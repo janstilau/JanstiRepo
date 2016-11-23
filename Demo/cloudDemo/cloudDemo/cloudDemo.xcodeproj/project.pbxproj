@@ -13,6 +13,8 @@
 		158A3D0D1DE348790011DFFA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 158A3D0C1DE348790011DFFA /* Assets.xcassets */; };
 		158A3D101DE348790011DFFA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 158A3D0E1DE348790011DFFA /* LaunchScreen.storyboard */; };
 		158A3D1A1DE3488E0011DFFA /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 158A3D191DE3488E0011DFFA /* CloudKit.framework */; };
+		15D473431DE3DF7100200D02 /* localDevData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 15D473421DE3DF7100200D02 /* localDevData.plist */; };
+		15D473451DE3EE0F00200D02 /* img.png in Resources */ = {isa = PBXBuildFile; fileRef = 15D473441DE3EE0F00200D02 /* img.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +27,8 @@
 		158A3D111DE348790011DFFA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		158A3D171DE348880011DFFA /* cloudDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cloudDemo.entitlements; sourceTree = "<group>"; };
 		158A3D191DE3488E0011DFFA /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		15D473421DE3DF7100200D02 /* localDevData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = localDevData.plist; sourceTree = "<group>"; };
+		15D473441DE3EE0F00200D02 /* img.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +66,8 @@
 				158A3D171DE348880011DFFA /* cloudDemo.entitlements */,
 				158A3D051DE348790011DFFA /* AppDelegate.swift */,
 				158A3D071DE348790011DFFA /* ViewController.swift */,
+				15D473421DE3DF7100200D02 /* localDevData.plist */,
+				15D473441DE3EE0F00200D02 /* img.png */,
 				158A3D091DE348790011DFFA /* Main.storyboard */,
 				158A3D0C1DE348790011DFFA /* Assets.xcassets */,
 				158A3D0E1DE348790011DFFA /* LaunchScreen.storyboard */,
@@ -146,6 +152,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15D473451DE3EE0F00200D02 /* img.png in Resources */,
+				15D473431DE3DF7100200D02 /* localDevData.plist in Resources */,
 				158A3D101DE348790011DFFA /* LaunchScreen.storyboard in Resources */,
 				158A3D0D1DE348790011DFFA /* Assets.xcassets in Resources */,
 				158A3D0B1DE348790011DFFA /* Main.storyboard in Resources */,
@@ -326,6 +334,7 @@
 				158A3D161DE348790011DFFA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
