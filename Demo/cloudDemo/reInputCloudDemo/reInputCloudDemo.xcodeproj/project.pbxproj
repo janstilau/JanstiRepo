@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1500B97C1DE6C57F000761B1 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1500B97B1DE6C57F000761B1 /* City.swift */; };
 		15B9A5111DE57D3600902DDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B9A5101DE57D3600902DDD /* AppDelegate.swift */; };
 		15B9A5131DE57D3600902DDD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B9A5121DE57D3600902DDD /* ViewController.swift */; };
 		15B9A5161DE57D3600902DDD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15B9A5141DE57D3600902DDD /* Main.storyboard */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1500B97B1DE6C57F000761B1 /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		15B9A50D1DE57D3600902DDD /* reInputCloudDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = reInputCloudDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15B9A5101DE57D3600902DDD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15B9A5121DE57D3600902DDD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 				15B9A5101DE57D3600902DDD /* AppDelegate.swift */,
 				15B9A5121DE57D3600902DDD /* ViewController.swift */,
 				15B9A5431DE57E4600902DDD /* CloudKitManager.swift */,
+				1500B97B1DE6C57F000761B1 /* City.swift */,
 				15B9A5141DE57D3600902DDD /* Main.storyboard */,
 				15B9A5171DE57D3600902DDD /* Assets.xcassets */,
 				15B9A5191DE57D3600902DDD /* LaunchScreen.storyboard */,
@@ -264,6 +267,7 @@
 			files = (
 				15B9A5131DE57D3600902DDD /* ViewController.swift in Sources */,
 				15B9A5111DE57D3600902DDD /* AppDelegate.swift in Sources */,
+				1500B97C1DE6C57F000761B1 /* City.swift in Sources */,
 				15B9A5441DE57E4600902DDD /* CloudKitManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -476,6 +480,7 @@
 				15B9A52C1DE57D3600902DDD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		15B9A52D1DE57D3600902DDD /* Build configuration list for PBXNativeTarget "reInputCloudDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -484,6 +489,7 @@
 				15B9A52F1DE57D3600902DDD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
