@@ -36,7 +36,7 @@ class MainViewController: BaseViewController {
 }
 
 // MARK: Private
-fileprivate extension MainViewController {
+private extension MainViewController {
     
     func setupView() {
         let cellNib = UINib(nibName: CityTableViewCell.nibName, bundle: nil)
