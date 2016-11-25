@@ -12,6 +12,17 @@ import CloudKit
 private let recordType = "Cities"
 
 
+/*
+ 
+ During development, it’s easy to create a schema using CloudKit APIs. When you save record objects to a database, the associated record types and their fields are automatically created for you. This feature is called just-in-time schema and is available only when you use the development environment which is not accessible by apps sold on the store. For example, during development you can populate a CloudKit database with test records stored in a property list.
+ 
+
+*/
+
+// 上面的什么意思呢,就是在api里面,save这个操作,会让dashBoard里面,生成相应的类型和数据
+// 比如,生成一个person的对象,设置name,age,face等类型,然后save,就会自动生成person这样的一个类型,然后name为string,age为int,face为asset或者是bytes.
+
+
 
 /*
  public enum CKDatabaseScope : Int {
@@ -90,11 +101,27 @@ final class CloudKitManager {
             }
             
             record.setValue(text, forKey: cityText)
-            self.publicCloudDatabase.save(record) { savedRecord, error in
-                DispatchQueue.main.async {
-                    completion(savedRecord, error as? NSError)
+            
+            let personId = CKRecordID.init(recordName: "James")
+            publicCloudDatabase.fetch(withRecordID: personId, completionHandler: { (fetchRecord, error) in
+                if error != nil {
+                    
+                    let person = CKRecord.init(recordType: "Artist", recordID: personId)
+                    person.setValue("LBJ", forKey: "name")
+                    publicCloudDatabase.save(person, completionHandler: { (saveRecord, error) in
+                        let personRef = CKReference.init(record: person, action: CKReferenceAction.none)
+                        record.setValue(personRef, forKey: "artist")
+                        self.publicCloudDatabase.save(record) { savedRecord, error in
+                            DispatchQueue.main.async {
+                                completion(savedRecord, error as? NSError)
+                            }
+                        }
+                    })
+                    
+                }else {
+                    
                 }
-            }
+            })
         }
     }
     
@@ -227,4 +254,80 @@ final class CloudKitManager {
  }
  }];
  */
+
+
+
+
+
+
+/* 根据recordId ,获取refrence关联的record
+ Get the reference field.
+ CKRecord *artworkRecord;
+ …
+ CKReference *referenceToArtist = artworkRecord[@"artist"];
+ Get the target record ID from the reference.
+ CKRecordID *artistRecordID = artistReference.recordID;
+ Fetch the target record.
+ [publicDatabase fetchRecordWithID:artistRecordID completionHandler:^(CKRecord *artistRecord, NSError *error) {
+ if (error) {
+ // Failed to fetch record
+ }
+ else {
+ // Successfully fetched record
+ }
+ }];
+ */
+
+/* 批量获取ref
+ 
+ Start with the parent record ID (CKRecordID) that you previously fetched and the model object for the parent.
+ For example, create an Artist model object from an Artist record.
+ 
+ __block Artist *artist = [[Artist alloc] initWithRecord:artistRecord];
+ Use __block so that you can access the parent object in the completion handler later.
+ Create a predicate object to fetch the child records.
+ NSPredicate *predicate = [NSPredicate predicateWithFormat:@“artist = %@”, artistRecordID];
+ In your code, replace artist with the name of the reference field in the child record, and replace artistRecordID with the parent record ID.
+ Note: Possible values for the right-hand expression in the predicate format string parameter include CKRecord, CKRecordID, and CKReference objects.
+ Create a query object specifying the record type to search.
+ CKQuery *query = [[CKQuery alloc] initWithRecordType:@“Artwork” predicate:predicate];
+ In your code, replace @“Artwork” with the name of the child record type.
+ Perform the fetch.
+ CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+ [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+ if (error) {
+ // Failed to fetch children of parent
+ }
+ else {
+ // Create model objects for each child and set the one-to-many relationship from the parent to its children
+ }
+ }];
+ Add the code to the else statement that creates the corresponding relationships between your model objects.
+
+ 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
