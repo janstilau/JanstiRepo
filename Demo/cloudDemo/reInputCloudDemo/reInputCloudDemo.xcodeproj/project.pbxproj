@@ -14,6 +14,7 @@
 		1500B9851DE6E563000761B1 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1500B9841DE6E563000761B1 /* MainViewController.swift */; };
 		1500B9871DE6E745000761B1 /* ScopeDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1500B9861DE6E745000761B1 /* ScopeDemo.swift */; };
 		1500B9891DE6F2AE000761B1 /* DetailedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1500B9881DE6F2AE000761B1 /* DetailedViewController.swift */; };
+		1500B98B1DE7D6B6000761B1 /* SelectCityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1500B98A1DE7D6B6000761B1 /* SelectCityViewController.swift */; };
 		15B9A5111DE57D3600902DDD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B9A5101DE57D3600902DDD /* AppDelegate.swift */; };
 		15B9A5131DE57D3600902DDD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B9A5121DE57D3600902DDD /* ViewController.swift */; };
 		15B9A5161DE57D3600902DDD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15B9A5141DE57D3600902DDD /* Main.storyboard */; };
@@ -49,6 +50,7 @@
 		1500B9841DE6E563000761B1 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		1500B9861DE6E745000761B1 /* ScopeDemo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScopeDemo.swift; sourceTree = "<group>"; };
 		1500B9881DE6F2AE000761B1 /* DetailedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailedViewController.swift; sourceTree = "<group>"; };
+		1500B98A1DE7D6B6000761B1 /* SelectCityViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectCityViewController.swift; sourceTree = "<group>"; };
 		15B9A50D1DE57D3600902DDD /* reInputCloudDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = reInputCloudDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15B9A5101DE57D3600902DDD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15B9A5121DE57D3600902DDD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 				1500B9821DE6E4BF000761B1 /* BaseViewController.swift */,
 				1500B9841DE6E563000761B1 /* MainViewController.swift */,
 				1500B9881DE6F2AE000761B1 /* DetailedViewController.swift */,
+				1500B98A1DE7D6B6000761B1 /* SelectCityViewController.swift */,
 				1500B9861DE6E745000761B1 /* ScopeDemo.swift */,
 			);
 			name = VC;
@@ -293,6 +296,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1500B9851DE6E563000761B1 /* MainViewController.swift in Sources */,
+				1500B98B1DE7D6B6000761B1 /* SelectCityViewController.swift in Sources */,
 				1500B9871DE6E745000761B1 /* ScopeDemo.swift in Sources */,
 				15B9A5131DE57D3600902DDD /* ViewController.swift in Sources */,
 				15B9A5111DE57D3600902DDD /* AppDelegate.swift in Sources */,
