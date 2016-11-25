@@ -11,11 +11,29 @@ import CloudKit
 
 private let recordType = "Cities"
 
+
+
+/*
+ public enum CKDatabaseScope : Int {
+ 
+ 
+ case `public`
+ 
+ case `private`
+ 
+ case shared
+ }
+ 
+ */ // 这上面,就是用到了系统保留关键字,但是这些关键字又和业务相关,所以用''进行了修饰.
+
+
+// 这个工具类基本就是封装了icloud的系统方法,icloud的方法一般都有一个提交给icloud的回调,然后在回调里面,执行自己定义的block
+
 final class CloudKitManager {
     
     fileprivate init() {
         ///forbide to create instance of helper class
-    }
+    }//  这里什么意思呢,let manager = CluodKitManager(), 这句话如果在别的文件里面进行书写会报错, isnot inaccessible, cause fileprivate,所以在这里添加了访问权限的设置,这样就是让在外界不能通过生成实例来访问这个方法了.
     
     static var publicCloudDatabase: CKDatabase {
         return CKContainer.default().publicCloudDatabase
@@ -105,3 +123,108 @@ final class CloudKitManager {
         }
     }
 }
+
+
+
+
+/* Apple 根据谓词进行查找的code
+ 
+ 
+ CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+ NSPredicate *predicate = [NSPredicate predicateWithFormat:@"title = %@", @"Santa Cruz Mountains"];
+ CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Artwork" predicate:predicate];
+ [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+ if (error) {
+ // Error handling for failed fetch from public database
+ }
+ else {
+ // Display the fetched records
+ }
+ }];
+ 
+ */
+
+
+/* Apple 根据identifier 进行查找的code
+ CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+ CKRecordID *artworkRecordID = [[CKRecordID alloc] initWithRecordName:@"115"];
+ [publicDatabase fetchRecordWithID:artworkRecordID completionHandler:^(CKRecord *artworkRecord, NSError *error) {
+ if (error) {
+ // Error handling for failed fetch from public database
+ }
+ else {
+ // Display the fetched record
+ }
+ }];
+ */
+
+
+/* Apple 查找修改的code
+ // Fetch the record from the database
+ CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+ CKRecordID *artworkRecordID = [[CKRecordID alloc] initWithRecordName:@"115"];
+ [publicDatabase fetchRecordWithID:artworkRecordID completionHandler:^(CKRecord *artworkRecord, NSError *error) {
+ if (error) {
+ // Error handling for failed fetch from public database
+ }
+ else {
+ // Modify the record and save it to the database
+ NSDate *date = artworkRecord[@"date"];
+ artworkRecord[@"date"] = [date dateByAddingTimeInterval:30.0 * 60.0];
+ [publicDatabase saveRecord:artworkRecord completionHandler:^(CKRecord *savedRecord, NSError *saveError) {
+ // Error handling for failed save to public database
+ }];
+ }
+ }];
+ 
+ */
+
+
+/*  Apple 创建保存record
+ CKRecordID *artworkRecordID = [[CKRecordID alloc] initWithRecordName:@"115"];
+ CKRecord *artworkRecord = [[CKRecord alloc] initWithRecordType:@"Artwork" recordID:artworkRecordID];
+ artworkRecord[@"title" ] = @"MacKerricher State Park";
+ artworkRecord[@"artist"] = @"Mei Chen";
+ artworkRecord[@"address"] = @"Fort Bragg, CA";
+ 
+ To get the public database:
+ CKContainer *myContainer = [CKContainer defaultContainer];
+ CKDatabase *publicDatabase = [myContainer publicCloudDatabase];
+ 
+ To get the private database:
+ CKContainer *myContainer = [CKContainer defaultContainer];
+ CKDatabase *privateDatabase = [myContainer privateCloudDatabase];
+ 
+ To get a custom container:
+ CKContainer *myContainer = [CKContainer containerWithIdentifier:@"iCloud.com.example.ajohnson.GalleryShared"];
+ 
+ [publicDatabase saveRecord:artworkRecord completionHandler:^(CKRecord *artworkRecord, NSError *error){
+ if (!error) {
+ // Insert successfully saved record code
+ }
+ else {
+ // Insert error handling
+ }
+ }];
+ 
+ */
+
+
+/* Apple alert权限
+ 
+ [[CKContainer defaultContainer] accountStatusWithCompletionHandler:^(CKAccountStatus accountStatus, NSError *error) {
+ if (accountStatus == CKAccountStatusNoAccount) {
+ UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Sign in to iCloud"
+ message:@"Sign in to your iCloud account to write records. On the Home screen, launch Settings, tap iCloud, and enter your Apple ID. Turn iCloud Drive on. If you don't have an iCloud account, tap Create a new Apple ID."
+ preferredStyle:UIAlertControllerStyleAlert];
+ [alert addAction:[UIAlertAction actionWithTitle:@"Okay"
+ style:UIAlertActionStyleCancel
+ handler:nil]];
+ [self presentViewController:alert animated:YES completion:nil];
+ }
+ else {
+ // Insert your just-in-time schema code here
+ }
+ }];
+ */
+
