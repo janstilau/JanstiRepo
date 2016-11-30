@@ -42,11 +42,11 @@ static YWFeedbackKit *_feedbackKit = nil;
 - (void)viewDidLoad {
     [super viewDidLoad];
     if (_feedbackKit == nil){
-       _feedbackKit = [[YWFeedbackKit alloc] initWithAppKey:@"23549859"];
+       _feedbackKit = [[YWFeedbackKit alloc] initWithAppKey:@"23550019"];
     }
     self.view.backgroundColor = [UIColor redColor];
     
-    _feedbackKit.extInfo = @{@"uid":@"uid",@"name":@"nikename",@"越狱":@"否"};
+   
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{

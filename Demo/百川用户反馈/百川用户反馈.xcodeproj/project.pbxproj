@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		151384181DED282A00C9E22B /* yw_1222.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 151384171DED282A00C9E22B /* yw_1222.jpg */; };
 		151B43871DEC042A002BBE77 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 151B43861DEC042A002BBE77 /* main.m */; };
 		151B438A1DEC042A002BBE77 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 151B43891DEC042A002BBE77 /* AppDelegate.m */; };
 		151B438D1DEC042A002BBE77 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 151B438C1DEC042A002BBE77 /* ViewController.m */; };
@@ -29,7 +30,6 @@
 		151B43C71DEC0967002BBE77 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 151B43C61DEC0967002BBE77 /* SystemConfiguration.framework */; };
 		151B43CA1DEC0A47002BBE77 /* FBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 151B43C91DEC0A47002BBE77 /* FBViewController.m */; };
 		151B43CD1DEC0F18002BBE77 /* UIView+AutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 151B43CC1DEC0F18002BBE77 /* UIView+AutoLayout.m */; };
-		151B43CF1DEC1211002BBE77 /* yw_1222.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 151B43CE1DEC1211002BBE77 /* yw_1222.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		151384171DED282A00C9E22B /* yw_1222.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = yw_1222.jpg; sourceTree = "<group>"; };
 		151B43821DEC042A002BBE77 /* 百川用户反馈.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "百川用户反馈.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		151B43861DEC042A002BBE77 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		151B43881DEC042A002BBE77 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -73,7 +74,6 @@
 		151B43C91DEC0A47002BBE77 /* FBViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBViewController.m; sourceTree = "<group>"; };
 		151B43CB1DEC0F18002BBE77 /* UIView+AutoLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AutoLayout.h"; sourceTree = "<group>"; };
 		151B43CC1DEC0F18002BBE77 /* UIView+AutoLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AutoLayout.m"; sourceTree = "<group>"; };
-		151B43CE1DEC1211002BBE77 /* yw_1222.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = yw_1222.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,7 +167,7 @@
 		151B43AA1DEC0872002BBE77 /* BCFeedback */ = {
 			isa = PBXGroup;
 			children = (
-				151B43CE1DEC1211002BBE77 /* yw_1222.jpg */,
+				151384171DED282A00C9E22B /* yw_1222.jpg */,
 				151B43AB1DEC0872002BBE77 /* BCConnectorBundle.framework */,
 				151B43AC1DEC0872002BBE77 /* BCHybridWebViewFMWK.framework */,
 				151B43AE1DEC0872002BBE77 /* SGMain.framework */,
@@ -277,7 +277,7 @@
 			files = (
 				151B43951DEC042C002BBE77 /* LaunchScreen.storyboard in Resources */,
 				151B43921DEC042C002BBE77 /* Assets.xcassets in Resources */,
-				151B43CF1DEC1211002BBE77 /* yw_1222.jpg in Resources */,
+				151384181DED282A00C9E22B /* yw_1222.jpg in Resources */,
 				151B43B91DEC0872002BBE77 /* YWFeedbackBundle.bundle in Resources */,
 				151B43901DEC042B002BBE77 /* Main.storyboard in Resources */,
 			);
@@ -446,7 +446,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.redstar.baichuan;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hoolai.mocatest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -464,7 +464,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.redstar.baichuan;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hoolai.mocatest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -514,6 +514,7 @@
 				151B43A61DEC042D002BBE77 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		151B43A71DEC042D002BBE77 /* Build configuration list for PBXNativeTarget "百川用户反馈Tests" */ = {
 			isa = XCConfigurationList;
@@ -522,6 +523,7 @@
 				151B43A91DEC042D002BBE77 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
