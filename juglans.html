@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>juglans</title>
+
+
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+
+body > *:first-child {
+  margin-top: 0 !important; }
+body > *:last-child {
+  margin-bottom: 0 !important; }
+
+a {
+  color: #4183C4; }
+a.absent {
+  color: #cc0000; }
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative; }
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
+  text-decoration: none; }
+
+h1 tt, h1 code {
+  font-size: inherit; }
+
+h2 tt, h2 code {
+  font-size: inherit; }
+
+h3 tt, h3 code {
+  font-size: inherit; }
+
+h4 tt, h4 code {
+  font-size: inherit; }
+
+h5 tt, h5 code {
+  font-size: inherit; }
+
+h6 tt, h6 code {
+  font-size: inherit; }
+
+h1 {
+  font-size: 28px;
+  color: black; }
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+  color: black; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 16px; }
+
+h5 {
+  font-size: 14px; }
+
+h6 {
+  color: #777777;
+  font-size: 14px; }
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0; }
+
+hr {
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+
+body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+  body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0; }
+
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0; }
+
+li p.first {
+  display: inline-block; }
+li {
+  margin: 0; }
+ul, ol {
+  padding-left: 30px; }
+
+ul :first-child, ol :first-child {
+  margin-top: 0; }
+
+dl {
+  padding: 0; }
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px; }
+    dl dt:first-child {
+      padding: 0; }
+    dl dt > :first-child {
+      margin-top: 0; }
+    dl dt > :last-child {
+      margin-bottom: 0; }
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px; }
+    dl dd > :first-child {
+      margin-top: 0; }
+    dl dd > :last-child {
+      margin-bottom: 0; }
+
+blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777; }
+  blockquote > :first-child {
+    margin-top: 0; }
+  blockquote > :last-child {
+    margin-bottom: 0; }
+
+table {
+  padding: 0;border-collapse: collapse; }
+  table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0; }
+    table tr:nth-child(2n) {
+      background-color: #f8f8f8; }
+    table tr th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr td {
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr th :first-child, table tr td :first-child {
+      margin-top: 0; }
+    table tr th :last-child, table tr td :last-child {
+      margin-bottom: 0; }
+
+img {
+  max-width: 100%; }
+
+span.frame {
+  display: block;
+  overflow: hidden; }
+  span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto; }
+  span.frame span img {
+    display: block;
+    float: left; }
+  span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0; }
+span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center; }
+  span.align-center span img {
+    margin: 0 auto;
+    text-align: center; }
+span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right; }
+  span.align-right span img {
+    margin: 0;
+    text-align: right; }
+span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left; }
+  span.float-left span {
+    margin: 13px 0 0; }
+span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right; }
+  span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right; }
+
+code, tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px; }
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent; }
+
+.highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+  pre code, pre tt {
+    background-color: transparent;
+    border: none; }
+
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb
+}
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+	table, pre {
+		page-break-inside: avoid;
+	}
+	pre {
+		word-wrap: break-word;
+	}
+}
+</style>
+
+
+</head>
+
+<body>
+
+<h1 id="toc_0">胡桃钱包接口文档</h1>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: center">版本</th>
+<th style="text-align: center">修改日期</th>
+<th style="text-align: center">修改说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td style="text-align: center">v2.3</td>
+<td style="text-align: center">2016-12-12</td>
+<td style="text-align: center">多资金方接入完成</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="toc_1">接口列表</h2>
+
+<ul>
+<li><a href="#annotation">说明</a></li>
+<li><p><a href="#underlying_parameter">基础参数</a>  </p></li>
+</ul>
+
+<ol>
+<li><a href="#system">System</a>
+
+<ul>
+<li><a href="#system/getDomainInfo">获取服务器域名</a></li>
+</ul></li>
+<li><a href="#user">User</a>
+
+<ul>
+<li><a href="#user/register">注册</a></li>
+<li><a href="#user/login">登录</a></li>
+<li><a href="#user/logout">登出</a></li>
+<li><a href="#user/resetPassword">重置密码</a></li>
+<li><a href="#user/forgetPassword">忘记密码</a></li>
+<li><a href="#user/sendCaptcha">发送验证码</a></li>
+<li><a href="#user/msgswitch">推送开关</a></li>
+<li><a href="#user/getUserMobile">获取用户联系方式</a></li>
+<li><a href="#user/addUserMobile">添加用户联系方式</a></li>
+<li><a href="#user2/getAccountPageNew">账户页用户信息</a></li>
+</ul></li>
+<li><a href="#credit">授信</a>
+
+<ul>
+<li><a href="#credit/uploadUserInfo">更新用户授信信息</a></li>
+<li><a href="#credit/submitJxlPassword">提交手机服务密码</a></li>
+<li><a href="#credit/userPhoneBook">提交手机通讯录</a></li>
+<li><a href="#credit/queryCosSign">获取腾讯云签名</a></li>
+<li><a href="#credit/userPhoneBook">提交通讯录</a></li>
+</ul></li>
+<li><a href="#loan">借款</a>
+
+<ul>
+<li><a href="#loan/preapply">提交借款申请</a></li>
+<li><a href="#loan/confirmapply">确认借款申请</a></li>
+<li><a href="#loan2/listLoan">借款订单列表</a></li>
+<li><a href="#loan/listInstallmentByLoanid">借款分期列表</a></li>
+<li><a href="#loan2/readLoanInstallment">授信状态变更</a></li>
+</ul></li>
+<li><a href="#pay">支付</a>
+
+<ul>
+<li><a href="#loan/wxpayment">获取微信支付信息</a></li>
+<li><a href="#loan/alipayment">获取支付宝支付信息</a></li>
+</ul></li>
+<li><a href="#data">医院数据</a>
+
+<ul>
+<li><a href="#data/updateHospitalData">更新医院数据</a></li>
+</ul></li>
+</ol>
+
+<h2 id="toc_2"><a name="annotation"></a>说明</h2>
+
+<ul>
+<li>未作特殊说明，所有接口参数均做url编码</li>
+<li>出错代码赋值给返回字段c,200为接口成功,其他值客户端均认为相关业务功能失败</li>
+<li><p>接口返回值数据分为c,h,m,n,p 几个主要字段<br>
+c为状态码字段<br>
+n为弹框提示内容字段,n中有内容客户端自动弹框<br>
+p为主要业务逻辑内容字段<br>
+m,h为相关错误提示字段,作为调试阶段技术人员提示数据<br>
+ts服务器当前时间戳  </p>
+
+<div><pre><code class="language-none">{
+c = 200;
+h = &quot;&quot;;
+m = &quot;成功&quot;;
+n = &quot;&quot;;
+p =     {
+    str = &quot;&quot;;
+};
+ts = 1481518556724;
+}</code></pre></div></li>
+<li><p>请求方法为POST</p></li>
+</ul>
+
+<h2 id="toc_3"><a name="underlying_parameter"></a>基础参数</h2>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>api_version</td>
+<td style="text-align: center">接口版本号</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>client_version</td>
+<td style="text-align: center">客户端版本号</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>platform</td>
+<td style="text-align: center">平台</td>
+<td style="text-align: center">0-iphone1-android</td>
+</tr>
+<tr>
+<td>device_id</td>
+<td style="text-align: center">设备id</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>time</td>
+<td style="text-align: center">当前时间戳</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>distributor</td>
+<td style="text-align: center">渠道名称</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>login_uid</td>
+<td style="text-align: center">登陆者uid</td>
+<td style="text-align: center">未登录时不需要</td>
+</tr>
+<tr>
+<td>session_key</td>
+<td style="text-align: center">登陆者session</td>
+<td style="text-align: center">未登录时不需要</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="toc_4"><a name="system"></a> System</h2>
+
+<h3 id="toc_5"><a name="system/getDomainInfo"></a> 获取服务器域名</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/data/getDomainInfo</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-javascript">{
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        app_conf =         {
+            code = &quot;12&quot;;
+            description = &quot;您的版本太旧了，请升级最新版本。     还款提醒更便捷，审批更快更方便。&quot;;
+            id = 6;
+            package_sha1 = &quot;&quot;;
+            platform = 0;
+            type = &quot;2&quot;;
+            url = &quot;&quot;;
+            version = &quot;2.2&quot;;
+        };
+        domain =         {
+            clientVersion = &quot;2&quot;;
+            downloadDomain = &quot;http://walnut-10023356.file.myqcloud.com&quot;;
+            flags = 3;
+            id = 1;
+            initDomain = &quot;http://api.hoootao.com/api&quot;;
+            logLevel = 3;
+            platform = 0;
+            spreadService = &quot;b&quot;;
+            tubeService = &quot;c&quot;;
+            uploadDomain = &quot;&quot;;
+        };
+    };
+    ts = 1481516730506;
+}</code></pre></div>
+
+<h2 id="toc_6"><a name="user"></a> User</h2>
+
+<h3 id="toc_7"><a name="user/register"></a> 注册</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/user/register</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>account</td>
+<td style="text-align: center">账号</td>
+<td style="text-align: center">phoneNum</td>
+</tr>
+<tr>
+<td>secret</td>
+<td style="text-align: center">账号密码</td>
+<td style="text-align: center">sha1加密</td>
+</tr>
+<tr>
+<td>captcha</td>
+<td style="text-align: center">验证码</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>device_info</td>
+<td style="text-align: center">设备基本信息</td>
+<td style="text-align: center"></td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none"> {
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        has_applied_loan_status = 0;
+        id = 0;
+        is_ca = 0;
+        is_permit_credit = 0;
+        latest_msg_id = 0;
+        loan_status = 0;
+        login_uid = &quot;d09161&quot;;
+        session_key = &quot;cf1cb07826934348941e1182fd2c7610&quot;;
+    };
+    ts = 1481529630017;
+}</code></pre></div>
+
+<h3 id="toc_8"><a name="user/login"></a> 登录</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/user/login</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>account</td>
+<td style="text-align: center">账号</td>
+<td style="text-align: center">phoneNum</td>
+</tr>
+<tr>
+<td>secret</td>
+<td style="text-align: center">账号密码</td>
+<td style="text-align: center">sha1加密</td>
+</tr>
+<tr>
+<td>type</td>
+<td style="text-align: center">废弃参数</td>
+<td style="text-align: center">固定写0</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">{
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        has_applied_loan_status = 0;
+        id = 0;
+        is_ca = 0;
+        is_permit_credit = 0;
+        latest_msg_id = 0;
+        loan_status = 2;
+        login_uid = &quot;b20dc2&quot;;
+        msg_switch = &quot;1&quot;;
+        session_key = &quot;ffab45b0debe4e3b83817a9bd2c52ba0&quot;;
+        user_info =         {
+            addition_imageUrls = &quot;idcard/436a4e9eb7fb452194c16ea8b8e38a22.jpg,idcard/b93a1887be32454b88a32b74f5cb3930.jpg,idcard/1c3c286e7d6a47cf89500a896099ed71.jpg,idcard/3364c60cabd04070a13989f4890ae504.jpg,idcard/70cd192c7c6a4b6ba84af5c9fde17f41.jpg,idcard/4e9deefa563d46ac96d21f9364711ec1.jpg,&quot;;
+            address = &quot;公开的地址&quot;;
+            bankCard = &quot;6212250200007708009&quot;;
+            companyTele = &quot;4621267&quot;;
+            company_address = &quot;测试公司地址&quot;;
+            company_name = &quot;测试公司名&quot;;
+            company_position = &quot;测试公司职位&quot;;
+            contact_mobile = &quot;156009000000&quot;;
+            contact_name = &quot;测试联系人&quot;;
+            createTime = &quot;2016-11-09 10-04-23&quot;;
+            education_background = &quot;2&quot;;
+            id = 3952;
+            id_back_img_url = &quot;idcard/f26f301cb1fc43e1825338ee90501f81.jpg&quot;;
+            id_front_img_url = &quot;idcard/28bb905013f54ad991ff00d4017d329a.jpg&quot;;
+            id_hold_img_url = &quot;idcard/0cf2a8b4b436455588d41a8591c363d0.jpg&quot;;
+            idcard = &quot;120929191909296312&quot;;
+            is_worker = 1;
+            major_name = &quot;专业名&quot;;
+            marriageStatus = &quot;0&quot;;
+            mobile = &quot;15600900000&quot;;
+            name = &quot;测试用户名&quot;;
+            parent_mobile = &quot;1310000000&quot;;
+            parent_name = &quot;测试父母命&quot;;
+            salary = 12331;
+            salary_level = &quot;&quot;;
+            school_name = &quot;测试学校&quot;;
+            uid = 9049;
+            updateTime = &quot;2016-11-24 06-23-23&quot;;
+        };
+    };
+    ts = 1481518095494;
+}</code></pre></div>
+
+<h3 id="toc_9"><a name="user/logout"></a> 登出</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/user/logout</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">{
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p = &lt;null&gt;;
+    ts = 1481518556724;
+}</code></pre></div>
+
+<h3 id="toc_10"><a name="user/resetPassword"></a> 重置密码</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/user/resetPassword</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>old_secret</td>
+<td style="text-align: center">原密码</td>
+<td style="text-align: center">sha1加密</td>
+</tr>
+<tr>
+<td>new_secret</td>
+<td style="text-align: center">新密码</td>
+<td style="text-align: center">sha1加密</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">{
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        has_applied_loan_status = 0;
+        id = 0;
+        is_ca = 0;
+        is_permit_credit = 0;
+        latest_msg_id = 0;
+        loan_status = 0;
+        login_uid = &quot;b20dc2&quot;;
+        session_key = &quot;976a8e471dd642c2801a3c2edb5c2f3f&quot;;
+    };
+    ts = 1481518728686;
+}</code></pre></div>
+
+<h3 id="toc_11"><a name="user/forgetPassword"></a> 忘记密码</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/user/forgetPassword</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>account</td>
+<td style="text-align: center">账号</td>
+<td style="text-align: center">phoneNum</td>
+</tr>
+<tr>
+<td>secret</td>
+<td style="text-align: center">账号密码</td>
+<td style="text-align: center">sha1加密</td>
+</tr>
+<tr>
+<td>captcha</td>
+<td style="text-align: center">验证码</td>
+<td style="text-align: center"></td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none"> {
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        str = &quot;&quot;;
+    };
+    ts = 1481518874169;
+}</code></pre></div>
+
+<h3 id="toc_12"><a name="user/sendCaptcha"></a> 发送验证码</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/user/sendCaptcha</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>mobile</td>
+<td style="text-align: center">手机号</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>type</td>
+<td style="text-align: center">验证码用途</td>
+<td style="text-align: center">0:注册 3:找回密码 4:增加联系方式</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none"> {
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        str = &quot;&quot;;
+    };
+    ts = 1481518874169;
+}</code></pre></div>
+
+<h3 id="toc_13"><a name="user/msgswitch"></a> 推送开关</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/user/msgswitch</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>msg_switch</td>
+<td style="text-align: center">推送开启与否</td>
+<td style="text-align: center">Bool</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none"> {
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p = &lt;null&gt;;
+    ts = 1481521915369;
+}</code></pre></div>
+
+<h3 id="toc_14"><a name="user/getUserMobile"></a> 获取用户联系方式</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/user/getUserMobile</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">{
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        id = 0;
+        mobile = &quot;15600900000&quot;;
+        uid = 0;
+    };
+    ts = 1481522026049;
+}</code></pre></div>
+
+<h3 id="toc_15"><a name="user/addUserMobile"></a> 添加用户联系方式</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/user/addUserMobile</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>mobile</td>
+<td style="text-align: center">新的手机号</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>captcha</td>
+<td style="text-align: center">验证码</td>
+<td style="text-align: center"></td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">{
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        str = &quot;&quot;;
+    };
+    ts = 1481523572527;
+}</code></pre></div>
+
+<h3 id="toc_16"><a name="user2/getAccountPageNew"></a> 账户页用户信息</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/user2/getAccountPageNew</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">{
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        Installment =         {
+            code = &quot;2016112911e38b-1&quot;;
+            hospital_name = &quot;北京美雅枫医疗美容医院&quot;;
+            loan_amount = 122300;
+            payment_amount = 42184;
+            payment_date = &quot;2016-12-04&quot;;
+            seq = 1;
+        };
+        credit_status = 1;
+        loan_status = 3;
+        notice_alert =         {
+            has_read = 0;
+            order =             {
+                hospital_id = 0;
+                hospital_name = &quot;&quot;;
+                installment_count = 0;
+                loan_amount = 0;
+                order_id = &quot;&quot;;
+                payment_date = &quot;&quot;;
+                reject_reason = &quot;&quot;;
+            };
+            type = 0;
+        };
+        notice_dot =         {
+            order =             {
+                content = &quot;&quot;;
+                has_read = 0;
+            };
+            overdue =             {
+                content = &quot;已产生额外服务费&quot;;
+                has_read = 0;
+            };
+        };
+        overdue =         {
+            earliest_amount = 200;
+            earliest_code = 10546;
+            earliest_days = 1;
+            total_amount = 200;
+        };
+    };
+    ts = 1481523323830;
+}</code></pre></div>
+
+<h2 id="toc_17"><a name="credit"></a> 授信</h2>
+
+<h3 id="toc_18"><a name="credit/uploadUserInfo"></a> 更新用户授信信息</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/credit/uploadUserInfo</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>lcStatus</td>
+<td style="text-align: center">判断多资金方管理</td>
+<td style="text-align: center">0单资金方 2多资金方</td>
+</tr>
+<tr>
+<td>loan</td>
+<td style="text-align: center">借款订单数据</td>
+<td style="text-align: center">医院相关数据+订单相关数据的json字符串</td>
+</tr>
+<tr>
+<td>userInfo</td>
+<td style="text-align: center">用户授信信息</td>
+<td style="text-align: center">用户授信相关信息的json字符串</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>load<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>hid</td>
+<td style="text-align: center">医院id</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>pre<em>borrow</em>amount</td>
+<td style="text-align: center">借款金额</td>
+<td style="text-align: center">单位分</td>
+</tr>
+<tr>
+<td>installment_count</td>
+<td style="text-align: center">分期数</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>rate</td>
+<td style="text-align: center">利率</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>surgeryimage_url</td>
+<td style="text-align: center">医院通知单url</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>projectInfo</td>
+<td style="text-align: center">手术名+手术费用相关信息</td>
+<td style="text-align: center">json字符串</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>userInfo<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">姓名</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>idcard</td>
+<td style="text-align: center">身份证号</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>address</td>
+<td style="text-align: center">常住地址</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>parent_name</td>
+<td style="text-align: center">父母姓名</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>parent_mobile</td>
+<td style="text-align: center">父母电话</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>contact_name</td>
+<td style="text-align: center">紧急联系人姓名</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>contact_mobile</td>
+<td style="text-align: center">紧急联系人电话</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>id<em>front</em>img_url</td>
+<td style="text-align: center">身份证正面url</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>id<em>back</em>img_url</td>
+<td style="text-align: center">身份证反面url</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>id<em>hold</em>img_url</td>
+<td style="text-align: center">手持身份证url</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>is_worker</td>
+<td style="text-align: center">在职与否</td>
+<td style="text-align: center">默认在职,固定写1</td>
+</tr>
+<tr>
+<td>school_name</td>
+<td style="text-align: center">学校名称</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>education_background</td>
+<td style="text-align: center">教育背景</td>
+<td style="text-align: center">0高中及以下1专科2本科3研究生及以上</td>
+</tr>
+<tr>
+<td>major_name</td>
+<td style="text-align: center">专业</td>
+<td style="text-align: center">高中及以下不填</td>
+</tr>
+<tr>
+<td>salary</td>
+<td style="text-align: center">工资</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>company_address</td>
+<td style="text-align: center">公司地址</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>company_name</td>
+<td style="text-align: center">公司名</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>company_position</td>
+<td style="text-align: center">公司职位</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>companyTele</td>
+<td style="text-align: center">公司电话</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>bankCard</td>
+<td style="text-align: center">银行卡号</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>marriageStatus</td>
+<td style="text-align: center">婚否</td>
+<td style="text-align: center">0已婚1未婚</td>
+</tr>
+<tr>
+<td>additionAuthImageUrls</td>
+<td style="text-align: center">额外信息图片url</td>
+<td style="text-align: center"></td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">{
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        actural_borrow_amount = 0;
+        fid = 0;
+        hid = 0;
+        hiid = 0;
+        id = 2100;
+        installment_count = 0;
+        mobile = &quot;15600900185&quot;;
+        pay_seq = 0;
+        pre_borrow_amount = 0;
+        rate = 0;
+        sid = &quot;6511&quot;;
+        status = 0;
+        statusChanged = 0;
+        uid = 0;
+        view_installment = 0;
+    };
+    ts = 1481524200878;
+}</code></pre></div>
+
+<h3 id="toc_19"><a name="credit/submitJxlPassword"></a> 提交手机服务密码</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/credit/submitJxlPassword</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>lcStatus</td>
+<td style="text-align: center">判断多资金方管理</td>
+<td style="text-align: center">0单资金方 2多资金方</td>
+</tr>
+<tr>
+<td>loanId</td>
+<td style="text-align: center">订单ID</td>
+<td style="text-align: center">订单id,更新用户授信信息接口返回</td>
+</tr>
+<tr>
+<td>pwd</td>
+<td style="text-align: center">手机服务密码</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>captcha</td>
+<td style="text-align: center">手机验证码</td>
+<td style="text-align: center">在需要手机验证码信息时传入,填写用户最新收到的验证码数据</td>
+</tr>
+<tr>
+<td>sid</td>
+<td style="text-align: center">服务器控制流程参数</td>
+<td style="text-align: center">更新用户授信信息接口返回</td>
+</tr>
+<tr>
+<td>tipcode</td>
+<td style="text-align: center">服务器控制流程参数</td>
+<td style="text-align: center">当前接口返回之后记录,下次接口调用传入</td>
+</tr>
+<tr>
+<td>ds</td>
+<td style="text-align: center">服务器控制流程参数</td>
+<td style="text-align: center">当前接口返回之后记录,下次接口调用传入</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">{
+    c = 1047;
+    h = &quot;&quot;;
+    m = &quot;您当前还未允许做信用审核，请与您的咨询师联系!&quot;;
+    n = &quot;您当前还未允许做信用审核，请与您的咨询师联系!&quot;;
+    p =     {
+        captcha = &lt;null&gt;;
+        code = &lt;null&gt;;
+        ds = 0;
+        message = &lt;null&gt;;
+        pwd = &lt;null&gt;;
+        sid = 0;
+        token = &lt;null&gt;;
+    };
+    ts = 1481525290819;
+}</code></pre></div>
+
+<h3 id="toc_20"><a name="credit/queryCosSign"></a> 获取腾讯云签名</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/credit/queryCosSign</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none"> {
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        bucketName = &quot;walnut&quot;;
+        cosPath = &quot;http://web.file.myqcloud.com/files/v1/10023356/walnut/idcard/8497f048cdeb47178bb433b99c086a38.jpg&quot;;
+        sign = &quot;Vc/hR0gQEsFEGu2rkIZXC6lWhclhPTEwMDIzMzU2Jms9QUtJRHVFa3Z0RE5oMG1ldHFrdjhIYmhuZ3FDWDBMd0JlU2QzJmU9MTQ4MTUyNTU2MiZ0PTE0ODE1MjUyNjImcj0zMzQ3ODQzNjAmZj0vMTAwMjMzNTYvd2FsbnV0L2lkY2FyZC84NDk3ZjA0OGNkZWI0NzE3OGJiNDMzYjk5YzA4NmEzOC5qcGcmYj13YWxudXQ=&quot;;
+    };
+    ts = 1481525262055;
+}</code></pre></div>
+
+<h3 id="toc_21"><a name="credit/userPhoneBook"></a> 提交通讯录</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/credit/userPhoneBook</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>contacts</td>
+<td style="text-align: center">通讯录信息</td>
+<td style="text-align: center">{&quot;userPhoneBook&quot;: userContacts } 的json串, userContacts 为通讯信息数组</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none"> {
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        str = &quot;&quot;;
+    };
+    ts = 1481523572527;
+}
+</code></pre></div>
+
+<h2 id="toc_22"><a name="loan"></a> 借款</h2>
+
+<h3 id="toc_23"><a name="loan/preapply"></a> 提交借款申请</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/loan/preapply</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>hid</td>
+<td style="text-align: center">借款医院id</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>pre<em>borrow</em>amount</td>
+<td style="text-align: center">借款金额</td>
+<td style="text-align: center">单位:分</td>
+</tr>
+<tr>
+<td>installment_count</td>
+<td style="text-align: center">分期数</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>rate</td>
+<td style="text-align: center">利率</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>surgeryimage_url</td>
+<td style="text-align: center">医院通知单url</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>projectInfo</td>
+<td style="text-align: center">手术项目相关信息</td>
+<td style="text-align: center">json字符串</td>
+</tr>
+<tr>
+<td>lcStatus</td>
+<td style="text-align: center">判断多资金方管理</td>
+<td style="text-align: center">0单资金方 2多资金方</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">{
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        actural_borrow_amount = 0;
+        fid = 0;
+        hid = 0;
+        hiid = 0;
+        id = 2105;
+        installment_count = 0;
+        pay_seq = 0;
+        pre_borrow_amount = 0;
+        rate = 0;
+        status = 0;
+        statusChanged = 0;
+        uid = 0;
+        view_installment = 0;
+    };
+    ts = 1481525858739;
+}</code></pre></div>
+
+<h3 id="toc_24"><a name="loan/confirmapply"></a> 确认借款申请</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/loan/confirmapply</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>id</td>
+<td style="text-align: center">订单id</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>status</td>
+<td style="text-align: center">确定借款状态</td>
+<td style="text-align: center">2确定借款,7取消借款</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">{
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        str = &quot;&quot;;
+    };
+    ts = 1481523572527;
+}</code></pre></div>
+
+<h3 id="toc_25"><a name="loan2/listLoan"></a> 借款订单列表</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/loan2/listLoan</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>param</td>
+<td style="text-align: center">逾期账单id</td>
+<td style="text-align: center">该参数用于消除账户页红点提示,对接口返回值没有影响</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">{
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        list =         (
+                        {
+                actural_borrow_amount = 1000000;
+                code = &quot;20161109c8afda&quot;;
+                createTime = &quot;2016-11-09 06:57:06&quot;;
+                fid = 0;
+                hid = 47;
+                hiid = 460;
+                hospital_name = &quot;北京基恩医院有限公司&quot;;
+                id = 922;
+                installment_count = 9;
+                li =                 (
+                                        {
+                        code = &quot;20161109c8afda-1&quot;;
+                        createTime = &quot;2016-11-09 06:57:06&quot;;
+                        hospital_name = &quot;北京基恩医院有限公司&quot;;
+                        id = 6272;
+                        interest = 9777;
+                        loanAmount = 1000000;
+                        loan_id = 922;
+                        overdueDays = 0;
+                        overdueFine = 0;
+                        principalAmount = 111111;
+                        repaymentAmount = 120888;
+                        repaymentDate = &quot;2016-12-08 06:57:06&quot;;
+                        repaymentDate1 = &quot;2016-12-08 06:57:06&quot;;
+                        seq = 1;
+                        status = 4;
+                        tip = 0;
+                        uid = 5368;
+                        updateTime = &quot;2016-12-05 06:54:43&quot;;
+                    }
+                );
+                pay_seq = 0;
+                pre_borrow_amount = 1000000;
+                projectInfo = &quot;[{&quot;name&quot;:&quot;眼睛&quot;,&quot;price&quot;:1000000}]&quot;;
+                rate = 880;
+                reject_reason = &quot;借款金额和消费金额不一致&quot;;
+                status = 3;
+                statusChanged = 0;
+                surgeryimage_url = &quot;idcard/c1adeab0d3ba4f36a72d312bd89e835e.jpg&quot;;
+                uid = 5368;
+                updateTime = &quot;2016-12-12 06:04:20&quot;;
+                view_installment = 0;
+            },
+                        {
+                actural_borrow_amount = 122300;
+                code = &quot;2016112911e38b&quot;;
+                contract_no = &quot;HT161201154&quot;;
+                contract_path = &quot;/contract/5368-14805897927930K4E1-0a18.pdf&quot;;
+                createTime = &quot;2016-11-29 05:37:34&quot;;
+                fid = 12;
+                hid = 48;
+                hiid = 736;
+                hospital_name = &quot;北京美雅枫医疗美容医院&quot;;
+                id = 1584;
+                installment_count = 3;
+                li =                 (
+                                        {
+                        code = &quot;2016112911e38b-1&quot;;
+                        createTime = &quot;2016-11-29 05:37:34&quot;;
+                        hospital_name = &quot;北京美雅枫医疗美容医院&quot;;
+                        id = 10546;
+                        interest = 1418;
+                        loanAmount = 122300;
+                        loan_id = 1584;
+                        overdueDays = 1;
+                        overdueFine = 200;
+                        principalAmount = 40766;
+                        repaymentAmount = 42184;
+                        repaymentDate = &quot;2016-12-04 09:37:41&quot;;
+                        repaymentDate1 = &quot;2016-12-04 09:37:41&quot;;
+                        seq = 1;
+                        status = 4;
+                        tip = 0;
+                        uid = 5368;
+                        updateTime = &quot;2016-12-12 07:10:55&quot;;
+                    }
+                );
+                pay_seq = 0;
+                pre_borrow_amount = 122300;
+                projectInfo = &quot;[{&quot;name&quot;:&quot;哈哈哈哈&quot;,&quot;price&quot;:122300}]&quot;;
+                rate = 348;
+                status = 8;
+                statusChanged = 0;
+                surgeryimage_url = &quot;idcard/f420e62c5e54485bafd16277877a29a1.jpg&quot;;
+                uid = 5368;
+                updateTime = &quot;2016-12-12 06:04:20&quot;;
+                view_installment = 0;
+            },
+                        {
+                actural_borrow_amount = 12300;
+                code = &quot;20161129916494&quot;;
+                contract_no = &quot;ZGEJKXY-HT201611293&quot;;
+                createTime = &quot;2016-11-29 09:39:41&quot;;
+                fid = 12;
+                hid = 47;
+                hiid = 737;
+                hospital_name = &quot;北京基恩医院有限公司&quot;;
+                id = 1590;
+                installment_count = 3;
+                li =                 (
+                                        {
+                        code = &quot;20161129916494-2&quot;;
+                        createTime = &quot;2016-11-29 09:39:41&quot;;
+                        hospital_name = &quot;北京基恩医院有限公司&quot;;
+                        id = 10568;
+                        interest = 142;
+                        loanAmount = 12300;
+                        loan_id = 1590;
+                        overdueDays = 0;
+                        overdueFine = 0;
+                        principalAmount = 4100;
+                        repaymentAmount = 4242;
+                        repaymentDate = &quot;2017-01-27 09:41:15&quot;;
+                        repaymentDate1 = &quot;2017-01-27 09:41:15&quot;;
+                        seq = 2;
+                        status = 2;
+                        tip = 0;
+                        uid = 5368;
+                        updateTime = &quot;2016-11-30 01:30:12&quot;;
+                    }
+                );
+                pay_seq = 0;
+                pre_borrow_amount = 12300;
+                projectInfo = &quot;[{&quot;name&quot;:&quot;y&quot;,&quot;price&quot;:12300}]&quot;;
+                rate = 348;
+                status = 8;
+                statusChanged = 0;
+                surgeryimage_url = &quot;idcard/15133a684a724134ba67e53757114896.jpg&quot;;
+                uid = 5368;
+                updateTime = &quot;2016-12-12 06:04:20&quot;;
+                view_installment = 0;
+            },
+                        {
+                actural_borrow_amount = 500000;
+                code = &quot;20161130454261&quot;;
+                createTime = &quot;2016-11-30 08:20:03&quot;;
+                fid = 0;
+                hid = 52;
+                hiid = 479;
+                hospital_name = &quot;北京杰康口腔&quot;;
+                id = 1625;
+                installment_count = 6;
+                pay_seq = 0;
+                pre_borrow_amount = 500000;
+                projectInfo = &quot;[{&quot;name&quot;:&quot;整牙&quot;,&quot;price&quot;:500000}]&quot;;
+                rate = 680;
+                status = 1;
+                statusChanged = 0;
+                surgeryimage_url = &quot;idcard/8816c53c09514338b6a1bc6829eea86a.jpg&quot;;
+                uid = 5368;
+                updateTime = &quot;2016-12-12 06:04:20&quot;;
+                view_installment = 0;
+            }
+        );
+    };
+    ts = 1481526655471;
+}</code></pre></div>
+
+<h3 id="toc_26"><a name="loan/listInstallmentByLoanid"></a> 借款分期列表</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/loan/listInstallmentByLoanid</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>id</td>
+<td style="text-align: center">账单id</td>
+<td style="text-align: center"></td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">  {
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        list =         (
+                        {
+                code = &quot;20161129916494-1&quot;;
+                createTime = &quot;2016-11-29 09:39:41&quot;;
+                hospital_name = &quot;北京基恩医院有限公司&quot;;
+                id = 10567;
+                interest = 142;
+                loanAmount = 12300;
+                loan_id = 1590;
+                overdueDays = 0;
+                overdueFine = 0;
+                principalAmount = 4100;
+                repaymentAmount = 4242;
+                repaymentDate = &quot;2016-12-27 09:41:15&quot;;
+                repaymentDate1 = &quot;2016-12-27 09:41:15&quot;;
+                seq = 1;
+                status = 3;
+                tip = 0;
+                uid = 5368;
+                updateTime = &quot;2016-11-30 01:30:12&quot;;
+            },
+                        {
+                code = &quot;20161129916494-2&quot;;
+                createTime = &quot;2016-11-29 09:39:41&quot;;
+                hospital_name = &quot;北京基恩医院有限公司&quot;;
+                id = 10568;
+                interest = 142;
+                loanAmount = 12300;
+                loan_id = 1590;
+                overdueDays = 0;
+                overdueFine = 0;
+                principalAmount = 4100;
+                repaymentAmount = 4242;
+                repaymentDate = &quot;2017-01-27 09:41:15&quot;;
+                repaymentDate1 = &quot;2017-01-27 09:41:15&quot;;
+                seq = 2;
+                status = 10;
+                tip = 0;
+                uid = 5368;
+                updateTime = &quot;2016-11-30 01:30:12&quot;;
+            },
+                        {
+                code = &quot;20161129916494-3&quot;;
+                createTime = &quot;2016-11-29 09:39:41&quot;;
+                hospital_name = &quot;北京基恩医院有限公司&quot;;
+                id = 10569;
+                interest = 144;
+                loanAmount = 12300;
+                loan_id = 1590;
+                overdueDays = 0;
+                overdueFine = 0;
+                principalAmount = 4100;
+                repaymentAmount = 4244;
+                repaymentDate = &quot;2017-02-27 09:41:15&quot;;
+                repaymentDate1 = &quot;2017-02-27 09:41:15&quot;;
+                seq = 3;
+                status = 10;
+                tip = 0;
+                uid = 5368;
+                updateTime = &quot;2016-11-30 01:30:12&quot;;
+            }
+        );
+    };
+    ts = 1481526935022;
+}</code></pre></div>
+
+<h3 id="toc_27"><a name="loan2/readLoanInstallment"></a> 授信状态变更</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/loan2/readLoanInstallment</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>id</td>
+<td style="text-align: center">订单id</td>
+<td style="text-align: center"></td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">  {
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        str = &quot;&quot;;
+    };
+    ts = 1481523572527;
+}</code></pre></div>
+
+<h2 id="toc_28"><a name="pay"></a> 支付</h2>
+
+<h3 id="toc_29"><a name="loan/wxpayment"></a> 获取微信支付信息</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/loan/wxpayment</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>amount</td>
+<td style="text-align: center">金额</td>
+<td style="text-align: center">单位: 分</td>
+</tr>
+<tr>
+<td>note</td>
+<td style="text-align: center">描述信息</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>installmentCodes</td>
+<td style="text-align: center">订单id</td>
+<td style="text-align: center"></td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">
+</code></pre></div>
+
+<h3 id="toc_30"><a name="loan/alipayment"></a> 获取支付宝支付信息</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/loan/alipayment</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>amount</td>
+<td style="text-align: center">金额</td>
+<td style="text-align: center">单位: 分</td>
+</tr>
+<tr>
+<td>note</td>
+<td style="text-align: center">描述信息</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>installmentCodes</td>
+<td style="text-align: center">订单id</td>
+<td style="text-align: center"></td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none">
+</code></pre></div>
+
+<h2 id="toc_31"><a name="data"></a> 医院数据</h2>
+
+<h3 id="toc_32"><a name="data/updateHospitalData"></a> 更新医院数据</h3>
+
+<ul>
+<li>接口访问地址 url: http://api.hoootao.com/api/data/updateHospitalData</li>
+<li>接口参数<br></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th style="text-align: center">参数定义</th>
+<th style="text-align: center">注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>hospital_ts</td>
+<td style="text-align: center">本地医院数据版本号</td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>installment_ts</td>
+<td style="text-align: center">本地分期数据版本号</td>
+<td style="text-align: center"></td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>返回数据<br></li>
+</ul>
+
+<div><pre><code class="language-none"> {
+    c = 200;
+    h = &quot;&quot;;
+    m = &quot;成功&quot;;
+    n = &quot;&quot;;
+    p =     {
+        hospital_ts = 1479408055000;
+        installment_ts = 1479408055000;
+        listHospital =         (
+                        {
+                address = &quot;四川省成都市武侯区人民南路四段45号1栋1单元9层907/908号&quot;;
+                bder = &quot;曲思源&quot;;
+                city = &quot;510100&quot;;
+                createTime = &quot;2016-09-14 13:23:31&quot;;
+                description = &quot;成都武侯艾美薇医疗美容门诊部有限公司，是艾美集团旗下全独资的子公司。艾美集团自2012年成立以来，始终致力于实现众多女性的美丽梦想，秉承年轻、快乐、真实的经营理念，在医美业惊艳绽放，创造并实现了一个又一个令人惊叹的奇迹和成就。&quot;;
+                district = &quot;510107&quot;;
+                faceImgUrl = &quot;hospital/picture/hosp-pic-ea5b5110-ec57-4869-bfdd-7037d23bf6cd.jpg,hospital/picture/hosp-pic-a02f75d3-e6f0-4953-bd34-53bf1ab73265.jpg,hospital/picture/hosp-pic-ce9a226b-aafd-4c24-86f8-5b451ca84c70.jpg,hospital/picture/hosp-pic-becbfb4a-c2c3-4145-93da-e767773cefa5.jpg&quot;;
+                hospitalName = &quot;成都武侯艾美薇医疗美容门诊部有限公司&quot;;
+                id = 5;
+                lat = &quot;&quot;;
+                lng = &quot;&quot;;
+                province = &quot;510000&quot;;
+                tel1 = &quot;15008406138&quot;;
+                updateTime = &quot;2016-10-31 13:58:58&quot;;
+            },
+                        {
+                address = &quot;四川省成都市武侯区航空路5号附6号&quot;;
+                bder = &quot;曲思源&quot;;
+                city = &quot;510100&quot;;
+                createTime = &quot;2016-09-14 13:25:27&quot;;
+                description = &quot;成都市武侯区春天莱尔医疗美容由国际著名整形美容专家廖建春院长创始于1986年。是国内最早将美容外科技术引入整形外科专业的机构。通过近30年积淀与发展，引进和发明了多项专利技术。为国际国内爱美人士完成慕美之梦。旨意打造成都市平民价格整形机构。&quot;;
+                district = &quot;510107&quot;;
+                faceImgUrl = &quot;hospital/picture/hosp-pic-b44bdbc0-f1ee-442c-b71e-63fa133de023.jpg,hospital/picture/hosp-pic-e7f336df-1179-47af-a47f-410f826629c1.jpg,hospital/picture/hosp-pic-e3e2738c-ab33-4cfa-b6a9-78013719044e.jpg,hospital/picture/hosp-pic-bc567365-0f0b-49b7-bc41-3299c2a34c87.jpg&quot;;
+                hospitalName = &quot;武侯区春天莱尔医疗美容诊所&quot;;
+                id = 6;
+                lat = &quot;&quot;;
+                lng = &quot;&quot;;
+                province = &quot;510000&quot;;
+                tel1 = &quot;13808171988&quot;;
+                updateTime = &quot;2016-10-29 16:41:05&quot;;
+            },
+                        {
+                address = &quot;四川省成都市武侯区桐凤路39号&quot;;
+                bder = &quot;任太强&quot;;
+                city = &quot;510100&quot;;
+                createTime = &quot;2016-09-14 13:30:12&quot;;
+                description = &quot;       成都武侯素美术。为国际国内爱美人士完成慕美之梦。旨意打造成都市平民价格整形机构。&quot;;
+                district = &quot;510107&quot;;
+                faceImgUrl = &quot;hospital/picture/hosp-pic-b44bdbc0-f1ee-442c-b71e-63fa133de023.jpg,hospital/picture/hosp-pic-e7f336df-1179-47af-a47f-410f826629c1.jpg,hospital/picture/hosp-pic-e3e2738c-ab33-4cfa-b6a9-78013719044e.jpg,hospital/picture/hosp-pic-bc567365-0f0b-49b7-bc41-3299c2a34c87.jpg&quot;;
+                hospitalName = &quot;武侯区春天莱尔医疗美容诊所&quot;;
+                id = 6;
+                lat = &quot;&quot;;
+                lng = &quot;&quot;;
+                province = &quot;510000&quot;;
+                tel1 = &quot;13808171988&quot;;
+                updateTime = &quot;2016-10-29 16:41:05&quot;;
+            },
+                        {
+                address = &quot;四川省成都市武侯区桐凤路39号&quot;;
+                bder = &quot;任太强&quot;;
+                city = &quot;510100&quot;;
+                createTime = &quot;2016-09-14 13:30:12&quot;;
+                description = &quot;       成都武侯素美\345\244天姿医疗美容门诊部位于成都武侯区桐凤路33号，实力打造西南自体脂肪品牌医院，凭借强大的技术支撑，设立自体脂肪中心、微创整形中心、整形外科中心、医学美肤中心、无创美容中心等。
+
+　　素美天姿以高雅的白色搭配温馨金色为装修基调，彰显高端品质，如一朵傲然绽放的金色郁金香，雍容内敛，开怀迎宾。
+
+　　为了提供高品质的医美服务，素美天姿斥巨资打造千层无菌手术室、高精尖的整形手术仪器和美肤治疗设备，采用一流品质的材料和一流的专家队伍，让您在最放松、温馨、舒适、安全的环境内接受“一对一”的医美&quot;;
+                district = &quot;510107&quot;;
+                faceImgUrl = &quot;hospital/picture/hosp-pic-b4f730fb-11b8-42d5-9bd9-22afc97930d2.jpg,hospital/picture/hosp-pic-4b5f1057-3db2-44b1-8d56-9cecf6c0593c.jpg,hospital/picture/hosp-pic-496fefbe-0372-48f6-a242-5fdc137009f1.jpg,hospital/picture/hosp-pic-bbe9bb53-4071-4070-8c2b-3a7f1a19a147.jpg&quot;;
+                hospitalName = &quot;成都武侯素美天姿医疗美容门诊部有限公司&quot;;
+                id = 7;
+                lat = &quot;&quot;;
+                lng = &quot;&quot;;
+                province = &quot;510000&quot;;
+                tel1 = &quot;15982849826&quot;;
+                updateTime = &quot;2016-10-29 16:40:55&quot;;
+            },
+                    ...
+        );
+        listInstallment =         (
+                        {
+                createTime = &quot;2016-09-22 11:45:49&quot;;
+                endTime = &quot;2026-09-22 11:45:49&quot;;
+                hid = 8;
+                hospitalShareRate = 0;
+                id = 318;
+                installmentType = 12;
+                interestShareType = &quot;1&quot;;
+                rate = 1200;
+                startTime = &quot;2016-09-22 11:45:49&quot;;
+                updateTime = &quot;2016-09-22 11:45:49&quot;;
+                userShareRate = 1200;
+            },
+                        {
+                createTime = &quot;2016-09-22 11:55:00&quot;;
+                endTime = &quot;2026-09-22 11:55:00&quot;;
+                hid = 15;
+                hospitalShareRate = 0;
+                id = 342;
+                installmentType = 12;
+                interestShareType = &quot;1&quot;;
+                rate = 1200;
+                startTime = &quot;2016-09-22 11:55:00&quot;;
+                updateTime = &quot;2016-09-22 11:55:00&quot;;
+                userShareRate = 1200;
+            },
+                   
+               ...
+        );
+    };
+    ts = 1481528342517;
+}
+</code></pre></div>
+
+<h1 id="toc_33">错误码</h1>
+
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th style="text-align: center">英文注释</th>
+<th style="text-align: center">中文注释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>200</td>
+<td style="text-align: center">ok</td>
+<td style="text-align: center">请求完成</td>
+</tr>
+<tr>
+<td>1001</td>
+<td style="text-align: center">CAPTCHA_ERROR</td>
+<td style="text-align: center">验证码错误</td>
+</tr>
+<tr>
+<td>1002</td>
+<td style="text-align: center">ACCOUNT_EXIST</td>
+<td style="text-align: center">账号已存在</td>
+</tr>
+<tr>
+<td>1003</td>
+<td style="text-align: center">NOT<em>CORRECT</em>MOBILE</td>
+<td style="text-align: center">手机号码格式不正确</td>
+</tr>
+<tr>
+<td>1004</td>
+<td style="text-align: center">ACCOUNT<em>OR</em>SECRET_ERROR</td>
+<td style="text-align: center">账户或密码不正确</td>
+</tr>
+<tr>
+<td>1005</td>
+<td style="text-align: center">DEVICE<em>ID</em>ERROR</td>
+<td style="text-align: center">设备号不正确</td>
+</tr>
+<tr>
+<td>1006</td>
+<td style="text-align: center">PLATFORM_ERROR</td>
+<td style="text-align: center">平台不正确</td>
+</tr>
+<tr>
+<td>1007</td>
+<td style="text-align: center">INVALID_MOBILE</td>
+<td style="text-align: center">无效的手机号</td>
+</tr>
+<tr>
+<td>1008</td>
+<td style="text-align: center">PASWORD<em>IS</em>NULL</td>
+<td style="text-align: center">密码不能为空</td>
+</tr>
+<tr>
+<td>1009</td>
+<td style="text-align: center">RESET<em>PASSWORD</em>FAILD</td>
+<td style="text-align: center">重置密码失败</td>
+</tr>
+<tr>
+<td>1010</td>
+<td style="text-align: center">INVALID_SESSION</td>
+<td style="text-align: center">会话秘钥无效</td>
+</tr>
+<tr>
+<td>1011</td>
+<td style="text-align: center">PASSWORD_ERROR</td>
+<td style="text-align: center">密码错误</td>
+</tr>
+<tr>
+<td>1012</td>
+<td style="text-align: center">INVALID_PARAM</td>
+<td style="text-align: center">参数不合法</td>
+</tr>
+<tr>
+<td>1013</td>
+<td style="text-align: center">ACCOUNT<em>NOT</em>EXIST</td>
+<td style="text-align: center">账号不存在</td>
+</tr>
+<tr>
+<td>1014</td>
+<td style="text-align: center">INVALID_SID</td>
+<td style="text-align: center">无效的SID</td>
+</tr>
+<tr>
+<td>1015</td>
+<td style="text-align: center">JXLERROR</td>
+<td style="text-align: center">聚信立接口错误</td>
+</tr>
+<tr>
+<td>4000</td>
+<td style="text-align: center">UNKNOW_ERROR</td>
+<td style="text-align: center">位置错误</td>
+</tr>
+<tr>
+<td>4001</td>
+<td style="text-align: center">PARAMETER_NULL</td>
+<td style="text-align: center">请求参数为空</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+</body>
+
+</html>
