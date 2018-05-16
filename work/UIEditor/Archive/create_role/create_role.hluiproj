@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="568" h="320" tag="9999">
+  <ImageView x="0" y="0" xr="0" yr="0" w="568" h="320" tag="10001" i="assets/bg_chuangjue.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <Button id="closeBtn" x="12.5" y="9.300000190734863" xr="0" yr="0" w="30" h="27.5" nn="返回按钮" autor="36" ni="../common/com_btn_fanhui.png" zot="1" state="0" act="closechoseRoleAction" ts="12" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <ImageView id="Roleanimation" x="235" y="111.9000015258789" xr="0" yr="0" w="89.9000015258789" h="152.39999389648438" i="gengral_resouces/kuang_11.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <ImageView x="214.1999969482422" y="281.29998779296875" xr="0" yr="0" w="121" h="23" autor="13" i="assets/bg_shurukuang.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+    <EditBox id="ebitBoxName" x="6.599999904632568" y="-0.30000001192092896" xr="0" yr="0" w="100" h="26.299999237060547" et="输入姓名" ts="8.5" tctl="rgba(179,229,255,0.4)" tctr="rgba(179,229,255,0.4)" tcbl="rgba(179,229,255,0.4)" tcbr="rgba(179,229,255,0.4)" sc="rgb(0,0,0)" ta="17"/>
+  </ImageView>
+  <Button id="randName" x="315.3999938964844" y="281.20001220703125" xr="0" yr="0" w="31" h="24.5" ni="assets/btn_shaizi.png" zot="1" state="0" act="randNameAction" ts="12" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <ImageView x="106.9000015258789" y="98" xr="0" yr="0" w="134" h="56.5" i="assets/bg_info_chuangjue.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+    <Label id="roleDec" x="11" y="-3.9000000953674316" xr="0" yr="0" w="118.9000015258789" h="60.20000076293945" t="在成为冬兵之前就巴恩斯已经被就九头蛇进行了人体改造培养并高造成了冬日战士" ts="8" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+  </ImageView>
+  <Button id="manBtn" x="130.89999389648438" y="272.8999938964844" xr="0" yr="0" w="66" h="31.5" autor="13" ni="assets/btn_male_weixuan.png" nic="0,0,0,0" si="assets/btn_male_xuanzhong.png" zot="1" state="0" act="choseManAction" ts="12" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <Label id="chosedManLab" x="4.599999904632568" y="8.100000381469727" xr="0" yr="0" w="62.79999923706055" h="20.899999618530273" iv="0" t="男" ts="8.5" tctl="rgb(36,102,113)" tctr="rgb(36,102,113)" tcbl="rgb(36,102,113)" tcbr="rgb(36,102,113)" sc="rgb(0,0,0)" ta="17"/>
+    <Label id="noChosedManLab" x="4.599999904632568" y="8.100000381469727" xr="0" yr="0" w="62.79999923706055" h="20.899999618530273" t="男" ts="8.5" tctl="rgb(121,134,142)" tctr="rgb(121,134,142)" tcbl="rgb(121,134,142)" tcbr="rgb(121,134,142)" sc="rgb(0,0,0)" ta="17"/>
+  </Button>
+  <Button id="girlBtn" x="358.3999938964844" y="272.70001220703125" xr="0" yr="0" w="66" h="32" autor="13" ni="assets/btn_female_weixuan.png" si="assets/btn_female_xuanzhong.png" zot="1" state="0" act="choseWoManAction" ts="12" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <Label id="chosedGirlLab" x="4.599999904632568" y="8.100000381469727" xr="0" yr="0" w="62.79999923706055" h="20.899999618530273" iv="0" t="男" ts="8.5" tctl="rgb(36,102,113)" tctr="rgb(36,102,113)" tcbl="rgb(36,102,113)" tcbr="rgb(36,102,113)" sc="rgb(0,0,0)" ta="17"/>
+    <Label id="noChosedGirlLab" x="4.599999904632568" y="8.100000381469727" xr="0" yr="0" w="62.79999923706055" h="20.899999618530273" t="男" ts="8.5" tctl="rgb(121,134,142)" tctr="rgb(121,134,142)" tcbl="rgb(121,134,142)" tcbr="rgb(121,134,142)" sc="rgb(0,0,0)" ta="17"/>
+  </Button>
+  <Button id="enterGameBtn" x="453.1000061035156" y="236.6999969482422" xr="0" yr="0" w="122.5" h="60.5" autor="9" ni="assets/btn_enter.png" zot="1" state="0" act="EnterGameAction" ts="12" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <Label id="enterGameLab" x="11.100000381469727" y="16.899999618530273" xr="0" yr="0" w="62.79999923706055" h="20.899999618530273" t="进入游戏" ts="11" tctl="rgb(255,255,238)" tctr="rgb(255,255,238)" tcbl="rgb(255,255,238)" tcbr="rgb(255,255,238)" sc="rgb(0,0,0)" ta="18"/>
+  </Button>
+</View>

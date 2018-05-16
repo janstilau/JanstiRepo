@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="568" h="320" tag="9999">
+  <ImageView id="battleSceneBg" x="0" y="0" xr="0" yr="0" w="568" h="320" tag="9999" i="battle_scene/bg_zhandou0.jpg" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView id="skillJinduView1" x="-2.5" y="270.5" xr="0" yr="0" w="96" h="49.5" i="assets/img_nuqi.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1">
+      <ImageView id="nutiaoImg1" x="30" y="5.5" xr="0" yr="0" w="38" h="38" i="assets/img_nuqi1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="0" y="0" xr="0" yr="0" w="NaN" h="50" i="assets/img_shanxing.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ImageView id="zhezhaoImg1" x="30" y="16.5" xr="0" yr="0" w="38" h="27.5" i="assets/img_zhe.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label id="skillJinduLab1" x="37.5" y="27.5" xr="0" yr="0" w="28" h="15" t="0%" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      <ImageView x="29" y="4" xr="0" yr="0" w="39.5" h="39.5" i="assets/img_zhe1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </ImageView>
+    <ImageView id="skillJinduView2" x="474" y="270.5" xr="0" yr="0" w="96" h="49.5" i="assets/img_nuqi.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="nutiaoImg2" x="28.5" y="6" xr="0" yr="0" w="38" h="38" i="assets/img_nuqi1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="zhezhaoImg2" x="28.5" y="17" xr="0" yr="0" w="38" h="27.5" i="assets/img_zhe.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label id="skillJinduLab2" x="36" y="28" xr="0" yr="0" w="28" h="15" t="0%" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      <ImageView x="27.5" y="4.5" xr="0" yr="0" w="39.5" h="39.5" i="assets/img_zhe1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </ImageView>
+    <View id="buffView1" x="8" y="44.5" xr="0" yr="0" w="168" h="41"/>
+    <View id="buffView2" x="390" y="44.5" xr="0" yr="0" w="168" h="41"/>
+  </ImageView>
+  <View id="bossView" x="0" y="0" xr="0" yr="0" w="568" h="320" iv="0">
+    <ImageView id="xuetiaoBgImg2" x="146.89999389648438" y="-0.5" xr="0" yr="0" w="273" h="34.5" i="assets/img_zhalan.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <View id="xuetiaoView" x="180.5" y="10" xr="0" yr="0" w="202" h="8">
+      <ImageView id="xuetiao1Img" x="0" y="0" xr="0" yr="0" w="202" h="8" i="assets/img_boss_xuetiao_1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="xuetiao2Img" x="0" y="0" xr="0" yr="0" w="202" h="8" i="assets/img_boss_xuetiao_2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="xuetiao3Img" x="0" y="0" xr="0" yr="0" w="202" h="8" i="assets/img_boss_xuetiao_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </View>
+    <ImageView x="144.5" y="-3.5" xr="0" yr="0" w="241.5" h="22.5" i="assets/img_hongdengguan.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="bossStateImg" x="386.5" y="1" xr="0" yr="0" w="47.5" h="32" i="assets/img_kulou.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="bossStateLab" x="15.5" y="19.5" xr="0" yr="0" w="20" h="8" t="50" ts="8" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+  </View>
+  <Button id="skipBtn" x="424.5" y="287.5" xr="0" yr="0" w="44.5" h="24" ni="../common/bg_tiaoguo1.png" nic="0.5,0.5,0,0" zot="1" state="0" act="skipBattleAction" ts="12" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView x="9.5" y="7.5" xr="0" yr="0" w="7.5" h="8" i="../common/btn_tiaoguo1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Label id="skipLab" x="20.5" y="8" xr="0" yr="0" w="23" h="10" t="跳过" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+  </Button>
+</View>
