@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="568" h="320" tag="9999">
+  <ImageView id="bgImg" x="141.50001525878906" y="75.55000305175781" xr="0" yr="0" w="285" h="168.89999389648438" nn="底版" i="../common/com_bg_tanchuang2.png" ic="0.8,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="96" y="2.5" xr="0" yr="0" w="93" h="19.5" i="../common/com_bt_title.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="titleLab" x="-2.5" y="0" xr="0" yr="0" w="100" h="16.5" t="提示信息" ts="10" tctl="rgb(0,0,0)" tctr="rgb(0,0,0)" tcbl="rgb(0,0,0)" tcbr="rgb(0,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <RichLabel id="des_label" x="9.8499755859375" y="28.199996948242188" xr="0" yr="0" w="265.29998779296875" h="85.5" t="......." ts="8.5" tc="rgb(0,0,0)" sc="rgb(0,0,0)" ta="18" lc="rgb(255,255,255)"/>
+    <Button id="close_btn" x="42.099998474121094" y="121" xr="0" yr="0" w="64.5" h="22" nn="删除按钮" nt="取消" ni="../common/com_btn_cancer.png" zot="1" state="0" act="onClickClose" ts="8.5" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Button id="sure_btn" x="181.8000030517578" y="121" xr="0" yr="0" w="64.5" h="22" nn="确定按钮" nt="确定" ni="../common/com_btn_yes.png" zot="1" state="0" act="onClickSure" ts="8.5" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  </ImageView>
+</View>
