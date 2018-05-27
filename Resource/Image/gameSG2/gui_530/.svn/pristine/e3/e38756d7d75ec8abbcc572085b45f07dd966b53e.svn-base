@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="100.000" h="150.000" srw="100" srh="150">
+  <ImageView id="tips_bg_Img" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="100.000" h="150.000" srw="100" srh="150" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="30.540" y="6.500" xr="0" yr="0" w="38.250" h="11.250" srw="100" srh="150" i="countrywar_gve/countrywar_gve_bg9.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="54.500" y="24.000" xr="0" yr="0" w="40.000" h="3.000" srw="100" srh="150" i="common/ui_common_dividing_line.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="93.500" y="24.500" xr="1" yr="0" w="40.000" h="3.000" srw="100" srh="150" i="common/ui_common_dividing_line.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000" rot="180.000000"/>
+    <ScrollView id="contentScrollView" nn="ScrollView" x="7.270" y="35.000" xr="0" yr="0" w="85.000" h="105.000" srw="100" srh="150">
+      <Label id="labelDes" nn="Label" x="0.000" y="-0.210" xr="0" yr="0" w="85.000" h="105.000" srw="100" srh="150" t="详情内容" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9"/>
+    </ScrollView>
+  </ImageView>
+</View>

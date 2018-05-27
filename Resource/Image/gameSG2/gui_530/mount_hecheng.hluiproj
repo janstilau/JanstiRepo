@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="-4.500" y="0.000" xr="0" yr="0" w="480.000" h="290.000" srw="480" srh="290" tag="10001">
+  <View id="_view_panel" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="290.000" srw="480" srh="290" tag="10001">
+    <View id="op_view" nn="View" x="210.000" y="74.500" xr="0" yr="0" w="60.000" h="200.000" srw="480" srh="290">
+      <Button nn="Button" x="15.760" y="41.450" xr="0" yr="0" w="27.000" h="27.000" srw="480" srh="290" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onDesCallBack"/>
+      <Button nn="Button" x="2.760" y="168.450" xr="0" yr="0" w="55.000" h="24.000" srw="480" srh="290" nt="吞噬预览" ni="common/u_btn_comfirm3.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onYuLanCallBack"/>
+      <ImageView id="_cost_img" nn="ImageView" x="4.760" y="152.450" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="290" iv="0" i="common/u_other_zuanshi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="diamond_lab" nn="Label" x="14.500" y="1.000" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="290" t="123456" ts="10" tctl="rgb(0, 86, 174)" tctr="rgb(0, 86, 174)" tcbl="rgb(0, 86, 174)" tcbr="rgb(0, 86, 174)" sc="rgb(0, 86, 174)" ta="17"/>
+      </ImageView>
+    </View>
+    <ImageView id="_zhu_horse" nn="ImageView" x="12.000" y="36.000" xr="0" yr="0" w="200.000" h="230.000" srw="480" srh="290" i="common/horse_item_bg_7.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="0.000" y="-31.000" xr="0" yr="0" w="45.500" h="17.000" srw="480" srh="290" i="mount/horse_word_14.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label nn="Label" x="0.000" y="-14.000" xr="0" yr="0" w="210.000" h="15.000" srw="480" srh="290" t="主坐骑可通过吞噬同种坐骑，继承副坐骑的可学技能" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+      <View id="z_empty" nn="View" x="-4.500" y="-11.500" xr="0" yr="0" w="210.000" h="258.000" srw="480" srh="290" iv="0">
+        <View id="zEffectBg" nn="View" x="0.430" y="14.880" xr="0" yr="0" w="200.000" h="200.000" srw="480" srh="290"/>
+        <ImageView id="z_hint_lab" nn="ImageView" x="70.000" y="215.000" xr="0" yr="0" w="70.000" h="11.500" srw="480" srh="290" i="mount/horse_word_16.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Button id="z_btn_add" nn="Button" x="80.500" y="102.000" xr="0" yr="0" w="48.000" h="48.000" srw="480" srh="290" tag="11" nt="" ni="common/smithy_xiangqian_plus.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onAddHorseCallback"/>
+        <View id="z_role_panel" nn="View" x="5.030" y="15.400" xr="0" yr="0" w="200.000" h="200.000" srw="480" srh="290"/>
+        <View id="z_effect_panel" nn="View" x="5.030" y="15.400" xr="0" yr="0" w="200.000" h="200.000" srw="480" srh="290" iv="0"/>
+      </View>
+      <View id="z_info_panel" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="240.000" srw="480" srh="290">
+        <ImageView nn="ImageView" x="5.000" y="7.000" xr="0" yr="0" w="190.000" h="56.000" srw="480" srh="290" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView id="z_icon_bg" nn="ImageView" x="3.000" y="5.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="290" i="common/u_other_general_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="z_icon" nn="ImageView" x="3.000" y="5.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="290" i="common/u_other_general_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label id="z_name_lab" nn="Label" x="50.000" y="7.000" xr="0" yr="0" w="80.000" h="10.000" srw="480" srh="290" t="坐骑名六个字" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+          <ImageView nn="ImageView" x="49.000" y="21.500" xr="0" yr="0" w="22.000" h="12.000" srw="480" srh="290" i="mount/horse_word_8.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="z_score_level" nn="ImageView" x="72.500" y="21.500" xr="0" yr="0" w="32.000" h="12.000" srw="480" srh="290" i="mount/horse_score_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label id="z_speed" nn="Label" x="50.000" y="37.000" xr="0" yr="0" w="100.000" h="10.000" srw="480" srh="290" t="移动速度增加5%" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+          <Label id="z_level" nn="Label" x="15.000" y="37.000" xr="0" yr="0" w="30.000" h="10.000" srw="480" srh="290" t="Lv.30" ts="8" tctl="rgb(204, 204, 204)" tctr="rgb(204, 204, 204)" tcbl="rgb(204, 204, 204)" tcbr="rgb(204, 204, 204)" stroke="1" sc="black" ta="20"/>
+          <Button id="z_change_btn" nn="Button" x="134.500" y="26.500" xr="0" yr="0" w="50.000" h="20.000" srw="480" srh="290" tag="11" nt="更换" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onChangeCallBack"/>
+          <ImageView id="z_cross_army" nn="ImageView" x="2.500" y="3.500" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="290" i="common/u_tab_sel_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <Label id="z_cross_army_lab" nn="Label" x="-1.500" y="-1.000" xr="0" yr="0" w="16.000" h="16.000" srw="480" srh="290" t="1" ts="8" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+          </ImageView>
+          <ImageView id="z_rpg_img" nn="ImageView" x="14.000" y="4.500" xr="0" yr="0" w="14.500" h="14.000" srw="480" srh="290" i="embattle_main/ui_formation_main_bz.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="z_xingge_img" nn="ImageView" x="27.000" y="4.000" xr="0" yr="0" w="22.500" h="14.000" srw="480" srh="290" i="mount/horse_sign_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="z_bind_img" nn="ImageView" x="3.700" y="33.000" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="290" i="mount/horse_icon_13.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <View nn="View" x="-3.500" y="61.000" xr="0" yr="0" w="210.000" h="75.000" srw="480" srh="290" iv="0">
+          <Label id="z_growth_hp" nn="Label" x="6.500" y="4.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="生命资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="z_growth_attack" nn="Label" x="6.500" y="23.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="攻击资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="z_growth_phy_defence" nn="Label" x="6.500" y="42.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="物防资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="z_growth_mag_defence" nn="Label" x="6.500" y="61.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="法防资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="z_growth_crit" nn="Label" x="109.000" y="4.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="暴击资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="z_growth_mortar" nn="Label" x="109.000" y="23.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="破击资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="z_growth_parry" nn="Label" x="109.000" y="42.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="格挡资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="z_growth_toughness" nn="Label" x="109.000" y="61.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="韧性资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+        </View>
+        <Label nn="Label" x="4.500" y="68.000" xr="0" yr="0" w="150.000" h="10.000" srw="480" srh="290" t="特殊技能" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+        <ImageView nn="ImageView" x="5.000" y="81.500" xr="0" yr="0" w="190.000" h="45.000" srw="480" srh="290" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <View id="z_inherent_skill_panel" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="190.000" h="45.000" srw="480" srh="290"/>
+          <ImageView nn="ImageView" x="61.000" y="15.000" xr="0" yr="0" w="69.500" h="15.000" srw="480" srh="290" iv="0" i="mount/horse_word_28.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <Label nn="Label" x="4.500" y="132.500" xr="0" yr="0" w="150.000" h="10.000" srw="480" srh="290" t="可学技能" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+        <ImageView nn="ImageView" x="5.000" y="146.000" xr="0" yr="0" w="190.000" h="76.000" srw="480" srh="290" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <View id="z_postnatal_skill_panel" nn="View" x="0.000" y="2.000" xr="0" yr="0" w="191.000" h="72.000" srw="480" srh="290"/>
+        </ImageView>
+      </View>
+    </ImageView>
+    <ImageView id="_fu_horse" nn="ImageView" x="268.000" y="36.000" xr="0" yr="0" w="200.000" h="230.000" srw="480" srh="290" i="common/horse_item_bg_7.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="0.000" y="-27.000" xr="0" yr="0" w="33.500" h="13.000" srw="480" srh="290" i="mount/horse_word_15.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label nn="Label" x="0.000" y="-14.000" xr="0" yr="0" w="210.000" h="15.000" srw="480" srh="290" t="副坐骑被吞噬后会消失" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+      <View id="f_empty" nn="View" x="-4.500" y="-11.500" xr="0" yr="0" w="210.000" h="258.000" srw="480" srh="290">
+        <View id="fEffectBg" nn="View" x="4.100" y="13.240" xr="0" yr="0" w="200.000" h="200.000" srw="480" srh="290"/>
+        <ImageView id="f_hint_lab" nn="ImageView" x="70.000" y="215.000" xr="0" yr="0" w="70.000" h="11.500" srw="480" srh="290" i="mount/horse_word_16.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Button id="f_btn_add" nn="Button" x="80.500" y="102.000" xr="0" yr="0" w="48.000" h="48.000" srw="480" srh="290" tag="22" nt="" ni="common/smithy_xiangqian_plus.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onAddHorseCallback"/>
+        <View id="f_role_panel" nn="View" x="5.030" y="15.400" xr="0" yr="0" w="200.000" h="200.000" srw="480" srh="290"/>
+        <View id="f_effect_panel" nn="View" x="5.030" y="15.400" xr="0" yr="0" w="200.000" h="200.000" srw="480" srh="290"/>
+      </View>
+      <View id="f_info_panel" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="240.000" srw="480" srh="290" iv="0">
+        <ImageView nn="ImageView" x="5.000" y="7.000" xr="0" yr="0" w="190.000" h="56.000" srw="480" srh="290" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView id="f_icon_bg" nn="ImageView" x="3.000" y="5.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="290" i="common/u_other_general_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="f_icon" nn="ImageView" x="3.000" y="5.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="290" i="common/u_other_general_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label id="f_name_lab" nn="Label" x="50.000" y="7.000" xr="0" yr="0" w="80.000" h="10.000" srw="480" srh="290" t="坐骑名六个字" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+          <ImageView nn="ImageView" x="49.000" y="21.500" xr="0" yr="0" w="22.000" h="12.000" srw="480" srh="290" i="mount/horse_word_8.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="f_score_level" nn="ImageView" x="72.500" y="21.500" xr="0" yr="0" w="32.000" h="12.000" srw="480" srh="290" i="mount/horse_score_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label id="f_speed" nn="Label" x="50.000" y="37.000" xr="0" yr="0" w="100.000" h="10.000" srw="480" srh="290" t="移动速度增加5%" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+          <Label id="f_level" nn="Label" x="15.000" y="37.000" xr="0" yr="0" w="30.000" h="10.000" srw="480" srh="290" t="Lv.30" ts="8" tctl="rgb(204, 204, 204)" tctr="rgb(204, 204, 204)" tcbl="rgb(204, 204, 204)" tcbr="rgb(204, 204, 204)" stroke="1" sc="black" ta="20"/>
+          <Button id="f_change_btn" nn="Button" x="134.500" y="26.500" xr="0" yr="0" w="50.000" h="20.000" srw="480" srh="290" tag="22" nt="更换" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onChangeCallBack"/>
+          <ImageView id="f_cross_army" nn="ImageView" x="2.500" y="3.500" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="290" i="common/u_tab_sel_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <Label id="f_cross_army_lab" nn="Label" x="-1.500" y="-1.000" xr="0" yr="0" w="16.000" h="16.000" srw="480" srh="290" t="1" ts="8" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+          </ImageView>
+          <ImageView id="f_rpg_img" nn="ImageView" x="14.000" y="4.500" xr="0" yr="0" w="14.500" h="14.000" srw="480" srh="290" i="embattle_main/ui_formation_main_bz.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="f_xingge_img" nn="ImageView" x="27.000" y="4.000" xr="0" yr="0" w="22.500" h="14.000" srw="480" srh="290" i="mount/horse_sign_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="f_bind_img" nn="ImageView" x="3.700" y="33.000" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="290" i="mount/horse_icon_13.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <View nn="View" x="-3.500" y="61.000" xr="0" yr="0" w="210.000" h="75.000" srw="480" srh="290" iv="0">
+          <Label id="f_growth_hp" nn="Label" x="6.500" y="4.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="生命资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="f_growth_attack" nn="Label" x="6.500" y="23.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="攻击资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="f_growth_phy_defence" nn="Label" x="6.500" y="42.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="物防资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="f_growth_mag_defence" nn="Label" x="6.500" y="61.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="法防资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="f_growth_crit" nn="Label" x="109.000" y="4.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="暴击资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="f_growth_mortar" nn="Label" x="109.000" y="23.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="破击资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="f_growth_parry" nn="Label" x="109.000" y="42.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="格挡资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+          <Label id="f_growth_toughness" nn="Label" x="109.000" y="61.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="韧性资质" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" i="mount/horse_bg_exp_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="37.500" y="-3.000" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="290" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+          </Label>
+        </View>
+        <Label nn="Label" x="4.500" y="68.000" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="特殊技能" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="41.000" y="0.000" xr="0" yr="0" w="100.000" h="10.000" srw="480" srh="290" t="（特殊技能不可吞噬）" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+        </Label>
+        <ImageView nn="ImageView" x="5.000" y="81.500" xr="0" yr="0" w="190.000" h="45.000" srw="480" srh="290" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <View id="f_inherent_skill_panel" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="190.000" h="45.000" srw="480" srh="290"/>
+          <ImageView id="f_empty_img" nn="ImageView" x="61.000" y="12.000" xr="0" yr="0" w="69.500" h="15.000" srw="480" srh="290" iv="0" i="mount/horse_word_28.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="190.000" h="44.000" srw="480" srh="290" i="mount/horse_item_bg_10.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <Label nn="Label" x="4.500" y="132.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="290" t="可学技能" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+        <ImageView nn="ImageView" x="5.000" y="146.000" xr="0" yr="0" w="190.000" h="76.000" srw="480" srh="290" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <View id="f_postnatal_skill_panel" nn="View" x="0.000" y="2.000" xr="0" yr="0" w="191.000" h="72.000" srw="480" srh="290"/>
+        </ImageView>
+      </View>
+    </ImageView>
+  </View>
+</View>

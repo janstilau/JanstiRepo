@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="175.000" h="282.000" srw="175" srh="282">
+  <ImageView id="m_bg_panel" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="175.000" h="218.000" srw="175" srh="282" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="equipBgIconImg" nn="ImageView" x="7.000" y="6.000" xr="0" yr="0" w="44.000" h="44.000" srw="175" srh="282" i="common/u_bg_goods.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="equipIconImg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="175" srh="282" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="subIcon" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="175" srh="282" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_is_install" nn="ImageView" x="0.000" y="1.000" xr="0" yr="0" w="29.000" h="24.000" srw="175" srh="282" i="common/smithy_zhuangtai1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="bingIcon" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="175" srh="282" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <Label id="equipNameLab" nn="Label" x="56.000" y="3.000" xr="0" yr="0" w="80.000" h="15.000" srw="175" srh="282" t="装备名六个字" ts="9" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+    <Label nn="Label" x="56.000" y="15.000" xr="0" yr="0" w="80.000" h="15.000" srw="175" srh="282" t="穿戴等级:" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+      <Label id="equiplvlLab" nn="Label" x="38.500" y="0.000" xr="0" yr="0" w="40.000" h="15.000" srw="175" srh="282" t="30" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+    </Label>
+    <Label nn="Label" x="56.000" y="26.000" xr="0" yr="0" w="80.000" h="15.000" srw="175" srh="282" t="装备评分:" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+      <Label id="equipScoreLab" nn="Label" x="38.500" y="0.000" xr="0" yr="0" w="40.000" h="15.000" srw="175" srh="282" t="30" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+      <ImageView id="m_score_up_img" nn="ImageView" x="49.000" y="2.000" xr="0" yr="0" w="7.000" h="10.000" srw="175" srh="282" i="common/u_jiantoulv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Label>
+    <Label nn="Label" x="56.000" y="37.500" xr="0" yr="0" w="80.000" h="15.000" srw="175" srh="282" t="部位:" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+      <Label id="posNameLab" nn="Label" x="20.500" y="0.000" xr="0" yr="0" w="40.000" h="15.000" srw="175" srh="282" t="武器" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    </Label>
+    <Label id="_property_0" nn="Label" x="9.000" y="54.500" xr="0" yr="0" w="80.000" h="15.000" srw="175" srh="282" t="主公生命" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+      <Label nn="Label" x="39.500" y="3.000" xr="0" yr="0" w="100.000" h="9.000" srw="175" srh="282" t="+1500" ts="9" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+    </Label>
+    <Label id="_property_1" nn="Label" x="9.000" y="65.500" xr="0" yr="0" w="80.000" h="15.000" srw="175" srh="282" t="主公生命" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+      <Label nn="Label" x="39.500" y="3.000" xr="0" yr="0" w="100.000" h="9.000" srw="175" srh="282" t="+1500" ts="9" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+    </Label>
+    <Label id="_property_2" nn="Label" x="9.000" y="77.000" xr="0" yr="0" w="80.000" h="15.000" srw="175" srh="282" t="主公生命" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+      <Label nn="Label" x="39.500" y="3.000" xr="0" yr="0" w="100.000" h="9.000" srw="175" srh="282" t="+1500" ts="9" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+    </Label>
+    <ImageView id="_magic_panel" nn="ImageView" x="4.000" y="180.000" xr="0" yr="0" w="163.000" h="1.000" srw="175" srh="282" i="common/u_bg_fengexian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="luck_lab" nn="Label" x="4.500" y="3.500" xr="0" yr="0" w="30.000" h="12.000" srw="175" srh="282" iv="0" t="幸运值" ts="9" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17">
+        <Label id="magic_find_value" nn="Label" x="35.040" y="0.000" xr="0" yr="0" w="45.000" h="12.000" srw="175" srh="282" t="" ts="9" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+      </Label>
+      <Label id="drop_type_lab" nn="Label" x="4.500" y="16.500" xr="0" yr="0" w="120.000" h="12.000" srw="175" srh="282" iv="0" t="(稀有掉落)" ts="9" tctl="red" tctr="red" tcbl="red" tcbr="red" sc="black" ta="17"/>
+      <Label id="bing_type_lab" nn="Label" x="4.500" y="16.500" xr="0" yr="0" w="100.000" h="12.000" srw="175" srh="282" iv="0" t="(已绑定，不可交易）" ts="9" tctl="red" tctr="red" tcbl="red" tcbr="red" sc="black" ta="17"/>
+    </ImageView>
+    <View id="_property_panel" nn="View" x="0.000" y="92.420" xr="0" yr="0" w="185.000" h="50.000" srw="175" srh="282" iv="0">
+      <ImageView nn="ImageView" x="4.000" y="0.000" xr="0" yr="0" w="163.000" h="1.000" srw="175" srh="282" i="common/u_bg_fengexian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <View id="army_value_view" nn="View" x="0.000" y="25.000" xr="0" yr="0" w="175.000" h="50.000" srw="175" srh="282">
+        <Label nn="Label" x="5.000" y="0.000" xr="0" yr="0" w="162.000" h="10.000" srw="175" srh="282" t="全军攻击" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+          <Label nn="Label" x="36.000" y="0.000" xr="0" yr="0" w="35.000" h="10.000" srw="175" srh="282" tag="11" t="+18000" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+          <Label nn="Label" x="151.500" y="0.000" xr="0" yr="0" w="30.000" h="10.000" srw="175" srh="282" tag="12" t="19" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+            <Label id="jl_lab_1" nn="Label" x="-56.000" y="0.000" xr="0" yr="0" w="60.000" h="10.000" srw="175" srh="282" t="剩余精炼次数:" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+          </Label>
+          <Label nn="Label" x="87.000" y="0.000" xr="0" yr="0" w="30.000" h="10.000" srw="175" srh="282" tag="13" t="0" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+          <ImageView nn="ImageView" x="68.000" y="0.000" xr="0" yr="0" w="7.000" h="10.000" srw="175" srh="282" iv="0" tag="14" i="common/u_jiantoulv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView nn="ImageView" x="73.000" y="-2.500" xr="0" yr="0" w="15.000" h="15.500" srw="175" srh="282" tag="15" i="equipment/equipment_hammer.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Label>
+        <Label nn="Label" x="5.000" y="12.500" xr="0" yr="0" w="162.000" h="10.000" srw="175" srh="282" t="全军攻击" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+          <Label nn="Label" x="36.000" y="0.000" xr="0" yr="0" w="35.000" h="10.000" srw="175" srh="282" tag="11" t="+180" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+          <Label nn="Label" x="151.500" y="0.000" xr="0" yr="0" w="30.000" h="10.000" srw="175" srh="282" tag="12" t="19" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+            <Label id="jl_lab_2" nn="Label" x="-56.000" y="0.000" xr="0" yr="0" w="60.000" h="10.000" srw="175" srh="282" t="剩余精炼次数:" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+          </Label>
+          <Label nn="Label" x="87.000" y="0.000" xr="0" yr="0" w="30.000" h="10.000" srw="175" srh="282" tag="13" t="0" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+          <ImageView nn="ImageView" x="68.000" y="0.000" xr="0" yr="0" w="7.000" h="10.000" srw="175" srh="282" iv="0" tag="14" i="common/u_jiantoulv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView nn="ImageView" x="73.000" y="-2.500" xr="0" yr="0" w="15.000" h="15.500" srw="175" srh="282" tag="15" i="equipment/equipment_hammer.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Label>
+        <Label nn="Label" x="5.000" y="25.500" xr="0" yr="0" w="162.000" h="10.000" srw="175" srh="282" t="全军攻击" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+          <Label nn="Label" x="36.000" y="0.000" xr="0" yr="0" w="35.000" h="10.000" srw="175" srh="282" tag="11" t="+180" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+          <Label nn="Label" x="151.500" y="0.000" xr="0" yr="0" w="30.000" h="10.000" srw="175" srh="282" tag="12" t="19" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+            <Label id="jl_lab_3" nn="Label" x="-56.000" y="0.000" xr="0" yr="0" w="60.000" h="10.000" srw="175" srh="282" t="剩余精炼次数:" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+          </Label>
+          <Label nn="Label" x="87.000" y="0.000" xr="0" yr="0" w="30.000" h="10.000" srw="175" srh="282" tag="13" t="0" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+          <ImageView nn="ImageView" x="68.000" y="0.000" xr="0" yr="0" w="7.000" h="10.000" srw="175" srh="282" iv="0" tag="14" i="common/u_jiantoulv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView nn="ImageView" x="73.000" y="-2.500" xr="0" yr="0" w="15.000" h="15.500" srw="175" srh="282" tag="15" i="equipment/equipment_hammer.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Label>
+        <Label nn="Label" x="5.000" y="37.500" xr="0" yr="0" w="162.000" h="10.000" srw="175" srh="282" t="全军攻击" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+          <Label nn="Label" x="36.000" y="0.000" xr="0" yr="0" w="35.000" h="10.000" srw="175" srh="282" tag="11" t="+180" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+          <Label nn="Label" x="87.000" y="0.000" xr="0" yr="0" w="30.000" h="10.000" srw="175" srh="282" tag="13" t="0" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+          <Label nn="Label" x="151.500" y="0.000" xr="0" yr="0" w="30.000" h="10.000" srw="175" srh="282" tag="12" t="19" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+            <Label id="jl_lab_4" nn="Label" x="-56.000" y="0.000" xr="0" yr="0" w="60.000" h="10.000" srw="175" srh="282" t="剩余精炼次数:" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+          </Label>
+          <ImageView nn="ImageView" x="68.000" y="0.000" xr="0" yr="0" w="7.000" h="10.000" srw="175" srh="282" iv="0" tag="14" i="common/u_jiantoulv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView nn="ImageView" x="73.000" y="-2.500" xr="0" yr="0" w="15.000" h="15.500" srw="175" srh="282" tag="15" i="equipment/equipment_hammer.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Label>
+      </View>
+      <View id="army_op_view" nn="View" x="5.000" y="2.500" xr="0" yr="0" w="168.000" h="20.000" srw="175" srh="282">
+        <Button id="m_property_btn" nn="Button" x="0.000" y="0.000" xr="0" yr="0" w="65.000" h="20.000" srw="175" srh="282" nt="查看初始" ni="common/u_btn_comfirm8.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.500000,0.500000,0.000000,0.000000" ht="" hi="" hci="" hic="0.500000,0.500000,0.000000,0.000000" dt="" di="" dci="" dic="0.500000,0.500000,0.000000,0.000000" state="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onArmyPropertyCallBack"/>
+        <Label id="m_ql_score_view" nn="Label" x="65.500" y="2.500" xr="0" yr="0" w="50.000" h="15.000" srw="175" srh="282" t="潜力评分:" ts="10" tctl="yellow" tctr="yellow" tcbl="yellow" tcbr="yellow" sc="black" ta="18">
+          <Label id="m_ql_score_lab" nn="Label" x="46.500" y="0.000" xr="0" yr="0" w="50.000" h="15.000" srw="175" srh="282" t="666666" ts="10" tctl="yellow" tctr="yellow" tcbl="yellow" tcbr="yellow" sc="black" ta="17"/>
+          <ImageView id="m_potential_up_img" nn="ImageView" x="46.500" y="1.000" xr="0" yr="0" w="10.000" h="10.000" srw="175" srh="282" i="equipment/ui_equipment_arrow_xu.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Label>
+      </View>
+    </View>
+    <View id="_effect_panel" nn="View" x="0.000" y="92.420" xr="0" yr="0" w="170.000" h="50.000" srw="175" srh="282" iv="0">
+      <ImageView nn="ImageView" x="4.000" y="0.000" xr="0" yr="0" w="163.000" h="1.000" srw="175" srh="282" i="common/u_bg_fengexian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="skill_name" nn="Label" x="39.000" y="2.500" xr="0" yr="0" w="100.000" h="10.000" srw="175" srh="282" t="" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+      <Label nn="Label" x="9.000" y="2.500" xr="0" yr="0" w="30.000" h="10.000" srw="175" srh="282" t="特效：" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+      <View id="skill_panel" nn="View" x="9.000" y="15.000" xr="0" yr="0" w="160.000" h="30.000" srw="175" srh="282"/>
+    </View>
+    <View id="m_operation_view" nn="View" x="15.830" y="116.890" xr="0" yr="0" w="24500.000" h="20056.000" srw="175" srh="282" iv="0">
+      <Button id="m_fenjie_btn" nn="Button" x="5.190" y="45.130" xr="0" yr="0" w="60.000" h="22.000" srw="175" srh="282" nt="分解" ni="common/u_btn_comfirm8.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onFenJieCallBack"/>
+      <Button id="m_lock_btn" nn="Button" x="5.190" y="2.410" xr="0" yr="0" w="60.000" h="22.000" srw="175" srh="282" nt="锁定" ni="common/u_btn_comfirm8.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onLockCallBack"/>
+      <Button id="m_jishou_btn" nn="Button" x="5.190" y="24.130" xr="0" yr="0" w="60.000" h="22.000" srw="175" srh="282" nt="寄售" ni="common/u_btn_comfirm8.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onSaleCallBack"/>
+      <Button id="mEquipBtn" nn="Button" x="75.690" y="67.130" xr="0" yr="0" w="60.000" h="22.000" srw="175" srh="282" nt="装备" ni="common/u_btn_comfirm8.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onInstallCallBack"/>
+      <Button id="mMoreBtn" nn="Button" x="5.190" y="67.130" xr="0" yr="0" w="60.000" h="22.000" srw="175" srh="282" nt="" ni="common/u_btn_comfirm8.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="common/u_btn_comfirm9.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onMoreCallBack">
+        <ImageView id="m_more_unopen" nn="ImageView" x="36.000" y="-6.500" xr="0" yr="0" w="17.500" h="33.000" srw="175" srh="282" iv="0" i="common/paihang_btn_up.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="-26.500" y="10.500" xr="0" yr="0" w="30.000" h="12.000" srw="175" srh="282" t="更多" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView id="m_more_open" nn="ImageView" x="32.000" y="-5.000" xr="0" yr="0" w="17.500" h="33.000" srw="175" srh="282" i="common/paihang_btn_up.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000" fx="1" fy="1">
+          <Label nn="Label" x="-22.500" y="9.000" xr="0" yr="0" w="30.000" h="12.000" srw="175" srh="282" t="更多" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        </ImageView>
+      </Button>
+    </View>
+    <Button id="_jinji_btn" nn="Button" x="57.500" y="190.500" xr="0" yr="0" w="60.000" h="22.000" srw="175" srh="282" iv="0" nt="进阶" ni="common/u_btn_comfirm8.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onJinJieCallBack">
+      <ImageView id="jinjie_red" nn="ImageView" x="46.820" y="-1.180" xr="0" yr="0" w="14.000" h="14.000" srw="175" srh="282" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="equipReuseBtn" nn="Button" x="134.000" y="7.000" xr="0" yr="0" w="32.000" h="23.000" srw="175" srh="282" nt="" ni="equipment/ui_equipment_change_btn_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="equipReuseBtnAction"/>
+    <ImageView id="equipReuseImg" nn="ImageView" x="140.000" y="8.000" xr="0" yr="0" w="25.000" h="24.000" srw="175" srh="282" i="equipment/ui_equipment_change_bg_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+  <ImageView id="suitEffectImg" nn="ImageView" x="-3.000" y="215.500" xr="0" yr="0" w="181.000" h="64.000" srw="175" srh="282" i="common/ui_common_gem_bg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="38.500" y="7.000" xr="0" yr="0" w="100.000" h="12.000" srw="175" srh="282" t="宝石特效" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+    <View id="suitEffectBgView" nn="View" x="8.050" y="20.840" xr="0" yr="0" w="160.000" h="40.000" srw="175" srh="282"/>
+  </ImageView>
+</View>

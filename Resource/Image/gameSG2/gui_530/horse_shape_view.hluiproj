@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <View nn="View" x="12.500" y="22.000" xr="0" yr="0" w="433.500" h="286.000" srw="480" srh="320">
+    <ImageView nn="ImageView" x="8.500" y="13.500" xr="0" yr="0" w="109.000" h="265.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <View id="m_list_bg_view" nn="View" x="4.000" y="3.000" xr="0" yr="0" w="100.000" h="258.000" srw="480" srh="320"/>
+    </ImageView>
+    <ImageView nn="ImageView" x="327.500" y="13.500" xr="0" yr="0" w="98.000" h="265.000" srw="480" srh="320" i="common/u_bg_8.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="3.500" y="11.000" xr="0" yr="0" w="91.500" h="12.000" srw="480" srh="320" i="horse/horse_word_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="15.000" y="117.000" xr="0" yr="0" w="69.000" h="15.500" srw="480" srh="320" i="horse/horse_word_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="3.500" y="108.000" xr="0" yr="0" w="91.500" h="1.000" srw="480" srh="320" i="common/u_bg_fengexian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_property_add_1" nn="Label" x="15.000" y="28.000" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" t="全军生命" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <Label nn="Label" x="43.500" y="0.000" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" tag="1" t="+9999" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="17"/>
+      </Label>
+      <Label id="m_property_add_2" nn="Label" x="15.000" y="45.500" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" t="全军攻击" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <Label nn="Label" x="43.500" y="0.000" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" tag="1" t="+9999" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="17"/>
+      </Label>
+      <Label id="m_property_add_3" nn="Label" x="15.000" y="63.500" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" t="全军物防" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <Label nn="Label" x="43.500" y="0.000" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" tag="1" t="+9999" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="17"/>
+      </Label>
+      <Label id="m_property_add_4" nn="Label" x="15.000" y="82.000" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" t="全军法防" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <Label nn="Label" x="43.500" y="0.000" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" tag="1" t="+9999" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="17"/>
+      </Label>
+      <Label nn="Label" x="0.500" y="137.000" xr="0" yr="0" w="70.000" h="15.000" srw="480" srh="320" t="移动速度加成至" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <Label id="m_speed_add_lab" nn="Label" x="70.500" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="480" srh="320" t="110%" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="17"/>
+      </Label>
+    </ImageView>
+    <ImageView nn="ImageView" x="118.500" y="13.500" xr="0" yr="0" w="208.000" h="265.000" srw="480" srh="320" i="horse/horse_bg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <View id="m_general_list_bg_view" nn="View" x="4.000" y="30.000" xr="0" yr="0" w="200.000" h="200.000" srw="480" srh="320"/>
+      <ImageView id="m_icon_bg_img" nn="ImageView" x="4.000" y="30.500" xr="0" yr="0" w="200.000" h="200.000" srw="480" srh="320" i="horse/horse_bg_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_icon_img" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="200.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <Button id="m_operate_btn" nn="Button" x="72.500" y="232.000" xr="0" yr="0" w="63.000" h="27.000" srw="480" srh="320" nt="激活" ni="common/u_btn_comfirm9.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="operateAction"/>
+      <ImageView id="m_cost_bg_img" nn="ImageView" x="16.500" y="232.000" xr="0" yr="0" w="28.000" h="28.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_cost_img" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="28.000" h="28.000" srw="480" srh="320" tag="1" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label id="m_ower_num_lab" nn="Label" x="28.000" y="8.000" xr="0" yr="0" w="30.000" h="12.000" srw="480" srh="320" t="2" ts="10" tctl="rgb(255, 73, 69)" tctr="rgb(255, 73, 69)" tcbl="rgb(255, 73, 69)" tcbr="rgb(255, 73, 69)" sc="black" ta="17"/>
+        <Label id="m_cost_num_lab" nn="Label" x="28.000" y="8.000" xr="0" yr="0" w="30.000" h="12.000" srw="480" srh="320" t="1" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="64.000" y="6.500" xr="0" yr="0" w="80.500" h="21.500" srw="480" srh="320" i="common/ui_common_bg_name.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_horse_name" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="80.500" h="21.500" srw="480" srh="320" t="Label" ts="11" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView id="m_owner_property_img" nn="ImageView" x="4.310" y="29.770" xr="0" yr="0" w="200.000" h="50.000" srw="480" srh="320" iv="0" i="common/ui_common_bg_up.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="50.000" y="-0.500" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="开启属性加成" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <Label id="m_owner_property_add_1" nn="Label" x="16.000" y="12.000" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="全军攻击" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="40.000" y="0.000" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" tag="1" t="+100" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+        </Label>
+        <Label id="m_owner_property_add_2" nn="Label" x="100.000" y="13.000" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="全军攻击" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="40.000" y="0.000" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" tag="1" t="+100" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+        </Label>
+        <Label id="m_owner_property_add_3" nn="Label" x="16.000" y="24.000" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="全军攻击" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="40.000" y="0.000" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" tag="1" t="+100" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+        </Label>
+        <Label id="m_owner_property_add_4" nn="Label" x="100.000" y="24.000" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="全军攻击" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="40.000" y="0.000" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" tag="1" t="+100" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+        </Label>
+        <Label id="m_owner_property_add_5" nn="Label" x="16.000" y="36.000" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="全军攻击" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="40.000" y="0.000" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" tag="1" t="+100" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+        </Label>
+      </ImageView>
+      <ImageView id="m_left_hint_img" nn="ImageView" x="5.000" y="122.500" xr="0" yr="0" w="16.500" h="27.500" srw="480" srh="320" tag="11" i="common/zhanyi_btn_page.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000" fx="1"/>
+      <ImageView id="m_right_hint_img" nn="ImageView" x="187.500" y="122.500" xr="0" yr="0" w="16.500" h="27.500" srw="480" srh="320" tag="22" i="common/zhanyi_btn_page.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_get_hint_lab" nn="Label" x="59.000" y="237.500" xr="0" yr="0" w="130.000" h="15.000" srw="480" srh="320" iv="0" t="占领州城3天可获得" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+      <View id="m_remain_time_view" nn="View" x="3.740" y="38.040" xr="0" yr="0" w="200.000" h="20.000" srw="480" srh="320" iv="0">
+        <Label nn="Label" x="39.000" y="4.460" xr="0" yr="0" w="60.000" h="12.000" srw="480" srh="320" t="剩余时间：" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="20"/>
+        <Label id="m_last_time_lab" nn="Label" x="97.500" y="4.460" xr="0" yr="0" w="60.000" h="12.000" srw="480" srh="320" t="00:01:00" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+        <Button nn="Button" x="141.260" y="-0.040" xr="0" yr="0" w="21.000" h="21.000" srw="480" srh="320" nt="" ni="common/u_btn_plus.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="addLastTimeAction"/>
+      </View>
+    </ImageView>
+    <ImageView nn="ImageView" x="122.000" y="41.500" xr="0" yr="0" w="200.000" h="50.000" srw="480" srh="320" iv="0" i="common/ui_common_bg_up.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="79.500" y="-0.500" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="属性加成" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+    </ImageView>
+  </View>
+</View>

@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="476" h="430" nn="View" tag="10001">
+  <ImageView x="106.19999694824219" y="12.5" xr="0" yr="0" w="264" h="405" nn="ImageView" i="cross_arena/cross_arena_bg15.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <ImageView x="83.4000015258789" y="18.700000762939453" xr="0" yr="0" w="329" h="386.5" nn="ImageView" i="cross_arena/cross_arena_bg14.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView id="fight_state" x="127.0999984741211" y="144.3000030517578" xr="0" yr="0" w="55.5" h="68.5" nn="ImageView" i="cross_arena/cross_arena_mark7.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </ImageView>
+  <View x="0" y="0" xr="0" yr="0" w="106" h="430" nn="玩家栏左">
+    <ImageView id="lp_1" x="0" y="0" xr="0" yr="0" w="106" h="25" nn="玩家栏左1" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_2" x="0" y="27" xr="0" yr="0" w="106" h="25" nn="玩家栏左2" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_3" x="0" y="54" xr="0" yr="0" w="106" h="25" nn="玩家栏左3" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_4" x="0" y="81" xr="0" yr="0" w="106" h="25" nn="玩家栏左4" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_5" x="0" y="108" xr="0" yr="0" w="106" h="25" nn="玩家栏左5" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_6" x="0" y="135" xr="0" yr="0" w="106" h="25" nn="玩家栏左6" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_7" x="0" y="162" xr="0" yr="0" w="106" h="25" nn="玩家栏左7" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_8" x="0" y="189" xr="0" yr="0" w="106" h="25" nn="玩家栏左8" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_9" x="0" y="216" xr="0" yr="0" w="106" h="25" nn="玩家栏左9" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_10" x="0" y="243" xr="0" yr="0" w="106" h="25" nn="玩家栏左10" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_11" x="0" y="270" xr="0" yr="0" w="106" h="25" nn="玩家栏左11" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_12" x="0" y="297" xr="0" yr="0" w="106" h="25" nn="玩家栏左12" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_13" x="0" y="324" xr="0" yr="0" w="106" h="25" nn="玩家栏左13" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_14" x="0" y="351" xr="0" yr="0" w="106" h="25" nn="玩家栏左14" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_15" x="0" y="378" xr="0" yr="0" w="106" h="25" nn="玩家栏左15" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="lp_16" x="0" y="405" xr="0" yr="0" w="106" h="25" nn="玩家栏左16" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+  </View>
+  <View x="370" y="0" xr="0" yr="0" w="106" h="430" nn="玩家栏右">
+    <ImageView id="rp_1" x="0" y="0" xr="0" yr="0" w="106" h="25" nn="玩家栏右1" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_2" x="0" y="27" xr="0" yr="0" w="106" h="25" nn="玩家栏右2" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_3" x="0" y="54" xr="0" yr="0" w="106" h="25" nn="玩家栏右3" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_4" x="0" y="81" xr="0" yr="0" w="106" h="25" nn="玩家栏右4" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_5" x="0" y="108" xr="0" yr="0" w="106" h="25" nn="玩家栏右5" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_6" x="0" y="135" xr="0" yr="0" w="106" h="25" nn="玩家栏右6" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_7" x="0" y="162" xr="0" yr="0" w="106" h="25" nn="玩家栏右7" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_8" x="0" y="189" xr="0" yr="0" w="106" h="25" nn="玩家栏右8" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_9" x="0" y="216" xr="0" yr="0" w="106" h="25" nn="玩家栏右9" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_10" x="0" y="243" xr="0" yr="0" w="106" h="25" nn="玩家栏右10" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_11" x="0" y="270" xr="0" yr="0" w="106" h="25" nn="玩家栏右11" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_12" x="0" y="297" xr="0" yr="0" w="106" h="25" nn="玩家栏右12" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_13" x="0" y="324" xr="0" yr="0" w="106" h="25" nn="玩家栏右13" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_14" x="0" y="351" xr="0" yr="0" w="106" h="25" nn="玩家栏右14" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_15" x="0" y="378" xr="0" yr="0" w="106" h="25" nn="玩家栏右15" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+    <ImageView id="rp_16" x="0" y="405" xr="0" yr="0" w="106" h="25" nn="玩家栏右16" i="cross_arena/cross_arena_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="5.5" y="2" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="26.5" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(77,35,9)" ta="17"/>
+      <Label x="80" y="0" xr="0" yr="0" w="100" h="25" nn="Label" t="S900" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(77,35,9)" ta="17"/>
+    </ImageView>
+  </View>
+  <View x="106" y="0" xr="0" yr="0" w="120" h="430" nn="线程图左">
+    <View id="lg_1" x="0" y="0" xr="0" yr="0" w="15" h="430" nn="线32-16">
+      <ImageView x="0" y="12.5" xr="0" yr="0" w="30" h="15" nn="32-16_1" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="24.5" xr="0" yr="0" w="30" h="15" nn="32-16_2" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+      <ImageView x="0" y="66.5" xr="0" yr="0" w="30" h="15" nn="32-16_3" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="78.5" xr="0" yr="0" w="30" h="15" nn="32-16_4" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+      <ImageView x="0" y="120.5" xr="0" yr="0" w="30" h="15" nn="32-16_5" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="132.5" xr="0" yr="0" w="30" h="15" nn="32-16_6" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+      <ImageView x="0" y="174.5" xr="0" yr="0" w="30" h="15" nn="32-16_7" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="186.5" xr="0" yr="0" w="30" h="15" nn="32-16_8" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+      <ImageView x="0" y="228.5" xr="0" yr="0" w="30" h="15" nn="32-16_9" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="240.5" xr="0" yr="0" w="30" h="15" nn="32-16_10" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+      <ImageView x="0" y="282.5" xr="0" yr="0" w="30" h="15" nn="32-16_11" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="294.5" xr="0" yr="0" w="30" h="15" nn="32-16_12" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+      <ImageView x="0" y="336.5" xr="0" yr="0" w="30" h="15" nn="32-16_13" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="348.5" xr="0" yr="0" w="30" h="15" nn="32-16_14" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+      <ImageView x="0" y="390.5" xr="0" yr="0" w="30" h="15" nn="32-16_15" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="402.5" xr="0" yr="0" w="30" h="15" nn="32-16_16" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+    </View>
+    <View id="lg_2" x="15" y="24.5" xr="0" yr="0" w="30" h="430" nn="线16-8">
+      <ImageView x="0" y="0" xr="0" yr="0" w="45" h="30" nn="16-8_1" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="27" xr="0" yr="0" w="45" h="30" nn="16-8_2" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+      <ImageView x="0" y="108" xr="0" yr="0" w="45" h="30" nn="16-8_3" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="135" xr="0" yr="0" w="45" h="30" nn="16-8_4" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+      <ImageView x="0" y="216.1999969482422" xr="0" yr="0" w="45" h="30" nn="16-8_5" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="243.1999969482422" xr="0" yr="0" w="45" h="30" nn="16-8_6" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+      <ImageView x="0" y="323.8999938964844" xr="0" yr="0" w="45" h="30" nn="16-8_7" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="350.8999938964844" xr="0" yr="0" w="45" h="30" nn="16-8_8" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+    </View>
+    <View id="lr_1" x="15" y="13.5" xr="0" yr="0" w="30" h="430" nn="头像16-8">
+      <View x="3.5" y="2.5" xr="0" yr="0" w="20" h="20" nn="View_1">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="16-8_1" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="56.5" xr="0" yr="0" w="20" h="20" nn="View_2">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="110.5" xr="0" yr="0" w="20" h="20" nn="View_3">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="165.39999389648438" xr="0" yr="0" w="20" h="20" nn="View_4">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="218.5" xr="0" yr="0" w="20" h="20" nn="View_5">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="272.5" xr="0" yr="0" w="20" h="20" nn="View_6">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="326.5" xr="0" yr="0" w="20" h="20" nn="View_7">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="380.5" xr="0" yr="0" w="20" h="20" nn="View_8">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+    </View>
+    <View id="lg_3" x="45" y="28.5" xr="0" yr="0" w="30" h="430" nn="线8-4">
+      <ImageView x="0" y="23" xr="0" yr="0" w="45" h="57" nn="8-4_1" i="cross_arena/cross_arena_line8_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="77" xr="0" yr="0" w="45" h="57" nn="8-4_2" i="cross_arena/cross_arena_line8_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+      <ImageView x="0" y="239" xr="0" yr="0" w="45" h="57" nn="8-4_3" i="cross_arena/cross_arena_line8_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="293" xr="0" yr="0" w="45" h="57" nn="8-4_4" i="cross_arena/cross_arena_line8_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+    </View>
+    <View id="lr_2" x="45" y="28.5" xr="0" yr="0" w="30" h="400" nn="头像8-4">
+      <View x="3.5" y="14.5" xr="0" yr="0" w="20" h="20" nn="View_1">
+        <ImageView x="0.4000000059604645" y="0.10000000149011612" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0.4000000059604645" y="0.10000000149011612" xr="0" yr="0" w="20" h="20" nn="8-4_1" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="122.69999694824219" xr="0" yr="0" w="20" h="20" nn="View_2">
+        <ImageView x="0.4000000059604645" y="0.10000000149011612" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0.4000000059604645" y="0.10000000149011612" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="230.5" xr="0" yr="0" w="20" h="20" nn="View_3">
+        <ImageView x="0.4000000059604645" y="0.10000000149011612" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0.4000000059604645" y="0.10000000149011612" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="338.5" xr="0" yr="0" w="20" h="20" nn="View_4">
+        <ImageView x="0.4000000059604645" y="0.10000000149011612" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0.4000000059604645" y="0.10000000149011612" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+    </View>
+    <View id="lg_4" x="75" y="78.5" xr="0" yr="0" w="30" h="300" nn="线4-2">
+      <ImageView x="0" y="27" xr="0" yr="0" w="30" h="109.5" nn="4-2_1" i="cross_arena/cross_arena_line4_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="0" y="136.5" xr="0" yr="0" w="30" h="109.5" nn="4-2_2" i="cross_arena/cross_arena_line4_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+    </View>
+    <View id="lr_3" x="75" y="78.5" xr="0" yr="0" w="30" h="300" nn="头像4-2">
+      <View x="3.5" y="18.5" xr="0" yr="0" w="20" h="20" nn="View_1">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="4-2_1" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="234.5" xr="0" yr="0" w="20" h="20" nn="View_2">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+    </View>
+    <View id="lr_4" x="93.66999816894531" y="202.3000030517578" xr="0" yr="0" w="20" h="20" nn="View">
+      <View x="0" y="0" xr="0" yr="0" w="20" h="20" nn="View">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView id="left_win_img" x="-0.20000000298023224" y="-13.899999618530273" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/paimingdiyi.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+    </View>
+  </View>
+  <View x="251.3000030517578" y="0" xr="0" yr="0" w="120" h="430" nn="线程图右">
+    <View id="rg_1" x="89" y="0" xr="0" yr="0" w="15" h="430" nn="线32-16">
+      <ImageView x="0" y="12.5" xr="0" yr="0" w="30" h="15" nn="32-16_1" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="24.5" xr="0" yr="0" w="30" h="15" nn="32-16_2" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+      <ImageView x="0" y="66.5" xr="0" yr="0" w="30" h="15" nn="32-16_3" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="78.5" xr="0" yr="0" w="30" h="15" nn="32-16_4" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+      <ImageView x="0" y="120.5" xr="0" yr="0" w="30" h="15" nn="32-16_5" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="132.5" xr="0" yr="0" w="30" h="15" nn="32-16_6" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+      <ImageView x="0" y="174.5" xr="0" yr="0" w="30" h="15" nn="32-16_7" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="186.5" xr="0" yr="0" w="30" h="15" nn="32-16_8" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+      <ImageView x="0" y="228.5" xr="0" yr="0" w="30" h="15" nn="32-16_9" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="240.5" xr="0" yr="0" w="30" h="15" nn="32-16_10" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+      <ImageView x="0" y="282.5" xr="0" yr="0" w="30" h="15" nn="32-16_11" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="294.5" xr="0" yr="0" w="30" h="15" nn="32-16_12" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+      <ImageView x="0" y="336.5" xr="0" yr="0" w="30" h="15" nn="32-16_13" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="348.5" xr="0" yr="0" w="30" h="15" nn="32-16_14" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+      <ImageView x="0" y="390.5" xr="0" yr="0" w="30" h="15" nn="32-16_15" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="402.5" xr="0" yr="0" w="30" h="15" nn="32-16_16" i="cross_arena/cross_arena_line32_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+    </View>
+    <View id="rg_2" x="59" y="24.5" xr="0" yr="0" w="30" h="430" nn="线16-8">
+      <ImageView x="0" y="0" xr="0" yr="0" w="45" h="30" nn="16-8_1" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="27" xr="0" yr="0" w="45" h="30" nn="16-8_2" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+      <ImageView x="0" y="108" xr="0" yr="0" w="45" h="30" nn="16-8_3" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="135" xr="0" yr="0" w="45" h="30" nn="16-8_4" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+      <ImageView x="0" y="216.1999969482422" xr="0" yr="0" w="45" h="30" nn="16-8_5" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="243.1999969482422" xr="0" yr="0" w="45" h="30" nn="16-8_6" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+      <ImageView x="0" y="323.8999938964844" xr="0" yr="0" w="45" h="30" nn="16-8_7" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="350.8999938964844" xr="0" yr="0" w="45" h="30" nn="16-8_8" i="cross_arena/cross_arena_line16_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+    </View>
+    <View id="rr_1" x="77" y="13.5" xr="0" yr="0" w="30" h="430" nn="头像16-8">
+      <View x="3.5" y="2.5" xr="0" yr="0" w="20" h="20" nn="View_1">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="16-8_1" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="56.5" xr="0" yr="0" w="20" h="20" nn="View_2">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="110" xr="0" yr="0" w="20" h="20" nn="View_3">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="164" xr="0" yr="0" w="20" h="20" nn="View_4">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="217.5" xr="0" yr="0" w="20" h="21.5" nn="View_5">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="271.5" xr="0" yr="0" w="20" h="21.5" nn="View_6">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="326.5" xr="0" yr="0" w="20" h="21.5" nn="View_7">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="380.5" xr="0" yr="0" w="20" h="21.5" nn="View_8">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+    </View>
+    <View id="rg_3" x="29" y="29" xr="0" yr="0" w="30" h="430" nn="线8-4">
+      <ImageView x="0" y="22.5" xr="0" yr="0" w="45" h="57" nn="8-4_1" i="cross_arena/cross_arena_line8_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="76.5" xr="0" yr="0" w="45" h="57" nn="8-4_2" i="cross_arena/cross_arena_line8_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+      <ImageView x="0" y="238.5" xr="0" yr="0" w="45" h="57" nn="8-4_3" i="cross_arena/cross_arena_line8_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="292.5" xr="0" yr="0" w="45" h="57" nn="8-4_4" i="cross_arena/cross_arena_line8_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+    </View>
+    <View id="rr_2" x="46" y="29.059999465942383" xr="0" yr="0" w="30" h="400" nn="头像8-4">
+      <View x="3.9000000953674316" y="14.100000381469727" xr="0" yr="0" w="20" h="20" nn="View_1">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="8-4_1" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.9000000953674316" y="122.0999984741211" xr="0" yr="0" w="20" h="20" nn="View_2">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.9000000953674316" y="230.5" xr="0" yr="0" w="20" h="20" nn="View_3">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.9000000953674316" y="338.20001220703125" xr="0" yr="0" w="20" h="20" nn="View_4">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+    </View>
+    <View id="rg_4" x="14" y="78.5" xr="0" yr="0" w="30" h="300" nn="线4-2">
+      <ImageView x="0" y="27" xr="0" yr="0" w="30" h="109.5" nn="4-2_1" i="cross_arena/cross_arena_line4_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+      <ImageView x="0" y="136.5" xr="0" yr="0" w="30" h="109.5" nn="4-2_2" i="cross_arena/cross_arena_line4_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1" fy="1"/>
+    </View>
+    <View id="rr_3" x="17" y="78.5" xr="0" yr="0" w="30" h="300" nn="头像4-2">
+      <View x="3.5" y="18.5" xr="0" yr="0" w="20" h="20" nn="View_1">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="4-2_1" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+      <View x="3.5" y="234.5" xr="0" yr="0" w="20" h="20" nn="View_2">
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+    </View>
+    <View id="rr_4" x="5.090000152587891" y="202.2899932861328" xr="0" yr="0" w="20" h="20" nn="View">
+      <View x="0" y="0" xr="0" yr="0" w="20" h="20" nn="View">
+        <ImageView x="0.4099999964237213" y="-0.28999999165534973" xr="0" yr="0" w="20" h="20" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0.4099999964237213" y="-0.28999999165534973" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/u_bg_role.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="10.5" y="-4" xr="0" yr="0" w="12" h="12" i="cross_arena/cross_arena_icon3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView id="right_win_img" x="-0.20000000298023224" y="-13.890000343322754" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/paimingdiyi.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+    </View>
+  </View>
+  <ImageView id="btn_reward" x="216.60000610351562" y="76.80000305175781" xr="0" yr="0" w="44" h="44" nn="ImageView" i="cross_arena/cross_arena_btn7.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <View id="m_effect_bg" x="216.60000610351562" y="76" xr="0" yr="0" w="44" h="44" nn="View"/>
+</View>

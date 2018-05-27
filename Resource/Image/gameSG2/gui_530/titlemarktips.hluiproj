@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="215.000" h="200.000" srw="240" srh="200">
+  <ImageView id="awardBg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="210.000" h="200.000" srw="240" srh="200" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label id="descTxt" nn="Label" x="7.500" y="7.500" xr="0" yr="0" w="195.000" h="12.000" srw="240" srh="200" t="Lv.1  主公强化和武将强化属性提升2%" ts="10" tctl="rgb(240, 240, 240)" tctr="rgb(240, 240, 240)" tcbl="rgb(240, 240, 240)" tcbr="rgb(240, 240, 240)" sc="black" ta="9"/>
+  </ImageView>
+</View>

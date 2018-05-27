@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="150" h="26">
+  <View x="0" y="0.75" xr="0" yr="0" w="150" h="15">
+    <ImageView id="cupImg" x="0" y="1" xr="0" yr="0" w="12.5" h="12" i="common/u_trophy_first.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Label id="rankLab" x="3" y="1" xr="0" yr="0" w="20" h="10" t="1" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="17"/>
+    <Label id="rankNmae" x="12.100000381469727" y="1" xr="0" yr="0" w="85" h="10" t="" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+    <Label id="rank_value" x="94.16000366210938" y="1" xr="0" yr="0" w="50" h="10" t="" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+  </View>
+</View>

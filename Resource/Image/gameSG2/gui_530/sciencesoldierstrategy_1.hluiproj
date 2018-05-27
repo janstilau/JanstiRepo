@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <View nn="View" x="92.500" y="69.000" xr="0" yr="0" w="275.000" h="184.000" srw="480" srh="320">
+    <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="275.000" h="184.000" srw="480" srh="320" i="bing_strategy/bing_strategy_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Button id="start_btn" nn="Button" x="97.500" y="145.000" xr="0" yr="0" w="80.000" h="26.000" srw="480" srh="320" nt="研究" ni="bing/bing_btn_2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18" act="startBtnAction"/>
+      <Button nn="Button" x="231.500" y="11.000" xr="0" yr="0" w="24.500" h="22.000" srw="480" srh="320" nt="" ni="bing_strategy/bing_strategy_btn_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeBtnAction"/>
+      <Label id="pro_lab_1" nn="Label" x="42.000" y="69.500" xr="0" yr="0" w="180.000" h="10.000" srw="480" srh="320" t="全军将领普通攻击造成伤害" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <ImageView id="pro_up_img_1" nn="ImageView" x="155.500" y="2.000" xr="0" yr="0" w="5.000" h="7.000" srw="480" srh="320" i="bing_strategy/bing_bg_6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="pro_up_value_lab_1" nn="Label" x="6.500" y="-2.000" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="320" t="9999" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" bold="1" sc="black" ta="17"/>
+        </ImageView>
+      </Label>
+      <Label id="pro_lab_2" nn="Label" x="42.000" y="85.000" xr="0" yr="0" w="180.000" h="10.000" srw="480" srh="320" t="全军将领普通攻击造成伤害" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <ImageView id="pro_up_img_2" nn="ImageView" x="155.500" y="1.500" xr="0" yr="0" w="5.000" h="7.000" srw="480" srh="320" i="bing_strategy/bing_bg_6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="pro_up_value_lab_2" nn="Label" x="6.500" y="-1.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="320" t="9999" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" bold="1" sc="black" ta="17"/>
+        </ImageView>
+      </Label>
+    </ImageView>
+    <ImageView nn="ImageView" x="32.500" y="108.000" xr="0" yr="0" w="208.000" h="18.000" srw="480" srh="320" i="bing_strategy/bing_strategy_bg1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="max_img" nn="ImageView" x="87.000" y="106.000" xr="0" yr="0" w="98.000" h="32.000" srw="480" srh="320" iv="0" i="bing_strategy/bing_strategy_word_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="material_view" nn="ImageView" x="119.500" y="109.500" xr="0" yr="0" w="16.000" h="16.000" srw="480" srh="320" i="common/u_bg_cost_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="material_num_lab" nn="Label" x="18.000" y="2.000" xr="0" yr="0" w="60.000" h="10.000" srw="480" srh="320" t="99999/99999" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      <Label id="material_name_lab" nn="Label" x="-42.500" y="2.500" xr="0" yr="0" w="38.000" h="10.000" srw="480" srh="320" t="需道具名" ts="8" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="20"/>
+      <ImageView id="material_icon_img" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="16.000" h="16.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="limit_lab" nn="Label" x="-26.510" y="21.500" xr="0" yr="0" w="90.000" h="10.000" srw="480" srh="320" t="需要龙飞之书Lv.xx" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <Label id="skill_lvl_lab" nn="Label" x="155.000" y="40.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="320" t="Lv.XX" ts="10" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="18"/>
+  </View>
+</View>

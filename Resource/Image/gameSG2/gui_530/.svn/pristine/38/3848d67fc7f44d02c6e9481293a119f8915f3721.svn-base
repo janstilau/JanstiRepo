@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="95.000" srw="480" srh="320" tag="10001">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="95.000" srw="480" srh="320" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="7.500" y="6.500" xr="0" yr="0" w="70.000" h="12.000" srw="480" srh="320" t="联盟实力值：" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label nn="Label" x="17.500" y="22.000" xr="0" yr="0" w="175.000" h="12.000" srw="480" srh="320" t="1. 联盟实力值是【决战洛阳】战场匹配" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+      <Label nn="Label" x="10.500" y="12.500" xr="0" yr="0" w="165.000" h="11.000" srw="480" srh="320" t="的重要依据" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    </Label>
+    <Label nn="Label" x="17.500" y="48.500" xr="0" yr="0" w="175.000" h="12.000" srw="480" srh="320" t="2. 联盟实力值受联盟势力值、联盟成员" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+      <Label nn="Label" x="10.500" y="12.500" xr="0" yr="0" w="165.000" h="11.000" srw="480" srh="320" t="战力、联盟科技等级的影响" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    </Label>
+    <Label nn="Label" x="17.500" y="76.000" xr="0" yr="0" w="175.000" h="12.000" srw="480" srh="320" t="3. 联盟实力值每日凌晨5点刷新" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+  </ImageView>
+</View>

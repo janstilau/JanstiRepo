@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="230" h="178">
+  <ImageView x="0" y="0" xr="0" yr="0" w="225.5" h="176" i="common/u_bg_2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="49.75" y="10.869999885559082" xr="0" yr="0" w="126" h="19" i="common/u_bg_title2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="tishiTitle" x="0" y="3" xr="0" yr="0" w="126" h="12" t="批量移除" ts="12" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="14.25" y="42.79999923706055" xr="0" yr="0" w="197" h="85" i="common/u_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_tishi_title" x="2.5399999618530273" y="2.8499999046325684" xr="0" yr="0" w="192.60000610351562" h="76.9000015258789" t="是否永久移除道具名六个字等99个道具？" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(52,0,0)" ta="18"/>
+    </ImageView>
+  </ImageView>
+  <Button x="201.2899932861328" y="0.009999999776482582" xr="0" yr="0" w="26" h="26" ni="common/u_btn_close1.png" nic="0,0,0,0" zot="1" state="0" act="closeAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <View id="shopCancelView" x="13.65999984741211" y="135.3699951171875" xr="0" yr="0" w="200" h="35">
+    <Button x="118" y="2.630000114440918" xr="0" yr="0" w="60" h="32" nt="确 定" ni="common/u_btn_comfirm1.png" nic="0,0,0,0" st="确定" zot="1" state="0" act="sureAction" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(115,9,1)" ta="18"/>
+    <Button x="20" y="2.630000114440918" xr="0" yr="0" w="60" h="32" nt="取 消" ni="common/u_btn_comfirm1.png" nic="0,0,0,0" zot="1" state="0" act="cancelAction" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(115,9,1)" ta="18"/>
+  </View>
+</View>

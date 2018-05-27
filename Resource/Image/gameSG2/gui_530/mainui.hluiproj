@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="480" h="320" nn="View">
+  <ImageView id="_cwShadow" x="0" y="0" xr="0" yr="0" w="480" h="92" nn="ImageView" iv="0" i="common/shadow184.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <View id="m_role_bgview" x="1.5" y="0" xr="0" yr="0" w="300" h="72" nn="View">
+    <ImageView x="0" y="-1.5" xr="0" yr="0" w="300" h="73.5" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Button id="m_world_level_btn" x="195" y="27" xr="0" yr="0" w="20" h="20" nn="Button" ni="mainui/main_worldbuff.png" nic="0,0,0,0" zot="1" state="0" act="onWorldLevelAction" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="protectBtn" x="178.5" y="22.5" xr="0" yr="0" w="25" h="25" nn="Button" iv="0" ni="mainui/countrywar_btn_newbie.png" nic="0,0,0,0" zot="1" state="0" act="onProtectTime" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="specialBtn" x="178.5" y="22.5" xr="0" yr="0" w="25" h="25" nn="Button" iv="0" ni="mainui/countrywar_btn_special.png" nic="0,0,0,0" zot="1" state="0" act="onClickLookEnhance" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="moonBtn" x="178.5" y="22.5" xr="0" yr="0" w="25" h="25" nn="Button" iv="0" ni="mainui/countrywar_btn_night.png" nic="0,0,0,0" zot="1" state="0" act="onMoonFightTip" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="masterBtn" x="178.5" y="22.5" xr="0" yr="0" w="25" h="25" nn="Button" iv="0" ni="mainui/countrywar_btn_castellan_2.png" nic="0,0,0,0" zot="1" state="0" act="onMasterTip" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="interimBtn" x="178.5" y="22.5" xr="0" yr="0" w="25" h="25" nn="Button" iv="0" ni="mainui/countrywar_btn_allianceinterim.png" nic="0,0,0,0" zot="1" state="0" act="onJoinInterimLefTime" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="inspireBtn" x="178.5" y="22.5" xr="0" yr="0" w="25" h="25" nn="Button" iv="0" ni="mainui/countrywar_btn_allianceinspire.png" nic="0,0,0,0" zot="1" state="0" act="onInspireLefTime" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="raceinsideBtn" x="178.5" y="22.5" xr="0" yr="0" w="25" h="25" nn="Button" iv="0" ni="mainui/countrywar_btn_raceinside.png" nic="0,0,0,0" zot="1" state="0" act="onRaceinside" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="raceoutsideBtn" x="178.5" y="22.5" xr="0" yr="0" w="25" h="25" nn="Button" iv="0" ni="mainui/countrywar_btn_raceoutside.png" nic="0,0,0,0" zot="1" state="0" act="onRaceoutside" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="landMonsterFeatBtn" x="178.5" y="22.5" xr="0" yr="0" w="25" h="25" nn="Button" iv="0" ni="mainui/countrywar_btn_debuff.png" nic="0,0,0,0" zot="1" state="0" act="openLandMonsterFeat" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="jiuxinglianyingBtn" x="178.5" y="22.5" xr="0" yr="0" w="25" h="25" nn="Button" iv="0" ni="mainui/countrywar_btn_special1.png" nic="0,0,0,0" zot="1" state="0" act="openJiuxinglianying" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+      <View id="taoFaLingView" x="50" y="29" xr="0" yr="0" w="120" h="20" nn="View" iv="0">
+        <ImageView x="1" y="1.5" xr="0" yr="0" w="120" h="17" nn="ImageView" i="mainui/ui_mainui_fengjianxian_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+        <Button x="-0.5" y="2" xr="0" yr="0" w="24" h="18" nn="Button" ni="common/countrywar_btn_lowtaofa.png" nic="0,0,0,0" state="0" act="onBuyLowTaoFaLing" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        <Label id="lowTaoFaLingLab" x="24" y="6.5" xr="0" yr="0" w="23" h="9" nn="Label" t="20" ts="10" tctl="rgb(246,186,101)" tctr="rgb(246,186,101)" tcbl="rgb(246,186,101)" tcbr="rgb(246,186,101)" sc="rgb(0,0,0)" ta="17"/>
+        <Button x="45.5" y="1.5" xr="0" yr="0" w="24" h="18" nn="Button" ni="common/countrywar_btn_hightaofa.png" nic="0,0,0,0" state="0" act="onBuyHighTaoFaLing" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        <Label id="highTaoFaLingLab" x="69" y="6.5" xr="0" yr="0" w="23" h="9" nn="Label" t="20" ts="10" tctl="rgb(246,186,101)" tctr="rgb(246,186,101)" tcbl="rgb(246,186,101)" tcbr="rgb(246,186,101)" sc="rgb(0,0,0)" ta="17"/>
+      </View>
+      <View id="guoTiliBtn" x="51" y="2.5" xr="0" yr="0" w="136" h="18" nn="View" iv="0">
+        <ImageView x="-1" y="18" xr="0" yr="0" w="120" h="8.5" nn="ImageView" i="mainui/ui_mainui_fengjianxian_1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1" fx="1">
+          <ImageView x="4.760000228881836" y="0.7599999904632568" xr="0" yr="0" w="6.5" h="6.5" nn="ImageView" i="mainui/countrywar_icon_time_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <Label id="_labServerTime" x="13.5" y="0.5" xr="0" yr="0" w="35" h="7" nn="Label" t="00:00:00" ts="7" tctl="rgb(209,183,148)" tctr="rgb(209,183,148)" tcbl="rgb(209,183,148)" tcbr="rgb(209,183,148)" sc="rgb(0,0,0)" ta="17"/>
+        </ImageView>
+        <ImageView x="42.5" y="19" xr="0" yr="0" w="6.5" h="6.5" nn="ImageView" i="mainui/countrywar_icon_mark_1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label id="_labCurPos" x="7.650000095367432" y="-0.5" xr="0" yr="0" w="40" h="7" nn="Label" t="123,123" ts="7" tctl="rgb(209,183,148)" tctr="rgb(209,183,148)" tcbl="rgb(209,183,148)" tcbr="rgb(209,183,148)" sc="rgb(0,0,0)" ta="17"/>
+        </ImageView>
+        <ImageView x="8.5" y="2.5" xr="0" yr="0" w="128" h="13.5" nn="ImageView" i="common/ui_common_bg_zl.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Button x="-0.5" y="0" xr="0" yr="0" w="24" h="18" nn="Button" ni="common/bing_yubeibing_up.png" nic="0,0,0,0" zot="1" state="0" act="openBuyPrepareBingAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        <Label id="guoPrepareBingCountLab" x="22.5" y="1.5" xr="0" yr="0" w="110" h="15" nn="Label" t="2000/1000" ts="8" tctl="rgb(246,186,101)" tctr="rgb(246,186,101)" tcbl="rgb(246,186,101)" tcbr="rgb(246,186,101)" sc="rgb(0,0,0)" ta="17"/>
+        <Label id="guoPrepareBingSpeedLab" x="24" y="1.5" xr="0" yr="0" w="110" h="15" nn="Label" t="130万/130万" ts="8" tctl="rgb(246,186,101)" tctr="rgb(246,186,101)" tcbl="rgb(246,186,101)" tcbr="rgb(246,186,101)" sc="rgb(0,0,0)" ta="20"/>
+        <View id="guoLiangCaoBtn" x="77.5" y="1.5" xr="0" yr="0" w="57" h="15" nn="View"/>
+      </View>
+      <ImageView id="touxiang_bg_image" x="2.5" y="4" xr="0" yr="0" w="48" h="48" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="_head_back_image" x="-0.5" y="1" xr="0" yr="0" w="54" h="54" nn="ImageView" i="mainui/main_bg_player.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="playerLevelContainer" x="3.5" y="36" xr="0" yr="0" w="10" h="8" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="myHeadZoneRedPoint" x="35.02000045776367" y="1.0399999618530273" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="privilege_img" x="38.27000045776367" y="32.61000061035156" xr="0" yr="0" w="12" h="17" nn="ImageView" iv="0" i="qq/qq_btn_tequan_24_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Button x="0" y="2" xr="0" yr="0" w="14" h="11" nn="Button" ni="mainui/main_btn_vip1.png" nic="0,0,0,0" state="0" act="openVip" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+        <ImageView id="vipLevelBtn" x="-1" y="9" xr="0" yr="0" w="9" h="8" nn="ImageView" i="mainui/main_word_v.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView id="vipLevelView" x="4.5" y="5" xr="0" yr="0" w="15" h="8" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </Button>
+      <Label id="playerNameLabel" x="47.36000061035156" y="1.3200000524520874" xr="0" yr="0" w="62" h="14" nn="Label" iv="0" t="玩家名六个字" ts="9" tctl="rgb(147,98,39)" tctr="rgb(147,98,39)" tcbl="rgb(147,98,39)" tcbr="rgb(147,98,39)" sc="rgb(25,9,1)" ta="10"/>
+      <View id="chickenView" x="51" y="2.5" xr="0" yr="0" w="60" h="18" nn="View">
+        <ImageView x="7.5" y="2.5" xr="0" yr="0" w="50" h="13.5" nn="ImageView" i="common/ui_common_bg_zl.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label id="energyLabel" x="22.5" y="1.5" xr="0" yr="0" w="43" h="15" nn="Label" t="2000/100" ts="8" tctl="rgb(246,186,101)" tctr="rgb(246,186,101)" tcbl="rgb(246,186,101)" tcbr="rgb(246,186,101)" sc="rgb(0,0,0)" ta="17"/>
+        <Button x="0" y="0" xr="0" yr="0" w="24" h="18" nn="Button" ni="common/main_btn_buy.png" nic="0,0,0,0" zot="1" state="0" act="openChickenBtnAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      </View>
+      <View id="buyGoldBtn" x="109" y="2.5" xr="0" yr="0" w="60" h="18" nn="View">
+        <ImageView x="7.5" y="2.5" xr="0" yr="0" w="50" h="13.5" nn="ImageView" i="common/ui_common_bg_zl.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label id="goldLabel" x="24" y="1.5" xr="0" yr="0" w="40" h="15" nn="Label" t="0000000" ts="8" tctl="rgb(246,186,101)" tctr="rgb(246,186,101)" tcbl="rgb(246,186,101)" tcbr="rgb(246,186,101)" sc="rgb(0,0,0)" ta="17"/>
+        <Button x="0" y="0" xr="0" yr="0" w="24" h="18" nn="Button" ni="mainui/main_btn_addgold.png" nic="0,0,0,0" zot="1" state="0" act="dianShiChengJinBtnAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      </View>
+      <View id="buyGemBtn" x="168.5" y="2.5" xr="0" yr="0" w="60" h="18" nn="View">
+        <ImageView x="7.5" y="2.5" xr="0" yr="0" w="50" h="13.5" nn="ImageView" i="common/ui_common_bg_zl.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label id="diamondLabel" x="23" y="1.5" xr="0" yr="0" w="40" h="15" nn="Label" t="0000000" ts="8" tctl="rgb(246,186,101)" tctr="rgb(246,186,101)" tcbl="rgb(246,186,101)" tcbr="rgb(246,186,101)" sc="rgb(0,0,0)" ta="17"/>
+        <Button id="diamond_icon" x="0" y="0" xr="0" yr="0" w="24" h="18" nn="Button" ni="mainui/main_btn_addzs.png" nic="0,0,0,0" zot="1" state="0" act="openChargeAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      </View>
+      <Button id="playerInfoBtn" x="38.86000061035156" y="40.36000061035156" xr="0" yr="0" w="12" h="12" nn="Button" iv="0" ni="common/countrywar_btn_tips.png" nic="0,0,0,0" state="0" act="openPlayerInfo" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      <View id="fightCapactityContainer" x="50" y="29" xr="0" yr="0" w="120" h="20" nn="View">
+        <ImageView id="fightCapactityBg" x="1" y="1.5" xr="0" yr="0" w="101" h="17" nn="ImageView" i="mainui/ui_mainui_fengjianxian_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+        <View id="fightCapactityBtn" x="22.5" y="-1" xr="0" yr="0" w="70" h="18" nn="View"/>
+        <Button id="mCanbeStrong" x="2.5" y="-1" xr="0" yr="0" w="19.5" h="20" nn="Button" ni="mainui/ui_main_word_zhan.png" nic="0,0,0,0" state="0" act="managerAction" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+        <Button x="21.5" y="0.5199999809265137" xr="0" yr="0" w="50" h="18" nn="Button" nic="0,0,0,0" state="0" act="managerAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      </View>
+      <View id="vipView" x="1.5" y="2.5" xr="0" yr="0" w="18" h="18" nn="View"/>
+    </ImageView>
+  </View>
+  <View id="m_otherrole_bgview" x="346.5" y="2.5" xr="0" yr="0" w="135" h="97" nn="View" iv="0">
+    <ImageView x="-19" y="7" xr="0" yr="0" w="101" h="34" nn="ImageView" i="mainui/ui_mainui_fengjianxian_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView x="-23" y="23.5" xr="0" yr="0" w="105" h="0.5" nn="ImageView" i="mainui/ui_mainui_fengjianxian_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="otherrole_bg_image" x="83" y="0" xr="0" yr="0" w="48" h="48" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView x="80" y="-3" xr="0" yr="0" w="54" h="54" nn="ImageView" i="mainui/main_bg_player.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="otherHeadZoneRedPoint" x="33.5" y="1" xr="0" yr="0" w="20" h="14" nn="ImageView" i="mainui/bubble_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="otherFightBtn" x="-15.5" y="26.5" xr="0" yr="0" w="15.199999809265137" h="17.200000762939453" nn="ImageView" i="mainui/main_word_zhan.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="otherPlayerLevel" x="3.5" y="33.5" xr="0" yr="0" w="14" h="12" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label id="ohterPlayerName" x="-100" y="12" xr="0" yr="0" w="100" h="12" nn="Label" t="Label" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="12"/>
+      <View id="otherFightCapactity" x="-96" y="27.5" xr="0" yr="0" w="80" h="15" nn="View"/>
+    </ImageView>
+    <ImageView id="otherVipLevelView" x="80" y="-1" xr="0" yr="0" w="14" h="11" nn="ImageView" i="mainui/main_btn_vip1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="otherVipLevelTxt" x="5.5" y="6.5" xr="0" yr="0" w="12" h="11" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="-1" y="9" xr="0" yr="0" w="9" h="8" nn="ImageView" i="mainui/main_word_v.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </ImageView>
+    <Button id="mFriendPVPBtn" x="88" y="62" xr="0" yr="0" w="41" h="41.5" nn="Button" ni="mainui/gcld_qiecuo.png" nic="0,0,0,0" state="0" act="pvpAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  </View>
+  <View id="task_container" x="336.5" y="76" xr="0" yr="0" w="145" h="152" nn="View">
+    <Button id="taskBtn" x="8" y="3" xr="0" yr="0" w="28" h="28" nn="Button" tag="101" ni="mainui/main_btn_task1.png" nic="0,0,0,0" state="0" act="openTask" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <View id="gatherEntity" x="39" y="41" xr="0" yr="0" w="103" h="106" nn="View" iv="0">
+      <ScrollView id="_scrollView" x="0" y="0" xr="0" yr="0" w="103" h="106" nn="ScrollView"/>
+    </View>
+    <Button id="countryWarTaskBtn" x="11.420000076293945" y="33.88999938964844" xr="0" yr="0" w="24" h="40.5" nn="Button" iv="0" ni="mainui/main_btn_page2.png" nic="0,0,0,0" si="mainui/main_btn_page1.png" state="1" act="openCountryWarTask" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <Label id="_taskUnselectedLabel" x="3.309999942779541" y="5.039999961853027" xr="0" yr="0" w="18" h="30" nn="Label" iv="0" t="任务" ts="12" tctl="rgb(226,226,226)" tctr="rgb(226,226,226)" tcbl="rgb(226,226,226)" tcbr="rgb(226,226,226)" sc="rgb(0,0,0)" ta="18"/>
+      <Label id="_taskSelectedLabel" x="3.309999942779541" y="5.039999961853027" xr="0" yr="0" w="18" h="30" nn="Label" t="任务" ts="12" tctl="rgb(255,255,0)" tctr="rgb(255,255,0)" tcbl="rgb(255,255,0)" tcbr="rgb(255,255,0)" sc="rgb(0,0,0)" ta="18"/>
+    </Button>
+    <Button id="countryWarGatherBtn" x="11.420000076293945" y="77.38999938964844" xr="0" yr="0" w="24" h="40.5" nn="Button" iv="0" ni="mainui/main_btn_page2.png" nic="0,0,0,0" si="mainui/main_btn_page1.png" state="0" act="openCountryWarGather" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <Label id="_gatherUnselectedLabel" x="3.309999942779541" y="5.039999961853027" xr="0" yr="0" w="18" h="30" nn="Label" t="集结" ts="12" tctl="rgb(226,226,226)" tctr="rgb(226,226,226)" tcbl="rgb(226,226,226)" tcbr="rgb(226,226,226)" sc="rgb(0,0,0)" ta="18"/>
+      <Label id="_gatherSelectedLabel" x="3.309999942779541" y="5.039999961853027" xr="0" yr="0" w="18" h="30" nn="Label" iv="0" t="集结" ts="12" tctl="rgb(255,255,0)" tctr="rgb(255,255,0)" tcbl="rgb(255,255,0)" tcbr="rgb(255,255,0)" sc="rgb(0,0,0)" ta="18"/>
+    </Button>
+    <View id="taskEntity" x="39" y="41" xr="0" yr="0" w="103" h="106" nn="View"/>
+  </View>
+  <Button id="countryWarSwitchBtn" x="344.5" y="53" xr="0" yr="0" w="30" h="30" nn="Button" iv="0" tag="101" ni="mainui/main_btn_task1.png" nic="0,0,0,0" state="0" act="openTask" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="taskExtendBtn" x="450" y="53" xr="0" yr="0" w="30" h="30" nn="Button" iv="0" tag="101" ni="mainui/main_btn_task1.png" nic="0,0,0,0" state="0" act="openTask" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="friendBtn" x="0" y="116" xr="0" yr="0" w="16.5" h="82" nn="Button" nt=" " ni="mainui/friend_btn.png" nic="0,0,0,0" state="0" act="openFriend" ts="13" tctl="rgb(218,171,104)" tctr="rgb(218,171,104)" tcbl="rgb(218,171,104)" tcbr="rgb(218,171,104)" sc="rgb(0,0,0)" ta="18"/>
+  <ImageView id="chatBtn" x="1.5399999618530273" y="285" xr="0" yr="0" w="10" h="33" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <View id="expBgView" x="0.5" y="285" xr="0" yr="0" w="480" h="30" nn="View">
+    <ImageView id="expBg" x="0" y="28" xr="0" yr="0" w="480" h="7" nn="ImageView" i="mainui/main_bg_exp.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="currentExpImg" x="0" y="28" xr="0" yr="0" w="480" h="7" nn="ImageView" i="" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="expBgBorder" x="0" y="28" xr="0" yr="0" w="480" h="7" nn="ImageView" i="mainui/main_bg_exp1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </View>
+  <View id="betterListView" x="223.5" y="1.5" xr="0" yr="0" w="250" h="80" nn="View">
+    <View id="rightBg" x="0" y="0" xr="0" yr="0" w="250" h="50" nn="View"/>
+    <View id="rightBgSecond" x="0" y="38.5" xr="0" yr="0" w="250" h="50" nn="View"/>
+  </View>
+  <View id="onlineBg" x="1.5" y="78.5" xr="0" yr="0" w="100" h="40" nn="View"/>
+  <Button x="1.5399999618530273" y="282.44000244140625" xr="0" yr="0" w="10" h="33" nn="Button" iv="0" nic="0,0,0,0" state="0" act="openChat" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="leaveBtn" x="433" y="0.6299999952316284" xr="0" yr="0" w="47" h="28" nn="Button" iv="0" tag="2" ni="common/u_btn_back.png" nic="0,0,0,0" zot="1" state="0" act="leaveAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="leavelInBuilding" x="433" y="0" xr="0" yr="0" w="47" h="28" nn="Button" iv="0" ni="common/u_btn_back.png" nic="0,0,0,0" zot="1" state="0" act="onLeavelInBuilding" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="backToCastleBtn" x="430" y="215" xr="0" yr="0" w="40" h="45" nn="Button" iv="0" ni="mainui/main_btn_gohome.png" nic="0,0,0,0" zot="1" state="0" act="backToCastleAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="qqTeQuanbtn" x="59.58000183105469" y="52.36000061035156" xr="0" yr="0" w="24" h="21.600000381469727" nn="Button" iv="0" ni="qq/qq_btn_tequan_3.png" nic="0,0,0,0" zot="1" state="0" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="aliTeQuanbtn" x="60" y="46.5" xr="0" yr="0" w="28" h="28" nn="Button" iv="0" ni="mainui/ui_main_btn_ali.png" nic="0,0,0,0" zot="1" state="0" act="openAliTequan" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="storeBtn" x="5" y="53.5" xr="0" yr="0" w="47" h="21" nn="Button" ni="mainui/main_btn_shop.png" nic="0,0,0,0" zot="1" state="0" act="openStore" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="storeRedPoint" x="35.5" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="storeNew" x="31.760000228881836" y="-3.5999999046325684" xr="0" yr="0" w="27" h="12.5" nn="ImageView" i="common/ui_common_new.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <Button id="_btnNewWorldMap" x="0" y="267" xr="0" yr="0" w="45" h="45" nn="Button" nic="0,0,0,0" zot="1" state="0" act="onOpenNewWorldMap" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="world_map_view" x="1" y="-6.5" xr="0" yr="0" w="43" h="14" nn="ImageView" i="mainui/countrywar_btn_mainui_bg.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="world_map_txt" x="0" y="1" xr="0" yr="0" w="43" h="12" nn="Label" t="19级开启" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+  </Button>
+  <Button id="zhanYiBtn" x="0" y="264" xr="0" yr="0" w="45" h="45" nn="Button" iv="0" ni="mainui/main_btn_campaign.png" nic="0,0,0,0" zot="1" state="0" act="openBattle" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <View id="bottomView" x="-35" y="217" xr="0" yr="0" w="510" h="95" nn="View">
+    <Button id="godweaponCwBtn" x="10" y="50" xr="0" yr="0" w="38" h="45" nn="Button" tag="1" ni="mainui/ui_mainui_godweapon.png" nic="0,0,0,0" zot="1" state="0" act="openGodweapon" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="godweaponCwRedpoint" x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="markBtn" x="52" y="50" xr="0" yr="0" w="38" h="45" nn="Button" tag="2" ni="mainui/ui_mainui_btn_guanyin.png" nic="0,0,0,0" zot="1" state="0" act="openMark" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="markRedpoint" x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="titleBtn" x="94" y="50" xr="0" yr="0" w="38" h="45" nn="Button" tag="4" ni="mainui/ui_mainui_btn_guanzhi.png" nic="0,0,0,0" zot="1" state="0" act="openTitle" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="titleOfficeRedpoint" x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button x="136" y="50" xr="0" yr="0" w="38" h="45" nn="Button" tag="8" ni="mainui/main_btn_role.png" nic="0,0,0,0" zot="1" state="0" act="openSkill" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="zhugongRedPoint" x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button x="178" y="50" xr="0" yr="0" w="38" h="45" nn="Button" tag="16" ni="mainui/main_btn_general.png" nic="0,0,0,0" zot="1" state="0" act="openGeneral" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="jianglingRedPoint" x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="formatRedpoint" x="220" y="50" xr="0" yr="0" w="38" h="45" nn="Button" tag="32" ni="mainui/main_btn_embattle.png" nic="0,0,0,0" zot="1" state="0" act="openDoubtful" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="formatRedPoint" x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button x="262" y="50" xr="0" yr="0" w="38" h="45" nn="Button" tag="64" ni="mainui/main_btn_skill.png" nic="0,0,0,0" zot="1" state="0" act="openShuYuan" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="collegeRedPoint" x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="mountBtn" x="304" y="50" xr="0" yr="0" w="38" h="45" nn="Button" tag="128" ni="mainui/main_btn_ride.png" nic="0,0,0,0" zot="1" state="0" act="openMount" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="zuoqiRedPoint" x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button x="346" y="50" xr="0" yr="0" w="38" h="45" nn="Button" tag="256" ni="mainui/main_btn_league.png" nic="0,0,0,0" zot="1" state="0" act="openUnion" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="leagueRedPoint" x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button x="388" y="50" xr="0" yr="0" w="38" h="45" nn="Button" tag="512" ni="mainui/ui_mainui_shop.png" nic="0,0,0,0" zot="1" state="0" act="openShangdian" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="shangdianRedPoint" x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="bagBtn" x="430" y="50" xr="0" yr="0" w="38" h="45" nn="Button" tag="1024" ni="mainui/main_btn_bag.png" nic="0,0,0,0" zot="1" state="0" act="openBag" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="bagBtnRedPoint" x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+  </View>
+  <Button id="cloakButton" x="311" y="267" xr="0" yr="0" w="36" h="45" nn="Button" iv="0" tag="32" ni="mainui/main_btn_cloak.png" nic="0,0,0,0" zot="1" state="0" act="openCloak" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+  <View id="guozhanBottomView" x="100" y="262" xr="0" yr="0" w="335" h="50" nn="View" iv="0">
+    <Button id="btnPersonalCity" x="124.5" y="8.5" xr="0" yr="0" w="36" h="40" nn="Button" tag="470" ni="mainui/main_btn_personalcity.png" nic="0,0,0,0" zot="1" state="0" act="onOpenPersonalCity" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="personalCityRedPoint" x="20" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" tag="101" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="btnJunqing" x="166.5" y="8.5" xr="0" yr="0" w="36" h="40" nn="Button" tag="458" ni="mainui/countrywar_btn_military.png" nic="0,0,0,0" zot="1" state="0" act="onOpenJunqing" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="junqingRedPoint" x="20" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" tag="101" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="btnReport" x="208.5" y="8.5" xr="0" yr="0" w="36" h="40" nn="Button" tag="454" ni="mainui/countrywar_btn_warreport.png" nic="0,0,0,0" zot="1" state="0" act="onOpenReport" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="warreportRedPoint" x="20" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" tag="101" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="btnLeague" x="250.5" y="8.5" xr="0" yr="0" w="36" h="40" nn="Button" tag="473" ni="mainui/countrywar_btn_league.png" nic="0,0,0,0" zot="1" state="0" act="openUnion" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="countryWarLeagueRedPoint" x="20" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" tag="101" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="btnTeam" x="292.5" y="8" xr="0" yr="0" w="36" h="40" nn="Button" tag="451" ni="mainui/countrywar_btn_formation.png" nic="0,0,0,0" zot="1" state="0" act="onOpenTeam" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="troopRedPoint" x="20" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" tag="101" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="gveBtn" x="81.5" y="8" xr="0" yr="0" w="36" h="40" nn="Button" tag="471" ni="mainui/countrywar_btn_gve.png" nic="0,0,0,0" zot="1" state="0" act="openGVE" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="gveRedPoint" x="20" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" tag="101" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="lianbingBtn" x="38.5" y="8" xr="0" yr="0" w="36" h="40" nn="Button" tag="472" ni="mainui/countrywar_btn_lianbing.png" nic="0,0,0,0" zot="1" state="0" act="openLianbing" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="lianbingRedPoint" x="20" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" tag="101" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="sceienceBtn" x="-2.5" y="8" xr="0" yr="0" w="36" h="40" nn="Button" tag="474" ni="mainui/ui_mainui_bingzhong.png" nic="0,0,0,0" zot="1" state="0" act="openScience" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="sceienceRedPoint" x="20" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" tag="101" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+  </View>
+  <Button id="shousuo_btn" x="433" y="267.5" xr="0" yr="0" w="43" h="43" nn="Button" tag="513" nic="0,0,0,0" zot="1" state="0" act="openShousuo" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="shousuo_image" x="0" y="0" xr="0" yr="0" w="43" h="43" nn="ImageView" i="mainui/mainui_bt_iconhide.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="shousuoRedPoint" x="28.5" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <View id="cwRedPointBack" x="28.5" y="0" xr="0" yr="0" w="18" h="18" nn="View" iv="0">
+      <View id="cwSwitchBack" x="0" y="0" xr="0" yr="0" w="18" h="18" nn="View" iv="0">
+        <ImageView id="cwShousuoRedPoint" x="0" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+    </View>
+  </Button>
+  <Button id="roleUIBtn" x="116.12000274658203" y="178.75999450683594" xr="0" yr="0" w="44" h="44" nn="Button" iv="0" tag="305" ni="common/u_other_hufu.png" nic="0,0,0,0" state="0" act="roleAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <View id="movieMC" x="100" y="100" xr="0" yr="0" w="20" h="20" nn="View" iv="0"/>
+  <View id="activieBtnView" x="154" y="217" xr="0" yr="0" w="322" h="40" nn="View" iv="0">
+    <Button id="btnAutowarTrophy" x="0" y="0" xr="0" yr="0" w="47" h="35" nn="Button" tag="3" ni="mainui/countrywar_btn_autoincome.png" nic="0,0,0,0" zot="1" state="0" act="onOpenAutowarTrophy" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView x="27.5" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="btnTrophy" x="45" y="0" xr="0" yr="0" w="32" h="35" nn="Button" ni="mainui/countrywar_btn_trophy.png" nic="0,0,0,0" zot="1" state="0" act="onOpenTrophy" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="btnTrophyRedPoint" x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" tag="100" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="btnWelfare" x="90" y="0" xr="0" yr="0" w="32" h="35" nn="Button" tag="1" ni="mainui/countrywar_btn_welfare.png" nic="0,0,0,0" zot="1" state="0" act="onOpenWelfare" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="btnMessage" x="135" y="0" xr="0" yr="0" w="32" h="35" nn="Button" tag="2" ni="mainui/countrywar_btn_message.png" nic="0,0,0,0" zot="1" state="0" act="onClickOpenMsg" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="btnTreasureMap" x="180" y="0" xr="0" yr="0" w="32" h="35" nn="Button" tag="3" ni="mainui/countrywar_btn_nwcoracle.png" nic="0,0,0,0" zot="1" state="0" act="onClickTreasureMap" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="btnAutowarTip" x="225" y="0" xr="0" yr="0" w="35" h="35" nn="Button" tag="3" ni="countrywar_autowar/autowar_btn_2.png" nic="0,0,0,0" zot="1" state="0" act="onClickAutowarTip" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="crossArenaHelpBtn" x="270" y="0" xr="0" yr="0" w="35" h="35" nn="Button" tag="3" ni="countrywar_autowar/autowar_btn_2.png" nic="0,0,0,0" zot="1" state="0" act="onClickCrossArenaHelpTips" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+  </View>
+  <Button id="btnGift" x="200" y="217" xr="0" yr="0" w="36" h="40" nn="Button" iv="0" ni="mainui/main_btn_libao.png" nic="0,0,0,0" zot="1" state="0" act="onGiftAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView x="20" y="3.5" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" tag="1" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <Button id="cwstoreBtn" x="1.5" y="47.31999969482422" xr="0" yr="0" w="47" h="21" nn="Button" iv="0" ni="mainui/main_btn_shop.png" nic="0,0,0,0" zot="1" state="0" act="openCwStore" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="killYellowBtn" x="392" y="224.5" xr="0" yr="0" w="40" h="40" nn="Button" iv="0" ni="mainui/countrywar_btn_jmhj.png" nic="0,0,0,0" zot="1" state="0" act="onKillYellow" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="findGuiBtn" x="434" y="224.5" xr="0" yr="0" w="40" h="40" nn="Button" iv="0" ni="mainui/countrywar_btn_findmonster.png" nic="0,0,0,0" zot="1" state="0" act="onFindGuai" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="expGiftBagBtn" x="434" y="224.5" xr="0" yr="0" w="40" h="40" nn="Button" iv="0" ni="mainui/main_btn_exp.png" nic="0,0,0,0" zot="1" state="0" act="openExpGiftBag" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="leavelNewWordMap" x="4" y="273.739990234375" xr="0" yr="0" w="36" h="40" nn="Button" iv="0" ni="common/u_btn_leaveWar.png" nic="0,0,0,0" zot="1" state="0" act="onLeavelNewWordMap" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="leavelCountrywarBtnRed" x="22.5" y="-1.5" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <Button id="btnGCBZ" x="435.5" y="33" xr="0" yr="0" w="36" h="40" nn="Button" iv="0" ni="mainui/countrywar_btn_target.png" nic="0,0,0,0" zot="1" state="0" act="onOpenGCBZ" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="GcbzRedPoint" x="20" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" tag="101" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <Button id="worldTrendBtn" x="393.5" y="33" xr="0" yr="0" w="36" h="40" nn="Button" iv="0" ni="mainui/countrywar_btn_world.png" nic="0,0,0,0" zot="1" state="0" act="onOpenWorldTrend" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="WorldTrendRedPoint" x="20" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" tag="101" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <Button id="firstRechargeBtn" x="314" y="2.059999942779541" xr="0" yr="0" w="40" h="36" nn="Button" iv="0" nic="0,0,0,0" zot="1" state="0" act="onCallback" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="firstRechargeBtnRed" x="22" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <View id="castellan_award_bg" x="119" y="139" xr="0" yr="0" w="215" h="72" nn="View" iv="0">
+    <ImageView x="20" y="0" xr="0" yr="0" w="175" h="72" nn="ImageView" i="mainui/countrywar_mainui_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ScrollView x="4.5" y="0" xr="0" yr="0" w="165" h="72" nn="ScrollView" iv="0">
+        <ImageView x="8" y="3.5" xr="0" yr="0" w="40" h="10.5" nn="ImageView" iv="0" i="mainui/countrywar_mainui_bg3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label x="1.5" y="0.5" xr="0" yr="0" w="40" h="9" nn="Label" t="城池名称" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+          <Button x="2" y="13" xr="0" yr="0" w="36" h="40" nn="Button" ni="mainui/countrywar_btn_xian.png" nic="0,0,0,0" state="0" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <ImageView x="-8.529999732971191" y="37.599998474121094" xr="0" yr="0" w="48" h="16" nn="ImageView" i="mainui/countrywar_mainui_bg2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="12" y="3.5" xr="0" yr="0" w="35" h="9" nn="Label" t="24:23:12" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+            </ImageView>
+          </Button>
+        </ImageView>
+        <ImageView x="63" y="3.5" xr="0" yr="0" w="40" h="10.5" nn="ImageView" iv="0" i="mainui/countrywar_mainui_bg3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label x="1.5" y="0.5" xr="0" yr="0" w="40" h="9" nn="Label" t="城池名称" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+          <Button x="2" y="13" xr="0" yr="0" w="36" h="40" nn="Button" ni="mainui/countrywar_btn_xian.png" nic="0,0,0,0" state="0" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <ImageView x="-8.529999732971191" y="37.599998474121094" xr="0" yr="0" w="48" h="16" nn="ImageView" i="mainui/countrywar_mainui_bg2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="12" y="3.5" xr="0" yr="0" w="35" h="9" nn="Label" t="24:23:12" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+            </ImageView>
+          </Button>
+        </ImageView>
+        <ImageView x="118" y="3.5" xr="0" yr="0" w="40" h="10.5" nn="ImageView" iv="0" i="mainui/countrywar_mainui_bg3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label x="1.5" y="0.5" xr="0" yr="0" w="40" h="9" nn="Label" t="城池名称" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+          <Button x="2" y="13" xr="0" yr="0" w="36" h="40" nn="Button" ni="mainui/countrywar_btn_xian.png" nic="0,0,0,0" state="0" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <ImageView x="-8.529999732971191" y="37.599998474121094" xr="0" yr="0" w="48" h="16" nn="ImageView" i="mainui/countrywar_mainui_bg2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="12" y="3.5" xr="0" yr="0" w="35" h="9" nn="Label" t="24:23:12" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+            </ImageView>
+          </Button>
+        </ImageView>
+      </ScrollView>
+      <View id="castellan_award_sv" x="4.5" y="0" xr="0" yr="0" w="165" h="72" nn="View"/>
+    </ImageView>
+    <Button id="castellan_award_left" x="0" y="25.5" xr="0" yr="0" w="18" h="23" nn="Button" nic="0,0,0,0" state="0" act="castellan_award_left_act" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView x="0" y="0" xr="0" yr="0" w="18" h="23" nn="ImageView" i="mainui/countrywar_btn_mainui_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="castellan_award_right" x="196.5" y="25.5" xr="0" yr="0" w="18" h="23" nn="Button" nic="0,0,0,0" state="0" act="castellan_award_right_act" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <ImageView x="0" y="0" xr="0" yr="0" w="18" h="23" nn="ImageView" i="mainui/countrywar_btn_mainui_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+    </Button>
+  </View>
+  <Button id="castellan_award_btn" x="350" y="32" xr="0" yr="0" w="36" h="40" nn="Button" iv="0" ni="mainui/countrywar_btn_cityaward.png" nic="0,0,0,0" zot="1" state="0" act="castellan_award_act" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="castellan_award_red" x="20" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" tag="101" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <Button id="mYybSuperBtn" x="434" y="224" xr="0" yr="0" w="40" h="36" nn="Button" ni="common/ui_common_mainui_qq.png" nic="0,0,0,0" zot="1" state="0" act="onYybSuperDone" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="mYybBBS_Btn" x="390.5" y="224" xr="0" yr="0" w="40" h="36" nn="Button" ni="common/ui_common_yingyongbao.png" nic="0,0,0,0" zot="1" state="0" act="onYybBBSDone" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="mXQBL_Btn" x="346.5" y="224" xr="0" yr="0" w="40" h="36" nn="Button" iv="0" ni="mainui/ui_mainui_btn_xingqubuluo_5.png" nic="0,0,0,0" zot="1" state="0" act="onXQBLClick" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="battleWatchButton" x="217" y="28" xr="0" yr="0" w="40" h="40" nn="Button" ni="cross_arena/cross_arena_btn11.png" nic="0,0,0,0" state="0" act="onBackBattleWatch" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+</View>

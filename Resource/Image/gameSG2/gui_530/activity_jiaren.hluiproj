@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="294.500" h="252.000" srw="294" srh="252">
+  <View x="14.500" y="1.000" xr="0" yr="0" w="280.000" h="250.000" srw="294" srh="252">
+    <ImageView x="-11.500" y="4.000" xr="0" yr="0" w="289.000" h="82.500" srw="294" srh="252" i="activity_jiaren/ui_activity_jiaren_bg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView x="54.000" y="-6.500" xr="0" yr="0" w="181.000" h="22.000" srw="294" srh="252" i="activity_jiaren/ui_activity_jiaren_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label x="-1.000" y="17.500" xr="0" yr="0" w="181.000" h="10.000" srw="294" srh="252" t="活动时间：" ts="9" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17">
+          <Label id="_open_time_lab" x="43.000" y="0.000" xr="0" yr="0" w="181.000" h="10.000" srw="294" srh="252" t="" ts="9" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17"/>
+        </Label>
+        <ImageView x="11.500" y="19.000" xr="0" yr="0" w="160.000" h="15.000" srw="294" srh="252" iv="0" i="common/u_bg_title6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="icon_60004" x="23.000" y="22.500" xr="0" yr="0" w="42.500" h="60.000" srw="294" srh="252" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="icon_60054" x="-5.500" y="22.500" xr="0" yr="0" w="42.500" h="60.000" srw="294" srh="252" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000" fx="1"/>
+      <ImageView id="icon_60041" x="251.000" y="22.500" xr="0" yr="0" w="42.500" h="60.000" srw="294" srh="252" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="icon_60037" x="219.000" y="22.500" xr="0" yr="0" w="42.500" h="60.000" srw="294" srh="252" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="icon_60030" x="176.000" y="22.500" xr="0" yr="0" w="42.500" h="60.000" srw="294" srh="252" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="icon_60034" x="151.250" y="22.500" xr="0" yr="0" w="42.500" h="60.000" srw="294" srh="252" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="icon_60053" x="70.750" y="22.500" xr="0" yr="0" w="42.500" h="60.000" srw="294" srh="252" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="icon_60055" x="103.750" y="22.500" xr="0" yr="0" w="42.500" h="60.000" srw="294" srh="252" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+  </View>
+  <ImageView x="2.500" y="113.000" xr="0" yr="0" w="289.000" h="138.500" srw="294" srh="252" i="common/u_bg_5.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <View id="m_scrollBg" x="5.000" y="4.500" xr="0" yr="0" w="279.000" h="130.000" srw="294" srh="252"/>
+  </ImageView>
+  <Button x="4.000" y="7.500" xr="0" yr="0" w="15.000" h="15.000" srw="294" srh="252" iv="0" nt="" ni="common/u_btn_zhushi_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onTipsCallBack"/>
+  <Button id="m_check_1" x="9.500" y="89.000" xr="0" yr="0" w="61.000" h="25.000" srw="294" srh="252" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="294" srh="252" tag="10" i="achievement_4/activity_tuangou_btn_select.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_title_1" x="0.000" y="8.000" xr="0" yr="0" w="61.000" h="12.000" srw="294" srh="252" t="形单影只" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="294" srh="252" iv="0" tag="11" i="achievement_4/activity_tuangou_btn_unselect.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_n_title_1" x="0.000" y="8.500" xr="0" yr="0" w="61.000" h="12.000" srw="294" srh="252" t="形单影只" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView id="_red_img_1" x="52.000" y="0.370" xr="0" yr="0" w="15.000" h="15.000" srw="294" srh="252" iv="0" tag="12" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </Button>
+  <Button id="m_check_2" x="77.000" y="89.000" xr="0" yr="0" w="61.000" h="25.000" srw="294" srh="252" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="294" srh="252" tag="10" i="achievement_4/activity_tuangou_btn_select.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="0.000" y="8.000" xr="0" yr="0" w="61.000" h="12.000" srw="294" srh="252" t="两全齐美" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="294" srh="252" tag="11" i="achievement_4/activity_tuangou_btn_unselect.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="0.000" y="8.500" xr="0" yr="0" w="61.000" h="12.000" srw="294" srh="252" t="两全齐美" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView x="52.000" y="0.370" xr="0" yr="0" w="15.000" h="15.000" srw="294" srh="252" tag="12" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </Button>
+</View>

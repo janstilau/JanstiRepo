@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="100.000" h="35.000" srw="100" srh="35">
+  <Button id="itemBtn" nn="Button" x="0.000" y="0.000" xr="0" yr="0" w="100.000" h="35.000" srw="100" srh="35" nt="" ni="cross_arena/cross_arena_btn13.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18" act="submitAction">
+    <Label id="titletxt" nn="Label" x="12.000" y="2.500" xr="0" yr="0" w="100.000" h="30.000" srw="100" srh="35" t="我是安妞" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    <ImageView id="icon" nn="ImageView" x="2.000" y="2.500" xr="0" yr="0" w="30.000" h="30.000" srw="100" srh="35" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="redPoint" nn="ImageView" x="83.240" y="-2.720" xr="0" yr="0" w="18.000" h="18.000" srw="100" srh="35" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </Button>
+</View>

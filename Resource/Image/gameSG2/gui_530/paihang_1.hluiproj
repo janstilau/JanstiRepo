@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View id="myViewBg" x="1.000" y="0.500" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView x="12.000" y="25.510" xr="0" yr="0" w="433.500" h="286.000" srw="480" srh="320" i="common/u_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="-12.100" y="-16.300" xr="0" yr="0" w="457.500" h="80.000" srw="480" srh="320" i="common/u_bg_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="457.500" h="27.000" srw="480" srh="320" i="common/u_bg_title1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label x="179.470" y="-2.420" xr="0" yr="0" w="100.000" h="30.000" srw="480" srh="320" t="排行榜" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+  </ImageView>
+  <Button x="430.170" y="9.560" xr="0" yr="0" w="27.500" h="35.000" srw="480" srh="320" nt="" ni="common/u_btn_close.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeBtnAction"/>
+  <ImageView x="22.500" y="40.000" xr="0" yr="0" w="91.000" h="260.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <View id="menuView" x="3.000" y="3.500" xr="0" yr="0" w="85.000" h="252.000" srw="480" srh="320"/>
+  </ImageView>
+  <View id="view1" x="112.480" y="41.030" xr="0" yr="0" w="330.000" h="260.000" srw="480" srh="320" iv="0">
+    <ImageView id="titleImg_1" x="6.500" y="4.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" i="paihang_1/word_paiming.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="titleImg_2" x="67.380" y="4.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" i="paihang_1/word_name.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="titleImg_3" x="140.030" y="4.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" i="paihang_1/word_allfight.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="cellViewBg" x="6.020" y="18.470" xr="0" yr="0" w="195.000" h="217.500" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="loadLab" x="45.500" y="201.000" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="加载中..." ts="8" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+    </ImageView>
+    <Button id="rankAwardBtn" x="151.160" y="239.470" xr="0" yr="0" w="50.000" h="22.000" srw="480" srh="320" iv="0" nt="排名奖励" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="rankAwardBtnAction"/>
+  </View>
+  <View id="view2" x="115.630" y="43.210" xr="0" yr="0" w="320.000" h="250.000" srw="480" srh="320">
+    <ImageView x="3.000" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" i="paihang_1/word_paiming.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="67.000" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" tag="101" i="paihang_1/word_lianmengname.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="158.500" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" tag="101" i="paihang_1/word_ashili.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="220.000" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" tag="101" i="paihang_1/word_lv..png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="272.000" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" tag="101" i="paihang_1/word_rennum.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="cellView2Bg" x="2.870" y="16.290" xr="0" yr="0" w="316.750" h="217.500" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <View id="cellView2" x="2.000" y="2.000" xr="0" yr="0" w="311.000" h="221.500" srw="480" srh="320"/>
+    </ImageView>
+    <Button id="rankAwardBtn1" x="265.510" y="240.790" xr="0" yr="0" w="50.000" h="22.000" srw="480" srh="320" iv="0" nt="排名奖励" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="rankAwardBtnAction1"/>
+    <ImageView x="67.000" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" tag="102" i="paihang_1/word_zhuangbeiming.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="158.500" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" tag="102" i="paihang_1/word_zhuangbeijifen.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="241.000" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" tag="102" i="paihang_1/word_chiyouzhe.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="67.000" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" tag="103" i="paihang_1/ui_paihang_1_ridename.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="158.500" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" tag="103" i="paihang_1/ui_paihang_1_ridepingfen.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="241.000" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" tag="103" i="paihang_1/ui_paihang_1_ridezhuren.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="67.000" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" tag="104" i="paihang_1/word_godweapon.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="158.500" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" tag="104" i="paihang_1/word_add_scroe.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="241.000" y="2.000" xr="0" yr="0" w="46.500" h="12.000" srw="480" srh="320" tag="104" i="paihang_1/word_chiyouzhe.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </View>
+  <Label id="rankLab" x="119.630" y="286.760" xr="0" yr="0" w="100.000" h="12.000" srw="480" srh="320" t="" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="17"/>
+  <View id="cellView" x="118.500" y="61.500" xr="0" yr="0" w="192.000" h="213.500" srw="480" srh="320"/>
+  <View id="playerView" x="316.830" y="27.640" xr="0" yr="0" w="122.000" h="280.000" srw="480" srh="320" iv="0">
+    <ImageView x="4.260" y="96.590" xr="0" yr="0" w="119.000" h="149.000" srw="480" srh="320" i="common/general_bg_general.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="1.210" y="-0.070" xr="0" yr="0" w="44.500" h="280.000" srw="480" srh="320" i="common/u_bg_gradient1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="2.520" y="12.230" xr="0" yr="0" w="120.000" h="25.000" srw="480" srh="320" i="common/u_bg_title3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="20.470" y="242.720" xr="0" yr="0" w="91.000" h="32.000" srw="480" srh="320" i="common/role_power.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <View id="viewForRole" x="0.000" y="0.000" xr="0" yr="0" w="150.000" h="280.000" srw="480" srh="320">
+      <ImageView id="allianceImg" x="51.000" y="71.500" xr="0" yr="0" w="25.500" h="11.000" srw="480" srh="320" i="paihang_1/word_lianmeng.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="unionLab" x="26.500" y="-1.000" xr="0" yr="0" w="80.000" h="12.000" srw="480" srh="320" t="联盟名六个字" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      </ImageView>
+      <Label id="lvLab" x="49.500" y="8.210" xr="0" yr="0" w="40.000" h="20.000" srw="480" srh="320" t="Lv.80" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="18"/>
+      <Label id="nameLab" x="30.530" y="23.770" xr="0" yr="0" w="80.000" h="12.000" srw="480" srh="320" t="玩家名六个字" ts="11" tctl="rgb(147, 98, 39)" tctr="rgb(147, 98, 39)" tcbl="rgb(147, 98, 39)" tcbr="rgb(147, 98, 39)" sc="black" ta="18"/>
+      <Button id="focusBtn" x="1.880" y="13.230" xr="0" yr="0" w="24.000" h="24.000" srw="480" srh="320" nt="" ni="common/cancel_attention.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="focusBtnAction"/>
+      <ImageView id="titleImg" x="29.980" y="42.720" xr="0" yr="0" w="68.500" h="21.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="titleNameLab" x="-17.650" y="-5.100" xr="0" yr="0" w="100.000" h="30.000" srw="480" srh="320" iv="0" t="Label" ts="8" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </ImageView>
+      <View id="roleView" x="0.800" y="85.170" xr="0" yr="0" w="120.000" h="150.000" srw="480" srh="320"/>
+      <Label id="batPowLab" x="47.970" y="257.220" xr="0" yr="0" w="60.000" h="12.000" srw="480" srh="320" t="999999" ts="12" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="rgb(115, 9, 1)" ta="18"/>
+    </View>
+  </View>
+  <View x="114.980" y="36.030" xr="0" yr="0" w="325.000" h="270.000" srw="480" srh="320" iv="0"/>
+  <Button x="440.000" y="90.500" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="1001" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="serverBtnAction">
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="1" i="common/a_tag_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="rank_item1_name1" x="6.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="本" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="18"/>
+      <Label id="rank_item1_name2" x="6.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="郡" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="18"/>
+    </ImageView>
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" iv="0" tag="2" i="common/a_tag_d.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="rank_item1_name3" x="8.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="本" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18"/>
+      <Label id="rank_item1_name4" x="8.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="郡" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18"/>
+    </ImageView>
+  </Button>
+  <Button x="440.000" y="150.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="1002" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="serverBtnAction">
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="1" i="common/a_tag_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="rank_item2_name1" x="6.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="本" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="18"/>
+      <Label id="rank_item2_name2" x="5.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="州" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="18"/>
+    </ImageView>
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" iv="0" tag="2" i="common/a_tag_d.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="rank_item2_name3" x="8.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="本" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18"/>
+      <Label id="rank_item2_name4" x="8.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="州" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18"/>
+    </ImageView>
+  </Button>
+</View>

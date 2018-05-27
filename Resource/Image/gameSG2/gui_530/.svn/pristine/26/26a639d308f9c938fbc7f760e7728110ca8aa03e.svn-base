@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="198.000" h="160.000" srw="198" srh="277">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="198.000" h="160.000" srw="198" srh="277" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="13.500" y="15.500" xr="0" yr="0" w="170.000" h="45.000" srw="198" srh="277" t="1. 在活动期间，任一城池未曾失守，参与守城的玩家即可获得翻牌机会；联盟守住的城池数量越多，翻牌机会越多" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+    <Label nn="Label" x="13.500" y="95.910" xr="0" yr="0" w="170.000" h="45.000" srw="198" srh="277" t="3. 每对叛军建筑城防造成1点伤害，可获得5积分，每击败一支叛军队伍，可获得80积分；" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+    <Label nn="Label" x="13.500" y="64.410" xr="0" yr="0" w="170.000" h="30.000" srw="198" srh="277" t="2. 参与守城的玩家守城积分超过500分时，才有翻牌机会" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9"/>
+  </ImageView>
+</View>

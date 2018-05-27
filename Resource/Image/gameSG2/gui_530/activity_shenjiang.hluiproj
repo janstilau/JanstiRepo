@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="288" h="251">
+  <View x="0" y="0" xr="0" yr="0" w="288" h="251">
+    <ImageView x="0" y="-1" xr="0" yr="0" w="290" h="30" i="common/activity_7days_bg_title.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="4.5" y="-7" xr="0" yr="0" w="174" h="22.5" i="activity_shenjiang/activity_shenjiang_word_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="4.5" y="16" xr="0" yr="0" w="100" h="10" t="活动时间：" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17">
+        <Label id="_open_time_lab" x="42" y="0" xr="0" yr="0" w="200" h="10" t="活动时间：" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17"/>
+      </Label>
+    </ImageView>
+    <ImageView id="m_bg" x="1.5" y="31.18000030517578" xr="0" yr="0" w="287" h="214" i="activity_shenjiang/activity_shenjiang_bg_1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="6.5" y="13" xr="0" yr="0" w="47" h="13" i="activity_shenjiang/activity_shenjiang_word_3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="61" y="4" xr="0" yr="0" w="30" h="32" i="activity_shenjiang/activity_shenjiang_bg_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="reward_1" x="1" y="1" xr="0" yr="0" w="28" h="28" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="-2.5" y="18" xr="0" yr="0" w="30" h="9" t="" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="20"/>
+      </ImageView>
+      <ImageView x="106.5" y="4" xr="0" yr="0" w="30" h="32" i="activity_shenjiang/activity_shenjiang_bg_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="reward_2" x="1" y="1" xr="0" yr="0" w="28" h="28" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="-2.5" y="18" xr="0" yr="0" w="30" h="9" t="" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="20"/>
+      </ImageView>
+      <ImageView x="152" y="4" xr="0" yr="0" w="30" h="32" i="activity_shenjiang/activity_shenjiang_bg_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="reward_3" x="1" y="1" xr="0" yr="0" w="28" h="28" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="-2.5" y="18" xr="0" yr="0" w="30" h="9" t="" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="20"/>
+      </ImageView>
+      <ImageView x="197.5" y="4" xr="0" yr="0" w="30" h="32" i="activity_shenjiang/activity_shenjiang_bg_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="reward_4" x="1" y="1" xr="0" yr="0" w="28" h="28" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="-2.5" y="18" xr="0" yr="0" w="30" h="9" t="" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="20"/>
+      </ImageView>
+      <ImageView x="243" y="4" xr="0" yr="0" w="30" h="32" i="activity_shenjiang/activity_shenjiang_bg_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="reward_5" x="1" y="1" xr="0" yr="0" w="28" h="28" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="-2.5" y="18" xr="0" yr="0" w="30" h="9" t="" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="20"/>
+      </ImageView>
+      <ImageView id="count_value_prog_img_bg" x="28.5" y="36" xr="0" yr="0" w="231.5" h="11" i="common/huoyue_bg_exp.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="count_value_prog_img" x="2.5" y="0" xr="0" yr="0" w="227" h="11" i="common/huoyue_exp.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="0" y="0" xr="0" yr="0" w="231.5" h="11" i="common/huoyue_bg_exp_shu.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView id="count_value_img" x="0" y="0" xr="0" yr="0" w="15" h="11" iv="0" i="common/huoyue_word_bg.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label id="count_value_lab" x="0" y="0" xr="0" yr="0" w="15" h="11" t="100" ts="8" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+        </ImageView>
+        <ImageView x="37" y="11.5" xr="0" yr="0" w="203.5" h="10.5" i="activity_shenjiang/activity_shenjiang_word_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ImageView id="des_img" x="111.5" y="66" xr="0" yr="0" w="157" h="13.5" i="activity_shenjiang/activity_shenjiang_name_6033.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="118.5" y="83.5" xr="0" yr="0" w="35" h="13.5" i="activity_shenjiang/activity_shenjiang_word_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="luck_value_prog_img_bg" x="153.5" y="83.5" xr="0" yr="0" w="104" h="13" i="activity_shenjiang/activity_shenjiang_exp_bg.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="luck_value_prog_img" x="0" y="0" xr="0" yr="0" w="104" h="13" i="activity_shenjiang/activity_shenjiang_exp.png" ic="0,0,0,0" tc="rgb(255,255,255)" repeat="1" bri="1"/>
+        <Label id="luck_value_lab" x="0" y="0" xr="0" yr="0" w="104" h="13" t="100/100" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+      </ImageView>
+      <Button id="luckyBox_Btn" x="244.5" y="75" xr="0" yr="0" w="38" h="32" ni="activity_shenjiang/activity_shenjiang_btn_3.png" nic="0,0,0,0" state="0" act="onLuckyBoxClick" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      <ImageView x="158" y="108" xr="0" yr="0" w="127" h="36.5" i="activity_shenjiang/activity_shenjiang_word_4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="185" y="158" xr="0" yr="0" w="50" h="12.5" i="activity_shenjiang/activity_shenjiang_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="zuanshi_icon" x="-6.5" y="-2" xr="0" yr="0" w="16" h="16" i="common/u_other_zuanshi.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label id="own_zuanshi_label" x="11.5" y="0" xr="0" yr="0" w="40" h="13" t="999" ts="9" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17"/>
+      </ImageView>
+      <ImageView x="246" y="158" xr="0" yr="0" w="32" h="12.5" i="activity_shenjiang/activity_shenjiang_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="fu_icon" x="-6.5" y="-2" xr="0" yr="0" w="16" h="16" i="wine/ui_wine_act_10.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label id="own_fu_label" x="9.5" y="0" xr="0" yr="0" w="30" h="13" t="999" ts="9" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17"/>
+      </ImageView>
+      <View id="main_view" x="0.30000001192092896" y="46.29999923706055" xr="0" yr="0" w="180" h="168">
+        <ImageView id="generals_big_img" x="0" y="-32.29999923706055" xr="0" yr="0" w="200" h="200" i="activity_shenjiang/activity_shenjiang_6033.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Button id="general_btn_4" x="70.19999694824219" y="28.200000762939453" xr="0" yr="0" w="50" h="50" nic="0,0,0,0" state="0" act="OnHeadImgClick" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        <Button id="general_btn_2" x="-5.800000190734863" y="54.20000076293945" xr="0" yr="0" w="40" h="50" nic="0,0,0,0" state="0" act="OnHeadImgClick" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        <Button id="general_btn_3" x="118.69999694824219" y="75.19999694824219" xr="0" yr="0" w="40" h="90" nic="0,0,0,0" state="0" act="OnHeadImgClick" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        <Button id="general_btn_1" x="37.939998626708984" y="94.91999816894531" xr="0" yr="0" w="70" h="70" nic="0,0,0,0" state="0" act="OnHeadImgClick" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      </View>
+      <Button id="buy_btn" x="180" y="175.5" xr="0" yr="0" w="100" h="32.5" ni="activity_shenjiang/activity_shenjiang_btn_1.png" nic="0,0,0,0" state="0" act="onBuyCallBack" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="buy_btn_4" x="180" y="175" xr="0" yr="0" w="100" h="32.5" ni="activity_shenjiang/activity_shenjiang_btn_4.png" nic="0,0,0,0" state="0" act="onBuyCallBack" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="open_box_btn" x="180" y="175.5" xr="0" yr="0" w="100" h="32.5" iv="0" ni="activity_shenjiang/activity_shenjiang_btn_5.png" nic="0,0,0,0" state="0" act="onLuckyBoxClick" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <Button x="3.119999885559082" y="195.60000610351562" xr="0" yr="0" w="21" h="48.5" ni="activity_shenjiang/activity_shenjiang_btn_2.png" nic="0,0,0,0" state="0" act="onRewardPoolClick" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Button x="258.8699951171875" y="3.0999999046325684" xr="0" yr="0" w="20" h="20" ni="common/u_btn_zhushi.png" nic="0,0,0,0" state="0" act="onTipsCallBack" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  </View>
+</View>

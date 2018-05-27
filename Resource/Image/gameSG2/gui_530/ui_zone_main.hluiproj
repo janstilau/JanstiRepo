@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="480" h="320" nn="View">
+  <ImageView x="21.020000457763672" y="24.399999618530273" xr="0" yr="0" w="433.5" h="286" nn="ImageView" i="common/u_bg_1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="37.52000045776367" y="8.260000228881836" xr="0" yr="0" w="100" h="272" nn="ImageView" i="common/u_bg_gradient1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+    <ImageView x="-12.09000015258789" y="-16.010000228881836" xr="0" yr="0" w="457.5" h="80" nn="ImageView" i="common/u_bg_title.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="0" y="0" xr="0" yr="0" w="457.5" h="27" nn="ImageView" i="common/u_bg_title1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label id="zonename" x="139.69000244140625" y="5.940000057220459" xr="0" yr="0" w="180" h="12" nn="Label" t="我的空间" ts="12" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+      </ImageView>
+    </ImageView>
+    <View id="roleView" x="3.4200000762939453" y="4.949999809265137" xr="0" yr="0" w="135" h="275" nn="View">
+      <ImageView x="28.84000015258789" y="13.970000267028809" xr="0" yr="0" w="77" h="77" nn="ImageView" i="ui_zone/ui_zone_bg3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="headImg" x="28.84000015258789" y="14.970000267028809" xr="0" yr="0" w="77" h="77" nn="ImageView" i="ui_zone/ui_zone_bg2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="headImgBg" x="28.84000015258789" y="14.970000267028809" xr="0" yr="0" w="77" h="77" nn="ImageView" i="ui_zone/ui_zone_bg1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label id="level" x="-3" y="56" xr="0" yr="0" w="30" h="20" nn="Label" t="888" ts="12" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        <ImageView id="privilege_img" x="62.5" y="-2" xr="0" yr="0" w="12" h="17" nn="ImageView" iv="0" i="qq/qq_btn_tequan_24_1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView id="redPoint" x="62.5" y="-2" xr="0" yr="0" w="18" h="18" nn="ImageView" i="common/u_other_redtips.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ImageView id="swithHeadTag" x="83.47000122070312" y="69.9800033569336" xr="0" yr="0" w="20" h="20" nn="ImageView" i="ui_zone/ui_zone_btn12.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="20.84000015258789" y="6.96999979019165" xr="0" yr="0" w="24" h="22" nn="ImageView" i="role_word/role_bg_vip.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="vipImg" x="11.729999542236328" y="13.579999923706055" xr="0" yr="0" w="12" h="12" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="2.240000009536743" y="14.149999618530273" xr="0" yr="0" w="12" h="12" nn="ImageView" i="role_word/role_word_v.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ImageView x="7.21999979019165" y="118.7699966430664" xr="0" yr="0" w="122" h="70" nn="ImageView" i="common/u_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="editRoleMsg" x="100.29000091552734" y="1.6100000143051147" xr="0" yr="0" w="20" h="20" nn="ImageView" i="ui_zone/ui_zone_btn2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="1.440000057220459" y="3.7300000190734863" xr="0" yr="0" w="30" h="12" nn="Label" t="地址：" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9"/>
+        <Label id="address1" x="30.940000534057617" y="3.7300000190734863" xr="0" yr="0" w="90" h="12" nn="Label" t="北京市" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9"/>
+        <Label id="address2" x="30.8700008392334" y="15.710000038146973" xr="0" yr="0" w="90" h="12" nn="Label" t="朝阳区" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9"/>
+        <Label x="0.8700000047683716" y="29.209999084472656" xr="0" yr="0" w="30" h="12" nn="Label" t="签名：" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9"/>
+        <View id="audioView" x="27.219999313354492" y="26.059999465942383" xr="0" yr="0" w="90" h="45" nn="View">
+          <ImageView x="4.150000095367432" y="1" xr="0" yr="0" w="88" h="42" nn="ImageView" i="chat/Talk_talk1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <ImageView x="0.15000000596046448" y="1.649999976158142" xr="0" yr="0" w="8" h="18" nn="ImageView" i="chat/Talk_talk0.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <Label id="lenLab" x="75.58000183105469" y="5.769999980926514" xr="0" yr="0" w="20" h="20" nn="Label" t="66&quot;" ts="9" tctl="rgb(0,89,0)" tctr="rgb(0,89,0)" tcbl="rgb(0,89,0)" tcbr="rgb(0,89,0)" sc="rgb(0,0,0)" ta="9"/>
+          <ImageView id="voiceImg" x="25.81999969482422" y="5.159999847412109" xr="0" yr="0" w="48" h="12" nn="ImageView" i="chat/Talk_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <ImageView id="v3" x="20.149999618530273" y="4.150000095367432" xr="0" yr="0" w="4" h="13" nn="ImageView" i="chat/Talk_sound4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <ImageView id="v2" x="17.149999618530273" y="6.150000095367432" xr="0" yr="0" w="3.5" h="10" nn="ImageView" i="chat/Talk_sound3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <ImageView id="v1" x="14.149999618530273" y="8.149999618530273" xr="0" yr="0" w="2.5" h="6" nn="ImageView" i="chat/Talk_sound2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <ImageView id="v0" x="12.149999618530273" y="10.149999618530273" xr="0" yr="0" w="1.5" h="2" nn="ImageView" i="chat/Talk_sound1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <ScrollView x="7.53000020980835" y="17.5" xr="0" yr="0" w="83" h="23" nn="ScrollView">
+            <Label id="voiceLab" x="0" y="0" xr="0" yr="0" w="83" h="23" nn="Label" t="每天都觉得每天都觉得每天都觉得每天都觉得" ts="9" tctl="rgb(147,98,39)" tctr="rgb(147,98,39)" tcbl="rgb(147,98,39)" tcbr="rgb(147,98,39)" sc="rgb(0,0,0)" ta="9"/>
+          </ScrollView>
+        </View>
+        <Label id="signLab" x="30.3700008392334" y="29.209999084472656" xr="0" yr="0" w="90" h="40" nn="Label" t="每天都觉得记几牛逼" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9"/>
+      </ImageView>
+      <Button x="109.72000122070312" y="5.199999809265137" xr="0" yr="0" w="22.5" h="22.5" nn="Button" ni="ui_zone/ui_zone_btn3.png" nic="0,0,0,0" si="ui_zone/ui_zone_btn3.png" state="0" act="flowerRankBtnAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="flowerLvImg" x="43.18000030517578" y="4.96999979019165" xr="0" yr="0" w="49.5" h="13.5" nn="Button" ni="ui_zone/ui_zone_btn10.png" nic="0,0,0,0" si="ui_zone/ui_zone_btn10.png" state="0" act="flowerLvImgAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="addFriendBtn" x="28.729999542236328" y="245.38999938964844" xr="0" yr="0" w="71" h="25" nn="Button" nt="加好友" ni="common/u_btn_comfirm1.png" nic="0,0,0,0" state="0" act="addFriendBtnAction" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+      <Label id="roleName" x="17.5" y="89" xr="0" yr="0" w="100" h="18" nn="Label" t="张三" ts="10" tctl="rgb(0,86,174)" tctr="rgb(0,86,174)" tcbl="rgb(0,86,174)" tcbr="rgb(0,86,174)" sc="rgb(0,0,0)" ta="18"/>
+      <ImageView id="expView" x="8" y="106" xr="0" yr="0" w="21" h="9.5" nn="ImageView" i="common/js_exp.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="m_image_exp_bg" x="21" y="-2" xr="0" yr="0" w="100" h="13" nn="ImageView" i="common/countrywar_other_kong.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+          <ImageView id="mExpParent" x="0" y="0" xr="0" yr="0" w="100" h="13" nn="ImageView" i="" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <Label id="mUpperProgressLabel" x="0" y="0" xr="0" yr="0" w="100" h="13" nn="Label" t="800/1000" ts="8" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        </ImageView>
+      </ImageView>
+      <Label x="7.940000057220459" y="192.47000122070312" xr="0" yr="0" w="110" h="12" nn="Label" t="地方官：" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9">
+        <Label id="localOfficesName" x="40" y="0" xr="0" yr="0" w="80" h="12" nn="Label" t="江州太守" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9"/>
+      </Label>
+      <Label x="7.940000057220459" y="204.97000122070312" xr="0" yr="0" w="110" h="12" nn="Label" t="官    职：" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9">
+        <Label id="officesName" x="40" y="0" xr="0" yr="0" w="80" h="12" nn="Label" t="大将军" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9"/>
+      </Label>
+      <Label x="8.9399995803833" y="218.52000427246094" xr="0" yr="0" w="110" h="12" nn="Label" t="数字ID：" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9">
+        <Label id="player_id" x="39.5" y="0" xr="0" yr="0" w="80" h="12" nn="Label" t="999999999" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9"/>
+      </Label>
+      <Label x="8.9399995803833" y="232.47000122070312" xr="0" yr="0" w="110" h="12" nn="Label" t="联    盟：" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9">
+        <Label id="alliance" x="40" y="0" xr="0" yr="0" w="80" h="12" nn="Label" t="世界和平" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9"/>
+      </Label>
+    </View>
+    <Button id="questionBtn" x="73.5" y="251.3000030517578" xr="0" yr="0" w="61" h="25" nn="Button" iv="0" ni="common/shop_top_btn1.png" nic="0,0,0,0" state="0" act="questionBtnAction" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18">
+      <Label x="-2.9000000953674316" y="4.5" xr="0" yr="0" w="80" h="15" nn="Label" t="热门问答" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+      <ImageView x="3" y="5.5" xr="0" yr="0" w="13" h="13" nn="ImageView" i="common_1/question.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="setBtn" x="39.70000076293945" y="251.3000030517578" xr="0" yr="0" w="61" h="25" nn="Button" ni="common/shop_top_btn1.png" nic="0,0,0,0" state="0" act="setBtnAction" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18">
+      <Label x="-2.9000000953674316" y="4.5" xr="0" yr="0" w="80" h="15" nn="Label" t="游戏设置" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+      <ImageView x="3" y="5.5" xr="0" yr="0" w="13" h="13" nn="ImageView" i="common_1/set.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <View id="contentViewBg" x="142.72999572753906" y="14.65999984741211" xr="0" yr="0" w="279" h="263" nn="View">
+      <View id="contentView" x="0" y="0" xr="0" yr="0" w="279" h="230" nn="View">
+        <Label id="loadLab" x="100" y="178" xr="0" yr="0" w="100" h="30" nn="Label" iv="0" t="Label" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+      </View>
+      <Button id="chatBtn" x="120.91999816894531" y="235.67999267578125" xr="0" yr="0" w="70" h="25" nn="Button" nt="      私聊" ni="common/u_btn_comfirm1.png" nic="0,0,0,0" state="0" act="chatBtnAction" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18">
+        <ImageView x="12.5" y="2" xr="0" yr="0" w="19" h="19" nn="ImageView" i="ui_zone/ui_zone_bg12.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </Button>
+      <Button id="sendFlowerBtn" x="207.9199981689453" y="235.1999969482422" xr="0" yr="0" w="70" h="25" nn="Button" nt="      送花" ni="common/u_btn_comfirm1.png" nic="0,0,0,0" state="0" act="sendFlowerBtnAction" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18">
+        <ImageView x="12.9399995803833" y="3.8299999237060547" xr="0" yr="0" w="19" h="19" nn="ImageView" i="ui_zone/ui_zone_bg11.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </Button>
+      <Button id="sendMsgBtn" x="205.9199981689453" y="235.10000610351562" xr="0" yr="0" w="70" h="25" nn="Button" iv="0" nt="发状态" ni="common/u_btn_comfirm1.png" nic="0,0,0,0" state="0" act="sendMsgBtnAction" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="giftRecordBtn" x="30" y="235.1999969482422" xr="0" yr="0" w="66" h="25" nn="Button" iv="0" nt="礼物记录" ni="common/u_btn_comfirm9.png" nic="0,0,0,0" state="0" act="openGiftRecord" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="share_fighting_capacity_btn" x="120.9000015258789" y="235.60000610351562" xr="0" yr="0" w="66" h="25" nn="Button" iv="0" nt="分享战力" ni="common/u_btn_comfirm9.png" nic="0,0,0,0" state="0" act="onShareFightingCapacityClick" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+    </View>
+    <View id="newMsgContentViewBg" x="142.72999572753906" y="14.65999984741211" xr="0" yr="0" w="279" h="230" nn="View">
+      <Label x="99.73999786376953" y="3.490000009536743" xr="0" yr="0" w="80" h="20" nn="Label" t="与我有关的新消息" ts="10" tctl="rgb(147,98,39)" tctr="rgb(147,98,39)" tcbl="rgb(147,98,39)" tcbr="rgb(147,98,39)" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="newMsgContenReturnBtn" x="3.490000009536743" y="-0.9200000166893005" xr="0" yr="0" w="35" h="20" nn="Button" ni="ui_zone/ui_zone_ts1.png" nic="0,0,0,0" si="ui_zone/ui_zone_ts1.png" state="0" act="newMsgContenReturnBtnAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+        <ImageView x="0.6200000047683716" y="-0.8799999952316284" xr="0" yr="0" w="11" h="20" nn="ImageView" i="ui_zone/ui_zone_ts2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="-3.259999990463257" y="-1.3300000429153442" xr="0" yr="0" w="50" h="20" nn="Label" t="返回" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="18"/>
+      </Button>
+      <ImageView x="0" y="21.889999389648438" xr="0" yr="0" w="279" h="1" nn="ImageView" i="common/u_bg_fengexian.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <View id="newMsgContentView" x="0" y="24" xr="0" yr="0" w="279" h="206" nn="View"/>
+    </View>
+    <ImageView x="143.4600067138672" y="244.86000061035156" xr="0" yr="0" w="275" h="10" nn="ImageView" i="common/u_bg_gradient2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="flowerLvImgTip" x="100" y="100" xr="0" yr="0" w="100" h="100" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </ImageView>
+  <Button x="437.32000732421875" y="9.100000381469727" xr="0" yr="0" w="27.5" h="35" nn="Button" ni="common/u_btn_close.png" nic="0,0,0,0" state="0" act="closeBtnAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="renameBtn" x="135.35000610351562" y="118.55999755859375" xr="0" yr="0" w="15.75" h="15" nn="Button" ni="league_main/a_gaiming.png" nic="0,0,0,0" state="0" act="renameBtnAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+</View>

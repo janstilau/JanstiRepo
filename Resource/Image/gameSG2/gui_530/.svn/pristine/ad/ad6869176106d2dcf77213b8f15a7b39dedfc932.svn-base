@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="300.000" h="310.000" srw="300" srh="364">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="300.000" h="310.000" srw="300" srh="364" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="110.000" y="7.000" xr="0" yr="0" w="75.000" h="21.500" srw="300" srh="364" i="countrywar_generaltrend/countrywar_generaltrend_word19.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="34.500" y="31.000" xr="0" yr="0" w="110.000" h="3.000" srw="300" srh="364" i="common/ui_common_dividing_line.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000" fx="1">
+      <ImageView nn="ImageView" x="117.500" y="0.000" xr="0" yr="0" w="110.000" h="3.000" srw="300" srh="364" i="common/ui_common_dividing_line.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <Label nn="Label" x="8.000" y="38.000" xr="0" yr="0" w="220.000" h="12.000" srw="300" srh="364" t="冀州之战 -- 论持久占" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9"/>
+    <Label nn="Label" x="8.000" y="53.000" xr="0" yr="0" w="10.000" h="12.000" srw="300" srh="364" t="1." ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9">
+      <Label nn="Label" x="10.000" y="0.000" xr="0" yr="0" w="210.000" h="12.000" srw="300" srh="364" t="周四20:00--通往冀州的码头/关隘开放开打。" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9"/>
+    </Label>
+    <Label nn="Label" x="8.000" y="70.000" xr="0" yr="0" w="10.000" h="12.000" srw="300" srh="364" t="2." ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9">
+      <Label nn="Label" x="10.000" y="0.000" xr="0" yr="0" w="280.000" h="36.000" srw="300" srh="364" t="周五20:00--冀州土地、城池开放攻打，同时前往其他郡的关隘/码头，其他郡的土地、城池开放攻打；" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9">
+        <Label nn="Label" x="169.500" y="12.500" xr="0" yr="0" w="100.000" h="12.000" srw="300" srh="364" t="精英武将怪开始刷新" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+      </Label>
+    </Label>
+    <Label nn="Label" x="7.360" y="98.000" xr="0" yr="0" w="10.000" h="12.000" srw="300" srh="364" t="3." ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="9">
+      <Label nn="Label" x="10.000" y="0.000" xr="0" yr="0" w="280.000" h="50.000" srw="300" srh="364" t="冀州内城池每日9时、11时、13时、15时、17时、19时、21时、23时、为所占联盟产出占领分，城池规模越大提供占领分越多（郡城/州城：10/次 邑城：6/次 县城：3/次 关隘：1/次）。" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="9"/>
+    </Label>
+    <Label nn="Label" x="8.000" y="139.000" xr="0" yr="0" w="10.000" h="12.000" srw="300" srh="364" t="4." ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="9">
+      <Label nn="Label" x="10.000" y="0.000" xr="0" yr="0" w="280.000" h="50.000" srw="300" srh="364" t="周日23:00--论持久占结束，占领分最高联盟获" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="9"/>
+      <Label nn="Label" x="214.500" y="-1.500" xr="0" yr="0" w="100.000" h="15.000" srw="300" srh="364" t="得冀州之战胜利；" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+      <Label nn="Label" x="99.000" y="10.500" xr="0" yr="0" w="30.000" h="15.000" srw="300" srh="364" t="在周" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+      <Label nn="Label" x="119.000" y="10.000" xr="0" yr="0" w="210.000" h="15.000" srw="300" srh="364" t="日23:00至周一23:00期间，占领分率" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+      <Label nn="Label" x="96.000" y="24.500" xr="0" yr="0" w="170.000" h="15.000" srw="300" srh="364" t="同时冀州土地、城池、关隘关闭攻打。" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      <Label nn="Label" x="10.000" y="24.500" xr="0" yr="0" w="100.000" h="15.000" srw="300" srh="364" t="先领先的联盟获胜。" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+      <Label nn="Label" x="10.500" y="10.500" xr="0" yr="0" w="100.000" h="15.000" srw="300" srh="364" t="若出现多个最高分，" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+    </Label>
+    <Label nn="Label" x="8.000" y="182.000" xr="0" yr="0" w="10.000" h="12.000" srw="300" srh="364" t="5." ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9">
+      <Label nn="Label" x="10.000" y="0.000" xr="0" yr="0" w="280.000" h="24.000" srw="300" srh="364" t="周一23:00--前往其他郡的关隘/码头重置，郡内其他非本郡联盟占领的土地、城池全部重置；" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9">
+        <Label nn="Label" x="129.500" y="12.500" xr="0" yr="0" w="100.000" h="12.000" srw="300" srh="364" t="精英武将怪停止刷新。" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+      </Label>
+    </Label>
+    <Label nn="Label" x="8.000" y="211.500" xr="0" yr="0" w="10.000" h="12.000" srw="300" srh="364" t="6." ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9">
+      <Label nn="Label" x="10.000" y="0.000" xr="0" yr="0" w="280.000" h="24.000" srw="300" srh="364" t="周二6:00--冀州关隘/码头、土地、城池全部重置。 " ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9"/>
+    </Label>
+    <Label nn="Label" x="8.000" y="229.500" xr="0" yr="0" w="10.000" h="12.000" srw="300" srh="364" t="7." ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9">
+      <Label nn="Label" x="10.000" y="0.000" xr="0" yr="0" w="210.000" h="12.000" srw="300" srh="364" t="周四20:00--冀州新地图生成。" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9"/>
+    </Label>
+    <Label nn="Label" x="8.000" y="247.500" xr="0" yr="0" w="280.000" h="12.000" srw="300" srh="364" t="8." ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9">
+      <Label nn="Label" x="9.500" y="0.000" xr="0" yr="0" w="270.000" h="12.000" srw="300" srh="364" t="本轮冀州之战失败的郡会在下一轮冀州之战开始时叠加一层复仇状态，复仇状态会增加玩家在冀州的伤害，降低在冀州受到的伤害。一旦获得冀州之战胜利，该状态立即清空；若冀州之战中三方平局，则各消除一层状态" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9"/>
+    </Label>
+  </ImageView>
+</View>

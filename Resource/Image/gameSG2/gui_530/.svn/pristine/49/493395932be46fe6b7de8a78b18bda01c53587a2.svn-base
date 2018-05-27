@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="290.000" h="58.000" srw="290" srh="58">
+  <ImageView id="_igmBack" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="290.000" h="58.000" srw="290" srh="58" i="countrywar_common/ride_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="3.500" y="0.000" xr="0" yr="0" w="20.500" h="18.000" srw="290" srh="58" i="countrywar_selectteam_item/countrywar_bg_jiangling.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="_imgSlot" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="20.500" h="18.000" srw="290" srh="58" i="countrywar_selectteam_item/countrywar_other_troops1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="headview1" nn="ImageView" x="29.500" y="6.000" xr="0" yr="0" w="44.000" h="44.000" srw="290" srh="58" i="common/u_bg_general.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="headview2" nn="ImageView" x="75.000" y="6.000" xr="0" yr="0" w="44.000" h="44.000" srw="290" srh="58" i="common/u_bg_general.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="headview3" nn="ImageView" x="120.500" y="6.000" xr="0" yr="0" w="44.000" h="44.000" srw="290" srh="58" i="common/u_bg_general.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="headview4" nn="ImageView" x="166.000" y="6.000" xr="0" yr="0" w="44.000" h="44.000" srw="290" srh="58" i="common/u_bg_general.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="_soldierIcon" nn="ImageView" x="213.500" y="27.000" xr="0" yr="0" w="15.000" h="18.000" srw="290" srh="58" i="common/fighttoast_icon.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <View id="fightView" nn="View" x="16.000" y="0.000" xr="0" yr="0" w="70.000" h="18.000" srw="290" srh="58"/>
+    </ImageView>
+    <ImageView id="_destroyIcon" nn="ImageView" x="212.500" y="7.500" xr="0" yr="0" w="15.000" h="16.000" srw="290" srh="58" i="common/countrywar_other_siege.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="_labRemoveForce" nn="Label" x="14.500" y="3.000" xr="0" yr="0" w="25.000" h="10.000" srw="290" srh="58" t="9999" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    </ImageView>
+    <ImageView id="_buildIcon" nn="ImageView" x="249.000" y="7.500" xr="0" yr="0" w="17.000" h="17.000" srw="290" srh="58" i="common/countrywar_icon_construct_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="_labBuildForce" nn="Label" x="16.000" y="3.500" xr="0" yr="0" w="40.000" h="10.000" srw="290" srh="58" t="9999" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    </ImageView>
+  </ImageView>
+</View>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="145.000" h="280.000" srw="145" srh="280" tag="10001">
+  <ImageView id="m_front_bg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="145.000" h="280.000" srw="145" srh="280" i="wine_item_1/wine_activity.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <View id="m_general_bg" nn="View" x="11.000" y="-3.000" xr="0" yr="0" w="122.000" h="230.000" srw="145" srh="280">
+      <ImageView id="m_general_icon" nn="ImageView" x="-17.000" y="25.500" xr="0" yr="0" w="156.000" h="212.000" srw="145" srh="280" i="wine_item_1/ui_wine_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+    <ImageView id="m_hint_img" nn="ImageView" x="16.000" y="183.000" xr="0" yr="0" w="113.000" h="23.500" srw="145" srh="280" i="wine_item_1/wine_word_activity.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="-10.000" y="-12.500" xr="0" yr="0" w="133.000" h="16.000" srw="145" srh="280" t="内含新将孙尚香,孙坚,姜维" ts="10" tctl="yellow" tctr="yellow" tcbl="yellow" tcbr="yellow" stroke="1" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView nn="ImageView" x="7.000" y="2.000" xr="0" yr="0" w="131.000" h="43.000" srw="145" srh="280" i="wine_activity/wine_activity_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="39.000" y="46.000" xr="0" yr="0" w="67.000" h="16.000" srw="145" srh="280" i="wine_activity/wine_activity_bg_time.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="_activity_cd_lab" nn="Label" x="4.500" y="0.000" xr="0" yr="0" w="67.000" h="16.000" srw="145" srh="280" t="00:00:00" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView id="m_free_count_bg" nn="ImageView" x="11.500" y="207.000" xr="0" yr="0" w="122.000" h="18.000" srw="145" srh="280" i="common/wine_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="_a_cd_count" nn="Label" x="39.500" y="1.250" xr="0" yr="0" w="80.000" h="15.000" srw="145" srh="280" iv="0" t="后免费" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="20">
+        <Label id="m_cd_lab" nn="Label" x="10.000" y="0.000" xr="0" yr="0" w="80.000" h="15.000" srw="145" srh="280" t="04:20:30" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+      </Label>
+      <Label id="_a_remain_count" nn="Label" x="43.000" y="1.250" xr="0" yr="0" w="80.000" h="15.000" srw="145" srh="280" iv="0" t="（1/1）" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="20">
+        <Label id="m_free_count" nn="Label" x="8.000" y="0.000" xr="0" yr="0" w="80.000" h="15.000" srw="145" srh="280" t="免费次数" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+      </Label>
+      <Label id="_a_money_lab" nn="Label" x="55.610" y="3.310" xr="0" yr="0" w="40.000" h="12.000" srw="145" srh="280" t="1" ts="12" tctl="yellow" tctr="yellow" tcbl="yellow" tcbr="yellow" sc="black" ta="18"/>
+      <Label id="_a_free_lab" nn="Label" x="10.440" y="3.310" xr="0" yr="0" w="40.000" h="12.000" srw="145" srh="280" iv="0" t="免费" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      <ImageView id="cost_img_f" nn="ImageView" x="41.010" y="-1.940" xr="0" yr="0" w="20.000" h="20.000" srw="145" srh="280" i="wine/ui_wine_btn_activity.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+  </ImageView>
+  <Button nn="Button" x="101.000" y="46.000" xr="0" yr="0" w="16.000" h="16.000" srw="145" srh="280" nt="" ni="wine_activity/wine_activity_btn.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onActivityDesCallBack"/>
+  <Button id="m_buy_btn" nn="Button" x="26.500" y="225.500" xr="0" yr="0" w="92.000" h="32.000" srw="145" srh="280" nt="" ni="common/ui_common_act_btn.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="11" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onCheckCallBack">
+    <ImageView nn="ImageView" x="8.250" y="7.250" xr="0" yr="0" w="75.500" h="15.500" srw="145" srh="280" i="wine_item_1/ui_wine_item_activity_btn_word.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_red_point" nn="ImageView" x="80.000" y="-2.750" xr="0" yr="0" w="18.000" h="18.000" srw="145" srh="280" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </Button>
+  <Label id="m_title_lab" nn="Label" x="23.000" y="27.160" xr="0" yr="0" w="100.000" h="12.000" srw="145" srh="280" iv="0" t="购买中级经验丹" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+</View>

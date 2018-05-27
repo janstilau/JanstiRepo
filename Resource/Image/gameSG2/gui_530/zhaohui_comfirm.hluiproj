@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="230.000" h="178.000" srw="230" srh="178">
+  <ImageView x="0.000" y="1.000" xr="0" yr="0" w="225.500" h="176.000" srw="230" srh="178" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="50.000" y="11.000" xr="0" yr="0" w="126.000" h="19.000" srw="230" srh="178" i="common/u_bg_title2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="0.000" y="3.000" xr="0" yr="0" w="126.000" h="12.000" srw="230" srh="178" t="找回" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </ImageView>
+    <Button x="201.300" y="-1.000" xr="0" yr="0" w="26.000" h="26.000" srw="230" srh="178" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="cancelTiShiClick"/>
+    <ImageView x="14.250" y="43.000" xr="0" yr="0" w="197.000" h="82.000" srw="230" srh="178" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="des_lab" x="12.500" y="60.000" xr="0" yr="0" w="200.000" h="12.000" srw="230" srh="178" t="您确定要消耗      钻石找回            体力吗？" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    <Label id="free_tishi_lab" x="7.000" y="90.000" xr="0" yr="0" w="200.000" h="15.000" srw="230" srh="178" t="（免费找回后将无法花费钻石找回）" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    <Button x="52.500" y="138.000" xr="0" yr="0" w="100.000" h="32.000" srw="230" srh="178" iv="0" nt="" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="cancelTiShiClick">
+      <Label x="26.500" y="8.000" xr="0" yr="0" w="50.000" h="15.000" srw="230" srh="178" t="取消" ts="13" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </Button>
+    <Button id="coin_back_btn" x="71.720" y="138.000" xr="0" yr="0" w="80.000" h="28.000" srw="230" srh="178" nt="" ni="common/u_btn_buy.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="sureTiShiClick">
+      <Label x="49.500" y="6.000" xr="0" yr="0" w="30.000" h="15.000" srw="230" srh="178" t="找回" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+      <Label id="ts_coin_num_lab" x="26.000" y="6.000" xr="0" yr="0" w="30.000" h="15.000" srw="230" srh="178" t="2000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+      <ImageView id="ts_coin_icon_img" x="7.000" y="4.000" xr="0" yr="0" w="20.000" h="20.000" srw="230" srh="178" i="common/u_other_zuanshi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="free_back_btn" x="72.960" y="138.000" xr="0" yr="0" w="80.000" h="28.000" srw="230" srh="178" iv="0" nt="" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="sureTiShiClick">
+      <Label x="9.970" y="5.450" xr="0" yr="0" w="60.000" h="15.000" srw="230" srh="178" t="免费找回" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </Button>
+  </ImageView>
+</View>

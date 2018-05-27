@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="233.000" h="17.500" srw="252" srh="16">
+  <ImageView id="bgImg" x="0.000" y="0.000" xr="0" yr="0" w="233.000" h="17.500" srw="252" srh="16" i="" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="likesImg" x="6.760" y="0.500" xr="0" yr="0" w="15.000" h="15.000" srw="252" srh="16" i="ui_zone/ui_zone_bg7.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="commentImg" x="6.760" y="0.500" xr="0" yr="0" w="15.000" h="15.000" srw="252" srh="16" i="ui_zone/ui_zone_bg6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="commentLab" x="20.860" y="0.500" xr="0" yr="0" w="200.000" h="12.000" srw="252" srh="16" t="[黑猫警长]" ts="10" tctl="rgb(145, 55, 0)" tctr="rgb(145, 55, 0)" tcbl="rgb(145, 55, 0)" tcbr="rgb(145, 55, 0)" sc="black" ta="17"/>
+    <ImageView id="commentLine" x="0.000" y="16.500" xr="0" yr="0" w="235.000" h="1.000" srw="252" srh="16" i="ui_zone/ui_zone_bg5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Button id="deleteCommentBtn" x="217.790" y="0.000" xr="0" yr="0" w="15.000" h="15.000" srw="252" srh="16" nt="" ni="ui_zone/ui_zone_btn4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="deleteCommentBtnAction"/>
+  </ImageView>
+</View>

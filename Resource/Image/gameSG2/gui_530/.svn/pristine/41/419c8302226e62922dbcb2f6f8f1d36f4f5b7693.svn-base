@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="311.000" h="29.000" srw="480" srh="320">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="311.000" h="29.000" srw="480" srh="320" i="common/a_memberbg_d.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="-1.500" y="6.000" xr="0" yr="0" w="24.100" h="18.000" srw="480" srh="320" t="999" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+    <Label nn="Label" x="19.900" y="6.000" xr="0" yr="0" w="95.200" h="18.000" srw="480" srh="320" t="C99-联盟名称六字" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+    <Label nn="Label" x="108.800" y="6.000" xr="0" yr="0" w="48.000" h="18.000" srw="480" srh="320" t="999999" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+    <Label nn="Label" x="158.500" y="6.000" xr="0" yr="0" w="48.000" h="18.000" srw="480" srh="320" t="999999" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+    <Label nn="Label" x="212.600" y="6.000" xr="0" yr="0" w="15.000" h="18.000" srw="480" srh="320" t="44" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+    <Label nn="Label" x="232.100" y="6.000" xr="0" yr="0" w="15.000" h="18.000" srw="480" srh="320" t="6" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+    <Label nn="Label" x="252.100" y="6.000" xr="0" yr="0" w="15.000" h="18.000" srw="480" srh="320" t="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+    <Label nn="Label" x="273.000" y="6.000" xr="0" yr="0" w="35.000" h="18.100" srw="480" srh="320" t="99999" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+  </ImageView>
+</View>

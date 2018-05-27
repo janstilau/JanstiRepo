@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<View h="320.0" id="m_jiuguan" type="0" w="480.0" x="0.0" y="0.0"><Label bold="0" h="30.0" sc="rgb(0,0,0)" stroke="0" t="点击任意位置继续" ta="18" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" ts="10" type="1" w="100.0" x="190.0" y="276.5" /></View>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="131" h="57">
+  <Button id="m_item_btn_1" x="0" y="0" xr="0" yr="0" w="131" h="53" tag="1" ni="common/contest_bg4.png" nic="0.5,0.5,0,0" si="points_mall_2/contest_bg5.png" hi="points_mall_2/contest_bg5.png" state="0" act="exchangeAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="propBg" x="4.5" y="4.5" xr="0" yr="0" w="44" h="44" i="common/u_bg_goods.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="propIcon" x="0" y="0" xr="0" yr="0" w="44" h="44" tag="1" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="m_sub_icon" x="1" y="1" xr="0" yr="0" w="42" h="42" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="m_biaoqian_icon" x="0" y="-1" xr="0" yr="0" w="35" h="31" i="common/chaoxiyou.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label id="wujiangName_Lab" x="31" y="2" xr="0" yr="0" w="10" h="28" t="夏侯惇" ts="7" tctl="rgb(76,41,17)" tctr="rgb(75,41,16)" tcbl="rgb(74,41,15)" tcbr="rgb(73,40,15)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <Label id="propName" x="56.029998779296875" y="5.800000190734863" xr="0" yr="0" w="90" h="15" tag="2" t="道具名六个字" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9"/>
+    <ImageView id="m_zkScore" x="54.150001525878906" y="17.81999969482422" xr="0" yr="0" w="16" h="16" i="common/contest_jifen.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_zkPrice" x="17" y="1.5" xr="0" yr="0" w="45" h="13" tag="3" t="9999" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="9"/>
+      <ImageView id="line_img" x="16" y="8" xr="0" yr="0" w="50" h="1" i="common/shop_redline.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </ImageView>
+    <ImageView id="m_scoreIcon" x="54.150001525878906" y="32.31999969482422" xr="0" yr="0" w="16" h="16" i="common/contest_jifen.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="propPrice" x="17.5" y="1.5" xr="0" yr="0" w="45" h="13" tag="3" t="9999" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="9"/>
+    </ImageView>
+    <ImageView id="m_zhezhao" x="0" y="0" xr="0" yr="0" w="131" h="53" i="points_mall_2/shop_sell_cover.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="stateIcon" x="94.66000366210938" y="14.720000267028809" xr="0" yr="0" w="33" h="34" tag="5" i="points_mall_2/shop_word1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+</View>

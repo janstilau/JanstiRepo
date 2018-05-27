@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="288.000" h="252.000" srw="288" srh="252">
+  <View x="0.000" y="0.000" xr="0" yr="0" w="288.000" h="250.000" srw="288" srh="252">
+    <ImageView x="0.000" y="3.000" xr="0" yr="0" w="253.000" h="21.500" srw="288" srh="252" i="qq/ui_qq_renwu_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="7.860" y="248.630" xr="0" yr="0" w="279.000" h="7.000" srw="288" srh="252" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <View id="m_scrollBg" x="4.500" y="30.000" xr="0" yr="0" w="279.000" h="217.000" srw="288" srh="252"/>
+  </View>
+</View>

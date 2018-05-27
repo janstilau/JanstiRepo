@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView x="21.000" y="24.500" xr="0" yr="0" w="433.500" h="286.000" srw="480" srh="320" i="common/u_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="m_bg_img" x="21.000" y="19.500" xr="0" yr="0" w="392.000" h="250.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_select_army_bg_img" x="235.000" y="7.500" xr="0" yr="0" w="70.500" h="160.000" srw="480" srh="320" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Button x="5.500" y="6.500" xr="0" yr="0" w="60.000" h="27.000" srw="480" srh="320" tag="1" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="selectArmyAction">
+        <ImageView x="0.000" y="0.000" xr="0" yr="0" w="60.000" h="27.000" srw="480" srh="320" i="common/a_bg9.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView x="17.500" y="7.000" xr="0" yr="0" w="24.000" h="12.500" srw="480" srh="320" i="common_2/countrywar_hb_word_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <Button x="5.500" y="36.500" xr="0" yr="0" w="60.000" h="27.000" srw="480" srh="320" tag="2" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="selectArmyAction">
+        <ImageView x="0.000" y="0.000" xr="0" yr="0" w="60.000" h="27.000" srw="480" srh="320" i="common/a_bg9.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView x="17.500" y="7.000" xr="0" yr="0" w="24.000" h="12.500" srw="480" srh="320" i="common_2/countrywar_hb_word_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <Button x="5.500" y="66.500" xr="0" yr="0" w="60.000" h="27.000" srw="480" srh="320" tag="3" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="selectArmyAction">
+        <ImageView x="0.000" y="0.000" xr="0" yr="0" w="60.000" h="27.000" srw="480" srh="320" i="common/a_bg9.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView x="17.500" y="7.000" xr="0" yr="0" w="24.000" h="12.500" srw="480" srh="320" i="common_2/countrywar_hb_word_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <Button x="5.500" y="96.500" xr="0" yr="0" w="60.000" h="27.000" srw="480" srh="320" tag="4" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="selectArmyAction">
+        <ImageView x="0.000" y="0.000" xr="0" yr="0" w="60.000" h="27.000" srw="480" srh="320" i="common/a_bg9.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView x="17.500" y="7.000" xr="0" yr="0" w="24.000" h="12.500" srw="480" srh="320" i="common_2/countrywar_hb_word_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <Button x="5.500" y="126.500" xr="0" yr="0" w="60.000" h="27.000" srw="480" srh="320" tag="5" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="selectArmyAction">
+        <ImageView x="0.000" y="0.000" xr="0" yr="0" w="60.000" h="27.000" srw="480" srh="320" i="common/a_bg9.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView x="17.500" y="7.000" xr="0" yr="0" w="24.000" h="12.500" srw="480" srh="320" i="common_2/countrywar_hb_word_5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+    </ImageView>
+  </ImageView>
+  <ImageView x="9.000" y="8.500" xr="0" yr="0" w="457.500" h="80.000" srw="480" srh="320" i="common/u_bg_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="457.500" h="27.000" srw="480" srh="320" i="common/u_bg_title1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Button x="150.000" y="2.500" xr="0" yr="0" w="160.000" h="20.000" srw="480" srh="320" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="showSelectArmyAction"/>
+    <ImageView id="m_arrows_img" x="280.000" y="5.000" xr="0" yr="0" w="28.000" h="15.000" srw="480" srh="320" i="common_2/countrywar_sc_bg_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="m_current_army_lab" x="183.000" y="5.940" xr="0" yr="0" w="100.000" h="12.000" srw="480" srh="320" t="一队" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+  </ImageView>
+  <Button x="437.320" y="9.100" xr="0" yr="0" w="27.500" h="35.000" srw="480" srh="320" nt="" ni="common/u_btn_close.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+  <Button x="24.500" y="15.000" xr="0" yr="0" w="27.000" h="27.000" srw="480" srh="320" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="changeSoldierExplain">
+    <ImageView x="0.000" y="1.000" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" i="common/u_btn_zhushi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </Button>
+</View>

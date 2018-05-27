@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="480" h="320">
+  <ImageView id="m_withe_bg_img" x="36.72999954223633" y="146.30999755859375" xr="0" yr="0" w="410" h="137.5" i="js_fail/js_bg.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <View id="m_fail_view" x="137.35000610351562" y="61.81999969482422" xr="0" yr="0" w="200" h="200">
+    <ImageView x="54.650001525878906" y="2.430000066757202" xr="0" yr="0" w="96" h="75.5" i="js_fail/js_word_bai.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="m_add_fight_hint" x="18.6299991607666" y="130.50999450683594" xr="0" yr="0" w="111.5" h="13.5" i="js_fail/js_word_shibai.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <View id="_battle_index_view" x="-54.2599983215332" y="81.62999725341797" xr="0" yr="0" w="307.5" h="50" iv="0">
+      <ImageView x="0" y="12.829999923706055" xr="0" yr="0" w="307.5" h="23" i="common/js_bg_jl.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label x="3.75" y="-3.5" xr="0" yr="0" w="300" h="30" t="您在第      波时不幸被击败，胜败乃兵家常事，主公请重新来过！" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        <View id="_battle_index_lab" x="43.0099983215332" y="0.49000000953674316" xr="0" yr="0" w="15" h="20"/>
+      </ImageView>
+    </View>
+    <View id="occupyComponent" x="-54.2599983215332" y="67.62999725341797" xr="0" yr="0" w="307.5" h="50" iv="0">
+      <ImageView id="qiecuoComponent" x="0" y="28.329999923706055" xr="0" yr="0" w="307.5" h="23" i="common/js_bg_jl.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="m_goods_1" x="93.41999816894531" y="-1.2300000190734863" xr="0" yr="0" w="23" h="23.5" i="common/u_other_zhangong.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label id="gesteOccupyLabel" x="22.8700008392334" y="6.739999771118164" xr="0" yr="0" w="180" h="12" tag="1" t="Label" ts="12" tctl="rgb(255,150,0)" tctr="rgb(255,150,0)" tcbl="rgb(255,150,0)" tcbr="rgb(255,150,0)" sc="rgb(0,0,0)" ta="17"/>
+        </ImageView>
+      </ImageView>
+    </View>
+    <View id="m_area_fail_view" x="-54.2599983215332" y="81.62999725341797" xr="0" yr="0" w="307.5" h="50" iv="0">
+      <ImageView x="0" y="12.829999923706055" xr="0" yr="0" w="307.5" h="23" i="common/js_bg_jl.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="118.29000091552734" y="-3.059999942779541" xr="0" yr="0" w="27.299999237060547" h="27.299999237060547" i="common/u_other_gold.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label id="m_arena_gold_lab" x="147.7899932861328" y="6.010000228881836" xr="0" yr="0" w="60" h="12" t="Label" ts="12" tctl="rgb(255,150,0)" tctr="rgb(255,150,0)" tcbl="rgb(255,150,0)" tcbr="rgb(255,150,0)" sc="rgb(0,0,0)" ta="17"/>
+      </ImageView>
+    </View>
+    <Button id="m_promote_btn_1" x="14" y="155" xr="0" yr="0" w="38" h="45" nic="0,0,0,0" zot="1" state="0" act="onPromoteOne" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Button id="m_promote_btn_2" x="83" y="155" xr="0" yr="0" w="38" h="45" nic="0,0,0,0" zot="1" state="0" act="onPromoteTwo" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Button id="m_promote_btn_3" x="146" y="155" xr="0" yr="0" w="38" h="45" nic="0,0,0,0" zot="1" state="0" act="onPromoteThree" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Label id="m_sure_lab" x="5.489999771118164" y="209.14999389648438" xr="0" yr="0" w="200" h="15" t="本场战斗不消耗士兵，点击任意区域退出" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  </View>
+  <View id="m_hit_fly_view" x="36.72999954223633" y="124.30999755859375" xr="0" yr="0" w="400" h="174.5" iv="0">
+    <ImageView x="155.27000427246094" y="-73.05999755859375" xr="0" yr="0" w="96" h="75" i="js_fail/js_word_bai.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView x="0" y="0" xr="0" yr="0" w="400" h="174.5" i="js_fail/js_bg.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView x="88" y="52" xr="0" yr="0" w="230" h="1.5" i="common/u_bg_fengexian2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView x="96.7699966430664" y="16.6200008392334" xr="0" yr="0" w="43" h="12.5" i="js_fail/hit_word4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_scores" x="48.630001068115234" y="1.059999942779541" xr="0" yr="0" w="53" h="10" t="999999999" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="9"/>
+    </ImageView>
+    <ImageView x="201.77000427246094" y="16.6200008392334" xr="0" yr="0" w="43" h="12.5" i="js_fail/hit_word3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <View id="m_rank" x="49.45000076293945" y="-11.84000015258789" xr="0" yr="0" w="80" h="25">
+        <Label id="_rank_lab" x="0" y="2" xr="0" yr="0" w="100" h="30" iv="0" t="未上榜" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17"/>
+      </View>
+    </ImageView>
+    <ImageView x="96.7699966430664" y="37.119998931884766" xr="0" yr="0" w="43" h="12.5" i="js_fail/hit_word5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_total_scores" x="49.529998779296875" y="1.059999942779541" xr="0" yr="0" w="120" h="10" t="999999999" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="9"/>
+    </ImageView>
+    <ImageView x="96.7699966430664" y="66.79000091552734" xr="0" yr="0" w="57.5" h="16.5" i="js_fail/hit_word6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_goal_score" x="62.04999923706055" y="1.5" xr="0" yr="0" w="110" h="13" t="累计500000000分" ts="13" tctl="rgb(38,135,197)" tctr="rgb(38,135,197)" tcbl="rgb(38,135,197)" tcbr="rgb(38,135,197)" sc="rgb(0,0,0)" ta="9"/>
+      <ImageView id="m_goal_ok" x="166.6300048828125" y="-9.539999961853027" xr="0" yr="0" w="44" h="37" i="js_fail/hit_suc1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="m_goal_nook" x="166.6300048828125" y="-6.039999961853027" xr="0" yr="0" w="41.33300018310547" h="30.66699981689453" i="js_fail/hit_suc2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </ImageView>
+    <View x="97" y="99" xr="0" yr="0" w="200" h="44">
+      <ImageView id="m_award_title" x="-0.7300000190734863" y="0.30000001192092896" xr="0" yr="0" w="63.5" h="12" i="js_fail/hit_word7.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <View id="m_skill_panel" x="70" y="0" xr="0" yr="0" w="200" h="44"/>
+    </View>
+  </View>
+  <ImageView id="m_bg_img" x="0" y="24.75" xr="0" yr="0" w="480" h="223" iv="0" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView id="m_bg_line_top" x="0" y="-5.5" xr="0" yr="0" w="480" h="5.5" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="m_bg_line_bottom" x="0" y="223" xr="0" yr="0" w="480" h="5.5" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fy="1"/>
+  </ImageView>
+</View>

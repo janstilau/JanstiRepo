@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="480" h="320" nn="View">
+  <ImageView id="countdownView" x="184" y="17.5" xr="0" yr="0" w="61" h="25" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="7" y="5.5" xr="0" yr="0" w="11" h="14" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <View x="17.59000015258789" y="4.71999979019165" xr="0" yr="0" w="40" h="15" nn="View">
+      <ImageView id="_minLeft" x="0" y="2.5" xr="0" yr="0" w="8" h="10" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg10.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="_minRight" x="8" y="2.5" xr="0" yr="0" w="8" h="10" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg10.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="_secLeft" x="20" y="2.5" xr="0" yr="0" w="8" h="10" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg10.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="_secRight" x="28" y="2.5" xr="0" yr="0" w="8" h="10" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg10.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="14" y="3" xr="0" yr="0" w="8" h="10" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg20.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </View>
+  </ImageView>
+  <ImageView id="gvgCountdownView" x="184" y="1" xr="0" yr="0" w="68" h="25" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="6.5" y="5.5" xr="0" yr="0" w="11" h="14" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <View x="17.09000015258789" y="4.71999979019165" xr="0" yr="0" w="40" h="15" nn="View">
+      <ImageView id="_minLeftLeft_GVG" x="0" y="2.5" xr="0" yr="0" w="8" h="10" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg10.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="_minLeft_GVG" x="8" y="2.5" xr="0" yr="0" w="8" h="10" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg10.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="_minRight_GVG" x="16" y="2.5" xr="0" yr="0" w="8" h="10" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg10.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="22" y="3" xr="0" yr="0" w="8" h="10" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg20.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="_secLeft_GVG" x="28" y="2.5" xr="0" yr="0" w="8" h="10" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg10.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="_secRight_GVG" x="36" y="2.5" xr="0" yr="0" w="8" h="10" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg10.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </View>
+  </ImageView>
+  <View id="dropView" x="247.5" y="1" xr="0" yr="0" w="118" h="18" nn="View" iv="0">
+    <View x="0" y="0" xr="0" yr="0" w="60" h="20" nn="View">
+      <ImageView id="lingPaiInfoView" x="6.5" y="4" xr="0" yr="0" w="50" h="115" nn="ImageView" iv="0" i="common/ui_common_bg_zl.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="4" y="17.5" xr="0" yr="0" w="14" h="14" nn="ImageView" i="common/cw_gve_shop1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="18.5" y="19.5" xr="0" yr="0" w="30" h="10" nn="Label" tag="-10066" t="0" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+        <ImageView x="4" y="36.5" xr="0" yr="0" w="14" h="14" nn="ImageView" tag="1" i="common/cw_gve_shop2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="18.5" y="38.5" xr="0" yr="0" w="30" h="10" nn="Label" tag="-10067" t="0" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+        <ImageView x="4" y="56.5" xr="0" yr="0" w="14" h="14" nn="ImageView" tag="2" i="common/cw_gve_shop3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="18.5" y="58.5" xr="0" yr="0" w="30" h="10" nn="Label" tag="-10068" t="0" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+        <ImageView x="4" y="76" xr="0" yr="0" w="14" h="14" nn="ImageView" tag="2" i="common/cw_gve_shop4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="18.5" y="78" xr="0" yr="0" w="30" h="10" nn="Label" tag="-10069" t="0" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+        <ImageView x="4" y="96" xr="0" yr="0" w="14" h="14" nn="ImageView" tag="2" i="common/cw_gve_shop5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="18.5" y="98" xr="0" yr="0" w="30" h="10" nn="Label" tag="-10070" t="0" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+      </ImageView>
+      <ImageView x="7" y="3" xr="0" yr="0" w="50" h="13.5" nn="ImageView" i="common/ui_common_bg_zl.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="lingpaiIcon" x="0" y="-0.6899999976158142" xr="0" yr="0" w="19" h="19" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_lingpai.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label id="lingpaiLab" x="21" y="4" xr="0" yr="0" w="30" h="10" nn="Label" t="0" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+    </View>
+    <View x="58.5" y="0" xr="0" yr="0" w="60" h="20" nn="View">
+      <ImageView id="boxInfoView" x="7" y="4" xr="0" yr="0" w="50" h="75" nn="ImageView" iv="0" i="common/ui_common_bg_zl.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="boxIcon4" x="4" y="17.5" xr="0" yr="0" w="14" h="14" nn="ImageView" i="countrywar_gve/countrywar_gve_box4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label id="boxLab4" x="14.5" y="2" xr="0" yr="0" w="30" h="10" nn="Label" t="0" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+        </ImageView>
+        <ImageView id="boxIcon3" x="4" y="36.5" xr="0" yr="0" w="14" h="14" nn="ImageView" tag="1" i="countrywar_gve/countrywar_gve_box5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label id="boxLab3" x="14.5" y="2" xr="0" yr="0" w="30" h="10" nn="Label" t="0" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+        </ImageView>
+        <ImageView id="boxIcon2" x="4" y="56.5" xr="0" yr="0" w="14" h="14" nn="ImageView" tag="2" i="countrywar_gve/countrywar_gve_box6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label id="boxLab2" x="14.5" y="2" xr="0" yr="0" w="30" h="10" nn="Label" t="0" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+        </ImageView>
+      </ImageView>
+      <ImageView x="7" y="3" xr="0" yr="0" w="50" h="13.5" nn="ImageView" i="common/ui_common_bg_zl.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="boxIcon" x="0" y="-0.5" xr="0" yr="0" w="19" h="19" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg9.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label id="boxLab" x="21.5" y="4" xr="0" yr="0" w="30" h="10" nn="Label" t="0" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+    </View>
+  </View>
+  <View id="mapView" x="363.5" y="1" xr="0" yr="0" w="117" h="80" nn="View">
+    <ImageView id="mapImage" x="-13.3100004196167" y="1.590000033378601" xr="0" yr="0" w="149" h="75" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_203.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="mapBackImage" x="0" y="0" xr="0" yr="0" w="117" h="80" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg8.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Button x="9.5" y="60.5" xr="0" yr="0" w="35" h="16" nn="Button" ni="countrywar_gve_mainui/countrywar_gve_mainui_btn1.png" nic="0,0,0,0" state="0" act="onMark" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Button x="78.5" y="60.5" xr="0" yr="0" w="35" h="16" nn="Button" ni="countrywar_gve_mainui/countrywar_gve_mainui_btn2.png" nic="0,0,0,0" state="0" act="onGoTo" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  </View>
+  <View id="taskView" x="330" y="82" xr="0" yr="0" w="148" h="143" nn="View">
+    <Button id="switchTaskBtn" x="0" y="0" xr="0" yr="0" w="28" h="28" nn="Button" ni="common/main_btn_task1.png" nic="0,0,0,0" state="0" act="onSwitchTask" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Button id="gvgTargetBtn" x="3" y="28" xr="0" yr="0" w="24" h="40.5" nn="Button" ni="mainui/main_btn_page2.png" nic="0,0,0,0" si="mainui/main_btn_page1.png" state="0" act="openTargetView" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <Label id="_targetUnselectedLabel" x="3.309999942779541" y="5.039999961853027" xr="0" yr="0" w="18" h="30" nn="Label" t="目标" ts="12" tctl="rgb(226,226,226)" tctr="rgb(226,226,226)" tcbl="rgb(226,226,226)" tcbr="rgb(226,226,226)" sc="rgb(0,0,0)" ta="18"/>
+      <Label id="_targetSelectedLabel" x="3.309999942779541" y="5.039999961853027" xr="0" yr="0" w="18" h="30" nn="Label" t="目标" ts="12" tctl="rgb(255,255,0)" tctr="rgb(255,255,0)" tcbl="rgb(255,255,0)" tcbr="rgb(255,255,0)" sc="rgb(0,0,0)" ta="18"/>
+    </Button>
+    <Button id="gvgGatherBtn" x="3" y="70" xr="0" yr="0" w="24" h="40.5" nn="Button" ni="mainui/main_btn_page2.png" nic="0,0,0,0" si="mainui/main_btn_page1.png" state="0" act="openGatherView" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <Label id="_gatherUnselectedLabel" x="3.309999942779541" y="5.039999961853027" xr="0" yr="0" w="18" h="30" nn="Label" t="集结" ts="12" tctl="rgb(226,226,226)" tctr="rgb(226,226,226)" tcbl="rgb(226,226,226)" tcbr="rgb(226,226,226)" sc="rgb(0,0,0)" ta="18"/>
+      <Label id="_gatherSelectedLabel" x="3.309999942779541" y="5.039999961853027" xr="0" yr="0" w="18" h="30" nn="Label" t="集结" ts="12" tctl="rgb(255,255,0)" tctr="rgb(255,255,0)" tcbl="rgb(255,255,0)" tcbr="rgb(255,255,0)" sc="rgb(0,0,0)" ta="18"/>
+    </Button>
+    <ImageView id="gveTaskView" x="27" y="0" xr="0" yr="0" w="120" h="145" nn="ImageView" iv="0" i="countrywar_gve_mainui/countrywar_gve_mainui_bg3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label x="26.5" y="8" xr="0" yr="0" w="60" h="10" nn="Label" t="战役任务" ts="9" tctl="rgb(235,226,156)" tctr="rgb(235,226,156)" tcbl="rgb(235,226,156)" tcbr="rgb(235,226,156)" sc="rgb(0,0,0)" ta="18"/>
+      <ScrollView id="_taskScrollView" x="0.5" y="29.5" xr="0" yr="0" w="115" h="113" nn="ScrollView">
+        <View id="normalTaskRootView" x="3.5" y="0" xr="0" yr="0" w="105" h="35" nn="View">
+          <ImageView x="2.5" y="1" xr="0" yr="0" w="100" h="22.5" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+            <Label id="_taskTipNormal" x="0" y="23" xr="0" yr="0" w="110" h="12" nn="Label" t="击败10支敌军部队(10/10)" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+          </ImageView>
+        </View>
+        <View id="storyTaskRootView" x="3.5" y="35.5" xr="0" yr="0" w="105" h="36" nn="View">
+          <ImageView x="2.5" y="1" xr="0" yr="0" w="100" h="22.5" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+            <Label id="_taskTipStory" x="0" y="26.5" xr="0" yr="0" w="100" h="12" nn="Label" t="阻止孙权的援军" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="9"/>
+          </ImageView>
+          <ImageView id="_storyTaskDetail" x="72" y="27.5" xr="0" yr="0" w="29" h="12" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_btn3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        </View>
+        <View id="branchTaskRootView" x="3.5" y="71.5" xr="0" yr="0" w="105" h="36" nn="View">
+          <ImageView x="2.5" y="4.5" xr="0" yr="0" w="100" h="22.5" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg7.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+            <Label id="_taskTipBranch" x="0" y="23" xr="0" yr="0" w="100" h="12" nn="Label" t="" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="9"/>
+          </ImageView>
+        </View>
+      </ScrollView>
+      <Button x="75" y="-2.5" xr="0" yr="0" w="30" h="30" nn="Button" ni="countrywar_gve_mainui/countrywar_gve_mainui_btn_chengjiu.png" nic="0,0,0,0" state="0" act="openAchievement" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView id="gvgTargetView" x="27" y="0" xr="0" yr="0" w="120" h="145" nn="ImageView" i="countrywar_gve_mainui/countrywar_gve_mainui_bg3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="41.5" y="8.5" xr="0" yr="0" w="39" h="11" nn="ImageView" i="countrywar_gvg/countrywar_gvg_word3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="41.5" y="58.5" xr="0" yr="0" w="39" h="11" nn="ImageView" i="countrywar_gvg/countrywar_gvg_word2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="-33" y="16" xr="0" yr="0" w="50" h="3" nn="ImageView" i="common/ui_common_dividing_line.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+        <ImageView x="24.5" y="16" xr="0" yr="0" w="50" h="3" nn="ImageView" i="common/ui_common_dividing_line.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ScrollView id="personalScrollView" x="4.5" y="78.5" xr="0" yr="0" w="111" h="63" nn="ScrollView">
+        <ImageView x="17" y="3.5" xr="0" yr="0" w="92" h="20" nn="ImageView" i="common/countrywar_gvg_bg33.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <ImageView x="-15" y="-1" xr="0" yr="0" w="23" h="22" nn="ImageView" i="countrywar_gvg/countrywar_gvg_bg32.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <Label x="8.4399995803833" y="-0.25" xr="0" yr="0" w="85" h="20" nn="Label" t="攻占10块地(10/10)" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+        </ImageView>
+      </ScrollView>
+      <View id="allianceBackView" x="4.5" y="31" xr="0" yr="0" w="110" h="25" nn="View">
+        <ImageView x="17" y="0.5" xr="0" yr="0" w="92" h="20" nn="ImageView" i="common/countrywar_gvg_bg33.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <ImageView x="-15" y="-1" xr="0" yr="0" w="23" h="22" nn="ImageView" i="countrywar_gvg/countrywar_gvg_bg31.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <Label x="8.4399995803833" y="-0.25" xr="0" yr="0" w="85" h="20" nn="Label" t="攻占洛阳城攻占洛阳城攻占洛阳城(10/10)" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+        </ImageView>
+      </View>
+    </ImageView>
+    <View id="gvgGatherView" x="27" y="0" xr="0" yr="0" w="120" h="145" nn="View" iv="0">
+      <ImageView x="0" y="0" xr="0" yr="0" w="120" h="30" nn="ImageView" i="common/countrywar_gvg_bg35.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="28" y="8.5" xr="0" yr="0" w="66" h="11.5" nn="ImageView" i="countrywar_gvg/countrywar_gvg_word28.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ScrollView id="gvgGatherScrollView" x="4.5" y="31.5" xr="0" yr="0" w="111" h="113" nn="ScrollView"/>
+    </View>
+  </View>
+  <Button id="weatherBufBtn" x="155" y="17.5" xr="0" yr="0" w="26.5" h="26.5" nn="Button" ni="countrywar_gvg/countrywar_gvg_bg_cloudy.png" nic="0,0,0,0" state="0" act="openWeatherBuff" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="worshipBufBtn" x="134.3000030517578" y="22.200000762939453" xr="0" yr="0" w="16" h="16" nn="Button" ni="countrywar_gvg/countrywar_gvg_bg_cloudy.png" nic="0,0,0,0" state="0" act="openWorshipBuff" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="pauseBtn" x="372" y="227" xr="0" yr="0" w="44" h="44" nn="Button" ni="countrywar_gve_mainui/countrywar_gve_mainui_btn5.png" nic="0,0,0,0" state="0" act="onPause" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="leavelBtn" x="429.5" y="227.5" xr="0" yr="0" w="44" h="44" nn="Button" ni="countrywar_gve_mainui/countrywar_gve_mainui_btn4.png" nic="0,0,0,0" state="0" act="onLeavel" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="floodBtn" x="178.5" y="22.5" xr="0" yr="0" w="16" h="16" nn="Button" ni="countrywar_gve_mainui/countrywar_gve_mainui_buff_flood.png" nic="0,0,0,0" zot="1" state="0" act="onFloodBuffTip" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="burnBtn" x="178.5" y="22.5" xr="0" yr="0" w="16" h="16" nn="Button" ni="countrywar_gve_mainui/countrywar_gve_mainui_buff_burn.png" nic="0,0,0,0" zot="1" state="0" act="onBurnBuffTip" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="poisonBtn" x="178.5" y="22.5" xr="0" yr="0" w="16" h="16" nn="Button" ni="countrywar_gve_mainui/countrywar_gve_mainui_buff_poison.png" nic="0,0,0,0" zot="1" state="0" act="onPoisonBuffTip" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+  <View id="gvgPlaceBackView" x="251.5" y="0" xr="0" yr="0" w="114" h="228" nn="View">
+    <ImageView x="0" y="2.5" xr="0" yr="0" w="114" h="15" nn="ImageView" i="common/countrywar_gvg_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="alliancePlaceTitle" x="0" y="0" xr="0" yr="0" w="114" h="15" nn="Label" t="当前未被占领城池数量: 88/99" ts="8" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <View id="gvgPlaceClipView" x="0" y="17.5" xr="0" yr="0" w="114" h="208">
+      <View id="gvgPlaceMoveView" x="0" y="0" xr="0" yr="0" w="114" h="208">
+        <ImageView x="0" y="-1" xr="0" yr="0" w="114" h="20" nn="ImageView" i="common/countrywar_gvg_bg36.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="2.799999952316284" y="1.7099990844726562" xr="0" yr="0" w="51" h="17" nn="Button" nic="0,0,0,0" state="0" act="openAlliancePlace" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <ImageView id="allianceRaceBtnSelected" x="-3.820003032684326" y="-1.8099918365478516" xr="0" yr="0" w="57" h="21" nn="ImageView" i="common/countrywar_gvg_bg38.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          </Button>
+          <Button x="60.79999923706055" y="1.7099990844726562" xr="0" yr="0" w="51" h="17" nn="Button" nic="0,0,0,0" state="0" act="openPersonalGlory" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <ImageView id="personalGloryBtnSelected" x="-3.820003032684326" y="-1.8099918365478516" xr="0" yr="0" w="57" h="21" nn="ImageView" i="common/countrywar_gvg_bg38.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          </Button>
+        </ImageView>
+        <View id="allianceRaceView" x="0" y="20" xr="0" yr="0" w="114" h="68" nn="View" iv="0">
+          <View id="gvgDetailPlaceView" x="0" y="0" xr="0" yr="0" w="114" h="58" nn="View">
+            <ImageView x="0" y="-0.5" xr="0" yr="0" w="114" h="1" nn="ImageView" i="common/u_bg_fengexian2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+            <ImageView x="0" y="0.5" xr="0" yr="0" w="114" h="11" nn="ImageView" i="common/countrywar_gvg_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <ImageView x="-12.579999923706055" y="0.800000011920929" xr="0" yr="0" w="45.5" h="10" nn="ImageView" i="countrywar_gvg/countrywar_gvg_word22.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+              <ImageView x="29.920000076293945" y="0.800000011920929" xr="0" yr="0" w="45.5" h="10" nn="ImageView" i="countrywar_gvg/countrywar_gvg_word23.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+              <ImageView id="cityCountImg" x="77.41999816894531" y="0.800000011920929" xr="0" yr="0" w="45.5" h="10" nn="ImageView" i="countrywar_gvg/countrywar_gvg_word24.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+              <ImageView id="cityScoreImg" x="77.41999816894531" y="0.800000011920929" xr="0" yr="0" w="45.5" h="10" nn="ImageView" iv="0" i="countrywar_gvg/countrywar_gvg_word25.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+            </ImageView>
+            <ImageView x="0" y="11.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="1" i="common/countrywar_gvg_bg2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="3.5" y="0" xr="0" yr="0" w="10" h="15" nn="Label" t="1" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="N999-联盟名联盟名" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="99999" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+            <ImageView x="0" y="26.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="2" i="common/countrywar_gvg_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="3.5" y="0" xr="0" yr="0" w="10" h="15" nn="Label" t="2" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="N999-联盟名联盟名" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="99999" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+            <ImageView x="0" y="41.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="3" i="common/countrywar_gvg_bg2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="3.5" y="0" xr="0" yr="0" w="10" h="15" nn="Label" t="3" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="N999-联盟名联盟名" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="99999" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+          </View>
+          <Button x="33" y="56.5" xr="0" yr="0" w="47.5" h="10" nn="Button" ni="common/countrywar_gvg_bg3.png" nic="0,0,0,0" state="0" act="turnOnOrOffTopView" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        </View>
+        <View id="personalGloryView" x="0" y="20" xr="0" yr="0" w="114" h="188" nn="View">
+          <View id="personalDetailGloryView" x="0" y="0" xr="0" yr="0" w="114" h="178" nn="View">
+            <ImageView x="0" y="-0.5" xr="0" yr="0" w="114" h="1" nn="ImageView" i="common/u_bg_fengexian2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+            <ImageView x="0" y="0.5" xr="0" yr="0" w="114" h="11" nn="ImageView" i="common/countrywar_gvg_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <ImageView x="-12.579999923706055" y="0.800000011920929" xr="0" yr="0" w="45.5" h="10" nn="ImageView" i="countrywar_gvg/countrywar_gvg_word22.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+              <ImageView x="29.920000076293945" y="0.800000011920929" xr="0" yr="0" w="45.5" h="10" nn="ImageView" i="countrywar_gvg/countrywar_gvg_word29.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+              <ImageView x="76.91999816894531" y="0.800000011920929" xr="0" yr="0" w="45.5" h="10" nn="ImageView" i="countrywar_gvg/countrywar_gvg_word30.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+            </ImageView>
+            <ImageView x="0" y="11.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="1" i="common/countrywar_gvg_bg2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="3.5" y="0" xr="0" yr="0" w="10" h="15" nn="Label" t="1" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="N999-角色名角色名" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="99999" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+            <ImageView x="0" y="26.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="2" i="common/countrywar_gvg_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="3.5" y="0" xr="0" yr="0" w="10" h="15" nn="Label" t="2" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="N999-角色名角色名" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="99999" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+            <ImageView x="0" y="41.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="3" i="common/countrywar_gvg_bg2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="3.5" y="0" xr="0" yr="0" w="10" h="15" nn="Label" t="3" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="N999-角色名角色名" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="99999" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+            <ImageView x="0" y="56.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="4" i="common/countrywar_gvg_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="3.5" y="0" xr="0" yr="0" w="10" h="15" nn="Label" t="4" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+            <ImageView x="0" y="71.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="5" i="common/countrywar_gvg_bg2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="3.5" y="0" xr="0" yr="0" w="10" h="15" nn="Label" t="5" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+            <ImageView x="0" y="86.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="6" i="common/countrywar_gvg_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="3.5" y="0" xr="0" yr="0" w="10" h="15" nn="Label" t="6" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+            <ImageView x="0" y="101.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="7" i="common/countrywar_gvg_bg2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="3.5" y="0" xr="0" yr="0" w="10" h="15" nn="Label" t="7" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+            <ImageView x="0" y="116.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="8" i="common/countrywar_gvg_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="3.5" y="0" xr="0" yr="0" w="10" h="15" nn="Label" t="8" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+            <ImageView x="0" y="131.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="9" i="common/countrywar_gvg_bg2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="3.5" y="0" xr="0" yr="0" w="10" h="15" nn="Label" t="9" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+            <ImageView x="0" y="146.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="10" i="common/countrywar_gvg_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="3.5" y="0" xr="0" yr="0" w="10" h="15" nn="Label" t="10" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="暂无" ts="7" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+            <ImageView x="0" y="161.5" xr="0" yr="0" w="114" h="15" nn="ImageView" tag="11" i="common/countrywar_gvg_bg37.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <Label x="-1.5" y="0" xr="0" yr="0" w="20" h="15" nn="Label" t="2" ts="7" tctl="rgb(15,255,255)" tctr="rgb(15,255,255)" tcbl="rgb(15,255,255)" tcbr="rgb(15,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="20" y="0" xr="0" yr="0" w="65" h="15" nn="Label" tag="1" t="N999-角色名角色名" ts="7" tctl="rgb(15,255,255)" tctr="rgb(15,255,255)" tcbl="rgb(15,255,255)" tcbr="rgb(15,255,255)" sc="rgb(0,0,0)" ta="18"/>
+              <Label x="91" y="0" xr="0" yr="0" w="20" h="15" nn="Label" tag="2" t="99999" ts="7" tctl="rgb(15,255,255)" tctr="rgb(15,255,255)" tcbl="rgb(15,255,255)" tcbr="rgb(15,255,255)" sc="rgb(0,0,0)" ta="18"/>
+            </ImageView>
+          </View>
+          <Button x="33" y="176.5" xr="0" yr="0" w="47.5" h="10" nn="Button" ni="common/countrywar_gvg_bg3.png" nic="0,0,0,0" state="0" act="turnOnOrOffTopView" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>

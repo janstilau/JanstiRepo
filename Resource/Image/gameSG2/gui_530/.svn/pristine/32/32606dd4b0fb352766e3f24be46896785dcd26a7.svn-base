@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="272.000" h="117.000" srw="272" srh="117">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="272.000" h="117.000" srw="272" srh="117" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="7.000" y="5.000" xr="0" yr="0" w="260.000" h="15.000" srw="272" srh="117" t="兵种相克详解：" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label nn="Label" x="55.000" y="20.000" xr="0" yr="0" w="30.000" h="15.000" srw="272" srh="117" t="普通兵" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="9"/>
+    <Label nn="Label" x="7.000" y="20.000" xr="0" yr="0" w="260.000" h="15.000" srw="272" srh="117" t="1.兵种分为           以及           两大体系，每个体系内三个兵种相互克制，不同体系之间没有对应的克制关系" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
+    <Label nn="Label" x="7.000" y="46.000" xr="0" yr="0" w="260.000" h="15.000" srw="272" srh="117" t="2.战斗过程中，被克制方的兵种科技所提供的加成效果降低50%，例如15级弓兵在对阵任意步兵系兵种时，科技效果由原有的" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
+    <Label nn="Label" x="7.000" y="84.000" xr="0" yr="0" w="100.000" h="15.000" srw="272" srh="117" t="部队士兵攻击" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9">
+      <Label nn="Label" x="62.000" y="0.000" xr="0" yr="0" w="100.000" h="15.000" srw="272" srh="117" t="+15000" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="9"/>
+    </Label>
+    <Label nn="Label" x="7.000" y="96.000" xr="0" yr="0" w="100.000" h="15.000" srw="272" srh="117" t="部队士兵防御" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9">
+      <Label nn="Label" x="62.000" y="0.000" xr="0" yr="0" w="100.000" h="15.000" srw="272" srh="117" t="+9600" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="9"/>
+    </Label>
+    <Label nn="Label" x="116.500" y="88.500" xr="0" yr="0" w="60.000" h="15.000" srw="272" srh="117" t="降低为" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
+    <Label nn="Label" x="159.000" y="84.000" xr="0" yr="0" w="100.000" h="15.000" srw="272" srh="117" t="部队士兵攻击" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9">
+      <Label nn="Label" x="62.000" y="0.000" xr="0" yr="0" w="100.000" h="15.000" srw="272" srh="117" t="+7500" ts="10" tctl="red" tctr="red" tcbl="red" tcbr="red" sc="black" ta="9"/>
+    </Label>
+    <Label nn="Label" x="159.000" y="96.000" xr="0" yr="0" w="100.000" h="15.000" srw="272" srh="117" t="部队士兵防御" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9">
+      <Label nn="Label" x="62.000" y="0.000" xr="0" yr="0" w="100.000" h="15.000" srw="272" srh="117" t="+4800" ts="10" tctl="red" tctr="red" tcbl="red" tcbr="red" sc="black" ta="9"/>
+    </Label>
+    <Label nn="Label" x="106.000" y="20.000" xr="0" yr="0" w="30.000" h="15.000" srw="272" srh="117" t="特种兵" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="9"/>
+    <Label nn="Label" x="7.000" y="58.000" xr="0" yr="0" w="30.000" h="15.000" srw="272" srh="117" t="50%" ts="10" tctl="red" tctr="red" tcbl="red" tcbr="red" sc="black" ta="9"/>
+  </ImageView>
+</View>

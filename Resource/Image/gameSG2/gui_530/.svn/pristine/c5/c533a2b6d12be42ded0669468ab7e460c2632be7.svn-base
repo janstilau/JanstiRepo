@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView x="15.000" y="22.000" xr="0" yr="0" w="433.500" h="286.000" srw="480" srh="320" i="common/u_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView x="2.500" y="5.000" xr="0" yr="0" w="457.500" h="80.000" srw="480" srh="320" i="common/u_bg_title.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="457.500" h="27.000" srw="480" srh="320" i="common/u_bg_title1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="_labTitle" x="144.200" y="3.010" xr="0" yr="0" w="170.000" h="18.000" srw="480" srh="320" t="选择队伍" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+  </ImageView>
+  <Button id="_btnClose" x="432.520" y="5.040" xr="0" yr="0" w="27.500" h="35.000" srw="480" srh="320" nt="" ni="common/u_btn_close.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="_onClose"/>
+  <ImageView x="24.500" y="54.500" xr="0" yr="0" w="415.000" h="203.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="-8.500" y="203.000" xr="0" yr="0" w="432.000" h="7.000" srw="480" srh="320" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ScrollView id="_scrollView" x="2.000" y="1.500" xr="0" yr="0" w="411.000" h="201.000" srw="480" srh="320"/>
+    <ImageView id="noArmyTip" x="116.500" y="36.500" xr="0" yr="0" w="180.000" h="150.000" srw="480" srh="320" i="common/u_bg_null.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="18.000" y="23.000" xr="0" yr="0" w="135.000" h="15.000" srw="480" srh="320" t="请尽快联系盟主建造联盟" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <Label x="0.000" y="16.000" xr="0" yr="0" w="135.000" h="15.000" srw="480" srh="320" t="主城，联盟主城建造完成" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+        <Label x="0.000" y="32.000" xr="0" yr="0" w="135.000" h="15.000" srw="480" srh="320" t="后，队伍将自动恢复！" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      </Label>
+    </ImageView>
+  </ImageView>
+  <View id="_chuzhenglingView" x="19.000" y="259.500" xr="0" yr="0" w="245.000" h="45.000" srw="480" srh="320">
+    <Label id="_chuzhenglingLab" x="30.000" y="7.500" xr="0" yr="0" w="45.000" h="10.000" srw="480" srh="320" t="出征令" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+      <ImageView id="_imageTaoFaLing1" x="28.000" y="-4.000" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" i="common/countrywar_bg_hightaofa.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Label>
+    <Label id="_labTili" x="79.500" y="8.500" xr="0" yr="0" w="50.000" h="10.000" srw="480" srh="320" t="" ts="9" tctl="rgb(224, 63, 63)" tctr="rgb(224, 63, 63)" tcbl="rgb(224, 63, 63)" tcbr="rgb(224, 63, 63)" sc="black" ta="17"/>
+    <Label id="_costTaoFaLingLab" x="21.000" y="24.500" xr="0" yr="0" w="38.000" h="10.000" srw="480" srh="320" t="出征消耗" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+      <ImageView id="_imageTaoFaLing2" x="37.500" y="-1.500" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" i="common/countrywar_bg_hightaofa.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="_costChuzhenglingLab" x="59.000" y="1.000" xr="0" yr="0" w="50.000" h="10.000" srw="480" srh="320" t="" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+      <Label id="nightXdlLab" x="63.500" y="1.000" xr="0" yr="0" w="42.000" h="10.000" srw="480" srh="320" t="(夜战双倍)" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+    </Label>
+    <Button id="_btnTaoFaLingTip" x="9.000" y="3.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="_onShowTaoFaLingTip"/>
+    <Button id="_buyChuzhenglingBtn" x="85.500" y="5.000" xr="0" yr="0" w="32.000" h="18.000" srw="480" srh="320" nt="购买" ni="common/shop_top_btn2_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18" act="_onBuyZhengTaoLing"/>
+  </View>
+  <Label id="stayTipLab" x="24.500" y="265.500" xr="0" yr="0" w="245.000" h="10.000" srw="480" srh="320" iv="0" t="提示：队伍驻扎建筑处于建造或升级状态时，队伍自动援建！" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  <View id="m_march_time_view" x="277.000" y="259.000" xr="0" yr="0" w="160.000" h="42.000" srw="480" srh="320">
+    <Label x="1.500" y="6.500" xr="0" yr="0" w="50.000" h="10.000" srw="480" srh="320" t="行军用时：" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+      <Label id="_labRunTime" x="42.500" y="0.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="320" t="88:88:88" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+      <Label id="nightSpend" x="77.500" y="0.500" xr="0" yr="0" w="42.000" h="10.000" srw="480" srh="320" t="(夜战双倍)" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+    </Label>
+    <Label x="1.500" y="23.000" xr="0" yr="0" w="50.000" h="10.000" srw="480" srh="320" t="到达时间：" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+      <Label id="_labArriveDate" x="42.500" y="0.500" xr="0" yr="0" w="60.000" h="10.000" srw="480" srh="320" t="今日 12:48:45" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+      <Label x="42.500" y="0.500" xr="0" yr="0" w="60.000" h="10.000" srw="480" srh="320" iv="0" t="今日" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+    </Label>
+    <Button id="stayTipBtn" x="81.000" y="-0.500" xr="0" yr="0" w="25.000" h="25.000" srw="480" srh="320" iv="0" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onOpenTipStay">
+      <ImageView x="2.000" y="3.500" xr="0" yr="0" w="17.000" h="17.000" srw="480" srh="320" i="common/u_btn_zhushi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <ImageView id="stayTipView" x="-9.140" y="-40.640" xr="0" yr="0" w="120.000" h="45.000" srw="480" srh="320" iv="0" i="common/xingmutishi_bg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="6.000" y="2.000" xr="0" yr="0" w="110.000" h="40.000" srw="480" srh="320" t="提示：                               执行【驻扎】指令，行军用时将少于【出征】等指令！" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    </ImageView>
+  </View>
+  <View x="30.000" y="255.500" xr="0" yr="0" w="410.000" h="50.000" srw="480" srh="320">
+    <View id="m_eff_panel" x="367.100" y="3.950" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320"/>
+  </View>
+  <View id="_viewFight" x="30.000" y="255.500" xr="0" yr="0" w="410.000" h="50.000" srw="480" srh="320" iv="0">
+    <Button id="_btnFight" x="367.100" y="3.950" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" nt="" ni="countrywar_selectteam/countrywar_btn_battle.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="_onStart"/>
+  </View>
+  <View id="_viewBuild" x="30.000" y="255.500" xr="0" yr="0" w="410.000" h="50.000" srw="480" srh="320" iv="0">
+    <Button id="_btnBuild" x="367.100" y="3.950" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" nt="" ni="countrywar_selectteam/countrywar_btn_fortification.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.500000,0.500000,0.000000,0.000000" ht="" hi="" hci="" hic="0.500000,0.500000,0.000000,0.000000" dt="" di="" dci="" dic="0.500000,0.500000,0.000000,0.000000" zot="1" state="0" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18" act="_onStart"/>
+  </View>
+  <View id="_viewStay" x="30.000" y="255.500" xr="0" yr="0" w="410.000" h="50.000" srw="480" srh="320" iv="0">
+    <Button id="_btnStay" x="367.100" y="3.950" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" nt="" ni="countrywar_selectteam/countrywar_btn_go.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.500000,0.500000,0.000000,0.000000" ht="" hi="" hci="" hic="0.500000,0.500000,0.000000,0.000000" dt="" di="" dci="" dic="0.500000,0.500000,0.000000,0.000000" zot="1" state="0" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18" act="_onStart"/>
+  </View>
+  <View id="_viewGather" x="30.000" y="255.500" xr="0" yr="0" w="410.000" h="50.000" srw="480" srh="320" iv="0">
+    <Button id="_btnGather" x="367.100" y="3.950" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" nt="" ni="countrywar_selectteam/countrywar_btn_response.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.500000,0.500000,0.000000,0.000000" ht="" hi="" hci="" hic="0.500000,0.500000,0.000000,0.000000" dt="" di="" dci="" dic="0.500000,0.500000,0.000000,0.000000" zot="1" state="0" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18" act="_onStart"/>
+  </View>
+  <View id="_viewVagrancy" x="30.000" y="255.500" xr="0" yr="0" w="410.000" h="50.000" srw="480" srh="320" iv="0">
+    <Button id="_btnVagrancy" x="367.100" y="3.950" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" nt="" ni="countrywar_selectteam/countrywar_btn_vagrancy.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.500000,0.500000,0.000000,0.000000" ht="" hi="" hci="" hic="0.500000,0.500000,0.000000,0.000000" dt="" di="" dci="" dic="0.500000,0.500000,0.000000,0.000000" zot="1" state="0" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18" act="_onStart"/>
+  </View>
+  <View id="_viewCrusade" x="30.000" y="255.500" xr="0" yr="0" w="410.000" h="50.000" srw="480" srh="320" iv="0">
+    <Button id="_btnCrusade" x="367.100" y="3.950" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" nt="" ni="countrywar_selectteam/countrywar_btn_taofa.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="_onStart"/>
+  </View>
+  <View id="_viewExplore" x="30.000" y="255.500" xr="0" yr="0" w="410.000" h="50.000" srw="480" srh="320" iv="0">
+    <Button id="_btnExplore" x="367.100" y="3.950" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" nt="" ni="countrywar_selectteam/countrywar_btn_explore.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="_onStart"/>
+  </View>
+  <View id="_viewTreasures" x="30.000" y="255.500" xr="0" yr="0" w="410.000" h="50.000" srw="480" srh="320" iv="0">
+    <Button id="_btnTreasures" x="367.100" y="3.950" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" nt="" ni="countrywar_selectteam/countrywar_btn_treasures.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="_onStart"/>
+  </View>
+  <View id="_viewReconstruction" x="30.000" y="255.500" xr="0" yr="0" w="410.000" h="50.000" srw="480" srh="320" iv="0">
+    <Button id="_btnReconstruction" x="367.100" y="3.950" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" nt="" ni="countrywar_selectteam/countrywar_btn_reconstruction.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="_onStart"/>
+  </View>
+  <View id="_viewOuterBuild" x="30.000" y="255.500" xr="0" yr="0" w="410.000" h="50.000" srw="480" srh="320" iv="0">
+    <Button id="_btnOuterBuild" x="367.100" y="3.950" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" nt="" ni="common_2/countrywar_btn_buildstructure1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="_onStart"/>
+  </View>
+  <View id="inspireView" x="29.000" y="29.500" xr="0" yr="0" w="400.000" h="26.000" srw="480" srh="320">
+    <Label id="costBingLab" x="200.240" y="5.000" xr="0" yr="0" w="50.000" h="15.000" srw="480" srh="320" t="99999" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17">
+      <Label x="-67.240" y="0.000" xr="0" yr="0" w="60.000" h="15.000" srw="480" srh="320" t="预计消耗" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      <ImageView x="-18.740" y="-2.500" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" i="common/bing_yubeibing.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Label>
+    <Label id="addShuXingLab" x="236.000" y="5.000" xr="0" yr="0" w="80.000" h="15.000" srw="480" srh="320" t="全军属性+10%" ts="10" tctl="rgb(38, 135, 197)" tctr="rgb(38, 135, 197)" tcbl="rgb(38, 135, 197)" tcbr="rgb(38, 135, 197)" sc="black" ta="17"/>
+    <Button x="308.000" y="3.500" xr="0" yr="0" w="58.000" h="19.500" srw="480" srh="320" nt="鼓舞全军" ni="common/wine_btn.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onShowInspire"/>
+  </View>
+  <Label id="judianAndtoushicheLab" x="27.500" y="274.000" xr="0" yr="0" w="230.000" h="15.000" srw="480" srh="320" iv="0" t="提示：攻打叛军据点和投石车不消耗行动力！" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+</View>

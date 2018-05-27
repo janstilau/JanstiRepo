@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="397" h="200" nn="大势用坐标映射层">
+  <ImageView id="3" x="0.6000000238418579" y="31.100000381469727" xr="0" yr="0" w="176" h="140.5" nn="兖州" tag="3" i="countrywar_worldmap_new/countrywar_worldmap_zhongyuan_B_03.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <ImageView id="1" x="137.60000610351562" y="95.5" xr="0" yr="0" w="260" h="105" nn="青州" tag="1" i="countrywar_worldmap_new/countrywar_worldmap_zhongyuan_B_02.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <ImageView id="2" x="129.70001220703125" y="0.300018310546875" xr="0" yr="0" w="267.5" h="103" nn="幽州" tag="2" i="countrywar_worldmap_new/countrywar_worldmap_zhongyuan_B_01.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <ImageView id="4" x="151" y="75.30000305175781" xr="0" yr="0" w="96" h="50" nn="冀州" tag="4" i="countrywar_worldmap_new/countrywar_worldmap_zhongyuan_B_04.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+</View>

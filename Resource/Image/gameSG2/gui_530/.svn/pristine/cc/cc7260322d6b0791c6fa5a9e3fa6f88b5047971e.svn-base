@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="412" h="35">
+  <ImageView x="0" y="0" xr="0" yr="0" w="412" h="35" i="common/a_bg4.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="3" y="2" xr="0" yr="0" w="30" h="30" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="headIcon" x="0" y="0" xr="0" yr="0" w="30" h="30" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="headBgImg" x="0" y="0" xr="0" yr="0" w="30" h="30" i="common/main_bg_player.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="playerLevelImg" x="1.1399999856948853" y="17.860000610351562" xr="0" yr="0" w="10" h="10" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label id="playerNameLab" x="30.5" y="10" xr="0" yr="0" w="55" h="9" t="玩家名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+      </ImageView>
+    </ImageView>
+    <ImageView id="generalBgImg1" x="90.5" y="1" xr="0" yr="0" w="27" h="27" i="common/u_other_general_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="generalIcon1" x="0" y="0" xr="0" yr="0" w="27" h="27" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="generalFullProBar1" x="1" y="27.5" xr="0" yr="0" w="25" h="5" i="common/fight_bg_exp.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="generalProBar1" x="0" y="0" xr="0" yr="0" w="25" h="5" i="common/fight_red_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ImageView id="corps_img1" x="0" y="22.5" xr="0" yr="0" w="10" h="10" i="common_2/countrywar_bz_0.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </ImageView>
+    <ImageView id="generalBgImg2" x="119" y="1" xr="0" yr="0" w="27" h="27" i="common/u_other_general_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="generalIcon2" x="0" y="0" xr="0" yr="0" w="27" h="27" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="generalFullProBar2" x="1" y="27.5" xr="0" yr="0" w="25" h="5" i="common/fight_bg_exp.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="generalProBar2" x="0" y="0" xr="0" yr="0" w="25" h="5" i="common/fight_red_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ImageView id="corps_img2" x="0" y="22.5" xr="0" yr="0" w="10" h="10" i="common_2/countrywar_bz_0.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </ImageView>
+    <ImageView id="generalBgImg3" x="147" y="1" xr="0" yr="0" w="27" h="27" i="common/u_other_general_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="generalIcon3" x="0" y="0" xr="0" yr="0" w="27" h="27" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="generalFullProBar3" x="1" y="27.5" xr="0" yr="0" w="25" h="5" i="common/fight_bg_exp.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="generalProBar3" x="0" y="0" xr="0" yr="0" w="25" h="5" i="common/fight_red_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ImageView id="corps_img3" x="0" y="22.5" xr="0" yr="0" w="10" h="10" i="common_2/countrywar_bz_0.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </ImageView>
+    <ImageView id="generalBgImg4" x="175" y="1" xr="0" yr="0" w="27" h="27" i="common/u_other_general_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="generalIcon4" x="0" y="0" xr="0" yr="0" w="27" h="27" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="generalFullProBar4" x="1" y="27.5" xr="0" yr="0" w="25" h="5" i="common/fight_bg_exp.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="generalProBar4" x="0" y="0" xr="0" yr="0" w="25" h="5" i="common/fight_red_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ImageView id="corps_img4" x="0" y="22.5" xr="0" yr="0" w="10" h="10" i="common_2/countrywar_bz_0.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </ImageView>
+    <ImageView x="205" y="3" xr="0" yr="0" w="12.600000381469727" h="14" i="common/bing_bingli.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="troopPowerLab" x="12.5" y="3" xr="0" yr="0" w="35" h="9" t="999999" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="17"/>
+    </ImageView>
+    <ImageView x="205.5" y="19.5" xr="0" yr="0" w="12" h="12" i="common/countrywar_other_siege.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="troopCastleLab" x="12.5" y="2" xr="0" yr="0" w="35" h="9" t="9999" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="17"/>
+    </ImageView>
+    <ImageView x="249" y="5" xr="0" yr="0" w="23" h="23" iv="0" i="league_troops_item/a_icon_zz.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label x="23" y="7.5" xr="0" yr="0" w="155" h="10" t="玩家名六个字的个人主城(888,888)" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+    </ImageView>
+    <ImageView id="leagueTroopStateView" x="264" y="0" xr="0" yr="0" w="146" h="34" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="stateImg" x="-10" y="7" xr="0" yr="0" w="20" h="20" i="league_troops_item/a_icon_zd.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </ImageView>
+  </ImageView>
+</View>

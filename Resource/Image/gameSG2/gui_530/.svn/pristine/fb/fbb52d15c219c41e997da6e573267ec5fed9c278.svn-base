@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="480" h="318.70001220703125" nn="View">
+  <View x="4" y="3.5" xr="0" yr="0" w="177.3000030517578" h="248.8000030517578" nn="View">
+    <ImageView id="iconBackView" x="-0.5" y="0" xr="0" yr="0" w="177.39999389648438" h="249.6999969482422" nn="ImageView" i="godweapon/gw_bg_long.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="swordIconBack" x="25.5" y="38" xr="0" yr="0" w="45" h="45" nn="ImageView" tag="1" i="godweapon/gw_bg_sword.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label id="swordNameLab" x="-8" y="54" xr="0" yr="0" w="60" h="10" nn="Label" tag="1" t="神兵名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+        <View x="0" y="0" xr="0" yr="0" w="45" h="45" tag="2"/>
+        <View id="equipCell1" x="0" y="0" xr="0" yr="0" w="45" h="45"/>
+        <ImageView x="35.5" y="-5.699999809265137" xr="0" yr="0" w="18" h="18" nn="ImageView" tag="3" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ImageView id="flagIconBack" x="105.9000015258789" y="72.5999984741211" xr="0" yr="0" w="45" h="45" nn="ImageView" tag="2" i="godweapon/gw_bg_flag.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label id="flagNameLab" x="-9" y="54" xr="0" yr="0" w="60" h="10" nn="Label" tag="1" t="神兵名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+        <View x="0" y="0" xr="0" yr="0" w="45" h="45" tag="2"/>
+        <View id="equipCell2" x="0" y="0" xr="0" yr="0" w="45" h="45"/>
+        <ImageView x="35.5" y="-5.699999809265137" xr="0" yr="0" w="18" h="18" nn="ImageView" tag="3" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ImageView id="bookIconBack" x="30.600000381469727" y="121.4000015258789" xr="0" yr="0" w="45" h="45" nn="ImageView" tag="3" i="godweapon/gw_bg_book.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label id="bookNameLab" x="-9" y="53.5" xr="0" yr="0" w="60" h="10" nn="Label" tag="1" t="神兵名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+        <View x="0" y="0" xr="0" yr="0" w="45" h="45" tag="2"/>
+        <View id="equipCell3" x="0" y="0" xr="0" yr="0" w="45" h="45"/>
+        <ImageView x="35.5" y="-5.699999809265137" xr="0" yr="0" w="18" h="18" nn="ImageView" tag="3" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ImageView id="treasureIconBack" x="104.80000305175781" y="156.5" xr="0" yr="0" w="45" h="45" nn="ImageView" tag="4" i="godweapon/gw_bg_magic.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label id="treasureNameLab" x="-8.5" y="54.5" xr="0" yr="0" w="60" h="10" nn="Label" tag="1" t="神兵名六个字" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+        <View x="0" y="0" xr="0" yr="0" w="45" h="45" tag="2"/>
+        <View id="equipCell4" x="0" y="0" xr="0" yr="0" w="45" h="45"/>
+        <ImageView x="35.5" y="-5.699999809265137" xr="0" yr="0" w="18" h="18" nn="ImageView" tag="3" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <Button id="suitBtn" x="10.800000190734863" y="213.1999969482422" xr="0" yr="0" w="29" h="29" nn="Button" ni="godweapon/gw_suit.png" nic="0,0,0,0" state="0" act="openSuit" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+        <Label id="suitLab" x="37.400001525878906" y="17.799999237060547" xr="0" yr="0" w="91.4000015258789" h="10" nn="Label" t="神兵套装（已激活）" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+      </Button>
+      <View x="0" y="0" xr="0" yr="0" w="100" h="50"/>
+    </ImageView>
+  </View>
+  <ImageView x="181.89999389648438" y="-6.300000190734863" xr="0" yr="0" w="80" h="272.70001220703125" i="common/u_bg_gradient1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <ImageView x="183.89999389648438" y="6.599999904632568" xr="0" yr="0" w="236" h="244.89999389648438" i="godweapon/gw_bg_right.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <ImageView x="180.8000030517578" y="4.199999809265137" xr="0" yr="0" w="241.5" h="248.89999389648438" i="godweapon/gw_bg_right2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <ScrollView id="gridScrollView" x="189.6999969482422" y="36.400001525878906" xr="0" yr="0" w="225.1999969482422" h="192.8000030517578" nn="ScrollView"/>
+  <ImageView x="265" y="14" xr="0" yr="0" w="74" h="21" nn="ImageView" i="godweapon/gw_title.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+    <Label x="2" y="6" xr="0" yr="0" w="70" h="10" nn="Label" t="已有神兵" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+  </ImageView>
+  <View id="beautifulGirl" x="165" y="-4.5" xr="0" yr="0" w="260" h="260" nn="View">
+    <ImageView x="-19.5" y="30.5" xr="0" yr="0" w="181" h="225" nn="ImageView" i="common/xiaozhushou.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView x="113.4000015258789" y="66.30000305175781" xr="0" yr="0" w="124.80000305175781" h="80.0999984741211" nn="ImageView" i="godweapon/gw_tishi.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Button x="186" y="88.5" xr="0" yr="0" w="45" h="45" nn="Button" ni="godweapon/gw_shop.png" nic="0,0,0,0" state="0" act="openMysteriousShop" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  </View>
+  <Button id="getGodweaponBtn" x="281" y="231.10000610351562" xr="0" yr="0" w="57" h="13" ni="godweapon/gw_get.png" zot="1" state="0" act="openMysteriousShop" ts="12" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <View id="animationBg" x="0" y="0" xr="0" yr="0" w="421.5" h="268.70001220703125"/>
+</View>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="130" h="70">
+  <View x="0" y="0" xr="0" yr="0" w="150" h="70">
+    <View id="propBg" x="7" y="5.5" xr="0" yr="0" w="44" h="44"/>
+    <Label id="des_lab" x="57" y="9" xr="0" yr="0" w="60" h="10" t="每日登录礼包" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+    <Button id="m_receieveBtn" x="57" y="26.5" xr="0" yr="0" w="50" h="23" ni="common/ui_btn_act_1.png" nic="0,0,0,0" state="0" act="onTouchCallBack" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Button id="m_hasreceieveBtn" x="57" y="26.5" xr="0" yr="0" w="50" h="23" iv="0" ni="qq/ui_qq_tequan_lingqu.png" nic="0,0,0,0" state="0" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  </View>
+</View>

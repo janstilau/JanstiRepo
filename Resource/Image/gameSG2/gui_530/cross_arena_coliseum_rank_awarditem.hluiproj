@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="235.000" h="30.000" srw="235" srh="30">
+  <View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="218.000" h="30.000" srw="235" srh="30">
+    <ImageView nn="ImageView" x="3.500" y="28.500" xr="0" yr="0" w="229.000" h="1.000" srw="235" srh="30" i="common/u_bg_fengexian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="rankimg" nn="ImageView" x="23.000" y="4.000" xr="0" yr="0" w="21.500" h="21.500" srw="235" srh="30" i="common/u_trophy_first.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="ranktxt" nn="Label" x="1.500" y="11.000" xr="0" yr="0" w="70.000" h="10.000" srw="235" srh="30" t="2001-10000" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    <View id="awardcontainer" nn="View" x="155.000" y="3.000" xr="0" yr="0" w="70.000" h="22.000" srw="235" srh="30"/>
+    <ImageView id="titleImg" nn="ImageView" x="90.000" y="5.000" xr="0" yr="0" w="61.000" h="18.000" srw="235" srh="30" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </View>
+</View>

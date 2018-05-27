@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="14.000" srw="200" srh="14">
+  <ImageView id="contentBgImg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="200.500" h="14.000" srw="200" srh="14" i="common/gvg_bg_dise2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label id="contentLab" nn="Label" x="8.000" y="0.000" xr="0" yr="0" w="186.700" h="13.000" srw="200" srh="14" t="盟内所有成员获得" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="17"/>
+    <ImageView id="iconImg" nn="ImageView" x="82.500" y="-5.500" xr="0" yr="0" w="30.000" h="30.000" srw="200" srh="14" iv="0" i="countrywar_gvg/countrywar_gvg_icon1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="namelab" nn="Label" x="28.000" y="5.500" xr="0" yr="0" w="100.000" h="13.000" srw="200" srh="14" t="问鼎天下宝箱" ts="9" tctl="rgb(228, 80, 255)" tctr="rgb(228, 80, 255)" tcbl="rgb(228, 80, 255)" tcbr="rgb(228, 80, 255)" sc="rgb(228, 80, 255)" ta="17"/>
+    </ImageView>
+  </ImageView>
+</View>

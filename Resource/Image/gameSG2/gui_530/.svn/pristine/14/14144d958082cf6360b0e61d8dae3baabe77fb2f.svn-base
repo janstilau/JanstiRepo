@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="311" h="26">
+  <View x="0" y="0.75" xr="0" yr="0" w="311" h="20">
+    <ImageView id="cupImg" x="0" y="3.059999942779541" xr="0" yr="0" w="15" h="15" i="common/u_trophy_first.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Label id="rankLab" x="3.5" y="5" xr="0" yr="0" w="20" h="10" iv="0" t="1" ts="10" tctl="rgb(0,255,0)" tctr="rgb(0,255,0)" tcbl="rgb(0,255,0)" tcbr="rgb(0,255,0)" sc="rgb(0,0,0)" ta="17"/>
+    <Label id="rankNmae" x="17.100000381469727" y="5" xr="0" yr="0" w="100" h="10" t="" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17"/>
+    <Label id="rank_value" x="116.16000366210938" y="5.5" xr="0" yr="0" w="50" h="10" t="" ts="10" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    <ImageView id="jobImg" x="55.5" y="-1.1100000143051147" xr="0" yr="0" w="26" h="26" iv="0" i="common/u_other_gongshou.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </View>
+</View>

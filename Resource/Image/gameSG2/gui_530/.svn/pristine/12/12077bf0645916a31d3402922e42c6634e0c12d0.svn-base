@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="34.000" h="34.000" srw="34" srh="34">
+  <ImageView id="iconImg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="34.000" h="34.000" srw="34" srh="34" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView id="bgImg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="34.000" h="34.000" srw="34" srh="34" i="common/u_other_role.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView id="headImg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="34.000" h="34.000" srw="34" srh="34" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <Label id="levelTxt" nn="Label" x="1.060" y="23.060" xr="0" yr="0" w="30.000" h="8.000" srw="34" srh="34" t="Lv.100" ts="8" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="20"/>
+</View>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="250.000" h="180.000" srw="250" srh="180">
+  <ImageView id="pt_bg" x="0.000" y="0.000" xr="0" yr="0" w="250.000" h="180.000" srw="250" srh="180" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="iconImge" x="21.000" y="12.500" xr="0" yr="0" w="35.000" h="35.000" srw="250" srh="180" i="signHuoYueTips/chengzhurenwu.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label x="21.000" y="53.000" xr="0" yr="0" w="100.000" h="15.000" srw="250" srh="180" t="开放等级：" ts="11" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label x="21.000" y="75.000" xr="0" yr="0" w="100.000" h="15.000" srw="250" srh="180" t="活动时间：" ts="11" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label x="21.000" y="98.000" xr="0" yr="0" w="100.000" h="15.000" srw="250" srh="180" t="活动内容：" ts="11" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <ImageView x="0.000" y="135.500" xr="0" yr="0" w="250.000" h="1.500" srw="250" srh="180" i="common/u_bg_fengexian2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="iconName" x="77.000" y="14.500" xr="0" yr="0" w="100.000" h="15.000" srw="250" srh="180" t="城主任务" ts="11" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label id="needLevel" x="77.000" y="52.880" xr="0" yr="0" w="100.000" h="15.000" srw="250" srh="180" t="12级" ts="11" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label id="activityTime" x="77.000" y="75.000" xr="0" yr="0" w="150.000" h="15.000" srw="250" srh="180" t="全天" ts="11" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label id="activityDes" x="77.000" y="99.380" xr="0" yr="0" w="165.000" h="30.000" srw="250" srh="180" t="全天" ts="11" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
+    <Label x="21.000" y="145.000" xr="0" yr="0" w="100.000" h="15.000" srw="250" srh="180" t="活动奖励：" ts="11" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <View id="bgWidget" x="77.000" y="141.380" xr="0" yr="0" w="150.000" h="30.000" srw="250" srh="180"/>
+  </ImageView>
+</View>

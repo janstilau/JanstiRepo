@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="48.5" h="63.5">
+  <Button id="castellan_item_bg" x="0" y="0" xr="0" yr="0" w="48.5" h="63.5" nic="0,0,0,0" state="0" act="castellan_item_bg_act" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="castellan_item_reverse" x="0" y="0" xr="0" yr="0" w="48.5" h="63.5" i="countrywar_castellan/countrywar_castellan_bg1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="castellan_item_front" x="0" y="0" xr="0" yr="0" w="48.5" h="63.5" i="countrywar_castellan/countrywar_castellan_bg2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="castellan_item_icon" x="5.760000228881836" y="6.480000019073486" xr="0" yr="0" w="35" h="35" i="新建文件夹/shenbingbaoxiang2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label id="castellan_item_numb" x="7.539999961853027" y="32" xr="0" yr="0" w="32" h="9" t="999999" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" bold="1" sc="rgb(0,0,0)" ta="20"/>
+      <Label id="castellan_item_name" x="2.5399999618530273" y="47" xr="0" yr="0" w="42" h="9" t="角色名称名称" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="0" y="0" xr="0" yr="0" w="14" h="14" i="countrywar_castellan/countrywar_castellan_bg3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="item_id" x="0.8999999761581421" y="1.690000057220459" xr="0" yr="0" w="13" h="10" t="888" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+  </Button>
+</View>

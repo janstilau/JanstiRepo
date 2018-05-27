@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="136.000" h="53.000" srw="136" srh="53">
+  <Button nn="Button" x="0.000" y="0.000" xr="0" yr="0" w="136.000" h="53.000" srw="136" srh="53" nt="" ni="common/a_bg3.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onItemTouchAction">
+    <ImageView id="prop_bg" nn="ImageView" x="4.500" y="5.000" xr="0" yr="0" w="44.000" h="44.000" srw="136" srh="53" i="common/shop_daojukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="prop_icon" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="136" srh="53" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <Label id="prop_name" nn="Label" x="51.310" y="7.210" xr="0" yr="0" w="80.000" h="15.000" srw="136" srh="53" t="道具名称八字" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    <Label id="limit_num" nn="Label" x="51.310" y="27.710" xr="0" yr="0" w="90.000" h="15.000" srw="136" srh="53" t="每次生产999999个" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+  </Button>
+</View>

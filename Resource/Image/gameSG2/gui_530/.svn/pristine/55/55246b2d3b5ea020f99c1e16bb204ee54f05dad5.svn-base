@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="150.000" h="16.000" srw="150" srh="16" tag="10001">
+  <View id="_big_size" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="200.000" srw="150" srh="16">
+    <Button id="_home_big_btn" nn="Button" x="0.000" y="0.000" xr="0" yr="0" w="150.000" h="16.000" srw="150" srh="16" nt="" ni="countrywar_gve_multiplayer/gve_multiplayer_bg2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="countrywar_gve_multiplayer/gve_multiplayer_bg3.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="countrywar_gve_multiplayer/gve_multiplayer_bg3.png" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickBigHome"/>
+    <ImageView id="campImg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="16.000" h="16.000" srw="150" srh="16" i="countrywar_gve/countrywar_gve_bg6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="memberCountLab" nn="Label" x="120.000" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="150" srh="16" t="(1/5)" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+    <Label id="roomNameLab" nn="Label" x="20.000" y="0.000" xr="0" yr="0" w="100.000" h="15.000" srw="150" srh="16" t="一二三四五六的房间" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+  </View>
+  <View id="_small_size" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="200.000" srw="150" srh="16" iv="0">
+    <Button id="_home_small_btn" nn="Button" x="0.000" y="0.000" xr="0" yr="0" w="92.000" h="16.000" srw="150" srh="16" nt="" ni="countrywar_gve_multiplayer/gve_multiplayer_bg2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="countrywar_gve_multiplayer/gve_multiplayer_bg3.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="countrywar_gve_multiplayer/gve_multiplayer_bg3.png" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickSmallHome"/>
+    <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="16.000" h="16.000" srw="150" srh="16" i="countrywar_gve/countrywar_gve_bg6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="77.000" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="150" srh="16" t="(1/5)" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+    <Label nn="Label" x="15.000" y="0.000" xr="0" yr="0" w="60.000" h="15.000" srw="150" srh="16" t="一二三四五六" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+  </View>
+</View>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="294.500" h="252.000" srw="294" srh="252">
+  <View x="14.500" y="1.000" xr="0" yr="0" w="280.000" h="252.000" srw="294" srh="252">
+    <ImageView x="-14.740" y="-1.000" xr="0" yr="0" w="293.000" h="54.000" srw="294" srh="252" i="common/activity_7days_bg_title.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView x="5.500" y="-0.500" xr="0" yr="0" w="211.000" h="25.000" srw="294" srh="252" i="activity_jinnang/ui_activity_jinnang_word.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label x="7.500" y="29.500" xr="0" yr="0" w="50.000" h="10.000" srw="294" srh="252" t="活动时间：" ts="10" tctl="rgb(144, 255, 254)" tctr="rgb(144, 255, 254)" tcbl="rgb(144, 255, 254)" tcbr="rgb(144, 255, 254)" sc="black" ta="17">
+        <Label id="_open_time_lab" x="51.500" y="0.000" xr="0" yr="0" w="220.000" h="10.000" srw="294" srh="252" t="" ts="10" tctl="rgb(144, 255, 254)" tctr="rgb(144, 255, 254)" tcbl="rgb(144, 255, 254)" tcbr="rgb(144, 255, 254)" sc="black" ta="17"/>
+      </Label>
+    </ImageView>
+    <ImageView x="-7.500" y="54.500" xr="0" yr="0" w="279.000" h="154.000" srw="294" srh="252" i="activity_jinnang/ui_activity_jinnang_bg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <View id="m_propBg" x="109.180" y="59.780" xr="0" yr="0" w="160.000" h="88.000" srw="294" srh="252"/>
+      <ImageView id="_zhekou_view" x="85.160" y="-54.780" xr="0" yr="0" w="55.000" h="23.000" srw="294" srh="252" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <Button id="_receieve_btn" x="77.680" y="213.600" xr="0" yr="0" w="122.000" h="36.500" srw="294" srh="252" nt="" ni="common/firstpay_btn_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onReceieveRewardCallBack"/>
+    <Button id="_buy_btn" x="77.680" y="213.600" xr="0" yr="0" w="122.000" h="36.500" srw="294" srh="252" nt="" ni="common/activity_tree_btn.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onBuyCallBack">
+      <Label id="cost_lab" x="26.000" y="6.190" xr="0" yr="0" w="70.000" h="20.000" srw="294" srh="252" t="1元购买" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+    </Button>
+  </View>
+</View>

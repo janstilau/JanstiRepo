@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="294.500" h="252.000" srw="294" srh="252">
+  <View x="14.500" y="1.000" xr="0" yr="0" w="280.000" h="250.000" srw="294" srh="252">
+    <ImageView x="-14.500" y="-1.000" xr="0" yr="0" w="293.000" h="50.000" srw="294" srh="252" i="common/activity_7days_bg_title.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="view3" x="8.500" y="31.500" xr="0" yr="0" w="150.000" h="12.000" srw="294" srh="252" t="活动时间：" ts="10" tctl="rgb(255, 229, 158)" tctr="rgb(255, 229, 158)" tcbl="rgb(255, 229, 158)" tcbr="rgb(255, 229, 158)" sc="black" ta="17">
+        <Label id="_open_time_lab" x="47.040" y="0.500" xr="0" yr="0" w="220.000" h="11.000" srw="294" srh="252" t="00:00:00" ts="10" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17"/>
+      </Label>
+      <ImageView x="8.780" y="7.430" xr="0" yr="0" w="229.000" h="22.500" srw="294" srh="252" i="activity_bag_ride_skill/ui_activity_bag_ride_skill_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView x="-7.500" y="51.000" xr="0" yr="0" w="279.000" h="154.000" srw="294" srh="252" i="activity_bag_ride_skill/ui_activity_bag_ride_skill_bg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView x="-23.000" y="11.500" xr="0" yr="0" w="147.500" h="141.000" srw="294" srh="252" i="activity_bag_ride_skill/ui_activity_bag_ride_skill_bg_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView x="52.500" y="10.000" xr="0" yr="0" w="233.000" h="50.000" srw="294" srh="252" i="activity_bag_ride_skill/ui_activity_bag_ride_skill_word.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <View id="m_propBg" x="112.000" y="87.850" xr="0" yr="0" w="160.000" h="44.000" srw="294" srh="252"/>
+    </ImageView>
+    <Button id="zs_buy_btn" x="77.680" y="213.600" xr="0" yr="0" w="122.000" h="36.500" srw="294" srh="252" nt="" ni="common/activity_tree_btn.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onDiamondBuyCallBack">
+      <Label id="zs_cost_lab" x="36.500" y="8.500" xr="0" yr="0" w="40.000" h="16.000" srw="294" srh="252" t="3500" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      <ImageView x="74.000" y="8.500" xr="0" yr="0" w="29.000" h="15.000" srw="294" srh="252" i="common/ui_common_word_buy.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView x="17.500" y="9.000" xr="0" yr="0" w="18.000" h="16.000" srw="294" srh="252" i="common/diamond_white.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="_receieve_btn" x="77.680" y="213.600" xr="0" yr="0" w="122.000" h="36.500" srw="294" srh="252" iv="0" nt="" ni="common/firstpay_btn_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onReceieveRewardCallBack"/>
+    <Button id="rmb_buy_btn" x="77.680" y="213.600" xr="0" yr="0" w="122.000" h="36.500" srw="294" srh="252" iv="0" nt="" ni="common/activity_tree_btn.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onBuyCallBack">
+      <Label id="rmb_cost_lab" x="-18.000" y="8.500" xr="0" yr="0" w="80.000" h="16.000" srw="294" srh="252" t="90元" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="20"/>
+      <ImageView x="64.000" y="9.000" xr="0" yr="0" w="29.000" h="15.000" srw="294" srh="252" i="common/ui_common_word_buy.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+  </View>
+</View>

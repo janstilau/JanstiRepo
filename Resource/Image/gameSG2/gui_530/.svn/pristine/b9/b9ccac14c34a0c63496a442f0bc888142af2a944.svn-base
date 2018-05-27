@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <View id="leftview" x="6.000" y="32.500" xr="0" yr="0" w="131.000" h="273.000" srw="480" srh="320">
+    <ImageView id="leftviewbg" x="0.000" y="0.000" xr="0" yr="0" w="140.000" h="273.500" srw="480" srh="320" i="office/ui_office_img_btnbg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <View id="container" x="0.000" y="0.000" xr="0" yr="0" w="135.000" h="273.000" srw="480" srh="320"/>
+  </View>
+  <View id="rightview" x="140.500" y="0.000" xr="0" yr="0" w="340.500" h="320.000" srw="480" srh="320">
+    <ImageView x="71.500" y="0.000" xr="0" yr="0" w="209.000" h="65.000" srw="480" srh="320" i="office/ui_office_img_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="nameImg" x="78.000" y="16.520" xr="0" yr="0" w="48.000" h="31.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <View id="moviecontaner" x="85.000" y="81.800" xr="0" yr="0" w="150.000" h="150.000" srw="480" srh="320"/>
+    <ImageView id="rightImg" x="11.940" y="99.790" xr="0" yr="0" w="308.000" h="156.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="cityNameTxt" x="137.000" y="52.500" xr="0" yr="0" w="46.000" h="10.000" srw="480" srh="320" iv="0" t="北郡" ts="8" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="10"/>
+      <Label id="cityLevelTxt" x="125.000" y="54.000" xr="0" yr="0" w="10.000" h="8.000" srw="480" srh="320" iv="0" t="5" ts="6" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="10"/>
+    </ImageView>
+    <Label id="descTxt" x="28.940" y="233.820" xr="0" yr="0" w="280.000" h="30.000" srw="480" srh="320" t="获得太守或州牧头衔的玩家可在【天下】频道发言。" ts="10" tctl="rgb(204, 204, 204)" tctr="rgb(204, 204, 204)" tcbl="rgb(204, 204, 204)" tcbr="rgb(204, 204, 204)" sc="black" ta="10"/>
+    <ImageView x="47.510" y="263.770" xr="0" yr="0" w="234.000" h="15.500" srw="480" srh="320" i="common_2/ui_city_des.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </View>
+</View>

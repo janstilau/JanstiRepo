@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="184.000" h="163.000" srw="184" srh="163">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="184.000" h="163.000" srw="184" srh="163" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="93.000" y="33.500" xr="0" yr="0" w="86.000" h="3.000" srw="184" srh="163" i="common/ui_common_dividing_line.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="2.000" y="33.500" xr="0" yr="0" w="86.000" h="3.000" srw="184" srh="163" i="common/ui_common_dividing_line.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000" fx="1"/>
+    <ImageView nn="ImageView" x="75.500" y="9.500" xr="0" yr="0" w="31.000" h="16.000" srw="184" srh="163" i="role_word/ui_role_word_sx.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="3.000" y="51.000" xr="0" yr="0" w="30.000" h="12.000" srw="184" srh="163" t="生 命" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+      <ImageView nn="ImageView" x="26.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_label_hp_" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" t="9999999" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+    </Label>
+    <Label id="m_label_attack_name_" nn="Label" x="3.000" y="77.000" xr="0" yr="0" w="30.000" h="12.000" srw="184" srh="163" t="物 攻" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+      <ImageView nn="ImageView" x="26.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_label_physique_" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" t="9999999" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+    </Label>
+    <Label nn="Label" x="3.000" y="103.000" xr="0" yr="0" w="30.000" h="12.000" srw="184" srh="163" t="物 防" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+      <ImageView nn="ImageView" x="26.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_label_phy_defence_" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" t="9999999" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+    </Label>
+    <Label nn="Label" x="3.000" y="129.000" xr="0" yr="0" w="30.000" h="12.000" srw="184" srh="163" t="法 防" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+      <ImageView nn="ImageView" x="26.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_label_mag_defence_" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" t="9999999" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+    </Label>
+    <Label nn="Label" x="93.500" y="51.000" xr="0" yr="0" w="30.000" h="12.000" srw="184" srh="163" t="暴 击" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+      <ImageView nn="ImageView" x="26.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_label_crit_" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" t="9999999" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+    </Label>
+    <Label nn="Label" x="93.500" y="77.000" xr="0" yr="0" w="30.000" h="12.000" srw="184" srh="163" t="韧 性" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+      <ImageView nn="ImageView" x="26.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_label_toughness_" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" t="9999999" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+    </Label>
+    <Label nn="Label" x="93.500" y="103.000" xr="0" yr="0" w="30.000" h="12.000" srw="184" srh="163" t="破 击" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+      <ImageView nn="ImageView" x="26.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_label_mortar_" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" t="9999999" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+    </Label>
+    <Label nn="Label" x="93.500" y="129.000" xr="0" yr="0" w="30.000" h="12.000" srw="184" srh="163" t="格 挡" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+      <ImageView nn="ImageView" x="26.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_label_parry_" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="58.000" h="12.000" srw="184" srh="163" t="9999999" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+    </Label>
+  </ImageView>
+</View>

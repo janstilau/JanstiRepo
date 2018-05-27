@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="300.000" h="280.000" srw="300" srh="280">
+  <View id="ndPYView" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="300.000" h="280.000" srw="300" srh="280">
+    <Button nn="Button" x="20.260" y="12.120" xr="0" yr="0" w="43.000" h="39.000" srw="300" srh="280" nt="" ni="general_ndpy/general_btn_xianqing.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="ndXiangQingAction"/>
+    <View nn="View" x="15.500" y="10.000" xr="0" yr="0" w="280.000" h="125.000" srw="300" srh="280">
+      <ImageView nn="ImageView" x="87.460" y="14.920" xr="0" yr="0" w="92.000" h="18.000" srw="300" srh="280" i="common/u_bg_title5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="16.880" y="2.020" xr="0" yr="0" w="60.000" h="15.000" srw="300" srh="280" t="总属性" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="3.710" y="42.940" xr="0" yr="0" w="260.000" h="85.000" srw="300" srh="280" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="30.790" y="5.060" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="-32.000" y="0.000" xr="0" yr="0" w="40.000" h="12.500" srw="300" srh="280" t="生命  " ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="176.290" y="5.060" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="-31.500" y="0.000" xr="0" yr="0" w="40.000" h="12.500" srw="300" srh="280" t="暴击    " ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="30.790" y="25.060" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="nd_gjName_lab" nn="Label" x="-32.000" y="0.000" xr="0" yr="0" w="40.000" h="12.500" srw="300" srh="280" t="法攻  " ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="176.290" y="25.060" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="-31.500" y="0.000" xr="0" yr="0" w="40.000" h="12.500" srw="300" srh="280" t="韧性    " ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="30.790" y="45.060" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="-32.000" y="0.000" xr="0" yr="0" w="40.000" h="12.500" srw="300" srh="280" t="物防  " ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView id="m_general_wreck_img" nn="ImageView" x="176.290" y="45.060" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_general_wreck_lab" nn="Label" x="-31.500" y="0.000" xr="0" yr="0" w="40.000" h="12.500" srw="300" srh="280" t="破击    " ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="30.790" y="65.060" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="-32.000" y="0.000" xr="0" yr="0" w="40.000" h="12.500" srw="300" srh="280" t="法防  " ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="176.290" y="65.060" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="-31.500" y="0.000" xr="0" yr="0" w="40.000" h="12.500" srw="300" srh="280" t="格挡    " ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+      </ImageView>
+      <View id="totalProLabView" nn="View" x="33.620" y="46.920" xr="0" yr="0" w="230.000" h="80.000" srw="300" srh="280">
+        <Label id="nd_shm_lab" nn="Label" x="0.880" y="1.080" xr="0" yr="0" w="60.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        <Label id="nd_bj_lab" nn="Label" x="146.380" y="1.080" xr="0" yr="0" w="60.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        <Label id="nd_gj_lab" nn="Label" x="0.880" y="21.080" xr="0" yr="0" w="60.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        <Label id="nd_rx_lab" nn="Label" x="146.380" y="21.080" xr="0" yr="0" w="60.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        <Label id="nd_wf_lab" nn="Label" x="0.880" y="41.080" xr="0" yr="0" w="60.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        <Label id="nd_pj_lab" nn="Label" x="146.380" y="41.580" xr="0" yr="0" w="60.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        <Label id="nd_ff_lab" nn="Label" x="0.880" y="61.080" xr="0" yr="0" w="60.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        <Label id="nd_fd_lab" nn="Label" x="146.380" y="61.080" xr="0" yr="0" w="60.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </View>
+      <View id="changeProLabView" nn="View" x="33.620" y="46.920" xr="0" yr="0" w="230.000" h="80.000" srw="300" srh="280">
+        <Label id="hp_change_lab" nn="Label" x="45.970" y="-0.240" xr="0" yr="0" w="40.000" h="15.000" srw="300" srh="280" t="+0" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <Label id="crit_change_lab" nn="Label" x="180.970" y="-0.260" xr="0" yr="0" w="40.000" h="15.000" srw="300" srh="280" t="+0" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <Label id="atk_change_lab" nn="Label" x="46.800" y="19.940" xr="0" yr="0" w="40.000" h="15.000" srw="300" srh="280" t="+0" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <Label id="thoughness_change_lab" nn="Label" x="180.970" y="19.940" xr="0" yr="0" w="40.000" h="15.000" srw="300" srh="280" t="+0" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <Label id="phyDef_change_lab" nn="Label" x="45.970" y="40.440" xr="0" yr="0" w="40.000" h="15.000" srw="300" srh="280" t="+0" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <Label id="mortar_change_lab" nn="Label" x="180.970" y="40.440" xr="0" yr="0" w="40.000" h="15.000" srw="300" srh="280" t="+0" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <Label id="magDef_change_lab" nn="Label" x="45.970" y="59.940" xr="0" yr="0" w="40.000" h="15.000" srw="300" srh="280" t="+0" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <Label id="parry_change_lab" nn="Label" x="180.970" y="59.940" xr="0" yr="0" w="40.000" h="15.000" srw="300" srh="280" t="+0" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </View>
+      <View id="curStageProLabView" nn="View" x="33.620" y="46.920" xr="0" yr="0" w="230.000" h="80.000" srw="300" srh="280">
+        <Label id="parry_stage_lab" nn="Label" x="146.380" y="61.080" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="18"/>
+        <Label id="magDef_stage_lab" nn="Label" x="0.880" y="61.080" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="18"/>
+        <Label id="mortar_stage_lab" nn="Label" x="146.380" y="41.080" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="18"/>
+        <Label id="phyDef_stage_lab" nn="Label" x="0.880" y="41.080" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="18"/>
+        <Label id="thoughness_stage_lab" nn="Label" x="146.380" y="21.080" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="18"/>
+        <Label id="atk_stage_lab" nn="Label" x="0.880" y="21.080" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="18"/>
+        <Label id="crit_stage_lab" nn="Label" x="146.380" y="1.080" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="18"/>
+        <Label id="hp_stage_lab" nn="Label" x="0.880" y="1.080" xr="0" yr="0" w="82.000" h="12.500" srw="300" srh="280" t="Label" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="18"/>
+      </View>
+    </View>
+    <Button id="selectedBtn" nn="Button" x="104.000" y="21.500" xr="0" yr="0" w="89.000" h="24.500" srw="300" srh="280" nt="三阶属性" ni="common/a_bg4.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.500000,0.500000,0.000000,0.000000" ht="" hi="" hci="" hic="0.500000,0.500000,0.000000,0.000000" dt="" di="" dci="" dic="0.500000,0.500000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="selectedBtnAction">
+      <ImageView nn="ImageView" x="73.500" y="9.000" xr="0" yr="0" w="8.500" h="7.000" srw="300" srh="280" tag="11" i="common/ui_zone_bg9.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="totalBtn" nn="Button" x="216.170" y="18.420" xr="0" yr="0" w="62.000" h="27.500" srw="300" srh="280" nt="总属性" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="totalBtnAction"/>
+    <Button id="checkBtn" nn="Button" x="216.170" y="18.420" xr="0" yr="0" w="62.000" h="27.500" srw="300" srh="280" iv="0" nt="" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="checkBtnAction">
+      <Label nn="Label" x="0.000" y="1.500" xr="0" yr="0" w="62.000" h="12.000" srw="300" srh="280" t="查看" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      <Label nn="Label" x="0.000" y="12.000" xr="0" yr="0" w="62.000" h="12.000" srw="300" srh="280" t="本阶属性" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </Button>
+    <ImageView nn="ImageView" x="6.420" y="135.370" xr="0" yr="0" w="280.000" h="7.000" srw="300" srh="280" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="nd_jieduan_img" nn="ImageView" x="68.170" y="143.170" xr="0" yr="0" w="160.000" h="15.000" srw="300" srh="280" i="general_ndpy/peiyang_bg_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="nd_jieduan_lab" nn="Label" x="29.070" y="0.700" xr="0" yr="0" w="100.000" h="15.000" srw="300" srh="280" t="一阶培养：3/5" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <View id="nd_py_view" nn="View" x="6.680" y="149.000" xr="0" yr="0" w="280.000" h="130.000" srw="300" srh="280" iv="0">
+      <ImageView nn="ImageView" x="14.220" y="15.780" xr="0" yr="0" w="70.000" h="81.000" srw="300" srh="280" i="common/general_bg_skill1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="nd_itemName_lab" nn="Label" x="14.840" y="3.500" xr="0" yr="0" w="40.000" h="15.000" srw="300" srh="280" t="内丹" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <ImageView nn="ImageView" x="13.540" y="18.420" xr="0" yr="0" w="44.000" h="44.000" srw="300" srh="280" i="common/u_other_goods3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView id="nd_itemIcon_img" nn="ImageView" x="0.700" y="0.700" xr="0" yr="0" w="44.000" h="44.000" srw="300" srh="280" i="" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <Label id="nd_own_lab" nn="Label" x="4.810" y="60.410" xr="0" yr="0" w="60.000" h="15.000" srw="300" srh="280" t="" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="90.090" y="44.870" xr="0" yr="0" w="25.500" h="25.500" srw="300" srh="280" i="common/u_other_arrowright.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="nd_aniBg_Img" nn="ImageView" x="117.340" y="16.970" xr="0" yr="0" w="146.500" h="78.500" srw="300" srh="280" i="common/u_bg_num.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="nd_tsName_lab" nn="Label" x="7.970" y="5.550" xr="0" yr="0" w="80.000" h="15.000" srw="300" srh="280" t="可能出现的效果:" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+        <ImageView nn="ImageView" x="7.910" y="23.480" xr="0" yr="0" w="132.000" h="1.000" srw="300" srh="280" i="general_ndpy/peiyang_xian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label id="nd_bg_lab" nn="Label" x="23.720" y="40.460" xr="0" yr="0" w="60.000" h="15.000" srw="300" srh="280" t="" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18">
+          <ImageView id="nd_img_level" nn="ImageView" x="40.000" y="20.000" xr="0" yr="0" w="19.000" h="11.000" srw="300" srh="280" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Label>
+      </ImageView>
+      <ImageView id="autoQuanImg" nn="ImageView" x="117.340" y="16.970" xr="0" yr="0" w="146.500" h="78.500" srw="300" srh="280" i="general_ndpy/ui_general_ndpy_zidong.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <View id="nd_juezeBtn_view" nn="View" x="110.000" y="100.000" xr="0" yr="0" w="165.000" h="30.000" srw="300" srh="280">
+        <Button id="nd_baoliu_btn" nn="Button" x="84.000" y="1.000" xr="0" yr="0" w="72.000" h="27.500" srw="300" srh="280" nt="保留" ni="common/u_btn_comfirm2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="keepBtnAction"/>
+        <Button id="nd_fangqi_btn" nn="Button" x="5.390" y="1.020" xr="0" yr="0" w="72.000" h="27.500" srw="300" srh="280" nt="放弃" ni="common/u_btn_comfirm2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="giveUpBtnAction"/>
+      </View>
+      <View id="nd_pyBtn_view" nn="View" x="110.000" y="100.000" xr="0" yr="0" w="165.000" h="30.000" srw="300" srh="280">
+        <Button id="nd_peiyang_btn" nn="Button" x="84.000" y="1.000" xr="0" yr="0" w="72.000" h="27.500" srw="300" srh="280" nt="培养" ni="common/u_btn_comfirm2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="peiyangBtnAction"/>
+        <Button id="autoBtn" nn="Button" x="5.390" y="1.020" xr="0" yr="0" w="72.000" h="27.500" srw="300" srh="280" nt="自动培养" ni="common/u_btn_comfirm2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="autoBtnAction"/>
+      </View>
+    </View>
+    <View id="nd_tupo_view" nn="View" x="12.900" y="147.340" xr="0" yr="0" w="280.000" h="130.000" srw="300" srh="280">
+      <Label id="nd_tupo_lab" nn="Label" x="12.550" y="13.900" xr="0" yr="0" w="170.000" h="15.000" srw="300" srh="280" t="武将突破到可升级到下一阶段" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      <Button id="nd_tupo_btn" nn="Button" x="99.240" y="100.600" xr="0" yr="0" w="72.000" h="27.500" srw="300" srh="280" nt="突破" ni="common/u_btn_comfirm4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="tupoBtnAction"/>
+      <ImageView nn="ImageView" x="7.500" y="37.000" xr="0" yr="0" w="83.000" h="64.500" srw="300" srh="280" i="" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="nd_tupo_iconBg_img" nn="ImageView" x="18.540" y="4.420" xr="0" yr="0" w="44.000" h="44.000" srw="300" srh="280" i="common/u_other_goods3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView id="nd_tupo_icon_img" nn="ImageView" x="0.700" y="0.200" xr="0" yr="0" w="44.000" h="44.000" srw="300" srh="280" i="" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <Label id="tupo_ownNum_lab" nn="Label" x="8.810" y="45.910" xr="0" yr="0" w="65.000" h="15.000" srw="300" srh="280" t="" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <ImageView nn="ImageView" x="81.170" y="14.130" xr="0" yr="0" w="25.500" h="25.500" srw="300" srh="280" i="common/u_other_arrowright.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="133.620" y="32.630" xr="0" yr="0" w="131.500" h="64.500" srw="300" srh="280" i="common/u_bg_num.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="nd_tupo_effect_lab" nn="Label" x="3.730" y="25.000" xr="0" yr="0" w="70.000" h="15.000" srw="300" srh="280" t="各项属性" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="20">
+          <Label id="nd_tupo_value_lab" nn="Label" x="70.000" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="300" srh="280" t="" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="17"/>
+        </Label>
+      </ImageView>
+    </View>
+    <View id="nd_higest_view" nn="View" x="19.910" y="145.670" xr="0" yr="0" w="260.000" h="110.000" srw="300" srh="280" iv="0">
+      <ImageView nn="ImageView" x="50.350" y="32.220" xr="0" yr="0" w="143.000" h="61.500" srw="300" srh="280" i="common/book_most.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+    <ImageView id="stageListBgImg" nn="ImageView" x="104.000" y="45.000" xr="0" yr="0" w="89.000" h="134.000" srw="300" srh="280" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </View>
+  <Button id="stopAutoBtn" nn="Button" x="206.000" y="138.000" xr="0" yr="0" w="62.000" h="26.000" srw="300" srh="280" iv="0" nt="停止培养" ni="common/u_btn_buy.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18" act="stopAutoBtnAction"/>
+</View>

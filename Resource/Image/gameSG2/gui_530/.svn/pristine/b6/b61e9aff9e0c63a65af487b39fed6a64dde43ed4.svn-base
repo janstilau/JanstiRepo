@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView id="m_tip_bg" nn="ImageView" x="60.360" y="51.290" xr="0" yr="0" w="354.500" h="237.000" srw="480" srh="320" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="14.000" y="45.000" xr="0" yr="0" w="330.500" h="141.500" srw="480" srh="320" i="zj_tip/zhanyi_neibg2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <View id="m_reset_num_view" nn="View" x="11.330" y="24.300" xr="0" yr="0" w="115.000" h="21.000" srw="480" srh="320">
+      <Label id="m_reset_num_lab" nn="Label" x="12.050" y="2.680" xr="0" yr="0" w="100.000" h="17.000" srw="480" srh="320" t="今日剩余次数:3/3" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      <Button id="m_buy_fightnum" nn="Button" x="92.210" y="-0.320" xr="0" yr="0" w="21.000" h="21.000" srw="480" srh="320" nt="" ni="common/u_btn_plus.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onResetFightTimesCallBack"/>
+    </View>
+    <View nn="View" x="156.500" y="113.500" xr="0" yr="0" w="200.000" h="80.000" srw="480" srh="320">
+      <Label id="m_drop_title_lab" nn="Label" x="5.880" y="5.040" xr="0" yr="0" w="100.000" h="30.000" srw="480" srh="320" t="几率掉落" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
+      <View id="m_props_bg" nn="View" x="-4.440" y="18.370" xr="0" yr="0" w="180.000" h="50.000" srw="480" srh="320"/>
+    </View>
+    <View id="m_generals_bg" nn="View" x="167.560" y="65.370" xr="0" yr="0" w="180.000" h="50.000" srw="480" srh="320">
+      <Label nn="Label" x="15.320" y="-12.330" xr="0" yr="0" w="50.000" h="12.000" srw="480" srh="320" t="敌方阵容" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+      <ImageView nn="ImageView" x="68.940" y="-14.780" xr="0" yr="0" w="12.000" h="15.000" srw="480" srh="320" i="common/fighttoast_icon.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="army_fighting" nn="Label" x="81.920" y="-11.830" xr="0" yr="0" w="70.000" h="12.000" srw="480" srh="320" t="8888" ts="10" tctl="rgb(255, 96, 0)" tctr="rgb(255, 96, 0)" tcbl="rgb(255, 96, 0)" tcbr="rgb(255, 96, 0)" sc="black" ta="17"/>
+      <View nn="View" x="0.500" y="0.000" xr="0" yr="0" w="175.000" h="50.000" srw="480" srh="320"/>
+    </View>
+    <ImageView nn="ImageView" x="120.610" y="6.190" xr="0" yr="0" w="116.000" h="18.000" srw="480" srh="320" i="common/u_bg_title2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="name_lab" nn="Label" x="8.600" y="1.230" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="关卡信息" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <Button nn="Button" x="329.500" y="-0.670" xr="0" yr="0" w="26.000" h="26.000" srw="480" srh="320" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onCloseCallBack"/>
+    <View id="m_generContainer" nn="View" x="39.700" y="56.730" xr="0" yr="0" w="90.000" h="108.000" srw="480" srh="320"/>
+    <View id="m_star_view" nn="View" x="56.510" y="166.600" xr="0" yr="0" w="60.000" h="20.000" srw="480" srh="320">
+      <ImageView id="m_star_1" nn="ImageView" x="0.520" y="-1.000" xr="0" yr="0" w="18.500" h="18.000" srw="480" srh="320" i="zj_tip/zhanyi_star1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_star_3" nn="ImageView" x="42.020" y="-1.000" xr="0" yr="0" w="18.500" h="18.000" srw="480" srh="320" i="zj_tip/zhanyi_star1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_star_2" nn="ImageView" x="21.520" y="-1.000" xr="0" yr="0" w="18.500" h="18.000" srw="480" srh="320" i="zj_tip/zhanyi_star1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+    <View nn="View" x="23.500" y="189.450" xr="0" yr="0" w="330.000" h="40.000" srw="480" srh="320">
+      <Button id="m_sweep_ten" nn="Button" x="1.520" y="6.550" xr="0" yr="0" w="65.000" h="27.500" srw="480" srh="320" tag="10" nt="扫荡10次" ni="common/u_btn_comfirm2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onSweepCallBack"/>
+      <Button id="m_sweep_one" nn="Button" x="76.260" y="6.550" xr="0" yr="0" w="65.000" h="27.500" srw="480" srh="320" tag="1" nt="扫荡" ni="common/u_btn_comfirm2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onSweepCallBack"/>
+      <Button id="m_fight_btn" nn="Button" x="207.860" y="1.690" xr="0" yr="0" w="98.000" h="36.500" srw="480" srh="320" nt="" ni="zj_tip/zhanyi_btn3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onFightCallBack">
+        <ImageView nn="ImageView" x="16.500" y="0.000" xr="0" yr="0" w="15.000" h="36.500" srw="480" srh="320" i="zj_tip/zhanyi_tili.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label id="m_energy_cost" nn="Label" x="28.500" y="0.000" xr="0" yr="0" w="30.000" h="36.500" srw="480" srh="320" t="10" ts="15" tctl="rgb(58, 22, 1)" tctr="rgb(58, 21, 0)" tcbl="rgb(58, 21, 0)" tcbr="rgb(58, 21, 0)" bold="1" sc="black" ta="18"/>
+        <ImageView nn="ImageView" x="55.360" y="0.000" xr="0" yr="0" w="32.000" h="36.500" srw="480" srh="320" i="zj_tip/zhanyi_w1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+    </View>
+    <ImageView nn="ImageView" x="19.290" y="186.450" xr="0" yr="0" w="317.000" h="7.000" srw="480" srh="320" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+</View>

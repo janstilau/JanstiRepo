@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="227.000" h="177.000" srw="227" srh="177">
+  <ImageView x="0.000" y="1.000" xr="0" yr="0" w="225.500" h="176.000" srw="227" srh="177" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="50.000" y="11.000" xr="0" yr="0" w="126.000" h="19.000" srw="227" srh="177" i="common/u_bg_title2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="0.000" y="3.000" xr="0" yr="0" w="126.000" h="12.000" srw="227" srh="177" t="加速成长礼包" ts="11" tctl="rgb(135, 0, 9)" tctr="rgb(135, 0, 9)" tcbl="rgb(135, 0, 9)" tcbr="rgb(135, 0, 9)" sc="black" ta="18"/>
+    </ImageView>
+    <Button x="200.500" y="-1.000" xr="0" yr="0" w="26.000" h="26.000" srw="227" srh="177" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="cancelTiShiClick"/>
+    <ImageView x="12.750" y="37.000" xr="0" yr="0" w="200.000" h="94.000" srw="227" srh="177" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="34.500" y="16.500" xr="0" yr="0" w="60.000" h="12.000" srw="227" srh="177" t="您确定要开启" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      <Label x="135.000" y="16.500" xr="0" yr="0" w="20.000" h="12.000" srw="227" srh="177" t="吗？" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      <Label x="-1.500" y="46.000" xr="0" yr="0" w="200.000" h="12.000" srw="227" srh="177" iv="0" t="（开启后将不能选择其他礼包）" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      <Label id="name_lab" x="94.500" y="16.500" xr="0" yr="0" w="40.000" h="12.000" srw="227" srh="177" t="豪华礼包" ts="10" tctl="rgb(255, 84, 0)" tctr="rgb(255, 84, 0)" tcbl="rgb(255, 84, 0)" tcbr="rgb(255, 84, 0)" sc="black" ta="17"/>
+      <Label id="free_tishi_lab" x="-1.500" y="46.000" xr="0" yr="0" w="200.000" h="12.000" srw="227" srh="177" iv="0" t="（开启后将不能选择其他礼包，请谨慎选择）" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      <Label id="coin_tishi_lab" x="-1.500" y="40.000" xr="0" yr="0" w="200.000" h="12.000" srw="227" srh="177" t="（开启后将不能选择其他礼包）" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      <View id="goodsview" x="31.000" y="64.500" xr="0" yr="0" w="140.000" h="20.000" srw="227" srh="177">
+        <Button id="tipsBtn" x="33.000" y="0.000" xr="0" yr="0" w="80.000" h="20.000" srw="227" srh="177" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+          <ImageView x="8.500" y="3.000" xr="0" yr="0" w="70.000" h="15.000" srw="227" srh="177" i="common/xingmutishi_bg1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <Label id="gemTxt" x="11.500" y="0.500" xr="0" yr="0" w="55.000" h="15.000" srw="227" srh="177" t="0" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+          </ImageView>
+          <ImageView id="icon" x="1.000" y="0.500" xr="0" yr="0" w="18.000" h="17.000" srw="227" srh="177" i="common/shop_ltzs.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Button>
+        <Label x="9.500" y="1.000" xr="0" yr="0" w="25.000" h="17.000" srw="227" srh="177" t="现有" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </View>
+    </ImageView>
+  </ImageView>
+  <Button x="21.500" y="109.000" xr="0" yr="0" w="85.000" h="30.000" srw="227" srh="177" pp="1" nt="" ni="common/u_btn_comfirm5.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="cancelTiShiClick">
+    <Label x="18.000" y="8.500" xr="0" yr="0" w="50.000" h="15.000" srw="227" srh="177" t="取消" ts="13" tctl="rgb(147, 98, 39)" tctr="rgb(147, 98, 39)" tcbl="rgb(147, 98, 39)" tcbr="rgb(147, 98, 39)" sc="black" ta="18"/>
+  </Button>
+  <Button id="coin_btn" x="73.380" y="140.000" xr="0" yr="0" w="80.000" h="28.000" srw="227" srh="177" nt="" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="sureTiShiClick">
+    <Label id="cost_num_lab" x="23.500" y="7.500" xr="0" yr="0" w="30.000" h="15.000" srw="227" srh="177" t="2000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18">
+      <ImageView id="cost_icon_img" x="-18.000" y="-1.500" xr="0" yr="0" w="18.000" h="17.000" srw="227" srh="177" i="common/shop_ltzs.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Label>
+    <Label x="50.110" y="7.500" xr="0" yr="0" w="30.000" h="14.000" srw="227" srh="177" t="开启" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+  </Button>
+  <Button id="free_btn" x="73.380" y="140.000" xr="0" yr="0" w="80.000" h="28.000" srw="227" srh="177" iv="0" nt="" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="sureTiShiClick">
+    <Label x="25.000" y="5.000" xr="0" yr="0" w="30.000" h="15.000" srw="227" srh="177" t="开启" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+  </Button>
+</View>

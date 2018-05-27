@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320" bgc="black" tag="10001">
+  <View id="m_general_view" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320" tag="11">
+    <View id="m_general_frame" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320" tag="10001"/>
+    <ImageView id="m_open_horse_img" nn="ImageView" x="200.500" y="30.000" xr="0" yr="0" w="67.000" h="15.000" srw="480" srh="320" i="horse/horse_word_5.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Button id="m_rideHorse_btn" nn="Button" x="194.000" y="267.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" nt="设为默认外形" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="rideHorseAction"/>
+  </View>
+</View>

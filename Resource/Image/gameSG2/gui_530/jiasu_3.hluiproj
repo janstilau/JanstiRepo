@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="420.000" h="48.000" srw="420" srh="48">
+  <ImageView x="0.000" y="0.000" xr="0" yr="0" w="420.000" h="48.000" srw="420" srh="48" i="zhaohui_jiasu/ui_jiasu_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="receieved_img" x="112.500" y="32.000" xr="0" yr="0" w="189.000" h="12.500" srw="420" srh="48" i="zhaohui_jiasu/ui_jiasu_word2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="no_receieve_img" x="0.500" y="32.000" xr="0" yr="0" w="419.000" h="12.500" srw="420" srh="48" i="zhaohui_jiasu/ui_jiasu_word1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="continue_tishi_img" x="0.000" y="9.500" xr="0" yr="0" w="158.000" h="15.000" srw="420" srh="48" i="zhaohui_jiasu/ui_jiasu_word5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="day_img" x="24.590" y="7.960" xr="0" yr="0" w="15.000" h="15.000" srw="420" srh="48" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+</View>

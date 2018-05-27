@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView id="wjBgImg" x="14.900" y="22.030" xr="0" yr="0" w="433.500" h="286.000" srw="480" srh="320" i="common/u_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView x="2.500" y="5.000" xr="0" yr="0" w="457.500" h="80.000" srw="480" srh="320" i="common/u_bg_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="457.500" h="27.000" srw="480" srh="320" i="common/u_bg_title1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="main_title_Lab" x="215.880" y="2.790" xr="0" yr="0" w="35.000" h="18.000" srw="480" srh="320" t="将领" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="17"/>
+  </ImageView>
+  <ImageView x="144.500" y="30.500" xr="0" yr="0" w="44.500" h="272.000" srw="480" srh="320" i="common/u_bg_gradient1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView id="scrollBgView" x="24.000" y="35.500" xr="0" yr="0" w="119.000" h="224.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <View id="scrollBgImg" x="0.000" y="4.000" xr="0" yr="0" w="119.500" h="218.000" srw="480" srh="320"/>
+  </ImageView>
+  <View id="potentialBgView" x="22.000" y="259.140" xr="0" yr="0" w="120.000" h="45.000" srw="480" srh="320">
+    <ImageView x="47.670" y="6.020" xr="0" yr="0" w="12.750" h="15.500" srw="480" srh="320" i="common/fighttoast_icon.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_all_capacity_lab" x="13.650" y="4.480" xr="0" yr="0" w="60.000" h="10.000" srw="480" srh="320" t="" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="17"/>
+    </ImageView>
+    <ImageView x="43.500" y="21.000" xr="0" yr="0" w="75.000" h="12.000" srw="480" srh="320" i="general_2/general_junshi_bg_exp.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_potential_progress" x="0.000" y="0.000" xr="0" yr="0" w="50.000" h="12.000" srw="480" srh="320" i="general_2/general_junshi_exp.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_potential_num_lab" x="0.000" y="0.000" xr="0" yr="0" w="75.000" h="12.000" srw="480" srh="320" t="8" ts="8" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+    </ImageView>
+    <Button x="0.000" y="2.000" xr="0" yr="0" w="120.000" h="42.000" srw="480" srh="320" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="potentialAction"/>
+    <Button id="m_potentialUpgrade_btn2" x="2.000" y="10.000" xr="0" yr="0" w="39.500" h="23.500" srw="480" srh="320" nt="" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="potentialAction">
+      <ImageView id="m_potential_red_point_img" x="30.680" y="-2.090" xr="0" yr="0" w="12.000" h="12.000" srw="480" srh="320" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_curr_junshi_level" x="0.000" y="13.300" xr="0" yr="0" w="39.500" h="8.000" srw="480" srh="320" t="Lv.130" ts="9" tctl="rgb(130, 0, 0)" tctr="rgb(130, 0, 0)" tcbl="rgb(130, 0, 0)" tcbr="rgb(130, 0, 0)" sc="black" ta="18"/>
+      <Label x="0.000" y="3.300" xr="0" yr="0" w="39.500" h="8.000" srw="480" srh="320" t="军势" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </Button>
+  </View>
+  <View id="npBgView" x="144.190" y="19.010" xr="0" yr="0" w="300.000" h="280.000" srw="480" srh="320"/>
+  <View id="tigerSoulView" x="148.500" y="27.000" xr="0" yr="0" w="300.000" h="280.000" srw="480" srh="320"/>
+  <View id="wuJiangView" x="136.000" y="19.500" xr="0" yr="0" w="303.000" h="285.000" srw="480" srh="320"/>
+  <View id="btnBgView" x="443.120" y="27.990" xr="0" yr="0" w="40.000" h="270.000" srw="480" srh="320">
+    <Button x="0.000" y="8.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="1001" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="tabClickHandler">
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" iv="0" tag="10001" i="common/a_tag_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label x="6.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="信" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="18"/>
+        <Label x="6.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="息" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="18"/>
+      </ImageView>
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="10002" i="common/a_tag_d.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label x="8.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="信" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18"/>
+        <Label x="8.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="息" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18"/>
+      </ImageView>
+      <ImageView id="detail_RedImg" x="16.500" y="0.000" xr="0" yr="0" w="16.000" h="16.000" srw="480" srh="320" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="mEquipBtn" x="0.000" y="61.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="1002" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="tabClickHandler">
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="10001" i="common/a_tag_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label x="6.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="装" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        <Label x="6.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="备" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="10002" i="common/a_tag_d.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label x="8.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="装" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label x="8.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="备" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView id="tiger_RedImg" x="16.500" y="0.000" xr="0" yr="0" w="16.000" h="16.000" srw="480" srh="320" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button x="0.000" y="114.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="1003" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="tabClickHandler">
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="10001" i="common/a_tag_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label x="6.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="培" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        <Label x="6.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="养" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="10002" i="common/a_tag_d.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label x="8.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="培" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label x="8.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="养" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </ImageView>
+    </Button>
+    <Button x="0.000" y="220.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="1004" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="tabClickHandler">
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="10001" i="common/a_tag_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label x="6.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="图" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        <Label x="6.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="鉴" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" iv="0" tag="10002" i="common/a_tag_d.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label x="8.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="图" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label x="8.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="鉴" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </ImageView>
+    </Button>
+    <Button x="0.000" y="167.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="1005" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="tabClickHandler">
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" tag="10001" i="common/a_tag_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label x="6.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="渊" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="18"/>
+        <Label x="6.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="源" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="18"/>
+      </ImageView>
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="50.000" srw="480" srh="320" iv="0" tag="10002" i="common/a_tag_d.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label x="8.000" y="10.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="渊" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18"/>
+        <Label x="8.000" y="21.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" t="源" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18"/>
+      </ImageView>
+      <ImageView id="yuanyuan_RedImg" x="16.500" y="0.000" xr="0" yr="0" w="16.000" h="16.000" srw="480" srh="320" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+  </View>
+  <Button id="closeBtn" x="426.000" y="0.370" xr="0" yr="0" w="35.000" h="35.000" srw="480" srh="320" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeWJAction">
+    <ImageView id="closeImg" x="6.000" y="4.210" xr="0" yr="0" w="27.500" h="35.000" srw="480" srh="320" i="common/u_btn_close.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </Button>
+  <ImageView id="illustratedBgImg" x="28.000" y="35.500" xr="0" yr="0" w="405.000" h="258.000" srw="480" srh="320" iv="0" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <Button id="tsRuleBtn" x="12.570" y="9.770" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" iv="0" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="tsRuleBtnAction"/>
+  <View id="yuanyuanView" x="145.000" y="35.000" xr="0" yr="0" w="295.000" h="265.000" srw="480" srh="320"/>
+</View>

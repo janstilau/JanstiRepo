@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="141" h="50" nn="View">
+  <ImageView x="0" y="0" xr="0" yr="0" w="141" h="50" nn="ImageView" i="common/a_bg7.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <ImageView id="selImg" x="0" y="0" xr="0" yr="0" w="141" h="50" nn="ImageView" iv="0" i="common/a_bg8.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <Label id="nameLab" x="54" y="8.5" xr="0" yr="0" w="60" h="10" nn="Label" t="神兵名六个字" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+  <Label id="strengthenLevel" x="54" y="33" xr="0" yr="0" w="80" h="10" nn="Label" iv="0" t="强化等级：某某级" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+  <View id="iconBackView" x="5" y="3" xr="0" yr="0" w="44" h="44"/>
+  <ImageView id="redPointImg" x="123" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+</View>

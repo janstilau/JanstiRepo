@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="384.000" h="252.000" srw="384" srh="252" tag="10001">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="384.000" h="252.000" srw="384" srh="252" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Button id="closeBtn" nn="Button" x="358.000" y="0.000" xr="0" yr="0" w="26.000" h="26.000" srw="384" srh="252" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+    <ImageView nn="ImageView" x="132.500" y="5.500" xr="0" yr="0" w="116.000" h="18.000" srw="384" srh="252" i="common/u_bg_title2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="116.000" h="18.000" srw="384" srh="252" t="回放详情" ts="10" tctl="rgb(135, 35, 9)" tctr="rgb(135, 35, 9)" tcbl="rgb(135, 35, 9)" tcbr="rgb(135, 35, 9)" sc="black" ta="18"/>
+    </ImageView>
+  </ImageView>
+  <View id="container" nn="View" x="8.000" y="31.020" xr="0" yr="0" w="368.000" h="200.000" srw="384" srh="252"/>
+</View>

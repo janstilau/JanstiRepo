@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="292.000" h="250.000" srw="292" srh="250">
+  <View x="14.500" y="1.000" xr="0" yr="0" w="280.000" h="250.000" srw="292" srh="250">
+    <ImageView id="ad_img" x="-11.500" y="4.000" xr="0" yr="0" w="287.500" h="54.000" srw="292" srh="250" i="common/activity_7days_bg_title.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="ad_word_img" x="5.000" y="1.000" xr="0" yr="0" w="228.500" h="21.500" srw="292" srh="250" i="activity_newmap/activity_newmap_word6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label x="7.500" y="23.500" xr="0" yr="0" w="260.000" h="10.000" srw="292" srh="250" t="活动时间：" ts="9" tctl="rgb(144, 255, 254)" tctr="rgb(144, 255, 254)" tcbl="rgb(144, 255, 254)" tcbr="rgb(144, 255, 254)" sc="black" ta="17">
+        <Label id="_open_time_lab" x="43.000" y="0.000" xr="0" yr="0" w="200.000" h="10.000" srw="292" srh="250" t="" ts="9" tctl="rgb(144, 255, 254)" tctr="rgb(144, 255, 254)" tcbl="rgb(144, 255, 254)" tcbr="rgb(144, 255, 254)" sc="black" ta="17"/>
+      </Label>
+      <Label x="7.500" y="35.500" xr="0" yr="0" w="260.000" h="10.000" srw="292" srh="250" t="活动时间：" ts="9" tctl="rgb(144, 255, 254)" tctr="rgb(144, 255, 254)" tcbl="rgb(144, 255, 254)" tcbr="rgb(144, 255, 254)" sc="black" ta="17">
+        <Label x="43.000" y="0.000" xr="0" yr="0" w="230.000" h="10.000" srw="292" srh="250" t="活动期间，在攻城略地中占领城池，可获得大量奖励" ts="9" tctl="rgb(144, 255, 254)" tctr="rgb(144, 255, 254)" tcbl="rgb(144, 255, 254)" tcbr="rgb(144, 255, 254)" sc="black" ta="17"/>
+      </Label>
+    </ImageView>
+  </View>
+  <ImageView x="2.500" y="86.000" xr="0" yr="0" w="289.000" h="165.000" srw="292" srh="250" i="common/u_bg_5.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ScrollView id="panel_1" x="5.000" y="4.500" xr="0" yr="0" w="279.000" h="160.000" srw="292" srh="250"/>
+    <ScrollView id="panel_2" x="5.000" y="4.500" xr="0" yr="0" w="279.000" h="160.000" srw="292" srh="250"/>
+    <ScrollView id="panel_3" x="5.000" y="4.500" xr="0" yr="0" w="279.000" h="160.000" srw="292" srh="250"/>
+  </ImageView>
+  <Button id="m_check_1" x="9.500" y="62.000" xr="0" yr="0" w="61.000" h="25.000" srw="292" srh="250" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="292" srh="250" tag="10" i="achievement_4/activity_tuangou_btn_select.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_title_1" x="0.000" y="8.000" xr="0" yr="0" w="61.000" h="12.000" srw="292" srh="250" t="抢邑城" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="292" srh="250" tag="11" i="achievement_4/activity_tuangou_btn_unselect.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_n_title_1" x="0.000" y="8.500" xr="0" yr="0" w="61.000" h="12.000" srw="292" srh="250" t="抢邑城" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView x="52.000" y="0.370" xr="0" yr="0" w="15.000" h="15.000" srw="292" srh="250" iv="0" tag="12" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </Button>
+  <Button id="m_check_2" x="77.000" y="62.000" xr="0" yr="0" w="61.000" h="25.000" srw="292" srh="250" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="292" srh="250" tag="10" i="achievement_4/activity_tuangou_btn_select.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_title_2" x="0.000" y="8.000" xr="0" yr="0" w="61.000" h="12.000" srw="292" srh="250" t="抢郡城" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="292" srh="250" tag="11" i="achievement_4/activity_tuangou_btn_unselect.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_n_title_2" x="0.000" y="8.500" xr="0" yr="0" w="61.000" h="12.000" srw="292" srh="250" t="抢郡城" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView x="52.000" y="0.370" xr="0" yr="0" w="15.000" h="15.000" srw="292" srh="250" iv="0" tag="12" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </Button>
+  <Button id="m_check_3" x="144.500" y="62.000" xr="0" yr="0" w="61.000" h="25.000" srw="292" srh="250" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="292" srh="250" tag="10" i="achievement_4/activity_tuangou_btn_select.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_title_3" x="0.000" y="8.000" xr="0" yr="0" w="61.000" h="12.000" srw="292" srh="250" t="抢州城" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="292" srh="250" tag="11" i="achievement_4/activity_tuangou_btn_unselect.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_n_title_3" x="0.000" y="8.500" xr="0" yr="0" w="61.000" h="12.000" srw="292" srh="250" t="抢州城" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView x="52.000" y="0.370" xr="0" yr="0" w="15.000" h="15.000" srw="292" srh="250" iv="0" tag="12" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </Button>
+</View>

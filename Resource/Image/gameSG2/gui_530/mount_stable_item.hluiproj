@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="380.000" h="270.000" srw="380" srh="270">
+  <View nn="View" x="58.500" y="1.000" xr="0" yr="0" w="142.000" h="140.000" srw="380" srh="270">
+    <View nn="View" x="-27.500" y="-48.500" xr="0" yr="0" w="202.000" h="242.000" srw="380" srh="270" iv="0"/>
+    <ImageView nn="ImageView" x="2.000" y="-1.500" xr="0" yr="0" w="142.000" h="139.000" srw="380" srh="270" i="mount/horse_bg_8.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_stable_item_bg_img_1" nn="ImageView" x="0.000" y="39.000" xr="0" yr="0" w="140.000" h="91.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_hint_bg_img_1" nn="ImageView" x="15.870" y="66.430" xr="0" yr="0" w="113.000" h="45.500" srw="380" srh="270" i="mount/horse_bg_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_add_pony_img_1" nn="ImageView" x="57.370" y="69.430" xr="0" yr="0" w="31.000" h="31.000" srw="380" srh="270" i="common/smithy_xiangqian_plus.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="-21.870" y="30.570" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_25.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_month_img_1" nn="ImageView" x="-21.370" y="42.570" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_32.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_lock_img_1" nn="ImageView" x="0.000" y="39.000" xr="0" yr="0" w="140.000" h="80.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_vip_lock_img_1" nn="ImageView" x="34.500" y="60.500" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_need_vip_level_img_1" nn="ImageView" x="14.500" y="-1.000" xr="0" yr="0" w="10.000" h="12.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="m_level_lock_img_1" nn="ImageView" x="37.500" y="60.500" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" iv="0" i="mount/horse_word_7.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_need_stable_level_img_1" nn="ImageView" x="26.000" y="-1.000" xr="0" yr="0" w="15.000" h="12.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="m_week_unlock_img_1" nn="ImageView" x="12.000" y="60.500" xr="0" yr="0" w="112.000" h="11.500" srw="380" srh="270" iv="0" i="mount/horse_word_26.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="61.870" y="34.930" xr="0" yr="0" w="19.000" h="19.000" srw="380" srh="270" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_breed_time_img_1" nn="ImageView" x="0.000" y="103.500" xr="0" yr="0" w="140.000" h="26.500" srw="380" srh="270" i="mount/horse_bg_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="54.000" y="11.000" xr="0" yr="0" w="68.000" h="13.000" srw="380" srh="270" i="common/guozhan_name_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="11.660" y="11.370" xr="0" yr="0" w="45.500" h="12.000" srw="380" srh="270" i="mount/horse_word_5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_breed_time_lab_1" nn="Label" x="54.190" y="10.300" xr="0" yr="0" w="50.000" h="15.000" srw="380" srh="270" t="11:50:59" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+      <Button id="m_add_speed_btn" nn="Button" x="105.000" y="3.430" xr="0" yr="0" w="21.000" h="21.000" srw="380" srh="270" tag="1" nt="" ni="mount/u_btn_accelerate.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="breedSpeedAction"/>
+    </ImageView>
+    <ImageView id="m_get_mount_1" nn="ImageView" x="23.000" y="15.500" xr="0" yr="0" w="51.500" h="33.000" srw="380" srh="270" i="mount/horse_uiguide_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_can_breed_1" nn="ImageView" x="9.500" y="51.500" xr="0" yr="0" w="51.500" h="33.000" srw="380" srh="270" i="mount/horse_uiguide_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </View>
+  <View nn="View" x="217.500" y="1.000" xr="0" yr="0" w="142.000" h="140.000" srw="380" srh="270">
+    <View nn="View" x="-27.500" y="-48.500" xr="0" yr="0" w="202.000" h="242.000" srw="380" srh="270" iv="0"/>
+    <ImageView nn="ImageView" x="2.000" y="-1.500" xr="0" yr="0" w="142.000" h="139.000" srw="380" srh="270" i="mount/horse_bg_8.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_stable_item_bg_img_2" nn="ImageView" x="0.000" y="39.000" xr="0" yr="0" w="140.000" h="91.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_hint_bg_img_2" nn="ImageView" x="15.870" y="66.430" xr="0" yr="0" w="113.000" h="45.500" srw="380" srh="270" i="mount/horse_bg_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_add_pony_img_2" nn="ImageView" x="57.370" y="69.430" xr="0" yr="0" w="31.000" h="31.000" srw="380" srh="270" i="common/smithy_xiangqian_plus.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="-21.870" y="30.570" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_25.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_month_img_2" nn="ImageView" x="-21.370" y="42.570" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_32.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_lock_img_2" nn="ImageView" x="0.000" y="39.000" xr="0" yr="0" w="140.000" h="80.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_vip_lock_img_2" nn="ImageView" x="34.500" y="60.500" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_need_vip_level_img_2" nn="ImageView" x="14.500" y="-1.000" xr="0" yr="0" w="10.000" h="12.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="m_level_lock_img_2" nn="ImageView" x="37.500" y="60.500" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_7.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_need_stable_level_img_2" nn="ImageView" x="26.000" y="-1.000" xr="0" yr="0" w="15.000" h="12.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="m_week_unlock_img_2" nn="ImageView" x="12.000" y="60.500" xr="0" yr="0" w="112.000" h="11.500" srw="380" srh="270" i="mount/horse_word_26.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="61.870" y="34.930" xr="0" yr="0" w="19.000" h="19.000" srw="380" srh="270" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_finish_img_2" nn="ImageView" x="96.220" y="110.530" xr="0" yr="0" w="37.500" h="16.500" srw="380" srh="270" iv="0" i="common/u_btn_comfirm4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="4.000" y="3.000" xr="0" yr="0" w="30.000" h="10.000" srw="380" srh="270" t="完成" ts="9" tctl="black" tctr="black" tcbl="black" tcbr="black" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView id="m_breed_time_img_2" nn="ImageView" x="0.000" y="103.500" xr="0" yr="0" w="140.000" h="26.500" srw="380" srh="270" i="mount/horse_bg_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="54.000" y="11.000" xr="0" yr="0" w="68.000" h="13.000" srw="380" srh="270" i="common/guozhan_name_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="11.660" y="11.370" xr="0" yr="0" w="45.500" h="12.000" srw="380" srh="270" i="mount/horse_word_5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_breed_time_lab_2" nn="Label" x="54.190" y="10.300" xr="0" yr="0" w="50.000" h="15.000" srw="380" srh="270" t="11:50:59" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+      <Button nn="Button" x="105.000" y="3.430" xr="0" yr="0" w="21.000" h="21.000" srw="380" srh="270" tag="2" nt="" ni="mount/u_btn_accelerate.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="breedSpeedAction"/>
+    </ImageView>
+    <ImageView id="m_get_mount_2" nn="ImageView" x="23.000" y="15.500" xr="0" yr="0" w="51.500" h="33.000" srw="380" srh="270" i="mount/horse_uiguide_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_can_breed_2" nn="ImageView" x="9.500" y="51.500" xr="0" yr="0" w="51.500" h="33.000" srw="380" srh="270" i="mount/horse_uiguide_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </View>
+  <View nn="View" x="-16.000" y="127.500" xr="0" yr="0" w="142.000" h="140.000" srw="380" srh="270">
+    <View nn="View" x="-27.500" y="-48.500" xr="0" yr="0" w="202.000" h="242.000" srw="380" srh="270" iv="0"/>
+    <ImageView nn="ImageView" x="2.000" y="-1.500" xr="0" yr="0" w="142.000" h="139.000" srw="380" srh="270" i="mount/horse_bg_8.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_stable_item_bg_img_3" nn="ImageView" x="0.000" y="39.000" xr="0" yr="0" w="140.000" h="91.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_hint_bg_img_3" nn="ImageView" x="15.870" y="66.430" xr="0" yr="0" w="113.000" h="45.500" srw="380" srh="270" i="mount/horse_bg_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_add_pony_img_3" nn="ImageView" x="57.370" y="69.430" xr="0" yr="0" w="31.000" h="31.000" srw="380" srh="270" i="common/smithy_xiangqian_plus.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="-21.870" y="30.570" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_25.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_month_img_3" nn="ImageView" x="-21.370" y="42.570" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_32.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_lock_img_3" nn="ImageView" x="0.000" y="39.000" xr="0" yr="0" w="140.000" h="80.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_vip_lock_img_3" nn="ImageView" x="34.500" y="60.500" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_need_vip_level_img_3" nn="ImageView" x="14.500" y="-1.000" xr="0" yr="0" w="10.000" h="12.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="m_level_lock_img_3" nn="ImageView" x="37.500" y="60.500" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_7.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_need_stable_level_img_3" nn="ImageView" x="26.000" y="-1.000" xr="0" yr="0" w="15.000" h="12.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="m_week_unlock_img_3" nn="ImageView" x="12.000" y="60.500" xr="0" yr="0" w="112.000" h="11.500" srw="380" srh="270" i="mount/horse_word_26.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="61.870" y="34.930" xr="0" yr="0" w="19.000" h="19.000" srw="380" srh="270" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_breed_time_img_3" nn="ImageView" x="0.000" y="103.500" xr="0" yr="0" w="140.000" h="26.500" srw="380" srh="270" i="mount/horse_bg_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="54.000" y="11.000" xr="0" yr="0" w="68.000" h="13.000" srw="380" srh="270" i="common/guozhan_name_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="11.660" y="11.370" xr="0" yr="0" w="45.500" h="12.000" srw="380" srh="270" i="mount/horse_word_5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_breed_time_lab_3" nn="Label" x="54.190" y="10.300" xr="0" yr="0" w="50.000" h="15.000" srw="380" srh="270" t="11:50:59" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+      <Button nn="Button" x="105.000" y="3.430" xr="0" yr="0" w="21.000" h="21.000" srw="380" srh="270" tag="3" nt="" ni="mount/u_btn_accelerate.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="breedSpeedAction"/>
+    </ImageView>
+    <ImageView id="m_get_mount_3" nn="ImageView" x="23.000" y="15.500" xr="0" yr="0" w="51.500" h="33.000" srw="380" srh="270" i="mount/horse_uiguide_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_can_breed_3" nn="ImageView" x="9.500" y="51.500" xr="0" yr="0" w="51.500" h="33.000" srw="380" srh="270" i="mount/horse_uiguide_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </View>
+  <View nn="View" x="136.500" y="127.500" xr="0" yr="0" w="142.000" h="140.000" srw="380" srh="270">
+    <View nn="View" x="-26.930" y="-48.500" xr="0" yr="0" w="202.000" h="242.000" srw="380" srh="270" iv="0"/>
+    <ImageView nn="ImageView" x="2.000" y="-1.500" xr="0" yr="0" w="142.000" h="139.000" srw="380" srh="270" i="mount/horse_bg_8.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_stable_item_bg_img_4" nn="ImageView" x="0.000" y="39.000" xr="0" yr="0" w="140.000" h="91.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_hint_bg_img_4" nn="ImageView" x="15.870" y="66.430" xr="0" yr="0" w="113.000" h="45.500" srw="380" srh="270" i="mount/horse_bg_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_add_pony_img_4" nn="ImageView" x="57.370" y="69.430" xr="0" yr="0" w="31.000" h="31.000" srw="380" srh="270" i="common/smithy_xiangqian_plus.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="-21.870" y="30.570" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_25.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_month_img_4" nn="ImageView" x="-21.370" y="42.570" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_32.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_lock_img_4" nn="ImageView" x="0.000" y="39.000" xr="0" yr="0" w="140.000" h="80.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_vip_lock_img_4" nn="ImageView" x="34.500" y="60.500" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_need_vip_level_img_4" nn="ImageView" x="14.500" y="-1.000" xr="0" yr="0" w="10.000" h="12.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="m_level_lock_img_4" nn="ImageView" x="37.500" y="60.500" xr="0" yr="0" w="76.500" h="12.000" srw="380" srh="270" i="mount/horse_word_7.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_need_stable_level_img_4" nn="ImageView" x="26.000" y="-1.000" xr="0" yr="0" w="15.000" h="12.000" srw="380" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="m_week_unlock_img_4" nn="ImageView" x="12.000" y="60.500" xr="0" yr="0" w="112.000" h="11.500" srw="380" srh="270" i="mount/horse_word_26.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="61.870" y="34.930" xr="0" yr="0" w="19.000" h="19.000" srw="380" srh="270" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_breed_time_img_4" nn="ImageView" x="0.000" y="103.500" xr="0" yr="0" w="140.000" h="26.500" srw="380" srh="270" i="mount/horse_bg_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="54.000" y="11.000" xr="0" yr="0" w="68.000" h="13.000" srw="380" srh="270" i="common/guozhan_name_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="11.660" y="11.370" xr="0" yr="0" w="45.500" h="12.000" srw="380" srh="270" i="mount/horse_word_5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_breed_time_lab_4" nn="Label" x="54.190" y="10.300" xr="0" yr="0" w="50.000" h="15.000" srw="380" srh="270" t="11:50:59" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+      <Button nn="Button" x="105.000" y="3.430" xr="0" yr="0" w="21.000" h="21.000" srw="380" srh="270" tag="4" nt="" ni="mount/u_btn_accelerate.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="breedSpeedAction"/>
+    </ImageView>
+    <ImageView id="m_get_mount_4" nn="ImageView" x="23.000" y="15.500" xr="0" yr="0" w="51.500" h="33.000" srw="380" srh="270" i="mount/horse_uiguide_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="m_can_breed_4" nn="ImageView" x="9.500" y="51.500" xr="0" yr="0" w="51.500" h="33.000" srw="380" srh="270" i="mount/horse_uiguide_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </View>
+</View>

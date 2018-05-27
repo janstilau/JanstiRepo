@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="286.1000061035156" h="275.6000061035156" nn="View">
+  <ImageView id="_bg_view" x="0" y="0" xr="0" yr="0" w="286.1000061035156" h="277.20001220703125" nn="ImageView" i="godweapon/gw_suit_bg.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="108.80000305175781" y="8.899999618530273" xr="0" yr="0" w="64" h="17.5" nn="ImageView" i="godweapon/gw_suit_zi.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="_next_tip" x="109.0999984741211" y="181.6999969482422" xr="0" yr="0" w="64" h="12" nn="ImageView" i="godweapon/gw_nextsuit.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Label x="16" y="154.1999969482422" xr="0" yr="0" w="253.3000030517578" h="30.399999618530273" nn="Label" t="神兵技能在所有队伍中都会生效。" ts="9" tctl="rgb(0,255,0)" tctr="rgb(0,255,0)" tcbl="rgb(0,255,0)" tcbr="rgb(0,255,0)" sc="rgb(0,0,0)" ta="17"/>
+    <View x="12.5" y="41.5" xr="0" yr="0" w="160" h="60" nn="View">
+      <Label id="_weapon1_name" x="-0.5" y="-6" xr="0" yr="0" w="100" h="10" nn="Label" t="【装备名字】" ts="9" tctl="rgb(255,255,0)" tctr="rgb(255,255,0)" tcbl="rgb(255,255,0)" tcbr="rgb(255,255,0)" sc="rgb(0,0,0)" ta="17">
+        <Label id="_weapon1_level" x="58" y="0" xr="0" yr="0" w="30" h="10" nn="Label" t="+99" ts="9" tctl="rgb(255,255,0)" tctr="rgb(255,255,0)" tcbl="rgb(255,255,0)" tcbr="rgb(255,255,0)" sc="rgb(0,0,0)" ta="17"/>
+      </Label>
+      <Label id="_weapon2_name" x="-0.5" y="8.5" xr="0" yr="0" w="100" h="10" nn="Label" t="【装备名字】" ts="9" tctl="rgb(255,255,0)" tctr="rgb(255,255,0)" tcbl="rgb(255,255,0)" tcbr="rgb(255,255,0)" sc="rgb(0,0,0)" ta="17">
+        <Label id="_weapon2_level" x="58" y="0" xr="0" yr="0" w="30" h="10" nn="Label" t="+99" ts="9" tctl="rgb(255,255,0)" tctr="rgb(255,255,0)" tcbl="rgb(255,255,0)" tcbr="rgb(255,255,0)" sc="rgb(0,0,0)" ta="17"/>
+      </Label>
+      <Label id="_weapon3_name" x="-0.5" y="23.5" xr="0" yr="0" w="100" h="10" nn="Label" t="【装备名字】" ts="9" tctl="rgb(255,255,0)" tctr="rgb(255,255,0)" tcbl="rgb(255,255,0)" tcbr="rgb(255,255,0)" sc="rgb(0,0,0)" ta="17">
+        <Label id="_weapon3_level" x="58" y="0" xr="0" yr="0" w="30" h="10" nn="Label" t="+99" ts="9" tctl="rgb(255,255,0)" tctr="rgb(255,255,0)" tcbl="rgb(255,255,0)" tcbr="rgb(255,255,0)" sc="rgb(0,0,0)" ta="17"/>
+      </Label>
+      <Label id="_weapon4_name" x="-0.5" y="36.5" xr="0" yr="0" w="100" h="10" nn="Label" t="【装备名字】" ts="9" tctl="rgb(255,255,0)" tctr="rgb(255,255,0)" tcbl="rgb(255,255,0)" tcbr="rgb(255,255,0)" sc="rgb(0,0,0)" ta="17">
+        <Label id="_weapon4_level" x="58" y="0" xr="0" yr="0" w="30" h="10" nn="Label" t="+99" ts="9" tctl="rgb(255,255,0)" tctr="rgb(255,255,0)" tcbl="rgb(255,255,0)" tcbr="rgb(255,255,0)" sc="rgb(0,0,0)" ta="17"/>
+      </Label>
+    </View>
+    <Label id="_cur_suit_effect1" x="12.600000381469727" y="87.4000015258789" xr="0" yr="0" w="260" h="39.099998474121094" nn="Label" t="【3级】2件套装效果：我方全体受到普通攻击时，都有15%的几率使自己受到的伤害降低X点，并且使攻击者在接下来一段时间内造成的伤害降低y%" ts="9" tctl="rgb(0,255,0)" tctr="rgb(0,255,0)" tcbl="rgb(0,255,0)" tcbr="rgb(0,255,0)" sc="rgb(0,0,0)" ta="17"/>
+    <Label id="_cur_suit_effect2" x="12.5" y="124.5" xr="0" yr="0" w="259.20001220703125" h="39.900001525878906" nn="Label" t="【1级】4件套装效果：我方全体在普通攻击时，都有15%的使自己造成的伤害提高X点，并且使目标在接下来一段时间内受到的伤害提高y%" ts="9" tctl="rgb(0,255,0)" tctr="rgb(0,255,0)" tcbl="rgb(0,255,0)" tcbr="rgb(0,255,0)" sc="rgb(0,0,0)" ta="17"/>
+    <Label id="_next_suit_effect1" x="13.199999809265137" y="200.10000610351562" xr="0" yr="0" w="258.6000061035156" h="30" nn="Label" t="【4级】2件套装效果：（两件橙色神兵强化到3级激活）我方全体受到普通攻击时，都有15%的几率使自己受到的伤害降低X点，并且使攻击者在接下来一段时间内造成的伤害降低y%" ts="9" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17"/>
+    <Label id="_next_suit_effect2" x="13.199999809265137" y="237.89999389648438" xr="0" yr="0" w="263.8999938964844" h="30" t="【2级】4件套装效果：（四件橙色神兵强化到3级激活）我方全体在普通攻击时，都有15%的使自己造成的伤害提高X点，并且使目标在接下来一段时间内受到的伤害提高y%" ts="9" tctl="rgb(240,218,178)" tctr="rgb(240,218,178)" tcbl="rgb(240,218,178)" tcbr="rgb(240,218,178)" sc="rgb(0,0,0)" ta="17"/>
+    <ImageView x="32.099998474121094" y="27.799999237060547" xr="0" yr="0" w="225.8000030517578" h="4" i="godweapon/gw_suit_fengexian.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </ImageView>
+</View>

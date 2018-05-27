@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="293" h="254">
+  <ImageView x="0" y="0" xr="0" yr="0" w="293" h="53" i="common/activity_7days_bg_title.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="7" y="-5" xr="0" yr="0" w="252" h="20" i="activity_doublebattle/ui_activity_doublebattle_word_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </ImageView>
+  <Label x="10.5" y="29" xr="0" yr="0" w="100" h="10" t="活动规则：" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17">
+    <Label id="group_buy_title" x="45.5" y="0" xr="0" yr="0" w="220" h="20" t="活动期间占领城池，战功双倍奖励！（包括翻牌中的战功奖励）" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17"/>
+  </Label>
+  <Label x="10.5" y="16" xr="0" yr="0" w="100" h="10" t="活动时间：" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17">
+    <Label id="_open_time_lab" x="45.5" y="0" xr="0" yr="0" w="210" h="10" t="2017年10月1日~2017年10月7日" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17"/>
+  </Label>
+  <View id="group_buy_bg" x="8.5" y="77.5" xr="0" yr="0" w="279" h="170"/>
+  <ImageView x="5" y="247.5" xr="0" yr="0" w="283" h="7" i="common/u_bg_gradient2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <ImageView x="3" y="56.5" xr="0" yr="0" w="287" h="190.5" i="activity_doublebattle/ui_activity_doublebattle_bg_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+</View>

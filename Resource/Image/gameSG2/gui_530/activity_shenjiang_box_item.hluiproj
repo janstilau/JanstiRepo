@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="121" h="46">
+  <ImageView id="wjBgImg" x="0" y="0" xr="0" yr="0" w="121" h="46" i="common/a_bg3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <View id="item_gb" x="3" y="3" xr="0" yr="0" w="40" h="40"/>
+    <Label id="name_lab" x="45" y="10" xr="0" yr="0" w="80" h="10" t="" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+  </ImageView>
+</View>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="275" h="160" tag="10001">
+  <ImageView x="4" y="16" xr="0" yr="0" w="270.5" h="143.5" i="common/u_bg_lingqu.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="79" y="-13" xr="0" yr="0" w="125" h="38" i="trooparmy/trooparmy_word_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Label id="dectxt" x="79" y="25" xr="0" yr="0" w="125" h="11" t="特惠礼包" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+    <ImageView id="bgImage" x="40.5" y="39.5" xr="0" yr="0" w="200" h="35" iv="0" i="common/a_bg9.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <View id="container" x="40.5" y="39.5" xr="0" yr="0" w="200" h="35"/>
+    <Button id="sureBtn" x="104.5" y="79.5" xr="0" yr="0" w="72" h="27.5" nt="确定" ni="common/u_btn_comfirm2.png" nic="0,0,0,0" state="0" act="sureAction" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+  </ImageView>
+</View>

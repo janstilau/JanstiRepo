@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View id="cw_worldmap" x="0" y="0" xr="0" yr="0" w="300" h="200" nn="荆州大势（c层">
+  <View id="right_map_area_C_layer" x="0" y="0" xr="0" yr="0" w="300" h="200" nn="美术的底图" tag="100">
+    <ImageView id="img_jiangxia_C_layer" x="27.399999618530273" y="51.599998474121094" xr="0" yr="0" w="235.5" h="79.5" nn="江夏" tag="1" i="countrywar_worldmap_new/countrywar_worldmap_jingzhou_C_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="img_wuling_C_layer" x="30.700000762939453" y="21.100000381469727" xr="0" yr="0" w="212" h="156.5" nn="武陵" iv="0" tag="2" i="countrywar_worldmap_new/countrywar_worldmap_jingzhou_C_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="img_nanyang_C_layer" x="62.119998931884766" y="15.739999771118164" xr="0" yr="0" w="193.5" h="161.5" nn="南阳" iv="0" tag="3" i="countrywar_worldmap_new/countrywar_worldmap_jingzhou_C_3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="img_nanjun_C_layer" x="40.88999938964844" y="31.34000015258789" xr="0" yr="0" w="225" h="126.5" nn="南郡" iv="0" tag="4" i="countrywar_worldmap_new/countrywar_worldmap_jingzhou_C_4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </View>
+  <View id="right_coordinate_C_layer" x="0" y="0" xr="0" yr="0" w="300" h="200" nn="坐标层" tag="100">
+    <ImageView id="img_coordinate_jiangxia_C_layer" x="25.149999618530273" y="39.68000030517578" xr="0" yr="0" w="237.5" h="88.5" nn="江夏" iv="0" tag="1" i="countrywar_worldmap_new/countrywar_worldmap_jingzhou_C_1_coordinate.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="img_coordinate_wuling_C_layer" x="29.799999237060547" y="18.6299991607666" xr="0" yr="0" w="250" h="172" nn="武陵" iv="0" tag="2" i="countrywar_worldmap_new/countrywar_worldmap_jingzhou_C_2_coordinate.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="img_coordinate_nanyang_C_layer" x="6.950000762939453" y="15.630008697509766" xr="0" yr="0" w="250.5" h="165.5" nn="南阳" iv="0" tag="3" i="countrywar_worldmap_new/countrywar_worldmap_jingzhou_C_3_coordinate.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="img_coordinate_nanjun_C_layer" x="39.22999954223633" y="29.6299991607666" xr="0" yr="0" w="230" h="121.75" nn="南郡" iv="0" tag="4" i="countrywar_worldmap_new/countrywar_worldmap_jingzhou_C_4_coordinate.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </View>
+</View>

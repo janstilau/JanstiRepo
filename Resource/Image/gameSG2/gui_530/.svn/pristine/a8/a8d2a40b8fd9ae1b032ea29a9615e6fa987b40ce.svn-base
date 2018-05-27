@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="221.000" h="95.000" srw="221" srh="130">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="221.000" h="95.000" srw="221" srh="130" i="mount/horse_bg_4.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <View nn="View" x="5.000" y="4.000" xr="0" yr="0" w="210.000" h="100.000" srw="221" srh="130">
+      <ImageView nn="ImageView" x="41.000" y="8.500" xr="0" yr="0" w="61.000" h="15.500" srw="221" srh="130" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="145.000" y="8.500" xr="0" yr="0" w="61.000" h="15.500" srw="221" srh="130" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="145.000" y="26.000" xr="0" yr="0" w="61.000" h="15.500" srw="221" srh="130" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="41.000" y="26.000" xr="0" yr="0" w="61.000" h="15.500" srw="221" srh="130" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="41.000" y="43.500" xr="0" yr="0" w="61.000" h="15.500" srw="221" srh="130" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="145.000" y="43.500" xr="0" yr="0" w="61.000" h="15.500" srw="221" srh="130" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="145.000" y="61.500" xr="0" yr="0" w="61.000" h="15.500" srw="221" srh="130" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="41.000" y="61.500" xr="0" yr="0" w="61.000" h="15.500" srw="221" srh="130" i="common/ui_common_bg_zl.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label nn="Label" x="-29.000" y="0.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" t="生命资质" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+      <Label nn="Label" x="75.500" y="0.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" t="暴击资质" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+      <Label nn="Label" x="-29.000" y="18.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" t="攻击资质" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+      <Label nn="Label" x="75.500" y="18.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" t="破击资质" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+      <Label nn="Label" x="-29.000" y="36.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" t="物防资质" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+      <Label nn="Label" x="75.500" y="36.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" t="格挡资质" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+      <Label nn="Label" x="75.500" y="54.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" t="韧性资质" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+      <Label nn="Label" x="-29.000" y="54.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" t="法防资质" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+      <Label id="mHpLabel" nn="Label" x="22.000" y="1.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" t="99999~99999" ts="9" tctl="rgb(255, 93, 93)" tctr="rgb(255, 93, 93)" tcbl="rgb(255, 93, 93)" tcbr="rgb(255, 93, 93)" sc="black" ta="18"/>
+      <Label id="mAtkLabel" nn="Label" x="22.000" y="19.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" t="99999~99999" ts="9" tctl="rgb(255, 93, 93)" tctr="rgb(255, 93, 93)" tcbl="rgb(255, 93, 93)" tcbr="rgb(255, 93, 93)" sc="black" ta="18"/>
+      <Label id="mWDefLabel" nn="Label" x="22.000" y="37.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" t="99999~99999" ts="9" tctl="rgb(255, 93, 93)" tctr="rgb(255, 93, 93)" tcbl="rgb(255, 93, 93)" tcbr="rgb(255, 93, 93)" sc="black" ta="18"/>
+      <Label id="mFDefLabel" nn="Label" x="22.000" y="55.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" t="99999~99999" ts="9" tctl="rgb(255, 93, 93)" tctr="rgb(255, 93, 93)" tcbl="rgb(255, 93, 93)" tcbr="rgb(255, 93, 93)" sc="black" ta="18"/>
+      <Label id="mBaoLabel" nn="Label" x="126.000" y="1.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" t="99999~99999" ts="9" tctl="rgb(255, 93, 93)" tctr="rgb(255, 93, 93)" tcbl="rgb(255, 93, 93)" tcbr="rgb(255, 93, 93)" sc="black" ta="18"/>
+      <Label nn="Label" x="126.000" y="19.000" xr="0" yr="0" w="100.000" h="30.000" srw="221" srh="130" iv="0" t="99999~99999" ts="9" tctl="rgb(255, 93, 93)" tctr="rgb(255, 93, 93)" tcbl="rgb(255, 93, 93)" tcbr="rgb(255, 93, 93)" sc="black" ta="18"/>
+      <Label id="mBrokeLabel" nn="Label" x="126.000" y="19.000" xr="0" yr="0" w="100.000" h="31.000" srw="221" srh="130" t="99999~99999" ts="9" tctl="rgb(255, 93, 93)" tctr="rgb(255, 93, 93)" tcbl="rgb(255, 93, 93)" tcbr="rgb(255, 93, 93)" sc="black" ta="18"/>
+      <Label id="mParryLabel" nn="Label" x="126.000" y="37.000" xr="0" yr="0" w="100.000" h="31.000" srw="221" srh="130" t="99999~99999" ts="9" tctl="rgb(255, 93, 93)" tctr="rgb(255, 93, 93)" tcbl="rgb(255, 93, 93)" tcbr="rgb(255, 93, 93)" sc="black" ta="18"/>
+      <Label id="mWilfulLabel" nn="Label" x="126.000" y="55.000" xr="0" yr="0" w="100.000" h="31.000" srw="221" srh="130" t="99999~99999" ts="9" tctl="rgb(255, 93, 93)" tctr="rgb(255, 93, 93)" tcbl="rgb(255, 93, 93)" tcbr="rgb(255, 93, 93)" sc="black" ta="18"/>
+    </View>
+    <ImageView nn="ImageView" x="9.500" y="91.000" xr="0" yr="0" w="201.500" h="1.500" srw="221" srh="130" iv="0" i="common/u_bg_fengexian2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <View nn="View" x="4.750" y="94.250" xr="0" yr="0" w="210.000" h="30.000" srw="221" srh="130" iv="0">
+      <Label nn="Label" x="0.700" y="15.230" xr="0" yr="0" w="50.000" h="10.000" srw="221" srh="130" t="获得性格" ts="10" tctl="rgb(255, 93, 93)" tctr="rgb(255, 93, 93)" tcbl="rgb(255, 93, 93)" tcbr="rgb(255, 93, 93)" sc="black" ta="18"/>
+      <Label nn="Label" x="11.940" y="2.730" xr="0" yr="0" w="30.000" h="10.000" srw="221" srh="130" t="可能" ts="10" tctl="rgb(255, 93, 93)" tctr="rgb(255, 93, 93)" tcbl="rgb(255, 93, 93)" tcbr="rgb(255, 93, 93)" sc="black" ta="18"/>
+      <View id="mPersonalityView" nn="View" x="52.000" y="1.000" xr="0" yr="0" w="150.000" h="30.000" srw="221" srh="130">
+        <ImageView id="mNature1" nn="ImageView" x="-2.930" y="1.000" xr="0" yr="0" w="22.000" h="12.400" srw="221" srh="130" i="mount/horse_sign_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="mNature2" nn="ImageView" x="19.070" y="1.740" xr="0" yr="0" w="22.000" h="12.400" srw="221" srh="130" i="mount/horse_sign_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="mNature3" nn="ImageView" x="41.070" y="1.740" xr="0" yr="0" w="22.000" h="12.400" srw="221" srh="130" i="mount/horse_sign_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="mNature4" nn="ImageView" x="63.070" y="1.740" xr="0" yr="0" w="22.000" h="12.400" srw="221" srh="130" i="mount/horse_sign_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="mNature5" nn="ImageView" x="85.070" y="1.740" xr="0" yr="0" w="22.000" h="12.400" srw="221" srh="130" i="mount/horse_sign_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="mNature6" nn="ImageView" x="107.070" y="1.740" xr="0" yr="0" w="22.000" h="12.400" srw="221" srh="130" i="mount/horse_sign_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="mNature7" nn="ImageView" x="129.070" y="1.740" xr="0" yr="0" w="22.000" h="12.400" srw="221" srh="130" i="mount/horse_sign_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="mNature8" nn="ImageView" x="-2.930" y="13.740" xr="0" yr="0" w="22.000" h="12.400" srw="221" srh="130" i="mount/horse_sign_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </View>
+    </View>
+  </ImageView>
+</View>

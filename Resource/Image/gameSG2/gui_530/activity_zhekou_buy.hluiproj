@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="480" h="360">
+  <ImageView id="m_buy_bgview_" x="143.5" y="45.5" xr="0" yr="0" w="184" h="233" i="common/u_bg_2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="16" y="21.5" xr="0" yr="0" w="152" h="190" i="common/u_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Button id="m_buy_close_" x="158.0399932861328" y="-2.259999990463257" xr="0" yr="0" w="26" h="26" ni="common/u_btn_close1.png" nic="0,0,0,0" state="0" act="buyClose" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <ImageView x="19.739999771118164" y="27.459999084472656" xr="0" yr="0" w="145" h="56" i="common/shop_bg_goods.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="m_item_bgImage_" x="5" y="6" xr="0" yr="0" w="44" h="44" i="common/u_bg_goods.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label id="wujiangName_Lab" x="31.5" y="2" xr="0" yr="0" w="10" h="28" t="夏侯惇" ts="7" tctl="rgb(76,41,17)" tctr="rgb(76,41,17)" tcbl="rgb(76,41,17)" tcbr="rgb(76,41,17)" sc="rgb(0,0,0)" ta="18"/>
+      </ImageView>
+      <Label id="m_buy_item_name_" x="56.5" y="7.5" xr="0" yr="0" w="90" h="10" t=" " ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+      <ImageView id="m_buy_comImg_" x="53.61000061035156" y="27.5" xr="0" yr="0" w="23" h="23" iv="0" i="common/u_other_zuanshi_s.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label id="m_buy_price_" x="77" y="34.5" xr="0" yr="0" w="50" h="10" iv="0" t="99999" ts="10" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(115,9,1)" ta="17"/>
+      <ImageView id="m_zkScore" x="54" y="19.5" xr="0" yr="0" w="16" h="16" i="common/contest_jifen.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label id="m_zkPrice" x="17" y="1.5" xr="0" yr="0" w="45" h="13" tag="3" t="9999" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="9"/>
+        <ImageView id="line_img" x="16" y="8" xr="0" yr="0" w="30" h="1" i="common/shop_redline.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <ImageView id="m_scoreIcon" x="54" y="34" xr="0" yr="0" w="16" h="16" i="common/contest_jifen.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label id="propPrice" x="17.5" y="1.5" xr="0" yr="0" w="45" h="13" tag="3" t="9999" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="9"/>
+      </ImageView>
+    </ImageView>
+    <ImageView x="56.5" y="91.5" xr="0" yr="0" w="69" h="29" i="common/u_bg_shurukuang.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <EditBox id="m_buy_edit_" x="0" y="0" xr="0" yr="0" w="69" h="29" et="" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <Button id="m_buy_reduce_" x="22" y="92" xr="0" yr="0" w="27" h="27" ni="common/u_btn_minus.png" nic="0,0,0,0" state="0" act="reduceAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Button id="m_buy_add_" x="135" y="92" xr="0" yr="0" w="27" h="27" ni="common/u_btn_plus_1.png" nic="0,0,0,0" state="0" act="addAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Label x="18.5" y="137" xr="0" yr="0" w="30" h="15" t="总价" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18">
+      <ImageView x="39.7400016784668" y="-1.3300000429153442" xr="0" yr="0" w="91" h="18" i="common/shop_diamond_bg.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label id="m_buy_allPrice_" x="0" y="0" xr="0" yr="0" w="91" h="18" t=" " ts="13" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(135,0,0)" ta="18"/>
+      </ImageView>
+      <ImageView id="m_buy_allComImg_" x="29.5" y="-6.5" xr="0" yr="0" w="27" h="27" i="common/u_other_zuanshi_s.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Label>
+    <View id="m_count_view_" x="32.06999969482422" y="162.22000122070312" xr="0" yr="0" w="100" h="50">
+      <Label x="11.5" y="31" xr="0" yr="0" w="100" h="15" t="还可以购买      次" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+      <Label id="m_limit_num_" x="72.5" y="31" xr="0" yr="0" w="20" h="15" t=" " ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    </View>
+    <Button id="m_sure_button_" x="43.47999954223633" y="160.7899932861328" xr="0" yr="0" w="97" h="32" nt="确定购买" ni="common/u_btn_comfirm1.png" nic="0,0,0,0" state="0" act="buyItemAction" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(115,9,1)" ta="18"/>
+  </ImageView>
+</View>

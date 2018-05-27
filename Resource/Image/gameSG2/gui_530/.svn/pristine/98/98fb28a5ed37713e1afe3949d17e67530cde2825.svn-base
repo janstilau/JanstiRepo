@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="262.000" h="270.000" srw="262" srh="270">
+  <View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="262.000" h="270.000" srw="262" srh="270">
+    <ImageView nn="ImageView" x="5.000" y="5.000" xr="0" yr="0" w="256.000" h="70.000" srw="262" srh="270" i="limitnpcattack/limitnpcattack_bg_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <View id="mc_first" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="262.000" h="270.000" srw="262" srh="270">
+      <Label nn="Label" x="5.000" y="79.500" xr="0" yr="0" w="10.000" h="10.000" srw="262" srh="270" t="1. " ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17">
+        <Label nn="Label" x="9.000" y="0.000" xr="0" yr="0" w="240.000" h="20.000" srw="262" srh="270" t="第一次叛军攻城将会在全郡超过14座城池被占领后的当日或次日开启" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      </Label>
+      <Label nn="Label" x="5.000" y="104.000" xr="0" yr="0" w="10.000" h="10.000" srw="262" srh="270" t="2. " ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17">
+        <Label nn="Label" x="9.000" y="0.500" xr="0" yr="0" w="240.000" h="20.000" srw="262" srh="270" t="之后每周三、周六 都会发生叛军攻城(但活动不会连续开启,例如第一次叛军攻城在周二发生,下一次叛军攻城为周六)" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      </Label>
+      <Label nn="Label" x="5.000" y="130.000" xr="0" yr="0" w="250.000" h="9.000" srw="262" srh="270" t="3. 叛军活动开放的当天20:30--21:30为叛军攻城时间" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      <Label nn="Label" x="5.000" y="144.000" xr="0" yr="0" w="255.000" h="10.000" srw="262" srh="270" t="4. 叛军将随机选择攻城目标,联盟占城越多可能被攻击的城越多" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      <Label nn="Label" x="5.000" y="158.500" xr="0" yr="0" w="10.000" h="10.000" srw="262" srh="270" t="5. " ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17">
+        <Label nn="Label" x="9.000" y="0.500" xr="0" yr="0" w="240.000" h="20.000" srw="262" srh="270" t="保护被进攻的城池直到活动结束时仍未被攻破即可获得奖励,守卫成功的城池越多奖励越多(个人最多能翻12次牌子)" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      </Label>
+    </View>
+    <View id="mc_second" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="262.000" h="270.000" srw="262" srh="270" iv="0">
+      <Label nn="Label" x="5.000" y="79.500" xr="0" yr="0" w="10.000" h="10.000" srw="262" srh="270" t="1. " ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17">
+        <Label nn="Label" x="9.000" y="0.000" xr="0" yr="0" w="240.000" h="20.000" srw="262" srh="270" t="第一次叛军攻城将会在全州超过21座城池被占领后的当日或次日开启" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      </Label>
+      <Label nn="Label" x="5.000" y="104.000" xr="0" yr="0" w="10.000" h="10.000" srw="262" srh="270" t="2. " ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17">
+        <Label nn="Label" x="9.000" y="0.500" xr="0" yr="0" w="240.000" h="20.000" srw="262" srh="270" t="之后每周三、周六 都会发生叛军攻城(但活动不会连续开启,例如第一次叛军攻城在周二发生,下一次叛军攻城为周六)" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      </Label>
+      <Label nn="Label" x="5.000" y="130.000" xr="0" yr="0" w="250.000" h="9.000" srw="262" srh="270" t="3. 叛军活动开放的当天20:30--21:30为叛军攻城时间" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      <Label nn="Label" x="5.000" y="144.000" xr="0" yr="0" w="255.000" h="10.000" srw="262" srh="270" t="4. 叛军将随机选择攻城目标,联盟占城越多可能被攻击的城越多" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      <Label nn="Label" x="5.000" y="158.500" xr="0" yr="0" w="10.000" h="10.000" srw="262" srh="270" t="5. " ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17">
+        <Label nn="Label" x="9.000" y="0.500" xr="0" yr="0" w="240.000" h="20.000" srw="262" srh="270" t="保护被进攻的城池直到活动结束时仍未被攻破即可获得奖励,守卫成功的城池越多奖励越多(个人最多能翻12次牌子)" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      </Label>
+    </View>
+    <View id="mc_third" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="262.000" h="270.000" srw="262" srh="270" iv="0">
+      <Label nn="Label" x="5.000" y="79.500" xr="0" yr="0" w="10.000" h="10.000" srw="262" srh="270" t="1. " ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17">
+        <Label nn="Label" x="9.000" y="0.000" xr="0" yr="0" w="240.000" h="20.000" srw="262" srh="270" t="第一次叛军攻城将会在全州超过21座城池被占领后的当日或次日开启" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      </Label>
+      <Label nn="Label" x="5.000" y="104.000" xr="0" yr="0" w="10.000" h="10.000" srw="262" srh="270" t="2. " ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17">
+        <Label nn="Label" x="9.000" y="0.500" xr="0" yr="0" w="240.000" h="20.000" srw="262" srh="270" t="之后每周三、周六都会发生叛军攻城。" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="9"/>
+        <Label nn="Label" x="9.000" y="0.500" xr="0" yr="0" w="240.000" h="20.000" srw="262" srh="270" t="                                                           注意：当【决战洛阳】战场开启后,周三叛军攻城将暂停,周六活动翻牌奖励翻倍" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="9"/>
+      </Label>
+      <Label nn="Label" x="5.000" y="130.000" xr="0" yr="0" w="250.000" h="9.000" srw="262" srh="270" t="3. 叛军活动开放的当天20:30--21:30为叛军攻城时间" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      <Label nn="Label" x="5.000" y="144.000" xr="0" yr="0" w="255.000" h="10.000" srw="262" srh="270" t="4. 叛军将随机选择攻城目标,联盟占城越多可能被攻击的城越多" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      <Label nn="Label" x="5.000" y="158.500" xr="0" yr="0" w="10.000" h="10.000" srw="262" srh="270" t="5. " ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17">
+        <Label nn="Label" x="9.000" y="0.500" xr="0" yr="0" w="240.000" h="20.000" srw="262" srh="270" t="保护被进攻的城池直到活动结束时仍未被攻破即可获得奖励,守卫成功的城池越多奖励越多(个人最多能翻12次牌子)" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+      </Label>
+    </View>
+    <View nn="View" x="5.000" y="185.500" xr="0" yr="0" w="256.000" h="50.000" srw="262" srh="270">
+      <Label nn="Label" x="2.500" y="1.000" xr="0" yr="0" w="20.000" h="10.000" srw="262" srh="270" t="奖励" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      <View id="container" nn="View" x="31.500" y="11.500" xr="0" yr="0" w="180.000" h="30.000" srw="262" srh="270"/>
+    </View>
+    <ImageView nn="ImageView" x="5.000" y="228.000" xr="0" yr="0" w="256.000" h="7.000" srw="262" srh="270" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Button id="tipsBtn" nn="Button" x="224.500" y="44.500" xr="0" yr="0" w="30.000" h="30.000" srw="262" srh="270" nt="" ni="common/guize.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="tipsAction"/>
+  </View>
+  <ImageView id="m_free_bg" nn="ImageView" x="80.000" y="50.000" xr="0" yr="0" w="102.000" h="18.000" srw="262" srh="270" i="common/wine_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label id="m_free_cd" nn="Label" x="7.000" y="1.250" xr="0" yr="0" w="80.000" h="15.000" srw="262" srh="270" iv="0" t="后开启" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="20">
+      <Label id="m_cd_lab" nn="Label" x="8.000" y="0.000" xr="0" yr="0" w="80.000" h="15.000" srw="262" srh="270" t="04:20:30" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+    </Label>
+    <Label id="m_week_cd" nn="Label" x="6.000" y="1.250" xr="0" yr="0" w="90.000" h="15.000" srw="262" srh="270" t="今日已结束" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+  </ImageView>
+  <Label id="alreadyTxt" nn="Label" x="22.740" y="235.400" xr="0" yr="0" w="200.000" h="30.000" srw="262" srh="270" iv="0" t="活动尚未开始" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+  <Button id="lookBtn" nn="Button" x="80.500" y="236.000" xr="0" yr="0" w="100.000" h="30.000" srw="262" srh="270" iv="0" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="lookAction">
+    <ImageView nn="ImageView" x="12.000" y="2.000" xr="0" yr="0" w="80.000" h="25.000" srw="262" srh="270" i="common/shop_top_btn2_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="11.000" y="2.000" xr="0" yr="0" w="60.000" h="20.000" srw="262" srh="270" t="查看战况" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </ImageView>
+  </Button>
+</View>

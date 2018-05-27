@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="115" h="48">
+  <ImageView x="4" y="0" xr="0" yr="0" w="111" h="48" i="common/contest_bg4.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView id="itemSelImg" x="0" y="0" xr="0" yr="0" w="111" h="48" i="countrywar_troops_item/contest_bg5.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Label id="itemNameLab" x="51" y="2" xr="0" yr="0" w="40" h="15" t="夏侯惇" ts="10" tctl="rgb(78,34,7)" tctr="rgb(78,34,7)" tcbl="rgb(78,34,7)" tcbr="rgb(78,34,7)" sc="rgb(0,0,0)" ta="17"/>
+    <ImageView id="itemBgIcon" x="4" y="3" xr="0" yr="0" w="42" h="42" i="common/u_bg_general.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="itemHeadImg" x="0" y="0" xr="0" yr="0" w="42" h="42" i="common/u_bg_general.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="itemSelImg_2" x="-1.5" y="-1.5" xr="0" yr="0" w="45" h="45" i="common/u_other_general_sel.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </ImageView>
+    <ImageView x="49.5" y="15.539999961853027" xr="0" yr="0" w="20" h="20" i="common/bing_bingli.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Label id="itemFightLab" x="66.56999969482422" y="25.270000457763672" xr="0" yr="0" w="38" h="9" t="888888" ts="9" tctl="rgb(144,0,0)" tctr="rgb(144,0,0)" tcbl="rgb(144,0,0)" tcbr="rgb(144,0,0)" sc="rgb(0,0,0)" ta="17"/>
+    <ImageView id="proBarFull" x="51" y="36" xr="0" yr="0" w="48" h="6" i="common/fight_bg_exp.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="hpProgressBar" x="0" y="0" xr="0" yr="0" w="35" h="6" i="countrywar_troops/countrywar_troops_exp.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </ImageView>
+    <Label id="levelLab" x="5.400000095367432" y="6.800000190734863" xr="0" yr="0" w="40" h="10" t="LV.100" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="17"/>
+    <ImageView id="swap_img" x="3.2899999618530273" y="2.009999990463257" xr="0" yr="0" w="43" h="43" iv="0" i="common/embattle_bg_jiangling.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <View id="starView" x="1.3700000047683716" y="33.88999938964844" xr="0" yr="0" w="50" h="11">
+      <ImageView x="0" y="0" xr="0" yr="0" w="10" h="10" i="common/u_other_star.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="9" y="0" xr="0" yr="0" w="10" h="10" tag="1" i="common/u_other_star.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="18" y="0" xr="0" yr="0" w="10" h="10" tag="2" i="common/u_other_star.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="27" y="0" xr="0" yr="0" w="10" h="10" tag="3" i="common/u_other_star.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="36" y="0" xr="0" yr="0" w="10" h="10" tag="4" i="common/u_other_star.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </View>
+    <ImageView id="m_attack_type_img" x="90.5" y="0" xr="0" yr="0" w="20" h="20" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Button id="surplusSoldiersBtn" x="96" y="31.5" xr="0" yr="0" w="15" h="15" ni="common/u_btn_zhushi.png" nic="0,0,0,0" state="0" act="onClickSurplusTips" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Button id="woundBtn" x="13.5" y="23" xr="0" yr="0" w="23" h="14" ni="common/ui_common_word_die.png" nic="0,0,0,0" state="0" act="onClickWoundTips" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  </ImageView>
+</View>

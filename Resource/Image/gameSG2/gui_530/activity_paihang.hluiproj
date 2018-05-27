@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="288" h="252">
+  <View x="12.5" y="1" xr="0" yr="0" w="288" h="250">
+    <ImageView x="-14.5" y="-1" xr="0" yr="0" w="293" h="52" i="common/activity_7days_bg_title.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="4.480000019073486" y="-7.03000020980835" xr="0" yr="0" w="280.5" h="22" i="activity_newmap/activity_newmap_word8.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label id="view3" x="56.45000076293945" y="26" xr="0" yr="0" w="230" h="20" t="活动期间内,累计充值排行前10玩家,即可获得充值排          行豪礼！活动结束后奖励通过邮件发放" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="9">
+        <Label x="-46.95000076293945" y="0" xr="0" yr="0" w="280" h="10" t="活动规则：" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17"/>
+      </Label>
+      <Label x="9.5" y="14" xr="0" yr="0" w="280" h="12" t="活动时间：" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17">
+        <Label id="m_activity_time" x="44.45000076293945" y="0" xr="0" yr="0" w="280" h="12" t="2015年10月1日~2015年10月7日" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17"/>
+      </Label>
+    </ImageView>
+    <ImageView x="-4.639999866485596" y="215.1300048828125" xr="0" yr="0" w="279" h="7" i="common/u_bg_gradient2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView x="-13" y="51.5" xr="0" yr="0" w="289" h="166" i="activity_newmap/activity_newmap_paihang_bg.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="rank_bg" x="13" y="21.030000686645508" xr="0" yr="0" w="78" h="136" i="activity_paihang/activity_paihang_bg_1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <View id="award_bg" x="98.5" y="24.5" xr="0" yr="0" w="175" h="130"/>
+    </ImageView>
+    <Button id="m_rechargeBtn" x="209.55999755859375" y="217.80999755859375" xr="0" yr="0" w="56" h="32" ni="common/vip_btn_chongzhi.png" nic="0,0,0,0" state="0" act="onBuyCallBack" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Label id="myRank" x="44.97999954223633" y="231" xr="0" yr="0" w="50" h="10" t="100" ts="10" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="17">
+      <Label x="-44.47999954223633" y="0" xr="0" yr="0" w="50" h="10" t="当前排名:" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+    </Label>
+    <Label id="liji_value" x="143.97999572753906" y="231" xr="0" yr="0" w="50" h="10" t="100" ts="10" tctl="rgb(23,203,255)" tctr="rgb(23,203,255)" tcbl="rgb(23,203,255)" tcbr="rgb(23,203,255)" sc="rgb(0,0,0)" ta="17">
+      <ImageView x="-16.5" y="-3.5" xr="0" yr="0" w="15" h="15" i="common/u_other_zuanshi.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Label>
+    <Label x="86" y="231" xr="0" yr="0" w="50" h="10" t="累计充值" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+  </View>
+  <Button x="263.29998779296875" y="29.56999969482422" xr="0" yr="0" w="20" h="20" ni="common/u_btn_zhushi.png" nic="0,0,0,0" state="0" act="onTipsCallBack" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+</View>

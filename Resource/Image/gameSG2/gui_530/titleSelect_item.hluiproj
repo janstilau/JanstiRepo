@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<View h="28.0" type="0" w="66.0" x="0.0" y="0.0"><ImageView bri="1.0" clip_image="shop_tm_bg.png" fx="0" fy="0" gray="0" h="25.0" i="common/shop_tm_bg.png" ic="0.000000,0.000000,0.000000,0.000000" id="m_baseplate_item_bg" repeat="0" tc="rgb(255,255,255)" type="2" w="63.0" x="1.5" y="1.5"><Label bold="0" h="25.0" id="m_Lable" sc="rgb(0,0,0)" stroke="0" t="故且兰太守" ta="18" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" ts="10" type="1" w="63.0" x="0.0" y="0.0" /></ImageView></View>

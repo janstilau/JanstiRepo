@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="480" h="320" tag="10001">
+  <View id="m_general_view" x="0" y="0" xr="0" yr="0" w="480" h="320" tag="11">
+    <View id="m_general_frame" x="0" y="0" xr="0" yr="0" w="480" h="320" tag="10001"/>
+    <Label id="m_hint_lab" x="90.5" y="279.5" xr="0" yr="0" w="300" h="12" t="点击任意区域返回" ts="12" tctl="rgb(192,192,192)" tctr="rgb(192,192,192)" tcbl="rgb(192,192,192)" tcbr="rgb(192,192,192)" sc="rgb(0,0,0)" ta="18"/>
+    <ImageView id="m_skii_view" x="117" y="31" xr="0" yr="0" w="44" h="44" i="common/u_other_skill.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="skill_icon" x="0" y="0" xr="0" yr="0" w="44" h="44" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="47.880001068115234" y="22.889999389648438" xr="0" yr="0" w="100" h="12" iv="0" t="主动技能" ts="12" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="9"/>
+      <Label x="-125.5" y="58.88999938964844" xr="0" yr="0" w="300" h="30" bgc="rgba(153,23,70,0.678)" iv="0" t="" ts="12" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="9"/>
+      <ImageView id="m_skill_des_bg" x="48.5" y="-1" xr="0" yr="0" w="195" h="44" i="common/wine_bg_word.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label id="name_lab" x="3" y="2.5" xr="0" yr="0" w="100" h="12" t="名字" ts="11" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+        <View id="skill_des" x="1" y="16" xr="0" yr="0" w="191" h="40"/>
+      </ImageView>
+    </ImageView>
+    <Label id="m_general_name" x="190" y="70" xr="0" yr="0" w="100" h="30" t="" ts="12" tctl="rgb(28,187,201)" tctr="rgb(28,187,201)" tcbl="rgb(28,187,201)" tcbr="rgb(28,187,201)" stroke="1" bold="1" sc="rgb(0,0,0)" ta="18"/>
+    <View id="conver_panel" x="125.91000366210938" y="251.24000549316406" xr="0" yr="0" w="250" h="15"/>
+    <View id="yuanyuan_panel" x="266.7900085449219" y="94.33000183105469" xr="0" yr="0" w="200" h="200">
+      <ImageView x="2.5" y="0" xr="0" yr="0" w="195" h="15" iv="0" i="effect/ui_effect_bg.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="2.5" y="20" xr="0" yr="0" w="195" h="15" iv="0" i="effect/ui_effect_bg.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="2.5" y="40" xr="0" yr="0" w="195" h="15" iv="0" i="effect/ui_effect_bg.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="2.5" y="60" xr="0" yr="0" w="195" h="15" iv="0" i="effect/ui_effect_bg.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="2.5" y="80" xr="0" yr="0" w="195" h="15" iv="0" i="effect/ui_effect_bg.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="2.5" y="100" xr="0" yr="0" w="195" h="15" iv="0" i="effect/ui_effect_bg.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="2.5" y="120" xr="0" yr="0" w="195" h="15" iv="0" i="effect/ui_effect_bg.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="2.5" y="140" xr="0" yr="0" w="195" h="15" iv="0" i="effect/ui_effect_bg.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </View>
+    <Button id="shareBtn" x="404.1000061035156" y="289.70001220703125" xr="0" yr="0" w="75" h="27" tag="10" nt="分享" ni="common/u_btn_comfirm3.png" nic="0,0,0,0" zot="1" state="0" act="onShareWuJiangClick" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+  </View>
+</View>

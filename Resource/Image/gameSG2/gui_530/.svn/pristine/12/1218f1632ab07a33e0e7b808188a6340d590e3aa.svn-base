@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="311.000" h="79.000" srw="311" srh="79">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="311.000" h="79.000" srw="311" srh="79" i="common/general_bg_skill1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="selectImg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="311.000" h="79.000" srw="311" srh="79" iv="0" i="common/general_bg_select1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="18.500" y="12.500" xr="0" yr="0" w="56.000" h="56.000" srw="311" srh="79" i="common/u_bg_6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="groupIcon" nn="ImageView" x="-3.500" y="4.500" xr="0" yr="0" w="66.000" h="49.000" srw="311" srh="79" i="countrywar_gvg/countrywar_gvg_btn3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView nn="ImageView" x="108.500" y="7.500" xr="0" yr="0" w="200.500" h="13.000" srw="311" srh="79" i="common/gvg_bg_dise2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="-9.000" y="-3.500" xr="0" yr="0" w="21.500" h="21.500" srw="311" srh="79" i="common/u_trophy_first.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="itemIconImg11" nn="ImageView" x="22.000" y="-8.000" xr="0" yr="0" w="30.000" h="30.000" srw="311" srh="79" i="新建文件夹/lianmengjiangyin_88.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="itemNameLab11" nn="Label" x="24.100" y="6.400" xr="0" yr="0" w="37.000" h="18.400" srw="311" srh="79" tag="1" t="+99999" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(135, 0, 0)" ta="18"/>
+      </ImageView>
+      <ImageView id="itemIconImg12" nn="ImageView" x="90.000" y="-8.000" xr="0" yr="0" w="30.000" h="30.000" srw="311" srh="79" i="countrywar_gvg/countrywar_gvg_icon1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="itemNameLab12" nn="Label" x="24.100" y="6.400" xr="0" yr="0" w="24.400" h="18.400" srw="311" srh="79" tag="1" t="×1" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(135, 0, 0)" ta="18"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="145.000" y="-8.000" xr="0" yr="0" w="30.000" h="30.000" srw="311" srh="79" i="countrywar_gvg/countrywar_gvg_icon2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="itemScoreLab1" nn="Label" x="24.100" y="6.400" xr="0" yr="0" w="24.400" h="18.400" srw="311" srh="79" t="+1" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(135, 0, 0)" ta="18"/>
+      </ImageView>
+    </ImageView>
+    <ImageView nn="ImageView" x="108.500" y="33.000" xr="0" yr="0" w="200.500" h="13.000" srw="311" srh="79" i="common/gvg_bg_dise2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="-9.000" y="-3.500" xr="0" yr="0" w="21.500" h="21.500" srw="311" srh="79" i="common/u_trophy_second.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="itemIconImg21" nn="ImageView" x="22.000" y="-8.000" xr="0" yr="0" w="30.000" h="30.000" srw="311" srh="79" i="新建文件夹/lianmengjiangyin_88.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="itemNameLab21" nn="Label" x="24.100" y="6.400" xr="0" yr="0" w="37.000" h="18.400" srw="311" srh="79" tag="1" t="+99999" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(135, 0, 0)" ta="18"/>
+      </ImageView>
+      <ImageView id="itemIconImg22" nn="ImageView" x="90.000" y="-8.000" xr="0" yr="0" w="30.000" h="30.000" srw="311" srh="79" i="countrywar_gvg/countrywar_gvg_icon1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="itemNameLab22" nn="Label" x="24.100" y="6.400" xr="0" yr="0" w="24.400" h="18.400" srw="311" srh="79" t="×1" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(135, 0, 0)" ta="18"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="145.000" y="-8.000" xr="0" yr="0" w="30.000" h="30.000" srw="311" srh="79" i="countrywar_gvg/countrywar_gvg_icon2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="itemScoreLab2" nn="Label" x="24.100" y="6.400" xr="0" yr="0" w="24.400" h="18.400" srw="311" srh="79" t="+1" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(135, 0, 0)" ta="18"/>
+      </ImageView>
+    </ImageView>
+    <ImageView nn="ImageView" x="108.500" y="59.500" xr="0" yr="0" w="200.500" h="13.000" srw="311" srh="79" i="common/gvg_bg_dise2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="-9.000" y="-3.500" xr="0" yr="0" w="21.500" h="21.500" srw="311" srh="79" i="common/u_trophy_third.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="itemIconImg31" nn="ImageView" x="22.000" y="-8.000" xr="0" yr="0" w="30.000" h="30.000" srw="311" srh="79" i="新建文件夹/lianmengjiangyin_88.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="itemNameLab31" nn="Label" x="24.100" y="6.400" xr="0" yr="0" w="37.000" h="18.400" srw="311" srh="79" tag="1" t="+99999" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(135, 0, 0)" ta="18"/>
+      </ImageView>
+      <ImageView id="itemIconImg32" nn="ImageView" x="90.000" y="-8.000" xr="0" yr="0" w="30.000" h="30.000" srw="311" srh="79" i="countrywar_gvg/countrywar_gvg_icon1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="itemNameLab32" nn="Label" x="24.100" y="6.400" xr="0" yr="0" w="24.400" h="18.400" srw="311" srh="79" t="×1" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(135, 0, 0)" ta="18"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="145.000" y="-8.000" xr="0" yr="0" w="30.000" h="30.000" srw="311" srh="79" i="countrywar_gvg/countrywar_gvg_icon2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="itemScoreLab3" nn="Label" x="24.100" y="6.400" xr="0" yr="0" w="24.400" h="18.400" srw="311" srh="79" t="+1" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(135, 0, 0)" ta="18"/>
+      </ImageView>
+    </ImageView>
+  </ImageView>
+</View>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView id="m_bg" x="64.470" y="62.470" xr="0" yr="0" w="349.000" h="214.000" srw="480" srh="320" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="-13.870" y="-30.350" xr="0" yr="0" w="377.500" h="158.000" srw="480" srh="320" i="common/firstpay_bg_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="117.000" y="29.000" xr="0" yr="0" w="213.500" h="16.000" srw="480" srh="320" i="firstpay/firstpay_word_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="133.880" y="-15.350" xr="0" yr="0" w="82.000" h="22.500" srw="480" srh="320" i="firstpay/firstpay_bg_title_word.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+  <Button x="386.470" y="49.470" xr="0" yr="0" w="27.500" h="35.000" srw="480" srh="320" nt="" ni="common/u_btn_close.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onCloseCallBack"/>
+  <ImageView id="m_propBg" x="127.470" y="110.470" xr="0" yr="0" w="272.500" h="116.500" srw="480" srh="320" i="common/a_bg6.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <View id="_props_bg_1" x="70.790" y="63.750" xr="0" yr="0" w="200.000" h="44.000" srw="480" srh="320"/>
+  </ImageView>
+  <ImageView x="127.630" y="123.540" xr="0" yr="0" w="276.000" h="43.500" srw="480" srh="320" i="firstpay/firstpay_word_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="m_rolename" x="125.500" y="-5.000" xr="0" yr="0" w="52.000" h="26.000" srw="480" srh="320" i="firstpay/firstpay_name.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+  <View id="m_role_clip" x="74.000" y="65.000" xr="0" yr="0" w="120.000" h="200.000" srw="480" srh="320"/>
+  <ImageView id="m_role" x="18.570" y="53.170" xr="0" yr="0" w="191.500" h="222.500" srw="480" srh="320" i="firstpay/firstpay_zhaoyun.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <View id="m_role_bg_clip" x="50.070" y="31.667" xr="0" yr="0" w="170.000" h="240.000" srw="480" srh="320"/>
+  <View id="_btn_panel" x="231.000" y="229.000" xr="0" yr="0" w="122.000" h="36.500" srw="480" srh="320">
+    <Button id="_buy_btn" x="0.120" y="0.320" xr="0" yr="0" w="122.000" h="36.500" srw="480" srh="320" iv="0" nt="" ni="common/firstpay_btn.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onGoToRechargeCallBack"/>
+    <Button id="_receieve_btn_1" x="0.120" y="0.320" xr="0" yr="0" w="122.000" h="36.500" srw="480" srh="320" iv="0" nt="" ni="common/firstpay_btn_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onReceieveCallBack"/>
+  </View>
+</View>

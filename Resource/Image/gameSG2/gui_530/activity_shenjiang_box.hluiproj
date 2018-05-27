@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="480" h="320">
+  <ImageView id="wjBgImg" x="87.5" y="64" xr="0" yr="0" w="305" h="192" i="common/u_bg_2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="89.5" y="6.5" xr="0" yr="0" w="126" h="18" i="common/u_bg_title2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="main_title_Lab" x="4.5" y="0" xr="0" yr="0" w="126" h="18" t="幸运宝箱" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(115,9,1)" ta="18"/>
+    </ImageView>
+    <ImageView x="21.5" y="30" xr="0" yr="0" w="35" h="13.5" i="activity_shenjiang/activity_shenjiang_word_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="luck_value_prog_img_bg" x="36" y="0" xr="0" yr="0" w="104" h="13" i="activity_shenjiang/activity_shenjiang_exp_bg.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="luck_value_prog_img" x="0" y="0" xr="0" yr="0" w="104" h="13" i="activity_shenjiang/activity_shenjiang_exp.png" ic="0,0,0,0" tc="rgb(255,255,255)" repeat="1" bri="1"/>
+        <Label id="luck_value_lab" x="0" y="0" xr="0" yr="0" w="104" h="13" t="Label" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="18"/>
+      </ImageView>
+      <Label x="143" y="0" xr="0" yr="0" w="120" h="13" t="幸运值满后可兑换一个物品" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+    </ImageView>
+    <ImageView id="xq_scrollBg" x="21.5" y="45.970001220703125" xr="0" yr="0" w="262" h="119" i="common/u_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <View x="0" y="0" xr="0" yr="0" w="262" h="119"/>
+    </ImageView>
+  </ImageView>
+  <Button x="369.8999938964844" y="61.279998779296875" xr="0" yr="0" w="26" h="26" ni="common/u_btn_close1.png" nic="0,0,0,0" state="0" act="ndCloseAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+</View>

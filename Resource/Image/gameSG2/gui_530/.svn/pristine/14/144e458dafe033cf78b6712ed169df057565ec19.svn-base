@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="294.500" h="252.000" srw="294" srh="252">
+  <View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="295.000" h="250.000" srw="294" srh="252">
+    <ImageView id="ad_img" nn="ImageView" x="3.000" y="5.000" xr="0" yr="0" w="287.500" h="45.500" srw="294" srh="252" i="common/activity_7days_bg_title.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="10.500" y="15.500" xr="0" yr="0" w="181.000" h="10.000" srw="294" srh="252" t="活动时间：" ts="9" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17">
+        <Label id="_open_time_lab" nn="Label" x="43.000" y="0.000" xr="0" yr="0" w="181.000" h="10.000" srw="294" srh="252" t="" ts="9" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17"/>
+      </Label>
+      <ImageView nn="ImageView" x="9.000" y="-5.500" xr="0" yr="0" w="279.000" h="20.000" srw="294" srh="252" i="activity_timeshop/ui_activity_timeshop_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label nn="Label" x="10.500" y="29.000" xr="0" yr="0" w="181.000" h="10.000" srw="294" srh="252" t="活动规则：" ts="9" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17">
+        <Label nn="Label" x="43.000" y="0.000" xr="0" yr="0" w="200.000" h="10.000" srw="294" srh="252" t="限时商店每日5点刷新折扣商品，不要错过哦~" ts="9" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17"/>
+      </Label>
+    </ImageView>
+    <ImageView nn="ImageView" x="7.500" y="75.500" xr="0" yr="0" w="279.000" h="175.000" srw="294" srh="252" i="common/u_bg_5.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ScrollView id="panel_1" nn="ScrollView" x="2.500" y="2.500" xr="0" yr="0" w="269.000" h="168.000" srw="294" srh="252"/>
+      <ScrollView id="panel_2" nn="ScrollView" x="2.500" y="2.500" xr="0" yr="0" w="269.000" h="168.000" srw="294" srh="252"/>
+    </ImageView>
+    <Button id="m_check_1" nn="Button" x="14.500" y="51.500" xr="0" yr="0" w="61.000" h="25.000" srw="294" srh="252" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+      <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="294" srh="252" tag="10" i="achievement_4/activity_tuangou_btn_select.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_title_1" nn="Label" x="0.000" y="8.000" xr="0" yr="0" w="61.000" h="12.000" srw="294" srh="252" t="专属装备" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="294" srh="252" iv="0" tag="11" i="achievement_4/activity_tuangou_btn_unselect.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_n_title_1" nn="Label" x="0.000" y="8.500" xr="0" yr="0" w="61.000" h="12.000" srw="294" srh="252" t="专属装备" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView id="_red_img_1" nn="ImageView" x="52.000" y="0.370" xr="0" yr="0" w="15.000" h="15.000" srw="294" srh="252" iv="0" tag="12" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="m_check_2" nn="Button" x="81.500" y="51.500" xr="0" yr="0" w="61.000" h="25.000" srw="294" srh="252" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+      <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="294" srh="252" tag="10" i="achievement_4/activity_tuangou_btn_select.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="0.000" y="8.000" xr="0" yr="0" w="61.000" h="12.000" srw="294" srh="252" t="坐骑技能" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="61.000" h="25.000" srw="294" srh="252" iv="0" tag="11" i="achievement_4/activity_tuangou_btn_unselect.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="0.000" y="8.500" xr="0" yr="0" w="61.000" h="12.000" srw="294" srh="252" t="坐骑技能" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="52.000" y="0.370" xr="0" yr="0" w="15.000" h="15.000" srw="294" srh="252" iv="0" tag="12" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <ImageView nn="ImageView" x="203.500" y="54.000" xr="0" yr="0" w="109.000" h="20.000" srw="294" srh="252" i="common/u_bg_cast.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="2.000" y="2.000" xr="0" yr="0" w="16.000" h="16.000" srw="294" srh="252" i="common/u_other_zuanshi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="diamond_lab" nn="Label" x="22.000" y="4.500" xr="0" yr="0" w="100.000" h="10.000" srw="294" srh="252" t="99999" ts="10" tctl="rgb(0, 86, 174)" tctr="rgb(0, 86, 174)" tcbl="rgb(0, 86, 174)" tcbr="rgb(0, 86, 174)" sc="black" ta="17"/>
+    </ImageView>
+  </View>
+</View>

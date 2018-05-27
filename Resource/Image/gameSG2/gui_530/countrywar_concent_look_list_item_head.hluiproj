@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="40.000" h="48.000" srw="60" srh="100">
+  <ImageView id="_imgQuality" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="40.000" h="40.000" srw="60" srh="100" i="common/u_other_role.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView id="_imgHead" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="40.000" h="40.000" srw="60" srh="100" i="" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView id="_imgHpBack" nn="ImageView" x="6.500" y="40.000" xr="0" yr="0" w="33.000" h="7.000" srw="60" srh="100" i="common/fight_bg_exp.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView id="_imgHp" nn="ImageView" x="6.500" y="40.000" xr="0" yr="0" w="25.000" h="7.000" srw="60" srh="100" tag="1" i="countrywar_troops/countrywar_troops_exp.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView id="corps_img" nn="ImageView" x="-3.000" y="35.000" xr="0" yr="0" w="13.000" h="13.000" srw="60" srh="100" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+</View>

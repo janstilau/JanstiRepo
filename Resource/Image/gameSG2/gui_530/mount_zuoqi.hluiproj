@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="480" h="290" nn="View" tag="10001">
+  <View x="0" y="0" xr="0" yr="0" w="480" h="290" nn="View" tag="10001">
+    <ImageView x="13" y="7.5" xr="0" yr="0" w="99.5" h="13.5" nn="ImageView" i="mount/horse_word_22.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Label id="_count_lab" x="115.5" y="7" xr="0" yr="0" w="50" h="15" nn="Label" t="5/20" ts="12" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17"/>
+    <View id="_list_panel" x="0" y="32.5" xr="0" yr="0" w="480" h="241" nn="View" tag="10001"/>
+    <ImageView id="_right_img" x="463" y="141.5" xr="0" yr="0" w="16.5" h="27.5" nn="ImageView" i="common/zhanyi_btn_page.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="_left_img" x="0" y="140" xr="0" yr="0" w="16.5" h="27.5" nn="ImageView" i="common/zhanyi_btn_page.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1"/>
+    <Button x="150.8699951171875" y="2.890000104904175" xr="0" yr="0" w="27" h="27" nn="Button" iv="0" ni="common/u_btn_zhushi.png" nic="0,0,0,0" zot="1" state="0" act="onDesCallBack" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Button id="zq_reward_btn" x="153.5" y="6" xr="0" yr="0" w="44" h="16" nn="Button" ni="mount/horse_btn_hh_3.png" nic="0,0,0,0" state="0" act="onReward" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+      <View id="zq_reward_effect_view" x="0" y="0" xr="0" yr="0" w="44" h="16"/>
+    </Button>
+    <View x="96" y="33" xr="0" yr="0" w="291" h="192" nn="View"/>
+  </View>
+</View>

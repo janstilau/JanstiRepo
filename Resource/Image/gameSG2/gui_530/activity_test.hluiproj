@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="294.500" h="262.000" srw="294" srh="262">
+  <View x="14.500" y="1.000" xr="0" yr="0" w="280.000" h="250.000" srw="294" srh="262">
+    <ImageView x="-14.500" y="-1.000" xr="0" yr="0" w="293.000" h="58.000" srw="294" srh="262" i="common/activity_7days_bg_title.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView x="9.980" y="-7.030" xr="0" yr="0" w="230.500" h="42.500" srw="294" srh="262" i="activity_test/ui_activity_test_word.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label x="9.950" y="38.280" xr="0" yr="0" w="300.000" h="12.000" srw="294" srh="262" t="您在测试期间共充值999元，根据活动规则可获得999钻" ts="10" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17"/>
+      <Button x="261.650" y="17.890" xr="0" yr="0" w="20.000" h="20.000" srw="294" srh="262" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+    </ImageView>
+    <View id="m_scrollBg" x="-7.000" y="58.240" xr="0" yr="0" w="279.000" h="187.000" srw="294" srh="262"/>
+    <ImageView x="-5.640" y="245.240" xr="0" yr="0" w="279.000" h="7.000" srw="294" srh="262" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </View>
+</View>

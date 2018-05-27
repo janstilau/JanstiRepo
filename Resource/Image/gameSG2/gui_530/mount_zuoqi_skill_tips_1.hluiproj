@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="170.000" h="115.000" srw="170" srh="115">
+  <ImageView id="m_tips_bg_img" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="170.000" h="115.000" srw="170" srh="115" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <View id="_view" nn="View" x="3.500" y="7.000" xr="0" yr="0" w="44.000" h="44.000" srw="170" srh="115">
+      <ImageView id="bg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="170" srh="115" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="subBg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="170" srh="115" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="icon" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="170" srh="115" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="subicon" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="170" srh="115" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="level" nn="ImageView" x="1.600" y="31.000" xr="0" yr="0" w="20.500" h="11.500" srw="170" srh="115" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+    <Label id="name" nn="Label" x="50.440" y="6.640" xr="0" yr="0" w="80.000" h="12.000" srw="170" srh="115" t="" ts="10" tctl="rgb(255, 96, 0)" tctr="rgb(255, 96, 0)" tcbl="rgb(255, 96, 0)" tcbr="rgb(255, 96, 0)" sc="black" ta="17"/>
+    <ImageView id="m_fight_img" nn="ImageView" x="50.970" y="20.510" xr="0" yr="0" w="12.750" h="15.500" srw="170" srh="115" iv="0" i="common/fighttoast_icon.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="16.560" y="2.360" xr="0" yr="0" w="50.000" h="12.000" srw="170" srh="115" t="全队战力" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
+      <Label id="m_fight_capacity_lab" nn="Label" x="57.060" y="2.360" xr="0" yr="0" w="50.000" h="12.000" srw="170" srh="115" t="+5%" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="9"/>
+    </ImageView>
+    <View id="skill_study" nn="View" x="50.790" y="36.840" xr="0" yr="0" w="100.000" h="15.000" srw="170" srh="115" iv="0">
+      <ImageView id="prop_icon" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="15.000" h="15.000" srw="170" srh="115" i="mount/horse_skillbook_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <View id="cost_panel" nn="View" x="20.500" y="0.000" xr="0" yr="0" w="100.000" h="15.000" srw="170" srh="115"/>
+    </View>
+    <View id="des_view" nn="View" x="5.000" y="55.780" xr="0" yr="0" w="160.000" h="50.000" srw="170" srh="115"/>
+    <Button id="resetBtn" nn="Button" x="101.000" y="5.970" xr="0" yr="0" w="28.000" h="17.000" srw="170" srh="115" iv="0" nt="" ni="mount/u_btn_reset.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onRestCallBack"/>
+    <Button id="m_upgrade_btn" nn="Button" x="139.530" y="5.670" xr="0" yr="0" w="28.000" h="17.000" srw="170" srh="115" iv="0" nt="" ni="common/ui_skill_btn_shengji.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onUpdateCallBack"/>
+    <ImageView nn="ImageView" x="5.730" y="54.020" xr="0" yr="0" w="160.000" h="1.000" srw="170" srh="115" i="common/u_bg_fengexian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+</View>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="1.000" y="0.500" xr="0" yr="0" w="100.000" h="100.000" srw="100" srh="100">
+  <ImageView id="headBigImg" x="0.000" y="0.000" xr="0" yr="0" w="100.000" h="100.000" srw="100" srh="100" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+</View>

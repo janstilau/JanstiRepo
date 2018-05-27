@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="230.000" h="178.000" srw="230" srh="178">
+  <ImageView x="0.000" y="0.000" xr="0" yr="0" w="225.500" h="176.000" srw="230" srh="178" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="49.750" y="10.870" xr="0" yr="0" w="126.000" h="19.000" srw="230" srh="178" i="common/u_bg_title2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="tishiTitle" x="0.000" y="3.000" xr="0" yr="0" w="126.000" h="12.000" srw="230" srh="178" t="提 示" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView x="14.250" y="42.800" xr="0" yr="0" w="197.000" h="85.000" srw="230" srh="178" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="title_txt" x="2.980" y="2.850" xr="0" yr="0" w="190.000" h="60.000" srw="230" srh="178" t="周卡剩余天数不足1天，是否续费？" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(52, 0, 0)" ta="18"/>
+    </ImageView>
+    <ImageView id="vipContainer" x="66.850" y="108.230" xr="0" yr="0" w="120.000" h="20.000" srw="230" srh="178" iv="0" i="" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="48.550" y="2.110" xr="0" yr="0" w="60.000" h="12.000" srw="230" srh="178" t="查看详情" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="17"/>
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="47.000" h="18.000" srw="230" srh="178" i="common/main_btn_vip.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="vipNumber" x="28.740" y="-0.700" xr="0" yr="0" w="15.000" h="15.000" srw="230" srh="178" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <Button x="2.000" y="3.210" xr="0" yr="0" w="100.000" h="12.000" srw="230" srh="178" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="vipAction"/>
+    </ImageView>
+    <Button id="alertBtn" x="58.040" y="97.130" xr="0" yr="0" w="22.000" h="22.000" srw="230" srh="178" iv="0" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="alertBtnAction">
+      <Label x="25.880" y="4.520" xr="0" yr="0" w="100.000" h="12.000" srw="230" srh="178" t="本次登陆不再提示" ts="10" tctl="black" tctr="black" tcbl="black" tcbr="black" sc="black" ta="9"/>
+      <ImageView id="alertImg2" x="0.000" y="0.000" xr="0" yr="0" w="22.000" h="22.000" srw="230" srh="178" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="alertImg1" x="0.000" y="0.000" xr="0" yr="0" w="22.000" h="22.000" srw="230" srh="178" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+  </ImageView>
+  <Button x="201.290" y="0.010" xr="0" yr="0" w="26.000" h="26.000" srw="230" srh="178" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+  <View id="quxiaoqueding" x="13.660" y="135.370" xr="0" yr="0" w="200.000" h="35.000" srw="230" srh="178">
+    <Button id="sureBtn" x="115.540" y="1.000" xr="0" yr="0" w="70.000" h="32.000" srw="230" srh="178" nt="购 买" ni="common/u_btn_buy.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="确定" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="sureAction"/>
+    <Button id="cancelBtn" x="13.290" y="1.000" xr="0" yr="0" w="70.000" h="32.000" srw="230" srh="178" nt="暂 不" ni="common/u_btn_comfirm4.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="cancelAction"/>
+  </View>
+</View>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView x="1.000" y="5.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="20.000" y="20.500" xr="0" yr="0" w="433.500" h="286.000" srw="480" srh="320" i="common/u_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Button id="m_contact_btn" x="174.000" y="12.000" xr="0" yr="0" w="80.000" h="27.500" srw="480" srh="320" iv="0" nt="联系我们" ni="common/u_btn_comfirm5.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="联系我们" si="common/u_btn_comfirm4.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onContactAction">
+        <ImageView x="68.500" y="-2.500" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" tag="1" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <Button id="m_message_btn" x="91.000" y="12.000" xr="0" yr="0" w="80.000" h="27.500" srw="480" srh="320" nt="消息" ni="common/u_btn_comfirm5.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="消息" si="common/u_btn_comfirm4.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onMessageAction">
+        <ImageView x="68.500" y="-2.500" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" iv="0" tag="1" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <Button id="m_mail_btn" x="8.000" y="12.000" xr="0" yr="0" w="80.000" h="27.500" srw="480" srh="320" nt="邮件" ni="common/u_btn_comfirm5.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="common/u_btn_comfirm4.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="邮件" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onMailAction">
+        <ImageView x="68.500" y="-2.500" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" tag="1" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <View id="m_mail_view" x="7.000" y="6.500" xr="0" yr="0" w="182503.500" h="80080.000" srw="480" srh="320">
+        <Label id="m_count_remind_lab" x="249.000" y="17.000" xr="0" yr="0" w="100.000" h="10.000" srw="480" srh="320" t="邮件最多保存30天" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Button id="m_deleteall_btn" x="275.470" y="8.350" xr="0" yr="0" w="67.000" h="26.000" srw="480" srh="320" iv="0" nt="一键删除" ni="common/u_btn_comfirm5.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="mailAllDelete"/>
+        <View id="m_mail_bg_view" x="2.000" y="40.500" xr="0" yr="0" w="165.000" h="228.000" srw="480" srh="320"/>
+        <ImageView id="m_mail_detail_view" x="170.750" y="40.470" xr="0" yr="0" w="245.000" h="228.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ScrollView id="m_mail_content_scroll" x="3.000" y="3.500" xr="0" yr="0" w="240.000" h="175.000" srw="480" srh="320">
+            <Label id="m_mail_title_lab" x="6.620" y="3.410" xr="0" yr="0" w="230.000" h="15.000" srw="480" srh="320" t="" ts="11" tctl="yellow" tctr="yellow" tcbl="yellow" tcbr="yellow" sc="black" ta="9"/>
+            <Label id="m_content_lab" x="6.860" y="20.400" xr="0" yr="0" w="225.000" h="60.000" srw="480" srh="320" t="" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="9"/>
+            <View id="m_time_author_view" x="5.500" y="73.500" xr="0" yr="0" w="230.000" h="20.000" srw="480" srh="320">
+              <Label id="m_time_lab" x="1.320" y="0.000" xr="0" yr="0" w="150.000" h="15.000" srw="480" srh="320" t="" ts="11" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="9"/>
+              <Label id="m_author_lab" x="123.000" y="0.000" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="12"/>
+              <ImageView x="-10.000" y="15.000" xr="0" yr="0" w="245.000" h="1.000" srw="480" srh="320" i="common/mail_linelong.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </View>
+          </ScrollView>
+          <Button id="m_delete_mail_btn" x="20.000" y="190.880" xr="0" yr="0" w="85.000" h="27.500" srw="480" srh="320" nt="删除" ni="common/u_btn_comfirm5.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="deleteMail"/>
+          <Button id="m_get_mail_btn" x="143.010" y="190.880" xr="0" yr="0" w="85.000" h="27.500" srw="480" srh="320" nt="领取" ni="common/u_btn_comfirm4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="receiveMail"/>
+        </ImageView>
+        <ImageView id="m_emty_bg_img" x="7.500" y="42.500" xr="0" yr="0" w="404.500" h="235.000" srw="480" srh="320" iv="0" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView x="212.000" y="6.500" xr="0" yr="0" w="181.000" h="225.000" srw="480" srh="320" i="common/xiaozhushou.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView x="39.610" y="61.760" xr="0" yr="0" w="157.000" h="67.000" srw="480" srh="320" i="common/duihuakuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <Label x="24.700" y="13.720" xr="0" yr="0" w="100.000" h="30.000" srw="480" srh="320" t="暂无邮件哦" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+          </ImageView>
+        </ImageView>
+        <Button id="m_getall_btn" x="349.470" y="6.350" xr="0" yr="0" w="67.000" h="26.000" srw="480" srh="320" nt="一键领取" ni="common/u_btn_comfirm5.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="receiveAllMail"/>
+      </View>
+      <View id="m_message_view" x="7.000" y="6.500" xr="0" yr="0" w="421.000" h="280.000" srw="480" srh="320" iv="0">
+        <Label id="m_mess_count_lab" x="244.000" y="17.500" xr="0" yr="0" w="90.000" h="10.000" srw="480" srh="320" t="最多保存50条消息" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Button id="m_mess_all_dele_btn" x="333.000" y="6.000" xr="0" yr="0" w="85.000" h="27.500" srw="480" srh="320" nt="全部清空" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="onDeleteAllMessage">
+          <ImageView x="-323.000" y="36.500" xr="0" yr="0" w="404.500" h="225.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Button>
+        <View id="m_message_bg_view" x="16.500" y="45.000" xr="0" yr="0" w="392.000" h="220.000" srw="480" srh="320"/>
+        <ImageView id="m_message_img" x="7.500" y="42.500" xr="0" yr="0" w="404.500" h="225.000" srw="480" srh="320" iv="0" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView x="212.000" y="6.500" xr="0" yr="0" w="181.000" h="225.000" srw="480" srh="320" i="common/xiaozhushou.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView x="39.610" y="61.760" xr="0" yr="0" w="157.000" h="67.000" srw="480" srh="320" i="common/duihuakuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <Label x="24.700" y="13.720" xr="0" yr="0" w="100.000" h="30.000" srw="480" srh="320" t="暂无消息哦" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+          </ImageView>
+        </ImageView>
+      </View>
+      <View id="m_contact_view" x="7.000" y="6.500" xr="0" yr="0" w="421.000" h="280.000" srw="480" srh="320" iv="0">
+        <ImageView x="7.340" y="39.600" xr="0" yr="0" w="285.000" h="226.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <View x="13.000" y="43.500" xr="0" yr="0" w="275.000" h="220.000" srw="480" srh="320"/>
+        <ImageView x="10.500" y="38.500" xr="0" yr="0" w="275.000" h="225.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <View x="10.570" y="67.680" xr="0" yr="0" w="270.000" h="100.000" srw="480" srh="320">
+          <Label x="14.000" y="6.000" xr="0" yr="0" w="100.000" h="20.000" srw="480" srh="320" t="官方1群：" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+            <Label x="50.000" y="0.000" xr="0" yr="0" w="100.000" h="20.000" srw="480" srh="320" t="127943216" ts="11" tctl="rgb(153, 23, 70)" tctr="rgb(153, 23, 70)" tcbl="rgb(153, 23, 70)" tcbr="rgb(153, 23, 70)" sc="rgb(153, 23, 70)" ta="17"/>
+          </Label>
+          <Label x="156.000" y="6.000" xr="0" yr="0" w="100.000" h="20.000" srw="480" srh="320" t="官方2群：" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+            <Label x="50.000" y="0.000" xr="0" yr="0" w="100.000" h="20.000" srw="480" srh="320" t="" ts="11" tctl="rgb(153, 23, 70)" tctr="rgb(153, 23, 70)" tcbl="rgb(153, 23, 70)" tcbr="rgb(153, 23, 70)" sc="rgb(153, 23, 70)" ta="17"/>
+          </Label>
+          <Label x="156.000" y="30.000" xr="0" yr="0" w="100.000" h="20.000" srw="480" srh="320" t="官方4群：" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+            <Label x="45.500" y="0.000" xr="0" yr="0" w="100.000" h="20.000" srw="480" srh="320" t="" ts="10" tctl="rgb(153, 23, 70)" tctr="rgb(153, 23, 70)" tcbl="rgb(153, 23, 70)" tcbr="rgb(153, 23, 70)" sc="rgb(153, 23, 70)" ta="17"/>
+          </Label>
+          <Label x="156.000" y="54.000" xr="0" yr="0" w="100.000" h="20.000" srw="480" srh="320" t="官方6群：" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+            <Label x="50.000" y="0.000" xr="0" yr="0" w="100.000" h="20.000" srw="480" srh="320" t="" ts="11" tctl="rgb(153, 23, 70)" tctr="rgb(153, 23, 70)" tcbl="rgb(153, 23, 70)" tcbr="rgb(153, 23, 70)" sc="rgb(153, 23, 70)" ta="17"/>
+          </Label>
+          <Label x="14.000" y="54.000" xr="0" yr="0" w="100.000" h="20.000" srw="480" srh="320" t="官方5群：" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+            <Label x="50.000" y="0.000" xr="0" yr="0" w="100.000" h="20.000" srw="480" srh="320" t="" ts="11" tctl="rgb(153, 23, 70)" tctr="rgb(153, 23, 70)" tcbl="rgb(153, 23, 70)" tcbr="rgb(153, 23, 70)" sc="rgb(153, 23, 70)" ta="17"/>
+          </Label>
+          <Label x="14.000" y="30.000" xr="0" yr="0" w="100.000" h="20.000" srw="480" srh="320" t="官方3群：" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+            <Label x="50.000" y="0.000" xr="0" yr="0" w="100.000" h="20.000" srw="480" srh="320" t="" ts="10" tctl="rgb(153, 23, 70)" tctr="rgb(153, 23, 70)" tcbl="rgb(153, 23, 70)" tcbr="rgb(153, 23, 70)" sc="rgb(153, 23, 70)" ta="17"/>
+          </Label>
+        </View>
+        <ImageView x="4.000" y="166.000" xr="0" yr="0" w="120.000" h="21.500" srw="480" srh="320" iv="0" i="common/u_bg_title4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView x="30.000" y="2.250" xr="0" yr="0" w="53.500" h="15.000" srw="480" srh="320" i="mail_main/activity_word_attentionus.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView x="20.000" y="32.770" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" i="mail_main/weixin.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label x="70.000" y="50.000" xr="0" yr="0" w="120.000" h="10.000" srw="480" srh="320" t="胡莱三国2 官方微信群" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+          <Button x="207.810" y="41.940" xr="0" yr="0" w="62.000" h="27.500" srw="480" srh="320" nt="关注" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="onConcernWXCallBack"/>
+        </ImageView>
+        <ImageView x="4.000" y="45.660" xr="0" yr="0" w="120.000" h="21.500" srw="480" srh="320" i="common/u_bg_title4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView x="30.000" y="2.250" xr="0" yr="0" w="53.500" h="15.000" srw="480" srh="320" i="common/activity_word_qq.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <Button x="302.000" y="39.000" xr="0" yr="0" w="112.500" h="35.000" srw="480" srh="320" nt="" ni="mail_main/ui_mail_main_btn_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="onWalkthroughCallBack"/>
+        <Button x="302.000" y="84.000" xr="0" yr="0" w="112.500" h="35.000" srw="480" srh="320" nt="" ni="mail_main/ui_mail_main_btn_2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="onConsultProblemCallBack"/>
+        <Button x="302.000" y="129.000" xr="0" yr="0" w="112.500" h="35.000" srw="480" srh="320" nt="" ni="mail_main/ui_mail_main_btn_4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="onFeedbackSuggestCallBack"/>
+        <Button x="302.000" y="174.000" xr="0" yr="0" w="112.500" h="35.000" srw="480" srh="320" nt="" ni="mail_main/ui_mail_main_btn_3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="onFeedbackBugsCallBack"/>
+      </View>
+      <Button x="174.000" y="12.000" xr="0" yr="0" w="80.000" h="27.500" srw="480" srh="320" iv="0" nt="联盟邮件" ni="common/u_btn_comfirm5.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="联系我们" si="common/u_btn_comfirm4.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18">
+        <ImageView x="68.500" y="-2.500" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" tag="1" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+    </ImageView>
+    <ImageView x="10.500" y="4.620" xr="0" yr="0" w="457.500" h="80.000" srw="480" srh="320" i="common/u_bg_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="457.500" h="27.000" srw="480" srh="320" i="common/u_bg_title1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_titile_lab" x="187.500" y="1.000" xr="0" yr="0" w="80.000" h="22.000" srw="480" srh="320" t="邮件" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView x="25.620" y="63.180" xr="0" yr="0" w="422.000" h="1.000" srw="480" srh="320" i="common/u_bg_fengexian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Button x="438.920" y="3.220" xr="0" yr="0" w="27.500" h="35.000" srw="480" srh="320" nt="" ni="common/u_btn_close.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+  </ImageView>
+</View>

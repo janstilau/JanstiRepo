@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="184.000" h="233.000" srw="184" srh="233">
+  <ImageView x="0.000" y="0.000" xr="0" yr="0" w="184.000" h="233.000" srw="184" srh="233" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="bag_item_scroll_view" x="10.000" y="60.000" xr="0" yr="0" w="164.000" h="125.000" srw="184" srh="233" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Button id="btn_minus_num" x="19.000" y="92.000" xr="0" yr="0" w="30.000" h="30.000" srw="184" srh="233" nt="" ni="common/u_btn_minus.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      <Button id="btn_add_num" x="115.000" y="92.000" xr="0" yr="0" w="30.000" h="30.000" srw="184" srh="233" nt="" ni="common/u_btn_plus_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      <ImageView id="num_panel" x="59.000" y="92.000" xr="0" yr="0" w="46.000" h="29.000" srw="184" srh="233" i="common/u_bg_shurukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <EditBox id="eb_num" x="0.500" y="4.500" xr="0" yr="0" w="45.000" h="20.000" srw="184" srh="233" et="" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+    </ImageView>
+    <View x="10.000" y="60.000" xr="0" yr="0" w="164.000" h="125.000" srw="184" srh="233" iv="0"/>
+    <Label x="13.250" y="65.370" xr="0" yr="0" w="126.000" h="12.000" srw="184" srh="233" t="分解后获得" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </ImageView>
+  <ImageView id="bag_image_bg_" x="14.240" y="8.880" xr="0" yr="0" w="44.000" h="44.000" srw="184" srh="233" i="common/shop_daojukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="mItemIconImage" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="184" srh="233" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="subIcon" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="184" srh="233" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="bingImg" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="184" srh="233" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="mItemCountLabel" x="2.000" y="32.500" xr="0" yr="0" w="40.000" h="9.000" srw="184" srh="233" t="Label" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="20"/>
+    <Label id="tishiTitle" x="50.510" y="6.490" xr="0" yr="0" w="126.000" h="12.000" srw="184" srh="233" t="道具名字" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+    <View id="equip_star_bg_view" x="2.000" y="0.000" xr="0" yr="0" w="10.000" h="44.000" srw="184" srh="233">
+      <ImageView x="0.000" y="34.000" xr="0" yr="0" w="9.000" h="8.500" srw="184" srh="233" i="common\u_other_star.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView x="0.000" y="25.500" xr="0" yr="0" w="9.000" h="8.500" srw="184" srh="233" i="common\u_other_star.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView x="0.000" y="17.000" xr="0" yr="0" w="9.000" h="8.500" srw="184" srh="233" i="common\u_other_star.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView x="0.000" y="8.500" xr="0" yr="0" w="9.000" h="8.500" srw="184" srh="233" i="common\u_other_star.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="9.000" h="8.500" srw="184" srh="233" i="common\u_other_star.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+  </ImageView>
+  <Button id="btn_cancel_edit" x="159.290" y="0.010" xr="0" yr="0" w="26.000" h="26.000" srw="184" srh="233" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+  <Button id="m_tishi_sureBtn" x="42.000" y="192.000" xr="0" yr="0" w="100.000" h="32.000" srw="184" srh="233" nt="确 定" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="确定" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="sureAction"/>
+</View>

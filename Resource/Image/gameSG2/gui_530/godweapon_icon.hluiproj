@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="44" h="44" nn="View">
+  <ImageView id="_godweapon_frame_nor" x="0" y="0" xr="0" yr="0" w="44" h="44" nn="ImageView" i="common/u_other_goods5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView id="_godweapon_icon_nor" x="0" y="0" xr="0" yr="0" w="44" h="44" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <View id="_star_nor" x="0" y="0" xr="0" yr="0" w="44" h="44"/>
+    <Label id="_strengthen_level_nor" x="23" y="31" xr="0" yr="0" w="18" h="10" nn="Label" t="" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="20"/>
+    <ImageView id="_is_equiped_nor" x="-8" y="-8" xr="0" yr="0" w="26" h="21.700000762939453" iv="0" i="common/smithy_zhuangtai1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </ImageView>
+  <ImageView id="_godweapon_frame_spe" x="0" y="0" xr="0" yr="0" w="53" h="53" nn="ImageView" iv="0" i="common/u_other_goods5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView id="_godweapon_icon_spe" x="0" y="0" xr="0" yr="0" w="53" h="53" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <View id="_star_spe" x="0" y="0" xr="0" yr="0" w="53" h="53"/>
+    <Label id="_strengthen_level_spe" x="30.399999618530273" y="38.5" xr="0" yr="0" w="18" h="10" nn="Label" t="" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" stroke="1" sc="rgb(0,0,0)" ta="20"/>
+    <ImageView id="_is_equiped_spe" x="-8" y="-8" xr="0" yr="0" w="26" h="21.700000762939453" iv="0" i="common/smithy_zhuangtai1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </ImageView>
+  <ImageView id="_red_point" x="31.600000381469727" y="-4.199999809265137" xr="0" yr="0" w="18" h="18" nn="ImageView" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+</View>

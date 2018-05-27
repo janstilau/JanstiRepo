@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="222" h="157">
+  <ImageView x="2.7100000381469727" y="2.7799999713897705" xr="0" yr="0" w="217" h="152" i="common/u_bg_2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="48" y="6.5" xr="0" yr="0" w="126" h="19" i="common/u_bg_title2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label x="18" y="3" xr="0" yr="0" w="90" h="12" t="补充军备" ts="12" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="8" y="35" xr="0" yr="0" w="201" h="70" i="common/u_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="3.5" y="39.13999938964844" xr="0" yr="0" w="195" h="1.5" i="common/a_dotted_line3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </ImageView>
+  </ImageView>
+  <Button x="78" y="116" xr="0" yr="0" w="72" h="27.5" nt="确 定" ni="common/u_btn_comfirm2.png" nic="0,0,0,0" st="确定" state="0" act="_onSure" ts="12" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(115,9,1)" ta="18"/>
+  <Button id="_btnClose" x="194" y="2.5" xr="0" yr="0" w="26" h="26" ni="common/u_btn_close1.png" nic="0.5,0.5,0,0" state="0" act="_onClose" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Label id="contentBack" x="11" y="46" xr="0" yr="0" w="200" h="24" t="是否花费       99999 补充军备？" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(52,0,0)" ta="18"/>
+  <Button id="_look_equip_btn" x="183" y="44" xr="0" yr="0" w="27" h="27" nic="0,0,0,0" state="0" act="onClickTips" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView x="0" y="4" xr="0" yr="0" w="19" h="19" i="common/u_btn_zhushi.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <Label x="11" y="87" xr="0" yr="0" w="200" h="12" t="小提示：一天内连续购买军备时的钻石消耗递增" ts="9" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+</View>

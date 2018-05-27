@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView x="67.000" y="32.500" xr="0" yr="0" w="354.000" h="252.000" srw="480" srh="320" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Button x="329.000" y="-1.500" xr="0" yr="0" w="26.000" h="26.000" srw="480" srh="320" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+    <ImageView x="119.000" y="6.000" xr="0" yr="0" w="116.000" h="18.000" srw="480" srh="320" i="common/u_bg_title2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="0.000" y="0.000" xr="0" yr="0" w="116.000" h="16.000" srw="480" srh="320" t="自动升级" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView x="24.000" y="22.500" xr="0" yr="0" w="140.000" h="26.000" srw="480" srh="320" i="common/u_bg_cast.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_elixir_num" x="27.500" y="0.780" xr="0" yr="0" w="80.000" h="26.000" srw="480" srh="320" t="99999" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+      <ImageView id="m_elixir_img" x="0.000" y="0.000" xr="0" yr="0" w="26.000" h="26.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView x="15.000" y="49.000" xr="0" yr="0" w="326.000" h="76.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="9.500" y="9.500" xr="0" yr="0" w="100.000" h="12.000" srw="480" srh="320" t="规则:" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      <Label x="9.000" y="29.000" xr="0" yr="0" w="330.000" h="12.000" srw="480" srh="320" t="1.没有增长倍数使用1个灵兽丹，有增长倍数的时候使用5个灵兽丹升级" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      <Label x="9.000" y="49.000" xr="0" yr="0" w="330.000" h="12.000" srw="480" srh="320" t="2.当灵兽丹消耗不足的时候停止自动升级" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    </ImageView>
+    <Label x="24.500" y="135.000" xr="0" yr="0" w="130.000" h="12.000" srw="480" srh="320" t="灵兽丹不足时自动购买" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    <Label id="count_limit_lab" x="128.500" y="135.000" xr="0" yr="0" w="130.000" h="12.000" srw="480" srh="320" t="（还可以购买    次）" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17">
+      <Label id="m_last_num_lab" x="51.110" y="0.280" xr="0" yr="0" w="30.000" h="12.000" srw="480" srh="320" t="30" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </Label>
+    <ImageView id="m_bg_elixir_img" x="24.000" y="155.000" xr="0" yr="0" w="29.000" h="29.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_elixir_icon_img" x="0.000" y="0.000" xr="0" yr="0" w="29.000" h="29.000" srw="480" srh="320" i="common/u_other_goods4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label x="31.000" y="8.500" xr="0" yr="0" w="30.000" h="12.000" srw="480" srh="320" t="x5" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+    </ImageView>
+    <Button id="m_reduce_btn" x="73.500" y="154.500" xr="0" yr="0" w="30.000" h="30.000" srw="480" srh="320" nt="" ni="common/u_btn_minus.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="reduceAction"/>
+    <Button id="m_add_btn" x="162.500" y="154.500" xr="0" yr="0" w="30.000" h="30.000" srw="480" srh="320" nt="" ni="common/u_btn_plus_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="addAction"/>
+    <ImageView x="110.000" y="154.500" xr="0" yr="0" w="46.000" h="29.000" srw="480" srh="320" i="common/u_bg_shurukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <EditBox id="m_num_box" x="0.000" y="0.000" xr="0" yr="0" w="46.000" h="29.000" srw="480" srh="320" et="111" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <Label x="195.000" y="164.000" xr="0" yr="0" w="100.000" h="12.000" srw="480" srh="320" t="（花费                 ）" ts="10" tctl="rgb(38, 135, 197)" tctr="rgb(38, 135, 197)" tcbl="rgb(38, 135, 197)" tcbr="rgb(38, 135, 197)" sc="black" ta="17">
+      <ImageView x="29.500" y="-5.000" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" i="common/u_other_zuanshi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_cost_coin_lab" x="50.000" y="0.000" xr="0" yr="0" w="60.000" h="12.000" srw="480" srh="320" t="Label" ts="10" tctl="rgb(38, 135, 197)" tctr="rgb(38, 135, 197)" tcbl="rgb(38, 135, 197)" tcbr="rgb(38, 135, 197)" sc="black" ta="17"/>
+    </Label>
+    <ImageView x="7.000" y="190.000" xr="0" yr="0" w="340.000" h="7.000" srw="480" srh="320" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="m_need_vip_level" x="127.000" y="195.500" xr="0" yr="0" w="100.000" h="12.000" srw="480" srh="320" t="（VIP5开启）" ts="10" tctl="rgb(255, 0, 72)" tctr="rgb(255, 0, 72)" tcbl="rgb(255, 0, 72)" tcbr="rgb(255, 0, 72)" sc="black" ta="18"/>
+    <Button x="129.500" y="206.500" xr="0" yr="0" w="97.000" h="32.000" srw="480" srh="320" nt="开始升级" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="startTrain"/>
+  </ImageView>
+</View>

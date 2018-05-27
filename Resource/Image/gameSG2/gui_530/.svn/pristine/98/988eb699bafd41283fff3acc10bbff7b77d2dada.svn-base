@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View id="m_bg_view" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320" tag="10001">
+  <ImageView id="m_bg_img" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320" tag="10001" i="palacetreasure_plus/palacetreasure_bg1.jpg" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <View id="m_bg_img_1" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320" tag="10001"/>
+    <View id="m_item_bg_view" nn="View" x="100.000" y="31.720" xr="0" yr="0" w="280.000" h="290.000" srw="480" srh="320"/>
+    <ImageView id="m_goods_explain_bg_img" nn="ImageView" x="0.000" y="33.500" xr="0" yr="0" w="480.000" h="23.000" srw="480" srh="320" tag="10001" i="palacetreasure_plus/palacetreasure_bg4.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="3.500" y="1.500" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" tag="1001" i="common/u_other_zuanshi_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_coin_num_lab" nn="Label" x="20.000" y="3.000" xr="0" yr="0" w="60.000" h="15.000" srw="480" srh="320" t="9999999" ts="10" tctl="yellow" tctr="yellow" tcbl="yellow" tcbr="yellow" sc="black" ta="17"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="73.500" y="1.500" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" tag="1002" i="palacetreasure_plus/choujiang_jifen.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_integral_num_lab" nn="Label" x="20.000" y="3.000" xr="0" yr="0" w="60.000" h="15.000" srw="480" srh="320" t="9999999" ts="10" tctl="yellow" tctr="yellow" tcbl="yellow" tcbr="yellow" sc="black" ta="17"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="143.500" y="1.500" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" tag="1003" i="palacetreasure_plus/choujiang_menpiao.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_hoard_ticket_one_lab" nn="Label" x="20.000" y="3.000" xr="0" yr="0" w="60.000" h="15.000" srw="480" srh="320" t="9999999" ts="10" tctl="yellow" tctr="yellow" tcbl="yellow" tcbr="yellow" sc="black" ta="17"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="213.500" y="1.500" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" tag="1004" i="palacetreasure_plus/choujiang_menpiao10.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_hoard_ticket_ten_lab" nn="Label" x="20.000" y="3.000" xr="0" yr="0" w="60.000" h="15.000" srw="480" srh="320" t="9999999" ts="10" tctl="yellow" tctr="yellow" tcbl="yellow" tcbr="yellow" sc="black" ta="17"/>
+      </ImageView>
+    </ImageView>
+    <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="30.500" srw="480" srh="320" tag="10001" i="common/horse_item_bg_6.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="117.500" y="0.000" xr="0" yr="0" w="254.000" h="30.500" srw="480" srh="320" i="palacetreasure_plus/palacetreasure_word.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <Button id="m_close_btn" nn="Button" x="443.500" y="3.000" xr="0" yr="0" w="30.000" h="25.000" srw="480" srh="320" nt="" ni="countrywar_worldmap/worldmap_btn_back.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+    <ImageView id="m_log_bg_img" nn="ImageView" x="0.000" y="58.500" xr="0" yr="0" w="133.000" h="262.000" srw="480" srh="320" tag="10004" i="palacetreasure_plus/palacetreasure_bg3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <View id="m_own_log_view" nn="View" x="5.360" y="28.850" xr="0" yr="0" w="120.000" h="82.000" srw="480" srh="320"/>
+      <View id="m_all_log_view" nn="View" x="6.500" y="133.500" xr="0" yr="0" w="120.000" h="120.000" srw="480" srh="320"/>
+    </ImageView>
+    <View nn="View" x="337.670" y="30.420" xr="0" yr="0" w="140.000" h="290.000" srw="480" srh="320" tag="10003">
+      <Button nn="Button" x="2.330" y="1.580" xr="0" yr="0" w="65.000" h="25.000" srw="480" srh="320" tag="10003" nt="" ni="palacetreasure_plus/mizangshangdian.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="convertAction"/>
+      <ImageView id="m_hint_img" nn="ImageView" x="0.830" y="25.580" xr="0" yr="0" w="141.000" h="81.000" srw="480" srh="320" tag="10003" i="palacetreasure_plus/palacetreasure_bg5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_activity_hint_lab" nn="Label" x="6.000" y="6.500" xr="0" yr="0" w="130.000" h="70.000" srw="480" srh="320" t="新服大放送" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="9"/>
+        <View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="141.000" h="81.000" srw="480" srh="320" iv="0">
+          <Label nn="Label" x="0.000" y="6.500" xr="0" yr="0" w="141.000" h="15.000" srw="480" srh="320" t="神将貂蝉直升星级" ts="10" tctl="yellow" tctr="yellow" tcbl="yellow" tcbr="yellow" sc="black" ta="18"/>
+          <Label nn="Label" x="5.500" y="23.000" xr="0" yr="0" w="130.000" h="15.000" srw="480" srh="320" t="只要获得将领貂蝉,即可获赠    个" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+            <Label nn="Label" x="105.500" y="0.000" xr="0" yr="0" w="20.000" h="15.000" srw="480" srh="320" t="50" ts="9" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="18"/>
+          </Label>
+          <Label nn="Label" x="5.500" y="35.500" xr="0" yr="0" w="130.000" h="15.000" srw="480" srh="320" t="貂蝉魂石,先到先得,全服仅限前" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+            <Label nn="Label" x="119.000" y="0.000" xr="0" yr="0" w="10.000" h="15.000" srw="480" srh="320" t="5" ts="9" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="18"/>
+          </Label>
+          <Label nn="Label" x="5.500" y="46.500" xr="0" yr="0" w="130.000" h="15.000" srw="480" srh="320" t="个（     ）！" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+            <Label nn="Label" x="12.000" y="0.000" xr="0" yr="0" w="25.000" h="15.000" srw="480" srh="320" t="1/5" ts="9" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="18"/>
+          </Label>
+          <Label nn="Label" x="5.500" y="59.500" xr="0" yr="0" w="130.000" h="15.000" srw="480" srh="320" t="奖励通过邮件发放~" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+        </View>
+      </ImageView>
+      <View id="m_award_view" nn="View" x="3.330" y="105.580" xr="0" yr="0" w="138.000" h="190.000" srw="480" srh="320" tag="10003">
+        <ImageView nn="ImageView" x="-1.000" y="1.500" xr="0" yr="0" w="45.000" h="45.000" srw="480" srh="320" tag="1" i="palacetreasure_plus/u_item_special.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="45.500" y="1.500" xr="0" yr="0" w="45.000" h="45.000" srw="480" srh="320" tag="2" i="palacetreasure_plus/u_item_special.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="92.000" y="1.500" xr="0" yr="0" w="45.000" h="45.000" srw="480" srh="320" tag="3" i="palacetreasure_plus/u_item_special.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="-1.000" y="47.000" xr="0" yr="0" w="45.000" h="45.000" srw="480" srh="320" tag="4" i="palacetreasure_plus/u_item_special.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="45.500" y="47.000" xr="0" yr="0" w="45.000" h="45.000" srw="480" srh="320" tag="5" i="palacetreasure_plus/u_item_special.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="92.000" y="47.000" xr="0" yr="0" w="45.000" h="45.000" srw="480" srh="320" tag="6" i="palacetreasure_plus/u_item_special.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="-0.500" y="93.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="7" i="common/shop_daojukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="46.000" y="93.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="8" i="common/shop_daojukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="92.500" y="93.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="9" i="common/shop_daojukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="-0.500" y="139.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="10" i="common/shop_daojukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="46.000" y="139.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="11" i="common/shop_daojukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="92.500" y="139.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="12" i="common/shop_daojukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+      </View>
+    </View>
+    <Button id="m_left_btn" nn="Button" x="135.000" y="266.000" xr="0" yr="0" w="97.000" h="34.000" srw="480" srh="320" nt="" ni="palacetreasure_plus/palacetreasure_btn1.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="exploreManyAction">
+      <ImageView id="m_left_cost_icon_img" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="97.000" h="34.000" srw="480" srh="320" i="palacetreasure_plus/ui_palacetreasure_word1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_hoard_left_red_img" nn="ImageView" x="86.280" y="-3.140" xr="0" yr="0" w="13.000" h="13.000" srw="480" srh="320" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="m_right_btn" nn="Button" x="240.000" y="266.000" xr="0" yr="0" w="97.000" h="34.000" srw="480" srh="320" nt="" ni="palacetreasure_plus/palacetreasure_btn2.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="exploreSingleAction">
+      <ImageView id="m_right_cost_icon_img" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="97.000" h="34.000" srw="480" srh="320" i="palacetreasure_plus/ui_palacetreasure_word2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_hoard_right_red_img" nn="ImageView" x="87.850" y="-3.130" xr="0" yr="0" w="13.000" h="13.000" srw="480" srh="320" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Label nn="Label" x="137.000" y="299.000" xr="0" yr="0" w="200.000" h="20.000" srw="480" srh="320" iv="0" t="留下两行空间用来显示内容" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
+  </ImageView>
+</View>

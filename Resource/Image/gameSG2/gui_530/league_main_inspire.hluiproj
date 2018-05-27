@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="225.000" h="144.000" srw="225" srh="144">
+  <ImageView x="0.000" y="5.000" xr="0" yr="0" w="217.000" h="137.000" srw="225" srh="144" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="53.000" y="7.000" xr="0" yr="0" w="116.000" h="18.000" srw="225" srh="144" i="common/u_bg_title2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="0.000" y="0.000" xr="0" yr="0" w="116.000" h="18.000" srw="225" srh="144" t="联盟鼓舞" ts="12" tctl="rgb(128, 0, 0)" tctr="rgb(128, 0, 0)" tcbl="rgb(128, 0, 0)" tcbr="rgb(128, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView x="9.000" y="29.000" xr="0" yr="0" w="201.000" h="73.000" srw="225" srh="144" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="2.500" y="1.000" xr="0" yr="0" w="25.000" h="10.000" srw="225" srh="144" t="提示:" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      <Label x="4.500" y="11.500" xr="0" yr="0" w="10.000" h="10.000" srw="225" srh="144" t="1. " ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="9">
+        <Label x="11.500" y="0.000" xr="0" yr="0" w="180.000" h="25.000" srw="225" srh="144" t="开启联盟鼓舞后，攻城略地中盟内所有成员队伍移动速度提高" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="9">
+          <Label id="m_durability_add" x="22.000" y="13.500" xr="0" yr="0" w="30.000" h="10.000" srw="225" srh="144" iv="0" t="20" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="18"/>
+          <Label id="m_speed_add_percent" x="90.500" y="12.500" xr="0" yr="0" w="30.000" h="10.000" srw="225" srh="144" t="40%" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="9"/>
+        </Label>
+      </Label>
+      <Label x="4.500" y="35.500" xr="0" yr="0" w="10.000" h="10.000" srw="225" srh="144" t="2. " ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="9">
+        <Label x="11.500" y="0.000" xr="0" yr="0" w="180.000" h="35.000" srw="225" srh="144" t="联盟每天有   次免费开启的机会，同时也可花费流通钻开启（流通钻消耗根据开启次数递增）" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="9">
+          <Label id="m_free_num" x="50.000" y="0.500" xr="0" yr="0" w="30.000" h="10.000" srw="225" srh="144" t="N" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="9"/>
+        </Label>
+      </Label>
+    </ImageView>
+    <View id="m_open_inspire_view" x="9.000" y="103.500" xr="0" yr="0" w="201.000" h="28.000" srw="225" srh="144" iv="0">
+      <ImageView x="25.000" y="8.000" xr="0" yr="0" w="75.000" h="14.000" srw="225" srh="144" i="league_main_inspire/time.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <View id="m_open_time_view" x="27.000" y="0.000" xr="0" yr="0" w="28.000" h="14.000" srw="225" srh="144"/>
+      </ImageView>
+      <Button x="106.500" y="1.500" xr="0" yr="0" w="77.000" h="26.000" srw="225" srh="144" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="inspireAction">
+        <ImageView id="m_free_img" x="0.000" y="0.000" xr="0" yr="0" w="77.000" h="26.000" srw="225" srh="144" iv="0" i="common/shop_top_btn2_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label x="0.000" y="0.000" xr="0" yr="0" w="77.000" h="26.000" srw="225" srh="144" t="免费" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView id="m_cost_coin_img" x="0.000" y="0.000" xr="0" yr="0" w="77.000" h="26.000" srw="225" srh="144" i="common/shop_top_btn2_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView x="6.000" y="4.000" xr="0" yr="0" w="20.000" h="16.800" srw="225" srh="144" i="common/shop_ltzs.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label id="m_cost_diamand_num" x="28.500" y="7.000" xr="0" yr="0" w="40.000" h="12.000" srw="225" srh="144" t="99999" ts="12" tctl="rgb(128, 0, 0)" tctr="rgb(128, 0, 0)" tcbl="rgb(128, 0, 0)" tcbr="rgb(128, 0, 0)" sc="black" ta="18"/>
+        </ImageView>
+      </Button>
+    </View>
+    <View id="m_max_view" x="9.000" y="103.500" xr="0" yr="0" w="201.000" h="28.000" srw="225" srh="144">
+      <Label x="0.000" y="8.500" xr="0" yr="0" w="201.000" h="12.000" srw="225" srh="144" t="已达今日开启次数上限！" ts="12" tctl="rgb(128, 0, 0)" tctr="rgb(128, 0, 0)" tcbl="rgb(128, 0, 0)" tcbr="rgb(128, 0, 0)" sc="black" ta="18"/>
+    </View>
+  </ImageView>
+  <Button x="195.000" y="1.000" xr="0" yr="0" w="26.000" h="26.000" srw="225" srh="144" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+</View>

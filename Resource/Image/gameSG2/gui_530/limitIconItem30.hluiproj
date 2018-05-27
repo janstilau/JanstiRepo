@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="30.000" srw="32" srh="32">
+  <ImageView id="iconBg" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="30.000" srw="32" srh="32" i="common/u_bg_goods.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="awardIcon" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="30.000" srw="32" srh="32" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="jiangling_sp" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="30.000" srw="32" srh="32" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="awardNumber" x="-4.000" y="20.290" xr="0" yr="0" w="32.000" h="8.000" srw="32" srh="32" t="10000" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="20"/>
+  </ImageView>
+</View>

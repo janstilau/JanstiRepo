@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="3.500" xr="0" yr="0" w="305.000" h="20.000" srw="305" srh="20">
+  <Label id="statetxt" nn="Label" x="4.000" y="4.000" xr="0" yr="0" w="200.000" h="15.000" srw="305" srh="20" t="当前正在升级" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  <ImageView id="processview" nn="ImageView" x="160.500" y="6.000" xr="0" yr="0" w="140.000" h="9.000" srw="305" srh="20" i="bing/bing_jindu_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <View id="clipmc" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="140.000" h="9.000" srw="305" srh="20">
+      <ImageView id="processmc" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="140.000" h="9.000" srw="305" srh="20" i="bing/bing_jindu_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+    <Label id="timetxt" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="140.000" h="9.000" srw="305" srh="20" t="00:00:00" ts="7" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+  </ImageView>
+  <View id="sandglassmc" nn="View" x="150.000" y="5.000" xr="0" yr="0" w="8.000" h="11.000" srw="305" srh="20"/>
+  <Label id="lefttimetittle" nn="Label" x="108.680" y="3.000" xr="0" yr="0" w="40.000" h="15.000" srw="305" srh="20" t="剩余时间" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+</View>

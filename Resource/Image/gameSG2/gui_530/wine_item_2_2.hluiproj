@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="150.000" h="280.000" srw="150" srh="280" tag="10001">
+  <ImageView id="m_back_bg" x="0.000" y="0.000" xr="0" yr="0" w="145.000" h="280.000" srw="150" srh="280" i="wine_item_2/wine_zuanshi_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label id="m_reward_name" x="22.500" y="30.500" xr="0" yr="0" w="100.000" h="15.000" srw="150" srh="280" t="购买高级经验丹" ts="12" tctl="rgb(255, 174, 25)" tctr="rgb(255, 174, 25)" tcbl="rgb(255, 174, 25)" tcbr="rgb(255, 174, 25)" bold="1" sc="rgb(255, 174, 25)" ta="18"/>
+    <Label id="m_cd_lab_b" x="18.500" y="48.790" xr="0" yr="0" w="75.000" h="15.000" srw="150" srh="280" iv="0" t="4:20:30" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+      <Label x="52.000" y="0.000" xr="0" yr="0" w="40.000" h="15.000" srw="150" srh="280" t="后免费" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+    </Label>
+    <Label id="m_free_time" x="32.500" y="48.790" xr="0" yr="0" w="80.000" h="15.000" srw="150" srh="280" t="" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    <ImageView id="m_cost_bo" x="41.000" y="67.000" xr="0" yr="0" w="20.000" h="20.000" srw="150" srh="280" i="wine/gjjianglingfu_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="buy_one_lab" x="22.940" y="4.310" xr="0" yr="0" w="60.000" h="12.000" srw="150" srh="280" t="" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+    </ImageView>
+    <Label id="m_zj_cd" x="-2.500" y="87.000" xr="0" yr="0" w="150.000" h="15.000" srw="150" srh="280" t="" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+    <Label id="m_buy_tip_1" x="-2.500" y="126.500" xr="0" yr="0" w="150.000" h="15.000" srw="150" srh="280" t="道具不足时自动购买使用" ts="8" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+    <Button id="m_one_ten" x="31.000" y="100.900" xr="0" yr="0" w="83.000" h="28.000" srw="150" srh="280" tag="1" nt="购买1个" ni="common/wine_btn.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onBuyCallBack">
+      <ImageView id="m_back_red_point" x="72.500" y="-2.000" xr="0" yr="0" w="18.000" h="18.000" srw="150" srh="280" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <ImageView id="m_cost_bt" x="41.000" y="190.060" xr="0" yr="0" w="20.000" h="20.000" srw="150" srh="280" i="wine/ui_wine_gj_10.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="buy_ten_lab" x="23.000" y="4.000" xr="0" yr="0" w="60.000" h="12.000" srw="150" srh="280" t="" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <Button id="m_ten_btn" x="31.000" y="216.000" xr="0" yr="0" w="83.000" h="28.000" srw="150" srh="280" tag="10" nt="购买10个" ni="common/wine_btn.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onBuyCallBack">
+      <ImageView id="_discount_icon" x="0.500" y="0.500" xr="0" yr="0" w="24.000" h="23.500" srw="150" srh="280" iv="0" i="wine_item_2/wine_nine.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_ten_red" x="72.500" y="-2.000" xr="0" yr="0" w="18.000" h="18.000" srw="150" srh="280" pp="1" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Label id="m_buy_tip_2" x="-2.500" y="241.500" xr="0" yr="0" w="150.000" h="15.000" srw="150" srh="280" t="道具不足时自动购买使用" ts="8" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+  </ImageView>
+  <Button id="back_btn" x="127.500" y="9.000" xr="0" yr="0" w="21.000" h="21.000" srw="150" srh="280" nt="" ni="wine_item_2/wine_btn_back.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onBackCallBack"/>
+  <ImageView id="m_b_title_img" x="10.000" y="154.030" xr="0" yr="0" w="125.000" h="22.000" srw="150" srh="280" i="wine_item_2/wine_zuanshi_word.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+</View>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="131.000" h="151.000" srw="131" srh="151">
+  <ImageView id="showBg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="131.000" h="151.000" srw="131" srh="151" i="common/general_bg_skill1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="11.000" y="5.500" xr="0" yr="0" w="108.000" h="18.000" srw="131" srh="151" i="common/u_bg_title7.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="titleTxt" nn="Label" x="5.000" y="6.500" xr="0" yr="0" w="120.000" h="18.000" srw="131" srh="151" t="Label" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18"/>
+    <ImageView id="btnbg" nn="ImageView" x="23.500" y="34.500" xr="0" yr="0" w="83.000" h="83.000" srw="131" srh="151" i="common/u_bg_6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Button id="iconBtn" nn="Button" x="46.000" y="56.000" xr="0" yr="0" w="36.000" h="38.000" srw="131" srh="151" nt="" ni="uiguidejustgo/guide_sh.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="clickAction"/>
+    <Label id="openTxt" nn="Label" x="3.500" y="112.000" xr="0" yr="0" w="125.000" h="12.000" srw="131" srh="151" t="攻城略地活动中可获得" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    <Label id="decTxt" nn="Label" x="0.000" y="124.500" xr="0" yr="0" w="130.000" h="12.000" srw="131" srh="151" t="攻城略地活动中可获得" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    <View id="movieContainer" nn="View" x="65.210" y="43.830" xr="0" yr="0" w="30.000" h="30.000" srw="131" srh="151">
+      <ImageView id="fenjieImg" nn="ImageView" x="18.690" y="-16.480" xr="0" yr="0" w="67.500" h="39.000" srw="131" srh="151" i="uiguide/uiguide_break.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+  </ImageView>
+</View>

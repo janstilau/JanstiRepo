@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="184.000" h="233.000" srw="184" srh="233">
+  <ImageView id="m_buy_bgview_" x="0.000" y="0.000" xr="0" yr="0" w="184.000" h="233.000" srw="184" srh="233" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="16.000" y="21.500" xr="0" yr="0" w="152.000" h="187.000" srw="184" srh="233" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Button id="m_buy_close_" x="159.040" y="-0.260" xr="0" yr="0" w="26.000" h="26.000" srw="184" srh="233" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="buyClose"/>
+    <ImageView x="19.630" y="26.960" xr="0" yr="0" w="145.000" h="56.000" srw="184" srh="233" i="common/shop_bg_goods.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_itemBg_image_" x="5.000" y="6.000" xr="0" yr="0" w="44.000" h="44.000" srw="184" srh="233" i="common/u_bg_goods.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_buy_item_image_" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="184" srh="233" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="m_sub_icon" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="184" srh="233" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label id="m_item_num_" x="6.000" y="27.210" xr="0" yr="0" w="35.000" h="15.000" srw="184" srh="233" t=" " ts="11" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="20"/>
+        <ImageView id="m_biaoqian_icon" x="0.000" y="-1.000" xr="0" yr="0" w="35.000" h="31.000" srw="184" srh="233" i="common/chaoxiyou.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label id="wujiangName_Lab" x="31.500" y="2.000" xr="0" yr="0" w="10.000" h="28.000" srw="184" srh="233" t="夏侯惇" ts="7" tctl="rgb(76, 41, 17)" tctr="rgb(76, 41, 17)" tcbl="rgb(76, 41, 17)" tcbr="rgb(76, 41, 17)" sc="black" ta="18"/>
+      </ImageView>
+      <Label id="m_buy_item_name_" x="58.000" y="5.000" xr="0" yr="0" w="90.000" h="15.000" srw="184" srh="233" t=" " ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      <ImageView id="m_zkScore" x="55.000" y="18.500" xr="0" yr="0" w="16.000" h="16.000" srw="184" srh="233" i="common/contest_jifen.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_zkPrice" x="17.500" y="2.500" xr="0" yr="0" w="50.000" h="10.000" srw="184" srh="233" t=" " ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="17"/>
+        <ImageView x="17.000" y="7.000" xr="0" yr="0" w="30.000" h="1.000" srw="184" srh="233" i="common/shop_redline.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="m_buy_comImg_" x="55.000" y="34.000" xr="0" yr="0" w="16.000" h="16.000" srw="184" srh="233" i="common/contest_jifen.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_buy_price_" x="17.500" y="2.500" xr="0" yr="0" w="50.000" h="10.000" srw="184" srh="233" t=" " ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="17"/>
+      </ImageView>
+    </ImageView>
+    <ImageView x="56.500" y="94.000" xr="0" yr="0" w="69.000" h="29.000" srw="184" srh="233" i="common/u_bg_shurukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <EditBox id="m_buy_edit_" x="0.000" y="0.000" xr="0" yr="0" w="69.000" h="29.000" srw="184" srh="233" et="" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <Button id="m_buy_reduce_" x="25.500" y="95.000" xr="0" yr="0" w="27.000" h="27.000" srw="184" srh="233" nt="" ni="common/u_btn_minus.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="reduceAction"/>
+    <Button id="m_buy_add_" x="130.500" y="95.000" xr="0" yr="0" w="27.000" h="27.000" srw="184" srh="233" nt="" ni="common/u_btn_plus_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="addAction"/>
+    <Button x="125.000" y="82.450" xr="0" yr="0" w="28.000" h="28.000" srw="184" srh="233" iv="0" nt="" ni="common/max.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="maxAction"/>
+    <Label x="18.500" y="135.000" xr="0" yr="0" w="30.000" h="15.000" srw="184" srh="233" t="总价" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18">
+      <ImageView x="39.740" y="-1.330" xr="0" yr="0" w="91.000" h="18.000" srw="184" srh="233" i="common/shop_diamond_bg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_buy_allPrice_" x="21.000" y="-0.500" xr="0" yr="0" w="91.000" h="18.000" srw="184" srh="233" t=" fdsfd " ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(135, 0, 0)" ta="17"/>
+      </ImageView>
+      <ImageView id="m_buy_allComImg_" x="28.000" y="-7.500" xr="0" yr="0" w="30.000" h="30.000" srw="184" srh="233" i="common/contest_jifen.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Label>
+    <View id="m_count_view_" x="36.070" y="160.720" xr="0" yr="0" w="100.000" h="50.000" srw="184" srh="233">
+      <Label x="6.000" y="31.000" xr="0" yr="0" w="100.000" h="15.000" srw="184" srh="233" t="还可以兑换    次" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18">
+        <Label id="m_limit_num_" x="59.920" y="-0.350" xr="0" yr="0" w="20.000" h="15.000" srw="184" srh="233" t=" " ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </Label>
+    </View>
+    <Button id="m_sure_button_" x="43.000" y="158.500" xr="0" yr="0" w="97.000" h="32.000" srw="184" srh="233" nt="确定兑换" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="buyItemAction"/>
+    <Label id="upViewLab" x="12.330" y="210.000" xr="0" yr="0" w="160.000" h="15.000" srw="184" srh="233" t="提升VIP等级可获得更多购买个数" ts="10" tctl="rgb(240, 85, 74)" tctr="rgb(240, 85, 74)" tcbl="rgb(240, 85, 74)" tcbr="rgb(240, 85, 74)" sc="black" ta="18"/>
+  </ImageView>
+</View>

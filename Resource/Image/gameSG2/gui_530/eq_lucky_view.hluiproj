@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="420.000" h="270.000" srw="420" srh="270">
+  <ImageView x="11.300" y="38.980" xr="0" yr="0" w="190.000" h="223.000" srw="420" srh="270" i="equips/skill_bg_putong.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="gestMovie" x="58.000" y="56.500" xr="0" yr="0" w="75.000" h="64.500" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="gesteBox" x="58.000" y="56.500" xr="0" yr="0" w="75.000" h="64.500" srw="420" srh="270" i="equips/skill_box0.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="21.890" y="153.320" xr="0" yr="0" w="146.500" h="18.000" srw="420" srh="270" i="common/wine_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView x="4.500" y="2.000" xr="0" yr="0" w="13.500" h="13.500" srw="420" srh="270" i="equips/time.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="geste_next_freetimeTxt" x="20.400" y="3.020" xr="0" yr="0" w="120.000" h="12.000" srw="420" srh="270" t="59:59:59后免费购买一个" ts="11" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
+    </ImageView>
+    <Button x="5.010" y="183.150" xr="0" yr="0" w="83.000" h="35.000" srw="420" srh="270" iv="0" tag="2" nt="" ni="common/u_btn_comfirm4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="luckyAction">
+      <ImageView x="24.000" y="0.500" xr="0" yr="0" w="20.000" h="20.000" srw="420" srh="270" i="equips/skill_sfu1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="gesteCostFiveTxt" x="43.080" y="6.410" xr="0" yr="0" w="25.000" h="12.000" srw="420" srh="270" t="5" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="9"/>
+      <ImageView x="21.380" y="18.800" xr="0" yr="0" w="39.500" h="13.000" srw="420" srh="270" i="equips/ui_skill_quan5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="freeBtn" x="54.000" y="183.150" xr="0" yr="0" w="83.000" h="35.000" srw="420" srh="270" tag="1" nt="" ni="common/u_btn_comfirm4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="luckyAction">
+      <ImageView id="gestebuyIcon" x="-1.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="420" srh="270" i="equips/skill_word_mianfei1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="gesteCostOneTxt" x="23.580" y="4.910" xr="0" yr="0" w="25.000" h="12.000" srw="420" srh="270" t="1" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="9"/>
+        <ImageView id="gesteOneRedPoint" x="75.000" y="-5.000" xr="0" yr="0" w="18.000" h="18.000" srw="420" srh="270" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="gestefreeIcon" x="1.500" y="0.000" xr="0" yr="0" w="28.000" h="24.800" srw="420" srh="270" iv="0" i="equips/skill_free.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView x="-2.500" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="420" srh="270" i="equips/skill_word_putongmian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView x="72.500" y="-5.000" xr="0" yr="0" w="18.000" h="18.000" srw="420" srh="270" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+    </Button>
+    <ImageView id="gestOpenMovie" x="58.000" y="56.500" xr="0" yr="0" w="75.000" h="64.500" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="8.000" y="3.600" xr="0" yr="0" w="165.500" h="39.500" srw="420" srh="270" i="equips/skill_word_putong.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+  <ImageView x="216.800" y="38.980" xr="0" yr="0" w="190.000" h="223.000" srw="420" srh="270" i="equips/skill_bg_gaoji.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="balenMovie" x="58.000" y="56.500" xr="0" yr="0" w="75.000" h="64.500" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="balenBox" x="58.000" y="56.500" xr="0" yr="0" w="75.000" h="64.500" srw="420" srh="270" i="equips/skill_box1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="freeTipsTxt" x="54.700" y="170.030" xr="0" yr="0" w="120.000" h="12.000" srw="420" srh="270" t="5次后必送3级技能" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="9"/>
+    <ImageView x="21.890" y="153.320" xr="0" yr="0" w="146.500" h="18.000" srw="420" srh="270" i="common/wine_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView x="4.500" y="2.000" xr="0" yr="0" w="13.500" h="13.500" srw="420" srh="270" i="equips/time.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="balen_next_freetimeTxt" x="20.400" y="3.020" xr="0" yr="0" w="120.000" h="12.000" srw="420" srh="270" t="59:59:59后免费购买一个" ts="11" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
+    </ImageView>
+    <Button x="7.000" y="182.000" xr="0" yr="0" w="83.000" h="35.000" srw="420" srh="270" tag="4" nt="" ni="common/u_btn_comfirm4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="luckyAction">
+      <ImageView id="betterbuyFiveIcon" x="-3.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="420" srh="270" iv="0" i="equips/skill_word_gaojijuan5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="balenCostFiveTxt" x="34.580" y="-0.590" xr="0" yr="0" w="25.000" h="12.000" srw="420" srh="270" iv="0" t="1" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="9"/>
+        <ImageView id="betterRedPoint" x="77.000" y="-4.500" xr="0" yr="0" w="18.000" h="18.000" srw="420" srh="270" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="balenbuyFiveIcon" x="-2.500" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="420" srh="270" i="equips/skill_word_gaoji5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="balenFivePriceTxt" x="39.500" y="2.500" xr="0" yr="0" w="30.000" h="15.000" srw="420" srh="270" iv="0" t="720" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        <Label id="specLimtTxt" x="2.500" y="33.000" xr="0" yr="0" w="80.000" h="10.000" srw="420" srh="270" iv="0" t="道具不足时自动购买使用" ts="7" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        <ImageView x="2.500" y="0.000" xr="0" yr="0" w="30.000" h="30.000" srw="420" srh="270" iv="0" i="equips/shop_zhekou_8.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+    </Button>
+    <Button x="102.000" y="182.000" xr="0" yr="0" w="83.000" h="35.000" srw="420" srh="270" tag="3" nt="" ni="common/u_btn_comfirm4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="luckyAction">
+      <ImageView id="balenCostOneIcon" x="-4.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="420" srh="270" iv="0" i="equips/skill_word_gaojijuan1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="specOneBtn" x="7.500" y="7.500" xr="0" yr="0" w="20.000" h="20.000" srw="420" srh="270" iv="0" i="equips/skill_sfu2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label id="balenCostOneTxt" x="54.700" y="-0.390" xr="0" yr="0" w="25.000" h="12.000" srw="420" srh="270" iv="0" t="1" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="9"/>
+      </ImageView>
+      <ImageView id="balenfreeIcon" x="1.000" y="0.000" xr="0" yr="0" w="28.000" h="24.800" srw="420" srh="270" iv="0" i="equips/skill_free.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="420" srh="270" i="equips/skill_word_gaojijuanmian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="balenOneRedPoint" x="70.500" y="-4.500" xr="0" yr="0" w="18.000" h="18.000" srw="420" srh="270" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="balenbuyOneIcon" x="-1.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="420" srh="270" i="equips/skill_word_gaoji1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="midLimitTxt" x="3.000" y="33.000" xr="0" yr="0" w="80.000" h="10.000" srw="420" srh="270" iv="0" t="道具不足时自动购买使用" ts="7" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        <Label id="balenOnePriceTxt" x="38.000" y="3.000" xr="0" yr="0" w="30.000" h="15.000" srw="420" srh="270" iv="0" t="100" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+    </Button>
+    <ImageView id="balenOpenMovie" x="58.000" y="56.500" xr="0" yr="0" w="75.000" h="64.500" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="8.000" y="3.600" xr="0" yr="0" w="173.000" h="39.500" srw="420" srh="270" i="equips/skill_word_gaoji.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+  <Button x="69.000" y="0.000" xr="0" yr="0" w="32.000" h="34.500" srw="420" srh="270" nt="" ni="equips/skill_box_tj.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="showAction"/>
+  <Button id="exchangeBtn" x="20.000" y="-1.000" xr="0" yr="0" w="35.000" h="34.500" srw="420" srh="270" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="pointAction"/>
+  <View x="115.160" y="0.420" xr="0" yr="0" w="300.000" h="30.000" srw="420" srh="270">
+    <View id="pointIcon" x="0.000" y="8.000" xr="0" yr="0" w="60.000" h="20.000" srw="420" srh="270">
+      <ImageView x="9.840" y="5.080" xr="0" yr="0" w="56.000" h="15.000" srw="420" srh="270" i="common/u_bg_num.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="20.000" h="20.000" srw="420" srh="270" i="equips/skill_sfu1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="pointTxt" x="18.550" y="6.750" xr="0" yr="0" w="65.000" h="12.000" srw="420" srh="270" t="0" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="9"/>
+    </View>
+    <View id="gesteIcon" x="74.610" y="8.000" xr="0" yr="0" w="60.000" h="20.000" srw="420" srh="270">
+      <ImageView x="10.230" y="5.080" xr="0" yr="0" w="56.000" h="15.000" srw="420" srh="270" i="common/u_bg_num.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="20.000" h="20.000" srw="420" srh="270" i="equips/skill_sfu2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="gesteTxt" x="18.940" y="6.750" xr="0" yr="0" w="55.000" h="12.000" srw="420" srh="270" t="0" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="9"/>
+    </View>
+    <View id="betterIcon" x="149.610" y="8.000" xr="0" yr="0" w="60.000" h="20.000" srw="420" srh="270">
+      <ImageView x="10.230" y="5.080" xr="0" yr="0" w="56.000" h="15.000" srw="420" srh="270" i="common/u_bg_num.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="20.000" h="20.000" srw="420" srh="270" i="equips/skill_sfu3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="betterTxt" x="18.940" y="6.750" xr="0" yr="0" w="55.000" h="12.000" srw="420" srh="270" t="0" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="9"/>
+    </View>
+    <View id="balenIcon" x="224.610" y="10.020" xr="0" yr="0" w="60.000" h="20.000" srw="420" srh="270">
+      <ImageView x="10.230" y="3.060" xr="0" yr="0" w="56.000" h="15.000" srw="420" srh="270" i="common/u_bg_num.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="18.000" h="18.000" srw="420" srh="270" i="common/u_other_zuanshi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="coinTxt" x="18.940" y="4.730" xr="0" yr="0" w="55.000" h="12.000" srw="420" srh="270" t="0" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="9"/>
+    </View>
+  </View>
+  <View id="movieView" x="-0.450" y="0.000" xr="0" yr="0" w="420.000" h="270.000" srw="420" srh="270"/>
+  <View id="openView" x="0.000" y="0.000" xr="0" yr="0" w="420.000" h="270.000" srw="420" srh="270" iv="0"/>
+</View>

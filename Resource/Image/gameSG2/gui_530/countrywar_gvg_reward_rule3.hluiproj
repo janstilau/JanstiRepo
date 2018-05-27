@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="330.000" h="320.000" srw="330" srh="320">
+  <View id="ruleBgView" nn="View" x="0.500" y="0.000" xr="0" yr="0" w="330.000" h="408.000" srw="330" srh="320">
+    <Label nn="Label" x="70.400" y="0.000" xr="0" yr="0" w="260.000" h="12.000" srw="330" srh="320" t="对城防造成伤害      每次加5点" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    <Label nn="Label" x="70.400" y="12.000" xr="0" yr="0" w="260.000" h="12.000" srw="330" srh="320" t="占领地块或城池&#x9;      每次加5点&#x9;" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    <Label nn="360" x="27.500" y="24.000" xr="0" yr="0" w="290.000" h="12.000" srw="330" srh="320" t="地图详细规则：" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+      <ImageView nn="ImageView" x="-15.000" y="1.000" xr="0" yr="0" w="10.000" h="10.000" srw="330" srh="320" i="common/answer_pro2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label nn="Label" x="22.000" y="12.000" xr="0" yr="0" w="280.000" h="12.000" srw="330" srh="320" t="争分夺城：每座城池会每隔5分钟产出一次占领分（州城10分/" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      <Label nn="Label" x="23.900" y="24.000" xr="0" yr="0" w="270.000" h="60.000" srw="330" srh="320" t="次、邑城6分/次），单场战斗内最终排名按照城池分高低排名发放奖励，当联盟城池积分出现同分时，联盟荣誉值高的排名靠前，如所有参战联盟未攻占任一城池，则按照联盟荣誉值数量多少排名，当联盟荣誉值出现相同时，先到达该值的联盟排名靠前" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      <Label nn="Label" x="23.900" y="84.000" xr="0" yr="0" w="270.000" h="60.000" srw="330" srh="320" t="皇城争霸：单场战斗内攻占洛阳的联盟直接获得第一名，剩余联盟则按照占城数量多少排名，当出现占城数量相同时，则先到该数量的联盟排名靠前，如所有参战联盟未攻占任一城池，则按照联盟荣誉值数量多少排名，当联盟荣誉值出现相同时，先到达该值的联盟排名靠前" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    </Label>
+    <Label nn="504" x="27.900" y="168.500" xr="0" yr="0" w="290.000" h="12.000" srw="330" srh="320" t="战场只可建造战场特殊建筑-战场驻军营，其他建筑将不可建造" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+      <ImageView nn="ImageView" x="-15.000" y="1.000" xr="0" yr="0" w="10.000" h="10.000" srw="330" srh="320" i="common/answer_pro2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Label>
+    <Label nn="516" x="28.000" y="181.000" xr="0" yr="0" w="290.000" h="24.000" srw="330" srh="320" t="联盟实力值根据联盟势力、联盟成员战力、联盟科技等级及战场积分等共同决定，联盟实力值每日凌晨5点刷新" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+      <ImageView nn="ImageView" x="-15.000" y="1.000" xr="0" yr="0" w="10.000" h="10.000" srw="330" srh="320" i="common/answer_pro2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Label>
+    <Label nn="鐜╂硶姒傝堪" x="2.400" y="205.500" xr="0" yr="0" w="300.000" h="10.000" srw="330" srh="320" t="【决战洛阳】其他规则" ts="10" tctl="rgb(0, 86, 174)" tctr="rgb(0, 86, 174)" tcbl="rgb(0, 86, 174)" tcbr="rgb(0, 86, 174)" sc="black" ta="17">
+      <Label nn="Label" x="25.000" y="14.000" xr="0" yr="0" w="290.000" h="24.000" srw="330" srh="320" t="每周一、周三战场开启期间，本服【攻城略地】中将无法执行出征、响应出征类集结等操作，同时无法执行退出联盟操作" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <ImageView nn="ImageView" x="-15.000" y="1.000" xr="0" yr="0" w="10.000" h="10.000" srw="330" srh="320" i="common/answer_pro2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Label>
+      <Label nn="Label" x="25.000" y="38.500" xr="0" yr="0" w="290.000" h="24.000" srw="330" srh="320" t="周三开放战场时，如遇叛军攻城活动，叛军活动将自动暂停，周六的叛军攻城翻牌奖励翻倍" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <ImageView nn="ImageView" x="-15.000" y="1.000" xr="0" yr="0" w="10.000" h="10.000" srw="330" srh="320" i="common/answer_pro2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Label>
+      <Label nn="Label" x="25.000" y="63.000" xr="0" yr="0" w="290.000" h="24.000" srw="330" srh="320" t="在战场地图内，队伍的行动力和配置将单独计算，在进入战场前可自由改变队伍搭配，战斗开始后将只可在战场主城内更换将领" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <ImageView nn="ImageView" x="-15.000" y="1.000" xr="0" yr="0" w="10.000" h="10.000" srw="330" srh="320" i="common/answer_pro2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Label>
+      <Label nn="Label" x="25.000" y="87.500" xr="0" yr="0" w="290.000" h="24.000" srw="330" srh="320" t="在战场内，战场主城被摧毁时，联盟占领的所有地盘将全部重置为未占领状态，同时清空占城数和占领分，所有队伍将无法继续行动" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <ImageView nn="ImageView" x="-15.000" y="1.000" xr="0" yr="0" w="10.000" h="10.000" srw="330" srh="320" i="common/answer_pro2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Label>
+      <Label nn="Label" x="25.000" y="112.000" xr="0" yr="0" w="290.000" h="24.000" srw="330" srh="320" t="联盟内只有非见习成员才可进入战场，处于入盟过渡期的玩家，可进入战场，但无法发出任何队伍行动指令" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <ImageView nn="ImageView" x="-15.000" y="1.000" xr="0" yr="0" w="10.000" h="10.000" srw="330" srh="320" i="common/answer_pro2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Label>
+      <Label nn="Label" x="25.000" y="136.500" xr="0" yr="0" w="290.000" h="24.000" srw="330" srh="320" t="战场匹配时，每个段位内积分较低的联盟可能会出现不满两个联盟对手的情况" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <ImageView nn="ImageView" x="-15.000" y="1.000" xr="0" yr="0" w="10.000" h="10.000" srw="330" srh="320" i="common/answer_pro2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Label>
+      <Label nn="Label" x="25.000" y="161.000" xr="0" yr="0" w="290.000" h="36.000" srw="330" srh="320" t="赛季结束时，若两个联盟战场积分出现相同分时，按照以下优先级进行排序，赛季中获得单场第一数&gt;赛季中获得的单场第二数&gt;赛季总荣誉值" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <ImageView nn="ImageView" x="-15.000" y="1.000" xr="0" yr="0" w="10.000" h="10.000" srw="330" srh="320" i="common/answer_pro2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Label>
+    </Label>
+  </View>
+</View>

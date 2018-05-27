@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="230.000" h="178.000" srw="230" srh="178">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="225.500" h="176.000" srw="230" srh="178" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="49.750" y="10.870" xr="0" yr="0" w="126.000" h="19.000" srw="230" srh="178" i="common/u_bg_title2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="tishiTitle" nn="Label" x="0.000" y="3.000" xr="0" yr="0" w="126.000" h="12.000" srw="230" srh="178" t="提 示" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView nn="ImageView" x="14.250" y="42.800" xr="0" yr="0" w="197.000" h="85.000" srw="230" srh="178" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_tishi_title_" nn="Label" x="2.540" y="2.850" xr="0" yr="0" w="190.000" h="45.000" srw="230" srh="178" t="        亲爱的主公，您当前的战功已接近当前官职上限，无法找回正常数量的战功，是否继续找回？" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(52, 0, 0)" ta="17"/>
+    </ImageView>
+    <Button id="alertBtn" nn="Button" x="58.040" y="97.130" xr="0" yr="0" w="22.000" h="22.000" srw="230" srh="178" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="alertBtnAction">
+      <Label nn="Label" x="25.880" y="4.520" xr="0" yr="0" w="100.000" h="12.000" srw="230" srh="178" t="本次登陆不再提示" ts="10" tctl="black" tctr="black" tcbl="black" tcbr="black" sc="black" ta="9"/>
+      <ImageView id="alertImg2" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="22.000" h="22.000" srw="230" srh="178" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="alertImg1" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="22.000" h="22.000" srw="230" srh="178" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+  </ImageView>
+  <Button nn="Button" x="201.290" y="0.010" xr="0" yr="0" w="26.000" h="26.000" srw="230" srh="178" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17" act="closeAction"/>
+  <View id="shopCancelView" nn="View" x="13.660" y="135.370" xr="0" yr="0" w="200.000" h="35.000" srw="230" srh="178">
+    <Button nn="Button" x="118.000" y="2.630" xr="0" yr="0" w="60.000" h="32.000" srw="230" srh="178" nt="确 定" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="确定" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="sureAction"/>
+    <Button nn="Button" x="20.000" y="2.630" xr="0" yr="0" w="60.000" h="32.000" srw="230" srh="178" nt="取 消" ni="common/smithy_btn1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="cancelAction"/>
+  </View>
+</View>

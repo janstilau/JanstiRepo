@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="108.000" h="56.000" srw="108" srh="56" tag="10001">
+  <Button x="2.000" y="2.000" xr="0" yr="0" w="104.000" h="52.000" srw="108" srh="56" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="touchCellAction"/>
+  <ImageView x="2.000" y="2.000" xr="0" yr="0" w="104.000" h="52.000" srw="108" srh="56" i="mount/horse_item_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="m_icon_bg" x="2.500" y="7.000" xr="0" yr="0" w="36.000" h="36.000" srw="108" srh="56" i="common/u_other_general_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_horse_icon_img" x="0.000" y="0.000" xr="0" yr="0" w="36.000" h="36.000" srw="108" srh="56" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_horse_level" x="4.500" y="22.000" xr="0" yr="0" w="30.000" h="15.000" srw="108" srh="56" t="Lv.30" ts="8" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="20"/>
+      <ImageView id="m_horse_bang_img" x="0.500" y="23.000" xr="0" yr="0" w="12.000" h="12.000" srw="108" srh="56" i="mount/horse_icon_13.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_quality_img" x="18.000" y="2.000" xr="0" yr="0" w="22.000" h="12.500" srw="108" srh="56" i="mount/horse_sign_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="-0.500" y="0.500" xr="0" yr="0" w="20.000" h="20.000" srw="108" srh="56" iv="0" i="common/u_tab_sel_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="-43.000" y="-7.500" xr="0" yr="0" w="100.000" h="30.000" srw="108" srh="56" t="1" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView id="m_inherent_skill_bg_3" x="58.000" y="0.500" xr="0" yr="0" w="15.000" h="15.000" srw="108" srh="56" iv="0" i="common/skill_k1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_inherent_skill_icon_3" x="0.000" y="0.000" xr="0" yr="0" w="16.000" h="16.000" srw="108" srh="56" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_inherent_skill_bg_2" x="73.000" y="0.500" xr="0" yr="0" w="15.000" h="15.000" srw="108" srh="56" iv="0" i="common/skill_k1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_inherent_skill_icon_2" x="0.000" y="0.000" xr="0" yr="0" w="16.000" h="16.000" srw="108" srh="56" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_inherent_skill_bg_1" x="88.000" y="0.500" xr="0" yr="0" w="15.000" h="15.000" srw="108" srh="56" iv="0" i="common/skill_k1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_inherent_skill_icon_1" x="0.000" y="0.000" xr="0" yr="0" w="16.000" h="16.000" srw="108" srh="56" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <Label id="m_horse_name" x="40.000" y="4.000" xr="0" yr="0" w="60.000" h="15.000" srw="108" srh="56" t="坐骑名六个字" ts="8" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    <Label id="m_speed_lab" x="40.000" y="31.000" xr="0" yr="0" w="70.000" h="15.000" srw="108" srh="56" t="移动速度增加5%" ts="7" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="17"/>
+    <ImageView x="40.000" y="21.000" xr="0" yr="0" w="16.000" h="9.000" srw="108" srh="56" i="mount/horse_word_8.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_grade_img" x="17.060" y="0.500" xr="0" yr="0" w="16.000" h="8.000" srw="108" srh="56" i="mount/horse_score_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_grade_lab" x="30.980" y="-1.330" xr="0" yr="0" w="35.000" h="10.000" srw="108" srh="56" t="(9999)" ts="8" tctl="rgb(255, 96, 0)" tctr="rgb(255, 96, 0)" tcbl="rgb(255, 96, 0)" tcbr="rgb(255, 96, 0)" sc="black" ta="17"/>
+    </ImageView>
+  </ImageView>
+</View>

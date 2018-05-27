@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="128" h="196" nn="View">
+  <ImageView x="0" y="0" xr="0" yr="0" w="128" h="196" nn="ImageView" i="countrywar_gvg/countrywar_gvg_bg7.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+    <Button x="19.5" y="157" xr="0" yr="0" w="91.5" h="32" nn="Button" ni="countrywar_gvg/countrywar_gvg_btn1.png" nic="0,0,0,0" state="0" act="onReceive" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Label id="allianceNameLab" x="12" y="52" xr="0" yr="0" w="100" h="30" nn="Label" t="联盟名六个字" ts="15" tctl="rgb(255,96,0)" tctr="rgb(255,96,0)" tcbl="rgb(255,96,0)" tcbr="rgb(255,96,0)" sc="rgb(0,0,0)" ta="18"/>
+    <Label id="holdTimesLab" x="16" y="21" xr="0" yr="0" w="100" h="30" nn="Label" t="第几届【决战洛阳】冠军" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+  </ImageView>
+</View>

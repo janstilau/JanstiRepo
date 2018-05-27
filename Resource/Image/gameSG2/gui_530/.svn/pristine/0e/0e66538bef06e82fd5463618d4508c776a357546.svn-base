@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="293.000" h="254.000" srw="293" srh="254">
+  <ImageView x="0.000" y="0.000" xr="0" yr="0" w="293.000" h="63.000" srw="293" srh="254" i="common/activity_7days_bg_title.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="9.000" y="-4.500" xr="0" yr="0" w="256.000" h="22.500" srw="293" srh="254" i="activity_beizhannanjun/ui_activity_beizhannanjun_word.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+  <Label x="10.500" y="18.000" xr="0" yr="0" w="100.000" h="10.000" srw="293" srh="254" t="活动规则：" ts="9" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17"/>
+  <Label id="yydb_rule1" x="56.000" y="18.000" xr="0" yr="0" w="250.000" h="10.000" srw="293" srh="254" t="南郡之战即将开启，根据三个郡的服务器开放时间差异，" ts="9" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17"/>
+  <Label id="yydb_rule2" x="56.000" y="32.000" xr="0" yr="0" w="210.000" h="10.000" srw="293" srh="254" t="特此为您准备-------备战南郡任务。" ts="9" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17"/>
+  <Label x="10.500" y="46.500" xr="0" yr="0" w="100.000" h="10.000" srw="293" srh="254" t="活动时间：" ts="9" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17"/>
+  <Label id="bznj_date" x="56.000" y="46.500" xr="0" yr="0" w="210.000" h="10.000" srw="293" srh="254" t="2017年10月1日~2017年10月7日" ts="9" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17"/>
+  <View id="bznj_bg" x="7.000" y="67.380" xr="0" yr="0" w="279.000" h="180.000" srw="293" srh="254"/>
+</View>

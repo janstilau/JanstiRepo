@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="184" h="233" nn="View">
+  <ImageView x="0" y="0" xr="0" yr="0" w="184" h="233" nn="ImageView" i="common/u_bg_2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="17.25" y="26.799999237060547" xr="0" yr="0" w="152" h="187" nn="ImageView" i="common/u_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="4" y="9.5" xr="0" yr="0" w="145" h="56" nn="ImageView" i="common/u_bg_7.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="6.300000190734863" y="5.5" xr="0" yr="0" w="45" h="45" i="common/ui_common_special_goods5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="51.400001525878906" y="7.599999904632568" xr="0" yr="0" w="74.80000305175781" h="15" nn="Label" t="道具名六个字" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+        <ImageView x="54.5" y="31" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/contest_jifen.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="76" y="34" xr="0" yr="0" w="29.299999237060547" h="15" nn="Label" t="9999" ts="11" tctl="rgb(145,55,0)" tctr="rgb(145,55,0)" tcbl="rgb(145,55,0)" tcbr="rgb(145,55,0)" sc="rgb(0,0,0)" ta="17"/>
+      </ImageView>
+      <View x="1.5" y="73" xr="0" yr="0" w="150" h="30" nn="View">
+        <Button x="8" y="0.5" xr="0" yr="0" w="30" h="30" nn="Button" ni="common/u_btn_minus.png" nic="0,0,0,0" state="0" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        <Button x="113" y="1" xr="0" yr="0" w="30" h="30" nn="Button" ni="common/u_btn_plus_1.png" nic="0,0,0,0" state="0" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        <Button x="42" y="2.5" xr="0" yr="0" w="68" h="29" nn="Button" ni="common/u_bg_shurukuang.png" nic="0,0,0,0" state="0" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+          <Label x="19.5" y="4.5" xr="0" yr="0" w="30" h="20" nn="Label" t="999" ts="11" tctl="rgb(145,55,0)" tctr="rgb(145,55,0)" tcbl="rgb(145,55,0)" tcbr="rgb(145,55,0)" sc="rgb(0,0,0)" ta="18"/>
+        </Button>
+      </View>
+      <View x="15.5" y="108" xr="0" yr="0" w="127.19999694824219" h="30" nn="View">
+        <Label x="-6" y="0" xr="0" yr="0" w="30" h="30" nn="Label" t="总价" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+        <ImageView x="36.5" y="7" xr="0" yr="0" w="81" h="16" nn="ImageView" i="common/u_bg_num.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label x="15.800000190734863" y="3.5" xr="0" yr="0" w="38.79999923706055" h="10" nn="Label" t="99999" ts="11" tctl="rgb(145,55,0)" tctr="rgb(145,55,0)" tcbl="rgb(145,55,0)" tcbr="rgb(145,55,0)" sc="rgb(0,0,0)" ta="18"/>
+        </ImageView>
+        <ImageView x="24.5" y="2" xr="0" yr="0" w="26" h="26" nn="ImageView" i="common/u_bg_cost_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <ImageView x="4" y="3.5" xr="0" yr="0" w="20" h="20" nn="ImageView" i="common/contest_jifen.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        </ImageView>
+      </View>
+    </ImageView>
+  </ImageView>
+  <Button x="156.7899932861328" y="1.0099999904632568" xr="0" yr="0" w="26" h="26" nn="Button" ni="common/u_btn_close1.png" nic="0,0,0,0" zot="1" state="0" act="closeAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="m_tishi_sureBtn" x="43.5" y="173.5" xr="0" yr="0" w="100" h="32" nn="Button" nt="确定兑换" ni="common/u_btn_comfirm1.png" nic="0,0,0,0" st="确定" zot="1" state="0" act="sureAction" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(115,9,1)" ta="18"/>
+</View>

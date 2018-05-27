@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="294.5" h="252">
+  <View x="14.5" y="1" xr="0" yr="0" w="280" h="250">
+    <ImageView x="-11.5" y="4" xr="0" yr="0" w="287.5" h="54" i="common/activity_7days_bg_title.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView id="ad_img" x="6" y="-3" xr="0" yr="0" w="274" h="22" i="activity_daojuxiaohao/ui_activity_daojuxiaohao_word.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="7.5" y="19.5" xr="0" yr="0" w="181" h="10" t="活动时间：" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17">
+        <Label id="_open_time_lab" x="43" y="0" xr="0" yr="0" w="181" h="10" t="" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17"/>
+      </Label>
+      <Label x="7.5" y="30.5" xr="0" yr="0" w="181" h="10" t="活动内容：" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17">
+        <Label x="43" y="0" xr="0" yr="0" w="240" h="20" t="每日消耗指定物品即可领取奖励，交易行、存储联盟仓库、分解、合成等转移道具方式不计算，仅计算道具正常消耗。" ts="9" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17"/>
+      </Label>
+    </ImageView>
+  </View>
+  <ImageView x="2.5" y="86" xr="0" yr="0" w="289" h="165" i="common/u_bg_5.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ScrollView id="panel_1" x="5" y="4.5" xr="0" yr="0" w="279" h="160"/>
+    <ScrollView id="panel_2" x="5" y="4.5" xr="0" yr="0" w="279" h="160"/>
+    <ScrollView id="panel_3" x="5" y="4.5" xr="0" yr="0" w="279" h="160"/>
+    <ScrollView id="panel_4" x="5" y="4.5" xr="0" yr="0" w="279" h="160"/>
+    <ScrollView id="panel_5" x="5" y="4.5" xr="0" yr="0" w="279" h="160"/>
+  </ImageView>
+  <Button id="m_check_1" x="10" y="62" xr="0" yr="0" w="51" h="25" nic="0,0,0,0" state="0" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView x="0" y="0" xr="0" yr="0" w="51" h="25" tag="10" i="achievement_4/activity_tuangou_btn_select.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_title_1" x="0" y="8" xr="0" yr="0" w="51" h="12" t="灵兽丹" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="0" y="0" xr="0" yr="0" w="51" h="25" iv="0" tag="11" i="achievement_4/activity_tuangou_btn_unselect.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_n_title_1" x="0" y="8.5" xr="0" yr="0" w="51" h="12" t="灵兽丹" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="41" y="0.3700000047683716" xr="0" yr="0" w="15" h="15" tag="12" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <Button id="m_check_2" x="66" y="62" xr="0" yr="0" w="51" h="25" nic="0,0,0,0" state="0" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView x="0" y="0" xr="0" yr="0" w="51" h="25" tag="10" i="achievement_4/activity_tuangou_btn_select.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_title_2" x="0" y="8" xr="0" yr="0" w="51" h="12" t="蓝田玉" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="0" y="0" xr="0" yr="0" w="51" h="25" tag="11" i="achievement_4/activity_tuangou_btn_unselect.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_n_title_2" x="0" y="8.5" xr="0" yr="0" w="51" h="12" t="蓝田玉" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="41" y="0.3700000047683716" xr="0" yr="0" w="15" h="15" tag="12" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <Button id="m_check_3" x="121" y="62" xr="0" yr="0" w="51" h="25" nic="0,0,0,0" state="0" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView x="0" y="0" xr="0" yr="0" w="51" h="25" tag="10" i="achievement_4/activity_tuangou_btn_select.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_title_3" x="0" y="8" xr="0" yr="0" w="51" h="12" t="坐骑精魂" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="0" y="0" xr="0" yr="0" w="51" h="25" tag="11" i="achievement_4/activity_tuangou_btn_unselect.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_n_title_3" x="0" y="8.5" xr="0" yr="0" w="51" h="12" t="坐骑精魂" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="41" y="0.3700000047683716" xr="0" yr="0" w="15" h="15" tag="12" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <Button id="m_check_4" x="176" y="62" xr="0" yr="0" w="51" h="25" nic="0,0,0,0" state="0" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView x="0" y="0" xr="0" yr="0" w="51" h="25" tag="10" i="achievement_4/activity_tuangou_btn_select.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_title_4" x="0" y="8" xr="0" yr="0" w="51" h="12" t="黄金" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="0" y="0" xr="0" yr="0" w="51" h="25" tag="11" i="achievement_4/activity_tuangou_btn_unselect.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_n_title_4" x="0" y="8.5" xr="0" yr="0" w="51" h="12" t="黄金" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="41" y="0.3700000047683716" xr="0" yr="0" w="15" h="15" tag="12" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <Button id="m_check_5" x="231" y="62" xr="0" yr="0" w="51" h="25" nic="0,0,0,0" state="0" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView x="0" y="0" xr="0" yr="0" w="51" h="25" tag="10" i="achievement_4/activity_tuangou_btn_select.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_title_5" x="0" y="8" xr="0" yr="0" w="51" h="12" t="技能" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="0" y="0" xr="0" yr="0" w="51" h="25" tag="11" i="achievement_4/activity_tuangou_btn_unselect.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_n_title_5" x="0" y="8.5" xr="0" yr="0" w="51" h="12" t="技能" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="41" y="0.3700000047683716" xr="0" yr="0" w="15" h="15" tag="12" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+</View>

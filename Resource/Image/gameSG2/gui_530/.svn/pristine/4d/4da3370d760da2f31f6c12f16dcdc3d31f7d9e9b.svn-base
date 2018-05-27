@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="184.000" h="233.000" srw="184" srh="233">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="184.000" h="233.000" srw="184" srh="233" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="17.250" y="26.800" xr="0" yr="0" w="152.000" h="187.000" srw="184" srh="233" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="4.000" y="9.500" xr="0" yr="0" w="145.000" h="56.000" srw="184" srh="233" i="common/u_bg_7.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <View nn="View" x="6.500" y="7.500" xr="0" yr="0" w="40.000" h="40.000" srw="184" srh="233"/>
+        <Label nn="Label" x="42.500" y="7.500" xr="0" yr="0" w="100.000" h="15.000" srw="184" srh="233" t="道具名称八八个字" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <ImageView nn="ImageView" x="45.500" y="23.500" xr="0" yr="0" w="20.000" h="20.000" srw="184" srh="233" i="countrywar_gve/countrywar_gve_bg6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="23.000" y="2.500" xr="0" yr="0" w="60.000" h="15.000" srw="184" srh="233" t="2000" ts="11" tctl="rgb(145, 55, 0)" tctr="rgb(145, 55, 0)" tcbl="rgb(145, 55, 0)" tcbr="rgb(145, 55, 0)" sc="black" ta="17"/>
+        </ImageView>
+      </ImageView>
+      <View nn="View" x="1.500" y="73.000" xr="0" yr="0" w="150.000" h="30.000" srw="184" srh="233">
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="30.000" srw="184" srh="233" t="数量" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Button nn="Button" x="27.500" y="0.000" xr="0" yr="0" w="30.000" h="30.000" srw="184" srh="233" nt="" ni="common/u_btn_minus.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <Button nn="Button" x="104.000" y="0.000" xr="0" yr="0" w="30.000" h="30.000" srw="184" srh="233" nt="" ni="common/u_btn_plus_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <Button nn="Button" x="57.500" y="2.500" xr="0" yr="0" w="46.000" h="29.000" srw="184" srh="233" nt="" ni="common/u_bg_shurukuang.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
+          <Label nn="Label" x="9.000" y="4.500" xr="0" yr="0" w="30.000" h="20.000" srw="184" srh="233" t="999" ts="11" tctl="rgb(145, 55, 0)" tctr="rgb(145, 55, 0)" tcbl="rgb(145, 55, 0)" tcbr="rgb(145, 55, 0)" sc="black" ta="18"/>
+        </Button>
+      </View>
+      <View nn="View" x="1.500" y="108.000" xr="0" yr="0" w="150.000" h="30.000" srw="184" srh="233">
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="30.000" srw="184" srh="233" t="总价" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <ImageView nn="ImageView" x="36.500" y="7.000" xr="0" yr="0" w="81.000" h="16.000" srw="184" srh="233" i="common/u_bg_num.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="19.000" y="3.500" xr="0" yr="0" w="60.000" h="10.000" srw="184" srh="233" t="99999" ts="11" tctl="rgb(145, 55, 0)" tctr="rgb(145, 55, 0)" tcbl="rgb(145, 55, 0)" tcbr="rgb(145, 55, 0)" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="29.500" y="2.000" xr="0" yr="0" w="26.000" h="26.000" srw="184" srh="233" i="common/u_bg_cost_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="4.000" y="3.500" xr="0" yr="0" w="20.000" h="20.000" srw="184" srh="233" i="countrywar_gve/countrywar_gve_bg6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+      </View>
+    </ImageView>
+  </ImageView>
+  <Button nn="Button" x="156.790" y="1.010" xr="0" yr="0" w="26.000" h="26.000" srw="184" srh="233" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+  <Button id="m_tishi_sureBtn" nn="Button" x="43.500" y="173.500" xr="0" yr="0" w="100.000" h="32.000" srw="184" srh="233" nt="确定兑换" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="确定" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18" act="sureAction"/>
+</View>

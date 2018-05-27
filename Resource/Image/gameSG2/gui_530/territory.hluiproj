@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="-3.5" y="0" xr="0" yr="0" w="480" h="320">
+  <ImageView id="wjBgImg" x="15.399999618530273" y="23.530000686645508" xr="0" yr="0" w="433.5" h="286" i="common/u_bg_1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <Button id="architectureBtn" x="444.239990234375" y="147.8300018310547" xr="0" yr="0" w="35" h="75" tag="52" nt="建&#xA;筑" ni="common/a_tag_d.png" nic="0,0,0,0" si="common/a_tag_s.png" state="0" act="menuBtnAction" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="buildingRedPoint" x="21.5" y="-3" xr="0" yr="0" w="16" h="16" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <Button id="territoryBtn" x="443.45001220703125" y="65.83000183105469" xr="0" yr="0" w="35" h="75" tag="51" nt="个&#xA;人&#xA;领&#xA;地" ni="common/a_tag_d.png" nic="0,0,0,0" si="common/a_tag_s.png" state="1" act="menuBtnAction" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="territoryMenuBtnRedPoint" x="21.5" y="-3" xr="0" yr="0" w="16" h="16" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <View id="architectureView" x="20.1299991607666" y="35.43000030517578" xr="0" yr="0" w="423" h="270">
+    <ScrollView id="architectureScrollView" x="6" y="3" xr="0" yr="0" w="410" h="260"/>
+  </View>
+  <View id="territoryView" x="0" y="0" xr="0" yr="0" w="480" h="320">
+    <View id="territoryDetailView" x="4.5" y="0" xr="0" yr="0" w="480" h="320">
+      <ImageView id="territoryBgImg1" x="27.5" y="40.40999984741211" xr="0" yr="0" w="400.5" h="120" i="territory/territory_bg_1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView id="attackBtn" x="3.5" y="2.5" xr="0" yr="0" w="72" h="20" i="territory/territory_bg_10.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+          <ImageView x="19" y="4.5" xr="0" yr="0" w="31" h="11.5" i="territory/territory_bg_9.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <ImageView x="52" y="7" xr="0" yr="0" w="4.5" h="11.5" tag="200" i="territory/territory_bg_8.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <ImageView x="57.5" y="7" xr="0" yr="0" w="4.5" h="11.5" tag="201" i="territory/territory_bg_8.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <ImageView x="63" y="7" xr="0" yr="0" w="4.5" h="11.5" tag="202" i="territory/territory_bg_8.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        </ImageView>
+        <Button id="outputDescBtn" x="243" y="78.5" xr="0" yr="0" w="36" h="40" ni="territory/territory_btn_1.png" nic="0,0,0,0" si="territory/territory_btn_1.png" state="0" act="outputDescBtnAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      </ImageView>
+      <ImageView x="308.7799987792969" y="45.27000045776367" xr="0" yr="0" w="116" h="110" i="territory/territory_bg_2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="6.079999923706055" y="7.739999771118164" xr="0" yr="0" w="68" h="14.5" i="territory/territory_label_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label id="territoryCount" x="41.63999938964844" y="-0.3400000035762787" xr="0" yr="0" w="15" h="15" t="5" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        </ImageView>
+        <ImageView x="5.579999923706055" y="22.239999771118164" xr="0" yr="0" w="68" h="14.5" i="territory/territory_label_3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label id="territoryMaxCount" x="42.13999938964844" y="0.1599999964237213" xr="0" yr="0" w="15" h="15" t="88" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        </ImageView>
+        <Label id="territoryOfficeDesc" x="5.099999904632568" y="41.63999938964844" xr="0" yr="0" w="107" h="30" t="" ts="15" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="9"/>
+        <Button id="territoryEventLogBtn" x="19.899999618530273" y="77.05999755859375" xr="0" yr="0" w="75" h="25" nt="领地事件记录" ni="common/a_bg4.png" nic="0.5,0.5,0,0" state="0" act="territoryEventLogBtnAction" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18">
+          <ImageView id="territoryEventBtnRedPoint" x="60.810001373291016" y="-2" xr="0" yr="0" w="16" h="16" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        </Button>
+      </ImageView>
+      <ImageView x="29.780000686645508" y="30.90999984741211" xr="0" yr="0" w="280" h="140" iv="0" i="territory/territory_bg_4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="29.780000686645508" y="30.90999984741211" xr="0" yr="0" w="280" h="140" iv="0" i="territory/territory_bg_3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView id="territoryLandsBg" x="29.780000686645508" y="35.90999984741211" xr="0" yr="0" w="280" h="140" i="territory/territory_bg_4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="111" y="0.5" xr="0" yr="0" w="57" h="28" tag="-20002" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="82.16999816894531" y="14.010000228881836" xr="0" yr="0" w="57" h="28" tag="-20001" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="53.56999969482422" y="28.5" xr="0" yr="0" w="57" h="28" tag="-20000" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="24.270000457763672" y="41.880001068115234" xr="0" yr="0" w="57" h="28" tag="-19999" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="-3.7300000190734863" y="56" xr="0" yr="0" w="57" h="28" tag="-19998" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="140.27999877929688" y="14.220000267028809" xr="0" yr="0" w="57" h="28" tag="-10002" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="111" y="28.5" xr="0" yr="0" w="57" h="28" tag="-10001" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="82.80000305175781" y="42.06999969482422" xr="0" yr="0" w="57" h="28" tag="-10000" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="53.709999084472656" y="56" xr="0" yr="0" w="57" h="28" tag="-9999" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="169.42999267578125" y="28.5" xr="0" yr="0" w="57" h="28" tag="-2" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="140.5500030517578" y="41.93000030517578" xr="0" yr="0" w="57" h="28" tag="-1" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView id="territoryCenterView" x="111" y="56" xr="0" yr="0" w="57" h="28" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="82.36000061035156" y="70.5199966430664" xr="0" yr="0" w="57" h="28" tag="1" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="198.14999389648438" y="42.09000015258789" xr="0" yr="0" w="57" h="28" tag="9998" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="169.63999938964844" y="56" xr="0" yr="0" w="57" h="28" tag="9999" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="140.5500030517578" y="69.87999725341797" xr="0" yr="0" w="57" h="28" tag="10000" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="111" y="83.5" xr="0" yr="0" w="57" h="28" tag="10001" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="227.19000244140625" y="56" xr="0" yr="0" w="57" h="28" tag="19998" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="197.9600067138672" y="70.19000244140625" xr="0" yr="0" w="57" h="28" tag="19999" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="168.58999633789062" y="83.5" xr="0" yr="0" w="57" h="28" tag="20000" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="140.17999267578125" y="97.58999633789062" xr="0" yr="0" w="57" h="28" tag="20001" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="24.690000534057617" y="70.37999725341797" xr="0" yr="0" w="57" h="28" tag="-9998" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="54.349998474121094" y="83.5" xr="0" yr="0" w="57" h="28" tag="2" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="82.87000274658203" y="97.44999694824219" xr="0" yr="0" w="57" h="28" tag="10002" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+        <ImageView x="111" y="111" xr="0" yr="0" w="57" h="28" tag="20002" i="territory/territory_bg_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Button x="33.5" y="-8.5" xr="0" yr="0" w="28" h="25" iv="0" tag="100" ni="common/u_bg_null.png" nic="0,0,0,0" state="0" act="AcquisitionAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+            <Label x="0" y="-3.5" xr="0" yr="0" w="28" h="20" t="可收取" ts="7" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </Button>
+        </ImageView>
+      </ImageView>
+      <ImageView x="109.19000244140625" y="160.25999450683594" xr="0" yr="0" w="100" h="6.5" i="territory/territory_bg_7.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="27.5" y="165.52999877929688" xr="0" yr="0" w="400" h="134" i="common/general_bg_word.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="10" y="2" xr="0" yr="0" w="42" h="12" i="territory/territory_label_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="241.5" y="2" xr="0" yr="0" w="42" h="12" i="territory/territory_label_4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="144.5" y="2" xr="0" yr="0" w="42" h="12" i="territory/territory_label_5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Button x="52.5" y="0.5" xr="0" yr="0" w="15" h="15" ni="common/u_btn_zhushi.png" nic="0,0,0,0" state="0" act="territoryTipAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        <ImageView x="0" y="14.550000190734863" xr="0" yr="0" w="400" h="1.5" i="common/u_bg_fengexian2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <View x="2" y="17" xr="0" yr="0" w="396" h="114">
+          <ScrollView id="territoryScrollView" x="0" y="0" xr="0" yr="0" w="396" h="114"/>
+          <ImageView id="territoryCopyCell" x="0" y="0" xr="0" yr="0" w="396" h="32" i="common/general_bg_skill1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+            <ImageView x="6" y="1" xr="0" yr="0" w="30" h="30" tag="301" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+            <Label x="39.599998474121094" y="9.520000457763672" xr="0" yr="0" w="45" h="10" tag="304" t="风水宝地" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+            <Label x="39.81999969482422" y="5.380000114440918" xr="0" yr="0" w="45" h="10" tag="302" t="风水宝地" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+            <ImageView x="44.31999969482422" y="15.649999618530273" xr="0" yr="0" w="33.5" h="13" tag="303" i="territory/territory_label_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+            <ImageView x="129.4499969482422" y="4.170000076293945" xr="0" yr="0" w="14" h="14" tag="305" i="common/bing_yubeibing.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+              <ImageView x="23" y="0" xr="0" yr="0" w="14" h="14" i="common/bing_yubeibing.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+              <ImageView x="42" y="0" xr="0" yr="0" w="14" h="14" tag="1" i="common/bing_yubeibing.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+            </ImageView>
+            <Label x="141.66000366210938" y="5.78000020980835" xr="0" yr="0" w="60" h="10" tag="306" t="999999/分钟" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+            <Label x="88.19999694824219" y="18.299999237060547" xr="0" yr="0" w="120" h="10" tag="307" t="连续生产2小时后收获奖励" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="20"/>
+            <ImageView x="209.10000610351562" y="17.290000915527344" xr="0" yr="0" w="14" h="14" tag="308" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+            <Label x="110.72000122070312" y="9.140000343322754" xr="0" yr="0" w="100" h="10" tag="309" t="中断/暂停收益" ts="9" tctl="rgb(255,0,72)" tctr="rgb(255,0,72)" tcbl="rgb(255,0,72)" tcbr="rgb(255,0,72)" sc="rgb(0,0,0)" ta="18"/>
+            <Label x="219.85000610351562" y="12.079999923706055" xr="0" yr="0" w="80" h="10" tag="310" t="生产99分钟" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+            <Label x="220.35000610351562" y="5.579999923706055" xr="0" yr="0" w="80" h="10" tag="311" t="生产99分钟" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+            <Label x="225.66000366210938" y="18.280000686645508" xr="0" yr="0" w="35" h="10" tag="312" t="可获取" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+            <ImageView x="257.1000061035156" y="17.290000915527344" xr="0" yr="0" w="14" h="14" tag="313" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+            <Label x="270.1600036621094" y="18.280000686645508" xr="0" yr="0" w="30" h="10" tag="314" t="*1111" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+            <Label x="199.64999389648438" y="9.140000343322754" xr="0" yr="0" w="120" h="10" tag="315" t="被联盟名六个字占领/未占领" ts="9" tctl="rgb(255,0,72)" tctr="rgb(255,0,72)" tcbl="rgb(255,0,72)" tcbr="rgb(255,0,72)" sc="rgb(0,0,0)" ta="18"/>
+            <Label x="314.7900085449219" y="11.720000267028809" xr="0" yr="0" w="78" h="10" tag="316" t="59:59:59" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="9"/>
+            <Button x="323.5400085449219" y="2.380000114440918" xr="0" yr="0" w="65" h="25" iv="0" tag="318" nt="前往收获" ni="common/countrywar_ab_btn1.png" nic="0.5,0.5,0,0" state="0" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+            <Button x="323.5400085449219" y="2.380000114440918" xr="0" yr="0" w="65" h="25" tag="317" nt="占领" ni="common/countrywar_ab_btn1.png" nic="0.5,0.5,0,0" state="0" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+            <Button id="outputSpeedBtn" x="117.9800033569336" y="-0.25999999046325684" xr="0" yr="0" w="100" h="30" tag="321" nic="0,0,0,0" state="0" act="outputSpeedBtnAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+          </ImageView>
+        </View>
+      </ImageView>
+      <View id="buildingView" x="29.989999771118164" y="181.5800018310547" xr="0" yr="0" w="400" h="119" iv="0">
+        <ImageView x="25.34000015258789" y="-1.9299999475479126" xr="0" yr="0" w="100" h="120" i="common/xiaozhushou.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="99.5999984741211" y="31.18000030517578" xr="0" yr="0" w="280" h="15" t="主公，个人主城建好后才可以拥有个人领地！" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+      </View>
+    </View>
+    <ImageView x="113.69000244140625" y="33.7599983215332" xr="0" yr="0" w="150" h="6.5" i="territory/territory_bg_7.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <View id="territoryAddAllianceView" x="4.5" y="0" xr="0" yr="0" w="480" h="320" iv="0">
+      <ImageView x="29.75" y="39.40999984741211" xr="0" yr="0" w="400" h="210" i="common/general_bg_word.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="6.409999847412109" y="-20.020000457763672" xr="0" yr="0" w="180" h="230" i="common/xiaozhushou.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="149.60000610351562" y="87.7699966430664" xr="0" yr="0" w="110" h="15" t="获得大量个人领地~" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+        <Label x="156.10000610351562" y="70.7699966430664" xr="0" yr="0" w="110" h="15" t="主公，快加入联盟吧！" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+        <Label x="339.4200134277344" y="105.02999877929688" xr="0" yr="0" w="25" h="15" t="哦~" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+        <Label x="272.45001220703125" y="105.19999694824219" xr="0" yr="0" w="55" h="15" t="大量兵力" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+        <ImageView x="321.9200134277344" y="103.66000366210938" xr="0" yr="0" w="18" h="18" i="common/bing_yubeibing.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="152.4199981689453" y="105.02999877929688" xr="0" yr="0" w="130" h="15" t="个人领地每分钟可以获得" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+      </ImageView>
+      <Button x="189.89999389648438" y="263.8699951171875" xr="0" yr="0" w="100" h="30" nt="加入联盟" ni="common/u_btn_comfirm1.png" nic="0.5,0.5,0,0" si="common/u_btn_comfirm1.png" state="0" act="territoryAddAllianceAction" ts="13" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+    </View>
+    <View id="territoryCreateView" x="4.5" y="0" xr="0" yr="0" w="480" h="320" iv="0">
+      <ImageView id="territoryBgImg2" x="30.280000686645508" y="40.40999984741211" xr="0" yr="0" w="400.5" h="120" i="territory/territory_bg_1.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <View x="0" y="0" xr="0" yr="0" w="400.5" h="120">
+          <ImageView x="-0.10000000149011612" y="6.739999771118164" xr="0" yr="0" w="220" h="32" i="territory/territory_image_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <Button x="211.5399932861328" y="64.93000030517578" xr="0" yr="0" w="50" h="50" ni="countrywar_selectteam/countrywar_btn_fortification.png" nic="0,0,0,0" state="0" act="territoryCreateAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+          <ImageView x="95.20999908447266" y="74.47000122070312" xr="0" yr="0" w="120" h="32" i="territory/territory_image_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+            <Label x="2" y="1" xr="0" yr="0" w="100" h="30" t="请点击建造个人主城" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+          </ImageView>
+        </View>
+      </ImageView>
+      <ImageView x="308.7799987792969" y="45.27000045776367" xr="0" yr="0" w="116" h="110" i="territory/territory_bg_2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label x="7.440000057220459" y="4.949999809265137" xr="0" yr="0" w="50" h="20" t="当前领地:" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17">
+          <Label x="44.5" y="0.5" xr="0" yr="0" w="40" h="20" t="未开启" ts="10" tctl="rgb(0,89,0)" tctr="rgb(0,89,0)" tcbl="rgb(0,89,0)" tcbr="rgb(0,89,0)" sc="rgb(0,0,0)" ta="17"/>
+        </Label>
+      </ImageView>
+      <ImageView x="29.899999618530273" y="165.52999877929688" xr="0" yr="0" w="400.5" h="134" i="common/general_bg_word.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="10" y="2" xr="0" yr="0" w="42" h="12" i="territory/territory_label_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="241.5" y="2" xr="0" yr="0" w="42" h="12" i="territory/territory_label_4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <ImageView x="144.5" y="2" xr="0" yr="0" w="42" h="12" i="territory/territory_label_5.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Button x="52.5" y="0.5" xr="0" yr="0" w="15" h="15" ni="common/u_btn_zhushi.png" nic="0,0,0,0" state="0" act="territoryTipAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        <ImageView x="1.909999966621399" y="14.550000190734863" xr="0" yr="0" w="395" h="1.5" i="common/u_bg_fengexian2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </ImageView>
+      <View x="29.989999771118164" y="181.5800018310547" xr="0" yr="0" w="400" h="119">
+        <ImageView x="25.34000015258789" y="-1.9299999475479126" xr="0" yr="0" w="100" h="120" i="common/xiaozhushou.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="99.5999984741211" y="31.18000030517578" xr="0" yr="0" w="280" h="15" t="主公，拥有个人领地后每分钟不停的获得                   哦!" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+        <Label x="278.1000061035156" y="31.18000030517578" xr="0" yr="0" w="75" h="15" t="大量兵力" ts="10" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+        <ImageView x="335.0299987792969" y="31.010000228881836" xr="0" yr="0" w="14" h="14" i="common/bing_yubeibing.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </View>
+    </View>
+    <ImageView x="26.700000762939453" y="101.93000030517578" xr="0" yr="0" w="5" h="7" i="territory/territory_bg_7.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </View>
+  <ImageView x="4.5" y="8.420000076293945" xr="0" yr="0" w="457.5" h="80" i="common/u_bg_title.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="0" y="0" xr="0" yr="0" w="457.5" h="27" i="common/u_bg_title1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Label id="main_title_Lab" x="194.3800048828125" y="3.2899999618530273" xr="0" yr="0" w="80" h="18" t="个人领地" ts="12" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(115,9,1)" ta="18"/>
+  </ImageView>
+  <Button id="closeBtn" x="431.94000244140625" y="6.639999866485596" xr="0" yr="0" w="30" h="30" nic="0,0,0,0" state="0" act="closeBtnAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="closeImg" x="3" y="1.5" xr="0" yr="0" w="27.5" h="35" i="common/u_btn_close.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+  <View id="territoryTipView" x="100.08000183105469" y="89.31999969482422" xr="0" yr="0" w="220" h="215" iv="0">
+    <ImageView x="0" y="0" xr="0" yr="0" w="220" h="215" i="common/u_bg_tips.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <ImageView x="5.309999942779541" y="27.020000457763672" xr="0" yr="0" w="210" h="1.5" i="common/u_bg_fengexian2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label x="54.22999954223633" y="0.20000000298023224" xr="0" yr="0" w="100" h="30" t="提示" ts="15" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="18"/>
+      <Label x="6.409999847412109" y="30.719999313354492" xr="0" yr="0" w="200" h="30" t="1.只有以下类型的地块可以被规划为个人领地" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9"/>
+      <Label x="49.40999984741211" y="66.02999877929688" xr="0" yr="0" w="190" h="15" t="+     预备兵30/分钟" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9">
+        <ImageView x="6.53000020980835" y="-1.7699999809265137" xr="0" yr="0" w="15" h="15" i="common/bing_yubeibing.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </Label>
+      <Label x="5.909999847412109" y="48.529998779296875" xr="0" yr="0" w="190" h="15" t="2.各个类型的地块收益如下：" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9"/>
+      <Label x="4.409999847412109" y="66.02999877929688" xr="0" yr="0" w="190" h="15" t="普通空地" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9"/>
+      <Label x="4.909999847412109" y="83.02999877929688" xr="0" yr="0" w="190" h="15" t="风水宝地" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9"/>
+      <Label x="49.40999984741211" y="82.52999877929688" xr="0" yr="0" w="190" h="15" t="+     预备兵90/分钟" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9">
+        <ImageView x="6.53000020980835" y="-1.7699999809265137" xr="0" yr="0" w="15" h="15" i="common/bing_yubeibing.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </Label>
+      <Label x="49.90999984741211" y="99.52999877929688" xr="0" yr="0" w="190" h="15" t="+     预备兵30/分钟" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9">
+        <ImageView x="6.53000020980835" y="-1.7699999809265137" xr="0" yr="0" w="15" h="15" i="common/bing_yubeibing.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </Label>
+      <Label x="4.349999904632568" y="114.73999786376953" xr="0" yr="0" w="200" h="15" t="连续生产4小时后收获，额外获得12个蓝田玉" ts="10" tctl="rgb(23,203,255)" tctr="rgb(23,203,255)" tcbl="rgb(23,203,255)" tcbr="rgb(23,203,255)" sc="rgb(0,0,0)" ta="9"/>
+      <Label x="4.909999847412109" y="100.02999877929688" xr="0" yr="0" w="190" h="15" t="农田" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9"/>
+      <Label x="49.90999984741211" y="167.52999877929688" xr="0" yr="0" w="190" h="15" t="+     预备兵30/分钟" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9">
+        <ImageView x="6.53000020980835" y="-1.7699999809265137" xr="0" yr="0" w="15" h="15" i="common/bing_yubeibing.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </Label>
+      <Label x="4.349999904632568" y="186.74000549316406" xr="0" yr="0" w="220" h="15" t="连续生产4小时后收获，额外获得百宝福袋" ts="10" tctl="rgb(23,203,255)" tctr="rgb(23,203,255)" tcbl="rgb(23,203,255)" tcbr="rgb(23,203,255)" sc="rgb(0,0,0)" ta="9"/>
+      <Label x="4.909999847412109" y="167.52999877929688" xr="0" yr="0" w="190" h="15" t="行军营地" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9"/>
+      <Label x="4.909999847412109" y="132.52999877929688" xr="0" yr="0" w="190" h="15" t="木厂" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9"/>
+      <Label x="49.90999984741211" y="133.02999877929688" xr="0" yr="0" w="190" h="15" t="+     预备兵30/分钟" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9">
+        <ImageView x="6.53000020980835" y="-1.7699999809265137" xr="0" yr="0" w="15" h="15" i="common/bing_yubeibing.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      </Label>
+      <Label x="4.349999904632568" y="149.74000549316406" xr="0" yr="0" w="220" h="15" t="连续生产4小时后收获，额外获得7200黄金" ts="10" tctl="rgb(23,203,255)" tctr="rgb(23,203,255)" tcbl="rgb(23,203,255)" tcbr="rgb(23,203,255)" sc="rgb(0,0,0)" ta="9"/>
+    </ImageView>
+  </View>
+</View>

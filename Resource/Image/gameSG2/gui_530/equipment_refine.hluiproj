@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="420.000" h="270.000" srw="420" srh="270">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="420.000" h="270.000" srw="420" srh="270" i="" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="149.500" y="-0.500" xr="0" yr="0" w="44.500" h="272.000" srw="420" srh="270" i="common/u_bg_gradient1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <View id="equipListBgView" nn="View" x="2.000" y="31.500" xr="0" yr="0" w="145.000" h="235.000" srw="420" srh="270"/>
+    <View id="refineBgView" nn="View" x="153.000" y="8.500" xr="0" yr="0" w="260.000" h="260.000" srw="420" srh="270">
+      <ImageView nn="ImageView" x="4.000" y="-8.790" xr="0" yr="0" w="260.000" h="260.000" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="0.500" y="23.000" xr="0" yr="0" w="51.000" h="51.000" srw="420" srh="270" i="equipment/ui_equipment_eqbg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView id="equipBgIconImg" nn="ImageView" x="3.000" y="3.500" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView id="equipIconImg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          </ImageView>
+        </ImageView>
+        <Label id="equipNameLab" nn="Label" x="-3.000" y="75.500" xr="0" yr="0" w="60.000" h="15.000" srw="420" srh="270" t="装备名六个字" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <ImageView nn="ImageView" x="58.500" y="7.500" xr="0" yr="0" w="169.500" h="18.000" srw="420" srh="270" i="equipment/ui_equipment_bg3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="4.500" y="1.500" xr="0" yr="0" w="50.000" h="15.000" srw="420" srh="270" t="装备评分:" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+            <Label id="equipScoreLab" nn="Label" x="39.500" y="0.500" xr="0" yr="0" w="50.000" h="15.000" srw="420" srh="270" t="10000" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+            <Label id="potentialLab" nn="Label" x="71.500" y="0.500" xr="0" yr="0" w="80.000" h="15.000" srw="420" srh="270" t="(潜力评分:1111)" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+          </Label>
+        </ImageView>
+        <ImageView nn="ImageView" x="58.000" y="26.500" xr="0" yr="0" w="169.500" h="18.000" srw="420" srh="270" i="equipment/ui_equipment_bg3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="4.500" y="1.000" xr="0" yr="0" w="100.000" h="15.000" srw="420" srh="270" t="穿戴等级:" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+            <Label id="equipLvlLab" nn="Label" x="38.500" y="0.500" xr="0" yr="0" w="100.000" h="15.000" srw="420" srh="270" t="10" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+          </Label>
+        </ImageView>
+        <Button id="roleBtn" nn="Button" x="233.500" y="4.000" xr="0" yr="0" w="27.000" h="27.000" srw="420" srh="270" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="roleBtnAction"/>
+        <Button id="advanceBtn" nn="Button" x="198.000" y="15.000" xr="0" yr="0" w="30.000" h="33.000" srw="420" srh="270" nt="" ni="equipment/ui_equipment_refine_btn_jj.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="advanceBtnAction"/>
+        <ImageView id="spEffectView" nn="ImageView" x="59.500" y="52.500" xr="0" yr="0" w="200.000" h="47.500" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView id="spEffectBianImg" nn="ImageView" x="0.000" y="-3.000" xr="0" yr="0" w="200.000" h="51.000" srw="420" srh="270" i="equipment/ui_equipment_refine_txk.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="199.000" h="44.000" srw="420" srh="270" i="equipment/equipment_refine_effect_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label nn="Label" x="6.000" y="3.500" xr="0" yr="0" w="30.000" h="15.000" srw="420" srh="270" t="特技:" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+            <Label id="spEffectNameLab" nn="Label" x="23.500" y="0.000" xr="0" yr="0" w="100.000" h="15.000" srw="420" srh="270" t="无" ts="10" tctl="rgb(255, 0, 72)" tctr="rgb(255, 0, 72)" tcbl="rgb(255, 0, 72)" tcbr="rgb(255, 0, 72)" sc="black" ta="17"/>
+          </Label>
+          <View id="spEffectStarView" nn="View" x="91.500" y="6.500" xr="0" yr="0" w="50.000" h="10.000" srw="420" srh="270" iv="0">
+            <ImageView nn="ImageView" x="2.500" y="0.000" xr="0" yr="0" w="9.000" h="8.500" srw="420" srh="270" i="common/u_other_star_gold.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="11.500" y="0.000" xr="0" yr="0" w="9.000" h="8.500" srw="420" srh="270" i="common/u_other_star_gold.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="21.000" y="0.000" xr="0" yr="0" w="9.000" h="8.500" srw="420" srh="270" i="common/u_other_star_gold.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="30.500" y="0.000" xr="0" yr="0" w="9.000" h="8.500" srw="420" srh="270" i="common/u_other_star_gold.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="40.000" y="0.000" xr="0" yr="0" w="9.000" h="8.500" srw="420" srh="270" i="common/u_other_star_gold.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          </View>
+          <Label id="spEffctDesLab" nn="Label" x="5.500" y="19.500" xr="0" yr="0" w="185.000" h="25.000" srw="420" srh="270" iv="0" t="PVP" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="9"/>
+          <Button id="fusionBtn" nn="Button" x="137.500" y="5.500" xr="0" yr="0" w="30.000" h="33.000" srw="420" srh="270" iv="0" nt="" ni="equipment/ui_equipment_refine_btn_rl.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="fusionBtnAction"/>
+          <ImageView nn="ImageView" x="6.500" y="5.500" xr="0" yr="0" w="12.000" h="12.000" srw="420" srh="270" iv="0" i="equipment/equioment_word_ji.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <View id="skill_panel" nn="View" x="7.000" y="15.500" xr="0" yr="0" w="190.000" h="26.000" srw="420" srh="270"/>
+        </ImageView>
+        <ImageView id="armyBgImg" nn="ImageView" x="0.500" y="105.500" xr="0" yr="0" w="257.000" h="117.000" srw="420" srh="270" i="equipment/ui_equipment_refine_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <View id="effectView1" nn="View" x="22.000" y="8.500" xr="0" yr="0" w="230.000" h="20.000" srw="420" srh="270">
+            <ImageView id="m_qh_image_prosperity_" nn="ImageView" x="36.000" y="2.500" xr="0" yr="0" w="173.000" h="16.000" srw="420" srh="270" i="equipment/ui_equipment_bg3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView id="effectNameLab1" nn="ImageView" x="9.000" y="5.000" xr="0" yr="0" w="39.000" h="11.000" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <Label id="effectValueLab1" nn="Label" x="39.000" y="-0.500" xr="0" yr="0" w="40.000" h="11.000" srw="420" srh="270" t="" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+            </ImageView>
+            <Label nn="Label" x="110.500" y="2.500" xr="0" yr="0" w="60.000" h="15.000" srw="420" srh="270" t="剩余精炼次数:" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18">
+              <Label id="effectTimesLab1" nn="Label" x="59.000" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="420" srh="270" t="" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+            </Label>
+            <Button id="refineBtn1" nn="Button" x="182.500" y="0.000" xr="0" yr="0" w="45.000" h="20.000" srw="420" srh="270" tag="1" nt="" ni="common/u_btn_comfirm8.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="refineBtnAction">
+              <ImageView id="effectCostImg1" nn="ImageView" x="7.000" y="2.500" xr="0" yr="0" w="15.000" h="15.000" srw="420" srh="270" i="equipment_intensify/ui_equipment_garrow.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <Label id="effectCostLab1" nn="Label" x="24.000" y="4.500" xr="0" yr="0" w="30.000" h="12.000" srw="420" srh="270" t="99" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+              <ImageView id="effectRedImg1" nn="ImageView" x="36.000" y="-3.500" xr="0" yr="0" w="12.000" h="12.000" srw="420" srh="270" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </Button>
+            <Label id="effectUsedLab1" nn="Label" x="-4.500" y="2.500" xr="0" yr="0" w="65.000" h="15.000" srw="420" srh="270" t="99" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+            <ImageView nn="ImageView" x="-19.000" y="2.500" xr="0" yr="0" w="15.000" h="15.500" srw="420" srh="270" i="equipment/equipment_hammer.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView id="effectArrowImg1" nn="ImageView" x="65.000" y="5.000" xr="0" yr="0" w="7.000" h="10.000" srw="420" srh="270" iv="0" i="common/u_jiantoulv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <Label id="effectAddLab1" nn="Label" x="8.500" y="-2.500" xr="0" yr="0" w="65.000" h="15.000" srw="420" srh="270" t="99" ts="9" tctl="green" tctr="green" tcbl="green" tcbr="green" stroke="1" sc="black" ta="17"/>
+              <ImageView id="addMaxImg1" nn="ImageView" x="23.500" y="-0.500" xr="0" yr="0" w="26.000" h="12.000" srw="420" srh="270" i="equipment/ui_equipment_word_max.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </ImageView>
+          </View>
+          <View id="effectView2" nn="View" x="22.000" y="34.000" xr="0" yr="0" w="230.000" h="20.000" srw="420" srh="270">
+            <ImageView nn="ImageView" x="36.000" y="2.500" xr="0" yr="0" w="173.000" h="16.000" srw="420" srh="270" i="equipment/ui_equipment_bg3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView id="effectNameLab2" nn="ImageView" x="9.000" y="5.000" xr="0" yr="0" w="39.000" h="11.000" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <Label id="effectValueLab2" nn="Label" x="39.000" y="-0.500" xr="0" yr="0" w="40.000" h="11.000" srw="420" srh="270" t="" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+            </ImageView>
+            <Label nn="Label" x="110.500" y="2.500" xr="0" yr="0" w="60.000" h="15.000" srw="420" srh="270" t="剩余精炼次数:" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18">
+              <Label id="effectTimesLab2" nn="Label" x="59.000" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="420" srh="270" t="" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+            </Label>
+            <Button id="refineBtn2" nn="Button" x="182.500" y="-0.500" xr="0" yr="0" w="45.000" h="20.000" srw="420" srh="270" tag="2" nt="" ni="common/u_btn_comfirm8.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="refineBtnAction">
+              <ImageView id="effectCostImg2" nn="ImageView" x="7.000" y="2.500" xr="0" yr="0" w="15.000" h="15.000" srw="420" srh="270" i="equipment_intensify/ui_equipment_garrow.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <Label id="effectCostLab2" nn="Label" x="24.000" y="4.500" xr="0" yr="0" w="30.000" h="12.000" srw="420" srh="270" t="99" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+              <ImageView id="effectRedImg2" nn="ImageView" x="36.000" y="-3.500" xr="0" yr="0" w="12.000" h="12.000" srw="420" srh="270" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </Button>
+            <Label id="effectUsedLab2" nn="Label" x="-4.500" y="2.500" xr="0" yr="0" w="65.000" h="15.000" srw="420" srh="270" t="99" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+            <ImageView nn="ImageView" x="-19.000" y="2.500" xr="0" yr="0" w="15.000" h="15.500" srw="420" srh="270" i="equipment/equipment_hammer.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView id="effectArrowImg2" nn="ImageView" x="65.000" y="5.500" xr="0" yr="0" w="7.000" h="10.000" srw="420" srh="270" iv="0" i="common/u_jiantoulv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <Label id="effectAddLab2" nn="Label" x="8.500" y="-3.000" xr="0" yr="0" w="65.000" h="15.000" srw="420" srh="270" t="99" ts="9" tctl="green" tctr="green" tcbl="green" tcbr="green" stroke="1" sc="black" ta="17"/>
+              <ImageView id="addMaxImg2" nn="ImageView" x="23.500" y="-1.000" xr="0" yr="0" w="26.000" h="12.000" srw="420" srh="270" i="equipment/ui_equipment_word_max.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </ImageView>
+          </View>
+          <View id="effectView3" nn="View" x="22.000" y="62.000" xr="0" yr="0" w="230.000" h="20.000" srw="420" srh="270">
+            <ImageView nn="ImageView" x="36.000" y="2.500" xr="0" yr="0" w="173.000" h="16.000" srw="420" srh="270" i="equipment/ui_equipment_bg3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView id="effectNameLab3" nn="ImageView" x="9.000" y="5.000" xr="0" yr="0" w="39.000" h="11.000" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <Label id="effectValueLab3" nn="Label" x="39.000" y="-0.500" xr="0" yr="0" w="40.000" h="11.000" srw="420" srh="270" t="" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+            </ImageView>
+            <Label nn="Label" x="110.500" y="2.000" xr="0" yr="0" w="60.000" h="15.000" srw="420" srh="270" t="剩余精炼次数:" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18">
+              <Label id="effectTimesLab3" nn="Label" x="59.000" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="420" srh="270" t="" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+            </Label>
+            <Button id="refineBtn3" nn="Button" x="182.500" y="-0.500" xr="0" yr="0" w="45.000" h="20.000" srw="420" srh="270" tag="3" nt="" ni="common/u_btn_comfirm8.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="refineBtnAction">
+              <ImageView id="effectCostImg3" nn="ImageView" x="7.000" y="2.500" xr="0" yr="0" w="15.000" h="15.000" srw="420" srh="270" i="equipment_intensify/ui_equipment_garrow.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <Label id="effectCostLab3" nn="Label" x="24.000" y="4.500" xr="0" yr="0" w="30.000" h="12.000" srw="420" srh="270" t="99" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+              <ImageView id="effectRedImg3" nn="ImageView" x="36.000" y="-3.500" xr="0" yr="0" w="12.000" h="12.000" srw="420" srh="270" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </Button>
+            <Label id="effectUsedLab3" nn="Label" x="-4.500" y="2.500" xr="0" yr="0" w="65.000" h="15.000" srw="420" srh="270" t="99" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+            <ImageView nn="ImageView" x="-19.000" y="2.500" xr="0" yr="0" w="15.000" h="15.500" srw="420" srh="270" i="equipment/equipment_hammer.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView id="effectArrowImg3" nn="ImageView" x="65.000" y="5.500" xr="0" yr="0" w="7.000" h="10.000" srw="420" srh="270" iv="0" i="common/u_jiantoulv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <Label id="effectAddLab3" nn="Label" x="8.500" y="-3.000" xr="0" yr="0" w="65.000" h="15.000" srw="420" srh="270" t="99" ts="9" tctl="green" tctr="green" tcbl="green" tcbr="green" stroke="1" sc="black" ta="17"/>
+              <ImageView id="addMaxImg3" nn="ImageView" x="23.500" y="-1.000" xr="0" yr="0" w="26.000" h="12.000" srw="420" srh="270" i="equipment/ui_equipment_word_max.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </ImageView>
+          </View>
+          <View id="effectView4" nn="View" x="22.000" y="89.000" xr="0" yr="0" w="230.000" h="20.000" srw="420" srh="270">
+            <ImageView nn="ImageView" x="36.000" y="2.500" xr="0" yr="0" w="173.000" h="16.000" srw="420" srh="270" i="equipment/ui_equipment_bg3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView id="effectNameLab4" nn="ImageView" x="9.000" y="5.000" xr="0" yr="0" w="39.000" h="11.000" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <Label id="effectValueLab4" nn="Label" x="39.000" y="-0.500" xr="0" yr="0" w="40.000" h="11.000" srw="420" srh="270" t="" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+            </ImageView>
+            <Label nn="Label" x="110.500" y="2.000" xr="0" yr="0" w="60.000" h="15.000" srw="420" srh="270" t="剩余精炼次数:" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(115, 9, 1)" ta="18">
+              <Label id="effectTimesLab4" nn="Label" x="59.000" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="420" srh="270" t="" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+            </Label>
+            <Button id="refineBtn4" nn="Button" x="182.500" y="-0.500" xr="0" yr="0" w="45.000" h="20.000" srw="420" srh="270" tag="4" nt="" ni="common/u_btn_comfirm8.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="refineBtnAction">
+              <ImageView id="effectCostImg4" nn="ImageView" x="7.000" y="2.500" xr="0" yr="0" w="15.000" h="15.000" srw="420" srh="270" i="equipment_intensify/ui_equipment_garrow.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <Label id="effectCostLab4" nn="Label" x="24.000" y="4.500" xr="0" yr="0" w="30.000" h="12.000" srw="420" srh="270" t="99" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+              <ImageView id="effectRedImg4" nn="ImageView" x="36.000" y="-3.500" xr="0" yr="0" w="12.000" h="12.000" srw="420" srh="270" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </Button>
+            <Label id="effectUsedLab4" nn="Label" x="-4.500" y="2.500" xr="0" yr="0" w="65.000" h="15.000" srw="420" srh="270" t="99" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+            <ImageView nn="ImageView" x="-19.000" y="2.500" xr="0" yr="0" w="15.000" h="15.500" srw="420" srh="270" i="equipment/equipment_hammer.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView id="effectArrowImg4" nn="ImageView" x="65.000" y="4.500" xr="0" yr="0" w="7.000" h="10.000" srw="420" srh="270" iv="0" i="common/u_jiantoulv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <Label id="effectAddLab4" nn="Label" x="8.500" y="-2.000" xr="0" yr="0" w="65.000" h="15.000" srw="420" srh="270" t="99" ts="9" tctl="green" tctr="green" tcbl="green" tcbr="green" stroke="1" sc="black" ta="17"/>
+              <ImageView id="addMaxImg4" nn="ImageView" x="23.500" y="0.000" xr="0" yr="0" w="26.000" h="12.000" srw="420" srh="270" i="equipment/ui_equipment_word_max.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </ImageView>
+          </View>
+        </ImageView>
+      </ImageView>
+      <ImageView nn="ImageView" x="-1.500" y="223.000" xr="0" yr="0" w="267.000" h="7.000" srw="420" srh="270" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="seniorStoneImg" nn="ImageView" x="48.000" y="236.000" xr="0" yr="0" w="15.000" h="15.000" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="seniorStoneLab" nn="Label" x="15.500" y="1.500" xr="0" yr="0" w="50.000" h="12.000" srw="420" srh="270" t="999999" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      </ImageView>
+      <ImageView id="middleStoneImg" nn="ImageView" x="110.500" y="236.000" xr="0" yr="0" w="15.000" h="15.000" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="middleStoneLab" nn="Label" x="15.500" y="1.500" xr="0" yr="0" w="50.000" h="12.000" srw="420" srh="270" t="999999" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      </ImageView>
+      <ImageView id="lowerStoneImg" nn="ImageView" x="170.000" y="236.000" xr="0" yr="0" w="15.000" h="15.000" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="lowerStoneLab" nn="Label" x="15.500" y="1.500" xr="0" yr="0" w="50.000" h="12.000" srw="420" srh="270" t="999999" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      </ImageView>
+      <Button nn="Button" x="223.500" y="235.500" xr="0" yr="0" w="30.000" h="15.000" srw="420" srh="270" nt="合成" ni="common/u_btn_comfirm8.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="composeBtnAction"/>
+    </View>
+    <ImageView nn="ImageView" x="28.500" y="10.500" xr="0" yr="0" w="92.000" h="18.000" srw="420" srh="270" i="common/u_bg_title5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="92.000" h="18.000" srw="420" srh="270" t="装备背包" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </ImageView>
+  </ImageView>
+</View>

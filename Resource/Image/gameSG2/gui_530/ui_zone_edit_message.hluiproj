@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="365.000" h="260.000" srw="365" srh="260">
+  <ImageView x="6.500" y="4.500" xr="0" yr="0" w="354.500" h="252.000" srw="365" srh="260" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="120.000" y="6.000" xr="0" yr="0" w="116.000" h="18.000" srw="365" srh="260" i="common/u_bg_title2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="0.000" y="0.000" xr="0" yr="0" w="116.000" h="18.000" srw="365" srh="260" t="编辑信息" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(115, 9, 1)" ta="18"/>
+    </ImageView>
+    <ImageView x="13.000" y="30.000" xr="0" yr="0" w="160.000" h="170.000" srw="365" srh="260" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="4.500" y="7.000" xr="0" yr="0" w="25.000" h="12.000" srw="365" srh="260" t="位置" ts="11" tctl="rgb(77, 34, 9)" tctr="rgb(77, 34, 9)" tcbl="rgb(77, 34, 9)" tcbr="rgb(77, 34, 9)" sc="black" ta="18"/>
+      <Label id="posSelLab" x="85.000" y="7.000" xr="0" yr="0" w="45.000" h="12.000" srw="365" srh="260" t="自动获取" ts="11" tctl="rgb(77, 34, 9)" tctr="rgb(77, 34, 9)" tcbl="rgb(77, 34, 9)" tcbr="rgb(77, 34, 9)" sc="black" ta="20"/>
+      <Button id="locationBtn" x="133.590" y="2.860" xr="0" yr="0" w="22.000" h="22.000" srw="365" srh="260" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="locationBtnAction">
+        <ImageView x="0.000" y="0.000" xr="0" yr="0" w="22.000" h="22.000" srw="365" srh="260" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="locationImg" x="0.000" y="0.000" xr="0" yr="0" w="22.000" h="22.000" srw="365" srh="260" iv="0" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <Button id="provinceBtn" x="5.000" y="28.000" xr="0" yr="0" w="71.000" h="20.000" srw="365" srh="260" nt="黑龙江省" ni="ui_zone/ui_zone_btn1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 34, 9)" tctr="rgb(77, 34, 9)" tcbl="rgb(77, 34, 9)" tcbr="rgb(77, 34, 9)" sc="black" ta="18" act="provinceBtnAction"/>
+      <Button id="cityBtn" x="84.000" y="28.000" xr="0" yr="0" w="71.000" h="20.000" srw="365" srh="260" nt="锡林郭勒盟" ni="ui_zone/ui_zone_btn1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 34, 9)" tctr="rgb(77, 34, 9)" tcbl="rgb(77, 34, 9)" tcbr="rgb(77, 34, 9)" sc="black" ta="18" act="cityBtnAction"/>
+      <ImageView x="3.500" y="49.000" xr="0" yr="0" w="75.500" h="120.000" srw="365" srh="260" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <View id="provinceView" x="4.000" y="4.000" xr="0" yr="0" w="67.000" h="112.000" srw="365" srh="260"/>
+      </ImageView>
+      <ImageView x="82.000" y="49.000" xr="0" yr="0" w="75.500" h="120.000" srw="365" srh="260" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <View id="cityView" x="4.000" y="4.000" xr="0" yr="0" w="67.000" h="112.000" srw="365" srh="260"/>
+      </ImageView>
+    </ImageView>
+    <ImageView x="182.000" y="30.000" xr="0" yr="0" w="160.000" h="170.000" srw="365" srh="260" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="6.000" y="7.000" xr="0" yr="0" w="25.000" h="12.000" srw="365" srh="260" t="签名" ts="11" tctl="rgb(77, 34, 9)" tctr="rgb(77, 34, 9)" tcbl="rgb(77, 34, 9)" tcbr="rgb(77, 34, 9)" sc="black" ta="18"/>
+      <ImageView x="4.000" y="26.000" xr="0" yr="0" w="121.000" h="27.000" srw="365" srh="260" i="common/u_bg_shurukuang.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <EditBox id="editBox" x="1.500" y="4.000" xr="0" yr="0" w="120.000" h="18.000" srw="365" srh="260" et="请编辑个性签名(30字)" ts="10" tctl="rgb(147, 98, 39)" tctr="rgb(147, 98, 39)" tcbl="rgb(147, 98, 39)" tcbr="rgb(147, 98, 39)" sc="black" ta="17"/>
+      </ImageView>
+      <ImageView id="recordImg" x="129.000" y="25.500" xr="0" yr="0" w="28.000" h="28.000" srw="365" srh="260" i="ui_zone/ui_zone_talk.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <View x="6.000" y="60.000" xr="0" yr="0" w="148.000" h="100.000" srw="365" srh="260">
+        <View id="audioView" x="0.000" y="0.000" xr="0" yr="0" w="148.000" h="100.000" srw="365" srh="260">
+          <ImageView x="4.540" y="0.000" xr="0" yr="0" w="144.000" h="100.000" srw="365" srh="260" i="chat/Talk_talk1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+            <Label id="lenLab" x="108.500" y="6.000" xr="0" yr="0" w="30.000" h="10.000" srw="365" srh="260" t="222&quot;" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="17"/>
+            <ImageView id="voiceImg" x="21.500" y="5.000" xr="0" yr="0" w="85.000" h="12.000" srw="365" srh="260" i="chat/Talk_bg1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView id="v0" x="7.000" y="9.500" xr="0" yr="0" w="1.500" h="2.000" srw="365" srh="260" i="chat/Talk_sound1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView id="v1" x="9.000" y="7.500" xr="0" yr="0" w="2.500" h="6.000" srw="365" srh="260" i="chat/Talk_sound2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView id="v2" x="11.500" y="5.500" xr="0" yr="0" w="3.500" h="10.000" srw="365" srh="260" i="chat/Talk_sound3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView id="v3" x="15.000" y="4.000" xr="0" yr="0" w="4.000" h="13.000" srw="365" srh="260" i="chat/Talk_sound4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label id="voiceLab" x="5.500" y="20.000" xr="0" yr="0" w="133.000" h="75.000" srw="365" srh="260" t="每天上来看一看看一看看一看看一看看一看看一看" ts="11" tctl="rgb(147, 98, 39)" tctr="rgb(147, 98, 39)" tcbl="rgb(147, 98, 39)" tcbr="rgb(147, 98, 39)" sc="black" ta="9"/>
+          </ImageView>
+          <ImageView x="0.970" y="2.900" xr="0" yr="0" w="6.000" h="9.000" srw="365" srh="260" i="chat/Talk_talk0.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </View>
+        <Label id="signLab" x="0.000" y="0.000" xr="0" yr="0" w="148.000" h="100.000" srw="365" srh="260" t="来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧来吧" ts="11" tctl="rgb(77, 34, 9)" tctr="rgb(77, 34, 9)" tcbl="rgb(77, 34, 9)" tcbr="rgb(77, 34, 9)" sc="black" ta="9"/>
+      </View>
+    </ImageView>
+    <Button x="329.360" y="-1.640" xr="0" yr="0" w="26.000" h="26.000" srw="365" srh="260" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeBtnAction"/>
+    <Button x="129.500" y="209.000" xr="0" yr="0" w="97.000" h="32.000" srw="365" srh="260" nt="确定" ni="common/u_btn_comfirm1.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.500000,0.500000,0.000000,0.000000" ht="" hi="" hci="" hic="0.500000,0.500000,0.000000,0.000000" dt="" di="" dci="" dic="0.500000,0.500000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="sureBtnAction"/>
+  </ImageView>
+</View>

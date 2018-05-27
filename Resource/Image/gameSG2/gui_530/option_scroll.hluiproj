@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="330.000" h="391.000" srw="330" srh="360">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="94.000" h="16.000" srw="330" srh="360" i="option/option_bg_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="3.200" y="0.000" xr="0" yr="0" w="80.000" h="14.000" srw="330" srh="360" t="军情推送提醒" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+  </ImageView>
+  <View nn="View" x="1.000" y="20.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="101">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="100.000" h="20.000" srw="330" srh="360" t="新的联盟集结发布" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="160.000" y="20.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="102">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="100.000" h="20.000" srw="330" srh="360" t="联盟领土被进攻" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="1.000" y="52.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="103">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="国战行动力满" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="160.000" y="52.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="104">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="离线自动征讨到最多次数" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="1.000" y="84.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="105">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="天下大势发生改变" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="160.000" y="84.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="106">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="有联盟预警的军情发布" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="1.000" y="116.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="107">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="个人主城附近发现宝箱" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="160.000" y="116.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="108">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="联盟祭祀台开启神兽" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <ImageView nn="ImageView" x="0.000" y="146.500" xr="0" yr="0" w="94.000" h="16.000" srw="330" srh="360" i="option/option_bg_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="3.000" y="0.000" xr="0" yr="0" w="80.000" h="14.000" srw="330" srh="360" t="限时活动推送提醒" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+  </ImageView>
+  <View nn="View" x="1.000" y="167.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="201">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="卧龙顶活动开启" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="160.000" y="167.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="202">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="贼兵乱世活动开启" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="1.000" y="199.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="203">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="BOSS挑战活动开启" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="160.000" y="199.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="204">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="领取体力活动开启" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="1.000" y="231.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="205">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="免费抽取高级武将" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="160.000" y="231.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="206">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="免费抽取高级技能" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="1.000" y="262.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="207">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="战城南-排位赛开启" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <ImageView nn="ImageView" x="0.000" y="294.500" xr="0" yr="0" w="100.000" h="16.000" srw="330" srh="360" i="option/option_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="0.500" y="0.500" xr="0" yr="0" w="90.000" h="14.000" srw="330" srh="360" t="与您相关的推送提醒" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+  </ImageView>
+  <View nn="View" x="1.000" y="316.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="301">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="有人私聊您" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="160.000" y="316.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="302">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="有人评论您空间内容" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+  <View nn="View" x="1.000" y="348.000" xr="0" yr="0" w="150.000" h="25.000" srw="330" srh="360" tag="303">
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.210" y="-0.210" xr="0" yr="0" w="22.000" h="22.000" srw="330" srh="360" i="common/u_btn_select_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="38.340" y="0.940" xr="0" yr="0" w="120.000" h="20.000" srw="330" srh="360" t="有人送您红玫瑰" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  </View>
+</View>

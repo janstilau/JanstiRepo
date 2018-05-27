@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="280.000" h="51.000" srw="280" srh="51">
+  <ImageView id="ts_openbg_Img" nn="ImageView" x="-0.350" y="0.000" xr="0" yr="0" w="280.000" h="51.000" srw="280" srh="51" i="common/general_bg_unselect1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label id="ts_effect_lab1" nn="Label" x="52.000" y="30.000" xr="0" yr="0" w="65.000" h="10.000" srw="280" srh="51" t="韧性+157810" ts="10" tctl="rgb(0, 106, 173)" tctr="rgb(0, 106, 173)" tcbl="rgb(0, 106, 173)" tcbr="rgb(0, 106, 173)" sc="black" ta="17"/>
+    <Label id="ts_effect_lab2" nn="Label" x="114.500" y="30.000" xr="0" yr="0" w="65.000" h="10.000" srw="280" srh="51" t="韧性+100" ts="10" tctl="rgb(0, 106, 173)" tctr="rgb(0, 106, 173)" tcbl="rgb(0, 106, 173)" tcbr="rgb(0, 106, 173)" sc="black" ta="17"/>
+    <Label id="ts_lvl_lab" nn="Label" x="108.660" y="12.500" xr="0" yr="0" w="30.000" h="10.000" srw="280" srh="51" t="lv.20" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    <Button id="ts_up_btn" nn="Button" x="230.240" y="3.430" xr="0" yr="0" w="41.000" h="25.000" srw="280" srh="51" nt="强化" ni="common/countrywar_ab_btn1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="tsUpBtnAction">
+      <ImageView id="ts_red_img" nn="ImageView" x="28.910" y="-0.620" xr="0" yr="0" w="17.000" h="17.000" srw="280" srh="51" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="ts_onekey_btn" nn="Button" x="166.240" y="3.430" xr="0" yr="0" w="55.000" h="25.000" srw="280" srh="51" nt="一键强化" ni="common/countrywar_ab_btn1.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="oneKeyBtnAction"/>
+    <Label id="ts_lvlLimit_lab" nn="Label" x="192.400" y="33.730" xr="0" yr="0" w="100.000" h="15.000" srw="280" srh="51" iv="0" t="需要黄月英Lv.2" ts="10" tctl="rgb(224, 63, 63)" tctr="rgb(224, 63, 63)" tcbl="rgb(224, 63, 63)" tcbr="rgb(224, 63, 63)" sc="black" ta="18"/>
+    <ImageView id="ts_costInfo_img" nn="ImageView" x="180.500" y="29.000" xr="0" yr="0" w="119.500" h="21.000" srw="280" srh="51" i="general_hufu_item/general_hufu_item_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="costItemIcon" nn="ImageView" x="1.500" y="2.500" xr="0" yr="0" w="18.000" h="18.000" srw="280" srh="51" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="costSubIcon" nn="ImageView" x="1.500" y="-3.500" xr="0" yr="0" w="18.000" h="10.500" srw="280" srh="51" i="general_hufu_item/good_jingpin.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="ts_num_lab" nn="Label" x="23.620" y="5.580" xr="0" yr="0" w="60.000" h="10.000" srw="280" srh="51" t="Label" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    </ImageView>
+  </ImageView>
+  <ImageView id="ts_suobg_Img" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="280.000" h="51.000" srw="280" srh="51" iv="0" i="common/u_bg_qianse.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="147.440" y="12.500" xr="0" yr="0" w="50.000" h="10.000" srw="280" srh="51" t="开启需要" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+      <Label id="ts_condition_lab1" nn="Label" x="41.000" y="0.000" xr="0" yr="0" w="90.000" h="10.000" srw="280" srh="51" t="华雄培养达到2阶" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+      <Label id="ts_condition_lab2" nn="Label" x="41.000" y="17.500" xr="0" yr="0" w="90.000" h="10.000" srw="280" srh="51" t="华雄培养达到2阶" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+    </Label>
+    <Label nn="Label" x="50.000" y="30.000" xr="0" yr="0" w="20.000" h="10.000" srw="280" srh="51" t="增加" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+      <Label id="addProBgLab" nn="Label" x="20.000" y="0.000" xr="0" yr="0" w="100.000" h="10.000" srw="280" srh="51" t="攻击防御属性" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <Label id="ts_sx_Lab" nn="Label" x="92.000" y="0.000" xr="0" yr="0" w="30.000" h="10.000" srw="280" srh="51" t="属性" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </Label>
+    </Label>
+  </ImageView>
+  <Label id="ts_name_lab" nn="Label" x="50.000" y="12.500" xr="0" yr="0" w="100.000" h="10.000" srw="280" srh="51" t="云雁虎符等级什么呀" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  <ImageView id="ts_bg_img" nn="ImageView" x="5.000" y="4.000" xr="0" yr="0" w="44.000" h="44.000" srw="280" srh="51" i="general_hufu_item/hufu_quality_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="ts_icon_img" nn="ImageView" x="2.000" y="2.000" xr="0" yr="0" w="40.000" h="40.000" srw="280" srh="51" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+</View>

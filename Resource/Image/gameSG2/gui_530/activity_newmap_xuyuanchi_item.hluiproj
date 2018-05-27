@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="286.000" h="150.000" srw="286" srh="150">
+  <View id="m_npc_bg" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="286.000" h="150.000" srw="286" srh="150">
+    <ImageView id="title_img" nn="ImageView" x="0.000" y="6.000" xr="0" yr="0" w="51.000" h="21.000" srw="286" srh="150" i="activity_newmap/activity_newmap_mark1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="0.000" y="144.000" xr="0" yr="0" w="286.000" h="7.000" srw="286" srh="150" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <View id="item_1" nn="View" x="59.000" y="3.000" xr="0" yr="0" w="60.000" h="70.000" srw="286" srh="150">
+      <View id="_prop_panel_1" nn="View" x="7.000" y="2.000" xr="0" yr="0" w="44.000" h="44.000" srw="286" srh="150"/>
+      <Button nn="Button" x="3.000" y="48.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" iv="0" nt="" ni="activity_newmap/activity_newmap_btn2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onBtnAction">
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" tag="101" i="activity_newmap/activity_newmap_btnword1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <ImageView nn="ImageView" x="3.000" y="48.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" iv="0" i="activity_newmap/activity_newmap_mark4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+    <View id="item_2" nn="View" x="129.000" y="3.000" xr="0" yr="0" w="60.000" h="70.000" srw="286" srh="150">
+      <View id="_prop_panel_2" nn="View" x="7.000" y="2.000" xr="0" yr="0" w="44.000" h="44.000" srw="286" srh="150"/>
+      <Button nn="Button" x="3.000" y="48.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" nt="" ni="activity_newmap/activity_newmap_btn2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onBtnAction">
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" tag="101" i="activity_newmap/activity_newmap_btnword1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <ImageView nn="ImageView" x="3.000" y="48.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" i="activity_newmap/activity_newmap_mark4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+    <View id="item_3" nn="View" x="199.000" y="3.000" xr="0" yr="0" w="60.000" h="70.000" srw="286" srh="150">
+      <View id="_prop_panel_3" nn="View" x="7.000" y="2.000" xr="0" yr="0" w="44.000" h="44.000" srw="286" srh="150"/>
+      <Button nn="Button" x="3.000" y="48.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" nt="" ni="activity_newmap/activity_newmap_btn2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onBtnAction">
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" tag="101" i="activity_newmap/activity_newmap_btnword1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <ImageView nn="ImageView" x="3.000" y="48.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" i="activity_newmap/activity_newmap_mark4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+    <View id="item_4" nn="View" x="59.000" y="73.500" xr="0" yr="0" w="60.000" h="70.000" srw="286" srh="150">
+      <View id="_prop_panel_4" nn="View" x="7.000" y="2.000" xr="0" yr="0" w="44.000" h="44.000" srw="286" srh="150"/>
+      <Button nn="Button" x="3.000" y="48.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" nt="" ni="activity_newmap/activity_newmap_btn2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onBtnAction">
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" tag="101" i="activity_newmap/activity_newmap_btnword1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <ImageView nn="ImageView" x="3.000" y="48.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" i="activity_newmap/activity_newmap_mark4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+    <View id="item_5" nn="View" x="129.000" y="73.500" xr="0" yr="0" w="60.000" h="70.000" srw="286" srh="150">
+      <View id="_prop_panel_5" nn="View" x="7.000" y="2.000" xr="0" yr="0" w="44.000" h="44.000" srw="286" srh="150"/>
+      <Button nn="Button" x="3.000" y="48.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" nt="" ni="activity_newmap/activity_newmap_btn2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onBtnAction">
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" tag="101" i="activity_newmap/activity_newmap_btnword1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <ImageView nn="ImageView" x="3.000" y="48.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" i="activity_newmap/activity_newmap_mark4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+    <View id="item_6" nn="View" x="199.000" y="73.500" xr="0" yr="0" w="60.000" h="70.000" srw="286" srh="150">
+      <View id="_prop_panel_6" nn="View" x="7.000" y="2.000" xr="0" yr="0" w="44.000" h="44.000" srw="286" srh="150"/>
+      <Button nn="Button" x="3.000" y="48.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" nt="" ni="activity_newmap/activity_newmap_btn2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onBtnAction">
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" tag="101" i="activity_newmap/activity_newmap_btnword1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <ImageView nn="ImageView" x="3.000" y="48.000" xr="0" yr="0" w="52.000" h="20.000" srw="286" srh="150" i="activity_newmap/activity_newmap_mark4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+  </View>
+</View>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="420" h="270" nn="View">
+  <Button id="m_storage_btn" x="15.5" y="1.5" xr="0" yr="0" w="65" h="25" nn="Button" nt="仓库" ni="common/u_btn_comfirm5.png" nic="0,0,0,0" si="common/u_btn_comfirm4.png" zot="1" state="0" act="clickStorageAction" ts="12" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="m_shop_btn" x="95" y="1.5" xr="0" yr="0" w="65" h="25" nn="Button" nt="商店" ni="common/u_btn_comfirm5.png" nic="0,0,0,0" si="common/u_btn_comfirm4.png" zot="1" state="0" act="clickShopAction" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+  <ImageView x="8.5" y="28" xr="0" yr="0" w="405" h="1" nn="ImageView" i="common/u_bg_fengexian.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <View id="m_storage_view" x="7" y="30" xr="0" yr="0" w="410" h="240" nn="View">
+    <ImageView id="m_shop_img" x="5" y="16.5" xr="0" yr="0" w="400" h="200" nn="ImageView" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <View id="m_storage_list_root" x="2.5" y="2" xr="0" yr="0" w="201" h="235" nn="View">
+      <ImageView x="0" y="0" xr="0" yr="0" w="201" h="211" nn="ImageView" i="common/u_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="77" y="4.5" xr="0" yr="0" w="44" h="12" nn="ImageView" i="league_main/ui_league_word_lmck.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <View id="m_storage_bg_view" x="7.5" y="21" xr="0" yr="0" w="188" h="187" nn="View"/>
+        <Button id="btnBatchRemove" x="7" y="0.5" xr="0" yr="0" w="50.5" h="21" nn="Button" ni="league_storage/ui_bg_storage_remove.png" nic="0,0,0,0" state="0" act="doBatchRemove" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+        <Button id="btnCancelBatchRemove" x="155.5" y="0.5" xr="0" yr="0" w="40" h="21" nn="Button" ni="league_storage/ui_bg_storage_return.png" nic="0,0,0,0" state="0" act="cancelBatchRemove" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      </ImageView>
+      <Button id="m_left_btn" x="60" y="212.5" xr="0" yr="0" w="22" h="22" nn="Button" tag="11" ni="common/ui_common_btn_filp.png" nic="0,0,0,0" zot="1" state="0" act="touchPagingAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="m_right_btn" x="115.5" y="212.5" xr="0" yr="0" w="22" h="22" nn="Button" tag="12" ni="common/ui_common_btn_filp.png" nic="0,0,0,0" zot="1" state="0" act="touchPagingAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      <ImageView x="83.5" y="216" xr="0" yr="0" w="30" h="15" nn="ImageView" i="league_main/ui_league_dikuang.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <Label id="m_page_lab" x="0" y="0" xr="0" yr="0" w="30" h="15" nn="Label" t="1/20" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      </ImageView>
+      <Button x="7" y="215.5" xr="0" yr="0" w="40" h="15" nn="Button" nt="筛选" ni="league_main/ui_league_btn_screen.png" nic="0,0,0,0" zot="1" state="0" act="filtrateAction" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="18"/>
+      <ImageView id="m_no_open_hint_img" x="-5" y="90" xr="0" yr="0" w="210.5" h="45" nn="ImageView" iv="0" i="league_main/ui_league_bg_lock.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="31.5" y="12.5" xr="0" yr="0" w="19" h="19" nn="ImageView" i="common/smithy_lock.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label x="20" y="3" xr="0" yr="0" w="120" h="15" nn="Label" t="联盟等级达到    级后开启" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17">
+            <Label id="m_open_level_lab" x="55" y="0" xr="0" yr="0" w="20" h="15" nn="Label" t="12" ts="10" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+          </Label>
+        </ImageView>
+      </ImageView>
+      <Label id="m_no_find_hint_lab" x="45" y="97" xr="0" yr="0" w="100" h="30" nn="Label" iv="0" t="未找到此类物品" ts="12" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+      <Button id="btnStorageRecord" x="160" y="210" xr="0" yr="0" w="39" h="28.5" nn="Button" ni="league_storage/ui_btn_storage_record.png" nic="0,0,0,0" state="0" act="onRecordTap" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    </View>
+    <View x="207" y="2" xr="0" yr="0" w="201" h="235" nn="View">
+      <ImageView x="0" y="0" xr="0" yr="0" w="201" h="234" nn="ImageView" i="common/u_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="77" y="4.5" xr="0" yr="0" w="44" h="12" nn="ImageView" i="league_main/ui_league_word_wdbb.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <View id="m_bag_bg_view" x="5" y="19" xr="0" yr="0" w="192" h="208" nn="View"/>
+      </ImageView>
+      <ImageView x="-37.65999984741211" y="7.849999904632568" xr="0" yr="0" w="181" h="225" nn="ImageView" iv="0" i="common/xiaozhushou.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+        <ImageView x="128.5" y="45.5" xr="0" yr="0" w="110" h="50" nn="ImageView" i="common/duihuakuang.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1" fx="1">
+          <Label x="19" y="10.5" xr="0" yr="0" w="80" h="30" nn="Label" t="您的背包还未有此类道具哦" ts="10" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+        </ImageView>
+      </ImageView>
+    </View>
+  </View>
+  <View id="m_shop_view" x="7.5" y="29.5" xr="0" yr="0" w="410" h="240" nn="View" iv="0">
+    <ImageView x="2" y="4.5" xr="0" yr="0" w="407" h="216" nn="ImageView" i="common/u_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <View id="m_shop_bg_view" x="9.859999656677246" y="9.289999961853027" xr="0" yr="0" w="392" h="205" nn="View"/>
+    <Label x="323.5" y="222" xr="0" yr="0" w="80" h="15" nn="Label" t="每天5点刷新" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="17"/>
+  </View>
+  <ImageView x="316" y="2.5" xr="0" yr="0" w="24" h="24" nn="ImageView" i="common/u_bg_cost_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="1" y="0" xr="0" yr="0" w="24" h="24" nn="ImageView" i="common/u_other_menggong_s.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="m_augong_lab" x="26.43000030517578" y="4.5" xr="0" yr="0" w="80" h="15" nn="Label" t="Label" ts="10" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="17"/>
+    </ImageView>
+  </ImageView>
+</View>

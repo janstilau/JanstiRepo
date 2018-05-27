@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View id="m_bg_view" x="0" y="0" xr="0" yr="0" w="135" h="230" nn="View">
+  <ImageView x="0" y="0" xr="0" yr="0" w="130" h="187" nn="武将框" i="palacetreasure/huawen.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+    <View id="avatarContainer" x="0" y="0" xr="0" yr="0" w="130" h="187" nn="View"/>
+  </ImageView>
+  <Button id="selectBtn" x="29.399999618530273" y="195.6999969482422" xr="0" yr="0" w="75" h="29" nn="确认按钮" ni="palacetreasure/xuanzeanniu.png" nic="0,0,0,0" zot="1" state="0" act="onSelectAction" ts="12" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18">
+    <Label id="name_lab" x="-7.699999809265137" y="3.5" xr="0" yr="0" w="90" h="20" nn="选择吕布" t="选择吕布" ts="12" tctl="rgb(77,35,6)" tctr="rgb(77,35,6)" tcbl="rgb(77,35,6)" tcbr="rgb(77,35,6)" sc="rgb(0,0,0)" ta="18"/>
+  </Button>
+</View>

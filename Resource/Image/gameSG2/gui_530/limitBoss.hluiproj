@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="262.000" h="270.000" srw="262" srh="270">
+  <View x="0.000" y="0.000" xr="0" yr="0" w="262.000" h="270.000" srw="262" srh="270">
+    <ImageView x="5.000" y="5.000" xr="0" yr="0" w="256.000" h="142.000" srw="262" srh="270" i="limitBoss/boss.jpg" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="bossUI" x="100.000" y="1.500" xr="0" yr="0" w="27.000" h="34.000" srw="262" srh="270" iv="0" i="limitBoss/cha_word_god.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="nameTxt" x="24.000" y="10.500" xr="0" yr="0" w="35.000" h="12.000" srw="262" srh="270" t="张角" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <ImageView x="55.500" y="9.500" xr="0" yr="0" w="40.000" h="16.000" srw="262" srh="270" iv="0" i="common/cha_word_Lv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label id="levelTxt" x="70.500" y="10.500" xr="0" yr="0" w="35.000" h="12.000" srw="262" srh="270" iv="0" t="99" ts="12" tctl="rgb(255, 96, 0)" tctr="rgb(255, 96, 0)" tcbl="rgb(255, 96, 0)" tcbr="rgb(255, 96, 0)" sc="black" ta="17"/>
+      </ImageView>
+      <ImageView id="imgContainer" x="74.570" y="-4.400" xr="0" yr="0" w="102.000" h="144.000" srw="262" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <Label x="7.500" y="151.000" xr="0" yr="0" w="250.000" h="9.000" srw="262" srh="270" t="1.每日 12:00-14:00、18:00-20:00 开放" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+    <Label x="7.500" y="162.000" xr="0" yr="0" w="250.000" h="9.000" srw="262" srh="270" t="2.每日出现一个新魔王，可以对其进行挑战" ts="9" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="17"/>
+    <View x="5.000" y="174.500" xr="0" yr="0" w="256.000" h="50.000" srw="262" srh="270">
+      <Label x="2.500" y="2.000" xr="0" yr="0" w="20.000" h="10.000" srw="262" srh="270" t="奖励" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      <View id="container" x="23.000" y="17.500" xr="0" yr="0" w="180.000" h="30.000" srw="262" srh="270"/>
+    </View>
+    <ImageView x="5.000" y="224.000" xr="0" yr="0" w="256.000" h="7.000" srw="262" srh="270" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Button id="tipsBtn" x="218.000" y="102.000" xr="0" yr="0" w="35.500" h="35.500" srw="262" srh="270" nt="" ni="common/guize.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="tipsAction"/>
+  </View>
+  <ImageView id="m_free_bg" x="80.000" y="118.000" xr="0" yr="0" w="102.000" h="18.000" srw="262" srh="270" iv="0" i="common/wine_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label id="m_free_cd" x="7.000" y="1.250" xr="0" yr="0" w="80.000" h="15.000" srw="262" srh="270" t="后开启" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="20">
+      <Label id="m_cd_lab" x="8.000" y="0.000" xr="0" yr="0" w="80.000" h="15.000" srw="262" srh="270" t="04:20:30" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+    </Label>
+    <Label id="m_week_cd" x="6.000" y="1.250" xr="0" yr="0" w="90.000" h="15.000" srw="262" srh="270" iv="0" t="今日已结束" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+  </ImageView>
+  <Label x="150.000" y="203.000" xr="0" yr="0" w="80.000" h="15.000" srw="262" srh="270" t="可挑战次数：" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+    <Label id="fightTimes" x="51.470" y="0.360" xr="0" yr="0" w="30.000" h="15.000" srw="262" srh="270" iv="0" t="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+  </Label>
+  <Button id="addTimesBtn" x="226.150" y="198.700" xr="0" yr="0" w="25.000" h="25.000" srw="262" srh="270" iv="0" nt="" ni="limitBoss/cha_jia.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="addTimesAction"/>
+  <Button id="rankBtn" x="8.500" y="92.500" xr="0" yr="0" w="42.000" h="42.000" srw="262" srh="270" iv="0" nt="" ni="common/u_btn_paihangbang.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="rankAction"/>
+</View>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="301.000" h="215.000" srw="480" srh="320">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="301.000" h="215.000" srw="480" srh="320" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="100.500" y="7.000" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="提 示" ts="12" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+    <ImageView nn="ImageView" x="278.000" y="7.000" xr="0" yr="0" w="16.500" h="17.000" srw="480" srh="320" i="common/u_btn_close2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="6.500" y="26.500" xr="0" yr="0" w="290.000" h="1.500" srw="480" srh="320" i="common/u_bg_fengexian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="8.850" y="32.000" xr="0" yr="0" w="285.000" h="12.000" srw="480" srh="320" t="1. 攻占不同等级的地块或城池，联盟可获得数量不等的势力值。" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+      <Label nn="Label" x="0.000" y="14.500" xr="0" yr="0" w="285.000" h="12.000" srw="480" srh="320" t="2. 各等级地块和城池势力值如下:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    </Label>
+    <ImageView nn="ImageView" x="5.000" y="63.000" xr="0" yr="0" w="60.000" h="145.000" srw="480" srh="320" i="common/lieming_sw_bg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="4.000" y="1.000" xr="0" yr="0" w="30.000" h="15.000" srw="480" srh="320" i="common/u_bg_alliance.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="480" srh="320" t="地块" ts="11" tctl="rgb(168, 55, 0)" tctr="rgb(168, 55, 0)" tcbl="rgb(168, 55, 0)" tcbr="rgb(168, 55, 0)" sc="black" ta="18"/>
+        <Label nn="Label" x="-3.700" y="17.000" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="普通地:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="37.000" y="0.500" xr="0" yr="0" w="25.000" h="12.000" srw="480" srh="320" t="10" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="32.000" xr="0" yr="0" w="50.000" h="12.000" srw="480" srh="320" t="边境附地:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="43.500" y="0.340" xr="0" yr="0" w="15.000" h="12.000" srw="480" srh="320" t="10" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="47.000" xr="0" yr="0" w="50.000" h="12.000" srw="480" srh="320" t="风水宝地:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="43.500" y="0.340" xr="0" yr="0" w="15.000" h="12.000" srw="480" srh="320" t="15" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="62.000" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="草场:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="26.000" y="0.500" xr="0" yr="0" w="25.000" h="12.000" srw="480" srh="320" t="20" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="77.000" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="矿场:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="26.000" y="0.500" xr="0" yr="0" w="25.000" h="12.000" srw="480" srh="320" t="20" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="92.000" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="林场:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="26.000" y="0.500" xr="0" yr="0" w="25.000" h="12.000" srw="480" srh="320" t="20" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="107.000" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="高级地:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="37.000" y="0.500" xr="0" yr="0" w="25.000" h="12.000" srw="480" srh="320" t="50" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+      </ImageView>
+    </ImageView>
+    <ImageView nn="ImageView" x="68.000" y="63.000" xr="0" yr="0" w="60.000" h="145.000" srw="480" srh="320" i="common/lieming_sw_bg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="4.000" y="1.000" xr="0" yr="0" w="30.000" h="15.000" srw="480" srh="320" i="common/u_bg_alliance.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="480" srh="320" t="关隘" ts="11" tctl="rgb(168, 55, 0)" tctr="rgb(168, 55, 0)" tcbl="rgb(168, 55, 0)" tcbr="rgb(168, 55, 0)" sc="black" ta="18"/>
+        <Label nn="Label" x="-3.700" y="17.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="关隘:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="25.000" y="0.500" xr="0" yr="0" w="30.000" h="12.000" srw="480" srh="320" t="100" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+      </ImageView>
+      <ImageView nn="ImageView" x="4.000" y="38.500" xr="0" yr="0" w="30.000" h="15.000" srw="480" srh="320" i="common/u_bg_alliance.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="480" srh="320" t="邑城" ts="11" tctl="rgb(168, 55, 0)" tctr="rgb(168, 55, 0)" tcbl="rgb(168, 55, 0)" tcbr="rgb(168, 55, 0)" sc="black" ta="18"/>
+        <Label nn="Label" x="-3.700" y="17.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="邑城:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.000" y="0.500" xr="0" yr="0" w="30.000" h="12.000" srw="480" srh="320" t="1000" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+      </ImageView>
+      <ImageView nn="ImageView" x="4.000" y="75.500" xr="0" yr="0" w="30.000" h="15.000" srw="480" srh="320" i="common/u_bg_alliance.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="480" srh="320" t="郡城" ts="11" tctl="rgb(168, 55, 0)" tctr="rgb(168, 55, 0)" tcbl="rgb(168, 55, 0)" tcbr="rgb(168, 55, 0)" sc="black" ta="18"/>
+        <Label nn="Label" x="-3.700" y="17.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="郡城:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.000" y="0.500" xr="0" yr="0" w="30.000" h="12.000" srw="480" srh="320" t="3000" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+      </ImageView>
+      <ImageView nn="ImageView" x="4.000" y="113.000" xr="0" yr="0" w="30.000" h="15.000" srw="480" srh="320" i="common/u_bg_alliance.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="480" srh="320" t="州城" ts="11" tctl="rgb(168, 55, 0)" tctr="rgb(168, 55, 0)" tcbl="rgb(168, 55, 0)" tcbr="rgb(168, 55, 0)" sc="black" ta="18"/>
+        <Label nn="Label" x="-3.700" y="17.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="州城:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.000" y="0.500" xr="0" yr="0" w="30.000" h="12.000" srw="480" srh="320" t="5000" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+      </ImageView>
+    </ImageView>
+    <ImageView nn="ImageView" x="130.500" y="63.000" xr="0" yr="0" w="166.000" h="145.000" srw="480" srh="320" i="common/lieming_sw_bg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="48.500" y="20.500" xr="0" yr="0" w="1.000" h="120.000" srw="480" srh="320" i="common/u_bg_fengexian1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="108.500" y="20.500" xr="0" yr="0" w="1.000" h="120.000" srw="480" srh="320" i="common/u_bg_fengexian1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="4.000" y="1.000" xr="0" yr="0" w="60.000" h="15.000" srw="480" srh="320" i="common/u_bg_alliance.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="60.000" h="15.000" srw="480" srh="320" t="个人主城" ts="11" tctl="rgb(168, 55, 0)" tctr="rgb(168, 55, 0)" tcbl="rgb(168, 55, 0)" tcbr="rgb(168, 55, 0)" sc="black" ta="18"/>
+        <Label nn="Label" x="-3.700" y="17.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="1级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="23.000" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="5" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="31.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="2级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="23.000" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="10" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="45.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="3级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="23.000" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="15" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="59.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="4级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="23.000" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="20" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="73.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="5级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="23.000" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="25" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="87.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="6级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="23.000" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="30" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="101.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="7级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="23.000" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="35" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="115.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="8级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="23.000" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="40" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="-3.700" y="129.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="9级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="23.000" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="45" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="52.000" y="17.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="10级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="50" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="52.000" y="31.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="11级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="55" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="52.000" y="45.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="12级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="60" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="52.000" y="59.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="13级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="65" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="52.000" y="73.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="14级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="70" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="52.000" y="87.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="15级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="75" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="52.000" y="101.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="16级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="80" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="52.000" y="115.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="17级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="85" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="52.000" y="129.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="18级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="90" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="112.000" y="17.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="19级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="95" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="112.000" y="31.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="20级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="100" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="112.000" y="45.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="21级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="105" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="112.000" y="59.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="22级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="110" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="112.000" y="73.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="23级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="115" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="112.000" y="87.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="24级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="120" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="112.000" y="101.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="320" t="25级:" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+          <Label nn="Label" x="28.500" y="0.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="125" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+        </Label>
+      </ImageView>
+    </ImageView>
+  </ImageView>
+</View>

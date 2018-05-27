@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="220" h="85" nn="View">
+  <ImageView x="0" y="0" xr="0" yr="0" w="220" h="85" nn="ImageView" i="common/u_bg_tips.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <Label id="titleLab" x="6.5" y="7.5" xr="0" yr="0" w="190" h="10" nn="Label" t="南郡之战复仇状态：" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17">
+      <Label id="loseLab" x="0" y="13.5" xr="0" yr="0" w="208" h="20" nn="Label" t="上一次轮战中您所属郡落败，获得复仇状态（状态可叠加）" ts="9" tctl="rgb(0,255,0)" tctr="rgb(0,255,0)" tcbl="rgb(0,255,0)" tcbr="rgb(0,255,0)" sc="rgb(0,0,0)" ta="17"/>
+      <Label id="drawLab" x="0" y="13.5" xr="0" yr="0" w="208" h="20" nn="Label" iv="0" t="上一次轮战中三郡战平，各减少一层复仇状态（状态可叠加）" ts="9" tctl="rgb(0,255,0)" tctr="rgb(0,255,0)" tcbl="rgb(0,255,0)" tcbr="rgb(0,255,0)" sc="rgb(0,0,0)" ta="17"/>
+      <Label id="openServerTimeLab" x="0" y="13.5" xr="0" yr="0" w="208" h="20" nn="Label" iv="0" t="由于开服时间落后，您所在郡获得：南郡之战复仇状态！" ts="9" tctl="rgb(0,255,0)" tctr="rgb(0,255,0)" tcbl="rgb(0,255,0)" tcbr="rgb(0,255,0)" sc="rgb(0,0,0)" ta="17"/>
+      <Label id="enhancelab" x="0" y="37.5" xr="0" yr="0" w="208" h="20" nn="Label" t="南郡之战复仇状态第20层（伤害提高100%，受伤降低12.1%）" ts="9" tctl="rgb(0,255,0)" tctr="rgb(0,255,0)" tcbl="rgb(0,255,0)" tcbr="rgb(0,255,0)" sc="rgb(0,0,0)" ta="17"/>
+      <Label id="moreThanTenLab" x="0" y="61" xr="0" yr="0" w="208" h="10" nn="Label" t="（下一次轮战结束后，该复仇状态将消失）" ts="9" tctl="rgb(255,39,64)" tctr="rgb(255,39,64)" tcbl="rgb(255,39,64)" tcbr="rgb(255,39,64)" sc="rgb(0,0,0)" ta="18"/>
+    </Label>
+  </ImageView>
+</View>

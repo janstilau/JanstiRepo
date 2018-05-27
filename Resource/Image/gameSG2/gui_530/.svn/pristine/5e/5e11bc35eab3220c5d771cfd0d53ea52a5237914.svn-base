@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="230" h="178">
+  <ImageView x="0" y="0" xr="0" yr="0" w="225.5" h="176" i="common/u_bg_2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="49.75" y="10.869999885559082" xr="0" yr="0" w="126" h="19" i="common/u_bg_title2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label x="0" y="3" xr="0" yr="0" w="126" h="12" t="提 示" ts="12" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="14.25" y="42.79999923706055" xr="0" yr="0" w="197" h="85" i="common/u_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label x="6.199999809265137" y="5" xr="0" yr="0" w="190" h="18.299999237060547" t="是否要重置此名将？" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(52,0,0)" ta="18"/>
+      <Label id="_des_lab" x="10.899999618530273" y="31.600000381469727" xr="0" yr="0" w="182.1999969482422" h="23.799999237060547" t="重置后，名将等级将变为0级，以80%的比例返还升级消耗的魏国名将印" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(52,0,0)" ta="17"/>
+      <Label x="28.600000381469727" y="36.70000076293945" xr="0" yr="0" w="151.60000610351562" h="23.799999237060547" t="" ts="9" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(52,0,0)" ta="18">
+        <ImageView id="_icon_img" x="81.5" y="-3.700000047683716" xr="0" yr="0" w="30" h="30" iv="0" i="" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+          <Label id="_count_lab" x="32.100006103515625" y="3.2999939918518066" xr="0" yr="0" w="69" h="23.799999237060547" iv="0" t="9999" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(52,0,0)" ta="17"/>
+        </ImageView>
+      </Label>
+    </ImageView>
+  </ImageView>
+  <Button x="201.2899932861328" y="0.009999999776482582" xr="0" yr="0" w="26" h="26" ni="common/u_btn_close1.png" nic="0,0,0,0" zot="1" state="0" act="closeAction" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button x="62.5" y="138" xr="0" yr="0" w="100" h="32" nt="确 定" ni="common/u_btn_comfirm1.png" nic="0,0,0,0" st="确定" zot="1" state="0" act="sureAction" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(115,9,1)" ta="18"/>
+</View>

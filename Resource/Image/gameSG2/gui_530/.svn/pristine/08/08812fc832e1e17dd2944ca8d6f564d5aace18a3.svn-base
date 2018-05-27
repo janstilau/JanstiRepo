@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView nn="ImageView" x="22.000" y="18.500" xr="0" yr="0" w="433.500" h="286.000" srw="480" srh="320" i="common/u_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="127.000" y="9.500" xr="0" yr="0" w="44.500" h="272.000" srw="480" srh="320" i="common/u_bg_gradient1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="-11.000" y="-14.000" xr="0" yr="0" w="457.500" h="80.000" srw="480" srh="320" i="common/u_bg_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="-11.000" y="-14.000" xr="0" yr="0" w="457.500" h="27.000" srw="480" srh="320" i="common/u_bg_title1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="181.500" y="5.500" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="信息" ts="13" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView nn="ImageView" x="13.000" y="19.500" xr="0" yr="0" w="110.000" h="248.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ScrollView id="scrollView" nn="ScrollView" x="5.000" y="2.000" xr="0" yr="0" w="100.000" h="245.000" srw="480" srh="320"/>
+    </ImageView>
+    <View id="rankview" nn="View" x="134.500" y="15.000" xr="0" yr="0" w="290.000" h="260.000" srw="480" srh="320">
+      <View nn="View" x="-0.500" y="0.000" xr="0" yr="0" w="290.000" h="20.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="9.000" y="223.500" xr="0" yr="0" w="270.000" h="7.000" srw="480" srh="320" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="14.000" y="4.500" xr="0" yr="0" w="22.500" h="12.000" srw="480" srh="320" i="cross_arena/cross_arena_word13.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="81.000" y="4.500" xr="0" yr="0" w="32.000" h="12.000" srw="480" srh="320" i="cross_arena/cross_arena_word14.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="176.500" y="4.500" xr="0" yr="0" w="22.500" h="12.000" srw="480" srh="320" i="cross_arena/cross_arena_word15.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="storeImg" nn="ImageView" x="243.000" y="4.500" xr="0" yr="0" w="22.500" h="12.000" srw="480" srh="320" i="cross_arena/cross_arena_word16.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="fightImg" nn="ImageView" x="238.000" y="4.500" xr="0" yr="0" w="32.500" h="12.000" srw="480" srh="320" i="cross_arena/cross_arena_word17.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </View>
+      <View id="rankContainer" nn="View" x="-0.500" y="17.000" xr="0" yr="0" w="290.000" h="208.000" srw="480" srh="320"/>
+      <Label id="rankTxt" nn="Label" x="52.000" y="235.000" xr="0" yr="0" w="50.000" h="10.000" srw="480" srh="320" t="未上榜" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17">
+        <Label nn="Label" x="-50.500" y="0.000" xr="0" yr="0" w="50.000" h="10.000" srw="480" srh="320" t="我的排名：" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </Label>
+      <Button id="rankAwardBtn" nn="Button" x="220.500" y="227.500" xr="0" yr="0" w="66.000" h="25.000" srw="480" srh="320" nt="排行榜奖励" ni="common/u_btn_comfirm9.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="common/u_btn_comfirm9.png" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="rankAwardAction"/>
+      <Label nn="Label" x="68.960" y="235.000" xr="0" yr="0" w="150.000" h="10.000" srw="480" srh="320" t="（每周排位赛结束后更新）" ts="10" tctl="rgb(147, 98, 39)" tctr="rgb(147, 98, 39)" tcbl="rgb(147, 98, 39)" tcbr="rgb(147, 98, 39)" sc="black" ta="18"/>
+    </View>
+    <View id="historyview" nn="View" x="134.500" y="15.000" xr="0" yr="0" w="290.000" h="260.000" srw="480" srh="320" iv="0">
+      <View id="historyContainer" nn="View" x="-6.000" y="5.500" xr="0" yr="0" w="298.000" h="240.000" srw="480" srh="320"/>
+      <ImageView id="emptyHistory" nn="ImageView" x="-6.000" y="21.500" xr="0" yr="0" w="181.000" h="225.000" srw="480" srh="320" iv="0" i="common/xiaozhushou.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="136.000" y="29.100" xr="0" yr="0" w="153.000" h="67.000" srw="480" srh="320" i="common/duihuakuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000" fx="1">
+          <Label nn="Label" x="27.000" y="6.500" xr="0" yr="0" w="100.000" h="50.000" srw="480" srh="320" t="暂无比赛记录" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+      </ImageView>
+      <ImageView nn="ImageView" x="0.800" y="245.500" xr="0" yr="0" w="285.600" h="12.500" srw="480" srh="320" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+    <View id="awardview" nn="View" x="134.500" y="15.000" xr="0" yr="0" w="290.000" h="260.000" srw="480" srh="320" iv="0">
+      <View id="awardContainer" nn="View" x="0.000" y="5.500" xr="0" yr="0" w="290.000" h="213.000" srw="480" srh="320"/>
+      <ImageView nn="ImageView" x="8.500" y="218.500" xr="0" yr="0" w="270.000" h="7.000" srw="480" srh="320" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="emptyCheer" nn="ImageView" x="-4.000" y="-5.500" xr="0" yr="0" w="181.000" h="225.000" srw="480" srh="320" iv="0" i="common/xiaozhushou.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="136.000" y="29.100" xr="0" yr="0" w="153.000" h="67.000" srw="480" srh="320" i="common/duihuakuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000" fx="1">
+          <Label nn="Label" x="27.000" y="6.500" xr="0" yr="0" w="100.000" h="50.000" srw="480" srh="320" t="暂无奖励" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+      </ImageView>
+      <Button id="oneKeyBtn" nn="Button" x="96.000" y="220.500" xr="0" yr="0" w="97.000" h="32.000" srw="480" srh="320" nt="一键领取" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="oneKeyAction"/>
+    </View>
+    <View id="ruleview" nn="View" x="134.500" y="15.000" xr="0" yr="0" w="290.000" h="260.000" srw="480" srh="320" iv="0">
+      <View id="ruleContainer" nn="View" x="-2.500" y="5.500" xr="0" yr="0" w="295.000" h="240.000" srw="480" srh="320"/>
+      <ImageView nn="ImageView" x="8.500" y="245.000" xr="0" yr="0" w="270.000" h="7.000" srw="480" srh="320" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+  </ImageView>
+  <Button id="closeBtn" nn="Button" x="441.000" y="4.500" xr="0" yr="0" w="27.500" h="35.000" srw="480" srh="320" nt="" ni="common/u_btn_close.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+</View>

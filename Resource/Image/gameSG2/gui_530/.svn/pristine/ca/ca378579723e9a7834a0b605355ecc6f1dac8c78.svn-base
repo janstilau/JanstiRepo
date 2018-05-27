@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="175" h="40">
+  <Label id="m_desLab" x="0" y="0" xr="0" yr="0" w="200" h="10" t="第10名" ts="9" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="17"/>
+  <Label id="detail_lab" x="28" y="0" xr="0" yr="0" w="200" h="10" t="活动期间累计充值10w钻可参与第一排名" ts="8" tctl="rgb(158,255,254)" tctr="rgb(158,255,254)" tcbl="rgb(158,255,254)" tcbr="rgb(158,255,254)" sc="rgb(0,0,0)" ta="17"/>
+  <View id="prop_panel" x="10" y="10.300000190734863" xr="0" yr="0" w="160" h="27.5"/>
+  <ImageView id="crown_img" x="0" y="10.300000190734863" xr="0" yr="0" w="10" h="10" i="common/paimingdiyi.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <ImageView x="0" y="39" xr="0" yr="0" w="175" h="1" i="activity_newmap/activity_newmap_paihang_fengjiexian.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+</View>

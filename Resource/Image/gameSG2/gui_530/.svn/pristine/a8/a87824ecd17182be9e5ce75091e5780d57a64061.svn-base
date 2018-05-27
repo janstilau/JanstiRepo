@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView nn="ImageView" x="25.500" y="34.500" xr="0" yr="0" w="430.000" h="263.000" srw="480" srh="320" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="_bing_img" nn="ImageView" x="142.000" y="9.000" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="320" i="mount/horse_icon_13.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="_level_lab" nn="Label" x="166.500" y="10.000" xr="0" yr="0" w="30.000" h="13.000" srw="480" srh="320" t="Lv.30" ts="10" tctl="rgb(153, 0, 0)" tctr="rgb(153, 0, 0)" tcbl="rgb(153, 0, 0)" tcbr="rgb(153, 0, 0)" sc="rgb(153, 0, 0)" ta="20"/>
+    <Label id="_name_lab" nn="Label" x="196.000" y="10.000" xr="0" yr="0" w="70.000" h="13.000" srw="480" srh="320" t="马的名字六字" ts="10" tctl="rgb(153, 0, 0)" tctr="rgb(153, 0, 0)" tcbl="rgb(153, 0, 0)" tcbr="rgb(153, 0, 0)" sc="rgb(153, 0, 0)" ta="18"/>
+    <Button nn="Button" x="265.000" y="4.000" xr="0" yr="0" w="22.000" h="22.000" srw="480" srh="320" nt="" ni="common/ui_common_btn_change.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onChangeName"/>
+    <ImageView nn="ImageView" x="9.500" y="27.000" xr="0" yr="0" w="400.000" h="1.000" srw="480" srh="320" i="common/u_bg_fengexian.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Button nn="Button" x="403.500" y="0.000" xr="0" yr="0" w="26.000" h="26.000" srw="480" srh="320" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onCloseCallBack"/>
+    <Button nn="Button" x="0.000" y="0.000" xr="0" yr="0" w="27.000" h="27.000" srw="480" srh="320" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onDesCallBack"/>
+    <ImageView nn="ImageView" x="7.500" y="29.930" xr="0" yr="0" w="210.000" h="226.000" srw="480" srh="320" i="mount/horse_bg_5.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <View id="m_entity_view" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="210.000" h="226.000" srw="480" srh="320">
+        <View id="mEffectBg" nn="View" x="5.450" y="-11.000" xr="0" yr="0" w="200.000" h="200.000" srw="480" srh="320"/>
+        <View id="scrollViewPanel" nn="View" x="4.050" y="28.750" xr="0" yr="0" w="200.000" h="150.000" srw="480" srh="320"/>
+        <ImageView id="m_illusion_result" nn="ImageView" x="11.000" y="35.500" xr="0" yr="0" w="30.000" h="30.000" srw="480" srh="320" i="common/shop_daojukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView id="m_illusion_result_icon" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="30.000" srw="480" srh="320" i="common/shop_daojukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView nn="ImageView" x="14.000" y="0.000" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="320" i="mount/horse_icon_hh_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+      </View>
+      <View id="m_detail_view" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="210.000" h="226.000" srw="480" srh="320">
+        <ImageView id="_left_img" nn="ImageView" x="4.000" y="98.000" xr="0" yr="0" w="16.500" h="27.500" srw="480" srh="320" i="common/zhanyi_btn_page.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000" fx="1"/>
+        <ImageView id="_right_img" nn="ImageView" x="190.820" y="97.400" xr="0" yr="0" w="16.500" h="27.500" srw="480" srh="320" i="common/zhanyi_btn_page.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="34.340" y="170.230" xr="0" yr="0" w="161.000" h="16.000" srw="480" srh="320" i="horse/horse_bg_exp.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView id="exp_pre" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="160.000" h="15.000" srw="480" srh="320" i="common_1/ride_exp_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label id="exp_lab" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="161.000" h="16.000" srw="480" srh="320" t="800/1000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        </ImageView>
+        <Label id="_speed_add" nn="Label" x="56.550" y="155.480" xr="0" yr="0" w="100.000" h="16.000" srw="480" srh="320" t="移动速度增加20%" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="18"/>
+        <ImageView id="xg_img" nn="ImageView" x="93.000" y="5.500" xr="0" yr="0" w="27.500" h="15.500" srw="480" srh="320" i="mount/horse_sign_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Button id="resetNatureBtn" nn="Button" x="125.600" y="5.500" xr="0" yr="0" w="28.000" h="17.000" srw="480" srh="320" nt="" ni="mount/u_btn_reset.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="resetNatureBtnAction"/>
+        <ImageView nn="ImageView" x="12.000" y="173.000" xr="0" yr="0" w="21.000" h="9.500" srw="480" srh="320" i="common/js_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Button id="_duiwu_btn" nn="Button" x="12.060" y="9.910" xr="0" yr="0" w="25.000" h="25.000" srw="480" srh="320" nt="" ni="mount/horse_icon_15.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onFormationCrossCallBack">
+          <Label id="_army_camp_lab" nn="Label" x="3.500" y="5.500" xr="0" yr="0" w="10.000" h="10.000" srw="480" srh="320" t="2" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+        </Button>
+        <Button id="_cross_btn" nn="Button" x="12.000" y="10.000" xr="0" yr="0" w="25.000" h="25.000" srw="480" srh="320" nt="" ni="mount/horse_icon_18.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onFormationCallBack"/>
+        <Button id="_buzhen_btn" nn="Button" x="40.560" y="9.910" xr="0" yr="0" w="25.000" h="25.000" srw="480" srh="320" nt="" ni="mount/horse_icon_14.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onFormationCallBack"/>
+        <Button id="_peiyang_mult_btn" nn="Button" x="155.500" y="195.000" xr="0" yr="0" w="45.000" h="23.000" srw="480" srh="320" nt="升级" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onPeiYangMultCallBack">
+          <ImageView id="_red_img" nn="ImageView" x="31.140" y="-4.790" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Button>
+        <Button id="auto_upgrade" nn="Button" x="107.500" y="195.000" xr="0" yr="0" w="45.000" h="23.000" srw="480" srh="320" nt="自动升级" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onUpgradeAutoCallBack"/>
+        <Button nn="Button" x="172.000" y="5.000" xr="0" yr="0" w="29.000" h="34.500" srw="480" srh="320" nt="" ni="mount/horse_icon_10.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onFangShengCallBack"/>
+        <Button id="_pyang_one_btn" nn="Button" x="137.500" y="191.000" xr="0" yr="0" w="62.000" h="27.500" srw="480" srh="320" iv="0" nt="培养" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="11" tctl="black" tctr="black" tcbl="black" tcbr="black" sc="black" ta="18" act="onPeiYangOneCallBack"/>
+        <Label id="cost_prop_num" nn="Label" x="53.500" y="199.500" xr="0" yr="0" w="60.000" h="12.000" srw="480" srh="320" t="999999999" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+        <ImageView id="cost_prop_bg" nn="ImageView" x="28.500" y="193.500" xr="0" yr="0" w="23.000" h="23.000" srw="480" srh="320" i="common/u_other_goods3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView id="cost_prop_icon" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="23.000" h="23.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <Button nn="Button" x="81.500" y="23.000" xr="0" yr="0" w="45.000" h="15.000" srw="480" srh="320" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onScoreDetail">
+          <ImageView nn="ImageView" x="-1.000" y="1.500" xr="0" yr="0" w="22.000" h="12.000" srw="480" srh="320" i="mount/horse_word_8.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="score_level" nn="ImageView" x="20.500" y="1.500" xr="0" yr="0" w="32.000" h="12.000" srw="480" srh="320" i="mount/horse_score_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView nn="ImageView" x="53.500" y="0.000" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="320" iv="0" i="common/u_btn_zhushi_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Button>
+      </View>
+      <View id="m_review_view" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="210.000" h="226.000" srw="480" srh="320" iv="0">
+        <ImageView nn="ImageView" x="43.500" y="21.000" xr="0" yr="0" w="163.500" h="183.000" srw="480" srh="320" i="mount/horse_bg_hh_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="8.000" y="5.500" xr="0" yr="0" w="40.000" h="10.000" srw="480" srh="320" t="幻化预览" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+          <Button id="m_illusion_btn" nn="Button" x="50.500" y="147.500" xr="0" yr="0" w="62.000" h="27.500" srw="480" srh="320" nt="幻化" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="illusionAction"/>
+          <Button id="m_cancel_illusion_btn" nn="Button" x="50.500" y="147.500" xr="0" yr="0" w="62.000" h="27.500" srw="480" srh="320" nt="取消幻化" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="cancelIllusionAction"/>
+          <ImageView id="m_comsume_img" nn="ImageView" x="45.000" y="128.000" xr="0" yr="0" w="20.000" h="16.800" srw="480" srh="320" i="common/shop_pyzs.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <Label id="m_comsume_num" nn="Label" x="23.000" y="3.500" xr="0" yr="0" w="70.000" h="10.000" srw="480" srh="320" t="9999999" ts="10" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+          </ImageView>
+          <ImageView id="m_review_img" nn="ImageView" x="8.230" y="28.620" xr="0" yr="0" w="150.000" h="100.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+      </View>
+    </ImageView>
+    <View id="_jn_panel" nn="View" x="222.500" y="29.000" xr="0" yr="0" w="205.000" h="230.000" srw="480" srh="320" iv="0">
+      <ImageView nn="ImageView" x="57.500" y="3.000" xr="0" yr="0" w="92.000" h="18.000" srw="480" srh="320" i="common/u_bg_title5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="92.000" h="18.000" srw="480" srh="320" t="技能" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </ImageView>
+      <Button nn="Button" x="153.000" y="-1.000" xr="0" yr="0" w="39.000" h="35.000" srw="480" srh="320" nt="" ni="mount/horse_icon_11.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onSkillStudyCallBack"/>
+      <Label id="inherent_lab" nn="Label" x="15.000" y="22.500" xr="0" yr="0" w="80.000" h="12.000" srw="480" srh="320" t="特殊技能（2/3）" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      <ImageView nn="ImageView" x="7.500" y="35.000" xr="0" yr="0" w="188.500" h="42.000" srw="480" srh="320" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="inherent_skill_panel" nn="ImageView" x="2.850" y="3.000" xr="0" yr="0" w="184.000" h="36.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <Label id="postnatal_lab" nn="Label" x="15.000" y="78.500" xr="0" yr="0" w="100.000" h="12.000" srw="480" srh="320" t="可学技能（2/3）" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      <ImageView nn="ImageView" x="7.000" y="91.000" xr="0" yr="0" w="188.500" h="84.000" srw="480" srh="320" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="postnatal_skill_panel" nn="ImageView" x="2.250" y="3.000" xr="0" yr="0" w="184.000" h="77.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <Button id="m_skill_add_btn" nn="Button" x="9.000" y="4.500" xr="0" yr="0" w="44.000" h="16.000" srw="480" srh="320" nt="" ni="mount/horse_btn_hh_2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="skillAddAction"/>
+    </View>
+    <View id="_sx_panel" nn="View" x="228.000" y="25.000" xr="0" yr="0" w="205.000" h="230.000" srw="480" srh="320" iv="0">
+      <ImageView nn="ImageView" x="52.000" y="7.000" xr="0" yr="0" w="92.000" h="18.000" srw="480" srh="320" i="common/u_bg_title5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="92.000" h="18.000" srw="480" srh="320" t="属性" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </ImageView>
+      <View id="sx_hp" nn="View" x="2.500" y="29.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="9.000" y="3.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="生命" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="rgb(153, 0, 0)" tctr="rgb(153, 0, 0)" tcbl="rgb(153, 0, 0)" tcbr="rgb(153, 0, 0)" sc="black" ta="18"/>
+      </View>
+      <View id="sx_attack" nn="View" x="2.500" y="54.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="9.000" y="3.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="攻击" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="rgb(153, 0, 0)" tctr="rgb(153, 0, 0)" tcbl="rgb(153, 0, 0)" tcbr="rgb(153, 0, 0)" sc="black" ta="18"/>
+      </View>
+      <View id="sx_phy_defence" nn="View" x="2.500" y="79.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="9.000" y="3.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="物防" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="rgb(153, 0, 0)" tctr="rgb(153, 0, 0)" tcbl="rgb(153, 0, 0)" tcbr="rgb(153, 0, 0)" sc="black" ta="18"/>
+      </View>
+      <View id="sx_mag_defence" nn="View" x="2.500" y="104.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="9.000" y="3.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="法防" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="rgb(153, 0, 0)" tctr="rgb(153, 0, 0)" tcbl="rgb(153, 0, 0)" tcbr="rgb(153, 0, 0)" sc="black" ta="18"/>
+      </View>
+      <View id="sx_crit" nn="View" x="94.000" y="29.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="9.000" y="3.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="暴击" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="rgb(153, 0, 0)" tctr="rgb(153, 0, 0)" tcbl="rgb(153, 0, 0)" tcbr="rgb(153, 0, 0)" sc="black" ta="18"/>
+      </View>
+      <View id="sx_mortar" nn="View" x="94.000" y="54.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="9.000" y="3.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="破击" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="rgb(153, 0, 0)" tctr="rgb(153, 0, 0)" tcbl="rgb(153, 0, 0)" tcbr="rgb(153, 0, 0)" sc="black" ta="18"/>
+      </View>
+      <View id="sx_parry" nn="View" x="94.000" y="79.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="9.000" y="3.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="格挡" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="rgb(153, 0, 0)" tctr="rgb(153, 0, 0)" tcbl="rgb(153, 0, 0)" tcbr="rgb(153, 0, 0)" sc="black" ta="18"/>
+      </View>
+      <View id="sx_toughness" nn="View" x="94.000" y="104.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" i="common/general_bg_word.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="9.000" y="3.500" xr="0" yr="0" w="20.000" h="12.000" srw="480" srh="320" t="韧性" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="31.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="rgb(153, 0, 0)" tctr="rgb(153, 0, 0)" tcbl="rgb(153, 0, 0)" tcbr="rgb(153, 0, 0)" sc="black" ta="18"/>
+      </View>
+      <ImageView nn="ImageView" x="12.000" y="135.000" xr="0" yr="0" w="173.000" h="29.000" srw="480" srh="320" i="common/u_bg_title7.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="15.000" y="6.500" xr="0" yr="0" w="61.500" h="16.500" srw="480" srh="320" i="mount/horse_word_17.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="77.500" y="-2.090" xr="0" yr="0" w="23.000" h="28.000" srw="480" srh="320" i="common/fighttoast_icon.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <View id="fighting_view" nn="View" x="102.500" y="6.000" xr="0" yr="0" w="45.000" h="15.000" srw="480" srh="320"/>
+      </ImageView>
+    </View>
+    <View id="_cz_panel" nn="View" x="228.000" y="29.000" xr="0" yr="0" w="205.000" h="230.000" srw="480" srh="320" iv="0">
+      <ImageView nn="ImageView" x="52.000" y="3.000" xr="0" yr="0" w="92.000" h="18.000" srw="480" srh="320" i="common/u_bg_title5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="92.000" h="18.000" srw="480" srh="320" t="成长" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </ImageView>
+      <View id="cz_growth_hp" nn="View" x="-5.000" y="29.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="5.500" y="3.500" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="生命资质" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="45.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </View>
+      <View id="cz_growth_attack" nn="View" x="-5.000" y="54.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="5.500" y="3.500" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="攻击资质" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="45.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </View>
+      <View id="cz_growth_phy_defence" nn="View" x="-5.000" y="80.000" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="5.500" y="3.500" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="物防资质" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="45.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </View>
+      <View id="cz_growth_mag_defence" nn="View" x="-5.000" y="104.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="5.500" y="3.500" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="法防资质" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="45.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </View>
+      <View id="cz_growth_crit" nn="View" x="91.000" y="29.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="5.500" y="3.500" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="暴击资质" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="45.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </View>
+      <View id="cz_growth_mortar" nn="View" x="91.000" y="54.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="5.500" y="3.500" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="破击资质" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="45.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </View>
+      <View id="cz_growth_parry" nn="View" x="91.000" y="80.000" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="5.500" y="3.500" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="格挡资质" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="45.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </View>
+      <View id="cz_growth_toughness" nn="View" x="91.000" y="104.500" xr="0" yr="0" w="90.000" h="18.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="45.000" y="2.500" xr="0" yr="0" w="56.000" h="15.500" srw="480" srh="320" i="mount/horse_bg_exp_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label nn="Label" x="5.500" y="3.500" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="韧性资质" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="45.000" y="2.500" xr="0" yr="0" w="60.000" h="14.500" srw="480" srh="320" t="600000" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </View>
+    </View>
+    <View id="_hh_panel" nn="View" x="228.000" y="29.000" xr="0" yr="0" w="205.000" h="230.000" srw="480" srh="320">
+      <ImageView nn="ImageView" x="52.000" y="3.000" xr="0" yr="0" w="92.000" h="18.000" srw="480" srh="320" i="common/u_bg_title5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="92.000" h="18.000" srw="480" srh="320" t="幻化" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="-14.000" y="23.000" xr="0" yr="0" w="227.500" h="16.000" srw="480" srh="320" i="common/u_bg_title7.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="227.500" h="16.000" srw="480" srh="320" t="幻化可以将坐骑的形象改变为其他坐骑的形象" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+      <View id="m_illusion_bg_view" nn="View" x="0.000" y="36.500" xr="0" yr="0" w="195.000" h="140.000" srw="480" srh="320"/>
+    </View>
+    <View nn="View" x="218.000" y="203.000" xr="0" yr="0" w="200.000" h="60.000" srw="480" srh="320">
+      <ImageView nn="ImageView" x="1.600" y="-175.500" xr="0" yr="0" w="44.500" h="231.000" srw="480" srh="320" i="common/u_bg_gradient1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="-5.000" y="4.000" xr="0" yr="0" w="213.000" h="7.000" srw="480" srh="320" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <View id="_shuxing_view" nn="View" x="15.000" y="11.500" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" i="mount/horse_icon_6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" i="mount/horse_icon_9.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </View>
+      <View id="_jineng_view" nn="View" x="61.500" y="11.000" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" i="mount/horse_icon_5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" i="mount/horse_icon_8.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </View>
+      <View id="_chengzhang_view" nn="View" x="108.000" y="11.000" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" i="mount/horse_icon_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" i="mount/horse_icon_7.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </View>
+      <View id="_huanhua_view" nn="View" x="154.500" y="11.000" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" i="mount/horse_icon_hh_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="42.000" h="42.000" srw="480" srh="320" i="mount/horse_icon_hh_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </View>
+    </View>
+    <EditBox id="_editBox" nn="EditBox" x="197.010" y="5.700" xr="0" yr="0" w="65.000" h="20.000" srw="480" srh="320" et="" ts="10" tctl="black" tctr="black" tcbl="black" tcbr="black" sc="black" ta="18"/>
+  </ImageView>
+</View>

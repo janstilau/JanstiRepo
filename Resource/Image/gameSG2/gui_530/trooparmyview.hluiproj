@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView x="24.020" y="20.900" xr="0" yr="0" w="433.500" h="286.000" srw="480" srh="320" i="common/u_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="-12.090" y="-16.010" xr="0" yr="0" w="457.500" h="80.000" srw="480" srh="320" i="common/u_bg_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView x="0.000" y="0.000" xr="0" yr="0" w="457.500" h="27.000" srw="480" srh="320" i="common/u_bg_title1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label x="174.500" y="5.940" xr="0" yr="0" w="100.000" h="12.000" srw="480" srh="320" t="练兵" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      </ImageView>
+    </ImageView>
+  </ImageView>
+  <Button x="442.500" y="5.500" xr="0" yr="0" w="27.500" h="35.000" srw="480" srh="320" nt="" ni="common/u_btn_close.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+  <Button x="28.220" y="3.930" xr="0" yr="0" w="27.000" h="27.000" srw="480" srh="320" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="helpAction">
+    <ImageView x="0.000" y="8.500" xr="0" yr="0" w="17.000" h="17.000" srw="480" srh="320" i="common/u_btn_zhushi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </Button>
+  <ImageView x="37.000" y="36.000" xr="0" yr="0" w="257.000" h="205.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <View id="leftview" x="5.000" y="5.000" xr="0" yr="0" w="255.000" h="200.000" srw="480" srh="320"/>
+  </ImageView>
+  <View id="rightview" x="299.500" y="36.000" xr="0" yr="0" w="145.000" h="205.000" srw="480" srh="320"/>
+  <ImageView x="29.000" y="242.500" xr="0" yr="0" w="429.000" h="7.000" srw="480" srh="320" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView id="awardBg" x="37.000" y="247.000" xr="0" yr="0" w="45.000" h="13.000" srw="480" srh="320" i="trooparmy/trooparmy_word_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <View id="awardContainer" x="37.000" y="245.000" xr="0" yr="0" w="204.000" h="50.000" srw="480" srh="320"/>
+  <View x="245.000" y="245.000" xr="0" yr="0" w="200.000" h="55.000" srw="480" srh="320">
+    <View x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="55.000" srw="480" srh="320">
+      <View x="12.500" y="20.500" xr="0" yr="0" w="100.000" h="11.000" srw="480" srh="320">
+        <View x="0.000" y="0.000" xr="0" yr="0" w="100.000" h="11.000" srw="480" srh="320">
+          <Label id="todaytxt" x="65.000" y="0.000" xr="0" yr="0" w="15.000" h="11.000" srw="480" srh="320" t="0" ts="11" tctl="rgb(255, 0, 72)" tctr="rgb(255, 0, 72)" tcbl="rgb(255, 0, 72)" tcbr="rgb(255, 0, 72)" sc="black" ta="18">
+            <Label x="-70.500" y="0.000" xr="0" yr="0" w="70.000" h="11.000" srw="480" srh="320" t="剩余练兵次数:" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+          </Label>
+          <Button id="addTimesBtn" x="79.000" y="-5.000" xr="0" yr="0" w="21.000" h="21.000" srw="480" srh="320" iv="0" nt="" ni="common/u_btn_plus.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="rgb(51, 15, 254)" tctr="rgb(51, 15, 254)" tcbl="rgb(51, 15, 254)" tcbr="rgb(51, 15, 254)" sc="black" ta="18" act="addTimesAction"/>
+          <Label id="yesterdaytxt" x="-14.500" y="16.000" xr="0" yr="0" w="120.000" h="10.000" srw="480" srh="320" t="(昨日结余99次,转存今日99次)" ts="8" tctl="rgb(147, 98, 39)" tctr="rgb(147, 98, 39)" tcbl="rgb(147, 98, 39)" tcbr="rgb(147, 98, 39)" sc="black" ta="18"/>
+        </View>
+      </View>
+    </View>
+    <View x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="55.000" srw="480" srh="320">
+      <Button id="giveupBtn" x="23.500" y="12.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" iv="0" nt="放弃" ni="common/countrywar_ab_btn2.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18" act="giveupAction"/>
+      <Button id="troopBtn" x="114.500" y="12.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" iv="0" nt="   征讨" ni="common/u_btn_comfirm4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="troopAction">
+        <ImageView x="17.000" y="8.500" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" i="common/countrywar_bg_hightaofa.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+    </View>
+  </View>
+</View>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="259.000" h="111.500" srw="259" srh="111">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="259.000" h="111.500" srw="259" srh="111" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="equip_bg_img" nn="ImageView" x="15.000" y="8.500" xr="0" yr="0" w="44.000" h="44.000" srw="259" srh="111" i="common/u_other_goods5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="equip_icon_img" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="259" srh="111" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="equip_country_img" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="259" srh="111" i="equip_solider/equip_solider_country2_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="equip_bang_img" nn="ImageView" x="-2.500" y="28.500" xr="0" yr="0" w="15.000" h="15.000" srw="259" srh="111" i="mount/horse_icon_13.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <Label id="equip_name_lab" nn="Label" x="63.500" y="11.500" xr="0" yr="0" w="100.000" h="15.000" srw="259" srh="111" t="装备名六个字" ts="10" tctl="rgb(255, 96, 0)" tctr="rgb(255, 96, 0)" tcbl="rgb(255, 96, 0)" tcbr="rgb(255, 96, 0)" sc="black" ta="17"/>
+    <ImageView id="equip_highest_img" nn="ImageView" x="63.500" y="33.000" xr="0" yr="0" w="45.000" h="13.000" srw="259" srh="111" i="equip_solider/equip_solider_word_2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="13.000" y="56.000" xr="0" yr="0" w="234.000" h="42.000" srw="259" srh="111" i="common/lieming_sw_bg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="pro_name_lab1" nn="Label" x="4.000" y="3.500" xr="0" yr="0" w="20.000" h="15.000" srw="259" srh="111" t="生命" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18">
+        <Label id="pro_value_lab1" nn="Label" x="23.500" y="0.000" xr="0" yr="0" w="45.000" h="15.000" srw="259" srh="111" t="+123" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+      </Label>
+      <Label id="pro_name_lab2" nn="Label" x="71.000" y="3.500" xr="0" yr="0" w="20.000" h="15.000" srw="259" srh="111" t="生命" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18">
+        <Label id="pro_value_lab2" nn="Label" x="23.500" y="0.000" xr="0" yr="0" w="45.000" h="15.000" srw="259" srh="111" t="+123" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+      </Label>
+      <Label id="pro_name_lab3" nn="Label" x="138.000" y="3.500" xr="0" yr="0" w="20.000" h="15.000" srw="259" srh="111" t="生命" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18">
+        <Label id="pro_value_lab3" nn="Label" x="23.500" y="0.000" xr="0" yr="0" w="45.000" h="15.000" srw="259" srh="111" t="+123" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+      </Label>
+      <Label id="effect_lab" nn="Label" x="4.000" y="23.000" xr="0" yr="0" w="20.000" h="15.000" srw="259" srh="111" t="特效" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18">
+        <Label id="effect_des_lab" nn="Label" x="24.500" y="0.000" xr="0" yr="0" w="200.000" h="15.000" srw="259" srh="111" t="全属性提高10%" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+      </Label>
+    </ImageView>
+  </ImageView>
+  <View nn="View" x="15.000" y="8.500" xr="0" yr="0" w="44.000" h="44.000" srw="259" srh="111">
+    <View id="equip_star_bg_view" nn="View" x="2.000" y="0.000" xr="0" yr="0" w="10.000" h="44.000" srw="259" srh="111">
+      <ImageView nn="ImageView" x="0.000" y="34.000" xr="0" yr="0" w="9.000" h="8.500" srw="259" srh="111" i="common\u_other_star.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="0.000" y="25.500" xr="0" yr="0" w="9.000" h="8.500" srw="259" srh="111" i="common\u_other_star.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="0.000" y="17.000" xr="0" yr="0" w="9.000" h="8.500" srw="259" srh="111" i="common\u_other_star.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="0.000" y="8.500" xr="0" yr="0" w="9.000" h="8.500" srw="259" srh="111" i="common\u_other_star.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="9.000" h="8.500" srw="259" srh="111" i="common\u_other_star.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+  </View>
+</View>

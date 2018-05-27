@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="420.000" h="270.000" srw="420" srh="270">
+  <View id="container" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="420.000" h="270.000" srw="420" srh="270">
+    <ImageView nn="ImageView" x="2.000" y="6.530" xr="0" yr="0" w="119.000" h="256.500" srw="420" srh="270" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <View id="m_list_bg_view" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="119.000" h="256.500" srw="420" srh="270"/>
+    </ImageView>
+    <View nn="View" x="123.670" y="6.760" xr="0" yr="0" w="144.000" h="256.000" srw="420" srh="270">
+      <ImageView nn="ImageView" x="-0.990" y="-6.290" xr="0" yr="0" w="100.000" h="270.000" srw="420" srh="270" i="common/u_bg_gradient1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_active_skill_view" nn="ImageView" x="-1.000" y="-4.000" xr="0" yr="0" w="145.000" h="55.000" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_active_skill_icon_1" nn="ImageView" x="3.150" y="2.480" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" i="common/skill_k1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="43.000" h="43.000" srw="420" srh="270" i="common/skill_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="m_skill_icon_1" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" i="common/skill_k2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="m_select_img_1" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" i="common/skill_k2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label id="m_skill_name_1" nn="Label" x="-0.010" y="41.050" xr="0" yr="0" w="45.000" h="12.000" srw="420" srh="270" t="" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="10"/>
+          <Label id="m_lock_lab_1" nn="Label" x="-0.010" y="41.050" xr="0" yr="0" w="45.000" h="12.000" srw="420" srh="270" t="" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="10"/>
+          <ImageView id="m_lock_img_1" nn="ImageView" x="11.310" y="11.310" xr="0" yr="0" w="19.000" h="19.000" srw="420" srh="270" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="m_open_state_1" nn="ImageView" x="26.500" y="-0.500" xr="0" yr="0" w="16.500" h="16.500" srw="420" srh="270" i="skillperson/skill_guanbi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="m_active_skill_new_1" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" iv="0" i="common/goods_new.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView id="m_active_skill_icon_2" nn="ImageView" x="50.150" y="2.480" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" i="common/skill_k1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="43.000" h="43.000" srw="420" srh="270" i="common/skill_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="m_skill_icon_2" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" i="common/skill_k2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="m_select_img_2" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" i="common/skill_k2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label id="m_skill_name_2" nn="Label" x="-5.000" y="41.050" xr="0" yr="0" w="55.000" h="12.000" srw="420" srh="270" t="" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="10"/>
+          <Label id="m_lock_lab_2" nn="Label" x="-0.010" y="41.050" xr="0" yr="0" w="45.000" h="12.000" srw="420" srh="270" t="" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="10"/>
+          <ImageView id="m_lock_img_2" nn="ImageView" x="11.310" y="11.310" xr="0" yr="0" w="19.000" h="19.000" srw="420" srh="270" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="m_open_state_2" nn="ImageView" x="26.500" y="-0.500" xr="0" yr="0" w="16.500" h="16.500" srw="420" srh="270" i="skillperson/skill_guanbi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="m_active_skill_new_2" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" iv="0" i="common/goods_new.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView id="m_active_skill_icon_3" nn="ImageView" x="96.150" y="2.480" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" i="common/skill_k1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="43.000" h="43.000" srw="420" srh="270" i="common/skill_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="m_skill_icon_3" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" iv="0" i="common/skill_k2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="m_select_img_3" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" iv="0" i="common/skill_k2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label id="m_skill_name_3" nn="Label" x="-0.010" y="41.050" xr="0" yr="0" w="45.000" h="12.000" srw="420" srh="270" t="" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="10"/>
+          <Label id="m_lock_lab_3" nn="Label" x="-0.010" y="41.050" xr="0" yr="0" w="45.000" h="12.000" srw="420" srh="270" t="" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="10"/>
+          <ImageView id="m_lock_img_3" nn="ImageView" x="11.310" y="11.310" xr="0" yr="0" w="19.000" h="19.000" srw="420" srh="270" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="m_open_state_3" nn="ImageView" x="26.500" y="-0.500" xr="0" yr="0" w="16.500" h="16.500" srw="420" srh="270" i="skillperson/skill_guanbi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="m_active_skill_new_3" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="420" srh="270" iv="0" i="common/goods_new.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+      </ImageView>
+      <View nn="View" x="-4.000" y="53.220" xr="0" yr="0" w="145.000" h="125.000" srw="420" srh="270">
+        <ImageView nn="ImageView" x="20.500" y="6.500" xr="0" yr="0" w="108.500" h="108.500" srw="420" srh="270" i="skillperson/skill_bg0.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="m_half_icon_img" nn="ImageView" x="28.500" y="0.000" xr="0" yr="0" w="85.000" h="120.000" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="-3.000" y="0.000" xr="0" yr="0" w="150.000" h="7.000" srw="420" srh="270" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="24.000" y="101.500" xr="0" yr="0" w="102.500" h="19.000" srw="420" srh="270" i="skillperson/skill_k0.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_general_name_lab" nn="Label" x="1.500" y="3.000" xr="0" yr="0" w="100.000" h="12.000" srw="420" srh="270" t="喵姐带我飞" ts="11" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="10"/>
+        </ImageView>
+      </View>
+      <ImageView id="m_passive_skill_img" nn="ImageView" x="-1.000" y="176.000" xr="0" yr="0" w="145.000" h="60.000" srw="420" srh="270" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="-1.000" y="236.000" xr="0" yr="0" w="145.000" h="1.000" srw="420" srh="270" i="common/u_bg_fengexian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="5.000" y="4.500" xr="0" yr="0" w="45.000" h="12.000" srw="420" srh="270" t="非待命中" ts="9" tctl="rgb(255, 0, 72)" tctr="rgb(255, 0, 72)" tcbl="rgb(255, 0, 72)" tcbr="rgb(255, 0, 72)" sc="black" ta="9"/>
+        <Label nn="Label" x="41.000" y="4.500" xr="0" yr="0" w="100.000" h="12.000" srw="420" srh="270" t="时技能调整不能立即生效" ts="9" tctl="rgb(147, 98, 39)" tctr="rgb(147, 98, 39)" tcbl="rgb(147, 98, 39)" tcbr="rgb(147, 98, 39)" sc="black" ta="9"/>
+      </ImageView>
+    </View>
+    <ImageView nn="ImageView" x="268.190" y="6.530" xr="0" yr="0" w="149.500" h="256.500" srw="420" srh="270" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="1.710" y="14.960" xr="0" yr="0" w="145.000" h="1.000" srw="420" srh="270" i="common/u_bg_fengexian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <View id="m_skill_bag_view" nn="View" x="1.730" y="16.850" xr="0" yr="0" w="145.000" h="205.000" srw="420" srh="270">
+        <ImageView id="m_empty_img" nn="ImageView" x="4.440" y="42.540" xr="0" yr="0" w="141.500" h="134.500" srw="420" srh="270" i="common/u_bg_null.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="19.120" y="30.170" xr="0" yr="0" w="100.000" h="30.000" srw="420" srh="270" t="当前没有可替换技能" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+      </View>
+      <ImageView nn="ImageView" x="-0.750" y="222.830" xr="0" yr="0" w="150.000" h="7.000" srw="420" srh="270" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Button id="m_batch_resolve_btn" nn="Button" x="42.180" y="226.610" xr="0" yr="0" w="72.000" h="27.500" srw="420" srh="270" nt="技能成长" ni="common/u_btn_comfirm2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="batchResolveAction">
+        <ImageView id="m_compose_skill_red_point" nn="ImageView" x="62.000" y="-2.000" xr="0" yr="0" w="18.000" h="18.000" srw="420" srh="270" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </Button>
+      <ImageView nn="ImageView" x="0.720" y="1.520" xr="0" yr="0" w="144.000" h="13.000" srw="420" srh="270" i="skillperson/ui_skill_word_shuoming.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+  </View>
+</View>

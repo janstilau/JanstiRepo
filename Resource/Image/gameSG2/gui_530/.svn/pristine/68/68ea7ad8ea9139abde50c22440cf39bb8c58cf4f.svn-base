@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="172.000" h="42.000" srw="172" srh="42">
+  <ImageView id="headImg" x="1.500" y="1.990" xr="0" yr="0" w="33.500" h="33.500" srw="172" srh="42" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="headImgBg" x="0.000" y="0.000" xr="0" yr="0" w="33.500" h="33.500" srw="172" srh="42" i="common/u_bg_role.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+  <ImageView id="allianceTitleImg" x="3.500" y="28.940" xr="0" yr="0" w="29.000" h="12.000" srw="172" srh="42" i="chat/ui_talk_fumengzhu.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView id="honorTitleImg" x="-3.500" y="0.000" xr="0" yr="0" w="45.100" h="13.200" srw="172" srh="42" i="chat/ui_talk_fumengzhu.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView id="honorTitleImgbg" x="-3.500" y="0.000" xr="0" yr="0" w="45.100" h="13.200" srw="172" srh="42" i="chat/ui_talk_fumengzhu.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <Label id="titleName" x="40.000" y="0.000" xr="0" yr="0" w="136.000" h="12.000" srw="172" srh="42" t="[州][联盟名六个字][官员名]" ts="9" tctl="rgb(38, 135, 179)" tctr="rgb(38, 135, 179)" tcbl="rgb(38, 135, 179)" tcbr="rgb(38, 135, 179)" sc="black" ta="17"/>
+  <Label id="nickNameLab" x="39.500" y="11.300" xr="0" yr="0" w="100.000" h="12.000" srw="172" srh="42" t="玩家名六个字" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+  <ImageView id="guanzhitubiao" x="38.500" y="11.100" xr="0" yr="0" w="12.000" h="12.000" srw="172" srh="42" i="office/biaozhi10.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView id="contentImg" x="34.220" y="22.420" xr="0" yr="0" w="136.000" h="20.000" srw="172" srh="42" i="chat/Talk_talk1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView id="jiantou" x="30.930" y="24.920" xr="0" yr="0" w="6.000" h="9.000" srw="172" srh="42" i="chat/Talk_talk0.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <Label id="contentLab" x="39.430" y="26.000" xr="0" yr="0" w="126.000" h="12.000" srw="172" srh="42" t="不知道你说的是否正" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="9"/>
+  <Button id="voiceBtn" x="53.710" y="25.710" xr="0" yr="0" w="96.000" h="13.000" srw="172" srh="42" nt="" ni="chat/Talk_bg1.png" nci="" nic="0.500000,0.500000,0.000000,0.000000" st="" si="" sci="" sic="0.500000,0.500000,0.000000,0.000000" ht="" hi="" hci="" hic="0.500000,0.500000,0.000000,0.000000" dt="" di="" dci="" dic="0.500000,0.500000,0.000000,0.000000" zot="1" state="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="voiceBtnActionCell"/>
+  <Label id="lenLab" x="148.930" y="26.210" xr="0" yr="0" w="20.000" h="13.000" srw="172" srh="42" t="25''" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+  <View id="voiceImg" x="39.210" y="25.030" xr="0" yr="0" w="20.000" h="15.000" srw="172" srh="42">
+    <ImageView x="0.500" y="6.180" xr="0" yr="0" w="1.500" h="2.000" srw="172" srh="42" i="chat/Talk_sound1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="v1" x="2.340" y="4.340" xr="0" yr="0" w="2.500" h="6.000" srw="172" srh="42" i="chat/Talk_sound2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="v2" x="5.180" y="2.170" xr="0" yr="0" w="3.500" h="10.000" srw="172" srh="42" i="chat/Talk_sound3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="v3" x="8.360" y="0.830" xr="0" yr="0" w="4.000" h="13.000" srw="172" srh="42" i="chat/Talk_sound4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </View>
+</View>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="85" srh="35">
+  <Button id="titleBtn" nn="Button" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="85" srh="35" tag="1" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="titleBtnAction">
+    <ImageView id="selectView" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="85" srh="35" iv="0" tag="1" i="common/u_btn_comfirm4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="selectLab" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="85" srh="35" t="赛季十强" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView id="normalView" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="85" srh="35" tag="2" i="common/u_btn_comfirm5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="normalLab" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="85" srh="35" t="赛季十强" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </ImageView>
+  </Button>
+</View>

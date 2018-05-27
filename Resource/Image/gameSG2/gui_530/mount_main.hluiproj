@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="480" h="320" nn="View" tag="10001">
+  <ImageView id="m_level_bg" x="0" y="0" xr="0" yr="0" w="480" h="320" nn="ImageView" iv="0" tag="10001" i="common_1/embattle.jpg" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  <View id="bg_panel" x="0" y="0" xr="0" yr="0" w="480" h="320" nn="View" tag="10001"/>
+  <ImageView id="menu_panel" x="0" y="0" xr="0" yr="0" w="480" h="30" nn="ImageView" tag="10001" i="common/horse_item_bg_6.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <Button id="_close_btn" x="431.94000244140625" y="4.179999828338623" xr="0" yr="0" w="47" h="28" nn="Button" ni="common/u_btn_back.png" nic="0,0,0,0" state="0" act="onCloseCallBacl" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Button id="_mj_btn" x="15" y="0" xr="0" yr="0" w="65" h="27" nn="Button" nt="马厩" ni="office/ui_office_btn_noselbg.png" nic="0,0,0,0" si="office/ui_office_btn_selbg.png" zot="1" state="1" act="onMaJiuCallBack" ts="10" tctl="rgb(204,204,204)" tctr="rgb(204,204,204)" tcbl="rgb(204,204,204)" tcbr="rgb(204,204,204)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="_red_img_1" x="50" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" tag="1" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="_mc_btn" x="85" y="0" xr="0" yr="0" w="65" h="27" nn="Button" nt="育马槽" ni="office/ui_office_btn_noselbg.png" nic="0,0,0,0" si="office/ui_office_btn_selbg.png" zot="1" state="0" act="onMaCangCallBack" ts="10" tctl="rgb(204,204,204)" tctr="rgb(204,204,204)" tcbl="rgb(204,204,204)" tcbr="rgb(204,204,204)" sc="rgb(0,0,0)" ta="18">
+      <ImageView x="50" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" tag="1" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <ImageView x="4.5" y="7.5" xr="0" yr="0" w="12" h="12" nn="ImageView" iv="0" tag="10" i="common/ui_common_lock1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="_zq_btn" x="155" y="0" xr="0" yr="0" w="65" h="27" nn="Button" nt="坐骑" ni="office/ui_office_btn_noselbg.png" nic="0,0,0,0" si="office/ui_office_btn_selbg.png" zot="1" state="0" act="onMuChangCallBack" ts="10" tctl="rgb(204,204,204)" tctr="rgb(204,204,204)" tcbl="rgb(204,204,204)" tcbr="rgb(204,204,204)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="_red_img_2" x="50" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" tag="1" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="_hc_btn" x="225" y="0" xr="0" yr="0" w="65" h="27" nn="Button" tag="1" nt="吞噬" ni="office/ui_office_btn_noselbg.png" nic="0,0,0,0" si="office/ui_office_btn_selbg.png" zot="1" state="0" act="onHeChengCallBack" ts="10" tctl="rgb(204,204,204)" tctr="rgb(204,204,204)" tcbl="rgb(204,204,204)" tcbr="rgb(204,204,204)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="_red_img_3" x="50" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+    <Button id="_tj_btn" x="295" y="-0.6299999952316284" xr="0" yr="0" w="65" h="27" nn="Button" tag="1" nt="图鉴" ni="office/ui_office_btn_noselbg.png" nic="0,0,0,0" si="office/ui_office_btn_selbg.png" zot="1" state="0" act="onTuJianCalBack" ts="10" tctl="rgb(204,204,204)" tctr="rgb(204,204,204)" tcbl="rgb(204,204,204)" tcbr="rgb(204,204,204)" sc="rgb(0,0,0)" ta="18">
+      <ImageView id="_red_img_4" x="50" y="0" xr="0" yr="0" w="18" h="18" nn="ImageView" iv="0" tag="1" i="common/u_other_redtips.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    </Button>
+  </ImageView>
+  <View id="_view_panel" x="-0.41999998688697815" y="30" xr="0" yr="0" w="480" h="290" nn="View" tag="10001"/>
+</View>

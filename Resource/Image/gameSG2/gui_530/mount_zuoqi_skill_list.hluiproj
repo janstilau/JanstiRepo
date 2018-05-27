@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="260.000" srw="200" srh="260">
+  <ImageView x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="260.000" srw="200" srh="260" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="2.000" y="2.000" xr="0" yr="0" w="196.000" h="16.000" srw="200" srh="260" i="mount/horse_title_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="mount_name" x="11.000" y="2.500" xr="0" yr="0" w="100.000" h="15.000" srw="200" srh="260" t="的卢可学技能" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <View id="skill_panel" x="2.000" y="20.500" xr="0" yr="0" w="196.000" h="235.000" srw="200" srh="260"/>
+  </ImageView>
+</View>

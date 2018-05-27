@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="288.000" h="252.000" srw="288" srh="252">
+  <View x="12.500" y="1.000" xr="0" yr="0" w="288.000" h="250.000" srw="288" srh="252">
+    <ImageView x="-14.500" y="-1.000" xr="0" yr="0" w="293.000" h="57.000" srw="288" srh="252" i="common/activity_7days_bg_title.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="view3" x="46.950" y="6.280" xr="0" yr="0" w="180.000" h="12.000" srw="288" srh="252" iv="0" t=" = 立即获得a钻+b钻成长福利" ts="10" tctl="rgb(255, 229, 158)" tctr="rgb(255, 229, 158)" tcbl="rgb(255, 229, 158)" tcbr="rgb(255, 229, 158)" sc="black" ta="17"/>
+      <Button id="m_rechargeBtn" x="201.560" y="6.310" xr="0" yr="0" w="81.000" h="32.000" srw="288" srh="252" nt="" ni="activity_chengzhang/guide_gm.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onBuyCallBack"/>
+      <ImageView x="8.980" y="-5.530" xr="0" yr="0" w="193.000" h="55.000" srw="288" srh="252" i="activity_chengzhang/act_word_chengzhang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView x="-4.640" y="248.130" xr="0" yr="0" w="279.000" h="7.000" srw="288" srh="252" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <View id="m_scrollBg" x="-7.000" y="58.240" xr="0" yr="0" w="279.000" h="187.000" srw="288" srh="252"/>
+  </View>
+</View>

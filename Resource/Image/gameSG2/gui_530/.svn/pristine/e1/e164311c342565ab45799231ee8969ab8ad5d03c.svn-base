@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="272.000" h="90.000" srw="272" srh="117">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="272.000" h="90.000" srw="272" srh="117" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="7.000" y="5.000" xr="0" yr="0" w="260.000" h="15.000" srw="272" srh="117" t="武将装备分解规则：" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label nn="Label" x="6.650" y="20.000" xr="0" yr="0" w="260.000" h="15.000" srw="272" srh="117" t="1.分解0阶专属装备只获得武将专属晶石，分解非专属装备会获得相对应的材料" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
+    <Label nn="Label" x="7.000" y="46.000" xr="0" yr="0" w="260.000" h="15.000" srw="272" srh="117" t="2.分解升阶及升星后的武将装备，会返还升阶及升星时所使用的大部分材料" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
+    <Label nn="Label" x="7.000" y="72.500" xr="0" yr="0" w="260.000" h="15.000" srw="272" srh="117" t="3.锁定后装备无法进行分解，但不影响升阶及升星操作" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
+  </ImageView>
+</View>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="199" h="27">
+  <View x="0" y="0" xr="0" yr="0" w="199" h="27">
+    <ImageView x="0" y="0" xr="0" yr="0" w="199" h="27" i="common/lieming_sw_bg.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="name_lab" x="3.5" y="8" xr="0" yr="0" w="40" h="10" t="吕玲绮" ts="10" tctl="rgb(228,80,255)" tctr="rgb(228,80,255)" tcbl="rgb(228,80,255)" tcbr="rgb(228,80,255)" sc="rgb(0,0,0)" ta="18"/>
+      <ImageView id="corps_img" x="50" y="5" xr="0" yr="0" w="18" h="18" i="common_2/countrywar_bz_6.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+      <Label id="corps_lab" x="71" y="8" xr="0" yr="0" w="35" h="10" t="虎豹骑" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17"/>
+      <Label id="resource_lab" x="107" y="3" xr="0" yr="0" w="90" h="21.5" t="9999999马匹  99999虎豹鞍" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+  </View>
+</View>

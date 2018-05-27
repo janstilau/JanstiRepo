@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="320.000" h="233.000" srw="320" srh="233">
+  <ImageView nn="ImageView" x="0.000" y="3.000" xr="0" yr="0" w="310.000" h="230.000" srw="320" srh="233" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="98.000" y="6.480" xr="0" yr="0" w="116.000" h="18.000" srw="320" srh="233" i="common/u_bg_title2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="23.000" y="-1.540" xr="0" yr="0" w="70.000" h="20.000" srw="320" srh="233" t="排行榜奖励" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <Button nn="Button" x="292.000" y="-3.000" xr="0" yr="0" w="26.000" h="26.000" srw="320" srh="233" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+    <Label nn="Label" x="15.000" y="30.000" xr="0" yr="0" w="280.000" h="12.000" srw="320" srh="233" t="每日20:05，系统将以邮件的方式发放排行榜奖励！" ts="10" tctl="blue" tctr="blue" tcbl="blue" tcbr="blue" sc="black" ta="18"/>
+    <ImageView nn="ImageView" x="5.000" y="44.500" xr="0" yr="0" w="300.000" h="7.000" srw="320" srh="233" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView nn="ImageView" x="0.000" y="20.500" xr="0" yr="0" w="300.000" h="1.000" srw="320" srh="233" i="common/skill_fengexian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="100.500" y="4.500" xr="0" yr="0" w="1.000" h="13.000" srw="320" srh="233" i="common/u_bg_fengexian1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label nn="Label" x="30.000" y="6.500" xr="0" yr="0" w="30.000" h="10.000" srw="320" srh="233" t="排名" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      <Label nn="Label" x="170.500" y="6.500" xr="0" yr="0" w="40.000" h="10.000" srw="320" srh="233" t="排名奖励" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </ImageView>
+    <ImageView nn="ImageView" x="5.000" y="197.500" xr="0" yr="0" w="300.000" h="7.000" srw="320" srh="233" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="36.000" y="202.000" xr="0" yr="0" w="240.000" h="20.000" srw="320" srh="233" i="common/u_bg_7.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="4.000" y="5.000" xr="0" yr="0" w="50.000" h="10.000" srw="320" srh="233" t="当前排名：" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <Label nn="Label" x="49.500" y="0.000" xr="0" yr="0" w="45.000" h="10.000" srw="320" srh="233" iv="0" t="未上榜" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+        <Label id="rankTxt" nn="Label" x="49.500" y="0.000" xr="0" yr="0" w="60.000" h="10.000" srw="320" srh="233" t="未上榜" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+      </Label>
+      <Label nn="Label" x="116.000" y="5.000" xr="0" yr="0" w="70.000" h="10.000" srw="320" srh="233" t="当前伤害：" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+        <Label id="hurtTxt" nn="Label" x="48.000" y="0.000" xr="0" yr="0" w="68.000" h="10.000" srw="320" srh="233" t="0" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17"/>
+      </Label>
+    </ImageView>
+    <View id="listContainer" nn="View" x="5.000" y="66.500" xr="0" yr="0" w="300.000" h="130.000" srw="320" srh="233"/>
+  </ImageView>
+</View>

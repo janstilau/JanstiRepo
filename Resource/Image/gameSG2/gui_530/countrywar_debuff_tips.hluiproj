@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="240.000" h="65.000" srw="240" srh="65">
+  <ImageView x="0.000" y="0.000" xr="0" yr="0" w="240.000" h="65.000" srw="240" srh="65" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label id="shuaijianLab" x="10.500" y="10.500" xr="0" yr="0" w="220.000" h="25.000" srw="240" srh="65" t="今日打地打怪战功已达日常上限值，打地打怪获得的战功将衰减至xx%。" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label x="10.500" y="44.000" xr="0" yr="0" w="220.000" h="10.000" srw="240" srh="65" t="(小提示：提升VIP等级会增加打地打怪日常上限值哦！)" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+  </ImageView>
+</View>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="288.000" h="260.000" srw="288" srh="260">
+  <View x="12.500" y="1.000" xr="0" yr="0" w="280.000" h="260.000" srw="288" srh="260">
+    <ImageView x="-14.500" y="-1.000" xr="0" yr="0" w="293.000" h="47.500" srw="288" srh="260" i="common/activity_7days_bg_title.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="view3" x="10.500" y="2.500" xr="0" yr="0" w="280.000" h="12.000" srw="288" srh="260" t="活动期间投入钻石可随机获得更多钻石！投入越多收获越多！" ts="10" tctl="rgb(255, 229, 158)" tctr="rgb(255, 229, 158)" tcbl="rgb(255, 229, 158)" tcbr="rgb(255, 229, 158)" sc="black" ta="17"/>
+      <Label id="view8" x="10.500" y="15.500" xr="0" yr="0" w="320.000" h="12.000" srw="288" srh="260" t="每人一次机会,VIP等级越高,可参加次数越多,最多可参加8次" ts="10" tctl="rgb(255, 229, 158)" tctr="rgb(255, 229, 158)" tcbl="rgb(255, 229, 158)" tcbr="rgb(255, 229, 158)" sc="black" ta="17"/>
+      <Label id="m_activity_time" x="10.500" y="28.500" xr="0" yr="0" w="280.000" h="12.000" srw="288" srh="260" t="活动时间:20155年10月1日~2015年10月7日" ts="10" tctl="rgb(158, 255, 254)" tctr="rgb(158, 255, 254)" tcbl="rgb(158, 255, 254)" tcbr="rgb(158, 255, 254)" sc="black" ta="17"/>
+      <ImageView x="26.320" y="51.000" xr="0" yr="0" w="15.000" h="15.000" srw="288" srh="260" i="common/u_other_zuanshi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_cur_diamond" x="15.220" y="2.000" xr="0" yr="0" w="40.000" h="11.000" srw="288" srh="260" t="1000" ts="10" tctl="rgb(0, 86, 174)" tctr="rgb(0, 86, 174)" tcbl="rgb(0, 86, 174)" tcbr="rgb(0, 86, 174)" sc="black" ta="17"/>
+        <Label x="-20.780" y="2.000" xr="0" yr="0" w="40.000" h="11.000" srw="288" srh="260" t="剩余" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      </ImageView>
+      <Label id="m_remain_num" x="248.040" y="52.000" xr="0" yr="0" w="40.000" h="11.000" srw="288" srh="260" t="5次" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="17">
+        <Label x="-42.500" y="-0.000" xr="0" yr="0" w="50.000" h="11.000" srw="288" srh="260" t="剩余次数:" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      </Label>
+    </ImageView>
+    <ImageView x="44.530" y="38.980" xr="0" yr="0" w="180.000" h="155.000" srw="288" srh="260" i="activity_tree/activity_tree.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView x="46.310" y="192.620" xr="0" yr="0" w="63.500" h="14.500" srw="288" srh="260" i="activity_tree/activity_tree_word.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView x="64.500" y="-5.500" xr="0" yr="0" w="140.000" h="26.000" srw="288" srh="260" i="common/u_bg_cast.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView x="67.500" y="-2.500" xr="0" yr="0" w="20.000" h="20.000" srw="288" srh="260" i="common/u_other_zuanshi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_reward" x="93.500" y="0.000" xr="0" yr="0" w="100.000" h="14.000" srw="288" srh="260" t="Label" ts="14" tctl="rgb(0, 86, 174)" tctr="rgb(0, 86, 174)" tcbl="rgb(0, 86, 174)" tcbr="rgb(0, 86, 174)" sc="black" ta="17"/>
+    </ImageView>
+    <Button id="m_buy_btn" x="76.500" y="218.090" xr="0" yr="0" w="122.000" h="36.500" srw="288" srh="260" nt="" ni="common/activity_tree_btn.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onBuyCallBack">
+      <ImageView id="m_const_tag" x="18.000" y="8.500" xr="0" yr="0" w="30.500" h="18.000" srw="288" srh="260" i="activity_tree/activity_tree_word_btn.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_cost_icon" x="49.000" y="8.000" xr="0" yr="0" w="18.000" h="16.000" srw="288" srh="260" i="common/diamond_white.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_price" x="17.500" y="1.000" xr="0" yr="0" w="50.000" h="14.000" srw="288" srh="260" t="Label" ts="14" tctl="rgb(255, 222, 0)" tctr="rgb(255, 222, 0)" tcbl="rgb(255, 222, 0)" tcbr="rgb(255, 222, 0)" sc="black" ta="17"/>
+      </ImageView>
+    </Button>
+    <Button x="250.460" y="46.620" xr="0" yr="0" w="20.000" h="20.000" srw="288" srh="260" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onShuoMingCallBack"/>
+  </View>
+</View>

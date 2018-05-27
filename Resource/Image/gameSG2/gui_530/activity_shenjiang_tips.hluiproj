@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="240" h="100">
+  <ImageView x="0" y="0" xr="0" yr="0" w="240" h="114" i="common/u_bg_tips.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <Label x="6" y="6" xr="0" yr="0" w="187" h="10" t="活动规则：" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17"/>
+    <Label x="6" y="18" xr="0" yr="0" w="230" h="10" t="1.购买1个高级经验丹可随机获得奖池中一名将领" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17"/>
+    <Label x="6" y="30" xr="0" yr="0" w="230" h="10" t="2.每次购买都会增加一定数量的幸运值" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17"/>
+    <Label x="6" y="42" xr="0" yr="0" w="230" h="10" t="3.幸运值越高，获得           的几率越大。" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17">
+      <Label id="general_name_lab" x="88.5" y="0" xr="0" yr="0" w="30" h="10" t="" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="18"/>
+    </Label>
+    <Label x="6" y="54" xr="0" yr="0" w="230" h="22" t="4.幸运值满后可兑换幸运宝箱中的一个物品（可重复兑换）" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17"/>
+    <Label id="trans_info_lab" x="6" y="78.5" xr="0" yr="0" w="230" h="10" t="5." ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9"/>
+  </ImageView>
+</View>

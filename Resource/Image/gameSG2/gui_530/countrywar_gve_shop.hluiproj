@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView x="22.500" y="23.000" xr="0" yr="0" w="433.500" h="286.000" srw="480" srh="320" i="common/u_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView x="12.000" y="7.000" xr="0" yr="0" w="457.500" h="80.000" srw="480" srh="320" i="common/u_bg_title.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="457.500" h="27.000" srw="480" srh="320" i="common/u_bg_title1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="_labTitle" x="144.200" y="3.510" xr="0" yr="0" w="170.000" h="18.000" srw="480" srh="320" t="历史战役商店" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+  </ImageView>
+  <Button id="_btnClose" x="441.020" y="7.040" xr="0" yr="0" w="27.500" h="35.000" srw="480" srh="320" nt="" ni="common/u_btn_close.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="_onClose"/>
+  <ImageView id="bg_view" x="122.500" y="70.000" xr="0" yr="0" w="321.000" h="215.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <View x="132.000" y="44.500" xr="0" yr="0" w="70.000" h="20.000" srw="480" srh="320">
+    <ImageView x="5.000" y="2.000" xr="0" yr="0" w="66.000" h="16.000" srw="480" srh="320" i="common/u_bg_num.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_scoreLab1" x="18.000" y="2.000" xr="0" yr="0" w="50.000" h="12.000" srw="480" srh="320" t="999999" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 2)" tcbl="rgb(135, 0, 2)" tcbr="rgb(135, 0, 2)" sc="black" ta="9"/>
+    </ImageView>
+    <ImageView x="-3.500" y="-3.000" xr="0" yr="0" w="26.000" h="26.000" srw="480" srh="320" i="common/u_bg_cost_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_scoreIcon1" x="4.000" y="3.500" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" i="countrywar_gve/countrywar_gve_bg8.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+  </View>
+  <Button id="itemFilterBtn" x="363.500" y="40.000" xr="0" yr="0" w="77.000" h="26.000" srw="480" srh="320" tag="1" nt="" ni="common/shop_top_btn2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onItemFilterClick">
+    <Label id="itemFilterLab" x="10.500" y="3.500" xr="0" yr="0" w="50.000" h="20.000" srw="480" srh="320" t="所有物品" ts="10" tctl="rgb(145, 55, 0)" tctr="rgb(145, 55, 0)" tcbl="rgb(145, 55, 0)" tcbr="rgb(145, 55, 0)" sc="black" ta="18"/>
+    <ImageView x="61.000" y="10.500" xr="0" yr="0" w="8.500" h="7.000" srw="480" srh="320" i="common/ui_zone_bg9.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </Button>
+  <ImageView x="77.500" y="30.500" xr="0" yr="0" w="44.500" h="275.000" srw="480" srh="320" i="common/u_bg_gradient3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <View x="33.000" y="38.500" xr="0" yr="0" w="85.000" h="240.000" srw="480" srh="320">
+    <Button id="WeiGuoShopBtn" x="-1.000" y="1.500" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" tag="13" nt="" ni="countrywar_gve/countrywar_gve_btn4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="countrywar_gve/countrywar_gve_btn5.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18" act="onItemClick">
+      <Label id="WeiGuoShopLab" x="33.000" y="-1.500" xr="0" yr="0" w="50.000" h="35.000" srw="480" srh="320" tag="111" t="魏国商店" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      <ImageView x="0.000" y="1.000" xr="0" yr="0" w="32.500" h="32.500" srw="480" srh="320" i="countrywar_gve/countrywar_gve_bg18.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="ShuGuoShopBtn" x="-1.000" y="40.500" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" tag="14" nt="" ni="countrywar_gve/countrywar_gve_btn4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="countrywar_gve/countrywar_gve_btn5.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onItemClick">
+      <Label id="ShuGuoShopLab" x="33.000" y="0.000" xr="0" yr="0" w="50.000" h="35.000" srw="480" srh="320" tag="111" t="蜀国商店" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      <ImageView x="0.000" y="2.000" xr="0" yr="0" w="32.500" h="32.500" srw="480" srh="320" i="countrywar_gve/countrywar_gve_bg19.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="WuGuoShopBtn" x="-0.500" y="81.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" tag="15" nt="" ni="countrywar_gve/countrywar_gve_btn4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="countrywar_gve/countrywar_gve_btn5.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onItemClick">
+      <ImageView x="0.000" y="1.500" xr="0" yr="0" w="32.500" h="32.500" srw="480" srh="320" i="countrywar_gve/countrywar_gve_bg20.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="WuGuoShopLab" x="32.000" y="1.500" xr="0" yr="0" w="50.000" h="30.000" srw="480" srh="320" tag="111" t="吴国商店" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </Button>
+    <Button id="QunXiongShopBtn" x="0.000" y="121.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" tag="16" nt="" ni="countrywar_gve/countrywar_gve_btn4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="countrywar_gve/countrywar_gve_btn5.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onItemClick">
+      <ImageView x="-0.500" y="1.500" xr="0" yr="0" w="32.500" h="32.500" srw="480" srh="320" i="countrywar_gve/countrywar_gve_bg21.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="QunXiongShopLab" x="31.500" y="-0.500" xr="0" yr="0" w="50.000" h="35.000" srw="480" srh="320" tag="111" t="群雄商店" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    </Button>
+    <Button id="TongYongShopBtn" x="-0.500" y="160.500" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" tag="17" nt="" ni="countrywar_gve/countrywar_gve_btn4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="countrywar_gve/countrywar_gve_btn5.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onItemClick">
+      <Label id="TongYongShopLab" x="32.500" y="0.500" xr="0" yr="0" w="50.000" h="35.000" srw="480" srh="320" tag="111" t="通用商店" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      <ImageView x="-1.000" y="2.000" xr="0" yr="0" w="32.500" h="32.500" srw="480" srh="320" i="countrywar_gve/countrywar_gve_bg22.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+  </View>
+</View>

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="287.000" srw="480" srh="287">
+  <ImageView id="troopStateImg" x="265.000" y="6.000" xr="0" yr="0" w="110.000" h="19.000" srw="480" srh="287" i="countrywar_troops/countrywar_bg1_troops.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label id="troopStateLab" x="5.000" y="2.000" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="287" t="出征路上出征路上路上" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+  </ImageView>
+  <View id="leftMainView" x="0.000" y="0.000" xr="0" yr="0" w="230.000" h="287.000" srw="480" srh="287">
+    <View id="m_mount_bg_view" x="78.110" y="103.800" xr="0" yr="0" w="100.000" h="90.000" srw="480" srh="287"/>
+    <ImageView id="mountFcBg" x="13.400" y="200.000" xr="0" yr="0" w="215.250" h="16.100" srw="480" srh="287" i="common/zhanyi_bg_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView x="106.600" y="-1.000" xr="0" yr="0" w="16.000" h="16.000" srw="480" srh="287" i="common/bing_bingli.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="mountFcLab" x="16.000" y="4.000" xr="0" yr="0" w="70.000" h="10.000" srw="480" srh="287" t="88888999" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+      </ImageView>
+    </ImageView>
+    <ImageView id="nameBgImg" x="119.500" y="5.000" xr="0" yr="0" w="95.000" h="23.000" srw="480" srh="287" i="common/xingmutishi_bg.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="26.130" y="7.630" xr="0" yr="0" w="66.000" h="10.000" srw="480" srh="287" iv="0" t="点击输入队名" ts="11" tctl="rgb(135, 111, 80)" tctr="rgb(135, 111, 80)" tcbl="rgb(135, 111, 80)" tcbr="rgb(135, 111, 80)" sc="black" ta="17"/>
+      <EditBox id="troopName_edit" x="24.000" y="0.000" xr="0" yr="0" w="72.000" h="23.000" srw="480" srh="287" et="" ts="10" tctl="rgb(135, 111, 80)" tctr="rgb(135, 111, 80)" tcbl="rgb(135, 111, 80)" tcbr="rgb(135, 111, 80)" sc="black" ta="17"/>
+      <ImageView id="troopsImg" x="4.770" y="1.600" xr="0" yr="0" w="20.400" h="20.000" srw="480" srh="287" i="countrywar_troops/u_tab_sel_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="troopsNoLab" x="3.000" y="3.500" xr="0" yr="0" w="20.000" h="9.000" srw="480" srh="287" t="2" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+      </ImageView>
+    </ImageView>
+    <Label id="locationLab" x="121.500" y="33.500" xr="0" yr="0" w="200.000" h="10.000" srw="480" srh="287" t="" ts="10" tctl="rgba(0, 255, 0, 0.784)" tctr="rgba(0, 255, 0, 0.784)" tcbl="rgba(0, 255, 0, 0.784)" tcbr="rgba(0, 255, 0, 0.784)" sc="black" ta="17"/>
+    <View id="powerView" x="119.500" y="47.150" xr="0" yr="0" w="100.000" h="70.000" srw="480" srh="287">
+      <View id="siegeListenerView" x="32.500" y="-0.150" xr="0" yr="0" w="66.000" h="18.600" srw="480" srh="287" tag="1">
+        <ImageView x="-32.000" y="4.500" xr="0" yr="0" w="75.000" h="13.500" srw="480" srh="287" i="common/ui_common_bg_zl.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView x="-1.500" y="1.000" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="287" i="common/countrywar_other_siege.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="siegeLab" x="17.500" y="4.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="287" t="8888" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+          <Label x="-27.500" y="4.000" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="287" t="攻城值" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+        </ImageView>
+      </View>
+      <View id="buildListenerView" x="34.500" y="20.350" xr="0" yr="0" w="66.000" h="18.600" srw="480" srh="287" tag="2">
+        <ImageView x="-34.000" y="4.000" xr="0" yr="0" w="75.000" h="13.500" srw="480" srh="287" i="common/ui_common_bg_zl.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView x="-5.000" y="-0.500" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="287" i="countrywar_troops/countrywar_icon_construct_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="buildLab" x="19.500" y="4.500" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="287" t="8888" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+          <Label x="-25.500" y="4.500" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="287" t="援建值" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+        </ImageView>
+      </View>
+      <View id="energeView" x="34.500" y="39.350" xr="0" yr="0" w="66.000" h="20.000" srw="480" srh="287" tag="3">
+        <ImageView x="-34.000" y="4.000" xr="0" yr="0" w="75.000" h="13.500" srw="480" srh="287" i="common/ui_common_bg_zl.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView x="-3.500" y="2.500" xr="0" yr="0" w="16.000" h="16.000" srw="480" srh="287" i="countrywar_selectteam/countrywar_icon_mobility.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="curEnergeNumLab" x="18.000" y="1.500" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="287" t="5/5" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+          <Label x="-27.000" y="1.500" xr="0" yr="0" w="35.000" h="12.000" srw="480" srh="287" t="行动力" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+        </ImageView>
+        <Button id="energeBuyBtn" x="40.000" y="0.000" xr="0" yr="0" w="21.000" h="21.000" srw="480" srh="287" nt="" ni="common/u_btn_plus.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickBuyEnerge"/>
+      </View>
+    </View>
+    <ImageView x="0.000" y="0.000" xr="0" yr="0" w="116.000" h="287.000" srw="480" srh="287" i="common/ui_common_embattle_main_bg_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="partLineImg" x="112.000" y="0.000" xr="0" yr="0" w="10.500" h="284.000" srw="480" srh="287" i="common/ui_common_fenjiexian_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <View id="scrollContentView" x="0.000" y="0.000" xr="0" yr="0" w="115.000" h="285.000" srw="480" srh="287"/>
+  </View>
+  <View id="leftBottomView" x="118.140" y="185.920" xr="0" yr="0" w="200.000" h="100.000" srw="480" srh="287">
+    <Button id="btnMount" x="1.000" y="36.000" xr="0" yr="0" w="36.000" h="28.500" srw="480" srh="287" nt="" ni="embattle_main/ui_embattle_main_btn_ma.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickMount">
+      <ImageView id="mountRedPoint" x="20.000" y="0.000" xr="0" yr="0" w="16.000" h="16.000" srw="480" srh="287" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="change_corps_btn" x="35.500" y="36.000" xr="0" yr="0" w="36.000" h="28.500" srw="480" srh="287" nt="" ni="embattle_main/ui_embattle_main_btn_bing.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickChangeCorps"/>
+    <Button id="btnOneKeyTroop" x="1.000" y="69.000" xr="0" yr="0" w="36.000" h="28.500" srw="480" srh="287" nt="" ni="common/ui_common_embattle_btn_yjbz.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickOneKeyTroop">
+      <ImageView id="OneKeyTroopRedPoint" x="0.000" y="0.000" xr="0" yr="0" w="36.000" h="28.500" srw="480" srh="287" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="resetTroopBtn" x="37.500" y="69.000" xr="0" yr="0" w="28.000" h="28.000" srw="480" srh="287" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickResetTroop">
+      <ImageView x="-3.500" y="0.000" xr="0" yr="0" w="36.000" h="28.500" srw="480" srh="287" i="common/ui_common_btn_chongzhi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="auto_gather_btn" x="71.000" y="69.000" xr="0" yr="0" w="28.000" h="28.000" srw="480" srh="287" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickAutoGather">
+      <ImageView x="-3.000" y="0.000" xr="0" yr="0" w="36.000" h="28.500" srw="480" srh="287" i="embattle_main/ui_embattle_main_btn_jijie.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+  </View>
+  <View id="btnBgView" x="440.600" y="27.000" xr="0" yr="0" w="40.000" h="193.000" srw="480" srh="287">
+    <Button id="troops_btn0" x="0.000" y="6.500" xr="0" yr="0" w="40.000" h="32.000" srw="480" srh="287" nt="" ni="countrywar_troops/u_tab_up.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="countrywar_troops/u_tab_sel.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="1" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onClickSelectTroops">
+      <ImageView id="troop_flag0" x="11.000" y="4.000" xr="0" yr="0" w="25.500" h="25.000" srw="480" srh="287" i="countrywar_troops/u_tab_sel_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="troops_btnLab0" x="4.500" y="3.500" xr="0" yr="0" w="14.000" h="12.000" srw="480" srh="287" t="1" ts="11" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="9"/>
+        <ImageView id="troop_red0" x="-10.000" y="-3.000" xr="0" yr="0" w="10.000" h="10.000" srw="480" srh="287" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="troops_lock0" x="2.000" y="1.000" xr="0" yr="0" w="42.000" h="32.000" srw="480" srh="287" iv="0" i="countrywar_troops/ui_countrywar_troops_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView x="12.000" y="5.000" xr="0" yr="0" w="19.000" h="19.000" srw="480" srh="287" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="energeImg0" x="6.000" y="20.000" xr="0" yr="0" w="10.000" h="10.000" srw="480" srh="287" i="countrywar_selectteam/countrywar_icon_mobility.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="energeNumLab0" x="10.500" y="0.000" xr="0" yr="0" w="20.000" h="10.000" srw="480" srh="287" t="1" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" stroke="1" sc="black" ta="17"/>
+      </ImageView>
+    </Button>
+    <Button id="troops_btn1" x="0.000" y="43.500" xr="0" yr="0" w="40.000" h="32.000" srw="480" srh="287" tag="1" nt="" ni="countrywar_troops/u_tab_up.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="countrywar_troops/u_tab_sel.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickSelectTroops">
+      <ImageView id="troop_flag1" x="11.000" y="4.000" xr="0" yr="0" w="25.500" h="25.000" srw="480" srh="287" i="countrywar_troops/u_tab_up_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="troops_btnLab1" x="4.500" y="3.500" xr="0" yr="0" w="14.000" h="12.000" srw="480" srh="287" t="2" ts="11" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+        <ImageView id="troop_red1" x="-4.000" y="-3.000" xr="0" yr="0" w="10.000" h="10.000" srw="480" srh="287" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="troops_lock1" x="2.000" y="1.000" xr="0" yr="0" w="40.000" h="32.000" srw="480" srh="287" iv="0" i="countrywar_troops/ui_countrywar_troops_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView x="12.000" y="5.000" xr="0" yr="0" w="19.000" h="19.000" srw="480" srh="287" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="energeImg1" x="11.500" y="20.000" xr="0" yr="0" w="10.000" h="10.000" srw="480" srh="287" i="countrywar_selectteam/countrywar_icon_mobility.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="energeNumLab1" x="11.000" y="0.000" xr="0" yr="0" w="20.000" h="10.000" srw="480" srh="287" t="1" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" stroke="1" sc="black" ta="17"/>
+      </ImageView>
+    </Button>
+    <Button id="troops_btn2" x="0.000" y="80.500" xr="0" yr="0" w="40.000" h="32.000" srw="480" srh="287" tag="2" nt="" ni="countrywar_troops/u_tab_up.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="countrywar_troops/u_tab_sel.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickSelectTroops">
+      <ImageView id="troop_flag2" x="11.000" y="4.000" xr="0" yr="0" w="25.500" h="25.000" srw="480" srh="287" i="countrywar_troops/u_tab_up_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="troops_btnLab2" x="4.500" y="3.500" xr="0" yr="0" w="12.000" h="14.000" srw="480" srh="287" t="3" ts="11" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+        <ImageView id="troop_red2" x="-4.000" y="-3.000" xr="0" yr="0" w="10.000" h="10.000" srw="480" srh="287" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="troops_lock2" x="2.000" y="1.000" xr="0" yr="0" w="40.000" h="32.000" srw="480" srh="287" i="countrywar_troops/ui_countrywar_troops_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView x="12.000" y="5.000" xr="0" yr="0" w="19.000" h="19.000" srw="480" srh="287" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="energeImg2" x="11.500" y="20.000" xr="0" yr="0" w="10.000" h="10.000" srw="480" srh="287" i="countrywar_selectteam/countrywar_icon_mobility.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="energeNumLab2" x="11.000" y="0.000" xr="0" yr="0" w="20.000" h="10.000" srw="480" srh="287" t="1" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" stroke="1" sc="black" ta="17"/>
+      </ImageView>
+    </Button>
+    <Button id="troops_btn3" x="0.000" y="117.500" xr="0" yr="0" w="40.000" h="32.000" srw="480" srh="287" tag="3" nt="" ni="countrywar_troops/u_tab_up.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="countrywar_troops/u_tab_sel.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickSelectTroops">
+      <ImageView id="troop_flag3" x="11.000" y="4.000" xr="0" yr="0" w="25.500" h="25.000" srw="480" srh="287" i="countrywar_troops/u_tab_up_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="troops_btnLab3" x="4.500" y="3.500" xr="0" yr="0" w="14.000" h="12.000" srw="480" srh="287" t="4" ts="11" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+        <ImageView id="troop_red3" x="-4.000" y="-3.000" xr="0" yr="0" w="10.000" h="10.000" srw="480" srh="287" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="troops_lock3" x="2.000" y="1.000" xr="0" yr="0" w="40.000" h="32.000" srw="480" srh="287" i="countrywar_troops/ui_countrywar_troops_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView x="12.000" y="5.000" xr="0" yr="0" w="19.000" h="19.000" srw="480" srh="287" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="energeImg3" x="11.500" y="20.000" xr="0" yr="0" w="10.000" h="10.000" srw="480" srh="287" i="countrywar_selectteam/countrywar_icon_mobility.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="energeNumLab3" x="11.000" y="0.000" xr="0" yr="0" w="20.000" h="10.000" srw="480" srh="287" t="1" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" stroke="1" sc="black" ta="17"/>
+      </ImageView>
+    </Button>
+    <Button id="troops_btn4" x="0.000" y="154.500" xr="0" yr="0" w="40.000" h="32.000" srw="480" srh="287" tag="4" nt="" ni="countrywar_troops/u_tab_up.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="countrywar_troops/u_tab_sel.png" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickSelectTroops">
+      <ImageView id="troop_flag4" x="11.000" y="4.000" xr="0" yr="0" w="25.500" h="25.000" srw="480" srh="287" i="countrywar_troops/u_tab_up_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="troops_btnLab4" x="4.500" y="3.500" xr="0" yr="0" w="14.000" h="12.000" srw="480" srh="287" t="5" ts="11" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+        <ImageView id="troop_red4" x="-4.000" y="-3.000" xr="0" yr="0" w="10.000" h="10.000" srw="480" srh="287" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="troops_lock4" x="2.000" y="1.000" xr="0" yr="0" w="40.000" h="32.000" srw="480" srh="287" i="countrywar_troops/ui_countrywar_troops_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView x="12.000" y="5.000" xr="0" yr="0" w="19.000" h="19.000" srw="480" srh="287" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="energeImg4" x="11.500" y="20.000" xr="0" yr="0" w="10.000" h="10.000" srw="480" srh="287" i="countrywar_selectteam/countrywar_icon_mobility.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="energeNumLab4" x="11.000" y="0.000" xr="0" yr="0" w="20.000" h="10.000" srw="480" srh="287" t="1" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" stroke="1" sc="black" ta="17"/>
+      </ImageView>
+    </Button>
+  </View>
+  <View id="rightBottomView" x="350.720" y="222.290" xr="0" yr="0" w="130.000" h="62.000" srw="480" srh="287">
+    <Label id="recoveryHpTimeLab" x="0.500" y="21.850" xr="0" yr="0" w="100.000" h="11.000" srw="480" srh="287" iv="0" t="恢复时间：03:15:41" ts="10" tctl="rgba(240, 213, 178, 0.784)" tctr="rgba(240, 213, 178, 0.784)" tcbl="rgba(240, 213, 178, 0.784)" tcbr="rgba(240, 213, 178, 0.784)" sc="black" ta="18"/>
+    <Button id="tipsBtn" x="100.500" y="33.500" xr="0" yr="0" w="27.000" h="27.000" srw="480" srh="287" tag="1111" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickIntroTips"/>
+    <Button id="recoveryBtn" x="10.000" y="33.500" xr="0" yr="0" w="90.000" h="27.000" srw="480" srh="287" iv="0" nt="" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="恢复生命（免费）" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onClickRecovery">
+      <ImageView id="recoveryRed" x="-4.500" y="-6.500" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="287" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="autoCrusadeBtn" x="100.000" y="1.500" xr="0" yr="0" w="29.000" h="29.000" srw="480" srh="287" nt="" ni="countrywar_autowar/autowar_btn_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickAutoCrusade">
+      <ImageView id="_autoWarRedPoint" x="-5.540" y="1.540" xr="0" yr="0" w="12.000" h="12.000" srw="480" srh="287" iv="0" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+  </View>
+  <View id="midBottomView" x="199.500" y="252.000" xr="0" yr="0" w="155.000" h="35.000" srw="480" srh="287">
+    <View id="militaryStrengthView" x="24.500" y="13.000" xr="0" yr="0" w="135.000" h="18.600" srw="480" srh="287" tag="4">
+      <ImageView id="carrySoldiersFullBar" x="12.000" y="3.000" xr="0" yr="0" w="122.000" h="14.500" srw="480" srh="287" i="countrywar_troops/countrywar_troops_exp_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="carrySoldiersProBar" x="12.000" y="3.000" xr="0" yr="0" w="122.000" h="14.500" srw="480" srh="287" i="countrywar_troops/countrywar_troops_exp_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="carrySoldiersRateLab" x="12.000" y="3.500" xr="0" yr="0" w="122.000" h="12.000" srw="480" srh="287" t="888888/80000(80%)" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+      <ImageView id="capabilityImg" x="-0.500" y="-1.500" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="287" i="common/bing_bingli.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="lackSoldiersHinLab" x="-2.500" y="-9.000" xr="0" yr="0" w="142.000" h="10.000" srw="480" srh="287" t="兵力不满参战,队伍属性降低99.99%" ts="9" tctl="red" tctr="red" tcbl="red" tcbr="red" sc="black" ta="18"/>
+      <View id="carrySoldiersAnimalView" x="12.000" y="3.000" xr="0" yr="0" w="122.000" h="14.500" srw="480" srh="287"/>
+    </View>
+  </View>
+  <View id="embattleMainView" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="287.000" srw="480" srh="287">
+    <View id="m_view_4" x="251.500" y="14.500" xr="0" yr="0" w="75.600" h="100.000" srw="480" srh="287">
+      <ImageView id="norImg_4" x="0.000" y="53.000" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" i="common/embattle_bg_general.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="selImg_4" x="0.000" y="53.000" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" iv="0" i="common/embattle_bg_player2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="recImg_4" x="0.000" y="53.000" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" iv="0" i="common/embattle_bg_player1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="iconImg_4" x="-22.000" y="-9.500" xr="0" yr="0" w="112.000" h="90.000" srw="480" srh="287" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="labBg_4" x="-5.750" y="81.000" xr="0" yr="0" w="88.000" h="20.000" srw="480" srh="287" i="common/embattle_bg_name1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_name_4" x="0.000" y="0.000" xr="0" yr="0" w="88.000" h="10.000" srw="480" srh="287" t="" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+        <ImageView id="corps_img4" x="22.500" y="7.400" xr="0" yr="0" w="12.000" h="12.000" srw="480" srh="287" i="common_2/countrywar_bz_10.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_fight_4" x="13.500" y="1.500" xr="0" yr="0" w="60.000" h="10.000" srw="480" srh="287" t="999999" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+        </ImageView>
+      </ImageView>
+      <ImageView id="proBarFull_4" x="16.000" y="75.500" xr="0" yr="0" w="44.000" h="6.000" srw="480" srh="287" tag="4" i="common/fight_bg_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="hpProBar_4" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="6.000" srw="480" srh="287" i="countrywar_troops/countrywar_troops_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <Button id="surplusSoldiersBtn4" x="58.500" y="70.000" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="287" tag="4" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickSurplusTips"/>
+      <Button id="woundBtn4" x="26.500" y="62.000" xr="0" yr="0" w="23.000" h="14.000" srw="480" srh="287" tag="4" nt="" ni="common/ui_common_word_die.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickWoundTips"/>
+    </View>
+    <View id="m_view_1" x="356.500" y="14.500" xr="0" yr="0" w="75.600" h="100.000" srw="480" srh="287">
+      <ImageView id="norImg_1" x="0.000" y="53.000" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" i="common/embattle_bg_general.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="selImg_1" x="0.000" y="53.000" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" iv="0" i="common/embattle_bg_player2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="recImg_1" x="0.000" y="53.000" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" iv="0" i="common/embattle_bg_player1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="iconImg_1" x="-22.000" y="-9.500" xr="0" yr="0" w="112.000" h="90.000" srw="480" srh="287" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="labBg_1" x="-5.750" y="81.000" xr="0" yr="0" w="88.000" h="20.000" srw="480" srh="287" i="common/embattle_bg_name1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_name_1" x="0.000" y="0.000" xr="0" yr="0" w="88.000" h="10.000" srw="480" srh="287" t="" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+        <ImageView id="corps_img1" x="22.500" y="7.400" xr="0" yr="0" w="12.000" h="12.000" srw="480" srh="287" i="common_2/countrywar_bz_0.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_fight_1" x="13.500" y="1.500" xr="0" yr="0" w="60.000" h="10.000" srw="480" srh="287" t="999999" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+        </ImageView>
+      </ImageView>
+      <ImageView id="proBarFull_1" x="16.000" y="75.500" xr="0" yr="0" w="44.000" h="6.000" srw="480" srh="287" tag="1" i="common/fight_bg_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="hpProBar_1" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="6.000" srw="480" srh="287" i="countrywar_troops/countrywar_troops_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <Button id="surplusSoldiersBtn1" x="58.500" y="70.000" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="287" tag="1" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickSurplusTips"/>
+      <Button id="woundBtn1" x="26.500" y="62.000" xr="0" yr="0" w="23.000" h="14.000" srw="480" srh="287" tag="1" nt="" ni="common/ui_common_word_die.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickWoundTips"/>
+    </View>
+    <View id="m_view_5" x="216.500" y="106.000" xr="0" yr="0" w="75.600" h="76.000" srw="480" srh="287">
+      <ImageView id="norImg_5" x="0.000" y="26.500" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" i="common/embattle_bg_general.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="selImg_5" x="0.000" y="26.500" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" iv="0" i="common/embattle_bg_player2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="recImg_5" x="0.000" y="26.500" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" iv="0" i="common/embattle_bg_player1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="iconImg_5" x="-21.000" y="-36.500" xr="0" yr="0" w="112.000" h="90.000" srw="480" srh="287" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="labBg_5" x="-5.750" y="55.000" xr="0" yr="0" w="88.000" h="20.000" srw="480" srh="287" i="common/embattle_bg_name1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_name_5" x="0.000" y="0.000" xr="0" yr="0" w="88.000" h="10.000" srw="480" srh="287" t="" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+        <ImageView id="corps_img5" x="22.500" y="7.400" xr="0" yr="0" w="12.000" h="12.000" srw="480" srh="287" i="common_2/countrywar_bz_5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_fight_5" x="13.500" y="1.500" xr="0" yr="0" w="60.000" h="10.000" srw="480" srh="287" t="999999" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+        </ImageView>
+      </ImageView>
+      <ImageView id="proBarFull_5" x="16.000" y="49.000" xr="0" yr="0" w="44.000" h="6.000" srw="480" srh="287" tag="5" i="common/fight_bg_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="hpProBar_5" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="6.000" srw="480" srh="287" i="countrywar_troops/countrywar_troops_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <Button id="surplusSoldiersBtn5" x="58.500" y="43.500" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="287" tag="5" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickSurplusTips"/>
+      <Button id="woundBtn5" x="26.500" y="35.500" xr="0" yr="0" w="23.000" h="14.000" srw="480" srh="287" tag="5" nt="" ni="common/ui_common_word_die.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickWoundTips"/>
+    </View>
+    <View id="m_view_2" x="321.500" y="106.000" xr="0" yr="0" w="75.600" h="76.000" srw="480" srh="287">
+      <ImageView id="norImg_2" x="0.000" y="26.500" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" i="common/embattle_bg_general.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="selImg_2" x="0.000" y="26.500" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" iv="0" i="common/embattle_bg_player2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="recImg_2" x="0.000" y="26.500" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" iv="0" i="common/embattle_bg_player1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="iconImg_2" x="-21.000" y="-34.500" xr="0" yr="0" w="112.000" h="90.000" srw="480" srh="287" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="labBg_2" x="-5.750" y="55.000" xr="0" yr="0" w="88.000" h="20.000" srw="480" srh="287" i="common/embattle_bg_name1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_name_2" x="0.000" y="0.000" xr="0" yr="0" w="88.000" h="10.000" srw="480" srh="287" t="" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+        <ImageView id="corps_img2" x="22.500" y="7.400" xr="0" yr="0" w="12.000" h="12.000" srw="480" srh="287" i="common_2/countrywar_bz_15.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_fight_2" x="13.500" y="1.500" xr="0" yr="0" w="60.000" h="10.000" srw="480" srh="287" t="999999" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+        </ImageView>
+      </ImageView>
+      <ImageView id="proBarFull_2" x="16.000" y="49.000" xr="0" yr="0" w="44.000" h="6.000" srw="480" srh="287" tag="2" i="common/fight_bg_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="hpProBar_2" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="6.000" srw="480" srh="287" i="countrywar_troops/countrywar_troops_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <Button id="surplusSoldiersBtn2" x="58.500" y="43.500" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="287" tag="2" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickSurplusTips"/>
+      <Button id="woundBtn2" x="26.500" y="35.500" xr="0" yr="0" w="23.000" h="14.000" srw="480" srh="287" tag="2" nt="" ni="common/ui_common_word_die.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickWoundTips"/>
+    </View>
+    <View id="m_view_6" x="182.500" y="162.000" xr="0" yr="0" w="75.600" h="84.000" srw="480" srh="287">
+      <ImageView id="norImg_6" x="0.000" y="35.500" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" i="common/embattle_bg_general.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="selImg_6" x="0.000" y="35.500" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" iv="0" i="common/embattle_bg_player2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="recImg_6" x="0.000" y="35.500" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" iv="0" i="common/embattle_bg_player1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="iconImg_6" x="-21.000" y="-26.000" xr="0" yr="0" w="112.000" h="90.000" srw="480" srh="287" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="labBg_6" x="-5.500" y="63.500" xr="0" yr="0" w="88.000" h="20.000" srw="480" srh="287" i="common/embattle_bg_name1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_name_6" x="0.000" y="0.000" xr="0" yr="0" w="88.000" h="10.000" srw="480" srh="287" t="" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+        <ImageView id="corps_img6" x="22.500" y="7.400" xr="0" yr="0" w="12.000" h="12.000" srw="480" srh="287" i="common_2/countrywar_bz_7.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_fight_6" x="13.500" y="1.500" xr="0" yr="0" w="60.000" h="10.000" srw="480" srh="287" t="999999" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+        </ImageView>
+      </ImageView>
+      <ImageView id="proBarFull_6" x="16.000" y="58.500" xr="0" yr="0" w="44.000" h="6.000" srw="480" srh="287" tag="6" i="common/fight_bg_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="hpProBar_6" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="6.000" srw="480" srh="287" i="countrywar_troops/countrywar_troops_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <Button id="surplusSoldiersBtn6" x="58.500" y="53.000" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="287" tag="6" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickSurplusTips"/>
+      <Button id="woundBtn6" x="26.500" y="45.000" xr="0" yr="0" w="23.000" h="14.000" srw="480" srh="287" tag="6" nt="" ni="common/ui_common_word_die.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickWoundTips"/>
+    </View>
+    <View id="m_view_3" x="287.500" y="162.000" xr="0" yr="0" w="75.600" h="84.000" srw="480" srh="287">
+      <ImageView id="norImg_3" x="0.000" y="35.500" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" i="common/embattle_bg_general.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="selImg_3" x="0.000" y="35.500" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" iv="0" i="common/embattle_bg_player2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="recImg_3" x="0.000" y="35.500" xr="0" yr="0" w="75.600" h="30.800" srw="480" srh="287" iv="0" i="common/embattle_bg_player1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="iconImg_3" x="-21.940" y="-26.220" xr="0" yr="0" w="112.000" h="90.000" srw="480" srh="287" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="labBg_3" x="-5.500" y="63.500" xr="0" yr="0" w="88.000" h="20.000" srw="480" srh="287" i="common/embattle_bg_name1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_name_3" x="0.000" y="0.000" xr="0" yr="0" w="88.000" h="10.000" srw="480" srh="287" t="" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+        <ImageView id="corps_img3" x="22.500" y="7.400" xr="0" yr="0" w="12.000" h="12.000" srw="480" srh="287" i="common_2/countrywar_bz_8.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_fight_3" x="13.500" y="1.500" xr="0" yr="0" w="60.000" h="10.000" srw="480" srh="287" t="999999" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+        </ImageView>
+      </ImageView>
+      <ImageView id="proBarFull_3" x="16.000" y="58.500" xr="0" yr="0" w="44.000" h="6.000" srw="480" srh="287" tag="3" i="common/fight_bg_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="hpProBar_3" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="6.000" srw="480" srh="287" i="countrywar_troops/countrywar_troops_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <Button id="surplusSoldiersBtn3" x="58.500" y="53.000" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="287" tag="3" nt="" ni="common/u_btn_zhushi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickSurplusTips"/>
+      <Button id="woundBtn3" x="26.500" y="45.000" xr="0" yr="0" w="23.000" h="14.000" srw="480" srh="287" tag="3" nt="" ni="common/ui_common_word_die.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="onClickWoundTips"/>
+    </View>
+  </View>
+</View>

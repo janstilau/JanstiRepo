@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="401.000" h="59.000" srw="401" srh="59">
+  <ImageView x="0.000" y="0.000" xr="0" yr="0" w="401.000" h="59.000" srw="401" srh="59" i="common/a_memberbg_d.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="iconContainer" x="10.500" y="7.000" xr="0" yr="0" w="48.000" h="46.000" srw="401" srh="59" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="nameTxt" x="67.500" y="6.500" xr="0" yr="0" w="100.000" h="15.000" srw="401" srh="59" t="Label" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    <Label id="vipLimitTxt" x="116.000" y="7.500" xr="0" yr="0" w="210.000" h="12.000" srw="401" srh="59" t="（战功获得已开始衰减，                                       ）" ts="9" tctl="rgb(255, 0, 72)" tctr="rgb(255, 0, 72)" tcbl="rgb(255, 0, 72)" tcbr="rgb(255, 0, 72)" sc="black" ta="17">
+      <Button x="99.500" y="-1.500" xr="0" yr="0" w="97.000" h="15.000" srw="401" srh="59" nt="" ni="sign/ui_sing_word_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="vipAction"/>
+    </Label>
+    <Label id="titleTxt" x="67.500" y="23.500" xr="0" yr="0" w="100.000" h="15.000" srw="401" srh="59" t="可得战功" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+      <ImageView x="40.000" y="0.000" xr="0" yr="0" w="15.000" h="15.000" srw="401" srh="59" i="common/u_other_zhangong_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="zhangongTxt" x="15.000" y="3.000" xr="0" yr="0" w="100.000" h="12.000" srw="401" srh="59" t="Label" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+      </ImageView>
+    </Label>
+    <Label id="descTxt" x="67.000" y="42.000" xr="0" yr="0" w="200.000" h="12.000" srw="401" srh="59" t="Label" ts="10" tctl="rgb(147, 98, 39)" tctr="rgb(147, 98, 39)" tcbl="rgb(147, 98, 39)" tcbr="rgb(147, 98, 39)" sc="black" ta="17"/>
+    <Button id="joinBtn" x="320.000" y="27.500" xr="0" yr="0" w="72.000" h="28.000" srw="401" srh="59" nt="参加" ni="common/u_btn_comfirm4.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="joinAction"/>
+    <ImageView id="finishBtn" x="320.500" y="32.000" xr="0" yr="0" w="72.000" h="20.000" srw="401" srh="59" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label x="0.000" y="0.000" xr="0" yr="0" w="72.000" h="20.000" srw="401" srh="59" t="已经完成" ts="10" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="18"/>
+    </ImageView>
+    <Button id="vipBtn" x="330.640" y="3.490" xr="0" yr="0" w="47.000" h="18.000" srw="401" srh="59" nt="" ni="common/main_btn_vip.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="vipAction">
+      <View x="27.390" y="-0.990" xr="0" yr="0" w="30.000" h="20.000" srw="401" srh="59">
+        <View id="vipContainer" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="20.000" srw="401" srh="59"/>
+      </View>
+    </Button>
+  </ImageView>
+</View>

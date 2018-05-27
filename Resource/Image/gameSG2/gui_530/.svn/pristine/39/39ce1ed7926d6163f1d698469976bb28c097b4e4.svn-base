@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="294.500" h="252.000" srw="294" srh="252">
+  <View x="14.500" y="1.000" xr="0" yr="0" w="280.000" h="250.000" srw="294" srh="252">
+    <ImageView x="-14.500" y="-1.000" xr="0" yr="0" w="293.000" h="47.500" srw="294" srh="252" i="common/activity_7days_bg_title.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="view3" x="12.500" y="18.000" xr="0" yr="0" w="150.000" h="20.000" srw="294" srh="252" t="可领取时间还剩：" ts="12" tctl="rgb(255, 229, 158)" tctr="rgb(255, 229, 158)" tcbl="rgb(255, 229, 158)" tcbr="rgb(255, 229, 158)" sc="black" ta="17"/>
+      <Label id="m_timeCdLab" x="106.430" y="18.000" xr="0" yr="0" w="80.000" h="20.000" srw="294" srh="252" t="00:00:00" ts="12" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+      <ImageView x="32.270" y="-5.510" xr="0" yr="0" w="228.500" h="20.000" srw="294" srh="252" i="activity_7/act_word_zaixian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView x="-1.640" y="248.130" xr="0" yr="0" w="279.000" h="7.000" srw="294" srh="252" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <View id="m_scrollBg" x="-7.000" y="50.740" xr="0" yr="0" w="279.000" h="192.000" srw="294" srh="252"/>
+  </View>
+</View>

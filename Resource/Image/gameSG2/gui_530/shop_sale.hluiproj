@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView id="m_main_bgview_" nn="ImageView" x="13.240" y="24.730" xr="0" yr="0" w="433.500" h="286.000" srw="480" srh="320" i="common/u_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <ImageView nn="ImageView" x="0.000" y="7.500" xr="0" yr="0" w="457.500" h="80.000" srw="480" srh="320" i="common/u_bg_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="457.500" h="27.000" srw="480" srh="320" i="common/u_bg_title1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="180.000" y="-1.000" xr="0" yr="0" w="100.000" h="27.000" srw="480" srh="320" t="交易行" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    </ImageView>
+  </ImageView>
+  <Button id="m_sh_close_" nn="Button" x="430.000" y="7.500" xr="0" yr="0" w="27.500" h="35.000" srw="480" srh="320" nt="" ni="common/u_btn_close.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+  <Button id="m_cz_button_" nn="Button" x="13.960" y="11.930" xr="0" yr="0" w="93.000" h="32.000" srw="480" srh="320" iv="0" nt="" ni="shop_sale/shop_btn_chongzhi.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="chongzhiAction"/>
+  <Button nn="Button" x="29.240" y="37.000" xr="0" yr="0" w="83.000" h="28.000" srw="480" srh="320" nt="我要购买" ni="shop_sale/shop_topbtn_d.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="buyBtnAction"/>
+  <Button id="normalSaleBtn" nn="Button" x="114.500" y="37.000" xr="0" yr="0" w="83.000" h="28.000" srw="480" srh="320" nt="我要出售" ni="shop_sale/shop_topbtn_d.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="saleBtnAction"/>
+  <Button id="selectSaleBtn" nn="Button" x="114.500" y="37.000" xr="0" yr="0" w="83.000" h="28.000" srw="480" srh="320" nt="我要出售" ni="shop_sale/shop_topbtn_s.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+  <Button id="selectAlreayBtn" nn="Button" x="355.000" y="38.500" xr="0" yr="0" w="77.000" h="26.000" srw="480" srh="320" nt="售出道具" ni="common/shop_top_btn2_1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18">
+    <ImageView id="storeRedPoint1" nn="ImageView" x="66.000" y="-5.000" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </Button>
+  <Button id="normalAlreayBtn" nn="Button" x="355.000" y="38.500" xr="0" yr="0" w="77.000" h="26.000" srw="480" srh="320" nt="售出道具" ni="common/shop_top_btn2.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="alreadySaleBtnAction">
+    <ImageView id="storeRedPoint" nn="ImageView" x="66.000" y="-5.000" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </Button>
+  <ImageView nn="ImageView" x="441.000" y="142.000" xr="0" yr="0" w="35.000" h="72.000" srw="480" srh="320" i="common/u_btn_page1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="7.000" y="0.000" xr="0" yr="0" w="20.000" h="70.000" srw="480" srh="320" t="交易行" ts="13" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+  </ImageView>
+  <ImageView nn="ImageView" x="441.000" y="219.000" xr="0" yr="0" w="35.000" h="72.000" srw="480" srh="320" i="common/u_btn_page2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="purchaseBtn" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="35.000" h="72.000" srw="480" srh="320" i="common/word_chongzhi_d.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="rechargeRedPoint" nn="ImageView" x="20.500" y="-2.500" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+  <ImageView id="shopBtn" nn="ImageView" x="441.000" y="65.000" xr="0" yr="0" w="35.000" h="72.000" srw="480" srh="320" i="common/u_btn_page2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="7.000" y="0.000" xr="0" yr="0" w="20.000" h="70.000" srw="480" srh="320" t="商城" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+    <ImageView id="shopRedPoint" nn="ImageView" x="20.500" y="-2.500" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+  <View id="saleView" nn="View" x="15.240" y="70.730" xr="0" yr="0" w="420.000" h="215.000" srw="480" srh="320">
+    <ImageView nn="ImageView" x="9.260" y="3.270" xr="0" yr="0" w="165.000" h="220.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="onSaleNumLab" nn="Label" x="32.000" y="2.000" xr="0" yr="0" w="100.000" h="20.000" srw="480" srh="320" t="出售中的道具8/8" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      <ImageView nn="ImageView" x="0.000" y="21.500" xr="0" yr="0" w="165.000" h="1.500" srw="480" srh="320" i="shop_sale/shop_sale_line.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <View id="saleItemView" nn="View" x="3.500" y="27.500" xr="0" yr="0" w="158.000" h="188.000" srw="480" srh="320"/>
+    </ImageView>
+    <ImageView nn="ImageView" x="179.260" y="3.270" xr="0" yr="0" w="238.000" h="191.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <View id="myItemView" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="238.000" h="191.000" srw="480" srh="320"/>
+    </ImageView>
+    <Label nn="Label" x="200.850" y="207.480" xr="0" yr="0" w="200.000" h="14.000" srw="480" srh="320" t="售出物品后商城将收取20%钻石的服务费" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    <Button id="normalBtn" nn="Button" x="197.000" y="196.500" xr="0" yr="0" w="82.000" h="29.000" srw="480" srh="320" iv="0" nt="我要购买" ni="shop_sale/shop_topbtn_d.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="normalBtnAction"/>
+    <Button id="treasureBtn" nn="Button" x="321.500" y="196.500" xr="0" yr="0" w="82.000" h="29.000" srw="480" srh="320" iv="0" nt="我要出售" ni="shop_sale/shop_topbtn_s.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18" act="treasureBtnAction"/>
+    <View id="noTip1" nn="View" x="4.000" y="28.500" xr="0" yr="0" w="175.000" h="200.000" srw="480" srh="320">
+      <ImageView nn="ImageView" x="91.150" y="70.330" xr="0" yr="0" w="103.620" h="124.080" srw="480" srh="320" i="common/xiaozhushou.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="8.420" y="71.500" xr="0" yr="0" w="100.000" h="50.000" srw="480" srh="320" i="common/duihuakuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="13.750" y="17.000" xr="0" yr="0" w="70.000" h="15.000" srw="480" srh="320" t="点击右侧道具可以出售哦" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </ImageView>
+    </View>
+    <View id="noTip3" nn="View" x="57.760" y="3.770" xr="0" yr="0" w="350.000" h="200.000" srw="480" srh="320">
+      <ImageView nn="ImageView" x="261.170" y="66.380" xr="0" yr="0" w="103.620" h="124.080" srw="480" srh="320" i="common/xiaozhushou.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="149.930" y="64.460" xr="0" yr="0" w="120.000" h="60.000" srw="480" srh="320" i="common/duihuakuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="18.850" y="9.770" xr="0" yr="0" w="80.000" h="40.000" srw="480" srh="320" t="没有道具，快去获得哦" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </ImageView>
+    </View>
+  </View>
+  <View id="alreadySaleView" nn="View" x="18.000" y="66.500" xr="0" yr="0" w="420.000" h="240.000" srw="480" srh="320" iv="0">
+    <View id="gainViewBg" nn="View" x="6.500" y="5.000" xr="0" yr="0" w="407.000" h="196.000" srw="480" srh="320"/>
+    <ImageView nn="ImageView" x="9.500" y="200.500" xr="0" yr="0" w="400.000" h="7.000" srw="480" srh="320" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Button id="gainAllBtn" nn="Button" x="162.000" y="204.500" xr="0" yr="0" w="97.000" h="32.000" srw="480" srh="320" nt="全部领取" ni="shop_sale/shop_leftbutton_s.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18" act="gainAllAction"/>
+    <View id="noTip2" nn="View" x="40.000" y="6.000" xr="0" yr="0" w="350.000" h="200.000" srw="480" srh="320">
+      <ImageView nn="ImageView" x="206.670" y="6.880" xr="0" yr="0" w="157.000" h="188.000" srw="480" srh="320" i="common/xiaozhushou.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="46.930" y="34.960" xr="0" yr="0" w="153.000" h="67.000" srw="480" srh="320" i="common/duihuakuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="18.850" y="17.270" xr="0" yr="0" w="110.000" h="30.000" srw="480" srh="320" t="您还没有售出任何道具哦" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </ImageView>
+    </View>
+  </View>
+  <ImageView nn="ImageView" x="29.240" y="67.560" xr="0" yr="0" w="402.000" h="1.000" srw="480" srh="320" i="common/u_bg_fengexian.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+</View>

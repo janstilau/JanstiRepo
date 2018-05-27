@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320" tag="10001">
+  <Button x="78.060" y="225.180" xr="0" yr="0" w="325.000" h="65.000" srw="480" srh="320" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="emptyAction"/>
+  <View id="m_common_view" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320" tag="10001">
+    <Button id="m_buyAgain" x="110.000" y="240.500" xr="0" yr="0" w="100.000" h="35.000" srw="480" srh="320" tag="1" nt="" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18" act="onBuyAgainCallBack">
+      <Label id="m_cost_sremain" x="19.010" y="11.180" xr="0" yr="0" w="30.000" h="12.000" srw="480" srh="320" t="2480" ts="12" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+      <ImageView id="m_cost_icon" x="4.780" y="6.820" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" i="equips/skill_sfu1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_bug_again_lab" x="46.720" y="10.840" xr="0" yr="0" w="50.000" h="12.000" srw="480" srh="320" t="再开一次" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      <ImageView id="redPoint" x="84.000" y="-2.500" xr="0" yr="0" w="18.000" h="18.000" srw="480" srh="320" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Button>
+    <Button id="sureBtn" x="271.500" y="240.000" xr="0" yr="0" w="100.000" h="35.000" srw="480" srh="320" tag="10" nt="确定" ni="common/u_btn_comfirm3.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="onSureCallBack"/>
+    <ImageView x="65.000" y="222.000" xr="0" yr="0" w="350.000" h="7.000" srw="480" srh="320" i="common/u_bg_gradient2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView id="mTitleImg" x="100.000" y="27.000" xr="0" yr="0" w="276.500" h="62.500" srw="480" srh="320" i="equips/wine_buysuccess.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_rewards_lab" x="107.000" y="29.500" xr="0" yr="0" w="95.000" h="12.000" srw="480" srh="320" t="200个技能兑换石" ts="12" tctl="green" tctr="green" tcbl="green" tcbr="green" stroke="1" sc="black" ta="18"/>
+    </ImageView>
+  </View>
+  <ImageView id="pointContainer" x="19.610" y="4.880" xr="0" yr="0" w="61.000" h="15.000" srw="480" srh="320" i="equips/skill_huodedi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="pointBtn" x="-11.190" y="-4.510" xr="0" yr="0" w="22.500" h="22.500" srw="480" srh="320" i="common/skill_word_jifen.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="pointTxt" x="12.440" y="1.380" xr="0" yr="0" w="45.000" h="12.000" srw="480" srh="320" t="99999999" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="10"/>
+  </ImageView>
+  <ImageView x="99.610" y="4.880" xr="0" yr="0" w="61.000" h="15.000" srw="480" srh="320" i="equips/skill_huodedi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="-9.690" y="-5.010" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" i="common/u_other_zuanshi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="coinTxt" x="12.440" y="1.380" xr="0" yr="0" w="45.000" h="12.000" srw="480" srh="320" t="99999999" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="10"/>
+  </ImageView>
+  <ImageView x="180.110" y="4.880" xr="0" yr="0" w="61.000" h="15.000" srw="480" srh="320" i="equips/skill_huodedi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="-10.690" y="-5.010" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" i="equips/skill_sfu1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="lotterCommonTxt" x="12.440" y="1.380" xr="0" yr="0" w="45.000" h="12.000" srw="480" srh="320" t="99999999" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="10"/>
+  </ImageView>
+  <ImageView x="262.110" y="4.880" xr="0" yr="0" w="61.000" h="15.000" srw="480" srh="320" i="equips/skill_huodedi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView x="-10.690" y="-5.010" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" i="equips/skill_sfu2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="lotterSeniorTxt" x="12.440" y="1.380" xr="0" yr="0" w="45.000" h="12.000" srw="480" srh="320" t="99999999" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="10"/>
+  </ImageView>
+  <ImageView x="341.610" y="4.880" xr="0" yr="0" w="61.000" h="15.000" srw="480" srh="320" i="equips/skill_huodedi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="betterIcon" x="-10.690" y="-5.010" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" i="equips/skill_sfu3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label id="betterTxt" x="12.440" y="1.380" xr="0" yr="0" w="45.000" h="12.000" srw="480" srh="320" t="99999999" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="10"/>
+  </ImageView>
+  <View id="mc" x="0.000" y="0.000" xr="0" yr="0" w="250.000" h="200.000" srw="480" srh="320"/>
+  <View id="container" x="140.000" y="120.000" xr="0" yr="0" w="200.000" h="60.000" srw="480" srh="320"/>
+</View>

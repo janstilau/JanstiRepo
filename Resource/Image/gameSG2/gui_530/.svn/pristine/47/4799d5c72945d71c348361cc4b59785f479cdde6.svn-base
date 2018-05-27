@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<View h="185.0" type="0" w="210.0" x="0.0" y="0.0"><ImageView bri="1.0" fx="0" fy="0" gray="0" h="185.0" i="common/u_bg_tips.png" ic="0.500000,0.500000,0.000000,0.000000" id="m_scrollView" repeat="0" tc="rgb(255,255,255)" type="2" w="210.0" x="0.0" y="0.0"><View h="175.0" id="m_baseplateView" type="0" w="200.0" x="5.0" y="5.5" /></ImageView></View>

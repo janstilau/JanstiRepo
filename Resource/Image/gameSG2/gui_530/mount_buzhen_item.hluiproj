@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="362.000" h="61.500" srw="362" srh="61">
+  <ImageView id="mBgImg" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="362.000" h="61.500" srw="362" srh="61" i="common/a_bg3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="362.000" h="61.500" srw="362" srh="61" iv="0" i="common/general_bg_select1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="6.000" y="6.000" xr="0" yr="0" w="50.000" h="50.000" srw="362" srh="61" i="common/u_other_general_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_horse_icon_img" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="50.000" h="50.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <Label id="m_level_img" nn="Label" x="23.500" y="35.000" xr="0" yr="0" w="40.000" h="15.000" srw="362" srh="61" t="Lv.30" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="17"/>
+      <ImageView id="m_quality_img" nn="ImageView" x="26.000" y="-3.000" xr="0" yr="0" w="26.000" h="14.500" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_is_bind_img" nn="ImageView" x="1.000" y="34.000" xr="0" yr="0" w="15.000" h="15.000" srw="362" srh="61" i="mount/horse_icon_13.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_rpg_army_img" nn="ImageView" x="0.000" y="14.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61" i="mount/horse_icon_14.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="1.500" y="1.500" xr="0" yr="0" w="8.000" h="8.000" srw="362" srh="61" iv="0" t="1" ts="8" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView id="m_troop_img" nn="ImageView" x="0.000" y="-3.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61" i="mount/horse_icon_15.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_troop_num_lab" nn="Label" x="-10.000" y="2.000" xr="0" yr="0" w="32.000" h="12.000" srw="362" srh="61" t="1" ts="8" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </ImageView>
+      <ImageView nn="ImageView" x="-0.500" y="-4.000" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61" iv="0" i="common/u_tab_sel_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="-43.500" y="-7.500" xr="0" yr="0" w="100.000" h="30.000" srw="362" srh="61" t="1" ts="8" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+      </ImageView>
+    </ImageView>
+    <Label id="m_horse_name_lab" nn="Label" x="57.500" y="3.500" xr="0" yr="0" w="65.000" h="15.000" srw="362" srh="61" t="坐骑名六个字" ts="9" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" sc="black" ta="17"/>
+    <Label nn="Label" x="57.500" y="44.000" xr="0" yr="0" w="20.000" h="12.000" srw="362" srh="61" t="评分" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    <ImageView id="m_score_img" nn="ImageView" x="77.000" y="44.000" xr="0" yr="0" w="32.000" h="12.000" srw="362" srh="61" i="mount/horse_score_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <Label nn="Label" x="162.000" y="3.500" xr="0" yr="0" w="55.000" h="15.000" srw="362" srh="61" t="移动速度增加" ts="9" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="17">
+      <Label id="m_speed_up_lab" nn="Label" x="55.500" y="0.000" xr="0" yr="0" w="30.000" h="15.000" srw="362" srh="61" t="10%" ts="9" tctl="rgb(0, 89, 0)" tctr="rgb(0, 89, 0)" tcbl="rgb(0, 89, 0)" tcbr="rgb(0, 89, 0)" sc="black" ta="17"/>
+    </Label>
+    <Label nn="Label" x="84.500" y="14.000" xr="0" yr="0" w="100.000" h="30.000" srw="362" srh="61" iv="0" t="战斗技能" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18">
+      <View id="m_battle_skills_view_1" nn="View" x="70.000" y="2.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+        <ImageView nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/skill_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <ImageView id="m_battle_skills_lock_1" nn="ImageView" x="2.800" y="2.500" xr="0" yr="0" w="12.000" h="12.000" srw="362" srh="61" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <ImageView id="m_battle_skills_icon_1" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="18.000" h="18.000" srw="362" srh="61" i="mount/horse_skill_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </ImageView>
+          </ImageView>
+        </ImageView>
+      </View>
+      <View id="m_battle_skills_view_2" nn="View" x="90.000" y="2.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+        <ImageView nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/skill_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <ImageView id="m_battle_skills_lock_2" nn="ImageView" x="2.800" y="2.500" xr="0" yr="0" w="12.000" h="12.000" srw="362" srh="61" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <ImageView id="m_battle_skills_icon_2" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="18.000" h="18.000" srw="362" srh="61" i="mount/horse_skill_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </ImageView>
+          </ImageView>
+        </ImageView>
+      </View>
+      <View id="m_battle_skills_view_3" nn="View" x="110.000" y="2.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+        <ImageView nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/skill_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <ImageView id="m_battle_skills_lock_3" nn="ImageView" x="2.800" y="2.500" xr="0" yr="0" w="12.000" h="12.000" srw="362" srh="61" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <ImageView id="m_battle_skills_icon_3" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="18.000" h="18.000" srw="362" srh="61" i="mount/horse_skill_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </ImageView>
+          </ImageView>
+        </ImageView>
+      </View>
+      <View id="m_battle_skills_view_4" nn="View" x="130.000" y="2.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+        <ImageView nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/skill_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <ImageView id="m_battle_skills_lock_4" nn="ImageView" x="2.800" y="2.500" xr="0" yr="0" w="12.000" h="12.000" srw="362" srh="61" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <ImageView id="m_battle_skills_icon_4" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="18.000" h="18.000" srw="362" srh="61" i="mount/horse_skill_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </ImageView>
+          </ImageView>
+        </ImageView>
+      </View>
+      <View id="m_battle_skills_view_5" nn="View" x="150.000" y="2.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+        <ImageView nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/skill_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <ImageView id="m_battle_skills_lock_5" nn="ImageView" x="2.800" y="2.500" xr="0" yr="0" w="12.000" h="12.000" srw="362" srh="61" i="common/smithy_lock.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+              <ImageView id="m_battle_skills_icon_5" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="18.000" h="18.000" srw="362" srh="61" i="mount/horse_skill_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            </ImageView>
+          </ImageView>
+        </ImageView>
+      </View>
+      <ImageView nn="ImageView" x="71.500" y="9.500" xr="0" yr="0" w="11.500" h="11.000" srw="362" srh="61" iv="0" i="mount/horse_word_24.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Label>
+    <Label nn="Label" x="162.000" y="23.000" xr="0" yr="0" w="40.000" h="15.000" srw="362" srh="61" t="可学技能" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17">
+      <ImageView id="m_after_skill_img" nn="ImageView" x="42.500" y="2.500" xr="0" yr="0" w="11.500" h="11.000" srw="362" srh="61" i="mount/horse_word_24.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </Label>
+    <View id="m_skills_view_1" nn="View" x="203.000" y="20.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+      <ImageView id="m_skills_bg_view_1" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="0.053" y="0.024" xr="0" yr="0" w="0.947" h="0.947" srw="362" srh="61" pp="1" sp="1" tag="1" i="mount/horse_skill_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="m_march_skills_icon_1" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" tag="2" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.500" y="12.500" xr="0" yr="0" w="10.000" h="6.000" srw="362" srh="61" tag="3" i="common/skill_l4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+    </View>
+    <View id="m_skills_view_2" nn="View" x="223.000" y="20.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+      <ImageView id="m_skills_bg_view_2" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="0.026" y="0.026" xr="0" yr="0" w="0.947" h="0.947" srw="362" srh="61" pp="1" sp="1" tag="1" i="mount/horse_skill_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="m_march_skills_icon_2" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" tag="2" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.500" y="12.500" xr="0" yr="0" w="10.000" h="6.000" srw="362" srh="61" tag="3" i="common/skill_l4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+    </View>
+    <View id="m_skills_view_3" nn="View" x="243.000" y="20.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+      <ImageView id="m_skills_bg_view_3" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="0.026" y="0.026" xr="0" yr="0" w="0.947" h="0.947" srw="362" srh="61" pp="1" sp="1" tag="1" i="mount/horse_skill_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="m_march_skills_icon_3" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" tag="2" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.500" y="12.500" xr="0" yr="0" w="10.000" h="6.000" srw="362" srh="61" tag="3" i="common/skill_l4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+    </View>
+    <View id="m_skills_view_4" nn="View" x="263.000" y="20.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+      <ImageView id="m_skills_bg_view_4" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="0.026" y="0.026" xr="0" yr="0" w="0.947" h="0.947" srw="362" srh="61" pp="1" sp="1" tag="1" i="mount/horse_skill_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="m_march_skills_icon_4" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" tag="2" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.500" y="12.500" xr="0" yr="0" w="10.000" h="6.000" srw="362" srh="61" tag="3" i="common/skill_l4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+    </View>
+    <View id="m_skills_view_5" nn="View" x="283.000" y="20.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+      <ImageView id="m_skills_bg_view_5" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="0.026" y="0.026" xr="0" yr="0" w="0.947" h="0.947" srw="362" srh="61" pp="1" sp="1" tag="1" i="mount/horse_skill_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="m_march_skills_icon_5" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" tag="2" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.500" y="12.500" xr="0" yr="0" w="10.000" h="6.000" srw="362" srh="61" tag="3" i="common/skill_l4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+    </View>
+    <View id="m_skills_view_6" nn="View" x="203.000" y="39.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+      <ImageView id="m_skills_bg_view_6" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="0.026" y="0.026" xr="0" yr="0" w="0.947" h="0.947" srw="362" srh="61" pp="1" sp="1" tag="1" i="mount/horse_skill_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="m_march_skills_icon_6" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" tag="2" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.500" y="12.500" xr="0" yr="0" w="10.000" h="6.000" srw="362" srh="61" tag="3" i="common/skill_l4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+    </View>
+    <View id="m_skills_view_7" nn="View" x="223.000" y="39.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+      <ImageView id="m_skills_bg_view_7" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="0.026" y="0.026" xr="0" yr="0" w="0.947" h="0.947" srw="362" srh="61" pp="1" sp="1" tag="1" i="mount/horse_skill_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="m_march_skills_icon_7" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" tag="2" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.500" y="12.500" xr="0" yr="0" w="10.000" h="6.000" srw="362" srh="61" tag="3" i="common/skill_l4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+    </View>
+    <View id="m_skills_view_8" nn="View" x="243.000" y="39.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+      <ImageView id="m_skills_bg_view_8" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="0.026" y="0.026" xr="0" yr="0" w="0.947" h="0.947" srw="362" srh="61" pp="1" sp="1" tag="1" i="mount/horse_skill_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="m_march_skills_icon_8" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" tag="2" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.500" y="12.500" xr="0" yr="0" w="10.000" h="6.000" srw="362" srh="61" tag="3" i="common/skill_l4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+    </View>
+    <View id="m_skills_view_9" nn="View" x="263.000" y="39.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+      <ImageView id="m_skills_bg_view_9" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="0.026" y="0.026" xr="0" yr="0" w="0.947" h="0.947" srw="362" srh="61" pp="1" sp="1" tag="1" i="mount/horse_skill_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="m_march_skills_icon_9" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" tag="2" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.500" y="12.500" xr="0" yr="0" w="10.000" h="6.000" srw="362" srh="61" tag="3" i="common/skill_l4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+    </View>
+    <View id="m_skills_view_10" nn="View" x="283.000" y="39.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61">
+      <ImageView id="m_skills_bg_view_10" nn="ImageView" x="0.500" y="0.500" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" i="common/u_other_skill.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="0.026" y="0.026" xr="0" yr="0" w="0.947" h="0.947" srw="362" srh="61" pp="1" sp="1" tag="1" i="mount/horse_skill_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView id="m_march_skills_icon_10" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="19.000" h="19.000" srw="362" srh="61" tag="2" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="0.500" y="12.500" xr="0" yr="0" w="10.000" h="6.000" srw="362" srh="61" tag="3" i="common/skill_l4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+    </View>
+    <Label id="m_inherent_lab" nn="Label" x="57.500" y="23.000" xr="0" yr="0" w="50.000" h="15.000" srw="362" srh="61" t="特殊技能" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="17"/>
+    <ImageView id="m_inherent_bg_img_1" nn="ImageView" x="98.500" y="20.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61" i="common/skill_k1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_inherent_img_1" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_inherent_level_1" nn="ImageView" x="0.000" y="13.000" xr="0" yr="0" w="10.000" h="6.000" srw="362" srh="61" i="common/skill_l4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_inherent_bg_img_2" nn="ImageView" x="118.500" y="20.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61" i="common/skill_k1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_inherent_img_2" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_inherent_level_2" nn="ImageView" x="0.000" y="13.000" xr="0" yr="0" w="10.000" h="6.000" srw="362" srh="61" i="common/skill_l4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_inherent_bg_img_3" nn="ImageView" x="138.500" y="20.500" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61" i="common/skill_k1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_inherent_img_3" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView id="m_inherent_level_3" nn="ImageView" x="0.000" y="13.000" xr="0" yr="0" w="10.000" h="6.000" srw="362" srh="61" i="common/skill_l4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+    <ImageView id="m_inherent_without_img" nn="ImageView" x="100.000" y="25.500" xr="0" yr="0" w="11.500" h="11.000" srw="362" srh="61" iv="0" i="mount/horse_word_24.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="307.500" y="2.000" xr="0" yr="0" w="13.000" h="15.500" srw="362" srh="61" i="common/main_power.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="m_fight_lab" nn="Label" x="15.000" y="1.500" xr="0" yr="0" w="60.000" h="15.000" srw="362" srh="61" t="999999" ts="9" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="rgb(135, 0, 0)" ta="17"/>
+    </ImageView>
+    <Button id="m_go_into_battle" nn="Button" x="315.500" y="24.000" xr="0" yr="0" w="41.000" h="25.500" srw="362" srh="61" iv="0" nt="上阵" ni="common/countrywar_ab_btn1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18" act="goIntoBattleAction"/>
+    <Button id="m_unsnatch_btn" nn="Button" x="315.500" y="24.000" xr="0" yr="0" w="41.000" h="25.500" srw="362" srh="61" nt="卸下" ni="common/u_btn_comfirm10.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18" act="unsnatchAction"/>
+    <ImageView id="m_illusion_bg_img" nn="ImageView" x="118.830" y="1.350" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61" i="common/shop_daojukuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_illusion_icon" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="20.000" h="20.000" srw="362" srh="61" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="10.500" y="0.000" xr="0" yr="0" w="10.000" h="10.000" srw="362" srh="61" i="mount/horse_icon_hh_3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </ImageView>
+  </ImageView>
+</View>

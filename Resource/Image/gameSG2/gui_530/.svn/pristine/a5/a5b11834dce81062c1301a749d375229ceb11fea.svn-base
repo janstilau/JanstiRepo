@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="240.000" h="115.000" srw="240" srh="115">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="240.000" h="115.000" srw="240" srh="115" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label nn="Label" x="6.000" y="6.000" xr="0" yr="0" w="100.000" h="10.000" srw="240" srh="115" t="活动详情：" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label nn="Label" x="6.000" y="18.500" xr="0" yr="0" w="228.000" h="22.000" srw="240" srh="115" t="1.活动期间内，每日可领取一个红包，累计登录还可领取丰厚奖励。" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label nn="Label" x="6.000" y="44.000" xr="0" yr="0" w="228.000" h="22.000" srw="240" srh="115" t="2.活动期间内，击杀紫色品质以上野怪、活动怪有几率获得节日物品" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+      <Label id="prop_name" nn="Label" x="71.500" y="12.000" xr="0" yr="0" w="60.000" h="10.000" srw="240" srh="115" t="xxx" ts="10" tctl="rgb(228, 80, 255)" tctr="rgb(228, 80, 255)" tcbl="rgb(228, 80, 255)" tcbr="rgb(228, 80, 255)" sc="black" ta="17"/>
+    </Label>
+    <Label nn="Label" x="6.000" y="94.500" xr="0" yr="0" w="228.000" h="10.000" srw="240" srh="115" t="ps：击杀活动黄色怪，还有机会获得惊喜哦~" ts="10" tctl="yellow" tctr="yellow" tcbl="yellow" tcbr="yellow" sc="black" ta="17"/>
+    <Label nn="Label" x="6.000" y="69.000" xr="0" yr="0" w="228.000" h="22.000" srw="240" srh="115" t="3.节日道具可在活动界面中兑换奖励，兑换奖励次数每日重置哦~" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+  </ImageView>
+</View>

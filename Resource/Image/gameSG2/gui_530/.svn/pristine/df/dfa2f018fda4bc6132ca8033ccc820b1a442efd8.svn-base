@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="180.000" h="55.000" srw="180" srh="97">
+  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="185.000" h="55.000" srw="180" srh="97" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label id="_addSoldiersSpeedTitle" nn="Label" x="7.000" y="6.500" xr="0" yr="0" w="200.000" h="12.000" srw="180" srh="97" t="挑战成功可获得3倍基础积分" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label id="alliPrepareLab" nn="Label" x="100.000" y="25.000" xr="0" yr="0" w="70.000" h="12.000" srw="180" srh="97" iv="0" t="9999999/分钟" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="20"/>
+    <Label nn="Label" x="7.000" y="20.500" xr="0" yr="0" w="200.000" h="12.000" srw="180" srh="97" t="挑战失败可获得1.5倍基础积分" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label id="jobPrepareLab" nn="Label" x="100.000" y="42.000" xr="0" yr="0" w="70.000" h="12.000" srw="180" srh="97" iv="0" t="9999999/分钟" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="20"/>
+    <Label nn="Label" x="7.000" y="34.500" xr="0" yr="0" w="200.000" h="12.000" srw="180" srh="97" t="每有一队胜出可额外获得一次基础积分" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    <Label id="costSpeedLab" nn="Label" x="100.000" y="59.000" xr="0" yr="0" w="70.000" h="12.000" srw="180" srh="97" iv="0" t="9999999/分钟" ts="10" tctl="red" tctr="red" tcbl="red" tcbr="red" sc="black" ta="20"/>
+  </ImageView>
+</View>

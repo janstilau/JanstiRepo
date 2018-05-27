@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="225.500" h="176.000" srw="480" srh="320">
+  <ImageView nn="ImageView" x="0.000" y="1.000" xr="0" yr="0" w="225.500" h="176.000" srw="480" srh="320" i="common/u_bg_2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="50.000" y="11.000" xr="0" yr="0" w="126.000" h="19.000" srw="480" srh="320" i="common/u_bg_title2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="0.000" y="3.000" xr="0" yr="0" w="126.000" h="12.000" srw="480" srh="320" t="许愿池" ts="11" tctl="rgb(135, 0, 9)" tctr="rgb(135, 0, 9)" tcbl="rgb(135, 0, 9)" tcbr="rgb(135, 0, 9)" sc="black" ta="18"/>
+    </ImageView>
+    <Button nn="Button" x="200.500" y="-1.000" xr="0" yr="0" w="26.000" h="26.000" srw="480" srh="320" nt="" ni="common/u_btn_close1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="cancelTiShiClick"/>
+    <ImageView nn="ImageView" x="12.750" y="37.000" xr="0" yr="0" w="200.000" h="94.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="94.000" srw="480" srh="320" iv="0">
+        <Label nn="Label" x="29.500" y="30.000" xr="0" yr="0" w="140.000" h="12.000" srw="480" srh="320" t="本次许愿免费，许愿后不可更改" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        <Label nn="Label" x="29.500" y="51.500" xr="0" yr="0" w="140.000" h="12.000" srw="480" srh="320" t="是否确认？" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </View>
+      <View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="94.000" srw="480" srh="320">
+        <Label nn="Label" x="0.000" y="30.000" xr="0" yr="0" w="200.000" h="12.000" srw="480" srh="320" t="本次许愿花费          ，许愿后不可更改" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18">
+          <ImageView nn="ImageView" x="74.500" y="-0.500" xr="0" yr="0" w="29.500" h="13.500" srw="480" srh="320" i="activity_newmap/activity_newmap_xuyuan.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Label>
+        <Label nn="Label" x="29.500" y="51.500" xr="0" yr="0" w="140.000" h="12.000" srw="480" srh="320" t="是否确认？" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+      </View>
+    </ImageView>
+  </ImageView>
+  <Button id="coin_btn" nn="Button" x="73.380" y="140.000" xr="0" yr="0" w="80.000" h="28.000" srw="480" srh="320" nt="确认" ni="common/u_btn_comfirm1.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18" act="sureTiShiClick"/>
+</View>

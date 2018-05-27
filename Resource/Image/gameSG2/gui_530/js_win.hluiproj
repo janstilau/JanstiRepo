@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView id="m_light_img" nn="ImageView" x="40.000" y="124.500" xr="0" yr="0" w="400.000" h="174.500" srw="480" srh="320" i="js_win/js_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label id="m_sure_lab" nn="Label" x="100.000" y="162.160" xr="0" yr="0" w="200.000" h="15.000" srw="480" srh="320" t="本场战斗不消耗士兵，点击任意空白区域退出" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+  </ImageView>
+  <ImageView id="m_bg_img" nn="ImageView" x="0.000" y="-0.780" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <View id="m_alma_level_win_view" nn="View" x="86.000" y="192.500" xr="0" yr="0" w="320.000" h="100.000" srw="480" srh="320" iv="0" tag="1">
+      <View id="m_level_container_view" nn="View" x="54.000" y="41.500" xr="0" yr="0" w="200.000" h="45.000" srw="480" srh="320">
+        <View id="m_level_container_sub_view" nn="View" x="-0.500" y="0.000" xr="0" yr="0" w="200.000" h="45.000" srw="480" srh="320">
+          <ImageView id="m_level_goods_1" nn="ImageView" x="3.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" iv="0" i="common/u_other_goods3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="1" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="7.500" y="28.500" xr="0" yr="0" w="30.000" h="10.000" srw="480" srh="320" tag="2" t="Label" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="20"/>
+          </ImageView>
+          <ImageView id="m_level_goods_2" nn="ImageView" x="52.500" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" iv="0" i="common/u_other_goods3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="1" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="7.500" y="28.500" xr="0" yr="0" w="30.000" h="10.000" srw="480" srh="320" tag="2" t="Label" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="20"/>
+          </ImageView>
+          <ImageView id="m_level_goods_3" nn="ImageView" x="103.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" iv="0" i="common/u_other_goods3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="1" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="7.500" y="28.500" xr="0" yr="0" w="30.000" h="10.000" srw="480" srh="320" tag="2" t="Label" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="20"/>
+          </ImageView>
+          <ImageView id="m_level_goods_4" nn="ImageView" x="152.500" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" iv="0" i="common/u_other_goods3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="1" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="7.500" y="28.500" xr="0" yr="0" w="30.000" h="10.000" srw="480" srh="320" tag="2" t="Label" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="20"/>
+          </ImageView>
+        </View>
+        <ImageView id="m_double_img" nn="ImageView" x="198.700" y="5.430" xr="0" yr="0" w="51.500" h="34.000" srw="480" srh="320" iv="0" i="js_win/js_word_10.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </View>
+    </View>
+    <View id="m_arena_win_view" nn="View" x="79.000" y="193.500" xr="0" yr="0" w="320.000" h="90.000" srw="480" srh="320" iv="0" tag="2">
+      <ImageView nn="ImageView" x="7.250" y="1.500" xr="0" yr="0" w="307.500" h="23.000" srw="480" srh="320" i="common/js_bg_jl.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="116.500" y="-4.500" xr="0" yr="0" w="30.000" h="30.000" srw="480" srh="320" i="common/u_other_gold.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_arena_gold_num" nn="Label" x="37.000" y="12.060" xr="0" yr="0" w="70.000" h="12.000" srw="480" srh="320" t="99999" ts="12" tctl="rgb(255, 150, 0)" tctr="rgb(255, 150, 0)" tcbl="rgb(255, 150, 0)" tcbr="rgb(255, 150, 0)" sc="black" ta="17"/>
+        </ImageView>
+      </ImageView>
+      <ImageView id="m_rank_change_img" nn="ImageView" x="87.000" y="46.000" xr="0" yr="0" w="107.500" h="17.000" srw="480" srh="320" i="js_win/js_word_jjc.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_rank_img" nn="ImageView" x="107.710" y="-13.600" xr="0" yr="0" w="50.000" h="30.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="159.120" y="3.280" xr="0" yr="0" w="9.000" h="12.000" srw="480" srh="320" i="common/u_other_arrowup.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_change_rank_lab" nn="Label" x="11.890" y="-9.710" xr="0" yr="0" w="50.000" h="30.000" srw="480" srh="320" t="Label" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+        </ImageView>
+      </ImageView>
+      <ImageView id="m_rank_no_change_img" nn="ImageView" x="106.500" y="45.000" xr="0" yr="0" w="107.500" h="17.000" srw="480" srh="320" iv="0" i="js_win/js_word_jjc1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+    <View id="m_campaign_win_view" nn="View" x="79.500" y="206.500" xr="0" yr="0" w="320.000" h="90.000" srw="480" srh="320" iv="0" tag="3">
+      <ImageView id="m_reward_img" nn="ImageView" x="6.500" y="-9.000" xr="0" yr="0" w="307.500" h="23.000" srw="480" srh="320" iv="0" i="common/js_bg_jl.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="goldLab" nn="Label" x="99.000" y="6.420" xr="0" yr="0" w="60.000" h="12.000" srw="480" srh="320" t="99999" ts="12" tctl="rgb(255, 150, 0)" tctr="rgb(255, 150, 0)" tcbl="rgb(255, 150, 0)" tcbr="rgb(255, 150, 0)" sc="black" ta="17">
+          <ImageView nn="ImageView" x="-34.000" y="-10.920" xr="0" yr="0" w="30.000" h="30.000" srw="480" srh="320" i="common/u_other_gold.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Label>
+        <Label id="expLab" nn="Label" x="204.200" y="6.420" xr="0" yr="0" w="80.000" h="12.000" srw="480" srh="320" t="99999" ts="12" tctl="rgb(255, 150, 0)" tctr="rgb(255, 150, 0)" tcbl="rgb(255, 150, 0)" tcbr="rgb(255, 150, 0)" sc="black" ta="17">
+          <ImageView nn="ImageView" x="-26.500" y="-5.560" xr="0" yr="0" w="20.000" h="20.000" srw="480" srh="320" i="common/exp_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Label>
+      </ImageView>
+    </View>
+    <View id="m_pvp_win_view" nn="View" x="88.000" y="186.000" xr="0" yr="0" w="320.000" h="90.000" srw="480" srh="320" iv="0" tag="4">
+      <ImageView nn="ImageView" x="-1.250" y="10.000" xr="0" yr="0" w="307.500" h="23.000" srw="480" srh="320" i="common/js_bg_jl.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label nn="Label" x="53.000" y="4.420" xr="0" yr="0" w="60.000" h="12.000" srw="480" srh="320" t="跨服积分:" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+          <Label nn="Label" x="53.000" y="1.000" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="99999" ts="12" tctl="rgb(255, 150, 0)" tctr="rgb(255, 150, 0)" tcbl="rgb(255, 150, 0)" tcbr="rgb(255, 150, 0)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="158.000" y="4.420" xr="0" yr="0" w="90.000" h="12.000" srw="480" srh="320" t="演武硬币:" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+          <Label nn="Label" x="52.500" y="1.000" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="99999" ts="12" tctl="rgb(255, 150, 0)" tctr="rgb(255, 150, 0)" tcbl="rgb(255, 150, 0)" tcbr="rgb(255, 150, 0)" sc="black" ta="17"/>
+        </Label>
+        <Label nn="Label" x="26.870" y="42.930" xr="0" yr="0" w="240.000" h="12.000" srw="480" srh="320" t="今日次数已用完，不再发放演武硬币" ts="12" tctl="rgb(71, 255, 218)" tctr="rgb(71, 255, 218)" tcbl="rgb(71, 255, 218)" tcbr="rgb(71, 255, 218)" sc="black" ta="18"/>
+      </ImageView>
+    </View>
+    <View id="occupyCompnent" nn="View" x="79.000" y="180.000" xr="0" yr="0" w="320.000" h="120.000" srw="480" srh="320" iv="0" tag="5">
+      <ImageView id="occupyReward" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="320.000" h="120.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="26.370" y="25.250" xr="0" yr="0" w="269.000" h="51.000" srw="480" srh="320" i="js_win/js_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView id="m_describe_bg_img" nn="ImageView" x="0.000" y="4.000" xr="0" yr="0" w="260.000" h="25.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <Label id="battleDescription" nn="Label" x="16.500" y="4.000" xr="0" yr="0" w="180.000" h="12.000" srw="480" srh="320" t="你的主城掠夺了" ts="11" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17"/>
+            <Label nn="Label" x="36.830" y="6.830" xr="0" yr="0" w="70.000" h="12.000" srw="480" srh="320" iv="0" t="玩家名六个字" ts="11" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="18"/>
+            <ImageView id="plunderGold" nn="ImageView" x="170.940" y="-0.310" xr="0" yr="0" w="25.000" h="25.000" srw="480" srh="320" i="common/u_other_gold.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <Label id="occupyGoldLabel" nn="Label" x="25.640" y="8.900" xr="0" yr="0" w="80.000" h="12.000" srw="480" srh="320" t="99999" ts="12" tctl="rgb(255, 150, 0)" tctr="rgb(255, 150, 0)" tcbl="rgb(255, 150, 0)" tcbr="rgb(255, 150, 0)" sc="black" ta="17"/>
+            </ImageView>
+          </ImageView>
+          <ImageView id="m_award_bg_img" nn="ImageView" x="0.000" y="23.500" xr="0" yr="0" w="260.000" h="25.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="16.000" y="7.500" xr="0" yr="0" w="36.500" h="14.500" srw="480" srh="320" i="js_win/js_word_get.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView id="m_plunder_goods_1" nn="ImageView" x="56.880" y="2.250" xr="0" yr="0" w="22.000" h="22.000" srw="480" srh="320" i="common/u_other_zhangong.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+              <Label id="gesteOccupyLabel" nn="Label" x="22.500" y="6.560" xr="0" yr="0" w="160.000" h="12.000" srw="480" srh="320" tag="1" t="99999" ts="10" tctl="rgb(255, 150, 0)" tctr="rgb(255, 150, 0)" tcbl="rgb(255, 150, 0)" tcbr="rgb(255, 150, 0)" sc="black" ta="17"/>
+              <Label nn="Label" x="50.290" y="6.560" xr="0" yr="0" w="60.000" h="12.000" srw="480" srh="320" iv="0" t="今日已达上限" ts="9" tctl="rgb(252, 58, 58)" tctr="rgb(252, 58, 58)" tcbl="rgb(252, 58, 58)" tcbr="rgb(252, 58, 58)" sc="black" ta="17"/>
+            </ImageView>
+          </ImageView>
+        </ImageView>
+        <ImageView nn="ImageView" x="26.370" y="63.750" xr="0" yr="0" w="269.000" h="16.000" srw="480" srh="320" iv="0" i="js_win/js_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="14.500" y="0.500" xr="0" yr="0" w="36.500" h="14.500" srw="480" srh="320" i="js_win/js_word_consume.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView nn="ImageView" x="55.380" y="-6.750" xr="0" yr="0" w="22.000" h="22.000" srw="480" srh="320" i="common/junliang_s.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label nn="Label" x="78.380" y="1.310" xr="0" yr="0" w="60.000" h="12.000" srw="480" srh="320" t="99999" ts="10" tctl="rgb(120, 255, 253)" tctr="rgb(120, 255, 253)" tcbl="rgb(120, 255, 253)" tcbr="rgb(120, 255, 253)" sc="black" ta="17"/>
+          <Label nn="Label" x="104.880" y="0.810" xr="0" yr="0" w="60.000" h="12.000" srw="480" srh="320" iv="0" t="今日已达上限" ts="9" tctl="rgb(252, 58, 58)" tctr="rgb(252, 58, 58)" tcbl="rgb(252, 58, 58)" tcbr="rgb(252, 58, 58)" sc="black" ta="17"/>
+        </ImageView>
+        <View nn="View" x="76.730" y="28.750" xr="0" yr="0" w="200.000" h="55.000" srw="480" srh="320" iv="0">
+          <ImageView nn="ImageView" x="61.500" y="8.000" xr="0" yr="0" w="9.000" h="12.000" srw="480" srh="320" i="common/u_other_arrowdown.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <Label nn="Label" x="10.230" y="1.250" xr="0" yr="0" w="30.000" h="10.000" srw="480" srh="320" t="50%" ts="10" tctl="rgb(252, 58, 58)" tctr="rgb(252, 58, 58)" tcbl="rgb(252, 58, 58)" tcbr="rgb(252, 58, 58)" sc="black" ta="17"/>
+          </ImageView>
+          <ImageView nn="ImageView" x="169.000" y="8.000" xr="0" yr="0" w="9.000" h="12.000" srw="480" srh="320" i="common/u_other_arrowdown.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <Label nn="Label" x="10.230" y="1.250" xr="0" yr="0" w="30.000" h="10.000" srw="480" srh="320" t="50%" ts="10" tctl="rgb(252, 58, 58)" tctr="rgb(252, 58, 58)" tcbl="rgb(252, 58, 58)" tcbr="rgb(252, 58, 58)" sc="black" ta="17"/>
+          </ImageView>
+          <ImageView nn="ImageView" x="61.500" y="36.500" xr="0" yr="0" w="9.000" h="12.000" srw="480" srh="320" i="common/u_other_arrowdown.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000" fx="1" fy="1">
+            <Label nn="Label" x="10.230" y="1.250" xr="0" yr="0" w="30.000" h="10.000" srw="480" srh="320" t="50%" ts="10" tctl="rgb(252, 58, 58)" tctr="rgb(252, 58, 58)" tcbl="rgb(252, 58, 58)" tcbr="rgb(252, 58, 58)" sc="black" ta="17"/>
+          </ImageView>
+        </View>
+      </ImageView>
+    </View>
+    <View id="m_kingRoads_win_view" nn="View" x="77.200" y="184.150" xr="0" yr="0" w="320.000" h="100.000" srw="480" srh="320" iv="0" tag="6">
+      <ImageView nn="ImageView" x="8.800" y="40.250" xr="0" yr="0" w="307.000" h="23.000" srw="480" srh="320" i="common/js_bg_jl.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_king_roads_lab" nn="Label" x="151.500" y="6.020" xr="0" yr="0" w="60.000" h="12.000" srw="480" srh="320" t="99999" ts="12" tctl="rgb(255, 150, 0)" tctr="rgb(255, 150, 0)" tcbl="rgb(255, 150, 0)" tcbr="rgb(255, 150, 0)" sc="black" ta="17">
+          <ImageView nn="ImageView" x="-34.000" y="-10.920" xr="0" yr="0" w="30.000" h="30.000" srw="480" srh="320" tag="1" i="common/u_other_gold.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </Label>
+      </ImageView>
+    </View>
+    <View id="m_battlefield_win_view" nn="View" x="79.000" y="207.000" xr="0" yr="0" w="320.000" h="90.000" srw="480" srh="320" iv="0" tag="7">
+      <ImageView nn="ImageView" x="6.750" y="-11.000" xr="0" yr="0" w="307.500" h="23.000" srw="480" srh="320" i="common/js_bg_jl.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <Label id="m_battlefield_dec_lab" nn="Label" x="82.340" y="4.530" xr="0" yr="0" w="210.000" h="12.000" srw="480" srh="320" t="你抢夺了                     的矿篓" ts="11" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="17">
+          <Label nn="Label" x="40.610" y="0.050" xr="0" yr="0" w="70.000" h="12.000" srw="480" srh="320" tag="1" t="玩家名六个字" ts="11" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="18"/>
+        </Label>
+      </ImageView>
+      <ImageView nn="ImageView" x="68.370" y="37.750" xr="0" yr="0" w="185.000" h="15.000" srw="480" srh="320" i="js_win/js_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView nn="ImageView" x="60.880" y="-12.250" xr="0" yr="0" w="21.500" h="30.500" srw="480" srh="320" i="common/zhanchangjifen.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_battle_field_num" nn="Label" x="20.500" y="13.060" xr="0" yr="0" w="60.000" h="12.000" srw="480" srh="320" t="99999" ts="12" tctl="rgb(255, 150, 0)" tctr="rgb(255, 150, 0)" tcbl="rgb(255, 150, 0)" tcbr="rgb(255, 150, 0)" sc="black" ta="17"/>
+        </ImageView>
+      </ImageView>
+    </View>
+    <View id="m_crazywaymc_view" nn="View" x="40.000" y="165.000" xr="0" yr="0" w="350.000" h="90.000" srw="480" srh="320" iv="0" tag="8">
+      <View id="crazywayLab" nn="View" x="0.000" y="38.500" xr="0" yr="0" w="200.000" h="25.000" srw="480" srh="320">
+        <Label id="crazyuseTimes" nn="Label" x="60.000" y="0.000" xr="0" yr="0" w="62.000" h="12.000" srw="480" srh="320" t="000s" ts="15" tctl="rgb(255, 150, 0)" tctr="rgb(255, 150, 0)" tcbl="rgb(255, 150, 0)" tcbr="rgb(255, 150, 0)" sc="black" ta="17"/>
+        <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="60.000" h="12.000" srw="480" srh="320" t="战斗用时：" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <Label nn="Label" x="88.000" y="0.000" xr="0" yr="0" w="80.000" h="12.000" srw="480" srh="320" t="(可回复血量：" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+        <Label id="crazyhpPecent" nn="Label" x="153.000" y="0.000" xr="0" yr="0" w="40.000" h="12.000" srw="480" srh="320" t="100%" ts="12" tctl="rgb(255, 150, 0)" tctr="rgb(255, 150, 0)" tcbl="rgb(255, 150, 0)" tcbr="rgb(255, 150, 0)" sc="black" ta="20"/>
+        <Label nn="Label" x="152.000" y="0.000" xr="0" yr="0" w="50.000" h="12.000" srw="480" srh="320" t="）" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="20"/>
+      </View>
+      <ImageView nn="ImageView" x="46.750" y="33.000" xr="0" yr="0" w="307.500" h="23.000" srw="480" srh="320" i="common/js_bg_jl.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    </View>
+    <View id="m_common_view" nn="View" x="138.500" y="217.000" xr="0" yr="0" w="200.000" h="45.000" srw="480" srh="320" tag="9">
+      <View id="m_contains_view" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="200.000" h="45.000" srw="480" srh="320">
+        <View id="m_contains_sub_view" nn="View" x="-0.500" y="0.000" xr="0" yr="0" w="200.000" h="45.000" srw="480" srh="320">
+          <ImageView id="m_goods_1" nn="ImageView" x="3.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="common/u_other_goods3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="1" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="3" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="7.500" y="28.500" xr="0" yr="0" w="30.000" h="10.000" srw="480" srh="320" tag="2" t="Label" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="20"/>
+          </ImageView>
+          <ImageView id="m_goods_2" nn="ImageView" x="52.500" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="common/u_other_goods3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="1" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="3" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="7.500" y="28.500" xr="0" yr="0" w="30.000" h="10.000" srw="480" srh="320" tag="2" t="Label" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="20"/>
+          </ImageView>
+          <ImageView id="m_goods_3" nn="ImageView" x="103.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="common/u_other_goods3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="1" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="3" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="7.500" y="28.500" xr="0" yr="0" w="30.000" h="10.000" srw="480" srh="320" tag="2" t="Label" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="20"/>
+          </ImageView>
+          <ImageView id="m_goods_4" nn="ImageView" x="152.500" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" i="common/u_other_goods3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="1" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="44.000" h="44.000" srw="480" srh="320" tag="3" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+            <Label nn="Label" x="8.000" y="28.500" xr="0" yr="0" w="30.000" h="10.000" srw="480" srh="320" tag="2" t="Label" ts="9" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="20"/>
+          </ImageView>
+        </View>
+        <ImageView id="m_first_three_star_img" nn="ImageView" x="181.200" y="22.430" xr="0" yr="0" w="33.500" h="22.000" srw="480" srh="320" iv="0" i="js_win/js_word_10.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <Label id="m_first_award_lab" nn="Label" x="0.000" y="-26.000" xr="0" yr="0" w="200.000" h="30.000" srw="480" srh="320" iv="0" t="首次3星通关蓝田玉5倍奖励！" ts="10" tctl="rgb(128, 255, 255)" tctr="rgb(128, 255, 255)" tcbl="rgb(128, 255, 255)" tcbr="rgb(128, 255, 255)" sc="black" ta="18"/>
+      </View>
+      <Label id="qq_jiacheng" nn="Label" x="-4.200" y="47.690" xr="0" yr="0" w="200.000" h="12.000" srw="480" srh="320" t="" ts="12" tctl="green" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18"/>
+    </View>
+    <View id="m_hit_fly_view" nn="View" x="0.000" y="124.160" xr="0" yr="0" w="480.000" h="160.000" srw="480" srh="320" iv="0">
+      <View nn="View" x="140.000" y="1.840" xr="0" yr="0" w="300.000" h="70.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="10.000" y="21.160" xr="0" yr="0" w="43.000" h="12.500" srw="480" srh="320" i="js_win/hit_word4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_scores" nn="Label" x="50.000" y="-1.000" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="" ts="12" tctl="rgb(255, 250, 207)" tctr="rgb(255, 250, 207)" tcbl="rgb(255, 250, 207)" tcbr="rgb(255, 250, 207)" sc="black" ta="9"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="160.000" y="21.160" xr="0" yr="0" w="43.000" h="12.500" srw="480" srh="320" i="js_win/hit_word3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <View id="m_rank" nn="View" x="49.170" y="0.000" xr="0" yr="0" w="43.000" h="12.500" srw="480" srh="320">
+            <Label id="_rank_lab" nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="43.000" h="12.500" srw="480" srh="320" iv="0" t="未上榜" ts="12" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+          </View>
+        </ImageView>
+        <ImageView nn="ImageView" x="10.000" y="45.000" xr="0" yr="0" w="43.000" h="12.500" srw="480" srh="320" i="js_win/hit_word5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_total_scores" nn="Label" x="50.000" y="-1.000" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="" ts="12" tctl="rgb(255, 250, 207)" tctr="rgb(255, 250, 207)" tcbl="rgb(255, 250, 207)" tcbr="rgb(255, 250, 207)" sc="black" ta="9"/>
+        </ImageView>
+      </View>
+      <ImageView nn="ImageView" x="134.500" y="63.120" xr="0" yr="0" w="230.000" h="1.500" srw="480" srh="320" i="common/u_bg_fengexian2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <View nn="View" x="140.000" y="70.000" xr="0" yr="0" w="300.000" h="90.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="10.000" y="12.660" xr="0" yr="0" w="57.500" h="16.500" srw="480" srh="320" i="js_win/hit_word6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label id="m_goal_score" nn="Label" x="61.710" y="0.000" xr="0" yr="0" w="100.000" h="22.000" srw="480" srh="320" t="" ts="15" tctl="rgb(23, 203, 255)" tctr="rgb(23, 203, 255)" tcbl="rgb(23, 203, 255)" tcbr="rgb(23, 203, 255)" bold="1" sc="black" ta="9"/>
+          <ImageView id="m_goal_ok" nn="ImageView" x="160.000" y="-9.000" xr="0" yr="0" w="44.000" h="37.000" srw="480" srh="320" iv="0" i="js_win/hit_suc1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <ImageView id="m_goal_nook" nn="ImageView" x="160.000" y="-9.000" xr="0" yr="0" w="44.000" h="32.650" srw="480" srh="320" i="js_win/hit_suc2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView id="m_award_title" nn="ImageView" x="10.000" y="42.660" xr="0" yr="0" w="63.500" h="12.500" srw="480" srh="320" i="js_win/hit_word7.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <View id="m_skill_panel" nn="View" x="80.000" y="42.660" xr="0" yr="0" w="210.000" h="44.000" srw="480" srh="320"/>
+      </View>
+    </View>
+  </ImageView>
+  <ImageView id="m_line_img" nn="ImageView" x="127.000" y="204.000" xr="0" yr="0" w="230.000" h="1.500" srw="480" srh="320" iv="0" i="common/u_bg_fengexian2.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  <View id="m_bg_icon_view_1" nn="View" x="124.000" y="120.000" xr="0" yr="0" w="230.000" h="100.000" srw="480" srh="320">
+    <View id="m_bg_icon_view_2" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="230.000" h="100.000" srw="480" srh="320">
+      <View id="m_bg_icon_1" nn="View" x="4.500" y="6.180" xr="0" yr="0" w="50.000" h="78.000" srw="480" srh="320">
+        <ImageView id="m_bg_img_1" nn="ImageView" x="3.500" y="10.000" xr="0" yr="0" w="43.200" h="43.200" srw="480" srh="320" tag="1" i="common/u_other_general_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="43.200" h="43.200" srw="480" srh="320" tag="1" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label nn="Label" x="0.000" y="-9.000" xr="0" yr="0" w="43.200" h="10.000" srw="480" srh="320" tag="2" t="Lv60" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="5.000" y="54.500" xr="0" yr="0" w="40.000" h="7.200" srw="480" srh="320" tag="2" i="common/js_bg_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="40.000" h="7.200" srw="480" srh="320" tag="1" i="common/js_exp_jiangling.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="5.500" y="65.500" xr="0" yr="0" w="21.000" h="9.500" srw="480" srh="320" iv="0" tag="3" i="common/js_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="20.000" y="-0.500" xr="0" yr="0" w="7.000" h="10.000" srw="480" srh="320" i="common/u_jiantoulv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label nn="Label" x="27.000" y="0.000" xr="0" yr="0" w="35.000" h="10.000" srw="480" srh="320" tag="2" t="999999" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="4.500" y="62.500" xr="0" yr="0" w="42.400" h="11.600" srw="480" srh="320" iv="0" i="js_win/js_word_levelup.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="4.000" y="21.500" xr="0" yr="0" w="42.000" h="22.000" srw="480" srh="320" iv="0" tag="4" i="js_win/crazyway_word_yizhenwang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </View>
+      <View id="m_bg_icon_2" nn="View" x="62.500" y="6.180" xr="0" yr="0" w="50.000" h="78.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="3.500" y="10.000" xr="0" yr="0" w="43.200" h="43.200" srw="480" srh="320" tag="1" i="common/u_other_general_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="43.200" h="43.200" srw="480" srh="320" tag="1" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label nn="Label" x="0.000" y="-9.000" xr="0" yr="0" w="43.200" h="10.000" srw="480" srh="320" tag="2" t="Lv60" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="5.000" y="54.500" xr="0" yr="0" w="40.000" h="7.200" srw="480" srh="320" tag="2" i="common/js_bg_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="40.000" h="7.200" srw="480" srh="320" tag="1" i="common/js_exp_jiangling.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="5.000" y="65.500" xr="0" yr="0" w="21.000" h="9.500" srw="480" srh="320" iv="0" tag="3" i="common/js_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="20.000" y="-0.500" xr="0" yr="0" w="7.000" h="10.000" srw="480" srh="320" i="common/u_jiantoulv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label nn="Label" x="27.000" y="0.000" xr="0" yr="0" w="35.000" h="10.000" srw="480" srh="320" tag="2" t="9999" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="4.500" y="62.500" xr="0" yr="0" w="42.400" h="11.600" srw="480" srh="320" iv="0" i="js_win/js_word_levelup.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="4.000" y="21.500" xr="0" yr="0" w="42.000" h="22.000" srw="480" srh="320" iv="0" tag="4" i="js_win/crazyway_word_yizhenwang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </View>
+      <View id="m_bg_icon_3" nn="View" x="118.000" y="6.180" xr="0" yr="0" w="50.000" h="78.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="3.500" y="10.000" xr="0" yr="0" w="43.200" h="43.200" srw="480" srh="320" tag="1" i="common/u_other_general_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="43.200" h="43.200" srw="480" srh="320" tag="1" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label nn="Label" x="0.000" y="-9.000" xr="0" yr="0" w="43.200" h="10.000" srw="480" srh="320" tag="2" t="Lv60" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="5.000" y="54.500" xr="0" yr="0" w="40.000" h="7.200" srw="480" srh="320" tag="2" i="common/js_bg_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="40.000" h="7.200" srw="480" srh="320" tag="1" i="common/js_exp_jiangling.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="4.500" y="65.500" xr="0" yr="0" w="21.000" h="9.500" srw="480" srh="320" iv="0" tag="3" i="common/js_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="20.000" y="-0.500" xr="0" yr="0" w="7.000" h="10.000" srw="480" srh="320" i="common/u_jiantoulv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label nn="Label" x="27.000" y="0.000" xr="0" yr="0" w="35.000" h="10.000" srw="480" srh="320" tag="2" t="9999" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="4.500" y="62.500" xr="0" yr="0" w="42.400" h="11.600" srw="480" srh="320" iv="0" i="js_win/js_word_levelup.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="4.000" y="21.500" xr="0" yr="0" w="42.000" h="22.000" srw="480" srh="320" iv="0" tag="4" i="js_win/crazyway_word_yizhenwang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </View>
+      <View id="m_bg_icon_4" nn="View" x="175.000" y="6.180" xr="0" yr="0" w="50.000" h="78.000" srw="480" srh="320">
+        <ImageView nn="ImageView" x="3.500" y="10.000" xr="0" yr="0" w="43.200" h="43.200" srw="480" srh="320" tag="1" i="common/u_other_general_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="43.200" h="43.200" srw="480" srh="320" tag="1" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label nn="Label" x="0.000" y="-9.000" xr="0" yr="0" w="43.200" h="10.000" srw="480" srh="320" tag="2" t="Lv60" ts="10" tctl="white" tctr="white" tcbl="white" tcbr="white" stroke="1" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="5.000" y="54.500" xr="0" yr="0" w="40.000" h="7.200" srw="480" srh="320" tag="2" i="common/js_bg_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="40.000" h="7.200" srw="480" srh="320" tag="1" i="common/js_exp_jiangling.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="5.000" y="65.500" xr="0" yr="0" w="21.000" h="9.500" srw="480" srh="320" iv="0" tag="3" i="common/js_exp.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <ImageView nn="ImageView" x="20.000" y="-0.500" xr="0" yr="0" w="7.000" h="10.000" srw="480" srh="320" i="common/u_jiantoulv.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+          <Label nn="Label" x="27.000" y="0.000" xr="0" yr="0" w="35.000" h="10.000" srw="480" srh="320" tag="2" t="9999" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="4.500" y="62.500" xr="0" yr="0" w="42.400" h="11.600" srw="480" srh="320" iv="0" i="js_win/js_word_levelup.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+        <ImageView nn="ImageView" x="4.000" y="21.500" xr="0" yr="0" w="42.000" h="22.000" srw="480" srh="320" iv="0" tag="4" i="js_win/crazyway_word_yizhenwang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </View>
+    </View>
+  </View>
+  <ImageView id="m_through_view" nn="ImageView" x="36.500" y="0.000" xr="0" yr="0" w="373.500" h="125.500" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="145.500" y="41.000" xr="0" yr="0" w="114.000" h="73.000" srw="480" srh="320" iv="0" i="js_win/js_tongguan_word.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="93.000" y="20.500" xr="0" yr="0" w="200.000" h="60.000" srw="480" srh="320" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+      <ImageView id="m_through_star_1" nn="ImageView" x="47.000" y="0.000" xr="0" yr="0" w="30.000" h="28.500" srw="480" srh="320" i="common/js_other_unstar.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_star_1" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="28.500" srw="480" srh="320" iv="0" tag="1" i="common/js_other_star.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="m_through_star_2" nn="ImageView" x="90.000" y="-11.000" xr="0" yr="0" w="30.000" h="28.500" srw="480" srh="320" i="common/js_other_unstar.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_star_2" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="28.500" srw="480" srh="320" iv="0" tag="1" i="common/js_other_star.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+      <ImageView id="m_through_star_3" nn="ImageView" x="133.000" y="0.000" xr="0" yr="0" w="30.000" h="28.500" srw="480" srh="320" i="common/js_other_unstar.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+        <ImageView id="m_star_3" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="30.000" h="28.500" srw="480" srh="320" iv="0" tag="1" i="common/js_other_star.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      </ImageView>
+    </ImageView>
+    <Label nn="Label" x="154.000" y="104.500" xr="0" yr="0" w="100.000" h="30.000" srw="480" srh="320" iv="0" t="无阵亡通关3星" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+  </ImageView>
+</View>

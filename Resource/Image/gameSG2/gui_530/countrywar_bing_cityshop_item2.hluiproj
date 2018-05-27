@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="110" h="35">
+  <Button id="TongYongShopBtn" x="0" y="0" xr="0" yr="0" w="110" h="35" tag="17" ni="common/u_btn_comfirm5.png" nic="0,0,0,0" si="countrywar_gve/countrywar_gve_btn5.png" state="0" act="onItemClick" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18">
+    <ImageView id="select_icon" x="0" y="0" xr="0" yr="0" w="110" h="35" iv="0" i="common/u_btn_comfirm4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <Label id="TongYongShopLab" x="33" y="0" xr="0" yr="0" w="50" h="35" tag="111" t="优县" ts="12" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+    <ImageView id="build_icon" x="2" y="0" xr="0" yr="0" w="35" h="35" i="countrywar_common/dikuai_zhucheng.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="battle_state" x="80" y="6" xr="0" yr="0" w="22.5" h="22" i="countrywar_common/countrywar_frightmark.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </Button>
+</View>

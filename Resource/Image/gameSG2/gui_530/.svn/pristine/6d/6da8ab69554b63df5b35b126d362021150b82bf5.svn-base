@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="237" h="187">
+  <ImageView id="wjBgImg" x="3.3499999046325684" y="5.929999828338623" xr="0" yr="0" w="228" h="180" i="common/u_bg_2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="57.13999938964844" y="9" xr="0" yr="0" w="116" h="18" i="common/u_bg_title2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="build_title" x="23.5" y="3.5" xr="0" yr="0" w="70" h="11" t="建 城" ts="12" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(115,9,1)" ta="18"/>
+    </ImageView>
+    <Button id="_btnClose" x="206" y="-4" xr="0" yr="0" w="26" h="26" ni="common/u_btn_close1.png" nic="0,0,0,0" zot="1" state="0" act="onClickClose" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+    <Button id="_btnAccept" x="80" y="144.5" xr="0" yr="0" w="72" h="27.5" nt="确 定" ni="common/u_btn_comfirm2.png" nic="0.5,0.5,0,0" state="0" act="onClickSure" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    <Button id="buildBtn1" x="35" y="30.5" xr="0" yr="0" w="80" h="25" tag="1" nt="个人建城" ni="common/a_bg2.png" nic="0.5,0.5,0,0" si="common/a_bg1.png" state="1" act="onClickBuild" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    <Button id="buildBtn2" x="115.5" y="30.5" xr="0" yr="0" w="80" h="25" tag="3" nt="联盟建城" ni="common/a_bg2.png" nic="0.5,0.5,0,0" si="common/a_bg1.png" state="0" act="onClickBuild" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    <ImageView id="contentView" x="15" y="55.5" xr="0" yr="0" w="200" h="85" i="common/u_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <View id="buildCityView" x="0" y="0" xr="0" yr="0" w="200" h="85">
+        <Label id="build_cost_title" x="20" y="7.5" xr="0" yr="0" w="68" h="11" t="建城所需消耗" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17">
+          <ImageView id="build_cost_img" x="100" y="-2" xr="0" yr="0" w="16" h="16" i="common/u_other_lianmengzijin_s.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <Label id="build_cost_lab" x="120" y="1" xr="0" yr="0" w="55" h="11" t="88888888" ts="11" tctl="rgb(0,0,255)" tctr="rgb(0,0,255)" tcbl="rgb(0,0,255)" tcbr="rgb(0,0,255)" sc="rgb(0,0,0)" ta="17"/>
+        </Label>
+        <Label id="build_time_tile" x="20" y="27" xr="0" yr="0" w="68" h="11" t="建造所需时间" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17">
+          <ImageView id="build_time_img" x="100" y="-2" xr="0" yr="0" w="16" h="16" i="common/sand_glass_box.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+          <Label id="build_time_lab" x="120" y="0" xr="0" yr="0" w="55" h="11" t="88888分钟" ts="11" tctl="rgb(0,0,255)" tctr="rgb(0,0,255)" tcbl="rgb(0,0,255)" tcbr="rgb(0,0,255)" sc="rgb(0,0,0)" ta="17"/>
+        </Label>
+        <ImageView x="-5.5" y="43.5" xr="0" yr="0" w="210" h="3" i="common/u_bg_gradient2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="14" y="52.5" xr="0" yr="0" w="35" h="11" t="提示：" ts="11" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="17">
+          <Label id="build_hint_lab" x="31" y="0.5" xr="0" yr="0" w="150" h="23" t="个人主城在建造状态时，如防守方被击败则建造被打断。" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
+        </Label>
+      </View>
+    </ImageView>
+  </ImageView>
+</View>

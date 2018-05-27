@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="180.000" h="30.000" srw="180" srh="30">
+  <ImageView x="0.000" y="0.000" xr="0" yr="0" w="180.000" h="30.000" srw="180" srh="30" i="mount/horse_bg_4.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label id="m_no_open_lab" x="5.500" y="1.000" xr="0" yr="0" w="175.000" h="15.000" srw="180" srh="30" t="官职达到征西将军可获得加成：" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+      <Label x="0.000" y="12.500" xr="0" yr="0" w="160.000" h="15.000" srw="180" srh="30" t="马厩属性及坐骑图鉴属性提升20%" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    </Label>
+    <Label id="m_open_lab" x="5.500" y="1.000" xr="0" yr="0" w="175.000" h="15.000" srw="180" srh="30" iv="0" t="官职已达到征西将军，获得加成：" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17">
+      <Label x="0.000" y="12.500" xr="0" yr="0" w="160.000" h="15.000" srw="180" srh="30" t="马厩属性及坐骑图鉴属性提升20%" ts="10" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="17"/>
+    </Label>
+  </ImageView>
+</View>

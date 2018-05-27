@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0" y="0" xr="0" yr="0" w="225" h="160" nn="View">
+  <ImageView x="1.340000033378601" y="6.78000020980835" xr="0" yr="0" w="217" h="152" nn="ImageView" i="common/u_bg_2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+    <ImageView x="48.25" y="6.369999885559082" xr="0" yr="0" w="126" h="19" nn="ImageView" i="common/u_bg_title2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="titleLab" x="18.09000015258789" y="3.1700000762939453" xr="0" yr="0" w="90" h="12" nn="Label" t="提  示" ts="12" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+    </ImageView>
+    <ImageView x="8.25" y="28.299999237060547" xr="0" yr="0" w="201" h="88" nn="ImageView" i="common/u_bg_3.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
+      <Label id="contentLab" x="14" y="14.15999984741211" xr="0" yr="0" w="180" h="60" nn="Label" t="现在要离开副本，回到攻城略地吗？" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
+      <Label id="gvgLab" x="11" y="9.5" xr="0" yr="0" w="180" h="35" nn="Label" iv="0" t="战场尚未结束，盟友正在浴血奋战中，您确定要暂离战场吗？" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18">
+        <ImageView x="-8.5" y="40" xr="0" yr="0" w="198" h="1.5" nn="ImageView" i="common/a_dotted_line3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+        <Label x="0" y="45" xr="0" yr="0" w="180" h="30" nn="Label" t="提示：战场结束前，可随时进入战场！" ts="10" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="18"/>
+      </Label>
+    </ImageView>
+  </ImageView>
+  <Button id="sureBtn" x="28" y="126.5" xr="0" yr="0" w="65" h="25" nn="Button" nt="离开" ni="common/u_btn_comfirm2.png" nic="0,0,0,0" st="离开" state="0" act="onClickSure" ts="12" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(115,9,1)" ta="18"/>
+  <Button id="closeBtn" x="197.11000061035156" y="2.390000104904175" xr="0" yr="0" w="26" h="26" nn="Button" ni="common/u_btn_close1.png" nic="0.5,0.5,0,0" state="0" act="onClickClose" ts="13" tctl="rgb(255,255,255)" tctr="rgb(255,255,255)" tcbl="rgb(255,255,255)" tcbr="rgb(255,255,255)" sc="rgb(0,0,0)" ta="18"/>
+  <Button id="cancelBtn" x="132" y="126" xr="0" yr="0" w="65" h="25" nn="Button" nt="留在副本" ni="common/u_btn_comfirm2.png" nic="0,0,0,0" st="留在副本" state="0" act="onClickCancel" ts="12" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(115,9,1)" ta="18"/>
+</View>

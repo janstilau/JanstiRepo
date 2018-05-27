@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320">
+  <ImageView nn="ImageView" x="22.000" y="18.500" xr="0" yr="0" w="433.500" h="286.000" srw="480" srh="320" i="common/u_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="-11.000" y="-14.000" xr="0" yr="0" w="457.500" h="80.000" srw="480" srh="320" i="common/u_bg_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <ImageView nn="ImageView" x="56.000" y="9.500" xr="0" yr="0" w="44.500" h="272.000" srw="480" srh="320" i="common/u_bg_gradient1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000" fx="1"/>
+    <View nn="View" x="3.800" y="22.500" xr="0" yr="0" w="96.200" h="243.800" srw="480" srh="320">
+      <Button id="check_1" nn="Button" x="6.500" y="9.500" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="checkBoxAction">
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" tag="10" i="common/u_btn_comfirm4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" t="全服排名" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" tag="11" i="common/u_btn_comfirm5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" t="全服排名" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+      </Button>
+      <Button id="check_2" nn="Button" x="6.500" y="49.500" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="checkBoxAction">
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" tag="10" i="common/u_btn_comfirm4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" t="中原排名" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" tag="11" i="common/u_btn_comfirm5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" t="中原排名" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+      </Button>
+      <Button id="check_3" nn="Button" x="6.500" y="89.500" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="12" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="checkBoxAction">
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" tag="10" i="common/u_btn_comfirm4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" t="本服排名" ts="11" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+        </ImageView>
+        <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" tag="11" i="common/u_btn_comfirm5.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+          <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="85.000" h="35.000" srw="480" srh="320" t="本服排名" ts="11" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
+        </ImageView>
+      </Button>
+    </View>
+    <ImageView nn="ImageView" x="105.000" y="32.000" xr="0" yr="0" w="320.000" h="240.000" srw="480" srh="320" i="common/u_bg_3.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
+    <View nn="View" x="105.500" y="32.000" xr="0" yr="0" w="319.000" h="240.500" srw="480" srh="320">
+      <ImageView nn="ImageView" x="-10.500" y="-11.500" xr="0" yr="0" w="51.500" h="11.000" srw="480" srh="320" i="countrywar_gvg/countrywar_gvg_word13.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="44.000" y="-11.500" xr="0" yr="0" w="51.500" h="11.000" srw="480" srh="320" i="countrywar_gvg/countrywar_gvg_word12.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="110.000" y="-11.500" xr="0" yr="0" w="51.500" h="11.000" srw="480" srh="320" i="countrywar_gvg/countrywar_gvg_word11.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="161.000" y="-11.500" xr="0" yr="0" w="51.500" h="11.000" srw="480" srh="320" i="countrywar_gvg/countrywar_gvg_word10.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="216.000" y="-14.500" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="320" i="common/paimingdiyi.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="235.950" y="-14.500" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="320" i="common/paimingdier.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="256.450" y="-14.500" xr="0" yr="0" w="15.000" h="15.000" srw="480" srh="320" i="common/paimingdisan.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <ImageView nn="ImageView" x="268.500" y="-11.500" xr="0" yr="0" w="51.500" h="11.000" srw="480" srh="320" i="countrywar_gvg/countrywar_gvg_word8.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+      <View id="container" nn="View" x="-1.090" y="2.080" xr="0" yr="0" w="319.000" h="237.000" srw="480" srh="320"/>
+    </View>
+    <ImageView id="_item_ui" nn="ImageView" x="109.030" y="34.510" xr="0" yr="0" w="311.000" h="29.000" srw="480" srh="320" i="common/countrywar_tab_up_02.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="-1.500" y="6.000" xr="0" yr="0" w="24.100" h="18.000" srw="480" srh="320" t="999" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label nn="Label" x="19.900" y="6.000" xr="0" yr="0" w="95.200" h="18.000" srw="480" srh="320" t="C99-联盟名称六字" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label nn="Label" x="108.800" y="6.000" xr="0" yr="0" w="48.000" h="18.000" srw="480" srh="320" t="999999" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label nn="Label" x="158.500" y="6.000" xr="0" yr="0" w="48.000" h="18.000" srw="480" srh="320" t="999999" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label nn="Label" x="205.100" y="6.000" xr="0" yr="0" w="30.000" h="18.000" srw="480" srh="320" t="44" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label nn="Label" x="224.600" y="6.000" xr="0" yr="0" w="30.000" h="18.000" srw="480" srh="320" t="6" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label nn="Label" x="246.100" y="6.000" xr="0" yr="0" w="25.000" h="18.000" srw="480" srh="320" t="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label nn="Label" x="273.000" y="6.000" xr="0" yr="0" w="35.000" h="18.100" srw="480" srh="320" t="99999" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+    </ImageView>
+    <ImageView id="my_rank" nn="ImageView" x="109.500" y="240.500" xr="0" yr="0" w="311.000" h="29.000" srw="480" srh="320" i="common/a_memberbg_d1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label id="rank_lab" nn="Label" x="-1.500" y="6.000" xr="0" yr="0" w="24.100" h="18.000" srw="480" srh="320" t="999" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label id="name_lab" nn="Label" x="19.900" y="6.000" xr="0" yr="0" w="95.200" h="18.000" srw="480" srh="320" t="C99-联盟名称六字" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label id="strength_lab" nn="Label" x="108.800" y="6.000" xr="0" yr="0" w="48.000" h="18.000" srw="480" srh="320" t="999999" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label id="honor_lab" nn="Label" x="158.500" y="6.000" xr="0" yr="0" w="48.000" h="18.000" srw="480" srh="320" t="999999" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label id="rank_1_lab" nn="Label" x="205.100" y="6.000" xr="0" yr="0" w="30.000" h="18.000" srw="480" srh="320" t="44" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label id="rank_2_lab" nn="Label" x="224.600" y="6.000" xr="0" yr="0" w="30.000" h="18.000" srw="480" srh="320" t="6" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label id="rank_3_lab" nn="Label" x="241.600" y="6.000" xr="0" yr="0" w="30.000" h="18.000" srw="480" srh="320" t="0" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+      <Label id="score_lab" nn="Label" x="273.000" y="6.000" xr="0" yr="0" w="35.000" h="18.100" srw="480" srh="320" t="99999" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="rgb(77, 35, 9)" ta="18"/>
+    </ImageView>
+  </ImageView>
+  <View id="touchBg" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320"/>
+  <ImageView id="periodPanel" nn="ImageView" x="171.840" y="27.500" xr="0" yr="0" w="136.000" h="137.000" srw="480" srh="320" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView id="periodItem" nn="ImageView" x="6.000" y="5.500" xr="0" yr="0" w="124.000" h="25.000" srw="480" srh="320" i="common/ui_common_btn_bg_1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+      <Label nn="Label" x="0.000" y="0.000" xr="0" yr="0" w="124.000" h="25.000" srw="480" srh="320" t="C111-联盟名称六字" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="18"/>
+    </ImageView>
+    <ScrollView id="m_groupsList" nn="ScrollView" x="5.500" y="3.500" xr="0" yr="0" w="124.000" h="129.000" srw="480" srh="320"/>
+  </ImageView>
+  <ImageView id="empty_panel" nn="ImageView" x="124.000" y="65.000" xr="0" yr="0" w="181.000" h="225.000" srw="480" srh="320" iv="0" i="common/xiaozhushou.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <ImageView nn="ImageView" x="145.000" y="45.000" xr="0" yr="0" w="153.000" h="67.000" srw="480" srh="320" i="common/duihuakuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000" fx="1"/>
+    <ImageView nn="ImageView" x="185.000" y="61.500" xr="0" yr="0" w="79.500" h="33.500" srw="480" srh="320" i="countrywar_gvg/countrywar_gvg_word31.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+  <ImageView nn="ImageView" x="11.000" y="4.500" xr="0" yr="0" w="457.500" h="27.000" srw="480" srh="320" i="common/u_bg_title1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label id="period_num_lab" nn="Label" x="177.000" y="5.500" xr="0" yr="0" w="100.000" h="15.000" srw="480" srh="320" t="第一届" ts="13" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
+    <View id="touch_bg" nn="View" x="145.720" y="2.350" xr="0" yr="0" w="170.000" h="20.000" srw="480" srh="320"/>
+    <ImageView id="periodnumSelectImg" nn="ImageView" x="279.400" y="4.200" xr="0" yr="0" w="28.000" h="15.000" srw="480" srh="320" i="countrywar_gvg/countrywar_gvg_bg22.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
+  </ImageView>
+  <View id="m_groupView" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="480.000" h="320.000" srw="480" srh="320" iv="0"/>
+  <Button id="closeBtn" nn="Button" x="441.000" y="4.500" xr="0" yr="0" w="27.500" h="35.000" srw="480" srh="320" nt="" ni="common/u_btn_close.png" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18" act="closeAction"/>
+</View>

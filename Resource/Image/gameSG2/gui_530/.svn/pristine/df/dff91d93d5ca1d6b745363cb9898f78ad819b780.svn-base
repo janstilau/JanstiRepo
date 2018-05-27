@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View x="0.000" y="0.000" xr="0" yr="0" w="170.000" h="60.000" srw="170" srh="60" tag="10001">
+  <ImageView x="0.000" y="0.000" xr="0" yr="0" w="170.000" h="60.000" srw="170" srh="60" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
+    <Label x="4.500" y="5.000" xr="0" yr="0" w="160.000" h="25.000" srw="170" srh="60" t="当前幻化方案：" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9">
+      <Label id="m_horse_name_1" x="70.000" y="0.000" xr="0" yr="0" w="60.000" h="25.000" srw="170" srh="60" t="赤火麒麟" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
+    </Label>
+    <Label x="4.500" y="19.500" xr="0" yr="0" w="160.000" h="25.000" srw="170" srh="60" t="（在攻城略地、卧龙顶、地牢中将会显示为" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9">
+      <Label id="m_horse_name_2" x="30.000" y="12.000" xr="0" yr="0" w="60.000" h="12.500" srw="170" srh="60" t="火麒麟" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+      <Label id="m_des_lab" x="60.500" y="12.000" xr="0" yr="0" w="60.000" h="12.500" srw="170" srh="60" t="的形象）" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
+    </Label>
+  </ImageView>
+</View>

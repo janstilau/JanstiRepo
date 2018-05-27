@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View id="cw_worldmap" x="1.5" y="0" xr="0" yr="0" w="300" h="200" nn="中原大势（c层">
+  <View id="right_map_area_C_layer" x="0" y="0" xr="0" yr="0" w="300" h="200" nn="美术的底图" tag="100">
+    <ImageView id="img_youzhou_C_layer" x="6.599999904632568" y="49.5" xr="0" yr="0" w="232.1999969482422" h="106.5" nn="幽州" tag="2" i="countrywar_worldmap_new/countrywar_worldmap_zhongyuan_C_1.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="img_qingzhou_C_layer" x="13" y="41" xr="0" yr="0" w="227" h="100" nn="青州" iv="0" tag="1" i="countrywar_worldmap_new/countrywar_worldmap_zhongyuan_C_2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="img_yanzhou_C_layer" x="79.69999694824219" y="13.899999618530273" xr="0" yr="0" w="176.10000610351562" h="177.89999389648438" nn="兖州" iv="0" tag="3" i="countrywar_worldmap_new/countrywar_worldmap_zhongyuan_C_3.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="img_jizhou_C_layer" x="9.699999809265137" y="24.200000762939453" xr="0" yr="0" w="280.79998779296875" h="156" nn="冀州" iv="0" tag="4" i="countrywar_worldmap_new/countrywar_worldmap_zhongyuan_C_4.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </View>
+  <View id="right_coordinate_C_layer" x="0" y="0" xr="0" yr="0" w="300" h="200" nn="坐标层" tag="100">
+    <ImageView id="img_coordinate_youzhou_C_layer" x="5.800000190734863" y="39.79999923706055" xr="0" yr="0" w="290.79998779296875" h="112" nn="幽州" iv="0" tag="2" i="countrywar_worldmap_new/countrywar_worldmap_zhongyuan_C_1_coordinate.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="img_coordinate_qingzhou_C_layer" x="8.800000190734863" y="38.899993896484375" xr="0" yr="0" w="289" h="116.5" nn="青州" iv="0" tag="1" i="countrywar_worldmap_new/countrywar_worldmap_zhongyuan_C_2_coordinate.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="img_coordinate_yanzhou_C_layer" x="14.300000190734863" y="4.400000095367432" xr="0" yr="0" w="240" h="192" nn="兖州" iv="0" tag="3" i="countrywar_worldmap_new/countrywar_worldmap_zhongyuan_C_3_coordinate.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+    <ImageView id="img_coordinate_jizhou_C_layer" x="11.899999618530273" y="23.899999618530273" xr="0" yr="0" w="279" h="145.3000030517578" nn="冀州" iv="0" tag="4" i="countrywar_worldmap_new/countrywar_worldmap_zhongyuan_C_4_coordinate.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
+  </View>
+</View>
