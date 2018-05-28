@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="320.000" h="26.000" srw="320" srh="26">
-  <ImageView id="bgImage" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="320.000" h="26.000" srw="320" srh="26" i="league_storage/ui_bg_storage_record2.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
-    <ImageView id="imageActionType" nn="ImageView" x="2.000" y="1.500" xr="0" yr="0" w="20.000" h="20.000" srw="320" srh="26" i="league_storage/ui_bg_storage_record3.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
-  </ImageView>
-</View>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View id="_scale_view" nn="View" x="0.000" y="0.000" xr="0" yr="0" w="250.000" h="60.000" srw="250" srh="60">
-  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="250.000" h="60.000" srw="250" srh="60" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
-    <Label nn="Label" x="6.500" y="9.000" xr="0" yr="0" w="240.000" h="15.000" srw="250" srh="60" t="1. 主公每日最多可在此许愿两次，心愿礼物需在合服后领取" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
-    <Label nn="Label" x="6.500" y="35.000" xr="0" yr="0" w="240.000" h="15.000" srw="250" srh="60" t="2. 每日许愿后无法更改心愿，请主公谨慎选择" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
-  </ImageView>
-</View>

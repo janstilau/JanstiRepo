@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View x="0" y="0" xr="0" yr="0" w="397" h="200" nn="大势用坐标映射层">
-  <ImageView id="1" x="72" y="0.3499999940395355" xr="0" yr="0" w="250.5" h="93.5" nn="江夏" tag="1" i="countrywar_worldmap_new/countrywar_worldmap_jingzhou_B_01.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
-  <ImageView id="2" x="195" y="62" xr="0" yr="0" w="202.5" h="138.5" nn="武陵" tag="2" i="countrywar_worldmap_new/countrywar_worldmap_jingzhou_B_02.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
-  <ImageView id="3" x="0" y="64" xr="0" yr="0" w="207" h="136" nn="南阳" tag="3" i="countrywar_worldmap_new/countrywar_worldmap_jingzhou_B_03.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
-  <ImageView id="4" x="160.55999755859375" y="80.5" xr="0" yr="0" w="76.5" h="40.5" nn="南郡" tag="4" i="countrywar_worldmap_new/countrywar_worldmap_jingzhou_B_04.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
-</View>

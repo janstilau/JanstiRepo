@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View x="0.000" y="0.000" xr="0" yr="0" w="420.000" h="46.000" srw="420" srh="46">
-  <ImageView id="title_bg_img" x="-0.500" y="0.500" xr="0" yr="0" w="420.000" h="46.000" srw="420" srh="46" i="zhaohui_jiasu/ui_zhaohui_title.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
-  <ImageView id="arrow_img" x="195.970" y="22.510" xr="0" yr="0" w="22.000" h="22.000" srw="420" srh="46" i="zhaohui_jiasu/ui_huadong_button.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
-</View>

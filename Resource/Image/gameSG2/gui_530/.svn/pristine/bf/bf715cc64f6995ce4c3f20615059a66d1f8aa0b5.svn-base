@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="300.000" h="75.000" srw="300" srh="75">
-  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="300.000" h="75.000" srw="300" srh="75" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
-    <Label nn="Label" x="10.000" y="10.000" xr="0" yr="0" w="280.000" h="15.000" srw="300" srh="75" t="1. 培养幼兽可以获得对应成年坐骑，并有几率获得更高级的特殊幼兽" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
-    <Label nn="Label" x="10.000" y="25.000" xr="0" yr="0" w="280.000" h="15.000" srw="300" srh="75" t="2. 普通幼兽可以通过提升马厩等级解锁" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
-    <Label nn="Label" x="10.000" y="40.000" xr="0" yr="0" w="280.000" h="15.000" srw="300" srh="75" t="3. 主公可以将不需要的特殊幼兽分解，分解特殊幼兽可以获得灵兽丹" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
-    <Label nn="Label" x="10.000" y="55.000" xr="0" yr="0" w="280.000" h="15.000" srw="300" srh="75" t="4. 在攻城略地中获得的非绑定特殊幼兽还可以在交易行进行交易" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
-  </ImageView>
-</View>

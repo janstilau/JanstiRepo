@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="280.000" h="90.000" srw="280" srh="90">
-  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="280.000" h="90.000" srw="280" srh="90" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
-    <Label nn="Label" x="9.000" y="7.500" xr="0" yr="0" w="80.000" h="15.000" srw="280" srh="90" t="装备强化规则：" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
-    <Label nn="Label" x="8.500" y="22.500" xr="0" yr="0" w="260.000" h="30.000" srw="280" srh="90" t="1、强化功能只跟装备部位相关，更换装备并不会改变部位的强化等级" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
-    <Label nn="Label" x="8.500" y="50.500" xr="0" yr="0" w="260.000" h="15.000" srw="280" srh="90" t="2、每个部位的强化等级不能超过当前主公等级*2" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
-    <Label nn="Label" x="8.500" y="66.000" xr="0" yr="0" w="260.000" h="15.000" srw="280" srh="90" t="3、强化时增长的属性，与穿戴装备的等级和品质无关" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
-  </ImageView>
-</View>

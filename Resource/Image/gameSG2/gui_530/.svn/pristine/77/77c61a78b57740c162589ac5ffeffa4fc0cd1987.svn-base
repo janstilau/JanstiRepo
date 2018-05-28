@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View x="0" y="0" xr="0" yr="0" w="220" h="70" nn="View">
-  <ImageView x="0" y="0" xr="0" yr="0" w="220" h="70" nn="ImageView" i="common/u_bg_tips.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
-    <Label id="titleName" x="6.5" y="7.5" xr="0" yr="0" w="190" h="10" nn="Label" t="南郡之战守成状态：" ts="9" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="17">
-      <Label id="nicknamelab" x="2" y="13.270000457763672" xr="0" yr="0" w="202" h="24" nn="Label" t="在南郡之战开始后，您所属联盟没有占有关隘和码头，获得守成状态" ts="9" tctl="rgb(0,255,0)" tctr="rgb(0,255,0)" tcbl="rgb(0,255,0)" tcbr="rgb(0,255,0)" sc="rgb(0,0,0)" ta="17"/>
-      <Label id="enhancelab" x="1.5" y="43" xr="0" yr="0" w="208" h="10" nn="Label" t="在本郡内，您的伤害提高5%、受到伤害降低5%" ts="9" tctl="rgb(0,255,0)" tctr="rgb(0,255,0)" tcbl="rgb(0,255,0)" tcbr="rgb(0,255,0)" sc="rgb(0,0,0)" ta="17"/>
-    </Label>
-  </ImageView>
-</View>

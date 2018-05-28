@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<View x="0.000" y="0.000" xr="0" yr="0" w="170.000" h="40.000" srw="170" srh="40">
-  <ImageView id="itemBg" x="0.000" y="0.000" xr="0" yr="0" w="130.000" h="39.000" srw="170" srh="40" i="office/ui_office_btn_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
-  <ImageView id="officeIcon" x="0.000" y="0.000" xr="0" yr="0" w="39.000" h="39.000" srw="170" srh="40" i="office/biaozhi0.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000"/>
-  <ImageView id="officeNameImg" x="31.000" y="12.000" xr="0" yr="0" w="86.000" h="16.000" srw="170" srh="40" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
-  <ImageView id="itemSelImg" x="0.000" y="0.000" xr="0" yr="0" w="130.000" h="39.000" srw="170" srh="40" i="office/ui_office_btn_sel.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
-  <ImageView id="curview" x="125.570" y="7.910" xr="0" yr="0" w="45.000" h="23.000" srw="170" srh="40" i="office/ui_office_mark.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
-</View>

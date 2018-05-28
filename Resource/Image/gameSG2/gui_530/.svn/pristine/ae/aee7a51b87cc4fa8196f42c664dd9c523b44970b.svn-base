@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="101.000" h="232.000" srw="101" srh="232">
-  <View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="101.000" h="232.000" srw="101" srh="232">
-    <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="101.000" h="232.000" srw="101" srh="232" i="bing/bing_bg_6.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
-      <ImageView id="titleIcon" nn="ImageView" x="23.000" y="16.500" xr="0" yr="0" w="57.000" h="18.000" srw="101" srh="232" i="bing/bing_type_4.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
-    </ImageView>
-    <View id="item_0" nn="View" x="31.080" y="48.420" xr="0" yr="0" w="42.000" h="42.000" srw="101" srh="232"/>
-  </View>
-</View>

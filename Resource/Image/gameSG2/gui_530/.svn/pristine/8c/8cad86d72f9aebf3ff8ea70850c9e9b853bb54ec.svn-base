@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<View x="0.000" y="0.000" xr="0" yr="0" w="40.000" h="50.000" srw="40" srh="50">
-  <View id="container" x="0.000" y="0.000" xr="0" yr="0" w="40.000" h="36.000" srw="40" srh="50"/>
-  <Button id="icon" x="4.000" y="0.000" xr="0" yr="0" w="32.000" h="28.800" srw="40" srh="50" nt="" ni="" nci="" nic="0.000000,0.000000,0.000000,0.000000" st="" si="" sci="" sic="0.000000,0.000000,0.000000,0.000000" ht="" hi="" hci="" hic="0.000000,0.000000,0.000000,0.000000" dt="" di="" dci="" dic="0.000000,0.000000,0.000000,0.000000" zot="1" state="0" ts="13" tctl="white" tctr="white" tcbl="white" tcbr="white" sc="black" ta="18">
-    <ImageView id="redPoint" x="23.000" y="-1.000" xr="0" yr="0" w="14.400" h="14.400" srw="40" srh="50" i="common/u_other_redtips.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
-    <ImageView id="emptyTxtbg" x="-6.000" y="30.000" xr="0" yr="0" w="44.000" h="11.000" srw="40" srh="50" i="mainui/ui_mainui_btn_bg.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
-    <Label id="emptyTxt" x="-4.000" y="29.500" xr="0" yr="0" w="40.000" h="12.000" srw="40" srh="50" t="00:00:00" ts="9" tctl="green" tctr="green" tcbl="green" tcbr="green" sc="black" ta="18"/>
-  </Button>
-</View>

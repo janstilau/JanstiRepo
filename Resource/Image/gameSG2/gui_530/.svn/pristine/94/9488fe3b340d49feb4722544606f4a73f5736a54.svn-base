@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View x="0" y="0" xr="0" yr="0" w="100" h="20">
-  <ImageView id="bgimag" x="0" y="0" xr="0" yr="0" w="100" h="20" i="common/xingmutishi_bg.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
-    <Label id="hpCurrentLab" x="3.5" y="5" xr="0" yr="0" w="45" h="10" t="99999999" ts="9" tctl="rgb(206,0,0)" tctr="rgb(206,0,0)" tcbl="rgb(206,0,0)" tcbr="rgb(206,0,0)" sc="rgb(0,0,0)" ta="20">
-      <Label id="hpTotalLab" x="44.5" y="0" xr="0" yr="0" w="45" h="10" t="/99999999" ts="9" tctl="rgb(176,176,176)" tctr="rgb(176,176,176)" tcbl="rgb(176,176,176)" tcbr="rgb(176,176,176)" sc="rgb(0,0,0)" ta="17"/>
-    </Label>
-  </ImageView>
-</View>

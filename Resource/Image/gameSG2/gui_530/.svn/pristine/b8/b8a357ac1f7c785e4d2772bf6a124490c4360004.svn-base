@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="138.000" h="110.000" srw="138" srh="110">
-  <ImageView id="bg_img" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="138.000" h="110.000" srw="138" srh="110" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
-    <Label nn="Label" x="7.500" y="6.500" xr="0" yr="0" w="30.000" h="12.000" srw="138" srh="110" t="提示：" ts="10" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
-    <Label nn="Label" x="17.500" y="22.600" xr="0" yr="0" w="115.000" h="40.000" srw="138" srh="110" t="1.每日俸禄包含金币以及兵法密卷，每日可领取一次，每日凌晨5点重置，隔天不可累积" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
-    <Label nn="Label" x="17.500" y="69.500" xr="0" yr="0" w="115.000" h="30.000" srw="138" srh="110" t="2.每日俸禄的数量受到玩家前一日主城等级、领地范围大小及联盟势力值的影响" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="17"/>
-  </ImageView>
-</View>

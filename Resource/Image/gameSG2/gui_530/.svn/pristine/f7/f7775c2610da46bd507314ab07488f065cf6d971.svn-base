@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<View id="m_bg_view" x="0.000" y="0.000" xr="0" yr="0" w="280.000" h="290.000" srw="280" srh="260">
-  <View id="m_hoard_show" x="0.000" y="0.000" xr="0" yr="0" w="280.000" h="290.000" srw="280" srh="260" pp="1">
-    <ImageView id="m_hoard_word" x="280.230" y="-46.590" xr="0" yr="0" w="140.000" h="25.000" srw="280" srh="260" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
-  </View>
-</View>

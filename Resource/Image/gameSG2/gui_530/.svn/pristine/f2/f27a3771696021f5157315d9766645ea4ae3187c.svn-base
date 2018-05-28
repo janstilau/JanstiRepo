@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="320.000" h="60.000" srw="340" srh="100">
-  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="320.000" h="60.000" srw="340" srh="100" i="common/u_bg_tips.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
-    <Label nn="Label" x="10.000" y="10.000" xr="0" yr="0" w="320.000" h="15.000" srw="340" srh="100" t="1. 通过使用灵兽丹升级马厩，可以大幅提高全军属性" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
-    <Label nn="Label" x="10.000" y="25.000" xr="0" yr="0" w="320.000" h="15.000" srw="340" srh="100" t="2. 升级马厩可以提升坐骑数量上限和坐骑等级上限，更可开启部分坐骑图鉴" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
-    <Label nn="Label" x="10.000" y="40.000" xr="0" yr="0" w="320.000" h="15.000" srw="340" srh="100" t="3. 主公可以在马厩中选择是否在城内显示默认形象" ts="9" tctl="rgb(240, 213, 178)" tctr="rgb(240, 213, 178)" tcbl="rgb(240, 213, 178)" tcbr="rgb(240, 213, 178)" sc="black" ta="9"/>
-  </ImageView>
-</View>

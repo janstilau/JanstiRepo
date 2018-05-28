@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="313.000" h="35.000" srw="313" srh="35">
-  <ImageView id="bgImg" nn="ImageView" x="1.000" y="1.000" xr="0" yr="0" w="311.000" h="33.000" srw="313" srh="35" i="common/general_bg_unselect1.png" ci="" ic="0.500000,0.500000,0.000000,0.000000" tc="white" bri="1.000000">
-    <Label id="rankLab" nn="Label" x="11.390" y="5.550" xr="0" yr="0" w="50.000" h="23.500" srw="313" srh="35" t="第1名" ts="10" tctl="rgb(135, 0, 0)" tctr="rgb(135, 0, 0)" tcbl="rgb(135, 0, 0)" tcbr="rgb(135, 0, 0)" sc="black" ta="18"/>
-  </ImageView>
-</View>

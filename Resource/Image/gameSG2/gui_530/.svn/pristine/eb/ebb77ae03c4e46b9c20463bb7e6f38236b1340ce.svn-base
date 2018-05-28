@@ -1,2 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<View h="12.0" type="0" w="15.0" x="0.0" y="0.0"><ImageView bri="1.0" fx="0" fy="0" gray="0" h="12.0" i="Talk/cha_point_black.png" ic="0.000000,0.000000,0.000000,0.000000" repeat="0" tc="rgb(255,255,255)" type="2" w="12.0" x="0.0" y="0.0" /><ImageView bri="1.0" fx="0" fy="0" gray="0" h="12.0" i="Talk/cha_point_write.png" ic="0.000000,0.000000,0.000000,0.000000" id="curPage" repeat="0" tc="rgb(255,255,255)" type="2" w="12.0" x="0.0" y="0.0" /></View>

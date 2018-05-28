@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View x="0" y="0" xr="0" yr="0" w="195" h="91">
-  <ImageView x="0" y="0" xr="0" yr="0" w="195" h="91" i="common/u_bg_tips.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
-    <ImageView x="9.25" y="22.5" xr="0" yr="0" w="173.5" h="1.5" i="common/u_bg_fengexian2.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1"/>
-    <Label x="0" y="8" xr="0" yr="0" w="192" h="12" t="打开后可获得" ts="12" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="18"/>
-  </ImageView>
-  <View id="m_tis_scrollView" x="8.430000305175781" y="35.29999923706055" xr="0" yr="0" w="175" h="40" tag="10"/>
-</View>

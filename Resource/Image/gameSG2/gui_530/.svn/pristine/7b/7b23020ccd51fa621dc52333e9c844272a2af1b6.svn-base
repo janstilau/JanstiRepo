@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View nn="View" x="0.000" y="0.000" xr="0" yr="0" w="26.000" h="40.000" srw="26" srh="40">
-  <ImageView nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="26.000" h="26.000" srw="26" srh="40" i="common/u_bg_cost_1.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
-    <ImageView id="item_icon" nn="ImageView" x="0.000" y="0.000" xr="0" yr="0" w="26.000" h="26.000" srw="26" srh="40" i="" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000"/>
-  </ImageView>
-  <Label id="cost_lab" nn="Label" x="-5.210" y="26.500" xr="0" yr="0" w="35.000" h="9.000" srw="26" srh="40" t="99/1" ts="9" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
-</View>

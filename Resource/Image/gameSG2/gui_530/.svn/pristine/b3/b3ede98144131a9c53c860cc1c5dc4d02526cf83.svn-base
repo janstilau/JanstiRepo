@@ -1,2 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<View h="273.5" type="0" w="170.0" x="0.0" y="0.0"><ImageView bri="1.0" fx="0" fy="0" gray="0" h="273.5" i="office/ui_office_img_btnbg.png" ic="0.500000,0.500000,0.000000,0.000000" id="mBg" repeat="0" tc="rgb(255,255,255)" type="2" w="131.0" x="0.0" y="0.0" /><View h="263.5" id="maskmc" type="0" w="120.0" x="9.5" y="2.5"><View h="263.5" id="container" type="0" w="175.0" x="0.0" y="0.0" /></View></View>

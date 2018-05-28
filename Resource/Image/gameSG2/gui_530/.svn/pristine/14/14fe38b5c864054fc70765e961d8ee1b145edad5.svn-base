@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<View x="0.000" y="0.000" xr="0" yr="0" w="279.000" h="160.000" srw="480" srh="320">
-  <ImageView id="noMsgTip" x="120.200" y="3.250" xr="0" yr="0" w="90.500" h="112.500" srw="480" srh="320" i="common/xiaozhushou.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
-    <ImageView x="-106.120" y="19.900" xr="0" yr="0" w="120.000" h="55.000" srw="480" srh="320" i="common/duihuakuang.png" ci="" ic="0.000000,0.000000,0.000000,0.000000" tc="white" bri="1.000000">
-      <Label x="5.910" y="11.140" xr="0" yr="0" w="100.000" h="30.000" srw="480" srh="320" t="还没有好友圈状态呦" ts="10" tctl="rgb(77, 35, 9)" tctr="rgb(77, 35, 9)" tcbl="rgb(77, 35, 9)" tcbr="rgb(77, 35, 9)" sc="black" ta="18"/>
-    </ImageView>
-  </ImageView>
-</View>

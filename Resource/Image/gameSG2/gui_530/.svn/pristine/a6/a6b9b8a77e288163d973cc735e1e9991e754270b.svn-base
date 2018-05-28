@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View x="0" y="0" xr="0" yr="0" w="327.5" h="35">
-  <Label id="timeLab" x="5" y="4.5" xr="0" yr="0" w="250" h="10" t="" ts="10" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="17"/>
-  <Label id="infoLab" x="5" y="16.5" xr="0" yr="0" w="250" h="10" t="" ts="10" tctl="rgb(135,0,0)" tctr="rgb(135,0,0)" tcbl="rgb(135,0,0)" tcbr="rgb(135,0,0)" sc="rgb(0,0,0)" ta="17"/>
-  <ImageView x="5" y="31.5" xr="0" yr="0" w="317.5" h="1" i="common/u_bg_fengexian.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
-  <Button id="giveBackBtn" x="263.5" y="2" xr="0" yr="0" w="62" h="26" nt="回赠" ni="common/shop_top_btn1.png" nic="0,0,0,0" state="0" act="sendBackAction" ts="11" tctl="rgb(77,35,9)" tctr="rgb(77,35,9)" tcbl="rgb(77,35,9)" tcbr="rgb(77,35,9)" sc="rgb(0,0,0)" ta="18"/>
-</View>

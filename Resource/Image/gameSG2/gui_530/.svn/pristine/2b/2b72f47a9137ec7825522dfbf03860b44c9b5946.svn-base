@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View id="_scale_view" x="0" y="0" xr="0" yr="0" w="250" h="60">
-  <ImageView x="0" y="0" xr="0" yr="0" w="250" h="60" i="common/u_bg_tips.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
-    <Label x="6.5" y="9" xr="0" yr="0" w="240" h="15" t="1.累计充值额度达标且排名满足即可获取对应奖励。" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9"/>
-    <Label x="6.5" y="23" xr="0" yr="0" w="240" h="15" t="2.排名满足，累计充值未达标，则向下领取已达标的最高档奖励。" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9"/>
-  </ImageView>
-</View>

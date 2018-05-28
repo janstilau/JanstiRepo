@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<View x="0" y="0" xr="0" yr="0" w="200" h="67" nn="View" tag="10001">
-  <ImageView x="0" y="0" xr="0" yr="0" w="200" h="67" nn="ImageView" i="common/u_bg_tips.png" ic="0.5,0.5,0,0" tc="rgb(255,255,255)" bri="1">
-    <Label id="titleLab" x="7.5" y="9" xr="0" yr="0" w="185" h="12" nn="Label" t="大雪纷飞" ts="12" tctl="rgb(23,203,255)" tctr="rgb(23,203,255)" tcbl="rgb(23,203,255)" tcbr="rgb(23,203,255)" sc="rgb(0,0,0)" ta="17"/>
-    <ImageView x="5.5" y="26" xr="0" yr="0" w="190" h="1.5" nn="ImageView" i="common/u_bg_fengexian2.png" ic="0,0,0,0" tc="rgb(255,255,255)" bri="1"/>
-    <Label id="contentLab" x="7.5" y="32.5" xr="0" yr="0" w="185" h="25" nn="Label" t="战场内联盟建筑建造时间增长50%，建筑建造完成后的城防值提高100%" ts="10" tctl="rgb(240,213,178)" tctr="rgb(240,213,178)" tcbl="rgb(240,213,178)" tcbr="rgb(240,213,178)" sc="rgb(0,0,0)" ta="9"/>
-  </ImageView>
-</View>

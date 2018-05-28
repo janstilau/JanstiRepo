@@ -1,2 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<View h="48.0" type="0" w="385.0" x="0.0" y="0.0"><View h="40.0" id="labContentView" type="0" w="385.0" x="0.0" y="0.0" /><ImageView bri="1.0" fx="0" fy="0" gray="0" h="1.0" i="common/u_bg_fengexian.png" ic="0.000000,0.000000,0.000000,0.000000" id="partLineImg" repeat="0" tc="rgb(255,255,255)" type="2" w="380.0" x="3.0" y="39.0" /></View>
