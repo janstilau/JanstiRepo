@@ -78,6 +78,111 @@
 }
 ```
 
+```cpp
+ //check cloud layer
+    QStringList checkLayers =
+    {
+        QLatin1String("di"),
+        QLatin1String("random"),
+        QLatin1String("res"),
+        QLatin1String("mountain"),
+        QLatin1String("biaoji")
+    };
+
+    mLayers.clear();
+    mTilesets.clear();
+    auto cloud = QLatin1String("cloud");
+    if(mMap->indexOfLayer(cloud, Layer::TileLayerType) >= 0)
+    {
+        checkLayers << cloud;
+    }
+    auto otherRegionLayer = BusinessUtil::getFirstLayerByType(mDocument, LayerType::otherRegion);
+    if (otherRegionLayer) {
+        checkLayers << otherRegionLayer->name();
+    }
+    auto beginningLayers = BusinessUtil::getLayersByName(mDocument, QLatin1String("beginning"), tr("beginning"));
+    if (!beginningLayers.isEmpty()) {
+        auto beginningLayer = beginningLayers.first();
+        if (beginningLayer) {
+            checkLayers << beginningLayer->name();
+        }
+    }
+    auto tilesetProperty = QLatin1String("tileset");
+    int sameNameLayerCount = 0;
+    for(auto checkName : checkLayers)
+    {
+        sameNameLayerCount = 0;
+        for(auto layer : mMap->layers())
+        {
+            if(layer->name() == checkName) sameNameLayerCount ++;
+            if(sameNameLayerCount > 1)
+            {
+                err = tr("There are other names %1 layers").arg(checkName);
+                return true;
+            }
+        }
+        auto layerIndex = mMap->indexOfLayer(checkName, Layer::TileLayerType);
+        if(layerIndex < 0)
+        {
+            err = tr("Layer with name %1 not found").arg(checkName);
+            return true;
+        }
+
+        TileLayer *tileLayer = mMap->layerAt(layerIndex)->asTileLayer();
+        if(!tileLayer)
+        {
+            err = tr("Layer with name %1 is not tile layer").arg(checkName);
+            return true;
+        }
+        mLayers[layerIndex] = checkName;
+        // get tileset value
+        if(!tileLayer->hasProperty(tilesetProperty))
+        {
+            err = tr("Property with name %1 not found in layer with name %2").arg(tilesetProperty).arg(checkName);
+            return true;
+        }
+        auto propertyValue = tileLayer->propertyAsString(tilesetProperty);
+        if(propertyValue.isEmpty())
+        {
+            err = tr("Property with name %1 value is null in layer with name %2").arg(tilesetProperty).arg(checkName);
+            return true;
+        }
+        auto tilesetValues = propertyValue.split(QLatin1String(","));
+        if(tilesetValues.count() > 1)
+        {
+            err = tr("Property with name %1 value more than one in layer with name %2").arg(tilesetProperty).arg(checkName);
+            return true;
+        }
+        auto tilesetSetValue = tilesetValues.at(0);
+        // check used tileset
+        auto layerUsedTilesets = tileLayer->usedTilesets();
+        bool noUsed = layerUsedTilesets.isEmpty();
+        if(!noUsed && layerUsedTilesets.count() > 1)
+        {
+            err = tr("Layer with name %1 use more than one tileset.").arg(checkName).append(tr("Please check error cell"));
+            return true;
+        }
+        if(noUsed)
+        {
+            mTilesets.insert(layerIndex, tilesetSetValue);
+            continue;
+        }
+
+        SharedTileset layerTileset = (*layerUsedTilesets.begin());
+        QString usedTilesetName = layerTileset->name();
+
+        if(tilesetSetValue != usedTilesetName)
+        {
+            err = tr("Property with name %1 value %2 different from using tileset %3 in layer with name %4")
+                    .arg(tilesetProperty).arg(tilesetSetValue)
+                    .arg(usedTilesetName).arg(checkName);
+            return true;
+        }
+        mTilesets.insert(layerIndex, tilesetSetValue);
+    }
+    return false;
+```
+
 ## tileset 的属性值是否是有效值
 
 ```cpp
