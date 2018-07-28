@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/JANSTI/JanstiRepo/Code/Algorithm/StringArray/main.cpp
+iostream
+-
+unordered_map
+-
+vector
+-
+iterator
+-
+algorithm
+-
+
