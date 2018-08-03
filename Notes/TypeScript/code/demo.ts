@@ -1,9 +1,14 @@
-interface UserArray {
-  [sth: number]: string,
-  [sb: string]: string
+class HelloMessage extends React.Component {
+  render() {
+    return (
+      <div>
+        Hello {this.props.name}
+      </div>
+    );
+  }
 }
 
-let obj: UserArray = {
-  name: 'jansti',
-  1: '299',
-}
+ReactDOM.render(
+  <HelloMessage name="Taylor" />,
+  mountNode
+);
