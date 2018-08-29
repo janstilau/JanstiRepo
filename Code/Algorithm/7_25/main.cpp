@@ -9,29 +9,46 @@ class A
 {
 public:
     A (int value){
-        cout << "ctor ";
+        cout << "A ctor ";
     }
 
     A (const A& backuo) {
-        cout << "cpor ";
+        cout << "A cpor ";
     }
+
+    A& operator=(const A& back) {
+        cout << "A assign ";
+        return *this;
+    }
+};
+
+class B : public  A{
+public:
+    explicit B(int value, int bvalue):
+            A(value),
+            mBvalue(bvalue) {
+        cout << " B ctor ";
+    }
+
+    B (const B& backuo): A(backuo) {
+        cout << "B cpor ";
+    }
+
+    B& operator=(const B& back) {
+        A::operator=(back);
+        cout << "B assign ";
+        return *this;
+    }
+
+    int mBvalue;
 };
 
 
 int main() {
 
-    A a = 5;
-    A b(2);
-    A c(a);
-    A d = b;
-    A e = 123;
-
-    vector<A> stash;
-    stash.push_back(a);
-
-  
-    std::cout << "vectyor  ";
-    stash.insert(stash.begin(), b);
+   B b(1, 20);
+   B ba(b);
+   ba = b;
 
 
     return 0;
