@@ -56,3 +56,9 @@ typedef struct object_class *Class;
 ```
 
 结构体的内存对齐规定: 按照最大的成员变量的所占空间的倍数.
+
+sizeof 是一个运算符, 在编译的时候, 编译器就会把结果替换成为一个常数.
+
+class_getInstanceSize 是一个函数, 返回的是 aligned 之后的成员变量所需要的大小.
+
+而 mallocSize 则是返回系统在分配的时候, 给这个对象指针分配了多少空间. 因为系统其实也有自己的分配策略, 不可能是你要多大就给多大, 系统是按照固定的长度分配内存的, 所以, 经常是系统分配的内存的空间, 要大于 class_getInstanceSize 的大小.
