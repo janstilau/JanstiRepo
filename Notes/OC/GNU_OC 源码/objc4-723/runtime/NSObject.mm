@@ -2018,6 +2018,7 @@ void arr_init(void)
 
 @implementation NSObject
 
+
 + (void)load {
 }
 

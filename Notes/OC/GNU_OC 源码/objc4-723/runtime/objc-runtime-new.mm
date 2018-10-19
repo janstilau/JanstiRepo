@@ -4686,7 +4686,10 @@ IMP lookUpImpOrForward(Class cls, SEL sel, id inst,
     // 如果消息解析失败, 进入消息转发流程
     imp = (IMP)_objc_msgForward_impcache;
     cache_fill(cls, sel, imp, inst);
-
+    /*消息转发流程没有源代码.
+     首先, 会调用forwardingTargetForSelector, 这个方法返回一个对象, 用于接受消息. 用这个方法, 可以实现多重继承的效果. 如果这个方法返回 nil, 就会进入 forwardInvocation 的流程. 如果要走这个流程, 首先要实现 methodSignatureForSelector, 返回一个方法签名, 系统会根据这个方法签名, 生成对应的 NSInvocation 对象, 然后进行传入到 forwardInvocation 中去. forwardingTargetForSelector 仅仅是改变接受者. 而 forwardInvocation 作为一个更加昂贵的机制, 将参数, 方法, 方法签名包装到一个 NSInvocation 对象里面, 程序员可以通过操作这个 Invocation 对象, 改变参数, 改变 target, 能做的事情就会有很多. 当 Invocation invocke 之后, 系统会将 returnValue 进行提取, 然后返回到最初进行函数调用的地方.
+     一般情况我们的代码不会写到这些地方, 这样的代码逻辑过去复杂, 不容易维护, 这仅仅是框架的设计如此. 不要为了 OC 框架的特殊点, 写出不符合简洁清晰原则的代码.
+     */
  done:
     runtimeLock.unlockRead();
 

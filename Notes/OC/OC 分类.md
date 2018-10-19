@@ -149,7 +149,8 @@ memcpy(array()->lists, addedLists,
 
 ## load, initialize
 
-load 是 runtime 在加载类, 分类的时候调用.
+load 是 objc_init 的时候, objc_init (* Bootstrap initialization. Registers our image notifier with dyld.
+* Called by libSystem BEFORE library initialization time), 其中调用 load_images 方法, load_images 其中调用 call_load_methods 方法. 所以 load 方法的调用非常早. 而且是直接调用的方法的IMP.
 
 void call_load_methods(void)
 {
