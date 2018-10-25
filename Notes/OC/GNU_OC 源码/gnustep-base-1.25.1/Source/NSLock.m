@@ -200,6 +200,8 @@ NSString *NSLockException = @"NSLockException";
 
 @implementation NSLock
 
+// 在其他的几个锁的 initialize 方法里面, 调用了 NSLock class 方法, 那么就能确保调用 NSLock 的 initialize 方法
+// 这个方法的内部, 是创建几个共用的数据.
 + (void) initialize
 {
   static BOOL	beenHere = NO;
@@ -258,6 +260,7 @@ MFINALIZE
 MISLOCKED
 MLOCK
 
+// lockBeforeDate 的内部逻辑, 就是一个 while 循环, 不断地调用 tryLock. 直到时间超时了. 这里可以看出, 底层的函数, 是没有定时这一个概念, 需要手动创造出定时的这个逻辑出来.
 - (BOOL) lockBeforeDate: (NSDate*)limit
 {
   do
@@ -291,7 +294,7 @@ MUNLOCK
 MDEALLOC
 MDESCRIPTION
 MFINALIZE
-
+// 递归所, 仅仅是锁的类别做了修改, 实际上, 和 NSLock 没有什么区别.
 - (id) init
 {
   if (nil != (self = [super init]))
@@ -317,11 +320,6 @@ MUNLOCK
 + (void) initialize
 {
   [NSLock class];	// Ensure mutex attributes are set up.
-}
-
-- (void) broadcast
-{
-  pthread_cond_broadcast(&_condition);
 }
 
 MDEALLOC
@@ -355,10 +353,18 @@ MLOCK
 MLOCKBEFOREDATE
 MNAME
 
+// NSCondition 和 NSLock 的用法在加锁解锁的时候, 没有区别. 只是, 这个类增加了等待, 唤醒的操作.
+
 - (void) signal
 {
   pthread_cond_signal(&_condition);
 }
+
+- (void) broadcast
+{
+    pthread_cond_broadcast(&_condition);
+}
+
 
 MTRYLOCK
 MUNLOCK
@@ -452,6 +458,10 @@ MUNLOCK
   return [_condition lockBeforeDate: limit];
 }
 
+// 这里的逻辑是, 首先加锁, 如果发现当前的_condition_value 不是形参的值, 就进行 wait. wait 操作会释放锁, 这样别的线程就可以进行加锁操作.
+// 而别的线程在释放锁之前, 会进行 _condition_value 的赋值, 然后释放锁. 这个时候, 原来线程就可以重新加锁, 然后再次判断 _condition_value 的值.
+// 由于这些操作, 都是在加锁之后, 所以, _condition_value 是线程安全的.
+// 可以看出, 底层没有那么便利的 api, 可以进行唤醒操作, 还是需要程序员手工控制.
 - (void) lockWhenCondition: (NSInteger)value
 {
   [_condition lock];
@@ -490,6 +500,7 @@ MNAME
   return [_condition tryLock];
 }
 
+// 这里的 tryLock 之后, 增加了关于 condition 的判断, 如果不满足, 立马进行 unlock
 - (BOOL) tryLockWhenCondition: (NSInteger)condition_to_meet
 {
   if ([_condition tryLock])

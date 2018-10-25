@@ -264,8 +264,8 @@ extern "C" {
 
 
 /**
- * Allows the lock to be recursively acquired by the same thread.
- *
+ * Allows the lock to be recursively acquired by the same thread. // 注意, 这里是 same thread
+ * 也就是, 递归锁只能是在自己的线程里面进行重新加锁, 如果另一个线程, 发现这个锁已经被别的线程加锁过了, 还是要进行等到, 直到这个递归锁被那个线程完全放开.
  * If the same thread locks the mutex (n) times then that same 
  * thread must also unlock it (n) times before another thread 
  * can acquire the lock.
