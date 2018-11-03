@@ -142,8 +142,8 @@ enum HaveNew { DontHaveNew = false, DoHaveNew = true };
 
 struct SideTable {
     spinlock_t slock;
-    RefcountMap refcnts;
-    weak_table_t weak_table;
+    RefcountMap refcnts; // 引用计数的 map
+    weak_table_t weak_table; // weak指针的 map
 
     SideTable() {
         memset(&weak_table, 0, sizeof(weak_table));
@@ -683,6 +683,13 @@ struct magic_t {
 #   undef M1
 };
     
+/*
+ autoRealeasePage 的这个机制, 很像 c++ 的 deque 的实现细节. 在用户看来, 这个一个连续的记录表, 但是实际上, 在内存实现上, 是通过一个个独立的记录表完成的, 而这些记录表之间用链表进行连接. 在用户使用的时候, 记录表的添加销毁完全隐藏在函数的内部, 作为内部的数据结构实现.
+ 当 NSobject 调用 autorelease 的时候, 实际上先要拿到当前使用的 page, 然后向这个 page 里面记录自己的地址, page 的next 指向变化, 当当前 page
+ 容量不够的时候, 新生成一个 page, 并且维护好链表的父子关系.
+ 当@autorelease {} 结束的时候, 会进行 pop 操作, 这个pop 操作就是顺着 page 的链表, 对上面的记录项不断的调用 release 操作, 直到到达上一次记录的 开始位置.
+ 这个使用, 也可以看做是用对象维护资源的一个体现, 在__AutoRealeasePool 这个对象的构造函数和析构函数中, 进行 C 语言函数的调用, 而不是资源的分配, 但是在用户眼里, 就好像是生成了一个新的 Pool 对象, 然后 Pool 对象管理着这些 autorelase 的 NSobject 对象, 使用起来很方便.
+ */
 
 class AutoreleasePoolPage 
 {
@@ -704,9 +711,9 @@ class AutoreleasePoolPage
     static size_t const COUNT = SIZE / sizeof(id);
 
     magic_t const magic;
-    id *next;
-    pthread_t const thread;
-    AutoreleasePoolPage * const parent;
+    id *next; // 下一个可以记录自动释放对象的单元地址
+    pthread_t const thread; // 自动释放池是和县城有关的
+    AutoreleasePoolPage * const parent; // 双向链表
     AutoreleasePoolPage *child;
     uint32_t const depth;
     uint32_t hiwat;
@@ -808,7 +815,7 @@ class AutoreleasePoolPage
         return next == begin();
     }
 
-    bool full() { 
+    bool full() {  // 如果下一个记录 item 的地址等于 end了, 证明这个 page 满了
         return next == end();
     }
 
@@ -816,7 +823,7 @@ class AutoreleasePoolPage
         return (next - begin() < (end() - begin()) / 2);
     }
 
-    id *add(id obj)
+    id *add(id obj) // 增加一个记录, 就是将 OBJ 的地址, 记录到 next 指向的区域里, next 向后移动
     {
         assert(!full());
         unprotect();
@@ -969,7 +976,9 @@ class AutoreleasePoolPage
         return result;
     }
 
-
+    /* 这就是对象调用 autorelease 的 C 函数,
+        首先拿到当前使用的 autoreleasePage. 没有满的话就直接插入, 慢了的话, 新生成autoreleasePage并维护好链表信息, 然后向新的 page 插入信息.
+     */
     static inline id *autoreleaseFast(id obj)
     {
         AutoreleasePoolPage *page = hotPage();
@@ -1068,6 +1077,7 @@ public:
     }
 
 
+    // 当 @auturelease {} 的时候, 就是生产一个类的对象, 在那个类的对象里面, 就是调用了这个方法, 而那个对象销毁的时候, 就是调用了 pop, 并且那 push 的时候生成的 token 传递进去.
     static inline void *push() 
     {
         id *dest;
@@ -1106,6 +1116,7 @@ public:
         objc_autoreleasePoolInvalid(token);
     }
     
+    // 这里一直数据回退到 token 的位置, 这个过程中, 应该会伴随的 page 的销毁.
     static inline void pop(void *token) 
     {
         AutoreleasePoolPage *page;
@@ -2024,6 +2035,7 @@ void arr_init(void)
 + (void)initialize {
 }
 
+// 这里, 两个 self 不一样, 一个是方法名, 一个是 objc_send 的第一个参数. + 的就是类对象, - 的就是实例对象.
 + (id)self {
     return (id)self;
 }
@@ -2036,6 +2048,7 @@ void arr_init(void)
     return self;
 }
 
+// 通过 ISA 找到类对象返回.
 - (Class)class {
     return object_getClass(self);
 }
@@ -2044,6 +2057,7 @@ void arr_init(void)
     return self->superclass;
 }
 
+// 先找到类对象, 然后直接返回类对象记录的 super 指针.
 - (Class)superclass {
     return [self class]->superclass;
 }
@@ -2052,6 +2066,7 @@ void arr_init(void)
     return object_getClass((id)self) == cls;
 }
 
+// 先找到类对象, 然后直接比较地址.
 - (BOOL)isMemberOfClass:(Class)cls {
     return [self class] == cls;
 }
@@ -2063,13 +2078,14 @@ void arr_init(void)
     return NO;
 }
 
+// 找到自己的类对象, 然后寻找类对象->类对象的父对象->...-> 中间有没有和 cls 地址相等的. 这和 JS 的原型查找是一样的.
 - (BOOL)isKindOfClass:(Class)cls {
     for (Class tcls = [self class]; tcls; tcls = tcls->superclass) {
         if (tcls == cls) return YES;
     }
     return NO;
 }
-
+// 下面这些都是通过类对象记录的父类信息实现的.
 + (BOOL)isSubclassOfClass:(Class)cls {
     for (Class tcls = self; tcls; tcls = tcls->superclass) {
         if (tcls == cls) return YES;
@@ -2084,6 +2100,7 @@ void arr_init(void)
     return NO;
 }
 
+// lookUpImpOrNil 这个方法的实质就是调用前面的 lookUpImp 方法, 如果有缓存命中, 直接返回 YES, 否则, 寻找自己的方法列表, 父对象的方法列表, 以此类推.
 + (BOOL)instancesRespondToSelector:(SEL)sel {
     if (!sel) return NO;
     return class_respondsToSelector(self, sel);
@@ -2107,6 +2124,7 @@ void arr_init(void)
     return NO;
 }
 
+// 这个也是一个寻路过程, 不过不会找父对象的.
 - (BOOL)conformsToProtocol:(Protocol *)protocol {
     if (!protocol) return NO;
     for (Class tcls = [self class]; tcls; tcls = tcls->superclass) {
@@ -2115,6 +2133,7 @@ void arr_init(void)
     return NO;
 }
 
+// _objc_rootHash 直接返回自己, 也即是一个指针.
 + (NSUInteger)hash {
     return _objc_rootHash(self);
 }
@@ -2131,7 +2150,7 @@ void arr_init(void)
     return obj == self;
 }
 
-
+// 数据库相关的
 + (BOOL)isFault {
     return NO;
 }
@@ -2159,11 +2178,13 @@ void arr_init(void)
     return object_getMethodImplementation((id)self, sel);
 }
 
+// 还是调用的lookUpImpOrNil
 - (IMP)methodForSelector:(SEL)sel {
     if (!sel) [self doesNotRecognizeSelector:sel];
     return object_getMethodImplementation(self, sel);
 }
 
+// 动态解析的时候, 会判断这个值. 算是动态解析机制的一部分.
 + (BOOL)resolveClassMethod:(SEL)sel {
     return NO;
 }
@@ -2184,7 +2205,7 @@ void arr_init(void)
                 object_getClassName(self), sel_getName(sel), self);
 }
 
-
+// performSelector, 直接调用了 objc_msgSend. 不过 onThread 和 afterDelay 则复杂一些,  after 其实是注册了一个 timer.
 + (id)performSelector:(SEL)sel {
     if (!sel) [self doesNotRecognizeSelector:sel];
     return ((id(*)(id, SEL))objc_msgSend)((id)self, sel);
@@ -2234,6 +2255,7 @@ void arr_init(void)
                 "not available without CoreFoundation");
 }
 
+// 动态解析的一部分.
 + (void)forwardInvocation:(NSInvocation *)invocation {
     [self doesNotRecognizeSelector:(invocation ? [invocation selector] : 0)];
 }
@@ -2329,7 +2351,7 @@ void arr_init(void)
     return (id)self;
 }
 
-// Replaced by ObjectAlloc
+// 这个最终会调用的 AutoRealseasePool 的方法.
 - (id)autorelease {
     return ((id)self)->rootAutorelease();
 }
