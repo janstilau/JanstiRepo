@@ -373,10 +373,11 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     }
 
     // First check the in-memory cache...
+    // 如果内存有值, 直接调用回调啦. 没有下面的硬盘取值和网络下载的操作.
     UIImage *image = [self imageFromMemoryCacheForKey:key];
     if (image) {
         NSData *diskData = nil;
-        if ([image isGIF]) {
+        if ([image isGIF]) { // 判断 images 不为 nil
             diskData = [self diskImageDataBySearchingAllPathsForKey:key];
         }
         if (doneBlock) {
@@ -387,6 +388,9 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 
     NSOperation *operation = [NSOperation new];
     dispatch_async(self.ioQueue, ^{
+        // 这里, 并没有真正的这么一个 opertation 生成了. 这里, 这个 operation 唯一的价值就是他的 cancle 标志位.
+        // 从这里, 开始了子线程的介入. 这里operation会被立马传递回去, 而dispatch_async 的操作, 可能会之后才会进行操作.
+        // 这里, 会不会有同步问题.
         if (operation.isCancelled) {
             // do not call the completion if cancelled
             return;

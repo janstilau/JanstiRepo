@@ -39,7 +39,8 @@ static char TAG_ACTIVITY_SHOW;
     // 首先, 是每一个 UIView 都是自己的 operation 缓存. 对于像 UIImageView 来说, 一般只有一张图片展示. 但是它也有这 animationImages 这样的特例, 所以在 UIImageView 的分类里面, 其实是有着关于 animationImages 的key. 而对于 UIbutton 来说, 他有着很多的状态, 并且有着 image 和 backgroundImage 两个图片.
     // 所以 operation 需要用 Key 进行管理. 如果只有一张图片会展示在 UIView 上, 那么在设置了新的图片的时候, 自然可以将原来的进行取消了. 但是 UIButton 下载 highlight 的状态图片, 和设置 UIButtonNormal 的状态图片是没有关系, 原来 highlihgt 的任务还应该继续执行. 所以, 而在 UIButton 的分类里面, 明确的看到了根据状态的不同, 生成了不同的 key 值.
     // 所以, sd image 的策略是, 如果是一个 UIView 的同一个 key 被重新赋值了,  那么之前的操作就取消了. 不是一个 key, 还继续下载.
-    // 在 US 自定义的图片下载模块里面, 是没有取消一说的.
+    // 在 US 自定义的图片下载模块里面, 是没有取消一说的. 所以, 所有的下载任务, 都是会执行的. 不过, 他有着优先级一说.
+    // 这里, 这样关联的意义是什么
     objc_setAssociatedObject(self, &imageURLKey, url, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     // 这里, options 的取值就是用 & 运算. 如果不推迟显示 placeHolderImage, 就立马设置.
@@ -61,7 +62,8 @@ static char TAG_ACTIVITY_SHOW;
         id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager loadImageWithURL:url options:options progress:progressBlock completed:^(UIImage *image, NSData *data, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
             __strong __typeof (wself) sself = wself;
             [sself sd_removeActivityIndicator];
-            if (!sself) {
+            if (!sself) { // 如果 sself 消失了, 就不执行回调了, 但是这里图片是已经下完了. 所以, 下载过程还是会用掉流量.
+                // 前面取消, 只是在 cell 复用的时候, cell 设置了新的图片, 那么原来的下载任务就可以取消. 但是 cell 消失了, 回调会不会执行了, 但是下载任务还是会执行.
                 return;
             }
             dispatch_main_async_safe(^{
@@ -73,7 +75,7 @@ static char TAG_ACTIVITY_SHOW;
                     completedBlock(image, error, cacheType, url);
                     return;
                 } else if (image) {
-                    // 设置到界面上.
+                    // 设置到界面上. 这里并没有进行校验, 就是这个 view 现在显示的图片是不是和下载完的图片的 url 是一样的.  因为一个 view 可能会被设置多次 url 下载任务. 是不是和取消操作有关系, 保证到这里, 一定是 url 匹配的.
                     [sself sd_setImage:image imageData:data basedOnClassOrViaCustomSetImageBlock:setImageBlock];
                     [sself sd_setNeedsLayout];
                 } else {

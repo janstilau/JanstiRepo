@@ -179,6 +179,8 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
 
  * @endcode
  */
+
+// 在缓存的时候, path 可能会增加一些动态路径, 但是还是一张图片, 这里就给你了这个权力, 去对路径进行一次过滤.
 @property (nonatomic, copy, nullable) SDWebImageCacheKeyFilterBlock cacheKeyFilter;
 
 /**
@@ -219,6 +221,7 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
  *
  * @return Returns an NSObject conforming to SDWebImageOperation. Should be an instance of SDWebImageDownloaderOperation
  */
+// 最主要的方法. 在各个 UIView 的分类里面, 其实就是调用到这里来了.
 - (nullable id <SDWebImageOperation>)loadImageWithURL:(nullable NSURL *)url
                                               options:(SDWebImageOptions)options
                                              progress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
@@ -231,7 +234,7 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
  * @param url   The URL to the image
  *
  */
-
+// 这应该在loadImageWithURL 中间被调用, 进行缓存.
 - (void)saveImageToCache:(nullable UIImage *)image forURL:(nullable NSURL *)url;
 
 /**

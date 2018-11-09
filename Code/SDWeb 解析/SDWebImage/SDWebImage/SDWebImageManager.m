@@ -14,9 +14,9 @@
 // 当这个协议里面, 有属性的时候, 需要在类里面写出属性来, 或者@ synethise 这个属性. 因为, 仅仅说实现了某个协议, 是不会自动创建成员变量的.
 @interface SDWebImageCombinedOperation : NSObject <SDWebImageOperation>
 
-@property (assign, nonatomic, getter = isCancelled) BOOL cancelled;
-@property (copy, nonatomic, nullable) SDWebImageNoParamsBlock cancelBlock;
-@property (strong, nonatomic, nullable) NSOperation *cacheOperation;
+@property (assign, nonatomic, getter = isCancelled) BOOL cancelled; // 状态,
+@property (copy, nonatomic, nullable) SDWebImageNoParamsBlock cancelBlock; // 取消的回调
+@property (strong, nonatomic, nullable) NSOperation *cacheOperation; // 真正的下载任务
 
 @end
 
@@ -68,6 +68,8 @@
     }
 }
 
+// 一般我们自己写 check 函数, 自然是返回值进行判断, 但是这是一个异步操作, 所以用了回调这种方式, 进行最后的处理.
+// 这个函数是一个 check 函数, 没有读取 image 到内存中来.
 - (void)cachedImageExistsForURL:(nullable NSURL *)url
                      completion:(nullable SDWebImageCheckCacheCompletionBlock)completionBlock {
     NSString *key = [self cacheKeyForURL:url];
@@ -132,6 +134,7 @@
         }
     }
 
+    // 如果 url 错误, 或者是之前记录了的失败的 url, 直接设置 error, 调用 complete 回调.
     if (url.absoluteString.length == 0 || (!(options & SDWebImageRetryFailed) && isFailedUrl)) {
         [self callCompletionBlockForOperation:operation completion:completedBlock error:[NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorFileDoesNotExist userInfo:nil] url:url];
         return operation;
@@ -142,12 +145,13 @@
     }
     NSString *key = [self cacheKeyForURL:url];
 
+    // 这里, 首先去缓存里面查询一下, 然后根据后续的结果进行后续的操作. 传过去的回调, 一定在里面会被调用的.
     operation.cacheOperation = [self.imageCache queryCacheOperationForKey:key done:^(UIImage *cachedImage, NSData *cachedData, SDImageCacheType cacheType) {
         if (operation.isCancelled) {
             [self safelyRemoveOperationFromRunning:operation];
             return;
         }
-
+        // 如果没缓存图, 或者强制刷新, 并且 delegate 统一下图了.
         if ((!cachedImage || options & SDWebImageRefreshCached) && (![self.delegate respondsToSelector:@selector(imageManager:shouldDownloadImageForURL:)] || [self.delegate imageManager:self shouldDownloadImageForURL:url])) {
             if (cachedImage && options & SDWebImageRefreshCached) {
                 // If image was found in the cache but SDWebImageRefreshCached is provided, notify about the cached image
@@ -156,6 +160,7 @@
             }
 
             // download if no image or requested to refresh anyway, and download allowed by delegate
+            // 设置下载 options, & 进行取值, | 进行赋值.
             SDWebImageDownloaderOptions downloaderOptions = 0;
             if (options & SDWebImageLowPriority) downloaderOptions |= SDWebImageDownloaderLowPriority;
             if (options & SDWebImageProgressiveDownload) downloaderOptions |= SDWebImageDownloaderProgressiveDownload;
@@ -173,6 +178,7 @@
                 downloaderOptions |= SDWebImageDownloaderIgnoreCachedResponse;
             }
             
+            // 通过下载器进行下图. 下载器下图, 才需要把 progressBlock 传进去.
             SDWebImageDownloadToken *subOperationToken = [self.imageDownloader downloadImageWithURL:url options:downloaderOptions progress:progressBlock completed:^(UIImage *downloadedImage, NSData *downloadedData, NSError *error, BOOL finished) {
                 __strong __typeof(weakOperation) strongOperation = weakOperation;
                 if (!strongOperation || strongOperation.isCancelled) {
@@ -235,6 +241,7 @@
                 [self safelyRemoveOperationFromRunning:strongOperation];
             };
         } else if (cachedImage) {
+            // 有缓存图, 直接调用回调.
             __strong __typeof(weakOperation) strongOperation = weakOperation;
             [self callCompletionBlockForOperation:strongOperation completion:completedBlock image:cachedImage data:cachedData error:nil cacheType:cacheType finished:YES url:url];
             [self safelyRemoveOperationFromRunning:operation];
@@ -249,6 +256,7 @@
     return operation;
 }
 
+// 这个函数, 在上面的 loadImage 被调用了. 暴露到 h 文件中, 只是为了给用户一个不设置图片, 只是存图片的机会.
 - (void)saveImageToCache:(nullable UIImage *)image forURL:(nullable NSURL *)url {
     if (image && url) {
         NSString *key = [self cacheKeyForURL:url];
@@ -256,6 +264,8 @@
     }
 }
 
+// 对于所有的 operation, 设置一下他们的 cancle 状态, 这样, 在真正轮到他们下载的时候, 发现已经 cancle 的了, 自然就不在执行他们的任务了.
+// @synchronized 是互斥锁, 里面的值其实是锁的 key 值, 之所以用 self.runningOperation 枷锁, 是因为只有 改变到它的操作, 才互斥.
 - (void)cancelAll {
     @synchronized (self.runningOperations) {
         NSArray<SDWebImageCombinedOperation *> *copiedOperations = [self.runningOperations copy];
@@ -322,6 +332,7 @@
 - (void)cancel {
     self.cancelled = YES;
     if (self.cacheOperation) {
+        // 用nsoperation的另一个原因, 应该就是线程安全.
         [self.cacheOperation cancel];
         self.cacheOperation = nil;
     }
