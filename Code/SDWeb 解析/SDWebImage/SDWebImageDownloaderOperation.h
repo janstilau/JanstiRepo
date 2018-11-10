@@ -20,6 +20,7 @@ extern NSString * _Nonnull const SDWebImageDownloadFinishNotification;
 /**
  Describes a downloader operation. If one wants to use a custom downloader op, it needs to inherit from `NSOperation` and conform to this protocol
  */
+// 终于看到了一个 protocol 是用 interface 命名的了
 @protocol SDWebImageDownloaderOperationInterface<NSObject>
 
 - (nonnull instancetype)initWithRequest:(nullable NSURLRequest *)request

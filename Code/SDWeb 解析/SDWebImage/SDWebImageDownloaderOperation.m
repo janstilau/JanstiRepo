@@ -66,7 +66,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
                               inSession:(nullable NSURLSession *)session
                                 options:(SDWebImageDownloaderOptions)options {
     if ((self = [super init])) {
-        _request = [request copy];
+        _request = [request copy]; // httpRequest
         _shouldDecompressImages = YES;
         _options = options;
         _callbackBlocks = [NSMutableArray new];
@@ -107,6 +107,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 
 - (BOOL)cancel:(nullable id)token {
     __block BOOL shouldCancel = NO;
+    // 只有一个 downloadOperation, downloadOperation的callbackBlocks 里面, 存放了业务回调
     dispatch_barrier_sync(self.barrierQueue, ^{
         [self.callbackBlocks removeObjectIdenticalTo:token];
         if (self.callbackBlocks.count == 0) {
@@ -119,8 +120,10 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
     return shouldCancel;
 }
 
+// SDWebImageDownloaderOperation cancle 的话, 要自己的回调都删除了才会进行, 而自己的回调删除, 是imageDownloader 用 token 进行 cancle 的时候进行的.
 - (void)start {
     @synchronized (self) {
+        
         if (self.isCancelled) {
             self.finished = YES;
             [self reset];
@@ -133,6 +136,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
         if (hasApplication && [self shouldContinueWhenAppEntersBackground]) {
             __weak __typeof__ (self) wself = self;
             UIApplication * app = [UIApplicationClass performSelector:@selector(sharedApplication)];
+            // 这里, 很好的解释了句柄是什么. 句柄, 就是一个资源标识符, 内部发生了什么, 我们不清楚, 我们只是拿着句柄调用另一个子模块的功能, 这样, 另外一个子模块, 可以很好的进行封装. 如果传回具体的对象, 一是暴露细节, 而是, 如果用户拿着具体的对象进行修改, 会让子模块不稳定.
             self.backgroundTaskId = [app beginBackgroundTaskWithExpirationHandler:^{
                 __strong __typeof (wself) sself = wself;
 
@@ -155,12 +159,14 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
              *  We send nil as delegate queue so that the session creates a serial operation queue for performing all delegate
              *  method calls and completion handler calls.
              */
+            // 这里, 将delegate 设置为 self.
             self.ownedSession = [NSURLSession sessionWithConfiguration:sessionConfig
                                                               delegate:self
                                                          delegateQueue:nil];
             session = self.ownedSession;
         }
         
+        // 这里通过 urlsession 进行下载, 完全脱离了 afn.
         self.dataTask = [session dataTaskWithRequest:self.request];
         self.executing = YES;
     }
@@ -252,6 +258,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 
 #pragma mark NSURLSessionDataDelegate
 
+// 通过 NSURLSessionDataDelegate 中的方法, 调用 complete Block 和 progressBlock
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
 didReceiveResponse:(NSURLResponse *)response

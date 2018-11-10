@@ -144,8 +144,9 @@
                                                   progress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
                                                  completed:(nullable SDWebImageDownloaderCompletedBlock)completedBlock {
     __weak SDWebImageDownloader *wself = self;
-
-    return [self addProgressCallback:progressBlock completedBlock:completedBlock forURL:url createCallback:^SDWebImageDownloaderOperation *{
+    // 这里暴露了一个 block 不好的地方, 定义和类型的写法不一样!. createCallBack 是一个返回 SDWebImageDownloaderOperation, 参数是 void 的 block.
+    return [self addProgressCallback:progressBlock completedBlock:completedBlock forURL:url createCallback:^SDWebImageDownloaderOperation *(){
+        // 这个操作, 是在主线程中
         __strong __typeof (wself) sself = wself;
         NSTimeInterval timeoutInterval = sself.downloadTimeout;
         if (timeoutInterval == 0.0) {
@@ -154,6 +155,7 @@
 
         // In order to prevent from potential duplicate caching (NSURLCache + SDImageCache) we disable the cache for image requests if told otherwise
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:(options & SDWebImageDownloaderUseNSURLCache ? NSURLRequestUseProtocolCachePolicy : NSURLRequestReloadIgnoringLocalCacheData) timeoutInterval:timeoutInterval];
+        // 之前的那么多设置, 都需要在代码里面做应对.
         request.HTTPShouldHandleCookies = (options & SDWebImageDownloaderHandleCookies);
         request.HTTPShouldUsePipelining = YES;
         if (sself.headersFilter) {
@@ -177,6 +179,7 @@
             operation.queuePriority = NSOperationQueuePriorityLow;
         }
 
+        // 这里, operation 才是真正的 NSopertation; operation 添加到了 operationQueue 中了. 所以, operation 中的代码, 会稍后被 queue 进行执行.
         [sself.downloadQueue addOperation:operation];
         if (sself.executionOrder == SDWebImageDownloaderLIFOExecutionOrder) {
             // Emulate LIFO execution order by systematically adding new operations as last operation's dependency
@@ -187,10 +190,12 @@
         return operation;
     }];
 }
-
+// When the barrier block reaches the front of a private concurrent queue, it is not executed immediately. Instead, the queue waits until its currently executing blocks finish executing. At that point, the queue executes the barrier block by itself. Any blocks submitted after the barrier block are not executed until the barrier block completes.
 - (void)cancel:(nullable SDWebImageDownloadToken *)token {
     dispatch_barrier_async(self.barrierQueue, ^{
         SDWebImageDownloaderOperation *operation = self.URLOperations[token.url];
+        // token.downloadOperationCancelToken 里面, 存了所有和这个 url 相关的回调.
+        // 一个 url , 对应一个 operation. 一个 operation
         BOOL canceled = [operation cancel:token.downloadOperationCancelToken];
         if (canceled) {
             [self.URLOperations removeObjectForKey:token.url];
@@ -211,14 +216,18 @@
     }
 
     __block SDWebImageDownloadToken *token = nil;
-
+    // 这个操作, 是在主线程中. 这里, token 必须返回, 所以用的 sync. dispatch_barrier
     dispatch_barrier_sync(self.barrierQueue, ^{
+        // 这里, 是为了避免重复下载.
+        // 在 US 的策略里面, 是通过 url 进行了管理, 在一次 url 下载完成后, 将和这个 url 相关的操作全部进行移除.
+        // US 之所以可以这么做, 是因为它是一张一张下载的.
         SDWebImageDownloaderOperation *operation = self.URLOperations[url];
         if (!operation) {
             operation = createCallback();
             self.URLOperations[url] = operation;
 
             __weak SDWebImageDownloaderOperation *woperation = operation;
+            // 在下载完成之后, 要删除之前的记录.
             operation.completionBlock = ^{
               SDWebImageDownloaderOperation *soperation = woperation;
               if (!soperation) return;
@@ -227,11 +236,12 @@
               };
             };
         }
+        // 这里, 其实就是讲同一个 url 的下载回调进行存储了, 以便后面调用. 和 US 的思路一样. US 那里有个问题, 就是用 NSDictionary 进行管理, 不那么基于对象. C++ 那本书里面的一个原则, 用对象管理资源, 也有这一点.
         id downloadOperationCancelToken = [operation addHandlersForProgress:progressBlock completed:completedBlock];
 
         token = [SDWebImageDownloadToken new];
         token.url = url;
-        token.downloadOperationCancelToken = downloadOperationCancelToken;
+        token.downloadOperationCancelToken = downloadOperationCancelToken; // 这个 token 里面存储了这次 operation 对应的过程回调和完成回调.
     });
 
     return token;

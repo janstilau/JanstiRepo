@@ -12,6 +12,9 @@
 
 // 当一个类实现某个协议的时候, 就代表着这个类在 h 文件里面, 写了这些方法的声明.
 // 当这个协议里面, 有属性的时候, 需要在类里面写出属性来, 或者@ synethise 这个属性. 因为, 仅仅说实现了某个协议, 是不会自动创建成员变量的.
+/* 这里, 就有了封装的重要行, SDWebImageCombinedOperation 看起来, 好像是 NSOperation 的一个子类, 将下载任务的操作, 封装到自己的 main 方法里面, 然后提交到 NSOpratationQueue 里面. 但是实际上, 这个类仅仅是一个数据类, 里面并没有封装操作的逻辑.
+    那么是不是 cacheOperation 中, 封装了异步下载的逻辑呢. 去看了源代码, 其实也不是, cacheOperation 仅仅是作为一个标志位存在的.
+*/
 @interface SDWebImageCombinedOperation : NSObject <SDWebImageOperation>
 
 @property (assign, nonatomic, getter = isCancelled) BOOL cancelled; // 状态,
@@ -106,6 +109,8 @@
     }];
 }
 
+
+// loadImage 的责任是, 取得 image, 然后调用 view 的回调. 这里, 取data 的操作分为两个部分, 缓存取值, 是 cacheManger 进行的. download 取值, 是 downloader 进行的.
 - (id <SDWebImageOperation>)loadImageWithURL:(nullable NSURL *)url
                                      options:(SDWebImageOptions)options
                                     progress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
@@ -179,15 +184,18 @@
             }
             
             // 通过下载器进行下图. 下载器下图, 才需要把 progressBlock 传进去.
+            // downloadImageWithURL 的责任很清楚, 就是下图然后传回来下好的图, 至于怎么下的. 是downloadImageWithURL 内部的事情.
             SDWebImageDownloadToken *subOperationToken = [self.imageDownloader downloadImageWithURL:url options:downloaderOptions progress:progressBlock completed:^(UIImage *downloadedImage, NSData *downloadedData, NSError *error, BOOL finished) {
+                // 这个回调是在主线程执行的.
                 __strong __typeof(weakOperation) strongOperation = weakOperation;
                 if (!strongOperation || strongOperation.isCancelled) {
                     // Do nothing if the operation was cancelled
                     // See #699 for more details
                     // if we would call the completedBlock, there could be a race condition between this block and another completedBlock for the same object, so if this one is called second, we will overwrite the new data
+                    // 如果操作已经取消了, 不做任何事. 这里, 之前的那个 view 多次 set url 的问题得到了解决. 异步操作只在两个地方, 一个是 disk 取值的时候, 一个是网络下载的时候. 通过 operation 的 cancel 属性, 之前保存的回调不执行了就. 并且, operation 的 cancel 设置和读取都是在主线程执行的.
                 } else if (error) {
                     [self callCompletionBlockForOperation:strongOperation completion:completedBlock error:error url:url];
-
+                    // 加入黑名单的操作.
                     if (   error.code != NSURLErrorNotConnectedToInternet
                         && error.code != NSURLErrorCancelled
                         && error.code != NSURLErrorTimedOut
@@ -201,6 +209,7 @@
                     }
                 }
                 else {
+                    // 可以看到, 那么多 options, 它的作用仅仅是在过程中控制一个点而已.
                     if ((options & SDWebImageRetryFailed)) {
                         @synchronized (self.failedURLs) {
                             [self.failedURLs removeObject:url];
@@ -212,6 +221,7 @@
                     if (options & SDWebImageRefreshCached && cachedImage && !downloadedImage) {
                         // Image refresh hit the NSURLCache cache, do not call the completion block
                     } else if (downloadedImage && (!downloadedImage.images || (options & SDWebImageTransformAnimatedImage)) && [self.delegate respondsToSelector:@selector(imageManager:transformDownloadedImage:withURL:)]) {
+                        // 这里, 进行一次转化操作. 转化操作是在 delegate 中完成的. 然后缓存. 最后调用保存的回调
                         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                             UIImage *transformedImage = [self.delegate imageManager:self transformDownloadedImage:downloadedImage withURL:url];
 
@@ -224,6 +234,7 @@
                             [self callCompletionBlockForOperation:strongOperation completion:completedBlock image:transformedImage data:downloadedData error:nil cacheType:SDImageCacheTypeNone finished:finished url:url];
                         });
                     } else {
+                        // 保存, 调用回调.
                         if (downloadedImage && finished) {
                             [self.imageCache storeImage:downloadedImage imageData:downloadedData forKey:key toDisk:cacheOnDisk completion:nil];
                         }
@@ -235,6 +246,7 @@
                     [self safelyRemoveOperationFromRunning:strongOperation];
                 }
             }];
+            // 这里, 设置了 cancelBlock. 也就是说, 对于下图这个操作, 其实是有取消操作的. 这里, 传入了之前返回的句柄.
             operation.cancelBlock = ^{
                 [self.imageDownloader cancel:subOperationToken];
                 __strong __typeof(weakOperation) strongOperation = weakOperation;
