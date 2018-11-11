@@ -88,7 +88,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     if ((self = [super init])) {
         NSString *fullNamespace = [@"com.hackemist.SDWebImageCache." stringByAppendingString:ns];
         
-        // Create IO serial queue
+        // Create IO serial queue, 串行的队列,
         _ioQueue = dispatch_queue_create("com.hackemist.SDWebImageCache", DISPATCH_QUEUE_SERIAL);
         
         _config = [[SDImageCacheConfig alloc] init];
@@ -121,6 +121,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
                                                      name:UIApplicationWillTerminateNotification
                                                    object:nil];
 
+        // 当进入后台的时候, 删除过期文件
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(backgroundDeleteOldFiles)
                                                      name:UIApplicationDidEnterBackgroundNotification
@@ -490,8 +491,9 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     [self deleteOldFilesWithCompletionBlock:nil];
 }
 
+// 这个方法, 一是删除过期的图片, 而是如果发现现在缓存的数据大于自己的最大值得时候, 会接着按照事先顺序删除没有过期的图片.
 - (void)deleteOldFilesWithCompletionBlock:(nullable SDWebImageNoParamsBlock)completionBlock {
-    dispatch_async(self.ioQueue, ^{
+    dispatch_async(self.ioQueue, ^{ // 这个 ioQueue 是穿行的.
         NSURL *diskCacheURL = [NSURL fileURLWithPath:self.diskCachePath isDirectory:YES];
         NSArray<NSString *> *resourceKeys = @[NSURLIsDirectoryKey, NSURLContentModificationDateKey, NSURLTotalFileAllocatedSizeKey];
 
@@ -532,6 +534,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
             cacheFiles[fileURL] = resourceValues;
         }
         
+        // 对于要删除的图片, 全部删除.
         for (NSURL *fileURL in urlsToDelete) {
             [_fileManager removeItemAtURL:fileURL error:nil];
         }
@@ -570,6 +573,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 }
 
 #if SD_UIKIT
+// 在进入后台模式的时候, 用 beginBackgroundTaskWithExpirationHandler 进行一次申请.
 - (void)backgroundDeleteOldFiles {
     Class UIApplicationClass = NSClassFromString(@"UIApplication");
     if(!UIApplicationClass || ![UIApplicationClass respondsToSelector:@selector(sharedApplication)]) {
