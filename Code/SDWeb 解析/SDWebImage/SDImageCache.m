@@ -115,11 +115,12 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 
 #if SD_UIKIT
         // Subscribe to app events
+        // 内存吃紧的时候自动清空
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(clearMemory)
                                                      name:UIApplicationDidReceiveMemoryWarningNotification
                                                    object:nil];
-
+        // 应用退出的时候, 删除过去文件
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(deleteOldFiles)
                                                      name:UIApplicationWillTerminateNotification
@@ -141,6 +142,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     SDDispatchQueueRelease(_ioQueue); // 这个在 arc 情况下, 宏定义为空.
 }
 
+// 这是一个判断当前线程所在的方法.
 - (void)checkIfQueueIsIOQueue {
     const char *currentQueueLabel = dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL);
     const char *ioQueueLabel = dispatch_queue_get_label(self.ioQueue);
@@ -161,6 +163,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     }
 }
 
+// 返回 hash 运算过得文件在文件中的存储地址.
 - (nullable NSString *)cachePathForKey:(nullable NSString *)key inPath:(nonnull NSString *)path {
     NSString *filename = [self cachedFileNameForKey:key];
     return [path stringByAppendingPathComponent:filename];
@@ -170,6 +173,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     return [self cachePathForKey:key inPath:self.diskCachePath];
 }
 
+// 文件名加密.
 - (nullable NSString *)cachedFileNameForKey:(nullable NSString *)key {
     const char *str = key.UTF8String;
     if (str == NULL) {
@@ -215,7 +219,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         }
         return;
     }
-    // if memory cache is enabled
+    // 这里, config 有用了, 可以阻挡存入内存.
     if (self.config.shouldCacheImagesInMemory) {
         NSUInteger cost = SDCacheCostForImage(image);
         [self.memCache setObject:image forKey:key cost:cost];
@@ -225,6 +229,8 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         dispatch_async(self.ioQueue, ^{
             NSData *data = imageData;
             
+            // US的 imageCache 里面, 这里就是直接的UIImageJPEGRepresentation了
+            // 在下面的方法里面, 其实是检查了 image 里面有没有 alpha 信息, 如果有就用 png 的返回 data 的方法, 如果没有, 就用 jpeg 的方法
             if (!data && image) {
                 SDImageFormat imageFormatFromData = [NSData sd_imageFormatForImageData:data];
                 data = [image sd_imageDataAsFormat:imageFormatFromData];
@@ -244,6 +250,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     }
 }
 
+// 每个方法都要各自的职责.
 - (void)storeImageDataToDisk:(nullable NSData *)imageData forKey:(nullable NSString *)key {
     if (!imageData || !key) {
         return;
@@ -260,6 +267,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     // transform to NSUrl
     NSURL *fileURL = [NSURL fileURLWithPath:cachePathForKey];
     
+    // 实际的写入的方法, 这里没有用常见的 write 方法, 不知道这个方法有什么好处.
     [_fileManager createFileAtPath:cachePathForKey contents:imageData attributes:nil];
     
     // disable iCloud backup
@@ -295,6 +303,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 
 - (nullable UIImage *)imageFromDiskCacheForKey:(nullable NSString *)key {
     UIImage *diskImage = [self diskImageForKey:key];
+    // 这里, 在从磁盘取值之后, 会存到内存中.
     if (diskImage && self.config.shouldCacheImagesInMemory) {
         NSUInteger cost = SDCacheCostForImage(diskImage);
         // 这里, 根据图片的尺寸, 进行了 mem 的缓存. 这里用到了 cost, 一般自己使用的时候, 很少用到.
@@ -584,6 +593,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         return;
     }
     UIApplication *application = [UIApplication performSelector:@selector(sharedApplication)];
+    // 这里, __block 是必须的, 只有 __block 了之后, bgTask 才能变成 block 可以追踪的一个对象.
     __block UIBackgroundTaskIdentifier bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
         // Clean up any unfinished task business by marking where you
         // stopped or ending the task outright.
@@ -592,6 +602,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     }];
 
     // Start the long-running task and return immediately.
+    // 如果执行完成了, 执行以下 endTask 的方法. 如果时间到了, 执行以下 endTask 的方法.
     [self deleteOldFilesWithCompletionBlock:^{
         [application endBackgroundTask:bgTask];
         bgTask = UIBackgroundTaskInvalid;
