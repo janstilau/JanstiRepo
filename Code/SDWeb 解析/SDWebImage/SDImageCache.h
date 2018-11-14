@@ -37,6 +37,10 @@ typedef void(^SDWebImageCalculateSizeBlock)(NSUInteger fileCount, NSUInteger tot
  * SDImageCache maintains a memory cache and an optional disk cache. Disk cache write operations are performed
  * asynchronous so it doesn’t add unnecessary latency to the UI.
  */
+
+/*
+ 这个类的意义在于什么呢, 一个管理缓存的类. 也就是说, 它的职责就在于图片的缓存. 这里包括两部分, 内存中的缓存以及磁盘上的缓存. 并且, 它应该还有一些接口, 方便程序员进行查询和调用. 职责明确, 这是编程的非常关键的一点.
+ */
 @interface SDImageCache : NSObject
 
 #pragma mark - Properties
@@ -49,10 +53,15 @@ typedef void(^SDWebImageCalculateSizeBlock)(NSUInteger fileCount, NSUInteger tot
 /**
  * The maximum "total cost" of the in-memory image cache. The cost function is the number of pixels held in memory.
  */
+/* 这个值被用到了内部的 NSCache 的 totalLimit 的字段.
+ NSCache 这个字段, 用的时候需要指定你存储的对象的 cost 到底是多少, 这样在达到 totalLimit 的时候, NSCache 会自动清理缓存.
+ */
 @property (assign, nonatomic) NSUInteger maxMemoryCost;
 
 /**
  * The maximum number of objects the cache should hold.
+ */
+/* 这个值, 也被用来设置内部的 NSCache 的字段了.
  */
 @property (assign, nonatomic) NSUInteger maxMemoryCountLimit;
 

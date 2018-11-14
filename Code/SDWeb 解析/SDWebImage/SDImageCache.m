@@ -83,17 +83,20 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     return [self initWithNamespace:ns diskCacheDirectory:path];
 }
 
+// 全能初始化方法
 - (nonnull instancetype)initWithNamespace:(nonnull NSString *)ns
                        diskCacheDirectory:(nonnull NSString *)directory {
     if ((self = [super init])) {
         NSString *fullNamespace = [@"com.hackemist.SDWebImageCache." stringByAppendingString:ns];
-        
+        // 传入的两个值, 其实就是设置存储路径用的.
         // Create IO serial queue, 串行的队列,
+        // 所有的和 Io 有关的操作, 都异步在这个 queue 里面顺序执行.
         _ioQueue = dispatch_queue_create("com.hackemist.SDWebImageCache", DISPATCH_QUEUE_SERIAL);
         
         _config = [[SDImageCacheConfig alloc] init];
         
         // Init the memory cache
+        // AutoPurgeCache 这个类很简单, 就是在监听内存警告, 然后自动清空内存.
         _memCache = [[AutoPurgeCache alloc] init];
         _memCache.name = fullNamespace;
 
@@ -106,6 +109,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         }
 
         dispatch_sync(_ioQueue, ^{
+            // 这里猜测, 专门有一个 _fileManager 是因为, defaultManager 的操作, 应该会有线程同步的代码. 如果主线程用 defaultManger 的话, 这里在使用, 会造成代码执行效率的降低.
             _fileManager = [NSFileManager new];
         });
 
@@ -134,7 +138,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    SDDispatchQueueRelease(_ioQueue);
+    SDDispatchQueueRelease(_ioQueue); // 这个在 arc 情况下, 宏定义为空.
 }
 
 - (void)checkIfQueueIsIOQueue {

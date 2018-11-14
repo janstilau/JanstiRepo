@@ -10,6 +10,7 @@
 #import <Foundation/Foundation.h>
 #import "SDWebImageCompat.h"
 
+// 这里, 将功能抽取出来, 利于维护.
 typedef NS_ENUM(NSInteger, SDImageFormat) {
     SDImageFormatUndefined = -1,
     SDImageFormatJPEG = 0,
