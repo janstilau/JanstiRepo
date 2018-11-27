@@ -1099,7 +1099,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 
     if (self.taskDidReceiveAuthenticationChallenge) {
         disposition = self.taskDidReceiveAuthenticationChallenge(session, task, challenge, &credential);
-    } else {
+    } else {// 如果是信任证书这一种, 就用 securityPolicy 的方法进行一次验证操作.
         if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
             if ([self.securityPolicy evaluateServerTrust:challenge.protectionSpace.serverTrust forDomain:challenge.protectionSpace.host]) {
                 disposition = NSURLSessionAuthChallengeUseCredential;
