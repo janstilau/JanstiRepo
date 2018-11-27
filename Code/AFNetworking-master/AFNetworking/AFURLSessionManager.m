@@ -256,7 +256,7 @@ didCompleteWithError:(NSError *)error
     } else {
         dispatch_async(url_session_manager_processing_queue(), ^{
             NSError *serializationError = nil;
-            // 这里做了对象的解析工作.
+            // 这里做了对象的解析工作. 主要在各个解析器的 responseObjectForResponse 方法的内部.
             responseObject = [manager.responseSerializer responseObjectForResponse:task.response data:data error:&serializationError];
 
             if (self.downloadFileURL) {

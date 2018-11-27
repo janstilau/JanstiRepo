@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06D40B7F21ACD91A00D6E3A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D40B7E21ACD91A00D6E3A4 /* main.m */; };
 		1BF9F9601C87832B00F1F35A /* AFImageResponseSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BF9F95F1C87832B00F1F35A /* AFImageResponseSerializerTests.m */; };
 		1BF9F9611C87843200F1F35A /* AFImageResponseSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BF9F95F1C87832B00F1F35A /* AFImageResponseSerializerTests.m */; };
 		1BF9F9621C87843300F1F35A /* AFImageResponseSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BF9F95F1C87832B00F1F35A /* AFImageResponseSerializerTests.m */; };
@@ -231,7 +232,21 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		06D40B7A21ACD91A00D6E3A4 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		06D40B7C21ACD91A00D6E3A4 /* PercentEncode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PercentEncode; sourceTree = BUILT_PRODUCTS_DIR; };
+		06D40B7E21ACD91A00D6E3A4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1BF9F95F1C87832B00F1F35A /* AFImageResponseSerializerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageResponseSerializerTests.m; sourceTree = "<group>"; };
 		1F083A4920364648004D80C7 /* AFCompatibilityMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFCompatibilityMacros.h; sourceTree = "<group>"; };
 		1F0B1DC5216EF28A00CB1F28 /* httpbinorg_12092018.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = httpbinorg_12092018.cer; sourceTree = "<group>"; };
@@ -319,6 +334,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		06D40B7921ACD91A00D6E3A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2987B0A11BC408A200179A4C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -374,6 +396,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06D40B7D21ACD91A00D6E3A4 /* PercentEncode */ = {
+			isa = PBXGroup;
+			children = (
+				06D40B7E21ACD91A00D6E3A4 /* main.m */,
+			);
+			path = PercentEncode;
+			sourceTree = "<group>";
+		};
 		298D7C561BC2C88F00FD3B3E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -480,6 +510,7 @@
 				299522851BBF13C700859F49 /* UIKit+AFNetworking */,
 				2995223B1BBF104D00859F49 /* Supporting Files */,
 				298D7C561BC2C88F00FD3B3E /* Tests */,
+				06D40B7D21ACD91A00D6E3A4 /* PercentEncode */,
 				2995223A1BBF104D00859F49 /* Products */,
 			);
 			indentWidth = 4;
@@ -497,6 +528,7 @@
 				298D7C4A1BC2C7B200FD3B3E /* AFNetworking macOS Tests.xctest */,
 				2987B0A51BC408A200179A4C /* AFNetworking.framework */,
 				2987B0AE1BC408A200179A4C /* AFNetworking tvOS Tests.xctest */,
+				06D40B7C21ACD91A00D6E3A4 /* PercentEncode */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -654,6 +686,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		06D40B7B21ACD91A00D6E3A4 /* PercentEncode */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 06D40B8221ACD91A00D6E3A4 /* Build configuration list for PBXNativeTarget "PercentEncode" */;
+			buildPhases = (
+				06D40B7821ACD91A00D6E3A4 /* Sources */,
+				06D40B7921ACD91A00D6E3A4 /* Frameworks */,
+				06D40B7A21ACD91A00D6E3A4 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PercentEncode;
+			productName = PercentEncode;
+			productReference = 06D40B7C21ACD91A00D6E3A4 /* PercentEncode */;
+			productType = "com.apple.product-type.tool";
+		};
 		2987B0A41BC408A200179A4C /* AFNetworking tvOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2987B0BA1BC408A200179A4C /* Build configuration list for PBXNativeTarget "AFNetworking tvOS" */;
@@ -789,6 +838,11 @@
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = AFNetworking;
 				TargetAttributes = {
+					06D40B7B21ACD91A00D6E3A4 = {
+						CreatedOnToolsVersion = 10.0;
+						DevelopmentTeam = U86LS642TB;
+						ProvisioningStyle = Automatic;
+					};
 					2987B0A41BC408A200179A4C = {
 						CreatedOnToolsVersion = 7.1;
 					};
@@ -833,6 +887,7 @@
 				298D7C3A1BC2C79500FD3B3E /* AFNetworking iOS Tests */,
 				298D7C491BC2C7B200FD3B3E /* AFNetworking macOS Tests */,
 				2987B0AD1BC408A200179A4C /* AFNetworking tvOS Tests */,
+				06D40B7B21ACD91A00D6E3A4 /* PercentEncode */,
 			);
 		};
 /* End PBXProject section */
@@ -947,6 +1002,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		06D40B7821ACD91A00D6E3A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				06D40B7F21ACD91A00D6E3A4 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2987B0A01BC408A200179A4C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1107,6 +1170,45 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		06D40B8021ACD91A00D6E3A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = U86LS642TB;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		06D40B8121ACD91A00D6E3A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = U86LS642TB;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		2987B0B61BC408A200179A4C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1556,6 +1658,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		06D40B8221ACD91A00D6E3A4 /* Build configuration list for PBXNativeTarget "PercentEncode" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				06D40B8021ACD91A00D6E3A4 /* Debug */,
+				06D40B8121ACD91A00D6E3A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2987B0BA1BC408A200179A4C /* Build configuration list for PBXNativeTarget "AFNetworking tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
