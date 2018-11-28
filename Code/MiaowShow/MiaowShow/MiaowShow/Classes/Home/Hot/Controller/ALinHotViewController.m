@@ -86,7 +86,13 @@ static NSString *ADReuseIdentifier = @"ALinHomeADCell";
 
 - (void)getHotLiveList
 {
-    [[ALinNetworkTool shareTool] GET:[NSString stringWithFormat:@"http://live.9158.com/Fans/GetHotLive?page=%ld", self.currentPage] parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    NSDictionary *params = @{
+                             @"isNewapp": @"1",
+                             @"page": @(self.currentPage),
+                             @"type": @(1),
+                             @"useridx": @"73305948"
+                             };
+    [[ALinNetworkTool shareTool] GET:[NSString stringWithFormat:@"https://live.miaobolive.com/Room/GetHotLive_v2"] parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [self.tableView.mj_header endRefreshing];
         [self.tableView.mj_footer endRefreshing];
         NSArray *result = [ALinLive mj_objectArrayWithKeyValuesArray:responseObject[@"data"][@"list"]];

@@ -71,6 +71,7 @@
 }
 
 - (void)setup{
+    // 这些都是界面上的事情, 重要的是 session.
     self.beautifulBtn.layer.cornerRadius = self.beautifulBtn.height * 0.5;
     self.beautifulBtn.layer.masksToBounds = YES;
     
@@ -80,12 +81,12 @@
     
     self.statusLabel.numberOfLines = 0;
     
-    // 默认开启后置摄像头, 怕我的面容吓到你们了...
     self.session.captureDevicePosition = AVCaptureDevicePositionBack;
 }
 // 关闭直播
 - (IBAction)close {
     if (self.session.state == LFLivePending || self.session.state == LFLiveStart){
+        // session 关闭了
         [self.session stopLive];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -94,13 +95,14 @@
 // 开启/关闭美颜相机
 - (IBAction)beautiful:(UIButton *)sender {
     sender.selected = !sender.selected;
-    // 默认是开启了美颜功能的
+    // 美颜是 session 里面的功能.
     self.session.beautyFace = !self.session.beautyFace;
 }
 
 
 // 切换前置/后置摄像头
 - (IBAction)switchCamare:(UIButton *)sender {
+    // 切换 session 的一个属性.
     AVCaptureDevicePosition devicePositon = self.session.captureDevicePosition;
     self.session.captureDevicePosition = (devicePositon == AVCaptureDevicePositionBack) ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
     NSLog(@"切换前置/后置摄像头");
