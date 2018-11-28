@@ -71,7 +71,7 @@
         btn.layer.borderColor = [UIColor yellowColor].CGColor;
         [btn setTitle:@"ALin快速通道" forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor yellowColor]  forState:UIControlStateNormal];
-        [btn addTarget:self action:@selector(loginSuccess) forControlEvents:UIControlEventTouchUpInside];
+        [btn addTarget:self action:@selector(play) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:btn];
         btn.hidden = YES;
         _quickBtn = btn;
@@ -79,11 +79,16 @@
     return _quickBtn;
 }
 
+- (void)play {
+    [self.player play];
+}
+
 - (UIImageView *)coverView
 {
     if (!_coverView) {
         UIImageView *cover = [[UIImageView alloc] initWithFrame:self.view.bounds];
         cover.image = [UIImage imageNamed:@"LaunchImage"];
+        cover.alpha = 0.1;
         [self.player.view addSubview:cover];
         _coverView = cover;
     }
@@ -114,7 +119,6 @@
     
     [self.player.view removeFromSuperview];
     self.player = nil;
-    
 }
 
 

@@ -31,6 +31,8 @@ static NSString * const reuseIdentifier = @"ALinLiveViewCell";
 {
     if (!_userView) {
         ALinUserView *userView = [ALinUserView userView];
+        userView.layer.borderWidth = 2;
+        userView.layer.borderColor = [[UIColor redColor] CGColor];
         [self.collectionView addSubview:userView];
         _userView = userView;
         
@@ -56,7 +58,7 @@ static NSString * const reuseIdentifier = @"ALinLiveViewCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.collectionView.backgroundColor = [UIColor whiteColor];
+    self.collectionView.backgroundColor = [UIColor greenColor];
     [self.collectionView registerClass:[ALinLiveViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
     ALinRefreshGifHeader *header = [ALinRefreshGifHeader headerWithRefreshingBlock:^{
         [self.collectionView.mj_header endRefreshing];
@@ -71,6 +73,7 @@ static NSString * const reuseIdentifier = @"ALinLiveViewCell";
     [header setTitle:@"下拉切换另一个主播" forState:MJRefreshStateIdle];
     self.collectionView.mj_header = header;
     
+    // 这里是通过通知进行的传递.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clickUser:) name:kNotifyClickUser object:nil];
 }
 
@@ -88,7 +91,6 @@ static NSString * const reuseIdentifier = @"ALinLiveViewCell";
 #pragma mark <UICollectionViewDataSource>
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-
     return 1;
 }
 

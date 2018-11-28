@@ -16,7 +16,7 @@
 
 @interface ALinNewStarViewController ()
 /** 最新主播列表 */
-@property(nonatomic, strong) NSMutableArray *anchors;
+@property(nonatomic, strong) NSMutableArray *anchors; // dataSource
 /** 当前页 */
 @property(nonatomic, assign) NSUInteger currentPage;
 /** NSTimer */

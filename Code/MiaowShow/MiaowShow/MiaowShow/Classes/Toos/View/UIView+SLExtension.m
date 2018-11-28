@@ -120,4 +120,34 @@ static void *TagStrKey = &TagStrKey;
 {
     objc_setAssociatedObject(self, TagStrKey, tagStr, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
+
+- (void)addHint:(NSString *)text {
+    static int const hintTag = 90129;
+    __block UILabel *hintLabel = nil;
+    [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.tag == hintTag) {
+            hintLabel = obj;
+            *stop = YES;
+        }
+    }];
+    
+    if (hintLabel) {
+        hintLabel.text = text;
+        [hintLabel sizeToFit];
+        return;
+    }
+    
+    hintLabel = [[UILabel alloc] init];
+    hintLabel.tag = hintTag;
+    hintLabel.font = [UIFont systemFontOfSize:12];
+    hintLabel.textColor = [UIColor redColor];
+    hintLabel.text = text;
+    hintLabel.x = 0;
+    hintLabel.y = 0;
+    [hintLabel sizeToFit];
+    [self addSubview:hintLabel];
+    
+    self.layer.borderWidth = 1;
+    self.layer.borderColor = [[UIColor colorWithRed:(arc4random() % 255) / 255.0 green:(arc4random() % 255) / 255.0 blue:(arc4random() % 255) / 255.0 alpha:1] CGColor];
+}
 @end

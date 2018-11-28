@@ -11,7 +11,7 @@
 @class ALinLive;
 @interface ALinLiveCollectionViewController : UICollectionViewController
 /** 直播 */
-@property (nonatomic, strong) NSArray *lives;
+@property (nonatomic, strong) NSArray *lives; // 这里是所有的数据.
 /** 当前的index */
 @property (nonatomic, assign) NSUInteger currentIndex;
 @end

@@ -32,5 +32,7 @@
 /** tag */
 @property (nonatomic, copy) NSString *tagStr;
 
+- (void)addHint:(NSString *)text;
+
 - (BOOL)isShowingOnKeyWindow;
 @end

@@ -42,6 +42,7 @@
 @end
 
 @implementation ALinLiveViewCell
+
 - (UIImageView *)placeHolderView
 {
     if (!_placeHolderView) {
@@ -90,10 +91,11 @@ bool _isSelected = NO;
         [self.contentView insertSubview:toolView aboveSubview:self.placeHolderView];
         [toolView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.equalTo(@0);
-            make.bottom.equalTo(@-10);
+            make.bottom.equalTo(@-40);
             make.height.equalTo(@40);
         }];
         _toolView = toolView;
+        [_toolView addHint:@"工具条"];
     }
     return _toolView;
 }
@@ -110,6 +112,7 @@ bool _isSelected = NO;
             make.bottom.equalTo(self.catEarView.mas_top).offset(-40);
         }];
         _otherView = imageView;
+        [_otherView addHint:@"相关主播"];
     }
     return _otherView;
 }
@@ -130,6 +133,7 @@ bool _isSelected = NO;
             make.top.equalTo(@0);
         }];
         _anchorView = anchorView;
+        [_anchorView addHint:@"顶层"];
     }
     return _anchorView;
 }
@@ -146,6 +150,7 @@ bool _isSelected = NO;
             make.width.height.equalTo(@98);
         }];
         _catEarView = catEarView;
+        [_catEarView addHint:@"相关主播"];
     }
     return _catEarView;
 }
@@ -159,7 +164,8 @@ bool _isSelected = NO;
         // 发射器的尺寸大小
         emitterLayer.emitterSize = CGSizeMake(20, 20);
         // 渲染模式
-        emitterLayer.renderMode = kCAEmitterLayerUnordered;
+        emitterLayer.renderMode = kCAEmitterLayerBackToFront;
+        
         // 开启三维效果
         //    _emitterLayer.preservesDepth = YES;
         NSMutableArray *array = [NSMutableArray array];
@@ -215,6 +221,7 @@ bool _isSelected = NO;
             [self clickCatEar];
         }];
         _endView = endView;
+        [_endView addHint:@"endview"];
     }
     return _endView;
 }
@@ -227,6 +234,7 @@ bool _isSelected = NO;
         _renderer = [[BarrageRenderer alloc] init];
         _renderer.canvasMargin = UIEdgeInsetsMake(ALinScreenHeight * 0.3, 10, 10, 10);
         [self.contentView addSubview:_renderer.view];
+        [_renderer.view addHint:@"弹幕"];
         
         NSSafeObject * safeObj = [[NSSafeObject alloc]initWithObject:self withSelector:@selector(autoSendBarrage)];
         _timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:safeObj selector:@selector(excute) userInfo:nil repeats:YES];

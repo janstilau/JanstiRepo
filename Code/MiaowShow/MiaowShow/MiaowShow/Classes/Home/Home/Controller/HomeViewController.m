@@ -110,6 +110,8 @@
 {
     // 设置顶部选择视图
     ALinSelectedView *selectedView = [[ALinSelectedView alloc] initWithFrame:self.navigationController.navigationBar.bounds];
+    selectedView.layer.borderWidth = 2;
+    selectedView.layer.borderColor = [[UIColor redColor] CGColor];
     selectedView.x = 45;
     selectedView.width = ALinScreenWidth - 45 * 2;
     [selectedView setSelectedBlock:^(HomeType type) {

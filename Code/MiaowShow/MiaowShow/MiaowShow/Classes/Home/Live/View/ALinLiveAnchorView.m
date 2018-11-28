@@ -27,7 +27,7 @@
 @implementation ALinLiveAnchorView
 
 - (NSArray *)chaoYangUsers
-{
+{   // 这里, 观众是假数据, 从 plist 文件中读取的.
     if (!_chaoYangUsers) {
         NSArray *array = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"user.plist" ofType:nil]];
         _chaoYangUsers = [ALinUser mj_objectArrayWithKeyValuesArray:array];
@@ -43,6 +43,7 @@
 {
     [super awakeFromNib];
     
+    // 切边
     [self maskViewToBounds:self.anchorView];
     [self maskViewToBounds:self.headImageView];
     [self maskViewToBounds:self.careBtn];
@@ -79,6 +80,7 @@ static int randomNum = 0;
 
 - (void)updateNum
 {
+    // 假数据.
     randomNum += arc4random_uniform(5);
     self.peopleLabel.text = [NSString stringWithFormat:@"%ld人", self.live.allnum + randomNum];
     [self.giftView setTitle:[NSString stringWithFormat:@"猫粮:%u  娃娃%u", 1993045 + randomNum,  124593+randomNum] forState:UIControlStateNormal];
