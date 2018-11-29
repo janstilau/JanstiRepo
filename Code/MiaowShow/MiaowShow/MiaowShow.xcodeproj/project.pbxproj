@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0625FCA021AF81D500616CCF /* MCHeartFlyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0625FC9F21AF81D500616CCF /* MCHeartFlyView.m */; };
 		70D249A48322E2E32E1F0507 /* libPods-MiaowShow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6372155D4C47F383711AE057 /* libPods-MiaowShow.a */; };
 		BB219BC61D22D06200AF44C1 /* ALinUserView.m in Sources */ = {isa = PBXBuildFile; fileRef = BB219BC51D22D06200AF44C1 /* ALinUserView.m */; };
 		BB219BC81D22D06C00AF44C1 /* ALinUserView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BB219BC71D22D06C00AF44C1 /* ALinUserView.xib */; };
@@ -91,6 +92,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0625FC9E21AF81D500616CCF /* MCHeartFlyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCHeartFlyView.h; sourceTree = "<group>"; };
+		0625FC9F21AF81D500616CCF /* MCHeartFlyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCHeartFlyView.m; sourceTree = "<group>"; };
 		343A1FB4B109EE1106C1EA18 /* Pods-MiaowShow.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaowShow.release.xcconfig"; path = "Pods/Target Support Files/Pods-MiaowShow/Pods-MiaowShow.release.xcconfig"; sourceTree = "<group>"; };
 		6372155D4C47F383711AE057 /* libPods-MiaowShow.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MiaowShow.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB219BC41D22D06200AF44C1 /* ALinUserView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALinUserView.h; sourceTree = "<group>"; };
@@ -238,6 +241,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0625FC9D21AF819D00616CCF /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				0625FCA121AF81EC00616CCF /* HeartFly */,
+			);
+			name = Vendor;
+			path = Classes/Vendor;
+			sourceTree = "<group>";
+		};
+		0625FCA121AF81EC00616CCF /* HeartFly */ = {
+			isa = PBXGroup;
+			children = (
+				0625FC9E21AF81D500616CCF /* MCHeartFlyView.h */,
+				0625FC9F21AF81D500616CCF /* MCHeartFlyView.m */,
+			);
+			path = HeartFly;
+			sourceTree = "<group>";
+		};
 		1C327328B0D5709B22F1531C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -359,6 +380,7 @@
 			children = (
 				BBE540B31D0F261900BF723E /* AppDelegate.h */,
 				BBE540B41D0F261900BF723E /* AppDelegate.m */,
+				0625FC9D21AF819D00616CCF /* Vendor */,
 				BBE540E31D0F26F300BF723E /* Classes */,
 				BBE540BC1D0F261900BF723E /* Assets.xcassets */,
 				BBE540BE1D0F261900BF723E /* LaunchScreen.storyboard */,
@@ -1014,6 +1036,7 @@
 				C75783591D0FF77900CD856B /* SLTopWindow.m in Sources */,
 				C75783621D1008B500CD856B /* UIViewController+SLExtension.m in Sources */,
 				C73F71FC1D12422500F28090 /* UIImage+ALinExtension.m in Sources */,
+				0625FCA021AF81D500616CCF /* MCHeartFlyView.m in Sources */,
 				C769A8AC1D29FCD6001EFB5C /* ProfileController.m in Sources */,
 				BBE540EF1D0F26F300BF723E /* ThirdLoginView.m in Sources */,
 				C7FD57731D2BA8DA0005BA11 /* NSSafeObject.m in Sources */,
