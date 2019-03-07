@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)https://wdxtub.com/2016/08/09/refactoring-clip/ -->
+<html class="theme-next mist use-motion" lang="zh-Hans"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/css" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/main.css" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="读书笔记,代码,重构,">
+
+
+
+
+
+  <link rel="alternate" href="https://wdxtub.com/atom.xml" title="小土刀" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="https://wdxtub.com/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="重构：在代码写好之后改进它的设计。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【重构 改善既有代码的设计】读书笔记">
+<meta property="og:url" content="http://wdxtub.com/2016/08/09/refactoring-clip/index.html">
+<meta property="og:site_name" content="小土刀">
+<meta property="og:description" content="重构：在代码写好之后改进它的设计。">
+<meta property="og:updated_time" content="2017-08-03T14:09:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【重构 改善既有代码的设计】读书笔记">
+<meta name="twitter:description" content="重构：在代码写好之后改进它的设计。">
+
+
+
+<script src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/push.js"></script><script src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/stats.js" name="MTAH5" sid="500421623"></script><script src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/stats"></script><script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '小土刀'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wdxtub.com/2016/08/09/refactoring-clip/">
+
+
+
+
+
+  <title> 【重构 改善既有代码的设计】读书笔记 | 小土刀 </title>
+<script src="https://api.gentie.163.com/pc/livescript.html" charset="utf-8"></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 5px 0px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 1px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: .7em}
+.MathJax_MenuRadioCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuLabel {padding: 1px 2em 3px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #DDDDDD; margin: 4px 3px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: #606872; color: white}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans" class="" style="padding-right: 320px;"><div id="MathJax_Message" style="display: none;"></div>
+
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=59042340";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+<script>
+  	var _mtac = {};
+  	(function() {
+  		var mta = document.createElement("script");
+  		mta.src = "http://pingjs.qq.com/h5/stats.js?v2.0.2";
+  		mta.setAttribute("name", "MTAH5");
+  		mta.setAttribute("sid", "500421623");
+
+  		var s = document.getElementsByTagName("script")[0];
+  		s.parentNode.insertBefore(mta, s);
+  	})();
+</script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="https://wdxtub.com/" class="brand" rel="start" style="opacity: 1;">
+        <span class="logo-line-before"><i class="" style="transform: translateX(100%);"></i></span>
+        <span class="site-title" style="opacity: 1; top: 0px;">小土刀</span>
+        <span class="logo-line-after"><i class="" style="transform: translateX(-100%);"></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description" style="opacity: 1; top: 0px;">Agony is my triumph</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home" style="opacity: 1; transform: translateY(0px);">
+          <a href="https://wdxtub.com/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-work" style="opacity: 1; transform: translateY(0px);">
+          <a href="https://wdxtub.com/2016/09/11/work-page" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-wifi"></i> <br>
+            
+            不周山
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tech" style="opacity: 1; transform: translateY(0px);">
+          <a href="https://wdxtub.com/2009/09/11/tech-page" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-gear"></i> <br>
+            
+            通天塔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-life" style="opacity: 1; transform: translateY(0px);">
+          <a href="https://wdxtub.com/1990/09/11/life-page" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-compass"></i> <br>
+            
+            好望角
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-booklist" style="opacity: 1; transform: translateY(0px);">
+          <a href="https://wdxtub.com/1997/09/11/booklist-page" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-diamond"></i> <br>
+            
+            书影音
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-thanks" style="opacity: 1; transform: translateY(0px);">
+          <a href="https://wdxtub.com/thanks" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives" style="opacity: 1; transform: translateY(0px);">
+          <a href="https://wdxtub.com/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article" style="opacity: 1; display: block; transform: translateY(0px);">
+    <link itemprop="mainEntityOfPage" href="http://wdxtub.com/2016/08/09/refactoring-clip/">
+
+    <span hidden="" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wdxtub">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/misc/avatar.jpg">
+    </span>
+
+    <span hidden="" itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小土刀">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                【重构 改善既有代码的设计】读书笔记
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-09T06:10:41+08:00">
+                2016-08-09
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-08-03T22:09:14+08:00">
+                2017-08-03
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="https://wdxtub.com/categories/Reading/" itemprop="url" rel="index">
+                    <span itemprop="name">Reading</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="https://wdxtub.com/2016/08/09/refactoring-clip/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                  
+                    <span title="Words count in article" }}"="">
+                      14,950
+                    </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                  
+                    <span title="Reading time" }}"="">
+                      51
+                    </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>重构：在代码写好之后改进它的设计。</p>
+<a id="more"></a>
+<hr>
+<p>尽管关注对象是代码，但重构对于系统设计也有巨大影响。资深设计师和架构师也很有必要了解重构原理，并在自己的项目中运用重构技术。最好是由老资格、经验丰富的开发人员来引入重构技术，因为这样的人最能够透彻理解重构背后的原理，并根据情况加以调整，使之适用于特定工作领域。</p>
+<p>如果你发现自己需要为程序添加一个特性，而代码结构使你无法很方便地达成目的，那就先重构那个程序，使特性的添加比较容易进行，然后再添加特性。</p>
+<p>重构之前，首先检查自己是否有一套可靠的测试机制，这些测试必须有自我检验能力。</p>
+<p>重构技术就是以微小的步伐修改程序。如果你犯下错误，很容易便可发现它。</p>
+<p>任何一个傻瓜都能写出计算机可以理解的代码。唯有写出人类容易理解的代码，才是优秀的程序员。</p>
+<p>重构（名词）：对软件内部结构的一种调整，目的是在不改变软件可观察行为的前提下，提高其可理解性，降低其修改成本。</p>
+<p>重构（动词）：使用一系列重构手法，在不改变软件可观察行为的前提下，调整其结构。</p>
+<h2 id="重构原则"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E9%87%8D%E6%9E%84%E5%8E%9F%E5%88%99" class="headerlink" title="重构原则"></a>重构原则</h2><p>为何重构：</p>
+<ul>
+<li>重构改进设计</li>
+<li>重构使软件更容易理解</li>
+<li>帮助找到 bug</li>
+<li>重构提高编程速度</li>
+</ul>
+<hr>
+<p>何时重构：</p>
+<ul>
+<li>三次法则：事不过三，三则重构</li>
+<li>添加功能时重构</li>
+<li>修补错误时重构</li>
+<li>复审代码时重构</li>
+</ul>
+<hr>
+<p>重构的难题</p>
+<ul>
+<li>数据库</li>
+<li>修改接口：不要过早发布接口</li>
+<li>难以通过重构手法完成的设计改动</li>
+</ul>
+<hr>
+<h2 id="代码的坏味道"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A3%E7%A0%81%E7%9A%84%E5%9D%8F%E5%91%B3%E9%81%93" class="headerlink" title="代码的坏味道"></a>代码的坏味道</h2><ul>
+<li>重复代码</li>
+<li>过长函数</li>
+<li>过大的类</li>
+<li>过长参数列</li>
+<li>发散式变化：类经常因为不同的原因在不同的方向上发生变化</li>
+<li>霰弹式修改：每遇到某种变化，你都必须在许多不同的类内做出许多小修改</li>
+<li>依恋情结：一个类的动作过分依赖其他类</li>
+<li>数据泥团：不同地方的相同数据字段</li>
+<li>基本类型偏执</li>
+<li>Switch 惊悚现身：考虑用多态代替 switch</li>
+<li>平行继承体系：为某个类增加一个子类的时候，也必须为另一个类相应增加一个子类</li>
+<li>冗赘类</li>
+<li>夸夸其谈未来性：某个抽象类其实没啥太大作用</li>
+<li>令人迷惑的暂时字段</li>
+<li>过度耦合的消息链</li>
+<li>中间人：某个类接口有一半的函数都委托给其他类</li>
+<li>狎昵关系：两个类过于亲密</li>
+<li>异曲同工的类：两个函数做同一件事，却有着不同的签名</li>
+<li>不完美的库类</li>
+<li>纯稚的数据类：单纯的数据容器</li>
+<li>被拒绝的遗赠：子类复用超类的行为，却又不愿意支持超类的接口</li>
+<li>过多的注释：当你感觉需要撰写注释时，请先尝试重构，试着让所有注释都变得多余</li>
+</ul>
+<h2 id="构筑测试体系"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%9E%84%E7%AD%91%E6%B5%8B%E8%AF%95%E4%BD%93%E7%B3%BB" class="headerlink" title="构筑测试体系"></a>构筑测试体系</h2><ul>
+<li>确保所有测试都完全自动化，让它们检查自己的测试结果</li>
+<li>一套测试就是一个强大的 bug 侦测器，能够大大缩减查找 bug 所需要的时间</li>
+<li>频繁地运行测试。每次编译请把测试也考虑进去——每天至少执行每个测试一次</li>
+<li>每当你收到 bug 报告，请先写一个单元测试来暴露 bug</li>
+<li>编写未臻完善的测试并实际运行，好过对完美测试的无尽等待</li>
+<li>考虑可能出错的边界条件，把测试火力集中在那儿</li>
+<li>当事情被认为应该会出错时，别忘了检查是否抛出了预期的异常</li>
+<li>不要因为测试无法捕捉所有 bug 就不写测试，因为测试的确可以捕捉到大多数 bug</li>
+</ul>
+<h2 id="重新组织函数"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E9%87%8D%E6%96%B0%E7%BB%84%E7%BB%87%E5%87%BD%E6%95%B0" class="headerlink" title="重新组织函数"></a>重新组织函数</h2><h3 id="提炼函数-Extract-Method"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8F%90%E7%82%BC%E5%87%BD%E6%95%B0-Extract-Method" class="headerlink" title="提炼函数 Extract Method"></a>提炼函数 Extract Method</h3><p>有一段代码可以被组织在一起并独立出来 -&gt; 将折断代码放进一个独立函数中，并让函数名称解释该函数的用途。</p>
+<ul>
+<li>创造一个新函数，根据这个函数的意图来对它命名（以它『做什么』来命名，而不是以它『怎样做』命名）</li>
+<li>将提炼出的代码从源函数复制到新建的目标函数中</li>
+<li>仔细检查提炼出的代码，看看是否引用了『作用域限于源函数』的变量（包括局部变量和源函数参数）</li>
+<li>检查是否有『仅用于被提炼代码段』的临时变量。如果有，在目标函数中将它们声明为临时变量</li>
+<li>检查被提炼代码段，看看是否有任何局部变量的值被它改变。如果一个临时变量值被修改了，看看是否可以将被提炼代码段处理为一个查询，并将结果赋值给相关变量。如果被修改的变量不止一个，你就不能仅仅将这段代码原封不动地提炼出来</li>
+<li>将被提炼代码段中需要读取的局部变量，当做参数传给目标函数</li>
+<li>处理完所有局部变量之后，进行编译</li>
+<li>在源函数中，将被提炼代码段替换为对目标函数的调用（如果你将任何临时变量移到目标函数中，请检查它们原本的声明式是否在被提炼代码段的外围。如果是，现在你可以删除这些声明式了）</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="内联函数-Inline-Method"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0-Inline-Method" class="headerlink" title="内联函数 Inline Method"></a>内联函数 Inline Method</h3><p>一个函数的本体与名称同样清楚易懂 -&gt; 在函数调用点插入函数本体，然后移除该函数</p>
+<ul>
+<li>检查函数，确定它不具多态性（如果子类继承了这个函数，就不要将此函数内联，因为子类无法覆写一个根本不存在的函数）</li>
+<li>找出这个函数的所有被调用点</li>
+<li>将这个函数的所有被调用点都替换为函数本体</li>
+<li>编译，测试</li>
+<li>删除该函数的定义</li>
+</ul>
+<h3 id="内联临时变量-Inline-Temp"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%86%85%E8%81%94%E4%B8%B4%E6%97%B6%E5%8F%98%E9%87%8F-Inline-Temp" class="headerlink" title="内联临时变量 Inline Temp"></a>内联临时变量 Inline Temp</h3><p>你有一个临时变量，只被一个简单表示式赋值一次，而它妨碍了其他重构手法 -&gt; 将所有对该变量的引用动作，替换为对它赋值的那个表达式自身。</p>
+<ul>
+<li>检查给临时变量赋值的语句，确保等号右边的表达式没有副作用</li>
+<li>如果这个临时变量并未被声明为 <code>final</code>，那么就将它声明为 <code>final</code>，然后编译（这可以检查该临时变量是否真的只被赋值一次）</li>
+<li>找到该临时变量的所有引用点，将它们替换为『为临时变量赋值』的表达式</li>
+<li>每次修改后，编译并测试</li>
+<li>修改完所有引用点之后，删除该临时变量的声明和赋值语句</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="以查询取代临时变量-Replace-Temp-with-Query"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E6%9F%A5%E8%AF%A2%E5%8F%96%E4%BB%A3%E4%B8%B4%E6%97%B6%E5%8F%98%E9%87%8F-Replace-Temp-with-Query" class="headerlink" title="以查询取代临时变量 Replace Temp with Query"></a>以查询取代临时变量 Replace Temp with Query</h3><p>你的程序以一个临时变量保存某一表达式的运算结果 -&gt; 将这个表达式提炼到一个独立函数中。将这个临时变量的所有引用点替换为对新函数的调用。此后，新函数就可被其他函数使用。</p>
+<ul>
+<li>找出只被赋值一次的临时变量（如果某个临时变量被赋值超过一次，考虑使用 Split Temporary Variable 将它分割成多个变量）</li>
+<li>将该临时变量声明为 <code>final</code></li>
+<li>编译（这可确保该临时变量的确只被赋值一次）</li>
+<li>将『对该临时变量赋值』的语句的等号右侧部分提炼到一个独立函数中（首先将函数声明为 private；确保提炼出来的函数无任何副作用，如果它有副作用，就对它进行 Separate Query from Modifier）</li>
+<li>编译，测试</li>
+<li>在该变量身上实施 Inline Temp</li>
+</ul>
+<h3 id="引入解释性变量-Introduce-Explaining-Variable"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%BC%95%E5%85%A5%E8%A7%A3%E9%87%8A%E6%80%A7%E5%8F%98%E9%87%8F-Introduce-Explaining-Variable" class="headerlink" title="引入解释性变量 Introduce Explaining Variable"></a>引入解释性变量 Introduce Explaining Variable</h3><p>你有一个复杂的表达式 -&gt; 将该复杂表达式（或其中一部分）的结果放进一个临时变量，以此变量名称来解释表达式用途</p>
+<ul>
+<li>声明一个 <code>final</code> 临时变量，将待分解之复杂表达式中的一部分动作的运算结果赋值给它</li>
+<li>将表达式中的『运算结果』这一部分，替换为上述临时变量（如果被替换的这一部分在代码中重复出现，你可以每次一个，逐一替换）</li>
+<li>编译测试</li>
+<li>重复上述过程，处理表达式的其他部分</li>
+</ul>
+<h3 id="分解临时变量-Split-Temporary-Variable"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%88%86%E8%A7%A3%E4%B8%B4%E6%97%B6%E5%8F%98%E9%87%8F-Split-Temporary-Variable" class="headerlink" title="分解临时变量 Split Temporary Variable"></a>分解临时变量 Split Temporary Variable</h3><p>你的程序有某个临时变量被赋值超过一次，它既不是循环变量，也不被用于收集计算结果 -&gt; 针对每次赋值，创造一个独立、对应的临时变量</p>
+<ul>
+<li>在待分解临时变量的声明及其第一次被赋值处，修改其名称（如果稍后的赋值语句是 <code>i=i+expression</code> 形式，就意味着这是个结果搜收集变量，就不要分解。结果收集变量的做用通常是累加、字符串接合、写入流或者向集合添加元素）</li>
+<li>将新的临时变量声明为 <code>final</code></li>
+<li>以该临时变量的第二次赋值动作为界，修改此前对该临时变量的所有引用点，让它们引用新的临时变量</li>
+<li>在第二次赋值处，重新声明原先那个临时变量</li>
+<li>编译，测试</li>
+<li>逐次重复上述过程。每次都在声明出对临时变量改名，并修改下次赋值之前的引用点</li>
+</ul>
+<h3 id="移除对参数的赋值-Remove-Assignments-to-Parameters"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%A7%BB%E9%99%A4%E5%AF%B9%E5%8F%82%E6%95%B0%E7%9A%84%E8%B5%8B%E5%80%BC-Remove-Assignments-to-Parameters" class="headerlink" title="移除对参数的赋值 Remove Assignments to Parameters"></a>移除对参数的赋值 Remove Assignments to Parameters</h3><p>代码对一个参数进行赋值 -&gt; 以一个临时变量取代该参数的位置</p>
+<ul>
+<li>建立一个临时变量，把待处理的参数值赋予它</li>
+<li>以『对参数的赋值』为界，将其后所有对此参数的引用点，全部替换为『对此临时变量的引用』</li>
+<li>修改赋值语句，使其改为对新建临时变量赋值</li>
+<li>编译，测试（如果代码的语义是按引用传递的，请在调用端检查调用后是否还使用了这个参数。也要检查有多少个按引用传递的参数被赋值后又被使用。请尽量只以 return 方式返回一个值。如果需要返回的值不止一个，看看可否把需返回的大堆数据变成单一对象，或干脆为每个返回值设计对应的一个独立函数）</li>
+</ul>
+<h3 id="以函数对象取代函数-Replace-Method-with-Method-Object"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1%E5%8F%96%E4%BB%A3%E5%87%BD%E6%95%B0-Replace-Method-with-Method-Object" class="headerlink" title="以函数对象取代函数 Replace Method with Method Object"></a>以函数对象取代函数 Replace Method with Method Object</h3><p>你有一个大型函数，其中对局部变量的使用使你无法采用 Extract Method -&gt; 将这个函数放进一个单独对象中，如此依赖局部变量就成了对象内的字段。然后你可以在同一个对象中将这个大型函数分解为多个小型函数</p>
+<ul>
+<li>建立一个新类，根据待处理函数的用途，为这个类命名</li>
+<li>在新类中建立一个 <code>final</code> 字段，用以保存原先大型函数所在的对象。我们将这个字段称为『源对象』。同时，针对原函数的每个临时变量和每个参数，在新类中建立一个对应的字段保存</li>
+<li>在新类中建立一个构造函数，接收源对象及原函数的所有参数作为参数</li>
+<li>在新类中建立一个 <code>compute()</code> 函数</li>
+<li>将原函数的代码复制到 <code>compute()</code> 函数中。如果需要调用源对象的任何函数，请通过源对象字段调用</li>
+<li>编译</li>
+<li>将旧函数的函数本体替换为这样一条语句：『创建上述新类的一个新对象，然后调用其中的 <code>compute()</code> 函数』</li>
+</ul>
+<h3 id="替换算法-Substitute-Algorithm"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95-Substitute-Algorithm" class="headerlink" title="替换算法  Substitute Algorithm"></a>替换算法  Substitute Algorithm</h3><p>你想要把某个算法替换成一个更清晰的算法 -&gt; 将函数本体替换为另一个算法</p>
+<ul>
+<li>准备好另一个（替换用）算法，让它通过编译</li>
+<li>针对现有测试，执行上述新算法。如果结果与原本相同，重构结束</li>
+<li>如果测试结果不同于原先，在测试和调试过程中，以旧算法为比较参照标准（对于每个测试用例，分别以新旧两种算法执行，并观察两者结果是否相同）</li>
+</ul>
+<h2 id="在对象之间搬移特性"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%9C%A8%E5%AF%B9%E8%B1%A1%E4%B9%8B%E9%97%B4%E6%90%AC%E7%A7%BB%E7%89%B9%E6%80%A7" class="headerlink" title="在对象之间搬移特性"></a>在对象之间搬移特性</h2><p>在对象的设计过程中，『决定把责任放在哪儿』即使不是最重要的事，也是最重要的事之一。</p>
+<h3 id="搬移函数-Move-Method"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%90%AC%E7%A7%BB%E5%87%BD%E6%95%B0-Move-Method" class="headerlink" title="搬移函数 Move Method"></a>搬移函数 Move Method</h3><p>你的程序中，有个函数与其所在类之外的另一个类进行更多交流：调用后者，或被后者调用 -&gt; 在该函数最常引用的类中建立一个有类似行为的新函数。将旧函数变成一个单纯的委托函数，或是将旧函数完全移除</p>
+<ul>
+<li>检查源类中被源函数所使用的一切特性（包括字段和函数），考虑它们是否也该被搬迁（如果某个特性只被你打算搬移的那个函数用到，就应该将它一并搬迁。如果另有其他函数使用了这个特性，你可以考虑将使用该特性的所有函数全都一并搬迁。有时候，搬移一组函数比逐一搬移简单些）</li>
+<li>检查源类的子类和超类，看看是否有该函数的其他声明（如果出现其他声明，你或许无法进行搬移，除非目标类也同样表现出多态性）</li>
+<li>在目标类中声明这个函数（你可以选择一个更有意义的名称）</li>
+<li>将源函数的代码复制到目标函数中。调整后者，使其能在新类中正常运行（如果源函数包含异常处理，你得判断逻辑上应该由哪个类来处理这一异常。如果应该由源类来负责，就把异常处理留在原地）</li>
+<li>编译目标类</li>
+<li>决定如何从源函数正确引用目标对象</li>
+<li>修改源函数，使之成为一个纯委托函数</li>
+<li>编译，测试</li>
+<li>决定是否删除源函数，或将它当作一个委托函数保留下来（如果你经常要在源对象中引用目标函数，那么将源函数作为委托函数保留下来会比较简单）</li>
+<li>如果要移除源函数，请将源类中对源函数的所有调用，替换为对目标函数的调用</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="搬移字段-Move-Field"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%90%AC%E7%A7%BB%E5%AD%97%E6%AE%B5-Move-Field" class="headerlink" title="搬移字段 Move Field"></a>搬移字段 Move Field</h3><p>你的程序中，某个字段被其所在类之外的另一个类更多的用到 -&gt; 在目标类新建一个字段，修改源字段的所有用户，令它们改用新字段</p>
+<ul>
+<li>如果字段的访问级是 public，使用 Encapsulate Field 将它封装起来（如果你有可能移动那些频繁访问该字段的函数，或如果有许多函数访问某个字段，先使用 Self Encapsulate Field 也许会有帮助）</li>
+<li>编译，测试</li>
+<li>在目标类中建立与源字段相同的字段，并同时建立相应的设值/取值函数</li>
+<li>编译目标类</li>
+<li>决定如何在源对象中引用目标对象（首先看是否有一个现成的字段或函数可以帮助你得到目标对象，如果没有，就看能否轻易建立这样一个函数。如果还不行，就得在源类中新建一个字段来存放目标对象。这可能是个永久性修改，但你也可以让它是暂时的，因为后续重构可能会把这个新建字段除掉）</li>
+<li>删除源字段</li>
+<li>将所有对源字段的引用替换为对某个目标函数的调用</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="提炼类-Extract-Class"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8F%90%E7%82%BC%E7%B1%BB-Extract-Class" class="headerlink" title="提炼类 Extract Class"></a>提炼类 Extract Class</h3><p>某个类做了应该由两个类做的事 -&gt; 建立一个新类，将相关的字段和函数从旧类搬移到新类</p>
+<ul>
+<li>决定如何分解类所负的责任</li>
+<li>建立一个新类，用以表现从旧类中分离出来的责任（如果旧类剩下的责任与旧类名称不符，为旧类更名）</li>
+<li>建立『从旧类访问新类』的连接关系（有可能需要一个双向链接。但是在真正需要它之前，不要建立『从新类通往旧类』的链接）</li>
+<li>对于你想搬移的每一个字段，运用 Move Field 搬移之</li>
+<li>每次搬移后，编译、测试</li>
+<li>使用 Move Method 将必要函数搬移到新类，先搬移低层函数（也就是『被其他函数调用』多于『调用其他函数』的函数），再搬移较高层函数</li>
+<li>每次搬移之后，编译、测试</li>
+<li>检查，精简每个类的接口（如果你建立其双向链接，检查是否可以将它改为单向连接）</li>
+<li>决定是否公开新类。如果你的确需要公开它，就要决定让它成为引用对象还是不可变的值对象</li>
+</ul>
+<p>这里也存在危险性。如果需要确保两个对象同时被锁定，你就面临事务问题，需要使用其他类型的共享锁。</p>
+<h3 id="将类内联化-Inline-Class"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E7%B1%BB%E5%86%85%E8%81%94%E5%8C%96-Inline-Class" class="headerlink" title="将类内联化 Inline Class"></a>将类内联化 Inline Class</h3><p>某个类没有做太多事情 -&gt; 将这个类的所有特性搬移到另一个类中，然后移除原类</p>
+<ul>
+<li>在目标类身上声明源类的 public 协议，并将其中所有函数委托至源类（如果『以一个独立接口表示源类函数』更合适的话，就应该在内联之前先使用 Extract Interface）</li>
+<li>修改所有源类引用点，改而引用目标类（将源类声明为 private，以斩断包之外的所有引用可能。同时修改源类的名称，这便可使编译器帮助你捕捉到所有对于源类的隐藏引用点）</li>
+<li>编译，测试</li>
+<li>运用 Move Method 和 Move Field，将源类的特性全部搬移到目标类</li>
+<li>为源类举行一个简单的『丧礼』</li>
+</ul>
+<h3 id="隐藏委托关系-Hide-Delegate"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E9%9A%90%E8%97%8F%E5%A7%94%E6%89%98%E5%85%B3%E7%B3%BB-Hide-Delegate" class="headerlink" title="隐藏委托关系 Hide Delegate"></a>隐藏委托关系 Hide Delegate</h3><p>客户通过一个委托类来调用另一个对象 -&gt; 在服务类上建立客户所需的所有函数，用以隐藏委托关系</p>
+<ul>
+<li>对于每一个委托关系中的函数，在服务对象端建立一个简单的委托函数</li>
+<li>调整客户，令它只调用服务对象提供的函数（如果使用者和服务提供者不在同一个包）</li>
+<li>每次调整后，编译并测试</li>
+<li>如果将来不再有任何客户需要用到 Delegate，便课移除服务对象中的相关访问函数</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="移除中间人-Remove-Middle-Man"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%A7%BB%E9%99%A4%E4%B8%AD%E9%97%B4%E4%BA%BA-Remove-Middle-Man" class="headerlink" title="移除中间人 Remove Middle Man"></a>移除中间人 Remove Middle Man</h3><p>某个类做了过多的简单委托动作 -&gt; 让客户直接调用受托类</p>
+<ul>
+<li>建立一个函数，用以获得受托对象</li>
+<li>对于每个委托函数，在服务类中删除该函数，并让需要调用该函数的客户转为调用受托对象</li>
+<li>处理每个委托函数后，编译、测试</li>
+</ul>
+<h3 id="引入外加函数-Introduce-Foreign-Method"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%BC%95%E5%85%A5%E5%A4%96%E5%8A%A0%E5%87%BD%E6%95%B0-Introduce-Foreign-Method" class="headerlink" title="引入外加函数 Introduce Foreign Method"></a>引入外加函数 Introduce Foreign Method</h3><p>你需要为提供服务的类增加一个函数，但你无法修改这个类 -&gt; 在客户类中建立一个函数，并以第一参数形式传入一个服务类实例</p>
+<p>外加函数终究是权宜之计。如果有可能，你仍然应该将这些函数搬移到它们的理想家园。如果由于代码所有权的原因使你无法这么做，就把外加函数交给服务类的拥有者，请他帮你在服务类中实现这个函数。</p>
+<ul>
+<li>在客户类中建立一个函数，用来提供你需要的功能（这个函数不应该调用客户类的任何特性。如果它需要一个值，把该值当做参数传给它）</li>
+<li>以服务类实例作为该函数的第一个参数</li>
+<li>将该函数注释为『外加函数(foreign method)，应该在服务类实现』（这么一来，如果将来有机会将外加函数搬移到服务类中时，你便可以轻松找出这些外加函数）</li>
+</ul>
+<h3 id="引入本地扩展-Introduce-Local-Extension"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%BC%95%E5%85%A5%E6%9C%AC%E5%9C%B0%E6%89%A9%E5%B1%95-Introduce-Local-Extension" class="headerlink" title="引入本地扩展 Introduce Local Extension"></a>引入本地扩展 Introduce Local Extension</h3><p>你需要为服务类提供一些额外函数，但你无法修改这个类 -&gt; 建立一个新类，使它包含这些额外函数。让这个扩展品陈伟源类的子类或包装类</p>
+<ul>
+<li>建立一个扩展类，将它作为原始类的子类或包装类</li>
+<li>在扩展类中加入转型构造函数（所谓『转型构造函数』是指『接受原对象作为参数』的构造函数。如果采用子类化方案，那么转型构造函数应该调用适当的超类构造函数；如果采用包装类方案，那么转型构造函数应该将它得到的传入参数以实例变量的形式保存起来，用作接受委托的原对象）</li>
+<li>在扩展类中加入新特性</li>
+<li>根据需要，将原对象替换为扩展对象</li>
+<li>将针对原始类定义的所有外加函数搬移到扩展类中</li>
+</ul>
+<h2 id="重新组织数据"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E9%87%8D%E6%96%B0%E7%BB%84%E7%BB%87%E6%95%B0%E6%8D%AE" class="headerlink" title="重新组织数据"></a>重新组织数据</h2><h3 id="自封装字段-Self-Encapsulate-Field"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E8%87%AA%E5%B0%81%E8%A3%85%E5%AD%97%E6%AE%B5-Self-Encapsulate-Field" class="headerlink" title="自封装字段 Self Encapsulate Field"></a>自封装字段 Self Encapsulate Field</h3><p>你直接访问一个字段，但与字段之间的耦合关系逐渐变得笨拙 -&gt; 为这个字段建立取值/设值函数，并且只以这些函数来访问字段</p>
+<ul>
+<li>为待封装字段建立取值/设值函数</li>
+<li>找出该字段的所有引用点，将它们全部改为调用取值/设值函数</li>
+<li>将该字段声明为 private</li>
+<li>复查，确保找出所有引用点</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="以对象取代数据值-Replace-Data-Value-with-Object"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%AF%B9%E8%B1%A1%E5%8F%96%E4%BB%A3%E6%95%B0%E6%8D%AE%E5%80%BC-Replace-Data-Value-with-Object" class="headerlink" title="以对象取代数据值 Replace Data Value with Object"></a>以对象取代数据值 Replace Data Value with Object</h3><p>你有一个数据项 -&gt; 需要与其他数据和行为一起使用才有意义 -&gt; 将数据项变成对象</p>
+<ul>
+<li>为待替换数值新建一个类，在其中声明一个 final 字段，其类型和源类中的待替换数值类型一样。让后在新类中加入这个字段的取值函数，再加上一个接受此字段为参数的构造函数</li>
+<li>编译</li>
+<li>将源类中的待替换数值字段的类型改为前面新建的类</li>
+<li>修改源类中该字段的取值函数，令它调用新类的取值函数</li>
+<li>如果源类构造函数中用到这个待替换字段（多半是赋值动作），我们就修改构造函数，令它改用新类的构造函数来对字段进行赋值动作</li>
+<li>修改源类中待替换字段的设值函数，令它为新类创建一个实例</li>
+<li>编译，测试</li>
+<li>现在，你有可能需要对新类使用 Change Value to Reference</li>
+</ul>
+<h3 id="将值对象改为引用对象-Change-Value-to-Reference"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E5%80%BC%E5%AF%B9%E8%B1%A1%E6%94%B9%E4%B8%BA%E5%BC%95%E7%94%A8%E5%AF%B9%E8%B1%A1-Change-Value-to-Reference" class="headerlink" title="将值对象改为引用对象 Change Value to Reference"></a>将值对象改为引用对象 Change Value to Reference</h3><p>你从一个类衍生出许多彼此相等的实例，希望将它们替换为同一个对象 -&gt; 将这个值对象编程引用对象</p>
+<ul>
+<li>使用 Replace Constructor with Factory Method</li>
+<li>编译，测试</li>
+<li>决定由什么对象负责提供访问新对象的途径（可能是一个静态字典或一个注册表对象；也可以使用多个对象作为新对象的访问点）</li>
+<li>决定这些引用对象应该预先创建号，或是应该动态创建（如果这些引用对象是预先创建号的，而你必须从内存中将它们读取出来，那么就得去报它们在被需要的时候能够被及时加载）</li>
+<li>修改工厂函数，令它返回引用对象（如果对象是预先创建号的，你就需要考虑：万一有人请求一个并不存在的对象，要如何处理错误；可能希望对工厂函数使用 Rename Method，使其传达这样的信息：它返回的是一个已存在的对象）</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="将引用对象改为值对象-Change-Reference-to-Value"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E5%BC%95%E7%94%A8%E5%AF%B9%E8%B1%A1%E6%94%B9%E4%B8%BA%E5%80%BC%E5%AF%B9%E8%B1%A1-Change-Reference-to-Value" class="headerlink" title="将引用对象改为值对象 Change Reference to Value"></a>将引用对象改为值对象 Change Reference to Value</h3><p>你有一个引用对象，很小且不可变，而且不易管理 -&gt; 将它变成一个值对象</p>
+<ul>
+<li>检查重构目标是否为不可变对象，或是否可修改为不可变对象（如果该对象目前还不是不可变的，就使用 Removing Setting Method，直到它成为不可变的为止；如果无法将该对象修改为不可变的，就放弃使用本项重构）</li>
+<li>建立 <code>equals()</code> 和 <code>hashCode()</code></li>
+<li>编译，测试</li>
+<li>考虑是否可以删除工厂函数，并将构造函数声明为 public</li>
+</ul>
+<h3 id="以对象取代数组-Replace-Array-with-Object"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%AF%B9%E8%B1%A1%E5%8F%96%E4%BB%A3%E6%95%B0%E7%BB%84-Replace-Array-with-Object" class="headerlink" title="以对象取代数组 Replace Array with Object"></a>以对象取代数组 Replace Array with Object</h3><p>你有一个数组，其中的元素各自代表不同的东西 -&gt; 以对象替换数组。对于数组中的每个元素，以一个字段来表示</p>
+<ul>
+<li>新建一个类表示数组所拥有的信息，并在其中以一个 public 字段保存原先的数组</li>
+<li>修改数组的所有用户，让它们改用新类的实例</li>
+<li>编译，测试</li>
+<li>逐一为数组元素添加取值/设值函数。根据元素的用途，为这些访问函数命名。修改客户代码，让它们动过访问函数取用数组内的元素。每次修改后，编译并测试</li>
+<li>当所有对数组的直接访问都转而调用访问函数后，将新类中保存该数组的字段声明为 private</li>
+<li>编译</li>
+<li>对于数组内的每一个元素，在新类中创建一个类型相当的字段。修改该元素的访问函数，令它改用上述的新建字段</li>
+<li>每修改一个元素，编译并测试</li>
+<li>数组的所有元素都有了相应字段之后，删除该数组</li>
+</ul>
+<h3 id="复制『被监视的数据』-Duplicate-Observed-Data"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%A4%8D%E5%88%B6%E3%80%8E%E8%A2%AB%E7%9B%91%E8%A7%86%E7%9A%84%E6%95%B0%E6%8D%AE%E3%80%8F-Duplicate-Observed-Data" class="headerlink" title="复制『被监视的数据』 Duplicate Observed Data"></a>复制『被监视的数据』 Duplicate Observed Data</h3><p>你有一些领域数据置身于 GUI 控件中，而领域函数需要访问这些数据 -&gt; 将该数据复制到一个领域对象中。建立一个 Observer 模式，用以同步领域对象和 GUI 对象内的重复数据</p>
+<ul>
+<li>修改展现类，使其成为领域类的 Observer[GOF]（如果尚未有领域类，就建立一个；如果没有『从展现类到领域类』的关联，就将领域类保存与展现类的一个字段中）</li>
+<li>针对 GUI 类中的领域数据，使用 Self Encapsulate Field</li>
+<li>编译，测试</li>
+<li>在事件处理函数中调用设值函数，直接更新 GUI 组件</li>
+<li>编译，测试</li>
+<li>在领域类中定义数据及其相关访问函数（确保领域类中的设值函数能够触发 Observer 模式的通报机制；对于被观察的数据，在领域类中使用与展现类所用的相同类型来保存。后续重构中你可以自由改变这个数据类型）</li>
+<li>修改展现类中的访问函数，将它们的操作对象改为领域对象（而非 GUI 组件）</li>
+<li>修改 Observer 的 <code>update()</code>，使其从相应的领域对象中将所需数据复制给 GUI 组件</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="将单向关联改为双向关联-Change-Unidirectional-Association-to-Bidirectional"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E5%8D%95%E5%90%91%E5%85%B3%E8%81%94%E6%94%B9%E4%B8%BA%E5%8F%8C%E5%90%91%E5%85%B3%E8%81%94-Change-Unidirectional-Association-to-Bidirectional" class="headerlink" title="将单向关联改为双向关联 Change Unidirectional Association to Bidirectional"></a>将单向关联改为双向关联 Change Unidirectional Association to Bidirectional</h3><p>两个类都需要使用对方特性，但期间只有一条单向连接 -&gt; 添加一个反向指针，并使修改函数能够同时更新两条连接</p>
+<ul>
+<li>在被引用类中增加一个字段，用以保存反向指针</li>
+<li>决定由哪个类——引用端还是被引用端——控制关联关系</li>
+<li>在被控端建立一个辅助函数，其命名应该清楚指出它的有限用途</li>
+<li>如果既有的修改函数在控制端，让它负责更新方向指针</li>
+<li>如果既有的修改函数在被控端，就在控制端建立一个控制函数，并让既有的修改函数调用这个新建的控制函数</li>
+</ul>
+<h3 id="将双向关联改为单向关联-Change-Bidirectional-Association-to-Unidirectional"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E5%8F%8C%E5%90%91%E5%85%B3%E8%81%94%E6%94%B9%E4%B8%BA%E5%8D%95%E5%90%91%E5%85%B3%E8%81%94-Change-Bidirectional-Association-to-Unidirectional" class="headerlink" title="将双向关联改为单向关联 Change Bidirectional Association to Unidirectional"></a>将双向关联改为单向关联 Change Bidirectional Association to Unidirectional</h3><p>两个类之间有双向关联，但其中一个类如今不再需要另一个类的特性 -&gt; 去除不必要的关联</p>
+<p>双向关联很有用，但是也必须为它付出代价，那就是维护双向连接、确保对象被正确创建和删除增加的复杂度。而且，由于很多程序员并不习惯使用双向关联，它往往成为错误之源。大量的双向连接也很容易造成『僵尸对象』：某个对象本来已经该死亡了，却仍然保留在系统中，因为对它的引用还没有完全清除。</p>
+<ul>
+<li>找出保存『你想去除的指针』的字段，检查它的每一个用户，判断是否可以去除该指针（不但要检查直接访问点，也要检查调用这些直接访问点的函数）</li>
+<li>如果客户使用了取值函数，先运用 Self Encapsulate Field 将待删除字段自我封装起来，然后使用 Substitute Algorithm 对付取值函数，令它不再使用该字段。然后编译、测试</li>
+<li>如果客户并未使用取值函数，那就直接修改待删除字段的所有被引用点：改以其他途径获得该字段所保存的对象。每次修改后，编译并测试</li>
+<li>如果已经没有任何函数使用待删除字段，移除所有对该字段的更新逻辑，然后移除该字段</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="以字面常量取代魔法数-Replace-Magic-Number-with-Symbolic-Constant"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%AD%97%E9%9D%A2%E5%B8%B8%E9%87%8F%E5%8F%96%E4%BB%A3%E9%AD%94%E6%B3%95%E6%95%B0-Replace-Magic-Number-with-Symbolic-Constant" class="headerlink" title="以字面常量取代魔法数 Replace Magic Number with Symbolic Constant"></a>以字面常量取代魔法数 Replace Magic Number with Symbolic Constant</h3><p>你有一个字面数值，带有特别含义 -&gt; 创造一个常量，根据其意义为它命名，并将上述的字面数值替换为这个常量</p>
+<ul>
+<li>声明一个常量，令其值为原本的魔法数值</li>
+<li>找出这个魔法数的所有引用点</li>
+<li>检查是否可以使用这个新声明的常量来替换该魔法数。如果可以，便以此常量替换之</li>
+<li>编译</li>
+<li>所有魔法数都被替换完毕后，编译并测试。此时整个程序应该运转如常</li>
+</ul>
+<h3 id="封装字段-Encapsulate-Field"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%81%E8%A3%85%E5%AD%97%E6%AE%B5-Encapsulate-Field" class="headerlink" title="封装字段 Encapsulate Field"></a>封装字段 Encapsulate Field</h3><p>你的类中存在一个 public 字段 -&gt; 将它声明为 private，并提供相应的访问函数</p>
+<ul>
+<li>为 Public 字段提供取值/设值函数</li>
+<li>找到这个类以外使用该字段的所有地点。用取值/设置函数进行替代</li>
+<li>每次修改之后，编译并测试</li>
+<li>将字段的所有用户修改完毕后，把字段声明为 private</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="封装集合-Encapsulate-Collection"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%81%E8%A3%85%E9%9B%86%E5%90%88-Encapsulate-Collection" class="headerlink" title="封装集合 Encapsulate Collection"></a>封装集合 Encapsulate Collection</h3><p>有个函数返回一个集合 -&gt; 让这个函数返回该集合的一个只读副本，并在这个类中提供添加/移除集合元素的函数（类似 MVC 的 M）</p>
+<ul>
+<li>加入为集合添加/移除元素的函数</li>
+<li>将保存集合的字段初始化为一个空集合</li>
+<li>编译</li>
+<li>找出集合设值函数的所有调用者。你可以修改那个设值函数，让它使用上述新建立的『添加/移除元素』函数；也可以直接修改调用端，改让它们调用上述新建立的『添加/移除元素』函数</li>
+<li>编译，测试</li>
+<li>找出所有『通过取值函数获得集合并修改其内容』的函数。逐一修改这些函数，让它们改用添加/移除函数。每次修改后，编译并测试</li>
+<li>修改完上述所有『通过取值函数获得集合并修改集合内容』的函数后，修改取值函数自身，使它返回该集合的一个只读副本</li>
+<li>编译，测试</li>
+<li>找出取值函数的所有用户，从中找出应该存在于集合所属对象内的代码。运用 Extract Method 和 Move Method 将这些代码移到宿主对象去</li>
+<li>修改现有取值函数的名字，然后添加一个新取值函数，使其返回一个枚举。找出旧取值函数的所有被实用点，将它们都改为使用新取值函数</li>
+<li>如果这一步跨度太大，可以先使用 Rename Method 修改原取值函数的名称；再建立一个新取值函数用以返回枚举；最后再修改所有调用者，使其调用新取值函数</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="以数据类取代记录-Replace-Record-with-Data-Class"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%8F%96%E4%BB%A3%E8%AE%B0%E5%BD%95-Replace-Record-with-Data-Class" class="headerlink" title="以数据类取代记录 Replace Record with Data Class"></a>以数据类取代记录 Replace Record with Data Class</h3><p>你需要面对传统编程环境中的记录结构 -&gt; 为该记录创建一个『哑』数据对象</p>
+<ul>
+<li>新建一个类，表示这个记录</li>
+<li>对于记录中的每一项数据，在新建的类中建立对应的一个 private 字段，并提供相应的取值/设值函数</li>
+</ul>
+<h3 id="以类取代类型码-Replace-Type-Code-with-Class"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E7%B1%BB%E5%8F%96%E4%BB%A3%E7%B1%BB%E5%9E%8B%E7%A0%81-Replace-Type-Code-with-Class" class="headerlink" title="以类取代类型码 Replace Type Code with Class"></a>以类取代类型码 Replace Type Code with Class</h3><ul>
+<li>为类型码建立一个类</li>
+<li>修改源类的实现，让它使用上述新建的类</li>
+<li>编译，测试</li>
+<li>对于源类中每一个使用类型码的函数，相应建立一个函数，让新函数使用新建的类</li>
+<li>逐一修改源类用户，让它们使用新接口</li>
+<li>每修改一个用户，编译并测试</li>
+<li>删除使用类型码的旧接口，并删除保存旧类型码的静态变量</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="以子类取代类型码-Replace-Type-Code-with-Subclasses"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%AD%90%E7%B1%BB%E5%8F%96%E4%BB%A3%E7%B1%BB%E5%9E%8B%E7%A0%81-Replace-Type-Code-with-Subclasses" class="headerlink" title="以子类取代类型码 Replace Type Code with Subclasses"></a>以子类取代类型码 Replace Type Code with Subclasses</h3><p>你有一个不可变的类型码，它会影响类的行为 -&gt; 以子类取代这个类型码</p>
+<ul>
+<li>使用 Self Encapsulate Field 将类型码自我封装起来（如果类型码被传递给构造函数，就需要将构造函数换成工厂函数）</li>
+<li>为类型码的每一个数值建立一个相应的子类。在每个子类中覆写类型码的取值函数，使其返回相应的类型码值</li>
+<li>每建立一个新的子类，编译并测试</li>
+<li>从超类中删掉保存类型码的字段。将类型码访问函数声明为抽象函数</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="以-State-Strategy-取代类型码-Replace-Type-Code-with-State-Strategy"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5-State-Strategy-%E5%8F%96%E4%BB%A3%E7%B1%BB%E5%9E%8B%E7%A0%81-Replace-Type-Code-with-State-Strategy" class="headerlink" title="以 State/Strategy 取代类型码 Replace Type Code with State/Strategy"></a>以 State/Strategy 取代类型码 Replace Type Code with State/Strategy</h3><p>你有一个类型码，它会影响类的行为，但你无法通过继承手法消除它</p>
+<ul>
+<li>使用 Self Encapsulate Field 将类型码自我封装起来</li>
+<li>新建一个类，根据类型码的用途为它命名。这就是一个状态对象</li>
+<li>为这个新类添加子类，每个子类对应一种类型码</li>
+<li>在超类中建立一个抽象的查询函数，用以返回类型码。在每个子类中覆写该函数，返回确切的类型码</li>
+<li>编译</li>
+<li>在源类中建立一个字段，用以保存新建的状态对象</li>
+<li>调整源类中负责查询类型码的函数，将查询动作转发给状态对象</li>
+<li>调整源类中为类型码设值的函数，将一个恰当的状态对象子类赋值给『保存状态对象』的那个字段</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="以字段取代子类-Replace-Subclass-with-Fields"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%AD%97%E6%AE%B5%E5%8F%96%E4%BB%A3%E5%AD%90%E7%B1%BB-Replace-Subclass-with-Fields" class="headerlink" title="以字段取代子类 Replace Subclass with Fields"></a>以字段取代子类 Replace Subclass with Fields</h3><p>你的各个子类的唯一差别只在『返回常量数据』的函数身上 -&gt; 修改这些函数，使它们返回超类中的某个（新增）字段，然后销毁子类</p>
+<ul>
+<li>对所有子类使用 Replace Constructor with Factory Method</li>
+<li>如果有任何代码直接引用子类，令它改而引用超类</li>
+<li>针对每个常量函数，在超类中声明一个 final 字段</li>
+<li>为超类声明一个 protected 构造函数，用以初始化这些新增字段</li>
+<li>新建或修改子类构造函数，使他调用超类的新增构造函数</li>
+<li>编译，测试</li>
+<li>在超类中实现所有的常量函数，令它们返回相应字段值，然后将该函数从子类中删掉</li>
+<li>每删除一个常量函数，编译并测试</li>
+<li>子类中所有的常量函数都被删除后，使用 Inline Method 将子类构造函数内联到超类的工厂函数中</li>
+<li>编译，测试</li>
+<li>将子类删掉</li>
+<li>编译，测试</li>
+<li>重复『内联构造函数、删除子类』过程，直到所有子类都被删除</li>
+</ul>
+<h2 id="简化条件表达式"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%AE%80%E5%8C%96%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F" class="headerlink" title="简化条件表达式"></a>简化条件表达式</h2><p>相比于面向过程程序，免息那个对象程序的条件表达式通常比较少，这是因为很多条件行为都被多态机制处理掉了。多态还有一种十分有用但鲜为人知的用途：通过  Introduce Null Object 去除对于 null 值的检验。</p>
+<h3 id="分解条件表达式-Decompose-Conditional"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%88%86%E8%A7%A3%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F-Decompose-Conditional" class="headerlink" title="分解条件表达式 Decompose Conditional"></a>分解条件表达式 Decompose Conditional</h3><p>你有一个复杂的条件(if-then-else)语句 -&gt; 从 if, then, else 三个段落中分别提炼出独立函数</p>
+<ul>
+<li>将 if 段落提炼出来，构成一个独立函数</li>
+<li>将 then 段落和 else 段落都提炼出来，各自构成一个独立函数</li>
+</ul>
+<h3 id="合并条件表达式-Consolidate-Conditional-Expression"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%90%88%E5%B9%B6%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F-Consolidate-Conditional-Expression" class="headerlink" title="合并条件表达式 Consolidate Conditional Expression"></a>合并条件表达式 Consolidate Conditional Expression</h3><p>你有一系列条件测试，都得到相同结果 -&gt; 将这些测试合并为一个条件表达式，并将这个条件表达式提炼成为一个独立函数</p>
+<ul>
+<li>确定这些条件语句都没有副作用（如果条件表达式有副作用，你就不能使用本项重构）</li>
+<li>使用适当的逻辑操作符，将一系列相关条件表达式合并为一个</li>
+<li>编译，测试</li>
+<li>对合并后的表达式实施 Extract Method</li>
+</ul>
+<h3 id="合并重复的条件片段-Consolidate-Duplicate-Conditional-Fragments"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%90%88%E5%B9%B6%E9%87%8D%E5%A4%8D%E7%9A%84%E6%9D%A1%E4%BB%B6%E7%89%87%E6%AE%B5-Consolidate-Duplicate-Conditional-Fragments" class="headerlink" title="合并重复的条件片段 Consolidate Duplicate Conditional Fragments"></a>合并重复的条件片段 Consolidate Duplicate Conditional Fragments</h3><p>在条件表达式的每个分支上有着相同的一段代码 -&gt; 将折断代码搬移到条件表达式之外</p>
+<ul>
+<li>鉴别出『执行方式不随条件变化而变化』的代码</li>
+<li>如果这些共通代码位于条件表达式起始处，就将它移到条件表达式之前</li>
+<li>如果这些共通代码位于条件表达式尾端，就将它移到条件表达式之后</li>
+<li>如果这些共同代码位于条件表达式中段，就需要观察来向前或向后移动</li>
+<li>如果共通代码不止一条语句，应该先使用 Extract Method 将共通代码提炼到一个独立函数中，再以前面所说的办法来处理</li>
+</ul>
+<h3 id="移除控制标记-Remove-Control-Flag"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%A7%BB%E9%99%A4%E6%8E%A7%E5%88%B6%E6%A0%87%E8%AE%B0-Remove-Control-Flag" class="headerlink" title="移除控制标记 Remove Control Flag"></a>移除控制标记 Remove Control Flag</h3><p>在一系列布尔表达式中，某个变量带有『控制标记(control flag)』的作用 -&gt; 以 break 语句或 return 语句取代控制标记</p>
+<ul>
+<li>找出让你跳出这段逻辑的控制标记值</li>
+<li>找出对标记变量赋值的语句，代以恰当的 break 语句或 continue 语句</li>
+<li>每次替换后，编译并测试</li>
+</ul>
+<p>在未能提供 break 和 continue 语句的编程语言中，可以使用下述办法</p>
+<ul>
+<li>运用 Extract Method，将整段逻辑提炼到一个独立函数中</li>
+<li>找出让你跳出这段逻辑的控制标记值</li>
+<li>找出对标记变量赋值的语句，代以恰当的 return 语句</li>
+<li>每次替换后，编译并测试</li>
+</ul>
+<h3 id="以-Guard-语句取代嵌套条件表达式-Replace-Nested-Conditional-with-Guard-Clauses"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5-Guard-%E8%AF%AD%E5%8F%A5%E5%8F%96%E4%BB%A3%E5%B5%8C%E5%A5%97%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F-Replace-Nested-Conditional-with-Guard-Clauses" class="headerlink" title="以 Guard 语句取代嵌套条件表达式 Replace Nested Conditional with Guard Clauses"></a>以 Guard 语句取代嵌套条件表达式 Replace Nested Conditional with Guard Clauses</h3><p>函数中的条件逻辑使人难以看清正常的执行路径 -&gt; 使用 Guard 语句表现所有特殊情况</p>
+<ul>
+<li>对于每个检查，放进一个 Guard 语句（要么从函数中返回，要么抛出一个异常）</li>
+<li>每次将条件检查替换成 Guard 语句后，编译并测试（如果所有 Guard 语句都导致相同结果，请使用 Consolidate Conditional Expressions）</li>
+</ul>
+<h3 id="以多态取代条件表达式-Replace-Conditional-with-Polymorphism"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%A4%9A%E6%80%81%E5%8F%96%E4%BB%A3%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F-Replace-Conditional-with-Polymorphism" class="headerlink" title="以多态取代条件表达式 Replace Conditional with Polymorphism"></a>以多态取代条件表达式 Replace Conditional with Polymorphism</h3><p>你手上有个条件表达式，它根据对象类型的不同而选择不同的行为 -&gt; 将这个条件表达式的每个分支放进一个子类内的覆写函数中，然后将原始函数声明为抽象函数</p>
+<ul>
+<li>如果要处理的表达式是一个更大函数中的一部分，首先对条件表达式进行分析，然后使用 Extract Method 将它提炼到一个独立函数去</li>
+<li>如果有必要，使用 Move Method 将条件表达式放置到继承结构的顶端</li>
+<li>任选一个子类，在其中建立一个函数，使之覆写超类中容纳条件表达式的那个函数。将与该子类相关的条件表达式分支复制到新建函数中，并对它进行适当调整</li>
+<li>编译，测试</li>
+<li>在超类中删掉条件表达式内被复制了的分支</li>
+<li>编译，测试</li>
+<li>针对条件表达式的每个分支，重复上述过程，直到所有分支都被移到子类内的函数为止</li>
+<li>将超类之中容纳条件表达式的函数声明为抽象函数</li>
+</ul>
+<h3 id="引入-Null-对象"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%BC%95%E5%85%A5-Null-%E5%AF%B9%E8%B1%A1" class="headerlink" title="引入 Null 对象"></a>引入 Null 对象</h3><p>你需要再三检查某对象是否为 null -&gt; 将 null 值替换为 null 对象</p>
+<ul>
+<li>为源类建立一个子类，使其行为就像是源类的 null 版本。在源类和 null 子类中都加上 <code>isNull()</code> 函数，前者的 <code>isNull()</code> 应该返回 false，后者的返回 true</li>
+<li>编译</li>
+<li>找出所有『请求源对象却获得一个 null』 的地方，修改这些地方，使它们改而获得一个空对象</li>
+<li>找出所有『将源对象与 null 做比较的地方』，修改这些地方，使它们调用 <code>isNull()</code> 函数</li>
+<li>编译，测试</li>
+<li>找出这样的程序点：如果对象不是 null，做 A 动作，否则做 B 动作</li>
+<li>对于每一个上述抵挡，在 null 类中覆写 A 动作，使其行为和 B 动作相同</li>
+<li>使用上述被覆写的动作，然后删除『对象是否等于 null』 的条件测试。编译并测试</li>
+</ul>
+<h3 id="引入断言-Introduce-Assertion"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%BC%95%E5%85%A5%E6%96%AD%E8%A8%80-Introduce-Assertion" class="headerlink" title="引入断言 Introduce Assertion"></a>引入断言 Introduce Assertion</h3><p>某一段代码需要对程序状态做出某种假设 -&gt; 以断言明确表现出这种假设</p>
+<ul>
+<li>如果你发现代码假设某个条件始终为真，就加入一个断言明确说明这种情况</li>
+</ul>
+<h2 id="简化函数调用"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%AE%80%E5%8C%96%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8" class="headerlink" title="简化函数调用"></a>简化函数调用</h2><p>容易被理解和被使用的接口，是开发良好面向对象软件的关键。良好的接口只像用户展现必须展现的东西。如果一个接口暴露了过多细节，你可以将不必要暴露的东西隐藏起来，从而改进接口的质量。</p>
+<h3 id="函数改名-Rename-Method"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%87%BD%E6%95%B0%E6%94%B9%E5%90%8D-Rename-Method" class="headerlink" title="函数改名 Rename Method"></a>函数改名 Rename Method</h3><p>函数名称未能揭示函数的用途 -&gt; 修改函数名称</p>
+<ul>
+<li>检查函数签名是否被超类或子类实现过。如果是，则需要针对每份实现分别进行下列步骤</li>
+<li>声明一个新函数，将它命名为你想要的新名称。将旧函数的代码复制到新函数中，并进行适当调整</li>
+<li>编译</li>
+<li>修改旧函数，令它将调用转发给新函数</li>
+<li>编译，测试</li>
+<li>找出旧函数的所有被引用点，修改它们，令它们改而引用心函数。每次修改后，编译并测试</li>
+<li>删除旧函数</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="添加参数-Add-Parameter"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%B7%BB%E5%8A%A0%E5%8F%82%E6%95%B0-Add-Parameter" class="headerlink" title="添加参数 Add Parameter"></a>添加参数 Add Parameter</h3><p>某个函数需要从调用端得到更多信息 -&gt; 为此函数添加一个对象函数，让该对象带进函数所需信息</p>
+<ul>
+<li>检查函数签名是否被超类或子类实现过。如果是，则需要针对每份实现分别进行下列步骤</li>
+<li>声明一个新函数，名称与原函数同，只是加上新添参数，将旧代码复制到新函数中</li>
+<li>编译</li>
+<li>修改旧函数，令它调用新函数</li>
+<li>编译，测试</li>
+<li>找出旧函数的所有被引用点，修改它们，令它们改而引用心函数。每次修改后，编译并测试</li>
+<li>删除旧函数</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="移除参数-Remove-Parameter"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%A7%BB%E9%99%A4%E5%8F%82%E6%95%B0-Remove-Parameter" class="headerlink" title="移除参数 Remove Parameter"></a>移除参数 Remove Parameter</h3><p>函数本体不再需要某个参数 -&gt; 将该参数去除</p>
+<ul>
+<li>检查函数签名是否被超类或子类实现过。如果是，则需要针对每份实现分别进行下列步骤</li>
+<li>声明一个新函数，名称与原函数同，只是去除新添参数，将旧代码复制到新函数中</li>
+<li>编译</li>
+<li>修改旧函数，令它调用新函数</li>
+<li>编译，测试</li>
+<li>找出旧函数的所有被引用点，修改它们，令它们改而引用心函数。每次修改后，编译并测试</li>
+<li>删除旧函数</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="将查询函数和修改函数分裂-Separate-Query-from-Modifier"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E6%9F%A5%E8%AF%A2%E5%87%BD%E6%95%B0%E5%92%8C%E4%BF%AE%E6%94%B9%E5%87%BD%E6%95%B0%E5%88%86%E8%A3%82-Separate-Query-from-Modifier" class="headerlink" title="将查询函数和修改函数分裂 Separate Query from Modifier"></a>将查询函数和修改函数分裂 Separate Query from Modifier</h3><p>某个函数既返回对象状态值，又修改对象状态 -&gt; 建立两个不同的函数，其中一个负责查询，另一个负责修改</p>
+<ul>
+<li>新建一个查询函数，令它返回的值与原函数相同</li>
+<li>修改原函数，令它调用查询函数，并返回获得的结果</li>
+<li>编译，测试</li>
+<li>将调用原函数的代码改为调用查询函数。然后在调用查询函数的那一行之前，加上对原函数的调用。每次修改后，编译并测试</li>
+<li>将原函数的返回值改为 void，并且删掉其中所有的 return 语句</li>
+</ul>
+<h3 id="令函数携带参数-Parameterized-Method"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A4%E5%87%BD%E6%95%B0%E6%90%BA%E5%B8%A6%E5%8F%82%E6%95%B0-Parameterized-Method" class="headerlink" title="令函数携带参数 Parameterized Method"></a>令函数携带参数 Parameterized Method</h3><p>若干函数做了类似的工作，但在函数本体中却包含了不同的值 -&gt; 建立单一函数，以参数表达那些不同的值</p>
+<ul>
+<li>新建一个带有参数的函数，使他可以先替换先前所有的重复性函数</li>
+<li>编译</li>
+<li>将调用旧函数的代码改为调用新函数</li>
+<li>编译，测试</li>
+<li>对所有旧函数重复上述步骤，每次替换后，修改并测试</li>
+</ul>
+<h3 id="以明确函数取代参数-Replace-Parameter-with-Explicit-Methods"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E6%98%8E%E7%A1%AE%E5%87%BD%E6%95%B0%E5%8F%96%E4%BB%A3%E5%8F%82%E6%95%B0-Replace-Parameter-with-Explicit-Methods" class="headerlink" title="以明确函数取代参数 Replace Parameter with Explicit Methods"></a>以明确函数取代参数 Replace Parameter with Explicit Methods</h3><p>你有一个函数，其中完全取决于参数值而采取不同行为 -&gt; 应该针对该参数的每一个可能值，建立一个独立函数</p>
+<ul>
+<li>针对参数的每一种可能值，新建一个明确函数</li>
+<li>修改条件表达式的每个分支，使其调用合适的新函数</li>
+<li>修改每个分支后，编译并测试</li>
+<li>修改原函数的每一个被调用点，改而调用上述的某个合适的新函数</li>
+<li>编译，测试</li>
+<li>所有调用端都修改完毕后，删除原函数</li>
+</ul>
+<h3 id="保持对象完整-Preserve-Whole-Object"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BF%9D%E6%8C%81%E5%AF%B9%E8%B1%A1%E5%AE%8C%E6%95%B4-Preserve-Whole-Object" class="headerlink" title="保持对象完整 Preserve Whole Object"></a>保持对象完整 Preserve Whole Object</h3><p>你从某个对象中取出若干值，将它们作为某一次函数调用时的参数 -&gt; 改为传递整个对象</p>
+<ul>
+<li>对你的目标函数新添一个参数项，用以代表原数据所在的完整对象</li>
+<li>编译，测试</li>
+<li>判断哪些参数可被包含在新添的完整对象中</li>
+<li>选择上述参数之一，将被调用函数中原来引用该参数的地方，改为调用新添参数对象的相应取值函数</li>
+<li>删除该项参数</li>
+<li>编译，测试</li>
+<li>针对所有可从完整对象中获得的参数，重复上述过程</li>
+<li>删除调用端中那些带有被删除参数的代码</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="以函数取代参数-Replace-Parameter-with-Method"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%87%BD%E6%95%B0%E5%8F%96%E4%BB%A3%E5%8F%82%E6%95%B0-Replace-Parameter-with-Method" class="headerlink" title="以函数取代参数 Replace Parameter with Method"></a>以函数取代参数 Replace Parameter with Method</h3><p>对象调用某个函数，并将所得结果作为参数，传递给另一个函数。而接受该参数的函数本身也能够调用前一个函数 -&gt; 让参数接受者去除该项参数，并直接调用前一个函数</p>
+<ul>
+<li>如果有必要，将参数的计算过程提炼到一个独立函数中。将函数本体内引用该参数的地方改为调用新建的函数</li>
+<li>每次替换后，修改并测试</li>
+<li>全部替换完成后，使用 Remove Parameter 将该参数去掉</li>
+</ul>
+<h3 id="引入参数对象-Introduce-Parameter-Object"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%BC%95%E5%85%A5%E5%8F%82%E6%95%B0%E5%AF%B9%E8%B1%A1-Introduce-Parameter-Object" class="headerlink" title="引入参数对象 Introduce Parameter Object"></a>引入参数对象 Introduce Parameter Object</h3><p>某些参数总是很自然地同时出现 -&gt; 以一个对象取代这些参数</p>
+<ul>
+<li>新建一个类，用以表现你想替换的一组参数。将这个类设为不可变的</li>
+<li>编译</li>
+<li>针对使用该组参数的所有函数，实施 Add Parameter，传入上述新建类的实例对象，并将次参数设为 null</li>
+<li>对于 Data Clumps 中的每一项（在此均为参数），从函数签名中移除，并修改调用端和函数本体，令它们都改而通过新的参数对象取得该值</li>
+<li>每去除一个参数，编译并测试</li>
+<li>将原先的参数全部去除之后，观察有无适当函数可以运行 Move Method 搬移到参数对象之中</li>
+</ul>
+<h3 id="移除设值函数-Remove-Setting-Method"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%A7%BB%E9%99%A4%E8%AE%BE%E5%80%BC%E5%87%BD%E6%95%B0-Remove-Setting-Method" class="headerlink" title="移除设值函数 Remove Setting Method"></a>移除设值函数 Remove Setting Method</h3><p>类中的某个字段应该在对象创建时被设值，然后就不再改变 -&gt; 去掉该字段的所有设值函数</p>
+<ul>
+<li>检查设值函数被使用的情况，看它是否只被构造函数调用，或者被构造函数所调用的另一个函数调用</li>
+<li>修改构造函数，使其直接访问设值函数所针对的那个变量</li>
+<li>编译，测试</li>
+<li>移除这个设值函数，将它所针对的字段设为 final</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="隐藏函数-Hide-Method"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E9%9A%90%E8%97%8F%E5%87%BD%E6%95%B0-Hide-Method" class="headerlink" title="隐藏函数 Hide Method"></a>隐藏函数 Hide Method</h3><p>有一个函数，从来没有被其他任何类用到 -&gt; 将这个函数修改为 private</p>
+<ul>
+<li>经常检查有没有可能降低某个函数的可见度</li>
+<li>尽可能降低所有函数的可见度</li>
+<li>每完成一组函数的隐藏之后，编译并测试</li>
+</ul>
+<h3 id="以工厂函数取代构造函数-Replace-Constructor-with-Factory-Method"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%B7%A5%E5%8E%82%E5%87%BD%E6%95%B0%E5%8F%96%E4%BB%A3%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-Replace-Constructor-with-Factory-Method" class="headerlink" title="以工厂函数取代构造函数 Replace Constructor with Factory Method"></a>以工厂函数取代构造函数 Replace Constructor with Factory Method</h3><p>你希望在创建对象时不仅仅是做简单的构建动作 -&gt; 将构造函数替换为工厂函数</p>
+<ul>
+<li>新建一个工厂函数，让它调用现有的构造函数</li>
+<li>将调用构造函数的代码改为调用工厂函数</li>
+<li>每次替换后，编译并测试</li>
+<li>将构造函数声明为 private</li>
+<li>编译</li>
+</ul>
+<h3 id="封装向下转型-Encapsulate-Downcast"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%81%E8%A3%85%E5%90%91%E4%B8%8B%E8%BD%AC%E5%9E%8B-Encapsulate-Downcast" class="headerlink" title="封装向下转型 Encapsulate Downcast"></a>封装向下转型 Encapsulate Downcast</h3><p>某个函数返回的对象，需要由函数调用者执行向下转型(downcast)</p>
+<ul>
+<li>找出必须对函数调用结果进行向下转型的地方（这种情况通常出现在返回一个集合或迭代器的函数中）</li>
+<li>将向下转型动作搬移到该函数中（针对返回集合的函数，使用 Encapsulate Collection）</li>
+</ul>
+<h3 id="以异常取代错误码-Replace-Error-Code-with-Exception"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%BC%82%E5%B8%B8%E5%8F%96%E4%BB%A3%E9%94%99%E8%AF%AF%E7%A0%81-Replace-Error-Code-with-Exception" class="headerlink" title="以异常取代错误码 Replace Error Code with Exception"></a>以异常取代错误码 Replace Error Code with Exception</h3><p>某个函数返回一个特定的代码，用以表示各种错误情况 -&gt; 改用异常</p>
+<ul>
+<li>决定应该抛出受控(checked)异常还是非受控(unchecked)异常</li>
+<li>找到该函数的所有者，对它们进行相应调整，让他们使用异常</li>
+<li>修改该函数的签名，令它反映出新用法</li>
+</ul>
+<h3 id="以测试取代异常-Replace-Exception-with-Test"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E6%B5%8B%E8%AF%95%E5%8F%96%E4%BB%A3%E5%BC%82%E5%B8%B8-Replace-Exception-with-Test" class="headerlink" title="以测试取代异常 Replace Exception with Test"></a>以测试取代异常 Replace Exception with Test</h3><p>面对一个调用者可以预先检查的条件，你抛出了一个异常 -&gt; 修改调用者，使它在调用函数之前先做检查</p>
+<ul>
+<li>在函数调用点之前，放置一个测试语句，将函数内 catch 区段中的代码复制到测试句的适当 if 分支中</li>
+<li>在 catch 区段起始处加入一个断言，确保 catch 区段绝对不会被执行</li>
+<li>编译，测试</li>
+<li>移除所有 catch 区段，让后将 try 区段内的代码复制到 try 之外，然后移除 try 区段</li>
+<li>编译，测试</li>
+</ul>
+<h2 id="处理概括关系"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%A4%84%E7%90%86%E6%A6%82%E6%8B%AC%E5%85%B3%E7%B3%BB" class="headerlink" title="处理概括关系"></a>处理概括关系</h2><h3 id="字段上移-Pull-Up-Field"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%AD%97%E6%AE%B5%E4%B8%8A%E7%A7%BB-Pull-Up-Field" class="headerlink" title="字段上移 Pull Up Field"></a>字段上移 Pull Up Field</h3><p>两个子类拥有相同的字段 -&gt; 将该字段移至超类</p>
+<ul>
+<li>针对提升字段，检查它们所有被使用点，确认它们以同样的方式被使用</li>
+<li>如果这些字段的名称不同，先将它们改名，使每一个名称都和你想为超类字段取的名称相同</li>
+<li>编译，测试</li>
+<li>在超类中新建一个字段（声明为 protected）</li>
+<li>移除子类中的字段</li>
+<li>编译，测试</li>
+<li>考虑对超类的新建字段使用 Self Encapsulate Field</li>
+</ul>
+<h3 id="函数上移-Pull-Up-Method"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%87%BD%E6%95%B0%E4%B8%8A%E7%A7%BB-Pull-Up-Method" class="headerlink" title="函数上移 Pull Up Method"></a>函数上移 Pull Up Method</h3><p>有些函数，在各个子类中产生完全相同的结果 -&gt; 将函数移至超类</p>
+<ul>
+<li>检查待提升函数，确定它们是完全一致的</li>
+<li>如果待提升函数的签名不同，将那些签名都修改为你想要在超类中使用的签名</li>
+<li>在超类中新建一个函数，将某个待提升函数的代码复制到其中，做适当调整，然后编译</li>
+<li>移除一个待提升的子类函数</li>
+<li>编译，测试</li>
+<li>逐一移除待提升的子类函数，直到只剩下超类中的函数为止。每次移除之后都需要测试</li>
+<li>观察该函数的 调用者，看看是否可以改为使用超类类型的对象</li>
+</ul>
+<h3 id="构造函数本体上移-Pull-Up-Constructor-Body"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E6%9C%AC%E4%BD%93%E4%B8%8A%E7%A7%BB-Pull-Up-Constructor-Body" class="headerlink" title="构造函数本体上移 Pull Up Constructor Body"></a>构造函数本体上移 Pull Up Constructor Body</h3><p>你在各子类中拥有一些构造函数，它们的本体几乎完全一致 -&gt; 在超类中新建一个构造函数，并在子类构造函数中调用它</p>
+<ul>
+<li>在超类中定义一个构造函数</li>
+<li>将子类构造函数中的共同代码搬移到超类构造函数中</li>
+<li>将子类构造函数中的共同代码删掉，改为调用新建的超类构造函数</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="函数下移-Push-Down-Method"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%87%BD%E6%95%B0%E4%B8%8B%E7%A7%BB-Push-Down-Method" class="headerlink" title="函数下移 Push Down Method"></a>函数下移 Push Down Method</h3><p>超类中的某个函数只与部分（而非全部）子类有关 -&gt; 将这个函数移到相关的那些子类去</p>
+<ul>
+<li>在所有子类声明该函数，将超类中的函数本体复制到每一个子类函数中</li>
+<li>删除超类中的函数</li>
+<li>编译，测试</li>
+<li>将该函数从所有不需要它的那些子类中删掉</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="字段下移-Push-Down-Field"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%AD%97%E6%AE%B5%E4%B8%8B%E7%A7%BB-Push-Down-Field" class="headerlink" title="字段下移 Push Down Field"></a>字段下移 Push Down Field</h3><p>超类中的某个字段只部分（而非全部）子类用到 -&gt; 将这个字段移到需要它的那些子类去</p>
+<ul>
+<li>在所有子类中声明该字段</li>
+<li>将该字段从超类中移除</li>
+<li>编译，测试</li>
+<li>将该字段从所有不需要它的那些子类中删掉</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="提炼子类-Extract-Subclass"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8F%90%E7%82%BC%E5%AD%90%E7%B1%BB-Extract-Subclass" class="headerlink" title="提炼子类 Extract Subclass"></a>提炼子类 Extract Subclass</h3><p>类中的某些特性只被某些（而非全部）实例用到 -&gt; 新建一个子类，将上面所说的那一部分特性移到子类中</p>
+<ul>
+<li>为源类定义一个新的子类</li>
+<li>为这个新的子类提供构造函数</li>
+<li>找出调用超类构造函数的所有地点。如果它们需要的是新建的子类，令它们改而调用新构造函数</li>
+<li>逐一使用 Push Down Method 和 Push Down Field 将源类的特性移到子类去</li>
+<li>找到所有这样的字段：它们所传达的信息如今可由继承体系自身传达。以 Self Encapsulate Field 避免直接使用这些字段，然后将它们的取值函数替换为多态常量函数。所有使用这些字段的地方都应该以 Replace Conditional with Polymorphism 重头</li>
+<li>每次下移之后，编译并测试</li>
+</ul>
+<h3 id="提炼超类-Extract-Superclass"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8F%90%E7%82%BC%E8%B6%85%E7%B1%BB-Extract-Superclass" class="headerlink" title="提炼超类 Extract Superclass"></a>提炼超类 Extract Superclass</h3><p>两个类具有相似特性 -&gt; 为这两个类建立一个超类，将相同特性移至超类</p>
+<ul>
+<li>为原本的类新建一个空白的抽象超类</li>
+<li>运用 Pull Up Field, Pull Up Method 和 Pull Up Constructor Body 逐一将子类的共同元素上移到超类</li>
+<li>每次上移后，编译并测试</li>
+<li>检查留在子类中的函数，看它们是否还有共通成分</li>
+<li>将所有共同元素都上移到超类之后，检查子类的所有用户。如果它们只使用共同接口，你就可以把它们请求的对象类型改为超类</li>
+</ul>
+<h3 id="提炼接口-Extract-Interface"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8F%90%E7%82%BC%E6%8E%A5%E5%8F%A3-Extract-Interface" class="headerlink" title="提炼接口 Extract Interface"></a>提炼接口 Extract Interface</h3><ul>
+<li>新建一个空接口</li>
+<li>在接口中声明待提炼类的共同操作</li>
+<li>让相关的类实现上述接口</li>
+<li>调整客户端的类型声明，令其使用该接口</li>
+</ul>
+<h3 id="折叠继承体系-Collapse-Hierarchy"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8A%98%E5%8F%A0%E7%BB%A7%E6%89%BF%E4%BD%93%E7%B3%BB-Collapse-Hierarchy" class="headerlink" title="折叠继承体系 Collapse Hierarchy"></a>折叠继承体系 Collapse Hierarchy</h3><p>超类和子类之间无太大区别 -&gt; 将它们合为一题</p>
+<ul>
+<li>选择你想移除的类：是超类还是子类？</li>
+<li>把想要移除的类的所有行为和数据搬移到另一个类</li>
+<li>每次移动后，编译并测试</li>
+<li>调整即将被移除的那个类的所有引用点，令它们改而引用合并后留下的类。这个动作将会影响变量的声明、参数的类型以及构造函数</li>
+<li>移除我们的目标</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="塑造模板函数-Form-Template-Method"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%A1%91%E9%80%A0%E6%A8%A1%E6%9D%BF%E5%87%BD%E6%95%B0-Form-Template-Method" class="headerlink" title="塑造模板函数 Form Template Method"></a>塑造模板函数 Form Template Method</h3><p>你有一些子类，其中响应的某些函数以相同顺序执行类似的操作，但各个操作在细节上有所不同 -&gt; 将这些操作分别放进独立函数中，并保持它们都有相同的签名，于是原函数也就变得相同。然后将原函数上移至超类</p>
+<ul>
+<li>在各个子类中分解目标函数，使分解后的各个函数要不完全相同，要不完全不同</li>
+<li>运用 Pull Up Method 将各子类内完全相同的函数上移至超类</li>
+<li>对于那些完全不同的函数，实施 Rename Method，使所有这些函数的签名完全相同</li>
+<li>修改上述所有签名后，编译并测试</li>
+<li>运用 Pull Up Method 将所有原函数逐一上移至超类。在超类中将那些代表各种不同操作的函数定义为抽象函数</li>
+<li>编译，测试</li>
+<li>移除其他子类中的原函数，每删除一个，编译并测试</li>
+</ul>
+<h3 id="以委托取代继承-Replace-Inheritance-with-Delegation"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%A7%94%E6%89%98%E5%8F%96%E4%BB%A3%E7%BB%A7%E6%89%BF-Replace-Inheritance-with-Delegation" class="headerlink" title="以委托取代继承 Replace Inheritance with Delegation"></a>以委托取代继承 Replace Inheritance with Delegation</h3><p>某个子类只使用超类接口中的一部分，或是根本不需要继承而来的数据 -&gt; 在子类中新建一个字段用以保存超类；调整子类函数，令它改而委托超类；然后去掉两者之间的继承关系</p>
+<ul>
+<li>在子类中新建一个字段，使其引用超类的一个实例，并将它初始化为 this</li>
+<li>修改子类内的所有函数，让它们不再使用超类，转而使用上述俺哥委托字段。每次修改后，编译并测试</li>
+<li>去除两个类之间的继承关系，新建一个受托类的对象赋给受托字段</li>
+<li>针对客户端所用的每一个超类函数，为它添加一个简单的委托函数</li>
+<li>编译，测试</li>
+</ul>
+<h3 id="以继承取代委托-Replace-Delegation-with-Inheritance"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E7%BB%A7%E6%89%BF%E5%8F%96%E4%BB%A3%E5%A7%94%E6%89%98-Replace-Delegation-with-Inheritance" class="headerlink" title="以继承取代委托 Replace Delegation with Inheritance"></a>以继承取代委托 Replace Delegation with Inheritance</h3><p>你在两个类之间使用委托关系，并经常为整个接口编写许多极简单的委托函数 -&gt; 让委托类继承受托类</p>
+<ul>
+<li>让委托端成为受托端的一个子类</li>
+<li>编译</li>
+<li>将受托字段设为该字段所处对象本身</li>
+<li>去掉简单的委托函数</li>
+<li>编译并测试</li>
+<li>将所有其他涉及委托关系的代码，改为调用对象自身</li>
+<li>移除受托字段</li>
+</ul>
+<h2 id="大型重构"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%A4%A7%E5%9E%8B%E9%87%8D%E6%9E%84" class="headerlink" title="大型重构"></a>大型重构</h2><p>耗费相当长时间，只在需要添加新功能或修补错误时才进行重构。这一章不写具体做法，很多时候需要灵活变通</p>
+<h3 id="梳理并分解继承体系-Tease-Apart-Inheritance"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%A2%B3%E7%90%86%E5%B9%B6%E5%88%86%E8%A7%A3%E7%BB%A7%E6%89%BF%E4%BD%93%E7%B3%BB-Tease-Apart-Inheritance" class="headerlink" title="梳理并分解继承体系 Tease Apart Inheritance"></a>梳理并分解继承体系 Tease Apart Inheritance</h3><p>某个继承体系同时承担两项责任 -&gt; 建立两个继承体系，并通过委托关系让其中一个可以调用另一个</p>
+<h3 id="将过程化设计转化为对象设计-Convert-Procedural-Design-to-Objects"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E8%BF%87%E7%A8%8B%E5%8C%96%E8%AE%BE%E8%AE%A1%E8%BD%AC%E5%8C%96%E4%B8%BA%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1-Convert-Procedural-Design-to-Objects" class="headerlink" title="将过程化设计转化为对象设计 Convert Procedural Design to Objects"></a>将过程化设计转化为对象设计 Convert Procedural Design to Objects</h3><p>你手上有一些传统过程化风格的代码 -&gt; 将数据记录变成对象，将大块的行为分成小块，并将行为移入相关对象之中</p>
+<h3 id="将领域和展示分离-Separate-Domain-from-Presentation"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E9%A2%86%E5%9F%9F%E5%92%8C%E5%B1%95%E7%A4%BA%E5%88%86%E7%A6%BB-Separate-Domain-from-Presentation" class="headerlink" title="将领域和展示分离 Separate Domain from Presentation"></a>将领域和展示分离 Separate Domain from Presentation</h3><p>某些 GUI 类之中包含了领域逻辑 -&gt; 将领域逻辑分离出来，为它们建立独立的领域类</p>
+<h3 id="提炼继承体系-Extract-Hierarchy"><a href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8F%90%E7%82%BC%E7%BB%A7%E6%89%BF%E4%BD%93%E7%B3%BB-Extract-Hierarchy" class="headerlink" title="提炼继承体系 Extract Hierarchy"></a>提炼继承体系 Extract Hierarchy</h3><p>你有某个类做了太多工作，其中一部分工作是以大量条件表达式完成的 -&gt; 建立继承体系，以一个子类表示一种特殊情况</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>捧个钱场？</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById(&#39;QR&#39;); if (qr.style.display === &#39;none&#39;) {qr.style.display=&#39;block&#39;;} else {qr.style.display=&#39;none&#39;}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/wechat.jpg" alt="wdxtub WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/alipay.jpg" alt="wdxtub Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="https://wdxtub.com/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="tag"># 读书笔记</a>
+          
+            <a href="https://wdxtub.com/tags/%E4%BB%A3%E7%A0%81/" rel="tag"># 代码</a>
+          
+            <a href="https://wdxtub.com/tags/%E9%87%8D%E6%9E%84/" rel="tag"># 重构</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="https://wdxtub.com/2016/08/08/mac-work-env/" rel="next" title="Mac 工作环境搭建指南">
+                <i class="fa fa-chevron-left"></i> Mac 工作环境搭建指南
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="https://wdxtub.com/2016/08/09/im-a-programmer/" rel="prev" title="非主流程序员的自我修养">
+                非主流程序员的自我修养 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first" style="top: 5px; transform: rotateZ(-45deg); width: 100%;"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle" style="opacity: 0;"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last" style="top: -5px; transform: rotateZ(45deg); width: 100%;"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar sidebar-active" style="display: block; width: 320px;">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element" style="opacity: 1; display: block; transform: translateX(0px);">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person" style="opacity: 1; display: block; transform: translateX(0px);">
+          <img class="site-author-image" itemprop="image" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/avatar.jpg" alt="wdxtub">
+          <p class="site-author-name" itemprop="name">wdxtub</p>
+           
+              <p class="site-description motion-element" itemprop="description" style="opacity: 1; display: block; transform: translateX(0px);"></p>
+           
+        </div>
+        <nav class="site-state motion-element" style="opacity: 1; display: block; transform: translateX(0px);">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="https://wdxtub.com/archives">
+                <span class="site-state-item-count">738</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">868</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element" style="opacity: 1; display: block; transform: translateX(0px);">
+            <a href="https://wdxtub.com/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element" style="opacity: 1; display: block; transform: translateX(0px);">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/wdxtub" target="_blank" title="GitHub">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/wdxtub" target="_blank" title="微博">
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/wdx" target="_blank" title="豆瓣">
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/wdxtub" target="_blank" title="知乎">
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license" style="opacity: 1; display: block; transform: translateX(0px);">
+            <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" target="_blank">
+              <img src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/cc-by-nc-nd.svg" alt="Creative Commons">
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline" style="opacity: 1; display: block; transform: translateX(0px);">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              不妨看看
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://zhchbin.github.io/" title="zhchbin" target="_blank">zhchbin</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.algorithmdog.com/" title="算法狗" target="_blank">算法狗</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.52cs.org/" title="我爱计算机" target="_blank">我爱计算机</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://wdxtub.lofter.com/" title="我的 Lofter" target="_blank">我的 Lofter</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://wdxtub.com/interview/" title="刷题笔记" target="_blank">刷题笔记</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active" style="opacity: 1; display: block; transform: translateX(0px);">
+          <div class="post-toc" style="max-height: 508px; width: calc(100% + 0px);">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E9%87%8D%E6%9E%84%E5%8E%9F%E5%88%99"><span class="nav-number">1.</span> <span class="nav-text">重构原则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A3%E7%A0%81%E7%9A%84%E5%9D%8F%E5%91%B3%E9%81%93"><span class="nav-number">2.</span> <span class="nav-text">代码的坏味道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%9E%84%E7%AD%91%E6%B5%8B%E8%AF%95%E4%BD%93%E7%B3%BB"><span class="nav-number">3.</span> <span class="nav-text">构筑测试体系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E9%87%8D%E6%96%B0%E7%BB%84%E7%BB%87%E5%87%BD%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">重新组织函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8F%90%E7%82%BC%E5%87%BD%E6%95%B0-Extract-Method"><span class="nav-number">4.1.</span> <span class="nav-text">提炼函数 Extract Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0-Inline-Method"><span class="nav-number">4.2.</span> <span class="nav-text">内联函数 Inline Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%86%85%E8%81%94%E4%B8%B4%E6%97%B6%E5%8F%98%E9%87%8F-Inline-Temp"><span class="nav-number">4.3.</span> <span class="nav-text">内联临时变量 Inline Temp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E6%9F%A5%E8%AF%A2%E5%8F%96%E4%BB%A3%E4%B8%B4%E6%97%B6%E5%8F%98%E9%87%8F-Replace-Temp-with-Query"><span class="nav-number">4.4.</span> <span class="nav-text">以查询取代临时变量 Replace Temp with Query</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%BC%95%E5%85%A5%E8%A7%A3%E9%87%8A%E6%80%A7%E5%8F%98%E9%87%8F-Introduce-Explaining-Variable"><span class="nav-number">4.5.</span> <span class="nav-text">引入解释性变量 Introduce Explaining Variable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%88%86%E8%A7%A3%E4%B8%B4%E6%97%B6%E5%8F%98%E9%87%8F-Split-Temporary-Variable"><span class="nav-number">4.6.</span> <span class="nav-text">分解临时变量 Split Temporary Variable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%A7%BB%E9%99%A4%E5%AF%B9%E5%8F%82%E6%95%B0%E7%9A%84%E8%B5%8B%E5%80%BC-Remove-Assignments-to-Parameters"><span class="nav-number">4.7.</span> <span class="nav-text">移除对参数的赋值 Remove Assignments to Parameters</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1%E5%8F%96%E4%BB%A3%E5%87%BD%E6%95%B0-Replace-Method-with-Method-Object"><span class="nav-number">4.8.</span> <span class="nav-text">以函数对象取代函数 Replace Method with Method Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95-Substitute-Algorithm"><span class="nav-number">4.9.</span> <span class="nav-text">替换算法  Substitute Algorithm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%9C%A8%E5%AF%B9%E8%B1%A1%E4%B9%8B%E9%97%B4%E6%90%AC%E7%A7%BB%E7%89%B9%E6%80%A7"><span class="nav-number">5.</span> <span class="nav-text">在对象之间搬移特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%90%AC%E7%A7%BB%E5%87%BD%E6%95%B0-Move-Method"><span class="nav-number">5.1.</span> <span class="nav-text">搬移函数 Move Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%90%AC%E7%A7%BB%E5%AD%97%E6%AE%B5-Move-Field"><span class="nav-number">5.2.</span> <span class="nav-text">搬移字段 Move Field</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8F%90%E7%82%BC%E7%B1%BB-Extract-Class"><span class="nav-number">5.3.</span> <span class="nav-text">提炼类 Extract Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E7%B1%BB%E5%86%85%E8%81%94%E5%8C%96-Inline-Class"><span class="nav-number">5.4.</span> <span class="nav-text">将类内联化 Inline Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E9%9A%90%E8%97%8F%E5%A7%94%E6%89%98%E5%85%B3%E7%B3%BB-Hide-Delegate"><span class="nav-number">5.5.</span> <span class="nav-text">隐藏委托关系 Hide Delegate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%A7%BB%E9%99%A4%E4%B8%AD%E9%97%B4%E4%BA%BA-Remove-Middle-Man"><span class="nav-number">5.6.</span> <span class="nav-text">移除中间人 Remove Middle Man</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%BC%95%E5%85%A5%E5%A4%96%E5%8A%A0%E5%87%BD%E6%95%B0-Introduce-Foreign-Method"><span class="nav-number">5.7.</span> <span class="nav-text">引入外加函数 Introduce Foreign Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%BC%95%E5%85%A5%E6%9C%AC%E5%9C%B0%E6%89%A9%E5%B1%95-Introduce-Local-Extension"><span class="nav-number">5.8.</span> <span class="nav-text">引入本地扩展 Introduce Local Extension</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E9%87%8D%E6%96%B0%E7%BB%84%E7%BB%87%E6%95%B0%E6%8D%AE"><span class="nav-number">6.</span> <span class="nav-text">重新组织数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E8%87%AA%E5%B0%81%E8%A3%85%E5%AD%97%E6%AE%B5-Self-Encapsulate-Field"><span class="nav-number">6.1.</span> <span class="nav-text">自封装字段 Self Encapsulate Field</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%AF%B9%E8%B1%A1%E5%8F%96%E4%BB%A3%E6%95%B0%E6%8D%AE%E5%80%BC-Replace-Data-Value-with-Object"><span class="nav-number">6.2.</span> <span class="nav-text">以对象取代数据值 Replace Data Value with Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E5%80%BC%E5%AF%B9%E8%B1%A1%E6%94%B9%E4%B8%BA%E5%BC%95%E7%94%A8%E5%AF%B9%E8%B1%A1-Change-Value-to-Reference"><span class="nav-number">6.3.</span> <span class="nav-text">将值对象改为引用对象 Change Value to Reference</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E5%BC%95%E7%94%A8%E5%AF%B9%E8%B1%A1%E6%94%B9%E4%B8%BA%E5%80%BC%E5%AF%B9%E8%B1%A1-Change-Reference-to-Value"><span class="nav-number">6.4.</span> <span class="nav-text">将引用对象改为值对象 Change Reference to Value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%AF%B9%E8%B1%A1%E5%8F%96%E4%BB%A3%E6%95%B0%E7%BB%84-Replace-Array-with-Object"><span class="nav-number">6.5.</span> <span class="nav-text">以对象取代数组 Replace Array with Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%A4%8D%E5%88%B6%E3%80%8E%E8%A2%AB%E7%9B%91%E8%A7%86%E7%9A%84%E6%95%B0%E6%8D%AE%E3%80%8F-Duplicate-Observed-Data"><span class="nav-number">6.6.</span> <span class="nav-text">复制『被监视的数据』 Duplicate Observed Data</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E5%8D%95%E5%90%91%E5%85%B3%E8%81%94%E6%94%B9%E4%B8%BA%E5%8F%8C%E5%90%91%E5%85%B3%E8%81%94-Change-Unidirectional-Association-to-Bidirectional"><span class="nav-number">6.7.</span> <span class="nav-text">将单向关联改为双向关联 Change Unidirectional Association to Bidirectional</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E5%8F%8C%E5%90%91%E5%85%B3%E8%81%94%E6%94%B9%E4%B8%BA%E5%8D%95%E5%90%91%E5%85%B3%E8%81%94-Change-Bidirectional-Association-to-Unidirectional"><span class="nav-number">6.8.</span> <span class="nav-text">将双向关联改为单向关联 Change Bidirectional Association to Unidirectional</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%AD%97%E9%9D%A2%E5%B8%B8%E9%87%8F%E5%8F%96%E4%BB%A3%E9%AD%94%E6%B3%95%E6%95%B0-Replace-Magic-Number-with-Symbolic-Constant"><span class="nav-number">6.9.</span> <span class="nav-text">以字面常量取代魔法数 Replace Magic Number with Symbolic Constant</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%81%E8%A3%85%E5%AD%97%E6%AE%B5-Encapsulate-Field"><span class="nav-number">6.10.</span> <span class="nav-text">封装字段 Encapsulate Field</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%81%E8%A3%85%E9%9B%86%E5%90%88-Encapsulate-Collection"><span class="nav-number">6.11.</span> <span class="nav-text">封装集合 Encapsulate Collection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%8F%96%E4%BB%A3%E8%AE%B0%E5%BD%95-Replace-Record-with-Data-Class"><span class="nav-number">6.12.</span> <span class="nav-text">以数据类取代记录 Replace Record with Data Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E7%B1%BB%E5%8F%96%E4%BB%A3%E7%B1%BB%E5%9E%8B%E7%A0%81-Replace-Type-Code-with-Class"><span class="nav-number">6.13.</span> <span class="nav-text">以类取代类型码 Replace Type Code with Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%AD%90%E7%B1%BB%E5%8F%96%E4%BB%A3%E7%B1%BB%E5%9E%8B%E7%A0%81-Replace-Type-Code-with-Subclasses"><span class="nav-number">6.14.</span> <span class="nav-text">以子类取代类型码 Replace Type Code with Subclasses</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5-State-Strategy-%E5%8F%96%E4%BB%A3%E7%B1%BB%E5%9E%8B%E7%A0%81-Replace-Type-Code-with-State-Strategy"><span class="nav-number">6.15.</span> <span class="nav-text">以 State/Strategy 取代类型码 Replace Type Code with State/Strategy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%AD%97%E6%AE%B5%E5%8F%96%E4%BB%A3%E5%AD%90%E7%B1%BB-Replace-Subclass-with-Fields"><span class="nav-number">6.16.</span> <span class="nav-text">以字段取代子类 Replace Subclass with Fields</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%AE%80%E5%8C%96%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">7.</span> <span class="nav-text">简化条件表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%88%86%E8%A7%A3%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F-Decompose-Conditional"><span class="nav-number">7.1.</span> <span class="nav-text">分解条件表达式 Decompose Conditional</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%90%88%E5%B9%B6%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F-Consolidate-Conditional-Expression"><span class="nav-number">7.2.</span> <span class="nav-text">合并条件表达式 Consolidate Conditional Expression</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%90%88%E5%B9%B6%E9%87%8D%E5%A4%8D%E7%9A%84%E6%9D%A1%E4%BB%B6%E7%89%87%E6%AE%B5-Consolidate-Duplicate-Conditional-Fragments"><span class="nav-number">7.3.</span> <span class="nav-text">合并重复的条件片段 Consolidate Duplicate Conditional Fragments</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%A7%BB%E9%99%A4%E6%8E%A7%E5%88%B6%E6%A0%87%E8%AE%B0-Remove-Control-Flag"><span class="nav-number">7.4.</span> <span class="nav-text">移除控制标记 Remove Control Flag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5-Guard-%E8%AF%AD%E5%8F%A5%E5%8F%96%E4%BB%A3%E5%B5%8C%E5%A5%97%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F-Replace-Nested-Conditional-with-Guard-Clauses"><span class="nav-number">7.5.</span> <span class="nav-text">以 Guard 语句取代嵌套条件表达式 Replace Nested Conditional with Guard Clauses</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%A4%9A%E6%80%81%E5%8F%96%E4%BB%A3%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F-Replace-Conditional-with-Polymorphism"><span class="nav-number">7.6.</span> <span class="nav-text">以多态取代条件表达式 Replace Conditional with Polymorphism</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%BC%95%E5%85%A5-Null-%E5%AF%B9%E8%B1%A1"><span class="nav-number">7.7.</span> <span class="nav-text">引入 Null 对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%BC%95%E5%85%A5%E6%96%AD%E8%A8%80-Introduce-Assertion"><span class="nav-number">7.8.</span> <span class="nav-text">引入断言 Introduce Assertion</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%AE%80%E5%8C%96%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8"><span class="nav-number">8.</span> <span class="nav-text">简化函数调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%87%BD%E6%95%B0%E6%94%B9%E5%90%8D-Rename-Method"><span class="nav-number">8.1.</span> <span class="nav-text">函数改名 Rename Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%B7%BB%E5%8A%A0%E5%8F%82%E6%95%B0-Add-Parameter"><span class="nav-number">8.2.</span> <span class="nav-text">添加参数 Add Parameter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%A7%BB%E9%99%A4%E5%8F%82%E6%95%B0-Remove-Parameter"><span class="nav-number">8.3.</span> <span class="nav-text">移除参数 Remove Parameter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E6%9F%A5%E8%AF%A2%E5%87%BD%E6%95%B0%E5%92%8C%E4%BF%AE%E6%94%B9%E5%87%BD%E6%95%B0%E5%88%86%E8%A3%82-Separate-Query-from-Modifier"><span class="nav-number">8.4.</span> <span class="nav-text">将查询函数和修改函数分裂 Separate Query from Modifier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A4%E5%87%BD%E6%95%B0%E6%90%BA%E5%B8%A6%E5%8F%82%E6%95%B0-Parameterized-Method"><span class="nav-number">8.5.</span> <span class="nav-text">令函数携带参数 Parameterized Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E6%98%8E%E7%A1%AE%E5%87%BD%E6%95%B0%E5%8F%96%E4%BB%A3%E5%8F%82%E6%95%B0-Replace-Parameter-with-Explicit-Methods"><span class="nav-number">8.6.</span> <span class="nav-text">以明确函数取代参数 Replace Parameter with Explicit Methods</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BF%9D%E6%8C%81%E5%AF%B9%E8%B1%A1%E5%AE%8C%E6%95%B4-Preserve-Whole-Object"><span class="nav-number">8.7.</span> <span class="nav-text">保持对象完整 Preserve Whole Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%87%BD%E6%95%B0%E5%8F%96%E4%BB%A3%E5%8F%82%E6%95%B0-Replace-Parameter-with-Method"><span class="nav-number">8.8.</span> <span class="nav-text">以函数取代参数 Replace Parameter with Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%BC%95%E5%85%A5%E5%8F%82%E6%95%B0%E5%AF%B9%E8%B1%A1-Introduce-Parameter-Object"><span class="nav-number">8.9.</span> <span class="nav-text">引入参数对象 Introduce Parameter Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E7%A7%BB%E9%99%A4%E8%AE%BE%E5%80%BC%E5%87%BD%E6%95%B0-Remove-Setting-Method"><span class="nav-number">8.10.</span> <span class="nav-text">移除设值函数 Remove Setting Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E9%9A%90%E8%97%8F%E5%87%BD%E6%95%B0-Hide-Method"><span class="nav-number">8.11.</span> <span class="nav-text">隐藏函数 Hide Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%B7%A5%E5%8E%82%E5%87%BD%E6%95%B0%E5%8F%96%E4%BB%A3%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-Replace-Constructor-with-Factory-Method"><span class="nav-number">8.12.</span> <span class="nav-text">以工厂函数取代构造函数 Replace Constructor with Factory Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%81%E8%A3%85%E5%90%91%E4%B8%8B%E8%BD%AC%E5%9E%8B-Encapsulate-Downcast"><span class="nav-number">8.13.</span> <span class="nav-text">封装向下转型 Encapsulate Downcast</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%BC%82%E5%B8%B8%E5%8F%96%E4%BB%A3%E9%94%99%E8%AF%AF%E7%A0%81-Replace-Error-Code-with-Exception"><span class="nav-number">8.14.</span> <span class="nav-text">以异常取代错误码 Replace Error Code with Exception</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E6%B5%8B%E8%AF%95%E5%8F%96%E4%BB%A3%E5%BC%82%E5%B8%B8-Replace-Exception-with-Test"><span class="nav-number">8.15.</span> <span class="nav-text">以测试取代异常 Replace Exception with Test</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%A4%84%E7%90%86%E6%A6%82%E6%8B%AC%E5%85%B3%E7%B3%BB"><span class="nav-number">9.</span> <span class="nav-text">处理概括关系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%AD%97%E6%AE%B5%E4%B8%8A%E7%A7%BB-Pull-Up-Field"><span class="nav-number">9.1.</span> <span class="nav-text">字段上移 Pull Up Field</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%87%BD%E6%95%B0%E4%B8%8A%E7%A7%BB-Pull-Up-Method"><span class="nav-number">9.2.</span> <span class="nav-text">函数上移 Pull Up Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E6%9C%AC%E4%BD%93%E4%B8%8A%E7%A7%BB-Pull-Up-Constructor-Body"><span class="nav-number">9.3.</span> <span class="nav-text">构造函数本体上移 Pull Up Constructor Body</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%87%BD%E6%95%B0%E4%B8%8B%E7%A7%BB-Push-Down-Method"><span class="nav-number">9.4.</span> <span class="nav-text">函数下移 Push Down Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%AD%97%E6%AE%B5%E4%B8%8B%E7%A7%BB-Push-Down-Field"><span class="nav-number">9.5.</span> <span class="nav-text">字段下移 Push Down Field</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8F%90%E7%82%BC%E5%AD%90%E7%B1%BB-Extract-Subclass"><span class="nav-number">9.6.</span> <span class="nav-text">提炼子类 Extract Subclass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8F%90%E7%82%BC%E8%B6%85%E7%B1%BB-Extract-Superclass"><span class="nav-number">9.7.</span> <span class="nav-text">提炼超类 Extract Superclass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8F%90%E7%82%BC%E6%8E%A5%E5%8F%A3-Extract-Interface"><span class="nav-number">9.8.</span> <span class="nav-text">提炼接口 Extract Interface</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8A%98%E5%8F%A0%E7%BB%A7%E6%89%BF%E4%BD%93%E7%B3%BB-Collapse-Hierarchy"><span class="nav-number">9.9.</span> <span class="nav-text">折叠继承体系 Collapse Hierarchy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%A1%91%E9%80%A0%E6%A8%A1%E6%9D%BF%E5%87%BD%E6%95%B0-Form-Template-Method"><span class="nav-number">9.10.</span> <span class="nav-text">塑造模板函数 Form Template Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E5%A7%94%E6%89%98%E5%8F%96%E4%BB%A3%E7%BB%A7%E6%89%BF-Replace-Inheritance-with-Delegation"><span class="nav-number">9.11.</span> <span class="nav-text">以委托取代继承 Replace Inheritance with Delegation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E4%BB%A5%E7%BB%A7%E6%89%BF%E5%8F%96%E4%BB%A3%E5%A7%94%E6%89%98-Replace-Delegation-with-Inheritance"><span class="nav-number">9.12.</span> <span class="nav-text">以继承取代委托 Replace Delegation with Inheritance</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%A4%A7%E5%9E%8B%E9%87%8D%E6%9E%84"><span class="nav-number">10.</span> <span class="nav-text">大型重构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%A2%B3%E7%90%86%E5%B9%B6%E5%88%86%E8%A7%A3%E7%BB%A7%E6%89%BF%E4%BD%93%E7%B3%BB-Tease-Apart-Inheritance"><span class="nav-number">10.1.</span> <span class="nav-text">梳理并分解继承体系 Tease Apart Inheritance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E8%BF%87%E7%A8%8B%E5%8C%96%E8%AE%BE%E8%AE%A1%E8%BD%AC%E5%8C%96%E4%B8%BA%E5%AF%B9%E8%B1%A1%E8%AE%BE%E8%AE%A1-Convert-Procedural-Design-to-Objects"><span class="nav-number">10.2.</span> <span class="nav-text">将过程化设计转化为对象设计 Convert Procedural Design to Objects</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E5%B0%86%E9%A2%86%E5%9F%9F%E5%92%8C%E5%B1%95%E7%A4%BA%E5%88%86%E7%A6%BB-Separate-Domain-from-Presentation"><span class="nav-number">10.3.</span> <span class="nav-text">将领域和展示分离 Separate Domain from Presentation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="https://wdxtub.com/2016/08/09/refactoring-clip/#%E6%8F%90%E7%82%BC%E7%BB%A7%E6%89%BF%E4%BD%93%E7%B3%BB-Extract-Hierarchy"><span class="nav-number">10.4.</span> <span class="nav-text">提炼继承体系 Extract Hierarchy</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  ©  2013 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wdxtub</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io/">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async="" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/index.js"></script>
+
+  
+  <script type="text/javascript" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/jquery.lazyload.js"></script>
+
+  
+  <script type="text/javascript" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/utils.js"></script>
+
+  <script type="text/javascript" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/motion.js"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/scrollspy.js"></script>
+<script type="text/javascript" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "617c94df1165440eaa2e0f239c18d092",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/loader.js"></script>
+  
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config;executed=true">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config;executed=true">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script src="./【重构 改善既有代码的设计】读书笔记 _ 小土刀_files/MathJax.js" id=""></script>
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  
+
+
+
+</body></html>
