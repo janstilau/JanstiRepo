@@ -20,17 +20,17 @@ struct MyStack {
     int mData[10000];
     int mLength = 0;
     int mMaxSize = kStackDefaultSize;
-
+    
     bool push(int value) {
         if (mLength >= mMaxSize - 1) { return false; }
         mData[mLength] = value;
         ++mLength;
         return true;
     };
-
+    
     bool pop(int &value) {
         if (mLength <= 0) { return false; }
-//        value = mData[mLength]; 这几思路有问题, mLength 记录的应该是下一个可插入的位置, 所以这里应该是 mLength - 1
+        //        value = mData[mLength]; 这几思路有问题, mLength 记录的应该是下一个可插入的位置, 所以这里应该是 mLength - 1
         value = mData[mLength - 1];
         --mLength;
         return true;
@@ -46,14 +46,14 @@ struct MyQueue {
     MyQueue(){
         size = head = tail = 0;
     }
-//    原始版本
-//    bool enqueue(int i) {
-//        if (tail == 100000) { return false; }
-//        mData[tail++] = i;
-//        size++;
-//        return true;
-//    }
-//    自动重排版本
+    //    原始版本
+    //    bool enqueue(int i) {
+    //        if (tail == 100000) { return false; }
+    //        mData[tail++] = i;
+    //        size++;
+    //        return true;
+    //    }
+    //    自动重排版本
     bool enqueue(int i) {
         if (tail == 10000) {
             if (head == 0) { return false;}
