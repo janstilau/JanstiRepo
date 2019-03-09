@@ -126,7 +126,11 @@ struct AutoMallocQueue {
         mSize++;
         return true;
     }
-};
+};
+
+/*
+ 循环队列, 就是 用 %操作, 算出下一个插入的位置, 这样, 出队之后空余出来的前半部分的空间还能继续使用. 但是需要注意的是, 这个时候的队列的空满判断, 就有了改变, 如果不是循环队列, 空是指头指针和尾指针相同, 满则是尾指针到达最大位置. 而循环队列, 空还是两个指针相同, 满则是尾指针是头指针上一个位置. 判断则公式则是 (front+1)%n=end. 也就是说, 循环队列浪费了一个空间, 当做满的标志.
+ */
 
 const int AutoMallocQueue::kDeafultQeueueSize = 1000;
 
@@ -221,6 +225,45 @@ int compute(char exp[]) {
     numStack.pop(result);
     return result;
 }
+
+// 不带头结点的链表模拟栈.
+/*
+ 用链表模拟栈, 那么链表必然是头插法. 因为只有用头插法, 才能保持入栈出栈操作的时间复杂度为o1.
+ */
+
+struct LNode {
+    int data;
+    LNode *next;
+};
+
+void initStackL(LNode *&LNode) {
+    LNode = nullptr;
+}
+
+bool isEmpty(LNode &l) {
+    return l == nullptr;
+}
+
+void push(LNode *&l, int data) {
+    LNode *newNode = (LNode *)malloc(sizeof(LNode));
+    newNode->data = data;
+    newNode->next = l;
+    l = newNode;
+}
+
+void pop(Lnode *&l, int &result) {
+    if (l == nullptr) { return; }
+    result = l->data;
+    l = l->next;
+}
+
+/*
+ 对于队列和栈, 能够用链表模拟, 也能够用数组模拟. 因为, 这两个都是线性表, 而队列和栈, 则是访问受限的线性表. 用数组模拟的场景比较简单, 可以直接用数字代表指针, 也就是利用了数组随机访问的特性. 用链表模拟栈, 一定要用头插法, 这样才能达到插入删除 O1的目的, 而链队, 则需要维护两个指针, 并且在第一个入队, 和最后一个出队的时候, 需要同时操作这两个指针. 这个时候, 队列为空就不是 head == tail, 而是 head == null 或者 tail == null. 在第一个入队的时候, head 和 tail 指向同一个位置, 当队列为空的时候, head tail 都置为 null.
+ */
+
+/*
+ 抽象数据类型, ADT, abstract data type. 是对功能的一种描述, 只关心对象的外在表现, 而不关心对象的内在实现. 栈和队列, 更多的是一种抽象数据类型, 只要满足了先入先出, 陷入后出的这种模型的对象, 都能够称之为栈, 队列, 而具体实现的方式, 或者是数组, 或者是链表, 也可以用其他的实现模型.
+ */
 
 int main(int argc, const char * argv[]) {
     return 0;
