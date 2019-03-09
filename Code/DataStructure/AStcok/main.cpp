@@ -169,6 +169,58 @@ struct LinkQueue {
     }
 };
 
+// 例题, 判断小括号匹配
+/*
+ 在解决问题的时候, 出现了一个子问题, 现有的条件不能解决他, 需要记下, 等到子问题解决之后在回来解决原有的问题, 这个时候就要用到栈, 因为栈有着记忆的功能.
+ 这其实就是递归的思路, 或者说, 递归的思路就是栈的思路. 所以, 递归本质上就是一个栈的使用.
+ */
+bool match(char exp[], int n) {
+    MyStack bracketContainer;
+    for (int i = 0; i < n; ++i) {
+        char oneChar = exp[i];
+        if (oneChar == '(') {
+            bracketContainer.push(oneChar);
+        } else if (oneChar == ')') {
+            if (bracketContainer.mLength == 0) {
+                return false;
+            } else {
+                int value;
+                bracketContainer.pop(value);
+            }
+        }
+    }
+    if (bracketContainer.mLength) { return false; }
+    return true;
+}
+
+// 例题, 后缀表达式求值.
+/*
+ (a+b+c*d)/e, 后缀表达为 abcd*++e/, 后缀表达式是没有运算符优先级问题的.
+ 后缀表达式, 当扫描到字符的时候, 应该怎么计算字符的值, 这个时候没有出现运算符的时候是没有办法计算的. 所以, 要先存储之前的字符值, 等到运算符的时候在取出计算, 这符合我们刚才提到的栈的使用场景.
+ */
+
+int op(int left, int right, char operatorChar) {
+    return 0;// 按照 +, -, *, / 返回运算的结果.
+}
+// 按理说, 这里应该有着对于表达式的错误检查, 所以, 应该有着一个 error 值作为判断格式正确与否的表示.
+int compute(char exp[]) {
+    MyStack numStack;
+    int result = -1;
+    for (int i = 0; exp[i] != '\0'; i++) {
+        if ('0' <= value && value <= '9') {
+            numStack.push(value - '0');// 这里, 应该对字符数字进行一次转化. 因为我们知道 Stack 里面, 存放的就应该是数值.
+        } else {
+            int right;
+            numStack.pop(right);
+            int left;
+            numStack.pop(left);
+            int opResult = op(left, right, value);
+            numStack.push(opResult);
+        }
+    }
+    numStack.pop(result);
+    return result;
+}
 
 int main(int argc, const char * argv[]) {
     return 0;
