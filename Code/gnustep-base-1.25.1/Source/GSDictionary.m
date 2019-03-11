@@ -52,7 +52,7 @@
 @interface GSDictionary : NSDictionary
 {
 @public
-  GSIMapTable_t	map;
+  GSIMapTable_t	map;// 底层用的 mapTable
 }
 @end
 

@@ -419,6 +419,7 @@ static Class	GSInlineArrayClass;
 }
 @end
 
+// 真正的 mutableArray 实现
 @implementation GSMutableArray
 
 + (void) initialize
@@ -543,7 +544,7 @@ static Class	GSInlineArrayClass;
     {
       NSUInteger	i;
 
-      for (i = 0; i < count; i++)
+      for (i = 0; i < count; i++) // 依次塞入并且 retain
 	{
 	  if ((_contents_array[i] = RETAIN(objects[i])) == nil)
 	    {
@@ -579,11 +580,11 @@ static Class	GSInlineArrayClass;
     {
       [self _raiseRangeExceptionWithIndex: index from: _cmd];
     }
-  if (_count == _capacity)
+  if (_count == _capacity)// 首先会进行扩容操作.
     {
       id	*ptr;
       size_t	size = (_capacity + _grow_factor)*sizeof(id);
-
+        // realloc 会将原来的内存复制过去. 所以这里可以没有.复制的操作
       ptr = NSZoneRealloc([self zone], _contents_array, size);
       if (ptr == 0)
 	{
@@ -592,10 +593,10 @@ static Class	GSInlineArrayClass;
 	}
       _contents_array = ptr;
       _capacity += _grow_factor;
-      _grow_factor = _capacity/2;
+      _grow_factor = _capacity/2; // 这里, 一致在更新 growFactor 的值. 看来在 iOS 里面, 更新的频率是 原来的容量 /2
     }
   memmove(&_contents_array[index+1], &_contents_array[index],
-    (_count - index) * sizeof(id));
+    (_count - index) * sizeof(id));// 因为这个调用时 insert, 所以这里进行了数据的搬移.
   /*
    *	Make sure the array is 'sane' so that it can be deallocated
    *	safely by an autorelease pool if the '[anObject retain]' causes
@@ -603,7 +604,7 @@ static Class	GSInlineArrayClass;
    */
   _contents_array[index] = nil;
   _count++;
-  _contents_array[index] = RETAIN(anObject);
+  _contents_array[index] = RETAIN(anObject); // 这里, 数组里面对传过来的对象进行了引用操作.
   _version++;
 }
 
@@ -640,7 +641,7 @@ static Class	GSInlineArrayClass;
               last = c;
               rel = [o methodForSelector: @selector(release)];
             }
-          (*rel)(o, @selector(release));
+          (*rel)(o, @selector(release));// 这里调用了 release 方法.
           _contents_array[pos] = nil;
         }
       _version++;
