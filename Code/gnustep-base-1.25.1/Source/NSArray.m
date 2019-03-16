@@ -1,35 +1,3 @@
-/** NSArray - Array object to hold other objects.
-   Copyright (C) 1995-2015 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   From skeleton by:  Adam Fedor <fedor@boulder.colorado.edu>
-   Created: March 1995
-
-   Rewrite by: Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   January 1998 - new methods and changes as documented for Rhapsody plus
-   changes of array indices to type unsigned, plus major efficiency hacks.
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSArray class reference</title>
-   $Date$ $Revision$
-   */
-
 #import "common.h"
 #import "Foundation/NSArray.h"
 #import "Foundation/NSEnumerator.h"
@@ -47,7 +15,6 @@
 #import "Foundation/NSSet.h"
 #import "Foundation/NSUserDefaults.h"
 #import "Foundation/NSIndexSet.h"
-// For private method _decodeArrayOfObjectsForKey:
 #import "Foundation/NSKeyedArchiver.h"
 #import "GSPrivate.h"
 #import "GSFastEnumeration.h"
