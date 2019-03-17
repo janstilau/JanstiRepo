@@ -53,6 +53,10 @@ typedef NSUInteger NSBinarySearchingOptions;
 - (BOOL) containsObject: (GS_GENERIC_TYPE(ElementT))anObject;
 
 /** <override-subclass />
+ count 方法是其他方法的基础, 苹果的文档规定了这个方法子类化的时候必须要实现.
+ objectAtIndex: 这个方法也是子类化的时候必须要实现的方法.
+ Remember that NSArray is the public interface for a class cluster
+ NSArray 不能当做一个对象来看待, 它更多的是一个接口.
  * Returns the number of elements contained in the receiver.
  */
 - (NSUInteger) count;
@@ -71,6 +75,11 @@ typedef NSUInteger NSBinarySearchingOptions;
 - (instancetype) initWithArray: (GS_GENERIC_CLASS(NSArray, ElementT)*)array
                      copyItems: (BOOL)shouldCopy;
 #endif
+    
+/*
+ 这两个方法, 都是 array 内部实现的序列化方法所产生的文件才行. array 序列化成为文件的话, 就是 plist 文件.
+ */
+    
 - (instancetype) initWithContentsOfFile: (NSString*)file;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (instancetype) initWithContentsOfURL: (NSURL*)aURL;

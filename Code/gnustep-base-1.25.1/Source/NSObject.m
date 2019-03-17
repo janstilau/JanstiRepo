@@ -768,12 +768,13 @@ inline id
 NSAllocateObject (Class aClass, NSUInteger extraBytes, NSZone *zone)
 {
 #ifdef OBJC_CAP_ARC
-  return class_createInstance(aClass, extraBytes);
+  return class_createInstance(aClass, extraBytes); // 如果是 arc 环境的话, 直接调用 runtime 的方法.
 #else
   id	new;
   int	size;
 
   NSCAssert((!class_isMetaClass(aClass)), @"Bad class for new object");
+    // 首先拿到大小.
   size = class_getInstanceSize(aClass) + extraBytes + sizeof(struct obj_layout);
   if (zone == 0)
     {
@@ -782,9 +783,9 @@ NSAllocateObject (Class aClass, NSUInteger extraBytes, NSZone *zone)
   new = NSZoneMalloc(zone, size);
   if (new != nil)
     {
-      memset (new, 0, size);
+      memset (new, 0, size); // 为什么 OC 的对象不需要c++的构造函数挨个赋值, 因为这里有一个 memset 函数.
       new = (id)&((obj)new)[1];
-      object_setClass(new, aClass);
+      object_setClass(new, aClass); // 这里, 应该就是设置 isa 指针而已.
       AADD(aClass, new);
     }
 
@@ -2204,7 +2205,7 @@ static id gs_weak_load(id obj)
     [NSException raise: NSInvalidArgumentException
 	        format: @"%s +setVersion: may not set a negative version",
 			GSClassNameFromObject(self)];
-  class_setVersion(self, aVersion);
+  class_setVersion(self, aVersion); // 业务代码不应该出现这些, 这应该都是系统代码使用的
   return self;
 }
 

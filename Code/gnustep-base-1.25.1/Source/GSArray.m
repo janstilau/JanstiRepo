@@ -1,30 +1,3 @@
-/** Concrete implementation of NSArray
-   Copyright (C) 1995, 1996, 1998, 1999 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Date: March 1995
-   Rewrite by:  Richard Frith-Macdonald <richard@brainstorm.co.uk>
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   $Date$ $Revision$
-   */
-
 #import "common.h"
 #import "Foundation/NSArray.h"
 #import "GNUstepBase/GSObjCRuntime.h"
@@ -375,6 +348,10 @@ static Class	GSInlineArrayClass;
 
 @end
 
+
+/*
+ 这个类实际上, 管理了内存, 而它是GSA rray 的子类, 所有的接口操作, 都在GSArray 中定义, 这个类子类化就是为了管理内存.
+ */
 @implementation	GSInlineArray
 - (void) dealloc
 {
@@ -394,6 +371,7 @@ static Class	GSInlineArrayClass;
 {
   return [self initWithObjects: 0 count: 0];
 }
+//
 - (id) initWithObjects: (const id[])objects count: (NSUInteger)count
 {
   _contents_array
@@ -1191,9 +1169,9 @@ static Class	GSInlineArrayClass;
 }
 
 - (id) initWithObjects: (const id[])objects count: (NSUInteger)count
-{
+{ // GSInlineArrayClass == [GSInlineArray class]
   self = (id)NSAllocateObject(GSInlineArrayClass, sizeof(id)*count,
-    [self zone]);
+    [self zone]); // 这里, 在 init 方法的内部, 又一次调用了 alloc 方法.
   return [self initWithObjects: objects count: count];
 }
 
