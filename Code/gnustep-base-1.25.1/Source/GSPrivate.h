@@ -63,7 +63,7 @@ struct objc_category;
 typedef struct objc_category* Category;
 #endif
 
-@interface GSArray : NSArray
+@interface GSArray : NSArray //NSArray 的子类,  所以, NSArray 的那些操作这里都会有.
 {
 @public
   id		*_contents_array;

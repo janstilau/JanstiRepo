@@ -1115,6 +1115,8 @@ compare(id elem1, id elem2, void* context)
   sortedArray = AUTORELEASE([[NSMutableArrayClass allocWithZone:
     NSDefaultMallocZone()] initWithArray: self copyItems: NO]);
   [sortedArray sortUsingFunction: comparator context: context];
+    
+    // 先复制一个可变的版本, 然后调用可变版本的 sort 方法, 然后返回.
 
   return GS_IMMUTABLE(sortedArray);
 }
@@ -1239,6 +1241,7 @@ compare(id elem1, id elem2, void* context)
       NSUInteger	i;
 
       [s appendString: [[self objectAtIndex: 0] description]];
+    // 先写出跳出循环的逻辑, 然后用循环.
       for (i = 1; i < c; i++)
 	{
 	  if (l > 0)
@@ -1270,7 +1273,7 @@ compare(id elem1, id elem2, void* context)
 
       if ([o isKindOfClass: cls])
 	{
-	  if ([extensions containsObject: [o pathExtension]])
+	  if ([extensions containsObject: [o pathExtension]]) // 这里其实也有一遍循环操作. 所以, 如果量特别大, 可以先替换 set, 然后用 set 进行比较.
 	    {
 	      (*add)(a, addSel, o);
 	    }
@@ -1284,7 +1287,7 @@ compare(id elem1, id elem2, void* context)
  * which is present in the otherArray as determined by using the
  * -containsObject: method.
  */
-- (id) firstObjectCommonWithArray: (NSArray*)otherArray
+- (id) firstObjectCommonWithArray: (NSArray*)otherArray // 这破函数谁会用...
 {
   NSUInteger i, c = [self count];
   id o;
@@ -1317,10 +1320,10 @@ compare(id elem1, id elem2, void* context)
   else
     {
       GS_BEGINIDBUF(objects, aRange.length);
-
       [self getObjects: objects range: aRange];
       na = [NSArray arrayWithObjects: objects count: aRange.length];
       GS_ENDIDBUF();
+        // 这两个宏必须同时调用, 因为如果上面的宏, 是分配的堆空间的数据, 这里不调用 end 宏, 会有内存释放的.
     }
   return na;
 }
@@ -1359,7 +1362,7 @@ compare(id elem1, id elem2, void* context)
  * Returns the result of invoking -descriptionWithLocale:indent: with a nil
  * locale and zero indent.
  */
-- (NSString*) description
+- (NSString*) description // 所以, 这里其实是个函数调用的关系.
 {
   return [self descriptionWithLocale: nil];
 }
@@ -1472,6 +1475,8 @@ compare(id elem1, id elem2, void* context)
  * A special case: the key "count" is not forwarded to each object
  * of the receiver but returns the number of objects of the receiver.<br/>
  */
+
+//  NSArray 对于 valueForKey 的特殊实现.
 - (id) valueForKey: (NSString*)key
 {
   id result = nil;
@@ -1506,7 +1511,7 @@ compare(id elem1, id elem2, void* context)
             {
               if (null == nil)
 		{
-		  null = RETAIN([NSNull null]);
+		  null = RETAIN([NSNull null]); // 如果这里是 nil, 返回 NSNull null. 其实, 这就是一个单例而已.
 		}
               result = null;
             }
@@ -1519,6 +1524,7 @@ compare(id elem1, id elem2, void* context)
   return result;
 }
 
+// 如果是普通的对象, 那么就是按照 keyPath 进行查找操作, 但是对于 Array 来说, 可以在路径前面加上 average 等对于 array 有着特殊函数的功能描述.
 - (id) valueForKeyPath: (NSString*)path
 {
   id	result = nil;
@@ -1527,7 +1533,7 @@ compare(id elem1, id elem2, void* context)
     {
       NSRange   r;
 
-      r = [path rangeOfString: @"."];
+      r = [path rangeOfString: @"."];// 首先, 判断一下有没有 . 的链接. 如果有话,就要按照路径进行一层层的查找.
       if (r.length == 0)
         {
           if ([path isEqualToString: @"@count"] == YES)
@@ -1542,7 +1548,7 @@ compare(id elem1, id elem2, void* context)
       else
         {
           NSString      *op = [path substringToIndex: r.location];
-          NSString      *rem = [path substringFromIndex: NSMaxRange(r)];
+          NSString      *remains = [path substringFromIndex: NSMaxRange(r)];
           NSUInteger    count = [self count];
 
           if ([op isEqualToString: @"@count"] == YES)
@@ -1560,11 +1566,11 @@ compare(id elem1, id elem2, void* context)
 
                   while ((o = [e nextObject]) != nil)
                     {
-                      d += [[o valueForKeyPath: rem] doubleValue];
+                      d += [[o valueForKeyPath: remains] doubleValue];
                     }
                   d /= count;
                 }
-              result = [NSNumber numberWithDouble: d];
+              result = [NSNumber numberWithDouble: d]; // 这里通过迭代器, 实现了递归操作.
             }
           else if ([op isEqualToString: @"@max"] == YES)
             {
@@ -1575,7 +1581,7 @@ compare(id elem1, id elem2, void* context)
 
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       if (result == nil
                         || [result compare: o] == NSOrderedAscending)
                         {
@@ -1593,7 +1599,7 @@ compare(id elem1, id elem2, void* context)
 
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       if (result == nil
                         || [result compare: o] == NSOrderedDescending)
                         {
@@ -1613,7 +1619,7 @@ compare(id elem1, id elem2, void* context)
 
                   while ((o = [e nextObject]) != nil)
                     {
-                      d += [[o valueForKeyPath: rem] doubleValue];
+                      d += [[o valueForKeyPath: remains] doubleValue];
                     }
                 }
               result = [NSNumber numberWithDouble: d];
@@ -1628,7 +1634,7 @@ compare(id elem1, id elem2, void* context)
                   result = [NSMutableSet set];
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       [result addObjectsFromArray: o];
                     }
                   result = [result allObjects];
@@ -1648,7 +1654,7 @@ compare(id elem1, id elem2, void* context)
                   result = [NSMutableSet set];
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       [result addObject: o];
                     }
                   result = [result allObjects];
@@ -1668,7 +1674,7 @@ compare(id elem1, id elem2, void* context)
                   result = [NSMutableSet set];
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       [result addObjectsFromArray: [o allObjects]];
                     }
                   result = [result allObjects];
@@ -1688,7 +1694,7 @@ compare(id elem1, id elem2, void* context)
                   result = [GSMutableArray array];
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       [result addObjectsFromArray: o];
                     }
                   result = GS_IMMUTABLE(result);
@@ -1708,7 +1714,7 @@ compare(id elem1, id elem2, void* context)
                   result = [GSMutableArray array];
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       [result addObject: o];
                     }
                   result = GS_IMMUTABLE(result);
@@ -1728,7 +1734,7 @@ compare(id elem1, id elem2, void* context)
                   result = [GSMutableArray array];
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       [result addObjectsFromArray: [o allObjects]];
                     }
                   result = GS_IMMUTABLE(result);
@@ -1793,6 +1799,15 @@ compare(id elem1, id elem2, void* context)
 
   {
   GS_DISPATCH_CREATE_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
+      
+      /*
+       #define FOR_IN(type, var, collection) \
+       for (type var in collection)\
+       {
+       #define END_FOR_IN(collection) }
+       有的时候, 宏就是函数. 它能起到很好的提示作用.
+       如果, 是 concurrent 就是一个并发队列, 如果是 serial, 就是一个串行队列.
+       */
   FOR_IN (id, obj, enumerator)
     GS_DISPATCH_SUBMIT_BLOCK(enumQueueGroup, enumQueue, if (YES == shouldStop) {return;}, return, aBlock, obj, count, &shouldStop);
       if (isReverse)
@@ -1904,6 +1919,7 @@ compare(id elem1, id elem2, void* context)
 
   /* If we are enumerating in reverse, use the reverse enumerator for fast
    * enumeration. */
+    // 可以看到, 所谓的 options 都要在代码里一个个的拆解出来.
   if (opts & NSEnumerationReverse)
     {
       enumerator = [self reverseObjectEnumerator];
@@ -2091,6 +2107,10 @@ compare(id elem1, id elem2, void* context)
 /**
  * Replaces objects in the receiver with those from anArray.<br />
  * Raises an exception if given a range extending beyond the array.<br />
+ */
+
+/*
+ 这样写铁定效率特别低, 因为明显应该一次多移动一块内存才好. 但是不要忘记了, 这里的是NSA rray, 它并不知道底部的实现. 万一是用的链表实现的呢.
  */
 - (void) replaceObjectsInRange: (NSRange)aRange
 	  withObjectsFromArray: (NSArray*)anArray
@@ -2412,6 +2432,7 @@ compare(id elem1, id elem2, void* context)
 {
   [self removeAllObjects];
   [self addObjectsFromArray: otherArray];
+    // 这里其实是全删和全加的操作.
 }
 
 /**
@@ -2616,6 +2637,8 @@ compare(id elem1, id elem2, void* context)
 }
 @end
 
+
+// 这里实现的都是最通用的版本, 在实际的子类中, 可以写出更加适合自己数据结构的版本. 比如, GSArray 中, 就是直接能够访问内存的版本.
 @implementation NSArrayEnumerator
 
 - (id) initWithArray: (NSArray*)anArray
