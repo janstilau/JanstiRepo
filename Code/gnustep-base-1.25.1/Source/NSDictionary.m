@@ -39,12 +39,12 @@ static Class NSMutableDictionaryClass;
 static Class GSDictionaryClass;
 static Class GSMutableDictionaryClass;
 
-static SEL	eqSel;
-static SEL	nxtSel;
-static SEL	objSel;
-static SEL	remSel;
-static SEL	setSel;
-static SEL	appSel;
+static SEL	equalSel;
+static SEL	nextSel;
+static SEL	objectForKeySel;
+static SEL	removeObjectForKeySel;
+static SEL	setObjectForKeySel;
+static SEL	appendStringSel;
 
 /**
  *  <p>This class and its subclasses store key-value pairs, where the key and
@@ -69,19 +69,22 @@ static SEL	appSel;
  *  code and is not thread-safe.  If the contents will be modified and
  *  accessed from multiple threads you should enclose critical operations
  *  within locks (see [NSLock]).</p>
+    NSDictionary 是线程不安全的.
  */
 @implementation NSDictionary
+
+// 这个类定义了许多字典的方法, 但是实际的内存实现, 要在子类中完成.
 
 + (void) initialize
 {
   if (self == [NSDictionary class])
     {
-      eqSel = @selector(isEqual:);
-      nxtSel = @selector(nextObject);
-      objSel = @selector(objectForKey:);
-      remSel = @selector(removeObjectForKey:);
-      setSel = @selector(setObject:forKey:);
-      appSel = @selector(appendString:);
+      equalSel = @selector(isEqual:);
+      nextSel = @selector(nextObject);
+      objectForKeySel = @selector(objectForKey:);
+      removeObjectForKeySel = @selector(removeObjectForKey:);
+      setObjectForKeySel = @selector(setObject:forKey:);
+      appendStringSel = @selector(appendString:);
       NSArray_class = [NSArray class];
       NSDictionaryClass = self;
       GSDictionaryClass = [GSDictionary class];
@@ -145,6 +148,7 @@ static SEL	appSel;
    BLOCK_SCOPE BOOL shouldStop = NO;
    id obj;
 
+    // 我们看到, 这里还是通过迭代器取得值, 这样子类只要实现迭代器接口就可以了. 因为字典的遍历, 其实是和字典的内部数据结构相关的. 而迭代器的作用, 就是想每个子类的内部实现, 包装到自己的接口之下.
    GS_DISPATCH_CREATE_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
    FOR_IN(id, key, enumerator)
      obj = (*objectForKey)(self, objectForKeySelector, key);
@@ -558,18 +562,18 @@ static SEL	appSel;
       id		k;
       NSEnumerator	*e = [other keyEnumerator];
       unsigned		i = 0;
-      IMP		nxtObj = [e methodForSelector: nxtSel];
-      IMP		otherObj = [other methodForSelector: objSel];
-      GS_BEGINIDBUF(o, c*2);
+      IMP		nxtObj = [e methodForSelector: nextSel];
+      IMP		otherObj = [other methodForSelector: objectForKeySel];
+      GS_BEGINIDBUF(o, c*2); // 这里就有一个数组, 前面装 key, 后面装 value
 
       if (shouldCopy)
 	{
 	  NSZone	*z = [self zone];
 
-	  while ((k = (*nxtObj)(e, nxtSel)) != nil)
+	  while ((k = (*nxtObj)(e, nextSel)) != nil)
 	    {
 	      o[i] = k;
-	      o[c + i] = [(*otherObj)(other, objSel, k) copyWithZone: z];
+	      o[c + i] = [(*otherObj)(other, objectForKeySel, k) copyWithZone: z];
 	      i++;
 	    }
 	  self = [self initWithObjects: o + c forKeys: o count: i];
@@ -580,10 +584,10 @@ static SEL	appSel;
 	}
       else
 	{
-	  while ((k = (*nxtObj)(e, nxtSel)) != nil)
+	  while ((k = (*nxtObj)(e, nextSel)) != nil)
 	    {
 	      o[i] = k;
-	      o[c + i] = (*otherObj)(other, objSel, k);
+	      o[c + i] = (*otherObj)(other, objectForKeySel, k);
 	      i++;
 	    }
 	  self = [self initWithObjects: o + c forKeys: o count: c];
@@ -610,6 +614,9 @@ static SEL	appSel;
  */
 - (id) initWithContentsOfFile: (NSString*)path
 {
+    // 先是文本, 然后解析成为字典, 最后通过 initWithDict 达到结果.
+    
+    
   NSString 	*myString;
 
   myString = [[NSString allocWithZone: NSDefaultMallocZone()]
@@ -750,15 +757,15 @@ static SEL	appSel;
       if (count > 0)
 	{
 	  NSEnumerator	*e = [self keyEnumerator];
-	  IMP		nxtObj = [e methodForSelector: nxtSel];
-	  IMP		myObj = [self methodForSelector: objSel];
-	  IMP		otherObj = [other methodForSelector: objSel];
+	  IMP		nxtObj = [e methodForSelector: nextSel];
+	  IMP		myObj = [self methodForSelector: objectForKeySel];
+	  IMP		otherObj = [other methodForSelector: objectForKeySel];
 	  id		k;
 
 	  while ((k = (*nxtObj)(e, @selector(nextObject))) != nil)
 	    {
-	      id o1 = (*myObj)(self, objSel, k);
-	      id o2 = (*otherObj)(other, objSel, k);
+	      id o1 = (*myObj)(self, objectForKeySel, k);
+	      id o2 = (*otherObj)(other, objectForKeySel, k);
 
 	      if (o1 == o2)
 		continue;
@@ -785,14 +792,14 @@ static SEL	appSel;
   else
     {
       NSEnumerator	*e = [self keyEnumerator];
-      IMP		nxtObj = [e methodForSelector: nxtSel];
+      IMP		nxtObj = [e methodForSelector: nextSel];
       unsigned		i;
       id		result;
       GS_BEGINIDBUF(k, c);
 
       for (i = 0; i < c; i++)
 	{
-	  k[i] = (*nxtObj)(e, nxtSel);
+	  k[i] = (*nxtObj)(e, nextSel);
 	  NSAssert (k[i], NSInternalInconsistencyException);
 	}
       result = [[NSArray_class allocWithZone: NSDefaultMallocZone()]
@@ -816,14 +823,14 @@ static SEL	appSel;
   else
     {
       NSEnumerator	*e = [self objectEnumerator];
-      IMP		nxtObj = [e methodForSelector: nxtSel];
+      IMP		nxtObj = [e methodForSelector: nextSel];
       id		result;
       unsigned		i;
       GS_BEGINIDBUF(k, c);
 
       for (i = 0; i < c; i++)
 	{
-	  k[i] = (*nxtObj)(e, nxtSel);
+	  k[i] = (*nxtObj)(e, nextSel);
 	}
       result = [[NSArray_class allocWithZone: NSDefaultMallocZone()]
 	initWithObjects: k count: c];
@@ -858,20 +865,20 @@ static SEL	appSel;
   else
     {
       NSEnumerator	*e = [self keyEnumerator];
-      IMP		nxtObj = [e methodForSelector: nxtSel];
-      IMP		myObj = [self methodForSelector: objSel];
+      IMP		nxtObj = [e methodForSelector: nextSel];
+      IMP		myObj = [self methodForSelector: objectForKeySel];
       BOOL		(*eqObj)(id, SEL, id);
       id		k;
       id		result;
       GS_BEGINIDBUF(a, [self count]);
 
-      eqObj = (BOOL (*)(id, SEL, id))[anObject methodForSelector: eqSel];
+      eqObj = (BOOL (*)(id, SEL, id))[anObject methodForSelector: equalSel];
       c = 0;
-      while ((k = (*nxtObj)(e, nxtSel)) != nil)
+      while ((k = (*nxtObj)(e, nextSel)) != nil)
 	{
-	  id	o = (*myObj)(self, objSel, k);
+	  id	o = (*myObj)(self, objectForKeySel, k);
 
-	  if (o == anObject || (*eqObj)(anObject, eqSel, o))
+	  if (o == anObject || (*eqObj)(anObject, equalSel, o))
 	    {
 	      a[c++] = k;
 	    }
@@ -916,7 +923,7 @@ compareIt(id o1, id o2, void* context)
 
   info.d = self;
   info.s = comp;
-  info.i = [self methodForSelector: objSel];
+  info.i = [self methodForSelector: objectForKeySel];
   k = [[self allKeys] sortedArrayUsingFunction: compareIt context: &info];
   return k;
 }
@@ -938,7 +945,7 @@ compareIt(id o1, id o2, void* context)
   else
     {
       unsigned	i;
-      IMP	myObj = [self methodForSelector: objSel];
+      IMP	myObj = [self methodForSelector: objectForKeySel];
       id	result;
       GS_BEGINIDBUF(obuf, c);
 
@@ -955,7 +962,7 @@ compareIt(id o1, id o2, void* context)
 	}
       for (i = 0; i < c; i++)
 	{
-	  id o = (*myObj)(self, objSel, obuf[i]);
+	  id o = (*myObj)(self, objectForKeySel, obuf[i]);
 
 	  if (o == nil)
 	    {
@@ -1124,13 +1131,13 @@ compareIt(id o1, id o2, void* context)
 {
   NSMutableString	*result = nil;
   NSEnumerator		*enumerator = [self keyEnumerator];
-  IMP			nxtObj = [enumerator methodForSelector: nxtSel];
-  IMP			myObj = [self methodForSelector: objSel];
+  IMP			nxtObj = [enumerator methodForSelector: nextSel];
+  IMP			myObj = [self methodForSelector: objectForKeySel];
   id                    key;
 
-  while ((key = (*nxtObj)(enumerator, nxtSel)) != nil)
+  while ((key = (*nxtObj)(enumerator, nextSel)) != nil)
     {
-      id val = (*myObj)(self, objSel, key);
+      id val = (*myObj)(self, objectForKeySel, key);
 
       GSPropertyListMake(key, nil, NO, YES, 0, &result);
       if (val != nil && [val isEqualToString: @""] == NO)
@@ -1263,14 +1270,14 @@ compareIt(id o1, id o2, void* context)
   unsigned	i;
   id		key;
   NSEnumerator	*enumerator = [self keyEnumerator];
-  IMP		nxtImp = [enumerator methodForSelector: nxtSel];
-  IMP		objImp = [self methodForSelector: objSel];
+  IMP		nxtImp = [enumerator methodForSelector: nextSel];
+  IMP		objImp = [self methodForSelector: objectForKeySel];
   GS_BEGINIDBUF(o, count*2);
 
-  for (i = 0; (key = (*nxtImp)(enumerator, nxtSel)); i++)
+  for (i = 0; (key = (*nxtImp)(enumerator, nextSel)); i++)
     {
       o[i] = key;
-      o[count + i] = (*objImp)(self, objSel, key);
+      o[count + i] = (*objImp)(self, objectForKeySel, key);
       o[count + i] = [o[count + i] copyWithZone: z];
     }
   newDictionary = [[GSDictionaryClass allocWithZone: z]
@@ -1360,10 +1367,10 @@ compareIt(id o1, id o2, void* context)
     {
       IMP	setObj;
 
-      setObj = [self methodForSelector: setSel];
+      setObj = [self methodForSelector: setObjectForKeySel];
       while (count--)
 	{
-	  (*setObj)(self, setSel, objects[count], keys[count]);
+	  (*setObj)(self, setObjectForKeySel, objects[count], keys[count]);
 	}
     }
   return self;
@@ -1376,12 +1383,12 @@ compareIt(id o1, id o2, void* context)
 {
   id		k;
   NSEnumerator	*e = [self keyEnumerator];
-  IMP		nxtObj = [e methodForSelector: nxtSel];
-  IMP		remObj = [self methodForSelector: remSel];
+  IMP		nxtObj = [e methodForSelector: nextSel];
+  IMP		remObj = [self methodForSelector: removeObjectForKeySel];
 
-  while ((k = (*nxtObj)(e, nxtSel)) != nil)
+  while ((k = (*nxtObj)(e, nextSel)) != nil)
     {
-      (*remObj)(self, remSel, k);
+      (*remObj)(self, removeObjectForKeySel, k);
     }
 }
 
@@ -1396,7 +1403,7 @@ compareIt(id o1, id o2, void* context)
 
   if (c > 0)
     {
-      IMP	remObj = [self methodForSelector: remSel];
+      IMP	remObj = [self methodForSelector: removeObjectForKeySel];
       GS_BEGINIDBUF(keys, c);
 
       if ([keyArray isProxy])
@@ -1414,7 +1421,7 @@ compareIt(id o1, id o2, void* context)
 	}
       while (c--)
 	{
-	  (*remObj)(self, remSel, keys[c]);
+	  (*remObj)(self, removeObjectForKeySel, keys[c]);
 	}
       GS_ENDIDBUF();
     }
@@ -1431,13 +1438,13 @@ compareIt(id o1, id o2, void* context)
     {
       id		k;
       NSEnumerator	*e = [otherDictionary keyEnumerator];
-      IMP		nxtObj = [e methodForSelector: nxtSel];
-      IMP		getObj = [otherDictionary methodForSelector: objSel];
-      IMP		setObj = [self methodForSelector: setSel];
+      IMP		nxtObj = [e methodForSelector: nextSel];
+      IMP		getObj = [otherDictionary methodForSelector: objectForKeySel];
+      IMP		setObj = [self methodForSelector: setObjectForKeySel];
 
-      while ((k = (*nxtObj)(e, nxtSel)) != nil)
+      while ((k = (*nxtObj)(e, nextSel)) != nil)
 	{
-	  (*setObj)(self, setSel, (*getObj)(otherDictionary, objSel, k), k);
+	  (*setObj)(self, setObjectForKeySel, (*getObj)(otherDictionary, objectForKeySel, k), k);
 	}
     }
 }

@@ -46,7 +46,7 @@ static SEL      privateCountOfSel;
 @interface GSSet : NSSet
 {
 @public
-  GSIMapTable_t	map;
+  GSIMapTable_t	map; // 我们可以看到, 其实 set, 和 map 没有区别.
 }
 @end
 
@@ -131,14 +131,15 @@ static Class	mutableSetClass;
       objects[i++] = node->key.obj;
       node = GSIMapEnumeratorNextNode(&enumerator);
     }
-  GSIMapEndEnumerator(&enumerator);
+  GSIMapEndEnumerator(&enumerator); // 清空操作.
   result = AUTORELEASE([[arrayClass allocWithZone: NSDefaultMallocZone()]
     initWithObjects: objects count: i]);
   GS_ENDIDBUF();
   return result;
 }
 
-- (id) anyObject
+// The object returned is chosen at the set’s convenience—the selection is not guaranteed to be random.
+- (id) anyObject // 可以看到, anyObject 其实就是取到第一个可以取到的对象而已.
 {
   if (map.nodeCount > 0)
     {
@@ -257,7 +258,7 @@ static Class	mutableSetClass;
       node = GSIMapNodeForKey(&map, (GSIMapKey)objs[i]);
       if (node == 0)
 	{
-	  GSIMapAddKey(&map, (GSIMapKey)objs[i]);
+	  GSIMapAddKey(&map, (GSIMapKey)objs[i]); // 如果找不到才添加进去, 如果找到了, 就不管了.
         }
     }
   return self;
@@ -294,7 +295,7 @@ static Class	mutableSetClass;
 	}
       GSIMapEndEnumerator(&enumerator);
     }
-  else
+  else // 如果不是 set, 就通过迭代器的方式寻找.
     {
       NSEnumerator	*e;
       id		o;
@@ -332,7 +333,7 @@ static Class	mutableSetClass;
   node = GSIMapEnumeratorNextNode(&enumerator);
 
   // 0. Loop for all members in this set(self).
-  while (node != 0)
+  while (node != 0) // 这里要有一个循环, 只有循环通过才认为是 sub
     {
       // 1. check the member is in the otherSet.
       if ((*imp)(otherSet, memberSel, node->key.obj) != nil)

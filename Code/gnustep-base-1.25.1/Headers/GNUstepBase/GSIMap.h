@@ -337,6 +337,12 @@ extern "C" {
  *  If nodeCount is bigger than the "increment" it will allocate chunks
  *  of size "increment".
  */
+    
+    /*
+     
+     内存分配的算法有很多 magic, 不去查找细节. 原则就是, map 的节点是会经常改变的, 如果每一次 setValueForKey. 或者是 removeValueForKey 都进行 alloc, free 操作, 会有很多次的内存分配. 所以, map 中会维护可以使用的node 的这一概念, 也就是 freeNodes. 在需要节点的时候, 会直接从 freeNode 中取, 如果 freeNode 中没有值了, 会申请新的内存. 注意, 节点过多导致的哈希列表重排是不一样的.
+     
+     */
 
 #if	!defined(GSI_MAP_TABLE_T)
 typedef struct _GSIMapBucket GSIMapBucket_t;
@@ -370,7 +376,7 @@ struct	_GSIMapTable { // 从这里我们可以看出, 这里 Map 就是散列表
   uintptr_t	nodeCount;	/* Number of used nodes in map.	*/
   uintptr_t	bucketCount;	/* Number of buckets in map.	*/
   GSIMapBucket	buckets;	/* Array of buckets.		*/ // bucket 的数组, 而 bucket 内部还有东西的
-  GSIMapNode	freeNodes;	/* List of unused nodes.	*/
+  GSIMapNode	freeNodes;	/* List of unused nodes.	*/ // 现在还剩余的节点.
   uintptr_t	chunkCount;	/* Number of chunks in array.	*/
   GSIMapNode	*nodeChunks;	/* Chunks of allocated memory.	*/
   uintptr_t	increment;
@@ -409,6 +415,8 @@ GSIMapBucketForKey(GSIMapTable map, GSIMapKey key)
 {
   return GSIMapPickBucket(GSI_MAP_HASH(map, key),
     map->buckets, map->bucketCount);
+    // return buckets + hash % bucketCount;
+    // 通过 key 的 hash 找到找到 bucket 的所在位置.
 }
 
 GS_STATIC_INLINE void
@@ -560,9 +568,9 @@ GSIMapRemangleBuckets(GSIMapTable map,
 	{
 	  GSIMapBucket	bkt;
 
-	  GSIMapRemoveNodeFromBucket(old_buckets, node);
-	  bkt = GSIMapPickBucket(GSI_MAP_HASH(map, node->key),
-	    new_buckets, new_bucketCount);
+	  GSIMapRemoveNodeFromBucket(old_buckets, node); // 将node 从原来的中删去.
+	  bkt = GSIMapPickBucket(GSI_MAP_HASH(map, node->key), // 将 node 填入新的 buckets 中.
+	    new_buckets, new_bucketCount); // 这里我感觉可以优化啊, 毕竟原来的就要删了, 直接填入新的就可以了.
 	  GSIMapAddNodeToBucket(bkt, node);
 	}
       old_buckets++;
@@ -572,65 +580,54 @@ GSIMapRemangleBuckets(GSIMapTable map,
 GS_STATIC_INLINE void
 GSIMapMoreNodes(GSIMapTable map, unsigned required)
 {
-  GSIMapNode	*newArray;
+    GSIMapNode	*newArray;
 
-  newArray = (GSIMapNode*)NSZoneCalloc(map->zone,
+    newArray = (GSIMapNode*)NSZoneCalloc(map->zone,
     (map->chunkCount+1), sizeof(GSIMapNode));
-  if (newArray)
+    
+    GSIMapNode    newNodes;
+    uintptr_t        chunkCount;
+
+    if (map->nodeChunks != 0) // nodeChunks 中记录的是 chunk链表数组.
     {
-      GSIMapNode	newNodes;
-      uintptr_t		chunkCount;
-
-      if (map->nodeChunks != 0)
-	{
-	  memcpy(newArray, map->nodeChunks,
-	    (map->chunkCount)*sizeof(GSIMapNode));
-	  NSZoneFree(map->zone, map->nodeChunks);
-	}
-      map->nodeChunks = newArray;
-
-      if (required == 0)
-	{
-	  if (map->chunkCount == 0)
-	    {
-	      chunkCount = map->bucketCount > 1 ? map->bucketCount : 2;
-	    }
-	  else
-	    {
-	      chunkCount = ((map->nodeCount>>2)+1)<<1;
-	    }
-	}
-      else
-	{
-	  chunkCount = required;
-	}
-      newNodes
-        = (GSIMapNode)NSZoneCalloc(map->zone, chunkCount, sizeof(GSIMapNode_t));
-      if (newNodes)
-	{
-	  map->nodeChunks[map->chunkCount++] = newNodes;
-	  newNodes[--chunkCount].nextInBucket = map->freeNodes;
-	  while (chunkCount--)
-	    {
-	      newNodes[chunkCount].nextInBucket = &newNodes[chunkCount+1];
-	    }
-	  map->freeNodes = newNodes;
-	}
-      else
-	{
-	  [NSException raise: NSMallocException format: @"No memory for nodes"];
-	}
+        memcpy(newArray, map->nodeChunks,
+               (map->chunkCount)*sizeof(GSIMapNode));
+        NSZoneFree(map->zone, map->nodeChunks);
     }
-  else
+    map->nodeChunks = newArray;
+
+    if (required == 0)
     {
-      [NSException raise: NSMallocException format: @"No memory for chunks"];
+        if (map->chunkCount == 0)
+        {
+            chunkCount = map->bucketCount > 1 ? map->bucketCount : 2;
+        }
+        else
+        {
+            chunkCount = ((map->nodeCount>>2)+1)<<1;
+        }
+    }
+    else
+    {
+        chunkCount = required;
+    }
+    newNodes = (GSIMapNode)NSZoneCalloc(map->zone, chunkCount, sizeof(GSIMapNode_t));
+    if (newNodes)
+    {
+        map->nodeChunks[map->chunkCount++] = newNodes;
+        newNodes[--chunkCount].nextInBucket = map->freeNodes;
+        while (chunkCount--)
+        {
+            newNodes[chunkCount].nextInBucket = &newNodes[chunkCount+1];
+        }
+        map->freeNodes = newNodes;
     }
 }
 
 GS_STATIC_INLINE GSIMapNode 
 GSIMapNodeForKeyInBucket(GSIMapTable map, GSIMapBucket bucket, GSIMapKey key)
 {
-  GSIMapNode	node = bucket->firstNode;
+  GSIMapNode	node = bucket->firstNode; //
 
   if (GSI_MAP_ZEROED(map))
     {
@@ -651,7 +648,7 @@ GSIMapNodeForKeyInBucket(GSIMapTable map, GSIMapBucket bucket, GSIMapKey key)
   while ((node != 0)
     && GSI_MAP_EQUAL(map, GSI_MAP_READ_KEY(map, &node->key), key) == NO)
     {
-      node = node->nextInBucket;
+      node = node->nextInBucket; // 上面太多宏没有看, 但是这里展示的是, 是通过链表解决的冲突.
     }
   return node;
 }
@@ -666,8 +663,8 @@ GSIMapNodeForKey(GSIMapTable map, GSIMapKey key)
     {
       return 0;
     }
-  bucket = GSIMapBucketForKey(map, key);
-  node = GSIMapNodeForKeyInBucket(map, bucket, key);
+  bucket = GSIMapBucketForKey(map, key); // 首先寻找 bucket
+  node = GSIMapNodeForKeyInBucket(map, bucket, key); // 然后 从 bucket 的链表中寻找 key 对应的值.
   return node;
 }
 
@@ -789,7 +786,7 @@ GSIMapResize(GSIMapTable map, uintptr_t new_capacity)
 
   if (new_buckets != 0)
     {
-      GSIMapRemangleBuckets(map, map->buckets, map->bucketCount, new_buckets,
+      GSIMapRemangleBuckets(map, map->buckets, map->bucketCount, new_buckets, // 这里对新创建的 buckets 进行了原来 node 的重新排列.
 	size);
       if (map->buckets != 0)
 	{
@@ -808,7 +805,7 @@ GSIMapRightSizeMap(GSIMapTable map, uintptr_t capacity)
    * provide evidence of its goodness, please get in touch with me, Albin
    * L. Jones <Albin.L.Jones@Dartmouth.EDU>. */
 
-  if (3 * capacity >= 4 * map->bucketCount)
+  if (3 * capacity >= 4 * map->bucketCount) // 如果, 容量大于了 bucketcount 的 3/4, 就进行扩容,
     {
       GSIMapResize(map, (3 * capacity)/4 + 1);
     }
@@ -908,7 +905,7 @@ GSIMapEnumeratorBucket(GSIMapEnumerator enumerator)
  * Returns the next node in the map, or a nul pointer if at the end.
  */
 GS_STATIC_INLINE GSIMapNode 
-GSIMapEnumeratorNextNode(GSIMapEnumerator enumerator)
+GSIMapEnumeratorNextNode(GSIMapEnumerator enumerator) // 这个函数内部, 在找到新的 node 之后, 其实还要维护 enumerator 的值,  方便它下一次进行取值.
 {
   GSIMapNode	node = ((_GSIE)enumerator)->node;
   GSIMapTable	map = ((_GSIE)enumerator)->map;
@@ -1073,12 +1070,12 @@ GSIMapAddPair(GSIMapTable map, GSIMapKey key, GSIMapVal value)
     }
   map->freeNodes = node->nextInBucket;
   GSI_MAP_WRITE_KEY(map, &node->key, key);
-  GSI_MAP_RETAIN_KEY(map, node->key);
+  GSI_MAP_RETAIN_KEY(map, node->key); // 这里调用的是 copy
   GSI_MAP_WRITE_VAL(map, &node->value, value);
-  GSI_MAP_RETAIN_VAL(map, node->value);
+  GSI_MAP_RETAIN_VAL(map, node->value); // 这里调用的是 retain 方法.
   node->nextInBucket = 0;
-  GSIMapRightSizeMap(map, map->nodeCount);
-  GSIMapAddNodeToMap(map, node);
+  GSIMapRightSizeMap(map, map->nodeCount); //这里, 如果GSIMapMoreNodes调用了的话, 这里会对 hash 表进行调整.
+  GSIMapAddNodeToMap(map, node); // 这里会将新的值填入到 hash 表中.
   return node;
 }
 #else
@@ -1127,10 +1124,10 @@ GSIMapAddKey(GSIMapTable map, GSIMapKey key)
 GS_STATIC_INLINE BOOL
 GSIMapRemoveKey(GSIMapTable map, GSIMapKey key)
 {
-  GSIMapBucket	bucket = GSIMapBucketForKey(map, key);
+  GSIMapBucket	bucket = GSIMapBucketForKey(map, key); // 先找到 bucket
   GSIMapNode	node;
   
-  node = GSIMapNodeForKeyInBucket(map, bucket, key);
+  node = GSIMapNodeForKeyInBucket(map, bucket, key); // 然后找到 node
   if (node != 0)
     {
       GSIMapRemoveNodeFromMap(map, bucket, node);
@@ -1141,50 +1138,49 @@ GSIMapRemoveKey(GSIMapTable map, GSIMapKey key)
 }
 
 GS_STATIC_INLINE void
-GSIMapCleanMap(GSIMapTable map)
+GSIMapCleanMap(GSIMapTable map) // 将每个 bucket 里面的数据清空, 并把空出来的 nodes 放到 freenodes 里面.
 {
-  if (map->nodeCount > 0)
+    if (map->nodeCount <=  0) { return; }
+    
+    GSIMapBucket    bucket = map->buckets;
+    unsigned int    i;
+    GSIMapNode    startNode = 0;
+    GSIMapNode    prevNode = 0;
+    GSIMapNode    node;
+    
+    map->nodeCount = 0;
+    for (i = 0; i < map->bucketCount; i++)
     {
-      GSIMapBucket	bucket = map->buckets;
-      unsigned int	i;
-      GSIMapNode	startNode = 0;
-      GSIMapNode	prevNode = 0;
-      GSIMapNode	node;
-      
-      map->nodeCount = 0;
-      for (i = 0; i < map->bucketCount; i++)
-	{
-	  node = bucket->firstNode;
-	  if (prevNode != 0)
-	    {
-	      prevNode->nextInBucket = node;
-	    }
-	  else
-	    {
-	      startNode = node;
-	    }
-	  while(node != 0)
-	    {
-	      GSI_MAP_RELEASE_KEY(map, node->key);
-	      GSI_MAP_CLEAR_KEY(node);
-	  
-#if	GSI_MAP_HAS_VALUE
-	      GSI_MAP_RELEASE_VAL(map, node->value);
-	      GSI_MAP_CLEAR_VAL(node);
+        node = bucket->firstNode;
+        if (prevNode != 0)
+        {
+            prevNode->nextInBucket = node;
+        }
+        else
+        {
+            startNode = node;
+        }
+        while(node != 0)
+        {
+            GSI_MAP_RELEASE_KEY(map, node->key);
+            GSI_MAP_CLEAR_KEY(node);
+            
+#if    GSI_MAP_HAS_VALUE
+            GSI_MAP_RELEASE_VAL(map, node->value);
+            GSI_MAP_CLEAR_VAL(node);
 #endif
-	      prevNode = node;
-	      node = node->nextInBucket;
-	    }
-	  bucket->nodeCount = 0;
-	  bucket->firstNode = 0;
-	  bucket++;
-	}
-      if (prevNode != 0)
-	{
-          prevNode->nextInBucket = map->freeNodes;
-	}
-      map->freeNodes = startNode;
+            prevNode = node;
+            node = node->nextInBucket;
+        }
+        bucket->nodeCount = 0;
+        bucket->firstNode = 0;
+        bucket++;
     }
+    if (prevNode != 0)
+    {
+        prevNode->nextInBucket = map->freeNodes;
+    }
+    map->freeNodes = startNode;
 }
 
 GS_STATIC_INLINE void

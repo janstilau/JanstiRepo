@@ -54,21 +54,21 @@
 
 @implementation GSDictionary
 
-static SEL	nxtSel;
-static SEL	objSel;
+static SEL	nextObjectSel;
+static SEL	objectForKeySel;
 
 + (void) initialize
 {
   if (self == [GSDictionary class])
     {
-      nxtSel = @selector(nextObject);
-      objSel = @selector(objectForKey:);
+      nextObjectSel = @selector(nextObject);
+      objectForKeySel = @selector(objectForKey:);
     }
 }
 
 - (id) copyWithZone: (NSZone*)zone
 {
-  return RETAIN(self);
+  return RETAIN(self); // 不可变对象的通用写法
 }
 
 - (NSUInteger) count
@@ -147,6 +147,9 @@ static SEL	objSel;
 }
 
 /* Designated initialiser */
+/*
+ 这个方法其实就是从两个数组中取值, 然后一点一点的添加到 hash 表中.
+ */
 - (id) initWithObjects: (const id[])objs
                forKeys: (const id <NSCopying>[])keys
                  count: (NSUInteger)c
@@ -199,8 +202,8 @@ static SEL	objSel;
   if (c > 0)
     {
       NSEnumerator	*e = [other keyEnumerator];
-      IMP		nxtObj = [e methodForSelector: nxtSel];
-      IMP		otherObj = [other methodForSelector: objSel];
+      IMP		nxtObj = [e methodForSelector: nextObjectSel];
+      IMP		otherObj = [other methodForSelector: objectForKeySel];
       BOOL		isProxy = [other isProxy];
       NSUInteger	i;
 
@@ -217,8 +220,8 @@ static SEL	objSel;
 	    }
 	  else
 	    {
-	      k = (*nxtObj)(e, nxtSel);
-	      o = (*otherObj)(other, objSel, k);
+	      k = (*nxtObj)(e, nextObjectSel);
+	      o = (*otherObj)(other, objectForKeySel, k);
 	    }
 	  k = [k copyWithZone: z];
 	  if (k == nil)
@@ -272,13 +275,13 @@ static SEL	objSel;
 	{
 	  GSIMapEnumerator_t	enumerator;
 	  GSIMapNode		node;
-	  IMP			otherObj = [other methodForSelector: objSel];
+	  IMP			otherObj = [other methodForSelector: objectForKeySel];
 
 	  enumerator = GSIMapEnumeratorForMap(&map);
 	  while ((node = GSIMapEnumeratorNextNode(&enumerator)) != 0)
 	    {
 	      id o1 = node->value.obj;
-	      id o2 = (*otherObj)(other, objSel, node->key.obj);
+	      id o2 = (*otherObj)(other, objectForKeySel, node->key.obj);
 
 	      if (o1 != o2 && [o1 isEqual: o2] == NO)
 		{
@@ -472,7 +475,7 @@ static SEL	objSel;
 {
   [super init];
   dictionary = (GSDictionary*)RETAIN(d);
-  enumerator = GSIMapEnumeratorForMap(&dictionary->map);
+  enumerator = GSIMapEnumeratorForMap(&dictionary->map); // 这里, 直接将底层的数据结构传递给了 enumerator
   return self;
 }
 
@@ -506,7 +509,7 @@ static SEL	objSel;
     {
       return nil;
     }
-  return node->value.obj;
+  return node->value.obj; // 这里可以看出, 其实 key, object 的 enumeration 是没有区别的, 都是迭代器从数据结构里面取值的一个过程.
 }
 
 @end
