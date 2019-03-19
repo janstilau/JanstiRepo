@@ -502,7 +502,7 @@ typedef struct SizeInfoAccumulator
 {
   size_t      size;
   unsigned    depth;
-} SizeInfoAccumulator;
+} SizeInfoAccumulator; // accumulate 累计累加的意思.
 
 static void
 SizeInfoAccumulatorAddInfo (SizeInfoAccumulator *this, GSObjCTypeInfo info)
@@ -537,6 +537,7 @@ objc_sizeof_type (const char* type)
     (GSObjCTypeParserDelegate)&SizeInfoAccumulatorAddInfo,
     &accumulator,
     GSObjCReportArrayOnceMask);
+    // 这其实是C风格的函数, 利用传出参数, 函数指针进行值的获取. C风格的动态性, 就是建立在函数指针的基础上.
   return (int)accumulator.size;
 }
 

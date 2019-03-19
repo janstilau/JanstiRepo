@@ -1,31 +1,3 @@
-/** NSCoder - coder object for serialization and persistance.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   From skeleton by:  Adam Fedor <fedor@boulder.colorado.edu>
-   Date: Mar 1995
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSCoder class reference</title>
-   $Date$ $Revision$
-   */
-
 #import "common.h"
 
 #if !defined (__GNU_LIBOBJC__)
@@ -41,17 +13,6 @@
 
 @implementation NSCoder
 
-/* We used to use a system version which actually reflected the version
- * of GNUstep-base ... but people screwed that up by releasing versions
- * of base with unofficial version numbers conflicting with the scheme.
- * So ... we are now starting from a basepoint of 1 million ... on the
- * basis that the old numbering scheme derived from the gnustep-base
- * major.minor.subminor versioning (in which each can range from 0 to 99)
- * should not have allowed anyone to create an archive with a version
- * greater than 999999.
- * In future, the system version will change if (and only if) the format
- * of the encoded data changes.
- */
 #define	MAX_SUPPORTED_SYSTEM_VERSION	1000000
 
 static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
@@ -111,25 +72,15 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
 			    at: (const void*)array
 {
   unsigned	i;
-  unsigned	size = objc_sizeof_type(type);
+  unsigned	size = objc_sizeof_type(type); // 利用底层函数, 获取 type 的所占空间大小. 计算出这个空间, 是为了遍历 array. 并不是说, 要把内容写入到 array 里面, 这个函数是 encode, 所以这个函数是把 array 的内存进行取出写到另外的一个位置. 到底写到哪里呢, 是这个类的
   const char	*where = array;
   IMP		imp;
 
   imp = [self methodForSelector: @selector(encodeValueOfObjCType:at:)];
-  for (i = 0; i < count; i++, where += size)
+  for (i = 0; i < count; i++, where += size) // 这里,encodeValueOfObjCType这个函数必须子类复写.
     {
       (*imp)(self, @selector(encodeValueOfObjCType:at:), type, where);
     }
-}
-
-- (void) encodeBycopyObject: (id)anObject
-{
-  [self encodeObject: anObject];
-}
-
-- (void) encodeByrefObject: (id)anObject
-{
-  [self encodeObject: anObject];
 }
 
 - (void) encodeBytes: (void*)d length: (NSUInteger)l
@@ -140,7 +91,7 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
 
   imp = [self methodForSelector: @selector(encodeValueOfObjCType:at:)];
   (*imp)(self, @selector(encodeValueOfObjCType:at:),
-    @encode(unsigned), &l);
+    @encode(unsigned), &l); // 这里, 首先是把 length 进行了存储, 然后挨个把字节进行序列化. 
   while (l-- > 0)
     (*imp)(self, @selector(encodeValueOfObjCType:at:), type, where++);
 }
@@ -150,6 +101,7 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
   [self encodeObject: anObject];
 }
 
+// object 就是 id 类型. 我们可以看到, 下面的函数就是利用了 encodeValueOfObjectType 这个函数, 而这个函数是需要子类进行重写的. 这其实是父类的功能, 定义重复的代码, 在子类需要特定某些功能的时候, 在进行复写操作.
 - (void) encodeObject: (id)anObject
 {
   [self encodeValueOfObjCType: @encode(id) at: &anObject];
@@ -159,7 +111,7 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
 {
   id    anObject;
 
-  anObject = plist ? (id)[NSSerializer serializePropertyList: plist] : nil;
+  anObject = plist ? (id)[NSSerializer serializePropertyList: plist] : nil; // 这里, 将 plist 文件的责任, 转移到了另外一个类中.
   [self encodeValueOfObjCType: @encode(id) at: &anObject];
 }
 
@@ -175,6 +127,7 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
 
 - (void) encodeRootObject: (id)rootObject
 {
+    // rootObject 的内部, 应该写清楚如何 encode 自己的成员.
   [self encodeObject: rootObject];
 }
 
@@ -200,7 +153,7 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
 }
 
 // Decoding Data
-
+// Decode 的作用和 encode 相反, 通过将二进制的数据复原成为想要的数据类型. 不过, decode 的数据, 要以返回值的形式传出来.
 - (void) decodeArrayOfObjCType: (const char*)type
 			 count: (NSUInteger)count
 			    at: (void*)address
@@ -217,8 +170,8 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
       (*imp)(self, @selector(decodeValueOfObjCType:at:), type, where);
     }
 }
-
-- (void*) decodeBytesWithReturnedLength: (NSUInteger*)l
+// decodeValueOfObjCType:at: 中, at 所指的位置, 应该是写入的位置. 也就是将数据写入到哪里去. 注意, 到哪里入这个动作其实我们都不知道. encode 的时候, 我们提供了数据的内存地址, 然后这个数据被类写入到某个地方, decode 的时候, 我们提供了内存地址用来保存数据, 但是数据从哪里来我们不知道. 序列化的数据究竟在哪里, 这是子类的责任. 但是, 归档解档的操作必须是一一对应的. 这也就是为什么要用 json 和 xml 进行数据传输的原因, 内存的传递, 必须要保证操作的一致性. 不能随意向里面插入数据, 而 json xml 这种 map 的形式, 可以方便扩展, 并且文字化的表示, 也便于调试.
+- (void*) decodeBytesWithReturnedLength: (NSUInteger*)length // 这个 length 是传出参数.
 {
   unsigned int	count;
   const char	*type = @encode(unsigned char);
@@ -229,8 +182,8 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
   imp = [self methodForSelector: @selector(decodeValueOfObjCType:at:)];
 
   (*imp)(self, @selector(decodeValueOfObjCType:at:),
-    @encode(unsigned int), &count);
-  *l = (NSUInteger)count;
+    @encode(unsigned int), &count); // 必须先调用 length 的解档操作, 然后才是实际的数据.
+  *length = (NSUInteger)count;
   array = NSZoneMalloc(NSDefaultMallocZone(), count);
   where = array;
   while (count-- > 0)

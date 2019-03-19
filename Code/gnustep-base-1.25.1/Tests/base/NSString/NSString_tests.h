@@ -1,17 +1,3 @@
-/*
-copyright 2004 Alexander Malmberg <alexander@malmberg.org>
-
-portions:
-copyright (C) 2003 Free Software Foundation, Inc.
-Author: Alexander Malmberg
-
-
-Test whether a class is a working concrete subclass of NSString. This file
-should be included _once_ in a test that wants to test a particular class.
-*/
-
-
-
 #import "Testing.h"
 #import <Foundation/NSAutoreleasePool.h>
 #import <Foundation/NSData.h>

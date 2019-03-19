@@ -276,11 +276,11 @@ extern "C" {
  *
  *  The first view is best described as follows:
  *
- *   _GSIMapTable   ----->  C-array of buckets 
+ *   _GSIMapTable   ----->  C-array of buckets  // bucket 的数组.
  *
  *  Where each bucket contains a count (nodeCount), describing the number
  *  of nodes in the bucket and a pointer (firstNode) to a single linked
- *  list of nodes.
+ *  list of nodes. // bucket 里面, 有一个数量值表示这个 bucket 的 length, 还有一个指针表示链表.
  *  
  *  The second view is slightly more complicated.
  *  The individual nodes are allocated and deallocated in chunks.
@@ -346,7 +346,7 @@ typedef GSIMapBucket_t *GSIMapBucket;
 typedef GSIMapNode_t *GSIMapNode;
 #endif
 
-struct	_GSIMapNode {
+struct	_GSIMapNode { // 这个定义和其他的数据结构的定义没什么区别, 都是 next 和 data .
   GSIMapNode	nextInBucket;	/* Linked list of bucket.	*/
   GSIMapKey	key;
 #if	GSI_MAP_HAS_VALUE
@@ -365,11 +365,11 @@ typedef GSI_MAP_TABLE_T	*GSIMapTable;
 typedef struct _GSIMapTable GSIMapTable_t;
 typedef GSIMapTable_t *GSIMapTable;
 
-struct	_GSIMapTable {
+struct	_GSIMapTable { // 从这里我们可以看出, 这里 Map 就是散列表, 而不是红黑树.
   NSZone	*zone;
   uintptr_t	nodeCount;	/* Number of used nodes in map.	*/
   uintptr_t	bucketCount;	/* Number of buckets in map.	*/
-  GSIMapBucket	buckets;	/* Array of buckets.		*/
+  GSIMapBucket	buckets;	/* Array of buckets.		*/ // bucket 的数组, 而 bucket 内部还有东西的
   GSIMapNode	freeNodes;	/* List of unused nodes.	*/
   uintptr_t	chunkCount;	/* Number of chunks in array.	*/
   GSIMapNode	*nodeChunks;	/* Chunks of allocated memory.	*/

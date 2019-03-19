@@ -451,7 +451,7 @@ static SEL	removeLastSel;
 	{
 	  GS_BEGINIDBUF(a, count);
 
-	  [self getObjects: a];
+	  [self getObjects: a]; // 这里不是很明白, 为什么不直接操作原来的那一份数据, 而是要进行一次拷贝???
 	  [aCoder encodeArrayOfObjCType: @encode(id)
 				  count: count
 				     at: a]; // 然后调用将数组序列化的方法, 用的是对象 id 类型. 具体的序列化方法, 在 encodeArrayOfObjCType 内部.

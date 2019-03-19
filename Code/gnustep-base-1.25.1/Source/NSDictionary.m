@@ -1,31 +1,3 @@
-/** NSDictionary - Dictionary object to store key/value pairs
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   From skeleton by:  Adam Fedor <fedor@boulder.colorado.edu>
-   Date: Mar 1995
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSDictionary class reference</title>
-   $Date$ $Revision$
-   */
-
 #import "common.h"
 #import "Foundation/NSDictionary.h"
 #import "Foundation/NSArray.h"
@@ -39,7 +11,6 @@
 #import "Foundation/NSValue.h"
 #import "Foundation/NSKeyValueCoding.h"
 #import "Foundation/NSUserDefaults.h"
-// For private method _decodeArrayOfObjectsForKey:
 #import "Foundation/NSKeyedArchiver.h"
 #import "GSPrivate.h"
 #import "GSFastEnumeration.h"
@@ -80,13 +51,14 @@ static SEL	appSel;
  *  the value are objects.  A great many utility methods for working with
  *  dictionaries are provided as part of this class, including the ability to
  *  retrieve multiple entries simultaneously, obtain sorted contents, and
- *  read/write from/to a serialized representation.</p>
+ *  read/write from/to a serialized representation.</p> // 这个类主要的职责是定义公共的函数. 和 NSArray 一样.
  *
  *  <p>The keys are copied and values are retained by the implementation,
  *  and both are released when either their entry is dropped or the entire
  *  dictionary is deallocated.<br />
  *  As in the OS X implementation, keys must therefore implement the
- *  [(NSCopying)] protocol.
+ *  [(NSCopying)] protocol. //
+    key 要进行 copy, 而 value 则进行 retain. 这里, 为什么 key 要进行 copy 呢, 因为, 如果不进行 copy 操作的话, 容器类是没有办法进行工作的, 容器类需要根据 key 计算 hash 值, 而如果 key 可以在外界改变的话, 那么原来存储 key-value 的位置, 就不对了. 例如, key = @"12334", 原来的位置是 9, 但是这个 12334 是一个 NSMutableString. 那么这个时候, 外界改变了这个值变成了 123, 所以新的 123 计算出 hash 来应该是 11. 如果我们要进行取值, 会去 11 的位置取值, 但是 11 的位置根本就没有值.
  *  </p>
  *
  *  <p>Objects of this class are immutable.  For a mutable version, use the

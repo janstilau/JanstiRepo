@@ -1,27 +1,3 @@
-/* Interface for NSCoder for GNUStep
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Date: 1995
-   
-   This file is part of the GNUstep Base Library.
-   
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
-
 #ifndef __NSCoder_h_GNUSTEP_BASE_INCLUDE
 #define __NSCoder_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -48,6 +24,14 @@ extern "C" {
  *  preferred for new implementations, since they provide greater
  *  forward/backward compatibility in the face of class changes.</p>
  */
+    
+// NSCode 是作为序列化的功能的一个类. 其实, 它和之前地图编辑器的归档解档功能是一样的.
+
+/*
+    这个类定义了一些, 类似于快捷方法的东西. 但是, 这些快捷方法所包装的最根本的方法, 还是需要每个子类进行编写. 而且, 这些快捷方法, 这个父类没有进行包装完全. 例如, Int32, Bool 这些值怎么包装, 都是子类的责任.
+    NSCoding 有着两个方法, 一个是 initWithCoder, 一个是 encodeWithCoder. 其实, 就是 encode 和 decode 两个方法, 在这两个方法的内部, 会传入NSCoder 的对象, 然后调用NSCoder 的各个方法, 进行序列化和反序列化, 而序列化之后的数据到底已什么样的方式, 保存在哪里, 完全封装到了 NSCoder 的内部.
+ */
+    
 @interface NSCoder : NSObject
 // Encoding Data
 
@@ -56,19 +40,15 @@ extern "C" {
  *  obtained through the '<code>@encode(...)</code>' compile-time operator.
  *  Usually this is used for primitives though it can be used for objects as
  *  well.
+ 
+ 在 NSArray 的序列化中, 就有 [aCoder encodeArrayOfObjCType: @encode(id) count: count at: a];的调用
+ 首先, array 是要实现分配出来的.
+ 
  */
+
 - (void) encodeArrayOfObjCType: (const char*)type
 			 count: (NSUInteger)count
 			    at: (const void*)array;
-
-/**
- *  Can be ignored.
- */
-- (void) encodeBycopyObject: (id)anObject;
-/**
- *  Can be ignored.
- */
-- (void) encodeByrefObject: (id)anObject;
 
 /**
  *  Stores bytes directly into archive.  
