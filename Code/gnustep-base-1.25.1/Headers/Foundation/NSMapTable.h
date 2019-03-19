@@ -174,6 +174,7 @@ typedef struct { void *map; void *node; size_t bucket; } NSMapEnumerator;
 
 /**
  * Callback functions for a key.
+  为什么现在闭包这么流行, 因为在之前的情况下, 想要完成回调这个事情, 必须要这样, 将函数指针包裹到一个结构体里面, 然后传递出去. 因为, 能存贮的只有内存值.
  */
 typedef struct _NSMapTableKeyCallBacks
 {

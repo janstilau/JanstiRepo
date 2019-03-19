@@ -1,30 +1,3 @@
-/** Concrete implementation of NSArray
-   Copyright (C) 1995, 1996, 1998, 1999 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Date: March 1995
-   Rewrite by:  Richard Frith-Macdonald <richard@brainstorm.co.uk>
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   $Date$ $Revision$
-   */
-
 #import "common.h"
 #import "Foundation/NSArray.h"
 #import "GNUstepBase/GSObjCRuntime.h"
@@ -39,16 +12,11 @@
 #import "GSPrivate.h"
 #import "GSSorting.h"
 
-static SEL	eqSel;
-static SEL	oaiSel;
+static SEL	equalSel;
+static SEL	objectAtIndexSel;
 
 static Class	GSInlineArrayClass;
-/* This class stores objects inline in data beyond the end of the instance.
- * However, when GC is enabled the object data is typed, and all data after
- * the end of the class is ignored by the garbage collector (which would
- * mean that objects in the array could be collected).
- * We therefore do not provide the class when GC is being used.
- */
+// 由父类定义公共的接口, 然后子类实现某些特定的逻辑.
 @interface GSInlineArray : GSArray
 {
 }
@@ -91,6 +59,7 @@ static Class	GSInlineArrayClass;
   exception = [NSException exceptionWithName: NSRangeException
 		                      reason: reason
                                     userInfo: info];
+    // 在抛出异常的时候, 最好带上一些帮助使用者调试的信息.
   [exception raise];
 }
 
@@ -99,8 +68,8 @@ static Class	GSInlineArrayClass;
   if (self == [GSArray class])
     {
       [self setVersion: 1];
-      eqSel = @selector(isEqual:);
-      oaiSel = @selector(objectAtIndex:);
+      equalSel = @selector(isEqual:);
+      objectAtIndexSel = @selector(objectAtIndex:);
       GSInlineArrayClass = [GSInlineArray class];
     }
 }
@@ -114,7 +83,7 @@ static Class	GSInlineArrayClass;
 
 - (id) copyWithZone: (NSZone*)zone
 {
-  return RETAIN(self);	// Optimised version
+  return RETAIN(self);	// Optimised version // GSArray 是不可变版本, 所以这里仅仅是做一次 retain 操作.
 }
 
 - (void) dealloc
@@ -123,6 +92,7 @@ static Class	GSInlineArrayClass;
     {
       NSUInteger	i;
 
+        // 这里, 做了所有的 release 操作. 要知道, 容器类管理了生命周期不是白白来的, 而是在对应的方法里面, 增加了管理内存的方法而已.
       for (i = 0; i < _count; i++)
 	{
 	  [_contents_array[i] release];
@@ -139,13 +109,14 @@ static Class	GSInlineArrayClass;
 }
 
 /* This is the designated initializer for NSArray. */
+// 子类复写父类的 designated init. 所以会直接调用到这里. NSArray 那里, 应该说没有实现 initWithObjects 这个方法.
 - (id) initWithObjects: (const id[])objects count: (NSUInteger)count
 {
   if (count > 0)
     {
       NSUInteger i;
 
-      _contents_array = NSZoneMalloc([self zone], sizeof(id)*count);
+      _contents_array = NSZoneMalloc([self zone], sizeof(id)*count);// 首先, 是分配内存给 backing stroe.
       if (_contents_array == 0)
 	{
 	  DESTROY(self);
@@ -154,12 +125,12 @@ static Class	GSInlineArrayClass;
 
       for (i = 0; i < count; i++)
 	{
-	  if ((_contents_array[i] = RETAIN(objects[i])) == nil)
+	  if ((_contents_array[i] = RETAIN(objects[i])) == nil) // 这里有着 retain 操作.
 	    {
 	      _count = i;
 	      DESTROY(self);
 	      [NSException raise: NSInvalidArgumentException
-			  format: @"Tried to init array with nil to object"];
+			  format: @"Tried to init array with nil to object"]; // 这里就是为什么不能用 nil 的原因, 代码里面写明了.
 	    }
 	}
       _count = count;
@@ -167,7 +138,7 @@ static Class	GSInlineArrayClass;
   return self;
 }
 
-- (void) encodeWithCoder: (NSCoder*)aCoder
+- (void) encodeWithCoder: (NSCoder*)aCoder // 有时间应该把序列化反序列化的操作读一读.
 {
   if ([aCoder allowsKeyedCoding])
     {
@@ -221,7 +192,7 @@ static Class	GSInlineArrayClass;
   return _count;
 }
 
-- (NSUInteger) hash
+- (NSUInteger) hash // 这里, hash 只是简单的返回 count, 不过一般来说, NSArray 不会再放入另外容器类里面了.
 {
   return _count;
 }
@@ -233,29 +204,29 @@ static Class	GSInlineArrayClass;
   /*
    *	For large arrays, speed things up a little by caching the method.
    */
-  if (_count > 1)
+  if (_count > 1) // indexOfIndex . 还是用的equalSel 的方法.
     {
       BOOL		(*imp)(id,SEL,id);
       NSUInteger		i;
 
-      imp = (BOOL (*)(id,SEL,id))[anObject methodForSelector: eqSel];
+      imp = (BOOL (*)(id,SEL,id))[anObject methodForSelector: equalSel];
 
       for (i = 0; i < _count; i++)
 	{
-	  if ((*imp)(anObject, eqSel, _contents_array[i]))
+	  if ((*imp)(anObject, equalSel, _contents_array[i]))
 	    {
 	      return i;
 	    }
 	}
     }
-  else if (_count == 1 && [anObject isEqual: _contents_array[0]])
+  else if (_count == 1 && [anObject isEqual: _contents_array[0]]) // 这里不明白为什么要做专门的判断, 用上面的逻辑没有问题.
     {
       return 0;
     }
   return NSNotFound;
 }
 
-- (NSUInteger) indexOfObjectIdenticalTo: anObject
+- (NSUInteger) indexOfObjectIdenticalTo: anObject // 这个函数才是真正的内存比较.
 {
   NSUInteger i;
 
@@ -269,6 +240,7 @@ static Class	GSInlineArrayClass;
   return NSNotFound;
 }
 
+// 先指针, 后数量, 最后是各个比较.
 - (BOOL) isEqualToArray: (NSArray*)otherArray
 {
   NSUInteger i;
@@ -283,11 +255,11 @@ static Class	GSInlineArrayClass;
     }
   if (_count > 0)
     {
-      IMP	get1 = [otherArray methodForSelector: oaiSel];
+      IMP	get1 = [otherArray methodForSelector: objectAtIndexSel];
 
       for (i = 0; i < _count; i++)
 	{
-	  if (![_contents_array[i] isEqual: (*get1)(otherArray, oaiSel, i)])
+	  if (![_contents_array[i] isEqual: (*get1)(otherArray, objectAtIndexSel, i)])
 	    {
 	      return NO;
 	    }
@@ -319,6 +291,8 @@ static Class	GSInlineArrayClass;
   return _contents_array[index];
 }
 
+
+// 这些函数, 本来在 NSArray 那里都有实现, 但是作为子类, 可以直接通过指针获取到 对象, 而在NSArray里面, 还需要 objectAtIndex 函数. 所以, 这里这样写的效率要高得多.
 - (void) makeObjectsPerformSelector: (SEL)aSelector
 {
   NSUInteger i;
@@ -375,6 +349,9 @@ static Class	GSInlineArrayClass;
 
 @end
 
+
+/*
+ */
 @implementation	GSInlineArray
 - (void) dealloc
 {
@@ -394,6 +371,7 @@ static Class	GSInlineArrayClass;
 {
   return [self initWithObjects: 0 count: 0];
 }
+//
 - (id) initWithObjects: (const id[])objects count: (NSUInteger)count
 {
   _contents_array
@@ -419,6 +397,7 @@ static Class	GSInlineArrayClass;
 }
 @end
 
+// 真正的 mutableArray 实现
 @implementation GSMutableArray
 
 + (void) initialize
@@ -426,7 +405,7 @@ static Class	GSInlineArrayClass;
   if (self == [GSMutableArray class])
     {
       [self setVersion: 1];
-      GSObjCAddClassBehavior(self, [GSArray class]);
+      GSObjCAddClassBehavior(self, [GSArray class]); // 因为, GSMutableArray 是NSMutableArray 的子类, 所以, 这里它并没有GSArray 的那些实现. 这里需要显示的添加, 这样一来, 也就相当于它进行了继承, 而且, 它自己的内部, 是建立了和GSA rray 一样的成员变量.
     }
 }
 
@@ -438,7 +417,7 @@ static Class	GSInlineArrayClass;
       [NSException raise: NSInvalidArgumentException
 		  format: @"Tried to add nil to array"];
     }
-  if (_count >= _capacity)
+  if (_count >= _capacity) // 首先, 这里要进行扩容操作.
     {
       id	*ptr;
       size_t	size = (_capacity + _grow_factor)*sizeof(id);
@@ -453,7 +432,7 @@ static Class	GSInlineArrayClass;
       _capacity += _grow_factor;
       _grow_factor = _capacity/2;
     }
-  _contents_array[_count] = RETAIN(anObject);
+  _contents_array[_count] = RETAIN(anObject);// 然后, 不要忘记新的对象的 retain 操作.
   _count++;	/* Do this AFTER we have retained the object.	*/
   _version++;
 }
@@ -466,7 +445,7 @@ static Class	GSInlineArrayClass;
   NSArray       *copy;
 
   copy = (id)NSAllocateObject(GSInlineArrayClass, sizeof(id)*_count, zone);
-  return [copy initWithObjects: _contents_array count: _count];
+  return [copy initWithObjects: _contents_array count: _count]; // 新建一个内存空间, 然后直接用初始化方法进行 copy.
 }
 
 - (void) exchangeObjectAtIndex: (NSUInteger)i1
@@ -496,7 +475,7 @@ static Class	GSInlineArrayClass;
   return [self initWithCapacity: 0];
 }
 
-- (id) initWithCapacity: (NSUInteger)cap
+- (id) initWithCapacity: (NSUInteger)cap // 直接创建固定大小的内存, 避免数据的迁移操作.
 {
   if (cap == 0)
     {
@@ -543,7 +522,7 @@ static Class	GSInlineArrayClass;
     {
       NSUInteger	i;
 
-      for (i = 0; i < count; i++)
+      for (i = 0; i < count; i++) // 依次塞入并且 retain
 	{
 	  if ((_contents_array[i] = RETAIN(objects[i])) == nil)
 	    {
@@ -579,11 +558,11 @@ static Class	GSInlineArrayClass;
     {
       [self _raiseRangeExceptionWithIndex: index from: _cmd];
     }
-  if (_count == _capacity)
+  if (_count == _capacity)// 首先会进行扩容操作.
     {
       id	*ptr;
       size_t	size = (_capacity + _grow_factor)*sizeof(id);
-
+        // realloc 会将原来的内存复制过去. 所以这里可以没有.复制的操作
       ptr = NSZoneRealloc([self zone], _contents_array, size);
       if (ptr == 0)
 	{
@@ -592,10 +571,10 @@ static Class	GSInlineArrayClass;
 	}
       _contents_array = ptr;
       _capacity += _grow_factor;
-      _grow_factor = _capacity/2;
+      _grow_factor = _capacity/2; // 这里, 一致在更新 growFactor 的值. 看来在 iOS 里面, 更新的频率是 原来的容量 /2
     }
-  memmove(&_contents_array[index+1], &_contents_array[index],
-    (_count - index) * sizeof(id));
+  memmove(&_contents_array[index+1], &_contents_array[index], // memMove 会处理 overlap 的情况, 所以 memCopy 快一点,它不会进行判断.
+    (_count - index) * sizeof(id));// 因为这个调用时 insert, 所以这里进行了数据的搬移.
   /*
    *	Make sure the array is 'sane' so that it can be deallocated
    *	safely by an autorelease pool if the '[anObject retain]' causes
@@ -603,7 +582,7 @@ static Class	GSInlineArrayClass;
    */
   _contents_array[index] = nil;
   _count++;
-  _contents_array[index] = RETAIN(anObject);
+  _contents_array[index] = RETAIN(anObject); // 这里, 数组里面对传过来的对象进行了引用操作.
   _version++;
 }
 
@@ -638,9 +617,9 @@ static Class	GSInlineArrayClass;
           if (c != last)
             {
               last = c;
-              rel = [o methodForSelector: @selector(release)];
+              rel = [o methodForSelector: @selector(release)]; // 这里, 从来不是 [o release], 这样写, 而是直接用的 IMP, 猜测是为了效率.
             }
-          (*rel)(o, @selector(release));
+          (*rel)(o, @selector(release));// 这里调用了 release 方法.
           _contents_array[pos] = nil;
         }
       _version++;
@@ -648,7 +627,7 @@ static Class	GSInlineArrayClass;
 }
 
 - (void) removeLastObject
-{
+{ // 所以我们看, 没有什么内存释放的操作.
   _version++;
   if (_count == 0)
     {
@@ -677,10 +656,10 @@ static Class	GSInlineArrayClass;
       BOOL	(*imp)(id,SEL,id);
       BOOL	retained = NO;
 
-      imp = (BOOL (*)(id,SEL,id))[anObject methodForSelector: eqSel];
+      imp = (BOOL (*)(id,SEL,id))[anObject methodForSelector: equalSel];
       while (index-- > 0)
 	{
-	  if ((*imp)(anObject, eqSel, _contents_array[index]) == YES)
+	  if ((*imp)(anObject, equalSel, _contents_array[index]) == YES)
 	    {
 	      NSUInteger	pos = index;
 	      id	        obj = _contents_array[index];
@@ -697,7 +676,7 @@ static Class	GSInlineArrayClass;
 		}
 	      _count--;
 	      _contents_array[_count] = 0;
-	      RELEASE(obj);
+	      RELEASE(obj); // 这一步操作, 是为了抵消 Array 添加的 retain 操作.
 	    }
 	}
       if (retained == YES)
@@ -740,14 +719,14 @@ static Class	GSInlineArrayClass;
       return;
     }
   index = _count;
-  while (index-- > 0)
+  while (index-- > 0) // 这里, 编码是显得代码少, 但是从效率的角度上来说, 应该先删除元素, 然后进行内存的搬移操作.
     {
       if (_contents_array[index] == anObject)
 	{
 	  id		obj = _contents_array[index];
 	  NSUInteger	pos = index;
 
-	  while (++pos < _count)
+	  while (++pos < _count) // 这里, 可能会有内存的多次搬移, 这样增加了时间复杂度.
 	    {
 	      _contents_array[pos-1] = _contents_array[pos];
 	    }
@@ -838,7 +817,7 @@ static Class	GSInlineArrayClass;
    *	Swap objects in order so that there is always a valid object in the
    *	array in case a retain or release causes an exception.
    */
-  obj = _contents_array[index];
+  obj = _contents_array[index];  // 一个 retain, 一个 release. 注意, 先 retain. 后 release
   [anObject retain];
   _contents_array[index] = anObject;
   [obj release];
@@ -860,6 +839,7 @@ static Class	GSInlineArrayClass;
 - (void) sortWithOptions: (NSSortOptions)options
          usingComparator: (NSComparator)comparator
 {
+    // 所以, oc 里面也有算法库, 只不过传过去的都是 id 类型的数据而已.
   _version++;
   if ((1 < _count) && (NULL != comparator))
     {
@@ -960,6 +940,8 @@ static Class	GSInlineArrayClass;
 
 @implementation GSArrayEnumerator
 
+// 迭代器必然是和容器类写在一起的, 它必须知道容器类的真正的存储数据结构, 才能进行便利操作.
+
 - (id) initWithArray: (GSArray*)anArray
 {
   if ((self = [super init]) != nil)
@@ -987,6 +969,8 @@ static Class	GSInlineArrayClass;
 @end
 
 @implementation GSArrayEnumeratorReverse
+
+// 这里, reverse 只不过遍历的起点进行了变化.
 
 - (id) initWithArray: (GSArray*)anArray
 {
@@ -1123,6 +1107,8 @@ static Class	GSInlineArrayClass;
 
 @end
 
+
+// 这个类会在NSArray 的 allocWithZone 中返回. 然后在 init 方法中, 返回实际的对象.
 @implementation	GSPlaceholderArray
 
 + (void) initialize
@@ -1190,9 +1176,10 @@ static Class	GSInlineArrayClass;
 }
 
 - (id) initWithObjects: (const id[])objects count: (NSUInteger)count
-{
+{ // GSInlineArrayClass == [GSInlineArray class]
   self = (id)NSAllocateObject(GSInlineArrayClass, sizeof(id)*count,
     [self zone]);
+    // 注意, 这个里面, 将 self 进行了替换, 原来的 self 是 placeHolderArray, 现在变成了 GSInlineArray. 而 GSInlineArray, 基本就是 GSArray. 也就是有着真正内存管理的A rray.
   return [self initWithObjects: objects count: count];
 }
 

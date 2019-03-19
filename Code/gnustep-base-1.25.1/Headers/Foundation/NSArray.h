@@ -1,27 +1,3 @@
-/* Interface for NSArray for GNUStep
-   Copyright (C) 1995-2015 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Created: 1995
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */
-
 #ifndef __NSArray_h_GNUSTEP_BASE_INCLUDE
 #define __NSArray_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -77,6 +53,10 @@ typedef NSUInteger NSBinarySearchingOptions;
 - (BOOL) containsObject: (GS_GENERIC_TYPE(ElementT))anObject;
 
 /** <override-subclass />
+ count 方法是其他方法的基础, 苹果的文档规定了这个方法子类化的时候必须要实现.
+ objectAtIndex: 这个方法也是子类化的时候必须要实现的方法.
+ Remember that NSArray is the public interface for a class cluster
+ NSArray 不能当做一个对象来看待, 它更多的是一个接口.
  * Returns the number of elements contained in the receiver.
  */
 - (NSUInteger) count;
@@ -95,6 +75,11 @@ typedef NSUInteger NSBinarySearchingOptions;
 - (instancetype) initWithArray: (GS_GENERIC_CLASS(NSArray, ElementT)*)array
                      copyItems: (BOOL)shouldCopy;
 #endif
+    
+/*
+ 这两个方法, 都是 array 内部实现的序列化方法所产生的文件才行. array 序列化成为文件的话, 就是 plist 文件.
+ */
+    
 - (instancetype) initWithContentsOfFile: (NSString*)file;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (instancetype) initWithContentsOfURL: (NSURL*)aURL;

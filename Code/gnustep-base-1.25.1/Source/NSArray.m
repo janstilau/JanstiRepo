@@ -1,35 +1,3 @@
-/** NSArray - Array object to hold other objects.
-   Copyright (C) 1995-2015 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   From skeleton by:  Adam Fedor <fedor@boulder.colorado.edu>
-   Created: March 1995
-
-   Rewrite by: Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   January 1998 - new methods and changes as documented for Rhapsody plus
-   changes of array indices to type unsigned, plus major efficiency hacks.
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSArray class reference</title>
-   $Date$ $Revision$
-   */
-
 #import "common.h"
 #import "Foundation/NSArray.h"
 #import "Foundation/NSEnumerator.h"
@@ -47,7 +15,6 @@
 #import "Foundation/NSSet.h"
 #import "Foundation/NSUserDefaults.h"
 #import "Foundation/NSIndexSet.h"
-// For private method _decodeArrayOfObjectsForKey:
 #import "Foundation/NSKeyedArchiver.h"
 #import "GSPrivate.h"
 #import "GSFastEnumeration.h"
@@ -97,10 +64,10 @@ static NSLock			*placeholderLock;
 static SEL	addSel;
 static SEL	appSel;
 static SEL	countSel;
-static SEL	eqSel;
-static SEL	oaiSel;
-static SEL	remSel;
-static SEL	rlSel;
+static SEL	equalSel;
+static SEL	objectAtSel;
+static SEL	deleteObjAtSel;
+static SEL	removeLastSel;
 
 + (void) atExit
 {
@@ -118,10 +85,10 @@ static SEL	rlSel;
       addSel = @selector(addObject:);
       appSel = @selector(appendString:);
       countSel = @selector(count);
-      eqSel = @selector(isEqual:);
-      oaiSel = @selector(objectAtIndex:);
-      remSel = @selector(removeObjectAtIndex:);
-      rlSel = @selector(removeLastObject);
+      equalSel = @selector(isEqual:);
+      objectAtSel = @selector(objectAtIndex:);
+      deleteObjAtSel = @selector(removeObjectAtIndex:);
+      removeLastSel = @selector(removeLastObject);
 
       NSArrayClass = [NSArray class];
       NSMutableArrayClass = [NSMutableArray class];
@@ -132,9 +99,12 @@ static SEL	rlSel;
       /*
        * Set up infrastructure for placeholder arrays.
        */
+        /*
+         defaultPlaceholderArray 的作用是为了实现类簇模式, 在 alloc 的时候, 返回defaultPlaceholderArray, 然后在 init 方法里面, 实现真正的子类化的对象. 具体在 allocWithZone 里面
+         */
       defaultPlaceholderArray = (GSPlaceholderArray*)
 	NSAllocateObject(GSPlaceholderArrayClass, 0, NSDefaultMallocZone());
-      placeholderMap = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
+      placeholderMap = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks, // 这两个值都是全局变量, 里面已经设置好了各个函数指针的值.
 	NSNonRetainedObjectMapValueCallBacks, 0);
       placeholderLock = [NSLock new];
       [self registerAtExit];
@@ -143,48 +113,45 @@ static SEL	rlSel;
 
 + (id) allocWithZone: (NSZone*)z
 {
-  if (self == NSArrayClass)
-    {
-      /*
-       * For a constant array, we return a placeholder object that can
-       * be converted to a real object when its initialisation method
-       * is called.
-       */
-      if (z == NSDefaultMallocZone() || z == 0)
-	{
-	  /*
-	   * As a special case, we can return a placeholder for an array
-	   * in the default malloc zone extremely efficiently.
-	   */
-	  return defaultPlaceholderArray;
-	}
-      else
-	{
-	  id	obj;
-
-	  /*
-	   * For anything other than the default zone, we need to
-	   * locate the correct placeholder in the (lock protected)
-	   * table of placeholders.
-	   */
-	  [placeholderLock lock];
-	  obj = (id)NSMapGet(placeholderMap, (void*)z);
-	  if (obj == nil)
-	    {
-	      /*
-	       * There is no placeholder object for this zone, so we
-	       * create a new one and use that.
-	       */
-	      obj = (id)NSAllocateObject(GSPlaceholderArrayClass, 0, z);
-	      NSMapInsert(placeholderMap, (void*)z, (void*)obj);
-	    }
-	  [placeholderLock unlock];
-	  return obj;
-	}
+    // 如果不是自定义的子类, 就是上面的方法, 如果是自定义的子类, 那么 alloc WithZone 就是正常的分配内存, 返回对象.
+    if (self != NSArrayClass) {
+        return NSAllocateObject(self, 0, z);
     }
-  else
+    /*
+     * For a constant array, we return a placeholder object that can
+     * be converted to a real object when its initialisation method
+     * is called.
+     */
+    if (z == NSDefaultMallocZone() || z == 0)
     {
-      return NSAllocateObject(self, 0, z);
+        /*
+         * As a special case, we can return a placeholder for an array
+         * in the default malloc zone extremely efficiently.
+         */
+        return defaultPlaceholderArray;
+    }
+    else
+    { // 其实下面这里也是为了返回 defaultPlaceholderArray, 只不过 defaultPlaceholderArray 是一个 initilize 的时候就产生的, 因为defaultZone 太常用了. 可以看到, 就算是 gnu 的代码, 实现的思路和代码的风格也是可以重构的.
+        id    obj;
+        
+        /*
+         * For anything other than the default zone, we need to
+         * locate the correct placeholder in the (lock protected)
+         * table of placeholders.
+         */
+        [placeholderLock lock];
+        obj = (id)NSMapGet(placeholderMap, (void*)z);
+        if (obj == nil)
+        {
+            /*
+             * There is no placeholder object for this zone, so we
+             * create a new one and use that.
+             */
+            obj = (id)NSAllocateObject(GSPlaceholderArrayClass, 0, z);
+            NSMapInsert(placeholderMap, (void*)z, (void*)obj);
+        }
+        [placeholderLock unlock];
+        return obj;
     }
 }
 
@@ -197,7 +164,7 @@ static SEL	rlSel;
 
   o = [self allocWithZone: NSDefaultMallocZone()];
   o = [o initWithObjects: (id*)0 count: 0];
-  return AUTORELEASE(o);
+  return AUTORELEASE(o); // Gnu 的代码里面有很多宏, 而这些宏其实都是简单的代码. 猜想这样做是为了之后可以方便修改.
 }
 
 /**
@@ -278,9 +245,16 @@ static SEL	rlSel;
     initWithObjects: objects count: count]);
 }
 
+/*
+ 从上面我们可以看到, 类方法仅仅是 alloc init 的调用而已, 这也是为什么苹果现在推崇 alloc init 这种两部的写法. 在上面的方法里面, 差别就是 init方法的调用.
+ */
+
 /**
  * Returns an autoreleased array formed from the contents of
  * the receiver and adding anObject as the last item.
+ */
+/*
+ 
  */
 - (NSArray*) arrayByAddingObject: (id)anObject
 {
@@ -298,7 +272,7 @@ static SEL	rlSel;
   else
     {
       GS_BEGINIDBUF(objects, c+1);
-
+ // 这个宏 会将分配一块内存空间给 objects, 然后下面的方法会进行这个空间的赋值操作. 所以, NSArray 的 backing 还是需要实际的C++ 的内存分配才能够进行的. GSArrayClass 就是实际的进行内存管理的类, 它是NSA rray 的子类, 代表着它符合NSA rray 的所有接口.
       [self getObjects: objects];
       objects[c] = anObject;
       na = [[GSArrayClass allocWithZone: NSDefaultMallocZone()]
@@ -312,6 +286,7 @@ static SEL	rlSel;
 /**
  * Returns a new array which is the concatenation of self and
  * otherArray (in this precise order).
+ 整个实现的思路不复杂, 还是分配空间, 填入数据, 然后GSA rray 进行分配.
  */
 - (NSArray*) arrayByAddingObjectsFromArray: (NSArray*)anotherArray
 {
@@ -328,7 +303,7 @@ static SEL	rlSel;
     GS_BEGINIDBUF(objects, e);
 
     [self getObjects: objects];
-    if ([anotherArray isProxy])
+    if ([anotherArray isProxy]) // 这里, 如果 anotherArray 是一个proxy, 那么其实这个对象不能使用 getObjects 这个方法的, 因为这个方法的内部, 用到了 IMP. 所以, 只能用 objectAtIndex 这样的方法, 因为这样的方法会被传递到 proxy 代理的对象中区.
       {
 	NSUInteger	i = c;
 	NSUInteger	j = 0;
@@ -353,7 +328,7 @@ static SEL	rlSel;
 /**
  * Returns the abstract class ... arrays are coded as abstract arrays.
  */
-- (Class) classForCoder
+- (Class) classForCoder // 和序列化相关, 先不考虑.
 {
   return NSArrayClass;
 }
@@ -361,6 +336,7 @@ static SEL	rlSel;
 /**
  * Returns YES if anObject belongs to self. No otherwise.<br />
  * The [NSObject-isEqual:] method of anObject is used to test for equality.
+ 从这个方法, 我们看到,  contains Object 在 array 里面是遍历才能确定的.
  */
 - (BOOL) containsObject: (id)anObject
 {
@@ -380,12 +356,16 @@ static SEL	rlSel;
   return [copy initWithArray: self copyItems: YES];
 }
 
+/*
+ 子类的责任, 因为必须要有实际的内存空间才能返回 数量, NSArray 是没有管理内存的责任的.
+ */
 - (NSUInteger) count
 {
   [self subclassResponsibility: _cmd];
   return 0;
 }
 
+// 没看.
 - (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state
 				   objects: (__unsafe_unretained id[])stackbuf
 				     count: (NSUInteger)len
@@ -437,7 +417,7 @@ static SEL	rlSel;
 {
   NSUInteger	count = [self count];
 
-  if ([aCoder allowsKeyedCoding])
+  if ([aCoder allowsKeyedCoding])// NSKeyValueArchive return YES
     {
       /* HACK ... MacOS-X seems to code differently if the coder is an
        * actual instance of NSKeyedArchiver
@@ -466,7 +446,7 @@ static SEL	rlSel;
       unsigned  items = (unsigned)count;
 
       [aCoder encodeValueOfObjCType: @encode(unsigned)
-				 at: &items];
+				 at: &items]; // 首先, 将数量序列化,
       if (count > 0)
 	{
 	  GS_BEGINIDBUF(a, count);
@@ -474,7 +454,7 @@ static SEL	rlSel;
 	  [self getObjects: a];
 	  [aCoder encodeArrayOfObjCType: @encode(id)
 				  count: count
-				     at: a];
+				     at: a]; // 然后调用将数组序列化的方法, 用的是对象 id 类型. 具体的序列化方法, 在 encodeArrayOfObjCType 内部.
 	  GS_ENDIDBUF();
 	}
     }
@@ -484,28 +464,32 @@ static SEL	rlSel;
  * Copies the objects from the receiver to aBuffer, which must be
  * an area of memory large enough to hold them.
  */
+/*
+ OC 的方法里面, get 一般就是用在这个时候, 将数据放到一个 buf 里面, 这个 buf 是输出参数, 必须实现分配, 由调用者来确保它是有效的.
+ */
 - (void) getObjects: (__unsafe_unretained id[])aBuffer
 {
   NSUInteger i, c = [self count];
-  IMP	get = [self methodForSelector: oaiSel];
+  IMP	get = [self methodForSelector: objectAtSel];
 
   for (i = 0; i < c; i++)
-    aBuffer[i] = (*get)(self, oaiSel, i);
+    aBuffer[i] = (*get)(self, objectAtSel, i);
 }
 
 /**
  * Copies the objects from the range aRange of the receiver to aBuffer,
  * which must be an area of memory large enough to hold them.
  */
+
 - (void) getObjects: (__unsafe_unretained id[])aBuffer range: (NSRange)aRange
 {
   NSUInteger i, j = 0, c = [self count], e = aRange.location + aRange.length;
-  IMP	get = [self methodForSelector: oaiSel];
+  IMP	get = [self methodForSelector: objectAtSel];
 
   GS_RANGE_CHECK(aRange, c);
 
   for (i = aRange.location; i < e; i++)
-    aBuffer[j++] = (*get)(self, oaiSel, i);
+    aBuffer[j++] = (*get)(self, objectAtSel, i);
 }
 
 /**
@@ -520,17 +504,21 @@ static SEL	rlSel;
  * Returns the index of the specified object in the receiver, or
  * NSNotFound if the object is not present.
  */
+
+/*
+ 这两个方法, 都是通过遍历实现的查询. 所以数组中判断一个对象在不在, 是代价很大的.
+ */
 - (NSUInteger) indexOfObjectIdenticalTo: (id)anObject
 {
   NSUInteger c = [self count];
 
   if (c > 0)
     {
-      IMP	get = [self methodForSelector: oaiSel];
+      IMP	get = [self methodForSelector: objectAtSel];
       NSUInteger	i;
 
       for (i = 0; i < c; i++)
-	if (anObject == (*get)(self, oaiSel, i))
+	if (anObject == (*get)(self, objectAtSel, i))
 	  return i;
     }
   return NSNotFound;
@@ -543,12 +531,12 @@ static SEL	rlSel;
 - (NSUInteger) indexOfObjectIdenticalTo: anObject inRange: (NSRange)aRange
 {
   NSUInteger i, e = aRange.location + aRange.length, c = [self count];
-  IMP	get = [self methodForSelector: oaiSel];
+  IMP	get = [self methodForSelector: objectAtSel];
 
   GS_RANGE_CHECK(aRange, c);
 
   for (i = aRange.location; i < e; i++)
-    if (anObject == (*get)(self, oaiSel, i))
+    if (anObject == (*get)(self, objectAtSel, i))
       return i;
   return NSNotFound;
 }
@@ -557,6 +545,7 @@ static SEL	rlSel;
  * Returns the index of the first object found in the receiver
  * which is equal to anObject (using anObject's [NSObject-isEqual:] method).
  * Returns NSNotFound on failure.
+ 这个方法就是遍历操作, 不过是在这里面, 用到其实要使用的是每个方法的Equal 方法, 这里, 系统的类的实现性能优先, 直接用的I mp
  */
 - (NSUInteger) indexOfObject: (id)anObject
 {
@@ -565,12 +554,12 @@ static SEL	rlSel;
   if (c > 0 && anObject != nil)
     {
       NSUInteger	i;
-      IMP	get = [self methodForSelector: oaiSel];
+      IMP	get = [self methodForSelector: objectAtSel];
       BOOL	(*eq)(id, SEL, id)
-	= (BOOL (*)(id, SEL, id))[anObject methodForSelector: eqSel];
+	= (BOOL (*)(id, SEL, id))[anObject methodForSelector: equalSel];
 
       for (i = 0; i < c; i++)
-	if ((*eq)(anObject, eqSel, (*get)(self, oaiSel, i)) == YES)
+	if ((*eq)(anObject, equalSel, (*get)(self, objectAtSel, i)) == YES)
 	  return i;
     }
   return NSNotFound;
@@ -584,15 +573,15 @@ static SEL	rlSel;
 - (NSUInteger) indexOfObject: (id)anObject inRange: (NSRange)aRange
 {
   NSUInteger i, e = aRange.location + aRange.length, c = [self count];
-  IMP	get = [self methodForSelector: oaiSel];
+  IMP	get = [self methodForSelector: objectAtSel];
   BOOL	(*eq)(id, SEL, id)
-    = (BOOL (*)(id, SEL, id))[anObject methodForSelector: eqSel];
+    = (BOOL (*)(id, SEL, id))[anObject methodForSelector: equalSel];
 
   GS_RANGE_CHECK(aRange, c);
 
   for (i = aRange.location; i < e; i++)
     {
-      if ((*eq)(anObject, eqSel, (*get)(self, oaiSel, i)) == YES)
+      if ((*eq)(anObject, equalSel, (*get)(self, objectAtSel, i)) == YES)
         return i;
     }
   return NSNotFound;
@@ -638,7 +627,7 @@ static SEL	rlSel;
 - (id) initWithArray: (NSArray*)array copyItems: (BOOL)shouldCopy
 {
   NSUInteger	c = [array count];
-  GS_BEGINIDBUF(objects, c);
+  GS_BEGINIDBUF(objects, c); // 分配存储空间.
 
   if ([array isProxy])
     {
@@ -671,6 +660,7 @@ static SEL	rlSel;
     {
       self = [self initWithObjects: objects count: c];
     }
+    // initWithObjects count 是所有 init 方法的重点, 是 designated init
   GS_ENDIDBUF();
   return self;
 }
@@ -793,11 +783,11 @@ static SEL	rlSel;
     {
       id result;
 
-      NS_DURING
+      NS_DURING // 标志异常发生的区间.
 	{
-	  result = [myString propertyList];
+	  result = [myString propertyList]; // 这里里面的细节不去细看, 应该是将字符串转换成为对象的代码.
 	}
-      NS_HANDLER
+      NS_HANDLER // 标志异常处理的区间.
 	{
           result = nil;
 	}
@@ -873,6 +863,8 @@ static SEL	rlSel;
   return self;
 }
 
+// 这里, NSArray 没有实现. 子类有责任实现. 那么现在来看, 就是 PlaceholderArray 中进行了覆盖
+// PlaceholderArray 的 initWithObject 中, 又进行了一次 allocwithZone 的操作, 创建真正的子类对象, 这个子类对象, 在GNU 中是 GSInlineArray.
 - (id) initWithObjects: (const id[])objects count: (NSUInteger)count
 {
   self = [self init];
@@ -939,9 +931,12 @@ static SEL	rlSel;
   return NO;
 }
 
-
+// 可以看到, 其他的所有操作, 都是建立在 objectAtIndex 和 count 的基础上的, 也就是说, 接口类也能提供很多很多的实现, 主要子类能够提供需要子类提供的实现就好. tempalteMethod
 /**
  * Returns YES if the receiver is equal to otherArray, NO otherwise.
+ */
+/*
+ 
  */
 - (BOOL) isEqualToArray: (NSArray*)otherArray
 {
@@ -954,11 +949,11 @@ static SEL	rlSel;
     return NO;
   if (c > 0)
     {
-      IMP	get0 = [self methodForSelector: oaiSel];
-      IMP	get1 = [otherArray methodForSelector: oaiSel];
+      IMP	get0 = [self methodForSelector: objectAtSel];
+      IMP	get1 = [otherArray methodForSelector: objectAtSel];
 
       for (i = 0; i < c; i++)
-	if (![(*get0)(self, oaiSel, i) isEqual: (*get1)(otherArray, oaiSel, i)])
+	if (![(*get0)(self, objectAtSel, i) isEqual: (*get1)(otherArray, objectAtSel, i)])
 	  return NO;
     }
   return YES;
@@ -990,18 +985,21 @@ static SEL	rlSel;
  * Makes each object in the array perform aSelector.<br />
  * This is done sequentially from the first to the last object.
  */
+/*
+ 这个实现起来, 和自己的思路完全一致.
+ */
 - (void) makeObjectsPerformSelector: (SEL)aSelector
 {
   NSUInteger	c = [self count];
 
   if (c > 0)
     {
-      IMP	        get = [self methodForSelector: oaiSel];
+      IMP	        get = [self methodForSelector: objectAtSel];
       NSUInteger	i = 0;
 
       while (i < c)
 	{
-	  [(*get)(self, oaiSel, i++) performSelector: aSelector];
+	  [(*get)(self, objectAtSel, i++) performSelector: aSelector];
 	}
     }
 }
@@ -1024,12 +1022,12 @@ static SEL	rlSel;
 
   if (c > 0)
     {
-      IMP	        get = [self methodForSelector: oaiSel];
+      IMP	        get = [self methodForSelector: objectAtSel];
       NSUInteger	i = 0;
 
       while (i < c)
 	{
-	  [(*get)(self, oaiSel, i++) performSelector: aSelector
+	  [(*get)(self, objectAtSel, i++) performSelector: aSelector
 					  withObject: arg];
 	}
     }
@@ -1043,6 +1041,10 @@ static SEL	rlSel;
    [self makeObjectsPerformSelector: aSelector withObject: argument];
 }
 
+/*
+ 所谓的 context, 就是任何 void* 可以传递的数据, 有的时候, 里面是一个字典, 字典里面存放各种需要的值. 这里 ,context 就是一个sel;
+ 这个 compare 还是比大小, 不过进行了一次比大小的封装而已.
+ */
 static NSComparisonResult
 compare(id elem1, id elem2, void* context)
 {
@@ -1079,6 +1081,7 @@ compare(id elem1, id elem2, void* context)
  * Returns an autoreleased array in which the objects are ordered
  * according to a sort with comparator.  This invokes
  * -sortedArrayUsingFunction:context:hint: with a nil hint.
+ sort 这个方法, 其实是需要两个函数, 一个是如何排序的函数, 一个是如何比大小的函数.
  */
 - (NSArray*) sortedArrayUsingFunction:
   (NSComparisonResult(*)(id,id,void*))comparator
@@ -1112,6 +1115,8 @@ compare(id elem1, id elem2, void* context)
   sortedArray = AUTORELEASE([[NSMutableArrayClass allocWithZone:
     NSDefaultMallocZone()] initWithArray: self copyItems: NO]);
   [sortedArray sortUsingFunction: comparator context: context];
+    
+    // 先复制一个可变的版本, 然后调用可变版本的 sort 方法, 然后返回.
 
   return GS_IMMUTABLE(sortedArray);
 }
@@ -1236,6 +1241,7 @@ compare(id elem1, id elem2, void* context)
       NSUInteger	i;
 
       [s appendString: [[self objectAtIndex: 0] description]];
+    // 先写出跳出循环的逻辑, 然后用循环.
       for (i = 1; i < c; i++)
 	{
 	  if (l > 0)
@@ -1258,16 +1264,16 @@ compare(id elem1, id elem2, void* context)
   NSUInteger i, c = [self count];
   NSMutableArray *a = AUTORELEASE([[NSMutableArray alloc] initWithCapacity: 1]);
   Class	cls = [NSString class];
-  IMP	get = [self methodForSelector: oaiSel];
+  IMP	get = [self methodForSelector: objectAtSel];
   IMP	add = [a methodForSelector: addSel];
 
   for (i = 0; i < c; i++)
     {
-      id o = (*get)(self, oaiSel, i);
+      id o = (*get)(self, objectAtSel, i);
 
       if ([o isKindOfClass: cls])
 	{
-	  if ([extensions containsObject: [o pathExtension]])
+	  if ([extensions containsObject: [o pathExtension]]) // 这里其实也有一遍循环操作. 所以, 如果量特别大, 可以先替换 set, 然后用 set 进行比较.
 	    {
 	      (*add)(a, addSel, o);
 	    }
@@ -1281,7 +1287,7 @@ compare(id elem1, id elem2, void* context)
  * which is present in the otherArray as determined by using the
  * -containsObject: method.
  */
-- (id) firstObjectCommonWithArray: (NSArray*)otherArray
+- (id) firstObjectCommonWithArray: (NSArray*)otherArray // 这破函数谁会用...
 {
   NSUInteger i, c = [self count];
   id o;
@@ -1314,10 +1320,10 @@ compare(id elem1, id elem2, void* context)
   else
     {
       GS_BEGINIDBUF(objects, aRange.length);
-
       [self getObjects: objects range: aRange];
       na = [NSArray arrayWithObjects: objects count: aRange.length];
       GS_ENDIDBUF();
+        // 这两个宏必须同时调用, 因为如果上面的宏, 是分配的堆空间的数据, 这里不调用 end 宏, 会有内存释放的.
     }
   return na;
 }
@@ -1356,7 +1362,7 @@ compare(id elem1, id elem2, void* context)
  * Returns the result of invoking -descriptionWithLocale:indent: with a nil
  * locale and zero indent.
  */
-- (NSString*) description
+- (NSString*) description // 所以, 这里其实是个函数调用的关系.
 {
   return [self descriptionWithLocale: nil];
 }
@@ -1469,6 +1475,8 @@ compare(id elem1, id elem2, void* context)
  * A special case: the key "count" is not forwarded to each object
  * of the receiver but returns the number of objects of the receiver.<br/>
  */
+
+//  NSArray 对于 valueForKey 的特殊实现.
 - (id) valueForKey: (NSString*)key
 {
   id result = nil;
@@ -1503,7 +1511,7 @@ compare(id elem1, id elem2, void* context)
             {
               if (null == nil)
 		{
-		  null = RETAIN([NSNull null]);
+		  null = RETAIN([NSNull null]); // 如果这里是 nil, 返回 NSNull null. 其实, 这就是一个单例而已.
 		}
               result = null;
             }
@@ -1516,6 +1524,7 @@ compare(id elem1, id elem2, void* context)
   return result;
 }
 
+// 如果是普通的对象, 那么就是按照 keyPath 进行查找操作, 但是对于 Array 来说, 可以在路径前面加上 average 等对于 array 有着特殊函数的功能描述.
 - (id) valueForKeyPath: (NSString*)path
 {
   id	result = nil;
@@ -1524,7 +1533,7 @@ compare(id elem1, id elem2, void* context)
     {
       NSRange   r;
 
-      r = [path rangeOfString: @"."];
+      r = [path rangeOfString: @"."];// 首先, 判断一下有没有 . 的链接. 如果有话,就要按照路径进行一层层的查找.
       if (r.length == 0)
         {
           if ([path isEqualToString: @"@count"] == YES)
@@ -1539,7 +1548,7 @@ compare(id elem1, id elem2, void* context)
       else
         {
           NSString      *op = [path substringToIndex: r.location];
-          NSString      *rem = [path substringFromIndex: NSMaxRange(r)];
+          NSString      *remains = [path substringFromIndex: NSMaxRange(r)];
           NSUInteger    count = [self count];
 
           if ([op isEqualToString: @"@count"] == YES)
@@ -1557,11 +1566,11 @@ compare(id elem1, id elem2, void* context)
 
                   while ((o = [e nextObject]) != nil)
                     {
-                      d += [[o valueForKeyPath: rem] doubleValue];
+                      d += [[o valueForKeyPath: remains] doubleValue];
                     }
                   d /= count;
                 }
-              result = [NSNumber numberWithDouble: d];
+              result = [NSNumber numberWithDouble: d]; // 这里通过迭代器, 实现了递归操作.
             }
           else if ([op isEqualToString: @"@max"] == YES)
             {
@@ -1572,7 +1581,7 @@ compare(id elem1, id elem2, void* context)
 
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       if (result == nil
                         || [result compare: o] == NSOrderedAscending)
                         {
@@ -1590,7 +1599,7 @@ compare(id elem1, id elem2, void* context)
 
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       if (result == nil
                         || [result compare: o] == NSOrderedDescending)
                         {
@@ -1610,7 +1619,7 @@ compare(id elem1, id elem2, void* context)
 
                   while ((o = [e nextObject]) != nil)
                     {
-                      d += [[o valueForKeyPath: rem] doubleValue];
+                      d += [[o valueForKeyPath: remains] doubleValue];
                     }
                 }
               result = [NSNumber numberWithDouble: d];
@@ -1625,7 +1634,7 @@ compare(id elem1, id elem2, void* context)
                   result = [NSMutableSet set];
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       [result addObjectsFromArray: o];
                     }
                   result = [result allObjects];
@@ -1645,7 +1654,7 @@ compare(id elem1, id elem2, void* context)
                   result = [NSMutableSet set];
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       [result addObject: o];
                     }
                   result = [result allObjects];
@@ -1665,7 +1674,7 @@ compare(id elem1, id elem2, void* context)
                   result = [NSMutableSet set];
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       [result addObjectsFromArray: [o allObjects]];
                     }
                   result = [result allObjects];
@@ -1685,7 +1694,7 @@ compare(id elem1, id elem2, void* context)
                   result = [GSMutableArray array];
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       [result addObjectsFromArray: o];
                     }
                   result = GS_IMMUTABLE(result);
@@ -1705,7 +1714,7 @@ compare(id elem1, id elem2, void* context)
                   result = [GSMutableArray array];
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       [result addObject: o];
                     }
                   result = GS_IMMUTABLE(result);
@@ -1725,7 +1734,7 @@ compare(id elem1, id elem2, void* context)
                   result = [GSMutableArray array];
                   while ((o = [e nextObject]) != nil)
                     {
-                      o = [o valueForKeyPath: rem];
+                      o = [o valueForKeyPath: remains];
                       [result addObjectsFromArray: [o allObjects]];
                     }
                   result = GS_IMMUTABLE(result);
@@ -1790,6 +1799,15 @@ compare(id elem1, id elem2, void* context)
 
   {
   GS_DISPATCH_CREATE_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
+      
+      /*
+       #define FOR_IN(type, var, collection) \
+       for (type var in collection)\
+       {
+       #define END_FOR_IN(collection) }
+       有的时候, 宏就是函数. 它能起到很好的提示作用.
+       如果, 是 concurrent 就是一个并发队列, 如果是 serial, 就是一个串行队列.
+       */
   FOR_IN (id, obj, enumerator)
     GS_DISPATCH_SUBMIT_BLOCK(enumQueueGroup, enumQueue, if (YES == shouldStop) {return;}, return, aBlock, obj, count, &shouldStop);
       if (isReverse)
@@ -1901,6 +1919,7 @@ compare(id elem1, id elem2, void* context)
 
   /* If we are enumerating in reverse, use the reverse enumerator for fast
    * enumeration. */
+    // 可以看到, 所谓的 options 都要在代码里一个个的拆解出来.
   if (opts & NSEnumerationReverse)
     {
       enumerator = [self reverseObjectEnumerator];
@@ -2089,6 +2108,10 @@ compare(id elem1, id elem2, void* context)
  * Replaces objects in the receiver with those from anArray.<br />
  * Raises an exception if given a range extending beyond the array.<br />
  */
+
+/*
+ 这样写铁定效率特别低, 因为明显应该一次多移动一块内存才好. 但是不要忘记了, 这里的是NSA rray, 它并不知道底部的实现. 万一是用的链表实现的呢.
+ */
 - (void) replaceObjectsInRange: (NSRange)aRange
 	  withObjectsFromArray: (NSArray*)anArray
 {
@@ -2202,19 +2225,19 @@ compare(id elem1, id elem2, void* context)
   if (i > 0)
     {
       IMP	rem = 0;
-      IMP	get = [self methodForSelector: oaiSel];
+      IMP	get = [self methodForSelector: objectAtSel];
 
       while (i-- > 0)
 	{
-	  id	o = (*get)(self, oaiSel, i);
+	  id	o = (*get)(self, objectAtSel, i);
 
 	  if (o == anObject)
 	    {
 	      if (rem == 0)
 		{
-		  rem = [self methodForSelector: remSel];
+		  rem = [self methodForSelector: deleteObjAtSel];
 		}
-	      (*rem)(self, remSel, i);
+	      (*rem)(self, deleteObjAtSel, i);
 	    }
 	}
     }
@@ -2245,19 +2268,19 @@ compare(id elem1, id elem2, void* context)
   if (i > s)
     {
       IMP	rem = 0;
-      IMP	get = [self methodForSelector: oaiSel];
+      IMP	get = [self methodForSelector: objectAtSel];
       BOOL	(*eq)(id, SEL, id)
-	= (BOOL (*)(id, SEL, id))[anObject methodForSelector: eqSel];
+	= (BOOL (*)(id, SEL, id))[anObject methodForSelector: equalSel];
 
       while (i-- > s)
 	{
-	  id	o = (*get)(self, oaiSel, i);
+	  id	o = (*get)(self, objectAtSel, i);
 
-	  if (o == anObject || (*eq)(anObject, eqSel, o) == YES)
+	  if (o == anObject || (*eq)(anObject, equalSel, o) == YES)
 	    {
 	      if (rem == 0)
 		{
-		  rem = [self methodForSelector: remSel];
+		  rem = [self methodForSelector: deleteObjAtSel];
 		  /*
 		   * We need to retain the object so that when we remove the
 		   * first equal object we don't get left with a bad object
@@ -2265,7 +2288,7 @@ compare(id elem1, id elem2, void* context)
 		   */
 		  RETAIN(anObject);
 		}
-	      (*rem)(self, remSel, i);
+	      (*rem)(self, deleteObjAtSel, i);
 	    }
 	}
       if (rem != 0)
@@ -2300,19 +2323,19 @@ compare(id elem1, id elem2, void* context)
   if (i > s)
     {
       IMP	rem = 0;
-      IMP	get = [self methodForSelector: oaiSel];
+      IMP	get = [self methodForSelector: objectAtSel];
 
       while (i-- > s)
 	{
-	  id	o = (*get)(self, oaiSel, i);
+	  id	o = (*get)(self, objectAtSel, i);
 
 	  if (o == anObject)
 	    {
 	      if (rem == 0)
 		{
-		  rem = [self methodForSelector: remSel];
+		  rem = [self methodForSelector: deleteObjAtSel];
 		}
-	      (*rem)(self, remSel, i);
+	      (*rem)(self, deleteObjAtSel, i);
 	    }
 	}
     }
@@ -2335,19 +2358,19 @@ compare(id elem1, id elem2, void* context)
   if (i > 0)
     {
       IMP	rem = 0;
-      IMP	get = [self methodForSelector: oaiSel];
+      IMP	get = [self methodForSelector: objectAtSel];
       BOOL	(*eq)(id, SEL, id)
-	= (BOOL (*)(id, SEL, id))[anObject methodForSelector: eqSel];
+	= (BOOL (*)(id, SEL, id))[anObject methodForSelector: equalSel];
 
       while (i-- > 0)
 	{
-	  id	o = (*get)(self, oaiSel, i);
+	  id	o = (*get)(self, objectAtSel, i);
 
-	  if (o == anObject || (*eq)(anObject, eqSel, o) == YES)
+	  if (o == anObject || (*eq)(anObject, equalSel, o) == YES)
 	    {
 	      if (rem == 0)
 		{
-		  rem = [self methodForSelector: remSel];
+		  rem = [self methodForSelector: deleteObjAtSel];
 		  /*
 		   * We need to retain the object so that when we remove the
 		   * first equal object we don't get left with a bad object
@@ -2355,7 +2378,7 @@ compare(id elem1, id elem2, void* context)
 		   */
 		  RETAIN(anObject);
 		}
-	      (*rem)(self, remSel, i);
+	      (*rem)(self, deleteObjAtSel, i);
 	    }
 	}
       if (rem != 0)
@@ -2374,11 +2397,11 @@ compare(id elem1, id elem2, void* context)
 
   if (c > 0)
     {
-      IMP	remLast = [self methodForSelector: rlSel];
+      IMP	remLast = [self methodForSelector: removeLastSel];
 
       while (c--)
 	{
-	  (*remLast)(self, rlSel);
+	  (*remLast)(self, removeLastSel);
 	}
     }
 }
@@ -2393,11 +2416,11 @@ compare(id elem1, id elem2, void* context)
   if (c > 0)
     {
       NSUInteger	i;
-      IMP	get = [otherArray methodForSelector: oaiSel];
+      IMP	get = [otherArray methodForSelector: objectAtSel];
       IMP	add = [self methodForSelector: addSel];
 
       for (i = 0; i < c; i++)
-	(*add)(self, addSel,  (*get)(otherArray, oaiSel, i));
+	(*add)(self, addSel,  (*get)(otherArray, objectAtSel, i));
     }
 }
 
@@ -2409,6 +2432,7 @@ compare(id elem1, id elem2, void* context)
 {
   [self removeAllObjects];
   [self addObjectsFromArray: otherArray];
+    // 这里其实是全删和全加的操作.
 }
 
 /**
@@ -2475,11 +2499,11 @@ compare(id elem1, id elem2, void* context)
 
       if (to > 0)
 	{
-	  IMP	rem = [self methodForSelector: remSel];
+	  IMP	rem = [self methodForSelector: deleteObjAtSel];
 
 	  while (to--)
 	    {
-	      (*rem)(self, remSel, sorted[to]);
+	      (*rem)(self, deleteObjAtSel, sorted[to]);
 	    }
 	}
       GS_ENDITEMBUF();
@@ -2497,11 +2521,11 @@ compare(id elem1, id elem2, void* context)
   if (c > 0)
     {
       NSUInteger	i;
-      IMP	get = [otherArray methodForSelector: oaiSel];
+      IMP	get = [otherArray methodForSelector: objectAtSel];
       IMP	rem = [self methodForSelector: @selector(removeObject:)];
 
       for (i = 0; i < c; i++)
-	(*rem)(self, @selector(removeObject:), (*get)(otherArray, oaiSel, i));
+	(*rem)(self, @selector(removeObject:), (*get)(otherArray, objectAtSel, i));
     }
 }
 
@@ -2521,11 +2545,11 @@ compare(id elem1, id elem2, void* context)
 
   if (i > s)
     {
-      IMP	rem = [self methodForSelector: remSel];
+      IMP	rem = [self methodForSelector: deleteObjAtSel];
 
       while (i-- > s)
 	{
-	  (*rem)(self, remSel, i);
+	  (*rem)(self, deleteObjAtSel, i);
 	}
     }
 }
@@ -2613,6 +2637,8 @@ compare(id elem1, id elem2, void* context)
 }
 @end
 
+
+// 这里实现的都是最通用的版本, 在实际的子类中, 可以写出更加适合自己数据结构的版本. 比如, GSArray 中, 就是直接能够访问内存的版本.
 @implementation NSArrayEnumerator
 
 - (id) initWithArray: (NSArray*)anArray
@@ -2623,7 +2649,7 @@ compare(id elem1, id elem2, void* context)
       array = anArray;
       IF_NO_GC(RETAIN(array));
       pos = 0;
-      get = [array methodForSelector: oaiSel];
+      get = [array methodForSelector: objectAtSel];
       cnt = (NSUInteger (*)(NSArray*, SEL))[array methodForSelector: countSel];
     }
   return self;
@@ -2639,7 +2665,7 @@ compare(id elem1, id elem2, void* context)
 {
   if (pos >= (*cnt)(array, countSel))
     return nil;
-  return (*get)(array, oaiSel, pos++);
+  return (*get)(array, objectAtSel, pos++);
 }
 
 - (void) dealloc
@@ -2672,7 +2698,7 @@ compare(id elem1, id elem2, void* context)
 {
   if (pos == 0)
     return nil;
-  return (*get)(array, oaiSel, --pos);
+  return (*get)(array, objectAtSel, --pos);
 }
 @end
 
