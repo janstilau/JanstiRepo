@@ -31,6 +31,7 @@
 /**
  * An object to use as a placeholder - in collections for instance.
  */
+// 一个单例, 表示 nil 状态.
 @implementation	NSNull
 
 static NSNull	*null = 0;

@@ -1,31 +1,3 @@
-/** Implementation of NSTimer for GNUstep
-   Copyright (C) 1995, 1996, 1999 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Created: March 1996
-
-   Rewrite by: Richard Frith-Macdonald <rfm@gnu.org>
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSTimer class reference</title>
-   $Date$ $Revision$
-   */
 
 #import "common.h"
 #define	EXPOSE_NSTimer_IVARS	1
@@ -62,37 +34,6 @@ static Class	NSDate_class;
     }
 }
 
-- (NSString*) description
-{
-  NSString      *s = [super description];
-
-  if ([self isValid])
-    {
-      if (_selector == 0)
-        {
-          return [NSString stringWithFormat: @"%@ at %@ invokes %@",
-            s, [self fireDate], _target];
-        }
-      else
-        {
-          return [NSString stringWithFormat: @"%@ at %@ sends %@ to (%@)",
-            s, [self fireDate], NSStringFromSelector(_selector), _target];
-        }
-    }
-  else
-    {
-      return [NSString stringWithFormat: @"%@ (invalidated)", s];
-    }
-}
-
-/* For MacOS-X compatibility, this returns nil.
- */
-- (id) init
-{
-  DESTROY(self);
-  return nil;
-}
-
 /** <init />
  * Initialise the receive, a newly allocated NSTimer object.<br />
  * The ti argument specifies the time (in seconds) between the firing.
@@ -118,18 +59,18 @@ static Class	NSDate_class;
 {
   if (ti <= 0.0)
     {
-      ti = 0.0001;
+      ti = 0.0001; // 防卫变成.
     }
   if (fd == nil)
     {
       _date = [[NSDate_class allocWithZone: NSDefaultMallocZone()]
-        initWithTimeIntervalSinceNow: ti];
+        initWithTimeIntervalSinceNow: ti]; // 如果不指定日期, 就以 ti 的时间间隔为准.
     }
   else
     {
       _date = [fd copyWithZone: NSDefaultMallocZone()];
     }
-  _target = RETAIN(object);
+  _target = RETAIN(object); // 这里有一个 retain 操作. 这也是 timer 危险的原因.
   _selector = selector;
   _info = RETAIN(info);
   if (f == YES)
@@ -140,7 +81,7 @@ static Class	NSDate_class;
   else
     {
       _repeats = NO;
-      _interval = 0.0;
+      _interval = 0.0; // 这里置为0是一种变成习惯.
     }
   return self;
 }
@@ -156,7 +97,7 @@ static Class	NSDate_class;
 {
   return AUTORELEASE([[self alloc] initWithFireDate: nil
 					   interval: ti
-					     target: invocation
+					     target: invocation // target 为 invocation
 					   selector: NULL
 					   userInfo: nil
 					    repeats: f]);
@@ -193,6 +134,7 @@ static Class	NSDate_class;
 				 invocation: (NSInvocation*)invocation
 				    repeats: (BOOL)f
 {
+    // 所以, 其实类方法, 就是包装designate 方法之后的操作.
   id t = [[self alloc] initWithFireDate: nil
 			       interval: ti
 				 target: invocation
@@ -244,59 +186,60 @@ static Class	NSDate_class;
  * to a target object, depending on how the timer was set up.<br />
  * If the timer is not set to repeat, it is automatically invalidated.<br />
  * Exceptions raised during firing of the timer are caught and logged.
+ 
+ 
+ You can use this method to fire a repeating timer without interrupting its regular firing schedule. If the timer is non-repeating, it is automatically invalidated after firing, even if its scheduled fire date has not arrived
  */
 - (void) fire
 {
   /* We check that we have not been invalidated before we fire.
    */
-  if (NO == _invalidated)
+    if (NO != _invalidated) { return; }
+    
+    id    target;
+    /* We retain the target so it won't be deallocated while we are using it
+     * (if this timer gets invalidated while we are firing).
+     */
+    target = RETAIN(_target);
+    
+    if (_selector == 0)
     {
-      id	target;
-
-      /* We retain the target so it won't be deallocated while we are using it
-       * (if this timer gets invalidated while we are firing).
-       */
-      target = RETAIN(_target);
-
-      if (_selector == 0)
-	{
-	  NS_DURING
-	    {
-	      [(NSInvocation*)target invoke];
-	    }
-	  NS_HANDLER
-	    {
-	      NSLog(@"*** NSTimer ignoring exception '%@' (reason '%@') "
-	        @"raised during posting of timer with target %s(%s) "
-		@"and selector '%@'",
-		[localException name], [localException reason],
-                GSClassNameFromObject(target),
-                GSObjCIsInstance(target) ? "instance" : "class",
-		NSStringFromSelector([target selector]));
-	    }
-	  NS_ENDHANDLER
-	}
-      else
-	{
-	  NS_DURING
-	    {
-	      [target performSelector: _selector withObject: self];
-	    }
-	  NS_HANDLER
-	    {
-	      NSLog(@"*** NSTimer ignoring exception '%@' (reason '%@') "
-		@"raised during posting of timer with target %p and "
-		@"selector '%@'",
-		[localException name], [localException reason], target,
-		NSStringFromSelector(_selector));
-	    }
-	  NS_ENDHANDLER
-	}
-      RELEASE(target);
-      if (_repeats == NO)
+        NS_DURING
         {
-          [self invalidate];
+            [(NSInvocation*)target invoke]; // 原来还可以这样
         }
+        NS_HANDLER
+        {
+            NSLog(@"*** NSTimer ignoring exception '%@' (reason '%@') "
+                  @"raised during posting of timer with target %s(%s) "
+                  @"and selector '%@'",
+                  [localException name], [localException reason],
+                  GSClassNameFromObject(target),
+                  GSObjCIsInstance(target) ? "instance" : "class",
+                  NSStringFromSelector([target selector]));
+        }
+        NS_ENDHANDLER
+    }
+    else
+    {
+        NS_DURING
+        {
+            [target performSelector: _selector withObject: self];
+        }
+        NS_HANDLER
+        {
+            NSLog(@"*** NSTimer ignoring exception '%@' (reason '%@') "
+                  @"raised during posting of timer with target %p and "
+                  @"selector '%@'",
+                  [localException name], [localException reason], target,
+                  NSStringFromSelector(_selector));
+        }
+        NS_ENDHANDLER
+    }
+    RELEASE(target);
+    if (_repeats == NO)
+    {
+        [self invalidate]; // 如果 不是 repeat, 我们直接 invalidate
     }
 }
 
@@ -306,7 +249,7 @@ static Class	NSDate_class;
  * Invalidated timers are automatically removed from the run loop when it
  * detects them.
  */
-- (void) invalidate
+- (void) invalidate // invalidate 应该有机制通知到 runloop. 不过它更大的意义在于内存的管理.
 {
   /* OPENSTEP allows this method to be called multiple times. */
   _invalidated = YES;
