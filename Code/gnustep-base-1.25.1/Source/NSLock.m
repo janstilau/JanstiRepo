@@ -1,26 +1,3 @@
-/** Control of executable units within a shared virtual memory space
-   Copyright (C) 1996-2010 Free Software Foundation, Inc.
-
-   Original Author:  David Chisnall <csdavec@swan.ac.uk>
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSLock class reference</title>
-   <ignore> All autogsdoc markup is in the header
-*/
 
 #import "common.h"
 #include <pthread.h>
@@ -117,7 +94,7 @@
 #define MFINALIZE \
 - (void) finalize\
 {\
-  pthread_mutex_destroy(&_mutex);\
+  pthread_mutex_destroy(&_mutex);\ //释放 mutex
 }
 
 #define MNAME \
@@ -150,7 +127,7 @@
 {\
   do\
     {\
-      int err = pthread_mutex_trylock(&_mutex);\
+      int err = pthread_mutex_trylock(&_mutex);\ // 之前还不太明白, tryLock 这种函数到底有什么用. 原来是在这里, 就是每次拿到线程的调度权之后, 其实是调用trylock 函数, 如果不能够获取, 就直接放弃运行, 进行 thread_yield 函数.
       if (0 == err)\
 	{\
 	  return YES;\
@@ -203,7 +180,9 @@ NSString *NSLockException = @"NSLockException";
 + (void) initialize
 {
   static BOOL	beenHere = NO;
-
+    
+ // 应该是, 在GNU的代码里面, 是没有 dispatch 这个概念的, 不然, 为什么有很多 dispatch 可以解决的问题, 都是用的其他的解决方法解决的呢.
+    
   if (beenHere == NO)
     {
       beenHere = YES;
@@ -257,7 +236,7 @@ MFINALIZE
 
 MISLOCKED
 MLOCK
-
+// 前边不是有了宏定义了?? 这一段是我替换的???
 - (BOOL) lockBeforeDate: (NSDate*)limit
 {
   do
@@ -282,6 +261,8 @@ MUNLOCK
 @end
 
 @implementation NSRecursiveLock
+
+// 这个类, 和上面的 NSLock 没有任何的区别,  仅仅是 attr_recursive 的替换. 不过, 应该注意的就是 attr_recursive 这个东西 ,这个东西他的意思是这个方法可以重新进入, 不过仅仅限于当前线程中.
 
 + (void) initialize
 {
@@ -313,6 +294,8 @@ MUNLOCK
 @end
 
 @implementation NSCondition
+
+// 这个类完完全全就是对于 pthread_mutext 的封装而已.
 
 + (void) initialize
 {
@@ -365,7 +348,7 @@ MUNLOCK
 
 - (void) wait
 {
-  pthread_cond_wait(&_condition, &_mutex);
+    pthread_cond_wait(&_condition, &_mutex); // 这个函数, 会释放自己当前已经捕获的 mutex, 然后陷入🔐中, 直到其他的线程进行 singnal, 或者 broadCast 的唤醒. 并且, 唤醒之后, 还要接着重新获取 mutex 才能继续后面的操作;.
 }
 
 - (BOOL) waitUntilDate: (NSDate*)limit
@@ -473,7 +456,7 @@ MUNLOCK
       return YES;
     }
   while ([_condition waitUntilDate: limitDate])
-    {
+    { // 上面, condition 进行了等待, 然后在等待之后检查值是不是自己想要的值, 如果不是, 继续等待.
       if (condition_to_meet == _condition_value)
 	{
 	  return YES; // KEEP THE LOCK

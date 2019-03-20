@@ -1,34 +1,3 @@
-/** Implementation of NSNotificationCenter for GNUstep
-   Copyright (C) 1999 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   Created: June 1999
-
-   Many thanks for the earlier version, (from which this is loosely
-   derived) by  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Created: March 1996
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSNotificationCenter class reference</title>
-   $Date$ $Revision$
-*/
-
 #import "common.h"
 #define	EXPOSE_NSNotificationCenter_IVARS	1
 #import "Foundation/NSNotification.h"
@@ -43,6 +12,7 @@ static NSZone	*_zone = 0;
 
 /**
  * Concrete class implementing NSNotification.
+ 不明白为什么这里还有一个类簇, NSNotification 本身就不是一个很复杂的系统.
  */
 @interface	GSNotification : NSNotification
 {
@@ -279,7 +249,7 @@ obsNew(NCTable *t, SEL s, id o)
    * very frequently (poor design, but something which happens in the
    * real world unfortunately).
    */
-  if (t->freeList == 0)
+  if (t->freeList == 0) // 如果没有缓存了.
     {
       Observation	*block;
 
@@ -558,7 +528,7 @@ purgeMapNode(GSIMapTable map, GSIMapNode node, id observer)
 #define	purgeCollected(X)	(X)
 #define purgeCollectedFromMapNode(X, Y) ((Observation*)Y->value.ext)
 
-
+// 对于 addObserverForName usingBlock 的封装.
 @interface GSNotificationBlockOperation : NSOperation
 {
 	NSNotification *_notification;
@@ -579,7 +549,7 @@ purgeMapNode(GSIMapTable map, GSIMapNode node, id observer)
 	if (self == nil)
 		return nil;
 
-	ASSIGN(_notification, notif);
+	ASSIGN(_notification, notif); // 这里面有 retain 和 release
 	_block = Block_copy(block);
 	return self;
 
@@ -599,6 +569,7 @@ purgeMapNode(GSIMapTable map, GSIMapNode node, id observer)
 
 @end
 
+// 对于 queue 和 回调的封装.
 @interface GSNotificationObserver : NSObject
 {
 	NSOperationQueue *_queue;
@@ -628,6 +599,7 @@ purgeMapNode(GSIMapTable map, GSIMapNode node, id observer)
 	[super dealloc];
 }
 
+// 这里, 其实 usingBlock 那种方式, 只不过是为了方便而已. 真正的使用, 还是 observer 和 selector 这种方法, 只不过 using Block 这种方式, 将 observer 进行了封装. 其实, YYKIt 的 timer 中, 也有类似的方法.
 - (void) didReceiveNotification: (NSNotification *)notif
 {
 	if (_queue != nil)
@@ -733,7 +705,7 @@ static NSNotificationCenter *default_center = nil;
   if (self == default_center)
     {
       [NSException raise: NSInternalInconsistencyException
-		  format: @"Attempt to destroy the default center"];
+		  format: @"Attempt to destroy the default center"]; // 不让删.
     }
   /*
    * Release all memory used to store Observations etc.
@@ -777,23 +749,7 @@ static NSNotificationCenter *default_center = nil;
   GSIMapTable	m;
   GSIMapNode	n;
 
-  if (observer == nil)
-    [NSException raise: NSInvalidArgumentException
-		format: @"Nil observer passed to addObserver ..."];
-
-  if (selector == 0)
-    [NSException raise: NSInvalidArgumentException
-		format: @"Null selector passed to addObserver ..."];
-
-  if ([observer respondsToSelector: selector] == NO)
-    {
-      [NSException raise: NSInvalidArgumentException
-        format: @"[%@-%@] Observer '%@' does not respond to selector '%@'",
-        NSStringFromClass([self class]), NSStringFromSelector(_cmd),
-        observer, NSStringFromSelector(selector)];
-    }
-
-  lockNCTable(TABLE);
+  lockNCTable(TABLE); // lcok
 
   o = obsNew(TABLE, selector, observer);
 

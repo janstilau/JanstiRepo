@@ -206,6 +206,7 @@ static NSNotificationCenter *nc = nil;
  * If the date is in the past, this function simply allows other threads
  * (if any) to run.
  */
+// sleep 方法的实现.
 void
 GSSleepUntilIntervalSinceReferenceDate(NSTimeInterval when)
 {
@@ -322,7 +323,7 @@ commonModes(void)
 
   if (modes == nil)
     {
-      [gnustep_global_lock lock];
+      [gnustep_global_lock lock]; // 线程同步
       if (modes == nil)
 	{
 	  Class	c = NSClassFromString(@"NSApplication");
@@ -335,7 +336,7 @@ commonModes(void)
 	  else
 	    {
 	      modes = [[NSArray alloc] initWithObjects:
-		NSDefaultRunLoopMode, NSConnectionReplyMode, nil];
+		NSDefaultRunLoopMode, NSConnectionReplyMode, nil]; // 其实可以直接这样写, 上面可能是为了以后的扩展
 	    }
 	}
       [gnustep_global_lock unlock];
@@ -365,6 +366,7 @@ static inline NSValue* NSValueCreateFromPthread(pthread_t thread)
 {
   return [[NSValue alloc] initWithBytes: &thread
                                objCType: @encode(pthread_t)];
+    // 看样子, 这样可以包装任何的 scalar 类型的数值. 猜测, NSValue 的内部会将这个 scalar 的数据原封不动的保存, NSValue 只是对这层数据的包装, 增加取值函数, 更重要的是, 进行内存, 也就是引用计数的管理操作.
 }
 
 /**
@@ -382,7 +384,7 @@ _getPthreadFromNSValue(const void *value, pthread_t *thread_ptr)
   NSCAssert(enc != NULL && (0 == strcmp(@encode(pthread_t),enc)),
     @"Invalid NSValue container for thread reference");
 # endif
-  [(NSValue*)value getValue: (void*)thread_ptr];
+  [(NSValue*)value getValue: (void*)thread_ptr]; // 从这里看出, NSValue 就是一层包装.
 }
 
 /**
@@ -709,6 +711,7 @@ setThreadForCurrentThread(NSThread *t)
   gnustep_base_thread_callback();
 }
 
+// 这个方法, 会在线程退出的时候调用
 static void
 unregisterActiveThread(NSThread *thread)
 {
@@ -1263,20 +1266,6 @@ nsthreadLauncher(void *thread)
   BOOL  signalled = NO;
 
   [lock lock];
-#if defined(_WIN32)
-  if (INVALID_HANDLE_VALUE != event)
-    {
-      if (SetEvent(event) == 0)
-        {
-          NSLog(@"Set event failed - %@", [NSError _last]);
-        }
-      else
-        {
-          signalled = YES;
-        }
-    }
-#else
-{
   NSTimeInterval        start = 0.0;
 
   /* The write could concievably fail if the pipe is full.
@@ -1301,9 +1290,7 @@ nsthreadLauncher(void *thread)
         }
       [lock unlock];
       [lock lock];
-    }
 }
-#endif
   if (YES == signalled)
     {
       [performers addObject: performer];
@@ -1390,15 +1377,8 @@ nsthreadLauncher(void *thread)
   NSArray       *p;
 
   [lock lock];
-  p = AUTORELEASE(performers);
+  p = AUTORELEASE(performers); // performers , 如果没有执行, 那么直接释放一点问题没有.
   performers = nil;
-#ifdef _WIN32
-  if (event != INVALID_HANDLE_VALUE)
-    {
-      CloseHandle(event);
-      event = INVALID_HANDLE_VALUE;
-    }
-#else
   if (inputFd >= 0)
     {
       close(inputFd);
@@ -1409,7 +1389,6 @@ nsthreadLauncher(void *thread)
       close(outputFd);
       outputFd = -1;
     }
-#endif
   [lock unlock];
   [p makeObjectsPerformSelector: @selector(invalidate)];
 }
@@ -1456,7 +1435,7 @@ nsthreadLauncher(void *thread)
       [lock unlock];
       return;
     }
-  toDo = [NSArray arrayWithArray: performers];
+  toDo = [NSArray arrayWithArray: performers]; // 这样写, 其实是为了拿出缓存来. 就 MCClick 的双数组的概念是一样的.
   [performers removeAllObjects];
   [lock unlock];
 
@@ -1464,7 +1443,7 @@ nsthreadLauncher(void *thread)
     {
       GSPerformHolder	*h = [toDo objectAtIndex: i];
 
-      [loop performSelector: @selector(fire)
+      [loop performSelector: @selector(fire) // 在这里, 将注册的所有的 holder 进行了调用. info 的 fire 操作, 是在 RUNLOOP CONTEXT 中进行的.
 		     target: h
 		   argument: nil
 		      order: 0
@@ -1487,7 +1466,7 @@ GSRunLoopInfoForThread(NSThread *aThread)
       [gnustep_global_lock lock];
       if (aThread->_runLoopInfo == nil)
         {
-          aThread->_runLoopInfo = [GSRunLoopThreadInfo new];
+          aThread->_runLoopInfo = [GSRunLoopThreadInfo new]; // 一个Thread 里面, 会关联一个 runloopInfo , 不过, 关联式关联, 现在不保证里面就有一个 runloop
 	}
       [gnustep_global_lock unlock];
     }
@@ -1531,7 +1510,7 @@ GSRunLoopInfoForThread(NSThread *aThread)
   GSNOSUPERDEALLOC;
 }
 
-- (void) fire
+- (void) fire // 这个 fire , 就是执行 GSPerformHolder 中记录的方法, 
 {
   GSRunLoopThreadInfo   *threadInfo;
 
@@ -1583,7 +1562,7 @@ GSRunLoopInfoForThread(NSThread *aThread)
 
           [lock lock];
           lock = nil;
-          [l unlockWithCondition: 1];
+          [l unlockWithCondition: 1]; // 这里, performerHolder 不要忘记把之前停到的线程进行唤醒.
         }
     }
 }
@@ -1599,6 +1578,9 @@ GSRunLoopInfoForThread(NSThread *aThread)
 }
 @end
 
+
+// NSObject 的扩展方法.
+// 这个方法暴露出去是因为主线程实在是太重要了.
 @implementation	NSObject (NSThreadPerformAdditions)
 
 - (void) performSelectorOnMainThread: (SEL)aSelector
@@ -1628,7 +1610,7 @@ GSRunLoopInfoForThread(NSThread *aThread)
   [self performSelectorOnMainThread: aSelector
 			 withObject: anObject
 		      waitUntilDone: aFlag
-			      modes: commonModes()];
+			      modes: commonModes()]; // 默认是 commonModes
 }
 
 - (void) performSelector: (SEL)aSelector
@@ -1660,6 +1642,7 @@ GSRunLoopInfoForThread(NSThread *aThread)
           /* Wait until done or no run loop.
            */
 	  [self performSelector: aSelector withObject: anObject];
+        // 如果是同步操作, 或者现在根本没有 runloop, 那就直接执行.
 	}
       else
 	{
@@ -1670,6 +1653,7 @@ GSRunLoopInfoForThread(NSThread *aThread)
                              argument: anObject
                                 order: 0
                                 modes: anArray];
+        // 如果有 runloop 并且是异步操作, 那么就添加到 runloop 维护的队列中去.
 	}
     }
   else
@@ -1677,13 +1661,8 @@ GSRunLoopInfoForThread(NSThread *aThread)
       GSPerformHolder   *h;
       NSConditionLock	*l = nil;
 
-      if ([aThread isFinished] == YES)
-        {
-          [NSException raise: NSInternalInconsistencyException
-                      format: @"perform on finished thread"];
-        }
       if (aFlag == YES)
-	{
+	{ // 如果是同步操作, 就加一把唤醒锁.
 	  l = [[NSConditionLock alloc] init];
 	}
 
@@ -1691,12 +1670,14 @@ GSRunLoopInfoForThread(NSThread *aThread)
 				 argument: anObject
 				 selector: aSelector
 				    modes: anArray
-				     lock: l];
-      [info addPerformer: h];
+				     lock: l]; // 注意, 这里把 lock 传递过去了, 所以在另外一个线程里面, 进行 unlock, 这里才会进行唤醒操作.
+      [info addPerformer: h];// 这里, 就讲要完成的操作, 注册给了另外一个线程的 runloopInfo
       if (l != nil)
 	{
+        // 如果是同步, 那么就进行 condition 锁的处理.
           [l lockWhenCondition: 1];
-	  [l unlock];
+        // The receiver’s condition must be equal to condition before the locking operation will succeed. This method blocks the thread’s execution until the lock can be acquired.
+	  [l unlock]; // 这里立马进行了释放 ,因为这个锁的意义, 其实就是等待.
 	  RELEASE(l);
           if ([h isInvalidated] == YES)
             {

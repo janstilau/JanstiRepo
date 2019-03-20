@@ -248,6 +248,9 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
 - (BOOL) pollUntil: (int)milliseconds within: (NSArray*)contexts
 {
   GSRunLoopThreadInfo   *threadInfo = GSRunLoopInfoForThread(nil);
+    
+    // 首先, 会将自己线程的 threadInof 拿到手, 里面存放的是其他线程注册给自己线程的 runloop 要执行的代码.
+    
   int		poll_return;
   int		fdEnd;	/* Number of descriptors being monitored. */
   int		fdIndex;

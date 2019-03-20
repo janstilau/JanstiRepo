@@ -1,30 +1,3 @@
-/** Implementation of NSNotification for GNUstep
-   Copyright (C) 1996 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Created: March 1996
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSNotification class reference</title>
-   $Date$ $Revision$
-*/
-
 #import "common.h"
 #define	EXPOSE_NSNotification_IVARS	1
 #import "Foundation/NSNotification.h"
@@ -43,6 +16,9 @@
  *  notification instance on to them.</p>
  *  <p>This class is actually the interface for a class cluster, so instances
  *  will be of a (private) subclass.</p>
+ 
+    上面是对于 NSNotification 的描述.
+ 
  */
 @implementation NSNotification
 

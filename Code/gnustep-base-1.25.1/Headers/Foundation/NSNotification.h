@@ -1,31 +1,3 @@
-/** Interface for NSNotification and NSNotificationCenter for GNUstep
-   Copyright (C) 1996,1999 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Rewrite by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Created: March 1996
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-  AutogsdocSource: NSNotification.m
-  AutogsdocSource: NSNotificationCenter.m
-*/
-
 #ifndef __NSNotification_h_GNUSTEP_BASE_INCLUDE
 #define __NSNotification_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -44,6 +16,10 @@ extern "C" {
 @class NSOperationQueue;
 
 @interface NSNotification : NSObject <NSCopying, NSCoding>
+
+/*
+ 其实, NSNotification, 仅仅是一个包装体. 里面的元素很少, name, object, userInfo. 并且说, object 并不是说哪个对象发出了这个通知, 仅仅是 notificationCenter 就把那个object对象组装到这个 notification 的对象内的 object 属性而已.
+ */
 
 /* Creating a Notification Object */
 + (NSNotification*) notificationWithName: (NSString*)name
