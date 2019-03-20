@@ -1,34 +1,3 @@
-/** Implementation of object for waiting on several input sources
-  NSRunLoop.m
-
-   Copyright (C) 1996-1999 Free Software Foundation, Inc.
-
-   Original by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Created: March 1996
-   OPENSTEP version by: Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   Created: August 1997
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSRunLoop class reference</title>
-   $Date$ $Revision$
-*/
-
 #import "common.h"
 #define	EXPOSE_NSRunLoop_IVARS	1
 #define	EXPOSE_NSTimer_IVARS	1
@@ -86,6 +55,8 @@ static NSDate	*theFuture = nil;
  *	The GSRunLoopPerformer class is used to hold information about
  *	messages which are due to be sent to objects once each runloop
  *	iteration has passed.
+ 
+    没明白这个类的作用.
  */
 @interface GSRunLoopPerformer: NSObject
 {
@@ -164,15 +135,17 @@ static NSDate	*theFuture = nil;
 
 /*
  * The GSTimedPerformer class is used to hold information about
- * messages which are due to be sent to objects at a particular time.
+ * messages which are due to be sent to objects at a particular time. due to 应归于.
+ 
+  这个对象, 其实是对于延时操作的一个包装体. 之所以要有这么一个东西, 是因为, timer 如果加入到runloop 之后, NSObject 其实是有着权力取消之前添加进入的定时任务的, 所以, 需要对加入 runLoop 的任务做一次包装处理. 因为是我们自己包装的对象, 也就有了更大的操作的空间.
  */
 @interface GSTimedPerformer: NSObject
 {
 @public
-  SEL		selector;
-  id		target;
-  id		argument;
-  NSTimer	*timer;
+  SEL		selector; // 执行函数
+  id		target; // 执行对象
+  id		argument; // 执行参数
+  NSTimer	*timer; // 执行的定时器
 }
 
 - (void) fire;
@@ -187,7 +160,7 @@ static NSDate	*theFuture = nil;
 
 - (void) dealloc
 {
-  [self finalize];
+  [self finalize]; // 取消定时器
   TEST_RELEASE(timer);
   RELEASE(target);
   RELEASE(argument);
@@ -207,6 +180,7 @@ static NSDate	*theFuture = nil;
   [self invalidate];
 }
 
+// 在构造方法的内部, 根据传递过来的参数, 创建所需要的参数.
 - (id) initWithSelector: (SEL)aSelector
 		 target: (id)aTarget
 	       argument: (id)anArgument
@@ -265,16 +239,19 @@ static inline BOOL timerInvalidated(NSTimer *t)
 }
 
 
-
+// 其实我们可以猜想, 在 runloop 的内部, 一定会有着操作 _timedPerformers 的代码, 在人物执行之后, 会对 _timedPerformers 进行更新.
 @implementation NSObject (TimedPerformers)
 
 /*
  * Cancels any perform operations set up for the specified target
  * in the current run loop.
  */
+
+/*
+ */
 + (void) cancelPreviousPerformRequestsWithTarget: (id)target
 {
-  NSMutableArray	*perf = [[NSRunLoop currentRunLoop] _timedPerformers];
+  NSMutableArray	*perf = [[NSRunLoop currentRunLoop] _timedPerformers]; // 首先拿到任务的缓存数组.
   unsigned		count = [perf count];
 
   if (count > 0)
@@ -289,7 +266,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
 
 	  if (p->target == target)
 	    {
-	      [p invalidate];
+	      [p invalidate]; // invalidate 做了什么事情呢. 标志位的改变. 所以, 对于一个任务来说, 如果它正在执行, 是不能 invalidate 的. 因为想要让一段代码终止是很难的事情, 除非在代码里面加入控制的逻辑, NSOperation 里面, 就有这样的控制逻辑. 而对于 timer 来说, 它是依托于 runloop 进行执行的, 所以, 一个 timer 进行 invalidate 的话, 只做一个标志位的改变就可以了, 这就需要在 runloop 里面添加, 如果 timer 的标志位invalid, 就不执行定时器的代码.
 	      [perf removeObjectAtIndex: count];
 	    }
 	}
@@ -304,6 +281,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
  * Matching of the argument may be either by pointer equality or by
  * use of the [NSObject-isEqual:] method.
  */
+// 从上面的两处代码我们可以看出, _timedPerformers 这个数组的最大的价值, 就是在 runloop 里面, 进行任务的管理操作.
 + (void) cancelPreviousPerformRequestsWithTarget: (id)target
 					selector: (SEL)aSelector
 					  object: (id)arg
@@ -334,20 +312,27 @@ static inline BOOL timerInvalidated(NSTimer *t)
     }
 }
 
+/*
+This method sets up a timer to perform the aSelector message on the current thread’s run loop.
+ The timer is configured to run in the default mode (NSDefaultRunLoopMode).
+ When the timer fires, the thread attempts to dequeue the message from the run loop and perform the selector.
+ It succeeds if the run loop is running and in the default mode; otherwise, the timer waits until the run loop is in the default mode.
+ */
+
 - (void) performSelector: (SEL)aSelector
 	      withObject: (id)argument
 	      afterDelay: (NSTimeInterval)seconds
 {
-  NSRunLoop		*loop = [NSRunLoop currentRunLoop];
+  NSRunLoop		*loop = [NSRunLoop currentRunLoop]; // 首先取得 currentRunLoop , 这个函数里面其实会根据当前的 thread 取得对应的 runloop
   GSTimedPerformer	*item;
 
   item = [[GSTimedPerformer alloc] initWithSelector: aSelector
 					     target: self
 					   argument: argument
 					      delay: seconds];
-  [[loop _timedPerformers] addObject: item];
-  RELEASE(item);
-  [loop addTimer: item->timer forMode: NSDefaultRunLoopMode];
+  [[loop _timedPerformers] addObject: item]; // 创建一个管理 timer 和 人物的 performer 对象.
+  RELEASE(item); // gnu 里面的代码, 都是 mrc 环境.
+  [loop addTimer: item->timer forMode: NSDefaultRunLoopMode]; // 这里, 非常明确的, 是加入了一个定时器.
 }
 
 - (void) performSelector: (SEL)aSelector
@@ -368,22 +353,24 @@ static inline BOOL timerInvalidated(NSTimer *t)
 						 target: self
 					       argument: argument
 						  delay: seconds];
-      [[loop _timedPerformers] addObject: item];
+      [[loop _timedPerformers] addObject: item]; // 这里我们看到, 一个 runloop 只有一个数组存储执行对象, 不会根据 modes 进行改变.
       RELEASE(item);
+        
+    // 不明白这里为什么这样写, 直接去 modes 里面的数据不可以吗
       if ([modes isProxy])
 	{
 	  for (i = 0; i < count; i++)
 	    {
 	      marray[i] = [modes objectAtIndex: i];
 	    }
-	}
-      else
+	} else
 	{
           [modes getObjects: marray];
 	}
-      for (i = 0; i < count; i++)
+        
+    for (i = 0; i < count; i++)
 	{
-	  [loop addTimer: item->timer forMode: marray[i]];
+	  [loop addTimer: item->timer forMode: marray[i]]; // 所有的任务, 都是被加入到 runloop 的定时器里面. 所以, 最终实现为什么会和 mode 关联是在这里完成的.
 	}
     }
 }
@@ -730,7 +717,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
 {
   if (self == [NSRunLoop class])
     {
-      [self currentRunLoop];
+      [self currentRunLoop]; //  这个时候, 铁定是主线程, 所以这个其实是为了创造主线程的运行循环.
       theFuture = RETAIN([NSDate distantFuture]);
       RELEASE([NSObject leakAt: &theFuture]);
     }

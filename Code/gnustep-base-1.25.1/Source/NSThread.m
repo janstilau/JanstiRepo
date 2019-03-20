@@ -1,36 +1,3 @@
-/** Control of executable units within a shared virtual memory space
-   Copyright (C) 1996-2000 Free Software Foundation, Inc.
-
-   Original Author:  Scott Christley <scottc@net-community.com>
-   Rewritten by: Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Created: 1996
-   Rewritten by: Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   to add optimisations features for faster thread access.
-   Modified by: Nicola Pero <n.pero@mi.flashnet.it>
-   to add GNUstep extensions allowing to interact with threads created
-   by external libraries/code (eg, a Java Virtual Machine).
-
-   This file is part of the GNUstep Objective-C Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSThread class reference</title>
-   $Date$ $Revision$
-*/
-
 #import "common.h"
 #define	EXPOSE_NSThread_IVARS	1
 #ifdef HAVE_NANOSLEEP
@@ -251,13 +218,14 @@ GSSleepUntilIntervalSinceReferenceDate(NSTimeInterval when)
       /* We don't need to wait, but since we are willing to wait at this
        * point, we should let other threads have preference over this one.
        */
-      sched_yield();
+      sched_yield(); // 让出线程的调度权.
       return;
     }
 
 #if     defined(_WIN32)
   /*
    * Avoid integer overflow by breaking up long sleeps.
+   牛逼
    */
   while (delay > 30.0*60.0)
     {
@@ -616,19 +584,16 @@ static void exitedThread(void *thread)
 inline NSThread*
 GSCurrentThread(void)
 {
+    // 从这里我们看出, thread_object_key 主要就是为了存储 NSThread 对象.
   NSThread *thr = pthread_getspecific(thread_object_key);
 
+    // pthread_self是一种函数，功能是获得线程自身的ID。
   if (nil == thr)
     {
       NSValue *selfThread = NSValueCreateFromPthread(pthread_self());
-
-      /* NB this locked section cannot be protected by an exception handler
-       * because the exception handler stores information in the current
-       * thread variables ... which causes recursion.
-       */
       if (nil != _exitingThreads)
         {
-          [_exitingThreadsLock lock];
+          [_exitingThreadsLock lock]; // 线程同步
           thr = NSMapGet(_exitingThreads, (const void*)selfThread);
           [_exitingThreadsLock unlock];
         }
@@ -636,11 +601,11 @@ GSCurrentThread(void)
     }
   if (nil == thr)
     {
-      GSRegisterCurrentThread();
+      GSRegisterCurrentThread(); // 在这里面, 一定会有生成线程的操作.
       thr = pthread_getspecific(thread_object_key);
       if ((nil == defaultThread) && IS_MAIN_PTHREAD)
         {
-          defaultThread = RETAIN(thr);
+          defaultThread = RETAIN(thr); // default 就是 主线程.
         }
     }
   assert(nil != thr && "No main thread");
@@ -669,6 +634,7 @@ GSCurrentThreadDictionary(void)
 /*
  * Callback function to send notifications on becoming multi-threaded.
  */
+// 这个方法就是改变一下全局的值, 然后发一个通知而已. 但是它的意义更多的是函数名, 一个进入多线程环境的准备.
 static void
 gnustep_base_thread_callback(void)
 {
@@ -678,9 +644,9 @@ gnustep_base_thread_callback(void)
    * and so that all NSWillBecomeMultiThreadedNotifications are sent
    * out before any second thread can interfere with anything.
    */
-  if (entered_multi_threaded_state == NO)
+  if (entered_multi_threaded_state == NO) // 对于程序的一个记录量, 表示现在是单线程环境. 在 start 方法里面调用这个, 使得程序变为多线程环境
     {
-      [gnustep_global_lock lock];
+      [gnustep_global_lock lock]; // double check, 这是多线程的基本操作.
       if (entered_multi_threaded_state == NO)
 	{
 	  /*
@@ -702,7 +668,7 @@ gnustep_base_thread_callback(void)
 	       */
 	      if (nc == nil)
 		{
-		  nc = RETAIN([NSNotificationCenter defaultCenter]);
+		  nc = RETAIN([NSNotificationCenter defaultCenter]); // defaultCenter 是在 NSNotificationCenter 的 initlize 里面生成的.
 		}
 #if	!defined(HAVE_INITIALIZE)
 	      if (NO == [[NSUserDefaults standardUserDefaults]
@@ -727,6 +693,12 @@ gnustep_base_thread_callback(void)
       [gnustep_global_lock unlock];
     }
 }
+
+
+
+// NSThread 的类方法, 一般是对于 pthread 方法的封装
+
+// 整个 NSThread 方法, 其实是对于 pthread 方法的封装, 也就是用面向对象的编程管理了原来杂乱无章的 pthread C语言函数. 比如, 是不是主线程这件事, 它其实是在将第一个生成的 NSThread 对象当做 defaultThread, 而这个对象 一定是在主线程里面才能生成的. 通过面向对象的方法, 记录一些公共的值为static 数据, 记录一些和线程相关的值在自己的实例对象里面, 实现了业务的封装处理.
 
 @implementation NSThread
 
@@ -809,6 +781,7 @@ unregisterActiveThread(NSThread *thread)
   thread = [[NSThread alloc] initWithTarget: aTarget
                                    selector: aSelector
                                      object: anArgument];
+    // 类方法, 一般是对于实例方法的封装.
 
   [thread start];
   RELEASE(thread);
@@ -827,7 +800,7 @@ unregisterActiveThread(NSThread *thread)
 	{
 	  /* For the default thread, we exit the process.
 	   */
-	  exit(0);
+	  exit(0); // 如果是主线程, 直接退出 app
 	}
       else
 	{
@@ -839,11 +812,20 @@ unregisterActiveThread(NSThread *thread)
 /*
  * Class initialization
  */
+
+/*
+ https://www.jianshu.com/p/d52c1ebf808a 什么是线程存储.
+ 创建一个类型为pthread_key_t类型的变量。
+ 调用pthread_key_create()来创建该变量。该函数有两个参数，第一个参数就是上面声明的pthread_key_t变量，第二个参数是一个清理函数，用来在线程释放该线程存储的时候被调用。该函数指针可以设成 NULL，这样系统将调用默认的清理函数。该函数成功返回0.其他任何返回值都表示出现了错误。
+ 当线程中需要存储特殊值的时候，可以调用 pthread_setspcific() 。该函数有两个参数，第一个为前面声明的pthread_key_t变量，第二个为void*变量，这样你可以存储任何类型的值。
+ 如果需要取出所存储的值，调用pthread_getspecific()。该函数的参数为前面提到的pthread_key_t变量，该函数返回void *类型的值。下面是前面提到的函数的原型：
+ */
 + (void) initialize
 {
   if (self == [NSThread class])
     {
-      if (pthread_key_create(&thread_object_key, exitedThread))
+        
+      if (pthread_key_create(&thread_object_key, exitedThread)) // exitedThread 线程退出的时候的清理函数.
 	{
 	  [NSException raise: NSInternalInconsistencyException
 		      format: @"Unable to create thread key!"];
@@ -862,7 +844,7 @@ unregisterActiveThread(NSThread *thread)
 
 + (BOOL) isMainThread
 {
-  return (GSCurrentThread() == defaultThread ? YES : NO);
+  return (GSCurrentThread() == defaultThread ? YES : NO); // 从这里我们看出, NSThread 是存储到线程内部的, 通过 pthread_getspecific 函数获取.
 }
 
 + (BOOL) isMultiThreaded
@@ -894,7 +876,7 @@ unregisterActiveThread(NSThread *thread)
   pri *= (PTHREAD_MAX_PRIORITY - PTHREAD_MIN_PRIORITY);
   pri += PTHREAD_MIN_PRIORITY;
 
-  pthread_getschedparam(pthread_self(), &policy, &param);
+  pthread_getschedparam(pthread_self(), &policy, &param); // 调用底层的 pthread 代码, 将传入的 priority 添加到底层的数据结构中.
   param.sched_priority = pri;
   pthread_setschedparam(pthread_self(), policy, &param);
 #endif
@@ -902,6 +884,7 @@ unregisterActiveThread(NSThread *thread)
 
 + (void) sleepForTimeInterval: (NSTimeInterval)ti
 {
+    // 底层还是用了 sleep 的方法, 不过这个方法里面有很多的优化.
   GSSleepUntilIntervalSinceReferenceDate(GSPrivateTimeNow() + ti);
 }
 
@@ -917,7 +900,7 @@ unregisterActiveThread(NSThread *thread)
 /**
  * Return the priority of the current thread.
  */
-+ (double) threadPriority
++ (double) threadPriority // 调用底层函数获取底层数据结构中对应的参数.
 {
   double pri = 0;
 #if defined(_POSIX_THREAD_PRIORITY_SCHEDULING) && (_POSIX_THREAD_PRIORITY_SCHEDULING > 0)
@@ -945,7 +928,7 @@ unregisterActiveThread(NSThread *thread)
 
 - (void) cancel
 {
-  _cancelled = YES;
+  _cancelled = YES; // 仅仅做一个数据的记录, 这个数据怎么使用, 是另外的函数的事情.
 }
 
 - (void) dealloc
@@ -957,11 +940,11 @@ unregisterActiveThread(NSThread *thread)
       [NSException raise: NSInternalInconsistencyException
 		  format: @"Deallocating an active thread without [+exit]!"];
     }
-  DESTROY(_runLoopInfo);
-  DESTROY(_thread_dictionary);
-  DESTROY(_target);
-  DESTROY(_arg);
-  DESTROY(_name);
+  DESTROY(_runLoopInfo); // 每个 thread 都有的 runloopInfo
+  DESTROY(_thread_dictionary); // 这个值?? 没有被用过啊.
+  DESTROY(_target); // 启动 的 target
+  DESTROY(_arg); // 启动的 arg
+  DESTROY(_name); // thread 对应的 name
   if (_autorelease_vars.pool_cache != 0)
     {
       [NSAutoreleasePool _endThread: self];
@@ -1164,7 +1147,7 @@ nsthreadLauncher(void *thread)
 {
   NSThread *t = (NSThread*)thread;
 
-  setThreadForCurrentThread(t);
+  setThreadForCurrentThread(t); // 将 thread 对象通过 pthread_setsepecific 方法进行保存.
 
   /*
    * Let observers know a new thread is starting.
@@ -1175,17 +1158,24 @@ nsthreadLauncher(void *thread)
     }
   [nc postNotificationName: NSThreadDidStartNotification
 		    object: t
-		  userInfo: nil];
+		  userInfo: nil]; // 发送一个通知.
 
-  [t _setName: [t name]];
+  [t _setName: [t name]]; // 设置一个方法.
 
-  [t main];
+  [t main]; // main 函数里面, 其实就是调用 target 的 selection 方法.
 
-  [NSThread exit];
+    // 所以说, 线程其实就是一个代码指令, 以及维护这个代码指令执行的相关数据, 也就是 pthread 数据.
+    // 而我们如果想要进行 runloop .其实是在 main 里面, 人工制造一个 运行循环, 让 nsthreadLauncher 这个方法, 不会退出.
+
+  [NSThread exit]; // 在这个方法里面, 会调用 pthread_exit 方法, 所以下面的 return 语句实际上是不会执行.
   // Not reached
-  return NULL;
+  return NULL; // 返回.
 }
 
+// 真正的开始方法.
+/*
+ 这个方法, 就是对于 pthread 方法的封装.
+ */
 - (void) start
 {
   pthread_attr_t	attr;
@@ -1219,7 +1209,7 @@ nsthreadLauncher(void *thread)
 
   /* The thread must persist until it finishes executing.
    */
-  RETAIN(self);
+  RETAIN(self); // thread self.
 
   /* Mark the thread as active whiul it's running.
    */
@@ -1230,7 +1220,7 @@ nsthreadLauncher(void *thread)
   /* Create this thread detached, because we never use the return state from
    * threads.
    */
-  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED); // 而分离线程不是这样子的，它没有被其他的线程所等待，自己运行结束了，线程也就终止了，马上释放系统资源
   /* Set the stack size when the thread is created.  Unlike the old setrlimit
    * code, this actually works.
    */
@@ -1238,7 +1228,7 @@ nsthreadLauncher(void *thread)
     {
       pthread_attr_setstacksize(&attr, _stackSize);
     }
-  if (pthread_create(&thr, &attr, nsthreadLauncher, self))
+  if (pthread_create(&thr, &attr, nsthreadLauncher, self)) // 生成线程的函数, 所以这里, 其实 thr, 以及 attr 没有被保存起来, 第三个是线程启动要调用的函数, 第四个则是传递给这个函数的参数, 这里是 self
     {
       DESTROY(self);
       [NSException raise: NSInternalInconsistencyException

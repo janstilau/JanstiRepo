@@ -1,27 +1,3 @@
-/* Control of executable units within a shared virtual memory space
-   Copyright (C) 1996 Free Software Foundation, Inc.
-
-   Original Author:  Scott Christley <scottc@net-community.com>
-   Rewritten by: Andrew McCallum <mccallum@gnu.ai.mit.edu>
-   Created: 1996
-   
-   This file is part of the GNUstep Objective-C Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-*/ 
 
 #ifndef __NSThread_h_GNUSTEP_BASE_INCLUDE
 #define __NSThread_h_GNUSTEP_BASE_INCLUDE
@@ -51,8 +27,13 @@ extern "C" {
  * has been carefully designed so that the internals of the base
  * library do not use threading (except for methods which explicitly
  * deal with threads of course) so that you can write applications
- * without threading.  Non-threaded applications are more efficient
+ * without threading.
+ 
+ Non-threaded applications are more efficient
  * (no locking is required) and are easier to debug during development.
+ 
+ 
+ Each process begins with a main thread and additional threads
  */
 @interface NSThread : NSObject
 {
