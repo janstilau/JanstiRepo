@@ -1,29 +1,3 @@
-/** Implementation of KeyValueCoding for GNUStep
-   Copyright (C) 2000,2002 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSKeyValueCoding informal protocol reference</title>
-   $Date$ $Revision$
-   */
-
 #import "common.h"
 #import "Foundation/NSArray.h"
 #import "Foundation/NSAutoreleasePool.h"
@@ -92,21 +66,23 @@ SetValueForKey(NSObject *self, id anObject, const char *key, unsigned size)
       char		hi;
 
       strncpy(buf, "_set", 4);
-      strncpy(&buf[4], key, size);
+      strncpy(&buf[4], key, size); // 首先是 _setKey
+        
+    
       lo = buf[4];
-      hi = islower(lo) ? toupper(lo) : lo;
+      hi = islower(lo) ? toupper(lo) : lo; // 这里是set 后面的大写字母变化.
       buf[4] = hi;
       buf[size + 4] = ':';
-      buf[size + 5] = '\0';
+      buf[size + 5] = '\0';  // buf 里面现在shi setKey:
 
       name = &buf[1];	// setKey:
       type = NULL;
-      sel = sel_getUid(name);
+      sel = sel_getUid(name); // 这个方法, 是把一个 c 字符串, 注册到 runtime 系统里面
       if (sel == 0 || [self respondsToSelector: sel] == NO)
 	{
 	  name = buf;	// _setKey:
-	  sel = sel_getUid(name);
-	  if (sel == 0 || [self respondsToSelector: sel] == NO)
+	  sel = sel_getUid(name); // 这里, 会取得 sel 的值,
+	  if (sel == 0 || [self respondsToSelector: sel] == NO) // 如果, 这个类没有这个 sel, 那么就是下面的直接进行内存的读取了.
 	    {
 	      sel = 0;
 	      if ([[self class] accessInstanceVariablesDirectly] == YES)
@@ -115,7 +91,7 @@ SetValueForKey(NSObject *self, id anObject, const char *key, unsigned size)
 		  buf[3] = '_';
 		  buf[4] = lo;
 		  name = &buf[3];	// _key
-		  if (GSObjCFindVariable(self, name, &type, &size, &off) == NO)
+		  if (GSObjCFindVariable(self, name, &type, &size, &off) == NO) // 如果没有找到这个值,
 		    {
 		      buf[4] = hi;
 		      buf[3] = 's';
@@ -123,19 +99,19 @@ SetValueForKey(NSObject *self, id anObject, const char *key, unsigned size)
 		      buf[1] = '_';
 		      name = &buf[1];	// _isKey
 		      if (GSObjCFindVariable(self,
-			name, &type, &size, &off) == NO)
+			name, &type, &size, &off) == NO) // 就找这个值. 如果还没有, 就找这个值.
 			{
 			  buf[4] = lo;
 			  name = &buf[4];	// key
 			  if (GSObjCFindVariable(self,
-			    name, &type, &size, &off) == NO)
+			    name, &type, &size, &off) == NO) // 还是找值.
 			    {
 			      buf[4] = hi;
 			      buf[3] = 's';
 			      buf[2] = 'i';
 			      name = &buf[2];	// isKey
 			      GSObjCFindVariable(self,
-				name, &type, &size, &off);
+				name, &type, &size, &off); // 还是找值.
 			    }
 			}
 		    }
@@ -241,7 +217,7 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
 
 + (BOOL) accessInstanceVariablesDirectly
 {
-  return YES;
+  return YES; // 默认是 可以用 kvc 访问数据的.
 }
 
 
@@ -250,21 +226,6 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
   NSMutableDictionary	*dictionary;
   NSEnumerator		*enumerator;
   id			key;
-#ifdef WANT_DEPRECATED_KVC_COMPAT
-  static IMP	o = 0;
-
-  /* Backward compatibility hack */
-  if (o == 0)
-    {
-      o = [NSObject instanceMethodForSelector:
-	@selector(valuesForKeys:)];
-    }
-  if ([self methodForSelector: @selector(valuesForKeys:)] != o)
-    {
-      return [self valuesForKeys: keys];
-    }
-#endif
-
   dictionary = [NSMutableDictionary dictionaryWithCapacity: [keys count]];
   enumerator = [keys objectEnumerator];
   while ((key = [enumerator nextObject]) != nil)
@@ -273,99 +234,27 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
 
       if (value == nil)
 	{
-	  value = [NSNull null];
+	  value = [NSNull null]; // 这里, 就算这个对象没有key 对应的数值, 他还是塞到了返回值中了.
 	}
       [dictionary setObject: value forKey: key];
     }
   return dictionary;
 }
 
-- (NSMutableSet*) mutableSetValueForKey: (NSString*)aKey
+- (void) setNilValueForKey: (NSString*)aKey // 所以, 在 KVC 的时候, 如果 value 为 nil 默认是抛出异常的.
 {
-  return [NSKeyValueMutableSet setForKey: aKey ofObject: self];
-}
-
-- (NSMutableSet*) mutableSetValueForKeyPath: (NSString*)aKey
-{
-  NSRange       r = [aKey rangeOfString: @"." options: NSLiteralSearch];
-
-  if (r.length == 0)
-    {
-      return [self mutableSetValueForKey: aKey];
-    }
-  else
-    {
-      NSString	*key = [aKey substringToIndex: r.location];
-      NSString	*path = [aKey substringFromIndex: NSMaxRange(r)];
-
-      return [[self valueForKey: key] mutableSetValueForKeyPath: path];
-    }
-}
-
-- (NSMutableArray*) mutableArrayValueForKey: (NSString*)aKey
-{
-  return [NSKeyValueMutableArray arrayForKey: aKey ofObject: self];
-}
-
-- (NSMutableArray*) mutableArrayValueForKeyPath: (NSString*)aKey
-{
-  NSRange       r = [aKey rangeOfString: @"." options: NSLiteralSearch];
-
-  if (r.length == 0)
-    {
-      return [self mutableArrayValueForKey: aKey];
-    }
-  else
-    {
-      NSString	*key = [aKey substringToIndex: r.location];
-      NSString	*path = [aKey substringFromIndex: NSMaxRange(r)];
-
-      return [[self valueForKey: key] mutableArrayValueForKeyPath: path];
-    }
-}
-
-- (void) setNilValueForKey: (NSString*)aKey
-{
-#ifdef WANT_DEPRECATED_KVC_COMPAT
-  static IMP	o = 0;
-
-  /* Backward compatibility hack */
-  if (o == 0)
-    {
-      o = [NSObject instanceMethodForSelector:
-	@selector(unableToSetNilForKey:)];
-    }
-  if ([self methodForSelector: @selector(unableToSetNilForKey:)] != o)
-    {
-      [self unableToSetNilForKey: aKey];
-      return;
-    }
-#endif
   [NSException raise: NSInvalidArgumentException
     format: @"%@ -- %@ 0x%"PRIxPTR": Given nil value to set for key \"%@\"",
     NSStringFromSelector(_cmd), NSStringFromClass([self class]),
     (NSUInteger)self, aKey];
 }
-
-
 - (void) setValue: (id)anObject forKey: (NSString*)aKey
 {
   unsigned	size = [aKey length] * 8;
-  char		key[size + 1];
-#ifdef WANT_DEPRECATED_KVC_COMPAT
-  IMP   	o = [self methodForSelector: @selector(takeValue:forKey:)];
-
-  setupCompat();
-  if (o != takeValue && o != takeValueKVO)
-    {
-      (*o)(self, @selector(takeValue:forKey:), anObject, aKey);
-      return;
-    }
-#endif
-
+  char		key[size + 1]; //
   [aKey getCString: key
 	 maxLength: size + 1
-	  encoding: NSUTF8StringEncoding];
+	  encoding: NSUTF8StringEncoding]; // 首先, 把 NSString 变为了 c 语言的字符串.
   size = strlen(key);
   SetValueForKey(self, anObject, key, size);
 }
@@ -374,17 +263,6 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
 - (void) setValue: (id)anObject forKeyPath: (NSString*)aKey
 {
   NSRange       r = [aKey rangeOfString: @"." options: NSLiteralSearch];
-#ifdef WANT_DEPRECATED_KVC_COMPAT
-  IMP	        o = [self methodForSelector: @selector(takeValue:forKeyPath:)];
-
-  setupCompat();
-  if (o != takePath && o != takePathKVO)
-    {
-      (*o)(self, @selector(takeValue:forKeyPath:), anObject, aKey);
-      return;
-    }
-#endif
-
   if (r.length == 0)
     {
       [self setValue: anObject forKey: aKey];
@@ -395,30 +273,15 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
       NSString	*path = [aKey substringFromIndex: NSMaxRange(r)];
       
       [[self valueForKey: key] setValue: anObject forKeyPath: path];
+        // 根据 . 前面的值进行取值, 然后递归调用这个方法. 前面的 r.length == 0 进行递归的终止.
     }
 }
 
 
-- (void) setValue: (id)anObject forUndefinedKey: (NSString*)aKey
+- (void) setValue: (id)anObject forUndefinedKey: (NSString*)aKey // 默认是抛出异常.
 {
   NSDictionary	*dict;
   NSException	*exp; 
-#ifdef WANT_DEPRECATED_KVC_COMPAT
-  static IMP	o = 0;
-
-  /* Backward compatibility hack */
-  if (o == 0)
-    {
-      o = [NSObject instanceMethodForSelector:
-	@selector(handleTakeValue:forUnboundKey:)];
-    }
-  if ([self methodForSelector: @selector(handleTakeValue:forUnboundKey:)] != o)
-    {
-      [self handleTakeValue: anObject forUnboundKey: aKey];
-      return;
-    }
-#endif
-
   dict = [NSDictionary dictionaryWithObjectsAndKeys:
     (anObject ? (id)anObject : (id)@"(nil)"), @"NSTargetObjectUserInfoKey",
     (aKey ? (id)aKey : (id)@"(nil)"), @"NSUnknownUserInfoKey",
@@ -429,27 +292,11 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
   [exp raise];
 }
 
-
+// 为什么我们不直接调用这个方法呢, 因为这个方法太危险了. dictionary 的 key, value 的获取是很简单的, 但是直接调用 setValue forKey 太危险了. 因为 NSObject 的默认是进行了异常抛出. 这就是那些框架有用的原因, 它会先拿到 propertyList 的信息, 然后根据这些信息, 如果 Object 里面不该调用 set 方法, 他就不会去调用.
 - (void) setValuesForKeysWithDictionary: (NSDictionary*)aDictionary
 {
   NSEnumerator	*enumerator;
   NSString	*key;
-#ifdef WANT_DEPRECATED_KVC_COMPAT
-  static IMP	o = 0;
-
-  /* Backward compatibility hack */
-  if (o == 0)
-    {
-      o = [NSObject instanceMethodForSelector:
-	@selector(takeValuesFromDictionary:)];
-    }
-  if ([self methodForSelector: @selector(takeValuesFromDictionary:)] != o)
-    {
-      [self takeValuesFromDictionary: aDictionary];
-      return;
-    }
-#endif
-
   enumerator = [aDictionary keyEnumerator];
   while ((key = [enumerator nextObject]) != nil)
     {
@@ -532,6 +379,8 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
 
 - (id) valueForKeyPath: (NSString*)aKey
 {
+    
+    // 同理, 递归取值.
   NSRange       r = [aKey rangeOfString: @"." options: NSLiteralSearch];
 
   if (r.length == 0)
@@ -553,20 +402,6 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
   NSDictionary	*dict;
   NSException	*exp;
   NSString      *reason;
-#ifdef WANT_DEPRECATED_KVC_COMPAT
-  static IMP	o = 0;
-
-  /* Backward compatibility hack */
-  if (o == 0)
-    {
-      o = [NSObject instanceMethodForSelector:
-	@selector(handleQueryWithUnboundKey:)];
-    }
-  if ([self methodForSelector: @selector(handleQueryWithUnboundKey:)] != o)
-    {
-      return [self handleQueryWithUnboundKey: aKey];
-    }
-#endif
   dict = [NSDictionary dictionaryWithObjectsAndKeys:
     self, @"NSTargetObjectUserInfoKey",
     (aKey ? (id)aKey : (id)@"(nil)"), @"NSUnknownUserInfoKey",
@@ -917,7 +752,7 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
   for (pos = 0; pos < count; pos++)
     {
       NSString	*key = [keys objectAtIndex: pos];
-      id 	val = [self valueForKey: key];
+      id 	val = [self valueForKey: key]; // 这里, 如果 val == nil 应该就退出异常退出了. 但是子类可以复写这个函数.
 
       if (val == nil)
 	{

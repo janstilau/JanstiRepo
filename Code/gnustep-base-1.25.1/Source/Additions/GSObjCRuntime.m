@@ -244,14 +244,14 @@ GSObjCFindVariable(id obj, const char *name,
 {
   Class		class = object_getClass(obj);
   Ivar		ivar = class_getInstanceVariable(class, name);
-
+ // Ivar 里面 是 name, type, offset, 还有 space
   if (ivar == 0)
     {
-      return NO;
+      return NO; // 没有找到, 也就是上面的值不会进行赋值操作.
     }
   else
     {
-      const char	*enc = ivar_getTypeEncoding(ivar);
+      const char	*enc = ivar_getTypeEncoding(ivar); // 获取这个 ivar 的 type 信息. ?? 这里, 内存怎么管理的.
 
       if (type != 0)
 	{
@@ -1030,7 +1030,7 @@ GSObjCGetVal(NSObject *self, const char *key, SEL sel,
       id	val = nil;
 
       switch (*type)
-	{
+	{ // 在下面的方法里面, 要对 return 的返回值进行包装. 根据 type, 要包装成为对应的各种各样类型的值.
 	  case _C_ID:
 	  case _C_CLASS:
 	    {
@@ -1057,7 +1057,7 @@ GSObjCGetVal(NSObject *self, const char *key, SEL sel,
 
 	      if (sel == 0)
 		{
-		  v = *(char *)((char *)self + offset);
+		  v = *(char *)((char *)self + offset); // 明确的写出, 这里要进行 char 的取值. 这里, 其实能够表现, 类型是什么, 类型就是, 告诉编译器这个地方, 应该进行什么操作.
 		}
 	      else
 		{
@@ -1066,12 +1066,15 @@ GSObjCGetVal(NSObject *self, const char *key, SEL sel,
 
 		  v = (*imp)(self, sel);
 		}
-	      val = [NSNumber numberWithChar: v];
+	      val = [NSNumber numberWithChar: v]; // 对于 char 的包装.
 	    }
 	    break;
 
 	  case _C_UCHR:
 	    {
+            // set 方法的时候, 是定义一个相关类型的指针, 然后让这个指针偏移到相应的位置. 然后进行赋值操作.
+            // 而 get 的时候, 也是让指针偏移到合适的位置, 然后根据指针进行取值, 然后赋值返回. 在返回的时候, 要进行类型的包装.
+            // 如果有 sel, 就直接 imp 的返回值
 	      unsigned char	v;
 
 	      if (sel == 0)
@@ -1320,6 +1323,9 @@ GSObjCGetVal(NSObject *self, const char *key, SEL sel,
             break;
 
           case _C_STRUCT_B:
+            
+            // 对于结构体这种. 直接调用了 memCpy.
+            
             if (GSSelectorTypesMatch(@encode(NSPoint), type))
               {
                 NSPoint	v;
@@ -1433,7 +1439,7 @@ GSObjCGetVal(NSObject *self, const char *key, SEL sel,
 	    }
 #endif
 	    val = [self valueForUndefinedKey:
-	      [NSString stringWithUTF8String: key]];
+	      [NSString stringWithUTF8String: key]]; // 在这里, 最后的最后, 还是会调用 valueForUndefinedKey 这个方法, 而这个方法, 会抛出异常. 所以, 还是很危险的.
 	}
       return val;
     }
@@ -1455,21 +1461,24 @@ GSObjCGetValue(NSObject *self, NSString *key, SEL sel,
  * supplied), or via direct access (if type, size, and offset are
  * supplied).<br />
  * Automatic conversion between NSNumber and C scalar types is performed.<br />
+ 
+ // 这里还有一个对于 NSNumber 和 C scalar type 的转换操作.
+ 
  * If type is null and can't be determined from the selector, the
  * [NSObject-handleTakeValue:forUnboundKey:] method is called to try
  * to set a value.
  */
 void
 GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
-  const char *type, unsigned size, int offset)
+  const char *type, unsigned size, int offset) // 这里, value 一定是 id 类型的, 如果有 sel, 那么后面的 type, size, offset 的信息就不会有. size 信息在type 可以被系统识别的时候, 是没有作用的.
 {
   static NSNull		*null = nil;
   NSMethodSignature	*sig = nil;
-
-  if (null == nil)
+    if (null == nil)
     {
-      null = [NSNull new];
+        null = [NSNull new];
     }
+  
   if (sel != 0)
     {
       sig = [self methodSignatureForSelector: sel];
@@ -1478,12 +1487,16 @@ GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
 	  [NSException raise: NSInvalidArgumentException
 		      format: @"key-value set method has wrong number of args"];
 	}
-      type = [sig getArgumentTypeAtIndex: 2];
+      type = [sig getArgumentTypeAtIndex: 2]; // 如果, type 找不到,
     }
+// 首先, 获取到 type 的信息, 也就是setvalue 中 value 的信息.
   if (type == NULL)
     {
       [self setValue: val forUndefinedKey:
 	[NSString stringWithUTF8String: key]];
+        
+        
+        // type 会有两个地方获取, 一是通过 sel, 二是通过 ivar, 这里, 如果为空的话, 那就是既没有 sel, 又没有 ivar 信息.
     }
   else if ((val == nil || val == null) && *type != _C_ID && *type != _C_CLASS)
     {
@@ -1496,20 +1509,20 @@ GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
 	  case _C_ID:
 	  case _C_CLASS:
 	    {
-	      id	v = val;
+	      id	v = val; // 如果是struct_obj, 或者是 struct_class. 这两种类型.
 
-	      if (sel == 0)
+	      if (sel == 0) // 如果没有 sel.
 		{
-		  id *ptr = (id *)((char *)self + offset);
+		  id *ptr = (id *)((char *)self + offset);// 那么计算出这个信息的指针位置.
 
-		  ASSIGN(*ptr, v);
+		  ASSIGN(*ptr, v); // 通过指针的直接赋值进行操作, 注意, 这里有着内存管理的代码.
 		}
 	      else
 		{
 		  void	(*imp)(id, SEL, id) =
 		    (void (*)(id, SEL, id))[self methodForSelector: sel];
 
-		  (*imp)(self, sel, val);
+		  (*imp)(self, sel, val); // 如果有 sel, 那么就直接调用函数进行操作.
 		}
 	    }
 	    break;
@@ -1555,27 +1568,25 @@ GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
 	    }
 	    break;
 
-#if __GNUC__ > 2 && defined(_C_BOOL)
-          case _C_BOOL:
+      case _C_BOOL:
+        {
+          _Bool     v = (_Bool)[val boolValue];
+
+          if (sel == 0)
             {
-              _Bool     v = (_Bool)[val boolValue];
- 
-              if (sel == 0)
-                {
-                  _Bool *ptr = (_Bool*)((char *)self + offset);
- 
-                  *ptr = v;
-                }
-              else
-                {
-                  void  (*imp)(id, SEL, _Bool) =
-                    (void (*)(id, SEL, _Bool))[self methodForSelector: sel];
- 
-                  (*imp)(self, sel, v);
-                }
+              _Bool *ptr = (_Bool*)((char *)self + offset);
+
+              *ptr = v;
             }
-            break;
-#endif
+          else
+            {
+              void  (*imp)(id, SEL, _Bool) =
+                (void (*)(id, SEL, _Bool))[self methodForSelector: sel];
+
+              (*imp)(self, sel, v);
+            }
+        }
+        break;
 
 	  case _C_SHT:
 	    {
@@ -1787,7 +1798,9 @@ GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
 	    }
 	    break;
 
-          case _C_STRUCT_B:
+        // 在上面的有着明确的类型, 这些类型是在 objcruntime 中可以识别的情况下. (其实, objc 识别就是runtime 注册了这些名字, 并且在其他的地方, 都加上了这个 type Name). 策略都是一样的, 如果 sel 可以用, 就进行函数调用, 如果 sel 找不到, 就直接进行内存值的读取.
+            
+          case _C_STRUCT_B: // 如果, 这是一个结构体.
             if (GSSelectorTypesMatch(@encode(NSPoint), type))
               {
                 NSPoint	v = [val pointValue];
@@ -1862,24 +1875,24 @@ GSObjCSetVal(NSObject *self, const char *key, id val, SEL sel,
               }
             else
               {
+         // 上面的结构体的处理和上面的简单类型的处理其实是一样的. 都是有sel的话, 函数调用, 没有的话, 内存访问.
+        // 上面几个结构体的类型匹配都没有成功.
 		NSUInteger	size;
-
 		NSGetSizeAndAlignment(type, &size, 0);
-                if (sel == 0)
-                  {
-		    [val getValue: ((char *)self + offset)];
-		  }
-		else
-		  {
-		    NSInvocation	*inv;
-		    char		buf[size];
+                    if (sel == 0){
+                        [val getValue: ((char *)self + offset)];
+                      }
+                    else
+                      {
+                        NSInvocation	*inv;
+                        char		buf[size];
 
-		    [val getValue: buf];
-		    inv = [NSInvocation invocationWithMethodSignature: sig];
-		    [inv setSelector: sel];
-		    [inv setArgument: buf atIndex: 2];
-		    [inv invokeWithTarget: self];
-		  }
+                        [val getValue: buf];
+                        inv = [NSInvocation invocationWithMethodSignature: sig];
+                        [inv setSelector: sel];
+                        [inv setArgument: buf atIndex: 2];
+                        [inv invokeWithTarget: self];
+                      }
               }
             break;
 

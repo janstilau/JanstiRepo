@@ -1,30 +1,3 @@
-/** NSRange - range functions
- * Copyright (C) 1993-2015 Free Software Foundation, Inc.
- *
- * Written by:  Adam Fedor <fedor@boulder.colorado.edu>
- * Date: Mar 1995
- *
- * This file is part of the GNUstep Base Library.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA 02111 USA.
-
-   <title>NSRange class reference</title>
-   $Date$ $Revision$
- */
-
 #import "common.h"
 
 #define	IN_NSRANGE_M 1
@@ -68,7 +41,7 @@ NSRangeFromString(NSString *aString)
   NSScanner	*scanner;
   NSRange	range;
 
-  setupCache();
+  setupCache(); // 没有问题, 该有的地方进行调用就可以了. 因为没有类的这个机制在, 所以, 需要缓存的地方, 都要显示的进行调用.
   scanner = (*scannerImp)(NSScannerClass, scannerSel, aString);
   if ((*scanStringImp)(scanner, scanStringSel, @"{", NULL)
     && (*scanStringImp)(scanner, scanStringSel, @"location", NULL)
@@ -87,7 +60,7 @@ NSRangeFromString(NSString *aString)
 NSString *
 NSStringFromRange(NSRange range)
 {
-  setupCache();
+  setupCache(); // 没有问题, 该有的地方进行调用就可以了. 因为没有类的这个机制在, 所以, 需要缓存的地方, 都要显示的进行调用.
   return [NSStringClass
     stringWithFormat: @"{location=%"PRIuPTR", length=%"PRIuPTR"}",
     range.location, range.length];

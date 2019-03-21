@@ -1,28 +1,3 @@
-
-/* Interface for NSKeyValueCoding for GNUStep
-   Copyright (C) 2000 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date:	2000
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
-
 #ifndef __NSKeyValueCoding_h_GNUSTEP_BASE_INCLUDE
 #define __NSKeyValueCoding_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -47,11 +22,15 @@ extern "C" {
 GS_EXPORT NSString* const NSUndefinedKeyException;
 
 /**
+ whereby 就是 bywhere
+ 
  * <p>This describes an informal protocol for <em>key-value coding</em>, a
  * mechanism whereby the fields of an object may be accessed and set using
  * generic methods in conjunction with string keys rather than field-specific
  * methods.  Key-based access loses compile-time validity checking, but can be
  * convenient in certain kinds of situations.</p>
+ // 通过 string key 进行取值和赋值的操作, 而不是写死的代码. 写死的代码, 如果是结构体的化, 会直接变成指针的偏移取值, 如果是方法的话, 则是对应的函数调用.
+ // KVC 增加了灵活性, 而灵活性带来的是易读性和逻辑的复杂.
  *
  * <p>The basic methods are implemented as a category of the [NSObject] class,
  * but other classes override those default implementations to perform more
@@ -63,6 +42,7 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  * Controls whether the NSKeyValueCoding methods may attempt to
  * access instance variables directly.
  * NSObject's implementation returns YES.
+ // 这是一个给, 每个类的一个权力. 因为毕竟有的类是不想接受KVC 这一套理论的.
  */
 + (BOOL) accessInstanceVariablesDirectly;
 

@@ -1,32 +1,7 @@
-/* 
- * Copyright (C) 1995,1999 Free Software Foundation, Inc.
- * 
- * Written by:  Adam Fedor <fedor@boulder.colorado.edu>
- * Date: 1995
- * 
- * This file is part of the GNUstep Base Library.
- * 
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA 02111 USA.
- */ 
-
 #ifndef __NSRange_h_GNUSTEP_BASE_INCLUDE
 #define __NSRange_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
-/**** Included Headers *******************************************************/
 
 #import	<Foundation/NSObject.h>
 
@@ -36,8 +11,6 @@ extern "C" {
 
 @class NSException;
 @class NXConstantString;
-
-/**** Type, Constant, and Macro Definitions **********************************/
 
 #ifndef MAX
 #define MAX(a,b) \
@@ -78,6 +51,7 @@ extern "C" {
  *   ruler, you can only store information <strong>between</strong>
  *   points.  So the number of items that can be stored in a range
  *   is the length of the range.
+ 前闭后开.
  * </p>
  */
 typedef struct _NSRange NSRange;
@@ -87,10 +61,8 @@ struct _NSRange
   NSUInteger length;
 };
 
-#if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 /** Pointer to an NSRange structure. */
 typedef NSRange *NSRangePointer;
-#endif
 
 /**** Function Prototypes ****************************************************/
 
@@ -128,7 +100,7 @@ NSLocationInRange(NSUInteger location, NSRange range) GS_RANGE_ATTR;
 GS_RANGE_SCOPE BOOL 
 NSLocationInRange(NSUInteger location, NSRange range) 
 {
-  return (location >= range.location) && (location < NSMaxRange(range));
+  return (location >= range.location) && (location < NSMaxRange(range)); // 前闭后开.
 }
 
 /** Convenience method for raising an NSRangeException. */
@@ -153,7 +125,7 @@ NSMakeRange(NSUInteger location, NSUInteger length)
 
   if (end < location || end < length)
     {
-      _NSRangeExceptionRaise ();
+      _NSRangeExceptionRaise (); // 这里会有异常...
     }
   range.location = location;
   range.length   = length;
@@ -176,6 +148,7 @@ NSUnionRange(NSRange range1, NSRange range2) GS_RANGE_ATTR;
 
 /** Returns range going from minimum of aRange's and bRange's locations to
     maximum of their two max's. */
+    // 这个方法, 就算两个 range 不相连, 也会将 range 进行联合.
 GS_RANGE_SCOPE NSRange
 NSUnionRange(NSRange aRange, NSRange bRange)
 {

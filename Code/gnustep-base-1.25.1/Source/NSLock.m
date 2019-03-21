@@ -444,6 +444,8 @@ MUNLOCK
     }
 }
 
+// 要注意, 想要通过NSCondition进行线程同步, 不同的线程之间, 首先要用同一把锁才可以.
+
 - (BOOL) lockWhenCondition: (NSInteger)condition_to_meet
                 beforeDate: (NSDate*)limitDate
 {

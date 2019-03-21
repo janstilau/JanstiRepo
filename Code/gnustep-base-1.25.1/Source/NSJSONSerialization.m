@@ -1,12 +1,3 @@
-/**
- * NSJSONSerialization.m.  This file provides an implementation of the JSON
- * reading and writing APIs introduced with OS X 10.7.  
- *
- * The parser is implemented as a simple recursive parser.  The JSON is
- * unambiguous, so this requires no read-ahead or backtracking.  The source of
- * data for the parse can be either a static JSON string or some JSON data.
- */
-
 #import "common.h"
 #import "Foundation/NSArray.h"
 #import "Foundation/NSByteOrder.h"
