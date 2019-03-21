@@ -24,11 +24,11 @@ typedef NSUInteger NSStreamStatus;
 
 enum {   
   NSStreamEventNone = 0,    
-  NSStreamEventOpenCompleted = 1,    
-  NSStreamEventHasBytesAvailable = 2,
-  NSStreamEventHasSpaceAvailable = 4,    
-  NSStreamEventErrorOccurred = 8,    
-  NSStreamEventEndEncountered = 16
+  NSStreamEventOpenCompleted = 1,         // The open has completed successfully.
+  NSStreamEventHasBytesAvailable = 2,     // The stream has bytes to be read.
+  NSStreamEventHasSpaceAvailable = 4,    // The stream can accept bytes for writing.
+  NSStreamEventErrorOccurred = 8,    // An error has occurred on the stream.
+  NSStreamEventEndEncountered = 16 // The end of the stream has been reached.
 };
 typedef NSUInteger NSStreamEvent;
 
@@ -40,6 +40,10 @@ typedef NSUInteger NSStreamEvent;
 @class NSRunLoop;
 @class NSURL;
 
+    /*
+     Use low-level Unix features to manage input and output among files, processes, and the network
+     */
+    
 /**
  * NSStream is an abstract class for objects representing streams. 
  */

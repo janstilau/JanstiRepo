@@ -79,6 +79,7 @@ typedef struct ParserStateStruct
 /**
  * Pulls the next group of characters from a string source.
  */
+// 取下一段数据, 并且更新自己的状态.
 static inline void
 updateStringBuffer(ParserState* state)
 {
@@ -90,8 +91,8 @@ updateStringBuffer(ParserState* state)
       r.length = end - state->sourceIndex;
     }
   [state->source getCharacters: state->buffer range: r];
-  state->sourceIndex = r.location;
-  state->bufferIndex = 0;
+  state->sourceIndex = r.location; // 在解析完之后, 一定会更新 sourceIndex 的位置
+  state->bufferIndex = 0; // 在解析完之后, 这个 bufferIndex 一定会变为 r.length.
   state->bufferLength = r.length;
   if (r.length == 0)
     {
@@ -253,7 +254,7 @@ updateStreamBuffer(ParserState* state)
  * Returns the current character.
  */
 static inline unichar
-currentChar(ParserState *state)
+currentChar(ParserState *state) // buffer 就像一个桶, 一直滚动. currentChar 这个取值函数, 一直滚着这个桶往前走.
 {
   if (state->bufferIndex >= state->bufferLength)
     {
@@ -268,11 +269,11 @@ currentChar(ParserState *state)
 static inline unichar
 consumeChar(ParserState *state)
 {
-  state->sourceIndex++;
-  state->bufferIndex++;
-  if (state->bufferIndex >= state->bufferLength)
+  state->sourceIndex++; // 总位置++
+  state->bufferIndex++; // buffer 位置++
+  if (state->bufferIndex >= state->bufferLength) // buffer 满了,
     {
-      state->updateBuffer(state);
+      state->updateBuffer(state); // 取新值.
     }
   return currentChar(state);
 }
@@ -328,7 +329,7 @@ parseString(ParserState *state)
 
   if (state->error)
     {
-      return nil;
+      return nil;// 如果, state 已经出错了, 直接返回 nil. 避免下面的处理.
     }
 
   if (currentChar(state) != '"')
@@ -341,7 +342,7 @@ parseString(ParserState *state)
   while ((next != 0) && (next != '"'))
     {
       // Unexpected end of stream
-      if (next == '\\')
+      if (next == '\\')// 下面的一个字符才是真正有用的数据.
         {
           next = consumeChar(state);
           switch (next)
@@ -352,7 +353,7 @@ parseString(ParserState *state)
               case '/':
                 break;
               // Map to the unicode values specified in RFC4627
-              case 'b': next = 0x0008; break;
+              case 'b': next = 0x0008; break; // 这里进行了转义. 将\n 转化成为了真正的 \nasicc 码.
               case 'f': next = 0x000c; break;
               case 'n': next = 0x000a; break;
               case 'r': next = 0x000d; break;
@@ -379,8 +380,9 @@ parseString(ParserState *state)
                 }
             }
         }
+        
       buffer[bufferIndex++] = next;
-      if (bufferIndex >= BUFFER_SIZE)
+      if (bufferIndex >= BUFFER_SIZE) // 如果 buffer 满了, 就装NSMutableString 中.
         {
           NSMutableString *str;
 
@@ -407,7 +409,7 @@ parseString(ParserState *state)
       return nil;
     }
 
-  if (bufferIndex > 0)
+  if (bufferIndex > 0) // 添加最后一点 buffer 里面的内容.
     {
       NSMutableString *str;
 
@@ -427,7 +429,7 @@ parseString(ParserState *state)
     {
       val = [NSMutableString new];
     }
-  if (!state->mutableStrings)
+  if (!state->mutableStrings) // 原来如此!!!! 终于之后那几个值的意义了.
     {
       if (NO == [val makeImmutable])
         {
@@ -452,8 +454,6 @@ parseNumber(ParserState *state)
   int parsedSize = 0;
   double num;
 
-  // Define a macro to add a character to the buffer, because we'll need to do
-  // it a lot.  This resizes the buffer if required.
 #define BUFFER(x) do {\
   if (parsedSize == bufferSize)\
     {\
@@ -464,6 +464,7 @@ parseNumber(ParserState *state)
 	number = realloc(number, bufferSize);\
     }\
     number[parsedSize++] = (char)x; } while (0)
+    
   // JSON numbers must start with a - or a digit
   if (!(c == '-' || isdigit(c)))
     {
@@ -512,7 +513,7 @@ parseNumber(ParserState *state)
       {
         free(number);
       }
-    return [[NSNumber alloc] initWithDouble: num];
+    return [[NSNumber alloc] initWithDouble: num]; // 字符串解析完, 要包装.
 #undef BUFFER
 }
 /**
@@ -529,11 +530,11 @@ parseArray(ParserState *state)
       parseError(state);
       return nil;
     }
-  // Eat the [
+  // Eat the [ // 吃. 牛逼.
   consumeChar(state);
   array = [NSMutableArray new];
   c = consumeSpace(state);
-  while (c != ']')
+  while (c != ']') // 牛逼的代码.
     {
       // If this fails, it will already set the error, so we don't have to.
       id obj = parseValue(state);
@@ -564,7 +565,7 @@ parseArray(ParserState *state)
 }
 
 NS_RETURNS_RETAINED static NSDictionary*
-parseObject(ParserState *state)
+parseObject(ParserState *state) // 牛逼牛逼...
 {
   unichar c = consumeSpace(state);
   NSMutableDictionary *dict;
@@ -632,12 +633,12 @@ parseObject(ParserState *state)
  * Parses a JSON value, as defined by RFC4627, section 2.1.
  */
 NS_RETURNS_RETAINED static id
-parseValue(ParserState *state)
+parseValue(ParserState *state) // 这个函数要在别的函数调用的. 因为这本身就是一个树的结构.
 {
   unichar c;
 
   if (state->error) { return nil; };
-  c = consumeSpace(state);
+  c = consumeSpace(state); // 先消耗. 这个方法直到真正的值的时候, 都先消耗数据.
   //   2.1: A JSON value MUST be an object, array, number, or string, or one of the
   //   following three literal names:
   //            false null true
@@ -653,7 +654,7 @@ parseValue(ParserState *state)
       case (unichar)'0' ... (unichar)'9':
         return parseNumber(state);
       // Literal null
-      case 'n':
+      case 'n': // 后面那三种情况.
         {
           if ((consumeChar(state) == 'u')
 	    && (consumeChar(state) == 'l')
@@ -689,7 +690,7 @@ parseValue(ParserState *state)
           break;
         }
     }
-  parseError(state);
+  parseError(state); // 如果, 到了这里, 就是有错误发生了.
   return nil;
 }
 
@@ -968,7 +969,7 @@ writeObject(id obj, NSMutableString *output, NSInteger tabs)
 {
   static BOOL beenHere = NO;
 
-  if (NO == beenHere)
+  if (NO == beenHere) // 没有 dispatch_once 的替换方法.
     {
       NSNullClass = [NSNull class];
       NSArrayClass = [NSArray class];
@@ -976,12 +977,9 @@ writeObject(id obj, NSMutableString *output, NSInteger tabs)
       NSDictionaryClass = [NSDictionary class];
       NSNumberClass = [NSNumber class];
       escapeSet = [NSMutableCharacterSet new];
-      [[NSObject leakAt: &escapeSet] release];
       [escapeSet addCharactersInString: @"\"\\"];
       boolN = [[NSNumber alloc] initWithBool: NO];
-      [[NSObject leakAt: &boolN] release];
       boolY = [[NSNumber alloc] initWithBool: YES];
-      [[NSObject leakAt: &boolY] release];
       beenHere = YES;
     }
 }
@@ -990,9 +988,6 @@ writeObject(id obj, NSMutableString *output, NSInteger tabs)
                        options: (NSJSONWritingOptions)opt
                          error: (NSError **)error
 {
-  /* Temporary string: allocate more space than we are likely to use so we just
-   * quickly claim a page and then give it back later
-   */
   NSMutableString *str = [[NSMutableString alloc] initWithCapacity: 4096];
   NSData *data = nil;
   NSUInteger tabs;
@@ -1036,17 +1031,17 @@ writeObject(id obj, NSMutableString *output, NSInteger tabs)
   ParserState p = { 0 };
   id obj;
 
-  [data getBytes: BOM length: 4];
-  getEncoding(BOM, &p);
-  p.source = [[NSString alloc] initWithData: data encoding: p.enc];
-  p.updateBuffer = updateStringBuffer;
+  [data getBytes: BOM length: 4]; // getBytes 其实就是 内存拷贝, 只不过里面做了些异常处理.
+  getEncoding(BOM, &p); // 可以获取到 Data 的编码方式.
+  p.source = [[NSString alloc] initWithData: data encoding: p.enc]; // 这里, 获取到了原始的字符串.
+  p.updateBuffer = updateStringBuffer; // buffer 取值函数.
   p.mutableContainers
     = (opt & NSJSONReadingMutableContainers) == NSJSONReadingMutableContainers;
   p.mutableStrings
     = (opt & NSJSONReadingMutableLeaves) == NSJSONReadingMutableLeaves;
-  obj = parseValue(&p);
+  obj = parseValue(&p); // parseValue 是实际的解析函数. 牛逼....
   [p.source release];
-  if (NULL != error)
+  if (NULL != error) // 如果上面的解析有错误, 进行存储.
     {
       *error = p.error;
     }

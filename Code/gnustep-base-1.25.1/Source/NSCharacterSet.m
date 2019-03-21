@@ -1,30 +1,3 @@
-/** NSCharacterSet - Character set holder
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
-
-   Written by:  Adam Fedor <fedor@boulder.colorado.edu>
-   Date: Apr 1995
-   Updates by:  Richard Frith-Macdonald <rfm@gnu.org>
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSCharacterSet class reference</title>
-   $Date$ $Revision$
-*/
 
 #import "common.h"
 #import "GNUstepBase/GSLock.h"
@@ -1407,14 +1380,6 @@ static Class concreteMutableClass = nil;
 - (void) addCharactersInString: (NSString*)aString
 {
   unsigned   length;
-
-  if (!aString)
-    {
-      [NSException raise:NSInvalidArgumentException
-          format:@"Adding characters from nil string"];
-      /* NOT REACHED */
-    }
-
   length = [aString length];
   if (length > 0)
     {
@@ -1423,12 +1388,14 @@ static Class concreteMutableClass = nil;
 
       get = (unichar (*)(id, SEL, NSUInteger))
 	[aString methodForSelector: @selector(characterAtIndex:)];
+        
       for (i = 0; i < length; i++)
 	{
 	  unichar	letter;
 	  unichar	second;
 
 	  letter = (*get)(aString, @selector(characterAtIndex:), i);
+        
 	  // Convert a surrogate pair if necessary
 	  if (letter >= 0xd800 && letter <= 0xdbff && i < length-1
 	    && (second = (*get)(aString, @selector(characterAtIndex:), i+1))
