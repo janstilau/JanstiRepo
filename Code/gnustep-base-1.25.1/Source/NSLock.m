@@ -440,7 +440,7 @@ MUNLOCK
   [_condition lock];
   while (value != _condition_value)
     {
-      [_condition wait];
+      [_condition wait]; // 这里, 会进行_condition unlock, 这个是 wait 内部的逻辑
     }
 }
 

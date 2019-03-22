@@ -37,6 +37,19 @@ typedef NSInteger NSOperationQueuePriority;
 #endif
 }
 
+/*
+ 这个类里面, 大量的用了 KVO.
+ NSOperation, NSOperation 里面有 main , start, 以及一个 denpendency 的数组. 当我们调用 start 的时候, 回去执行 main 方法, 这也就是为什么, 我们要进行 main 方法的重载. start 是我们的主观的调用, 而 queue 里面, 是直接调用 main 方法的.
+ queue 里面维护了两个数组, 一个 waiting 数组, 一个 starting 数组, 并且监听了每个 operation 的 isReady KVO. 当 queue 发现有个 operatin isReady 的时候, 就把这个 operation 放进 waiting 数组里面. 然后在执行 execute 方法里面, 将 waiting 数组的内容, 放置到 starting 数组里面, 按照配置, 创建线程, 在线程里面, 不断的执行 starting 数组里面的方法.
+ 
+ 我之前一直在想, Operation 底层是不是dispatch, 现在看来, 并不是.
+ 
+ 那么如何实现任务的依赖呢, 这里, 它是用的数组解决的, 只有处于 ready 的 operation 才能到 waitting 里面, 而想要处于 ready 状态, 必须自己 denpendcy 数组里面的所有依赖 operation 全部处于 finish 状态. 通过两个数组, 根本不要什么唤醒之类的操作.
+ 
+之前的MC 代码里面, 有序的下载图片这个事情, 也是用的数组进行的封装, 应该这样说, 有序这个事情, 最好就是通过逻辑进行控制, 那种很底层的唤醒机制, 只有在线程同步的时候用到才好.
+ 
+ */
+
 /** Adds a dependency to the receiver.<br />
  * The receiver is not considered ready to execute until all of its
  * dependencies have finished executing.<br />
