@@ -27,6 +27,7 @@ extern "C" {
 </example>
  */
 + (NSValue*) value: (const void*)value withObjCType: (const char*)type;
+// 其实, 后面的 type 有两个意思, 第一是这是什么, 第二是, 应该取多少空间的值.
 
 /**
  * Create new instance holding anObject.  This is useful if you want to add

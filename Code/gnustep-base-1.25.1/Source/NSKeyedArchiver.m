@@ -419,7 +419,7 @@ static NSDictionary *makeReference(unsigned ref)
     {
       m = [[NSMutableData alloc] initWithCapacity: 10240];
       a = [[NSKeyedArchiver alloc] initForWritingWithMutableData: m];
-      [a encodeObject: anObject forKey: @"root"];
+      [a encodeObject: anObject forKey: @"root"]; // 这里, root 当根 key 值.
       [a finishEncoding];
       d = [m copy];
       DESTROY(m);
@@ -619,7 +619,7 @@ static NSDictionary *makeReference(unsigned ref)
 
 - (void) encodeObject: (id)anObject
 {
-  NSString	*aKey = [NSString stringWithFormat: @"$%u", _keyNum++];
+  NSString	*aKey = [NSString stringWithFormat: @"$%u", _keyNum++]; // 没有提供 key 的, 就用一个计数器代替.
 
   anObject = [self _encodeObject: anObject conditional: NO];
   [_enc setObject: anObject forKey: aKey];
@@ -791,13 +791,13 @@ static NSDictionary *makeReference(unsigned ref)
   [_delegate archiverWillFinish: self];
 
   final = [NSMutableDictionary new];
-  [final setObject: NSStringFromClass([self class]) forKey: @"$archiver"];
+  [final setObject: NSStringFromClass([self class]) forKey: @"$archiver"]; // 首先, 把归档接档的类名存起来,
   [final setObject: [NSNumber numberWithInt: 100000] forKey: @"$version"];
   [final setObject: _enc forKey: @"$top"];
   [final setObject: _obj forKey: @"$objects"];
   data = [NSPropertyListSerialization dataFromPropertyList: final
 						    format: _format
-					  errorDescription: &error];
+					  errorDescription: &error]; // 然后存到了一个 proeprtyList 里面.
   RELEASE(final);
   [_data setData: data];
   [_delegate archiverDidFinish: self];

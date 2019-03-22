@@ -1,34 +1,3 @@
-/** Implementation of NSNumber for GNUStep
-   Copyright (C) 2010 Free Software Foundation, Inc.
-
-   Written by:  David Chisnall
-   Partial rewrite:  Richard Frith-Macdonld <rfm@gnu.org>
-    (to compile on gnu/linux and mswindows,
-    to meet coding/style standards,
-    to restore lost functionality)
-
-   Date: February 2010
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   */
-
-
 #import "common.h"
 
 #if	!defined(LLONG_MAX)
@@ -137,6 +106,10 @@ return NSOrderedSame;
       return NSOrderedSame; \
     }
 
+/*
+ @encode() 的意义在于, 类型这个概念, 本来是编译器用的. 编译通过类型来直到, 应该怎么操作下面的几个字节的数据, 看到.->语言知道怎么便宜, 看到new, 类型名, 知道应该有多少的内存空间. 不过, 这都是编译器的事情, 在 runtime 里面, 并没有这面一套东西. 所以, runtime 里面其实也需要这样一套机制, 在运行时分配内存, 地址偏移, 取值设值等等等等.
+ */
+
 @implementation NSSignedIntegerNumber
 - (NSComparisonResult) compare: (NSNumber*)aNumber
 {
@@ -221,6 +194,7 @@ return NSOrderedSame;
   BOOL *ptr = (BOOL*)buffer;
   *ptr = VALUE;
 }
+
 - (const char *) objCType
 {
   return @encode(BOOL);

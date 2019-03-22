@@ -79,7 +79,7 @@ static Class	NSMutableDataMallocClass;
  */
 - (id) init
 {
-  NSMutableData	*d;
+  NSMutableData	*d; //最终, 要到文件中的数据.
 
   d = [[NSMutableDataMallocClass allocWithZone: [self zone]] init];
   self = [self initForWritingWithMutableData: d];
@@ -210,7 +210,7 @@ static Class	NSMutableDataMallocClass;
 		    toFile: (NSString*)path
 {
   id	d = [self archivedDataWithRootObject: rootObject];
-
+ // 一个函数写完, 是另外一个函数. 很多暴露出去的, 只不过是对于以后函数的简单包装而已.
   return [d writeToFile: path atomically: YES];
 }
 

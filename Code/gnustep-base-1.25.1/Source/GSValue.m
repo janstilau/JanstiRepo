@@ -72,7 +72,7 @@ typeSize(const char* type)
   self = [super init];
   if (self != nil)
     {
-      int	size = typeSize(type);
+      int	size = typeSize(type); // 这里, 首先根据类型, 把 size 拿到手.
 
       if (size < 0)
 	{
@@ -83,12 +83,14 @@ typeSize(const char* type)
       if (size > 0)
 	{
 	  data = (void *)NSZoneMalloc([self zone], size);
-	  memcpy(data, value, size);
+	  memcpy(data, value, size); // 然后就是简简单单的 memcpy 操作了.
 	}
       size = strlen(type);
       objctype = (char *)NSZoneMalloc([self zone], size + 1);
       strncpy(objctype, type, size);
-      objctype[size] = '\0';
+      objctype[size] = '\0'; // 以及最后的, 把 typename 存一下.
+        
+        // 这里其实没有内存管理的, 或者说, 内存管理就在这个类里面, dealloc 的时候, 释放指针空间, alloc 的时候, 进行 malloc 操作. 因为这个类设计的是, 不可变的, 并且值来自于结构体.
     }
   return self;
 }
@@ -116,7 +118,7 @@ typeSize(const char* type)
 		      format: @"Cannot copy value into NULL buffer"];
 	  /* NOT REACHED */
 	}
-      memcpy(value, data, size);
+      memcpy(value, data, size); // objctype 已经存放到了自己的内存里面, 这里直接取值, 然后 memcpy 操作.
     }
 }
 
@@ -129,7 +131,7 @@ typeSize(const char* type)
     {
       hash += ((unsigned char*)data)[size];
     }
-  return hash;
+  return hash;// hash, 把所有的内存相加.
 }
 
 - (BOOL) isEqualToValue: (NSValue*)aValue
@@ -183,7 +185,7 @@ typeSize(const char* type)
       [NSException raise: NSInternalInconsistencyException
 		  format: @"Return value of size %u as NSPoint", size];
     }
-  return *((NSPoint *)data);
+  return *((NSPoint *)data); // 这里, 就是直接把 backing stroe 值当做 CGPoint 进行了处理, 再次验证了, 类型, 只不过是编程语言的提示语的特点.
 }
 
 - (void *) pointerValue

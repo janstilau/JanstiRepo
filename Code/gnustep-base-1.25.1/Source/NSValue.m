@@ -258,6 +258,8 @@ static NSLock			*placeholderLock;
 
 // 可以看到, 上面的类方法, 所做的仅仅是帮助我们快速的建立所需要的类. 真正的最后要调用的, 还是 initWithBytes: objCType 这个函数.
 
+
+// 从通用的字符串表示中, 抓取类型数据.
 + (NSValue*) valueFromString: (NSString *)string
 {
   NSDictionary	*dict = [string propertyList];
@@ -381,9 +383,10 @@ static NSLock			*placeholderLock;
   const char	*objctype = [self objCType];
   NSMutableData	*d;
 
+    // 如何归档, 就代表着如何解档. 因为这是顺序排列的.
   size = strlen(objctype)+1;
-  [coder encodeValueOfObjCType: @encode(unsigned) at: &size];
-  [coder encodeArrayOfObjCType: @encode(signed char) count: size at: objctype];
+  [coder encodeValueOfObjCType: @encode(unsigned) at: &size]; // 首先, 归档 size
+  [coder encodeArrayOfObjCType: @encode(signed char) count: size at: objctype]; // 然后, 归档 type
   if (strncmp("{_NSSize=", objctype, 9) == 0)
     {
       NSSize    v = [self sizeValue];
