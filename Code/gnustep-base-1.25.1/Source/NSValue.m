@@ -1,32 +1,3 @@
-/** NSValue.m - Object encapsulation for C types.
-   Copyright (C) 1993, 1994, 1996, 1999 Free Software Foundation, Inc.
-
-   Written by:  Adam Fedor <fedor@boulder.colorado.edu>
-   Date: Mar 1995
-   Updated by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: Jan 2001
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSValue class reference</title>
-   $Date$ $Revision$
-*/
-
 #import "common.h"
 #import "Foundation/NSValue.h"
 #import "Foundation/NSCoder.h"
@@ -65,7 +36,7 @@
 @end
 
 
-static Class	abstractClass;
+static Class	NSValueClass;
 static Class	concreteClass;
 static Class	nonretainedObjectValueClass;
 static Class	pointValueClass;
@@ -86,8 +57,8 @@ static NSLock			*placeholderLock;
 {
   if (self == [NSValue class])
     {
-      abstractClass = self;
-      [abstractClass setVersion: 3];	// Version 3
+      NSValueClass = self;
+      [NSValueClass setVersion: 3];	// Version 3
       concreteClass = [GSValue class];
       nonretainedObjectValueClass = [GSNonretainedObjectValue class];
       pointValueClass = [GSPointValue class];
@@ -113,7 +84,7 @@ static NSLock			*placeholderLock;
 
 + (id) allocWithZone: (NSZone*)z
 {
-  if (self == abstractClass)
+  if (self == NSValueClass)
     {
       if (z == NSDefaultMallocZone() || z == 0)
 	{
@@ -121,7 +92,7 @@ static NSLock			*placeholderLock;
 	   * As a special case, we can return a placeholder for a value
 	   * in the default malloc zone extremely efficiently.
 	   */
-	  return defaultPlaceholderValue;
+	  return defaultPlaceholderValue; // 其实和类簇一样, alloc 返回一个对象, 然后这个对象在返回实际的值.
 	}
       else
 	{
@@ -157,7 +128,7 @@ static NSLock			*placeholderLock;
 
 - (id) copy
 {
-  return RETAIN(self);
+  return RETAIN(self); // 因为 NSValue 都是不可变的对象.
 }
 
 - (id) copyWithZone: (NSZone *)zone
@@ -285,6 +256,8 @@ static NSLock			*placeholderLock;
   return AUTORELEASE(theObj);
 }
 
+// 可以看到, 上面的类方法, 所做的仅仅是帮助我们快速的建立所需要的类. 真正的最后要调用的, 还是 initWithBytes: objCType 这个函数.
+
 + (NSValue*) valueFromString: (NSString *)string
 {
   NSDictionary	*dict = [string propertyList];
@@ -297,7 +270,7 @@ static NSLock			*placeholderLock;
       NSRange range;
       range = NSMakeRange([[dict objectForKey: @"location"] intValue],
 			[[dict objectForKey: @"length"] intValue]);
-      return [abstractClass valueWithRange: range];
+      return [NSValueClass valueWithRange: range];
     }
   else if ([dict objectForKey: @"width"] && [dict objectForKey: @"x"])
     {
@@ -306,21 +279,21 @@ static NSLock			*placeholderLock;
 		       [[dict objectForKey: @"y"] floatValue],
 		       [[dict objectForKey: @"width"] floatValue],
 		       [[dict objectForKey: @"height"] floatValue]);
-      return [abstractClass valueWithRect: rect];
+      return [NSValueClass valueWithRect: rect];
     }
   else if ([dict objectForKey: @"width"])
     {
       NSSize size;
       size = NSMakeSize([[dict objectForKey: @"width"] floatValue],
 			[[dict objectForKey: @"height"] floatValue]);
-      return [abstractClass valueWithSize: size];
+      return [NSValueClass valueWithSize: size];
     }
   else if ([dict objectForKey: @"x"])
     {
       NSPoint point;
       point = NSMakePoint([[dict objectForKey: @"x"] floatValue],
 			[[dict objectForKey: @"y"] floatValue]);
-      return [abstractClass valueWithPoint: point];
+      return [NSValueClass valueWithPoint: point];
     }
   return nil;
 }
@@ -397,7 +370,7 @@ static NSLock			*placeholderLock;
 
 - (Class) classForCoder
 {
-  return abstractClass;
+  return NSValueClass;
 }
 
 - (void) encodeWithCoder: (NSCoder *)coder
@@ -481,15 +454,15 @@ static NSLock			*placeholderLock;
 			 count: size
 			    at: (void*)objctype];
   if (strncmp("{_NSSize=", objctype, 9) == 0)
-    c = [abstractClass valueClassWithObjCType: @encode(NSSize)];
+    c = [NSValueClass valueClassWithObjCType: @encode(NSSize)];
   else if (strncmp("{_NSPoint=", objctype, 10) == 0)
-    c = [abstractClass valueClassWithObjCType: @encode(NSPoint)];
+    c = [NSValueClass valueClassWithObjCType: @encode(NSPoint)];
   else if (strncmp("{_NSRect=", objctype, 9) == 0)
-    c = [abstractClass valueClassWithObjCType: @encode(NSRect)];
+    c = [NSValueClass valueClassWithObjCType: @encode(NSRect)];
   else if (strncmp("{_NSRange=", objctype, 10) == 0)
-    c = [abstractClass valueClassWithObjCType: @encode(NSRange)];
+    c = [NSValueClass valueClassWithObjCType: @encode(NSRange)];
   else
-    c = [abstractClass valueClassWithObjCType: objctype];
+    c = [NSValueClass valueClassWithObjCType: objctype];
   o = [c allocWithZone: [coder objectZone]];
 
   ver = [coder versionForClassName: @"NSValue"];
@@ -705,7 +678,7 @@ static NSLock			*placeholderLock;
 
 - (id) initWithBytes: (const void*)data objCType: (const char*)type
 {
-  Class		c = [abstractClass valueClassWithObjCType: type];
+  Class		c = [NSValueClass valueClassWithObjCType: type]; // 这里, 得到实际的类, 然后进行初始化.
 
   self = (id)NSAllocateObject(c, 0, [self zone]);
   return [self initWithBytes: data objCType: type];
