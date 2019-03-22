@@ -1079,7 +1079,7 @@ static id gs_weak_load(id obj)
  * <code>NSDefaultMallocZone()</code> as the zone argument.<br />
  * Returns the created instance.
  */
-+ (id) alloc
++ (id) alloc // 直接调用的 allocWithZone.
 {
   return [self allocWithZone: NSDefaultMallocZone()];
 }
@@ -1196,7 +1196,7 @@ static id gs_weak_load(id obj)
  */
 + (id) new
 {
-  return [[self alloc] init];
+  return [[self alloc] init]; // new 就是 alloc init
 }
 
 /**
@@ -1394,7 +1394,7 @@ static id gs_weak_load(id obj)
  */
 - (id) init
 {
-  return self;
+  return self; // 所以, init 就是一个函数而已, 它做的就是初始化操作, 只不过在类簇模式下, 用这个东西进行了 self 的重新赋值.
 }
 
 /**
@@ -2528,3 +2528,4 @@ GSPrivateMemorySize(NSObject *self, NSHashTable *exclude)
   return GSPrivateMemorySize(self, exclude);
 }
 @end
+s
