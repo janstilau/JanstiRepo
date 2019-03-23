@@ -1,30 +1,3 @@
-/** Interface for NSPropertyList for GNUstep
-   Copyright (C) 2004 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: January 2004
-   
-   This file is part of the GNUstep Base Library.
-   
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   AutogsdocSource: NSPropertyList.m
-
-   */ 
-
 #ifndef __NSPropertyList_h_GNUSTEP_BASE_INCLUDE
 #define __NSPropertyList_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -42,7 +15,7 @@ extern "C" {
 enum {
   NSPropertyListImmutable = 0,
   NSPropertyListMutableContainers,
-  NSPropertyListMutableContainersAndLeaves
+  NSPropertyListMutableContainersAndLeaves // 这里, 也有这三个项, 和 json 中一样, 都是在返回数据的时候, 表示要生成什么样的容器类. 比如在看到 dict 这个标签的时候, 当然, 解析的过程中铁定是 NSMutableDict, 而这个NSMutableDict 在最后返回的时候, 一般会进行一次 copy 操作.
 };
 /**
  * Describes the mutability to use when generating objects during
@@ -94,6 +67,11 @@ typedef NSUInteger NSPropertyListFormat;
  * formats.  A property list is roughly an [NSArray] or [NSDictionary] object,
  * with these or [NSNumber], [NSData], [NSString], or [NSDate] objects
  * as members.  (See below.)</p>
+ 
+ 为什么, 是几个这几个呢, 因为无论多复杂的数据, 都可以通过上面的方式, 变成 propertyList. proeprtyList 本质上来说, 不过是一个变种的XML 文件而已, 这个变种是, 限制了节点的类型和节点的含义. 限制节点的类型指的是 ,只有 dcit, array, number, data string, date. 节点的含义指的是, 在这几个有限的类型下面, 按照到类型规定的方式去读取节点. 例如, array 就是一组数据, dict 就是 key, value 这猴子那个形式.
+ 因为 所有的对象数据, 都可以通过, 1 字典进行管理, 2 数组去表示一种很特殊的数据结构, 就是相似, 有序的数据. 3 字符串可以对大部分类型的数据进行描述 4 数字可以对于大部分数值可以表示的类型进行标书. 5 Date 本身可以用时间戳表示, 但是 proeprtyList 为了阅读的方便, 用了一种更加对于阅读者友好的方式进行了展示.
+ 
+ 
  * <p>You do not work with instances of this class, instead you use a
  * small number of class methods to serialize and deserialize
  * property lists.
@@ -147,6 +125,8 @@ typedef NSUInteger NSPropertyListFormat;
  *     </example>
  *   </desc>
  *   <term>[NSDictionary]</term>
+ 
+ 
  *   <desc>
  *     A dictionary which is either empty or contains only <em>string</em>
  *     keys and <em>property list</em> objects.<br />

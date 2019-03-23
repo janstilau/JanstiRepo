@@ -1,28 +1,3 @@
-/** Interface for NSPropertyList for GNUstep
-   Copyright (C) 2003,2004 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   		Fred Kiefer <FredKiefer@gmx.de>
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   */
-
 #import "common.h"
 #import "GNUstepBase/GSMime.h"
 
@@ -89,9 +64,9 @@ extern BOOL GSScanDouble(unichar*, unsigned, double*);
 @end
 
 
-@interface GSXMLPListParser : NSObject
+@interface GSXMLPListParser : NSObject // 从命名就能够看出来, plist 其实是可以当做一个 XML 来进行解析的.
 {
-  NSXMLParser				*theParser;
+  NSXMLParser				*theParser; // 还是用的 XML parser
   NSMutableString			*value;
   NSMutableArray			*stack;
   id					key;
@@ -1839,14 +1814,16 @@ static const char	*indentStrings[] = {
  * dest is the output buffer.
  */
 static void
-OAppend(id obj, NSDictionary *loc, unsigned lev, unsigned step,
+OAppend(id obj, NSDictionary *loc, unsigned indentValue, unsigned step,
   NSPropertyListFormat x, NSMutableData *dest)
 {
   if (NSStringClass == 0)
     {
       [NSPropertyListSerialization class];      // Force initialisation
     }
-  if ([obj isKindOfClass: NSStringClass])
+    
+    
+  if ([obj isKindOfClass: NSStringClass]) // 如果, 想要变 data 的是字符串.
     {
       if (x == NSPropertyListXMLFormat_v1_0)
 	{
@@ -1939,7 +1916,7 @@ OAppend(id obj, NSDictionary *loc, unsigned lev, unsigned step,
       if (NSPropertyListXMLFormat_v1_0 == x)
 	{
 	  [dest appendBytes: "<data>\n" length: 7];
-	  encodeBase64(obj, dest);
+	  encodeBase64(obj, dest); // base64 编码. 所以, 这里可以看出来, data 是没有用文本进行表示的, 必须通过 base64
 	  [dest appendBytes: "</data>\n" length: 8];
 	}
       else if (NSPropertyListGNUstepFormat == x)
@@ -1989,7 +1966,7 @@ OAppend(id obj, NSDictionary *loc, unsigned lev, unsigned step,
 	{
 	  [dest appendBytes: "<date>" length: 6];
 	  obj = [obj descriptionWithCalendarFormat: @"%Y-%m-%dT%H:%M:%SZ"
-	    timeZone: z locale: nil];
+	    timeZone: z locale: nil]; // 时间用字符串表示.
 	  obj = [obj dataUsingEncoding: NSASCIIStringEncoding];
 	  [dest appendData: obj];
 	  [dest appendBytes: "</date>\n" length: 8];
@@ -2012,7 +1989,7 @@ OAppend(id obj, NSDictionary *loc, unsigned lev, unsigned step,
     {
       const char	*iBaseString;
       const char	*iSizeString;
-      unsigned	level = lev;
+      unsigned	level = indentValue;
 
       if (level*step < sizeof(indentStrings)/sizeof(id))
 	{
@@ -2043,7 +2020,7 @@ OAppend(id obj, NSDictionary *loc, unsigned lev, unsigned step,
 	  while ((obj = [e nextObject]))
 	    {
 	      [dest appendBytes: iSizeString length: strlen(iSizeString)];
-	      OAppend(obj, loc, level, step, x, dest);
+	      OAppend(obj, loc, level, step, x, dest); // 每一个, 都调用这个方法.
 	    }
 	  [dest appendBytes: iBaseString length: strlen(iBaseString)];
 	  [dest appendBytes: "</array>\n" length: 9];
@@ -2118,7 +2095,7 @@ OAppend(id obj, NSDictionary *loc, unsigned lev, unsigned step,
       NSString		*keys[numKeys];
       BOOL		canCompare = YES;
       Class		lastClass = 0;
-      unsigned		level = lev;
+      unsigned		level = indentValue;
       BOOL		isProxy = [obj isProxy];
 
       if (level*step < sizeof(indentStrings)/sizeof(id))
@@ -2435,6 +2412,14 @@ static BOOL	classInitialized = NO;
   return data;
 }
 
+// 所以, 一个对象, 如何存储成为 propertyList 的呢, 其实, propertylist 仅仅是有着相应的节点名, 以及节点名对应规则的文件而已.
+/*
+    对于一个 dict 来说, 它是dict 开头, 然后里面的内容, 必然是 key 代表键值, 里面的 value , 是一个对象, 对象的类型, 用 <string>,
+ <Bool> 这些进行表示. 而对于这些, 不同的类型, 下面的元素不一样, 比如, array 表示其中的都是 array 下面的对象, 可以是任意类型. 而BOOL 就只能是 true, false.
+    对于 data, 则是用 base64 表示的一个字符串.
+ XML的好处在于, 可以无限的在里面扩展类型, 这是 json 不能替代的.
+ 一个对象,想要存储成为 propertyList , 首先要变成 propertyListy 的字符串表示, 然后作为字符串进行保存. 而接档的过程, 则是通过节点, 不断的生成相应的对象, 然后返回这个最终的对象. 这个对象, 包含了它从 plist 文件中得到的所有的东西.
+ */
 + (NSData *) dataWithPropertyList: (id)aPropertyList
                            format: (NSPropertyListFormat)aFormat
                           options: (NSPropertyListWriteOptions)anOption
@@ -2444,21 +2429,14 @@ static BOOL	classInitialized = NO;
   NSDictionary	*loc;
   int		step = 2;
 
-  if (nil == aPropertyList)
-    {
-      [NSException raise: NSInvalidArgumentException
-                  format: @"[%@ +%@]: nil property list",
-        NSStringFromClass(self), NSStringFromSelector(_cmd)];
-    }
-
   loc = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
   dest = [NSMutableData dataWithCapacity: 1024];
 
   if (aFormat == NSPropertyListXMLFormat_v1_0)
     {
-      [dest appendBytes: prefix length: strlen(prefix)];
+      [dest appendBytes: prefix length: strlen(prefix)]; // 如果是用 xml 的那种方式, 先加前缀.
       OAppend(aPropertyList, loc, 0, step > 3 ? 3 : step, aFormat, dest);
-      [dest appendBytes: "</plist>" length: 8];
+      [dest appendBytes: "</plist>" length: 8]; // 然后加后缀.
     }
   else if (aFormat == NSPropertyListGNUstepBinaryFormat)
     {
@@ -2645,7 +2623,7 @@ GSPropertyListMake(id obj, NSDictionary *loc, BOOL xml,
         {
         case NSPropertyListXMLFormat_v1_0:
           {
-            GSXMLPListParser *parser;
+            GSXMLPListParser *parser; // 这里, 解析工作和xml 的解析差不多.
             
             parser = [GSXMLPListParser alloc];
             parser = AUTORELEASE([parser initWithData: data

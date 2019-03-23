@@ -1638,9 +1638,6 @@ NSLog(@"_processTag <%@%@ %@>", flag?@"/": @"", tag, attributes);
   c = cget();  // get first character
   while (!this->abort)
     {
-#if EXTRA_DEBUG
-    NSLog(@"_nextelement %02x %c", c, isprint(c)?c: ' ');
-#endif
       switch(c)
         {
           case '\r': 
