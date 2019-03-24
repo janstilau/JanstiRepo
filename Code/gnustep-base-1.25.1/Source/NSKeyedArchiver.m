@@ -140,15 +140,16 @@ static NSDictionary *makeReference(unsigned ref)
 	}
       o = m;
     }
-  [_enc setObject: o forKey: aKey];
+  [_encodeObject setObject: o forKey: aKey];
 }
 
 - (void) _encodePropertyList: (id)anObject forKey: (NSString*)aKey
 {
   CHECKKEY
-  [_enc setObject: anObject forKey: aKey];
+  [_encodeObject setObject: anObject forKey: aKey];
 }
 @end
+
 
 @implementation	NSKeyedArchiver (Private)
 /*
@@ -156,121 +157,45 @@ static NSDictionary *makeReference(unsigned ref)
  * archiving of objects. It returns the object to be stored in the
  * mapping dictionary (_enc).
  */
+
+// 最核心的方法.
 - (id) _encodeObject: (id)anObject conditional: (BOOL)conditional
 {
   id			original = anObject;
   GSIMapNode		node;
   id			objectInfo = nil;	// Encoded object
-  NSMutableDictionary	*m = nil;
+  NSMutableDictionary	*encodeObjectInfoM = nil;
   NSDictionary		*refObject;
   unsigned		ref = 0;		// Reference to nil
 
-  if (anObject != nil)
-    {
-      /*
-       * Obtain replacement object for the value being encoded.
-       * Notify delegate of progress and set up new mapping if necessary.
-       */
-      node = GSIMapNodeForKey(_repMap, (GSIMapKey)anObject);
-      if (node == 0)
-	{
-	  anObject = [original replacementObjectForKeyedArchiver: self];
-	  if (_delegate != nil)
-	    {
-	      if (anObject != nil)
-		{
-		  anObject = [_delegate archiver: self
-				willEncodeObject: anObject];
-		}
-	      if (original != anObject)
-		{
-		  [_delegate archiver: self
-		    willReplaceObject: original
-			   withObject: anObject];
-		}
-	    }
-	  GSIMapAddPair(_repMap, (GSIMapKey)original, (GSIMapVal)anObject);
-	}
-      else
-	{
-	  /*
-	   * If the object has a replacement, use it.
-	   */
-	  anObject = node->value.obj;
-	}
-    }
-
-  if (anObject != nil)
+  if (anObject != nil) // 这一段, 是建立 id 对应的关系. 因为, 可能会有循环引用.
     {
       node = GSIMapNodeForKey(_uIdMap, (GSIMapKey)anObject);
-      if (node == 0)
+      if (node == 0) // 如果这个值没有被归档过. 就建立 id 的映射.
 	{
-	  if (conditional == YES)
-	    {
-	      node = GSIMapNodeForKey(_cIdMap, (GSIMapKey)anObject);
-	      if (node == 0)
-		{
-		  ref = [_obj count];
-		  GSIMapAddPair(_cIdMap,
-		    (GSIMapKey)anObject, (GSIMapVal)(NSUInteger)ref);
-		  /*
-		   * Use the null object as a placeholder for a conditionally
-		   * encoded object.
-		   */
-		  [_obj addObject: [_obj objectAtIndex: 0]];
-		}
-	      else
-		{
-		  /*
-		   * This object has already been conditionally encoded.
-		   */
-		  ref = node->value.nsu;
-		}
-	    }
-	  else
-	    {
-	      Class	c = [anObject classForKeyedArchiver];
-
-	      // FIXME ... exactly what classes are stored directly???
-	      if (c == [NSString class]
-	        || c == [NSNumber class]
-	        || c == [NSDate class]
-	        || c == [NSData class]
-		)
-		{
-		  objectInfo = anObject;
-		}
-	      else
-		{
-		  // We store a dictionary describing the object.
-		  m = [NSMutableDictionary new];
-		  objectInfo = m;
-		}
-
-	      node = GSIMapNodeForKey(_cIdMap, (GSIMapKey)anObject);
-	      if (node == 0)
-		{
-		  /*
-		   * Not encoded ... create dictionary for it.
-		   */
-		  ref = [_obj count];
-		  GSIMapAddPair(_uIdMap,
-		    (GSIMapKey)anObject, (GSIMapVal)(NSUInteger)ref);
-		  [_obj addObject: objectInfo];
-		}
-	      else
-		{
-		  /*
-		   * Conditionally encoded ... replace with actual value.
-		   */
-		  ref = node->value.nsu;
-		  GSIMapAddPair(_uIdMap,
-		    (GSIMapKey)anObject, (GSIMapVal)(NSUInteger)ref);
-		  GSIMapRemoveKey(_cIdMap, (GSIMapKey)anObject);
-		  [_obj replaceObjectAtIndex: ref withObject: objectInfo];
-		}
-	      RELEASE(m);
-	    }
+        Class    c = [anObject classForKeyedArchiver];
+        // FIXME ... exactly what classes are stored directly???
+        if (c == [NSString class]
+            || c == [NSNumber class]
+            || c == [NSDate class]
+            || c == [NSData class]
+            )
+        { // 如果是基本数据类型, 那么归档的就是自身的值.
+            objectInfo = anObject;
+        }
+        else
+        { // 不然, 又要进行成员变量的归档操作.
+            // We store a dictionary describing the object.
+            encodeObjectInfoM = [NSMutableDictionary new];
+            objectInfo = encodeObjectInfoM;
+        }
+        
+        node = GSIMapNodeForKey(_cIdMap, (GSIMapKey)anObject);
+        ref = [_allArchivedObjects count];
+        GSIMapAddPair(_uIdMap,
+                      (GSIMapKey)anObject, (GSIMapVal)(NSUInteger)ref);
+        [_allArchivedObjects addObject: objectInfo];
+        RELEASE(encodeObjectInfoM);
 	}
       else
 	{
@@ -281,16 +206,16 @@ static NSDictionary *makeReference(unsigned ref)
   /*
    * Build an object to reference the encoded value of anObject
    */
-  refObject = makeReference(ref);
+  refObject = makeReference(ref); // 得到的这个字典, 里面现在带有 id 信息, 代表着不同的对象.
 
   /*
-   * objectInfo is a dictionary describing the object.
+   * objectInfo is a dictionary describing the object. // 如果 encode 一个对象, 它的信息其实还没填进去. 上面的仅仅是确立了对象的 id.
    */
-  if (objectInfo != nil && m == objectInfo)
+  if (objectInfo != nil)
     {
-      NSMutableDictionary	*savedEnc = _enc;
+      NSMutableDictionary	*savedEnc = _encodeObject;
       unsigned			savedKeyNum = _keyNum;
-      Class			c = [anObject class];
+      Class			archiveName = [anObject class];
       NSString			*classname;
       Class			mapped;
 
@@ -298,35 +223,35 @@ static NSDictionary *makeReference(unsigned ref)
        * Map the class of the object to the actual class it is encoded as.
        * First ask the object, then apply any name mappings to that value.
        */
-      mapped = [anObject classForKeyedArchiver];
+      mapped = [anObject classForKeyedArchiver]; // 取出被归档对象的类型.
       if (mapped != nil)
 	{
-	  c = mapped;
+	  archiveName = mapped;
 	}
 
-      classname = [self classNameForClass: c];
+      classname = [self classNameForClass: archiveName];
       if (classname == nil)
 	{
-	  classname = [[self class] classNameForClass: c];
+	  classname = [[self class] classNameForClass: archiveName];
 	}
       if (classname == nil)
 	{
-	  classname = NSStringFromClass(c);
+	  classname = NSStringFromClass(archiveName);
 	}
       else
 	{
-	  c = NSClassFromString(classname);
+	  archiveName = NSClassFromString(classname);
 	}
 
       /*
        * At last, get the object to encode itself.  Save and restore the
        * current object scope of course.
        */
-      _enc = m;
-      _keyNum = 0;
-      [anObject encodeWithCoder: self];
+      _encodeObject = encodeObjectInfoM; // 这里, 体现了命名的重要性, 我不明白为什么GNU 那么牛逼的团队会写出 m 这样垃圾的变量名
+      _keyNum = 0; // 在每个 object 进行 encode 的时候, 会替换一下_encodeObject 对象, 所以, 每个对象进行 encode 的时候, 是修改的每个对象匹配的 NSMutableDict .
+      [anObject encodeWithCoder: self]; // 这个是每个类索所要实现的方法.
       _keyNum = savedKeyNum;
-      _enc = savedEnc;
+      _encodeObject = savedEnc;
 
       /*
        * This is ugly, but it seems to be the way MacOS-X does it ...
@@ -340,15 +265,15 @@ static NSDictionary *makeReference(unsigned ref)
        * simply because that seems to be the way MacOS-X does it and
        * we want to maximise compatibility (perhaps they had good reason?)
        */
-      node = GSIMapNodeForKey(_uIdMap, (GSIMapKey)c);
+      node = GSIMapNodeForKey(_uIdMap, (GSIMapKey)archiveName);
       if (node == 0)
 	{
 	  NSMutableDictionary	*cDict;
 	  NSMutableArray	*hierarchy;
 
-	  ref = [_obj count];
+	  ref = [_allArchivedObjects count];
 	  GSIMapAddPair(_uIdMap,
-	    (GSIMapKey)c, (GSIMapVal)(NSUInteger)ref);
+	    (GSIMapKey)archiveName, (GSIMapVal)(NSUInteger)ref);
 	  cDict = [[NSMutableDictionary alloc] initWithCapacity: 2];
 
 	  /*
@@ -360,20 +285,20 @@ static NSDictionary *makeReference(unsigned ref)
 	   * Record the class hierarchy for this object.
 	   */
 	  hierarchy = [NSMutableArray new];
-	  while (c != 0)
+	  while (archiveName != 0)
 	    {
-	      Class	next = [c superclass];
+	      Class	next = [archiveName superclass];
 
-	      [hierarchy addObject: NSStringFromClass(c)];
-	      if (next == c)
+	      [hierarchy addObject: NSStringFromClass(archiveName)];
+	      if (next == archiveName)
 		{
 		  break;
 		}
-	      c = next;
+	      archiveName = next;
 	    }
 	  [cDict setObject: hierarchy forKey: @"$classes"];
 	  RELEASE(hierarchy);
-	  [_obj addObject: cDict];
+	  [_allArchivedObjects addObject: cDict];
 	  RELEASE(cDict);
 	}
       else
@@ -385,15 +310,7 @@ static NSDictionary *makeReference(unsigned ref)
        * Now create a reference to the class information and store it
        * in the object description dictionary for the object we just encoded.
        */
-      [m setObject: makeReference(ref) forKey: @"$class"];
-    }
-
-  /*
-   * If we have encoded the object information, tell the delegaate.
-   */
-  if (objectInfo != nil && _delegate != nil)
-    {
-      [_delegate archiver: self didEncodeObject: anObject];
+      [encodeObjectInfoM setObject: makeReference(ref) forKey: @"$class"];
     }
 
   /*
@@ -406,9 +323,22 @@ static NSDictionary *makeReference(unsigned ref)
 @implementation	NSKeyedArchiver
 
 /*
- * When I tried this on MacOS 10.3 it encoded the object with the key 'root',
- * so this implementation does the same.
+ 刚试验了, 果然, keyedArchive 可以进行循环引用的归档解档的工作.
+ 
+ A *aValue = [[A alloc] init];
+ B *bValue = [[B alloc] init];
+ 
+ aValue.bValue = bValue;
+ bValue.aValue = aValue;
+ 
+ NSData *data = [NSKeyedArchiver archivedDataWithRootObject:aValue];
+ 
+ A *restoreValue = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+ NSLog(@"%@", restoreValue);
+ NSLog(@"%@", restoreValue.bValue);
+ NSLog(@"%@", restoreValue.bValue.aValue);
  */
+
 + (NSData*) archivedDataWithRootObject: (id)anObject
 {
   NSMutableData		*m = nil;
@@ -417,11 +347,12 @@ static NSDictionary *makeReference(unsigned ref)
 
   NS_DURING
     {
+        // 类方法, 只是做了一些实例方法能做的事情, 不过, 它更大的意义在于封装, 不给用户暴露太多的东西, 因为, 类之间的协作, 只有类的设计者才清楚, 让外人知道太多, 外人反而不知道该如何是好.
       m = [[NSMutableData alloc] initWithCapacity: 10240];
       a = [[NSKeyedArchiver alloc] initForWritingWithMutableData: m];
       [a encodeObject: anObject forKey: @"root"]; // 这里, root 当根 key 值.
       [a finishEncoding];
-      d = [m copy];
+      d = [m copy]; // 这里, 没有直接返回 Mutable 对象.
       DESTROY(m);
       DESTROY(a);
     }
@@ -437,7 +368,7 @@ static NSDictionary *makeReference(unsigned ref)
 
 + (BOOL) archiveRootObject: (id)anObject toFile: (NSString*)aPath
 {
-  NSAutoreleasePool	*pool = [NSAutoreleasePool new];
+  NSAutoreleasePool	*pool = [NSAutoreleasePool new]; // 自动释放池. 防止内存占用过大.
   NSData		*d;
   BOOL			result;
 
@@ -489,8 +420,8 @@ static NSDictionary *makeReference(unsigned ref)
 
 - (void) dealloc
 {
-  RELEASE(_enc);
-  RELEASE(_obj);
+  RELEASE(_encodeObject);
+  RELEASE(_allArchivedObjects);
   RELEASE(_data);
   if (_clsMap != 0)
     {
@@ -546,7 +477,7 @@ static NSDictionary *makeReference(unsigned ref)
 {
   CHECKKEY
 
-  [_enc setObject: [NSNumber  numberWithBool: aBool] forKey: aKey];
+  [_encodeObject setObject: [NSNumber  numberWithBool: aBool] forKey: aKey];
 }
 
 - (void) encodeBytes: (const uint8_t*)aPointer
@@ -555,7 +486,7 @@ static NSDictionary *makeReference(unsigned ref)
 {
   CHECKKEY
 
-  [_enc setObject: [NSData dataWithBytes: aPointer length: length]
+  [_encodeObject setObject: [NSData dataWithBytes: aPointer length: length]
 	   forKey: aKey];
 }
 
@@ -564,7 +495,7 @@ static NSDictionary *makeReference(unsigned ref)
   NSString	*aKey = [NSString stringWithFormat: @"$%u", _keyNum++];
 
   anObject = [self _encodeObject: anObject conditional: YES];
-  [_enc setObject: anObject forKey: aKey];
+  [_encodeObject setObject: anObject forKey: aKey];
 }
 
 - (void) encodeConditionalObject: (id)anObject forKey: (NSString*)aKey
@@ -572,49 +503,49 @@ static NSDictionary *makeReference(unsigned ref)
   CHECKKEY
 
   anObject = [self _encodeObject: anObject conditional: YES];
-  [_enc setObject: anObject forKey: aKey];
+  [_encodeObject setObject: anObject forKey: aKey];
 }
 
 - (void) encodeDouble: (double)aDouble forKey: (NSString*)aKey
 {
   CHECKKEY
 
-  [_enc setObject: [NSNumber  numberWithDouble: aDouble] forKey: aKey];
+  [_encodeObject setObject: [NSNumber  numberWithDouble: aDouble] forKey: aKey];
 }
 
 - (void) encodeFloat: (float)aFloat forKey: (NSString*)aKey
 {
   CHECKKEY
 
-  [_enc setObject: [NSNumber  numberWithFloat: aFloat] forKey: aKey];
+  [_encodeObject setObject: [NSNumber  numberWithFloat: aFloat] forKey: aKey];
 }
 
 - (void) encodeInt: (int)anInteger forKey: (NSString*)aKey
 {
   CHECKKEY
 
-  [_enc setObject: [NSNumber  numberWithInt: anInteger] forKey: aKey];
+  [_encodeObject setObject: [NSNumber  numberWithInt: anInteger] forKey: aKey];
 }
 
 - (void) encodeInteger: (NSInteger)anInteger forKey: (NSString*)aKey
 {
   CHECKKEY
 
-  [_enc setObject: [NSNumber  numberWithInteger: anInteger] forKey: aKey];
+  [_encodeObject setObject: [NSNumber  numberWithInteger: anInteger] forKey: aKey];
 }
 
 - (void) encodeInt32: (int32_t)anInteger forKey: (NSString*)aKey
 {
   CHECKKEY
 
-  [_enc setObject: [NSNumber  numberWithLong: anInteger] forKey: aKey];
+  [_encodeObject setObject: [NSNumber  numberWithLong: anInteger] forKey: aKey];
 }
 
 - (void) encodeInt64: (int64_t)anInteger forKey: (NSString*)aKey
 {
   CHECKKEY
 
-  [_enc setObject: [NSNumber  numberWithLongLong: anInteger] forKey: aKey];
+  [_encodeObject setObject: [NSNumber  numberWithLongLong: anInteger] forKey: aKey];
 }
 
 - (void) encodeObject: (id)anObject
@@ -622,7 +553,7 @@ static NSDictionary *makeReference(unsigned ref)
   NSString	*aKey = [NSString stringWithFormat: @"$%u", _keyNum++]; // 没有提供 key 的, 就用一个计数器代替.
 
   anObject = [self _encodeObject: anObject conditional: NO];
-  [_enc setObject: anObject forKey: aKey];
+  [_encodeObject setObject: anObject forKey: aKey];
 }
 
 - (void) encodeObject: (id)anObject forKey: (NSString*)aKey
@@ -630,7 +561,7 @@ static NSDictionary *makeReference(unsigned ref)
   CHECKKEY
 
   anObject = [self _encodeObject: anObject conditional: NO];
-  [_enc setObject: anObject forKey: aKey];
+  [_encodeObject setObject: anObject forKey: aKey]; // aKey 仅仅是做最后的一个在 Dictionary 的记录的作用.
 }
 
 - (void) encodePoint: (NSPoint)p
@@ -690,69 +621,69 @@ static NSDictionary *makeReference(unsigned ref)
 
       case _C_CHR:
 	o = [NSNumber numberWithInt: (NSInteger)*(char*)address];
-	[_enc setObject: o forKey: aKey];
+	[_encodeObject setObject: o forKey: aKey];
 	return;
 
       case _C_UCHR:
 	o = [NSNumber numberWithInt: (NSInteger)*(unsigned char*)address];
-	[_enc setObject: o forKey: aKey];
+	[_encodeObject setObject: o forKey: aKey];
 	return;
 
       case _C_SHT:
 	o = [NSNumber numberWithInt: (NSInteger)*(short*)address];
-	[_enc setObject: o forKey: aKey];
+	[_encodeObject setObject: o forKey: aKey];
 	return;
 
       case _C_USHT:
 	o = [NSNumber numberWithLong: (long)*(unsigned short*)address];
-	[_enc setObject: o forKey: aKey];
+	[_encodeObject setObject: o forKey: aKey];
 	return;
 
       case _C_INT:
 	o = [NSNumber numberWithInt: *(int*)address];
-	[_enc setObject: o forKey: aKey];
+	[_encodeObject setObject: o forKey: aKey];
 	return;
 
       case _C_UINT:
 	o = [NSNumber numberWithUnsignedInt: *(unsigned int*)address];
-	[_enc setObject: o forKey: aKey];
+	[_encodeObject setObject: o forKey: aKey];
 	return;
 
       case _C_LNG:
 	o = [NSNumber numberWithLong: *(long*)address];
-	[_enc setObject: o forKey: aKey];
+	[_encodeObject setObject: o forKey: aKey];
 	return;
 
       case _C_ULNG:
 	o = [NSNumber numberWithUnsignedLong: *(unsigned long*)address];
-	[_enc setObject: o forKey: aKey];
+	[_encodeObject setObject: o forKey: aKey];
 	return;
 
       case _C_LNG_LNG:
 	o = [NSNumber numberWithLongLong: *(long long*)address];
-	[_enc setObject: o forKey: aKey];
+	[_encodeObject setObject: o forKey: aKey];
 	return;
 
       case _C_ULNG_LNG:
 	o = [NSNumber numberWithUnsignedLongLong:
 	  *(unsigned long long*)address];
-	[_enc setObject: o forKey: aKey];
+	[_encodeObject setObject: o forKey: aKey];
 	return;
 
       case _C_FLT:
 	o = [NSNumber numberWithFloat: *(float*)address];
-	[_enc setObject: o forKey: aKey];
+	[_encodeObject setObject: o forKey: aKey];
 	return;
 
       case _C_DBL:
 	o = [NSNumber numberWithDouble: *(double*)address];
-	[_enc setObject: o forKey: aKey];
+	[_encodeObject setObject: o forKey: aKey];
 	return;
 
 #if __GNUC__ > 2 && defined(_C_BOOL)
       case _C_BOOL:
 	o = [NSNumber numberWithInt: (NSInteger)*(_Bool*)address];
-	[_enc setObject: o forKey: aKey];
+	[_encodeObject setObject: o forKey: aKey];
 	return;
 #endif
 
@@ -784,6 +715,11 @@ static NSDictionary *makeReference(unsigned ref)
 
 - (void) finishEncoding
 {
+// 这个类的思路在于, 一般的额 primitie 可以表示的值, 记录在NSDictionary 里面, 而对于对象来说, 因为可能会有循环引用, 这些东西都记录成为 id 值, 然后将所有的对象, 记录在一个数组里面. 也就是 top 和 objects 里面的内容.
+// 最后这个类用 propertyList 进行了存储. 首先, 到了这里, 所有 _encodeObject, _allArchivedObjects 里面的内容, 都是符合 propertyList 存储要求的. 也就是必须是 String, Number, Data 这些 propertyList 知道怎么操作的数据类型才可以. 而这些, 是靠 encodeInt64 这些函数的重写达到的.
+// 如此看来, NSKeyedArchiver 最大的作用, 倒不是说进行归档解档这些操作, 而是它建立了一套避免循环的机制.
+// 这一点, 在 PropertyList 是不存在的, 为什么呢. 因为 Propertylist 是不允许有对象存在的. 所有的东西, 都要转化成为上面的结构才可以. 实验证明, 如果 propertyList 里面有 一个对象, 进行 write 操作, 最后success的返回值为F alse. 所以, 从根本上来说, proeprtyList 就堵死了循环引用这条路了.
+    
   NSMutableDictionary	*final;
   NSData		*data;
   NSString		*error;
@@ -793,8 +729,8 @@ static NSDictionary *makeReference(unsigned ref)
   final = [NSMutableDictionary new];
   [final setObject: NSStringFromClass([self class]) forKey: @"$archiver"]; // 首先, 把归档接档的类名存起来,
   [final setObject: [NSNumber numberWithInt: 100000] forKey: @"$version"];
-  [final setObject: _enc forKey: @"$top"];
-  [final setObject: _obj forKey: @"$objects"];
+  [final setObject: _encodeObject forKey: @"$top"];
+  [final setObject: _allArchivedObjects forKey: @"$objects"];
   data = [NSPropertyListSerialization dataFromPropertyList: final
 						    format: _format
 					  errorDescription: &error]; // 然后存到了一个 proeprtyList 里面.
@@ -821,7 +757,7 @@ static NSDictionary *makeReference(unsigned ref)
       NSZone	*zone = [self zone];
 
       _keyNum = 0;
-      _data = RETAIN(data);
+      _data = RETAIN(data); // 这里, 仅仅是一个存储的作用.
 
       _clsMap = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
 			  NSObjectMapValueCallBacks, 0);
@@ -835,9 +771,9 @@ static NSDictionary *makeReference(unsigned ref)
       GSIMapInitWithZoneAndCapacity(_uIdMap, zone, 200);
       GSIMapInitWithZoneAndCapacity(_repMap, zone, 1);
 
-      _enc = [NSMutableDictionary new];		// Top level mapping dict
-      _obj = [NSMutableArray new];		// Array of objects.
-      [_obj addObject: @"$null"];		// Placeholder.
+      _encodeObject = [NSMutableDictionary new];		// Top level mapping dict
+      _allArchivedObjects = [NSMutableArray new];		// Array of objects.
+      [_allArchivedObjects addObject: @"$null"];		// Placeholder.
 
       _format = NSPropertyListBinaryFormat_v1_0;
     }
@@ -873,6 +809,8 @@ static NSDictionary *makeReference(unsigned ref)
 
 @end
 
+
+// 居然有一个 Archive 的非正式协议. 一直没有用过.
 @implementation NSObject (NSKeyedArchiverDelegate)
 /** <override-dummy />
  */
@@ -916,6 +854,8 @@ willReplaceObject: (id)anObject
 @end
 
 
+// 不太明白上面  - (void) encodePoint: (NSPoint)aPoint; 什么时候回用到, 这里看, 苹果专门为这几种 结构体类型定义了如何进行序列化的方式了.
+// 如果, 想要进行序列化一种自定义的种类的时候, 也可以这样做.
 
 @implementation NSCoder (NSGeometryKeyedCoding)
 - (void) encodePoint: (NSPoint)aPoint forKey: (NSString*)aKey

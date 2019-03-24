@@ -16,8 +16,11 @@ extern "C" {
 /**
  *  <p>Top-level class defining methods for use when archiving (encoding)
  *  objects to a byte array or file, and when restoring (decoding) objects.
- *  Generally only subclasses of this class are used directly - [NSArchiver],
- *  [NSUnarchiver], [NSKeyedArchiver], [NSKeyedUnarchiver], or [NSPortCoder].
+ *  Generally only subclasses of this class are used directly - ,
+ 
+ *  [NSArchiver], [NSUnarchiver]
+    [NSKeyedArchiver], [NSKeyedUnarchiver], or
+    [NSPortCoder]. // 不看.
  *  </p>
  *  <p><code>NSPortCoder</code> is used within the distributed objects
  *  framework.  For archiving to/from disk, the <em>Keyed...</em> classes are
@@ -25,13 +28,17 @@ extern "C" {
  *  forward/backward compatibility in the face of class changes.</p>
  */
     
-// NSCode 是作为序列化的功能的一个类. 其实, 它和之前地图编辑器的归档解档功能是一样的.
+//
 
+    
+    
 /*
+    这个类定义了一些公共的方法, 但是具体应该怎么进行归档解档, 具体的策略并没有在这个类当中.
     这个类定义了一些, 类似于快捷方法的东西. 但是, 这些快捷方法所包装的最根本的方法, 还是需要每个子类进行编写. 而且, 这些快捷方法, 这个父类没有进行包装完全. 例如, Int32, Bool 这些值怎么包装, 都是子类的责任.
     NSCoding 有着两个方法, 一个是 initWithCoder, 一个是 encodeWithCoder. 其实, 就是 encode 和 decode 两个方法, 在这两个方法的内部, 会传入NSCoder 的对象, 然后调用NSCoder 的各个方法, 进行序列化和反序列化, 而序列化之后的数据到底已什么样的方式, 保存在哪里, 完全封装到了 NSCoder 的内部.
  */
     
+    // 这个类, 在别的类库里面, 就是 NSSerializer,
 @interface NSCoder : NSObject
 // Encoding Data
 

@@ -13,7 +13,7 @@ extern "C" {
 #import	<Foundation/NSPropertyList.h>
 
 @class NSMutableDictionary, NSMutableData, NSData, NSString;
-
+// 实验证明, NSKeyedArchiver 和 propertylist 不是一种技术. 通过 NSKeyedArchiver 序列化而成的 data, 写入到文件中, 不能打开, 而 dict 直接 writeToFile, 它的内部是生成 propertylist 文件写入到文件中, 是 xml 的文本文件.
 /**
  *  Implements <em>keyed</em> archiving of object graphs.  This archiver
  *  should be used instead of [NSArchiver] for new implementations.  Classes
@@ -39,8 +39,8 @@ extern "C" {
 #undef	GSIMapTable
 #endif
   unsigned	_keyNum;	/* Counter for keys in object.	*/
-  NSMutableDictionary	*_enc;	/* Object being encoded.	*/
-  NSMutableArray	*_obj;	/* Array of objects.		*/
+  NSMutableDictionary	*_encodeObject;	/* Object being encoded.	*/
+  NSMutableArray	*_allArchivedObjects;	/* Array of objects.		*/
   NSPropertyListFormat	_format;
 #endif
 #if     GS_NONFRAGILE
