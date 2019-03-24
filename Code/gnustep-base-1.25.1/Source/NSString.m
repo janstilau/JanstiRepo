@@ -788,7 +788,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 	   * As a special case, we can return a placeholder for a string
 	   * in the default zone extremely efficiently.
 	   */
-	  return defaultPlaceholderString;
+	  return defaultPlaceholderString; // 类簇模式的写法.
 	}
       else
 	{

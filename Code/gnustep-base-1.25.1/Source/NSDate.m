@@ -117,7 +117,7 @@ otherTime(NSDate* other)
 {
   if (self == abstractClass)
     {
-      return NSAllocateObject(concreteClass, 0, NSDefaultMallocZone());
+      return NSAllocateObject(concreteClass, 0, NSDefaultMallocZone()); // 接口和实体类之间的差别.
     }
   return NSAllocateObject(self, 0, NSDefaultMallocZone());
 }

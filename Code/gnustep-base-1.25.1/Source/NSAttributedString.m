@@ -45,7 +45,8 @@ static IMP	remDictImp;
 
 /**
  *  A string in which name-value pairs represented by an [NSDictionary] may
- *  be associated to ranges of characters.  Used for text rendering by the
+ *  be associated to ranges of characters.
+    Used for text rendering by the
  *  GUI/AppKit framework, in which fonts, sizes, etc. are stored under standard
  *  attributes in the dictionaries.
  *
@@ -356,6 +357,7 @@ appendUIntData(NSMutableData *d, NSUInteger i)
   NSMutableString	*desc;
 
   desc = [NSMutableString stringWithCapacity: length];
+    // 不断地拼接, 相同属性段落对应的字符串和属性集合.
   while (index < length &&
     (attrs = [self attributesAtIndex: index effectiveRange: &r]) != nil)
     {
@@ -460,6 +462,8 @@ appendUIntData(NSMutableData *d, NSUInteger i)
 	 atIndex: (NSUInteger)index
   effectiveRange: (NSRange*)aRange
 {
+    
+    // 首先返回那个属性集合, 然后返回相应的属性.
   NSDictionary *tmpDictionary;
   id attrValue;
 

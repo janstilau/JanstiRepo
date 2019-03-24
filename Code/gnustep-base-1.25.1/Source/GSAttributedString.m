@@ -63,7 +63,7 @@
 @interface GSAttributedString : NSAttributedString
 {
   NSString		*_textChars;
-  NSMutableArray	*_infoArray;
+  NSMutableArray	*_infoArray; // 这个容器,存放了所有的 attribtues 的集合.
 }
 
 - (id) initWithString: (NSString*)aString
@@ -220,8 +220,8 @@ unCacheAttributes(NSDictionary *attrs)
 @interface	GSAttrInfo : NSObject
 {
 @public
-  unsigned	loc;
-  NSDictionary	*attrs;
+  unsigned	loc; // 位置,
+  NSDictionary	*attrs; // 属性.
 }
 
 + (GSAttrInfo*) newWithZone: (NSZone*)z value: (NSDictionary*)a at: (unsigned)l;
@@ -306,12 +306,12 @@ static	GSAttrInfo	*blank;
 
 static Class	infCls = 0;
 
-static SEL	infSel;
-static SEL	addSel;
-static SEL	cntSel;
-static SEL	insSel;
-static SEL	oatSel;
-static SEL	remSel;
+static SEL	newWithZoneValueAtSel;
+static SEL	addObjectSel;
+static SEL	countSel;
+static SEL	insetObjectAtSel;
+static SEL	objectAtSel;
+static SEL	removeObjectAtSel;
 
 static IMP	infImp;
 static void	(*addImp)(NSMutableArray*,SEL,id);
@@ -351,7 +351,7 @@ _setAttributesFrom(
   else
     {
       attr = [attributedString attributesAtIndex: aRange.location
-				  effectiveRange: &range];
+				  effectiveRange: &range]; // 这个函数, 返回属性集合, range 里面存放这个属性集合覆盖的范围, 也就是, 这个属性attributes 和location 相同的范围.
     }
   info = NEWINFO(z, attr, 0);
   ADDOBJECT(info);
@@ -371,20 +371,20 @@ inline static NSDictionary*
 _attributesAtIndexEffectiveRange(
   unsigned int index,
   NSRange *aRange,
-  unsigned int tmpLength,
+  unsigned int textLength,
   NSMutableArray *_infoArray,
   unsigned int *foundIndex)
 {
-  unsigned	low, high, used, cnt, nextLoc;
+  unsigned	low, high, cachedAttributesCount, cnt, nextLoc;
   GSAttrInfo	*found = nil;
 
-  used = (*cntImp)(_infoArray, cntSel);
-  NSCAssert(used > 0, NSInternalInconsistencyException);
-  high = used - 1;
+  cachedAttributesCount = (*cntImp)(_infoArray, countSel); // 首先取出现在有多少属性配置
+  NSCAssert(cachedAttributesCount > 0, NSInternalInconsistencyException);
+  high = cachedAttributesCount - 1;
 
-  if (index >= tmpLength)
+  if (index >= textLength)
     {
-      if (index == tmpLength)
+      if (index == textLength)
 	{
 	  found = OBJECTAT(high);
 	  if (foundIndex != 0)
@@ -394,7 +394,7 @@ _attributesAtIndexEffectiveRange(
 	  if (aRange != 0)
 	    {
 	      aRange->location = found->loc;
-	      aRange->length = tmpLength - found->loc;
+	      aRange->length = textLength - found->loc;
 	    }
 	  return found->attrs;
 	}
@@ -405,6 +405,7 @@ _attributesAtIndexEffectiveRange(
 
   /*
    * Binary search for efficiency in huge attributed strings
+   二分查找. 为什么这里可以用二分呢. infoArray 里面的值, 记录了 loc, 和 attribtues. 这样, loc 和它下一个元素的 loc 可以计算出 Range 是多少. 这样, 一个有序的表示范围的数组, 就符合了二分查找的条件.
    */
   low = 0;
   while (low <= high)
@@ -417,9 +418,9 @@ _attributesAtIndexEffectiveRange(
 	}
       else
 	{
-	  if (cnt >= used - 1)
+	  if (cnt >= cachedAttributesCount - 1)
 	    {
-	      nextLoc = tmpLength;
+	      nextLoc = textLength;
 	    }
 	  else
 	    {
@@ -458,15 +459,15 @@ _attributesAtIndexEffectiveRange(
       NSMutableArray	*a;
       NSDictionary	*d;
 
-      infSel = @selector(newWithZone:value:at:);
-      addSel = @selector(addObject:);
-      cntSel = @selector(count);
-      insSel = @selector(insertObject:atIndex:);
-      oatSel = @selector(objectAtIndex:);
-      remSel = @selector(removeObjectAtIndex:);
+      newWithZoneValueAtSel = @selector(newWithZone:value:at:);
+      addObjectSel = @selector(addObject:);
+      countSel = @selector(count);
+      insetObjectAtSel = @selector(insertObject:atIndex:);
+      objectAtSel = @selector(objectAtIndex:);
+      removeObjectAtSel = @selector(removeObjectAtIndex:);
 
       infCls = [GSAttrInfo class];
-      infImp = [infCls methodForSelector: infSel];
+      infImp = [infCls methodForSelector: newWithZoneValueAtSel];
 
       d = [NSDictionary new];
       blank = NEWINFO(NSDefaultMallocZone(), d, 0);
@@ -475,13 +476,13 @@ _attributesAtIndexEffectiveRange(
 
       a = [NSMutableArray allocWithZone: NSDefaultMallocZone()];
       a = [a initWithCapacity: 1];
-      addImp = (void (*)(NSMutableArray*,SEL,id))[a methodForSelector: addSel];
-      cntImp = (unsigned (*)(NSArray*,SEL))[a methodForSelector: cntSel];
+      addImp = (void (*)(NSMutableArray*,SEL,id))[a methodForSelector: addObjectSel];
+      cntImp = (unsigned (*)(NSArray*,SEL))[a methodForSelector: countSel];
       insImp = (void (*)(NSMutableArray*,SEL,id,unsigned))
-	[a methodForSelector: insSel];
-      oatImp = [a methodForSelector: oatSel];
+	[a methodForSelector: insetObjectAtSel];
+      oatImp = [a methodForSelector: objectAtSel];
       remImp = (void (*)(NSMutableArray*,SEL,unsigned))
-	[a methodForSelector: remSel];
+	[a methodForSelector: removeObjectAtSel];
       RELEASE(a);
     }
   [[NSObject leakAt: &attrLock] release];
@@ -492,20 +493,9 @@ _attributesAtIndexEffectiveRange(
 {
   NSZone	*z = [self zone];
 
-  if (nil == aString)
-    {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"aString object passed to -[GSAttributedString initWithString:attributes:] is nil"];
-    }
-  if (![aString respondsToSelector: @selector(length)])
-    {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"aString object passed to -[GSAttributedString initWithString:attributes:] does not respond to -length"];
-    }
-
   _infoArray = [[NSMutableArray allocWithZone: z] initWithCapacity: 1];
   if (aString != nil && [aString isKindOfClass: [NSAttributedString class]])
-    {
+    { // 如果原来就是 attributedString, 那么就需要从原来的值里面取值, 然后糅合传进来的 attributes
       NSAttributedString	*as = (NSAttributedString*)aString;
       unsigned			len;
 
@@ -521,20 +511,20 @@ _attributesAtIndexEffectiveRange(
 	{
 	  attributes = blank->attrs;
 	}
-      info = NEWINFO(z, attributes, 0);
+      info = NEWINFO(z, attributes, 0); // 如果原来的 string , 不是 attributestring, 那么整个 attributestring 就是一个属性.
       ADDOBJECT(info);
       RELEASE(info);
     }
   if (aString == nil)
     _textChars = @"";
   else
-    _textChars = [aString copyWithZone: z];
+    _textChars = [aString copyWithZone: z]; // 首先, 原始的 string 是会被保存起来的
   return self;
 }
 
 - (NSString*) string
 {
-  return AUTORELEASE([_textChars copyWithZone: NSDefaultMallocZone()]);
+  return AUTORELEASE([_textChars copyWithZone: NSDefaultMallocZone()]); // stirng, 就是返回 backing stroe String.
 }
 
 - (NSDictionary*) attributesAtIndex: (NSUInteger)index
@@ -573,7 +563,7 @@ _attributesAtIndexEffectiveRange(
 
 /* We always compile in this method so that it is available from
  * regression test cases.  */
-- (void) _sanity
+- (void) _sanity // 聪明. sanity
 {
   GSAttrInfo	*info;
   unsigned	i;
@@ -591,11 +581,6 @@ _attributesAtIndexEffectiveRange(
       NSAssert(info->loc < len, NSInternalInconsistencyException);
       l = info->loc;
     }
-}
-
-+ (void) initialize
-{
-  [GSAttributedString class];	// Ensure immutable class is initialised
 }
 
 - (id) initWithString: (NSString*)aString
@@ -677,41 +662,37 @@ SANITY();
  *	part of aRange lies beyond the end of the receiver's characters.
  *	See also: - addAtributes: range: , - removeAttributes: range:
  */
-- (void) setAttributes: (NSDictionary*)attributes
+
+
+// 这两个方法的细节都没细看, 不过效果应该是更新 attributesInfo 数组.
+- (void) setAttributes: (NSDictionary*)newattributes
 		 range: (NSRange)range
 {
-  unsigned	tmpLength;
+  unsigned	backingTextLength;
   unsigned	arrayIndex = 0;
-  unsigned	arraySize;
+  unsigned	cachedAttributesSize;
   NSRange	effectiveRange = NSMakeRange(0, NSNotFound);
   unsigned	afterRangeLoc, beginRangeLoc;
   NSDictionary	*attrs;
   NSZone	*z = [self zone];
   GSAttrInfo	*info;
-
-  if (range.length == 0)
+  if (newattributes == nil)
     {
-      NSWarnMLog(@"Attempt to set attribute for zero-length range");
-      return;
+      newattributes = blank->attrs;
     }
-  if (attributes == nil)
-    {
-      attributes = blank->attrs;
-    }
-SANITY();
-  tmpLength = [_textChars length];
-  GS_RANGE_CHECK(range, tmpLength);
+    
+  backingTextLength = [_textChars length];
   arraySize = (*cntImp)(_infoArray, cntSel);
   beginRangeLoc = range.location;
   afterRangeLoc = NSMaxRange(range);
-  if (afterRangeLoc < tmpLength)
+  if (afterRangeLoc < backingTextLength)
     {
       /*
        * Locate the first range that extends beyond our range.
        */
       attrs = _attributesAtIndexEffectiveRange(
-	afterRangeLoc, &effectiveRange, tmpLength, _infoArray, &arrayIndex);
-      if (attrs == attributes)
+	afterRangeLoc, &effectiveRange, backingTextLength, _infoArray, &arrayIndex);
+      if (attrs == newattributes)
         {
           /*
            * The located range has the same attributes as us - so we can
@@ -752,12 +733,9 @@ SANITY();
     }
   else
     {
-      arrayIndex = arraySize - 1;
+      arrayIndex = cachedAttributesSize - 1;
     }
 
-  /*
-   * Remove any ranges completely within ours
-   */
   while (arrayIndex > 0)
     {
       info = OBJECTAT(arrayIndex-1);
@@ -775,21 +753,19 @@ SANITY();
   if (info->loc >= beginRangeLoc)
     {
       info->loc = beginRangeLoc;
-      if (info->attrs != attributes)
+      if (info->attrs != newattributes)
 	{
 	  unCacheAttributes(info->attrs);
-	  info->attrs = cacheAttributes(attributes);
+	  info->attrs = cacheAttributes(newattributes);
 	}
     }
-  else if (info->attrs != attributes)
+  else if (info->attrs != newattributes)
     {
       arrayIndex++;
       info = NEWINFO(z, attributes, beginRangeLoc);
       INSOBJECT(info, arrayIndex);
       RELEASE(info);
     }
-
-SANITY();
 }
 
 - (void) replaceCharactersInRange: (NSRange)range
@@ -944,33 +920,5 @@ SANITY();
   return [_textChars length];
 }
 
-@end
-
-
-
-@interface	NSGAttributedString : NSAttributedString
-@end
-@implementation	NSGAttributedString
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-  NSLog(@"Warning - decoding archive containing obsolete %@ object - please delete/replace this archive", NSStringFromClass([self class]));
-  DESTROY(self);
-  self = (id)NSAllocateObject([GSAttributedString class], 0, NSDefaultMallocZone());
-  self = [self initWithCoder: aCoder];
-  return self;
-}
-@end
-
-@interface	NSGMutableAttributedString : NSMutableAttributedString
-@end
-@implementation	NSGMutableAttributedString
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-  NSLog(@"Warning - decoding archive containing obsolete %@ object - please delete/replace this archive", NSStringFromClass([self class]));
-  DESTROY(self);
-  self = (id)NSAllocateObject([GSMutableAttributedString class], 0, NSDefaultMallocZone());
-  self = [self initWithCoder: aCoder];
-  return self;
-}
 @end
 
