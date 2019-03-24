@@ -667,29 +667,11 @@ static Class	NSMutableDataMallocClass;
 
 - (void) encodeRootObject: (id)rootObject
 {
-  if (_encodingRoot)
-    {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"encoding root object more than once"];
-    }
-
   _encodingRoot = YES;
-
-  /*
-   *	First pass - find conditional objects.
-   */
   _initialPass = YES;
   (*_eObjImp)(self, eObjSel, rootObject);
-
-  /*
-   *	Second pass - write archive.
-   */
   _initialPass = NO;
   (*_eObjImp)(self, eObjSel, rootObject);
-
-  /*
-   *	Write sizes of crossref arrays to head of archive.
-   */
   [self serializeHeaderAt: _startPos
 		  version: [self systemVersion]
 		  classes: _clsMap->nodeCount
@@ -795,98 +777,86 @@ static Class	NSMutableDataMallocClass;
 
 - (void) encodeObject: (id)anObject
 {
-  if (anObject == nil)
+    if (anObject == nil) {return;}
+    
+    GSIMapNode    node;
+    /*
+     *    Substitute replacement object if required.
+     */
+    // 这里面, 也有规避循环引用的措施.
+    node = GSIMapNodeForKey(_repMap, (GSIMapKey)anObject);
+    if (node)
     {
-      if (_initialPass == NO)
-	{
-	  /*
-	   *	Special case - encode a nil pointer as a crossref of zero.
-	   */
-	  (*_tagImp)(_dst, tagSel, _GSC_ID | _GSC_XREF, _GSC_X_0);
-	}
+        anObject = (id)node->value.ptr;
     }
-  else
+    
+    /*
+     *    See if the object has already been encoded.
+     */
+    node = GSIMapNodeForKey(_uIdMap, (GSIMapKey)anObject);
+    
+    if (_initialPass)
     {
-      GSIMapNode	node;
-
-      /*
-       *	Substitute replacement object if required.
-       */
-      node = GSIMapNodeForKey(_repMap, (GSIMapKey)anObject);
-      if (node)
-	{
-	  anObject = (id)node->value.ptr;
-	}
-
-      /*
-       *	See if the object has already been encoded.
-       */
-      node = GSIMapNodeForKey(_uIdMap, (GSIMapKey)anObject);
-
-      if (_initialPass)
-	{
-	  if (node == 0)
-	    {
-	      /*
-	       *	Remove object from map of conditionally encoded objects
-	       *	and add it to the map of unconditionay encoded ones.
-	       */
-	      GSIMapRemoveKey(_cIdMap, (GSIMapKey)anObject);
-	      GSIMapAddPair(_uIdMap,
-		(GSIMapKey)anObject, (GSIMapVal)(NSUInteger)0);
-	      [anObject encodeWithCoder: self];
-	    }
-	  return;
-	}
-
-      if (node == 0 || node->value.nsu == 0)
-	{
-	  Class	cls;
-	  id	obj;
-
-	  if (node == 0)
-	    {
-	      node = GSIMapAddPair(_uIdMap,
-		(GSIMapKey)anObject, (GSIMapVal)(NSUInteger)++_xRefO);
-	    }
-	  else
-	    {
-	      node->value.nsu = ++_xRefO;
-	    }
-
-	  obj = [anObject replacementObjectForArchiver: self];
-	  if (GSObjCIsInstance(obj) == NO)
-	    {
-	      /*
-	       * If the object we have been given is actually a class,
-	       * we encode it as a special case.
-	       */
-	      (*_xRefImp)(_dst, xRefSel, _GSC_CID, node->value.nsu);
-	      (*_eValImp)(self, eValSel, @encode(Class), &obj);
-	    }
-	  else
-	    {
-	      cls = [obj classForArchiver];
-	      if (_namMap->nodeCount)
-		{
-		  GSIMapNode	n;
-
-		  n = GSIMapNodeForKey(_namMap, (GSIMapKey)cls);
-
-		  if (n)
-		    {
-		      cls = (Class)n->value.ptr;
-		    }
-		}
-	      (*_xRefImp)(_dst, xRefSel, _GSC_ID, node->value.nsu);
-	      (*_eValImp)(self, eValSel, @encode(Class), &cls);
-	      [obj encodeWithCoder: self];
-	    }
-	}
-      else
-	{
-	  (*_xRefImp)(_dst, xRefSel, _GSC_ID | _GSC_XREF, node->value.nsu);
-	}
+        if (node == 0)
+        {
+            /*
+             *    Remove object from map of conditionally encoded objects
+             *    and add it to the map of unconditionay encoded ones.
+             */
+            GSIMapRemoveKey(_cIdMap, (GSIMapKey)anObject);
+            GSIMapAddPair(_uIdMap,
+                          (GSIMapKey)anObject, (GSIMapVal)(NSUInteger)0);
+            [anObject encodeWithCoder: self];
+        }
+        return;
+    }
+    
+    if (node == 0 || node->value.nsu == 0)
+    {
+        Class    cls;
+        id    obj;
+        
+        if (node == 0)
+        {
+            node = GSIMapAddPair(_uIdMap,
+                                 (GSIMapKey)anObject, (GSIMapVal)(NSUInteger)++_xRefO);
+        }
+        else
+        {
+            node->value.nsu = ++_xRefO;
+        }
+        
+        if (GSObjCIsInstance(obj) == NO)
+        {
+            /*
+             * If the object we have been given is actually a class,
+             * we encode it as a special case.
+             */
+            (*_xRefImp)(_dst, xRefSel, _GSC_CID, node->value.nsu);
+            (*_eValImp)(self, eValSel, @encode(Class), &obj);
+        }
+        else
+        {
+            cls = [obj classForArchiver];
+            if (_namMap->nodeCount)
+            {
+                GSIMapNode    n;
+                
+                n = GSIMapNodeForKey(_namMap, (GSIMapKey)cls);
+                
+                if (n)
+                {
+                    cls = (Class)n->value.ptr;
+                }
+            }
+            (*_xRefImp)(_dst, xRefSel, _GSC_ID, node->value.nsu);
+            (*_eValImp)(self, eValSel, @encode(Class), &cls);
+            [obj encodeWithCoder: self];
+        }
+    }
+    else
+    {
+        (*_xRefImp)(_dst, xRefSel, _GSC_ID | _GSC_XREF, node->value.nsu);
     }
 }
 
