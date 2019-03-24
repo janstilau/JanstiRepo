@@ -1,52 +1,3 @@
-/**
-   NSAttributedString.m
-
-   Implementation of string class with attributes
-
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
-
-   Written by: ANOQ of the sun <anoq@vip.cybercity.dk>
-   Date: November 1997
-   Rewrite by: Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   Date: April 1999
-
-   This file is part of GNUstep-base
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   If you are interested in a warranty or support for this source code,
-   contact Scott Christley <scottc@net-community.com> for more information.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSAttributedString class reference</title>
-   $Date$ $Revision$
-*/
-
-/* Warning -	[-initWithString:attributes:] is the designated initialiser,
- *		but it doesn't provide any way to perform the function of the
- *		[-initWithAttributedString:] initialiser.
- *		In order to work round this, the string argument of the
- *		designated initialiser has been overloaded such that it
- *		is expected to accept an NSAttributedString here instead of
- *		a string.  If you create an NSAttributedString subclass, you
- *		must make sure that your implementation of the initialiser
- *		copes with either an NSString or an NSAttributedString.
- *		If it receives an NSAttributedString, it should ignore the
- *		attributes argument and use the values from the string.
- */
-
 #import "common.h"
 #import "GNUstepBase/Unicode.h"
 
@@ -140,7 +91,7 @@ static Class GSMutableAttributedStringClass;
 + (id) allocWithZone: (NSZone*)z
 {
   if (self == NSAttributedStringClass)
-    return NSAllocateObject(GSAttributedStringClass, 0, z);
+    return NSAllocateObject(GSAttributedStringClass, 0, z); // 这里, 通过重新 allocWithZone , 隐藏了真正的实现类.
   else
     return NSAllocateObject(self, 0, z);
 }
