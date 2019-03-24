@@ -42,7 +42,7 @@ static Class	concreteClass = 0;
 
 + (id) allocWithZone: (NSZone*)aZone
 {
-  if (self == abstractClass)
+  if (self == abstractClass) // 类类簇模式.
     {
       return NSAllocateObject(concreteClass, 0, aZone);
     }
@@ -125,6 +125,8 @@ static Class	concreteClass = 0;
                          valueOptions: NSPointerFunctionsObjectPersonality |
                                          NSMapTableWeakMemory];
 }
+
+// designated initlizer
 
 - (id) initWithKeyOptions: (NSPointerFunctionsOptions)keyOptions
 	     valueOptions: (NSPointerFunctionsOptions)valueOptions

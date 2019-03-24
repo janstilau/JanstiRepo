@@ -231,6 +231,8 @@ extern "C" {
  */
 - (id) mutableCopyWithZone: (NSZone*)zone;
 @end
+    
+    
 
 /**
  * This protocol must be adopted by any class wishing to support
@@ -240,6 +242,7 @@ extern "C" {
 @protocol NSCoding
 
 /**
+ NSArchiver // 这个类被废弃了, 现在类在序列化的时候, 传递的 aCoder 的具体类型, 也是 NSKeyedArchiver 这个类.
  * Called when it is time for receiver to be serialized for writing to an
  * archive or network connection.  Receiver should record all of its instance
  * variables using methods on aCoder.  See documentation for [NSCoder],
@@ -248,6 +251,7 @@ extern "C" {
 - (void) encodeWithCoder: (NSCoder*)aCoder;
 
 /**
+ freshly allocated //
  * Called on a freshly allocated receiver when it is time to reconstitute from
  * serialized bytes in an archive or from a network connection.  Receiver
  * should load all of its instance variables using methods on aCoder.  See
@@ -255,6 +259,10 @@ extern "C" {
  * [NSPortCoder] for more information.
  */
 - (id) initWithCoder: (NSCoder*)aDecoder;
+    
+    /*
+     In keeping with object-oriented design principles, an object being encoded or decoded is responsible for encoding and decoding its instance variables.
+     */
 @end
 
 @protocol NSSecureCoding <NSCoding>

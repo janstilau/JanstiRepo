@@ -1,31 +1,3 @@
-/* NSMapTable interface for GNUStep.
- * Copyright (C) 1994, 1995, 1996, 2002, 2009  Free Software Foundation, Inc.
- * 
- * Author: Albin L. Jones <Albin.L.Jones@Dartmouth.EDU>
- * Created: Tue Dec 13 00:05:02 EST 1994
- * Updated: Thu Mar 21 15:12:42 EST 1996
- * Serial: 96.03.21.05
- * Modified by: Richard Frith-Macdonald <rfm@gnu.org>
- * Updated: March 2009
- * 
- * This file is part of the GNUstep Base Library.
- * 
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA 02111 USA.
- */ 
-
 #ifndef __NSMapTable_h_GNUSTEP_BASE_INCLUDE
 #define __NSMapTable_h_GNUSTEP_BASE_INCLUDE 1
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -48,19 +20,21 @@ enum {
   NSMapTableStrongMemory
     = NSPointerFunctionsStrongMemory,
   NSMapTableZeroingWeakMemory
-    = NSPointerFunctionsZeroingWeakMemory,
+    = NSPointerFunctionsZeroingWeakMemory, // 垃圾回收相关
   NSMapTableCopyIn
     = NSPointerFunctionsCopyIn,
   NSMapTableObjectPointerPersonality
     = NSPointerFunctionsObjectPointerPersonality,
   NSMapTableWeakMemory
-    = NSPointerFunctionsWeakMemory
+    = NSPointerFunctionsWeakMemory // equal to weak
 };
 
 typedef NSUInteger NSMapTableOptions;
 
 @interface NSMapTable : NSObject <NSCopying, NSCoding, NSFastEnumeration>
 
+
+// 这个类可以指定 key 和 value 的内存管理策略.
 /** Return a map table initialised using the specified options for
  * keys and values.
  */
@@ -107,6 +81,7 @@ typedef NSUInteger NSMapTableOptions;
  */
 + (id) weakToWeakObjectsMapTable;
 
+// 上面的方法, 都是一些 convenience 方法.
 
 /** Initialiser using option bitmasks to describe the keys and values.
  */
