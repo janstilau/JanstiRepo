@@ -164,7 +164,7 @@
 #define Y_StockChartTimeLineVolumeViewMinX 0
 
 //Kline种类
-typedef NS_ENUM(NSInteger, Y_StockChartCenterViewType) {
+typedef NS_ENUM(NSInteger, ChartViewType) {
     Y_StockChartcenterViewTypeKline= 1, //K线
     Y_StockChartcenterViewTypeTimeLine,  //分时图
     Y_StockChartcenterViewTypeOther

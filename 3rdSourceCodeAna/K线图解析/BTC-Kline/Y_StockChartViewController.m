@@ -65,11 +65,6 @@
     return _modelsDict;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of  nmthat can be recreated.
-}
-
 -(id) stockDatasWithIndex:(NSInteger)index
 {
     NSString *type;
@@ -123,7 +118,7 @@
     self.type = type;
     if(![self.modelsDict objectForKey:type])
     {
-        [self reloadData];
+        [self reloadData]; //如果没有数据, 就进行网络加载.
     } else {
         return [self.modelsDict objectForKey:type].models;
     }
@@ -140,7 +135,6 @@
         Y_KLineGroupModel *groupModel = [Y_KLineGroupModel objectWithArray:responseObject[@"data"]];
         self.groupModel = groupModel;
         [self.modelsDict setObject:groupModel forKey:self.type];
-        NSLog(@"%@",groupModel);
         [self.stockChartView reloadData];
     } fail:^{
         
@@ -151,17 +145,16 @@
     if(!_stockChartView) {
         _stockChartView = [Y_StockChartView new];
         _stockChartView.itemModels = @[
-                                       [Y_StockChartViewItemModel itemModelWithTitle:@"指标" type:Y_StockChartcenterViewTypeOther],
-                                       [Y_StockChartViewItemModel itemModelWithTitle:@"分时" type:Y_StockChartcenterViewTypeTimeLine],
-                                       [Y_StockChartViewItemModel itemModelWithTitle:@"1分" type:Y_StockChartcenterViewTypeKline],
-                                       [Y_StockChartViewItemModel itemModelWithTitle:@"5分" type:Y_StockChartcenterViewTypeKline],
-                                       [Y_StockChartViewItemModel itemModelWithTitle:@"30分" type:Y_StockChartcenterViewTypeKline],
-                                       [Y_StockChartViewItemModel itemModelWithTitle:@"60分" type:Y_StockChartcenterViewTypeKline],
-                                       [Y_StockChartViewItemModel itemModelWithTitle:@"日线" type:Y_StockChartcenterViewTypeKline],
-                                       [Y_StockChartViewItemModel itemModelWithTitle:@"周线" type:Y_StockChartcenterViewTypeKline],
+                                       [StockChartItemModel itemModelWithTitle:@"指标" type:Y_StockChartcenterViewTypeOther],
+                                       [StockChartItemModel itemModelWithTitle:@"分时" type:Y_StockChartcenterViewTypeTimeLine],
+                                       [StockChartItemModel itemModelWithTitle:@"1分" type:Y_StockChartcenterViewTypeKline],
+                                       [StockChartItemModel itemModelWithTitle:@"5分" type:Y_StockChartcenterViewTypeKline],
+                                       [StockChartItemModel itemModelWithTitle:@"30分" type:Y_StockChartcenterViewTypeKline],
+                                       [StockChartItemModel itemModelWithTitle:@"60分" type:Y_StockChartcenterViewTypeKline],
+                                       [StockChartItemModel itemModelWithTitle:@"日线" type:Y_StockChartcenterViewTypeKline],
+                                       [StockChartItemModel itemModelWithTitle:@"周线" type:Y_StockChartcenterViewTypeKline],
  
                                        ];
-        _stockChartView.backgroundColor = [UIColor orangeColor];
         _stockChartView.dataSource = self;
         [self.view addSubview:_stockChartView];
         [_stockChartView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -171,17 +164,8 @@
                 make.edges.equalTo(self.view);
             }
         }];
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dismiss)];
-        tap.numberOfTapsRequired = 2;
-        [self.view addGestureRecognizer:tap];
     }
     return _stockChartView;
-}
-- (void)dismiss
-{
-    AppDelegate *appdelegate = [UIApplication sharedApplication].delegate;
-    appdelegate.isEable = NO;
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {

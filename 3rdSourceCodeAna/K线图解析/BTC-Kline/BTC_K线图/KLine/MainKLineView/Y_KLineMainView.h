@@ -64,7 +64,7 @@
 /**
  *  是否为图表类型
  */
-@property (nonatomic, assign) Y_StockChartCenterViewType MainViewType;
+@property (nonatomic, assign) ChartViewType MainViewType;
 
 /**
  *  Accessory指标种类

@@ -94,8 +94,8 @@
 {
     self = [super initWithFrame:frame];
     if(self) {
-        self.mainViewRatio = [Y_StockChartGlobalVariable kLineMainViewRadio];
-        self.volumeViewRatio = [Y_StockChartGlobalVariable kLineVolumeViewRadio];
+        self.mainViewRatio = 0.5;
+        self.volumeViewRatio = 0.2;
     }
     return self;
 }
@@ -109,14 +109,12 @@
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.minimumZoomScale = 1.0f;
         _scrollView.maximumZoomScale = 1.0f;
-//        _scrollView.alwaysBounceHorizontal = YES;
         _scrollView.delegate = self;
         _scrollView.bounces = NO;
         
         //缩放手势
         UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(event_pichMethod:)];
         [_scrollView addGestureRecognizer:pinchGesture];
-        
         //长按手势
         UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(event_longPressMethod:)];
         [_scrollView addGestureRecognizer:longPressGesture];
@@ -132,6 +130,8 @@
         
         [self layoutIfNeeded];
     }
+    _scrollView.layer.borderWidth= 1;
+    _scrollView.layer.borderColor = [[UIColor yellowColor] CGColor];
     return _scrollView;
 }
 
@@ -192,7 +192,6 @@
             self.kLineMainViewHeightConstraint = make.height.equalTo(self.scrollView).multipliedBy(self.mainViewRatio);
             make.width.equalTo(@0);
         }];
-        
     }
     //加载rightYYView
     self.priceView.backgroundColor = [UIColor clearColor];
@@ -262,7 +261,6 @@
         [_volumeView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.kLineVolumeView.mas_top).offset(10);
             make.right.width.equalTo(self.priceView);
-//            make.height.equalTo(self).multipliedBy(self.volumeViewRatio);
             make.bottom.equalTo(self.kLineVolumeView);
         }];
     }
@@ -349,7 +347,6 @@
         {
             return;
         }
-        
         NSInteger oldNeedDrawStartIndex = [self.kLineMainView getNeedDrawStartIndexWithScroll:NO];
         
         [Y_StockChartGlobalVariable setkLineWith:oldKLineWidth * (difValue > 0 ? (1 + Y_StockChartScaleFactor) : (1 - Y_StockChartScaleFactor))];
@@ -366,7 +363,6 @@
         }
         //更新MainView的宽度
         [self.kLineMainView updateMainViewWidth];
-        
         [self.kLineMainView drawMainView];
     }
 }

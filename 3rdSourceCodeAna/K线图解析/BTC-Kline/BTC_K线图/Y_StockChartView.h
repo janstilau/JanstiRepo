@@ -10,7 +10,7 @@
 #import "Y_StockChartConstant.h"
 
 //种类
-typedef NS_ENUM(NSInteger, Y_KLineType) {
+typedef NS_ENUM(NSInteger, LineType) {
     KLineTypeTimeShare = 1,
     KLineType1Min,
     KLineType3MIn,
@@ -29,17 +29,6 @@ typedef NS_ENUM(NSInteger, Y_KLineType) {
 };
 
 /**
- *  Y_StockChartView代理
- */
-
-@protocol Y_StockChartViewDelegate <NSObject>
-
-
-@end
-
-
-
-/**
  *  Y_StockChartView数据源
  */
 @protocol Y_StockChartViewDataSource <NSObject>
@@ -50,30 +39,17 @@ typedef NS_ENUM(NSInteger, Y_KLineType) {
 
 
 @interface Y_StockChartView : UIView
-
 @property (nonatomic, strong) NSArray *itemModels;
-
-/**
- *  数据源
- */
 @property (nonatomic, weak) id<Y_StockChartViewDataSource> dataSource;
-
-/**
- *  当前选中的索引
- */
-@property (nonatomic, assign,readonly) Y_KLineType currentLineTypeIndex;
-
-
+@property (nonatomic, assign,readonly) LineType currentLineTypeIndex;
 -(void) reloadData;
 @end
 
 /************************ItemModel类************************/
-@interface Y_StockChartViewItemModel : NSObject
+@interface StockChartItemModel : NSObject
 
 @property (nonatomic, copy) NSString *title;
-
-@property (nonatomic, assign) Y_StockChartCenterViewType centerViewType;
-
-+ (instancetype)itemModelWithTitle:(NSString *)title type:(Y_StockChartCenterViewType)type;
+@property (nonatomic, assign) ChartViewType centerViewType;
++ (instancetype)itemModelWithTitle:(NSString *)title type:(ChartViewType)type;
 
 @end

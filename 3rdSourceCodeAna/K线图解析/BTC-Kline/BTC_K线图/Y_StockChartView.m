@@ -26,7 +26,7 @@
 /**
  *  图表类型
  */
-@property(nonatomic,assign) Y_StockChartCenterViewType currentCenterViewType;
+@property(nonatomic,assign) ChartViewType currentCenterViewType;
 
 /**
  *  当前索引
@@ -36,25 +36,9 @@
 
 
 @implementation Y_StockChartView
-
-- (Y_KLineView *)kLineView
-{
-    if(!_kLineView)
-    {
-        _kLineView = [Y_KLineView new];
-        [self addSubview:_kLineView];
-        [_kLineView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.right.top.equalTo(self);
-            make.left.equalTo(self.segmentView.mas_right);
-        }];
-    }
-    return _kLineView;
-}
-
-- (Y_StockChartSegmentView *)segmentView
-{
-    if(!_segmentView)
-    {
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
         _segmentView = [Y_StockChartSegmentView new];
         _segmentView.delegate = self;
         [self addSubview:_segmentView];
@@ -62,8 +46,15 @@
             make.bottom.left.top.equalTo(self);
             make.width.equalTo(@50);
         }];
+        
+        _kLineView = [Y_KLineView new];
+        [self addSubview:_kLineView];
+        [_kLineView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.right.top.equalTo(self);
+            make.left.equalTo(self.segmentView.mas_right);
+        }];
     }
-    return _segmentView;
+    return self;
 }
 
 - (void)setItemModels:(NSArray *)itemModels
@@ -72,12 +63,12 @@
     if(itemModels)
     {
         NSMutableArray *items = [NSMutableArray array];
-        for(Y_StockChartViewItemModel *item in itemModels)
+        for(StockChartItemModel *item in itemModels)
         {
             [items addObject:item.title];
         }
         self.segmentView.items = items;
-        Y_StockChartViewItemModel *firstModel = itemModels.firstObject;
+        StockChartItemModel *firstModel = itemModels.firstObject;
         self.currentCenterViewType = firstModel.centerViewType;
     }
     if(self.dataSource)
@@ -115,12 +106,6 @@
     } else  if(index >= 100 && index != 105) {
         
         [Y_StockChartGlobalVariable setisEMALine:index];
-//        if(index == Y_StockChartTargetLineStatusMA)
-//        {
-//            [Y_StockChartGlobalVariable setisEMALine:Y_StockChartTargetLineStatusMA];
-//        } else {
-//            [Y_StockChartGlobalVariable setisEMALine:Y_StockChartTargetLineStatusEMA];
-//        }
         self.kLineView.targetLineStatus = index;
         [self.kLineView reDraw];
         [self bringSubviewToFront:self.segmentView];
@@ -135,10 +120,10 @@
                 return;
             }
             
-            Y_StockChartViewItemModel *itemModel = self.itemModels[index];
+            StockChartItemModel *itemModel = self.itemModels[index];
             
             
-            Y_StockChartCenterViewType type = itemModel.centerViewType;
+            ChartViewType type = itemModel.centerViewType;
             
 
             
@@ -179,11 +164,11 @@
 
 
 /************************ItemModel类************************/
-@implementation Y_StockChartViewItemModel
+@implementation StockChartItemModel
 
-+ (instancetype)itemModelWithTitle:(NSString *)title type:(Y_StockChartCenterViewType)type
++ (instancetype)itemModelWithTitle:(NSString *)title type:(ChartViewType)type
 {
-    Y_StockChartViewItemModel *itemModel = [Y_StockChartViewItemModel new];
+    StockChartItemModel *itemModel = [StockChartItemModel new];
     itemModel.title = title;
     itemModel.centerViewType = type;
     return itemModel;
