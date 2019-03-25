@@ -1,0 +1,1614 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		06EDDA0D2248BFA300C87605 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDA0C2248BFA300C87605 /* main.m */; };
+		06EDDCCC2248BFB400C87605 /* NSBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBC62248BFB300C87605 /* NSBox.m */; };
+		06EDDCCD2248BFB400C87605 /* NSOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBC72248BFB300C87605 /* NSOutlineView.m */; };
+		06EDDCCE2248BFB400C87605 /* externs.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBC82248BFB300C87605 /* externs.m */; };
+		06EDDCCF2248BFB400C87605 /* NSToolbarItemGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBC92248BFB300C87605 /* NSToolbarItemGroup.m */; };
+		06EDDCD02248BFB400C87605 /* NSBitmapImageRep+PNM.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBCA2248BFB300C87605 /* NSBitmapImageRep+PNM.m */; };
+		06EDDCD12248BFB400C87605 /* NSCachedImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBCB2248BFB300C87605 /* NSCachedImageRep.m */; };
+		06EDDCD22248BFB400C87605 /* NSVisualEffectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBCC2248BFB300C87605 /* NSVisualEffectView.m */; };
+		06EDDCD32248BFB400C87605 /* NSBitmapImageRep+PNG.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBCD2248BFB300C87605 /* NSBitmapImageRep+PNG.m */; };
+		06EDDCD42248BFB400C87605 /* GSThemePrintPanels.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBCE2248BFB300C87605 /* GSThemePrintPanels.m */; };
+		06EDDCD52248BFB400C87605 /* NSButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBCF2248BFB300C87605 /* NSButton.m */; };
+		06EDDCD62248BFB400C87605 /* NSProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBD02248BFB300C87605 /* NSProgressIndicator.m */; };
+		06EDDCD72248BFB400C87605 /* NSTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBD12248BFB300C87605 /* NSTableHeaderView.m */; };
+		06EDDCD82248BFB400C87605 /* GSCharacterPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBD22248BFB300C87605 /* GSCharacterPanel.m */; };
+		06EDDCD92248BFB400C87605 /* NSSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBD42248BFB300C87605 /* NSSplitView.m */; };
+		06EDDCDA2248BFB400C87605 /* GSXibLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBD52248BFB300C87605 /* GSXibLoading.m */; };
+		06EDDCDB2248BFB400C87605 /* NSTextTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBD62248BFB300C87605 /* NSTextTable.m */; };
+		06EDDCDC2248BFB400C87605 /* NSGlyphGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBD72248BFB300C87605 /* NSGlyphGenerator.m */; };
+		06EDDCDD2248BFB400C87605 /* NSSearchFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBD82248BFB300C87605 /* NSSearchFieldCell.m */; };
+		06EDDCDE2248BFB400C87605 /* GSVbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBD92248BFB300C87605 /* GSVbox.m */; };
+		06EDDCDF2248BFB400C87605 /* GSEPSPrintOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBDA2248BFB300C87605 /* GSEPSPrintOperation.m */; };
+		06EDDCE02248BFB400C87605 /* NSFontPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBDC2248BFB300C87605 /* NSFontPanel.m */; };
+		06EDDCE12248BFB400C87605 /* NSMovie.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBDD2248BFB300C87605 /* NSMovie.m */; };
+		06EDDCE22248BFB400C87605 /* NSCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBDF2248BFB300C87605 /* NSCollectionView.m */; };
+		06EDDCE32248BFB400C87605 /* GSThemePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBE02248BFB300C87605 /* GSThemePanel.m */; };
+		06EDDCE42248BFB400C87605 /* NSSearchField.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBE12248BFB300C87605 /* NSSearchField.m */; };
+		06EDDCE52248BFB400C87605 /* NSScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBE22248BFB300C87605 /* NSScrollView.m */; };
+		06EDDCE62248BFB400C87605 /* NSFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBE32248BFB300C87605 /* NSFont.m */; };
+		06EDDCE72248BFB400C87605 /* NSTextBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBE52248BFB300C87605 /* NSTextBlock.m */; };
+		06EDDCE82248BFB400C87605 /* NSShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBE62248BFB300C87605 /* NSShadow.m */; };
+		06EDDCE92248BFB400C87605 /* NSArrayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBE72248BFB300C87605 /* NSArrayController.m */; };
+		06EDDCEA2248BFB400C87605 /* NSComboBoxCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBE92248BFB300C87605 /* NSComboBoxCell.m */; };
+		06EDDCEB2248BFB400C87605 /* NSOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBEA2248BFB300C87605 /* NSOpenGLView.m */; };
+		06EDDCEC2248BFB400C87605 /* NSStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBEB2248BFB300C87605 /* NSStatusBar.m */; };
+		06EDDCED2248BFB400C87605 /* NSImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBEC2248BFB300C87605 /* NSImageCell.m */; };
+		06EDDCEE2248BFB400C87605 /* NSNibConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBED2248BFB300C87605 /* NSNibConnector.m */; };
+		06EDDCEF2248BFB400C87605 /* NSStepperCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBEE2248BFB300C87605 /* NSStepperCell.m */; };
+		06EDDCF02248BFB400C87605 /* GSInfoPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBEF2248BFB300C87605 /* GSInfoPanel.m */; };
+		06EDDCF12248BFB400C87605 /* GSNibLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBF02248BFB300C87605 /* GSNibLoading.m */; };
+		06EDDCF22248BFB400C87605 /* NSImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBF12248BFB300C87605 /* NSImageView.m */; };
+		06EDDCF32248BFB400C87605 /* NSControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBF22248BFB300C87605 /* NSControl.m */; };
+		06EDDCF42248BFB400C87605 /* GSThemeTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBF32248BFB300C87605 /* GSThemeTools.m */; };
+		06EDDCF52248BFB400C87605 /* NSMenuItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBF42248BFB300C87605 /* NSMenuItemCell.m */; };
+		06EDDCF62248BFB400C87605 /* GSNibLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBF52248BFB300C87605 /* GSNibLoader.m */; };
+		06EDDCF72248BFB400C87605 /* GSXibElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBF62248BFB300C87605 /* GSXibElement.m */; };
+		06EDDCF82248BFB400C87605 /* NSColorPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBF72248BFB300C87605 /* NSColorPanel.m */; };
+		06EDDCF92248BFB400C87605 /* Functions.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBF82248BFB300C87605 /* Functions.m */; };
+		06EDDCFA2248BFB400C87605 /* NSLevelIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBF92248BFB300C87605 /* NSLevelIndicator.m */; };
+		06EDDCFB2248BFB400C87605 /* GSTypesetter.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDBFB2248BFB300C87605 /* GSTypesetter.m */; };
+		06EDDCFC2248BFB400C87605 /* linking.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC002248BFB300C87605 /* linking.m */; };
+		06EDDCFD2248BFB400C87605 /* GSKeyBindingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC022248BFB400C87605 /* GSKeyBindingAction.m */; };
+		06EDDCFE2248BFB400C87605 /* GSSlideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC032248BFB400C87605 /* GSSlideView.m */; };
+		06EDDCFF2248BFB400C87605 /* GSModelLoaderFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC042248BFB400C87605 /* GSModelLoaderFactory.m */; };
+		06EDDD002248BFB400C87605 /* NSTextList.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC052248BFB400C87605 /* NSTextList.m */; };
+		06EDDD012248BFB400C87605 /* NSRulerMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC062248BFB400C87605 /* NSRulerMarker.m */; };
+		06EDDD022248BFB400C87605 /* NSBitmapImageRep+GIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC072248BFB400C87605 /* NSBitmapImageRep+GIF.m */; };
+		06EDDD032248BFB400C87605 /* NSTableHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC082248BFB400C87605 /* NSTableHeaderCell.m */; };
+		06EDDD042248BFB400C87605 /* NSPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC092248BFB400C87605 /* NSPrinter.m */; };
+		06EDDD052248BFB400C87605 /* GSXibParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC0A2248BFB400C87605 /* GSXibParser.m */; };
+		06EDDD062248BFB400C87605 /* NSTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC0B2248BFB400C87605 /* NSTableView.m */; };
+		06EDDD072248BFB400C87605 /* NSBundleAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC0C2248BFB400C87605 /* NSBundleAdditions.m */; };
+		06EDDD082248BFB400C87605 /* GSThemeInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC0D2248BFB400C87605 /* GSThemeInspector.m */; };
+		06EDDD092248BFB400C87605 /* NSColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC0E2248BFB400C87605 /* NSColor.m */; };
+		06EDDD0A2248BFB400C87605 /* GSHelpManagerPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC0F2248BFB400C87605 /* GSHelpManagerPanel.m */; };
+		06EDDD0B2248BFB400C87605 /* NSSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC102248BFB400C87605 /* NSSlider.m */; };
+		06EDDD0C2248BFB400C87605 /* NSTokenField.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC112248BFB400C87605 /* NSTokenField.m */; };
+		06EDDD0D2248BFB400C87605 /* GSKeyBindingTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC122248BFB400C87605 /* GSKeyBindingTable.m */; };
+		06EDDD0E2248BFB400C87605 /* GSStandardWindowDecorationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC132248BFB400C87605 /* GSStandardWindowDecorationView.m */; };
+		06EDDD0F2248BFB400C87605 /* NSLevelIndicatorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC142248BFB400C87605 /* NSLevelIndicatorCell.m */; };
+		06EDDD102248BFB400C87605 /* NSDrawer.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC152248BFB400C87605 /* NSDrawer.m */; };
+		06EDDD112248BFB400C87605 /* win32-entry.c in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC172248BFB400C87605 /* win32-entry.c */; };
+		06EDDD122248BFB400C87605 /* NSAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC182248BFB400C87605 /* NSAnimation.m */; };
+		06EDDD132248BFB400C87605 /* NSCollectionViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC192248BFB400C87605 /* NSCollectionViewItem.m */; };
+		06EDDD142248BFB400C87605 /* GSTrackingRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC1A2248BFB400C87605 /* GSTrackingRect.m */; };
+		06EDDD152248BFB400C87605 /* NSTextTableBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC1B2248BFB400C87605 /* NSTextTableBlock.m */; };
+		06EDDD162248BFB400C87605 /* NSTextView_actions.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC1C2248BFB400C87605 /* NSTextView_actions.m */; };
+		06EDDD172248BFB400C87605 /* GSPrinting.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC1D2248BFB400C87605 /* GSPrinting.m */; };
+		06EDDD182248BFB400C87605 /* GSXibObjectContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC1E2248BFB400C87605 /* GSXibObjectContainer.m */; };
+		06EDDD192248BFB400C87605 /* GSIconManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC1F2248BFB400C87605 /* GSIconManager.m */; };
+		06EDDD1A2248BFB400C87605 /* GSGModelLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC202248BFB400C87605 /* GSGModelLoader.m */; };
+		06EDDD1B2248BFB400C87605 /* GSThemeMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC212248BFB400C87605 /* GSThemeMenu.m */; };
+		06EDDD1C2248BFB400C87605 /* NSFontDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC222248BFB400C87605 /* NSFontDescriptor.m */; };
+		06EDDD1D2248BFB400C87605 /* GSThemeOpenSavePanels.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC232248BFB400C87605 /* GSThemeOpenSavePanels.m */; };
+		06EDDD1E2248BFB400C87605 /* NSWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC242248BFB400C87605 /* NSWindowController.m */; };
+		06EDDD1F2248BFB400C87605 /* NSSegmentedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC252248BFB400C87605 /* NSSegmentedCell.m */; };
+		06EDDD202248BFB400C87605 /* NSSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC262248BFB400C87605 /* NSSound.m */; };
+		06EDDD212248BFB400C87605 /* GSTextFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC272248BFB400C87605 /* GSTextFinder.m */; };
+		06EDDD222248BFB400C87605 /* GSGormLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC282248BFB400C87605 /* GSGormLoader.m */; };
+		06EDDD232248BFB400C87605 /* GSXibKeyedUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC292248BFB400C87605 /* GSXibKeyedUnarchiver.m */; };
+		06EDDD242248BFB400C87605 /* NSTreeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC2A2248BFB400C87605 /* NSTreeController.m */; };
+		06EDDD252248BFB400C87605 /* NSScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC2B2248BFB400C87605 /* NSScroller.m */; };
+		06EDDD262248BFB400C87605 /* GSTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC2C2248BFB400C87605 /* GSTheme.m */; };
+		06EDDD272248BFB400C87605 /* NSColorList.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC2D2248BFB400C87605 /* NSColorList.m */; };
+		06EDDD282248BFB400C87605 /* NSFontManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC2E2248BFB400C87605 /* NSFontManager.m */; };
+		06EDDD292248BFB400C87605 /* NSTextAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC302248BFB400C87605 /* NSTextAttachment.m */; };
+		06EDDD2A2248BFB400C87605 /* GSThemeDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC312248BFB400C87605 /* GSThemeDrawing.m */; };
+		06EDDD2B2248BFB400C87605 /* GSHbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC322248BFB400C87605 /* GSHbox.m */; };
+		06EDDD2C2248BFB400C87605 /* NSMovieView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC332248BFB400C87605 /* NSMovieView.m */; };
+		06EDDD2D2248BFB400C87605 /* NSEPSImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC342248BFB400C87605 /* NSEPSImageRep.m */; };
+		06EDDD2E2248BFB400C87605 /* NSEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC362248BFB400C87605 /* NSEvent.m */; };
+		06EDDD2F2248BFB400C87605 /* NSBrowserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC372248BFB400C87605 /* NSBrowserCell.m */; };
+		06EDDD302248BFB400C87605 /* NSKeyValueBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC382248BFB400C87605 /* NSKeyValueBinding.m */; };
+		06EDDD312248BFB400C87605 /* NSGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC392248BFB400C87605 /* NSGestureRecognizer.m */; };
+		06EDDD322248BFB400C87605 /* NSScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC3A2248BFB400C87605 /* NSScreen.m */; };
+		06EDDD332248BFB400C87605 /* NSComboBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC3B2248BFB400C87605 /* NSComboBox.m */; };
+		06EDDD342248BFB400C87605 /* GSAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC3D2248BFB400C87605 /* GSAnimator.m */; };
+		06EDDD352248BFB400C87605 /* NSStringDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC3E2248BFB400C87605 /* NSStringDrawing.m */; };
+		06EDDD362248BFB400C87605 /* NSPrintOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC402248BFB400C87605 /* NSPrintOperation.m */; };
+		06EDDD372248BFB400C87605 /* NSGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC412248BFB400C87605 /* NSGradient.m */; };
+		06EDDD382248BFB400C87605 /* NSMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC422248BFB400C87605 /* NSMenu.m */; };
+		06EDDD392248BFB400C87605 /* NSRunningApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC432248BFB400C87605 /* NSRunningApplication.m */; };
+		06EDDD3A2248BFB500C87605 /* NSPrintPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC442248BFB400C87605 /* NSPrintPanel.m */; };
+		06EDDD3B2248BFB500C87605 /* NSClipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC452248BFB400C87605 /* NSClipView.m */; };
+		06EDDD3C2248BFB500C87605 /* NSPopUpButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC462248BFB400C87605 /* NSPopUpButtonCell.m */; };
+		06EDDD3D2248BFB500C87605 /* NSTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC472248BFB400C87605 /* NSTextFieldCell.m */; };
+		06EDDD3E2248BFB500C87605 /* GSDragView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC482248BFB400C87605 /* GSDragView.m */; };
+		06EDDD3F2248BFB500C87605 /* NSButtonImageSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC492248BFB400C87605 /* NSButtonImageSource.m */; };
+		06EDDD402248BFB500C87605 /* NSTextStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC4A2248BFB400C87605 /* NSTextStorage.m */; };
+		06EDDD412248BFB500C87605 /* NSStepper.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC4B2248BFB400C87605 /* NSStepper.m */; };
+		06EDDD422248BFB500C87605 /* NSParagraphStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC4C2248BFB400C87605 /* NSParagraphStyle.m */; };
+		06EDDD432248BFB500C87605 /* GSToolTips.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC4D2248BFB400C87605 /* GSToolTips.m */; };
+		06EDDD442248BFB500C87605 /* NSHelpManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC4E2248BFB400C87605 /* NSHelpManager.m */; };
+		06EDDD452248BFB500C87605 /* GSToolbarCustomizationPalette.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC4F2248BFB400C87605 /* GSToolbarCustomizationPalette.m */; };
+		06EDDD462248BFB500C87605 /* NSNib.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC502248BFB400C87605 /* NSNib.m */; };
+		06EDDD472248BFB500C87605 /* NSTrackingArea.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC512248BFB400C87605 /* NSTrackingArea.m */; };
+		06EDDD482248BFB500C87605 /* NSLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC522248BFB400C87605 /* NSLayoutManager.m */; };
+		06EDDD492248BFB500C87605 /* NSTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC532248BFB400C87605 /* NSTabView.m */; };
+		06EDDD4A2248BFB500C87605 /* NSColorSpace.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC542248BFB400C87605 /* NSColorSpace.m */; };
+		06EDDD4B2248BFB500C87605 /* NSAccessibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC562248BFB400C87605 /* NSAccessibility.m */; };
+		06EDDD4C2248BFB500C87605 /* NSInterfaceStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC572248BFB400C87605 /* NSInterfaceStyle.m */; };
+		06EDDD4D2248BFB500C87605 /* NSAttributedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC582248BFB400C87605 /* NSAttributedString.m */; };
+		06EDDD4E2248BFB500C87605 /* NSTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC592248BFB400C87605 /* NSTreeNode.m */; };
+		06EDDD4F2248BFB500C87605 /* NSTextContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC5A2248BFB400C87605 /* NSTextContainer.m */; };
+		06EDDD502248BFB500C87605 /* NSCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC5C2248BFB400C87605 /* NSCell.m */; };
+		06EDDD512248BFB500C87605 /* NSOpenGLPixelFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC5D2248BFB400C87605 /* NSOpenGLPixelFormat.m */; };
+		06EDDD522248BFB500C87605 /* NSDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC5F2248BFB400C87605 /* NSDocument.m */; };
+		06EDDD532248BFB500C87605 /* NSAnimationContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC622248BFB400C87605 /* NSAnimationContext.m */; };
+		06EDDD542248BFB500C87605 /* GSThemeWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC632248BFB400C87605 /* GSThemeWindow.m */; };
+		06EDDD552248BFB500C87605 /* NSNibAXRelationshipConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC642248BFB400C87605 /* NSNibAXRelationshipConnector.m */; };
+		06EDDD562248BFB500C87605 /* NSDataLinkPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC662248BFB400C87605 /* NSDataLinkPanel.m */; };
+		06EDDD572248BFB500C87605 /* NSFileWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC682248BFB400C87605 /* NSFileWrapper.m */; };
+		06EDDD582248BFB500C87605 /* NSNibBindingConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC692248BFB400C87605 /* NSNibBindingConnector.m */; };
+		06EDDD592248BFB500C87605 /* GSToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC6A2248BFB400C87605 /* GSToolbarView.m */; };
+		06EDDD5A2248BFB500C87605 /* tiff.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC6B2248BFB400C87605 /* tiff.m */; };
+		06EDDD5B2248BFB500C87605 /* GSPDFPrintOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC6C2248BFB400C87605 /* GSPDFPrintOperation.m */; };
+		06EDDD5C2248BFB500C87605 /* NSTabViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC6D2248BFB400C87605 /* NSTabViewItem.m */; };
+		06EDDD5D2248BFB500C87605 /* GSImageMagickImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC6E2248BFB400C87605 /* GSImageMagickImageRep.m */; };
+		06EDDD5E2248BFB500C87605 /* NSView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC6F2248BFB400C87605 /* NSView.m */; };
+		06EDDD5F2248BFB500C87605 /* NSSpeechSynthesizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC702248BFB400C87605 /* NSSpeechSynthesizer.m */; };
+		06EDDD602248BFB500C87605 /* NSPageLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC712248BFB400C87605 /* NSPageLayout.m */; };
+		06EDDD612248BFB500C87605 /* NSSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC722248BFB400C87605 /* NSSegmentedControl.m */; };
+		06EDDD622248BFB500C87605 /* NSController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC732248BFB400C87605 /* NSController.m */; };
+		06EDDD632248BFB500C87605 /* NSColorWell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC742248BFB400C87605 /* NSColorWell.m */; };
+		06EDDD642248BFB500C87605 /* NSAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC762248BFB400C87605 /* NSAlert.m */; };
+		06EDDD652248BFB500C87605 /* NSImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC782248BFB400C87605 /* NSImage.m */; };
+		06EDDD662248BFB500C87605 /* NSResponder.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC792248BFB400C87605 /* NSResponder.m */; };
+		06EDDD672248BFB500C87605 /* NSApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC7A2248BFB400C87605 /* NSApplication.m */; };
+		06EDDD682248BFB500C87605 /* NSBezierPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC7C2248BFB400C87605 /* NSBezierPath.m */; };
+		06EDDD692248BFB500C87605 /* NSBitmapImageRep+JPEG.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC7D2248BFB400C87605 /* NSBitmapImageRep+JPEG.m */; };
+		06EDDD6A2248BFB500C87605 /* NSBitmapImageRep+ICNS.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC7E2248BFB400C87605 /* NSBitmapImageRep+ICNS.m */; };
+		06EDDD6B2248BFB500C87605 /* NSDataLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC7F2248BFB400C87605 /* NSDataLink.m */; };
+		06EDDD6C2248BFB500C87605 /* NSSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC812248BFB400C87605 /* NSSliderCell.m */; };
+		06EDDD6D2248BFB500C87605 /* NSNibAXAttributeConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC822248BFB400C87605 /* NSNibAXAttributeConnector.m */; };
+		06EDDD6E2248BFB500C87605 /* NSTokenFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC832248BFB400C87605 /* NSTokenFieldCell.m */; };
+		06EDDD6F2248BFB500C87605 /* NSObjectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC842248BFB400C87605 /* NSObjectController.m */; };
+		06EDDD702248BFB500C87605 /* NSInputManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC852248BFB400C87605 /* NSInputManager.m */; };
+		06EDDD712248BFB500C87605 /* NSRulerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC862248BFB400C87605 /* NSRulerView.m */; };
+		06EDDD722248BFB500C87605 /* NSBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC872248BFB400C87605 /* NSBrowser.m */; };
+		06EDDD732248BFB500C87605 /* NSSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC882248BFB400C87605 /* NSSelection.m */; };
+		06EDDD742248BFB500C87605 /* NSPasteboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC892248BFB400C87605 /* NSPasteboard.m */; };
+		06EDDD752248BFB500C87605 /* NSPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC8A2248BFB400C87605 /* NSPopUpButton.m */; };
+		06EDDD762248BFB500C87605 /* GSHorizontalTypesetter.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC8B2248BFB400C87605 /* GSHorizontalTypesetter.m */; };
+		06EDDD772248BFB500C87605 /* NSFormCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC8C2248BFB400C87605 /* NSFormCell.m */; };
+		06EDDD782248BFB500C87605 /* GSGormLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC8D2248BFB400C87605 /* GSGormLoading.m */; };
+		06EDDD792248BFB500C87605 /* NSMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC8E2248BFB400C87605 /* NSMenuItem.m */; };
+		06EDDD7A2248BFB500C87605 /* NSTableColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC8F2248BFB400C87605 /* NSTableColumn.m */; };
+		06EDDD7B2248BFB500C87605 /* GSTextStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC902248BFB400C87605 /* GSTextStorage.m */; };
+		06EDDD7C2248BFB500C87605 /* NSPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC912248BFB400C87605 /* NSPanel.m */; };
+		06EDDD7D2248BFB500C87605 /* NSDataLinkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC922248BFB400C87605 /* NSDataLinkManager.m */; };
+		06EDDD7E2248BFB500C87605 /* NSStatusItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC942248BFB400C87605 /* NSStatusItem.m */; };
+		06EDDD7F2248BFB500C87605 /* GSServicesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC952248BFB400C87605 /* GSServicesManager.m */; };
+		06EDDD802248BFB500C87605 /* GSDisplayServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC962248BFB400C87605 /* GSDisplayServer.m */; };
+		06EDDD812248BFB500C87605 /* NSUserDefaultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC972248BFB400C87605 /* NSUserDefaultsController.m */; };
+		06EDDD822248BFB500C87605 /* NSImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC982248BFB400C87605 /* NSImageRep.m */; };
+		06EDDD832248BFB500C87605 /* NSWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC992248BFB400C87605 /* NSWindow.m */; };
+		06EDDD842248BFB500C87605 /* NSMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC9B2248BFB400C87605 /* NSMatrix.m */; };
+		06EDDD852248BFB500C87605 /* NSTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC9C2248BFB400C87605 /* NSTextView.m */; };
+		06EDDD862248BFB500C87605 /* NSWorkspace.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC9D2248BFB400C87605 /* NSWorkspace.m */; };
+		06EDDD872248BFB500C87605 /* NSHelpPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC9E2248BFB400C87605 /* NSHelpPanel.m */; };
+		06EDDD882248BFB500C87605 /* NSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDC9F2248BFB400C87605 /* NSViewController.m */; };
+		06EDDD892248BFB500C87605 /* GSLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCA02248BFB400C87605 /* GSLayoutManager.m */; };
+		06EDDD8A2248BFB500C87605 /* NSCursor.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCA12248BFB400C87605 /* NSCursor.m */; };
+		06EDDD8B2248BFB500C87605 /* NSOpenPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCA22248BFB400C87605 /* NSOpenPanel.m */; };
+		06EDDD8C2248BFB500C87605 /* NSToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCA32248BFB400C87605 /* NSToolbarItem.m */; };
+		06EDDD8D2248BFB500C87605 /* GSFontInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCA42248BFB400C87605 /* GSFontInfo.m */; };
+		06EDDD8E2248BFB500C87605 /* GSMemoryPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCA52248BFB400C87605 /* GSMemoryPanel.m */; };
+		06EDDD8F2248BFB500C87605 /* NSCustomImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCA62248BFB400C87605 /* NSCustomImageRep.m */; };
+		06EDDD902248BFB500C87605 /* NSInputServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCA72248BFB400C87605 /* NSInputServer.m */; };
+		06EDDD912248BFB500C87605 /* NSSecureTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCA82248BFB400C87605 /* NSSecureTextField.m */; };
+		06EDDD922248BFB500C87605 /* NSSharingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCA92248BFB400C87605 /* NSSharingService.m */; };
+		06EDDD932248BFB500C87605 /* GSHelpAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCAA2248BFB400C87605 /* GSHelpAttachment.m */; };
+		06EDDD942248BFB500C87605 /* GSTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCAB2248BFB400C87605 /* GSTitleView.m */; };
+		06EDDD952248BFB500C87605 /* NSForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCAD2248BFB400C87605 /* NSForm.m */; };
+		06EDDD962248BFB500C87605 /* NSGraphicsContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCAE2248BFB400C87605 /* NSGraphicsContext.m */; };
+		06EDDD972248BFB500C87605 /* NSButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCB12248BFB400C87605 /* NSButtonCell.m */; };
+		06EDDD982248BFB500C87605 /* GSGhostscriptImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCB22248BFB400C87605 /* GSGhostscriptImageRep.m */; };
+		06EDDD992248BFB500C87605 /* NSTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCB32248BFB400C87605 /* NSTextField.m */; };
+		06EDDD9A2248BFB500C87605 /* GSXibLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCB42248BFB400C87605 /* GSXibLoader.m */; };
+		06EDDD9B2248BFB500C87605 /* NSPrintInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCB52248BFB400C87605 /* NSPrintInfo.m */; };
+		06EDDD9C2248BFB500C87605 /* NSTextAlternatives.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCB82248BFB400C87605 /* NSTextAlternatives.m */; };
+		06EDDD9D2248BFB500C87605 /* NSActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCB92248BFB400C87605 /* NSActionCell.m */; };
+		06EDDD9E2248BFB500C87605 /* GSWindowDecorationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCBA2248BFB400C87605 /* GSWindowDecorationView.m */; };
+		06EDDD9F2248BFB500C87605 /* GSPrintOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCBC2248BFB400C87605 /* GSPrintOperation.m */; };
+		06EDDDA02248BFB500C87605 /* NSAffineTransform.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCBD2248BFB400C87605 /* NSAffineTransform.m */; };
+		06EDDDA12248BFB500C87605 /* NSDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCBE2248BFB400C87605 /* NSDocumentController.m */; };
+		06EDDDA22248BFB500C87605 /* NSToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCBF2248BFB400C87605 /* NSToolbar.m */; };
+		06EDDDA32248BFB500C87605 /* NSPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCC02248BFB400C87605 /* NSPopover.m */; };
+		06EDDDA42248BFB500C87605 /* GSTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCC12248BFB400C87605 /* GSTable.m */; };
+		06EDDDA52248BFB500C87605 /* NSSpellChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCC22248BFB400C87605 /* NSSpellChecker.m */; };
+		06EDDDA62248BFB500C87605 /* NSPasteboardItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCC32248BFB400C87605 /* NSPasteboardItem.m */; };
+		06EDDDA72248BFB500C87605 /* GSAutocompleteWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCC42248BFB400C87605 /* GSAutocompleteWindow.m */; };
+		06EDDDA82248BFB500C87605 /* NSBitmapImageRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCC52248BFB400C87605 /* NSBitmapImageRep.m */; };
+		06EDDDA92248BFB500C87605 /* NSSavePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCC62248BFB400C87605 /* NSSavePanel.m */; };
+		06EDDDAA2248BFB500C87605 /* NSOpenGLContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCC72248BFB400C87605 /* NSOpenGLContext.m */; };
+		06EDDDAB2248BFB500C87605 /* NSText.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCC82248BFB400C87605 /* NSText.m */; };
+		06EDDDAC2248BFB500C87605 /* NSColorPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCC92248BFB400C87605 /* NSColorPicker.m */; };
+		06EDDDAD2248BFB500C87605 /* NSMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06EDDCCA2248BFB400C87605 /* NSMenuView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		06EDDA072248BFA300C87605 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		06EDDA092248BFA300C87605 /* Appkit */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Appkit; sourceTree = BUILT_PRODUCTS_DIR; };
+		06EDDA0C2248BFA300C87605 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		06EDDB1F2248BFB300C87605 /* NSDataLinkPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataLinkPanel.h; sourceTree = "<group>"; };
+		06EDDB202248BFB300C87605 /* NSAnimationContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAnimationContext.h; sourceTree = "<group>"; };
+		06EDDB212248BFB300C87605 /* NSCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCell.h; sourceTree = "<group>"; };
+		06EDDB222248BFB300C87605 /* NSDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDocument.h; sourceTree = "<group>"; };
+		06EDDB232248BFB300C87605 /* NSInterfaceStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSInterfaceStyle.h; sourceTree = "<group>"; };
+		06EDDB242248BFB300C87605 /* NSAccessibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAccessibility.h; sourceTree = "<group>"; };
+		06EDDB252248BFB300C87605 /* NSTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTreeNode.h; sourceTree = "<group>"; };
+		06EDDB262248BFB300C87605 /* NSNibLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSNibLoading.h; sourceTree = "<group>"; };
+		06EDDB272248BFB300C87605 /* NSAttributedString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAttributedString.h; sourceTree = "<group>"; };
+		06EDDB282248BFB300C87605 /* NSTextContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTextContainer.h; sourceTree = "<group>"; };
+		06EDDB292248BFB300C87605 /* NSColorSpace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSColorSpace.h; sourceTree = "<group>"; };
+		06EDDB2A2248BFB300C87605 /* NSLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSLayoutManager.h; sourceTree = "<group>"; };
+		06EDDB2B2248BFB300C87605 /* NSTabView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTabView.h; sourceTree = "<group>"; };
+		06EDDB2C2248BFB300C87605 /* NSTrackingArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTrackingArea.h; sourceTree = "<group>"; };
+		06EDDB2D2248BFB300C87605 /* NSNib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSNib.h; sourceTree = "<group>"; };
+		06EDDB2E2248BFB300C87605 /* NSHelpManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSHelpManager.h; sourceTree = "<group>"; };
+		06EDDB2F2248BFB300C87605 /* NSParagraphStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSParagraphStyle.h; sourceTree = "<group>"; };
+		06EDDB302248BFB300C87605 /* NSTextStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTextStorage.h; sourceTree = "<group>"; };
+		06EDDB312248BFB300C87605 /* NSStepper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStepper.h; sourceTree = "<group>"; };
+		06EDDB322248BFB300C87605 /* NSColorPicking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSColorPicking.h; sourceTree = "<group>"; };
+		06EDDB332248BFB300C87605 /* NSTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTextFieldCell.h; sourceTree = "<group>"; };
+		06EDDB342248BFB300C87605 /* NSPopUpButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPopUpButtonCell.h; sourceTree = "<group>"; };
+		06EDDB352248BFB300C87605 /* NSClipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSClipView.h; sourceTree = "<group>"; };
+		06EDDB362248BFB300C87605 /* NSOpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSOpenGL.h; sourceTree = "<group>"; };
+		06EDDB372248BFB300C87605 /* NSFormCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFormCell.h; sourceTree = "<group>"; };
+		06EDDB382248BFB300C87605 /* NSPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPopUpButton.h; sourceTree = "<group>"; };
+		06EDDB392248BFB300C87605 /* NSRulerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSRulerView.h; sourceTree = "<group>"; };
+		06EDDB3A2248BFB300C87605 /* NSBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSBrowser.h; sourceTree = "<group>"; };
+		06EDDB3B2248BFB300C87605 /* NSSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSelection.h; sourceTree = "<group>"; };
+		06EDDB3C2248BFB300C87605 /* NSPasteboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPasteboard.h; sourceTree = "<group>"; };
+		06EDDB3D2248BFB300C87605 /* NSObjectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObjectController.h; sourceTree = "<group>"; };
+		06EDDB3E2248BFB300C87605 /* NSTokenFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTokenFieldCell.h; sourceTree = "<group>"; };
+		06EDDB3F2248BFB300C87605 /* NSInputManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSInputManager.h; sourceTree = "<group>"; };
+		06EDDB402248BFB300C87605 /* NSBezierPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSBezierPath.h; sourceTree = "<group>"; };
+		06EDDB412248BFB300C87605 /* NSDataLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataLink.h; sourceTree = "<group>"; };
+		06EDDB422248BFB300C87605 /* NSSliderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSliderCell.h; sourceTree = "<group>"; };
+		06EDDB432248BFB300C87605 /* NSApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSApplication.h; sourceTree = "<group>"; };
+		06EDDB442248BFB300C87605 /* NSResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSResponder.h; sourceTree = "<group>"; };
+		06EDDB452248BFB300C87605 /* NSImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSImage.h; sourceTree = "<group>"; };
+		06EDDB462248BFB300C87605 /* NSAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAlert.h; sourceTree = "<group>"; };
+		06EDDB472248BFB300C87605 /* NSColorWell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSColorWell.h; sourceTree = "<group>"; };
+		06EDDB482248BFB300C87605 /* NSController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSController.h; sourceTree = "<group>"; };
+		06EDDB492248BFB300C87605 /* NSSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSegmentedControl.h; sourceTree = "<group>"; };
+		06EDDB4A2248BFB300C87605 /* NSPageLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPageLayout.h; sourceTree = "<group>"; };
+		06EDDB4B2248BFB300C87605 /* NSTabViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTabViewItem.h; sourceTree = "<group>"; };
+		06EDDB4C2248BFB300C87605 /* NSSpeechSynthesizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSpeechSynthesizer.h; sourceTree = "<group>"; };
+		06EDDB4D2248BFB300C87605 /* NSView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSView.h; sourceTree = "<group>"; };
+		06EDDB4E2248BFB300C87605 /* NSFileWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFileWrapper.h; sourceTree = "<group>"; };
+		06EDDB4F2248BFB300C87605 /* AppKitDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppKitDefines.h; sourceTree = "<group>"; };
+		06EDDB502248BFB300C87605 /* NSSharingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSharingService.h; sourceTree = "<group>"; };
+		06EDDB512248BFB300C87605 /* NSSecureTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSecureTextField.h; sourceTree = "<group>"; };
+		06EDDB522248BFB300C87605 /* NSInputServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSInputServer.h; sourceTree = "<group>"; };
+		06EDDB532248BFB300C87605 /* NSCustomImageRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCustomImageRep.h; sourceTree = "<group>"; };
+		06EDDB542248BFB300C87605 /* NSToolbarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSToolbarItem.h; sourceTree = "<group>"; };
+		06EDDB552248BFB300C87605 /* NSViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSViewController.h; sourceTree = "<group>"; };
+		06EDDB562248BFB300C87605 /* NSCursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCursor.h; sourceTree = "<group>"; };
+		06EDDB572248BFB300C87605 /* NSOpenPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSOpenPanel.h; sourceTree = "<group>"; };
+		06EDDB582248BFB300C87605 /* NSWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSWorkspace.h; sourceTree = "<group>"; };
+		06EDDB592248BFB300C87605 /* DPSOperators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DPSOperators.h; sourceTree = "<group>"; };
+		06EDDB5A2248BFB300C87605 /* NSHelpPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSHelpPanel.h; sourceTree = "<group>"; };
+		06EDDB5B2248BFB300C87605 /* NSTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTextView.h; sourceTree = "<group>"; };
+		06EDDB5C2248BFB300C87605 /* NSMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMatrix.h; sourceTree = "<group>"; };
+		06EDDB5D2248BFB300C87605 /* NSWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSWindow.h; sourceTree = "<group>"; };
+		06EDDB5E2248BFB300C87605 /* NSUserDefaultsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSUserDefaultsController.h; sourceTree = "<group>"; };
+		06EDDB5F2248BFB300C87605 /* NSImageRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSImageRep.h; sourceTree = "<group>"; };
+		06EDDB602248BFB300C87605 /* PSOperators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSOperators.h; sourceTree = "<group>"; };
+		06EDDB612248BFB300C87605 /* NSStatusItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStatusItem.h; sourceTree = "<group>"; };
+		06EDDB622248BFB300C87605 /* AppKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppKit.h; sourceTree = "<group>"; };
+		06EDDB632248BFB300C87605 /* NSDataLinkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataLinkManager.h; sourceTree = "<group>"; };
+		06EDDB642248BFB300C87605 /* NSTableColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTableColumn.h; sourceTree = "<group>"; };
+		06EDDB652248BFB300C87605 /* NSPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPanel.h; sourceTree = "<group>"; };
+		06EDDB662248BFB300C87605 /* NSMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMenuItem.h; sourceTree = "<group>"; };
+		06EDDB672248BFB300C87605 /* NSMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMenuView.h; sourceTree = "<group>"; };
+		06EDDB682248BFB300C87605 /* NSText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSText.h; sourceTree = "<group>"; };
+		06EDDB692248BFB300C87605 /* NSColorPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSColorPicker.h; sourceTree = "<group>"; };
+		06EDDB6A2248BFB300C87605 /* NSBitmapImageRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSBitmapImageRep.h; sourceTree = "<group>"; };
+		06EDDB6B2248BFB300C87605 /* NSSavePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSavePanel.h; sourceTree = "<group>"; };
+		06EDDB6C2248BFB300C87605 /* NSPasteboardItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPasteboardItem.h; sourceTree = "<group>"; };
+		06EDDB6D2248BFB300C87605 /* NSUserInterfaceValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSUserInterfaceValidation.h; sourceTree = "<group>"; };
+		06EDDB6E2248BFB300C87605 /* NSSpellChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSpellChecker.h; sourceTree = "<group>"; };
+		06EDDB6F2248BFB300C87605 /* NSToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSToolbar.h; sourceTree = "<group>"; };
+		06EDDB702248BFB300C87605 /* NSPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPopover.h; sourceTree = "<group>"; };
+		06EDDB712248BFB300C87605 /* NSAffineTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAffineTransform.h; sourceTree = "<group>"; };
+		06EDDB722248BFB300C87605 /* NSDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDocumentController.h; sourceTree = "<group>"; };
+		06EDDB732248BFB300C87605 /* NSNibDeclarations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSNibDeclarations.h; sourceTree = "<group>"; };
+		06EDDB742248BFB300C87605 /* NSActionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSActionCell.h; sourceTree = "<group>"; };
+		06EDDB752248BFB300C87605 /* NSTextAlternatives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTextAlternatives.h; sourceTree = "<group>"; };
+		06EDDB762248BFB300C87605 /* NSPrintInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPrintInfo.h; sourceTree = "<group>"; };
+		06EDDB772248BFB300C87605 /* NSTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTextField.h; sourceTree = "<group>"; };
+		06EDDB782248BFB300C87605 /* NSGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSGraphics.h; sourceTree = "<group>"; };
+		06EDDB792248BFB300C87605 /* NSButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSButtonCell.h; sourceTree = "<group>"; };
+		06EDDB7A2248BFB300C87605 /* NSGraphicsContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSGraphicsContext.h; sourceTree = "<group>"; };
+		06EDDB7B2248BFB300C87605 /* NSForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSForm.h; sourceTree = "<group>"; };
+		06EDDB7C2248BFB300C87605 /* NSImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSImageCell.h; sourceTree = "<group>"; };
+		06EDDB7D2248BFB300C87605 /* NSStepperCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStepperCell.h; sourceTree = "<group>"; };
+		06EDDB7E2248BFB300C87605 /* NSNibConnector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSNibConnector.h; sourceTree = "<group>"; };
+		06EDDB7F2248BFB300C87605 /* NSOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSOpenGLView.h; sourceTree = "<group>"; };
+		06EDDB802248BFB300C87605 /* NSStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStatusBar.h; sourceTree = "<group>"; };
+		06EDDB812248BFB300C87605 /* NSArrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSArrayController.h; sourceTree = "<group>"; };
+		06EDDB822248BFB300C87605 /* NSComboBoxCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSComboBoxCell.h; sourceTree = "<group>"; };
+		06EDDB832248BFB300C87605 /* NSShadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSShadow.h; sourceTree = "<group>"; };
+		06EDDB842248BFB300C87605 /* NSScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSScrollView.h; sourceTree = "<group>"; };
+		06EDDB852248BFB300C87605 /* NSSearchField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSearchField.h; sourceTree = "<group>"; };
+		06EDDB862248BFB300C87605 /* NSFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFont.h; sourceTree = "<group>"; };
+		06EDDB872248BFB300C87605 /* NSMovie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMovie.h; sourceTree = "<group>"; };
+		06EDDB882248BFB300C87605 /* NSFontPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFontPanel.h; sourceTree = "<group>"; };
+		06EDDB892248BFB300C87605 /* NSCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCollectionView.h; sourceTree = "<group>"; };
+		06EDDB8A2248BFB300C87605 /* NSTextTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTextTable.h; sourceTree = "<group>"; };
+		06EDDB8B2248BFB300C87605 /* NSSearchFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSearchFieldCell.h; sourceTree = "<group>"; };
+		06EDDB8C2248BFB300C87605 /* NSGlyphGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSGlyphGenerator.h; sourceTree = "<group>"; };
+		06EDDB8D2248BFB300C87605 /* NSSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSplitView.h; sourceTree = "<group>"; };
+		06EDDB8E2248BFB300C87605 /* NSTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTableHeaderView.h; sourceTree = "<group>"; };
+		06EDDB8F2248BFB300C87605 /* NSButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSButton.h; sourceTree = "<group>"; };
+		06EDDB902248BFB300C87605 /* NSProgressIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSProgressIndicator.h; sourceTree = "<group>"; };
+		06EDDB912248BFB300C87605 /* NSVisualEffectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSVisualEffectView.h; sourceTree = "<group>"; };
+		06EDDB922248BFB300C87605 /* NSCachedImageRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCachedImageRep.h; sourceTree = "<group>"; };
+		06EDDB932248BFB300C87605 /* NSToolbarItemGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSToolbarItemGroup.h; sourceTree = "<group>"; };
+		06EDDB942248BFB300C87605 /* NSOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSOutlineView.h; sourceTree = "<group>"; };
+		06EDDB952248BFB300C87605 /* NSBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSBox.h; sourceTree = "<group>"; };
+		06EDDB962248BFB300C87605 /* NSTokenField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTokenField.h; sourceTree = "<group>"; };
+		06EDDB972248BFB300C87605 /* NSAccessibilityConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAccessibilityConstants.h; sourceTree = "<group>"; };
+		06EDDB982248BFB300C87605 /* NSColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSColor.h; sourceTree = "<group>"; };
+		06EDDB992248BFB300C87605 /* NSSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSlider.h; sourceTree = "<group>"; };
+		06EDDB9A2248BFB300C87605 /* NSTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTableView.h; sourceTree = "<group>"; };
+		06EDDB9B2248BFB300C87605 /* NSPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPrinter.h; sourceTree = "<group>"; };
+		06EDDB9C2248BFB300C87605 /* NSTableHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTableHeaderCell.h; sourceTree = "<group>"; };
+		06EDDB9D2248BFB300C87605 /* NSRulerMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSRulerMarker.h; sourceTree = "<group>"; };
+		06EDDB9E2248BFB300C87605 /* NSTextList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTextList.h; sourceTree = "<group>"; };
+		06EDDB9F2248BFB300C87605 /* NSUserInterfaceLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSUserInterfaceLayout.h; sourceTree = "<group>"; };
+		06EDDBA02248BFB300C87605 /* NSLevelIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSLevelIndicator.h; sourceTree = "<group>"; };
+		06EDDBA12248BFB300C87605 /* NSMenuItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMenuItemCell.h; sourceTree = "<group>"; };
+		06EDDBA22248BFB300C87605 /* NSColorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSColorPanel.h; sourceTree = "<group>"; };
+		06EDDBA32248BFB300C87605 /* NSControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSControl.h; sourceTree = "<group>"; };
+		06EDDBA42248BFB300C87605 /* NSImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSImageView.h; sourceTree = "<group>"; };
+		06EDDBA52248BFB300C87605 /* AppKitExceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppKitExceptions.h; sourceTree = "<group>"; };
+		06EDDBA62248BFB300C87605 /* NSFontManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFontManager.h; sourceTree = "<group>"; };
+		06EDDBA72248BFB300C87605 /* NSScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSScroller.h; sourceTree = "<group>"; };
+		06EDDBA82248BFB300C87605 /* NSTreeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTreeController.h; sourceTree = "<group>"; };
+		06EDDBA92248BFB300C87605 /* NSColorList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSColorList.h; sourceTree = "<group>"; };
+		06EDDBAA2248BFB300C87605 /* NSSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSound.h; sourceTree = "<group>"; };
+		06EDDBAB2248BFB300C87605 /* NSUserInterfaceItemIdentification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSUserInterfaceItemIdentification.h; sourceTree = "<group>"; };
+		06EDDBAC2248BFB300C87605 /* NSWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSWindowController.h; sourceTree = "<group>"; };
+		06EDDBAD2248BFB300C87605 /* NSSegmentedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSegmentedCell.h; sourceTree = "<group>"; };
+		06EDDBAE2248BFB300C87605 /* NSFontDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFontDescriptor.h; sourceTree = "<group>"; };
+		06EDDBAF2248BFB300C87605 /* NSAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAnimation.h; sourceTree = "<group>"; };
+		06EDDBB02248BFB300C87605 /* NSCollectionViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCollectionViewItem.h; sourceTree = "<group>"; };
+		06EDDBB12248BFB300C87605 /* NSDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDrawer.h; sourceTree = "<group>"; };
+		06EDDBB22248BFB300C87605 /* NSLevelIndicatorCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSLevelIndicatorCell.h; sourceTree = "<group>"; };
+		06EDDBB32248BFB300C87605 /* NSDragging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDragging.h; sourceTree = "<group>"; };
+		06EDDBB42248BFB300C87605 /* NSRunningApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSRunningApplication.h; sourceTree = "<group>"; };
+		06EDDBB52248BFB300C87605 /* NSPrintPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPrintPanel.h; sourceTree = "<group>"; };
+		06EDDBB62248BFB300C87605 /* NSSpellProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSpellProtocol.h; sourceTree = "<group>"; };
+		06EDDBB72248BFB300C87605 /* NSMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMenu.h; sourceTree = "<group>"; };
+		06EDDBB82248BFB300C87605 /* NSGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSGradient.h; sourceTree = "<group>"; };
+		06EDDBB92248BFB300C87605 /* NSStringDrawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStringDrawing.h; sourceTree = "<group>"; };
+		06EDDBBA2248BFB300C87605 /* NSPrintOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPrintOperation.h; sourceTree = "<group>"; };
+		06EDDBBB2248BFB300C87605 /* NSComboBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSComboBox.h; sourceTree = "<group>"; };
+		06EDDBBC2248BFB300C87605 /* NSKeyValueBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSKeyValueBinding.h; sourceTree = "<group>"; };
+		06EDDBBD2248BFB300C87605 /* NSScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSScreen.h; sourceTree = "<group>"; };
+		06EDDBBE2248BFB300C87605 /* NSGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSGestureRecognizer.h; sourceTree = "<group>"; };
+		06EDDBBF2248BFB300C87605 /* NSEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSEvent.h; sourceTree = "<group>"; };
+		06EDDBC02248BFB300C87605 /* NSBrowserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSBrowserCell.h; sourceTree = "<group>"; };
+		06EDDBC12248BFB300C87605 /* NSEPSImageRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSEPSImageRep.h; sourceTree = "<group>"; };
+		06EDDBC22248BFB300C87605 /* NSMovieView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMovieView.h; sourceTree = "<group>"; };
+		06EDDBC32248BFB300C87605 /* NSSpellServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSpellServer.h; sourceTree = "<group>"; };
+		06EDDBC42248BFB300C87605 /* NSTextAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTextAttachment.h; sourceTree = "<group>"; };
+		06EDDBC62248BFB300C87605 /* NSBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBox.m; sourceTree = "<group>"; };
+		06EDDBC72248BFB300C87605 /* NSOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSOutlineView.m; sourceTree = "<group>"; };
+		06EDDBC82248BFB300C87605 /* externs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = externs.m; sourceTree = "<group>"; };
+		06EDDBC92248BFB300C87605 /* NSToolbarItemGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSToolbarItemGroup.m; sourceTree = "<group>"; };
+		06EDDBCA2248BFB300C87605 /* NSBitmapImageRep+PNM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBitmapImageRep+PNM.m"; sourceTree = "<group>"; };
+		06EDDBCB2248BFB300C87605 /* NSCachedImageRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCachedImageRep.m; sourceTree = "<group>"; };
+		06EDDBCC2248BFB300C87605 /* NSVisualEffectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSVisualEffectView.m; sourceTree = "<group>"; };
+		06EDDBCD2248BFB300C87605 /* NSBitmapImageRep+PNG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBitmapImageRep+PNG.m"; sourceTree = "<group>"; };
+		06EDDBCE2248BFB300C87605 /* GSThemePrintPanels.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSThemePrintPanels.m; sourceTree = "<group>"; };
+		06EDDBCF2248BFB300C87605 /* NSButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSButton.m; sourceTree = "<group>"; };
+		06EDDBD02248BFB300C87605 /* NSProgressIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSProgressIndicator.m; sourceTree = "<group>"; };
+		06EDDBD12248BFB300C87605 /* NSTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTableHeaderView.m; sourceTree = "<group>"; };
+		06EDDBD22248BFB300C87605 /* GSCharacterPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSCharacterPanel.m; sourceTree = "<group>"; };
+		06EDDBD32248BFB300C87605 /* GNUmakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
+		06EDDBD42248BFB300C87605 /* NSSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSplitView.m; sourceTree = "<group>"; };
+		06EDDBD52248BFB300C87605 /* GSXibLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSXibLoading.m; sourceTree = "<group>"; };
+		06EDDBD62248BFB300C87605 /* NSTextTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextTable.m; sourceTree = "<group>"; };
+		06EDDBD72248BFB300C87605 /* NSGlyphGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSGlyphGenerator.m; sourceTree = "<group>"; };
+		06EDDBD82248BFB300C87605 /* NSSearchFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSearchFieldCell.m; sourceTree = "<group>"; };
+		06EDDBD92248BFB300C87605 /* GSVbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSVbox.m; sourceTree = "<group>"; };
+		06EDDBDA2248BFB300C87605 /* GSEPSPrintOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSEPSPrintOperation.m; sourceTree = "<group>"; };
+		06EDDBDB2248BFB300C87605 /* GSToolbarCustomizationPalette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSToolbarCustomizationPalette.h; sourceTree = "<group>"; };
+		06EDDBDC2248BFB300C87605 /* NSFontPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFontPanel.m; sourceTree = "<group>"; };
+		06EDDBDD2248BFB300C87605 /* NSMovie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMovie.m; sourceTree = "<group>"; };
+		06EDDBDE2248BFB300C87605 /* GSToolTips.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSToolTips.h; sourceTree = "<group>"; };
+		06EDDBDF2248BFB300C87605 /* NSCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCollectionView.m; sourceTree = "<group>"; };
+		06EDDBE02248BFB300C87605 /* GSThemePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSThemePanel.m; sourceTree = "<group>"; };
+		06EDDBE12248BFB300C87605 /* NSSearchField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSearchField.m; sourceTree = "<group>"; };
+		06EDDBE22248BFB300C87605 /* NSScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSScrollView.m; sourceTree = "<group>"; };
+		06EDDBE32248BFB300C87605 /* NSFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFont.m; sourceTree = "<group>"; };
+		06EDDBE42248BFB300C87605 /* NSButtonImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSButtonImageSource.h; sourceTree = "<group>"; };
+		06EDDBE52248BFB300C87605 /* NSTextBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextBlock.m; sourceTree = "<group>"; };
+		06EDDBE62248BFB300C87605 /* NSShadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSShadow.m; sourceTree = "<group>"; };
+		06EDDBE72248BFB300C87605 /* NSArrayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSArrayController.m; sourceTree = "<group>"; };
+		06EDDBE82248BFB300C87605 /* NSToolbarFrameworkPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSToolbarFrameworkPrivate.h; sourceTree = "<group>"; };
+		06EDDBE92248BFB300C87605 /* NSComboBoxCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSComboBoxCell.m; sourceTree = "<group>"; };
+		06EDDBEA2248BFB300C87605 /* NSOpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSOpenGLView.m; sourceTree = "<group>"; };
+		06EDDBEB2248BFB300C87605 /* NSStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStatusBar.m; sourceTree = "<group>"; };
+		06EDDBEC2248BFB300C87605 /* NSImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSImageCell.m; sourceTree = "<group>"; };
+		06EDDBED2248BFB300C87605 /* NSNibConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSNibConnector.m; sourceTree = "<group>"; };
+		06EDDBEE2248BFB300C87605 /* NSStepperCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStepperCell.m; sourceTree = "<group>"; };
+		06EDDBEF2248BFB300C87605 /* GSInfoPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSInfoPanel.m; sourceTree = "<group>"; };
+		06EDDBF02248BFB300C87605 /* GSNibLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSNibLoading.m; sourceTree = "<group>"; };
+		06EDDBF12248BFB300C87605 /* NSImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSImageView.m; sourceTree = "<group>"; };
+		06EDDBF22248BFB300C87605 /* NSControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSControl.m; sourceTree = "<group>"; };
+		06EDDBF32248BFB300C87605 /* GSThemeTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSThemeTools.m; sourceTree = "<group>"; };
+		06EDDBF42248BFB300C87605 /* NSMenuItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMenuItemCell.m; sourceTree = "<group>"; };
+		06EDDBF52248BFB300C87605 /* GSNibLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSNibLoader.m; sourceTree = "<group>"; };
+		06EDDBF62248BFB300C87605 /* GSXibElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSXibElement.m; sourceTree = "<group>"; };
+		06EDDBF72248BFB300C87605 /* NSColorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSColorPanel.m; sourceTree = "<group>"; };
+		06EDDBF82248BFB300C87605 /* Functions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Functions.m; sourceTree = "<group>"; };
+		06EDDBF92248BFB300C87605 /* NSLevelIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSLevelIndicator.m; sourceTree = "<group>"; };
+		06EDDBFA2248BFB300C87605 /* GSFastEnumeration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSFastEnumeration.h; sourceTree = "<group>"; };
+		06EDDBFB2248BFB300C87605 /* GSTypesetter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSTypesetter.m; sourceTree = "<group>"; };
+		06EDDBFC2248BFB300C87605 /* Source.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Source.xcodeproj; sourceTree = "<group>"; };
+		06EDDBFF2248BFB300C87605 /* NSBitmapImageRep+ICNS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+ICNS.h"; sourceTree = "<group>"; };
+		06EDDC002248BFB300C87605 /* linking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = linking.m; sourceTree = "<group>"; };
+		06EDDC012248BFB300C87605 /* NSBitmapImageRep+JPEG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+JPEG.h"; sourceTree = "<group>"; };
+		06EDDC022248BFB400C87605 /* GSKeyBindingAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSKeyBindingAction.m; sourceTree = "<group>"; };
+		06EDDC032248BFB400C87605 /* GSSlideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSlideView.m; sourceTree = "<group>"; };
+		06EDDC042248BFB400C87605 /* GSModelLoaderFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSModelLoaderFactory.m; sourceTree = "<group>"; };
+		06EDDC052248BFB400C87605 /* NSTextList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextList.m; sourceTree = "<group>"; };
+		06EDDC062248BFB400C87605 /* NSRulerMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSRulerMarker.m; sourceTree = "<group>"; };
+		06EDDC072248BFB400C87605 /* NSBitmapImageRep+GIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBitmapImageRep+GIF.m"; sourceTree = "<group>"; };
+		06EDDC082248BFB400C87605 /* NSTableHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTableHeaderCell.m; sourceTree = "<group>"; };
+		06EDDC092248BFB400C87605 /* NSPrinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSPrinter.m; sourceTree = "<group>"; };
+		06EDDC0A2248BFB400C87605 /* GSXibParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSXibParser.m; sourceTree = "<group>"; };
+		06EDDC0B2248BFB400C87605 /* NSTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTableView.m; sourceTree = "<group>"; };
+		06EDDC0C2248BFB400C87605 /* NSBundleAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBundleAdditions.m; sourceTree = "<group>"; };
+		06EDDC0D2248BFB400C87605 /* GSThemeInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSThemeInspector.m; sourceTree = "<group>"; };
+		06EDDC0E2248BFB400C87605 /* NSColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSColor.m; sourceTree = "<group>"; };
+		06EDDC0F2248BFB400C87605 /* GSHelpManagerPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSHelpManagerPanel.m; sourceTree = "<group>"; };
+		06EDDC102248BFB400C87605 /* NSSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSlider.m; sourceTree = "<group>"; };
+		06EDDC112248BFB400C87605 /* NSTokenField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTokenField.m; sourceTree = "<group>"; };
+		06EDDC122248BFB400C87605 /* GSKeyBindingTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSKeyBindingTable.m; sourceTree = "<group>"; };
+		06EDDC132248BFB400C87605 /* GSStandardWindowDecorationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSStandardWindowDecorationView.m; sourceTree = "<group>"; };
+		06EDDC142248BFB400C87605 /* NSLevelIndicatorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSLevelIndicatorCell.m; sourceTree = "<group>"; };
+		06EDDC152248BFB400C87605 /* NSDrawer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDrawer.m; sourceTree = "<group>"; };
+		06EDDC162248BFB400C87605 /* GSGuiPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSGuiPrivate.h; sourceTree = "<group>"; };
+		06EDDC172248BFB400C87605 /* win32-entry.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "win32-entry.c"; sourceTree = "<group>"; };
+		06EDDC182248BFB400C87605 /* NSAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAnimation.m; sourceTree = "<group>"; };
+		06EDDC192248BFB400C87605 /* NSCollectionViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCollectionViewItem.m; sourceTree = "<group>"; };
+		06EDDC1A2248BFB400C87605 /* GSTrackingRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSTrackingRect.m; sourceTree = "<group>"; };
+		06EDDC1B2248BFB400C87605 /* NSTextTableBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextTableBlock.m; sourceTree = "<group>"; };
+		06EDDC1C2248BFB400C87605 /* NSTextView_actions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextView_actions.m; sourceTree = "<group>"; };
+		06EDDC1D2248BFB400C87605 /* GSPrinting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSPrinting.m; sourceTree = "<group>"; };
+		06EDDC1E2248BFB400C87605 /* GSXibObjectContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSXibObjectContainer.m; sourceTree = "<group>"; };
+		06EDDC1F2248BFB400C87605 /* GSIconManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSIconManager.m; sourceTree = "<group>"; };
+		06EDDC202248BFB400C87605 /* GSGModelLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSGModelLoader.m; sourceTree = "<group>"; };
+		06EDDC212248BFB400C87605 /* GSThemeMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSThemeMenu.m; sourceTree = "<group>"; };
+		06EDDC222248BFB400C87605 /* NSFontDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFontDescriptor.m; sourceTree = "<group>"; };
+		06EDDC232248BFB400C87605 /* GSThemeOpenSavePanels.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSThemeOpenSavePanels.m; sourceTree = "<group>"; };
+		06EDDC242248BFB400C87605 /* NSWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSWindowController.m; sourceTree = "<group>"; };
+		06EDDC252248BFB400C87605 /* NSSegmentedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSegmentedCell.m; sourceTree = "<group>"; };
+		06EDDC262248BFB400C87605 /* NSSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSound.m; sourceTree = "<group>"; };
+		06EDDC272248BFB400C87605 /* GSTextFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSTextFinder.m; sourceTree = "<group>"; };
+		06EDDC282248BFB400C87605 /* GSGormLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSGormLoader.m; sourceTree = "<group>"; };
+		06EDDC292248BFB400C87605 /* GSXibKeyedUnarchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSXibKeyedUnarchiver.m; sourceTree = "<group>"; };
+		06EDDC2A2248BFB400C87605 /* NSTreeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTreeController.m; sourceTree = "<group>"; };
+		06EDDC2B2248BFB400C87605 /* NSScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSScroller.m; sourceTree = "<group>"; };
+		06EDDC2C2248BFB400C87605 /* GSTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSTheme.m; sourceTree = "<group>"; };
+		06EDDC2D2248BFB400C87605 /* NSColorList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSColorList.m; sourceTree = "<group>"; };
+		06EDDC2E2248BFB400C87605 /* NSFontManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFontManager.m; sourceTree = "<group>"; };
+		06EDDC2F2248BFB400C87605 /* GSTextStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSTextStorage.h; sourceTree = "<group>"; };
+		06EDDC302248BFB400C87605 /* NSTextAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextAttachment.m; sourceTree = "<group>"; };
+		06EDDC312248BFB400C87605 /* GSThemeDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSThemeDrawing.m; sourceTree = "<group>"; };
+		06EDDC322248BFB400C87605 /* GSHbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSHbox.m; sourceTree = "<group>"; };
+		06EDDC332248BFB400C87605 /* NSMovieView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMovieView.m; sourceTree = "<group>"; };
+		06EDDC342248BFB400C87605 /* NSEPSImageRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSEPSImageRep.m; sourceTree = "<group>"; };
+		06EDDC352248BFB400C87605 /* GSAutocompleteWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSAutocompleteWindow.h; sourceTree = "<group>"; };
+		06EDDC362248BFB400C87605 /* NSEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSEvent.m; sourceTree = "<group>"; };
+		06EDDC372248BFB400C87605 /* NSBrowserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBrowserCell.m; sourceTree = "<group>"; };
+		06EDDC382248BFB400C87605 /* NSKeyValueBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueBinding.m; sourceTree = "<group>"; };
+		06EDDC392248BFB400C87605 /* NSGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSGestureRecognizer.m; sourceTree = "<group>"; };
+		06EDDC3A2248BFB400C87605 /* NSScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSScreen.m; sourceTree = "<group>"; };
+		06EDDC3B2248BFB400C87605 /* NSComboBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSComboBox.m; sourceTree = "<group>"; };
+		06EDDC3C2248BFB400C87605 /* nsimage-tiff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nsimage-tiff.h"; sourceTree = "<group>"; };
+		06EDDC3D2248BFB400C87605 /* GSAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSAnimator.m; sourceTree = "<group>"; };
+		06EDDC3E2248BFB400C87605 /* NSStringDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringDrawing.m; sourceTree = "<group>"; };
+		06EDDC3F2248BFB400C87605 /* GNUmakefile.postamble */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GNUmakefile.postamble; sourceTree = "<group>"; };
+		06EDDC402248BFB400C87605 /* NSPrintOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSPrintOperation.m; sourceTree = "<group>"; };
+		06EDDC412248BFB400C87605 /* NSGradient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSGradient.m; sourceTree = "<group>"; };
+		06EDDC422248BFB400C87605 /* NSMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMenu.m; sourceTree = "<group>"; };
+		06EDDC432248BFB400C87605 /* NSRunningApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSRunningApplication.m; sourceTree = "<group>"; };
+		06EDDC442248BFB400C87605 /* NSPrintPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSPrintPanel.m; sourceTree = "<group>"; };
+		06EDDC452248BFB400C87605 /* NSClipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSClipView.m; sourceTree = "<group>"; };
+		06EDDC462248BFB400C87605 /* NSPopUpButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSPopUpButtonCell.m; sourceTree = "<group>"; };
+		06EDDC472248BFB400C87605 /* NSTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextFieldCell.m; sourceTree = "<group>"; };
+		06EDDC482248BFB400C87605 /* GSDragView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSDragView.m; sourceTree = "<group>"; };
+		06EDDC492248BFB400C87605 /* NSButtonImageSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSButtonImageSource.m; sourceTree = "<group>"; };
+		06EDDC4A2248BFB400C87605 /* NSTextStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextStorage.m; sourceTree = "<group>"; };
+		06EDDC4B2248BFB400C87605 /* NSStepper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStepper.m; sourceTree = "<group>"; };
+		06EDDC4C2248BFB400C87605 /* NSParagraphStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSParagraphStyle.m; sourceTree = "<group>"; };
+		06EDDC4D2248BFB400C87605 /* GSToolTips.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSToolTips.m; sourceTree = "<group>"; };
+		06EDDC4E2248BFB400C87605 /* NSHelpManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSHelpManager.m; sourceTree = "<group>"; };
+		06EDDC4F2248BFB400C87605 /* GSToolbarCustomizationPalette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSToolbarCustomizationPalette.m; sourceTree = "<group>"; };
+		06EDDC502248BFB400C87605 /* NSNib.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSNib.m; sourceTree = "<group>"; };
+		06EDDC512248BFB400C87605 /* NSTrackingArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTrackingArea.m; sourceTree = "<group>"; };
+		06EDDC522248BFB400C87605 /* NSLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSLayoutManager.m; sourceTree = "<group>"; };
+		06EDDC532248BFB400C87605 /* NSTabView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTabView.m; sourceTree = "<group>"; };
+		06EDDC542248BFB400C87605 /* NSColorSpace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSColorSpace.m; sourceTree = "<group>"; };
+		06EDDC552248BFB400C87605 /* DocMakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DocMakefile; sourceTree = "<group>"; };
+		06EDDC562248BFB400C87605 /* NSAccessibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAccessibility.m; sourceTree = "<group>"; };
+		06EDDC572248BFB400C87605 /* NSInterfaceStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInterfaceStyle.m; sourceTree = "<group>"; };
+		06EDDC582248BFB400C87605 /* NSAttributedString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAttributedString.m; sourceTree = "<group>"; };
+		06EDDC592248BFB400C87605 /* NSTreeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTreeNode.m; sourceTree = "<group>"; };
+		06EDDC5A2248BFB400C87605 /* NSTextContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextContainer.m; sourceTree = "<group>"; };
+		06EDDC5B2248BFB400C87605 /* libgnustep-gui.def */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "libgnustep-gui.def"; sourceTree = "<group>"; };
+		06EDDC5C2248BFB400C87605 /* NSCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCell.m; sourceTree = "<group>"; };
+		06EDDC5D2248BFB400C87605 /* NSOpenGLPixelFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSOpenGLPixelFormat.m; sourceTree = "<group>"; };
+		06EDDC5E2248BFB400C87605 /* NSBitmapImageRep+PNG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+PNG.h"; sourceTree = "<group>"; };
+		06EDDC5F2248BFB400C87605 /* NSDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDocument.m; sourceTree = "<group>"; };
+		06EDDC602248BFB400C87605 /* CompatibilityHeaders.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CompatibilityHeaders.make; sourceTree = "<group>"; };
+		06EDDC612248BFB400C87605 /* win32-def.top */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "win32-def.top"; sourceTree = "<group>"; };
+		06EDDC622248BFB400C87605 /* NSAnimationContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAnimationContext.m; sourceTree = "<group>"; };
+		06EDDC632248BFB400C87605 /* GSThemeWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSThemeWindow.m; sourceTree = "<group>"; };
+		06EDDC642248BFB400C87605 /* NSNibAXRelationshipConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSNibAXRelationshipConnector.m; sourceTree = "<group>"; };
+		06EDDC652248BFB400C87605 /* NSBitmapImageRep+PNM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+PNM.h"; sourceTree = "<group>"; };
+		06EDDC662248BFB400C87605 /* NSDataLinkPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDataLinkPanel.m; sourceTree = "<group>"; };
+		06EDDC672248BFB400C87605 /* NSBitmapImageRepPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSBitmapImageRepPrivate.h; sourceTree = "<group>"; };
+		06EDDC682248BFB400C87605 /* NSFileWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFileWrapper.m; sourceTree = "<group>"; };
+		06EDDC692248BFB400C87605 /* NSNibBindingConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSNibBindingConnector.m; sourceTree = "<group>"; };
+		06EDDC6A2248BFB400C87605 /* GSToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSToolbarView.m; sourceTree = "<group>"; };
+		06EDDC6B2248BFB400C87605 /* tiff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tiff.m; sourceTree = "<group>"; };
+		06EDDC6C2248BFB400C87605 /* GSPDFPrintOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSPDFPrintOperation.m; sourceTree = "<group>"; };
+		06EDDC6D2248BFB400C87605 /* NSTabViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTabViewItem.m; sourceTree = "<group>"; };
+		06EDDC6E2248BFB400C87605 /* GSImageMagickImageRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSImageMagickImageRep.m; sourceTree = "<group>"; };
+		06EDDC6F2248BFB400C87605 /* NSView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSView.m; sourceTree = "<group>"; };
+		06EDDC702248BFB400C87605 /* NSSpeechSynthesizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSpeechSynthesizer.m; sourceTree = "<group>"; };
+		06EDDC712248BFB400C87605 /* NSPageLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSPageLayout.m; sourceTree = "<group>"; };
+		06EDDC722248BFB400C87605 /* NSSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSegmentedControl.m; sourceTree = "<group>"; };
+		06EDDC732248BFB400C87605 /* NSController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSController.m; sourceTree = "<group>"; };
+		06EDDC742248BFB400C87605 /* NSColorWell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSColorWell.m; sourceTree = "<group>"; };
+		06EDDC752248BFB400C87605 /* GSThemePrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSThemePrivate.h; sourceTree = "<group>"; };
+		06EDDC762248BFB400C87605 /* NSAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAlert.m; sourceTree = "<group>"; };
+		06EDDC772248BFB400C87605 /* NSBitmapImageRep+GIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+GIF.h"; sourceTree = "<group>"; };
+		06EDDC782248BFB400C87605 /* NSImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSImage.m; sourceTree = "<group>"; };
+		06EDDC792248BFB400C87605 /* NSResponder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSResponder.m; sourceTree = "<group>"; };
+		06EDDC7A2248BFB400C87605 /* NSApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSApplication.m; sourceTree = "<group>"; };
+		06EDDC7B2248BFB400C87605 /* GSKeyBindingAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSKeyBindingAction.h; sourceTree = "<group>"; };
+		06EDDC7C2248BFB400C87605 /* NSBezierPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBezierPath.m; sourceTree = "<group>"; };
+		06EDDC7D2248BFB400C87605 /* NSBitmapImageRep+JPEG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBitmapImageRep+JPEG.m"; sourceTree = "<group>"; };
+		06EDDC7E2248BFB400C87605 /* NSBitmapImageRep+ICNS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBitmapImageRep+ICNS.m"; sourceTree = "<group>"; };
+		06EDDC7F2248BFB400C87605 /* NSDataLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDataLink.m; sourceTree = "<group>"; };
+		06EDDC802248BFB400C87605 /* GSSlideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSlideView.h; sourceTree = "<group>"; };
+		06EDDC812248BFB400C87605 /* NSSliderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSliderCell.m; sourceTree = "<group>"; };
+		06EDDC822248BFB400C87605 /* NSNibAXAttributeConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSNibAXAttributeConnector.m; sourceTree = "<group>"; };
+		06EDDC832248BFB400C87605 /* NSTokenFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTokenFieldCell.m; sourceTree = "<group>"; };
+		06EDDC842248BFB400C87605 /* NSObjectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObjectController.m; sourceTree = "<group>"; };
+		06EDDC852248BFB400C87605 /* NSInputManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInputManager.m; sourceTree = "<group>"; };
+		06EDDC862248BFB400C87605 /* NSRulerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSRulerView.m; sourceTree = "<group>"; };
+		06EDDC872248BFB400C87605 /* NSBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBrowser.m; sourceTree = "<group>"; };
+		06EDDC882248BFB400C87605 /* NSSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSelection.m; sourceTree = "<group>"; };
+		06EDDC892248BFB400C87605 /* NSPasteboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSPasteboard.m; sourceTree = "<group>"; };
+		06EDDC8A2248BFB400C87605 /* NSPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSPopUpButton.m; sourceTree = "<group>"; };
+		06EDDC8B2248BFB400C87605 /* GSHorizontalTypesetter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSHorizontalTypesetter.m; sourceTree = "<group>"; };
+		06EDDC8C2248BFB400C87605 /* NSFormCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFormCell.m; sourceTree = "<group>"; };
+		06EDDC8D2248BFB400C87605 /* GSGormLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSGormLoading.m; sourceTree = "<group>"; };
+		06EDDC8E2248BFB400C87605 /* NSMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMenuItem.m; sourceTree = "<group>"; };
+		06EDDC8F2248BFB400C87605 /* NSTableColumn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTableColumn.m; sourceTree = "<group>"; };
+		06EDDC902248BFB400C87605 /* GSTextStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSTextStorage.m; sourceTree = "<group>"; };
+		06EDDC912248BFB400C87605 /* NSPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSPanel.m; sourceTree = "<group>"; };
+		06EDDC922248BFB400C87605 /* NSDataLinkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDataLinkManager.m; sourceTree = "<group>"; };
+		06EDDC932248BFB400C87605 /* GSTextFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSTextFinder.h; sourceTree = "<group>"; };
+		06EDDC942248BFB400C87605 /* NSStatusItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStatusItem.m; sourceTree = "<group>"; };
+		06EDDC952248BFB400C87605 /* GSServicesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSServicesManager.m; sourceTree = "<group>"; };
+		06EDDC962248BFB400C87605 /* GSDisplayServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSDisplayServer.m; sourceTree = "<group>"; };
+		06EDDC972248BFB400C87605 /* NSUserDefaultsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUserDefaultsController.m; sourceTree = "<group>"; };
+		06EDDC982248BFB400C87605 /* NSImageRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSImageRep.m; sourceTree = "<group>"; };
+		06EDDC992248BFB400C87605 /* NSWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSWindow.m; sourceTree = "<group>"; };
+		06EDDC9A2248BFB400C87605 /* GSIconManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSIconManager.h; sourceTree = "<group>"; };
+		06EDDC9B2248BFB400C87605 /* NSMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMatrix.m; sourceTree = "<group>"; };
+		06EDDC9C2248BFB400C87605 /* NSTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextView.m; sourceTree = "<group>"; };
+		06EDDC9D2248BFB400C87605 /* NSWorkspace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSWorkspace.m; sourceTree = "<group>"; };
+		06EDDC9E2248BFB400C87605 /* NSHelpPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSHelpPanel.m; sourceTree = "<group>"; };
+		06EDDC9F2248BFB400C87605 /* NSViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSViewController.m; sourceTree = "<group>"; };
+		06EDDCA02248BFB400C87605 /* GSLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSLayoutManager.m; sourceTree = "<group>"; };
+		06EDDCA12248BFB400C87605 /* NSCursor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCursor.m; sourceTree = "<group>"; };
+		06EDDCA22248BFB400C87605 /* NSOpenPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSOpenPanel.m; sourceTree = "<group>"; };
+		06EDDCA32248BFB400C87605 /* NSToolbarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSToolbarItem.m; sourceTree = "<group>"; };
+		06EDDCA42248BFB400C87605 /* GSFontInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSFontInfo.m; sourceTree = "<group>"; };
+		06EDDCA52248BFB400C87605 /* GSMemoryPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSMemoryPanel.m; sourceTree = "<group>"; };
+		06EDDCA62248BFB400C87605 /* NSCustomImageRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCustomImageRep.m; sourceTree = "<group>"; };
+		06EDDCA72248BFB400C87605 /* NSInputServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInputServer.m; sourceTree = "<group>"; };
+		06EDDCA82248BFB400C87605 /* NSSecureTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSecureTextField.m; sourceTree = "<group>"; };
+		06EDDCA92248BFB400C87605 /* NSSharingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSharingService.m; sourceTree = "<group>"; };
+		06EDDCAA2248BFB400C87605 /* GSHelpAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSHelpAttachment.m; sourceTree = "<group>"; };
+		06EDDCAB2248BFB400C87605 /* GSTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSTitleView.m; sourceTree = "<group>"; };
+		06EDDCAC2248BFB400C87605 /* GSKeyBindingTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSKeyBindingTable.h; sourceTree = "<group>"; };
+		06EDDCAD2248BFB400C87605 /* NSForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSForm.m; sourceTree = "<group>"; };
+		06EDDCAE2248BFB400C87605 /* NSGraphicsContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSGraphicsContext.m; sourceTree = "<group>"; };
+		06EDDCAF2248BFB400C87605 /* NSViewPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSViewPrivate.h; sourceTree = "<group>"; };
+		06EDDCB02248BFB400C87605 /* GNUmakefile.preamble */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GNUmakefile.preamble; sourceTree = "<group>"; };
+		06EDDCB12248BFB400C87605 /* NSButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSButtonCell.m; sourceTree = "<group>"; };
+		06EDDCB22248BFB400C87605 /* GSGhostscriptImageRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSGhostscriptImageRep.m; sourceTree = "<group>"; };
+		06EDDCB32248BFB400C87605 /* NSTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextField.m; sourceTree = "<group>"; };
+		06EDDCB42248BFB400C87605 /* GSXibLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSXibLoader.m; sourceTree = "<group>"; };
+		06EDDCB52248BFB400C87605 /* NSPrintInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSPrintInfo.m; sourceTree = "<group>"; };
+		06EDDCB62248BFB400C87605 /* .cvsignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
+		06EDDCB72248BFB400C87605 /* NSDocumentFrameworkPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDocumentFrameworkPrivate.h; sourceTree = "<group>"; };
+		06EDDCB82248BFB400C87605 /* NSTextAlternatives.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextAlternatives.m; sourceTree = "<group>"; };
+		06EDDCB92248BFB400C87605 /* NSActionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSActionCell.m; sourceTree = "<group>"; };
+		06EDDCBA2248BFB400C87605 /* GSWindowDecorationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSWindowDecorationView.m; sourceTree = "<group>"; };
+		06EDDCBB2248BFB400C87605 /* GSBindingHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSBindingHelpers.h; sourceTree = "<group>"; };
+		06EDDCBC2248BFB400C87605 /* GSPrintOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSPrintOperation.m; sourceTree = "<group>"; };
+		06EDDCBD2248BFB400C87605 /* NSAffineTransform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAffineTransform.m; sourceTree = "<group>"; };
+		06EDDCBE2248BFB400C87605 /* NSDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDocumentController.m; sourceTree = "<group>"; };
+		06EDDCBF2248BFB400C87605 /* NSToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSToolbar.m; sourceTree = "<group>"; };
+		06EDDCC02248BFB400C87605 /* NSPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSPopover.m; sourceTree = "<group>"; };
+		06EDDCC12248BFB400C87605 /* GSTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSTable.m; sourceTree = "<group>"; };
+		06EDDCC22248BFB400C87605 /* NSSpellChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSpellChecker.m; sourceTree = "<group>"; };
+		06EDDCC32248BFB400C87605 /* NSPasteboardItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSPasteboardItem.m; sourceTree = "<group>"; };
+		06EDDCC42248BFB400C87605 /* GSAutocompleteWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSAutocompleteWindow.m; sourceTree = "<group>"; };
+		06EDDCC52248BFB400C87605 /* NSBitmapImageRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBitmapImageRep.m; sourceTree = "<group>"; };
+		06EDDCC62248BFB400C87605 /* NSSavePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSSavePanel.m; sourceTree = "<group>"; };
+		06EDDCC72248BFB400C87605 /* NSOpenGLContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSOpenGLContext.m; sourceTree = "<group>"; };
+		06EDDCC82248BFB400C87605 /* NSText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSText.m; sourceTree = "<group>"; };
+		06EDDCC92248BFB400C87605 /* NSColorPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSColorPicker.m; sourceTree = "<group>"; };
+		06EDDCCA2248BFB400C87605 /* NSMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMenuView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		06EDDA062248BFA300C87605 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		06EDDA002248BFA300C87605 = {
+			isa = PBXGroup;
+			children = (
+				06EDDA0B2248BFA300C87605 /* Appkit */,
+				06EDDA0A2248BFA300C87605 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		06EDDA0A2248BFA300C87605 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				06EDDA092248BFA300C87605 /* Appkit */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		06EDDA0B2248BFA300C87605 /* Appkit */ = {
+			isa = PBXGroup;
+			children = (
+				06EDDB1E2248BFB300C87605 /* AppKit */,
+				06EDDBC52248BFB300C87605 /* Source */,
+				06EDDA0C2248BFA300C87605 /* main.m */,
+			);
+			path = Appkit;
+			sourceTree = "<group>";
+		};
+		06EDDB1E2248BFB300C87605 /* AppKit */ = {
+			isa = PBXGroup;
+			children = (
+				06EDDB622248BFB300C87605 /* AppKit.h */,
+				06EDDB4F2248BFB300C87605 /* AppKitDefines.h */,
+				06EDDBA52248BFB300C87605 /* AppKitExceptions.h */,
+				06EDDB592248BFB300C87605 /* DPSOperators.h */,
+				06EDDB242248BFB300C87605 /* NSAccessibility.h */,
+				06EDDB972248BFB300C87605 /* NSAccessibilityConstants.h */,
+				06EDDB742248BFB300C87605 /* NSActionCell.h */,
+				06EDDB712248BFB300C87605 /* NSAffineTransform.h */,
+				06EDDB462248BFB300C87605 /* NSAlert.h */,
+				06EDDBAF2248BFB300C87605 /* NSAnimation.h */,
+				06EDDB202248BFB300C87605 /* NSAnimationContext.h */,
+				06EDDB432248BFB300C87605 /* NSApplication.h */,
+				06EDDB812248BFB300C87605 /* NSArrayController.h */,
+				06EDDB272248BFB300C87605 /* NSAttributedString.h */,
+				06EDDB402248BFB300C87605 /* NSBezierPath.h */,
+				06EDDB6A2248BFB300C87605 /* NSBitmapImageRep.h */,
+				06EDDB952248BFB300C87605 /* NSBox.h */,
+				06EDDB3A2248BFB300C87605 /* NSBrowser.h */,
+				06EDDBC02248BFB300C87605 /* NSBrowserCell.h */,
+				06EDDB8F2248BFB300C87605 /* NSButton.h */,
+				06EDDB792248BFB300C87605 /* NSButtonCell.h */,
+				06EDDB922248BFB300C87605 /* NSCachedImageRep.h */,
+				06EDDB212248BFB300C87605 /* NSCell.h */,
+				06EDDB352248BFB300C87605 /* NSClipView.h */,
+				06EDDB892248BFB300C87605 /* NSCollectionView.h */,
+				06EDDBB02248BFB300C87605 /* NSCollectionViewItem.h */,
+				06EDDB982248BFB300C87605 /* NSColor.h */,
+				06EDDBA92248BFB300C87605 /* NSColorList.h */,
+				06EDDBA22248BFB300C87605 /* NSColorPanel.h */,
+				06EDDB692248BFB300C87605 /* NSColorPicker.h */,
+				06EDDB322248BFB300C87605 /* NSColorPicking.h */,
+				06EDDB292248BFB300C87605 /* NSColorSpace.h */,
+				06EDDB472248BFB300C87605 /* NSColorWell.h */,
+				06EDDBBB2248BFB300C87605 /* NSComboBox.h */,
+				06EDDB822248BFB300C87605 /* NSComboBoxCell.h */,
+				06EDDBA32248BFB300C87605 /* NSControl.h */,
+				06EDDB482248BFB300C87605 /* NSController.h */,
+				06EDDB562248BFB300C87605 /* NSCursor.h */,
+				06EDDB532248BFB300C87605 /* NSCustomImageRep.h */,
+				06EDDB412248BFB300C87605 /* NSDataLink.h */,
+				06EDDB632248BFB300C87605 /* NSDataLinkManager.h */,
+				06EDDB1F2248BFB300C87605 /* NSDataLinkPanel.h */,
+				06EDDB222248BFB300C87605 /* NSDocument.h */,
+				06EDDB722248BFB300C87605 /* NSDocumentController.h */,
+				06EDDBB32248BFB300C87605 /* NSDragging.h */,
+				06EDDBB12248BFB300C87605 /* NSDrawer.h */,
+				06EDDBC12248BFB300C87605 /* NSEPSImageRep.h */,
+				06EDDBBF2248BFB300C87605 /* NSEvent.h */,
+				06EDDB4E2248BFB300C87605 /* NSFileWrapper.h */,
+				06EDDB862248BFB300C87605 /* NSFont.h */,
+				06EDDBAE2248BFB300C87605 /* NSFontDescriptor.h */,
+				06EDDBA62248BFB300C87605 /* NSFontManager.h */,
+				06EDDB882248BFB300C87605 /* NSFontPanel.h */,
+				06EDDB7B2248BFB300C87605 /* NSForm.h */,
+				06EDDB372248BFB300C87605 /* NSFormCell.h */,
+				06EDDBBE2248BFB300C87605 /* NSGestureRecognizer.h */,
+				06EDDB8C2248BFB300C87605 /* NSGlyphGenerator.h */,
+				06EDDBB82248BFB300C87605 /* NSGradient.h */,
+				06EDDB782248BFB300C87605 /* NSGraphics.h */,
+				06EDDB7A2248BFB300C87605 /* NSGraphicsContext.h */,
+				06EDDB2E2248BFB300C87605 /* NSHelpManager.h */,
+				06EDDB5A2248BFB300C87605 /* NSHelpPanel.h */,
+				06EDDB452248BFB300C87605 /* NSImage.h */,
+				06EDDB7C2248BFB300C87605 /* NSImageCell.h */,
+				06EDDB5F2248BFB300C87605 /* NSImageRep.h */,
+				06EDDBA42248BFB300C87605 /* NSImageView.h */,
+				06EDDB3F2248BFB300C87605 /* NSInputManager.h */,
+				06EDDB522248BFB300C87605 /* NSInputServer.h */,
+				06EDDB232248BFB300C87605 /* NSInterfaceStyle.h */,
+				06EDDBBC2248BFB300C87605 /* NSKeyValueBinding.h */,
+				06EDDB2A2248BFB300C87605 /* NSLayoutManager.h */,
+				06EDDBA02248BFB300C87605 /* NSLevelIndicator.h */,
+				06EDDBB22248BFB300C87605 /* NSLevelIndicatorCell.h */,
+				06EDDB5C2248BFB300C87605 /* NSMatrix.h */,
+				06EDDBB72248BFB300C87605 /* NSMenu.h */,
+				06EDDB662248BFB300C87605 /* NSMenuItem.h */,
+				06EDDBA12248BFB300C87605 /* NSMenuItemCell.h */,
+				06EDDB672248BFB300C87605 /* NSMenuView.h */,
+				06EDDB872248BFB300C87605 /* NSMovie.h */,
+				06EDDBC22248BFB300C87605 /* NSMovieView.h */,
+				06EDDB2D2248BFB300C87605 /* NSNib.h */,
+				06EDDB7E2248BFB300C87605 /* NSNibConnector.h */,
+				06EDDB732248BFB300C87605 /* NSNibDeclarations.h */,
+				06EDDB262248BFB300C87605 /* NSNibLoading.h */,
+				06EDDB3D2248BFB300C87605 /* NSObjectController.h */,
+				06EDDB362248BFB300C87605 /* NSOpenGL.h */,
+				06EDDB7F2248BFB300C87605 /* NSOpenGLView.h */,
+				06EDDB572248BFB300C87605 /* NSOpenPanel.h */,
+				06EDDB942248BFB300C87605 /* NSOutlineView.h */,
+				06EDDB4A2248BFB300C87605 /* NSPageLayout.h */,
+				06EDDB652248BFB300C87605 /* NSPanel.h */,
+				06EDDB2F2248BFB300C87605 /* NSParagraphStyle.h */,
+				06EDDB3C2248BFB300C87605 /* NSPasteboard.h */,
+				06EDDB6C2248BFB300C87605 /* NSPasteboardItem.h */,
+				06EDDB702248BFB300C87605 /* NSPopover.h */,
+				06EDDB382248BFB300C87605 /* NSPopUpButton.h */,
+				06EDDB342248BFB300C87605 /* NSPopUpButtonCell.h */,
+				06EDDB9B2248BFB300C87605 /* NSPrinter.h */,
+				06EDDB762248BFB300C87605 /* NSPrintInfo.h */,
+				06EDDBBA2248BFB300C87605 /* NSPrintOperation.h */,
+				06EDDBB52248BFB300C87605 /* NSPrintPanel.h */,
+				06EDDB902248BFB300C87605 /* NSProgressIndicator.h */,
+				06EDDB442248BFB300C87605 /* NSResponder.h */,
+				06EDDB9D2248BFB300C87605 /* NSRulerMarker.h */,
+				06EDDB392248BFB300C87605 /* NSRulerView.h */,
+				06EDDBB42248BFB300C87605 /* NSRunningApplication.h */,
+				06EDDB6B2248BFB300C87605 /* NSSavePanel.h */,
+				06EDDBBD2248BFB300C87605 /* NSScreen.h */,
+				06EDDBA72248BFB300C87605 /* NSScroller.h */,
+				06EDDB842248BFB300C87605 /* NSScrollView.h */,
+				06EDDB852248BFB300C87605 /* NSSearchField.h */,
+				06EDDB8B2248BFB300C87605 /* NSSearchFieldCell.h */,
+				06EDDB512248BFB300C87605 /* NSSecureTextField.h */,
+				06EDDBAD2248BFB300C87605 /* NSSegmentedCell.h */,
+				06EDDB492248BFB300C87605 /* NSSegmentedControl.h */,
+				06EDDB3B2248BFB300C87605 /* NSSelection.h */,
+				06EDDB832248BFB300C87605 /* NSShadow.h */,
+				06EDDB502248BFB300C87605 /* NSSharingService.h */,
+				06EDDB992248BFB300C87605 /* NSSlider.h */,
+				06EDDB422248BFB300C87605 /* NSSliderCell.h */,
+				06EDDBAA2248BFB300C87605 /* NSSound.h */,
+				06EDDB4C2248BFB300C87605 /* NSSpeechSynthesizer.h */,
+				06EDDB6E2248BFB300C87605 /* NSSpellChecker.h */,
+				06EDDBB62248BFB300C87605 /* NSSpellProtocol.h */,
+				06EDDBC32248BFB300C87605 /* NSSpellServer.h */,
+				06EDDB8D2248BFB300C87605 /* NSSplitView.h */,
+				06EDDB802248BFB300C87605 /* NSStatusBar.h */,
+				06EDDB612248BFB300C87605 /* NSStatusItem.h */,
+				06EDDB312248BFB300C87605 /* NSStepper.h */,
+				06EDDB7D2248BFB300C87605 /* NSStepperCell.h */,
+				06EDDBB92248BFB300C87605 /* NSStringDrawing.h */,
+				06EDDB642248BFB300C87605 /* NSTableColumn.h */,
+				06EDDB9C2248BFB300C87605 /* NSTableHeaderCell.h */,
+				06EDDB8E2248BFB300C87605 /* NSTableHeaderView.h */,
+				06EDDB9A2248BFB300C87605 /* NSTableView.h */,
+				06EDDB2B2248BFB300C87605 /* NSTabView.h */,
+				06EDDB4B2248BFB300C87605 /* NSTabViewItem.h */,
+				06EDDB682248BFB300C87605 /* NSText.h */,
+				06EDDB752248BFB300C87605 /* NSTextAlternatives.h */,
+				06EDDBC42248BFB300C87605 /* NSTextAttachment.h */,
+				06EDDB282248BFB300C87605 /* NSTextContainer.h */,
+				06EDDB772248BFB300C87605 /* NSTextField.h */,
+				06EDDB332248BFB300C87605 /* NSTextFieldCell.h */,
+				06EDDB9E2248BFB300C87605 /* NSTextList.h */,
+				06EDDB302248BFB300C87605 /* NSTextStorage.h */,
+				06EDDB8A2248BFB300C87605 /* NSTextTable.h */,
+				06EDDB5B2248BFB300C87605 /* NSTextView.h */,
+				06EDDB962248BFB300C87605 /* NSTokenField.h */,
+				06EDDB3E2248BFB300C87605 /* NSTokenFieldCell.h */,
+				06EDDB6F2248BFB300C87605 /* NSToolbar.h */,
+				06EDDB542248BFB300C87605 /* NSToolbarItem.h */,
+				06EDDB932248BFB300C87605 /* NSToolbarItemGroup.h */,
+				06EDDB2C2248BFB300C87605 /* NSTrackingArea.h */,
+				06EDDBA82248BFB300C87605 /* NSTreeController.h */,
+				06EDDB252248BFB300C87605 /* NSTreeNode.h */,
+				06EDDB5E2248BFB300C87605 /* NSUserDefaultsController.h */,
+				06EDDBAB2248BFB300C87605 /* NSUserInterfaceItemIdentification.h */,
+				06EDDB9F2248BFB300C87605 /* NSUserInterfaceLayout.h */,
+				06EDDB6D2248BFB300C87605 /* NSUserInterfaceValidation.h */,
+				06EDDB4D2248BFB300C87605 /* NSView.h */,
+				06EDDB552248BFB300C87605 /* NSViewController.h */,
+				06EDDB912248BFB300C87605 /* NSVisualEffectView.h */,
+				06EDDB5D2248BFB300C87605 /* NSWindow.h */,
+				06EDDBAC2248BFB300C87605 /* NSWindowController.h */,
+				06EDDB582248BFB300C87605 /* NSWorkspace.h */,
+				06EDDB602248BFB300C87605 /* PSOperators.h */,
+			);
+			name = AppKit;
+			path = "../../gnustep-base-1.25.1/Gui/AppKit";
+			sourceTree = "<group>";
+		};
+		06EDDBC52248BFB300C87605 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				06EDDBC62248BFB300C87605 /* NSBox.m */,
+				06EDDBC72248BFB300C87605 /* NSOutlineView.m */,
+				06EDDBC82248BFB300C87605 /* externs.m */,
+				06EDDBC92248BFB300C87605 /* NSToolbarItemGroup.m */,
+				06EDDBCA2248BFB300C87605 /* NSBitmapImageRep+PNM.m */,
+				06EDDBCB2248BFB300C87605 /* NSCachedImageRep.m */,
+				06EDDBCC2248BFB300C87605 /* NSVisualEffectView.m */,
+				06EDDBCD2248BFB300C87605 /* NSBitmapImageRep+PNG.m */,
+				06EDDBCE2248BFB300C87605 /* GSThemePrintPanels.m */,
+				06EDDBCF2248BFB300C87605 /* NSButton.m */,
+				06EDDBD02248BFB300C87605 /* NSProgressIndicator.m */,
+				06EDDBD12248BFB300C87605 /* NSTableHeaderView.m */,
+				06EDDBD22248BFB300C87605 /* GSCharacterPanel.m */,
+				06EDDBD32248BFB300C87605 /* GNUmakefile */,
+				06EDDBD42248BFB300C87605 /* NSSplitView.m */,
+				06EDDBD52248BFB300C87605 /* GSXibLoading.m */,
+				06EDDBD62248BFB300C87605 /* NSTextTable.m */,
+				06EDDBD72248BFB300C87605 /* NSGlyphGenerator.m */,
+				06EDDBD82248BFB300C87605 /* NSSearchFieldCell.m */,
+				06EDDBD92248BFB300C87605 /* GSVbox.m */,
+				06EDDBDA2248BFB300C87605 /* GSEPSPrintOperation.m */,
+				06EDDBDB2248BFB300C87605 /* GSToolbarCustomizationPalette.h */,
+				06EDDBDC2248BFB300C87605 /* NSFontPanel.m */,
+				06EDDBDD2248BFB300C87605 /* NSMovie.m */,
+				06EDDBDE2248BFB300C87605 /* GSToolTips.h */,
+				06EDDBDF2248BFB300C87605 /* NSCollectionView.m */,
+				06EDDBE02248BFB300C87605 /* GSThemePanel.m */,
+				06EDDBE12248BFB300C87605 /* NSSearchField.m */,
+				06EDDBE22248BFB300C87605 /* NSScrollView.m */,
+				06EDDBE32248BFB300C87605 /* NSFont.m */,
+				06EDDBE42248BFB300C87605 /* NSButtonImageSource.h */,
+				06EDDBE52248BFB300C87605 /* NSTextBlock.m */,
+				06EDDBE62248BFB300C87605 /* NSShadow.m */,
+				06EDDBE72248BFB300C87605 /* NSArrayController.m */,
+				06EDDBE82248BFB300C87605 /* NSToolbarFrameworkPrivate.h */,
+				06EDDBE92248BFB300C87605 /* NSComboBoxCell.m */,
+				06EDDBEA2248BFB300C87605 /* NSOpenGLView.m */,
+				06EDDBEB2248BFB300C87605 /* NSStatusBar.m */,
+				06EDDBEC2248BFB300C87605 /* NSImageCell.m */,
+				06EDDBED2248BFB300C87605 /* NSNibConnector.m */,
+				06EDDBEE2248BFB300C87605 /* NSStepperCell.m */,
+				06EDDBEF2248BFB300C87605 /* GSInfoPanel.m */,
+				06EDDBF02248BFB300C87605 /* GSNibLoading.m */,
+				06EDDBF12248BFB300C87605 /* NSImageView.m */,
+				06EDDBF22248BFB300C87605 /* NSControl.m */,
+				06EDDBF32248BFB300C87605 /* GSThemeTools.m */,
+				06EDDBF42248BFB300C87605 /* NSMenuItemCell.m */,
+				06EDDBF52248BFB300C87605 /* GSNibLoader.m */,
+				06EDDBF62248BFB300C87605 /* GSXibElement.m */,
+				06EDDBF72248BFB300C87605 /* NSColorPanel.m */,
+				06EDDBF82248BFB300C87605 /* Functions.m */,
+				06EDDBF92248BFB300C87605 /* NSLevelIndicator.m */,
+				06EDDBFA2248BFB300C87605 /* GSFastEnumeration.h */,
+				06EDDBFB2248BFB300C87605 /* GSTypesetter.m */,
+				06EDDBFC2248BFB300C87605 /* Source.xcodeproj */,
+				06EDDBFF2248BFB300C87605 /* NSBitmapImageRep+ICNS.h */,
+				06EDDC002248BFB300C87605 /* linking.m */,
+				06EDDC012248BFB300C87605 /* NSBitmapImageRep+JPEG.h */,
+				06EDDC022248BFB400C87605 /* GSKeyBindingAction.m */,
+				06EDDC032248BFB400C87605 /* GSSlideView.m */,
+				06EDDC042248BFB400C87605 /* GSModelLoaderFactory.m */,
+				06EDDC052248BFB400C87605 /* NSTextList.m */,
+				06EDDC062248BFB400C87605 /* NSRulerMarker.m */,
+				06EDDC072248BFB400C87605 /* NSBitmapImageRep+GIF.m */,
+				06EDDC082248BFB400C87605 /* NSTableHeaderCell.m */,
+				06EDDC092248BFB400C87605 /* NSPrinter.m */,
+				06EDDC0A2248BFB400C87605 /* GSXibParser.m */,
+				06EDDC0B2248BFB400C87605 /* NSTableView.m */,
+				06EDDC0C2248BFB400C87605 /* NSBundleAdditions.m */,
+				06EDDC0D2248BFB400C87605 /* GSThemeInspector.m */,
+				06EDDC0E2248BFB400C87605 /* NSColor.m */,
+				06EDDC0F2248BFB400C87605 /* GSHelpManagerPanel.m */,
+				06EDDC102248BFB400C87605 /* NSSlider.m */,
+				06EDDC112248BFB400C87605 /* NSTokenField.m */,
+				06EDDC122248BFB400C87605 /* GSKeyBindingTable.m */,
+				06EDDC132248BFB400C87605 /* GSStandardWindowDecorationView.m */,
+				06EDDC142248BFB400C87605 /* NSLevelIndicatorCell.m */,
+				06EDDC152248BFB400C87605 /* NSDrawer.m */,
+				06EDDC162248BFB400C87605 /* GSGuiPrivate.h */,
+				06EDDC172248BFB400C87605 /* win32-entry.c */,
+				06EDDC182248BFB400C87605 /* NSAnimation.m */,
+				06EDDC192248BFB400C87605 /* NSCollectionViewItem.m */,
+				06EDDC1A2248BFB400C87605 /* GSTrackingRect.m */,
+				06EDDC1B2248BFB400C87605 /* NSTextTableBlock.m */,
+				06EDDC1C2248BFB400C87605 /* NSTextView_actions.m */,
+				06EDDC1D2248BFB400C87605 /* GSPrinting.m */,
+				06EDDC1E2248BFB400C87605 /* GSXibObjectContainer.m */,
+				06EDDC1F2248BFB400C87605 /* GSIconManager.m */,
+				06EDDC202248BFB400C87605 /* GSGModelLoader.m */,
+				06EDDC212248BFB400C87605 /* GSThemeMenu.m */,
+				06EDDC222248BFB400C87605 /* NSFontDescriptor.m */,
+				06EDDC232248BFB400C87605 /* GSThemeOpenSavePanels.m */,
+				06EDDC242248BFB400C87605 /* NSWindowController.m */,
+				06EDDC252248BFB400C87605 /* NSSegmentedCell.m */,
+				06EDDC262248BFB400C87605 /* NSSound.m */,
+				06EDDC272248BFB400C87605 /* GSTextFinder.m */,
+				06EDDC282248BFB400C87605 /* GSGormLoader.m */,
+				06EDDC292248BFB400C87605 /* GSXibKeyedUnarchiver.m */,
+				06EDDC2A2248BFB400C87605 /* NSTreeController.m */,
+				06EDDC2B2248BFB400C87605 /* NSScroller.m */,
+				06EDDC2C2248BFB400C87605 /* GSTheme.m */,
+				06EDDC2D2248BFB400C87605 /* NSColorList.m */,
+				06EDDC2E2248BFB400C87605 /* NSFontManager.m */,
+				06EDDC2F2248BFB400C87605 /* GSTextStorage.h */,
+				06EDDC302248BFB400C87605 /* NSTextAttachment.m */,
+				06EDDC312248BFB400C87605 /* GSThemeDrawing.m */,
+				06EDDC322248BFB400C87605 /* GSHbox.m */,
+				06EDDC332248BFB400C87605 /* NSMovieView.m */,
+				06EDDC342248BFB400C87605 /* NSEPSImageRep.m */,
+				06EDDC352248BFB400C87605 /* GSAutocompleteWindow.h */,
+				06EDDC362248BFB400C87605 /* NSEvent.m */,
+				06EDDC372248BFB400C87605 /* NSBrowserCell.m */,
+				06EDDC382248BFB400C87605 /* NSKeyValueBinding.m */,
+				06EDDC392248BFB400C87605 /* NSGestureRecognizer.m */,
+				06EDDC3A2248BFB400C87605 /* NSScreen.m */,
+				06EDDC3B2248BFB400C87605 /* NSComboBox.m */,
+				06EDDC3C2248BFB400C87605 /* nsimage-tiff.h */,
+				06EDDC3D2248BFB400C87605 /* GSAnimator.m */,
+				06EDDC3E2248BFB400C87605 /* NSStringDrawing.m */,
+				06EDDC3F2248BFB400C87605 /* GNUmakefile.postamble */,
+				06EDDC402248BFB400C87605 /* NSPrintOperation.m */,
+				06EDDC412248BFB400C87605 /* NSGradient.m */,
+				06EDDC422248BFB400C87605 /* NSMenu.m */,
+				06EDDC432248BFB400C87605 /* NSRunningApplication.m */,
+				06EDDC442248BFB400C87605 /* NSPrintPanel.m */,
+				06EDDC452248BFB400C87605 /* NSClipView.m */,
+				06EDDC462248BFB400C87605 /* NSPopUpButtonCell.m */,
+				06EDDC472248BFB400C87605 /* NSTextFieldCell.m */,
+				06EDDC482248BFB400C87605 /* GSDragView.m */,
+				06EDDC492248BFB400C87605 /* NSButtonImageSource.m */,
+				06EDDC4A2248BFB400C87605 /* NSTextStorage.m */,
+				06EDDC4B2248BFB400C87605 /* NSStepper.m */,
+				06EDDC4C2248BFB400C87605 /* NSParagraphStyle.m */,
+				06EDDC4D2248BFB400C87605 /* GSToolTips.m */,
+				06EDDC4E2248BFB400C87605 /* NSHelpManager.m */,
+				06EDDC4F2248BFB400C87605 /* GSToolbarCustomizationPalette.m */,
+				06EDDC502248BFB400C87605 /* NSNib.m */,
+				06EDDC512248BFB400C87605 /* NSTrackingArea.m */,
+				06EDDC522248BFB400C87605 /* NSLayoutManager.m */,
+				06EDDC532248BFB400C87605 /* NSTabView.m */,
+				06EDDC542248BFB400C87605 /* NSColorSpace.m */,
+				06EDDC552248BFB400C87605 /* DocMakefile */,
+				06EDDC562248BFB400C87605 /* NSAccessibility.m */,
+				06EDDC572248BFB400C87605 /* NSInterfaceStyle.m */,
+				06EDDC582248BFB400C87605 /* NSAttributedString.m */,
+				06EDDC592248BFB400C87605 /* NSTreeNode.m */,
+				06EDDC5A2248BFB400C87605 /* NSTextContainer.m */,
+				06EDDC5B2248BFB400C87605 /* libgnustep-gui.def */,
+				06EDDC5C2248BFB400C87605 /* NSCell.m */,
+				06EDDC5D2248BFB400C87605 /* NSOpenGLPixelFormat.m */,
+				06EDDC5E2248BFB400C87605 /* NSBitmapImageRep+PNG.h */,
+				06EDDC5F2248BFB400C87605 /* NSDocument.m */,
+				06EDDC602248BFB400C87605 /* CompatibilityHeaders.make */,
+				06EDDC612248BFB400C87605 /* win32-def.top */,
+				06EDDC622248BFB400C87605 /* NSAnimationContext.m */,
+				06EDDC632248BFB400C87605 /* GSThemeWindow.m */,
+				06EDDC642248BFB400C87605 /* NSNibAXRelationshipConnector.m */,
+				06EDDC652248BFB400C87605 /* NSBitmapImageRep+PNM.h */,
+				06EDDC662248BFB400C87605 /* NSDataLinkPanel.m */,
+				06EDDC672248BFB400C87605 /* NSBitmapImageRepPrivate.h */,
+				06EDDC682248BFB400C87605 /* NSFileWrapper.m */,
+				06EDDC692248BFB400C87605 /* NSNibBindingConnector.m */,
+				06EDDC6A2248BFB400C87605 /* GSToolbarView.m */,
+				06EDDC6B2248BFB400C87605 /* tiff.m */,
+				06EDDC6C2248BFB400C87605 /* GSPDFPrintOperation.m */,
+				06EDDC6D2248BFB400C87605 /* NSTabViewItem.m */,
+				06EDDC6E2248BFB400C87605 /* GSImageMagickImageRep.m */,
+				06EDDC6F2248BFB400C87605 /* NSView.m */,
+				06EDDC702248BFB400C87605 /* NSSpeechSynthesizer.m */,
+				06EDDC712248BFB400C87605 /* NSPageLayout.m */,
+				06EDDC722248BFB400C87605 /* NSSegmentedControl.m */,
+				06EDDC732248BFB400C87605 /* NSController.m */,
+				06EDDC742248BFB400C87605 /* NSColorWell.m */,
+				06EDDC752248BFB400C87605 /* GSThemePrivate.h */,
+				06EDDC762248BFB400C87605 /* NSAlert.m */,
+				06EDDC772248BFB400C87605 /* NSBitmapImageRep+GIF.h */,
+				06EDDC782248BFB400C87605 /* NSImage.m */,
+				06EDDC792248BFB400C87605 /* NSResponder.m */,
+				06EDDC7A2248BFB400C87605 /* NSApplication.m */,
+				06EDDC7B2248BFB400C87605 /* GSKeyBindingAction.h */,
+				06EDDC7C2248BFB400C87605 /* NSBezierPath.m */,
+				06EDDC7D2248BFB400C87605 /* NSBitmapImageRep+JPEG.m */,
+				06EDDC7E2248BFB400C87605 /* NSBitmapImageRep+ICNS.m */,
+				06EDDC7F2248BFB400C87605 /* NSDataLink.m */,
+				06EDDC802248BFB400C87605 /* GSSlideView.h */,
+				06EDDC812248BFB400C87605 /* NSSliderCell.m */,
+				06EDDC822248BFB400C87605 /* NSNibAXAttributeConnector.m */,
+				06EDDC832248BFB400C87605 /* NSTokenFieldCell.m */,
+				06EDDC842248BFB400C87605 /* NSObjectController.m */,
+				06EDDC852248BFB400C87605 /* NSInputManager.m */,
+				06EDDC862248BFB400C87605 /* NSRulerView.m */,
+				06EDDC872248BFB400C87605 /* NSBrowser.m */,
+				06EDDC882248BFB400C87605 /* NSSelection.m */,
+				06EDDC892248BFB400C87605 /* NSPasteboard.m */,
+				06EDDC8A2248BFB400C87605 /* NSPopUpButton.m */,
+				06EDDC8B2248BFB400C87605 /* GSHorizontalTypesetter.m */,
+				06EDDC8C2248BFB400C87605 /* NSFormCell.m */,
+				06EDDC8D2248BFB400C87605 /* GSGormLoading.m */,
+				06EDDC8E2248BFB400C87605 /* NSMenuItem.m */,
+				06EDDC8F2248BFB400C87605 /* NSTableColumn.m */,
+				06EDDC902248BFB400C87605 /* GSTextStorage.m */,
+				06EDDC912248BFB400C87605 /* NSPanel.m */,
+				06EDDC922248BFB400C87605 /* NSDataLinkManager.m */,
+				06EDDC932248BFB400C87605 /* GSTextFinder.h */,
+				06EDDC942248BFB400C87605 /* NSStatusItem.m */,
+				06EDDC952248BFB400C87605 /* GSServicesManager.m */,
+				06EDDC962248BFB400C87605 /* GSDisplayServer.m */,
+				06EDDC972248BFB400C87605 /* NSUserDefaultsController.m */,
+				06EDDC982248BFB400C87605 /* NSImageRep.m */,
+				06EDDC992248BFB400C87605 /* NSWindow.m */,
+				06EDDC9A2248BFB400C87605 /* GSIconManager.h */,
+				06EDDC9B2248BFB400C87605 /* NSMatrix.m */,
+				06EDDC9C2248BFB400C87605 /* NSTextView.m */,
+				06EDDC9D2248BFB400C87605 /* NSWorkspace.m */,
+				06EDDC9E2248BFB400C87605 /* NSHelpPanel.m */,
+				06EDDC9F2248BFB400C87605 /* NSViewController.m */,
+				06EDDCA02248BFB400C87605 /* GSLayoutManager.m */,
+				06EDDCA12248BFB400C87605 /* NSCursor.m */,
+				06EDDCA22248BFB400C87605 /* NSOpenPanel.m */,
+				06EDDCA32248BFB400C87605 /* NSToolbarItem.m */,
+				06EDDCA42248BFB400C87605 /* GSFontInfo.m */,
+				06EDDCA52248BFB400C87605 /* GSMemoryPanel.m */,
+				06EDDCA62248BFB400C87605 /* NSCustomImageRep.m */,
+				06EDDCA72248BFB400C87605 /* NSInputServer.m */,
+				06EDDCA82248BFB400C87605 /* NSSecureTextField.m */,
+				06EDDCA92248BFB400C87605 /* NSSharingService.m */,
+				06EDDCAA2248BFB400C87605 /* GSHelpAttachment.m */,
+				06EDDCAB2248BFB400C87605 /* GSTitleView.m */,
+				06EDDCAC2248BFB400C87605 /* GSKeyBindingTable.h */,
+				06EDDCAD2248BFB400C87605 /* NSForm.m */,
+				06EDDCAE2248BFB400C87605 /* NSGraphicsContext.m */,
+				06EDDCAF2248BFB400C87605 /* NSViewPrivate.h */,
+				06EDDCB02248BFB400C87605 /* GNUmakefile.preamble */,
+				06EDDCB12248BFB400C87605 /* NSButtonCell.m */,
+				06EDDCB22248BFB400C87605 /* GSGhostscriptImageRep.m */,
+				06EDDCB32248BFB400C87605 /* NSTextField.m */,
+				06EDDCB42248BFB400C87605 /* GSXibLoader.m */,
+				06EDDCB52248BFB400C87605 /* NSPrintInfo.m */,
+				06EDDCB62248BFB400C87605 /* .cvsignore */,
+				06EDDCB72248BFB400C87605 /* NSDocumentFrameworkPrivate.h */,
+				06EDDCB82248BFB400C87605 /* NSTextAlternatives.m */,
+				06EDDCB92248BFB400C87605 /* NSActionCell.m */,
+				06EDDCBA2248BFB400C87605 /* GSWindowDecorationView.m */,
+				06EDDCBB2248BFB400C87605 /* GSBindingHelpers.h */,
+				06EDDCBC2248BFB400C87605 /* GSPrintOperation.m */,
+				06EDDCBD2248BFB400C87605 /* NSAffineTransform.m */,
+				06EDDCBE2248BFB400C87605 /* NSDocumentController.m */,
+				06EDDCBF2248BFB400C87605 /* NSToolbar.m */,
+				06EDDCC02248BFB400C87605 /* NSPopover.m */,
+				06EDDCC12248BFB400C87605 /* GSTable.m */,
+				06EDDCC22248BFB400C87605 /* NSSpellChecker.m */,
+				06EDDCC32248BFB400C87605 /* NSPasteboardItem.m */,
+				06EDDCC42248BFB400C87605 /* GSAutocompleteWindow.m */,
+				06EDDCC52248BFB400C87605 /* NSBitmapImageRep.m */,
+				06EDDCC62248BFB400C87605 /* NSSavePanel.m */,
+				06EDDCC72248BFB400C87605 /* NSOpenGLContext.m */,
+				06EDDCC82248BFB400C87605 /* NSText.m */,
+				06EDDCC92248BFB400C87605 /* NSColorPicker.m */,
+				06EDDCCA2248BFB400C87605 /* NSMenuView.m */,
+			);
+			name = Source;
+			path = "../../gnustep-base-1.25.1/Gui/Source";
+			sourceTree = "<group>";
+		};
+		06EDDBFD2248BFB300C87605 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		06EDDA082248BFA300C87605 /* Appkit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 06EDDA102248BFA300C87605 /* Build configuration list for PBXNativeTarget "Appkit" */;
+			buildPhases = (
+				06EDDA052248BFA300C87605 /* Sources */,
+				06EDDA062248BFA300C87605 /* Frameworks */,
+				06EDDA072248BFA300C87605 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Appkit;
+			productName = Appkit;
+			productReference = 06EDDA092248BFA300C87605 /* Appkit */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		06EDDA012248BFA300C87605 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = JustinLau;
+				TargetAttributes = {
+					06EDDA082248BFA300C87605 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+				};
+			};
+			buildConfigurationList = 06EDDA042248BFA300C87605 /* Build configuration list for PBXProject "Appkit" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 06EDDA002248BFA300C87605;
+			productRefGroup = 06EDDA0A2248BFA300C87605 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 06EDDBFD2248BFB300C87605 /* Products */;
+					ProjectRef = 06EDDBFC2248BFB300C87605 /* Source.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				06EDDA082248BFA300C87605 /* Appkit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		06EDDA052248BFA300C87605 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				06EDDCF02248BFB400C87605 /* GSInfoPanel.m in Sources */,
+				06EDDD7D2248BFB500C87605 /* NSDataLinkManager.m in Sources */,
+				06EDDCE92248BFB400C87605 /* NSArrayController.m in Sources */,
+				06EDDD922248BFB500C87605 /* NSSharingService.m in Sources */,
+				06EDDD112248BFB400C87605 /* win32-entry.c in Sources */,
+				06EDDCD72248BFB400C87605 /* NSTableHeaderView.m in Sources */,
+				06EDDD392248BFB400C87605 /* NSRunningApplication.m in Sources */,
+				06EDDD2A2248BFB400C87605 /* GSThemeDrawing.m in Sources */,
+				06EDDD622248BFB500C87605 /* NSController.m in Sources */,
+				06EDDDAB2248BFB500C87605 /* NSText.m in Sources */,
+				06EDDD1E2248BFB400C87605 /* NSWindowController.m in Sources */,
+				06EDDD752248BFB500C87605 /* NSPopUpButton.m in Sources */,
+				06EDDD1A2248BFB400C87605 /* GSGModelLoader.m in Sources */,
+				06EDDCCD2248BFB400C87605 /* NSOutlineView.m in Sources */,
+				06EDDD682248BFB500C87605 /* NSBezierPath.m in Sources */,
+				06EDDD6E2248BFB500C87605 /* NSTokenFieldCell.m in Sources */,
+				06EDDD942248BFB500C87605 /* GSTitleView.m in Sources */,
+				06EDDD892248BFB500C87605 /* GSLayoutManager.m in Sources */,
+				06EDDD1D2248BFB400C87605 /* GSThemeOpenSavePanels.m in Sources */,
+				06EDDD8F2248BFB500C87605 /* NSCustomImageRep.m in Sources */,
+				06EDDD312248BFB400C87605 /* NSGestureRecognizer.m in Sources */,
+				06EDDCD82248BFB400C87605 /* GSCharacterPanel.m in Sources */,
+				06EDDD092248BFB400C87605 /* NSColor.m in Sources */,
+				06EDDCD02248BFB400C87605 /* NSBitmapImageRep+PNM.m in Sources */,
+				06EDDD772248BFB500C87605 /* NSFormCell.m in Sources */,
+				06EDDD192248BFB400C87605 /* GSIconManager.m in Sources */,
+				06EDDD632248BFB500C87605 /* NSColorWell.m in Sources */,
+				06EDDD702248BFB500C87605 /* NSInputManager.m in Sources */,
+				06EDDD882248BFB500C87605 /* NSViewController.m in Sources */,
+				06EDDD052248BFB400C87605 /* GSXibParser.m in Sources */,
+				06EDDCEA2248BFB400C87605 /* NSComboBoxCell.m in Sources */,
+				06EDDD202248BFB400C87605 /* NSSound.m in Sources */,
+				06EDDCE72248BFB400C87605 /* NSTextBlock.m in Sources */,
+				06EDDCEB2248BFB400C87605 /* NSOpenGLView.m in Sources */,
+				06EDDD182248BFB400C87605 /* GSXibObjectContainer.m in Sources */,
+				06EDDD7E2248BFB500C87605 /* NSStatusItem.m in Sources */,
+				06EDDD7B2248BFB500C87605 /* GSTextStorage.m in Sources */,
+				06EDDD422248BFB500C87605 /* NSParagraphStyle.m in Sources */,
+				06EDDCDB2248BFB400C87605 /* NSTextTable.m in Sources */,
+				06EDDD6F2248BFB500C87605 /* NSObjectController.m in Sources */,
+				06EDDD5D2248BFB500C87605 /* GSImageMagickImageRep.m in Sources */,
+				06EDDDA02248BFB500C87605 /* NSAffineTransform.m in Sources */,
+				06EDDD982248BFB500C87605 /* GSGhostscriptImageRep.m in Sources */,
+				06EDDD542248BFB500C87605 /* GSThemeWindow.m in Sources */,
+				06EDDD082248BFB400C87605 /* GSThemeInspector.m in Sources */,
+				06EDDD732248BFB500C87605 /* NSSelection.m in Sources */,
+				06EDDD9A2248BFB500C87605 /* GSXibLoader.m in Sources */,
+				06EDDD432248BFB500C87605 /* GSToolTips.m in Sources */,
+				06EDDD132248BFB400C87605 /* NSCollectionViewItem.m in Sources */,
+				06EDDCE22248BFB400C87605 /* NSCollectionView.m in Sources */,
+				06EDDD6B2248BFB500C87605 /* NSDataLink.m in Sources */,
+				06EDDD442248BFB500C87605 /* NSHelpManager.m in Sources */,
+				06EDDCDA2248BFB400C87605 /* GSXibLoading.m in Sources */,
+				06EDDD762248BFB500C87605 /* GSHorizontalTypesetter.m in Sources */,
+				06EDDCF52248BFB400C87605 /* NSMenuItemCell.m in Sources */,
+				06EDDD002248BFB400C87605 /* NSTextList.m in Sources */,
+				06EDDD272248BFB400C87605 /* NSColorList.m in Sources */,
+				06EDDD2D2248BFB400C87605 /* NSEPSImageRep.m in Sources */,
+				06EDDCD42248BFB400C87605 /* GSThemePrintPanels.m in Sources */,
+				06EDDDA22248BFB500C87605 /* NSToolbar.m in Sources */,
+				06EDDCE32248BFB400C87605 /* GSThemePanel.m in Sources */,
+				06EDDCE82248BFB400C87605 /* NSShadow.m in Sources */,
+				06EDDCEC2248BFB400C87605 /* NSStatusBar.m in Sources */,
+				06EDDD3F2248BFB500C87605 /* NSButtonImageSource.m in Sources */,
+				06EDDD022248BFB400C87605 /* NSBitmapImageRep+GIF.m in Sources */,
+				06EDDD4B2248BFB500C87605 /* NSAccessibility.m in Sources */,
+				06EDDD0D2248BFB400C87605 /* GSKeyBindingTable.m in Sources */,
+				06EDDD532248BFB500C87605 /* NSAnimationContext.m in Sources */,
+				06EDDD7F2248BFB500C87605 /* GSServicesManager.m in Sources */,
+				06EDDCCF2248BFB400C87605 /* NSToolbarItemGroup.m in Sources */,
+				06EDDD6C2248BFB500C87605 /* NSSliderCell.m in Sources */,
+				06EDDD282248BFB400C87605 /* NSFontManager.m in Sources */,
+				06EDDD812248BFB500C87605 /* NSUserDefaultsController.m in Sources */,
+				06EDDCF92248BFB400C87605 /* Functions.m in Sources */,
+				06EDDD852248BFB500C87605 /* NSTextView.m in Sources */,
+				06EDDCCE2248BFB400C87605 /* externs.m in Sources */,
+				06EDDCED2248BFB400C87605 /* NSImageCell.m in Sources */,
+				06EDDD642248BFB500C87605 /* NSAlert.m in Sources */,
+				06EDDD2E2248BFB400C87605 /* NSEvent.m in Sources */,
+				06EDDD6D2248BFB500C87605 /* NSNibAXAttributeConnector.m in Sources */,
+				06EDDCD52248BFB400C87605 /* NSButton.m in Sources */,
+				06EDDD512248BFB500C87605 /* NSOpenGLPixelFormat.m in Sources */,
+				06EDDCEF2248BFB400C87605 /* NSStepperCell.m in Sources */,
+				06EDDD452248BFB500C87605 /* GSToolbarCustomizationPalette.m in Sources */,
+				06EDDD1F2248BFB400C87605 /* NSSegmentedCell.m in Sources */,
+				06EDDD012248BFB400C87605 /* NSRulerMarker.m in Sources */,
+				06EDDCFF2248BFB400C87605 /* GSModelLoaderFactory.m in Sources */,
+				06EDDDA12248BFB500C87605 /* NSDocumentController.m in Sources */,
+				06EDDDAA2248BFB500C87605 /* NSOpenGLContext.m in Sources */,
+				06EDDD5F2248BFB500C87605 /* NSSpeechSynthesizer.m in Sources */,
+				06EDDD102248BFB400C87605 /* NSDrawer.m in Sources */,
+				06EDDD572248BFB500C87605 /* NSFileWrapper.m in Sources */,
+				06EDDD962248BFB500C87605 /* NSGraphicsContext.m in Sources */,
+				06EDDD522248BFB500C87605 /* NSDocument.m in Sources */,
+				06EDDD4F2248BFB500C87605 /* NSTextContainer.m in Sources */,
+				06EDDD8D2248BFB500C87605 /* GSFontInfo.m in Sources */,
+				06EDDD5C2248BFB500C87605 /* NSTabViewItem.m in Sources */,
+				06EDDD4A2248BFB500C87605 /* NSColorSpace.m in Sources */,
+				06EDDD662248BFB500C87605 /* NSResponder.m in Sources */,
+				06EDDDA72248BFB500C87605 /* GSAutocompleteWindow.m in Sources */,
+				06EDDD4D2248BFB500C87605 /* NSAttributedString.m in Sources */,
+				06EDDD412248BFB500C87605 /* NSStepper.m in Sources */,
+				06EDDD952248BFB500C87605 /* NSForm.m in Sources */,
+				06EDDD652248BFB500C87605 /* NSImage.m in Sources */,
+				06EDDD042248BFB400C87605 /* NSPrinter.m in Sources */,
+				06EDDD9B2248BFB500C87605 /* NSPrintInfo.m in Sources */,
+				06EDDD4E2248BFB500C87605 /* NSTreeNode.m in Sources */,
+				06EDDD842248BFB500C87605 /* NSMatrix.m in Sources */,
+				06EDDD742248BFB500C87605 /* NSPasteboard.m in Sources */,
+				06EDDCF42248BFB400C87605 /* GSThemeTools.m in Sources */,
+				06EDDDA52248BFB500C87605 /* NSSpellChecker.m in Sources */,
+				06EDDD292248BFB400C87605 /* NSTextAttachment.m in Sources */,
+				06EDDD672248BFB500C87605 /* NSApplication.m in Sources */,
+				06EDDD0F2248BFB400C87605 /* NSLevelIndicatorCell.m in Sources */,
+				06EDDD332248BFB400C87605 /* NSComboBox.m in Sources */,
+				06EDDD372248BFB400C87605 /* NSGradient.m in Sources */,
+				06EDDCF12248BFB400C87605 /* GSNibLoading.m in Sources */,
+				06EDDDA82248BFB500C87605 /* NSBitmapImageRep.m in Sources */,
+				06EDDD792248BFB500C87605 /* NSMenuItem.m in Sources */,
+				06EDDD862248BFB500C87605 /* NSWorkspace.m in Sources */,
+				06EDDD3A2248BFB500C87605 /* NSPrintPanel.m in Sources */,
+				06EDDD6A2248BFB500C87605 /* NSBitmapImageRep+ICNS.m in Sources */,
+				06EDDD4C2248BFB500C87605 /* NSInterfaceStyle.m in Sources */,
+				06EDDD402248BFB500C87605 /* NSTextStorage.m in Sources */,
+				06EDDD872248BFB500C87605 /* NSHelpPanel.m in Sources */,
+				06EDDD722248BFB500C87605 /* NSBrowser.m in Sources */,
+				06EDDD8B2248BFB500C87605 /* NSOpenPanel.m in Sources */,
+				06EDDD5A2248BFB500C87605 /* tiff.m in Sources */,
+				06EDDD2B2248BFB400C87605 /* GSHbox.m in Sources */,
+				06EDDCD32248BFB400C87605 /* NSBitmapImageRep+PNG.m in Sources */,
+				06EDDD1C2248BFB400C87605 /* NSFontDescriptor.m in Sources */,
+				06EDDD222248BFB400C87605 /* GSGormLoader.m in Sources */,
+				06EDDD932248BFB500C87605 /* GSHelpAttachment.m in Sources */,
+				06EDDD072248BFB400C87605 /* NSBundleAdditions.m in Sources */,
+				06EDDD8E2248BFB500C87605 /* GSMemoryPanel.m in Sources */,
+				06EDDD342248BFB400C87605 /* GSAnimator.m in Sources */,
+				06EDDD712248BFB500C87605 /* NSRulerView.m in Sources */,
+				06EDDD9F2248BFB500C87605 /* GSPrintOperation.m in Sources */,
+				06EDDDA32248BFB500C87605 /* NSPopover.m in Sources */,
+				06EDDD5B2248BFB500C87605 /* GSPDFPrintOperation.m in Sources */,
+				06EDDCF22248BFB400C87605 /* NSImageView.m in Sources */,
+				06EDDD3B2248BFB500C87605 /* NSClipView.m in Sources */,
+				06EDDD822248BFB500C87605 /* NSImageRep.m in Sources */,
+				06EDDCEE2248BFB400C87605 /* NSNibConnector.m in Sources */,
+				06EDDCD22248BFB400C87605 /* NSVisualEffectView.m in Sources */,
+				06EDDCDE2248BFB400C87605 /* GSVbox.m in Sources */,
+				06EDDCFE2248BFB400C87605 /* GSSlideView.m in Sources */,
+				06EDDDA92248BFB500C87605 /* NSSavePanel.m in Sources */,
+				06EDDD7A2248BFB500C87605 /* NSTableColumn.m in Sources */,
+				06EDDD252248BFB400C87605 /* NSScroller.m in Sources */,
+				06EDDD502248BFB500C87605 /* NSCell.m in Sources */,
+				06EDDCE62248BFB400C87605 /* NSFont.m in Sources */,
+				06EDDD9D2248BFB500C87605 /* NSActionCell.m in Sources */,
+				06EDDD142248BFB400C87605 /* GSTrackingRect.m in Sources */,
+				06EDDD492248BFB500C87605 /* NSTabView.m in Sources */,
+				06EDDDA62248BFB500C87605 /* NSPasteboardItem.m in Sources */,
+				06EDDD262248BFB400C87605 /* GSTheme.m in Sources */,
+				06EDDD8A2248BFB500C87605 /* NSCursor.m in Sources */,
+				06EDDD152248BFB400C87605 /* NSTextTableBlock.m in Sources */,
+				06EDDD972248BFB500C87605 /* NSButtonCell.m in Sources */,
+				06EDDD902248BFB500C87605 /* NSInputServer.m in Sources */,
+				06EDDCF72248BFB400C87605 /* GSXibElement.m in Sources */,
+				06EDDCDF2248BFB400C87605 /* GSEPSPrintOperation.m in Sources */,
+				06EDDD212248BFB400C87605 /* GSTextFinder.m in Sources */,
+				06EDDCD12248BFB400C87605 /* NSCachedImageRep.m in Sources */,
+				06EDDD032248BFB400C87605 /* NSTableHeaderCell.m in Sources */,
+				06EDDD3E2248BFB500C87605 /* GSDragView.m in Sources */,
+				06EDDD802248BFB500C87605 /* GSDisplayServer.m in Sources */,
+				06EDDD9E2248BFB500C87605 /* GSWindowDecorationView.m in Sources */,
+				06EDDCDD2248BFB400C87605 /* NSSearchFieldCell.m in Sources */,
+				06EDDCFA2248BFB400C87605 /* NSLevelIndicator.m in Sources */,
+				06EDDCCC2248BFB400C87605 /* NSBox.m in Sources */,
+				06EDDD3C2248BFB500C87605 /* NSPopUpButtonCell.m in Sources */,
+				06EDDCF82248BFB400C87605 /* NSColorPanel.m in Sources */,
+				06EDDD592248BFB500C87605 /* GSToolbarView.m in Sources */,
+				06EDDA0D2248BFA300C87605 /* main.m in Sources */,
+				06EDDCE12248BFB400C87605 /* NSMovie.m in Sources */,
+				06EDDDA42248BFB500C87605 /* GSTable.m in Sources */,
+				06EDDD362248BFB400C87605 /* NSPrintOperation.m in Sources */,
+				06EDDD3D2248BFB500C87605 /* NSTextFieldCell.m in Sources */,
+				06EDDD322248BFB400C87605 /* NSScreen.m in Sources */,
+				06EDDCDC2248BFB400C87605 /* NSGlyphGenerator.m in Sources */,
+				06EDDCFB2248BFB400C87605 /* GSTypesetter.m in Sources */,
+				06EDDD172248BFB400C87605 /* GSPrinting.m in Sources */,
+				06EDDD352248BFB400C87605 /* NSStringDrawing.m in Sources */,
+				06EDDD122248BFB400C87605 /* NSAnimation.m in Sources */,
+				06EDDD0E2248BFB400C87605 /* GSStandardWindowDecorationView.m in Sources */,
+				06EDDD2C2248BFB400C87605 /* NSMovieView.m in Sources */,
+				06EDDCFD2248BFB400C87605 /* GSKeyBindingAction.m in Sources */,
+				06EDDD602248BFB500C87605 /* NSPageLayout.m in Sources */,
+				06EDDCF32248BFB400C87605 /* NSControl.m in Sources */,
+				06EDDD5E2248BFB500C87605 /* NSView.m in Sources */,
+				06EDDDAC2248BFB500C87605 /* NSColorPicker.m in Sources */,
+				06EDDD472248BFB500C87605 /* NSTrackingArea.m in Sources */,
+				06EDDD992248BFB500C87605 /* NSTextField.m in Sources */,
+				06EDDD9C2248BFB500C87605 /* NSTextAlternatives.m in Sources */,
+				06EDDD0B2248BFB400C87605 /* NSSlider.m in Sources */,
+				06EDDD302248BFB400C87605 /* NSKeyValueBinding.m in Sources */,
+				06EDDCE52248BFB400C87605 /* NSScrollView.m in Sources */,
+				06EDDD0C2248BFB400C87605 /* NSTokenField.m in Sources */,
+				06EDDD912248BFB500C87605 /* NSSecureTextField.m in Sources */,
+				06EDDCFC2248BFB400C87605 /* linking.m in Sources */,
+				06EDDD382248BFB400C87605 /* NSMenu.m in Sources */,
+				06EDDD162248BFB400C87605 /* NSTextView_actions.m in Sources */,
+				06EDDD462248BFB500C87605 /* NSNib.m in Sources */,
+				06EDDD482248BFB500C87605 /* NSLayoutManager.m in Sources */,
+				06EDDCD92248BFB400C87605 /* NSSplitView.m in Sources */,
+				06EDDD1B2248BFB400C87605 /* GSThemeMenu.m in Sources */,
+				06EDDD582248BFB500C87605 /* NSNibBindingConnector.m in Sources */,
+				06EDDD2F2248BFB400C87605 /* NSBrowserCell.m in Sources */,
+				06EDDD832248BFB500C87605 /* NSWindow.m in Sources */,
+				06EDDD782248BFB500C87605 /* GSGormLoading.m in Sources */,
+				06EDDD7C2248BFB500C87605 /* NSPanel.m in Sources */,
+				06EDDDAD2248BFB500C87605 /* NSMenuView.m in Sources */,
+				06EDDCE02248BFB400C87605 /* NSFontPanel.m in Sources */,
+				06EDDD062248BFB400C87605 /* NSTableView.m in Sources */,
+				06EDDD8C2248BFB500C87605 /* NSToolbarItem.m in Sources */,
+				06EDDD242248BFB400C87605 /* NSTreeController.m in Sources */,
+				06EDDD552248BFB500C87605 /* NSNibAXRelationshipConnector.m in Sources */,
+				06EDDCD62248BFB400C87605 /* NSProgressIndicator.m in Sources */,
+				06EDDD692248BFB500C87605 /* NSBitmapImageRep+JPEG.m in Sources */,
+				06EDDD612248BFB500C87605 /* NSSegmentedControl.m in Sources */,
+				06EDDD232248BFB400C87605 /* GSXibKeyedUnarchiver.m in Sources */,
+				06EDDD0A2248BFB400C87605 /* GSHelpManagerPanel.m in Sources */,
+				06EDDD562248BFB500C87605 /* NSDataLinkPanel.m in Sources */,
+				06EDDCF62248BFB400C87605 /* GSNibLoader.m in Sources */,
+				06EDDCE42248BFB400C87605 /* NSSearchField.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		06EDDA0E2248BFA300C87605 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		06EDDA0F2248BFA300C87605 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		06EDDA112248BFA300C87605 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TE2958KSXV;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		06EDDA122248BFA300C87605 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TE2958KSXV;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		06EDDA042248BFA300C87605 /* Build configuration list for PBXProject "Appkit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				06EDDA0E2248BFA300C87605 /* Debug */,
+				06EDDA0F2248BFA300C87605 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		06EDDA102248BFA300C87605 /* Build configuration list for PBXNativeTarget "Appkit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				06EDDA112248BFA300C87605 /* Debug */,
+				06EDDA122248BFA300C87605 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 06EDDA012248BFA300C87605 /* Project object */;
+}

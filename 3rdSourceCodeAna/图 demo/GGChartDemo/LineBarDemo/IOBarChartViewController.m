@@ -25,12 +25,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     self.title = @"IOBarChart";
-    
+    [self addBarChat];
+    [self addAnalogBtn];
+}
+
+- (void)addBarChat {
     _barData = [[BarData alloc] init];
-    _barData.barWidth = GG_SIZE_CONVERT(25);
-    _barData.roundNumber = @0;
+    _barData.barWidth = GG_SIZE_CONVERT(20);
+    _barData.roundNumber = @2;
     _barData.dataAry = @[@-2225.6, @-2563.1, @531.4, @839.4, @-897.0, @1500];
     
     _barData.dataFormatter = @"%.2f";
@@ -49,12 +52,10 @@
     _barDataSet.gridConfig.bottomLableAxis.drawStringAxisCenter = YES;
     
     [_barDataSet setBarColorsAtIndexPath:^UIColor *(NSIndexPath * index, NSNumber * number) {
-        
         return number.floatValue > 0 ? RGB(241, 73, 81) : RGB(30, 191, 97);
     }];
     
     [_barDataSet setStringColorForValue:^UIColor *(CGFloat value) {
-        
         return value > 0 ? RGB(241, 73, 81) : RGB(30, 191, 97);
     }];
     
@@ -64,7 +65,9 @@
     
     [_barChart drawBarChart];
     [_barChart startAnimationsWithType:BarAnimationRiseType duration:.5f];
-    
+}
+
+- (void)addAnalogBtn {
     UIButton * btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn setBackgroundColor:[UIColor redColor]];
     [btn setFrame:CGRectMake(10, 400, 100, 50)];
@@ -78,7 +81,7 @@
     [btn setTitle:@"模拟数据二" forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(analogDataSecond) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
-
+    
     btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn setBackgroundColor:[UIColor redColor]];
     [btn setFrame:CGRectMake(230, 400, 100, 50)];
@@ -87,11 +90,11 @@
     [self.view addSubview:btn];
 }
 
-- (void)analogDataFirst
+- (void)analogDataFirst // analog 模拟
 {
     _barData.dataAry = @[@2225.6, @2563.1, @531.4, @839.4, @107.4, @1500];
     
-    [_barChart drawBarChart];
+    [_barChart drawBarChart]; // _barChart 是一个 UIView 类.
 }
 
 - (void)analogDataSecond
