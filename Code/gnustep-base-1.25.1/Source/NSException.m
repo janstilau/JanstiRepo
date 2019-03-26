@@ -590,24 +590,23 @@ static HANDLE	hProcess = 0;
 - (NSString*) description
 {
   NSMutableString *result;
-  NSArray *s;
+  NSArray *symbols;
   int i;
   int n;
 
   result = [NSMutableString string];
-  s = [self symbols];
-  n = [s count];
+  symbols = [self symbols];
+  n = [symbols count];
   for (i = 0; i < n; i++)
     {
-      NSString	*line = [s objectAtIndex: i];
-
+      NSString	*line = [symbols objectAtIndex: i];
       [result appendFormat: @"%3d: %@\n", i, line];
     }
   return result;
 }
 
 // grab the current stack 
-- (id) init
+- (id) init // 没看懂, 不过应该在 init 的时候, 可以记录调用堆栈.
 {
 #if	defined(USE_BFD)
   addresses = [GSPrivateStackAddresses() copy];
@@ -963,7 +962,7 @@ callUncaughtHandler(id value)
 #endif	/* USE_BFD */
 #if defined(_NATIVE_OBJC_EXCEPTIONS)
 #  ifdef HAVE_SET_UNCAUGHT_EXCEPTION_HANDLER
-  objc_setUncaughtExceptionHandler(callUncaughtHandler);
+  objc_setUncaughtExceptionHandler(callUncaughtHandler); // 在
 #  elif defined(HAVE_UNEXPECTED)
   _objc_unexpected_exception = callUncaughtHandler;
 #  elif defined(HAVE_SET_UNEXPECTED)
@@ -1016,15 +1015,15 @@ callUncaughtHandler(id value)
 	     reason: (NSString*)reason
 	   userInfo: (NSDictionary*)userInfo
 {
-  ASSIGN(_e_name, name);
-  ASSIGN(_e_reason, reason);
+  ASSIGN(_e_name, name); // 单纯的记录
+  ASSIGN(_e_reason, reason); // 单纯的记录
   if (userInfo != nil)
     {
       if (_reserved == 0)
         {
           _reserved = NSZoneCalloc([self zone], 2, sizeof(id));
         }
-      ASSIGN(_e_info, userInfo);
+      ASSIGN(_e_info, userInfo); // 把 UserInfo 放到了 _reserved[0]中
     }
   return self;
 }
@@ -1119,7 +1118,7 @@ callUncaughtHandler(id value)
     }
 
 #if     defined(_NATIVE_OBJC_EXCEPTIONS)
-  @throw self;
+  @throw self; // throw self.
 #else
 {
   NSThread      *thread;

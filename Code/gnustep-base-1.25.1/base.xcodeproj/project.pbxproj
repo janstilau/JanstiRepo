@@ -79,7 +79,6 @@
 		06EDD99E2248BEA900C87605 /* NSURLError.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD8F62248BEA800C87605 /* NSURLError.h */; };
 		06EDD99F2248BEA900C87605 /* NSPointerFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD8F72248BEA800C87605 /* NSPointerFunctions.h */; };
 		06EDD9A02248BEA900C87605 /* NSException.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD8F82248BEA800C87605 /* NSException.h */; };
-		06EDD9A12248BEA900C87605 /* NSURLSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD8F92248BEA800C87605 /* NSURLSession.h */; };
 		06EDD9A22248BEA900C87605 /* NSDate.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD8FA2248BEA800C87605 /* NSDate.h */; };
 		06EDD9A32248BEA900C87605 /* NSURLProtectionSpace.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD8FB2248BEA800C87605 /* NSURLProtectionSpace.h */; };
 		06EDD9A42248BEA900C87605 /* NSURLHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD8FC2248BEA800C87605 /* NSURLHandle.h */; };
@@ -490,7 +489,6 @@
 		06EDD8F62248BEA800C87605 /* NSURLError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLError.h; sourceTree = "<group>"; };
 		06EDD8F72248BEA800C87605 /* NSPointerFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPointerFunctions.h; sourceTree = "<group>"; };
 		06EDD8F82248BEA800C87605 /* NSException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSException.h; sourceTree = "<group>"; };
-		06EDD8F92248BEA800C87605 /* NSURLSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLSession.h; sourceTree = "<group>"; };
 		06EDD8FA2248BEA800C87605 /* NSDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDate.h; sourceTree = "<group>"; };
 		06EDD8FB2248BEA800C87605 /* NSURLProtectionSpace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLProtectionSpace.h; sourceTree = "<group>"; };
 		06EDD8FC2248BEA800C87605 /* NSURLHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLHandle.h; sourceTree = "<group>"; };
@@ -1519,7 +1517,6 @@
 		AD197C02189A4D5F000F6CF9 /* NSMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMetadata.m; sourceTree = "<group>"; };
 		AD197C03189A4D5F000F6CF9 /* NSUserNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUserNotification.m; sourceTree = "<group>"; };
 		AD197C04189A4D5F000F6CF9 /* NSUUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUUID.m; sourceTree = "<group>"; };
-		AD197C0B189A4E98000F6CF9 /* MISSING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = MISSING; path = Headers/Foundation/MISSING; sourceTree = "<group>"; };
 		AD197C15189A51ED000F6CF9 /* GNUmakefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; indentWidth = 8; path = GNUmakefile; sourceTree = "<group>"; tabWidth = 8; };
 /* End PBXFileReference section */
 
@@ -1615,6 +1612,9 @@
 		06EDD8DA2248BEA800C87605 /* Readed */ = {
 			isa = PBXGroup;
 			children = (
+				06EDD91F2248BEA800C87605 /* MISSING */,
+				06EDD9162248BEA800C87605 /* Foundation.h */,
+				06EDD8F82248BEA800C87605 /* NSException.h */,
 				06EDD8DB2248BEA800C87605 /* NSLock.h */,
 				06EDD8DC2248BEA800C87605 /* NSNull.h */,
 				06EDD8DD2248BEA800C87605 /* NSAttributedString.h */,
@@ -1650,8 +1650,6 @@
 				06EDD8F52248BEA800C87605 /* NSHTTPCookieStorage.h */,
 				06EDD8F62248BEA800C87605 /* NSURLError.h */,
 				06EDD8F72248BEA800C87605 /* NSPointerFunctions.h */,
-				06EDD8F82248BEA800C87605 /* NSException.h */,
-				06EDD8F92248BEA800C87605 /* NSURLSession.h */,
 				06EDD8FA2248BEA800C87605 /* NSDate.h */,
 				06EDD8FB2248BEA800C87605 /* NSURLProtectionSpace.h */,
 				06EDD8FC2248BEA800C87605 /* NSURLHandle.h */,
@@ -1680,7 +1678,6 @@
 				06EDD9132248BEA800C87605 /* NSTask.h */,
 				06EDD9142248BEA800C87605 /* NSTextCheckingResult.h */,
 				06EDD9152248BEA800C87605 /* NSURLConnection.h */,
-				06EDD9162248BEA800C87605 /* Foundation.h */,
 				06EDD9172248BEA800C87605 /* NSHTTPCookie.h */,
 				06EDD9182248BEA800C87605 /* NSGeometry.h */,
 				06EDD9192248BEA800C87605 /* NSStream.h */,
@@ -1689,7 +1686,6 @@
 				06EDD91C2248BEA800C87605 /* NSURLProtocol.h */,
 				06EDD91D2248BEA800C87605 /* NSFileManager.h */,
 				06EDD91E2248BEA800C87605 /* NSAffineTransform.h */,
-				06EDD91F2248BEA800C87605 /* MISSING */,
 				06EDD9202248BEA800C87605 /* NSBundle.h */,
 				06EDD9212248BEA800C87605 /* NSIndexSet.h */,
 				06EDD9222248BEA800C87605 /* NSHost.h */,
@@ -2153,7 +2149,6 @@
 			isa = PBXGroup;
 			children = (
 				AD197C15189A51ED000F6CF9 /* GNUmakefile */,
-				AD197C0B189A4E98000F6CF9 /* MISSING */,
 				18906E661610BF3C0003C892 /* Headers */,
 				18394BF31610DC4B00335E85 /* Private Headers */,
 				18906F081610BF3C0003C892 /* Source */,
@@ -2212,11 +2207,11 @@
 		18906E661610BF3C0003C892 /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				06EDD8DA2248BEA800C87605 /* Readed */,
 				06EDD8EE2248BEA800C87605 /* Foundation */,
 				06EDD8AC2248BEA800C87605 /* GNUstepBase */,
 				06EDD94E2248BEA900C87605 /* NotNeedRead */,
 				06EDD8D42248BEA800C87605 /* ObjectiveC2 */,
-				06EDD8DA2248BEA800C87605 /* Readed */,
 			);
 			path = Headers;
 			sourceTree = "<group>";
@@ -3650,7 +3645,6 @@
 				06EDD9F32248BEA900C87605 /* NSByteOrder.h in Headers */,
 				06EDD9702248BEA900C87605 /* GSXML.h in Headers */,
 				06EDD9FA2248BEA900C87605 /* NSXMLElement.h in Headers */,
-				06EDD9A12248BEA900C87605 /* NSURLSession.h in Headers */,
 				06EDD9B72248BEA900C87605 /* NSURLResponse.h in Headers */,
 				06EDD9752248BEA900C87605 /* NSObject+GNUstepBase.h in Headers */,
 				06EDD9A42248BEA900C87605 /* NSURLHandle.h in Headers */,

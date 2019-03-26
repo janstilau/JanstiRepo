@@ -1,11 +1,3 @@
-/*
-Note from Manuel Guesdon:
-* I've made some test to compare apple NSURL results
-and GNUstep NSURL results but as there this class is not very documented, some
-function may be incorrect
-* I've put 2 functions to make tests. You can add your own tests
-* Some functions are not implemented
-*/
 #import "common.h"
 #define	EXPOSE_NSURL_IVARS	1
 #import "Foundation/NSArray.h"
@@ -37,63 +29,64 @@ NSString * const NSErrorFailingURLStringKey = @"NSErrorFailingURLStringKey";
 
 /* Like the normal percent escape method, but with additional characters
  * escaped (for use by file scheme URLs).
+ URI所允许的字符分作保留与未保留。保留字符是那些具有特殊含义的字符. 例如, 斜线字符用于URL (或者更一般的, URI)不同部分的分界符. 未保留字符没有这些特殊含义. 百分号编码把保留字符表示为特殊字符序列。
+ 如果一个保留字符在特定上下文中具有特殊含义(称作"reserved purpose") , 且URI中必须使用该字符用于其它目的, 那么该字符必须百分号编码。百分号编码一个保留字符，首先需要把该字符的ASCII的值表示为两个16进制的数字，然后在其前面放置转义字符("%")，置入URI中的相应位置。(对于非ASCII字符, 需要转换为UTF-8字节序, 然后每个字节按照上述方式表示.)
  */
 - (NSString*) _stringByAddingPercentEscapes
 {
   NSData	*data = [self dataUsingEncoding: NSUTF8StringEncoding];
-  NSString	*s = nil;
+  NSString	*result = nil;
 
-  if (data != nil)
+    if (!data) { return result; }
+    
+    unsigned char    *src = (unsigned char*)[data bytes];
+    unsigned int    slen = [data length];
+    unsigned char    *dst;
+    unsigned int    spos = 0;
+    unsigned int    dpos = 0;
+    
+    dst = (unsigned char*)NSZoneMalloc(NSDefaultMallocZone(), slen * 3);
+    while (spos < slen)
     {
-      unsigned char	*src = (unsigned char*)[data bytes];
-      unsigned int	slen = [data length];
-      unsigned char	*dst;
-      unsigned int	spos = 0;
-      unsigned int	dpos = 0;
-
-      dst = (unsigned char*)NSZoneMalloc(NSDefaultMallocZone(), slen * 3);
-      while (spos < slen)
-	{
-	  unsigned char	c = src[spos++];
-	  unsigned int	hi;
-	  unsigned int	lo;
-
-	  if (c <= 32
-	    || c > 126
-	    || c == 34
-	    || c == 35
-	    || c == 37
-	    || c == 59
-	    || c == 60
-	    || c == 62
-	    || c == 63
-	    || c == 91
-	    || c == 92
-	    || c == 93
-	    || c == 94
-	    || c == 96
-	    || c == 123
-	    || c == 124
-	    || c == 125)
-	    {
-	      dst[dpos++] = '%';
-	      hi = (c & 0xf0) >> 4;
-	      dst[dpos++] = (hi > 9) ? 'A' + hi - 10 : '0' + hi;
-	      lo = (c & 0x0f);
-	      dst[dpos++] = (lo > 9) ? 'A' + lo - 10 : '0' + lo;
-	    }
-	  else
-	    {
-	      dst[dpos++] = c;
-	    }
-	}
-      s = [[NSString alloc] initWithBytes: dst
-				   length: dpos
-				 encoding: NSASCIIStringEncoding];
-      NSZoneFree(NSDefaultMallocZone(), dst);
-      IF_NO_GC([s autorelease];)
+        unsigned char    c = src[spos++];
+        unsigned int    hi;
+        unsigned int    lo;
+        
+        if (c <= 32             // 这些都是保留字
+            || c > 126
+            || c == 34
+            || c == 35
+            || c == 37
+            || c == 59
+            || c == 60
+            || c == 62
+            || c == 63
+            || c == 91
+            || c == 92
+            || c == 93
+            || c == 94
+            || c == 96
+            || c == 123
+            || c == 124
+            || c == 125)
+        {
+            dst[dpos++] = '%'; // 首先, 第一个表示为 %
+            hi = (c & 0xf0) >> 4;// 然后对于两个字符进行单独表示.
+            dst[dpos++] = (hi > 9) ? 'A' + hi - 10 : '0' + hi;
+            lo = (c & 0x0f);// 然后对于两个字符进行单独表示.
+            dst[dpos++] = (lo > 9) ? 'A' + lo - 10 : '0' + lo;
+        }
+        else
+        {
+            dst[dpos++] = c; //
+        }
     }
-  return s;
+    result = [[NSString alloc] initWithBytes: dst
+                                      length: dpos
+                                    encoding: NSASCIIStringEncoding]; // 然后根据长度, 生成最终的字符串.
+    NSZoneFree(NSDefaultMallocZone(), dst);
+    IF_NO_GC([result autorelease];)
+  return result;
 }
 
 @end
@@ -106,7 +99,7 @@ NSString * const NSErrorFailingURLStringKey = @"NSErrorFailingURLStringKey";
 
 - (NSURL*) _URLBySettingPath: (NSString*)newPath 
 {
-  if ([self isFileURL]) 
+  if ([self isFileURL])  // 如果是 filePath , 就是 fileUrl
     {
       return [NSURL fileURLWithPath: newPath];
     }

@@ -10,19 +10,8 @@ extern "C" {
 
 GS_EXPORT NSString * const NSSystemClockDidChangeNotification;
 
-/**
- * Time interval difference between two dates, in seconds.
- */
 typedef double NSTimeInterval;
 
-/**
- * Time interval between the unix standard reference date of 1 January 1970
- * and the OpenStep reference date of 1 January 2001<br />
- * This number comes from:<br />
- * (((31 years * 365 days) + 8 days for leap years) = total number of days<br />
- * 24 hours * 60 minutes * 60 seconds)<br />
- * This ignores leap-seconds.
- */
 GS_EXPORT const NSTimeInterval NSTimeIntervalSince1970;
 
 #import	<Foundation/NSObject.h>
