@@ -22,8 +22,6 @@
  */
 +(CGFloat)kLineGap;
 
-+(void)setkLineGap:(CGFloat)kLineGap;
-
 /**
  *  MainView的高度占比,默认为0.5
  */

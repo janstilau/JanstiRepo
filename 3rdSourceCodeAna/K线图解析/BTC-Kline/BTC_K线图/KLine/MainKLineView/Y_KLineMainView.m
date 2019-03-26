@@ -217,7 +217,16 @@
 /**
  *  更新MainView的宽度
  */
+
+static UIView *pinchIndicator;
 - (void)updateMainViewWidth{
+    
+    if (!pinchIndicator) {
+        pinchIndicator = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 5)];
+        pinchIndicator.backgroundColor = [UIColor yellowColor];
+        [self.parentScrollView addSubview:pinchIndicator];
+    }
+    
     //根据stockModels的个数和间隔和K线的宽度计算出self的宽度，并设置contentsize
     CGFloat kLineViewWidth = self.kLineModels.count * [Y_StockChartGlobalVariable kLineWidth] + (self.kLineModels.count + 1) * [Y_StockChartGlobalVariable kLineGap] + 10;
     
@@ -225,11 +234,16 @@
         kLineViewWidth = self.parentScrollView.bounds.size.width;
     }
     
-    if (self.pinchStartIndex)
+    if (self.pinchStartIndex) // 如果, 有 pinch 存在, 那么重新计算一个 contentOffset. 也就是说, 在这里, 其实是会将 scrollView 根据 pinchStartIndex 进行偏移.
     {
         CGFloat new_x = self.pinchStartIndex * ([Y_StockChartGlobalVariable kLineGap] + [Y_StockChartGlobalVariable kLineWidth]) + [Y_StockChartGlobalVariable kLineGap];
         [self.parentScrollView setContentOffset:CGPointMake(new_x, 0) animated:NO];
+        
+        CGRect updatedFrame = pinchIndicator.frame;
+        updatedFrame.origin = CGPointMake(new_x, 0);
+        pinchIndicator.frame = updatedFrame;
     }
+    // 更新 mainView 在 scrollView 里面的位置.
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(self.parentScrollView);
         make.left.equalTo(self.parentScrollView).offset(self.parentScrollView.contentOffset.x);
@@ -280,12 +294,12 @@
     //起始位置
     NSInteger needDrawKLineStartIndex ;
     
-    if(self.pinchStartIndex > 0) {
+    if(self.pinchStartIndex > 0) { // 如果是 pinch 引起的重绘.
         needDrawKLineStartIndex = self.pinchStartIndex;
         _needDrawStartIndex = self.pinchStartIndex;
-        self.pinchStartIndex = -1;
-    } else {
-        needDrawKLineStartIndex = [self getNeedDrawStartIndexWithScroll:YES];
+        self.pinchStartIndex = -1; // pinchStartIndex 在这里进行 reset. 在没有 pinch 操作之后, 一切以正常的 scrollView 进行操作.
+    } else { // 如果是 scroll 引起的重绘.
+        needDrawKLineStartIndex = [self needDrawStartWhenScroll];
     }
     
     NSLog(@"这是模型开始的index-----------%lu",needDrawKLineStartIndex);
@@ -592,16 +606,15 @@ static char *observerContext = NULL;
     return _needDrawStartIndex;
 }
 
-- (NSInteger)getNeedDrawStartIndexWithScroll:(BOOL)scorll
+- (NSInteger)needDrawStartWhenScroll
 {
-    if (scorll)
-    {
-        CGFloat scrollViewOffsetX = self.parentScrollView.contentOffset.x < 0 ? 0 : self.parentScrollView.contentOffset.x;
-        NSUInteger leftArrCount = ABS(scrollViewOffsetX - [Y_StockChartGlobalVariable kLineGap]) / ([Y_StockChartGlobalVariable kLineGap] + [Y_StockChartGlobalVariable kLineWidth]);
-        
-        _needDrawStartIndex = leftArrCount;
-    }
-    
+    CGFloat scrollViewOffsetX = self.parentScrollView.contentOffset.x < 0 ? 0 : self.parentScrollView.contentOffset.x;
+    NSUInteger leftArrCount = ABS(scrollViewOffsetX - [Y_StockChartGlobalVariable kLineGap]) / ([Y_StockChartGlobalVariable kLineGap] + [Y_StockChartGlobalVariable kLineWidth]);
+    _needDrawStartIndex = leftArrCount;
+    return _needDrawStartIndex;
+}
+
+- (NSInteger)currentDrawStart {
     return _needDrawStartIndex;
 }
 

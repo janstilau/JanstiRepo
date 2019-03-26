@@ -68,11 +68,6 @@ static Y_StockChartTargetLineStatus Y_StockChartKLineIsBOLLLine = Y_StockChartTa
     return Y_StockChartKLineGap;
 }
 
-+(void)setkLineGap:(CGFloat)kLineGap
-{
-    Y_StockChartKLineGap = kLineGap;
-}
-
 /**
  *  MainView的高度占比,默认为0.5
  */

@@ -337,34 +337,51 @@
 }
 #pragma mark - event事件处理方法
 #pragma mark 缩放执行方法
+
+static UIView *centerView;
 - (void)event_pichMethod:(UIPinchGestureRecognizer *)pinch
 {
     static CGFloat oldScale = 1.0f;
-    CGFloat difValue = pinch.scale - oldScale;
-    if(ABS(difValue) > Y_StockChartScaleBound) {
-        CGFloat oldKLineWidth = [Y_StockChartGlobalVariable kLineWidth];
-        if (oldKLineWidth == Y_StockChartKLineMinWidth && difValue <= 0)
-        {
-            return;
-        }
-        NSInteger oldNeedDrawStartIndex = [self.kLineMainView getNeedDrawStartIndexWithScroll:NO];
-        
-        [Y_StockChartGlobalVariable setkLineWith:oldKLineWidth * (difValue > 0 ? (1 + Y_StockChartScaleFactor) : (1 - Y_StockChartScaleFactor))];
-        oldScale = pinch.scale;
-        
-        if( pinch.numberOfTouches == 2 ) {
-            CGPoint p1 = [pinch locationOfTouch:0 inView:self.scrollView];
-            CGPoint p2 = [pinch locationOfTouch:1 inView:self.scrollView];
-            CGPoint centerPoint = CGPointMake((p1.x+p2.x)/2, (p1.y+p2.y)/2);
-            NSUInteger oldLeftArrCount = ABS((centerPoint.x - self.scrollView.contentOffset.x) - [Y_StockChartGlobalVariable kLineGap]) / ([Y_StockChartGlobalVariable kLineGap] + oldKLineWidth);
-            NSUInteger newLeftArrCount = ABS((centerPoint.x - self.scrollView.contentOffset.x) - [Y_StockChartGlobalVariable kLineGap]) / ([Y_StockChartGlobalVariable kLineGap] + [Y_StockChartGlobalVariable kLineWidth]);
-            
-            self.kLineMainView.pinchStartIndex = oldNeedDrawStartIndex + oldLeftArrCount - newLeftArrCount;
-        }
-        //更新MainView的宽度
-        [self.kLineMainView updateMainViewWidth];
-        [self.kLineMainView drawMainView];
+    
+    if (!centerView) {
+        centerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 5)];
+        centerView.backgroundColor = [UIColor redColor];
+        [self.scrollView addSubview:centerView];
     }
+    CGFloat difValue = pinch.scale - oldScale;
+    if(ABS(difValue) <= Y_StockChartScaleBound) { // 如果 pinch 的幅度太小了
+        return;
+    }
+    CGFloat oldKLineWidth = [Y_StockChartGlobalVariable kLineWidth];
+    if (oldKLineWidth == Y_StockChartKLineMinWidth && difValue <= 0) // 如果已经到达了最小的额度.
+    {
+        return;
+    }
+    
+    NSInteger oldNeedDrawStartIndex = [self.kLineMainView currentDrawStart];
+    [Y_StockChartGlobalVariable setkLineWith:oldKLineWidth * (difValue > 0 ? (1 + Y_StockChartScaleFactor) : (1 - Y_StockChartScaleFactor))]; // 更新宽度.
+    
+    if( pinch.numberOfTouches == 2 ) {
+        CGPoint p1 = [pinch locationOfTouch:0 inView:self.scrollView];
+        CGPoint p2 = [pinch locationOfTouch:1 inView:self.scrollView];
+        CGPoint centerPoint = CGPointMake((p1.x+p2.x)/2, (p1.y+p2.y)/2);
+        CGFloat centerScreenLeft = (centerPoint.x - self.scrollView.contentOffset.x);
+        CGFloat oldLineWidth = ([Y_StockChartGlobalVariable kLineGap] + oldKLineWidth);
+        CGFloat newLineWidth = ([Y_StockChartGlobalVariable kLineGap] + [Y_StockChartGlobalVariable kLineWidth]);
+        NSUInteger oldLeftArrCount = ABS(centerScreenLeft - [Y_StockChartGlobalVariable kLineGap]) / oldLineWidth;
+        NSUInteger newLeftArrCount = ABS(centerScreenLeft - [Y_StockChartGlobalVariable kLineGap]) / newLineWidth;
+        self.kLineMainView.pinchStartIndex = oldNeedDrawStartIndex + oldLeftArrCount - newLeftArrCount;
+        // 这里的改动, 每一次都是一点点修改, 用户其实是看不出太大的差异的.
+        NSLog(@"pinchStartIndex -- %@", @(self.kLineMainView.pinchStartIndex));
+        NSLog(@"oldNeedDrawStartIndex -- %@", @(oldNeedDrawStartIndex));
+        // 这里不明白什么意思, pinchStartIndex 铁定和newLeftArrCount 不一样的
+        CGRect updatedFrame = centerView.frame;
+        updatedFrame.origin = centerPoint;
+        centerView.frame = updatedFrame;
+    }
+    //更新MainView的宽度
+    [self.kLineMainView updateMainViewWidth];
+    [self.kLineMainView drawMainView];
 }
 #pragma mark 长按手势执行方法
 - (void)event_longPressMethod:(UILongPressGestureRecognizer *)longPress
@@ -375,11 +392,11 @@
         CGPoint location = [longPress locationInView:self.scrollView];
         if(ABS(oldPositionX - location.x) < ([Y_StockChartGlobalVariable kLineWidth] + [Y_StockChartGlobalVariable kLineGap])/2)
         {
-            return;
+            return; // 如果偏移具体不到K柱的一般.
         }
         
         //暂停滑动
-        self.scrollView.scrollEnabled = NO;
+        self.scrollView.scrollEnabled = NO; // 在手势识别之后, 停止 scrollView 的滚动.
         oldPositionX = location.x;
         
         //初始化竖线
@@ -405,7 +422,7 @@
         }];
         [self.verticalView layoutIfNeeded];
         self.verticalView.hidden = NO;
-    }
+    } // 这个, 只是简简单单的添加一条数线, 真正的显示回调, 在 getExactXPositionWithOriginXPosition 中进行添加.
     
     if(longPress.state == UIGestureRecognizerStateEnded)
     {
