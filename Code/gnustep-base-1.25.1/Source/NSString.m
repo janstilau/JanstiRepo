@@ -5386,7 +5386,7 @@ static NSFileManager *fm = nil;
       return NO;		// Empty string ... relative
     }
   c = [self characterAtIndex: 0];
-  if (c == (unichar)'~')
+  if (c == (unichar)'~') // 如果是~开头, 就一定是 绝对路径.
     {
       return YES;		// Begins with tilde ... absolute
     }

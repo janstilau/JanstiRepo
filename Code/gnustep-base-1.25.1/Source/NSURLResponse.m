@@ -1,27 +1,3 @@
-/* Implementation for NSURLResponse for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
-
 #import "common.h"
 
 #define	EXPOSE_NSURLResponse_IVARS	1
@@ -140,6 +116,7 @@ typedef struct {
 }
 @end
 
+// Response 中的 data , 是不会伴随到这个类里面的, 响应里面的数据, 要么是随着数据一点点的下载到本地, 要么是在回调中一次性的拿到.
 
 @implementation	NSURLResponse
 
@@ -200,32 +177,9 @@ typedef struct {
   [super dealloc];
 }
 
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-// FIXME
-  if ([aCoder allowsKeyedCoding])
-    {
-    }
-  else
-    {
-    }
-}
-
 - (long long) expectedContentLength
 {
   return this->expectedContentLength;
-}
-
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-// FIXME
-  if ([aCoder allowsKeyedCoding])
-    {
-    }
-  else
-    {
-    }
-  return self;
 }
 
 /**
@@ -254,7 +208,7 @@ typedef struct {
 {
   self = [self initWithURL: URL
 		  MIMEType: nil
-     expectedContentLength: NSURLResponseUnknownLength
+     expectedContentLength: NSURLResponseUnknownLength // (long long - 1)
 	  textEncodingName: nil];
   if (nil != self)
     {
@@ -285,10 +239,10 @@ typedef struct {
  */
 - (NSString *) suggestedFilename
 {
-  NSString	*disp = [self _valueForHTTPHeaderField: @"content-disposition"];
+  NSString	*disposition = [self _valueForHTTPHeaderField: @"content-disposition"];
   NSString	*name = nil;
 
-  if (disp != nil)
+  if (disposition != nil)
     {
       GSMimeParser	*p;
       GSMimeHeader	*h;
@@ -297,7 +251,7 @@ typedef struct {
       // Try to get name from content disposition header.
       p = AUTORELEASE([GSMimeParser new]);
       h = [[GSMimeHeader alloc] initWithName: @"content-displosition"
-				       value: disp];
+				       value: disposition];
       IF_NO_GC([h autorelease];)
       sc = [NSScanner scannerWithString: [h value]];
       if ([p scanHeaderBody: sc into: h] == YES)
