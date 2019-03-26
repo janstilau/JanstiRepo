@@ -1,27 +1,3 @@
-/* Implementation for NSURLConnection for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
-
 #import "common.h"
 
 #define	EXPOSE_NSURLConnection_IVARS	1
@@ -30,6 +6,9 @@
 #import "Foundation/NSRunLoop.h"
 #import "GSURLPrivate.h"
 
+/*
+ During a request, the connection maintains a strong reference to its delegate. It releases that strong reference when the connection finishes loading, fails, or is canceled.
+ */
 @interface _NSURLConnectionDataCollector : NSObject
 {
   NSURLConnection	*_connection;	// Not retained
@@ -120,9 +99,9 @@
 
 typedef struct
 {
-  NSMutableURLRequest		*_request;
+  NSMutableURLRequest		*_request; // request
   NSURLProtocol			*_protocol;
-  id				_delegate;
+  id				_delegate; // 在网络过程中, 强引用这个 delegate
   BOOL				_debug;
 } Internal;
  
@@ -189,7 +168,7 @@ typedef struct
 {
   if ((self = [super init]) != nil)
     {
-      this->_request = [request mutableCopyWithZone: [self zone]];
+      this->_request = [request mutableCopyWithZone: [self zone]]; // request 进行了 copy , 这样原来的 request 对现在没有应县了.
 
       /* Enrich the request with the appropriate HTTP cookies,
        * if desired.
@@ -216,17 +195,12 @@ typedef struct
 	    }
 	}
 
-      /* According to bug #35686, Cocoa has a bizarre deviation from the
-       * convention that delegates are retained here.
-       * For compatibility we retain the delegate and release it again
-       * when the operation is over.
-       */
       this->_delegate = [delegate retain];
       this->_protocol = [[NSURLProtocol alloc]
 	initWithRequest: this->_request
 	cachedResponse: nil
 	client: (id<NSURLProtocolClient>)self];
-      [this->_protocol startLoading];
+      [this->_protocol startLoading]; // 最重要的启动.
       this->_debug = GSDebugSet(@"NSURLConnection");
     }
   return self;
@@ -374,6 +348,8 @@ typedef struct
 
 @implementation	NSURLConnection (URLProtocolClient)
 
+
+// 这个类完全是一个中介作用, 完全靠 Protocol 进行网络的交互.
 - (void) URLProtocol: (NSURLProtocol *)protocol
   cachedResponseIsValid: (NSCachedURLResponse *)cachedResponse
 {
