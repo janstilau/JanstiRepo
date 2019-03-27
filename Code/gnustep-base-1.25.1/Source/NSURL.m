@@ -625,16 +625,11 @@ static NSUInteger	urlAlign;
   NSFileManager	*mgr = [NSFileManager defaultManager];
   BOOL		flag = NO;
 
-  if (nil == aPath)
-    {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"[%@ %@] nil string parameter",
-	NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
-    }
   if ([aPath isAbsolutePath] == NO)
     {
       aPath = [[mgr currentDirectoryPath]
 	stringByAppendingPathComponent: aPath];
+        // [mgr currentDirectoryPath] 这个路径, 应该是应用程序可执行文件的所在路径, 可以人工修改.
     }
   if ([mgr fileExistsAtPath: aPath isDirectory: &flag] == YES)
     {
@@ -658,12 +653,6 @@ static NSUInteger	urlAlign;
   NSFileManager	*mgr = [NSFileManager defaultManager];
   BOOL		flag = NO;
 
-  if (nil == aPath)
-    {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"[%@ %@] nil string parameter",
-	NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
-    }
   if ([aPath isAbsolutePath] == NO)
     {
       aPath = [[mgr currentDirectoryPath]
@@ -707,12 +696,13 @@ static NSUInteger	urlAlign;
       NSRange	r = [aHost rangeOfString: @"@"];
       NSString	*auth = nil;
 
+        // https://johnny:p4ssw0rd@www.example.com:443/script.ext;param=value?query=value#ref
       /* Allow for authentication (username:password) before actual host.
        */
       if (r.length > 0)
 	{
-	  auth = [aHost substringToIndex: r.location];
-	  aHost = [aHost substringFromIndex: NSMaxRange(r)];
+	  auth = [aHost substringToIndex: r.location]; // johnny:p4ssw0rd
+	  aHost = [aHost substringFromIndex: NSMaxRange(r)]; // www.example.com
 	}
 
       /* Add square brackets around ipv6 address if necessary
@@ -787,19 +777,6 @@ static NSUInteger	urlAlign;
    */
   static const char *filepath = ";/?:@&=+$,[]#";
 
-  if ([aUrlString isKindOfClass: [NSString class]] == NO)
-    {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"[%@ %@] bad string parameter",
-	NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
-    }
-  if (aBaseUrl != nil
-    && [aBaseUrl isKindOfClass: [NSURL class]] == NO)
-    {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"[%@ %@] bad base URL parameter",
-	NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
-    }
   ASSIGNCOPY(_urlString, aUrlString);
   ASSIGN(_baseURL, [aBaseUrl absoluteURL]);
   NS_DURING

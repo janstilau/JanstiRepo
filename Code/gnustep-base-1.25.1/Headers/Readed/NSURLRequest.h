@@ -29,6 +29,15 @@ enum {
 
     NSURLRequestReloadRevalidatingCacheData = 5
 };
+    
+    /*
+     If a cached response does not exist for the request, the URL loading system fetches the data from the originating source.
+     
+     Otherwise, if the cached response does not indicate that it must be revalidated every time, and if the cached response is not stale (past its expiration date), the URL loading system returns the cached response.
+     
+     If the cached response is stale or requires revalidation, the URL loading system makes a HEAD request to the originating source to see if the resource has changed. If so, the URL loading system fetches the data from the originating source. Otherwise, it returns the cached response.
+     */
+    
 /**
  * <deflist>
  *   <term>NSURLRequestUseProtocolCachePolicy</term>

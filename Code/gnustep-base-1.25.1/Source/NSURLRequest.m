@@ -7,20 +7,23 @@
 #import "Foundation/NSCoder.h"
 
 
-// Internal data storage
 typedef struct {
   NSData			*body;
   NSInputStream			*bodyStream;
+    
   NSString			*method;
   NSMutableDictionary		*headers;
+    
   BOOL				shouldHandleCookies;
   BOOL                          debug;
+    
   NSURL				*URL;
   NSURL				*mainDocumentURL;
+    
   NSURLRequestCachePolicy	cachePolicy;
   NSTimeInterval		timeoutInterval;
   NSMutableDictionary		*properties;
-} Internal;
+} Internal; // NSURLRequest 仅仅是一个数据类, 真正的根据这些数据进行操作的, 还是要在网络操作操作类中.
  
 /* Defines to get easy access to internals from mutable/immutable
  * versions of the class and from categories.
@@ -33,13 +36,13 @@ typedef struct {
 
 @implementation	NSURLRequest
 
-+ (id) allocWithZone: (NSZone*)z
++ (id) allocWithZone: (NSZone*)z //  这里不明白为啥一定要写在 allocWithZone 方法里面.
 {
   NSURLRequest	*o = [super allocWithZone: z];
 
   if (o != nil)
     {
-      o->_NSURLRequestInternal = NSZoneCalloc(z, 1, sizeof(Internal));
+      o->_NSURLRequestInternal = NSZoneCalloc(z, 1, sizeof(Internal)); // initializes it to all bits zero
     }
   return o;
 }
@@ -75,7 +78,7 @@ typedef struct {
   if (NSShouldRetainWithZone(self, z) == YES
     && [self isKindOfClass: [NSMutableURLRequest class]] == NO)
     {
-      o = RETAIN(self);
+      o = RETAIN(self); // 不可变对象, 直接自身.
     }
   else
     {
@@ -93,7 +96,7 @@ typedef struct {
 	  inst->shouldHandleCookies = this->shouldHandleCookies;
 	  inst->debug = this->debug;
           inst->headers = [this->headers mutableCopy];
-	}
+	} // 内部元素一顿复制操作.
     }
   return o;
 }
@@ -118,29 +121,6 @@ typedef struct {
 {
   return [NSString stringWithFormat: @"<%@ %@>",
     NSStringFromClass([self class]), [[self URL] absoluteString]];
-}
-
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-// FIXME
-  if ([aCoder allowsKeyedCoding])
-    {
-    }
-  else
-    {
-    }
-}
-
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-// FIXME
-  if ([aCoder allowsKeyedCoding])
-    {
-    }
-  else
-    {
-    }
-  return self;
 }
 
 - (NSUInteger) hash
@@ -174,9 +154,10 @@ typedef struct {
       this->cachePolicy = cachePolicy;
       this->timeoutInterval = timeoutInterval;
       this->mainDocumentURL = nil;
-      this->method = @"GET";
+      this->method = @"GET";// 默认 get
       this->shouldHandleCookies = YES;
     }
+    // 所以, 这其实就是一顿记录的事情.
   return self;
 }
 
@@ -226,7 +207,7 @@ typedef struct {
 
 - (NSURL *) mainDocumentURL
 {
-  return this->mainDocumentURL;
+  return this->mainDocumentURL; // this 指向了 internal
 }
 
 - (id) mutableCopyWithZone: (NSZone*)z
@@ -248,7 +229,7 @@ typedef struct {
       inst->shouldHandleCookies = this->shouldHandleCookies;
       inst->debug = this->debug;
       inst->headers = [this->headers mutableCopy];
-    }
+    } // 一顿复制操作. mutableCopy
   return o;
 }
 
@@ -311,6 +292,7 @@ typedef struct {
     {
       fields = [NSDictionary dictionaryWithDictionary: this->headers];
     }
+    // 所以, headers 只不过是一个字典而已, 里面可以放任意的内容.
   return fields;
 }
 
@@ -351,7 +333,7 @@ typedef struct {
 
   if (old != nil)
     {
-      value = [old stringByAppendingFormat: @",%@", value];
+      value = [old stringByAppendingFormat: @",%@", value]; // 这里, addValue , 证明协议头里面是可以放多个值得.
     }
   [self setValue: value forHTTPHeaderField: field];
 }
