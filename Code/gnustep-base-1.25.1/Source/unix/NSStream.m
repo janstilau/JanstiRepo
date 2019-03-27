@@ -27,6 +27,13 @@
 #import "../GSStream.h"
 #import "../GSSocketStream.h"
 
+/*
+ NSStream objects provide an easy way to read and write data to and from a variety of media in a device-independent way. You can create stream objects for data located in memory, in a file, or on a network (using sockets), and you can use stream objects without loading all of the data into memory at once. //
+ 
+ 顺序逐步的 loading, 除了文件 stream 可以进行 seekLocation, 其他的集中 stream 都只能顺序加载.
+ 
+ */
+
 /** 
  * The concrete subclass of NSInputStream that reads from a file
  */
@@ -332,6 +339,8 @@
 
 @implementation NSStream
 
+// 这几个方法, 都是生成了对应的实际的子类对象做 stream.
+
 + (void) getStreamsToHost: (NSHost *)host 
                      port: (NSInteger)port 
               inputStream: (NSInputStream **)inputStream 
@@ -345,7 +354,7 @@
   ins = AUTORELEASE([[GSInetInputStream alloc]
     initToAddr: address port: port]);
   outs = AUTORELEASE([[GSInetOutputStream alloc]
-    initToAddr: address port: port]);
+    initToAddr: address port: port]); // 在这个类里面, 就直接返回的就是子类的对象.
   if (!ins)
     {
 #if	defined(PF_INET6)
@@ -358,7 +367,7 @@
 
   if (inputStream)
     {
-      [ins _setSibling: outs];
+      [ins _setSibling: outs]; 
       *inputStream = (NSInputStream*)ins;
     }
   if (outputStream)
@@ -475,6 +484,7 @@
 
 @implementation NSInputStream
 
+// 直接用的 DATAINPUTStream.
 + (id) inputStreamWithData: (NSData *)data
 {
   return AUTORELEASE([[GSDataInputStream alloc] initWithData: data]);
@@ -487,7 +497,7 @@
 
 + (id) inputStreamWithURL: (NSURL *)url
 {
-  if ([url isFileURL])
+  if ([url isFileURL]) // 如果是文件, 就是本地的.
     {
       return [self inputStreamWithFileAtPath: [url path]];
     }
