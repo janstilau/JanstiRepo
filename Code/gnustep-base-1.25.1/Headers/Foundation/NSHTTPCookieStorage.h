@@ -1,27 +1,3 @@
-/* Interface for NSHTTPCookieStorage for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <frm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
-
 #ifndef __NSHTTPCookieStorage_h_GNUSTEP_BASE_INCLUDE
 #define __NSHTTPCookieStorage_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -30,18 +6,28 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 @class NSArray;
 @class NSHTTPCookie;
 @class NSURL;
 
+/*
+ 同源政策 // http://www.ruanyifeng.com/blog/2016/04/same-origin-policy.html
+ 如果两个页面的1 协议，2 端口（如果有指定）和3 域名都相同，则两个页面具有相同的源
+ 最初，它的含义是指，A网页设置的 Cookie，B网页不能打开，除非这两个网页"同源"。所谓"同源"指的是"三个相同"。
+ 同源政策的目的，是为了保证用户信息的安全，防止恶意的网站窃取数据。
+ 目前，如果非同源，共有三种行为受到限制。
+ （1） Cookie、LocalStorage 和 IndexDB 无法读取。
+ （2） DOM 无法获得。
+ （3） AJAX 请求不能发送。
+ 浏览器允许通过设置document.domain共享 Cookie。
+ 举例来说，A网页是http://w1.example.com/a.html，B网页是http://w2.example.com/b.html，那么只要设置相同的document.domain，两个网页就可以共享Cookie。
+ */
+
 enum {
-  NSHTTPCookieAcceptPolicyAlways,
-  NSHTTPCookieAcceptPolicyNever,
-  NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain
+    NSHTTPCookieAcceptPolicyAlways,
+    NSHTTPCookieAcceptPolicyNever,
+    NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain
 };
 /**
  * NSHTTPCookieAcceptPolicyAlways Accept all cookies
@@ -70,10 +56,7 @@ extern NSString * const NSHTTPCookieManagerCookiesChangedNotification;
 
 @interface NSHTTPCookieStorage :  NSObject
 {
-#if	GS_EXPOSE(NSHTTPCookieStorage)
-@private
-  void	*_NSHTTPCookieStorageInternal;
-#endif
+    void	*_NSHTTPCookieStorageInternal;
 }
 
 /**
@@ -117,14 +100,10 @@ extern NSString * const NSHTTPCookieManagerCookiesChangedNotification;
  * NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain
  */
 - (void) setCookies: (NSArray *)cookies
-	     forURL: (NSURL *)URL
+             forURL: (NSURL *)URL
     mainDocumentURL: (NSURL *)mainDocumentURL;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif	/* 100200 */
 

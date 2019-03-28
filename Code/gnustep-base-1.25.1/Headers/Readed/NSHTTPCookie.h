@@ -6,9 +6,33 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
+/*
+ Cookie（复数形态Cookies），又称为“小甜饼”。类型为“小型文本文件”[1]，指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）
+ 因为HTTP协议是无状态的，即服务器不知道用户上一次做了什么，这严重阻碍了交互式Web应用程序的实现。
+ 服务器可以设置或读取Cookies中包含信息，借此维护用户跟服务器会话中的状态。
+ 在刚才的购物场景中，当用户选购了第一项商品，服务器在向用户发送网页的同时，还发送了一段Cookie，记录着那项商品的信息。当用户访问另一个页面，浏览器会把Cookie发送给服务器，于是服务器知道他之前选购了什么。用户继续选购饮料，服务器就在原来那段Cookie里追加新的商品信息。结帐时，服务器读取发送来的Cookie就行了。
+ Cookie另一个典型的应用是当登录一个网站时，网站往往会请求用户输入用户名和密码，并且用户可以勾选“下次自动登录”。如果勾选了，那么下次访问同一网站时，用户会发现没输入用户名和密码就已经登录了。这正是因为前一次登录时，服务器发送了包含登录凭据（用户名加密码的某种加密形式）的Cookie到用户的硬盘上。第二次登录时，如果该Cookie尚未到期，浏览器会发送该Cookie，服务器验证凭据，于是不必输入用户名和密码就让用户登录了。
+ Cookie会被附加在每个HTTP请求中，所以无形中增加了流量。
+ 由于在HTTP请求中的Cookie是明文传递的，所以安全性成问题，除非用HTTPS。
+ Cookie的大小限制在4KB左右，对于复杂的存储需求来说是不够用的.
+ 
+ # 前段存储策略
+ 1. 存储在cookie中的数据，每次都会被浏览器自动放在http请求中，如果这些数据并不是每个请求都需要发给服务端的数据，浏览器这设置自动处理无疑增加了网络开销；但如果这些数据是每个请求都需要发给服务端的数据（比如身份认证信息），浏览器这设置自动处理就大大免去了重复添加操作。所以对于那种设置“每次请求都要携带的信息（最典型的就是身份认证信息）”就特别适合放在cookie中，其他类型的数据就不适合了。
+ cookie的存储是以域名形式进行区分的，不同的域下存储的cookie是独立的。
+ 2. localStorage H5 才出现的东西.
+ 大小：据说是5M（跟浏览器厂商有关系）
+ 3. sessionStorage
+ 
+ 从前面我们可以知道, 在H5 之前, 一个网页应用很难存储自己的数据到数据库中.
+ 对于一个 app 来说, 我们可以存储自己的数据到自己的沙盒中, 自己所在的文件夹中, 因为自己可以直接和操作系统接口打交道, 但是, 对于一个网页 app 来说, 没有办法记录自己的信息在哪里, 只能通过浏览器才能存储数据. 所以, cookie 非常重要.
+ 
+ 
+ http://bubkoo.com/2014/04/21/http-cookies-explained/
+ cookie 的详细信息.
+ 
+ 这个 cookie 有四个标识符：cookie 的 name，domain，path，secure 标记。要想改变这个 cookie 的值，需要发送另一个具有相同 cookie name，domain，path 的 Set-Cookie 消息头。例如：
+ */
+
 
 @class NSArray;
 @class NSDate;
@@ -35,16 +59,14 @@ extern NSString * const NSHTTPCookieVersion; /** Obtain cookie version */
  *  An instance of the NSHTTPCookie class is a single, immutable http cookie.
  *  It can be initialised with properties from a dictionary and has accessor
  *  methods to obtain the cookie values.<br />
+ cookie 天生就是 NSDictionary 的形式.
  *  The class supports unversioned cookies (sometimes referred to as version 0)
  *  as originally produced by netscape, as well as more recent standardised
  *  and versioned cookies.
  */
 @interface NSHTTPCookie :  NSObject
 {
-#if	GS_EXPOSE(NSHTTPCookie)
-@private
-  void	*_NSHTTPCookieInternal;
-#endif
+    void	*_NSHTTPCookieInternal;
 }
 
 /**
@@ -61,7 +83,7 @@ extern NSString * const NSHTTPCookieVersion; /** Obtain cookie version */
  * relevant to cookie setting ... other headers are ignored.
  */
 + (NSArray *) cookiesWithResponseHeaderFields: (NSDictionary *)headerFields
-				       forURL: (NSURL *)URL;
+                                       forURL: (NSURL *)URL;
 
 /**
  * Returns a dictionary of header fields that can be used to add the
@@ -241,9 +263,6 @@ extern NSString * const NSHTTPCookieVersion; /** Obtain cookie version */
 
 @end
 
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif	/* 100200 */
 

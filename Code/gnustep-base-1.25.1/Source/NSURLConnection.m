@@ -1,27 +1,3 @@
-/* Implementation for NSURLConnection for GNUstep
- Copyright (C) 2006 Software Foundation, Inc.
- 
- Written by:  Richard Frith-Macdonald <rfm@gnu.org>
- Date: 2006
- 
- This file is part of the GNUstep Base Library.
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free
- Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02111 USA.
- */
-
 #import "common.h"
 
 #define	EXPOSE_NSURLConnection_IVARS	1
@@ -121,7 +97,7 @@
 typedef struct
 {
     NSMutableURLRequest		*_request;
-    NSURLProtocol			*_protocol;
+    NSURLProtocol			*_protocol; // 真正的网络交互的操作, 完全交给了 NSURLProtocol, NSURLConnection 仅仅是一个包装类.
     id				_delegate;
     BOOL				_debug;
 } Internal;
@@ -145,7 +121,7 @@ typedef struct
 
 + (BOOL) canHandleRequest: (NSURLRequest *)request
 {
-    return ([NSURLProtocol _classToHandleRequest: request] != nil); // 直接询问, NSURLProtocol .
+    return ([NSURLProtocol _classToHandleRequest: request] != nil); // 直接询问, NSURLProtocol.
 }
 
 + (NSURLConnection *) connectionWithRequest: (NSURLRequest *)request
@@ -168,7 +144,7 @@ typedef struct
 {
     if (this != 0)
     {
-        [self cancel];
+        [self cancel]; // 主要是调用 protocol 停止 loading.
         DESTROY(this->_request);
         DESTROY(this->_delegate);
         NSZoneFree([self zone], this);
@@ -189,12 +165,14 @@ typedef struct
 {
     if ((self = [super init]) != nil)
     {
-        this->_request = [request mutableCopyWithZone: [self zone]];
+        this->_request = [request mutableCopyWithZone: [self zone]]; // 首先, request 进行了 copy, copy 的作用在于, 在后续的操作的时候, 不会收到影响.
         
         /* Enrich the request with the appropriate HTTP cookies,
          * if desired.
          */
-        if ([this->_request HTTPShouldHandleCookies] == YES)
+        if ([this->_request HTTPShouldHandleCookies] == YES) // 如果, 原来的 request 里面设置了要包含 cookie 的东西, 就在这里加上 cookie 的内容, 到 request 的 http Header 里面.
+            // 我们之前一直说, request 是一个数据类, 那么这个数据类里面, 设置了我们需要 HTTPShouldHandleCookies, 那么现在在这里, 如果request 里面设置了需要cookie, 就把这些信息, 放到 httpHeader 中.
+            // 而什么时候会设置cookie 的内容呢, 要在 NSURLProtocol 里面, 在判断, request 中需要 cookie 的时候, 直接将值设置到了 HTTPShouldHandleCookies 中去了.
         {
             NSArray *cookies;
             
@@ -289,9 +267,9 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
 
 - (NSURLRequest *) connection: (NSURLConnection *)connection
               willSendRequest: (NSURLRequest *)request
-             redirectResponse: (NSURLResponse *)response
+             redirectResponse: (NSURLResponse *)response // responsse 为返回值, 它的里面应该提供了上面 request 的信息.
 {
-    return request; // 这里, 仅仅是简单的返回重定向的 request, 也就是说, 我们可以根据参数值, 改变新的 request 的配置.
+    return request; // 这里, 仅仅是简单的返回重定向的 request, 也就是说, 我们可以根据参数值, 改变新的 request 的配置. 当然, 这是NSObject 的默认实现.
 }
 
 @end

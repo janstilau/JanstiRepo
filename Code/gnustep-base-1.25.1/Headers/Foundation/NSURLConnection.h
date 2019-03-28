@@ -17,6 +17,12 @@ extern "C" {
 @class NSURLRequest;
 @class NSURLResponse;
 
+/*
+ The interface for NSURLConnection is sparse, providing only the controls to start and cancel asynchronous loads of a URL request. You perform most of your configuration on the URL request object itself.
+ NSURLConnection 的接口很少, 仅仅提供了开始和结束 load 的控制.
+ During a request, the connection maintains a strong reference to its delegate. It releases that strong reference when the connection finishes loading, fails, or is canceled.
+ */
+    
 /**
  */
 @interface NSURLConnection : NSObject
@@ -70,22 +76,28 @@ extern "C" {
  * This category is an informal protocol specifying how an NSURLConnection
  * instance will communicate with its delegate to inform it of (and allow
  * it to manage) the progress of a load request.<br />
+ 
  * A load operation is performed by asynchronous I/O using the
  * run loop of the thread in which it was initiated, so all callbacks
  * will occur in that thread.<br />
+ 
+ 这也就是, connection 必须要在一个有着 runloop 的 thread 才能执行的原因.
+ 
  * The process of loading a resource occurs as follows -<br />
  * <list>
  *   <item>
  *     Any number of -connection:willSendRequest:redirectResponse:
  *     messages may be sent to the delegate before any other messages
  *     in this list are sent.  This permits a chain of redirects to
- *     be followed before eventual loading of 'real' data.
+ *     be followed before eventual loading of 'real' data. // 在得到响应头数据之后, 如果响应头里面是重定向, 就会到达这里.
  *   </item>
+ 
  *   <item>
  *     A -connection:didReceiveAuthenticationChallenge: message may be
  *     sent to the delegate (where authentication is required) before
- *     response data can be downloaded.
+ *     response data can be downloaded. // 这是得到响应头之后进行的处理.
  *   </item>
+ 
  *   <item>
  *     Any number of -connection:didReceiveResponse: messages
  *     may be be sent to the delegate before a
@@ -94,8 +106,9 @@ extern "C" {
  *     responses for each part, and if an error occurs in the download
  *     the delegate may not receive a response at all.<br />
  *     Delegates should discard previously handled data when they
- *     receive a new response.
+ *     receive a new response. // 在得到完整的响应头之后, 会把响应头信息给代理, 然后继续下载 data
  *   </item>
+ 
  *   <item>
  *     Any number of -connection:didReceiveData: messages may
  *     be sent before the load completes as described below.
@@ -104,8 +117,9 @@ extern "C" {
  *     A single -connection:willCacheResponse: message may
  *     be sent to the delegate after any -connection:didReceiveData:
  *     messages are sent but before a -connectionDidFinishLoading: message
- *     is sent.
+ *     is sent. // 在得到完整的响应头之后, 就开始下载响应体的内容.
  *   </item>
+ 
  *   <item>
  *     Unless the NSURLConnection receives a -cancel message,
  *     the delegate will receive one and only one of
@@ -185,14 +199,14 @@ extern "C" {
 /**
  * Informs the delegate that the connection must change the URL of
  * the request in order to continue with the load operation.<br />
- * This allows the delegate to ionspect and/or modify a copy of the request
+ * This allows the delegate to inspect and/or modify a copy of the request
  * before the connection continues loading it.  Normally the delegate
  * can return the request unmodifield.<br />
  * The redirection can be rejectected by the delegate calling -cancel
  * or returning nil.<br />
  * Cancelling the load will simply stop it, but returning nil will
  * cause it to complete with a redirection failure.<br />
- * As a special case, this method may be called with a nil response,
+ * As a special case, this method may be called with a nil response, // response 可能是 nil, 因为在刚开始的时候, 系统可能发觉request有问题, 然后进行了URL的修正.
  * indicating a change of URL made internally by the system rather than
  * due to a response from the server.
  */
@@ -211,7 +225,7 @@ extern "C" {
  * [NSURLResponse] in response.<br />
  * Returns the result of the load or nil if the load failed.
  */
-+ (NSData *) sendSynchronousRequest: (NSURLRequest *)request
++ (NSData *) sendSynchronousRequest: (NSURLRequest *)request // 异步发送请求, 然后将 response 在输出参数中进行记录.
 		  returningResponse: (NSURLResponse **)response
 			      error: (NSError **)error;
 

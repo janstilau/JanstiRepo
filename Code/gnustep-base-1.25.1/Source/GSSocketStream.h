@@ -3,24 +3,21 @@
 #import "GSNetwork.h"
 
 typedef	union {
-  struct sockaddr	s;
-  struct sockaddr_in	i4;
+    struct sockaddr	s;
+    struct sockaddr_in	i4;
 #ifdef	AF_INET6
-  struct sockaddr_in	i6;
-#endif
-#ifndef	_WIN32
-  struct sockaddr_un	u;
+    struct sockaddr_in	i6;
 #endif
 } sockaddr_any;
 
 #define	SOCKIVARS \
 { \
-  id            _sibling;       /* For bidirectional traffic.  	*/\
-  BOOL          _passive;       /* YES means already connected. */\
-  BOOL		_closing;	/* Must close on next failure.	*/\
-  SOCKET        _sock;          /* Needed for ms-windows.       */\
-  id            _handler;       /* TLS/SOCKS handler.           */\
-  sockaddr_any	_address;	/* Socket address info.		*/\
+id            _sibling;       /* For bidirectional traffic.  	*/\
+BOOL          _passive;       /* YES means already connected. */\
+BOOL		_closing;	/* Must close on next failure.	*/\
+SOCKET        _sock;          /* Needed for ms-windows.       */\
+id            _handler;       /* TLS/SOCKS handler.           */\
+sockaddr_any	_address;	/* Socket address info.		*/\
 }
 
 /* The semi-abstract GSSocketStream class is not intended to be subclassed
