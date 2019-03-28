@@ -1040,11 +1040,9 @@ static NSURLProtocol	*placeholder = nil;
         }
         else
         {
-            NSURLCacheStoragePolicy policy;
-            
-            /* Get cookies from the response and accept them into
-             * shared storage if policy permits
-             */
+            NSURLCacheStoragePolicy policy; // 这里进行 cookie 的一些设置工作.
+            // 因为现在其实 response 的返回, 也就是 header 解析完之后开始解析 body 的时候. 也就是说, 现在只有 response 而 body 的内容可能还在进行解析操作.
+            // 所以, 这里是对 response 的处理. 而 cookie 是存储在 response 里面, 所以, 这里进行 cookie 的处理是没有问题的.
             // 所以说, 各个类其实就是责任的抽象体. 这里, 我们将 cookie 设置进去, 回头我们发现如果需要用到 cookie 的时候, 我们在用相同的方法抽取出来.
             if ([this->request HTTPShouldHandleCookies] == YES
                 && [_response isKindOfClass: [NSHTTPURLResponse class]] == YES)
@@ -1225,7 +1223,7 @@ static NSURLProtocol	*placeholder = nil;
                     /* Tell the client that we have a response and how
                      * it should be cached.
                      */
-                    policy = [this->request cachePolicy];
+                    // 在这个类里面, cookie 的存储是用了 CookieStorage 类的单例, 所以, 我觉得其实在真正的 apple 的实现里面, 是用了 [NSURLCache class] 这个类进行了存储的管理. 不过, 在 GNU 的实现里面, 没有用这个东西. 不知道是为了什么.
                     if (policy == (NSURLCacheStoragePolicy)
                         NSURLRequestUseProtocolCachePolicy)
                     {

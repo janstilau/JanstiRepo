@@ -384,7 +384,7 @@ didReceiveAuthenticationChallenge: challenge];
 
 - (void) URLProtocol: (NSURLProtocol *)protocol
   didReceiveResponse: (NSURLResponse *)response
-  cacheStoragePolicy: (NSURLCacheStoragePolicy)policy
+  cacheStoragePolicy: (NSURLCacheStoragePolicy)policy // 这里, iOS 的后面的版本, 其实是去除了 policy 了, 其实在NSURLC onnectionDataDelegate 里面, 是没有 policy 这个参数的.
 {
     [this->_delegate connection: self didReceiveResponse: response]; // protocol 的头信息解析完之后, 会到这里来.
     if (policy == NSURLCacheStorageAllowed
