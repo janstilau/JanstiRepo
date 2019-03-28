@@ -62,6 +62,11 @@ NSString * const NSStreamSOCKSProxyVersionKey
  * Streams which actually expect to wait for I/O events must be added with
  * the appropriate information for the loop to signal them.
  */
+
+/*
+ 关于 runloop 的东西这里没有看, 不过他的基本思想在于, 将 自己注册给 runloop, 然后 runloop 就会在适当的时机, 进行回调, 调用自己实现的的 runloop 相关的接口, 在这个接口里面, 会进行 dispatch 函数, 这个函数里面, 会根据自身的状态, 进行事件的发送. 这个事件发送函数里面, 会调用最终的 stream handleEvent 方法. 所以, 流这种方式不会造成任务的阻塞, 是通过一点点的读取完成的流的写入和写出操作.
+ */
+
 static RunLoopEventType typeForStream(NSStream *aStream)
 {
     NSStreamStatus        status = [aStream streamStatus];
@@ -71,18 +76,15 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     {
         return ET_TRIGGER;
     }
-#if	defined(_WIN32)
-    return ET_HANDLE;
-#else
     if ([aStream isKindOfClass: [NSOutputStream class]] == NO
         && status != NSStreamStatusOpening)
     {
         return ET_RDESC;
     }
     return ET_WDESC;
-#endif
 }
 
+// runloop 的先不看.
 @implementation	NSRunLoop (NSStream)
 - (void) addStream: (NSStream*)aStream mode: (NSString*)mode
 {
@@ -186,12 +188,12 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     return [_properties objectForKey: key];
 }
 
-- (void) receivedEvent: (void*)data
+- (void) receivedEvent: (void*)data // runloop 的回调.
                   type: (RunLoopEventType)type
                  extra: (void*)extra
                forMode: (NSString*)mode
 {
-    [self _dispatch];
+    [self _dispatch]; // 每一次, runloop 告诉我们, 可以执行之后, 我们执行 dispatch 方法, 由各个子类, 进行 dispatch 的编写.
 }
 
 - (void) removeFromRunLoop: (NSRunLoop *)aRunLoop forMode: (NSString *)mode
@@ -272,7 +274,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
         /* We don't want to send any events the the delegate after the
          * stream has been closed.
          */
-        _delegateValid
+        _delegateValid // 这里还专门有这么一个判断.
         = [_delegate respondsToSelector: @selector(stream:handleEvent:)];
     }
 }
@@ -410,7 +412,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     NSEndMapTableEnumeration(&enumerator);
 }
 
-- (void) _sendEvent: (NSStreamEvent)event
+- (void) _sendEvent: (NSStreamEvent)event // 这个主要就是为了通知代理.
 {
     if (event == NSStreamEventNone)
     {
@@ -418,10 +420,10 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     }
     else if (event == NSStreamEventOpenCompleted)
     {
-        if ((_events & event) == 0)
+        if ((_events & event) == 0) // 如果之前的没有完成.
         {
             _events |= NSStreamEventOpenCompleted;
-            if (_delegateValid == YES)
+            if (_delegateValid == YES) // 通知代理.
             {
                 [_delegate stream: self
                       handleEvent: NSStreamEventOpenCompleted];
@@ -432,11 +434,11 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     {
         if ((_events & NSStreamEventOpenCompleted) == 0)
         {
-            _events |= NSStreamEventOpenCompleted;
+            _events |= NSStreamEventOpenCompleted; // 更新事件
             if (_delegateValid == YES)
             {
                 [_delegate stream: self
-                      handleEvent: NSStreamEventOpenCompleted];
+                      handleEvent: NSStreamEventOpenCompleted]; // 通知代理.
             }
         }
         if ((_events & NSStreamEventHasBytesAvailable) == 0)
@@ -445,7 +447,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
             if (_delegateValid == YES)
             {
                 [_delegate stream: self
-                      handleEvent: NSStreamEventHasBytesAvailable];
+                      handleEvent: NSStreamEventHasBytesAvailable]; // 通知代理.
             }
         }
     }
@@ -634,9 +636,9 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     }
 }
 
-- (BOOL) hasBytesAvailable
+- (BOOL) hasBytesAvailable // A Boolean value that indicates whether the receiver has bytes available to read. Input stream 是读数据的 stream.
 {
-    if (_currentStatus == NSStreamStatusOpen)
+    if (_currentStatus == NSStreamStatusOpen) // The stream is open, but no reading or writing is occurring.
     {
         return YES;
     }
@@ -679,7 +681,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
 @end
 
 
-@implementation GSDataInputStream
+@implementation GSDataInputStream // reading stream from a given NSData Object.
 
 /**
  * the designated initializer
@@ -709,43 +711,32 @@ static RunLoopEventType typeForStream(NSStream *aStream)
 {
     NSUInteger dataSize;
     
-    if (buffer == 0)
-    {
-        [NSException raise: NSInvalidArgumentException
-                    format: @"null pointer for buffer"];
-    }
-    if (len == 0)
-    {
-        [NSException raise: NSInvalidArgumentException
-                    format: @"zero byte read write requested"];
-    }
-    
     if ([self streamStatus] == NSStreamStatusClosed
-        || [self streamStatus] == NSStreamStatusAtEnd)
+        || [self streamStatus] == NSStreamStatusAtEnd) // 防卫式编程.
     {
         return 0;
     }
     
     /* Mark the data availability event as handled, so we can generate more.
      */
-    _events &= ~NSStreamEventHasBytesAvailable;
+    _events &= ~NSStreamEventHasBytesAvailable; // ~ 是按位取反. 0xFFF11111101, _EVENT 在这样的操作之后, 就是 bytesUnAvailable.
     
     dataSize = [_data length];
     NSAssert(dataSize >= _pointer, @"Buffer overflow!");
     if (len + _pointer >= dataSize)
     {
         len = dataSize - _pointer;
-        [self _setStatus: NSStreamStatusAtEnd];
+        [self _setStatus: NSStreamStatusAtEnd]; // 如果, 读取到头了. 就设置为 end 了
     }
     if (len > 0)
     {
-        memcpy(buffer, [_data bytes] + _pointer, len);
+        memcpy(buffer, [_data bytes] + _pointer, len); // 进行 buffer 的读取操作, 更新存储的偏移量的值.
         _pointer = _pointer + len;
     }
     return len;
 }
 
-- (BOOL) getBuffer: (uint8_t **)buffer length: (NSUInteger *)len
+- (BOOL) getBuffer: (uint8_t **)buffer length: (NSUInteger *)len // 返回, 数据流的地址, 以及还有多少数据可以读取.
 {
     unsigned long dataSize = [_data length];
     
@@ -759,17 +750,17 @@ static RunLoopEventType typeForStream(NSStream *aStream)
 {
     unsigned long dataSize = [_data length];
     
-    return (dataSize > _pointer);
+    return (dataSize > _pointer); // 查看偏移量是否到了最后.
 }
 
-- (id) propertyForKey: (NSString *)key
+- (id) propertyForKey: (NSString *)key // KeyValue Coding 的实现.
 {
     if ([key isEqualToString: NSStreamFileCurrentOffsetKey])
         return [NSNumber numberWithLong: _pointer];
     return [super propertyForKey: key];
 }
 
-- (void) _dispatch
+- (void) _dispatch // 在 DataInput 的dispatch 里面, 是发送 event 消息, sendEvent 主要是通知代理. 而在代理里面, 通过上面的 read 方法, 每次进行取值操作. 最终结果就是, 每个 runloop 执行一点点的 read 操作. 这其实和 设置 timer interval 为0 达到的效果是一样一样的.
 {
     BOOL av = [self hasBytesAvailable];
     NSStreamEvent myEvent = av ? NSStreamEventHasBytesAvailable :
@@ -798,17 +789,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
 
 - (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len
 {
-    if (buffer == 0)
-    {
-        [NSException raise: NSInvalidArgumentException
-                    format: @"null pointer for buffer"];
-    }
-    if (len == 0)
-    {
-        [NSException raise: NSInvalidArgumentException
-                    format: @"zero byte length write requested"];
-    }
-    
+    // 在这个函数里面, 会记录 _pointer 的位置, 也就是写入缓存区的偏移量.
     if ([self streamStatus] == NSStreamStatusClosed
         || [self streamStatus] == NSStreamStatusAtEnd)
     {
@@ -844,7 +825,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
 
 - (void) _dispatch
 {
-    BOOL av = [self hasSpaceAvailable];
+    BOOL av = [self hasSpaceAvailable]; // 其实, 这个和 NSTimer 然后设置为 0 是一个意思, 就是每一次 runloop 都进行一次短小的操作.
     NSStreamEvent myEvent = av ? NSStreamEventHasSpaceAvailable :
     NSStreamEventEndEncountered;
     
@@ -892,7 +873,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     /* We have consumed the 'writable' event ... mark that so another can
      * be generated.
      */
-    _events &= ~NSStreamEventHasSpaceAvailable;
+    _events &= ~NSStreamEventHasSpaceAvailable; // 这里, _event 在这里设置为 UnAvaiable, 在 _sendEvent 的方法内部, 会进行状态的恢复处理.
     [_data appendBytes: buffer length: len];
     _pointer += len;
     return len;
@@ -903,7 +884,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     return YES;
 }
 
-- (id) propertyForKey: (NSString *)key
+- (id) propertyForKey: (NSString *)key // [NSOutputStream outputStreamToMemory], 这样的方法有什么用的? 这里它的方法有问题, 就是需要通过 propertyForKey 这个方法, 去获取特定的 NSStreamDataWrittenToMemoryStreamKey 来获得写入的 data. 不过, keyValue Coding 的好处在于, 有了很多的灵活性
 {
     if ([key isEqualToString: NSStreamFileCurrentOffsetKey])
     {
@@ -916,16 +897,13 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     return [super propertyForKey: key];
 }
 
-- (void) _dispatch
+- (void) _dispatch // 对于 Data相关的 Stream 比较简单. 就是根据 hasSpaceAvailable 来进行event 的发送, 而 hasSpaceAvailable 这个方法里面, 仅仅是进行偏移量的计算而已.
 {
     BOOL av = [self hasSpaceAvailable];
     NSStreamEvent myEvent = av ? NSStreamEventHasSpaceAvailable :
     NSStreamEventEndEncountered;
-    
     [self _sendEvent: myEvent];
 }
-
-@end
 
 @end
 

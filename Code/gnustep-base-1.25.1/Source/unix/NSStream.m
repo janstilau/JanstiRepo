@@ -186,7 +186,6 @@
     }
   else
     {
-      NSLog(@"_dispatch with unexpected status %"PRIuPTR, [self streamStatus]);
     }
 }
 @end
@@ -315,7 +314,6 @@
     }
   else
     {
-      NSLog(@"_dispatch with unexpected status %"PRIuPTR, [self streamStatus]);
     }
 }
 @end
@@ -452,7 +450,7 @@
   return NO;
 }
 
-- (id) propertyForKey: (NSString *)key
+- (id) propertyForKey: (NSString *)key 
 {
   [self subclassResponsibility: _cmd];
   return nil;

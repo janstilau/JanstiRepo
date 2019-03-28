@@ -14,7 +14,7 @@ enum {
   NSStreamStatusNotOpen = 0,   
   NSStreamStatusOpening = 1,
   NSStreamStatusOpen = 2,   
-  NSStreamStatusReading = 3,   
+  NSStreamStatusReading = 3,   // 这一个是给其他的线程的程序使用的.
   NSStreamStatusWriting = 4,   
   NSStreamStatusAtEnd = 5,   
   NSStreamStatusClosed = 6,   

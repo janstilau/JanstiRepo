@@ -121,6 +121,8 @@ typedef	enum {
  * category.
  */
 @protocol RunLoopEvents
+    
+    // 具体的runloop 我们以后在细究, 这里的意思就是, 由 runloop 告诉我们, 可以进行操作了.
 /** This is the message sent back to a watcher when an event is observed
  * by the run loop.<br />
  * The 'data', 'type' and 'mode' arguments are the same as the arguments

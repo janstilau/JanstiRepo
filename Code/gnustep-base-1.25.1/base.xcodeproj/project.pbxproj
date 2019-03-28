@@ -1008,7 +1008,6 @@
 		189070171610BF3C0003C892 /* Makefile.preamble */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.preamble; sourceTree = "<group>"; };
 		189070181610BF3C0003C892 /* NSMessagePort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMessagePort.m; sourceTree = "<group>"; };
 		189070191610BF3C0003C892 /* NSMessagePortNameServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMessagePortNameServer.m; sourceTree = "<group>"; };
-		1890701A1610BF3C0003C892 /* NSStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStream.m; sourceTree = "<group>"; };
 		1890701B1610BF3C0003C892 /* NSUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUserDefaults.m; sourceTree = "<group>"; };
 		1890701C1610BF3C0003C892 /* win32-def.top */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "win32-def.top"; sourceTree = "<group>"; };
 		1890701D1610BF3C0003C892 /* win32-load.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "win32-load.h"; sourceTree = "<group>"; };
@@ -2316,7 +2315,6 @@
 				189070171610BF3C0003C892 /* Makefile.preamble */,
 				189070181610BF3C0003C892 /* NSMessagePort.m */,
 				189070191610BF3C0003C892 /* NSMessagePortNameServer.m */,
-				1890701A1610BF3C0003C892 /* NSStream.m */,
 				1890701B1610BF3C0003C892 /* NSUserDefaults.m */,
 			);
 			path = win32;
