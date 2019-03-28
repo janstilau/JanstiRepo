@@ -1,27 +1,3 @@
-/* Implementation for NSCachedURLResponse for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
-
 #import "common.h"
 #define	EXPOSE_NSCachedURLResponse_IVARS	1
 #import "GSURLPrivate.h"
@@ -38,6 +14,7 @@ typedef struct {
 #define	this	((Internal*)(self->_NSCachedURLResponseInternal))
 
 
+// 这真的是一个纯纯的数据类, 一点逻辑都没写在这个类里面.
 @implementation	NSCachedURLResponse
 
 + (id) allocWithZone: (NSZone*)z
@@ -81,29 +58,6 @@ typedef struct {
       NSZoneFree([self zone], this);
     }
   [super dealloc];
-}
-
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-// FIXME
-  if ([aCoder allowsKeyedCoding])
-    {
-    }
-  else
-    {
-    }
-}
-
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-// FIXME
-  if ([aCoder allowsKeyedCoding])
-    {
-    }
-  else
-    {
-    }
-  return self;
 }
 
 - (NSData *) data

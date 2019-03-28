@@ -131,7 +131,6 @@
 #import	<Foundation/NSURLError.h>
 #import	<Foundation/NSURL.h>
 #import	<Foundation/NSURLHandle.h>
-#import	<Foundation/NSURLProtectionSpace.h>
 #import	<Foundation/NSURLProtocol.h>
 #import	<Foundation/NSURLRequest.h>
 #import	<Foundation/NSURLResponse.h>

@@ -1108,17 +1108,18 @@ static NSURLProtocol	*placeholder = nil;
         if (_statusCode == 401) // 授权相关.
         {
             NSURLProtectionSpace    *space;
-            NSString            *hdr;
+            NSString            *Authenticate;
             NSURL            *url;
             int            failures = 0;
             
             /* This was an authentication challenge.
+             www-authenticate . 这种就是说, 浏览器进行弹框, 用户输入密码, 然后返回这些用户账号, 密码数据, 用的 base64, 之后如果服务器验证成功, 就返回之前请求的数据.
              */
-            hdr = [[document headerNamed: @"WWW-Authenticate"] value];
+            Authenticate = [[document headerNamed: @"WWW-Authenticate"] value];
             url = [this->request URL];
             space = [GSHTTPAuthentication
-                     protectionSpaceForAuthentication: hdr requestURL: url];
-            DESTROY(_credential);
+                     protectionSpaceForAuthentication: Authenticate requestURL: url];
+            DESTROY(_credential); // reset 操作.
             if (space != nil)
             {
                 /* Create credential from user and password
@@ -1207,7 +1208,7 @@ static NSURLProtocol	*placeholder = nil;
                      * authentication type in the challenge.
                      */
                     auth = [authentication
-                            authorizationForAuthentication: hdr
+                            authorizationForAuthentication: Authenticate
                             method: [this->request HTTPMethod]
                             path: [url fullPath]];
                 }
@@ -1269,6 +1270,7 @@ static NSURLProtocol	*placeholder = nil;
             }
         }
         
+        // 已经完成了, 不是授权相关的一些东西.
         [this->input removeFromRunLoop: [NSRunLoop currentRunLoop]
                                forMode: NSDefaultRunLoopMode];
         [this->output removeFromRunLoop: [NSRunLoop currentRunLoop]
@@ -1312,7 +1314,7 @@ static NSURLProtocol	*placeholder = nil;
             }
         }
     }
-    else if (_isLoading == YES && _statusCode != 401)
+    else if (_isLoading == YES && _statusCode != 401) // 如果还在进行 loading,
     {
         /*
          * Report partial data if possible.

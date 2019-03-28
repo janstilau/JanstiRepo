@@ -23,7 +23,7 @@
 
 @end
 
-@implementation _NSURLConnectionDataCollector
+@implementation _NSURLConnectionDataCollector  // 牛逼!!!!!!!!!!!
 
 - (void) dealloc
 {
@@ -199,7 +199,7 @@ typedef struct
          * For compatibility we retain the delegate and release it again
          * when the operation is over.
          */
-        this->_delegate = [delegate retain];
+        this->_delegate = [delegate retain]; // 在这个类的内部, 应该有对于 delegate 的解引用操作
         this->_protocol = [[NSURLProtocol alloc] // 在初始化的时候, 定义了一个新的 NSURLProtocol
                            initWithRequest: this->_request
                            cachedResponse: nil
@@ -239,9 +239,6 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
     if ([challenge proposedCredential] == nil
         || [challenge previousFailureCount] > 0)
     {
-        /* continue without a credential if there is no proposed credential
-         * at all or if an authentication failure has already happened.
-         */
         [[challenge sender]
          continueWithoutCredentialForAuthenticationChallenge: challenge];
     }
@@ -270,7 +267,7 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
              redirectResponse: (NSURLResponse *)response // responsse 为返回值, 它的里面应该提供了上面 request 的信息.
 {
     return request; // 这里, 仅仅是简单的返回重定向的 request, 也就是说, 我们可以根据参数值, 改变新的 request 的配置. 当然, 这是NSObject 的默认实现.
-}
+}// 这个是NSO bject 的非正式协议, 也就是说, 如果自己写一个 delegate 的话, 没有实现的方法, 也就这样实现了.
 
 @end
 
@@ -278,6 +275,7 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
 
 @implementation NSURLConnection (NSURLConnectionSynchronousLoading)
 
+// A synchronous load is
 + (NSData *) sendSynchronousRequest: (NSURLRequest *)request
                   returningResponse: (NSURLResponse **)response
                               error: (NSError **)error
@@ -286,11 +284,11 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
     
     if (0 != response)
     {
-        *response = nil;
+        *response = nil; // 首先, 设置为 nil 了, 这样好不好???
     }
     if (0 != error)
     {
-        *error = nil;
+        *error = nil; // 首先, 设置为 nil 了, 这样好不好???
     }
     if ([self canHandleRequest: request] == YES)
     {
@@ -298,7 +296,7 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
         NSURLConnection			*conn;
         
         collector = [_NSURLConnectionDataCollector new];
-        conn = [[self alloc] initWithRequest: request delegate: collector];
+        conn = [[self alloc] initWithRequest: request delegate: collector]; // 这里, 建立了一个 connection
         if (nil != conn)
         {
             NSRunLoop	*loop;
@@ -309,9 +307,10 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
             limit = [[NSDate alloc] initWithTimeIntervalSinceNow:
                      [request timeoutInterval]];
             
-            while ([collector done] == NO && [limit timeIntervalSinceNow] > 0.0)
-            {
-                [loop runMode: NSDefaultRunLoopMode beforeDate: limit];
+            while ([collector done] == NO && [limit timeIntervalSinceNow] > 0.0) // while 作为 runloop run 的控制条件, 里面的是一次次的执行 runloop 的 runmode 方法. 这个方法, 只会 run 一次.
+            {// Runs the loop once, blocking for input in the specified mode until a given date.
+                // 这样, 这个 runloop 一定可以执行, 因为 connection, 其实是添加到 runloop 的 input 源里面去了. 太厉害了.
+                [loop runMode: NSDefaultRunLoopMode beforeDate: limit]; // 还能这样同步, 太牛了.
             }
             [limit release];
             if (NO == [collector done])
