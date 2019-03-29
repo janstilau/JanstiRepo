@@ -1602,6 +1602,7 @@
 		06EDD8DA2248BEA800C87605 /* Readed */ = {
 			isa = PBXGroup;
 			children = (
+				06EDD9472248BEA800C87605 /* NSURLCredentialStorage.h */,
 				06EDD8F52248BEA800C87605 /* NSHTTPCookieStorage.h */,
 				06EDD9152248BEA800C87605 /* NSURLConnection.h */,
 				06EDD90D2248BEA800C87605 /* NSURLCache.h */,
@@ -1630,6 +1631,8 @@
 				06EDD8EC2248BEA800C87605 /* NSKeyedArchiver.h */,
 				06EDD8ED2248BEA800C87605 /* NSPropertyList.h */,
 				06EDD90F2248BEA800C87605 /* NSURLResponse.h */,
+				06EDD8FB2248BEA800C87605 /* NSURLProtectionSpace.h */,
+				06EDD9272248BEA800C87605 /* NSURLCredential.h */,
 			);
 			path = Readed;
 			sourceTree = "<group>";
@@ -1707,9 +1710,6 @@
 				06EDD92A2248BEA800C87605 /* NSTimeZone.h */,
 				06EDD9412248BEA800C87605 /* NSUndoManager.h */,
 				06EDD9402248BEA800C87605 /* NSURLAuthenticationChallenge.h */,
-				06EDD9272248BEA800C87605 /* NSURLCredential.h */,
-				06EDD9472248BEA800C87605 /* NSURLCredentialStorage.h */,
-				06EDD8FB2248BEA800C87605 /* NSURLProtectionSpace.h */,
 				06EDD91C2248BEA800C87605 /* NSURLProtocol.h */,
 				06EDD92F2248BEA800C87605 /* NSUserDefaults.h */,
 				06EDD9282248BEA800C87605 /* NSUtilities.h */,

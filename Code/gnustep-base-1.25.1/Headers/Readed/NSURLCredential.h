@@ -26,6 +26,21 @@ typedef enum {
 
 /**
  * Represents a user/password credential
+ 
+The URL Loading System supports password-based user credentials,
+ certificate-based user credentials,
+ and certificate-based server credentials.
+ 
+ + credentialForTrust:
+ Creates a URL credential instance for server trust authentication with a given accepted trust.
+ 
+ https://blogs.msdn.microsoft.com/kaushal/2015/05/27/client-certificate-authentication-part-1/
+ + credentialWithIdentity:certificates:persistence:
+ Client Certificate is a digital certificate which confirms to the X.509 system. It is used by client systems to prove their identity to the
+ remote server. Here is a simple way to identify where a certificate is a client certificate or not:
+
+ In Computer Science, Authentication is a mechanism used to prove the identity of the parties involved in a communication. It verifies that “you are who you say you are“. Not to be confused with Authorization, which is to verify that “you are permitted to do what you are trying to do“.
+ 
  */
 @interface NSURLCredential : NSObject <NSCopying>
 {

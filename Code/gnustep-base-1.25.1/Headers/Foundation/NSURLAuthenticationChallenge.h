@@ -52,6 +52,9 @@ extern "C" {
 /**
  * Class to represent an authentication challenge and indicate when the
  * challenge is complete.
+ 
+ 这个类, 其实就是一个包装类. 
+ 
  */
 @interface NSURLAuthenticationChallenge : NSObject
 {

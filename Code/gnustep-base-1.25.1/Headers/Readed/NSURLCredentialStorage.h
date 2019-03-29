@@ -20,6 +20,9 @@ extern "C" {
  */
 extern NSString *const NSURLCredentialStorageChangedNotification;
 
+// 这个类, 就像是 URLCache, HttpCookieStorage 一样, 是做缓存的. Certificate-based credentials are never stored permanently
+// 这个类, 只能存储 user/ password 的 crential, 不能存储 certificate 的.
+    
 /**
  * Provides shared storage of credentials.
  */

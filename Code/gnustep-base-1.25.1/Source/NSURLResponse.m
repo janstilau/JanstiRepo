@@ -29,6 +29,10 @@ typedef struct {
 @interface	_GSMutableInsensitiveDictionary : NSMutableDictionary
 @end
 
+
+// 这其实仅仅是一个数据类而已.
+
+
 @implementation	NSURLResponse (Private)
 
 - (void) _checkHeaders

@@ -77,11 +77,11 @@ typedef struct {
 {
   if ((self = [super init]) != nil)
     {
-      this->space = [space copy];
-      this->credential = [credential copy];
+      this->space = [space copy]; // space, 也就是 host, port, method, realm, 等信息.
+      this->credential = [credential copy]; //
       this->response = [response copy];
       this->error = [error copy];
-      this->sender = RETAIN(sender);
+      this->sender = RETAIN(sender); // 回调的对象.
       this->previousFailureCount = previousFailureCount;
     }
   return self;
