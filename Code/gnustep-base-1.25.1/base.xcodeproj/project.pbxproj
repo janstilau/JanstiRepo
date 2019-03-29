@@ -1602,6 +1602,8 @@
 		06EDD8DA2248BEA800C87605 /* Readed */ = {
 			isa = PBXGroup;
 			children = (
+				06EDD9402248BEA800C87605 /* NSURLAuthenticationChallenge.h */,
+				06EDD91C2248BEA800C87605 /* NSURLProtocol.h */,
 				06EDD9472248BEA800C87605 /* NSURLCredentialStorage.h */,
 				06EDD8F52248BEA800C87605 /* NSHTTPCookieStorage.h */,
 				06EDD9152248BEA800C87605 /* NSURLConnection.h */,
@@ -1709,8 +1711,6 @@
 				06EDD9142248BEA800C87605 /* NSTextCheckingResult.h */,
 				06EDD92A2248BEA800C87605 /* NSTimeZone.h */,
 				06EDD9412248BEA800C87605 /* NSUndoManager.h */,
-				06EDD9402248BEA800C87605 /* NSURLAuthenticationChallenge.h */,
-				06EDD91C2248BEA800C87605 /* NSURLProtocol.h */,
 				06EDD92F2248BEA800C87605 /* NSUserDefaults.h */,
 				06EDD9282248BEA800C87605 /* NSUtilities.h */,
 				06EDD92D2248BEA800C87605 /* NSValueTransformer.h */,
