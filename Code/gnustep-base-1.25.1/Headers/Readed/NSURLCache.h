@@ -26,7 +26,6 @@ typedef enum
   NSURLCacheStorageNotAllowed /** No caching allowed */
 } NSURLCacheStoragePolicy;
 
-    
 /*
  这个类的逻辑很简单, 就是一个缓存的作用.
  */
@@ -34,17 +33,15 @@ typedef enum
 /**
  * Encapsulates a cached response to a URL load request.
  */
-@interface NSCachedURLResponse : NSObject <NSCoding, NSCopying>
+@interface NSCachedURLResponse : NSObject <NSCoding, NSCopying> // 这个类并没有返回 request 的信息, 也就是对应的关系, 其实是由NSURLCache 管理的.
 {
-#if	GS_EXPOSE(NSCachedURLResponse)
   void *_NSCachedURLResponseInternal;
-#endif
 }
 
 /**
  * Returns the data with which the receiver was initialised.
  */
-- (NSData *) data;
+- (NSData *) data; // 真正原始的数据.
 
 /**
  * Uses the NSURLCacheStorageAllowed policy to cache the specified
@@ -58,7 +55,7 @@ typedef enum
  */
 - (id) initWithResponse: (NSURLResponse *)response
 		   data: (NSData *)data
-	       userInfo: (NSDictionary *)userInfo
+	       userInfo: (NSDictionary *)userInfo // 这个东西, 就是 app 的一个切口, 可以在这里面存储任何和 app 相关的内容, 如果有必要的话.
 	  storagePolicy: (NSURLCacheStoragePolicy)storagePolicy;
 
 /**
@@ -82,9 +79,7 @@ typedef enum
 
 @interface NSURLCache : NSObject
 {
-#if	GS_EXPOSE(NSURLCache)
   void *_NSURLCacheInternal;
-#endif
 }
 
 /**
@@ -92,6 +87,9 @@ typedef enum
  * If you are going to call this method to specify an alternative to
  * the default cache, you should do so before the shared cache is used
  * in order to avoid loss of data that was in the old cache.
+ 
+ 这个函数可以替换 cache, 不过需要在这个类没有使用之前使用, 因为可能丢失数据.
+ 
  */
 + (void) setSharedURLCache: (NSURLCache *)cache;
 
@@ -111,7 +109,7 @@ typedef enum
 
 /**
  * Returns the [NSCachedURLResponse] cached for the specified request
- * or nil if there is no matching response in tthe cache.
+ * or nil if there is no matching response in the cache.
  */
 - (NSCachedURLResponse *) cachedResponseForRequest: (NSURLRequest *)request;
 

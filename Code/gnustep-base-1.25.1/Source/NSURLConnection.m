@@ -233,6 +233,13 @@ didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
     return;
 }
 
+
+/*
+ 现在 NSSesstion 里面, didReceiveAuthenticationChallenge 提供了一个闭包, 不过逻辑是一样的.
+ 如果在 web端, 收到一个 basic 之后, 是会弹出一个账号密码的输入框, 然后用户输入账号密码之后点击确认, 浏览器会重发之前的请求, 并且在请求头里面, 添加用户密码的信息(base64). 这件事不用 web 开发人员进行设置, 而是浏览器自己执行的. 也就是浏览器自己封装了将数据密码添加到协议头中重发的这套逻辑了.
+ 那么在 iOS 中, 这套逻辑就变成了, 在NSURLS ession 里面, 生成一个新的 crendial, 这个 credential 里面包含了账号和密码, 交到闭包里面, 在闭包里面, 还是上面的那一套逻辑, 将这些内容封装到协议头里面, 然后发送.
+ 这就是类库的作用, 也就是虽然知道了最底层的 http 的机制, 但是不同的类库有着自己的实现逻辑. 这是需要再次学习的.
+ */
 - (void) connection: (NSURLConnection *)connection
 didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
 {

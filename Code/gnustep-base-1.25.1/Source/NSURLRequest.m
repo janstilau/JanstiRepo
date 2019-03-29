@@ -123,7 +123,7 @@ typedef struct {
     NSStringFromClass([self class]), [[self URL] absoluteString]];
 }
 
-- (NSUInteger) hash
+- (NSUInteger) hash // 这里, Request 的 hash 是通过URL 的 hash 达成的. 在 MC 的代码里面, 去除时间戳这些东西, 其实也是为了这些, 因为 在 get 的时候, 所有的参数都是URL 的一部分.
 {
   return [this->URL hash];
 }

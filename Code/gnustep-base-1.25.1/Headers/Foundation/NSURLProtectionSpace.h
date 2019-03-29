@@ -43,6 +43,7 @@ extern NSString * const NSURLAuthenticationMethodServerTrust;
  * Class to encapsulate a protection space ... where authentication is
  * required.
  */
+// 这是一个数据类, 主要就是封装 WWW-Authenticate 里面的内容.
 @interface NSURLProtectionSpace : NSObject <NSCopying>
 {
 #if	GS_EXPOSE(NSURLProtectionSpace)
@@ -58,7 +59,7 @@ extern NSString * const NSURLAuthenticationMethodServerTrust;
 /**
  * Returns the host (or proxy host) set in the receiver.
  */
-- (NSString *) host;
+- (NSString *) host; // url 的 host
 
 /**
  * Initialises the receiver with host, port, and protocol identifying the

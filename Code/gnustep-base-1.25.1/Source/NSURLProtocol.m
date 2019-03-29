@@ -1298,7 +1298,7 @@ static NSURLProtocol	*placeholder = nil;
                 if (_parseOffset > 0)
                 {
                     newInputData = [newInputData subdataWithRange:
-                         NSMakeRange(_parseOffset, bodyLength - _parseOffset)];
+                                    NSMakeRange(_parseOffset, bodyLength - _parseOffset)];
                 }
                 _parseOffset = bodyLength;
                 [self _didLoad: newInputData];
@@ -1328,7 +1328,7 @@ static NSURLProtocol	*placeholder = nil;
                 if (_parseOffset > 0)
                 {
                     newInputData = [newInputData subdataWithRange:
-                         NSMakeRange(_parseOffset, [newInputData length] - _parseOffset)];
+                                    NSMakeRange(_parseOffset, [newInputData length] - _parseOffset)];
                 }
                 _parseOffset = bodyLength;
                 [this->client URLProtocol: self didLoadData: newInputData]; // 通知代理, 又来了新的数据了.
