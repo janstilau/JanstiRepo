@@ -81,10 +81,6 @@ otherTime(NSDate* other)
 {
   Class	c;
 
-  if (other == nil)
-    [NSException raise: NSInvalidArgumentException format: @"other time nil"];
-  if (GSObjCIsInstance(other) == NO)
-    [NSException raise: NSInvalidArgumentException format: @"other time bad"];
   c = object_getClass(other);
   if (c == concreteClass || c == calendarClass)
     return ((NSGDate*)other)->_seconds_since_ref;
@@ -1015,7 +1011,7 @@ otherTime(NSDate* other)
   return s;
 }
 
-- (NSDate*) earlierDate: (NSDate*)otherDate
+- (NSDate*) earlierDate: (NSDate*)otherDate // 比较, 取出靠前的时间. 同 self 比较.
 {
   if (otherTime(self) > otherTime(otherDate))
     {

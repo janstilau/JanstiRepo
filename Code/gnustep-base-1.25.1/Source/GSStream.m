@@ -239,7 +239,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
              */
             if ([self _isOpened])
             {
-                [aRunLoop addStream: self mode: mode];
+                [aRunLoop addStream: self mode: mode]; // 就是把 stream 变成了 runloop 的一个 watcher.
             }
         }
     }

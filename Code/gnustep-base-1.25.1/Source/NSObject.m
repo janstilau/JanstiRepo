@@ -1904,6 +1904,10 @@ static id gs_weak_load(id obj)
   return GSObjCIsKindOf(self, aClass);
 }
 
+/*
+ performSelector 这个函数很可怕, 涉及到 RUNTime 的底层实现, 以及 runloop 的底层实现. 因为根据参数的不同, 它属于不同的领域, 在 NSObject 里面, 这个函数是 runTime 的底层实现.
+ 
+ */
 /**
  * Causes the receiver to execute the method implementation corresponding
  * to aSelector and returns the result.<br />
@@ -1913,10 +1917,6 @@ static id gs_weak_load(id obj)
 - (id) performSelector: (SEL)aSelector
 {
   IMP msg;
-
-  if (aSelector == 0)
-    [NSException raise: NSInvalidArgumentException
-		format: @"%@ null selector given", NSStringFromSelector(_cmd)];
 
   /* The Apple runtime API would do:
    * msg = class_getMethodImplementation(object_getClass(self), aSelector);
@@ -1934,7 +1934,7 @@ static id gs_weak_load(id obj)
 		     sel_getName(aSelector), sel_getName(_cmd)];
       return nil;
     }
-  return (*msg)(self, aSelector);
+  return (*msg)(self, aSelector); // 找到 IMP, 直接调用了
 }
 
 /**
@@ -2004,7 +2004,7 @@ static id gs_weak_load(id obj)
       return nil;
     }
 
-  return (*msg)(self, aSelector, object1, object2);
+  return (*msg)(self, aSelector, object1, object2); // 直接调用,
 }
 
 /**
