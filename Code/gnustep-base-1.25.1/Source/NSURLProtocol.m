@@ -431,7 +431,8 @@ static NSURLProtocol	*placeholder = nil;
     }
 }
 
-
+// Don't instantiate an NSURLProtocol subclass directly. Instead, create subclasses for any custom protocols or URL schemes that your app supports. When a download starts, the system creates the appropriate protocol object to handle the corresponding URL request.
+// 在一个网络请求开启的时候, 系统会根据之前 registerClass 的调用的结构, 生成真正的相对应这个 Protocol 的实现类.
 + (BOOL) registerClass: (Class)protocolClass
 {
     if ([protocolClass isSubclassOfClass: [NSURLProtocol class]] == YES)
@@ -450,6 +451,7 @@ static NSURLProtocol	*placeholder = nil;
     [regLock unlock];
 }
 
+// 这个方法, 从函数的
 + (void) setProperty: (id)value
               forKey: (NSString *)key
            inRequest: (NSMutableURLRequest *)request
@@ -531,6 +533,7 @@ static NSURLProtocol	*placeholder = nil;
     return self;
 }
 
+// 在苹果的实现里面, 真的是大量的使用了类簇模式. 在 init 方法里面, 根据参数生成实际的对象, 然后在调用实际对象的 init 方法.
 - (id) initWithRequest: (NSURLRequest *)request
         cachedResponse: (NSCachedURLResponse *)cachedResponse
                 client: (id <NSURLProtocolClient>)client
@@ -559,11 +562,11 @@ static NSURLProtocol	*placeholder = nil;
                       cachedResponse: cachedResponse
                               client: client];
     }
-    if ((self = [self init]) != nil)
+    if ((self = [self init]) != nil) // 前面是类簇模式的实现, 这里是真正的实现.
     {
         this->request = [request copy];
-        this->cachedResponse = RETAIN(cachedResponse);
-        this->client = client;	// Not retained // 这里, 进行了 client 的赋值, 现在这个client 就是 NSURLConnection
+        this->cachedResponse = RETAIN(cachedResponse); // 这个 cachedResponse 现在代码里面没有实际的意义, 仅仅是在 StartLoading 的时候, 可以根据这个进行一些之前缓存数据的读取, 帮助这次的 request.
+        this->client = client;	// 这个东西, 就是和 URL Loading system 进行交互的入口.
     }
     return self;
 }
@@ -577,6 +580,7 @@ static NSURLProtocol	*placeholder = nil;
 
 @implementation	NSURLProtocol (Private)
 
+// 在这里, 在生成实际的处理网络请求的处理类的时候, 会通过这个函数, 来生成真正的操作网络请求的类.
 + (Class) _classToHandleRequest:(NSURLRequest *)request
 {
     Class protoClass = nil;
@@ -587,7 +591,7 @@ static NSURLProtocol	*placeholder = nil;
     while (count-- > 0)
     {
         Class	proto = [registered objectAtIndex: count];
-        if ([proto canInitWithRequest: request] == YES)
+        if ([proto canInitWithRequest: request] == YES) // 这种检查方式可以放到自己的代码里面, 如果想要自己去控制对于某种类型的控制的时候, 只暴露一个 registerClass 给用户, 然后将全部的实现逻辑封装到自己的内部, 是很好的接口隔离的实现方式.
         {
             protoClass = proto;
             break;
@@ -760,6 +764,7 @@ static NSURLProtocol	*placeholder = nil;
         // Fall through to continue original connect.
     }
     
+    // 组装各个数据项.
     NSURL    *url = [this->request URL];
     NSHost    *host = [NSHost hostWithName: [url host]];
     int    port = [[url port] intValue];
@@ -781,6 +786,7 @@ static NSURLProtocol	*placeholder = nil;
         port = [[url scheme] isEqualToString: @"https"] ? 443 : 80; // 这里, 做了保险处理, 就是 port 为 443 或者 80, 是和 http 进行匹配的.
     }
     
+    // 建立一个 Stream Socket 链接, 连进行真正的 Http 请求
     [NSStream getStreamsToHost: host
                           port: port
                    inputStream: &this->input
@@ -800,7 +806,7 @@ static NSURLProtocol	*placeholder = nil;
     
     [this->input retain];
     [this->output retain];
-    if ([[url scheme] isEqualToString: @"https"] == YES) // 如果是 https 的链接.
+    if ([[url scheme] isEqualToString: @"https"] == YES) // 如果是 https 的链接, 那么在 socket 链接中, 赋值了很多的属性, 这些属性会有什么效果, 放在了 Stream 类的实现里面
     {
         static NSArray        *keys;
         if (nil == keys)
@@ -828,7 +834,6 @@ static NSURLProtocol	*placeholder = nil;
         {
             NSString      *key = [keys objectAtIndex: count];
             NSString      *str = [this->request _propertyForKey: key];
-            
             if (nil != str)
             {
                 [this->output setProperty: str forKey: key];
@@ -848,10 +853,6 @@ static NSURLProtocol	*placeholder = nil;
 
 - (void) stopLoading // 移出 input, ouput 的操作.
 {
-    if (_debug == YES)
-    {
-        NSLog(@"%@ stopLoading", self);
-    }
     _isLoading = NO;
     DESTROY(_writeData);
     if (this->input != nil)
@@ -1618,7 +1619,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
 }
 @end
 
-@implementation _NSHTTPSURLProtocol
+@implementation _NSHTTPSURLProtocol // 这个和 http 没有任何的区别, 仅仅是 canInitWithRequest 进行了重写. 因为 http 和 https 的区别,更多的是 stream 的区别.
 
 + (BOOL) canInitWithRequest: (NSURLRequest*)request
 {

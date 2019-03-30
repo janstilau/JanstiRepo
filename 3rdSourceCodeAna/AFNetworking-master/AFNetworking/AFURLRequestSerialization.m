@@ -78,7 +78,6 @@ NSString * AFPercentEscapedStringFromString(NSString *string) {
 
 #pragma mark -
 
-// 这是对于 query key-value 的一个封装, 主要是为了百分号转移.
 @interface AFQueryStringPair : NSObject
 @property (readwrite, nonatomic, strong) id field;
 @property (readwrite, nonatomic, strong) id value;
@@ -117,7 +116,6 @@ NSString * AFPercentEscapedStringFromString(NSString *string) {
 FOUNDATION_EXPORT NSArray * AFQueryStringPairsFromDictionary(NSDictionary *dictionary);
 FOUNDATION_EXPORT NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value);
 
-// 序列化的过程
 NSString * AFQueryStringFromParameters(NSDictionary *parameters) {
     NSMutableArray *mutablePairs = [NSMutableArray array];
     for (AFQueryStringPair *pair in AFQueryStringPairsFromDictionary(parameters)) {
@@ -134,9 +132,6 @@ NSArray * AFQueryStringPairsFromDictionary(NSDictionary *dictionary) {
 NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value) {
     NSMutableArray *mutableQueryStringComponents = [NSMutableArray array];
 
-    /*
-     An immutable description of how to order a collection of objects based on a property common to all the objects.
-     */
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"description" ascending:YES selector:@selector(compare:)];
 
     if ([value isKindOfClass:[NSDictionary class]]) {
@@ -188,8 +183,6 @@ static NSArray * AFHTTPRequestSerializerObservedKeyPaths() {
 
 static void *AFHTTPRequestSerializerObserverContext = &AFHTTPRequestSerializerObserverContext;
 
-
-// http 发送内容的原理其实并没有进行改变, afn 是把那些复杂的操作进行了封装. 可以说是隔离了底层. 这就是在抽象层进行编程的意义所在.
 @interface AFHTTPRequestSerializer ()
 @property (readwrite, nonatomic, strong) NSMutableSet *mutableObservedChangedKeyPaths;
 @property (readwrite, nonatomic, strong) NSMutableDictionary *mutableHTTPRequestHeaders;
@@ -247,7 +240,6 @@ static void *AFHTTPRequestSerializerObserverContext = &AFHTTPRequestSerializerOb
     // HTTP Method Definitions; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
     self.HTTPMethodsEncodingParametersInURI = [NSSet setWithObjects:@"GET", @"HEAD", @"DELETE", nil];
 
-    // 这里添加监听是为了, 在 serializer 设置属性之后, 将这个属性值添加到 mutableObservedChangedKeyPaths 中, 再生成 request 的过程中, 如果 mutableObservedChangedKeyPaths 中有值, 直接将这个值添加到 request 中去.
     self.mutableObservedChangedKeyPaths = [NSMutableSet set];
     for (NSString *keyPath in AFHTTPRequestSerializerObservedKeyPaths()) {
         if ([self respondsToSelector:NSSelectorFromString(keyPath)]) {
@@ -360,12 +352,10 @@ forHTTPHeaderField:(NSString *)field
 
 #pragma mark -
 
-
-// 最主要的方法, 生成对应的 request 对象. NSParameterAssert 检测参数对象是不是 nil
-- (NSMutableURLRequest *)requestWithMethod:(NSString *)method // get. set
-                                 URLString:(NSString *)URLString // url, 这个 url 已经是全路径了.
-                                parameters:(id)parameters // 参数
-                                     error:(NSError *__autoreleasing *)error // 传出对象
+- (NSMutableURLRequest *)requestWithMethod:(NSString *)method
+                                 URLString:(NSString *)URLString
+                                parameters:(id)parameters
+                                     error:(NSError *__autoreleasing *)error
 {
     NSParameterAssert(method);
     NSParameterAssert(URLString);
@@ -382,7 +372,7 @@ forHTTPHeaderField:(NSString *)field
             [mutableRequest setValue:[self valueForKeyPath:keyPath] forKey:keyPath];
         }
     }
-    // 上面设置了 url 还有 method, 然后后面的内容通过下面进行处理. 下面的这个方法, 就是这个协议里面的方法.
+
     mutableRequest = [[self requestBySerializingRequest:mutableRequest withParameters:parameters error:error] mutableCopy];
 
 	return mutableRequest;
@@ -397,12 +387,10 @@ forHTTPHeaderField:(NSString *)field
     NSParameterAssert(method);
     NSParameterAssert(![method isEqualToString:@"GET"] && ![method isEqualToString:@"HEAD"]);
 
-    // 首先还是生成对应的 request. 只不过不传入 param 参数. 这种传递文件的 content-type 必然是 multipart/form-data, 所以参数其实是包含在请求体里面.
     NSMutableURLRequest *mutableRequest = [self requestWithMethod:method URLString:URLString parameters:nil error:error];
 
     __block AFStreamingMultipartFormData *formData = [[AFStreamingMultipartFormData alloc] initWithURLRequest:mutableRequest stringEncoding:NSUTF8StringEncoding];
 
-    // 首先, 将 parameters 里面的内容, 添加到 httpBody 中去.
     if (parameters) {
         for (AFQueryStringPair *pair in AFQueryStringPairsFromDictionary(parameters)) {
             NSData *data = nil;
@@ -420,7 +408,6 @@ forHTTPHeaderField:(NSString *)field
         }
     }
 
-    // block 里面, 也会用 appendPartWithFormData, 为 formData 添加内容. 一般我们是会添加文件. 这个类是讲参数部分进行预先处理, 然后提供一个 block, 进行内容部分的添加.
     if (block) {
         block(formData);
     }
@@ -483,7 +470,7 @@ forHTTPHeaderField:(NSString *)field
 }
 
 #pragma mark - AFURLRequestSerialization
-// Http 的 serialization 方法, 为刚刚生成的 request 对象, 添加参数.
+
 - (NSURLRequest *)requestBySerializingRequest:(NSURLRequest *)request
                                withParameters:(id)parameters
                                         error:(NSError *__autoreleasing *)error
@@ -492,7 +479,6 @@ forHTTPHeaderField:(NSString *)field
 
     NSMutableURLRequest *mutableRequest = [request mutableCopy];
 
-    // 现在里面有的信息是 "Accept-Language, User-Agent", 也就是说, HTTPRequestHeaders 里面存放的是一些共有信息, 是每个 reqeust 都要设置的 header 信息.
     [self.HTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL * __unused stop) {
         if (![request valueForHTTPHeaderField:field]) {
             [mutableRequest setValue:value forHTTPHeaderField:field];
@@ -500,7 +486,6 @@ forHTTPHeaderField:(NSString *)field
     }];
 
     NSString *query = nil;
-    // 这里, 将 parameter 的内容进行了字符串话.
     if (parameters) {
         if (self.queryStringSerialization) {
             NSError *serializationError;
@@ -522,7 +507,6 @@ forHTTPHeaderField:(NSString *)field
         }
     }
 
-    // 如果是需要将参数添加到 URL 中去的 httpMethod, 默认是 get, head, delete. 那么就将 query 中的数据拼接到后面.
     if ([self.HTTPMethodsEncodingParametersInURI containsObject:[[request HTTPMethod] uppercaseString]]) {
         if (query && query.length > 0) {
             mutableRequest.URL = [NSURL URLWithString:[[mutableRequest.URL absoluteString] stringByAppendingFormat:mutableRequest.URL.query ? @"&%@" : @"?%@", query]];
@@ -532,11 +516,9 @@ forHTTPHeaderField:(NSString *)field
         if (!query) {
             query = @"";
         }
-        // 如果是 http 的 request, 那么就用表单形式提交数据, content-type 其实就是一个字段, 但是 http 规范里面表明, 这个字段是用来表示实体, 也就是 body 的内容的. 所以, 必须按照规范填写固定的 mime-type 值. 为什么这样呢, 因为拿到数据解析数据内容, 是很费时间的, 如果有 content-type 表明数据的格式, 框架层就可以对数据进行分层处理了.
         if (![mutableRequest valueForHTTPHeaderField:@"Content-Type"]) {
             [mutableRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
         }
-        // 将 query 转化成 data 存放到 body 内部.
         [mutableRequest setHTTPBody:[query dataUsingEncoding:self.stringEncoding]];
     }
 
@@ -545,7 +527,6 @@ forHTTPHeaderField:(NSString *)field
 
 #pragma mark - NSKeyValueObserving
 
-// 如果是自己手动进行通知的, 返回 NO
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
     if ([AFHTTPRequestSerializerObservedKeyPaths() containsObject:key]) {
         return NO;
@@ -692,7 +673,7 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 
     self.request = urlRequest;
     self.stringEncoding = encoding;
-    self.boundary = AFCreateMultipartFormBoundary(); // 随机生成的 boundary
+    self.boundary = AFCreateMultipartFormBoundary();
     self.bodyStream = [[AFMultipartBodyStream alloc] initWithStringEncoding:encoding];
 
     return self;
@@ -843,11 +824,9 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
     }
 
     // Reset the initial and final boundaries to ensure correct Content-Length
-    // 这里, bodyStream 没有仔细去看具体的实现是什么.
     [self.bodyStream setInitialAndFinalBoundaries];
     [self.request setHTTPBodyStream:self.bodyStream];
 
-    // 这里做一下 httpHeader 的设置.
     [self.request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", self.boundary] forHTTPHeaderField:@"Content-Type"];
     [self.request setValue:[NSString stringWithFormat:@"%llu", [self.bodyStream contentLength]] forHTTPHeaderField:@"Content-Length"];
 

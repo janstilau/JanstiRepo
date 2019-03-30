@@ -27,11 +27,8 @@ extern "C" {
  *  preferred for new implementations, since they provide greater
  *  forward/backward compatibility in the face of class changes.</p>
  */
-    
 //
 
-    
-    
 /*
     这个类定义了一些公共的方法, 但是具体应该怎么进行归档解档, 具体的策略并没有在这个类当中.
     这个类定义了一些, 类似于快捷方法的东西. 但是, 这些快捷方法所包装的最根本的方法, 还是需要每个子类进行编写. 而且, 这些快捷方法, 这个父类没有进行包装完全. 例如, Int32, Bool 这些值怎么包装, 都是子类的责任.

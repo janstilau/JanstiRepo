@@ -181,7 +181,6 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
 }
 
 + (instancetype)policyWithPinningMode:(AFSSLPinningMode)pinningMode withPinnedCertificates:(NSSet *)pinnedCertificates {
-    // 用这个方法创建的, pinningMode 发生了改变.
     AFSecurityPolicy *securityPolicy = [[self alloc] init];
     securityPolicy.SSLPinningMode = pinningMode;
 
@@ -221,11 +220,6 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
 
 #pragma mark -
 
-/*
- 如果是购买的 HTTPS , 那么 afn 一点都不需要进行配置. 直接到 AFServerTrustIsValid(serverTrust) 中
- 如果是自签名的证书, 那么 allowInvalidCertificates 要设置为 YES, 然后使用 policyWithPinningMode:AFSSLPinningModeCertificate 方法, 将自签名的证书导入到 App 中
- 如果是自签名的证书, 又不想导入 App, 那么 allowInvalidCertificates 为 yes, validatesDomainName 为 NO, 相当于这里没有任何的限制, 完全信任服务器端的证书.
- */
 - (BOOL)evaluateServerTrust:(SecTrustRef)serverTrust
                   forDomain:(NSString *)domain
 {
@@ -258,9 +252,6 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
     }
 
     switch (self.SSLPinningMode) {
-        case AFSSLPinningModeNone:
-        default:
-            return NO;
         case AFSSLPinningModeCertificate: {
             NSMutableArray *pinnedCertificates = [NSMutableArray array];
             for (NSData *certificateData in self.pinnedCertificates) {
@@ -296,6 +287,9 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
             }
             return trustedPublicKeyCount > 0;
         }
+            
+        default:
+            return NO;
     }
     
     return NO;

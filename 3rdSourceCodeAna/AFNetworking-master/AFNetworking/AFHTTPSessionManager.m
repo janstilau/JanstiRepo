@@ -66,7 +66,6 @@
 - (instancetype)initWithBaseURL:(NSURL *)url
            sessionConfiguration:(NSURLSessionConfiguration *)configuration
 {
-    // 先调用父类的构造方法, 父类的作用在于, 进行任务的分解. 将任务的回调包装到一个类中进行管理.
     self = [super initWithSessionConfiguration:configuration];
     if (!self) {
         return nil;
@@ -79,7 +78,6 @@
 
     self.baseURL = url;
 
-    // 请求序列化器是 http 的, 相应的序列化器是 json 的.
     self.requestSerializer = [AFHTTPRequestSerializer serializer];
     self.responseSerializer = [AFJSONResponseSerializer serializer];
 
@@ -176,6 +174,7 @@
 {
     NSURLSessionDataTask *dataTask = [self dataTaskWithHTTPMethod:@"HEAD" URLString:URLString parameters:parameters headers:headers uploadProgress:nil downloadProgress:nil success:^(NSURLSessionDataTask *task, __unused id responseObject) {
         if (success) {
+            success(task);
         }
     } failure:failure];
     
@@ -201,7 +200,6 @@
     return [self POST:URLString parameters:parameters headers:nil progress:uploadProgress success:success failure:failure];
 }
 
-// 这里可以明显的看出来, mc 的 httpManager 是收到了 afn 的影响.
 - (nullable NSURLSessionDataTask *)POST:(NSString *)URLString
                              parameters:(nullable id)parameters
                                 headers:(nullable NSDictionary <NSString *, NSString *> *)headers
@@ -243,7 +241,6 @@
                        success:(void (^)(NSURLSessionDataTask * _Nonnull, id _Nullable))success failure:(void (^)(NSURLSessionDataTask * _Nullable, NSError * _Nonnull))failure
 {
     NSError *serializationError = nil;
-    // 这里, post 和 dataTask 唯一的区别就是 request 是通过 requestSerialize 的不同方法获得的.
     NSMutableURLRequest *request = [self.requestSerializer multipartFormRequestWithMethod:@"POST" URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters constructingBodyWithBlock:block error:&serializationError];
     for (NSString *headerField in headers.keyEnumerator) {
         [request addValue:headers[headerField] forHTTPHeaderField:headerField];
@@ -423,7 +420,6 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {
-    // 先调用 super
     [super encodeWithCoder:coder];
 
     [coder encodeObject:self.baseURL forKey:NSStringFromSelector(@selector(baseURL))];
@@ -440,7 +436,6 @@
 #pragma mark - NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-    // 这里一定是 self class. 为了子类
     AFHTTPSessionManager *HTTPClient = [[[self class] allocWithZone:zone] initWithBaseURL:self.baseURL sessionConfiguration:self.session.configuration];
 
     HTTPClient.requestSerializer = [self.requestSerializer copyWithZone:zone];

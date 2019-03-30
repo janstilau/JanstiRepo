@@ -21,6 +21,10 @@ extern "C" {
 @class NSURLRequest;
 @class NSURLResponse;
 
+    
+    /*
+     An abstract class that handles the loading of protocol-specific URL data.
+     */
 
 /**
  * Defines the API for NSURLProtocol loading

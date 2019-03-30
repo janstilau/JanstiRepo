@@ -7,19 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		06D40B7F21ACD91A00D6E3A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D40B7E21ACD91A00D6E3A4 /* main.m */; };
 		1BF9F9601C87832B00F1F35A /* AFImageResponseSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BF9F95F1C87832B00F1F35A /* AFImageResponseSerializerTests.m */; };
 		1BF9F9611C87843200F1F35A /* AFImageResponseSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BF9F95F1C87832B00F1F35A /* AFImageResponseSerializerTests.m */; };
 		1BF9F9621C87843300F1F35A /* AFImageResponseSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BF9F95F1C87832B00F1F35A /* AFImageResponseSerializerTests.m */; };
-		1F0B1DC6216EF28A00CB1F28 /* httpbinorg_12092018.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1F0B1DC5216EF28A00CB1F28 /* httpbinorg_12092018.cer */; };
-		1F0B1DC7216EF28A00CB1F28 /* httpbinorg_12092018.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1F0B1DC5216EF28A00CB1F28 /* httpbinorg_12092018.cer */; };
-		1F0B1DC8216EF28A00CB1F28 /* httpbinorg_12092018.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1F0B1DC5216EF28A00CB1F28 /* httpbinorg_12092018.cer */; };
 		1F6F7DF71F17051000C979D0 /* DST Root CA X3.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1F6F7DF61F1703A100C979D0 /* DST Root CA X3.cer */; };
 		1F6F7DF81F17051000C979D0 /* Let's Encrypt Authority X3.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1F6F7DF51F1703A100C979D0 /* Let's Encrypt Authority X3.cer */; };
 		1F6F7DFA1F17051000C979D0 /* DST Root CA X3.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1F6F7DF61F1703A100C979D0 /* DST Root CA X3.cer */; };
 		1F6F7DFB1F17051000C979D0 /* Let's Encrypt Authority X3.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1F6F7DF51F1703A100C979D0 /* Let's Encrypt Authority X3.cer */; };
 		1F6F7DFD1F17051100C979D0 /* DST Root CA X3.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1F6F7DF61F1703A100C979D0 /* DST Root CA X3.cer */; };
 		1F6F7DFE1F17051100C979D0 /* Let's Encrypt Authority X3.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1F6F7DF51F1703A100C979D0 /* Let's Encrypt Authority X3.cer */; };
+		1F8482C0220F386200718111 /* httpbinorg_04082019.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1F8482BF220F386200718111 /* httpbinorg_04082019.cer */; };
+		1F8482C1220F386200718111 /* httpbinorg_04082019.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1F8482BF220F386200718111 /* httpbinorg_04082019.cer */; };
+		1F8482C2220F386200718111 /* httpbinorg_04082019.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1F8482BF220F386200718111 /* httpbinorg_04082019.cer */; };
 		1F96D2A4203649560085FC3F /* AFCompatibilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F083A4920364648004D80C7 /* AFCompatibilityMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F96D2A5203649570085FC3F /* AFCompatibilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F083A4920364648004D80C7 /* AFCompatibilityMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F96D2A6203649570085FC3F /* AFCompatibilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F083A4920364648004D80C7 /* AFCompatibilityMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -232,26 +231,12 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		06D40B7A21ACD91A00D6E3A4 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		06D40B7C21ACD91A00D6E3A4 /* PercentEncode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PercentEncode; sourceTree = BUILT_PRODUCTS_DIR; };
-		06D40B7E21ACD91A00D6E3A4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1BF9F95F1C87832B00F1F35A /* AFImageResponseSerializerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageResponseSerializerTests.m; sourceTree = "<group>"; };
 		1F083A4920364648004D80C7 /* AFCompatibilityMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFCompatibilityMacros.h; sourceTree = "<group>"; };
-		1F0B1DC5216EF28A00CB1F28 /* httpbinorg_12092018.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = httpbinorg_12092018.cer; sourceTree = "<group>"; };
 		1F6F7DF51F1703A100C979D0 /* Let's Encrypt Authority X3.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Let's Encrypt Authority X3.cer"; sourceTree = "<group>"; };
 		1F6F7DF61F1703A100C979D0 /* DST Root CA X3.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DST Root CA X3.cer"; sourceTree = "<group>"; };
+		1F8482BF220F386200718111 /* httpbinorg_04082019.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = httpbinorg_04082019.cer; sourceTree = "<group>"; };
 		2960BAC21C1B2F1A00BA02F0 /* AFUIButtonTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFUIButtonTests.m; sourceTree = "<group>"; };
 		297824A01BC2D69A0041C395 /* adn_0.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = adn_0.cer; path = ADNNetServerTrustChain/adn_0.cer; sourceTree = "<group>"; };
 		297824A11BC2D69A0041C395 /* adn_1.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = adn_1.cer; path = ADNNetServerTrustChain/adn_1.cer; sourceTree = "<group>"; };
@@ -334,13 +319,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		06D40B7921ACD91A00D6E3A4 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2987B0A11BC408A200179A4C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -396,14 +374,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		06D40B7D21ACD91A00D6E3A4 /* PercentEncode */ = {
-			isa = PBXGroup;
-			children = (
-				06D40B7E21ACD91A00D6E3A4 /* main.m */,
-			);
-			path = PercentEncode;
-			sourceTree = "<group>";
-		};
 		298D7C561BC2C88F00FD3B3E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -442,7 +412,7 @@
 				298D7CE21BC2CB7C00FD3B3E /* HTTPBinOrgServerTrustChain */,
 				1F6F7DF61F1703A100C979D0 /* DST Root CA X3.cer */,
 				1F6F7DF51F1703A100C979D0 /* Let's Encrypt Authority X3.cer */,
-				1F0B1DC5216EF28A00CB1F28 /* httpbinorg_12092018.cer */,
+				1F8482BF220F386200718111 /* httpbinorg_04082019.cer */,
 			);
 			path = HTTPBin.org;
 			sourceTree = "<group>";
@@ -510,7 +480,6 @@
 				299522851BBF13C700859F49 /* UIKit+AFNetworking */,
 				2995223B1BBF104D00859F49 /* Supporting Files */,
 				298D7C561BC2C88F00FD3B3E /* Tests */,
-				06D40B7D21ACD91A00D6E3A4 /* PercentEncode */,
 				2995223A1BBF104D00859F49 /* Products */,
 			);
 			indentWidth = 4;
@@ -528,7 +497,6 @@
 				298D7C4A1BC2C7B200FD3B3E /* AFNetworking macOS Tests.xctest */,
 				2987B0A51BC408A200179A4C /* AFNetworking.framework */,
 				2987B0AE1BC408A200179A4C /* AFNetworking tvOS Tests.xctest */,
-				06D40B7C21ACD91A00D6E3A4 /* PercentEncode */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -686,23 +654,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		06D40B7B21ACD91A00D6E3A4 /* PercentEncode */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 06D40B8221ACD91A00D6E3A4 /* Build configuration list for PBXNativeTarget "PercentEncode" */;
-			buildPhases = (
-				06D40B7821ACD91A00D6E3A4 /* Sources */,
-				06D40B7921ACD91A00D6E3A4 /* Frameworks */,
-				06D40B7A21ACD91A00D6E3A4 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = PercentEncode;
-			productName = PercentEncode;
-			productReference = 06D40B7C21ACD91A00D6E3A4 /* PercentEncode */;
-			productType = "com.apple.product-type.tool";
-		};
 		2987B0A41BC408A200179A4C /* AFNetworking tvOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2987B0BA1BC408A200179A4C /* Build configuration list for PBXNativeTarget "AFNetworking tvOS" */;
@@ -838,11 +789,6 @@
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = AFNetworking;
 				TargetAttributes = {
-					06D40B7B21ACD91A00D6E3A4 = {
-						CreatedOnToolsVersion = 10.0;
-						DevelopmentTeam = U86LS642TB;
-						ProvisioningStyle = Automatic;
-					};
 					2987B0A41BC408A200179A4C = {
 						CreatedOnToolsVersion = 7.1;
 					};
@@ -887,7 +833,6 @@
 				298D7C3A1BC2C79500FD3B3E /* AFNetworking iOS Tests */,
 				298D7C491BC2C7B200FD3B3E /* AFNetworking macOS Tests */,
 				2987B0AD1BC408A200179A4C /* AFNetworking tvOS Tests */,
-				06D40B7B21ACD91A00D6E3A4 /* PercentEncode */,
 			);
 		};
 /* End PBXProject section */
@@ -906,11 +851,11 @@
 			files = (
 				2987B0DE1BC40AFB00179A4C /* foobar.com.cer in Resources */,
 				2987B0D61BC40AEC00179A4C /* ADNNetServerTrustChain in Resources */,
+				1F8482C2220F386200718111 /* httpbinorg_04082019.cer in Resources */,
 				2987B0DF1BC40AFB00179A4C /* NoDomains.cer in Resources */,
 				2987B0D41BC40AE900179A4C /* adn_1.cer in Resources */,
 				2987B0DD1BC40AFB00179A4C /* AltName.cer in Resources */,
 				2987B0D71BC40AF000179A4C /* HTTPBinOrgServerTrustChain in Resources */,
-				1F0B1DC8216EF28A00CB1F28 /* httpbinorg_12092018.cer in Resources */,
 				2987B0D31BC40AE900179A4C /* adn_0.cer in Resources */,
 				2987B0DC1BC40AF600179A4C /* logo.png in Resources */,
 				2987B0D51BC40AE900179A4C /* adn_2.cer in Resources */,
@@ -932,11 +877,11 @@
 			files = (
 				298D7CBF1BC2CA9D00FD3B3E /* foobar.com.cer in Resources */,
 				298D7CBA1BC2CA9800FD3B3E /* logo.png in Resources */,
+				1F8482C0220F386200718111 /* httpbinorg_04082019.cer in Resources */,
 				297824A31BC2D69A0041C395 /* adn_0.cer in Resources */,
 				298D7CE31BC2CB7C00FD3B3E /* HTTPBinOrgServerTrustChain in Resources */,
 				297824A71BC2D69A0041C395 /* adn_2.cer in Resources */,
 				297824A51BC2D69A0041C395 /* adn_1.cer in Resources */,
-				1F0B1DC6216EF28A00CB1F28 /* httpbinorg_12092018.cer in Resources */,
 				298D7CC01BC2CA9D00FD3B3E /* NoDomains.cer in Resources */,
 				298D7CE01BC2CB5A00FD3B3E /* ADNNetServerTrustChain in Resources */,
 				298D7CBE1BC2CA9D00FD3B3E /* AltName.cer in Resources */,
@@ -958,11 +903,11 @@
 			files = (
 				298D7CBC1BC2CA9C00FD3B3E /* foobar.com.cer in Resources */,
 				298D7CB91BC2CA9800FD3B3E /* logo.png in Resources */,
+				1F8482C1220F386200718111 /* httpbinorg_04082019.cer in Resources */,
 				297824A41BC2D69A0041C395 /* adn_0.cer in Resources */,
 				298D7CE41BC2CB7C00FD3B3E /* HTTPBinOrgServerTrustChain in Resources */,
 				297824A81BC2D69A0041C395 /* adn_2.cer in Resources */,
 				297824A61BC2D69A0041C395 /* adn_1.cer in Resources */,
-				1F0B1DC7216EF28A00CB1F28 /* httpbinorg_12092018.cer in Resources */,
 				298D7CBD1BC2CA9C00FD3B3E /* NoDomains.cer in Resources */,
 				298D7CE11BC2CB5A00FD3B3E /* ADNNetServerTrustChain in Resources */,
 				298D7CBB1BC2CA9C00FD3B3E /* AltName.cer in Resources */,
@@ -1002,14 +947,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		06D40B7821ACD91A00D6E3A4 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				06D40B7F21ACD91A00D6E3A4 /* main.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2987B0A01BC408A200179A4C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1170,45 +1107,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		06D40B8021ACD91A00D6E3A4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = U86LS642TB;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-			};
-			name = Debug;
-		};
-		06D40B8121ACD91A00D6E3A4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = U86LS642TB;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MTL_FAST_MATH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-			};
-			name = Release;
-		};
 		2987B0B61BC408A200179A4C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1658,15 +1556,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		06D40B8221ACD91A00D6E3A4 /* Build configuration list for PBXNativeTarget "PercentEncode" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				06D40B8021ACD91A00D6E3A4 /* Debug */,
-				06D40B8121ACD91A00D6E3A4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		2987B0BA1BC408A200179A4C /* Build configuration list for PBXNativeTarget "AFNetworking tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
