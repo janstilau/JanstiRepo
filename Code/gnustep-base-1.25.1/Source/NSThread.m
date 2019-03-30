@@ -630,7 +630,7 @@ GSDictionaryForThread(NSThread *t)
 NSMutableDictionary*
 GSCurrentThreadDictionary(void)
 {
-  return GSDictionaryForThread(nil);
+  return GSDictionaryForThread(nil); // NSThread 通过特殊的 pthread 的函数和线程进行连接, 而每一个 NSThread 里面, 又有一个NSDictionay 作为整个线程的私有数据.
 }
 
 /*

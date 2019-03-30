@@ -22,8 +22,8 @@ extern "C" {
  <example>
 {
   NSPostWhenIdle,	// post when runloop is idle
-  NSPostASAP,		// post soon
-  NSPostNow		// post synchronously
+  NSPostASAP,		// post soon //
+  NSPostNow		// post synchronously // 同步
 }
  </example>
  */
@@ -46,9 +46,9 @@ typedef NSUInteger NSPostingStyle;
  </example>
  */
 enum {
-  NSNotificationNoCoalescing = 0,
-  NSNotificationCoalescingOnName = 1,
-  NSNotificationCoalescingOnSender = 2
+  NSNotificationNoCoalescing = 0, // 不合并
+  NSNotificationCoalescingOnName = 1, // 根据名字合并
+  NSNotificationCoalescingOnSender = 2 // 根据发送者合并.
 };
 typedef NSUInteger NSNotificationCoalescing;
 
@@ -65,9 +65,9 @@ struct _NSNotificationQueueList;
 {
 #if	GS_EXPOSE(NSNotificationQueue)
 @public
-  NSNotificationCenter			*_center;
-  struct _NSNotificationQueueList	*_asapQueue;
-  struct _NSNotificationQueueList	*_idleQueue;
+  NSNotificationCenter			*_center; // 通知中心.
+  struct _NSNotificationQueueList	*_asapQueue; // soon as possible
+  struct _NSNotificationQueueList	*_idleQueue; // 空闲.
   NSZone				*_zone;
 #endif
 }

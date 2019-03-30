@@ -1245,25 +1245,23 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
   [arp drain];
 }
 
-- (BOOL) runMode: (NSString*)mode beforeDate: (NSDate*)date
+- (BOOL) runMode: (NSString*)mode beforeDate: (NSDate*)date // 这个方法很简单, 是因为大量的操作被封装到别的类了.
 {
-  NSAutoreleasePool	*arp = [NSAutoreleasePool new];
-  NSString              *savedMode = _currentMode;
+  NSAutoreleasePool	*arp = [NSAutoreleasePool new]; // 首先, 是创建一个自动释放池.
+  NSString              *savedMode = _currentMode; // 保存之前的 mode
   GSRunLoopCtxt		*context;
   NSDate		*d;
 
-  NSAssert(mode != nil, NSInvalidArgumentException);
-
   /* Process any pending notifications.
    */
-  GSPrivateNotifyASAP(mode);
+  GSPrivateNotifyASAP(mode); // 将之前注册给 NSNotificationQueue 的进行通知.
 
   /* And process any performers scheduled in the loop (eg something from
    * another thread.
    */
   _currentMode = mode;
   context = NSMapGet(_contextMap, mode);
-  [self _checkPerformers: context];
+  [self _checkPerformers: context]; // 执行任务.
   _currentMode = savedMode;
 
   /* Find out how long we can wait before first limit date.
@@ -1303,7 +1301,14 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
  */
 - (void) run
 {
-  [self runUntilDate: theFuture];
+  [self runUntilDate: theFuture]; //
+    /*
+     run 这个函数就是不断地 runMode beforeDate 这个函数, 如果我们自己去写控制 runloop 的函数, 应该是
+     while (控制条件) {
+     [self runMode: NSDefaultRunLoopMode beforeDate: date];
+     }
+     然后我们就根据这个控制条件就可以控制这个死循环了. 而 run 这个函数, 就是想要让 runLoop 一直跑下去, 所以, 就直接是 runUntilFutureDate 了.
+     */
 }
 
 /**
@@ -1311,15 +1316,13 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
  * -runMode:beforeDate: while there are still input sources.  Exits when no
  * more input sources remain, or date is reached, whichever occurs first.
  */
-- (void) runUntilDate: (NSDate*)date
+- (void) runUntilDate: (NSDate*)date // 如果没有输入源了, 或者如果到达了时间, 就退出循环.
 {
   BOOL		mayDoMore = YES;
-
-  /* Positive values are in the future. */
   while (YES == mayDoMore)
     {
-      mayDoMore = [self runMode: NSDefaultRunLoopMode beforeDate: date];
-      if (nil == date || [date timeIntervalSinceNow] <= 0.0)
+      mayDoMore = [self runMode: NSDefaultRunLoopMode beforeDate: date]; // 这里, 返回值如果是 NO, 应该就是没有 inputSource 了.
+      if (nil == date || [date timeIntervalSinceNow] <= 0.0) // 如果时间不允许的, 就将控制条件置为 NO.
         {
           mayDoMore = NO;
         }

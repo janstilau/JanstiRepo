@@ -17,6 +17,8 @@ extern "C" {
  */
 GS_EXPORT NSString * const NSDefaultRunLoopMode;
 
+// GNU 的 runloop 有着自己的一套底层实现, 和 Foundation 的实现不太一样
+    
 @interface NSRunLoop : NSObject
 {
 #if	GS_EXPOSE(NSRunLoop)
