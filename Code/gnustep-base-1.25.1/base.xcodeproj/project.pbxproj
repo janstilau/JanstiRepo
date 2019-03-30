@@ -414,6 +414,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		064A2278224F840100A6B909 /* URLSessionLearn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = URLSessionLearn.h; sourceTree = "<group>"; };
 		06EDD8AD2248BEA800C87605 /* NSMutableString+GNUstepBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableString+GNUstepBase.h"; sourceTree = "<group>"; };
 		06EDD8AE2248BEA800C87605 /* NSBundle+GNUstepBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+GNUstepBase.h"; sourceTree = "<group>"; };
 		06EDD8AF2248BEA800C87605 /* NSTask+GNUstepBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTask+GNUstepBase.h"; sourceTree = "<group>"; };
@@ -1608,6 +1609,7 @@
 				06EDD9472248BEA800C87605 /* NSURLCredentialStorage.h */,
 				06EDD8F52248BEA800C87605 /* NSHTTPCookieStorage.h */,
 				06EDD9152248BEA800C87605 /* NSURLConnection.h */,
+				064A2278224F840100A6B909 /* URLSessionLearn.h */,
 				06EDD90D2248BEA800C87605 /* NSURLCache.h */,
 				06EDD9172248BEA800C87605 /* NSHTTPCookie.h */,
 				06EDD8FE2248BEA800C87605 /* NSURLRequest.h */,

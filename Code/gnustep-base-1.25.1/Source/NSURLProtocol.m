@@ -847,6 +847,7 @@ static NSURLProtocol	*placeholder = nil;
                            forMode: NSDefaultRunLoopMode];
     [this->output scheduleInRunLoop: [NSRunLoop currentRunLoop]
                             forMode: NSDefaultRunLoopMode];
+    // 这里, 将自己加入到 runloop 里面, 其实是将自己作为 source0 加入到 runloop 里面. 但是这里没有明确的开启 runloop. 在 schedule 里面, 也没有明确的调用 runloop 的 run 方法的调用. 
     [this->input open];
     [this->output open]; // 然后后面就是 根据 input, output 的回调进行处理.
 }

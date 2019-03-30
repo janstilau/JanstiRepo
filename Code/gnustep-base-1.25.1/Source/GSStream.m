@@ -84,7 +84,6 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     return ET_WDESC;
 }
 
-// runloop 的先不看.
 @implementation	NSRunLoop (NSStream)
 - (void) addStream: (NSStream*)aStream mode: (NSString*)mode
 {
