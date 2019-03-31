@@ -24,6 +24,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
  @return The object decoded from the specified response data.
  */
+// _Nullable __autoreleasing 是为了内存管理的宏.
 - (nullable id)responseObjectForResponse:(nullable NSURLResponse *)response
                            data:(nullable NSData *)data
                           error:(NSError * _Nullable __autoreleasing *)error NS_SWIFT_NOTHROW;
@@ -54,13 +55,14 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 /**
  The acceptable HTTP status codes for responses. When non-`nil`, responses with status codes not contained by the set will result in an error during validation.
-
+ // 可以设定一个借口statuscode 的范围.
  See http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
  */
-@property (nonatomic, copy, nullable) NSIndexSet *acceptableStatusCodes;
+@property (nonatomic, copy, nullable) NSIndexSet *acceptableStatusCodes; // set 但是 有序.
 
 /**
  The acceptable MIME types for responses. When non-`nil`, responses with a `Content-Type` with MIME types that do not intersect with the set will result in an error during validation.
+ 设定的可以接受的 contentType 的范围.
  */
 @property (nonatomic, copy, nullable) NSSet <NSString *> *acceptableContentTypes;
 

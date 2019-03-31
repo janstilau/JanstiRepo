@@ -40,6 +40,10 @@ FOUNDATION_EXPORT NSString * AFQueryStringFromParameters(NSDictionary *parameter
 
  For example, a JSON request serializer may set the HTTP body of the request to a JSON representation, and set the `Content-Type` HTTP header field value to `application/json`.
  */
+
+// 这个类就是做了很多很多的生成 request 的操作. 包括对于 data 的拼接操作的封装. 尤其是 multiPart 的时候
+
+
 @protocol AFURLRequestSerialization <NSObject, NSSecureCoding, NSCopying>
 
 /**

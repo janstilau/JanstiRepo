@@ -23,6 +23,7 @@ typedef NSString * (^AFQueryStringSerializationBlock)(NSURLRequest *request, id 
     - parameter string: The string to be percent-escaped.
     - returns: The percent-escaped string.
  */
+// 这个函数就是分批的百分号转义
 NSString * AFPercentEscapedStringFromString(NSString *string) {
     static NSString * const kAFCharactersGeneralDelimitersToEncode = @":#[]@"; // does not include "?" or "/" due to RFC 3986 - Section 3.4
     static NSString * const kAFCharactersSubDelimitersToEncode = @"!$&'()*+,;=";
@@ -95,12 +96,12 @@ NSString * AFPercentEscapedStringFromString(NSString *string) {
 FOUNDATION_EXPORT NSArray * AFQueryStringPairsFromDictionary(NSDictionary *dictionary);
 FOUNDATION_EXPORT NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value);
 
+// get 的拼接方式.
 NSString * AFQueryStringFromParameters(NSDictionary *parameters) {
     NSMutableArray *mutablePairs = [NSMutableArray array];
     for (AFQueryStringPair *pair in AFQueryStringPairsFromDictionary(parameters)) {
         [mutablePairs addObject:[pair URLEncodedStringValue]];
     }
-
     return [mutablePairs componentsJoinedByString:@"&"];
 }
 
@@ -463,6 +464,7 @@ forHTTPHeaderField:(NSString *)field
             [mutableRequest setValue:value forHTTPHeaderField:field];
         }
     }];
+    // 首先, 设置头信息..
 
     NSString *query = nil;
     if (parameters) {

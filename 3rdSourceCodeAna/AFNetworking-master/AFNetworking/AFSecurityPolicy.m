@@ -126,7 +126,7 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
 
 @implementation AFSecurityPolicy
 
-+ (NSSet *)certificatesInBundle:(NSBundle *)bundle {
++ (NSSet *)certificatesInBundle:(NSBundle *)bundle { // 在 bundle 内嵌的所有证书.
     NSArray *paths = [bundle pathsForResourcesOfType:@"cer" inDirectory:@"."];
 
     NSMutableSet *certificates = [NSMutableSet setWithCapacity:[paths count]];
@@ -200,6 +200,7 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
 
 #pragma mark -
 
+// 判断该不该相信 服务器端的证书.
 - (BOOL)evaluateServerTrust:(SecTrustRef)serverTrust
                   forDomain:(NSString *)domain
 {
