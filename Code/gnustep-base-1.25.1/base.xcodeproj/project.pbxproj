@@ -1603,6 +1603,7 @@
 		06EDD8DA2248BEA800C87605 /* Readed */ = {
 			isa = PBXGroup;
 			children = (
+				06EDD9242248BEA800C87605 /* NSNotificationQueue.h */,
 				06EDD9252248BEA800C87605 /* NSRunLoop.h */,
 				06EDD9402248BEA800C87605 /* NSURLAuthenticationChallenge.h */,
 				06EDD91C2248BEA800C87605 /* NSURLProtocol.h */,
@@ -1687,7 +1688,6 @@
 				06EDD93F2248BEA800C87605 /* NSMetadata.h */,
 				06EDD9022248BEA800C87605 /* NSMethodSignature.h */,
 				06EDD8FD2248BEA800C87605 /* NSNetServices.h */,
-				06EDD9242248BEA800C87605 /* NSNotificationQueue.h */,
 				06EDD94A2248BEA800C87605 /* NSNumberFormatter.h */,
 				06EDD9062248BEA800C87605 /* NSObjCRuntime.h */,
 				06EDD9262248BEA800C87605 /* NSObject.h */,
