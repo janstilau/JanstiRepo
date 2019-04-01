@@ -126,6 +126,9 @@ typedef NS_ENUM(NSUInteger, AFHTTPRequestQueryStringSerializationStyle) {
  */
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
 
+
+// 上面的这些属性, MCNetWork 在拿到 serialiation 返回的 request 之后, 又进行了赋值操作.
+
 ///---------------------------------------
 /// @name Configuring HTTP Request Headers
 ///---------------------------------------
