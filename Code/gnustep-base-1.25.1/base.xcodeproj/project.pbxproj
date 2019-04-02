@@ -90,7 +90,6 @@
 		06EDD9AB2248BEA900C87605 /* NSPortCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD9032248BEA800C87605 /* NSPortCoder.h */; };
 		06EDD9AC2248BEA900C87605 /* NSDistributedNotificationCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD9042248BEA800C87605 /* NSDistributedNotificationCenter.h */; };
 		06EDD9AD2248BEA900C87605 /* NSAutoreleasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD9052248BEA800C87605 /* NSAutoreleasePool.h */; };
-		06EDD9AE2248BEA900C87605 /* NSObjCRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD9062248BEA800C87605 /* NSObjCRuntime.h */; };
 		06EDD9AF2248BEA900C87605 /* NSScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD9072248BEA800C87605 /* NSScanner.h */; };
 		06EDD9B02248BEA900C87605 /* NSMapTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD9082248BEA800C87605 /* NSMapTable.h */; };
 		06EDD9B12248BEA900C87605 /* NSComparisonPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD9092248BEA800C87605 /* NSComparisonPredicate.h */; };
@@ -123,7 +122,6 @@
 		06EDD9CD2248BEA900C87605 /* NSRunLoop.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD9252248BEA800C87605 /* NSRunLoop.h */; };
 		06EDD9CE2248BEA900C87605 /* NSObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD9262248BEA800C87605 /* NSObject.h */; };
 		06EDD9CF2248BEA900C87605 /* NSURLCredential.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD9272248BEA800C87605 /* NSURLCredential.h */; };
-		06EDD9D02248BEA900C87605 /* NSUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD9282248BEA800C87605 /* NSUtilities.h */; };
 		06EDD9D12248BEA900C87605 /* NSFileCoordinator.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD9292248BEA800C87605 /* NSFileCoordinator.h */; };
 		06EDD9D22248BEA900C87605 /* NSTimeZone.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD92A2248BEA800C87605 /* NSTimeZone.h */; };
 		06EDD9D32248BEA900C87605 /* NSCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD92B2248BEA800C87605 /* NSCache.h */; };
@@ -498,7 +496,6 @@
 		06EDD9032248BEA800C87605 /* NSPortCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSPortCoder.h; sourceTree = "<group>"; };
 		06EDD9042248BEA800C87605 /* NSDistributedNotificationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDistributedNotificationCenter.h; sourceTree = "<group>"; };
 		06EDD9052248BEA800C87605 /* NSAutoreleasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAutoreleasePool.h; sourceTree = "<group>"; };
-		06EDD9062248BEA800C87605 /* NSObjCRuntime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObjCRuntime.h; sourceTree = "<group>"; };
 		06EDD9072248BEA800C87605 /* NSScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSScanner.h; sourceTree = "<group>"; };
 		06EDD9082248BEA800C87605 /* NSMapTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMapTable.h; sourceTree = "<group>"; };
 		06EDD9092248BEA800C87605 /* NSComparisonPredicate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSComparisonPredicate.h; sourceTree = "<group>"; };
@@ -531,7 +528,6 @@
 		06EDD9252248BEA800C87605 /* NSRunLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSRunLoop.h; sourceTree = "<group>"; };
 		06EDD9262248BEA800C87605 /* NSObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObject.h; sourceTree = "<group>"; };
 		06EDD9272248BEA800C87605 /* NSURLCredential.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLCredential.h; sourceTree = "<group>"; };
-		06EDD9282248BEA800C87605 /* NSUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSUtilities.h; sourceTree = "<group>"; };
 		06EDD9292248BEA800C87605 /* NSFileCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFileCoordinator.h; sourceTree = "<group>"; };
 		06EDD92A2248BEA800C87605 /* NSTimeZone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTimeZone.h; sourceTree = "<group>"; };
 		06EDD92B2248BEA800C87605 /* NSCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCache.h; sourceTree = "<group>"; };
@@ -1639,6 +1635,7 @@
 				06EDD90F2248BEA800C87605 /* NSURLResponse.h */,
 				06EDD8E92248BEA800C87605 /* NSValue.h */,
 				064A2278224F840100A6B909 /* URLSessionLearn.h */,
+				06EDD9192248BEA800C87605 /* NSStream.h */,
 			);
 			path = Readed;
 			sourceTree = "<group>";
@@ -1689,7 +1686,6 @@
 				06EDD9022248BEA800C87605 /* NSMethodSignature.h */,
 				06EDD8FD2248BEA800C87605 /* NSNetServices.h */,
 				06EDD94A2248BEA800C87605 /* NSNumberFormatter.h */,
-				06EDD9062248BEA800C87605 /* NSObjCRuntime.h */,
 				06EDD9262248BEA800C87605 /* NSObject.h */,
 				06EDD9332248BEA800C87605 /* NSPathUtilities.h */,
 				06EDD9372248BEA800C87605 /* NSPointerArray.h */,
@@ -1707,14 +1703,12 @@
 				06EDD9442248BEA800C87605 /* NSScriptWhoseTests.h */,
 				06EDD93E2248BEA800C87605 /* NSSortDescriptor.h */,
 				06EDD94D2248BEA800C87605 /* NSSpellServer.h */,
-				06EDD9192248BEA800C87605 /* NSStream.h */,
 				06EDD9382248BEA800C87605 /* NSString.h */,
 				06EDD9132248BEA800C87605 /* NSTask.h */,
 				06EDD9142248BEA800C87605 /* NSTextCheckingResult.h */,
 				06EDD92A2248BEA800C87605 /* NSTimeZone.h */,
 				06EDD9412248BEA800C87605 /* NSUndoManager.h */,
 				06EDD92F2248BEA800C87605 /* NSUserDefaults.h */,
-				06EDD9282248BEA800C87605 /* NSUtilities.h */,
 				06EDD92D2248BEA800C87605 /* NSValueTransformer.h */,
 			);
 			path = Foundation;
@@ -3624,7 +3618,6 @@
 				06EDD9B02248BEA900C87605 /* NSMapTable.h in Headers */,
 				06EDD9872248BEA900C87605 /* NSOperation.h in Headers */,
 				06EDD9E52248BEA900C87605 /* NSDebug.h in Headers */,
-				06EDD9D02248BEA900C87605 /* NSUtilities.h in Headers */,
 				06EDD96E2248BEA900C87605 /* NSFileHandle+GNUstepBase.h in Headers */,
 				06EDD9F32248BEA900C87605 /* NSByteOrder.h in Headers */,
 				06EDD9702248BEA900C87605 /* GSXML.h in Headers */,
@@ -3633,7 +3626,6 @@
 				06EDD9752248BEA900C87605 /* NSObject+GNUstepBase.h in Headers */,
 				06EDD9A42248BEA900C87605 /* NSURLHandle.h in Headers */,
 				06EDD9732248BEA900C87605 /* NSThread+GNUstepBase.h in Headers */,
-				06EDD9AE2248BEA900C87605 /* NSObjCRuntime.h in Headers */,
 				06EDD9972248BEA900C87605 /* NSPredicate.h in Headers */,
 				06EDD96C2248BEA900C87605 /* NSNetServices+GNUstepBase.h in Headers */,
 				06EDD9CF2248BEA900C87605 /* NSURLCredential.h in Headers */,
