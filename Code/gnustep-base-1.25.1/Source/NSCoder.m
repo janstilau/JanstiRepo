@@ -72,7 +72,7 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
 			    at: (const void*)array
 {
   unsigned	i;
-  unsigned	size = objc_sizeof_type(type); // 利用底层函数, 获取 type 的所占空间大小. 计算出这个空间, 是为了遍历 array. 并不是说, 要把内容写入到 array 里面, 这个函数是 encode, 所以这个函数是把 array 的内存进行取出写到另外的一个位置. 到底写到哪里呢, 是这个类的
+  unsigned	size = objc_sizeof_type(type); // 利用底层函数, 获取 type 的所占空间大小. 计算出这个空间, 是为了遍历 array.
   const char	*where = array;
   IMP		imp;
 

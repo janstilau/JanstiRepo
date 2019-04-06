@@ -66,8 +66,8 @@ typedef struct objc_category* Category;
 @interface GSArray : NSArray //NSArray 的子类,  所以, NSArray 的那些操作这里都会有.
 {
 @public
-  id		*_contents_array;
-  unsigned	_count;
+  id		*_contents_array; // 真正的数据存放的地方.
+  unsigned	_count; // 记录的数据的长度, 这个值之所以要记录下来, 是因为询问长度是一个很普遍的行为.
 }
 @end
 
