@@ -1645,7 +1645,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
 }
 
 /**
-
+ 
  */
 - (void) exchangeObjectAtIndex: (NSUInteger)i1
              withObjectAtIndex: (NSUInteger)i2
@@ -1658,6 +1658,10 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
     RELEASE(tmp);
 }
 
+/**
+    这是一个 primitive method, 其他的方法通过调用这个函数, 可以达到自己的目的.
+    自己编写代码的时候, 很少写出这种全局都使用的 primitive 的函数, 因为直接操作内存做某些事的诱惑实在太大了, 如果习惯于这种写法, 那么之后, 修改primitive 函数, 就能达到修改所有的函数的目的, 通过函数的组装, 能够达到逻辑的统一. 这种便利性, 要比直接操作内存那小小的效率要高得多.
+ */
 - (void) replaceObjectAtIndex: (NSUInteger)index withObject: (id)anObject
 {
     [self subclassResponsibility: _cmd];
@@ -1689,7 +1693,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
     {
         [self replaceObjectAtIndex: index withObject: object];
         object = [enumerator nextObject];
-        index = [indexes indexGreaterThanIndex: index];
+        index = [indexes indexGreaterThanIndex: index]; // 这样写感觉有点问题.
     }
 }
 

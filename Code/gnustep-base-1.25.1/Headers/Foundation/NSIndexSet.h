@@ -12,16 +12,26 @@
 #if	defined(__cplusplus)
 extern "C" {
 #endif
-
-/**
- * Instances of this class are collections of unsigned integers in the
- * range 0 to NSNotFound-1.<br />
- * Each integer can appear in a collection only once.
- */
-@interface	NSIndexSet : NSObject <NSCopying, NSMutableCopying, NSCoding>
+    
+    /**
+     * Instances of this class are collections of unsigned integers in the
+     * range 0 to NSNotFound-1.<br />
+     * Each integer can appear in a collection only once.
+     
+     An immutable collection of unique integer values that represent indexes in another collection.
+     
+     首先, 这个类里面的都是非负数, 表示的是容器中的下标.
+     The NSIndexSet class represents an immutable collection of unique unsigned integers, known as indexes because of the way they are used. This collection is referred to as an index set. Indexes must be in the range 0 .. NSNotFound - 1.
+     
+     You should not use index sets to store an arbitrary collection of integer values because index sets store indexes as sorted ranges. This makes them more efficient than storing a collection of individual integers. It also means that each index value can only appear once in the index set.
+     上面一段话说的是, 不能把这个类当做一个任意的容器用, 因为 set 只会存储一遍,
+     
+     
+     */
+    @interface	NSIndexSet : NSObject <NSCopying, NSMutableCopying, NSCoding>
 {
 #if	GS_EXPOSE(NSIndexSet)
-  void	*_data;
+    void	*_data; // 这里面就是一个 GSArray.
 #endif
 }
 
@@ -75,14 +85,14 @@ extern "C" {
 DEFINE_BLOCK_TYPE(GSIndexSetEnumerationBlock, void, NSUInteger, BOOL*);
 - (void) enumerateIndexesInRange: (NSRange)range
                          options: (NSEnumerationOptions)opts
-		      usingBlock: (GSIndexSetEnumerationBlock)aBlock;
+                      usingBlock: (GSIndexSetEnumerationBlock)aBlock;
 /**
  * Enumerate all indices in the set by applying a block to them.
  */
 - (void) enumerateIndexesUsingBlock: (GSIndexSetEnumerationBlock)aBlock;
 
 - (void) enumerateIndexesWithOptions: (NSEnumerationOptions)opts
-		          usingBlock: (GSIndexSetEnumerationBlock)aBlock;
+                          usingBlock: (GSIndexSetEnumerationBlock)aBlock;
 
 #endif
 
@@ -102,8 +112,8 @@ DEFINE_BLOCK_TYPE(GSIndexSetEnumerationBlock, void, NSUInteger, BOOL*);
  * index values from the set (and of course no range can be returned in it).
  */
 - (NSUInteger) getIndexes: (NSUInteger*)aBuffer
-		 maxCount: (NSUInteger)aCount
-	     inIndexRange: (NSRangePointer)aRange;
+                 maxCount: (NSUInteger)aCount
+             inIndexRange: (NSRangePointer)aRange;
 
 /**
  * Return the first index value in the receiver which is greater than
@@ -163,9 +173,9 @@ DEFINE_BLOCK_TYPE(GSIndexSetEnumerationBlock, void, NSUInteger, BOOL*);
  */
 - (NSUInteger) lastIndex;
 @end
-
-
-@interface	NSMutableIndexSet : NSIndexSet
+    
+    
+    @interface	NSMutableIndexSet : NSIndexSet
 
 /**
  * Adds anIndex to the set of indexes stored in the receiver.
@@ -212,10 +222,10 @@ DEFINE_BLOCK_TYPE(GSIndexSetEnumerationBlock, void, NSUInteger, BOOL*);
  * anIndex.
  */
 - (void) shiftIndexesStartingAtIndex: (NSUInteger)anIndex
-				  by: (NSInteger)amount;
+                                  by: (NSInteger)amount;
 
 @end
-
+    
 #if	defined(__cplusplus)
 }
 #endif
