@@ -831,7 +831,7 @@ static Class	GSInlineArrayClass;
     _version++;
     if ((1 < _count) && (NULL != comparator))
     {
-        if (options & NSSortStable)
+        if (options & NSSortStable) // 稳定性
         {
             if (options & NSSortConcurrent)
             {
@@ -844,7 +844,7 @@ static Class	GSInlineArrayClass;
                              (id)comparator, GSComparisonTypeComparatorBlock, NULL);
             }
         }
-        else
+        else // 不稳定性.
         {
             if (options & NSSortConcurrent)
             {
