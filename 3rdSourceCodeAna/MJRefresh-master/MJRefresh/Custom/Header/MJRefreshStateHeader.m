@@ -16,11 +16,11 @@
     __unsafe_unretained UILabel *_stateLabel;
 }
 /** 所有状态对应的文字 */
-@property (strong, nonatomic) NSMutableDictionary *stateTitles;
+@property (strong, nonatomic) NSMutableDictionary *stateTitles; // 通过一个字典, 记录所有的相关的显示文字信息.
 @end
 
 @implementation MJRefreshStateHeader
-#pragma mark - 懒加载
+#pragma mark - 懒加载,
 - (NSMutableDictionary *)stateTitles
 {
     if (!_stateTitles) {
@@ -50,7 +50,7 @@
 {
     if (title == nil) return;
     self.stateTitles[@(state)] = title;
-    self.stateLabel.text = self.stateTitles[@(self.state)];
+    self.stateLabel.text = self.stateTitles[@(self.state)]; // 这里, 相当于 updateView 的方法.
 }
 
 #pragma mark - 日历获取在9.x之后的系统使用currentCalendar会出异常。在8.0之后使用系统新API。
@@ -154,9 +154,10 @@
     }
 }
 
+// 在 state 的里面, 就是根据 state 的值, 做一些文本的显示变化
 - (void)setState:(MJRefreshState)state
 {
-    MJRefreshCheckState
+    MJRefreshCheckState // 在这个宏里面, 调用了 super setState 的方法,
     
     // 设置状态文字
     self.stateLabel.text = self.stateTitles[@(state)];

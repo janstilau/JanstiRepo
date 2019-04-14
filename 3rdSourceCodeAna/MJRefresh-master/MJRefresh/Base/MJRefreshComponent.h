@@ -19,7 +19,6 @@ typedef NS_ENUM(NSInteger, MJRefreshState) {
     /** 普通闲置状态 */
     MJRefreshStateIdle = 1,
     /** 松开就可以进行刷新的状态 */
-    // 这个状态的引入, 完全是因为, 需要有一个量进行判断, 是不是松手就应该进行刷新了.
     MJRefreshStatePulling,
     /** 正在刷新中的状态 */
     MJRefreshStateRefreshing,
@@ -87,7 +86,7 @@ typedef void (^MJRefreshComponentEndRefreshingCompletionBlock)(void);
 - (void)placeSubviews NS_REQUIRES_SUPER;
 /** 当scrollView的contentOffset发生改变的时候调用 */
 - (void)scrollViewContentOffsetDidChange:(NSDictionary *)change NS_REQUIRES_SUPER;
-/** 当scrollView的contentSize发生改变的时候调用 */
+/** 当scrollView的contentSize发生改变的时候调用 */ 
 - (void)scrollViewContentSizeDidChange:(NSDictionary *)change NS_REQUIRES_SUPER;
 /** 当scrollView的拖拽状态发生改变的时候调用 */
 - (void)scrollViewPanStateDidChange:(NSDictionary *)change NS_REQUIRES_SUPER;

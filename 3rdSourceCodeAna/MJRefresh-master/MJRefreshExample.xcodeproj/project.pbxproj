@@ -586,7 +586,7 @@
 					};
 					2DA7F9241AA6B4C4005627AB = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = U86LS642TB;
+						DevelopmentTeam = TE2958KSXV;
 					};
 					2DA7F93D1AA6B4C4005627AB = {
 						CreatedOnToolsVersion = 6.1;
@@ -920,12 +920,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = U86LS642TB;
+				DEVELOPMENT_TEAM = TE2958KSXV;
 				GCC_PREFIX_HEADER = MJRefreshExample/PrefixHeader.pch;
 				INFOPLIST_FILE = MJRefreshExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mj.MJRefreshTest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mj.MJRefresh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -935,12 +935,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = U86LS642TB;
+				DEVELOPMENT_TEAM = TE2958KSXV;
 				GCC_PREFIX_HEADER = MJRefreshExample/PrefixHeader.pch;
 				INFOPLIST_FILE = MJRefreshExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mj.MJRefreshTest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mj.MJRefresh;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

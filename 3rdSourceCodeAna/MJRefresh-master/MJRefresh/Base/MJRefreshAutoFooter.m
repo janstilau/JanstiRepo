@@ -68,6 +68,7 @@
     self.mj_y = self.scrollView.mj_contentH;
 }
 
+// 这里, 所谓的 autoRefresh 无非是监听了 contentOffset 的变化.
 - (void)scrollViewContentOffsetDidChange:(NSDictionary *)change
 {
     [super scrollViewContentOffsetDidChange:change];

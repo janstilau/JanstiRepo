@@ -166,6 +166,7 @@ static void (^_exceptionBlock)(NSString *log) = ^void(NSString *log) {
 
 + (void)startEngine
 {
+    // 防止重复.
     if (![JSContext class] || _context) {
         return;
     }
@@ -173,6 +174,7 @@ static void (^_exceptionBlock)(NSString *log) = ^void(NSString *log) {
     JSContext *context = [[JSContext alloc] init];
     
 #ifdef DEBUG
+    // 定义 po, 这个命令是在 js 环境下的命令.
     context[@"po"] = ^JSValue*(JSValue *obj) {
         id ocObject = formatJSToOC(obj);
         return [JSValue valueWithObject:[ocObject description] inContext:_context];
@@ -1778,6 +1780,7 @@ static id formatOCToJS(id obj)
     return _wrapObj(obj);
 }
 
+// JSValue 就是对于 JS 的值的包装.
 static id formatJSToOC(JSValue *jsval)
 {
     id obj = [jsval toObject];

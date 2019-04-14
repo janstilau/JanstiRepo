@@ -29,21 +29,17 @@
 }
 
 #pragma mark - 覆盖父类的方法
-
-// 这个是在 init 方法里面调用的.
 - (void)prepare
 {
     [super prepare];
     
     // 设置key
-    self.lastUpdatedTimeKey = MJRefreshHeaderLastUpdatedTimeKey;
+    self.lastUpdatedTimeKey = MJRefreshHeaderLastUpdatedTimeKey; // 这个东西, 就是保存一下刷新时间, 如何保存呢, 是通过 UserDefaults. 个人觉着这不是一个好办法.
     
     // 设置高度
-    // 高度的设置, 被放到了子 view 里面.
-    self.mj_h = MJRefreshHeaderHeight;
+    self.mj_h = MJRefreshHeaderHeight; // 固定的一个值, 这里这个值暴露出去了, 可能是考虑别的 View 系统会用到这个值.
 }
 
-// 这个是在 layoutSubviews 里面调用的.
 - (void)placeSubviews
 {
     [super placeSubviews];
@@ -52,17 +48,17 @@
     self.mj_y = - self.mj_h - self.ignoredScrollViewContentInsetTop;
 }
 
-// scrollView 滑动了.
+// 最重要的方法, 根据 offset 的值, 改变自身的状态. 而在 setState 的方法里面, 进行相应的处理.
 - (void)scrollViewContentOffsetDidChange:(NSDictionary *)change
 {
     [super scrollViewContentOffsetDidChange:change];
     
-    // 在刷新的refreshing状态
+    // 在刷新的refreshing状态, 在这个状态下, header 可以停留在 scrollView 的顶部而不回缩. 当然, 如果 offset 大于了 header 的 height, 还是不可以的.
     if (self.state == MJRefreshStateRefreshing) {
         // 暂时保留
         if (self.window == nil) return;
         
-        // 通过计算, 让 scrollView 进行向下的停留.
+        // sectionheader停留解决, 是通过改写 scrollView 的 inset 解决的.
         CGFloat insetT = - self.scrollView.mj_offsetY > _scrollViewOriginalInset.top ? - self.scrollView.mj_offsetY : _scrollViewOriginalInset.top;
         insetT = insetT > self.mj_h + _scrollViewOriginalInset.top ? self.mj_h + _scrollViewOriginalInset.top : insetT;
         self.scrollView.mj_insetT = insetT;
@@ -83,12 +79,11 @@
     // >= -> >
     if (offsetY > happenOffsetY) return;
     
-    // 通过监听位置, 更改状态.
     // 普通 和 即将刷新 的临界点
     CGFloat normal2pullingOffsetY = happenOffsetY - self.mj_h;
-    CGFloat pullingPercent = (happenOffsetY - offsetY) / self.mj_h;
+    CGFloat pullingPercent = (happenOffsetY - offsetY) / self.mj_h; // 计算出 pulling 的百分比.
     
-    if (self.scrollView.isDragging) { // 如果正在拖拽
+    if (self.scrollView.isDragging) { // 如果正在拖拽, 根据现在的 state 值和 offset 的数值, 改变 state 的值.
         self.pullingPercent = pullingPercent;
         if (self.state == MJRefreshStateIdle && offsetY < normal2pullingOffsetY) {
             // 转为即将刷新状态
@@ -99,16 +94,15 @@
         }
     } else if (self.state == MJRefreshStatePulling) {// 即将刷新 && 手松开
         // 开始刷新
-        [self beginRefreshing];
+        [self beginRefreshing]; // 如果, 在 drag 的时候, 达到了 pulling 的状态, 就刷新.
     } else if (pullingPercent < 1) {
-        // 如果没有进行拖拽的话, 那么就只进行 pullingPercent 的赋值操作. 这个赋值有什么用呢, 目前来说, 仅仅是在 endRefresh 的时候, 根据这个值, 进行模拟 animation 动画. 不过, 猜想可以作为手动控制动画的一种实现方式.
         self.pullingPercent = pullingPercent;
     }
 }
 
 - (void)setState:(MJRefreshState)state
 {
-    MJRefreshCheckState
+    MJRefreshCheckState // 如果, 状态没有改变, 直接 return.
     
     // 根据状态做事情
     if (state == MJRefreshStateIdle) {
@@ -120,18 +114,18 @@
         
         // 恢复inset和offset
         [UIView animateWithDuration:MJRefreshSlowAnimationDuration animations:^{
-            self.scrollView.mj_insetT += self.insetTDelta; // 这里, insetTDelta 是一个负值, 所以这里其实是修改 scrollView 的 contentOffset, 让之前多出来的那一部分缩回去.
+            self.scrollView.mj_insetT += self.insetTDelta;
             
             // 自动调整透明度
             if (self.isAutomaticallyChangeAlpha) self.alpha = 0.0;
         } completion:^(BOOL finished) {
             self.pullingPercent = 0.0;
-            
+            // 这个 endRefreshCompletionBlock, 是在当 state 是 MJRefreshStateIdle 的时候进行的调用, 不过这个 blcok 我们一般不会使用.
             if (self.endRefreshingCompletionBlock) {
                 self.endRefreshingCompletionBlock();
             }
         }];
-    } else if (state == MJRefreshStateRefreshing) {
+    } else if (state == MJRefreshStateRefreshing) { // 这个 state 只会在 beginRefreshing 中才会进行设值操作.
         MJRefreshDispatchAsyncOnMainQueue({
             [UIView animateWithDuration:MJRefreshFastAnimationDuration animations:^{
                 if (self.scrollView.panGestureRecognizer.state != UIGestureRecognizerStateCancelled) {
@@ -142,6 +136,7 @@
                     CGPoint offset = self.scrollView.contentOffset;
                     offset.y = -top;
                     [self.scrollView setContentOffset:offset animated:NO];
+                    // 这里, 在刚进入刷新的时候, 进行 scrollView 的位置调整工作.
                 }
             } completion:^(BOOL finished) {
                 [self executeRefreshingCallback];

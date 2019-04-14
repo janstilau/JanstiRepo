@@ -68,6 +68,7 @@
     }
 }
 
+// contentSize 的变化, 主要用在了改变 footer 的位置上.
 - (void)scrollViewContentSizeDidChange:(NSDictionary *)change
 {
     [super scrollViewContentSizeDidChange:change];

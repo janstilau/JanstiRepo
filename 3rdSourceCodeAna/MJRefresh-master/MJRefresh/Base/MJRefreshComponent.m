@@ -31,7 +31,6 @@
 - (void)prepare
 {
     // 基本属性
-    // UIViewAutoresizingFlexibleWidth.
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.backgroundColor = [UIColor clearColor];
 }
@@ -39,35 +38,37 @@
 - (void)layoutSubviews
 {
     [self placeSubviews];
-    
     [super layoutSubviews];
 }
 
-// 父类不做任何处理, 把接口留给子类, templateMethod. 这样, 子类只用重写 placeSubviews 就行了, 并不用知道, 这个函数到底在哪里被用到了.
+// 这个方法, 就是给子类复写的, template 模式.
 - (void)placeSubviews{}
 
+// 如果我设计这个调用, 应该就是在 superView 的改变的时候, 所以, 从这里应该可以看出, 在 UIView 的层级关系里面, superView 应该还是一个内存里面的值.
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {
-    [super willMoveToSuperview:newSuperview];
+    [super willMoveToSuperview:newSuperview]; // doing nothing
     
     // 如果不是UIScrollView，不做任何事情
-    if (newSuperview && ![newSuperview isKindOfClass:[UIScrollView class]]) return;
+    if (newSuperview && ![newSuperview isKindOfClass:[UIScrollView class]]) return; // 属性里面有一个 scrollView, 这里, 如果父控件不是 scrollView 不做任何事情.
     
     // 旧的父控件移除监听
     [self removeObservers];
     
     if (newSuperview) { // 新的父控件
-        // 设置宽度
+        // 设置宽度.
         self.mj_w = newSuperview.mj_w;
-        // 设置位置
-        self.mj_x = -_scrollView.mj_insetL;
+        // 设置位置.
+        self.mj_x = -_scrollView.mj_insetL; // 这里,
         
         // 记录UIScrollView
         _scrollView = (UIScrollView *)newSuperview;
-        // 设置永远支持垂直弹簧效果, 这个是必要的, 如果没有弹簧效果, 那么就不会触发刷新了.
+        // 设置永远支持垂直弹簧效果
         _scrollView.alwaysBounceVertical = YES;
-        // 记录UIScrollView最开始的contentInset
+        // 记录UIScrollView最开始的contentInset, 之前其实一直没有太关心 contentInset.
         _scrollViewOriginalInset = _scrollView.mj_inset;
+        
+        // 这些值, 之所以要记录, 是在之后的计算中, 这些都有意义, 所以专门记录下来. 每次调用_scrollView取值实在是太麻烦了.
         
         // 添加监听
         [self addObservers];
@@ -79,23 +80,20 @@
     [super drawRect:rect];
     
     if (self.state == MJRefreshStateWillRefresh) {
-        // 预防view还没显示出来就调用了beginRefreshing, 没看明白
+        // 预防view还没显示出来就调用了beginRefreshing
         self.state = MJRefreshStateRefreshing;
     }
 }
 
 #pragma mark - KVO监听
-// 这个框架, kvo 用的很多. 如果不用 kvo 的话, 那么就需要在 scrollView 的 delegate 方法里面传值到这里来. 这样这个框架就太不方便了.
 - (void)addObservers
 {
     NSKeyValueObservingOptions options = NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld;
-    // contentOffset 的监听
-    [self.scrollView addObserver:self forKeyPath:MJRefreshKeyPathContentOffset options:options context:nil];
-    // contentSize 的监听
-    [self.scrollView addObserver:self forKeyPath:MJRefreshKeyPathContentSize options:options context:nil];
-    // scrollView 的 pan 手势的监听. 之前不知道这么手势, 还是要去读一遍 scrollview 的源代码.
+    [self.scrollView addObserver:self forKeyPath:MJRefreshKeyPathContentOffset options:options context:nil]; // 检测 offset 变化
+    [self.scrollView addObserver:self forKeyPath:MJRefreshKeyPathContentSize options:options context:nil]; // 检测 contentSize 变化.
     self.pan = self.scrollView.panGestureRecognizer;
     [self.pan addObserver:self forKeyPath:MJRefreshKeyPathPanState options:options context:nil];
+    // 检测, pan gesture 变化.
 }
 
 - (void)removeObservers
@@ -106,7 +104,6 @@
     self.pan = nil;
 }
 
-// 这个方法监听之后, 主要做分发作用.
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     // 遇到这些情况就直接返回
@@ -114,24 +111,26 @@
     
     // 这个就算看不见也需要处理
     if ([keyPath isEqualToString:MJRefreshKeyPathContentSize]) {
-        [self scrollViewContentSizeDidChange:change];
+        [self scrollViewContentSizeDidChange:change]; // contentSize 变化的回调
     }
     
     // 看不见
     if (self.hidden) return;
     if ([keyPath isEqualToString:MJRefreshKeyPathContentOffset]) {
-        [self scrollViewContentOffsetDidChange:change];
+        [self scrollViewContentOffsetDidChange:change]; // offset 变化的回调
     } else if ([keyPath isEqualToString:MJRefreshKeyPathPanState]) {
-        [self scrollViewPanStateDidChange:change];
+        [self scrollViewPanStateDidChange:change]; // panState 变化的回调.
     }
 }
 
+// 以下的三个回调, 要在子类中处理.
 - (void)scrollViewContentOffsetDidChange:(NSDictionary *)change{}
 - (void)scrollViewContentSizeDidChange:(NSDictionary *)change{}
 - (void)scrollViewPanStateDidChange:(NSDictionary *)change{}
 
 #pragma mark - 公共方法
 #pragma mark 设置回调对象和回调方法
+// 记录回调.
 - (void)setRefreshingTarget:(id)target refreshingAction:(SEL)action
 {
     self.refreshingTarget = target;
@@ -143,7 +142,6 @@
     _state = state;
     
     // 加入主队列的目的是等setState:方法调用完毕、设置完文字后再去布局子控件
-    // 在 setState 了之后, 就要进行一次 layout 的操作. 原因在于, 现在的框架是根据 state 进行了界面的变化.
     MJRefreshDispatchAsyncOnMainQueue([self setNeedsLayout];)
 }
 
@@ -155,7 +153,7 @@
     }];
     self.pullingPercent = 1.0;
     // 只要正在刷新，就完全显示
-    if (self.window) {
+    if (self.window) { // 可以通过 window 来判断, 一个 view 是否正在显示的状态.
         self.state = MJRefreshStateRefreshing;
     } else {
         // 预防正在刷新中时，调用本方法使得header inset回置失败
@@ -169,13 +167,12 @@
 
 - (void)beginRefreshingWithCompletionBlock:(void (^)(void))completionBlock
 {
+    // 所以, block 的回调一般来说, 仅仅是进行一个数值的记录.
     self.beginRefreshingCompletionBlock = completionBlock;
-    
     [self beginRefreshing];
 }
 
 #pragma mark 结束刷新状态
-// 这个函数会修改到空闲状态. 在子类的 setState 方法里面, 会有相应的处理.
 - (void)endRefreshing
 {
     MJRefreshDispatchAsyncOnMainQueue(self.state = MJRefreshStateIdle;)
@@ -195,6 +192,8 @@
 }
 
 #pragma mark 自动切换透明度
+
+// 这里之所以有三个函数, 是因为有一个被废除了.
 - (void)setAutoChangeAlpha:(BOOL)autoChangeAlpha
 {
     self.automaticallyChangeAlpha = autoChangeAlpha;
@@ -231,6 +230,8 @@
 }
 
 #pragma mark - 内部方法
+
+// 在子类里面, 通过大量重载 setState 方法, 来达到目的.
 - (void)executeRefreshingCallback
 {
     MJRefreshDispatchAsyncOnMainQueue({

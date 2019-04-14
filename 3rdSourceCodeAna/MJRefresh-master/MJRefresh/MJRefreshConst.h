@@ -67,6 +67,7 @@ if (state == oldState) return; \
 [super setState:state];
 
 // 异步主线程执行，不强持有Self
+// 平时的代码里面, 不会在意这里的持有问题, 仔细向下, 应该不持有.
 #define MJRefreshDispatchAsyncOnMainQueue(x) \
 __weak typeof(self) weakSelf = self; \
 dispatch_async(dispatch_get_main_queue(), ^{ \
