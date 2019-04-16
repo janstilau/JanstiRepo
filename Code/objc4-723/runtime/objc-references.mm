@@ -1,30 +1,3 @@
-/*
- * Copyright (c) 2004-2007 Apple Inc. All rights reserved.
- *
- * @APPLE_LICENSE_HEADER_START@
- * 
- * This file contains Original Code and/or Modifications of Original Code
- * as defined in and that are subject to the Apple Public Source License
- * Version 2.0 (the 'License'). You may not use this file except in
- * compliance with the License. Please obtain a copy of the License at
- * http://www.opensource.apple.com/apsl/ and read it before using this
- * file.
- * 
- * The Original Code and all software distributed under the License are
- * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
- * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
- * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
- * Please see the License for the specific language governing rights and
- * limitations under the License.
- * 
- * @APPLE_LICENSE_HEADER_END@
- */
-/*
-  Implementation of the weak / associative references for non-GC mode.
-*/
-
-
 #include "objc-private.h"
 #include <objc/message.h>
 #include <map>
@@ -153,8 +126,8 @@ namespace objc_references_support {
     inline id UNDISGUISE(disguised_ptr_t dptr) { return id(~dptr); }
   
     class ObjcAssociation {
-        uintptr_t _policy;
-        id _value;
+        uintptr_t _policy; // 内存管理政策.
+        id _value; // 内存管理的值.
     public:
         ObjcAssociation(uintptr_t policy, id value) : _policy(policy), _value(value) {}
         ObjcAssociation() : _policy(0), _value(nil) {}
@@ -172,8 +145,8 @@ namespace objc_references_support {
     typedef ObjcAllocator<std::pair<void * const, ObjcAssociation> > ObjectAssociationMapAllocator;
     class ObjectAssociationMap : public std::map<void *, ObjcAssociation, ObjectPointerLess, ObjectAssociationMapAllocator> {
     public:
-        void *operator new(size_t n) { return ::malloc(n); }
-        void operator delete(void *ptr) { ::free(ptr); }
+        void *operator new(size_t n) { return ::malloc(n); } // 定义元素的分配器
+        void operator delete(void *ptr) { ::free(ptr); } // 定义元素的 delete 操作回收函数
     };
     typedef ObjcAllocator<std::pair<const disguised_ptr_t, ObjectAssociationMap*> > AssociationsHashMapAllocator;
     class AssociationsHashMap : public unordered_map<disguised_ptr_t, ObjectAssociationMap *, DisguisedPointerHash, DisguisedPointerEqual, AssociationsHashMapAllocator> {
@@ -196,6 +169,7 @@ class AssociationsManager {
     // associative references: object pointer -> PtrPtrHashMap.
     static AssociationsHashMap *_map;
 public:
+    // 这里, 其实就一个 map, 然后构造方法是进行加锁和解锁的操作, 用对象管理资源. 骚操作.
     AssociationsManager()   { AssociationsManagerLock.lock(); }
     ~AssociationsManager()  { AssociationsManagerLock.unlock(); }
     
@@ -219,14 +193,17 @@ enum {
     OBJC_ASSOCIATION_GETTER_AUTORELEASE = (2 << 8)
 }; 
 
+// 这个方法其实很简单, 只是 getterPolicy 是什么时候设置进去的.
+// getterPolicy 其实就是 setPolicy. 因为, 这是 MRC 环境, 所以看来, mrc 环境调用 ojct_association 是要进行内存管理的.
 id _object_get_associative_reference(id object, void *key) {
     id value = nil;
     uintptr_t policy = OBJC_ASSOCIATION_ASSIGN;
     {
         AssociationsManager manager;
         AssociationsHashMap &associations(manager.associations());
-        disguised_ptr_t disguised_object = DISGUISE(object);
+        disguised_ptr_t disguised_object = DISGUISE(object); // 这里, 应该是取得真实的地址, 从 isa 中提取.
         AssociationsHashMap::iterator i = associations.find(disguised_object);
+        // 这里它有 if 的嵌套, 感觉自己现在提前 return 中毒了, 不应该追求提前 return.
         if (i != associations.end()) {
             ObjectAssociationMap *refs = i->second;
             ObjectAssociationMap::iterator j = refs->find(key);
@@ -266,35 +243,34 @@ struct ReleaseValue {
     void operator() (ObjcAssociation &association) {
         releaseValue(association.value(), association.policy());
     }
-};
+}; //  不太明白, 这是一个类名啊, 怎么直接使用的.
 
 void _object_set_associative_reference(id object, void *key, id value, uintptr_t policy) {
-    // retain the new value (if any) outside the lock.
-    ObjcAssociation old_association(0, nil);
+    ObjcAssociation old_association(0, nil); // 提前写好一个值在最后修改, 这和我们自己写代码是一样的.
     id new_value = value ? acquireValue(value, policy) : nil;
-    {
-        AssociationsManager manager;
+    { // 专门的 {}, 标明下面的逻辑是一个单元, 可以模仿
+        AssociationsManager manager; // 骚操作, 构造函数, 析构函数加锁.
         AssociationsHashMap &associations(manager.associations());
         disguised_ptr_t disguised_object = DISGUISE(object);
-        if (new_value) {
+        if (new_value) { // 如果 new_value, 那么就是 set 操作.
             // break any existing association.
             AssociationsHashMap::iterator i = associations.find(disguised_object);
-            if (i != associations.end()) {
+            if (i != associations.end()) { // 原来有object.
                 // secondary table exists
                 ObjectAssociationMap *refs = i->second;
-                ObjectAssociationMap::iterator j = refs->find(key);
+                ObjectAssociationMap::iterator j = refs->find(key); // 原来 key 有值.
                 if (j != refs->end()) {
-                    old_association = j->second;
-                    j->second = ObjcAssociation(policy, new_value);
+                    old_association = j->second; // 先获取一下原来的值.
+                    j->second = ObjcAssociation(policy, new_value); // 然后设置新值. 奇怪的是, 这里面没有根据 policy 进行操作 啊.
                 } else {
                     (*refs)[key] = ObjcAssociation(policy, new_value);
                 }
             } else {
-                // create the new association (first time).
+                // 我们可以看到, 这和我们自己写代码思路差不多, 所以大神的代码也是可以放心平等的a看的.
                 ObjectAssociationMap *refs = new ObjectAssociationMap;
                 associations[disguised_object] = refs;
                 (*refs)[key] = ObjcAssociation(policy, new_value);
-                object->setHasAssociatedObjects();
+                object->setHasAssociatedObjects(); // 这里, 设置了有关联对象的 isa 的标志位. 所以, 所有的数据存储工作, 一定是有代码, 或者算法对他进行了读取, 设置, 否则这个数据存储的功能就要删除.
             }
         } else {
             // setting the association to nil breaks the association.
@@ -304,7 +280,7 @@ void _object_set_associative_reference(id object, void *key, id value, uintptr_t
                 ObjectAssociationMap::iterator j = refs->find(key);
                 if (j != refs->end()) {
                     old_association = j->second;
-                    refs->erase(j);
+                    refs->erase(j); // remove 操作.
                 }
             }
         }

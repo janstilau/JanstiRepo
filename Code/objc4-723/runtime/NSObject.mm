@@ -1673,8 +1673,8 @@ id
 objc_autorelease(id obj)
 {
     if (!obj) return obj;
-    if (obj->isTaggedPointer()) return obj;
-    return obj->autorelease();
+    if (obj->isTaggedPointer()) return obj; // 如果是 taggedPointer, 因为其实就是一个指针值, 所以没有释放之说
+    return obj->autorelease(); // 调用 autorelease 代码
 }
 
 

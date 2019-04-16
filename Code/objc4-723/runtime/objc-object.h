@@ -691,7 +691,7 @@ objc_object::autorelease()
     if (isTaggedPointer()) return (id)this;
     if (fastpath(!ISA()->hasCustomRR())) return rootAutorelease();
 
-    return ((id(*)(objc_object *, SEL))objc_msgSend)(this, SEL_autorelease);
+    return ((id(*)(objc_object *, SEL))objc_msgSend)(this, SEL_autorelease); // 发送 autorelease 方法.
 }
 
 
