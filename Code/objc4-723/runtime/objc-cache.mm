@@ -1,86 +1,3 @@
-/*
- * Copyright (c) 1999-2007 Apple Inc.  All Rights Reserved.
- * 
- * @APPLE_LICENSE_HEADER_START@
- * 
- * This file contains Original Code and/or Modifications of Original Code
- * as defined in and that are subject to the Apple Public Source License
- * Version 2.0 (the 'License'). You may not use this file except in
- * compliance with the License. Please obtain a copy of the License at
- * http://www.opensource.apple.com/apsl/ and read it before using this
- * file.
- * 
- * The Original Code and all software distributed under the License are
- * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
- * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
- * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
- * Please see the License for the specific language governing rights and
- * limitations under the License.
- * 
- * @APPLE_LICENSE_HEADER_END@
- */
-
-/***********************************************************************
-* objc-cache.m
-* Method cache management
-* Cache flushing
-* Cache garbage collection
-* Cache instrumentation
-* Dedicated allocator for large caches
-**********************************************************************/
-
-
-/***********************************************************************
- * Method cache locking (GrP 2001-1-14)
- *
- * For speed, objc_msgSend does not acquire any locks when it reads 
- * method caches. Instead, all cache changes are performed so that any 
- * objc_msgSend running concurrently with the cache mutator will not 
- * crash or hang or get an incorrect result from the cache. 
- *
- * When cache memory becomes unused (e.g. the old cache after cache 
- * expansion), it is not immediately freed, because a concurrent 
- * objc_msgSend could still be using it. Instead, the memory is 
- * disconnected from the data structures and placed on a garbage list. 
- * The memory is now only accessible to instances of objc_msgSend that 
- * were running when the memory was disconnected; any further calls to 
- * objc_msgSend will not see the garbage memory because the other data 
- * structures don't point to it anymore. The collecting_in_critical
- * function checks the PC of all threads and returns FALSE when all threads 
- * are found to be outside objc_msgSend. This means any call to objc_msgSend 
- * that could have had access to the garbage has finished or moved past the 
- * cache lookup stage, so it is safe to free the memory.
- *
- * All functions that modify cache data or structures must acquire the 
- * cacheUpdateLock to prevent interference from concurrent modifications.
- * The function that frees cache garbage must acquire the cacheUpdateLock 
- * and use collecting_in_critical() to flush out cache readers.
- * The cacheUpdateLock is also used to protect the custom allocator used 
- * for large method cache blocks.
- *
- * Cache readers (PC-checked by collecting_in_critical())
- * objc_msgSend*
- * cache_getImp
- *
- * Cache writers (hold cacheUpdateLock while reading or writing; not PC-checked)
- * cache_fill         (acquires lock)
- * cache_expand       (only called from cache_fill)
- * cache_create       (only called from cache_expand)
- * bcopy               (only called from instrumented cache_expand)
- * flush_caches        (acquires lock)
- * cache_flush        (only called from cache_fill and flush_caches)
- * cache_collect_free (only called from cache_expand and cache_flush)
- *
- * UNPROTECTED cache readers (NOT thread-safe; used for debug info only)
- * cache_print
- * _class_printMethodCaches
- * _class_printDuplicateCacheEntries
- * _class_printMethodCacheStatistics
- *
- ***********************************************************************/
-
-
 #if __OBJC2__
 
 #include "objc-private.h"
@@ -241,7 +158,6 @@ cache_t *getCache(Class cls)
 
 cache_key_t getKey(SEL sel) 
 {
-    assert(sel);
     return (cache_key_t)sel;
 }
 
@@ -310,7 +226,7 @@ mask_t cache_t::mask()
     return _mask; 
 }
 
-mask_t cache_t::occupied() 
+mask_t cache_t::occupied()  // 散列表size
 {
     return _occupied;
 }
@@ -327,7 +243,7 @@ void cache_t::initializeToEmpty()
 }
 
 
-mask_t cache_t::capacity() 
+mask_t cache_t::capacity()  // 散列表容量
 {
     return mask() ? mask()+1 : 0; 
 }
@@ -444,6 +360,7 @@ bool cache_t::canBeFreed()
 }
 
 
+// 扩容操作. 散列表的 mask 就是 capacity - 1.
 void cache_t::reallocate(mask_t oldCapacity, mask_t newCapacity)
 {
     bool freeOld = canBeFreed();
@@ -516,10 +433,10 @@ bucket_t * cache_t::find(cache_key_t k, id receiver)
 
 void cache_t::expand()
 {
-    cacheUpdateLock.assertLocked();
+    cacheUpdateLock.assertLocked(); // 加锁了.
     
     uint32_t oldCapacity = capacity();
-    uint32_t newCapacity = oldCapacity ? oldCapacity*2 : INIT_CACHE_SIZE;
+    uint32_t newCapacity = oldCapacity ? oldCapacity*2 : INIT_CACHE_SIZE; // 双倍增加.
 
     if ((uint32_t)(mask_t)newCapacity != newCapacity) {
         // mask overflow - can't grow further
@@ -533,37 +450,36 @@ void cache_t::expand()
 
 static void cache_fill_nolock(Class cls, SEL sel, IMP imp, id receiver)
 {
-    cacheUpdateLock.assertLocked();
+    cacheUpdateLock.assertLocked(); // 加锁, 首先
 
-    // Never cache before +initialize is done
-    if (!cls->isInitialized()) return;
+    if (!cls->isInitialized()) return; // 如果, 类还没有初始化过, 不进行缓存
 
     // Make sure the entry wasn't added to the cache by some other thread 
     // before we grabbed the cacheUpdateLock.
-    if (cache_getImp(cls, sel)) return;
+    if (cache_getImp(cls, sel)) return; // cache_getImp 汇编代码, 找不到实现源码.
 
     cache_t *cache = getCache(cls);
-    cache_key_t key = getKey(sel);
+    cache_key_t key = getKey(sel); // SEL 的 key 就是一个强转操作.
 
     // Use the cache as-is if it is less than 3/4 full
     mask_t newOccupied = cache->occupied() + 1;
     mask_t capacity = cache->capacity();
     if (cache->isConstantEmptyCache()) {
         // Cache is read-only. Replace it.
-        cache->reallocate(capacity, capacity ?: INIT_CACHE_SIZE);
+        cache->reallocate(capacity, capacity ?: INIT_CACHE_SIZE); // 如果, cache 还没有初始化
     }
-    else if (newOccupied <= capacity / 4 * 3) {
+    else if (newOccupied <= capacity / 4 * 3) { // 如果, 没有达到扩容的界限,
         // Cache is less than 3/4 full. Use it as-is.
     }
     else {
         // Cache is too full. Expand it.
-        cache->expand();
+        cache->expand(); // 需要进行扩容.
     }
 
     // Scan for the first unused slot and insert there.
     // There is guaranteed to be an empty slot because the 
     // minimum size is 4 and we resized at 3/4 full.
-    bucket_t *bucket = cache->find(key, receiver);
+    bucket_t *bucket = cache->find(key, receiver); // 这里, 用的是寻址法解决的冲突.
     if (bucket->key() == 0) cache->incrementOccupied();
     bucket->set(key, imp);
 }

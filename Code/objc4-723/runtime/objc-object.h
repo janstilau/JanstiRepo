@@ -76,6 +76,7 @@ objc_object::isClass()
 inline Class 
 objc_object::getIsa() 
 {
+    // isTaggedPointer 是 objc_object 的方法, 不是一个C函数.
     if (!isTaggedPointer()) return ISA();
 
     uintptr_t ptr = (uintptr_t)this;
@@ -195,16 +196,15 @@ objc_object::initProtocolIsa(Class cls)
 inline void 
 objc_object::initInstanceIsa(Class cls, bool hasCxxDtor)
 {
-    assert(!cls->instancesRequireRawIsa());
-    assert(hasCxxDtor == cls->hasCxxDtor());
-
     initIsa(cls, true, hasCxxDtor);
 }
 
-inline void 
+inline void
+    
+// 初始化自己的 isa 指针.
 objc_object::initIsa(Class cls, bool nonpointer, bool hasCxxDtor) 
 { 
-    assert(!isTaggedPointer()); 
+    assert(!isTaggedPointer());
     
     if (!nonpointer) {
         isa.cls = cls;
@@ -212,7 +212,7 @@ objc_object::initIsa(Class cls, bool nonpointer, bool hasCxxDtor)
         assert(!DisableNonpointerIsa);
         assert(!cls->instancesRequireRawIsa());
 
-        isa_t newisa(0);
+        isa_t newisa(0); // 首先, 创建一个全部为 0 的 is 指针.
 
 #if SUPPORT_INDEXED_ISA
         assert(cls->classArrayIndex() > 0);

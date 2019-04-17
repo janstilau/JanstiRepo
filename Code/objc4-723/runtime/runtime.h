@@ -1632,8 +1632,9 @@ objc_storeWeak(id _Nullable * _Nonnull location, id _Nullable obj)
  * These are options to objc_setAssociatedObject()
  */
 typedef OBJC_ENUM(uintptr_t, objc_AssociationPolicy) {
+    // 其实就是 assign
     OBJC_ASSOCIATION_ASSIGN = 0,           /**< Specifies a weak reference to the associated object. */
-    OBJC_ASSOCIATION_RETAIN_NONATOMIC = 1, /**< Specifies a strong reference to the associated object. 
+    OBJC_ASSOCIATION_RETAIN_NONATOMIC = 1, /**< Specifies a strong reference to the associated object.
                                             *   The association is not made atomically. */
     OBJC_ASSOCIATION_COPY_NONATOMIC = 3,   /**< Specifies that the associated object is copied. 
                                             *   The association is not made atomically. */
@@ -1648,7 +1649,7 @@ typedef OBJC_ENUM(uintptr_t, objc_AssociationPolicy) {
  * 
  * @param object The source object for the association.
  * @param key The key for the association.
- * @param value The value to associate with the key key for object. Pass nil to clear an existing association.
+ * @param value The value to associate with the key key for object. Pass nil to clear an existing association. // 这样不好, 传入 null 做特殊处理不如专门的调用 remove.
  * @param policy The policy for the association. For possible values, see “Associative Object Behaviors.”
  * 
  * @see objc_setAssociatedObject

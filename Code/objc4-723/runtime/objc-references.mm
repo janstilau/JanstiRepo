@@ -247,7 +247,7 @@ struct ReleaseValue {
 
 void _object_set_associative_reference(id object, void *key, id value, uintptr_t policy) {
     ObjcAssociation old_association(0, nil); // 提前写好一个值在最后修改, 这和我们自己写代码是一样的.
-    id new_value = value ? acquireValue(value, policy) : nil;
+    id new_value = value ? acquireValue(value, policy) : nil; // 在这里, acquireValue 中根据 policy 进行了对应的操作, 所以在下面 policy 就是一个被记录的值而已.
     { // 专门的 {}, 标明下面的逻辑是一个单元, 可以模仿
         AssociationsManager manager; // 骚操作, 构造函数, 析构函数加锁.
         AssociationsHashMap &associations(manager.associations());
@@ -261,7 +261,7 @@ void _object_set_associative_reference(id object, void *key, id value, uintptr_t
                 ObjectAssociationMap::iterator j = refs->find(key); // 原来 key 有值.
                 if (j != refs->end()) {
                     old_association = j->second; // 先获取一下原来的值.
-                    j->second = ObjcAssociation(policy, new_value); // 然后设置新值. 奇怪的是, 这里面没有根据 policy 进行操作 啊.
+                    j->second = ObjcAssociation(policy, new_value);
                 } else {
                     (*refs)[key] = ObjcAssociation(policy, new_value);
                 }
@@ -292,11 +292,12 @@ void _object_set_associative_reference(id object, void *key, id value, uintptr_t
 void _object_remove_assocations(id object) {
     vector< ObjcAssociation,ObjcAllocator<ObjcAssociation> > elements;
     {
-        AssociationsManager manager;
+        AssociationsManager manager; // 加锁解锁凑走.
         AssociationsHashMap &associations(manager.associations());
         if (associations.size() == 0) return;
         disguised_ptr_t disguised_object = DISGUISE(object);
         AssociationsHashMap::iterator i = associations.find(disguised_object);
+        // 这里, 并没有在遍历的时候进行 release 的调用, 而是记录值, 在最后统一进行一次 release 的操作.
         if (i != associations.end()) {
             // copy all of the associations that need to be removed.
             ObjectAssociationMap *refs = i->second;

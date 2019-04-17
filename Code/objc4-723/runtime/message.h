@@ -46,14 +46,10 @@ struct objc_super {
 };
 #endif
 
-
+// 这个函数, 没有实现代码, 或者说, 实现代码是用汇编编写的
 /* Basic Messaging Primitives
  *
- * On some architectures, use objc_msgSend_stret for some struct return types.
- * On some architectures, use objc_msgSend_fpret for some float return types.
- * On some architectures, use objc_msgSend_fp2ret for some float return types.
- *
- * These functions must be cast to an appropriate function pointer type 
+ * These functions must be cast to an appropriate function pointer type
  * before being called. 
  */
 #if !OBJC_OLD_DISPATCH_PROTOTYPES
@@ -65,6 +61,7 @@ OBJC_EXPORT void
 objc_msgSendSuper(void /* struct objc_super *super, SEL op, ... */ )
     OBJC_AVAILABLE(10.0, 2.0, 9.0, 1.0, 2.0);
 #else
+
 /** 
  * Sends a message with a simple return value to an instance of a class.
  * 
