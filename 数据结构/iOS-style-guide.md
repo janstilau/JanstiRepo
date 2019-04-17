@@ -49,6 +49,13 @@
 }
 ```  
 
+### 嵌套
+
+{}的嵌套不宜过多, 由于苹果中大量使用了闭包, 导致经常会出现大量调用的嵌套. 如果所有的嵌套都写在一起, 不利于代码阅读. 同理, 循环语句, switch 语句中, 大量的嵌套导致的缩进会导致阅读困难. 应该寻找减少嵌套的解决办法.
+
+1. 定义新函数, 将里层嵌套转移到新的逻辑单元.
+1. 提前定义闭包, 闭包本身就是函数的包装, 如果闭包内代码仅仅用到方法内部, 方法的逻辑又不过长. 可以将闭包封装到方法内部.
+
 ### 括号的换行
 
 将带有分支的代码（`if`, `else`, `switch`, `while` 等等）和上一个分支的结束括号（`)`, `}`），以及自己分支的开始括号（`(`, `{`）放在同一行，来保证代码的紧凑可读。
@@ -62,7 +69,7 @@ if (user.isHappy)
 {
     // ...
 }
-else 
+else
 {
     // ...
 }
@@ -122,14 +129,14 @@ if (something) {
 
 严禁使用 public, private 标记符. 现有的 interface, implementation 文件结构, 和 property 关键字, 已经能够将成员变量和访问器进行很好的包装. public, private 标记符没有使用的必要.
 
-同理, 没有用 property 包装任何使用的成员变量, 而不要在 { } 中声明成员变量. 
+同理, 没有用 property 包装任何使用的成员变量, 而不要在 { } 中声明成员变量.
 
 ### 协议（Protocols）
 
 在书写协议的时候注意用 `<>` 括起来的协议和类型名之间是没有空格的，比如 `IPCConnectHandler()<IPCPreconnectorDelegate>`,这个规则适用所有书写协议的地方，包括函数声明、类声明、实例变量等等：
 
 ```objective-c
-@interface MyProtocoledClass : NSObject<NSWindowDelegate> 
+@interface MyProtocoledClass : NSObject<NSWindowDelegate>
 
 - (void)setDelegate:(id<MyFancyDelegate>)aDelegate;
 @end
@@ -222,7 +229,9 @@ remove:
 ```
 
 不要使用单词的简写，拼写出完整的单词：
+
 ```objective-c
+
 // 清晰
 destinationSelection
 setBackgroundColor:
@@ -231,6 +240,7 @@ setBackgroundColor:
 destSel
 setBkgdColor:
 ```
+
 然而，有部分单词简写在 Objective-C 编码过程中是非常常用的，以至于成为了一种规范，这些简写可以在代码中直接使用，下面列举了部分：
 
 ```objective-c
@@ -246,9 +256,10 @@ init    == Initialize       vert   == Vertical
 int     == Integer
 ```
 
-命名方法或者函数时要避免歧义
+命名方法或者函数时要避免歧义, 严禁使用 temp, array, list 或者 变量名+数字的命名方式.
 
 ```objective-c
+
 // 有歧义，是返回sendPort还是send一个Port？
 sendPort
 
@@ -301,7 +312,7 @@ zhengLiaoJiLu
 @end
 ```
 
-而协议名称应该清晰地表示它所执行的行为，而且要和类名区别开来，所以通常使用 `ing` 词尾来命名一个协议，比如 `NSCopying`, `NSLocking`：
+而协议名称应该清晰地表示它所执行的行为，而且要和类名区别开来，可以使用 `ing` 词尾来命名一个协议，比如 `NSCopying`, `NSLocking`：
 
 ```objective-c
 
@@ -323,7 +334,7 @@ zhengLiaoJiLu
 
 - 每一个Framework都应该有一个和框架同名的头文件，包含了框架中所有公共类头文件的引用，比如`Foundation.h`
 
-- Framework中有时候会实现在别的框架中类的类别扩展，这样的文件通常使用`被扩展的框架名`+`Additions`的方式来命名，比如`NSBundleAdditions.h`。
+- Framework中有时候会实现在别的框架中类的类别扩展，这样的文件通常使用`被扩展的框架名`+`Additions`的方式来命名，比如`NSBundle+Additions.h`。
 
 ### 命名方法（Methods）
 
@@ -371,39 +382,22 @@ Objective-C的方法名通常都比较长，这是为了让程序有更好地可
 
 不要用 `and` 来连接两个参数，通常 `and` 用来表示方法执行了两个相对独立的操作（*从设计上来说，这时候应该拆分成两个独立的方法*）：
 
-```objective-c
+```objective-c  
+
 // 错误，不要使用"and"来连接参数
 - (int)runModalForDirectory:(NSString *)path andFile:(NSString *)name andTypes:(NSArray *)fileTypes;
 
 // 正确，使用"and"来表示两个相对独立的操作
-- (BOOL)openFile:(NSString *)fullPath withApplication:(NSString *)appName andDeactivate:(BOOL)flag;
+- (BOOL)openFile:(NSString *)fullPath withApplication:(NSString *)appName andDeactivate:(BOOL)flag;  
+
 ```
+
 方法的参数命名也有一些需要注意的地方:
+
 - 和方法名类似，参数的第一个字母小写，后面的每一个单词首字母大写
 - 不要再方法名中使用类似`pointer`,`ptr`这样的字眼去表示指针，参数本身的类型足以说明
 - 不要使用只有一两个字母的参数名
 - 不要使用简写，拼出完整的单词
-
-下面列举了一些常用参数名：
-
-```objective-c
-...action:(SEL)aSelector
-...alignment:(int)mode
-...atIndex:(int)index
-...content:(NSRect)aRect
-...doubleValue:(double)aDouble
-...floatValue:(float)aFloat
-...font:(NSFont *)fontObj
-...frame:(NSRect)frameRect
-...intValue:(int)anInt
-...keyEquivalent:(NSString *)charCode
-...length:(int)numBytes
-...point:(NSPoint)aPoint
-...stringValue:(NSString *)aString
-...tag:(int)anInt
-...target:(id)anObject
-...title:(NSString *)aString
-```
 
 ### 存取方法（Accessor Methods）
 
@@ -433,7 +427,9 @@ Objective-C的方法名通常都比较长，这是为了让程序有更好地可
 ```
 
 命名存取方法时不要将动词转化为被动形式来使用：
+
 ```objective-c
+
 // 正确
 - (void)setAcceptsGlyphInfo:(BOOL)flag;
 - (BOOL)acceptsGlyphInfo;
@@ -444,7 +440,9 @@ Objective-C的方法名通常都比较长，这是为了让程序有更好地可
 ```
 
 可以使用 `can`, `should`, `will` 等词来协助表达存取方法的意思，但不要使用 `do`,和 `does`：
+
 ```objective-c
+
 // 正确
 - (void)setCanHide:(BOOL)flag;
 - (BOOL)canHide;
@@ -457,7 +455,9 @@ Objective-C的方法名通常都比较长，这是为了让程序有更好地可
 ```
 
 为什么 Objective-C 中不适用 `get` 前缀来表示属性获取方法？因为 `get`在Objective-C中通常只用来表示从函数指针返回值的函数：
+
 ```objective-c
+
 // 三个参数都是作为函数的返回值来使用的，这样的函数名可以使用"get"前缀
 - (void)getLineDash:(float *)pattern count:(int *)count phase:(float *)phase;
 ```
@@ -467,7 +467,9 @@ Objective-C的方法名通常都比较长，这是为了让程序有更好地可
 当特定的事件发生时，对象会触发它注册的委托方法。委托是Objective-C中常用的传递消息的方式。委托有它固定的命名范式。
 
 一个委托方法的第一个参数是触发它的对象，第一个关键词是触发对象的类名，除非委托方法只有一个名为`sender`的参数：
+
 ```objective-c
+
 // 第一个关键词为触发委托的类名
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row;
 - (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename;
@@ -477,47 +479,14 @@ Objective-C的方法名通常都比较长，这是为了让程序有更好地可
 ```
 
 根据委托方法触发的时机和目的，使用 `should`, `will`, `did` 等关键词
+
 ```objective-c
+
 - (void)browserDidScroll:(NSBrowser *)sender;
 
 - (NSUndoManager *)windowWillReturnUndoManager:(NSWindow *)window;、
 
 - (BOOL)windowShouldClose:(id)sender;
-```
-
-### 集合操作类方法（Collection Methods）
-
-有些对象管理着一系列其它对象或者元素的集合，需要使用类似“增删查改”的方法来对集合进行操作，这些方法的命名范式一般为：
-
-```objective-c
-// 集合操作范式
-- (void)addElement:(elementType)anObj;
-- (void)removeElement:(elementType)anObj;
-- (NSArray *)elements;
-
-// 栗子
-- (void)addLayoutManager:(NSLayoutManager *)obj;
-- (void)removeLayoutManager:(NSLayoutManager *)obj;
-- (NSArray *)layoutManagers;
-```
-
-注意，如果返回的集合是无序的，使用 `NSSet` 来代替 `NSArray`。如果需要将元素插入到特定的位置，使用类似于这样的命名：
-
-```objective-c
-- (void)insertLayoutManager:(NSLayoutManager *)obj atIndex:(int)index;
-- (void)removeLayoutManagerAtIndex:(int)index;
-```
-
-如果管理的集合元素中有指向管理对象的指针，要设置成 `weak` 类型以防止引用循环。
-
-下面是SDK中 `NSWindow` 类的集合操作方法：
-
-```objective-c
-- (void)addChildWindow:(NSWindow *)childWin ordered:(NSWindowOrderingMode)place;
-- (void)removeChildWindow:(NSWindow *)childWin;
-- (NSArray *)childWindows;
-- (NSWindow *)parentWindow;
-- (void)setParentWindow:(NSWindow *)window;
 ```
 
 ### 命名函数（Functions）
@@ -573,18 +542,13 @@ BOOL NSDecimalIsNotANumber(const NSDecimal *decimal)
 @property (assign, getter=isEditable) BOOL editable;
 ```
 
-命名实例变量，在变量名前加上`_`前缀（*有些有历史的代码会将`_`放在后面*），其它和命名属性一样：
+命名实例变量，在变量名前加上`_`前缀（*有些有历史的代码会将`_`放在后面*）, 不建议直接定义实例变量, 属性的命名方式可以达到统一的效果.
 
 ```objective-c
 @implementation MyClass {
     BOOL _showsTitle;
 }
 ```
-
-一般来说，类需要对使用者隐藏数据存储的细节，所以不要将实例方法定义成公共可访问的接口，可以使用 `@private`，`@protected` 前缀。
-
-*按苹果的说法，不建议在除了 `init` 和 `dealloc` 方法以外的地方直接访问实例变量，但很多人认为直接访问会让代码更加清晰可读，只在需要计算或者执行操作的时候才使用存取方法访问，所以这里不作要求。*
-
 
 ### 命名常量（Constants）
 
@@ -613,10 +577,11 @@ typedef NS_OPTIONS(NSUInteger, NSWindowMask) {
 };
 ```
 
-使用 `const` 定义浮点型或者单个的整数型常量，如果要定义一组相关的整数常量，应该优先使用枚举。常量的命名规范和函数相同：
+使用 `const` 定义浮点型或者单个的整数型常量，如果要定义一组相关的整数常量，应该优先使用枚举。常量如果是类内部使用, 应该 用 static 类型 k+常量名的方式, 常量如果需要暴露给外界使用, 则需要增加所属类的前缀, 表明常量所属命名空间.
 
 ```objective-c
 const float NSLightGray;
+static float kHeaderHeight;
 ```
 
 不要使用`#define`宏来定义常量，如果是整型常量，尽量使用枚举，浮点型常量，使用`const`定义。`#define`通常用来给编译器决定是否编译某块代码，比如常用的：
@@ -630,8 +595,8 @@ const float NSLightGray;
 ### 命名通知（Notifications）
 
 通知常用于在模块间传递消息，所以通知要尽可能地表示出发生的事件，通知的命名范式是：
-	
-	[触发通知的类名] + [Did | Will] + [动作] + Notification
+
+[触发通知的类名] + [Did | Will] + [动作] + Notification
 
 栗子：
 
@@ -646,55 +611,6 @@ NSColorPanelColorDidChangeNotification
 
 读没有注释代码的痛苦你我都体会过，好的注释不仅能让人轻松读懂你的程序，还能提升代码本身的质量。注意注释是为了让别人看懂，而不是仅仅你自己。
 
-### 文件注释
-
-每一个文件都**必须**写文件注释，文件注释通常包含
-
-- 文件所在模块
-- 作者信息
-- 历史版本信息
-- 版权信息
-- 文件包含的内容，作用
-
-一段良好文件注释的栗子：
-
-```objective-c
-/*******************************************************************************
-	Copyright (C), 2011-2013, Andrew Min Chang
-
-	File name: 	AMCCommonLib.h
-	Author:		Andrew Chang (Zhang Min) 
-	E-mail:		LaplaceZhang@126.com
-	
-	Description: 	
-			This file provide some covenient tool in calling library tools. One can easily include 
-		library headers he wants by declaring the corresponding macros. 
-			I hope this file is not only a header, but also a useful Linux library note.
-			
-	History:
-		2012-??-??: On about come date around middle of Year 2012, file created as "commonLib.h"
-		2012-08-
-	Copyright information: 20: Add shared memory library; add message queue.
-    2012-08-21: Add socket library (local)
-    2012-08-22: Add math library
-    2012-08-23: Add socket library (internet)
-    2012-08-24: Add daemon function
-    2012-10-10: Change file name as "AMCCommonLib.h"
-    2012-12-04: Add UDP support in AMC socket library
-    2013-01-07: Add basic data type such as "sint8_t"
-    2013-01-18: Add CFG_LIB_STR_NUM.
-    2013-01-22: Add CFG_LIB_TIMER.
-    2013-01-22: Remove CFG_LIB_DATA_TYPE because there is already AMCDataTypes.h
-
-			This file was intended to be under GPL protocol. However, I may use this library
-		in my work as I am an employee. And my company may require me to keep it secret. 
-		Therefore, this file is neither open source nor under GPL control. 
-		
-********************************************************************************/
-```
-
-*文件注释的格式通常不作要求，能清晰易读就可以了，但在整个工程中风格要统一。*
-
 ### 代码注释
 
 好的代码应该是**“自解释”（self-documenting）**的，因此对代码块的注释应该更注重说明**为什么这么做**，而不是**做了什么**。
@@ -705,9 +621,7 @@ NSColorPanelColorDidChangeNotification
 
 注释对语言没有要求，使用中文英文都可以，只要保证**清晰**和**简洁**，避免大段冗长的注释和无用多余的注释。
 
-方法、函数、类、协议、类别的定义都需要注释，推荐采用Apple的标准注释风格，好处是可以在引用的地方 `alt+点击`自动弹出注释，非常方便。
-
-Xcode自带注释快捷键：`option` + `command` + `/`。
+尽量避免无效注释, 如果方法, 属性的命名拥有良好的自解释性, 那么注释就会变为重复啰嗦占用空间的元素.
 
 一些良好的注释：
 
@@ -749,7 +663,8 @@ Xcode自带注释快捷键：`option` + `command` + `/`。
 
 ### 使用 `#pragma mark` 为代码分块
 
-在方法较多的源文件中，使用 `#pragma mark` 标记符来为不同功能的代码进行分块：
+在方法较多的源文件中，使用 `#pragma mark` 标记符来为不同功能的代码进行分块:
+注意, 过度的使用 pragma mark, 和没有使用没有区别, 应该讲方法按照功能进行分块.
 
 ```objective-c
 // 一个使用 #pragma mark 进行分块的源文件代码结构
@@ -770,10 +685,6 @@ Xcode自带注释快捷键：`option` + `command` + `/`。
 - (void)preparePlayer {}
 - (void)initPlayerView {}
 
-#pragma mark - Actions
-
-- (void)longPress:(UILongPressGestureRecognizer *)gesture {}
-
 #pragma mark - MCVideoPlayerControlDelegate
 
 - (void)controlDidPaused {}
@@ -789,9 +700,6 @@ Xcode自带注释快捷键：`option` + `command` + `/`。
 
 - (void)showNoWifiToast {}
 - (void)saveToAlbum {}
-
-#pragma mark - Overide
-
 - (BOOL)prefersStatusBarHidden {}
 
 @end
@@ -951,12 +859,12 @@ NSNumber *myEnum = @(kMyEnum);
 ```objective-c
 // 正确，直接判断
 if (!objc) {
-	...	
+  ...
 }
 
 // 错误，不要使用nil == Object的形式
 if (nil == objc) {
-	...	
+  ...
 }
 ```
 
@@ -987,3 +895,21 @@ array.release;
 /** delegate */
 @property (nonatomic, weak) id <IPCConnectHandlerDelegate> delegate;
 ```
+
+### 关于懒加载
+
+不要滥用懒加载. 懒加载设计的初衷是为了避免耗费资源, 只在明确使用到某个资源的时候进行生成操作. 然而, 在实际的代码中, 大部分的成员变量是随着这个类一起使用的, 需要动态生成的资源少之又少.
+
+懒加载过度使用的问题在于:
+
+1. 类的初始化过程混乱, 无法追踪某个成员变量的具体生成时间点. 而类不进行大部分成员变量的初始化, 根本无法工作. 懒加载可能是想推迟某个属性的生成时机, 但付出的代价是编程过程的复杂, 得不偿失.
+1. 类中对于成员变量的使用不统一, _变量名, self.变量名的方式杂交, 想要进行精确地文本查找, 总是产生遗漏.
+1. 代码臃肿. 在类的特定位置, 固定会出现懒加载代码, 首先判空, 然后进行初始化工作. 这些代码, 不能和类初始化代码放在一起, 逻辑不紧凑. 无法找到这些代码的合适位置, 因为懒加载的时机本身就不确定.
+
+懒加载的过度使用, 导致类内对于成员变量的使用, 只能全部使用点语法, 仅仅是因为不使用点语法, 不能保证成员变量已经进行初始化. 付出这么多代价, 不如直接在类初始化过程中, 明确的进行成员变量的初始化.
+
+建议是, 只有类内真正需要的时候, 用点语法操作成员变量. 例如, 某个成员变量确实只在某些时刻才会使用, 那么点语法会导致懒加载, 可以明确告诉阅读者, 这是一个特殊点; 如果 setProperty 中进行了更新操作, 那么使用点语法进行赋值, 可以明确告诉阅读者, 该成员变量在类内的其他部分需要使用 set 方法进行赋值. 在 weak-strong dance 中, 明确的使用 self.property, 是为了避免循环引用. 以上在类内部使用点语法的点, 都明确的标识, 此处应该特殊注意. 而在其他场合下, 直接使用_成员变量的方式, 表明仅仅是对于数据的取值赋值操作, 没有副作用.
+
+### OC 底层机制
+
+如果编写某个工具类, 利用 OC 底层 runtime, runloop, 和对象自省机制增加工具类的使用范围, 可以接受. 在业务代码功类中, 严禁过度使用这些不利于其他人员理解的黑魔法. 清晰的协议以及逻辑控制, 能够更好地提现代码的意图.
