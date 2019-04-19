@@ -134,39 +134,6 @@ KVOSetup()
 }
 @end
 
-/* An instance of thsi records the observations for a key path and the
- * recursion state of the process of sending notifications.
- */
-@interface	GSKVOPathInfo : NSObject
-{
-@public
-    unsigned              recursion;
-    unsigned              allOptions;
-    NSMutableArray        *observations;
-    NSMutableDictionary   *change;
-}
-- (void) notifyForKey: (NSString *)aKey ofInstance: (id)instance prior: (BOOL)f;
-@end
-
-/*
- * Instances of this class are created to hold information about the
- * observers monitoring a particular object which is being observed.
- */
-@interface	GSKVOInfo : NSObject
-{
-    NSObject	        *instance;	// Not retained.
-    GSLazyRecursiveLock	        *iLock;
-    NSMapTable	        *paths;
-}
-- (GSKVOPathInfo *) lockReturningPathInfoForKey: (NSString *)key;
-- (void*) contextForObserver: (NSObject*)anObserver ofKeyPath: (NSString*)aPath;
-- (id) initWithInstance: (NSObject*)i;
-- (NSObject*) instance;
-- (BOOL) isUnobserved;
-- (void) unlock;
-
-@end
-
 @interface NSKeyValueObservationForwarder : NSObject
 {
     id                                    target;
@@ -444,7 +411,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
 // 这是一个核心方法, 在这里, 进行了 set 的替换工作
 // 举个例子. name
 - (void) overrideSetterFor: (NSString*)aKey // aKey == name
-{
+{
     if ([keys member: aKey] != nil) { return; }
     
     NSMethodSignature    *sig;
@@ -949,8 +916,18 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
 }
 @end
 
-
-@implementation	GSKVOObservation
+/* An instance of thsi records the observations for a key path and the
+ * recursion state of the process of sending notifications.
+ */
+@interface    GSKVOPathInfo : NSObject
+{
+@public
+    unsigned              recursion;
+    unsigned              allOptions;
+    NSMutableArray        *observations;
+    NSMutableDictionary   *change;
+}
+- (void) notifyForKey: (NSString *)aKey ofInstance: (id)instance prior: (BOOL)f;
 @end
 
 @implementation	GSKVOPathInfo
@@ -1033,7 +1010,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
         [o->observer observeValueForKeyPath: aKey
                                    ofObject: instance
                                      change: change
-                                    context: o->context];
+                                    context: o->context]; // 这里不太明白, 这样岂不是 willChangeValue 的时候, 就进行了一次通知了吗
     }
     
     [change setObject: oldValue forKey: NSKeyValueChangeOldKey];
@@ -1044,7 +1021,33 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
 }
 @end
 
+/*
+ * Instances of this class are created to hold information about the
+ * observers monitoring a particular object which is being observed.
+ */
+@interface    GSKVOInfo : NSObject
+{
+    NSObject            *instance;    // 监听的对象
+    GSLazyRecursiveLock            *iLock;
+    NSMapTable            *paths; // 监听的 path
+}
+- (GSKVOPathInfo *) lockReturningPathInfoForKey: (NSString *)key;
+- (void*) contextForObserver: (NSObject*)anObserver ofKeyPath: (NSString*)aPath;
+- (id) initWithInstance: (NSObject*)i;
+- (NSObject*) instance;
+- (BOOL) isUnobserved;
+- (void) unlock;
+
 @implementation	GSKVOInfo
+
+- (id) initWithInstance: (NSObject*)i
+{
+    instance = i;
+    paths = NSCreateMapTable(NSObjectMapKeyCallBacks,
+                             NSObjectMapValueCallBacks, 8);
+    iLock = [GSLazyRecursiveLock new];
+    return self;
+}
 
 - (NSObject*) instance
 {
@@ -1094,7 +1097,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     } // 如果, 监听者没有实现 observeValueForKeyPath, 直接不添加.
     
     [iLock lock];
-    pathInfo = (GSKVOPathInfo*)NSMapGet(paths, (void*)aPath);
+    pathInfo = (GSKVOPathInfo*)NSMapGet(paths, (void*)aPath); // 这个里面, 存放的是 path 相关的观察者.
     if (pathInfo == nil)
     {
         pathInfo = [GSKVOPathInfo new];
@@ -1113,7 +1116,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
         GSKVOObservation      *o;
         
         o = [pathInfo->observations objectAtIndex: count];
-        if (o->observer == anObserver)
+        if (o->observer == anObserver) // 更新 observer 的属性.
         {
             o->context = aContext;
             o->options = options;
@@ -1130,7 +1133,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
         observation->options = options;
         [pathInfo->observations addObject: observation];
         [observation release];
-        pathInfo->allOptions |= options;
+        pathInfo->allOptions |= options; // 记录一下 GSKVOObservation
     }
     
     if (options & NSKeyValueObservingOptionInitial)
@@ -1145,7 +1148,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
         {
             id    value;
             
-            value = [instance valueForKeyPath: aPath];
+            value = [instance valueForKeyPath: aPath]; // 取得现在的属性状态.
             if (value == nil)
             {
                 value = null;
@@ -1161,41 +1164,12 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     [iLock unlock];
 }
 
-- (void) dealloc
-{
-    if (paths != 0) NSFreeMapTable(paths);
-    RELEASE(iLock);
-    [super dealloc];
-}
-
-- (id) initWithInstance: (NSObject*)i
-{
-    instance = i;
-    paths = NSCreateMapTable(NSObjectMapKeyCallBacks,
-                             NSObjectMapValueCallBacks, 8);
-    iLock = [GSLazyRecursiveLock new];
-    return self;
-}
-
-- (BOOL) isUnobserved
-{
-    BOOL	result = NO;
-    
-    [iLock lock];
-    if (NSCountMapTable(paths) == 0)
-    {
-        result = YES;
-    }
-    [iLock unlock];
-    return result;
-}
-
 /*
  * removes the observer
  */
 - (void) removeObserver: (NSObject*)anObserver forKeyPath: (NSString*)aPath
 {
-    GSKVOPathInfo	*pathInfo;
+    GSKVOPathInfo    *pathInfo;
     
     [iLock lock];
     pathInfo = (GSKVOPathInfo*)NSMapGet(paths, (void*)aPath);
@@ -1228,7 +1202,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
 
 - (void*) contextForObserver: (NSObject*)anObserver ofKeyPath: (NSString*)aPath
 {
-    GSKVOPathInfo	*pathInfo;
+    GSKVOPathInfo    *pathInfo;
     void          *context = 0;
     
     [iLock lock];
@@ -1252,6 +1226,28 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     [iLock unlock];
     return context;
 }
+
+- (void) dealloc
+{
+    if (paths != 0) NSFreeMapTable(paths);
+    RELEASE(iLock);
+    [super dealloc];
+}
+
+
+- (BOOL) isUnobserved
+{
+    BOOL	result = NO;
+    
+    [iLock lock];
+    if (NSCountMapTable(paths) == 0)
+    {
+        result = YES;
+    }
+    [iLock unlock];
+    return result;
+}
+
 @end
 
 @implementation NSKeyValueObservationForwarder
@@ -1460,7 +1456,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     {
         info = [[GSKVOInfo alloc] initWithInstance: self];
         [self setObservationInfo: info];
-        object_setClass(self, [r replacement]);
+        object_setClass(self, [r replacement]); // 从这里, self 就变成了子类了.
     }
     
     /*
@@ -1481,7 +1477,8 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     }
     else
     {
-        [r overrideSetterFor: aPath];
+        [r overrideSetterFor: aPath]; // overrideSetterFor 这一步, self 所变成的那个子类, 会添加 willChangeValueForKey setValue didChangeValueForKey 的调用了
+        // 然后, 将关系完全传递给了 addObserver
         [info addObserver: anObserver
                forKeyPath: aPath
                   options: options
@@ -1514,72 +1511,6 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     }
     if ([aPath rangeOfString:@"."].location != NSNotFound)
         [forwarder finalize];
-}
-
-@end
-
-/**
- * NSArray objects are not observable, so the registration methods
- * raise an exception.
- */
-@implementation NSArray (NSKeyValueObserverRegistration)
-
-- (void) addObserver: (NSObject*)anObserver
-          forKeyPath: (NSString*)aPath
-             options: (NSKeyValueObservingOptions)options
-             context: (void*)aContext
-{
-    [NSException raise: NSGenericException
-                format: @"[%@-%@]: This class is not observable",
-     NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
-}
-
-- (void) addObserver: (NSObject*)anObserver
-  toObjectsAtIndexes: (NSIndexSet*)indexes
-          forKeyPath: (NSString*)aPath
-             options: (NSKeyValueObservingOptions)options
-             context: (void*)aContext
-{
-    [self notImplemented: _cmd];
-}
-
-- (void) removeObserver: (NSObject*)anObserver forKeyPath: (NSString*)aPath
-{
-    [NSException raise: NSGenericException
-                format: @"[%@-%@]: This class is not observable",
-     NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
-}
-
-- (void) removeObserver: (NSObject*)anObserver
-   fromObjectsAtIndexes: (NSIndexSet*)indexes
-             forKeyPath: (NSString*)aPath
-{
-    [self notImplemented: _cmd];
-}
-
-@end
-
-/**
- * NSSet objects are not observable, so the registration methods
- * raise an exception.
- */
-@implementation NSSet (NSKeyValueObserverRegistration)
-
-- (void) addObserver: (NSObject*)anObserver
-          forKeyPath: (NSString*)aPath
-             options: (NSKeyValueObservingOptions)options
-             context: (void*)aContext
-{
-    [NSException raise: NSGenericException
-                format: @"[%@-%@]: This class is not observable",
-     NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
-}
-
-- (void) removeObserver: (NSObject*)anObserver forKeyPath: (NSString*)aPath
-{
-    [NSException raise: NSGenericException
-                format: @"[%@-%@]: This class is not observable",
-     NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
 }
 
 @end
@@ -1637,19 +1568,20 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     GSKVOPathInfo *pathInfo;
     GSKVOInfo     *info;
     
-    info = (GSKVOInfo *)[self observationInfo];
+    info = (GSKVOInfo *)[self observationInfo];// 取出 self 相关的  GSKVOInfo
     if (info == nil)
     {
         return;
     }
     
-    pathInfo = [info lockReturningPathInfoForKey: aKey];
+    pathInfo = [info lockReturningPathInfoForKey: aKey]; // 取出 GSKVOInfo 中akey 相关的 pathinfo
     if (pathInfo != nil)
     {
         if (pathInfo->recursion++ == 0)
         {
             id    old = [pathInfo->change objectForKey: NSKeyValueChangeNewKey];
             
+            // 这一步, 设置 old, 如果old有值, 代表着 NSKeyValueObservingOptionOld 一定在 allOptions 中.
             if (old != nil)
             {
                 /* We have set a value for this key already, so the value
@@ -1677,6 +1609,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
              [NSNumber numberWithInt: NSKeyValueChangeSetting]
                                 forKey: NSKeyValueChangeKindKey];
             
+            //现在 pathInfo->change 里面NSKeyValueChangeOldKey 的值已经搞定了.
             [pathInfo notifyForKey: aKey ofInstance: [info instance] prior: YES];
         }
         [info unlock];
@@ -1724,6 +1657,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     [self didChangeValueForDependentsOfKey: aKey];
 }
 
+// array 相关
 - (void) didChange: (NSKeyValueChange)changeKind
    valuesAtIndexes: (NSIndexSet*)indexes
             forKey: (NSString*)aKey
@@ -1768,6 +1702,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     [self didChangeValueForDependentsOfKey: aKey];
 }
 
+// array 相关
 - (void) willChange: (NSKeyValueChange)changeKind
     valuesAtIndexes: (NSIndexSet*)indexes
              forKey: (NSString*)aKey
@@ -1805,6 +1740,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     [self willChangeValueForDependentsOfKey: aKey];
 }
 
+// set 相关
 - (void) willChangeValueForKey: (NSString*)aKey
                withSetMutation: (NSKeyValueSetMutationKind)mutationKind
                   usingObjects: (NSSet*)objects
@@ -1838,6 +1774,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     [self willChangeValueForDependentsOfKey: aKey];
 }
 
+// set 相关
 - (void) didChangeValueForKey: (NSString*)aKey
               withSetMutation: (NSKeyValueSetMutationKind)mutationKind
                  usingObjects: (NSSet*)objects
