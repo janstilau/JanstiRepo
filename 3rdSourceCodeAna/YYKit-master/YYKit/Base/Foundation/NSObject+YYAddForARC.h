@@ -14,6 +14,9 @@
 /**
  Debug method for NSObject when using ARC.
  */
+
+// 没太明白这个类的意思.
+
 @interface NSObject (YYAddForARC)
 
 /// Same as `retain`

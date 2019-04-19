@@ -9,40 +9,44 @@
 #if	defined(__cplusplus)
 extern "C" {
 #endif
-
-@class NSArray;
-@class NSMutableArray;
-@class NSSet;
-@class NSMutableSet;
-@class NSDictionary;
-@class NSError;
-@class NSString;
-
-/** An exception for an unknown key in [NSObject(NSKeyValueCoding)]. */
-GS_EXPORT NSString* const NSUndefinedKeyException;
+    
+    @class NSArray;
+    @class NSMutableArray;
+    @class NSSet;
+    @class NSMutableSet;
+    @class NSDictionary;
+    @class NSError;
+    @class NSString;
+    
+    /** An exception for an unknown key in [NSObject(NSKeyValueCoding)]. */
+    GS_EXPORT NSString* const NSUndefinedKeyException;
+    
+    /**
+     whereby 就是 bywhere
+     
+     KVC 是一种机制, 可以使得对象的字段可以用一种通用的方式进行访问, 这种方式是和字符串的 key 值一起使用的.
+     通过这种方式, 就可以不再使用字段相关的方法了. KVC 失去了编译时的方法检查, 但是在某些情况下能够带来灵活性.
+     
+     * <p>This describes an informal protocol for <em>key-value coding</em>, a
+     * mechanism whereby the fields of an object may be accessed and set using
+     * generic methods in conjunction with string keys rather than field-specific
+     * methods.  Key-based access loses compile-time validity checking, but can be
+     * convenient in certain kinds of situations.</p>
+     *
+     
+     KVC 是通过 NSObject 的分类完成的. 特定的类可以重写实现来达到自己的目的.
+     
+     * <p>The basic methods are implemented as a category of the [NSObject] class,
+     * but other classes override those default implementations to perform more
+     * specific operations.</p>
+     */
+    @interface NSObject (NSKeyValueCoding)
 
 /**
- whereby 就是 bywhere
- 
- * <p>This describes an informal protocol for <em>key-value coding</em>, a
- * mechanism whereby the fields of an object may be accessed and set using
- * generic methods in conjunction with string keys rather than field-specific
- * methods.  Key-based access loses compile-time validity checking, but can be
- * convenient in certain kinds of situations.</p>
- // 通过 string key 进行取值和赋值的操作, 而不是写死的代码. 写死的代码, 如果是结构体的化, 会直接变成指针的偏移取值, 如果是方法的话, 则是对应的函数调用.
- // KVC 增加了灵活性, 而灵活性带来的是易读性和逻辑的复杂.
- *
- * <p>The basic methods are implemented as a category of the [NSObject] class,
- * but other classes override those default implementations to perform more
- * specific operations.</p>
- */
-@interface NSObject (NSKeyValueCoding)
-
-/**
+ 控制, 该类在使用 kvc 的时候, 可不可以直接访问实例变量的值. 这种情况一般出现在类中没有找到对应的方法的时候.
  * Controls whether the NSKeyValueCoding methods may attempt to
  * access instance variables directly.
  * NSObject's implementation returns YES.
- // 这是一个给, 每个类的一个权力. 因为毕竟有的类是不想接受KVC 这一套理论的.
  */
 + (BOOL) accessInstanceVariablesDirectly;
 
@@ -56,6 +60,7 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
 + (BOOL) useStoredAccessor;
 
 /**
+ 返回一个字典, 这个字段的 keys 是传入的这些值. 默认情况下, value 是通过各个key 值的 valueForKey 函数取得的, 如果 valueForKey nil, 返回 NSNull
  * Returns a dictionary built from values obtained for the specified keys.<br />
  * By default this is derived by calling -valueForKey: for each key.
  * Any nil values obtained are represented by an [NSNull] instance.
@@ -63,22 +68,12 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
 - (NSDictionary*) dictionaryWithValuesForKeys: (NSArray*)keys;
 
 /**
- * Deprecated ... use -valueForUndefinedKey: instead.
- */
-- (id) handleQueryWithUnboundKey: (NSString*)aKey;
-
-/**
- * Deprecated, use -setValue:forUndefinedKey: instead.
- */
-- (void) handleTakeValue: (id)anObject forUnboundKey: (NSString*)aKey;
-
-/**
  * Returns a mutable array value for a given key. This method:
  * <list>
- *  <item>Searches the receiver for methods matching the patterns 
+ *  <item>Searches the receiver for methods matching the patterns
  *   insertObject:in&lt;Key&gt;AtIndex: and
  *   removeObjectFrom&lt;Key&gt;AtIndex:. If both
- *   methods are found, each message sent to the proxy array will result in the 
+ *   methods are found, each message sent to the proxy array will result in the
  *   invocation of one or more of these methods. If
  *   replaceObjectIn&lt;Key&gt;AtIndex:withObject:
  *   is also found in the receiver it
@@ -87,11 +82,11 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  *   method set&lt;Key&gt;:. Each message sent to the proxy array will result in
  *   the invocation of set&lt;Key&gt;:</item>
  *  <item>If the previous do not match, and accessInstanceVariablesDirectly
- *   returns YES, searches for an instance variable matching _&lt;key&gt; or 
+ *   returns YES, searches for an instance variable matching _&lt;key&gt; or
  *   &lt;key&gt; (in that order). If the instance variable is found,
  *   messages sent
  *   to the proxy object will be forwarded to the instance variable.</item>
- *  <item>If none of the previous are found, raises an NSUndefinedKeyException 
+ *  <item>If none of the previous are found, raises an NSUndefinedKeyException
  *  </item>
  * </list>
  */
@@ -105,7 +100,7 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
 /**
  * Returns a mutable set value for a given key. This method:
  * <list>
- *  <item>Searches the receiver for methods matching the patterns 
+ *  <item>Searches the receiver for methods matching the patterns
  *   add&lt;Key&gt;Object:, remove&lt;Key&gt;Object:,
  *   add&lt;Key&gt;:, and remove&lt;Key&gt;:, which
  *   correspond to the NSMutableSet methods addObject:, removeObject:,
@@ -119,11 +114,11 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  *   method set&lt;Key&gt;:. Each message sent to the proxy set will result in
  *   the invocation of set&lt;Key&gt;:</item>
  *  <item>If the previous do not match, and accessInstanceVariablesDirectly
- *   returns YES, searches for an instance variable matching _&lt;key&gt; or 
+ *   returns YES, searches for an instance variable matching _&lt;key&gt; or
  *   &lt;key&gt; (in that order). If the instance variable is found,
  *   messages sent
  *   to the proxy object will be forwarded to the instance variable.</item>
- *  <item>If none of the previous are found, raises an NSUndefinedKeyException 
+ *  <item>If none of the previous are found, raises an NSUndefinedKeyException
  *  </item>
  * </list>
  */
@@ -135,6 +130,7 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
 - (NSMutableSet*) mutableSetValueForKeyPath: (NSString*)aKey;
 
 /**
+ 这个方法, 会在 KVC 机制中, 当把一个 nil 赋值给基本数据类型属性的时候出发. 默认情况下, 会引起崩溃.
  * This method is invoked by the NSKeyValueCoding mechanism when an attempt
  * is made to set an null value for a scalar attribute.  This implementation
  * raises an NSInvalidArgument exception.  Subclasses my override this method
@@ -143,6 +139,11 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
 - (void) setNilValueForKey: (NSString*)aKey;
 
 /**
+ 为接受者的 key 相关的属性进行赋值.
+ 如果value 可以转化为基本数据类型, 那么其中会进行自动转化.
+ 首先, 会去寻找 setKey 这个方法是否存在, 如果没有找到, 并且, accessInstanceVariablesDirectly 这个方法返回为 YES 的话, 会按照以下名字寻找成员变量.
+ _key, _isKey, key, isKey.
+ 如果set 方法没有找到, 上面的变量也没有找到, 就调用 setValue:forUndefinedKey. 默认这个方法, 会引发一场. 如果属性希望得到的是 基本数据类型, 而 value 是 nil, 那么会调用 setNilValueForKey, 而这个方法, 会引发异常.
  * Sets the value if the attribute associated with the key in the receiver.
  * The object is converted to a scalar attribute where applicable (and
  * -setNilValueForKey: is called if a nil value is supplied).
@@ -160,12 +161,13 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  * and raises NSInvalidArgumentException if the accessor method doesn't take
  * exactly one argument or the type is unsupported (e.g. structs).
  * If the receiver expects a scalar value and the value supplied
- * is the NSNull instance or nil, this method invokes 
+ * is the NSNull instance or nil, this method invokes
  * -setNilValueForKey: .
  */
 - (void) setValue: (id)anObject forKey: (NSString*)aKey;
 
 /**
+    该方法会获取到最后一个 path 所依附的对象, 获取的方法是, 递归调用 value for key. 这个获取的数据, 是根据 . 进行分割的.
  * Retrieves the object returned by invoking -valueForKey:
  * on the receiver with the first key component supplied by the key path.
  * Then invokes -setValue:forKeyPath: recursively on the
@@ -177,6 +179,7 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
 - (void) setValue: (id)anObject forKeyPath: (NSString*)aKey;
 
 /**
+ 如果 找不到方法和变量的话, 就调用这个方法, 默认是引起崩溃.
  * Invoked when -setValue:forKey: / -takeStoredValue:forKey: are called with
  * a key which can't be associated with an accessor method or instance
  * variable.  Subclasses may override this method to add custom handling.
@@ -188,6 +191,7 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
 - (void) setValue: (id)anObject forUndefinedKey: (NSString*)aKey;
 
 /**
+ 通过遍历 aDictionary, 使用 setValueForKey 这种方式.
  * Uses -setValue:forKey: to place the values from aDictionary in the
  * receiver.
  */
@@ -248,7 +252,7 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  * and raises NSInvalidArgumentException if the accessor method doesn't take
  * exactly one argument or the type is unsupported (e.g. structs).
  * If the receiver expects a scalar value and the value supplied
- * is the NSNull instance or nil, this method invokes 
+ * is the NSNull instance or nil, this method invokes
  * -unableToSetNilForKey: .
  */
 - (void) takeStoredValue: (id)anObject forKey: (NSString*)aKey;
@@ -280,7 +284,7 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  * and raises NSInvalidArgumentException if the accessor method doesn't take
  * exactly one argument or the type is unsupported (e.g. structs).
  * If the receiver expects a scalar value and the value supplied
- * is the NSNull instance or nil, this method invokes 
+ * is the NSNull instance or nil, this method invokes
  * -unableToSetNilForKey: .<br />
  * Deprecated ... use -setValue:forKey: instead.
  */
@@ -321,8 +325,8 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  * method, otherwise it simply returns YES.
  */
 - (BOOL) validateValue: (id*)aValue
-		forKey: (NSString*)aKey
-		 error: (out NSError**)anError;
+                forKey: (NSString*)aKey
+                 error: (out NSError**)anError;
 
 /**
  * Returns the result of calling -validateValue:forKey:error: on the receiver
@@ -330,10 +334,11 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  * -valueForKeyPath: method.
  */
 - (BOOL) validateValue: (id*)aValue
-	    forKeyPath: (NSString*)aKey
-		 error: (out NSError**)anError;
+            forKeyPath: (NSString*)aKey
+                 error: (out NSError**)anError;
 
 /**
+ 
  * Returns the value associated with the supplied key as an object.
  * Scalar attributes are converted to corresponding objects.<br />
  * The search order is:<br/>
@@ -389,7 +394,7 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
 - (NSDictionary*) valuesForKeys: (NSArray*)keys;
 
 @end
-
+    
 #if	defined(__cplusplus)
 }
 #endif

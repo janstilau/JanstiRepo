@@ -32,97 +32,97 @@
 
 + (GSCodeBuffer*) memoryWithSize: (NSUInteger)_size
 {
-  return [[[self alloc] initWithSize: _size] autorelease];
+    return [[[self alloc] initWithSize: _size] autorelease];
 }
 
 - (void*) buffer
 {
-  return buffer;
+    return buffer;
 }
 
 - (void) dealloc
 {
-  DESTROY(frame);
-  if (size > 0)
+    DESTROY(frame);
+    if (size > 0)
     {
 #if	defined(HAVE_FFI_PREP_CLOSURE_LOC)
-      ffi_closure_free(buffer);
+        ffi_closure_free(buffer);
 #else
 #if     defined(HAVE_MMAP)
-      munmap(buffer, size);
+        munmap(buffer, size);
 #else
 #if     !defined(_WIN32) && defined(HAVE_MPROTECT)
-      if (mprotect(buffer, NSPageSize(), PROT_READ|PROT_WRITE) == -1)
-	{
-	  NSLog(@"Failed to protect memory as writable: %@", [NSError _last]);
-	}
+        if (mprotect(buffer, NSPageSize(), PROT_READ|PROT_WRITE) == -1)
+        {
+            NSLog(@"Failed to protect memory as writable: %@", [NSError _last]);
+        }
 #endif
-      NSDeallocateMemoryPages(buffer, NSPageSize());
+        NSDeallocateMemoryPages(buffer, NSPageSize());
 #endif
 #endif
-      buffer = 0;
-      executable = 0;
-      size = 0;
+        buffer = 0;
+        executable = 0;
+        size = 0;
     }
-  [super dealloc];
+    [super dealloc];
 }
 
 - (void*) executable
 {
-  return executable;
+    return executable;
 }
 
 - (id) initWithSize: (NSUInteger)_size
 {
-  NSAssert(_size > 0, @"Tried to allocate zero length buffer.");
-  NSAssert(_size <= NSPageSize(), @"Tried to allocate more than one page.");
+    NSAssert(_size > 0, @"Tried to allocate zero length buffer.");
+    NSAssert(_size <= NSPageSize(), @"Tried to allocate more than one page.");
 #if	defined(HAVE_FFI_PREP_CLOSURE_LOC)
-  buffer = ffi_closure_alloc(_size, &executable);
-  if (0 == buffer)
+    buffer = ffi_closure_alloc(_size, &executable);
+    if (0 == buffer)
     {
-      executable = 0;
-    }  
-  else
+        executable = 0;
+    }
+    else
     {
-      size = _size;
+        size = _size;
     }
 #else
 #if     defined(HAVE_MMAP)
 #if     defined(HAVE_MPROTECT)
-  /* We have mprotect, so we create memory as writable and change it to
-   * executable later (writable and executable may not be possible at
-   * the same time).
-   */
-  buffer = mmap (NULL, _size, PROT_READ|PROT_WRITE,
-    MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+    /* We have mprotect, so we create memory as writable and change it to
+     * executable later (writable and executable may not be possible at
+     * the same time).
+     */
+    buffer = mmap (NULL, _size, PROT_READ|PROT_WRITE,
+                   MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
 #else
-  /* We do not have mprotect, so we have to try to create writable and
-   * executable memory.
-   */
-  buffer = mmap (NULL, _size, PROT_READ|PROT_WRITE|PROT_EXEC,
-    MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+    /* We do not have mprotect, so we have to try to create writable and
+     * executable memory.
+     */
+    buffer = mmap (NULL, _size, PROT_READ|PROT_WRITE|PROT_EXEC,
+                   MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
 #endif  /* HAVE_MPROTECT */
-  if (buffer == (void*)-1) buffer = (void*)0;
+    if (buffer == (void*)-1) buffer = (void*)0;
 #else
-  buffer = NSAllocateMemoryPages(NSPageSize());
+    buffer = NSAllocateMemoryPages(NSPageSize());
 #endif  /* HAVE_MMAP */
-
-  if (buffer == (void*)0)
+    
+    if (buffer == (void*)0)
     {
-      NSLog(@"Failed to map %"PRIuPTR
-	" bytes for execute: %@", _size, [NSError _last]);
-      buffer = 0;
-      executable = 0;
-      [self dealloc];
-      self = nil;
+        NSLog(@"Failed to map %"PRIuPTR
+              " bytes for execute: %@", _size, [NSError _last]);
+        buffer = 0;
+        executable = 0;
+        [self dealloc];
+        self = nil;
     }
-  else
+    else
     {
-      executable = buffer;
-      size = _size;
+        executable = buffer;
+        size = _size;
     }
 #endif	/* USE_LIBFFI */
-  return self;
+    return self;
 }
 
 /* Ensure that the protection on the buffer is such that it will execute
@@ -132,15 +132,15 @@
 {
 #if	!defined(HAVE_FFI_PREP_CLOSURE_LOC)
 #if	defined(_WIN32)
-  DWORD old;
-  if (VirtualProtect(buffer, size, PAGE_EXECUTE, &old) == 0)
+    DWORD old;
+    if (VirtualProtect(buffer, size, PAGE_EXECUTE, &old) == 0)
     {
-      NSLog(@"Failed to protect memory as executable: %@", [NSError _last]);
+        NSLog(@"Failed to protect memory as executable: %@", [NSError _last]);
     }
 #elif     defined(HAVE_MPROTECT)
-  if (mprotect(buffer, NSPageSize(), PROT_READ|PROT_EXEC) == -1)
+    if (mprotect(buffer, NSPageSize(), PROT_READ|PROT_EXEC) == -1)
     {
-      NSLog(@"Failed to protect memory as executable: %@", [NSError _last]);
+        NSLog(@"Failed to protect memory as executable: %@", [NSError _last]);
     }
 #endif
 #endif
@@ -148,7 +148,7 @@
 
 - (void) setFrame: (id)aFrame
 {
-  ASSIGN(frame, aFrame);
+    ASSIGN(frame, aFrame);
 }
 @end
 
@@ -162,9 +162,9 @@ GS_ROOT_CLASS
 @interface GSInvocationProxy
 {
 @public
-  Class		isa;
-  id		target;
-  NSInvocation	*invocation;
+    Class		isa;
+    id		target;
+    NSInvocation	*invocation;
 }
 + (id) _newWithTarget: (id)t;
 - (NSInvocation*) _invocation;
@@ -176,6 +176,8 @@ GS_ROOT_CLASS
 
 #define	_inf	((NSArgumentInfo*)_info)
 
+
+// 最关键的 invokeWithTarget 没有找到实现. 现在 这个类, 存储了 各个参数, target, sel 的信息, 知道每一个位置的变量的类型. 剩下的就是调用了.
 /**
  * <p>The <code>NSInvocation</code> class implements a mechanism of constructing
  * messages (as <code>NSInvocation</code> instances), sending these to other
@@ -206,43 +208,43 @@ GS_ROOT_CLASS
 #ifdef USE_LIBFFI
 static inline void
 _get_arg(NSInvocation *inv, int index, void *buffer)
-{
-  cifframe_get_arg((cifframe_t *)inv->_cframe, index, buffer,
-		   ((NSArgumentInfo*)inv->_info)[index+1].size);
+{   // 这个 cifframe_get_arg 里面, 就是 memcpy 的调用, 不知道为什么搞这么复杂
+    cifframe_get_arg((cifframe_t *)inv->_cframe, index, buffer,
+                     ((NSArgumentInfo*)inv->_info)[index+1].size);
 }
 
 static inline void
 _set_arg(NSInvocation *inv, int index, void *buffer)
 {
-  cifframe_set_arg((cifframe_t *)inv->_cframe, index, buffer,
-		   ((NSArgumentInfo*)inv->_info)[index+1].size);
+    cifframe_set_arg((cifframe_t *)inv->_cframe, index, buffer,
+                     ((NSArgumentInfo*)inv->_info)[index+1].size);
 }
 
 static inline void *
 _arg_addr(NSInvocation *inv, int index)
 {
-  return cifframe_arg_addr((cifframe_t *)inv->_cframe, index);
+    return cifframe_arg_addr((cifframe_t *)inv->_cframe, index);
 }
 
 #elif defined(USE_FFCALL)
 static inline void
 _get_arg(NSInvocation *inv, int index, void *buffer)
 {
-  callframe_get_arg((callframe_t *)inv->_cframe, index, buffer,
-		    ((NSArgumentInfo*)inv->_info)[index+1].size);
+    callframe_get_arg((callframe_t *)inv->_cframe, index, buffer,
+                      ((NSArgumentInfo*)inv->_info)[index+1].size);
 }
 
 static inline void
 _set_arg(NSInvocation *inv, int index, void *buffer)
 {
-  callframe_set_arg((callframe_t *)inv->_cframe, index, buffer,
-		    ((NSArgumentInfo*)inv->_info)[index+1].size);
+    callframe_set_arg((callframe_t *)inv->_cframe, index, buffer,
+                      ((NSArgumentInfo*)inv->_info)[index+1].size);
 }
 
 static inline void *
 _arg_addr(NSInvocation *inv, int index)
 {
-  return callframe_arg_addr((callframe_t *)inv->_cframe, index);
+    return callframe_arg_addr((callframe_t *)inv->_cframe, index);
 }
 
 #else
@@ -260,34 +262,34 @@ _set_arg(NSInvocation *inv, int index, void *buffer)
 static inline void *
 _arg_addr(NSInvocation *inv, int index)
 {
-  return 0;
+    return 0;
 }
 
 #endif
 
 + (id) allocWithZone: (NSZone*)aZone
 {
-  if (self == NSInvocation_abstract_class)
+    if (self == NSInvocation_abstract_class)
     {
-      return NSAllocateObject(NSInvocation_concrete_class, 0, aZone);
+        return NSAllocateObject(NSInvocation_concrete_class, 0, aZone);
     }
-  else
+    else
     {
-      return NSAllocateObject(self, 0, aZone);
+        return NSAllocateObject(self, 0, aZone);
     }
 }
 
 + (void) initialize
 {
-  if (self == [NSInvocation class])
+    if (self == [NSInvocation class])
     {
-      NSInvocation_abstract_class = self;
+        NSInvocation_abstract_class = self;
 #if defined(USE_LIBFFI)
-      NSInvocation_concrete_class = [GSFFIInvocation class];
+        NSInvocation_concrete_class = [GSFFIInvocation class];
 #elif defined(USE_FFCALL)
-      NSInvocation_concrete_class = [GSFFCallInvocation class];
+        NSInvocation_concrete_class = [GSFFCallInvocation class];
 #else
-      NSInvocation_concrete_class = [GSDummyInvocation class];
+        NSInvocation_concrete_class = [GSDummyInvocation class];
 #endif
     }
 }
@@ -301,71 +303,71 @@ _arg_addr(NSInvocation *inv, int index)
  */
 + (NSInvocation*) invocationWithMethodSignature: (NSMethodSignature*)_signature
 {
-  return AUTORELEASE([[NSInvocation_concrete_class alloc]
-    initWithMethodSignature: _signature]);
+    return AUTORELEASE([[NSInvocation_concrete_class alloc]
+                        initWithMethodSignature: _signature]);
 }
 
 - (void) dealloc
 {
-  if (_targetRetained)
+    if (_targetRetained)
     {
-      _targetRetained = NO;
-      RELEASE(_target);
+        _targetRetained = NO;
+        RELEASE(_target);
     }
-  if (_argsRetained)
+    if (_argsRetained)
     {
-      _argsRetained = NO;
-      if (_cframe && _sig)
-	{
-	  unsigned int	i;
-
-	  for (i = 3; i <= _numArgs; i++)
-	    {
-	      if (*_inf[i].type == _C_CHARPTR)
-		{
-		  char	*str = 0;
-
-		  _get_arg(self, i-1, &str);
-		  if (str != 0)
-		    {
-		      NSZoneFree(NSDefaultMallocZone(), str);
-		    }
-		}
-	      else if (*_inf[i].type == _C_ID)
-		{
-		  id	obj = nil;
-
-		  _get_arg(self, i-1, &obj);
-		  RELEASE(obj);
-		}
-	    }
-	}
+        _argsRetained = NO;
+        if (_cframe && _sig)
+        {
+            unsigned int	i;
+            
+            for (i = 3; i <= _argsNum; i++)
+            {
+                if (*_inf[i].type == _C_CHARPTR)
+                {
+                    char	*str = 0;
+                    
+                    _get_arg(self, i-1, &str);
+                    if (str != 0)
+                    {
+                        NSZoneFree(NSDefaultMallocZone(), str);
+                    }
+                }
+                else if (*_inf[i].type == _C_ID)
+                {
+                    id	obj = nil;
+                    
+                    _get_arg(self, i-1, &obj);
+                    RELEASE(obj);
+                }
+            }
+        }
     }
-
-
-  CLEAR_RETURN_VALUE_IF_OBJECT;
-
+    
+    
+    CLEAR_RETURN_VALUE_IF_OBJECT;
+    
 #if	defined(USE_LIBFFI)
-  if (_cframe)
+    if (_cframe)
     {
-      /* If we get here then we are not using GC, so the _frame instance
-       * variable points to a mutable data object containing _cframe and
-       * we can release it.
-       */
-      [((GSFFIInvocation*)self)->_frame release];
+        /* If we get here then we are not using GC, so the _frame instance
+         * variable points to a mutable data object containing _cframe and
+         * we can release it.
+         */
+        [((GSFFIInvocation*)self)->_frame release];
     }
 #elif defined(USE_FFCALL)
-  if (_cframe)
+    if (_cframe)
     {
-      NSZoneFree(NSDefaultMallocZone(), _cframe);
+        NSZoneFree(NSDefaultMallocZone(), _cframe);
     }
 #endif
-  if (_retptr)
+    if (_retptr)
     {
-      NSZoneFree(NSDefaultMallocZone(), _retptr);
+        NSZoneFree(NSDefaultMallocZone(), _retptr);
     }
-  RELEASE(_sig);
-  [super dealloc];
+    RELEASE(_sig);
+    [super dealloc];
 }
 
 /**
@@ -375,25 +377,25 @@ _arg_addr(NSInvocation *inv, int index)
  * so the actual method arguments start at index 2.
  */
 - (void) getArgument: (void*)buffer
-	     atIndex: (NSInteger)index
+             atIndex: (NSInteger)index
 {
-  if ((NSUInteger)index >= _numArgs)
+    if ((NSUInteger)index >= _numArgs)
     {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"bad invocation argument index"];
+        [NSException raise: NSInvalidArgumentException
+                    format: @"bad invocation argument index"];
     }
-  if (index == 0)
+    if (index == 0)
     {
-      *(id*)buffer = _target;
+        *(id*)buffer = _target;
     }
-  else if (index == 1)
+    else if (index == 1)
     {
-      *(SEL*)buffer = _selector;
+        *(SEL*)buffer = _selector;
     }
-  else
+    else
     {
-      _get_arg(self, index, buffer);
-    }		
+        _get_arg(self, index, buffer);
+    }
 }
 
 /**
@@ -403,14 +405,14 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (void) getReturnValue: (void*)buffer
 {
-  if (_validReturn == NO)
+    if (_validReturn == NO)
     {
-      [NSException raise: NSGenericException
-		  format: @"getReturnValue with no value set"];
+        [NSException raise: NSGenericException
+                    format: @"getReturnValue with no value set"];
     }
-  if (*_inf[0].type != _C_VOID)
+    if (*_inf[0].type != _C_VOID)
     {
-      memcpy(buffer, _retval, _inf[0].size);
+        memcpy(buffer, _retval, _inf[0].size);
     }
 }
 
@@ -419,7 +421,7 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (SEL) selector
 {
-  return _selector;
+    return _selector;
 }
 
 /**
@@ -434,67 +436,67 @@ _arg_addr(NSInvocation *inv, int index)
  * receiver is retained by it.
  */
 - (void) setArgument: (void*)buffer
-	     atIndex: (NSInteger)index
+             atIndex: (NSInteger)index
 {
-  if (index == 0)
+    if (index == 0)
     {
-      [self setTarget: *(id*)buffer];
+        [self setTarget: *(id*)buffer];
     }
-  else if (index == 1)
+    else if (index == 1)
     {
-      [self setSelector: *(SEL*)buffer];
+        [self setSelector: *(SEL*)buffer];
     }
-  else
+    else
     {
-      int		i = index+1;	/* Allow for return type in '_inf' */
-      const char	*type = _inf[i].type;
-
-      if (_argsRetained && (*type == _C_ID || *type == _C_CHARPTR))
-	{
-	  if (*type == _C_ID)
-	    {
-	      id	old;
-
-	      _get_arg(self, index, &old);
-	      _set_arg(self, index, buffer);
-	      IF_NO_GC(RETAIN(*(id*)buffer));
-	      if (old != nil)
-		{
-		  RELEASE(old);
-		}
-	    }
-	  else
-	    {
-	      char	*oldstr;
-	      char	*newstr = *(char**)buffer;
-
-	      _get_arg(self, index, &oldstr);
-	      if (newstr == 0)
-		{
-		  _set_arg(self, index, buffer);
-		}
-	      else
-		{
-		  int	len;
-		  char	*tmp;
-
-		  len = strlen(newstr);
-		  tmp = NSZoneMalloc(NSDefaultMallocZone(), len + 1);
-		  strncpy(tmp, newstr, len);
-		  tmp[len] = '\0';
-		  _set_arg(self, index, tmp);
-		}
-	      if (oldstr != 0)
-		{
-		  NSZoneFree(NSDefaultMallocZone(), oldstr);
-		}
-	    }
-	}
-      else
-	{
-	  _set_arg(self, index, buffer);
-	}
-    }		
+        int		i = index+1;	/* Allow for return type in '_inf' */
+        const char	*type = _inf[i].type;
+        
+        if (_argsRetained && (*type == _C_ID || *type == _C_CHARPTR)) // 如果, 进行了内存的管理, 并且是 id 和 字符串类型, 那么 set 新值, 要做老值的内存管理.
+        {
+            if (*type == _C_ID)
+            {
+                id	old;
+                
+                _get_arg(self, index, &old);
+                _set_arg(self, index, buffer);
+                IF_NO_GC(RETAIN(*(id*)buffer));
+                if (old != nil)
+                {
+                    RELEASE(old);
+                }
+            }
+            else
+            {
+                char	*oldstr;
+                char	*newstr = *(char**)buffer;
+                
+                _get_arg(self, index, &oldstr);
+                if (newstr == 0)
+                {
+                    _set_arg(self, index, buffer);
+                }
+                else
+                {
+                    int	len;
+                    char	*tmp;
+                    
+                    len = strlen(newstr);
+                    tmp = NSZoneMalloc(NSDefaultMallocZone(), len + 1);
+                    strncpy(tmp, newstr, len);
+                    tmp[len] = '\0';
+                    _set_arg(self, index, tmp);
+                }
+                if (oldstr != 0)
+                {
+                    NSZoneFree(NSDefaultMallocZone(), oldstr);
+                }
+            }
+        }
+        else // 不用内存管理, 直接覆盖.
+        {
+            _set_arg(self, index, buffer);
+        }
+    }
 }
 
 /**
@@ -502,19 +504,19 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (void) setReturnValue: (void*)buffer
 {
-  const char	*type;
-
-  type = _inf[0].type;
-
-  CLEAR_RETURN_VALUE_IF_OBJECT;
-
-  if (*type != _C_VOID)
+    const char	*type;
+    
+    type = _inf[0].type;
+    
+    CLEAR_RETURN_VALUE_IF_OBJECT;
+    
+    if (*type != _C_VOID)
     {
-      memcpy(_retval, buffer, _inf[0].size);
+        memcpy(_retval, buffer, _inf[0].size);
     }
-
-  RETAIN_RETURN_VALUE;
-  _validReturn = YES;
+    
+    RETAIN_RETURN_VALUE;
+    _validReturn = YES;
 }
 
 /**
@@ -522,7 +524,7 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (void) setSelector: (SEL)aSelector
 {
-  _selector = aSelector;
+    _selector = aSelector;
 }
 
 /**
@@ -531,13 +533,13 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (void) setTarget: (id)anObject
 {
-  if (_targetRetained)
+    if (_targetRetained)
     {
-      ASSIGN(_target, anObject);
+        ASSIGN(_target, anObject);
     }
-  else
+    else
     {
-      _target = anObject;
+        _target = anObject;
     }
 }
 
@@ -546,8 +548,12 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (id) target
 {
-  return _target;
+    return _target;
 }
+
+// 内存管理相关.
+
+// NSTimer objects always instruct their invocations to retain their arguments, for example, because there’s usually a delay before a timer fires.
 
 /**
  * Returns a flag to indicate whether object arguments of the invocation
@@ -555,7 +561,7 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (BOOL) argumentsRetained
 {
-  return _argsRetained;
+    return _argsRetained;
 }
 
 /**
@@ -564,7 +570,7 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (void) retainArguments
 {
-  [self retainArgumentsIncludingTarget: YES];
+    [self retainArgumentsIncludingTarget: YES];
 }
 
 /**
@@ -572,7 +578,7 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (BOOL) targetRetained
 {
-  return _targetRetained;
+    return _targetRetained;
 }
 
 /**
@@ -583,52 +589,52 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (void) retainArgumentsIncludingTarget: (BOOL)retainTargetFlag
 {
-  if (_argsRetained == NO)
+    if (_argsRetained == NO)
     {
-      unsigned int	i;
-
-      _argsRetained = YES;
-      if (_cframe == 0)
-	{
-	  return;
-	}
-      for (i = 3; i <= _numArgs; i++)
-	{
-	  if (*_inf[i].type == _C_ID)
-	    {
-              id        old;
-
-	      _get_arg(self, i-1, &old);
-	      if (old != nil)
-		{
-		  IF_NO_GC(RETAIN(old));
-		}
+        unsigned int	i;
+        
+        _argsRetained = YES;
+        if (_cframe == 0)
+        {
+            return;
+        }
+        for (i = 3; i <= _argsNum; i++) // 从参数开始
+        {
+            if (*_inf[i].type == _C_ID) // 这里, 参数的类型信息也都记录下来了.
+            {
+                id        old;
+                
+                _get_arg(self, i-1, &old);
+                if (old != nil)
+                {
+                    IF_NO_GC(RETAIN(old)); // 如果是 id 类型的, 进行一次 retain 操作.
+                }
             }
-	  else if (*_inf[i].type == _C_CHARPTR)
-	    {
-	      char      *str;
-
-	      _get_arg(self, i-1, &str);
-	      if (str != 0)
-	        {
-		  char  *tmp;
-		  int	len;
-
-		  len = strlen(str);
-		  tmp = NSZoneMalloc(NSDefaultMallocZone(), len + 1);
-		  strncpy(tmp, str, len);
-		  tmp[len] = '\0';
-		  _set_arg(self, i-1, &tmp);
-		}
-	    }
-	}
+            else if (*_inf[i].type == _C_CHARPTR) // 如果是字符串指针.
+            {
+                char      *str;
+                
+                _get_arg(self, i-1, &str);
+                if (str != 0)
+                {
+                    char  *tmp;
+                    int	len;
+                    
+                    len = strlen(str);
+                    tmp = NSZoneMalloc(NSDefaultMallocZone(), len + 1);
+                    strncpy(tmp, str, len);
+                    tmp[len] = '\0';
+                    _set_arg(self, i-1, &tmp); // 进行一次字符串的拷贝, 然后把拷贝过后的值替换原来的值, 所以, 这个类里面, 必然有内存管理操作.
+                }
+            }
+        }
     }
-
-  if (retainTargetFlag && _targetRetained == NO)
+    
+    if (retainTargetFlag && _targetRetained == NO)
     {
-      _targetRetained = YES;
-
-      IF_NO_GC(RETAIN(_target));
+        _targetRetained = YES;
+        
+        IF_NO_GC(RETAIN(_target)); // retain target
     }
 }
 
@@ -637,7 +643,7 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (void) invoke
 {
-  [self invokeWithTarget: _target];
+    [self invokeWithTarget: _target];
 }
 
 /**
@@ -645,7 +651,7 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (void) invokeWithTarget: (id)anObject
 {
-  [self subclassResponsibility: _cmd];
+    [self subclassResponsibility: _cmd];
 }
 
 /**
@@ -653,99 +659,101 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (NSMethodSignature*) methodSignature
 {
-  return _sig;
+    return _sig;
 }
 
-- (NSString*) description
+- (NSString*) description // 拼接.
 {
-  /*
-   *	Don't use -[NSString stringWithFormat:] method because it can cause
-   *	infinite recursion.
-   */
-  char buffer[1024];
-
-  snprintf (buffer, 1024, "<%s %p selector: %s target: %s>", \
-    GSClassNameFromObject(self), \
-    self, \
-    _selector ? sel_getName(_selector) : "nil", \
-    _target ? class_getName([_target class]) : "nil" \
-   );
-
-  return [NSString stringWithUTF8String: buffer];
+    /*
+     *	Don't use -[NSString stringWithFormat:] method because it can cause
+     *	infinite recursion.
+     */
+    char buffer[1024];
+    
+    snprintf (buffer, 1024, "<%s %p selector: %s target: %s>", \
+              GSClassNameFromObject(self), \
+              self, \
+              _selector ? sel_getName(_selector) : "nil", \
+              _target ? class_getName([_target class]) : "nil" \
+              );
+    
+    return [NSString stringWithUTF8String: buffer];
 }
 
+// 这里, 可以看出来, 序列化如果不用 keyedArchiver, 是要保证序列化和反序列化的时候, 要按照完全一样的顺序就行.
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  const char	*types = [_sig methodType];
-  unsigned int	i;
-
-  [aCoder encodeValueOfObjCType: @encode(char*)
-			     at: &types];
-
-  [aCoder encodeObject: _target];
-
-  [aCoder encodeValueOfObjCType: _inf[2].type
-			     at: &_selector];
-
-  for (i = 3; i <= _numArgs; i++)
+    const char	*types = [_sig methodType];
+    unsigned int	i;
+    
+    [aCoder encodeValueOfObjCType: @encode(char*)
+                               at: &types];
+    
+    [aCoder encodeObject: _target];
+    
+    [aCoder encodeValueOfObjCType: _inf[2].type
+                               at: &_selector];
+    
+    for (i = 3; i <= _argsNum; i++)
     {
-      const char	*type = _inf[i].type;
-      void		*datum;
-
-      datum = _arg_addr(self, i-1);
-
-      if (*type == _C_ID)
-	{
-	  [aCoder encodeObject: *(id*)datum];
-	}
-      else
-	{
-	  [aCoder encodeValueOfObjCType: type at: datum];
-	}
+        const char	*type = _inf[i].type;
+        void		*datum;
+        
+        datum = _arg_addr(self, i-1);
+        
+        if (*type == _C_ID) // 这里, 不太明白为什么要专门进行一次 id 的判断, 因为其实在 coder 里面, 其实还是encodeValueOfObjCType
+        {
+            [aCoder encodeObject: *(id*)datum];
+        }
+        else
+        {
+            [aCoder encodeValueOfObjCType: type at: datum];
+        }
     }
-  if (*_inf[0].type != _C_VOID)
+    if (*_inf[0].type != _C_VOID)
     {
-      [aCoder encodeValueOfObjCType: @encode(BOOL) at: &_validReturn];
-      if (_validReturn)
-	{
-	  [aCoder encodeValueOfObjCType: _inf[0].type at: _retval];
-	}
+        [aCoder encodeValueOfObjCType: @encode(BOOL) at: &_validReturn];
+        if (_validReturn)
+        {
+            [aCoder encodeValueOfObjCType: _inf[0].type at: _retval];
+        }
     }
 }
 
+// 解档的时候, 要玩玩全全按归档的顺序进行, 这也是为什么 key - value 的形式要好的原因.
 - (id) initWithCoder: (NSCoder*)aCoder
 {
-  NSMethodSignature	*newSig;
-  const char		*types;
-  void			*datum;
-  unsigned int		i;
-
-  [aCoder decodeValueOfObjCType: @encode(char*) at: &types];
-  newSig = [NSMethodSignature signatureWithObjCTypes: types];
-  NSZoneFree(NSDefaultMallocZone(), (void*)types);
-
-  DESTROY(self);
-  self = RETAIN([NSInvocation invocationWithMethodSignature: newSig]);
-
-  [aCoder decodeValueOfObjCType: @encode(id) at: &_target];
-
-  [aCoder decodeValueOfObjCType: @encode(SEL) at: &_selector];
-
-  for (i = 3; i <= _numArgs; i++)
+    NSMethodSignature	*newSig;
+    const char		*types;
+    void			*datum;
+    unsigned int		i;
+    
+    [aCoder decodeValueOfObjCType: @encode(char*) at: &types];
+    newSig = [NSMethodSignature signatureWithObjCTypes: types];
+    NSZoneFree(NSDefaultMallocZone(), (void*)types);
+    
+    DESTROY(self);
+    self = RETAIN([NSInvocation invocationWithMethodSignature: newSig]);
+    
+    [aCoder decodeValueOfObjCType: @encode(id) at: &_target];
+    
+    [aCoder decodeValueOfObjCType: @encode(SEL) at: &_selector];
+    
+    for (i = 3; i <= _argsNum; i++)
     {
-      datum = _arg_addr(self, i-1);
-      [aCoder decodeValueOfObjCType: _inf[i].type at: datum];
+        datum = _arg_addr(self, i-1);
+        [aCoder decodeValueOfObjCType: _inf[i].type at: datum];
     }
-  _argsRetained = YES;
-  if (*_inf[0].type != _C_VOID)
+    _argsRetained = YES;
+    if (*_inf[0].type != _C_VOID)
     {
-      [aCoder decodeValueOfObjCType: @encode(BOOL) at: &_validReturn];
-      if (_validReturn)
+        [aCoder decodeValueOfObjCType: @encode(BOOL) at: &_validReturn];
+        if (_validReturn)
         {
-          [aCoder decodeValueOfObjCType: _inf[0].type at: _retval];
+            [aCoder decodeValueOfObjCType: _inf[0].type at: _retval];
         }
     }
-  return self;
+    return self;
 }
 
 @end
@@ -758,12 +766,12 @@ _arg_addr(NSInvocation *inv, int index)
 
 - (BOOL) sendsToSuper
 {
-  return _sendToSuper;
+    return _sendToSuper;
 }
 
 - (void) setSendsToSuper: (BOOL)flag
 {
-  _sendToSuper = flag;
+    _sendToSuper = flag;
 }
 @end
 
@@ -783,8 +791,8 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (id) initWithMethodSignature: (NSMethodSignature*)aSignature
 {
-  [self subclassResponsibility: _cmd];
-  return nil;
+    [self subclassResponsibility: _cmd];
+    return nil;
 }
 
 /**
@@ -792,17 +800,17 @@ _arg_addr(NSInvocation *inv, int index)
  */
 + (id) _newProxyForInvocation: (id)target
 {
-  return (id)[GSInvocationProxy _newWithTarget: target];
+    return (id)[GSInvocationProxy _newWithTarget: target];
 }
 + (id) _newProxyForMessage: (id)target
 {
-  return (id)[GSMessageProxy _newWithTarget: target];
+    return (id)[GSMessageProxy _newWithTarget: target];
 }
 + (NSInvocation*) _returnInvocationAndDestroyProxy: (id)proxy
 {
-  NSInvocation  *inv = [proxy _invocation];
-  NSDeallocateObject(proxy);
-  return inv;
+    NSInvocation  *inv = [proxy _invocation];
+    NSDeallocateObject(proxy);
+    return inv;
 }
 @end
 
@@ -810,7 +818,7 @@ _arg_addr(NSInvocation *inv, int index)
 
 - (void) invokeWithObject: (id)obj
 {
-  [self invokeWithTarget: (id)obj];
+    [self invokeWithTarget: (id)obj];
 }
 
 @end
@@ -824,20 +832,20 @@ _arg_addr(NSInvocation *inv, int index)
  */
 - (id) initWithMethodSignature: (NSMethodSignature*)aSignature
 {
-  return self;
+    return self;
 }
 
 - (void) invokeWithTarget: (id)anObject
 {
-  CLEAR_RETURN_VALUE_IF_OBJECT;
-  _validReturn = NO;
-  /*
-   *	A message to a nil object returns nil.
-   */
-  if (anObject == nil)
+    CLEAR_RETURN_VALUE_IF_OBJECT;
+    _validReturn = NO;
+    /*
+     *	A message to a nil object returns nil.
+     */
+    if (anObject == nil)
     {
-      _validReturn = YES;
-      return;
+        _validReturn = YES;
+        return;
     }
 }
 
@@ -847,30 +855,30 @@ _arg_addr(NSInvocation *inv, int index)
 @implementation	GSInvocationProxy
 + (id) _newWithTarget: (id)t
 {
-  GSInvocationProxy	*o;
-  o = (GSInvocationProxy*) NSAllocateObject(self, 0, NSDefaultMallocZone());
-  o->target = RETAIN(t);
-  return o;
+    GSInvocationProxy	*o;
+    o = (GSInvocationProxy*) NSAllocateObject(self, 0, NSDefaultMallocZone());
+    o->target = RETAIN(t);
+    return o;
 }
 - (NSInvocation*) _invocation
 {
-  return invocation;
+    return invocation;
 }
 - (void) forwardInvocation: (NSInvocation*)anInvocation
 {
-  invocation = anInvocation;
+    invocation = anInvocation;
 }
 - (NSMethodSignature*) methodSignatureForSelector: (SEL)aSelector
 {
-  return [target methodSignatureForSelector: aSelector];
+    return [target methodSignatureForSelector: aSelector];
 }
 @end
 
 @implementation	GSMessageProxy
 - (NSInvocation*) _invocation
 {
-  [invocation setTarget: target];
-  return invocation;
+    [invocation setTarget: target];
+    return invocation;
 }
 @end
 

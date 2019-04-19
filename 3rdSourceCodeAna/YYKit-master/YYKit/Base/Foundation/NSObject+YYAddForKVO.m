@@ -17,8 +17,6 @@
 YYSYNTH_DUMMY_CLASS(NSObject_YYAddForKVO)
 
 
-
-
 static const int block_key;
 
 @interface _YYNSObjectKVOBlockTarget : NSObject
@@ -43,10 +41,13 @@ static const int block_key;
     if (!self.block) return;
     
     BOOL isPrior = [[change objectForKey:NSKeyValueChangeNotificationIsPriorKey] boolValue];
+    // If the NSKeyValueObservingOptionPrior option was specified when the observer was registered this notification is sent prior to a change.
     if (isPrior) return;
     
     NSKeyValueChange changeKind = [[change objectForKey:NSKeyValueChangeKindKey] integerValue];
     if (changeKind != NSKeyValueChangeSetting) return;
+    // NSKeyValueChangeSetting
+    // NSKeyValueChangeInsertion NSKeyValueChangeRemoval NSKeyValueChangeReplacement
     
     id oldVal = [change objectForKey:NSKeyValueChangeOldKey];
     if (oldVal == [NSNull null]) oldVal = nil;
@@ -59,9 +60,9 @@ static const int block_key;
 
 @end
 
-
-
 @implementation NSObject (YYAddForKVO)
+
+// 参数前面写 __weak, 其实就是相当于是, 定义一个 __weak 的变量.
 
 - (void)addObserverBlockForKeyPath:(NSString *)keyPath block:(void (^)(__weak id obj, id oldVal, id newVal))block {
     if (!keyPath || !block) return;
@@ -98,6 +99,9 @@ static const int block_key;
     [dic removeAllObjects];
 }
 
+
+// YYKIT 大量利用了 associate 这个技术, 作为自己架构的中间量的存储.
+// 其实, 这一步主要做的就是 target 的保活工作. 要让自己创建的, 可以进行 KVO 响应的这个中间对象一直存在. 而这个中间对象里面, 存放了 KVO 的回调 block.
 - (NSMutableDictionary *)_yy_allNSObjectObserverBlocks {
     NSMutableDictionary *targets = objc_getAssociatedObject(self, &block_key);
     if (!targets) {

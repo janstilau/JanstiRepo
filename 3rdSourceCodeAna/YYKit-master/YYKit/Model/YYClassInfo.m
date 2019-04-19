@@ -1,14 +1,3 @@
-//
-//  YYClassInfo.m
-//  YYKit <https://github.com/ibireme/YYKit>
-//
-//  Created by ibireme on 15/5/9.
-//  Copyright (c) 2015 ibireme.
-//
-//  This source code is licensed under the MIT-style license found in the
-//  LICENSE file in the root directory of this source tree.
-//
-
 #import "YYClassInfo.h"
 #import <objc/runtime.h>
 
@@ -53,10 +42,10 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
             default: { prefix = false; } break;
         }
     }
-
+    
     len = strlen(type);
     if (len == 0) return YYEncodingTypeUnknown | qualifier;
-
+    
     switch (*type) {
         case 'v': return YYEncodingTypeVoid | qualifier;
         case 'B': return YYEncodingTypeBool | qualifier;
@@ -265,7 +254,7 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
     }
     _name = NSStringFromClass(cls);
     [self _update];
-
+    
     _superClassInfo = [self.class classInfoWithClass:_superCls];
     return self;
 }

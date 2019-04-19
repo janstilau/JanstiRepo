@@ -200,6 +200,11 @@ static void CodingCopyingHashEqualExample() {
     CodingCopyingHashEqualExample();
 }
 
+- (int)getValue:(id)value {
+    NSLog(@"%@", value);
+    return 1;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
@@ -209,6 +214,16 @@ static void CodingCopyingHashEqualExample() {
     label.textAlignment = NSTextAlignmentCenter;
     label.text = @"See code in YYModelExample.m";
     [self.view addSubview:label];
+    
+    NSMethodSignature *sig = [self methodSignatureForSelector:@selector(getValue:)];
+    NSInvocation *inv = [NSInvocation invocationWithMethodSignature:sig];
+    [inv setTarget:self];
+    [inv setSelector:@selector(getValue:)];
+    [inv setArgument:(__bridge void *)(self) atIndex:2];
+    [inv invoke];
+    int a = 2;
+    [inv getReturnValue:&a];
+    
     
     [self runExample];
 }

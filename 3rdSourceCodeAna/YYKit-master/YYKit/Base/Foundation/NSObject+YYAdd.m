@@ -1,14 +1,3 @@
-//
-//  NSObject+YYAdd.m
-//  YYKit <https://github.com/ibireme/YYKit>
-//
-//  Created by ibireme on 14/10/8.
-//  Copyright (c) 2015 ibireme.
-//
-//  This source code is licensed under the MIT-style license found in the
-//  LICENSE file in the root directory of this source tree.
-//
-
 #import "NSObject+YYAdd.h"
 #import "YYKitMacro.h"
 #import <objc/objc.h>
@@ -37,21 +26,63 @@ va_start(args, _last_arg_); \
 va_end(args);
 
 - (id)performSelectorWithArgs:(SEL)sel, ...{
-    INIT_INV(sel, nil);
+//    INIT_INV(sel, nil);
+    NSMethodSignature * sig = [self methodSignatureForSelector:sel];
+    if (!sig) { [self doesNotRecognizeSelector:sel]; return nil; }
+    NSInvocation *inv = [NSInvocation invocationWithMethodSignature:sig];
+    if (!inv) { [self doesNotRecognizeSelector:sel]; return nil; }
+    [inv setTarget:self];
+    [inv setSelector:sel];
+    va_list args;
+    va_start(args, sel);
+    [NSObject setInv:inv withSig:sig andArgs:args];
+    /* 这是摩擦的处理方法.
+     [inv setTarget:self];
+     [inv setSelector:aSelector];
+     // 0被target占用，1被selector占用，故参数从2开始
+     int index = 2;
+     if (arg) {
+     [inv setArgument:&arg atIndex:index];
+     id argVa;
+     va_list args;
+     va_start(args, arg);
+     while ((argVa = va_arg(args, id))) {
+     index ++;
+     [inv setArgument:&argVa atIndex:index];
+     }
+     va_end(args);
+     [inv retainArguments];
+     }
+     
+     而在 [NSObject setInv:inv withSig:sig andArgs:args] 的内部, 会通过 签名获取参数的类型, 然后进行了处理.
+     */
+    va_end(args);
     [inv invoke];
+    
+    /*
+     这是摩擦的处理方法.
+     id ret = nil;
+     [inv getReturnValue:&ret];
+     return ret;
+     
+     getReturnFromInv 的内部, 增加了对于类型的处理.
+     摩擦的这种方式有问题, [inv getReturnValue:&ret]; ret 要确保自己的空间能够装的下返回值. 所以, invocation 里面会有一个 return Length 函数, 要实现把存放的空间申请出来才可以, [NSObject getReturnFromInv:inv withSig:sig] 里面, 对这个进行了处理. 摩擦的这种方式, 在返回结构体的时候, 会引起内存的越界, 并且, 如果是基本数据类型的返回值, 那么 id ret 里面存放的就是基本数据类型的值. 这其实, 是 oc 里面 get 开头的方法的通病, get 开头方法里面, 传入一个缓存地址, 然后这个缓存进行填充. 所以, id ret 里面不能保证是一个对象. 所以, 在 YY 里面, 专门进行了一次包装. 保证, return 的就是一个对象.
+     */
     return [NSObject getReturnFromInv:inv withSig:sig];
 }
 
+// 这里, 延时操作, 是用的 invocation 的 perfromSelection after delay. 这个方法, 是和 runloop 相关的.
 - (void)performSelectorWithArgs:(SEL)sel afterDelay:(NSTimeInterval)delay, ...{
     INIT_INV(delay, );
-    [inv retainArguments];
+    [inv retainArguments]; // 对于要延时执行的, 都要进行 retain 的处理
     [inv performSelector:@selector(invoke) withObject:nil afterDelay:delay];
 }
 
 - (id)performSelectorWithArgsOnMainThread:(SEL)sel waitUntilDone:(BOOL)wait, ...{
     INIT_INV(wait, nil);
-    if (!wait) [inv retainArguments];
+    if (!wait) [inv retainArguments]; // 如果不 wait, 才进行 retain 处理.
     [inv performSelectorOnMainThread:@selector(invoke) withObject:nil waitUntilDone:wait];
+    // 这里, 如果 wait, 那么到这里的时候, sel 就是已经执行了. 如果不进行 wait, 那么就返回 nil.
     return wait ? [NSObject getReturnFromInv:inv withSig:sig] : nil;
 }
 
@@ -59,6 +90,7 @@ va_end(args);
     INIT_INV(wait, nil);
     if (!wait) [inv retainArguments];
     [inv performSelector:@selector(invoke) onThread:thr withObject:nil waitUntilDone:wait];
+    // 系统原生的方法, 一定要进行利用的. 因为, 从 gnu 的实现来看, runloop 相关的这一套还是很复杂的.
     return wait ? [NSObject getReturnFromInv:inv withSig:sig] : nil;
 }
 
@@ -135,7 +167,7 @@ return @(ret); \
             return value;
         };
     }
-#undef return_with_number
+#undef return_with_number // 这种, 对于想要去除冗余代码, 是非常好的写法.
 }
 
 + (void)setInv:(NSInvocation *)inv withSig:(NSMethodSignature *)sig andArgs:(va_list)args {
@@ -278,9 +310,9 @@ return @(ret); \
             
 #define case_size(_size_) \
 else if (size <= 4 * _size_ ) { \
-    struct dummy { char tmp[4 * _size_]; }; \
-    struct dummy arg = va_arg(args, struct dummy); \
-    [inv setArgument:&arg atIndex:index]; \
+struct dummy { char tmp[4 * _size_]; }; \
+struct dummy arg = va_arg(args, struct dummy); \
+[inv setArgument:&arg atIndex:index]; \
 }
             if (size == 0) { }
             case_size( 1) case_size( 2) case_size( 3) case_size( 4)
@@ -310,7 +342,7 @@ else if (size <= 4 * _size_ ) { \
                       [sig getArgumentTypeAtIndex:index],(unsigned long)size);
             }
 #undef case_size
-
+            
         }
     }
 }
@@ -323,7 +355,7 @@ else if (size <= 4 * _size_ ) { \
     Method originalMethod = class_getInstanceMethod(self, originalSel);
     Method newMethod = class_getInstanceMethod(self, newSel);
     if (!originalMethod || !newMethod) return NO;
-    
+    // 这里我其实不太明白, 这里为什么要进行一下 class_addMethod 的处理.
     class_addMethod(self,
                     originalSel,
                     class_getMethodImplementation(self, originalSel),
@@ -347,6 +379,7 @@ else if (size <= 4 * _size_ ) { \
     return YES;
 }
 
+// 这个可以说是非常优秀了, 非常常用
 - (void)setAssociateValue:(id)value withKey:(void *)key {
     objc_setAssociatedObject(self, key, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -371,6 +404,7 @@ else if (size <= 4 * _size_ ) { \
     return [NSString stringWithUTF8String:class_getName([self class])];
 }
 
+// 深拷贝, 序列化之后反序列化.
 - (id)deepCopy {
     id obj = nil;
     @try {

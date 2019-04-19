@@ -45,6 +45,49 @@ __attribute__((error(x " not supported by the GNU runtime")))
 #undef objc_lookUpClass
 #endif
 
+struct objc_method {
+    SEL _Nonnull method_name                                 OBJC2_UNAVAILABLE;
+    char * _Nullable method_types                            OBJC2_UNAVAILABLE;
+    IMP _Nonnull method_imp                                  OBJC2_UNAVAILABLE;
+}
+
+struct objc_ivar {
+    char * _Nullable ivar_name                               OBJC2_UNAVAILABLE;
+    char * _Nullable ivar_type                               OBJC2_UNAVAILABLE;
+    int ivar_offset                                          OBJC2_UNAVAILABLE;
+    int space                                                OBJC2_UNAVAILABLE;
+}
+
+struct objc_category {
+    char * _Nonnull category_name                            OBJC2_UNAVAILABLE; // 分类名
+    char * _Nonnull class_name                               OBJC2_UNAVAILABLE; // 所属类名
+    struct objc_method_list * _Nullable instance_methods     OBJC2_UNAVAILABLE; // 成员方法列表
+    struct objc_method_list * _Nullable class_methods        OBJC2_UNAVAILABLE; // 类方法列表
+    struct objc_protocol_list * _Nullable protocols          OBJC2_UNAVAILABLE; // 集成协议列表.
+}
+
+typedef struct {
+    const char * _Nonnull name;           /**< The name of the attribute */
+    const char * _Nonnull value;          /**< The value of the attribute (usually empty) */
+} objc_property_attribute_t;
+
+struct objc_class {
+    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;
+#if !__OBJC2__
+    Class _Nullable super_class                              OBJC2_UNAVAILABLE;
+    const char * _Nonnull name                               OBJC2_UNAVAILABLE;
+    long version                                             OBJC2_UNAVAILABLE;
+    long info                                                OBJC2_UNAVAILABLE;
+    long instance_size                                       OBJC2_UNAVAILABLE;
+    struct objc_ivar_list * _Nullable ivars                  OBJC2_UNAVAILABLE;
+    struct objc_method_list * _Nullable * _Nullable methodLists                    OBJC2_UNAVAILABLE;
+    struct objc_cache * _Nonnull cache                       OBJC2_UNAVAILABLE;
+    struct objc_protocol_list * _Nullable protocols          OBJC2_UNAVAILABLE;
+#endif
+} OBJC2_UNAVAILABLE;
+
+// 虽然, 上面的在 OBJC2 中失效了, 但是我们作为想要理解 runtime 的运行的人来说, 这才是最宝贵的设计. rot, rwt 那些复杂的东西为什么要专门学习呢.
+
 typedef struct objc_ivar* Ivar;
 
 #ifndef __objc_INCLUDE_GNU

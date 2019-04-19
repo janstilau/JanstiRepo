@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface NSObject (YYAddForKVO)
 
+// 优秀. 这个类, 或者说, YYKit 中很多闭包的封装, 都是在类的内部定义了一个对象, 这个对象, 作为中间值参与到系统的框架流程中, 而在类的内部, 则通过调用闭包来调用用户自定义的操作. 
+
 /**
  Registers a block to receive KVO notifications for the specified key-path 
  relative to the receiver.

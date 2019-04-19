@@ -1,4 +1,3 @@
-
 #ifndef __NSKeyValueObserving_h_GNUSTEP_BASE_INCLUDE
 #define __NSKeyValueObserving_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -27,12 +26,12 @@ enum {
 typedef NSUInteger NSKeyValueObservingOptions;
 
 enum {
-  NSKeyValueChangeSetting = 1,
-  NSKeyValueChangeInsertion = 2,
-  NSKeyValueChangeRemoval = 3,
-  NSKeyValueChangeReplacement = 4
+  NSKeyValueChangeSetting = 1, //  Indicates that the value of the observed key path was set to a new value. This change can occur when observing an attribute of an object, as well as properties that specify to-one and to-many relationships.
+  NSKeyValueChangeInsertion = 2, // Indicates that an object has been inserted into the to-many relationship that is being observed.
+  NSKeyValueChangeRemoval = 3, // Indicates that an object has been removed from the to-many relationship that is being observed.
+  NSKeyValueChangeReplacement = 4 // Indicates that an object has been replaced in the to-many relationship that is being observed.
 };
-typedef NSUInteger NSKeyValueChange;
+typedef NSUInteger NSKeyValueChange; // The kinds of changes that can be observed.
 
 enum {
   NSKeyValueUnionSetMutation = 1,
@@ -53,18 +52,22 @@ GS_EXPORT NSString *const NSKeyValueChangeNotificationIsPriorKey;
 /* Given that the receiver has been registered as an observer
  * of the value at a key path relative to an object,
  * be notified that the value has changed.
+ 
  * The change dictionary always contains an NSKeyValueChangeKindKey entry
  * whose value is an NSNumber wrapping an NSKeyValueChange
  * (use [NSNumber-intValue]). The meaning of NSKeyValueChange
  * depends on what sort of property is identified by the key path:
- *
- * For any sort of property (attribute, to-one relationship,
+ 
+ * For any sort of property (attribute, 这里, attribute 应该指的是基本数据类型而不是指针了 to-one relationship,
  * or ordered or unordered to-many relationship) NSKeyValueChangeSetting
  * indicates that the observed object has received a -setValue:forKey:
  * message, or that the key-value coding-compliant set method for the
  * key has been invoked, or that a -willChangeValueForKey: or
  * -didChangeValueForKey: pair has otherwise been invoked.
+ NSKeyValueChangeSetting 指的是 setvalueforkey 了, 或者 willChangeValueForKey, didChangeValueForKey 被显示调用了
  *
+ 
+ // 下面这两项有点不理解.
  * For an _ordered_ to-many relationship, NSKeyValueChangeInsertion,
  * NSKeyValueChangeRemoval, and NSKeyValueChangeReplacement indicate
  * that a mutating message has been sent to the array returned by
@@ -87,6 +90,7 @@ GS_EXPORT NSString *const NSKeyValueChangeNotificationIsPriorKey;
  * an NSKeyValueChangeNewKey entry if NSKeyValueObservingOptionNew
  * was specified at observer-registration time, likewise for
  * NSKeyValueChangeOldKey if NSKeyValueObservingOptionOld was specified.
+ 
  * See the comments for the NSKeyValueObserverNotification informal
  * protocol methods for what the values of those entries will be.
  * For an _ordered_ to-many relationship, the change dictionary

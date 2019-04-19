@@ -438,6 +438,13 @@ ObjcRuntimeUtilities.m by Nicola Pero
  * <p>The iVars dictionary lists the instance variable names and their types.
  * </p>
  */
+
+/*
+ How to create a class using runtime.
+ 
+ To create a new class, start by calling objc_allocateClassPair. Then set the class's attributes with functions like class_addMethod and class_addIvar. When you are done building the class, call objc_registerClassPair. The new class is now ready for use.
+ Instance methods and instance variables should be added to the class itself. Class methods should be added to the metaclass.
+ */
 NSValue *
 GSObjCMakeClass(NSString *name, NSString *superName, NSDictionary *iVars)
 {
@@ -445,17 +452,11 @@ GSObjCMakeClass(NSString *name, NSString *superName, NSDictionary *iVars)
   Class		classSuperClass;
   const char	*classNameCString;
 
-  NSCAssert(name, @"no name");
-  NSCAssert(superName, @"no superName");
-
   classSuperClass = NSClassFromString(superName);
-
-  NSCAssert1(classSuperClass, @"No class named %@",superName);
-  NSCAssert1(!NSClassFromString(name), @"A class %@ already exists", name);
-
   classNameCString = [name UTF8String];
+    // Creates a new class and metaclass.
   newClass = objc_allocateClassPair(classSuperClass, classNameCString, 0);
-  if ([iVars count] > 0)
+  if ([iVars count] > 0) // 如果, 后面有新增成员变量的信息, 这里要进行 addIvar 的操作.
     {
       NSEnumerator	*enumerator = [iVars keyEnumerator];
       NSString		*key;

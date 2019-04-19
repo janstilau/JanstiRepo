@@ -12,15 +12,15 @@ extern "C" {
 {
 #if	GS_EXPOSE(NSInvocation)
 @public
-  NSMethodSignature	*_sig;
+  NSMethodSignature	*_sig; // 里面记录了返回值和各个参数的类型
   void                  *_cframe;
   void			*_retval;
   id			_target;
   SEL			_selector;
-  unsigned int		_numArgs;
+  unsigned int		_argsNum;
   void			*_info;
   BOOL			_argsRetained;
-  BOOL                  _targetRetained;
+  BOOL                  _targetRetained; // 记录着需不需要进行 retain 操作. 如果需要, 那么在有关 target 的设置中, 要进行 retain 操作.
   BOOL			_validReturn;
   BOOL			_sendToSuper;
   void			*_retptr;
@@ -32,7 +32,7 @@ extern "C" {
    * Use this mechanism rather than changing the instance variable
    * layout (see Source/GSInternal.h for details).
    */
-  @private id _internal GS_UNUSED_IVAR;
+@private id _internal GS_UNUSED_IVAR; // 发现好多类库里面, 都有这个东西, 作为内部的存储值; 猜测, OC 之前也是需要把成员变量放到头文件里面来的, 这样, 为了将真正的实现隐藏, 就用一个 void* 来指代真正的实现, 然后在实现文件里面, 在引入真正的头文件.
 #endif
 }
 

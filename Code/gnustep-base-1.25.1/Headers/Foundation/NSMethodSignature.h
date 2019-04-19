@@ -1,29 +1,3 @@
-/* Interface for NSMethodSignature for GNUStep
-   Copyright (C) 1995, 1998 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Date: 1995
-   Rewritten:	Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   Date: 1998
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
-
 #ifndef __NSMethodSignature_h_GNUSTEP_BASE_INCLUDE
 #define __NSMethodSignature_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -33,6 +7,29 @@
 #if	defined(__cplusplus)
 extern "C" {
 #endif
+    
+/*
+ A record of the type information for the return value and parameters of a method.
+ 
+ 从这里我们可以看出, 它只记录的是 返回值和参数的类型信息.
+ 它的主要作用, 是当一个消息不能被响应的时候, 把这个消息的一些信息传递给别的对象. 它是 NSInvocation 的一个组成部分.
+ NSInvocation 中, 可以记录参数的具体的值, 但是每个值的具体的类型, 是要从 NSMethodSignature 中获取, 猜想是, 可能会有类型转化. 例如
+ 1.322 是具体的参数值, 但是这个参数可能要的是 int 类型的.
+ 
+Use an NSMethodSignature object to forward messages that the receiving object does not respond to—most notably in the case of distributed objects. You typically create an NSMethodSignature object using the NSObject methodSignatureForSelector: instance method (in macOS 10.5 and later you can also use signatureWithObjCTypes:). It is then used to create an NSInvocation object, which is passed as the argument to a forwardInvocation: message to send the invocation on to whatever other object can handle the message. In the default case, NSObject invokes doesNotRecognizeSelector:, which raises an exception. For distributed objects, the NSInvocation object is encoded using the information in the NSMethodSignature object and sent to the real object represented by the receiver of the message.
+ 
+ An NSMethodSignature object is initialized with an array of characters representing the string encoding of return and argument types for a method. You can get the string encoding of a particular type using the @encode() compiler directive. Because string encodings are implementation-specific, you should not hard-code these values.
+ 
+ For example, the NSString instance method containsString: has a method signature with the following arguments:
+ @encode(BOOL) (c) for the return type
+ @encode(id) (@) for the receiver (self)
+ @encode(SEL) (:) for the selector (_cmd)
+ @encode(NSString *) (@) for the first explicit argument
+ */
+    
+/*
+ 这个类, 会根据 runtime 里面, objc_method 里面记录的 types 的信息, 构建自己的存储的信息. 在自己的存储信息里面, 记录了每个参数的位置, size, 类型等信息, 所以, 这个类是一个纯粹的数据类. NSObject methodSignature 方法, 首先会进行 objc_method 里面记录的 types 信息的提取, 然后将提取出来的信息, 传到这个类的 designated init 中去.
+ */
 
 /**
  * <p>Class encapsulating type information for method arguments and return
@@ -54,7 +51,7 @@ extern "C" {
   const char		*_methodTypes;
   NSUInteger		_argFrameLength;
   NSUInteger		_numArgs;
-  void			*_info;
+  void			*_info; // opaque pointer
 #endif
 }
 
