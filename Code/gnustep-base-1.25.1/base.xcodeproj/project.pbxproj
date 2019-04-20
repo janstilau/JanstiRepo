@@ -1693,6 +1693,7 @@
 				06EDD8E92248BEA800C87605 /* NSValue.h */,
 				064A2278224F840100A6B909 /* URLSessionLearn.h */,
 				06EDD9192248BEA800C87605 /* NSStream.h */,
+				06EDD9072248BEA800C87605 /* NSScanner.h */,
 			);
 			path = Readed;
 			sourceTree = "<group>";
@@ -1756,7 +1757,6 @@
 				06EDD9002248BEA800C87605 /* NSProtocolChecker.h */,
 				06EDD91A2248BEA800C87605 /* NSProxy.h */,
 				06EDD9462248BEA800C87605 /* NSRegularExpression.h */,
-				06EDD9072248BEA800C87605 /* NSScanner.h */,
 				06EDD9442248BEA800C87605 /* NSScriptWhoseTests.h */,
 				06EDD93E2248BEA800C87605 /* NSSortDescriptor.h */,
 				06EDD94D2248BEA800C87605 /* NSSpellServer.h */,

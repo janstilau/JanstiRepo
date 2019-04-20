@@ -95,6 +95,8 @@ YYSYNTH_DUMMY_CLASS(NSString_YYAdd)
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
+
+// 百分号转移.
 - (NSString *)stringByURLEncode {
     if ([self respondsToSelector:@selector(stringByAddingPercentEncodingWithAllowedCharacters:)]) {
         /**
@@ -120,6 +122,7 @@ YYSYNTH_DUMMY_CLASS(NSString_YYAdd)
         NSUInteger index = 0;
         NSMutableString *escaped = @"".mutableCopy;
         
+        // 分批次进行百分号转移.
         while (index < self.length) {
             NSUInteger length = MIN(self.length - index, batchSize);
             NSRange range = NSMakeRange(index, length);
@@ -128,7 +131,6 @@ YYSYNTH_DUMMY_CLASS(NSString_YYAdd)
             NSString *substring = [self substringWithRange:range];
             NSString *encoded = [substring stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacterSet];
             [escaped appendString:encoded];
-            
             index += range.length;
         }
         return escaped;
@@ -168,6 +170,7 @@ YYSYNTH_DUMMY_CLASS(NSString_YYAdd)
     }
 }
 
+// HTML 中, 各个变为相应的
 - (NSString *)stringByEscapingHTML {
     NSUInteger len = self.length;
     if (!len) return self;
@@ -198,6 +201,8 @@ YYSYNTH_DUMMY_CLASS(NSString_YYAdd)
     return result;
 }
 
+
+// String 的 size 计算, 其实是和绘图程序有关的.
 - (CGSize)sizeForFont:(UIFont *)font size:(CGSize)size mode:(NSLineBreakMode)lineBreakMode {
     CGSize result;
     if (!font) font = [UIFont systemFontOfSize:12];
@@ -232,6 +237,7 @@ YYSYNTH_DUMMY_CLASS(NSString_YYAdd)
     return size.height;
 }
 
+// 正则的封装.
 - (BOOL)matchesRegex:(NSString *)regex options:(NSRegularExpressionOptions)options {
     NSRegularExpression *pattern = [NSRegularExpression regularExpressionWithPattern:regex options:options error:NULL];
     if (!pattern) return NO;
@@ -244,6 +250,7 @@ YYSYNTH_DUMMY_CLASS(NSString_YYAdd)
     if (regex.length == 0 || !block) return;
     NSRegularExpression *pattern = [NSRegularExpression regularExpressionWithPattern:regex options:options error:nil];
     if (!regex) return;
+    // 可以可以
     [pattern enumerateMatchesInString:self options:kNilOptions range:NSMakeRange(0, self.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         block([self substringWithRange:result.range], result.range, stop);
     }];
@@ -337,9 +344,11 @@ YYSYNTH_DUMMY_CLASS(NSString_YYAdd)
 
 - (NSString *)stringByTrim {
     NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    // Returns a new string made by removing from both ends of the receiver characters contained in a given character set.
     return [self stringByTrimmingCharactersInSet:set];
 }
 
+// 这应该是为了拼接图片路径.
 - (NSString *)stringByAppendingNameScale:(CGFloat)scale {
     if (fabs(scale - 1) <= __FLT_EPSILON__ || self.length == 0 || [self hasSuffix:@"/"]) return self.copy;
     return [self stringByAppendingFormat:@"@%@x", @(scale)];

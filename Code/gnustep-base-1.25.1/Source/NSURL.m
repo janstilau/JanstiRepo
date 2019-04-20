@@ -52,7 +52,7 @@ NSString * const NSErrorFailingURLStringKey = @"NSErrorFailingURLStringKey";
         unsigned int    hi;
         unsigned int    lo;
         
-        if (c <= 32             // 这些都是保留字
+        if (c <= 32             // URL 的保留字符, 要进行转义.
             || c > 126
             || c == 34
             || c == 35
