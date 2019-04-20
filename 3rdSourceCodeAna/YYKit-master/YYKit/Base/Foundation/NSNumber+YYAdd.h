@@ -14,6 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ 主要是为了分析字符型的数值.
  Provide a method to parse `NSString` for `NSNumber`.
  */
 @interface NSNumber (YYAdd)

@@ -24,24 +24,26 @@ YYSYNTH_DUMMY_CLASS(NSNumber_YYAdd)
         return nil;
     }
     
-    static NSDictionary *dic;
+    static NSDictionary *notNumMap;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        dic = @{@"true" :   @(YES),
-                @"yes" :    @(YES),
-                @"false" :  @(NO),
-                @"no" :     @(NO),
-                @"nil" :    [NSNull null],
-                @"null" :   [NSNull null],
-                @"<null>" : [NSNull null]};
+        notNumMap = @{
+                      @"true" :   @(YES),
+                      @"yes" :    @(YES),
+                      @"false" :  @(NO),
+                      @"no" :     @(NO),
+                      @"nil" :    [NSNull null],
+                      @"null" :   [NSNull null],
+                      @"<null>" : [NSNull null]};
     });
-    id num = dic[str];
+    id num = notNumMap[str];
     if (num) {
         if (num == [NSNull null]) return nil;
         return num;
     }
     
     // hex number
+    // 优秀.
     int sign = 0;
     if ([str hasPrefix:@"0x"]) sign = 1;
     else if ([str hasPrefix:@"-0x"]) sign = -1;

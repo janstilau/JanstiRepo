@@ -286,14 +286,6 @@
 - (void) addCharactersInString: (NSString*)aString
 {
     unsigned   length;
-    
-    if (!aString)
-    {
-        [NSException raise:NSInvalidArgumentException
-                    format:@"Adding characters from nil string"];
-        /* NOT REACHED */
-    }
-    
     length = [aString length];
     if (length > 0)
     {
@@ -302,6 +294,7 @@
         
         get = (unichar (*)(id, SEL, NSUInteger))
         [aString methodForSelector: @selector(characterAtIndex:)];
+        // 这一步, get 进行了赋值. 取得 IMP 之后, 进行类型的变化.
         for (i = 0; i < length; i++)
         {
             unichar	letter;
@@ -318,6 +311,8 @@
                 letter = ((letter - 0xd800) << 10)
                 + (second - 0xdc00) + 0x0010000;
             }
+            // 这里对 unicode 进行了处理.
+            
             byte = letter/8;
             if (byte >= _length)
             {
@@ -625,12 +620,13 @@ static Class concreteMutableClass = nil;
  * Creat and cache (or retrieve from cache) a characterset
  * using static bitmap data.
  * Return nil if no data is supplied and the cache is empty.
+ 这个会有缓存.
  */
 
 // 这里, 调用这个数组返回回来的值, 都是预先定义好的. 如果点击跳转的话, 发现是个长长的数组定义的文件.
 + (NSCharacterSet*) _staticSet: (const void*)bytes // 数组
                         length: (unsigned)length // 数组长度
-                        number: (int)number // 序号
+                        number: (int)number // 序号, 这里不用枚举, 不好.
 {
     [cache_lock lock];
     if (cache_set[number] == nil && bytes != 0)
@@ -642,7 +638,6 @@ static Class concreteMutableClass = nil;
                                               freeWhenDone: NO];
         cache_set[number]
         = [[_GSStaticCharSet alloc] initWithBitmap: bitmap number: number];
-        [[NSObject leakAt: &cache_set[number]] release];
         RELEASE(bitmap);
     }
     [cache_lock unlock];

@@ -9,11 +9,31 @@
 extern "C" {
 #endif
 
+/*
+ An NSCharacterSet object represents a set of Unicode-compliant characters.
+ NSString and NSScanner objects use NSCharacterSet objects to group characters together for searching operations, so that they can find any of a particular set of characters during a search.
+ The cluster’s two public classes, NSCharacterSet and NSMutableCharacterSet, declare the programmatic interface for static and dynamic character sets, respectively.
+ 
+ The objects you create using these classes are referred to as character set objects (and when no confusion will result, merely as character sets).
+ Because of the nature of class clusters, character set objects aren’t actual instances of the NSCharacterSet or NSMutableCharacterSet classes but of one of their private subclasses.
+ Although a character set object’s class is private, its interface is public, as declared by these abstract superclasses, NSCharacterSet and NSMutableCharacterSet.
+ The character set classes adopt the NSCopying and NSMutableCopying protocols, making it convenient to convert a character set of one type to the other.
+ 
+ The NSCharacterSet class declares the programmatic interface for an object that manages a set of Unicode characters (see the NSString class cluster specification for information on Unicode).
+ characterIsMember the primitiveMethod
+ NSCharacterSet’s principal primitive method, characterIsMember:, provides the basis for all other instance methods in its interface.
+ A subclass of NSCharacterSet needs only to implement this method, plus mutableCopyWithZone:, for proper behavior. F
+ or optimal performance, a subclass should also override bitmapRepresentation, which otherwise works by invoking characterIsMember: for every possible Unicode value.
+ 
+ NSCharacterSet is “toll-free bridged” with its Core Foundation counterpart, CFCharacterSetRef. See Toll-Free Bridging for more information on toll-free bridging.
+ */
+    
 @class NSData;
-
+    
 /**
  *  Represents a set of unicode characters.  Used by [NSScanner] and [NSString]
  *  for parsing-related methods.
+ 这是一个数据类.
  */
 @interface NSCharacterSet : NSObject <NSCoding, NSCopying, NSMutableCopying>
 
@@ -70,7 +90,7 @@ extern "C" {
 
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 /**
- * Returns a character set containing the newline characters, values 
+ * Returns a character set containing the newline characters, values
  * 0x000A and 0x000D and nextline 0x0085 character.
  */
 + (id) newlineCharacterSet;
@@ -180,11 +200,11 @@ extern "C" {
 - (BOOL) longCharacterIsMember: (UTF32Char)aCharacter;
 #endif
 @end
-
-/**
- *  An [NSCharacterSet] that can be modified.
- */
-@interface NSMutableCharacterSet : NSCharacterSet
+    
+    /**
+     *  An [NSCharacterSet] that can be modified.
+     */
+    @interface NSMutableCharacterSet : NSCharacterSet
 
 /**
  *  Adds characters specified by unicode indices in aRange to set.
@@ -224,7 +244,7 @@ extern "C" {
 - (void) invert;
 
 @end
-
+    
 #if	defined(__cplusplus)
 }
 #endif

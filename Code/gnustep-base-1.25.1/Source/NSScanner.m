@@ -1,32 +1,3 @@
-/** Implemenation of NSScanner class
-   Copyright (C) 1996,1999 Free Software Foundation, Inc.
-
-   Author:  Eric Norum <eric@skatter.usask.ca>
-   Date: 1996
-   Rewrite/optimisation by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: 1998
-
-   This file is part of the GNUstep Objective-C Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSScanner class reference</title>
-   $Date$ $Revision$
-*/
-
 #import "common.h"
 
 #if	defined(HAVE_FLOAT_H)
@@ -81,12 +52,12 @@ static NSStringEncoding internalEncoding = NSISOLatin1StringEncoding;
 
 static inline unichar myGetC(unsigned char c)
 {
-  unsigned int  size = 1;
-  unichar       u = 0;
-  unichar       *dst = &u;
-
-  GSToUnicode(&dst, &size, &c, 1, internalEncoding, 0, 0);
-  return u;
+    unsigned int  size = 1;
+    unichar       u = 0;
+    unichar       *dst = &u;
+    
+    GSToUnicode(&dst, &size, &c, 1, internalEncoding, 0, 0);
+    return u;
 }
 /*
  * Hack for direct access to internals of an concrete string object.
@@ -104,10 +75,10 @@ typedef GSString	*ivars;
  * For internal use only.
  */
 #define	skipToNextField()	({\
-  while (_scanLocation < myLength() && _charactersToBeSkipped != nil \
-    && (*_skipImp)(_charactersToBeSkipped, memSel, myCharacter(_scanLocation)))\
-    _scanLocation++;\
-  (_scanLocation >= myLength()) ? NO : YES;\
+while (_scanLocation < myLength() && _charactersToBeSkipped != nil \
+&& (*_skipImp)(_charactersToBeSkipped, memSel, myCharacter(_scanLocation)))\
+_scanLocation++;\
+(_scanLocation >= myLength()) ? NO : YES;\
 })
 
 /**
@@ -128,35 +99,36 @@ typedef GSString	*ivars;
 
 + (void) initialize
 {
-  if (self == [NSScanner class])
+    if (self == [NSScanner class])
     {
-      NSStringEncoding externalEncoding;
-
-      memSel = @selector(characterIsMember:);
-      defaultSkipSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-      IF_NO_GC(RETAIN(defaultSkipSet));
-      NSStringClass = [NSString class];
-      GSCStringClass = [GSCString class];
-      GSUnicodeStringClass = [GSUnicodeString class];
-      GSMutableStringClass = [GSMutableString class];
-      GSPlaceholderStringClass = [GSPlaceholderString class];
-      _holder = (id)NSAllocateObject(GSPlaceholderStringClass, 0, 0);
-      externalEncoding = [NSString defaultCStringEncoding];
-      if (GSPrivateIsByteEncoding(externalEncoding) == YES)
-	{
-	  internalEncoding = externalEncoding;
-	}
+        NSStringEncoding externalEncoding;
+        
+        memSel = @selector(characterIsMember:);
+        defaultSkipSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+        IF_NO_GC(RETAIN(defaultSkipSet));
+        NSStringClass = [NSString class];
+        GSCStringClass = [GSCString class];
+        GSUnicodeStringClass = [GSUnicodeString class];
+        GSMutableStringClass = [GSMutableString class];
+        GSPlaceholderStringClass = [GSPlaceholderString class];
+        _holder = (id)NSAllocateObject(GSPlaceholderStringClass, 0, 0);
+        externalEncoding = [NSString defaultCStringEncoding];
+        if (GSPrivateIsByteEncoding(externalEncoding) == YES)
+        {
+            internalEncoding = externalEncoding;
+        }
     }
 }
 
 /**
  * Create and return a scanner that scans aString.<br />
  * Uses -initWithString: and with no locale set.
+ 类方法, 添加了 autorelease
  */
 + (id) scannerWithString: (NSString *)aString
 {
-  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-    initWithString: aString]);
+    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
+                        initWithString: aString]);
 }
 
 /**
@@ -166,16 +138,16 @@ typedef GSString	*ivars;
  */
 + (id) localizedScannerWithString: (NSString*)aString
 {
-  NSScanner		*scanner = [self scannerWithString: aString];
-
-  if (scanner != nil)
+    NSScanner		*scanner = [self scannerWithString: aString];
+    
+    if (scanner != nil)
     {
-      NSDictionary	*loc;
-
-      loc = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
-      [scanner setLocale: loc];
+        NSDictionary	*loc;
+        
+        loc = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
+        [scanner setLocale: loc];
     }
-  return scanner;
+    return scanner;
 }
 
 /**
@@ -186,53 +158,54 @@ typedef GSString	*ivars;
  * will be visible to the scanner.
  * <br/>
  * Returns the scanner object.
+ 这里, 对字符串进行了拷贝.
+ aString, 作为 stirng 的参数的命名.
  */
 - (id) initWithString: (NSString *)aString
 {
-  Class	c;
-
-  if ((self = [super init]) == nil)
-    return nil;
-  /*
-   * Ensure that we have a known string so we can access its internals directly.
-   */
-  if (aString == nil)
+    Class	c;
+    
+    if ((self = [super init]) == nil)
+        return nil;
+    /*
+     * Ensure that we have a known string so we can access its internals directly.
+     */
+    if (aString == nil)
     {
-      NSLog(@"Scanner initialised with nil string");
-      aString = @"";
+        aString = @"";
     }
-
-  c = object_getClass(aString);
-  if (GSObjCIsKindOf(c, GSMutableStringClass) == YES)
+    
+    c = object_getClass(aString);
+    if (GSObjCIsKindOf(c, GSMutableStringClass) == YES)
     {
-      _string = [_holder initWithString: aString];
+        _string = [_holder initWithString: aString];
     }
-  else if (GSObjCIsKindOf(c, GSUnicodeStringClass) == YES)
+    else if (GSObjCIsKindOf(c, GSUnicodeStringClass) == YES)
     {
-      _string = RETAIN(aString);
+        _string = RETAIN(aString);
     }
-  else if (GSObjCIsKindOf(c, GSCStringClass) == YES)
+    else if (GSObjCIsKindOf(c, GSCStringClass) == YES)
     {
-      _string = RETAIN(aString);
+        _string = RETAIN(aString);
     }
-  else if ([aString isKindOfClass: NSStringClass])
+    else if ([aString isKindOfClass: NSStringClass])
     {
-      _string = [_holder initWithString: aString];
+        _string = [_holder initWithString: aString];
     }
-  else
+    else
     {
-      DESTROY(self);
-      NSLog(@"Scanner initialised with something not a string");
-      return nil;
+        DESTROY(self);
+        NSLog(@"Scanner initialised with something not a string");
+        return nil;
     }
-  c = object_getClass(_string);
-  if (GSObjCIsKindOf(c, GSUnicodeStringClass) == YES)
+    c = object_getClass(_string);
+    if (GSObjCIsKindOf(c, GSUnicodeStringClass) == YES)
     {
-      _isUnicode = YES;
+        _isUnicode = YES;
     }
-  [self setCharactersToBeSkipped: defaultSkipSet];
-  _decimal = '.';
-  return self;
+    [self setCharactersToBeSkipped: defaultSkipSet];
+    _decimal = '.';
+    return self;
 }
 
 /*
@@ -240,10 +213,10 @@ typedef GSString	*ivars;
  */
 - (void) dealloc
 {
-  RELEASE(_string);
-  TEST_RELEASE(_locale);
-  RELEASE(_charactersToBeSkipped);
-  [super dealloc];
+    RELEASE(_string);
+    TEST_RELEASE(_locale);
+    RELEASE(_charactersToBeSkipped);
+    [super dealloc];
 }
 
 /**
@@ -254,15 +227,15 @@ typedef GSString	*ivars;
  */
 - (BOOL) isAtEnd
 {
-  unsigned int	save__scanLocation;
-  BOOL		ret;
-
-  if (_scanLocation >= myLength())
-    return YES;
-  save__scanLocation = _scanLocation;
-  ret = !skipToNextField();
-  _scanLocation = save__scanLocation;
-  return ret;
+    unsigned int	save__scanLocation;
+    BOOL		ret;
+    
+    if (_scanLocation >= myLength())
+        return YES;
+    save__scanLocation = _scanLocation;
+    ret = !skipToNextField();
+    _scanLocation = save__scanLocation;
+    return ret;
 }
 
 /*
@@ -280,59 +253,59 @@ typedef GSString	*ivars;
  */
 - (BOOL) _scanInt: (int*)value
 {
-  unsigned int num = 0;
-  const unsigned int limit = UINT_MAX / 10;
-  BOOL negative = NO;
-  BOOL overflow = NO;
-  BOOL got_digits = NO;
-
-  /* Check for sign */
-  if (_scanLocation < myLength())
+    unsigned int num = 0;
+    const unsigned int limit = UINT_MAX / 10;
+    BOOL negative = NO;
+    BOOL overflow = NO;
+    BOOL got_digits = NO;
+    
+    /* Check for sign */
+    if (_scanLocation < myLength())
     {
-      switch (myCharacter(_scanLocation))
-	{
-	  case '+':
-	    _scanLocation++;
-	    break;
-	  case '-':
-	    negative = YES;
-	    _scanLocation++;
-	    break;
-	}
+        switch (myCharacter(_scanLocation))
+        {
+            case '+':
+                _scanLocation++;
+                break;
+            case '-':
+                negative = YES;
+                _scanLocation++;
+                break;
+        }
     }
-
-  /* Process digits */
-  while (_scanLocation < myLength())
+    
+    /* Process digits */
+    while (_scanLocation < myLength())
     {
-      unichar digit = myCharacter(_scanLocation);
-
-      if ((digit < '0') || (digit > '9'))
-	break;
-      if (!overflow)
-	{
-	  if (num >= limit)
-	    overflow = YES;
-	  else
-	    num = num * 10 + (digit - '0');
-	}
-      _scanLocation++;
-      got_digits = YES;
+        unichar digit = myCharacter(_scanLocation);
+        
+        if ((digit < '0') || (digit > '9'))
+            break;
+        if (!overflow)
+        {
+            if (num >= limit)
+                overflow = YES;
+            else
+                num = num * 10 + (digit - '0');
+        }
+        _scanLocation++;
+        got_digits = YES;
     }
-
-  /* Save result */
-  if (!got_digits)
-    return NO;
-  if (value)
+    
+    /* Save result */
+    if (!got_digits)
+        return NO;
+    if (value)
     {
-      if (overflow
-	|| (num > (negative ? (NSUInteger)INT_MIN : (NSUInteger)INT_MAX)))
-	*value = negative ? INT_MIN: INT_MAX;
-      else if (negative)
-	*value = -num;
-      else
-	*value = num;
+        if (overflow
+            || (num > (negative ? (NSUInteger)INT_MIN : (NSUInteger)INT_MAX)))
+            *value = negative ? INT_MIN: INT_MAX;
+        else if (negative)
+            *value = -num;
+        else
+            *value = num;
     }
-  return YES;
+    return YES;
 }
 
 /**
@@ -347,12 +320,12 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanInt: (int*)value
 {
-  unsigned int saveScanLocation = _scanLocation;
-
-  if (skipToNextField() && [self _scanInt: value])
-    return YES;
-  _scanLocation = saveScanLocation;
-  return NO;
+    unsigned int saveScanLocation = _scanLocation;
+    
+    if (skipToNextField() && [self _scanInt: value])
+        return YES;
+    _scanLocation = saveScanLocation;
+    return NO;
 }
 
 /* Scan an unsigned long long of the given radix into value.
@@ -363,84 +336,84 @@ typedef GSString	*ivars;
                        maximum: (unsigned long long)max
                      gotDigits: (BOOL)gotDigits
 {
-  unsigned long long int        num = 0;
-  unsigned long long int        numLimit = max / radix;
-  unsigned long long int        digitLimit = max % radix;
-  unsigned long long int        digitValue = 0;
-  BOOL                          overflow = NO;
-  unsigned int                  saveScanLocation = _scanLocation;
-
-  /* Process digits */
-  while (_scanLocation < myLength())
+    unsigned long long int        num = 0;
+    unsigned long long int        numLimit = max / radix;
+    unsigned long long int        digitLimit = max % radix;
+    unsigned long long int        digitValue = 0;
+    BOOL                          overflow = NO;
+    unsigned int                  saveScanLocation = _scanLocation;
+    
+    /* Process digits */
+    while (_scanLocation < myLength())
     {
-      unichar digit = myCharacter(_scanLocation);
-
-      switch (digit)
+        unichar digit = myCharacter(_scanLocation);
+        
+        switch (digit)
         {
-          case '0': digitValue = 0; break;
-          case '1': digitValue = 1; break;
-          case '2': digitValue = 2; break;
-          case '3': digitValue = 3; break;
-          case '4': digitValue = 4; break;
-          case '5': digitValue = 5; break;
-          case '6': digitValue = 6; break;
-          case '7': digitValue = 7; break;
-          case '8': digitValue = 8; break;
-          case '9': digitValue = 9; break;
-          case 'a': digitValue = 0xA; break;
-          case 'b': digitValue = 0xB; break;
-          case 'c': digitValue = 0xC; break;
-          case 'd': digitValue = 0xD; break;
-          case 'e': digitValue = 0xE; break;
-          case 'f': digitValue = 0xF; break;
-          case 'A': digitValue = 0xA; break;
-          case 'B': digitValue = 0xB; break;
-          case 'C': digitValue = 0xC; break;
-          case 'D': digitValue = 0xD; break;
-          case 'E': digitValue = 0xE; break;
-          case 'F': digitValue = 0xF; break;
-          default:
-            digitValue = radix;
+            case '0': digitValue = 0; break;
+            case '1': digitValue = 1; break;
+            case '2': digitValue = 2; break;
+            case '3': digitValue = 3; break;
+            case '4': digitValue = 4; break;
+            case '5': digitValue = 5; break;
+            case '6': digitValue = 6; break;
+            case '7': digitValue = 7; break;
+            case '8': digitValue = 8; break;
+            case '9': digitValue = 9; break;
+            case 'a': digitValue = 0xA; break;
+            case 'b': digitValue = 0xB; break;
+            case 'c': digitValue = 0xC; break;
+            case 'd': digitValue = 0xD; break;
+            case 'e': digitValue = 0xE; break;
+            case 'f': digitValue = 0xF; break;
+            case 'A': digitValue = 0xA; break;
+            case 'B': digitValue = 0xB; break;
+            case 'C': digitValue = 0xC; break;
+            case 'D': digitValue = 0xD; break;
+            case 'E': digitValue = 0xE; break;
+            case 'F': digitValue = 0xF; break;
+            default:
+                digitValue = radix;
+                break;
+        }
+        if (digitValue >= radix)
+        {
             break;
         }
-      if (digitValue >= radix)
+        if (!overflow)
         {
-          break;
-        }
-      if (!overflow)
-        {
-          if ((num > numLimit)
-            || ((num == numLimit) && (digitValue > digitLimit)))
+            if ((num > numLimit)
+                || ((num == numLimit) && (digitValue > digitLimit)))
             {
-              overflow = YES;
+                overflow = YES;
             }
-           else
+            else
             {
-              num = num * radix + digitValue;
+                num = num * radix + digitValue;
             }
         }
-      _scanLocation++;
-      gotDigits = YES;
+        _scanLocation++;
+        gotDigits = YES;
     }
-
-  /* Save result */
-  if (!gotDigits)
+    
+    /* Save result */
+    if (!gotDigits)
     {
-      _scanLocation = saveScanLocation;
-      return NO;
+        _scanLocation = saveScanLocation;
+        return NO;
     }
-  if (value)
+    if (value)
     {
-      if (overflow)
+        if (overflow)
         {
-          *value = ULLONG_MAX;
+            *value = ULLONG_MAX;
         }
-      else
+        else
         {
-          *value = num;
+            *value = num;
         }
     }
-  return YES;
+    return YES;
 }
 
 /**
@@ -458,55 +431,55 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanRadixUnsignedInt: (unsigned int*)value
 {
-  unsigned int	        radix;
-  unsigned long long    tmp;
-  BOOL		        gotDigits = NO;
-  unsigned int	        saveScanLocation = _scanLocation;
-
-  /* Skip whitespace */
-  if (!skipToNextField())
+    unsigned int	        radix;
+    unsigned long long    tmp;
+    BOOL		        gotDigits = NO;
+    unsigned int	        saveScanLocation = _scanLocation;
+    
+    /* Skip whitespace */
+    if (!skipToNextField())
     {
-      _scanLocation = saveScanLocation;
-      return NO;
+        _scanLocation = saveScanLocation;
+        return NO;
     }
-
-  /* Check radix */
-  radix = 10;
-  if ((_scanLocation < myLength()) && (myCharacter(_scanLocation) == '0'))
+    
+    /* Check radix */
+    radix = 10;
+    if ((_scanLocation < myLength()) && (myCharacter(_scanLocation) == '0'))
     {
-      radix = 8;
-      _scanLocation++;
-      gotDigits = YES;
-      if (_scanLocation < myLength())
-	{
-	  switch (myCharacter(_scanLocation))
-	    {
-	      case 'x':
-	      case 'X':
-		_scanLocation++;
-		radix = 16;
-		gotDigits = NO;
-		break;
-	    }
-	}
-    }
-  if ([self scanUnsignedLongLong_: &tmp
-                            radix: radix
-                          maximum: UINT_MAX
-                        gotDigits: gotDigits])
-    {
-      if (tmp > UINT_MAX)
+        radix = 8;
+        _scanLocation++;
+        gotDigits = YES;
+        if (_scanLocation < myLength())
         {
-          *value = UINT_MAX;
+            switch (myCharacter(_scanLocation))
+            {
+                case 'x':
+                case 'X':
+                    _scanLocation++;
+                    radix = 16;
+                    gotDigits = NO;
+                    break;
+            }
         }
-      else
-        {
-          *value = (unsigned int)tmp;
-        }
-      return YES;
     }
-  _scanLocation = saveScanLocation;
-  return NO;
+    if ([self scanUnsignedLongLong_: &tmp
+                              radix: radix
+                            maximum: UINT_MAX
+                          gotDigits: gotDigits])
+    {
+        if (tmp > UINT_MAX)
+        {
+            *value = UINT_MAX;
+        }
+        else
+        {
+            *value = (unsigned int)tmp;
+        }
+        return YES;
+    }
+    _scanLocation = saveScanLocation;
+    return NO;
 }
 
 /**
@@ -524,46 +497,46 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanRadixUnsignedLongLong: (unsigned long long*)value
 {
-  unsigned int	        radix;
-  BOOL		        gotDigits = NO;
-  unsigned int	        saveScanLocation = _scanLocation;
-
-  /* Skip whitespace */
-  if (!skipToNextField())
+    unsigned int	        radix;
+    BOOL		        gotDigits = NO;
+    unsigned int	        saveScanLocation = _scanLocation;
+    
+    /* Skip whitespace */
+    if (!skipToNextField())
     {
-      _scanLocation = saveScanLocation;
-      return NO;
+        _scanLocation = saveScanLocation;
+        return NO;
     }
-
-  /* Check radix */
-  radix = 10;
-  if ((_scanLocation < myLength()) && (myCharacter(_scanLocation) == '0'))
+    
+    /* Check radix */
+    radix = 10;
+    if ((_scanLocation < myLength()) && (myCharacter(_scanLocation) == '0'))
     {
-      radix = 8;
-      _scanLocation++;
-      gotDigits = YES;
-      if (_scanLocation < myLength())
-	{
-	  switch (myCharacter(_scanLocation))
-	    {
-	      case 'x':
-	      case 'X':
-		_scanLocation++;
-		radix = 16;
-		gotDigits = NO;
-		break;
-	    }
-	}
+        radix = 8;
+        _scanLocation++;
+        gotDigits = YES;
+        if (_scanLocation < myLength())
+        {
+            switch (myCharacter(_scanLocation))
+            {
+                case 'x':
+                case 'X':
+                    _scanLocation++;
+                    radix = 16;
+                    gotDigits = NO;
+                    break;
+            }
+        }
     }
-  if ([self scanUnsignedLongLong_: value
-                            radix: radix
-                          maximum: ULLONG_MAX
-                        gotDigits: gotDigits])
+    if ([self scanUnsignedLongLong_: value
+                              radix: radix
+                            maximum: ULLONG_MAX
+                          gotDigits: gotDigits])
     {
-      return YES;
+        return YES;
     }
-  _scanLocation = saveScanLocation;
-  return NO;
+    _scanLocation = saveScanLocation;
+    return NO;
 }
 
 /**
@@ -579,47 +552,47 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanHexInt: (unsigned int*)value
 {
-  unsigned int          saveScanLocation = _scanLocation;
-  unsigned long long    tmp;
-
-  /* Skip whitespace */
-  if (!skipToNextField())
+    unsigned int          saveScanLocation = _scanLocation;
+    unsigned long long    tmp;
+    
+    /* Skip whitespace */
+    if (!skipToNextField())
     {
-      _scanLocation = saveScanLocation;
-      return NO;
+        _scanLocation = saveScanLocation;
+        return NO;
     }
-
-  if ((_scanLocation < myLength()) && (myCharacter(_scanLocation) == '0'))
+    
+    if ((_scanLocation < myLength()) && (myCharacter(_scanLocation) == '0'))
     {
-      _scanLocation++;
-      if (_scanLocation < myLength())
-	{
-	  switch (myCharacter(_scanLocation))
-	    {
-	      case 'x':
-	      case 'X':
-		_scanLocation++;	// Scan beyond the 0x prefix
-		break;
-	      default:
-		_scanLocation--;	// Scan from the initial digit
-	        break;
-	    }
-	}
-      else
-	{
-	  _scanLocation--;	// Just scan the zero.
-	}
+        _scanLocation++;
+        if (_scanLocation < myLength())
+        {
+            switch (myCharacter(_scanLocation))
+            {
+                case 'x':
+                case 'X':
+                    _scanLocation++;	// Scan beyond the 0x prefix
+                    break;
+                default:
+                    _scanLocation--;	// Scan from the initial digit
+                    break;
+            }
+        }
+        else
+        {
+            _scanLocation--;	// Just scan the zero.
+        }
     }
-  if ([self scanUnsignedLongLong_: &tmp
-                            radix: 16
-                          maximum: UINT_MAX
-                        gotDigits: NO])
+    if ([self scanUnsignedLongLong_: &tmp
+                              radix: 16
+                            maximum: UINT_MAX
+                          gotDigits: NO])
     {
-      *value = (unsigned int)tmp;
-      return YES;
+        *value = (unsigned int)tmp;
+        return YES;
     }
-  _scanLocation = saveScanLocation;
-  return NO;
+    _scanLocation = saveScanLocation;
+    return NO;
 }
 
 /**
@@ -636,76 +609,76 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanLongLong: (long long *)value
 {
-  unsigned long long		num = 0;
-  const unsigned long long	limit = ULLONG_MAX / 10;
-  BOOL				negative = NO;
-  BOOL				overflow = NO;
-  BOOL				got_digits = NO;
-  unsigned int			saveScanLocation = _scanLocation;
-
-  /* Skip whitespace */
-  if (!skipToNextField())
+    unsigned long long		num = 0;
+    const unsigned long long	limit = ULLONG_MAX / 10;
+    BOOL				negative = NO;
+    BOOL				overflow = NO;
+    BOOL				got_digits = NO;
+    unsigned int			saveScanLocation = _scanLocation;
+    
+    /* Skip whitespace */
+    if (!skipToNextField())
     {
-      _scanLocation = saveScanLocation;
-      return NO;
+        _scanLocation = saveScanLocation;
+        return NO;
     }
-
-  /* Check for sign */
-  if (_scanLocation < myLength())
+    
+    /* Check for sign */
+    if (_scanLocation < myLength())
     {
-      switch (myCharacter(_scanLocation))
-	{
-	  case '+':
-	    _scanLocation++;
-	    break;
-	  case '-':
-	    negative = YES;
-	    _scanLocation++;
-	    break;
-	}
+        switch (myCharacter(_scanLocation))
+        {
+            case '+':
+                _scanLocation++;
+                break;
+            case '-':
+                negative = YES;
+                _scanLocation++;
+                break;
+        }
     }
-
+    
     /* Process digits */
-  while (_scanLocation < myLength())
+    while (_scanLocation < myLength())
     {
-      unichar digit = myCharacter(_scanLocation);
-
-      if ((digit < '0') || (digit > '9'))
-	break;
-      if (!overflow) {
-	if (num >= limit)
-	  overflow = YES;
-	else
-	  num = num * 10 + (digit - '0');
-      }
-      _scanLocation++;
-      got_digits = YES;
+        unichar digit = myCharacter(_scanLocation);
+        
+        if ((digit < '0') || (digit > '9'))
+            break;
+        if (!overflow) {
+            if (num >= limit)
+                overflow = YES;
+            else
+                num = num * 10 + (digit - '0');
+        }
+        _scanLocation++;
+        got_digits = YES;
     }
-
+    
     /* Save result */
-  if (!got_digits)
+    if (!got_digits)
     {
-      _scanLocation = saveScanLocation;
-      return NO;
+        _scanLocation = saveScanLocation;
+        return NO;
     }
-  if (value)
+    if (value)
     {
-      if (negative)
-	{
-	  if (overflow || (num > (unsigned long long)LLONG_MIN))
-	    *value = LLONG_MIN;
-	  else
-	    *value = -num;
-	}
-      else
-	{
-	  if (overflow || (num > (unsigned long long)LLONG_MAX))
-	    *value = LLONG_MAX;
-	  else
-	    *value = num;
-	}
+        if (negative)
+        {
+            if (overflow || (num > (unsigned long long)LLONG_MIN))
+                *value = LLONG_MIN;
+            else
+                *value = -num;
+        }
+        else
+        {
+            if (overflow || (num > (unsigned long long)LLONG_MAX))
+                *value = LLONG_MAX;
+            else
+                *value = num;
+        }
     }
-  return YES;
+    return YES;
 }
 
 /**
@@ -721,45 +694,45 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanHexLongLong: (unsigned long long*)value
 {
-  unsigned int saveScanLocation = _scanLocation;
-
-  /* Skip whitespace */
-  if (!skipToNextField())
+    unsigned int saveScanLocation = _scanLocation;
+    
+    /* Skip whitespace */
+    if (!skipToNextField())
     {
-      _scanLocation = saveScanLocation;
-      return NO;
+        _scanLocation = saveScanLocation;
+        return NO;
     }
-
-  if ((_scanLocation < myLength()) && (myCharacter(_scanLocation) == '0'))
+    
+    if ((_scanLocation < myLength()) && (myCharacter(_scanLocation) == '0'))
     {
-      _scanLocation++;
-      if (_scanLocation < myLength())
-       {
-         switch (myCharacter(_scanLocation))
-           {
-             case 'x':
-             case 'X':
-               _scanLocation++;        // Scan beyond the 0x prefix
-               break;
-             default:
-               _scanLocation--;        // Scan from the initial digit
-               break;
-           }
-       }
-      else
-       {
-         _scanLocation--;      // Just scan the zero.
-       }
+        _scanLocation++;
+        if (_scanLocation < myLength())
+        {
+            switch (myCharacter(_scanLocation))
+            {
+                case 'x':
+                case 'X':
+                    _scanLocation++;        // Scan beyond the 0x prefix
+                    break;
+                default:
+                    _scanLocation--;        // Scan from the initial digit
+                    break;
+            }
+        }
+        else
+        {
+            _scanLocation--;      // Just scan the zero.
+        }
     }
-  if ([self scanUnsignedLongLong_: value
-                            radix: 16
-                          maximum: ULLONG_MAX
-                        gotDigits: NO])
+    if ([self scanUnsignedLongLong_: value
+                              radix: 16
+                            maximum: ULLONG_MAX
+                          gotDigits: NO])
     {
-      return YES;
+        return YES;
     }
-  _scanLocation = saveScanLocation;
-  return NO;
+    _scanLocation = saveScanLocation;
+    return NO;
 }
 
 /**
@@ -767,8 +740,8 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanDecimal: (NSDecimal*)value
 {
-  [self notImplemented:_cmd];			/* FIXME */
-  return NO;
+    [self notImplemented:_cmd];			/* FIXME */
+    return NO;
 }
 
 /**
@@ -784,112 +757,112 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanDouble: (double *)value
 {
-  unichar	c = 0;
-  double	num = 0.0;
-  long int	exponent = 0;
-  BOOL		negative = NO;
-  BOOL		got_dot = NO;
-  BOOL		got_digit = NO;
-  unsigned int	saveScanLocation = _scanLocation;
-
-  /* Skip whitespace */
-  if (!skipToNextField())
+    unichar	c = 0;
+    double	num = 0.0;
+    long int	exponent = 0;
+    BOOL		negative = NO;
+    BOOL		got_dot = NO;
+    BOOL		got_digit = NO;
+    unsigned int	saveScanLocation = _scanLocation;
+    
+    /* Skip whitespace */
+    if (!skipToNextField())
     {
-      _scanLocation = saveScanLocation;
-      return NO;
+        _scanLocation = saveScanLocation;
+        return NO;
     }
-
-  /* Check for sign */
-  if (_scanLocation < myLength())
+    
+    /* Check for sign */
+    if (_scanLocation < myLength())
     {
-      switch (myCharacter(_scanLocation))
-	{
-	  case '+':
-	    _scanLocation++;
-	    break;
-	  case '-':
-	    negative = YES;
-	    _scanLocation++;
-	    break;
-	}
+        switch (myCharacter(_scanLocation))
+        {
+            case '+':
+                _scanLocation++;
+                break;
+            case '-':
+                negative = YES;
+                _scanLocation++;
+                break;
+        }
     }
-
+    
     /* Process number */
-  while (_scanLocation < myLength())
+    while (_scanLocation < myLength())
     {
-      c = myCharacter(_scanLocation);
-      if ((c >= '0') && (c <= '9'))
-	{
-	  /* Ensure that the number being accumulated will not overflow. */
-	  if (num >= (DBL_MAX / 10.000000001))
-	    {
-	      ++exponent;
-	    }
-	  else
-	    {
-	      num = (num * 10.0) + (c - '0');
-	      got_digit = YES;
-	    }
-            /* Keep track of the number of digits after the decimal point.
-	       If we just divided by 10 here, we would lose precision. */
-	  if (got_dot)
-	    --exponent;
-        }
-      else if (!got_dot && (c == _decimal))
-	{
-	  /* Note that we have found the decimal point. */
-	  got_dot = YES;
-        }
-      else
-	{
-	  /* Any other character terminates the number. */
-	  break;
-        }
-      _scanLocation++;
-    }
-  if (!got_digit)
-    {
-      _scanLocation = saveScanLocation;
-      return NO;
-    }
-
-  /* Check for trailing exponent */
-  if ((_scanLocation < myLength()) && ((c == 'e') || (c == 'E')))
-    {
-      unsigned int	expScanLocation = _scanLocation;
-      int expval;
-      
-
-      _scanLocation++;
-      if ([self _scanInt: &expval])
-	{
-        /* Check for exponent overflow */
-          if (num)
+        c = myCharacter(_scanLocation);
+        if ((c >= '0') && (c <= '9'))
+        {
+            /* Ensure that the number being accumulated will not overflow. */
+            if (num >= (DBL_MAX / 10.000000001))
             {
-              if ((exponent > 0) && (expval > (LONG_MAX - exponent)))
-                exponent = LONG_MAX;
-              else if ((exponent < 0) && (expval < (LONG_MIN - exponent)))
-                exponent = LONG_MIN;
-              else
-                exponent += expval;
+                ++exponent;
             }
-	}
-      else
-	{
-	  /* Numbers like 1.23eFOO are accepted (as 1.23). */
-	  _scanLocation = expScanLocation;
-	}
+            else
+            {
+                num = (num * 10.0) + (c - '0');
+                got_digit = YES;
+            }
+            /* Keep track of the number of digits after the decimal point.
+             If we just divided by 10 here, we would lose precision. */
+            if (got_dot)
+                --exponent;
+        }
+        else if (!got_dot && (c == _decimal))
+        {
+            /* Note that we have found the decimal point. */
+            got_dot = YES;
+        }
+        else
+        {
+            /* Any other character terminates the number. */
+            break;
+        }
+        _scanLocation++;
     }
-  if (value)
+    if (!got_digit)
     {
-      if (num && exponent)
-	num *= pow(10.0, (double) exponent);
-      if (negative)
-	*value = -num;
-      else
-	*value = num;
+        _scanLocation = saveScanLocation;
+        return NO;
     }
-  return YES;
+    
+    /* Check for trailing exponent */
+    if ((_scanLocation < myLength()) && ((c == 'e') || (c == 'E')))
+    {
+        unsigned int	expScanLocation = _scanLocation;
+        int expval;
+        
+        
+        _scanLocation++;
+        if ([self _scanInt: &expval])
+        {
+            /* Check for exponent overflow */
+            if (num)
+            {
+                if ((exponent > 0) && (expval > (LONG_MAX - exponent)))
+                    exponent = LONG_MAX;
+                else if ((exponent < 0) && (expval < (LONG_MIN - exponent)))
+                    exponent = LONG_MIN;
+                else
+                    exponent += expval;
+            }
+        }
+        else
+        {
+            /* Numbers like 1.23eFOO are accepted (as 1.23). */
+            _scanLocation = expScanLocation;
+        }
+    }
+    if (value)
+    {
+        if (num && exponent)
+            num *= pow(10.0, (double) exponent);
+        if (negative)
+            *value = -num;
+        else
+            *value = num;
+    }
+    return YES;
 }
 
 /**
@@ -905,16 +878,16 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanFloat: (float*)value
 {
-  double num;
-
-  if (value == NULL)
-    return [self scanDouble: NULL];
-  if ([self scanDouble: &num])
+    double num;
+    
+    if (value == NULL)
+        return [self scanDouble: NULL];
+    if ([self scanDouble: &num])
     {
-      *value = num;
-      return YES;
+        *value = num;
+        return YES;
     }
-  return NO;
+    return NO;
 }
 
 /**
@@ -926,55 +899,55 @@ typedef GSString	*ivars;
  * stored in a string returned in this location.
  */
 - (BOOL) scanCharactersFromSet: (NSCharacterSet *)aSet
-		    intoString: (NSString **)value
+                    intoString: (NSString **)value
 {
-  unsigned int	saveScanLocation = _scanLocation;
-
-  if (skipToNextField())
+    unsigned int	saveScanLocation = _scanLocation;
+    
+    if (skipToNextField())
     {
-      unsigned int	start;
-      BOOL		(*memImp)(NSCharacterSet*, SEL, unichar);
-
-      if (aSet == _charactersToBeSkipped)
-	memImp = _skipImp;
-      else
-	memImp = (BOOL (*)(NSCharacterSet*, SEL, unichar))
-	  [aSet methodForSelector: memSel];
-
-      start = _scanLocation;
-      if (_isUnicode)
-	{
-	  while (_scanLocation < myLength())
-	    {
-	      if ((*memImp)(aSet, memSel, myUnicode(_scanLocation)) == NO)
-		break;
-	      _scanLocation++;
-	    }
-	}
-      else
-	{
-	  while (_scanLocation < myLength())
-	    {
-	      if ((*memImp)(aSet, memSel, myChar(_scanLocation)) == NO)
-		break;
-	      _scanLocation++;
-	    }
-	}
-      if (_scanLocation != start)
-	{
-	  if (value != 0)
-	    {
-	      NSRange	range;
-
-	      range.location = start;
-	      range.length = _scanLocation - start;
-	      *value = [_string substringWithRange: range];
-	    }
-	  return YES;
-	}
+        unsigned int	start;
+        BOOL		(*memImp)(NSCharacterSet*, SEL, unichar);
+        
+        if (aSet == _charactersToBeSkipped)
+            memImp = _skipImp;
+        else
+            memImp = (BOOL (*)(NSCharacterSet*, SEL, unichar))
+            [aSet methodForSelector: memSel];
+        
+        start = _scanLocation;
+        if (_isUnicode)
+        {
+            while (_scanLocation < myLength())
+            {
+                if ((*memImp)(aSet, memSel, myUnicode(_scanLocation)) == NO)
+                    break;
+                _scanLocation++;
+            }
+        }
+        else
+        {
+            while (_scanLocation < myLength())
+            {
+                if ((*memImp)(aSet, memSel, myChar(_scanLocation)) == NO)
+                    break;
+                _scanLocation++;
+            }
+        }
+        if (_scanLocation != start)
+        {
+            if (value != 0)
+            {
+                NSRange	range;
+                
+                range.location = start;
+                range.length = _scanLocation - start;
+                *value = [_string substringWithRange: range];
+            }
+            return YES;
+        }
     }
-  _scanLocation = saveScanLocation;
-  return NO;
+    _scanLocation = saveScanLocation;
+    return NO;
 }
 
 /**
@@ -985,55 +958,55 @@ typedef GSString	*ivars;
  * Returns YES if anything is scanned, NO otherwise.
  */
 - (BOOL) scanUpToCharactersFromSet: (NSCharacterSet *)aSet
-		        intoString: (NSString **)value
+                        intoString: (NSString **)value
 {
-  unsigned int	saveScanLocation = _scanLocation;
-  unsigned int	start;
-  BOOL		(*memImp)(NSCharacterSet*, SEL, unichar);
-
-  if (!skipToNextField())
-    return NO;
-
-  if (aSet == _charactersToBeSkipped)
-    memImp = _skipImp;
-  else
-    memImp = (BOOL (*)(NSCharacterSet*, SEL, unichar))
-      [aSet methodForSelector: memSel];
-
-  start = _scanLocation;
-  if (_isUnicode)
+    unsigned int	saveScanLocation = _scanLocation;
+    unsigned int	start;
+    BOOL		(*memImp)(NSCharacterSet*, SEL, unichar);
+    
+    if (!skipToNextField())
+        return NO;
+    
+    if (aSet == _charactersToBeSkipped)
+        memImp = _skipImp;
+    else
+        memImp = (BOOL (*)(NSCharacterSet*, SEL, unichar))
+        [aSet methodForSelector: memSel];
+    
+    start = _scanLocation;
+    if (_isUnicode)
     {
-      while (_scanLocation < myLength())
-	{
-	  if ((*memImp)(aSet, memSel, myUnicode(_scanLocation)) == YES)
-	    break;
-	  _scanLocation++;
-	}
+        while (_scanLocation < myLength())
+        {
+            if ((*memImp)(aSet, memSel, myUnicode(_scanLocation)) == YES)
+                break;
+            _scanLocation++;
+        }
     }
-  else
+    else
     {
-      while (_scanLocation < myLength())
-	{
-	  if ((*memImp)(aSet, memSel, myChar(_scanLocation)) == YES)
-	    break;
-	  _scanLocation++;
-	}
+        while (_scanLocation < myLength())
+        {
+            if ((*memImp)(aSet, memSel, myChar(_scanLocation)) == YES)
+                break;
+            _scanLocation++;
+        }
     }
-
-  if (_scanLocation == start)
+    
+    if (_scanLocation == start)
     {
-      _scanLocation = saveScanLocation;
-      return NO;
+        _scanLocation = saveScanLocation;
+        return NO;
     }
-  if (value)
+    if (value)
     {
-      NSRange	range;
-
-      range.location = start;
-      range.length = _scanLocation - start;
-      *value = [_string substringWithRange: range];
+        NSRange	range;
+        
+        range.location = start;
+        range.length = _scanLocation - start;
+        *value = [_string substringWithRange: range];
     }
-  return YES;
+    return YES;
 }
 
 /**
@@ -1043,29 +1016,29 @@ typedef GSString	*ivars;
  */
 - (BOOL) scanString: (NSString *)string intoString: (NSString **)value
 {
-  NSRange	range;
-  unsigned int	saveScanLocation = _scanLocation;
-
-  if (skipToNextField() == NO)
+    NSRange	range;
+    unsigned int	saveScanLocation = _scanLocation;
+    
+    if (skipToNextField() == NO)
     {
-      return NO;
+        return NO;
     }
-  range.location = _scanLocation;
-  range.length = [string length];
-  if (range.location + range.length > myLength())
-    return NO;
-  range = [_string rangeOfString: string
-			options: _caseSensitive ? 0 : NSCaseInsensitiveSearch
-			  range: range];
-  if (range.length == 0)
+    range.location = _scanLocation;
+    range.length = [string length];
+    if (range.location + range.length > myLength())
+        return NO;
+    range = [_string rangeOfString: string
+                           options: _caseSensitive ? 0 : NSCaseInsensitiveSearch
+                             range: range];
+    if (range.length == 0)
     {
-      _scanLocation = saveScanLocation;
-      return NO;
+        _scanLocation = saveScanLocation;
+        return NO;
     }
-  if (value)
-    *value = [_string substringWithRange: range];
-  _scanLocation += range.length;
-  return YES;
+    if (value)
+        *value = [_string substringWithRange: range];
+    _scanLocation += range.length;
+    return YES;
 }
 
 /**
@@ -1097,32 +1070,32 @@ typedef GSString	*ivars;
  * </example>
  */
 - (BOOL) scanUpToString: (NSString *)string
-	     intoString: (NSString **)value
+             intoString: (NSString **)value
 {
-  NSRange	range;
-  NSRange	found;
-  unsigned int	saveScanLocation = _scanLocation;
-
-  if (skipToNextField() == NO)
+    NSRange	range;
+    NSRange	found;
+    unsigned int	saveScanLocation = _scanLocation;
+    
+    if (skipToNextField() == NO)
     {
-      return NO;
+        return NO;
     }
-  range.location = _scanLocation;
-  range.length = myLength() - _scanLocation;
-  found = [_string rangeOfString: string
-			 options: _caseSensitive ? 0 : NSCaseInsensitiveSearch
-			   range: range];
-  if (found.length)
-    range.length = found.location - _scanLocation;
-  if (range.length == 0)
+    range.location = _scanLocation;
+    range.length = myLength() - _scanLocation;
+    found = [_string rangeOfString: string
+                           options: _caseSensitive ? 0 : NSCaseInsensitiveSearch
+                             range: range];
+    if (found.length)
+        range.length = found.location - _scanLocation;
+    if (range.length == 0)
     {
-      _scanLocation = saveScanLocation;
-      return NO;
+        _scanLocation = saveScanLocation;
+        return NO;
     }
-  if (value)
-    *value = [_string substringWithRange: range];
-  _scanLocation += range.length;
-  return YES;
+    if (value)
+        *value = [_string substringWithRange: range];
+    _scanLocation += range.length;
+    return YES;
 }
 
 /**
@@ -1130,7 +1103,7 @@ typedef GSString	*ivars;
  */
 - (NSString *) string
 {
-  return _string;
+    return _string;
 }
 
 /**
@@ -1140,7 +1113,7 @@ typedef GSString	*ivars;
  */
 - (NSUInteger) scanLocation
 {
-  return _scanLocation;
+    return _scanLocation;
 }
 
 /**
@@ -1151,11 +1124,11 @@ typedef GSString	*ivars;
  */
 - (void) setScanLocation: (NSUInteger)anIndex
 {
-  if (_scanLocation <= myLength())
-    _scanLocation = anIndex;
-  else
-    [NSException raise: NSRangeException
-		format: @"Attempt to set scan location beyond end of string"];
+    if (_scanLocation <= myLength())
+        _scanLocation = anIndex;
+    else
+        [NSException raise: NSRangeException
+                    format: @"Attempt to set scan location beyond end of string"];
 }
 
 /**
@@ -1167,7 +1140,7 @@ typedef GSString	*ivars;
  */
 - (BOOL) caseSensitive
 {
-  return _caseSensitive;
+    return _caseSensitive;
 }
 
 /**
@@ -1180,7 +1153,7 @@ typedef GSString	*ivars;
  */
 - (void) setCaseSensitive: (BOOL)flag
 {
-  _caseSensitive = flag;
+    _caseSensitive = flag;
 }
 
 /**
@@ -1194,7 +1167,7 @@ typedef GSString	*ivars;
  */
 - (NSCharacterSet *) charactersToBeSkipped
 {
-  return _charactersToBeSkipped;
+    return _charactersToBeSkipped;
 }
 
 /**
@@ -1208,8 +1181,8 @@ typedef GSString	*ivars;
  */
 - (void) setCharactersToBeSkipped: (NSCharacterSet *)aSet
 {
-  ASSIGNCOPY(_charactersToBeSkipped, aSet);
-  _skipImp = (BOOL (*)(NSCharacterSet*, SEL, unichar))
+    ASSIGNCOPY(_charactersToBeSkipped, aSet);
+    _skipImp = (BOOL (*)(NSCharacterSet*, SEL, unichar))
     [_charactersToBeSkipped methodForSelector: memSel];
 }
 
@@ -1221,7 +1194,7 @@ typedef GSString	*ivars;
  */
 - (NSDictionary *) locale
 {
-  return _locale;
+    return _locale;
 }
 
 /**
@@ -1230,23 +1203,23 @@ typedef GSString	*ivars;
  */
 - (void) setLocale: (NSDictionary *)localeDictionary
 {
-  ASSIGN(_locale, localeDictionary);
-  /*
-   * Get decimal point character from locale if necessary.
-   */
-  if (_locale == nil)
+    ASSIGN(_locale, localeDictionary);
+    /*
+     * Get decimal point character from locale if necessary.
+     */
+    if (_locale == nil)
     {
-      _decimal = '.';
+        _decimal = '.';
     }
-  else
+    else
     {
-      NSString	*pointString;
-
-      pointString = [_locale objectForKey: NSDecimalSeparator];
-      if ([pointString length] > 0)
-	_decimal = [pointString characterAtIndex: 0];
-      else
-	_decimal = '.';
+        NSString	*pointString;
+        
+        pointString = [_locale objectForKey: NSDecimalSeparator];
+        if ([pointString length] > 0)
+            _decimal = [pointString characterAtIndex: 0];
+        else
+            _decimal = '.';
     }
 }
 
@@ -1255,30 +1228,30 @@ typedef GSString	*ivars;
  */
 - (id) copyWithZone: (NSZone *)zone
 {
-  NSScanner	*n = [[self class] allocWithZone: zone];
-
-  n = [n initWithString: _string];
-  [n setCharactersToBeSkipped: _charactersToBeSkipped];
-  [n setLocale: _locale];
-  [n setScanLocation: _scanLocation];
-  [n setCaseSensitive: _caseSensitive];
-  return n;
+    NSScanner	*n = [[self class] allocWithZone: zone];
+    
+    n = [n initWithString: _string];
+    [n setCharactersToBeSkipped: _charactersToBeSkipped];
+    [n setLocale: _locale];
+    [n setScanLocation: _scanLocation];
+    [n setCaseSensitive: _caseSensitive];
+    return n;
 }
 
 - (BOOL) scanHexDouble: (double *)result
 {
-  return NO;    // FIXME
+    return NO;    // FIXME
 }
 - (BOOL) scanHexFloat: (float *)result
 {
-  return NO;    // FIXME
+    return NO;    // FIXME
 }
 - (BOOL) scanInteger: (NSInteger *)value
 {
 #if GS_SIZEOF_VOIDP == GS_SIZEOF_INT
-  return [self scanInt: (int *)value];
+    return [self scanInt: (int *)value];
 #else
-  return [self scanLongLong: (long long *)value];
+    return [self scanLongLong: (long long *)value];
 #endif
 }
 @end
@@ -1289,69 +1262,69 @@ typedef GSString	*ivars;
 BOOL
 GSScanInt(unichar *buf, unsigned length, int *result)
 {
-  unsigned int num = 0;
-  const unsigned int limit = UINT_MAX / 10;
-  BOOL negative = NO;
-  BOOL overflow = NO;
-  BOOL got_digits = NO;
-  unsigned int pos = 0;
-
-  /* Check for sign */
-  if (pos < length)
+    unsigned int num = 0;
+    const unsigned int limit = UINT_MAX / 10;
+    BOOL negative = NO;
+    BOOL overflow = NO;
+    BOOL got_digits = NO;
+    unsigned int pos = 0;
+    
+    /* Check for sign */
+    if (pos < length)
     {
-      switch (buf[pos])
-	{
-	  case '+':
-	    pos++;
-	    break;
-	  case '-':
-	    negative = YES;
-	    pos++;
-	    break;
-	}
+        switch (buf[pos])
+        {
+            case '+':
+                pos++;
+                break;
+            case '-':
+                negative = YES;
+                pos++;
+                break;
+        }
     }
-
-  /* Process digits */
-  while (pos < length)
+    
+    /* Process digits */
+    while (pos < length)
     {
-      unichar digit = buf[pos];
-
-      if ((digit < '0') || (digit > '9'))
-	break;
-      if (!overflow)
-	{
-	  if (num >= limit)
-	    overflow = YES;
-	  else
-	    num = num * 10 + (digit - '0');
-	}
-      pos++;
-      got_digits = YES;
+        unichar digit = buf[pos];
+        
+        if ((digit < '0') || (digit > '9'))
+            break;
+        if (!overflow)
+        {
+            if (num >= limit)
+                overflow = YES;
+            else
+                num = num * 10 + (digit - '0');
+        }
+        pos++;
+        got_digits = YES;
     }
-
-  /* Save result */
-  if (!got_digits)
+    
+    /* Save result */
+    if (!got_digits)
     {
-      return NO;
+        return NO;
     }
-  if (result)
+    if (result)
     {
-      if (overflow
-	|| (num > (negative ? (NSUInteger)INT_MIN : (NSUInteger)INT_MAX)))
-	*result = negative ? INT_MIN: INT_MAX;
-      else if (negative)
-	*result = -num;
-      else
-	*result = num;
+        if (overflow
+            || (num > (negative ? (NSUInteger)INT_MIN : (NSUInteger)INT_MAX)))
+            *result = negative ? INT_MIN: INT_MAX;
+        else if (negative)
+            *result = -num;
+        else
+            *result = num;
     }
-  return YES;
+    return YES;
 }
 
 /* Table of binary powers of 10 represented by bits in a byte.
  * Used to convert decimal integer exponents to doubles.
  */
 static double powersOf10[] = {
-  1.0e1, 1.0e2, 1.0e4, 1.0e8, 1.0e16, 1.0e32, 1.0e64, 1.0e128, 1.0e256
+    1.0e1, 1.0e2, 1.0e4, 1.0e8, 1.0e16, 1.0e32, 1.0e64, 1.0e128, 1.0e256
 };
 
 /**
@@ -1363,190 +1336,190 @@ static double powersOf10[] = {
 BOOL
 GSScanDouble(unichar *buf, unsigned length, double *result)
 {
-  unichar	c = 0;
-  char          mantissa[20];
-  const char    *ptr;
-  double        *d;
-  double        value;
-  double        e;
-  int	        exponent = 0;
-  BOOL	        negativeMantissa = NO;
-  BOOL		negativeExponent = NO;
-  unsigned	pos = 0;
-  int           mantissaLength;
-  int           dotPos = -1;
-  int           hi = 0;
-  int           lo = 0;
-
-  /* Skip whitespace */
-  while (pos < length && isspace((int)buf[pos]))
+    unichar	c = 0;
+    char          mantissa[20];
+    const char    *ptr;
+    double        *d;
+    double        value;
+    double        e;
+    int	        exponent = 0;
+    BOOL	        negativeMantissa = NO;
+    BOOL		negativeExponent = NO;
+    unsigned	pos = 0;
+    int           mantissaLength;
+    int           dotPos = -1;
+    int           hi = 0;
+    int           lo = 0;
+    
+    /* Skip whitespace */
+    while (pos < length && isspace((int)buf[pos]))
     {
-      pos++;
+        pos++;
     }
-  if (pos >= length)
+    if (pos >= length)
     {
-      return NO;
+        return NO;
     }
-
-  /* Check for sign */
-  switch (buf[pos])
+    
+    /* Check for sign */
+    switch (buf[pos])
     {
-      case '+':
-	pos++;
-	break;
-      case '-':
-	negativeMantissa = YES;
-	pos++;
-	break;
+        case '+':
+            pos++;
+            break;
+        case '-':
+            negativeMantissa = YES;
+            pos++;
+            break;
     }
-  if (pos >= length)
+    if (pos >= length)
     {
-      return NO;
+        return NO;
     }
-
-  /* Scan the mantissa ... at most 18 digits and a decimal point.
-   */
-  for (mantissaLength = 0; pos < length && mantissaLength < 19; pos++)
+    
+    /* Scan the mantissa ... at most 18 digits and a decimal point.
+     */
+    for (mantissaLength = 0; pos < length && mantissaLength < 19; pos++)
     {
-      mantissa[mantissaLength] = c = buf[pos];
-      if (!isdigit(c))
+        mantissa[mantissaLength] = c = buf[pos];
+        if (!isdigit(c))
         {
-          if ('.' != c || dotPos >= 0)
+            if ('.' != c || dotPos >= 0)
             {
-              break;    // End of mantissa
+                break;    // End of mantissa
             }
-          dotPos = mantissaLength;
+            dotPos = mantissaLength;
         }
-      else
-	{
-          mantissaLength++;
-	}
-    }
-  if (0 == mantissaLength)
-    {
-      return NO;        // No mantissa ... not a double
-    }
-  if (mantissaLength > 18)
-    {
-      /* Mantissa too long ... ignore excess.
-       */
-      mantissaLength = 18;
-    }
-  if (dotPos < 0)
-    {
-      dotPos = mantissaLength;
-    }
-  dotPos -= mantissaLength;      // Exponent offset for decimal point
-
-  /* Convert mantissa characters to a double value
-   */
-  for (ptr = mantissa; mantissaLength > 9; mantissaLength -= 1)
-    {
-      c = *ptr;
-      ptr += 1;
-      hi = hi * 10 + (c - '0');
-    }
-  for (; mantissaLength > 0; mantissaLength -= 1)
-    {
-      c = *ptr;
-      ptr += 1;
-      lo = lo * 10 + (c - '0');
-    }
-  value = (1.0e9 * hi) + lo;
-
-  /* Scan the exponent (if any)
-   */
-  if (pos < length && ('E' == (c = buf[pos]) || 'e' == c))
-    {
-      if (++pos >= length)
+        else
         {
-          return NO;    // Missing exponent
+            mantissaLength++;
         }
-      c = buf[pos];
-      if ('-' == c)
+    }
+    if (0 == mantissaLength)
+    {
+        return NO;        // No mantissa ... not a double
+    }
+    if (mantissaLength > 18)
+    {
+        /* Mantissa too long ... ignore excess.
+         */
+        mantissaLength = 18;
+    }
+    if (dotPos < 0)
+    {
+        dotPos = mantissaLength;
+    }
+    dotPos -= mantissaLength;      // Exponent offset for decimal point
+    
+    /* Convert mantissa characters to a double value
+     */
+    for (ptr = mantissa; mantissaLength > 9; mantissaLength -= 1)
+    {
+        c = *ptr;
+        ptr += 1;
+        hi = hi * 10 + (c - '0');
+    }
+    for (; mantissaLength > 0; mantissaLength -= 1)
+    {
+        c = *ptr;
+        ptr += 1;
+        lo = lo * 10 + (c - '0');
+    }
+    value = (1.0e9 * hi) + lo;
+    
+    /* Scan the exponent (if any)
+     */
+    if (pos < length && ('E' == (c = buf[pos]) || 'e' == c))
+    {
+        if (++pos >= length)
         {
-          negativeExponent = YES;
-          if (++pos >= length)
+            return NO;    // Missing exponent
+        }
+        c = buf[pos];
+        if ('-' == c)
+        {
+            negativeExponent = YES;
+            if (++pos >= length)
             {
-              return NO;    // Missing exponent
+                return NO;    // Missing exponent
             }
-          c = buf[pos];
+            c = buf[pos];
         }
-      else if ('+' == c)
+        else if ('+' == c)
         {
-          if (++pos >= length)
+            if (++pos >= length)
             {
-              return NO;    // Missing exponent
+                return NO;    // Missing exponent
             }
-          c = buf[pos];
+            c = buf[pos];
         }
-      while (isdigit(c))
+        while (isdigit(c))
         {
-          exponent = exponent * 10 + (c - '0');
-          if (++pos >= length)
+            exponent = exponent * 10 + (c - '0');
+            if (++pos >= length)
             {
-              break;
+                break;
             }
-          c = buf[pos];
+            c = buf[pos];
         }
     }
-
-  /* Add in the amount to shift the exponent depending on the position
-   * of the decimal point in the mantissa and check the adjusted sign
-   * of the exponent.
-   */
-  if (YES == negativeExponent)
+    
+    /* Add in the amount to shift the exponent depending on the position
+     * of the decimal point in the mantissa and check the adjusted sign
+     * of the exponent.
+     */
+    if (YES == negativeExponent)
     {
-      exponent = dotPos - exponent;
+        exponent = dotPos - exponent;
     }
-  else
+    else
     {
-      exponent = dotPos + exponent;
+        exponent = dotPos + exponent;
     }
-  if (exponent < 0)
+    if (exponent < 0)
     {
-      negativeExponent = YES;
-      exponent = -exponent;
+        negativeExponent = YES;
+        exponent = -exponent;
     }
-  else
+    else
     {
-      negativeExponent = NO;
+        negativeExponent = NO;
     }
-  if (exponent > 511)
+    if (exponent > 511)
     {
-      return NO;        // Maximum exponent exceeded
+        return NO;        // Maximum exponent exceeded
     }
-
-  /* Convert the exponent to a double then apply it to the value from
-   * the mantissa.
-   */
-  e = 1.0;
-  for (d = powersOf10; exponent != 0; exponent >>= 1, d += 1)
+    
+    /* Convert the exponent to a double then apply it to the value from
+     * the mantissa.
+     */
+    e = 1.0;
+    for (d = powersOf10; exponent != 0; exponent >>= 1, d += 1)
     {
-      if (exponent & 1)
+        if (exponent & 1)
         {
-          e *= *d;
+            e *= *d;
         }
     }
-  if (YES == negativeExponent)
+    if (YES == negativeExponent)
     {
-      value /= e;
+        value /= e;
     }
-  else
+    else
     {
-      value *= e;
+        value *= e;
     }
-
-  if (0 != result)
+    
+    if (0 != result)
     {
-      if (YES == negativeMantissa)
+        if (YES == negativeMantissa)
         {
-          *result = -value;
+            *result = -value;
         }
-      else
+        else
         {
-          *result = value;
+            *result = value;
         }
     }
-  return YES;
+    return YES;
 }
