@@ -1,0 +1,665 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		064A9E68226B0C12009AAB1A /* NSBox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSBox.m; sourceTree = "<group>"; };
+		064A9E69226B0C12009AAB1A /* NSOutlineView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSOutlineView.m; sourceTree = "<group>"; };
+		064A9E6A226B0C12009AAB1A /* externs.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = externs.m; sourceTree = "<group>"; };
+		064A9E6B226B0C12009AAB1A /* NSToolbarItemGroup.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSToolbarItemGroup.m; sourceTree = "<group>"; };
+		064A9E6C226B0C12009AAB1A /* NSBitmapImageRep+PNM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBitmapImageRep+PNM.m"; sourceTree = "<group>"; };
+		064A9E6D226B0C12009AAB1A /* NSCachedImageRep.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSCachedImageRep.m; sourceTree = "<group>"; };
+		064A9E6E226B0C12009AAB1A /* NSVisualEffectView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSVisualEffectView.m; sourceTree = "<group>"; };
+		064A9E6F226B0C12009AAB1A /* NSBitmapImageRep+PNG.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBitmapImageRep+PNG.m"; sourceTree = "<group>"; };
+		064A9E70226B0C12009AAB1A /* GSThemePrintPanels.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSThemePrintPanels.m; sourceTree = "<group>"; };
+		064A9E71226B0C12009AAB1A /* NSButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSButton.m; sourceTree = "<group>"; };
+		064A9E72226B0C12009AAB1A /* NSProgressIndicator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSProgressIndicator.m; sourceTree = "<group>"; };
+		064A9E73226B0C12009AAB1A /* NSTableHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTableHeaderView.m; sourceTree = "<group>"; };
+		064A9E74226B0C12009AAB1A /* GSCharacterPanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSCharacterPanel.m; sourceTree = "<group>"; };
+		064A9E75226B0C12009AAB1A /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
+		064A9E76226B0C12009AAB1A /* NSSplitView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSplitView.m; sourceTree = "<group>"; };
+		064A9E77226B0C12009AAB1A /* GSXibLoading.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSXibLoading.m; sourceTree = "<group>"; };
+		064A9E78226B0C12009AAB1A /* NSTextTable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTextTable.m; sourceTree = "<group>"; };
+		064A9E79226B0C12009AAB1A /* NSGlyphGenerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSGlyphGenerator.m; sourceTree = "<group>"; };
+		064A9E7A226B0C12009AAB1A /* NSSearchFieldCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSearchFieldCell.m; sourceTree = "<group>"; };
+		064A9E7B226B0C12009AAB1A /* GSVbox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSVbox.m; sourceTree = "<group>"; };
+		064A9E7C226B0C12009AAB1A /* GSEPSPrintOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSEPSPrintOperation.m; sourceTree = "<group>"; };
+		064A9E7D226B0C12009AAB1A /* GSToolbarCustomizationPalette.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSToolbarCustomizationPalette.h; sourceTree = "<group>"; };
+		064A9E7E226B0C12009AAB1A /* NSFontPanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSFontPanel.m; sourceTree = "<group>"; };
+		064A9E7F226B0C12009AAB1A /* NSMovie.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSMovie.m; sourceTree = "<group>"; };
+		064A9E80226B0C12009AAB1A /* GSToolTips.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSToolTips.h; sourceTree = "<group>"; };
+		064A9E81226B0C12009AAB1A /* NSCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSCollectionView.m; sourceTree = "<group>"; };
+		064A9E82226B0C12009AAB1A /* GSThemePanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSThemePanel.m; sourceTree = "<group>"; };
+		064A9E83226B0C12009AAB1A /* NSSearchField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSearchField.m; sourceTree = "<group>"; };
+		064A9E84226B0C12009AAB1A /* NSScrollView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSScrollView.m; sourceTree = "<group>"; };
+		064A9E85226B0C12009AAB1A /* NSFont.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSFont.m; sourceTree = "<group>"; };
+		064A9E86226B0C12009AAB1A /* NSButtonImageSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSButtonImageSource.h; sourceTree = "<group>"; };
+		064A9E87226B0C12009AAB1A /* NSTextBlock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTextBlock.m; sourceTree = "<group>"; };
+		064A9E88226B0C12009AAB1A /* NSShadow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSShadow.m; sourceTree = "<group>"; };
+		064A9E89226B0C12009AAB1A /* NSArrayController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSArrayController.m; sourceTree = "<group>"; };
+		064A9E8A226B0C12009AAB1A /* NSToolbarFrameworkPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSToolbarFrameworkPrivate.h; sourceTree = "<group>"; };
+		064A9E8B226B0C12009AAB1A /* NSComboBoxCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSComboBoxCell.m; sourceTree = "<group>"; };
+		064A9E8C226B0C12009AAB1A /* NSOpenGLView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSOpenGLView.m; sourceTree = "<group>"; };
+		064A9E8D226B0C12009AAB1A /* NSStatusBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSStatusBar.m; sourceTree = "<group>"; };
+		064A9E8E226B0C12009AAB1A /* NSImageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSImageCell.m; sourceTree = "<group>"; };
+		064A9E8F226B0C12009AAB1A /* NSNibConnector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSNibConnector.m; sourceTree = "<group>"; };
+		064A9E90226B0C12009AAB1A /* NSStepperCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSStepperCell.m; sourceTree = "<group>"; };
+		064A9E91226B0C12009AAB1A /* GSInfoPanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSInfoPanel.m; sourceTree = "<group>"; };
+		064A9E92226B0C12009AAB1A /* GSNibLoading.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSNibLoading.m; sourceTree = "<group>"; };
+		064A9E93226B0C12009AAB1A /* NSImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSImageView.m; sourceTree = "<group>"; };
+		064A9E94226B0C12009AAB1A /* NSControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSControl.m; sourceTree = "<group>"; };
+		064A9E95226B0C12009AAB1A /* GSThemeTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSThemeTools.m; sourceTree = "<group>"; };
+		064A9E96226B0C12009AAB1A /* NSMenuItemCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSMenuItemCell.m; sourceTree = "<group>"; };
+		064A9E97226B0C12009AAB1A /* GSNibLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSNibLoader.m; sourceTree = "<group>"; };
+		064A9E98226B0C12009AAB1A /* GSXibElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSXibElement.m; sourceTree = "<group>"; };
+		064A9E99226B0C12009AAB1A /* NSColorPanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSColorPanel.m; sourceTree = "<group>"; };
+		064A9E9A226B0C12009AAB1A /* Functions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Functions.m; sourceTree = "<group>"; };
+		064A9E9B226B0C12009AAB1A /* NSLevelIndicator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSLevelIndicator.m; sourceTree = "<group>"; };
+		064A9E9C226B0C12009AAB1A /* GSFastEnumeration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSFastEnumeration.h; sourceTree = "<group>"; };
+		064A9E9D226B0C12009AAB1A /* GSTypesetter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSTypesetter.m; sourceTree = "<group>"; };
+		064A9E9E226B0C12009AAB1A /* Source.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Source.xcodeproj; sourceTree = "<group>"; };
+		064A9EA1226B0C12009AAB1A /* NSBitmapImageRep+ICNS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+ICNS.h"; sourceTree = "<group>"; };
+		064A9EA2226B0C12009AAB1A /* linking.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = linking.m; sourceTree = "<group>"; };
+		064A9EA3226B0C12009AAB1A /* NSBitmapImageRep+JPEG.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+JPEG.h"; sourceTree = "<group>"; };
+		064A9EA4226B0C12009AAB1A /* GSKeyBindingAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSKeyBindingAction.m; sourceTree = "<group>"; };
+		064A9EA5226B0C12009AAB1A /* GSSlideView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSSlideView.m; sourceTree = "<group>"; };
+		064A9EA6226B0C12009AAB1A /* GSModelLoaderFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSModelLoaderFactory.m; sourceTree = "<group>"; };
+		064A9EA7226B0C12009AAB1A /* NSTextList.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTextList.m; sourceTree = "<group>"; };
+		064A9EA8226B0C12009AAB1A /* NSRulerMarker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSRulerMarker.m; sourceTree = "<group>"; };
+		064A9EA9226B0C12009AAB1A /* NSBitmapImageRep+GIF.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBitmapImageRep+GIF.m"; sourceTree = "<group>"; };
+		064A9EAA226B0C12009AAB1A /* NSTableHeaderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTableHeaderCell.m; sourceTree = "<group>"; };
+		064A9EAB226B0C12009AAB1A /* NSPrinter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSPrinter.m; sourceTree = "<group>"; };
+		064A9EAC226B0C12009AAB1A /* GSXibParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSXibParser.m; sourceTree = "<group>"; };
+		064A9EAD226B0C12009AAB1A /* NSTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTableView.m; sourceTree = "<group>"; };
+		064A9EAE226B0C12009AAB1A /* NSBundleAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSBundleAdditions.m; sourceTree = "<group>"; };
+		064A9EAF226B0C12009AAB1A /* GSThemeInspector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSThemeInspector.m; sourceTree = "<group>"; };
+		064A9EB0226B0C12009AAB1A /* NSColor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSColor.m; sourceTree = "<group>"; };
+		064A9EB1226B0C12009AAB1A /* GSHelpManagerPanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSHelpManagerPanel.m; sourceTree = "<group>"; };
+		064A9EB2226B0C12009AAB1A /* NSSlider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSlider.m; sourceTree = "<group>"; };
+		064A9EB3226B0C12009AAB1A /* NSTokenField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTokenField.m; sourceTree = "<group>"; };
+		064A9EB4226B0C12009AAB1A /* GSKeyBindingTable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSKeyBindingTable.m; sourceTree = "<group>"; };
+		064A9EB5226B0C12009AAB1A /* GSStandardWindowDecorationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSStandardWindowDecorationView.m; sourceTree = "<group>"; };
+		064A9EB6226B0C12009AAB1A /* NSLevelIndicatorCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSLevelIndicatorCell.m; sourceTree = "<group>"; };
+		064A9EB7226B0C12009AAB1A /* NSDrawer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSDrawer.m; sourceTree = "<group>"; };
+		064A9EB8226B0C12009AAB1A /* GSGuiPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSGuiPrivate.h; sourceTree = "<group>"; };
+		064A9EB9226B0C12009AAB1A /* win32-entry.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "win32-entry.c"; sourceTree = "<group>"; };
+		064A9EBA226B0C12009AAB1A /* NSAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSAnimation.m; sourceTree = "<group>"; };
+		064A9EBB226B0C12009AAB1A /* NSCollectionViewItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSCollectionViewItem.m; sourceTree = "<group>"; };
+		064A9EBC226B0C12009AAB1A /* GSTrackingRect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSTrackingRect.m; sourceTree = "<group>"; };
+		064A9EBD226B0C12009AAB1A /* NSTextTableBlock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTextTableBlock.m; sourceTree = "<group>"; };
+		064A9EBE226B0C12009AAB1A /* NSTextView_actions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTextView_actions.m; sourceTree = "<group>"; };
+		064A9EBF226B0C12009AAB1A /* GSPrinting.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSPrinting.m; sourceTree = "<group>"; };
+		064A9EC0226B0C12009AAB1A /* GSXibObjectContainer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSXibObjectContainer.m; sourceTree = "<group>"; };
+		064A9EC1226B0C12009AAB1A /* GSIconManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSIconManager.m; sourceTree = "<group>"; };
+		064A9EC2226B0C12009AAB1A /* GSGModelLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSGModelLoader.m; sourceTree = "<group>"; };
+		064A9EC3226B0C12009AAB1A /* GSThemeMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSThemeMenu.m; sourceTree = "<group>"; };
+		064A9EC4226B0C12009AAB1A /* NSFontDescriptor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSFontDescriptor.m; sourceTree = "<group>"; };
+		064A9EC5226B0C12009AAB1A /* GSThemeOpenSavePanels.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSThemeOpenSavePanels.m; sourceTree = "<group>"; };
+		064A9EC6226B0C12009AAB1A /* NSWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSWindowController.m; sourceTree = "<group>"; };
+		064A9EC7226B0C12009AAB1A /* NSSegmentedCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSegmentedCell.m; sourceTree = "<group>"; };
+		064A9EC8226B0C12009AAB1A /* NSSound.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSound.m; sourceTree = "<group>"; };
+		064A9EC9226B0C12009AAB1A /* GSTextFinder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSTextFinder.m; sourceTree = "<group>"; };
+		064A9ECA226B0C12009AAB1A /* GSGormLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSGormLoader.m; sourceTree = "<group>"; };
+		064A9ECB226B0C12009AAB1A /* GSXibKeyedUnarchiver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSXibKeyedUnarchiver.m; sourceTree = "<group>"; };
+		064A9ECC226B0C12009AAB1A /* NSTreeController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTreeController.m; sourceTree = "<group>"; };
+		064A9ECD226B0C12009AAB1A /* NSScroller.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSScroller.m; sourceTree = "<group>"; };
+		064A9ECE226B0C12009AAB1A /* GSTheme.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSTheme.m; sourceTree = "<group>"; };
+		064A9ECF226B0C12009AAB1A /* NSColorList.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSColorList.m; sourceTree = "<group>"; };
+		064A9ED0226B0C12009AAB1A /* NSFontManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSFontManager.m; sourceTree = "<group>"; };
+		064A9ED1226B0C12009AAB1A /* GSTextStorage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSTextStorage.h; sourceTree = "<group>"; };
+		064A9ED2226B0C12009AAB1A /* NSTextAttachment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTextAttachment.m; sourceTree = "<group>"; };
+		064A9ED3226B0C12009AAB1A /* GSThemeDrawing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSThemeDrawing.m; sourceTree = "<group>"; };
+		064A9ED4226B0C12009AAB1A /* GSHbox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSHbox.m; sourceTree = "<group>"; };
+		064A9ED5226B0C12009AAB1A /* NSMovieView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSMovieView.m; sourceTree = "<group>"; };
+		064A9ED6226B0C12009AAB1A /* NSEPSImageRep.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSEPSImageRep.m; sourceTree = "<group>"; };
+		064A9ED7226B0C12009AAB1A /* GSAutocompleteWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSAutocompleteWindow.h; sourceTree = "<group>"; };
+		064A9ED8226B0C12009AAB1A /* NSEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSEvent.m; sourceTree = "<group>"; };
+		064A9ED9226B0C12009AAB1A /* NSBrowserCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSBrowserCell.m; sourceTree = "<group>"; };
+		064A9EDA226B0C12009AAB1A /* NSKeyValueBinding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueBinding.m; sourceTree = "<group>"; };
+		064A9EDB226B0C12009AAB1A /* NSGestureRecognizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSGestureRecognizer.m; sourceTree = "<group>"; };
+		064A9EDC226B0C12009AAB1A /* NSScreen.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSScreen.m; sourceTree = "<group>"; };
+		064A9EDD226B0C12009AAB1A /* NSComboBox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSComboBox.m; sourceTree = "<group>"; };
+		064A9EDE226B0C12009AAB1A /* nsimage-tiff.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "nsimage-tiff.h"; sourceTree = "<group>"; };
+		064A9EDF226B0C12009AAB1A /* GSAnimator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSAnimator.m; sourceTree = "<group>"; };
+		064A9EE0226B0C12009AAB1A /* NSStringDrawing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSStringDrawing.m; sourceTree = "<group>"; };
+		064A9EE1226B0C12009AAB1A /* GNUmakefile.postamble */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile.postamble; sourceTree = "<group>"; };
+		064A9EE2226B0C12009AAB1A /* NSPrintOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSPrintOperation.m; sourceTree = "<group>"; };
+		064A9EE3226B0C12009AAB1A /* NSGradient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSGradient.m; sourceTree = "<group>"; };
+		064A9EE4226B0C12009AAB1A /* NSMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSMenu.m; sourceTree = "<group>"; };
+		064A9EE5226B0C12009AAB1A /* NSRunningApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSRunningApplication.m; sourceTree = "<group>"; };
+		064A9EE6226B0C12009AAB1A /* NSPrintPanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSPrintPanel.m; sourceTree = "<group>"; };
+		064A9EE7226B0C12009AAB1A /* NSClipView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSClipView.m; sourceTree = "<group>"; };
+		064A9EE8226B0C12009AAB1A /* NSPopUpButtonCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSPopUpButtonCell.m; sourceTree = "<group>"; };
+		064A9EE9226B0C12009AAB1A /* NSTextFieldCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTextFieldCell.m; sourceTree = "<group>"; };
+		064A9EEA226B0C12009AAB1A /* GSDragView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSDragView.m; sourceTree = "<group>"; };
+		064A9EEB226B0C12009AAB1A /* NSButtonImageSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSButtonImageSource.m; sourceTree = "<group>"; };
+		064A9EEC226B0C12009AAB1A /* NSTextStorage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTextStorage.m; sourceTree = "<group>"; };
+		064A9EED226B0C12009AAB1A /* NSStepper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSStepper.m; sourceTree = "<group>"; };
+		064A9EEE226B0C12009AAB1A /* NSParagraphStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSParagraphStyle.m; sourceTree = "<group>"; };
+		064A9EEF226B0C12009AAB1A /* GSToolTips.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSToolTips.m; sourceTree = "<group>"; };
+		064A9EF0226B0C12009AAB1A /* NSHelpManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSHelpManager.m; sourceTree = "<group>"; };
+		064A9EF1226B0C12009AAB1A /* GSToolbarCustomizationPalette.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSToolbarCustomizationPalette.m; sourceTree = "<group>"; };
+		064A9EF2226B0C12009AAB1A /* NSNib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSNib.m; sourceTree = "<group>"; };
+		064A9EF3226B0C12009AAB1A /* NSTrackingArea.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTrackingArea.m; sourceTree = "<group>"; };
+		064A9EF4226B0C12009AAB1A /* NSLayoutManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSLayoutManager.m; sourceTree = "<group>"; };
+		064A9EF5226B0C12009AAB1A /* NSTabView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTabView.m; sourceTree = "<group>"; };
+		064A9EF6226B0C12009AAB1A /* NSColorSpace.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSColorSpace.m; sourceTree = "<group>"; };
+		064A9EF7226B0C12009AAB1A /* DocMakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = DocMakefile; sourceTree = "<group>"; };
+		064A9EF8226B0C12009AAB1A /* NSAccessibility.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSAccessibility.m; sourceTree = "<group>"; };
+		064A9EF9226B0C12009AAB1A /* NSInterfaceStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSInterfaceStyle.m; sourceTree = "<group>"; };
+		064A9EFA226B0C12009AAB1A /* NSAttributedString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSAttributedString.m; sourceTree = "<group>"; };
+		064A9EFB226B0C12009AAB1A /* NSTreeNode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTreeNode.m; sourceTree = "<group>"; };
+		064A9EFC226B0C12009AAB1A /* NSTextContainer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTextContainer.m; sourceTree = "<group>"; };
+		064A9EFD226B0C12009AAB1A /* libgnustep-gui.def */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libgnustep-gui.def"; sourceTree = "<group>"; };
+		064A9EFE226B0C12009AAB1A /* NSCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSCell.m; sourceTree = "<group>"; };
+		064A9EFF226B0C12009AAB1A /* NSOpenGLPixelFormat.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSOpenGLPixelFormat.m; sourceTree = "<group>"; };
+		064A9F00226B0C12009AAB1A /* NSBitmapImageRep+PNG.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+PNG.h"; sourceTree = "<group>"; };
+		064A9F01226B0C12009AAB1A /* NSDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSDocument.m; sourceTree = "<group>"; };
+		064A9F02226B0C12009AAB1A /* CompatibilityHeaders.make */ = {isa = PBXFileReference; lastKnownFileType = text; path = CompatibilityHeaders.make; sourceTree = "<group>"; };
+		064A9F03226B0C12009AAB1A /* win32-def.top */ = {isa = PBXFileReference; lastKnownFileType = text; path = "win32-def.top"; sourceTree = "<group>"; };
+		064A9F04226B0C12009AAB1A /* NSAnimationContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSAnimationContext.m; sourceTree = "<group>"; };
+		064A9F05226B0C12009AAB1A /* GSThemeWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSThemeWindow.m; sourceTree = "<group>"; };
+		064A9F06226B0C12009AAB1A /* NSNibAXRelationshipConnector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSNibAXRelationshipConnector.m; sourceTree = "<group>"; };
+		064A9F07226B0C12009AAB1A /* NSBitmapImageRep+PNM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+PNM.h"; sourceTree = "<group>"; };
+		064A9F08226B0C12009AAB1A /* NSDataLinkPanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSDataLinkPanel.m; sourceTree = "<group>"; };
+		064A9F09226B0C12009AAB1A /* NSBitmapImageRepPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSBitmapImageRepPrivate.h; sourceTree = "<group>"; };
+		064A9F0A226B0C12009AAB1A /* NSFileWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSFileWrapper.m; sourceTree = "<group>"; };
+		064A9F0B226B0C12009AAB1A /* NSNibBindingConnector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSNibBindingConnector.m; sourceTree = "<group>"; };
+		064A9F0C226B0C12009AAB1A /* GSToolbarView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSToolbarView.m; sourceTree = "<group>"; };
+		064A9F0D226B0C12009AAB1A /* tiff.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tiff.m; sourceTree = "<group>"; };
+		064A9F0E226B0C12009AAB1A /* GSPDFPrintOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSPDFPrintOperation.m; sourceTree = "<group>"; };
+		064A9F0F226B0C12009AAB1A /* NSTabViewItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTabViewItem.m; sourceTree = "<group>"; };
+		064A9F10226B0C12009AAB1A /* GSImageMagickImageRep.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSImageMagickImageRep.m; sourceTree = "<group>"; };
+		064A9F11226B0C12009AAB1A /* NSView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSView.m; sourceTree = "<group>"; };
+		064A9F12226B0C12009AAB1A /* NSSpeechSynthesizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSpeechSynthesizer.m; sourceTree = "<group>"; };
+		064A9F13226B0C12009AAB1A /* NSPageLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSPageLayout.m; sourceTree = "<group>"; };
+		064A9F14226B0C12009AAB1A /* NSSegmentedControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSegmentedControl.m; sourceTree = "<group>"; };
+		064A9F15226B0C12009AAB1A /* NSController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSController.m; sourceTree = "<group>"; };
+		064A9F16226B0C12009AAB1A /* NSColorWell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSColorWell.m; sourceTree = "<group>"; };
+		064A9F17226B0C12009AAB1A /* GSThemePrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSThemePrivate.h; sourceTree = "<group>"; };
+		064A9F18226B0C12009AAB1A /* NSAlert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSAlert.m; sourceTree = "<group>"; };
+		064A9F19226B0C12009AAB1A /* NSBitmapImageRep+GIF.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+GIF.h"; sourceTree = "<group>"; };
+		064A9F1A226B0C12009AAB1A /* NSImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSImage.m; sourceTree = "<group>"; };
+		064A9F1B226B0C12009AAB1A /* NSResponder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSResponder.m; sourceTree = "<group>"; };
+		064A9F1C226B0C12009AAB1A /* NSApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSApplication.m; sourceTree = "<group>"; };
+		064A9F1D226B0C12009AAB1A /* GSKeyBindingAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSKeyBindingAction.h; sourceTree = "<group>"; };
+		064A9F1E226B0C12009AAB1A /* NSBezierPath.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSBezierPath.m; sourceTree = "<group>"; };
+		064A9F1F226B0C12009AAB1A /* NSBitmapImageRep+JPEG.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBitmapImageRep+JPEG.m"; sourceTree = "<group>"; };
+		064A9F20226B0C12009AAB1A /* NSBitmapImageRep+ICNS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBitmapImageRep+ICNS.m"; sourceTree = "<group>"; };
+		064A9F21226B0C12009AAB1A /* NSDataLink.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSDataLink.m; sourceTree = "<group>"; };
+		064A9F22226B0C12009AAB1A /* GSSlideView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSSlideView.h; sourceTree = "<group>"; };
+		064A9F23226B0C12009AAB1A /* NSSliderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSliderCell.m; sourceTree = "<group>"; };
+		064A9F24226B0C12009AAB1A /* NSNibAXAttributeConnector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSNibAXAttributeConnector.m; sourceTree = "<group>"; };
+		064A9F25226B0C12009AAB1A /* NSTokenFieldCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTokenFieldCell.m; sourceTree = "<group>"; };
+		064A9F26226B0C12009AAB1A /* NSObjectController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSObjectController.m; sourceTree = "<group>"; };
+		064A9F27226B0C12009AAB1A /* NSInputManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSInputManager.m; sourceTree = "<group>"; };
+		064A9F28226B0C12009AAB1A /* NSRulerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSRulerView.m; sourceTree = "<group>"; };
+		064A9F29226B0C12009AAB1A /* NSBrowser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSBrowser.m; sourceTree = "<group>"; };
+		064A9F2A226B0C12009AAB1A /* NSSelection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSelection.m; sourceTree = "<group>"; };
+		064A9F2B226B0C12009AAB1A /* NSPasteboard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSPasteboard.m; sourceTree = "<group>"; };
+		064A9F2C226B0C12009AAB1A /* NSPopUpButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSPopUpButton.m; sourceTree = "<group>"; };
+		064A9F2D226B0C12009AAB1A /* GSHorizontalTypesetter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSHorizontalTypesetter.m; sourceTree = "<group>"; };
+		064A9F2E226B0C12009AAB1A /* NSFormCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSFormCell.m; sourceTree = "<group>"; };
+		064A9F2F226B0C12009AAB1A /* GSGormLoading.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSGormLoading.m; sourceTree = "<group>"; };
+		064A9F30226B0C12009AAB1A /* NSMenuItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSMenuItem.m; sourceTree = "<group>"; };
+		064A9F31226B0C12009AAB1A /* NSTableColumn.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTableColumn.m; sourceTree = "<group>"; };
+		064A9F32226B0C12009AAB1A /* GSTextStorage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSTextStorage.m; sourceTree = "<group>"; };
+		064A9F33226B0C12009AAB1A /* NSPanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSPanel.m; sourceTree = "<group>"; };
+		064A9F34226B0C12009AAB1A /* NSDataLinkManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSDataLinkManager.m; sourceTree = "<group>"; };
+		064A9F35226B0C12009AAB1A /* GSTextFinder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSTextFinder.h; sourceTree = "<group>"; };
+		064A9F36226B0C12009AAB1A /* NSStatusItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSStatusItem.m; sourceTree = "<group>"; };
+		064A9F37226B0C12009AAB1A /* GSServicesManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSServicesManager.m; sourceTree = "<group>"; };
+		064A9F38226B0C12009AAB1A /* GSDisplayServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSDisplayServer.m; sourceTree = "<group>"; };
+		064A9F39226B0C12009AAB1A /* NSUserDefaultsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSUserDefaultsController.m; sourceTree = "<group>"; };
+		064A9F3A226B0C12009AAB1A /* NSImageRep.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSImageRep.m; sourceTree = "<group>"; };
+		064A9F3B226B0C12009AAB1A /* NSWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSWindow.m; sourceTree = "<group>"; };
+		064A9F3C226B0C12009AAB1A /* GSIconManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSIconManager.h; sourceTree = "<group>"; };
+		064A9F3D226B0C12009AAB1A /* NSMatrix.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSMatrix.m; sourceTree = "<group>"; };
+		064A9F3E226B0C12009AAB1A /* NSTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTextView.m; sourceTree = "<group>"; };
+		064A9F3F226B0C12009AAB1A /* NSWorkspace.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSWorkspace.m; sourceTree = "<group>"; };
+		064A9F40226B0C12009AAB1A /* NSHelpPanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSHelpPanel.m; sourceTree = "<group>"; };
+		064A9F41226B0C12009AAB1A /* NSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSViewController.m; sourceTree = "<group>"; };
+		064A9F42226B0C12009AAB1A /* GSLayoutManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSLayoutManager.m; sourceTree = "<group>"; };
+		064A9F43226B0C12009AAB1A /* NSCursor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSCursor.m; sourceTree = "<group>"; };
+		064A9F44226B0C12009AAB1A /* NSOpenPanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSOpenPanel.m; sourceTree = "<group>"; };
+		064A9F45226B0C12009AAB1A /* NSToolbarItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSToolbarItem.m; sourceTree = "<group>"; };
+		064A9F46226B0C12009AAB1A /* GSFontInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSFontInfo.m; sourceTree = "<group>"; };
+		064A9F47226B0C12009AAB1A /* GSMemoryPanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSMemoryPanel.m; sourceTree = "<group>"; };
+		064A9F48226B0C12009AAB1A /* NSCustomImageRep.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSCustomImageRep.m; sourceTree = "<group>"; };
+		064A9F49226B0C12009AAB1A /* NSInputServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSInputServer.m; sourceTree = "<group>"; };
+		064A9F4A226B0C12009AAB1A /* NSSecureTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSecureTextField.m; sourceTree = "<group>"; };
+		064A9F4B226B0C12009AAB1A /* NSSharingService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSharingService.m; sourceTree = "<group>"; };
+		064A9F4C226B0C12009AAB1A /* GSHelpAttachment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSHelpAttachment.m; sourceTree = "<group>"; };
+		064A9F4D226B0C12009AAB1A /* GSTitleView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSTitleView.m; sourceTree = "<group>"; };
+		064A9F4E226B0C12009AAB1A /* GSKeyBindingTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSKeyBindingTable.h; sourceTree = "<group>"; };
+		064A9F4F226B0C12009AAB1A /* NSForm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSForm.m; sourceTree = "<group>"; };
+		064A9F50226B0C12009AAB1A /* NSGraphicsContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSGraphicsContext.m; sourceTree = "<group>"; };
+		064A9F51226B0C12009AAB1A /* NSViewPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSViewPrivate.h; sourceTree = "<group>"; };
+		064A9F52226B0C12009AAB1A /* GNUmakefile.preamble */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile.preamble; sourceTree = "<group>"; };
+		064A9F53226B0C12009AAB1A /* NSButtonCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSButtonCell.m; sourceTree = "<group>"; };
+		064A9F54226B0C12009AAB1A /* GSGhostscriptImageRep.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSGhostscriptImageRep.m; sourceTree = "<group>"; };
+		064A9F55226B0C12009AAB1A /* NSTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTextField.m; sourceTree = "<group>"; };
+		064A9F56226B0C12009AAB1A /* GSXibLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSXibLoader.m; sourceTree = "<group>"; };
+		064A9F57226B0C12009AAB1A /* NSPrintInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSPrintInfo.m; sourceTree = "<group>"; };
+		064A9F58226B0C12009AAB1A /* .cvsignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
+		064A9F59226B0C12009AAB1A /* NSDocumentFrameworkPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSDocumentFrameworkPrivate.h; sourceTree = "<group>"; };
+		064A9F5A226B0C12009AAB1A /* NSTextAlternatives.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSTextAlternatives.m; sourceTree = "<group>"; };
+		064A9F5B226B0C12009AAB1A /* NSActionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSActionCell.m; sourceTree = "<group>"; };
+		064A9F5C226B0C12009AAB1A /* GSWindowDecorationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSWindowDecorationView.m; sourceTree = "<group>"; };
+		064A9F5D226B0C12009AAB1A /* GSBindingHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSBindingHelpers.h; sourceTree = "<group>"; };
+		064A9F5E226B0C12009AAB1A /* GSPrintOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSPrintOperation.m; sourceTree = "<group>"; };
+		064A9F5F226B0C12009AAB1A /* NSAffineTransform.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSAffineTransform.m; sourceTree = "<group>"; };
+		064A9F60226B0C12009AAB1A /* NSDocumentController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSDocumentController.m; sourceTree = "<group>"; };
+		064A9F61226B0C12009AAB1A /* NSToolbar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSToolbar.m; sourceTree = "<group>"; };
+		064A9F62226B0C12009AAB1A /* NSPopover.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSPopover.m; sourceTree = "<group>"; };
+		064A9F63226B0C12009AAB1A /* GSTable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSTable.m; sourceTree = "<group>"; };
+		064A9F64226B0C12009AAB1A /* NSSpellChecker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSpellChecker.m; sourceTree = "<group>"; };
+		064A9F65226B0C12009AAB1A /* NSPasteboardItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSPasteboardItem.m; sourceTree = "<group>"; };
+		064A9F66226B0C12009AAB1A /* GSAutocompleteWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSAutocompleteWindow.m; sourceTree = "<group>"; };
+		064A9F67226B0C12009AAB1A /* NSBitmapImageRep.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSBitmapImageRep.m; sourceTree = "<group>"; };
+		064A9F68226B0C12009AAB1A /* NSSavePanel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSavePanel.m; sourceTree = "<group>"; };
+		064A9F69226B0C12009AAB1A /* NSOpenGLContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSOpenGLContext.m; sourceTree = "<group>"; };
+		064A9F6A226B0C12009AAB1A /* NSText.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSText.m; sourceTree = "<group>"; };
+		064A9F6B226B0C12009AAB1A /* NSColorPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSColorPicker.m; sourceTree = "<group>"; };
+		064A9F6C226B0C12009AAB1A /* NSMenuView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSMenuView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		064A9E62226B0C12009AAB1A = {
+			isa = PBXGroup;
+			children = (
+				064A9E68226B0C12009AAB1A /* NSBox.m */,
+				064A9E69226B0C12009AAB1A /* NSOutlineView.m */,
+				064A9E6A226B0C12009AAB1A /* externs.m */,
+				064A9E6B226B0C12009AAB1A /* NSToolbarItemGroup.m */,
+				064A9E6C226B0C12009AAB1A /* NSBitmapImageRep+PNM.m */,
+				064A9E6D226B0C12009AAB1A /* NSCachedImageRep.m */,
+				064A9E6E226B0C12009AAB1A /* NSVisualEffectView.m */,
+				064A9E6F226B0C12009AAB1A /* NSBitmapImageRep+PNG.m */,
+				064A9E70226B0C12009AAB1A /* GSThemePrintPanels.m */,
+				064A9E71226B0C12009AAB1A /* NSButton.m */,
+				064A9E72226B0C12009AAB1A /* NSProgressIndicator.m */,
+				064A9E73226B0C12009AAB1A /* NSTableHeaderView.m */,
+				064A9E74226B0C12009AAB1A /* GSCharacterPanel.m */,
+				064A9E75226B0C12009AAB1A /* GNUmakefile */,
+				064A9E76226B0C12009AAB1A /* NSSplitView.m */,
+				064A9E77226B0C12009AAB1A /* GSXibLoading.m */,
+				064A9E78226B0C12009AAB1A /* NSTextTable.m */,
+				064A9E79226B0C12009AAB1A /* NSGlyphGenerator.m */,
+				064A9E7A226B0C12009AAB1A /* NSSearchFieldCell.m */,
+				064A9E7B226B0C12009AAB1A /* GSVbox.m */,
+				064A9E7C226B0C12009AAB1A /* GSEPSPrintOperation.m */,
+				064A9E7D226B0C12009AAB1A /* GSToolbarCustomizationPalette.h */,
+				064A9E7E226B0C12009AAB1A /* NSFontPanel.m */,
+				064A9E7F226B0C12009AAB1A /* NSMovie.m */,
+				064A9E80226B0C12009AAB1A /* GSToolTips.h */,
+				064A9E81226B0C12009AAB1A /* NSCollectionView.m */,
+				064A9E82226B0C12009AAB1A /* GSThemePanel.m */,
+				064A9E83226B0C12009AAB1A /* NSSearchField.m */,
+				064A9E84226B0C12009AAB1A /* NSScrollView.m */,
+				064A9E85226B0C12009AAB1A /* NSFont.m */,
+				064A9E86226B0C12009AAB1A /* NSButtonImageSource.h */,
+				064A9E87226B0C12009AAB1A /* NSTextBlock.m */,
+				064A9E88226B0C12009AAB1A /* NSShadow.m */,
+				064A9E89226B0C12009AAB1A /* NSArrayController.m */,
+				064A9E8A226B0C12009AAB1A /* NSToolbarFrameworkPrivate.h */,
+				064A9E8B226B0C12009AAB1A /* NSComboBoxCell.m */,
+				064A9E8C226B0C12009AAB1A /* NSOpenGLView.m */,
+				064A9E8D226B0C12009AAB1A /* NSStatusBar.m */,
+				064A9E8E226B0C12009AAB1A /* NSImageCell.m */,
+				064A9E8F226B0C12009AAB1A /* NSNibConnector.m */,
+				064A9E90226B0C12009AAB1A /* NSStepperCell.m */,
+				064A9E91226B0C12009AAB1A /* GSInfoPanel.m */,
+				064A9E92226B0C12009AAB1A /* GSNibLoading.m */,
+				064A9E93226B0C12009AAB1A /* NSImageView.m */,
+				064A9E94226B0C12009AAB1A /* NSControl.m */,
+				064A9E95226B0C12009AAB1A /* GSThemeTools.m */,
+				064A9E96226B0C12009AAB1A /* NSMenuItemCell.m */,
+				064A9E97226B0C12009AAB1A /* GSNibLoader.m */,
+				064A9E98226B0C12009AAB1A /* GSXibElement.m */,
+				064A9E99226B0C12009AAB1A /* NSColorPanel.m */,
+				064A9E9A226B0C12009AAB1A /* Functions.m */,
+				064A9E9B226B0C12009AAB1A /* NSLevelIndicator.m */,
+				064A9E9C226B0C12009AAB1A /* GSFastEnumeration.h */,
+				064A9E9D226B0C12009AAB1A /* GSTypesetter.m */,
+				064A9E9E226B0C12009AAB1A /* Source.xcodeproj */,
+				064A9EA1226B0C12009AAB1A /* NSBitmapImageRep+ICNS.h */,
+				064A9EA2226B0C12009AAB1A /* linking.m */,
+				064A9EA3226B0C12009AAB1A /* NSBitmapImageRep+JPEG.h */,
+				064A9EA4226B0C12009AAB1A /* GSKeyBindingAction.m */,
+				064A9EA5226B0C12009AAB1A /* GSSlideView.m */,
+				064A9EA6226B0C12009AAB1A /* GSModelLoaderFactory.m */,
+				064A9EA7226B0C12009AAB1A /* NSTextList.m */,
+				064A9EA8226B0C12009AAB1A /* NSRulerMarker.m */,
+				064A9EA9226B0C12009AAB1A /* NSBitmapImageRep+GIF.m */,
+				064A9EAA226B0C12009AAB1A /* NSTableHeaderCell.m */,
+				064A9EAB226B0C12009AAB1A /* NSPrinter.m */,
+				064A9EAC226B0C12009AAB1A /* GSXibParser.m */,
+				064A9EAD226B0C12009AAB1A /* NSTableView.m */,
+				064A9EAE226B0C12009AAB1A /* NSBundleAdditions.m */,
+				064A9EAF226B0C12009AAB1A /* GSThemeInspector.m */,
+				064A9EB0226B0C12009AAB1A /* NSColor.m */,
+				064A9EB1226B0C12009AAB1A /* GSHelpManagerPanel.m */,
+				064A9EB2226B0C12009AAB1A /* NSSlider.m */,
+				064A9EB3226B0C12009AAB1A /* NSTokenField.m */,
+				064A9EB4226B0C12009AAB1A /* GSKeyBindingTable.m */,
+				064A9EB5226B0C12009AAB1A /* GSStandardWindowDecorationView.m */,
+				064A9EB6226B0C12009AAB1A /* NSLevelIndicatorCell.m */,
+				064A9EB7226B0C12009AAB1A /* NSDrawer.m */,
+				064A9EB8226B0C12009AAB1A /* GSGuiPrivate.h */,
+				064A9EB9226B0C12009AAB1A /* win32-entry.c */,
+				064A9EBA226B0C12009AAB1A /* NSAnimation.m */,
+				064A9EBB226B0C12009AAB1A /* NSCollectionViewItem.m */,
+				064A9EBC226B0C12009AAB1A /* GSTrackingRect.m */,
+				064A9EBD226B0C12009AAB1A /* NSTextTableBlock.m */,
+				064A9EBE226B0C12009AAB1A /* NSTextView_actions.m */,
+				064A9EBF226B0C12009AAB1A /* GSPrinting.m */,
+				064A9EC0226B0C12009AAB1A /* GSXibObjectContainer.m */,
+				064A9EC1226B0C12009AAB1A /* GSIconManager.m */,
+				064A9EC2226B0C12009AAB1A /* GSGModelLoader.m */,
+				064A9EC3226B0C12009AAB1A /* GSThemeMenu.m */,
+				064A9EC4226B0C12009AAB1A /* NSFontDescriptor.m */,
+				064A9EC5226B0C12009AAB1A /* GSThemeOpenSavePanels.m */,
+				064A9EC6226B0C12009AAB1A /* NSWindowController.m */,
+				064A9EC7226B0C12009AAB1A /* NSSegmentedCell.m */,
+				064A9EC8226B0C12009AAB1A /* NSSound.m */,
+				064A9EC9226B0C12009AAB1A /* GSTextFinder.m */,
+				064A9ECA226B0C12009AAB1A /* GSGormLoader.m */,
+				064A9ECB226B0C12009AAB1A /* GSXibKeyedUnarchiver.m */,
+				064A9ECC226B0C12009AAB1A /* NSTreeController.m */,
+				064A9ECD226B0C12009AAB1A /* NSScroller.m */,
+				064A9ECE226B0C12009AAB1A /* GSTheme.m */,
+				064A9ECF226B0C12009AAB1A /* NSColorList.m */,
+				064A9ED0226B0C12009AAB1A /* NSFontManager.m */,
+				064A9ED1226B0C12009AAB1A /* GSTextStorage.h */,
+				064A9ED2226B0C12009AAB1A /* NSTextAttachment.m */,
+				064A9ED3226B0C12009AAB1A /* GSThemeDrawing.m */,
+				064A9ED4226B0C12009AAB1A /* GSHbox.m */,
+				064A9ED5226B0C12009AAB1A /* NSMovieView.m */,
+				064A9ED6226B0C12009AAB1A /* NSEPSImageRep.m */,
+				064A9ED7226B0C12009AAB1A /* GSAutocompleteWindow.h */,
+				064A9ED8226B0C12009AAB1A /* NSEvent.m */,
+				064A9ED9226B0C12009AAB1A /* NSBrowserCell.m */,
+				064A9EDA226B0C12009AAB1A /* NSKeyValueBinding.m */,
+				064A9EDB226B0C12009AAB1A /* NSGestureRecognizer.m */,
+				064A9EDC226B0C12009AAB1A /* NSScreen.m */,
+				064A9EDD226B0C12009AAB1A /* NSComboBox.m */,
+				064A9EDE226B0C12009AAB1A /* nsimage-tiff.h */,
+				064A9EDF226B0C12009AAB1A /* GSAnimator.m */,
+				064A9EE0226B0C12009AAB1A /* NSStringDrawing.m */,
+				064A9EE1226B0C12009AAB1A /* GNUmakefile.postamble */,
+				064A9EE2226B0C12009AAB1A /* NSPrintOperation.m */,
+				064A9EE3226B0C12009AAB1A /* NSGradient.m */,
+				064A9EE4226B0C12009AAB1A /* NSMenu.m */,
+				064A9EE5226B0C12009AAB1A /* NSRunningApplication.m */,
+				064A9EE6226B0C12009AAB1A /* NSPrintPanel.m */,
+				064A9EE7226B0C12009AAB1A /* NSClipView.m */,
+				064A9EE8226B0C12009AAB1A /* NSPopUpButtonCell.m */,
+				064A9EE9226B0C12009AAB1A /* NSTextFieldCell.m */,
+				064A9EEA226B0C12009AAB1A /* GSDragView.m */,
+				064A9EEB226B0C12009AAB1A /* NSButtonImageSource.m */,
+				064A9EEC226B0C12009AAB1A /* NSTextStorage.m */,
+				064A9EED226B0C12009AAB1A /* NSStepper.m */,
+				064A9EEE226B0C12009AAB1A /* NSParagraphStyle.m */,
+				064A9EEF226B0C12009AAB1A /* GSToolTips.m */,
+				064A9EF0226B0C12009AAB1A /* NSHelpManager.m */,
+				064A9EF1226B0C12009AAB1A /* GSToolbarCustomizationPalette.m */,
+				064A9EF2226B0C12009AAB1A /* NSNib.m */,
+				064A9EF3226B0C12009AAB1A /* NSTrackingArea.m */,
+				064A9EF4226B0C12009AAB1A /* NSLayoutManager.m */,
+				064A9EF5226B0C12009AAB1A /* NSTabView.m */,
+				064A9EF6226B0C12009AAB1A /* NSColorSpace.m */,
+				064A9EF7226B0C12009AAB1A /* DocMakefile */,
+				064A9EF8226B0C12009AAB1A /* NSAccessibility.m */,
+				064A9EF9226B0C12009AAB1A /* NSInterfaceStyle.m */,
+				064A9EFA226B0C12009AAB1A /* NSAttributedString.m */,
+				064A9EFB226B0C12009AAB1A /* NSTreeNode.m */,
+				064A9EFC226B0C12009AAB1A /* NSTextContainer.m */,
+				064A9EFD226B0C12009AAB1A /* libgnustep-gui.def */,
+				064A9EFE226B0C12009AAB1A /* NSCell.m */,
+				064A9EFF226B0C12009AAB1A /* NSOpenGLPixelFormat.m */,
+				064A9F00226B0C12009AAB1A /* NSBitmapImageRep+PNG.h */,
+				064A9F01226B0C12009AAB1A /* NSDocument.m */,
+				064A9F02226B0C12009AAB1A /* CompatibilityHeaders.make */,
+				064A9F03226B0C12009AAB1A /* win32-def.top */,
+				064A9F04226B0C12009AAB1A /* NSAnimationContext.m */,
+				064A9F05226B0C12009AAB1A /* GSThemeWindow.m */,
+				064A9F06226B0C12009AAB1A /* NSNibAXRelationshipConnector.m */,
+				064A9F07226B0C12009AAB1A /* NSBitmapImageRep+PNM.h */,
+				064A9F08226B0C12009AAB1A /* NSDataLinkPanel.m */,
+				064A9F09226B0C12009AAB1A /* NSBitmapImageRepPrivate.h */,
+				064A9F0A226B0C12009AAB1A /* NSFileWrapper.m */,
+				064A9F0B226B0C12009AAB1A /* NSNibBindingConnector.m */,
+				064A9F0C226B0C12009AAB1A /* GSToolbarView.m */,
+				064A9F0D226B0C12009AAB1A /* tiff.m */,
+				064A9F0E226B0C12009AAB1A /* GSPDFPrintOperation.m */,
+				064A9F0F226B0C12009AAB1A /* NSTabViewItem.m */,
+				064A9F10226B0C12009AAB1A /* GSImageMagickImageRep.m */,
+				064A9F11226B0C12009AAB1A /* NSView.m */,
+				064A9F12226B0C12009AAB1A /* NSSpeechSynthesizer.m */,
+				064A9F13226B0C12009AAB1A /* NSPageLayout.m */,
+				064A9F14226B0C12009AAB1A /* NSSegmentedControl.m */,
+				064A9F15226B0C12009AAB1A /* NSController.m */,
+				064A9F16226B0C12009AAB1A /* NSColorWell.m */,
+				064A9F17226B0C12009AAB1A /* GSThemePrivate.h */,
+				064A9F18226B0C12009AAB1A /* NSAlert.m */,
+				064A9F19226B0C12009AAB1A /* NSBitmapImageRep+GIF.h */,
+				064A9F1A226B0C12009AAB1A /* NSImage.m */,
+				064A9F1B226B0C12009AAB1A /* NSResponder.m */,
+				064A9F1C226B0C12009AAB1A /* NSApplication.m */,
+				064A9F1D226B0C12009AAB1A /* GSKeyBindingAction.h */,
+				064A9F1E226B0C12009AAB1A /* NSBezierPath.m */,
+				064A9F1F226B0C12009AAB1A /* NSBitmapImageRep+JPEG.m */,
+				064A9F20226B0C12009AAB1A /* NSBitmapImageRep+ICNS.m */,
+				064A9F21226B0C12009AAB1A /* NSDataLink.m */,
+				064A9F22226B0C12009AAB1A /* GSSlideView.h */,
+				064A9F23226B0C12009AAB1A /* NSSliderCell.m */,
+				064A9F24226B0C12009AAB1A /* NSNibAXAttributeConnector.m */,
+				064A9F25226B0C12009AAB1A /* NSTokenFieldCell.m */,
+				064A9F26226B0C12009AAB1A /* NSObjectController.m */,
+				064A9F27226B0C12009AAB1A /* NSInputManager.m */,
+				064A9F28226B0C12009AAB1A /* NSRulerView.m */,
+				064A9F29226B0C12009AAB1A /* NSBrowser.m */,
+				064A9F2A226B0C12009AAB1A /* NSSelection.m */,
+				064A9F2B226B0C12009AAB1A /* NSPasteboard.m */,
+				064A9F2C226B0C12009AAB1A /* NSPopUpButton.m */,
+				064A9F2D226B0C12009AAB1A /* GSHorizontalTypesetter.m */,
+				064A9F2E226B0C12009AAB1A /* NSFormCell.m */,
+				064A9F2F226B0C12009AAB1A /* GSGormLoading.m */,
+				064A9F30226B0C12009AAB1A /* NSMenuItem.m */,
+				064A9F31226B0C12009AAB1A /* NSTableColumn.m */,
+				064A9F32226B0C12009AAB1A /* GSTextStorage.m */,
+				064A9F33226B0C12009AAB1A /* NSPanel.m */,
+				064A9F34226B0C12009AAB1A /* NSDataLinkManager.m */,
+				064A9F35226B0C12009AAB1A /* GSTextFinder.h */,
+				064A9F36226B0C12009AAB1A /* NSStatusItem.m */,
+				064A9F37226B0C12009AAB1A /* GSServicesManager.m */,
+				064A9F38226B0C12009AAB1A /* GSDisplayServer.m */,
+				064A9F39226B0C12009AAB1A /* NSUserDefaultsController.m */,
+				064A9F3A226B0C12009AAB1A /* NSImageRep.m */,
+				064A9F3B226B0C12009AAB1A /* NSWindow.m */,
+				064A9F3C226B0C12009AAB1A /* GSIconManager.h */,
+				064A9F3D226B0C12009AAB1A /* NSMatrix.m */,
+				064A9F3E226B0C12009AAB1A /* NSTextView.m */,
+				064A9F3F226B0C12009AAB1A /* NSWorkspace.m */,
+				064A9F40226B0C12009AAB1A /* NSHelpPanel.m */,
+				064A9F41226B0C12009AAB1A /* NSViewController.m */,
+				064A9F42226B0C12009AAB1A /* GSLayoutManager.m */,
+				064A9F43226B0C12009AAB1A /* NSCursor.m */,
+				064A9F44226B0C12009AAB1A /* NSOpenPanel.m */,
+				064A9F45226B0C12009AAB1A /* NSToolbarItem.m */,
+				064A9F46226B0C12009AAB1A /* GSFontInfo.m */,
+				064A9F47226B0C12009AAB1A /* GSMemoryPanel.m */,
+				064A9F48226B0C12009AAB1A /* NSCustomImageRep.m */,
+				064A9F49226B0C12009AAB1A /* NSInputServer.m */,
+				064A9F4A226B0C12009AAB1A /* NSSecureTextField.m */,
+				064A9F4B226B0C12009AAB1A /* NSSharingService.m */,
+				064A9F4C226B0C12009AAB1A /* GSHelpAttachment.m */,
+				064A9F4D226B0C12009AAB1A /* GSTitleView.m */,
+				064A9F4E226B0C12009AAB1A /* GSKeyBindingTable.h */,
+				064A9F4F226B0C12009AAB1A /* NSForm.m */,
+				064A9F50226B0C12009AAB1A /* NSGraphicsContext.m */,
+				064A9F51226B0C12009AAB1A /* NSViewPrivate.h */,
+				064A9F52226B0C12009AAB1A /* GNUmakefile.preamble */,
+				064A9F53226B0C12009AAB1A /* NSButtonCell.m */,
+				064A9F54226B0C12009AAB1A /* GSGhostscriptImageRep.m */,
+				064A9F55226B0C12009AAB1A /* NSTextField.m */,
+				064A9F56226B0C12009AAB1A /* GSXibLoader.m */,
+				064A9F57226B0C12009AAB1A /* NSPrintInfo.m */,
+				064A9F58226B0C12009AAB1A /* .cvsignore */,
+				064A9F59226B0C12009AAB1A /* NSDocumentFrameworkPrivate.h */,
+				064A9F5A226B0C12009AAB1A /* NSTextAlternatives.m */,
+				064A9F5B226B0C12009AAB1A /* NSActionCell.m */,
+				064A9F5C226B0C12009AAB1A /* GSWindowDecorationView.m */,
+				064A9F5D226B0C12009AAB1A /* GSBindingHelpers.h */,
+				064A9F5E226B0C12009AAB1A /* GSPrintOperation.m */,
+				064A9F5F226B0C12009AAB1A /* NSAffineTransform.m */,
+				064A9F60226B0C12009AAB1A /* NSDocumentController.m */,
+				064A9F61226B0C12009AAB1A /* NSToolbar.m */,
+				064A9F62226B0C12009AAB1A /* NSPopover.m */,
+				064A9F63226B0C12009AAB1A /* GSTable.m */,
+				064A9F64226B0C12009AAB1A /* NSSpellChecker.m */,
+				064A9F65226B0C12009AAB1A /* NSPasteboardItem.m */,
+				064A9F66226B0C12009AAB1A /* GSAutocompleteWindow.m */,
+				064A9F67226B0C12009AAB1A /* NSBitmapImageRep.m */,
+				064A9F68226B0C12009AAB1A /* NSSavePanel.m */,
+				064A9F69226B0C12009AAB1A /* NSOpenGLContext.m */,
+				064A9F6A226B0C12009AAB1A /* NSText.m */,
+				064A9F6B226B0C12009AAB1A /* NSColorPicker.m */,
+				064A9F6C226B0C12009AAB1A /* NSMenuView.m */,
+			);
+			sourceTree = "<group>";
+		};
+		064A9E9F226B0C12009AAB1A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		064A9E67226B0C12009AAB1A /* Source */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 064A9F6E226B0C12009AAB1A /* Build configuration list for PBXLegacyTarget "Source" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/justinlau/JanstiRepo/Code/gnustep-gui-0.27.0/Source";
+			dependencies = (
+			);
+			name = Source;
+			passBuildSettingsInEnvironment = 1;
+			productName = Source;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		064A9E63226B0C12009AAB1A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 064A9E66226B0C12009AAB1A /* Build configuration list for PBXProject "Source 2" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 064A9E62226B0C12009AAB1A;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 064A9E9F226B0C12009AAB1A /* Products */;
+					ProjectRef = 064A9E9E226B0C12009AAB1A /* Source.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				064A9E67226B0C12009AAB1A /* Source */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		064A9E64226B0C12009AAB1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		064A9E65226B0C12009AAB1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		064A9F6F226B0C12009AAB1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Source;
+			};
+			name = Debug;
+		};
+		064A9F70226B0C12009AAB1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Source;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		064A9E66226B0C12009AAB1A /* Build configuration list for PBXProject "Source 2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				064A9E64226B0C12009AAB1A /* Debug */,
+				064A9E65226B0C12009AAB1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		064A9F6E226B0C12009AAB1A /* Build configuration list for PBXLegacyTarget "Source" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				064A9F6F226B0C12009AAB1A /* Debug */,
+				064A9F70226B0C12009AAB1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 064A9E63226B0C12009AAB1A /* Project object */;
+}

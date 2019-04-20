@@ -1,0 +1,798 @@
+2019-01-06 Ivan Vucica <ivan@vucica.net>
+
+	* ANNOUNCE
+	* Documentation/ReleaseNotes.gsdoc
+	* Documentation/news.texi
+	* NEWS
+	* Version:
+	Updating documentation for the 0.26.2 release.
+
+2019-01-06 Ivan Vucica <ivan@vucica.net>
+
+	* configure: Regenerated with autoconf 2.69.
+
+2019-01-05 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Documentation/news.texi: Fill in some details for pending release.
+	* Source/NSTableView.m (encodeWithCoder:,initWithCoder:): Use
+	unsigned int instead of unsigned long for flags.
+
+2018-11-19 Riccardo Mottola <rm@gnu.org>
+
+	* Headers/Additions/GNUstepGUI/config.h.in
+	* configure
+	* configure.ac
+	New getmntent structure checks.
+
+	* Source/NSWorkspace.m (getFileSystemInfoForPath)
+	On linux, try to read /sys/block/xxx/removable information to get
+	information about removable volumes, while continue honoring
+	preferences. This can be a little inefficient if called for each volume.
+	Furthermore in mountedLocalVolumePaths, enhance skipping reserved mount
+	names by using filesystem type also if getmmntent is available.
+
+2018-09-14 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSGraphicsContext.m
+	(+graphicsContextWithGraphicsPort:flipped:): Rewrite using an init method.
+
+2018-08-05    <wolfgang.lux@gmail.com>
+
+	* Source/NSApplication.m (-setApplicationIconImage:): Avoid
+	calling iconSize method on a null pointer.
+
+2018-08-03 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSApplication.m (-applicationIconImage): Lazy load the
+	app icon.
+
+2018-07-27 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSView.m (-beginPageInRect:atPlacement): Remove check for
+	empty rect. This will now use the placement translation all the time.
+
+2018-07-14 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSPrinter.m (-addPPDKeyword:withScanner:withPPDPath:):
+	Protect against value being nil.
+	* Source/NSPageLayout.m (-tableView:objectValueForTableColumn:row:):
+	With standard papers, calculate margins taking into account factorValue.
+	* Source/NSPrintInfo.m (-initWithDictionary): Fix border calculation.
+	Idea by Yavor Doganov <yavor@gnu.org>
+
+2018-07-08 Ivan Vucica <ivan@vucica.net>
+
+	* Source/NSOpenGLView.m:
+	Fix docstring for -[NSOpenGLView initWithFrame:pixelFormat:].
+	There is no such thing as +[NSOpenGLContext defaultPixelFormat].
+
+2018-06-11 Riccardo Mottola <rm@gnu.org>
+
+	* Headers/Additions/GNUstepGUI/config.h.in
+	* configure
+	* configure.ac
+	* Source/NSBitmapImageRep+JPEG.m
+	Check for floorf() and provide simple replacement.
+
+2018-06-04 Stjepan Brkić <stjepanbrkicc@gmail.com>
+
+	* Headers/AppKit/NSView.h: Add 'id _coreAnimationData' variable.
+	The variable will point to another class instance that will
+	contain data necessary data for future implementation of methods
+	regarding CA layers.
+
+2018-03-30 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSDocument.m (-revertToContentsOfURL:ofType:error:): Add
+	override calls for deprecated methods.
+
+2018-03-29  Graham Lee  <graham@iamleeg.com>
+
+	* Source/NSWindowController.m: gsdoc
+
+2018-03-11 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Headers/AppKit/NSSliderCell.h,
+	* Source/NSSliderCell.m: Rewrite this class to store and access
+	the value directly. This brings the behaviour closer to Apple's
+	horrible implementation.
+
+2018-02-27 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSSegmentedCell.m (-startTrackingAt:inView:,
+	-continueTracking:at:inView:): Add this methods to enable
+	tracking for this class.
+	Patch suggested by Josh Freeman <pikopixel@twilightedge.com>.
+
+2018-02-27 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Headers/Additions/GNUstepGUI/GSTheme.h,
+	* Source/GSThemeDrawing.m: Correct int/NSInteger mismatch detected
+	by Josh Freeman <pikopixel@twilightedge.com>.
+
+2018-02-25 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Headers/AppKit/NSKeyValueBinding.h,
+	* Source/NSKeyValueBinding.m: Add helper function NSIsControllerMarker.
+
+2018-02-09 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/GSDisplayServer.m: Store the current display server in a
+	static variable and not in a thread variable.
+	Idea by Yavor Doganov  <yavor@gnu.org>
+
+2018-02-05 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/GSHorizontalTypesetter.m (-layoutLineNewParagraph:): Make
+	sure nominal gets always set.
+
+2018-02-04 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSAlert.m (NSBeginAlertSheet): Move closing the sheet from
+	here...
+	* Source/NSApplication.m (-beginSheet:...:contextInfo:): ...to here.
+
+2018-01-29 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Tools/speech/GNUmakefile,
+	* configure.ac: Give up on dynamic library detecion.
+	* configure: Regnerate
+
+2018-01-29 Fred Kiefer <FredKiefer@gmx.de>
+
+	* configure.ac: Correct last commit.
+	* configure: Regnerate
+
+2018-01-28 Fred Kiefer <FredKiefer@gmx.de>
+
+	* configure.ac: Improve checks for flite.
+	* configure: Regnerate
+	* Tools/speech/GNUmakefile: Use variables for flite libraries.
+	* Tools/speech/FliteSpeechEngine.m: Switch to use register_cmu_us_kal16.
+
+2018-01-24 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Printing/GSCUPS/GSCUPSPrintOperation.m:
+	Restore -allocWithZone: methods as this is needed to override
+	behaviour in superclass.
+
+2018-01-23 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSApplication.m (-targetForAction:to:from:): Warn about
+	the target not responding to the action.
+	* Source/NSSavePanel.m (_initWithoutGModel): Don't set the OK
+	button as the target of the browser. Use helper method instead.
+
+2018-01-22 Gregory John Casamento <greg.casamento@gmail.com>
+
+	* Tools/speech/GSSpeechSynthesizer.m: Correct compilation
+	error in for loop in connectionDied: method.
+
+2018-01-21 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Tools/speech/GNUmakefile: Remove specific OBJC flags.
+	Fixes bug #46939.
+
+2018-01-14 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSMenu.m (-update): Restructure by splitting up into two
+	helper methods.
+	* Source/NSMenu.m (-performKeyEquivalent:): Use new helper method
+	to only autoenable menu item with matching key equivalent.
+
+2018-01-14 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/GSLayoutManager.m
+	(-glyphRangeForCharacterRange:actualCharacterRange:): Try to
+	handle attachments at the end of the file more graceful.
+
+2018-01-07 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSView.m (-_rebuildCoordinates): Use simple path only
+	when both window and superview are nil. Set the visibleRect in
+	this case to bounds.
+
+2018-01-07 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSApplication.m (-targetForAction:to:from:): Return nil
+	if the target is non-nil but does not respond to the action.
+
+2018-01-01 Ivan Vucica <ivan@vucica.net>
+
+	* ANNOUNCE
+	* Documentation/ReleaseNotes.gsdoc
+	* Documentation/news.texi
+	* NEWS
+	* Version:
+	Updating documentation for the 0.26.2 release.
+
+2018-01-01 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Printing/GSCUPS/GSCUPSPrinter.m,
+	* Printing/GSCUPS/GSCUPSPrintInfo.m:
+	Restore -allocWithZone: methods as this is needed to override
+	behaviour in superclass.
+
+2018-01-01  Yavor Doganov <yavor@gnu.org>
+
+	* Documentation/make_services.1: Typo fix.
+
+2018-01-01 Fred Kiefer <FredKiefer@gmx.de>
+
+	* config/pkg.m4: Update to serial 12.
+	* Headers/Additions/GNUstepGUI/config.h.in,
+	* configure: Regnerate
+	Fixes bug #52779.
+	Patch by Yavor Doganov <yavor@gnu.org>
+
+2017-12-31 Ivan Vucica <ivan@vucica.net>
+
+	* Documentation/announce.texi
+	* Documentation/news.texi
+	* Documentation/ReleaseNotes.gsdoc
+	* ANNOUNCE
+	* NEWS
+	* Version: Cut a new release of gnustep-gui which requires
+	gnustep-base 1.25.1.
+
+2017-12-28 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Tests/gui/NSBezierPath/windingCountAtPoint.m
+	* Tests/gui/NSCell/basic.m
+	* Tests/gui/NSEvent/delta.m
+	* Tests/gui/NSPasteboard/lazy_copy.m
+	* Tests/gui/NSSavePanel/setDelegate_reload.m
+	* Tests/gui/NSSliderCell/minMax.m
+	Remove comipler warnings in test code.
+	* Tests/gui/TextSystem/deallocation.m
+	Move auto release pool inside of the test set to get the test
+	working again.
+
+2017-12-28 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Printing/GSCUPS/GSCUPSPrinter.m,
+	* Printing/GSCUPS/GSCUPSPrintInfo.m,
+	* Printing/GSCUPS/GSCUPSPrintOperation.m: Undefine __BLOCKS__
+	before the cups.h import as some versions of this header file
+	expect unconditional that libdispatch is present when that
+	variable is defined.
+	Remove duplicated -allocWithZone: methods.
+
+2017-12-27 Richard Frith-Macdonald <rfm@gnu.org>
+
+	* Source/NSGraphicsContext.m:  When using clang and the gnustep
+	runtime (the nonfragile API), it seems the compiler calculates the
+	offset of the _gcontext instance variable in the NSThread object
+	incorrectly, causing a crash.
+	Until we know why and can fix it, we need a workaround.  The simplest
+	one would be not to use the instance variable at all, but on the
+	assumption that the instance variable was added to address a real
+ 	performance issue it seems better to use the runtime to access the
+	instance variable.
+
+2017-12-10 Ivan Vucica <ivan@vucica.net>
+
+	* NEWS: Regenerate NEWS file for the 0.26.0 release.
+
+2017-12-07 Ivan Vucica <ivan@vucica.net>
+
+	* Documentation/announce.texi: Use GNUSTEP-GUI-VERSION even when
+	talking about -back.
+	* Documentation/ReleaseNotes.gsdoc:
+	* Documentation/news.texi: Update with notable changes for 0.26.0.
+	* ANNOUNCE: Regenerated the ANNOUNCE file from announce.texi and
+	news.texi.
+
+2017-12-07 Ivan Vucica <ivan@vucica.net>
+
+	* Source/NSImage.m (-initWithCoder:): Clean up and reduce amount
+	of releases of self.
+
+2017-12-03 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Headers/AppKit/NSScreen.h
+	* Source/NSScreen.m (-backingScaleFactor): Add new method. Change
+	return value of -userSpaceScaleFactor to CGFloat.
+	* Source/NSWindow.m (-backingScaleFactor): Return 1 instead of 0.
+
+2017-10-28  Graham Lee  <graham@iamleeg.com>
+
+	* Source/NSImage.m (initWithCoder:): restore image name when
+	loading an archived image with a name that can't be resolved at
+	load time. Fixes Gorm bug #46317.
+
+2017-10-05 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSMenu.m (-isPartlyOffScreen): Protect agains window or
+	screen being nil.
+	* Source/NSWindow.m (-_screenForFrame:): Try not to return nil, as
+	other code uses the result without checks.
+
+2017-10-01 Ivan Vucica <ivan@vucica.net>
+
+	* Documentation/ReleaseNotes.gsdoc:
+	Backfill 0.24.1 through 0.25.1. Add stub 0.26.0 entry.
+
+	* Documentation/news.texi:
+	Add stub 0.26.0 entry.
+
+	* Version:
+	Bump to 0.26.0.
+
+2017-08-31 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSStepperCell.m (-trackMouse:...untilMouseUp:): Adjust
+	to changes in super class.
+
+2017-08-27 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSButtonCell.m (-setButtonType:): Warn about unsupported
+	button types.
+	* Source/NSCell.m (-performClickWithFrame:inView:): Highlight the
+	cell only if drawing is possible.
+
+2017-08-27 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSCell.m (-trackMouse:...untilMouseUp:): Rewrote mouse
+	tracking logic to be closer to the Cocoa definition.
+
+2017-08-25 Riccardo Mottola <rm@gnu.org>
+
+	* Source/NSBitmapImageRep.m
+	Initialize density to 0, so that in case it is unset (72dpi) it is
+	not a random value in case the struct is not zeroed.
+
+2017-08-24  Daniel Ferreira <dtf@stanford.edu>
+
+	* Source/externs.m:
+	Define some private NSAttributedString attribute name definitions. Their
+	functionality is not yet implemented.
+
+2017-08-24  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/NSWindow.h:
+	Define new values for the NSWindowCollectionBehavior enum for
+	compatibility purposes.
+
+2017-08-24  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/NSGestureRecognizer.h
+	* Source/NSGestureRecognizer.m:
+	Implement stub for -[NSGestureRecognizer locationInView:] for
+	compatibility purposes.
+
+	* Headers/AppKit/NSWindow.h
+	* Source/NSWindow.m:
+	Add stub for +[NSWindow windowNumberAtPoint:belowWindowWithWindowNumber:]
+	for compatibility purposes.
+
+	* Headers/AppKit/NSSpellChecker.h
+	* Source/NSSpellChecker.m:
+	Add a stub for the -checkGrammarOfString:... method for compatibility
+	purposes.
+
+	* Headers/AppKit/NSSpellChecker.h
+	* Source/NSSpellChecker.m:
+	Add stubs for:
+	- +[NSSpellChecker isAutomaticTextReplacementEnabled],
+	- +[NSSpellChecker isAutomaticDashSubstitutionEnabled]
+	- +[NSSpellChecker isAutomaticQuoteSubstitutionEnabled]
+	for compatibility purposes.
+
+2017-08-15  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/NSDragging.h:
+	Create NSDraggingSource protocol for increased compatibility with GUI.
+
+	* Headers/AppKit/NSSpellChecker.h:
+	Add definitions for the NSCorrectionResponse for increased
+	compatibility.
+
+	* Headers/AppKit/NSWindow.h
+	* Source/NSWindow.m:
+	Add stub for -[NSWindow backingScaleFactor] for compatibility purposes.
+
+	* Headers/AppKit/NSApplication.h
+	* Headers/AppKit/NSWindow.h
+	* Source/NSWindow.m:
+	Define constants and stubs related to modal sheets in GUI for increased
+	compatibility.
+
+	* Headers/AppKit/NSFont.h
+	* Source/externs.m:
+	Define font weight constants introduced in macOS 10.11.
+
+	* Source/externs.m:
+	Export the private _NXSmartPaste constant for compatibility purposes.
+
+	* Headers/AppKit/NSAttributedString.h
+	* Source/externs.m:
+	Add a stub for NSTextInsertionUndoableAttributeName, a private
+	NSAttributedString attribute.
+
+	* Headers/AppKit/NSButtonCell.h:
+	Define new button cell constants in the NSButtonCell header. These
+	buttons are not yet implemented, however.
+
+	* Headers/AppKit/NSText.h:
+	Define new-style NSTextAlignment* constants on GUI for compatibility
+	purposes with new macOS versions.
+
+2017-08-09  Svetlana Tkachenko
+
+	*  ColorPickers/Russian.lproj/StandardPicker.strings
+	Add translation.
+
+2017-08-04  Daniel Ferreira <dtf@stanford.edu>
+
+	* .travis.yml
+	* travis-deps.sh:
+	Add a Travis CI build to gnustep-gui to check if everything is really
+	okay before accepting patches.
+
+	Recent events have shown that bad patches have passed through the review
+	process, specially when it comes to breaking compatibility with GCC. A
+	CI routine would distinctly avoid these cases.
+
+2017-08-04 Alex Myczko <alex@aiei.ch>
+
+	* ColorPickers/Polish.lproj: Added translation.
+
+2017-08-02 Alex Myczko <alex@aiei.ch>
+
+	* ColorPickers/German.lproj: Added translation.
+
+2017-07-31 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Headers/AppKit/NSPasteboardItem.h
+	* Source/NSPasteboardItem.m: Clean up these files.
+
+2017-07-31 Ivan Vucica <ivan@vucica.net>
+
+	* Source/NSTextList.m: Add _startingItemNumber-related TODOs to
+	NSTextList.
+	* Source/NSPasteboardItem.m: Remove RETAIN() when returning
+	-[NSPasteboardItem types].
+
+2017-07-28 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSMenuView.m (-attachSubmenuForItemAtIndex:): We should
+	not use [NSMenu display] for NSWindows95InterfaceStyle as there we
+	have two NSMenuViews for the NSMenu.
+
+2017-07-28 Riccardo Mottola <rm@gnu.org>
+
+	* Headers/AppKit/NSRunningApplication.h: We can actually use retain
+	as an equivalent property when not using ARC.
+
+2017-07-26 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Headers/AppKit/NSRunningApplication.h: Remove property attribute
+	"strong" as gcc does not support this.
+
+2017-07-26  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/NSTextList.h
+	* Source/NSTextList.m:
+	Add the `startingItemNumber` property to NSTextList introduced in macOS
+	10.6.
+
+2017-07-26  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/AppKit.h
+	* Headers/AppKit/NSPasteboardItem.h
+	* Source/GNUmakefile
+	* Source/NSPasteboardItem.m:
+	Implement the NSPasteboardItem class. For now, it remains relatively
+	useless since NSPasteboard does not yet know how to use it. However, it
+	should be pluggable into NSPasteboard once NSPasteboard learns about
+	NSPasteboardReading and NSPasteboardWriting.
+
+	* Headers/AppKit/NSPasteboard.h:
+	Define the NSPasteboardReading and NSPasteboardWriting protocols
+	introduced in OSX 10.6, which remain unimplemented in NSPasteboard.
+
+2017-07-26  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/AppKit.h
+	* Headers/AppKit/NSTextAlternatives.h
+	* Source/GNUmakefile
+	* Source/NSTextAlternatives.m:
+	Implement NSTextAlternatives, a class usually used for choosing
+	alternatives from a basic string usually for dictation purposes.
+
+2017-07-26  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/NSScroller.h
+	* Source/NSScroller.m:
+	As of macOS 10.7, scrollers gained two types: Legacy and Overlay. Here,
+	we define these styles as well as a method to determine which is the
+	"default" style to be used.
+
+2017-07-25 Riccardo Mottola <rm@gnu.org>
+
+	* Source/externs.m
+	Do not initialize a string constant with another string constant
+	or it breaks GCC build as is. Better proposals to ensure the exact
+	same string pointer is used welcome.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/NSAttributedString.h
+	* Source/externs.m:
+	Define an (unimplemented) NSAttributedString attribute for an
+	NSTextAlternatives object.
+
+	Define an (unimplemented) NSAttributedString attribute for Unicode
+	writing direction.
+
+	* Headers/AppKit/NSParagraphStyle.h
+	* Headers/AppKit/NSText.h:
+	Define constants for defining an attributed string's writing direction.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/NSCell.h
+	* Headers/AppKit/NSView.h
+	* Source/NSCell.m
+	* Source/NSView.m:
+	Implement stubs for the layout direction properties in NSCell and
+	NSView. Currently, they default to left-to-right layouting.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/AppKit.h
+	* Headers/AppKit/NSAccessibility.h
+	* Headers/AppKit/NSAccessibilityConstants.h
+	* Source/GNUmakefile
+	* Source/NSAccessibility.m:
+	Declare base NSAccessibility functions and constants, which have been
+	implemented as stubs.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/NSWindow.h:
+	Define a missing enum value for a window mask. This mask remains
+	unimplemented.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/NSControl.h
+	* Source/NSControl.m:
+	Create a stub for the -[NSControl sizeThatFits:] function.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/NSScrollView.h
+	* Source/NSScrollView.m:
+	Create stubs for the content/scroller inset properties in NSScrollView.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+	* Headers/AppKit/AppKit.h
+	* Source/GNUmakefile:
+	Create new classes in the GUI library.
+
+	* Headers/AppKit/NSRunningApplication.h
+	* Source/NSRunningApplication.m:
+	Create a stub for the NSRunningApplication class.
+
+	* Headers/AppKit/NSGestureRecognizer.h
+	* Source/NSGestureRecognizer.m:
+	Create stub for the NSGestureRecognizer class.
+
+	* Headers/AppKit/NSVisualEffectView.h
+	* Source/NSVisualEffectView.m:
+	Create stub for the NSVisualEffectView class.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+	* Headers/AppKit/NSSpeechSynthesizer.h
+	* Source/NSSpeechSynthesizer.m:
+	Define new constants in NSSpeechSynthesizer. These are not yet handled
+	by the implementation.
+
+	* Headers/AppKit/NSSpellChecker.h:
+	Define new constants on NSSpellChecker. They are not yet handled by the
+	implementation.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/AppKit.h
+	* Headers/AppKit/NSUserInterfaceLayout.h
+	* Source/GNUmakefile:
+	Define interface layout enums to be used by AppKit. This improves
+	compatibility with the reference platform.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/AppKit.h
+	* Headers/AppKit/NSUserInterfaceItemIdentification.h
+	* Source/GNUmakefile:
+	Introduce the NSUserInterfaceItemIdentification protocol, which required
+	an user interface class provide an unique identifier.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/AppKit.h
+	* Headers/AppKit/NSSharingService.h
+	* Source/GNUmakefile
+	* Source/NSSharingService.m:
+	Define the NSSharingService class as an unimplemented stub for
+	compatibility purposes.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/NSView.h
+	* Source/NSView.m:
+	Define layer-related properties in NSView for compatibility purposes,
+	and keep their getters and setters as stubs, since they will not have
+	any effect before NSView-CALayer integration is implemented.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/NSPasteboard.h
+	* Source/NSPasteboard.m
+	* Source/externs.m:
+	Define new constants for NSPasteboard type identifiers. Most of them are
+	aliases to the old "Pboard"-style types, although some new ones are not
+	fully implemented.
+
+2017-07-25  Daniel Ferreira <dtf@stanford.edu>
+
+	* Headers/AppKit/NSSpeechSynthesizer.h:
+	Modern applications require NSSpeechSynthesizerDelegate to be an actual
+	@protocol in order to conform to it. Here, we allow it to be one if we
+	are on an Objective-C runtime that supports it.
+
+2017-07-22 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/GSModelLoaderFactory.m (-supportedModelFileAtPath:): Fix
+	bug found by compiler.
+
+2017-07-22 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Headers/AppKit/NSEvent.h
+	* Source/NSEvent.m: Add some newer Cocoa enums and one method with
+	dummy implementation.
+
+2017-07-09 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Headers/AppKit/NSEvent.h
+	* Source/NSEvent.m: Add some newer Cocoa methods with dummy implementations.
+
+2017-07-09 Fred Kiefer <FredKiefer@gmx.de>
+
+	* .gitignore: Add a .gitignore file.
+
+2017-06-17 Riccardo Mottola <rm@gnu.org>
+
+	* Source/NSBitmapImageRep+JPEG.m
+	Save resolution information if it is different from 72 dpi.
+
+2017-06-13 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/externs.m: Added semicolons missing in last commit.
+	* Source/NSSavePanel.m: Fix return type of sorting function.
+
+2017-06-12 Ivan Vucica <ivan@vucica.net>
+
+	* Source/NSAttributedString.m,
+	* Source/externs.m:
+	Merge pull request from TheDharc <brunosonic@gmail.com>.
+
+2017-04-24 Riccardo Mottola <rm@gnu.org>
+
+        * Source/tiff.m
+	* Source/NSBitmapImageRep.m
+	Support for writing resolution.
+
+2017-04-22 Fred Kiefer <FredKiefer@gmx.de>
+
+        * Version: Correct required base version that has been off for a year.
+
+2017-04-16 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Printing/GSCUPS/GSCUPSPrinter.m: Add include to get deprecated
+	function cupsGetPPD() on newer CUPS systems.
+
+2017-04-16 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Model/IMLoading.m
+	* Source/GSTextStorage.m
+	* Source/GSToolbarView.m
+	* Source/NSLayoutManager.m
+	* Source/NSTableView.m
+	Fix some clang static analyser warnings reported by
+	Sebastian Reitenbach <sebastia@l00-bugdead-prods.de>.
+
+2017-04-06 Ivan Vucica <ivan@vucica.net>
+
+	* Releasing 0.25.1.
+
+2017-04-05 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Headers/Additions/GNUstepGUI/GSXibKeyedUnarchiver.h: Moved from Source.
+	* Headers/Additions/GNUstepGUI/GSXibLoading.h,
+	* Source/GSXibLoader.m,
+	* Source/GSXibKeyedUnarchiver.m,
+	* Source/GNUmakefile: Use and install moved header file.
+
+2017-04-01 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSMenu.m (-displayTransient): Update menu before displaying.
+	* Source/NSMenuView.m (-attachSubmenuForItemAtIndex:): Use NSMenu
+	display method.
+
+2017-03-31 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSAttributedString.m: Check for surrogate UTF16
+	characters to prevent nil strings when trying to attempt font
+	substitution.
+
+2017-03-31 Riccardo Mottola <rm@gnu.org>
+
+	* Source/NSBitmapImageRep+JPEG.m (-_initBitmapFromJPEG:errorMessage:)
+	Ignore density if unit is 0
+
+2017-03-28 Riccardo Mottola <rm@gnu.org>
+
+	* Source/NSBitmapImageRep+JPEG.m (-_initBitmapFromJPEG:errorMessage:)
+	Parse density data and set size accordingly.
+
+2017-03-24 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSBitmapImageRep+JPEG.m(-_JPEGRepresentationWithProperties:errorMessage:):
+	Correct JPEG export which was using size instead of pixelsWide and pixelsHigh.
+
+2017-03-20 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/GSXibKeyedUnarchiver.m:
+	Merge some of the changes from the testplant branch.
+
+2017-03-19 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSBrowser.m: Add encoding of NSColumnsAutosaveName.
+	* Headers/Additions/GNUstepGUI/GSXibLoading.h,
+	* Source/GSXibLoader.m,
+	* Source/GSXibKeyedUnarchiver.h,
+	* Source/GSXibKeyedUnarchiver.m,
+	* Source/GNUmakefile: Split of GSXibKeyedUnarchiver in separate file.
+	* Source/GSXibLoading.m: Add description method for IBUserDefinedRuntimeAttribute.
+	Merge some of the changes from the testplant branch.
+
+2017-03-05 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Headers/AppKit/NSImage.h
+	* Headers/AppKit/NSSplitView.h
+	* Source/NSImage.m
+	* Source/NSProgressIndicator.m
+	* Source/NSTableHeaderView.m
+	Merge some of the changes from the testplant branch.
+
+2017-02-20 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/GSHorizontalTypesetter.m (-layoutLineNewParagraph:): Add
+	extra line fragment for empty string here.
+
+2017-02-17 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/GSLayoutManager.m (-usedRectForTextContainer:): Add extra
+	line rect when needed.
+	* Source/NSTextView.m (sizeToFit): Don't add extra line rect, as
+	it is now already included.
+	* Source/NSStringDrawing.m (cache_lookup): Remove hack for empty string.
+
+2017-02-12 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSStringDrawing.m: Use shared drawing code.
+	* Source/NSStringDrawing.m (cache_lookup): Try to handle case of
+	empty string.
+
+2017-02-12 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSStringDrawing.m: Clean up string drawing cache code.
+
+2017-01-08 Fred Kiefer <FredKiefer@gmx.de>
+
+	* Source/NSMenu.m (-_isVisible, -_isMain): Add two helper
+	methods. And make sure we update the menu items before display and
+	keyEquivalent processing.

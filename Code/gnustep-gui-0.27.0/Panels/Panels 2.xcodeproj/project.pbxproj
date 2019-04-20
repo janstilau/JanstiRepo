@@ -1,0 +1,161 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		064A9E02226B0C11009AAB1A /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
+		064A9E03226B0C11009AAB1A /* English.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = English.lproj; sourceTree = "<group>"; };
+		064A9E04226B0C11009AAB1A /* ColorPanel.gmodel */ = {isa = PBXFileReference; lastKnownFileType = text; path = ColorPanel.gmodel; sourceTree = "<group>"; };
+		064A9E05226B0C11009AAB1A /* GNUmakefile.postamble */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile.postamble; sourceTree = "<group>"; };
+		064A9E06226B0C11009AAB1A /* Spanish.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Spanish.lproj; sourceTree = "<group>"; };
+		064A9E07226B0C11009AAB1A /* SavePanel.gmodel */ = {isa = PBXFileReference; lastKnownFileType = text; path = SavePanel.gmodel; sourceTree = "<group>"; };
+		064A9E08226B0C11009AAB1A /* Panels.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Panels.xcodeproj; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		064A9DFC226B0C11009AAB1A = {
+			isa = PBXGroup;
+			children = (
+				064A9E02226B0C11009AAB1A /* GNUmakefile */,
+				064A9E03226B0C11009AAB1A /* English.lproj */,
+				064A9E04226B0C11009AAB1A /* ColorPanel.gmodel */,
+				064A9E05226B0C11009AAB1A /* GNUmakefile.postamble */,
+				064A9E06226B0C11009AAB1A /* Spanish.lproj */,
+				064A9E07226B0C11009AAB1A /* SavePanel.gmodel */,
+				064A9E08226B0C11009AAB1A /* Panels.xcodeproj */,
+			);
+			sourceTree = "<group>";
+		};
+		064A9E09226B0C11009AAB1A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		064A9E01226B0C11009AAB1A /* Panels */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 064A9E0C226B0C11009AAB1A /* Build configuration list for PBXLegacyTarget "Panels" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/justinlau/JanstiRepo/Code/gnustep-gui-0.27.0/Panels";
+			dependencies = (
+			);
+			name = Panels;
+			passBuildSettingsInEnvironment = 1;
+			productName = Panels;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		064A9DFD226B0C11009AAB1A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 064A9E00226B0C11009AAB1A /* Build configuration list for PBXProject "Panels 2" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 064A9DFC226B0C11009AAB1A;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 064A9E09226B0C11009AAB1A /* Products */;
+					ProjectRef = 064A9E08226B0C11009AAB1A /* Panels.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				064A9E01226B0C11009AAB1A /* Panels */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		064A9DFE226B0C11009AAB1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		064A9DFF226B0C11009AAB1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		064A9E0D226B0C11009AAB1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Panels;
+			};
+			name = Debug;
+		};
+		064A9E0E226B0C11009AAB1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Panels;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		064A9E00226B0C11009AAB1A /* Build configuration list for PBXProject "Panels 2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				064A9DFE226B0C11009AAB1A /* Debug */,
+				064A9DFF226B0C11009AAB1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		064A9E0C226B0C11009AAB1A /* Build configuration list for PBXLegacyTarget "Panels" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				064A9E0D226B0C11009AAB1A /* Debug */,
+				064A9E0E226B0C11009AAB1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 064A9DFD226B0C11009AAB1A /* Project object */;
+}

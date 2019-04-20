@@ -1,0 +1,192 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		064A959E226B08A8009AAB1A /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
+		064A959F226B08A8009AAB1A /* GSColorSliderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSColorSliderCell.m; sourceTree = "<group>"; };
+		064A95A0226B08A8009AAB1A /* GSHSBColorPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSHSBColorPicker.h; sourceTree = "<group>"; };
+		064A95A1226B08A8009AAB1A /* English.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = English.lproj; sourceTree = "<group>"; };
+		064A95A2226B08A8009AAB1A /* GSWheelColorPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSWheelColorPicker.m; sourceTree = "<group>"; };
+		064A95A3226B08A8009AAB1A /* Polish.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Polish.lproj; sourceTree = "<group>"; };
+		064A95A4226B08A8009AAB1A /* GSRGBColorPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSRGBColorPicker.h; sourceTree = "<group>"; };
+		064A95A5226B08A8009AAB1A /* GSNamedColorPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSNamedColorPicker.m; sourceTree = "<group>"; };
+		064A95A6226B08A8009AAB1A /* GSNamedColorPicker.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = GSNamedColorPicker.tiff; sourceTree = "<group>"; };
+		064A95A7226B08A8009AAB1A /* GSWheelColorPicker.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = GSWheelColorPicker.tiff; sourceTree = "<group>"; };
+		064A95A8226B08A8009AAB1A /* GSCMYKColorPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSCMYKColorPicker.m; sourceTree = "<group>"; };
+		064A95A9226B08A8009AAB1A /* GSStandardColorPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSStandardColorPicker.h; sourceTree = "<group>"; };
+		064A95AA226B08A8009AAB1A /* German.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = German.lproj; sourceTree = "<group>"; };
+		064A95AB226B08A8009AAB1A /* Swedish.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Swedish.lproj; sourceTree = "<group>"; };
+		064A95AC226B08A8009AAB1A /* GSGrayColorPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSGrayColorPicker.m; sourceTree = "<group>"; };
+		064A95AD226B08A8009AAB1A /* GSHSBColorPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSHSBColorPicker.m; sourceTree = "<group>"; };
+		064A95AE226B08A8009AAB1A /* Russian.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Russian.lproj; sourceTree = "<group>"; };
+		064A95AF226B08A8009AAB1A /* GSColorSliderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSColorSliderCell.h; sourceTree = "<group>"; };
+		064A95B0226B08A8009AAB1A /* Spanish.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Spanish.lproj; sourceTree = "<group>"; };
+		064A95B1226B08A8009AAB1A /* GSRGBColorPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSRGBColorPicker.m; sourceTree = "<group>"; };
+		064A95B2226B08A8009AAB1A /* French.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = French.lproj; sourceTree = "<group>"; };
+		064A95B3226B08A8009AAB1A /* GSCMYKColorPicker.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = GSCMYKColorPicker.tiff; sourceTree = "<group>"; };
+		064A95B4226B08A8009AAB1A /* GSGrayColorPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSGrayColorPicker.h; sourceTree = "<group>"; };
+		064A95B5226B08A8009AAB1A /* GSHSBColorPicker.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = GSHSBColorPicker.tiff; sourceTree = "<group>"; };
+		064A95B6226B08A8009AAB1A /* GSStandardColorPicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSStandardColorPicker.m; sourceTree = "<group>"; };
+		064A95B7226B08A8009AAB1A /* GSCMYKColorPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSCMYKColorPicker.h; sourceTree = "<group>"; };
+		064A95B8226B08A8009AAB1A /* GSRGBColorPicker.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = GSRGBColorPicker.tiff; sourceTree = "<group>"; };
+		064A95B9226B08A8009AAB1A /* .cvsignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
+		064A95BA226B08A8009AAB1A /* GSGrayColorPicker.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = GSGrayColorPicker.tiff; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		064A9598226B08A8009AAB1A = {
+			isa = PBXGroup;
+			children = (
+				064A959E226B08A8009AAB1A /* GNUmakefile */,
+				064A959F226B08A8009AAB1A /* GSColorSliderCell.m */,
+				064A95A0226B08A8009AAB1A /* GSHSBColorPicker.h */,
+				064A95A1226B08A8009AAB1A /* English.lproj */,
+				064A95A2226B08A8009AAB1A /* GSWheelColorPicker.m */,
+				064A95A3226B08A8009AAB1A /* Polish.lproj */,
+				064A95A4226B08A8009AAB1A /* GSRGBColorPicker.h */,
+				064A95A5226B08A8009AAB1A /* GSNamedColorPicker.m */,
+				064A95A6226B08A8009AAB1A /* GSNamedColorPicker.tiff */,
+				064A95A7226B08A8009AAB1A /* GSWheelColorPicker.tiff */,
+				064A95A8226B08A8009AAB1A /* GSCMYKColorPicker.m */,
+				064A95A9226B08A8009AAB1A /* GSStandardColorPicker.h */,
+				064A95AA226B08A8009AAB1A /* German.lproj */,
+				064A95AB226B08A8009AAB1A /* Swedish.lproj */,
+				064A95AC226B08A8009AAB1A /* GSGrayColorPicker.m */,
+				064A95AD226B08A8009AAB1A /* GSHSBColorPicker.m */,
+				064A95AE226B08A8009AAB1A /* Russian.lproj */,
+				064A95AF226B08A8009AAB1A /* GSColorSliderCell.h */,
+				064A95B0226B08A8009AAB1A /* Spanish.lproj */,
+				064A95B1226B08A8009AAB1A /* GSRGBColorPicker.m */,
+				064A95B2226B08A8009AAB1A /* French.lproj */,
+				064A95B3226B08A8009AAB1A /* GSCMYKColorPicker.tiff */,
+				064A95B4226B08A8009AAB1A /* GSGrayColorPicker.h */,
+				064A95B5226B08A8009AAB1A /* GSHSBColorPicker.tiff */,
+				064A95B6226B08A8009AAB1A /* GSStandardColorPicker.m */,
+				064A95B7226B08A8009AAB1A /* GSCMYKColorPicker.h */,
+				064A95B8226B08A8009AAB1A /* GSRGBColorPicker.tiff */,
+				064A95B9226B08A8009AAB1A /* .cvsignore */,
+				064A95BA226B08A8009AAB1A /* GSGrayColorPicker.tiff */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		064A959D226B08A8009AAB1A /* ColorPickers */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 064A95BB226B08A8009AAB1A /* Build configuration list for PBXLegacyTarget "ColorPickers" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/justinlau/JanstiRepo/Code/gnustep-gui-0.27.0/ColorPickers";
+			dependencies = (
+			);
+			name = ColorPickers;
+			passBuildSettingsInEnvironment = 1;
+			productName = ColorPickers;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		064A9599226B08A8009AAB1A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 064A959C226B08A8009AAB1A /* Build configuration list for PBXProject "ColorPickers" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 064A9598226B08A8009AAB1A;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				064A959D226B08A8009AAB1A /* ColorPickers */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		064A959A226B08A8009AAB1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		064A959B226B08A8009AAB1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		064A95BC226B08A8009AAB1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = ColorPickers;
+			};
+			name = Debug;
+		};
+		064A95BD226B08A8009AAB1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = ColorPickers;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		064A959C226B08A8009AAB1A /* Build configuration list for PBXProject "ColorPickers" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				064A959A226B08A8009AAB1A /* Debug */,
+				064A959B226B08A8009AAB1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		064A95BB226B08A8009AAB1A /* Build configuration list for PBXLegacyTarget "ColorPickers" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				064A95BC226B08A8009AAB1A /* Debug */,
+				064A95BD226B08A8009AAB1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 064A9599226B08A8009AAB1A /* Project object */;
+}

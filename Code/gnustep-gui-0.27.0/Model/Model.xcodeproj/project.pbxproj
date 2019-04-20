@@ -1,0 +1,174 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		064A9685226B08A9009AAB1A /* nib2gmodel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = nib2gmodel.m; sourceTree = "<group>"; };
+		064A9686226B08A9009AAB1A /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
+		064A9687226B08A9009AAB1A /* Controller.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Controller.m; sourceTree = "<group>"; };
+		064A9688226B08A9009AAB1A /* GMAppKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GMAppKit.m; sourceTree = "<group>"; };
+		064A9689226B08A9009AAB1A /* Translator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Translator.m; sourceTree = "<group>"; };
+		064A968A226B08A9009AAB1A /* IMConnectors.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMConnectors.m; sourceTree = "<group>"; };
+		064A968B226B08A9009AAB1A /* IMCustomObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMCustomObject.m; sourceTree = "<group>"; };
+		064A968C226B08A9009AAB1A /* IBClasses.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IBClasses.h; sourceTree = "<group>"; };
+		064A968D226B08A9009AAB1A /* GNUmakefile.postamble */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile.postamble; sourceTree = "<group>"; };
+		064A968E226B08A9009AAB1A /* Controller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Controller.h; sourceTree = "<group>"; };
+		064A968F226B08A9009AAB1A /* GMArchiveObjects.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GMArchiveObjects.m; sourceTree = "<group>"; };
+		064A9690226B08A9009AAB1A /* GMArchiver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GMArchiver.m; sourceTree = "<group>"; };
+		064A9691226B08A9009AAB1A /* test.gmodel */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.gmodel; sourceTree = "<group>"; };
+		064A9692226B08A9009AAB1A /* test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = test.m; sourceTree = "<group>"; };
+		064A9693226B08A9009AAB1A /* test.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = test.nib; sourceTree = "<group>"; };
+		064A9694226B08A9009AAB1A /* Translator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Translator.h; sourceTree = "<group>"; };
+		064A9695226B08A9009AAB1A /* IMLoading.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMLoading.m; sourceTree = "<group>"; };
+		064A9696226B08A9009AAB1A /* .cvsignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
+		064A9697226B08A9009AAB1A /* IBClasses.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IBClasses.m; sourceTree = "<group>"; };
+		064A9698226B08A9009AAB1A /* IMConnectors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMConnectors.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		064A967F226B08A9009AAB1A = {
+			isa = PBXGroup;
+			children = (
+				064A9685226B08A9009AAB1A /* nib2gmodel.m */,
+				064A9686226B08A9009AAB1A /* GNUmakefile */,
+				064A9687226B08A9009AAB1A /* Controller.m */,
+				064A9688226B08A9009AAB1A /* GMAppKit.m */,
+				064A9689226B08A9009AAB1A /* Translator.m */,
+				064A968A226B08A9009AAB1A /* IMConnectors.m */,
+				064A968B226B08A9009AAB1A /* IMCustomObject.m */,
+				064A968C226B08A9009AAB1A /* IBClasses.h */,
+				064A968D226B08A9009AAB1A /* GNUmakefile.postamble */,
+				064A968E226B08A9009AAB1A /* Controller.h */,
+				064A968F226B08A9009AAB1A /* GMArchiveObjects.m */,
+				064A9690226B08A9009AAB1A /* GMArchiver.m */,
+				064A9691226B08A9009AAB1A /* test.gmodel */,
+				064A9692226B08A9009AAB1A /* test.m */,
+				064A9693226B08A9009AAB1A /* test.nib */,
+				064A9694226B08A9009AAB1A /* Translator.h */,
+				064A9695226B08A9009AAB1A /* IMLoading.m */,
+				064A9696226B08A9009AAB1A /* .cvsignore */,
+				064A9697226B08A9009AAB1A /* IBClasses.m */,
+				064A9698226B08A9009AAB1A /* IMConnectors.h */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		064A9684226B08A9009AAB1A /* Model */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 064A9699226B08A9009AAB1A /* Build configuration list for PBXLegacyTarget "Model" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/justinlau/JanstiRepo/Code/gnustep-gui-0.27.0/Model";
+			dependencies = (
+			);
+			name = Model;
+			passBuildSettingsInEnvironment = 1;
+			productName = Model;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		064A9680226B08A9009AAB1A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 064A9683226B08A9009AAB1A /* Build configuration list for PBXProject "Model" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 064A967F226B08A9009AAB1A;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				064A9684226B08A9009AAB1A /* Model */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		064A9681226B08A9009AAB1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		064A9682226B08A9009AAB1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		064A969A226B08A9009AAB1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Model;
+			};
+			name = Debug;
+		};
+		064A969B226B08A9009AAB1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Model;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		064A9683226B08A9009AAB1A /* Build configuration list for PBXProject "Model" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				064A9681226B08A9009AAB1A /* Debug */,
+				064A9682226B08A9009AAB1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		064A9699226B08A9009AAB1A /* Build configuration list for PBXLegacyTarget "Model" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				064A969A226B08A9009AAB1A /* Debug */,
+				064A969B226B08A9009AAB1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 064A9680226B08A9009AAB1A /* Project object */;
+}

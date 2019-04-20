@@ -1,0 +1,157 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		064A9E26226B0C11009AAB1A /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
+		064A9E27226B0C11009AAB1A /* GSLPR */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GSLPR; sourceTree = "<group>"; };
+		064A9E28226B0C11009AAB1A /* Printing.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Printing.xcodeproj; sourceTree = "<group>"; };
+		064A9E2B226B0C11009AAB1A /* GSWIN32 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GSWIN32; sourceTree = "<group>"; };
+		064A9E2C226B0C11009AAB1A /* GSCUPS */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GSCUPS; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		064A9E20226B0C11009AAB1A = {
+			isa = PBXGroup;
+			children = (
+				064A9E26226B0C11009AAB1A /* GNUmakefile */,
+				064A9E27226B0C11009AAB1A /* GSLPR */,
+				064A9E28226B0C11009AAB1A /* Printing.xcodeproj */,
+				064A9E2B226B0C11009AAB1A /* GSWIN32 */,
+				064A9E2C226B0C11009AAB1A /* GSCUPS */,
+			);
+			sourceTree = "<group>";
+		};
+		064A9E29226B0C11009AAB1A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		064A9E25226B0C11009AAB1A /* Printing */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 064A9E2E226B0C11009AAB1A /* Build configuration list for PBXLegacyTarget "Printing" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/justinlau/JanstiRepo/Code/gnustep-gui-0.27.0/Printing";
+			dependencies = (
+			);
+			name = Printing;
+			passBuildSettingsInEnvironment = 1;
+			productName = Printing;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		064A9E21226B0C11009AAB1A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 064A9E24226B0C11009AAB1A /* Build configuration list for PBXProject "Printing 2" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 064A9E20226B0C11009AAB1A;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 064A9E29226B0C11009AAB1A /* Products */;
+					ProjectRef = 064A9E28226B0C11009AAB1A /* Printing.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				064A9E25226B0C11009AAB1A /* Printing */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		064A9E22226B0C11009AAB1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		064A9E23226B0C11009AAB1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		064A9E2F226B0C11009AAB1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Printing;
+			};
+			name = Debug;
+		};
+		064A9E30226B0C11009AAB1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Printing;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		064A9E24226B0C11009AAB1A /* Build configuration list for PBXProject "Printing 2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				064A9E22226B0C11009AAB1A /* Debug */,
+				064A9E23226B0C11009AAB1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		064A9E2E226B0C11009AAB1A /* Build configuration list for PBXLegacyTarget "Printing" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				064A9E2F226B0C11009AAB1A /* Debug */,
+				064A9E30226B0C11009AAB1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 064A9E21226B0C11009AAB1A /* Project object */;
+}

@@ -1,0 +1,176 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		064A95C4226B08A8009AAB1A /* GuiAdditions.gsdoc */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = GuiAdditions.gsdoc; sourceTree = "<group>"; };
+		064A95C5226B08A8009AAB1A /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
+		064A95C6226B08A8009AAB1A /* gcloseall.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = gcloseall.1; sourceTree = "<group>"; };
+		064A95C7226B08A8009AAB1A /* General */ = {isa = PBXFileReference; lastKnownFileType = folder; path = General; sourceTree = "<group>"; };
+		064A95C8226B08A8009AAB1A /* Gui.gsdoc */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Gui.gsdoc; sourceTree = "<group>"; };
+		064A95C9226B08A8009AAB1A /* todo.texi */ = {isa = PBXFileReference; lastKnownFileType = text; path = todo.texi; sourceTree = "<group>"; };
+		064A95CA226B08A8009AAB1A /* GNUmakefile.postamble */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile.postamble; sourceTree = "<group>"; };
+		064A95CB226B08A9009AAB1A /* GuiUser */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GuiUser; sourceTree = "<group>"; };
+		064A95CC226B08A9009AAB1A /* set_show_service.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = set_show_service.1; sourceTree = "<group>"; };
+		064A95CD226B08A9009AAB1A /* manual */ = {isa = PBXFileReference; lastKnownFileType = folder; path = manual; sourceTree = "<group>"; };
+		064A95CE226B08A9009AAB1A /* ReleaseNotes.gsdoc */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ReleaseNotes.gsdoc; sourceTree = "<group>"; };
+		064A95CF226B08A9009AAB1A /* announce.texi */ = {isa = PBXFileReference; lastKnownFileType = text; path = announce.texi; sourceTree = "<group>"; };
+		064A95D0226B08A9009AAB1A /* make_services.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = make_services.1; sourceTree = "<group>"; };
+		064A95D1226B08A9009AAB1A /* say.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = say.1; sourceTree = "<group>"; };
+		064A95D2226B08A9009AAB1A /* install.texi */ = {isa = PBXFileReference; lastKnownFileType = text; path = install.texi; sourceTree = "<group>"; };
+		064A95D3226B08A9009AAB1A /* GSSpeechServer.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = GSSpeechServer.1; sourceTree = "<group>"; };
+		064A95D4226B08A9009AAB1A /* news.texi */ = {isa = PBXFileReference; lastKnownFileType = text; path = news.texi; sourceTree = "<group>"; };
+		064A95D5226B08A9009AAB1A /* readme.texi */ = {isa = PBXFileReference; lastKnownFileType = text; path = readme.texi; sourceTree = "<group>"; };
+		064A95D6226B08A9009AAB1A /* .cvsignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
+		064A95D7226B08A9009AAB1A /* gclose.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = gclose.1; sourceTree = "<group>"; };
+		064A95D8226B08A9009AAB1A /* gopen.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = gopen.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		064A95BE226B08A8009AAB1A = {
+			isa = PBXGroup;
+			children = (
+				064A95C4226B08A8009AAB1A /* GuiAdditions.gsdoc */,
+				064A95C5226B08A8009AAB1A /* GNUmakefile */,
+				064A95C6226B08A8009AAB1A /* gcloseall.1 */,
+				064A95C7226B08A8009AAB1A /* General */,
+				064A95C8226B08A8009AAB1A /* Gui.gsdoc */,
+				064A95C9226B08A8009AAB1A /* todo.texi */,
+				064A95CA226B08A8009AAB1A /* GNUmakefile.postamble */,
+				064A95CB226B08A9009AAB1A /* GuiUser */,
+				064A95CC226B08A9009AAB1A /* set_show_service.1 */,
+				064A95CD226B08A9009AAB1A /* manual */,
+				064A95CE226B08A9009AAB1A /* ReleaseNotes.gsdoc */,
+				064A95CF226B08A9009AAB1A /* announce.texi */,
+				064A95D0226B08A9009AAB1A /* make_services.1 */,
+				064A95D1226B08A9009AAB1A /* say.1 */,
+				064A95D2226B08A9009AAB1A /* install.texi */,
+				064A95D3226B08A9009AAB1A /* GSSpeechServer.1 */,
+				064A95D4226B08A9009AAB1A /* news.texi */,
+				064A95D5226B08A9009AAB1A /* readme.texi */,
+				064A95D6226B08A9009AAB1A /* .cvsignore */,
+				064A95D7226B08A9009AAB1A /* gclose.1 */,
+				064A95D8226B08A9009AAB1A /* gopen.1 */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		064A95C3226B08A8009AAB1A /* Documentation */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 064A95D9226B08A9009AAB1A /* Build configuration list for PBXLegacyTarget "Documentation" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/justinlau/JanstiRepo/Code/gnustep-gui-0.27.0/Documentation";
+			dependencies = (
+			);
+			name = Documentation;
+			passBuildSettingsInEnvironment = 1;
+			productName = Documentation;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		064A95BF226B08A8009AAB1A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 064A95C2226B08A8009AAB1A /* Build configuration list for PBXProject "Documentation" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 064A95BE226B08A8009AAB1A;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				064A95C3226B08A8009AAB1A /* Documentation */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		064A95C0226B08A8009AAB1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		064A95C1226B08A8009AAB1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		064A95DA226B08A9009AAB1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Documentation;
+			};
+			name = Debug;
+		};
+		064A95DB226B08A9009AAB1A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Documentation;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		064A95C2226B08A8009AAB1A /* Build configuration list for PBXProject "Documentation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				064A95C0226B08A8009AAB1A /* Debug */,
+				064A95C1226B08A8009AAB1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		064A95D9226B08A9009AAB1A /* Build configuration list for PBXLegacyTarget "Documentation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				064A95DA226B08A9009AAB1A /* Debug */,
+				064A95DB226B08A9009AAB1A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 064A95BF226B08A8009AAB1A /* Project object */;
+}
