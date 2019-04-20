@@ -99,6 +99,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (nullable NSMutableArray *)arrayWithPlistString:(NSString *)plist;
 
+
+
+// 下面的都是一些通用的操作.
+
 /**
  Removes the object with the lowest-valued index in the array.
  If the array is empty, this method has no effect.

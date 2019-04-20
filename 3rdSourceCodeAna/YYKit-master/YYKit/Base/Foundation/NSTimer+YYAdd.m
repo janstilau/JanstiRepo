@@ -17,6 +17,8 @@ YYSYNTH_DUMMY_CLASS(NSTimer_YYAdd)
 
 @implementation NSTimer (YYAdd)
 
+// 这里是52个方法里面的技巧. 主要就是为了 NSTimer 类对象不怕循环引用.
+// 这个方法, 是所有的 timer 都会进行触发的, 具体执行什么样的回调, 根据 timeInfo 里面的信息, 这里, timeInfo 直接就是 block, 作者连封装到内部的意愿都没有.
 + (void)_yy_ExecBlock:(NSTimer *)timer {
     if ([timer userInfo]) {
         void (^block)(NSTimer *timer) = (void (^)(NSTimer *timer))[timer userInfo];

@@ -21,14 +21,14 @@ YYSYNTH_DUMMY_CLASS(NSData_YYAdd)
 
 - (NSString *)md2String {
     unsigned char result[CC_MD2_DIGEST_LENGTH];
-    CC_MD2(self.bytes, (CC_LONG)self.length, result);
+    CC_MD2(self.bytes, (CC_LONG)self.length, result); // 这一步将 self.bytes 的数据, MD2 到 result 里面了.
     return [NSString stringWithFormat:
             @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
             result[0], result[1], result[2], result[3],
             result[4], result[5], result[6], result[7],
             result[8], result[9], result[10], result[11],
             result[12], result[13], result[14], result[15]
-            ];
+            ]; // 这一步, 将 result 里面的数据, 进行了输出.
 }
 
 - (NSData *)md2Data {

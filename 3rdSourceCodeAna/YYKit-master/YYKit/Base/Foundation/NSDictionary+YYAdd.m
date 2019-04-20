@@ -157,6 +157,8 @@ YYSYNTH_DUMMY_CLASS(NSDictionary_YYAdd)
 #undef XMLText
 #undef XMLName
 #undef XMLPref
+
+// 所用宏, 在类文件中使用, 用 undef 一下是非常好的习惯.
 @end
 
 
@@ -185,10 +187,12 @@ YYSYNTH_DUMMY_CLASS(NSDictionary_YYAdd)
     return nil;
 }
 
+// 由于 oc 的语言特性, 这里可以不传闭包, 而是用字符串化进行传递.
 - (NSArray *)allKeysSorted {
     return [[self allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 }
 
+// 优秀.
 - (NSArray *)allValuesSortedByKeys {
     NSArray *sortedKeys = [self allKeysSorted];
     NSMutableArray *arr = [[NSMutableArray alloc] init];
@@ -244,11 +248,15 @@ YYSYNTH_DUMMY_CLASS(NSDictionary_YYAdd)
 
 
 /// Get a number value from 'id'.
+/*
+ Returns a character set containing characters with Unicode values in a given range.
+ */
 static NSNumber *NSNumberFromID(id value) {
     static NSCharacterSet *dot;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         dot = [NSCharacterSet characterSetWithRange:NSMakeRange('.', 1)];
+        // 找出 dot 来.
     });
     if (!value || value == [NSNull null]) return nil;
     if ([value isKindOfClass:[NSNumber class]]) return value;
@@ -258,9 +266,9 @@ static NSNumber *NSNumberFromID(id value) {
         if ([lower isEqualToString:@"false"] || [lower isEqualToString:@"no"]) return @(NO);
         if ([lower isEqualToString:@"nil"] || [lower isEqualToString:@"null"]) return nil;
         if ([(NSString *)value rangeOfCharacterFromSet:dot].location != NSNotFound) {
-            return @(((NSString *)value).doubleValue);
+            return @(((NSString *)value).doubleValue); // 如果能找出小数点来, 就认为是浮点数
         } else {
-            return @(((NSString *)value).longLongValue);
+            return @(((NSString *)value).longLongValue); // 否则就认为是整数.
         }
     }
     return nil;
@@ -274,6 +282,7 @@ if ([value isKindOfClass:[NSNumber class]]) return ((NSNumber *)value)._type_;  
 if ([value isKindOfClass:[NSString class]]) return NSNumberFromID(value)._type_; \
 return def;
 
+// 优秀. 为什么要有一个 defaultValue, 其实在HLTool 里面经常出现这种情况, 如果没有某个值的话, 就用默认值. 这样的写法统一, 要比每次都在业务类里面专门进行一次逻辑处理好的多.
 - (BOOL)boolValueForKey:(NSString *)key default:(BOOL)def {
     RETURN_VALUE(boolValue);
 }

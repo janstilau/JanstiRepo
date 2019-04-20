@@ -19,12 +19,14 @@ YYSYNTH_DUMMY_CLASS(NSNotificationCenter_YYAdd)
 @implementation NSNotificationCenter (YYAdd)
 
 - (void)postNotificationOnMainThread:(NSNotification *)notification {
+    // 这里不用类方法不好, 不直观.
     if (pthread_main_np()) return [self postNotification:notification];
     [self postNotificationOnMainThread:notification waitUntilDone:NO];
 }
 
 - (void)postNotificationOnMainThread:(NSNotification *)notification waitUntilDone:(BOOL)wait {
     if (pthread_main_np()) return [self postNotification:notification];
+    // 这里, 把操作转移到类方法上面, 还是用的系统的方法.
     [[self class] performSelectorOnMainThread:@selector(_yy_postNotification:) withObject:notification waitUntilDone:wait];
 }
 

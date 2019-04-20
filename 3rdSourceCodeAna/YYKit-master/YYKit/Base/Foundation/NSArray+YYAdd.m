@@ -41,7 +41,7 @@ YYSYNTH_DUMMY_CLASS(NSArray_YYAdd)
     return nil;
 }
 
-- (id)randomObject {
+- (id)randomObject { // 优秀.
     if (self.count) {
         return self[arc4random_uniform((u_int32_t)self.count)];
     }
@@ -162,6 +162,7 @@ YYSYNTH_DUMMY_CLASS(NSArray_YYAdd)
     }
 }
 
+// 优秀
 - (void)shuffle {
     for (NSUInteger i = self.count; i > 1; i--) {
         [self exchangeObjectAtIndex:(i - 1)

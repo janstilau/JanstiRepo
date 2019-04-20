@@ -30,7 +30,7 @@ static void PoolStackReleaseCallBack(CFAllocatorRef allocator, const void *value
     CFRelease((CFTypeRef)value);
 }
 
-
+// 入栈, 只会在线程的 runloop 的监听者中, 进行 poolStack 的操作. 在运行过程中的自动释放池, 不会进入到 poolStack.
 static inline void YYAutoreleasePoolPush() {
     NSMutableDictionary *dic =  [NSThread currentThread].threadDictionary;
     NSMutableArray *poolStack = dic[YYNSThreadAutoleasePoolStackKey];
@@ -51,6 +51,7 @@ static inline void YYAutoreleasePoolPush() {
     [poolStack addObject:pool]; // push
 }
 
+// 出栈.
 static inline void YYAutoreleasePoolPop() {
     NSMutableDictionary *dic =  [NSThread currentThread].threadDictionary;
     NSMutableArray *poolStack = dic[YYNSThreadAutoleasePoolStackKey];
@@ -72,7 +73,7 @@ static void YYRunLoopAutoreleasePoolObserverCallBack(CFRunLoopObserverRef observ
         default: break;
     }
 }
-
+// 监听 runloop 的状态切换.
 static void YYRunloopAutoreleasePoolSetup() {
     CFRunLoopRef runloop = CFRunLoopGetCurrent();
 
@@ -95,12 +96,14 @@ static void YYRunloopAutoreleasePoolSetup() {
 
 @implementation NSThread (YYAdd)
 
+// 主线程的 runloop 会自动开启, 但是子线程的应该是没有开启.
+
 + (void)addAutoreleasePoolToCurrentRunloop {
     if ([NSThread isMainThread]) return; // The main thread already has autorelease pool.
     NSThread *thread = [self currentThread];
     if (!thread) return;
     if (thread.threadDictionary[YYNSThreadAutoleasePoolKey]) return; // already added
-    YYRunloopAutoreleasePoolSetup();
+    YYRunloopAutoreleasePoolSetup(); // threadDictionary 这个东西, 就是碰过专门开放给开发者放东西用的.
     thread.threadDictionary[YYNSThreadAutoleasePoolKey] = YYNSThreadAutoleasePoolKey; // mark the state
 }
 

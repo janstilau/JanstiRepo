@@ -15,6 +15,7 @@
 
 YYSYNTH_DUMMY_CLASS(NSDate_YYAdd)
 
+// Date 需要专门看一下.
 
 @implementation NSDate (YYAdd)
 
