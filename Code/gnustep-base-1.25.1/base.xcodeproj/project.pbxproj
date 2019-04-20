@@ -8,6 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		064A9563226ABF25009AAB1A /* NSKeyValueObserving.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A9562226ABF25009AAB1A /* NSKeyValueObserving.m */; };
+		064A9566226AF7C2009AAB1A /* KVOClasses.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A9564226AF7C2009AAB1A /* KVOClasses.h */; };
+		064A9567226AF7C2009AAB1A /* KVOClasses.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A9565226AF7C2009AAB1A /* KVOClasses.m */; };
+		064A956B226AF8D8009AAB1A /* GSKVOBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A9569226AF8D8009AAB1A /* GSKVOBase.h */; };
+		064A956C226AF8D8009AAB1A /* GSKVOBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A956A226AF8D8009AAB1A /* GSKVOBase.m */; };
+		064A956F226AF8F7009AAB1A /* GSKVOReplacement.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A956D226AF8F7009AAB1A /* GSKVOReplacement.h */; };
+		064A9570226AF8F7009AAB1A /* GSKVOReplacement.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A956E226AF8F7009AAB1A /* GSKVOReplacement.m */; };
+		064A9573226AF919009AAB1A /* GSKVOSetter.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A9571226AF919009AAB1A /* GSKVOSetter.h */; };
+		064A9574226AF919009AAB1A /* GSKVOSetter.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A9572226AF919009AAB1A /* GSKVOSetter.m */; };
+		064A9577226AF938009AAB1A /* GSKVOObservation.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A9575226AF938009AAB1A /* GSKVOObservation.h */; };
+		064A9578226AF938009AAB1A /* GSKVOObservation.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A9576226AF938009AAB1A /* GSKVOObservation.m */; };
+		064A957B226AF967009AAB1A /* GSKVOInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A9579226AF967009AAB1A /* GSKVOInfo.h */; };
+		064A957C226AF967009AAB1A /* GSKVOInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A957A226AF967009AAB1A /* GSKVOInfo.m */; };
+		064A957F226AF996009AAB1A /* GSKVOPathInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A957D226AF996009AAB1A /* GSKVOPathInfo.h */; };
+		064A9580226AF996009AAB1A /* GSKVOPathInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A957E226AF996009AAB1A /* GSKVOPathInfo.m */; };
+		064A9583226AF9CA009AAB1A /* NSKeyValueObservationForwarder.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A9581226AF9CA009AAB1A /* NSKeyValueObservationForwarder.h */; };
+		064A9584226AF9CA009AAB1A /* NSKeyValueObservationForwarder.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A9582226AF9CA009AAB1A /* NSKeyValueObservationForwarder.m */; };
 		06EDD9592248BEA900C87605 /* NSMutableString+GNUstepBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD8AD2248BEA800C87605 /* NSMutableString+GNUstepBase.h */; };
 		06EDD95A2248BEA900C87605 /* NSBundle+GNUstepBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD8AE2248BEA800C87605 /* NSBundle+GNUstepBase.h */; };
 		06EDD95B2248BEA900C87605 /* NSTask+GNUstepBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD8AF2248BEA800C87605 /* NSTask+GNUstepBase.h */; };
@@ -415,6 +431,22 @@
 		064A2278224F840100A6B909 /* URLSessionLearn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = URLSessionLearn.h; sourceTree = "<group>"; };
 		064A9561226ABEF1009AAB1A /* NSKeyValueObservingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSKeyValueObservingHeader.h; sourceTree = "<group>"; };
 		064A9562226ABF25009AAB1A /* NSKeyValueObserving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueObserving.m; sourceTree = "<group>"; };
+		064A9564226AF7C2009AAB1A /* KVOClasses.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KVOClasses.h; sourceTree = "<group>"; };
+		064A9565226AF7C2009AAB1A /* KVOClasses.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KVOClasses.m; sourceTree = "<group>"; };
+		064A9569226AF8D8009AAB1A /* GSKVOBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSKVOBase.h; sourceTree = "<group>"; };
+		064A956A226AF8D8009AAB1A /* GSKVOBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSKVOBase.m; sourceTree = "<group>"; };
+		064A956D226AF8F7009AAB1A /* GSKVOReplacement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSKVOReplacement.h; sourceTree = "<group>"; };
+		064A956E226AF8F7009AAB1A /* GSKVOReplacement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSKVOReplacement.m; sourceTree = "<group>"; };
+		064A9571226AF919009AAB1A /* GSKVOSetter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSKVOSetter.h; sourceTree = "<group>"; };
+		064A9572226AF919009AAB1A /* GSKVOSetter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSKVOSetter.m; sourceTree = "<group>"; };
+		064A9575226AF938009AAB1A /* GSKVOObservation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSKVOObservation.h; sourceTree = "<group>"; };
+		064A9576226AF938009AAB1A /* GSKVOObservation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSKVOObservation.m; sourceTree = "<group>"; };
+		064A9579226AF967009AAB1A /* GSKVOInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSKVOInfo.h; sourceTree = "<group>"; };
+		064A957A226AF967009AAB1A /* GSKVOInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSKVOInfo.m; sourceTree = "<group>"; };
+		064A957D226AF996009AAB1A /* GSKVOPathInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSKVOPathInfo.h; sourceTree = "<group>"; };
+		064A957E226AF996009AAB1A /* GSKVOPathInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSKVOPathInfo.m; sourceTree = "<group>"; };
+		064A9581226AF9CA009AAB1A /* NSKeyValueObservationForwarder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSKeyValueObservationForwarder.h; sourceTree = "<group>"; };
+		064A9582226AF9CA009AAB1A /* NSKeyValueObservationForwarder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueObservationForwarder.m; sourceTree = "<group>"; };
 		06EDD8AD2248BEA800C87605 /* NSMutableString+GNUstepBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableString+GNUstepBase.h"; sourceTree = "<group>"; };
 		06EDD8AE2248BEA800C87605 /* NSBundle+GNUstepBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+GNUstepBase.h"; sourceTree = "<group>"; };
 		06EDD8AF2248BEA800C87605 /* NSTask+GNUstepBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTask+GNUstepBase.h"; sourceTree = "<group>"; };
@@ -1531,6 +1563,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		064A9568226AF8C3009AAB1A /* KVO */ = {
+			isa = PBXGroup;
+			children = (
+				064A9564226AF7C2009AAB1A /* KVOClasses.h */,
+				064A9565226AF7C2009AAB1A /* KVOClasses.m */,
+				064A9561226ABEF1009AAB1A /* NSKeyValueObservingHeader.h */,
+				064A9562226ABF25009AAB1A /* NSKeyValueObserving.m */,
+				064A9569226AF8D8009AAB1A /* GSKVOBase.h */,
+				064A956A226AF8D8009AAB1A /* GSKVOBase.m */,
+				064A956D226AF8F7009AAB1A /* GSKVOReplacement.h */,
+				064A956E226AF8F7009AAB1A /* GSKVOReplacement.m */,
+				064A9571226AF919009AAB1A /* GSKVOSetter.h */,
+				064A9572226AF919009AAB1A /* GSKVOSetter.m */,
+				064A9575226AF938009AAB1A /* GSKVOObservation.h */,
+				064A9576226AF938009AAB1A /* GSKVOObservation.m */,
+				064A9579226AF967009AAB1A /* GSKVOInfo.h */,
+				064A957A226AF967009AAB1A /* GSKVOInfo.m */,
+				064A957D226AF996009AAB1A /* GSKVOPathInfo.h */,
+				064A957E226AF996009AAB1A /* GSKVOPathInfo.m */,
+				064A9581226AF9CA009AAB1A /* NSKeyValueObservationForwarder.h */,
+				064A9582226AF9CA009AAB1A /* NSKeyValueObservationForwarder.m */,
+			);
+			path = KVO;
+			sourceTree = "<group>";
+		};
 		06EDD8AC2248BEA800C87605 /* GNUstepBase */ = {
 			isa = PBXGroup;
 			children = (
@@ -1912,8 +1969,7 @@
 		18394BFF1610E9D600335E85 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
-				064A9561226ABEF1009AAB1A /* NSKeyValueObservingHeader.h */,
-				064A9562226ABF25009AAB1A /* NSKeyValueObserving.m */,
+				064A9568226AF8C3009AAB1A /* KVO */,
 				18906F701610BF3C0003C892 /* NSAffineTransform.m */,
 				18906F711610BF3C0003C892 /* NSArchiver.m */,
 				18906F721610BF3C0003C892 /* NSArray.m */,
@@ -3644,6 +3700,7 @@
 				06EDD9A62248BEA900C87605 /* NSURLRequest.h in Headers */,
 				06EDD9C32248BEA900C87605 /* NSPort.h in Headers */,
 				06EDD9682248BEA900C87605 /* GSVersionMacros.h in Headers */,
+				064A957F226AF996009AAB1A /* GSKVOPathInfo.h in Headers */,
 				06EDD96A2248BEA900C87605 /* GSObjCRuntime.h in Headers */,
 				06EDD96B2248BEA900C87605 /* NSNumber+GNUstepBase.h in Headers */,
 				06EDD9662248BEA900C87605 /* NSAttributedString+GNUstepBase.h in Headers */,
@@ -3678,16 +3735,20 @@
 				06EDD9DA2248BEA900C87605 /* NSInvocation.h in Headers */,
 				06EDD9E62248BEA900C87605 /* NSSortDescriptor.h in Headers */,
 				06EDD9F82248BEA900C87605 /* NSXMLNode.h in Headers */,
+				064A956F226AF8F7009AAB1A /* GSKVOReplacement.h in Headers */,
 				06EDD95D2248BEA900C87605 /* GSUnion.h in Headers */,
+				064A9583226AF9CA009AAB1A /* NSKeyValueObservationForwarder.h in Headers */,
 				06EDD9852248BEA900C87605 /* NSNull.h in Headers */,
 				06EDD9A92248BEA900C87605 /* NSErrorRecoveryAttempting.h in Headers */,
 				06EDD9B92248BEA900C87605 /* NSClassDescription.h in Headers */,
 				06EDD9DE2248BEA900C87605 /* NSError.h in Headers */,
+				064A9573226AF919009AAB1A /* GSKVOSetter.h in Headers */,
 				06EDD9AC2248BEA900C87605 /* NSDistributedNotificationCenter.h in Headers */,
 				06EDD97A2248BEA900C87605 /* NSCalendarDate+GNUstepBase.h in Headers */,
 				06EDD9602248BEA900C87605 /* NSStream+GNUstepBase.h in Headers */,
 				06EDD9C42248BEA900C87605 /* NSURLProtocol.h in Headers */,
 				06EDD95A2248BEA900C87605 /* NSBundle+GNUstepBase.h in Headers */,
+				064A9566226AF7C2009AAB1A /* KVOClasses.h in Headers */,
 				06EDD9CD2248BEA900C87605 /* NSRunLoop.h in Headers */,
 				06EDD9D32248BEA900C87605 /* NSCache.h in Headers */,
 				06EDD9EA2248BEA900C87605 /* NSURLDownload.h in Headers */,
@@ -3699,8 +3760,10 @@
 				06EDD9BA2248BEA900C87605 /* NSDateFormatter.h in Headers */,
 				06EDD9D52248BEA900C87605 /* NSValueTransformer.h in Headers */,
 				06EDD99F2248BEA900C87605 /* NSPointerFunctions.h in Headers */,
+				064A9577226AF938009AAB1A /* GSKVOObservation.h in Headers */,
 				06EDD9FF2248BEA900C87605 /* NSXMLDocument.h in Headers */,
 				06EDD9942248BEA900C87605 /* NSRange.h in Headers */,
+				064A956B226AF8D8009AAB1A /* GSKVOBase.h in Headers */,
 				06EDD9D22248BEA900C87605 /* NSTimeZone.h in Headers */,
 				06EDD9902248BEA900C87605 /* NSThread.h in Headers */,
 				06EDD9DF2248BEA900C87605 /* NSPointerArray.h in Headers */,
@@ -3715,6 +3778,7 @@
 				18394C811610EC5E00335E85 /* NSXMLPrivate.h in Headers */,
 				06EDD9A82248BEA900C87605 /* NSProtocolChecker.h in Headers */,
 				06EDD9932248BEA900C87605 /* NSJSONSerialization.h in Headers */,
+				064A957B226AF967009AAB1A /* GSKVOInfo.h in Headers */,
 				06EDD99D2248BEA900C87605 /* NSHTTPCookieStorage.h in Headers */,
 				06EDD9F72248BEA900C87605 /* NSXMLDTD.h in Headers */,
 				06EDD9D42248BEA900C87605 /* NSFormatter.h in Headers */,
@@ -3958,6 +4022,7 @@
 				18394C341610EB7F00335E85 /* NSKeyedArchiver.m in Sources */,
 				185391931625FD0C0015BDFA /* NSKeyedUnarchiver.m in Sources */,
 				18394C361610EB7F00335E85 /* NSLocale.m in Sources */,
+				064A957C226AF967009AAB1A /* GSKVOInfo.m in Sources */,
 				AD197C08189A4D5F000F6CF9 /* NSMetadata.m in Sources */,
 				AD197C09189A4D5F000F6CF9 /* NSUserNotification.m in Sources */,
 				18394C371610EB7F00335E85 /* NSLock.m in Sources */,
@@ -3967,6 +4032,7 @@
 				18394C3B1610EB7F00335E85 /* NSMessagePortNameServer.m in Sources */,
 				18394C3C1610EB7F00335E85 /* NSMethodSignature.m in Sources */,
 				18394C3D1610EB7F00335E85 /* NSNetServices.m in Sources */,
+				064A9580226AF996009AAB1A /* GSKVOPathInfo.m in Sources */,
 				18394C3E1610EB7F00335E85 /* NSNotification.m in Sources */,
 				185289FF1613A8840016729B /* NSNotificationCenter.m in Sources */,
 				18394C401610EB7F00335E85 /* NSNotificationQueue.m in Sources */,
@@ -3989,6 +4055,7 @@
 				18394C501610EB7F00335E85 /* NSPredicate.m in Sources */,
 				18394C511610EB7F00335E85 /* NSProcessInfo.m in Sources */,
 				18394C521610EB7F00335E85 /* NSPropertyList.m in Sources */,
+				064A9570226AF8F7009AAB1A /* GSKVOReplacement.m in Sources */,
 				18394C531610EB7F00335E85 /* NSProtocolChecker.m in Sources */,
 				18394C541610EB7F00335E85 /* NSProxy.m in Sources */,
 				18394C551610EB7F00335E85 /* NSRange.m in Sources */,
@@ -3999,13 +4066,16 @@
 				18394C5A1610EB7F00335E85 /* NSSet.m in Sources */,
 				18394C5B1610EB7F00335E85 /* NSSocketPort.m in Sources */,
 				18394C5C1610EB7F00335E85 /* NSSocketPortNameServer.m in Sources */,
+				064A956C226AF8D8009AAB1A /* GSKVOBase.m in Sources */,
 				18394C5D1610EB7F00335E85 /* NSSortDescriptor.m in Sources */,
 				18394C5E1610EB7F00335E85 /* NSSpellServer.m in Sources */,
+				064A9574226AF919009AAB1A /* GSKVOSetter.m in Sources */,
 				18394C5F1610EB7F00335E85 /* NSString.m in Sources */,
 				18394C601610EB7F00335E85 /* NSTask.m in Sources */,
 				18394C611610EB7F00335E85 /* NSTextCheckingResult.m in Sources */,
 				18394C621610EB7F00335E85 /* NSThread.m in Sources */,
 				18394C631610EB7F00335E85 /* NSTimeZone.m in Sources */,
+				064A9578226AF938009AAB1A /* GSKVOObservation.m in Sources */,
 				18394C641610EB7F00335E85 /* NSTimer.m in Sources */,
 				18394C651610EB7F00335E85 /* NSURL.m in Sources */,
 				18394C661610EB7F00335E85 /* NSURLAuthenticationChallenge.m in Sources */,
@@ -4016,6 +4086,7 @@
 				18394C6B1610EB8000335E85 /* NSURLDownload.m in Sources */,
 				18394C6C1610EB8000335E85 /* NSURLHandle.m in Sources */,
 				18394C6D1610EB8000335E85 /* NSURLProtectionSpace.m in Sources */,
+				064A9567226AF7C2009AAB1A /* KVOClasses.m in Sources */,
 				18394C6E1610EB8000335E85 /* NSURLProtocol.m in Sources */,
 				18394C6F1610EB8000335E85 /* NSURLRequest.m in Sources */,
 				18394C701610EB8000335E85 /* NSURLResponse.m in Sources */,
@@ -4031,6 +4102,7 @@
 				18394C7A1610EB8000335E85 /* NSXMLNode.m in Sources */,
 				18394C7B1610EB8000335E85 /* NSXMLParser.m in Sources */,
 				18394C7C1610EB8000335E85 /* NSZone.m in Sources */,
+				064A9584226AF9CA009AAB1A /* NSKeyValueObservationForwarder.m in Sources */,
 				1890B34116F3BC3300187826 /* GSPrivateHash.m in Sources */,
 				AD197C06189A4D5F000F6CF9 /* NSInvocationOperation.m in Sources */,
 				18EA6761172EC6170026AC34 /* GSTypeEncoding.c in Sources */,

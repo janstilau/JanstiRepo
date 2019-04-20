@@ -542,27 +542,28 @@ GSObjCAddMethods(Class cls, Method *list, BOOL replace)
 
   while ((m = list[index++]) != NULL)
     {
-      SEL		n = method_getName(m);
-      IMP		i = method_getImplementation(m);
-      const char	*t = method_getTypeEncoding(m);
+      SEL		methodName = method_getName(m);
+      IMP		methodImp = method_getImplementation(m);
+      const char	*typeEncoding = method_getTypeEncoding(m);
 
       /* This will override a superclass method but will not replace a
        * method which already exists in the class itsself.
        */
-      if (YES == class_addMethod(cls, n, i, t))
+        // class_addMethod 会在已有方法的时候,
+      if (YES == class_addMethod(cls, methodName, methodImp, typeEncoding))
 	{
-          BDBGPrintf("    added %c%s\n", c, sel_getName(n));
+          BDBGPrintf("    added %c%s\n", c, sel_getName(methodName));
 	}
-      else if (YES == replace)
+      else if (YES == replace) // 所以, 在失败之后, 如果可以替换, 那么就进行替换操作.
 	{
 	  /* If we want to replace an existing implemetation ...
 	   */
-	  method_setImplementation(class_getInstanceMethod(cls, n), i);
-          BDBGPrintf("    replaced %c%s\n", c, sel_getName(n));
+	  method_setImplementation(class_getInstanceMethod(cls, methodName), methodImp);
+          BDBGPrintf("    replaced %c%s\n", c, sel_getName(methodName));
 	} 
       else
 	{
-          BDBGPrintf("    skipped %c%s\n", c, sel_getName(n));
+          BDBGPrintf("    skipped %c%s\n", c, sel_getName(methodName));
 	}
     }
 }
@@ -898,14 +899,15 @@ GSObjCAddClassBehavior(Class receiver, Class behavior)
   BDBGPrintf("Adding behavior to class %s\n", class_getName(receiver));
 
   /* Add instance methods */
+  // 把原有类的行为抽取出来.
   methods = class_copyMethodList(behavior, &count);
-  BDBGPrintf("  instance methods from %s %u\n", class_getName(behavior), count);
   if (methods == NULL)
     {
       BDBGPrintf("    none.\n");
     }
   else
     {
+        //  把原有类的行为, 添加到新的类上.
       GSObjCAddMethods (receiver, methods, NO);
       free(methods);
     }
@@ -924,6 +926,7 @@ GSObjCAddClassBehavior(Class receiver, Class behavior)
     }
 
   /* Add behavior's superclass, if not already there. */
+    // 如果, receiver 是behavior 类的父类, 那么重新刷一次, 目的就是把原有类的行为刷新回来
   if (!GSObjCIsKindOf(receiver, behavior_super_class))
     {
       GSObjCAddClassBehavior (receiver, behavior_super_class);
