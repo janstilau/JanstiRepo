@@ -47,7 +47,7 @@ static Class		GSMutableStringClass;
 static Class		GSPlaceholderStringClass;
 static id		_holder;
 static NSCharacterSet	*defaultSkipSet;
-static SEL		memSel;
+static SEL		characterIsMemSel;
 static NSStringEncoding internalEncoding = NSISOLatin1StringEncoding;
 
 static inline unichar myGetC(unsigned char c)
@@ -103,7 +103,7 @@ _scanLocation++;\
     {
         NSStringEncoding externalEncoding;
         
-        memSel = @selector(characterIsMember:);
+        characterIsMemSel = @selector(characterIsMember:);
         defaultSkipSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
         IF_NO_GC(RETAIN(defaultSkipSet));
         NSStringClass = [NSString class];
@@ -208,17 +208,6 @@ _scanLocation++;\
     return self;
 }
 
-/*
- * Deallocate a scanner and all its associated storage.
- */
-- (void) dealloc
-{
-    RELEASE(_string);
-    TEST_RELEASE(_locale);
-    RELEASE(_charactersToBeSkipped);
-    [super dealloc];
-}
-
 /**
  * Returns YES if no more characters remain to be scanned.<br />
  * Returns YES if all characters remaining to be scanned
@@ -232,34 +221,28 @@ _scanLocation++;\
     
     if (_scanLocation >= myLength())
         return YES;
-    save__scanLocation = _scanLocation;
-    ret = !skipToNextField();
-    _scanLocation = save__scanLocation;
+    save__scanLocation = _scanLocation; // 先缓存一下原来的位置
+    
+    ret = YES;
+    ({
+        while (_scanLocation < myLength() && _charactersToBeSkipped != nil
+               && (*_skipImp)(_charactersToBeSkipped, characterIsMemSel, myCharacter(_scanLocation)))
+            _scanLocation++;
+        (_scanLocation >= myLength()) ? NO : YES;
+    });
+    ret = !ret;
+    _scanLocation = save__scanLocation; // 复原原来的位置
     return ret;
 }
 
-/*
- * Internal version of scanInt: method.
- * Does the actual work for scanInt: except for the initial skip.
- * For internal use only.  This method may move the scan location
- * even if a valid integer is not scanned.
- * Based on the strtol code from the GNU C library.  A little simpler since
- * we deal only with base 10.
- * FIXME: I don't use the decimalDigitCharacterSet here since it
- * includes many more characters than the ASCII digits.  I don't
- * know how to convert those other characters, so I ignore them
- * for now.  For the same reason, I don't try to support all the
- * possible Unicode plus and minus characters.
- */
+// 这个方法的判断, 和做算法题的时候是一样的.
 - (BOOL) _scanInt: (int*)value
 {
     unsigned int num = 0;
-    const unsigned int limit = UINT_MAX / 10;
     BOOL negative = NO;
     BOOL overflow = NO;
-    BOOL got_digits = NO;
     
-    /* Check for sign */
+    /* 首先, 判断一下正负号. 这和算法题里面一样! 所以, 算法题其实是有用的, 只不过是类库封装起来了而已. 实际上, 还是那么多操作. 所以能缓存就缓存.*/
     if (_scanLocation < myLength())
     {
         switch (myCharacter(_scanLocation))
@@ -274,32 +257,34 @@ _scanLocation++;\
         }
     }
     
+    BOOL got_digits = NO;
+    const unsigned int limit = INTMAX_MAX / 10; // 把最大值除以10, 作为判断是否越界的标志.
     /* Process digits */
     while (_scanLocation < myLength())
     {
         unichar digit = myCharacter(_scanLocation);
         
-        if ((digit < '0') || (digit > '9'))
+        if ((digit < '0') || (digit > '9')) // 已经不是正整数了.
             break;
         if (!overflow)
         {
-            if (num >= limit)
+            if (num >= limit) // 这个时候, 是已经取得下一位的数字了, 如果 num 比 最大值/10 还大, 那就是越界了,
+                // error: 这里有问题, 当 num == limit 的时候, 和下面 16 进制的那个判断一样.
                 overflow = YES;
             else
-                num = num * 10 + (digit - '0');
+                num = num * 10 + (digit - '0'); // 正常的数值相加.
         }
         _scanLocation++;
         got_digits = YES;
     }
     
     /* Save result */
-    if (!got_digits)
-        return NO;
+    if (!got_digits) return NO;
     if (value)
     {
-        if (overflow
-            || (num > (negative ? (NSUInteger)INT_MIN : (NSUInteger)INT_MAX)))
-            *value = negative ? INT_MIN: INT_MAX;
+        if (overflow ||
+            (num > (negative ? (NSUInteger)INT_MIN : (NSUInteger)INT_MAX)))
+            *value = negative ? INT_MIN: INT_MAX; // 如果越界了, 返回界限值.
         else if (negative)
             *value = -num;
         else
@@ -321,24 +306,24 @@ _scanLocation++;\
 - (BOOL) scanInt: (int*)value
 {
     unsigned int saveScanLocation = _scanLocation;
-    
+//    skipToNextField() 这个会跳过开头的应该跳过的字符集.
     if (skipToNextField() && [self _scanInt: value])
         return YES;
-    _scanLocation = saveScanLocation;
+    _scanLocation = saveScanLocation; // 这里, 会进行一次复原操作. 看来就算是大神的代码, 这种保存复原的操作也经常发生.
     return NO;
 }
 
 /* Scan an unsigned long long of the given radix into value.
  * Internal version used by scanHexInt:, scanHexLongLong: etc.
  */
-- (BOOL) scanUnsignedLongLong_: (unsigned long long int*)value
-                         radix: (NSUInteger)radix
-                       maximum: (unsigned long long)max
+- (BOOL) scanUnsignedLongLong_: (unsigned long long int*)value // container
+                         radix: (NSUInteger)radix // 进制
+                       maximum: (unsigned long long)max // 最大值.
                      gotDigits: (BOOL)gotDigits
 {
     unsigned long long int        num = 0;
-    unsigned long long int        numLimit = max / radix;
-    unsigned long long int        digitLimit = max % radix;
+    unsigned long long int        numLimit = max / radix; // 这个, 和scanInt中的做法一样
+    unsigned long long int        digitLimit = max % radix; // 判断出最大值的余数.
     unsigned long long int        digitValue = 0;
     BOOL                          overflow = NO;
     unsigned int                  saveScanLocation = _scanLocation;
@@ -373,17 +358,17 @@ _scanLocation++;\
             case 'E': digitValue = 0xE; break;
             case 'F': digitValue = 0xF; break;
             default:
-                digitValue = radix;
                 break;
         }
         if (digitValue >= radix)
         {
             break;
         }
+        
         if (!overflow)
         {
             if ((num > numLimit)
-                || ((num == numLimit) && (digitValue > digitLimit)))
+                || ((num == numLimit) && (digitValue > digitLimit))) // 为什么10进制的没有做这项检查.
             {
                 overflow = YES;
             }
@@ -397,7 +382,7 @@ _scanLocation++;\
     }
     
     /* Save result */
-    if (!gotDigits)
+    if (!gotDigits) // 如果, 没有取到数值, 那么就是解析失败了
     {
         _scanLocation = saveScanLocation;
         return NO;
@@ -416,19 +401,6 @@ _scanLocation++;\
     return YES;
 }
 
-/**
- * After initial skipping (if any), this method scans an unsigned
- * integer placing it in <em>value</em> if that is not null.
- * If the number begins with "0x" or "0X" it is treated as hexadecimal,
- * otherwise if the number begins with "0" it is treated as octal,
- * otherwise the number is treated as decimal.
- * <br/>
- * Returns YES if anything is scanned, NO otherwise.
- * <br/>
- * On overflow, UINT_MAX is put into <em>value</em>
- * <br/>
- * Scans past any excess digits
- */
 - (BOOL) scanRadixUnsignedInt: (unsigned int*)value
 {
     unsigned int	        radix;
@@ -443,7 +415,8 @@ _scanLocation++;\
         return NO;
     }
     
-    /* Check radix */
+    // 这里, 首先会提取出 进制的前缀判断字符串的进制.
+    // 所以, 如果自己写解析程序, 也是这样的思路, 商业类库还是脱离不了基本的算法
     radix = 10;
     if ((_scanLocation < myLength()) && (myCharacter(_scanLocation) == '0'))
     {
@@ -482,19 +455,6 @@ _scanLocation++;\
     return NO;
 }
 
-/**
- * After initial skipping (if any), this method scans an unsigned
- * long long integer placing it in <em>value</em> if that is not null.
- * If the number begins with "0x" or "0X" it is treated as hexadecimal,
- * otherwise if the number begins with "0" it is treated as octal,
- * otherwise the number is treated as decimal.
- * <br/>
- * Returns YES if anything is scanned, NO otherwise.
- * <br/>
- * On overflow, ULLONG_MAX is put into <em>value</em>
- * <br/>
- * Scans past any excess digits
- */
 - (BOOL) scanRadixUnsignedLongLong: (unsigned long long*)value
 {
     unsigned int	        radix;
@@ -539,29 +499,18 @@ _scanLocation++;\
     return NO;
 }
 
-/**
- * After initial skipping (if any), this method scans a hexadecimal
- * integer value (optionally prefixed by "0x" or "0X"),
- * placing it in <em>intValue</em> if that is not null.
- * <br/>
- * Returns YES if anything is scanned, NO otherwise.
- * <br/>
- * On overflow, INT_MAX or INT_MIN is put into <em>intValue</em>
- * <br/>
- * Scans past any excess digits
- */
 - (BOOL) scanHexInt: (unsigned int*)value
 {
     unsigned int          saveScanLocation = _scanLocation;
     unsigned long long    tmp;
     
     /* Skip whitespace */
-    if (!skipToNextField())
+    if (!skipToNextField()) // 后面没东西了
     {
         _scanLocation = saveScanLocation;
         return NO;
     }
-    
+    // 这里, 控制的是解析指针. 如果是 0x 的, 那么越过, 如果不是, 那么代表这个字符串没有 0x 开头, 那么第一个就是有效的数值.
     if ((_scanLocation < myLength()) && (myCharacter(_scanLocation) == '0'))
     {
         _scanLocation++;
@@ -583,6 +532,7 @@ _scanLocation++;\
             _scanLocation--;	// Just scan the zero.
         }
     }
+    
     if ([self scanUnsignedLongLong_: &tmp
                               radix: 16
                             maximum: UINT_MAX
@@ -595,18 +545,6 @@ _scanLocation++;\
     return NO;
 }
 
-/**
- * After initial skipping (if any), this method scans a long
- * decimal integer value placing it in <em>longLongValue</em> if that
- * is not null.
- * <br/>
- * Returns YES if anything is scanned, NO otherwise.
- * <br/>
- * On overflow, LLONG_MAX or LLONG_MIN is put into
- * <em>longLongValue</em>
- * <br/>
- * Scans past any excess digits
- */
 - (BOOL) scanLongLong: (long long *)value
 {
     unsigned long long		num = 0;
@@ -681,17 +619,6 @@ _scanLocation++;\
     return YES;
 }
 
-/**
- * After initial skipping (if any), this method scans a hexadecimal
- * long long value (optionally prefixed by "0x" or "0X"),
- * placing it in <em>longLongValue</em> if that is not null.
- * <br/>
- * Returns YES if anything is scanned, NO otherwise.
- * <br/>
- * On overflow, ULLONG_MAX or ULLONG_MAX is put into <em>longLongValue</em>
- * <br/>
- * Scans past any excess digits
- */
 - (BOOL) scanHexLongLong: (unsigned long long*)value
 {
     unsigned int saveScanLocation = _scanLocation;
@@ -735,26 +662,8 @@ _scanLocation++;\
     return NO;
 }
 
-/**
- * Not implemented.
- */
-- (BOOL) scanDecimal: (NSDecimal*)value
-{
-    [self notImplemented:_cmd];			/* FIXME */
-    return NO;
-}
-
-/**
- * After initial skipping (if any), this method scans a double value,
- * placing it in <em>doubleValue</em> if that is not null.
- * Returns YES if anything is scanned, NO otherwise.
- * <br/>
- * On overflow, HUGE_VAL or - HUGE_VAL is put into <em>doubleValue</em>
- * <br/>
- * On underflow, 0.0 is put into <em>doubleValue</em>
- * <br/>
- * Scans past any excess digits
- */
+// http://www.ruanyifeng.com/blog/2010/06/ieee_floating-point_representation.html
+// 这里, 没看明白, 没有仔细看.
 - (BOOL) scanDouble: (double *)value
 {
     unichar	c = 0;
@@ -763,6 +672,8 @@ _scanLocation++;\
     BOOL		negative = NO;
     BOOL		got_dot = NO;
     BOOL		got_digit = NO;
+    
+    // 还是先记录一下最初的位置.
     unsigned int	saveScanLocation = _scanLocation;
     
     /* Skip whitespace */
@@ -772,7 +683,7 @@ _scanLocation++;\
         return NO;
     }
     
-    /* Check for sign */
+    // 还是记录一下正负号.
     if (_scanLocation < myLength())
     {
         switch (myCharacter(_scanLocation))
@@ -786,6 +697,7 @@ _scanLocation++;\
                 break;
         }
     }
+    
     
     /* Process number */
     while (_scanLocation < myLength())
@@ -820,6 +732,7 @@ _scanLocation++;\
         }
         _scanLocation++;
     }
+    
     if (!got_digit)
     {
         _scanLocation = saveScanLocation;
@@ -853,6 +766,7 @@ _scanLocation++;\
             _scanLocation = expScanLocation;
         }
     }
+    
     if (value)
     {
         if (num && exponent)
@@ -865,17 +779,6 @@ _scanLocation++;\
     return YES;
 }
 
-/**
- * After initial skipping (if any), this method scans a float value,
- * placing it in <em>floatValue</em> if that is not null.
- * Returns YES if anything is scanned, NO otherwise.
- * <br/>
- * On overflow, HUGE_VAL or - HUGE_VAL is put into <em>floatValue</em>
- * <br/>
- * On underflow, 0.0 is put into <em>floatValue</em>
- * <br/>
- * Scans past any excess digits
- */
 - (BOOL) scanFloat: (float*)value
 {
     double num;
@@ -898,53 +801,53 @@ _scanLocation++;\
  * If value is not null, any character scanned are
  * stored in a string returned in this location.
  */
+// 这个函数的意思是, 遍历直到aSet中的字符出现了. 个人感觉命名很烂.
 - (BOOL) scanCharactersFromSet: (NSCharacterSet *)aSet
                     intoString: (NSString **)value
 {
     unsigned int	saveScanLocation = _scanLocation;
     
-    if (skipToNextField())
+    if (!skipToNextField()) { return NO;}
+    
+    unsigned int    start;
+    BOOL        (*memImp)(NSCharacterSet*, SEL, unichar);
+    
+    if (aSet == _charactersToBeSkipped)
+        memImp = _skipImp;
+    else
+        memImp = (BOOL (*)(NSCharacterSet*, SEL, unichar))
+        [aSet methodForSelector: memSel];
+    
+    start = _scanLocation;
+    if (_isUnicode)
     {
-        unsigned int	start;
-        BOOL		(*memImp)(NSCharacterSet*, SEL, unichar);
-        
-        if (aSet == _charactersToBeSkipped)
-            memImp = _skipImp;
-        else
-            memImp = (BOOL (*)(NSCharacterSet*, SEL, unichar))
-            [aSet methodForSelector: memSel];
-        
-        start = _scanLocation;
-        if (_isUnicode)
+        while (_scanLocation < myLength())
         {
-            while (_scanLocation < myLength())
-            {
-                if ((*memImp)(aSet, memSel, myUnicode(_scanLocation)) == NO)
-                    break;
-                _scanLocation++;
-            }
+            if ((*memImp)(aSet, memSel, myUnicode(_scanLocation)) == NO)
+                break;
+            _scanLocation++;
         }
-        else
+    }
+    else
+    {
+        while (_scanLocation < myLength())
         {
-            while (_scanLocation < myLength())
-            {
-                if ((*memImp)(aSet, memSel, myChar(_scanLocation)) == NO)
-                    break;
-                _scanLocation++;
-            }
+            if ((*memImp)(aSet, memSel, myChar(_scanLocation)) == NO)
+                break;
+            _scanLocation++;
         }
-        if (_scanLocation != start)
+    }
+    if (_scanLocation != start)
+    {
+        if (value != 0)
         {
-            if (value != 0)
-            {
-                NSRange	range;
-                
-                range.location = start;
-                range.length = _scanLocation - start;
-                *value = [_string substringWithRange: range];
-            }
-            return YES;
+            NSRange    range;
+            
+            range.location = start;
+            range.length = _scanLocation - start;
+            *value = [_string substringWithRange: range];
         }
+        return YES;
     }
     _scanLocation = saveScanLocation;
     return NO;
@@ -956,6 +859,7 @@ _scanLocation++;\
  * <em>stringValue</em> if that is not null.
  * <br/>
  * Returns YES if anything is scanned, NO otherwise.
+ 这个函数和scanCharactersFromSet应该是一样的逻辑. 难道是之前的命名太差, 重新起了一个名, 那也应该调用原来的函数啊
  */
 - (BOOL) scanUpToCharactersFromSet: (NSCharacterSet *)aSet
                         intoString: (NSString **)value
@@ -1183,7 +1087,7 @@ _scanLocation++;\
 {
     ASSIGNCOPY(_charactersToBeSkipped, aSet);
     _skipImp = (BOOL (*)(NSCharacterSet*, SEL, unichar))
-    [_charactersToBeSkipped methodForSelector: memSel];
+    [_charactersToBeSkipped methodForSelector: characterIsMemSel];
 }
 
 /**

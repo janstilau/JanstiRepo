@@ -21,7 +21,7 @@ extern "C" {
 @private
     NSString		*_string;
     NSCharacterSet	*_charactersToBeSkipped;
-    BOOL			(*_skipImp)(NSCharacterSet*, SEL, unichar);
+    BOOL			(*_skipImp)(NSCharacterSet*, SEL, unichar); // 这样写是为了提高效率????
     NSDictionary		*_locale;
     NSUInteger		_scanLocation;
     unichar		_decimal;
