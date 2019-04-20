@@ -92,7 +92,7 @@ KVOSetup()
  */
 @interface	GSKVOReplacement : NSObject
 {
-    Class         original;       /* The original class *
+    Class         original;       /* The original class */
     Class         replacement;    /* The replacement class */
     NSMutableSet  *keys;          /* The observed setter keys */
 }

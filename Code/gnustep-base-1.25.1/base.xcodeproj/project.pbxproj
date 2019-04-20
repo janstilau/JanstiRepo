@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		064A9563226ABF25009AAB1A /* NSKeyValueObserving.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A9562226ABF25009AAB1A /* NSKeyValueObserving.m */; };
 		06EDD9592248BEA900C87605 /* NSMutableString+GNUstepBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD8AD2248BEA800C87605 /* NSMutableString+GNUstepBase.h */; };
 		06EDD95A2248BEA900C87605 /* NSBundle+GNUstepBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD8AE2248BEA800C87605 /* NSBundle+GNUstepBase.h */; };
 		06EDD95B2248BEA900C87605 /* NSTask+GNUstepBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EDD8AF2248BEA800C87605 /* NSTask+GNUstepBase.h */; };
@@ -369,7 +370,6 @@
 		18EFCC1F172B0B9A003304CA /* gdnc.m in Sources */ = {isa = PBXBuildFile; fileRef = 1837D9DE1652D0FF00197E53 /* gdnc.m */; };
 		AD197C05189A4D5F000F6CF9 /* NSInvocation.m in Sources */ = {isa = PBXBuildFile; fileRef = AD197BFF189A4D5F000F6CF9 /* NSInvocation.m */; };
 		AD197C06189A4D5F000F6CF9 /* NSInvocationOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = AD197C00189A4D5F000F6CF9 /* NSInvocationOperation.m */; };
-		AD197C07189A4D5F000F6CF9 /* NSKeyValueObserving.m in Sources */ = {isa = PBXBuildFile; fileRef = AD197C01189A4D5F000F6CF9 /* NSKeyValueObserving.m */; };
 		AD197C08189A4D5F000F6CF9 /* NSMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = AD197C02189A4D5F000F6CF9 /* NSMetadata.m */; };
 		AD197C09189A4D5F000F6CF9 /* NSUserNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = AD197C03189A4D5F000F6CF9 /* NSUserNotification.m */; };
 		AD197C0A189A4D5F000F6CF9 /* NSUUID.m in Sources */ = {isa = PBXBuildFile; fileRef = AD197C04189A4D5F000F6CF9 /* NSUUID.m */; };
@@ -413,6 +413,8 @@
 
 /* Begin PBXFileReference section */
 		064A2278224F840100A6B909 /* URLSessionLearn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = URLSessionLearn.h; sourceTree = "<group>"; };
+		064A9561226ABEF1009AAB1A /* NSKeyValueObservingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSKeyValueObservingHeader.h; sourceTree = "<group>"; };
+		064A9562226ABF25009AAB1A /* NSKeyValueObserving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueObserving.m; sourceTree = "<group>"; };
 		06EDD8AD2248BEA800C87605 /* NSMutableString+GNUstepBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableString+GNUstepBase.h"; sourceTree = "<group>"; };
 		06EDD8AE2248BEA800C87605 /* NSBundle+GNUstepBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+GNUstepBase.h"; sourceTree = "<group>"; };
 		06EDD8AF2248BEA800C87605 /* NSTask+GNUstepBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTask+GNUstepBase.h"; sourceTree = "<group>"; };
@@ -792,7 +794,6 @@
 		18906F331610BF3C0003C892 /* nextstep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nextstep.h; sourceTree = "<group>"; };
 		18906F341610BF3C0003C892 /* thai.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thai.h; sourceTree = "<group>"; };
 		18906F351610BF3C0003C892 /* CXXException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXXException.m; sourceTree = "<group>"; };
-		18906F361610BF3C0003C892 /* CompatibilityHeaders.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CompatibilityHeaders.make; sourceTree = "<group>"; };
 		18906F371610BF3C0003C892 /* DocMakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DocMakefile; sourceTree = "<group>"; };
 		18906F381610BF3C0003C892 /* GNUmakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
 		18906F391610BF3C0003C892 /* GSArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSArray.m; sourceTree = "<group>"; };
@@ -1500,7 +1501,6 @@
 		18FE20621628550100389A13 /* Unicode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Unicode.m; sourceTree = "<group>"; };
 		AD197BFF189A4D5F000F6CF9 /* NSInvocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInvocation.m; sourceTree = "<group>"; };
 		AD197C00189A4D5F000F6CF9 /* NSInvocationOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInvocationOperation.m; sourceTree = "<group>"; };
-		AD197C01189A4D5F000F6CF9 /* NSKeyValueObserving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSKeyValueObserving.m; path = Source/NSKeyValueObserving.m; sourceTree = "<group>"; };
 		AD197C02189A4D5F000F6CF9 /* NSMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMetadata.m; sourceTree = "<group>"; };
 		AD197C03189A4D5F000F6CF9 /* NSUserNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUserNotification.m; sourceTree = "<group>"; };
 		AD197C04189A4D5F000F6CF9 /* NSUUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUUID.m; sourceTree = "<group>"; };
@@ -1912,7 +1912,8 @@
 		18394BFF1610E9D600335E85 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
-				18F8D04F1724534E00420DA5 /* KVO */,
+				064A9561226ABEF1009AAB1A /* NSKeyValueObservingHeader.h */,
+				064A9562226ABF25009AAB1A /* NSKeyValueObserving.m */,
 				18906F701610BF3C0003C892 /* NSAffineTransform.m */,
 				18906F711610BF3C0003C892 /* NSArchiver.m */,
 				18906F721610BF3C0003C892 /* NSArray.m */,
@@ -2202,7 +2203,6 @@
 				18906F381610BF3C0003C892 /* GNUmakefile */,
 				18906F6F1610BF3C0003C892 /* Makefile.preamble */,
 				18906F6E1610BF3C0003C892 /* Makefile.postamble */,
-				18906F361610BF3C0003C892 /* CompatibilityHeaders.make */,
 				18906F371610BF3C0003C892 /* DocMakefile */,
 				18394BFF1610E9D600335E85 /* Foundation */,
 				18394BF21610DC0B00335E85 /* GNUstepBase */,
@@ -2359,14 +2359,6 @@
 				18F8D04D17244FE900420DA5 /* test00.m */,
 				18D882531729B64E0067E486 /* test01.m */,
 				18EFCC08172AF0F0003304CA /* test02.m */,
-			);
-			path = KVO;
-			sourceTree = "<group>";
-		};
-		18F8D04F1724534E00420DA5 /* KVO */ = {
-			isa = PBXGroup;
-			children = (
-				AD197C01189A4D5F000F6CF9 /* NSKeyValueObserving.m */,
 			);
 			path = KVO;
 			sourceTree = "<group>";
@@ -3882,6 +3874,7 @@
 				1852897E161396450016729B /* GSValue.m in Sources */,
 				18641D211678AD41003C6E11 /* GSSocksParser.m in Sources */,
 				18641D221678AD46003C6E11 /* GSSocksParserPrivate.m in Sources */,
+				064A9563226ABF25009AAB1A /* NSKeyValueObserving.m in Sources */,
 				18641D1F1678AD34003C6E11 /* GSSocks4Parser.m in Sources */,
 				18641D201678AD39003C6E11 /* GSSocks5Parser.m in Sources */,
 				18528957161396130016729B /* GCArray.m in Sources */,
@@ -3977,7 +3970,6 @@
 				18394C3E1610EB7F00335E85 /* NSNotification.m in Sources */,
 				185289FF1613A8840016729B /* NSNotificationCenter.m in Sources */,
 				18394C401610EB7F00335E85 /* NSNotificationQueue.m in Sources */,
-				AD197C07189A4D5F000F6CF9 /* NSKeyValueObserving.m in Sources */,
 				18394C411610EB7F00335E85 /* NSNull.m in Sources */,
 				18394C421610EB7F00335E85 /* NSNumber.m in Sources */,
 				18394C431610EB7F00335E85 /* NSNumberFormatter.m in Sources */,
