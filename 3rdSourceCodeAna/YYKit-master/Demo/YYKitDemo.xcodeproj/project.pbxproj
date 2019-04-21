@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		067A3B07226C527900BD046E /* Demo.xib in Resources */ = {isa = PBXBuildFile; fileRef = 067A3B06226C527900BD046E /* Demo.xib */; };
+		067A3B35226C6B2900BD046E /* YYTextLayoutDraw.m in Sources */ = {isa = PBXBuildFile; fileRef = 067A3B34226C6B2900BD046E /* YYTextLayoutDraw.m */; };
+		067A3B39226C815000BD046E /* YYTextContainer+CommonMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 067A3B38226C815000BD046E /* YYTextContainer+CommonMethod.m */; };
 		06EE2A94226C21CA00B50EC1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 06EE2A96226C21CA00B50EC1 /* InfoPlist.strings */; };
 		06EE2A9B226C25F400B50EC1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 06EE2A9D226C25F400B50EC1 /* Localizable.strings */; };
 		ABDC320D1BEAFB870012A159 /* YYTextTagExample.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDC320C1BEAFB870012A159 /* YYTextTagExample.m */; };
@@ -199,6 +202,11 @@
 
 /* Begin PBXFileReference section */
 		067A3B05226C476300BD046E /* UILabelDash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UILabelDash.h; sourceTree = "<group>"; };
+		067A3B06226C527900BD046E /* Demo.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Demo.xib; sourceTree = "<group>"; };
+		067A3B33226C6B2800BD046E /* YYTextLayoutDraw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YYTextLayoutDraw.h; sourceTree = "<group>"; };
+		067A3B34226C6B2900BD046E /* YYTextLayoutDraw.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YYTextLayoutDraw.m; sourceTree = "<group>"; };
+		067A3B37226C815000BD046E /* YYTextContainer+CommonMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "YYTextContainer+CommonMethod.h"; sourceTree = "<group>"; };
+		067A3B38226C815000BD046E /* YYTextContainer+CommonMethod.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "YYTextContainer+CommonMethod.m"; sourceTree = "<group>"; };
 		06EE2A8F226C217D00B50EC1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		06EE2A90226C218400B50EC1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		06EE2A91226C218900B50EC1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -554,6 +562,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		067A3B36226C811800BD046E /* YYLayout */ = {
+			isa = PBXGroup;
+			children = (
+				067A3B33226C6B2800BD046E /* YYTextLayoutDraw.h */,
+				067A3B34226C6B2900BD046E /* YYTextLayoutDraw.m */,
+				D9B260171BEE79370038C00A /* YYTextLayout.h */,
+				D9B260181BEE79370038C00A /* YYTextLayout.m */,
+				067A3B37226C815000BD046E /* YYTextContainer+CommonMethod.h */,
+				067A3B38226C815000BD046E /* YYTextContainer+CommonMethod.m */,
+			);
+			path = YYLayout;
+			sourceTree = "<group>";
+		};
 		D9067E041B98A39200F346EB /* Feed List */ = {
 			isa = PBXGroup;
 			children = (
@@ -1045,6 +1066,7 @@
 		D9B2600B1BEE79370038C00A /* Text */ = {
 			isa = PBXGroup;
 			children = (
+				067A3B06226C527900BD046E /* Demo.xib */,
 				067A3B05226C476300BD046E /* UILabelDash.h */,
 				D9B260321BEE79370038C00A /* YYLabel.h */,
 				D9B260331BEE79370038C00A /* YYLabel.m */,
@@ -1059,8 +1081,7 @@
 		D9B2600C1BEE79370038C00A /* Component */ = {
 			isa = PBXGroup;
 			children = (
-				D9B260171BEE79370038C00A /* YYTextLayout.h */,
-				D9B260181BEE79370038C00A /* YYTextLayout.m */,
+				067A3B36226C811800BD046E /* YYLayout */,
 				D9B260191BEE79370038C00A /* YYTextLine.h */,
 				D9B2601A1BEE79370038C00A /* YYTextLine.m */,
 				D9B260131BEE79370038C00A /* YYTextInput.h */,
@@ -1221,6 +1242,7 @@
 				D98193281BC8067C00BA0604 /* Twitter@3x.jpg in Resources */,
 				D9CC99FB1B8B568B00A9466D /* mew_baseline.png in Resources */,
 				D933C72B1B7E39EA0065CDBB /* ermilio_lossless.bpg in Resources */,
+				067A3B07226C527900BD046E /* Demo.xib in Resources */,
 				D9700D961BC7C16900F878A4 /* weibo_1.json in Resources */,
 				D933C16E1B779FE90065CDBB /* cube@2x.png in Resources */,
 				D9700D931BC7C16900F878A4 /* weibo_2.json in Resources */,
@@ -1268,6 +1290,7 @@
 				D9B260791BEE79370038C00A /* YYImage.m in Sources */,
 				D91A99441B5A8DE900EF3A3E /* YYImageExample.m in Sources */,
 				D9B260831BEE79370038C00A /* YYTextEffectWindow.m in Sources */,
+				067A3B35226C6B2900BD046E /* YYTextLayoutDraw.m in Sources */,
 				D9067E031B987CF000F346EB /* YYTextAsyncExample.m in Sources */,
 				D9B2607A1BEE79370038C00A /* YYImageCache.m in Sources */,
 				D9B260591BEE79370038C00A /* NSObject+YYAddForARC.m in Sources */,
@@ -1277,6 +1300,7 @@
 				D9B260681BEE79370038C00A /* UIImage+YYAdd.m in Sources */,
 				D9067DF11B975D3900F346EB /* YYTextExampleHelper.m in Sources */,
 				D9971BB01B84D55A00A7B424 /* YYTextAttributeExample.m in Sources */,
+				067A3B39226C815000BD046E /* YYTextContainer+CommonMethod.m in Sources */,
 				D9B260A01BEE79370038C00A /* YYWeakProxy.m in Sources */,
 				D9B260951BEE79370038C00A /* YYAsyncLayer.m in Sources */,
 				D9B260691BEE79370038C00A /* UIScreen+YYAdd.m in Sources */,

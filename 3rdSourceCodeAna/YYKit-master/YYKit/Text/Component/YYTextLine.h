@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A text line object wrapped `CTLineRef`, see `YYTextLayout` for more.
  */
+
 @interface YYTextLine : NSObject
 
 + (instancetype)lineWithCTLine:(CTLineRef)CTLine position:(CGPoint)position vertical:(BOOL)isVertical;

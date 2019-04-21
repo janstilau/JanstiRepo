@@ -1,14 +1,3 @@
-//
-//  YYTextLayout.h
-//  YYKit <https://github.com/ibireme/YYKit>
-//
-//  Created by ibireme on 15/3/3.
-//  Copyright (c) 2015 ibireme.
-//
-//  This source code is licensed under the MIT-style license found in the
-//  LICENSE file in the root directory of this source tree.
-//
-
 #import <UIKit/UIKit.h>
 #import <CoreText/CoreText.h>
 
@@ -21,6 +10,16 @@
 #import "YYTextLine.h"
 #import "YYTextInput.h"
 #endif
+
+typedef NS_OPTIONS(NSUInteger, YYTextDecorationType) {
+    YYTextDecorationTypeUnderline     = 1 << 0,
+    YYTextDecorationTypeStrikethrough = 1 << 1,
+};
+
+typedef NS_OPTIONS(NSUInteger, YYTextBorderType) {
+    YYTextBorderTypeBackgound = 1 << 0,
+    YYTextBorderTypeNormal    = 1 << 1,
+};
 
 @protocol YYTextLinePositionModifier;
 
@@ -44,18 +43,20 @@ extern const CGSize YYTextContainerMaxSize;
  
  Example:
  
-     ┌─────────────────────────────┐  <------- container
-     │                             │
-     │    asdfasdfasdfasdfasdfa   <------------ container insets
-     │    asdfasdfa   asdfasdfa    │
-     │    asdfas         asdasd    │
-     │    asdfa        <----------------------- container exclusion path
-     │    asdfas         adfasd    │
-     │    asdfasdfa   asdfasdfa    │
-     │    asdfasdfasdfasdfasdfa    │
-     │                             │
-     └─────────────────────────────┘
+ ┌─────────────────────────────┐  <------- container
+ │                             │
+ │    asdfasdfasdfasdfasdfa   <------------ container insets
+ │    asdfasdfa   asdfasdfa    │
+ │    asdfas         asdasd    │
+ │    asdfa        <----------------------- container exclusion path
+ │    asdfas         adfasd    │
+ │    asdfasdfa   asdfasdfa    │
+ │    asdfasdfasdfasdfasdfa    │
+ │                             │
+ └─────────────────────────────┘
  */
+
+// 这是一个纯粹纯粹的数据类. 
 @interface YYTextContainer : NSObject <NSCoding, NSCopying>
 
 /// Creates a container with the specified size. @param size The size.
@@ -138,15 +139,15 @@ extern const CGSize YYTextContainerMaxSize;
  
  example: (layout with a circle exclusion path)
  
-     ┌──────────────────────────┐  <------ container
-     │ [--------Line0--------]  │  <- Row0
-     │ [--------Line1--------]  │  <- Row1
-     │ [-Line2-]     [-Line3-]  │  <- Row2
-     │ [-Line4]       [Line5-]  │  <- Row3
-     │ [-Line6-]     [-Line7-]  │  <- Row4
-     │ [--------Line8--------]  │  <- Row5
-     │ [--------Line9--------]  │  <- Row6
-     └──────────────────────────┘
+ ┌──────────────────────────┐  <------ container
+ │ [--------Line0--------]  │  <- Row0
+ │ [--------Line1--------]  │  <- Row1
+ │ [-Line2-]     [-Line3-]  │  <- Row2
+ │ [-Line4]       [Line5-]  │  <- Row3
+ │ [-Line6-]     [-Line7-]  │  <- Row4
+ │ [--------Line8--------]  │  <- Row5
+ │ [--------Line9--------]  │  <- Row6
+ └──────────────────────────┘
  */
 @interface YYTextLayout : NSObject <NSCoding>
 
@@ -158,11 +159,11 @@ extern const CGSize YYTextContainerMaxSize;
 
 /**
  Generate a layout with the given container size and text.
-
+ 
  @param size The text container's size
  @param text The text (if nil, returns nil).
  @return A new layout, or nil when an error occurs.
-*/
+ */
 + (nullable YYTextLayout *)layoutWithContainerSize:(CGSize)size
                                               text:(NSAttributedString *)text;
 
@@ -182,7 +183,7 @@ extern const CGSize YYTextContainerMaxSize;
  @param container The text container (if nil, returns nil).
  @param text      The text (if nil, returns nil).
  @param range     The text range (if out of range, returns nil). If the
-    length of the range is 0, it means the length is no limit.
+ length of the range is 0, it means the length is no limit.
  @return A new layout, or nil when an error occurs.
  */
 + (nullable YYTextLayout *)layoutWithContainer:(YYTextContainer *)container
@@ -195,7 +196,7 @@ extern const CGSize YYTextContainerMaxSize;
  @param containers An array of YYTextContainer object (if nil, returns nil).
  @param text       The text (if nil, returns nil).
  @return An array of YYTextLayout object (the count is same as containers),
-    or nil when an error occurs.
+ or nil when an error occurs.
  */
 + (nullable NSArray<YYTextLayout *> *)layoutWithContainers:(NSArray<YYTextContainer *> *)containers
                                                       text:(NSAttributedString *)text;
@@ -206,9 +207,9 @@ extern const CGSize YYTextContainerMaxSize;
  @param containers An array of YYTextContainer object (if nil, returns nil).
  @param text       The text (if nil, returns nil).
  @param range      The text range (if out of range, returns nil). If the
-    length of the range is 0, it means the length is no limit.
+ length of the range is 0, it means the length is no limit.
  @return An array of YYTextLayout object (the count is same as containers),
-    or nil when an error occurs.
+ or nil when an error occurs.
  */
 + (nullable NSArray<YYTextLayout *> *)layoutWithContainers:(NSArray<YYTextContainer *> *)containers
                                                       text:(NSAttributedString *)text
@@ -529,9 +530,10 @@ extern const CGSize YYTextContainerMaxSize;
  @param layer   The attachment layers will add to this layer.
  @param debug   The debug option. Pass nil to avoid debug drawing.
  @param cancel  The cancel checker block. It will be called in drawing progress.
-                    If it returns YES, the further draw progress will be canceled.
-                    Pass nil to ignore this feature.
+ If it returns YES, the further draw progress will be canceled.
+ Pass nil to ignore this feature.
  */
+// 这个函数, 感觉将 attach 和 其他的绘制放到一起, 有点问题. 现在的处理时, 在 didDisplay 里面, 通过传入 context = nil. 来组织绘图, 令人容易产生混淆.
 - (void)drawInContext:(nullable CGContextRef)context
                  size:(CGSize)size
                 point:(CGPoint)point

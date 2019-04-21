@@ -47,6 +47,7 @@ CGContextRef YYCGContextCreateGrayBitmapContext(CGSize size, CGFloat scale) {
     return context;
 }
 
+// 返回当前屏幕的 scale 值.
 CGFloat YYScreenScale() {
     static CGFloat scale;
     static dispatch_once_t onceToken;
@@ -56,6 +57,7 @@ CGFloat YYScreenScale() {
     return scale;
 }
 
+// 返回当前屏幕的 size 值.
 CGSize YYScreenSize() {
     static CGSize size;
     static dispatch_once_t onceToken;

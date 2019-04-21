@@ -39,6 +39,10 @@ NS_ASSUME_NONNULL_BEGIN
  
  See NSAttributedString+YYText.h for more convenience methods to set the attributes.
  See YYTextAttribute.h and YYTextLayout.h for more information.
+ 
+ 
+ YYLabel 是从 UIView 中继承过来的, 所以它是一个完全自定义的类.
+ 
  */
 @interface YYLabel : UIView <NSCoding>
 

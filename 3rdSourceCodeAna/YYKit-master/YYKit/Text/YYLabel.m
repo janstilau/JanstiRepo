@@ -26,12 +26,14 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
 
 
 @interface YYLabel() <YYTextDebugTarget, YYAsyncLayerDelegate> {
+// 所有的数据项.
+
     NSMutableAttributedString *_innerText; ///< nonnull
     YYTextLayout *_innerLayout;
     YYTextContainer *_innerContainer; ///< nonnull
     
-    NSMutableArray *_attachmentViews;
-    NSMutableArray *_attachmentLayers;
+    NSMutableArray *_attachmentViews; // 表示, 正在显示的
+    NSMutableArray *_attachmentLayers; // 表示, 正在显示的.
     
     NSRange _highlightRange; ///< current highlight range
     YYTextHighlight *_highlight; ///< highlight attribute in `_highlightRange`
@@ -43,8 +45,8 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     NSTimer *_longPressTimer;
     CGPoint _touchBeganPoint;
     
-    struct {
-        unsigned int layoutNeedUpdate : 1;
+    struct { // 节省空间, 个人感觉没有必要.
+        unsigned int layoutNeedUpdate : 1; // 设置需要需要重新计算布局. 在 frame, bounds 改变, 以及明确的调用 _setLayoutNeedUpdate 之后, 这个值变为YES.
         unsigned int showingHighlight : 1;
         
         unsigned int trackingTouch : 1;
@@ -61,6 +63,132 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
 
 
 @implementation YYLabel
+
+#pragma mark - init
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:CGRectZero];
+    if (!self) return nil;
+    self.backgroundColor = [UIColor clearColor];
+    self.opaque = NO; // 这个是绘图系统优化性能用的值.
+    [self _initLabel];
+    self.frame = frame;
+    return self;
+}
+
+// init 方法.
+- (void)_initLabel {
+    ((YYAsyncLayer *)self.layer).displaysAsynchronously = NO;
+    self.layer.contentsScale = [UIScreen mainScreen].scale;
+    self.contentMode = UIViewContentModeRedraw;
+    
+    _attachmentViews = [NSMutableArray new];
+    _attachmentLayers = [NSMutableArray new];
+    
+    _debugOption = [YYTextDebugOption sharedDebugOption];
+    [YYTextDebugOption addDebugTarget:self];
+    
+    _font = [self _defaultFont];
+    _textColor = [UIColor blackColor];
+    _textVerticalAlignment = YYTextVerticalAlignmentCenter;
+    _numberOfLines = 1;
+    _textAlignment = NSTextAlignmentNatural;
+    _lineBreakMode = NSLineBreakByTruncatingTail;
+    _innerText = [NSMutableAttributedString new];
+    _innerContainer = [YYTextContainer new];
+    _innerContainer.truncationType = YYTextTruncationTypeEnd;
+    _innerContainer.maximumNumberOfRows = _numberOfLines;
+    _clearContentsBeforeAsynchronouslyDisplay = YES;
+    _fadeOnAsynchronouslyDisplay = YES;
+    _fadeOnHighlight = YES;
+    
+    self.isAccessibilityElement = YES;
+}
+
+- (void)dealloc {
+    [YYTextDebugOption removeDebugTarget:self];
+    [_longPressTimer invalidate];
+}
+
++ (Class)layerClass { // 返回特定的 layer, 作为自己的 layer.
+    return [YYAsyncLayer class];
+}
+
+- (void)setFrame:(CGRect)frame {
+    CGSize oldSize = self.bounds.size;
+    [super setFrame:frame];
+    CGSize newSize = self.bounds.size;
+    if (!CGSizeEqualToSize(oldSize, newSize)) {
+        _innerContainer.size = self.bounds.size;
+        if (!_ignoreCommonProperties) {
+            _state.layoutNeedUpdate = YES;
+        }
+        if (_displaysAsynchronously && _clearContentsBeforeAsynchronouslyDisplay) {
+            [self _clearContents];
+        }
+        [self _setLayoutNeedRedraw];
+    }
+}
+
+- (void)setBounds:(CGRect)bounds {
+    CGSize oldSize = self.bounds.size;
+    [super setBounds:bounds];
+    CGSize newSize = self.bounds.size;
+    if (!CGSizeEqualToSize(oldSize, newSize)) {
+        _innerContainer.size = self.bounds.size;
+        if (!_ignoreCommonProperties) {
+            _state.layoutNeedUpdate = YES;
+        }
+        if (_displaysAsynchronously && _clearContentsBeforeAsynchronouslyDisplay) {
+            [self _clearContents];
+        }
+        [self _setLayoutNeedRedraw];
+    }
+}
+
+- (CGSize)sizeThatFits:(CGSize)size {
+    if (_ignoreCommonProperties) {
+        return _innerLayout.textBoundingSize;
+    }
+    
+    if (!_verticalForm && size.width <= 0) size.width = YYTextContainerMaxSize.width;
+    if (_verticalForm && size.height <= 0) size.height = YYTextContainerMaxSize.height;
+    
+    if ((!_verticalForm && size.width == self.bounds.size.width) ||
+        (_verticalForm && size.height == self.bounds.size.height)) {
+        [self _updateIfNeeded];
+        YYTextLayout *layout = self._innerLayout;
+        BOOL contains = NO;
+        if (layout.container.maximumNumberOfRows == 0) {
+            if (layout.truncatedLine == nil) {
+                contains = YES;
+            }
+        } else {
+            if (layout.rowCount <= layout.container.maximumNumberOfRows) {
+                contains = YES;
+            }
+        }
+        if (contains) {
+            return layout.textBoundingSize;
+        }
+    }
+    
+    if (!_verticalForm) {
+        size.height = YYTextContainerMaxSize.height;
+    } else {
+        size.width = YYTextContainerMaxSize.width;
+    }
+    
+    YYTextContainer *container = [_innerContainer copy];
+    container.size = size;
+    
+    YYTextLayout *layout = [YYTextLayout layoutWithContainer:container text:_innerText];
+    return layout.textBoundingSize;
+}
+
+- (NSString *)accessibilityLabel {
+    return [_innerLayout.text plainTextForRange:_innerLayout.text.rangeOfAll];
+}
 
 #pragma mark - Private
 
@@ -370,131 +498,6 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
             CFRelease(image);
         });
     }
-}
-
-- (void)_initLabel {
-    ((YYAsyncLayer *)self.layer).displaysAsynchronously = NO;
-    self.layer.contentsScale = [UIScreen mainScreen].scale;
-    self.contentMode = UIViewContentModeRedraw;
-    
-    _attachmentViews = [NSMutableArray new];
-    _attachmentLayers = [NSMutableArray new];
-    
-    _debugOption = [YYTextDebugOption sharedDebugOption];
-    [YYTextDebugOption addDebugTarget:self];
-    
-    _font = [self _defaultFont];
-    _textColor = [UIColor blackColor];
-    _textVerticalAlignment = YYTextVerticalAlignmentCenter;
-    _numberOfLines = 1;
-    _textAlignment = NSTextAlignmentNatural;
-    _lineBreakMode = NSLineBreakByTruncatingTail;
-    _innerText = [NSMutableAttributedString new];
-    _innerContainer = [YYTextContainer new];
-    _innerContainer.truncationType = YYTextTruncationTypeEnd;
-    _innerContainer.maximumNumberOfRows = _numberOfLines;
-    _clearContentsBeforeAsynchronouslyDisplay = YES;
-    _fadeOnAsynchronouslyDisplay = YES;
-    _fadeOnHighlight = YES;
-    
-    self.isAccessibilityElement = YES;
-}
-
-#pragma mark - Override
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:CGRectZero];
-    if (!self) return nil;
-    self.backgroundColor = [UIColor clearColor];
-    self.opaque = NO;
-    [self _initLabel];
-    self.frame = frame;
-    return self;
-}
-
-- (void)dealloc {
-    [YYTextDebugOption removeDebugTarget:self];
-    [_longPressTimer invalidate];
-}
-
-+ (Class)layerClass {
-    return [YYAsyncLayer class];
-}
-
-- (void)setFrame:(CGRect)frame {
-    CGSize oldSize = self.bounds.size;
-    [super setFrame:frame];
-    CGSize newSize = self.bounds.size;
-    if (!CGSizeEqualToSize(oldSize, newSize)) {
-        _innerContainer.size = self.bounds.size;
-        if (!_ignoreCommonProperties) {
-            _state.layoutNeedUpdate = YES;
-        }
-        if (_displaysAsynchronously && _clearContentsBeforeAsynchronouslyDisplay) {
-            [self _clearContents];
-        }
-        [self _setLayoutNeedRedraw];
-    }
-}
-
-- (void)setBounds:(CGRect)bounds {
-    CGSize oldSize = self.bounds.size;
-    [super setBounds:bounds];
-    CGSize newSize = self.bounds.size;
-    if (!CGSizeEqualToSize(oldSize, newSize)) {
-        _innerContainer.size = self.bounds.size;
-        if (!_ignoreCommonProperties) {
-            _state.layoutNeedUpdate = YES;
-        }
-        if (_displaysAsynchronously && _clearContentsBeforeAsynchronouslyDisplay) {
-            [self _clearContents];
-        }
-        [self _setLayoutNeedRedraw];
-    }
-}
-
-- (CGSize)sizeThatFits:(CGSize)size {
-    if (_ignoreCommonProperties) {
-        return _innerLayout.textBoundingSize;
-    }
-    
-    if (!_verticalForm && size.width <= 0) size.width = YYTextContainerMaxSize.width;
-    if (_verticalForm && size.height <= 0) size.height = YYTextContainerMaxSize.height;
-    
-    if ((!_verticalForm && size.width == self.bounds.size.width) ||
-        (_verticalForm && size.height == self.bounds.size.height)) {
-        [self _updateIfNeeded];
-        YYTextLayout *layout = self._innerLayout;
-        BOOL contains = NO;
-        if (layout.container.maximumNumberOfRows == 0) {
-            if (layout.truncatedLine == nil) {
-                contains = YES;
-            }
-        } else {
-            if (layout.rowCount <= layout.container.maximumNumberOfRows) {
-                contains = YES;
-            }
-        }
-        if (contains) {
-            return layout.textBoundingSize;
-        }
-    }
-    
-    if (!_verticalForm) {
-        size.height = YYTextContainerMaxSize.height;
-    } else {
-        size.width = YYTextContainerMaxSize.width;
-    }
-    
-    YYTextContainer *container = [_innerContainer copy];
-    container.size = size;
-    
-    YYTextLayout *layout = [YYTextLayout layoutWithContainer:container text:_innerText];
-    return layout.textBoundingSize;
-}
-
-- (NSString *)accessibilityLabel {
-    return [_innerLayout.text plainTextForRange:_innerLayout.text.rangeOfAll];
 }
 
 #pragma mark - NSCoding
@@ -1053,6 +1056,8 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
 
 #pragma mark - YYAsyncLayerDelegate
 
+
+// 最重要的一步, 如何绘制就在这个函数里面.
 - (YYAsyncLayerDisplayTask *)newAsyncDisplayTask {
     
     // capture current context
@@ -1065,7 +1070,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     NSMutableArray *attachmentLayers = _attachmentLayers;
     BOOL layoutNeedUpdate = _state.layoutNeedUpdate;
     BOOL fadeForAsync = _displaysAsynchronously && _fadeOnAsynchronouslyDisplay;
-    __block YYTextLayout *layout = (_state.showingHighlight && _highlightLayout) ? self._highlightLayout : self._innerLayout;
+    __block YYTextLayout *currentLayout = (_state.showingHighlight && _highlightLayout) ? self._highlightLayout : self._innerLayout;
     __block YYTextLayout *shrinkLayout = nil;
     __block BOOL layoutUpdated = NO;
     if (layoutNeedUpdate) {
@@ -1074,22 +1079,23 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     }
     
     // create display task
-    YYAsyncLayerDisplayTask *task = [YYAsyncLayerDisplayTask new];
-    
+    YYAsyncLayerDisplayTask *task = [[YYAsyncLayerDisplayTask alloc] init];
+    // willDisplay 是在主线程中进行的. 主要是做一些清空的操作.
     task.willDisplay = ^(CALayer *layer) {
-        [layer removeAnimationForKey:@"contents"];
+        [layer removeAnimationForKey:@"contents"]; // 首先, 把动画移出了.
         
         // If the attachment is not in new layout, or we don't know the new layout currently,
         // the attachment should be removed.
+        // 当布局改变只是, 所有 attach 重新添加, 当现有 attach 没有该 attach 时, 所有 attach 移出.
         for (UIView *view in attachmentViews) {
-            if (layoutNeedUpdate || ![layout.attachmentContentsSet containsObject:view]) {
+            if (layoutNeedUpdate || ![currentLayout.attachmentContentsSet containsObject:view]) {
                 if (view.superview == self) {
                     [view removeFromSuperview];
                 }
             }
         }
         for (CALayer *layer in attachmentLayers) {
-            if (layoutNeedUpdate || ![layout.attachmentContentsSet containsObject:layer]) {
+            if (layoutNeedUpdate || ![currentLayout.attachmentContentsSet containsObject:layer]) {
                 if (layer.superlayer == self.layer) {
                     [layer removeFromSuperlayer];
                 }
@@ -1099,29 +1105,31 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         [attachmentLayers removeAllObjects];
     };
     
+    // task.display 已经是在子线程中执行了, 所以里面调用了好几次 isCancelled 判断.
     task.display = ^(CGContextRef context, CGSize size, BOOL (^isCancelled)(void)) {
-        if (isCancelled()) return;
-        if (text.length == 0) return;
+        if (isCancelled()) return; // 如果, 取消了, 直接返回. 注意, isCancelled 是一个闭包, 所以这是一个动态值.
+        if (text.length == 0) return; //如果没有文字, 直接返回.
         
-        YYTextLayout *drawLayout = layout;
+        YYTextLayout *drawLayout = currentLayout;
         if (layoutNeedUpdate) {
-            layout = [YYTextLayout layoutWithContainer:container text:text];
-            shrinkLayout = [YYLabel _shrinkLayoutWithLayout:layout];
+            currentLayout = [YYTextLayout layoutWithContainer:container text:text];
+            shrinkLayout = [YYLabel _shrinkLayoutWithLayout:currentLayout];
             if (isCancelled()) return;
             layoutUpdated = YES;
-            drawLayout = shrinkLayout ? shrinkLayout : layout;
+            drawLayout = shrinkLayout ? shrinkLayout : currentLayout;
         }
         
         CGSize boundingSize = drawLayout.textBoundingSize;
         CGPoint point = CGPointZero;
+        // 这里, 根据垂直方向的布局, 修改起始点的坐标.
         if (verticalAlignment == YYTextVerticalAlignmentCenter) {
-            if (drawLayout.container.isVerticalForm) {
+            if (drawLayout.container.isVerticalForm) { // 是不是竖排.
                 point.x = -(size.width - boundingSize.width) * 0.5;
             } else {
                 point.y = (size.height - boundingSize.height) * 0.5;
             }
         } else if (verticalAlignment == YYTextVerticalAlignmentBottom) {
-            if (drawLayout.container.isVerticalForm) {
+            if (drawLayout.container.isVerticalForm) { // 是不是竖排.
                 point.x = -(size.width - boundingSize.width);
             } else {
                 point.y = (size.height - boundingSize.height);
@@ -1132,7 +1140,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     };
     
     task.didDisplay = ^(CALayer *layer, BOOL finished) {
-        YYTextLayout *drawLayout = layout;
+        YYTextLayout *drawLayout = currentLayout;
         if (layoutUpdated && shrinkLayout) {
             drawLayout = shrinkLayout;
         }
@@ -1156,7 +1164,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         __strong YYLabel *view = (YYLabel *)layer.delegate;
         if (!view) return;
         if (view->_state.layoutNeedUpdate && layoutUpdated) {
-            view->_innerLayout = layout;
+            view->_innerLayout = currentLayout;
             view->_shrinkInnerLayout = shrinkLayout;
             view->_state.layoutNeedUpdate = NO;
         }

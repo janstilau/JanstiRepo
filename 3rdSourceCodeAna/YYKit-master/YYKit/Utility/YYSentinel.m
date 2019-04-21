@@ -21,7 +21,7 @@
 }
 
 - (int32_t)increase {
-    return OSAtomicIncrement32(&_value);
+    return OSAtomicIncrement32(&_value); // abstract Atomically increments a 32-bit value.
 }
 
 @end

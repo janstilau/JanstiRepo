@@ -1,14 +1,3 @@
-//
-//  YYTextInput.h
-//  YYKit <https://github.com/ibireme/YYKit>
-//
-//  Created by ibireme on 15/4/17.
-//  Copyright (c) 2015 ibireme.
-//
-//  This source code is licensed under the MIT-style license found in the
-//  LICENSE file in the root directory of this source tree.
-//
-
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -25,7 +14,7 @@ typedef NS_ENUM(NSInteger, YYTextAffinity) {
 
 
 /**
- A YYTextPosition object represents a position in a text container; in other words, 
+ A YYTextPosition object represents a position in a text container; in other words,
  it is an index into the backing string in a text-displaying view.
  
  YYTextPosition has the same API as Apple's implementation in UITextView/UITextField,
@@ -45,7 +34,7 @@ typedef NS_ENUM(NSInteger, YYTextAffinity) {
 
 
 /**
- A YYTextRange object represents a range of characters in a text container; in other words, 
+ A YYTextRange object represents a range of characters in a text container; in other words,
  it identifies a starting index and an ending index in string backing a text-displaying view.
  
  YYTextRange has the same API as Apple's implementation in UITextView/UITextField,
