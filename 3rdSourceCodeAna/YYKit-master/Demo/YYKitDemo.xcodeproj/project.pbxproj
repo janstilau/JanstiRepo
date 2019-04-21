@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06EE2A94226C21CA00B50EC1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 06EE2A96226C21CA00B50EC1 /* InfoPlist.strings */; };
+		06EE2A9B226C25F400B50EC1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 06EE2A9D226C25F400B50EC1 /* Localizable.strings */; };
 		ABDC320D1BEAFB870012A159 /* YYTextTagExample.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDC320C1BEAFB870012A159 /* YYTextTagExample.m */; };
 		D9067DF11B975D3900F346EB /* YYTextExampleHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D9067DF01B975D3900F346EB /* YYTextExampleHelper.m */; };
 		D9067DF41B9813B500F346EB /* YYTextEditExample.m in Sources */ = {isa = PBXBuildFile; fileRef = D9067DF31B9813B500F346EB /* YYTextEditExample.m */; };
@@ -196,6 +198,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		06EE2A8F226C217D00B50EC1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		06EE2A90226C218400B50EC1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		06EE2A91226C218900B50EC1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		06EE2A95226C21CA00B50EC1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		06EE2A97226C21EF00B50EC1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		06EE2A98226C21F600B50EC1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		06EE2A9C226C25F400B50EC1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		06EE2A9E226C25F600B50EC1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		06EE2A9F226C25F800B50EC1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		ABDC320B1BEAFB870012A159 /* YYTextTagExample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYTextTagExample.h; sourceTree = "<group>"; };
 		ABDC320C1BEAFB870012A159 /* YYTextTagExample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYTextTagExample.m; sourceTree = "<group>"; };
 		D9067DEF1B975D3900F346EB /* YYTextExampleHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYTextExampleHelper.h; sourceTree = "<group>"; };
@@ -858,6 +869,8 @@
 			isa = PBXGroup;
 			children = (
 				D9B2604F1BEE79370038C00A /* YYKit.h */,
+				06EE2A96226C21CA00B50EC1 /* InfoPlist.strings */,
+				06EE2A9D226C25F400B50EC1 /* Localizable.strings */,
 				D9B25FA01BEE79370038C00A /* Base */,
 				D9B260061BEE79370038C00A /* Model */,
 				D9B25FE11BEE79370038C00A /* Cache */,
@@ -1164,6 +1177,8 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hant",
+				"zh-Hans",
 			);
 			mainGroup = D97484C719CAAD2900F46DE1;
 			productRefGroup = D97484D119CAAD2900F46DE1 /* Products */;
@@ -1189,6 +1204,7 @@
 				D91A995E1B5ADA3900EF3A3E /* google@2x.webp in Resources */,
 				D9700D921BC7C16900F878A4 /* weibo_6.json in Resources */,
 				D98193431BCAD3EF00BA0604 /* ResourceTwitter.bundle in Resources */,
+				06EE2A94226C21CA00B50EC1 /* InfoPlist.strings in Resources */,
 				D939F5E11B7CB044003EEC6A /* dribbble64_imageio.png in Resources */,
 				D98193291BC8067C00BA0604 /* Weibo@3x.jpg in Resources */,
 				D91A995F1B5ADA3900EF3A3E /* nyancat@2x.webp in Resources */,
@@ -1219,6 +1235,7 @@
 				D91A995B1B5ACF2A00EF3A3E /* niconiconi@2x.gif in Resources */,
 				D939F5E31B7CB04A003EEC6A /* dribbble128_imageio.png in Resources */,
 				D939F5E71B7CB052003EEC6A /* dribbble512_imageio.png in Resources */,
+				06EE2A9B226C25F400B50EC1 /* Localizable.strings in Resources */,
 				D9CC99F61B8B568B00A9466D /* mew_baseline.gif in Resources */,
 				D9CC99FA1B8B568B00A9466D /* mew_interlaced.png in Resources */,
 				D98193311BC829F900BA0604 /* twitter_0.json in Resources */,
@@ -1366,10 +1383,33 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		06EE2A96226C21CA00B50EC1 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				06EE2A95226C21CA00B50EC1 /* zh-Hans */,
+				06EE2A97226C21EF00B50EC1 /* zh-Hant */,
+				06EE2A98226C21F600B50EC1 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		06EE2A9D226C25F400B50EC1 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				06EE2A9C226C25F400B50EC1 /* en */,
+				06EE2A9E226C25F600B50EC1 /* zh-Hant */,
+				06EE2A9F226C25F800B50EC1 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		D97484E219CAAD2900F46DE1 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				D97484E319CAAD2900F46DE1 /* Base */,
+				06EE2A8F226C217D00B50EC1 /* zh-Hant */,
+				06EE2A90226C218400B50EC1 /* zh-Hant */,
+				06EE2A91226C218900B50EC1 /* zh-Hans */,
 			);
 			name = LaunchScreen.xib;
 			sourceTree = "<group>";
@@ -1381,6 +1421,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1434,6 +1475,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  YYKitDemo
+
+  Created by JustinLau on 2019/4/21.
+  Copyright © 2019 ibireme. All rights reserved.
+*/
+
+CFBundleDisplayName = "国际化App繁体字";

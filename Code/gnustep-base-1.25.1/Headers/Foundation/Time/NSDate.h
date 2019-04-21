@@ -24,6 +24,19 @@ GS_EXPORT const NSTimeInterval NSTimeIntervalSince1970;
 @class NSTimeZone;
 @class NSTimeZoneDetail;
 
+    
+/*
+ A representation of a specific point in time, independent of any calendar or time zone.
+ NSDate objects encapsulate a single point in time, independent of any particular calendrical system or time zone.
+ Date objects are immutable, representing an invariant time interval relative to an absolute reference date (00:00:00 UTC on 1 January 2001).
+ */
+    
+    
+/*
+
+ 这个类, 仅仅是对于时间戳的一个包装而已, 这个时间戳, 是和 2001,1,1 比较的, 而 unix 的, 是从 1970,1,1 开始的. 和服务器的交互, 也都是和 1970,1,1 进行的比较.
+*/
+    
 @interface NSDate : NSObject <NSCoding,NSCopying>
 {
 }

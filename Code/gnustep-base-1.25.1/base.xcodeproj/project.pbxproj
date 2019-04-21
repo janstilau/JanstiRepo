@@ -1694,6 +1694,7 @@
 				064A2278224F840100A6B909 /* URLSessionLearn.h */,
 				06EDD9192248BEA800C87605 /* NSStream.h */,
 				06EDD9072248BEA800C87605 /* NSScanner.h */,
+				06EDD9352248BEA800C87605 /* NSKeyValueObserving.h */,
 			);
 			path = Readed;
 			sourceTree = "<group>";
@@ -1701,21 +1702,19 @@
 		06EDD8EE2248BEA800C87605 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				06EE2A8E226C191200B50EC1 /* Time */,
 				06EDD9052248BEA800C87605 /* NSAutoreleasePool.h */,
 				06EDD9202248BEA800C87605 /* NSBundle.h */,
 				06EDD94B2248BEA800C87605 /* NSByteOrder.h */,
 				06EDD92B2248BEA800C87605 /* NSCache.h */,
-				06EDD9342248BEA800C87605 /* NSCalendar.h */,
-				06EDD94C2248BEA800C87605 /* NSCalendarDate.h */,
 				06EDD9102248BEA800C87605 /* NSCharacterSet.h */,
 				06EDD9112248BEA800C87605 /* NSClassDescription.h */,
 				06EDD9092248BEA800C87605 /* NSComparisonPredicate.h */,
 				06EDD9302248BEA800C87605 /* NSCompoundPredicate.h */,
 				06EDD9312248BEA800C87605 /* NSConnection.h */,
 				06EDD8F32248BEA800C87605 /* NSData.h */,
-				06EDD8FA2248BEA800C87605 /* NSDate.h */,
-				06EDD9122248BEA800C87605 /* NSDateFormatter.h */,
 				06EDD93D2248BEA800C87605 /* NSDebug.h */,
+				06EDD8F02248BEA800C87605 /* NSLocale.h */,
 				06EDD9392248BEA800C87605 /* NSDecimal.h */,
 				06EDD8F42248BEA800C87605 /* NSDecimalNumber.h */,
 				06EDD93A2248BEA800C87605 /* NSDistantObject.h */,
@@ -1737,8 +1736,6 @@
 				06EDD9212248BEA800C87605 /* NSIndexSet.h */,
 				06EDD9322248BEA800C87605 /* NSInvocation.h */,
 				06EDD9452248BEA800C87605 /* NSInvocationOperation.h */,
-				06EDD9352248BEA800C87605 /* NSKeyValueObserving.h */,
-				06EDD8F02248BEA800C87605 /* NSLocale.h */,
 				06EDD9082248BEA800C87605 /* NSMapTable.h */,
 				06EDD93F2248BEA800C87605 /* NSMetadata.h */,
 				06EDD9022248BEA800C87605 /* NSMethodSignature.h */,
@@ -1763,7 +1760,6 @@
 				06EDD9382248BEA800C87605 /* NSString.h */,
 				06EDD9132248BEA800C87605 /* NSTask.h */,
 				06EDD9142248BEA800C87605 /* NSTextCheckingResult.h */,
-				06EDD92A2248BEA800C87605 /* NSTimeZone.h */,
 				06EDD9412248BEA800C87605 /* NSUndoManager.h */,
 				06EDD92F2248BEA800C87605 /* NSUserDefaults.h */,
 				06EDD92D2248BEA800C87605 /* NSValueTransformer.h */,
@@ -1791,6 +1787,18 @@
 				06EDD91E2248BEA800C87605 /* NSAffineTransform.h */,
 			);
 			path = NotNeedRead;
+			sourceTree = "<group>";
+		};
+		06EE2A8E226C191200B50EC1 /* Time */ = {
+			isa = PBXGroup;
+			children = (
+				06EDD8FA2248BEA800C87605 /* NSDate.h */,
+				06EDD9342248BEA800C87605 /* NSCalendar.h */,
+				06EDD92A2248BEA800C87605 /* NSTimeZone.h */,
+				06EDD9122248BEA800C87605 /* NSDateFormatter.h */,
+				06EDD94C2248BEA800C87605 /* NSCalendarDate.h */,
+			);
+			path = Time;
 			sourceTree = "<group>";
 		};
 		1837D9C51652D0FF00197E53 /* Tools */ = {

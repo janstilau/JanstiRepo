@@ -54,11 +54,12 @@ static UCalendarDateFields _NSCalendarUnitToDateField (NSCalendarUnit unit)
 typedef struct {
   NSString      *identifier;
   NSString      *localeID;
-  NSTimeZone    *tz; 
+  NSTimeZone    *timeZone; 
   void          *cal;
   NSInteger     firstWeekday;
   NSInteger     minimumDaysInFirstWeek;
-} Calendar; 
+} Calendar;
+
 #define my ((Calendar*)_NSCalendarInternal)
 #define aac ((Calendar*)(autoupdatingCalendar->_NSCalendarInternal))
 
@@ -189,25 +190,26 @@ static NSRecursiveLock *classLock = nil;
   
   if ([locale isEqual: aac->localeID] == NO
     || [calendar isEqual: aac->identifier] == NO
-    || [tz isEqual: [(aac->tz) name]] == NO)
+    || [tz isEqual: [(aac->timeZone) name]] == NO)
     {
       [classLock lock];
       RELEASE(aac->localeID);
       RELEASE(aac->identifier);
-      RELEASE(aac->tz);
+      RELEASE(aac->timeZone);
 #if GS_USE_ICU == 1
       ucal_close(aac->cal);
 #endif
       
       aac->localeID = RETAIN(locale);
       aac->identifier = RETAIN(calendar);
-      aac->tz = [[NSTimeZone alloc] initWithName: tz];
+      aac->timeZone = [[NSTimeZone alloc] initWithName: tz];
       
       [autoupdatingCalendar _resetCalendar];
       [classLock unlock];
     }
 }
 
+// 这里没有返回 cal, 而是生成了一个新的对象. 这样, 修改之后的值, 不会污染全局对象.
 + (id) currentCalendar
 {
   NSCalendar *result;
@@ -230,8 +232,7 @@ static NSRecursiveLock *classLock = nil;
 
 - (id) initWithCalendarIdentifier: (NSString *) string
 {
-  NSAssert(0 == _NSCalendarInternal, NSInvalidArgumentException);
-  _NSCalendarInternal = 
+  _NSCalendarInternal =
     NSZoneCalloc([self zone], sizeof(Calendar), 1);
 
   my->firstWeekday = NSNotFound;
@@ -278,7 +279,7 @@ static NSRecursiveLock *classLock = nil;
   // It's much easier to keep a copy of the NSLocale's string representation
   // than to have to build it everytime we have to open a UCalendar.
   my->localeID = RETAIN([self _localeIDWithLocale: [NSLocale currentLocale]]);
-  my->tz = RETAIN([NSTimeZone defaultTimeZone]);
+  my->timeZone = RETAIN([NSTimeZone defaultTimeZone]);
   
   [self _resetCalendar];
   return self;
@@ -293,7 +294,7 @@ static NSRecursiveLock *classLock = nil;
 #endif
       RELEASE(my->identifier);
       RELEASE(my->localeID);
-      RELEASE(my->tz);
+      RELEASE(my->timeZone);
       NSZoneFree([self zone], _NSCalendarInternal);
     }
   [super dealloc];
@@ -629,16 +630,16 @@ do \
 
 - (NSTimeZone *) timeZone
 {
-  return my->tz;
+  return my->timeZone;
 }
 
 - (void) setTimeZone: (NSTimeZone *) tz
 {
-  if ([tz isEqual: my->tz])
+  if ([tz isEqual: my->timeZone])
     return;
   
-  RELEASE(my->tz);
-  my->tz = RETAIN(tz);
+  RELEASE(my->timeZone);
+  my->timeZone = RETAIN(tz);
   [self _resetCalendar];
 }
 
@@ -747,7 +748,7 @@ do \
         return NO;
       if (![my->localeID isEqual: [obj localeIdentifier]])
         return NO;
-      if (![my->tz isEqual: [obj timeZone]])
+      if (![my->timeZone isEqual: [obj timeZone]])
         return NO;
       return YES;
     }
@@ -760,7 +761,7 @@ do \
 {
   [encoder encodeObject: my->identifier];
   [encoder encodeObject: my->localeID];
-  [encoder encodeObject: my->tz];
+  [encoder encodeObject: my->timeZone];
 }
 
 - (id) initWithCoder: (NSCoder*)decoder
@@ -787,7 +788,7 @@ do \
       result = [[[self class] allocWithZone: zone]
         initWithCalendarIdentifier: my->identifier];
       [result _setLocaleIdentifier: my->localeID];
-      [result setTimeZone: my->tz];
+      [result setTimeZone: my->timeZone];
     }
   
   return result;
