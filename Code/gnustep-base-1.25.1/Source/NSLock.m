@@ -21,8 +21,9 @@
  *
  * Note: These methods currently throw exceptions when locks are incorrectly
  * acquired.  This is compatible with earlier GNUstep behaviour.  In OS X 10.5
- * and later, these will just NSLog a warning instead.  Throwing an exception
- * is probably better behaviour, because it encourages developer to fix their
+ * and later, these will just NSLog a warning instead.
+ 抛出异常, 是帮助开发者能够更好的进行错误排查.
+ Throwing an exception  is probably better behaviour, because it encourages developer to fix their
  * code.
  */
 
