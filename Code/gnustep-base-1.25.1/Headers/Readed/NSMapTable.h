@@ -31,6 +31,8 @@ enum {
 
 typedef NSUInteger NSMapTableOptions;
 
+    // Dictionary
+    
 @interface NSMapTable : NSObject <NSCopying, NSCoding, NSFastEnumeration>
 
 
@@ -151,7 +153,7 @@ typedef struct { void *map; void *node; size_t bucket; } NSMapEnumerator;
  * Callback functions for a key.
   为什么现在闭包这么流行, 因为在之前的情况下, 想要完成回调这个事情, 必须要这样, 将函数指针包裹到一个结构体里面, 然后传递出去. 因为, 能存贮的只有内存值.
  */
-typedef struct _NSMapTableKeyCallBacks
+typedef struct _NSMapTableKeyCallBacks // key 相关的函数.
 {
   /*
    * Hashing function. Must not modify the key.<br />
@@ -197,6 +199,7 @@ typedef struct _NSMapTableKeyCallBacks
  * Callback functions for a value.
  */
 typedef struct _NSMapTableValueCallBacks NSMapTableValueCallBacks;
+    // value 的回调里面少了什么, hash, isEqual, 证明 key value 的时候, 完全是按照 key 的值进行空间位置的寻找.
 struct _NSMapTableValueCallBacks
 {
   /**

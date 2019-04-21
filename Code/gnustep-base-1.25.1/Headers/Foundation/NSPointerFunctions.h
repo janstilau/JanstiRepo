@@ -36,8 +36,13 @@ extern "C" {
 
 /** Options flags come in three groups  ...<br />
  *  Memory management options (only one of which may be set)<br />
+ 
  *  Personality options (only one of which may be set)<br />
+ 
  *  Others.
+ 
+ 这里面有很多的考虑, 不仅仅是 iOS 相关的东西.
+ 
  */
 enum {
   /** Garbage collected strong references , or retain counting if GC
@@ -65,11 +70,11 @@ enum {
 
   /** Use the -hash and -isEqual: methods for storing objects, and the
    * -description method to describe them. */
-  NSPointerFunctionsObjectPersonality = (0<<8),
+  NSPointerFunctionsObjectPersonality = (0<<8), // 最常见的.
 
   /** Use the pointer (shifted) as a hash, and compare for bitwise quality.
    */
-  NSPointerFunctionsOpaquePersonality = (1<<8),
+  NSPointerFunctionsOpaquePersonality = (1<<8), // 根据地址值.
 
   /** Use the pointer (shifted) as a hash, and compare for bitwise quality,
    * but use -description to desribe the objects.
@@ -97,7 +102,8 @@ enum {
   NSPointerFunctionsCopyIn = (1<<16)
 };
 
-/** An integer value containing memory option, personality option,
+/**
+ An integer value containing memory option, personality option,
  * and copying option.
  */
 typedef	NSUInteger NSPointerFunctionsOptions;

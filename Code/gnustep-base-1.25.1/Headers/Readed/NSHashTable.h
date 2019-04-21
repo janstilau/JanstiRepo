@@ -34,6 +34,8 @@ enum {
 
 typedef NSUInteger NSHashTableOptions;
 
+    // set
+    
 @interface NSHashTable : NSObject <NSCopying, NSCoding, NSFastEnumeration>
 
 + (id) hashTableWithOptions: (NSPointerFunctionsOptions)options;

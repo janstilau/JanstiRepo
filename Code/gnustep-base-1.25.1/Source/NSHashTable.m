@@ -143,6 +143,7 @@ static Class	concreteClass = 0;
   return nil;
 }
 
+// 两层遍历操作.
 - (void) intersectHashTable: (NSHashTable*)other
 {
   unsigned		count = [self count];

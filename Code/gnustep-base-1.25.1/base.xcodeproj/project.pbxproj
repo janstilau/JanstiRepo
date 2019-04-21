@@ -1695,6 +1695,11 @@
 				06EDD9192248BEA800C87605 /* NSStream.h */,
 				06EDD9072248BEA800C87605 /* NSScanner.h */,
 				06EDD9352248BEA800C87605 /* NSKeyValueObserving.h */,
+				06EDD9322248BEA800C87605 /* NSInvocation.h */,
+				06EDD92B2248BEA800C87605 /* NSCache.h */,
+				06EDD9492248BEA800C87605 /* NSHashTable.h */,
+				06EDD9082248BEA800C87605 /* NSMapTable.h */,
+				06EE2A8E226C191200B50EC1 /* Time */,
 			);
 			path = Readed;
 			sourceTree = "<group>";
@@ -1702,11 +1707,9 @@
 		06EDD8EE2248BEA800C87605 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
-				06EE2A8E226C191200B50EC1 /* Time */,
 				06EDD9052248BEA800C87605 /* NSAutoreleasePool.h */,
 				06EDD9202248BEA800C87605 /* NSBundle.h */,
 				06EDD94B2248BEA800C87605 /* NSByteOrder.h */,
-				06EDD92B2248BEA800C87605 /* NSCache.h */,
 				06EDD9102248BEA800C87605 /* NSCharacterSet.h */,
 				06EDD9112248BEA800C87605 /* NSClassDescription.h */,
 				06EDD9092248BEA800C87605 /* NSComparisonPredicate.h */,
@@ -1721,6 +1724,7 @@
 				06EDD90E2248BEA800C87605 /* NSDistributedLock.h */,
 				06EDD9042248BEA800C87605 /* NSDistributedNotificationCenter.h */,
 				06EDD9362248BEA800C87605 /* NSError.h */,
+				06EDD9452248BEA800C87605 /* NSInvocationOperation.h */,
 				06EDD9012248BEA800C87605 /* NSErrorRecoveryAttempting.h */,
 				06EDD8FF2248BEA800C87605 /* NSExpression.h */,
 				06EDD9292248BEA800C87605 /* NSFileCoordinator.h */,
@@ -1730,13 +1734,9 @@
 				06EDD92C2248BEA800C87605 /* NSFormatter.h */,
 				06EDD9232248BEA800C87605 /* NSGarbageCollector.h */,
 				06EDD9182248BEA800C87605 /* NSGeometry.h */,
-				06EDD9492248BEA800C87605 /* NSHashTable.h */,
 				06EDD9222248BEA800C87605 /* NSHost.h */,
 				06EDD92E2248BEA800C87605 /* NSIndexPath.h */,
 				06EDD9212248BEA800C87605 /* NSIndexSet.h */,
-				06EDD9322248BEA800C87605 /* NSInvocation.h */,
-				06EDD9452248BEA800C87605 /* NSInvocationOperation.h */,
-				06EDD9082248BEA800C87605 /* NSMapTable.h */,
 				06EDD93F2248BEA800C87605 /* NSMetadata.h */,
 				06EDD9022248BEA800C87605 /* NSMethodSignature.h */,
 				06EDD8FD2248BEA800C87605 /* NSNetServices.h */,

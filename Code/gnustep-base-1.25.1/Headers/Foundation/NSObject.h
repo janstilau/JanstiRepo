@@ -537,7 +537,7 @@ GS_EXPORT NSRecursiveLock *gnustep_global_lock;
  * which may be discarded if resource constraints are exceeded.  These
  * constraints are typically, but not always, related memory.  
  */
-@protocol NSDiscardableContent
+@protocol NSDiscardableContent // 这个协议, 仅仅在 NSCache 中使用
 
 /**
  * This method is called before any access to the object.  It returns YES if

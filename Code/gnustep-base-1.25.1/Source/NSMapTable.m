@@ -16,7 +16,7 @@ static Class	concreteClass = 0;
 
 + (id) allocWithZone: (NSZone*)aZone
 {
-  if (self == abstractClass) // 类类簇模式.
+  if (self == abstractClass) // 类簇模式.
     {
       return NSAllocateObject(concreteClass, 0, aZone);
     }
@@ -40,10 +40,12 @@ static Class	concreteClass = 0;
   t = [self allocWithZone: NSDefaultMallocZone()];
   t = [t initWithKeyOptions: keyOptions
 	       valueOptions: valueOptions
-		   capacity: 0];
+		   capacity: 0]; // 这里, capacity 是0, 证明后面要有大量的扩容处理.
   return AUTORELEASE(t);
 }
 
+
+// 默认的 memory 就是 strongMemory, 所以方法里面没有体现. 只有专门的是 weak 的时候, 才会把值传递进去.
 + (id) mapTableWithStrongToStrongObjects
 {
   return [self mapTableWithKeyOptions: NSPointerFunctionsObjectPersonality
@@ -148,6 +150,7 @@ static Class	concreteClass = 0;
   return (NSUInteger)0;
 }
 
+// 建立一个字典, 遍历赋值, 然后返回.
 - (NSDictionary*) dictionaryRepresentation
 {
   NSEnumerator		*enumerator;

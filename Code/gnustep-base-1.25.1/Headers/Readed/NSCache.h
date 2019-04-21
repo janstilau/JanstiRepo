@@ -31,7 +31,7 @@ extern "C" {
   /** Name of this cache. */
   NSString *_name;
   /** The mapping from names to objects in this cache. */
-  NSMapTable *_objects; // 还是用的NSM apTable
+  NSMapTable *_objects; //
   /** LRU ordering of all potentially-evictable objects in this cache. */
   GS_GENERIC_CLASS(NSMutableArray, ValT) *_accesses;
   /** Total number of accesses to objects */
