@@ -131,18 +131,19 @@ appendUIntData(NSMutableData *d, NSUInteger i)
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  if ([aCoder allowsKeyedCoding])
+  if ([aCoder allowsKeyedCoding]) // 如果, 可以 keyValue Code,
     {
       NSUInteger length = [self length];
 
-      [aCoder  encodeObject: [self string] forKey: @"NSString"];
+      [aCoder  encodeObject: [self string] forKey: @"NSString"]; // 显示保存自己的字符串值.
+        
       if (length > 0) 
 	{
 	  NSRange range;
 	  NSDictionary	*attrs;
 
 	  attrs = [self attributesAtIndex: 0 effectiveRange: &range];
-	  if (range.length == length)
+	  if (range.length == length) // 如果, 整个字符串都是一种属性, 直接存储.
 	    {
 	      [aCoder encodeObject: attrs forKey: @"NSAttributes"];
 	    }
@@ -150,21 +151,21 @@ appendUIntData(NSMutableData *d, NSUInteger i)
 	    {
 	      NSUInteger i = 0;
 	      NSUInteger pos = 0;
-	      NSMutableArray *attrs = [NSMutableArray arrayWithCapacity: 1];
+	      NSMutableArray *attrsArrayM = [NSMutableArray arrayWithCapacity: 1];
 	      NSMutableData *info = [NSMutableData dataWithCapacity: 2];
 
 	      while (pos < length)
 		{
-		  [attrs addObject: [self attributesAtIndex: pos
-					     effectiveRange: &range]];
-		  appendUIntData(info, range.length);
-		  appendUIntData(info, i++);
+		  [attrsArrayM addObject: [self attributesAtIndex: pos
+					     effectiveRange: &range]]; // 把属性值, 不断的进行存储.
+		  appendUIntData(info, range.length); // 存储, 属性长度
+		  appendUIntData(info, i++); // 存储属性编号.
 		  pos = NSMaxRange(range);
 		}
-	      [aCoder encodeObject: [[attrs copy] autorelease]
+	      [aCoder encodeObject: [[attrsArrayM copy] autorelease]
 			    forKey: @"NSAttributes"];
 	      [aCoder encodeObject: [[info copy] autorelease]
-			    forKey: @"NSAttributeInfo"];
+			    forKey: @"NSAttributeInfo"]; // 这里面, 存储的就是各个属性的长度信息.
 	    }
 	}
     }
@@ -177,7 +178,7 @@ appendUIntData(NSMutableData *d, NSUInteger i)
       NSDictionary	*attrs;
 
       [aCoder encodeObject: string];
-      while (index < length)
+      while (index < length) // 按照顺序, 存储 index, 以及属性值.
 	{
 	  attrs = [self attributesAtIndex: index effectiveRange: &r];
 	  index = NSMaxRange(r);
@@ -356,8 +357,8 @@ appendUIntData(NSMutableData *d, NSUInteger i)
   NSDictionary		*attrs;
   NSMutableString	*desc;
 
+    // 不断的读取子字符串的属性值, 然后拼接影响到的属性值以及子字符串的值.
   desc = [NSMutableString stringWithCapacity: length];
-    // 不断地拼接, 相同属性段落对应的字符串和属性集合.
   while (index < length &&
     (attrs = [self attributesAtIndex: index effectiveRange: &r]) != nil)
     {

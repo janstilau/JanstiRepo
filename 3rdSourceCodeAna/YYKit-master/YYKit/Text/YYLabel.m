@@ -1,14 +1,3 @@
-//
-//  YYLabel.m
-//  YYKit <https://github.com/ibireme/YYKit>
-//
-//  Created by ibireme on 15/2/25.
-//  Copyright (c) 2015 ibireme.
-//
-//  This source code is licensed under the MIT-style license found in the
-//  LICENSE file in the root directory of this source tree.
-//
-
 #import "YYLabel.h"
 #import "YYAsyncLayer.h"
 #import "YYWeakProxy.h"
@@ -1109,7 +1098,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         [attachmentViews removeAllObjects];
         [attachmentLayers removeAllObjects];
     };
-
+    
     task.display = ^(CGContextRef context, CGSize size, BOOL (^isCancelled)(void)) {
         if (isCancelled()) return;
         if (text.length == 0) return;
@@ -1141,7 +1130,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         point = CGPointPixelRound(point);
         [drawLayout drawInContext:context size:size point:point view:nil layer:nil debug:debug cancel:isCancelled];
     };
-
+    
     task.didDisplay = ^(CALayer *layer, BOOL finished) {
         YYTextLayout *drawLayout = layout;
         if (layoutUpdated && shrinkLayout) {

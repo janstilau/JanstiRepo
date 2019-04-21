@@ -1324,7 +1324,6 @@
 		18FE1F681628550100389A13 /* socket_cs.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = socket_cs.m; sourceTree = "<group>"; };
 		18FE1F6A1628550100389A13 /* NSString_base.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSString_base.m; sourceTree = "<group>"; };
 		18FE1F6B1628550100389A13 /* NSString_custom.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSString_custom.m; sourceTree = "<group>"; };
-		18FE1F6C1628550100389A13 /* NSString_tests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSString_tests.h; sourceTree = "<group>"; };
 		18FE1F6D1628550100389A13 /* NSString_zero_hash.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSString_zero_hash.m; sourceTree = "<group>"; };
 		18FE1F6E1628550100389A13 /* TestInfo */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestInfo; sourceTree = "<group>"; };
 		18FE1F6F1628550100389A13 /* basic.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = basic.m; sourceTree = "<group>"; };
@@ -3234,7 +3233,6 @@
 			children = (
 				18FE1F6A1628550100389A13 /* NSString_base.m */,
 				18FE1F6B1628550100389A13 /* NSString_custom.m */,
-				18FE1F6C1628550100389A13 /* NSString_tests.h */,
 				18FE1F6D1628550100389A13 /* NSString_zero_hash.m */,
 				18FE1F6E1628550100389A13 /* TestInfo */,
 				18FE1F6F1628550100389A13 /* basic.m */,

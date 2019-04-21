@@ -19,6 +19,9 @@
  @discussion If you create your own thread (NSThread/pthread), and you use 
  runloop to manage your task, you may use this method to add an autorelease pool
  to the runloop. Its behavior is the same as the main thread's autorelease pool.
+ 
+ 这个方法的主要意义是, 模仿主线程 runloop 管理自动释放池, 在子线程的 runloop 中添加相同的行为.
+ 
  */
 + (void)addAutoreleasePoolToCurrentRunloop;
 

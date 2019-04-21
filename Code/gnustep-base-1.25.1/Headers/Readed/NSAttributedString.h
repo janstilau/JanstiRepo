@@ -15,6 +15,11 @@ extern "C" {
 #import	<Foundation/NSArray.h>
 #import	<Foundation/NSCoder.h>
 
+/*
+
+ 这是一个数据类. 这个数据类中包含, 1: 原始的文本值. 2. 范围 3. 范围相关的一个字典, 这个字典里面, 是这个范围里面这个文本展示的一些信息. 例如, 字体, 颜色, 阴影, 删除线等等. iOS 定义了一些 key 值, 然后对应的展示空间, 也就是 LABEL, TEXTView 在绘制的时候, 会读取这些 key 值, 然后根据这些 key 值的 value 值进行展示.
+*/
+    
 @interface NSAttributedString : NSObject <NSCoding, NSCopying, NSMutableCopying>
 {
 }
@@ -33,19 +38,23 @@ extern "C" {
  */
 - (NSString*) string;					//Primitive method!
 
-//Retrieving attribute information
+// 获取某个位置的属性信息, 以及那个位置属性信息影响的范围.
 - (NSDictionary*) attributesAtIndex: (NSUInteger)index
 		     effectiveRange: (NSRange*)aRange;	//Primitive method!
+
+// 获取某个位置的属性信息, 以及在某个范围内, 这个属性信息影响的最长范围.
 - (NSDictionary*) attributesAtIndex: (NSUInteger)index
 	      longestEffectiveRange: (NSRange*)aRange
 			    inRange: (NSRange)rangeLimit;
+// 获取某个属性在某个位置的信息, 以及最长影响的范围.
 - (id) attribute: (NSString*)attributeName
 	 atIndex: (NSUInteger)index
   effectiveRange: (NSRange*)aRange;
+// 加了范围的限制.
 - (id) attribute: (NSString*)attributeName atIndex: (NSUInteger)index
   longestEffectiveRange: (NSRange*)aRange inRange: (NSRange)rangeLimit;
 
-//Comparing attributed strings
+// 比较, 先是 指针, 然后是字符串, 然后是属性及其属性范围.
 - (BOOL) isEqualToAttributedString: (NSAttributedString*)otherString;
 
 //Extracting a substring

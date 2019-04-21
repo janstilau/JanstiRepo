@@ -198,6 +198,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		067A3B05226C476300BD046E /* UILabelDash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UILabelDash.h; sourceTree = "<group>"; };
 		06EE2A8F226C217D00B50EC1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		06EE2A90226C218400B50EC1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		06EE2A91226C218900B50EC1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -1044,6 +1045,7 @@
 		D9B2600B1BEE79370038C00A /* Text */ = {
 			isa = PBXGroup;
 			children = (
+				067A3B05226C476300BD046E /* UILabelDash.h */,
 				D9B260321BEE79370038C00A /* YYLabel.h */,
 				D9B260331BEE79370038C00A /* YYLabel.m */,
 				D9B260341BEE79370038C00A /* YYTextView.h */,
