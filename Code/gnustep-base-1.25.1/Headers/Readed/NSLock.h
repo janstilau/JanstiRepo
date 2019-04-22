@@ -100,6 +100,7 @@ extern "C" {
 }
 /**
  * Blocks and atomically unlocks the receiver.
+ 这里, 进行了一次 unlock 的操作.
  * This method should only be called when the receiver is locked.
  * The caller will then block until the receiver is sent either a -signal
  * or -broadcast message from another thread.  At which
@@ -143,7 +144,7 @@ extern "C" {
 {
 #if	GS_EXPOSE(NSConditionLock)
 @private
-  NSCondition *_condition;
+  NSCondition *_condition; // 其实就是对于 NSCondition 的封装.
   int   _condition_value;
   NSString      *_name;
 #endif
