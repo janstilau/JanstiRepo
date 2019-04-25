@@ -18,7 +18,7 @@ extern "C" {
 @interface NSNotification : NSObject <NSCopying, NSCoding>
 
 /*
- 其实, NSNotification, 仅仅是一个包装体. 里面的元素很少, name, object, userInfo. 并且说, object 并不是说哪个对象发出了这个通知, 仅仅是 notificationCenter 就把那个object对象组装到这个 notification 的对象内的 object 属性而已.
+ 其实, NSNotification, 仅仅是一个包装体. 里面的元素很少, name, object, userInfo. 并且说, object 并不是说哪个对象发出了这个通知, 仅仅是 notificationCenter 就把那个object对象组装到这个 notification 的对象内的 object 属性而已. 不过从理解的角度上来说, 或者从 Apple 的文档描述来说, 这个 object 就是发送者, 而观察者仅仅在指定的发送者发送通知的时候, 才会进行回调的处理.
  */
 
 /* Creating a Notification Object */
@@ -56,8 +56,8 @@ DEFINE_BLOCK_TYPE(GSNotificationBlock, void, NSNotification *);
             selector: (SEL)selector
                 name: (NSString*)name
               object: (id)object;
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
-- (id) addObserverForName: (NSString *)name 
+
+- (id) addObserverForName: (NSString *)name
                    object: (id)object 
                     queue: (NSOperationQueue *)queue 
                usingBlock: (GSNotificationBlock)block;
@@ -71,6 +71,7 @@ DEFINE_BLOCK_TYPE(GSNotificationBlock, void, NSNotification *);
 - (void) postNotification: (NSNotification*)notification;
 - (void) postNotificationName: (NSString*)name
                        object: (id)object;
+
 - (void) postNotificationName: (NSString*)name
                        object: (id)object
                      userInfo: (NSDictionary*)info;

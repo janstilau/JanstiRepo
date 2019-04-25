@@ -18,13 +18,14 @@
  *  will be of a (private) subclass.</p>
  
     上面是对于 NSNotification 的描述.
- 
  */
+
 @implementation NSNotification
 
 static Class	abstractClass = 0;
 static Class	concreteClass = 0;
 
+// 这里是一个实现技巧, 控制最终真实的对象的一个技巧. 如果这是一个类簇模式, 那么可以在 allocWithZone 中返回一个固定的对象, 然后在 init 里面, 根据参数, 生成真正的子类对象. 不过, 这里只有一个子类, 所以直接返回的是子类. 这里不明白, 为什么要进行子类化, 只有一个子类直接写到原始类里面不得了. 难道是为了扩展???
 + (id) allocWithZone: (NSZone*)z
 {
   if (self == abstractClass)
@@ -34,6 +35,7 @@ static Class	concreteClass = 0;
   return (id)NSAllocateObject(self, 0, z);
 }
 
+// initialize 可以做很多事情. 我觉得, 许多的单例对象可以不存在, 如果真的只有一份的话, 那么用类方法, 和 static 对象完全没有问题.
 + (void) initialize
 {
   if (concreteClass == 0)
@@ -86,6 +88,7 @@ static Class	concreteClass = 0;
     [self name], [self object], [self userInfo]];
 }
 
+// 这里, 就是在 init 方法里面, 生成最终的实体类.
 - (id) init
 {
   if ([self class] == abstractClass)
@@ -156,6 +159,7 @@ static Class	concreteClass = 0;
   RELEASE(name);
   RELEASE(object);
   RELEASE(info);
+// 所以说, 在用输出参数的时候, 其实也要进行 release 操作. 不过, 在 ARC 的环境下, 这个其实也不用理会的.
   DESTROY(self);
   return RETAIN(n);
 }
