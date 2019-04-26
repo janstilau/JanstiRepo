@@ -150,7 +150,7 @@ static SEL __sel_registerName(const char *name, int lock, int copy)
     
     if (lock) selLock.read();
     if (namedSelectors) {
-        result = (SEL)NXMapGet(namedSelectors, name);
+        result = (SEL)NXMapGet(namedSelectors, name); // 这里, 还是有缓存.
     }
     if (lock) selLock.unlockRead();
     if (result) return result;

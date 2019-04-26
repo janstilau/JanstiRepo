@@ -725,20 +725,11 @@ callCXXConstructors(Class aClass, id anObject)
 }
 #endif
 
-
-/*
- *	Now do conditional compilation of memory allocation functions
- *	depending on what information (if any) we are storing before
- *	the start of each object.
- */
-
-// FIXME rewrite object allocation to use class_createInstance when we
-// are using libobjc2.
 inline id
 NSAllocateObject (Class aClass, NSUInteger extraBytes, NSZone *zone)
 {
 #ifdef OBJC_CAP_ARC
-    return class_createInstance(aClass, extraBytes); // 如果是 arc 环境的话, 直接调用 runtime 的方法.
+    return class_createInstance(aClass, extraBytes); // 如果是 arc 环境的话, 直接调用 runtime 的方法. 在这里没有实现, 在 objc 的源码里面, 有着对应的实现. _class_createInstanceFromZone, 这个方法里面, 会根据类对象的 instanceSize 调用 calloc 的方法, 创建一个实例对象, 然后会初始化这个实例对象的 isa 指针. 也就是说, alloc 之后, 只有 isa 是有值的.
 #else
     id	new;
     int	size;
@@ -755,7 +746,7 @@ NSAllocateObject (Class aClass, NSUInteger extraBytes, NSZone *zone)
     {
         memset (new, 0, size); // 为什么 OC 的对象不需要c++的构造函数挨个赋值, 因为这里有一个 memset 函数.
         new = (id)&((obj)new)[1];
-        object_setClass(new, aClass); // 这里, 应该就是设置 isa 指针而已.
+        object_setClass(new, aClass); // 这里, 应该就是设置 isa 指针而已. 这和 arc 的 class_createInstance 不是一个策略. 这个是生成之后, 代用的 setClass 方法.
         AADD(aClass, new);
     }
     
@@ -1078,6 +1069,7 @@ static id gs_weak_load(id obj)
  * zone, by invoking +allocWithZone: with
  * <code>NSDefaultMallocZone()</code> as the zone argument.<br />
  * Returns the created instance.
+ zone 这个东西, 最好还是不要深究, 没有什么意义.
  */
 + (id) alloc // 直接调用的 allocWithZone.
 {
@@ -1091,11 +1083,11 @@ static id gs_weak_load(id obj)
  * <p>
  *   Memory for an instance of the receiver is allocated; a
  *   pointer to this newly created instance is returned.  All
- *   instance variables are set to 0.  No initialization of the
+ *   instance variables are set to 0. 这是通过 calloc 完成的. No initialization of the
  *   instance is performed apart from setup to be an instance of
- *   the correct class: it is your responsibility to initialize the
+ *   the correct class: 这里指的是设置了 isa 的指向. it is your responsibility to initialize the
  *   instance by calling an appropriate <code>init</code>
- *   method.  If you are not using the garbage collector, it is
+ *   method. 所以 alloc init 一般来说是连在一起的. If you are not using the garbage collector, it is
  *   also your responsibility to make sure the returned
  *   instance is destroyed when you finish using it, by calling
  *   the <code>release</code> method to destroy the instance
@@ -1108,6 +1100,7 @@ static id gs_weak_load(id obj)
  *  some reasons silently allocates instances of another class
  *  (this is typically needed to implement class clusters and
  *  similar design schemes).
+ 这里说的很清楚, 如果想要实现类簇模式, 才会重写 alloc with zone 的方法.
  * </p>
  * <p>
  *   If you have turned on debugging of object allocation (by
@@ -1120,7 +1113,7 @@ static id gs_weak_load(id obj)
  */
 + (id) allocWithZone: (NSZone*)z
 {
-    return NSAllocateObject (self, 0, z);
+    return NSAllocateObject (self, 0, z); // 0 extra size, z zone
 }
 
 /**

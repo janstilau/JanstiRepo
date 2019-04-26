@@ -181,6 +181,7 @@ struct old_property_list {
 
 
 struct objc_class : objc_object {
+    // 这种容易理解, 新的版本的优化, 不利于阅读源码.
     Class superclass;
     const char *name;
     uint32_t version;

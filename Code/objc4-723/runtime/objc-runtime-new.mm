@@ -1423,13 +1423,12 @@ static void removeRootClass(Class cls)
  **********************************************************************/
 static void addSubclass(Class supercls, Class subcls)
 {
-    runtimeLock.assertWriting();
+    runtimeLock.assertWriting(); // 加锁了, 为什要加锁, 不应该类的loading 过程, 都在主线程刚开始的时候完成的吗.
     
     if (supercls  &&  subcls) {
-        assert(supercls->isRealized());
-        assert(subcls->isRealized());
         subcls->data()->nextSiblingClass = supercls->data()->firstSubclass;
         supercls->data()->firstSubclass = subcls;
+        // nextSiblingClass 和 firstSubclass 是玩玩全全在 runtime 里面使用的.
         
         if (supercls->hasCxxCtor()) {
             subcls->setHasCxxCtor();
@@ -1730,19 +1729,11 @@ static Class realizeClass(Class cls)
     
     // fixme verify class is not in an un-dlopened part of the shared cache?
     
-    ro = (const class_ro_t *)cls->data();
-    if (ro->flags & RO_FUTURE) {
-        // This was a future class. rw data is already allocated.
-        rw = cls->data();
-        ro = cls->data()->ro;
-        cls->changeInfo(RW_REALIZED|RW_REALIZING, RW_FUTURE);
-    } else {
-        // Normal class. Allocate writeable class data.
-        rw = (class_rw_t *)calloc(sizeof(class_rw_t), 1);
-        rw->ro = ro;
-        rw->flags = RW_REALIZED|RW_REALIZING;
-        cls->setData(rw);
-    }
+    ro = (const class_ro_t *)cls->data(); // 从这里可以看出, rot 里面的东西, 是之前就确定好的.
+    rw = (class_rw_t *)calloc(sizeof(class_rw_t), 1);
+    rw->ro = ro; //  在 rwt 里面, 其实是存储了 rot 的.
+    rw->flags = RW_REALIZED|RW_REALIZING;
+    cls->setData(rw); // 然后设置 rwt 的信息.
     
     isMeta = ro->flags & RO_META;
     
@@ -1762,47 +1753,12 @@ static Class realizeClass(Class cls)
     // Realize superclass and metaclass, if they aren't already.
     // This needs to be done after RW_REALIZED is set above, for root classes.
     // This needs to be done after class index is chosen, for root metaclasses.
-    supercls = realizeClass(remapClass(cls->superclass));
-    metacls = realizeClass(remapClass(cls->ISA()));
-    
-#if SUPPORT_NONPOINTER_ISA
-    // Disable non-pointer isa for some classes and/or platforms.
-    // Set instancesRequireRawIsa.
-    bool instancesRequireRawIsa = cls->instancesRequireRawIsa();
-    bool rawIsaIsInherited = false;
-    static bool hackedDispatch = false;
-    
-    if (DisableNonpointerIsa) {
-        // Non-pointer isa disabled by environment or app SDK version
-        instancesRequireRawIsa = true;
-    }
-    else if (!hackedDispatch  &&  !(ro->flags & RO_META)  &&
-             0 == strcmp(ro->name, "OS_object"))
-    {
-        // hack for libdispatch et al - isa also acts as vtable pointer
-        hackedDispatch = true;
-        instancesRequireRawIsa = true;
-    }
-    else if (supercls  &&  supercls->superclass  &&
-             supercls->instancesRequireRawIsa())
-    {
-        // This is also propagated by addSubclass()
-        // but nonpointer isa setup needs it earlier.
-        // Special case: instancesRequireRawIsa does not propagate
-        // from root class to root metaclass
-        instancesRequireRawIsa = true;
-        rawIsaIsInherited = true;
-    }
-    
-    if (instancesRequireRawIsa) {
-        cls->setInstancesRequireRawIsa(rawIsaIsInherited);
-    }
-    // SUPPORT_NONPOINTER_ISA
-#endif
+    supercls = realizeClass(remapClass(cls->superclass)); // 父类信息进行 realize
+    metacls = realizeClass(remapClass(cls->ISA())); // 元类信息进行 realize.
     
     // Update superclass and metaclass in case of remapping
-    cls->superclass = supercls;
-    cls->initClassIsa(metacls);
+    cls->superclass = supercls; // 设置类的付信息,
+    cls->initClassIsa(metacls);// 设置类的 isa 信息, 这里, 这个是个类对象, 所以要专门设置isa 信息. 如果是一个实例对象, 那么 isa 的设置工作, 应该在 alloc 的时候就完成的
     
     // Reconcile instance variable offsets / layout.
     // This may reallocate class_ro_t, updating our ro variable.
@@ -1811,7 +1767,7 @@ static Class realizeClass(Class cls)
     // Set fastInstanceSize if it wasn't set already.
     cls->setInstanceSize(ro->instanceSize);
     
-    // Copy some flags from ro to rw
+    // Copy some flags from ro to rw, 一直不太明白, 这里的 CTOR, DTOR 的作用.
     if (ro->flags & RO_HAS_CXX_STRUCTORS) {
         cls->setHasCxxDtor();
         if (! (ro->flags & RO_HAS_CXX_DTOR_ONLY)) {
@@ -1820,6 +1776,7 @@ static Class realizeClass(Class cls)
     }
     
     // Connect this class to its superclass's subclass lists
+    // 进行子类父类, 元类关系的串联工作.
     if (supercls) {
         addSubclass(supercls, cls);
     } else {
@@ -3308,7 +3265,7 @@ const char *
 protocol_getName(Protocol *proto)
 {
     if (!proto) return "nil";
-    else return newprotocol(proto)->demangledName();
+    else return newprotocol(proto)->demangledName(); // dangle 悬挂的.
 }
 
 
@@ -5679,12 +5636,12 @@ look_up_class(const char *name,
     Class result;
     bool unrealized;
     {
-        rwlock_reader_t lock(runtimeLock);
+        rwlock_reader_t lock(runtimeLock); // 读写锁. 可以多读, 但是只能单独写.
         result = getClass(name);
         unrealized = result  &&  !result->isRealized();
     }
     if (unrealized) {
-        rwlock_writer_t lock(runtimeLock);
+        rwlock_writer_t lock(runtimeLock); // 读写多, 可以多度, 但是只能单独写. 所以了这, 传入的参数是一样的.
         realizeClass(result);
     }
     return result;
@@ -6149,8 +6106,6 @@ _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone,
                               size_t *outAllocatedSize = nil)
 {
     if (!cls) return nil;
-    
-    assert(cls->isRealized());
     
     // Read class's info bits all at once for performance
     bool hasCxxCtor = cls->hasCxxCtor(); // 拥有 C++ 构造函数

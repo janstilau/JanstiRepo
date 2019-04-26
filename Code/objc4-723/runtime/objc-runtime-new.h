@@ -69,8 +69,8 @@ typedef struct classref * classref_t;
 template <typename Element, typename List, uint32_t FlagMask>
 struct entsize_list_tt {
     uint32_t entsizeAndFlags;
-    uint32_t count;
-    Element first;
+    uint32_t count; // 总量
+    Element first; // 第一个元素的指针.
 
     uint32_t entsize() const {
         return entsizeAndFlags & ~FlagMask;
@@ -180,11 +180,11 @@ struct entsize_list_tt {
     };
 };
 
-
+// method_t 
 struct method_t {
-    SEL name;
-    const char *types;
-    IMP imp;
+    SEL name; // 方法名
+    const char *types; // 方法签名.
+    IMP imp; // 真正的 函数地址.
 
     struct SortBySELAddress :
         public std::binary_function<const method_t&,
@@ -205,9 +205,9 @@ struct ivar_t {
     // Some code uses all 64 bits. class_addIvar() over-allocates the 
     // offset for their benefit.
 #endif
-    int32_t *offset;
-    const char *name;
-    const char *type;
+    int32_t *offset; //偏移量, 不知道有没有增加 isa 指针的. 这里, oc 还是一个, 和内存管理很密切的语言, 在 JS 里面, 就完完全全的用 associate 这种进行了存储了.
+    const char *name; // 参数名
+    const char *type; // 参数类型, 这里用的是一套 objc 的 encode 的方法.
     // alignment is sometimes -1; use alignment() instead
     uint32_t alignment_raw;
     uint32_t size;
@@ -219,11 +219,12 @@ struct ivar_t {
 };
 
 struct property_t {
-    const char *name;
-    const char *attributes;
+    const char *name; // property 其实就是 名字.
+    const char *attributes; // 属性, 猜测是 copy, storng 这些东西.
 };
 
 // Two bits of entsize are used for fixup markers.
+// entsize_list_tt 这个类有点奇怪, 这个类里面, 并没有真正存储的空间啊.
 struct method_list_t : entsize_list_tt<method_t, method_list_t, 0x3> {
     bool isFixedUp() const;
     void setFixedUp();
@@ -258,11 +259,11 @@ typedef uintptr_t protocol_ref_t;  // protocol_t *, but unremapped
 struct protocol_t : objc_object {
     const char *mangledName;
     struct protocol_list_t *protocols;
-    method_list_t *instanceMethods;
-    method_list_t *classMethods;
+    method_list_t *instanceMethods; // 实例方法列表.
+    method_list_t *classMethods; // 类方法列表
     method_list_t *optionalInstanceMethods;
     method_list_t *optionalClassMethods;
-    property_list_t *instanceProperties;
+    property_list_t *instanceProperties; // 属性列表.
     uint32_t size;   // sizeof(protocol_t)
     uint32_t flags;
     // Fields below this point are not always present on disk.
@@ -305,7 +306,7 @@ struct protocol_t : objc_object {
 struct protocol_list_t {
     // count is 64-bit by accident. 
     uintptr_t count;
-    protocol_ref_t list[0]; // variable-size
+    protocol_ref_t list[0]; // variable-size 一个 opauge pointer
 
     size_t byteSize() const {
         return sizeof(*this) + count*sizeof(list[0]);
@@ -501,7 +502,7 @@ struct locstamped_category_list_t {
 
 #endif
 
-
+// 类的原始信息里面的值. 
 struct class_ro_t {
     uint32_t flags;
     uint32_t instanceStart;
@@ -774,13 +775,36 @@ class protocol_array_t :
     }
 };
 
+/*
+ struct class_ro_t {
+ uint32_t flags;
+ uint32_t instanceStart;
+ uint32_t instanceSize;
+ #ifdef __LP64__
+ uint32_t reserved;
+ #endif
+ 
+ const uint8_t * ivarLayout;
+ 
+ const char * name;
+ method_list_t * baseMethodList;
+ protocol_list_t * baseProtocols;
+ const ivar_list_t * ivars;
+ 
+ const uint8_t * weakIvarLayout;
+ property_list_t *baseProperties;
+ 
+ method_list_t *baseMethods() const {
+ return baseMethodList;
+ }
+ };
+ */
 
 struct class_rw_t {
-    // Be warned that Symbolication knows the layout of this structure.
     uint32_t flags;
     uint32_t version;
 
-    const class_ro_t *ro;
+    const class_ro_t *ro; // 类的原始信息, 值在类的实现文件和头文件中存在.
 
     method_array_t methods;
     property_array_t properties;
@@ -1040,8 +1064,8 @@ public:
 
 struct objc_class : objc_object {
     // Class ISA;
-    Class superclass;
-    cache_t cache;             // formerly cache pointer and vtable
+    Class superclass;          // 父类对象的指向.
+    cache_t cache;             // formerly cache pointer and vtable. method 的缓存策略
     class_data_bits_t bits;    // class_rw_t * plus custom rr/alloc flags
 
     class_rw_t *data() { 
@@ -1188,7 +1212,7 @@ struct objc_class : objc_object {
 
     // Locking: To prevent concurrent realization, hold runtimeLock.
     bool isRealized() {
-        return data()->flags & RW_REALIZED;
+        return data()->flags & RW_REALIZED; // 这里, 是通过 isa 里面的一个位值进行的判定.
     }
 
     // Returns true if this is an unrealized future class.
