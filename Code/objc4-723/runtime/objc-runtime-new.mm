@@ -618,6 +618,7 @@ prepareMethodLists(Class cls, method_list_t **addedLists, int addedCount,
 // Attach method lists and properties and protocols from categories to a class.
 // Assumes the categories in cats are all loaded and sorted by load order, 
 // oldest categories first.
+// load order, oldest categories first 这也就是, 后来居上的原因.
 static void 
 attachCategories(Class cls, category_list *cats, bool flush_caches)
 {
@@ -678,6 +679,9 @@ attachCategories(Class cls, category_list *cats, bool flush_caches)
 
 /***********************************************************************
  * methodizeClass
+ 
+ 增加分类的方法.
+ 
  * Fixes up cls's method list, protocol list, and property list.
  * Attaches any outstanding categories.
  * Locking: runtimeLock must be held by the caller
@@ -690,27 +694,21 @@ static void methodizeClass(Class cls)
     auto rw = cls->data();
     auto ro = rw->ro;
     
-    // Methodizing for the first time
-    if (PrintConnecting) {
-        _objc_inform("CLASS: methodizing class '%s' %s",
-                     cls->nameForLogging(), isMeta ? "(meta)" : "");
-    }
-    
     // Install methods and properties that the class implements itself.
     method_list_t *list = ro->baseMethods();
     if (list) {
         prepareMethodLists(cls, &list, 1, YES, isBundleClass(cls));
-        rw->methods.attachLists(&list, 1);
+        rw->methods.attachLists(&list, 1); // 首先, 添加的是rot, 也就是原始类文件里面的方法列表.
     }
     
     property_list_t *proplist = ro->baseProperties;
     if (proplist) {
-        rw->properties.attachLists(&proplist, 1);
+        rw->properties.attachLists(&proplist, 1); // 添加 rot, 也就是原始类文件里面的属性列表.
     }
     
     protocol_list_t *protolist = ro->baseProtocols;
     if (protolist) {
-        rw->protocols.attachLists(&protolist, 1);
+        rw->protocols.attachLists(&protolist, 1); // 添加 rot, 也就是原始类文件里面的协议列表.
     }
     
     // Root classes get bonus method implementations if they don't have
@@ -721,31 +719,11 @@ static void methodizeClass(Class cls)
     }
     
     // Attach categories.
+    // 然后是添加分类里面的列表.
     category_list *cats = unattachedCategoriesForClass(cls, true /*realizing*/);
     attachCategories(cls, cats, false /*don't flush caches*/);
     
-    if (PrintConnecting) {
-        if (cats) {
-            for (uint32_t i = 0; i < cats->count; i++) {
-                _objc_inform("CLASS: attached category %c%s(%s)",
-                             isMeta ? '+' : '-',
-                             cls->nameForLogging(), cats->list[i].cat->name);
-            }
-        }
-    }
-    
     if (cats) free(cats);
-    
-#if DEBUG
-    // Debug: sanity-check all SELs; log method list contents
-    for (const auto& meth : rw->methods) {
-        if (PrintConnecting) {
-            _objc_inform("METHOD %c[%s %s]", isMeta ? '+' : '-',
-                         cls->nameForLogging(), sel_getName(meth.name));
-        }
-        assert(sel_registerName(sel_getName(meth.name)) == meth.name);
-    }
-#endif
 }
 
 
@@ -6541,16 +6519,17 @@ fixupMessageRef(message_ref_t *msg)
 
 
 // ProKit SPI
+/*
+ 思路很简单, 类对象的关系理清, 元类对象的关系理清, 然后设置新的, 最后把缓存清一下.
+ */
 static Class setSuperclass(Class cls, Class newSuper)
 {
     Class oldSuper;
     
     runtimeLock.assertWriting();
     
-    assert(cls->isRealized());
-    assert(newSuper->isRealized());
-    
     oldSuper = cls->superclass;
+    //
     removeSubclass(oldSuper, cls);
     removeSubclass(oldSuper->ISA(), cls->ISA());
     
