@@ -14,18 +14,19 @@ extern "C" {
 @class NSMutableData, NSData, NSString;
 
 /**
+ 
+ An abstract class that serves as the basis for objects that enable archiving of other objects.
+ 
+ 
  *  <p>Top-level class defining methods for use when archiving (encoding)
  *  objects to a byte array or file, and when restoring (decoding) objects.
  *  Generally only subclasses of this class are used directly - ,
  
  *  [NSArchiver], [NSUnarchiver]
     [NSKeyedArchiver], [NSKeyedUnarchiver], or
-    [NSPortCoder]. // 不看.
- *  </p>
- *  <p><code>NSPortCoder</code> is used within the distributed objects
- *  framework.  For archiving to/from disk, the <em>Keyed...</em> classes are
- *  preferred for new implementations, since they provide greater
- *  forward/backward compatibility in the face of class changes.</p>
+ 
+  A coder object stores object type information along with the data, so an object decoded from a stream of bytes is normally of the same class as the object that was originally encoded into the stream
+ 
  */
 //
 

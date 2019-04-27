@@ -1,56 +1,120 @@
 #ifndef __NSKeyedArchiver_h_GNUSTEP_BASE_INCLUDE
 #define __NSKeyedArchiver_h_GNUSTEP_BASE_INCLUDE
-#import	<GNUstepBase/GSVersionMacros.h>
+#import    <GNUstepBase/GSVersionMacros.h>
 
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 
-#if	defined(__cplusplus)
+#if    defined(__cplusplus)
 extern "C" {
 #endif
+    
+#import    <Foundation/NSCoder.h>
+#import    <Foundation/NSMapTable.h>
+#import    <Foundation/NSPropertyList.h>
+    
+    
+    
+/*
+ 
+ 
+ @interface A : NSError <NSCoding>
+ 
+ @property (nonatomic, strong) A *value;
+ @property (nonatomic, assign) int age;
+ @property (nonatomic, strong) NSString *desc;
+ @property (nonatomic, strong) NSString *title;
+ 
+ @end
+ 
+ @implementation A
+ 
+ - (instancetype)initWithCoder:(NSCoder *)aDecoder {
+ self = [super init];
+ if (self) {
+ _value = [aDecoder decodeObjectForKey:@"relation"];
+ _age = [aDecoder decodeIntegerForKey:@"age"];
+ _title = [aDecoder decodeObjectForKey:@"title"];
+ _desc = [aDecoder decodeObjectForKey:@"desc"];
+ }
+ return self;
+ }
+ 
+ - (void)encodeWithCoder:(NSCoder *)aCoder {
+ [aCoder encodeObject:_value forKey:@"relation"];
+ [aCoder encodeInteger:_age forKey:@"age"];
+ [aCoder encodeObject:_title forKey:@"title"];
+ [aCoder encodeObject:_desc forKey:@"desc"];
+ }
+ 
+ @end
+ 
+ A *value_1 = [[A alloc] init];
+ A *value_2 = [[A alloc] init];
+ value_1.value = value_2;
+ value_1.age = 1;
+ value_1.title = @"1_ttitle";
+ value_1.desc = @"1 desc";
+ value_2.value = value_1;
+ value_2.age = 2;
+ value_2.title = @"2_title";
+ value_2.desc = @"2_desc";
+ 
+ BOOL result = [NSKeyedArchiver archiveRootObject:value_1 toFile:@"/Users/justinlau/Work/Character/temp.plist"];
+ NSLog(@"%@", @(result));
+ A *unValues = [NSKeyedUnarchiver unarchiveObjectWithFile:@"/Users/justinlau/Work/Character/temp.plist"];
 
-#import	<Foundation/NSCoder.h>
-#import	<Foundation/NSMapTable.h>
-#import	<Foundation/NSPropertyList.h>
+ 上面是一个小的 demo, 归档解档成功了.
+ 这个类过程过于复杂, 只看最后的结果. 下面的 NSKeyedArchiver.plist 是归档之后的结果. 从结果上来看, KeyedArchiver 这个类是把所有的需要进行归档的对象, 都放到了一个数组里面, 然后之间的关系就用了数组的下标进行提现. 这个数组是从 1 开始计数的, 并且这个数组里面, 处理记录对象, 还记录了类对象的信息, 类对象的信息就是类的名称以及类的继承关系. 对于自定义的数据类型, 例如上面 A 对象, 里面记录这个类的 class, 然后用一个 id 指代这个 class 到底是哪个类对象. 然后, 对象里面的指针关系, 也是用的 id 的方式, 指代数组里面的某个对象. 这里, id 都是用的下标的这种方式.
+ 通过这种方式, 所有的需要进行归档的对象, 只会归档一次. 这就避免了循环归档和重复归档的过程.
+ 在解档的时候, 如果我来实现这块逻辑, 会通过数组里面的信息, 首先 alloc 所有的数组里面的对象, 建立的对象的类型, 就根据里面记录的类信息进行创建. 这仅仅是 alloc, 对象里面能够确定的也就是一个 isa 指针. 然后, 就可以数组中各个对象的具体进行, 进行初始化的工作. 这个舒适化工作, 铁定是调用了 decodeObjectForKey, 在这个逻辑里面, 如果是基本数据类型, 直接进行成员变量的赋值操作, 如果是关系指针的成员变量, 那就根据这个 key 所记录的 id 信息, 去数组的响应位置, 取响应的指针, 然后进行赋值.
+ 
+ 在没有归档前的对象里面, 所有的对象都在内存里面, 然后所有的关系是通过指针进行确定的. 我们把内存看做一个超级大的数组, 所有的对象, 都是独一无二没有第二份的. 但是我们在归档的时候, 是不可能有这么一个无线的空间的, 所以我们将所有要归档的对象, 放到一个数组里面, 相当于我们手动的对这个数组大内存进行了压缩, 压缩后的所有对象, 都是我们要进行归档的对象. 这样, 数组的下标就可以充当指针的作用, 指代关系类型的成员变量的值.
+ 这种技巧, 应该是很常见的.
+ 
+ 在 id 的存储的过程中, 归档文件是用 CF$UID 进行存储的, 这样在 plist 文件打开的时候, 是看不到这个 entry 的. 这应该是 xcode 的隐藏配置.
 
-@class NSMutableDictionary, NSMutableData, NSData, NSString;
-// 实验证明, NSKeyedArchiver 和 propertylist 不是一种技术. 通过 NSKeyedArchiver 序列化而成的 data, 写入到文件中, 不能打开, 而 dict 直接 writeToFile, 它的内部是生成 propertylist 文件写入到文件中, 是 xml 的文本文件.
-/**
- *  Implements <em>keyed</em> archiving of object graphs.  This archiver
- *  should be used instead of [NSArchiver] for new implementations.  Classes
- *  implementing [(NSCoding)] should check the [NSCoder-allowsKeyedCoding]
- *  method and if the response is YES, encode/decode their fields using the
- *  <code>...forKey:</code> [NSCoder] methods, which provide for more robust
- *  forwards and backwards compatibility.
+ 
  */
-@interface NSKeyedArchiver : NSCoder
+    
+    @class NSMutableDictionary, NSMutableData, NSData, NSString;
+    
+    /**
+     *  Implements <em>keyed</em> archiving of object graphs.  This archiver
+     *  should be used instead of [NSArchiver] for new implementations.  Classes
+     *  implementing [(NSCoding)] should check the [NSCoder-allowsKeyedCoding]
+     *  method and if the response is YES, encode/decode their fields using the
+     *  <code>...forKey:</code> [NSCoder] methods, which provide for more robust
+     *  forwards and backwards compatibility.
+     */
+    @interface NSKeyedArchiver : NSCoder
 {
-#if	GS_EXPOSE(NSKeyedArchiver)
+#if    GS_EXPOSE(NSKeyedArchiver)
 @private
-  NSMutableData	*_data;		/* Data to write into.		*/
-  id		_delegate;	/* Delegate controls operation.	*/
-  NSMapTable	*_clsMap;	/* Map classes to names.	*/
-#ifndef	_IN_NSKEYEDARCHIVER_M
-#define	GSIMapTable	void*
+    NSMutableData    *_data;        /* Data to write into.        */
+    id        _delegate;    /* Delegate controls operation.    */
+    NSMapTable    *_clsMap;    /* Map classes to names.    */
+#ifndef    _IN_NSKEYEDARCHIVER_M
+#define    GSIMapTable    void*
 #endif
-  GSIMapTable	_cIdMap;	/* Conditionally coded.		*/
-  GSIMapTable	_uIdMap;	/* Unconditionally coded.	*/
-  GSIMapTable	_repMap;	/* Mappings for objects.	*/
-#ifndef	_IN_NSKEYEDARCHIVER_M
-#undef	GSIMapTable
+    GSIMapTable    _cIdMap;    /* Conditionally coded.        */
+    GSIMapTable    _uIdMap;    /* Unconditionally coded.    */
+    GSIMapTable    _replaceMentMap;    /* Mappings for objects.    */
+#ifndef    _IN_NSKEYEDARCHIVER_M
+#undef    GSIMapTable
 #endif
-  unsigned	_keyNum;	/* Counter for keys in object.	*/
-  NSMutableDictionary	*_encodeObject;	/* Object being encoded.	*/
-  NSMutableArray	*_allArchivedObjects;	/* Array of objects.		*/
-  NSPropertyListFormat	_format;
+    unsigned    _keyNum;    /* Counter for keys in object.    */
+    NSMutableDictionary    *_encodeObjectDictM;    /* Object being encoded.    */
+    NSMutableArray    *_encodeObjectsArrayM;    /* Array of objects.        */
+    NSPropertyListFormat    _format;
 #endif
 #if     GS_NONFRAGILE
 #else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
+    /* Pointer to private additional data used to avoid breaking ABI
+     * when we don't have the non-fragile ABI available.
+     * Use this mechanism rather than changing the instance variable
+     * layout (see Source/GSInternal.h for details).
+     */
+@private id _internal GS_UNUSED_IVAR;
 #endif
 }
 
@@ -85,7 +149,7 @@ extern "C" {
  * Returns any mapping for the name of aClass which was previously set
  * for the receiver using the -setClassName:forClass: method.<br />
  * Returns nil if no such mapping exists, even if one has been set
- * using the class method +setClassName:forClass: 
+ * using the class method +setClassName:forClass:
  */
 - (NSString*) classNameForClass: (Class)aClass;
 
@@ -104,8 +168,8 @@ extern "C" {
  * and associates the encoded value with aKey.
  */
 - (void) encodeBytes: (const uint8_t*)aPointer
-	      length: (NSUInteger)length
-	      forKey: (NSString*)aKey;
+              length: (NSUInteger)length
+              forKey: (NSString*)aKey;
 
 /**
  * Encodes anObject and associates the encoded value with aKey, but only
@@ -186,46 +250,46 @@ extern "C" {
 - (void) setOutputFormat: (NSPropertyListFormat)format;
 
 @end
-
-
-
-/**
- *  Implements <em>keyed</em> unarchiving of object graphs.  The keyed archiver
- *  should be used instead of [NSArchiver] for new implementations.  Classes
- *  implementing [(NSCoding)] should check the [NSCoder-allowsKeyedCoding]
- *  method and if the response is YES, encode/decode their fields using the
- *  <code>...forKey:</code> [NSCoder] methods, which provide for more robust
- *  forwards and backwards compatibility.
- */
-@interface NSKeyedUnarchiver : NSCoder
+    
+    
+    
+    /**
+     *  Implements <em>keyed</em> unarchiving of object graphs.  The keyed archiver
+     *  should be used instead of [NSArchiver] for new implementations.  Classes
+     *  implementing [(NSCoding)] should check the [NSCoder-allowsKeyedCoding]
+     *  method and if the response is YES, encode/decode their fields using the
+     *  <code>...forKey:</code> [NSCoder] methods, which provide for more robust
+     *  forwards and backwards compatibility.
+     */
+    @interface NSKeyedUnarchiver : NSCoder
 {
-#if	GS_EXPOSE(NSKeyedUnarchiver)
+#if    GS_EXPOSE(NSKeyedUnarchiver)
 @private
-  NSDictionary	*_archive;
-  id		_delegate;	/* Delegate controls operation.	*/
-  NSMapTable	*_clsMap;	/* Map classes to names.	*/
-  NSArray	*_objects;	/* All encoded objects.		*/
-  NSDictionary	*_keyMap;	/* Local object name table.	*/
-  unsigned	_cursor;	/* Position in object.		*/
-  NSString	*_archiverClass;
-  NSString	*_version;
-#ifndef	_IN_NSKEYEDUNARCHIVER_M
-#define	GSIArray	void*
+    NSDictionary    *_archive;
+    id        _delegate;    /* Delegate controls operation.    */
+    NSMapTable    *_clsMap;    /* Map classes to names.    */
+    NSArray    *_objects;    /* All encoded objects.        */
+    NSDictionary    *_keyMap;    /* Local object name table.    */
+    unsigned    _cursor;    /* Position in object.        */
+    NSString    *_archiverClass;
+    NSString    *_version;
+#ifndef    _IN_NSKEYEDUNARCHIVER_M
+#define    GSIArray    void*
 #endif
-  GSIArray		_objMap; /* Decoded objects.		*/
-#ifndef	_IN_NSKEYEDUNARCHIVER_M
-#undef	GSIArray
+    GSIArray        _objMap; /* Decoded objects.        */
+#ifndef    _IN_NSKEYEDUNARCHIVER_M
+#undef    GSIArray
 #endif
-  NSZone	*_zone;		/* Zone for allocating objs.	*/
+    NSZone    *_zone;        /* Zone for allocating objs.    */
 #endif
 #if     GS_NONFRAGILE
 #else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
+    /* Pointer to private additional data used to avoid breaking ABI
+     * when we don't have the non-fragile ABI available.
+     * Use this mechanism rather than changing the instance variable
+     * layout (see Source/GSInternal.h for details).
+     */
+@private id _internal GS_UNUSED_IVAR;
 #endif
 }
 
@@ -292,7 +356,7 @@ extern "C" {
  * -encodeBytes:length:forKey:
  */
 - (const uint8_t*) decodeBytesForKey: (NSString*)aKey
-		      returnedLength: (NSUInteger*)length;
+                      returnedLength: (NSUInteger*)length;
 
 /**
  * Returns a double value associated with aKey.  This value must previously
@@ -364,34 +428,34 @@ extern "C" {
 - (void) setDelegate: (id)delegate;
 
 @end
-
-/**
- * Internal methods.  Do not use.
- */
-@interface	NSKeyedArchiver (Internal)
+    
+    /**
+     * Internal methods.  Do not use.
+     */
+    @interface    NSKeyedArchiver (Internal)
 - (void) _encodeArrayOfObjects: (NSArray*)anArray forKey: (NSString*)aKey;
 - (void) _encodePropertyList: (id)anObject forKey: (NSString*)aKey;
 @end
-
-/**
- * Internal methods.  Do not use.
- */
-@interface	NSKeyedUnarchiver (Internal)
+    
+    /**
+     * Internal methods.  Do not use.
+     */
+    @interface    NSKeyedUnarchiver (Internal)
 - (id) _decodeArrayOfObjectsForKey: (NSString*)aKey;
 - (id) _decodePropertyListForKey: (NSString*)aKey;
 - (BOOL) replaceObject: (id)oldObj withObject: (id)newObj;
 @end
-
-
-/* Exceptions */
-GS_EXPORT NSString * const NSInvalidArchiveOperationException;
-GS_EXPORT NSString * const NSInvalidUnarchiveOperationException;
-
-
-/**
- * Informal protocol implemented by delegates of [NSKeyedArchiver].
- */
-@interface NSObject (NSKeyedArchiverDelegate)
+    
+    
+    /* Exceptions */
+    GS_EXPORT NSString * const NSInvalidArchiveOperationException;
+    GS_EXPORT NSString * const NSInvalidUnarchiveOperationException;
+    
+    
+    /**
+     * Informal protocol implemented by delegates of [NSKeyedArchiver].
+     */
+    @interface NSObject (NSKeyedArchiverDelegate)
 
 /**
  * Sent when encoding of anObject has completed <em>except</em> in the case
@@ -431,13 +495,13 @@ willReplaceObject: (id)anObject
        withObject: (id)newObject;
 
 @end
-
-
-
-/**
- * Informal protocol implemented by delegates of [NSKeyedUnarchiver].
- */
-@interface NSObject (NSKeyedUnarchiverDelegate) 
+    
+    
+    
+    /**
+     * Informal protocol implemented by delegates of [NSKeyedUnarchiver].
+     */
+    @interface NSObject (NSKeyedUnarchiverDelegate)
 
 /**
  * Sent if the named class is not available during decoding.<br />
@@ -449,8 +513,8 @@ willReplaceObject: (id)anObject
  * to continue decoding, or may return nil to abort the decoding process.
  */
 - (Class) unarchiver: (NSKeyedUnarchiver*)anUnarchiver
-  cannotDecodeObjectOfClassName: (NSString*)aName
-  originalClasses: (NSArray*)classNames;
+cannotDecodeObjectOfClassName: (NSString*)aName
+     originalClasses: (NSArray*)classNames;
 
 /**
  * Sent when anObject is decoded.  The receiver may return either anObject
@@ -476,16 +540,16 @@ willReplaceObject: (id)anObject
  */
 - (void) unarchiver: (NSKeyedUnarchiver*)anUnarchiver
   willReplaceObject: (id)anObject
-	 withObject: (id)newObject;
+         withObject: (id)newObject;
 
 @end
-
-
-
-/**
- * Methods by which a class may control its archiving by the [NSKeyedArchiver].
- */
-@interface NSObject (NSKeyedArchiverObjectSubstitution) 
+    
+    
+    
+    /**
+     * Methods by which a class may control its archiving by the [NSKeyedArchiver].
+     */
+    @interface NSObject (NSKeyedArchiverObjectSubstitution)
 
 /**
  * This message is sent to objects being encoded, to allow them to choose
@@ -508,12 +572,12 @@ willReplaceObject: (id)anObject
 - (id) replacementObjectForKeyedArchiver: (NSKeyedArchiver*)archiver;
 
 @end
-
-/**
- * Methods by which a class may control its unarchiving by the
- * [NSKeyedArchiver].
- */
-@interface NSObject (NSKeyedUnarchiverObjectSubstitution) 
+    
+    /**
+     * Methods by which a class may control its unarchiving by the
+     * [NSKeyedArchiver].
+     */
+    @interface NSObject (NSKeyedUnarchiverObjectSubstitution)
 
 /**
  * Sent during unarchiving to permit classes to substitute a different
@@ -524,11 +588,11 @@ willReplaceObject: (id)anObject
 + (Class) classForKeyedUnarchiver;
 
 @end
-
-/**
- *  Methods for encoding/decoding points, rectangles, and sizes.
- */
-@interface NSCoder (NSGeometryKeyedCoding)
+    
+    /**
+     *  Methods for encoding/decoding points, rectangles, and sizes.
+     */
+    @interface NSCoder (NSGeometryKeyedCoding)
 /**
  * Encodes an <code>NSPoint</code> object.
  */
@@ -559,11 +623,11 @@ willReplaceObject: (id)anObject
  */
 - (NSSize) decodeSizeForKey: (NSString*)aKey;
 @end
-
-#if	defined(__cplusplus)
+    
+#if    defined(__cplusplus)
 }
 #endif
 
-#endif	/* GS_API_MACOSX */
-#endif	/* __NSKeyedArchiver_h_GNUSTEP_BASE_INCLUDE */
+#endif    /* GS_API_MACOSX */
+#endif    /* __NSKeyedArchiver_h_GNUSTEP_BASE_INCLUDE */
 
