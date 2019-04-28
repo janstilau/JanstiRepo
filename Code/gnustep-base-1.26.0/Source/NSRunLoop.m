@@ -96,7 +96,7 @@ static NSDate	*theFuture = nil;
     unsigned	order;
 }
 
-- (void) fire;
+- (void) fireRunloopPerformer;
 - (id) initWithSelector: (SEL)aSelector
                  target: (id)target
                argument: (id)argument
@@ -112,7 +112,7 @@ static NSDate	*theFuture = nil;
     [super dealloc];
 }
 
-- (void) fire
+- (void) fireRunloopPerformer
 {
     NS_DURING
     {
@@ -194,7 +194,7 @@ static NSDate	*theFuture = nil;
     [super dealloc];
 }
 
-- (void) fire
+- (void) fireTimer
 {
     DESTROY(timer);
     [target performSelector: selector withObject: argument];
@@ -222,7 +222,7 @@ static NSDate	*theFuture = nil;
                  initWithFireDate: nil
                  interval: delay
                  target: self
-                 selector: @selector(fire)
+                 selector: @selector(fireTimer)
                  userInfo: nil
                  repeats: NO];
     }
@@ -413,7 +413,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
 
 - (void) _addWatcher: (GSRunLoopWatcher*)item
              forMode: (NSString*)mode;
-- (BOOL) _checkPerformers: (GSRunLoopCtxt*)context;
+- (BOOL) runContextCachedPerformers: (GSRunLoopCtxt*)context;
 - (GSRunLoopWatcher*) _getWatcher: (void*)data
                              type: (RunLoopEventType)type
                           forMode: (NSString*)mode;
@@ -452,13 +452,13 @@ static inline BOOL timerInvalidated(NSTimer *t)
     }
 }
 
-- (BOOL) _checkPerformers: (GSRunLoopCtxt*)context
+- (BOOL) runContextCachedPerformers: (GSRunLoopCtxt*)context
 {
     BOOL                  found = NO;
     
     if (context != nil)
     {
-        GSIArray	performers = context->performers;
+        GSIArray	performers = context->cachedPerformers;
         unsigned	count = GSIArrayCount(performers);
         
         if (count > 0)
@@ -491,7 +491,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
             {
                 if (context != nil && context != original)
                 {
-                    GSIArray	performers = context->performers;
+                    GSIArray	performers = context->cachedPerformers;
                     unsigned	tmpCount = GSIArrayCount(performers);
                     
                     while (tmpCount--)
@@ -515,7 +515,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
              */
             for (i = 0; i < count; i++)
             {
-                [array[i] fire];
+                [array[i] fireRunloopPerformer];
                 RELEASE(array[i]);
                 IF_NO_GC([arp emptyPool];)
             }
@@ -626,7 +626,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
 
 
 @implementation NSRunLoop(GNUstepExtensions)
-
+// NSStream 是被当做是一个 watcher 添加到 runloop 中去的.
 - (void) addEvent: (void*)data
              type: (RunLoopEventType)type
           watcher: (id<RunLoopEvents>)watcher
@@ -871,7 +871,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
         NSMapInsert(_contextMap, context->mode, context);
         RELEASE(context);
     }
-    timers = context->timers;
+    timers = context->cachedTimers;
     i = GSIArrayCount(timers);
     while (i-- > 0)
     {
@@ -961,11 +961,11 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
     return YES;
 }
 
-- (NSDate*) _limitDateForContext: (GSRunLoopCtxt *)context
+- (NSDate*) tryRunCachedTimers: (GSRunLoopCtxt *)context
 {
     NSDate		*when = nil;
     NSAutoreleasePool     *arp = [NSAutoreleasePool new];
-    GSIArray		timers = context->timers;
+    GSIArray		timers = context->cachedTimers;
     NSTimeInterval	now;
     NSDate                *earliest;
     NSDate		*d;
@@ -1006,7 +1006,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
             if (ti < now)
             {
                 GSIArrayRemoveItemAtIndexNoRelease(timers, i);
-                [t fire];
+                [t fire]; // 最终的执行 timer 的 fire 方法.
                 GSPrivateNotifyASAP(_currentMode);
                 IF_NO_GC([arp emptyPool];)
                 if (updateTimer(t, d, now) == YES)
@@ -1106,7 +1106,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
         _currentMode = mode;
         NS_DURING
         {
-            when = [self _limitDateForContext: context];
+            when = [self tryRunCachedTimers: context];
             _currentMode = savedMode;
         }
         NS_HANDLER
@@ -1152,7 +1152,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
     }
     _currentMode = mode;
     
-    [self _checkPerformers: context];
+    [self runContextCachedPerformers: context];
     
     NS_DURING
     {
@@ -1162,7 +1162,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
         while (NO == done)
         {
             [arp emptyPool];
-            when = [self _limitDateForContext: context];
+            when = [self tryRunCachedTimers: context];
             if (nil == when)
             {
                 NSDebugMLLog(@"NSRunLoop",
@@ -1173,7 +1173,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
                  * a method to perform in this thread.
                  */
                 [GSRunLoopCtxt awakenedBefore: nil];
-                [self _checkPerformers: context];
+                [self runContextCachedPerformers: context];
                 GSPrivateNotifyASAP(_currentMode);
                 [_contextStack removeObjectIdenticalTo: context];
                 _currentMode = savedMode;
@@ -1228,7 +1228,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
                     done = YES;
                 }
             }
-            [self _checkPerformers: context];
+            [self runContextCachedPerformers: context];
             GSPrivateNotifyASAP(_currentMode);
             [context endPoll];
             
@@ -1258,34 +1258,23 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
 
 - (BOOL) runMode: (NSString*)mode beforeDate: (NSDate*)date
 {
-    NSAutoreleasePool	*arp = [NSAutoreleasePool new];
+    NSAutoreleasePool	*releasePool = [NSAutoreleasePool new];
     NSString              *savedMode = _currentMode;
-    GSRunLoopCtxt		*context;
     NSDate		*d;
     
     NSAssert(mode != nil, NSInvalidArgumentException);
     
     /* Process any pending notifications.
      */
-    GSPrivateNotifyASAP(mode);
-    
+    GSPrivateNotifyASAP(mode); // 通知相关的东西
     /* And process any performers scheduled in the loop (eg something from
      * another thread.
      */
     _currentMode = mode;
+    GSRunLoopCtxt        *context;
     context = NSMapGet(_contextMap, mode);
-    [self _checkPerformers: context];
+    [self runContextCachedPerformers: context];
     _currentMode = savedMode;
-    
-    /* Find out how long we can wait before first limit date.
-     * If there are no input sources or timers, return immediately.
-     */
-    d = [self limitDateForMode: mode];
-    if (nil == d)
-    {
-        [arp drain];
-        return NO;
-    }
     
     /* Use the earlier of the two dates we have (nil date is like distant past).
      */
@@ -1303,7 +1292,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
         RELEASE(d);
     }
     
-    [arp drain];
+    [releasePool drain];
     return YES;
 }
 
@@ -1350,6 +1339,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
 /**
  * Adds port to be monitored in given mode.
  */
+// 这里, addPort 被当做是添加一个 water 进行处理.
 - (void) addPort: (NSPort*)port
          forMode: (NSString*)mode
 {
@@ -1375,7 +1365,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
     {
         if (context != nil)
         {
-            GSIArray	performers = context->performers;
+            GSIArray	performers = context->cachedPerformers;
             unsigned	count = GSIArrayCount(performers);
             
             while (count--)
@@ -1414,7 +1404,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
     {
         if (context != nil)
         {
-            GSIArray	performers = context->performers;
+            GSIArray	performers = context->cachedPerformers;
             unsigned	count = GSIArrayCount(performers);
             
             while (count--)
@@ -1452,6 +1442,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
  * order value are sent first.<br />
  * If the modes array is empty, this method has no effect.
  */
+// 这里, 是讲一项任务, 存放到 context->performers 中去了
 - (void) performSelector: (SEL)aSelector
                   target: (id)target
                 argument: (id)argument
@@ -1463,26 +1454,14 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
     if (count > 0)
     {
         NSString			*array[count];
-        GSRunLoopPerformer	*item;
+        GSRunLoopPerformer	*performer;
         
-        item = [[GSRunLoopPerformer alloc] initWithSelector: aSelector
+        performer = [[GSRunLoopPerformer alloc] initWithSelector: aSelector
                                                      target: target
                                                    argument: argument
                                                       order: order];
         
-        if ([modes isProxy])
-        {
-            unsigned	i;
-            
-            for (i = 0; i < count; i++)
-            {
-                array[i] = [modes objectAtIndex: i];
-            }
-        }
-        else
-        {
-            [modes getObjects: array];
-        }
+        [modes getObjects: array];
         while (count-- > 0)
         {
             NSString	*mode = array[count];
@@ -1499,7 +1478,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
                 NSMapInsert(_contextMap, context->mode, context);
                 RELEASE(context);
             }
-            performers = context->performers;
+            performers = context->cachedPerformers;
             
             end = GSIArrayCount(performers);
             for (i = 0; i < end; i++)
@@ -1509,13 +1488,13 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
                 p = GSIArrayItemAtIndex(performers, i).obj;
                 if (p->order > order)
                 {
-                    GSIArrayInsertItem(performers, (GSIArrayItem)((id)item), i);
+                    GSIArrayInsertItem(performers, (GSIArrayItem)((id)performer), i);
                     break;
                 }
             }
             if (i == end)
             {
-                GSIArrayInsertItem(performers, (GSIArrayItem)((id)item), i);
+                GSIArrayInsertItem(performers, (GSIArrayItem)((id)performer), i);
             }
             i = GSIArrayCount(performers);
             if (i % 1000 == 0 && i > context->maxPerformers)
@@ -1527,7 +1506,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
                       NSStringFromSelector(aSelector));
             }
         }
-        RELEASE(item);
+        RELEASE(performer);
     }
 }
 

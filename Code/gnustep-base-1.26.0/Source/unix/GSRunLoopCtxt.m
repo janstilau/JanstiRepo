@@ -66,10 +66,10 @@ static const NSMapTableValueCallBacks WatcherMapValueCallBacks =
 - (void) dealloc
 {
     RELEASE(mode);
-    GSIArrayEmpty(performers);
-    NSZoneFree(performers->zone, (void*)performers);
-    GSIArrayEmpty(timers);
-    NSZoneFree(timers->zone, (void*)timers);
+    GSIArrayEmpty(cachedPerformers);
+    NSZoneFree(cachedPerformers->zone, (void*)cachedPerformers);
+    GSIArrayEmpty(cachedTimers);
+    NSZoneFree(cachedTimers->zone, (void*)cachedTimers);
     GSIArrayEmpty(watchers);
     NSZoneFree(watchers->zone, (void*)watchers);
     if (_efdMap != 0)
@@ -171,12 +171,12 @@ static const NSMapTableValueCallBacks WatcherMapValueCallBacks =
         mode = [theMode copy];
         extra = e;
         z = [self zone];
-        performers = NSZoneMalloc(z, sizeof(GSIArray_t));
-        timers = NSZoneMalloc(z, sizeof(GSIArray_t));
+        cachedPerformers = NSZoneMalloc(z, sizeof(GSIArray_t));
+        cachedTimers = NSZoneMalloc(z, sizeof(GSIArray_t));
         watchers = NSZoneMalloc(z, sizeof(GSIArray_t));
         _trigger = NSZoneMalloc(z, sizeof(GSIArray_t));
-        GSIArrayInitWithZoneAndCapacity(performers, z, 8);
-        GSIArrayInitWithZoneAndCapacity(timers, z, 8);
+        GSIArrayInitWithZoneAndCapacity(cachedPerformers, z, 8);
+        GSIArrayInitWithZoneAndCapacity(cachedTimers, z, 8);
         GSIArrayInitWithZoneAndCapacity(watchers, z, 8);
         GSIArrayInitWithZoneAndCapacity(_trigger, z, 8);
         

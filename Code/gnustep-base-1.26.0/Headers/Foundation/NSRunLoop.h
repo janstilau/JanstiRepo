@@ -1,27 +1,3 @@
-/* Interface for NSRunLoop for GNUStep
- Copyright (C) 1996 Free Software Foundation, Inc.
- 
- Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
- Created: March 1996
- 
- This file is part of the GNUstep Base Library.
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free
- Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02111 USA.
- */
-
 #ifndef __NSRunLoop_h_GNUSTEP_BASE_INCLUDE
 #define __NSRunLoop_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -46,12 +22,21 @@ extern "C" {
 #if	GS_EXPOSE(NSRunLoop)
 @private
     NSString		*_currentMode;
-    NSMapTable		*_contextMap;
+    NSMapTable		*_contextMap; // 这里, 是根据 mode 进行的区分,
     NSMutableArray	*_contextStack;
-    NSMutableArray	*_timedPerformers;
+    NSMutableArray	*_timedPerformers; // 这个 _timedPerformers, 仅仅是 runloop 管理performSelector AfterDelay 用到的一个数组, 并不是真正的在 runloop 检查是不是应该执行定时任务的容器. runloop 中, 应对的就是 NSTimer.
     void			*_extra;
 #endif
 }
+
+
+/*
+ 
+ runloop 又看了一遍. 感觉理解还是很混乱.
+ 
+ 
+ 
+ */
 
 /**
  * Returns the run loop instance for the current thread.
@@ -73,6 +58,7 @@ extern "C" {
 
 - (NSString*) currentMode;
 
+// Performs one pass through the run loop in the specified mode and returns the date at which the next timer is scheduled to fire.
 - (NSDate*) limitDateForMode: (NSString*)mode;
 
 - (void) run;
