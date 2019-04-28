@@ -42,8 +42,8 @@ extern "C" {
 {
 #if	GS_EXPOSE(NSLock)
 @private
-  gs_mutex_t	_mutex;
-  NSString	*_name;
+  gs_mutex_t	_mutex; // 功能的实现
+  NSString	*_name; // 提示信息.
 #endif
 }
 
@@ -93,6 +93,7 @@ extern "C" {
 {
 #if	GS_EXPOSE(NSCondition)
 @private
+    // 先通过 mutext 得到锁, 然后 _condition 进行 wait 操作, 在这个 wait 的过程中, 会释放 mutext 的锁, 好让其他的线程获取锁. 其他线程完成操作之后, 可以进行 singal, 或者 broadcast 唤醒 wait 的线程. 在被唤醒之后, 首先还是要通过 mutext 获得锁, 然后进行之后的操作.
   gs_cond_t	_condition;
   gs_mutex_t	_mutex;
   NSString	*_name;
@@ -101,7 +102,7 @@ extern "C" {
 /**
  * Blocks and atomically unlocks the receiver.
  这里, 进行了一次 unlock 的操作.
- * This method should only be called when the receiver is locked.
+ * This method should only be called when the receiver is locked. -- 必须在已经获取到 mutext 之后, 才能调用该方法.
  * The caller will then block until the receiver is sent either a -signal
  * or -broadcast message from another thread.  At which
  * point, the calling thread will reacquire the lock.

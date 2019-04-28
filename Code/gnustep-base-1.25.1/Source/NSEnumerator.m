@@ -16,6 +16,9 @@
  *  Calling this method 'exhausts' the enumerator, leaving it at the
  *  end of the collection being enumerated.
  */
+
+// nextObject 这个方法的具体实现, 是每个NSEnumerator根据自己依赖的容器的结构进行自定义的, allObjects 做的就是最后的统计工作.
+
 - (NSArray*) allObjects
 {
   NSMutableArray	*array;

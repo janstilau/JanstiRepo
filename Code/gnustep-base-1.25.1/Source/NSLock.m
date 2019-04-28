@@ -27,6 +27,8 @@
  * code.
  */
 
+// 从下面的宏可以看出, lock 就是 对于 mutext 的一层封装.
+
 #define	MDEALLOC \
 - (void) dealloc\
 {\
@@ -108,6 +110,7 @@
   return _name;\
 }
 
+// lock, 就是 pthread_mutex_lock 的代用.
 #define	MLOCK \
 - (void) lock\
 {\
@@ -123,12 +126,13 @@
     }\
 }
 
+// lockBeforeDate 就是不断的调用 pthread_mutex_trylock, 在调用失败之后, 进行 sched_yield 的操作, 然后在下次获取到调度之后, 判断一下时间有没有到达限定的时间, 如果是的话, 就是 lockBeforeDate 失败了, 如果还没有到达时间, 就继续尝试 pthread_mutex_trylock.
 #define	MLOCKBEFOREDATE \
 - (BOOL) lockBeforeDate: (NSDate*)limit\
 {\
   do\
     {\
-      int err = pthread_mutex_trylock(&_mutex);\ // 之前还不太明白, tryLock 这种函数到底有什么用. 原来是在这里, 就是每次拿到线程的调度权之后, 其实是调用trylock 函数, 如果不能够获取, 就直接放弃运行, 进行 thread_yield 函数.
+      int err = pthread_mutex_trylock(&_mutex);\
       if (0 == err)\
 	{\
 	  return YES;\
@@ -138,6 +142,7 @@
   return NO;\
 }
 
+// 直接就是 pthread_mutex_trylock 的调用.
 #define	MTRYLOCK \
 - (BOOL) tryLock\
 {\
@@ -251,7 +256,7 @@ MLOCK
 	{
 	  _NSLockError(self, _cmd, NO);
 	}
-      sched_yield();
+      sched_yield(); // 这个函数, 在之前的资源浏览器里面, 也是用到过很多次. 不过我觉得用这么低级的函数不好, 那个功能用 timer 不应该更好.
     } while ([limit timeIntervalSinceNow] > 0);
   return NO;
 }
@@ -278,7 +283,7 @@ MFINALIZE
 {
   if (nil != (self = [super init]))
     {
-      if (0 != pthread_mutex_init(&_mutex, &attr_recursive))
+      if (0 != pthread_mutex_init(&_mutex, &attr_recursive)) // 循环锁有一个特性, 就是只允许自己线程重新进入临界区. 所以, 循环锁还是可以达到线程保护的目的.
 	{
 	  DESTROY(self);
 	}
@@ -347,11 +352,14 @@ MNAME
 MTRYLOCK
 MUNLOCK
 
+// 类仅仅是提供了接口, 真正要使用的时候, 应该首先调用 lock, 在获取到当前锁的情况下, 调用 wait.
+
 - (void) wait
 {
     pthread_cond_wait(&_condition, &_mutex); // 这个函数, 会释放自己当前已经捕获的 mutex, 然后陷入🔐中, 直到其他的线程进行 singnal, 或者 broadCast 的唤醒. 并且, 唤醒之后, 还要接着重新获取 mutex 才能继续后面的操作;.
 }
 
+// 这个没有和 tryLock 那样使用一个循环, 是因为 pthread_cond_timedwait 直接就有这样一个 函数存在.
 - (BOOL) waitUntilDate: (NSDate*)limit
 {
   NSTimeInterval t = [limit timeIntervalSince1970];
@@ -439,7 +447,7 @@ MUNLOCK
 - (void) lockWhenCondition: (NSInteger)value
 {
   [_condition lock];
-  while (value != _condition_value)
+  while (value != _condition_value) // 所以, 在
     {
       [_condition wait]; // 这里, 会进行_condition unlock, 这个是 wait 内部的逻辑
     }

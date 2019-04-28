@@ -50,6 +50,13 @@ DEFINE_BLOCK_TYPE(GSNotificationBlock, void, NSNotification *);
 #endif
 }
 
+/*
+ 这个 NSNotificationCenter 这里实现的太复杂, 简单的说一下 Cocoa design pattern 的实现方式.
+ 在那本书里面, 用了一个字典存储所有的 observer, key 就是用的 notificationName, value 是 observer 为元素的可变数组.
+ 这样, 在 post 的时候, 相当于是首先根据 name, 读取到所有这个 name 相对应的 observer, 然后遍历, 如果这个 observer 中设置了监听某个特定的 object, 那么就做 object 的校验工作, 如果校验通过, 或者是不需要校验 object, 那么 observer 里面, 存储了 target 和 action, 直接通过 performSelector 进行方法的调用. NSNotification 作为方法的参数进行传递.
+ 这个实现简单, 并且能够符合现在文档里面对于 Notificaiton 机制的描述, 所以可以这样理解 center 内部的实现.
+ */
+
 + (NSNotificationCenter*) defaultCenter;
 
 - (void) addObserver: (id)observer
