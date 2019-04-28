@@ -326,7 +326,7 @@ typedef enum {
 /* Fire all pending performers in the current thread.  May only be called
  * from the runloop when the event/descriptor is triggered.
  */
-- (void) fire;
+- (void) fireThreadInfo;
 /* Cancel all pending performers.
  */
 - (void) invalidate;

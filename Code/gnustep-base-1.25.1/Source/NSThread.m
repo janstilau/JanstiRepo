@@ -190,7 +190,7 @@ static NSNotificationCenter *nc = nil;
                            selector: (SEL)s
                               modes: (NSArray*)m
                                lock: (NSConditionLock*)l;
-- (void) fire;
+- (void) firePerfomHolder;
 - (void) invalidate;
 - (BOOL) isInvalidated;
 - (NSArray*) modes;
@@ -596,7 +596,7 @@ GSCurrentThread(void)
         if (nil != _exitingThreads)
         {
             [_exitingThreadsLock lock]; // 线程同步
-            thr = NSMapGet(_exitingThreads, (const void*)selfThread);
+            thr = NSMapGet(_exitingThreads, (const void*)selfThread);  // 从这里获取正在进行清除操作的 thread 对象
             [_exitingThreadsLock unlock];
         }
         DESTROY(selfThread);
@@ -605,12 +605,12 @@ GSCurrentThread(void)
     {
         GSRegisterCurrentThread(); // 在这里面, 一定会有生成线程的操作.
         thr = pthread_getspecific(thread_object_key);
-        if ((nil == defaultThread) && IS_MAIN_PTHREAD)
+        if ((nil == defaultThread))
         {
             defaultThread = RETAIN(thr); // default 就是 主线程.
         }
     }
-    assert(nil != thr && "No main thread");
+    
     return thr;
 }
 
@@ -636,7 +636,7 @@ GSCurrentThreadDictionary(void)
 /*
  * Callback function to send notifications on becoming multi-threaded.
  */
-// 这个方法就是改变一下全局的值, 然后发一个通知而已. 但是它的意义更多的是函数名, 一个进入多线程环境的准备.
+// 这个方法, 其实最主要的作用就是发送一个通知, 告诉系统现在进入了多线程的环境.
 static void
 gnustep_base_thread_callback(void)
 {
@@ -700,18 +700,18 @@ gnustep_base_thread_callback(void)
 
 // NSThread 的类方法, 一般是对于 pthread 方法的封装
 
-// 整个 NSThread 方法, 其实是对于 pthread 方法的封装, 也就是用面向对象的编程管理了原来杂乱无章的 pthread C语言函数. 比如, 是不是主线程这件事, 它其实是在将第一个生成的 NSThread 对象当做 defaultThread, 而这个对象 一定是在主线程里面才能生成的. 通过面向对象的方法, 记录一些公共的值为static 数据, 记录一些和线程相关的值在自己的实例对象里面, 实现了业务的封装处理.
+// 整个 NSThread 方法, 其实是对于 pthread 方法的封装, 也就是用面向对象的编程管理了原来杂乱无章的 pthread C语言函数
 
 @implementation NSThread
 
 static void
 setThreadForCurrentThread(NSThread *t)
 {
-    pthread_setspecific(thread_object_key, t);
+    pthread_setspecific(thread_object_key, t); // 这个函数的作用是, 给当前的线程设置一个相关的量, 具体的实现不用管,  不过, 可以当做这是一个线程和 NSThread 的映射表, 因为有这个映射, 所以 NSThread 才能代表线程.
     gnustep_base_thread_callback();
 }
 
-// 这个方法, 会在线程退出的时候调用
+// 这个方法, 会在线程退出的时候调用, 它的主要作用是发送通知, pthread_setspecific 为 nil
 static void
 unregisterActiveThread(NSThread *thread)
 {
@@ -730,7 +730,7 @@ unregisterActiveThread(NSThread *thread)
         {
             nc = RETAIN([NSNotificationCenter defaultCenter]);
         }
-        [nc postNotificationName: NSThreadWillExitNotification
+        [nc postNotificationName: NSThreadWillExitNotification // 发送通知. 这就是框架的一部分, 提前埋点.
                           object: thread
                         userInfo: nil];
         
@@ -767,11 +767,12 @@ unregisterActiveThread(NSThread *thread)
     return NO;
 }
 
-+ (NSThread*) currentThread
++ (NSThread*) currentThread // 就是利用 getSpecific 函数, 获取 NSThread 对象.
 {
     return GSCurrentThread();
 }
 
+// 这里面,已经提供了所有 NSThread 所需要的信息了. 所以直接生成并且 start 就可以了.
 + (void) detachNewThreadSelector: (SEL)aSelector
                         toTarget: (id)aTarget
                       withObject: (id)anArgument
@@ -845,14 +846,15 @@ unregisterActiveThread(NSThread *thread)
     }
 }
 
+// 通过 getSepcific 获取当前线程的 NSThread, 然后和 defaultThread 做比较.
 + (BOOL) isMainThread
 {
-    return (GSCurrentThread() == defaultThread ? YES : NO); // 从这里我们看出, NSThread 是存储到线程内部的, 通过 pthread_getspecific 函数获取.
+    return (GSCurrentThread() == defaultThread ? YES : NO);
 }
 
 + (BOOL) isMultiThreaded
 {
-    return entered_multi_threaded_state;
+    return entered_multi_threaded_state;  // 这个值, 在第一次进入多线程环境的时候改变, 没有机会重置为 NO.
 }
 
 + (NSThread*) mainThread
@@ -944,7 +946,7 @@ unregisterActiveThread(NSThread *thread)
                     format: @"Deallocating an active thread without [+exit]!"];
     }
     DESTROY(_runLoopInfo); // 每个 thread 都有的 runloopInfo
-    DESTROY(_thread_dictionary); // 这个值?? 没有被用过啊.
+    DESTROY(_thread_dictionary); // 这个值, 作为 NSThread 的一个数据存储的入口, 现在可以知道的是,  NSOperationQueue 是存在里面了.
     DESTROY(_target); // 启动 的 target
     DESTROY(_arg); // 启动的 arg
     DESTROY(_name); // thread 对应的 name
@@ -1039,7 +1041,7 @@ unregisterActiveThread(NSThread *thread)
          NSStringFromSelector(_cmd)];
     }
     
-    [_target performSelector: _selector withObject: _arg];
+    [_target performSelector: _selector withObject: _arg]; // 从这里, 进入到线程的指定的方法.
 }
 
 - (NSString*) name
@@ -1132,6 +1134,7 @@ unregisterActiveThread(NSThread *thread)
 #endif
 }
 
+// 这个会在线程启动的时候尽心刚设置.
 - (void) setStackSize: (NSUInteger)stackSize
 {
     _stackSize = stackSize;
@@ -1167,9 +1170,7 @@ nsthreadLauncher(void *thread)
     
     [t main]; // main 函数里面, 其实就是调用 target 的 selection 方法.
     
-    // 所以说, 线程其实就是一个代码指令, 以及维护这个代码指令执行的相关数据, 也就是 pthread 数据.
-    // 而我们如果想要进行 runloop .其实是在 main 里面, 人工制造一个 运行循环, 让 nsthreadLauncher 这个方法, 不会退出.
-    
+    // 在执行完 Main 之后, 直接就退出了.
     [NSThread exit]; // 在这个方法里面, 会调用 pthread_exit 方法, 所以下面的 return 语句实际上是不会执行.
     // Not reached
     return NULL; // 返回.
@@ -1184,6 +1185,7 @@ nsthreadLauncher(void *thread)
     pthread_attr_t	attr;
     pthread_t		thr;
     
+    // 前面是一些判断操作.
     if (_active == YES)
     {
         [NSException raise: NSInternalInconsistencyException
@@ -1393,38 +1395,14 @@ nsthreadLauncher(void *thread)
     [p makeObjectsPerformSelector: @selector(invalidate)];
 }
 
-- (void) fire // 在这个时候, 才将原来注册给 Thread 的调用信息, 加到了 runloop 里面. 这是在什么时候呢, 是在 RunloopCtx 里面的 poll 函数中, 也就是在 timer 之后.
+// 在这里, 会执行所有的 GSPerformHolder 的操作. 所以, GSPerformHolder 和 timedPerfomer 不是一回事.
+- (void) fireThreadInfo
 {
     NSArray	*toDo;
     unsigned int	i;
     unsigned int	c;
     
     [lock lock];
-#if defined(_WIN32)
-    if (event != INVALID_HANDLE_VALUE)
-    {
-        if (ResetEvent(event) == 0)
-        {
-            NSLog(@"Reset event failed - %@", [NSError _last]);
-        }
-    }
-#else
-    if (inputFd >= 0)
-    {
-        char	buf[BUFSIZ];
-        
-        /* We don't care how much we read.  If there have been multiple
-         * performers queued then there will be multiple bytes available,
-         * but we always handle all available performers, so we can also
-         * read all available bytes.
-         * The descriptor is non-blocking ... so it's safe to ask for more
-         * bytes than are available.
-         */
-        while (read(inputFd, buf, sizeof(buf)) > 0)
-            ;
-    }
-#endif
-    
     c = [performers count];
     if (0 == c)
     {
@@ -1442,8 +1420,7 @@ nsthreadLauncher(void *thread)
     for (i = 0; i < c; i++)
     {
         GSPerformHolder	*h = [toDo objectAtIndex: i];
-        
-        [loop performSelector: @selector(fire) // 在这里, 将注册的所有的 holder 进行了调用. info 的 fire 操作, 是在 RUNLOOP CONTEXT 中进行的.
+        [loop performSelector: @selector(firePerformer)
                        target: h
                      argument: nil
                         order: 0
@@ -1510,7 +1487,7 @@ GSRunLoopInfoForThread(NSThread *aThread)
     GSNOSUPERDEALLOC;
 }
 
-- (void) fire // 这个 fire , 就是执行 GSPerformHolder 中记录的方法, 
+- (void) firePerfomHolder // 这个 fire , 就是执行 GSPerformHolder 中记录的方法, 
 {
     GSRunLoopThreadInfo   *threadInfo;
     
@@ -1581,6 +1558,8 @@ GSRunLoopInfoForThread(NSThread *aThread)
 
 // NSObject 的扩展方法.
 // 这个方法暴露出去是因为主线程实在是太重要了.
+
+
 @implementation	NSObject (NSThreadPerformAdditions)
 
 - (void) performSelectorOnMainThread: (SEL)aSelector
@@ -1613,28 +1592,27 @@ GSRunLoopInfoForThread(NSThread *aThread)
                                 modes: commonModes()]; // 默认是 commonModes
 }
 
-// 这个是没有 timed 的概念的. 这里, aThread 的概念仅仅是, 在不同线程的 runloop 进行切换. 就算是一个 runloop 没有开启的线程也没有关系??
 - (void) performSelector: (SEL)aSelector
-                onThread: (NSThread*)aThread
+                onThread: (NSThread*)targetThread
               withObject: (id)anObject
            waitUntilDone: (BOOL)shouldWait
                    modes: (NSArray*)runModes
 {
     GSRunLoopThreadInfo   *runloopInfo;
-    NSThread	        *t;
+    NSThread	        *currentThread;
     
     if ([runModes count] == 0)
     {
         return;
     }
     
-    t = GSCurrentThread();
-    if (aThread == nil)
+    currentThread = GSCurrentThread();
+    if (targetThread == nil)
     {
-        aThread = t;
+        targetThread = currentThread;
     }
-    runloopInfo = GSRunLoopInfoForThread(aThread);
-    if (t == aThread) // 如果调用线程, 就是当前线程.
+    runloopInfo = GSRunLoopInfoForThread(targetThread);
+    if (currentThread == targetThread) // 如果调用线程, 就是当前线程.
     {
         /* Perform in current thread.
          */
@@ -1644,19 +1622,17 @@ GSRunLoopInfoForThread(NSThread *aThread)
              */
             [self performSelector: aSelector withObject: anObject]; //如果要等待, 或者当前线程没有 runLoop 的话, 就直接执行.
         }
-        else
+        else // 否则, 相当于把这一串信息, 记录到 runloop 里面, 由 runloop 决定什么时候执行.
         {
             [runloopInfo->loop performSelector: aSelector
-                                 target: self
-                               argument: anObject
-                                  order: 0
-                                  modes: runModes];
-            // 如果有 runloop 并且是异步操作, 那么就添加到 runloop 维护的队列中去.
-            // 就算这样写也是没有问题的, 因为这里面没有 timer 的
+                                        target: self
+                                      argument: anObject
+                                         order: 0
+                                         modes: runModes];
         }
     }
     else
-    { // 如果是在另外一个线程执行, 就是讲任务添加到了另外一个线程的 runloop 里面去, 并且通过了 NSConditionLock 这种方式, 控制wait 问题.
+    { // 如果是在另外一个线程执行, 就是讲任务添加到了另外一个线程的 runloop 里面去, 如果需要等待, 就通过 NSConditionLock 的形式进行同步.
         GSPerformHolder   *h;
         NSConditionLock	*l = nil;
         

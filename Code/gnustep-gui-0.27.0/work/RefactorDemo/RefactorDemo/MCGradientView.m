@@ -45,7 +45,6 @@
     _bgView.backgroundColor = [UIColor clearColor];
     _bgView.userInteractionEnabled = NO;
     [self addSubview:_bgView];
-    UIButton *btn;
 }
 
 - (void)setupGradientView {

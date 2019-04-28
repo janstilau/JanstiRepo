@@ -60,13 +60,13 @@ static NSDate	*theFuture = nil;
 @interface GSRunLoopPerformer: NSObject
 {
 @public
-    SEL		selector;
-    id		target;
+    SEL		selector; // 方法
+    id		target; // target
     id		argument;
     unsigned	order;
 }
 
-- (void) fire;
+- (void) firePerformer;
 - (id) initWithSelector: (SEL)aSelector
                  target: (id)target
                argument: (id)argument
@@ -82,7 +82,7 @@ static NSDate	*theFuture = nil;
     [super dealloc];
 }
 
-- (void) fire
+- (void) firePerformer
 {
     NS_DURING
     {
@@ -238,7 +238,8 @@ static inline BOOL timerInvalidated(NSTimer *t)
 }
 
 
-// 其实我们可以猜想, 在 runloop 的内部, 一定会有着操作 _timedPerformers 的代码, 在人物执行之后, 会对 _timedPerformers 进行更新.
+// 其实我们可以猜想, 在 runloop 的内部, 一定会有着操作 _timedPerformers 的代码, 在任务执行之后, 会对 _timedPerformers 进行更新.
+
 @implementation NSObject (TimedPerformers)
 
 /*
@@ -250,22 +251,20 @@ static inline BOOL timerInvalidated(NSTimer *t)
  */
 + (void) cancelPreviousPerformRequestsWithTarget: (id)target
 {
-    NSMutableArray	*perf = [[NSRunLoop currentRunLoop] _timedPerformers]; // 首先拿到任务的缓存数组.
+    NSMutableArray	*perf = [[NSRunLoop currentRunLoop] _timedPerformers]; // 首先拿到timer任务的缓存数组.
     unsigned		count = [perf count];
     
     if (count > 0)
     {
         GSTimedPerformer	*array[count];
         
-        IF_NO_GC(RETAIN(target));
-        [perf getObjects: array];
         while (count-- > 0)
         {
             GSTimedPerformer	*p = array[count];
             
             if (p->target == target)
             {
-                [p invalidate]; // invalidate 做了什么事情呢. 标志位的改变. 所以, 对于一个任务来说, 如果它正在执行, 是不能 invalidate 的. 因为想要让一段代码终止是很难的事情, 除非在代码里面加入控制的逻辑, NSOperation 里面, 就有这样的控制逻辑. 而对于 timer 来说, 它是依托于 runloop 进行执行的, 所以, 一个 timer 进行 invalidate 的话, 只做一个标志位的改变就可以了, 这就需要在 runloop 里面添加, 如果 timer 的标志位invalid, 就不执行定时器的代码.
+                [p invalidate]; // 这个, 就是讲 timer 进行 invalidate.
                 [perf removeObjectAtIndex: count];
             }
         }
@@ -333,7 +332,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
                                                 delay: seconds];
     [[loop _timedPerformers] addObject: item]; // 创建一个管理 timer 和 人物的 performer 对象.
     RELEASE(item); // gnu 里面的代码, 都是 mrc 环境.
-    [loop addTimer: item->timer forMode: NSDefaultRunLoopMode]; // 这里, 非常明确的, 是加入了一个定时器.
+    [loop addTimer: item->timer forMode: NSDefaultRunLoopMode]; // 然后将 GSTimedPerformer 中的 timer, 添加到 runloop 中去.
 }
 
 - (void) performSelector: (SEL)aSelector
@@ -412,7 +411,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
  runloop 其实就是程序给我们的一个切口而已, 程序为了让程序保持运行, 所以制造了一个死循环. 为了让这个死循环不真的是死循环, 所以在这个死循环里面是用了系统调用的机制, 当需要执行的时候就不执行, 但是就算是这样他还是一个死循环. 因为从程序本身的角度来看, 它并不知道线程切换这回事. 在这个死循环里面, iOS 系统为我们添加了可以在这个死循环里面执行代码的机会, 那就是添加时间源, 因为这个死循环里面会去执行时间源里面的回调, 添加输入源, 延时执行函数, 因为这个死循环里面会去执行这些回调. 添加runloop observer, 因为 runloop 里面有着对于 observer 的回调, 添加 NSNoticiationQueue 的执行, 还是因为 runloop 里面有着对于他们的回调. 一般来说, 有了这些我们就能做很多事情了. 比如, observer 里面可以只是一个分发器, 当检测到 runloop 状态改变的时候, 由这个分发器进行分发, 而这个分发, 就可以无限扩展了.
  比如, 对于手势的回调, 就是从source0 的回调中衍生出来的. 首先衍生到公共API, UIApplicaiton sendevent. 然后继续分发, 最后到达了我们定义的 action 回掉.
  Dispatches an event to the appropriate responder objects in the app.
-这个分发机制, 就是通过 hitTest pointInSide 这些东西进行的分发. 而怎么到达的 runloop 呢, 猜测是系统的功劳, 而这些的源头由到了 cpu 中断等事情.
+ 这个分发机制, 就是通过 hitTest pointInSide 这些东西进行的分发. 而怎么到达的 runloop 呢, 猜测是系统的功劳, 而这些的源头由到了 cpu 中断等事情.
  */
 
 /* Add a watcher to the list for the specified mode.  Keep the list in
@@ -451,7 +450,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
     if (count <= 0) { return found; }
     
     NSAutoreleasePool    *arp = [NSAutoreleasePool new];
-    GSRunLoopPerformer    *array[count];
+    GSRunLoopPerformer    *tasks[count];
     NSMapEnumerator    enumerator;
     GSRunLoopCtxt        *original;
     void            *mode;
@@ -466,9 +465,9 @@ static inline BOOL timerInvalidated(NSTimer *t)
      */
     for (i = 0; i < count; i++)
     {
-        array[i] = GSIArrayItemAtIndex(performers, i).obj;
+        tasks[i] = GSIArrayItemAtIndex(performers, i).obj;
     }
-    performers->count = 0;
+    performers->count = 0;// 将任务出去来之后, 对原来的 performers 进行了任务的清空操作.
     
     /* Remove the requests that we are about to fire from all modes.
      */
@@ -488,7 +487,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
                 p = GSIArrayItemAtIndex(performers, tmpCount).obj;
                 for (i = 0; i < count; i++)
                 {
-                    if (p == array[i])
+                    if (p == tasks[i])
                     {
                         GSIArrayRemoveItemAtIndex(performers, tmpCount);
                     }
@@ -502,8 +501,8 @@ static inline BOOL timerInvalidated(NSTimer *t)
      */
     for (i = 0; i < count; i++)
     {
-        [array[i] fire]; // 这里才进行实际的fire 操作, 之前的是提取操作.
-        RELEASE(array[i]);
+        [tasks[i] firePerformer]; // 然后执行任务.
+        RELEASE(tasks[i]);
         IF_NO_GC([arp emptyPool];)
     }
     [arp drain];
@@ -642,8 +641,8 @@ static inline BOOL timerInvalidated(NSTimer *t)
         
         /* Create new object to hold information. */
         loopWatcher = [[GSRunLoopWatcher alloc] initWithType: type
-                                             receiver: watcher
-                                                 data: event];
+                                                    receiver: watcher
+                                                        data: event];
         /* Add the object to the array for the mode. */
         [self _addWatcher: loopWatcher forMode: mode];
         RELEASE(loopWatcher);		/* Now held in array.	*/
@@ -721,12 +720,12 @@ static inline BOOL timerInvalidated(NSTimer *t)
 
 + (NSRunLoop*) _runLoopForThread: (NSThread*) aThread
 {
-    GSRunLoopThreadInfo	*info = GSRunLoopInfoForThread(aThread);
-    NSRunLoop             *current = info->loop;
+    GSRunLoopThreadInfo	*runloopInfo = GSRunLoopInfoForThread(aThread);
+    NSRunLoop             *current = runloopInfo->loop;
     
     if (nil == current)
     {
-        current = info->loop = [[self alloc] _init];
+        current = runloopInfo->loop = [[self alloc] _init];
         /* If this is the main thread, set up a housekeeping timer.
          */
         if (nil != current && [GSCurrentThread() isMainThread] == YES)
@@ -1246,7 +1245,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
      */
     _currentMode = mode;
     context = NSMapGet(_contextMap, mode); // 拿到
-    [self _checkPerformers: context]; // 执行任务, 首先执行的是之前添加了 performSelector 的回调.
+    [self _checkPerformers: context]; // 执行任务, 首先执行的是之前添加了.
     _currentMode = savedMode;
     
     /* Find out how long we can wait before first limit date.
@@ -1431,9 +1430,6 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
  */
 
 /*
- 
- 注意, 这里建立的就不是 timedPerformer 了.
- 
  */
 - (void) performSelector: (SEL)aSelector
                   target: (id)target

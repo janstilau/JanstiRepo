@@ -35,6 +35,10 @@ extern "C" {
  
  Each process begins with a main thread and additional threads
  */
+    
+    /*
+     NSThread 的 start 方法里面, 会调用 pthread create 方法, 该方法, 会调用 NSThread 的 main 方法, 则在 main 方法的内部, 会调用 target, action 方法, 在方法执行完之后, 会调用 exit 方法.
+     */
 @interface NSThread : NSObject
 {
 #if	GS_EXPOSE(NSThread)
