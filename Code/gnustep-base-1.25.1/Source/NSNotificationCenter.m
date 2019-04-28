@@ -599,7 +599,8 @@ purgeMapNode(GSIMapTable map, GSIMapNode node, id observer)
 	[super dealloc];
 }
 
-// 这里, 其实 usingBlock 那种方式, 只不过是为了方便而已. 真正的使用, 还是 observer 和 selector 这种方法, 只不过 using Block 这种方式, 将 observer 进行了封装. 其实, YYKIt 的 timer 中, 也有类似的方法.
+// perform selector 这种方式是在太方便了,  并且苹果大多数的设计也是如此, 完全没有必要引入 block 就修改之前的实现.
+// 对于 block 封装回调的这种, 可以通过一个中间层, 中间层对象去面对原来的系统, 还是用 perform selector 的方式, 只不过, 中间层固定去调用某个方法, 而在这个方法的实现里面, 去调用封装的 block. 这样, 就可以把 block 融入到原来的系统设计中.
 - (void) didReceiveNotification: (NSNotification *)notif
 {
 	if (_queue != nil)
@@ -696,7 +697,6 @@ static NSNotificationCenter *default_center = nil;
 - (void) dealloc
 {
   [self finalize];
-
   [super dealloc];
 }
 
@@ -719,10 +719,12 @@ static NSNotificationCenter *default_center = nil;
 /**
  * <p>Registers observer to receive notifications with the name
  * notificationName and/or containing object (one or both of these two must be
- * non-nil; nil acts like a wildcard).  When a notification of name name
- * containing object is posted, observer receives a selector message with this
- * notification as the argument.  The notification center waits for the
- * observer to finish processing the message, then informs the next registree
+ * non-nil; nil acts like a wildcard).
+ 
+    When a notification of name name containing object is posted, observer receives a selector message with this
+ * notification as the argument.
+ 
+    The notification center waits for the observer to finish processing the message, then informs the next registree
  * matching the notification, and after all of this is done, control returns
  * to the poster of the notification.  Therefore the processing in the
  * selector implementation should be short.</p>
@@ -730,6 +732,8 @@ static NSNotificationCenter *default_center = nil;
  * <p>The notification center does not retain observer or object. Therefore,
  * you should always send removeObserver: or removeObserver:name:object: to
  * the notification center before releasing these objects.<br />
+ 
+ 
  * As a convenience, when built with garbage collection, you do not need to
  * remove any garbage collected observer as the system will do it implicitly.
  * </p>
@@ -1140,6 +1144,8 @@ static NSNotificationCenter *default_center = nil;
    */
   unlockNCTable(TABLE);
 
+    
+    // 上面, 寻找出所有的注册监听的方法, 下面进行一次统一的调用.
   /*
    * Now send all the notifications.
    */
