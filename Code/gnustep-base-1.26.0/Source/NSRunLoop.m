@@ -166,7 +166,7 @@ static NSDate	*theFuture = nil;
  * The GSTimedPerformer class is used to hold information about
  * messages which are due to be sent to objects at a particular time.
  */
-@interface GSTimedPerformer: NSObject
+@interface GSRunloopDelayerPerformer: NSObject
 {
 @public
     SEL		selector;
@@ -183,7 +183,7 @@ static NSDate	*theFuture = nil;
 - (void) invalidate;
 @end
 
-@implementation GSTimedPerformer
+@implementation GSRunloopDelayerPerformer
 
 - (void) dealloc
 {
@@ -264,8 +264,6 @@ static inline BOOL timerInvalidated(NSTimer *t)
     return t->_invalidated;
 }
 
-
-
 @implementation NSObject (TimedPerformers)
 
 /*
@@ -279,13 +277,13 @@ static inline BOOL timerInvalidated(NSTimer *t)
     
     if (count > 0)
     {
-        GSTimedPerformer	*array[count];
+        GSRunloopDelayerPerformer	*array[count];
         
         IF_NO_GC(RETAIN(target));
         [perf getObjects: array];
         while (count-- > 0)
         {
-            GSTimedPerformer	*p = array[count];
+            GSRunloopDelayerPerformer	*p = array[count];
             
             if (p->target == target)
             {
@@ -313,14 +311,14 @@ static inline BOOL timerInvalidated(NSTimer *t)
     
     if (count > 0)
     {
-        GSTimedPerformer	*array[count];
+        GSRunloopDelayerPerformer	*array[count];
         
         IF_NO_GC(RETAIN(target));
         IF_NO_GC(RETAIN(arg));
         [perf getObjects: array];
         while (count-- > 0)
         {
-            GSTimedPerformer	*p = array[count];
+            GSRunloopDelayerPerformer	*p = array[count];
             
             if (p->target == target && sel_isEqual(p->selector, aSelector)
                 && (p->argument == arg || [p->argument isEqual: arg]))
@@ -339,9 +337,9 @@ static inline BOOL timerInvalidated(NSTimer *t)
               afterDelay: (NSTimeInterval)seconds
 {
     NSRunLoop		*loop = [NSRunLoop currentRunLoop];
-    GSTimedPerformer	*item;
+    GSRunloopDelayerPerformer	*item;
     
-    item = [[GSTimedPerformer alloc] initWithSelector: aSelector
+    item = [[GSRunloopDelayerPerformer alloc] initWithSelector: aSelector
                                                target: self
                                              argument: argument
                                                 delay: seconds];
@@ -361,10 +359,10 @@ static inline BOOL timerInvalidated(NSTimer *t)
     {
         NSRunLoop		*loop = [NSRunLoop currentRunLoop];
         NSString		*marray[count];
-        GSTimedPerformer	*item;
+        GSRunloopDelayerPerformer	*item;
         unsigned		i;
         
-        item = [[GSTimedPerformer alloc] initWithSelector: aSelector
+        item = [[GSRunloopDelayerPerformer alloc] initWithSelector: aSelector
                                                    target: self
                                                  argument: argument
                                                     delay: seconds];

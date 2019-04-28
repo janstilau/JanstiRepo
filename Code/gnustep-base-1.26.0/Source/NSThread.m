@@ -279,8 +279,8 @@ static BOOL                     disableTraceLocks = NO;
                            selector: (SEL)s
                               modes: (NSArray*)m
                                lock: (NSConditionLock*)l;
-- (void) fire;
-- (void) invalidate;
+- (void) firePerformHolder;
+- (void) invalidatePerformHolder;
 - (BOOL) isInvalidated;
 - (NSArray*) modes;
 @end
@@ -858,7 +858,7 @@ unregisterActiveThread(NSThread *thread)
                           object: thread
                         userInfo: nil];
         
-        [(GSRunLoopThreadInfo*)thread->_runLoopInfo invalidate];
+        [(GSRunLoopThreadInfo*)thread->_runLoopInfo invalidateThreadInfo];
         RELEASE(thread);
         pthread_setspecific(thread_object_key, nil);
     }
@@ -1796,7 +1796,7 @@ lockInfoErr(NSString *str)
 
 - (void) dealloc
 {
-    [self invalidate];
+    [self invalidateThreadInfo];
     DESTROY(lock);
     DESTROY(loop);
     [super dealloc];
@@ -1861,7 +1861,7 @@ lockInfoErr(NSString *str)
     return self;
 }
 
-- (void) invalidate
+- (void) invalidateThreadInfo
 {
     NSArray       *p;
     
@@ -1887,10 +1887,10 @@ lockInfoErr(NSString *str)
     }
 #endif
     [lock unlock];
-    [p makeObjectsPerformSelector: @selector(invalidate)];
+    [p makeObjectsPerformSelector: @selector(invalidatePerformHolder)];
 }
 
-- (void) fire
+- (void) fireThreadInfo
 {
     NSArray	*toDo;
     unsigned int	i;
@@ -1939,8 +1939,8 @@ lockInfoErr(NSString *str)
     for (i = 0; i < c; i++)
     {
         GSPerformHolder	*h = [toDo objectAtIndex: i];
-        
-        [loop performSelector: @selector(fire)
+         // 在这里, performHolder 还是要通过 runloop 去执行最终的业务代码.
+        [loop performSelector: @selector(firePerformHolder)
                        target: h
                      argument: nil
                         order: 0
@@ -2007,7 +2007,8 @@ GSRunLoopInfoForThread(NSThread *aThread)
     GSNOSUPERDEALLOC;
 }
 
-- (void) fire
+// 这个方法, 只会在 fireThreadInfo 中执行.
+- (void) firePerformHolder
 {
     GSRunLoopThreadInfo   *threadInfo;
     
@@ -2018,7 +2019,7 @@ GSRunLoopInfoForThread(NSThread *aThread)
     threadInfo = GSRunLoopInfoForThread(GSCurrentThread());
     [threadInfo->loop cancelPerformSelectorsWithTarget: self];
     NS_DURING
-    {
+    {   // 真正执行的方法.
         [receiver performSelector: selector withObject: argument];
     }
     NS_HANDLER
@@ -2047,7 +2048,7 @@ GSRunLoopInfoForThread(NSThread *aThread)
     }
 }
 
-- (void) invalidate
+- (void) invalidatePerformHolder
 {
     if (invalidated == NO)
     {
