@@ -1,27 +1,3 @@
-/* Interface for NSValue for GNUStep
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-
-   Written by:  Adam Fedor <fedor@boulder.colorado.edu>
-   Created: 1995
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
-
 #ifndef __NSValue_h_GNUSTEP_BASE_INCLUDE
 #define __NSValue_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -33,19 +9,21 @@
 #if	defined(__cplusplus)
 extern "C" {
 #endif
-
-@class NSString;
-
-/**
- * The <code>NSValue</code> class can wrap a single primitive value as an
- * object so it can be used in the containers and other places where an object
- * reference is needed. Once initialized, an <code>NSValue</code> is
- * immutable, and there is no <code>NSMutableValue</code> class. You
- * initialize it by giving it a pointer to the primitive value, and you should
- * be careful this does not get freed until after the <code>NSValue</code> is
- * no longer used.
- */
-@interface NSValue : NSObject <NSCopying, NSCoding>
+    
+    @class NSString;
+    
+    /**
+     * The <code>NSValue</code> class can wrap a single primitive value as an
+     * object so it can be used in the containers and other places where an object
+     * reference is needed. Once initialized, an <code>NSValue</code> is
+     * immutable, and there is no <code>NSMutableValue</code> class. You
+     * initialize it by giving it a pointer to the primitive value, and you should
+     * be careful this does not get freed until after the <code>NSValue</code> is
+     * no longer used.
+     
+     这个类是不可变的, 并且它的作用, 就是包装 primitive value.
+     */
+    @interface NSValue : NSObject <NSCopying, NSCoding>
 
 // Allocating and Initializing 
 
@@ -53,9 +31,9 @@ extern "C" {
  * Create new instance with specified value (a pointer) of given type, which
  * is a string code obtainable through the compile-time operator
  * <code>@encode(...)</code>.  For example:
-<example>
-    NSValue *theValue = [NSValue value: &amp;n withObjCType: @encode(int)];
-</example>
+ <example>
+ NSValue *theValue = [NSValue value: &amp;n withObjCType: @encode(int)];
+ </example>
  */
 + (NSValue*) value: (const void*)value withObjCType: (const char*)type;
 
@@ -167,13 +145,13 @@ extern "C" {
 - (NSPoint) pointValue;
 
 @end
-
-/**
- * Subclass of [NSValue] offering convenience methods for initializing from
- * and accessing as any C primitive numeric type.  On access, the value will
- * be type-converted if necessary, using standard C conversion rules.
- */
-@interface NSNumber : NSValue <NSCopying,NSCoding>
+    
+    /**
+     * Subclass of [NSValue] offering convenience methods for initializing from
+     * and accessing as any C primitive numeric type.  On access, the value will
+     * be type-converted if necessary, using standard C conversion rules.
+     */
+    @interface NSNumber : NSValue <NSCopying,NSCoding>
 
 // Allocating and Initializing
 
@@ -346,19 +324,19 @@ extern "C" {
 #endif
 
 @end
-
+    
 #if OS_API_VERSION(GS_API_NONE, GS_API_NONE)
-
-/** Note: Defines a method that is not in the OpenStep spec, but makes
-    subclassing easier. */
-@interface NSValue (Subclassing)
+    
+    /** Note: Defines a method that is not in the OpenStep spec, but makes
+     subclassing easier. */
+    @interface NSValue (Subclassing)
 
 /** Used by value: withObjCType: to determine the concrete subclass to alloc. */
 + (Class) valueClassWithObjCType: (const char*)type;
 
 @end
 #endif
-
+    
 #if	defined(__cplusplus)
 }
 #endif

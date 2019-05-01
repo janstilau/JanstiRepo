@@ -45,6 +45,7 @@
     _bgView.backgroundColor = [UIColor clearColor];
     _bgView.userInteractionEnabled = NO;
     [self addSubview:_bgView];
+    [NSValue valueWithRange:NSMakeRange(0, 0)];
 }
 
 - (void)setupGradientView {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		065AAD462275ECB600A1C9C7 /* img.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 065AAD452275ECB600A1C9C7 /* img.jpg */; };
 		0662DF0B226F491600765A46 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0662DF0A226F491600765A46 /* AppDelegate.m */; };
 		0662DF0E226F491600765A46 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0662DF0D226F491600765A46 /* ViewController.m */; };
 		0662DF11226F491600765A46 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0662DF0F226F491600765A46 /* Main.storyboard */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		065AAD452275ECB600A1C9C7 /* img.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img.jpg; sourceTree = "<group>"; };
 		0662DF06226F491600765A46 /* RefactorDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RefactorDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0662DF09226F491600765A46 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0662DF0A226F491600765A46 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				0662DF3C226F492400765A46 /* MCGradientView.m */,
 				0662DF0C226F491600765A46 /* ViewController.h */,
 				0662DF0D226F491600765A46 /* ViewController.m */,
+				065AAD452275ECB600A1C9C7 /* img.jpg */,
 				0662DF0F226F491600765A46 /* Main.storyboard */,
 				0662DF12226F491800765A46 /* Assets.xcassets */,
 				0662DF14226F491800765A46 /* LaunchScreen.storyboard */,
@@ -242,6 +245,7 @@
 			files = (
 				0662DF16226F491800765A46 /* LaunchScreen.storyboard in Resources */,
 				0662DF13226F491800765A46 /* Assets.xcassets in Resources */,
+				065AAD462275ECB600A1C9C7 /* img.jpg in Resources */,
 				0662DF11226F491600765A46 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

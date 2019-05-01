@@ -930,7 +930,7 @@
 		18906FDD1610BF3C0003C892 /* NSURLCredential.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLCredential.m; sourceTree = "<group>"; };
 		18906FDE1610BF3C0003C892 /* NSURLCredentialStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLCredentialStorage.m; sourceTree = "<group>"; };
 		18906FDF1610BF3C0003C892 /* NSURLDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLDownload.m; sourceTree = "<group>"; };
-		18906FE01610BF3C0003C892 /* NSURLHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLHandle.m; sourceTree = "<group>"; };
+		18906FE01610BF3C0003C892 /* NSURLHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLHandle.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		18906FE11610BF3C0003C892 /* NSURLProtectionSpace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLProtectionSpace.m; sourceTree = "<group>"; };
 		18906FE21610BF3C0003C892 /* NSURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLProtocol.m; sourceTree = "<group>"; };
 		18906FE31610BF3C0003C892 /* NSURLRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLRequest.m; sourceTree = "<group>"; };

@@ -1,27 +1,3 @@
-/** GSValue - Object encapsulation for C types.
-   Copyright (C) 1993,1994,1995,1999 Free Software Foundation, Inc.
-
-   Written by:  Adam Fedor <fedor@boulder.colorado.edu>
-   Date: Mar 1995
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-*/
-
 #import "common.h"
 #import "Foundation/NSValue.h"
 #import "Foundation/NSData.h"
@@ -30,250 +6,252 @@
 
 @interface GSValue : NSValue
 {
-  void *data;
-  char *objctype;
+    void *data; // opaque 类型, 存储值的二进制表示
+    char *objctype; // 类型存储. 这里, 其实有点像编程语言, 通过类型来操作二进制数据.
 }
 @end
 
 /* This is the real, general purpose value object.  I've implemented all the
-   methods here (like pointValue) even though most likely, other concrete
-   subclasses were created to handle these types */
+ methods here (like pointValue) even though most likely, other concrete
+ subclasses were created to handle these types */
 
 @implementation GSValue
 
 static inline unsigned
 typeSize(const char* type)
 {
-  switch (*type)
+    switch (*type)
     {
-      case _C_ID:	return sizeof(id);
-      case _C_CLASS:	return sizeof(Class);
-      case _C_SEL:	return sizeof(SEL);
-      case _C_CHR:	return sizeof(char);
-      case _C_UCHR:	return sizeof(unsigned char);
-      case _C_SHT:	return sizeof(short);
-      case _C_USHT:	return sizeof(unsigned short);
-      case _C_INT:	return sizeof(int);
-      case _C_UINT:	return sizeof(unsigned int);
-      case _C_LNG:	return sizeof(long);
-      case _C_ULNG:	return sizeof(unsigned long);
-      case _C_LNG_LNG:	return sizeof(long long);
-      case _C_ULNG_LNG:	return sizeof(unsigned long long);
-      case _C_FLT:	return sizeof(float);
-      case _C_DBL:	return sizeof(double);
-#if __GNUC__ > 2 && defined(_C_BOOL)
-      case _C_BOOL:	return sizeof(_Bool);
-#endif
-      case _C_PTR:	return sizeof(void*);
-      case _C_CHARPTR:	return sizeof(char*);
-      case _C_BFLD:
-      case _C_ARY_B:
-      case _C_UNION_B:
-      case _C_STRUCT_B:
-	{
-	  NSUInteger	size;
-
-	  NSGetSizeAndAlignment(type, &size, 0);
-	  return (int)size;
-	}
-      case _C_VOID:	return 0;
-      default:		return 0;
+        case _C_ID:	return sizeof(id);
+        case _C_CLASS:	return sizeof(Class);
+        case _C_SEL:	return sizeof(SEL);
+        case _C_CHR:	return sizeof(char);
+        case _C_UCHR:	return sizeof(unsigned char);
+        case _C_SHT:	return sizeof(short);
+        case _C_USHT:	return sizeof(unsigned short);
+        case _C_INT:	return sizeof(int);
+        case _C_UINT:	return sizeof(unsigned int);
+        case _C_LNG:	return sizeof(long);
+        case _C_ULNG:	return sizeof(unsigned long);
+        case _C_LNG_LNG:	return sizeof(long long);
+        case _C_ULNG_LNG:	return sizeof(unsigned long long);
+        case _C_FLT:	return sizeof(float);
+        case _C_DBL:	return sizeof(double);
+        case _C_PTR:	return sizeof(void*);
+        case _C_CHARPTR:	return sizeof(char*);
+        case _C_BFLD:
+        case _C_ARY_B:
+        case _C_UNION_B:
+        case _C_STRUCT_B:
+        {
+            NSUInteger	size;
+            
+            NSGetSizeAndAlignment(type, &size, 0);
+            return (int)size;
+        }
+        case _C_VOID:	return 0;
+        default:		return 0;
     }
 }
 
 // Allocating and Initializing
 
 - (id) initWithBytes: (const void *)value
-	    objCType: (const char *)type
+            objCType: (const char *)type
 {
-  if (!value || !type)
+    if (!value || !type)
     {
-      NSLog(@"Tried to create NSValue with NULL value or NULL type");
-      DESTROY(self);
-      return nil;
+        NSLog(@"Tried to create NSValue with NULL value or NULL type");
+        DESTROY(self);
+        return nil;
     }
-
-  self = [super init];
-  if (self != nil)
+    
+    self = [super init];
+    if (self != nil)
     {
-      unsigned	size = typeSize(type);
-
-      if (size > 0)
-	{
-	  data = (void *)NSZoneMalloc([self zone], size);
-	  memcpy(data, value, size);
-	}
-      else
+        unsigned	size = typeSize(type);
+        
+        if (size > 0)
         {
-	  NSLog(@"Tried to create NSValue with invalid Objective-C type");
-	  DESTROY(self);
-	  return nil;
+            data = (void *)NSZoneMalloc([self zone], size);
+            memcpy(data, value, size);
         }
-      size = strlen(type);
-      objctype = (char *)NSZoneMalloc([self zone], size + 1);
-      strncpy(objctype, type, size);
-      objctype[size] = '\0';
+        else
+        {
+            NSLog(@"Tried to create NSValue with invalid Objective-C type");
+            DESTROY(self);
+            return nil;
+        }
+        size = strlen(type);
+        objctype = (char *)NSZoneMalloc([self zone], size + 1);
+        strncpy(objctype, type, size);
+        objctype[size] = '\0';
+        // 这里, 通过 C 函数, 把 objcType 进行了记录.
     }
-  return self;
+    return self;
 }
 
 - (void) dealloc
 {
-  if (objctype != 0)
-    NSZoneFree([self zone], objctype);
-  if (data != 0)
-    NSZoneFree([self zone], data);
-  [super dealloc];
+    if (objctype != 0)
+        NSZoneFree([self zone], objctype);
+    if (data != 0)
+        NSZoneFree([self zone], data);
+    [super dealloc];
 }
 
 // Accessing Data
+// 传递出去的, 就是存储的二进制值, 没有任何的改变, 并且是 copy. get 函数不能有副作用的.
 - (void) getValue: (void *)value
 {
-  unsigned	size;
-
-  size = typeSize(objctype);
-  if (size > 0)
+    unsigned	size;
+    
+    size = typeSize(objctype);
+    if (size > 0)
     {
-      if (value == 0)
-	{
-	  [NSException raise: NSInvalidArgumentException
-		      format: @"Cannot copy value into NULL buffer"];
-	  /* NOT REACHED */
-	}
-      memcpy(value, data, size);
+        if (value == 0)
+        {
+            [NSException raise: NSInvalidArgumentException
+                        format: @"Cannot copy value into NULL buffer"];
+            /* NOT REACHED */
+        }
+        memcpy(value, data, size);
     }
 }
 
-- (NSUInteger) hash
+- (NSUInteger) hash // 这里的 hash, 就是二进制值的每个 byte 相加.
 {
-  unsigned	size = typeSize(objctype);
-  unsigned	hash = 0;
-
-  while (size-- > 0)
+    unsigned	size = typeSize(objctype);
+    unsigned	hash = 0;
+    
+    while (size-- > 0)
     {
-      hash += ((unsigned char*)data)[size];
+        hash += ((unsigned char*)data)[size];
     }
-  return hash;
+    return hash;
 }
 
+// 指针相同, 类相同, type 相同, 值相同.
 - (BOOL) isEqualToValue: (NSValue*)aValue
 {
-  if (aValue == self)
+    if (aValue == self)
     {
-      return YES;
+        return YES;
     }
-  if (aValue == nil)
+    if (aValue == nil)
     {
-      return NO;
+        return NO;
     }
-  if (object_getClass(aValue) != object_getClass(self))
+    if (object_getClass(aValue) != object_getClass(self))
     {
-      return NO;
+        return NO;
     }
-  if (!GSSelectorTypesMatch(objctype, ((GSValue*)aValue)->objctype))
+    if (!GSSelectorTypesMatch(objctype, ((GSValue*)aValue)->objctype))
     {
-      return NO;
+        return NO;
     }
-  if (memcmp(((GSValue*)aValue)->data, data, typeSize(objctype)) != 0)
+    if (memcmp(((GSValue*)aValue)->data, data, typeSize(objctype)) != 0)
     {
-      return NO;
+        return NO;
     }
-  return YES;
+    return YES;
 }
 
 - (const char *)objCType
 {
-  return objctype;
+    return objctype;
 }
 
 - (id) nonretainedObjectValue
 {
-  unsigned	size = typeSize(objctype);
-
-  if (size != sizeof(void*))
+    unsigned	size = typeSize(objctype);
+    
+    if (size != sizeof(void*))
     {
-      [NSException raise: NSInternalInconsistencyException
-		  format: @"Return value of size %u as object", size];
+        [NSException raise: NSInternalInconsistencyException
+                    format: @"Return value of size %u as object", size];
     }
-  return *((id *)data);
+    return *((id *)data); // 直接返回, 传出去的值没有经过 autorelease.
 }
 
-- (NSPoint) pointValue
+- (NSPoint) pointValue // 直接把值当做 point 处理, 在处理之前, 会做一次类型的检查. 不过, 只是检查长度没有检查内容??? 个人认为, 既然已经检查了, 不如完全的检查一下的好.
 {
-  unsigned	size = typeSize(objctype);
-
-  if (size != sizeof(NSPoint))
+    unsigned	size = typeSize(objctype);
+    
+    if (size != sizeof(NSPoint))
     {
-      [NSException raise: NSInternalInconsistencyException
-		  format: @"Return value of size %u as NSPoint", size];
+        [NSException raise: NSInternalInconsistencyException
+                    format: @"Return value of size %u as NSPoint", size];
     }
-  return *((NSPoint *)data);
+    return *((NSPoint *)data);
 }
 
 - (void *) pointerValue
 {
-  unsigned	size = typeSize(objctype);
-
-  if (size != sizeof(void*))
+    unsigned	size = typeSize(objctype);
+    
+    if (size != sizeof(void*))
     {
-      [NSException raise: NSInternalInconsistencyException
-		  format: @"Return value of size %u as pointer", size];
+        [NSException raise: NSInternalInconsistencyException
+                    format: @"Return value of size %u as pointer", size];
     }
-  return *((void **)data);
+    return *((void **)data);
 }
 
 - (NSRect) rectValue
 {
-  unsigned	size = (unsigned)typeSize(objctype);
-
-  if (size != sizeof(NSRect))
+    unsigned	size = (unsigned)typeSize(objctype);
+    
+    if (size != sizeof(NSRect))
     {
-      [NSException raise: NSInternalInconsistencyException
-		  format: @"Return value of size %u as NSRect", size];
+        [NSException raise: NSInternalInconsistencyException
+                    format: @"Return value of size %u as NSRect", size];
     }
-  return *((NSRect *)data);
+    return *((NSRect *)data);
 }
 
 - (NSSize) sizeValue
 {
-  unsigned	size = typeSize(objctype);
-
-  if (size != sizeof(NSSize))
+    unsigned	size = typeSize(objctype);
+    
+    if (size != sizeof(NSSize))
     {
-      [NSException raise: NSInternalInconsistencyException
-		  format: @"Return value of size %u as NSSize", size];
+        [NSException raise: NSInternalInconsistencyException
+                    format: @"Return value of size %u as NSSize", size];
     }
-  return *((NSSize *)data);
+    return *((NSSize *)data);
 }
 
 - (NSString *) description
 {
-  unsigned	size;
-  NSData	*rep;
-
-  size = typeSize(objctype);
-  rep = [NSData dataWithBytes: data length: size];
-  return [NSString stringWithFormat: @"(%s) %@", objctype, [rep description]];
+    unsigned	size;
+    NSData	*rep;
+    
+    size = typeSize(objctype);
+    rep = [NSData dataWithBytes: data length: size];
+    return [NSString stringWithFormat: @"(%s) %@", objctype, [rep description]];
 }
 
+
+// 这里没有用到 keyedArchiver, 猜测是这个类很稳定, 固定的存 size, 存 type, 存data.
 - (void) encodeWithCoder: (NSCoder *)coder
 {
-  NSUInteger	tsize;
-  unsigned	size;
-  NSMutableData	*d;
-
-  size = strlen(objctype)+1;
-  [coder encodeValueOfObjCType: @encode(unsigned) at: &size];
-  [coder encodeArrayOfObjCType: @encode(signed char) count: size at: objctype];
-  NSGetSizeAndAlignment(objctype, 0, &tsize);
-  size = tsize;
-  d = [NSMutableData new];
-  [d serializeDataAt: data ofObjCType: objctype context: nil];
-  size = [d length];
-  [coder encodeValueOfObjCType: @encode(unsigned) at: &size];
-  [coder encodeArrayOfObjCType: @encode(unsigned char)
-			 count: size
-			    at: [d bytes]];
-  RELEASE(d);
+    NSUInteger	tsize;
+    unsigned	size;
+    NSMutableData	*d;
+    
+    size = strlen(objctype)+1;
+    [coder encodeValueOfObjCType: @encode(unsigned) at: &size];
+    [coder encodeArrayOfObjCType: @encode(signed char) count: size at: objctype];
+    NSGetSizeAndAlignment(objctype, 0, &tsize);
+    size = tsize;
+    d = [NSMutableData new];
+    [d serializeDataAt: data ofObjCType: objctype context: nil];
+    size = [d length];
+    [coder encodeValueOfObjCType: @encode(unsigned) at: &size];
+    [coder encodeArrayOfObjCType: @encode(unsigned char)
+                           count: size
+                              at: [d bytes]];
+    RELEASE(d);
 }
 @end
