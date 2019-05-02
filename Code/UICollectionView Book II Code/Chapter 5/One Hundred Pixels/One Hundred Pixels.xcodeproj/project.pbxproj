@@ -239,6 +239,11 @@
 				CLASSPREFIX = AF;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Ash Furrow";
+				TargetAttributes = {
+					5E3E2E0516B9C552008FB8BF = {
+						DevelopmentTeam = TE2958KSXV;
+					};
+				};
 			};
 			buildConfigurationList = 5E3E2E0116B9C552008FB8BF /* Build configuration list for PBXProject "One Hundred Pixels" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -388,6 +393,7 @@
 		5E3E2E2A16B9C552008FB8BF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = TE2958KSXV;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "One Hundred Pixels/One Hundred Pixels-Prefix.pch";
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"/**";
@@ -401,6 +407,7 @@
 		5E3E2E2B16B9C552008FB8BF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = TE2958KSXV;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "One Hundred Pixels/One Hundred Pixels-Prefix.pch";
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"/**";

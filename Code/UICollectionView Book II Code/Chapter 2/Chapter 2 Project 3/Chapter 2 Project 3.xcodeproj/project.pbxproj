@@ -17,7 +17,6 @@
 		5EE1E697167EAD9200362AB3 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5EE1E696167EAD9200362AB3 /* Default@2x.png */; };
 		5EE1E699167EAD9200362AB3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5EE1E698167EAD9200362AB3 /* Default-568h@2x.png */; };
 		5EE1E69C167EAD9200362AB3 /* AFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EE1E69B167EAD9200362AB3 /* AFViewController.m */; };
-		5EE1E69F167EAD9200362AB3 /* AFViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EE1E69D167EAD9200362AB3 /* AFViewController.xib */; };
 		5EE1E6A6167EADBF00362AB3 /* cat.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5EE1E6A5167EADBF00362AB3 /* cat.jpg */; };
 /* End PBXBuildFile section */
 
@@ -37,7 +36,6 @@
 		5EE1E698167EAD9200362AB3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5EE1E69A167EAD9200362AB3 /* AFViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFViewController.h; sourceTree = "<group>"; };
 		5EE1E69B167EAD9200362AB3 /* AFViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFViewController.m; sourceTree = "<group>"; };
-		5EE1E69E167EAD9200362AB3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/AFViewController.xib; sourceTree = "<group>"; };
 		5EE1E6A5167EADBF00362AB3 /* cat.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cat.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,7 +88,6 @@
 				5EE1E692167EAD9200362AB3 /* AFAppDelegate.m */,
 				5EE1E69A167EAD9200362AB3 /* AFViewController.h */,
 				5EE1E69B167EAD9200362AB3 /* AFViewController.m */,
-				5EE1E69D167EAD9200362AB3 /* AFViewController.xib */,
 				5EE1E689167EAD9200362AB3 /* Supporting Files */,
 			);
 			path = "Chapter 2 Project 3";
@@ -166,7 +163,6 @@
 				5EE1E695167EAD9200362AB3 /* Default.png in Resources */,
 				5EE1E697167EAD9200362AB3 /* Default@2x.png in Resources */,
 				5EE1E699167EAD9200362AB3 /* Default-568h@2x.png in Resources */,
-				5EE1E69F167EAD9200362AB3 /* AFViewController.xib in Resources */,
 				5EE1E6A6167EADBF00362AB3 /* cat.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -193,14 +189,6 @@
 				5EE1E68C167EAD9200362AB3 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		5EE1E69D167EAD9200362AB3 /* AFViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				5EE1E69E167EAD9200362AB3 /* en */,
-			);
-			name = AFViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -297,6 +285,7 @@
 				5EE1E6A4167EAD9200362AB3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

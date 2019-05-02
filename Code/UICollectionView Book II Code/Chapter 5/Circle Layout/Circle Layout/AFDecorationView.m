@@ -14,14 +14,14 @@
 {
     if (!(self = [super initWithFrame:frame])) return nil;
     
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor redColor];
     
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
     gradientLayer.colors = @[(id)[[UIColor blackColor] CGColor], (id)[[UIColor clearColor] CGColor]];
     gradientLayer.backgroundColor = [[UIColor clearColor] CGColor];
     gradientLayer.frame = self.bounds;
     
-    self.layer.mask = gradientLayer;
+//    self.layer.mask = gradientLayer;
     
     self.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     
@@ -37,7 +37,7 @@
     gradientLayer.backgroundColor = [[UIColor clearColor] CGColor];
     gradientLayer.frame = self.bounds;
     
-    self.layer.mask = gradientLayer;
+//    self.layer.mask = gradientLayer;
 }
 
 @end

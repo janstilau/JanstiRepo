@@ -47,7 +47,7 @@ static NSString *CellIdentifier = @"Cell Identifier";
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     flowLayout.minimumInteritemSpacing = 20.0f;
     flowLayout.minimumLineSpacing = 20.0f;
-    flowLayout.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
+    flowLayout.sectionInset = UIEdgeInsetsMake(20, 30, 1000, 10);
     flowLayout.itemSize = CGSizeMake(220, 220);
     
     //configure our collection view

@@ -136,6 +136,11 @@
 				CLASSPREFIX = AF;
 				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = "Ash Furrow";
+				TargetAttributes = {
+					5E534A4D16755F9700873502 = {
+						DevelopmentTeam = TE2958KSXV;
+					};
+				};
 			};
 			buildConfigurationList = 5E534A4816755F9700873502 /* Build configuration list for PBXProject "Chapter 1 Project 1" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -255,6 +260,7 @@
 		5E534A7316755F9800873502 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = TE2958KSXV;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Chapter 1 Project 1/Chapter 1 Project 1-Prefix.pch";
 				INFOPLIST_FILE = "Chapter 1 Project 1/Chapter 1 Project 1-Info.plist";
@@ -266,6 +272,7 @@
 		5E534A7416755F9800873502 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = TE2958KSXV;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Chapter 1 Project 1/Chapter 1 Project 1-Prefix.pch";
 				INFOPLIST_FILE = "Chapter 1 Project 1/Chapter 1 Project 1-Info.plist";
@@ -293,6 +300,7 @@
 				5E534A7416755F9800873502 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
