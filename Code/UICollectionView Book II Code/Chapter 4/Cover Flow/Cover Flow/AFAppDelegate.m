@@ -21,7 +21,24 @@
     self.viewController = navigationController;
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    
+    [self consoleLog];
     return YES;
+}
+
+- (void)consoleLog {
+    NSArray *locations = @[@"Beijing",
+                           @"ShangeHai",
+                           @"HeJian",
+                           @"Fujian",
+                           @"TaiBei",
+                           @"America"];
+    static int i = 2;
+    static CGFloat value = 0.2;
+    for (; i < 100; i++, value += 0.1) {
+        NSString *content = [NSString stringWithFormat:@"INSERT INTO Product VALUES ( %@, 'Product_%@', 'Product_%@_Content', '%@', %@);", @(i), @(i), @(i), locations[i%locations.count], @(value)];
+        NSLog(@"%@", content);
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

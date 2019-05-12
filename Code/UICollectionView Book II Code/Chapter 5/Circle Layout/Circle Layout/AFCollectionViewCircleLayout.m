@@ -10,6 +10,7 @@
 #import "AFDecorationView.h"
 
 #define kItemDimension   70.0f
+// fuzhifuzhi
 
 static NSString *AFCollectionViewFlowDecoration = @"DecorationView";
 
