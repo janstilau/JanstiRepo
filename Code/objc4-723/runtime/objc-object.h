@@ -469,7 +469,7 @@ objc_object::rootTryRetain()
 ALWAYS_INLINE id 
 objc_object::rootRetain(bool tryRetain, bool handleOverflow)
 {
-    if (isTaggedPointer()) return (id)this;
+    if (isTaggedPointer()) return (id)this; // 如果是 taggedPointer 直接返回, 因为 tagged OBJ 实际是没有堆的内存空间的.
 
     bool sideTableLocked = false;
     bool transcribeToSideTable = false;

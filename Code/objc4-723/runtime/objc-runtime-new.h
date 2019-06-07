@@ -180,7 +180,8 @@ struct entsize_list_tt {
     };
 };
 
-// method_t 
+// method_t
+// 方法名, 也就是 SEL, 方法签名, 以及 真正的函数实现.
 struct method_t {
     SEL name; // 方法名
     const char *types; // 方法签名.
@@ -196,6 +197,7 @@ struct method_t {
     };
 };
 
+// 所以, 这些和 cpp 的属性化是很像的. 因为本身要达成的功能是相似的.
 struct ivar_t {
 #if __x86_64__
     // *offset was originally 64-bit on some x86_64 platforms.
@@ -210,7 +212,7 @@ struct ivar_t {
     const char *type; // 参数类型, 这里用的是一套 objc 的 encode 的方法.
     // alignment is sometimes -1; use alignment() instead
     uint32_t alignment_raw;
-    uint32_t size;
+    uint32_t size; // 所占空间大小.
 
     uint32_t alignment() const {
         if (alignment_raw == ~(uint32_t)0) return 1U << WORD_SHIFT;
@@ -1211,6 +1213,7 @@ struct objc_class : objc_object {
     IMP getLoadMethod();
 
     // Locking: To prevent concurrent realization, hold runtimeLock.
+    // 这个变量就是一个标志位, 标志着类进行过初始化操作.
     bool isRealized() {
         return data()->flags & RW_REALIZED; // 这里, 是通过 isa 里面的一个位值进行的判定.
     }
@@ -1267,12 +1270,14 @@ struct objc_class : objc_object {
     }
 
     // May be unaligned depending on class's ivars.
+    // 这里返回的应该是各个成员变量相加的总和.
     uint32_t unalignedInstanceSize() {
         assert(isRealized());
         return data()->ro->instanceSize;
     }
 
     // Class's ivar size rounded up to a pointer-size boundary.
+    // 这里, 会对变量的总和进行 round 操作.
     uint32_t alignedInstanceSize() {
         return word_align(unalignedInstanceSize());
     }
@@ -1280,6 +1285,7 @@ struct objc_class : objc_object {
     size_t instanceSize(size_t extraBytes) {
         size_t size = alignedInstanceSize() + extraBytes;
         // CF requires all objects be at least 16 bytes.
+        // 这里表明了, 之所以是 16, 是因为 coreFoundation 的原因.
         if (size < 16) size = 16;
         return size;
     }
