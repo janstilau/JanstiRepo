@@ -22,6 +22,8 @@
 #import "cifframe.h"
 #endif
 
+@class GSKVOReplacement;
+
 NSString *const NSKeyValueChangeIndexesKey = @"indexes";
 NSString *const NSKeyValueChangeKindKey = @"kind";
 NSString *const NSKeyValueChangeNewKey = @"new";
@@ -29,25 +31,32 @@ NSString *const NSKeyValueChangeOldKey = @"old";
 NSString *const NSKeyValueChangeNotificationIsPriorKey = @"notificationIsPrior";
 
 static NSRecursiveLock	*kvoLock = nil;
-static NSMapTable	*classTable = 0;
-static NSMapTable	*infoTable = 0;
+static NSMapTable	*class2ClassReplaceMentTable = 0;
+static NSMapTable	*instance2KVOInfoTable = 0;
 static NSMapTable       *dependentKeyTable;
 static Class		baseClass;
 static id               null;
 
-// 这个框架, 总的数据是存放到全局数据里的, 这里就是对于全局数据的存储工作.
+/**
+ * 这里其实给了我们一些写法的参考. 对于某些初始化的方法, 我们可以写在一个方法里面, 然后在很多地方进行调用. 因为里面会有判断, 所以其实只是进行一次的初始化的操作.
+ 不过, 如果有明确的初始化的地方, 放到那里面更好. 例如 initilize 方法内部就是专门可以做初始化的工作.
+ 这里, 猜测是 KVO 没有专门的 initilize 的地方, 因为它本身就不是一个专门的类.
+ */
 static inline void
 KVOSetup()
 {
+    // 这里, 是根据 kvoLock 进行的初始化操作, 因为 KVO 是一个全局的修改, 所以不能保证调用方在哪一个线程. 对于类来说, 如果修改的是类共享的数据, 那么给这个类专门配置一个锁, 在合适的时候调用. 如果, 修改的是类对象的数据, 那么在类的初始化的过程中设置一个锁.
+    // 这里有很多锁, 职责不一样. gnustep_global_lock 是一个全局性的锁, 但是不能所有的操作都用这个锁.
     if (nil == kvoLock)
     {
-        [gnustep_global_lock lock]; // 这是一个全局锁, 在 NSObject 的 initialize 里面进行了初始化.
+        // 这是一个全局锁, 在 NSObject 的 initialize 里面进行了初始化. 可以看到, 这个锁大部分时间还是用在了一个类的初始化的时间里面, 然后类内部的一些操作, 还是用到了各自专属的锁. 不但类要有各自的责任, 锁也要有各自的责任.
+        [gnustep_global_lock lock];
         if (nil == kvoLock)
         {
             kvoLock = [GSLazyRecursiveLock new];
             null = [[NSNull null] retain];
-            classTable = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
-                                          NSNonOwnedPointerMapValueCallBacks, 128);
+            class2ClassReplaceMentTable = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
+                                                           NSNonOwnedPointerMapValueCallBacks, 128);
             infoTable = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
                                          NSNonOwnedPointerMapValueCallBacks, 1024);
             dependentKeyTable = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
@@ -131,17 +140,17 @@ static NSString *newKey(SEL _cmd)
     return key;
 }
 
-// 这是一个全局函数, 为的就是获取一个类对应的 replaceMent.  GSKVOReplacement 是一个工具类.
+/// 根于原有类, 生成一个新的类. 这个函数其实很简单, 就像 NSDict 里面为空生成相应对象之后更新 Dict 一样. 主要复杂的逻辑其实是在 GSKVOReplacement 里面.
 static GSKVOReplacement *
 replacementForClass(Class c)
 {
     GSKVOReplacement *r;
     [kvoLock lock];
-    r = (GSKVOReplacement*)NSMapGet(classTable, (void*)c);
+    r = (GSKVOReplacement*)NSMapGet(class2ClassReplaceMentTable, (void*)c); // 这里, 缓存了原有类和生成类之间的映射关系.
     if (r == nil)
     {
         r = [[GSKVOReplacement alloc] initWithClass: c];
-        NSMapInsert(classTable, (void*)c, (void*)r);
+        NSMapInsert(class2ClassReplaceMentTable, (void*)c, (void*)r);
     }
     [kvoLock unlock];
     return r;
@@ -182,6 +191,9 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
 
 @implementation NSObject (NSKeyValueObserving)
 
+/**
+ * 对于需要子类实现的方法, 明确的禁止调用.
+ */
 - (void) observeValueForKeyPath: (NSString*)aPath
                        ofObject: (id)anObject
                          change: (NSDictionary*)aChange
@@ -209,9 +221,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     GSKVOReplacement      *replaceMent;
     NSKeyValueObservationForwarder *forwarder;
     NSRange               dot;
-    
-    KVOSetup();
-    [kvoLock lock]; // 每一次 addObserver, 都是一次全局的 lock. 不过, 这个函数其实调用的频率不太多, 而且一般主要就是在主线程.
+    [kvoLock lock]; // 每一次 addObserver, 都是一次全局的 lock. 不过, 这个函数其实调用的频率不太多
     
     // 这里, 返回一个 GSKVOReplacement, 里面存放了 原始类, 生成的原始类的子类.
     // 在 replaceMent 的生成过程中, 其实会生成原始类对应的 kvo 类
@@ -221,9 +231,11 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     info = (GSKVOInfo*)[self observationInfo];
     if (info == nil)
     {
-        info = [[GSKVOInfo alloc] initWithInstance: self]; // 在这个函数里面,
+        info = [[GSKVOInfo alloc] initWithInstance: self];
         [self setObservationInfo: info];
-        object_setClass(self, [replaceMent replacement]); // 从这里, self 就变成了子类了.
+        // 如果, info 为 nil, 那么就代表这个对象并没有加入到 kvo 体系里面, 所以在这里更改了它的 class 的指向.
+        // object_setClass 的 实现, 主要是 obj->changeIsa(cls); 其实就是更改了 isa 的指向.
+        object_setClass(self, [replaceMent replacement]);
     }
     
     /*
@@ -700,30 +712,41 @@ triggerChangeNotificationsForDependentKey: (NSString*)dependentKey
 // 返回 info 数据, 这里也是进行了线程保护, 也有缓存的处理.
 // 这里, 在系统的类里面, 有很多这种函数, 看似是类的方法, 实际上是操作的一个全局的内容
 // associate 中, manager 的 alloc, dealloc, 仅仅是一个加锁的操作, 实际的是操作一个全局的 map, map 做缓存之用.
+/**
+ *  这里也提供了一个新的思路, 数据一定要在对象里面吗, 如果就是要操作一份数据呢.
+ 方法可能是, 写类方法吧, 或者, 写一个单例吧.
+ 也可以就是用对象的方式进行管理, 只不过使用者看起来是这样而已. 对象的方法里面, 还是操作类的内部的一份共有数据.
+ 这样写就不用把所有的使用, 都放到单例里面去了.
+ 更重要的是, 对象是可以有自己的数据的, 虽然维护的总的数据只有一份, 但是对象的自己的数据可以是配置相关的工作. 那么在对象的init或者 set 过程中, 将数据根据自己的需要进行配置, 然后在类的内部, 维护那一份单独的数据. 这要比, 通过类方法, 或者单例模式下, 传入众多的参数的方式要好的太多了.
+ */
 - (void*) observationInfo
 {
     void	*info;
     
     KVOSetup();
     [kvoLock lock];
-    info = NSMapGet(infoTable, (void*)self);
+    info = NSMapGet(instance2KVOInfoTable, (void*)self);
     AUTORELEASE(RETAIN((id)info));
     [kvoLock unlock];
     return info;
 }
 
-// 在自己的类里面, 想要实现分类中进行数据的操作, 一定需要一个全局数据进行操作. 这在 associate 也是同样的做法.
+/**
+ *  这是一个分类, 但是, 这个分类是可以操作数据的, 而不仅仅是操作的集合.
+    数据是需要预先分配出来的.
+    但是没有问题, 因为这个分类相关的就是这些数据.
+    这其实能够标明分类关于责任的划分的理解. 我之前,一直不理解分类对于模块化的理解. 因为数据的声明都要在主文件里面啊, 而分类是没有办法知道 m 文件里面的东西的, 这样, 分类是没有办法修改私有成员变量的.
+    这里, 提供了使用的实例, 分类是某个责任的集合体, 这个责任, 就可以不是在操作你这个类的数据啊. 这个分类, 是在操作和这个分类相关的功能的数据, 而这个功能相关的数据, 很有可能和对象的数据是一点关系没有的.
+ */
 - (void) setObservationInfo: (void*)observationInfo
 {
-    KVOSetup();
     [kvoLock lock];
     if (observationInfo == 0)
     {
-        NSMapRemove(infoTable, (void*)self);
-    }
-    else
+        NSMapRemove(instance2KVOInfoTable, (void*)self);
+    } else
     {
-        NSMapInsert(infoTable, (void*)self, observationInfo);
+        NSMapInsert(instance2KVOInfoTable, (void*)self, observationInfo);
     }
     [kvoLock unlock];
 }

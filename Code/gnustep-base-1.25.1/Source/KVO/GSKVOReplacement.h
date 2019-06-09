@@ -17,9 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface    GSKVOReplacement : NSObject
 {
-    Class         original;       /* The original class */
-    Class         replacement;    /* The replacement class */
-    NSMutableSet  *keys;          /* The observed setter keys */
+    Class         _original;       /* The original class */
+    Class         _replacement;    /* The replacement class */
+    NSMutableSet  *_observeredKeys;          /* The observed setter keys */
 }
 - (id) initWithClass: (Class)aClass;
 - (void) overrideSetterFor: (NSString*)aKey;

@@ -2079,7 +2079,6 @@ void arr_init(void)
     return obj == (id)self;
 }
 
-// 默认的就是比较地址.
 - (BOOL)isEqual:(id)obj {
     return obj == self;
 }
