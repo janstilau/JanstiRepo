@@ -48,7 +48,7 @@
 // 从这里我们也看到了, 如果直接操作成员变量, 是没有用的, 必须是通过方法调用才能进行 KVO 的工作.
 - (void) overrideSetterFor: (NSString*)aKey // aKey == name
 {
-    // 一个类, 对应一个 _replacement. 如果 _observeredKeys 里面有了 aKey, 那么就是这个替换的工作就完成了.
+    // 这里是一个去重处理, 表示 aKey 的替换工作已经完成了.
     if ([_observeredKeys member: aKey] != nil) { return; }
     
     IMP        imp;
@@ -64,6 +64,8 @@
     tmp = [[NSString alloc] initWithCharacters: &u length: 1];
     setSelName[0] = [NSString stringWithFormat: @"set%@%@:", tmp, suffix]; // a[0] == setName
     setSelName[1] = [NSString stringWithFormat: @"_set%@%@:", tmp, suffix]; // a[1] == _setName
+    
+    // 上面就是寻找 setName 和 _setName 的组装过程. 也就是说, 只会替换着两个方法.
     for (unsigned i = 0; i < 2; i++)
     {
         NSMethodSignature    *sig;
@@ -97,7 +99,7 @@
          * Unsupported types are quietly ignored ... is that right?
          */
         type = [sig getArgumentTypeAtIndex: 2];
-        // 在这里, 拿到了 set 函数的参数值的类型
+        // 这里, 要根据不同的参数类型, 做不同的处理
         switch (*type)
         {
             case _C_CHR:
@@ -181,6 +183,7 @@
         
         if (imp != 0)
         {
+            // 在这里, 将完成方法的替换. _replacement 中, 相应的 setName 便成为了 GSKVOSetter 中的方法, 而在 GSKVOSetter 中, 有着 willChange , didChange 的调用.
             if (class_addMethod(_replacement /*新创建出来的类.*/, sel, imp, [sig methodType]))
             {
                 found = YES;

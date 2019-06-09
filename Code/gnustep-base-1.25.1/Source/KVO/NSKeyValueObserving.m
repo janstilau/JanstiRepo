@@ -253,11 +253,8 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
                forKeyPath: aPath
                   options: options
                   context: forwarder];
-    }
-    else
-    {
-        [replaceMent overrideSetterFor: aPath]; // overrideSetterFor 这一步, self 所变成的那个子类, 会添加 willChangeValueForKey setValue didChangeValueForKey 的调用了
-        // 然后, 将关系完全传递给了 addObserver
+    } else {
+        [replaceMent overrideSetterFor: aPath];
         [info addObserver: anObserver
                forKeyPath: aPath
                   options: options
@@ -384,10 +381,11 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
                 }
                 [pathInfo->change setObject: old
                                      forKey: NSKeyValueChangeOldKey];
+                // 这里会把setValue 之前的值记录下来.
             }
             [pathInfo->change setValue:
              [NSNumber numberWithInt: NSKeyValueChangeSetting]
-                                forKey: NSKeyValueChangeKindKey];
+                                forKey: NSKeyValueChangeKindKey]; // 这一个值是一个固定的值, 因为我们基本用不上其他几种类型, 也就是NSKeyValueChangeInsertion, Remove, ReplaceMent. 主要是我们基本不监听容器的属性.
             
             //现在 pathInfo->change 里面NSKeyValueChangeOldKey 的值已经搞定了.
             // 这里, prior 传递的是YES, notifyForKey 的实现中, 发现 NSKeyValueChangeNotificationIsPriorKey 这个key 每一个 observer 都没有注册的话, 就直接返回了. NSKeyValueChangeNotificationIsPriorKey 指的是, willChangeValueForKey 的时候, 就进行通知.
@@ -399,6 +397,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     [self willChangeValueForDependentsOfKey: aKey];
 }
 
+// 所以, 所谓的 KVO 的监听, 是在 willChangeValue 中存储old, didChagne 中存储 new, 然后进行observer 的方法调用.
 - (void) didChangeValueForKey: (NSString*)aKey
 {
     GSKVOPathInfo *pathInfo;
