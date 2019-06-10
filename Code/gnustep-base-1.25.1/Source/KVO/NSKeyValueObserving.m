@@ -229,6 +229,8 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
     
     // GSKVOInfo 中包装了监听相关的东西. 从里面可以找到监听对象, 监听路径, 以及监听者的各种信息.
     info = (GSKVOInfo*)[self observationInfo];
+    
+    // 这里, setObservationInfo 只会在这里调用. 这也是为什么 [self observationInfo] 是一个没有副作用的get 方法的原因, 在 willChange 里面, 如果 info 为 nil, 代表着没有监听者, 那么就直接退出函数调用了.
     if (info == nil)
     {
         info = [[GSKVOInfo alloc] initWithInstance: self];
@@ -718,6 +720,8 @@ triggerChangeNotificationsForDependentKey: (NSString*)dependentKey
  这样写就不用把所有的使用, 都放到单例里面去了.
  更重要的是, 对象是可以有自己的数据的, 虽然维护的总的数据只有一份, 但是对象的自己的数据可以是配置相关的工作. 那么在对象的init或者 set 过程中, 将数据根据自己的需要进行配置, 然后在类的内部, 维护那一份单独的数据. 这要比, 通过类方法, 或者单例模式下, 传入众多的参数的方式要好的太多了.
  */
+
+//
 - (void*) observationInfo
 {
     void	*info;
