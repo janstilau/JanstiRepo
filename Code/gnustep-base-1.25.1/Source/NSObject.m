@@ -725,11 +725,42 @@ callCXXConstructors(Class aClass, id anObject)
 }
 #endif
 
+/***********************************************************************
+ * _class_createInstanceFromZone.  Allocate an instance of the
+ * specified class with the specified number of bytes for indexed
+ * variables, in the specified zone.  The isa field is set to the
+ * class, C++ default constructors are called, and all other fields are zeroed.
+ **********************************************************************/
+id
+_class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone)
+{
+    void *bytes;
+    size_t size;
+    
+    // Can't create something for nothing
+    if (!cls) return nil;
+    
+    // Allocate and initialize
+    size = cls->alignedInstanceSize() + extraBytes;
+    
+    // CF requires all objects be at least 16 bytes.
+    if (size < 16) size = 16;
+    
+    if (zone) {
+        bytes = malloc_zone_calloc((malloc_zone_t *)zone, 1, size);
+    } else {
+        bytes = calloc(1, size);
+    }
+    
+    return objc_constructInstance(cls, bytes);
+}
+
 inline id
 NSAllocateObject (Class aClass, NSUInteger extraBytes, NSZone *zone)
 {
 #ifdef OBJC_CAP_ARC
-    return class_createInstance(aClass, extraBytes); // 如果是 arc 环境的话, 直接调用 runtime 的方法. 在这里没有实现, 在 objc 的源码里面, 有着对应的实现. _class_createInstanceFromZone, 这个方法里面, 会根据类对象的 instanceSize 调用 calloc 的方法, 创建一个实例对象, 然后会初始化这个实例对象的 isa 指针. 也就是说, alloc 之后, 只有 isa 是有值的.
+    return class_createInstance(aClass, extraBytes);
+    // 如果是 arc 环境的话, 直接调用 runtime 的方法. 在这里没有实现, 在 objc 的源码里面, 有着对应的实现. _class_createInstanceFromZone(写到了上面), 这个方法里面, 会根据类对象的 instanceSize 调用 calloc 的方法, 创建一个实例对象, 然后会初始化这个实例对象的 isa 指针. 也就是说, alloc 之后, 只有 isa 是有值的.
 #else
     id	new;
     int	size;
@@ -741,12 +772,13 @@ NSAllocateObject (Class aClass, NSUInteger extraBytes, NSZone *zone)
     {
         zone = NSDefaultMallocZone();
     }
-    new = NSZoneMalloc(zone, size);
+    new = NSZoneMalloc(zone, size); // 这里面其实就是调用 malloc 函数.
     if (new != nil)
     {
         memset (new, 0, size); // 为什么 OC 的对象不需要c++的构造函数挨个赋值, 因为这里有一个 memset 函数.
-        new = (id)&((obj)new)[1];
+        new = (id)&((obj)new)[1]; // 这里, 转移了一些位置, 个人猜想是前面存放 retaion Count 的数量.
         object_setClass(new, aClass); // 这里, 应该就是设置 isa 指针而已. 这和 arc 的 class_createInstance 不是一个策略. 这个是生成之后, 代用的 setClass 方法.
+        //object_setClass 的实现是 objc_object::changeIsa, 从名称可以看出来, 这是一个 isa 指针的改变的操作.
         AADD(aClass, new);
     }
     
@@ -1082,17 +1114,24 @@ static id gs_weak_load(id obj)
  * memory zone.
  * <p>
  *   Memory for an instance of the receiver is allocated; a
- *   pointer to this newly created instance is returned.  All
- *   instance variables are set to 0. 这是通过 calloc 完成的. No initialization of the
+ *   pointer to this newly created instance is returned.
+    其实, cpp 的 new , JS 的 new 也都是做的一样的事情, 先分配一份内存空间, 然后运行时语言, 会修改这份空间的某个值, 用来让这份空间成为某个特定类型的值.
+    然后, 在这个内存空间上, 调用初始化方法, 进行这份空间的初始化工作.
+ *  All  instance variables are set to 0. 这是通过 calloc 完成的. No initialization of the
  *   instance is performed apart from setup to be an instance of
- *   the correct class: 这里指的是设置了 isa 的指向. it is your responsibility to initialize the
+ *   the correct class: 这里指的是设置了 isa 的指向. 除此之外, alloc 内部不会调用任何的初始化的方法.
+ 
+    it is your responsibility to initialize the
  *   instance by calling an appropriate <code>init</code>
- *   method. 所以 alloc init 一般来说是连在一起的. If you are not using the garbage collector, it is
+ *   method. 所以 alloc init 一般来说是连在一起的.
+
+ If you are not using the garbage collector, it is
  *   also your responsibility to make sure the returned
  *   instance is destroyed when you finish using it, by calling
  *   the <code>release</code> method to destroy the instance
  *   directly, or by using <code>autorelease</code> and
  *   autorelease pools.
+ 然后交代一下内存管理的事情.
  * </p>
  * <p>
  *  You do not normally need to override this method in

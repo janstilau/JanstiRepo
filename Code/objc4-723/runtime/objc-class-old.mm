@@ -2321,6 +2321,16 @@ _class_createInstanceFromZone(Class cls, size_t extraBytes, void *zone)
         bytes = malloc_zone_calloc((malloc_zone_t *)zone, 1, size);
     } else {
         bytes = calloc(1, size);
+        /*
+         Allocates memory for an array of num objects of size size and initializes it to all bits zero.
+         If allocation succeeds, returns a pointer to the lowest (first) byte in the allocated memory block that is suitably aligned for any object type.
+         If size is zero, the behavior is implementation defined (null pointer may be returned, or some non-null pointer may be returned that may not be used to access storage)
+         The following functions are required to be thread-safe:
+         The library versions of operator new and operator delete
+         User replacement versions of global operator new and operator delete
+         std::calloc, std::malloc, std::realloc, std::aligned_alloc (since C++17), std::free
+         Calls to these functions that allocate or deallocate a particular unit of storage occur in a single total order, and each such deallocation call happens-before the next allocation (if any) in this order.
+         */
     }
 
     return objc_constructInstance(cls, bytes);

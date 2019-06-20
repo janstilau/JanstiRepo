@@ -42,6 +42,7 @@
 #   define WORD_BITS 32
 #endif
 
+// 这样的操作结果就是, 8 的倍数.
 static inline uint32_t word_align(uint32_t x) {
     return (x + WORD_MASK) & ~WORD_MASK;
 }

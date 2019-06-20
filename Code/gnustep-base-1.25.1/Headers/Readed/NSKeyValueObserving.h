@@ -18,7 +18,7 @@ extern "C" {
 enum {
   NSKeyValueObservingOptionNew = 1,
   NSKeyValueObservingOptionOld = 2
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST)
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST) // 下面的两个, 从这个宏的意思看, 是仅仅用在了 macOS 里面.
 ,  NSKeyValueObservingOptionInitial = 4,
   NSKeyValueObservingOptionPrior = 8
 #endif
@@ -49,10 +49,11 @@ GS_EXPORT NSString *const NSKeyValueChangeOldKey;
 GS_EXPORT NSString *const NSKeyValueChangeNotificationIsPriorKey;
 #endif
 
-/* Given that the receiver has been registered as an observer
+/* Given 考虑到 that the receiver has been registered as an observer
  * of the value at a key path relative to an object,
  * be notified that the value has changed.
  
+ NSKeyValueChangeKindKey 是固定会有的, 但是含义其实不一定.
  * The change dictionary always contains an NSKeyValueChangeKindKey entry
  * whose value is an NSNumber wrapping an NSKeyValueChange
  * (use [NSNumber-intValue]). The meaning of NSKeyValueChange

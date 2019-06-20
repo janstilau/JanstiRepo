@@ -166,7 +166,7 @@ union isa_t
 };
 
 
-// objc_object 指的就是, 有一个 isa 的指针的对象, 这个和 JS 里面, 一个 prototype 的有什么区别呢.
+// objc_object 指的就是, 有一个 isa 的指针的对象, 这个和 JS 里面, 一个 prototype 的有什么区别呢. 没有区别.
 struct objc_object {
 private:
     isa_t isa;

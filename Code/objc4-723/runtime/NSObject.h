@@ -14,9 +14,23 @@
 
 @protocol NSObject
 
+/**
+ *  默认这个函数是 Receiver 和 object 的 == 比较, 由于 OC 里面并没有操作符重载, 所以就是地址的比较.
+ *  这个函数有着很重要的意义, 比如数组的 indexOf 函数判断对象相等就是用的这个方法. 注意是, 用的是这个方法, 而不是 == 地址比较, 也就是说, 各个类可以自定义这个函数, 已达到自定义相等操作的目的.
+ 
+ This method defines what it means for instances to be equal. For example, a container object might define two containers as equal if their corresponding objects all respond YES to an isEqual: request. See the NSData, NSDictionary, NSArray, and NSString class specifications for examples of the use of this method.
+ 
+ If two objects are equal, they must have the same hash value. This last point is particularly important if you define isEqual: in a subclass and intend to put instances of that subclass into a collection. Make sure you also define hash in your subclass.
+ */
 - (BOOL)isEqual:(id)object;
+/**
+ * hash 的真正意义, 如果不去学习数据结构的话, 不会有所了解. hash 首先是 hash 容器用到, 用来确定数组的下标, 如果是链式解决冲突的办法, 那么在数组的相应位置, 应该是一个链表, 那么在对于链表的每个对象调用 isEqual 方法. 所以, 一般来说, isEqual 和 hash 方法要一起修改.
+ */
 @property (readonly) NSUInteger hash;
 
+/**
+ * 这个就是直接读取的类对象里面的 superClass. 
+ */
 @property (readonly) Class superclass;
 - (Class)class OBJC_SWIFT_UNAVAILABLE("use 'type(of: anObject)' instead");
 - (instancetype)self;

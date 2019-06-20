@@ -449,13 +449,13 @@ NSValue *
 GSObjCMakeClass(NSString *name, NSString *superName, NSDictionary *iVars)
 {
     Class		newClass;
-    Class		classSuperClass;
-    const char	*classNameCString;
+    Class		classSuperClass = NSClassFromString(superName);
+    const char	*classNameCString = [name UTF8String];
     
-    classSuperClass = NSClassFromString(superName);
-    classNameCString = [name UTF8String];
     // Creates a new class and metaclass.
+    // objc_allocateClassPair 这个方法内部, 会生成相应的 class 和 metaClass, 然后做一些对应的初始化的工作.
     newClass = objc_allocateClassPair(classSuperClass, classNameCString, 0);
+    
     if ([iVars count] > 0) // 如果, 后面有新增成员变量的信息, 这里要进行 addIvar 的操作.
     {
         NSEnumerator	*enumerator = [iVars keyEnumerator];
@@ -463,8 +463,9 @@ GSObjCMakeClass(NSString *name, NSString *superName, NSDictionary *iVars)
         
         while ((key = [enumerator nextObject]) != nil)
         {
-            const	char	*iVarName = [key UTF8String];
-            const char	*iVarType = [[iVars objectForKey: key] UTF8String];
+            const	char	*iVarName = [key UTF8String]; // 变量名.
+            const char	*iVarType = [[iVars objectForKey: key] UTF8String]; // 变量的类型.
+            // 从这里可以看出, iVars 里面存的是 { {name:string}, {length:int} } 这样的信息. 名字和类型.
             uint8_t	iVarAlign = 0;
             size_t	iVarSize;
             NSUInteger	s;
@@ -481,7 +482,10 @@ GSObjCMakeClass(NSString *name, NSString *superName, NSDictionary *iVars)
             // Record actual size
             iVarSize = s;
             if (NO
-                == class_addIvar(newClass, iVarName, iVarSize, iVarAlign, iVarType))
+                == class_addIvar(newClass, iVarName, iVarSize, iVarAlign, iVarType)) // 名字, 尺寸, 对齐方式, type.
+                // class_addIvar 这个函数首先会检查重名情况.
+                // 然后会添加 iVar 到 iVar List 中.
+                // 在这个过程中, 会利用原来的 class的instanceSize 作为新的 ivar 的 offset. 而 instanceSize 会在稍后进行更新操作.
             {
                 NSLog(@"Error adding ivar '%s' of type '%s'", iVarName, iVarType);
             }
@@ -534,7 +538,7 @@ GSObjCAddMethods(Class cls, Method *list, BOOL replace)
     char		c;
     Method	m;
     
-    if (cls == 0 || list == 0)
+    if (cls == 0 || list == 0) // Guard
     {
         return;
     }
@@ -854,84 +858,30 @@ GSProtocolGetMethodDescriptionRecursive(Protocol *aProtocol, SEL aSel, BOOL isRe
 }
 
 void
-GSObjCAddClassBehavior(Class receiver, Class behavior)
+GSObjCAddClassBehavior(Class receiver, Class behaviorContainerClass)
 {
     unsigned int	count;
     Method	*methods;
-    Class behavior_super_class = class_getSuperclass(behavior);
+    Class behavior_super_class = class_getSuperclass(behaviorContainerClass);
     
-    if (YES == class_isMetaClass(receiver))
-    {
-        fprintf(stderr, "Trying to add behavior (%s) to meta class (%s)\n",
-                class_getName(behavior), class_getName(receiver));
-        abort();
-    }
-    if (YES == class_isMetaClass(behavior))
-    {
-        fprintf(stderr, "Trying to add meta class as behavior (%s) to (%s)\n",
-                class_getName(behavior), class_getName(receiver));
-        abort();
-    }
-    if (class_getInstanceSize(receiver) < class_getInstanceSize(behavior))
-    {
-        const char *b = class_getName(behavior);
-        const char *r = class_getName(receiver);
-        
-#ifdef NeXT_Foundation_LIBRARY
-        fprintf(stderr, "Trying to add behavior (%s) with instance "
-                "size larger than class (%s)\n", b, r);
-        abort();
-#else
-        /* As a special case we allow adding GSString/GSCString to the
-         * constant string class ... since we know the base library
-         * takes care not to access non-existent instance variables.
-         */
-        if ((strcmp(b, "GSCString") && strcmp(b, "GSString"))
-            || (strcmp(r, "NSConstantString") && strcmp(r, "NXConstantString")))
-        {
-            fprintf(stderr, "Trying to add behavior (%s) with instance "
-                    "size larger than class (%s)\n", b, r);
-            abort();
-        }
-#endif
-    }
+    /**
+     *  首先判断了是不是 metaClass, 删去了
+        然后, 根据 instanceSize 的比较进行了某些判断, 删去了.
+     */
     
     BDBGPrintf("Adding behavior to class %s\n", class_getName(receiver));
     
-    /* Add instance methods */
-    // 把原有类的行为抽取出来.
-    methods = class_copyMethodList(behavior, &count);
-    if (methods == NULL)
-    {
-        BDBGPrintf("    none.\n");
-    }
-    else
-    {
-        //  把原有类的行为, 添加到新的类上.
-        GSObjCAddMethods (receiver, methods, NO);
-        free(methods);
-    }
-    
     /* Add class methods */
-    methods = class_copyMethodList(object_getClass(behavior), &count);
-    BDBGPrintf("  class methods from %s %u\n", class_getName(behavior), count);
+    methods = class_copyMethodList(object_getClass(behaviorContainerClass), &count);
+    BDBGPrintf("  class methods from %s %u\n", class_getName(behaviorContainerClass), count);
     if (methods == NULL)
     {
         BDBGPrintf("    none.\n");
-    }
-    else
+    } else
     {
         GSObjCAddMethods (object_getClass(receiver), methods, NO);
         free(methods);
     }
-    
-    /* Add behavior's superclass, if not already there. */
-    // 如果, receiver 是behavior 类的父类, 那么重新刷一次, 目的就是把原有类的行为刷新回来
-    if (!GSObjCIsKindOf(receiver, behavior_super_class))
-    {
-        GSObjCAddClassBehavior (receiver, behavior_super_class);
-    }
-    GSFlushMethodCacheForClass (receiver);
 }
 
 void

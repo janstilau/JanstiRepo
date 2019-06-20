@@ -11,42 +11,45 @@
 
 - (void) dealloc
 {
-    DESTROY(keys);
+    DESTROY(_observeredKeys);
     [super dealloc];
 }
-// 这里, 通过原始类, 进行了一次类的创造的工作. 因为, GSKVOReplacement 的获取的时候, 会有缓存机制, 所以这个创造工作其实也只会产生一次.
+
 - (id) initWithClass: (Class)aClass
 {
-    NSValue        *template;
-    NSString        *superName;
-    NSString        *name;
-    
-    original = aClass;
-    /*
-     * Create subclass of the original, and override some methods
-     * with implementations from our abstract base class.
-     */
-    superName = NSStringFromClass(original);
-    name = [@"GSKVO" stringByAppendingString: superName];
-    template = GSObjCMakeClass(name, superName, nil); // 创建了一个新的类.
-    GSObjCAddClasses([NSArray arrayWithObject: template]);
-    replacement = NSClassFromString(name);
-    GSObjCAddClassBehavior(replacement, baseClass); // 这里, 将 baseClass, 也就是 GSKVOBase 里面的操作, 都添加到新类里面了.
-    //GSKVOBase 里面的操作,是复写了 class 等操作的, 为的就是, 让使用者不能察觉这里有一个子类存在.
-    
-    /* Create the set of setter methods overridden.
-     */
-    keys = [NSMutableSet new];
+    _original = aClass;
+    [self setupReplaceMent];
+    _observeredKeys = [NSMutableSet new];
     
     return self;
 }
+
+/*
+ * Create subclass of the _original, and override some methods
+ * with implementations from our abstract base class.
+ */
+- (void)setupReplaceMent {
+    NSString *superName = NSStringFromClass(_original);
+    NSString *name = [@"GSKVO" stringByAppendingString: superName];
+    NSValue *template = GSObjCMakeClass(name, superName, nil); 
+    GSObjCAddClasses([NSArray arrayWithObject: template]);
+    _replacement = NSClassFromString(name);
+    Class baseClass = NSClassFromString(@"GSKVOBase");
+    /**
+     *  这里, 就是讲 baseClass 里面的实现, 加到新创建出来的类中,
+        这些添加的方法包括, class 方法, superClass 方法, setValueForKey 方法.
+     */
+    GSObjCAddClassBehavior(_replacement, baseClass);
+    
+}
+
 // 这是一个核心方法, 在这里, 进行了 set 的替换工作
 // 举个例子. name
 // 从这里我们也看到了, 如果直接操作成员变量, 是没有用的, 必须是通过方法调用才能进行 KVO 的工作.
 - (void) overrideSetterFor: (NSString*)aKey // aKey == name
 {
-    // 一个类, 对应一个 ReplaceMent. 如果 keys 里面有了 aKey, 那么就是这个替换的工作就完成了.
-    if ([keys member: aKey] != nil) { return; }
+    // 这里是一个去重处理, 表示 aKey 的替换工作已经完成了.
+    if ([_observeredKeys member: aKey] != nil) { return; }
     
     IMP        imp;
     const char    *type;
@@ -61,6 +64,8 @@
     tmp = [[NSString alloc] initWithCharacters: &u length: 1];
     setSelName[0] = [NSString stringWithFormat: @"set%@%@:", tmp, suffix]; // a[0] == setName
     setSelName[1] = [NSString stringWithFormat: @"_set%@%@:", tmp, suffix]; // a[1] == _setName
+    
+    // 上面就是寻找 setName 和 _setName 的组装过程. 也就是说, 只会替换着两个方法.
     for (unsigned i = 0; i < 2; i++)
     {
         NSMethodSignature    *sig;
@@ -70,7 +75,7 @@
         {
             continue;
         }
-        sig = [original instanceMethodSignatureForSelector: sel];
+        sig = [_original instanceMethodSignatureForSelector: sel];
         if (sig == 0)
         {
             continue;
@@ -94,7 +99,7 @@
          * Unsupported types are quietly ignored ... is that right?
          */
         type = [sig getArgumentTypeAtIndex: 2];
-        // 在这里, 拿到了 set 函数的参数值的类型
+        // 这里, 要根据不同的参数类型, 做不同的处理
         switch (*type)
         {
             case _C_CHR:
@@ -178,26 +183,27 @@
         
         if (imp != 0)
         {
-            if (class_addMethod(replacement /*新创建出来的类.*/, sel, imp, [sig methodType]))
+            // 在这里, 将完成方法的替换. _replacement 中, 相应的 setName 便成为了 GSKVOSetter 中的方法, 而在 GSKVOSetter 中, 有着 willChange , didChange 的调用.
+            if (class_addMethod(_replacement /*新创建出来的类.*/, sel, imp, [sig methodType]))
             {
                 found = YES;
             }
             else
             {
                 NSLog(@"Failed to add setter method for %s to %s",
-                      sel_getName(sel), class_getName(original));
+                      sel_getName(sel), class_getName(_original));
             }
         }
     }
     
     if (found == YES)
     {
-        [keys addObject: aKey];
+        [_observeredKeys addObject: aKey];
     }
 }
 
 - (Class) replacement
 {
-    return replacement;
+    return _replacement;
 }
 @end
