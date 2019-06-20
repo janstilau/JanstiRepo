@@ -45,7 +45,8 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     //Create our view
     //Create a basic flow layout that will accomodate three columns in portrait
     UICollectionViewFlowLayout *surveyFlowLayout = [[UICollectionViewFlowLayout alloc] init];
-    surveyFlowLayout.sectionInset = UIEdgeInsetsMake(30.0f, 80.0f, 30.0f, 20.0f);
+    surveyFlowLayout.sectionInset = UIEdgeInsetsMake(0.f, 0, 0, 0);
+//    surveyFlowLayout.sectionInset = UIEdgeInsetsZero;
     surveyFlowLayout.minimumInteritemSpacing = 20.0f;
     surveyFlowLayout.minimumLineSpacing = 20.0f;
     surveyFlowLayout.itemSize = kMaxItemSize;
@@ -53,6 +54,8 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     
     //Create a new collection view with our flow layout and set ourself as delegate and data source
     UICollectionView *surveyCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:surveyFlowLayout];
+    surveyCollectionView.layer.borderWidth = 2;
+    surveyCollectionView.layer.borderColor = [[UIColor redColor] CGColor];
     surveyCollectionView.dataSource = self;
     surveyCollectionView.delegate = self;
     
@@ -77,7 +80,6 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 
 #pragma mark - Private Custom Methods
 
-//A handy method to implement — returns the photo model at any index path
 -(AFPhotoModel *)photoModelForIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section >= selectionModelArray.count) return nil;
@@ -86,10 +88,11 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
     return [selectionModelArray[indexPath.section] photoModels][indexPath.item];
 }
 
-//Configures a cell for a given index path
 -(void)configureCell:(AFCollectionViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
     //Set the image for the cell
+    cell.layer.borderWidth = 2;
+    cell.layer.borderColor = [[UIColor yellowColor] CGColor];
     [cell setImage:[[self photoModelForIndexPath:indexPath] image]];
     
     //By default, assume the cell is not disabled and not selected
@@ -113,15 +116,11 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
 
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    //Return the smallest of either our curent model index plus one, or our total number of sections.
-    //This will show 1 section when we only want to display section zero, etc.
-    //It will prevent us from returning 11 when we only have 10 sections.
     return MIN(currentModelArrayIndex + 1, selectionModelArray.count);
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    //Return the number of photos in the section model
     return [[selectionModelArray[currentModelArrayIndex] photoModels] count];
 }
 
@@ -189,6 +188,9 @@ static NSString *HeaderIdentifier = @"HeaderIdentifier";
         
         [headerView setText:[NSString stringWithFormat:@"Because you liked %@...", selectedPhotoModel.name]];
     }
+    
+    headerView.layer.borderColor = [[UIColor greenColor] CGColor];
+    headerView.layer.borderWidth = 2;
     
     return headerView;
 }
