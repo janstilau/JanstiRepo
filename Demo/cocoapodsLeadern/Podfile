@@ -4,7 +4,7 @@ platform :ios, '9.0'
 target 'cocoapodsLeadern' do
   use_frameworks!
 	
-  pod 'AFNetworking'
+  pod 'AFNetworking','~>1.2'
   pod 'FBSDKCoreKit'
  	
 
