@@ -1272,7 +1272,6 @@ struct objc_class : objc_object {
     // May be unaligned depending on class's ivars.
     // 这里返回的应该是各个成员变量相加的总和.
     uint32_t unalignedInstanceSize() {
-        assert(isRealized());
         return data()->ro->instanceSize;
     }
 
