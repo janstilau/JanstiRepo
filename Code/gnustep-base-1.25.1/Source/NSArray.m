@@ -111,7 +111,7 @@ static SEL	removeLastSel;
     /*
      在 alloc 里面, 返回一个 placeHolder 类, 在 placeHolder 的 init 方法里面, 返回实际的对象.
      */
-   return defaultPlaceholderArray;
+    return defaultPlaceholderArray;
 }
 
 + (id) array // 所以这个方法是一点意义没有的. 但是 NSMutableArray 也可以使用这个
@@ -301,7 +301,7 @@ static SEL	removeLastSel;
  * The default abstract implementation of a copy is to use the
  * -initWithArray:copyItems: method with the flag set to YES.<br />
  * Immutable subclasses generally simply retain and return the receiver.
-    直接应用了 init 函数.
+ 直接应用了 init 函数.
  
  */
 - (id) copyWithZone: (NSZone*)zone
@@ -654,7 +654,7 @@ static SEL	removeLastSel;
     {
         result = [myString propertyList];
         /*
-          这里, 将字符串, 转换成为了一个 NSDictionary 对象. 字符串的转换, 本身是一个超级复杂的问题, GNU 将所需要的逻辑, 都封装到了 PropertyList, JSON 相关的一个类中. 这两个类, 感觉虽然算法精妙, 但对实际开发帮助不大, 看完就忘.
+         这里, 将字符串, 转换成为了一个 NSDictionary 对象. 字符串的转换, 本身是一个超级复杂的问题, GNU 将所需要的逻辑, 都封装到了 PropertyList, JSON 相关的一个类中. 这两个类, 感觉虽然算法精妙, 但对实际开发帮助不大, 看完就忘.
          */
     }
     NS_HANDLER // 标志异常处理的区间.
@@ -896,7 +896,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
                                 NSDefaultMallocZone()] initWithArray: self copyItems: NO]);
     [sortedArray sortUsingFunction: comparator context: context];
     /*
-        这里, 是利用的 NSMutableArray 的 sort 函数. 所以, 在 NSMutableArray 的 sort 函数的内部, 一定有排序算法. 这个排序算法, 根据 comparator, context 决定元素的比较.
+     这里, 是利用的 NSMutableArray 的 sort 函数. 所以, 在 NSMutableArray 的 sort 函数的内部, 一定有排序算法. 这个排序算法, 根据 comparator, context 决定元素的比较.
      */
     return GS_IMMUTABLE(sortedArray);
 }
@@ -1425,7 +1425,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
 }
 
 /*
-  这里的实现, 和自己的想法差不多. 太多 options 的细节东西不看.
+ 这里的实现, 和自己的想法差不多. 太多 options 的细节东西不看.
  */
 - (void) enumerateObjectsWithOptions: (NSEnumerationOptions)opts
                           usingBlock: (GSEnumeratorBlock)aBlock
@@ -1659,8 +1659,8 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
 }
 
 /**
-    这是一个 primitive method, 其他的方法通过调用这个函数, 可以达到自己的目的.
-    自己编写代码的时候, 很少写出这种全局都使用的 primitive 的函数, 因为直接操作内存做某些事的诱惑实在太大了, 如果习惯于这种写法, 那么之后, 修改primitive 函数, 就能达到修改所有的函数的目的, 通过函数的组装, 能够达到逻辑的统一. 这种便利性, 要比直接操作内存那小小的效率要高得多.
+ 这是一个 primitive method, 其他的方法通过调用这个函数, 可以达到自己的目的.
+ 自己编写代码的时候, 很少写出这种全局都使用的 primitive 的函数, 因为直接操作内存做某些事的诱惑实在太大了, 如果习惯于这种写法, 那么之后, 修改primitive 函数, 就能达到修改所有的函数的目的, 通过函数的组装, 能够达到逻辑的统一. 这种便利性, 要比直接操作内存那小小的效率要高得多.
  */
 - (void) replaceObjectAtIndex: (NSUInteger)index withObject: (id)anObject
 {
