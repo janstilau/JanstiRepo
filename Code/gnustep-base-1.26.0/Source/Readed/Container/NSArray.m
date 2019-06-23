@@ -110,7 +110,6 @@ static SEL	removeLastSEL;
          * Set up infrastructure for placeholder arrays.
          */
         defaultPlaceholderArray = (GSPlaceholderArray*)
-        NSAllocateObject(GSPlaceholderArrayClass, 0, NSDefaultMallocZone());
         [self registerAtExit];
     }
 }
@@ -2012,6 +2011,7 @@ compare(id elem1, id elem2, void* context)
     id	tmp = [self objectAtIndex: i1];
     
     RETAIN(tmp);
+    // exchange is replace twice.
     [self replaceObjectAtIndex: i1 withObject: [self objectAtIndex: i2]];
     [self replaceObjectAtIndex: i2 withObject: tmp];
     RELEASE(tmp);
@@ -2036,6 +2036,8 @@ compare(id elem1, id elem2, void* context)
 
 /** Replaces the values in the receiver at the locations given by the
  * indexes set with values from the objects array.
+ 
+ This method may import bugs, never use it.
  */
 - (void) replaceObjectsAtIndexes: (NSIndexSet *)indexes
                      withObjects: (NSArray *)objects
@@ -2055,6 +2057,10 @@ compare(id elem1, id elem2, void* context)
 /**
  * Replaces objects in the receiver with those from anArray.<br />
  * Raises an exception if given a range extending beyond the array.<br />
+ 
+ Here, all the method is based on the primitive method, objectAtIndex, removeObjectAtIndex, and insertObjectAtIndex.
+ The method doesnot use the memory.
+ It's not very efficent, but the sub class can override the primitive method to get their own implementaion.
  */
 - (void) replaceObjectsInRange: (NSRange)aRange
           withObjectsFromArray: (NSArray*)anArray
@@ -2371,6 +2377,9 @@ compare(id elem1, id elem2, void* context)
 /**
  * Sets the contents of the receiver to be identical to the contents
  * of otherArray.
+ 
+ For sort, get a copy and sort, then replace the whole array with the sorted one.
+ It's not a inplace sort.
  */
 - (void) setArray: (NSArray *)otherArray
 {
@@ -2529,7 +2538,9 @@ compare(id elem1, id elem2, void* context)
         GS_ENDIDBUF();
     }
 }
-
+/*
+ sort is a common algorithm. Array copy it's content and use the common algorighm, then repalce the whole content with sorted array contents.
+ */
 - (void) sortWithOptions: (NSSortOptions)options
          usingComparator: (NSComparator)comparator
 {

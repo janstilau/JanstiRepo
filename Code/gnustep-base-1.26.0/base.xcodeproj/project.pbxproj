@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0629129022BFE4C9007B530D /* GSArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 0629128E22BFE4C8007B530D /* GSArray.m */; };
+		0629129122BFE4C9007B530D /* NSArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 0629128F22BFE4C8007B530D /* NSArray.m */; };
 		180878891618537A006EBD74 /* objc-load.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890700B1610BF3C0003C892 /* objc-load.m */; };
 		1837DA141652D18400197E53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
 		18394B341610D95600335E85 /* Foundation-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 18394B321610D95600335E85 /* Foundation-Prefix.pch */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -144,7 +146,6 @@
 		18394BB81610D9ED00335E85 /* NSThread+GNUstepBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EFE1610BF3C0003C892 /* NSThread+GNUstepBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394BB91610D9ED00335E85 /* NSURL+GNUstepBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EFF1610BF3C0003C892 /* NSURL+GNUstepBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394C011610EB7F00335E85 /* NSAffineTransform.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F701610BF3C0003C892 /* NSAffineTransform.m */; };
-		18394C031610EB7F00335E85 /* NSArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F721610BF3C0003C892 /* NSArray.m */; };
 		18394C041610EB7F00335E85 /* NSAssertionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F731610BF3C0003C892 /* NSAssertionHandler.m */; };
 		18394C051610EB7F00335E85 /* NSAttributedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F741610BF3C0003C892 /* NSAttributedString.m */; };
 		18394C061610EB7F00335E85 /* NSAutoreleasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F751610BF3C0003C892 /* NSAutoreleasePool.m */; };
@@ -276,7 +277,6 @@
 		1852895C161396280016729B /* GSLock.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F111610BF3C0003C892 /* GSLock.m */; };
 		1852895D1613962B0016729B /* GSMime.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F121610BF3C0003C892 /* GSMime.m */; };
 		1852895E161396310016729B /* GSXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F141610BF3C0003C892 /* GSXML.m */; };
-		1852895F161396450016729B /* GSArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F391610BF3C0003C892 /* GSArray.m */; };
 		18528960161396450016729B /* GSAttributedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F3A1610BF3C0003C892 /* GSAttributedString.m */; };
 		18528961161396450016729B /* CXXException.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F351610BF3C0003C892 /* CXXException.m */; };
 		18528966161396450016729B /* GSBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F411610BF3C0003C892 /* GSBlocks.m */; };
@@ -388,6 +388,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0629128E22BFE4C8007B530D /* GSArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSArray.m; sourceTree = "<group>"; };
+		0629128F22BFE4C8007B530D /* NSArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSArray.m; sourceTree = "<group>"; };
 		1837D9C61652D0FF00197E53 /* .cvsignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
 		1837D9C71652D0FF00197E53 /* AGSHtml.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AGSHtml.h; sourceTree = "<group>"; };
 		1837D9C81652D0FF00197E53 /* AGSHtml.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AGSHtml.m; sourceTree = "<group>"; };
@@ -764,7 +766,6 @@
 		18906F361610BF3C0003C892 /* CompatibilityHeaders.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CompatibilityHeaders.make; sourceTree = "<group>"; };
 		18906F371610BF3C0003C892 /* DocMakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DocMakefile; sourceTree = "<group>"; };
 		18906F381610BF3C0003C892 /* GNUmakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
-		18906F391610BF3C0003C892 /* GSArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSArray.m; sourceTree = "<group>"; };
 		18906F3A1610BF3C0003C892 /* GSAttributedString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSAttributedString.m; sourceTree = "<group>"; };
 		18906F3B1610BF3C0003C892 /* GSAvahiClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSAvahiClient.h; path = Source/GSAvahiClient.h; sourceTree = "<group>"; };
 		18906F3C1610BF3C0003C892 /* GSAvahiClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSAvahiClient.m; sourceTree = "<group>"; };
@@ -821,7 +822,6 @@
 		18906F6F1610BF3C0003C892 /* Makefile.preamble */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.preamble; sourceTree = "<group>"; };
 		18906F701610BF3C0003C892 /* NSAffineTransform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAffineTransform.m; sourceTree = "<group>"; };
 		18906F711610BF3C0003C892 /* NSArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSArchiver.m; sourceTree = "<group>"; };
-		18906F721610BF3C0003C892 /* NSArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSArray.m; sourceTree = "<group>"; };
 		18906F731610BF3C0003C892 /* NSAssertionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAssertionHandler.m; sourceTree = "<group>"; };
 		18906F741610BF3C0003C892 /* NSAttributedString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAttributedString.m; sourceTree = "<group>"; };
 		18906F751610BF3C0003C892 /* NSAutoreleasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAutoreleasePool.m; sourceTree = "<group>"; };
@@ -1509,9 +1509,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0629128D22BFE4C8007B530D /* Container */ = {
+			isa = PBXGroup;
+			children = (
+				0629128E22BFE4C8007B530D /* GSArray.m */,
+				0629128F22BFE4C8007B530D /* NSArray.m */,
+			);
+			path = Container;
+			sourceTree = "<group>";
+		};
 		062F83B822BF6D4C006F50B4 /* Readed */ = {
 			isa = PBXGroup;
 			children = (
+				0629128D22BFE4C8007B530D /* Container */,
 			);
 			path = Readed;
 			sourceTree = "<group>";
@@ -1639,7 +1649,6 @@
 			isa = PBXGroup;
 			children = (
 				18641D0D1678AD04003C6E11 /* GSSocksParser */,
-				18906F391610BF3C0003C892 /* GSArray.m */,
 				18906F3A1610BF3C0003C892 /* GSAttributedString.m */,
 				18906F351610BF3C0003C892 /* CXXException.m */,
 				18906F3C1610BF3C0003C892 /* GSAvahiClient.m */,
@@ -1720,7 +1729,6 @@
 				062F83B822BF6D4C006F50B4 /* Readed */,
 				18906F701610BF3C0003C892 /* NSAffineTransform.m */,
 				18906F711610BF3C0003C892 /* NSArchiver.m */,
-				18906F721610BF3C0003C892 /* NSArray.m */,
 				18906F731610BF3C0003C892 /* NSAssertionHandler.m */,
 				18906F741610BF3C0003C892 /* NSAttributedString.m */,
 				18906F751610BF3C0003C892 /* NSAutoreleasePool.m */,
@@ -3784,11 +3792,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				185289A516139AAF0016729B /* externs.m in Sources */,
+				0629129122BFE4C9007B530D /* NSArray.m in Sources */,
 				180878891618537A006EBD74 /* objc-load.m in Sources */,
 				185289AA16139AAF0016729B /* preface.m in Sources */,
 				18528A001613AB940016729B /* GSRunLoopCtxt.m in Sources */,
 				18528A011613AB940016729B /* NSStream.m in Sources */,
-				1852895F161396450016729B /* GSArray.m in Sources */,
 				18528960161396450016729B /* GSAttributedString.m in Sources */,
 				18528961161396450016729B /* CXXException.m in Sources */,
 				18528966161396450016729B /* GSBlocks.m in Sources */,
@@ -3847,9 +3855,9 @@
 				18528996161399000016729B /* NSURL+GNUstepBase.m in Sources */,
 				18528997161399000016729B /* Unicode.m in Sources */,
 				185289A216139AAF0016729B /* NSObject+NSComparisonMethods.m in Sources */,
+				0629129022BFE4C9007B530D /* GSArray.m in Sources */,
 				18394C011610EB7F00335E85 /* NSAffineTransform.m in Sources */,
 				1852895316138C5C0016729B /* NSArchiver.m in Sources */,
-				18394C031610EB7F00335E85 /* NSArray.m in Sources */,
 				AD197C0A189A4D5F000F6CF9 /* NSUUID.m in Sources */,
 				18394C041610EB7F00335E85 /* NSAssertionHandler.m in Sources */,
 				18394C051610EB7F00335E85 /* NSAttributedString.m in Sources */,
