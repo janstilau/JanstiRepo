@@ -1,36 +1,3 @@
-/** Control of executable units within a shared virtual memory space
- Copyright (C) 1996-2018 Free Software Foundation, Inc.
- 
- Original Author:  Scott Christley <scottc@net-community.com>
- Rewritten by: Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
- Created: 1996
- Rewritten by: Richard Frith-Macdonald <richard@brainstorm.co.uk>
- to add optimisations features for faster thread access.
- Modified by: Nicola Pero <n.pero@mi.flashnet.it>
- to add GNUstep extensions allowing to interact with threads created
- by external libraries/code (eg, a Java Virtual Machine).
- 
- This file is part of the GNUstep Objective-C Library.
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free
- Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02111 USA.
- 
- <title>NSThread class reference</title>
- $Date$ $Revision$
- */
-
 #import "common.h"
 
 #import "GSPThread.h"
@@ -1205,7 +1172,7 @@ unregisterActiveThread(NSThread *thread)
         }
         else
         {
-            /* Too much for buffer ... truncate on a character boundary.
+            /* Too much for buffer ... truncate on a character boundary.NSThread
              */
             i = sizeof(buf) - 1;
             if (buf[i] & 0x80)
@@ -1939,7 +1906,7 @@ lockInfoErr(NSString *str)
     for (i = 0; i < c; i++)
     {
         GSPerformHolder	*h = [toDo objectAtIndex: i];
-         // 在这里, performHolder 还是要通过 runloop 去执行最终的业务代码.
+        // 在这里, performHolder 还是要通过 runloop 去执行最终的业务代码.
         [loop performSelector: @selector(firePerformHolder)
                        target: h
                      argument: nil

@@ -634,7 +634,8 @@ void objc_setAssociatedObject(id object, const void *key, id value, objc_Associa
 
 void objc_removeAssociatedObjects(id object) 
 {
-    if (object && object->hasAssociatedObjects()) {
+    // 如果, 一个对象设置过关联对象的话, 那么它的 ISA 里面就会记录这个状态.
+    if (object && object->hasAssociatedObjects()) { 
         _object_remove_assocations(object);
     }
 }

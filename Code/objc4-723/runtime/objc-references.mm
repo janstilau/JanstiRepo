@@ -149,8 +149,10 @@ namespace objc_references_support {
         void operator delete(void *ptr) { ::free(ptr); } // 定义元素的 delete 操作回收函数
     };
     typedef ObjcAllocator<std::pair<const disguised_ptr_t, ObjectAssociationMap*> > AssociationsHashMapAllocator;
+    
     class AssociationsHashMap : public unordered_map<disguised_ptr_t, ObjectAssociationMap *, DisguisedPointerHash, DisguisedPointerEqual, AssociationsHashMapAllocator> {
     public:
+        // 这里, 重新定义 operator new 和 operator delete 的意义是什么
         void *operator new(size_t n) { return ::malloc(n); }
         void operator delete(void *ptr) { ::free(ptr); }
     };
@@ -165,6 +167,7 @@ using namespace objc_references_support;
 
 spinlock_t AssociationsManagerLock;
 
+// 这里, 是通过对象管理资源的一个表现, 在构造函数和析构函数的内部, 进行一些操作. 这样可以解放程序员的思考复杂程度.
 class AssociationsManager {
     // associative references: object pointer -> PtrPtrHashMap.
     static AssociationsHashMap *_map;
@@ -223,6 +226,7 @@ id _object_get_associative_reference(id object, void *key) {
     return value;
 }
 
+// 这里, 根据 policy 进行内存管理方面的工作.
 static id acquireValue(id value, uintptr_t policy) {
     switch (policy & 0xFF) {
     case OBJC_ASSOCIATION_SETTER_RETAIN:
@@ -233,6 +237,7 @@ static id acquireValue(id value, uintptr_t policy) {
     return value;
 }
 
+// 只有在 retain 的时候, 才会调用 release
 static void releaseValue(id value, uintptr_t policy) {
     if (policy & OBJC_ASSOCIATION_SETTER_RETAIN) {
         return objc_release(value);
@@ -243,15 +248,16 @@ struct ReleaseValue {
     void operator() (ObjcAssociation &association) {
         releaseValue(association.value(), association.policy());
     }
-}; //  不太明白, 这是一个类名啊, 怎么直接使用的.
+};
 
 void _object_set_associative_reference(id object, void *key, id value, uintptr_t policy) {
     ObjcAssociation old_association(0, nil); // 提前写好一个值在最后修改, 这和我们自己写代码是一样的.
-    id new_value = value ? acquireValue(value, policy) : nil; // 在这里, acquireValue 中根据 policy 进行了对应的操作, 所以在下面 policy 就是一个被记录的值而已.
+    id new_value = value ? acquireValue(value, policy) : nil; // acquireValue 内部有着内存管理的工作.
+    
     { // 专门的 {}, 标明下面的逻辑是一个单元, 可以模仿
-        AssociationsManager manager; // 骚操作, 构造函数, 析构函数加锁.
+        AssociationsManager manager;
         AssociationsHashMap &associations(manager.associations());
-        disguised_ptr_t disguised_object = DISGUISE(object);
+        disguised_ptr_t disguised_object = DISGUISE(object); // 这里的意义是什么?? 不直接用指针???
         if (new_value) { // 如果 new_value, 那么就是 set 操作.
             // break any existing association.
             AssociationsHashMap::iterator i = associations.find(disguised_object);
@@ -260,19 +266,19 @@ void _object_set_associative_reference(id object, void *key, id value, uintptr_t
                 ObjectAssociationMap *refs = i->second;
                 ObjectAssociationMap::iterator j = refs->find(key); // 原来 key 有值.
                 if (j != refs->end()) {
-                    old_association = j->second; // 先获取一下原来的值.
+                    old_association = j->second; // 先获取一下原来的值. 用于后面的释放操作.
                     j->second = ObjcAssociation(policy, new_value);
                 } else {
                     (*refs)[key] = ObjcAssociation(policy, new_value);
                 }
             } else {
-                // 我们可以看到, 这和我们自己写代码思路差不多, 所以大神的代码也是可以放心平等的a看的.
+                // 我们可以看到, 这和我们自己写代码思路差不多
                 ObjectAssociationMap *refs = new ObjectAssociationMap;
                 associations[disguised_object] = refs;
                 (*refs)[key] = ObjcAssociation(policy, new_value);
                 object->setHasAssociatedObjects(); // 这里, 设置了有关联对象的 isa 的标志位. 所以, 所有的数据存储工作, 一定是有代码, 或者算法对他进行了读取, 设置, 否则这个数据存储的功能就要删除.
             }
-        } else {
+        } else { // remove 操作.
             // setting the association to nil breaks the association.
             AssociationsHashMap::iterator i = associations.find(disguised_object);
             if (i !=  associations.end()) {
@@ -286,13 +292,13 @@ void _object_set_associative_reference(id object, void *key, id value, uintptr_t
         }
     }
     // release the old value (outside of the lock).
-    if (old_association.hasValue()) ReleaseValue()(old_association);
+    if (old_association.hasValue()) ReleaseValue()(old_association); // 这是一个函数对象.
 }
 
 void _object_remove_assocations(id object) {
     vector< ObjcAssociation,ObjcAllocator<ObjcAssociation> > elements;
     {
-        AssociationsManager manager; // 加锁解锁凑走.
+        AssociationsManager manager; // 加锁解锁
         AssociationsHashMap &associations(manager.associations());
         if (associations.size() == 0) return;
         disguised_ptr_t disguised_object = DISGUISE(object);
