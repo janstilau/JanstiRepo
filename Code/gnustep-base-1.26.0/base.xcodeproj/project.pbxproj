@@ -1512,8 +1512,10 @@
 		0629128D22BFE4C8007B530D /* Container */ = {
 			isa = PBXGroup;
 			children = (
+				18906F8E1610BF3C0003C892 /* NSDictionary.m */,
 				0629128E22BFE4C8007B530D /* GSArray.m */,
 				0629128F22BFE4C8007B530D /* NSArray.m */,
+				18906F451610BF3C0003C892 /* GSDictionary.m */,
 			);
 			path = Container;
 			sourceTree = "<group>";
@@ -1521,9 +1523,20 @@
 		062F83B822BF6D4C006F50B4 /* Readed */ = {
 			isa = PBXGroup;
 			children = (
+				06B95DFE22C1327F007045E8 /* NetWork */,
 				0629128D22BFE4C8007B530D /* Container */,
 			);
 			path = Readed;
+			sourceTree = "<group>";
+		};
+		06B95DFE22C1327F007045E8 /* NetWork */ = {
+			isa = PBXGroup;
+			children = (
+				18906F9A1610BF3C0003C892 /* NSHTTPCookie.m */,
+				18906FE31610BF3C0003C892 /* NSURLRequest.m */,
+				18906F9B1610BF3C0003C892 /* NSHTTPCookieStorage.m */,
+			);
+			path = NetWork;
 			sourceTree = "<group>";
 		};
 		1837D9C51652D0FF00197E53 /* Tools */ = {
@@ -1659,7 +1672,6 @@
 				18906F421610BF3C0003C892 /* GSConcreteValue.m */,
 				18906F431610BF3C0003C892 /* GSConcreteValueTemplate.m */,
 				18906F441610BF3C0003C892 /* GSCountedSet.m */,
-				18906F451610BF3C0003C892 /* GSDictionary.m */,
 				18906F471610BF3C0003C892 /* GSFFCallInvocation.m */,
 				18906F481610BF3C0003C892 /* GSFFIInvocation.m */,
 				18906F491610BF3C0003C892 /* GSFTPURLHandle.m */,
@@ -1753,7 +1765,6 @@
 				18906F8B1610BF3C0003C892 /* NSDebug.m */,
 				18906F8C1610BF3C0003C892 /* NSDecimal.m */,
 				18906F8D1610BF3C0003C892 /* NSDecimalNumber.m */,
-				18906F8E1610BF3C0003C892 /* NSDictionary.m */,
 				18906F8F1610BF3C0003C892 /* NSDistantObject.m */,
 				18906F901610BF3C0003C892 /* NSDistributedLock.m */,
 				18906F911610BF3C0003C892 /* NSDistributedNotificationCenter.m */,
@@ -1765,8 +1776,6 @@
 				18906F971610BF3C0003C892 /* NSFormatter.m */,
 				18906F981610BF3C0003C892 /* NSGarbageCollector.m */,
 				18906F991610BF3C0003C892 /* NSGeometry.m */,
-				18906F9A1610BF3C0003C892 /* NSHTTPCookie.m */,
-				18906F9B1610BF3C0003C892 /* NSHTTPCookieStorage.m */,
 				18906F9C1610BF3C0003C892 /* NSHashTable.m */,
 				18906F9D1610BF3C0003C892 /* NSHost.m */,
 				18906F9E1610BF3C0003C892 /* NSIndexPath.m */,
@@ -1839,7 +1848,6 @@
 				18906FE01610BF3C0003C892 /* NSURLHandle.m */,
 				18906FE11610BF3C0003C892 /* NSURLProtectionSpace.m */,
 				18906FE21610BF3C0003C892 /* NSURLProtocol.m */,
-				18906FE31610BF3C0003C892 /* NSURLRequest.m */,
 				18906FE41610BF3C0003C892 /* NSURLResponse.m */,
 				18906FE71610BF3C0003C892 /* NSUserDefaults.m */,
 				AD197C03189A4D5F000F6CF9 /* NSUserNotification.m */,
