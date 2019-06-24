@@ -1,31 +1,3 @@
-/** NSDictionary - Dictionary object to store key/value pairs
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   From skeleton by:  Adam Fedor <fedor@boulder.colorado.edu>
-   Date: Mar 1995
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSDictionary class reference</title>
-   $Date$ $Revision$
-   */
-
 #import "common.h"
 #import "Foundation/NSDictionary.h"
 #import "Foundation/NSArray.h"
@@ -47,9 +19,9 @@
 
 static BOOL GSMacOSXCompatiblePropertyLists(void)
 {
-  if (GSPrivateDefaultsFlag(NSWriteOldStylePropertyLists) == YES)
-    return NO;
-  return GSPrivateDefaultsFlag(GSMacOSXCompatible);
+    if (GSPrivateDefaultsFlag(NSWriteOldStylePropertyLists) == YES)
+        return NO;
+    return GSPrivateDefaultsFlag(GSMacOSXCompatible);
 }
 
 @class	GSDictionary;
@@ -68,16 +40,17 @@ static Class NSMutableDictionaryClass;
 static Class GSDictionaryClass;
 static Class GSMutableDictionaryClass;
 
-static SEL	eqSel;
-static SEL	nxtSel;
-static SEL	objSel;
-static SEL	remSel;
-static SEL	setSel;
-static SEL	appSel;
+static SEL	equalSEL;
+static SEL	nextSEL;
+static SEL	objectForKeySEL;
+static SEL	removeObjectForKeySEL;
+static SEL	setObjectForKeySEL;
+static SEL	appendStringSEL;
 
 /**
  *  <p>This class and its subclasses store key-value pairs, where the key and
- *  the value are objects.  A great many utility methods for working with
+ *  the value are objects.
+    A great many utility methods for working with
  *  dictionaries are provided as part of this class, including the ability to
  *  retrieve multiple entries simultaneously, obtain sorted contents, and
  *  read/write from/to a serialized representation.</p>
@@ -85,6 +58,10 @@ static SEL	appSel;
  *  <p>The keys are copied and values are retained by the implementation,
  *  and both are released when either their entry is dropped or the entire
  *  dictionary is deallocated.<br />
+ 
+    keys is copied , because dictionary need the key hash value to location the entry location list.
+    If key is mutable, hash code will changed. So copy is for making key a value type. It is important to identify the differenct between value type and ref type.
+ 
  *  As in the OS X implementation, keys must therefore implement the
  *  [(NSCopying)] protocol.
  *  </p>
@@ -102,30 +79,31 @@ static SEL	appSel;
 
 + (void) initialize
 {
-  if (self == [NSDictionary class])
+    if (self == [NSDictionary class])
     {
-      eqSel = @selector(isEqual:);
-      nxtSel = @selector(nextObject);
-      objSel = @selector(objectForKey:);
-      remSel = @selector(removeObjectForKey:);
-      setSel = @selector(setObject:forKey:);
-      appSel = @selector(appendString:);
-      NSArray_class = [NSArray class];
-      NSDictionaryClass = self;
-      GSDictionaryClass = [GSDictionary class];
-      [NSMutableDictionary class];
+        equalSEL = @selector(isEqual:);
+        nextSEL = @selector(nextObject);
+        objectForKeySEL = @selector(objectForKey:);
+        removeObjectForKeySEL = @selector(removeObjectForKey:);
+        setObjectForKeySEL = @selector(setObject:forKey:);
+        appendStringSEL = @selector(appendString:);
+        NSArray_class = [NSArray class];
+        NSDictionaryClass = self;
+        GSDictionaryClass = [GSDictionary class];
+        [NSMutableDictionary class];
     }
 }
 
 + (id) allocWithZone: (NSZone*)z
 {
-  if (self == NSDictionaryClass)
+    if (self == NSDictionaryClass)
     {
-      return NSAllocateObject(GSDictionaryClass, 0, z);
+        // The main subclass is GSDictionaryClass, In apple, there are several subclasses, but GNU only make one subclass.
+        return NSAllocateObject(GSDictionaryClass, 0, z);
     }
-  else
+    else
     {
-      return NSAllocateObject(self, 0, z);
+        return NSAllocateObject(self, 0, z);
     }
 }
 
@@ -137,9 +115,9 @@ static SEL	appSel;
  */
 - (id) copyWithZone: (NSZone*)z
 {
-  NSDictionary	*copy = [NSDictionaryClass allocWithZone: z];
-
-  return [copy initWithDictionary: self copyItems: NO];
+    NSDictionary	*copy = [NSDictionaryClass allocWithZone: z];
+    
+    return [copy initWithDictionary: self copyItems: NO];
 }
 
 /**
@@ -148,41 +126,41 @@ static SEL	appSel;
  */
 - (NSUInteger) count
 {
-  [self subclassResponsibility: _cmd];
-  return 0;
+    [self subclassResponsibility: _cmd];
+    return 0;
 }
 
 - (void) enumerateKeysAndObjectsUsingBlock:
-  (GSKeysAndObjectsEnumeratorBlock)aBlock
+(GSKeysAndObjectsEnumeratorBlock)aBlock
 {
-  [self enumerateKeysAndObjectsWithOptions: 0
-                                usingBlock: aBlock];
+    [self enumerateKeysAndObjectsWithOptions: 0
+                                  usingBlock: aBlock];
 }
 
 - (void) enumerateKeysAndObjectsWithOptions: (NSEnumerationOptions)opts
-  usingBlock: (GSKeysAndObjectsEnumeratorBlock)aBlock
+                                 usingBlock: (GSKeysAndObjectsEnumeratorBlock)aBlock
 {
-  /*
-   * NOTE: According to the Cocoa documentation, NSEnumerationReverse is
-   * undefined for NSDictionary. NSEnumerationConcurrent will be handled through
-   * the GS_DISPATCH_* macros if libdispatch is available.
-   */
-   id<NSFastEnumeration> enumerator = [self keyEnumerator];
-   SEL objectForKeySelector = @selector(objectForKey:);
-   IMP objectForKey = [self methodForSelector: objectForKeySelector];
-   BLOCK_SCOPE BOOL shouldStop = NO;
-   id obj;
-
-   GS_DISPATCH_CREATE_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
-   FOR_IN(id, key, enumerator)
-     obj = (*objectForKey)(self, objectForKeySelector, key);
-     GS_DISPATCH_SUBMIT_BLOCK(enumQueueGroup, enumQueue, if (shouldStop){return;};, return;, aBlock, key, obj, &shouldStop);
-     if (YES == shouldStop)
-       {
-	 break;
-       }
-   END_FOR_IN(enumerator)
-   GS_DISPATCH_TEARDOWN_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
+    /*
+     * NOTE: According to the Cocoa documentation, NSEnumerationReverse is
+     * undefined for NSDictionary. NSEnumerationConcurrent will be handled through
+     * the GS_DISPATCH_* macros if libdispatch is available.
+     */
+    id<NSFastEnumeration> enumerator = [self keyEnumerator];
+    SEL objectForKeySelector = @selector(objectForKey:);
+    IMP objectForKey = [self methodForSelector: objectForKeySelector];
+    BLOCK_SCOPE BOOL shouldStop = NO;
+    id obj;
+    
+    GS_DISPATCH_CREATE_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
+    FOR_IN(id, key, enumerator)
+    obj = (*objectForKey)(self, objectForKeySelector, key);
+    GS_DISPATCH_SUBMIT_BLOCK(enumQueueGroup, enumQueue, if (shouldStop){return;};, return;, aBlock, key, obj, &shouldStop);
+    if (YES == shouldStop)
+    {
+        break;
+    }
+    END_FOR_IN(enumerator)
+    GS_DISPATCH_TEARDOWN_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
 }
 
 /**
@@ -211,8 +189,8 @@ static SEL	appSel;
  */
 - (id) init
 {
-  self = [super init];
-  return self;
+    self = [super init];
+    return self;
 }
 
 /** <init /> <override-subclass />
@@ -225,11 +203,11 @@ static SEL	appSel;
  * other initialisers work.
  */
 - (id) initWithObjects: (const id[])objects
-	       forKeys: (const id <NSCopying>[])keys
-		 count: (NSUInteger)count
+               forKeys: (const id <NSCopying>[])keys
+                 count: (NSUInteger)count
 {
-  self = [self init];
-  return self;
+    self = [self init];
+    return self;
 }
 
 /**
@@ -237,7 +215,7 @@ static SEL	appSel;
  */
 - (NSEnumerator*) keyEnumerator
 {
-  return [self subclassResponsibility: _cmd];
+    return [self subclassResponsibility: _cmd];
 }
 
 /**
@@ -246,12 +224,12 @@ static SEL	appSel;
  */
 - (id) objectForKey: (id)aKey
 {
-  return [self subclassResponsibility: _cmd];
+    return [self subclassResponsibility: _cmd];
 }
 
 - (id) objectForKeyedSubscript: (id)aKey
 {
-  return [self objectForKey: aKey];
+    return [self objectForKey: aKey];
 }
 
 /**
@@ -259,7 +237,7 @@ static SEL	appSel;
  */
 - (NSEnumerator*) objectEnumerator
 {
-  return [self subclassResponsibility: _cmd];
+    return [self subclassResponsibility: _cmd];
 }
 
 /**
@@ -271,151 +249,151 @@ static SEL	appSel;
  */
 - (id) mutableCopyWithZone: (NSZone*)z
 {
-  NSMutableDictionary	*copy = [NSMutableDictionaryClass allocWithZone: z];
-
-  return [copy initWithDictionary: self copyItems: NO];
+    NSMutableDictionary	*copy = [NSMutableDictionaryClass allocWithZone: z];
+    
+    return [copy initWithDictionary: self copyItems: NO];
 }
 
 - (Class) classForCoder
 {
-  return NSDictionaryClass;
+    return NSDictionaryClass;
 }
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  unsigned	count = [self count];
-
-  if ([aCoder allowsKeyedCoding])
+    unsigned	count = [self count];
+    
+    if ([aCoder allowsKeyedCoding])
     {
-      id	key;
-      unsigned	i;
-
-      if ([aCoder class] == [NSKeyedArchiver class])
-	{
-	  NSArray	*keys = [self allKeys];
-	  id		objects = [NSMutableArray arrayWithCapacity: count];
-
-	  for (i = 0; i < count; i++)
-	    {
-	      key = [keys objectAtIndex: i];
-	      [objects addObject: [self objectForKey: key]];
-	    }
-	  [(NSKeyedArchiver*)aCoder _encodeArrayOfObjects: keys
-						   forKey: @"NS.keys"];
-	  [(NSKeyedArchiver*)aCoder _encodeArrayOfObjects: objects
-						   forKey: @"NS.objects"];
-	}
-      else if (count > 0)
-	{
-	  NSEnumerator	*enumerator = [self keyEnumerator];
-
-	  i = 0;
-	  while ((key = [enumerator nextObject]) != nil)
-	    {
-	      NSString	*s;
-
-	      s = [NSString stringWithFormat: @"NS.key.%u", i];
-	      [aCoder encodeObject: key forKey: s];
-	      s = [NSString stringWithFormat: @"NS.object.%u", i];
-	      [aCoder encodeObject: [self objectForKey: key] forKey: s];
-	      i++;
-	    }
-	}
+        id	key;
+        unsigned	i;
+        
+        if ([aCoder class] == [NSKeyedArchiver class])
+        {
+            NSArray	*keys = [self allKeys];
+            id		objects = [NSMutableArray arrayWithCapacity: count];
+            
+            for (i = 0; i < count; i++)
+            {
+                key = [keys objectAtIndex: i];
+                [objects addObject: [self objectForKey: key]];
+            }
+            [(NSKeyedArchiver*)aCoder _encodeArrayOfObjects: keys
+                                                     forKey: @"NS.keys"];
+            [(NSKeyedArchiver*)aCoder _encodeArrayOfObjects: objects
+                                                     forKey: @"NS.objects"];
+        }
+        else if (count > 0)
+        {
+            NSEnumerator	*enumerator = [self keyEnumerator];
+            
+            i = 0;
+            while ((key = [enumerator nextObject]) != nil)
+            {
+                NSString	*s;
+                
+                s = [NSString stringWithFormat: @"NS.key.%u", i];
+                [aCoder encodeObject: key forKey: s];
+                s = [NSString stringWithFormat: @"NS.object.%u", i];
+                [aCoder encodeObject: [self objectForKey: key] forKey: s];
+                i++;
+            }
+        }
     }
-  else
+    else
     {
-      [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
-      if (count > 0)
-	{
-	  NSEnumerator	*enumerator = [self keyEnumerator];
-	  id		key;
-	  IMP		enc;
-	  IMP		nxt;
-	  IMP		ofk;
-
-	  nxt = [enumerator methodForSelector: @selector(nextObject)];
-	  enc = [aCoder methodForSelector: @selector(encodeObject:)];
-	  ofk = [self methodForSelector: @selector(objectForKey:)];
-
-	  while ((key = (*nxt)(enumerator, @selector(nextObject))) != nil)
-	    {
-	      id	val = (*ofk)(self, @selector(objectForKey:), key);
-
-	      (*enc)(aCoder, @selector(encodeObject:), key);
-	      (*enc)(aCoder, @selector(encodeObject:), val);
-	    }
-	}
+        [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
+        if (count > 0)
+        {
+            NSEnumerator	*enumerator = [self keyEnumerator];
+            id		key;
+            IMP		enc;
+            IMP		nxt;
+            IMP		ofk;
+            
+            nxt = [enumerator methodForSelector: @selector(nextObject)];
+            enc = [aCoder methodForSelector: @selector(encodeObject:)];
+            ofk = [self methodForSelector: @selector(objectForKey:)];
+            
+            while ((key = (*nxt)(enumerator, @selector(nextObject))) != nil)
+            {
+                id	val = (*ofk)(self, @selector(objectForKey:), key);
+                
+                (*enc)(aCoder, @selector(encodeObject:), key);
+                (*enc)(aCoder, @selector(encodeObject:), val);
+            }
+        }
     }
 }
 
 - (id) initWithCoder: (NSCoder*)aCoder
 {
-  if ([aCoder allowsKeyedCoding])
+    if ([aCoder allowsKeyedCoding])
     {
-      id keys = nil;
-      id objects = nil;
-
-      if ([aCoder containsValueForKey: @"NS.keys"])
+        id keys = nil;
+        id objects = nil;
+        
+        if ([aCoder containsValueForKey: @"NS.keys"])
         {
-          keys = [(NSKeyedUnarchiver*)aCoder _decodeArrayOfObjectsForKey:
-                                        @"NS.keys"];
-          objects = [(NSKeyedUnarchiver*)aCoder _decodeArrayOfObjectsForKey:
-                                           @"NS.objects"];
+            keys = [(NSKeyedUnarchiver*)aCoder _decodeArrayOfObjectsForKey:
+                    @"NS.keys"];
+            objects = [(NSKeyedUnarchiver*)aCoder _decodeArrayOfObjectsForKey:
+                       @"NS.objects"];
         }
-      else if ([aCoder containsValueForKey: @"dict.sortedKeys"])
-	{
-          keys = [aCoder decodeObjectForKey: @"dict.sortedKeys"];
-          objects = [aCoder decodeObjectForKey: @"dict.values"];
+        else if ([aCoder containsValueForKey: @"dict.sortedKeys"])
+        {
+            keys = [aCoder decodeObjectForKey: @"dict.sortedKeys"];
+            objects = [aCoder decodeObjectForKey: @"dict.values"];
         }
-
-      if (keys == nil)
-	{
-	  unsigned	i = 0;
-	  NSString	*key;
-	  id		val;
-
-	  keys = [NSMutableArray arrayWithCapacity: 2];
-	  objects = [NSMutableArray arrayWithCapacity: 2];
-	  key = [NSString stringWithFormat: @"NS.object.%u", i];
-	  val = [(NSKeyedUnarchiver*)aCoder decodeObjectForKey: key];
-
-	  while (val != nil)
-	    {
-	      [objects addObject: val];
-	      key = [NSString stringWithFormat: @"NS.key.%u", i];
-	      val = [(NSKeyedUnarchiver*)aCoder decodeObjectForKey: key];
-	      [keys addObject: val];
-	      i++;
-	      key = [NSString stringWithFormat: @"NS.object.%u", i];
-	      val = [(NSKeyedUnarchiver*)aCoder decodeObjectForKey: key];
-	    }
-	}
-      self = [self initWithObjects: objects forKeys: keys];
+        
+        if (keys == nil)
+        {
+            unsigned	i = 0;
+            NSString	*key;
+            id		val;
+            
+            keys = [NSMutableArray arrayWithCapacity: 2];
+            objects = [NSMutableArray arrayWithCapacity: 2];
+            key = [NSString stringWithFormat: @"NS.object.%u", i];
+            val = [(NSKeyedUnarchiver*)aCoder decodeObjectForKey: key];
+            
+            while (val != nil)
+            {
+                [objects addObject: val];
+                key = [NSString stringWithFormat: @"NS.key.%u", i];
+                val = [(NSKeyedUnarchiver*)aCoder decodeObjectForKey: key];
+                [keys addObject: val];
+                i++;
+                key = [NSString stringWithFormat: @"NS.object.%u", i];
+                val = [(NSKeyedUnarchiver*)aCoder decodeObjectForKey: key];
+            }
+        }
+        self = [self initWithObjects: objects forKeys: keys];
     }
-  else
+    else
     {
-      unsigned	count;
-
-      [aCoder decodeValueOfObjCType: @encode(unsigned) at: &count];
-      if (count > 0)
+        unsigned	count;
+        
+        [aCoder decodeValueOfObjCType: @encode(unsigned) at: &count];
+        if (count > 0)
         {
-	  id	*keys = NSZoneMalloc(NSDefaultMallocZone(), sizeof(id)*count);
-	  id	*vals = NSZoneMalloc(NSDefaultMallocZone(), sizeof(id)*count);
-	  unsigned	i;
-	  IMP	dec;
-
-	  dec = [aCoder methodForSelector: @selector(decodeObject)];
-	  for (i = 0; i < count; i++)
-	    {
-	      keys[i] = (*dec)(aCoder, @selector(decodeObject));
-	      vals[i] = (*dec)(aCoder, @selector(decodeObject));
-	    }
-	  self = [self initWithObjects: vals forKeys: keys count: count];
-	  NSZoneFree(NSDefaultMallocZone(), keys);
-	  NSZoneFree(NSDefaultMallocZone(), vals);
-	}
+            id	*keys = NSZoneMalloc(NSDefaultMallocZone(), sizeof(id)*count);
+            id	*vals = NSZoneMalloc(NSDefaultMallocZone(), sizeof(id)*count);
+            unsigned	i;
+            IMP	dec;
+            
+            dec = [aCoder methodForSelector: @selector(decodeObject)];
+            for (i = 0; i < count; i++)
+            {
+                keys[i] = (*dec)(aCoder, @selector(decodeObject));
+                vals[i] = (*dec)(aCoder, @selector(decodeObject));
+            }
+            self = [self initWithObjects: vals forKeys: keys count: count];
+            NSZoneFree(NSDefaultMallocZone(), keys);
+            NSZoneFree(NSDefaultMallocZone(), vals);
+        }
     }
-  return self;
+    return self;
 }
 
 /**
@@ -423,7 +401,7 @@ static SEL	appSel;
  */
 + (id) dictionary
 {
-  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()] init]);
+    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()] init]);
 }
 
 /**
@@ -433,8 +411,8 @@ static SEL	appSel;
  */
 + (id) dictionaryWithDictionary: (NSDictionary*)otherDictionary
 {
-  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-    initWithDictionary: otherDictionary]);
+    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
+                        initWithDictionary: otherDictionary]);
 }
 
 /**
@@ -444,16 +422,18 @@ static SEL	appSel;
  * element of the keys array.
  */
 + (id) dictionaryWithObjects: (const id[])objects
-		     forKeys: (const id <NSCopying>[])keys
-		       count: (NSUInteger)count
+                     forKeys: (const id <NSCopying>[])keys
+                       count: (NSUInteger)count
 {
-  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-    initWithObjects: objects forKeys: keys count: count]);
+    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
+                        initWithObjects: objects forKeys: keys count: count]);
 }
+
+
 
 - (NSUInteger) hash
 {
-  return [self count];
+    return [self count];
 }
 
 /**
@@ -464,49 +444,51 @@ static SEL	appSel;
  */
 - (id) initWithObjects: (NSArray*)objects forKeys: (NSArray*)keys
 {
-  unsigned	objectCount = [objects count];
-
-  if (objectCount != [keys count])
+    unsigned	objectCount = [objects count];
+    
+    if (objectCount != [keys count])
     {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"init with obj and key arrays of different sizes"];
+        [NSException raise: NSInvalidArgumentException
+                    format: @"init with obj and key arrays of different sizes"];
     }
-  else
+    else
     {
-      GS_BEGINIDBUF(o, objectCount*2);
-
-      if ([objects isProxy])
-	{
-	  unsigned	i;
-
-	  for (i = 0; i < objectCount; i++)
-	    {
-	      o[i] = [objects objectAtIndex: i];
-	    }
-	}
-      else
-	{
-          [objects getObjects: o];
-	}
-      if ([keys isProxy])
-	{
-	  unsigned	i;
-
-	  for (i = 0; i < objectCount; i++)
-	    {
-	      o[objectCount + i] = [keys objectAtIndex: i];
-	    }
-	}
-      else
-	{
-          [keys getObjects: o + objectCount];
-	}
-      self = [self initWithObjects: o
-			   forKeys: o + objectCount
-			     count: objectCount];
-      GS_ENDIDBUF();
+        
+        // cache the key and value in one array, and init dict with that array.
+        GS_BEGINIDBUF(o, objectCount*2);
+        
+        if ([objects isProxy])
+        {
+            unsigned	i;
+            
+            for (i = 0; i < objectCount; i++)
+            {
+                o[i] = [objects objectAtIndex: i];
+            }
+        }
+        else
+        {
+            [objects getObjects: o];
+        }
+        if ([keys isProxy])
+        {
+            unsigned	i;
+            
+            for (i = 0; i < objectCount; i++)
+            {
+                o[objectCount + i] = [keys objectAtIndex: i];
+            }
+        }
+        else
+        {
+            [keys getObjects: o + objectCount];
+        }
+        self = [self initWithObjects: o
+                             forKeys: o + objectCount
+                               count: objectCount];
+        GS_ENDIDBUF();
     }
-  return self;
+    return self;
 }
 
 /**
@@ -517,9 +499,9 @@ static SEL	appSel;
  */
 - (id) initWithObjectsAndKeys: (id)firstObject, ...
 {
-  GS_USEIDPAIRLIST(firstObject,
-    self = [self initWithObjects: __objects forKeys: __pairs count: __count/2]);
-  return self;
+    GS_USEIDPAIRLIST(firstObject,
+                     self = [self initWithObjects: __objects forKeys: __pairs count: __count/2]);
+    return self;
 }
 
 /**
@@ -530,11 +512,11 @@ static SEL	appSel;
  */
 + (id) dictionaryWithObjectsAndKeys: (id)firstObject, ...
 {
-  id	o = [self allocWithZone: NSDefaultMallocZone()];
-
-  GS_USEIDPAIRLIST(firstObject,
-    o = [o initWithObjects: __objects forKeys: __pairs count: __count/2]);
-  return AUTORELEASE(o);
+    id	o = [self allocWithZone: NSDefaultMallocZone()];
+    
+    GS_USEIDPAIRLIST(firstObject,
+                     o = [o initWithObjects: __objects forKeys: __pairs count: __count/2]);
+    return AUTORELEASE(o);
 }
 
 /**
@@ -545,8 +527,8 @@ static SEL	appSel;
  */
 + (id) dictionaryWithObjects: (NSArray*)objects forKeys: (NSArray*)keys
 {
-  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-    initWithObjects: objects forKeys: keys]);
+    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
+                        initWithObjects: objects forKeys: keys]);
 }
 
 /**
@@ -555,8 +537,8 @@ static SEL	appSel;
  */
 + (id) dictionaryWithObject: (id)object forKey: (id)key
 {
-  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-    initWithObjects: &object forKeys: &key count: 1]);
+    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
+                        initWithObjects: &object forKeys: &key count: 1]);
 }
 
 /**
@@ -565,7 +547,7 @@ static SEL	appSel;
  */
 - (id) initWithDictionary: (NSDictionary*)otherDictionary
 {
-  return [self initWithDictionary: otherDictionary copyItems: NO];
+    return [self initWithDictionary: otherDictionary copyItems: NO];
 }
 
 /**
@@ -577,48 +559,48 @@ static SEL	appSel;
  * originally to ensure that they are immutable.
  */
 - (id) initWithDictionary: (NSDictionary*)other
-		copyItems: (BOOL)shouldCopy
+                copyItems: (BOOL)shouldCopy
 {
-  unsigned	c = [other count];
-
-  if (c > 0)
+    unsigned	c = [other count];
+    
+    if (c > 0)
     {
-      id		k;
-      NSEnumerator	*e = [other keyEnumerator];
-      unsigned		i = 0;
-      IMP		nxtObj = [e methodForSelector: nxtSel];
-      IMP		otherObj = [other methodForSelector: objSel];
-      GS_BEGINIDBUF(o, c*2);
-
-      if (shouldCopy)
-	{
-	  NSZone	*z = [self zone];
-
-	  while ((k = (*nxtObj)(e, nxtSel)) != nil)
-	    {
-	      o[i] = k;
-	      o[c + i] = [(*otherObj)(other, objSel, k) copyWithZone: z];
-	      i++;
-	    }
-	  self = [self initWithObjects: o + c forKeys: o count: i];
-	  while (i-- > 0)
-	    {
-	      [o[c + i] release];
-	    }
-	}
-      else
-	{
-	  while ((k = (*nxtObj)(e, nxtSel)) != nil)
-	    {
-	      o[i] = k;
-	      o[c + i] = (*otherObj)(other, objSel, k);
-	      i++;
-	    }
-	  self = [self initWithObjects: o + c forKeys: o count: c];
-	}
-      GS_ENDIDBUF();
+        id		k;
+        NSEnumerator	*e = [other keyEnumerator];
+        unsigned		i = 0;
+        IMP		nxtObj = [e methodForSelector: nextSEL];
+        IMP		otherObj = [other methodForSelector: objectForKeySEL];
+        GS_BEGINIDBUF(o, c*2);
+        
+        if (shouldCopy)
+        {
+            NSZone	*z = [self zone];
+            
+            while ((k = (*nxtObj)(e, nextSEL)) != nil)
+            {
+                o[i] = k;
+                o[c + i] = [(*otherObj)(other, objectForKeySEL, k) copyWithZone: z];
+                i++;
+            }
+            self = [self initWithObjects: o + c forKeys: o count: i];
+            while (i-- > 0)
+            {
+                [o[c + i] release];
+            }
+        }
+        else
+        {
+            while ((k = (*nxtObj)(e, nextSEL)) != nil)
+            {
+                o[i] = k;
+                o[c + i] = (*otherObj)(other, objectForKeySEL, k);
+                i++;
+            }
+            self = [self initWithObjects: o + c forKeys: o count: c];
+        }
+        GS_ENDIDBUF();
     }
-  return self;
+    return self;
 }
 
 /**
@@ -638,40 +620,40 @@ static SEL	appSel;
  */
 - (id) initWithContentsOfFile: (NSString*)path
 {
-  NSString 	*myString;
-
-  myString = [[NSString allocWithZone: NSDefaultMallocZone()]
-    initWithContentsOfFile: path];
-  if (myString == nil)
+    NSString 	*myString;
+    
+    myString = [[NSString allocWithZone: NSDefaultMallocZone()]
+                initWithContentsOfFile: path];
+    if (myString == nil)
     {
-      DESTROY(self);
+        DESTROY(self);
     }
-  else
+    else
     {
-      id result;
-
-      NS_DURING
-	{
-	  result = [myString propertyList];
-	}
-      NS_HANDLER
-	{
-          result = nil;
-	}
-      NS_ENDHANDLER
-      RELEASE(myString);
-      if ([result isKindOfClass: NSDictionaryClass])
-	{
-	  self = [self initWithDictionary: result];
-	}
-      else
-	{
-	  NSWarnMLog(@"Contents of file '%@' does not contain a dictionary",
-	    path);
-	  DESTROY(self);
-	}
+        id result;
+        
+        NS_DURING
+        {
+            result = [myString propertyList];
+        }
+        NS_HANDLER
+        {
+            result = nil;
+        }
+        NS_ENDHANDLER
+        RELEASE(myString);
+        if ([result isKindOfClass: NSDictionaryClass])
+        {
+            self = [self initWithDictionary: result];
+        }
+        else
+        {
+            NSWarnMLog(@"Contents of file '%@' does not contain a dictionary",
+                       path);
+            DESTROY(self);
+        }
     }
-  return self;
+    return self;
 }
 
 /**
@@ -691,40 +673,40 @@ static SEL	appSel;
  */
 - (id) initWithContentsOfURL: (NSURL*)aURL
 {
-  NSString 	*myString;
-
-  myString = [[NSString allocWithZone: NSDefaultMallocZone()]
-    initWithContentsOfURL: aURL];
-  if (myString == nil)
+    NSString 	*myString;
+    
+    myString = [[NSString allocWithZone: NSDefaultMallocZone()]
+                initWithContentsOfURL: aURL];
+    if (myString == nil)
     {
-      DESTROY(self);
+        DESTROY(self);
     }
-  else
+    else
     {
-      id result;
-
-      NS_DURING
-	{
-	  result = [myString propertyList];
-	}
-      NS_HANDLER
-	{
-          result = nil;
-	}
-      NS_ENDHANDLER
-      RELEASE(myString);
-      if ([result isKindOfClass: NSDictionaryClass])
-	{
-	  self = [self initWithDictionary: result];
-	}
-      else
-	{
-	  NSWarnMLog(@"Contents of URL '%@' does not contain a dictionary",
-	    aURL);
-	  DESTROY(self);
-	}
+        id result;
+        
+        NS_DURING
+        {
+            result = [myString propertyList];
+        }
+        NS_HANDLER
+        {
+            result = nil;
+        }
+        NS_ENDHANDLER
+        RELEASE(myString);
+        if ([result isKindOfClass: NSDictionaryClass])
+        {
+            self = [self initWithDictionary: result];
+        }
+        else
+        {
+            NSWarnMLog(@"Contents of URL '%@' does not contain a dictionary",
+                       aURL);
+            DESTROY(self);
+        }
     }
-  return self;
+    return self;
 }
 
 /**
@@ -733,8 +715,8 @@ static SEL	appSel;
  */
 + (id) dictionaryWithContentsOfFile: (NSString*)path
 {
-  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-    initWithContentsOfFile: path]);
+    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
+                        initWithContentsOfFile: path]);
 }
 
 /**
@@ -743,19 +725,19 @@ static SEL	appSel;
  */
 + (id) dictionaryWithContentsOfURL: (NSURL*)aURL
 {
-  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-    initWithContentsOfURL: aURL]);
+    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
+                        initWithContentsOfURL: aURL]);
 }
 
 - (BOOL) isEqual: other
 {
-  if (other == self)
-    return YES;
-
-  if ([other isKindOfClass: NSDictionaryClass])
-    return [self isEqualToDictionary: other];
-
-  return NO;
+    if (other == self)
+        return YES;
+    
+    if ([other isKindOfClass: NSDictionaryClass])
+        return [self isEqualToDictionary: other];
+    
+    return NO;
 }
 
 /**
@@ -766,37 +748,37 @@ static SEL	appSel;
  */
 - (BOOL) isEqualToDictionary: (NSDictionary*)other
 {
-  unsigned	count;
-
-  if (other == self)
+    unsigned	count;
+    
+    if (other == self)
     {
-      return YES;
+        return YES;
     }
-  count = [self count];
-  if (count == [other count])
+    count = [self count];
+    if (count == [other count])
     {
-      if (count > 0)
-	{
-	  NSEnumerator	*e = [self keyEnumerator];
-	  IMP		nxtObj = [e methodForSelector: nxtSel];
-	  IMP		myObj = [self methodForSelector: objSel];
-	  IMP		otherObj = [other methodForSelector: objSel];
-	  id		k;
-
-	  while ((k = (*nxtObj)(e, @selector(nextObject))) != nil)
-	    {
-	      id o1 = (*myObj)(self, objSel, k);
-	      id o2 = (*otherObj)(other, objSel, k);
-
-	      if (o1 == o2)
-		continue;
-	      if ([o1 isEqual: o2] == NO)
-		return NO;
-	    }
-	}
-      return YES;
+        if (count > 0)
+        {
+            NSEnumerator	*e = [self keyEnumerator];
+            IMP		nxtObj = [e methodForSelector: nextSEL];
+            IMP		myObj = [self methodForSelector: objectForKeySEL];
+            IMP		otherObj = [other methodForSelector: objectForKeySEL];
+            id		k;
+            
+            while ((k = (*nxtObj)(e, @selector(nextObject))) != nil)
+            {
+                id o1 = (*myObj)(self, objectForKeySEL, k);
+                id o2 = (*otherObj)(other, objectForKeySEL, k);
+                
+                if (o1 == o2)
+                    continue;
+                if ([o1 isEqual: o2] == NO)
+                    return NO;
+            }
+        }
+        return YES;
     }
-  return NO;
+    return NO;
 }
 
 /**
@@ -804,29 +786,30 @@ static SEL	appSel;
  */
 - (NSArray*) allKeys
 {
-  unsigned	c = [self count];
-
-  if (c == 0)
+    unsigned	c = [self count];
+    
+    if (c == 0)
     {
-      return [NSArray_class array];
+        return [NSArray_class array];
     }
-  else
+    else
     {
-      NSEnumerator	*e = [self keyEnumerator];
-      IMP		nxtObj = [e methodForSelector: nxtSel];
-      unsigned		i;
-      id		result;
-      GS_BEGINIDBUF(k, c);
-
-      for (i = 0; i < c; i++)
-	{
-	  k[i] = (*nxtObj)(e, nxtSel);
-	  NSAssert (k[i], NSInternalInconsistencyException);
-	}
-      result = [[NSArray_class allocWithZone: NSDefaultMallocZone()]
-	initWithObjects: k count: c];
-      GS_ENDIDBUF();
-      return AUTORELEASE(result);
+        // tranfser the get method to enumerator.
+        NSEnumerator	*e = [self keyEnumerator];
+        IMP		nxtObj = [e methodForSelector: nextSEL];
+        unsigned		i;
+        id		result;
+        GS_BEGINIDBUF(k, c);
+        
+        for (i = 0; i < c; i++)
+        {
+            k[i] = (*nxtObj)(e, nextSEL);
+            NSAssert (k[i], NSInternalInconsistencyException);
+        }
+        result = [[NSArray_class allocWithZone: NSDefaultMallocZone()]
+                  initWithObjects: k count: c];
+        GS_ENDIDBUF();
+        return AUTORELEASE(result);
     }
 }
 
@@ -835,40 +818,40 @@ static SEL	appSel;
  */
 - (NSArray*) allValues
 {
-  unsigned	c = [self count];
-
-  if (c == 0)
+    unsigned	c = [self count];
+    
+    if (c == 0)
     {
-      return [NSArray_class array];
+        return [NSArray_class array];
     }
-  else
+    else
     {
-      NSEnumerator	*e = [self objectEnumerator];
-      IMP		nxtObj = [e methodForSelector: nxtSel];
-      id		result;
-      unsigned		i;
-      GS_BEGINIDBUF(k, c);
-
-      for (i = 0; i < c; i++)
-	{
-	  k[i] = (*nxtObj)(e, nxtSel);
-	}
-      result = [[NSArray_class allocWithZone: NSDefaultMallocZone()]
-	initWithObjects: k count: c];
-      GS_ENDIDBUF();
-      return AUTORELEASE(result);
+        NSEnumerator	*e = [self objectEnumerator];
+        IMP		nxtObj = [e methodForSelector: nextSEL];
+        id		result;
+        unsigned		i;
+        GS_BEGINIDBUF(k, c);
+        
+        for (i = 0; i < c; i++)
+        {
+            k[i] = (*nxtObj)(e, nextSEL);
+        }
+        result = [[NSArray_class allocWithZone: NSDefaultMallocZone()]
+                  initWithObjects: k count: c];
+        GS_ENDIDBUF();
+        return AUTORELEASE(result);
     }
 }
 
 - (void)getObjects: (__unsafe_unretained id[])objects
            andKeys: (__unsafe_unretained id<NSCopying>[])keys
 {
-  NSUInteger i=0;
-  FOR_IN(id, key, self)
+    NSUInteger i=0;
+    FOR_IN(id, key, self)
     if (keys != NULL) keys[i] = key;
     if (objects != NULL) objects[i] = [self objectForKey: key];
     i++;
-  END_FOR_IN(self)
+    END_FOR_IN(self)
 }
 
 /**
@@ -877,44 +860,44 @@ static SEL	appSel;
  */
 - (NSArray*) allKeysForObject: (id)anObject
 {
-  unsigned	c;
-
-  if (anObject == nil || (c = [self count]) == 0)
+    unsigned	c;
+    
+    if (anObject == nil || (c = [self count]) == 0)
     {
-      return nil;
+        return nil;
     }
-  else
+    else
     {
-      NSEnumerator	*e = [self keyEnumerator];
-      IMP		nxtObj = [e methodForSelector: nxtSel];
-      IMP		myObj = [self methodForSelector: objSel];
-      BOOL		(*eqObj)(id, SEL, id);
-      id		k;
-      id		result;
-      GS_BEGINIDBUF(a, [self count]);
-
-      eqObj = (BOOL (*)(id, SEL, id))[anObject methodForSelector: eqSel];
-      c = 0;
-      while ((k = (*nxtObj)(e, nxtSel)) != nil)
-	{
-	  id	o = (*myObj)(self, objSel, k);
-
-	  if (o == anObject || (*eqObj)(anObject, eqSel, o))
-	    {
-	      a[c++] = k;
-	    }
-	}
-      if (c == 0)
-	{
-	  result = nil;
-	}
-      else
-	{
-	  result = [[NSArray_class allocWithZone: NSDefaultMallocZone()]
-	    initWithObjects: a count: c];
-	}
-      GS_ENDIDBUF();
-      return AUTORELEASE(result);
+        NSEnumerator	*e = [self keyEnumerator];
+        IMP		nxtObj = [e methodForSelector: nextSEL];
+        IMP		myObj = [self methodForSelector: objectForKeySEL];
+        BOOL		(*eqObj)(id, SEL, id);
+        id		k;
+        id		result;
+        GS_BEGINIDBUF(a, [self count]);
+        
+        eqObj = (BOOL (*)(id, SEL, id))[anObject methodForSelector: equalSEL];
+        c = 0;
+        while ((k = (*nxtObj)(e, nextSEL)) != nil)
+        {
+            id	o = (*myObj)(self, objectForKeySEL, k);
+            
+            if (o == anObject || (*eqObj)(anObject, equalSEL, o))
+            {
+                a[c++] = k;
+            }
+        }
+        if (c == 0)
+        {
+            result = nil;
+        }
+        else
+        {
+            result = [[NSArray_class allocWithZone: NSDefaultMallocZone()]
+                      initWithObjects: a count: c];
+        }
+        GS_ENDIDBUF();
+        return AUTORELEASE(result);
     }
 }
 
@@ -923,10 +906,10 @@ struct foo { NSDictionary *d; SEL s; IMP i; };
 static NSInteger
 compareIt(id o1, id o2, void* context)
 {
-  struct foo	*f = (struct foo*)context;
-  o1 = (*f->i)(f->d, @selector(objectForKey:), o1);
-  o2 = (*f->i)(f->d, @selector(objectForKey:), o2);
-  return (NSInteger)(intptr_t)[o1 performSelector: f->s withObject: o2];
+    struct foo	*f = (struct foo*)context;
+    o1 = (*f->i)(f->d, @selector(objectForKey:), o1);
+    o2 = (*f->i)(f->d, @selector(objectForKey:), o2);
+    return (NSInteger)(intptr_t)[o1 performSelector: f->s withObject: o2];
 }
 
 /**
@@ -939,14 +922,14 @@ compareIt(id o1, id o2, void* context)
  */
 - (NSArray*) keysSortedByValueUsingSelector: (SEL)comp
 {
-  struct foo	info;
-  id	k;
-
-  info.d = self;
-  info.s = comp;
-  info.i = [self methodForSelector: objSel];
-  k = [[self allKeys] sortedArrayUsingFunction: compareIt context: &info];
-  return k;
+    struct foo	info;
+    id	k;
+    
+    info.d = self;
+    info.s = comp;
+    info.i = [self methodForSelector: objectForKeySEL];
+    k = [[self allKeys] sortedArrayUsingFunction: compareIt context: &info];
+    return k;
 }
 
 /**
@@ -957,111 +940,111 @@ compareIt(id o1, id o2, void* context)
  */
 - (NSArray*) objectsForKeys: (NSArray*)keys notFoundMarker: (id)marker
 {
-  unsigned	c = [keys count];
-
-  if (c == 0)
+    unsigned	c = [keys count];
+    
+    if (c == 0)
     {
-      return [NSArray_class array];
+        return [NSArray_class array];
     }
-  else
+    else
     {
-      unsigned	i;
-      IMP	myObj = [self methodForSelector: objSel];
-      id	result;
-      GS_BEGINIDBUF(obuf, c);
-
-      if ([keys isProxy])
-	{
-	  for (i = 0; i < c; i++)
-	    {
-	      obuf[i] = [keys objectAtIndex: i];
-	    }
-	}
-      else
-	{
-          [keys getObjects: obuf];
-	}
-      for (i = 0; i < c; i++)
-	{
-	  id o = (*myObj)(self, objSel, obuf[i]);
-
-	  if (o == nil)
-	    {
-	      obuf[i] = marker;
-	    }
-	  else
-	    {
-	      obuf[i] = o;
-	    }
-	}
-      result = [[NSArray_class allocWithZone: NSDefaultMallocZone()]
-	initWithObjects: obuf count: c];
-      GS_ENDIDBUF();
-      return AUTORELEASE(result);
+        unsigned	i;
+        IMP	myObj = [self methodForSelector: objectForKeySEL];
+        id	result;
+        GS_BEGINIDBUF(obuf, c);
+        
+        if ([keys isProxy])
+        {
+            for (i = 0; i < c; i++)
+            {
+                obuf[i] = [keys objectAtIndex: i];
+            }
+        }
+        else
+        {
+            [keys getObjects: obuf];
+        }
+        for (i = 0; i < c; i++)
+        {
+            id o = (*myObj)(self, objectForKeySEL, obuf[i]);
+            
+            if (o == nil)
+            {
+                obuf[i] = marker;
+            }
+            else
+            {
+                obuf[i] = o;
+            }
+        }
+        result = [[NSArray_class allocWithZone: NSDefaultMallocZone()]
+                  initWithObjects: obuf count: c];
+        GS_ENDIDBUF();
+        return AUTORELEASE(result);
     }
 }
 
 - (NSSet*) keysOfEntriesWithOptions: (NSEnumerationOptions)opts
                         passingTest: (GSKeysAndObjectsPredicateBlock)aPredicate
 {
-  /*
-   * See -enumerateKeysAndObjectsWithOptions:usingBlock: for note about
-   * NSEnumerationOptions.
-   */
-  id<NSFastEnumeration> enumerator = [self keyEnumerator];
-  SEL objectForKeySelector = @selector(objectForKey:);
-  IMP objectForKey = [self methodForSelector: objectForKeySelector];
-  BLOCK_SCOPE BOOL shouldStop = NO;
-  NSMutableSet *buildSet = [NSMutableSet new];
-  SEL addObjectSelector = @selector(addObject:);
-  IMP addObject = [buildSet methodForSelector: addObjectSelector];
-  NSSet *resultSet = nil;
-  id obj = nil;
-  BLOCK_SCOPE NSLock *setLock = nil;
-
-  if (opts & NSEnumerationConcurrent)
+    /*
+     * See -enumerateKeysAndObjectsWithOptions:usingBlock: for note about
+     * NSEnumerationOptions.
+     */
+    id<NSFastEnumeration> enumerator = [self keyEnumerator];
+    SEL objectForKeySelector = @selector(objectForKey:);
+    IMP objectForKey = [self methodForSelector: objectForKeySelector];
+    BLOCK_SCOPE BOOL shouldStop = NO;
+    NSMutableSet *buildSet = [NSMutableSet new];
+    SEL addObjectSelector = @selector(addObject:);
+    IMP addObject = [buildSet methodForSelector: addObjectSelector];
+    NSSet *resultSet = nil;
+    id obj = nil;
+    BLOCK_SCOPE NSLock *setLock = nil;
+    
+    if (opts & NSEnumerationConcurrent)
     {
-      setLock = [NSLock new];
+        setLock = [NSLock new];
     }
-  GS_DISPATCH_CREATE_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
-  FOR_IN(id, key, enumerator)
+    GS_DISPATCH_CREATE_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
+    FOR_IN(id, key, enumerator)
     obj = (*objectForKey)(self, objectForKeySelector, key);
 #if (__has_feature(blocks) && (GS_USE_LIBDISPATCH == 1))
-      dispatch_group_async(enumQueueGroup, enumQueue, ^(void){
+    dispatch_group_async(enumQueueGroup, enumQueue, ^(void){
         if (shouldStop)
-          {
-	    return;
-          }
+        {
+            return;
+        }
         if (aPredicate(key, obj, &shouldStop))
-          {
-	    [setLock lock];
-	    addObject(buildSet, addObjectSelector, key);
-	    [setLock unlock];
-          }
+        {
+            [setLock lock];
+            addObject(buildSet, addObjectSelector, key);
+            [setLock unlock];
+        }
     });
 #else
     if (CALL_BLOCK(aPredicate, key, obj, &shouldStop))
-      {
+    {
         addObject(buildSet, addObjectSelector, key);
-      }
+    }
 #endif
-
+    
     if (YES == shouldStop)
-      {
-	break;
-      }
-  END_FOR_IN(enumerator)
-  GS_DISPATCH_TEARDOWN_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
-  [setLock release];
-  resultSet = [NSSet setWithSet: buildSet];
-  [buildSet release];
-  return resultSet;
+    {
+        break;
+    }
+    END_FOR_IN(enumerator)
+    GS_DISPATCH_TEARDOWN_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
+    [setLock release];
+    resultSet = [NSSet setWithSet: buildSet];
+    [buildSet release];
+    return resultSet;
 }
 
 - (NSSet*) keysOfEntriesPassingTest: (GSKeysAndObjectsPredicateBlock)aPredicate
 {
-  return [self keysOfEntriesWithOptions: 0
-                            passingTest: aPredicate];
+    return [self keysOfEntriesWithOptions: 0
+                              passingTest: aPredicate];
 }
 
 /**
@@ -1089,22 +1072,22 @@ compareIt(id o1, id o2, void* context)
  */
 - (BOOL) writeToFile: (NSString *)path atomically: (BOOL)useAuxiliaryFile
 {
-  NSDictionary	*loc;
-  NSString	*desc = nil;
-  NSData	*data;
-
-  loc = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
-  if (GSMacOSXCompatiblePropertyLists() == YES)
+    NSDictionary	*loc;
+    NSString	*desc = nil;
+    NSData	*data;
+    
+    loc = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
+    if (GSMacOSXCompatiblePropertyLists() == YES)
     {
-      GSPropertyListMake(self, loc, YES, NO, 2, &desc);
-      data = [desc dataUsingEncoding: NSUTF8StringEncoding];
+        GSPropertyListMake(self, loc, YES, NO, 2, &desc);
+        data = [desc dataUsingEncoding: NSUTF8StringEncoding];
     }
-  else
+    else
     {
-      GSPropertyListMake(self, loc, NO, NO, 2, &desc);
-      data = [desc dataUsingEncoding: NSASCIIStringEncoding];
+        GSPropertyListMake(self, loc, NO, NO, 2, &desc);
+        data = [desc dataUsingEncoding: NSASCIIStringEncoding];
     }
-  return [data writeToFile: path atomically: useAuxiliaryFile];
+    return [data writeToFile: path atomically: useAuxiliaryFile];
 }
 
 /**
@@ -1115,23 +1098,23 @@ compareIt(id o1, id o2, void* context)
  */
 - (BOOL) writeToURL: (NSURL *)url atomically: (BOOL)useAuxiliaryFile
 {
-  NSDictionary	*loc;
-  NSString	*desc = nil;
-  NSData	*data;
-
-  loc = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
-  if (GSMacOSXCompatiblePropertyLists() == YES)
+    NSDictionary	*loc;
+    NSString	*desc = nil;
+    NSData	*data;
+    
+    loc = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
+    if (GSMacOSXCompatiblePropertyLists() == YES)
     {
-      GSPropertyListMake(self, loc, YES, NO, 2, &desc);
-      data = [desc dataUsingEncoding: NSUTF8StringEncoding];
+        GSPropertyListMake(self, loc, YES, NO, 2, &desc);
+        data = [desc dataUsingEncoding: NSUTF8StringEncoding];
     }
-  else
+    else
     {
-      GSPropertyListMake(self, loc, NO, NO, 2, &desc);
-      data = [desc dataUsingEncoding: NSASCIIStringEncoding];
+        GSPropertyListMake(self, loc, NO, NO, 2, &desc);
+        data = [desc dataUsingEncoding: NSASCIIStringEncoding];
     }
-
-  return [data writeToURL: url atomically: useAuxiliaryFile];
+    
+    return [data writeToURL: url atomically: useAuxiliaryFile];
 }
 
 /**
@@ -1140,7 +1123,7 @@ compareIt(id o1, id o2, void* context)
  */
 - (NSString*) description
 {
-  return [self descriptionWithLocale: nil indent: 0];
+    return [self descriptionWithLocale: nil indent: 0];
 }
 
 /**
@@ -1150,26 +1133,26 @@ compareIt(id o1, id o2, void* context)
  */
 - (NSString*) descriptionInStringsFileFormat
 {
-  NSMutableString	*result = nil;
-  NSEnumerator		*enumerator = [self keyEnumerator];
-  IMP			nxtObj = [enumerator methodForSelector: nxtSel];
-  IMP			myObj = [self methodForSelector: objSel];
-  id                    key;
-
-  while ((key = (*nxtObj)(enumerator, nxtSel)) != nil)
+    NSMutableString	*result = nil;
+    NSEnumerator		*enumerator = [self keyEnumerator];
+    IMP			nxtObj = [enumerator methodForSelector: nextSEL];
+    IMP			myObj = [self methodForSelector: objectForKeySEL];
+    id                    key;
+    
+    while ((key = (*nxtObj)(enumerator, nextSEL)) != nil)
     {
-      id val = (*myObj)(self, objSel, key);
-
-      GSPropertyListMake(key, nil, NO, YES, 0, &result);
-      if (val != nil && [val isEqualToString: @""] == NO)
+        id val = (*myObj)(self, objectForKeySEL, key);
+        
+        GSPropertyListMake(key, nil, NO, YES, 0, &result);
+        if (val != nil && [val isEqualToString: @""] == NO)
         {
-	  [result appendString: @" = "];
-	  GSPropertyListMake(val, nil, NO, YES, 0, &result);
+            [result appendString: @" = "];
+            GSPropertyListMake(val, nil, NO, YES, 0, &result);
         }
-      [result appendString: @";\n"];
+        [result appendString: @";\n"];
     }
-
-  return result;
+    
+    return result;
 }
 
 /**
@@ -1178,7 +1161,7 @@ compareIt(id o1, id o2, void* context)
  */
 - (NSString*) descriptionWithLocale: (id)locale
 {
-  return [self descriptionWithLocale: locale indent: 0];
+    return [self descriptionWithLocale: locale indent: 0];
 }
 
 /**
@@ -1193,12 +1176,12 @@ compareIt(id o1, id o2, void* context)
  * items are listed is undefined.
  */
 - (NSString*) descriptionWithLocale: (id)locale
-			     indent: (NSUInteger)level
+                             indent: (NSUInteger)level
 {
-  NSMutableString	*result = nil;
-
-  GSPropertyListMake(self, locale, NO, YES, level == 1 ? 3 : 2, &result);
-  return result;
+    NSMutableString	*result = nil;
+    
+    GSPropertyListMake(self, locale, NO, YES, level == 1 ? 3 : 2, &result);
+    return result;
 }
 
 /**
@@ -1209,50 +1192,50 @@ compareIt(id o1, id o2, void* context)
  */
 - (id) valueForKey: (NSString*)key
 {
-  id	o;
-
-  if ([key hasPrefix: @"@"] == YES)
+    id	o;
+    
+    if ([key hasPrefix: @"@"] == YES)
     {
-      o = [super valueForKey: [key substringFromIndex: 1]];
+        o = [super valueForKey: [key substringFromIndex: 1]];
     }
-  else
+    else
     {
-      o = [self objectForKey: key];
+        o = [self objectForKey: key];
     }
-  return o;
+    return o;
 }
 - (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state
                                    objects: (__unsafe_unretained id[])stackbuf
                                      count: (NSUInteger)len
 {
-  [self subclassResponsibility: _cmd];
-  return 0;
+    [self subclassResponsibility: _cmd];
+    return 0;
 }
 
 - (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
 {
-  NSUInteger	size = [super sizeInBytesExcluding: exclude];
-
-  if (size > 0)
+    NSUInteger	size = [super sizeInBytesExcluding: exclude];
+    
+    if (size > 0)
     {
-      NSUInteger	count = [self count];
-
-      size += 3 * sizeof(void*) * count;
-      if (count > 0)
+        NSUInteger	count = [self count];
+        
+        size += 3 * sizeof(void*) * count;
+        if (count > 0)
         {
-	  NSEnumerator  *enumerator = [self keyEnumerator];
-	  NSObject<NSCopying>	*k = nil;
-
-	  while ((k = [enumerator nextObject]) != nil)
-	    {
-	      NSObject	*o = [self objectForKey: k];
-
-	      size += [k sizeInBytesExcluding: exclude];
-	      size += [o sizeInBytesExcluding: exclude];
-	    }
-	}
+            NSEnumerator  *enumerator = [self keyEnumerator];
+            NSObject<NSCopying>	*k = nil;
+            
+            while ((k = [enumerator nextObject]) != nil)
+            {
+                NSObject	*o = [self objectForKey: k];
+                
+                size += [k sizeInBytesExcluding: exclude];
+                size += [o sizeInBytesExcluding: exclude];
+            }
+        }
     }
-  return size;
+    return size;
 }
 @end
 
@@ -1264,59 +1247,59 @@ compareIt(id o1, id o2, void* context)
 
 + (void) initialize
 {
-  if (self == [NSMutableDictionary class])
+    if (self == [NSMutableDictionary class])
     {
-      NSMutableDictionaryClass = self;
-      GSMutableDictionaryClass = [GSMutableDictionary class];
+        NSMutableDictionaryClass = self;
+        GSMutableDictionaryClass = [GSMutableDictionary class];
     }
 }
 
 + (id) allocWithZone: (NSZone*)z
 {
-  if (self == NSMutableDictionaryClass)
+    if (self == NSMutableDictionaryClass)
     {
-      return NSAllocateObject(GSMutableDictionaryClass, 0, z);
+        return NSAllocateObject(GSMutableDictionaryClass, 0, z);
     }
-  else
+    else
     {
-      return NSAllocateObject(self, 0, z);
+        return NSAllocateObject(self, 0, z);
     }
 }
 
 - (id) copyWithZone: (NSZone*)z
 {
-  /* a deep copy */
-  unsigned	count = [self count];
-  NSDictionary	*newDictionary;
-  unsigned	i;
-  id		key;
-  NSEnumerator	*enumerator = [self keyEnumerator];
-  IMP		nxtImp = [enumerator methodForSelector: nxtSel];
-  IMP		objImp = [self methodForSelector: objSel];
-  GS_BEGINIDBUF(o, count*2);
-
-  for (i = 0; (key = (*nxtImp)(enumerator, nxtSel)); i++)
+    /* a deep copy */
+    unsigned	count = [self count];
+    NSDictionary	*newDictionary;
+    unsigned	i;
+    id		key;
+    NSEnumerator	*enumerator = [self keyEnumerator];
+    IMP		nxtImp = [enumerator methodForSelector: nextSEL];
+    IMP		objImp = [self methodForSelector: objectForKeySEL];
+    GS_BEGINIDBUF(o, count*2);
+    
+    for (i = 0; (key = (*nxtImp)(enumerator, nextSEL)); i++)
     {
-      o[i] = key;
-      o[count + i] = (*objImp)(self, objSel, key);
-      o[count + i] = [o[count + i] copyWithZone: z];
+        o[i] = key;
+        o[count + i] = (*objImp)(self, objectForKeySEL, key);
+        o[count + i] = [o[count + i] copyWithZone: z];
     }
-  newDictionary = [[GSDictionaryClass allocWithZone: z]
-	  initWithObjects: o + count
-		  forKeys: o
-		    count: count];
-  while (i-- > 0)
+    newDictionary = [[GSDictionaryClass allocWithZone: z]
+                     initWithObjects: o + count
+                     forKeys: o
+                     count: count];
+    while (i-- > 0)
     {
-      [o[count + i] release];
+        [o[count + i] release];
     }
-  GS_ENDIDBUF();
-
-  return newDictionary;
+    GS_ENDIDBUF();
+    
+    return newDictionary;
 }
 
 - (Class) classForCoder
 {
-  return NSMutableDictionaryClass;
+    return NSMutableDictionaryClass;
 }
 
 /** <init /> <override-subclass />
@@ -1330,8 +1313,8 @@ compareIt(id o1, id o2, void* context)
  */
 - (id) initWithCapacity: (NSUInteger)numItems
 {
-  self = [self init];
-  return self;
+    self = [self init];
+    return self;
 }
 
 /**
@@ -1343,12 +1326,12 @@ compareIt(id o1, id o2, void* context)
  */
 - (void) setObject: anObject forKey: (id)aKey
 {
-  [self subclassResponsibility: _cmd];
+    [self subclassResponsibility: _cmd];
 }
 
 - (void) setObject: (id)anObject forKeyedSubscript: (id)aKey
 {
-  [self setObject: anObject forKey: aKey];
+    [self setObject: anObject forKey: aKey];
 }
 
 /**
@@ -1357,7 +1340,7 @@ compareIt(id o1, id o2, void* context)
  */
 - (void) removeObjectForKey: (id)aKey
 {
-  [self subclassResponsibility: _cmd];
+    [self subclassResponsibility: _cmd];
 }
 
 /**
@@ -1368,8 +1351,8 @@ compareIt(id o1, id o2, void* context)
  */
 + (id) dictionaryWithCapacity: (NSUInteger)numItems
 {
-  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-    initWithCapacity: numItems]);
+    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
+                        initWithCapacity: numItems]);
 }
 
 /* Override superclass's designated initializer */
@@ -1380,21 +1363,21 @@ compareIt(id o1, id o2, void* context)
  * element of the keys array.
  */
 - (id) initWithObjects: (const id[])objects
-	       forKeys: (const id <NSCopying>[])keys
-		 count: (NSUInteger)count
+               forKeys: (const id <NSCopying>[])keys
+                 count: (NSUInteger)count
 {
-  self = [self initWithCapacity: count];
-  if (self != nil)
+    self = [self initWithCapacity: count];
+    if (self != nil)
     {
-      IMP	setObj;
-
-      setObj = [self methodForSelector: setSel];
-      while (count--)
-	{
-	  (*setObj)(self, setSel, objects[count], keys[count]);
-	}
+        IMP	setObj;
+        
+        setObj = [self methodForSelector: setObjectForKeySEL];
+        while (count--)
+        {
+            (*setObj)(self, setObjectForKeySEL, objects[count], keys[count]);
+        }
     }
-  return self;
+    return self;
 }
 
 /**
@@ -1402,14 +1385,14 @@ compareIt(id o1, id o2, void* context)
  */
 - (void) removeAllObjects
 {
-  id		k;
-  NSEnumerator	*e = [self keyEnumerator];
-  IMP		nxtObj = [e methodForSelector: nxtSel];
-  IMP		remObj = [self methodForSelector: remSel];
-
-  while ((k = (*nxtObj)(e, nxtSel)) != nil)
+    id		k;
+    NSEnumerator	*e = [self keyEnumerator];
+    IMP		nxtObj = [e methodForSelector: nextSEL];
+    IMP		remObj = [self methodForSelector: removeObjectForKeySEL];
+    
+    while ((k = (*nxtObj)(e, nextSEL)) != nil)
     {
-      (*remObj)(self, remSel, k);
+        (*remObj)(self, removeObjectForKeySEL, k);
     }
 }
 
@@ -1420,31 +1403,31 @@ compareIt(id o1, id o2, void* context)
  */
 - (void) removeObjectsForKeys: (NSArray*)keyArray
 {
-  unsigned	c = [keyArray count];
-
-  if (c > 0)
+    unsigned	c = [keyArray count];
+    
+    if (c > 0)
     {
-      IMP	remObj = [self methodForSelector: remSel];
-      GS_BEGINIDBUF(keys, c);
-
-      if ([keyArray isProxy])
-	{
-	  unsigned	i;
-
-	  for (i = 0; i < c; i++)
-	    {
-	      keys[i] = [keyArray objectAtIndex: i];
-	    }
-	}
-      else
-	{
-	  [keyArray getObjects: keys];
-	}
-      while (c--)
-	{
-	  (*remObj)(self, remSel, keys[c]);
-	}
-      GS_ENDIDBUF();
+        IMP	remObj = [self methodForSelector: removeObjectForKeySEL];
+        GS_BEGINIDBUF(keys, c);
+        
+        if ([keyArray isProxy])
+        {
+            unsigned	i;
+            
+            for (i = 0; i < c; i++)
+            {
+                keys[i] = [keyArray objectAtIndex: i];
+            }
+        }
+        else
+        {
+            [keyArray getObjects: keys];
+        }
+        while (c--)
+        {
+            (*remObj)(self, removeObjectForKeySEL, keys[c]);
+        }
+        GS_ENDIDBUF();
     }
 }
 
@@ -1455,18 +1438,18 @@ compareIt(id o1, id o2, void* context)
  */
 - (void) addEntriesFromDictionary: (NSDictionary*)otherDictionary
 {
-  if (otherDictionary != nil && otherDictionary != self)
+    if (otherDictionary != nil && otherDictionary != self)
     {
-      id		k;
-      NSEnumerator	*e = [otherDictionary keyEnumerator];
-      IMP		nxtObj = [e methodForSelector: nxtSel];
-      IMP		getObj = [otherDictionary methodForSelector: objSel];
-      IMP		setObj = [self methodForSelector: setSel];
-
-      while ((k = (*nxtObj)(e, nxtSel)) != nil)
-	{
-	  (*setObj)(self, setSel, (*getObj)(otherDictionary, objSel, k), k);
-	}
+        id		k;
+        NSEnumerator	*e = [otherDictionary keyEnumerator];
+        IMP		nxtObj = [e methodForSelector: nextSEL];
+        IMP		getObj = [otherDictionary methodForSelector: objectForKeySEL];
+        IMP		setObj = [self methodForSelector: setObjectForKeySEL];
+        
+        while ((k = (*nxtObj)(e, nextSEL)) != nil)
+        {
+            (*setObj)(self, setObjectForKeySEL, (*getObj)(otherDictionary, objectForKeySEL, k), k);
+        }
     }
 }
 
@@ -1475,8 +1458,8 @@ compareIt(id o1, id o2, void* context)
  */
 - (void) setDictionary: (NSDictionary*)otherDictionary
 {
-  [self removeAllObjects];
-  [self addEntriesFromDictionary: otherDictionary];
+    [self removeAllObjects];
+    [self addEntriesFromDictionary: otherDictionary];
 }
 
 /**
@@ -1486,13 +1469,13 @@ compareIt(id o1, id o2, void* context)
  */
 - (void) takeStoredValue: (id)value forKey: (NSString*)key
 {
-  if (value == nil)
+    if (value == nil)
     {
-      [self removeObjectForKey: key];
+        [self removeObjectForKey: key];
     }
-  else
+    else
     {
-      [self setObject: value forKey: key];
+        [self setObject: value forKey: key];
     }
 }
 
@@ -1503,13 +1486,13 @@ compareIt(id o1, id o2, void* context)
  */
 - (void) takeValue: (id)value forKey: (NSString*)key
 {
-  if (value == nil)
+    if (value == nil)
     {
-      [self removeObjectForKey: key];
+        [self removeObjectForKey: key];
     }
-  else
+    else
     {
-      [self setObject: value forKey: key];
+        [self setObject: value forKey: key];
     }
 }
 
@@ -1520,13 +1503,13 @@ compareIt(id o1, id o2, void* context)
  */
 - (void) setValue: (id)value forKey: (NSString*)key
 {
-  if (value == nil)
+    if (value == nil)
     {
-      [self removeObjectForKey: key];
+        [self removeObjectForKey: key];
     }
-  else
+    else
     {
-      [self setObject: value forKey: key];
+        [self setObject: value forKey: key];
     }
 }
 @end
