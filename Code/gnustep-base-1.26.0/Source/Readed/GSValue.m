@@ -11,9 +11,6 @@
 }
 @end
 
-/* This is the real, general purpose value object.  I've implemented all the
- methods here (like pointValue) even though most likely, other concrete
- subclasses were created to handle these types */
 
 @implementation GSValue
 
@@ -55,17 +52,10 @@ typeSize(const char* type)
 }
 
 // Allocating and Initializing
-
+// Here, NSValue alloc a memory to cache the value, and the value type string info.
 - (id) initWithBytes: (const void *)value
             objCType: (const char *)type
 {
-    if (!value || !type)
-    {
-        NSLog(@"Tried to create NSValue with NULL value or NULL type");
-        DESTROY(self);
-        return nil;
-    }
-    
     self = [super init];
     if (self != nil)
     {
@@ -86,7 +76,6 @@ typeSize(const char* type)
         objctype = (char *)NSZoneMalloc([self zone], size + 1);
         strncpy(objctype, type, size);
         objctype[size] = '\0';
-        // 这里, 通过 C 函数, 把 objcType 进行了记录.
     }
     return self;
 }
@@ -101,7 +90,6 @@ typeSize(const char* type)
 }
 
 // Accessing Data
-// 传递出去的, 就是存储的二进制值, 没有任何的改变, 并且是 copy. get 函数不能有副作用的.
 - (void) getValue: (void *)value
 {
     unsigned	size;
@@ -131,7 +119,7 @@ typeSize(const char* type)
     return hash;
 }
 
-// 指针相同, 类相同, type 相同, 值相同.
+// pointer, class, primitive type, memory compare.
 - (BOOL) isEqualToValue: (NSValue*)aValue
 {
     if (aValue == self)
@@ -174,7 +162,9 @@ typeSize(const char* type)
     return *((id *)data); // 直接返回, 传出去的值没有经过 autorelease.
 }
 
-- (NSPoint) pointValue // 直接把值当做 point 处理, 在处理之前, 会做一次类型的检查. 不过, 只是检查长度没有检查内容??? 个人认为, 既然已经检查了, 不如完全的检查一下的好.
+// value is opaque, So you can see it as every type.
+
+- (NSPoint) pointValue
 {
     unsigned	size = typeSize(objctype);
     

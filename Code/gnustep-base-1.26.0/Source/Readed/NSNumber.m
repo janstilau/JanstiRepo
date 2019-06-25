@@ -20,14 +20,8 @@
 #  include <objc/runtime.h>
 #endif
 
-/*
- * NSNumber implementation.  This matches the behaviour of Apple's
- * implementation.  Values in the range -1 to 12 inclusive are mapped to
- * singletons.  All other values are mapped to the smallest signed value that
- * will store them, unless they are greater than LLONG_MAX, in which case
- * they are stored in an unsigned long long.
- * Booleans are handled as a special case since some stuff (notably interface
- * builder (nib) archives) needs to differentiate between booleans and integers.
+/**
+ * Every class has the same name 'value' instance variable. So macro can be used.
  */
 
 @interface NSSignedIntegerNumber : NSNumber

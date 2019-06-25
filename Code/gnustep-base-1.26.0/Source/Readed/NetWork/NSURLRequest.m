@@ -121,45 +121,6 @@
 
 - (BOOL) isEqual: (id)aRequest
 {
-//    if ([aRequest isKindOfClass: [NSURLRequest class]] == NO)
-//    {
-//        return NO;
-//    }
-//    if (URL != aRequest->URL
-//        && [URL isEqual: aRequest->URL] == NO)
-//    {
-//        return NO;
-//    }
-//    if (mainDocumentURL != aRequest->mainDocumentURL
-//        && [mainDocumentURL isEqual: aRequest->mainDocumentURL] == NO)
-//    {
-//        return NO;
-//    }
-//    if (method != aRequest->method
-//        && [method isEqual: aRequest->method] == NO)
-//    {
-//        return NO;
-//    }
-//    if (body != aRequest->body
-//        && [body isEqual: aRequest->body] == NO)
-//    {
-//        return NO;
-//    }
-//    if (bodyStream != aRequest->bodyStream
-//        && [bodyStream isEqual: aRequest->bodyStream] == NO)
-//    {
-//        return NO;
-//    }
-//    if (properties != aRequest->properties
-//        && [properties isEqual: aRequest->properties] == NO)
-//    {
-//        return NO;
-//    }
-//    if (headers != aRequest->headers
-//        && [headers isEqual: aRequest->headers] == NO)
-//    {
-//        return NO;
-//    }
     return YES;
 }
 

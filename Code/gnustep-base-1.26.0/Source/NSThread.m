@@ -1030,11 +1030,6 @@ unregisterActiveThread(NSThread *thread)
         [NSException raise: NSInternalInconsistencyException
                     format: @"Deallocating an active thread without [+exit]!"];
     }
-    DESTROY(_runLoopInfo);
-    DESTROY(_thread_dictionary);
-    DESTROY(_target);
-    DESTROY(_arg);
-    DESTROY(_name);
     if (_autorelease_vars.pool_cache != 0)
     {
         [NSAutoreleasePool _endThread: self];
