@@ -11,10 +11,10 @@
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        
-        NSMutableArray *nums = [NSMutableArray arrayWithCapacity:10];
-        for (int i = 0; i < 10; ++i) {
-            int aNum = arc4random_uniform(50);
+        int count = 100;
+        NSMutableArray *nums = [NSMutableArray arrayWithCapacity:count];
+        for (int i = 0; i < count; ++i) {
+            int aNum = arc4random_uniform(2000);
             [nums addObject:@(aNum)];
         }
         NSLog(@"original - %@", nums);
@@ -25,14 +25,31 @@ int main(int argc, const char * argv[]) {
              NSLog(@"push remain - %@", [aQeueue allElements]);
         }
         
-        NSMutableArray *result = [NSMutableArray arrayWithCapacity:10];
+        NSMutableArray *result = [NSMutableArray arrayWithCapacity:count];
+        while (aQeueue.size > 50) {
+            id popValue = [aQeueue pop];
+            [result addObject:popValue];
+            NSLog(@"pop - %@", popValue);
+            NSLog(@"remain - %@", [aQeueue allElements]);
+            NSLog(@"remainCount - %@", @(aQeueue.size));
+        }
+        NSLog(@"result - %@", result);
+        
+        [result removeAllObjects];
+        for (int i = 0; i < count; ++i) {
+            int aNum = arc4random_uniform(2000);
+            [nums addObject:@(aNum)];
+        }
+        for (NSNumber *num in nums) {
+            [aQeueue push:num];
+            NSLog(@"push remain - %@", [aQeueue allElements]);
+        }
         while (!aQeueue.empty) {
             id popValue = [aQeueue pop];
             [result addObject:popValue];
             NSLog(@"pop - %@", popValue);
             NSLog(@"remain - %@", [aQeueue allElements]);
         }
-        
         NSLog(@"result - %@", result);
     }
     return 0;

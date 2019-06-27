@@ -64,7 +64,8 @@ static const int kDefaultCapacity = 10;
 }
 
 - (NSArray *)allElements {
-    return [_datas copy];
+    if (self.empty) { return @[]; }
+    return [_datas subarrayWithRange:NSMakeRange(1, _datas.count-1)];
 }
 
 - (void)clear {
