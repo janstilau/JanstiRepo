@@ -13,25 +13,14 @@
 @class  NSArray;
 @class	NSDate;
 @class	NSMutableDictionary;
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-    
-    /**
-     * This class encapsulates OpenStep threading.  See [NSLock] and its
-     * subclasses for handling synchronisation between threads.<br />
-     * Each process begins with a main thread and additional threads can
-     * be created using NSThread.  The GNUstep implementation of OpenStep
-     * has been carefully designed so that the internals of the base
-     * library do not use threading (except for methods which explicitly
-     * deal with threads of course) so that you can write applications
-     * without threading.  Non-threaded applications are more efficient
-     * (no locking is required) and are easier to debug during development.
-     */
-    @interface NSThread : NSObject
+/**
+ * This class encapsulates OpenStep threading.  See [NSLock] and its
+ * subclasses for handling synchronisation between threads.<br />
+ * Each process begins with a main thread and additional threads can
+ * be created using NSThread.
+ */
+@interface NSThread : NSObject
 {
-#if	GS_EXPOSE(NSThread)
 @public
     id			_target;
     id			_arg;
@@ -46,19 +35,6 @@ extern "C" {
     struct autorelease_thread_vars _autorelease_vars;
     id			_gcontext;
     void                  *_runLoopInfo;  // Per-thread runloop related info.
-#endif
-#if     GS_NONFRAGILE
-#  if defined(GS_NSThread_IVARS)
-@public GS_NSThread_IVARS;
-#  endif
-#else
-    /* Pointer to private additional data used to avoid breaking ABI
-     * when we don't have the non-fragile ABI available.
-     * Use this mechanism rather than changing the instance variable
-     * layout (see Source/GSInternal.h for details).
-     */
-@private id _internal GS_UNUSED_IVAR;
-#endif
 }
 
 /**
@@ -195,15 +171,15 @@ extern "C" {
 #endif
 
 @end
-    
-    /**
-     * Extra methods to permit messages to be sent to an object such that they
-     * are executed in <em>another</em> thread.<br />
-     * The main thread is the thread in which the GNUstep system is started,
-     * and where the GNUstep gui is used, it is the thread in which gui
-     * drawing operations <strong>must</strong> be performed.
-     */
-    @interface	NSObject(NSThreadPerformAdditions)
+
+/**
+ * Extra methods to permit messages to be sent to an object such that they
+ * are executed in <em>another</em> thread.<br />
+ * The main thread is the thread in which the GNUstep system is started,
+ * and where the GNUstep gui is used, it is the thread in which gui
+ * drawing operations <strong>must</strong> be performed.
+ */
+@interface	NSObject(NSThreadPerformAdditions)
 #if	GS_API_VERSION(MAC_OS_X_VERSION_10_2, GS_API_LATEST)
 /**
  * <p>This method performs aSelector on the receiver, passing anObject as
@@ -299,11 +275,11 @@ extern "C" {
  * and passing anObject (which may be nil) as the argument.
  */
 - (void) performSelectorInBackground: (SEL)aSelector
-                          withObject: (id)anObject; 
+                          withObject: (id)anObject;
 #endif
 @end
-    
-    @interface NSThread (CallStackSymbols)
+
+@interface NSThread (CallStackSymbols)
 #if	GS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 /** Returns an array of NSString objects representing the current stack
  * in an implementation-defined format. May return an empty array if
@@ -312,43 +288,43 @@ extern "C" {
 + (NSArray *) callStackSymbols;
 #endif
 @end
-    
+
 #if	GS_API_VERSION(GS_API_NONE, GS_API_NONE)
-    /*
-     * Don't use the following functions unless you really know what you are 
-     * doing ! 
-     * The following functions are low-levelish and special. 
-     * They are meant to make it possible to run GNUstep code in threads 
-     * created in completely different environment, eg inside a JVM.
-     *
-     * If you use them, make sure you initialize the NSThread class inside
-     * (what you consider to be your) main thread, before registering any
-     * other thread.  To initialize NSThread, simply call GSCurrentThread
-     * ().  The main thread will not need to be registered.  
-     */
-    
-    /*
-     * Register an external thread (created using your OS thread interface
-     * directly) to GNUstep.  This means that it creates a NSThread object
-     * corresponding to the current thread, and sets things up so that you
-     * can run GNUstep code inside the thread.  If the thread was not
-     * known to GNUstep, this function registers it, and returns YES.  If
-     * the thread was already known to GNUstep, this function does nothing
-     * and returns NO.  */
-    GS_EXPORT BOOL GSRegisterCurrentThread (void);
-    /*
-     * Unregister the current thread from GNUstep.  You must only
-     * unregister threads which have been register using
-     * registerCurrentThread ().  This method is basically the same as
-     * `+exit', but does not exit the thread - just destroys all objects
-     * associated with the thread.  Warning: using any GNUstep code after
-     * this method call is not safe.  Posts an NSThreadWillExit
-     * notification.  */
-    GS_EXPORT void GSUnregisterCurrentThread (void);
-    
-    /* Internal API used by traced locks.
-     */
-    @interface NSThread (GSLockInfo)
+/*
+ * Don't use the following functions unless you really know what you are
+ * doing !
+ * The following functions are low-levelish and special.
+ * They are meant to make it possible to run GNUstep code in threads
+ * created in completely different environment, eg inside a JVM.
+ *
+ * If you use them, make sure you initialize the NSThread class inside
+ * (what you consider to be your) main thread, before registering any
+ * other thread.  To initialize NSThread, simply call GSCurrentThread
+ * ().  The main thread will not need to be registered.
+ */
+
+/*
+ * Register an external thread (created using your OS thread interface
+ * directly) to GNUstep.  This means that it creates a NSThread object
+ * corresponding to the current thread, and sets things up so that you
+ * can run GNUstep code inside the thread.  If the thread was not
+ * known to GNUstep, this function registers it, and returns YES.  If
+ * the thread was already known to GNUstep, this function does nothing
+ * and returns NO.  */
+GS_EXPORT BOOL GSRegisterCurrentThread (void);
+/*
+ * Unregister the current thread from GNUstep.  You must only
+ * unregister threads which have been register using
+ * registerCurrentThread ().  This method is basically the same as
+ * `+exit', but does not exit the thread - just destroys all objects
+ * associated with the thread.  Warning: using any GNUstep code after
+ * this method call is not safe.  Posts an NSThreadWillExit
+ * notification.  */
+GS_EXPORT void GSUnregisterCurrentThread (void);
+
+/* Internal API used by traced locks.
+ */
+@interface NSThread (GSLockInfo)
 
 /* Removes the mutex (either as the one we are waiting for or as a held mutex.
  * For internal use only ... do not call this method.<br />
@@ -367,54 +343,41 @@ extern "C" {
 - (NSString *) mutexWait: (id)mutex;
 
 @end
-    
-#endif
-    
-    /*
-     * Notification Strings.
-     * NSBecomingMultiThreaded and NSThreadExiting are defined for strict
-     * OpenStep compatibility, the actual notification names are the more
-     * modern OPENSTEP/MacOS versions.
-     */
-    
-    /**
-     *  Notification posted the first time a new [NSThread] is created or a
-     *  separate thread from another library is registered in an application.
-     *  (The initial thread that a program starts with does <em>not</em>
-     *  post this notification.)  Before such a notification has been posted you
-     *  can assume the application is in single-threaded mode and locks are not
-     *  necessary.  Afterwards multiple threads <em>may</em> be running.
-     */
-    GS_EXPORT NSString* const NSWillBecomeMultiThreadedNotification;
-#define	NSBecomingMultiThreaded NSWillBecomeMultiThreadedNotification
-    
-    /**
-     *  Notification posted when an [NSThread] instance receives an exit message,
-     *  or an external thread has been deregistered.
-     */
-    GS_EXPORT NSString* const NSThreadWillExitNotification;
-#define NSThreadExiting NSThreadWillExitNotification
-    
-#if	GS_API_VERSION(GS_API_NONE, GS_API_NONE)
-    
-    /**
-     *  Notification posted whenever a new thread is started up.  This is a
-     *  GNUstep extension.
-     */
-    GS_EXPORT NSString* const NSThreadDidStartNotification;
-    
-#endif
-    
-#if	!NO_GNUSTEP
-#  if	defined(GNUSTEP_BASE_INTERNAL)
-#    import	"GNUstepBase/NSThread+GNUstepBase.h"
-#  else
-#    import	<GNUstepBase/NSThread+GNUstepBase.h>
-#  endif
-#endif
-    
-#if	defined(__cplusplus)
-}
+
 #endif
 
+/*
+ * Notification Strings.
+ * NSBecomingMultiThreaded and NSThreadExiting are defined for strict
+ * OpenStep compatibility, the actual notification names are the more
+ * modern OPENSTEP/MacOS versions.
+ */
+
+/**
+ *  Notification posted the first time a new [NSThread] is created or a
+ *  separate thread from another library is registered in an application.
+ *  (The initial thread that a program starts with does <em>not</em>
+ *  post this notification.)  Before such a notification has been posted you
+ *  can assume the application is in single-threaded mode and locks are not
+ *  necessary.  Afterwards multiple threads <em>may</em> be running.
+ */
+GS_EXPORT NSString* const NSWillBecomeMultiThreadedNotification;
+#define	NSBecomingMultiThreaded NSWillBecomeMultiThreadedNotification
+
+/**
+ *  Notification posted when an [NSThread] instance receives an exit message,
+ *  or an external thread has been deregistered.
+ */
+GS_EXPORT NSString* const NSThreadWillExitNotification;
+#define NSThreadExiting NSThreadWillExitNotification
+
+#if	GS_API_VERSION(GS_API_NONE, GS_API_NONE)
+
+/**
+ *  Notification posted whenever a new thread is started up.  This is a
+ *  GNUstep extension.
+ */
+GS_EXPORT NSString* const NSThreadDidStartNotification;
+
+#endif
 #endif /* __NSThread_h_GNUSTEP_BASE_INCLUDE */

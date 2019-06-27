@@ -6,24 +6,19 @@
 #import	<Foundation/NSGeometry.h>
 #import	<Foundation/NSRange.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-    
-    @class NSString;
-    
-    /**
-     * The <code>NSValue</code> class can wrap a single primitive value as an
-     * object so it can be used in the containers and other places where an object
-     * reference is needed. Once initialized, an <code>NSValue</code> is
-     * immutable, and there is no <code>NSMutableValue</code> class. You
-     * initialize it by giving it a pointer to the primitive value, and you should
-     * be careful this does not get freed until after the <code>NSValue</code> is
-     * no longer used.
-     
-     这个类是不可变的, 并且它的作用, 就是包装 primitive value.
-     */
-    @interface NSValue : NSObject <NSCopying, NSCoding>
+
+@class NSString;
+
+/**
+ * The <code>NSValue</code> class can wrap a single primitive value as an
+ * object so it can be used in the containers and other places where an object
+ * reference is needed. Once initialized, an <code>NSValue</code> is
+ * immutable, and there is no <code>NSMutableValue</code> class. You
+ * initialize it by giving it a pointer to the primitive value, and you should
+ * be careful this does not get freed until after the <code>NSValue</code> is
+ * no longer used.
+ */
+@interface NSValue : NSObject <NSCopying, NSCoding>
 
 // Allocating and Initializing 
 
@@ -145,13 +140,15 @@ extern "C" {
 - (NSPoint) pointValue;
 
 @end
-    
-    /**
-     * Subclass of [NSValue] offering convenience methods for initializing from
-     * and accessing as any C primitive numeric type.  On access, the value will
-     * be type-converted if necessary, using standard C conversion rules.
-     */
-    @interface NSNumber : NSValue <NSCopying,NSCoding>
+
+/**
+ * Subclass of [NSValue] offering convenience methods for initializing from
+ * and accessing as any C primitive numeric type.  On access, the value will
+ * be type-converted if necessary, using standard C conversion rules.
+ */
+
+
+@interface NSNumber : NSValue <NSCopying,NSCoding>
 
 // Allocating and Initializing
 
@@ -324,21 +321,17 @@ extern "C" {
 #endif
 
 @end
-    
+
 #if OS_API_VERSION(GS_API_NONE, GS_API_NONE)
-    
-    /** Note: Defines a method that is not in the OpenStep spec, but makes
-     subclassing easier. */
-    @interface NSValue (Subclassing)
+
+/** Note: Defines a method that is not in the OpenStep spec, but makes
+ subclassing easier. */
+@interface NSValue (Subclassing)
 
 /** Used by value: withObjCType: to determine the concrete subclass to alloc. */
 + (Class) valueClassWithObjCType: (const char*)type;
 
 @end
-#endif
-    
-#if	defined(__cplusplus)
-}
 #endif
 
 #if     !NO_GNUSTEP && !defined(GNUSTEP_BASE_INTERNAL)

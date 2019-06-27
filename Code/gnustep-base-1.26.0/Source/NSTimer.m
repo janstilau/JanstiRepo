@@ -1,32 +1,3 @@
-/** Implementation of NSTimer for GNUstep
-   Copyright (C) 1995, 1996, 1999 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Created: March 1996
-
-   Rewrite by: Richard Frith-Macdonald <rfm@gnu.org>
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSTimer class reference</title>
-   $Date$ $Revision$
-   */
-
 #import "common.h"
 #define	EXPOSE_NSTimer_IVARS	1
 #import "Foundation/NSTimer.h"
@@ -56,32 +27,32 @@ static Class	NSDate_class;
 
 + (void) initialize
 {
-  if (self == [NSTimer class])
+    if (self == [NSTimer class])
     {
-      NSDate_class = [NSGDate class];
+        NSDate_class = [NSGDate class];
     }
 }
 
 - (NSString*) description
 {
-  NSString      *s = [super description];
-
-  if ([self isValid])
+    NSString      *s = [super description];
+    
+    if ([self isValid])
     {
-      if (_selector == 0)
+        if (_selector == 0)
         {
-          return [NSString stringWithFormat: @"%@ at %@ invokes %@",
-            s, [self fireDate], _target];
+            return [NSString stringWithFormat: @"%@ at %@ invokes %@",
+                    s, [self fireDate], _target];
         }
-      else
+        else
         {
-          return [NSString stringWithFormat: @"%@ at %@ sends %@ to (%@)",
-            s, [self fireDate], NSStringFromSelector(_selector), _target];
+            return [NSString stringWithFormat: @"%@ at %@ sends %@ to (%@)",
+                    s, [self fireDate], NSStringFromSelector(_selector), _target];
         }
     }
-  else
+    else
     {
-      return [NSString stringWithFormat: @"%@ (invalidated)", s];
+        return [NSString stringWithFormat: @"%@ (invalidated)", s];
     }
 }
 
@@ -89,8 +60,8 @@ static Class	NSDate_class;
  */
 - (id) init
 {
-  DESTROY(self);
-  return nil;
+    DESTROY(self);
+    return nil;
 }
 
 /** <init />
@@ -110,39 +81,39 @@ static Class	NSDate_class;
  * invalidated.
  */
 - (id) initWithFireDate: (NSDate*)fd
-	       interval: (NSTimeInterval)ti
-		 target: (id)object
-	       selector: (SEL)selector
-	       userInfo: (id)info
-		repeats: (BOOL)f
+               interval: (NSTimeInterval)ti
+                 target: (id)object
+               selector: (SEL)selector
+               userInfo: (id)info
+                repeats: (BOOL)f
 {
-  if (ti <= 0.0)
+    if (ti <= 0.0)
     {
-      ti = 0.0001;
+        ti = 0.0001;
     }
-  if (fd == nil)
+    if (fd == nil)
     {
-      _date = [[NSDate_class allocWithZone: NSDefaultMallocZone()]
-        initWithTimeIntervalSinceNow: ti];
+        _date = [[NSDate_class allocWithZone: NSDefaultMallocZone()]
+                 initWithTimeIntervalSinceNow: ti];
     }
-  else
+    else
     {
-      _date = [fd copyWithZone: NSDefaultMallocZone()];
+        _date = [fd copyWithZone: NSDefaultMallocZone()];
     }
-  _target = RETAIN(object);
-  _selector = selector;
-  _info = RETAIN(info);
-  if (f == YES)
+    _target = RETAIN(object);
+    _selector = selector;
+    _info = RETAIN(info);
+    if (f == YES)
     {
-      _repeats = YES;
-      _interval = ti;
+        _repeats = YES;
+        _interval = ti;
     }
-  else
+    else
     {
-      _repeats = NO;
-      _interval = 0.0;
+        _repeats = NO;
+        _interval = 0.0;
     }
-  return self;
+    return self;
 }
 
 /**
@@ -151,15 +122,15 @@ static Class	NSDate_class;
  * NB. To make the timer operate, you must add it to a run loop.
  */
 + (NSTimer*) timerWithTimeInterval: (NSTimeInterval)ti
-		        invocation: (NSInvocation*)invocation
-			   repeats: (BOOL)f
+                        invocation: (NSInvocation*)invocation
+                           repeats: (BOOL)f
 {
-  return AUTORELEASE([[self alloc] initWithFireDate: nil
-					   interval: ti
-					     target: invocation
-					   selector: NULL
-					   userInfo: nil
-					    repeats: f]);
+    return AUTORELEASE([[self alloc] initWithFireDate: nil
+                                             interval: ti
+                                               target: invocation
+                                             selector: NULL
+                                             userInfo: nil
+                                              repeats: f]);
 }
 
 /**
@@ -170,17 +141,17 @@ static Class	NSDate_class;
  * NB. To make the timer operate, you must add it to a run loop.
  */
 + (NSTimer*) timerWithTimeInterval: (NSTimeInterval)ti
-			    target: (id)object
-			  selector: (SEL)selector
-			  userInfo: (id)info
-			   repeats: (BOOL)f
+                            target: (id)object
+                          selector: (SEL)selector
+                          userInfo: (id)info
+                           repeats: (BOOL)f
 {
-  return AUTORELEASE([[self alloc] initWithFireDate: nil
-					   interval: ti
-					     target: object
-					   selector: selector
-					   userInfo: info
-					    repeats: f]);
+    return AUTORELEASE([[self alloc] initWithFireDate: nil
+                                             interval: ti
+                                               target: object
+                                             selector: selector
+                                             userInfo: info
+                                              repeats: f]);
 }
 
 /**
@@ -190,18 +161,18 @@ static Class	NSDate_class;
  * will fire in the default run loop mode.
  */
 + (NSTimer*) scheduledTimerWithTimeInterval: (NSTimeInterval)ti
-				 invocation: (NSInvocation*)invocation
-				    repeats: (BOOL)f
+                                 invocation: (NSInvocation*)invocation
+                                    repeats: (BOOL)f
 {
-  id t = [[self alloc] initWithFireDate: nil
-			       interval: ti
-				 target: invocation
-			       selector: NULL
-			       userInfo: nil
-				repeats: f];
-  [[NSRunLoop currentRunLoop] addTimer: t forMode: NSDefaultRunLoopMode];
-  RELEASE(t);
-  return t;
+    id t = [[self alloc] initWithFireDate: nil
+                                 interval: ti
+                                   target: invocation
+                                 selector: NULL
+                                 userInfo: nil
+                                  repeats: f];
+    [[NSRunLoop currentRunLoop] addTimer: t forMode: NSDefaultRunLoopMode];
+    RELEASE(t);
+    return t;
 }
 
 /**
@@ -213,30 +184,30 @@ static Class	NSDate_class;
  * will fire in the default run loop mode.
  */
 + (NSTimer*) scheduledTimerWithTimeInterval: (NSTimeInterval)ti
-				     target: (id)object
-				   selector: (SEL)selector
-				   userInfo: (id)info
-				    repeats: (BOOL)f
+                                     target: (id)object
+                                   selector: (SEL)selector
+                                   userInfo: (id)info
+                                    repeats: (BOOL)f
 {
-  id t = [[self alloc] initWithFireDate: nil
-			       interval: ti
-				 target: object
-			       selector: selector
-			       userInfo: info
-				repeats: f];
-  [[NSRunLoop currentRunLoop] addTimer: t forMode: NSDefaultRunLoopMode];
-  RELEASE(t);
-  return t;
+    id t = [[self alloc] initWithFireDate: nil
+                                 interval: ti
+                                   target: object
+                                 selector: selector
+                                 userInfo: info
+                                  repeats: f];
+    [[NSRunLoop currentRunLoop] addTimer: t forMode: NSDefaultRunLoopMode];
+    RELEASE(t);
+    return t;
 }
 
 - (void) dealloc
 {
-  if (_invalidated == NO)
+    if (_invalidated == NO)
     {
-      [self invalidate];
+        [self invalidate];
     }
-  RELEASE(_date);
-  [super dealloc];
+    RELEASE(_date);
+    [super dealloc];
 }
 
 /**
@@ -247,55 +218,55 @@ static Class	NSDate_class;
  */
 - (void) fire
 {
-  /* We check that we have not been invalidated before we fire.
-   */
-  if (NO == _invalidated)
+    /* We check that we have not been invalidated before we fire.
+     */
+    if (NO == _invalidated)
     {
-      id	target;
-
-      /* We retain the target so it won't be deallocated while we are using it
-       * (if this timer gets invalidated while we are firing).
-       */
-      target = RETAIN(_target);
-
-      if (_selector == 0)
-	{
-	  NS_DURING
-	    {
-	      [(NSInvocation*)target invoke];
-	    }
-	  NS_HANDLER
-	    {
-	      NSLog(@"*** NSTimer ignoring exception '%@' (reason '%@') "
-	        @"raised during posting of timer with target %s(%s) "
-		@"and selector '%@'",
-		[localException name], [localException reason],
-                GSClassNameFromObject(target),
-                GSObjCIsInstance(target) ? "instance" : "class",
-		NSStringFromSelector([target selector]));
-	    }
-	  NS_ENDHANDLER
-	}
-      else
-	{
-	  NS_DURING
-	    {
-	      [target performSelector: _selector withObject: self];
-	    }
-	  NS_HANDLER
-	    {
-	      NSLog(@"*** NSTimer ignoring exception '%@' (reason '%@') "
-		@"raised during posting of timer with target %p and "
-		@"selector '%@'",
-		[localException name], [localException reason], target,
-		NSStringFromSelector(_selector));
-	    }
-	  NS_ENDHANDLER
-	}
-      RELEASE(target);
-      if (_repeats == NO)
+        id	target;
+        
+        /* We retain the target so it won't be deallocated while we are using it
+         * (if this timer gets invalidated while we are firing).
+         */
+        target = RETAIN(_target);
+        
+        if (_selector == 0)
         {
-          [self invalidate];
+            NS_DURING
+            {
+                [(NSInvocation*)target invoke];
+            }
+            NS_HANDLER
+            {
+                NSLog(@"*** NSTimer ignoring exception '%@' (reason '%@') "
+                      @"raised during posting of timer with target %s(%s) "
+                      @"and selector '%@'",
+                      [localException name], [localException reason],
+                      GSClassNameFromObject(target),
+                      GSObjCIsInstance(target) ? "instance" : "class",
+                      NSStringFromSelector([target selector]));
+            }
+            NS_ENDHANDLER
+        }
+        else
+        {
+            NS_DURING
+            {
+                [target performSelector: _selector withObject: self];
+            }
+            NS_HANDLER
+            {
+                NSLog(@"*** NSTimer ignoring exception '%@' (reason '%@') "
+                      @"raised during posting of timer with target %p and "
+                      @"selector '%@'",
+                      [localException name], [localException reason], target,
+                      NSStringFromSelector(_selector));
+            }
+            NS_ENDHANDLER
+        }
+        RELEASE(target);
+        if (_repeats == NO)
+        {
+            [self invalidate];
         }
     }
 }
@@ -308,15 +279,15 @@ static Class	NSDate_class;
  */
 - (void) invalidate
 {
-  /* OPENSTEP allows this method to be called multiple times. */
-  _invalidated = YES;
-  if (_target != nil)
+    /* OPENSTEP allows this method to be called multiple times. */
+    _invalidated = YES;
+    if (_target != nil)
     {
-      DESTROY(_target);
+        DESTROY(_target);
     }
-  if (_info != nil)
+    if (_info != nil)
     {
-      DESTROY(_info);
+        DESTROY(_info);
     }
 }
 
@@ -325,13 +296,13 @@ static Class	NSDate_class;
  */
 - (BOOL) isValid
 {
-  if (_invalidated == NO)
+    if (_invalidated == NO)
     {
-      return YES;
+        return YES;
     }
-  else
+    else
     {
-      return NO;
+        return NO;
     }
 }
 
@@ -340,7 +311,7 @@ static Class	NSDate_class;
  */
 - (NSDate*) fireDate
 {
-  return _date;
+    return _date;
 }
 
 /**
@@ -352,7 +323,7 @@ static Class	NSDate_class;
  */
 - (void) setFireDate: (NSDate*)fireDate
 {
-  ASSIGN(_date, fireDate);
+    ASSIGN(_date, fireDate);
 }
 
 /**
@@ -361,7 +332,7 @@ static Class	NSDate_class;
  */
 - (NSTimeInterval) timeInterval
 {
-  return _interval;
+    return _interval;
 }
 
 /**
@@ -370,7 +341,7 @@ static Class	NSDate_class;
  */
 - (id) userInfo
 {
-  return _info;
+    return _info;
 }
 
 /**
@@ -378,20 +349,20 @@ static Class	NSDate_class;
  */
 - (NSComparisonResult) compare: (id)anotherTimer
 {
-  if (anotherTimer == self)
+    if (anotherTimer == self)
     {
-      return NSOrderedSame;
+        return NSOrderedSame;
     }
-  else if (anotherTimer == nil)
+    else if (anotherTimer == nil)
     {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"nil argument for compare:"];
+        [NSException raise: NSInvalidArgumentException
+                    format: @"nil argument for compare:"];
     }
-  else
+    else
     {
-      return [_date compare: ((NSTimer*)anotherTimer)->_date];
+        return [_date compare: ((NSTimer*)anotherTimer)->_date];
     }
-  return 0;
+    return 0;
 }
 
 @end

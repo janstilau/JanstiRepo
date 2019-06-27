@@ -10,6 +10,7 @@
 @interface	GSPlaceholderValue : NSValue
 @end
 
+// All the class is just a name.
 @class	GSValue;
 @interface GSValue : NSObject	// Help the compiler
 @end
@@ -86,37 +87,7 @@ static NSLock			*placeholderLock;
 {
     if (self == abstractClass)
     {
-        if (z == NSDefaultMallocZone() || z == 0)
-        {
-            /*
-             * As a special case, we can return a placeholder for a value
-             * in the default malloc zone extremely efficiently.
-             */
-            return defaultPlaceholderValue;
-        }
-        else
-        {
-            id	obj;
-            
-            /*
-             * For anything other than the default zone, we need to
-             * locate the correct placeholder in the (lock protected)
-             * table of placeholders.
-             */
-            [placeholderLock lock];
-            obj = (id)NSMapGet(placeholderMap, (void*)z);
-            if (obj == nil)
-            {
-                /*
-                 * There is no placeholder object for this zone, so we
-                 * create a new one and use that.
-                 */
-                obj = (id)NSAllocateObject(GSPlaceholderValueClass, 0, z);
-                NSMapInsert(placeholderMap, (void*)z, (void*)obj);
-            }
-            [placeholderLock unlock];
-            return obj;
-        }
+        return defaultPlaceholderValue;
     }
     else
     {
@@ -125,14 +96,11 @@ static NSLock			*placeholderLock;
 }
 
 // NSCopying - always a simple retain.
-
-// 不可变对象, 直接返回自己.
 - (id) copy
 {
     return RETAIN(self);
 }
 
-// 不可变对象, 直接返回自己
 - (id) copyWithZone: (NSZone *)zone
 {
     return RETAIN(self);
@@ -141,12 +109,7 @@ static NSLock			*placeholderLock;
 /* Returns the concrete class associated with the type encoding */
 + (Class) valueClassWithObjCType: (const char *)type
 {
-    Class	theClass = concreteClass;
-    
-    /* Let someone else deal with this error */
-    if (!type)
-        return theClass;
-    
+    Class	theClass = nil;
     /* Try for an exact type match.
      */
     if (strcmp(@encode(id), type) == 0)
@@ -162,8 +125,6 @@ static NSLock			*placeholderLock;
     else if (strcmp(@encode(NSSize), type) == 0)
         theClass = sizeValueClass;
     
-    /* Try for equivalent types match.
-     */
     else if (GSSelectorTypesMatch(@encode(id), type))
         theClass = nonretainedObjectValueClass;
     else if (GSSelectorTypesMatch(@encode(NSPoint), type))

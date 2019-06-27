@@ -1,36 +1,9 @@
-/* Interface for NSAutoreleasePool for GNUStep
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Date: 1995
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
-
 #ifndef __NSAutoreleasePool_h_GNUSTEP_BASE_INCLUDE
 #define __NSAutoreleasePool_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 @class NSAutoreleasePool;
 @class NSThread;
@@ -39,60 +12,60 @@ extern "C" {
 /**
  * Each thread has its own copy of these variables.
  <example>
-{
-  NSAutoreleasePool *current_pool; // current pool for thread
-  unsigned total_objects_count;    // total #/autoreleased objects over thread's lifetime
-  id *pool_cache;                  // cache of previously-allocated pools,
-  int pool_cache_size;             //  used internally for recycling
-  int pool_cache_count;
-}
+ {
+ NSAutoreleasePool *current_pool; // current pool for thread
+ unsigned total_objects_count;    // total #/autoreleased objects over thread's lifetime
+ id *pool_cache;                  // cache of previously-allocated pools,
+ int pool_cache_size;             //  used internally for recycling
+ int pool_cache_count;
+ }
  </example>
-*/
+ */
 typedef struct autorelease_thread_vars
 {
-  /* The current, default NSAutoreleasePool for the calling thread;
+    /* The current, default NSAutoreleasePool for the calling thread;
      the one that will hold objects that are arguments to
      [NSAutoreleasePool +addObject:]. */
-  __unsafe_unretained NSAutoreleasePool *current_pool;
-
-  /* The total number of objects autoreleased since the thread was
+    __unsafe_unretained NSAutoreleasePool *current_pool;
+    
+    /* The total number of objects autoreleased since the thread was
      started, or since -resetTotalAutoreleasedObjects was called
      in this thread. (if compiled in) */
-  unsigned total_objects_count;
-
-  /* A cache of NSAutoreleasePool's already alloc'ed.  Caching old pools
+    unsigned total_objects_count;
+    
+    /* A cache of NSAutoreleasePool's already alloc'ed.  Caching old pools
      instead of deallocating and re-allocating them will save time. */
-  __unsafe_unretained id *pool_cache;
-  int pool_cache_size;
-  int pool_cache_count;
+    __unsafe_unretained id *pool_cache;
+    int pool_cache_size;
+    int pool_cache_count;
 } thread_vars_struct;
 
 /* Initialize an autorelease_thread_vars structure for a new thread.
-   This function is called in NSThread each time an NSThread is created.
-   TV should be of type `struct autorelease_thread_vars *' */
+ This function is called in NSThread each time an NSThread is created.
+ TV should be of type `struct autorelease_thread_vars *' */
 #define init_autorelease_thread_vars(TV) \
 memset (TV, 0, sizeof (__typeof__ (*TV)))
 
 
 
 /**
- *  Each pool holds its objects-to-be-released in a linked-list of 
-    these structures.
-    <example>
-{
-  struct autorelease_array_list *next;
-  unsigned size;
-  unsigned count;
-  id objects[0];
-}
-    </example>
+ *  Each pool holds its objects-to-be-released in a linked-list of
+ these structures.
+ <example>
+ {
+ struct autorelease_array_list *next;
+ unsigned size;
+ unsigned count;
+ id objects[0];
+ }
+ </example>
  */
 typedef struct autorelease_array_list
 {
-  struct autorelease_array_list *next;
-  unsigned size;
-  unsigned count;
-  __unsafe_unretained id objects[0];
+    struct autorelease_array_list *next;
+    unsigned size;
+    unsigned count;
+    __unsafe_unretained id objects[0];
 } array_list_struct;
 
 
@@ -134,9 +107,9 @@ typedef struct autorelease_array_list
  * <p>
  *   This mechanism provides a simple but controllable and reasonably
  *   efficient way of managing temporary objects.  An object can be
- *   autoreleased and then passed around and used until the topmost 
+ *   autoreleased and then passed around and used until the topmost
  *   pool in the stack is destroyed.
- * </p>   
+ * </p>
  * <p>
  *   Most methods return objects which are either owned by autorelease
  *   pools or by the receiver of the method, so the lifetime of the
@@ -179,30 +152,30 @@ typedef struct autorelease_array_list
  * </deflist>
  */
 NS_AUTOMATED_REFCOUNT_UNAVAILABLE
-@interface NSAutoreleasePool : NSObject 
+@interface NSAutoreleasePool : NSObject
 {
 #if	GS_EXPOSE(NSAutoreleasePool) && !__has_feature(objc_arc)
-  /* For re-setting the current pool when we are dealloc'ed. */
-  NSAutoreleasePool *_parent;
-  /* This pointer to our child pool is  necessary for co-existing
+    /* For re-setting the current pool when we are dealloc'ed. */
+    NSAutoreleasePool *_parent;
+    /* This pointer to our child pool is  necessary for co-existing
      with exceptions. */
-  NSAutoreleasePool *_child;
-  /* A collection of the objects to be released. */
-  struct autorelease_array_list *_released;
-  struct autorelease_array_list *_released_head;
-  /* The total number of objects autoreleased in this pool. */
-  unsigned _released_count;
-  /* The method to add an object to this pool */
-  void 	(*_addImp)(id, SEL, id);
+    NSAutoreleasePool *_child;
+    /* A collection of the objects to be released. */
+    struct autorelease_array_list *_released;
+    struct autorelease_array_list *_released_head;
+    /* The total number of objects autoreleased in this pool. */
+    unsigned _released_count;
+    /* The method to add an object to this pool */
+    void 	(*_addImp)(id, SEL, id);
 #endif
 #if     GS_NONFRAGILE
 #else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
+    /* Pointer to private additional data used to avoid breaking ABI
+     * when we don't have the non-fragile ABI available.
+     * Use this mechanism rather than changing the instance variable
+     * layout (see Source/GSInternal.h for details).
+     */
+@private id _internal GS_UNUSED_IVAR;
 #endif
 }
 
@@ -322,10 +295,6 @@ NS_AUTOMATED_REFCOUNT_UNAVAILABLE
  * This is a low cost (efficient) method which may be used to get rid of
  * autoreleased objects in the pool, but carry on using the pool.
  */
-- (void) emptyPool;
-#endif
-@end
-
 #if	defined(__cplusplus)
 }
 #endif
