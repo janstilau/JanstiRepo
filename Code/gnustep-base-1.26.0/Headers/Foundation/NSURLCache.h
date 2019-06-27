@@ -30,9 +30,10 @@ typedef enum
  */
 @interface NSCachedURLResponse : NSObject <NSCoding, NSCopying>
 {
-#if	GS_EXPOSE(NSCachedURLResponse)
-  void *_NSCachedURLResponseInternal;
-#endif
+    NSData            *data; // data is response data
+    NSURLResponse            *response; // data is response header.
+    NSDictionary            *userInfo;
+    NSURLCacheStoragePolicy    storagePolicy;
 }
 
 /**
@@ -73,12 +74,19 @@ typedef enum
 
 @end
 
+/**
+ * This is just a manager for cached response as the request for key.
+ * Cache response info and corresponding data.
+ */
 
 @interface NSURLCache : NSObject
 {
-#if	GS_EXPOSE(NSURLCache)
-  void *_NSURLCacheInternal;
-#endif
+    unsigned        diskCapacity;
+    unsigned        memoryCapacity;
+    unsigned        diskUsage;
+    unsigned        memoryUsage;
+    NSString        *path;
+    NSMutableDictionary    *memory;
 }
 
 /**

@@ -159,7 +159,7 @@ static BOOL                     (*nonBaseImp)(id, SEL, unichar) = 0;
 
 /* Macro to return the receiver if it is already immutable, but an
  * autoreleased copy otherwise.  Used where we have to return an
- * immutable string, but we don't want to change the parameter from 
+ * immutable string, but we don't want to change the parameter from
  * a mutable string to an immutable one.
  */
 #define	IMMUTABLE(S)	AUTORELEASE([(S) copyWithZone: NSDefaultMallocZone()])
@@ -1904,49 +1904,50 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * '+', '=' and '&amp;' characters used in such forms.  If you need to
  * add a string as a form field value (or name) you must add percent
  * escapes for those characters yourself.
+ 
+ So called percent escape.
+ It is aimed at remove all unsafe character in String. Every charcter out of the scope, will be transfer with %numnum format dta. ex. %E5%8E%89 %E5%AE%B3 is 厉害 in Chinese, and will be spilted into 3 bytes and every byte will be displayed in percent format.
  */
 - (NSString*) stringByAddingPercentEscapesUsingEncoding: (NSStringEncoding)e
 {
     NSData	*data = [self dataUsingEncoding: e];
-    NSString	*s = nil;
+    NSString	*result = nil;
     
-    if (data != nil)
+    if (data == nil) { return result; }
+    
+    unsigned char    *src = (unsigned char*)[data bytes];
+    unsigned int    dataLength = [data length];
+    unsigned char    *targetMemory;
+    unsigned int    spos = 0;
+    unsigned int    dpos = 0;
+    
+    targetMemory = (unsigned char*)NSZoneMalloc(NSDefaultMallocZone(), dataLength * 3);
+    while (spos < dataLength)
     {
-        unsigned char	*src = (unsigned char*)[data bytes];
-        unsigned int	slen = [data length];
-        unsigned char	*dst;
-        unsigned int	spos = 0;
-        unsigned int	dpos = 0;
+        unsigned char    c = src[spos++];
+        unsigned int    hi;
+        unsigned int    lo;
         
-        dst = (unsigned char*)NSZoneMalloc(NSDefaultMallocZone(), slen * 3);
-        while (spos < slen)
+        if (c <= 32 || c > 126 || c == 34 || c == 35 || c == 37
+            || c == 60 || c == 62 || c == 91 || c == 92 || c == 93
+            || c == 94 || c == 96 || c == 123 || c == 124 || c == 125)
         {
-            unsigned char	c = src[spos++];
-            unsigned int	hi;
-            unsigned int	lo;
-            
-            if (c <= 32 || c > 126 || c == 34 || c == 35 || c == 37
-                || c == 60 || c == 62 || c == 91 || c == 92 || c == 93
-                || c == 94 || c == 96 || c == 123 || c == 124 || c == 125)
-            {
-                dst[dpos++] = '%';
-                hi = (c & 0xf0) >> 4;
-                dst[dpos++] = (hi > 9) ? 'A' + hi - 10 : '0' + hi;
-                lo = (c & 0x0f);
-                dst[dpos++] = (lo > 9) ? 'A' + lo - 10 : '0' + lo;
-            }
-            else
-            {
-                dst[dpos++] = c;
-            }
+            targetMemory[dpos++] = '%';
+            hi = (c & 0xf0) >> 4; // the left 4 bits
+            targetMemory[dpos++] = (hi > 9) ? 'A' + hi - 10 : '0' + hi;
+            lo = (c & 0x0f); // the right 4 bits.
+            targetMemory[dpos++] = (lo > 9) ? 'A' + lo - 10 : '0' + lo;
         }
-        s = [[NSString alloc] initWithBytes: dst
-                                     length: dpos
-                                   encoding: NSASCIIStringEncoding];
-        NSZoneFree(NSDefaultMallocZone(), dst);
-        IF_NO_GC([s autorelease];)
+        else
+        {
+            targetMemory[dpos++] = c;
+        }
     }
-    return s;
+    result = [[NSString alloc] initWithBytes: targetMemory
+                                      length: dpos
+                                    encoding: NSASCIIStringEncoding];
+    NSZoneFree(NSDefaultMallocZone(), targetMemory);
+    return result;
 }
 
 /**
@@ -2092,7 +2093,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 - (NSString*) stringByReplacingOccurrencesOfString: (NSString*)replace
                                         withString: (NSString*)by
 {
-    return [self 
+    return [self
             stringByReplacingOccurrencesOfString: replace
             withString: by
             options: 0
@@ -2100,8 +2101,8 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 }
 
 /**
- * Returns a new string where the substring in the given range is replaced by 
- * the passed string. 
+ * Returns a new string where the substring in the given range is replaced by
+ * the passed string.
  */
 - (NSString*) stringByReplacingCharactersInRange: (NSRange)aRange 
                                       withString: (NSString*)by
@@ -2462,7 +2463,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                                 break;
                             }
                             pos++;
-                        }                        
+                        }
                     }
                 }
                 else
@@ -2488,7 +2489,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                                 break;
                             }
                             pos++;
-                        }                        
+                        }
                     }
                 }
                 GS_ENDITEMBUF2()
@@ -2670,7 +2671,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                                 break;
                             }
                             pos++;
-                        }                        
+                        }
                     }
                     else
                     {
@@ -2682,7 +2683,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                                 break;
                             }
                             pos++;
-                        }                        
+                        }
                     }
                 }
                 
@@ -2712,7 +2713,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
         if (NULL != coll)
         {
             NSRange       result = NSMakeRange(NSNotFound, 0);
-            UErrorCode    status = U_ZERO_ERROR; 
+            UErrorCode    status = U_ZERO_ERROR;
             NSUInteger    countSelf = searchRange.length;
             UStringSearch *search = NULL;
             GS_BEGINITEMBUF(charsSelf, (countSelf * sizeof(unichar)), unichar)
@@ -2732,7 +2733,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                 int32_t matchLength;
                 
                 if ((mask & NSBackwardsSearch) == NSBackwardsSearch)
-                {		
+                {
                     matchLocation = usearch_last(search, &status);
                 }
                 else
@@ -2763,7 +2764,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                             }
                         }
                     }
-                    else 
+                    else
                     {
                         result = NSMakeRange(searchRange.location
                                              + matchLocation, matchLength);
@@ -3718,7 +3719,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * eg. If the receiver is @"hello" then the provided buffer must be
  * at least six bytes long and the value of maxLength must be at least
  * six if NSASCIIStringEncoding is requested, but they must be at least
- * twelve if NSUnicodeStringEncoding is requested. 
+ * twelve if NSUnicodeStringEncoding is requested.
  */
 - (BOOL) getCString: (char*)buffer
           maxLength: (NSUInteger)maxLength
@@ -3896,7 +3897,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
         
         v = strtoul(ptr, 0, 10);
         return (int)v;
-    } 
+    }
 }
 
 - (NSInteger) integerValue
@@ -3917,7 +3918,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
         
         v = (uint64_t)strtoull(ptr, 0, 10);
         return (NSInteger)v;
-    } 
+    }
 }
 
 - (long long) longLongValue
@@ -3938,7 +3939,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
         
         l = strtoull(ptr, 0, 10);
         return (long long)l;
-    } 
+    }
 }
 
 // Working With Encodings
@@ -4469,7 +4470,7 @@ static NSFileManager *fm = nil;
     if (length > 0)
     {
         /* Trim trailing path separators as long as they are not part of
-         * the root. 
+         * the root.
          */
         aLength = length - 1;
         while (aLength > root && pathSepMember(buf[aLength]) == YES)
@@ -4537,8 +4538,8 @@ static NSFileManager *fm = nil;
     
     /* MacOS-X prohibits an extension beginning with a path separator,
      * but this code extends that a little to prohibit any root except
-     * one beginning with '~' from being used as an extension. 
-     */ 
+     * one beginning with '~' from being used as an extension.
+     */
     root = rootOf(aString, [aString length]);
     if (root > 0 && [aString characterAtIndex: 0] != '~')
     {
@@ -4898,91 +4899,95 @@ static NSFileManager *fm = nil;
 - (NSString*) stringByReplacingPercentEscapesUsingEncoding: (NSStringEncoding)e
 {
     NSMutableData	*d;
-    NSString	*s = nil;
-    
+    NSString	*result = nil;
+    // After PercentEscapes every char will be asscii char.
     d = [[self dataUsingEncoding: NSASCIIStringEncoding] mutableCopy];
-    if (d != nil)
+    if (d == nil) { return nil;}
+    
+    unsigned char    *charPool = (unsigned char*)[d mutableBytes];
+    unsigned        byteLength = [d length];
+    unsigned        iter = 0;
+    unsigned        charLocation = 0;
+    
+    while (iter < byteLength)
     {
-        unsigned char	*p = (unsigned char*)[d mutableBytes];
-        unsigned		l = [d length];
-        unsigned		i = 0;
-        unsigned		j = 0;
-        
-        while (i < l)
+        unsigned char    currentChar;
+        if ((currentChar = charPool[iter++]) == '%')
         {
-            unsigned char	t;
+            //Find a escape format bytes.
+            unsigned char    c;
             
-            if ((t = p[i++]) == '%')
+            if (iter >= byteLength)
             {
-                unsigned char	c;
-                
-                if (i >= l)
+                DESTROY(d);
+                break;
+            }
+            currentChar = charPool[iter++];
+            
+            if (isxdigit(currentChar))
+            {
+                if (currentChar <= '9')
                 {
-                    DESTROY(d);
-                    break;
+                    c = currentChar - '0';
                 }
-                t = p[i++];
-                
-                if (isxdigit(t))
+                else if (currentChar <= 'F')
                 {
-                    if (t <= '9')
-                    {
-                        c = t - '0';
-                    }
-                    else if (t <= 'F')
-                    {
-                        c = t - 'A' + 10;
-                    }
-                    else
-                    {
-                        c = t - 'a' + 10;
-                    }
+                    c = currentChar - 'A' + 10;
                 }
                 else
                 {
-                    DESTROY(d);
-                    break;
+                    c = currentChar - 'a' + 10;
                 }
-                c <<= 4;
-                
-                if (i >= l)
-                {
-                    DESTROY(d);
-                    break;
-                }
-                t = p[i++];
-                if (isxdigit(t))
-                {
-                    if (t <= '9')
-                    {
-                        c |= t - '0';
-                    }
-                    else if (t <= 'F')
-                    {
-                        c |= t - 'A' + 10;
-                    }
-                    else
-                    {
-                        c |= t - 'a' + 10;
-                    }
-                }
-                else
-                {
-                    DESTROY(d);
-                    break;
-                }
-                p[j++] = c;
             }
             else
             {
-                p[j++] = t;
+                DESTROY(d);
+                break;
             }
+            c <<= 4;
+            
+            if (iter >= byteLength)
+            {
+                DESTROY(d);
+                break;
+            }
+            currentChar = charPool[iter++];
+            if (isxdigit(currentChar))
+            {
+                if (currentChar <= '9')
+                {
+                    c |= currentChar - '0';
+                }
+                else if (currentChar <= 'F')
+                {
+                    c |= currentChar - 'A' + 10;
+                }
+                else
+                {
+                    c |= currentChar - 'a' + 10;
+                }
+            }
+            else
+            {
+                DESTROY(d);
+                break;
+            }
+            /**
+             * First fird the left 4 bits and then the right 4 bits.
+             */
+            charPool[charLocation++] = c;
         }
-        [d setLength: j];
-        s = AUTORELEASE([[NSString alloc] initWithData: d encoding: e]);
-        RELEASE(d);
+        else
+        {
+            // just copy.
+            charPool[charLocation++] = currentChar;
+        }
     }
-    return s;
+    [d setLength: charLocation];
+    result = AUTORELEASE([[NSString alloc] initWithData: d encoding: e]);
+    RELEASE(d);
+    
+    return result;
 }
 
 - (NSString*) stringByResolvingSymlinksInPath
@@ -5323,7 +5328,7 @@ static NSFileManager *fm = nil;
     }
     
     /*
-     *	For absolute paths, we must 
+     *	For absolute paths, we must
      *	remove '/../' sequences and their matching parent directories.
      */
     r = (NSRange){root, l-root};
@@ -5357,7 +5362,7 @@ static NSFileManager *fm = nil;
                     r.length = NSMaxRange(r2) - r.location;
                     r.location++;		// Location Just after last separator
                 }
-                r.length += 2;		// Add the `..' 
+                r.length += 2;		// Add the `..'
             }
             if (NO == atEnd)
             {
@@ -5647,12 +5652,12 @@ static NSFileManager *fm = nil;
 
 /**
  * <p>Compares this instance with string. If locale is an NSLocale
- * instance and ICU is available, performs a comparison using the 
- * ICU collator for that locale. If locale is an instance of a class 
+ * instance and ICU is available, performs a comparison using the
+ * ICU collator for that locale. If locale is an instance of a class
  * other than NSLocale, perform a comparison using +[NSLocale currentLocale].
  * If locale is nil, or ICU is not available, use a POSIX-style
  * collation (for example, latin capital letters A-Z are ordered before
- * all of the lowercase letter, a-z.) 
+ * all of the lowercase letter, a-z.)
  * </p>
  * <p>mask may be <code>NSLiteralSearch</code>, which requests a literal
  * byte-by-byte
@@ -5687,7 +5692,7 @@ static NSFileManager *fm = nil;
         if (nil == locale)
         {
             /* See comments in GSICUCollatorOpen about the posix locale.
-             * It's bad for case insensitive search, but needed for numeric    
+             * It's bad for case insensitive search, but needed for numeric
              */
             if (mask & NSNumericSearch)
             {
@@ -5705,7 +5710,7 @@ static NSFileManager *fm = nil;
         if (coll != NULL)
         {
             NSUInteger countSelf = compareRange.length;
-            NSUInteger countOther = [string length];       
+            NSUInteger countOther = [string length];
             unichar *charsSelf;
             unichar *charsOther;
             UCollationResult result;
@@ -5723,8 +5728,8 @@ static NSFileManager *fm = nil;
                                   charsSelf, countSelf, charsOther, countOther);
             
             NSZoneFree(NSDefaultMallocZone(), charsSelf);
-            NSZoneFree(NSDefaultMallocZone(), charsOther);	  
-            ucol_close(coll); 
+            NSZoneFree(NSDefaultMallocZone(), charsOther);
+            ucol_close(coll);
             
             switch (result)
             {
@@ -5944,7 +5949,7 @@ static NSFileManager *fm = nil;
             }
             else
             {
-                self = [self initWithData: (NSData*)bytes 
+                self = [self initWithData: (NSData*)bytes
                                  encoding: NSUTF8StringEncoding];
             }
         }

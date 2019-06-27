@@ -3,18 +3,6 @@
 #define	EXPOSE_NSURLCache_IVARS	1
 #import "GSURLPrivate.h"
 
-typedef struct {
-  unsigned		diskCapacity;
-  unsigned		memoryCapacity;
-  unsigned		diskUsage;
-  unsigned		memoryUsage;
-  NSString		*path;
-  NSMutableDictionary	*memory;
-} Internal;
- 
-#define	this	((Internal*)(self->_NSURLCacheInternal))
-#define	inst	((Internal*)(o->_NSURLCacheInternal))
-
 
 static NSURLCache	*shared = nil;
 
@@ -23,11 +11,6 @@ static NSURLCache	*shared = nil;
 + (id) allocWithZone: (NSZone*)z
 {
   NSURLCache	*o = [super allocWithZone: z];
-
-  if (o != nil)
-    {
-      o->_NSURLCacheInternal = NSZoneCalloc(z, 1, sizeof(Internal));
-    }
   return o;
 }
 
@@ -38,17 +21,6 @@ static NSURLCache	*shared = nil;
   [gnustep_global_lock unlock];
 }
 
-- (void) dealloc
-{
-  if (this != 0)
-    {
-      RELEASE(this->memory);
-      RELEASE(this->path);
-      NSZoneFree([self zone], this);
-    }
-  [super dealloc];
-}
-
 + (NSURLCache *) sharedURLCache
 {
   NSURLCache	*c;
@@ -57,9 +29,6 @@ static NSURLCache	*shared = nil;
   if (shared == nil)
     {
       NSString	*path = nil;
-
-// FIXME user-library-path/Caches/current-app-name
-
       shared = [[self alloc] initWithMemoryCapacity: 4 * 1024 * 1024
 				       diskCapacity: 20 * 1024 * 1024
 					   diskPath: path];
@@ -70,25 +39,27 @@ static NSURLCache	*shared = nil;
   return AUTORELEASE(c);
 }
 
+/**
+ * request is used as a key. So the hash method and isEqual method must be used. And copy method.
+ */
 - (NSCachedURLResponse *) cachedResponseForRequest: (NSURLRequest *)request
 {
-  // FIXME ... handle disk cache
-  return [this->memory objectForKey: request];
+  return [memory objectForKey: request];
 }
 
 - (NSUInteger) currentDiskUsage
 {
-  return this->diskUsage;
+  return diskUsage;
 }
 
 - (NSUInteger) currentMemoryUsage
 {
-  return this->memoryUsage;
+  return memoryUsage;
 }
 
 - (NSUInteger) diskCapacity
 {
-  return this->diskCapacity;
+  return diskCapacity;
 }
 
 - (id) initWithMemoryCapacity: (NSUInteger)memoryCapacity
@@ -97,27 +68,27 @@ static NSURLCache	*shared = nil;
 {
   if ((self = [super init]) != nil)
     {
-      this->diskUsage = 0;
-      this->diskCapacity = diskCapacity;
-      this->memoryUsage = 0;
-      this->memoryCapacity = memoryCapacity;
-      this->path = [path copy];
-      this->memory = [NSMutableDictionary new];
+      diskUsage = 0;
+      diskCapacity = diskCapacity;
+      memoryUsage = 0;
+      memoryCapacity = memoryCapacity;
+      path = [path copy];
+      memory = [NSMutableDictionary new];
     }
   return self;
 }
 
 - (NSUInteger) memoryCapacity
 {
-  return this->memoryCapacity;
+  return memoryCapacity;
 }
 
 - (void) removeAllCachedResponses
 {
   // FIXME ... disk storage
-  [this->memory removeAllObjects];
-  this->diskUsage = 0;
-  this->memoryUsage = 0;
+  [memory removeAllObjects];
+  diskUsage = 0;
+  memoryUsage = 0;
 }
 
 - (void) removeCachedResponseForRequest: (NSURLRequest *)request
@@ -127,8 +98,8 @@ static NSURLCache	*shared = nil;
   if (item != nil)
     {
       // FIXME ... disk storage
-      this->memoryUsage -= [[item data] length];
-      [this->memory removeObjectForKey: request];
+      memoryUsage -= [[item data] length]; // So memoryUsage is form data length.
+      [memory removeObjectForKey: request];
     }
 }
 
@@ -156,24 +127,27 @@ static NSURLCache	*shared = nil;
         {
 	  unsigned		size = [[cachedResponse data] length];
 
-	  if (size < this->memoryCapacity)
+	  if (size < memoryCapacity)
 	    {
 	      NSCachedURLResponse	*old;
 
-	      old = [this->memory objectForKey: request];
+	      old = [memory objectForKey: request];
 	      if (old != nil)
 		{
-		  this->memoryUsage -= [[old data] length];
-		  [this->memory removeObjectForKey: request];
+		  memoryUsage -= [[old data] length];
+		  [memory removeObjectForKey: request];
 		}
-	      while (this->memoryUsage + size > this->memoryCapacity)
+	      while (memoryUsage + size > memoryCapacity)
 	        {
 // FIXME ... should delete least recently used.
+                /**
+                 * Here just remove a random one.
+                 */
 		  [self removeCachedResponseForRequest:
-		    [[this->memory allKeys] lastObject]];
+		    [[memory allKeys] lastObject]];
 		}
-	      [this->memory setObject: cachedResponse forKey: request];
-	      this->memoryUsage += size;
+	      [memory setObject: cachedResponse forKey: request];
+	      memoryUsage += size;
 	    }
 	  }
         break;
