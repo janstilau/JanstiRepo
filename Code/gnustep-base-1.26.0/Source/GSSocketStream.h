@@ -130,7 +130,7 @@ SOCKIVARS
 - (SOCKET) _sock;
 @end
 
-@interface GSInetInputStream : GSSocketInputStream
+@interface GSIneternetInputStream : GSSocketInputStream
 
 /**
  * the designated initializer
@@ -172,7 +172,7 @@ SOCKIVARS
 - (NSInteger) _write: (const uint8_t *)buffer maxLength: (NSUInteger)len;
 @end
 
-@interface GSInetOutputStream : GSSocketOutputStream
+@interface GSIneternetOutputStream : GSSocketOutputStream
 
 /**
  * the designated initializer

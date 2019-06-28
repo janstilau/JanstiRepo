@@ -1,26 +1,3 @@
-/** Interface for NSStream for GNUStep
-   Copyright (C) 2006 Free Software Foundation, Inc.
-
-   Written by:  Derek Zhou <derekzhou@gmail.com>
-   Date: 2006
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   */
-
 #ifndef __NSStream_h_GNUSTEP_BASE_INCLUDE
 #define __NSStream_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -29,15 +6,11 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
-enum {   
-  NSStreamStatusNotOpen = 0,   
+enum {
+  NSStreamStatusNotOpen = 0,
   NSStreamStatusOpening = 1,
   NSStreamStatusOpen = 2,   
-  NSStreamStatusReading = 3,   
+  NSStreamStatusReading = 3,    // Data is being read from the stream
   NSStreamStatusWriting = 4,   
   NSStreamStatusAtEnd = 5,   
   NSStreamStatusClosed = 6,   
@@ -47,7 +20,7 @@ typedef NSUInteger NSStreamStatus;
 
 enum {   
   NSStreamEventNone = 0,    
-  NSStreamEventOpenCompleted = 1,    
+  NSStreamEventOpenCompleted = 1,
   NSStreamEventHasBytesAvailable = 2,
   NSStreamEventHasSpaceAvailable = 4,    
   NSStreamEventErrorOccurred = 8,    
@@ -295,10 +268,6 @@ GS_EXPORT NSString * const NSStreamSOCKSProxyVersionKey;
 @interface	NSObject (NSStreamDelegate)
 - (void) stream: (NSStream*)sStream handleEvent: (NSStreamEvent)anEvent;
 @end
-#endif
-
-#if	defined(__cplusplus)
-}
 #endif
 
 #if	!NO_GNUSTEP && !defined(GNUSTEP_BASE_INTERNAL)

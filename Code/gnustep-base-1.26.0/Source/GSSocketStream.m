@@ -1,27 +1,3 @@
-/** Implementation for GSSocketStream for GNUStep
-   Copyright (C) 2006-2008 Free Software Foundation, Inc.
-
-   Written by:  Derek Zhou <derekzhou@gmail.com>
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: 2006
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   */
-
 #import "common.h"
 
 #import "Foundation/NSArray.h"
@@ -989,7 +965,7 @@ static NSString * const GSSOCKSAckConn = @"GSSOCKSAckConn";
 {
   if ((self = [super initWithInput: i output: o]) != nil)
     {
-      if ([istream isKindOfClass: [GSInetInputStream class]] == NO)
+      if ([istream isKindOfClass: [GSIneternetInputStream class]] == NO)
 	{
 	  NSLog(@"Attempt to use SOCKS with non-INET stream ignored");
 	  DESTROY(self);
@@ -2851,7 +2827,7 @@ setNonBlocking(SOCKET fd)
 
 
 
-@implementation GSInetInputStream
+@implementation GSIneternetInputStream
 
 - (id) initToAddr: (NSString*)addr port: (NSInteger)port
 {
@@ -2891,7 +2867,7 @@ setNonBlocking(SOCKET fd)
 #endif
 @end
 
-@implementation GSInetOutputStream
+@implementation GSIneternetOutputStream
 
 - (id) initToAddr: (NSString*)addr port: (NSInteger)port
 {
@@ -2935,12 +2911,12 @@ setNonBlocking(SOCKET fd)
 
 - (Class) _inputStreamClass
 {
-  return [GSInetInputStream class];
+  return [GSIneternetInputStream class];
 }
 
 - (Class) _outputStreamClass
 {
-  return [GSInetOutputStream class];
+  return [GSIneternetOutputStream class];
 }
 
 - (id) initToAddr: (NSString*)addr port: (NSInteger)port

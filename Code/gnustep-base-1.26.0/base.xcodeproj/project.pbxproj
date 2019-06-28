@@ -1537,6 +1537,13 @@
 			path = Readed;
 			sourceTree = "<group>";
 		};
+		0645F69322C646DC007FB134 /* Stream */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Stream;
+			sourceTree = "<group>";
+		};
 		06B95DFE22C1327F007045E8 /* NetWork */ = {
 			isa = PBXGroup;
 			children = (
@@ -1671,6 +1678,7 @@
 		18394BF21610DC0B00335E85 /* GNUstepBase */ = {
 			isa = PBXGroup;
 			children = (
+				0645F69322C646DC007FB134 /* Stream */,
 				18641D0D1678AD04003C6E11 /* GSSocksParser */,
 				18906F3A1610BF3C0003C892 /* GSAttributedString.m */,
 				18906F351610BF3C0003C892 /* CXXException.m */,

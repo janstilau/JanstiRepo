@@ -626,14 +626,15 @@ static inline BOOL timerInvalidated(NSTimer *t)
 
 
 @implementation NSRunLoop(GNUstepExtensions)
+
 // NSStream 是被当做是一个 watcher 添加到 runloop 中去的.
+
 - (void) addEvent: (void*)data
              type: (RunLoopEventType)type
           watcher: (id<RunLoopEvents>)watcher
           forMode: (NSString*)mode
 {
     GSRunLoopWatcher	*info;
-    
     if (mode == nil)
     {
         mode = [self currentMode];

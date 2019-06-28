@@ -72,16 +72,18 @@ extern "C" {
 
 @end
 
-
 /**
  * Class to represent an authentication challenge and indicate when the
  * challenge is complete.
  */
 @interface NSURLAuthenticationChallenge : NSObject
 {
-#if	GS_EXPOSE(NSURLAuthenticationChallenge)
-  void	*_NSURLAuthenticationChallengeInternal;
-#endif
+    NSURLProtectionSpace                *space;
+    NSURLCredential                *credential;
+    int                        previousFailureCount;
+    NSURLResponse                    *response;
+    NSError                    *error;
+    id<NSURLAuthenticationChallengeSender>    sender;
 }
 
 /**
