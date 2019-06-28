@@ -94,6 +94,80 @@
 
 @end
 
+@implementation NSURLConnection (NSURLConnectionSynchronousLoading)
+
++ (NSData *) sendSynchronousRequest: (NSURLRequest *)request
+                  returningResponse: (NSURLResponse **)response
+                              error: (NSError **)error
+{
+    NSData    *data = nil;
+    
+    if (0 != response)
+    {
+        *response = nil; // reset pointed value.
+    }
+    if (0 != error)
+    {
+        *error = nil;
+    }
+    if ([self canHandleRequest: request] == YES)
+    {
+        _NSURLConnectionDataCollector    *collector;
+        NSURLConnection            *conn;
+        
+        collector = [_NSURLConnectionDataCollector new];
+        conn = [[self alloc] initWithRequest: request delegate: collector];
+        if (nil != conn)
+        {
+            NSRunLoop    *loop;
+            NSDate    *limit;
+            
+            [collector setConnection: conn];
+            loop = [NSRunLoop currentRunLoop];
+            limit = [[NSDate alloc] initWithTimeIntervalSinceNow:
+                     [request timeoutInterval]];
+            
+            while ([collector done] == NO && [limit timeIntervalSinceNow] > 0.0)
+            {
+                [loop runMode: NSDefaultRunLoopMode beforeDate: limit];
+            }
+            [limit release];
+            if (NO == [collector done])
+            {
+                data = nil;
+                if (0 != response)
+                {
+                    *response = nil;
+                }
+                if (0 != error)
+                {
+                    *error = [NSError errorWithDomain: NSURLErrorDomain
+                                                 code: NSURLErrorTimedOut
+                                             userInfo: nil];
+                }
+            }
+            else
+            {
+                data = [[[collector data] retain] autorelease];
+                if (0 != response)
+                {
+                    *response = [[[collector response] retain] autorelease];
+                }
+                if (0 != error)
+                {
+                    *error = [[[collector error] retain] autorelease];
+                }
+            }
+            [conn release];
+        }
+        [collector release];
+    }
+    return data;
+}
+
+@end
+
+
 @implementation	NSURLConnection
 
 + (BOOL) canHandleRequest: (NSURLRequest *)request
@@ -137,7 +211,6 @@
         if ([_request HTTPShouldHandleCookies] == YES)
         {
             NSArray *cookies;
-            
             cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage]
                        cookiesForURL: [_request URL]];
             if ([cookies count] > 0)
@@ -173,8 +246,9 @@
 
 @end
 
-
-
+/**
+ * So connection is just a delegate for NSProtocol. The real loading progress is in NSProtocol class.
+ */
 @implementation NSObject (NSURLConnectionDelegate)
 
 - (void) connection: (NSURLConnection *)connection
@@ -235,83 +309,7 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
 
 @end
 
-
-
-@implementation NSURLConnection (NSURLConnectionSynchronousLoading)
-
-+ (NSData *) sendSynchronousRequest: (NSURLRequest *)request
-                  returningResponse: (NSURLResponse **)response
-                              error: (NSError **)error
-{
-    NSData	*data = nil;
-    
-    if (0 != response)
-    {
-        *response = nil; // reset pointed value.
-    }
-    if (0 != error)
-    {
-        *error = nil;
-    }
-    if ([self canHandleRequest: request] == YES)
-    {
-        _NSURLConnectionDataCollector	*collector;
-        NSURLConnection			*conn;
-        
-        collector = [_NSURLConnectionDataCollector new];
-        conn = [[self alloc] initWithRequest: request delegate: collector];
-        if (nil != conn)
-        {
-            NSRunLoop	*loop;
-            NSDate	*limit;
-            
-            [collector setConnection: conn];
-            loop = [NSRunLoop currentRunLoop];
-            limit = [[NSDate alloc] initWithTimeIntervalSinceNow:
-                     [request timeoutInterval]];
-            
-            while ([collector done] == NO && [limit timeIntervalSinceNow] > 0.0)
-            {
-                [loop runMode: NSDefaultRunLoopMode beforeDate: limit];
-            }
-            [limit release];
-            if (NO == [collector done])
-            {
-                data = nil;
-                if (0 != response)
-                {
-                    *response = nil;
-                }
-                if (0 != error)
-                {
-                    *error = [NSError errorWithDomain: NSURLErrorDomain
-                                                 code: NSURLErrorTimedOut
-                                             userInfo: nil];
-                }
-            }
-            else
-            {
-                data = [[[collector data] retain] autorelease];
-                if (0 != response)
-                {
-                    *response = [[[collector response] retain] autorelease];
-                }
-                if (0 != error)
-                {
-                    *error = [[[collector error] retain] autorelease];
-                }
-            }
-            [conn release];
-        }
-        [collector release];
-    }
-    return data;
-}
-
-@end
-
-
-@implementation	NSURLConnection (URLProtocolClient)
+@implementation    NSURLConnection (URLProtocolClient)
 
 - (void) URLProtocol: (NSURLProtocol *)protocol
 cachedResponseIsValid: (NSCachedURLResponse *)cachedResponse
@@ -354,13 +352,16 @@ didReceiveAuthenticationChallenge: challenge];
     }
 }
 
+/**
+ * User the redirectedRequest to loading new data
+ */
 - (void) URLProtocol: (NSURLProtocol *)protocol
 wasRedirectedToRequest: (NSURLRequest *)request
     redirectResponse: (NSURLResponse *)redirectResponse
 {
     request = [_delegate connection: self
-                          willSendRequest: request
-                         redirectResponse: redirectResponse];
+                    willSendRequest: request
+                   redirectResponse: redirectResponse];
     if (_protocol == nil)
     {
         return;
@@ -373,9 +374,9 @@ wasRedirectedToRequest: (NSURLRequest *)request
         DESTROY(_protocol);
         ASSIGNCOPY(_request, request);
         _protocol = [[NSURLProtocol alloc]
-                           initWithRequest: _request
-                           cachedResponse: nil
-                           client: (id<NSURLProtocolClient>)self];
+                     initWithRequest: _request
+                     cachedResponse: nil
+                     client: (id<NSURLProtocolClient>)self];
         [_protocol startLoading];
     }
 }

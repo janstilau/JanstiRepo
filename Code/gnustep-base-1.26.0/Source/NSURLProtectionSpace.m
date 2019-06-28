@@ -51,85 +51,48 @@ NSString * const NSURLAuthenticationMethodClientCertificate
 NSString * const NSURLAuthenticationMethodServerTrust
   = @"NSURLAuthenticationMethodServerTrust";
 
-// Internal data storage
-typedef struct {
-  NSString	*host;
-  int		port;
-  NSString	*protocol;
-  NSString	*realm;
-  NSString	*proxyType;		// Not retained
-  NSString	*authenticationMethod;	// Not retained
-  BOOL		isProxy;
-} Internal;
- 
-#define	this	((Internal*)(self->_NSURLProtectionSpaceInternal))
-#define	inst	((Internal*)(o->_NSURLProtectionSpaceInternal))
 
 @implementation NSURLProtectionSpace
 
 + (id) allocWithZone: (NSZone*)z
 {
   NSURLProtectionSpace	*o = [super allocWithZone: z];
-
-  if (o != nil)
-    {
-      o->_NSURLProtectionSpaceInternal = NSZoneCalloc(z, 1, sizeof(Internal));
-    }
   return o;
 }
 
 - (NSString *) authenticationMethod
 {
-  return this->authenticationMethod;
-}
-
-- (id) copyWithZone: (NSZone*)z
-{
-  if (NSShouldRetainWithZone(self, z) == YES)
-    {
-      return RETAIN(self);
-    }
-  else
-    {
-      NSURLProtectionSpace	*o = [[self class] allocWithZone: z];
-
-      o = [o initWithHost: this->host
-		     port: this->port
-		 protocol: this->protocol
-		    realm: this->realm
-     authenticationMethod: this->authenticationMethod];
-      if (o != nil)
-	{
-	  inst->isProxy = this->isProxy;
-	  inst->proxyType = this->proxyType;
-	}
-      return o;
-    }
-}
-
-- (void) dealloc
-{
-  if (this != 0)
-    {
-      RELEASE(this->host);
-      RELEASE(this->protocol);
-      RELEASE(this->realm);
-      NSZoneFree([self zone], this);
-    }
-  [super dealloc];
+  return authenticationMethod;
 }
 
 - (NSUInteger) hash
 {
   return [[self host] hash] + [self port]
     + [[self realm] hash] + [[self protocol] hash]
-    + (uintptr_t)this->proxyType + (uintptr_t)this->authenticationMethod;
+    + (uintptr_t)proxyType + (uintptr_t)authenticationMethod;
 }
 
 - (NSString *) host
 {
-  return this->host;
+  return host;
 }
+
+/**
+ *
+ NSURLAuthenticationMethodDefault
+ // 基本的 HTTP 验证，通过 NSURLCredential 对象提供用户名和密码。
+ NSURLAuthenticationMethodHTTPBasic
+ // 类似于基本的 HTTP 验证，摘要会自动生成，同样通过 NSURLCredential 对象提供用户名和密码。
+ NSURLAuthenticationMethodHTTPDigest
+ // 不会用于 URL Loading System，在通过 web 表单验证时可能用到。
+ NSURLAuthenticationMethodHTMLForm
+ NSURLAuthenticationMethodNegotiate
+ NSURLAuthenticationMethodNTLM
+ // 验证客户端的证书
+ NSURLAuthenticationMethodClientCertificate
+ // 指明客户端要验证服务端提供的证书
+ NSURLAuthenticationMethodServerTrust
+ */
 
 - (id) initWithHost: (NSString *)host
 	       port: (NSInteger)port
@@ -139,51 +102,52 @@ authenticationMethod: (NSString *)authenticationMethod
 {
   if ((self = [super init]) != nil)
     {
-      this->host = [host copy];
-      this->protocol = [protocol copy];
-      this->realm = [realm copy];
+      host = [host copy];
+      protocol = [protocol copy];
+      realm = [realm copy];
       if ([authenticationMethod isEqualToString: 
-	NSURLAuthenticationMethodHTMLForm] == YES)
+	NSURLAuthenticationMethodHTMLForm])
 	{
-	  this->authenticationMethod = NSURLAuthenticationMethodHTMLForm;
+      // The URL loading system never issues authentication challenges based on this authentication method.
+	  authenticationMethod = NSURLAuthenticationMethodHTMLForm;
 	}
       else if ([authenticationMethod isEqualToString: 
-	NSURLAuthenticationMethodHTTPBasic] == YES)
-	{
-	  this->authenticationMethod = NSURLAuthenticationMethodHTTPBasic;
+	NSURLAuthenticationMethodHTTPBasic])
+	{ // user password
+	  authenticationMethod = NSURLAuthenticationMethodHTTPBasic;
 	}
       else if ([authenticationMethod isEqualToString: 
 	NSURLAuthenticationMethodHTTPDigest] == YES)
-	{
-	  this->authenticationMethod = NSURLAuthenticationMethodHTTPDigest;
+	{ // like basic ,execpt for add diges
+	  authenticationMethod = NSURLAuthenticationMethodHTTPDigest;
 	}
       else if ([authenticationMethod isEqualToString: 
 	NSURLAuthenticationMethodNTLM] == YES)
 	{
-	  this->authenticationMethod = NSURLAuthenticationMethodNTLM;
+	  authenticationMethod = NSURLAuthenticationMethodNTLM;
 	}
       else if ([authenticationMethod isEqualToString: 
 	NSURLAuthenticationMethodNegotiate] == YES)
 	{
-	  this->authenticationMethod = NSURLAuthenticationMethodNegotiate;
+	  authenticationMethod = NSURLAuthenticationMethodNegotiate;
 	}
       else if ([authenticationMethod isEqualToString: 
 	NSURLAuthenticationMethodClientCertificate] == YES)
 	{
-	  this->authenticationMethod = NSURLAuthenticationMethodClientCertificate;
+	  authenticationMethod = NSURLAuthenticationMethodClientCertificate;
 	}
       else if ([authenticationMethod isEqualToString: 
 	NSURLAuthenticationMethodServerTrust] == YES)
 	{
-	  this->authenticationMethod = NSURLAuthenticationMethodServerTrust;
+	  authenticationMethod = NSURLAuthenticationMethodServerTrust;
 	}
       else
         {
-	  this->authenticationMethod = NSURLAuthenticationMethodDefault;
+	  authenticationMethod = NSURLAuthenticationMethodDefault;
 	}
-      this->port = port;
-      this->proxyType = nil;
-      this->isProxy = NO;
+      port = port;
+      proxyType = nil;
+      isProxy = NO;
     }
   return self;
 }
@@ -201,22 +165,22 @@ authenticationMethod: (NSString *)authenticationMethod
        authenticationMethod: authenticationMethod];
   if (self != nil)
     {
-      this->isProxy = YES;
+      isProxy = YES;
       if ([type isEqualToString: NSURLProtectionSpaceFTPProxy] == YES)
         {
-	  this->proxyType = NSURLProtectionSpaceFTPProxy;
+	  proxyType = NSURLProtectionSpaceFTPProxy;
 	}
       else if ([type isEqualToString: NSURLProtectionSpaceHTTPProxy] == YES)
         {
-	  this->proxyType = NSURLProtectionSpaceHTTPProxy;
+	  proxyType = NSURLProtectionSpaceHTTPProxy;
 	}
       else if ([type isEqualToString: NSURLProtectionSpaceHTTPSProxy] == YES)
         {
-	  this->proxyType = NSURLProtectionSpaceHTTPSProxy;
+	  proxyType = NSURLProtectionSpaceHTTPSProxy;
 	}
       else if ([type isEqualToString: NSURLProtectionSpaceSOCKSProxy] == YES)
         {
-	  this->proxyType = NSURLProtectionSpaceSOCKSProxy;
+	  proxyType = NSURLProtectionSpaceSOCKSProxy;
 	}
       else
         {
@@ -278,45 +242,45 @@ authenticationMethod: (NSString *)authenticationMethod
 
 - (BOOL) isProxy
 {
-  return this->isProxy;
+  return isProxy;
 }
 
 - (NSInteger) port
 {
-  return this->port;
+  return port;
 }
 
 - (NSString *) protocol
 {
-  return this->protocol;
+  return protocol;
 }
 
 - (NSString *) proxyType
 {
-  return this->proxyType;
+  return proxyType;
 }
 
 - (NSString *) realm
 {
-  return this->realm;
+  return realm;
 }
 
 - (BOOL) receivesCredentialSecurely
 {
-  if (this->authenticationMethod == NSURLAuthenticationMethodHTTPDigest)
+  if (authenticationMethod == NSURLAuthenticationMethodHTTPDigest)
     {
       return YES;
     }
-  if (this->isProxy)
+  if (isProxy)
     {
-      if (this->proxyType == NSURLProtectionSpaceHTTPSProxy)
+      if (proxyType == NSURLProtectionSpaceHTTPSProxy)
         {
 	  return YES;
 	}
     }
   else
     {
-      if ([this->protocol isEqual: @"https"] == YES)
+      if ([protocol isEqual: @"https"] == YES)
         {
 	  return YES;
 	}

@@ -30,10 +30,6 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSString;
 
 extern NSString * const NSURLProtectionSpaceFTPProxy;	/** An FTP proxy */
@@ -69,9 +65,13 @@ extern NSString * const NSURLAuthenticationMethodServerTrust;
  */
 @interface NSURLProtectionSpace : NSObject <NSCopying>
 {
-#if	GS_EXPOSE(NSURLProtectionSpace)
-  void *_NSURLProtectionSpaceInternal;
-#endif
+    NSString    *host;
+    int         port;
+    NSString    *protocol;
+    NSString    *realm;
+    NSString    *proxyType;        // Not retained
+    NSString    *authenticationMethod;    // Not retained
+    BOOL        isProxy;
 }
 
 /**
@@ -147,10 +147,6 @@ authenticationMethod: (NSString *)authenticationMethod;
 #endif
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

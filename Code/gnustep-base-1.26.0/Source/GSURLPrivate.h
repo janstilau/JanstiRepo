@@ -82,8 +82,8 @@
 @interface GSHTTPAuthentication : NSObject
 {
   NSLock		*_lock;
-  NSURLCredential	*_credential;
-  NSURLProtectionSpace	*_space;
+  NSURLCredential	*_credential; // username, password info
+  NSURLProtectionSpace	*_space; // host, prot, protocol, authenticaion method.
   NSString		*_nonce;
   NSString		*_opaque;
   NSString		*_qop;
