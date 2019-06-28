@@ -27,14 +27,6 @@
 #import "GSURLPrivate.h"
 #import "Foundation/NSCoder.h"
 
-// Internal data storage
-typedef struct {
-  NSData			*data;
-  NSURLResponse			*response;
-  NSDictionary			*userInfo;
-  NSURLCacheStoragePolicy	storagePolicy;
-} Internal;
- 
 #define	this	((Internal*)(self->_NSCachedURLResponseInternal))
 
 
