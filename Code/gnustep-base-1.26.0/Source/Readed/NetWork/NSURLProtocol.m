@@ -1555,6 +1555,13 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
 
 @end
 
+
+/**
+ * FileURLProtocol is just loading file data and call corresponding delegate method.
+ There is no complex data loading progress. The response is fix with most parameter.
+ All delegate is called in start loading method.
+ */
+
 @implementation _NSFileURLProtocol
 
 + (BOOL) canInitWithRequest: (NSURLRequest*)request

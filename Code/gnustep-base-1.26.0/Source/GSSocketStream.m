@@ -1721,22 +1721,22 @@ setNonBlocking(SOCKET fd)
         
         if ([self _sock] == INVALID_SOCKET)
         {
-            SOCKET        s;
+            SOCKET        aSocket;
             
             if (_handler == nil)
             {
                 [GSSOCKS tryInput: self output: _sibling];
             }
-            s = socket(_address.s.sa_family, SOCK_STREAM, 0);
-            if (BADSOCKET(s))
+            aSocket = socket(_address.s.sa_family, SOCK_STREAM, 0);
+            if (BADSOCKET(aSocket))
             {
                 [self _recordError];
                 return;
             }
             else
             {
-                [self _setSock: s];
-                [_sibling _setSock: s];
+                [self _setSock: aSocket];
+                [_sibling _setSock: aSocket];
             }
         }
         
