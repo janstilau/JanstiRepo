@@ -950,7 +950,6 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
             
             if (fdIndex == threadInfo->inputFd)
             {
-                NSDebugMLLog(@"NSRunLoop", @"Fire perform on thread");
                 [threadInfo fireThreadInfo];
                 watcher = nil;
             }
