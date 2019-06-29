@@ -1,30 +1,5 @@
 #ifndef __GSRunLoopCtxt_h_GNUSTEP_BASE_INCLUDE
 #define __GSRunLoopCtxt_h_GNUSTEP_BASE_INCLUDE
-/** 
- Copyright (C) 2008-2009 Free Software Foundation, Inc.
- 
- By: Richard Frith-Macdonald <richard@brainstorm.co.uk>
- 
- This file is part of the GNUstep Base Library.
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free
- Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02111 USA.
- 
- $Date$ $Revision$
- */
-
 #import "common.h"
 #import "Foundation/NSException.h"
 #import "Foundation/NSMapTable.h"
@@ -58,19 +33,17 @@ typedef struct{
     NSString	*mode;		/** The mode for this context.		*/
     GSIArray	cachedPerformers;	/** The actions to perform regularly.	*/
     unsigned	maxPerformers;
+    
     GSIArray	cachedTimers;		/** The timers set for the runloop mode */
     unsigned	maxTimers;
+    
     GSIArray	watchers;	/** The inputs set for the runloop mode */
     unsigned	maxWatchers;
+    
 @private
-#if	defined(_WIN32)
-    NSMapTable    *handleMap;     
-    NSMapTable	*winMsgMap;
-#else
     NSMapTable	*_efdMap;
     NSMapTable	*_rfdMap;
     NSMapTable	*_wfdMap;
-#endif
     GSIArray	_trigger;	// Watchers to trigger unconditionally.
     int		fairStart;	// For trying to ensure fair handling.
     BOOL		completed;	// To mark operation as completed.

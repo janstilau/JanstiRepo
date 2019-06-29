@@ -1512,6 +1512,7 @@
 		060CC75122C78273009A5616 /* RunLoop */ = {
 			isa = PBXGroup;
 			children = (
+				18906FD81610BF3C0003C892 /* NSTimer.m */,
 			);
 			path = RunLoop;
 			sourceTree = "<group>";
@@ -1859,7 +1860,6 @@
 				18906FD41610BF3C0003C892 /* NSTask.m */,
 				18906FD51610BF3C0003C892 /* NSTextCheckingResult.m */,
 				18906FD71610BF3C0003C892 /* NSTimeZone.m */,
-				18906FD81610BF3C0003C892 /* NSTimer.m */,
 				18906FE51610BF3C0003C892 /* NSUnarchiver.m */,
 				18906FE61610BF3C0003C892 /* NSUndoManager.m */,
 				18906FDA1610BF3C0003C892 /* NSURLAuthenticationChallenge.m */,

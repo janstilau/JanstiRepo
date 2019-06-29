@@ -144,7 +144,7 @@ skip_argspec(const char *ptr)
 static inline NSRunLoop *
 GSRunLoopForThread(NSThread *aThread)
 {
-  GSRunLoopCrossThreadTaskInfo   *info = GSRunLoopInfoForThread(aThread);
+  GSRunLoopThreadRelatedInfo   *info = GSRunLoopInfoForThread(aThread);
 
   if (info == nil || info->loop == nil)
     {

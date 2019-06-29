@@ -4,20 +4,16 @@
 
 #import	<Foundation/NSMapTable.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-    
-    @class NSTimer, NSDate, NSPort;
-    
-    /**
-     * Run loop mode used to deal with input sources other than NSConnections or
-     * dialog windows.  Most commonly used. Defined in
-     * <code>Foundation/NSRunLoop.h</code>.
-     */
-    GS_EXPORT NSString * const NSDefaultRunLoopMode;
-    
-    @interface NSRunLoop : NSObject
+@class NSTimer, NSDate, NSPort;
+
+/**
+ * Run loop mode used to deal with input sources other than NSConnections or
+ * dialog windows.  Most commonly used. Defined in
+ * <code>Foundation/NSRunLoop.h</code>.
+ */
+GS_EXPORT NSString * const NSDefaultRunLoopMode;
+
+@interface NSRunLoop : NSObject
 {
 @private
     NSString		*_currentMode;
@@ -27,13 +23,12 @@ extern "C" {
     void			*_extra;
 }
 
-
 /*
- 
- runloop 又看了一遍. 感觉理解还是很混乱.
- 
- 
- 
+ Runloop now has some kind of tasks to perform now.
+ Timer, expicitly create and added into runloop
+ DelayedPerformer -> create a timer and cache in a dealyed array(_timedPerformers). NSObejct cancel, perform after delay will update the array.
+ CorssThreadPerformer -> imported in NSThread, make task perform between thread
+ ModePerformer -> add task into different modes.
  */
 
 /**
@@ -79,8 +74,8 @@ extern "C" {
 - (void) runUntilDate: (NSDate*)date;
 
 @end
-    
-    @interface NSRunLoop(OPENSTEP)
+
+@interface NSRunLoop(OPENSTEP)
 
 - (void) addPort: (NSPort*)port
          forMode: (NSString*)mode;
@@ -103,52 +98,52 @@ extern "C" {
             forMode: (NSString*)mode;
 
 @end
-    
-    /** This type specifies the kinds of event which may be 'watched' in a
-     * run loop.
-     */
-    typedef	enum {
+
+/** This type specifies the kinds of event which may be 'watched' in a
+ * run loop.
+ */
+typedef	enum {
 #ifdef __MINGW__
-        ET_HANDLE,	/* Watch for an I/O event on a handle.		*/
-        ET_RPORT,	/* Watch for message arriving on port.		*/
-        ET_WINMSG,	/* Watch for a message on a window handle.	*/
-        ET_TRIGGER	/* Trigger immediately when the loop runs.	*/
+    ET_HANDLE,	/* Watch for an I/O event on a handle.		*/
+    ET_RPORT,	/* Watch for message arriving on port.		*/
+    ET_WINMSG,	/* Watch for a message on a window handle.	*/
+    ET_TRIGGER	/* Trigger immediately when the loop runs.	*/
 #else
-        ET_RDESC,	/* Watch for descriptor becoming readable.	*/
-        ET_WDESC,	/* Watch for descriptor becoming writeable.	*/
-        ET_RPORT,	/* Watch for message arriving on port.		*/
-        ET_EDESC,	/* Watch for descriptor with out-of-band data.	*/
-        ET_TRIGGER	/* Trigger immediately when the loop runs.	*/
+    ET_RDESC,	/* Watch for descriptor becoming readable.	*/
+    ET_WDESC,	/* Watch for descriptor becoming writeable.	*/
+    ET_RPORT,	/* Watch for message arriving on port.		*/
+    ET_EDESC,	/* Watch for descriptor with out-of-band data.	*/
+    ET_TRIGGER	/* Trigger immediately when the loop runs.	*/
 #endif
-    } RunLoopEventType;
-    
-    /** This protocol defines the mandatory interface a run loop watcher must
-     * provide in order for it to be notified of events occurring in the loop
-     * it is watching.<br />
-     * Optional methods are documented in the NSObject(RunLoopEvents)
-     * category.
-     */
-    @protocol RunLoopEvents
-    /** This is the message sent back to a watcher when an event is observed
-     * by the run loop.<br />
-     * The 'data', 'type' and 'mode' arguments are the same as the arguments
-     * passed to the -addEvent:type:watcher:forMode: method.<br />
-     * The 'extra' argument varies.  For an ET_TRIGGER event, it is the same
-     * as the 'data' argument.  For other events on unix it is the file
-     * descriptor associated with the event (which may be the same as the
-     * 'data' argument, but is not in the case of ET_RPORT).<br />
-     * For windows it will be the handle or the windows message assciated
-     * with the event.
-     */
-    - (void) receivedEvent: (void*)data
-type: (RunLoopEventType)type
-extra: (void*)extra
-forMode: (NSString*)mode;
-    @end
-    
-    /** This informal protocol defiens optional methods of the run loop watcher.
-     */
-    @interface NSObject (RunLoopEvents)
+} RunLoopEventType;
+
+/** This protocol defines the mandatory interface a run loop watcher must
+ * provide in order for it to be notified of events occurring in the loop
+ * it is watching.<br />
+ * Optional methods are documented in the NSObject(RunLoopEvents)
+ * category.
+ */
+@protocol RunLoopEvents
+/** This is the message sent back to a watcher when an event is observed
+ * by the run loop.<br />
+ * The 'data', 'type' and 'mode' arguments are the same as the arguments
+ * passed to the -addEvent:type:watcher:forMode: method.<br />
+ * The 'extra' argument varies.  For an ET_TRIGGER event, it is the same
+ * as the 'data' argument.  For other events on unix it is the file
+ * descriptor associated with the event (which may be the same as the
+ * 'data' argument, but is not in the case of ET_RPORT).<br />
+ * For windows it will be the handle or the windows message assciated
+ * with the event.
+ */
+- (void) receivedEvent: (void*)data
+                  type: (RunLoopEventType)type
+                 extra: (void*)extra
+               forMode: (NSString*)mode;
+@end
+
+/** This informal protocol defiens optional methods of the run loop watcher.
+ */
+@interface NSObject (RunLoopEvents)
 /** Called by the run loop to find out whether it needs to block to wait
  * for events for this watcher.  The shouldTrigger flag is used to inform
  * the run loop if tit should immediately trigger a received event for the
@@ -156,18 +151,18 @@ forMode: (NSString*)mode;
  */
 - (BOOL) runLoopShouldBlock: (BOOL*)shouldTrigger;
 @end
-    
-    /**
-     * The run loop watcher API was originally intended to perform two
-     * tasks ...
-     * 1. provide the most efficient API reasonably possible to integrate
-     * unix networking code into the runloop.
-     * 2. provide a standard mechanism to allow people to contribute
-     * code to add new I/O mechanisms to GNUstep (OpenStep didn't allow this).
-     * It succeeded in 1, and partially succeeded in 2 (adding support
-     * for the win32 API).
-     */
-    @interface NSRunLoop(GNUstepExtensions)
+
+/**
+ * The run loop watcher API was originally intended to perform two
+ * tasks ...
+ * 1. provide the most efficient API reasonably possible to integrate
+ * unix networking code into the runloop.
+ * 2. provide a standard mechanism to allow people to contribute
+ * code to add new I/O mechanisms to GNUstep (OpenStep didn't allow this).
+ * It succeeded in 1, and partially succeeded in 2 (adding support
+ * for the win32 API).
+ */
+@interface NSRunLoop(GNUstepExtensions)
 /** Adds a watcher to the receiver ... the watcher is used to monitor events
  * of the specified type which are associted with the event handle data and
  * it operates in the specified run loop modes.<br />
@@ -189,9 +184,5 @@ forMode: (NSString*)mode;
              forMode: (NSString*)mode
                  all: (BOOL)removeAll;
 @end
-    
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif /*__NSRunLoop_h_GNUSTEP_BASE_INCLUDE */

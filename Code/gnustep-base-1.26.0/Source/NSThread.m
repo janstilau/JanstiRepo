@@ -206,10 +206,10 @@ static BOOL                     disableTraceLocks = NO;
     NSException           *exception;
 }
 + (GSCrossTheadTaskHolder*) newForReceiver: (id)r
-                           argument: (id)a
-                           selector: (SEL)s
-                              modes: (NSArray*)m
-                               lock: (NSConditionLock*)l;
+                                  argument: (id)a
+                                  selector: (SEL)s
+                                     modes: (NSArray*)m
+                                      lock: (NSConditionLock*)l;
 - (void) firePerformHolder;
 - (void) invalidatePerformHolder;
 - (BOOL) isInvalidated;
@@ -258,7 +258,7 @@ static BOOL                     disableTraceLocks = NO;
     {
         return;    // Already fired!
     }
-    GSRunLoopCrossThreadTaskInfo   *threadInfo = GSRunLoopInfoForThread(GSCurrentThread());
+    GSRunLoopThreadRelatedInfo   *threadInfo = GSRunLoopInfoForThread(GSCurrentThread());
     [threadInfo->loop cancelPerformSelectorsWithTarget: self];
     NS_DURING
     {   // 真正执行的方法.
@@ -407,7 +407,7 @@ static NSArray *
 commonModes(void)
 {
     NSArray	*modes = [[NSArray alloc] initWithObjects:
-                              NSDefaultRunLoopMode, NSConnectionReplyMode, nil];
+                      NSDefaultRunLoopMode, NSConnectionReplyMode, nil];
     return modes;
 }
 
@@ -606,7 +606,7 @@ unregisterActiveThread(NSThread *thread);
 static void exitedThread(void *thread)
 {
     if (thread == defaultThread) { return; }
-        
+    
     NSValue           *ref;
     if (0 == thread)
     {
@@ -728,7 +728,7 @@ gnustep_base_thread_callback(void)
 
 /**
  *
-  Set the NSThread self to thread private value. And update _activeThreads.
+ Set the NSThread self to thread private value. And update _activeThreads.
  */
 - (void) _makeThreadCurrent
 {
@@ -817,7 +817,7 @@ unregisterActiveThread(NSThread *thread)
 
 /**
  *
-  NSThread class method will call this method every time to get current NSThread value. So calss method is like
+ NSThread class method will call this method every time to get current NSThread value. So calss method is like
  1. get current thread
  2. using the got value to do sth.
  */
@@ -1548,38 +1548,37 @@ lockInfoErr(NSString *str)
 
 
 
-@implementation GSRunLoopCrossThreadTaskInfo
+@implementation GSRunLoopThreadRelatedInfo
 
 - (void) addPerformer: (id)performer
 {
     BOOL  signalled = NO;
     
     [lock lock];
-        NSTimeInterval        start = 0.0;
+    NSTimeInterval        start = 0.0;
+    
+    /* The write could concievably fail if the pipe is full.
+     * In that case we need to release the lock temporarily to allow the other
+     * thread to consume data from the pipe.  It's possible that the thread
+     * and its runloop might stop during that ... so we need to check that
+     * outputFd is still valid.
+     */
+    while (outputFd >= 0
+           && NO == (signalled = (write(outputFd, "0", 1) == 1) ? YES : NO))
+    {
+        NSTimeInterval    now = [NSDate timeIntervalSinceReferenceDate];
         
-        /* The write could concievably fail if the pipe is full.
-         * In that case we need to release the lock temporarily to allow the other
-         * thread to consume data from the pipe.  It's possible that the thread
-         * and its runloop might stop during that ... so we need to check that
-         * outputFd is still valid.
-         */
-        while (outputFd >= 0
-               && NO == (signalled = (write(outputFd, "0", 1) == 1) ? YES : NO))
+        if (0.0 == start)
         {
-            NSTimeInterval    now = [NSDate timeIntervalSinceReferenceDate];
-            
-            if (0.0 == start)
-            {
-                start = now;
-            }
-            else if (now - start >= 1.0)
-            {
-                NSLog(@"Unable to signal %@ within a second; blocked?", self);
-                break;
-            }
-            [lock unlock];
-            [lock lock];
+            start = now;
         }
+        else if (now - start >= 1.0)
+        {
+            NSLog(@"Unable to signal %@ within a second; blocked?", self);
+            break;
+        }
+        [lock unlock];
+        [lock lock];
     }
     if (YES == signalled)
     {
@@ -1595,6 +1594,7 @@ lockInfoErr(NSString *str)
     }
 }
 
+
 - (void) dealloc
 {
     [self invalidateThreadInfo];
@@ -1605,16 +1605,7 @@ lockInfoErr(NSString *str)
 
 - (id) init
 {
-#ifdef _WIN32
-    if ((event = CreateEvent(NULL, TRUE, FALSE, NULL)) == INVALID_HANDLE_VALUE)
-    {
-        DESTROY(self);
-        [NSException raise: NSInternalInconsistencyException
-                    format: @"Failed to create event to handle perform in thread"];
-    }
-#else
     int	fd[2];
-    
     if (pipe(fd) == 0)
     {
         int	e;
@@ -1656,7 +1647,6 @@ lockInfoErr(NSString *str)
         [NSException raise: NSInternalInconsistencyException
                     format: @"Failed to create pipe to handle perform in thread"];
     }
-#endif
     lock = [NSLock new];
     performers = [NSMutableArray new];
     return self;
@@ -1698,15 +1688,6 @@ lockInfoErr(NSString *str)
     unsigned int	c;
     
     [lock lock];
-#if defined(_WIN32)
-    if (event != INVALID_HANDLE_VALUE)
-    {
-        if (ResetEvent(event) == 0)
-        {
-            NSLog(@"Reset event failed - %@", [NSError _last]);
-        }
-    }
-#else
     if (inputFd >= 0)
     {
         char	buf[BUFSIZ];
@@ -1721,7 +1702,6 @@ lockInfoErr(NSString *str)
         while (read(inputFd, buf, sizeof(buf)) > 0)
             ;
     }
-#endif
     
     c = [performers count];
     if (0 == c)
@@ -1754,10 +1734,10 @@ lockInfoErr(NSString *str)
  * Just a get method, get the info related with a thread.
  Delete the thread safe code.
  */
-GSRunLoopCrossThreadTaskInfo *
+GSRunLoopThreadRelatedInfo *
 GSRunLoopInfoForThread(NSThread *aThread)
 {
-    GSRunLoopCrossThreadTaskInfo   *info;
+    GSRunLoopThreadRelatedInfo   *info;
     
     if (aThread == nil)
     {
@@ -1805,7 +1785,7 @@ GSRunLoopInfoForThread(NSThread *aThread)
            waitUntilDone: (BOOL)aFlag
                    modes: (NSArray*)anArray
 {
-    GSRunLoopCrossThreadTaskInfo   *info;
+    GSRunLoopThreadRelatedInfo   *info;
     NSThread	        *currentThread;
     if ([anArray count] == 0)
     {
@@ -1840,7 +1820,7 @@ GSRunLoopInfoForThread(NSThread *aThread)
     }
     else
     {
-        GSCrossTheadTaskHolder   *h;
+        GSCrossTheadTaskHolder   *hoderPerfomer;
         NSConditionLock	*conditionLock = nil;
         
         if ([aThread isFinished] == YES)
@@ -1856,32 +1836,32 @@ GSRunLoopInfoForThread(NSThread *aThread)
             conditionLock = [[NSConditionLock alloc] init];
         }
         
-        h = [GSCrossTheadTaskHolder newForReceiver: self
-                                   argument: anObject
-                                   selector: aSelector
-                                      modes: anArray
-                                       lock: conditionLock];
-        [info addPerformer: h];
+        hoderPerfomer = [GSCrossTheadTaskHolder newForReceiver: self
+                                          argument: anObject
+                                          selector: aSelector
+                                             modes: anArray
+                                              lock: conditionLock];
+        [info addPerformer: hoderPerfomer];
         if (conditionLock != nil)
         {
             [conditionLock lockWhenCondition: 1]; // Here, thead will be block until the condition unlock it in GSCrossTheadTaskHolder invkoe related tash.
             [conditionLock unlock];
             RELEASE(conditionLock);
-            if ([h isInvalidated] == NO)
+            if ([hoderPerfomer isInvalidated] == NO)
             {
                 /* If we have an exception passed back from the remote thread,
                  * re-raise it.
                  */
-                if (nil != h->exception)
+                if (nil != hoderPerfomer->exception)
                 {
-                    NSException       *e = AUTORELEASE(RETAIN(h->exception));
+                    NSException       *e = AUTORELEASE(RETAIN(hoderPerfomer->exception));
                     
-                    RELEASE(h);
+                    RELEASE(hoderPerfomer);
                     [e raise];
                 }
             }
         }
-        RELEASE(h);
+        RELEASE(hoderPerfomer);
     }
 }
 
