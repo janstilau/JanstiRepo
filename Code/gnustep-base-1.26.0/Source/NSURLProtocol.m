@@ -591,6 +591,7 @@ static NSURLProtocol	*placeholder = nil;
                           port: port
                    inputStream: &input
                   outputStream: &output];
+    // GSIneternetInputStream and GSIneternetOutputStream
     if (!input || !output)
     {
         [self stopLoading];
