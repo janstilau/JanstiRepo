@@ -11,18 +11,6 @@
 @end
 static Class	NSDate_class;
 
-/**
- * <p>An <code>NSTimer</code> provides a way to send a message at some time in
- * the future, possibly repeating every time a fixed interval has passed. To
- * use a timer, you can either create one that will automatically be added to
- * the run loop in the current thread (using the -addTimer:forMode: method),
- * or you can create it without adding it then add it to an [NSRunLoop]
- * explicitly later.
- * </p>
- * <p>NB. You may not use -init or +new to create a timer, as the timer must
- * be properly initialised to send an action after some interval.
- * </p>
- */
 @implementation NSTimer
 
 + (void) initialize
@@ -31,37 +19,6 @@ static Class	NSDate_class;
     {
         NSDate_class = [NSGDate class];
     }
-}
-
-- (NSString*) description
-{
-    NSString      *s = [super description];
-    
-    if ([self isValid])
-    {
-        if (_selector == 0)
-        {
-            return [NSString stringWithFormat: @"%@ at %@ invokes %@",
-                    s, [self fireDate], _target];
-        }
-        else
-        {
-            return [NSString stringWithFormat: @"%@ at %@ sends %@ to (%@)",
-                    s, [self fireDate], NSStringFromSelector(_selector), _target];
-        }
-    }
-    else
-    {
-        return [NSString stringWithFormat: @"%@ (invalidated)", s];
-    }
-}
-
-/* For MacOS-X compatibility, this returns nil.
- */
-- (id) init
-{
-    DESTROY(self);
-    return nil;
 }
 
 /** <init />
@@ -98,7 +55,7 @@ static Class	NSDate_class;
     }
     else
     {
-        _date = [fd copyWithZone: NSDefaultMallocZone()];
+        _date = [fd copyWithZone: NSDefaultMallocZone()]; // copy for safe.
     }
     _target = RETAIN(object);
     _selector = selector;

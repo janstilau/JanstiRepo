@@ -19,14 +19,12 @@ extern "C" {
     
     @interface NSRunLoop : NSObject
 {
-#if	GS_EXPOSE(NSRunLoop)
 @private
     NSString		*_currentMode;
     NSMapTable		*_contextMap; // 这里, 是根据 mode 进行的区分,
     NSMutableArray	*_contextStack;
-    NSMutableArray	*_timedPerformers; // 这个 _timedPerformers, 仅仅是 runloop 管理performSelector AfterDelay 用到的一个数组, 并不是真正的在 runloop 检查是不是应该执行定时任务的容器. runloop 中, 应对的就是 NSTimer.
+    NSMutableArray	*_timedPerformers; // afterDelay infomation will be insert into thir array.
     void			*_extra;
-#endif
 }
 
 

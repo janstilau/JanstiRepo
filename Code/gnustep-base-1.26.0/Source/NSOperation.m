@@ -561,7 +561,7 @@ sortFunc(id o1, id o2, void *ctxt)
   return NSOrderedSame;
 }
 
-static NSString	*threadKey = @"NSOperationQueue";
+static NSString	*operationQueueKey = @"NSOperationQueue";
 static NSOperationQueue *mainQueue = nil;
 
 @implementation NSOperationQueue
@@ -572,7 +572,7 @@ static NSOperationQueue *mainQueue = nil;
     {
       return mainQueue;
     }
-  return [[[NSThread currentThread] threadDictionary] objectForKey: threadKey];
+  return [[[NSThread currentThread] threadDictionary] objectForKey: operationQueueKey];
 }
 
 + (void) initialize
@@ -921,7 +921,7 @@ static NSOperationQueue *mainQueue = nil;
   NSAutoreleasePool	*pool = [NSAutoreleasePool new];
 
   [[[NSThread currentThread] threadDictionary] setObject: self
-                                                  forKey: threadKey];
+                                                  forKey: operationQueueKey];
   for (;;)
     {
       NSOperation	*op;
@@ -978,7 +978,7 @@ static NSOperationQueue *mainQueue = nil;
 	}
     }
 
-  [[[NSThread currentThread] threadDictionary] removeObjectForKey: threadKey];
+  [[[NSThread currentThread] threadDictionary] removeObjectForKey: operationQueueKey];
   [internal->lock lock];
   internal->threadCount--;
   [internal->lock unlock];

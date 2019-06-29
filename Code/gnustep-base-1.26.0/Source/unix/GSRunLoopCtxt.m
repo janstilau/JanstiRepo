@@ -652,7 +652,7 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
 
 - (BOOL) pollUntil: (int)milliseconds within: (NSArray*)contexts
 {
-    GSRunLoopThreadInfo   *threadInfo = GSRunLoopInfoForThread(nil);
+    GSRunLoopCrossThreadTaskInfo   *threadInfo = GSRunLoopInfoForThread(nil);
     struct timeval	timeout;
     void			*select_timeout;
     int			select_return;
@@ -1032,7 +1032,7 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
 
 + (BOOL) awakenedBefore: (NSDate*)when
 {
-    GSRunLoopThreadInfo   *threadInfo = GSRunLoopInfoForThread(nil);
+    GSRunLoopCrossThreadTaskInfo   *threadInfo = GSRunLoopInfoForThread(nil);
     NSTimeInterval	ti = (when == nil) ? 0.0 : [when timeIntervalSinceNow];
     int			milliseconds = (ti <= 0.0) ? 0 : (int)(ti*1000);
     struct timeval	timeout;

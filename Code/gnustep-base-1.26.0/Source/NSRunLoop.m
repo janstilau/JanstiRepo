@@ -1,34 +1,3 @@
-/** Implementation of object for waiting on several input sources
- NSRunLoop.m
- 
- Copyright (C) 1996-1999 Free Software Foundation, Inc.
- 
- Original by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
- Created: March 1996
- OPENSTEP version by: Richard Frith-Macdonald <richard@brainstorm.co.uk>
- Created: August 1997
- 
- This file is part of the GNUstep Base Library.
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free
- Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02111 USA.
- 
- <title>NSRunLoop class reference</title>
- $Date$ $Revision$
- */
-
 #import "common.h"
 #define	EXPOSE_NSRunLoop_IVARS	1
 #define	EXPOSE_NSTimer_IVARS	1
@@ -80,8 +49,6 @@ static NSDate	*theFuture = nil;
 - (void) getFds: (NSInteger*)fds count: (NSInteger*)count;
 @end
 
-
-
 /*
  *	The GSRunLoopPerformer class is used to hold information about
  *	messages which are due to be sent to objects once each runloop
@@ -107,28 +74,12 @@ static NSDate	*theFuture = nil;
 
 - (void) dealloc
 {
-    RELEASE(target);
-    RELEASE(argument);
     [super dealloc];
 }
 
 - (void) fireRunloopPerformer
 {
-    NS_DURING
-    {
-        [target performSelector: selector withObject: argument];
-    }
-    NS_HANDLER
-    {
-        NSLog(@"*** NSRunLoop ignoring exception '%@' (reason '%@') "
-              @"raised during performSelector... with target %s(%s) "
-              @"and selector '%s'",
-              [localException name], [localException reason],
-              GSClassNameFromObject(target),
-              GSObjCIsInstance(target) ? "instance" : "class",
-              sel_getName(selector));
-    }
-    NS_ENDHANDLER
+    [target performSelector: selector withObject: argument];
 }
 
 - (id) initWithSelector: (SEL)aSelector
@@ -149,8 +100,6 @@ static NSDate	*theFuture = nil;
 
 @end
 
-
-
 @interface NSRunLoop (TimedPerformers)
 - (NSMutableArray*) _timedPerformers;
 @end
@@ -162,10 +111,6 @@ static NSDate	*theFuture = nil;
 }
 @end
 
-/*
- * The GSTimedPerformer class is used to hold information about
- * messages which are due to be sent to objects at a particular time.
- */
 @interface GSRunloopDelayerPerformer: NSObject
 {
 @public
@@ -185,19 +130,13 @@ static NSDate	*theFuture = nil;
 
 @implementation GSRunloopDelayerPerformer
 
-- (void) dealloc
-{
-    [self finalize];
-    TEST_RELEASE(timer);
-    RELEASE(target);
-    RELEASE(argument);
-    [super dealloc];
-}
-
 - (void) fireTimer
 {
     DESTROY(timer);
     [target performSelector: selector withObject: argument];
+    /**
+     * Not only invoke method. The runloop timedPerfromer must be updated.
+     */
     [[[NSRunLoop currentRunLoop] _timedPerformers]
      removeObjectIdenticalTo: self];
 }
@@ -239,9 +178,7 @@ static NSDate	*theFuture = nil;
 }
 
 @end
-
 
-
 /*
  *      Setup for inline operation of arrays.
  */
@@ -278,17 +215,14 @@ static inline BOOL timerInvalidated(NSTimer *t)
     if (count > 0)
     {
         GSRunloopDelayerPerformer	*array[count];
-        
-        IF_NO_GC(RETAIN(target));
         [perf getObjects: array];
         while (count-- > 0)
         {
             GSRunloopDelayerPerformer	*p = array[count];
-            
             if (p->target == target)
             {
                 [p invalidate];
-                [perf removeObjectAtIndex: count];
+                [perf removeObjectAtIndex: count]; // Here copy the origin data, and the delete can be made in the origin one.
             }
         }
         RELEASE(target);
@@ -313,13 +247,13 @@ static inline BOOL timerInvalidated(NSTimer *t)
     {
         GSRunloopDelayerPerformer	*array[count];
         
-        IF_NO_GC(RETAIN(target));
-        IF_NO_GC(RETAIN(arg));
         [perf getObjects: array];
         while (count-- > 0)
         {
+            /**
+             * Except for target, aSelector and arg will be check.
+             */
             GSRunloopDelayerPerformer	*p = array[count];
-            
             if (p->target == target && sel_isEqual(p->selector, aSelector)
                 && (p->argument == arg || [p->argument isEqual: arg]))
             {
@@ -327,8 +261,6 @@ static inline BOOL timerInvalidated(NSTimer *t)
                 [perf removeObjectAtIndex: count];
             }
         }
-        RELEASE(arg);
-        RELEASE(target);
     }
 }
 
@@ -345,6 +277,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
                                                 delay: seconds];
     [[loop _timedPerformers] addObject: item];
     RELEASE(item);
+    // add timer for run.
     [loop addTimer: item->timer forMode: NSDefaultRunLoopMode];
 }
 
@@ -367,18 +300,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
                                                  argument: argument
                                                     delay: seconds];
         [[loop _timedPerformers] addObject: item];
-        RELEASE(item);
-        if ([modes isProxy])
-        {
-            for (i = 0; i < count; i++)
-            {
-                marray[i] = [modes objectAtIndex: i];
-            }
-        }
-        else
-        {
-            [modes getObjects: marray];
-        }
+        [modes getObjects: marray];
         for (i = 0; i < count; i++)
         {
             [loop addTimer: item->timer forMode: marray[i]];
@@ -737,7 +659,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
 
 + (NSRunLoop*) _runLoopForThread: (NSThread*) aThread
 {
-    GSRunLoopThreadInfo	*info = GSRunLoopInfoForThread(aThread);
+    GSRunLoopCrossThreadTaskInfo	*info = GSRunLoopInfoForThread(aThread);
     NSRunLoop             *current = info->loop;
     
     if (nil == current)
@@ -1443,7 +1365,6 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
  * order value are sent first.<br />
  * If the modes array is empty, this method has no effect.
  */
-// 这里, 是讲一项任务, 存放到 context->performers 中去了
 - (void) performSelector: (SEL)aSelector
                   target: (id)target
                 argument: (id)argument
@@ -1452,63 +1373,60 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
 {
     unsigned		count = [modes count];
     
-    if (count > 0)
+    if (count <=  0) { return; }
+    
+    NSString            *array[count];
+    GSRunLoopPerformer    *performer;
+    performer = [[GSRunLoopPerformer alloc] initWithSelector: aSelector
+                                                      target: target
+                                                    argument: argument
+                                                       order: order];
+    [modes getObjects: array];
+    while (count-- > 0)
     {
-        NSString			*array[count];
-        GSRunLoopPerformer	*performer;
+        NSString    *mode = array[count];
+        unsigned    end;
+        unsigned    i;
+        GSRunLoopCtxt    *context;
+        GSIArray    performers;
         
-        performer = [[GSRunLoopPerformer alloc] initWithSelector: aSelector
-                                                     target: target
-                                                   argument: argument
-                                                      order: order];
-        
-        [modes getObjects: array];
-        while (count-- > 0)
+        context = NSMapGet(_contextMap, mode);
+        if (context == nil)
         {
-            NSString	*mode = array[count];
-            unsigned	end;
-            unsigned	i;
-            GSRunLoopCtxt	*context;
-            GSIArray	performers;
+            context = [[GSRunLoopCtxt alloc] initWithMode: mode
+                                                    extra: _extra];
+            NSMapInsert(_contextMap, context->mode, context);
+            RELEASE(context);
+        }
+        performers = context->cachedPerformers;
+        
+        end = GSIArrayCount(performers);
+        for (i = 0; i < end; i++)
+        {
+            GSRunLoopPerformer    *p;
             
-            context = NSMapGet(_contextMap, mode);
-            if (context == nil)
-            {
-                context = [[GSRunLoopCtxt alloc] initWithMode: mode
-                                                        extra: _extra];
-                NSMapInsert(_contextMap, context->mode, context);
-                RELEASE(context);
-            }
-            performers = context->cachedPerformers;
-            
-            end = GSIArrayCount(performers);
-            for (i = 0; i < end; i++)
-            {
-                GSRunLoopPerformer	*p;
-                
-                p = GSIArrayItemAtIndex(performers, i).obj;
-                if (p->order > order)
-                {
-                    GSIArrayInsertItem(performers, (GSIArrayItem)((id)performer), i);
-                    break;
-                }
-            }
-            if (i == end)
+            p = GSIArrayItemAtIndex(performers, i).obj;
+            if (p->order > order)
             {
                 GSIArrayInsertItem(performers, (GSIArrayItem)((id)performer), i);
-            }
-            i = GSIArrayCount(performers);
-            if (i % 1000 == 0 && i > context->maxPerformers)
-            {
-                context->maxPerformers = i;
-                NSLog(@"WARNING ... there are %u performers scheduled"
-                      @" in mode %@ of %@\n(Latest: [%@ %@])",
-                      i, mode, self, NSStringFromClass([target class]),
-                      NSStringFromSelector(aSelector));
+                break;
             }
         }
-        RELEASE(performer);
+        if (i == end)
+        {
+            GSIArrayInsertItem(performers, (GSIArrayItem)((id)performer), i);
+        }
+        i = GSIArrayCount(performers);
+        if (i % 1000 == 0 && i > context->maxPerformers)
+        {
+            context->maxPerformers = i;
+            NSLog(@"WARNING ... there are %u performers scheduled"
+                  @" in mode %@ of %@\n(Latest: [%@ %@])",
+                  i, mode, self, NSStringFromClass([target class]),
+                  NSStringFromSelector(aSelector));
+        }
     }
+    RELEASE(performer);
 }
 
 /**

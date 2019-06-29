@@ -29,27 +29,31 @@ static IMP      takeValue = 0;
 static IMP      takePathKVO = 0;
 static IMP      takeValueKVO = 0;
 
+
+/**
+ * This method is prepare for methodName and variable name for GSObjCSetVal
+ */
 static void
-SetValueForKey(NSObject *self, id anObject, const char *key, unsigned size)
+SetValueForKey(NSObject *self, id anObject, const char *key, unsigned keyLength)
 {
     SEL		sel = 0;
     const char	*type = 0;
     int		off = 0;
     
-    if (size > 0)
+    if (keyLength > 0)
     {
         const char	*name;
-        char		buf[size + 6];
+        char		buf[keyLength + 6];
         char		lo;
         char		hi;
         
         strncpy(buf, "_set", 4);
-        strncpy(&buf[4], key, size);
+        strncpy(&buf[4], key, keyLength);
         lo = buf[4];
         hi = islower(lo) ? toupper(lo) : lo;
         buf[4] = hi;
-        buf[size + 4] = ':';
-        buf[size + 5] = '\0';
+        buf[keyLength + 4] = ':';
+        buf[keyLength + 5] = '\0';
         
         name = &buf[1];	// setKey:
         type = NULL;
@@ -61,13 +65,14 @@ SetValueForKey(NSObject *self, id anObject, const char *key, unsigned size)
             if (sel == 0 || [self respondsToSelector: sel] == NO)
             {
                 sel = 0;
+                // Here, all setMethod cannot be found, so the next step is to fine coorsponding variable.
                 if ([[self class] accessInstanceVariablesDirectly] == YES)
                 {
-                    buf[size + 4] = '\0';
+                    buf[keyLength + 4] = '\0';
                     buf[3] = '_';
                     buf[4] = lo;
                     name = &buf[3];	// _key
-                    if (GSObjCFindVariable(self, name, &type, &size, &off) == NO)
+                    if (GSObjCFindVariable(self, name, &type, &keyLength, &off) == NO)
                     {
                         buf[4] = hi;
                         buf[3] = 's';
@@ -75,19 +80,19 @@ SetValueForKey(NSObject *self, id anObject, const char *key, unsigned size)
                         buf[1] = '_';
                         name = &buf[1];	// _isKey
                         if (GSObjCFindVariable(self,
-                                               name, &type, &size, &off) == NO)
+                                               name, &type, &keyLength, &off) == NO)
                         {
                             buf[4] = lo;
                             name = &buf[4];	// key
                             if (GSObjCFindVariable(self,
-                                                   name, &type, &size, &off) == NO)
+                                                   name, &type, &keyLength, &off) == NO)
                             {
                                 buf[4] = hi;
                                 buf[3] = 's';
                                 buf[2] = 'i';
                                 name = &buf[2];	// isKey
                                 GSObjCFindVariable(self,
-                                                   name, &type, &size, &off);
+                                                   name, &type, &keyLength, &off);
                             }
                         }
                     }
@@ -99,7 +104,7 @@ SetValueForKey(NSObject *self, id anObject, const char *key, unsigned size)
             }
         }
     }
-    GSObjCSetVal(self, key, anObject, sel, type, size, off);
+    GSObjCSetVal(self, key, anObject, sel, type, keyLength, off);
 }
 
 static id ValueForKey(NSObject *self, const char *key, unsigned size)
@@ -233,29 +238,24 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
     return dictionary;
 }
 
+/**
+ * The default is to reise a exception. You can override to just make you app not creash, which is dangerous.
+ */
 - (void) setNilValueForKey: (NSString*)aKey
 {
-    /**
-     * Default is to reise a exception. You can override to just make you app not creash, which is dangerous.
-     */
     [NSException raise: NSInvalidArgumentException
                 format: @"%@ -- %@ 0x%"PRIxPTR": Given nil value to set for key \"%@\"",
      NSStringFromSelector(_cmd), NSStringFromClass([self class]),
      (NSUInteger)self, aKey];
 }
 
-
+/**
+ * All setValueForKey will enter a funnel C function setValueForKey. All logic are in one place.
+ */
 - (void) setValue: (id)anObject forKey: (NSString*)aKey
 {
     unsigned	size = [aKey length] * 8;
     char		key[size + 1];
-    IMP   	o = [self methodForSelector: @selector(takeValue:forKey:)];
-    
-    if (o != takeValue && o != takeValueKVO)
-    {
-        (*o)(self, @selector(takeValue:forKey:), anObject, aKey);
-        return;
-    }
     [aKey getCString: key
            maxLength: size + 1
             encoding: NSUTF8StringEncoding];
@@ -263,26 +263,21 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
     SetValueForKey(self, anObject, key, size);
 }
 
-
+/**
+ * Recursive call. First find . character. So character parse is very important in coding, The reason is that humman being is interacting with strings.
+ */
 - (void) setValue: (id)anObject forKeyPath: (NSString*)aKey
 {
     NSRange       r = [aKey rangeOfString: @"." options: NSLiteralSearch];
-    IMP	        o = [self methodForSelector: @selector(takeValue:forKeyPath:)];
-    if (o != takePath && o != takePathKVO)
-    {
-        (*o)(self, @selector(takeValue:forKeyPath:), anObject, aKey);
-        return;
-    }
-    
     if (r.length == 0)
     {
         [self setValue: anObject forKey: aKey];
     }
     else
     {
-        NSString	*key = [aKey substringToIndex: r.location];
+        NSString	*key = [aKey substringToIndex: r.location];// up to, but not including.
         NSString	*path = [aKey substringFromIndex: NSMaxRange(r)];
-        
+        // get value and setValue for the remain path. If value is nil, end from object_msg_send.
         [[self valueForKey: key] setValue: anObject forKeyPath: path];
     }
 }
@@ -302,7 +297,9 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
     [exp raise];
 }
 
-
+/**
+ * This method is dangerous, set nil value for key will cause exception.So the yYModel
+ */
 - (void) setValuesForKeysWithDictionary: (NSDictionary*)aDictionary
 {
     NSEnumerator	*enumerator;
@@ -314,7 +311,10 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
     }
 }
 
-
+/**
+ *
+ The default implementation of this method searches the class of the receiver for a validation method whose name matches the pattern validate<Key>:error:. If you define such a method for a property, the default implementation of validateValue:forKey:error: calls it when asked to validate the corresponding property, allowing your method to alter the input value if needed, and to determine the return value.
+ */
 - (BOOL) validateValue: (id*)aValue
                 forKey: (NSString*)aKey
                  error: (NSError**)anError
@@ -324,30 +324,27 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
     if (aValue == 0 || (size = [aKey length] * 8) == 0)
     {
         [NSException raise: NSInvalidArgumentException format: @"nil argument"];
+        return YES;
     }
-    else
+    char		name[size + 16];
+    SEL		sel;
+    BOOL		(*imp)(id,SEL,id*,id*);
+    strncpy(name, "validate", 8);
+    [aKey getCString: &name[8]
+           maxLength: size + 1
+            encoding: NSUTF8StringEncoding];
+    size = strlen(&name[8]);
+    strncpy(&name[size + 8], ":error:", 7);
+    name[size + 15] = '\0';
+    if (islower(name[8]))
     {
-        char		name[size + 16];
-        SEL		sel;
-        BOOL		(*imp)(id,SEL,id*,id*);
-        
-        strncpy(name, "validate", 8);
-        [aKey getCString: &name[8]
-               maxLength: size + 1
-                encoding: NSUTF8StringEncoding];
-        size = strlen(&name[8]);
-        strncpy(&name[size + 8], ":error:", 7);
-        name[size + 15] = '\0';
-        if (islower(name[8]))
-        {
-            name[8] = toupper(name[8]);
-        }
-        sel = sel_getUid(name);
-        if (sel != 0 && [self respondsToSelector: sel] == YES)
-        {
-            imp = (BOOL (*)(id,SEL,id*,id*))[self methodForSelector: sel];
-            return (*imp)(self, sel, aValue, anError);
-        }
+        name[8] = toupper(name[8]);
+    }
+    sel = sel_getUid(name);
+    if (sel != 0 && [self respondsToSelector: sel] == YES)
+    {
+        imp = (BOOL (*)(id,SEL,id*,id*))[self methodForSelector: sel];
+        return (*imp)(self, sel, aValue, anError);
     }
     return YES;
 }
@@ -404,7 +401,10 @@ static id ValueForKey(NSObject *self, const char *key, unsigned size)
     }
 }
 
-
+/**
+ *
+ The default is to raise a exception.
+ */
 - (id) valueForUndefinedKey: (NSString*)aKey
 {
     NSDictionary	*dict;
