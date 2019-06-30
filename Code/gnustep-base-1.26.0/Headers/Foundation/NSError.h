@@ -1,40 +1,7 @@
-/** Interface for NSError for GNUStep
-   Copyright (C) 2004,2006 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: May 2004
-   
-   This file is part of the GNUstep Base Library.
-   
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   AutogsdocSource: NSError.m
-   */ 
-
 #ifndef __NSError_h_GNUSTEP_BASE_INCLUDE
 #define __NSError_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
-
 #import	<Foundation/NSObject.h>
-
-#if	OS_API_VERSION(MAC_OS_X_VERSION_10_3,GS_API_LATEST)
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 @class NSArray, NSDictionary, NSString;
 
@@ -123,26 +90,22 @@ GS_EXPORT NSString* const NSCocoaErrorDomain;
  * Error information class.<br />
  * NSError instances are used to pass information about runtime errors
  * from lower levels to higher levels of the program.<br />
+ 
+    From low level to upper level.
+ 
  * These should be used instead of exceptions where an error is caused
  * by external factors (such as a resource file not being present)
  * rather than a programming error (where NSException should be used).
+ 
+    NSError is aimed at showing infomation about not programming error.
+ 
  */
 @interface NSError : NSObject <NSCopying, NSCoding>
 {
-#if	GS_EXPOSE(NSError)
 @private
-  int		_code;
-  NSString	*_domain;
-  NSDictionary	*_userInfo;
-#endif
-#if     GS_NONFRAGILE
-#else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
+    int		_code;
+    NSString	*_domain;
+    NSDictionary	*_userInfo;
 #endif
 }
 
@@ -151,12 +114,14 @@ GS_EXPORT NSString* const NSCocoaErrorDomain;
  * -initWithDomain:code:userInfo:
  */
 + (id) errorWithDomain: (NSString*)aDomain
-		  code: (NSInteger)aCode
-	      userInfo: (NSDictionary*)aDictionary;
+                  code: (NSInteger)aCode
+              userInfo: (NSDictionary*)aDictionary;
 
 /**
  * Return the error code ... which is not globally unique, just unique for
  * a particular domain.
+ 
+ Code is just related to a particular domain.
  */
 - (NSInteger) code;
 
@@ -170,8 +135,8 @@ GS_EXPORT NSString* const NSCocoaErrorDomain;
  * The domain must be non-nil.
  */
 - (id) initWithDomain: (NSString*)aDomain
-		 code: (NSInteger)aCode
-	     userInfo: (NSDictionary*)aDictionary;
+                 code: (NSInteger)aCode
+             userInfo: (NSDictionary*)aDictionary;
 
 /**
  * Return a human readable description for the error.<br />
@@ -181,7 +146,6 @@ GS_EXPORT NSString* const NSCocoaErrorDomain;
  */
 - (NSString *) localizedDescription;
 
-#if	OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST)
 /**
  * Return a human readable explanation of the reason for the error
  * (if known).  This should normally be a more discursive explanation
@@ -215,22 +179,17 @@ GS_EXPORT NSString* const NSCocoaErrorDomain;
  * if it is available, otherwise it returns nil.
  */
 - (id) recoveryAttempter;
-#endif
 
 /**
  * Return the user info for this instance (or nil if none is set)<br />
  * The <code>NSLocalizedDescriptionKey</code> should locate a human readable
- * description in the dictionary.<br /> 
+ * description in the dictionary.<br />
  * The <code>NSUnderlyingErrorKey</code> key should locate an
  * <code>NSError</code> instance if an error is available describing any
  * underlying problem.<br />
  */
 - (NSDictionary*) userInfo;
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

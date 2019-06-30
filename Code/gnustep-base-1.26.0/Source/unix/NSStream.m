@@ -206,7 +206,6 @@
 {
     if ((self = [super init]) != nil)
     {
-        [NSOutputStream outputStreamToFileAtPath:<#(NSString *)#> append:<#(BOOL)#>]
         ASSIGN(_path, path);
         // so that unopened access will fail
         _shouldAppend = shouldAppend;
