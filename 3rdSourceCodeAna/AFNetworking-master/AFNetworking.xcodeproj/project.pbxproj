@@ -7,18 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		064A228A22506DAC00A6B909 /* MCJWT.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A227B22506DAB00A6B909 /* MCJWT.h */; };
-		064A228B22506DAC00A6B909 /* MCAlgorithm.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A227C22506DAB00A6B909 /* MCAlgorithm.h */; };
-		064A228C22506DAC00A6B909 /* MCJWT.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A227D22506DAB00A6B909 /* MCJWT.m */; };
-		064A228D22506DAC00A6B909 /* MCAlgorithm.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A227E22506DAB00A6B909 /* MCAlgorithm.m */; };
-		064A228E22506DAC00A6B909 /* MCNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A227F22506DAB00A6B909 /* MCNetwork.h */; };
-		064A228F22506DAC00A6B909 /* MCNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A228022506DAB00A6B909 /* MCNetwork.m */; };
-		064A229022506DAC00A6B909 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A228222506DAB00A6B909 /* Reachability.m */; };
-		064A229122506DAC00A6B909 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A228322506DAB00A6B909 /* Reachability.h */; };
-		064A229222506DAC00A6B909 /* MCNetSupporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A228522506DAB00A6B909 /* MCNetSupporting.m */; };
-		064A229322506DAC00A6B909 /* MCNetSupporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A228622506DAB00A6B909 /* MCNetSupporting.h */; };
-		064A229422506DAC00A6B909 /* MCUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 064A228822506DAB00A6B909 /* MCUploadManager.m */; };
-		064A229522506DAC00A6B909 /* MCUploadManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 064A228922506DAB00A6B909 /* MCUploadManager.h */; };
 		1BF9F9601C87832B00F1F35A /* AFImageResponseSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BF9F95F1C87832B00F1F35A /* AFImageResponseSerializerTests.m */; };
 		1BF9F9611C87843200F1F35A /* AFImageResponseSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BF9F95F1C87832B00F1F35A /* AFImageResponseSerializerTests.m */; };
 		1BF9F9621C87843300F1F35A /* AFImageResponseSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BF9F95F1C87832B00F1F35A /* AFImageResponseSerializerTests.m */; };
@@ -244,18 +232,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		064A227B22506DAB00A6B909 /* MCJWT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCJWT.h; sourceTree = "<group>"; };
-		064A227C22506DAB00A6B909 /* MCAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCAlgorithm.h; sourceTree = "<group>"; };
-		064A227D22506DAB00A6B909 /* MCJWT.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCJWT.m; sourceTree = "<group>"; };
-		064A227E22506DAB00A6B909 /* MCAlgorithm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCAlgorithm.m; sourceTree = "<group>"; };
-		064A227F22506DAB00A6B909 /* MCNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCNetwork.h; sourceTree = "<group>"; };
-		064A228022506DAB00A6B909 /* MCNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCNetwork.m; sourceTree = "<group>"; };
-		064A228222506DAB00A6B909 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		064A228322506DAB00A6B909 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		064A228522506DAB00A6B909 /* MCNetSupporting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCNetSupporting.m; sourceTree = "<group>"; };
-		064A228622506DAB00A6B909 /* MCNetSupporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCNetSupporting.h; sourceTree = "<group>"; };
-		064A228822506DAB00A6B909 /* MCUploadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCUploadManager.m; sourceTree = "<group>"; };
-		064A228922506DAB00A6B909 /* MCUploadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCUploadManager.h; sourceTree = "<group>"; };
 		1BF9F95F1C87832B00F1F35A /* AFImageResponseSerializerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageResponseSerializerTests.m; sourceTree = "<group>"; };
 		1F083A4920364648004D80C7 /* AFCompatibilityMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AFCompatibilityMacros.h; sourceTree = "<group>"; };
 		1F6F7DF51F1703A100C979D0 /* Let's Encrypt Authority X3.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Let's Encrypt Authority X3.cer"; sourceTree = "<group>"; };
@@ -398,57 +374,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		064A227922506DAB00A6B909 /* Network */ = {
-			isa = PBXGroup;
-			children = (
-				064A227A22506DAB00A6B909 /* JWT */,
-				064A227F22506DAB00A6B909 /* MCNetwork.h */,
-				064A228022506DAB00A6B909 /* MCNetwork.m */,
-				064A228122506DAB00A6B909 /* Reachability */,
-				064A228422506DAB00A6B909 /* Supporting */,
-				064A228722506DAB00A6B909 /* Upload */,
-			);
-			path = Network;
-			sourceTree = "<group>";
-		};
-		064A227A22506DAB00A6B909 /* JWT */ = {
-			isa = PBXGroup;
-			children = (
-				064A227B22506DAB00A6B909 /* MCJWT.h */,
-				064A227C22506DAB00A6B909 /* MCAlgorithm.h */,
-				064A227D22506DAB00A6B909 /* MCJWT.m */,
-				064A227E22506DAB00A6B909 /* MCAlgorithm.m */,
-			);
-			path = JWT;
-			sourceTree = "<group>";
-		};
-		064A228122506DAB00A6B909 /* Reachability */ = {
-			isa = PBXGroup;
-			children = (
-				064A228222506DAB00A6B909 /* Reachability.m */,
-				064A228322506DAB00A6B909 /* Reachability.h */,
-			);
-			path = Reachability;
-			sourceTree = "<group>";
-		};
-		064A228422506DAB00A6B909 /* Supporting */ = {
-			isa = PBXGroup;
-			children = (
-				064A228522506DAB00A6B909 /* MCNetSupporting.m */,
-				064A228622506DAB00A6B909 /* MCNetSupporting.h */,
-			);
-			path = Supporting;
-			sourceTree = "<group>";
-		};
-		064A228722506DAB00A6B909 /* Upload */ = {
-			isa = PBXGroup;
-			children = (
-				064A228822506DAB00A6B909 /* MCUploadManager.m */,
-				064A228922506DAB00A6B909 /* MCUploadManager.h */,
-			);
-			path = Upload;
-			sourceTree = "<group>";
-		};
 		298D7C561BC2C88F00FD3B3E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -551,7 +476,6 @@
 		2995222F1BBF104D00859F49 = {
 			isa = PBXGroup;
 			children = (
-				064A227922506DAB00A6B909 /* Network */,
 				299522451BBF125A00859F49 /* AFNetworking */,
 				299522851BBF13C700859F49 /* UIKit+AFNetworking */,
 				2995223B1BBF104D00859F49 /* Supporting Files */,
@@ -678,29 +602,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				2995225A1BBF125A00859F49 /* AFURLRequestSerialization.h in Headers */,
-				064A228E22506DAC00A6B909 /* MCNetwork.h in Headers */,
 				299522A81BBF13C700859F49 /* UIImage+AFNetworking.h in Headers */,
 				299522531BBF125A00859F49 /* AFHTTPSessionManager.h in Headers */,
 				2995229C1BBF13C700859F49 /* AFAutoPurgingImageCache.h in Headers */,
 				299522581BBF125A00859F49 /* AFSecurityPolicy.h in Headers */,
-				064A229322506DAC00A6B909 /* MCNetSupporting.h in Headers */,
 				299522561BBF125A00859F49 /* AFNetworkReachabilityManager.h in Headers */,
-				064A228B22506DAC00A6B909 /* MCAlgorithm.h in Headers */,
 				299522A91BBF13C700859F49 /* UIImageView+AFNetworking.h in Headers */,
 				2995229E1BBF13C700859F49 /* AFImageDownloader.h in Headers */,
 				2995225E1BBF125A00859F49 /* AFURLSessionManager.h in Headers */,
 				2995225C1BBF125A00859F49 /* AFURLResponseSerialization.h in Headers */,
 				299522A21BBF13C700859F49 /* UIActivityIndicatorView+AFNetworking.h in Headers */,
 				1F96D2A4203649560085FC3F /* AFCompatibilityMacros.h in Headers */,
-				064A229522506DAC00A6B909 /* MCUploadManager.h in Headers */,
 				2995223D1BBF104D00859F49 /* AFNetworking.h in Headers */,
 				299522B01BBF13C700859F49 /* UIWebView+AFNetworking.h in Headers */,
 				299522AC1BBF13C700859F49 /* UIProgressView+AFNetworking.h in Headers */,
-				064A229122506DAC00A6B909 /* Reachability.h in Headers */,
 				299522A61BBF13C700859F49 /* UIButton+AFNetworking.h in Headers */,
 				299522A01BBF13C700859F49 /* AFNetworkActivityIndicatorManager.h in Headers */,
 				299522AE1BBF13C700859F49 /* UIRefreshControl+AFNetworking.h in Headers */,
-				064A228A22506DAC00A6B909 /* MCJWT.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -901,6 +819,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 2995222F1BBF104D00859F49;
@@ -1131,15 +1050,9 @@
 				299522AA1BBF13C700859F49 /* UIImageView+AFNetworking.m in Sources */,
 				299522B11BBF13C700859F49 /* UIWebView+AFNetworking.m in Sources */,
 				299522591BBF125A00859F49 /* AFSecurityPolicy.m in Sources */,
-				064A229422506DAC00A6B909 /* MCUploadManager.m in Sources */,
-				064A229222506DAC00A6B909 /* MCNetSupporting.m in Sources */,
 				299522A71BBF13C700859F49 /* UIButton+AFNetworking.m in Sources */,
-				064A228C22506DAC00A6B909 /* MCJWT.m in Sources */,
 				299522541BBF125A00859F49 /* AFHTTPSessionManager.m in Sources */,
 				2995225F1BBF125A00859F49 /* AFURLSessionManager.m in Sources */,
-				064A229022506DAC00A6B909 /* Reachability.m in Sources */,
-				064A228F22506DAC00A6B909 /* MCNetwork.m in Sources */,
-				064A228D22506DAC00A6B909 /* MCAlgorithm.m in Sources */,
 				2995225B1BBF125A00859F49 /* AFURLRequestSerialization.m in Sources */,
 				2995229D1BBF13C700859F49 /* AFAutoPurgingImageCache.m in Sources */,
 				299522A31BBF13C700859F49 /* UIActivityIndicatorView+AFNetworking.m in Sources */,

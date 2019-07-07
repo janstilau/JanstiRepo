@@ -1,3 +1,25 @@
+// AFURLSessionManager.h
+// Copyright (c) 2011–2016 Alamofire Software Foundation ( http://alamofire.org/ )
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+
 #import <Foundation/Foundation.h>
 
 #import "AFURLResponseSerialization.h"
@@ -11,37 +33,39 @@
 /**
  `AFURLSessionManager` creates and manages an `NSURLSession` object based on a specified `NSURLSessionConfiguration` object, which conforms to `<NSURLSessionTaskDelegate>`, `<NSURLSessionDataDelegate>`, `<NSURLSessionDownloadDelegate>`, and `<NSURLSessionDelegate>`.
 
- // AFURLSessionManager 这个类, 实现了上面的 delegate 方法. 也就是说, 这个类掌握了所有关系 网络交互的 细节. 因为, delegate 的作用, 其实就是在网络交互的过程中, 通知到外界各个小步骤正在发生.
- 
+ ## Subclassing Notes
+
+ This is the base class for `AFHTTPSessionManager`, which adds functionality specific to making HTTP requests. If you are looking to extend `AFURLSessionManager` specifically for HTTP, consider subclassing `AFHTTPSessionManager` instead.
+
  ## NSURLSession & NSURLSessionTask Delegate Methods
 
  `AFURLSessionManager` implements the following delegate methods:
 
  ### `NSURLSessionDelegate`
 
- - `URLSession:didBecomeInvalidWithError:` // 失败
- - `URLSession:didReceiveChallenge:completionHandler:` // 需要认证.
- - `URLSessionDidFinishEventsForBackgroundURLSession:` // 后台下载.
+ - `URLSession:didBecomeInvalidWithError:`
+ - `URLSession:didReceiveChallenge:completionHandler:`
+ - `URLSessionDidFinishEventsForBackgroundURLSession:`
 
  ### `NSURLSessionTaskDelegate`
 
- - `URLSession:willPerformHTTPRedirection:newRequest:completionHandler:` // 重定向
- - `URLSession:task:didReceiveChallenge:completionHandler:` // 需要认证. 现在还不太明白和 session 的 认证的区别
- - `URLSession:task:didSendBodyData:totalBytesSent:totalBytesExpectedToSend:` // request 的发送
- - `URLSession:task:needNewBodyStream:` // 还不太明白
- - `URLSession:task:didCompleteWithError:` // 一个请求完成
+ - `URLSession:willPerformHTTPRedirection:newRequest:completionHandler:`
+ - `URLSession:task:didReceiveChallenge:completionHandler:`
+ - `URLSession:task:didSendBodyData:totalBytesSent:totalBytesExpectedToSend:`
+ - `URLSession:task:needNewBodyStream:`
+ - `URLSession:task:didCompleteWithError:`
 
  ### `NSURLSessionDataDelegate`
 
- - `URLSession:dataTask:didReceiveResponse:completionHandler:` // 收到了响应头信息.
- - `URLSession:dataTask:didBecomeDownloadTask:` // 变化成为了下载任务. 这里, session 的下载任务会将下载操作进行disk-base 的缓存操作, 避免了内存的暴增
- - `URLSession:dataTask:didReceiveData:` // response 的 data 一点点的返回回来, 在 connection 的环境下, 要进行手动的 data 拼接, 或者文件的写入.
- - `URLSession:dataTask:willCacheResponse:completionHandler:` // 根据 cachePocily 进行存储. 在这里, 可以修改 response.
+ - `URLSession:dataTask:didReceiveResponse:completionHandler:`
+ - `URLSession:dataTask:didBecomeDownloadTask:`
+ - `URLSession:dataTask:didReceiveData:`
+ - `URLSession:dataTask:willCacheResponse:completionHandler:`
 
  ### `NSURLSessionDownloadDelegate`
 
- - `URLSession:downloadTask:didFinishDownloadingToURL:` // 完成下载
- - `URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesWritten:totalBytesExpectedToWrite:` // session 专门为 download task 做的代理函数
+ - `URLSession:downloadTask:didFinishDownloadingToURL:`
+ - `URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesWritten:totalBytesExpectedToWrite:`
  - `URLSession:downloadTask:didResumeAtOffset:expectedTotalBytes:`
 
  If any of these methods are overridden in a subclass, they _must_ call the `super` implementation first.
@@ -69,19 +93,19 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The managed session.
  */
-@property (readonly, nonatomic, strong) NSURLSession *session; // 这里, 可以看到之后一个 session. 所以, 如果想要进行新的配置, 需要生成新的manager.
+@property (readonly, nonatomic, strong) NSURLSession *session;
 
 /**
  The operation queue on which delegate callbacks are run.
  */
-@property (readonly, nonatomic, strong) NSOperationQueue *delegateOperationQueue;
+@property (readonly, nonatomic, strong) NSOperationQueue *operationQueue;
 
 /**
  Responses sent from the server in data tasks created with `dataTaskWithRequest:success:failure:` and run using the `GET` / `POST` / et al. convenience methods are automatically validated and serialized by the response serializer. By default, this property is set to an instance of `AFJSONResponseSerializer`.
 
  @warning `responseSerializer` must not be `nil`.
  */
-@property (nonatomic, strong) id <AFURLResponseSerialization> responseSerializer; // 其实就是解析器.
+@property (nonatomic, strong) id <AFURLResponseSerialization> responseSerializer;
 
 ///-------------------------------
 /// @name Managing Security Policy
@@ -90,7 +114,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The security policy used by created session to evaluate server trust for secure connections. `AFURLSessionManager` uses the `defaultPolicy` unless otherwise specified.
  */
-@property (nonatomic, strong) AFSecurityPolicy *securityPolicy;  // 认证相关的内容.
+@property (nonatomic, strong) AFSecurityPolicy *securityPolicy;
 
 #if !TARGET_OS_WATCH
 ///--------------------------------------

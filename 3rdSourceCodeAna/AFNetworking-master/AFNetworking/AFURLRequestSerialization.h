@@ -1,3 +1,23 @@
+// AFURLRequestSerialization.h
+// Copyright (c) 2011–2016 Alamofire Software Foundation ( http://alamofire.org/ )
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
 #import <TargetConditionals.h>
@@ -40,10 +60,6 @@ FOUNDATION_EXPORT NSString * AFQueryStringFromParameters(NSDictionary *parameter
 
  For example, a JSON request serializer may set the HTTP body of the request to a JSON representation, and set the `Content-Type` HTTP header field value to `application/json`.
  */
-
-// 这个类就是做了很多很多的生成 request 的操作. 包括对于 data 的拼接操作的封装. 尤其是 multiPart 的时候
-
-
 @protocol AFURLRequestSerialization <NSObject, NSSecureCoding, NSCopying>
 
 /**
@@ -125,9 +141,6 @@ typedef NS_ENUM(NSUInteger, AFHTTPRequestQueryStringSerializationStyle) {
  @see NSMutableURLRequest -setTimeoutInterval:
  */
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
-
-
-// 上面的这些属性, MCNetWork 在拿到 serialiation 返回的 request 之后, 又进行了赋值操作.
 
 ///---------------------------------------
 /// @name Configuring HTTP Request Headers

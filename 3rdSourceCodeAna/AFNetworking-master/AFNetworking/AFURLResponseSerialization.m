@@ -1,3 +1,24 @@
+// AFURLResponseSerialization.m
+// Copyright (c) 2011–2016 Alamofire Software Foundation ( http://alamofire.org/ )
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 #import "AFURLResponseSerialization.h"
 
 #import <TargetConditionals.h>
@@ -47,6 +68,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
                 [mutableArray addObject:AFJSONObjectByRemovingKeysWithNullValues(value, readingOptions)];
             }
         }
+
         return (readingOptions & NSJSONReadingMutableContainers) ? mutableArray : [NSArray arrayWithArray:mutableArray];
     } else if ([JSONObject isKindOfClass:[NSDictionary class]]) {
         NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithDictionary:JSONObject];
@@ -58,6 +80,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
                 mutableDictionary[key] = AFJSONObjectByRemovingKeysWithNullValues(value, readingOptions);
             }
         }
+
         return (readingOptions & NSJSONReadingMutableContainers) ? mutableDictionary : [NSDictionary dictionaryWithDictionary:mutableDictionary];
     }
 
@@ -66,7 +89,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 @implementation AFHTTPResponseSerializer
 
-+ (instancetype)serializer { // 这里面, 没有做太多的工厂方法的事情.
++ (instancetype)serializer {
     return [[self alloc] init];
 }
 
@@ -76,25 +99,25 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
         return nil;
     }
 
-    self.acceptableStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)]; // 只有 200 ~ 300 范围的才能算作是成功.
+    self.acceptableStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)];
     self.acceptableContentTypes = nil;
 
     return self;
 }
 
 #pragma mark -
-// 默认的 Http responserSerializer, 检查返回值类型, 以及返回的状态码.
+
 - (BOOL)validateResponse:(NSHTTPURLResponse *)response
                     data:(NSData *)data
                    error:(NSError * __autoreleasing *)error
 {
-    BOOL responseIsValid = YES; // 默认是 YES
+    BOOL responseIsValid = YES;
     NSError *validationError = nil;
 
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
         if (self.acceptableContentTypes && ![self.acceptableContentTypes containsObject:[response MIMEType]] &&
             !([response MIMEType] == nil && [data length] == 0)) {
-            // 首先,检查的是内容合不合格. 能到这个分支, 已经是不合格了.
+
             if ([data length] > 0 && [response URL]) {
                 NSMutableDictionary *mutableUserInfo = [@{
                                                           NSLocalizedDescriptionKey: [NSString stringWithFormat:NSLocalizedStringFromTable(@"Request failed: unacceptable content-type: %@", @"AFNetworking", nil), [response MIMEType]],
@@ -137,12 +160,12 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 #pragma mark - AFURLResponseSerialization
 
-// 这里, error 作为输出参数. 仅仅是一个传递的作用. 真正的返回值, 是 data 的解析之后的对象. 在默认的 HTTPSerializer 里面, 直接返回的是 data.
 - (id)responseObjectForResponse:(NSURLResponse *)response
                            data:(NSData *)data
                           error:(NSError *__autoreleasing *)error
 {
     [self validateResponse:(NSHTTPURLResponse *)response data:data error:error];
+
     return data;
 }
 
@@ -152,18 +175,18 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     return YES;
 }
 
-// 序列化,
 - (instancetype)initWithCoder:(NSCoder *)decoder {
     self = [self init];
     if (!self) {
         return nil;
     }
+
     self.acceptableStatusCodes = [decoder decodeObjectOfClass:[NSIndexSet class] forKey:NSStringFromSelector(@selector(acceptableStatusCodes))];
     self.acceptableContentTypes = [decoder decodeObjectOfClass:[NSIndexSet class] forKey:NSStringFromSelector(@selector(acceptableContentTypes))];
+
     return self;
 }
 
-// 反序列化
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:self.acceptableStatusCodes forKey:NSStringFromSelector(@selector(acceptableStatusCodes))];
     [coder encodeObject:self.acceptableContentTypes forKey:NSStringFromSelector(@selector(acceptableContentTypes))];
@@ -175,6 +198,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     AFHTTPResponseSerializer *serializer = [[[self class] allocWithZone:zone] init];
     serializer.acceptableStatusCodes = [self.acceptableStatusCodes copyWithZone:zone];
     serializer.acceptableContentTypes = [self.acceptableContentTypes copyWithZone:zone];
+
     return serializer;
 }
 
@@ -183,7 +207,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 #pragma mark -
 
 @implementation AFJSONResponseSerializer
-// 这里, 每一个类对 工厂方法进行了重写. 用 type 值的方式好不好呢?? 其实不太好, type 值的方式, 需要不断的修改根据 type 值的进行 alloc init 的方法实现, 更为不好的是, 如果这个方法写在父类里面, 就需要父类知道子类的存在了. 但是, 如果有一个 factory 类的存在, 也是可以这样写的.
+
 + (instancetype)serializer {
     return [self serializerWithReadingOptions:(NSJSONReadingOptions)0];
 }
@@ -191,6 +215,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 + (instancetype)serializerWithReadingOptions:(NSJSONReadingOptions)readingOptions {
     AFJSONResponseSerializer *serializer = [[self alloc] init];
     serializer.readingOptions = readingOptions;
+
     return serializer;
 }
 
@@ -200,7 +225,6 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
         return nil;
     }
 
-    // 这里, json 的接受 contentType 有了限制. 这在摩擦的实现里面, 设置为 nil. 参考上面的实现. 这个属性, 是在 validateResponse 中用到的. 有的时候,我们其实不太想有太多的限制.
     self.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", nil];
 
     return self;
@@ -216,8 +240,10 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
         if (!error || AFErrorOrUnderlyingErrorHasCodeInDomain(*error, NSURLErrorCannotDecodeContentData, AFURLResponseSerializationErrorDomain)) {
             return nil;
         }
-    } // 如果没有经过检查, 这里直接返回了 nil.
+    }
 
+    // Workaround for behavior of Rails to return a single space for `head :ok` (a workaround for a bug in Safari), which is not interpreted as valid input by NSJSONSerialization.
+    // See https://github.com/rails/rails/issues/1742
     BOOL isSpace = [data isEqualToData:[NSData dataWithBytes:" " length:1]];
     
     if (data.length == 0 || isSpace) {
@@ -226,7 +252,6 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     
     NSError *serializationError = nil;
     
-    // 这里, 直接通过 JSON 的序列化器进行了解析. 这个类的实际代码实现, 也是通过字符串的递归解析达到的效果.
     id responseObject = [NSJSONSerialization JSONObjectWithData:data options:self.readingOptions error:&serializationError];
 
     if (!responseObject)
@@ -237,7 +262,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
         return nil;
     }
     
-    if (self.removesKeysWithNullValues) { // 消除 NULL 值.
+    if (self.removesKeysWithNullValues) {
         return AFJSONObjectByRemovingKeysWithNullValues(responseObject, self.readingOptions);
     }
 
@@ -283,6 +308,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 + (instancetype)serializer {
     AFXMLParserResponseSerializer *serializer = [[self alloc] init];
+
     return serializer;
 }
 
@@ -291,6 +317,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     if (!self) {
         return nil;
     }
+
     self.acceptableContentTypes = [[NSSet alloc] initWithObjects:@"application/xml", @"text/xml", nil];
 
     return self;
@@ -307,7 +334,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
             return nil;
         }
     }
- // XML 的解析没有细看, 不过我记得 XML 的解析是逐步完成的啊.
+
     return [[NSXMLParser alloc] initWithData:data];
 }
 
@@ -413,6 +440,7 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     AFPropertyListResponseSerializer *serializer = [[self alloc] init];
     serializer.format = format;
     serializer.readOptions = readOptions;
+
     return serializer;
 }
 
@@ -445,7 +473,6 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     
     NSError *serializationError = nil;
     
-    // 这里, 直接根据 propertyListSerialization 进行的解析.
     id responseObject = [NSPropertyListSerialization propertyListWithData:data options:self.readOptions format:NULL error:&serializationError];
     
     if (!responseObject)
@@ -514,8 +541,7 @@ static NSLock* imageLock = nil;
     });
     
     [imageLock lock];
-    image = [UIImage imageWithData:data]; // 这里, 其实不太明白为什么要进行加锁操作. 并没有公共资源的抢夺啊.
-    // UIImage initWithData is not thread safe. In order to avoid crash we need to serialise call.
+    image = [UIImage imageWithData:data];
     [imageLock unlock];
     return image;
 }

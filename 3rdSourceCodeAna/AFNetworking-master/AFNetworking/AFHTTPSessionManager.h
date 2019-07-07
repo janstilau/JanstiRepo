@@ -53,7 +53,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface AFHTTPSessionManager : AFURLSessionManager <NSSecureCoding, NSCopying>
-// 这是一个子类, 所以想要知道真正的实现, 还是要从 AFURLSessionManager 中分析.
 
 /**
  The URL used to construct requests from relative paths in methods like `requestWithMethod:URLString:parameters:`, and the `GET` / `POST` / et al. convenience methods.

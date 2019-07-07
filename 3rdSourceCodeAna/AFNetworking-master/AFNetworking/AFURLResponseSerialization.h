@@ -1,3 +1,24 @@
+// AFURLResponseSerialization.h
+// Copyright (c) 2011–2016 Alamofire Software Foundation ( http://alamofire.org/ )
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
 
@@ -24,7 +45,6 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
  @return The object decoded from the specified response data.
  */
-// _Nullable __autoreleasing 是为了内存管理的宏.
 - (nullable id)responseObjectForResponse:(nullable NSURLResponse *)response
                            data:(nullable NSData *)data
                           error:(NSError * _Nullable __autoreleasing *)error NS_SWIFT_NOTHROW;
@@ -55,14 +75,13 @@ id AFJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
 /**
  The acceptable HTTP status codes for responses. When non-`nil`, responses with status codes not contained by the set will result in an error during validation.
- // 可以设定一个借口statuscode 的范围.
+
  See http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
  */
-@property (nonatomic, copy, nullable) NSIndexSet *acceptableStatusCodes; // set 但是 有序.
+@property (nonatomic, copy, nullable) NSIndexSet *acceptableStatusCodes;
 
 /**
  The acceptable MIME types for responses. When non-`nil`, responses with a `Content-Type` with MIME types that do not intersect with the set will result in an error during validation.
- 设定的可以接受的 contentType 的范围.
  */
 @property (nonatomic, copy, nullable) NSSet <NSString *> *acceptableContentTypes;
 

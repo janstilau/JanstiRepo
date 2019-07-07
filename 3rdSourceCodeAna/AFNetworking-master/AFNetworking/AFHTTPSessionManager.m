@@ -230,10 +230,10 @@
                 failure(nil, serializationError);
             });
         }
+        
         return nil;
     }
     
-    // 这里特殊点在于, task 变成了 uploadTask 了
     __block NSURLSessionDataTask *task = [self uploadTaskWithStreamedRequest:request progress:uploadProgress completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error) {
         if (error) {
             if (failure) {
@@ -325,8 +325,6 @@
 {
     NSError *serializationError = nil;
     NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:method URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:&serializationError];
-    // 所以, 发送请求的重要工作, 是在 requestSerializer 中.
-    // [requestSerializer requestWithMethod] 的内部, 已经对 request, 做了大量的设置工作.
     for (NSString *headerField in headers.keyEnumerator) {
         [request addValue:headers[headerField] forHTTPHeaderField:headerField];
     }
@@ -362,7 +360,7 @@
 #pragma mark - NSObject
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p, baseURL: %@, session: %@, operationQueue: %@>", NSStringFromClass([self class]), self, [self.baseURL absoluteString], self.session, self.delegateOperationQueue];
+    return [NSString stringWithFormat:@"<%@: %p, baseURL: %@, session: %@, operationQueue: %@>", NSStringFromClass([self class]), self, [self.baseURL absoluteString], self.session, self.operationQueue];
 }
 
 #pragma mark - NSSecureCoding
