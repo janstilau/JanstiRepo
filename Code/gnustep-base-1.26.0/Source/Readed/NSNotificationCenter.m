@@ -1,34 +1,3 @@
-/** Implementation of NSNotificationCenter for GNUstep
-   Copyright (C) 1999 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   Created: June 1999
-
-   Many thanks for the earlier version, (from which this is loosely
-   derived) by  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Created: March 1996
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSNotificationCenter class reference</title>
-   $Date$ $Revision$
-*/
-
 #import "common.h"
 #define	EXPOSE_NSNotificationCenter_IVARS	1
 #import "Foundation/NSNotification.h"
@@ -54,84 +23,10 @@ static NSZone	*_zone = 0;
 @end
 
 @implementation GSNotification
-
-static Class concrete = 0;
-
-+ (void) initialize
-{
-  if (concrete == 0)
-    {
-      concrete = [GSNotification class];
-    }
-}
-
-+ (NSNotification*) notificationWithName: (NSString*)name
-				  object: (id)object
-			        userInfo: (NSDictionary*)info
-{
-  GSNotification	*n;
-
-  n = (GSNotification*)NSAllocateObject(self, 0, NSDefaultMallocZone());
-  n->_name = [name copyWithZone: [self zone]];
-  n->_object = TEST_RETAIN(object);
-  n->_info = TEST_RETAIN(info);
-  return AUTORELEASE(n);
-}
-
-- (id) copyWithZone: (NSZone*)zone
-{
-  GSNotification	*n;
-
-  if (NSShouldRetainWithZone (self, zone))
-    {
-      return [self retain];
-    }
-  n = (GSNotification*)NSAllocateObject(concrete, 0, zone);
-  n->_name = [_name copyWithZone: [self zone]];
-  n->_object = TEST_RETAIN(_object);
-  n->_info = TEST_RETAIN(_info);
-  return n;
-}
-
-- (void) dealloc
-{
-  RELEASE(_name);
-  TEST_RELEASE(_object);
-  TEST_RELEASE(_info);
-  [super dealloc];
-}
-
-- (NSString*) name
-{
-  return _name;
-}
-
-- (id) object
-{
-  return _object;
-}
-
-- (NSDictionary*) userInfo
-{
-  return _info;
-}
-
 @end
 
 
-/*
- * Garbage collection considerations -
- * The notification center is not supposed to retain any notification
- * observers or notification objects.  To achieve this when using garbage
- * collection, we must hide all references to observers and objects.
- * Within an Observation structure, this is not a problem, we simply
- * allocate the structure using 'atomic' allocation to tell the gc
- * system to ignore pointers inside it.
- * Elsewhere, we store the pointers with a bit added, to hide them from
- * the garbage collector.
- */
-
-struct	NCTbl;		/* Notification Center Table structure	*/
+struct	NotificationTable;		/* Notification Center Table structure	*/
 
 /*
  * Observation structure - One of these objects is created for
@@ -153,7 +48,7 @@ typedef	struct	Obs {
   SEL		selector;	/* Method selector.		*/
   struct Obs	*next;		/* Next item in linked list.	*/
   int		retained;	/* Retain count for structure.	*/
-  struct NCTbl	*link;		/* Pointer back to chunk table	*/
+  struct NotificationTable	*link;		/* Pointer back to chunk table	*/
 } Observation;
 
 #define	ENDOBS	((Observation*)-1)
@@ -190,14 +85,7 @@ static inline BOOL doEqual(BOOL shouldHash, NSString* key1, NSString* key2)
     }
 }
 
-/*
- * Setup for inline operation on arrays of Observers.
- */
 static void listFree(Observation *list);
-
-/* Observations have retain/release counts managed explicitly by fast
- * function calls.
- */
 static void obsRetain(Observation *o);
 static void obsFree(Observation *o);
 
@@ -246,7 +134,7 @@ static void obsFree(Observation *o);
  */
 #define	CHUNKSIZE	128
 #define	CACHESIZE	16
-typedef struct NCTbl {
+typedef struct NotificationTable {
   Observation		*wildcard;	/* Get ALL messages.		*/
   GSIMapTable		nameless;	/* Get messages for any name.	*/
   GSIMapTable		named;		/* Getting named messages only.	*/
@@ -258,7 +146,7 @@ typedef struct NCTbl {
   GSIMapTable		cache[CACHESIZE];
   unsigned short	chunkIndex;
   unsigned short	cacheIndex;
-} NCTable;
+} NotificationTable;
 
 #define	TABLE		((NCTable*)_table)
 #define	WILDCARD	(TABLE->wildcard)
@@ -267,7 +155,7 @@ typedef struct NCTbl {
 #define	LOCKCOUNT	(TABLE->lockCount)
 
 static Observation *
-obsNew(NCTable *t, SEL s, id o)
+obsNew(NotificationTable *t, SEL s, id o)
 {
   Observation	*obs;
 
@@ -315,7 +203,7 @@ obsNew(NCTable *t, SEL s, id o)
   return obs;
 }
 
-static GSIMapTable	mapNew(NCTable *t)
+static GSIMapTable	mapNew(NotificationTable *t)
 {
   if (t->cacheIndex > 0)
     {
@@ -331,7 +219,7 @@ static GSIMapTable	mapNew(NCTable *t)
     }
 }
 
-static void	mapFree(NCTable *t, GSIMapTable m)
+static void	mapFree(NotificationTable *t, GSIMapTable m)
 {
   if (t->cacheIndex < CACHESIZE)
     {
@@ -344,7 +232,7 @@ static void	mapFree(NCTable *t, GSIMapTable m)
     }
 }
 
-static void endNCTable(NCTable *t)
+static void endNCTable(NotificationTable *t)
 {
   unsigned		i;
   GSIMapEnumerator_t	e0;
@@ -410,11 +298,11 @@ static void endNCTable(NCTable *t)
   NSZoneFree(NSDefaultMallocZone(), t);
 }
 
-static NCTable *newNCTable(void)
+static NotificationTable *newNCTable(void)
 {
-  NCTable	*t;
+  NotificationTable	*t;
 
-  t = (NCTable*)NSAllocateCollectable(sizeof(NCTable), NSScannedOption);
+  t = (NotificationTable*)NSAllocateCollectable(sizeof(NotificationTable), NSScannedOption);
   t->chunkIndex = CHUNKSIZE;
   t->wildcard = ENDOBS;
 
@@ -428,13 +316,13 @@ static NCTable *newNCTable(void)
   return t;
 }
 
-static inline void lockNCTable(NCTable* t)
+static inline void lockNCTable(NotificationTable* t)
 {
   [t->_lock lock];
   t->lockCount++;
 }
 
-static inline void unlockNCTable(NCTable* t)
+static inline void unlockNCTable(NotificationTable* t)
 {
   t->lockCount--;
   [t->_lock unlock];
@@ -445,9 +333,9 @@ static void obsFree(Observation *o)
   NSCAssert(o->retained >= 0, NSInternalInconsistencyException);
   if (o->retained-- == 0)
     {
-      NCTable	*t = o->link;
+      NotificationTable	*t = o->link;
 
-      o->link = (NCTable*)t->freeList;
+      o->link = (NotificationTable*)t->freeList;
       t->freeList = o;
     }
 }
@@ -648,21 +536,22 @@ purgeMapNode(GSIMapTable map, GSIMapNode node, id observer)
 
 /**
  * <p>GNUstep provides a framework for sending messages between objects within
- * a process called <em>notifications</em>.  Objects register with an
- * <code>NSNotificationCenter</code> to be informed whenever other objects
+ * a process called <em>notifications</em>.
+ 
+ Sync is simple, Async need a lot of consideration.
+ Objects register with an  <code>NSNotificationCenter</code> to be informed whenever other objects
  * post [NSNotification]s to it matching certain criteria. The notification
  * center processes notifications synchronously -- that is, control is only
  * returned to the notification poster once every recipient of the
- * notification has received it and processed it.  Asynchronous processing is
- * possible using an [NSNotificationQueue].</p>
+ * notification has received it and processed it.
+ 
+ 
+ Asynchronous processing is possible using an [NSNotificationQueue].</p>
  *
  * <p>Obtain an instance using the +defaultCenter method.</p>
  *
  * <p>In a multithreaded process, notifications are always sent on the thread
- * that they are posted from.</p>
- *
- * <p>Use the [NSDistributedNotificationCenter] for interprocess
- * communications on the same machine.</p>
+ * that they are posted from.</p> // Becaues of sync
  */
 @implementation NSNotificationCenter
 
@@ -672,38 +561,6 @@ purgeMapNode(GSIMapTable map, GSIMapNode node, id observer)
 
 static NSNotificationCenter *default_center = nil;
 
-+ (void) atExit
-{
-  id	tmp = default_center;
-
-  default_center = nil;
-  [tmp release];
-}
-
-+ (void) initialize
-{
-  if (self == [NSNotificationCenter class])
-    {
-      _zone = NSDefaultMallocZone();
-      if (concrete == 0)
-	{
-	  concrete = [GSNotification class];
-	}
-      /*
-       * Do alloc and init separately so the default center can refer to
-       * the 'default_center' variable during initialisation.
-       */
-      default_center = [self alloc];
-      [default_center init];
-      [self registerAtExit];
-    }
-}
-
-/**
- * Returns the default notification center being used for this task (process).
- * This is used for all notifications posted by the Base library unless
- * otherwise noted.
- */
 + (NSNotificationCenter*) defaultCenter
 {
   return default_center;
