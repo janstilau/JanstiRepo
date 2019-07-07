@@ -591,6 +591,7 @@ static NSURLProtocol	*placeholder = nil;
                           port: port
                    inputStream: &input
                   outputStream: &output];
+    // GSIneternetInputStream and GSIneternetOutputStream
     if (!input || !output)
     {
         [self stopLoading];
@@ -1155,7 +1156,6 @@ static NSURLProtocol	*placeholder = nil;
                 _writeOffset = 0;
                 if ([request HTTPBodyStream] == nil)
                 {
-                    // Not streaming
                     bodylength = [[request HTTPBody] length];
                     _version = 1.1;
                 }
@@ -1261,8 +1261,8 @@ static NSURLProtocol	*placeholder = nil;
                 // append the end for headers
                 [dataM appendBytes: "\r\n" length: 2];	// End of headers
                 _writedSoFarData  = dataM;
-            }			// Fall through to do the write
-                
+            }
+            // Fall through to do the write, So there is no break here.
             case NSStreamEventHasSpaceAvailable: // The stream can accept bytes for writing.
             {
                 int	written;
@@ -1286,13 +1286,16 @@ static NSURLProtocol	*placeholder = nil;
                                 requestDataStream = RETAIN([request HTTPBodyStream]);
                                 if (requestDataStream == nil)
                                 {
-                                    NSData	*d = [request HTTPBody];
+                                    NSData	*httpBody = [request HTTPBody];
                                     
-                                    if (d != nil)
+                                    if (httpBody != nil)
                                     {
+                                        /**
+                                         * Why there must have a inputStream to read requestBody.
+                                         */
                                         requestDataStream = [NSInputStream alloc];
-                                        requestDataStream = [requestDataStream initWithData: d];
-                                        [requestDataStream open];
+                                        requestDataStream = [requestDataStream initWithData: httpBody];
+                                        [requestDataStream open]; // requestDataStream is for sending body.
                                     }
                                     else
                                     {
@@ -1553,6 +1556,13 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
 }
 
 @end
+
+
+/**
+ * FileURLProtocol is just loading file data and call corresponding delegate method.
+ There is no complex data loading progress. The response is fix with most parameter.
+ All delegate is called in start loading method.
+ */
 
 @implementation _NSFileURLProtocol
 

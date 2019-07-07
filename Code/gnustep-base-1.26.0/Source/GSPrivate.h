@@ -294,18 +294,14 @@ typedef enum {
 
 /* Used to handle events performed in one thread from another.
  */
-@interface      GSRunLoopThreadInfo : NSObject
+@interface      GSRunLoopThreadRelatedInfo : NSObject
 {
 @public
     NSRunLoop             *loop;
     NSLock                *lock;
     NSMutableArray        *performers;
-#ifdef _WIN32
-    HANDLE	        event;
-#else
     int                   inputFd;
     int                   outputFd;
-#endif	
 }
 /* Add a performer to be run in the loop's thread.  May be called from
  * any thread.
@@ -325,7 +321,7 @@ typedef enum {
  * If aThread is nil and no value is set for the current thread, create
  * a GSRunLoopThreadInfo and set it for the current thread.
  */
-GSRunLoopThreadInfo *
+GSRunLoopThreadRelatedInfo *
 GSRunLoopInfoForThread(NSThread *aThread) GS_ATTRIB_PRIVATE;
 
 /* Used by NSException uncaught exception handler - must not call any

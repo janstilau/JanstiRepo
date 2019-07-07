@@ -1264,11 +1264,13 @@ static id gs_weak_load(id obj)
 /**
  * Deallocates the receiver by calling NSDeallocateObject() with self
  * as the argument.<br />
+ 
  * <p>
  *   You should normally call the superclass implementation of this method
  *   when you override it in a subclass, or the memory occupied by your
  *   object will not be released.
  * </p>
+ 
  * <p>
  *   <code>NSObject</code>'s implementation of this method
  *   destroys the receiver, by returning the memory allocated
@@ -1306,7 +1308,8 @@ static id gs_weak_load(id obj)
  *   Because the <code>dealloc</code> method will be called
  *   when an instance is being destroyed, if instances of your
  *   subclass use objects or resources (as it happens for most
- *   useful classes), you must override <code>dealloc</code> in
+ *   useful classes),
+     you must override <code>dealloc</code> in
  *   subclasses to release all objects and resources which are
  *   used by the instance, otherwise these objects and
  *   resources would be leaked.  In the subclass

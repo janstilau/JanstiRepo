@@ -60,7 +60,7 @@
     NSStreamStatus         _currentStatus;/* current status               */
     NSMapTable        *_loops;    /* Run loops and their modes.    */
     void                  *_loopID;    /* file descriptor etc.        */
-    int            _events;    /* Signalled events.        */
+    int            _signalledEvents;    /* Signalled events.        */
 }
 @end
 
@@ -73,7 +73,7 @@
     NSStreamStatus         _currentStatus;/* current status               */
     NSMapTable        *_loops;    /* Run loops and their modes.    */
     void                  *_loopID;    /* file descriptor etc.        */
-    int            _events;    /* Signalled events.        */
+    int            _signalledEvents;    /* Signalled events.        */
 }
 @end
 
@@ -146,7 +146,7 @@
     NSStreamStatus         _currentStatus;/* current status               */
     NSMapTable        *_loops;    /* Run loops and their modes.    */
     void                  *_loopID;    /* file descriptor etc.        */
-    int            _events;    /* Signalled events.        */
+    int            _signalledEvents;    /* Signalled events.        */
 }
 @end
 
@@ -159,7 +159,7 @@
     NSStreamStatus         _currentStatus;/* current status               */
     NSMapTable        *_loops;    /* Run loops and their modes.    */
     void                  *_loopID;    /* file descriptor etc.        */
-    int            _events;    /* Signalled events.        */
+    int            _signalledEvents;    /* Signalled events.        */
 }
 @end
 
@@ -170,7 +170,7 @@
 {
 @private
     NSData *_data;
-    unsigned long _pointer;
+    unsigned long _offsetPointer;
 }
 @end
 
@@ -182,7 +182,7 @@
 @private
     uint8_t	*_buffer;
     unsigned	_capacity;
-    unsigned long _pointer;
+    unsigned long _writeOffsetPointer;
 }
 @end
 

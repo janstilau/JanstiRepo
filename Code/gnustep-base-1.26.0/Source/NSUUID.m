@@ -173,7 +173,7 @@ static int uuid_from_string(const char *string, unsigned char *uuid)
         
         if ((i == 8) || (i == 13) || (i == 18) || (i == 23))
         {
-            if (c != '-') 
+            if (c != '-')
             {
                 return -1;
             }
