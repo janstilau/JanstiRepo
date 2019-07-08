@@ -82,14 +82,6 @@ static NSURLProtocol	*placeholder = nil;
         placeholderClass = [NSURLProtocolPlaceholder class];
         placeholder = (NSURLProtocol*)NSAllocateObject(placeholderClass, 0,
                                                        NSDefaultMallocZone());
-        // register is a common routine to cache handler for later code run.
-        registered = [NSMutableArray new];
-        [self registerClass: [_NSHTTPURLProtocol class]];
-        [self registerClass: [_NSHTTPSURLProtocol class]];
-        [self registerClass: [_NSFTPURLProtocol class]];
-        [self registerClass: [_NSFileURLProtocol class]];
-        [self registerClass: [_NSAboutURLProtocol class]];
-        [self registerClass: [_NSDataURLProtocol class]];
     }
 }
 
@@ -100,33 +92,6 @@ static NSURLProtocol	*placeholder = nil;
     return o;
 }
 
-+ (id) propertyForKey: (NSString *)key inRequest: (NSURLRequest *)request
-{
-    return [request _propertyForKey: key];
-}
-
-+ (BOOL) registerClass: (Class)protocolClass
-{
-    if ([protocolClass isSubclassOfClass: [NSURLProtocol class]] == YES)
-    {
-        [registered addObject: protocolClass];
-        return YES;
-    }
-    return NO;
-}
-
-+ (void) setProperty: (id)value
-              forKey: (NSString *)key
-           inRequest: (NSMutableURLRequest *)request
-{
-    [request _setProperty: value forKey: key];
-}
-
-+ (void) unregisterClass: (Class)protocolClass
-{
-    [registered removeObjectIdenticalTo: protocolClass];
-}
-
 - (NSCachedURLResponse *) cachedResponse
 {
     return cachedResponse;
@@ -135,14 +100,6 @@ static NSURLProtocol	*placeholder = nil;
 - (id <NSURLProtocolClient>) client
 {
     return client;
-}
-
-- (id) init
-{
-    if ((self = [super init]) != nil)
-    {
-    }
-    return self;
 }
 
 - (id) initWithRequest: (NSURLRequest *)request
@@ -160,6 +117,9 @@ static NSURLProtocol	*placeholder = nil;
         
         DESTROY(self);
         count = [registered count];
+        /**
+         * Here is the real alloc method. Factory method have been transfered here.
+         */
         while (count-- > 0)
         {
             Class	proto = [registered objectAtIndex: count];
@@ -177,38 +137,8 @@ static NSURLProtocol	*placeholder = nil;
     return self;
 }
 
-- (NSURLRequest *) request
-{
-    return request;
-}
-
 @end
 
-@implementation	NSURLProtocol (Private)
-
-/**
- * Search in sequence. The first can handle request will be the target protocol.
- */
-+ (Class) _classToHandleRequest:(NSURLRequest *)request
-{
-    Class protoClass = nil;
-    int count;
-    
-    count = [registered count];
-    while (count-- > 0)
-    {
-        Class	proto = [registered objectAtIndex: count];
-        
-        if ([proto canInitWithRequest: request] == YES)
-        {
-            protoClass = proto;
-            break;
-        }
-    }
-    return protoClass;
-}
-
-@end
 
 @implementation	NSURLProtocol (Subclassing)
 
@@ -256,34 +186,7 @@ static NSURLProtocol	*placeholder = nil;
     return request;
 }
 
-- (void) cancelAuthenticationChallenge: (NSURLAuthenticationChallenge*)c
-{
-    if (c == _challenge)
-    {
-        DESTROY(_challenge);	// We should cancel the download
-    }
-}
-
-- (void) continueWithoutCredentialForAuthenticationChallenge:
-(NSURLAuthenticationChallenge*)c
-{
-    if (c == _challenge)
-    {
-        DESTROY(_credential);	// We download the challenge page
-    }
-}
-
-- (void) dealloc
-{
-    [_parser release];			// received headers
-    [requestDataStream release];			// for sending the body
-    [_response release];
-    [_credential release];
-    [super dealloc];
-}
-
-- (void) startLoading
-{
+- (BOOL)isValidHTTPMethod:(NSString *)method {
     const NSDictionary *methods = [[NSDictionary alloc] initWithObjectsAndKeys:
                                    self, @"HEAD",
                                    self, @"GET",
@@ -294,176 +197,166 @@ static NSURLProtocol	*placeholder = nil;
                                    self, @"OPTIONS",
                                    self, @"CONNECT",
                                    nil];
-    /**
-     * If method is wrong, return directly.
+
+    return [methods objectForKey:method];
+}
+
+- (NSMutableURLRequest *)redirectedRequest {
+    NSString        *s = [[request URL] absoluteString];
+    NSURL        *url;
+    
+    if ([s rangeOfString: @"?"].length > 0)
+    {
+        s = [s stringByReplacingString: @"?" withString: @"/?"];
+    }
+    else if ([s rangeOfString: @"#"].length > 0)
+    {
+        s = [s stringByReplacingString: @"#" withString: @"/#"];
+    }
+    else
+    {
+        s = [s stringByAppendingString: @"/"];
+    }
+    url = [NSURL URLWithString: s];
+    if (url == nil)
+    {
+        NSError    *e;
+        
+        e = [NSError errorWithDomain: @"Invalid redirect request"
+                                code: 0
+                            userInfo: nil];
+        [self stopLoading];
+        [client URLProtocol: self
+           didFailWithError: e];
+        return nil;
+    } else {
+        NSMutableURLRequest    *request;
+        
+        request = [[request mutableCopy] autorelease];
+        [request setURL: url];
+        [client URLProtocol: self
+     wasRedirectedToRequest: request
+           redirectResponse: nil];
+        return request;
+    }
+}
+
+- (void)configureHttps:(NSInputStream *)inputStream outPut:(NSOutputStream *)outputStream {
+    NSUInteger            count;
+    [inputStream setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
+                      forKey: NSStreamSocketSecurityLevelKey];
+    [outputStream setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
+                       forKey: NSStreamSocketSecurityLevelKey];
+    NSArray        *keys = [[NSArray alloc] initWithObjects:
+                            GSTLSCAFile,
+                            GSTLSCertificateFile,
+                            GSTLSCertificateKeyFile,
+                            GSTLSCertificateKeyPassword,
+                            GSTLSDebug,
+                            GSTLSPriority,
+                            GSTLSRemoteHosts,
+                            GSTLSRevokeFile,
+                            GSTLSServerName,
+                            GSTLSVerify,
+                            nil];;
+    count = [keys count];
+    while (count-- > 0)
+    {
+        NSString      *key = [keys objectAtIndex: count];
+        NSString      *str = [request _propertyForKey: key];
+        
+        if (nil != str)
+        {
+            [outputStream setProperty: str forKey: key];
+        }
+    }
+    /* If there is no value set for the server name, and the host in the
+     * URL is a domain name rather than an address, we use that.
      */
-    if ([methods objectForKey: [request HTTPMethod]] == nil)
+    if (nil == [outputStream propertyForKey: GSTLSServerName])
+    {
+        NSString  *host = [request.URL host];
+        unichar   c;
+        
+        c = [host length] == 0 ? 0 : [host characterAtIndex: 0];
+        if (c != 0 && c != ':' && !isdigit(c))
+        {
+            [outputStream setProperty: host forKey: GSTLSServerName];
+        }
+    }
+}
+
+- (void) startLoading
+{
+    if (![self isValidHTTPMethod:[request HTTPMethod]])
     {
         [self stopLoading];
-        [client URLProtocol: self didFailWithError:
-         [NSError errorWithDomain: @"Invalid HTTP Method"
-                             code: 0
-                         userInfo: nil]];
-        return;
-    }
-    if (_isLoading == YES)
-    {
-        NSLog(@"startLoading when load in progress");
+        [client URLProtocol: self
+                didFailWithError:[NSError errorWithDomain: @"Invalid HTTP Method"
+                                                code: 0
+                                            userInfo: nil]
+         ];
         return;
     }
     
     _statusCode = 0;	/* No status returned yet.	*/
     _isLoading = YES;
     _complete = NO;
+    _parseOffset = 0;
     
-    // redrect if request url is bad
     if ([[[request URL] fullPath] length] == 0)
     {
-        NSString		*s = [[request URL] absoluteString];
-        NSURL		*url;
-        
-        if ([s rangeOfString: @"?"].length > 0)
-        {
-            s = [s stringByReplacingString: @"?" withString: @"/?"];
-        }
-        else if ([s rangeOfString: @"#"].length > 0)
-        {
-            s = [s stringByReplacingString: @"#" withString: @"/#"];
-        }
-        else
-        {
-            s = [s stringByAppendingString: @"/"];
-        }
-        url = [NSURL URLWithString: s];
-        if (url == nil)
-        {
-            NSError	*e;
-            
-            e = [NSError errorWithDomain: @"Invalid redirect request"
-                                    code: 0
-                                userInfo: nil];
-            [self stopLoading];
-            [client URLProtocol: self
-               didFailWithError: e];
-        }
-        else
-        {
-            NSMutableURLRequest	*request;
-            
-            request = [[request mutableCopy] autorelease];
-            [request setURL: url];
-            [client URLProtocol: self
-         wasRedirectedToRequest: request
-               redirectResponse: nil];
-        }
-        if (NO == _isLoading)
-        {
-            return;	// Loading cancelled
-        }
-        if (nil != inputStream)
-        {
-            return;	// Following redirection
-        }
+        request = [self redirectedRequest];
+        if (!request) { return; }
     }
     
     NSURL    *url = [request URL];
     NSHost    *host = [NSHost hostWithName: [url host]];
     int    port = [[url port] intValue];
-    _parseOffset = 0;
-    DESTROY(_parser);
-    
-    if (host == nil)
+    if (!host)
     {
         host = [NSHost hostWithAddress: [url host]];    // try dotted notation
     }
-    if (host == nil)
+    if (!host)
     {
         host = [NSHost hostWithAddress: @"127.0.0.1"];    // final default
     }
-    if (port == 0)
+    if (!port)
     {
-        // default if not specified
         port = [[url scheme] isEqualToString: @"https"] ? 443 : 80;
     }
     
-    /**
-     * Using input stream and outputstream to handle loading progerss.
-     */
     [NSStream getStreamsToHost: host
                           port: port
                    inputStream: &inputStream
-                  outputStream: &output];
-    // GSIneternetInputStream and GSIneternetOutputStream
-    if (!inputStream || !output)
+                  outputStream: &outputStream];
+    if (!inputStream || !outputStream)
     {
         [self stopLoading];
-        [client URLProtocol: self didFailWithError:
-         [NSError errorWithDomain: @"can't connect" code: 0 userInfo:
-          [NSDictionary dictionaryWithObjectsAndKeys:
-           url, @"NSErrorFailingURLKey",
-           host, @"NSErrorFailingURLStringKey",
-           @"can't find host", @"NSLocalizedDescription",
-           nil]]];
+        [client URLProtocol: self
+           didFailWithError:[NSError errorWithDomain: @"can't connect" code: 0 userInfo:nil]
+        ];
         return;
     }
+    
     [inputStream retain];
-    [output retain];
+    [outputStream retain];
+    
     /**
      * If loading a https data. Set corresponding property.
      */
     if ([[url scheme] isEqualToString: @"https"] == YES)
     {
-        NSUInteger            count;
-        [inputStream setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
-                          forKey: NSStreamSocketSecurityLevelKey];
-        [output setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
-                     forKey: NSStreamSocketSecurityLevelKey];
-        NSArray        *keys = [[NSArray alloc] initWithObjects:
-                                GSTLSCAFile,
-                                GSTLSCertificateFile,
-                                GSTLSCertificateKeyFile,
-                                GSTLSCertificateKeyPassword,
-                                GSTLSDebug,
-                                GSTLSPriority,
-                                GSTLSRemoteHosts,
-                                GSTLSRevokeFile,
-                                GSTLSServerName,
-                                GSTLSVerify,
-                                nil];;
-        count = [keys count];
-        while (count-- > 0)
-        {
-            NSString      *key = [keys objectAtIndex: count];
-            NSString      *str = [request _propertyForKey: key];
-            
-            if (nil != str)
-            {
-                [output setProperty: str forKey: key];
-            }
-        }
-        /* If there is no value set for the server name, and the host in the
-         * URL is a domain name rather than an address, we use that.
-         */
-        if (nil == [output propertyForKey: GSTLSServerName])
-        {
-            NSString  *host = [url host];
-            unichar   c;
-            
-            c = [host length] == 0 ? 0 : [host characterAtIndex: 0];
-            if (c != 0 && c != ':' && !isdigit(c))
-            {
-                [output setProperty: host forKey: GSTLSServerName];
-            }
-        }
+        [self configureHttps:inputStream outPut:outputStream];
     }
     [inputStream setDelegate: self];
-    [output setDelegate: self];
+    [outputStream setDelegate: self];
     [inputStream scheduleInRunLoop: [NSRunLoop currentRunLoop]
                            forMode: NSDefaultRunLoopMode];
-    [output scheduleInRunLoop: [NSRunLoop currentRunLoop]
+    [outputStream scheduleInRunLoop: [NSRunLoop currentRunLoop]
                       forMode: NSDefaultRunLoopMode];
     [inputStream open];
-    [output open];
+    [outputStream open];
 }
 
 - (void) stopLoading
@@ -473,223 +366,59 @@ static NSURLProtocol	*placeholder = nil;
     if (inputStream != nil) // check two value inited with one value. It's common
     {
         [inputStream setDelegate: nil];
-        [output setDelegate: nil];
+        [outputStream setDelegate: nil];
         [inputStream removeFromRunLoop: [NSRunLoop currentRunLoop]
                                forMode: NSDefaultRunLoopMode];
-        [output removeFromRunLoop: [NSRunLoop currentRunLoop]
+        [outputStream removeFromRunLoop: [NSRunLoop currentRunLoop]
                           forMode: NSDefaultRunLoopMode];
         [inputStream close];
-        [output close];
+        [outputStream close];
         DESTROY(inputStream);
-        DESTROY(output);
+        DESTROY(outputStream);
     }
 }
 
-- (void) _didLoad: (NSData*)d
+- (void) streamDidLoadData: (NSData*)d
 {
     [client URLProtocol: self didLoadData: d];
 }
 
-// get response.
-- (void) _got: (NSStream*)stream
+// Get data from server.
+- (void) didReceiveDataFromInputStream: (NSStream*)stream
 {
     unsigned char	buffer[BUFSIZ*64];
-    int 		readCount;
-    NSError	*e;
-    NSData	*d;
-    BOOL		wasInHeaders = NO;
-    /**
-     * Get data form stream.
-     */
-    readCount = [(NSInputStream *)stream read: buffer
-                                    maxLength: sizeof(buffer)];
+    BOOL wasInHeaders = [_parser isInHeaders];
+    
+    int readCount = [(NSInputStream *)stream read: buffer maxLength: sizeof(buffer)];
     if (readCount < 0)
     {
         [client URLProtocol: self didFailWithError: nil];
         return;
     }
     
-    /**
-     * The parse progress is translate into parser class.
-     */
-    wasInHeaders = [_parser isInHeaders];
-    d = [NSData dataWithBytes: buffer length: readCount];
-    if ([_parser parse: d] == NO && (_complete = [_parser isComplete]) == NO)
+    NSData *data = [NSData dataWithBytes: buffer length: readCount];
+    if ([_parser parse:data] == NO && (_complete = [_parser isComplete]) == NO)
     {
-        e = [NSError errorWithDomain: @"parse error"
+        NSError *error = [NSError errorWithDomain: @"parse error"
                                 code: 0
                             userInfo: nil];
         [self stopLoading];
-        [client URLProtocol: self didFailWithError: e];
+        [client URLProtocol: self didFailWithError: error];
         return;
     }
     
-    BOOL        isInHeaders = [_parser isInHeaders];
+    BOOL isInHeaders = [_parser isInHeaders];
     GSMimeDocument    *document = [_parser mimeDocument];
-    unsigned        bodyLength;
     _complete = [_parser isComplete];
     /**
      * YES == wasInHeaders && NO == isInHeaders means response can post to client.
      */
     if (YES == wasInHeaders && NO == isInHeaders)
     {
-        GSMimeHeader        *info;
-        int            len = -1;
-        NSString        *ct;
-        NSString        *st;
-        NSString        *responseValue;
-        
-        info = [document headerNamed: @"http"];
-        
-        _version = [[info value] floatValue];
-        if (_version < 1.1)
-        {
-            _shouldClose = YES;
-        }
-        else if ((responseValue = [[document headerNamed: @"connection"] value]) != nil
-                 && [responseValue caseInsensitiveCompare: @"close"] == NSOrderedSame)
-        {
-            _shouldClose = YES;
-        }
-        else
-        {
-            _shouldClose = NO;    // Keep connection alive.
-        }
-        
-        responseValue = [info objectForKey: NSHTTPPropertyStatusCodeKey];
-        _statusCode = [responseValue intValue];
-        
-        responseValue = [[document headerNamed: @"content-length"] value];
-        if ([responseValue length] > 0)
-        {
-            len = [responseValue intValue];
-        }
-        
-        responseValue = [info objectForKey: NSHTTPPropertyStatusReasonKey];
-        info = [document headerNamed: @"content-type"];
-        ct = [document contentType];
-        st = [document contentSubtype];
-        if (ct && st)
-        {
-            ct = [ct stringByAppendingFormat: @"/%@", st];
-        }
-        else
-        {
-            ct = nil;
-        }
-        _response = [[NSHTTPURLResponse alloc]
-                     initWithURL: [request URL]
-                     MIMEType: ct
-                     expectedContentLength: len
-                     textEncodingName: [info parameterForKey: @"charset"]];
-        [_response _setStatusCode: _statusCode text: responseValue];
-        [document deleteHeaderNamed: @"http"];
-        [_response _setHeaders: [document allHeaders]];
-        
-        if (_statusCode == 204 || _statusCode == 304)
-        {
-            _complete = YES;    // No body expected.
-        }
-        else if (_complete == NO && [d length] == 0)
-        {
-            _complete = YES;    // Had EOF ... terminate
-        }
-        
-        if (_statusCode == 401)
-        {
-            /* This is an authentication challenge, so we keep reading
-             * until the challenge is complete, then try to deal with it.
-             */
-        } else if (_statusCode >= 300 && _statusCode < 400) {
-            /**
-             * Redirect status
-             */
-            NSURL    *url;
-            
-            NS_DURING
-            responseValue = [[document headerNamed: @"location"] value];
-            url = [NSURL URLWithString: responseValue];
-            NS_HANDLER
-            url = nil;
-            NS_ENDHANDLER
-            
-            if (url == nil)
-            {
-                NSError    *e;
-                
-                e = [NSError errorWithDomain: @"Invalid redirect request"
-                                        code: 0
-                                    userInfo: nil];
-                [self stopLoading];
-                [client URLProtocol: self
-                   didFailWithError: e];
-            }
-            else
-            {
-                NSMutableURLRequest    *request;
-                
-                request = [[request mutableCopy] autorelease];
-                [request setURL: url];
-                [client URLProtocol: self
-             wasRedirectedToRequest: request
-                   redirectResponse: _response];
-            }
-        }
-        else
-        {
-            NSURLCacheStoragePolicy policy;
-            if ([request HTTPShouldHandleCookies] == YES
-                && [_response isKindOfClass: [NSHTTPURLResponse class]] == YES)
-            {
-                /* Get cookies from the response and accept them into
-                 * shared storage if policy permits
-                 */
-                NSDictionary    *hdrs;
-                NSArray    *cookies;
-                NSURL        *url;
-                
-                url = [_response URL];
-                hdrs = [_response allHeaderFields];
-                cookies = [NSHTTPCookie cookiesWithResponseHeaderFields: hdrs
-                                                                 forURL: url];
-                [[NSHTTPCookieStorage sharedHTTPCookieStorage]
-                 setCookies: cookies
-                 forURL: url
-                 mainDocumentURL: [request mainDocumentURL]];
-            }
-            
-            /* Tell the client that we have a response and how
-             * it should be cached.
-             */
-            policy = [request cachePolicy];
-            if (policy
-                == (NSURLCacheStoragePolicy)NSURLRequestUseProtocolCachePolicy)
-            {
-                if ([self isKindOfClass: [_NSHTTPSURLProtocol class]] == YES)
-                {
-                    /* For HTTPS we should not allow caching unless the
-                     * request explicitly wants it.
-                     */
-                    policy = NSURLCacheStorageNotAllowed;
-                }
-                else
-                {
-                    /* For HTTP we allow caching unless the request
-                     * specifically denies it.
-                     */
-                    policy = NSURLCacheStorageAllowed;
-                }
-            }
-            /**
-             * So protocol don't handle for caching progress. It's connection responsibility.
-             And eventully, response is pop up to connection.
-             */
-            [client URLProtocol: self
-             didReceiveResponse: _response
-             cacheStoragePolicy: policy];
-        }
+        [self responseHeaderTransferComplete];
     }
     
+    unsigned        bodyLength;
     if (_complete == YES) {
         /**
          *
@@ -699,179 +428,20 @@ static NSURLProtocol	*placeholder = nil;
          */
         if (_statusCode == 401)
         {
-            // If need authorization, tell client.
-            NSURLProtectionSpace    *space;
-            NSString            *authValue;
-            NSURL            *url;
-            int            failures = 0;
-            
-            /* This was an authentication challenge.
-             */
-            // authValue 中存储了验证的方式.
-            authValue = [[document headerNamed: @"WWW-Authenticate"] value];
-            url = [request URL];
-            space = [GSHTTPAuthentication
-                     protectionSpaceForAuthentication: authValue requestURL: url];
-            if (space != nil)
-            {
-                /* Create credential from user and password
-                 * stored in the URL.
-                 * Returns nil if we have no username or password.
-                 */
-                _credential = [[NSURLCredential alloc]
-                               initWithUser: [url user]
-                               password: [url password]
-                               persistence: NSURLCredentialPersistenceForSession];
-                if (_credential == nil)
-                {
-                    /* No credential from the URL, so we try using the
-                     * default credential for the protection space.
-                     */
-                    ASSIGN(_credential,
-                           [[NSURLCredentialStorage sharedCredentialStorage]
-                            defaultCredentialForProtectionSpace: space]);
-                }
-            }
-            
-            if (_challenge != nil)
-            {
-                /* The failure count is incremented if we have just
-                 * tried a request in the same protection space.
-                 */
-                if (YES == [[_challenge protectionSpace] isEqual: space])
-                {
-                    failures = [_challenge previousFailureCount] + 1;
-                }
-            }
-            else if ([request valueForHTTPHeaderField:@"Authorization"])
-            {
-                /* Our request had an authorization header, so we should
-                 * count that as a failure or we wouldn't have been
-                 * challenged.
-                 */
-                failures = 1;
-            }
-            DESTROY(_challenge);
-            
-            _challenge = [[NSURLAuthenticationChallenge alloc]
-                          initWithProtectionSpace: space
-                          proposedCredential: _credential
-                          previousFailureCount: failures
-                          failureResponse: _response
-                          error: nil
-                          sender: self];
-            
-            /* Allow the client to control the credential we send
-             * or whether we actually send at all.
-             */
-            [client URLProtocol: self didReceiveAuthenticationChallenge: _challenge];
-            
-            if (_challenge == nil)
-            {
-                NSError    *e;
-                
-                /* The client cancelled the authentication challenge
-                 * so we must cancel the download.
-                 */
-                e = [NSError errorWithDomain: @"Authentication cancelled"
-                                        code: 0
-                                    userInfo: nil];
-                [self stopLoading];
-                [client URLProtocol: self
-                   didFailWithError: e];
-            }
-            else
-            {
-                NSString    *auth = nil;
-                
-                if (_credential != nil)
-                {
-                    GSHTTPAuthentication    *authentication;
-                    
-                    /* Get information about basic or
-                     * digest authentication.
-                     */
-                    authentication = [GSHTTPAuthentication
-                                      authenticationWithCredential: _credential
-                                      inProtectionSpace: space];
-                    
-                    /* Generate authentication header value for the
-                     * authentication type in the challenge.
-                     */
-                    auth = [authentication
-                            authorizationForAuthentication: authValue
-                            method: [request HTTPMethod]
-                            path: [url fullPath]];
-                }
-                
-                if (auth == nil)
-                {
-                    NSURLCacheStoragePolicy policy;
-                    
-                    /* We have no authentication credentials so we
-                     * treat this as a download of the challenge page.
-                     */
-                    
-                    /* Tell the client that we have a response and how
-                     * it should be cached.
-                     */
-                    policy = [request cachePolicy];
-                    if (policy == (NSURLCacheStoragePolicy)
-                        NSURLRequestUseProtocolCachePolicy)
-                    {
-                        if ([self isKindOfClass: [_NSHTTPSURLProtocol class]])
-                        {
-                            /* For HTTPS we should not allow caching unless
-                             * the request explicitly wants it.
-                             */
-                            policy = NSURLCacheStorageNotAllowed;
-                        }
-                        else
-                        {
-                            /* For HTTP we allow caching unless the request
-                             * specifically denies it.
-                             */
-                            policy = NSURLCacheStorageAllowed;
-                        }
-                    }
-                    [client URLProtocol: self
-                     didReceiveResponse: _response
-                     cacheStoragePolicy: policy];
-                    /* Fall through to code providing page data.
-                     */
-                }
-                else
-                {
-                    NSMutableURLRequest    *request;
-                    
-                    /* To answer the authentication challenge,
-                     * we must retry with a modified request and
-                     * with the cached response cleared.
-                     */
-                    request = [request mutableCopy];
-                    [request setValue: auth
-                   forHTTPHeaderField: @"Authorization"];
-                    [self stopLoading];
-                    [request release];
-                    request = request;
-                    DESTROY(cachedResponse);
-                    [self startLoading];
-                    return;
-                }
-            }
+            [self handleForAuthorization];
         }
         [inputStream removeFromRunLoop: [NSRunLoop currentRunLoop]
                                forMode: NSDefaultRunLoopMode];
-        [output removeFromRunLoop: [NSRunLoop currentRunLoop]
+        [outputStream removeFromRunLoop: [NSRunLoop currentRunLoop]
                           forMode: NSDefaultRunLoopMode];
         if (_shouldClose == YES)
         {
             [inputStream setDelegate: nil];
-            [output setDelegate: nil];
+            [outputStream setDelegate: nil];
             [inputStream close];
-            [output close];
+            [outputStream close];
             DESTROY(inputStream);
-            DESTROY(output);
+            DESTROY(outputStream);
         }
         
         /*
@@ -880,17 +450,17 @@ static NSURLProtocol	*placeholder = nil;
          */
         if (_isLoading == YES)
         {
-            d = [_parser data];
-            bodyLength = [d length];
+            data = [_parser data];
+            bodyLength = [data length];
             if (bodyLength > _parseOffset)
             {
                 if (_parseOffset > 0)
                 {
-                    d = [d subdataWithRange:
+                    data = [data subdataWithRange:
                          NSMakeRange(_parseOffset, bodyLength - _parseOffset)];
                 }
                 _parseOffset = bodyLength;
-                [self _didLoad: d];
+                [self streamDidLoadData: data];
             }
             
             /* Check again in case the client cancelled the load inside
@@ -905,22 +475,314 @@ static NSURLProtocol	*placeholder = nil;
         return;
     }
     
-    /*
-     * Report partial data if possible.
-     */
     if ([_parser isInBody])
     {
-        d = [_parser data];
-        bodyLength = [d length];
+        data = [_parser data];
+        bodyLength = [data length];
         if (bodyLength > _parseOffset)
         {
             if (_parseOffset > 0)
             {
-                d = [d subdataWithRange:
-                     NSMakeRange(_parseOffset, [d length] - _parseOffset)];
+                data = [data subdataWithRange:
+                     NSMakeRange(_parseOffset, [data length] - _parseOffset)];
             }
             _parseOffset = bodyLength;
-            [self _didLoad: d];
+            [self streamDidLoadData: data];
+        }
+    }
+}
+
+- (void)responseHeaderTransferComplete {
+    NSData *data; // data 应该是从流中读取的数据, 这里为了代码清晰, 定义一个临时数据避免报错.
+    GSMimeDocument    *document = [_parser mimeDocument];
+    int            len = -1;
+    NSString        *contentType;
+    NSString        *contentSubType;
+    NSString        *responseValue;
+    
+    GSMimeHeader *info = [document headerNamed: @"http"];
+    
+    _version = [[info value] floatValue];
+    if (_version < 1.1)
+    {
+        _shouldClose = YES;
+    } else if ((responseValue = [[document headerNamed: @"connection"] value]) != nil
+             && [responseValue caseInsensitiveCompare: @"close"] == NSOrderedSame) {
+        _shouldClose = YES;
+    } else {
+        _shouldClose = NO;    // Keep connection alive.
+    }
+    
+    responseValue = [info objectForKey: NSHTTPPropertyStatusCodeKey];
+    _statusCode = [responseValue intValue];
+    
+    responseValue = [[document headerNamed: @"content-length"] value];
+    if ([responseValue length] > 0)
+    {
+        len = [responseValue intValue];
+    }
+    
+    responseValue = [info objectForKey: NSHTTPPropertyStatusReasonKey];
+    info = [document headerNamed: @"content-type"];
+    contentType = [document contentType];
+    contentSubType = [document contentSubtype];
+    if (contentType && contentSubType)
+    {
+        contentType = [contentType stringByAppendingFormat: @"/%@", contentSubType];
+    } else {
+        contentType = nil;
+    }
+    /**
+     Construct the response with parsed value.
+     */
+    _response = [[NSHTTPURLResponse alloc]
+                 initWithURL: [request URL]
+                 MIMEType: contentType
+                 expectedContentLength: len
+                 textEncodingName: [info parameterForKey: @"charset"]];
+    [_response _setStatusCode: _statusCode text: responseValue];
+    [document deleteHeaderNamed: @"http"];
+    [_response _setHeaders: [document allHeaders]];
+    
+    if (_statusCode == 204 || _statusCode == 304)
+    {
+        _complete = YES;    // No body expected.
+    }
+    else if (_complete == NO && [data length] == 0)
+    {
+        _complete = YES;    // Had EOF ... terminate
+    }
+    
+    if (_statusCode == 401)
+    {
+        /* This is an authentication challenge, so we keep reading
+         * until the challenge is complete, then try to deal with it.
+         */
+    } else if (_statusCode >= 300 && _statusCode < 400) {
+        /**
+         * Redirect status, So here construct a redirect request
+         */
+        responseValue = [[document headerNamed: @"location"] value];
+        NSURL *url = [NSURL URLWithString: responseValue];
+        
+        if (url == nil)
+        {
+            NSError    *e;
+            e = [NSError errorWithDomain: @"Invalid redirect request"
+                                    code: 0
+                                userInfo: nil];
+            [self stopLoading];
+            [client URLProtocol: self
+               didFailWithError: e];
+        } else {
+            NSMutableURLRequest    *request;
+            request = [[request mutableCopy] autorelease];
+            [request setURL: url];
+            [client URLProtocol: self wasRedirectedToRequest: request redirectResponse: _response];
+        }
+    } else {
+        NSURLCacheStoragePolicy policy;
+        if ([request HTTPShouldHandleCookies] && [_response isKindOfClass: [NSHTTPURLResponse class]]) {
+            /* Get cookies from the response and accept them into
+             * shared storage if policy permits
+             */
+            NSURL *url = [_response URL];
+            NSDictionary *hdrs = [_response allHeaderFields];
+            NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields: hdrs forURL: url];
+            // NSHTTPCookieStorage is just a cached data class.
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage]
+             setCookies: cookies
+             forURL: url
+             mainDocumentURL: [request mainDocumentURL]];
+        }
+        
+        /* Tell the client that we have a response and how
+         * it should be cached.
+         */
+        policy = [request cachePolicy];
+        if (policy == (NSURLCacheStoragePolicy)NSURLRequestUseProtocolCachePolicy)
+        {
+            if ([self isKindOfClass: [_NSHTTPSURLProtocol class]])
+            {
+                /* For HTTPS we should not allow caching unless the
+                 * request explicitly wants it.
+                 */
+                policy = NSURLCacheStorageNotAllowed;
+            } else {
+                /* For HTTP we allow caching unless the request
+                 * specifically denies it.
+                 */
+                policy = NSURLCacheStorageAllowed;
+            }
+        }
+        /**
+         So protocol don't handle for caching progress. It's connection responsibility.
+         And eventully, response is pop up to connection.
+         */
+        [client URLProtocol: self
+         didReceiveResponse: _response
+         cacheStoragePolicy: policy];
+    }
+}
+
+- (void)handleForAuthorization {
+    GSMimeDocument    *document = [_parser mimeDocument];
+    NSURLProtectionSpace    *space;
+    NSString            *authValue;
+    NSURL            *url;
+    int            failures = 0;
+    /*
+     This was an authentication challenge.
+     */
+    authValue = [[document headerNamed: @"WWW-Authenticate"] value];
+    url = [request URL];
+    space = [GSHTTPAuthentication
+             protectionSpaceForAuthentication: authValue requestURL: url];
+    if (space != nil)
+    {
+        /* Create credential from user and password
+         * stored in the URL.
+         * Returns nil if we have no username or password.
+         */
+        _credential = [[NSURLCredential alloc]
+                       initWithUser: [url user]
+                       password: [url password]
+                       persistence: NSURLCredentialPersistenceForSession];
+        if (_credential == nil)
+        {
+            /* No credential from the URL, so we try using the
+             * default credential for the protection space.
+             */
+            ASSIGN(_credential,
+                   [[NSURLCredentialStorage sharedCredentialStorage]
+                    defaultCredentialForProtectionSpace: space]);
+        }
+    }
+    
+    if (_challenge != nil)
+    {
+        /* The failure count is incremented if we have just
+         * tried a request in the same protection space.
+         */
+        if (YES == [[_challenge protectionSpace] isEqual: space])
+        {
+            failures = [_challenge previousFailureCount] + 1;
+        }
+    }
+    else if ([request valueForHTTPHeaderField:@"Authorization"])
+    {
+        /* Our request had an authorization header, so we should
+         * count that as a failure or we wouldn't have been
+         * challenged.
+         */
+        failures = 1;
+    }
+    DESTROY(_challenge);
+    
+    _challenge = [[NSURLAuthenticationChallenge alloc]
+                  initWithProtectionSpace: space
+                  proposedCredential: _credential
+                  previousFailureCount: failures
+                  failureResponse: _response
+                  error: nil
+                  sender: self];
+    
+    /* Allow the client to control the credential we send
+     * or whether we actually send at all.
+     */
+    [client URLProtocol: self didReceiveAuthenticationChallenge: _challenge];
+    
+    if (_challenge == nil)
+    {
+        NSError    *e;
+        
+        /* The client cancelled the authentication challenge
+         * so we must cancel the download.
+         */
+        e = [NSError errorWithDomain: @"Authentication cancelled"
+                                code: 0
+                            userInfo: nil];
+        [self stopLoading];
+        [client URLProtocol: self
+           didFailWithError: e];
+    }
+    else
+    {
+        NSString    *auth = nil;
+        
+        if (_credential != nil)
+        {
+            GSHTTPAuthentication    *authentication;
+            
+            /* Get information about basic or
+             * digest authentication.
+             */
+            authentication = [GSHTTPAuthentication
+                              authenticationWithCredential: _credential
+                              inProtectionSpace: space];
+            
+            /* Generate authentication header value for the
+             * authentication type in the challenge.
+             */
+            auth = [authentication
+                    authorizationForAuthentication: authValue
+                    method: [request HTTPMethod]
+                    path: [url fullPath]];
+        }
+        
+        if (auth == nil)
+        {
+            NSURLCacheStoragePolicy policy;
+            
+            /* We have no authentication credentials so we
+             * treat this as a download of the challenge page.
+             */
+            
+            /* Tell the client that we have a response and how
+             * it should be cached.
+             */
+            policy = [request cachePolicy];
+            if (policy == (NSURLCacheStoragePolicy)
+                NSURLRequestUseProtocolCachePolicy)
+            {
+                if ([self isKindOfClass: [_NSHTTPSURLProtocol class]])
+                {
+                    /* For HTTPS we should not allow caching unless
+                     * the request explicitly wants it.
+                     */
+                    policy = NSURLCacheStorageNotAllowed;
+                }
+                else
+                {
+                    /* For HTTP we allow caching unless the request
+                     * specifically denies it.
+                     */
+                    policy = NSURLCacheStorageAllowed;
+                }
+            }
+            [client URLProtocol: self
+             didReceiveResponse: _response
+             cacheStoragePolicy: policy];
+            /* Fall through to code providing page data.
+             */
+        }
+        else
+        {
+            NSMutableURLRequest    *request;
+            
+            /* To answer the authentication challenge,
+             * we must retry with a modified request and
+             * with the cached response cleared.
+             */
+            request = [request mutableCopy];
+            [request setValue: auth
+           forHTTPHeaderField: @"Authorization"];
+            [self stopLoading];
+            [request release];
+            request = request;
+            DESTROY(cachedResponse);
+            [self startLoading];
+            return;
         }
     }
 }
@@ -932,244 +794,238 @@ static NSURLProtocol	*placeholder = nil;
         {
             case NSStreamEventHasBytesAvailable:
             case NSStreamEventEndEncountered:
-                [self _got: stream];
+                [self didReceiveDataFromInputStream: stream];
                 return;
             case NSStreamEventOpenCompleted:
                 return;
             default:
                 break;
         }
+        return;
     }
-    else if (stream == output)
+    
+    
+    switch (event)
     {
-        switch (event)
+            // output stream should output every data, include the http header and body.
+        case NSStreamEventOpenCompleted: // opened and make output stream.
         {
-                // output stream should output every data, include the http header and body.
-            case NSStreamEventOpenCompleted: // opened and make output stream.
+            NSMutableData    *dataM;
+            NSDictionary    *d;
+            NSEnumerator    *e;
+            NSString        *s;
+            NSURL        *url;
+            int        bodylength;
+            
+            DESTROY(_writedSoFarData);
+            _writeOffset = 0;
+            if ([request HTTPBodyStream] == nil)
             {
-                NSMutableData	*dataM;
-                NSDictionary	*d;
-                NSEnumerator	*e;
-                NSString		*s;
-                NSURL		*url;
-                int		bodylength;
+                bodylength = [[request HTTPBody] length];
+                _version = 1.1;
+            }
+            else
+            {
+                // Stream and close
+                bodylength = -1;
+                _version = 1.0;
+                _shouldClose = YES;
+            }
+            
+            dataM = [[NSMutableData alloc] initWithCapacity: 1024];
+            
+            /* The request line is of the form:
+             * method /path?query HTTP/version
+             * where the query part may be missing
+             */
+            [dataM appendData: [[request HTTPMethod]
+                                dataUsingEncoding: NSASCIIStringEncoding]];
+            [dataM appendBytes: " " length: 1];
+            url = [request URL];
+            s = [[url fullPath] stringByAddingPercentEscapesUsingEncoding:
+                 NSUTF8StringEncoding];
+            if ([s hasPrefix: @"/"] == NO)
+            {
+                [dataM appendBytes: "/" length: 1];
+            }
+            [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
+            s = [url query];
+            if ([s length] > 0)
+            {
+                [dataM appendBytes: "?" length: 1];
+                [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
+            }
+            s = [NSString stringWithFormat: @" HTTP/%0.1f\r\n", _version];
+            [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
+            // dataM add all httpheaders
+            d = [request allHTTPHeaderFields];
+            e = [d keyEnumerator];
+            while ((s = [e nextObject]) != nil)
+            {
+                GSMimeHeader      *h;
                 
-                DESTROY(_writedSoFarData);
-                _writeOffset = 0;
-                if ([request HTTPBodyStream] == nil)
+                h = [[GSMimeHeader alloc] initWithName: s
+                                                 value: [d objectForKey: s]
+                                            parameters: nil];
+                [dataM appendData:
+                 [h rawMimeDataPreservingCase: YES foldedAt: 0]];
+                RELEASE(h);
+            }
+            
+            /* Use valueForHTTPHeaderField: to check for content-type
+             * header as that does a case insensitive comparison and
+             * we therefore won't end up adding a second header by
+             * accident because the two header names differ in case.
+             */
+            if ([[request HTTPMethod] isEqual: @"POST"]
+                && [request valueForHTTPHeaderField:
+                    @"Content-Type"] == nil)
+            {
+                /* On MacOSX, this is automatically added to POST methods */
+                static char   *ct
+                = "Content-Type: application/x-www-form-urlencoded\r\n";
+                [dataM appendBytes: ct length: strlen(ct)];
+            }
+            if ([request valueForHTTPHeaderField: @"Host"] == nil)
+            {
+                NSString      *s = [url scheme];
+                id            p = [url port];
+                id            h = [url host];
+                
+                if (h == nil)
                 {
-                    bodylength = [[request HTTPBody] length];
-                    _version = 1.1;
+                    h = @"";    // Must send an empty host header
+                }
+                if (([s isEqualToString: @"http"] && [p intValue] == 80)
+                    || ([s isEqualToString: @"https"] && [p intValue] == 443))
+                {
+                    /* Some buggy systems object to the port being in
+                     * the Host header when it's the default (optional)
+                     * value.
+                     * To keep them happy let's omit it in those cases.
+                     */
+                    p = nil;
+                }
+                if (nil == p)
+                {
+                    s = [NSString stringWithFormat: @"Host: %@\r\n", h];
                 }
                 else
                 {
-                    // Stream and close
-                    bodylength = -1;
-                    _version = 1.0;
-                    _shouldClose = YES;
-                }
-                
-                dataM = [[NSMutableData alloc] initWithCapacity: 1024];
-                
-                /* The request line is of the form:
-                 * method /path?query HTTP/version
-                 * where the query part may be missing
-                 */
-                [dataM appendData: [[request HTTPMethod]
-                                    dataUsingEncoding: NSASCIIStringEncoding]];
-                [dataM appendBytes: " " length: 1];
-                url = [request URL];
-                s = [[url fullPath] stringByAddingPercentEscapesUsingEncoding:
-                     NSUTF8StringEncoding];
-                if ([s hasPrefix: @"/"] == NO)
-                {
-                    [dataM appendBytes: "/" length: 1];
+                    s = [NSString stringWithFormat: @"Host: %@:%@\r\n", h, p];
                 }
                 [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
-                s = [url query];
-                if ([s length] > 0)
-                {
-                    [dataM appendBytes: "?" length: 1];
-                    [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
-                }
-                s = [NSString stringWithFormat: @" HTTP/%0.1f\r\n", _version];
-                [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
-                // dataM add all httpheaders
-                d = [request allHTTPHeaderFields];
-                e = [d keyEnumerator];
-                while ((s = [e nextObject]) != nil)
-                {
-                    GSMimeHeader      *h;
-                    
-                    h = [[GSMimeHeader alloc] initWithName: s
-                                                     value: [d objectForKey: s]
-                                                parameters: nil];
-                    [dataM appendData:
-                     [h rawMimeDataPreservingCase: YES foldedAt: 0]];
-                    RELEASE(h);
-                }
-                
-                /* Use valueForHTTPHeaderField: to check for content-type
-                 * header as that does a case insensitive comparison and
-                 * we therefore won't end up adding a second header by
-                 * accident because the two header names differ in case.
-                 */
-                if ([[request HTTPMethod] isEqual: @"POST"]
-                    && [request valueForHTTPHeaderField:
-                        @"Content-Type"] == nil)
-                {
-                    /* On MacOSX, this is automatically added to POST methods */
-                    static char   *ct
-                    = "Content-Type: application/x-www-form-urlencoded\r\n";
-                    [dataM appendBytes: ct length: strlen(ct)];
-                }
-                if ([request valueForHTTPHeaderField: @"Host"] == nil)
-                {
-                    NSString      *s = [url scheme];
-                    id	        p = [url port];
-                    id	        h = [url host];
-                    
-                    if (h == nil)
-                    {
-                        h = @"";	// Must send an empty host header
-                    }
-                    if (([s isEqualToString: @"http"] && [p intValue] == 80)
-                        || ([s isEqualToString: @"https"] && [p intValue] == 443))
-                    {
-                        /* Some buggy systems object to the port being in
-                         * the Host header when it's the default (optional)
-                         * value.
-                         * To keep them happy let's omit it in those cases.
-                         */
-                        p = nil;
-                    }
-                    if (nil == p)
-                    {
-                        s = [NSString stringWithFormat: @"Host: %@\r\n", h];
-                    }
-                    else
-                    {
-                        s = [NSString stringWithFormat: @"Host: %@:%@\r\n", h, p];
-                    }
-                    [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
-                }
-                if (bodylength >= 0 && [request
-                                        valueForHTTPHeaderField: @"Content-Length"] == nil)
-                {
-                    // Here, Content-Length is sure that accurate. cause it is form data length.
-                    s = [NSString stringWithFormat: @"Content-Length: %d\r\n", bodylength];
-                    [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
-                }
-                // append the end for headers
-                [dataM appendBytes: "\r\n" length: 2];	// End of headers
-                _writedSoFarData  = dataM;
             }
-                // Fall through to do the write, So there is no break here.
-            case NSStreamEventHasSpaceAvailable: // The stream can accept bytes for writing.
+            if (bodylength >= 0 && [request
+                                    valueForHTTPHeaderField: @"Content-Length"] == nil)
             {
-                int	written;
-                BOOL	sent = NO;
-                if (_writedSoFarData != nil) // First write header data
+                // Here, Content-Length is sure that accurate. cause it is form data length.
+                s = [NSString stringWithFormat: @"Content-Length: %d\r\n", bodylength];
+                [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
+            }
+            // append the end for headers
+            [dataM appendBytes: "\r\n" length: 2];    // End of headers
+            _writedSoFarData  = dataM;
+        }
+            // Fall through to do the write, So there is no break here.
+        case NSStreamEventHasSpaceAvailable: // The stream can accept bytes for writing.
+        {
+            int    written;
+            BOOL    sent = NO;
+            if (_writedSoFarData != nil) // First write header data
+            {
+                const unsigned char    *bytes = [_writedSoFarData bytes];
+                unsigned        len = [_writedSoFarData length];
+                
+                written = [outputStream write: bytes + _writeOffset
+                                    maxLength: len - _writeOffset];
+                if (written > 0)
                 {
-                    const unsigned char	*bytes = [_writedSoFarData bytes];
-                    unsigned		len = [_writedSoFarData length];
-                    
-                    written = [output write: bytes + _writeOffset
-                                  maxLength: len - _writeOffset];
-                    if (written > 0)
+                    _writeOffset += written;
+                    if (_writeOffset >= len)
                     {
-                        _writeOffset += written;
-                        if (_writeOffset >= len)
+                        // _writedSoFarData has been output all
+                        DESTROY(_writedSoFarData);
+                        if (requestDataStream == nil)
                         {
-                            // _writedSoFarData has been output all
-                            DESTROY(_writedSoFarData);
+                            requestDataStream = RETAIN([request HTTPBodyStream]);
                             if (requestDataStream == nil)
                             {
-                                requestDataStream = RETAIN([request HTTPBodyStream]);
-                                if (requestDataStream == nil)
+                                NSData    *httpBody = [request HTTPBody];
+                                
+                                if (httpBody != nil)
                                 {
-                                    NSData	*httpBody = [request HTTPBody];
-                                    
-                                    if (httpBody != nil)
-                                    {
-                                        /**
-                                         * Why there must have a inputStream to read requestBody.
-                                         */
-                                        requestDataStream = [NSInputStream alloc];
-                                        requestDataStream = [requestDataStream initWithData: httpBody];
-                                        [requestDataStream open]; // requestDataStream is for sending body.
-                                    }
-                                    else
-                                    {
-                                        sent = YES;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (requestDataStream != nil) // write http body data
-                {
-                    if ([requestDataStream hasBytesAvailable])
-                    {
-                        unsigned char	buffer[BUFSIZ*64];
-                        int		len;
-                        
-                        // read form stream.
-                        len = [requestDataStream read: buffer maxLength: sizeof(buffer)];
-                        if (len < 0)
-                        {
-                            [self stopLoading];
-                            [client URLProtocol: self didFailWithError:
-                             [NSError errorWithDomain: @"can't read body"
-                                                 code: 0
-                                             userInfo: nil]];
-                            return;
-                        }
-                        else if (len > 0)
-                        {
-                            // write to output.
-                            written = [output write: buffer maxLength: len];
-                            if (written > 0)
-                            {
-                                len -= written;
-                                if (len > 0)
-                                {
-                                    /* Couldn't write it all now, save and try
-                                     * again later.
+                                    /**
+                                     * Why there must have a inputStream to read requestBody.
                                      */
-                                    _writedSoFarData = [[NSData alloc] initWithBytes:
-                                                        buffer + written length: len];
-                                    _writeOffset = 0;
+                                    requestDataStream = [NSInputStream alloc];
+                                    requestDataStream = [requestDataStream initWithData: httpBody];
+                                    [requestDataStream open]; // requestDataStream is for sending body.
                                 }
-                                else if (len == 0 && ![requestDataStream hasBytesAvailable])
+                                else
                                 {
-                                    /* all _body's bytes are read and written
-                                     * so we shouldn't wait for another
-                                     * opportunity to close _body and set
-                                     * the flag 'sent'.
-                                     */
-                                    [requestDataStream close];
-                                    DESTROY(requestDataStream);
                                     sent = YES;
                                 }
                             }
-                            else if ([output streamStatus]
-                                     == NSStreamStatusWriting)
+                        }
+                    }
+                }
+            }
+            else if (requestDataStream != nil) // write http body data
+            {
+                if ([requestDataStream hasBytesAvailable])
+                {
+                    unsigned char    buffer[BUFSIZ*64];
+                    int        len;
+                    
+                    // read form stream.
+                    len = [requestDataStream read: buffer maxLength: sizeof(buffer)];
+                    if (len < 0)
+                    {
+                        [self stopLoading];
+                        [client URLProtocol: self didFailWithError:
+                         [NSError errorWithDomain: @"can't read body"
+                                             code: 0
+                                         userInfo: nil]];
+                        return;
+                    }
+                    else if (len > 0)
+                    {
+                        // write to output.
+                        written = [outputStream write: buffer maxLength: len];
+                        if (written > 0)
+                        {
+                            len -= written;
+                            if (len > 0)
                             {
                                 /* Couldn't write it all now, save and try
                                  * again later.
                                  */
                                 _writedSoFarData = [[NSData alloc] initWithBytes:
-                                                    buffer length: len];
+                                                    buffer + written length: len];
                                 _writeOffset = 0;
                             }
+                            else if (len == 0 && ![requestDataStream hasBytesAvailable])
+                            {
+                                /* all _body's bytes are read and written
+                                 * so we shouldn't wait for another
+                                 * opportunity to close _body and set
+                                 * the flag 'sent'.
+                                 */
+                                [requestDataStream close];
+                                DESTROY(requestDataStream);
+                                sent = YES;
+                            }
                         }
-                        else
+                        else if ([outputStream streamStatus]
+                                 == NSStreamStatusWriting)
                         {
-                            [requestDataStream close];
-                            DESTROY(requestDataStream);
-                            sent = YES;
+                            /* Couldn't write it all now, save and try
+                             * again later.
+                             */
+                            _writedSoFarData = [[NSData alloc] initWithBytes:
+                                                buffer length: len];
+                            _writeOffset = 0;
                         }
                     }
                     else
@@ -1179,47 +1035,32 @@ static NSURLProtocol	*placeholder = nil;
                         sent = YES;
                     }
                 }
-                if (sent == YES)
+                else
                 {
-                    if (_shouldClose == YES)
-                    {
-                        [output setDelegate: nil];
-                        [output removeFromRunLoop:
-                         [NSRunLoop currentRunLoop]
-                                          forMode: NSDefaultRunLoopMode];
-                        [output close];
-                        DESTROY(output);
-                    }
+                    [requestDataStream close];
+                    DESTROY(requestDataStream);
+                    sent = YES;
                 }
-                return;  // done
             }
-            default:
-                break;
+            if (sent == YES)
+            {
+                if (_shouldClose == YES)
+                {
+                    [outputStream setDelegate: nil];
+                    [outputStream removeFromRunLoop:
+                     [NSRunLoop currentRunLoop]
+                                            forMode: NSDefaultRunLoopMode];
+                    [outputStream close];
+                    DESTROY(outputStream);
+                }
+            }
+            return;  // done
         }
-    }
-    else
-    {
-    }
-    
-    if (event == NSStreamEventErrorOccurred)
-    {
-        NSError	*error = [[[stream streamError] retain] autorelease];
-        [self stopLoading];
-        [client URLProtocol: self didFailWithError: error];
-    }
-    else
-    {
+        default:
+            break;
     }
 }
 
-- (void) useCredential: (NSURLCredential*)credential
-forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
-{
-    if (challenge == _challenge)
-    {
-        ASSIGN(_credential, credential);
-    }
-}
 @end
 
 @implementation _NSHTTPSURLProtocol
@@ -1260,8 +1101,8 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
         [NSStream getStreamsToHost: host
                               port: [[url port] intValue]
                        inputStream: &inputStream
-                      outputStream: &output];
-        if (inputStream == nil || output == nil)
+                      outputStream: &outputStream];
+        if (inputStream == nil || outputStream == nil)
         {
             [client URLProtocol: self didFailWithError:
              [NSError errorWithDomain: @"can't connect"
@@ -1270,23 +1111,23 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
             return;
         }
         [inputStream retain];
-        [output retain];
+        [outputStream retain];
         if ([[url scheme] isEqualToString: @"https"] == YES)
         {
             [inputStream setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
                               forKey: NSStreamSocketSecurityLevelKey];
-            [output setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
+            [outputStream setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
                          forKey: NSStreamSocketSecurityLevelKey];
         }
         [inputStream setDelegate: self];
-        [output setDelegate: self];
+        [outputStream setDelegate: self];
         [inputStream scheduleInRunLoop: [NSRunLoop currentRunLoop]
                                forMode: NSDefaultRunLoopMode];
-        [output scheduleInRunLoop: [NSRunLoop currentRunLoop]
+        [outputStream scheduleInRunLoop: [NSRunLoop currentRunLoop]
                           forMode: NSDefaultRunLoopMode];
         // set socket options for ftps requests
         [inputStream open];
-        [output open];
+        [outputStream open];
     }
 }
 
@@ -1295,15 +1136,15 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
     if (inputStream)
     {
         [inputStream setDelegate: nil];
-        [output setDelegate: nil];
+        [outputStream setDelegate: nil];
         [inputStream removeFromRunLoop: [NSRunLoop currentRunLoop]
                                forMode: NSDefaultRunLoopMode];
-        [output removeFromRunLoop: [NSRunLoop currentRunLoop]
+        [outputStream removeFromRunLoop: [NSRunLoop currentRunLoop]
                           forMode: NSDefaultRunLoopMode];
         [inputStream close];
-        [output close];
+        [outputStream close];
         DESTROY(inputStream);
-        DESTROY(output);
+        DESTROY(outputStream);
     }
 }
 
@@ -1332,7 +1173,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
                 break;
         }
     }
-    else if (stream == output)
+    else if (stream == outputStream)
     {
         NSLog(@"An event occurred on the output stream.");
         // if successfully opened, send out FTP request header

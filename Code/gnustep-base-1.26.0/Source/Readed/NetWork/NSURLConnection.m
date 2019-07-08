@@ -387,7 +387,6 @@ wasRedirectedToRequest: (NSURLRequest *)request
 - (void) URLProtocolDidFinishLoading: (NSURLProtocol *)protocol
 {
     id    o = _delegate;
-    
     _delegate = nil;
     [o connectionDidFinishLoading: self];
     DESTROY(o);

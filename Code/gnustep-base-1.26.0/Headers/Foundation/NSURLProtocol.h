@@ -92,7 +92,7 @@ didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 @interface NSURLProtocol : NSObject
 {
     NSInputStream            *inputStream;
-    NSOutputStream        *output;
+    NSOutputStream        *outputStream;
     NSCachedURLResponse        *cachedResponse;
     id <NSURLProtocolClient>    client;        // Not retained
     NSURLRequest            *request;
