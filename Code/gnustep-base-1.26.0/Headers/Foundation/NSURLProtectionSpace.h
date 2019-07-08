@@ -1,26 +1,26 @@
 /* Interface for NSURLProtectionSpace for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <frm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
+ Copyright (C) 2006 Software Foundation, Inc.
+ 
+ Written by:  Richard Frith-Macdonald <frm@gnu.org>
+ Date: 2006
+ 
+ This file is part of the GNUstep Base Library.
+ 
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+ 
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free
+ Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ Boston, MA 02111 USA.
+ */
 
 #ifndef __NSURLProtectionSpace_h_GNUSTEP_BASE_INCLUDE
 #define __NSURLProtectionSpace_h_GNUSTEP_BASE_INCLUDE
@@ -90,9 +90,9 @@ extern NSString * const NSURLAuthenticationMethodServerTrust;
  * within the host, for others it may be nil.
  */
 - (id) initWithHost: (NSString *)host
-	       port: (NSInteger)port
-	   protocol: (NSString *)protocol
-	      realm: (NSString *)realm
+               port: (NSInteger)port
+           protocol: (NSString *)protocol
+              realm: (NSString *)realm
 authenticationMethod: (NSString *)authenticationMethod;
 
 /**
@@ -101,9 +101,9 @@ authenticationMethod: (NSString *)authenticationMethod;
  * host and a protocol.
  */
 - (id) initWithProxyHost: (NSString *)host
-		    port: (NSInteger)port
-		    type: (NSString *)type
-		   realm: (NSString *)realm
+                    port: (NSInteger)port
+                    type: (NSString *)type
+                   realm: (NSString *)realm
     authenticationMethod: (NSString *)authenticationMethod;
 
 /**

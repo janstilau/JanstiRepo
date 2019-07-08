@@ -20,7 +20,7 @@ typedef enum {
 
 
 /**
- * Represents a user/password credential
+ * Represents a user/password credential, the real apple will have trust for server and for client.
  */
 @interface NSURLCredential : NSObject <NSCopying>
 {

@@ -627,17 +627,10 @@ static NSURLProtocol	*placeholder = nil;
 
 - (void)handleForAuthorization {
     GSMimeDocument    *document = [_parser mimeDocument];
-    NSURLProtectionSpace    *space;
-    NSString            *authValue;
-    NSURL            *url;
     int            failures = 0;
-    /*
-     This was an authentication challenge.
-     */
-    authValue = [[document headerNamed: @"WWW-Authenticate"] value];
-    url = [request URL];
-    space = [GSHTTPAuthentication
-             protectionSpaceForAuthentication: authValue requestURL: url];
+    NSString *authValue = [[document headerNamed: @"WWW-Authenticate"] value];
+    NSURL *url = [request URL];
+    NSURLProtectionSpace *space = [GSHTTPAuthentication protectionSpaceForAuthentication:authValue requestURL: url];
     if (space != nil)
     {
         /* Create credential from user and password
@@ -810,255 +803,247 @@ static NSURLProtocol	*placeholder = nil;
             // output stream should output every data, include the http header and body.
         case NSStreamEventOpenCompleted: // opened and make output stream.
         {
-            NSMutableData    *dataM;
-            NSDictionary    *d;
-            NSEnumerator    *e;
-            NSString        *s;
-            NSURL        *url;
-            int        bodylength;
-            
-            DESTROY(_writedSoFarData);
-            _writeOffset = 0;
-            if ([request HTTPBodyStream] == nil)
-            {
-                bodylength = [[request HTTPBody] length];
-                _version = 1.1;
-            }
-            else
-            {
-                // Stream and close
-                bodylength = -1;
-                _version = 1.0;
-                _shouldClose = YES;
-            }
-            
-            dataM = [[NSMutableData alloc] initWithCapacity: 1024];
-            
-            /* The request line is of the form:
-             * method /path?query HTTP/version
-             * where the query part may be missing
-             */
-            [dataM appendData: [[request HTTPMethod]
-                                dataUsingEncoding: NSASCIIStringEncoding]];
-            [dataM appendBytes: " " length: 1];
-            url = [request URL];
-            s = [[url fullPath] stringByAddingPercentEscapesUsingEncoding:
-                 NSUTF8StringEncoding];
-            if ([s hasPrefix: @"/"] == NO)
-            {
-                [dataM appendBytes: "/" length: 1];
-            }
-            [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
-            s = [url query];
-            if ([s length] > 0)
-            {
-                [dataM appendBytes: "?" length: 1];
-                [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
-            }
-            s = [NSString stringWithFormat: @" HTTP/%0.1f\r\n", _version];
-            [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
-            // dataM add all httpheaders
-            d = [request allHTTPHeaderFields];
-            e = [d keyEnumerator];
-            while ((s = [e nextObject]) != nil)
-            {
-                GSMimeHeader      *h;
-                
-                h = [[GSMimeHeader alloc] initWithName: s
-                                                 value: [d objectForKey: s]
-                                            parameters: nil];
-                [dataM appendData:
-                 [h rawMimeDataPreservingCase: YES foldedAt: 0]];
-                RELEASE(h);
-            }
-            
-            /* Use valueForHTTPHeaderField: to check for content-type
-             * header as that does a case insensitive comparison and
-             * we therefore won't end up adding a second header by
-             * accident because the two header names differ in case.
-             */
-            if ([[request HTTPMethod] isEqual: @"POST"]
-                && [request valueForHTTPHeaderField:
-                    @"Content-Type"] == nil)
-            {
-                /* On MacOSX, this is automatically added to POST methods */
-                static char   *ct
-                = "Content-Type: application/x-www-form-urlencoded\r\n";
-                [dataM appendBytes: ct length: strlen(ct)];
-            }
-            if ([request valueForHTTPHeaderField: @"Host"] == nil)
-            {
-                NSString      *s = [url scheme];
-                id            p = [url port];
-                id            h = [url host];
-                
-                if (h == nil)
-                {
-                    h = @"";    // Must send an empty host header
-                }
-                if (([s isEqualToString: @"http"] && [p intValue] == 80)
-                    || ([s isEqualToString: @"https"] && [p intValue] == 443))
-                {
-                    /* Some buggy systems object to the port being in
-                     * the Host header when it's the default (optional)
-                     * value.
-                     * To keep them happy let's omit it in those cases.
-                     */
-                    p = nil;
-                }
-                if (nil == p)
-                {
-                    s = [NSString stringWithFormat: @"Host: %@\r\n", h];
-                }
-                else
-                {
-                    s = [NSString stringWithFormat: @"Host: %@:%@\r\n", h, p];
-                }
-                [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
-            }
-            if (bodylength >= 0 && [request
-                                    valueForHTTPHeaderField: @"Content-Length"] == nil)
-            {
-                // Here, Content-Length is sure that accurate. cause it is form data length.
-                s = [NSString stringWithFormat: @"Content-Length: %d\r\n", bodylength];
-                [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
-            }
-            // append the end for headers
-            [dataM appendBytes: "\r\n" length: 2];    // End of headers
-            _writedSoFarData  = dataM;
+            [self sendRequestHeader];
         }
             // Fall through to do the write, So there is no break here.
         case NSStreamEventHasSpaceAvailable: // The stream can accept bytes for writing.
         {
-            int    written;
-            BOOL    sent = NO;
-            if (_writedSoFarData != nil) // First write header data
+            [self sendRequestBody];
+        }
+        default:
+            break;
+    }
+}
+
+- (void)sendRequestHeader {
+    NSDictionary    *headerFileds;
+    int        bodylength;
+    
+    _writeOffset = 0;
+    if (![request HTTPBodyStream])
+    {
+        bodylength = [[request HTTPBody] length];
+        _version = 1.1;
+    } else{
+        bodylength = -1;
+        _version = 1.0;
+        _shouldClose = YES;
+    }
+    
+    NSMutableData *sendRequestData = [[NSMutableData alloc] initWithCapacity: 1024];
+    
+    /* The request line is of the form:
+     * method /path?query HTTP/version
+     * where the query part may be missing
+     */
+    [sendRequestData appendData: [[request HTTPMethod]
+                        dataUsingEncoding: NSASCIIStringEncoding]];
+    [sendRequestData appendBytes: " " length: 1];
+    NSURL *url = [request URL];
+    NSString *requestUrl = [[url fullPath] stringByAddingPercentEscapesUsingEncoding:
+         NSUTF8StringEncoding];
+    if ([requestUrl hasPrefix: @"/"] == NO)
+    {
+        [sendRequestData appendBytes: "/" length: 1];
+    }
+    [sendRequestData appendData: [requestUrl dataUsingEncoding: NSASCIIStringEncoding]];
+    requestUrl = [url query];
+    if ([requestUrl length] > 0)
+    {
+        [sendRequestData appendBytes: "?" length: 1];
+        [sendRequestData appendData: [requestUrl dataUsingEncoding: NSASCIIStringEncoding]];
+    }
+    requestUrl = [NSString stringWithFormat: @" HTTP/%0.1f\r\n", _version];
+    [sendRequestData appendData: [requestUrl dataUsingEncoding: NSASCIIStringEncoding]];
+    // dataM add all httpheaders
+    headerFileds = [request allHTTPHeaderFields];
+    NSEnumerator  *headerKeyIter = [headerFileds keyEnumerator];
+    while ((requestUrl = [headerKeyIter nextObject]) != nil)
+    {
+        GSMimeHeader *h = [[GSMimeHeader alloc] initWithName: requestUrl
+                                         value: [headerFileds objectForKey: requestUrl]
+                                    parameters: nil];
+        [sendRequestData appendData:[h rawMimeDataPreservingCase: YES foldedAt: 0]];
+    }
+    
+    /* Use valueForHTTPHeaderField: to check for content-type
+     * header as that does a case insensitive comparison and
+     * we therefore won't end up adding a second header by
+     * accident because the two header names differ in case.
+     */
+    if ([[request HTTPMethod] isEqual: @"POST"] && ![request valueForHTTPHeaderField:@"Content-Type"])
+    {
+        /* On MacOSX, this is automatically added to POST methods */
+        static char   *ct = "Content-Type: application/x-www-form-urlencoded\r\n";
+        [sendRequestData appendBytes: ct length: strlen(ct)];
+    }
+    if ([request valueForHTTPHeaderField: @"Host"] == nil)
+    {
+        NSString      *s = [url scheme];
+        id            p = [url port];
+        id            h = [url host];
+        
+        if (h == nil)
+        {
+            h = @"";    // Must send an empty host header
+        }
+        if (([s isEqualToString: @"http"] && [p intValue] == 80)
+            || ([s isEqualToString: @"https"] && [p intValue] == 443))
+        {
+            /* Some buggy systems object to the port being in
+             * the Host header when it's the default (optional)
+             * value.
+             * To keep them happy let's omit it in those cases.
+             */
+            p = nil;
+        }
+        if (nil == p)
+        {
+            s = [NSString stringWithFormat: @"Host: %@\r\n", h];
+        }
+        else
+        {
+            s = [NSString stringWithFormat: @"Host: %@:%@\r\n", h, p];
+        }
+        [sendRequestData appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
+    }
+    if (bodylength >= 0 && [request valueForHTTPHeaderField: @"Content-Length"] == nil)
+    {
+        // Here, Content-Length is sure that accurate. cause it is form data length.
+        requestUrl = [NSString stringWithFormat: @"Content-Length: %d\r\n", bodylength];
+        [sendRequestData appendData: [requestUrl dataUsingEncoding: NSASCIIStringEncoding]];
+    }
+    // append the end for headers
+    [sendRequestData appendBytes: "\r\n" length: 2];    // End of headers
+    _writedSoFarData  = sendRequestData;
+}
+
+- (void)sendRequestBody {
+    int    written;
+    BOOL    sent = NO;
+    if (_writedSoFarData != nil) // First write header data
+    {
+        const unsigned char    *bytes = [_writedSoFarData bytes];
+        unsigned        len = [_writedSoFarData length];
+        
+        written = [outputStream write: bytes + _writeOffset
+                            maxLength: len - _writeOffset];
+        if (written > 0)
+        {
+            _writeOffset += written;
+            if (_writeOffset >= len)
             {
-                const unsigned char    *bytes = [_writedSoFarData bytes];
-                unsigned        len = [_writedSoFarData length];
-                
-                written = [outputStream write: bytes + _writeOffset
-                                    maxLength: len - _writeOffset];
-                if (written > 0)
+                // _writedSoFarData has been output all
+                DESTROY(_writedSoFarData);
+                if (requestDataStream == nil)
                 {
-                    _writeOffset += written;
-                    if (_writeOffset >= len)
+                    requestDataStream = RETAIN([request HTTPBodyStream]);
+                    if (requestDataStream == nil)
                     {
-                        // _writedSoFarData has been output all
-                        DESTROY(_writedSoFarData);
-                        if (requestDataStream == nil)
+                        NSData    *httpBody = [request HTTPBody];
+                        
+                        if (httpBody != nil)
                         {
-                            requestDataStream = RETAIN([request HTTPBodyStream]);
-                            if (requestDataStream == nil)
-                            {
-                                NSData    *httpBody = [request HTTPBody];
-                                
-                                if (httpBody != nil)
-                                {
-                                    /**
-                                     * Why there must have a inputStream to read requestBody.
-                                     */
-                                    requestDataStream = [NSInputStream alloc];
-                                    requestDataStream = [requestDataStream initWithData: httpBody];
-                                    [requestDataStream open]; // requestDataStream is for sending body.
-                                }
-                                else
-                                {
-                                    sent = YES;
-                                }
-                            }
+                            /**
+                             * Why there must have a inputStream to read requestBody.
+                             */
+                            requestDataStream = [NSInputStream alloc];
+                            requestDataStream = [requestDataStream initWithData: httpBody];
+                            [requestDataStream open]; // requestDataStream is for sending body.
+                        }
+                        else
+                        {
+                            sent = YES;
                         }
                     }
                 }
             }
-            else if (requestDataStream != nil) // write http body data
+        }
+    }
+    else if (requestDataStream != nil) // write http body data
+    {
+        if ([requestDataStream hasBytesAvailable])
+        {
+            unsigned char    buffer[BUFSIZ*64];
+            int        len;
+            
+            // read form stream.
+            len = [requestDataStream read: buffer maxLength: sizeof(buffer)];
+            if (len < 0)
             {
-                if ([requestDataStream hasBytesAvailable])
+                [self stopLoading];
+                [client URLProtocol: self didFailWithError:
+                 [NSError errorWithDomain: @"can't read body"
+                                     code: 0
+                                 userInfo: nil]];
+                return;
+            }
+            else if (len > 0)
+            {
+                // write to output.
+                written = [outputStream write: buffer maxLength: len];
+                if (written > 0)
                 {
-                    unsigned char    buffer[BUFSIZ*64];
-                    int        len;
-                    
-                    // read form stream.
-                    len = [requestDataStream read: buffer maxLength: sizeof(buffer)];
-                    if (len < 0)
+                    len -= written;
+                    if (len > 0)
                     {
-                        [self stopLoading];
-                        [client URLProtocol: self didFailWithError:
-                         [NSError errorWithDomain: @"can't read body"
-                                             code: 0
-                                         userInfo: nil]];
-                        return;
+                        /* Couldn't write it all now, save and try
+                         * again later.
+                         */
+                        _writedSoFarData = [[NSData alloc] initWithBytes:
+                                            buffer + written length: len];
+                        _writeOffset = 0;
                     }
-                    else if (len > 0)
+                    else if (len == 0 && ![requestDataStream hasBytesAvailable])
                     {
-                        // write to output.
-                        written = [outputStream write: buffer maxLength: len];
-                        if (written > 0)
-                        {
-                            len -= written;
-                            if (len > 0)
-                            {
-                                /* Couldn't write it all now, save and try
-                                 * again later.
-                                 */
-                                _writedSoFarData = [[NSData alloc] initWithBytes:
-                                                    buffer + written length: len];
-                                _writeOffset = 0;
-                            }
-                            else if (len == 0 && ![requestDataStream hasBytesAvailable])
-                            {
-                                /* all _body's bytes are read and written
-                                 * so we shouldn't wait for another
-                                 * opportunity to close _body and set
-                                 * the flag 'sent'.
-                                 */
-                                [requestDataStream close];
-                                DESTROY(requestDataStream);
-                                sent = YES;
-                            }
-                        }
-                        else if ([outputStream streamStatus]
-                                 == NSStreamStatusWriting)
-                        {
-                            /* Couldn't write it all now, save and try
-                             * again later.
-                             */
-                            _writedSoFarData = [[NSData alloc] initWithBytes:
-                                                buffer length: len];
-                            _writeOffset = 0;
-                        }
-                    }
-                    else
-                    {
+                        /* all _body's bytes are read and written
+                         * so we shouldn't wait for another
+                         * opportunity to close _body and set
+                         * the flag 'sent'.
+                         */
                         [requestDataStream close];
                         DESTROY(requestDataStream);
                         sent = YES;
                     }
                 }
-                else
+                else if ([outputStream streamStatus]
+                         == NSStreamStatusWriting)
                 {
-                    [requestDataStream close];
-                    DESTROY(requestDataStream);
-                    sent = YES;
+                    /* Couldn't write it all now, save and try
+                     * again later.
+                     */
+                    _writedSoFarData = [[NSData alloc] initWithBytes:
+                                        buffer length: len];
+                    _writeOffset = 0;
                 }
             }
-            if (sent == YES)
+            else
             {
-                if (_shouldClose == YES)
-                {
-                    [outputStream setDelegate: nil];
-                    [outputStream removeFromRunLoop:
-                     [NSRunLoop currentRunLoop]
-                                            forMode: NSDefaultRunLoopMode];
-                    [outputStream close];
-                    DESTROY(outputStream);
-                }
+                [requestDataStream close];
+                DESTROY(requestDataStream);
+                sent = YES;
             }
-            return;  // done
         }
-        default:
-            break;
+        else
+        {
+            [requestDataStream close];
+            DESTROY(requestDataStream);
+            sent = YES;
+        }
     }
+    if (sent == YES)
+    {
+        if (_shouldClose == YES)
+        {
+            [outputStream setDelegate: nil];
+            [outputStream removeFromRunLoop:
+             [NSRunLoop currentRunLoop]
+                                    forMode: NSDefaultRunLoopMode];
+            [outputStream close];
+            DESTROY(outputStream);
+        }
+    }
+    return;  // done
 }
 
 @end
@@ -1221,13 +1206,8 @@ static NSURLProtocol	*placeholder = nil;
 
 - (void) startLoading
 {
-    // check for GET/PUT/DELETE etc so that we can also write to a file
-    NSData	*data;
-    NSURLResponse	*r;
-    
-    data = [NSData dataWithContentsOfFile: [[request URL] path]
-            /* options: error: - don't use that because it is based on self */];
-    if (data == nil)
+    NSData    *data = [NSData dataWithContentsOfFile: [[request URL] path];
+    if (!data)
     {
         [client URLProtocol: self didFailWithError:
          [NSError errorWithDomain: @"can't load file" code: 0 userInfo:
@@ -1240,7 +1220,7 @@ static NSURLProtocol	*placeholder = nil;
     
     /* FIXME ... maybe should infer MIME type and encoding from extension or BOM
      */
-    r = [[NSURLResponse alloc] initWithURL: [request URL]
+    NSURLResponse *r = [[NSURLResponse alloc] initWithURL: [request URL]
                                   MIMEType: @"text/html"
                      expectedContentLength: [data length]
                           textEncodingName: @"unknown"];
