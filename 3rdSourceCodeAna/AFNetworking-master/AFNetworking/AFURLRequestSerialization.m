@@ -165,7 +165,6 @@ static void *AFHTTPRequestSerializerObserverContext = &AFHTTPRequestSerializerOb
 @interface AFHTTPRequestSerializer ()
 @property (readwrite, nonatomic, strong) NSMutableSet *mutableObservedChangedKeyPaths;
 @property (readwrite, nonatomic, strong) NSMutableDictionary *mutableHTTPRequestHeaders;
-@property (readwrite, nonatomic, strong) dispatch_queue_t requestHeaderModificationQueue;
 @property (readwrite, nonatomic, assign) AFHTTPRequestQueryStringSerializationStyle queryStringSerializationStyle;
 @property (readwrite, nonatomic, copy) AFQueryStringSerializationBlock queryStringSerialization;
 @end
@@ -182,11 +181,9 @@ static void *AFHTTPRequestSerializerObserverContext = &AFHTTPRequestSerializerOb
         return nil;
     }
 
+    // AtFirst, set the default http headers.
     self.stringEncoding = NSUTF8StringEncoding;
-
     self.mutableHTTPRequestHeaders = [NSMutableDictionary dictionary];
-    self.requestHeaderModificationQueue = dispatch_queue_create("requestHeaderModificationQueue", DISPATCH_QUEUE_CONCURRENT);
-
     // Accept-Language HTTP Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4
     NSMutableArray *acceptLanguagesComponents = [NSMutableArray array];
     [[NSLocale preferredLanguages] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -197,15 +194,8 @@ static void *AFHTTPRequestSerializerObserverContext = &AFHTTPRequestSerializerOb
     [self setValue:[acceptLanguagesComponents componentsJoinedByString:@", "] forHTTPHeaderField:@"Accept-Language"];
 
     NSString *userAgent = nil;
-#if TARGET_OS_IOS
     // User-Agent Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.43
     userAgent = [NSString stringWithFormat:@"%@/%@ (%@; iOS %@; Scale/%0.2f)", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[UIDevice currentDevice] model], [[UIDevice currentDevice] systemVersion], [[UIScreen mainScreen] scale]];
-#elif TARGET_OS_WATCH
-    // User-Agent Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.43
-    userAgent = [NSString stringWithFormat:@"%@/%@ (%@; watchOS %@; Scale/%0.2f)", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[WKInterfaceDevice currentDevice] model], [[WKInterfaceDevice currentDevice] systemVersion], [[WKInterfaceDevice currentDevice] screenScale]];
-#elif defined(__MAC_OS_X_VERSION_MIN_REQUIRED)
-    userAgent = [NSString stringWithFormat:@"%@/%@ (Mac OS X %@)", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[NSProcessInfo processInfo] operatingSystemVersionString]];
-#endif
     if (userAgent) {
         if (![userAgent canBeConvertedToEncoding:NSASCIIStringEncoding]) {
             NSMutableString *mutableUserAgent = [userAgent mutableCopy];
@@ -229,18 +219,7 @@ static void *AFHTTPRequestSerializerObserverContext = &AFHTTPRequestSerializerOb
     return self;
 }
 
-- (void)dealloc {
-    for (NSString *keyPath in AFHTTPRequestSerializerObservedKeyPaths()) {
-        if ([self respondsToSelector:NSSelectorFromString(keyPath)]) {
-            [self removeObserver:self forKeyPath:keyPath context:AFHTTPRequestSerializerObserverContext];
-        }
-    }
-}
-
 #pragma mark -
-
-// Workarounds for crashing behavior using Key-Value Observing with XCTest
-// See https://github.com/AFNetworking/AFNetworking/issues/2523
 
 - (void)setAllowsCellularAccess:(BOOL)allowsCellularAccess {
     [self willChangeValueForKey:NSStringFromSelector(@selector(allowsCellularAccess))];
@@ -281,29 +260,24 @@ static void *AFHTTPRequestSerializerObserverContext = &AFHTTPRequestSerializerOb
 #pragma mark -
 
 - (NSDictionary *)HTTPRequestHeaders {
-    NSDictionary __block *value;
-    dispatch_sync(self.requestHeaderModificationQueue, ^{
-        value = [NSDictionary dictionaryWithDictionary:self.mutableHTTPRequestHeaders];
-    });
+    NSDictionary __block *value = [NSDictionary dictionaryWithDictionary:self.mutableHTTPRequestHeaders];
     return value;
 }
 
 - (void)setValue:(NSString *)value
 forHTTPHeaderField:(NSString *)field
 {
-    dispatch_barrier_async(self.requestHeaderModificationQueue, ^{
-        [self.mutableHTTPRequestHeaders setValue:value forKey:field];
-    });
+    [self.mutableHTTPRequestHeaders setValue:value forKey:field];
 }
 
 - (NSString *)valueForHTTPHeaderField:(NSString *)field {
-    NSString __block *value;
-    dispatch_sync(self.requestHeaderModificationQueue, ^{
-        value = [self.mutableHTTPRequestHeaders valueForKey:field];
-    });
+    NSString __block *value = [self.mutableHTTPRequestHeaders valueForKey:field];;
     return value;
 }
 
+/**
+ Here username and password is set in reqeustSerializationer
+ */
 - (void)setAuthorizationHeaderFieldWithUsername:(NSString *)username
                                        password:(NSString *)password
 {
@@ -313,9 +287,7 @@ forHTTPHeaderField:(NSString *)field
 }
 
 - (void)clearAuthorizationHeader {
-    dispatch_barrier_async(self.requestHeaderModificationQueue, ^{
-        [self.mutableHTTPRequestHeaders removeObjectForKey:@"Authorization"];
-    });
+    [self.mutableHTTPRequestHeaders removeObjectForKey:@"Authorization"];
 }
 
 #pragma mark -
@@ -336,13 +308,7 @@ forHTTPHeaderField:(NSString *)field
                                 parameters:(id)parameters
                                      error:(NSError *__autoreleasing *)error
 {
-    NSParameterAssert(method);
-    NSParameterAssert(URLString);
-
     NSURL *url = [NSURL URLWithString:URLString];
-
-    NSParameterAssert(url);
-
     NSMutableURLRequest *mutableRequest = [[NSMutableURLRequest alloc] initWithURL:url];
     mutableRequest.HTTPMethod = method;
 
@@ -363,8 +329,6 @@ forHTTPHeaderField:(NSString *)field
                               constructingBodyWithBlock:(void (^)(id <AFMultipartFormData> formData))block
                                                   error:(NSError *__autoreleasing *)error
 {
-    NSURLProtectionSpace
-    NSParameterAssert(method);
     NSParameterAssert(![method isEqualToString:@"GET"] && ![method isEqualToString:@"HEAD"]);
 
     NSMutableURLRequest *mutableRequest = [self requestWithMethod:method URLString:URLString parameters:nil error:error];
@@ -455,10 +419,7 @@ forHTTPHeaderField:(NSString *)field
                                withParameters:(id)parameters
                                         error:(NSError *__autoreleasing *)error
 {
-    NSParameterAssert(request);
-
     NSMutableURLRequest *mutableRequest = [request mutableCopy];
-
     [self.HTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL * __unused stop) {
         if (![request valueForHTTPHeaderField:field]) {
             [mutableRequest setValue:value forHTTPHeaderField:field];
@@ -466,6 +427,7 @@ forHTTPHeaderField:(NSString *)field
     }];
 
     NSString *query = nil;
+    // Query parameters.
     if (parameters) {
         if (self.queryStringSerialization) {
             NSError *serializationError;
@@ -487,12 +449,13 @@ forHTTPHeaderField:(NSString *)field
         }
     }
 
+    // Parameters should be in url
     if ([self.HTTPMethodsEncodingParametersInURI containsObject:[[request HTTPMethod] uppercaseString]]) {
         if (query && query.length > 0) {
             mutableRequest.URL = [NSURL URLWithString:[[mutableRequest.URL absoluteString] stringByAppendingFormat:mutableRequest.URL.query ? @"&%@" : @"?%@", query]];
         }
     } else {
-        // #2864: an empty string is a valid x-www-form-urlencoded payload
+        // parameter should be in body.
         if (!query) {
             query = @"";
         }
@@ -530,42 +493,6 @@ forHTTPHeaderField:(NSString *)field
 }
 
 #pragma mark - NSSecureCoding
-
-+ (BOOL)supportsSecureCoding {
-    return YES;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)decoder {
-    self = [self init];
-    if (!self) {
-        return nil;
-    }
-
-    self.mutableHTTPRequestHeaders = [[decoder decodeObjectOfClass:[NSDictionary class] forKey:NSStringFromSelector(@selector(mutableHTTPRequestHeaders))] mutableCopy];
-    self.queryStringSerializationStyle = (AFHTTPRequestQueryStringSerializationStyle)[[decoder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(queryStringSerializationStyle))] unsignedIntegerValue];
-
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)coder {
-    dispatch_sync(self.requestHeaderModificationQueue, ^{
-        [coder encodeObject:self.mutableHTTPRequestHeaders forKey:NSStringFromSelector(@selector(mutableHTTPRequestHeaders))];
-    });
-    [coder encodeInteger:self.queryStringSerializationStyle forKey:NSStringFromSelector(@selector(queryStringSerializationStyle))];
-}
-
-#pragma mark - NSCopying
-
-- (instancetype)copyWithZone:(NSZone *)zone {
-    AFHTTPRequestSerializer *serializer = [[[self class] allocWithZone:zone] init];
-    dispatch_sync(self.requestHeaderModificationQueue, ^{
-        serializer.mutableHTTPRequestHeaders = [self.mutableHTTPRequestHeaders mutableCopyWithZone:zone];
-    });
-    serializer.queryStringSerializationStyle = self.queryStringSerializationStyle;
-    serializer.queryStringSerialization = self.queryStringSerialization;
-
-    return serializer;
-}
 
 @end
 
