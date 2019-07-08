@@ -203,6 +203,9 @@
 {
     if ((self = [super init]) != nil)
     {
+        /**
+         * Here is a copy aciton, for safe.
+         */
         _request = [request mutableCopyWithZone: [self zone]];
         
         /* Enrich the request with the appropriate HTTP cookies,

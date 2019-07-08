@@ -17,17 +17,6 @@
 
 #include	<zlib.h>
 
-static void*
-zalloc(void *opaque, unsigned nitems, unsigned size)
-{
-    return calloc(nitems, size);
-}
-static void
-zfree(void *opaque, void *mem)
-{
-    free(mem);
-}
-
 @interface	GSSocketStreamPair : NSObject
 {
     NSInputStream		*ip;
@@ -499,7 +488,7 @@ static NSURLProtocol	*placeholder = nil;
     {
         [self stopLoading];
         [client URLProtocol: self didFailWithError:
-        [NSError errorWithDomain: @"Invalid HTTP Method"
+         [NSError errorWithDomain: @"Invalid HTTP Method"
                              code: 0
                          userInfo: nil]];
         return;
@@ -558,7 +547,7 @@ static NSURLProtocol	*placeholder = nil;
         {
             return;	// Loading cancelled
         }
-        if (nil != input)
+        if (nil != inputStream)
         {
             return;	// Following redirection
         }
@@ -589,10 +578,10 @@ static NSURLProtocol	*placeholder = nil;
      */
     [NSStream getStreamsToHost: host
                           port: port
-                   inputStream: &input
+                   inputStream: &inputStream
                   outputStream: &output];
     // GSIneternetInputStream and GSIneternetOutputStream
-    if (!input || !output)
+    if (!inputStream || !output)
     {
         [self stopLoading];
         [client URLProtocol: self didFailWithError:
@@ -604,7 +593,7 @@ static NSURLProtocol	*placeholder = nil;
            nil]]];
         return;
     }
-    [input retain];
+    [inputStream retain];
     [output retain];
     /**
      * If loading a https data. Set corresponding property.
@@ -612,8 +601,8 @@ static NSURLProtocol	*placeholder = nil;
     if ([[url scheme] isEqualToString: @"https"] == YES)
     {
         NSUInteger            count;
-        [input setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
-                    forKey: NSStreamSocketSecurityLevelKey];
+        [inputStream setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
+                          forKey: NSStreamSocketSecurityLevelKey];
         [output setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
                      forKey: NSStreamSocketSecurityLevelKey];
         NSArray        *keys = [[NSArray alloc] initWithObjects:
@@ -654,13 +643,13 @@ static NSURLProtocol	*placeholder = nil;
             }
         }
     }
-    [input setDelegate: self];
+    [inputStream setDelegate: self];
     [output setDelegate: self];
-    [input scheduleInRunLoop: [NSRunLoop currentRunLoop]
-                     forMode: NSDefaultRunLoopMode];
+    [inputStream scheduleInRunLoop: [NSRunLoop currentRunLoop]
+                           forMode: NSDefaultRunLoopMode];
     [output scheduleInRunLoop: [NSRunLoop currentRunLoop]
                       forMode: NSDefaultRunLoopMode];
-    [input open];
+    [inputStream open];
     [output open];
 }
 
@@ -668,17 +657,17 @@ static NSURLProtocol	*placeholder = nil;
 {
     _isLoading = NO;
     DESTROY(_writedSoFarData);
-    if (input != nil) // check two value inited with one value. It's common
+    if (inputStream != nil) // check two value inited with one value. It's common
     {
-        [input setDelegate: nil];
+        [inputStream setDelegate: nil];
         [output setDelegate: nil];
-        [input removeFromRunLoop: [NSRunLoop currentRunLoop]
-                         forMode: NSDefaultRunLoopMode];
+        [inputStream removeFromRunLoop: [NSRunLoop currentRunLoop]
+                               forMode: NSDefaultRunLoopMode];
         [output removeFromRunLoop: [NSRunLoop currentRunLoop]
                           forMode: NSDefaultRunLoopMode];
-        [input close];
+        [inputStream close];
         [output close];
-        DESTROY(input);
+        DESTROY(inputStream);
         DESTROY(output);
     }
 }
@@ -1058,17 +1047,17 @@ static NSURLProtocol	*placeholder = nil;
                 }
             }
         }
-        [input removeFromRunLoop: [NSRunLoop currentRunLoop]
-                         forMode: NSDefaultRunLoopMode];
+        [inputStream removeFromRunLoop: [NSRunLoop currentRunLoop]
+                               forMode: NSDefaultRunLoopMode];
         [output removeFromRunLoop: [NSRunLoop currentRunLoop]
                           forMode: NSDefaultRunLoopMode];
         if (_shouldClose == YES)
         {
-            [input setDelegate: nil];
+            [inputStream setDelegate: nil];
             [output setDelegate: nil];
-            [input close];
+            [inputStream close];
             [output close];
-            DESTROY(input);
+            DESTROY(inputStream);
             DESTROY(output);
         }
         
@@ -1124,7 +1113,7 @@ static NSURLProtocol	*placeholder = nil;
 }
 
 - (void) stream: (NSStream*) stream handleEvent: (NSStreamEvent) event {
-    if (stream == input)
+    if (stream == inputStream)
     {
         switch(event)
         {
@@ -1142,7 +1131,7 @@ static NSURLProtocol	*placeholder = nil;
     {
         switch (event)
         {
-        // output stream should output every data, include the http header and body.
+                // output stream should output every data, include the http header and body.
             case NSStreamEventOpenCompleted: // opened and make output stream.
             {
                 NSMutableData	*dataM;
@@ -1174,7 +1163,7 @@ static NSURLProtocol	*placeholder = nil;
                  * where the query part may be missing
                  */
                 [dataM appendData: [[request HTTPMethod]
-                                dataUsingEncoding: NSASCIIStringEncoding]];
+                                    dataUsingEncoding: NSASCIIStringEncoding]];
                 [dataM appendBytes: " " length: 1];
                 url = [request URL];
                 s = [[url fullPath] stringByAddingPercentEscapesUsingEncoding:
@@ -1252,7 +1241,7 @@ static NSURLProtocol	*placeholder = nil;
                     [dataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
                 }
                 if (bodylength >= 0 && [request
-                               valueForHTTPHeaderField: @"Content-Length"] == nil)
+                                        valueForHTTPHeaderField: @"Content-Length"] == nil)
                 {
                     // Here, Content-Length is sure that accurate. cause it is form data length.
                     s = [NSString stringWithFormat: @"Content-Length: %d\r\n", bodylength];
@@ -1262,7 +1251,7 @@ static NSURLProtocol	*placeholder = nil;
                 [dataM appendBytes: "\r\n" length: 2];	// End of headers
                 _writedSoFarData  = dataM;
             }
-            // Fall through to do the write, So there is no break here.
+                // Fall through to do the write, So there is no break here.
             case NSStreamEventHasSpaceAvailable: // The stream can accept bytes for writing.
             {
                 int	written;
@@ -1337,7 +1326,7 @@ static NSURLProtocol	*placeholder = nil;
                                      * again later.
                                      */
                                     _writedSoFarData = [[NSData alloc] initWithBytes:
-                                                  buffer + written length: len];
+                                                        buffer + written length: len];
                                     _writeOffset = 0;
                                 }
                                 else if (len == 0 && ![requestDataStream hasBytesAvailable])
@@ -1359,7 +1348,7 @@ static NSURLProtocol	*placeholder = nil;
                                  * again later.
                                  */
                                 _writedSoFarData = [[NSData alloc] initWithBytes:
-                                              buffer length: len];
+                                                    buffer length: len];
                                 _writeOffset = 0;
                             }
                         }
@@ -1457,9 +1446,9 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
         }
         [NSStream getStreamsToHost: host
                               port: [[url port] intValue]
-                       inputStream: &input
+                       inputStream: &inputStream
                       outputStream: &output];
-        if (input == nil || output == nil)
+        if (inputStream == nil || output == nil)
         {
             [client URLProtocol: self didFailWithError:
              [NSError errorWithDomain: @"can't connect"
@@ -1467,47 +1456,47 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
                              userInfo: nil]];
             return;
         }
-        [input retain];
+        [inputStream retain];
         [output retain];
         if ([[url scheme] isEqualToString: @"https"] == YES)
         {
-            [input setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
-                        forKey: NSStreamSocketSecurityLevelKey];
+            [inputStream setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
+                              forKey: NSStreamSocketSecurityLevelKey];
             [output setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
                          forKey: NSStreamSocketSecurityLevelKey];
         }
-        [input setDelegate: self];
+        [inputStream setDelegate: self];
         [output setDelegate: self];
-        [input scheduleInRunLoop: [NSRunLoop currentRunLoop]
-                         forMode: NSDefaultRunLoopMode];
+        [inputStream scheduleInRunLoop: [NSRunLoop currentRunLoop]
+                               forMode: NSDefaultRunLoopMode];
         [output scheduleInRunLoop: [NSRunLoop currentRunLoop]
                           forMode: NSDefaultRunLoopMode];
         // set socket options for ftps requests
-        [input open];
+        [inputStream open];
         [output open];
     }
 }
 
 - (void) stopLoading
 {
-    if (input)
+    if (inputStream)
     {
-        [input setDelegate: nil];
+        [inputStream setDelegate: nil];
         [output setDelegate: nil];
-        [input removeFromRunLoop: [NSRunLoop currentRunLoop]
-                         forMode: NSDefaultRunLoopMode];
+        [inputStream removeFromRunLoop: [NSRunLoop currentRunLoop]
+                               forMode: NSDefaultRunLoopMode];
         [output removeFromRunLoop: [NSRunLoop currentRunLoop]
                           forMode: NSDefaultRunLoopMode];
-        [input close];
+        [inputStream close];
         [output close];
-        DESTROY(input);
+        DESTROY(inputStream);
         DESTROY(output);
     }
 }
 
 - (void) stream: (NSStream *) stream handleEvent: (NSStreamEvent) event
 {
-    if (stream == input)
+    if (stream == inputStream)
     {
         switch(event)
         {
