@@ -180,7 +180,6 @@
 		18394C061610EB7F00335E85 /* NSAutoreleasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F751610BF3C0003C892 /* NSAutoreleasePool.m */; };
 		18394C071610EB7F00335E85 /* NSBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F761610BF3C0003C892 /* NSBundle.m */; };
 		18394C081610EB7F00335E85 /* NSCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F771610BF3C0003C892 /* NSCache.m */; };
-		18394C091610EB7F00335E85 /* NSCachedURLResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F781610BF3C0003C892 /* NSCachedURLResponse.m */; };
 		18394C0A1610EB7F00335E85 /* NSCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F791610BF3C0003C892 /* NSCalendar.m */; };
 		18394C0B1610EB7F00335E85 /* NSCalendarDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F7A1610BF3C0003C892 /* NSCalendarDate.m */; };
 		18394C0C1610EB7F00335E85 /* NSCallBacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F7C1610BF3C0003C892 /* NSCallBacks.m */; };
@@ -201,7 +200,6 @@
 		18394C1D1610EB7F00335E85 /* NSDistantObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F8F1610BF3C0003C892 /* NSDistantObject.m */; };
 		18394C1E1610EB7F00335E85 /* NSDistributedLock.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F901610BF3C0003C892 /* NSDistributedLock.m */; };
 		18394C1F1610EB7F00335E85 /* NSDistributedNotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F911610BF3C0003C892 /* NSDistributedNotificationCenter.m */; };
-		18394C211610EB7F00335E85 /* NSError.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F931610BF3C0003C892 /* NSError.m */; };
 		18394C221610EB7F00335E85 /* NSException.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F941610BF3C0003C892 /* NSException.m */; };
 		18394C231610EB7F00335E85 /* NSFileHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F951610BF3C0003C892 /* NSFileHandle.m */; };
 		18394C241610EB7F00335E85 /* NSFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F961610BF3C0003C892 /* NSFileManager.m */; };
@@ -212,8 +210,6 @@
 		18394C2B1610EB7F00335E85 /* NSHost.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F9D1610BF3C0003C892 /* NSHost.m */; };
 		18394C2C1610EB7F00335E85 /* NSIndexPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F9E1610BF3C0003C892 /* NSIndexPath.m */; };
 		18394C2D1610EB7F00335E85 /* NSIndexSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F9F1610BF3C0003C892 /* NSIndexSet.m */; };
-		18394C2F1610EB7F00335E85 /* NSJSONSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA11610BF3C0003C892 /* NSJSONSerialization.m */; };
-		18394C301610EB7F00335E85 /* NSKeyValueCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA21610BF3C0003C892 /* NSKeyValueCoding.m */; };
 		18394C341610EB7F00335E85 /* NSKeyedArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA61610BF3C0003C892 /* NSKeyedArchiver.m */; };
 		18394C361610EB7F00335E85 /* NSLocale.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FA81610BF3C0003C892 /* NSLocale.m */; };
 		18394C381610EB7F00335E85 /* NSLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FAA1610BF3C0003C892 /* NSLog.m */; };
@@ -866,7 +862,6 @@
 		18906F751610BF3C0003C892 /* NSAutoreleasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAutoreleasePool.m; sourceTree = "<group>"; };
 		18906F761610BF3C0003C892 /* NSBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBundle.m; sourceTree = "<group>"; };
 		18906F771610BF3C0003C892 /* NSCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCache.m; sourceTree = "<group>"; };
-		18906F781610BF3C0003C892 /* NSCachedURLResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCachedURLResponse.m; sourceTree = "<group>"; };
 		18906F791610BF3C0003C892 /* NSCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCalendar.m; sourceTree = "<group>"; };
 		18906F7A1610BF3C0003C892 /* NSCalendarDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCalendarDate.m; sourceTree = "<group>"; };
 		18906F7B1610BF3C0003C892 /* NSCallBacks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSCallBacks.h; path = Source/NSCallBacks.h; sourceTree = "<group>"; };
@@ -891,7 +886,6 @@
 		18906F8F1610BF3C0003C892 /* NSDistantObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDistantObject.m; sourceTree = "<group>"; };
 		18906F901610BF3C0003C892 /* NSDistributedLock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDistributedLock.m; sourceTree = "<group>"; };
 		18906F911610BF3C0003C892 /* NSDistributedNotificationCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDistributedNotificationCenter.m; sourceTree = "<group>"; };
-		18906F931610BF3C0003C892 /* NSError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSError.m; sourceTree = "<group>"; };
 		18906F941610BF3C0003C892 /* NSException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSException.m; sourceTree = "<group>"; };
 		18906F951610BF3C0003C892 /* NSFileHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFileHandle.m; sourceTree = "<group>"; };
 		18906F961610BF3C0003C892 /* NSFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFileManager.m; sourceTree = "<group>"; };
@@ -902,8 +896,6 @@
 		18906F9D1610BF3C0003C892 /* NSHost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSHost.m; sourceTree = "<group>"; };
 		18906F9E1610BF3C0003C892 /* NSIndexPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSIndexPath.m; sourceTree = "<group>"; };
 		18906F9F1610BF3C0003C892 /* NSIndexSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSIndexSet.m; sourceTree = "<group>"; };
-		18906FA11610BF3C0003C892 /* NSJSONSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSJSONSerialization.m; sourceTree = "<group>"; };
-		18906FA21610BF3C0003C892 /* NSKeyValueCoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueCoding.m; sourceTree = "<group>"; };
 		18906FA31610BF3C0003C892 /* NSKeyValueMutableArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueMutableArray.m; sourceTree = "<group>"; };
 		18906FA41610BF3C0003C892 /* NSKeyValueMutableSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyValueMutableSet.m; sourceTree = "<group>"; };
 		18906FA61610BF3C0003C892 /* NSKeyedArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSKeyedArchiver.m; sourceTree = "<group>"; };
@@ -1809,7 +1801,6 @@
 				18906F751610BF3C0003C892 /* NSAutoreleasePool.m */,
 				18906F761610BF3C0003C892 /* NSBundle.m */,
 				18906F771610BF3C0003C892 /* NSCache.m */,
-				18906F781610BF3C0003C892 /* NSCachedURLResponse.m */,
 				18906F791610BF3C0003C892 /* NSCalendar.m */,
 				18906F7A1610BF3C0003C892 /* NSCalendarDate.m */,
 				18906F7C1610BF3C0003C892 /* NSCallBacks.m */,
@@ -1831,7 +1822,6 @@
 				18906F8F1610BF3C0003C892 /* NSDistantObject.m */,
 				18906F901610BF3C0003C892 /* NSDistributedLock.m */,
 				18906F911610BF3C0003C892 /* NSDistributedNotificationCenter.m */,
-				18906F931610BF3C0003C892 /* NSError.m */,
 				18906F941610BF3C0003C892 /* NSException.m */,
 				18906F951610BF3C0003C892 /* NSFileHandle.m */,
 				18906F961610BF3C0003C892 /* NSFileManager.m */,
@@ -1844,8 +1834,6 @@
 				18906F9F1610BF3C0003C892 /* NSIndexSet.m */,
 				AD197BFF189A4D5F000F6CF9 /* NSInvocation.m */,
 				AD197C00189A4D5F000F6CF9 /* NSInvocationOperation.m */,
-				18906FA11610BF3C0003C892 /* NSJSONSerialization.m */,
-				18906FA21610BF3C0003C892 /* NSKeyValueCoding.m */,
 				18906FA31610BF3C0003C892 /* NSKeyValueMutableArray.m */,
 				18906FA41610BF3C0003C892 /* NSKeyValueMutableSet.m */,
 				18906FA61610BF3C0003C892 /* NSKeyedArchiver.m */,
@@ -3938,7 +3926,6 @@
 				18394C061610EB7F00335E85 /* NSAutoreleasePool.m in Sources */,
 				18394C071610EB7F00335E85 /* NSBundle.m in Sources */,
 				18394C081610EB7F00335E85 /* NSCache.m in Sources */,
-				18394C091610EB7F00335E85 /* NSCachedURLResponse.m in Sources */,
 				18394C0A1610EB7F00335E85 /* NSCalendar.m in Sources */,
 				061F211B22D336B100131DC5 /* NSURLConnection.m in Sources */,
 				18394C0B1610EB7F00335E85 /* NSCalendarDate.m in Sources */,
@@ -3964,7 +3951,6 @@
 				18394C1E1610EB7F00335E85 /* NSDistributedLock.m in Sources */,
 				061F210C22D336B100131DC5 /* NSJSONSerialization.m in Sources */,
 				18394C1F1610EB7F00335E85 /* NSDistributedNotificationCenter.m in Sources */,
-				18394C211610EB7F00335E85 /* NSError.m in Sources */,
 				18394C221610EB7F00335E85 /* NSException.m in Sources */,
 				18394C231610EB7F00335E85 /* NSFileHandle.m in Sources */,
 				18394C241610EB7F00335E85 /* NSFileManager.m in Sources */,
@@ -3977,8 +3963,6 @@
 				18394C2C1610EB7F00335E85 /* NSIndexPath.m in Sources */,
 				18394C2D1610EB7F00335E85 /* NSIndexSet.m in Sources */,
 				061F210A22D336B100131DC5 /* NSCache.m in Sources */,
-				18394C2F1610EB7F00335E85 /* NSJSONSerialization.m in Sources */,
-				18394C301610EB7F00335E85 /* NSKeyValueCoding.m in Sources */,
 				061F210F22D336B100131DC5 /* NSThread.m in Sources */,
 				18394C341610EB7F00335E85 /* NSKeyedArchiver.m in Sources */,
 				185391931625FD0C0015BDFA /* NSKeyedUnarchiver.m in Sources */,
