@@ -144,4 +144,4 @@ UIImage * _Nullable SDImageLoaderDecodeProgressiveImageData(NSData * _Nonnull im
     return image;
 }
 
-SDWebImageContextOption const SDWebImageContextLoaderCachedImage = @"loaderCachedImage";
+NSString* const SDWebImageContextLoaderCachedImage = @"loaderCachedImage";

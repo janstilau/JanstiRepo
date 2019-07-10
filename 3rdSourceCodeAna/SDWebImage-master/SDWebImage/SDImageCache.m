@@ -379,11 +379,7 @@
     UIImage *image = [self imageFromMemoryCacheForKey:key];
 
     if ((options & SDImageCacheDecodeFirstFrameOnly) && image.sd_isAnimated) {
-#if SD_MAC
-        image = [[NSImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:kCGImagePropertyOrientationUp];
-#else
         image = [[UIImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:image.imageOrientation];
-#endif
     }
 
     BOOL shouldQueryMemoryOnly = (image && !(options & SDImageCacheQueryMemoryData));

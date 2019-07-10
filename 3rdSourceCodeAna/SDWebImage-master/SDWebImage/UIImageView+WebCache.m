@@ -51,6 +51,9 @@
                    context:(nullable SDWebImageContext *)context
                   progress:(nullable SDImageLoaderProgressBlock)progressBlock
                  completed:(nullable SDExternalCompletionBlock)completedBlock {
+    /**
+     All set action will funnel into this funciton.
+     */
     [self sd_internalSetImageWithURL:url
                     placeholderImage:placeholder
                              options:options
@@ -58,6 +61,7 @@
                        setImageBlock:nil
                             progress:progressBlock
                            completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+                               // Here data is lost here.
                                if (completedBlock) {
                                    completedBlock(image, error, cacheType, imageURL);
                                }

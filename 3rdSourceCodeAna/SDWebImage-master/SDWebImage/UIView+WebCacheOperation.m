@@ -17,6 +17,9 @@ typedef NSMapTable<NSString *, id<SDWebImageOperation>> SDOperationsDictionary;
 
 @implementation UIView (WebCacheOperation)
 
+/**
+ All opertaion will be store in a dict related with this view.
+ */
 - (SDOperationsDictionary *)sd_operationDictionary {
     @synchronized(self) {
         SDOperationsDictionary *operations = objc_getAssociatedObject(self, &loadOperationKey);
@@ -40,44 +43,39 @@ typedef NSMapTable<NSString *, id<SDWebImageOperation>> SDOperationsDictionary;
     return operation;
 }
 
+
 - (void)sd_setImageLoadOperation:(nullable id<SDWebImageOperation>)operation forKey:(nullable NSString *)key {
-    if (key) {
-        [self sd_cancelImageLoadOperationWithKey:key];
-        if (operation) {
-            SDOperationsDictionary *operationDictionary = [self sd_operationDictionary];
-            @synchronized (self) {
-                [operationDictionary setObject:operation forKey:key];
-            }
-        }
+    if (!key) { return; }
+    [self sd_cancelImageLoadOperationWithKey:key];
+    if (!operation) { return; }
+    SDOperationsDictionary *operationDictionary = [self sd_operationDictionary];
+    @synchronized (self) {
+        [operationDictionary setObject:operation forKey:key];
     }
+    
 }
 
+/**
+ The previous operation is canceled, so there is no need to check current image url and uiview cached url  when image is downloaded.
+ In MC Customed ImageSetter, all action are cached in a dict, when a download is done, every related action will be performed no matter whether the url is current uiview url or not. And in the end, the real setImage action, will check for that.
+ */
 - (void)sd_cancelImageLoadOperationWithKey:(nullable NSString *)key {
-    if (key) {
-        // Cancel in progress downloader from queue
-        SDOperationsDictionary *operationDictionary = [self sd_operationDictionary];
-        id<SDWebImageOperation> operation;
-        
-        @synchronized (self) {
-            operation = [operationDictionary objectForKey:key];
-        }
-        if (operation) {
-            if ([operation conformsToProtocol:@protocol(SDWebImageOperation)]) {
-                [operation cancel];
-            }
-            @synchronized (self) {
-                [operationDictionary removeObjectForKey:key];
-            }
-        }
+    if (!key) { return; }
+    // Cancel in progress downloader from queue
+    SDOperationsDictionary *operationDictionary = [self sd_operationDictionary];
+    id<SDWebImageOperation> operation;
+    /**
+     @synchronized is acceptable, In this class, thread safe action is numberable.
+     */
+    @synchronized (self) {
+        operation = [operationDictionary objectForKey:key];
     }
-}
-
-- (void)sd_removeImageLoadOperationWithKey:(nullable NSString *)key {
-    if (key) {
-        SDOperationsDictionary *operationDictionary = [self sd_operationDictionary];
-        @synchronized (self) {
-            [operationDictionary removeObjectForKey:key];
-        }
+    if (!operation) { return; }
+    if ([operation conformsToProtocol:@protocol(SDWebImageOperation)]) {
+        [operation cancel];
+    }
+    @synchronized (self) {
+        [operationDictionary removeObjectForKey:key];
     }
 }
 

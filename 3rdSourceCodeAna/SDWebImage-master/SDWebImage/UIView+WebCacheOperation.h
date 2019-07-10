@@ -38,11 +38,4 @@
  */
 - (void)sd_cancelImageLoadOperationWithKey:(nullable NSString *)key;
 
-/**
- *  Just remove the operations corresponding to the current UIView and key without cancelling them
- *
- *  @param key key for identifying the operations
- */
-- (void)sd_removeImageLoadOperationWithKey:(nullable NSString *)key;
-
 @end

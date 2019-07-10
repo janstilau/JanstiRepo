@@ -38,6 +38,10 @@ static id<SDImageLoader> _defaultImageLoader;
 
 @implementation SDWebImageManager
 
+/**
+ Coding depend protocol.
+ All cache and loading opertaion is seperated into _defaultImageCache and _defaultImageLoader
+ */
 + (id<SDImageCache>)defaultImageCache {
     return _defaultImageCache;
 }
@@ -85,6 +89,7 @@ static id<SDImageLoader> _defaultImageLoader;
     if ((self = [super init])) {
         _imageCache = cache;
         _imageLoader = loader;
+        
         _failedURLs = [NSMutableSet new];
         _failedURLsLock = dispatch_semaphore_create(1);
         _runningOperations = [NSMutableSet new];
@@ -101,7 +106,7 @@ static id<SDImageLoader> _defaultImageLoader;
     if (!url) {
         return @"";
     }
-
+    // So cacheKeyFilter is a opportunity for coder to set a custom url encoding patern.
     if (cacheKeyFilter) {
         return [cacheKeyFilter cacheKeyForURL:url];
     } else {
@@ -118,10 +123,8 @@ static id<SDImageLoader> _defaultImageLoader;
                                           context:(nullable SDWebImageContext *)context
                                          progress:(nullable SDImageLoaderProgressBlock)progressBlock
                                         completed:(nonnull SDInternalCompletionBlock)completedBlock {
-    // Invoking this method without a completedBlock is pointless
-    NSAssert(completedBlock != nil, @"If you mean to prefetch the image, use -[SDWebImagePrefetcher prefetchURLs] instead");
 
-    // Very common mistake is to send the URL using NSString object instead of NSURL. For some strange reason, Xcode won't
+    // Very  Very Very Verycommon mistake is to send the URL using NSString object instead of NSURL. For some strange reason, Xcode won't
     // throw any warning for this type mismatch. Here we failsafe this error by allowing URLs to be passed as NSString.
     if ([url isKindOfClass:NSString.class]) {
         url = [NSURL URLWithString:(NSString *)url];
@@ -133,7 +136,7 @@ static id<SDImageLoader> _defaultImageLoader;
     }
 
     SDWebImageCombinedOperation *operation = [SDWebImageCombinedOperation new];
-    operation.manager = self;
+    operation.manager = self; // WEAK.
 
     BOOL isFailedUrl = NO;
     if (url) {
@@ -177,7 +180,7 @@ static id<SDImageLoader> _defaultImageLoader;
 
 #pragma mark - Private
 
-// Query cache process
+// Get image form cache system.
 - (void)callCacheProcessForOperation:(nonnull SDWebImageCombinedOperation *)operation
                                  url:(nonnull NSURL *)url
                              options:(SDWebImageOptions)options
@@ -238,6 +241,7 @@ static id<SDImageLoader> _defaultImageLoader;
         
         // `SDWebImageCombinedOperation` -> `SDWebImageDownloadToken` -> `downloadOperationCancelToken`, which is a `SDCallbacksDictionary` and retain the completed block below, so we need weak-strong again to avoid retain cycle
         @weakify(operation);
+        // The image loader handle all the download progress.
         operation.loaderOperation = [self.imageLoader requestImageWithURL:url options:options context:context progress:progressBlock completed:^(UIImage *downloadedImage, NSData *downloadedData, NSError *error, BOOL finished) {
             @strongify(operation);
             if (!operation || operation.isCancelled) {

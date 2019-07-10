@@ -106,6 +106,9 @@ static inline NSString * backgroundImageOperationKeyForState(UIControlState stat
     }
     mutableContext[SDWebImageContextSetImageOperationKey] = imageOperationKeyForState(state);
     @weakify(self);
+    /**
+     *So setImageBlock and SDWebImageContext *)context is used in button class.
+     */
     [self sd_internalSetImageWithURL:url
                     placeholderImage:placeholder
                              options:options

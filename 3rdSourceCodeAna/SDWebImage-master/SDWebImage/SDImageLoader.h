@@ -20,7 +20,7 @@ typedef void(^SDImageLoaderCompletedBlock)(UIImage * _Nullable image, NSData * _
  This can be a hint for image loader to load the image from network and refresh the image from remote location if needed. If the image from remote location does not change, you should call the completion with `SDWebImageErrorCacheNotModified` error. (UIImage)
  @note If you don't implement `SDWebImageRefreshCached` support, you do not need to care abot this context option.
  */
-FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextLoaderCachedImage;
+FOUNDATION_EXPORT NSString* _Nonnull const SDWebImageContextLoaderCachedImage;
 
 #pragma mark - Helper method
 

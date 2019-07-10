@@ -118,13 +118,13 @@ inline UIImage * _Nullable SDScaledImageForScaleFactor(CGFloat scale, UIImage * 
 
 #pragma mark - Context option
 
-SDWebImageContextOption const SDWebImageContextSetImageOperationKey = @"setImageOperationKey";
-SDWebImageContextOption const SDWebImageContextCustomManager = @"customManager";
-SDWebImageContextOption const SDWebImageContextImageTransformer = @"imageTransformer";
-SDWebImageContextOption const SDWebImageContextImageScaleFactor = @"imageScaleFactor";
-SDWebImageContextOption const SDWebImageContextStoreCacheType = @"storeCacheType";
-SDWebImageContextOption const SDWebImageContextOriginalStoreCacheType = @"originalStoreCacheType";
-SDWebImageContextOption const SDWebImageContextAnimatedImageClass = @"animatedImageClass";
-SDWebImageContextOption const SDWebImageContextDownloadRequestModifier = @"downloadRequestModifier";
-SDWebImageContextOption const SDWebImageContextCacheKeyFilter = @"cacheKeyFilter";
-SDWebImageContextOption const SDWebImageContextCacheSerializer = @"cacheSerializer";
+NSString* const SDWebImageContextSetImageOperationKey = @"setImageOperationKey";
+NSString* const SDWebImageContextCustomManager = @"customManager";
+NSString* const SDWebImageContextImageTransformer = @"imageTransformer";
+NSString* const SDWebImageContextImageScaleFactor = @"imageScaleFactor";
+NSString* const SDWebImageContextStoreCacheType = @"storeCacheType";
+NSString* const SDWebImageContextOriginalStoreCacheType = @"originalStoreCacheType";
+NSString* const SDWebImageContextAnimatedImageClass = @"animatedImageClass";
+NSString* const SDWebImageContextDownloadRequestModifier = @"downloadRequestModifier";
+NSString* const SDWebImageContextCacheKeyFilter = @"cacheKeyFilter";
+NSString* const SDWebImageContextCacheSerializer = @"cacheSerializer";

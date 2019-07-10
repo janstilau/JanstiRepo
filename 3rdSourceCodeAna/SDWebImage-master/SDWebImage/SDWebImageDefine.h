@@ -9,9 +9,8 @@
 #import "SDWebImageCompat.h"
 
 typedef void(^SDWebImageNoParamsBlock)(void);
-typedef NSString * SDWebImageContextOption NS_EXTENSIBLE_STRING_ENUM;
-typedef NSDictionary<SDWebImageContextOption, id> SDWebImageContext;
-typedef NSMutableDictionary<SDWebImageContextOption, id> SDWebImageMutableContext;
+typedef NSDictionary<NSString*, id> SDWebImageContext;
+typedef NSMutableDictionary<NSString*, id> SDWebImageMutableContext;
 
 #pragma mark - Image scale
 
@@ -185,53 +184,53 @@ typedef NS_OPTIONS(NSUInteger, SDWebImageOptions) {
 /**
  A String to be used as the operation key for view category to store the image load operation. This is used for view instance which supports different image loading process. If nil, will use the class name as operation key. (NSString *)
  */
-FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextSetImageOperationKey;
+FOUNDATION_EXPORT NSString* _Nonnull const SDWebImageContextSetImageOperationKey;
 
 /**
  A SDWebImageManager instance to control the image download and cache process using in UIImageView+WebCache category and likes. If not provided, use the shared manager (SDWebImageManager *)
  */
-FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextCustomManager;
+FOUNDATION_EXPORT NSString* _Nonnull const SDWebImageContextCustomManager;
 
 /**
  A id<SDImageTransformer> instance which conforms `SDImageTransformer` protocol. It's used for image transform after the image load finished and store the transformed image to cache. If you provide one, it will ignore the `transformer` in manager and use provided one instead. (id<SDImageTransformer>)
  */
-FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextImageTransformer;
+FOUNDATION_EXPORT NSString* _Nonnull const SDWebImageContextImageTransformer;
 
 /**
  A CGFloat raw value which specify the image scale factor. The number should be greater than or equal to 1.0. If not provide or the number is invalid, we will use the cache key to specify the scale factor. (NSNumber)
  */
-FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextImageScaleFactor;
+FOUNDATION_EXPORT NSString* _Nonnull const SDWebImageContextImageScaleFactor;
 
 /**
  A SDImageCacheType raw value which specify the store cache type when the image has just been downloaded and will be stored to the cache. Specify `SDImageCacheTypeNone` to disable cache storage; `SDImageCacheTypeDisk` to store in disk cache only; `SDImageCacheTypeMemory` to store in memory only. And `SDImageCacheTypeAll` to store in both memory cache and disk cache.
  If you use image transformer feature, this actually apply for the transformed image, but not the original image itself. Use `SDWebImageContextOriginalStoreCacheType` if you want to control the original image's store cache type at the same time.
  If not provide or the value is invalid, we will use `SDImageCacheTypeAll`. (NSNumber)
  */
-FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextStoreCacheType;
+FOUNDATION_EXPORT NSString* _Nonnull const SDWebImageContextStoreCacheType;
 
 /**
  The same behavior like `SDWebImageContextStoreCacheType`, but control the store cache type for the original image when you use image transformer feature. This allows the detail control of cache storage for these two images. For example, if you want to store the transformed image into both memory/disk cache, store the original image into disk cache only, use `[.storeCacheType : .all, .originalStoreCacheType : .disk]`
  If not provide or the value is invalid, we will use `SDImageCacheTypeNone`, which does not store the original image into cache. (NSNumber)
  */
-FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextOriginalStoreCacheType;
+FOUNDATION_EXPORT NSString* _Nonnull const SDWebImageContextOriginalStoreCacheType;
 
 /**
  A Class object which the instance is a `UIImage/NSImage` subclass and adopt `SDAnimatedImage` protocol. We will call `initWithData:scale:options:` to create the instance (or `initWithAnimatedCoder:scale:` when using progressive download) . If the instance create failed, fallback to normal `UIImage/NSImage`.
  This can be used to improve animated images rendering performance (especially memory usage on big animated images) with `SDAnimatedImageView` (Class).
  */
-FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextAnimatedImageClass;
+FOUNDATION_EXPORT NSString* _Nonnull const SDWebImageContextAnimatedImageClass;
 
 /**
  A id<SDWebImageDownloaderRequestModifier> instance to modify the image download request. It's used for downloader to modify the original request from URL and options. If you provide one, it will ignore the `requestModifier` in downloader and use provided one instead. (id<SDWebImageDownloaderRequestModifier>)
  */
-FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextDownloadRequestModifier;
+FOUNDATION_EXPORT NSString* _Nonnull const SDWebImageContextDownloadRequestModifier;
 
 /**
  A id<SDWebImageCacheKeyFilter> instance to convert an URL into a cache key. It's used when manager need cache key to use image cache. If you provide one, it will ignore the `cacheKeyFilter` in manager and use provided one instead. (id<SDWebImageCacheKeyFilter>)
  */
-FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextCacheKeyFilter;
+FOUNDATION_EXPORT NSString* _Nonnull const SDWebImageContextCacheKeyFilter;
 
 /**
  A id<SDWebImageCacheSerializer> instance to convert the decoded image, the source downloaded data, to the actual data. It's used for manager to store image to the disk cache. If you provide one, it will ignore the `cacheSerializer` in manager and use provided one instead. (id<SDWebImageCacheSerializer>)
  */
-FOUNDATION_EXPORT SDWebImageContextOption _Nonnull const SDWebImageContextCacheSerializer;
+FOUNDATION_EXPORT NSString* _Nonnull const SDWebImageContextCacheSerializer;
