@@ -9,9 +9,9 @@
 import UIKit
 
 class ViewController: UIViewController {
-                            
+    
   @IBAction func startGameButtonTapped(_ sender : UIButton) {
-    let game = NumberTileGameViewController(dimension: 4, threshold: 4096)
+    let game = GameBoardViewController(dimension: 4, threshold: 4096)
     self.present(game, animated: true, completion: nil)
   }
 }

@@ -9,10 +9,14 @@
 import UIKit
 
 @UIApplicationMain
+// 所有的内容, 都写到 class 的内部, 没有 h,m 文件之分了.
 class AppDelegate: UIResponder, UIApplicationDelegate {
                             
-  var window: UIWindow?
-
+  var window: UIWindow? // var 代表可以改变, windown ? 代表这里可以为 nil
+    
+//- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+// application 本身就是函数名, 所以第一个函数 _ 可以隐藏, 这里, launchOptions 是可以为空的, 但是要明确的写出类型Dict 的类型来
+// 函数的返回值, 用 -> 类型表示.
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
     return true
   }
