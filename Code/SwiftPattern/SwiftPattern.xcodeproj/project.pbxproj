@@ -14,6 +14,7 @@
 		06D4B22022F481B700F83B21 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06D4B21E22F481B700F83B21 /* LaunchScreen.storyboard */; };
 		06D4B22B22F481B700F83B21 /* SwiftPatternTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D4B22A22F481B700F83B21 /* SwiftPatternTests.swift */; };
 		06D4B23622F481B700F83B21 /* SwiftPatternUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D4B23522F481B700F83B21 /* SwiftPatternUITests.swift */; };
+		06D4B24522F4864300F83B21 /* ResponsibilityChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D4B24422F4864300F83B21 /* ResponsibilityChain.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		06D4B23122F481B700F83B21 /* SwiftPatternUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftPatternUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		06D4B23522F481B700F83B21 /* SwiftPatternUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftPatternUITests.swift; sourceTree = "<group>"; };
 		06D4B23722F481B700F83B21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		06D4B24422F4864300F83B21 /* ResponsibilityChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponsibilityChain.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 		06D4B21422F481B600F83B21 /* SwiftPattern */ = {
 			isa = PBXGroup;
 			children = (
+				06D4B24322F4824100F83B21 /* Pattern */,
 				06D4B21522F481B600F83B21 /* AppDelegate.swift */,
 				06D4B21722F481B600F83B21 /* ViewController.swift */,
 				06D4B21922F481B600F83B21 /* Main.storyboard */,
@@ -123,6 +126,14 @@
 				06D4B23722F481B700F83B21 /* Info.plist */,
 			);
 			path = SwiftPatternUITests;
+			sourceTree = "<group>";
+		};
+		06D4B24322F4824100F83B21 /* Pattern */ = {
+			isa = PBXGroup;
+			children = (
+				06D4B24422F4864300F83B21 /* ResponsibilityChain.swift */,
+			);
+			path = Pattern;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06D4B24522F4864300F83B21 /* ResponsibilityChain.swift in Sources */,
 				06D4B21822F481B600F83B21 /* ViewController.swift in Sources */,
 				06D4B21622F481B600F83B21 /* AppDelegate.swift in Sources */,
 			);
