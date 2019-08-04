@@ -260,12 +260,6 @@
 		18394C721610EB8000335E85 /* NSUndoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FE61610BF3C0003C892 /* NSUndoManager.m */; };
 		18394C731610EB8000335E85 /* NSUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FE71610BF3C0003C892 /* NSUserDefaults.m */; };
 		18394C751610EB8000335E85 /* NSValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FE91610BF3C0003C892 /* NSValueTransformer.m */; };
-		18394C761610EB8000335E85 /* NSXMLDTD.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FEA1610BF3C0003C892 /* NSXMLDTD.m */; };
-		18394C771610EB8000335E85 /* NSXMLDTDNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FEB1610BF3C0003C892 /* NSXMLDTDNode.m */; };
-		18394C781610EB8000335E85 /* NSXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FEC1610BF3C0003C892 /* NSXMLDocument.m */; };
-		18394C791610EB8000335E85 /* NSXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FED1610BF3C0003C892 /* NSXMLElement.m */; };
-		18394C7A1610EB8000335E85 /* NSXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FEE1610BF3C0003C892 /* NSXMLNode.m */; };
-		18394C7B1610EB8000335E85 /* NSXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FEF1610BF3C0003C892 /* NSXMLParser.m */; };
 		18394C7C1610EB8000335E85 /* NSZone.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FF11610BF3C0003C892 /* NSZone.m */; };
 		18394C7D1610EC5E00335E85 /* NSCallBacks.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F7B1610BF3C0003C892 /* NSCallBacks.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		18394C7E1610EC5E00335E85 /* NSCharacterSetData.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906F7E1610BF3C0003C892 /* NSCharacterSetData.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -915,12 +909,6 @@
 		18906FE61610BF3C0003C892 /* NSUndoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUndoManager.m; sourceTree = "<group>"; };
 		18906FE71610BF3C0003C892 /* NSUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUserDefaults.m; sourceTree = "<group>"; };
 		18906FE91610BF3C0003C892 /* NSValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSValueTransformer.m; sourceTree = "<group>"; };
-		18906FEA1610BF3C0003C892 /* NSXMLDTD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSXMLDTD.m; sourceTree = "<group>"; };
-		18906FEB1610BF3C0003C892 /* NSXMLDTDNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSXMLDTDNode.m; sourceTree = "<group>"; };
-		18906FEC1610BF3C0003C892 /* NSXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSXMLDocument.m; sourceTree = "<group>"; };
-		18906FED1610BF3C0003C892 /* NSXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSXMLElement.m; sourceTree = "<group>"; };
-		18906FEE1610BF3C0003C892 /* NSXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSXMLNode.m; sourceTree = "<group>"; };
-		18906FEF1610BF3C0003C892 /* NSXMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSXMLParser.m; sourceTree = "<group>"; };
 		18906FF01610BF3C0003C892 /* NSXMLPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSXMLPrivate.h; path = Source/NSXMLPrivate.h; sourceTree = "<group>"; };
 		18906FF11610BF3C0003C892 /* NSZone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSZone.m; sourceTree = "<group>"; };
 		18906FFD1610BF3C0003C892 /* callframe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = callframe.h; sourceTree = "<group>"; };
@@ -1000,9 +988,9 @@
 		061F20E722D336B100131DC5 /* Readed */ = {
 			isa = PBXGroup;
 			children = (
-				18906FBA1610BF3C0003C892 /* NSOperation.m */,
-				060A00E422D438D70071C7C4 /* NSKeyValueObserving.m */,
+				061F210022D336B100131DC5 /* Container */,
 				061F20F122D336B100131DC5 /* GSValue.m */,
+				061F20F522D336B100131DC5 /* NetWork */,
 				061F20E822D336B100131DC5 /* NSCache.m */,
 				061F210922D336B100131DC5 /* NSCopyObject.m */,
 				061F210722D336B100131DC5 /* NSCountedSet.m */,
@@ -1010,15 +998,15 @@
 				061F20F422D336B100131DC5 /* NSError.m */,
 				061F20EA22D336B100131DC5 /* NSJSONSerialization.m */,
 				061F20F022D336B100131DC5 /* NSKeyValueCoding.m */,
+				060A00E422D438D70071C7C4 /* NSKeyValueObserving.m */,
 				061F210622D336B100131DC5 /* NSLock.m */,
 				061F210822D336B100131DC5 /* NSNotification.m */,
 				061F20E922D336B100131DC5 /* NSNotificationCenter.m */,
 				061F210522D336B100131DC5 /* NSNull.m */,
 				061F20FF22D336B100131DC5 /* NSNumber.m */,
+				18906FBA1610BF3C0003C892 /* NSOperation.m */,
 				061F20F322D336B100131DC5 /* NSRange.m */,
 				061F20EB22D336B100131DC5 /* NSValue.m */,
-				061F210022D336B100131DC5 /* Container */,
-				061F20F522D336B100131DC5 /* NetWork */,
 				061F20EC22D336B100131DC5 /* RunLoop */,
 			);
 			path = Readed;
@@ -1289,8 +1277,8 @@
 				18906F891610BF3C0003C892 /* NSDate.m */,
 				18906F8A1610BF3C0003C892 /* NSDateFormatter.m */,
 				18906F8B1610BF3C0003C892 /* NSDebug.m */,
-				18906F8C1610BF3C0003C892 /* NSDecimal.m */,
 				18906F8D1610BF3C0003C892 /* NSDecimalNumber.m */,
+				18906F8C1610BF3C0003C892 /* NSDecimal.m */,
 				18906F8F1610BF3C0003C892 /* NSDistantObject.m */,
 				18906F901610BF3C0003C892 /* NSDistributedLock.m */,
 				18906F911610BF3C0003C892 /* NSDistributedNotificationCenter.m */,
@@ -1365,12 +1353,6 @@
 				AD197C03189A4D5F000F6CF9 /* NSUserNotification.m */,
 				AD197C04189A4D5F000F6CF9 /* NSUUID.m */,
 				18906FE91610BF3C0003C892 /* NSValueTransformer.m */,
-				18906FEA1610BF3C0003C892 /* NSXMLDTD.m */,
-				18906FEB1610BF3C0003C892 /* NSXMLDTDNode.m */,
-				18906FEC1610BF3C0003C892 /* NSXMLDocument.m */,
-				18906FED1610BF3C0003C892 /* NSXMLElement.m */,
-				18906FEE1610BF3C0003C892 /* NSXMLNode.m */,
-				18906FEF1610BF3C0003C892 /* NSXMLParser.m */,
 				18906FF11610BF3C0003C892 /* NSZone.m */,
 			);
 			name = Foundation;
@@ -2229,13 +2211,7 @@
 				061F211022D336B100131DC5 /* NSTimer.m in Sources */,
 				18394C731610EB8000335E85 /* NSUserDefaults.m in Sources */,
 				18394C751610EB8000335E85 /* NSValueTransformer.m in Sources */,
-				18394C761610EB8000335E85 /* NSXMLDTD.m in Sources */,
-				18394C771610EB8000335E85 /* NSXMLDTDNode.m in Sources */,
-				18394C781610EB8000335E85 /* NSXMLDocument.m in Sources */,
 				061F211A22D336B100131DC5 /* NSHTTPCookie.m in Sources */,
-				18394C791610EB8000335E85 /* NSXMLElement.m in Sources */,
-				18394C7A1610EB8000335E85 /* NSXMLNode.m in Sources */,
-				18394C7B1610EB8000335E85 /* NSXMLParser.m in Sources */,
 				18394C7C1610EB8000335E85 /* NSZone.m in Sources */,
 				1890B34116F3BC3300187826 /* GSPrivateHash.m in Sources */,
 				AD197C06189A4D5F000F6CF9 /* NSInvocationOperation.m in Sources */,
