@@ -74,14 +74,15 @@ final class MoneyPile: WithDrawing {
     }
     
     func canWithDraw(amount: Int) -> Bool {
-        if (amount < 0) {
+        guard amount >= 0 else {
             return false
         }
-        if (quanity <= 0) {
+        guard quanity > 0 else {
             return false
         }
         let number = amount / self.value
-        if (quanity < number) {
+        // guard 里面定义变量, 只能是 optional binding, 这里将 number 转移到 if guard 的判断式里面会报错的.
+        guard  number > 0 else {
             return false
         }
         
