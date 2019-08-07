@@ -13,11 +13,12 @@ using namespace std;
  链表就是结点的串联, 而结点中有着两部分含义的数据, 数据域和指针域.
  链表的优势在于, 不用实现分配内存空间, 可以利用内存中零散的内存进行串联, 但是这也有个不好的地方, 每次需要新的结点, 释放原有结点都要进行内存的分配.
  链表没有满的概念. 但是有着长度的概念. 一般来说, 我们自己的封装链表, 都要有着 length 这个数据. 这样, 每次进行操作的时候, 不用进行遍历操作, 直接根据 length 的值判断链表的长度. 类似的, 数组那里也有着length , 但数组如果没有这个值, 根本不知道数组的长度. 而链表因为可以判断尾节点为NULL, 知道链表的范围.
+ 根据尾节点为 NULL 当然可以知道链表的长度, 但是封装的意义就在于, 可以在链表操作的时候, 及时更新 length 的值. 这个更新操作是在链表类的内部的, 所以类的设计者可以进行控制. 这里也是类和结构体的区别, 结构器的 public 作用域导致, 每次操作, 相当于更新一个 public 的成员变量, 既然是 public, 那么任何人任何地方都可以修改. 而类, 则可以限制 length 只在某些地方进行修改.
+ 双向链表在操作的方便性以及代码的简介性上都有很大的帮助, 所以实际的工作中, 大量的使用了双向链表.
  链表操作, 注意不要丢失指针, 也就是在进行结点内指针的指向前, 要注意保存原有的指向.
  要注意边界条件, 因为边界条件的代码一般和常规逻辑不符.
- 可以为链表添加头结点, 头结点可以将边界条件的复杂逻辑简化为一般逻辑.
+ 哨兵, 可以理解为减少特殊情况的判断, 就和 guard 函数一样, 既可以保持程序的逻辑一致和整洁, 也可以加快程序的效率. 提前将小概率情况进行处理, 在后续的处理中, 可以在循环中减少每次都对于特殊情况的判断, 如果是大量的操作的话, 是很有好处的.
  在需要手动管理内存的环境里面, 注意内存的分配和释放.
- 
  */
 
 struct LNode {
@@ -25,7 +26,8 @@ struct LNode {
     LNode *next;
 };
 
-void merge(LNode *l, LNode *r, LNode *&result) {
+//
+void sortMerge(LNode *l, LNode *r, LNode *&result) {
     if (!l->next && !r->next) { return; }
     if (!l->next) { result = r; return;}
     if (!r->next) { result = l; return;}
@@ -56,14 +58,14 @@ void merge(LNode *l, LNode *r, LNode *&result) {
     }
 }
 
-// 尾插法
+// 尾插法, 这里, 默认是建立一个带有头结点的链表.
 void createListInTail(LNode *&result, int *source, int n) {
     result = nullptr;
     if (!source) { return; }
     if (n <= 0) { return; }
     result = (LNode *)malloc(sizeof(LNode));
     result->data = -1;
-    result->next = nullptr;
+    result->next = nullptr; // 建立头结点.
     
     LNode *current = result;
     for (int i = 0; i < n; ++i) {
