@@ -1,29 +1,29 @@
 /** Interface for NSLog for GNUStep
- Copyright (C) 1996, 1997 Free Software Foundation, Inc.
- 
- Written by:  Adam Fedor <fedor@boulder.colorado.edu>
- Date: November 1996
- 
- This file is part of the GNUstep Base Library.
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free
- Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02111 USA.
- 
- <title>NSLog reference</title>
- $Date$ $Revision$
- */
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+
+   Written by:  Adam Fedor <fedor@boulder.colorado.edu>
+   Date: November 1996
+
+   This file is part of the GNUstep Base Library.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02111 USA.
+
+   <title>NSLog reference</title>
+   $Date$ $Revision$
+   */
 
 #import "common.h"
 #import "Foundation/NSDate.h"
@@ -41,9 +41,9 @@
 #ifdef	HAVE_SYSLOG_H
 #include <syslog.h>
 #elif HAVE_SYS_SLOG_H
-/* we are on a QNX-ish system, which has a syslog symbol somewhere,
- * but it isn't our syslog function (we use slogf().)
- */
+  /* we are on a QNX-ish system, which has a syslog symbol somewhere,
+   * but it isn't our syslog function (we use slogf().)
+   */
 # ifdef HAVE_SYSLOG
 #   undef HAVE_SYSLOG
 # endif
@@ -99,135 +99,135 @@ static IMP              unlockImp = 0;
 NSRecursiveLock *
 GSLogLock()
 {
-    if (myLock == nil)
+  if (myLock == nil)
     {
-        [gnustep_global_lock lock];
-        if (myLock == nil)
-        {
-            myLock = [NSRecursiveLock new];
-            lockImp = [myLock methodForSelector: @selector(lock)];
-            unlockImp = [myLock methodForSelector: @selector(unlock)];
-        }
-        [gnustep_global_lock unlock];
+      [gnustep_global_lock lock];
+      if (myLock == nil)
+	{
+	  myLock = [NSRecursiveLock new];
+          lockImp = [myLock methodForSelector: @selector(lock)];
+          unlockImp = [myLock methodForSelector: @selector(unlock)];
+	}
+      [gnustep_global_lock unlock];
     }
-    return myLock;
+  return myLock;
 }
 
 static void
 _NSLog_standard_printf_handler(NSString* message)
 {
-    NSData	*d;
-    const char	*buf;
-    unsigned	len;
+  NSData	*d;
+  const char	*buf;
+  unsigned	len;
 #if	defined(_WIN32)
-    LPCWSTR	null_terminated_buf;
+  LPCWSTR	null_terminated_buf;
 #else
 #if	defined(HAVE_SYSLOG) || defined(HAVE_SLOGF)
-    char	*null_terminated_buf = NULL;
+  char	*null_terminated_buf = NULL;
 #endif
 #endif
-    static NSStringEncoding enc = 0;
-    
-    if (enc == 0)
+  static NSStringEncoding enc = 0;
+
+  if (enc == 0)
     {
-        enc = [NSString defaultCStringEncoding];
+      enc = [NSString defaultCStringEncoding];
     }
-    d = [message dataUsingEncoding: enc allowLossyConversion: NO];
-    if (d == nil)
+  d = [message dataUsingEncoding: enc allowLossyConversion: NO];
+  if (d == nil)
     {
-        d = [message dataUsingEncoding: NSUTF8StringEncoding
-                  allowLossyConversion: NO];
+      d = [message dataUsingEncoding: NSUTF8StringEncoding
+		allowLossyConversion: NO];
     }
-    
-    if (d == nil)		// Should never happen.
+
+  if (d == nil)		// Should never happen.
     {
-        buf = [message lossyCString];
-        len = strlen(buf);
+      buf = [message lossyCString];
+      len = strlen(buf);
     }
-    else
+  else
     {
-        buf = (const char*)[d bytes];
-        len = [d length];
+      buf = (const char*)[d bytes];
+      len = [d length];
     }
-    
+
 #if	defined(_WIN32)
-    null_terminated_buf = UNISTR(message);
-    
-    OutputDebugStringW(null_terminated_buf);
-    
-    if ((GSPrivateDefaultsFlag(GSLogSyslog) == YES
-         || write(_NSLogDescriptor, buf, len) != (int)len) && !IsDebuggerPresent())
+  null_terminated_buf = UNISTR(message);
+
+  OutputDebugStringW(null_terminated_buf);
+
+  if ((GSPrivateDefaultsFlag(GSLogSyslog) == YES
+    || write(_NSLogDescriptor, buf, len) != (int)len) && !IsDebuggerPresent())
     {
-        static HANDLE eventloghandle = 0;
-        
-        if (!eventloghandle)
-        {
-            eventloghandle = RegisterEventSourceW(NULL,
-                                                  UNISTR([[NSProcessInfo processInfo] processName]));
-        }
-        if (eventloghandle)
-        {
-            ReportEventW(eventloghandle,	// event log handle
-                         EVENTLOG_WARNING_TYPE,	// event type
-                         0,				// category zero
-                         0,				// event identifier
-                         NULL,			// no user security identifier
-                         1,				// one substitution string
-                         0,				// no data
-                         &null_terminated_buf,	// pointer to string array
-                         NULL);			// pointer to data
-        }
+      static HANDLE eventloghandle = 0;
+
+      if (!eventloghandle)
+	{
+	  eventloghandle = RegisterEventSourceW(NULL,
+	    UNISTR([[NSProcessInfo processInfo] processName]));
+	}
+      if (eventloghandle)
+	{
+	  ReportEventW(eventloghandle,	// event log handle
+	    EVENTLOG_WARNING_TYPE,	// event type
+	    0,				// category zero
+	    0,				// event identifier
+	    NULL,			// no user security identifier
+	    1,				// one substitution string
+	    0,				// no data
+	    &null_terminated_buf,	// pointer to string array
+	    NULL);			// pointer to data
+	}
     }
 #else
-    
+
 #if	defined(HAVE_SYSLOG)
-    if (GSPrivateDefaultsFlag(GSLogSyslog) == YES
-        || write(_NSLogDescriptor, buf, len) != (int)len)
+  if (GSPrivateDefaultsFlag(GSLogSyslog) == YES
+    || write(_NSLogDescriptor, buf, len) != (int)len)
     {
-        null_terminated_buf = malloc(sizeof (char) * (len + 1));
-        strncpy (null_terminated_buf, buf, len);
-        null_terminated_buf[len] = '\0';
-        
-        syslog(SYSLOGMASK, "%s",  null_terminated_buf);
-        
-        free(null_terminated_buf);
+      null_terminated_buf = malloc(sizeof (char) * (len + 1));
+      strncpy (null_terminated_buf, buf, len);
+      null_terminated_buf[len] = '\0';
+
+      syslog(SYSLOGMASK, "%s",  null_terminated_buf);
+
+      free(null_terminated_buf);
     }
 #elif defined(HAVE_SLOGF)
-    if (GSPrivateDefaultsFlag(GSLogSyslog) == YES
-        || write(_NSLogDescriptor, buf, len) != (int)len)
+  if (GSPrivateDefaultsFlag(GSLogSyslog) == YES
+    || write(_NSLogDescriptor, buf, len) != (int)len)
     {
-        /* QNX's slog has a size limit per entry. We might need to iterate over
-         * _SLOG_MAXSIZEd chunks of the buffer
-         */
-        const char *newBuf = buf;
-        unsigned newLen = len;
-        
-        // Allocate at most _SLOG_MAXSIZE bytes
-        null_terminated_buf = malloc(sizeof(char) * MIN(newLen, _SLOG_MAXSIZE));
-        // If it's shorter than that, we never even enter the loop
-        while (newLen >= _SLOG_MAXSIZE)
+      /* QNX's slog has a size limit per entry. We might need to iterate over
+       * _SLOG_MAXSIZEd chunks of the buffer
+       */
+      const char *newBuf = buf;
+      unsigned newLen = len;
+
+      // Allocate at most _SLOG_MAXSIZE bytes
+      null_terminated_buf = malloc(sizeof(char) * MIN(newLen, _SLOG_MAXSIZE));
+      // If it's shorter than that, we never even enter the loop
+      while (newLen >= _SLOG_MAXSIZE)
         {
-            strncpy(null_terminated_buf, newBuf, (_SLOG_MAXSIZE - 1));
-            null_terminated_buf[_SLOG_MAXSIZE] = '\0';
-            slogf(_SLOG_SETCODE(_SLOG_SYSLOG, 0), _SLOG_ERROR, "%s",
-                  null_terminated_buf);
-            newBuf += (_SLOG_MAXSIZE - 1);
-            newLen -= (_SLOG_MAXSIZE - 1);
+          strncpy(null_terminated_buf, newBuf, (_SLOG_MAXSIZE - 1));
+          null_terminated_buf[_SLOG_MAXSIZE] = '\0';
+          slogf(_SLOG_SETCODE(_SLOG_SYSLOG, 0), _SLOG_ERROR, "%s",
+            null_terminated_buf);
+          newBuf += (_SLOG_MAXSIZE - 1);
+          newLen -= (_SLOG_MAXSIZE - 1);
         }
-        /* Write out the rest (which will be at most (_SLOG_MAXSIZE - 1) chars,
-         * so the terminator still fits.
-         */
-        if (0 != newLen)
+      /* Write out the rest (which will be at most (_SLOG_MAXSIZE - 1) chars,
+       * so the terminator still fits.
+       */
+      if (0 != newLen)
         {
-            strncpy(null_terminated_buf, newBuf, newLen);
-            null_terminated_buf[newLen] = '\0';
-            slogf(_SLOG_SETCODE(_SLOG_SYSLOG, 0), _SLOG_ERROR, "%s",
-                  null_terminated_buf);
+          strncpy(null_terminated_buf, newBuf, newLen);
+          null_terminated_buf[newLen] = '\0';
+          slogf(_SLOG_SETCODE(_SLOG_SYSLOG, 0), _SLOG_ERROR, "%s",
+            null_terminated_buf);
         }
-        free(null_terminated_buf);
+      free(null_terminated_buf);
     }
 #else
-    write(_NSLogDescriptor, buf, len);
+  write(_NSLogDescriptor, buf, len);
 #endif
 #endif // _WIN32
 }
@@ -291,11 +291,11 @@ NSLog_printf_handler *_NSLog_printf_handler = _NSLog_standard_printf_handler;
 void
 NSLog(NSString* format, ...)
 {
-    va_list ap;
-    
-    va_start(ap, format);
-    NSLogv(format, ap);
-    va_end(ap);
+  va_list ap;
+
+  va_start(ap, format);
+  NSLogv(format, ap);
+  va_end(ap);
 }
 
 /**
@@ -331,111 +331,111 @@ NSLog(NSString* format, ...)
 void
 NSLogv(NSString* format, va_list args)
 {
-    NSMutableString	*prefix;
-    NSString              *message;
-    NSString              *threadName = nil;
-    NSThread              *t = nil;
-    static int		pid = 0;
-    
-    if (_NSLog_printf_handler == NULL)
+  NSMutableString	*prefix;
+  NSString              *message;
+  NSString              *threadName = nil;
+  NSThread              *t = nil;
+  static int		pid = 0;
+
+  if (_NSLog_printf_handler == NULL)
     {
-        _NSLog_printf_handler = *_NSLog_standard_printf_handler;
+      _NSLog_printf_handler = *_NSLog_standard_printf_handler;
     }
-    
-    if (pid == 0)
+
+  if (pid == 0)
     {
 #if defined(_WIN32)
-        pid = (int)GetCurrentProcessId();
+      pid = (int)GetCurrentProcessId();
 #else
-        pid = (int)getpid();
+      pid = (int)getpid();
 #endif
     }
-    
-    if (GSPrivateDefaultsFlag(GSLogThread) == YES)
+
+  if (GSPrivateDefaultsFlag(GSLogThread) == YES)
     {
-        /* If no name has been set for the current thread,
-         * we log the address of the NSThread object instead.
-         */
-        t = GSCurrentThread();
-        threadName = [t name];
+      /* If no name has been set for the current thread,
+       * we log the address of the NSThread object instead.
+       */
+      t = GSCurrentThread();
+      threadName = [t name];
     }
-    
-    prefix = [[NSMutableString alloc] initWithCapacity: 1000];
-    
+
+  prefix = [[NSMutableString alloc] initWithCapacity: 1000];
+
 #ifdef	HAVE_SYSLOG
-    if (GSPrivateDefaultsFlag(GSLogSyslog) == YES)
+  if (GSPrivateDefaultsFlag(GSLogSyslog) == YES)
     {
-        if (nil == t)
+      if (nil == t)
         {
-            [prefix appendFormat: @"[thread:%"PRIuPTR"] ",
-             GSPrivateThreadID()];
+          [prefix appendFormat: @"[thread:%"PRIuPTR"] ",
+            GSPrivateThreadID()];
         }
-        else if (nil == threadName)
+      else if (nil == threadName)
         {
-            [prefix appendFormat: @"[thread:%"PRIuPTR",%p] ",
-             GSPrivateThreadID(), t];
+          [prefix appendFormat: @"[thread:%"PRIuPTR",%p] ",
+            GSPrivateThreadID(), t];
         }
-        else
+      else
         {
-            [prefix appendFormat: @"[thread:%"PRIuPTR",%@] ",
-             GSPrivateThreadID(), threadName];
+          [prefix appendFormat: @"[thread:%"PRIuPTR",%@] ",
+            GSPrivateThreadID(), threadName];
         }
     }
-    else
+  else
 #endif
     {
-        NSString  *fmt;
-        NSString  *cal;
-        
-        if (GSPrivateDefaultsFlag(GSLogOffset) == YES)
+      NSString  *fmt;
+      NSString  *cal;
+
+      if (GSPrivateDefaultsFlag(GSLogOffset) == YES)
         {
-            fmt = @"%Y-%m-%d %H:%M:%S.%F %z";
+          fmt = @"%Y-%m-%d %H:%M:%S.%F %z";
         }
-        else
+      else
         {
-            fmt = @"%Y-%m-%d %H:%M:%S.%F";
+          fmt = @"%Y-%m-%d %H:%M:%S.%F";
         }
-        cal = [[NSCalendarDate calendarDate] descriptionWithCalendarFormat: fmt];
-        
-        [prefix appendString: cal];
-        [prefix appendString: @" "];
-        [prefix appendString: [[NSProcessInfo processInfo] processName]];
-        if (nil == t)
+      cal = [[NSCalendarDate calendarDate] descriptionWithCalendarFormat: fmt];
+
+      [prefix appendString: cal];
+      [prefix appendString: @" "];
+      [prefix appendString: [[NSProcessInfo processInfo] processName]];
+      if (nil == t)
         {
-            [prefix appendFormat: @"[%d:%"PRIuPTR"] ",
-             pid, GSPrivateThreadID()];
+          [prefix appendFormat: @"[%d:%"PRIuPTR"] ",
+            pid, GSPrivateThreadID()];
         }
-        else if (nil == threadName)
+      else if (nil == threadName)
         {
-            [prefix appendFormat: @"[%d:%"PRIuPTR",%p] ",
-             pid, GSPrivateThreadID(), t];
+          [prefix appendFormat: @"[%d:%"PRIuPTR",%p] ",
+            pid, GSPrivateThreadID(), t];
         }
-        else
+      else
         {
-            [prefix appendFormat: @"[%d:%"PRIuPTR",%@] ",
-             pid, GSPrivateThreadID(), threadName];
+          [prefix appendFormat: @"[%d:%"PRIuPTR",%@] ",
+            pid, GSPrivateThreadID(), threadName];
         }
     }
-    
-    message = [[NSString alloc] initWithFormat: format arguments: args];
-    [prefix appendString: message];
-    [message release];
-    if ([prefix hasSuffix: @"\n"] ==  NO)
+
+  message = [[NSString alloc] initWithFormat: format arguments: args];
+  [prefix appendString: message];
+  [message release];
+  if ([prefix hasSuffix: @"\n"] ==  NO)
     {
-        [prefix appendString: @"\n"];
+      [prefix appendString: @"\n"];
     }
-    
-    if (nil == myLock)
+
+  if (nil == myLock)
     {
-        GSLogLock();
+      GSLogLock();
     }
-    
-    (*lockImp)(myLock, @selector(lock));
-    
-    _NSLog_printf_handler(prefix);
-    
-    (*unlockImp)(myLock, @selector(unlock));
-    
-    [prefix release];
+
+  (*lockImp)(myLock, @selector(lock));
+
+  _NSLog_printf_handler(prefix);
+
+  (*unlockImp)(myLock, @selector(unlock));
+
+  [prefix release];
 }
 

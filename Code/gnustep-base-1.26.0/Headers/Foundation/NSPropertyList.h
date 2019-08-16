@@ -1,276 +1,41 @@
+/** Interface for NSPropertyList for GNUstep
+   Copyright (C) 2004 Free Software Foundation, Inc.
+
+   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
+   Date: January 2004
+   
+   This file is part of the GNUstep Base Library.
+   
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+   
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02111 USA.
+
+   AutogsdocSource: NSPropertyList.m
+
+   */ 
+
 #ifndef __NSPropertyList_h_GNUSTEP_BASE_INCLUDE
 #define __NSPropertyList_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
 #import	<Foundation/NSObject.h>
 
-#if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
+#if	defined(__cplusplus)
+extern "C" {
+#endif
 
-/**
- *
- Here is the info.plist for MoegoApp.
- <?xml version="1.0" encoding="UTF-8"?>
- <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
- <plist version="1.0">
- 
- Above is the meta info.
-For dict, the first item is key, and the next item is value. Each value can be difffercent class.
- <dict> // The top level is a dict, dict is good for portable.
-     <key>CFBundleDevelopmentRegion</key> // Key
-     <string>zh_CN</string> // Value
- 
-     <key>CFBundleDisplayName</key>
-     <string>萌股</string>
- 
-     <key>CFBundleExecutable</key>
-     <string>$(EXECUTABLE_NAME)</string>
- 
-     <key>CFBundleIdentifier</key>
-     <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
- 
-     <key>CFBundleInfoDictionaryVersion</key>
-     <string>6.0</string>
- 
-     <key>CFBundleLocalizations</key>
-     <array>// Array mark it's array now, every item is in the array.
-     <string>zh_CN</string>
-     <string>en</string>
-     </array>// The end of array
- 
-     <key>CFBundleName</key>
-     <string>萌股</string>
- 
-     <key>CFBundlePackageType</key>
-     <string>APPL</string>
- 
-     <key>CFBundleShortVersionString</key>
-     <string>1.8.0</string>
- 
-     <key>CFBundleURLTypes</key>
-     <array>
-         <dict>
-             <key>CFBundleTypeRole</key>
-             <string>Editor</string>
-             <key>CFBundleURLName</key>
-             <string>app</string>
-             <key>CFBundleURLSchemes</key>
-             <array>
-                <string>moego</string>
-             </array>
-         </dict>
-         <dict>
-             <key>CFBundleTypeRole</key>
-             <string>Editor</string>
-             <key>CFBundleURLName</key>
-             <string>com.weibo</string>
-             <key>CFBundleURLSchemes</key>
-             <array>
-             <string>wb2812754643</string>
-             </array>
-         </dict>
-         <dict>
-             <key>CFBundleTypeRole</key>
-             <string>Editor</string>
-             <key>CFBundleURLName</key>
-             <string>com.wechat</string>
-             <key>CFBundleURLSchemes</key>
-             <array>
-             <string>wx1b6ba0f7f8d66dc9</string>
-             </array>
-         </dict>
-         <dict>
-             <key>CFBundleTypeRole</key>
-             <string>Editor</string>
-             <key>CFBundleURLName</key>
-             <string>com.qq</string>
-             <key>CFBundleURLSchemes</key>
-             <array>
-             <string>tencent1106878573</string>
-             </array>
-         </dict>
-         <dict>
-             <key>CFBundleTypeRole</key>
-             <string>Editor</string>
-             <key>CFBundleURLName</key>
-             <string>com.qq</string>
-             <key>CFBundleURLSchemes</key>
-             <array>
-             <string>QQ41f9a06d</string>
-             </array>
-         </dict>
-     </array>
- 
-     <key>CFBundleVersion</key>
-     <string>28</string>
- 
-     <key>LSApplicationQueriesSchemes</key>
-     <array>
-         <string>wechat</string>
-         <string>weixin</string>
-         <string>sinaweibohd</string>
-         <string>sinaweibo</string>
-         <string>sinaweibosso</string>
-         <string>weibosdk</string>
-         <string>weibosdk2.5</string>
-         <string>mqqapi</string>
-         <string>mqq</string>
-         <string>mqqOpensdkSSoLogin</string>
-         <string>mqqconnect</string>
-         <string>mqqopensdkdataline</string>
-         <string>mqqopensdkgrouptribeshare</string>
-         <string>mqqopensdkfriend</string>
-         <string>mqqopensdkapi</string>
-         <string>mqqopensdkapiV2</string>
-         <string>mqqopensdkapiV3</string>
-         <string>mqqopensdkapiV4</string>
-         <string>mqzoneopensdk</string>
-         <string>wtloginmqq</string>
-         <string>wtloginmqq2</string>
-         <string>mqqwpa</string>
-         <string>mqzone</string>
-         <string>mqzonev2</string>
-         <string>mqzoneshare</string>
-         <string>wtloginqzone</string>
-         <string>mqzonewx</string>
-         <string>mqzoneopensdkapiV2</string>
-         <string>mqzoneopensdkapi19</string>
-         <string>mqzoneopensdkapi</string>
-         <string>mqqbrowser</string>
-         <string>mttbrowser</string>
-         <string>tim</string>
-         <string>timapi</string>
-         <string>timopensdkfriend</string>
-         <string>timwpa</string>
-         <string>timgamebindinggroup</string>
-         <string>timapiwallet</string>
-         <string>timOpensdkSSoLogin</string>
-         <string>wtlogintim</string>
-         <string>timopensdkgrouptribeshare</string>
-         <string>timopensdkapiV4</string>
-         <string>timgamebindinggroup</string>
-         <string>timopensdkdataline</string>
-         <string>wtlogintimV1</string>
-         <string>timapiV1</string>
-         <string>alipay</string>
-         <string>alipayshare</string>
-         <string>dingtalk</string>
-         <string>dingtalk-open</string>
-         <string>linkedin</string>
-         <string>linkedin-sdk2</string>
-         <string>linkedin-sdk</string>
-         <string>laiwangsso</string>
-         <string>yixin</string>
-         <string>yixinopenapi</string>
-         <string>instagram</string>
-         <string>whatsapp</string>
-         <string>line</string>
-         <string>fbapi</string>
-         <string>fb-messenger-api</string>
-         <string>fb-messenger-share-api</string>
-         <string>fbauth2</string>
-         <string>fbshareextension</string>
-         <string>kakaofa63a0b2356e923f3edd6512d531f546</string>
-         <string>kakaokompassauth</string>
-         <string>storykompassauth</string>
-         <string>kakaolink</string>
-         <string>kakaotalk-4.5.0</string>
-         <string>kakaostory-2.9.0</string>
-         <string>pinterestsdk.v1</string>
-         <string>tumblr</string>
-         <string>evernote</string>
-         <string>en</string>
-         <string>enx</string>
-         <string>evernotecid</string>
-         <string>evernotemsg</string>
-         <string>youdaonote</string>
-         <string>ynotedictfav</string>
-         <string>com.youdao.note.todayViewNote</string>
-         <string>ynotesharesdk</string>
-         <string>gplus</string>
-         <string>pocket</string>
-         <string>readitlater</string>
-         <string>pocket-oauth-v1</string>
-         <string>fb131450656879143</string>
-         <string>en-readitlater-5776</string>
-         <string>com.ideashower.ReadItLaterPro3</string>
-         <string>com.ideashower.ReadItLaterPro</string>
-         <string>com.ideashower.ReadItLaterProAlpha</string>
-         <string>com.ideashower.ReadItLaterProEnterprise</string>
-         <string>vk</string>
-         <string>vk-share</string>
-         <string>vkauthorize</string>
-         <string>twitter</string>
-         <string>twitterauth</string>
-     </array>
- 
-     <key>LSRequiresIPhoneOS</key>
-     <true/>
- 
-     <key>MiSDKAppID</key>
-     <string></string>
- 
-     <key>NSAppTransportSecurity</key>
-     <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/>
-     </dict>
- 
-     <key>NSCameraUsageDescription</key>
-     <string>你可以在应用中上传、发送相机拍摄的内容</string>
- 
-     <key>NSContactsUsageDescription</key>
-     <string>你可以看到通讯录中使用萌股的用户</string>
- 
-     <key>NSLocationWhenInUseUsageDescription </key>
-     <string>你可以在应用中发送自己的位置，通过位置信息查找附近的人</string>
- 
-     <key>NSMicrophoneUsageDescription</key>
-     <string>你可以在应用中上传、发送麦克风录制的语音信息</string>
- 
-     <key>NSPhotoLibraryAddUsageDescription</key>
-     <string>你可以在应用中保存照片到相机胶卷中</string>
- 
-     <key>NSPhotoLibraryUsageDescription</key>
-     <string>你可以在应用中上传、发送相机胶卷中的内容，或保存照片到相机胶卷中</string>
- 
-     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-     <string>你可以在应用中发送自己的位置，通过位置信息查找附近的人</string>
- 
-     <key>NSLocationWhenInUseUsageDescription</key>
-     <string>你可以在应用中发送自己的位置，通过位置信息查找附近的人</string>
- 
-     <key>UIAppFonts</key>
-     <array>
-        <string>HappyZcool.ttf</string>
-     </array>
- 
-     <key>UIBackgroundModes</key>
-     <array>
-        <string>remote-notification</string>
-     </array>
- 
-     <key>UIRequiredDeviceCapabilities</key>
-     <array>
-        <string>armv7</string>
-     </array>
- 
-     <key>UIStatusBarHidden</key>
-        <true/>
- 
-     <key>UIStatusBarStyle</key>
-        <string>UIStatusBarStyleDefault</string>
- 
-     <key>UISupportedInterfaceOrientations</key>
-     <array>
-        <string>UIInterfaceOrientationPortrait</string>
-     </array>
- 
-     <key>UIViewControllerBasedStatusBarAppearance</key>
-     <false/>
- </dict>
- 
- </plist>
- */
+#if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 
 @class NSData, NSString, NSInputStream, NSOutputStream;
 
@@ -295,6 +60,7 @@ enum {
   NSPropertyListOpenStepFormat = 1,
   NSPropertyListXMLFormat_v1_0 = 100,
   NSPropertyListBinaryFormat_v1_0 = 200,
+
   NSPropertyListGNUstepFormat = 1000,
   NSPropertyListGNUstepBinaryFormat
 };
@@ -325,21 +91,15 @@ typedef NSUInteger NSPropertyListFormat;
 /**
  * <p>The NSPropertyListSerialization class provides facilities for
  * serialising and deserializing property list data in a number of
- * formats. Just the same as JSON.
- 
- In property list only sub class value is valuable
-    A property list is roughly an [NSArray] or [NSDictionary] object,
+ * formats.  A property list is roughly an [NSArray] or [NSDictionary] object,
  * with these or [NSNumber], [NSData], [NSString], or [NSDate] objects
  * as members.  (See below.)</p>
- 
  * <p>You do not work with instances of this class, instead you use a
  * small number of class methods to serialize and deserialize
  * property lists.
  * </p><br/>
  * A <em>property list</em> may only be one of the following classes - 
  * <deflist>
- 
- 
  *   <term>[NSArray]</term>
  *   <desc>
  *     An array which is either empty or contains only <em>property list</em>
@@ -351,12 +111,10 @@ typedef NSUInteger NSPropertyListFormat;
  *     </example>
  *     In XML format, an array is an element whose name is <code>array</code>
  *     and whose content is the array content.
-       In xml, the tag name is the class.
  *     <example>
- *       <array>&lt;string&gt;one&lt;/string&gt;&lt;string&gt;two&lt;/string&gt;&lt;string&gt;three&lt;/string&gt;<array>;
+ *       &lt;array&gt;&lt;string&gt;one&lt;/string&gt;&lt;string&gt;two&lt;/string&gt;&lt;string&gt;three&lt;/string&gt;&lt;/array&gt;
  *     </example>
  *   </desc>
- 
  *   <term>[NSData]</term>
  *   <desc>
  *     An array is represented as a series of pairs of hexadecimal characters
@@ -526,4 +284,9 @@ typedef NSUInteger NSPropertyListFormat;
 @end
 
 #endif	/* GS_API_MACOSX */
+
+#if	defined(__cplusplus)
+}
+#endif
+
 #endif	/* __NSPropertyList_h_GNUSTEP_BASE_INCLUDE*/

@@ -1,3 +1,30 @@
+/** NSSet - Set object to store key/value pairs
+   Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
+
+   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
+   Created: Sep 1995
+
+   This file is part of the GNUstep Base Library.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02111 USA.
+
+   <title>NSSet class reference</title>
+   $Date$ $Revision$
+   */
+
 #import "common.h"
 #import "Foundation/NSArray.h"
 #import "Foundation/NSAutoreleasePool.h"
@@ -35,23 +62,23 @@ static Class NSMutableSet_concrete_class;
 
 + (id) allocWithZone: (NSZone*)z
 {
-    if (self == NSSet_abstract_class)
+  if (self == NSSet_abstract_class)
     {
-        return NSAllocateObject(NSSet_concrete_class, 0, z);
+      return NSAllocateObject(NSSet_concrete_class, 0, z);
     }
-    else
+  else
     {
-        return NSAllocateObject(self, 0, z);
+      return NSAllocateObject(self, 0, z);
     }
 }
 
 + (void) initialize
 {
-    if (self == [NSSet class])
+  if (self == [NSSet class])
     {
-        NSSet_abstract_class = self;
-        NSSet_concrete_class = [GSSet class];
-        [NSMutableSet class];
+      NSSet_abstract_class = self;
+      NSSet_concrete_class = [GSSet class];
+      [NSMutableSet class];
     }
 }
 
@@ -60,7 +87,7 @@ static Class NSMutableSet_concrete_class;
  */
 + (id) set
 {
-    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()] init]);
+  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()] init]);
 }
 
 /**
@@ -68,8 +95,8 @@ static Class NSMutableSet_concrete_class;
  */
 + (id) setWithArray: (NSArray*)objects
 {
-    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-                        initWithArray: objects]);
+  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
+    initWithArray: objects]);
 }
 
 /**
@@ -77,18 +104,18 @@ static Class NSMutableSet_concrete_class;
  */
 + (id) setWithObject: anObject
 {
-    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-                        initWithObjects: &anObject count: 1]);
+  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
+    initWithObjects: &anObject count: 1]);
 }
 
 /**
  *  New set containing (unique elements of) objects.
  */
 + (id) setWithObjects: (const id[])objects
-                count: (NSUInteger)count
+	        count: (NSUInteger)count
 {
-    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-                        initWithObjects: objects count: count]);
+  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
+    initWithObjects: objects count: count]);
 }
 
 /**
@@ -96,12 +123,12 @@ static Class NSMutableSet_concrete_class;
  */
 + (id) setWithObjects: firstObject, ...
 {
-    id	set;
-    
-    GS_USEIDLIST(firstObject,
-                 set = [[self allocWithZone: NSDefaultMallocZone()]
-                        initWithObjects: __objects count: __count]);
-    return AUTORELEASE(set);
+  id	set;
+
+  GS_USEIDLIST(firstObject,
+    set = [[self allocWithZone: NSDefaultMallocZone()]
+      initWithObjects: __objects count: __count]);
+  return AUTORELEASE(set);
 }
 
 /**
@@ -109,13 +136,13 @@ static Class NSMutableSet_concrete_class;
  */
 + (id) setWithSet: (NSSet*)aSet
 {
-    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-                        initWithSet: aSet]);
+  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
+    initWithSet: aSet]);
 }
 
 - (Class) classForCoder
 {
-    return NSSet_abstract_class;
+  return NSSet_abstract_class;
 }
 
 /**
@@ -126,9 +153,9 @@ static Class NSMutableSet_concrete_class;
  */
 - (id) copyWithZone: (NSZone*)z
 {
-    NSSet	*copy = [NSSet_concrete_class allocWithZone: z];
-    
-    return [copy initWithSet: self copyItems: YES];
+  NSSet	*copy = [NSSet_concrete_class allocWithZone: z];
+
+  return [copy initWithSet: self copyItems: YES];
 }
 
 /**
@@ -136,118 +163,118 @@ static Class NSMutableSet_concrete_class;
  */
 - (NSUInteger) count
 {
-    [self subclassResponsibility: _cmd];
-    return 0;
+  [self subclassResponsibility: _cmd];
+  return 0;
 }
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-    if ([aCoder allowsKeyedCoding])
+  if ([aCoder allowsKeyedCoding])
     {
-        /* HACK ... MacOS-X seems to code differently if the coder is an
-         * actual instance of NSKeyedArchiver
-         */
-        if ([aCoder class] == [NSKeyedArchiver class])
-        {
-            [(NSKeyedArchiver*)aCoder _encodeArrayOfObjects: [self allObjects]
-                                                     forKey: @"NS.objects"];
-        }
-        else
-        {
-            unsigned	i = 0;
-            NSEnumerator	*e = [self objectEnumerator];
-            id		o;
-            
-            while ((o = [e nextObject]) != nil)
-            {
-                NSString	*key;
-                
-                key = [NSString stringWithFormat: @"NS.object.%u", i++];
-                [(NSKeyedArchiver*)aCoder encodeObject: o forKey: key];
-            }
-        }
+      /* HACK ... MacOS-X seems to code differently if the coder is an
+       * actual instance of NSKeyedArchiver
+       */
+      if ([aCoder class] == [NSKeyedArchiver class])
+	{
+	  [(NSKeyedArchiver*)aCoder _encodeArrayOfObjects: [self allObjects]
+						   forKey: @"NS.objects"];
+	}
+      else
+	{
+	  unsigned	i = 0;
+	  NSEnumerator	*e = [self objectEnumerator];
+	  id		o;
+
+	  while ((o = [e nextObject]) != nil)
+	    {
+	      NSString	*key;
+
+	      key = [NSString stringWithFormat: @"NS.object.%u", i++];
+	      [(NSKeyedArchiver*)aCoder encodeObject: o forKey: key];
+	    }
+	}
     }
-    else
+  else
     {
-        unsigned		count = [self count];
-        NSEnumerator	*e = [self objectEnumerator];
-        id		o;
-        
-        [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
-        while ((o = [e nextObject]) != nil)
-        {
-            [aCoder encodeValueOfObjCType: @encode(id) at: &o];
-        }
+      unsigned		count = [self count];
+      NSEnumerator	*e = [self objectEnumerator];
+      id		o;
+
+      [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
+      while ((o = [e nextObject]) != nil)
+	{
+	  [aCoder encodeValueOfObjCType: @encode(id) at: &o];
+	}
     }
 }
 
 - (id) initWithCoder: (NSCoder*)aCoder
 {
-    Class		c;
-    
-    c = object_getClass(self);
-    if (c == NSSet_abstract_class)
+  Class		c;
+
+  c = object_getClass(self);
+  if (c == NSSet_abstract_class)
     {
-        DESTROY(self);
-        self = [NSSet_concrete_class allocWithZone: NSDefaultMallocZone()];
-        return [self initWithCoder: aCoder];
+      DESTROY(self);
+      self = [NSSet_concrete_class allocWithZone: NSDefaultMallocZone()];
+      return [self initWithCoder: aCoder];
     }
-    else if (c == NSMutableSet_abstract_class)
+  else if (c == NSMutableSet_abstract_class)
     {
-        DESTROY(self);
-        self = [NSMutableSet_concrete_class allocWithZone: NSDefaultMallocZone()];
-        return [self initWithCoder: aCoder];
+      DESTROY(self);
+      self = [NSMutableSet_concrete_class allocWithZone: NSDefaultMallocZone()];
+      return [self initWithCoder: aCoder];
     }
-    
-    if ([aCoder allowsKeyedCoding])
+
+  if ([aCoder allowsKeyedCoding])
     {
-        id	array;
-        
-        array = [(NSKeyedUnarchiver*)aCoder _decodeArrayOfObjectsForKey:
-                 @"NS.objects"];
-        if (array == nil)
+      id	array;
+
+      array = [(NSKeyedUnarchiver*)aCoder _decodeArrayOfObjectsForKey:
+						@"NS.objects"];
+      if (array == nil)
+	{
+	  unsigned	i = 0;
+	  NSString	*key;
+	  id		val;
+
+	  array = [NSMutableArray arrayWithCapacity: 2];
+	  key = [NSString stringWithFormat: @"NS.object.%u", i];
+	  val = [(NSKeyedUnarchiver*)aCoder decodeObjectForKey: key];
+
+	  while (val != nil)
+	    {
+	      [array addObject: val];
+	      i++;
+	      key = [NSString stringWithFormat: @"NS.object.%u", i];
+	      val = [(NSKeyedUnarchiver*)aCoder decodeObjectForKey: key];
+	    }
+	}
+      self = [self initWithArray: array];
+    }
+  else
+    {
+      unsigned	count;
+
+      [aCoder decodeValueOfObjCType: @encode(unsigned) at: &count];
+      if (count > 0)
         {
-            unsigned	i = 0;
-            NSString	*key;
-            id		val;
-            
-            array = [NSMutableArray arrayWithCapacity: 2];
-            key = [NSString stringWithFormat: @"NS.object.%u", i];
-            val = [(NSKeyedUnarchiver*)aCoder decodeObjectForKey: key];
-            
-            while (val != nil)
-            {
-                [array addObject: val];
-                i++;
-                key = [NSString stringWithFormat: @"NS.object.%u", i];
-                val = [(NSKeyedUnarchiver*)aCoder decodeObjectForKey: key];
-            }
-        }
-        self = [self initWithArray: array];
+	  unsigned	i;
+	  GS_BEGINIDBUF(objs, count);
+
+	  for (i = 0; i < count; i++)
+	    {
+	      [aCoder decodeValueOfObjCType: @encode(id) at: &objs[i]];
+	    }
+	  self = [self initWithObjects: objs count: count];
+	  while (count-- > 0)
+	    {
+	      [objs[count] release];
+	    }
+	  GS_ENDIDBUF();
+	}
     }
-    else
-    {
-        unsigned	count;
-        
-        [aCoder decodeValueOfObjCType: @encode(unsigned) at: &count];
-        if (count > 0)
-        {
-            unsigned	i;
-            GS_BEGINIDBUF(objs, count);
-            
-            for (i = 0; i < count; i++)
-            {
-                [aCoder decodeValueOfObjCType: @encode(id) at: &objs[i]];
-            }
-            self = [self initWithObjects: objs count: count];
-            while (count-- > 0)
-            {
-                [objs[count] release];
-            }
-            GS_ENDIDBUF();
-        }
-    }
-    return self;
+  return self;
 }
 
 /**
@@ -276,8 +303,8 @@ static Class NSMutableSet_concrete_class;
  */
 - (id) init
 {
-    self = [super init];
-    return self;
+  self = [super init];
+  return self;
 }
 
 /** <init /> <override-subclass />
@@ -287,10 +314,10 @@ static Class NSMutableSet_concrete_class;
  * other initialisers work.
  */
 - (id) initWithObjects: (const id[])objects
-                 count: (NSUInteger)count
+		 count: (NSUInteger)count
 {
-    self = [self init];
-    return self;
+  self = [self init];
+  return self;
 }
 
 /**
@@ -298,8 +325,8 @@ static Class NSMutableSet_concrete_class;
  */
 - (id) member: (id)anObject
 {
-    return [self subclassResponsibility: _cmd];
-    return 0;
+  return [self subclassResponsibility: _cmd];
+  return 0;
 }
 
 /**
@@ -311,9 +338,9 @@ static Class NSMutableSet_concrete_class;
  */
 - (id) mutableCopyWithZone: (NSZone*)z
 {
-    NSMutableSet	*copy = [NSMutableSet_concrete_class allocWithZone: z];
-    
-    return [copy initWithSet: self copyItems: NO];
+  NSMutableSet	*copy = [NSMutableSet_concrete_class allocWithZone: z];
+
+  return [copy initWithSet: self copyItems: NO];
 }
 
 /**
@@ -321,7 +348,7 @@ static Class NSMutableSet_concrete_class;
  */
 - (NSEnumerator*) objectEnumerator
 {
-    return [self subclassResponsibility: _cmd];
+  return [self subclassResponsibility: _cmd];
 }
 
 /**
@@ -329,9 +356,9 @@ static Class NSMutableSet_concrete_class;
  */
 - (id) initWithObjects: firstObject, ...
 {
-    GS_USEIDLIST(firstObject,
-                 self = [self initWithObjects: __objects count: __count]);
-    return self;
+  GS_USEIDLIST(firstObject,
+    self = [self initWithObjects: __objects count: __count]);
+  return self;
 }
 
 /**
@@ -340,32 +367,32 @@ static Class NSMutableSet_concrete_class;
  */
 - (id) initWithArray: (NSArray*)other
 {
-    unsigned	count = [other count];
-    
-    if (count == 0)
+  unsigned	count = [other count];
+
+  if (count == 0)
     {
-        return [self init];
+      return [self init];
     }
-    else
+  else
     {
-        GS_BEGINIDBUF(objs, count);
-        
-        if ([other isProxy])
-        {
-            unsigned	i;
-            
-            for (i = 0; i < count; i++)
-            {
-                objs[i] = [other objectAtIndex: i];
-            }
-        }
-        else
-        {
-            [other getObjects: objs];
-        }
-        self = [self initWithObjects: objs count: count];
-        GS_ENDIDBUF();
-        return self;
+      GS_BEGINIDBUF(objs, count);
+
+      if ([other isProxy])
+	{
+	  unsigned	i;
+
+	  for (i = 0; i < count; i++)
+	    {
+	      objs[i] = [other objectAtIndex: i];
+	    }
+	}
+      else
+	{
+          [other getObjects: objs];
+	}
+      self = [self initWithObjects: objs count: count];
+      GS_ENDIDBUF();
+      return self;
     }
 }
 
@@ -375,29 +402,29 @@ static Class NSMutableSet_concrete_class;
  */
 - (id) initWithSet: (NSSet*)other copyItems: (BOOL)flag
 {
-    unsigned	c = [other count];
-    id		o, e = [other objectEnumerator];
-    unsigned	i = 0;
-    GS_BEGINIDBUF(os, c);
-    
-    while ((o = [e nextObject]))
+  unsigned	c = [other count];
+  id		o, e = [other objectEnumerator];
+  unsigned	i = 0;
+  GS_BEGINIDBUF(os, c);
+
+  while ((o = [e nextObject]))
     {
-        if (flag)
-            os[i] = [o copy];
-        else
-            os[i] = o;
-        i++;
+      if (flag)
+	os[i] = [o copy];
+      else
+	os[i] = o;
+      i++;
     }
-    self = [self initWithObjects: os count: c];
-    if (flag)
+  self = [self initWithObjects: os count: c];
+  if (flag)
     {
-        while (i--)
+      while (i--)
         {
-            [os[i] release];
+          [os[i] release];
         }
     }
-    GS_ENDIDBUF();
-    return self;
+  GS_ENDIDBUF();
+  return self;
 }
 
 /**
@@ -405,7 +432,7 @@ static Class NSMutableSet_concrete_class;
  */
 - (id) initWithSet: (NSSet*)other
 {
-    return [self initWithSet: other copyItems: NO];
+  return [self initWithSet: other copyItems: NO];
 }
 
 /**
@@ -413,20 +440,20 @@ static Class NSMutableSet_concrete_class;
  */
 - (NSArray*) allObjects
 {
-    id		e = [self objectEnumerator];
-    unsigned	i;
-    unsigned	c = [self count];
-    NSArray	*result = nil;
-    GS_BEGINIDBUF(k, c);
-    
-    for (i = 0; i < c; i++)
+  id		e = [self objectEnumerator];
+  unsigned	i;
+  unsigned	c = [self count];
+  NSArray	*result = nil;
+  GS_BEGINIDBUF(k, c);
+
+  for (i = 0; i < c; i++)
     {
-        k[i] = [e nextObject];
+      k[i] = [e nextObject];
     }
-    return AUTORELEASE([[NSArray allocWithZone: NSDefaultMallocZone()]
-                        initWithObjects: k count: c]);
-    GS_ENDIDBUF();
-    return result;
+  return AUTORELEASE([[NSArray allocWithZone: NSDefaultMallocZone()]
+    initWithObjects: k count: c]);
+  GS_ENDIDBUF();
+  return result;
 }
 
 /**
@@ -434,12 +461,12 @@ static Class NSMutableSet_concrete_class;
  */
 - (id) anyObject
 {
-    if ([self count] == 0)
-        return nil;
-    else
+  if ([self count] == 0)
+    return nil;
+  else
     {
-        id e = [self objectEnumerator];
-        return [e nextObject];
+      id e = [self objectEnumerator];
+      return [e nextObject];
     }
 }
 
@@ -449,12 +476,12 @@ static Class NSMutableSet_concrete_class;
  */
 - (BOOL) containsObject: (id)anObject
 {
-    return (([self member: anObject]) ? YES : NO);
+  return (([self member: anObject]) ? YES : NO);
 }
 
 - (NSUInteger) hash
 {
-    return [self count];
+  return [self count];
 }
 
 /**
@@ -463,10 +490,10 @@ static Class NSMutableSet_concrete_class;
  */
 - (void) makeObjectsPerform: (SEL)aSelector
 {
-    id	o, e = [self objectEnumerator];
-    
-    while ((o = [e nextObject]))
-        [o performSelector: aSelector];
+  id	o, e = [self objectEnumerator];
+
+  while ((o = [e nextObject]))
+    [o performSelector: aSelector];
 }
 
 /**
@@ -475,10 +502,10 @@ static Class NSMutableSet_concrete_class;
  */
 - (void) makeObjectsPerformSelector: (SEL)aSelector
 {
-    id	o, e = [self objectEnumerator];
-    
-    while ((o = [e nextObject]))
-        [o performSelector: aSelector];
+  id	o, e = [self objectEnumerator];
+
+  while ((o = [e nextObject]))
+    [o performSelector: aSelector];
 }
 
 /**
@@ -487,10 +514,10 @@ static Class NSMutableSet_concrete_class;
  */
 - (void) makeObjectsPerformSelector: (SEL)aSelector withObject: argument
 {
-    id	o, e = [self objectEnumerator];
-    
-    while ((o = [e nextObject]))
-        [o performSelector: aSelector withObject: argument];
+  id	o, e = [self objectEnumerator];
+
+  while ((o = [e nextObject]))
+    [o performSelector: aSelector withObject: argument];
 }
 
 /**
@@ -499,10 +526,10 @@ static Class NSMutableSet_concrete_class;
  */
 - (void) makeObjectsPerform: (SEL)aSelector withObject: argument
 {
-    id	o, e = [self objectEnumerator];
-    
-    while ((o = [e nextObject]))
-        [o performSelector: aSelector withObject: argument];
+  id	o, e = [self objectEnumerator];
+
+  while ((o = [e nextObject]))
+    [o performSelector: aSelector withObject: argument];
 }
 
 /**
@@ -510,20 +537,20 @@ static Class NSMutableSet_concrete_class;
  */
 - (BOOL) intersectsSet: (NSSet*) otherSet
 {
-    id	o = nil, e = nil;
-    
-    // -1. If this set is empty, this method should return NO.
-    if ([self count] == 0)
-        return NO;
-    
-    // 0. Loop for all members in otherSet
-    e = [otherSet objectEnumerator];
-    while ((o = [e nextObject])) // 1. pick a member from otherSet.
-    {
-        if ([self member: o])    // 2. check the member is in this set(self).
-            return YES;
-    }
+  id	o = nil, e = nil;
+
+  // -1. If this set is empty, this method should return NO.
+  if ([self count] == 0)
     return NO;
+
+  // 0. Loop for all members in otherSet
+  e = [otherSet objectEnumerator];
+  while ((o = [e nextObject])) // 1. pick a member from otherSet.
+    {
+      if ([self member: o])    // 2. check the member is in this set(self).
+        return YES;
+    }
+  return NO;
 }
 
 /**
@@ -531,42 +558,42 @@ static Class NSMutableSet_concrete_class;
  */
 - (BOOL) isSubsetOfSet: (NSSet*) otherSet
 {
-    id o = nil, e = nil;
-    
-    // -1. members of this set(self) <= that of otherSet
-    if ([self count] > [otherSet count])
-        return NO;
-    
-    // 0. Loop for all members in this set(self).
-    e = [self objectEnumerator];
-    while ((o = [e nextObject]))
+  id o = nil, e = nil;
+
+  // -1. members of this set(self) <= that of otherSet
+  if ([self count] > [otherSet count])
+    return NO;
+
+  // 0. Loop for all members in this set(self).
+  e = [self objectEnumerator];
+  while ((o = [e nextObject]))
     {
-        // 1. check the member is in the otherSet.
-        if ([otherSet member: o])
-        {
-            // 1.1 if true -> continue, try to check the next member.
-            continue ;
-        }
-        else
-        {
-            // 1.2 if false -> return NO;
-            return NO;
-        }
+      // 1. check the member is in the otherSet.
+      if ([otherSet member: o])
+       {
+         // 1.1 if true -> continue, try to check the next member.
+         continue ;
+       }
+      else
+       {
+         // 1.2 if false -> return NO;
+         return NO;
+       }
     }
-    // 2. return YES; all members in this set are also in the otherSet.
-    return YES;
+  // 2. return YES; all members in this set are also in the otherSet.
+  return YES;
 }
 
 - (BOOL) isEqual: (id)other
 {
-    if ([other isKindOfClass: [NSSet class]])
-        return [self isEqualToSet: other];
-    return NO;
+  if ([other isKindOfClass: [NSSet class]])
+    return [self isEqualToSet: other];
+  return NO;
 }
 
 - (NSUInteger)_countForObject: (id)object
 {
-    return 1;
+  return 1;
 }
 
 /**
@@ -574,29 +601,29 @@ static Class NSMutableSet_concrete_class;
  */
 - (BOOL) isEqualToSet: (NSSet*)other
 {
-    if ([self count] != [other count])
-        return NO;
-    else
+  if ([self count] != [other count])
+    return NO;
+  else
     {
-        id	o, e = [self objectEnumerator];
-        
-        while ((o = [e nextObject]))
+      id	o, e = [self objectEnumerator];
+
+      while ((o = [e nextObject]))
         {
-            if (![other member: o])
+	  if (![other member: o])
             {
-                return NO;
+	      return NO;
             }
-            else
-            {
-                if ([self _countForObject: o] != [other _countForObject: o])
-                {
-                    return NO;
-                }
-            }
+         else
+           {
+             if ([self _countForObject: o] != [other _countForObject: o])
+               {
+                 return NO;
+               }
+           }
         }
     }
-    /* xxx Recheck this. */
-    return YES;
+  /* xxx Recheck this. */
+  return YES;
 }
 
 /**
@@ -604,7 +631,7 @@ static Class NSMutableSet_concrete_class;
  */
 - (NSString*) description
 {
-    return [self descriptionWithLocale: nil];
+  return [self descriptionWithLocale: nil];
 }
 
 /**
@@ -612,356 +639,356 @@ static Class NSMutableSet_concrete_class;
  */
 - (NSString*) descriptionWithLocale: (id)locale
 {
-    return [[self allObjects] descriptionWithLocale: locale];
+  return [[self allObjects] descriptionWithLocale: locale];
 }
 
 - (id) valueForKey: (NSString*)key
 {
-    NSEnumerator *e = [self objectEnumerator];
-    id object = nil;
-    NSMutableSet *results = [NSMutableSet setWithCapacity: [self count]];
-    
-    while ((object = [e nextObject]) != nil)
+  NSEnumerator *e = [self objectEnumerator];
+  id object = nil;
+  NSMutableSet *results = [NSMutableSet setWithCapacity: [self count]];
+
+  while ((object = [e nextObject]) != nil)
     {
-        id result = [object valueForKey: key];
-        
-        if (result == nil)
-            continue;
-        
-        [results addObject: result];
+      id result = [object valueForKey: key];
+
+      if (result == nil)
+        continue;
+
+      [results addObject: result];
     }
-    return results;
+  return results;
 }
 
 - (id) valueForKeyPath: (NSString*)path
 {
-    id result = (id) nil;
-    
-    if ([path hasPrefix: @"@"])
+  id result = (id) nil;
+
+  if ([path hasPrefix: @"@"])
     {
-        NSRange   r;
-        
-        r = [path rangeOfString: @"."];
-        if (r.length == 0)
+      NSRange   r;
+
+      r = [path rangeOfString: @"."];
+      if (r.length == 0)
         {
-            if ([path isEqualToString: @"@count"] == YES)
+          if ([path isEqualToString: @"@count"] == YES)
             {
-                result = [NSNumber numberWithUnsignedInteger: [self count]];
+              result = [NSNumber numberWithUnsignedInteger: [self count]];
             }
-            else
+          else
             {
-                result = [self valueForKey: path];
+              result = [self valueForKey: path];
             }
         }
-        else
+      else
         {
-            NSString      *op = [path substringToIndex: r.location];
-            NSString      *rem = [path substringFromIndex: NSMaxRange(r)];
-            unsigned      count = [self count];
-            
-            if ([op isEqualToString: @"@count"] == YES)
+          NSString      *op = [path substringToIndex: r.location];
+          NSString      *rem = [path substringFromIndex: NSMaxRange(r)];
+          unsigned      count = [self count];
+
+          if ([op isEqualToString: @"@count"] == YES)
             {
-                result = [NSNumber numberWithUnsignedInteger: count];
+              result = [NSNumber numberWithUnsignedInteger: count];
             }
-            else if ([op isEqualToString: @"@avg"] == YES)
+          else if ([op isEqualToString: @"@avg"] == YES)
             {
-                double        d = 0;
-                
-                if (count > 0)
+              double        d = 0;
+
+              if (count > 0)
                 {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    while ((o = [e nextObject]) != nil)
+                  NSEnumerator  *e = [self objectEnumerator];
+                  id            o;
+
+                  while ((o = [e nextObject]) != nil)
                     {
-                        d += [[o valueForKeyPath: rem] doubleValue];
+                      d += [[o valueForKeyPath: rem] doubleValue];
                     }
-                    d /= count;
+                  d /= count;
                 }
-                result = [NSNumber numberWithDouble: d];
+              result = [NSNumber numberWithDouble: d];
             }
-            else if ([op isEqualToString: @"@max"] == YES)
+          else if ([op isEqualToString: @"@max"] == YES)
             {
-                if (count > 0)
+              if (count > 0)
                 {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    while ((o = [e nextObject]) != nil)
+                  NSEnumerator  *e = [self objectEnumerator];
+                  id            o;
+
+                  while ((o = [e nextObject]) != nil)
                     {
-                        o = [o valueForKeyPath: rem];
-                        if (result == nil
-                            || [result compare: o] == NSOrderedAscending)
+                      o = [o valueForKeyPath: rem];
+                      if (result == nil
+                        || [result compare: o] == NSOrderedAscending)
                         {
-                            result = o;
+                          result = o;
                         }
                     }
                 }
             }
-            else if ([op isEqualToString: @"@min"] == YES)
+          else if ([op isEqualToString: @"@min"] == YES)
             {
-                if (count > 0)
+              if (count > 0)
                 {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    while ((o = [e nextObject]) != nil)
+                  NSEnumerator  *e = [self objectEnumerator];
+                  id            o;
+
+                  while ((o = [e nextObject]) != nil)
                     {
-                        o = [o valueForKeyPath: rem];
-                        if (result == nil
-                            || [result compare: o] == NSOrderedDescending)
+                      o = [o valueForKeyPath: rem];
+                      if (result == nil
+                        || [result compare: o] == NSOrderedDescending)
                         {
-                            result = o;
+                          result = o;
                         }
                     }
                 }
             }
-            else if ([op isEqualToString: @"@sum"] == YES)
+          else if ([op isEqualToString: @"@sum"] == YES)
             {
-                double        d = 0;
-                
-                if (count > 0)
+              double        d = 0;
+
+              if (count > 0)
                 {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    while ((o = [e nextObject]) != nil)
+                  NSEnumerator  *e = [self objectEnumerator];
+                  id            o;
+
+                  while ((o = [e nextObject]) != nil)
                     {
-                        d += [[o valueForKeyPath: rem] doubleValue];
+                      d += [[o valueForKeyPath: rem] doubleValue];
                     }
                 }
-                result = [NSNumber numberWithDouble: d];
+              result = [NSNumber numberWithDouble: d];
             }
-            else if ([op isEqualToString: @"@distinctUnionOfArrays"] == YES)
+          else if ([op isEqualToString: @"@distinctUnionOfArrays"] == YES)
             {
-                if (count > 0)
+              if (count > 0)
                 {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    result = [NSMutableSet set];
-                    while ((o = [e nextObject]) != nil)
+                  NSEnumerator  *e = [self objectEnumerator];
+                  id            o;
+
+                  result = [NSMutableSet set];
+                  while ((o = [e nextObject]) != nil)
                     {
-                        o = [o valueForKeyPath: rem];
-                        [result addObjectsFromArray: o];
+                      o = [o valueForKeyPath: rem];
+                      [result addObjectsFromArray: o];
                     }
-                    result = [result allObjects];
+                  result = [result allObjects];
                 }
-                else
+              else
                 {
-                    result = [NSArray array];
+                  result = [NSArray array];
                 }
             }
-            else if ([op isEqualToString: @"@distinctUnionOfObjects"] == YES)
+          else if ([op isEqualToString: @"@distinctUnionOfObjects"] == YES)
             {
-                if (count > 0)
+              if (count > 0)
                 {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    result = [NSMutableSet set];
-                    while ((o = [e nextObject]) != nil)
+                  NSEnumerator  *e = [self objectEnumerator];
+                  id            o;
+
+                  result = [NSMutableSet set];
+                  while ((o = [e nextObject]) != nil)
                     {
-                        o = [o valueForKeyPath: rem];
-                        [result addObject: o];
+                      o = [o valueForKeyPath: rem];
+                      [result addObject: o];
                     }
-                    result = [result allObjects];
+                  result = [result allObjects];
                 }
-                else
+              else
                 {
-                    result = [NSArray array];
+                  result = [NSArray array];
                 }
             }
-            else if ([op isEqualToString: @"@distinctUnionOfSets"] == YES)
+          else if ([op isEqualToString: @"@distinctUnionOfSets"] == YES)
             {
-                if (count > 0)
+              if (count > 0)
                 {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    result = [NSMutableSet set];
-                    while ((o = [e nextObject]) != nil)
+                  NSEnumerator  *e = [self objectEnumerator];
+                  id            o;
+
+                  result = [NSMutableSet set];
+                  while ((o = [e nextObject]) != nil)
                     {
-                        o = [o valueForKeyPath: rem];
-                        [result addObjectsFromArray: [o allObjects]];
+                      o = [o valueForKeyPath: rem];
+                      [result addObjectsFromArray: [o allObjects]];
                     }
-                    result = [result allObjects];
+                  result = [result allObjects];
                 }
-                else
+              else
                 {
-                    result = [NSArray array];
+                  result = [NSArray array];
                 }
             }
-            else if ([op isEqualToString: @"@unionOfArrays"] == YES)
+          else if ([op isEqualToString: @"@unionOfArrays"] == YES)
             {
-                if (count > 0)
+              if (count > 0)
                 {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    result = [GSMutableArray array];
-                    while ((o = [e nextObject]) != nil)
+                  NSEnumerator  *e = [self objectEnumerator];
+                  id            o;
+
+                  result = [GSMutableArray array];
+                  while ((o = [e nextObject]) != nil)
                     {
-                        o = [o valueForKeyPath: rem];
-                        [result addObjectsFromArray: o];
+                      o = [o valueForKeyPath: rem];
+                      [result addObjectsFromArray: o];
                     }
-                    result = GS_IMMUTABLE(result);
+                  result = GS_IMMUTABLE(result);
                 }
-                else
+              else
                 {
-                    result = [NSArray array];
+                  result = [NSArray array];
                 }
             }
-            else if ([op isEqualToString: @"@unionOfObjects"] == YES)
+          else if ([op isEqualToString: @"@unionOfObjects"] == YES)
             {
-                if (count > 0)
+              if (count > 0)
                 {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    result = [GSMutableArray array];
-                    while ((o = [e nextObject]) != nil)
+                  NSEnumerator  *e = [self objectEnumerator];
+                  id            o;
+
+                  result = [GSMutableArray array];
+                  while ((o = [e nextObject]) != nil)
                     {
-                        o = [o valueForKeyPath: rem];
-                        [result addObject: o];
+                      o = [o valueForKeyPath: rem];
+                      [result addObject: o];
                     }
-                    result = GS_IMMUTABLE(result);
+                  result = GS_IMMUTABLE(result);
                 }
-                else
+              else
                 {
-                    result = [NSArray array];
+                  result = [NSArray array];
                 }
             }
-            else if ([op isEqualToString: @"@unionOfSets"] == YES)
+          else if ([op isEqualToString: @"@unionOfSets"] == YES)
             {
-                if (count > 0)
+              if (count > 0)
                 {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    result = [GSMutableArray array];
-                    while ((o = [e nextObject]) != nil)
+                  NSEnumerator  *e = [self objectEnumerator];
+                  id            o;
+
+                  result = [GSMutableArray array];
+                  while ((o = [e nextObject]) != nil)
                     {
-                        o = [o valueForKeyPath: rem];
-                        [result addObjectsFromArray: [o allObjects]];
+                      o = [o valueForKeyPath: rem];
+                      [result addObjectsFromArray: [o allObjects]];
                     }
-                    result = GS_IMMUTABLE(result);
+                  result = GS_IMMUTABLE(result);
                 }
-                else
+              else
                 {
-                    result = [NSArray array];
+                  result = [NSArray array];
                 }
             }
-            else
+          else
             {
-                result = [super valueForKeyPath: path];
+              result = [super valueForKeyPath: path];
             }
         }
     }
-    else
+  else
     {
-        result = [super valueForKeyPath: path];
+      result = [super valueForKeyPath: path];
     }
-    
-    return result;
+
+  return result;
 }
 
 - (void) enumerateObjectsUsingBlock: (GSSetEnumeratorBlock)aBlock
 {
-    [self enumerateObjectsWithOptions: 0 usingBlock: aBlock];
+  [self enumerateObjectsWithOptions: 0 usingBlock: aBlock];
 }
 
 - (void) enumerateObjectsWithOptions: (NSEnumerationOptions)opts
                           usingBlock: (GSSetEnumeratorBlock)aBlock
 {
-    BLOCK_SCOPE BOOL shouldStop = NO;
-    id<NSFastEnumeration> enumerator = self;
-    
-    GS_DISPATCH_CREATE_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
-    FOR_IN (id, obj, enumerator)
-    {
-        GS_DISPATCH_SUBMIT_BLOCK(enumQueueGroup,enumQueue, if (shouldStop) {return;}, return;, aBlock, obj, &shouldStop);
-        if (shouldStop)
-        {
-            break;
-        }
-    }
-    END_FOR_IN(enumerator)
-    GS_DISPATCH_TEARDOWN_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
+  BLOCK_SCOPE BOOL shouldStop = NO;
+  id<NSFastEnumeration> enumerator = self;
+
+  GS_DISPATCH_CREATE_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
+  FOR_IN (id, obj, enumerator)
+  {
+    GS_DISPATCH_SUBMIT_BLOCK(enumQueueGroup,enumQueue, if (shouldStop) {return;}, return;, aBlock, obj, &shouldStop);
+    if (shouldStop)
+      {
+	break;
+      }
+  }
+  END_FOR_IN(enumerator)
+  GS_DISPATCH_TEARDOWN_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
 }
 
 - (NSSet *) objectsPassingTest: (GSSetFilterBlock)aBlock
 {
-    return [self objectsWithOptions: 0 passingTest: aBlock];
+  return [self objectsWithOptions: 0 passingTest: aBlock];
 }
 
 - (NSSet *) objectsWithOptions: (NSEnumerationOptions)opts
                    passingTest: (GSSetFilterBlock)aBlock
 {
-    BOOL                  shouldStop = NO;
-    id<NSFastEnumeration> enumerator = self;
-    NSMutableSet          *resultSet;
+  BOOL                  shouldStop = NO;
+  id<NSFastEnumeration> enumerator = self;
+  NSMutableSet          *resultSet;
+
+  resultSet = [NSMutableSet setWithCapacity: [self count]];
     
-    resultSet = [NSMutableSet setWithCapacity: [self count]];
-    
-    FOR_IN (id, obj, enumerator)
+  FOR_IN (id, obj, enumerator)
     {
-        BOOL include = CALL_BLOCK(aBlock, obj, &shouldStop);
-        
-        if (include)
+      BOOL include = CALL_BLOCK(aBlock, obj, &shouldStop);
+
+      if (include)
         {
-            [resultSet addObject:obj];
+          [resultSet addObject:obj];
         }
-        if (shouldStop)
+      if (shouldStop)
         {
-            break;
+          break;
         }
     }
-    END_FOR_IN(enumerator)
+  END_FOR_IN(enumerator)
     
-    return GS_IMMUTABLE(resultSet);
+  return GS_IMMUTABLE(resultSet);
 }
 
 /** Return a set formed by adding anObject to the receiver.
  */
 - (NSSet *) setByAddingObject: (id)anObject
 {
-    NSMutableSet  *m;
-    NSSet         *s;
-    
-    m = [self mutableCopy];
-    [m addObject: anObject];
-    s = [m copy];
-    [m release];
-    return [s autorelease];
+  NSMutableSet  *m;
+  NSSet         *s;
+
+  m = [self mutableCopy];
+  [m addObject: anObject];
+  s = [m copy];
+  [m release];
+  return [s autorelease];
 }
 
 /** Return a set formed by adding the contents of other to the receiver.
  */
 - (NSSet *) setByAddingObjectsFromArray: (NSArray *)other
 {
-    NSMutableSet  *m;
-    NSSet         *s;
-    
-    m = [self mutableCopy];
-    [m addObjectsFromArray: other];
-    s = [m copy];
-    [m release];
-    return [s autorelease];
+  NSMutableSet  *m;
+  NSSet         *s;
+
+  m = [self mutableCopy];
+  [m addObjectsFromArray: other];
+  s = [m copy];
+  [m release];
+  return [s autorelease];
 }
 
 /** Return a set formed as a union of the receiver and other.
  */
 - (NSSet *) setByAddingObjectsFromSet: (NSSet *)other
 {
-    NSMutableSet  *m;
-    NSSet         *s;
-    
-    m = [self mutableCopy];
-    [m unionSet: other];
-    s = [m copy];
-    [m release];
-    return [s autorelease];
+  NSMutableSet  *m;
+  NSSet         *s;
+
+  m = [self mutableCopy];
+  [m unionSet: other];
+  s = [m copy];
+  [m release];
+  return [s autorelease];
 }
 
 - (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state
@@ -974,25 +1001,25 @@ static Class NSMutableSet_concrete_class;
 
 - (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
 {
-    NSUInteger    size = [super sizeInBytesExcluding: exclude];
-    
-    if (size > 0)
+  NSUInteger    size = [super sizeInBytesExcluding: exclude];
+
+  if (size > 0)
     {
-        NSUInteger        count = [self count];
-        
-        size += 3 * sizeof(void*) * count;
-        if (count > 0)
+      NSUInteger        count = [self count];
+
+      size += 3 * sizeof(void*) * count;
+      if (count > 0)
         {
-            NSEnumerator          *enumerator = [self objectEnumerator];
-            NSObject              *o;
-            
-            while ((o = [enumerator nextObject]) != nil)
+          NSEnumerator          *enumerator = [self objectEnumerator];
+          NSObject              *o;
+
+          while ((o = [enumerator nextObject]) != nil)
             {
-                size += [o sizeInBytesExcluding: exclude];
+              size += [o sizeInBytesExcluding: exclude];
             }
         }
     }
-    return size;
+  return size;
 }
 
 @end
@@ -1005,10 +1032,10 @@ static Class NSMutableSet_concrete_class;
 
 + (void) initialize
 {
-    if (self == [NSMutableSet class])
+  if (self == [NSMutableSet class])
     {
-        NSMutableSet_abstract_class = self;
-        NSMutableSet_concrete_class = [GSMutableSet class];
+      NSMutableSet_abstract_class = self;
+      NSMutableSet_concrete_class = [GSMutableSet class];
     }
 }
 
@@ -1017,25 +1044,25 @@ static Class NSMutableSet_concrete_class;
  */
 + (id) setWithCapacity: (NSUInteger)numItems
 {
-    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-                        initWithCapacity: numItems]);
+  return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
+    initWithCapacity: numItems]);
 }
 
 + (id) allocWithZone: (NSZone*)z
 {
-    if (self == NSMutableSet_abstract_class)
+  if (self == NSMutableSet_abstract_class)
     {
-        return NSAllocateObject(NSMutableSet_concrete_class, 0, z);
+      return NSAllocateObject(NSMutableSet_concrete_class, 0, z);
     }
-    else
+  else
     {
-        return NSAllocateObject(self, 0, z);
+      return NSAllocateObject(self, 0, z);
     }
 }
 
 - (Class) classForCoder
 {
-    return NSMutableSet_abstract_class;
+  return NSMutableSet_abstract_class;
 }
 
 /** <init /> <override-subclass />
@@ -1050,8 +1077,8 @@ static Class NSMutableSet_concrete_class;
  */
 - (id) initWithCapacity: (NSUInteger)numItems
 {
-    self = [self init];
-    return self;
+  self = [self init];
+  return self;
 }
 
 /**
@@ -1060,7 +1087,7 @@ static Class NSMutableSet_concrete_class;
  */
 - (void) addObject: (id)anObject
 {
-    [self subclassResponsibility: _cmd];
+  [self subclassResponsibility: _cmd];
 }
 
 /**
@@ -1068,21 +1095,21 @@ static Class NSMutableSet_concrete_class;
  */
 - (void) removeObject: (id)anObject
 {
-    [self subclassResponsibility: _cmd];
+  [self subclassResponsibility: _cmd];
 }
 
 - (id) initWithObjects: (const id[])objects
-                 count: (NSUInteger)count
+		 count: (NSUInteger)count
 {
-    self = [self initWithCapacity: count];
-    if (self != nil)
+  self = [self initWithCapacity: count];
+  if (self != nil)
     {
-        while (count--)
-        {
-            [self addObject: objects[count]];
-        }
+      while (count--)
+	{
+	  [self addObject: objects[count]];
+	}
     }
-    return self;
+  return self;
 }
 
 /**
@@ -1090,11 +1117,11 @@ static Class NSMutableSet_concrete_class;
  */
 - (void) addObjectsFromArray: (NSArray*)array
 {
-    unsigned	i, c = [array count];
-    
-    for (i = 0; i < c; i++)
+  unsigned	i, c = [array count];
+
+  for (i = 0; i < c; i++)
     {
-        [self addObject: [array objectAtIndex: i]];
+      [self addObject: [array objectAtIndex: i]];
     }
 }
 
@@ -1104,18 +1131,18 @@ static Class NSMutableSet_concrete_class;
  */
 - (void) intersectSet: (NSSet*) other
 {
-    if (other != self)
+  if (other != self)
     {
-        id keys = [self objectEnumerator];
-        id key;
-        
-        while ((key = [keys nextObject]))
-        {
-            if ([other containsObject: key] == NO)
-            {
-                [self removeObject: key];
-            }
-        }
+      id keys = [self objectEnumerator];
+      id key;
+
+      while ((key = [keys nextObject]))
+	{
+	  if ([other containsObject: key] == NO)
+	    {
+	      [self removeObject: key];
+	    }
+	}
     }
 }
 
@@ -1125,19 +1152,19 @@ static Class NSMutableSet_concrete_class;
  */
 - (void) minusSet: (NSSet*) other
 {
-    if (other == self)
+  if (other == self)
     {
-        [self removeAllObjects];
+      [self removeAllObjects];
     }
-    else
+  else
     {
-        id keys = [other objectEnumerator];
-        id key;
-        
-        while ((key = [keys nextObject]))
-        {
-            [self removeObject: key];
-        }
+      id keys = [other objectEnumerator];
+      id key;
+
+      while ((key = [keys nextObject]))
+	{
+	  [self removeObject: key];
+	}
     }
 }
 
@@ -1146,7 +1173,7 @@ static Class NSMutableSet_concrete_class;
  */
 - (void) removeAllObjects
 {
-    [self subclassResponsibility: _cmd];
+  [self subclassResponsibility: _cmd];
 }
 
 /**
@@ -1156,39 +1183,39 @@ static Class NSMutableSet_concrete_class;
  */
 - (void) setSet: (NSSet*)other
 {
-    if (other == self)
+  if (other == self)
     {
-        return;
+      return;
     }
-    if (other == nil)
+  if (other == nil)
     {
-        NSWarnMLog(@"Setting mutable set to nil");
-        [self removeAllObjects];
+      NSWarnMLog(@"Setting mutable set to nil");
+      [self removeAllObjects];
     }
-    else
+  else
     {
-        IF_NO_GC([other retain];)	// In case it's held by us
-        [self removeAllObjects];
-        [self unionSet: other];
-        RELEASE(other);
+      IF_NO_GC([other retain];)	// In case it's held by us
+      [self removeAllObjects];
+      [self unionSet: other];
+      RELEASE(other);
     }
 }
 
 /**
- 
+
  * Adds all the objects from other to the receiver.
  */
 - (void) unionSet: (NSSet*) other
 {
-    if (other != self)
+  if (other != self)
     {
-        id keys = [other objectEnumerator];
-        id key;
-        
-        while ((key = [keys nextObject]))
-        {
-            [self addObject: key];
-        }
+      id keys = [other objectEnumerator];
+      id key;
+
+      while ((key = [keys nextObject]))
+	{
+	  [self addObject: key];
+	}
     }
 }
 

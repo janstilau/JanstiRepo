@@ -1,26 +1,60 @@
+#ifndef	INCLUDED_GSSOCKETSTREAM_H
+#define	INCLUDED_GSSOCKETSTREAM_H
+
+/** Implementation for GSSocketStream for GNUStep
+   Copyright (C) 2006-2008 Free Software Foundation, Inc.
+
+   Written by:  Derek Zhou <derekzhou@gmail.com>
+   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
+   Date: 2006
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02111 USA.
+
+*/
+
+/* You should have included GSStream.h before this */
+
 #import "GSNetwork.h"
 
 typedef	union {
-    struct sockaddr	s;
-    struct sockaddr_in	i4;
+  struct sockaddr	s;
+  struct sockaddr_in	i4;
 #ifdef	AF_INET6
-    struct sockaddr_in	i6;
+  struct sockaddr_in	i6;
+#endif
+#ifndef	_WIN32
+  struct sockaddr_un	u;
 #endif
 } sockaddr_any;
 
+#define	SOCKIVARS \
+{ \
+  id            _sibling;       /* For bidirectional traffic.  	*/\
+  BOOL          _passive;       /* YES means already connected. */\
+  BOOL		_closing;	/* Must close on next failure.	*/\
+  SOCKET        _sock;          /* Needed for ms-windows.       */\
+  id            _handler;       /* TLS/SOCKS handler.           */\
+  sockaddr_any	_address;	/* Socket address info.		*/\
+}
 
 /* The semi-abstract GSSocketStream class is not intended to be subclassed
  * but is used to add behaviors to other socket based classes.
  */
 @interface GSSocketStream : GSStream
-{
-    id            _sibling;       /* For bidirectional traffic.      */
-    BOOL          _passive;       /* YES means already connected. */
-    BOOL        _closing;    /* Must close on next failure.    */
-    SOCKET        _sock;          /* Needed for ms-windows.       */
-    id            _handler;       /* TLS/SOCKS handler.           */
-    sockaddr_any    _address;    /* Socket address info.        */
-}
+SOCKIVARS
 
 /**
  * get the sockaddr
@@ -79,14 +113,7 @@ typedef	union {
  * so it must have the same instance variable layout as GSSocketStream.
  */
 @interface GSSocketInputStream : GSInputStream
-{
-    id            _sibling;       /* For bidirectional traffic.      */
-    BOOL          _passive;       /* YES means already connected. */
-    BOOL        _closing;    /* Must close on next failure.    */
-    SOCKET        _sock;          /* Needed for ms-windows.       */
-    id            _handler;       /* TLS/SOCKS handler.           */
-    sockaddr_any    _address;    /* Socket address info.        */
-}
+SOCKIVARS
 @end
 @interface GSSocketInputStream (AddedBehaviors)
 - (struct sockaddr*) _address;
@@ -103,7 +130,7 @@ typedef	union {
 - (SOCKET) _sock;
 @end
 
-@interface GSIneternetInputStream : GSSocketInputStream
+@interface GSInetInputStream : GSSocketInputStream
 
 /**
  * the designated initializer
@@ -128,14 +155,7 @@ typedef	union {
  * so it must have the same instance variable layout as GSSocketStream.
  */
 @interface GSSocketOutputStream : GSOutputStream
-{
-    id            _sibling;       /* For bidirectional traffic.      */
-    BOOL          _passive;       /* YES means already connected. */
-    BOOL        _closing;    /* Must close on next failure.    */
-    SOCKET        _sock;          /* Needed for ms-windows.       */
-    id            _handler;       /* TLS/SOCKS handler.           */
-    sockaddr_any    _address;    /* Socket address info.        */
-}
+SOCKIVARS
 @end
 @interface GSSocketOutputStream (AddedBehaviors)
 - (struct sockaddr*) _address;
@@ -152,7 +172,7 @@ typedef	union {
 - (NSInteger) _write: (const uint8_t *)buffer maxLength: (NSUInteger)len;
 @end
 
-@interface GSIneternetOutputStream : GSSocketOutputStream
+@interface GSInetOutputStream : GSSocketOutputStream
 
 /**
  * the designated initializer
@@ -178,14 +198,7 @@ typedef	union {
  * as GSSocketStream.
  */
 @interface GSSocketServerStream : GSAbstractServerStream
-{
-    id            _sibling;       /* For bidirectional traffic.      */
-    BOOL          _passive;       /* YES means already connected. */
-    BOOL        _closing;    /* Must close on next failure.    */
-    SOCKET        _sock;          /* Needed for ms-windows.       */
-    id            _handler;       /* TLS/SOCKS handler.           */
-    sockaddr_any    _address;    /* Socket address info.        */
-}
+SOCKIVARS
 
 /**
  * Return the class of the inputStream associated with this

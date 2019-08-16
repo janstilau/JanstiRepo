@@ -1774,8 +1774,9 @@ GSAssignZeroingWeakPointer(void **destination, void *source)
 void*
 NSZoneMalloc (NSZone *zone, NSUInteger size)
 {
-  if (!zone) { zone = NSDefaultMallocZone(); }
-  return (zone->malloc)(zone, size); // Here is used with zone->malloc, zone may should have buffer cache.
+  if (!zone)
+    zone = NSDefaultMallocZone();
+  return (zone->malloc)(zone, size);
 }
 
 void* 

@@ -245,7 +245,5 @@ class GameBoardViewController : UIViewController, GameModelProtocol {
     assert(gameBoard != nil)
     let b = gameBoard!
     b.insertTile(at: location, value: value)
-        AnyObject
     }
-    
 }

@@ -1,28 +1,28 @@
 /**Interface for NSObject for GNUStep
- Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
- 
- Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
- Date: 1995
- 
- This file is part of the GNUstep Base Library.
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free
- Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02111 USA.
- 
- AutogsdocSource: NSObject.m
- */
+   Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
+
+   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
+   Date: 1995
+   
+   This file is part of the GNUstep Base Library.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+   
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02111 USA.
+
+   AutogsdocSource: NSObject.m
+   */ 
 
 #ifndef __NSObject_h_GNUSTEP_BASE_INCLUDE
 #define __NSObject_h_GNUSTEP_BASE_INCLUDE
@@ -37,6 +37,10 @@
 #define	GS_WITH_GC	0
 
 #import	<GNUstepBase/GNUstep.h>
+
+#if	defined(__cplusplus)
+extern "C" {
+#endif
 
 @class NSArchiver;
 @class NSArray;
@@ -61,7 +65,7 @@
  * Returns the class of the receiver.  If the receiver is a proxy, then this
  * may return the class of the proxy target.  Use -isProxy to determine whether
  * the receiver is a proxy.  If you wish to find the real class of the
- * receiver, ignoring proxies, then use object_getClass().
+ * receiver, ignoring proxies, then use object_getClass().  
  */
 - (Class) class;
 /**
@@ -104,7 +108,7 @@
  * Calling this method is rarely the correct thing to do.  In most cases, a
  * subclass can be substituted for a superclass, so you should never need to
  * check that an object is really an instance of a specific class and not a
- * subclass.
+ * subclass.  
  */
 - (BOOL) isMemberOfClass: (Class)aClass;
 /**
@@ -141,15 +145,15 @@
  * correspond to a method that takes one object argument.
  */
 - (id) performSelector: (SEL)aSelector
-            withObject: (id)anObject;
+	    withObject: (id)anObject;
 /**
  * Performs the specified selector, with the objects as the arguments.  This
  * method does not perform any automatic unboxing, so the selector must
  * correspond to a method that takes two object arguments.
  */
 - (id) performSelector: (SEL)aSelector
-            withObject: (id)object1
-            withObject: (id)object2;
+	    withObject: (id)object1
+	    withObject: (id)object2;
 /**
  * Returns YES if the object can respond to messages with the specified
  * selector.  The default implementation in NSObject returns YES if the
@@ -286,12 +290,12 @@
 
 GS_ROOT_CLASS @interface NSObject <NSObject>
 {
-    /**
-     * Points to instance's class.  Used by runtime to access method
-     * implementations, etc..  Set in +alloc, Unlike other instance variables,
-     * which are cleared there.
-     */
-    Class isa;
+ /**
+  * Points to instance's class.  Used by runtime to access method
+  * implementations, etc..  Set in +alloc, Unlike other instance variables,
+  * which are cleared there.
+  */
+  Class isa;
 }
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
@@ -411,7 +415,7 @@ GS_ROOT_CLASS @interface NSObject <NSObject>
  * -beginContentAccess message to the receiver when it is created and an
  * -endContentAccess message when it is destroyed.  This prevents an object
  * that implements the NSDiscardableContent protocol from having its contents
- * discarded for as long as the proxy exists.
+ * discarded for as long as the proxy exists.  
  *
  * On systems using the GNUstep runtime, messages send to the proxy will be
  * slightly slower than direct messages.  With the GCC runtime, they will be
@@ -484,14 +488,14 @@ NSIncrementExtraRefCount(id anObject);
 #if OS_API_VERSION(GS_API_NONE, GS_API_NONE)
 
 /** Global lock to be used by classes when operating on any global
- data that invoke other methods which also access global; thus,
- creating the potential for deadlock. */
+    data that invoke other methods which also access global; thus,
+    creating the potential for deadlock. */
 GS_EXPORT NSRecursiveLock *gnustep_global_lock;
 
 @interface NSObject (NEXTSTEP)
 - (id) error:(const char *)aString, ...;
 /* - (const char *) name;
- Removed because OpenStep has -(NSString*)name; */
+   Removed because OpenStep has -(NSString*)name; */
 @end
 
 #if GS_API_VERSION(GS_API_NONE, 011700)
@@ -523,31 +527,31 @@ GS_EXPORT NSRecursiveLock *gnustep_global_lock;
  * use of the [NSObject-isEqual:] method.
  */
 + (void) cancelPreviousPerformRequestsWithTarget: (id)obj
-                                        selector: (SEL)s
-                                          object: (id)arg;
+					selector: (SEL)s
+					  object: (id)arg;
 /**
  * Sets given message to be sent to this instance after given delay,
  * in any run loop mode.  See [NSRunLoop].
  */
 - (void) performSelector: (SEL)s
-              withObject: (id)arg
-              afterDelay: (NSTimeInterval)seconds;
+	      withObject: (id)arg
+	      afterDelay: (NSTimeInterval)seconds;
 
 /**
  * Sets given message to be sent to this instance after given delay,
  * in given run loop modes.  See [NSRunLoop].
  */
 - (void) performSelector: (SEL)s
-              withObject: (id)arg
-              afterDelay: (NSTimeInterval)seconds
-                 inModes: (NSArray*)modes;
+	      withObject: (id)arg
+	      afterDelay: (NSTimeInterval)seconds
+		 inModes: (NSArray*)modes;
 @end
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 /**
  * The NSDiscardableContent protocol is used by objects which encapsulate data
  * which may be discarded if resource constraints are exceeded.  These
- * constraints are typically, but not always, related memory.
+ * constraints are typically, but not always, related memory.  
  */
 @protocol NSDiscardableContent
 
@@ -574,10 +578,14 @@ GS_EXPORT NSRecursiveLock *gnustep_global_lock;
 /**
  * Returns YES if the contents of the object have been discarded, either via a
  * call to -discardContentIfPossible while the object is not in use, or by some
- * implementation dependent mechanism.
+ * implementation dependent mechanism.  
  */
 - (BOOL) isContentDiscarded;
 @end
+#endif
+#if	defined(__cplusplus)
+}
+#endif
 
 #if     !NO_GNUSTEP && !defined(GNUSTEP_BASE_INTERNAL)
 #import <GNUstepBase/NSObject+GNUstepBase.h>

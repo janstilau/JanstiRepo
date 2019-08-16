@@ -189,7 +189,9 @@ extern "C" {
  */
 @interface	NSDecimalNumber : NSNumber <NSDecimalNumberBehaviors>
 {
+#if	GS_EXPOSE(NSDecimalNumber)
   NSDecimal data;
+#endif
 }
 
 /**
