@@ -14,6 +14,10 @@ func createMoodyContainer(completion: @escaping (NSPersistentContainer) -> ()) {
     container.loadPersistentStores { _, error in
         guard error == nil else { fatalError("Failed to load store: \(error!)") }
         DispatchQueue.main.async { completion(container) }
+        /**
+         dispatch_async(dispatch_get_main_queue(), ^{
+         });
+         */
     }
 }
 

@@ -8,7 +8,10 @@
 
 import UIKit
 
-
+/**
+ 就在这个小小的类中, 也包含了大量的协议.
+ 没有细看这里面的实现细节, 绘制的过程, 有着递归处理.
+ */
 class MoodView: UIView {
 
     var colors: [UIColor] = [] {

@@ -30,7 +30,7 @@
 		1771F3271DD9DB18004CCA43 /* Memoization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FFCD701B57A2DC00F70F4D /* Memoization.swift */; };
 		1771F3281DD9DB18004CCA43 /* PlatformExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FFCD711B57A2DC00F70F4D /* PlatformExtensions.swift */; };
 		1771F32B1DD9E502004CCA43 /* ManagedObjectObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1771F32A1DD9E502004CCA43 /* ManagedObjectObserver.swift */; };
-		1771F32D1DD9E511004CCA43 /* Managed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1771F32C1DD9E511004CCA43 /* Managed.swift */; };
+		1771F32D1DD9E511004CCA43 /* ManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1771F32C1DD9E511004CCA43 /* ManagedObject.swift */; };
 		1771F32F1DD9E523004CCA43 /* NSManagedObjectContext+Observers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1771F32E1DD9E523004CCA43 /* NSManagedObjectContext+Observers.swift */; };
 		1771F3311DD9E535004CCA43 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1771F3301DD9E535004CCA43 /* NSManagedObjectContext+Extensions.swift */; };
 		1771F3351DD9E563004CCA43 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1771F3341DD9E563004CCA43 /* Utilities.swift */; };
@@ -72,7 +72,7 @@
 		176699B71B833E7D00AC71A8 /* MoodyStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MoodyStack.swift; path = Moody/MoodyStack.swift; sourceTree = SOURCE_ROOT; };
 		1771F3291DD9DCB0004CCA43 /* Moody-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Moody-Bridging-Header.h"; sourceTree = "<group>"; };
 		1771F32A1DD9E502004CCA43 /* ManagedObjectObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectObserver.swift; sourceTree = "<group>"; };
-		1771F32C1DD9E511004CCA43 /* Managed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Managed.swift; sourceTree = "<group>"; };
+		1771F32C1DD9E511004CCA43 /* ManagedObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObject.swift; sourceTree = "<group>"; };
 		1771F32E1DD9E523004CCA43 /* NSManagedObjectContext+Observers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Observers.swift"; sourceTree = "<group>"; };
 		1771F3301DD9E535004CCA43 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
 		1771F3341DD9E563004CCA43 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -193,7 +193,7 @@
 				17F961641B944DDC0084C990 /* TableViewDataSource.swift */,
 				1771F3301DD9E535004CCA43 /* NSManagedObjectContext+Extensions.swift */,
 				1771F32E1DD9E523004CCA43 /* NSManagedObjectContext+Observers.swift */,
-				1771F32C1DD9E511004CCA43 /* Managed.swift */,
+				1771F32C1DD9E511004CCA43 /* ManagedObject.swift */,
 				1771F32A1DD9E502004CCA43 /* ManagedObjectObserver.swift */,
 			);
 			name = "Core Data Helpers";
@@ -340,7 +340,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1771F32D1DD9E511004CCA43 /* Managed.swift in Sources */,
+				1771F32D1DD9E511004CCA43 /* ManagedObject.swift in Sources */,
 				174495881AFBF246007C9A75 /* MoodsTableViewController.swift in Sources */,
 				1771F3221DD9DB18004CCA43 /* RandomNumbers.mm in Sources */,
 				1771F3381DD9F25F004CCA43 /* Moody.xcdatamodeld in Sources */,

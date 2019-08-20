@@ -16,7 +16,7 @@ class MoodsTableViewController: UITableViewController, SegueHandler {
         case showMoodDetail = "showMoodDetail"
     }
 
-    var managedObjectContext: NSManagedObjectContext!
+    var managedObjectContext: NSManagedObjectContext! // 这里, 也是用的隐式解包
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,11 +41,12 @@ class MoodsTableViewController: UITableViewController, SegueHandler {
     fileprivate func setupTableView() {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
+        
         let request = Mood.sortedFetchRequest
         request.fetchBatchSize = 20
         request.returnsObjectsAsFaults = false
-        let frc = NSFetchedResultsController(fetchRequest: request, managedObjectContext: managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
-        dataSource = TableViewDataSource(tableView: tableView, cellIdentifier: "MoodCell", fetchedResultsController: frc, delegate: self)
+        let featchVC = NSFetchedResultsController(fetchRequest: request, managedObjectContext: managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        dataSource = TableViewDataSource(tableView: tableView, cellIdentifier: "MoodCell", fetchedResultsController: featchVC, delegate: self)
     }
 
 }

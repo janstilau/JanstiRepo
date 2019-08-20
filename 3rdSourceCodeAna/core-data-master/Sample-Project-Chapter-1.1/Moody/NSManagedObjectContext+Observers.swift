@@ -10,8 +10,10 @@ import Foundation
 import CoreData
 
 
-struct ObjectsDidChangeNotification {
+struct NotiParser {
 
+    private let notification: Notification
+    
     init(note: Notification) {
         assert(note.name == NSNotification.Name.NSManagedObjectContextObjectsDidChange)
         notification = note
@@ -49,8 +51,6 @@ struct ObjectsDidChangeNotification {
 
     // MARK: Private
 
-    fileprivate let notification: Notification
-
     fileprivate func objects(forKey key: String) -> Set<NSManagedObject> {
         return ((notification as NSNotification).userInfo?[key] as? Set<NSManagedObject>) ?? Set()
     }
@@ -62,14 +62,13 @@ extension NSManagedObjectContext {
 
     /// Adds the given block to the default `NSNotificationCenter`'s dispatch table for the given context's objects-did-change notifications.
     /// - returns: An opaque object to act as the observer. This must be sent to the default `NSNotificationCenter`'s `removeObserver()`.
-    func addObjectsDidChangeNotificationObserver(_ handler: @escaping (ObjectsDidChangeNotification) -> ()) -> NSObjectProtocol {
+    func addObjectsDidChangeNotificationObserver(_ handler: @escaping (NotiParser) -> ()) -> NSObjectProtocol {
         let nc = NotificationCenter.default
-        return nc.addObserver(forName: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: self, queue: nil) { note in
-            let wrappedNote = ObjectsDidChangeNotification(note: note)
+        return nc.addObserver(forName: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: self, queue: nil) { notification in
+            let wrappedNote = NotiParser(note: notification)
             handler(wrappedNote)
         }
     }
-
 }
 
 

@@ -8,6 +8,7 @@
 
 import UIKit
 
+// 抽象隔离, 先不管它的具体实现细节.
 public extension UIImage {
     /**
     Computes the dominant colors in the receiver
