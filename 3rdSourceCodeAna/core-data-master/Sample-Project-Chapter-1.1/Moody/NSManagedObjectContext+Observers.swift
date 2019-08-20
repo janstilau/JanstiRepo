@@ -48,7 +48,6 @@ struct NotiParser {
         return c
     }
 
-
     // MARK: Private
 
     fileprivate func objects(forKey key: String) -> Set<NSManagedObject> {
