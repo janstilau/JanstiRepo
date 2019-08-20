@@ -11,7 +11,7 @@ import CoreData
 
 final class Region: NSManagedObject {}
 
-extension Region: Managed {
+extension Region: ManagedObject {
     static var defaultSortDescriptors: [NSSortDescriptor] {
         return [NSSortDescriptor(key: "updatedAt", ascending: false)]
     }

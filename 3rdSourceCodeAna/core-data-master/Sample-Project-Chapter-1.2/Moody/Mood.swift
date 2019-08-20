@@ -49,7 +49,7 @@ final class Mood: NSManagedObject {
 }
 
 
-extension Mood: Managed {
+extension Mood: ManagedObject {
     static var defaultSortDescriptors: [NSSortDescriptor] {
         return [NSSortDescriptor(key: #keyPath(date), ascending: false)]
     }

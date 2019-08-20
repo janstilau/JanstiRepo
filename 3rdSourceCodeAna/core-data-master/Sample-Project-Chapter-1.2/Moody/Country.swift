@@ -16,10 +16,13 @@ final class Country: NSManagedObject {
     @NSManaged fileprivate(set) var continent: Continent?
     @NSManaged var updatedAt: Date
 
+    /**
+     numericISO3166Code 必须以 int 的形式进行存储, 而我们需要的, 是一个枚举值.
+     */
     fileprivate(set) var iso3166Code: ISO3166.Country {
         get {
-            guard let c = ISO3166.Country(rawValue: numericISO3166Code) else { fatalError("Unknown country code") }
-            return c
+            guard let country = ISO3166.Country(rawValue: numericISO3166Code) else { fatalError("Unknown country code") }
+            return country
         }
         set {
             numericISO3166Code = newValue.rawValue
@@ -50,7 +53,7 @@ final class Country: NSManagedObject {
 }
 
 
-extension Country: Managed {
+extension Country: ManagedObject {
     static var defaultSortDescriptors: [NSSortDescriptor] {
         return [NSSortDescriptor(key: #keyPath(updatedAt), ascending: false)]
     }

@@ -26,6 +26,10 @@ final class Continent: NSManagedObject {
     }
 
     static func findOrCreateContinent(for isoCountry: ISO3166.Country, in context: NSManagedObjectContext) -> Continent? {
+        /**
+         首先, 判断一下 continent 的 code 存不存在.
+         如果存在, 就 findOrCreate 一下.
+         */
         guard let iso3166 = ISO3166.Continent(country: isoCountry) else { return nil }
         let predicate = NSPredicate(format: "%K == %d", #keyPath(numericISO3166Code), Int(iso3166.rawValue))
         let continent = findOrCreate(in: context, matching: predicate) {
@@ -42,7 +46,7 @@ final class Continent: NSManagedObject {
 }
 
 
-extension Continent: Managed {
+extension Continent: ManagedObject {
     static var defaultSortDescriptors: [NSSortDescriptor] {
         return [NSSortDescriptor(key: #keyPath(updatedAt), ascending: false)]
     }
