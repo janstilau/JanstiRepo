@@ -199,6 +199,11 @@ APPKIT_EXPORT NSString	*NSEventTrackingRunLoopMode;
   NSWindow              *_hidden_main;
   GSInfoPanel           *_infoPanel;
   NSApplicationPresentationOptions _presentationOptions;
+
+  /* This autorelease pool should only be created and used by -run, with
+     a single exception (which is why it is stored here as an ivar): the
+     -terminate: method will destroy this autorelease pool before exiting
+     the program.  */
   id             _runLoopPool;
 }
 

@@ -28,6 +28,28 @@
  
  */
 
+void mergeSort(int *origin, int length, int capacity, int* target, int targertLength) {
+    if (length + targertLength < capacity) { return; }
+    int originIndex = length - 1;
+    int targetIndex = targertLength - 1;
+    int mergedIndex = length + targertLength - 1;
+    while (originIndex > 0 && targertLength > 0) {
+        if (origin[originIndex] >= target[targertLength]) {
+            origin[mergedIndex] = origin[originIndex];
+            originIndex -= 1;
+        } else {
+            origin[mergedIndex] = target[targetIndex];
+            targetIndex -= 1;
+        }
+        mergedIndex -= 1;
+    }
+    if (targetIndex) {
+        while (mergedIndex) {
+            origin[mergedIndex--] = target[targetIndex--];
+        }
+    }
+}
+
 int main(int argc, const char * argv[]) {
     // insert code here...
     std::cout << "Hello, World!\n";

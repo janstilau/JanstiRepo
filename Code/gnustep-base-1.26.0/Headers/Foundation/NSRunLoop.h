@@ -1,8 +1,36 @@
+/* Interface for NSRunLoop for GNUStep
+   Copyright (C) 1996 Free Software Foundation, Inc.
+
+   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
+   Created: March 1996
+
+   This file is part of the GNUstep Base Library.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+   
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02111 USA.
+*/
+
 #ifndef __NSRunLoop_h_GNUSTEP_BASE_INCLUDE
 #define __NSRunLoop_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
 #import	<Foundation/NSMapTable.h>
+
+#if	defined(__cplusplus)
+extern "C" {
+#endif
 
 @class NSTimer, NSDate, NSPort;
 
@@ -15,21 +43,15 @@ GS_EXPORT NSString * const NSDefaultRunLoopMode;
 
 @interface NSRunLoop : NSObject
 {
-@private
-    NSString		*_currentMode;
-    NSMapTable		*_contextMap; // 这里, 是根据 mode 进行的区分,
-    NSMutableArray	*_contextStack;
-    NSMutableArray	*_timedPerformers; // afterDelay infomation will be insert into thir array.
-    void			*_extra;
+#if	GS_EXPOSE(NSRunLoop)
+  @private
+  NSString		*_currentMode;
+  NSMapTable		*_contextMap;
+  NSMutableArray	*_contextStack;
+  NSMutableArray	*_timedPerformers;
+  void			*_extra;
+#endif
 }
-
-/*
- Runloop now has some kind of tasks to perform now.
- Timer, expicitly create and added into runloop
- DelayedPerformer -> create a timer and cache in a dealyed array(_timedPerformers). NSObejct cancel, perform after delay will update the array.
- CorssThreadPerformer -> imported in NSThread, make task perform between thread
- ModePerformer -> add task into different modes.
- */
 
 /**
  * Returns the run loop instance for the current thread.
@@ -47,11 +69,10 @@ GS_EXPORT NSString * const NSDefaultRunLoopMode;
                  beforeDate: (NSDate*)limit_date;
 
 - (void) addTimer: (NSTimer*)timer
-          forMode: (NSString*)mode;
+	  forMode: (NSString*)mode;
 
 - (NSString*) currentMode;
 
-// Performs one pass through the run loop in the specified mode and returns the date at which the next timer is scheduled to fire.
 - (NSDate*) limitDateForMode: (NSString*)mode;
 
 - (void) run;
@@ -83,16 +104,16 @@ GS_EXPORT NSString * const NSDefaultRunLoopMode;
 - (void) cancelPerformSelectorsWithTarget: (id)target;
 
 - (void) cancelPerformSelector: (SEL)aSelector
-                        target: (id)target
-                      argument: (id)argument;
+			target: (id)target
+		      argument: (id)argument;
 
 - (void) configureAsServer;
 
 - (void) performSelector: (SEL)aSelector
-                  target: (id)target
-                argument: (id)argument
-                   order: (NSUInteger)order
-                   modes: (NSArray*)modes;
+		  target: (id)target
+		argument: (id)argument
+		   order: (NSUInteger)order
+		   modes: (NSArray*)modes;
 
 - (void) removePort: (NSPort*)port
             forMode: (NSString*)mode;
@@ -134,11 +155,11 @@ typedef	enum {
  * 'data' argument, but is not in the case of ET_RPORT).<br />
  * For windows it will be the handle or the windows message assciated
  * with the event.
- */
+ */ 
 - (void) receivedEvent: (void*)data
-                  type: (RunLoopEventType)type
-                 extra: (void*)extra
-               forMode: (NSString*)mode;
+		  type: (RunLoopEventType)type
+		 extra: (void*)extra
+	       forMode: (NSString*)mode;
 @end
 
 /** This informal protocol defiens optional methods of the run loop watcher.
@@ -170,9 +191,9 @@ typedef	enum {
  * -removeEvent:type:forMode:all: is made.
  */
 - (void) addEvent: (void*)data
-             type: (RunLoopEventType)type
-          watcher: (id<RunLoopEvents>)watcher
-          forMode: (NSString*)mode;
+	     type: (RunLoopEventType)type
+	  watcher: (id<RunLoopEvents>)watcher
+	  forMode: (NSString*)mode;
 /** Removes a watcher from the receiver ... the watcher must have been 
  * previously added using -addEvent:type:watcher:forMode:<br />
  * This method mirrors exactly one addition of a watcher unless removeAll
@@ -180,9 +201,13 @@ typedef	enum {
  * other paramters.
  */
 - (void) removeEvent: (void*)data
-                type: (RunLoopEventType)type
-             forMode: (NSString*)mode
-                 all: (BOOL)removeAll;
+	        type: (RunLoopEventType)type
+	     forMode: (NSString*)mode
+		 all: (BOOL)removeAll;
 @end
+
+#if	defined(__cplusplus)
+}
+#endif
 
 #endif /*__NSRunLoop_h_GNUSTEP_BASE_INCLUDE */

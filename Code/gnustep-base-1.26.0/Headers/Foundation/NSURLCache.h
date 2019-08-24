@@ -1,3 +1,26 @@
+/* Interface for NSURLCache for GNUstep
+   Copyright (C) 2006 Software Foundation, Inc.
+
+   Written by:  Richard Frith-Macdonald <frm@gnu.org>
+   Date: 2006
+   
+   This file is part of the GNUstep Base Library.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+   
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02111 USA.
+   */ 
 
 #ifndef __NSURLCache_h_GNUSTEP_BASE_INCLUDE
 #define __NSURLCache_h_GNUSTEP_BASE_INCLUDE
@@ -7,6 +30,9 @@
 
 #import	<Foundation/NSObject.h>
 
+#if	defined(__cplusplus)
+extern "C" {
+#endif
 
 @class NSData;
 @class NSDictionary;
@@ -30,10 +56,9 @@ typedef enum
  */
 @interface NSCachedURLResponse : NSObject <NSCoding, NSCopying>
 {
-    NSData            *data; // data is response data
-    NSURLResponse            *response; // data is response header.
-    NSDictionary            *userInfo;
-    NSURLCacheStoragePolicy    storagePolicy;
+#if	GS_EXPOSE(NSCachedURLResponse)
+  void *_NSCachedURLResponseInternal;
+#endif
 }
 
 /**
@@ -74,19 +99,12 @@ typedef enum
 
 @end
 
-/**
- * This is just a manager for cached response as the request for key.
- * Cache response info and corresponding data.
- */
 
 @interface NSURLCache : NSObject
 {
-    unsigned        diskCapacity;
-    unsigned        memoryCapacity;
-    unsigned        diskUsage;
-    unsigned        memoryUsage;
-    NSString        *path;
-    NSMutableDictionary    *memory;
+#if	GS_EXPOSE(NSURLCache)
+  void *_NSURLCacheInternal;
+#endif
 }
 
 /**
@@ -177,6 +195,10 @@ typedef enum
 		  forRequest: (NSURLRequest *)request;
 
 @end
+
+#if	defined(__cplusplus)
+}
+#endif
 
 #endif
 

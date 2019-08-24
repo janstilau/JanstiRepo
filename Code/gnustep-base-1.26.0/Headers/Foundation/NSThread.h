@@ -1,3 +1,28 @@
+/* Control of executable units within a shared virtual memory space
+   Copyright (C) 1996 Free Software Foundation, Inc.
+
+   Original Author:  Scott Christley <scottc@net-community.com>
+   Rewritten by: Andrew McCallum <mccallum@gnu.ai.mit.edu>
+   Created: 1996
+   
+   This file is part of the GNUstep Objective-C Library.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+   
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02111 USA.
+*/ 
+
 #ifndef __NSThread_h_GNUSTEP_BASE_INCLUDE
 #define __NSThread_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -13,28 +38,52 @@
 @class  NSArray;
 @class	NSDate;
 @class	NSMutableDictionary;
+
+#if	defined(__cplusplus)
+extern "C" {
+#endif
+
 /**
  * This class encapsulates OpenStep threading.  See [NSLock] and its
  * subclasses for handling synchronisation between threads.<br />
  * Each process begins with a main thread and additional threads can
- * be created using NSThread.
+ * be created using NSThread.  The GNUstep implementation of OpenStep
+ * has been carefully designed so that the internals of the base
+ * library do not use threading (except for methods which explicitly
+ * deal with threads of course) so that you can write applications
+ * without threading.  Non-threaded applications are more efficient
+ * (no locking is required) and are easier to debug during development.
  */
 @interface NSThread : NSObject
 {
+#if	GS_EXPOSE(NSThread)
 @public
-    id			_target;
-    id			_arg;
-    SEL			_selector;
-    NSString              *_name;
-    NSUInteger            _stackSize;
-    BOOL			_cancelled;
-    BOOL			_active;
-    BOOL			_finished;
-    NSHandler		*_exception_handler;    // Not retained.
-    NSMutableDictionary	*_thread_dictionary;
-    struct autorelease_thread_vars _autorelease_vars;
-    id			_gcontext;
-    void                  *_runLoopInfo;  // Per-thread runloop related info.
+  id			_target;
+  id			_arg;
+  SEL			_selector;
+  NSString              *_name;
+  NSUInteger            _stackSize;
+  BOOL			_cancelled;
+  BOOL			_active;
+  BOOL			_finished;
+  NSHandler		*_exception_handler;    // Not retained.
+  NSMutableDictionary	*_thread_dictionary;
+  struct autorelease_thread_vars _autorelease_vars;
+  id			_gcontext;
+  void                  *_runLoopInfo;  // Per-thread runloop related info.
+#endif
+#if     GS_NONFRAGILE
+#  if defined(GS_NSThread_IVARS)
+@public GS_NSThread_IVARS;
+#  endif
+#else
+  /* Pointer to private additional data used to avoid breaking ABI
+   * when we don't have the non-fragile ABI available.
+   * Use this mechanism rather than changing the instance variable
+   * layout (see Source/GSInternal.h for details).
+   */
+  @private id _internal GS_UNUSED_IVAR;
+#endif
 }
 
 /**
@@ -58,8 +107,8 @@
  * free this pool before it finishes execution.</p>
  */
 + (void) detachNewThreadSelector: (SEL)aSelector
-                        toTarget: (id)aTarget
-                      withObject: (id)anArgument;
+		        toTarget: (id)aTarget
+		      withObject: (id)anArgument;
 
 /**
  * Terminates the current thread.<br />
@@ -82,9 +131,14 @@
 
 - (NSMutableDictionary*) threadDictionary;
 
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_2,GS_API_LATEST) \
+  && GS_API_VERSION( 10200,GS_API_LATEST)
 + (void) setThreadPriority: (double)pri;
 + (double) threadPriority;
+#endif
 
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST) \
+  && GS_API_VERSION( 11501,GS_API_LATEST)
 
 /** Returns an array of the call stack return addresses.
  */
@@ -163,6 +217,7 @@
 /** Starts the receiver executing.
  */
 - (void) start;
+#endif
 
 @end
 
@@ -205,9 +260,9 @@
  * </p>
  */
 - (void) performSelectorOnMainThread: (SEL)aSelector
-                          withObject: (id)anObject
-                       waitUntilDone: (BOOL)aFlag
-                               modes: (NSArray*)anArray;
+			  withObject: (id)anObject
+		       waitUntilDone: (BOOL)aFlag
+			       modes: (NSArray*)anArray;
 /**
  * Invokes -performSelectorOnMainThread:withObject:waitUntilDone:modes:
  * using the supplied arguments and an array containing common modes.<br />
@@ -215,8 +270,8 @@
  * in an application, the NSApplication modes.
  */
 - (void) performSelectorOnMainThread: (SEL)aSelector
-                          withObject: (id)anObject
-                       waitUntilDone: (BOOL)aFlag;
+			  withObject: (id)anObject
+		       waitUntilDone: (BOOL)aFlag;
 #endif
 #if	GS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
 /**
@@ -269,7 +324,7 @@
  * and passing anObject (which may be nil) as the argument.
  */
 - (void) performSelectorInBackground: (SEL)aSelector
-                          withObject: (id)anObject;
+                          withObject: (id)anObject; 
 #endif
 @end
 
@@ -285,16 +340,16 @@
 
 #if	GS_API_VERSION(GS_API_NONE, GS_API_NONE)
 /*
- * Don't use the following functions unless you really know what you are
- * doing !
- * The following functions are low-levelish and special.
- * They are meant to make it possible to run GNUstep code in threads
+ * Don't use the following functions unless you really know what you are 
+ * doing ! 
+ * The following functions are low-levelish and special. 
+ * They are meant to make it possible to run GNUstep code in threads 
  * created in completely different environment, eg inside a JVM.
  *
  * If you use them, make sure you initialize the NSThread class inside
  * (what you consider to be your) main thread, before registering any
  * other thread.  To initialize NSThread, simply call GSCurrentThread
- * ().  The main thread will not need to be registered.
+ * ().  The main thread will not need to be registered.  
  */
 
 /*
@@ -374,4 +429,17 @@ GS_EXPORT NSString* const NSThreadWillExitNotification;
 GS_EXPORT NSString* const NSThreadDidStartNotification;
 
 #endif
+
+#if	!NO_GNUSTEP
+#  if	defined(GNUSTEP_BASE_INTERNAL)
+#    import	"GNUstepBase/NSThread+GNUstepBase.h"
+#  else
+#    import	<GNUstepBase/NSThread+GNUstepBase.h>
+#  endif
+#endif
+
+#if	defined(__cplusplus)
+}
+#endif
+
 #endif /* __NSThread_h_GNUSTEP_BASE_INCLUDE */

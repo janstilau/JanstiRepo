@@ -1,31 +1,31 @@
 /* 
- NSResponder.h
- 
- Abstract class which is basis of command and event processing
- 
- Copyright (C) 1996,1999 Free Software Foundation, Inc.
- 
- Author:  Scott Christley <scottc@net-community.com>
- Date: 1996
- 
- This file is part of the GNUstep GUI Library.
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- Lesser General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; see the file COPYING.LIB.
- If not, see <http://www.gnu.org/licenses/> or write to the
- Free Software Foundation, 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
- */
+   NSResponder.h
+
+   Abstract class which is basis of command and event processing
+
+   Copyright (C) 1996,1999 Free Software Foundation, Inc.
+
+   Author:  Scott Christley <scottc@net-community.com>
+   Date: 1996
+   
+   This file is part of the GNUstep GUI Library.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; see the file COPYING.LIB.
+   If not, see <http://www.gnu.org/licenses/> or write to the 
+   Free Software Foundation, 51 Franklin Street, Fifth Floor, 
+   Boston, MA 02110-1301, USA.
+*/ 
 
 #ifndef _GNUstep_H_NSResponder
 #define _GNUstep_H_NSResponder
@@ -46,23 +46,23 @@
 
 @interface NSResponder : NSObject <NSCoding>
 {
-    PACKAGE_SCOPE
+PACKAGE_SCOPE
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
-    NSInterfaceStyle	_interface_style;
+  NSInterfaceStyle	_interface_style;
 #else
-    int			_interface_style;
+  int			_interface_style;
 #endif
 @protected
-    NSResponder		*_next_responder;
-    
-    /*
-     Due to interface brain-damage, both NSResponder and NSMenuView have -menu
-     and -setMenu: methods, but for different menus. Thus, to prevent (future,
-     there have already been some) problems and confusion, this ivar is
-     private (iow, it can't be accidentally used in NSMenuView).
-     */
+  NSResponder		*_next_responder;
+
+  /*
+  Due to interface brain-damage, both NSResponder and NSMenuView have -menu
+  and -setMenu: methods, but for different menus. Thus, to prevent (future,
+  there have already been some) problems and confusion, this ivar is
+  private (iow, it can't be accidentally used in NSMenuView).
+  */
 @private
-    NSMenu                *_menu;
+  NSMenu                *_menu;
 }
 
 /*
@@ -118,7 +118,7 @@
  * Services menu support
  */
 - (id) validRequestorForSendType: (NSString*)typeSent
-                      returnType: (NSString*)typeReturned;
+		      returnType: (NSString*)typeReturned;
 
 /*
  * NSCoding protocol
@@ -133,15 +133,15 @@
 - (void) doCommandBySelector: (SEL)aSelector;
 
 /** <p>Tells the receiver to insert the given string. In a text view
- the text is typically inserted at the insertion point, and replaces
- any selection.
- </p><p>
- Subclasses should override this method. The implementation in
- NSResponder just sends the message on to the next responder.
- </p><p>
- Normally, aString will be an NSString, but in some cases, it might
- be an NSAttributedString.
- </p>  */
+    the text is typically inserted at the insertion point, and replaces
+    any selection.
+    </p><p>
+    Subclasses should override this method. The implementation in
+    NSResponder just sends the message on to the next responder.
+    </p><p>
+    Normally, aString will be an NSString, but in some cases, it might
+    be an NSAttributedString.
+    </p>  */
 - (void) insertText: (id)aString;
 - (NSUndoManager*) undoManager;
 

@@ -27,21 +27,18 @@ struct SList {
 }
 
 int findElem(const SList &l, int x) {
-    int index = 0;
-    for (; index < l.length ; ++index) {
-        if (l.data[index] > x) {
+//    int index = 0; 这样写不好, for 的结构开始就是为了初始化数据, 不如把 index 放到 for 中, 而且放到 for 中, index 的可访问区域会减少很多.
+    for (int index = 0; index < l.length ; ++index) {
+        if (l.data[index] == x) {
             return index;
         }
     }
-    return index;
+    return -1;
 }
 
 void insertElem(SList &l, int x) {
-    int index = findElem(l, x);
-    if (index == kMaxSize) { return; }// 越界报错
-//    for (int i = l.length - 1; i > index; --i) {
-//        l.data[i] = l.data[i-1];
-//    } 算法有问题, 最后一个元素的值没有转移
+    if (l.length+1 >= kMaxSize) { return; }
+    if (x < 0 || x > l.length) { return; }
     for (int i = l.length - 1; i >= index; --i) {
         l.data[i+1] = l.data[i];
     }

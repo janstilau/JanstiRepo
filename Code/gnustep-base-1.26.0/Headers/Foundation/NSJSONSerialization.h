@@ -7,30 +7,27 @@
 
 enum
 {
-    /**
-     * Collection classes created from reading a JSON stream will be mutable.
-     This means the array and dictionary will be mutable subclass.
-     */
-    NSJSONReadingMutableContainers = (1UL << 0),
-    /**
-     * Strings in a JSON tree will be mutable.
-     This means the string will be NSMutableString.
-     */
-    NSJSONReadingMutableLeaves     = (1UL << 1),
-    /**
-     * The parser will read a single value, not just a
-     */
-    NSJSONReadingAllowFragments    = (1UL << 2)
+  /**
+   * Collection classes created from reading a JSON stream will be mutable.
+   */
+  NSJSONReadingMutableContainers = (1UL << 0),
+  /**
+   * Strings in a JSON tree will be mutable.
+   */
+  NSJSONReadingMutableLeaves     = (1UL << 1),
+  /**
+   * The parser will read a single value, not just a 
+   */
+  NSJSONReadingAllowFragments    = (1UL << 2)
 };
 enum
 {
-    /**
-     * When writing JSON, produce indented output intended for humans to read.
-     * If this is not set, then the writer will not generate any superfluous
-     * whitespace, producing space-efficient but not very human-friendly JSON.
-     When serialized into json, this will make the json string more readable.
-     */
-    NSJSONWritingPrettyPrinted = (1UL << 0)
+  /**
+   * When writing JSON, produce indented output intended for humans to read.
+   * If this is not set, then the writer will not generate any superfluous
+   * whitespace, producing space-efficient but not very human-friendly JSON.
+   */
+  NSJSONWritingPrettyPrinted = (1UL << 0)
 };
 /**
  * A bitmask containing flags from the NSJSONWriting* set, specifying options
@@ -49,9 +46,9 @@ typedef NSUInteger NSJSONReadingOptions;
  * graphs in JSON.
  */
 @interface NSJSONSerialization : NSObject
-+ (NSData *)dataWithJSONObject:(id)obj
-                       options:(NSJSONWritingOptions)opt
-                         error:(NSError **)error;
+ + (NSData *)dataWithJSONObject:(id)obj
+                        options:(NSJSONWritingOptions)opt
+                          error:(NSError **)error;
 + (BOOL)isValidJSONObject:(id)obj;
 + (id)JSONObjectWithData:(NSData *)data
                  options:(NSJSONReadingOptions)opt

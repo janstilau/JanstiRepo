@@ -1,3 +1,27 @@
+/* Interface for NSValue for GNUStep
+   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+
+   Written by:  Adam Fedor <fedor@boulder.colorado.edu>
+   Created: 1995
+   
+   This file is part of the GNUstep Base Library.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+   
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02111 USA.
+   */ 
+
 #ifndef __NSValue_h_GNUSTEP_BASE_INCLUDE
 #define __NSValue_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -6,6 +30,9 @@
 #import	<Foundation/NSGeometry.h>
 #import	<Foundation/NSRange.h>
 
+#if	defined(__cplusplus)
+extern "C" {
+#endif
 
 @class NSString;
 
@@ -26,9 +53,9 @@
  * Create new instance with specified value (a pointer) of given type, which
  * is a string code obtainable through the compile-time operator
  * <code>@encode(...)</code>.  For example:
- <example>
- NSValue *theValue = [NSValue value: &amp;n withObjCType: @encode(int)];
- </example>
+<example>
+    NSValue *theValue = [NSValue value: &amp;n withObjCType: @encode(int)];
+</example>
  */
 + (NSValue*) value: (const void*)value withObjCType: (const char*)type;
 
@@ -146,8 +173,6 @@
  * and accessing as any C primitive numeric type.  On access, the value will
  * be type-converted if necessary, using standard C conversion rules.
  */
-
-
 @interface NSNumber : NSValue <NSCopying,NSCoding>
 
 // Allocating and Initializing
@@ -325,13 +350,17 @@
 #if OS_API_VERSION(GS_API_NONE, GS_API_NONE)
 
 /** Note: Defines a method that is not in the OpenStep spec, but makes
- subclassing easier. */
+    subclassing easier. */
 @interface NSValue (Subclassing)
 
 /** Used by value: withObjCType: to determine the concrete subclass to alloc. */
 + (Class) valueClassWithObjCType: (const char*)type;
 
 @end
+#endif
+
+#if	defined(__cplusplus)
+}
 #endif
 
 #if     !NO_GNUSTEP && !defined(GNUSTEP_BASE_INTERNAL)

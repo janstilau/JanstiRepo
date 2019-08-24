@@ -30,12 +30,38 @@ struct MyStack {
     
     bool pop(int &value) {
         if (mLength <= 0) { return false; }
-        //        value = mData[mLength]; 这几思路有问题, mLength 记录的应该是下一个可插入的位置, 所以这里应该是 mLength - 1
+        //        value = mData[mLength]; 这个思路有问题, mLength 记录的应该是下一个可插入的位置, 所以这里应该是 mLength - 1
         value = mData[mLength - 1];
         --mLength;
         return true;
     }
+    
+    int top() {
+        if (mLength <= 0) { return -1; }
+        return mData[mLength-1];
+    }
 };
+
+void sortStock(const MyStack& stack) {
+    if (!stack.mLength) { return; }
+    MyStack cacheStack;
+    while (stack.mLength) {
+        int currentValue;
+        stack.pop(currentValue);
+        if (!cacheStack.mLength) {
+            cacheStack.push(currentValue);
+            continue;
+        }
+        if (cacheStack.top >= currentValue) {
+            cacheStack.push(currentValue);
+            continue;
+        }
+        while (cacheStack.mLength && cacheStack.top < currentValue) {
+            stack.push(cacheStack.pop());
+        }
+        cacheStack.push(currentValue);
+    }
+}
 
 struct MyQueue {
     int mData[10000];
@@ -268,3 +294,7 @@ void pop(Lnode *&l, int &result) {
 int main(int argc, const char * argv[]) {
     return 0;
 }
+
+
+
+   

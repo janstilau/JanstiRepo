@@ -1,27 +1,27 @@
 /* Implementation of extension methods to base additions
- 
- Copyright (C) 2010 Free Software Foundation, Inc.
- 
- Written by:  Richard Frith-Macdonald <rfm@gnu.org>
- 
- This file is part of the GNUstep Base Library.
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free
- Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02111 USA.
- 
- */
+
+   Copyright (C) 2010 Free Software Foundation, Inc.
+
+   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
+
+   This file is part of the GNUstep Base Library.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02111 USA.
+
+*/
 #import "common.h"
 #import "Foundation/NSArray.h"
 #import "Foundation/NSException.h"
@@ -44,168 +44,166 @@
 
 + (id) notImplemented: (SEL)selector
 {
-    [NSException raise: NSGenericException
-                format: @"method %@ not implemented in %@(class)",
-     selector ? (id)NSStringFromSelector(selector) : (id)@"(null)",
-     NSStringFromClass(self)];
-    while (0) ;   // Does not return
+  [NSException raise: NSGenericException
+    format: @"method %@ not implemented in %@(class)",
+    selector ? (id)NSStringFromSelector(selector) : (id)@"(null)",
+    NSStringFromClass(self)];
+  while (0) ;   // Does not return
 }
 
 - (NSComparisonResult) compare: (id)anObject
 {
-    NSLog(@"WARNING: The -compare: method for NSObject is deprecated.");
-    
-    if (anObject == self)
+  NSLog(@"WARNING: The -compare: method for NSObject is deprecated.");
+
+  if (anObject == self)
     {
-        return NSOrderedSame;
+      return NSOrderedSame;
     }
-    if (anObject == nil)
+  if (anObject == nil)
     {
-        [NSException raise: NSInvalidArgumentException
-                    format: @"nil argument for compare:"];
+      [NSException raise: NSInvalidArgumentException
+		   format: @"nil argument for compare:"];
     }
-    if ([self isEqual: anObject])
+  if ([self isEqual: anObject])
     {
-        return NSOrderedSame;
+      return NSOrderedSame;
     }
-    /*
-     * Ordering objects by their address is pretty useless,
-     * so subclasses should override this is some useful way.
-     */
-    if ((id)self > anObject)
+  /*
+   * Ordering objects by their address is pretty useless,
+   * so subclasses should override this is some useful way.
+   */
+  if ((id)self > anObject)
     {
-        return NSOrderedDescending;
+      return NSOrderedDescending;
     }
-    else
+  else
     {
-        return NSOrderedAscending;
+      return NSOrderedAscending;
     }
 }
 
 - (BOOL) isInstance
 {
-    GSOnceMLog(@"Warning, the -isInstance method is deprecated. "
-               @"Use 'class_isMetaClass([self class]) ? NO : YES' instead");
-    return class_isMetaClass([self class]) ? NO : YES;
+  GSOnceMLog(@"Warning, the -isInstance method is deprecated. "
+    @"Use 'class_isMetaClass([self class]) ? NO : YES' instead");
+  return class_isMetaClass([self class]) ? NO : YES;
 }
 
 - (BOOL) makeImmutable
 {
-    return NO;
+  return NO;
 }
 
 - (id) makeImmutableCopyOnFail: (BOOL)force
 {
-    if (force == YES)
+  if (force == YES)
     {
-        return AUTORELEASE([self copy]);
+      return AUTORELEASE([self copy]);
     }
-    return self;
+  return self;
 }
 
 - (id) notImplemented: (SEL)aSel
 {
-    char	c = (class_isMetaClass(object_getClass(self)) ? '+' : '-');
-    
-    [NSException
-     raise: NSInvalidArgumentException
-     format: @"[%@%c%@] not implemented",
-     NSStringFromClass([self class]), c,
-     aSel ? (id)NSStringFromSelector(aSel) : (id)@"(null)"];
-    while (0) ;   // Does not return
+  char	c = (class_isMetaClass(object_getClass(self)) ? '+' : '-');
+
+  [NSException
+    raise: NSInvalidArgumentException
+    format: @"[%@%c%@] not implemented",
+    NSStringFromClass([self class]), c,
+    aSel ? (id)NSStringFromSelector(aSel) : (id)@"(null)"];
+  while (0) ;   // Does not return
 }
 
 - (id) shouldNotImplement: (SEL)aSel
 {
-    char	c = (class_isMetaClass(object_getClass(self)) ? '+' : '-');
-    
-    [NSException
-     raise: NSInvalidArgumentException
-     format: @"[%@%c%@] should not be implemented",
-     NSStringFromClass([self class]), c,
-     aSel ? (id)NSStringFromSelector(aSel) : (id)@"(null)"];
-    while (0) ;   // Does not return
+  char	c = (class_isMetaClass(object_getClass(self)) ? '+' : '-');
+
+  [NSException
+    raise: NSInvalidArgumentException
+    format: @"[%@%c%@] should not be implemented",
+    NSStringFromClass([self class]), c,
+    aSel ? (id)NSStringFromSelector(aSel) : (id)@"(null)"];
+  while (0) ;   // Does not return
 }
 
 - (id) subclassResponsibility: (SEL)aSel
 {
-    char	c = (class_isMetaClass(object_getClass(self)) ? '+' : '-');
-    
-    [NSException raise: NSInvalidArgumentException
-                format: @"[%@%c%@] should be overridden by subclass",
-     NSStringFromClass([self class]), c,
-     aSel ? (id)NSStringFromSelector(aSel) : (id)@"(null)"];
-    while (0) ;   // Does not return
+  char	c = (class_isMetaClass(object_getClass(self)) ? '+' : '-');
+
+  [NSException raise: NSInvalidArgumentException
+    format: @"[%@%c%@] should be overridden by subclass",
+    NSStringFromClass([self class]), c,
+    aSel ? (id)NSStringFromSelector(aSel) : (id)@"(null)"];
+  while (0) ;   // Does not return
 }
 
 @end
 
 #if     defined(GNUSTEP)
 struct exitLink {
-    struct exitLink	*next;
-    id			obj;	// Object to release or class for atExit
-    SEL			sel;	// Selector for atExit or 0 if releasing
-    id			*at;	// Address of static variable or NULL
+  struct exitLink	*next;
+  id			obj;	// Object to release or class for atExit
+  SEL			sel;	// Selector for atExit or 0 if releasing
+  id			*at;	// Address of static variable or NULL
 };
 
-static struct exitLink	*exitLinkList = 0;
-static BOOL		appExistHandleEnable = NO;
+static struct exitLink	*exited = 0;
+static BOOL		enabled = NO;
 static BOOL		shouldCleanUp = NO;
 static NSLock           *exitLock = nil;
 
-// gnustep_global_lock aim at initlize every class lock. Then the class lock can make sure the thread safe in class method.
 static inline void setup()
 {
-    // double check and middle lock.
-    if (nil == exitLock)
+  if (nil == exitLock)
     {
-        [gnustep_global_lock lock];
-        if (nil == exitLock)
+      [gnustep_global_lock lock];
+      if (nil == exitLock)
         {
-            exitLock = [NSLock new];
-        }
-        [gnustep_global_lock unlock];
+          exitLock = [NSLock new];
+        } 
+      [gnustep_global_lock unlock];
     }
 }
 
 static void
 handleExit()
 {
-    BOOL  unknownThread = GSRegisterCurrentThread();
-    CREATE_AUTORELEASE_POOL(arp);
-    
-    while (exitLinkList != 0)
+  BOOL  unknownThread = GSRegisterCurrentThread();
+  CREATE_AUTORELEASE_POOL(arp);
+
+  while (exited != 0)
     {
-        struct exitLink	*tmp = exitLinkList;
-        
-        exitLinkList = tmp->next;
-        if (0 != tmp->sel)
-        {
-            Method	method;
-            IMP		msg;
-            
-            method = class_getClassMethod(tmp->obj, tmp->sel);
-            msg = method_getImplementation(method);
-            if (0 != msg)
-            {
-                (*msg)(tmp->obj, tmp->sel);
-            }
-        }
-        else if (YES == shouldCleanUp)
-        {
-            if (0 != tmp->at)
-            {
-                tmp->obj = *(tmp->at);
-                *(tmp->at) = nil;
-            }
-            [tmp->obj release];
-        }
-        free(tmp);
+      struct exitLink	*tmp = exited;
+
+      exited = tmp->next;
+      if (0 != tmp->sel)
+	{
+	  Method	method;
+	  IMP		msg;
+
+	  method = class_getClassMethod(tmp->obj, tmp->sel);
+	  msg = method_getImplementation(method);
+	  if (0 != msg)
+	    {
+	      (*msg)(tmp->obj, tmp->sel);
+	    }
+	}
+      else if (YES == shouldCleanUp)
+	{
+	  if (0 != tmp->at)
+	    {
+	      tmp->obj = *(tmp->at);
+	      *(tmp->at) = nil;
+	    }
+	  [tmp->obj release];
+	}
+      free(tmp);
     }
-    DESTROY(arp);
-    if (unknownThread == YES)
+  DESTROY(arp);
+  if (unknownThread == YES)
     {
-        GSUnregisterCurrentThread();
+      GSUnregisterCurrentThread();
     }
 }
 
@@ -213,115 +211,112 @@ handleExit()
 
 + (id) leakAt: (id*)anAddress
 {
-    struct exitLink	*l;
-    
-    l = (struct exitLink*)malloc(sizeof(struct exitLink));
-    l->at = anAddress;
-    l->obj = [*anAddress retain];
-    l->sel = 0;
-    setup();
-    [exitLock lock];
-    l->next = exitLinkList;
-    exitLinkList = l;
-    [exitLock unlock];
-    return l->obj;
+  struct exitLink	*l;
+
+  l = (struct exitLink*)malloc(sizeof(struct exitLink));
+  l->at = anAddress;
+  l->obj = [*anAddress retain];
+  l->sel = 0;
+  setup();
+  [exitLock lock];
+  l->next = exited;
+  exited = l;
+  [exitLock unlock];
+  return l->obj;
 }
 
 + (id) leak: (id)anObject
 {
-    struct exitLink	*l;
-    
-    l = (struct exitLink*)malloc(sizeof(struct exitLink));
-    l->at = 0;
-    l->obj = [anObject retain];
-    l->sel = 0;
-    setup();
-    [exitLock lock];
-    l->next = exitLinkList;
-    exitLinkList = l;
-    [exitLock unlock];
-    return l->obj;
+  struct exitLink	*l;
+
+  l = (struct exitLink*)malloc(sizeof(struct exitLink));
+  l->at = 0;
+  l->obj = [anObject retain];
+  l->sel = 0;
+  setup();
+  [exitLock lock];
+  l->next = exited;
+  exited = l;
+  [exitLock unlock];
+  return l->obj;
 }
 
 + (BOOL) registerAtExit
 {
-    return [self registerAtExit: @selector(atExit)];
+  return [self registerAtExit: @selector(atExit)];
 }
 
-+ (BOOL) registerAtExit: (SEL)exitSEL
++ (BOOL) registerAtExit: (SEL)sel
 {
-    struct exitLink	*l;
-    
-    // This is a default handle. If SEL is a invalid parameter, in this method, should keey the invoke is still valid.
-    // AtExit is convention for every class, If you make a different method as a exit method, you should registerAtExit expicitly.
-    if (0 == exitSEL)
+  Method		m;
+  Class			s;
+  struct exitLink	*l;
+
+  if (0 == sel)
     {
-        exitSEL = @selector(atExit);
+      sel = @selector(atExit);
     }
-    
-    Method exitMethod = class_getClassMethod(self, exitSEL);
-    if (0 == exitMethod)
+
+  m = class_getClassMethod(self, sel);
+  if (0 == m)
     {
-        return NO;	// method not implemented. Method should keep robust if input is valid.
+      return NO;	// method not implemented.
     }
-    
-    Class theSuperClass =  class_getSuperclass(self);
-    if (0 != theSuperClass && class_getClassMethod(theSuperClass, exitSEL) == exitMethod)
+
+  s = class_getSuperclass(self);
+  if (0 != s && class_getClassMethod(s, sel) == m)
     {
-        return NO;	// method not implemented in this class
+      return NO;	// method not implemented in this class
     }
-    
-    setup();
-    [exitLock lock];
-    for (l = exitLinkList; l != 0; l = l->next)
+
+  setup();
+  [exitLock lock];
+  for (l = exited; l != 0; l = l->next)
     {
-        if (l->obj == self && sel_isEqual(l->sel, exitSEL))
-        {
-            [exitLock unlock];
-            return NO;	// Already registered
-        }
+      if (l->obj == self && sel_isEqual(l->sel, sel))
+	{
+	  [exitLock unlock];
+	  return NO;	// Already registered
+	}
     }
-    l = (struct exitLink*)malloc(sizeof(struct exitLink));
-    // insert with head insert way.
-    l->obj = self;
-    l->sel = exitSEL;
-    l->at = 0;
-    l->next = exitLinkList;
-    exitLinkList = l;
-    // appExistHandleEnable is a global variable to mark, had register the exit method for app terminated.
-    if (NO == appExistHandleEnable)
+  l = (struct exitLink*)malloc(sizeof(struct exitLink));
+  l->obj = self;
+  l->sel = sel;
+  l->at = 0;
+  l->next = exited;
+  exited = l;
+  if (NO == enabled)
     {
-        // Registers the function pointed to by func to be called on normal program termination (via std::exit() or returning from the main function)
-        atexit(handleExit);
-        appExistHandleEnable = YES;
+      atexit(handleExit);
+      enabled = YES;
     }
-    [exitLock unlock];
-    return YES;
+  [exitLock unlock];
+  return YES;
 }
 
 + (void) setShouldCleanUp: (BOOL)aFlag
 {
-    if (YES == aFlag)
+  if (YES == aFlag)
     {
-        setup();
-        [exitLock lock];
-        if (NO == appExistHandleEnable)
-        {
-            atexit(handleExit);
-            appExistHandleEnable = YES;
-        }
-        [exitLock unlock];
-        shouldCleanUp = YES;
+      setup();
+      [exitLock lock];
+      if (NO == enabled)
+	{
+	  atexit(handleExit);
+	  enabled = YES;
+	}
+      [exitLock unlock];
+      shouldCleanUp = YES;
     }
-    else
+  else
     {
-        shouldCleanUp = NO;
+      shouldCleanUp = NO;
     }
 }
 
 + (BOOL) shouldCleanUp
 {
-    return shouldCleanUp;
+  return shouldCleanUp;
 }
 
 @end
@@ -331,27 +326,27 @@ handleExit()
 NSUInteger
 GSPrivateMemorySize(NSObject *self, NSHashTable *exclude)
 {
-    if (0 == NSHashGet(exclude, self))
+  if (0 == NSHashGet(exclude, self))
     {
-        NSHashInsert(exclude, self);
-        return class_getInstanceSize(object_getClass(self));
+      NSHashInsert(exclude, self);
+      return class_getInstanceSize(object_getClass(self));
     }
-    return 0;
+  return 0;
 }
 
 @implementation NSObject (MemoryFootprint)
 + (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
 {
-    return 0;
+  return 0;
 }
 - (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
 {
-    if (0 == NSHashGet(exclude, self))
+  if (0 == NSHashGet(exclude, self))
     {
-        NSHashInsert(exclude, self);
-        return class_getInstanceSize(object_getClass(self));
+      NSHashInsert(exclude, self);
+      return class_getInstanceSize(object_getClass(self));
     }
-    return 0;
+  return 0;
 }
 @end
 
@@ -361,32 +356,32 @@ GSPrivateMemorySize(NSObject *self, NSHashTable *exclude)
 
 + (id) leakAt: (id*)anAddress
 {
-    [*anAddress retain];
+  [*anAddress retain];
 }
 
 + (id) leak: (id)anObject
 {
-    return [anObject retain];
+  return [anObject retain];
 }
 
 + (BOOL) registerAtExit
 {
-    return [self registerAtExit: @selector(atExit)];
+  return [self registerAtExit: @selector(atExit)];
 }
 
 + (BOOL) registerAtExit: (SEL)sel
 {
-    return NO;
+  return NO;
 }
 
 + (void) setShouldCleanUp: (BOOL)aFlag
 {
-    return;
+  return;
 }
 
 + (BOOL) shouldCleanUp
 {
-    return NO;
+  return NO;
 }
 
 @end

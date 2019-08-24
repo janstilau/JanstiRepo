@@ -42,7 +42,7 @@ int binarySearchRecurive(int datas[], int n, int value) {
     return binarySearchRecuriveImp(datas, 0, n, value);
 }
 
-
+// 这种二分查找的变体, 就用最简单的, 判断边界值周边的值是不是符合要求就好了. 那种不太直观的代码可能写起来简练一些, 但是没有可读性, 尽量避免那样.
 
 int binarySearchFirst(int datas[], int n, int value) {
     if (!datas) { return -1;}

@@ -6,31 +6,34 @@
 
 #import <Foundation/NSObject.h>
 
+#if	defined(__cplusplus)
+extern "C" {
+#endif
+
 @class NSString;
 @class NSMapTable;
 @class GS_GENERIC_CLASS(NSMutableArray, ElementT);
 
 @interface GS_GENERIC_CLASS(NSCache, KeyT, ValT) : NSObject
 {
-@private
-    /** The maximum total cost of all cache objects. */
-    NSUInteger _costLimit;
-    /** Total cost of currently-stored objects. */
-    NSUInteger _totalCost;
-    /** The maximum number of objects in the cache. */
-    NSUInteger _countLimit;
-    /** The delegate object, notified when objects are about to be evicted. */
-    id _delegate;
-    /** Flag indicating whether discarded objects should be evicted */
-    BOOL _evictsObjectsWithDiscardedContent;
-    /** Name of this cache. */
-    NSString *_name;
-    /** The mapping from names to objects in this cache. */
-    NSMapTable *cacheMap;
-    /** LRU ordering of all potentially-evictable objects in this cache. */
-    GS_GENERIC_CLASS(NSMutableArray, ValT) *_accesses;
-    /** Total number of accesses to objects */
-    int64_t _totalAccesses;
+  /** The maximum total cost of all cache objects. */
+  NSUInteger _costLimit;
+  /** Total cost of currently-stored objects. */
+  NSUInteger _totalCost;
+  /** The maximum number of objects in the cache. */
+  NSUInteger _countLimit;
+  /** The delegate object, notified when objects are about to be evicted. */
+  id _delegate;
+  /** Flag indicating whether discarded objects should be evicted */
+  BOOL _evictsObjectsWithDiscardedContent;
+  /** Name of this cache. */
+  NSString *_name;
+  /** The mapping from names to objects in this cache. */
+  NSMapTable *_objects;
+  /** LRU ordering of all potentially-evictable objects in this cache. */
+  GS_GENERIC_CLASS(NSMutableArray, ValT) *_accesses;
+  /** Total number of accesses to objects */
+  int64_t _totalAccesses;
 }
 /**
  * Returns the maximum number of objects that are supported by this cache.
@@ -63,7 +66,7 @@
  * Returns an object associated with the specified key in this cache.
  */
 - (GS_GENERIC_TYPE(ValT)) objectForKey:
-(GS_GENERIC_TYPE(KeyT))key;
+    (GS_GENERIC_TYPE(KeyT))key;
 
 /**
  * Removes all objects from this cache.
@@ -105,14 +108,14 @@
  * contents of objects which implement the NSDiscardableContent protocol.
  */
 - (void) setObject: (GS_GENERIC_TYPE(ValT))obj
-forKey: (GS_GENERIC_TYPE(KeyT))key
-cost: (NSUInteger)num;
+            forKey: (GS_GENERIC_TYPE(KeyT))key
+              cost: (NSUInteger)num;
 
 /**
  * Adds an object to the cache without associating a cost with it.
  */
 - (void) setObject: (GS_GENERIC_TYPE(ValT))obj
-forKey: (GS_GENERIC_TYPE(KeyT))key;
+            forKey: (GS_GENERIC_TYPE(KeyT))key;
 
 /**
  * Sets the maximum total cost for objects stored in this cache.  This limit is
@@ -132,6 +135,10 @@ forKey: (GS_GENERIC_TYPE(KeyT))key;
  */
 - (void) cache: (NSCache*)cache willEvictObject: (id)obj;
 @end
+
+#if	defined(__cplusplus)
+}
+#endif
 
 #endif //OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 

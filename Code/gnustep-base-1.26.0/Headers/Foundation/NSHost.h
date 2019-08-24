@@ -1,3 +1,26 @@
+/* Interface for host class
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+
+   Written by: Luke Howard <lukeh@xedoc.com.au> 
+   Date: 1996
+   
+   This file is part of the GNUstep Base Library.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+   
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02111 USA.
+   */ 
 #ifndef __NSHost_h_GNUSTEP_BASE_INCLUDE
 #define __NSHost_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -7,28 +30,28 @@
 #if	defined(__cplusplus)
 extern "C" {
 #endif
-    
-    @class NSString, NSArray, NSSet;
-    
-    /**
-     *  Instances of this class encapsulate host information.  Constructors based
-     *  on host name or numeric address are provided.
-     */
-    @interface NSHost : NSObject
+
+@class NSString, NSArray, NSSet;
+
+/**
+ *  Instances of this class encapsulate host information.  Constructors based
+ *  on host name or numeric address are provided.
+ */
+@interface NSHost : NSObject
 {
 #if	GS_EXPOSE(NSHost)
-@private
-    NSSet	*_names;
-    NSSet	*_addresses;
+  @private
+  NSSet	*_names;
+  NSSet	*_addresses;
 #endif
 #if     GS_NONFRAGILE
 #else
-    /* Pointer to private additional data used to avoid breaking ABI
-     * when we don't have the non-fragile ABI available.
-     * Use this mechanism rather than changing the instance variable
-     * layout (see Source/GSInternal.h for details).
-     */
-@private id _internal GS_UNUSED_IVAR;
+  /* Pointer to private additional data used to avoid breaking ABI
+   * when we don't have the non-fragile ABI available.
+   * Use this mechanism rather than changing the instance variable
+   * layout (see Source/GSInternal.h for details).
+   */
+  @private id _internal GS_UNUSED_IVAR;
 #endif
 }
 
@@ -46,7 +69,7 @@ extern "C" {
  *  Get a host object.  Hosts are cached for efficiency.  The address
  *  must be an IPV4 "dotted decimal" string, e.g.
  <example>
- NSHost aHost = [NSHost hostWithAddress:@"192.42.172.1"];
+  NSHost aHost = [NSHost hostWithAddress:@"192.42.172.1"];
  </example>
  */
 + (NSHost*) hostWithAddress: (NSString*)address;
@@ -107,13 +130,13 @@ extern "C" {
 - (NSArray*) addresses;
 
 @end
-    
+
 #if     GS_API_VERSION(GS_API_NONE,011700)
-    
-    /**
-     *  Adds synonym for +currentHost.
-     */
-    @interface NSHost (GNUstep)
+
+/**
+ *  Adds synonym for +currentHost.
+ */
+@interface NSHost (GNUstep)
 
 /**
  *  Synonym for +currentHost.
@@ -121,5 +144,10 @@ extern "C" {
 + (NSHost*) localHost;		/* All local IP addresses	*/
 @end
 #endif
+
+#if	defined(__cplusplus)
+}
+#endif
+
 #endif
 

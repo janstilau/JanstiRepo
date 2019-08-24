@@ -1,3 +1,27 @@
+/* Interface for NSURLConnection for GNUstep
+   Copyright (C) 2006 Software Foundation, Inc.
+
+   Written by:  Richard Frith-Macdonald <frm@gnu.org>
+   Date: 2006
+   
+   This file is part of the GNUstep Base Library.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+   
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02111 USA.
+   */ 
+
 #ifndef __NSURLConnection_h_GNUSTEP_BASE_INCLUDE
 #define __NSURLConnection_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -5,6 +29,11 @@
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_2,GS_API_LATEST) && GS_API_VERSION( 11300,GS_API_LATEST)
 
 #import	<Foundation/NSObject.h>
+
+#if	defined(__cplusplus)
+extern "C" {
+#endif
+
 @class NSCachedURLResponse;
 @class NSData;
 @class NSError;
@@ -13,14 +42,12 @@
 @class NSURLResponse;
 
 /**
- * This class is just a adapter for NSProtocol.
  */
-
 @interface NSURLConnection : NSObject
 {
-    NSMutableURLRequest        *_request;
-    NSURLProtocol            *_protocol;
-    id                _delegate;
+#if	GS_EXPOSE(NSURLConnection)
+  void *_NSURLConnectionInternal;
+#endif
 }
 
 /**
@@ -37,7 +64,7 @@
  * using the -initWithRequest:delegate: method.
  */
 + (NSURLConnection *) connectionWithRequest: (NSURLRequest *)request
-                                   delegate: (id)delegate;
+				   delegate: (id)delegate;
 
 /**
  * Cancel the asynchronous load in progress (if any) for this connection.
@@ -110,7 +137,7 @@
  *     -connection:didFailWithError: message, but never
  *     both.<br />
  *     Once either of these terminal messages is sent the
- *     delegate will receive no further messages from the
+ *     delegate will receive no further messages from the 
  *     NSURLConnection.
  *   </item>
  * </list>
@@ -118,15 +145,23 @@
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_7,GS_API_LATEST) && GS_API_VERSION(11300,GS_API_LATEST)
 @protocol NSURLConnectionDelegate <NSObject>
 
-
+#if GS_PROTOCOLS_HAVE_OPTIONAL
+@optional
+#else
+@end
 @interface NSObject (NSURLConnectionDelegate)
+#endif
+
+#else
+@interface NSObject (NSURLConnectionDelegate)
+#endif
 
 /**
  * Instructs the delegate that authentication for challenge has
  * been cancelled for the request loading on connection.
  */
 - (void) connection: (NSURLConnection *)connection
-didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
+  didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 
 /*
  * Called when an NSURLConnection has failed to load successfully.
@@ -146,7 +181,7 @@ didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
  * -cancelAuthenticationChallenge: to the challenge sender when done.
  */
 - (void) connection: (NSURLConnection *)connection
-didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
+  didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 
 /**
  * Called when content data arrives during a load operations ... this
@@ -169,7 +204,7 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
  * If it returns nil, nothing will be stored in the cache.
  */
 - (NSCachedURLResponse *) connection: (NSURLConnection *)connection
-                   willCacheResponse: (NSCachedURLResponse *)cachedResponse;
+  willCacheResponse: (NSCachedURLResponse *)cachedResponse;
 
 /**
  * Informs the delegate that the connection must change the URL of
@@ -186,8 +221,8 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
  * due to a response from the server.
  */
 - (NSURLRequest *) connection: (NSURLConnection *)connection
-              willSendRequest: (NSURLRequest *)request
-             redirectResponse: (NSURLResponse *)response;
+	      willSendRequest: (NSURLRequest *)request
+	     redirectResponse: (NSURLResponse *)response;
 @end
 
 /**
@@ -201,10 +236,14 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
  * Returns the result of the load or nil if the load failed.
  */
 + (NSData *) sendSynchronousRequest: (NSURLRequest *)request
-                  returningResponse: (NSURLResponse **)response
-                              error: (NSError **)error;
+		  returningResponse: (NSURLResponse **)response
+			      error: (NSError **)error;
 
 @end
+
+#if	defined(__cplusplus)
+}
+#endif
 
 #endif
 

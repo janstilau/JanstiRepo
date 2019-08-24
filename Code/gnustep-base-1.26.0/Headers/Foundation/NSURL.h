@@ -1,3 +1,27 @@
+/* NSURL.h - Class NSURL
+   Copyright (C) 1999 Free Software Foundation, Inc.
+   
+   Written by: 	Manuel Guesdon <mguesdon@sbuilders.com>
+   Date:	Jan 1999
+   
+   This file is part of the GNUstep Library.
+   
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+   
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02111 USA.
+*/
+
 #ifndef __NSURL_h_GNUSTEP_BASE_INCLUDE
 #define __NSURL_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -42,11 +66,13 @@ enum
  */
 @interface NSURL: NSObject <NSCoding, NSCopying, NSURLHandleClient>
 {
+#if	GS_EXPOSE(NSURL)
 @private
   NSString	*_urlString;
   NSURL		*_baseURL;
   void		*_clients;
   void		*_data;
+#endif
 }
  
 /**
@@ -57,11 +83,15 @@ enum
  */
 + (id) fileURLWithPath: (NSString*)aPath;
 
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST) 
 /** Creates a file URL using a path built from components.
  */
 + (NSURL*) fileURLWithPathComponents: (NSArray*)components;
+#endif
 
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
 + (id) fileURLWithPath: (NSString*)aPath isDirectory: (BOOL)isDir;
+#endif
 /**
  * Create and return a URL with the supplied string, which should
  * be a string (containing percent escape codes where necessary)
@@ -70,9 +100,11 @@ enum
  */
 + (id) URLWithString: (NSString*)aUrlString;
 
-+ (id) URLByResolvingAliasFileAtURL: (NSURL*)url
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_10, GS_API_LATEST)
++ (id) URLByResolvingAliasFileAtURL: (NSURL*)url 
                             options: (NSURLBookmarkResolutionOptions)options 
                               error: (NSError**)error;
+#endif
 
 /**
  * Create and return a URL with the supplied string, which should

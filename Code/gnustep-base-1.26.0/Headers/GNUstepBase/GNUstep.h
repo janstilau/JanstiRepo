@@ -194,10 +194,6 @@ id __object = (object); (__object != nil) ? [__object autorelease] : nil; })
  *	releasing the object - to avoid side-effects of the release trying
  *	to reference the object being released through the variable.
  */
-
-/**
- *  This is a macro. So object is not a function parameter, it is the original variable.
- */
 #define	DESTROY(object) 	({ \
   id __o = object; \
   object = nil; \

@@ -1,3 +1,26 @@
+/* GSPrivate
+   Copyright (C) 2001,2002 Free Software Foundation, Inc.
+
+   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
+   
+   This file is part of the GNUstep Base Library.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+   
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free
+   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+   MA 02111 USA.
+*/ 
+
 #ifndef _GSPrivate_h_
 #define _GSPrivate_h_
 
@@ -43,21 +66,19 @@ typedef struct objc_category* Category;
 @interface GSArray : NSArray
 {
 @public
-    id		*_arrayContents;
-    unsigned	_count;
+  id		*_contents_array;
+  unsigned	_count;
 }
 @end
-/**
- *GSMutableArray is not a subclass of GSArray, they has diffent memory layout.s
- */
+
 @interface GSMutableArray : NSMutableArray
 {
 @public
-    id		*_contents_array;
-    unsigned	_count;
-    unsigned	_capacity;
-    int		_grow_factor;
-    unsigned long		_version;
+  id		*_contents_array;
+  unsigned	_count;
+  unsigned	_capacity;
+  int		_grow_factor;
+  unsigned long		_version;
 }
 @end
 
@@ -78,39 +99,39 @@ typedef struct objc_category* Category;
 #if __GNUC__ > 3 && !defined(__clang__)
 __attribute__((unused)) static void GSFreeTempBuffer(void **b)
 {
-    if (NULL != *b) free(*b);
+  if (NULL != *b) free(*b);
 }
 #  define	GS_BEGINITEMBUF(P, S, T) { \
-T _ibuf[GS_MAX_OBJECTS_FROM_STACK];\
-T *P = _ibuf;\
-__attribute__((cleanup(GSFreeTempBuffer))) void *_base = 0;\
-if (S > GS_MAX_OBJECTS_FROM_STACK)\
-{\
-_base = malloc((S) * sizeof(T));\
-P = _base;\
-}
+  T _ibuf[GS_MAX_OBJECTS_FROM_STACK];\
+  T *P = _ibuf;\
+  __attribute__((cleanup(GSFreeTempBuffer))) void *_base = 0;\
+  if (S > GS_MAX_OBJECTS_FROM_STACK)\
+    {\
+      _base = malloc((S) * sizeof(T));\
+      P = _base;\
+    }
 #  define	GS_BEGINITEMBUF2(P, S, T) { \
-T _ibuf2[GS_MAX_OBJECTS_FROM_STACK];\
-T *P = _ibuf2;\
-__attribute__((cleanup(GSFreeTempBuffer))) void *_base2 = 0;\
-if (S > GS_MAX_OBJECTS_FROM_STACK)\
-{\
-_base2 = malloc((S) * sizeof(T));\
-P = _base2;\
-}
+  T _ibuf2[GS_MAX_OBJECTS_FROM_STACK];\
+  T *P = _ibuf2;\
+  __attribute__((cleanup(GSFreeTempBuffer))) void *_base2 = 0;\
+  if (S > GS_MAX_OBJECTS_FROM_STACK)\
+    {\
+      _base2 = malloc((S) * sizeof(T));\
+      P = _base2;\
+    }
 #else
 /* Make minimum size of _ibuf 1 to avoid compiler warnings.
  */
 #  define	GS_BEGINITEMBUF(P, S, T) { \
-T _ibuf[(S) > 0 && (S) <= GS_MAX_OBJECTS_FROM_STACK ? (S) : 1]; \
-T *_base = ((S) <= GS_MAX_OBJECTS_FROM_STACK) ? _ibuf \
-: (T*)malloc((S) * sizeof(T)); \
-T *(P) = _base;
+  T _ibuf[(S) > 0 && (S) <= GS_MAX_OBJECTS_FROM_STACK ? (S) : 1]; \
+  T *_base = ((S) <= GS_MAX_OBJECTS_FROM_STACK) ? _ibuf \
+    : (T*)malloc((S) * sizeof(T)); \
+  T *(P) = _base;
 #  define	GS_BEGINITEMBUF2(P, S, T) { \
-T _ibuf2[(S) > 0 && (S) <= GS_MAX_OBJECTS_FROM_STACK ? (S) : 1]; \
-T *_base2 = ((S) <= GS_MAX_OBJECTS_FROM_STACK) ? _ibuf2 \
-: (T*)malloc((S) * sizeof(T)); \
-T *(P) = _base2;
+  T _ibuf2[(S) > 0 && (S) <= GS_MAX_OBJECTS_FROM_STACK ? (S) : 1]; \
+  T *_base2 = ((S) <= GS_MAX_OBJECTS_FROM_STACK) ? _ibuf2 \
+    : (T*)malloc((S) * sizeof(T)); \
+  T *(P) = _base2;
 #endif
 
 /**
@@ -123,13 +144,13 @@ T *(P) = _base2;
 # define	GS_ENDITEMBUF2() }
 #else
 #  define	GS_ENDITEMBUF() \
-if (_base != _ibuf) \
-free(_base); \
-}
+  if (_base != _ibuf) \
+    free(_base); \
+  }
 #  define	GS_ENDITEMBUF2() \
-if (_base2 != _ibuf2) \
-free(_base2); \
-}
+  if (_base2 != _ibuf2) \
+    free(_base2); \
+  }
 #endif
 
 /**
@@ -166,7 +187,7 @@ free(_base2); \
  */
 #ifndef GNUSTEP_NEW_STRING_ABI
 #define GS_REPLACE_CONSTANT_STRING(ID) [(ID = [NSObject \
-leak: [[NSString alloc] initWithUTF8String: [ID UTF8String]]]) release]
+  leak: [[NSString alloc] initWithUTF8String: [ID UTF8String]]]) release]
 #else
 /**
  * In the new constant string ABI, the hash can be stored in the constant
@@ -175,16 +196,16 @@ leak: [[NSString alloc] initWithUTF8String: [ID UTF8String]]]) release]
 #define GS_REPLACE_CONSTANT_STRING(ID)
 #endif
 /* Using cString here is OK here
- because NXConstantString returns a pointer
- to it's internal pointer.  */
+   because NXConstantString returns a pointer
+   to it's internal pointer.  */
 
 /*
  * Type to hold either UTF-16 (unichar) or 8-bit encodings,
  * while satisfying alignment constraints.
  */
 typedef union {
-    unichar *u;       // 16-bit unicode characters.
-    unsigned char *c; // 8-bit characters.
+  unichar *u;       // 16-bit unicode characters.
+  unsigned char *c; // 8-bit characters.
 } GSCharPtr;
 
 /*
@@ -198,15 +219,15 @@ typedef union {
 @interface GSString : NSString
 {
 @public
-    GSCharPtr _contents;
-    unsigned int	_count;
-    struct {
-        unsigned int	wide: 1;	// 16-bit characters in string?
-        unsigned int	owned: 1;	// Set if the instance owns the
-        // _contents buffer
-        unsigned int	unused: 2;
-        unsigned int	hash: 28;
-    } _flags;
+  GSCharPtr _contents;
+  unsigned int	_count;
+  struct {
+    unsigned int	wide: 1;	// 16-bit characters in string?
+    unsigned int	owned: 1;	// Set if the instance owns the
+					// _contents buffer
+    unsigned int	unused: 2;
+    unsigned int	hash: 28;
+  } _flags;
 }
 @end
 
@@ -217,16 +238,16 @@ typedef union {
 @interface GSMutableString : NSMutableString
 {
 @public
-    GSCharPtr _contents;
-    unsigned int	_count;
-    struct {
-        unsigned int	wide: 1;
-        unsigned int	owned: 1;
-        unsigned int	unused: 2;
-        unsigned int	hash: 28;
-    } _flags;
-    unsigned int	_capacity;
-    NSZone	*_zone;
+  GSCharPtr _contents;
+  unsigned int	_count;
+  struct {
+    unsigned int	wide: 1;
+    unsigned int	owned: 1;
+    unsigned int	unused: 2;
+    unsigned int	hash: 28;
+  } _flags;
+  unsigned int	_capacity;
+  NSZone	*_zone;
 }
 @end
 
@@ -238,14 +259,14 @@ typedef	GSMutableString *GSStr;
  * base library.
  */
 typedef enum {
-    GSMacOSXCompatible,			// General behavior flag.
-    GSOldStyleGeometry,			// Control geometry string output.
-    GSLogSyslog,				// Force logging to go to syslog.
-    GSLogThread,				// Include thread name in log message.
-    GSLogOffset,			        // Include time zone offset in message.
-    NSWriteOldStylePropertyLists,		// Control PList output.
-    GSExceptionStackTrace,                // Add trace to exception description.
-    GSUserDefaultMaxFlag			// End marker.
+  GSMacOSXCompatible,			// General behavior flag.
+  GSOldStyleGeometry,			// Control geometry string output.
+  GSLogSyslog,				// Force logging to go to syslog.
+  GSLogThread,				// Include thread name in log message.
+  GSLogOffset,			        // Include time zone offset in message.
+  NSWriteOldStylePropertyLists,		// Control PList output.
+  GSExceptionStackTrace,                // Add trace to exception description.
+  GSUserDefaultMaxFlag			// End marker.
 } GSUserDefaultFlagType;
 
 
@@ -266,11 +287,11 @@ typedef enum {
  */
 @interface	_NSKeyedCoderOldStyleArray : NSObject <NSCoding>
 {
-    char		_t[2];
-    unsigned	_c;
-    unsigned	_s;
-    const void	*_a;
-    NSData	*_d;	// Only valid after initWithCoder:
+  char		_t[2];
+  unsigned	_c;
+  unsigned	_s;
+  const void	*_a;
+  NSData	*_d;	// Only valid after initWithCoder:
 }
 - (const void*) bytes;
 - (NSUInteger) count;
@@ -294,14 +315,18 @@ typedef enum {
 
 /* Used to handle events performed in one thread from another.
  */
-@interface      GSRunLoopThreadRelatedInfo : NSObject
+@interface      GSRunLoopThreadInfo : NSObject
 {
-@public
-    NSRunLoop             *loop;
-    NSLock                *lock;
-    NSMutableArray        *performers;
-    int                   inputFd;
-    int                   outputFd;
+  @public
+  NSRunLoop             *loop;
+  NSLock                *lock;
+  NSMutableArray        *performers;
+#ifdef _WIN32
+  HANDLE	        event;
+#else
+  int                   inputFd;
+  int                   outputFd;
+#endif	
 }
 /* Add a performer to be run in the loop's thread.  May be called from
  * any thread.
@@ -310,10 +335,10 @@ typedef enum {
 /* Fire all pending performers in the current thread.  May only be called
  * from the runloop when the event/descriptor is triggered.
  */
-- (void) fireThreadInfo;
+- (void) fire;
 /* Cancel all pending performers.
  */
-- (void) invalidateThreadInfo;
+- (void) invalidate;
 @end
 
 /* Return (and optionally create) GSRunLoopThreadInfo for the specified
@@ -321,7 +346,7 @@ typedef enum {
  * If aThread is nil and no value is set for the current thread, create
  * a GSRunLoopThreadInfo and set it for the current thread.
  */
-GSRunLoopThreadRelatedInfo *
+GSRunLoopThreadInfo *
 GSRunLoopInfoForThread(NSThread *aThread) GS_ATTRIB_PRIVATE;
 
 /* Used by NSException uncaught exception handler - must not call any
@@ -380,7 +405,7 @@ GSPrivateExecutablePath(void) GS_ATTRIB_PRIVATE;
  */
 void
 GSPrivateFormat(GSStr fb, const unichar *fmt, va_list ap, NSDictionary *loc)
-GS_ATTRIB_PRIVATE;
+  GS_ATTRIB_PRIVATE;
 
 /* determine whether data in a particular encoding can
  * generally be represented as 8-bit characters including ascii.
@@ -397,8 +422,8 @@ GSPrivateIsEncodingSupported(NSStringEncoding encoding) GS_ATTRIB_PRIVATE;
  */
 long
 GSPrivateLoadModule(NSString *filename, FILE *errorStream,
-                    void (*loadCallback)(Class, struct objc_category *),
-                    void **header, NSString *debugFilename) GS_ATTRIB_PRIVATE;
+  void (*loadCallback)(Class, struct objc_category *),
+  void **header, NSString *debugFilename) GS_ATTRIB_PRIVATE;
 
 /* Get the native C-string encoding as used by locale specific code in the
  * operating system.  This may differ from the default C-string encoding
@@ -443,7 +468,7 @@ GSPrivateSmallHash(int n) GS_ATTRIB_PRIVATE;
  */
 void
 GSPrivateStrAppendUnichars(GSStr s, const unichar *u, unsigned l)
-GS_ATTRIB_PRIVATE;
+  GS_ATTRIB_PRIVATE;
 
 /* Make the content of this string into unicode if it is not in
  * the external defaults C string encoding.
@@ -472,7 +497,7 @@ GSPrivateStrExternalize(GSStr s) GS_ATTRIB_PRIVATE;
  * On my platform (a Debian GNU Linux), it seems the dynamic linker
  * always returns the filesystem path that was used to load the
  * module.  So it returns the full filesystem path for shared libraries
- * and bundles (which is very nice), but unfortunately it returns
+ * and bundles (which is very nice), but unfortunately it returns 
  * argv[0] (which might be something as horrible as './obj/test')
  * for classes in the main executable.
  *
@@ -507,17 +532,17 @@ GSPrivateUniCop(unichar u) GS_ATTRIB_PRIVATE;
  */
 long
 GSPrivateUnloadModule(FILE *errorStream,
-                      void (*unloadCallback)(Class, struct objc_category *)) GS_ATTRIB_PRIVATE;
+  void (*unloadCallback)(Class, struct objc_category *)) GS_ATTRIB_PRIVATE;
 
 
 /* Memory to use to put executable code in.
  */
 @interface      GSCodeBuffer : NSObject
 {
-    unsigned      size;
-    void          *buffer;
-    void		*executable;
-    id            frame;
+  unsigned      size;
+  void          *buffer;
+  void		*executable;
+  id            frame;
 }
 + (GSCodeBuffer*) memoryWithSize: (NSUInteger)_size;
 - (void*) buffer;
@@ -537,7 +562,7 @@ GSAtomicMallocZone (void);
  */
 uint32_t
 GSPrivateHash(uint32_t seed, const void *bytes, int length)
-GS_ATTRIB_PRIVATE;
+  GS_ATTRIB_PRIVATE;
 
 /* Incorporate 'l' bytes of data from the buffer pointed to by 'b' into
  * the hash state information pointed to by p0 and p1.
@@ -547,14 +572,14 @@ GS_ATTRIB_PRIVATE;
  */
 void
 GSPrivateIncrementalHash(uint32_t *p0, uint32_t *p1, const void *b, int l)
-GS_ATTRIB_PRIVATE;
+  GS_ATTRIB_PRIVATE;
 
 /* Generate a 32bit hash from supplied state variables resulting from
  * calls to the GSPrivateIncrementalHash() function.
  */
 uint32_t
 GSPrivateFinishHash(uint32_t s0, uint32_t s1, uint32_t totalLength)
-GS_ATTRIB_PRIVATE;
+  GS_ATTRIB_PRIVATE;
 
 @class  NSHashTable;
 /* If 'self' is not a member of 'exclude', adds to the hash
@@ -564,7 +589,7 @@ GS_ATTRIB_PRIVATE;
  */
 NSUInteger
 GSPrivateMemorySize(NSObject *self, NSHashTable *exclude)
-GS_ATTRIB_PRIVATE;
+  GS_ATTRIB_PRIVATE;
 
 /* Return the current thread ID as an NSUInteger.
  * Ideally, we use the operating-system's notion of a thread ID so
@@ -576,14 +601,14 @@ GS_ATTRIB_PRIVATE;
  */
 NSUInteger
 GSPrivateThreadID()
-GS_ATTRIB_PRIVATE;
+  GS_ATTRIB_PRIVATE;
 
 /** Function to base64 encode data.  The destination buffer must be of
  * size (((length + 2) / 3) * 4) or more.
  */
 void
 GSPrivateEncodeBase64(const uint8_t *src, NSUInteger length, uint8_t *dst)
-GS_ATTRIB_PRIVATE;
+  GS_ATTRIB_PRIVATE;
 
 #endif /* _GSPrivate_h_ */
 
