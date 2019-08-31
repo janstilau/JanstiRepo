@@ -1,29 +1,3 @@
-/**Interface for NSObject for GNUStep
-   Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Date: 1995
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   AutogsdocSource: NSObject.m
-   */ 
-
 #ifndef __NSObject_h_GNUSTEP_BASE_INCLUDE
 #define __NSObject_h_GNUSTEP_BASE_INCLUDE
 
@@ -60,12 +34,33 @@ extern "C" {
  * of the messages listed in this protocol to an object, and be safe
  * in assuming that the receiver can handle it.
  */
+    
+/**
+ typedef struct objc_object
+ {
+ Class isa;
+ } *id;
+ id 第一个数据是 isa 指针的对象, 而 NSObject 更多的是一顿操作的集合.
+ 虽然 NSObject 在 OC 里面是最根本的类, 但是它不能和id 完全相等. id 更多的是一种, 数据格式的表示, 而NSObject 是一种集合的表示.
+ 在 OC 里面, 由于 NSObject 是最根本的基类, 两者的差别不明显.
+ */
 @protocol NSObject
 /**
  * Returns the class of the receiver.  If the receiver is a proxy, then this
  * may return the class of the proxy target.  Use -isProxy to determine whether
  * the receiver is a proxy.  If you wish to find the real class of the
  * receiver, ignoring proxies, then use object_getClass().  
+ */
+/**
+ object_getClass
+ NSObject 的实现, 就是调用这个 C 语言的方法. 而这个方法, 定义在 OBJCRuntime 中
+ objc_object::getIsa()
+ Class object_getClass(id obj)
+ {
+ if (obj) return obj->getIsa();
+ else return Nil;
+ }
+ 就是根据 isa 里面的值, 去取得类对象.
  */
 - (Class) class;
 /**
@@ -74,6 +69,8 @@ extern "C" {
  * determine whether the receiver is a proxy.  If you wish to find the real
  * superclass of the receiver's class, ignoring proxies, then use
  * class_getSuperclass(object_getClass()).
+ 这个函数的默认实现, 是拿到对象所属于的类对象, 读取 superClass 的指针.
+ 所以, 元信息变成, 就是利用已经存储好的各种类型相关的信息, 进行相应的操作. 将代码的运行决定, 推迟到了运行时, 而不是在编译的时候就发生.
  */
 - (Class) superclass;
 /**
@@ -99,6 +96,26 @@ extern "C" {
  * subclass, or (in the case of proxies), an instance of something that can be
  * treated as an instance of the class.
  */
+/**
+ - (BOOL)isMemberOf:aClass
+ {
+ return isa == (Class)aClass;
+ }
+ + (BOOL)isKindOfClass:(Class)cls {
+    for (Class tcls = object_getClass((id)self); tcls; tcls = tcls->superclass) {
+    if (tcls == cls) return YES;
+ }
+ return NO;
+ }
+ - (BOOL)isKindOfClassNamed:(const char *)aClassName
+ {
+     Class cls;
+     for (cls = isa; cls; cls = cls->superclass)
+        if (strcmp(aClassName, class_getName(cls)) == 0)
+     return YES;
+     return NO;
+ }
+ */
 - (BOOL) isKindOfClass: (Class)aClass;
 /**
  * Returns YES if the receiver is an instance of the class or (in the case of
@@ -108,7 +125,9 @@ extern "C" {
  * Calling this method is rarely the correct thing to do.  In most cases, a
  * subclass can be substituted for a superclass, so you should never need to
  * check that an object is really an instance of a specific class and not a
- * subclass.  
+ * subclass.
+ 
+ 所以, OC 里面的自省操作, 也是完全的就是操作类对象的数据而已.
  */
 - (BOOL) isMemberOfClass: (Class)aClass;
 /**
@@ -122,11 +141,14 @@ extern "C" {
  * return the same hash value.  For efficient storage in sets, or as keys in
  * dictionaries, different objects should return hashes spread evenly over the
  * range of an integer.
- *
+ 这里说的很清楚了, 为什么 equal 和 hash 必须相等, 其实就是容器类那里的限制. 其实我们写 isEqual 的时候, 也可以通过 hash 做判断,
+ 因为 hash 一般来说是比较快的操作, 而 isEqual 最后一步才应该是检查内容是否相等, 之前都应该是一些过滤的判断.
+ 
  * An object may not return different values from this method after being
  * stored in a collection.  This typically means that ether the hash value must
  * be constant after the object's creation, or that the object may not be
  * modified while stored in an unordered collection.
+ 这里讲的就是, 为什么容器里面, key 值不要用一个可变对象的原因.
  */
 - (NSUInteger) hash;
 /**
@@ -164,12 +186,16 @@ extern "C" {
 - (BOOL) respondsToSelector: (SEL)aSelector;
 /**
  * Returns YES if the receiver conforms to the specified protocol.
+ 这个方法的内部, 也是说得到 协议列表之后, 然后挨个比较.
  */
 - (BOOL) conformsToProtocol: (Protocol*)aProtocol;
 /**
  * Increments the reference count of the object and returns the receiver.  In
  * garbage collected mode, this method does nothing.  In automated reference
  * counting mode, you may neither implement this method nor call it directly.
+ 
+ 这里, 不同的操作平台类库的实现不一样, 可以猜想 C++ 的实现方案.
+ 
  */
 - (id) retain NS_AUTOMATED_REFCOUNT_UNAVAILABLE;
 /**
@@ -205,6 +231,7 @@ extern "C" {
 /**
  * Returns the description of the object.  This is used by the %@ format
  * specifier in strings.
+ 这其实就是基本方法, %@的实现会自动调用这个方法. 这就是语言的优势, 语言可以用一些特定的关键字, 取代替方法的使用, 让程序员书写的更快更便利, 但是, 还是建立在了方法的调用的基础上.
  */
 - (NSString*) description;
 /**
@@ -286,7 +313,7 @@ extern "C" {
 @protocol NSSecureCoding <NSCoding>
 + (BOOL)supportsSecureCoding;
 @end
-
+    
 
 GS_ROOT_CLASS @interface NSObject <NSObject>
 {
