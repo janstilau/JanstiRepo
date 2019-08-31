@@ -245,6 +245,8 @@ extern "C" {
  * ie where instances of the class should be able to create new instances
  * which are copies of the original and, where a class has mutable and
  * immutable versions, where the copies are immutable.
+ 
+ 这里, 没有标明这是浅复制还是深复制. 不过这里意思说的很明白, 一个新的对象, 复制原来的内容. 他想要达到的目的就是值对象的效果. 这在容器里面是很重要的.
  */
 @protocol NSCopying
 /**
@@ -289,6 +291,9 @@ extern "C" {
  * This protocol must be adopted by any class wishing to support
  * saving and restoring instances to an archive, or copying them
  * to remote processes via the Distributed Objects mechanism.
+ 
+ Swift 里面对于归档解档有扩展, 支持了更多的功能.
+ 实现了这两个方法, 仅仅是归档接档里面的一小环, 真正的过程, 是在 Coder 类的内部的. 在Coder类的内部, 有着真正的归档解档的过程, 他们会调用每个类的归档解档的过程, 因为每个类如何操作, 是每个类的责任.
  */
 @protocol NSCoding
 
@@ -321,23 +326,22 @@ GS_ROOT_CLASS @interface NSObject <NSObject>
   * Points to instance's class.  Used by runtime to access method
   * implementations, etc..  Set in +alloc, Unlike other instance variables,
   * which are cleared there.
+  正是因为这个, 所以 id 和 NSObject 才被我们认为是等同的. 其实他们之间语义的差别非常大.
   */
   Class isa;
 }
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
-/** On a system which performs garbage collection, you should implement
- * this method to execute code when the receiver is collected.<br />
- * You must not call this method yourself (except when a subclass
- * calls the superclass method within its own implementation).
- */
-- (void) finalize;
-#endif
 
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
+/**
+ [NSString stringWithUTF8String: (char*)class_getName(aClass)], 还是通过类对象获取
+ */
 - (NSString*) className;
 #endif
 
+/**
+ 这两个方法的详细过程要在实现中分析.
+ */
 + (id) allocWithZone: (NSZone*)z;
 + (id) alloc;
 + (Class) class;
@@ -388,14 +392,15 @@ GS_ROOT_CLASS @interface NSObject <NSObject>
  * of +initialize.
  */
 + (void) initialize;
+/**
+ 获取 IMP, class_getMethodImplementation, 还是通过类对象进行操作.
+ */
 + (IMP) instanceMethodForSelector: (SEL)aSelector;
 + (NSMethodSignature*) instanceMethodSignatureForSelector: (SEL)aSelector;
 + (BOOL) instancesRespondToSelector: (SEL)aSelector;
 + (BOOL) isSubclassOfClass: (Class)aClass;
 + (id) new;
 + (void) poseAsClass: (Class)aClassObject;
-+ (id) setVersion: (NSInteger)aVersion;
-+ (NSInteger) version;
 
 - (id) awakeAfterUsingCoder: (NSCoder*)aDecoder;
 - (Class) classForArchiver;

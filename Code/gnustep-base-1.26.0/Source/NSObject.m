@@ -772,15 +772,12 @@ NSAllocateObject(Class aClass, NSUInteger extraBytes, NSZone *zone)
 {
     id	new;
     
-#ifdef OBJC_CAP_ARC
-    if ((new = class_createInstance(aClass, extraBytes)) != nil)
-    {
-        AADD(aClass, new);
-    }
-#else
     int	size;
-    
-    NSCAssert((!class_isMetaClass(aClass)), @"Bad class for new object");
+    /**
+     class_getInstanceSize 获取一个对象的长度,
+     cls->alignedInstanceSize(), align(data()->ro->instanceSize;), 也就是说, 直接读取的类对象里面的长度.
+     这也就是说, 就连分配对象这个操作, 也是通过运行时系统分配的内存空间.
+     */
     size = class_getInstanceSize(aClass) + extraBytes + sizeof(struct obj_layout);
     if (zone == 0)
     {
@@ -790,8 +787,9 @@ NSAllocateObject(Class aClass, NSUInteger extraBytes, NSZone *zone)
     if (new != nil)
     {
         memset (new, 0, size);
+        // 这个 GNU Foundation 的做法, 将 retianCount 存放到对象的头部, 然后返回偏移后的位置.
         new = (id)&((obj)new)[1];
-        object_setClass(new, aClass);
+        object_setClass(new, aClass);// 这里会进行 isa 指向的修正.
         AADD(aClass, new);
     }
     
@@ -807,7 +805,6 @@ NSAllocateObject(Class aClass, NSUInteger extraBytes, NSZone *zone)
         cxx_destruct = sel_registerName(".cxx_destruct");
     }
     callCXXConstructors(aClass, new);
-#endif
     
     return new;
 }
@@ -1117,6 +1114,7 @@ static id gs_weak_load(id obj)
  * zone, by invoking +allocWithZone: with
  * <code>NSDefaultMallocZone()</code> as the zone argument.<br />
  * Returns the created instance.
+ 这个方法, 仅仅是调用 allocWithZone
  */
 + (id) alloc
 {
@@ -1130,11 +1128,15 @@ static id gs_weak_load(id obj)
  * <p>
  *   Memory for an instance of the receiver is allocated; a
  *   pointer to this newly created instance is returned.  All
- *   instance variables are set to 0.  No initialization of the
+ *   instance variables are set to 0.
+ 这里说的很清楚, alloc 函数会设置 isa 指针, 然后 init 方法会负责其他的成员的初始化工作.
+ No initialization of the
  *   instance is performed apart from setup to be an instance of
  *   the correct class: it is your responsibility to initialize the
  *   instance by calling an appropriate <code>init</code>
- *   method.  If you are not using the garbage collector, it is
+ *   method.
+ 
+ If you are not using the garbage collector, it is
  *   also your responsibility to make sure the returned
  *   instance is destroyed when you finish using it, by calling
  *   the <code>release</code> method to destroy the instance
@@ -1142,6 +1144,8 @@ static id gs_weak_load(id obj)
  *   autorelease pools.
  * </p>
  * <p>
+ 
+ 这里说明了, 类簇模式下会对这个方法进行重写, 其他情况不应该重写这个方法.
  *  You do not normally need to override this method in
  *  subclasses, unless you are implementing a class which for
  *  some reasons silently allocates instances of another class
