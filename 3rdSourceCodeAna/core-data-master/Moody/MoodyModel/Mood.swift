@@ -154,7 +154,7 @@ private let ColorsTransformerName = "ColorsTransformer"
 
 extension Mood {
     static func registerValueTransformers() {
-        _ = self.__registerOnce
+        _ = self.__registerOnce // 这里, 仅仅是想让下面的这个函数执行一次而已. 会不会用 dispatch_once 好一点, 清晰一点.
     }
     fileprivate static let __registerOnce: () = {
         ClosureValueTransformer.registerTransformer(withName: ColorsTransformerName, transform: { (colors: NSArray?) -> NSData? in
