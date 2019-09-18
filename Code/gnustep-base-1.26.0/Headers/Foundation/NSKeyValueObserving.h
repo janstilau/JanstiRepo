@@ -1,27 +1,3 @@
-/* Interface for NSKeyValueObserving for GNUStep
-   Copyright (C) 2005 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date:	2005
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
-
 #ifndef __NSKeyValueObserving_h_GNUSTEP_BASE_INCLUDE
 #define __NSKeyValueObserving_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -31,37 +7,33 @@
 #import	<Foundation/NSObject.h>
 #import	<Foundation/NSArray.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSIndexSet;
 @class NSSet;
 @class NSString;
 
 enum {
-  NSKeyValueObservingOptionNew = 1,
-  NSKeyValueObservingOptionOld = 2
+    NSKeyValueObservingOptionNew = 1,
+    NSKeyValueObservingOptionOld = 2
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST)
-,  NSKeyValueObservingOptionInitial = 4,
-  NSKeyValueObservingOptionPrior = 8
+    ,  NSKeyValueObservingOptionInitial = 4,
+    NSKeyValueObservingOptionPrior = 8
 #endif
 };
 typedef NSUInteger NSKeyValueObservingOptions;
 
 enum {
-  NSKeyValueChangeSetting = 1,
-  NSKeyValueChangeInsertion = 2,
-  NSKeyValueChangeRemoval = 3,
-  NSKeyValueChangeReplacement = 4
+    NSKeyValueChangeSetting = 1,
+    NSKeyValueChangeInsertion = 2,
+    NSKeyValueChangeRemoval = 3,
+    NSKeyValueChangeReplacement = 4
 };
 typedef NSUInteger NSKeyValueChange;
 
 enum {
-  NSKeyValueUnionSetMutation = 1,
-  NSKeyValueMinusSetMutation = 2,
-  NSKeyValueIntersectSetMutation = 3,
-  NSKeyValueSetSetMutation = 4
+    NSKeyValueUnionSetMutation = 1,
+    NSKeyValueMinusSetMutation = 2,
+    NSKeyValueIntersectSetMutation = 3,
+    NSKeyValueSetSetMutation = 4
 };
 typedef NSUInteger NSKeyValueSetMutationKind;
 
@@ -122,21 +94,21 @@ GS_EXPORT NSString *const NSKeyValueChangeNotificationIsPriorKey;
 
 @interface NSObject (NSKeyValueObserving)
 - (void) observeValueForKeyPath: (NSString*)aPath
-		       ofObject: (id)anObject
-			 change: (NSDictionary*)aChange
-		        context: (void*)aContext;
+                       ofObject: (id)anObject
+                         change: (NSDictionary*)aChange
+                        context: (void*)aContext;
 
 @end
 
 @interface NSObject (NSKeyValueObserverRegistration)
 
 - (void) addObserver: (NSObject*)anObserver
-	  forKeyPath: (NSString*)aPath
-	     options: (NSKeyValueObservingOptions)options
-	     context: (void*)aContext;
+          forKeyPath: (NSString*)aPath
+             options: (NSKeyValueObservingOptions)options
+             context: (void*)aContext;
 
 - (void) removeObserver: (NSObject*)anObserver
-	     forKeyPath: (NSString*)aPath;
+             forKeyPath: (NSString*)aPath;
 
 @end
 
@@ -144,13 +116,13 @@ GS_EXPORT NSString *const NSKeyValueChangeNotificationIsPriorKey;
 
 - (void) addObserver: (NSObject*)anObserver
   toObjectsAtIndexes: (NSIndexSet*)indexes
-	  forKeyPath: (NSString*)aPath
-	     options: (NSKeyValueObservingOptions)options
-	     context: (void*)aContext;
+          forKeyPath: (NSString*)aPath
+             options: (NSKeyValueObservingOptions)options
+             context: (void*)aContext;
 
 - (void) removeObserver: (NSObject*)anObserver
    fromObjectsAtIndexes: (NSIndexSet*)indexes
-	     forKeyPath: (NSString*)aPath;
+             forKeyPath: (NSString*)aPath;
 
 @end
 
@@ -168,7 +140,7 @@ GS_EXPORT NSString *const NSKeyValueChangeNotificationIsPriorKey;
  */
 - (void) didChange: (NSKeyValueChange)changeKind
    valuesAtIndexes: (NSIndexSet*)indexes
-	    forKey: (NSString*)aKey;
+            forKey: (NSString*)aKey;
 
 /** <override-dummy />
  */
@@ -178,21 +150,21 @@ GS_EXPORT NSString *const NSKeyValueChangeNotificationIsPriorKey;
  */
 - (void) willChange: (NSKeyValueChange)changeKind
     valuesAtIndexes: (NSIndexSet*)indexes
-	     forKey: (NSString*)aKey;
+             forKey: (NSString*)aKey;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST)
 
 /** <override-dummy />
  */
 - (void) didChangeValueForKey: (NSString*)aKey
-	      withSetMutation: (NSKeyValueSetMutationKind)mutationKind
-		 usingObjects: (NSSet*)objects;
+              withSetMutation: (NSKeyValueSetMutationKind)mutationKind
+                 usingObjects: (NSSet*)objects;
 
 /** <override-dummy />
  */
 - (void) willChangeValueForKey: (NSString*)aKey
-	       withSetMutation: (NSKeyValueSetMutationKind)mutationKind
-		  usingObjects: (NSSet*)objects;
+               withSetMutation: (NSKeyValueSetMutationKind)mutationKind
+                  usingObjects: (NSSet*)objects;
 
 #endif
 
@@ -242,10 +214,6 @@ triggerChangeNotificationsForDependentKey: (NSString*)dependentKey;
 - (void) setObservationInfo: (void*)observationInfo;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif	/* 100300 */
 

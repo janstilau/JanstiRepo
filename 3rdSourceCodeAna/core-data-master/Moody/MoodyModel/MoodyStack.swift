@@ -25,7 +25,7 @@ private let moodyContainer: NSPersistentContainer = {
 }()
 
 public func createMoodyContainer(migrating: Bool = false, progress: Progress? = nil, completion: @escaping (NSPersistentContainer) -> ()) {
-    Mood.registerValueTransformers()
+    Mood.registerValueTransformers() // 注册自定义的转换函数
     moodyContainer.loadPersistentStores { _, error in
         if error == nil {
             moodyContainer.viewContext.mergePolicy = MoodyMergePolicy(mode: .local)

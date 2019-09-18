@@ -8,6 +8,12 @@
 
 import CoreData
 
+/**
+ 如果是 OC 里面, 这会是一个数据类, 里面一个 enum 值, 然后一个Country, 一个 Continent, 根据 type 值来取不同的数据.
+ 首先这样就有数据的冗余了, 一个类里面的数据, 必然在某个时候只会用到一个, 让使用者很不舒服.
+ Enum 的关联对象的技术, 很好的解决了这个问题, 并且, 作为一个独立的类型, 可以在里面添加相关联的函数.
+ */
+
 enum MoodSource {
     case country(Country)
     case continent(Continent)

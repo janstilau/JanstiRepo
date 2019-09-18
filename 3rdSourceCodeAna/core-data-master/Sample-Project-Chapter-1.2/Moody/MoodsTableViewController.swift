@@ -19,10 +19,10 @@ class MoodsTableViewController: UITableViewController, SegueHandler {
     var managedObjectContext: NSManagedObjectContext!
     var moodSource: MoodSource! {
         didSet {
-            guard let o = moodSource.managedObject else { return }
-            observer = ManagedObjectObserver(object: o) { [unowned self] type in
+            guard let manageObj = moodSource.managedObject else { return }
+            observer = ManagedObjectObserver(object: manageObj) { [unowned self] type in
                 guard type == .delete else { return }
-                let _ = self.navigationController?.popViewController(animated: true)
+                let _ = self.navigationController?.popViewController(animated: true) // 这里, 是为了减少警告.
             }
         }
     }
@@ -47,6 +47,9 @@ class MoodsTableViewController: UITableViewController, SegueHandler {
     fileprivate var dataSource: TableViewDataSource<MoodsTableViewController>!
     fileprivate var observer: ManagedObjectObserver?
 
+    /**
+     * 通过业务关注点的拆分, 想要完成不同数据的读取, 已经变成了一个非常简单的事情.
+     */
     fileprivate func setupTableView() {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100

@@ -40,9 +40,9 @@ final class Country: NSManagedObject {
     }
 
     override func prepareForDeletion() {
-        guard let c = continent else { return }
-        if c.countries.filter({ !$0.isDeleted }).isEmpty {
-            managedObjectContext?.delete(c)
+        guard let continent = continent else { return }
+        if continent.countries.filter({ !$0.isDeleted }).isEmpty {
+            managedObjectContext?.delete(continent)
         }
     }
 
