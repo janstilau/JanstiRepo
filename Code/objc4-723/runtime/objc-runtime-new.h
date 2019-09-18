@@ -1223,7 +1223,7 @@ struct objc_class : objc_object {
     bool isFuture() { 
         return data()->flags & RW_FUTURE;
     }
-
+    // 所以, 其实就和我们写一个成员变量一样, 判断是不是某个特殊的值. 只不过系统的为了省空间, 用的是位运算的方式.
     bool isMetaClass() {
         assert(this);
         assert(isRealized());
