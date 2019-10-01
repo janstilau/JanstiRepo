@@ -358,6 +358,8 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.S";
 			fileType = pattern.proxy;
+			inputFiles = (
+			);
 			isEditable = 1;
 			outputFiles = (
 				"${OBJECT_FILE_DIR}/${INPUT_FILE_NAME}.o",
@@ -1714,8 +1716,8 @@
 			children = (
 				18F8D04F1724534E00420DA5 /* KVO */,
 				18906F701610BF3C0003C892 /* NSAffineTransform.m */,
-				18906F711610BF3C0003C892 /* NSArchiver.m */,
 				18906F721610BF3C0003C892 /* NSArray.m */,
+				18906F711610BF3C0003C892 /* NSArchiver.m */,
 				18906F731610BF3C0003C892 /* NSAssertionHandler.m */,
 				18906F741610BF3C0003C892 /* NSAttributedString.m */,
 				18906F751610BF3C0003C892 /* NSAutoreleasePool.m */,
