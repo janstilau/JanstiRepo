@@ -242,6 +242,10 @@ static SEL	removeLastSel;
 }
 
 /**
+  所有, 上面的类方法, 都是调用的实例方法. 仅仅是一层最简单的包装而已. 所有的返回对象, 都进行了 autorelease 的调用.
+ */
+
+/**
  * Returns an autoreleased array formed from the contents of
  * the receiver and adding anObject as the last item.
  */
