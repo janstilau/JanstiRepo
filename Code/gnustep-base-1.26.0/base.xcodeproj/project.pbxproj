@@ -383,10 +383,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1837DA191652D18400197E53 /* gdnc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = gdnc; path = "/Users/justinlau/JanstiRepo/Code/gnustep-base-1.26.0/build/Debug/gdnc"; sourceTree = "<absolute>"; };
+		06A9E02A234E3A7000B0F280 /* Foundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Foundation.framework; path = "/Users/justinlau/JanstiRepo/Code/gnustep-base-1.26.0/build/Debug/Foundation.framework"; sourceTree = "<absolute>"; };
+		06A9E02B234E3A7000B0F280 /* gdnc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = gdnc; path = "/Users/justinlau/JanstiRepo/Code/gnustep-base-1.26.0/build/Debug/gdnc"; sourceTree = "<absolute>"; };
 		18394AA31610CC4E00335E85 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		18394AA41610CC4E00335E85 /* GSConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSConfig.h; sourceTree = "<group>"; };
-		18394B1C1610D8E300335E85 /* Foundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Foundation.framework; path = "/Users/justinlau/JanstiRepo/Code/gnustep-base-1.26.0/build/Debug/Foundation.framework"; sourceTree = "<absolute>"; };
 		18641D0E1678AD04003C6E11 /* GSSocks4Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSocks4Parser.h; sourceTree = "<group>"; };
 		18641D0F1678AD04003C6E11 /* GSSocks4Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSocks4Parser.m; sourceTree = "<group>"; };
 		18641D101678AD04003C6E11 /* GSSocks5Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSocks5Parser.h; sourceTree = "<group>"; };
@@ -1582,7 +1582,7 @@
 			);
 			name = gdnc;
 			productName = keepalive;
-			productReference = 1837DA191652D18400197E53 /* gdnc */;
+			productReference = 06A9E02B234E3A7000B0F280 /* gdnc */;
 			productType = "com.apple.product-type.tool";
 		};
 		18394B1B1610D8E300335E85 /* Foundation */ = {
@@ -1601,7 +1601,7 @@
 			);
 			name = Foundation;
 			productName = Foundation;
-			productReference = 18394B1C1610D8E300335E85 /* Foundation.framework */;
+			productReference = 06A9E02A234E3A7000B0F280 /* Foundation.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */

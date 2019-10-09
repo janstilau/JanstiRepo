@@ -84,13 +84,13 @@ typedef struct {
 @interface GCArray : NSArray
 {
   gcInfo	gc;
-  id		*_contents;	// C array of content objects
+  id		*_contents;	// C array of content objects // 直接就是 C 语言的数组.
   BOOL		*_isGCObject;	// Is content object collectable?
   unsigned int	_count;		// Number of content objects.
 }
 @end
 
-
+// 完全一直的内存布局. 只不过多了一个 max 的记录值.
 @interface GCMutableArray : NSMutableArray
 {
   gcInfo	gc;
