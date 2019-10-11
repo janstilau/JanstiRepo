@@ -30,10 +30,6 @@
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 /** Options flags come in three groups  ...<br />
  *  Memory management options (only one of which may be set)<br />
  *  Personality options (only one of which may be set)<br />
@@ -149,10 +145,6 @@ typedef	NSUInteger NSPointerFunctionsOptions;
 - (BOOL) usesWeakReadAndWriteBarriers;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif /* OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST) */
 #endif /* __NSPointerFunctions_h_GNUSTEP_BASE_INCLUDE */

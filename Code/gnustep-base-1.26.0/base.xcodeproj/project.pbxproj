@@ -842,6 +842,7 @@
 		06AB682E2350E3E0001FF62A /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906FBE1610BF3C0003C892 /* NSPointerArray.m */,
 				18906F721610BF3C0003C892 /* NSArray.m */,
 			);
 			path = Done;
@@ -1029,7 +1030,6 @@
 				18906FBB1610BF3C0003C892 /* NSPage.m */,
 				18906FBC1610BF3C0003C892 /* NSPathUtilities.m */,
 				18906FBD1610BF3C0003C892 /* NSPipe.m */,
-				18906FBE1610BF3C0003C892 /* NSPointerArray.m */,
 				18906FBF1610BF3C0003C892 /* NSPointerFunctions.m */,
 				18906FC01610BF3C0003C892 /* NSPort.m */,
 				18906FC11610BF3C0003C892 /* NSPortCoder.m */,
