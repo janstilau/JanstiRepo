@@ -350,8 +350,6 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.S";
 			fileType = pattern.proxy;
-			inputFiles = (
-			);
 			isEditable = 1;
 			outputFiles = (
 				"${OBJECT_FILE_DIR}/${INPUT_FILE_NAME}.o",
@@ -383,8 +381,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		06A9E02A234E3A7000B0F280 /* Foundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Foundation.framework; path = "/Users/justinlau/JanstiRepo/Code/gnustep-base-1.26.0/build/Debug/Foundation.framework"; sourceTree = "<absolute>"; };
-		06A9E02B234E3A7000B0F280 /* gdnc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = gdnc; path = "/Users/justinlau/JanstiRepo/Code/gnustep-base-1.26.0/build/Debug/gdnc"; sourceTree = "<absolute>"; };
+		06AB682C2350D840001FF62A /* Foundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Foundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		06AB682D2350D840001FF62A /* gdnc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gdnc; sourceTree = BUILT_PRODUCTS_DIR; };
 		18394AA31610CC4E00335E85 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		18394AA41610CC4E00335E85 /* GSConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSConfig.h; sourceTree = "<group>"; };
 		18641D0E1678AD04003C6E11 /* GSSocks4Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSocks4Parser.h; sourceTree = "<group>"; };
@@ -841,6 +839,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06AB682E2350E3E0001FF62A /* Done */ = {
+			isa = PBXGroup;
+			children = (
+				18906F721610BF3C0003C892 /* NSArray.m */,
+			);
+			path = Done;
+			sourceTree = SOURCE_ROOT;
+		};
 		18394B031610D85D00335E85 /* Additions */ = {
 			isa = PBXGroup;
 			children = (
@@ -948,9 +954,9 @@
 		18394BFF1610E9D600335E85 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				06AB682E2350E3E0001FF62A /* Done */,
 				18F8D04F1724534E00420DA5 /* KVO */,
 				18906F701610BF3C0003C892 /* NSAffineTransform.m */,
-				18906F721610BF3C0003C892 /* NSArray.m */,
 				18906F711610BF3C0003C892 /* NSArchiver.m */,
 				18906F731610BF3C0003C892 /* NSAssertionHandler.m */,
 				18906F741610BF3C0003C892 /* NSAttributedString.m */,
@@ -1113,6 +1119,8 @@
 				18906E661610BF3C0003C892 /* Headers */,
 				18394BF31610DC4B00335E85 /* Private Headers */,
 				18906F081610BF3C0003C892 /* Source */,
+				06AB682C2350D840001FF62A /* Foundation.framework */,
+				06AB682D2350D840001FF62A /* gdnc */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1582,7 +1590,7 @@
 			);
 			name = gdnc;
 			productName = keepalive;
-			productReference = 06A9E02B234E3A7000B0F280 /* gdnc */;
+			productReference = 06AB682D2350D840001FF62A /* gdnc */;
 			productType = "com.apple.product-type.tool";
 		};
 		18394B1B1610D8E300335E85 /* Foundation */ = {
@@ -1601,7 +1609,7 @@
 			);
 			name = Foundation;
 			productName = Foundation;
-			productReference = 06A9E02A234E3A7000B0F280 /* Foundation.framework */;
+			productReference = 06AB682C2350D840001FF62A /* Foundation.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */

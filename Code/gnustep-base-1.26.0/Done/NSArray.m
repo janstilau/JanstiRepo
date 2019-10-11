@@ -246,8 +246,7 @@ static SEL	removeLastSel;
  */
 
 /**
- * Returns an autoreleased array formed from the contents of
- * the receiver and adding anObject as the last item.
+  生成一个新的对象. 因为 NSArray 是一个不可变类型.
  */
 - (NSArray*) arrayByAddingObject: (id)anObject
 {
@@ -257,7 +256,7 @@ static SEL	removeLastSel;
     if (anObject == nil)
         [NSException raise: NSInvalidArgumentException
                     format: @"Attempt to add nil to an array"];
-    if (c == 0)
+    if (c == 0) // 如果是空的数组, 直接生成一个新的数组.
     {
         na = [[GSArrayClass allocWithZone: NSDefaultMallocZone()]
               initWithObjects: &anObject count: 1];
@@ -267,7 +266,7 @@ static SEL	removeLastSel;
         GS_BEGINIDBUF(objects, c+1);
         
         [self getObjects: objects];
-        objects[c] = anObject;
+        objects[c] = anObject; // 在后面, 添加数据. 然后, 根据这块内存区域, 生成类型. 在 initWithObjects 中, 才会进行 retain 的操作.
         na = [[GSArrayClass allocWithZone: NSDefaultMallocZone()]
               initWithObjects: objects count: c+1];
         
@@ -326,8 +325,7 @@ static SEL	removeLastSel;
 }
 
 /**
- * Returns YES if anObject belongs to self. No otherwise.<br />
- * The [NSObject-isEqual:] method of anObject is used to test for equality.
+ 
  */
 - (BOOL) containsObject: (id)anObject
 {
@@ -352,6 +350,10 @@ static SEL	removeLastSel;
     [self subclassResponsibility: _cmd];
     return 0;
 }
+
+/**
+    这个函数, 其实就是一个语言内置的切口, 在 for in 的实现里面, 就会调用这个方法. 也就是说, 如果一个类实现了这个方法, 声明实现了这个协议, 它就能直接用 for in 循环.
+ */
 
 - (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state
                                    objects: (__unsafe_unretained id[])stackbuf
@@ -448,8 +450,9 @@ static SEL	removeLastSel;
 }
 
 /**
- * Copies the objects from the receiver to aBuffer, which must be
- * an area of memory large enough to hold them.
+ 
+ 最核心的方法, 将自己的数据放到提前定义的 buffer 里面. 这里仅仅是简单的数据的赋值操作, 没有内存管理方面的内容.
+ 
  */
 - (void) getObjects: (__unsafe_unretained id[])aBuffer
 {
@@ -460,23 +463,9 @@ static SEL	removeLastSel;
         aBuffer[i] = (*get)(self, objAtIndexSel, i);
 }
 
-/**
- * Copies the objects from the range aRange of the receiver to aBuffer,
- * which must be an area of memory large enough to hold them.
- */
-- (void) getObjects: (__unsafe_unretained id[])aBuffer range: (NSRange)aRange
-{
-    NSUInteger i, j = 0, c = [self count], e = aRange.location + aRange.length;
-    IMP	get = [self methodForSelector: objAtIndexSel];
-    
-    GS_RANGE_CHECK(aRange, c);
-    
-    for (i = aRange.location; i < e; i++)
-        aBuffer[j++] = (*get)(self, objAtIndexSel, i);
-}
 
 /**
- * Returns the same value as -count
+ 直接用的 length 当做 hash 的值.
  */
 - (NSUInteger) hash
 {
@@ -484,8 +473,7 @@ static SEL	removeLastSel;
 }
 
 /**
- * Returns the index of the specified object in the receiver, or
- * NSNotFound if the object is not present.
+ 基于地址的比较, 直接比较的就是地址值
  */
 - (NSUInteger) indexOfObjectIdenticalTo: (id)anObject
 {
@@ -521,9 +509,7 @@ static SEL	removeLastSel;
 }
 
 /**
- * Returns the index of the first object found in the receiver
- * which is equal to anObject (using anObject's [NSObject-isEqual:] method).
- * Returns NSNotFound on failure.
+ 这里我们可以看到, 数组里面的相等比较, 是基于值属性的比较, 而不是地址的比较
  */
 - (NSUInteger) indexOfObject: (id)anObject
 {
@@ -749,7 +735,7 @@ static SEL	removeLastSel;
 - (id) initWithContentsOfFile: (NSString*)file
 {
     NSString 	*myString;
-    
+    // 首先是读取 file 位置的文件的字符串内容, 也就是说, NSArray 是按照文本文件存储的. plist .
     myString = [[NSString allocWithZone: NSDefaultMallocZone()]
                 initWithContentsOfFile: file];
     if (myString == nil)
@@ -762,7 +748,7 @@ static SEL	removeLastSel;
         
         NS_DURING
         {
-            result = [myString propertyList];
+            result = [myString propertyList]; // 文本文件到底会变成什么样的数据, 是 propertyList 的解析工具的事情.
         }
         NS_HANDLER
         {
@@ -908,7 +894,7 @@ static SEL	removeLastSel;
 
 
 /**
- * Returns YES if the receiver is equal to otherArray, NO otherwise.
+ 首先比较个数, 然后是各个位置的值得 isEqual 的比较.
  */
 - (BOOL) isEqualToArray: (NSArray*)otherArray
 {
@@ -932,7 +918,7 @@ static SEL	removeLastSel;
 }
 
 /**
- * Returns the last object in the receiver, or nil if the receiver is empty.
+ 
  */
 - (id) lastObject
 {
@@ -954,8 +940,7 @@ static SEL	removeLastSel;
 }
 
 /**
- * Makes each object in the array perform aSelector.<br />
- * This is done sequentially from the first to the last object.
+ 每一个元素执行 selector.
  */
 - (void) makeObjectsPerformSelector: (SEL)aSelector
 {
@@ -974,7 +959,7 @@ static SEL	removeLastSel;
 }
 
 /**
- * Obsolete version of -makeObjectsPerformSelector:
+ 这个方法, 不如上面的方法清晰, 所以被废除了.
  */
 - (void) makeObjectsPerform: (SEL)aSelector
 {
@@ -982,8 +967,7 @@ static SEL	removeLastSel;
 }
 
 /**
- * Makes each object in the array perform aSelector with arg.<br />
- * This is done sequentially from the first to the last object.
+ 也仅仅是一个简单的包装而已.
  */
 - (void) makeObjectsPerformSelector: (SEL)aSelector withObject: (id)arg
 {
@@ -2506,8 +2490,9 @@ compare(id elem1, id elem2, void* context)
 }
 
 /**
- * Sorts the array according to the supplied compare function
- * with the context information.
+ 
+ void* 就是任何类型, 在 C 时代的时候, 为了传递环境, 经常用 void * 进行传递. 这在有了闭包之后 ,有了很好的改善.
+ sort 最终会调用到基础的 快排等算法. 这些算法是固定下来的. 而各个类, 仅仅是对于这个算法调用的包装而已.
  */
 - (void) sortUsingFunction: (NSComparisonResult (*)(id,id,void*))compare
                    context: (void*)context
@@ -2579,6 +2564,11 @@ compare(id elem1, id elem2, void* context)
     [self sortWithOptions: 0 usingComparator: comparator];
 }
 @end
+
+/**
+ NSArrayEnumerator 仅仅是一个包装类, 它和容器类一定是联系非常紧密的. 他可以获取到容器里面的数据, 然后将这些数据暴露给使用者. 它更多的是一个协议的概念, 让使用者可以稳定的用一个接口来进行.
+ 在其他语言里面, 已经用这个接口做循环的替换了.
+ */
 
 @implementation NSArrayEnumerator
 
