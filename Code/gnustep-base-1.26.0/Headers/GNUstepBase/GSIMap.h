@@ -656,6 +656,8 @@ GSIMapNodeForKeyInBucket(GSIMapTable map, GSIMapBucket bucket, GSIMapKey key)
   return node;
 }
 
+    
+    
 GS_STATIC_INLINE GSIMapNode 
 GSIMapNodeForKey(GSIMapTable map, GSIMapKey key)
 {

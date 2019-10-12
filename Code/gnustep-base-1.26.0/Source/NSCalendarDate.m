@@ -1,32 +1,32 @@
 /** Implementation for NSCalendarDate for GNUstep
-   Copyright (C) 1996, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
-
-   Author:  Scott Christley <scottc@net-community.com>
-   Date: October 1996
-
-   Author: Richard Frith-Macdonald <rfm@gnu.org>
-   Date: September 2002
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSCalendarDate class reference</title>
-   $Date$ $Revision$
-   */
+ Copyright (C) 1996, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
+ 
+ Author:  Scott Christley <scottc@net-community.com>
+ Date: October 1996
+ 
+ Author: Richard Frith-Macdonald <rfm@gnu.org>
+ Date: September 2002
+ 
+ This file is part of the GNUstep Base Library.
+ 
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+ 
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free
+ Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ Boston, MA 02111 USA.
+ 
+ <title>NSCalendarDate class reference</title>
+ $Date$ $Revision$
+ */
 
 #import "common.h"
 #define	EXPOSE_NSCalendarDate_IVARS	1
@@ -99,27 +99,27 @@ static NSString* (*dstAbrIMP)(id, SEL, id);
 static inline int
 offset(NSTimeZone *tz, NSDate *d)
 {
-  if (tz == nil)
+    if (tz == nil)
     {
-      return 0;
+        return 0;
     }
-  if (tz == localTZ && offIMP != 0)
+    if (tz == localTZ && offIMP != 0)
     {
-      return (*offIMP)(tz, offSEL, d);
+        return (*offIMP)(tz, offSEL, d);
     }
-  else
+    else
     {
-      Class	c = object_getClass(tz);
-
-      if (c == dstClass && dstOffIMP != 0)
-	{
-	  return (*dstOffIMP)(tz, offSEL, d);
-	}
-      if (c == absClass && absOffIMP != 0)
-	{
-	  return (*absOffIMP)(tz, offSEL, d);
-	}
-      return [tz secondsFromGMTForDate: d];
+        Class	c = object_getClass(tz);
+        
+        if (c == dstClass && dstOffIMP != 0)
+        {
+            return (*dstOffIMP)(tz, offSEL, d);
+        }
+        if (c == absClass && absOffIMP != 0)
+        {
+            return (*absOffIMP)(tz, offSEL, d);
+        }
+        return [tz secondsFromGMTForDate: d];
     }
 }
 
@@ -131,64 +131,64 @@ offset(NSTimeZone *tz, NSDate *d)
 static inline NSString*
 abbrev(NSTimeZone *tz, NSDate *d)
 {
-  if (tz == nil)
+    if (tz == nil)
     {
-      return @"GMT";
+        return @"GMT";
     }
-  if (tz == localTZ && abrIMP != 0)
+    if (tz == localTZ && abrIMP != 0)
     {
-      return (*abrIMP)(tz, abrSEL, d);
+        return (*abrIMP)(tz, abrSEL, d);
     }
-  else
+    else
     {
-      Class	c = object_getClass(tz);
-
-      if (c == dstClass && dstAbrIMP != 0)
-	{
-	  return (*dstAbrIMP)(tz, abrSEL, d);
-	}
-      if (c == absClass && absAbrIMP != 0)
-	{
-	  return (*absAbrIMP)(tz, abrSEL, d);
-	}
-      return [tz abbreviationForDate: d];
+        Class	c = object_getClass(tz);
+        
+        if (c == dstClass && dstAbrIMP != 0)
+        {
+            return (*dstAbrIMP)(tz, abrSEL, d);
+        }
+        if (c == absClass && absAbrIMP != 0)
+        {
+            return (*absAbrIMP)(tz, abrSEL, d);
+        }
+        return [tz abbreviationForDate: d];
     }
 }
 
 static inline NSUInteger
 lastDayOfGregorianMonth(NSUInteger month, NSUInteger year)
 {
-  switch (month)
+    switch (month)
     {
-      case 2:
-	if ((((year % 4) == 0) && ((year % 100) != 0))
-	  || ((year % 400) == 0))
-	  return 29;
-	else
-	  return 28;
-      case 4:
-      case 6:
-      case 9:
-      case 11: return 30;
-      default: return 31;
+        case 2:
+            if ((((year % 4) == 0) && ((year % 100) != 0))
+                || ((year % 400) == 0))
+                return 29;
+            else
+                return 28;
+        case 4:
+        case 6:
+        case 9:
+        case 11: return 30;
+        default: return 31;
     }
 }
 
 static inline NSUInteger
 absoluteGregorianDay(NSUInteger day, NSUInteger month, NSUInteger year)
 {
-  if (month > 1)
+    if (month > 1)
     {
-      while (--month > 0)
-	{
-	  day = day + lastDayOfGregorianMonth(month, year);
-	}
+        while (--month > 0)
+        {
+            day = day + lastDayOfGregorianMonth(month, year);
+        }
     }
-  if (year > 0)
+    if (year > 0)
     {
-      year--;
+        year--;
     }
-  return
+    return
     (day            // days this year
      + 365 * year   // days in previous years ignoring leap days
      + year/4       // Julian leap days before this year...
@@ -199,38 +199,38 @@ absoluteGregorianDay(NSUInteger day, NSUInteger month, NSUInteger year)
 static inline NSInteger
 dayOfCommonEra(NSTimeInterval when)
 {
-  NSInteger r;
-
-  // Get reference date in terms of days
-  when /= 86400.0;
-  // Offset by Gregorian reference
-  when += GREGORIAN_REFERENCE;
-  r = (NSInteger)when;
-  return r;
+    NSInteger r;
+    
+    // Get reference date in terms of days
+    when /= 86400.0;
+    // Offset by Gregorian reference
+    when += GREGORIAN_REFERENCE;
+    r = (NSInteger)when;
+    return r;
 }
 
 static void
 gregorianDateFromAbsolute(NSInteger abs,
-  NSInteger *day, NSInteger *month, NSInteger *year)
+                          NSInteger *day, NSInteger *month, NSInteger *year)
 {
-  NSInteger     y;
-  NSInteger     m;
-
-  // Search forward year by year from approximate year
-  y = abs/366;
-  while (abs >= absoluteGregorianDay(1, 1, y+1))
+    NSInteger     y;
+    NSInteger     m;
+    
+    // Search forward year by year from approximate year
+    y = abs/366;
+    while (abs >= absoluteGregorianDay(1, 1, y+1))
     {
-      y++;
+        y++;
     }
-  // Search forward month by month from January
-  m = 1;
-  while (abs > absoluteGregorianDay(lastDayOfGregorianMonth(m, y), m, y))
+    // Search forward month by month from January
+    m = 1;
+    while (abs > absoluteGregorianDay(lastDayOfGregorianMonth(m, y), m, y))
     {
-      m++;
+        m++;
     }
-  *year = y;
-  *month = m;
-  *day = abs - absoluteGregorianDay(1, m, y) + 1;
+    *year = y;
+    *month = m;
+    *day = abs - absoluteGregorianDay(1, m, y) + 1;
 }
 
 /**
@@ -240,18 +240,18 @@ gregorianDateFromAbsolute(NSInteger abs,
 static NSTimeInterval
 GSTime(unsigned day, unsigned month, unsigned year, unsigned hour, unsigned minute, unsigned second, unsigned mil)
 {
-  NSTimeInterval	a;
-
-  a = (NSTimeInterval)absoluteGregorianDay(day, month, year);
-
-  // Calculate date as GMT
-  a -= GREGORIAN_REFERENCE;
-  a = (NSTimeInterval)a * 86400;
-  a += hour * 3600;
-  a += minute * 60;
-  a += second;
-  a += ((NSTimeInterval)mil)/1000.0;
-  return a;
+    NSTimeInterval	a;
+    
+    a = (NSTimeInterval)absoluteGregorianDay(day, month, year);
+    
+    // Calculate date as GMT
+    a -= GREGORIAN_REFERENCE;
+    a = (NSTimeInterval)a * 86400;
+    a += hour * 3600;
+    a += minute * 60;
+    a += second;
+    a += ((NSTimeInterval)mil)/1000.0;
+    return a;
 }
 
 /**
@@ -261,103 +261,54 @@ GSTime(unsigned day, unsigned month, unsigned year, unsigned hour, unsigned minu
  */
 void
 GSBreakTime(NSTimeInterval when,
-  NSInteger *year, NSInteger *month, NSInteger *day,
-  NSInteger *hour, NSInteger *minute, NSInteger *second, NSInteger *mil)
+            NSInteger *year, NSInteger *month, NSInteger *day,
+            NSInteger *hour, NSInteger *minute, NSInteger *second, NSInteger *mil)
 {
-  NSInteger h, m, dayOfEra;
-  double a, b, c, d;
-
-  /* The 0.1 constant was experimentally derived to cause our behavior
-   * to match Mac OS X 10.9.1.
-   */
-  when = floor(when * 1000.0 + 0.1) / 1000.0;
-
-  // Get reference date in terms of days
-  a = when / 86400.0;
-  // Offset by Gregorian reference
-  a += GREGORIAN_REFERENCE;
-  // result is the day of common era.
-  dayOfEra = (NSInteger)a;
-
-  // Calculate year, month, and day
-  gregorianDateFromAbsolute(dayOfEra, day, month, year);
-
-  // Calculate hour, minute, and seconds
-  d = dayOfEra - GREGORIAN_REFERENCE;
-  d *= 86400;
-  a = fabs(d - when);
-  b = a / 3600;
-  *hour = (NSInteger)b;
-  h = *hour;
-  h = h * 3600;
-  b = a - h;
-  b = b / 60;
-  *minute = (NSInteger)b;
-  m = *minute;
-  m = m * 60;
-  c = a - h - m;
-  *second = (NSInteger)c;
-  *mil = (NSInteger)rint((a - h - m - *second) * 1000.0);
+    NSInteger h, m, dayOfEra;
+    double a, b, c, d;
+    
+    /* The 0.1 constant was experimentally derived to cause our behavior
+     * to match Mac OS X 10.9.1.
+     */
+    when = floor(when * 1000.0 + 0.1) / 1000.0;
+    
+    // Get reference date in terms of days
+    a = when / 86400.0;
+    // Offset by Gregorian reference
+    a += GREGORIAN_REFERENCE;
+    // result is the day of common era.
+    dayOfEra = (NSInteger)a;
+    
+    // Calculate year, month, and day
+    gregorianDateFromAbsolute(dayOfEra, day, month, year);
+    
+    // Calculate hour, minute, and seconds
+    d = dayOfEra - GREGORIAN_REFERENCE;
+    d *= 86400;
+    a = fabs(d - when);
+    b = a / 3600;
+    *hour = (NSInteger)b;
+    h = *hour;
+    h = h * 3600;
+    b = a - h;
+    b = b / 60;
+    *minute = (NSInteger)b;
+    m = *minute;
+    m = m * 60;
+    c = a - h - m;
+    *second = (NSInteger)c;
+    *mil = (NSInteger)rint((a - h - m - *second) * 1000.0);
 }
 
 /**
- * Returns the current time (seconds since reference date) as an NSTimeInterval.
+ 就是调用系统的一些方法返回一个时间戳.
  */
 NSTimeInterval
 GSPrivateTimeNow(void)
 {
-  NSTimeInterval t;
-#if !defined(_WIN32)
-  struct timeval tp;
-
-  gettimeofday (&tp, NULL);
-  t = (NSTimeInterval)tp.tv_sec - NSTimeIntervalSince1970;
-  t += (NSTimeInterval)tp.tv_usec / (NSTimeInterval)1000000.0;
-#if	1
-/* This is a workaround for a bug on some SMP intel systems where the TSC
- * clock information from the processors gets out of sync and causes a
- * leap of 4398 seconds into the future for an instant, and then back.
- * If we detect a time jump back by more than the sort of small interval
- * that ntpd might do (or forwards by a very large amount) we refetch the
- * system time to make sure we don't have a temporary glitch.
- */
-{
-  static int	old = 0;
-
-  if (old == 0)
-    {
-      old = tp.tv_sec;
-    }
-  else
-    {
-      int	diff = tp.tv_sec - old;
-
-      old = tp.tv_sec;
-      if (diff < -1 || diff > 3000)
-	{
-	  time_t	now = (time_t)tp.tv_sec;
-
-	  fprintf(stderr, "WARNING: system time changed by %d seconds: %s\n",
-	    diff, ctime(&now));
-	  /* Get time again ... should be OK now.
-	   */
-	  t = GSPrivateTimeNow();
-	}
-    }
-}
-#endif
-
-#else
-  SYSTEMTIME sys_time;
-  /*
-   * Get current GMT time, convert to NSTimeInterval since reference date,
-   */
-  GetSystemTime(&sys_time);
-  t = GSTime(sys_time.wDay, sys_time.wMonth, sys_time.wYear, sys_time.wHour,
-    sys_time.wMinute, sys_time.wSecond, sys_time.wMilliseconds);
-#endif /* _WIN32 */
-
-  return t;
+    NSTimeInterval t;
+    
+    return t;
 }
 
 /**
@@ -369,35 +320,35 @@ GSPrivateTimeNow(void)
 
 + (void) initialize
 {
-  if (self == [NSCalendarDate class] && nil == NSCalendarDateClass)
+    if (self == [NSCalendarDate class] && nil == NSCalendarDateClass)
     {
-      NSAutoreleasePool *pool = [NSAutoreleasePool new];
-
-      NSCalendarDateClass = self;
-      [self setVersion: 1];
-      localTZ = RETAIN([NSTimeZone localTimeZone]);
-
-      dstClass = [GSTimeZone class];
-      absClass = [GSAbsTimeZone class];
-
-      offSEL = @selector(secondsFromGMTForDate:);
-      offIMP = (int (*)(id,SEL,id))
-	[localTZ methodForSelector: offSEL];
-      dstOffIMP = (int (*)(id,SEL,id))
-	[dstClass instanceMethodForSelector: offSEL];
-      absOffIMP = (int (*)(id,SEL,id))
-	[absClass instanceMethodForSelector: offSEL];
-
-      abrSEL = @selector(abbreviationForDate:);
-      abrIMP = (NSString* (*)(id,SEL,id))
-	[localTZ methodForSelector: abrSEL];
-      dstAbrIMP = (NSString* (*)(id,SEL,id))
-	[dstClass instanceMethodForSelector: abrSEL];
-      absAbrIMP = (NSString* (*)(id,SEL,id))
-	[absClass instanceMethodForSelector: abrSEL];
-
-      GSObjCAddClassBehavior(self, [NSGDate class]);
-      [pool release];
+        NSAutoreleasePool *pool = [NSAutoreleasePool new];
+        
+        NSCalendarDateClass = self;
+        [self setVersion: 1];
+        localTZ = RETAIN([NSTimeZone localTimeZone]);
+        
+        dstClass = [GSTimeZone class];
+        absClass = [GSAbsTimeZone class];
+        
+        offSEL = @selector(secondsFromGMTForDate:);
+        offIMP = (int (*)(id,SEL,id))
+        [localTZ methodForSelector: offSEL];
+        dstOffIMP = (int (*)(id,SEL,id))
+        [dstClass instanceMethodForSelector: offSEL];
+        absOffIMP = (int (*)(id,SEL,id))
+        [absClass instanceMethodForSelector: offSEL];
+        
+        abrSEL = @selector(abbreviationForDate:);
+        abrIMP = (NSString* (*)(id,SEL,id))
+        [localTZ methodForSelector: abrSEL];
+        dstAbrIMP = (NSString* (*)(id,SEL,id))
+        [dstClass instanceMethodForSelector: abrSEL];
+        absAbrIMP = (NSString* (*)(id,SEL,id))
+        [absClass instanceMethodForSelector: abrSEL];
+        
+        GSObjCAddClassBehavior(self, [NSGDate class]);
+        [pool release];
     }
 }
 
@@ -407,9 +358,9 @@ GSPrivateTimeNow(void)
  */
 + (id) calendarDate
 {
-  id	d = [[self alloc] init];
-
-  return AUTORELEASE(d);
+    id	d = [[self alloc] init];
+    
+    return AUTORELEASE(d);
 }
 
 /**
@@ -420,9 +371,9 @@ GSPrivateTimeNow(void)
 + (id) dateWithString: (NSString *)description
        calendarFormat: (NSString *)format
 {
-  NSCalendarDate *d = [[self alloc] initWithString: description
-				    calendarFormat: format];
-  return AUTORELEASE(d);
+    NSCalendarDate *d = [[self alloc] initWithString: description
+                                      calendarFormat: format];
+    return AUTORELEASE(d);
 }
 
 /**
@@ -433,12 +384,12 @@ GSPrivateTimeNow(void)
  */
 + (id) dateWithString: (NSString *)description
        calendarFormat: (NSString *)format
-	       locale: (NSDictionary *)dictionary
+               locale: (NSDictionary *)dictionary
 {
-  NSCalendarDate *d = [[self alloc] initWithString: description
-				    calendarFormat: format
-				    locale: dictionary];
-  return AUTORELEASE(d);
+    NSCalendarDate *d = [[self alloc] initWithString: description
+                                      calendarFormat: format
+                                              locale: dictionary];
+    return AUTORELEASE(d);
 }
 
 /**
@@ -446,21 +397,21 @@ GSPrivateTimeNow(void)
  * by calling -initWithYear:month:day:hour:minute:second:timeZone:
  */
 + (id) dateWithYear: (NSInteger)year
-	      month: (NSUInteger)month
-	        day: (NSUInteger)day
-	       hour: (NSUInteger)hour
-	     minute: (NSUInteger)minute
-	     second: (NSUInteger)second
-	   timeZone: (NSTimeZone *)aTimeZone
+              month: (NSUInteger)month
+                day: (NSUInteger)day
+               hour: (NSUInteger)hour
+             minute: (NSUInteger)minute
+             second: (NSUInteger)second
+           timeZone: (NSTimeZone *)aTimeZone
 {
-  NSCalendarDate *d = [[self alloc] initWithYear: year
-					   month: month
-					     day: day
-					    hour: hour
-					  minute: minute
-					  second: second
-					timeZone: aTimeZone];
-  return AUTORELEASE(d);
+    NSCalendarDate *d = [[self alloc] initWithYear: year
+                                             month: month
+                                               day: day
+                                              hour: hour
+                                            minute: minute
+                                            second: second
+                                          timeZone: aTimeZone];
+    return AUTORELEASE(d);
 }
 
 /**
@@ -469,12 +420,12 @@ GSPrivateTimeNow(void)
  */
 - (id) addTimeInterval: (NSTimeInterval)seconds
 {
-  return [self dateByAddingTimeInterval: seconds];
+    return [self dateByAddingTimeInterval: seconds];
 }
 
 - (Class) classForCoder
 {
-  return [self class];
+    return [self class];
 }
 
 /**
@@ -483,42 +434,42 @@ GSPrivateTimeNow(void)
  */
 - (id) dateByAddingTimeInterval: (NSTimeInterval)seconds
 {
-  id newObj = [[self class] dateWithTimeIntervalSinceReferenceDate:
-     [self timeIntervalSinceReferenceDate] + seconds];
-	
-  [newObj setTimeZone: [self timeZoneDetail]];
-  [newObj setCalendarFormat: [self calendarFormat]];
-
-  return newObj;
+    id newObj = [[self class] dateWithTimeIntervalSinceReferenceDate:
+                 [self timeIntervalSinceReferenceDate] + seconds];
+    
+    [newObj setTimeZone: [self timeZoneDetail]];
+    [newObj setCalendarFormat: [self calendarFormat]];
+    
+    return newObj;
 }
 
 - (id) replacementObjectForPortCoder: (NSPortCoder*)aRmc
 {
-  return self;
+    return self;
 }
 
 - (void) encodeWithCoder: (NSCoder*)coder
 {
-  [coder encodeValueOfObjCType: @encode(NSTimeInterval)
-			    at: &_seconds_since_ref];
-  [coder encodeObject: _calendar_format];
-  [coder encodeObject: _time_zone];
+    [coder encodeValueOfObjCType: @encode(NSTimeInterval)
+                              at: &_seconds_since_ref];
+    [coder encodeObject: _calendar_format];
+    [coder encodeObject: _time_zone];
 }
 
 - (id) initWithCoder: (NSCoder*)coder
 {
-  [coder decodeValueOfObjCType: @encode(NSTimeInterval)
-			    at: &_seconds_since_ref];
-  [coder decodeValueOfObjCType: @encode(id) at: &_calendar_format];
-  [coder decodeValueOfObjCType: @encode(id) at: &_time_zone];
-  return self;
+    [coder decodeValueOfObjCType: @encode(NSTimeInterval)
+                              at: &_seconds_since_ref];
+    [coder decodeValueOfObjCType: @encode(id) at: &_calendar_format];
+    [coder decodeValueOfObjCType: @encode(id) at: &_time_zone];
+    return self;
 }
 
 - (void) dealloc
 {
-  RELEASE(_calendar_format);
-  RELEASE(_time_zone);
-  [super dealloc];
+    RELEASE(_calendar_format);
+    RELEASE(_time_zone);
+    [super dealloc];
 }
 
 /**
@@ -528,9 +479,9 @@ GSPrivateTimeNow(void)
  */
 - (id) initWithString: (NSString *)description
 {
-  return [self initWithString: description
-	       calendarFormat: cformat
-		       locale: nil];
+    return [self initWithString: description
+                 calendarFormat: cformat
+                         locale: nil];
 }
 
 /**
@@ -541,9 +492,9 @@ GSPrivateTimeNow(void)
 - (id) initWithString: (NSString *)description
        calendarFormat: (NSString *)format
 {
-  return [self initWithString: description
-	       calendarFormat: format
-		       locale: nil];
+    return [self initWithString: description
+                 calendarFormat: format
+                         locale: nil];
 }
 
 /*
@@ -552,37 +503,37 @@ GSPrivateTimeNow(void)
  */
 static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
 {
-  int	i = 0;
-  int	j = 0;
-
-  BOOL	foundDigit = NO;
-
-  while (i < limit)
+    int	i = 0;
+    int	j = 0;
+    
+    BOOL	foundDigit = NO;
+    
+    while (i < limit)
     {
-      if (isdigit(from[i]))
-	{
-	  to[j++] = from[i];
-	  foundDigit = YES;
-	}
-      else if (isspace(from[i]))
-	{
-	  if (foundDigit == YES)
-	    {
-	      break;
-	    }
-	}
-      else
-	{
-	  break;
-	}
-      i++;
+        if (isdigit(from[i]))
+        {
+            to[j++] = from[i];
+            foundDigit = YES;
+        }
+        else if (isspace(from[i]))
+        {
+            if (foundDigit == YES)
+            {
+                break;
+            }
+        }
+        else
+        {
+            break;
+        }
+        i++;
     }
-  to[j] = '\0';
-  if (j == 0)
+    to[j] = '\0';
+    if (j == 0)
     {
-      *error = YES;	// No digits read
+        *error = YES;	// No digits read
     }
-  return i;
+    return i;
 }
 
 #define	hadY	1
@@ -704,781 +655,781 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
        calendarFormat: (NSString*)fmt
                locale: (NSDictionary*)locale
 {
-  int		milliseconds = 0;
-  int		year = 1;
-  int		month = 1;
-  int		day = 1;
-  int		hour = 0;
-  int		min = 0;
-  int		sec = 0;
-  NSTimeZone	*tz = nil;
-  BOOL		ampm = NO;
-  BOOL		isPM = NO;
-  BOOL		twelveHrClock = NO;
-  int		julianWeeks = -1, weekStartsMonday = 0, dayOfWeek = -1;
-  const char	*source;
-  unsigned	sourceLen;
-  unichar	*format;
-  unsigned	formatLen;
-  unsigned	formatIdx = 0;
-  unsigned	sourceIdx = 0;
-  char		tmpStr[120];
-  unsigned int	tmpIdx;
-  unsigned int	tmpEnd;
-  unsigned	had = 0;
-  unsigned int	pos;
-  BOOL		hadPercent = NO;
-  NSMutableData	*fd;
-  BOOL		changedFormat = NO;
-  BOOL		error = NO;
-
-  if (description == nil)
+    int		milliseconds = 0;
+    int		year = 1;
+    int		month = 1;
+    int		day = 1;
+    int		hour = 0;
+    int		min = 0;
+    int		sec = 0;
+    NSTimeZone	*tz = nil;
+    BOOL		ampm = NO;
+    BOOL		isPM = NO;
+    BOOL		twelveHrClock = NO;
+    int		julianWeeks = -1, weekStartsMonday = 0, dayOfWeek = -1;
+    const char	*source;
+    unsigned	sourceLen;
+    unichar	*format;
+    unsigned	formatLen;
+    unsigned	formatIdx = 0;
+    unsigned	sourceIdx = 0;
+    char		tmpStr[120];
+    unsigned int	tmpIdx;
+    unsigned int	tmpEnd;
+    unsigned	had = 0;
+    unsigned int	pos;
+    BOOL		hadPercent = NO;
+    NSMutableData	*fd;
+    BOOL		changedFormat = NO;
+    BOOL		error = NO;
+    
+    if (description == nil)
     {
-      description = @"";
+        description = @"";
     }
-  source = [description cString];
-  sourceLen = strlen(source);
-  if (fmt == nil)
+    source = [description cString];
+    sourceLen = strlen(source);
+    if (fmt == nil)
     {
-      fmt = [LOCALE objectForKey: NSTimeDateFormatString];
-      if (fmt == nil)
-	{
-	  fmt = @"";
-	}
-    }
-
-  /*
-   * Get format into a buffer, leaving room for expansion in case it has
-   * escapes that need to be converted.
-   */
-  formatLen = [fmt length];
-  fd = [[NSMutableData alloc]
-    initWithLength: (formatLen + 32) * sizeof(unichar)];
-  format = (unichar*)[fd mutableBytes];
-  [fmt getCharacters: format];
-
-  /*
-   * Expand any sequences to their basic components.
-   */
-  for (pos = 0; pos < formatLen; pos++)
-    {
-      unichar	c = format[pos];
-
-      if (c == '%')
-	{
-	  if (hadPercent == YES)
-	    {
-	      hadPercent = NO;
-	    }
-	  else
-	    {
-	      hadPercent = YES;
-	    }
-	}
-      else
-	{
-	  if (hadPercent == YES)
-	    {
-	      NSString	*sub = nil;
-
-	      if (c == 'c')
-		{
-		  sub = [LOCALE objectForKey: NSTimeDateFormatString];
-		  if (sub == nil)
-		    {
-		      sub = @"%X %x";
-		    }
-		}
-	      else if (c == 'R')
-		{
-		  sub = @"%H:%M";
-		}
-	      else if (c == 'r')
-		{
-		  sub = @"%I:%M:%S %p";
-		}
-	      else if (c == 'T')
-		{
-		  sub = @"%H:%M:%S";
-		}
-	      else if (c == 't')
-	        {
-		  sub = @"\t";
-	        }
-	      else if (c == 'X')
-		{
-		  sub = [LOCALE objectForKey: NSTimeFormatString];
-		  if (sub == nil)
-		    {
-		      sub = @"%H-%M-%S";
-		    }
-		}
-	      else if (c == 'x')
-		{
-		  sub = [LOCALE objectForKey: NSShortDateFormatString];
-		  if (sub == nil)
-		    {
-		      sub = @"%y-%m-%d";
-		    }
-		}
-
-	      if (sub != nil)
-		{
-		  unsigned	sLen = [sub length];
-		  int	i;
-
-		  if (sLen > 2)
-		    {
-		      [fd setLength:
-			(formatLen + sLen - 2) * sizeof(unichar)];
-		      format = (unichar*)[fd mutableBytes];
-		      for (i = formatLen-1; i > (NSInteger)pos; i--)
-			{
-			  format[i+sLen-2] = format[i];
-			}
-		    }
-		  else
-		    {
-		      for (i = pos+1; i < (NSInteger)formatLen; i++)
-			{
-			  format[i+sLen-2] = format[i];
-			}
-		      [fd setLength:
-			(formatLen + sLen - 2) * sizeof(unichar)];
-		      format = (unichar*)[fd mutableBytes];
-		    }
-		  [sub getCharacters: &format[pos-1]];
-		  formatLen += sLen - 2;
-		  changedFormat = YES;
-		  pos -= 2;	// Re-parse the newly substituted data.
-		}
-	    }
-	  hadPercent = NO;
-	}
-    }
-
-  /*
-   * Set up calendar format.
-   */
-  if (changedFormat == YES)
-    {
-      fmt = [NSString stringWithCharacters: format length: formatLen];
-    }
-  ASSIGN(_calendar_format, fmt);
-
-  //
-  // WARNING:
-  //   -Most locale stuff is dubious at best.
-  //   -Long day and month names depend on a non-alpha character after the
-  //    last digit to work.
-  //
-
-  while (error == NO && formatIdx < formatLen)
-    {
-      if (format[formatIdx] != '%')
-	{
-	  // If it's not a format specifier, ignore it.
-	  if (isspace(format[formatIdx]))
-	    {
-	      // Skip any amount of white space.
-	      while (source[sourceIdx] != 0 && isspace(source[sourceIdx]))
-		{
-		  sourceIdx++;
-		}
-	    }
-	  else
-	    {
-	      if (sourceIdx < sourceLen)
-		{
-		  if (source[sourceIdx] != format[formatIdx])
-		    {
-		      error = YES;
-		      NSDebugMLog(
-			@"Expected literal '%c' but got '%c' parsing"
-			@"'%@' using '%@'", format[formatIdx],
-			source[sourceIdx], description, fmt);
-		    }
-		  sourceIdx++;
-		}
-	    }
-	}
-      else
-	{
-	  // Skip '%'
-	  formatIdx++;
-	  while (formatIdx < formatLen && isdigit(format[formatIdx]))
-	    {
-	      formatIdx++; // skip field width
-	    }
-	  if (formatIdx < formatLen)
-	    {
-	      switch (format[formatIdx])
-		{
-		  case '%':
-		    // skip literal %
-		    if (sourceIdx < sourceLen)
-		      {
-			if (source[sourceIdx] != '%')
-			  {
-			    error = YES;
-			    NSDebugMLog(
-			      @"Expected literal '%%' but got '%c' parsing"
-			      @"'%@' using '%@'", source[sourceIdx],
-			      description, fmt);
-			  }
-			sourceIdx++;
-		      }
-		    else
-		      {
-			error = YES;
-			NSDebugMLog(
-			  @"Expected literal '%%' but got end of string parsing"
-			  @"'%@' using '%@'", description, fmt);
-		      }
-		    break;
-
-		  case 'a':
-		    /* FIXME ... Should look for all values from the locale,
-		     * matching for longest values first, rather than (wrongly)
-		     * assuming a fixed length of three characters.
-		     */
-		    tmpStr[0] = toupper(source[sourceIdx]);
-		    if (sourceIdx < sourceLen)
-		      sourceIdx++;
-		    tmpStr[1] = tolower(source[sourceIdx]);
-		    if (sourceIdx < sourceLen)
-		      sourceIdx++;
-		    tmpStr[2] = tolower(source[sourceIdx]);
-		    if (sourceIdx < sourceLen)
-		      sourceIdx++;
-		    tmpStr[3] = '\0';
-		    {
-		      NSString	*currDay;
-		      NSArray	*dayNames;
-
-		      currDay = [[NSString alloc] initWithCString: tmpStr];
-		      dayNames = [LOCALE objectForKey: NSShortWeekDayNameArray];
-		      for (tmpIdx = 0; tmpIdx < 7; tmpIdx++)
-			{
-			  if ([[dayNames objectAtIndex: tmpIdx] isEqual:
-			    currDay] == YES)
-			    {
-			      break;
-			    }
-			}
-		      if (tmpIdx == 7)
-			{
-			  error = YES;
-			  NSDebugMLog(@"Day of week '%@' not found in locale",
-			    currDay);
-			}
-		      else
-			{
-			  dayOfWeek = tmpIdx;
-			  had |= hadw;
-			}
-		      RELEASE(currDay);
-		    }
-		    break;
-
-		  case 'A':
-		    /* FIXME ... Should look for all values from the locale,
-		     * matching for longest values first, rather than (wrongly)
-		     * assuming the name contains only western letters.
-		     */
-		    tmpEnd = sizeof(tmpStr) - 1;
-		    if (sourceLen - sourceIdx < tmpEnd)
-		      {
-			tmpEnd = sourceLen - sourceIdx;
-		      }
-		    for (tmpIdx = 0; tmpIdx < tmpEnd; tmpIdx++)
-		      {
-			if (isalpha(source[sourceIdx + tmpIdx]))
-			  {
-			    tmpStr[tmpIdx] = source[sourceIdx + tmpIdx];
-			  }
-			else
-			  {
-			    break;
-			  }
-		      }
-		    tmpStr[tmpIdx] = '\0';
-		    sourceIdx += tmpIdx;
-		    {
-		      NSString	*currDay;
-		      NSArray	*dayNames;
-
-		      currDay = [[NSString alloc] initWithCString: tmpStr];
-		      dayNames = [LOCALE objectForKey: NSWeekDayNameArray];
-		      for (tmpIdx = 0; tmpIdx < 7; tmpIdx++)
-			{
-			  if ([[dayNames objectAtIndex: tmpIdx] isEqual:
-			    currDay] == YES)
-			    {
-			      break;
-			    }
-			}
-		      if (tmpIdx == 7)
-			{
-			  error = YES;
-			  NSDebugMLog(@"Day of week '%@' not found in locale",
-			    currDay);
-			}
-		      else
-			{
-			  dayOfWeek = tmpIdx;
-			  had |= hadw;
-			}
-		      RELEASE(currDay);
-		    }
-		    break;
-
-		  case 'b':
-		    /* FIXME ... Should look for all values from the locale,
-		     * matching for longest values first, rather than (wrongly)
-		     * assuming a fixed length of three characters.
-		     */
-		    tmpStr[0] = toupper(source[sourceIdx]);
-		    if (sourceIdx < sourceLen)
-		      sourceIdx++;
-		    tmpStr[1] = tolower(source[sourceIdx]);
-		    if (sourceIdx < sourceLen)
-		      sourceIdx++;
-		    tmpStr[2] = tolower(source[sourceIdx]);
-		    if (sourceIdx < sourceLen)
-		      sourceIdx++;
-		    tmpStr[3] = '\0';
-		    {
-		      NSString	*currMonth;
-		      NSArray	*monthNames;
-
-		      currMonth = [[NSString alloc] initWithCString: tmpStr];
-		      monthNames = [LOCALE objectForKey: NSShortMonthNameArray];
-
-		      for (tmpIdx = 0; tmpIdx < 12; tmpIdx++)
-			{
-			  if ([[monthNames objectAtIndex: tmpIdx]
-				    isEqual: currMonth] == YES)
-			    {
-			      break;
-			    }
-			}
-		      if (tmpIdx == 12)
-			{
-			  error = YES;
-			  NSDebugMLog(@"Month of year '%@' not found in locale",
-			    currMonth);
-			}
-		      else
-			{
-			  month = tmpIdx+1;
-			  had |= hadM;
-			}
-		      RELEASE(currMonth);
-		    }
-		    break;
-
-		  case 'B':
-		    /* FIXME ... Should look for all values from the locale,
-		     * matching for longest values first, rather than (wrongly)
-		     * assuming the name contains only western letters.
-		     */
-		    tmpEnd = sizeof(tmpStr) - 1;
-		    if (sourceLen - sourceIdx < tmpEnd)
-		      {
-			tmpEnd = sourceLen - sourceIdx;
-		      }
-		    for (tmpIdx = 0; tmpIdx < tmpEnd; tmpIdx++)
-		      {
-			if (isalpha(source[sourceIdx + tmpIdx]))
-			  {
-			    tmpStr[tmpIdx] = source[sourceIdx + tmpIdx];
-			  }
-			else
-			  {
-			    break;
-			  }
-		      }
-		    tmpStr[tmpIdx] = '\0';
-		    sourceIdx += tmpIdx;
-		    {
-		      NSString	*currMonth;
-		      NSArray	*monthNames;
-
-		      currMonth = [[NSString alloc] initWithCString: tmpStr];
-		      monthNames = [LOCALE objectForKey: NSMonthNameArray];
-
-		      for (tmpIdx = 0; tmpIdx < 12; tmpIdx++)
-			{
-			  if ([[monthNames objectAtIndex: tmpIdx]
-				    isEqual: currMonth] == YES)
-			    {
-			      break;
-			    }
-			}
-		      if (tmpIdx == 12)
-			{
-			  error = YES;
-			  NSDebugMLog(@"Month of year '%@' not found in locale",
-			    currMonth);
-			}
-		      else
-			{
-			  month = tmpIdx+1;
-			  had |= hadM;
-			}
-		      RELEASE(currMonth);
-		    }
-		    break;
-
-		  case 'd': // fall through
-		  case 'e':
-		    sourceIdx
-		      += getDigits(&source[sourceIdx], tmpStr, 2, &error);
-		    day = atoi(tmpStr);
-		    had |= hadD;
-		    if (error == NO && day < 1)
-		      {
-			error = YES;
-			NSDebugMLog(@"Day of month is zero");
-		      }
-		    break;
-
-		  case 'F':
-		    sourceIdx
-		      += getDigits(&source[sourceIdx], tmpStr, 3, &error);
-		    milliseconds = atoi(tmpStr);
-		    break;
-
-		  case 'k':
-		    // GNUstep extension, not available in Cocoa
-		    if (GSPrivateDefaultsFlag(GSMacOSXCompatible))
-		      {
-			error = YES;
-			NSLog(@"Invalid NSCalendar date, "
-			      @"specifier %c not recognized in format %@",
-			      format[formatIdx], fmt);
-		      }
-		  case 'I': // fall through
-		    twelveHrClock = YES;
-		  case 'H':
-		    sourceIdx
-		      += getDigits(&source[sourceIdx], tmpStr, 2, &error);
-		    hour = atoi(tmpStr);
-		    had |= hadh;
-		    break;
-
-		  case 'j':
-		    sourceIdx
-		      += getDigits(&source[sourceIdx], tmpStr, 3, &error);
-		    day = atoi(tmpStr);
-		    had |= hadD;
-		    break;
-
-		  case 'm':
-		    sourceIdx
-		      += getDigits(&source[sourceIdx], tmpStr, 2, &error);
-		    month = atoi(tmpStr);
-		    had |= hadM;
-		    if (error == NO && month < 1)
-		      {
-			error = YES;
-			NSDebugMLog(@"Month of year is zero");
-		      }
-		    break;
-
-		  case 'M':
-		    sourceIdx
-		      += getDigits(&source[sourceIdx], tmpStr, 2, &error);
-		    min = atoi(tmpStr);
-		    had |= hadm;
-		    break;
-
-		  case 'p':
-		    /* FIXME ... Should look for all values from the locale,
-		     * matching for longest values first, rather than (wrongly)
-		     * assuming the name is always two uppercase letters.
-		     */
-		    twelveHrClock = YES;
-		    tmpStr[0] = toupper(source[sourceIdx]);
-		    if (sourceIdx < sourceLen)
-		      sourceIdx++;
-		    tmpStr[1] = toupper(source[sourceIdx]);
-		    if (sourceIdx < sourceLen)
-		      sourceIdx++;
-		    tmpStr[2] = '\0';
-		    {
-		      NSString	*currAMPM;
-		      NSArray	*amPMNames;
-
-		      currAMPM = [NSString stringWithUTF8String: tmpStr];
-		      amPMNames = [LOCALE objectForKey: NSAMPMDesignation];
-
-		      /*
-		       * The time addition is handled below because this
-		       * indicator only modifies the time on a 12hour clock.
-		       */
-                      if ([currAMPM caseInsensitiveCompare:
-			[amPMNames objectAtIndex: 0]] == NSOrderedSame)
-                        {
-                          ampm = YES;
-                          isPM = NO;
-                        }
-                      else if ([currAMPM caseInsensitiveCompare:
-			[amPMNames objectAtIndex: 1]] == NSOrderedSame)
-                        {
-                          ampm = YES;
-                          isPM = YES;
-                        }
-		    }
-		    break;
-
-		  case 'S':
-		    sourceIdx
-		      += getDigits(&source[sourceIdx], tmpStr, 2, &error);
-		    sec = atoi(tmpStr);
-		    had |= hads;
-		    break;
-
-		  case 'w':
-		    sourceIdx
-		      += getDigits(&source[sourceIdx], tmpStr, 1, &error);
-		    dayOfWeek = atoi(tmpStr);
-		    had |= hadw;
-		    break;
-
-		  case 'W': // Fall through
-		    weekStartsMonday = 1;
-		  case 'U':
-		    sourceIdx
-		      += getDigits(&source[sourceIdx], tmpStr, 1, &error);
-		    julianWeeks = atoi(tmpStr);
-		    break;
-
-		    //	case 'x':
-		    //	break;
-
-		    //	case 'X':
-		    //	break;
-
-		  case 'y':
-		    sourceIdx
-		      += getDigits(&source[sourceIdx], tmpStr, 2, &error);
-		    year = atoi(tmpStr);
-		    if (year >= 70)
-		      {
-			year += 1900;
-		      }
-		    else
-		      {
-			year += 2000;
-		      }
-		    had |= hadY;
-		    break;
-
-		  case 'Y':
-		    sourceIdx
-		      += getDigits(&source[sourceIdx], tmpStr, 4, &error);
-		    year = atoi(tmpStr);
-		    had |= hadY;
-		    break;
-
-		  case 'z':
-		    {
-		      int	sign = 1;
-		      int	zone;
-		      int	found;
-
-		      if (source[sourceIdx] == '+')
-			{
-			  sourceIdx++;
-			}
-		      else if (source[sourceIdx] == '-')
-			{
-			  sign = -1;
-			  sourceIdx++;
-			}
-		      found = getDigits(&source[sourceIdx], tmpStr, 4, &error);
-		      if (found > 0)
-			{
-			  sourceIdx += found;
-			  zone = atoi(tmpStr);
-			  if (found == 2)
-			    {
-			      zone *= 100;	// Convert 2 digits to 4
-			    }
-			  tz = [NSTimeZone timeZoneForSecondsFromGMT:
-			    sign * ((zone / 100) * 60 + (zone % 100)) * 60];
-			}
-		    }
-		    break;
-
-		  case 'Z':
-		    /* Can we assume a timezone name is always space terminated?
-		     */
-		    tmpEnd = sizeof(tmpStr) - 1;
-		    if (sourceLen - sourceIdx < tmpEnd)
-		      {
-			tmpEnd = sourceLen - sourceIdx;
-		      }
-		    for (tmpIdx = 0; tmpIdx < tmpEnd; tmpIdx++)
-		      {
-			if (!isspace(source[sourceIdx + tmpIdx]))
-			  {
-			    tmpStr[tmpIdx] = source[sourceIdx + tmpIdx];
-			  }
-			else
-			  {
-			    break;
-			  }
-		      }
-		    tmpStr[tmpIdx] = '\0';
-		    sourceIdx += tmpIdx;
-		    {
-		      NSString	*z = [NSString stringWithUTF8String: tmpStr];
-
-		      /* Abbreviations aren't one-to-one with time zone names
-			 so just look for the zone named after the abbreviation,
-			 then look up the abbreviation as a last resort */
-		      if ([z length] > 0)
-		        {
-		          tz = [NSTimeZone timeZoneWithName: z];
-		          if (tz == nil)
-			    {
-			      tz = [NSTimeZone timeZoneWithAbbreviation: z];
-			      if (tz == nil)
-			        {
-			          error = YES;
-			          NSDebugMLog(@"Time zone '%@' not found", z);
-			        }
-			    }
-		        }
-                      else
-                        {
-                           error = YES;
-                           NSDebugMLog(@"Time zone not given");
-                        }
-		    }
-		    break;
-
-		  default:
-		    error = YES;
-		    NSLog(@"Invalid NSCalendar date, "
-		      @"specifier %c not recognized in format %@",
-		      format[formatIdx], fmt);
-		    break;
-		}
-	    }
-	}
-      formatIdx++;
-    }
-  RELEASE(fd);
-
-  if (error == NO)
-    {
-      if (tz == nil)
-	{
-	  tz = localTZ;
-	}
-
-      if (twelveHrClock == YES)
+        fmt = [LOCALE objectForKey: NSTimeDateFormatString];
+        if (fmt == nil)
         {
-          if (ampm == YES && isPM == YES && hour != 12)
+            fmt = @"";
+        }
+    }
+    
+    /*
+     * Get format into a buffer, leaving room for expansion in case it has
+     * escapes that need to be converted.
+     */
+    formatLen = [fmt length];
+    fd = [[NSMutableData alloc]
+          initWithLength: (formatLen + 32) * sizeof(unichar)];
+    format = (unichar*)[fd mutableBytes];
+    [fmt getCharacters: format];
+    
+    /*
+     * Expand any sequences to their basic components.
+     */
+    for (pos = 0; pos < formatLen; pos++)
+    {
+        unichar	c = format[pos];
+        
+        if (c == '%')
+        {
+            if (hadPercent == YES)
             {
-              hour += 12;
+                hadPercent = NO;
             }
-          else if (ampm == YES && isPM == NO && hour == 12)
+            else
             {
-              hour = 0; // 12 AM
+                hadPercent = YES;
             }
         }
-
-      if (julianWeeks != -1)
-	{
-	  NSTimeZone		*gmtZone;
-	  NSCalendarDate	*d;
-	  int			currDay;
-
-	  gmtZone = [NSTimeZone timeZoneForSecondsFromGMT: 0];
-
-	  if ((had & (hadY|hadw)) != (hadY|hadw))
-	    {
-	      NSCalendarDate	*now = [[NSCalendarDateClass alloc] init];
-
-	      [now setTimeZone: gmtZone];
-	      if ((had & hadY) == 0)
-		{
-		  year = [now yearOfCommonEra];
-		  had |= hadY;
-		}
-	      if ((had & hadw) == 0)
-		{
-		  dayOfWeek = [now dayOfWeek];
-		  had |= hadw;
-		}
-	      RELEASE(now);
-	    }
-
-	  d = [[NSCalendarDateClass alloc] initWithYear: year
-						  month: 1
-						    day: 1
-						   hour: 0
-						 minute: 0
-						 second: 0
-					       timeZone: gmtZone];
-	  currDay = [d dayOfWeek];
-	  RELEASE(d);
-
-	  /*
-	   * The julian weeks are either sunday relative or monday relative
-	   * but all of the day of week specifiers are sunday relative.
-	   * This means that if no day of week specifier was used the week
-	   * starts on monday.
-	   */
-	  if (dayOfWeek == -1)
-	    {
-	      if (weekStartsMonday)
-		{
-		  dayOfWeek = 1;
-		}
-	      else
-		{
-		  dayOfWeek = 0;
-		}
-	    }
-	  day = dayOfWeek + (julianWeeks * 7 - (currDay - 1));
-	  had |= hadD;
-	}
-
-      /*
-       * If the year has not been set ... use this year ... as on MacOS-X
-       */
-      if ((had & hadY) == 0)
-	{
-	  NSCalendarDate	*now = [[NSCalendarDateClass alloc] init];
-
-	  year = [now yearOfCommonEra];
-	  RELEASE(now);
-	}
-
-      self = [self initWithYear: year
-			  month: month
-			    day: day
-			   hour: hour
-			 minute: min
-			 second: sec
-		       timeZone: tz];
-      if (self != nil)
-	{
-	  _seconds_since_ref += ((NSTimeInterval)milliseconds) / 1000.0;
-	}
+        else
+        {
+            if (hadPercent == YES)
+            {
+                NSString	*sub = nil;
+                
+                if (c == 'c')
+                {
+                    sub = [LOCALE objectForKey: NSTimeDateFormatString];
+                    if (sub == nil)
+                    {
+                        sub = @"%X %x";
+                    }
+                }
+                else if (c == 'R')
+                {
+                    sub = @"%H:%M";
+                }
+                else if (c == 'r')
+                {
+                    sub = @"%I:%M:%S %p";
+                }
+                else if (c == 'T')
+                {
+                    sub = @"%H:%M:%S";
+                }
+                else if (c == 't')
+                {
+                    sub = @"\t";
+                }
+                else if (c == 'X')
+                {
+                    sub = [LOCALE objectForKey: NSTimeFormatString];
+                    if (sub == nil)
+                    {
+                        sub = @"%H-%M-%S";
+                    }
+                }
+                else if (c == 'x')
+                {
+                    sub = [LOCALE objectForKey: NSShortDateFormatString];
+                    if (sub == nil)
+                    {
+                        sub = @"%y-%m-%d";
+                    }
+                }
+                
+                if (sub != nil)
+                {
+                    unsigned	sLen = [sub length];
+                    int	i;
+                    
+                    if (sLen > 2)
+                    {
+                        [fd setLength:
+                         (formatLen + sLen - 2) * sizeof(unichar)];
+                        format = (unichar*)[fd mutableBytes];
+                        for (i = formatLen-1; i > (NSInteger)pos; i--)
+                        {
+                            format[i+sLen-2] = format[i];
+                        }
+                    }
+                    else
+                    {
+                        for (i = pos+1; i < (NSInteger)formatLen; i++)
+                        {
+                            format[i+sLen-2] = format[i];
+                        }
+                        [fd setLength:
+                         (formatLen + sLen - 2) * sizeof(unichar)];
+                        format = (unichar*)[fd mutableBytes];
+                    }
+                    [sub getCharacters: &format[pos-1]];
+                    formatLen += sLen - 2;
+                    changedFormat = YES;
+                    pos -= 2;	// Re-parse the newly substituted data.
+                }
+            }
+            hadPercent = NO;
+        }
     }
-
-  if (error == YES)
+    
+    /*
+     * Set up calendar format.
+     */
+    if (changedFormat == YES)
     {
-      DESTROY(self);
+        fmt = [NSString stringWithCharacters: format length: formatLen];
     }
-  return self;
+    ASSIGN(_calendar_format, fmt);
+    
+    //
+    // WARNING:
+    //   -Most locale stuff is dubious at best.
+    //   -Long day and month names depend on a non-alpha character after the
+    //    last digit to work.
+    //
+    
+    while (error == NO && formatIdx < formatLen)
+    {
+        if (format[formatIdx] != '%')
+        {
+            // If it's not a format specifier, ignore it.
+            if (isspace(format[formatIdx]))
+            {
+                // Skip any amount of white space.
+                while (source[sourceIdx] != 0 && isspace(source[sourceIdx]))
+                {
+                    sourceIdx++;
+                }
+            }
+            else
+            {
+                if (sourceIdx < sourceLen)
+                {
+                    if (source[sourceIdx] != format[formatIdx])
+                    {
+                        error = YES;
+                        NSDebugMLog(
+                                    @"Expected literal '%c' but got '%c' parsing"
+                                    @"'%@' using '%@'", format[formatIdx],
+                                    source[sourceIdx], description, fmt);
+                    }
+                    sourceIdx++;
+                }
+            }
+        }
+        else
+        {
+            // Skip '%'
+            formatIdx++;
+            while (formatIdx < formatLen && isdigit(format[formatIdx]))
+            {
+                formatIdx++; // skip field width
+            }
+            if (formatIdx < formatLen)
+            {
+                switch (format[formatIdx])
+                {
+                    case '%':
+                        // skip literal %
+                        if (sourceIdx < sourceLen)
+                        {
+                            if (source[sourceIdx] != '%')
+                            {
+                                error = YES;
+                                NSDebugMLog(
+                                            @"Expected literal '%%' but got '%c' parsing"
+                                            @"'%@' using '%@'", source[sourceIdx],
+                                            description, fmt);
+                            }
+                            sourceIdx++;
+                        }
+                        else
+                        {
+                            error = YES;
+                            NSDebugMLog(
+                                        @"Expected literal '%%' but got end of string parsing"
+                                        @"'%@' using '%@'", description, fmt);
+                        }
+                        break;
+                        
+                    case 'a':
+                        /* FIXME ... Should look for all values from the locale,
+                         * matching for longest values first, rather than (wrongly)
+                         * assuming a fixed length of three characters.
+                         */
+                        tmpStr[0] = toupper(source[sourceIdx]);
+                        if (sourceIdx < sourceLen)
+                            sourceIdx++;
+                        tmpStr[1] = tolower(source[sourceIdx]);
+                        if (sourceIdx < sourceLen)
+                            sourceIdx++;
+                        tmpStr[2] = tolower(source[sourceIdx]);
+                        if (sourceIdx < sourceLen)
+                            sourceIdx++;
+                        tmpStr[3] = '\0';
+                    {
+                        NSString	*currDay;
+                        NSArray	*dayNames;
+                        
+                        currDay = [[NSString alloc] initWithCString: tmpStr];
+                        dayNames = [LOCALE objectForKey: NSShortWeekDayNameArray];
+                        for (tmpIdx = 0; tmpIdx < 7; tmpIdx++)
+                        {
+                            if ([[dayNames objectAtIndex: tmpIdx] isEqual:
+                                 currDay] == YES)
+                            {
+                                break;
+                            }
+                        }
+                        if (tmpIdx == 7)
+                        {
+                            error = YES;
+                            NSDebugMLog(@"Day of week '%@' not found in locale",
+                                        currDay);
+                        }
+                        else
+                        {
+                            dayOfWeek = tmpIdx;
+                            had |= hadw;
+                        }
+                        RELEASE(currDay);
+                    }
+                        break;
+                        
+                    case 'A':
+                        /* FIXME ... Should look for all values from the locale,
+                         * matching for longest values first, rather than (wrongly)
+                         * assuming the name contains only western letters.
+                         */
+                        tmpEnd = sizeof(tmpStr) - 1;
+                        if (sourceLen - sourceIdx < tmpEnd)
+                        {
+                            tmpEnd = sourceLen - sourceIdx;
+                        }
+                        for (tmpIdx = 0; tmpIdx < tmpEnd; tmpIdx++)
+                        {
+                            if (isalpha(source[sourceIdx + tmpIdx]))
+                            {
+                                tmpStr[tmpIdx] = source[sourceIdx + tmpIdx];
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        tmpStr[tmpIdx] = '\0';
+                        sourceIdx += tmpIdx;
+                    {
+                        NSString	*currDay;
+                        NSArray	*dayNames;
+                        
+                        currDay = [[NSString alloc] initWithCString: tmpStr];
+                        dayNames = [LOCALE objectForKey: NSWeekDayNameArray];
+                        for (tmpIdx = 0; tmpIdx < 7; tmpIdx++)
+                        {
+                            if ([[dayNames objectAtIndex: tmpIdx] isEqual:
+                                 currDay] == YES)
+                            {
+                                break;
+                            }
+                        }
+                        if (tmpIdx == 7)
+                        {
+                            error = YES;
+                            NSDebugMLog(@"Day of week '%@' not found in locale",
+                                        currDay);
+                        }
+                        else
+                        {
+                            dayOfWeek = tmpIdx;
+                            had |= hadw;
+                        }
+                        RELEASE(currDay);
+                    }
+                        break;
+                        
+                    case 'b':
+                        /* FIXME ... Should look for all values from the locale,
+                         * matching for longest values first, rather than (wrongly)
+                         * assuming a fixed length of three characters.
+                         */
+                        tmpStr[0] = toupper(source[sourceIdx]);
+                        if (sourceIdx < sourceLen)
+                            sourceIdx++;
+                        tmpStr[1] = tolower(source[sourceIdx]);
+                        if (sourceIdx < sourceLen)
+                            sourceIdx++;
+                        tmpStr[2] = tolower(source[sourceIdx]);
+                        if (sourceIdx < sourceLen)
+                            sourceIdx++;
+                        tmpStr[3] = '\0';
+                    {
+                        NSString	*currMonth;
+                        NSArray	*monthNames;
+                        
+                        currMonth = [[NSString alloc] initWithCString: tmpStr];
+                        monthNames = [LOCALE objectForKey: NSShortMonthNameArray];
+                        
+                        for (tmpIdx = 0; tmpIdx < 12; tmpIdx++)
+                        {
+                            if ([[monthNames objectAtIndex: tmpIdx]
+                                 isEqual: currMonth] == YES)
+                            {
+                                break;
+                            }
+                        }
+                        if (tmpIdx == 12)
+                        {
+                            error = YES;
+                            NSDebugMLog(@"Month of year '%@' not found in locale",
+                                        currMonth);
+                        }
+                        else
+                        {
+                            month = tmpIdx+1;
+                            had |= hadM;
+                        }
+                        RELEASE(currMonth);
+                    }
+                        break;
+                        
+                    case 'B':
+                        /* FIXME ... Should look for all values from the locale,
+                         * matching for longest values first, rather than (wrongly)
+                         * assuming the name contains only western letters.
+                         */
+                        tmpEnd = sizeof(tmpStr) - 1;
+                        if (sourceLen - sourceIdx < tmpEnd)
+                        {
+                            tmpEnd = sourceLen - sourceIdx;
+                        }
+                        for (tmpIdx = 0; tmpIdx < tmpEnd; tmpIdx++)
+                        {
+                            if (isalpha(source[sourceIdx + tmpIdx]))
+                            {
+                                tmpStr[tmpIdx] = source[sourceIdx + tmpIdx];
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        tmpStr[tmpIdx] = '\0';
+                        sourceIdx += tmpIdx;
+                    {
+                        NSString	*currMonth;
+                        NSArray	*monthNames;
+                        
+                        currMonth = [[NSString alloc] initWithCString: tmpStr];
+                        monthNames = [LOCALE objectForKey: NSMonthNameArray];
+                        
+                        for (tmpIdx = 0; tmpIdx < 12; tmpIdx++)
+                        {
+                            if ([[monthNames objectAtIndex: tmpIdx]
+                                 isEqual: currMonth] == YES)
+                            {
+                                break;
+                            }
+                        }
+                        if (tmpIdx == 12)
+                        {
+                            error = YES;
+                            NSDebugMLog(@"Month of year '%@' not found in locale",
+                                        currMonth);
+                        }
+                        else
+                        {
+                            month = tmpIdx+1;
+                            had |= hadM;
+                        }
+                        RELEASE(currMonth);
+                    }
+                        break;
+                        
+                    case 'd': // fall through
+                    case 'e':
+                        sourceIdx
+                        += getDigits(&source[sourceIdx], tmpStr, 2, &error);
+                        day = atoi(tmpStr);
+                        had |= hadD;
+                        if (error == NO && day < 1)
+                        {
+                            error = YES;
+                            NSDebugMLog(@"Day of month is zero");
+                        }
+                        break;
+                        
+                    case 'F':
+                        sourceIdx
+                        += getDigits(&source[sourceIdx], tmpStr, 3, &error);
+                        milliseconds = atoi(tmpStr);
+                        break;
+                        
+                    case 'k':
+                        // GNUstep extension, not available in Cocoa
+                        if (GSPrivateDefaultsFlag(GSMacOSXCompatible))
+                        {
+                            error = YES;
+                            NSLog(@"Invalid NSCalendar date, "
+                                  @"specifier %c not recognized in format %@",
+                                  format[formatIdx], fmt);
+                        }
+                    case 'I': // fall through
+                        twelveHrClock = YES;
+                    case 'H':
+                        sourceIdx
+                        += getDigits(&source[sourceIdx], tmpStr, 2, &error);
+                        hour = atoi(tmpStr);
+                        had |= hadh;
+                        break;
+                        
+                    case 'j':
+                        sourceIdx
+                        += getDigits(&source[sourceIdx], tmpStr, 3, &error);
+                        day = atoi(tmpStr);
+                        had |= hadD;
+                        break;
+                        
+                    case 'm':
+                        sourceIdx
+                        += getDigits(&source[sourceIdx], tmpStr, 2, &error);
+                        month = atoi(tmpStr);
+                        had |= hadM;
+                        if (error == NO && month < 1)
+                        {
+                            error = YES;
+                            NSDebugMLog(@"Month of year is zero");
+                        }
+                        break;
+                        
+                    case 'M':
+                        sourceIdx
+                        += getDigits(&source[sourceIdx], tmpStr, 2, &error);
+                        min = atoi(tmpStr);
+                        had |= hadm;
+                        break;
+                        
+                    case 'p':
+                        /* FIXME ... Should look for all values from the locale,
+                         * matching for longest values first, rather than (wrongly)
+                         * assuming the name is always two uppercase letters.
+                         */
+                        twelveHrClock = YES;
+                        tmpStr[0] = toupper(source[sourceIdx]);
+                        if (sourceIdx < sourceLen)
+                            sourceIdx++;
+                        tmpStr[1] = toupper(source[sourceIdx]);
+                        if (sourceIdx < sourceLen)
+                            sourceIdx++;
+                        tmpStr[2] = '\0';
+                    {
+                        NSString	*currAMPM;
+                        NSArray	*amPMNames;
+                        
+                        currAMPM = [NSString stringWithUTF8String: tmpStr];
+                        amPMNames = [LOCALE objectForKey: NSAMPMDesignation];
+                        
+                        /*
+                         * The time addition is handled below because this
+                         * indicator only modifies the time on a 12hour clock.
+                         */
+                        if ([currAMPM caseInsensitiveCompare:
+                             [amPMNames objectAtIndex: 0]] == NSOrderedSame)
+                        {
+                            ampm = YES;
+                            isPM = NO;
+                        }
+                        else if ([currAMPM caseInsensitiveCompare:
+                                  [amPMNames objectAtIndex: 1]] == NSOrderedSame)
+                        {
+                            ampm = YES;
+                            isPM = YES;
+                        }
+                    }
+                        break;
+                        
+                    case 'S':
+                        sourceIdx
+                        += getDigits(&source[sourceIdx], tmpStr, 2, &error);
+                        sec = atoi(tmpStr);
+                        had |= hads;
+                        break;
+                        
+                    case 'w':
+                        sourceIdx
+                        += getDigits(&source[sourceIdx], tmpStr, 1, &error);
+                        dayOfWeek = atoi(tmpStr);
+                        had |= hadw;
+                        break;
+                        
+                    case 'W': // Fall through
+                        weekStartsMonday = 1;
+                    case 'U':
+                        sourceIdx
+                        += getDigits(&source[sourceIdx], tmpStr, 1, &error);
+                        julianWeeks = atoi(tmpStr);
+                        break;
+                        
+                        //	case 'x':
+                        //	break;
+                        
+                        //	case 'X':
+                        //	break;
+                        
+                    case 'y':
+                        sourceIdx
+                        += getDigits(&source[sourceIdx], tmpStr, 2, &error);
+                        year = atoi(tmpStr);
+                        if (year >= 70)
+                        {
+                            year += 1900;
+                        }
+                        else
+                        {
+                            year += 2000;
+                        }
+                        had |= hadY;
+                        break;
+                        
+                    case 'Y':
+                        sourceIdx
+                        += getDigits(&source[sourceIdx], tmpStr, 4, &error);
+                        year = atoi(tmpStr);
+                        had |= hadY;
+                        break;
+                        
+                    case 'z':
+                    {
+                        int	sign = 1;
+                        int	zone;
+                        int	found;
+                        
+                        if (source[sourceIdx] == '+')
+                        {
+                            sourceIdx++;
+                        }
+                        else if (source[sourceIdx] == '-')
+                        {
+                            sign = -1;
+                            sourceIdx++;
+                        }
+                        found = getDigits(&source[sourceIdx], tmpStr, 4, &error);
+                        if (found > 0)
+                        {
+                            sourceIdx += found;
+                            zone = atoi(tmpStr);
+                            if (found == 2)
+                            {
+                                zone *= 100;	// Convert 2 digits to 4
+                            }
+                            tz = [NSTimeZone timeZoneForSecondsFromGMT:
+                                  sign * ((zone / 100) * 60 + (zone % 100)) * 60];
+                        }
+                    }
+                        break;
+                        
+                    case 'Z':
+                        /* Can we assume a timezone name is always space terminated?
+                         */
+                        tmpEnd = sizeof(tmpStr) - 1;
+                        if (sourceLen - sourceIdx < tmpEnd)
+                        {
+                            tmpEnd = sourceLen - sourceIdx;
+                        }
+                        for (tmpIdx = 0; tmpIdx < tmpEnd; tmpIdx++)
+                        {
+                            if (!isspace(source[sourceIdx + tmpIdx]))
+                            {
+                                tmpStr[tmpIdx] = source[sourceIdx + tmpIdx];
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        tmpStr[tmpIdx] = '\0';
+                        sourceIdx += tmpIdx;
+                    {
+                        NSString	*z = [NSString stringWithUTF8String: tmpStr];
+                        
+                        /* Abbreviations aren't one-to-one with time zone names
+                         so just look for the zone named after the abbreviation,
+                         then look up the abbreviation as a last resort */
+                        if ([z length] > 0)
+                        {
+                            tz = [NSTimeZone timeZoneWithName: z];
+                            if (tz == nil)
+                            {
+                                tz = [NSTimeZone timeZoneWithAbbreviation: z];
+                                if (tz == nil)
+                                {
+                                    error = YES;
+                                    NSDebugMLog(@"Time zone '%@' not found", z);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            error = YES;
+                            NSDebugMLog(@"Time zone not given");
+                        }
+                    }
+                        break;
+                        
+                    default:
+                        error = YES;
+                        NSLog(@"Invalid NSCalendar date, "
+                              @"specifier %c not recognized in format %@",
+                              format[formatIdx], fmt);
+                        break;
+                }
+            }
+        }
+        formatIdx++;
+    }
+    RELEASE(fd);
+    
+    if (error == NO)
+    {
+        if (tz == nil)
+        {
+            tz = localTZ;
+        }
+        
+        if (twelveHrClock == YES)
+        {
+            if (ampm == YES && isPM == YES && hour != 12)
+            {
+                hour += 12;
+            }
+            else if (ampm == YES && isPM == NO && hour == 12)
+            {
+                hour = 0; // 12 AM
+            }
+        }
+        
+        if (julianWeeks != -1)
+        {
+            NSTimeZone		*gmtZone;
+            NSCalendarDate	*d;
+            int			currDay;
+            
+            gmtZone = [NSTimeZone timeZoneForSecondsFromGMT: 0];
+            
+            if ((had & (hadY|hadw)) != (hadY|hadw))
+            {
+                NSCalendarDate	*now = [[NSCalendarDateClass alloc] init];
+                
+                [now setTimeZone: gmtZone];
+                if ((had & hadY) == 0)
+                {
+                    year = [now yearOfCommonEra];
+                    had |= hadY;
+                }
+                if ((had & hadw) == 0)
+                {
+                    dayOfWeek = [now dayOfWeek];
+                    had |= hadw;
+                }
+                RELEASE(now);
+            }
+            
+            d = [[NSCalendarDateClass alloc] initWithYear: year
+                                                    month: 1
+                                                      day: 1
+                                                     hour: 0
+                                                   minute: 0
+                                                   second: 0
+                                                 timeZone: gmtZone];
+            currDay = [d dayOfWeek];
+            RELEASE(d);
+            
+            /*
+             * The julian weeks are either sunday relative or monday relative
+             * but all of the day of week specifiers are sunday relative.
+             * This means that if no day of week specifier was used the week
+             * starts on monday.
+             */
+            if (dayOfWeek == -1)
+            {
+                if (weekStartsMonday)
+                {
+                    dayOfWeek = 1;
+                }
+                else
+                {
+                    dayOfWeek = 0;
+                }
+            }
+            day = dayOfWeek + (julianWeeks * 7 - (currDay - 1));
+            had |= hadD;
+        }
+        
+        /*
+         * If the year has not been set ... use this year ... as on MacOS-X
+         */
+        if ((had & hadY) == 0)
+        {
+            NSCalendarDate	*now = [[NSCalendarDateClass alloc] init];
+            
+            year = [now yearOfCommonEra];
+            RELEASE(now);
+        }
+        
+        self = [self initWithYear: year
+                            month: month
+                              day: day
+                             hour: hour
+                           minute: min
+                           second: sec
+                         timeZone: tz];
+        if (self != nil)
+        {
+            _seconds_since_ref += ((NSTimeInterval)milliseconds) / 1000.0;
+        }
+    }
+    
+    if (error == YES)
+    {
+        DESTROY(self);
+    }
+    return self;
 }
 
 /**
@@ -1531,85 +1482,85 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  * </list>
  */
 - (id) initWithYear: (NSInteger)year
-	      month: (NSUInteger)month
-	        day: (NSUInteger)day
-	       hour: (NSUInteger)hour
-	     minute: (NSUInteger)minute
-	     second: (NSUInteger)second
-	   timeZone: (NSTimeZone *)aTimeZone
+              month: (NSUInteger)month
+                day: (NSUInteger)day
+               hour: (NSUInteger)hour
+             minute: (NSUInteger)minute
+             second: (NSUInteger)second
+           timeZone: (NSTimeZone *)aTimeZone
 {
-  unsigned int		c;
-  NSTimeInterval	s;
-  NSTimeInterval	oldOffset;
-  NSTimeInterval	newOffset;
-
-  if (month < 1 || month > 12)
+    unsigned int		c;
+    NSTimeInterval	s;
+    NSTimeInterval	oldOffset;
+    NSTimeInterval	newOffset;
+    
+    if (month < 1 || month > 12)
     {
-      NSWarnMLog(@"invalid month given - %"PRIuPTR, month);
+        NSWarnMLog(@"invalid month given - %"PRIuPTR, month);
     }
-  c = lastDayOfGregorianMonth(month, year);
-  if (day < 1 || day > c)
+    c = lastDayOfGregorianMonth(month, year);
+    if (day < 1 || day > c)
     {
-      NSWarnMLog(@"invalid day given - %"PRIuPTR, day);
+        NSWarnMLog(@"invalid day given - %"PRIuPTR, day);
     }
-  if (hour > 23)
+    if (hour > 23)
     {
-      NSWarnMLog(@"invalid hour given - %"PRIuPTR, hour);
+        NSWarnMLog(@"invalid hour given - %"PRIuPTR, hour);
     }
-  if (minute > 59)
+    if (minute > 59)
     {
-      NSWarnMLog(@"invalid minute given - %"PRIuPTR, minute);
+        NSWarnMLog(@"invalid minute given - %"PRIuPTR, minute);
     }
-  if (second > 59)
+    if (second > 59)
     {
-      NSWarnMLog(@"invalid second given - %"PRIuPTR, second);
+        NSWarnMLog(@"invalid second given - %"PRIuPTR, second);
     }
-
-  // Calculate date as GMT
-  s = GSTime(day, month, year, hour, minute, second, 0);
-
-  // Assign time zone detail
-  if (aTimeZone == nil)
+    
+    // Calculate date as GMT
+    s = GSTime(day, month, year, hour, minute, second, 0);
+    
+    // Assign time zone detail
+    if (aTimeZone == nil)
     {
-      _time_zone = localTZ;	// retain is a no-op for the local timezone.
+        _time_zone = localTZ;	// retain is a no-op for the local timezone.
     }
-  else
+    else
     {
-      _time_zone = RETAIN(aTimeZone);
+        _time_zone = RETAIN(aTimeZone);
     }
-  if (_calendar_format == nil)
+    if (_calendar_format == nil)
     {
-      _calendar_format = cformat;
+        _calendar_format = cformat;
     }
-  _seconds_since_ref = s;
-
-  /*
-   * Adjust date so it is correct for time zone.
-   */
-  oldOffset = offset(_time_zone, self);
-  s -= oldOffset;
-  _seconds_since_ref = s;
-
-  /*
-   * See if we need to adjust for daylight savings time
-   */
-  newOffset = offset(_time_zone, self);
-  if (oldOffset != newOffset)
+    _seconds_since_ref = s;
+    
+    /*
+     * Adjust date so it is correct for time zone.
+     */
+    oldOffset = offset(_time_zone, self);
+    s -= oldOffset;
+    _seconds_since_ref = s;
+    
+    /*
+     * See if we need to adjust for daylight savings time
+     */
+    newOffset = offset(_time_zone, self);
+    if (oldOffset != newOffset)
     {
-      s -= (newOffset - oldOffset);
-      _seconds_since_ref = s;
-      oldOffset = offset(_time_zone, self);
-      /*
-       * If the adjustment puts us in another offset, we must be in the
-       * non-existent period at the start of daylight savings time.
-       */
-      if (oldOffset != newOffset)
-	{
-	  NSWarnMLog(@"init non-existent time at start of daylight savings");
-	}
+        s -= (newOffset - oldOffset);
+        _seconds_since_ref = s;
+        oldOffset = offset(_time_zone, self);
+        /*
+         * If the adjustment puts us in another offset, we must be in the
+         * non-existent period at the start of daylight savings time.
+         */
+        if (oldOffset != newOffset)
+        {
+            NSWarnMLog(@"init non-existent time at start of daylight savings");
+        }
     }
-
-  return self;
+    
+    return self;
 }
 
 /**
@@ -1619,32 +1570,32 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  */
 - (id) initWithTimeIntervalSinceReferenceDate: (NSTimeInterval)seconds
 {
-  if (isnan(seconds))
+    if (isnan(seconds))
     {
-      [NSException raise: NSInvalidArgumentException
-	          format: @"[%@-%@] interval is not a number",
-	NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
+        [NSException raise: NSInvalidArgumentException
+                    format: @"[%@-%@] interval is not a number",
+         NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
     }
 #if	GS_SIZEOF_VOIDP == 4
-  if (seconds <= DISTANT_PAST)
+    if (seconds <= DISTANT_PAST)
     {
-      seconds = DISTANT_PAST;
+        seconds = DISTANT_PAST;
     }
-  else if (seconds >= DISTANT_FUTURE)
+    else if (seconds >= DISTANT_FUTURE)
     {
-      seconds = DISTANT_FUTURE;
+        seconds = DISTANT_FUTURE;
     }
 #endif
-  _seconds_since_ref = seconds;
-  if (_calendar_format == nil)
+    _seconds_since_ref = seconds;
+    if (_calendar_format == nil)
     {
-      _calendar_format = cformat;
+        _calendar_format = cformat;
     }
-  if (_time_zone == nil)
+    if (_time_zone == nil)
     {
-      _time_zone = localTZ;	// retain is a no-op for the local timezone.
+        _time_zone = localTZ;	// retain is a no-op for the local timezone.
     }
-  return self;
+    return self;
 }
 
 /**
@@ -1653,10 +1604,10 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  */
 - (NSInteger) dayOfCommonEra
 {
-  NSTimeInterval	when;
-
-  when = _seconds_since_ref + offset(_time_zone, self);
-  return dayOfCommonEra(when);
+    NSTimeInterval	when;
+    
+    when = _seconds_since_ref + offset(_time_zone, self);
+    return dayOfCommonEra(when);
 }
 
 /**
@@ -1664,13 +1615,13 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  */
 - (NSInteger) dayOfMonth
 {
-  NSInteger m, d, y;
-  NSTimeInterval	when;
-
-  when = _seconds_since_ref + offset(_time_zone, self);
-  gregorianDateFromAbsolute(dayOfCommonEra(when), &d, &m, &y);
-
-  return d;
+    NSInteger m, d, y;
+    NSTimeInterval	when;
+    
+    when = _seconds_since_ref + offset(_time_zone, self);
+    gregorianDateFromAbsolute(dayOfCommonEra(when), &d, &m, &y);
+    
+    return d;
 }
 
 /**
@@ -1687,20 +1638,20 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  */
 - (NSInteger) dayOfWeek
 {
-  NSInteger	        d;
-  NSTimeInterval	when;
-
-  when = _seconds_since_ref + offset(_time_zone, self);
-  d = dayOfCommonEra(when);
-
-  /* The era started on a sunday.
+    NSInteger	        d;
+    NSTimeInterval	when;
+    
+    when = _seconds_since_ref + offset(_time_zone, self);
+    d = dayOfCommonEra(when);
+    
+    /* The era started on a sunday.
      Did we always have a seven day week?
      Did we lose week days changing from Julian to Gregorian?
      AFAIK seven days a week is ok for all reasonable dates.  */
-  d = d % 7;
-  if (d < 0)
-    d += 7;
-  return d;
+    d = d % 7;
+    if (d < 0)
+        d += 7;
+    return d;
 }
 
 /**
@@ -1708,16 +1659,16 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  */
 - (NSInteger) dayOfYear
 {
-  NSInteger m, d, y, days, i;
-  NSTimeInterval	when;
-
-  when = _seconds_since_ref + offset(_time_zone, self);
-  gregorianDateFromAbsolute(dayOfCommonEra(when), &d, &m, &y);
-  days = d;
-  for (i = m - 1;  i > 0; i--) // days in prior months this year
-    days = days + lastDayOfGregorianMonth(i, y);
-
-  return days;
+    NSInteger m, d, y, days, i;
+    NSTimeInterval	when;
+    
+    when = _seconds_since_ref + offset(_time_zone, self);
+    gregorianDateFromAbsolute(dayOfCommonEra(when), &d, &m, &y);
+    days = d;
+    for (i = m - 1;  i > 0; i--) // days in prior months this year
+        days = days + lastDayOfGregorianMonth(i, y);
+    
+    return days;
 }
 
 /**
@@ -1725,24 +1676,24 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  */
 - (NSInteger) hourOfDay
 {
-  NSInteger h;
-  double a, d;
-  NSTimeInterval	when;
-
-  when = _seconds_since_ref + offset(_time_zone, self);
-  d = dayOfCommonEra(when);
-  d -= GREGORIAN_REFERENCE;
-  d *= 86400;
-  a = fabs(d - (_seconds_since_ref + offset(_time_zone, self)));
-  a = a / 3600;
-  h = (NSInteger)a;
-
-  // There is a small chance of getting
-  // it right at the stroke of midnight
-  if (h == 24)
-    h = 0;
-
-  return h;
+    NSInteger h;
+    double a, d;
+    NSTimeInterval	when;
+    
+    when = _seconds_since_ref + offset(_time_zone, self);
+    d = dayOfCommonEra(when);
+    d -= GREGORIAN_REFERENCE;
+    d *= 86400;
+    a = fabs(d - (_seconds_since_ref + offset(_time_zone, self)));
+    a = a / 3600;
+    h = (NSInteger)a;
+    
+    // There is a small chance of getting
+    // it right at the stroke of midnight
+    if (h == 24)
+        h = 0;
+    
+    return h;
 }
 
 /**
@@ -1750,23 +1701,23 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  */
 - (NSInteger) minuteOfHour
 {
-  NSInteger h, m;
-  double a, b, d;
-  NSTimeInterval	when;
-
-  when = _seconds_since_ref + offset(_time_zone, self);
-  d = dayOfCommonEra(when);
-  d -= GREGORIAN_REFERENCE;
-  d *= 86400;
-  a = fabs(d - (_seconds_since_ref + offset(_time_zone, self)));
-  b = a / 3600;
-  h = (NSInteger)b;
-  h = h * 3600;
-  b = a - h;
-  b = b / 60;
-  m = (NSInteger)b;
-
-  return m;
+    NSInteger h, m;
+    double a, b, d;
+    NSTimeInterval	when;
+    
+    when = _seconds_since_ref + offset(_time_zone, self);
+    d = dayOfCommonEra(when);
+    d -= GREGORIAN_REFERENCE;
+    d *= 86400;
+    a = fabs(d - (_seconds_since_ref + offset(_time_zone, self)));
+    b = a / 3600;
+    h = (NSInteger)b;
+    h = h * 3600;
+    b = a - h;
+    b = b / 60;
+    m = (NSInteger)b;
+    
+    return m;
 }
 
 /**
@@ -1774,13 +1725,13 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  */
 - (NSInteger) monthOfYear
 {
-  NSInteger m, d, y;
-  NSTimeInterval	when;
-
-  when = _seconds_since_ref + offset(_time_zone, self);
-  gregorianDateFromAbsolute(dayOfCommonEra(when), &d, &m, &y);
-
-  return m;
+    NSInteger m, d, y;
+    NSTimeInterval	when;
+    
+    when = _seconds_since_ref + offset(_time_zone, self);
+    gregorianDateFromAbsolute(dayOfCommonEra(when), &d, &m, &y);
+    
+    return m;
 }
 
 /**
@@ -1788,26 +1739,26 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  */
 - (NSInteger) secondOfMinute
 {
-  NSInteger h, m, s;
-  double a, b, c, d;
-  NSTimeInterval	when;
-
-  when = _seconds_since_ref + offset(_time_zone, self);
-  d = dayOfCommonEra(when);
-  d -= GREGORIAN_REFERENCE;
-  d *= 86400;
-  a = fabs(d - (_seconds_since_ref + offset(_time_zone, self)));
-  b = a / 3600;
-  h = (NSInteger)b;
-  h = h * 3600;
-  b = a - h;
-  b = b / 60;
-  m = (NSInteger)b;
-  m = m * 60;
-  c = a - h - m;
-  s = (NSInteger)c;
-
-  return s;
+    NSInteger h, m, s;
+    double a, b, c, d;
+    NSTimeInterval	when;
+    
+    when = _seconds_since_ref + offset(_time_zone, self);
+    d = dayOfCommonEra(when);
+    d -= GREGORIAN_REFERENCE;
+    d *= 86400;
+    a = fabs(d - (_seconds_since_ref + offset(_time_zone, self)));
+    b = a / 3600;
+    h = (NSInteger)b;
+    h = h * 3600;
+    b = a - h;
+    b = b / 60;
+    m = (NSInteger)b;
+    m = m * 60;
+    c = a - h - m;
+    s = (NSInteger)c;
+    
+    return s;
 }
 
 /**
@@ -1816,13 +1767,13 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  */
 - (NSInteger) yearOfCommonEra
 {
-  NSInteger m, d, y;
-  NSTimeInterval	when;
-
-  when = _seconds_since_ref + offset(_time_zone, self);
-  gregorianDateFromAbsolute(dayOfCommonEra(when), &d, &m, &y);
-
-  return y;
+    NSInteger m, d, y;
+    NSTimeInterval	when;
+    
+    when = _seconds_since_ref + offset(_time_zone, self);
+    gregorianDateFromAbsolute(dayOfCommonEra(when), &d, &m, &y);
+    
+    return y;
 }
 
 /**
@@ -1831,18 +1782,18 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  * -dateByAddingYears:months:days:hours:minutes:seconds:
  */
 - (NSCalendarDate*) addYear: (NSInteger)year
-		      month: (NSInteger)month
-			day: (NSInteger)day
-		       hour: (NSInteger)hour
-		     minute: (NSInteger)minute
-		     second: (NSInteger)second
+                      month: (NSInteger)month
+                        day: (NSInteger)day
+                       hour: (NSInteger)hour
+                     minute: (NSInteger)minute
+                     second: (NSInteger)second
 {
-  return [self dateByAddingYears: year
-		          months: month
-			    days: day
-			   hours: hour
-		         minutes: minute
-		         seconds: second];
+    return [self dateByAddingYears: year
+                            months: month
+                              days: day
+                             hours: hour
+                           minutes: minute
+                           seconds: second];
 }
 
 /**
@@ -1851,7 +1802,7 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  */
 - (NSString*) description
 {
-  return [self descriptionWithCalendarFormat: _calendar_format locale: nil];
+    return [self descriptionWithCalendarFormat: _calendar_format locale: nil];
 }
 
 /**
@@ -1861,43 +1812,43 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  */
 - (NSString*) descriptionWithCalendarFormat: (NSString *)format
 {
-  return [self descriptionWithCalendarFormat: format locale: nil];
+    return [self descriptionWithCalendarFormat: format locale: nil];
 }
 
 #define UNIX_REFERENCE_INTERVAL -978307200.0
 
 typedef struct {
-  unichar	*base;
-  unichar	*t;
-  unsigned	length;
-  unsigned	offset;
-  NSInteger	yd;
-  NSInteger	md;
-  NSInteger	dom;
-  NSInteger	hd;
-  NSInteger	mnd;
-  NSInteger	sd;
-  NSInteger	mil;
+    unichar	*base;
+    unichar	*t;
+    unsigned	length;
+    unsigned	offset;
+    NSInteger	yd;
+    NSInteger	md;
+    NSInteger	dom;
+    NSInteger	hd;
+    NSInteger	mnd;
+    NSInteger	sd;
+    NSInteger	mil;
 } DescriptionInfo;
 
 static void Grow(DescriptionInfo *info, unsigned size)
 {
-  if (info->offset + size >= info->length)
+    if (info->offset + size >= info->length)
     {
-      if (info->t == info->base)
-	{
-	  unichar	*old = info->t;
-
-	  info->t = NSZoneMalloc(NSDefaultMallocZone(),
-	    (info->length + 512) * sizeof(unichar));
-	  memcpy(info->t, old, info->length*sizeof(unichar));
-	}
-      else
-	{
-	  info->t = NSZoneRealloc(NSDefaultMallocZone(), info->t,
-	    (info->length + 512) * sizeof(unichar));
-	}
-      info->length += 512;
+        if (info->t == info->base)
+        {
+            unichar	*old = info->t;
+            
+            info->t = NSZoneMalloc(NSDefaultMallocZone(),
+                                   (info->length + 512) * sizeof(unichar));
+            memcpy(info->t, old, info->length*sizeof(unichar));
+        }
+        else
+        {
+            info->t = NSZoneRealloc(NSDefaultMallocZone(), info->t,
+                                    (info->length + 512) * sizeof(unichar));
+        }
+        info->length += 512;
     }
 }
 
@@ -1905,447 +1856,447 @@ static void Grow(DescriptionInfo *info, unsigned size)
 
 static void outputValueWithFormat(int v, char *fldfmt, DescriptionInfo *info)
 {
-  char	cbuf[MAX_FLD_WIDTH + 1];
-  int	idx = 0;
-
-  snprintf((char*)cbuf, sizeof(cbuf), fldfmt, v);
-  Grow(info, strlen((char*)cbuf));
-  while (cbuf[idx] != '\0')
+    char	cbuf[MAX_FLD_WIDTH + 1];
+    int	idx = 0;
+    
+    snprintf((char*)cbuf, sizeof(cbuf), fldfmt, v);
+    Grow(info, strlen((char*)cbuf));
+    while (cbuf[idx] != '\0')
     {
-      info->t[info->offset++] = cbuf[idx++];
+        info->t[info->offset++] = cbuf[idx++];
     }
 }
 
 - (void) _format: (NSString*)fmt
-	  locale: (NSDictionary*)locale
-	    info: (DescriptionInfo*)info
+          locale: (NSDictionary*)locale
+            info: (DescriptionInfo*)info
 {
-  unichar	fbuf[512];
-  unichar	*f = fbuf;
-  unsigned	lf = [fmt length];
-  unsigned	i = 0;
-  int		v;
-
-  if (lf == 0)
+    unichar	fbuf[512];
+    unichar	*f = fbuf;
+    unsigned	lf = [fmt length];
+    unsigned	i = 0;
+    int		v;
+    
+    if (lf == 0)
     {
-      return;	// Nothing to do.
+        return;	// Nothing to do.
     }
-  if (lf >= sizeof(fbuf)/sizeof(unichar))
+    if (lf >= sizeof(fbuf)/sizeof(unichar))
     {
-      /*
-       * Make temporary buffer to hold format string as unicode.
-       */
-      f = (unichar*)NSZoneMalloc(NSDefaultMallocZone(), lf*sizeof(unichar));
+        /*
+         * Make temporary buffer to hold format string as unicode.
+         */
+        f = (unichar*)NSZoneMalloc(NSDefaultMallocZone(), lf*sizeof(unichar));
     }
-  [fmt getCharacters: f];
-
-  while (i < lf)
+    [fmt getCharacters: f];
+    
+    while (i < lf)
     {
-      NSString  *str;
-      BOOL	mtag = NO;
-      BOOL	dtag = NO;
-      BOOL	ycent = NO;
-      BOOL	mname = NO;
-      BOOL	dname = NO;
-      BOOL	twelve = NO;
-      BOOL	hspc = NO;
-      char	fldfmt[8];
-      int	fmtlen = 0;
-      int	width = 0;
-
-      // Only care about a format specifier
-      if (f[i] == '%')
-	{
-          i++;
-	  fldfmt[fmtlen++] = '%';
-          // field width specified
-          while (fmtlen < 5 && f[i] >= '0' && f[i] <= '9')
-	    {
-	      fldfmt[fmtlen++] = f[i];
-	      width = 10 * width + f[i] - '0';
-	      i++;
-	    }
-	  if (fmtlen >= 5 || width > MAX_FLD_WIDTH)
-	    {
-	      /* ignore formats that specify field width
-               * greater than the max allowed.
-               * set i back so all ignored characters will
-               * be copied
-               */
-	      i -= fmtlen;
-	    }
-
-	  // check the character that comes after
-	  switch (f[i++])
-	    {
-		// literal %
-	      case '%':
-		Grow(info, 1);
-		info->t[info->offset++] = f[i-1];
-		break;
-
-	      case 'R':
-		[self _format: @"%H:%M" locale: locale info: info];
-		break;
-
-	      case 'r':
-		[self _format: @"%I:%M:%S %p" locale: locale info: info];
-		break;
-
-	      case 'T':
-		[self _format: @"%H:%M:%S" locale: locale info: info];
-		break;
-
-	      case 't':
-		Grow(info, 1);
-		info->t[info->offset++] = '\t';
-		break;
-
-	      case 'c':
-		str = (NSString*)[LOCALE objectForKey: NSTimeFormatString];
-		[self _format: str locale: locale info: info];
-		Grow(info, 1);
-		info->t[info->offset++] = ' ';
-		str = (NSString*)[LOCALE objectForKey: NSDateFormatString];
-		[self _format: str locale: locale info: info];
-		break;
-
-	      case 'X':
-		str = (NSString*)[LOCALE objectForKey: NSTimeFormatString];
-		[self _format: str locale: locale info: info];
-		break;
-
-	      case 'x':
-		str = (NSString*)[LOCALE objectForKey: NSDateFormatString];
-		[self _format: str locale: locale info: info];
-		break;
-
-		// is it the year
-	      case 'Y':
-		ycent = YES;
-	      case 'y':
-		v = info->yd;
-		if (ycent)
-		  {
-		    if (fmtlen == 1)
-		      {
-			// no format width specified; supply default
-			fldfmt[fmtlen++] = '0';
-			fldfmt[fmtlen++] = '4';
-		      }
-		  }
-		else
-		  {
-		    if (v < 0) v = -v;
-		    v = v % 100;
-		    if (fmtlen == 1)
-		      {
-			// no format width specified; supply default
-			fldfmt[fmtlen++] = '0';
-			fldfmt[fmtlen++] = '2';
-		      }
-		  }
-		  fldfmt[fmtlen++] = 'd';
-		  fldfmt[fmtlen] = 0;
-		  outputValueWithFormat(v, fldfmt, info);
-		break;
-
-		// is it the month
-	      case 'b':
-		mname = YES;
-	      case 'B':
-		mtag = YES;    // Month is character string
-	      case 'm':
-		if (mtag == YES)
-		  {
-		    NSArray	*months;
-
-		    if (mname)
-		      months = [LOCALE objectForKey: NSShortMonthNameArray];
-		    else
-		      months = [LOCALE objectForKey: NSMonthNameArray];
-		    if (info->md > [months count])
-		      {
-			mtag = NO;
-		      }
-		    else
-		      {
-			NSString	*name;
-		
-			name = [months objectAtIndex: info->md-1];
-			v = [name length];
-			Grow(info, v);
-			[name getCharacters: info->t + info->offset];
-			info->offset += v;
-		      }
-		  }
-		if (mtag == NO)
-		  {
-		    v = info->md;
-		    v = v % 100;
-		    if (fmtlen == 1)
-		      {
-			// no format width specified; supply default
-			fldfmt[fmtlen++] = '0';
-			fldfmt[fmtlen++] = '2';
-		      }
-		    fldfmt[fmtlen++] = 'd';
-		    fldfmt[fmtlen] = 0;
-		    outputValueWithFormat(v, fldfmt, info);
-		  }
-		break;
-
-	      case 'd': 	// day of month with leading zero
-		v = info->dom;
-		v = v % 100;
-		if (fmtlen == 1) // no format width specified; supply default
-		  {
-		    fldfmt[fmtlen++] = '0';
-		    fldfmt[fmtlen++] = '2';
-		  }
-		fldfmt[fmtlen++] = 'd';
-		fldfmt[fmtlen] = 0;
-		outputValueWithFormat(v, fldfmt, info);
-		break;
-
-	      case 'e': 	// day of month with leading space
-		v = info->dom;
-		v = v % 100;
-		if (fmtlen == 1) // no format width specified; supply default
-		  {
-		    fldfmt[fmtlen++] = '1'; // no leading space, just like Cocoa
-		  }
-		fldfmt[fmtlen++] = 'd';
-		fldfmt[fmtlen] = 0;
-		outputValueWithFormat(v, fldfmt, info);
-		break;
-
-	      case 'F': 	// milliseconds
-                v = info->mil;
-		if (fmtlen == 1) // no format width specified; supply default
-		  {
-		    fldfmt[fmtlen++] = '0';
-		    fldfmt[fmtlen++] = '3';
-		  }
-		fldfmt[fmtlen++] = 'd';
-		fldfmt[fmtlen] = 0;
-		outputValueWithFormat(v, fldfmt, info);
-		break;
-
-	      case 'j': 	// day of year
-		v = [self dayOfYear];
-		if (fmtlen == 1) // no format width specified; supply default
-		  {
-		    fldfmt[fmtlen++] = '0';
-		    fldfmt[fmtlen++] = '3';
-		  }
-		fldfmt[fmtlen++] = 'd';
-		fldfmt[fmtlen] = 0;
-		outputValueWithFormat(v, fldfmt, info);
-		break;
-
-		// is it the week-day
-	      case 'a':
-		dname = YES;
-	      case 'A':
-		dtag = YES;   // Day is character string
-	      case 'w':
-		{
-		  v = [self dayOfWeek];
-		  if (dtag == YES)
-		    {
-		      NSArray	*days;
-
-		      if (dname)
-			days = [LOCALE objectForKey: NSShortWeekDayNameArray];
-		      else
-			days = [LOCALE objectForKey: NSWeekDayNameArray];
-		      if (v < [days count])
-			{
-			  NSString	*name;
-
-			  name = [days objectAtIndex: v];
-			  v = [name length];
-			  Grow(info, v);
-			  [name getCharacters: info->t + info->offset];
-			  info->offset += v;
-			}
-		      else
-			{
-			  dtag = NO;
-			}
-		    }
-		  if (dtag == NO)
-		    {
-		      if (fmtlen == 1)
-			{
-			  // no format width specified; supply default
-			  fldfmt[fmtlen++] = '1';
-			}
-		      fldfmt[fmtlen++] = 'd';
-		      fldfmt[fmtlen] = 0;
-		      outputValueWithFormat(v, fldfmt, info);
-		    }
-		}
-		break;
-
-		// is it the hour
-	      case 'I':
-		twelve = YES;
-	      case 'k':
-		if (twelve == NO)
-		  hspc = YES;
-	      case 'H':
-		v = info->hd;
-		if (twelve == YES)
-		  {
-		    if (info->hd == 12 || info->hd == 0)
-		      {
-			v = 12;
-		      }
-		    else
-		      {
-			v = v % 12;
-		      }
-		  }
-		if (fmtlen == 1) // no format width specified; supply default
-		  {
-		    if (hspc == YES)
-		      fldfmt[fmtlen++] = '2'; // ensure a leading space
-		    else
-		      {
-			fldfmt[fmtlen++] = '0';
-			fldfmt[fmtlen++] = '2';
-		      }
-
-		  }
-		fldfmt[fmtlen++] = 'd';
-		fldfmt[fmtlen] = 0;
-		if (GSPrivateDefaultsFlag(GSMacOSXCompatible)
-		    && hspc == YES)
-		  {
-		    Grow(info, 2);
-		    info->t[info->offset++] = '%';
-		    info->t[info->offset++] = f[i-1];
-		    break;
-		  }
-		else
-		  outputValueWithFormat(v, fldfmt, info);
-		break;
-
-		// is it the minute
-	      case 'M':
-		v = info->mnd;
-		if (fmtlen == 1) // no format width specified; supply default
-		  {
-		    fldfmt[fmtlen++] = '0';
-		    fldfmt[fmtlen++] = '2';
-		  }
-		fldfmt[fmtlen++] = 'd';
-		fldfmt[fmtlen] = 0;
-		outputValueWithFormat(v, fldfmt, info);
-		break;
-
-		// is it the second
-	      case 'S':
-		v = info->sd;
-		if (fmtlen == 1) // no format width specified; supply default
-		  {
-		    fldfmt[fmtlen++] = '0';
-		    fldfmt[fmtlen++] = '2';
-		  }
-		fldfmt[fmtlen++] = 'd';
-		fldfmt[fmtlen] = 0;
-		outputValueWithFormat(v, fldfmt, info);
-		break;
-
-		// Is it the am/pm indicator
-	      case 'p':
-		{
-		  NSArray	*a = [LOCALE objectForKey: NSAMPMDesignation];
-		  NSString	*ampm;
-
-		  if (info->hd >= 12)
-		    {
-		      if ([a count] > 1)
-			ampm = [a objectAtIndex: 1];
-		      else
-			ampm = @"pm";
-		    }
-		  else
-		    {
-		      if ([a count] > 0)
-			ampm = [a objectAtIndex: 0];
-		      else
-			ampm = @"am";
-		    }
-		  v = [ampm length];
-		  Grow(info, v);
-		  [ampm getCharacters: info->t + info->offset];
-		  info->offset += v;
-		}
-		break;
-
-		// is it the zone name
-	      case 'Z':
-		{
-		  NSString	*s;
-
-		  s = abbrev(_time_zone, self);
-		  v = [s length];
-		  Grow(info, v);
-		  [s getCharacters: info->t + info->offset];
-		  info->offset += v;
-		}
-		break;
-
-	      case 'z':
-		{
-		  int	z;
-
-		  Grow(info, 5);
-		  z = offset(_time_zone, self);
-		  if (z < 0)
-		    {
-		      z = -z;
-		      info->t[info->offset++] = '-';
-		    }
-		  else
-		    {
-		      info->t[info->offset++] = '+';
-		    }
-		  z /= 60;	// Convert seconds to minutes.
-		  v = z / 60;
-		  info->t[info->offset+1] = (v%10) + '0';
-		  v /= 10;
-		  info->t[info->offset+0] = (v%10) + '0';
-		  info->offset += 2;
-		  v = z % 60;
-		  info->t[info->offset+1] = (v%10) + '0';
-		  v /= 10;
-		  info->t[info->offset+0] = (v%10) + '0';
-		  info->offset += 2;
-		}
-		break;
-
-		// Anything else is unknown so just copy
-	      default:
-		Grow(info, 2);
-		info->t[info->offset++] = '%';
-		info->t[info->offset++] = f[i-1];
-		break;
-	    }
-	}
-      else
-	{
-	  Grow(info, 1);
-	  info->t[info->offset++] = f[i++];
-	}
+        NSString  *str;
+        BOOL	mtag = NO;
+        BOOL	dtag = NO;
+        BOOL	ycent = NO;
+        BOOL	mname = NO;
+        BOOL	dname = NO;
+        BOOL	twelve = NO;
+        BOOL	hspc = NO;
+        char	fldfmt[8];
+        int	fmtlen = 0;
+        int	width = 0;
+        
+        // Only care about a format specifier
+        if (f[i] == '%')
+        {
+            i++;
+            fldfmt[fmtlen++] = '%';
+            // field width specified
+            while (fmtlen < 5 && f[i] >= '0' && f[i] <= '9')
+            {
+                fldfmt[fmtlen++] = f[i];
+                width = 10 * width + f[i] - '0';
+                i++;
+            }
+            if (fmtlen >= 5 || width > MAX_FLD_WIDTH)
+            {
+                /* ignore formats that specify field width
+                 * greater than the max allowed.
+                 * set i back so all ignored characters will
+                 * be copied
+                 */
+                i -= fmtlen;
+            }
+            
+            // check the character that comes after
+            switch (f[i++])
+            {
+                    // literal %
+                case '%':
+                    Grow(info, 1);
+                    info->t[info->offset++] = f[i-1];
+                    break;
+                    
+                case 'R':
+                    [self _format: @"%H:%M" locale: locale info: info];
+                    break;
+                    
+                case 'r':
+                    [self _format: @"%I:%M:%S %p" locale: locale info: info];
+                    break;
+                    
+                case 'T':
+                    [self _format: @"%H:%M:%S" locale: locale info: info];
+                    break;
+                    
+                case 't':
+                    Grow(info, 1);
+                    info->t[info->offset++] = '\t';
+                    break;
+                    
+                case 'c':
+                    str = (NSString*)[LOCALE objectForKey: NSTimeFormatString];
+                    [self _format: str locale: locale info: info];
+                    Grow(info, 1);
+                    info->t[info->offset++] = ' ';
+                    str = (NSString*)[LOCALE objectForKey: NSDateFormatString];
+                    [self _format: str locale: locale info: info];
+                    break;
+                    
+                case 'X':
+                    str = (NSString*)[LOCALE objectForKey: NSTimeFormatString];
+                    [self _format: str locale: locale info: info];
+                    break;
+                    
+                case 'x':
+                    str = (NSString*)[LOCALE objectForKey: NSDateFormatString];
+                    [self _format: str locale: locale info: info];
+                    break;
+                    
+                    // is it the year
+                case 'Y':
+                    ycent = YES;
+                case 'y':
+                    v = info->yd;
+                    if (ycent)
+                    {
+                        if (fmtlen == 1)
+                        {
+                            // no format width specified; supply default
+                            fldfmt[fmtlen++] = '0';
+                            fldfmt[fmtlen++] = '4';
+                        }
+                    }
+                    else
+                    {
+                        if (v < 0) v = -v;
+                        v = v % 100;
+                        if (fmtlen == 1)
+                        {
+                            // no format width specified; supply default
+                            fldfmt[fmtlen++] = '0';
+                            fldfmt[fmtlen++] = '2';
+                        }
+                    }
+                    fldfmt[fmtlen++] = 'd';
+                    fldfmt[fmtlen] = 0;
+                    outputValueWithFormat(v, fldfmt, info);
+                    break;
+                    
+                    // is it the month
+                case 'b':
+                    mname = YES;
+                case 'B':
+                    mtag = YES;    // Month is character string
+                case 'm':
+                    if (mtag == YES)
+                    {
+                        NSArray	*months;
+                        
+                        if (mname)
+                            months = [LOCALE objectForKey: NSShortMonthNameArray];
+                        else
+                            months = [LOCALE objectForKey: NSMonthNameArray];
+                        if (info->md > [months count])
+                        {
+                            mtag = NO;
+                        }
+                        else
+                        {
+                            NSString	*name;
+                            
+                            name = [months objectAtIndex: info->md-1];
+                            v = [name length];
+                            Grow(info, v);
+                            [name getCharacters: info->t + info->offset];
+                            info->offset += v;
+                        }
+                    }
+                    if (mtag == NO)
+                    {
+                        v = info->md;
+                        v = v % 100;
+                        if (fmtlen == 1)
+                        {
+                            // no format width specified; supply default
+                            fldfmt[fmtlen++] = '0';
+                            fldfmt[fmtlen++] = '2';
+                        }
+                        fldfmt[fmtlen++] = 'd';
+                        fldfmt[fmtlen] = 0;
+                        outputValueWithFormat(v, fldfmt, info);
+                    }
+                    break;
+                    
+                case 'd': 	// day of month with leading zero
+                    v = info->dom;
+                    v = v % 100;
+                    if (fmtlen == 1) // no format width specified; supply default
+                    {
+                        fldfmt[fmtlen++] = '0';
+                        fldfmt[fmtlen++] = '2';
+                    }
+                    fldfmt[fmtlen++] = 'd';
+                    fldfmt[fmtlen] = 0;
+                    outputValueWithFormat(v, fldfmt, info);
+                    break;
+                    
+                case 'e': 	// day of month with leading space
+                    v = info->dom;
+                    v = v % 100;
+                    if (fmtlen == 1) // no format width specified; supply default
+                    {
+                        fldfmt[fmtlen++] = '1'; // no leading space, just like Cocoa
+                    }
+                    fldfmt[fmtlen++] = 'd';
+                    fldfmt[fmtlen] = 0;
+                    outputValueWithFormat(v, fldfmt, info);
+                    break;
+                    
+                case 'F': 	// milliseconds
+                    v = info->mil;
+                    if (fmtlen == 1) // no format width specified; supply default
+                    {
+                        fldfmt[fmtlen++] = '0';
+                        fldfmt[fmtlen++] = '3';
+                    }
+                    fldfmt[fmtlen++] = 'd';
+                    fldfmt[fmtlen] = 0;
+                    outputValueWithFormat(v, fldfmt, info);
+                    break;
+                    
+                case 'j': 	// day of year
+                    v = [self dayOfYear];
+                    if (fmtlen == 1) // no format width specified; supply default
+                    {
+                        fldfmt[fmtlen++] = '0';
+                        fldfmt[fmtlen++] = '3';
+                    }
+                    fldfmt[fmtlen++] = 'd';
+                    fldfmt[fmtlen] = 0;
+                    outputValueWithFormat(v, fldfmt, info);
+                    break;
+                    
+                    // is it the week-day
+                case 'a':
+                    dname = YES;
+                case 'A':
+                    dtag = YES;   // Day is character string
+                case 'w':
+                {
+                    v = [self dayOfWeek];
+                    if (dtag == YES)
+                    {
+                        NSArray	*days;
+                        
+                        if (dname)
+                            days = [LOCALE objectForKey: NSShortWeekDayNameArray];
+                        else
+                            days = [LOCALE objectForKey: NSWeekDayNameArray];
+                        if (v < [days count])
+                        {
+                            NSString	*name;
+                            
+                            name = [days objectAtIndex: v];
+                            v = [name length];
+                            Grow(info, v);
+                            [name getCharacters: info->t + info->offset];
+                            info->offset += v;
+                        }
+                        else
+                        {
+                            dtag = NO;
+                        }
+                    }
+                    if (dtag == NO)
+                    {
+                        if (fmtlen == 1)
+                        {
+                            // no format width specified; supply default
+                            fldfmt[fmtlen++] = '1';
+                        }
+                        fldfmt[fmtlen++] = 'd';
+                        fldfmt[fmtlen] = 0;
+                        outputValueWithFormat(v, fldfmt, info);
+                    }
+                }
+                    break;
+                    
+                    // is it the hour
+                case 'I':
+                    twelve = YES;
+                case 'k':
+                    if (twelve == NO)
+                        hspc = YES;
+                case 'H':
+                    v = info->hd;
+                    if (twelve == YES)
+                    {
+                        if (info->hd == 12 || info->hd == 0)
+                        {
+                            v = 12;
+                        }
+                        else
+                        {
+                            v = v % 12;
+                        }
+                    }
+                    if (fmtlen == 1) // no format width specified; supply default
+                    {
+                        if (hspc == YES)
+                            fldfmt[fmtlen++] = '2'; // ensure a leading space
+                        else
+                        {
+                            fldfmt[fmtlen++] = '0';
+                            fldfmt[fmtlen++] = '2';
+                        }
+                        
+                    }
+                    fldfmt[fmtlen++] = 'd';
+                    fldfmt[fmtlen] = 0;
+                    if (GSPrivateDefaultsFlag(GSMacOSXCompatible)
+                        && hspc == YES)
+                    {
+                        Grow(info, 2);
+                        info->t[info->offset++] = '%';
+                        info->t[info->offset++] = f[i-1];
+                        break;
+                    }
+                    else
+                        outputValueWithFormat(v, fldfmt, info);
+                    break;
+                    
+                    // is it the minute
+                case 'M':
+                    v = info->mnd;
+                    if (fmtlen == 1) // no format width specified; supply default
+                    {
+                        fldfmt[fmtlen++] = '0';
+                        fldfmt[fmtlen++] = '2';
+                    }
+                    fldfmt[fmtlen++] = 'd';
+                    fldfmt[fmtlen] = 0;
+                    outputValueWithFormat(v, fldfmt, info);
+                    break;
+                    
+                    // is it the second
+                case 'S':
+                    v = info->sd;
+                    if (fmtlen == 1) // no format width specified; supply default
+                    {
+                        fldfmt[fmtlen++] = '0';
+                        fldfmt[fmtlen++] = '2';
+                    }
+                    fldfmt[fmtlen++] = 'd';
+                    fldfmt[fmtlen] = 0;
+                    outputValueWithFormat(v, fldfmt, info);
+                    break;
+                    
+                    // Is it the am/pm indicator
+                case 'p':
+                {
+                    NSArray	*a = [LOCALE objectForKey: NSAMPMDesignation];
+                    NSString	*ampm;
+                    
+                    if (info->hd >= 12)
+                    {
+                        if ([a count] > 1)
+                            ampm = [a objectAtIndex: 1];
+                        else
+                            ampm = @"pm";
+                    }
+                    else
+                    {
+                        if ([a count] > 0)
+                            ampm = [a objectAtIndex: 0];
+                        else
+                            ampm = @"am";
+                    }
+                    v = [ampm length];
+                    Grow(info, v);
+                    [ampm getCharacters: info->t + info->offset];
+                    info->offset += v;
+                }
+                    break;
+                    
+                    // is it the zone name
+                case 'Z':
+                {
+                    NSString	*s;
+                    
+                    s = abbrev(_time_zone, self);
+                    v = [s length];
+                    Grow(info, v);
+                    [s getCharacters: info->t + info->offset];
+                    info->offset += v;
+                }
+                    break;
+                    
+                case 'z':
+                {
+                    int	z;
+                    
+                    Grow(info, 5);
+                    z = offset(_time_zone, self);
+                    if (z < 0)
+                    {
+                        z = -z;
+                        info->t[info->offset++] = '-';
+                    }
+                    else
+                    {
+                        info->t[info->offset++] = '+';
+                    }
+                    z /= 60;	// Convert seconds to minutes.
+                    v = z / 60;
+                    info->t[info->offset+1] = (v%10) + '0';
+                    v /= 10;
+                    info->t[info->offset+0] = (v%10) + '0';
+                    info->offset += 2;
+                    v = z % 60;
+                    info->t[info->offset+1] = (v%10) + '0';
+                    v /= 10;
+                    info->t[info->offset+0] = (v%10) + '0';
+                    info->offset += 2;
+                }
+                    break;
+                    
+                    // Anything else is unknown so just copy
+                default:
+                    Grow(info, 2);
+                    info->t[info->offset++] = '%';
+                    info->t[info->offset++] = f[i-1];
+                    break;
+            }
+        }
+        else
+        {
+            Grow(info, 1);
+            info->t[info->offset++] = f[i++];
+        }
     }
-
-  if (f != fbuf)
+    
+    if (f != fbuf)
     {
-      NSZoneFree(NSDefaultMallocZone(), f);
+        NSZoneFree(NSDefaultMallocZone(), f);
     }
 }
 
@@ -2438,60 +2389,60 @@ static void outputValueWithFormat(int v, char *fldfmt, DescriptionInfo *info)
  * recognized.</p>
  */
 - (NSString*) descriptionWithCalendarFormat: (NSString*)format
-				     locale: (NSDictionary*)locale
+                                     locale: (NSDictionary*)locale
 {
-  unichar		tbuf[512];
-  NSString		*result;
-  DescriptionInfo	info;
-
-  if (format == nil)
-    format = [LOCALE objectForKey: NSTimeDateFormatString];
-
-  GSBreakTime(_seconds_since_ref + offset(_time_zone, self),
-    &info.yd, &info.md, &info.dom, &info.hd, &info.mnd, &info.sd, &info.mil);
-
-  info.base = tbuf;
-  info.t = tbuf;
-  info.length = sizeof(tbuf)/sizeof(unichar);
-  info.offset = 0;
-
-  [self _format: format locale: locale info: &info];
-
-  result = [NSString stringWithCharacters: info.t length: info.offset];
-
-  if (info.t != tbuf)
+    unichar		tbuf[512];
+    NSString		*result;
+    DescriptionInfo	info;
+    
+    if (format == nil)
+        format = [LOCALE objectForKey: NSTimeDateFormatString];
+    
+    GSBreakTime(_seconds_since_ref + offset(_time_zone, self),
+                &info.yd, &info.md, &info.dom, &info.hd, &info.mnd, &info.sd, &info.mil);
+    
+    info.base = tbuf;
+    info.t = tbuf;
+    info.length = sizeof(tbuf)/sizeof(unichar);
+    info.offset = 0;
+    
+    [self _format: format locale: locale info: &info];
+    
+    result = [NSString stringWithCharacters: info.t length: info.offset];
+    
+    if (info.t != tbuf)
     {
-      NSZoneFree(NSDefaultMallocZone(), info.t);
+        NSZoneFree(NSDefaultMallocZone(), info.t);
     }
-
-  return result;
+    
+    return result;
 }
 
 - (id) copyWithZone: (NSZone*)zone
 {
-  NSCalendarDate	*newDate;
-
-  if (NSShouldRetainWithZone(self, zone))
+    NSCalendarDate	*newDate;
+    
+    if (NSShouldRetainWithZone(self, zone))
     {
-      newDate = RETAIN(self);
+        newDate = RETAIN(self);
     }
-  else
+    else
     {
-      newDate = (NSCalendarDate*)NSCopyObject(self, 0, zone);
-
-      if (newDate != nil)
-	{
-	  if (_calendar_format != cformat)
-	    {
-	      newDate->_calendar_format = [_calendar_format copyWithZone: zone];
-	    }
-	  if (_time_zone != localTZ)
-	    {
-	      newDate->_time_zone = RETAIN(_time_zone);
-	    }
-	}
+        newDate = (NSCalendarDate*)NSCopyObject(self, 0, zone);
+        
+        if (newDate != nil)
+        {
+            if (_calendar_format != cformat)
+            {
+                newDate->_calendar_format = [_calendar_format copyWithZone: zone];
+            }
+            if (_time_zone != localTZ)
+            {
+                newDate->_time_zone = RETAIN(_time_zone);
+            }
+        }
     }
-  return newDate;
+    return newDate;
 }
 
 /**
@@ -2501,7 +2452,7 @@ static void outputValueWithFormat(int v, char *fldfmt, DescriptionInfo *info)
  */
 - (NSString*) descriptionWithLocale: (id)locale
 {
-  return [self descriptionWithCalendarFormat: _calendar_format locale: locale];
+    return [self descriptionWithCalendarFormat: _calendar_format locale: locale];
 }
 
 /**
@@ -2510,7 +2461,7 @@ static void outputValueWithFormat(int v, char *fldfmt, DescriptionInfo *info)
  */
 - (NSString*) calendarFormat
 {
-  return _calendar_format;
+    return _calendar_format;
 }
 
 /**
@@ -2520,11 +2471,11 @@ static void outputValueWithFormat(int v, char *fldfmt, DescriptionInfo *info)
  */
 - (void) setCalendarFormat: (NSString *)format
 {
-  if (format == nil)
+    if (format == nil)
     {
-      format = cformat;
+        format = cformat;
     }
-  ASSIGNCOPY(_calendar_format, format);
+    ASSIGNCOPY(_calendar_format, format);
 }
 
 /**
@@ -2533,11 +2484,11 @@ static void outputValueWithFormat(int v, char *fldfmt, DescriptionInfo *info)
  */
 - (void) setTimeZone: (NSTimeZone *)aTimeZone
 {
-  if (aTimeZone == nil)
+    if (aTimeZone == nil)
     {
-      aTimeZone = localTZ;
+        aTimeZone = localTZ;
     }
-  ASSIGN(_time_zone, aTimeZone);
+    ASSIGN(_time_zone, aTimeZone);
 }
 
 /**
@@ -2545,7 +2496,7 @@ static void outputValueWithFormat(int v, char *fldfmt, DescriptionInfo *info)
  */
 - (NSTimeZone*) timeZone
 {
-  return _time_zone;
+    return _time_zone;
 }
 
 /**
@@ -2553,8 +2504,8 @@ static void outputValueWithFormat(int v, char *fldfmt, DescriptionInfo *info)
  */
 - (NSTimeZoneDetail*) timeZoneDetail
 {
-  NSTimeZoneDetail	*detail = [_time_zone timeZoneDetailForDate: self];
-  return detail;
+    NSTimeZoneDetail	*detail = [_time_zone timeZoneDetailForDate: self];
+    return detail;
 }
 
 @end
@@ -2574,7 +2525,7 @@ static void outputValueWithFormat(int v, char *fldfmt, DescriptionInfo *info)
  */
 - (NSInteger) lastDayOfGregorianMonth: (NSInteger)month year: (NSInteger)year
 {
-  return lastDayOfGregorianMonth(month, year);
+    return lastDayOfGregorianMonth(month, year);
 }
 
 /**
@@ -2582,10 +2533,10 @@ static void outputValueWithFormat(int v, char *fldfmt, DescriptionInfo *info)
  * day, month, and year.
  */
 - (NSInteger) absoluteGregorianDay: (NSInteger)day
-			     month: (NSInteger)month
-			      year: (NSInteger)year
+                             month: (NSInteger)month
+                              year: (NSInteger)year
 {
-  return absoluteGregorianDay(day, month, year);
+    return absoluteGregorianDay(day, month, year);
 }
 
 /**
@@ -2593,11 +2544,11 @@ static void outputValueWithFormat(int v, char *fldfmt, DescriptionInfo *info)
  * day, month, and year.
  */
 - (void) gregorianDateFromAbsolute: (NSInteger)d
-			       day: (NSInteger *)day
-			     month: (NSInteger *)month
-			      year: (NSInteger *)year
+                               day: (NSInteger *)day
+                             month: (NSInteger *)month
+                              year: (NSInteger *)year
 {
-  gregorianDateFromAbsolute(d, day, month, year);
+    gregorianDateFromAbsolute(d, day, month, year);
 }
 
 @end
@@ -2609,149 +2560,149 @@ static void outputValueWithFormat(int v, char *fldfmt, DescriptionInfo *info)
 @implementation NSCalendarDate (OPENSTEP)
 
 - (NSCalendarDate*) dateByAddingYears: (NSInteger)years
-			       months: (NSInteger)months
-				 days: (NSInteger)days
-			        hours: (NSInteger)hours
-			      minutes: (NSInteger)minutes
-			      seconds: (NSInteger)seconds
+                               months: (NSInteger)months
+                                 days: (NSInteger)days
+                                hours: (NSInteger)hours
+                              minutes: (NSInteger)minutes
+                              seconds: (NSInteger)seconds
 {
-  NSCalendarDate	*c;
-  NSTimeInterval	s;
-  NSTimeInterval	oldOffset;
-  NSTimeInterval	newOffset;
-  NSInteger		i, year, month, day, hour, minute, second, mil;
-
-  /* Apply timezone offset to _seconds_since_ref from GMT to local time,
-   * then break into components in local time zone.
-   */
-  oldOffset = offset(_time_zone, self);
-  s = _seconds_since_ref + oldOffset;
-  GSBreakTime(s, &year, &month, &day, &hour, &minute, &second, &mil);
-
-  /* Apply required offsets to get new local time.
-   */
-  while (years != 0 || months != 0 || days != 0
-    || hours != 0 || minutes != 0 || seconds != 0)
+    NSCalendarDate	*c;
+    NSTimeInterval	s;
+    NSTimeInterval	oldOffset;
+    NSTimeInterval	newOffset;
+    NSInteger		i, year, month, day, hour, minute, second, mil;
+    
+    /* Apply timezone offset to _seconds_since_ref from GMT to local time,
+     * then break into components in local time zone.
+     */
+    oldOffset = offset(_time_zone, self);
+    s = _seconds_since_ref + oldOffset;
+    GSBreakTime(s, &year, &month, &day, &hour, &minute, &second, &mil);
+    
+    /* Apply required offsets to get new local time.
+     */
+    while (years != 0 || months != 0 || days != 0
+           || hours != 0 || minutes != 0 || seconds != 0)
     {
-      year += years;
-      years = 0;
-
-      month += months;
-      months = 0;
-      while (month > 12)
-	{
-	  year++;
-	  month -= 12;
-	}
-      while (month < 1)
-	{
-	  year--;
-	  month += 12;
-	}
-
-      day += days;
-      days = 0;
-      if (day > 28)
-	{
-	  i = lastDayOfGregorianMonth(month, year);
-	  while (day > i)
-	    {
-	      day -= i;
-	      if (month < 12)
-		{
-		  month++;
-		}
-	      else
-		{
-		  month = 1;
-		  year++;
-		}
-	      i = lastDayOfGregorianMonth(month, year);
-	    }
-	}
-      else
-	{
-	  while (day < 1)
-	    {
-	      if (month == 1)
-		{
-		  year--;
-		  month = 12;
-		}
-	      else
-		{
-		  month--;
-		}
-	      day += lastDayOfGregorianMonth(month, year);
-	    }
-	}
-
-      hour += hours;
-      hours = 0;
-      days += hour/24;
-      hour %= 24;
-      if (hour < 0)
-	{
-	  days--;
-	  hour += 24;
-	}
-
-      minute += minutes;
-      minutes = 0;
-      hours += minute/60;
-      minute %= 60;
-      if (minute < 0)
-	{
-	  hours--;
-	  minute += 60;
-	}
-
-      second += seconds;
-      seconds = 0;
-      minutes += second/60;
-      second %= 60;
-      if (second < 0)
-	{
-	  minutes--;
-	  second += 60;
-	}
+        year += years;
+        years = 0;
+        
+        month += months;
+        months = 0;
+        while (month > 12)
+        {
+            year++;
+            month -= 12;
+        }
+        while (month < 1)
+        {
+            year--;
+            month += 12;
+        }
+        
+        day += days;
+        days = 0;
+        if (day > 28)
+        {
+            i = lastDayOfGregorianMonth(month, year);
+            while (day > i)
+            {
+                day -= i;
+                if (month < 12)
+                {
+                    month++;
+                }
+                else
+                {
+                    month = 1;
+                    year++;
+                }
+                i = lastDayOfGregorianMonth(month, year);
+            }
+        }
+        else
+        {
+            while (day < 1)
+            {
+                if (month == 1)
+                {
+                    year--;
+                    month = 12;
+                }
+                else
+                {
+                    month--;
+                }
+                day += lastDayOfGregorianMonth(month, year);
+            }
+        }
+        
+        hour += hours;
+        hours = 0;
+        days += hour/24;
+        hour %= 24;
+        if (hour < 0)
+        {
+            days--;
+            hour += 24;
+        }
+        
+        minute += minutes;
+        minutes = 0;
+        hours += minute/60;
+        minute %= 60;
+        if (minute < 0)
+        {
+            hours--;
+            minute += 60;
+        }
+        
+        second += seconds;
+        seconds = 0;
+        minutes += second/60;
+        second %= 60;
+        if (second < 0)
+        {
+            minutes--;
+            second += 60;
+        }
     }
-
-  /*
-   * Reassemble and apply original timezone offset to get
-   * _seconds_since_ref back to GMT.
-   */
-  s = GSTime(day, month, year, hour, minute, second, mil);
-  s -= oldOffset;
-  c = [NSCalendarDateClass alloc];
-  c->_calendar_format = [_calendar_format copy];
-  c->_time_zone = [_time_zone copy];
-  c->_seconds_since_ref = s;
-
-  /*
-   * Adjust date to try to maintain the time of day over
-   * a daylight savings time boundary if necessary.
-   */
-  newOffset = offset(_time_zone, c);
-  if (newOffset != oldOffset)
+    
+    /*
+     * Reassemble and apply original timezone offset to get
+     * _seconds_since_ref back to GMT.
+     */
+    s = GSTime(day, month, year, hour, minute, second, mil);
+    s -= oldOffset;
+    c = [NSCalendarDateClass alloc];
+    c->_calendar_format = [_calendar_format copy];
+    c->_time_zone = [_time_zone copy];
+    c->_seconds_since_ref = s;
+    
+    /*
+     * Adjust date to try to maintain the time of day over
+     * a daylight savings time boundary if necessary.
+     */
+    newOffset = offset(_time_zone, c);
+    if (newOffset != oldOffset)
     {
-      NSTimeInterval	tmpOffset = newOffset;
-
-      s -= (newOffset - oldOffset);
-      c->_seconds_since_ref = s;
-      /*
-       * If the date we have lies within a missing hour at a
-       * daylight savings time transition, we use the original
-       * date rather than the adjusted one.
-       */
-      newOffset = offset(_time_zone, c);
-      if (newOffset == oldOffset)
-	{
-	  s += (tmpOffset - oldOffset);
-	  c->_seconds_since_ref = s;
-	}
+        NSTimeInterval	tmpOffset = newOffset;
+        
+        s -= (newOffset - oldOffset);
+        c->_seconds_since_ref = s;
+        /*
+         * If the date we have lies within a missing hour at a
+         * daylight savings time transition, we use the original
+         * date rather than the adjusted one.
+         */
+        newOffset = offset(_time_zone, c);
+        if (newOffset == oldOffset)
+        {
+            s += (tmpOffset - oldOffset);
+            c->_seconds_since_ref = s;
+        }
     }
-  return AUTORELEASE(c);
+    return AUTORELEASE(c);
 }
 
 /**
@@ -2766,172 +2717,172 @@ static void outputValueWithFormat(int v, char *fldfmt, DescriptionInfo *info)
  * by 60.
  */
 - (void) years: (NSInteger*)years
-	months: (NSInteger*)months
+        months: (NSInteger*)months
           days: (NSInteger*)days
          hours: (NSInteger*)hours
        minutes: (NSInteger*)minutes
        seconds: (NSInteger*)seconds
      sinceDate: (NSDate*)date
 {
-  NSCalendarDate	*start;
-  NSCalendarDate	*end;
-  NSCalendarDate	*tmp;
-  int			diff;
-  int			extra;
-  int			sign;
-  NSInteger		mil;
-  NSInteger		syear, smonth, sday, shour, sminute, ssecond;
-  NSInteger		eyear, emonth, eday, ehour, eminute, esecond;
-
-  /* FIXME What if the two dates are in different time zones?
-    How about daylight savings time?
-   */
-  if ([date isKindOfClass: NSCalendarDateClass])
+    NSCalendarDate	*start;
+    NSCalendarDate	*end;
+    NSCalendarDate	*tmp;
+    int			diff;
+    int			extra;
+    int			sign;
+    NSInteger		mil;
+    NSInteger		syear, smonth, sday, shour, sminute, ssecond;
+    NSInteger		eyear, emonth, eday, ehour, eminute, esecond;
+    
+    /* FIXME What if the two dates are in different time zones?
+     How about daylight savings time?
+     */
+    if ([date isKindOfClass: NSCalendarDateClass])
     {
-      tmp = (NSCalendarDate*)RETAIN(date);
+        tmp = (NSCalendarDate*)RETAIN(date);
     }
-  else if ([date isKindOfClass: [NSDate class]])
+    else if ([date isKindOfClass: [NSDate class]])
     {
-      tmp = [[NSCalendarDateClass alloc] initWithTimeIntervalSinceReferenceDate:
-	[date timeIntervalSinceReferenceDate]];
+        tmp = [[NSCalendarDateClass alloc] initWithTimeIntervalSinceReferenceDate:
+               [date timeIntervalSinceReferenceDate]];
     }
-  else
+    else
     {
-      tmp = nil;	// Avoid compiler warning
-      [NSException raise: NSInvalidArgumentException
-	format: @"%@ invalid date given - %@",
-	NSStringFromSelector(_cmd), date];
+        tmp = nil;	// Avoid compiler warning
+        [NSException raise: NSInvalidArgumentException
+                    format: @"%@ invalid date given - %@",
+         NSStringFromSelector(_cmd), date];
     }
-
-  end = (NSCalendarDate*)[self laterDate: tmp];
-  if (end == self)
+    
+    end = (NSCalendarDate*)[self laterDate: tmp];
+    if (end == self)
     {
-      start = tmp;
-      sign = 1;
+        start = tmp;
+        sign = 1;
     }
-  else
+    else
     {
-      start = self;
-      sign = -1;
+        start = self;
+        sign = -1;
     }
-
-  GSBreakTime(start->_seconds_since_ref + offset(start->_time_zone, start),
-    &syear, &smonth, &sday, &shour, &sminute, &ssecond, &mil);
-
-  GSBreakTime(end->_seconds_since_ref + offset(end->_time_zone, end),
-    &eyear, &emonth, &eday, &ehour, &eminute, &esecond, &mil);
-
-  if (esecond < ssecond)
+    
+    GSBreakTime(start->_seconds_since_ref + offset(start->_time_zone, start),
+                &syear, &smonth, &sday, &shour, &sminute, &ssecond, &mil);
+    
+    GSBreakTime(end->_seconds_since_ref + offset(end->_time_zone, end),
+                &eyear, &emonth, &eday, &ehour, &eminute, &esecond, &mil);
+    
+    if (esecond < ssecond)
     {
-      eminute -= 1;
-      esecond += 60;
+        eminute -= 1;
+        esecond += 60;
     }
-  if (eminute < sminute)
+    if (eminute < sminute)
     {
-      ehour -= 1;
-      eminute += 60;
+        ehour -= 1;
+        eminute += 60;
     }
-  if (ehour < shour)
+    if (ehour < shour)
     {
-      eday -= 1;
-      ehour += 24;
+        eday -= 1;
+        ehour += 24;
     }
-  if (eday < sday)
+    if (eday < sday)
     {
-      emonth -= 1;
-      if (emonth >= 0)
-	{
-	  eday += [end lastDayOfGregorianMonth: emonth year: eyear];
-	}
-      else
-	{
-	  eday += 31;
-	}
-    }
-  if (emonth < smonth || (emonth == smonth && eday < sday))
-    {
-      eyear -= 1;
-      emonth += 12;
-    }
-
-  /* Calculate year difference and leave any remaining months in 'extra' */
-  diff = eyear - syear;
-  extra = 0;
-  if (years != 0)
-    {
-      *years = sign*diff;
-    }
-  else
-    {
-      extra += diff*12;
-    }
-
-  /* Calculate month difference and leave any remaining days in 'extra' */
-  diff = emonth - smonth + extra;
-  extra = 0;
-  if (months != 0)
-    {
-      *months = sign*diff;
-    }
-  else
-    {
-      while (diff-- > 0)
-	{
-	  int tmpmonth = emonth - diff - 1;
-	  int tmpyear = eyear;
-
-          while (tmpmonth < 1)
-	    {
-	      tmpmonth += 12;
-	      tmpyear--;
-	    }
-          extra += lastDayOfGregorianMonth(tmpmonth, tmpyear);
+        emonth -= 1;
+        if (emonth >= 0)
+        {
+            eday += [end lastDayOfGregorianMonth: emonth year: eyear];
+        }
+        else
+        {
+            eday += 31;
         }
     }
-
-  /* Calculate day difference and leave any remaining hours in 'extra' */
-  diff = eday - sday + extra;
-  extra = 0;
-  if (days != 0)
+    if (emonth < smonth || (emonth == smonth && eday < sday))
     {
-      *days = sign*diff;
+        eyear -= 1;
+        emonth += 12;
     }
-  else
+    
+    /* Calculate year difference and leave any remaining months in 'extra' */
+    diff = eyear - syear;
+    extra = 0;
+    if (years != 0)
     {
-      extra += diff*24;
+        *years = sign*diff;
     }
-
-  /* Calculate hour difference and leave any remaining minutes in 'extra' */
-  diff = ehour - shour + extra;
-  extra = 0;
-  if (hours != 0)
+    else
     {
-      *hours = sign*diff;
+        extra += diff*12;
     }
-  else
+    
+    /* Calculate month difference and leave any remaining days in 'extra' */
+    diff = emonth - smonth + extra;
+    extra = 0;
+    if (months != 0)
     {
-      extra += diff*60;
+        *months = sign*diff;
     }
-
-  /* Calculate minute difference and leave any remaining seconds in 'extra' */
-  diff = eminute - sminute + extra;
-  extra = 0;
-  if (minutes != 0)
+    else
     {
-      *minutes = sign*diff;
+        while (diff-- > 0)
+        {
+            int tmpmonth = emonth - diff - 1;
+            int tmpyear = eyear;
+            
+            while (tmpmonth < 1)
+            {
+                tmpmonth += 12;
+                tmpyear--;
+            }
+            extra += lastDayOfGregorianMonth(tmpmonth, tmpyear);
+        }
     }
-  else
+    
+    /* Calculate day difference and leave any remaining hours in 'extra' */
+    diff = eday - sday + extra;
+    extra = 0;
+    if (days != 0)
     {
-      extra += diff*60;
+        *days = sign*diff;
     }
-
-  diff = esecond - ssecond + extra;
-  if (seconds != 0)
+    else
     {
-      *seconds = sign*diff;
+        extra += diff*24;
     }
-
-  RELEASE(tmp);
+    
+    /* Calculate hour difference and leave any remaining minutes in 'extra' */
+    diff = ehour - shour + extra;
+    extra = 0;
+    if (hours != 0)
+    {
+        *hours = sign*diff;
+    }
+    else
+    {
+        extra += diff*60;
+    }
+    
+    /* Calculate minute difference and leave any remaining seconds in 'extra' */
+    diff = eminute - sminute + extra;
+    extra = 0;
+    if (minutes != 0)
+    {
+        *minutes = sign*diff;
+    }
+    else
+    {
+        extra += diff*60;
+    }
+    
+    diff = esecond - ssecond + extra;
+    if (seconds != 0)
+    {
+        *seconds = sign*diff;
+    }
+    
+    RELEASE(tmp);
 }
 
 @end

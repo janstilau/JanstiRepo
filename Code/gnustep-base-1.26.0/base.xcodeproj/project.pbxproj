@@ -842,8 +842,10 @@
 		06AB682E2350E3E0001FF62A /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906F921610BF3C0003C892 /* NSEnumerator.m */,
 				18906FBE1610BF3C0003C892 /* NSPointerArray.m */,
 				18906F721610BF3C0003C892 /* NSArray.m */,
+				18906F9C1610BF3C0003C892 /* NSHashTable.m */,
 			);
 			path = Done;
 			sourceTree = SOURCE_ROOT;
@@ -987,7 +989,6 @@
 				18906F8F1610BF3C0003C892 /* NSDistantObject.m */,
 				18906F901610BF3C0003C892 /* NSDistributedLock.m */,
 				18906F911610BF3C0003C892 /* NSDistributedNotificationCenter.m */,
-				18906F921610BF3C0003C892 /* NSEnumerator.m */,
 				18906F931610BF3C0003C892 /* NSError.m */,
 				18906F941610BF3C0003C892 /* NSException.m */,
 				18906F951610BF3C0003C892 /* NSFileHandle.m */,
@@ -997,7 +998,6 @@
 				18906F991610BF3C0003C892 /* NSGeometry.m */,
 				18906F9A1610BF3C0003C892 /* NSHTTPCookie.m */,
 				18906F9B1610BF3C0003C892 /* NSHTTPCookieStorage.m */,
-				18906F9C1610BF3C0003C892 /* NSHashTable.m */,
 				18906F9D1610BF3C0003C892 /* NSHost.m */,
 				18906F9E1610BF3C0003C892 /* NSIndexPath.m */,
 				18906F9F1610BF3C0003C892 /* NSIndexSet.m */,

@@ -1,29 +1,3 @@
-/** NSHashTable implementation for GNUStep.
- * Copyright (C) 2009  Free Software Foundation, Inc.
- *
- * Author: Richard Frith-Macdonald <rfm@gnu.org>
- *
- * This file is part of the GNUstep Base Library.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA 02111 USA.
- *
- * <title>NSHashTable class reference</title>
- * $Date$ $Revision$
- */
-
 #import "common.h"
 #import "Foundation/NSArray.h"
 #import "Foundation/NSException.h"
@@ -36,8 +10,11 @@
 @interface	NSConcreteHashTable : NSHashTable
 @end
 
-@implementation	NSHashTable
 
+
+// 父类, 是公共的接口的概念. 在 GNU 的环境里面, 父类的接口的实现, 是建立在一些 primitive 的 method 的基础上的. 这些 primitive 到底如何进行数据的存储, 被放到了子类
+// 这也是为什么这么多的父类, 子类, 都是 1:1 的关系. 作为一个类库, 他会认为自己的类有会子类化的可能. 可以这样认为, 子类的都是 privimite method, 而父类的都是高层函数.
+@implementation	NSHashTable
 
 static Class	abstractClass = 0;
 static Class	concreteClass = 0;
@@ -82,6 +59,8 @@ static Class	concreteClass = 0;
     NSPointerFunctionsObjectPersonality | NSPointerFunctionsWeakMemory];
 }
 
+
+// Designated init
 - (id) initWithOptions: (NSPointerFunctionsOptions)options
 	      capacity: (NSUInteger)initialCapacity
 {
@@ -94,17 +73,6 @@ static Class	concreteClass = 0;
   return o;
 }
 
-- (id) initWithPointerFunctions: (NSPointerFunctions*)functions
-		       capacity: (NSUInteger)initialCapacity
-{
-  [self subclassResponsibility: _cmd];
-  return nil;
-}
-
-- (void) addObject: (id)object
-{
-  [self subclassResponsibility: _cmd];
-}
 
 - (NSArray*) allObjects
 {
@@ -113,7 +81,6 @@ static Class	concreteClass = 0;
   unsigned	index;
   NSArray	*a;
   GS_BEGINITEMBUF(objects, nodeCount, id);
-
   enumerator = [self objectEnumerator];
   index = 0;
   while (index < nodeCount && (objects[index] = [enumerator nextObject]) != nil)
@@ -127,7 +94,7 @@ static Class	concreteClass = 0;
 
 - (id) anyObject
 {
-  return [[self objectEnumerator] nextObject];
+  return [[self objectEnumerator] nextObject]; // 创建一个迭代器然后调用它的方法. 按照原理来说, 应该是哈希表的第一个可以查找到的数据.
 }
 
 - (BOOL) containsObject: (id)anObject
@@ -135,44 +102,15 @@ static Class	concreteClass = 0;
   return [self member: anObject] ? YES : NO;
 }
 
-- (id) copyWithZone: (NSZone*)aZone
-{
-  [self subclassResponsibility: _cmd];
-  return nil;
-}
-
-- (NSUInteger) count
-{
-  return (NSUInteger)[self subclassResponsibility: _cmd];
-}
-
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
-				   objects: (id*)stackbuf
-				     count: (NSUInteger)len
-{
-  return (NSUInteger)[self subclassResponsibility: _cmd];
-}
-
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-  [self subclassResponsibility: _cmd];
-}
-
 - (NSUInteger) hash
 {
   return [self count];
 }
 
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-  [self subclassResponsibility: _cmd];
-  return nil;
-}
-
 - (void) intersectHashTable: (NSHashTable*)other
 {
   unsigned		count = [self count];
-
+    // 就是查找相交的数据, 然后最后一期删除. 注意就是, 不能在遍历的过程中删除数据. 只能是先记录, 然后删除.
   if (count > 0)
     {
       NSEnumerator	*enumerator;
@@ -196,6 +134,7 @@ static Class	concreteClass = 0;
     }
 }
 
+// 和上面的逻辑一眼, 如果有交叉的数据, 立马返回, 略去后面的操作.
 - (BOOL) intersectsHashTable: (NSHashTable*)other
 {
   NSEnumerator	*enumerator;
@@ -227,7 +166,7 @@ static Class	concreteClass = 0;
 {
   NSEnumerator	*enumerator;
   id		object;
-
+  // 还是 M*N 的复杂度, 双重的遍历, 应该有剪枝操作.
   enumerator = [self objectEnumerator];
   while ((object = [enumerator nextObject]) != nil)
     {
@@ -237,11 +176,6 @@ static Class	concreteClass = 0;
 	}
     }
   return YES;
-}
-
-- (id) member: (id)object
-{
-  return [self subclassResponsibility: _cmd];
 }
 
 - (void) minusHashTable: (NSHashTable*)other
@@ -259,21 +193,12 @@ static Class	concreteClass = 0;
     }
 }
 
-- (NSEnumerator*) objectEnumerator
-{
-  return [self subclassResponsibility: _cmd];
-}
-
-- (NSPointerFunctions*) pointerFunctions
-{
-  return [self subclassResponsibility: _cmd];
-}
-
 - (void) removeAllObjects
 {
   NSEnumerator	*enumerator;
   id		object;
-
+    
+    // 在遍历的过程中, 有删除, 这是因为 hash 表的结构, 每次删除都是一个查找操作.
   enumerator = [[self allObjects] objectEnumerator];
   while ((object = [enumerator nextObject]) != nil)
     {
@@ -281,12 +206,7 @@ static Class	concreteClass = 0;
     }
 }
 
-- (void) removeObject: (id)object
-{
-  [self subclassResponsibility: _cmd];
-}
-
-- (NSSet*) setRepresentation 
+- (NSSet*) setRepresentation
 {
   NSEnumerator	*enumerator;
   NSMutableSet	*set;
@@ -309,7 +229,7 @@ static Class	concreteClass = 0;
   enumerator = [other objectEnumerator];
   while ((object = [enumerator nextObject]) != nil)
     {
-      [self addObject: object];
+      [self addObject: object]; // addObject 里面应该会有去重的处理. 所以这里就没有查找的操作.
     }
 }
 
