@@ -43,7 +43,7 @@
  *	Some standard selectors for frequently used methods. Set in NSString
  *      +initialize or the GSString.m setup() function.
  */
-static SEL	caiSel = NULL;
+static SEL	charAtIndexSel = NULL;
 static SEL	gcrSel = NULL;
 static SEL	ranSel = NULL;
 
@@ -677,13 +677,13 @@ GSEQ_STRRANGE(NSString *ss, NSString *os, NSUInteger mask, NSRange aRange)
    */
 #if	GSEQ_S == GSEQ_NS
   scImp = (unichar (*)(NSString*,SEL,NSUInteger))
-    [(id)s methodForSelector: caiSel];
+    [(id)s methodForSelector: charAtIndexSel];
   sgImp = (void (*)(NSString*,SEL,unichar*,NSRange))
     [(id)s methodForSelector: gcrSel];
 #endif
 #if	GSEQ_O == GSEQ_NS
   ocImp = (unichar (*)(NSString*,SEL,NSUInteger))
-    [(id)o methodForSelector: caiSel];
+    [(id)o methodForSelector: charAtIndexSel];
   ogImp = (void (*)(NSString*,SEL,unichar*,NSRange))
     [(id)o methodForSelector: gcrSel];
 #endif

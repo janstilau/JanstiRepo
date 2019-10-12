@@ -1,31 +1,3 @@
-/** Implementation of NSHashTable for GNUStep
- Copyright (C) 2009 Free Software Foundation, Inc.
- 
- Written by:  Richard Frith-Macdonald <rfm@gnu.org>
- Date: April 2009
- 
- Based on original o_hash code by Albin L. Jones <Albin.L.Jones@Dartmouth.EDU>
- 
- This file is part of the GNUstep Base Library.
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free
- Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02111 USA.
- 
- $Date: 2008-06-08 11:38:33 +0100 (Sun, 08 Jun 2008) $ $Revision: 26606 $
- */
-
 #import "common.h"
 
 #import "Foundation/NSArray.h"
@@ -108,16 +80,10 @@ pointerFunctionsAssign(&M->cb.pf, (void**)addr, (x).obj);
 
 #include "GNUstepBase/GSIMap.h"
 
-/**** Function Implementations ****/
-
-/**
- * Returns an array of all the objects in the table.
- * NB. The table <em>must</em> contain objects for its keys.
- */
 NSArray *
 NSAllHashTableObjects(NSHashTable *table)
 {
-    return [table allObjects];
+    return [table allObjects]; // 调用父类的方法.
 }
 
 /**
@@ -148,14 +114,6 @@ NSCompareHashTables(NSHashTable *table1, NSHashTable *table2)
     if ([table1 count] != [table2 count])
     {
         return NO;
-    }
-    if (object_getClass(table1) != concreteClass
-        && object_getClass(table2) == concreteClass)
-    {
-        id	t = table1;
-        
-        table1 = table2;
-        table2 = t;
     }
     if (object_getClass(table1) == concreteClass)
     {
@@ -903,7 +861,7 @@ const NSHashTableCallBacks NSPointerToStructHashCallBacks =
 - (NSUInteger) count
 {
     GSIMapRemoveWeak(self);
-    return (NSUInteger)nodeCount;
+    return (NSUInteger)nodeCount; // 直接读取的 nodeCount, 所以这个值要时刻维护.
 }
 
 - (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state 	

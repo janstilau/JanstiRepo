@@ -10,8 +10,6 @@
 @interface	NSConcreteHashTable : NSHashTable
 @end
 
-
-
 // 父类, 是公共的接口的概念. 在 GNU 的环境里面, 父类的接口的实现, 是建立在一些 primitive 的 method 的基础上的. 这些 primitive 到底如何进行数据的存储, 被放到了子类
 // 这也是为什么这么多的父类, 子类, 都是 1:1 的关系. 作为一个类库, 他会认为自己的类有会子类化的可能. 可以这样认为, 子类的都是 privimite method, 而父类的都是高层函数.
 @implementation	NSHashTable

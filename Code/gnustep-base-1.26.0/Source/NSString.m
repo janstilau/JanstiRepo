@@ -820,7 +820,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
     {
       beenHere = YES;
       cMemberSel = @selector(characterIsMember:);
-      caiSel = @selector(characterAtIndex:);
+      charAtIndexSel = @selector(characterAtIndex:);
       gcrSel = @selector(getCharacters:range:);
       ranSel = @selector(rangeOfComposedCharacterSequenceAtIndex:);
 
@@ -1878,11 +1878,11 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
   GS_RANGE_CHECK(aRange, l);
 
   caiImp = (unichar (*)(NSString*,SEL,NSUInteger))
-    [self methodForSelector: caiSel];
+    [self methodForSelector: charAtIndexSel];
 
   for (i = 0; i < aRange.length; i++)
     {
-      buffer[i] = (*caiImp)(self, caiSel, aRange.location + i);
+      buffer[i] = (*caiImp)(self, charAtIndexSel, aRange.location + i);
     }
 }
 
@@ -2245,13 +2245,13 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
   range.length = 0;
 
   cImp = (unichar(*)(id,SEL,NSUInteger))
-    [self methodForSelector: caiSel];
+    [self methodForSelector: charAtIndexSel];
   mImp = (BOOL(*)(id,SEL,unichar))
     [aSet methodForSelector: cMemberSel];
 
   for (i = start; i != stop; i += step)
     {
-      unichar letter = (unichar)(*cImp)(self, caiSel, i);
+      unichar letter = (unichar)(*cImp)(self, charAtIndexSel, i);
 
       if ((*mImp)(aSet, cMemberSel, letter))
 	{
@@ -2817,17 +2817,17 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
   if (anIndex >= length)
     [NSException raise: NSRangeException format:@"Invalid location."];
   caiImp = (unichar (*)(NSString*,SEL,NSUInteger))
-    [self methodForSelector: caiSel];
+    [self methodForSelector: charAtIndexSel];
 
   for (start = anIndex; start > 0; start--)
     {
-      ch = (*caiImp)(self, caiSel, start);
+      ch = (*caiImp)(self, charAtIndexSel, start);
       if (uni_isnonsp(ch) == NO)
         break;
     }
   for (end = start+1; end < length; end++)
     {
-      ch = (*caiImp)(self, caiSel, end);
+      ch = (*caiImp)(self, charAtIndexSel, end);
       if (uni_isnonsp(ch) == NO)
         break;
     }
@@ -3085,14 +3085,14 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 	return IMMUTABLE(aString);
 
       scImp = (unichar (*)(NSString*,SEL,NSUInteger))
-	[self methodForSelector: caiSel];
+	[self methodForSelector: charAtIndexSel];
       ocImp = (unichar (*)(NSString*,SEL,NSUInteger))
-	[aString methodForSelector: caiSel];
+	[aString methodForSelector: charAtIndexSel];
 
       while ((sIndex < sLength) && (oIndex < oLength))
 	{
-	  unichar	sc = (*scImp)(self, caiSel, sIndex);
-	  unichar	oc = (*ocImp)(aString, caiSel, oIndex);
+	  unichar	sc = (*scImp)(self, charAtIndexSel, sIndex);
+	  unichar	oc = (*ocImp)(aString, charAtIndexSel, oIndex);
 
 	  if (sc == oc)
 	    {
@@ -3188,11 +3188,11 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
   len = [self length];
   GS_RANGE_CHECK(aRange, len);
 
-  caiImp = (unichar (*)())[self methodForSelector: caiSel];
+  caiImp = (unichar (*)())[self methodForSelector: charAtIndexSel];
   /* Place aRange.location at the beginning of a CR-LF sequence */
   if (aRange.location > 0 && aRange.location < len
-    && (*caiImp)(self, caiSel, aRange.location - 1) == (unichar)'\r'
-    && (*caiImp)(self, caiSel, aRange.location) == (unichar)'\n')
+    && (*caiImp)(self, charAtIndexSel, aRange.location - 1) == (unichar)'\r'
+    && (*caiImp)(self, charAtIndexSel, aRange.location) == (unichar)'\n')
     {
       aRange.location--;
     }
@@ -3211,7 +3211,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 	    {
 	      BOOL	done = NO;
 
-	      thischar = (*caiImp)(self, caiSel, start);
+	      thischar = (*caiImp)(self, charAtIndexSel, start);
 	      switch (thischar)
 		{
 		  case (unichar)0x000A:
@@ -3234,7 +3234,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 	    }
 	  if (start == 0)
 	    {
-	      thischar = (*caiImp)(self, caiSel, start);
+	      thischar = (*caiImp)(self, charAtIndexSel, start);
 	      switch (thischar)
 		{
 		  case (unichar)0x000A:
@@ -3270,7 +3270,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
         }
       while (end < len)
 	{
-	   thischar = (*caiImp)(self, caiSel, end);
+	   thischar = (*caiImp)(self, charAtIndexSel, end);
 	   switch (thischar)
 	     {
 	       case (unichar)0x000A:
@@ -3295,8 +3295,8 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
       if (lineEndIndex)
 	{
 	  if (end < len
-	    && ((*caiImp)(self, caiSel, end-1) == (unichar)0x000D)
-	    && ((*caiImp)(self, caiSel, end) == (unichar)0x000A))
+	    && ((*caiImp)(self, charAtIndexSel, end-1) == (unichar)0x000D)
+	    && ((*caiImp)(self, charAtIndexSel, end) == (unichar)0x000A))
 	    {
 	      *lineEndIndex = ++end;
 	      termlen = 2;
@@ -5224,18 +5224,18 @@ static NSFileManager *fm = nil;
   l = [s length];
   root = rootOf(s, l);
 
-  caiImp = (unichar (*)())[s methodForSelector: caiSel];
+  caiImp = (unichar (*)())[s methodForSelector: charAtIndexSel];
 
   /* Remove any separators ('/') immediately after the trailing
    * separator in the root (if any).
    */
-  if (root > 0 && YES == pathSepMember((*caiImp)(s, caiSel, root-1)))
+  if (root > 0 && YES == pathSepMember((*caiImp)(s, charAtIndexSel, root-1)))
     {
       unsigned	i;
 
       for (i = root; i < l; i++)
 	{
-	  if (NO == pathSepMember((*caiImp)(s, caiSel, i)))
+	  if (NO == pathSepMember((*caiImp)(s, charAtIndexSel, i)))
 	    {
 	      break;
 	    }
@@ -5256,7 +5256,7 @@ static NSFileManager *fm = nil;
 				   range: r]).length == 1)
     {
       while (NSMaxRange(r) < l
-	&& pathSepMember((*caiImp)(s, caiSel, NSMaxRange(r))) == YES)
+	&& pathSepMember((*caiImp)(s, charAtIndexSel, NSMaxRange(r))) == YES)
 	{
 	  r.length++;
 	}
@@ -5274,8 +5274,8 @@ static NSFileManager *fm = nil;
    * As a special case for OSX compatibility, we only remove the trailing
    * dot if it's not immediately after the root.
    */
-  if (l > root + 1 && (*caiImp)(s, caiSel, l-1) == '.'
-    && pathSepMember((*caiImp)(s, caiSel, l-2)) == YES)
+  if (l > root + 1 && (*caiImp)(s, charAtIndexSel, l-1) == '.'
+    && pathSepMember((*caiImp)(s, charAtIndexSel, l-2)) == YES)
     {
       l--;
       [s deleteCharactersInRange: NSMakeRange(l, 1)];
@@ -5287,8 +5287,8 @@ static NSFileManager *fm = nil;
     == 1)
     {
       if (r.location > 0 && r.location < l - 1
-	&& pathSepMember((*caiImp)(s, caiSel, r.location-1)) == YES
-	&& pathSepMember((*caiImp)(s, caiSel, r.location+1)) == YES)
+	&& pathSepMember((*caiImp)(s, charAtIndexSel, r.location-1)) == YES
+	&& pathSepMember((*caiImp)(s, charAtIndexSel, r.location+1)) == YES)
 	{
 	  r.length++;
 	  [s deleteCharactersInRange: r];
@@ -5331,9 +5331,9 @@ static NSFileManager *fm = nil;
     == 2)
     {
       if (r.location > 0
-	&& pathSepMember((*caiImp)(s, caiSel, r.location-1)) == YES
+	&& pathSepMember((*caiImp)(s, charAtIndexSel, r.location-1)) == YES
         && (NSMaxRange(r) == l
-	  || pathSepMember((*caiImp)(s, caiSel, NSMaxRange(r))) == YES))
+	  || pathSepMember((*caiImp)(s, charAtIndexSel, NSMaxRange(r))) == YES))
 	{
 	  BOOL	atEnd = (NSMaxRange(r) == l) ? YES : NO;
 
@@ -5400,12 +5400,12 @@ static NSFileManager *fm = nil;
       BOOL	(*mImp)(id, SEL, unichar);
       unichar	letter;
 
-      caiImp = (unichar (*)())[self methodForSelector: caiSel];
+      caiImp = (unichar (*)())[self methodForSelector: charAtIndexSel];
       mImp = (BOOL(*)(id,SEL,unichar)) [aSet methodForSelector: cMemberSel];
 
       while (end > 0)
 	{
-	  letter = (*caiImp)(self, caiSel, end-1);
+	  letter = (*caiImp)(self, charAtIndexSel, end-1);
 	  if ((*mImp)(aSet, cMemberSel, letter) == NO)
 	    {
 	      break;
@@ -5414,7 +5414,7 @@ static NSFileManager *fm = nil;
 	}
       while (start < end)
 	{
-	  letter = (*caiImp)(self, caiSel, start);
+	  letter = (*caiImp)(self, charAtIndexSel, start);
 	  if ((*mImp)(aSet, cMemberSel, letter) == NO)
 	    {
 	      break;
@@ -5444,10 +5444,10 @@ static NSFileManager *fm = nil;
       unsigned int	count = 0;
       unichar	(*caiImp)(NSString*, SEL, NSUInteger);
 
-      caiImp = (unichar (*)())[self methodForSelector: caiSel];
+      caiImp = (unichar (*)())[self methodForSelector: charAtIndexSel];
       while (count < len)
 	{
-	  if (!uni_isnonsp((*caiImp)(self, caiSel, count++)))
+	  if (!uni_isnonsp((*caiImp)(self, charAtIndexSel, count++)))
 	    {
 	      blen++;
 	    }

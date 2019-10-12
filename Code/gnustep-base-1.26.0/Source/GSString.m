@@ -662,7 +662,7 @@ setup(BOOL rerun)
     {
       beenHere = YES;
 
-      caiSel = @selector(characterAtIndex:);
+      charAtIndexSel = @selector(characterAtIndex:);
       gcrSel = @selector(getCharacters:range:);
       ranSel = @selector(rangeOfComposedCharacterSequenceAtIndex:);
 
@@ -710,7 +710,7 @@ setup(BOOL rerun)
       hashImp = (NSUInteger (*)(id, SEL))
 	[GSStringClass instanceMethodForSelector: hashSel];
 
-      caiSel = @selector(characterAtIndex:);
+      charAtIndexSel = @selector(characterAtIndex:);
       gcrSel = @selector(getCharacters:range:);
       ranSel = @selector(rangeOfComposedCharacterSequenceAtIndex:);
     }
