@@ -846,6 +846,7 @@
 		06AB682E2350E3E0001FF62A /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906F931610BF3C0003C892 /* NSError.m */,
 				06A1D1522353132900A7C4A2 /* udocumenttoxml.cpp */,
 				06A1D1532353132900A7C4A2 /* xmltools.cpp */,
 				18906FC61610BF3C0003C892 /* NSPropertyList.m */,
@@ -997,7 +998,6 @@
 				18906F8F1610BF3C0003C892 /* NSDistantObject.m */,
 				18906F901610BF3C0003C892 /* NSDistributedLock.m */,
 				18906F911610BF3C0003C892 /* NSDistributedNotificationCenter.m */,
-				18906F931610BF3C0003C892 /* NSError.m */,
 				18906F941610BF3C0003C892 /* NSException.m */,
 				18906F951610BF3C0003C892 /* NSFileHandle.m */,
 				18906F961610BF3C0003C892 /* NSFileManager.m */,
