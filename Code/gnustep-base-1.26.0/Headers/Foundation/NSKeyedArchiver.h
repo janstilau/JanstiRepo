@@ -1,40 +1,8 @@
-/** Interface for NSKeyedArchiver for GNUStep
-   Copyright (C) 2004 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: January 2004
-   
-   This file is part of the GNUstep Base Library.
-   
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   AutogsdocSource: NSKeyedArchiver.m
-   AutogsdocSource: NSKeyedUnarchiver.m
-
-   */ 
-
 #ifndef __NSKeyedArchiver_h_GNUSTEP_BASE_INCLUDE
 #define __NSKeyedArchiver_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 #import	<Foundation/NSCoder.h>
 #import	<Foundation/NSMapTable.h>
@@ -52,34 +20,16 @@ extern "C" {
  */
 @interface NSKeyedArchiver : NSCoder
 {
-#if	GS_EXPOSE(NSKeyedArchiver)
-@private
-  NSMutableData	*_data;		/* Data to write into.		*/
-  id		_delegate;	/* Delegate controls operation.	*/
-  NSMapTable	*_clsMap;	/* Map classes to names.	*/
-#ifndef	_IN_NSKEYEDARCHIVER_M
-#define	GSIMapTable	void*
-#endif
-  GSIMapTable	_cIdMap;	/* Conditionally coded.		*/
-  GSIMapTable	_uIdMap;	/* Unconditionally coded.	*/
-  GSIMapTable	_repMap;	/* Mappings for objects.	*/
-#ifndef	_IN_NSKEYEDARCHIVER_M
-#undef	GSIMapTable
-#endif
-  unsigned	_keyNum;	/* Counter for keys in object.	*/
-  NSMutableDictionary	*_enc;	/* Object being encoded.	*/
-  NSMutableArray	*_obj;	/* Array of objects.		*/
-  NSPropertyListFormat	_format;
-#endif
-#if     GS_NONFRAGILE
-#else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
-#endif
+    NSMutableData	*_data;		/* Data to write into.		*/
+    id		_delegate;	/* Delegate controls operation.	*/
+    NSMapTable	*_clsMap;	/* Map classes to names.	*/
+    GSIMapTable	_cIdMap;	/* Conditionally coded.		*/
+    GSIMapTable	_uIdMap;	/* Unconditionally coded.	*/
+    GSIMapTable	_repMap;	/* Mappings for objects.	*/
+    unsigned	_keyNum;	/* Counter for keys in object.	*/
+    NSMutableDictionary	*_enc;	/* Object being encoded.	*/
+    NSMutableArray	*_obj;	/* Array of objects.		*/
+    NSPropertyListFormat	_format;
 }
 
 /**
@@ -113,7 +63,7 @@ extern "C" {
  * Returns any mapping for the name of aClass which was previously set
  * for the receiver using the -setClassName:forClass: method.<br />
  * Returns nil if no such mapping exists, even if one has been set
- * using the class method +setClassName:forClass: 
+ * using the class method +setClassName:forClass:
  */
 - (NSString*) classNameForClass: (Class)aClass;
 
@@ -132,8 +82,8 @@ extern "C" {
  * and associates the encoded value with aKey.
  */
 - (void) encodeBytes: (const uint8_t*)aPointer
-	      length: (NSUInteger)length
-	      forKey: (NSString*)aKey;
+              length: (NSUInteger)length
+              forKey: (NSString*)aKey;
 
 /**
  * Encodes anObject and associates the encoded value with aKey, but only
@@ -229,31 +179,31 @@ extern "C" {
 {
 #if	GS_EXPOSE(NSKeyedUnarchiver)
 @private
-  NSDictionary	*_archive;
-  id		_delegate;	/* Delegate controls operation.	*/
-  NSMapTable	*_clsMap;	/* Map classes to names.	*/
-  NSArray	*_objects;	/* All encoded objects.		*/
-  NSDictionary	*_keyMap;	/* Local object name table.	*/
-  unsigned	_cursor;	/* Position in object.		*/
-  NSString	*_archiverClass;
-  NSString	*_version;
+    NSDictionary	*_archive;
+    id		_delegate;	/* Delegate controls operation.	*/
+    NSMapTable	*_clsMap;	/* Map classes to names.	*/
+    NSArray	*_objects;	/* All encoded objects.		*/
+    NSDictionary	*_keyMap;	/* Local object name table.	*/
+    unsigned	_cursor;	/* Position in object.		*/
+    NSString	*_archiverClass;
+    NSString	*_version;
 #ifndef	_IN_NSKEYEDUNARCHIVER_M
 #define	GSIArray	void*
 #endif
-  GSIArray		_objMap; /* Decoded objects.		*/
+    GSIArray		_objMap; /* Decoded objects.		*/
 #ifndef	_IN_NSKEYEDUNARCHIVER_M
 #undef	GSIArray
 #endif
-  NSZone	*_zone;		/* Zone for allocating objs.	*/
+    NSZone	*_zone;		/* Zone for allocating objs.	*/
 #endif
 #if     GS_NONFRAGILE
 #else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
+    /* Pointer to private additional data used to avoid breaking ABI
+     * when we don't have the non-fragile ABI available.
+     * Use this mechanism rather than changing the instance variable
+     * layout (see Source/GSInternal.h for details).
+     */
+@private id _internal GS_UNUSED_IVAR;
 #endif
 }
 
@@ -320,7 +270,7 @@ extern "C" {
  * -encodeBytes:length:forKey:
  */
 - (const uint8_t*) decodeBytesForKey: (NSString*)aKey
-		      returnedLength: (NSUInteger*)length;
+                      returnedLength: (NSUInteger*)length;
 
 /**
  * Returns a double value associated with aKey.  This value must previously
@@ -465,7 +415,7 @@ willReplaceObject: (id)anObject
 /**
  * Informal protocol implemented by delegates of [NSKeyedUnarchiver].
  */
-@interface NSObject (NSKeyedUnarchiverDelegate) 
+@interface NSObject (NSKeyedUnarchiverDelegate)
 
 /**
  * Sent if the named class is not available during decoding.<br />
@@ -477,8 +427,8 @@ willReplaceObject: (id)anObject
  * to continue decoding, or may return nil to abort the decoding process.
  */
 - (Class) unarchiver: (NSKeyedUnarchiver*)anUnarchiver
-  cannotDecodeObjectOfClassName: (NSString*)aName
-  originalClasses: (NSArray*)classNames;
+cannotDecodeObjectOfClassName: (NSString*)aName
+     originalClasses: (NSArray*)classNames;
 
 /**
  * Sent when anObject is decoded.  The receiver may return either anObject
@@ -504,7 +454,7 @@ willReplaceObject: (id)anObject
  */
 - (void) unarchiver: (NSKeyedUnarchiver*)anUnarchiver
   willReplaceObject: (id)anObject
-	 withObject: (id)newObject;
+         withObject: (id)newObject;
 
 @end
 
@@ -513,7 +463,7 @@ willReplaceObject: (id)anObject
 /**
  * Methods by which a class may control its archiving by the [NSKeyedArchiver].
  */
-@interface NSObject (NSKeyedArchiverObjectSubstitution) 
+@interface NSObject (NSKeyedArchiverObjectSubstitution)
 
 /**
  * This message is sent to objects being encoded, to allow them to choose
@@ -541,7 +491,7 @@ willReplaceObject: (id)anObject
  * Methods by which a class may control its unarchiving by the
  * [NSKeyedArchiver].
  */
-@interface NSObject (NSKeyedUnarchiverObjectSubstitution) 
+@interface NSObject (NSKeyedUnarchiverObjectSubstitution)
 
 /**
  * Sent during unarchiving to permit classes to substitute a different
@@ -587,10 +537,6 @@ willReplaceObject: (id)anObject
  */
 - (NSSize) decodeSizeForKey: (NSString*)aKey;
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif	/* GS_API_MACOSX */
 #endif	/* __NSKeyedArchiver_h_GNUSTEP_BASE_INCLUDE */

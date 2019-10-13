@@ -1,27 +1,3 @@
-/* Interface for NSCoder for GNUStep
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Date: 1995
-   
-   This file is part of the GNUstep Base Library.
-   
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
-
 #ifndef __NSCoder_h_GNUSTEP_BASE_INCLUDE
 #define __NSCoder_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -30,10 +6,6 @@
 #import	<Foundation/NSGeometry.h>
 #import	<Foundation/NSSet.h>
 #import	<Foundation/NSZone.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 @class NSMutableData, NSData, NSString;
 
@@ -58,8 +30,8 @@ extern "C" {
  *  well.
  */
 - (void) encodeArrayOfObjCType: (const char*)type
-			 count: (NSUInteger)count
-			    at: (const void*)array;
+                         count: (NSUInteger)count
+                            at: (const void*)array;
 
 /**
  *  Can be ignored.
@@ -71,7 +43,7 @@ extern "C" {
 - (void) encodeByrefObject: (id)anObject;
 
 /**
- *  Stores bytes directly into archive.  
+ *  Stores bytes directly into archive.
  */
 - (void) encodeBytes: (void*)d length: (NSUInteger)l;
 
@@ -126,7 +98,7 @@ extern "C" {
  *  this is used for primitives though it can be used for objects as well.
  */
 - (void) encodeValueOfObjCType: (const char*)type
-			    at: (const void*)address;
+                            at: (const void*)address;
 
 /**
  *  Multiple version of [-encodeValueOfObjCType:at:].
@@ -190,7 +162,7 @@ extern "C" {
  *  in which case you are responsible for releasing them.
  */
 - (void) decodeValueOfObjCType: (const char*)type
-			    at: (void*)address;
+                            at: (void*)address;
 
 /**
  *  Multiple version of [-decodeValueOfObjCType:at:].
@@ -221,7 +193,7 @@ extern "C" {
 /**
  *  Returns current version of class (when encoding) or version of decoded
  *  class (decoded).  Version comes from [NSObject -getVersion].
- *  
+ *
  */
 - (NSInteger) versionForClassName: (NSString*)className;
 
@@ -229,8 +201,6 @@ extern "C" {
 /*
  * Include GSConfig.h for typedefs/defines of uint8_t, int32_t int64_t
  */
-#import <GNUstepBase/GSConfig.h>
-
 
 /** <override-subclass />
  * Returns a flag indicating whether the receiver supported keyed coding.
@@ -258,7 +228,7 @@ extern "C" {
  * -encodeBytes:length:forKey:
  */
 - (const uint8_t*) decodeBytesForKey: (NSString*)aKey
-		      returnedLength: (NSUInteger*)alength;
+                      returnedLength: (NSUInteger*)alength;
 
 /** <override-subclass />
  * Returns a double value associated with aKey.  This value must previously
@@ -316,8 +286,8 @@ extern "C" {
  * and associates the encoded value with aKey.
  */
 - (void) encodeBytes: (const uint8_t*)aPointer
-	      length: (NSUInteger)length
-	      forKey: (NSString*)aKey;
+              length: (NSUInteger)length
+              forKey: (NSString*)aKey;
 
 /** <override-subclass />
  * Encodes anObject and associates the encoded value with aKey, but only
@@ -382,9 +352,5 @@ extern "C" {
 
 #endif
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif	/* __NSCoder_h_GNUSTEP_BASE_INCLUDE */
