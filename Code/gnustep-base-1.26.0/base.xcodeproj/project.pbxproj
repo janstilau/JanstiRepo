@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06A1D1542353132900A7C4A2 /* udocumenttoxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06A1D1522353132900A7C4A2 /* udocumenttoxml.cpp */; };
+		06A1D1552353132900A7C4A2 /* xmltools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06A1D1532353132900A7C4A2 /* xmltools.cpp */; };
 		180878891618537A006EBD74 /* objc-load.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890700B1610BF3C0003C892 /* objc-load.m */; };
 		18394B351610D9D000335E85 /* Foundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906E681610BF3C0003C892 /* Foundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B361610D9D000335E85 /* FoundationErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906E691610BF3C0003C892 /* FoundationErrors.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -381,6 +383,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		06A1D1522353132900A7C4A2 /* udocumenttoxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = udocumenttoxml.cpp; sourceTree = "<group>"; };
+		06A1D1532353132900A7C4A2 /* xmltools.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmltools.cpp; sourceTree = "<group>"; };
 		06AB682C2350D840001FF62A /* Foundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Foundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		06AB682D2350D840001FF62A /* gdnc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gdnc; sourceTree = BUILT_PRODUCTS_DIR; };
 		18394AA31610CC4E00335E85 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
@@ -842,6 +846,9 @@
 		06AB682E2350E3E0001FF62A /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				06A1D1522353132900A7C4A2 /* udocumenttoxml.cpp */,
+				06A1D1532353132900A7C4A2 /* xmltools.cpp */,
+				18906FC61610BF3C0003C892 /* NSPropertyList.m */,
 				18906FA11610BF3C0003C892 /* NSJSONSerialization.m */,
 				18906F921610BF3C0003C892 /* NSEnumerator.m */,
 				18906FBE1610BF3C0003C892 /* NSPointerArray.m */,
@@ -1037,7 +1044,6 @@
 				18906FC31610BF3C0003C892 /* NSPortNameServer.m */,
 				18906FC41610BF3C0003C892 /* NSPredicate.m */,
 				18906FC51610BF3C0003C892 /* NSProcessInfo.m */,
-				18906FC61610BF3C0003C892 /* NSPropertyList.m */,
 				18906FC71610BF3C0003C892 /* NSProtocolChecker.m */,
 				18906FC81610BF3C0003C892 /* NSProxy.m */,
 				18906FC91610BF3C0003C892 /* NSRange.m */,
@@ -1165,6 +1171,7 @@
 				18906E7F1610BF3C0003C892 /* NSDecimalNumber.h */,
 				18906E801610BF3C0003C892 /* NSDictionary.h */,
 				18906E811610BF3C0003C892 /* NSDistantObject.h */,
+				18906EAE1610BF3C0003C892 /* NSPropertyList.h */,
 				18906E821610BF3C0003C892 /* NSDistributedLock.h */,
 				18906E831610BF3C0003C892 /* NSDistributedNotificationCenter.h */,
 				18906E841610BF3C0003C892 /* NSEnumerator.h */,
@@ -1209,7 +1216,6 @@
 				18906EAB1610BF3C0003C892 /* NSPortNameServer.h */,
 				18906EAC1610BF3C0003C892 /* NSPredicate.h */,
 				18906EAD1610BF3C0003C892 /* NSProcessInfo.h */,
-				18906EAE1610BF3C0003C892 /* NSPropertyList.h */,
 				18906EAF1610BF3C0003C892 /* NSProtocolChecker.h */,
 				18906EB01610BF3C0003C892 /* NSProxy.h */,
 				18906EB11610BF3C0003C892 /* NSRange.h */,
@@ -1678,6 +1684,7 @@
 				1852896D161396450016729B /* GSFTPURLHandle.m in Sources */,
 				1852896E161396450016729B /* GSFileHandle.m in Sources */,
 				1852896F161396450016729B /* GSFormat.m in Sources */,
+				06A1D1542353132900A7C4A2 /* udocumenttoxml.cpp in Sources */,
 				18528970161396450016729B /* GSHTTPAuthentication.m in Sources */,
 				18528971161396450016729B /* GSHTTPURLHandle.m in Sources */,
 				18528972161396450016729B /* GSICUString.m in Sources */,
@@ -1697,6 +1704,7 @@
 				18641D221678AD46003C6E11 /* GSSocksParserPrivate.m in Sources */,
 				18641D1F1678AD34003C6E11 /* GSSocks4Parser.m in Sources */,
 				18641D201678AD39003C6E11 /* GSSocks5Parser.m in Sources */,
+				06A1D1552353132900A7C4A2 /* xmltools.cpp in Sources */,
 				18528957161396130016729B /* GCArray.m in Sources */,
 				18528958161396160016729B /* GCDictionary.m in Sources */,
 				185289591613961A0016729B /* GCObject.m in Sources */,
