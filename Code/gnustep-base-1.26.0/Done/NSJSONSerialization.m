@@ -865,7 +865,7 @@ writeObject(id obj, NSMutableString *output, NSInteger tabs)
         [output appendString: @"}"];
     }
 /*
- * 如果是字符串, 那么久应该是直接打印.
+ * 如果是字符串, 那么是直接打印.
  */
     else if ([obj isKindOfClass: NSStringClass])
     {

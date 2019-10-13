@@ -1366,11 +1366,10 @@ compare(id elem1, id elem2, void* context)
  */
 - (BOOL) writeToFile: (NSString *)path atomically: (BOOL)useAuxiliaryFile
 {
-    NSDictionary	*loc;
     NSString	*desc = nil;
     NSData	*data;
     
-    loc = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
+    NSDictionary *loc = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
     if (GSMacOSXCompatiblePropertyLists() == YES)
     {
         GSPropertyListMake(self, loc, YES, NO, 2, &desc);

@@ -163,34 +163,34 @@ decodebase64(unsigned char *dst, const unsigned char *src)
 }
 
 void
-GSPrivateEncodeBase64(const uint8_t *src, NSUInteger length, uint8_t *dst)
+GSPrivateEncodeBase64(const uint8_t *src, NSUInteger sourceLength, uint8_t *dst)
 {
   int	dIndex = 0;
   int	sIndex;
 
-  for (sIndex = 0; sIndex < length; sIndex += 3)
+  for (sIndex = 0; sIndex < sourceLength; sIndex += 3)
     {
-      static char b64[]
+      static char b64Chars[]
         = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
       int	c0 = src[sIndex];
-      int	c1 = (sIndex+1 < length) ? src[sIndex+1] : 0;
-      int	c2 = (sIndex+2 < length) ? src[sIndex+2] : 0;
+      int	c1 = (sIndex+1 < sourceLength) ? src[sIndex+1] : 0;
+      int	c2 = (sIndex+2 < sourceLength) ? src[sIndex+2] : 0;
 
-      dst[dIndex++] = b64[(c0 >> 2) & 077];
-      dst[dIndex++] = b64[((c0 << 4) & 060) | ((c1 >> 4) & 017)];
-      dst[dIndex++] = b64[((c1 << 2) & 074) | ((c2 >> 6) & 03)];
-      dst[dIndex++] = b64[c2 & 077];
+      dst[dIndex++] = b64Chars[(c0 >> 2) & 077];
+      dst[dIndex++] = b64Chars[((c0 << 4) & 060) | ((c1 >> 4) & 017)];
+      dst[dIndex++] = b64Chars[((c1 << 2) & 074) | ((c2 >> 6) & 03)];
+      dst[dIndex++] = b64Chars[c2 & 077];
     }
 
    /* If len was not a multiple of 3, then we have encoded too
     * many characters.  Adjust appropriately.
     */
-   if (sIndex == length + 1)
+   if (sIndex == sourceLength + 1)
      {
        /* There were only 2 bytes in that last group */
        dst[dIndex - 1] = '=';
      }
-   else if (sIndex == length + 2)
+   else if (sIndex == sourceLength + 2)
      {
        /* There was only 1 byte in that last group */
        dst[dIndex - 1] = '=';

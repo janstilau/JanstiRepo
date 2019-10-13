@@ -324,7 +324,7 @@ writeDictionary(NSDictionary *dict, NSString *file)
 
       err = nil;
       data = [NSPropertyListSerialization dataFromPropertyList: dict
-	       format: NSPropertyListXMLFormat_v1_0
+	       format: NSPropertyListXMLFormat_AppleUsed
 	       errorDescription: &err];
       if (data == nil)
 	{

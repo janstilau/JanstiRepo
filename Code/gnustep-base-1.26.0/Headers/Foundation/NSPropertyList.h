@@ -1,40 +1,8 @@
-/** Interface for NSPropertyList for GNUstep
-   Copyright (C) 2004 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: January 2004
-   
-   This file is part of the GNUstep Base Library.
-   
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   AutogsdocSource: NSPropertyList.m
-
-   */ 
-
 #ifndef __NSPropertyList_h_GNUSTEP_BASE_INCLUDE
 #define __NSPropertyList_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
 #import	<Foundation/NSObject.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 
 @class NSData, NSString, NSInputStream, NSOutputStream;
@@ -58,7 +26,7 @@ typedef NSUInteger NSPropertyListMutabilityOptions;
 
 enum {
   NSPropertyListOpenStepFormat = 1,
-  NSPropertyListXMLFormat_v1_0 = 100,
+  NSPropertyListXMLFormat_AppleUsed = 100,
   NSPropertyListBinaryFormat_v1_0 = 200,
 
   NSPropertyListGNUstepFormat = 1000,
@@ -91,14 +59,17 @@ typedef NSUInteger NSPropertyListFormat;
 /**
  * <p>The NSPropertyListSerialization class provides facilities for
  * serialising and deserializing property list data in a number of
- * formats.  A property list is roughly an [NSArray] or [NSDictionary] object,
+ * formats.
+    A property list is roughly an [NSArray] or [NSDictionary] object,
  * with these or [NSNumber], [NSData], [NSString], or [NSDate] objects
  * as members.  (See below.)</p>
+ 
  * <p>You do not work with instances of this class, instead you use a
  * small number of class methods to serialize and deserialize
- * property lists.
+ * property lists. 这个类其实不暴露给外界的, 应该在各个类的内部, 嵌入对于这个类的调用
  * </p><br/>
- * A <em>property list</em> may only be one of the following classes - 
+ * A <em>property list</em> may only be one of the following classes -
+ 
  * <deflist>
  *   <term>[NSArray]</term>
  *   <desc>
@@ -225,7 +196,7 @@ typedef NSUInteger NSPropertyListFormat;
  *   </desc>
  * </deflist>
  */
-@interface NSPropertyListSerialization : NSObject
+@interface NSPropertyListSerialization : NSObject // plist 的归档解档, 在 KeyedArchive 里面大量用到了. 所以, 一定要理解这一块内容.
 {
 }
 
@@ -238,13 +209,6 @@ typedef NSUInteger NSPropertyListFormat;
 + (NSData*) dataFromPropertyList: (id)aPropertyList
 			  format: (NSPropertyListFormat)aFormat
 		errorDescription: (NSString**)anErrorString;
-
-/**
- * Returns a flag indicating whether it is possible to serialize aPropertyList
- * in the format aFormat.
- */
-+ (BOOL) propertyList: (id)aPropertyList
-     isValidForFormat: (NSPropertyListFormat)aFormat;
 
 /**
  * Deserialises dataItem and returns the resulting property list
@@ -261,7 +225,6 @@ typedef NSUInteger NSPropertyListFormat;
 		     format: (NSPropertyListFormat*)aFormat
 	   errorDescription: (NSString**)anErrorString;
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST)
 + (NSData *) dataWithPropertyList: (id)aPropertyList
                            format: (NSPropertyListFormat)aFormat
                           options: (NSPropertyListWriteOptions)anOption
@@ -284,9 +247,4 @@ typedef NSUInteger NSPropertyListFormat;
 @end
 
 #endif	/* GS_API_MACOSX */
-
-#if	defined(__cplusplus)
-}
-#endif
-
 #endif	/* __NSPropertyList_h_GNUSTEP_BASE_INCLUDE*/
