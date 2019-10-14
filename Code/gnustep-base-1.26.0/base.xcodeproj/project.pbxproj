@@ -352,6 +352,8 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.S";
 			fileType = pattern.proxy;
+			inputFiles = (
+			);
 			isEditable = 1;
 			outputFiles = (
 				"${OBJECT_FILE_DIR}/${INPUT_FILE_NAME}.o",
@@ -846,6 +848,8 @@
 		06AB682E2350E3E0001FF62A /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906FB31610BF3C0003C892 /* NSNull.m */,
+				18906FD81610BF3C0003C892 /* NSTimer.m */,
 				18906F931610BF3C0003C892 /* NSError.m */,
 				06A1D1522353132900A7C4A2 /* udocumenttoxml.cpp */,
 				06A1D1532353132900A7C4A2 /* xmltools.cpp */,
@@ -1028,7 +1032,6 @@
 				18906FB01610BF3C0003C892 /* NSNotification.m */,
 				18906FB11610BF3C0003C892 /* NSNotificationCenter.m */,
 				18906FB21610BF3C0003C892 /* NSNotificationQueue.m */,
-				18906FB31610BF3C0003C892 /* NSNull.m */,
 				18906FB41610BF3C0003C892 /* NSNumber.m */,
 				18906FB51610BF3C0003C892 /* NSNumberFormatter.m */,
 				18906FB71610BF3C0003C892 /* NSObjCRuntime.m */,
@@ -1061,7 +1064,6 @@
 				18906FD51610BF3C0003C892 /* NSTextCheckingResult.m */,
 				18906FD61610BF3C0003C892 /* NSThread.m */,
 				18906FD71610BF3C0003C892 /* NSTimeZone.m */,
-				18906FD81610BF3C0003C892 /* NSTimer.m */,
 				18906FE51610BF3C0003C892 /* NSUnarchiver.m */,
 				18906FE61610BF3C0003C892 /* NSUndoManager.m */,
 				18906FD91610BF3C0003C892 /* NSURL.m */,
