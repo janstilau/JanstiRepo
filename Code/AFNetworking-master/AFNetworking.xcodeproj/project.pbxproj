@@ -374,6 +374,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		065515F92354C10D0053CA2F /* Done */ = {
+			isa = PBXGroup;
+			children = (
+				299522461BBF125A00859F49 /* AFHTTPSessionManager.h */,
+				299522471BBF125A00859F49 /* AFHTTPSessionManager.m */,
+			);
+			path = Done;
+			sourceTree = "<group>";
+		};
 		298D7C561BC2C88F00FD3B3E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -514,9 +523,8 @@
 		299522451BBF125A00859F49 /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
+				065515F92354C10D0053CA2F /* Done */,
 				1F083A4920364648004D80C7 /* AFCompatibilityMacros.h */,
-				299522461BBF125A00859F49 /* AFHTTPSessionManager.h */,
-				299522471BBF125A00859F49 /* AFHTTPSessionManager.m */,
 				299522491BBF125A00859F49 /* AFNetworkReachabilityManager.h */,
 				2995224A1BBF125A00859F49 /* AFNetworkReachabilityManager.m */,
 				2995224B1BBF125A00859F49 /* AFSecurityPolicy.h */,
@@ -819,6 +827,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 2995222F1BBF104D00859F49;

@@ -1,24 +1,3 @@
-// AFHTTPSessionManager.m
-// Copyright (c) 2011–2016 Alamofire Software Foundation ( http://alamofire.org/ )
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 #import "AFHTTPSessionManager.h"
 
 #import "AFURLRequestSerialization.h"
@@ -34,7 +13,7 @@
 #import <ifaddrs.h>
 #import <netdb.h>
 
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_TV // 这些宏, 在可以用来条件编译.
 #import <UIKit/UIKit.h>
 #elif TARGET_OS_WATCH
 #import <WatchKit/WatchKit.h>
@@ -47,7 +26,7 @@
 @implementation AFHTTPSessionManager
 @dynamic responseSerializer;
 
-+ (instancetype)manager {
++ (instancetype)manager { // 类方法, 仅仅是实例方法的一个包装而已.
     return [[[self class] alloc] initWithBaseURL:nil];
 }
 
@@ -63,6 +42,8 @@
     return [self initWithBaseURL:nil sessionConfiguration:configuration];
 }
 
+// desigated init 方法.
+// NSURLSessionConfiguration 其实这个类, 就是配置, 就是为了使 session 变得简洁, 而抽取出来的一个数据的集合体而已.
 - (instancetype)initWithBaseURL:(NSURL *)url
            sessionConfiguration:(NSURLSessionConfiguration *)configuration
 {
@@ -76,10 +57,10 @@
         url = [url URLByAppendingPathComponent:@""];
     }
 
-    self.baseURL = url;
+    self.baseURL = url; // 设置 baseUrl
 
-    self.requestSerializer = [AFHTTPRequestSerializer serializer];
-    self.responseSerializer = [AFJSONResponseSerializer serializer];
+    self.requestSerializer = [AFHTTPRequestSerializer serializer]; // 设置默认的 request 序列化器
+    self.responseSerializer = [AFJSONResponseSerializer serializer]; // 设置默认的 json 的解析器.
 
     return self;
 }
@@ -101,15 +82,17 @@
 @dynamic securityPolicy;
 
 - (void)setSecurityPolicy:(AFSecurityPolicy *)securityPolicy {
-    if (securityPolicy.SSLPinningMode != AFSSLPinningModeNone && ![self.baseURL.scheme isEqualToString:@"https"]) {
+    if (securityPolicy.SSLPinningMode != AFSSLPinningModeNone &&
+        ![self.baseURL.scheme isEqualToString:@"https"]) {
         NSString *pinningMode = @"Unknown Pinning Mode";
-        switch (securityPolicy.SSLPinningMode) {
+        switch (securityPolicy.SSLPinningMode) { // 这里, switch 这样写就显得很简洁.
             case AFSSLPinningModeNone:        pinningMode = @"AFSSLPinningModeNone"; break;
             case AFSSLPinningModeCertificate: pinningMode = @"AFSSLPinningModeCertificate"; break;
             case AFSSLPinningModePublicKey:   pinningMode = @"AFSSLPinningModePublicKey"; break;
         }
         NSString *reason = [NSString stringWithFormat:@"A security policy configured with `%@` can only be applied on a manager with a secure base URL (i.e. https)", pinningMode];
         @throw [NSException exceptionWithName:@"Invalid Security Policy" reason:reason userInfo:nil];
+        // 这里仅仅是一个报错的而已. 真正的还是要用 super 才可以.
     }
 
     [super setSecurityPolicy:securityPolicy];
@@ -335,6 +318,8 @@
     return dataTask;
 }
 
+
+// 都有的起始都是聚集到了这个方法里面而已. 但是, 这个方法其实也是一个包装. 
 - (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
                                        URLString:(NSString *)URLString
                                       parameters:(id)parameters
@@ -346,6 +331,7 @@
 {
     NSError *serializationError = nil;
     NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:method URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:&serializationError];
+    
     for (NSString *headerField in headers.keyEnumerator) {
         [request addValue:headers[headerField] forHTTPHeaderField:headerField];
     }
@@ -358,7 +344,6 @@
 
         return nil;
     }
-
     __block NSURLSessionDataTask *dataTask = nil;
     dataTask = [self dataTaskWithRequest:request
                           uploadProgress:uploadProgress
@@ -381,7 +366,13 @@
 #pragma mark - NSObject
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p, baseURL: %@, session: %@, operationQueue: %@>", NSStringFromClass([self class]), self, [self.baseURL absoluteString], self.session, self.operationQueue];
+    // 前面要模仿系统的, 后面打印自己的一些基本信息.
+    return [NSString stringWithFormat:@"<%@: %p, baseURL: %@, session: %@, operationQueue: %@>",
+            NSStringFromClass([self class]),
+            self,
+            [self.baseURL absoluteString],
+            self.session,
+            self.operationQueue];
 }
 
 #pragma mark - NSSecureCoding
@@ -396,11 +387,7 @@
     if (!configuration) {
         NSString *configurationIdentifier = [decoder decodeObjectOfClass:[NSString class] forKey:@"identifier"];
         if (configurationIdentifier) {
-#if (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 80000) || (defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 1100)
             configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:configurationIdentifier];
-#else
-            configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:configurationIdentifier];
-#endif
         }
     }
 
@@ -419,6 +406,7 @@
     return self;
 }
 
+// 用的是 keyvalue 的存储.
 - (void)encodeWithCoder:(NSCoder *)coder {
     [super encodeWithCoder:coder];
 
@@ -435,6 +423,7 @@
 
 #pragma mark - NSCopying
 
+// 只要属性都实现了 copy 协议, 那么整个对象, 就是一个组织者而已.
 - (instancetype)copyWithZone:(NSZone *)zone {
     AFHTTPSessionManager *HTTPClient = [[[self class] allocWithZone:zone] initWithBaseURL:self.baseURL sessionConfiguration:self.session.configuration];
 
