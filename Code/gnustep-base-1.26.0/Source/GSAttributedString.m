@@ -1,49 +1,3 @@
-/**
-   GSAttributedString.m
-
-   Implementation of concrete subclass of a string class with attributes
-
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
-
-   Written by: ANOQ of the sun <anoq@vip.cybercity.dk>
-   Date: November 1997
-   Rewrite by: Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   Date: April 1999
-
-   This file is part of GNUStep-base
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   If you are interested in a warranty or support for this source code,
-   contact Scott Christley <scottc@net-community.com> for more information.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-*/
-
-/* Warning -	[-initWithString:attributes:] is the designated initialiser,
- *		but it doesn't provide any way to perform the function of the
- *		[-initWithAttributedString:] initialiser.
- *		In order to work round this, the string argument of the
- *		designated initialiser has been overloaded such that it
- *		is expected to accept an NSAttributedString here instead of
- *		a string.  If you create an NSAttributedString subclass, you
- *		must make sure that your implementation of the initialiser
- *		copes with either an NSString or an NSAttributedString.
- *		If it receives an NSAttributedString, it should ignore the
- *		attributes argument and use the values from the string.
- */
-
 #import "common.h"
 #import "GNUstepBase/GSLock.h"
 #import "GNUstepBase/NSMutableString+GNUstepBase.h"
@@ -62,34 +16,34 @@
 
 @interface GSAttributedString : NSAttributedString
 {
-  NSString		*_textChars;
-  NSMutableArray	*_infoArray;
+    NSString		*_textChars;
+    NSMutableArray	*_infoArray;
 }
 
 - (id) initWithString: (NSString*)aString
-	   attributes: (NSDictionary*)attributes;
+           attributes: (NSDictionary*)attributes;
 - (NSString*) string;
 - (NSDictionary*) attributesAtIndex: (NSUInteger)index
-		     effectiveRange: (NSRange*)aRange;
+                     effectiveRange: (NSRange*)aRange;
 
 @end
 
 @interface GSMutableAttributedString : NSMutableAttributedString
 {
-  NSMutableString	*_textChars;
-  NSMutableArray	*_infoArray;
-  NSString		*_textProxy;
+    NSMutableString	*_textChars;
+    NSMutableArray	*_infoArray;
+    NSString		*_textProxy;
 }
 
 - (id) initWithString: (NSString*)aString
-	   attributes: (NSDictionary*)attributes;
+           attributes: (NSDictionary*)attributes;
 - (NSString*) string;
 - (NSDictionary*) attributesAtIndex: (NSUInteger)index
-		     effectiveRange: (NSRange*)aRange;
+                     effectiveRange: (NSRange*)aRange;
 - (void) setAttributes: (NSDictionary*) attributes
-		 range: (NSRange)range;
+                 range: (NSRange)range;
 - (void) replaceCharactersInRange: (NSRange)range
-		       withString: (NSString*)aString;
+                       withString: (NSString*)aString;
 
 @end
 
@@ -109,10 +63,10 @@ static BOOL     adding;
 static inline BOOL
 cacheEqual(id A, id B)
 {
-  if (YES == adding)
-    return [A isEqualToDictionary: B];
-  else
-    return A == B;
+    if (YES == adding)
+        return [A isEqualToDictionary: B];
+    else
+        return A == B;
 }
 
 #define	GSI_MAP_RETAIN_KEY(M, X)	
@@ -150,31 +104,31 @@ static IMP		unlockImp;
 static NSDictionary*
 cacheAttributes(NSDictionary *attrs)
 {
-  if (nil != attrs)
+    if (nil != attrs)
     {
-      GSIMapNode	node;
-
-      ALOCK();
-      adding = YES;
-      node = GSIMapNodeForKey(&attrMap, (GSIMapKey)((id)attrs));
-      if (node == 0)
+        GSIMapNode	node;
+        
+        ALOCK();
+        adding = YES;
+        node = GSIMapNodeForKey(&attrMap, (GSIMapKey)((id)attrs));
+        if (node == 0)
         {
-          /* Shallow copy of dictionary, without copying objects ....
-           * result in an immutable dictionary that can safely be cached.
-           */
-          attrs = [(NSDictionary*)[GSCachedDictionary alloc]
-            initWithDictionary: attrs copyItems: NO];
-          GSIMapAddPair(&attrMap,
-            (GSIMapKey)((id)attrs), (GSIMapVal)(NSUInteger)1);
+            /* Shallow copy of dictionary, without copying objects ....
+             * result in an immutable dictionary that can safely be cached.
+             */
+            attrs = [(NSDictionary*)[GSCachedDictionary alloc]
+                     initWithDictionary: attrs copyItems: NO];
+            GSIMapAddPair(&attrMap,
+                          (GSIMapKey)((id)attrs), (GSIMapVal)(NSUInteger)1);
         }
-      else
+        else
         {
-          node->value.nsu++;
-          attrs = node->key.obj;
+            node->value.nsu++;
+            attrs = node->key.obj;
         }
-      AUNLOCK();
+        AUNLOCK();
     }
-  return attrs;
+    return attrs;
 }
 
 /* Decrement the count of a dictionary in the cache and release it.
@@ -183,63 +137,62 @@ cacheAttributes(NSDictionary *attrs)
 static void
 unCacheAttributes(NSDictionary *attrs)
 {
-  if (nil != attrs)
+    if (nil != attrs)
     {
-      GSIMapBucket  bucket;
-      id<GSCachedDictionary> removed = nil;
-
-      ALOCK();
-      adding = NO;
-      bucket = GSIMapBucketForKey(&attrMap, (GSIMapKey)((id)attrs));
-      if (bucket != 0)
+        GSIMapBucket  bucket;
+        id<GSCachedDictionary> removed = nil;
+        
+        ALOCK();
+        adding = NO;
+        bucket = GSIMapBucketForKey(&attrMap, (GSIMapKey)((id)attrs));
+        if (bucket != 0)
         {
-          GSIMapNode     node;
-
-          node = GSIMapNodeForKeyInBucket(&attrMap,
-            bucket, (GSIMapKey)((id)attrs));
-          if (node != 0)
+            GSIMapNode     node;
+            
+            node = GSIMapNodeForKeyInBucket(&attrMap,
+                                            bucket, (GSIMapKey)((id)attrs));
+            if (node != 0)
             {
-              if (--node->value.nsu == 0)
+                if (--node->value.nsu == 0)
                 {
-                  removed = node->key.obj;
-                  GSIMapRemoveNodeFromMap(&attrMap, bucket, node);
-                  GSIMapFreeNode(&attrMap, node);
+                    removed = node->key.obj;
+                    GSIMapRemoveNodeFromMap(&attrMap, bucket, node);
+                    GSIMapFreeNode(&attrMap, node);
                 }
             }
         }
-      AUNLOCK();
-      if (nil != removed)
+        AUNLOCK();
+        if (nil != removed)
         {
-          [removed _uncache];
+            [removed _uncache];
         }
     }
 }
 
 
 
-@interface	GSAttrInfo : NSObject
-{
+@interface	AttributeItem : NSObject {
 @public
-  unsigned	loc;
-  NSDictionary	*attrs;
+    unsigned	loc;
+    NSDictionary	*attrs;
 }
 
-+ (GSAttrInfo*) newWithZone: (NSZone*)z value: (NSDictionary*)a at: (unsigned)l;
++ (AttributeItem*) newWithZone: (NSZone*)z value: (NSDictionary*)a at: (unsigned)l;
 
 @end
 
-@implementation	GSAttrInfo
+@implementation	AttributeItem
 
 + (void) initialize
 {
-  if (nil == attrLock)
+    if (nil == attrLock)
     {
-      attrLock = [NSLock new];
-      lockSel = @selector(lock);
-      unlockSel = @selector(unlock);
-      lockImp = [attrLock methodForSelector: lockSel];
-      unlockImp = [attrLock methodForSelector: unlockSel];
-      GSIMapInitWithZoneAndCapacity(&attrMap, NSDefaultMallocZone(), 32);
+        attrLock = [NSLock new];
+        lockSel = @selector(lock);
+        unlockSel = @selector(unlock);
+        lockImp = [attrLock methodForSelector: lockSel];
+        unlockImp = [attrLock methodForSelector: unlockSel];
+        GSIMapInitWithZoneAndCapacity(&attrMap, NSDefaultMallocZone(), 32);
     }
 }
 
@@ -248,52 +201,52 @@ unCacheAttributes(NSDictionary *attrs)
  * dictionary must have been produced by 'cacheAttributes()' so that it is
  * already copied/retained and this method doesn't need to do it.
  */
-+ (GSAttrInfo*) newWithZone: (NSZone*)z value: (NSDictionary*)a at: (unsigned)l;
++ (AttributeItem*) newWithZone: (NSZone*)z value: (NSDictionary*)a at: (unsigned)l;
 {
-  GSAttrInfo	*info = (GSAttrInfo*)NSAllocateObject(self, 0, z);
-
-  info->loc = l;
-  info->attrs = cacheAttributes(a);
-  return info;
+    AttributeItem	*info = (AttributeItem*)NSAllocateObject(self, 0, z);
+    
+    info->loc = l;
+    info->attrs = cacheAttributes(a);
+    return info;
 }
 
 - (void) dealloc
 {
-  [self finalize];
-  [super dealloc];
+    [self finalize];
+    [super dealloc];
 }
 
 - (NSString*) description
 {
-  return [NSString stringWithFormat: @"Attributes at %u are - %@",
-    loc, attrs];
+    return [NSString stringWithFormat: @"Attributes at %u are - %@",
+            loc, attrs];
 }
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  [aCoder encodeValueOfObjCType: @encode(unsigned) at: &loc];
-  [aCoder encodeValueOfObjCType: @encode(id) at: &attrs];
+    [aCoder encodeValueOfObjCType: @encode(unsigned) at: &loc];
+    [aCoder encodeValueOfObjCType: @encode(id) at: &attrs];
 }
 
 - (void) finalize
 {
-  unCacheAttributes(attrs);
-  attrs = nil;
+    unCacheAttributes(attrs);
+    attrs = nil;
 }
 
 - (id) initWithCoder: (NSCoder*)aCoder
 {
-  NSDictionary  *a;
-
-  [aCoder decodeValueOfObjCType: @encode(unsigned) at: &loc];
-  a = [aCoder decodeObject];
-  attrs = cacheAttributes(a);
-  return self;
+    NSDictionary  *a;
+    
+    [aCoder decodeValueOfObjCType: @encode(unsigned) at: &loc];
+    a = [aCoder decodeObject];
+    attrs = cacheAttributes(a);
+    return self;
 }
 
 - (id) replacementObjectForPortCoder: (NSPortCoder*)aCoder
 {
-  return self;
+    return self;
 }
 
 @end
@@ -302,260 +255,239 @@ unCacheAttributes(NSDictionary *attrs)
 
 @implementation GSAttributedString
 
-static	GSAttrInfo	*blank;
+static	AttributeItem	*blank;
 
-static Class	infCls = 0;
+static Class	AttributeItemClass = 0;
 
-static SEL	infSel;
-static SEL	addSel;
-static SEL	cntSel;
-static SEL	insSel;
-static SEL	oatSel;
-static SEL	remSel;
+static SEL	newWithValueAtSel;
+static SEL	addObjectSel;
+static SEL	countSel;
+static SEL	insertObjectSel;
+static SEL	objectAtSel;
+static SEL	removeObjectAtSel;
 
-static IMP	infImp;
-static void	(*addImp)(NSMutableArray*,SEL,id);
-static unsigned (*cntImp)(NSArray*,SEL);
-static void	(*insImp)(NSMutableArray*,SEL,id,unsigned);
-static IMP	oatImp;
-static void	(*remImp)(NSMutableArray*,SEL,unsigned);
+static IMP	newWithValueAtImp;
+static void	(*addObjectImp)(NSMutableArray*,SEL,id);
+static unsigned (*countImp)(NSArray*,SEL);
+static void	(*insetObjectAtImp)(NSMutableArray*,SEL,id,unsigned);
+static IMP	objectAtImp;
+static void	(*removeObjectAtImp)(NSMutableArray*,SEL,unsigned);
 
-#define	NEWINFO(Z,O,L)	((*infImp)(infCls, infSel, (Z), (O), (L)))
-#define	ADDOBJECT(O)	((*addImp)(_infoArray, addSel, (O)))
-#define	INSOBJECT(O,I)	((*insImp)(_infoArray, insSel, (O), (I)))
-#define	OBJECTAT(I)	((*oatImp)(_infoArray, oatSel, (I)))
-#define	REMOVEAT(I)	((*remImp)(_infoArray, remSel, (I)))
+#define	NEWINFO(Z,O,L)	((*newWithValueAtImp)(AttributeItemClass, newWithValueAtSel, (Z), (O), (L)))
+#define	INSOBJECT(O,I)	((*insetObjectAtImp)(_infoArray, insertObjectSel, (O), (I)))
+#define	OBJECTAT(I)	((*objectAtImp)(_infoArray, objectAtSel, (I)))
+#define	REMOVEAT(I)	((*removeObjectAtImp)(_infoArray, removeObjectAtSel, (I)))
 
 static void
 _setAttributesFrom(
-  NSAttributedString *attributedString,
-  NSRange aRange,
-  NSMutableArray *_infoArray)
+                   NSAttributedString *attributedString,
+                   NSRange aRange,
+                   NSMutableArray *_infoArray)
 {
-  NSZone	*z = [_infoArray zone];
-  NSRange	range;
-  NSDictionary	*attr;
-  GSAttrInfo	*info;
-  unsigned	loc;
-
-  /*
-   * remove any old attributes of the string.
-   */
-  [_infoArray removeAllObjects];
-
-  if (aRange.length == 0)
+    NSZone	*z = [_infoArray zone];
+    NSRange	range;
+    NSDictionary	*attr;
+    AttributeItem	*info;
+    unsigned	loc;
+    
+    [_infoArray removeAllObjects];
+    
+    if (aRange.length == 0)
     {
-      attr = blank->attrs;
-      range = aRange; /* Set to satisfy the loop condition below. */
+        attr = blank->attrs;
+        range = aRange; /* Set to satisfy the loop condition below. */
     }
-  else
+    else
     {
-      attr = [attributedString attributesAtIndex: aRange.location
-				  effectiveRange: &range];
+        attr = [attributedString attributesAtIndex: aRange.location
+                                    effectiveRange: &range];
     }
-  info = NEWINFO(z, attr, 0);
-  ADDOBJECT(info);
-  RELEASE(info);
-
-  while ((loc = NSMaxRange(range)) < NSMaxRange(aRange))
+    info = NEWINFO(z, attr, 0);
+    [_infoArray addObject:info];
+    
+    while ((loc = NSMaxRange(range)) < NSMaxRange(aRange))
     {
-      attr = [attributedString attributesAtIndex: loc
-				  effectiveRange: &range];
-      info = NEWINFO(z, attr, loc - aRange.location);
-      ADDOBJECT(info);
-      RELEASE(info);
+        attr = [attributedString attributesAtIndex: loc
+                                    effectiveRange: &range];
+        info = NEWINFO(z, attr, loc - aRange.location);
+        [_infoArray addObject:info];
+        RELEASE(info);
     }
+    
+    // 上面的循环, 就是通过attributesAtIndex这个方法, 一点点的把属性提取出来, 然后放到 infoArray 中.
 }
 
+// 运用二分查找, 查找位置属性的过程.
 inline static NSDictionary*
 _attributesAtIndexEffectiveRange(
-  unsigned int index,
-  NSRange *aRange,
-  unsigned int tmpLength,
-  NSMutableArray *_infoArray,
-  unsigned int *foundIndex)
+                                 unsigned int targetIndex,
+                                 NSRange *effectRangePointer,
+                                 unsigned int stringLength,
+                                 NSMutableArray *_infoArray,
+                                 unsigned int *foundIndex)
 {
-  unsigned	low, high, used, cnt, nextLoc;
-  GSAttrInfo	*found = nil;
-
-  used = (*cntImp)(_infoArray, cntSel);
-  NSCAssert(used > 0, NSInternalInconsistencyException);
-  high = used - 1;
-
-  if (index >= tmpLength)
+    unsigned	low, high, attributeItemCount, currentIndex, nextLoc;
+    AttributeItem	*found = nil;
+    
+    attributeItemCount = (*countImp)(_infoArray, countSel);
+    high = attributeItemCount - 1; // 所以, infoArray 里面必须要有元素, 在 init 方法里面, 插入了一个代表无属性的空值.
+    
+    if (targetIndex >= stringLength)
     {
-      if (index == tmpLength)
-	{
-	  found = OBJECTAT(high);
-	  if (foundIndex != 0)
-	    {
-	      *foundIndex = high;
-	    }
-	  if (aRange != 0)
-	    {
-	      aRange->location = found->loc;
-	      aRange->length = tmpLength - found->loc;
-	    }
-	  return found->attrs;
-	}
-      [NSException raise: NSRangeException
-		  format: @"index is out of range in function "
-			  @"_attributesAtIndexEffectiveRange()"];
+        if (targetIndex == stringLength)
+        {
+            found = OBJECTAT(high);
+            if (foundIndex != 0)
+            {
+                *foundIndex = high;
+            }
+            if (effectRangePointer != 0)
+            {
+                effectRangePointer->location = found->loc;
+                effectRangePointer->length = stringLength - found->loc;
+            }
+            return found->attrs;
+        }
+        [NSException raise: NSRangeException
+                    format: @"index is out of range in function "
+         @"_attributesAtIndexEffectiveRange()"];
+        // 这里就是一个特殊判断, 如果是要最后一个位置的属性, 就直接找到最后一个位置的属性返回.
     }
-
-  /*
-   * Binary search for efficiency in huge attributed strings
-   */
-  low = 0;
-  while (low <= high)
+    
+    /*
+     * Binary search for efficiency in huge attributed strings
+     */
+    low = 0;
+    while (low <= high)
     {
-      cnt = (low + high) / 2;
-      found = OBJECTAT(cnt);
-      if (found->loc > index)
-	{
-	  high = cnt - 1;
-	}
-      else
-	{
-	  if (cnt >= used - 1)
-	    {
-	      nextLoc = tmpLength;
-	    }
-	  else
-	    {
-	      GSAttrInfo	*inf = OBJECTAT(cnt + 1);
-
-	      nextLoc = inf->loc;
-	    }
-	  if (found->loc == index || index < nextLoc)
-	    {
-	      //Found
-	      if (aRange != 0)
-		{
-		  aRange->location = found->loc;
-		  aRange->length = nextLoc - found->loc;
-		}
-	      if (foundIndex != 0)
-		{
-		  *foundIndex = cnt;
-		}
-	      return found->attrs;
-	    }
-	  else
-	    {
-	      low = cnt + 1;
-	    }
-	}
+        currentIndex = (low + high) / 2;
+        found = OBJECTAT(currentIndex);
+        if (found->loc > targetIndex)
+        {
+            high = currentIndex - 1; // 这里还是没找到, 所以上边界-1
+        } else {
+            if (currentIndex >= attributeItemCount - 1) {
+                nextLoc = stringLength;
+            } else {
+                AttributeItem	*inf = OBJECTAT(currentIndex + 1);
+                nextLoc = inf->loc;
+            }
+            if (found->loc == targetIndex || targetIndex < nextLoc) // 如果, 下一个属性的 location 比 taget大了, 这才算找到了.
+            {
+                //Found
+                if (effectRangePointer != 0)
+                {
+                    effectRangePointer->location = found->loc;
+                    effectRangePointer->length = nextLoc - found->loc;
+                }
+                if (foundIndex != 0)
+                {
+                    *foundIndex = currentIndex;
+                }
+                return found->attrs;
+            } else
+            {
+                low = currentIndex + 1;
+            }
+        }
     }
-  NSCAssert(NO,@"Error in binary search algorithm");
-  return nil;
+    NSCAssert(NO,@"Error in binary search algorithm");
+    return nil;
 }
 
 + (void) initialize
 {
-  if (infCls == 0)
+    if (AttributeItemClass == 0)
     {
-      NSMutableArray	*a;
-      NSDictionary	*d;
-
-      infSel = @selector(newWithZone:value:at:);
-      addSel = @selector(addObject:);
-      cntSel = @selector(count);
-      insSel = @selector(insertObject:atIndex:);
-      oatSel = @selector(objectAtIndex:);
-      remSel = @selector(removeObjectAtIndex:);
-
-      infCls = [GSAttrInfo class];
-      infImp = [infCls methodForSelector: infSel];
-
-      d = [NSDictionary new];
-      blank = NEWINFO(NSDefaultMallocZone(), d, 0);
-      [[NSObject leakAt: &blank] release];
-      RELEASE(d);
-
-      a = [NSMutableArray allocWithZone: NSDefaultMallocZone()];
-      a = [a initWithCapacity: 1];
-      addImp = (void (*)(NSMutableArray*,SEL,id))[a methodForSelector: addSel];
-      cntImp = (unsigned (*)(NSArray*,SEL))[a methodForSelector: cntSel];
-      insImp = (void (*)(NSMutableArray*,SEL,id,unsigned))
-	[a methodForSelector: insSel];
-      oatImp = [a methodForSelector: oatSel];
-      remImp = (void (*)(NSMutableArray*,SEL,unsigned))
-	[a methodForSelector: remSel];
-      RELEASE(a);
+        NSMutableArray	*a;
+        NSDictionary	*d;
+        
+        newWithValueAtSel = @selector(newWithZone:value:at:);
+        addObjectSel = @selector(addObject:);
+        countSel = @selector(count);
+        insertObjectSel = @selector(insertObject:atIndex:);
+        objectAtSel = @selector(objectAtIndex:);
+        removeObjectAtSel = @selector(removeObjectAtIndex:);
+        
+        AttributeItemClass = [AttributeItem class];
+        newWithValueAtImp = [AttributeItemClass methodForSelector: newWithValueAtSel];
+        
+        d = [NSDictionary new];
+        blank = NEWINFO(NSDefaultMallocZone(), d, 0);
+        [[NSObject leakAt: &blank] release];
+        RELEASE(d);
+        
+        a = [NSMutableArray allocWithZone: NSDefaultMallocZone()];
+        a = [a initWithCapacity: 1];
+        addObjectImp = (void (*)(NSMutableArray*,SEL,id))[a methodForSelector: addObjectSel];
+        countImp = (unsigned (*)(NSArray*,SEL))[a methodForSelector: countSel];
+        insetObjectAtImp = (void (*)(NSMutableArray*,SEL,id,unsigned))
+        [a methodForSelector: insertObjectSel];
+        objectAtImp = [a methodForSelector: objectAtSel];
+        removeObjectAtImp = (void (*)(NSMutableArray*,SEL,unsigned))
+        [a methodForSelector: removeObjectAtSel];
+        RELEASE(a);
     }
-  [[NSObject leakAt: &attrLock] release];
+    [[NSObject leakAt: &attrLock] release];
 }
 
 - (id) initWithString: (NSString*)aString
-	   attributes: (NSDictionary*)attributes
+           attributes: (NSDictionary*)attributes
 {
-  NSZone	*z = [self zone];
-
-  if (nil == aString)
+    NSZone	*z = [self zone];
+    _infoArray = [[NSMutableArray allocWithZone: z] initWithCapacity: 1];
+    if (aString != nil && [aString isKindOfClass: [NSAttributedString class]])
     {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"aString object passed to -[GSAttributedString initWithString:attributes:] is nil"];
-    }
-  if (![aString respondsToSelector: @selector(length)])
+        NSAttributedString	*attributeString = (NSAttributedString*)aString;
+        unsigned			len;
+        aString = [attributeString string];
+        len = [aString length];
+        _setAttributesFrom(attributeString, NSMakeRange(0, len), _infoArray);
+    } else
     {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"aString object passed to -[GSAttributedString initWithString:attributes:] does not respond to -length"];
+        AttributeItem	*info;
+        
+        if (attributes == nil)
+        {
+            attributes = blank->attrs;
+        }
+        info = NEWINFO(z, attributes, 0);
+        [_infoArray addObject:info];
+        RELEASE(info);
     }
-
-  _infoArray = [[NSMutableArray allocWithZone: z] initWithCapacity: 1];
-  if (aString != nil && [aString isKindOfClass: [NSAttributedString class]])
-    {
-      NSAttributedString	*as = (NSAttributedString*)aString;
-      unsigned			len;
-
-      aString = [as string];
-      len = [aString length];
-      _setAttributesFrom(as, NSMakeRange(0, len), _infoArray);
-    }
-  else
-    {
-      GSAttrInfo	*info;
-
-      if (attributes == nil)
-	{
-	  attributes = blank->attrs;
-	}
-      info = NEWINFO(z, attributes, 0);
-      ADDOBJECT(info);
-      RELEASE(info);
-    }
-  if (aString == nil)
-    _textChars = @"";
-  else
-    _textChars = [aString copyWithZone: z];
-  return self;
+    
+    // 上面的操作, 就是填充 infoArray, 如果传入的不是一个 attributedString, 就传入空.
+    if (aString == nil)
+        _textChars = @"";
+    else
+        _textChars = [aString copyWithZone: z]; // 这里会有一个 copy 的操作. 所以, 原有的类和现在的类是两个字符串.
+    return self;
 }
 
-- (NSString*) string
+- (NSString*)string // 所以, 富文本的 string 就是根据它存储的 string 进行了一份拷贝而已.
 {
-  return AUTORELEASE([_textChars copyWithZone: NSDefaultMallocZone()]);
+    return AUTORELEASE([_textChars copyWithZone: NSDefaultMallocZone()]);
 }
 
 - (NSDictionary*) attributesAtIndex: (NSUInteger)index
-		     effectiveRange: (NSRange*)aRange
+                     effectiveRange: (NSRange*)rangePointer
 {
-  return _attributesAtIndexEffectiveRange(
-    index, aRange, [_textChars length], _infoArray, NULL);
+    return _attributesAtIndexEffectiveRange(
+                                            index, rangePointer, [_textChars length], _infoArray, NULL);
 }
 
 - (void) dealloc
 {
-  RELEASE(_textChars);
-  RELEASE(_infoArray);
-  [super dealloc];
+    RELEASE(_textChars);
+    RELEASE(_infoArray);
+    [super dealloc];
 }
 
 
 // The superclass implementation is correct but too slow
 - (NSUInteger) length
 {
-  return [_textChars length];
+    return [_textChars length];
 }
 
 @end
@@ -563,107 +495,62 @@ _attributesAtIndexEffectiveRange(
 
 @implementation GSMutableAttributedString
 
-#if	SANITY_CHECKS
-
-#define	SANITY()	[self _sanity]
-
-#else
-#define	SANITY()	
-#endif
-
-/* We always compile in this method so that it is available from
- * regression test cases.  */
-- (void) _sanity
-{
-  GSAttrInfo	*info;
-  unsigned	i;
-  unsigned	l = 0;
-  unsigned	len = [_textChars length];
-  unsigned	c = (*cntImp)(_infoArray, cntSel);
-
-  NSAssert(c > 0, NSInternalInconsistencyException);
-  info = OBJECTAT(0);
-  NSAssert(info->loc == 0, NSInternalInconsistencyException);
-  for (i = 1; i < c; i++)
-    {
-      info = OBJECTAT(i);
-      NSAssert(info->loc > l, NSInternalInconsistencyException);
-      NSAssert(info->loc < len, NSInternalInconsistencyException);
-      l = info->loc;
-    }
-}
-
 + (void) initialize
 {
-  [GSAttributedString class];	// Ensure immutable class is initialised
+    [GSAttributedString class];	// Ensure immutable class is initialised
 }
 
 - (id) initWithString: (NSString*)aString
-	   attributes: (NSDictionary*)attributes
+           attributes: (NSDictionary*)attributes
 {
-  NSZone	*z = [self zone];
-
-  if (nil == aString)
+    NSZone	*z = [self zone];
+    
+    _infoArray = [[NSMutableArray allocWithZone: z] initWithCapacity: 1];
+    if (aString != nil && [aString isKindOfClass: [NSAttributedString class]])
     {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"aString object passed to -[GSAttributedString initWithString:attributes:] is nil"];
-    }
-  if (![aString respondsToSelector: @selector(length)])
-    {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"aString object passed to -[GSAttributedString initWithString:attributes:] does not respond to -length"];
-    }
-
-  _infoArray = [[NSMutableArray allocWithZone: z] initWithCapacity: 1];
-  if (aString != nil && [aString isKindOfClass: [NSAttributedString class]])
-    {
-      NSAttributedString	*as = (NSAttributedString*)aString;
-
-      aString = [as string];
-      _setAttributesFrom(as, NSMakeRange(0, [aString length]), _infoArray);
-    }
-  else
-    {
-      GSAttrInfo	*info;
-
-      if (attributes == nil)
+        NSAttributedString	*as = (NSAttributedString*)aString;
+        
+        aString = [as string];
+        _setAttributesFrom(as, NSMakeRange(0, [aString length]), _infoArray);
+    } else {
+        AttributeItem	*info;
+        
+        if (attributes == nil)
         {
-          attributes = blank->attrs;
+            attributes = blank->attrs;
         }
-      info = NEWINFO(z, attributes, 0);
-      ADDOBJECT(info);
-      RELEASE(info);
+        info = NEWINFO(z, attributes, 0);
+        [_infoArray addObject:info];
+        RELEASE(info);
     }
-/* WARNING ... NSLayoutManager depends on the fact that we create the
- * _textChars instance variable by copying the aString argument to get
- * its own string subclass into the attributed string.
- */
-  if (aString == nil)
-    _textChars = [[NSMutableString allocWithZone: z] init];
-  else
-    _textChars = [aString mutableCopyWithZone: z];
-SANITY();
-  return self;
+    /* WARNING ... NSLayoutManager depends on the fact that we create the
+     * _textChars instance variable by copying the aString argument to get
+     * its own string subclass into the attributed string.
+     */
+    if (aString == nil)
+        _textChars = [[NSMutableString allocWithZone: z] init];
+    else
+        _textChars = [aString mutableCopyWithZone: z];
+    return self;
 }
 
 - (NSString*) string
 {
-  /* NB. This method is SUPPOSED to return a proxy to the mutable string!
-   * This is a performance feature documented ifor OSX.
-   */
-  if (_textProxy == nil)
+    /* NB. This method is SUPPOSED to return a proxy to the mutable string!
+     * This is a performance feature documented ifor OSX.
+     */
+    if (_textProxy == nil)
     {
-      _textProxy = [[_textChars immutableProxy] retain];
+        _textProxy = [[_textChars immutableProxy] retain];
     }
-  return _textProxy;
+    return _textProxy;
 }
 
 - (NSDictionary*) attributesAtIndex: (NSUInteger)index
-		     effectiveRange: (NSRange*)aRange
+                     effectiveRange: (NSRange*)aRange
 {
-  unsigned	dummy;
-  return _attributesAtIndexEffectiveRange(
-    index, aRange, [_textChars length], _infoArray, &dummy);
+    return _attributesAtIndexEffectiveRange(
+                                            index, aRange, [_textChars length], _infoArray, nil);
 }
 
 /*
@@ -678,296 +565,262 @@ SANITY();
  *	See also: - addAtributes: range: , - removeAttributes: range:
  */
 - (void) setAttributes: (NSDictionary*)attributes
-		 range: (NSRange)range
+                 range: (NSRange)range
 {
-  unsigned	tmpLength;
-  unsigned	arrayIndex = 0;
-  unsigned	arraySize;
-  NSRange	effectiveRange = NSMakeRange(0, NSNotFound);
-  unsigned	afterRangeLoc, beginRangeLoc;
-  NSDictionary	*attrs;
-  NSZone	*z = [self zone];
-  GSAttrInfo	*info;
-
-  if (range.length == 0)
+    unsigned	stringLength;
+    unsigned	arrayIndex = 0;
+    unsigned	currentAttriItemSize;
+    NSRange	effectiveRange = NSMakeRange(0, NSNotFound);
+    unsigned	endIndex, beginIndex;
+    NSDictionary	*attrs;
+    NSZone	*z = [self zone];
+    AttributeItem	*info;
+    
+    if (range.length == 0)
     {
-      NSWarnMLog(@"Attempt to set attribute for zero-length range");
-      return;
+        return;
     }
-  if (attributes == nil)
+    if (attributes == nil)
     {
-      attributes = blank->attrs;
+        attributes = blank->attrs; // 如果, 没有 attributes, 就用默认的空属性.
     }
-SANITY();
-  tmpLength = [_textChars length];
-  GS_RANGE_CHECK(range, tmpLength);
-  arraySize = (*cntImp)(_infoArray, cntSel);
-  beginRangeLoc = range.location;
-  afterRangeLoc = NSMaxRange(range);
-  if (afterRangeLoc < tmpLength)
+    stringLength = [_textChars length];
+    currentAttriItemSize = (*countImp)(_infoArray, countSel);
+    beginIndex = range.location;
+    endIndex = NSMaxRange(range);
+    if (endIndex < stringLength)
     {
-      /*
-       * Locate the first range that extends beyond our range.
-       */
-      attrs = _attributesAtIndexEffectiveRange(
-	afterRangeLoc, &effectiveRange, tmpLength, _infoArray, &arrayIndex);
-      if (attrs == attributes)
+        attrs = _attributesAtIndexEffectiveRange(
+                                                 endIndex, &effectiveRange, stringLength, _infoArray, &arrayIndex);
+        if (attrs == attributes)
         {
-          /* The located range has the same attributes as us - so we can
-           * extend our range to include it.
-           */
-          if (effectiveRange.location < beginRangeLoc)
+            /* The located range has the same attributes as us - so we can
+             * extend our range to include it.
+             */
+            if (effectiveRange.location < beginIndex)
             {
-              beginRangeLoc = effectiveRange.location;
+                beginIndex = effectiveRange.location;
             }
-          if (NSMaxRange(effectiveRange) > afterRangeLoc)
+            if (NSMaxRange(effectiveRange) > endIndex)
             {
-              afterRangeLoc = NSMaxRange(effectiveRange);
+                endIndex = NSMaxRange(effectiveRange);
             }
         }
-      else if (effectiveRange.location > beginRangeLoc)
-	{
-	  /*
-	   * The located range also starts at or after our range.
-	   */
-	  info = OBJECTAT(arrayIndex);
-	  info->loc = afterRangeLoc;
-	  arrayIndex--;
-	}
-      else if (NSMaxRange(effectiveRange) > afterRangeLoc)
-	{
-	  /*
-	   * The located range ends after our range.
-	   * Create a subrange to go from our end to the end of the old range.
-	   */
-	  info = NEWINFO(z, attrs, afterRangeLoc);
-	  arrayIndex++;
-	  INSOBJECT(info, arrayIndex);
-	  RELEASE(info);
-	  arrayIndex--;
-	}
+        else if (effectiveRange.location > beginIndex)
+        {
+            /*
+             * The located range also starts at or after our range.
+             */
+            info = OBJECTAT(arrayIndex);
+            info->loc = endIndex;
+            arrayIndex--;
+        }
+        else if (NSMaxRange(effectiveRange) > endIndex)
+        {
+            /*
+             * The located range ends after our range.
+             * Create a subrange to go from our end to the end of the old range.
+             */
+            info = NEWINFO(z, attrs, endIndex);
+            arrayIndex++;
+            INSOBJECT(info, arrayIndex);
+            RELEASE(info);
+            arrayIndex--;
+        }
     }
-  else
+    else
     {
-      arrayIndex = arraySize - 1;
+        arrayIndex = currentAttriItemSize - 1;
     }
-
-  /*
-   * Remove any ranges completely within ours
-   */
-  while (arrayIndex > 0)
+    
+    // 上面的操作, 就是更新 infoArray 的数据, 并且计算出要删除的元素的位置.
+    
+    /*
+     * Remove any ranges completely within ours
+     */
+    while (arrayIndex > 0)
     {
-      info = OBJECTAT(arrayIndex-1);
-      if (info->loc < beginRangeLoc)
-	break;
-      REMOVEAT(arrayIndex);
-      arrayIndex--;
+        info = OBJECTAT(arrayIndex-1);
+        if (info->loc < beginIndex)
+            break;
+        REMOVEAT(arrayIndex);
+        arrayIndex--;
     }
-
-  /*
-   * Use the location/attribute info in the current slot if possible,
-   * otherwise, add a new slot and use that.
-   */
-  info = OBJECTAT(arrayIndex);
-  if (info->loc >= beginRangeLoc)
+    
+    /*
+     * Use the location/attribute info in the current slot if possible,
+     * otherwise, add a new slot and use that.
+     */
+    // 将新的 attributes 放到 infoArray 中.
+    info = OBJECTAT(arrayIndex);
+    if (info->loc >= beginIndex)
     {
-      info->loc = beginRangeLoc;
-      if (info->attrs != attributes)
-	{
-	  unCacheAttributes(info->attrs);
-	  info->attrs = cacheAttributes(attributes);
-	}
+        info->loc = beginIndex;
+        if (info->attrs != attributes)
+        {
+            unCacheAttributes(info->attrs);
+            info->attrs = cacheAttributes(attributes);
+        }
     }
-  else if (info->attrs != attributes)
+    else if (info->attrs != attributes)
     {
-      arrayIndex++;
-      info = NEWINFO(z, attributes, beginRangeLoc);
-      INSOBJECT(info, arrayIndex);
-      RELEASE(info);
+        arrayIndex++;
+        info = NEWINFO(z, attributes, beginIndex);
+        INSOBJECT(info, arrayIndex);
+        RELEASE(info);
     }
-
-SANITY();
 }
 
+// 具体的实现没看, 但是做了两件事情, 1 是字符串的替换, 2 是属性的设置, 现在的思路是, 被替换的位置的前面一个字符的 attributes 是什么, 就会延续到新插入字符中.
 - (void) replaceCharactersInRange: (NSRange)range
-		       withString: (NSString*)aString
+                       withString: (NSString*)aString
 {
-  unsigned	tmpLength;
-  unsigned	arrayIndex = 0;
-  unsigned	arraySize;
-  NSRange	effectiveRange = NSMakeRange(0, NSNotFound);
-  GSAttrInfo	*info;
-  int		moveLocations;
-  unsigned	start;
-
-SANITY();
-  if (aString == nil)
+    unsigned	tmpLength;
+    unsigned	arrayIndex = 0;
+    unsigned	arraySize;
+    NSRange	effectiveRange = NSMakeRange(0, NSNotFound);
+    AttributeItem	*info;
+    int		moveLocations;
+    unsigned	start;
+    
+    if (aString == nil)
     {
-      aString = @"";
+        aString = @"";
     }
-  tmpLength = [_textChars length];
-  GS_RANGE_CHECK(range, tmpLength);
-  if (range.location == tmpLength)
+    tmpLength = [_textChars length];
+    if (range.location == tmpLength)
     {
-      /*
-       * Special case - replacing a zero length string at the end
-       * simply appends the new string and attributes are inherited.
-       */
-      [_textChars appendString: aString];
-      goto finish;
+        /*
+         * Special case - replacing a zero length string at the end
+         * simply appends the new string and attributes are inherited.
+         */
+        [_textChars appendString: aString];
+        goto finish;
     }
-
-  arraySize = (*cntImp)(_infoArray, cntSel);
-  if (arraySize == 1)
+    
+    arraySize = (*countImp)(_infoArray, countSel);
+    if (arraySize == 1)
     {
-      /*
-       * Special case - if the string has only one set of attributes
-       * then the replacement characters will get them too.
-       */
-      [_textChars replaceCharactersInRange: range withString: aString];
-      goto finish;
+        /*
+         * Special case - if the string has only one set of attributes
+         * then the replacement characters will get them too.
+         */
+        [_textChars replaceCharactersInRange: range withString: aString];
+        goto finish;
     }
-
-  /*
-   * Get the attributes to associate with our replacement string.
-   * Should be those of the first character replaced.
-   * If the range replaced is empty, we use the attributes of the
-   * previous character (if possible).
-   */
-  if (range.length == 0 && range.location > 0)
-    start = range.location - 1;
-  else
-    start = range.location;
-  _attributesAtIndexEffectiveRange(start, &effectiveRange,
-    tmpLength, _infoArray, &arrayIndex);
-
-  moveLocations = [aString length] - range.length;
-
-  arrayIndex++;
-  if (NSMaxRange(effectiveRange) < NSMaxRange(range))
+    
+    /*
+     * Get the attributes to associate with our replacement string.
+     * Should be those of the first character replaced.
+     * If the range replaced is empty, we use the attributes of the
+     * previous character (if possible).
+     */
+    if (range.length == 0 && range.location > 0)
+        start = range.location - 1;
+    else
+        start = range.location;
+    _attributesAtIndexEffectiveRange(start, &effectiveRange,
+                                     tmpLength, _infoArray, &arrayIndex);
+    
+    moveLocations = [aString length] - range.length;
+    
+    arrayIndex++;
+    if (NSMaxRange(effectiveRange) < NSMaxRange(range))
     {
-      /*
-       * Remove all range info for ranges enclosed within the one
-       * we are replacing.  Adjust the start point of a range that
-       * extends beyond ours.
-       */
-      info = OBJECTAT(arrayIndex);
-      if (info->loc < NSMaxRange(range))
-	{
-	  unsigned int	next = arrayIndex + 1;
-
-	  while (next < arraySize)
-	    {
-	      GSAttrInfo	*n = OBJECTAT(next);
-
-	      if (n->loc <= NSMaxRange(range))
-		{
-		  REMOVEAT(arrayIndex);
-		  arraySize--;
-		  info = n;
-		}
-	      else
-		{
-		  break;
-		}
-	    }
-	}
-      if (NSMaxRange(range) < [_textChars length])
-	{
-	  info->loc = NSMaxRange(range);
-	}
-      else
-	{
-	  REMOVEAT(arrayIndex);
-	  arraySize--;
-	}
+        /*
+         * Remove all range info for ranges enclosed within the one
+         * we are replacing.  Adjust the start point of a range that
+         * extends beyond ours.
+         */
+        info = OBJECTAT(arrayIndex);
+        if (info->loc < NSMaxRange(range))
+        {
+            unsigned int	next = arrayIndex + 1;
+            
+            while (next < arraySize)
+            {
+                AttributeItem	*n = OBJECTAT(next);
+                
+                if (n->loc <= NSMaxRange(range))
+                {
+                    REMOVEAT(arrayIndex);
+                    arraySize--;
+                    info = n;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        if (NSMaxRange(range) < [_textChars length])
+        {
+            info->loc = NSMaxRange(range);
+        }
+        else
+        {
+            REMOVEAT(arrayIndex);
+            arraySize--;
+        }
     }
-
-  /*
-   * If we are replacing a range with a zero length string and the
-   * range we are using matches the range replaced, then we must
-   * remove it from the array to avoid getting a zero length range.
-   */
-  if ((moveLocations + range.length) == 0)
+    
+    /*
+     * If we are replacing a range with a zero length string and the
+     * range we are using matches the range replaced, then we must
+     * remove it from the array to avoid getting a zero length range.
+     */
+    if ((moveLocations + range.length) == 0)
     {
-      _attributesAtIndexEffectiveRange(start, &effectiveRange,
-        tmpLength, _infoArray, &arrayIndex);
-      arrayIndex++;
-
-      if (effectiveRange.location == range.location
-	&& effectiveRange.length == range.length)
-	{
-	  arrayIndex--;
-	  if (arrayIndex != 0 || arraySize > 1)
-	    {
-	      REMOVEAT(arrayIndex);
-	      arraySize--;
-	    }
-	  else
-	    {
-	      info = OBJECTAT(0);
-	      unCacheAttributes(info->attrs);
-	      info->attrs = cacheAttributes(blank->attrs);
-	      info->loc = NSMaxRange(range);
-	    }
-	}
+        _attributesAtIndexEffectiveRange(start, &effectiveRange,
+                                         tmpLength, _infoArray, &arrayIndex);
+        arrayIndex++;
+        
+        if (effectiveRange.location == range.location
+            && effectiveRange.length == range.length)
+        {
+            arrayIndex--;
+            if (arrayIndex != 0 || arraySize > 1)
+            {
+                REMOVEAT(arrayIndex);
+                arraySize--;
+            }
+            else
+            {
+                info = OBJECTAT(0);
+                unCacheAttributes(info->attrs);
+                info->attrs = cacheAttributes(blank->attrs);
+                info->loc = NSMaxRange(range);
+            }
+        }
     }
-
-  /*
-   * Now adjust the positions of the ranges following the one we are using.
-   */
-  while (arrayIndex < arraySize)
+    
+    /*
+     * Now adjust the positions of the ranges following the one we are using.
+     */
+    while (arrayIndex < arraySize)
     {
-      info = OBJECTAT(arrayIndex);
-      info->loc += moveLocations;
-      arrayIndex++;
+        info = OBJECTAT(arrayIndex);
+        info->loc += moveLocations;
+        arrayIndex++;
     }
-  [_textChars replaceCharactersInRange: range withString: aString];
+    [_textChars replaceCharactersInRange: range withString: aString];
 finish:
-SANITY();
 }
 
 - (void) dealloc
 {
-  [_textProxy release];
-  RELEASE(_textChars);
-  RELEASE(_infoArray);
-  [super dealloc];
+    [_textProxy release];
+    RELEASE(_textChars);
+    RELEASE(_infoArray);
+    [super dealloc];
 }
 
 // The superclass implementation is correct but too slow
 - (NSUInteger) length
 {
-  return [_textChars length];
+    return [_textChars length];
 }
 
 @end
 
 
-
-@interface	NSGAttributedString : NSAttributedString
-@end
-@implementation	NSGAttributedString
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-  NSLog(@"Warning - decoding archive containing obsolete %@ object - please delete/replace this archive", NSStringFromClass([self class]));
-  DESTROY(self);
-  self = (id)NSAllocateObject([GSAttributedString class], 0, NSDefaultMallocZone());
-  self = [self initWithCoder: aCoder];
-  return self;
-}
-@end
-
-@interface	NSGMutableAttributedString : NSMutableAttributedString
-@end
-@implementation	NSGMutableAttributedString
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-  NSLog(@"Warning - decoding archive containing obsolete %@ object - please delete/replace this archive", NSStringFromClass([self class]));
-  DESTROY(self);
-  self = (id)NSAllocateObject([GSMutableAttributedString class], 0, NSDefaultMallocZone());
-  self = [self initWithCoder: aCoder];
-  return self;
-}
-@end
-
