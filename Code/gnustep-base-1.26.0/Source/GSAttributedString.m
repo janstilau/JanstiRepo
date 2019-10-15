@@ -805,6 +805,7 @@ _attributesAtIndexEffectiveRange(
     }
     [_textChars replaceCharactersInRange: range withString: aString];
 finish:
+    
 }
 
 - (void) dealloc
