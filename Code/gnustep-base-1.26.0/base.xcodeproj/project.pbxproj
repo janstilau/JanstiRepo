@@ -352,8 +352,6 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.S";
 			fileType = pattern.proxy;
-			inputFiles = (
-			);
 			isEditable = 1;
 			outputFiles = (
 				"${OBJECT_FILE_DIR}/${INPUT_FILE_NAME}.o",
@@ -848,6 +846,9 @@
 		06AB682E2350E3E0001FF62A /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906FB01610BF3C0003C892 /* NSNotification.m */,
+				18906FDB1610BF3C0003C892 /* NSURLCache.m */,
+				18906F741610BF3C0003C892 /* NSAttributedString.m */,
 				18906FB31610BF3C0003C892 /* NSNull.m */,
 				18906FD81610BF3C0003C892 /* NSTimer.m */,
 				18906F931610BF3C0003C892 /* NSError.m */,
@@ -859,6 +860,7 @@
 				18906FBE1610BF3C0003C892 /* NSPointerArray.m */,
 				18906F721610BF3C0003C892 /* NSArray.m */,
 				18906F9C1610BF3C0003C892 /* NSHashTable.m */,
+				18906FB11610BF3C0003C892 /* NSNotificationCenter.m */,
 			);
 			path = Done;
 			sourceTree = SOURCE_ROOT;
@@ -975,7 +977,6 @@
 				18906F701610BF3C0003C892 /* NSAffineTransform.m */,
 				18906F711610BF3C0003C892 /* NSArchiver.m */,
 				18906F731610BF3C0003C892 /* NSAssertionHandler.m */,
-				18906F741610BF3C0003C892 /* NSAttributedString.m */,
 				18906F751610BF3C0003C892 /* NSAutoreleasePool.m */,
 				18906F761610BF3C0003C892 /* NSBundle.m */,
 				18906F771610BF3C0003C892 /* NSCache.m */,
@@ -1029,8 +1030,6 @@
 				AD197C02189A4D5F000F6CF9 /* NSMetadata.m */,
 				18906FAE1610BF3C0003C892 /* NSMethodSignature.m */,
 				18906FAF1610BF3C0003C892 /* NSNetServices.m */,
-				18906FB01610BF3C0003C892 /* NSNotification.m */,
-				18906FB11610BF3C0003C892 /* NSNotificationCenter.m */,
 				18906FB21610BF3C0003C892 /* NSNotificationQueue.m */,
 				18906FB41610BF3C0003C892 /* NSNumber.m */,
 				18906FB51610BF3C0003C892 /* NSNumberFormatter.m */,
@@ -1068,7 +1067,6 @@
 				18906FE61610BF3C0003C892 /* NSUndoManager.m */,
 				18906FD91610BF3C0003C892 /* NSURL.m */,
 				18906FDA1610BF3C0003C892 /* NSURLAuthenticationChallenge.m */,
-				18906FDB1610BF3C0003C892 /* NSURLCache.m */,
 				18906FDC1610BF3C0003C892 /* NSURLConnection.m */,
 				18906FDD1610BF3C0003C892 /* NSURLCredential.m */,
 				18906FDE1610BF3C0003C892 /* NSURLCredentialStorage.m */,

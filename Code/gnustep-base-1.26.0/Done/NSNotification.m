@@ -7,16 +7,6 @@
 @class	GSNotification;
 @interface GSNotification : NSObject	// Help the compiler
 @end
-
-/**
- *  <p>Represents a notification for posting to an [NSNotificationCenter].
- *  Consists of a name, an object, and an optional dictionary.  The
- *  notification center will check for observers registered to receive
- *  either notifications with the name, the object, or both and pass the
- *  notification instance on to them.</p>
- *  <p>This class is actually the interface for a class cluster, so instances
- *  will be of a (private) subclass.</p>
- */
 @implementation NSNotification
 
 static Class	abstractClass = 0;
@@ -70,7 +60,7 @@ static Class	concreteClass = 0;
  */
 - (id) copyWithZone: (NSZone*)zone
 {
-  return [self retain];
+  return [self retain]; // 这是一个不可变对象, 直接 retain 就可以了
 }
 
 /**
