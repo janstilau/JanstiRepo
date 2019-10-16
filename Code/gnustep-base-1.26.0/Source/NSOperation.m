@@ -27,6 +27,8 @@ static NSArray	*emptyDependcy = nil;
 
 @implementation NSOperation
 
+// 因为这个类的操作, 会在各个线程里面运行, 所以这个类的操作都进行了加锁.
+
 + (BOOL) automaticallyNotifiesObserversForKey: (NSString*)theKey
 {
     /* Handle all KVO manually
@@ -54,7 +56,7 @@ static NSArray	*emptyDependcy = nil;
                     format: @"[%@-%@] attempt to add dependency on self",
          NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
     }
-    // 加锁.
+    // 在前面的防卫式判断之后, 后面的操作都要进行加锁的处理.
     [self->operationLock lock];
     if (self->dependencies == nil)
     {
@@ -62,7 +64,8 @@ static NSArray	*emptyDependcy = nil;
     }
     NS_DURING
     {
-        // 自己的依赖会变, 这里手动的通知给外界, 如果依赖对象还没有执行, 并且可执行, 自己的 ready 状态也会变, 通知给外界. 并且自己要观测依赖对象的 finish 的状态.
+        // 自己的依赖会变, 这里手动的通知给外界, 如果依赖对象还没有执行, 并且可执行, 自己的 ready 状态也会为 NO, 通知给外界.
+        // operation 本身要检查依赖对象的 isFinished 的值, 用来更新自己的 isReady 的状态.
         if (NSNotFound == [self->dependencies indexOfObjectIdenticalTo: target])
         {
             [self willChangeValueForKey:@"dependencies"];
@@ -82,14 +85,14 @@ static NSArray	*emptyDependcy = nil;
                 [target addObserver: self
                      forKeyPath: @"isFinished"
                         options: NSKeyValueObservingOptionNew
-                        context: isFinishedCtxt];
+                        context: isFinishedCtxt]; // 如果依赖一个 opertaion, 那么应该监听它的finish的状态, 然后更改自己的 ready 的状态.
                 if (self->ready == YES)
                 {
                     /* The new dependency stops us being ready ...
                      * change state.
                      */
                     [self willChangeValueForKey: @"isReady"];
-                    self->ready = NO;
+                    self->ready = NO; // 有了新的依赖, 然后自己的 ready 就改为 NO, 在依赖finish完成之后再改变.
                     [self didChangeValueForKey: @"isReady"];
                 }
             }
@@ -119,6 +122,7 @@ static NSArray	*emptyDependcy = nil;
                 self->cancelled = YES;
                 if (NO == self->ready)
                 {
+                    // A Boolean value indicating whether the operation can be performed now.
                     [self willChangeValueForKey: @"isReady"];
                     self->ready = YES;
                     [self didChangeValueForKey: @"isReady"];
@@ -156,7 +160,6 @@ static NSArray	*emptyDependcy = nil;
         RELEASE(self->dependencies);
         RELEASE(self->operationCondition);
         RELEASE(self->operationLock);
-        GS_DESTROY_self(NSOperation);
     }
     [super dealloc];
 }
@@ -183,12 +186,15 @@ static NSArray	*emptyDependcy = nil;
     self->priority = NSOperationQueuePriorityNormal;
     self->threadPriority = 0.5;
     self->ready = YES;
+    
     self->operationLock = [NSRecursiveLock new];
     [self->operationLock setName:
      [NSString stringWithFormat: @"lock-for-opqueue-%p", self]];
+    
     self->operationCondition = [[NSConditionLock alloc] initWithCondition: 0];
     [self->operationCondition setName:
      [NSString stringWithFormat: @"cond-for-opqueue-%p", self]];
+    
     [self addObserver: self
            forKeyPath: @"isFinished"
               options: NSKeyValueObservingOptionNew
@@ -233,7 +239,7 @@ static NSArray	*emptyDependcy = nil;
                          change: (NSDictionary *)change
                         context: (void *)context
 {
-    [self->operationLock lock];
+    [self->operationLock lock]; // 这个函数会改变自身的属性, 所以要进行加锁处理.
     
     /* We only observe isFinished changes, and we can remove self as an
      * observer once we know the operation has finished since it can never
@@ -247,12 +253,12 @@ static NSArray	*emptyDependcy = nil;
          * any waiting thread can continue.
          */
         [self->operationCondition lock];
-        [self->operationCondition unlockWithCondition: 1]; // 干嘛的???
+        [self->operationCondition unlockWithCondition: 1]; // 这里面没有 wait 的处理, 仅仅是为了 singal, 这里的 single 是为了唤醒, waitUntilFinished 的调用.
         [self->operationLock unlock];
         return;
     }
     
-    if (NO == self->ready) // 如果自己还处于不可开启的状态.
+    if (NO == self->ready) // 遍历依赖的状态, 然后更改自己的 ready 的状态.
     {
         NSEnumerator	*en;
         NSOperation	*op;
@@ -295,8 +301,8 @@ static NSArray	*emptyDependcy = nil;
             [self->dependencies removeObject: op];
             if (NO == self->ready)
             {
-                /* The dependency may cause us to become ready ...
-                 * fake an observation so we can deal with that.
+                /*
+                    移除了依赖, 可能会导致 isReady 的变化, 这里是模拟了一次调用. 感觉命名不好.
                  */
                 [self observeValueForKeyPath: @"isFinished"
                                     ofObject: op
@@ -321,6 +327,7 @@ static NSArray	*emptyDependcy = nil;
     self->completionBlock = aBlock;
 }
 
+// 这就是一个存储在 NSOperation 里面的一个数据, 在 queue 里面会用到这个数据.
 - (void) setQueuePriority: (NSOperationQueuePriority)pri
 {
     if (pri <= NSOperationQueuePriorityVeryLow)
@@ -369,8 +376,8 @@ static NSArray	*emptyDependcy = nil;
     NSAutoreleasePool	*pool = [NSAutoreleasePool new]; // 先推进一个自动释放池
     double		prio = [NSThread  threadPriority];
     
-    AUTORELEASE(RETAIN(self));	// Make sure we exist while running.
-    [self->operationLock lock];
+    AUTORELEASE(RETAIN(self));	// 这里, retain 了一下自己, 因为这是多线程的环境, 所以自己的生命周期不能完全依赖于外界的强链接, 因为这个链接有可能在其他线程进行切除.
+    [self->operationLock lock]; // 这里进行了加锁.
     NS_DURING
     {
         // 显示一顿的防卫式语句.
@@ -406,14 +413,15 @@ static NSArray	*emptyDependcy = nil;
         [localException raise];
     }
     NS_ENDHANDLER
-    [self->operationLock unlock];
+    [self->operationLock unlock]; // 这里才会开锁.
     
     NS_DURING
     {
+        // 所以, cancel 函数不会改变 finish 的状态, operation 还是会有 start 的调用, 只不过最重要的 main 不会被调用.
         if (NO == [self isCancelled])
         {
             [NSThread setThreadPriority: self->threadPriority]; // 在这里, 修改线程的优先级, 然后调用 main 方法.
-            [self main]; // 在 start 里面, 调用了 main.
+            [self main]; // 在 start 里面, 调用了 main. 在这里面, 没有加锁, 因为 main 是业务代码, 不会进行上面那些状态的修改.
         }
     }
     NS_HANDLER
@@ -434,14 +442,13 @@ static NSArray	*emptyDependcy = nil;
 
 
 // 阻塞当前的线程, 之后再别的线程, 通过 KVO 才能唤醒.
+// 这种, 一定是要操作一个 conditionLock. 一般情况下, 是把这个 conditionLock 传出去. 现在, NSOpertation 可能在两个线程中执行他的代码, 所以会有下面的这样的一个调用.
 - (void) waitUntilFinished
 {
-    [self->operationCondition lockWhenCondition: 1];	// Wait for finish
-    [self->operationCondition unlockWithCondition: 1];	// Signal any other watchers
+    [self->operationCondition lockWhenCondition: 1];	// 在这个函数里面, condition 会进行 wait, 在被唤醒之后, 会进行锁的重新添加
+    [self->operationCondition unlockWithCondition: 1];	// 在这个函数里面, 会释放唤醒之后添加的锁, 并且进行信号的发送.
 }
-@end
 
-@implementation	NSOperation (Private)
 - (void) _finish
 {
     /* retain while finishing so that we don't get deallocated when our
@@ -466,9 +473,10 @@ static NSArray	*emptyDependcy = nil;
             self->finished = YES;
             [self didChangeValueForKey: @"isFinished"];
         }
+        // 所以, completionBlock 仅仅是一个属性, 在算法流程里面会有这个属性的检测机制.
         if (NULL != self->completionBlock)
         {
-            CALL_BLOCK_NO_ARGS(self->completionBlock);
+            self->completionBlock();
         }
     }
     [self->operationLock unlock]; // 在这里修改状态.

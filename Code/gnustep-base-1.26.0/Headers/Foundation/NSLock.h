@@ -137,12 +137,10 @@
  */
 @interface NSConditionLock : NSObject <NSLocking>
 {
-#if	GS_EXPOSE(NSConditionLock)
 @protected
     NSCondition *_condition;
     int   _condition_value;
     NSString      *_name;
-#endif
 }
 
 /**

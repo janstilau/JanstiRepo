@@ -29,10 +29,10 @@ typedef NSInteger NSOperationQueuePriority;
     double threadPriority;
     BOOL cancelled;
     BOOL concurrent;
-    BOOL executing;
-    BOOL finished;
+    BOOL executing; // 只有在 start 里面修改
+    BOOL finished;// 只会在 start 的最后修改
     BOOL blocked;
-    BOOL ready;
+    BOOL ready; // 在每一个依赖添加, 消除, 以及依赖的 isFinish 变化的时候修改.
     NSMutableArray *dependencies;
     GSOperationCompletionBlock completionBlock;
 }
