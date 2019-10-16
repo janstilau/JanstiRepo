@@ -490,7 +490,7 @@ static NSArray	*emptyDependcy = nil;
 
 
 @interface	NSOperationQueue (Private)
-- (void) _execute;
+- (void) schedule;
 - (void) _thread;
 - (void) observeValueForKeyPath: (NSString *)keyPath
                        ofObject: (id)object
@@ -538,59 +538,62 @@ static NSOperationQueue *mainQueue = nil;
     return mainQueue;
 }
 
-- (void) addOperation: (NSOperation *)op
-{ // 对于 queue 来说, 他要检测自己每个 operation 的 isReady 状态.
+- (void) addOperation: (NSOperation *)operation
+{
+    // 对于 queue 来说, 他要检测自己每个 operation 的 isReady 状态.
     [self->queueLock lock];
-    if (NSNotFound == [self->operations indexOfObjectIdenticalTo: op] &&
-        NO == [op isFinished])
+    // 如果, 没有添加过这个 operation , 并且这 opration 还没有完成的话, 才添加进去.
+    if (NSNotFound == [self->operations indexOfObjectIdenticalTo: operation] &&
+        NO == [operation isFinished])
     {
-        [op addObserver: self
+        [operation addObserver: self
              forKeyPath: @"isReady"
                 options: NSKeyValueObservingOptionNew
-                context: isReadyCtxt];
-        [self willChangeValueForKey: @"operations"];
+                context: isReadyCtxt]; // operation 的 Ready 状态需要被 queue 监听, 因为需要管理下一个可以处理的 operation 的位置.
+        [self willChangeValueForKey: @"operations"]; // 因为, 在文档里面明确说明了这个属性是 KVO 兼容的, 所以在代码里面, 每一个修改的地方, 都要添加 KVO 的调用.
         [self willChangeValueForKey: @"operationCount"];
-        [self->operations addObject: op];
+        [self->operations addObject: operation];
         [self didChangeValueForKey: @"operationCount"];
         [self didChangeValueForKey: @"operations"];
-        if (YES == [op isReady])
+        if (YES == [operation isReady]) // 如果 operation 是 isReady 的状态了, 显示的调用一下.
         {
             [self observeValueForKeyPath: @"isReady"
-                                ofObject: op
+                                ofObject: operation
                                   change: nil
                                  context: isReadyCtxt];
         }
     }
     [self->queueLock unlock];
+    [self schedule];
 }
 
-- (void) addOperations: (NSArray *)ops
+- (void) addOperations: (NSArray *)operations
      waitUntilFinished: (BOOL)shouldWait
 {
     NSUInteger	total;
     NSUInteger	index;
     
-    total = [ops count];
+    total = [operations count];
     if (total > 0)
     {
         BOOL		invalidArg = NO;
         NSUInteger	toAdd = total;
         GS_BEGINITEMBUF(buf, total, id)
         
-        [ops getObjects: buf];
+        [operations getObjects: buf];
         for (index = 0; index < total; index++)
         {
             NSOperation	*op = buf[index];
             
             if (NO == [op isKindOfClass: [NSOperation class]])
             {
-                invalidArg = YES;
+                invalidArg = YES; // 如果, 里面有一个不是 NSOperation, 那么直接抛异常了.
                 toAdd = 0;
                 break;
             }
             if (YES == [op isFinished])
             {
-                buf[index] = nil;
+                buf[index] = nil; // 这里, buf 不是 NSArray, 所以可以进行 nil 的赋值.
                 toAdd--;
             }
         }
@@ -648,13 +651,36 @@ static NSOperationQueue *mainQueue = nil;
              index];
         }
     }
+    [self schedule];
+    // 这里, 卡住的仅仅是调用了这个方法的线程.
     if (YES == shouldWait)
     {
         [self waitUntilAllOperationsAreFinished];
     }
 }
 
-- (void) cancelAllOperations
+- (void) waitUntilAllOperationsAreFinished
+{
+    NSOperation    *op;
+    
+    [self->queueLock lock];
+    
+    /**
+           真正的卡掉当前线程, 是 [op waitUntilFinished] 里面, 会有一个 conditionLock 的 wait 操作. 直到在其他的线程执行完整个 operation 之后, 才会singal waitUntilFinished 继续执行. 然后再次取当前 queue 的最后一个 operation, 然后再次调用 waitUntilFinished 方法.
+           这里, 没有对于 queue 的修改, 因为对于 queue 的修改, 应该是另外的线程中执行. 也就是在 unlock, lock 之间.
+     */
+    while ((op = [self->operations lastObject]) != nil)
+    {
+        [op retain];
+        [self->queueLock unlock];
+        [op waitUntilFinished];
+        [op release];
+        [self->queueLock lock];
+    }
+    [self->queueLock unlock];
+}
+
+- (void) cancelAllOperations // 所有的进行 cancel 的调用.
 {
     [[self operations] makeObjectsPerformSelector: @selector(cancel)];
 }
@@ -668,7 +694,6 @@ static NSOperationQueue *mainQueue = nil;
     DESTROY(self->name);
     DESTROY(self->queueCondition);
     DESTROY(self->queueLock);
-    GS_DESTROY_self(NSOperationQueue);
     [super dealloc];
 }
 
@@ -676,15 +701,17 @@ static NSOperationQueue *mainQueue = nil;
 {
     if ((self = [super init]) != nil)
     {
-        GS_CREATE_self(NSOperationQueue);
         self->suspended = NO;
-        self->count = NSOperationQueueDefaultMaxConcurrentOperationCount;
-        self->operations = [NSMutableArray new];
-        self->starting = [NSMutableArray new];
-        self->waiting = [NSMutableArray new];
+        self->concurrentCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
+        // 下面这三个数组, 是为了进行 operation 的调配工作.
+        self->operations = [NSMutableArray new]; // 总的
+        self->starting = [NSMutableArray new]; // 已经执行的
+        self->waiting = [NSMutableArray new]; // 还在等待的
+        
         self->queueLock = [NSRecursiveLock new];
         [self->queueLock setName:
          [NSString stringWithFormat: @"lock-for-op-%p", self]];
+        
         self->queueCondition = [[NSConditionLock alloc] initWithCondition: 0];
         [self->queueCondition setName:
          [NSString stringWithFormat: @"cond-for-op-%p", self]];
@@ -699,7 +726,7 @@ static NSOperationQueue *mainQueue = nil;
 
 - (NSInteger) maxConcurrentOperationCount
 {
-    return self->count;
+    return self->concurrentCount;
 }
 
 - (NSString*) name
@@ -712,7 +739,7 @@ static NSOperationQueue *mainQueue = nil;
         self->name
         = [[NSString alloc] initWithFormat: @"NSOperation %p", self];
     }
-    s = [self->name retain];
+    s = [self->name retain]; // 在多线程环境下, 不能直接返回属性的值, 而是要进行一个变量的赋值, 然后返回这个变量.
     [self->queueLock unlock];
     return [s autorelease];
 }
@@ -727,7 +754,7 @@ static NSOperationQueue *mainQueue = nil;
     return c;
 }
 
-- (NSArray *) operations
+- (NSArray *) operations // 复制操作, 不直接返回.
 {
     NSArray	*a;
     
@@ -747,14 +774,14 @@ static NSOperationQueue *mainQueue = nil;
          NSStringFromClass([self class]), NSStringFromSelector(_cmd), cnt];
     }
     [self->queueLock lock];
-    if (cnt != self->count)
+    if (cnt != self->concurrentCount)
     {
         [self willChangeValueForKey: @"maxConcurrentOperationCount"];
-        self->count = cnt;
+        self->concurrentCount = cnt;
         [self didChangeValueForKey: @"maxConcurrentOperationCount"];
     }
     [self->queueLock unlock];
-    [self _execute];
+    [self schedule];
 }
 
 - (void) setName: (NSString*)s
@@ -771,6 +798,7 @@ static NSOperationQueue *mainQueue = nil;
     [self->queueLock unlock];
 }
 
+// 所以, 这里仅仅是一个属性的设置, 然后在调用
 - (void) setSuspended: (BOOL)flag
 {
     [self->queueLock lock];
@@ -781,40 +809,33 @@ static NSOperationQueue *mainQueue = nil;
         [self didChangeValueForKey: @"suspended"];
     }
     [self->queueLock unlock];
-    [self _execute];
+    [self schedule];
 }
 
-- (void) waitUntilAllOperationsAreFinished
-{
-    NSOperation	*op;
-    
-    [self->queueLock lock];
-    while ((op = [self->operations lastObject]) != nil)
-    {
-        [op retain];
-        [self->queueLock unlock];
-        [op waitUntilFinished];
-        [op release];
-        [self->queueLock lock];
-    }
-    [self->queueLock unlock];
-}
-@end
-
-@implementation	NSOperationQueue (Private)
+/**
+ * 对于队列来说,  它关心的是,
+ * 1. 任务完成了吗, 完成了, 更新队列, 进行下一次的调度
+ * 2. 任务的优先级变化了吗, 变化了, 进行调度队列的刷新
+ * 3. 任务的 ready 状态变化了吗. 变化了, 更新调度队列.
+ *
+ * 所有的真正执行方法, 在 调度算法里面, 调度算法, 仅仅对 starting, waiting 队列感兴趣
+ *
+ *
+ *    对于任务来说, 它关心的是,
+ *    1. 依赖的任务的 finish 状态, 这样可以更新自己的 ready 状态
+ *    2. 自己的finish 状态, 这样可以唤醒自己的停滞状态.
+ */
 
 - (void) observeValueForKeyPath: (NSString *)keyPath
                        ofObject: (id)object
                          change: (NSDictionary *)change
                         context: (void *)context
 {
-    /* We observe three properties in sequence ...
-     * isReady (while we wait for an operation to be ready)
-     * queuePriority (when priority of a ready operation may change)
-     * isFinished (to see if an executing operation is over).
+    /*
+    这里, context 被用到了, 这就是一个, 类似于 NSDicitonary 的info 的东西, 它到底干什么, 是做分发用, 还是用做取值用, 全部是使用者设置.
      */
     if (context == isFinishedCtxt)
-    {
+    { // 一个 operation 完成了, 修改执行的属性, 以及 operations 数组的量.
         [self->queueLock lock];
         self->executing--;
         [object removeObserver: self forKeyPath: @"isFinished"];
@@ -826,14 +847,14 @@ static NSOperationQueue *mainQueue = nil;
         [self->queueLock unlock];
         [self didChangeValueForKey: @"operationCount"];
         [self didChangeValueForKey: @"operations"];
-    }
-    else if (context == queuePriorityCtxt || context == isReadyCtxt)
+    } else if (context == queuePriorityCtxt || context == isReadyCtxt)
     {
+        // 如果是优先级变化了, 或者是 operation 的 ready 变化了.
         NSInteger pos;
         
         [self->queueLock lock];
         if (context == queuePriorityCtxt)
-        {
+        {// 如果是优先级发生了变化, 那么修改 waiting 里面的位置.
             [self->waiting removeObjectIdenticalTo: object];
         }
         if (context == isReadyCtxt)
@@ -844,14 +865,91 @@ static NSOperationQueue *mainQueue = nil;
                         options: NSKeyValueObservingOptionNew
                         context: queuePriorityCtxt];
         }
+        // 根据 queuePriority 在队列里面进行排序. 也就是, 优先级越大的, 在 wait 里面的位置越靠前.
         pos = [self->waiting insertionPosition: object
                                  usingFunction: sortFunc
                                        context: 0];
         [self->waiting insertObject: object atIndex: pos];
         [self->queueLock unlock];
+        // self->waiting 的操作, 只会在这里进行. schedule 只会进行 deque 的处理.
     }
-    [self _execute];
+    [self schedule];
 }
+
+/*
+ 这里, 进行真正的任务的调配, operation 的运行操作.
+ 任何可能会改变任务的执行顺序, 以及更新队列的操作, 都应该调用这个方法.
+ */
+- (void) schedule
+{
+    NSInteger    max;
+    
+    [self->queueLock lock];
+    
+    max = [self maxConcurrentOperationCount];
+    if (NSOperationQueueDefaultMaxConcurrentOperationCount == max)
+    {
+        max = maxConcurrent;
+    }
+    // 如果 停止了, 不做新的任务的调配工作 ,所以 isSuspended 这个值, 不会影响到已经运行了的任务.
+    // 如果现在运行的值已经超过了最大的并发量, 不进行新的任务的调配
+    // 如果现在没有了正在等待的任务, 返回.
+    while (NO == [self isSuspended]
+           && max > self->executing
+           && [self->waiting count] > 0)
+    {
+        NSOperation    *toRunOperation;
+        /* Take the first operation from the queue and start it executing.
+         * We set ourselves up as an observer for the operating finishing
+         * and we keep track of the count of operations we have started,
+         * but the actual startup is left to the NSOperation -start method.
+         */
+        /**
+         * 所以, operation 的 concorrent queue还是有顺序的, 只不过 maxCount 大于 1 的话, 可以多取几个 task.
+         */
+        
+        toRunOperation = [self->waiting objectAtIndex: 0];
+        [self->waiting removeObjectAtIndex: 0];
+        [toRunOperation removeObserver: self forKeyPath: @"queuePriority"]; // 一旦, 取出之后, queue 就不在检测 operation 的属性值了.
+        [toRunOperation addObserver: self
+             forKeyPath: @"isFinished"
+                options: NSKeyValueObservingOptionNew
+                context: isFinishedCtxt];
+        // 正在运行的 operation 的状态, 要被 queue 监听着它的 isFinished 状态, 来更新自己的状态.
+        self->executing++; // 增加执行的数量.
+        
+        // 如果, [toRunOperation isConcurrent] == YES, 那么一定要在 operation 内部有着异步的处理逻辑. 不然, 这个 operation 还是在当前的线程执行.
+        if (YES == [toRunOperation isConcurrent])
+        {
+            [toRunOperation start];
+        }
+        else
+        {
+            NSUInteger    pending;
+            
+            [self->queueCondition lock];
+            pending = [self->starting count];
+            [self->starting addObject: toRunOperation];
+            
+            /* Create a new thread if all existing threads are busy and
+             * we haven't reached the pool limit.
+             */
+            if (0 == self->threadCount ||
+                (pending > 0 && self->threadCount < POOL)) // 如果, 当前运行的线程数小于阈值.
+            {
+                self->threadCount++;
+                [NSThread detachNewThreadSelector: @selector(_thread)
+                                         toTarget: self
+                                       withObject: nil]; // 这里没有值得传递.
+            }
+            /* Tell the thread pool that there is an operation to start.
+             */
+            [self->queueCondition unlockWithCondition: 1];
+        }
+    }
+    [self->queueLock unlock];
+}
+
 
 - (void) _thread
 {
@@ -859,14 +957,14 @@ static NSOperationQueue *mainQueue = nil;
     
     [[[NSThread currentThread] threadDictionary] setObject: self
                                                     forKey: queueKey];
-    for (;;)
+    for (;;) // 连续不断地进行已经提交的任务的调用. 这里这样设计, 是为了充分的利用到线程.
     {
-        NSOperation	*op;
+        NSOperation	*toRunOperation;
         NSDate		*when;
         BOOL		found;
         
         when = [[NSDate alloc] initWithTimeIntervalSinceNow: 5.0];
-        found = [self->queueCondition lockWhenCondition: 1 beforeDate: when];
+        found = [self->queueCondition lockWhenCondition: 1 beforeDate: when]; // 等待, 如果有其他的任务, 就会被唤醒.
         RELEASE(when);
         if (NO == found)
         {
@@ -875,43 +973,39 @@ static NSOperationQueue *mainQueue = nil;
         
         if ([self->starting count] > 0)
         {
-            op = RETAIN([self->starting objectAtIndex: 0]);
+            toRunOperation = RETAIN([self->starting objectAtIndex: 0]);
             [self->starting removeObjectAtIndex: 0];
         }
         else
         {
-            op = nil;
+            toRunOperation = nil;
         }
         
-        if ([self->starting count] > 0)
+        if ([self->starting count] > 0) // 如果还有没有执行起来的任务, 就通知其他的线程.
         {
-            // Signal any other idle threads,
             [self->queueCondition unlockWithCondition: 1];
-        }
-        else
-        {
+        } else {
             // There are no more operations starting.
             [self->queueCondition unlockWithCondition: 0];
         }
         
-        if (nil != op)
+        if (nil != toRunOperation)
         {
             NS_DURING
             {
                 NSAutoreleasePool	*opPool = [NSAutoreleasePool new];
-                
-                [NSThread setThreadPriority: [op threadPriority]];
-                [op start];
+                [NSThread setThreadPriority: [toRunOperation threadPriority]];
+                [toRunOperation start];// 真正的执行函数.
                 RELEASE(opPool);
             }
             NS_HANDLER
             {
                 NSLog(@"Problem running operation %@ ... %@",
-                      op, localException);
+                      toRunOperation, localException);
             }
             NS_ENDHANDLER
-            [op _finish];
-            RELEASE(op);
+            [toRunOperation _finish];
+            RELEASE(toRunOperation);
         }
     }
     
@@ -921,70 +1015,6 @@ static NSOperationQueue *mainQueue = nil;
     [self->queueLock unlock];
     RELEASE(pool);
     [NSThread exit];
-}
-
-/* Check for operations which can be executed and start them.
- */
-- (void) _execute
-{
-    NSInteger	max;
-    
-    [self->queueLock lock];
-    
-    max = [self maxConcurrentOperationCount];
-    if (NSOperationQueueDefaultMaxConcurrentOperationCount == max)
-    {
-        max = maxConcurrent;
-    }
-    
-    while (NO == [self isSuspended]
-           && max > self->executing
-           && [self->waiting count] > 0)
-    {
-        NSOperation	*op;
-        
-        /* Take the first operation from the queue and start it executing.
-         * We set ourselves up as an observer for the operating finishing
-         * and we keep track of the count of operations we have started,
-         * but the actual startup is left to the NSOperation -start method.
-         */
-        op = [self->waiting objectAtIndex: 0];
-        [self->waiting removeObjectAtIndex: 0];
-        [op removeObserver: self forKeyPath: @"queuePriority"];
-        [op addObserver: self
-             forKeyPath: @"isFinished"
-                options: NSKeyValueObservingOptionNew
-                context: isFinishedCtxt];
-        self->executing++;
-        if (YES == [op isConcurrent])
-        {
-            [op start];
-        }
-        else
-        {
-            NSUInteger	pending;
-            
-            [self->queueCondition lock];
-            pending = [self->starting count];
-            [self->starting addObject: op];
-            
-            /* Create a new thread if all existing threads are busy and
-             * we haven't reached the pool limit.
-             */
-            if (0 == self->threadCount
-                || (pending > 0 && self->threadCount < POOL))
-            {
-                self->threadCount++;
-                [NSThread detachNewThreadSelector: @selector(_thread)
-                                         toTarget: self
-                                       withObject: nil];
-            }
-            /* Tell the thread pool that there is an operation to start.
-             */
-            [self->queueCondition unlockWithCondition: 1];
-        }
-    }
-    [self->queueLock unlock];
 }
 
 @end

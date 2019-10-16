@@ -195,7 +195,7 @@ enum {
     BOOL            suspended;
     NSInteger        executing;
     NSInteger        threadCount;
-    NSInteger        count;
+    NSInteger        concurrentCount;
 }
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 /** If called from within the -main method of an operation which is
