@@ -1179,6 +1179,7 @@ nsthreadLauncher(void *thread)
     [p makeObjectsPerformSelector: @selector(timerPerformerInvalidate)];
 }
 
+// 这个函数被调用的时机, 应该是切换到相应的线程, 然后调用这个方法来出发之前存储的调用.
 - (void) threadRelatedTaskContainerFire
 {
     NSArray	*toDo;
@@ -1186,49 +1187,20 @@ nsthreadLauncher(void *thread)
     unsigned int	c;
     
     [lock lock];
-#if defined(_WIN32)
-    if (event != INVALID_HANDLE_VALUE)
-    {
-        if (ResetEvent(event) == 0)
-        {
-            NSLog(@"Reset event failed - %@", [NSError _last]);
-        }
-    }
-#else
-    if (inputFd >= 0)
-    {
-        char	buf[BUFSIZ];
-        
-        /* We don't care how much we read.  If there have been multiple
-         * performers queued then there will be multiple bytes available,
-         * but we always handle all available performers, so we can also
-         * read all available bytes.
-         * The descriptor is non-blocking ... so it's safe to ask for more
-         * bytes than are available.
-         */
-        while (read(inputFd, buf, sizeof(buf)) > 0)
-            ;
-    }
-#endif
-    
     c = [performers count];
     if (0 == c)
     {
-        /* We deal with all available performers each time we fire, so
-         * it's likely that we will fire when we have no performers left.
-         * In that case we can skip the copying and emptying of the array.
-         */
         [lock unlock];
         return;
     }
-    toDo = [NSArray arrayWithArray: performers];
+    toDo = [NSArray arrayWithArray: performers]; // 这里进行一次复制, 然后就解锁了, 这让代码段要比最后解锁要少很多.
     [performers removeAllObjects];
     [lock unlock];
     
     for (i = 0; i < c; i++)
     {
         GSThreadRelatedPerformHolder	*h = [toDo objectAtIndex: i];
-        
+        // 调用 runloop 的方法, 将存储的任务进行使用.
         [loop performSelector: @selector(timerPerformFire)
                        target: h
                      argument: nil
@@ -1423,7 +1395,7 @@ GSThreadCacheTasks(NSThread *aThread)
                                   order: 0
                                   modes: anArray];
         }
-    } else {
+    } else { // 将这个任务存起来, 最后还是要调用runloop 的方法将存起来的方法调用起来.
         GSThreadRelatedPerformHolder   *h;
         NSConditionLock	*lock = nil;
         if (shouldWait == YES) // 如果同步处理.

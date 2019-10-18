@@ -1,34 +1,3 @@
-/** Implementation of object for waiting on several input sources
- NSRunLoop.m
- 
- Copyright (C) 1996-1999 Free Software Foundation, Inc.
- 
- Original by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
- Created: March 1996
- OPENSTEP version by: Richard Frith-Macdonald <richard@brainstorm.co.uk>
- Created: August 1997
- 
- This file is part of the GNUstep Base Library.
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free
- Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02111 USA.
- 
- <title>NSRunLoop class reference</title>
- $Date$ $Revision$
- */
-
 #import "common.h"
 #define	EXPOSE_NSRunLoop_IVARS	1
 #define	EXPOSE_NSTimer_IVARS	1
@@ -97,7 +66,7 @@ static NSDate	*theFuture = nil;
     unsigned	order;
 }
 
-- (void) fire;
+- (void) ModeRelatedPerformerFire;
 - (id) initWithSelector: (SEL)aSelector
                  target: (id)target
                argument: (id)argument
@@ -113,7 +82,7 @@ static NSDate	*theFuture = nil;
     [super dealloc];
 }
 
-- (void) fire
+- (void) ModeRelatedPerformerFire
 {
     NS_DURING
     {
@@ -500,7 +469,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
              */
             for (i = 0; i < count; i++)
             {
-                [array[i] fire];
+                [array[i] ModeRelatedPerformerFire];
                 RELEASE(array[i]);
                 IF_NO_GC([arp emptyPool];)
             }
@@ -1450,9 +1419,9 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
         
         GSRunLoopModeRelatedPerformer *item =
         [[GSRunLoopModeRelatedPerformer alloc] initWithSelector: aSelector
-                                                     target: target
-                                                   argument: argument
-                                                      order: order];
+                                                         target: target
+                                                       argument: argument
+                                                          order: order];
         
         if ([modes isProxy])
         {
