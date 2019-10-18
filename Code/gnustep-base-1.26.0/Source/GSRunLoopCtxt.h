@@ -51,26 +51,23 @@ typedef struct{
 @class NSString;
 @class GSRunLoopWatcher;
 
+
+// mode 
 @interface	GSRunLoopCtxt : NSObject
 {
 @public
   void		*extra;		/** Copy of the RunLoop ivar.		*/
   NSString	*mode;		/** The mode for this context.		*/
-  GSIArray	performers;	/** The actions to perform regularly.	*/
+  GSIArray	performers;	/** The actions to perform regularly.	*/ // runloop related performer.
   unsigned	maxPerformers;
   GSIArray	timers;		/** The timers set for the runloop mode */
   unsigned	maxTimers;
   GSIArray	watchers;	/** The inputs set for the runloop mode */
   unsigned	maxWatchers;
 @private
-#if	defined(_WIN32)
-  NSMapTable    *handleMap;     
-  NSMapTable	*winMsgMap;
-#else
   NSMapTable	*_efdMap;
   NSMapTable	*_rfdMap;
   NSMapTable	*_wfdMap;
-#endif
   GSIArray	_trigger;	// Watchers to trigger unconditionally.
   int		fairStart;	// For trying to ensure fair handling.
   BOOL		completed;	// To mark operation as completed.

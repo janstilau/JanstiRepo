@@ -4,10 +4,6 @@
 
 #import	<Foundation/NSMapTable.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSTimer, NSDate, NSPort;
 
 /**
@@ -19,14 +15,12 @@ GS_EXPORT NSString * const NSDefaultRunLoopMode;
 
 @interface NSRunLoop : NSObject
 {
-#if	GS_EXPOSE(NSRunLoop)
 @private
     NSString		*_currentMode;
     NSMapTable		*_contextMap;
     NSMutableArray	*_contextStack;
-    NSMutableArray	*_timedPerformers;
+    NSMutableArray	*_timedPerformers; // 和时间相关的调用请求.
     void			*_extra;
-#endif
 }
 
 /**
@@ -34,12 +28,10 @@ GS_EXPORT NSString * const NSDefaultRunLoopMode;
  */
 + (NSRunLoop*) currentRunLoop;
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST)
 /**
  * Returns the run loop instance of the main thread.
  */
 + (NSRunLoop*) mainRunLoop;
-#endif
 
 - (void) acceptInputForMode: (NSString*)mode
                  beforeDate: (NSDate*)limit_date;
@@ -77,13 +69,13 @@ GS_EXPORT NSString * const NSDefaultRunLoopMode;
 - (void) addPort: (NSPort*)port
          forMode: (NSString*)mode;
 
+// 类似于 NSObject 的那几个函数.
+
 - (void) cancelPerformSelectorsWithTarget: (id)target;
 
 - (void) cancelPerformSelector: (SEL)aSelector
                         target: (id)target
                       argument: (id)argument;
-
-- (void) configureAsServer;
 
 - (void) performSelector: (SEL)aSelector
                   target: (id)target
@@ -181,9 +173,5 @@ forMode: (NSString*)mode;
              forMode: (NSString*)mode
                  all: (BOOL)removeAll;
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif /*__NSRunLoop_h_GNUSTEP_BASE_INCLUDE */

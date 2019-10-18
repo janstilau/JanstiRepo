@@ -19,26 +19,21 @@
 
 #import "GSPrivate.h"
 
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-#ifdef HAVE_POLL_F
-#include <poll.h>
-#endif
-#include <math.h>
-#include <time.h>
+@interface GSRunLoopModeRelatedPerformer: NSObject
+{
+@public
+    SEL        selector;
+    id        target;
+    id        argument;
+    unsigned    order;
+}
 
-#if HAVE_DISPATCH_GET_MAIN_QUEUE_HANDLE_NP && HAVE_DISPATCH_MAIN_QUEUE_DRAIN_NP
-#  define RL_INTEGRATE_DISPATCH 1
-#  ifdef HAVE_DISPATCH_H
-#    include <dispatch.h>
-#  elif HAVE_DISPATCH_DISPATCH_H
-#    include <dispatch/dispatch.h>
-#  endif
-#endif
+- (void) modeRelatedPerformerFire;
+- (id) initWithSelector: (SEL)aSelector
+                 target: (id)target
+               argument: (id)argument
+                  order: (NSUInteger)order;
+@end
 
 
 NSString * const NSDefaultRunLoopMode = @"NSDefaultRunLoopMode";
@@ -48,173 +43,7 @@ static NSDate	*theFuture = nil;
 @interface NSObject (OptionalPortRunLoop)
 - (void) getFds: (NSInteger*)fds count: (NSInteger*)count;
 @end
-
 
-
-/*
- *	The GSRunLoopPerformer class is used to hold information about
- *	messages which are due to be sent to objects once each runloop
- *	iteration has passed.
- // 为了封装 mode 相关的调用.
- */
-@interface GSRunLoopModeRelatedPerformer: NSObject
-{
-@public
-    SEL		selector;
-    id		target;
-    id		argument;
-    unsigned	order;
-}
-
-- (void) ModeRelatedPerformerFire;
-- (id) initWithSelector: (SEL)aSelector
-                 target: (id)target
-               argument: (id)argument
-                  order: (NSUInteger)order;
-@end
-
-@implementation GSRunLoopModeRelatedPerformer
-
-- (void) dealloc
-{
-    RELEASE(target);
-    RELEASE(argument);
-    [super dealloc];
-}
-
-- (void) ModeRelatedPerformerFire
-{
-    NS_DURING
-    {
-        [target performSelector: selector withObject: argument];
-    }
-    NS_HANDLER
-    {
-        NSLog(@"*** NSRunLoop ignoring exception '%@' (reason '%@') "
-              @"raised during performSelector... with target %s(%s) "
-              @"and selector '%s'",
-              [localException name], [localException reason],
-              GSClassNameFromObject(target),
-              GSObjCIsInstance(target) ? "instance" : "class",
-              sel_getName(selector));
-    }
-    NS_ENDHANDLER
-}
-
-- (id) initWithSelector: (SEL)aSelector
-                 target: (id)aTarget
-               argument: (id)anArgument
-                  order: (NSUInteger)theOrder
-{
-    self = [super init];
-    if (self)
-    {
-        selector = aSelector;
-        target = RETAIN(aTarget);
-        argument = RETAIN(anArgument);
-        order = theOrder;
-    }
-    return self;
-}
-
-@end
-
-
-
-@interface NSRunLoop (TimedPerformers)
-- (NSMutableArray*) _timedPerformers;
-@end
-
-@implementation	NSRunLoop (TimedPerformers)
-- (NSMutableArray*) _timedPerformers
-{
-    return _timedPerformers;
-}
-@end
-
-/*
- * The GSTimedPerformer class is used to hold information about
- * messages which are due to be sent to objects at a particular time.
- */
-@interface GSTimedPerformer: NSObject
-{
-@public
-    SEL		selector;
-    id		target;
-    id		argument;
-    NSTimer	*timer;
-}
-
-- (void) timerPerformFire;
-- (id) initWithSelector: (SEL)aSelector
-                 target: (id)target
-               argument: (id)argument
-                  delay: (NSTimeInterval)delay;
-- (void) timerPerformerInvalidate;
-@end
-
-@implementation GSTimedPerformer
-
-- (void) dealloc
-{
-    [self finalize];
-    TEST_RELEASE(timer);
-    RELEASE(target);
-    RELEASE(argument);
-    [super dealloc];
-}
-
-- (void) timerPerformFire
-{
-    DESTROY(timer);
-    [target performSelector: selector withObject: argument];
-    [[[NSRunLoop currentRunLoop] _timedPerformers] removeObjectIdenticalTo: self];
-}
-
-- (void) finalize
-{
-    [self timerPerformerInvalidate];
-}
-
-- (id) initWithSelector: (SEL)aSelector
-                 target: (id)aTarget
-               argument: (id)anArgument
-                  delay: (NSTimeInterval)delay
-{
-    self = [super init];
-    if (self != nil)
-    {
-        selector = aSelector;
-        target = RETAIN(aTarget);
-        argument = RETAIN(anArgument);
-        timer = [[NSTimer allocWithZone: NSDefaultMallocZone()]
-                 initWithFireDate: nil
-                 interval: delay
-                 target: self
-                 selector: @selector(timerPerformFire)
-                 userInfo: nil
-                 repeats: NO];
-    }
-    return self;
-}
-
-- (void) timerPerformerInvalidate
-{
-    if (timer != nil)
-    {
-        [timer invalidate];
-        DESTROY(timer);
-    }
-}
-
-@end
-
-
-
-/*
- *      Setup for inline operation of arrays.
- */
-
 #ifndef GSI_ARRAY_TYPES
 #define GSI_ARRAY_TYPES       GSUNION_OBJ
 
@@ -232,115 +61,6 @@ static inline BOOL timerInvalidated(NSTimer *t)
 {
     return t->_invalidated;
 }
-
-
-
-@implementation NSObject (TimedPerformers)
-
-/*
- 所以, cancelPreviousPerformRequestsWithTarget 这个方法, 就是在操作队列.
- */
-+ (void) cancelPreviousPerformRequestsWithTarget: (id)target
-{
-    NSMutableArray	*perf = [[NSRunLoop currentRunLoop] _timedPerformers];
-    unsigned		count = [perf count];
-    
-    if (count > 0)
-    {
-        GSTimedPerformer	*array[count];
-        [perf getObjects: array];
-        while (count-- > 0)
-        {
-            GSTimedPerformer	*p = array[count];
-            if (p->target == target)
-            {
-                [p timerPerformerInvalidate];
-                [perf removeObjectAtIndex: count];
-            }
-        }
-        RELEASE(target);
-    }
-}
-
-/*
- 操作队列, 比上面仅仅进行 target 的比较, 还多了对于 target 和 sel 的比较.
- */
-+ (void) cancelPreviousPerformRequestsWithTarget: (id)target
-                                        selector: (SEL)aSelector
-                                          object: (id)arg
-{
-    NSMutableArray	*perf = [[NSRunLoop currentRunLoop] _timedPerformers];
-    unsigned		count = [perf count];
-    
-    if (count > 0)
-    {
-        GSTimedPerformer	*array[count];
-        [perf getObjects: array];
-        while (count-- > 0)
-        {
-            GSTimedPerformer	*p = array[count];
-            
-            if (p->target == target &&
-                sel_isEqual(p->selector, aSelector) &&
-                (p->argument == arg || [p->argument isEqual: arg]))
-            {
-                [p timerPerformerInvalidate];
-                [perf removeObjectAtIndex: count];
-            }
-        }
-    }
-}
-
-
-// 对于 afterDelay, 没有线程的调用. 直接是构造一个 NSTimer. GSTimedPerformer 是对于 timer 的一个包装.
-// 之所以不直接进行 timer, 而是包装一个新的结构, 是因为上面有一个队列, 可以给使用者取消的权利.
-- (void) performSelector: (SEL)aSelector
-              withObject: (id)argument
-              afterDelay: (NSTimeInterval)seconds
-{
-    NSRunLoop		*loop = [NSRunLoop currentRunLoop];
-    GSTimedPerformer	*item;
-    
-    item = [[GSTimedPerformer alloc] initWithSelector: aSelector
-                                               target: self
-                                             argument: argument
-                                                delay: seconds];
-    [[loop _timedPerformers] addObject: item];
-    RELEASE(item);
-    [loop addTimer: item->timer forMode: NSDefaultRunLoopMode];
-}
-
-// 同样的, 这里也是一个简单的 Timer 的封装.
-
-- (void) performSelector: (SEL)aSelector
-              withObject: (id)argument
-              afterDelay: (NSTimeInterval)seconds
-                 inModes: (NSArray*)modes
-{
-    unsigned	count = [modes count];
-    
-    if (count > 0)
-    {
-        NSRunLoop		*loop = [NSRunLoop currentRunLoop];
-        NSString		*marray[count];
-        GSTimedPerformer	*item;
-        unsigned		i;
-        
-        item = [[GSTimedPerformer alloc] initWithSelector: aSelector
-                                                   target: self
-                                                 argument: argument
-                                                    delay: seconds];
-        [[loop _timedPerformers] addObject: item];
-        RELEASE(item);
-        [modes getObjects: marray];
-        for (i = 0; i < count; i++)
-        {
-            [loop addTimer: item->timer forMode: marray[i]];
-        }
-    }
-}
-
-@end
 
 #ifdef RL_INTEGRATE_DISPATCH
 @interface GSMainQueueDrainer : NSObject <RunLoopEvents>
@@ -469,7 +189,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
              */
             for (i = 0; i < count; i++)
             {
-                [array[i] ModeRelatedPerformerFire];
+                [array[i] modeRelatedPerformerFire];
                 RELEASE(array[i]);
                 IF_NO_GC([arp emptyPool];)
             }
@@ -1294,12 +1014,136 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
 @end
 
 
+
+
+
+
+// ----------------------------  command 的包装  ----------------------------
 
+
+/*
+ *    The GSRunLoopPerformer class is used to hold information about
+ *    messages which are due to be sent to objects once each runloop
+ *    iteration has passed.
+ // 为了封装 mode 相关的调用.
+ */
+
+@implementation GSRunLoopModeRelatedPerformer
+
+- (void) dealloc
+{
+    RELEASE(target);
+    RELEASE(argument);
+    [super dealloc];
+}
+
+- (void) modeRelatedPerformerFire
+{
+    NS_DURING
+    {
+        [target performSelector: selector withObject: argument];
+    }
+    NS_HANDLER
+    {
+        NSLog(@"*** NSRunLoop ignoring exception '%@' (reason '%@') "
+              @"raised during performSelector... with target %s(%s) "
+              @"and selector '%s'",
+              [localException name], [localException reason],
+              GSClassNameFromObject(target),
+              GSObjCIsInstance(target) ? "instance" : "class",
+              sel_getName(selector));
+    }
+    NS_ENDHANDLER
+}
+
+- (id) initWithSelector: (SEL)aSelector
+                 target: (id)aTarget
+               argument: (id)anArgument
+                  order: (NSUInteger)theOrder
+{
+    self = [super init];
+    if (self)
+    {
+        selector = aSelector;
+        target = RETAIN(aTarget);
+        argument = RETAIN(anArgument);
+        order = theOrder;
+    }
+    return self;
+}
+
+@end
+
 /**
  * OpenStep-compatibility methods for [NSRunLoop].  These methods are also
  * all in OS X.
  */
 @implementation	NSRunLoop (OPENSTEP)
+
+/**
+ * Sets up sending of aSelector to target with argument.<br />
+ * The selector is sent before the next runloop iteration (unless
+ * cancelled before then) in any of the specified modes.<br />
+ * The target and argument objects are retained.<br />
+ * The order value is used to determine the order in which messages
+ * are sent if multiple messages have been set up. Messages with a lower
+ * order value are sent first.<br />
+ * If the modes array is empty, this method has no effect.
+ */
+- (void) performSelector: (SEL)aSelector
+                  target: (id)target
+                argument: (id)argument
+                   order: (NSUInteger)order
+                   modes: (NSArray*)modes
+{
+    unsigned        count = [modes count];
+    if (!count) { return; }
+    NSString *array[count];
+    
+    GSRunLoopModeRelatedPerformer *item =
+    [[GSRunLoopModeRelatedPerformer alloc] initWithSelector: aSelector
+                                                     target: target
+                                                   argument: argument
+                                                      order: order];
+    [modes getObjects: array];
+    while (count-- > 0)
+    {
+        NSString    *mode = array[count];
+        unsigned    end;
+        unsigned    i;
+        GSRunLoopCtxt    *context;
+        GSIArray    performers;
+        
+        context = NSMapGet(_contextMap, mode);
+        if (context == nil)
+        { //  如果没有懒加载, 那么这种判断插入的操作, 就会有很多. 或者, 如果有一个可以明显可以确定的初始化的时机, 可以将对应的代码写到那个位置.
+            context = [[GSRunLoopCtxt alloc] initWithMode: mode
+                                                    extra: _extra];
+            NSMapInsert(_contextMap, context->mode, context);
+            RELEASE(context);
+        }
+        performers = context->performers;
+        
+        end = GSIArrayCount(performers);
+        for (i = 0; i < end; i++)
+        {
+            GSRunLoopModeRelatedPerformer    *p;
+            
+            p = GSIArrayItemAtIndex(performers, i).obj;
+            if (p->order > order)
+            {
+                GSIArrayInsertItem(performers, (GSIArrayItem)((id)item), i);
+                break;
+            }
+        }
+        if (i == end)
+        {
+            GSIArrayInsertItem(performers, (GSIArrayItem)((id)item), i);
+        }
+        // 根据 order 插入到相应的位置.
+    }
+    RELEASE(item);
+}
 
 /**
  * Adds port to be monitored in given mode.
@@ -1325,6 +1169,8 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
     
     enumerator = NSEnumerateMapTable(_contextMap);
     
+    
+    // 遍历所有 mode 对应下的 ModeRelatedPerformer, 然后移除这个请求.
     while (NSNextMapEnumeratorPair(&enumerator, &mode, (void**)&context))
     {
         if (context != nil)
@@ -1353,6 +1199,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
  * with which the performs were set up match those supplied.<br />
  * Matching of the argument may be either by pointer equality or by
  * use of the [NSObject-isEqual:] method.
+    cancelPerformSelector target 的升级版本, 这个和 timeRelatedPerformer 是类似的功能.
  */
 - (void) cancelPerformSelector: (SEL)aSelector
                         target: (id) target
@@ -1376,8 +1223,9 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
                 GSRunLoopModeRelatedPerformer	*p;
                 
                 p = GSIArrayItemAtIndex(performers, count).obj;
-                if (p->target == target && sel_isEqual(p->selector, aSelector)
-                    && (p->argument == argument || [p->argument isEqual: argument]))
+                if (p->target == target &&
+                    sel_isEqual(p->selector, aSelector) &&
+                    (p->argument == argument || [p->argument isEqual: argument]))
                 {
                     GSIArrayRemoveItemAtIndex(performers, count);
                 }
@@ -1388,103 +1236,6 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
 }
 
 /**
- *  Configure event processing for acting as a server process for distributed
- *  objects.  (In the current implementation this is a no-op.)
- */
-- (void) configureAsServer
-{
-    return;	/* Nothing to do here */
-}
-
-/**
- * Sets up sending of aSelector to target with argument.<br />
- * The selector is sent before the next runloop iteration (unless
- * cancelled before then) in any of the specified modes.<br />
- * The target and argument objects are retained.<br />
- * The order value is used to determine the order in which messages
- * are sent if multiple messages have been set up. Messages with a lower
- * order value are sent first.<br />
- * If the modes array is empty, this method has no effect.
- */
-- (void) performSelector: (SEL)aSelector
-                  target: (id)target
-                argument: (id)argument
-                   order: (NSUInteger)order
-                   modes: (NSArray*)modes
-{
-    unsigned		count = [modes count];
-    if (count > 0)
-    {
-        NSString			*array[count];
-        
-        GSRunLoopModeRelatedPerformer *item =
-        [[GSRunLoopModeRelatedPerformer alloc] initWithSelector: aSelector
-                                                         target: target
-                                                       argument: argument
-                                                          order: order];
-        
-        if ([modes isProxy])
-        {
-            unsigned	i;
-            
-            for (i = 0; i < count; i++)
-            {
-                array[i] = [modes objectAtIndex: i];
-            }
-        }
-        else
-        {
-            [modes getObjects: array];
-        }
-        while (count-- > 0)
-        {
-            NSString	*mode = array[count];
-            unsigned	end;
-            unsigned	i;
-            GSRunLoopCtxt	*context;
-            GSIArray	performers;
-            
-            context = NSMapGet(_contextMap, mode);
-            if (context == nil)
-            {
-                context = [[GSRunLoopCtxt alloc] initWithMode: mode
-                                                        extra: _extra];
-                NSMapInsert(_contextMap, context->mode, context);
-                RELEASE(context);
-            }
-            performers = context->performers;
-            
-            end = GSIArrayCount(performers);
-            for (i = 0; i < end; i++)
-            {
-                GSRunLoopModeRelatedPerformer	*p;
-                
-                p = GSIArrayItemAtIndex(performers, i).obj;
-                if (p->order > order)
-                {
-                    GSIArrayInsertItem(performers, (GSIArrayItem)((id)item), i);
-                    break;
-                }
-            }
-            if (i == end)
-            {
-                GSIArrayInsertItem(performers, (GSIArrayItem)((id)item), i);
-            }
-            i = GSIArrayCount(performers);
-            if (i % 1000 == 0 && i > context->maxPerformers)
-            {
-                context->maxPerformers = i;
-                NSLog(@"WARNING ... there are %u performers scheduled"
-                      @" in mode %@ of %@\n(Latest: [%@ %@])",
-                      i, mode, self, NSStringFromClass([target class]),
-                      NSStringFromSelector(aSelector));
-            }
-        }
-        RELEASE(item);
-    }
-}
-
-/**
  * Removes port to be monitored from given mode.
  * Ports are also removed if they are detected to be invalid.
  */
@@ -1492,6 +1243,201 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
             forMode: (NSString*)mode
 {
     [self removeEvent: (void*)port type: ET_RPORT forMode: mode all: NO];
+}
+
+@end
+
+@interface NSRunLoop (TimedPerformers)
+- (NSMutableArray*) _timedPerformers;
+@end
+
+@implementation    NSRunLoop (TimedPerformers)
+- (NSMutableArray*) _timedPerformers
+{
+    return _timedPerformers;
+}
+@end
+
+/*
+ * The GSTimedPerformer class is used to hold information about
+ * messages which are due to be sent to objects at a particular time.
+ */
+@interface GSRunLoopTimeRelatedPerformer: NSObject
+{
+@public
+    SEL        selector;
+    id        target;
+    id        argument;
+    NSTimer    *timer;
+}
+
+- (void) timerPerformFire;
+- (id) initWithSelector: (SEL)aSelector
+                 target: (id)target
+               argument: (id)argument
+                  delay: (NSTimeInterval)delay;
+- (void) timerPerformerInvalidate;
+@end
+
+@implementation GSRunLoopTimeRelatedPerformer
+
+- (void) dealloc
+{
+    [self finalize];
+    TEST_RELEASE(timer);
+    RELEASE(target);
+    RELEASE(argument);
+    [super dealloc];
+}
+
+- (void) timerPerformFire
+{
+    DESTROY(timer);
+    [target performSelector: selector withObject: argument];
+    [[[NSRunLoop currentRunLoop] _timedPerformers] removeObjectIdenticalTo: self];
+}
+
+- (void) finalize
+{
+    [self timerPerformerInvalidate];
+}
+
+- (id) initWithSelector: (SEL)aSelector
+                 target: (id)aTarget
+               argument: (id)anArgument
+                  delay: (NSTimeInterval)delay
+{
+    self = [super init];
+    if (self != nil)
+    {
+        selector = aSelector;
+        target = RETAIN(aTarget);
+        argument = RETAIN(anArgument);
+        timer = [[NSTimer allocWithZone: NSDefaultMallocZone()]
+                 initWithFireDate: nil
+                 interval: delay
+                 target: self
+                 selector: @selector(timerPerformFire)
+                 userInfo: nil
+                 repeats: NO];
+    }
+    return self;
+}
+
+- (void) timerPerformerInvalidate
+{
+    if (timer != nil)
+    {
+        [timer invalidate];
+        DESTROY(timer);
+    }
+}
+
+@end
+
+@implementation NSObject (TimedPerformers)
+
+/*
+ 所以, cancelPreviousPerformRequestsWithTarget 这个方法, 就是在操作队列.
+ */
++ (void) cancelPreviousPerformRequestsWithTarget: (id)target
+{
+    NSMutableArray    *perf = [[NSRunLoop currentRunLoop] _timedPerformers];
+    unsigned        count = [perf count];
+    
+    if (count > 0)
+    {
+        GSRunLoopTimeRelatedPerformer    *array[count];
+        [perf getObjects: array];
+        while (count-- > 0)
+        {
+            GSRunLoopTimeRelatedPerformer    *p = array[count];
+            if (p->target == target)
+            {
+                [p timerPerformerInvalidate];
+                [perf removeObjectAtIndex: count];
+            }
+        }
+        RELEASE(target);
+    }
+}
+
+/*
+ 操作队列, 比上面仅仅进行 target 的比较, 还多了对于 target 和 sel 的比较.
+ */
++ (void) cancelPreviousPerformRequestsWithTarget: (id)target
+                                        selector: (SEL)aSelector
+                                          object: (id)arg
+{
+    NSMutableArray    *perf = [[NSRunLoop currentRunLoop] _timedPerformers];
+    unsigned        count = [perf count];
+    
+    if (count > 0)
+    {
+        GSRunLoopTimeRelatedPerformer    *array[count];
+        [perf getObjects: array];
+        while (count-- > 0)
+        {
+            GSRunLoopTimeRelatedPerformer    *p = array[count];
+            
+            if (p->target == target &&
+                sel_isEqual(p->selector, aSelector) &&
+                (p->argument == arg || [p->argument isEqual: arg]))
+            {
+                [p timerPerformerInvalidate];
+                [perf removeObjectAtIndex: count];
+            }
+        }
+    }
+}
+
+
+// 对于 afterDelay, 没有线程的调用. 直接是构造一个 NSTimer. GSTimedPerformer 是对于 timer 的一个包装.
+// 之所以不直接进行 timer, 而是包装一个新的结构, 是因为上面有一个队列, 可以给使用者取消的权利.
+- (void) performSelector: (SEL)aSelector
+              withObject: (id)argument
+              afterDelay: (NSTimeInterval)seconds
+{
+    NSRunLoop        *loop = [NSRunLoop currentRunLoop];
+    GSRunLoopTimeRelatedPerformer    *item;
+    
+    item = [[GSRunLoopTimeRelatedPerformer alloc] initWithSelector: aSelector
+                                               target: self
+                                             argument: argument
+                                                delay: seconds];
+    [[loop _timedPerformers] addObject: item];
+    RELEASE(item);
+    [loop addTimer: item->timer forMode: NSDefaultRunLoopMode];
+}
+
+// 同样的, 这里也是一个简单的 Timer 的封装.
+
+- (void) performSelector: (SEL)aSelector
+              withObject: (id)argument
+              afterDelay: (NSTimeInterval)seconds
+                 inModes: (NSArray*)modes
+{
+    unsigned    count = [modes count];
+    
+    if (count > 0)
+    {
+        NSRunLoop        *loop = [NSRunLoop currentRunLoop];
+        NSString        *marray[count];
+        GSRunLoopTimeRelatedPerformer    *item;
+        unsigned        i;
+        
+        item = [[GSRunLoopTimeRelatedPerformer alloc] initWithSelector: aSelector
+                                                   target: self
+                                                 argument: argument
+                                                    delay: seconds];
+        [[loop _timedPerformers] addObject: item];
+        RELEASE(item);
+        [modes getObjects: marray];
+        for (i = 0; i < count; i++)
+        {
+            [loop addTimer: item->timer forMode: marray[i]];
+        }
+    }
 }
 
 @end
