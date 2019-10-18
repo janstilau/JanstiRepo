@@ -13,6 +13,13 @@
 @class  NSArray;
 @class	NSDate;
 @class	NSMutableDictionary;
+
+typedef struct {
+    pthread_spinlock_t    spin;   /* protect access to struct members */
+    NSHashTable           *held;  /* all locks/conditions held by thread */
+    id                    wait;   /* the lock/condition we are waiting for */
+} GSLockInfo;
+
 /**
  * This class encapsulates OpenStep threading.  See [NSLock] and its
  * subclasses for handling synchronisation between threads.<br />
@@ -26,7 +33,6 @@
  */
 @interface NSThread : NSObject
 {
-#if	GS_EXPOSE(NSThread)
 @public
     id			_target;
     id			_arg;
@@ -39,21 +45,16 @@
     NSHandler		*_exception_handler;    // Not retained.
     NSMutableDictionary	*_thread_dictionary;
     struct autorelease_thread_vars _autorelease_vars;
-    id			_gcontext;
     void                  *_runLoopInfo;  // Per-thread runloop related info.
-#endif
-#if     GS_NONFRAGILE
-#  if defined(GS_NSThread_IVARS)
-@public GS_NSThread_IVARS;
-#  endif
-#else
+    pthread_t             _pthreadID;
+    NSUInteger            _threadID;
+    GSLockInfo            _lockInfo;
     /* Pointer to private additional data used to avoid breaking ABI
      * when we don't have the non-fragile ABI available.
      * Use this mechanism rather than changing the instance variable
      * layout (see Source/GSInternal.h for details).
      */
 @private id _internal GS_UNUSED_IVAR;
-#endif
 }
 
 /**

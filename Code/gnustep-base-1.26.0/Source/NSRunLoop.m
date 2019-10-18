@@ -738,7 +738,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
 
 + (NSRunLoop*) _runLoopForThread: (NSThread*) aThread
 {
-  GSRunLoopThreadInfo	*info = GSRunLoopInfoForThread(aThread);
+  GSThreadCacheTaskContainer	*info = GSRunLoopInfoForThread(aThread);
   NSRunLoop             *current = info->loop;
 
   if (nil == current)
