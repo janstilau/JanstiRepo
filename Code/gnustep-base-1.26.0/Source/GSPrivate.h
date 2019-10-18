@@ -315,7 +315,7 @@ typedef enum {
 
 /* Used to handle events performed in one thread from another.
  */
-@interface      GSThreadRelatedTaskContainer : NSObject
+@interface GSThreadRelatedTaskContainer : NSObject
 {
   @public
   NSRunLoop             *loop; // thread 配套的 runloop 的信息.
