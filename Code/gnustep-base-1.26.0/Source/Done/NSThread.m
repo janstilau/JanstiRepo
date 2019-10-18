@@ -1175,7 +1175,7 @@ nsthreadLauncher(void *thread)
     }
 #endif
     [lock unlock];
-    [p makeObjectsPerformSelector: @selector(invalidate)];
+    [p makeObjectsPerformSelector: @selector(timerPerformerInvalidate)];
 }
 
 - (void) fire
@@ -1228,7 +1228,7 @@ nsthreadLauncher(void *thread)
     {
         GSPerformHolder	*h = [toDo objectAtIndex: i];
         
-        [loop performSelector: @selector(fire)
+        [loop performSelector: @selector(timerPerformFire)
                        target: h
                      argument: nil
                         order: 0
