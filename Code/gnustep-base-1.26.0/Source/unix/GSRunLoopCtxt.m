@@ -652,7 +652,7 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
 
 - (BOOL) pollUntil: (int)milliseconds within: (NSArray*)contexts
 {
-  GSThreadCacheTaskContainer   *threadInfo = GSRunLoopInfoForThread(nil);
+  GSThreadRelatedTaskContainer   *threadInfo = GSThreadCacheTasks(nil);
   struct timeval	timeout;
   void			*select_timeout;
   int			select_return;
@@ -978,8 +978,7 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
 
           if (fdIndex == threadInfo->inputFd)
             {
-	      NSDebugMLLog(@"NSRunLoop", @"Fire perform on thread");
-              [threadInfo fire];
+              [threadInfo threadRelatedTaskContainerFire];
               watcher = nil;
             }
           else
@@ -1032,7 +1031,7 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
 
 + (BOOL) awakenedBefore: (NSDate*)when
 {
-  GSThreadCacheTaskContainer   *threadInfo = GSRunLoopInfoForThread(nil);
+  GSThreadRelatedTaskContainer   *threadInfo = GSThreadCacheTasks(nil);
   NSTimeInterval	ti = (when == nil) ? 0.0 : [when timeIntervalSinceNow];
   int			milliseconds = (ti <= 0.0) ? 0 : (int)(ti*1000);
   struct timeval	timeout;
@@ -1050,7 +1049,7 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
     &exception_fds, &timeout) > 0)
     {
       NSDebugMLLog(@"NSRunLoop", @"Fire perform on thread");
-      [threadInfo fire];
+      [threadInfo threadRelatedTaskContainerFire];
       return YES;
     }
   return NO;

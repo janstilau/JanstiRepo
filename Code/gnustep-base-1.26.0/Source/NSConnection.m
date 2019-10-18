@@ -113,7 +113,7 @@ skip_argspec(const char *ptr)
 static inline NSRunLoop *
 GSRunLoopForThread(NSThread *aThread)
 {
-  GSThreadCacheTaskContainer   *info = GSRunLoopInfoForThread(aThread);
+  GSThreadRelatedTaskContainer   *info = GSThreadCacheTasks(aThread);
 
   if (info == nil || info->loop == nil)
     {

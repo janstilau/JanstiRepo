@@ -86,8 +86,9 @@ static NSDate	*theFuture = nil;
  *	The GSRunLoopPerformer class is used to hold information about
  *	messages which are due to be sent to objects once each runloop
  *	iteration has passed.
+ // 为了封装 mode 相关的调用.
  */
-@interface GSRunLoopPerformer: NSObject
+@interface GSRunLoopModeRelatedPerformer: NSObject
 {
 @public
     SEL		selector;
@@ -103,7 +104,7 @@ static NSDate	*theFuture = nil;
                   order: (NSUInteger)order;
 @end
 
-@implementation GSRunLoopPerformer
+@implementation GSRunLoopModeRelatedPerformer
 
 - (void) dealloc
 {
@@ -448,7 +449,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
         if (count > 0)
         {
             NSAutoreleasePool	*arp = [NSAutoreleasePool new];
-            GSRunLoopPerformer	*array[count];
+            GSRunLoopModeRelatedPerformer	*array[count];
             NSMapEnumerator	enumerator;
             GSRunLoopCtxt		*original;
             void			*mode;
@@ -480,7 +481,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
                     
                     while (tmpCount--)
                     {
-                        GSRunLoopPerformer	*p;
+                        GSRunLoopModeRelatedPerformer	*p;
                         
                         p = GSIArrayItemAtIndex(performers, tmpCount).obj;
                         for (i = 0; i < count; i++)
@@ -720,7 +721,7 @@ static inline BOOL timerInvalidated(NSTimer *t)
 
 + (NSRunLoop*) _runLoopForThread: (NSThread*) aThread
 {
-    GSThreadCacheTaskContainer	*info = GSRunLoopInfoForThread(aThread);
+    GSThreadRelatedTaskContainer	*info = GSThreadCacheTasks(aThread);
     NSRunLoop             *current = info->loop;
     
     if (nil == current)
@@ -1364,7 +1365,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
             
             while (count--)
             {
-                GSRunLoopPerformer	*p;
+                GSRunLoopModeRelatedPerformer	*p;
                 
                 p = GSIArrayItemAtIndex(performers, count).obj;
                 if (p->target == target)
@@ -1403,7 +1404,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
             
             while (count--)
             {
-                GSRunLoopPerformer	*p;
+                GSRunLoopModeRelatedPerformer	*p;
                 
                 p = GSIArrayItemAtIndex(performers, count).obj;
                 if (p->target == target && sel_isEqual(p->selector, aSelector)
@@ -1443,13 +1444,12 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
                    modes: (NSArray*)modes
 {
     unsigned		count = [modes count];
-    
     if (count > 0)
     {
         NSString			*array[count];
-        GSRunLoopPerformer	*item;
         
-        item = [[GSRunLoopPerformer alloc] initWithSelector: aSelector
+        GSRunLoopModeRelatedPerformer *item =
+        [[GSRunLoopModeRelatedPerformer alloc] initWithSelector: aSelector
                                                      target: target
                                                    argument: argument
                                                       order: order];
@@ -1488,7 +1488,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
             end = GSIArrayCount(performers);
             for (i = 0; i < end; i++)
             {
-                GSRunLoopPerformer	*p;
+                GSRunLoopModeRelatedPerformer	*p;
                 
                 p = GSIArrayItemAtIndex(performers, i).obj;
                 if (p->order > order)

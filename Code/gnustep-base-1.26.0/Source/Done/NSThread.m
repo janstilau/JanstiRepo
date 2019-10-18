@@ -209,7 +209,7 @@ static BOOL                     disableTraceLocks = NO;
  *   run.
  * </p>
  */
-@interface GSPerformHolder : NSObject
+@interface GSThreadRelatedPerformHolder : NSObject
 {
     id			receiver;
     id			argument;
@@ -220,7 +220,7 @@ static BOOL                     disableTraceLocks = NO;
 @public
     NSException           *exception;
 }
-+ (GSPerformHolder*) newForReceiver: (id)r
++ (GSThreadRelatedPerformHolder*) newForReceiver: (id)r
                            argument: (id)a
                            selector: (SEL)s
                               modes: (NSArray*)m
@@ -606,7 +606,7 @@ gnustep_notify_enterMultiThread(void)
             entered_multi_threaded_state = YES;
             NS_DURING
             {
-                [GSPerformHolder class];	// Force initialization
+                [GSThreadRelatedPerformHolder class];	// Force initialization
                 
                 /*
                  * Post a notification if this is the first new thread
@@ -690,7 +690,7 @@ unregisterActiveThread(NSThread *thread)
                           object: thread
                         userInfo: nil];
         
-        [(GSThreadCacheTaskContainer*)thread->_runLoopInfo invalidate];
+        [(GSThreadRelatedTaskContainer*)thread->_runLoopInfo threadRelatedTaskContainerInvalidate];
         RELEASE(thread);
         pthread_setspecific(thread_object_key, nil); // 移除 NSThread 的绑定
     }
@@ -1073,7 +1073,8 @@ nsthreadLauncher(void *thread)
 
 @end
 
-@implementation GSThreadCacheTaskContainer
+@implementation GSThreadRelatedTaskContainer
+
 - (void) addPerformer: (id)performer
 {
     BOOL  signalled = NO;
@@ -1136,7 +1137,7 @@ nsthreadLauncher(void *thread)
 
 - (void) dealloc
 {
-    [self invalidate];
+    [self threadRelatedTaskContainerInvalidate];
     DESTROY(lock);
     DESTROY(loop);
     [super dealloc];
@@ -1149,7 +1150,7 @@ nsthreadLauncher(void *thread)
     return self;
 }
 
-- (void) invalidate
+- (void) threadRelatedTaskContainerInvalidate
 {
     NSArray       *p;
     
@@ -1178,7 +1179,7 @@ nsthreadLauncher(void *thread)
     [p makeObjectsPerformSelector: @selector(timerPerformerInvalidate)];
 }
 
-- (void) fire
+- (void) threadRelatedTaskContainerFire
 {
     NSArray	*toDo;
     unsigned int	i;
@@ -1226,7 +1227,7 @@ nsthreadLauncher(void *thread)
     
     for (i = 0; i < c; i++)
     {
-        GSPerformHolder	*h = [toDo objectAtIndex: i];
+        GSThreadRelatedPerformHolder	*h = [toDo objectAtIndex: i];
         
         [loop performSelector: @selector(timerPerformFire)
                        target: h
@@ -1238,10 +1239,10 @@ nsthreadLauncher(void *thread)
 @end
 
 // 类似于懒加载的机制, 获取当前 Thread 下存储的要执行的任务集合.
-GSThreadCacheTaskContainer *
-GSRunLoopInfoForThread(NSThread *aThread)
+GSThreadRelatedTaskContainer *
+GSThreadCacheTasks(NSThread *aThread)
 {
-    GSThreadCacheTaskContainer   *info;
+    GSThreadRelatedTaskContainer   *info;
     
     if (aThread == nil)
     {
@@ -1252,7 +1253,7 @@ GSRunLoopInfoForThread(NSThread *aThread)
         [gnustep_global_lock lock];
         if (aThread->_runLoopInfo == nil)
         {
-            aThread->_runLoopInfo = [GSThreadCacheTaskContainer new];
+            aThread->_runLoopInfo = [GSThreadRelatedTaskContainer new];
         }
         [gnustep_global_lock unlock];
     }
@@ -1260,17 +1261,17 @@ GSRunLoopInfoForThread(NSThread *aThread)
     return info;
 }
 
-@implementation GSPerformHolder
+@implementation GSThreadRelatedPerformHolder
 
-+ (GSPerformHolder*) newForReceiver: (id)r
++ (GSThreadRelatedPerformHolder*) newForReceiver: (id)r
                            argument: (id)a
                            selector: (SEL)s
                               modes: (NSArray*)m
                                lock: (NSConditionLock*)l
 {
-    GSPerformHolder	*h;
+    GSThreadRelatedPerformHolder	*h;
     
-    h = (GSPerformHolder*)NSAllocateObject(self, 0, NSDefaultMallocZone());
+    h = (GSThreadRelatedPerformHolder*)NSAllocateObject(self, 0, NSDefaultMallocZone());
     h->receiver = RETAIN(r);
     h->argument = RETAIN(a);
     h->selector = s;
@@ -1298,13 +1299,13 @@ GSRunLoopInfoForThread(NSThread *aThread)
 
 - (void) fire
 {
-    GSThreadCacheTaskContainer   *threadInfo;
+    GSThreadRelatedTaskContainer   *threadInfo;
     
     if (receiver == nil)
     {
         return;	// Already fired!
     }
-    threadInfo = GSRunLoopInfoForThread(GSCurrentThread());
+    threadInfo = GSThreadCacheTasks(GSCurrentThread());
     [threadInfo->loop cancelPerformSelectorsWithTarget: self];
     NS_DURING
     {
@@ -1405,10 +1406,10 @@ GSRunLoopInfoForThread(NSThread *aThread)
     {
         aThread = GSCurrentThread();;
     }
-    GSThreadCacheTaskContainer   *info = GSRunLoopInfoForThread(aThread);
+    GSThreadRelatedTaskContainer   *threadTaskContainer = GSThreadCacheTasks(aThread);
     if (t == aThread) // 如果是当前线程下提交任务.
     {
-        if (shouldWait == YES || info->loop == nil) // 如果当前线程的任务, 并且没有开启 runloop, 立即执行.
+        if (shouldWait == YES || threadTaskContainer->loop == nil) // 如果当前线程的任务, 并且没有开启 runloop, 立即执行.
         {
             /* Wait until done or no run loop.
              */
@@ -1416,26 +1417,27 @@ GSRunLoopInfoForThread(NSThread *aThread)
         } else { // 不用立即使用, 那么就提交给 runloop 在合适的时机在进行调用. 相当于做了任务的存储工作.
             /* Don't wait ... schedule operation in run loop.
              */
-            [info->loop performSelector: aSelector
+            [threadTaskContainer->loop performSelector: aSelector
                                  target: self
                                argument: anObject
                                   order: 0
                                   modes: anArray];
         }
     } else {
-        GSPerformHolder   *h;
+        GSThreadRelatedPerformHolder   *h;
         NSConditionLock	*lock = nil;
         if (shouldWait == YES) // 如果同步处理.
         {
             lock = [[NSConditionLock alloc] init];
         }
         
-        h = [GSPerformHolder newForReceiver: self
+        h =
+        [GSThreadRelatedPerformHolder newForReceiver: self
                                    argument: anObject
                                    selector: aSelector
                                       modes: anArray
                                        lock: lock];
-        [info addPerformer: h]; // 存起来.
+        [threadTaskContainer addPerformer: h]; // 存起来.
         if (lock != nil)// 需要同步, 就设置同步锁. 这里, 锁必须传出去用于唤醒.
         {
             [lock lockWhenCondition: 1];

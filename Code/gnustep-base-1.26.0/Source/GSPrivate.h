@@ -315,7 +315,7 @@ typedef enum {
 
 /* Used to handle events performed in one thread from another.
  */
-@interface      GSThreadCacheTaskContainer : NSObject
+@interface      GSThreadRelatedTaskContainer : NSObject
 {
   @public
   NSRunLoop             *loop; // thread 配套的 runloop 的信息.
@@ -331,10 +331,10 @@ typedef enum {
 /* Fire all pending performers in the current thread.  May only be called
  * from the runloop when the event/descriptor is triggered.
  */
-- (void) fire;
+- (void) threadRelatedTaskContainerFire;
 /* Cancel all pending performers.
  */
-- (void) invalidate;
+- (void) threadRelatedTaskContainerInvalidate;
 @end
 
 /* Return (and optionally create) GSRunLoopThreadInfo for the specified
@@ -342,8 +342,8 @@ typedef enum {
  * If aThread is nil and no value is set for the current thread, create
  * a GSRunLoopThreadInfo and set it for the current thread.
  */
-GSThreadCacheTaskContainer *
-GSRunLoopInfoForThread(NSThread *aThread) GS_ATTRIB_PRIVATE;
+GSThreadRelatedTaskContainer *
+GSThreadCacheTasks(NSThread *aThread) GS_ATTRIB_PRIVATE;
 
 /* Used by NSException uncaught exception handler - must not call any
  * methods/functions which might cause a recursive exception.
