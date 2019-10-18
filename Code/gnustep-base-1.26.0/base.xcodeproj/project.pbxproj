@@ -804,7 +804,6 @@
 		189070121610BF3C0003C892 /* NSStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStream.m; sourceTree = "<group>"; };
 		189070141610BF3C0003C892 /* GNUmakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
 		189070151610BF3C0003C892 /* GSFileHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSFileHandle.m; sourceTree = "<group>"; };
-		189070161610BF3C0003C892 /* GSRunLoopCtxt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSRunLoopCtxt.m; sourceTree = "<group>"; };
 		189070171610BF3C0003C892 /* Makefile.preamble */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.preamble; sourceTree = "<group>"; };
 		189070181610BF3C0003C892 /* NSMessagePort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMessagePort.m; sourceTree = "<group>"; };
 		189070191610BF3C0003C892 /* NSMessagePortNameServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMessagePortNameServer.m; sourceTree = "<group>"; };
@@ -1417,7 +1416,6 @@
 			children = (
 				189070141610BF3C0003C892 /* GNUmakefile */,
 				189070151610BF3C0003C892 /* GSFileHandle.m */,
-				189070161610BF3C0003C892 /* GSRunLoopCtxt.m */,
 				189070171610BF3C0003C892 /* Makefile.preamble */,
 				189070181610BF3C0003C892 /* NSMessagePort.m */,
 				189070191610BF3C0003C892 /* NSMessagePortNameServer.m */,
