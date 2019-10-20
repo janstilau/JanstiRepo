@@ -46,6 +46,9 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 
 @interface NSData : NSObject <NSCoding, NSCopying, NSMutableCopying>
 
+
+// 这个类就简单的当类似数组的概念处理吧, 里面很多的序列化的操作, 在 apple 的文档里面没有涉及.
+
 // Allocating and Initializing a Data Object
 
 + (id) data;
@@ -53,18 +56,13 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 	      length: (NSUInteger)length;
 + (id) dataWithBytesNoCopy: (void*)bytes
 		    length: (NSUInteger)length;
-#if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 + (id) dataWithBytesNoCopy: (void*)aBuffer
 		    length: (NSUInteger)bufferSize
 	      freeWhenDone: (BOOL)shouldFree;
-#endif
 + (id) dataWithContentsOfFile: (NSString*)path;
 + (id) dataWithContentsOfMappedFile: (NSString*)path;
-#if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 + (id) dataWithContentsOfURL: (NSURL*)url;
-#endif
 + (id) dataWithData: (NSData*)data;
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_9,GS_API_LATEST)
 - (id) initWithBase64EncodedData: (NSData*)base64Data
                          options: (NSDataBase64DecodingOptions)options;
 - (id) initWithBase64EncodedString: (NSString*)base64String
@@ -79,21 +77,16 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 - (instancetype) initWithBytesNoCopy: (void*)bytes
                               length: (NSUInteger)length
                          deallocator: (GSDataDeallocatorBlock)deallocBlock;
-#endif
 - (id) initWithBytes: (const void*)aBuffer
 	      length: (NSUInteger)bufferSize;
 - (id) initWithBytesNoCopy: (void*)aBuffer
 		    length: (NSUInteger)bufferSize;
-#if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (id) initWithBytesNoCopy: (void*)aBuffer
 		    length: (NSUInteger)bufferSize
 	      freeWhenDone: (BOOL)shouldFree;
-#endif
 - (id) initWithContentsOfFile: (NSString*)path;
 - (id) initWithContentsOfMappedFile: (NSString*)path;
-#if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (id) initWithContentsOfURL: (NSURL*)url;
-#endif
 - (id) initWithData: (NSData*)data;
 
 // Accessing Data
@@ -107,11 +100,8 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 	    range: (NSRange)aRange;
 - (NSData*) subdataWithRange: (NSRange)aRange;
 
-// base64
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_9,GS_API_LATEST)
 - (NSData *) base64EncodedDataWithOptions: (NSDataBase64EncodingOptions)options;
 - (NSString *) base64EncodedStringWithOptions: (NSDataBase64EncodingOptions)options;
-#endif
 
 // Querying a Data Object
 

@@ -350,8 +350,6 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.S";
 			fileType = pattern.proxy;
-			inputFiles = (
-			);
 			isEditable = 1;
 			outputFiles = (
 				"${OBJECT_FILE_DIR}/${INPUT_FILE_NAME}.o",
@@ -849,6 +847,7 @@
 		063150402359A45700EC6A60 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906F881610BF3C0003C892 /* NSData.m */,
 				18906FA91610BF3C0003C892 /* NSLock.m */,
 				063150412359A45700EC6A60 /* NSNotificationCenter.m */,
 				063150422359A45700EC6A60 /* NSJSONSerialization.m */,
@@ -1019,7 +1018,6 @@
 				18906F851610BF3C0003C892 /* NSConnection.m */,
 				18906F861610BF3C0003C892 /* NSCopyObject.m */,
 				18906F871610BF3C0003C892 /* NSCountedSet.m */,
-				18906F881610BF3C0003C892 /* NSData.m */,
 				18906F891610BF3C0003C892 /* NSDate.m */,
 				18906F8A1610BF3C0003C892 /* NSDateFormatter.m */,
 				18906F8B1610BF3C0003C892 /* NSDebug.m */,
