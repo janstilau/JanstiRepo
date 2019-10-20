@@ -136,7 +136,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The dispatch queue for `completionBlock`. If `NULL` (default), the main queue is used.
  */
-@property (nonatomic, strong, nullable) dispatch_queue_t completionQueue;
+@property (nonatomic, strong, nullable) dispatch_queue_t completionQueue; // 提供了, 就在这个 queue 中提交回调, 默认没有, 就是主队列中执行回调.
 
 /**
  The dispatch group for `completionBlock`. If `NULL` (default), a private dispatch group is used.

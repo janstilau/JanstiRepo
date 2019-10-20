@@ -220,18 +220,14 @@ static NSArray * AFPublicKeyTrustChainForServerTrust(SecTrustRef serverTrust) {
 
 #pragma mark -
 
-- (BOOL)evaluateServerTrust:(SecTrustRef)serverTrust
-                  forDomain:(NSString *)domain
+// 具体的代码没看, 总之, 在这里要进行证书的验证工作.
+- (BOOL)evaluateServerTrust:(SecTrustRef)serverTrust // 服务器端发送过来的证书
+                  forDomain:(NSString *)domain // domain
 {
-    if (domain && self.allowInvalidCertificates && self.validatesDomainName && (self.SSLPinningMode == AFSSLPinningModeNone || [self.pinnedCertificates count] == 0)) {
-        // https://developer.apple.com/library/mac/documentation/NetworkingInternet/Conceptual/NetworkingTopics/Articles/OverridingSSLChainValidationCorrectly.html
-        //  According to the docs, you should only trust your provided certs for evaluation.
-        //  Pinned certificates are added to the trust. Without pinned certificates,
-        //  there is nothing to evaluate against.
-        //
-        //  From Apple Docs:
-        //          "Do not implicitly trust self-signed certificates as anchors (kSecTrustOptionImplicitAnchors).
-        //           Instead, add your own (self-signed) CA certificate to the list of trusted anchors."
+    if (domain &&
+        self.allowInvalidCertificates && // 允许自定的证书
+        self.validatesDomainName && // 自己要验证证书.
+        (self.SSLPinningMode == AFSSLPinningModeNone || [self.pinnedCertificates count] == 0)) {
         NSLog(@"In order to validate a domain name for self signed certificates, you MUST use pinning.");
         return NO;
     }
