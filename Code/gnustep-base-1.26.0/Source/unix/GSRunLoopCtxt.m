@@ -246,7 +246,7 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
  */
 - (BOOL) pollUntil: (int)milliseconds within: (NSArray*)contexts
 {
-    GSRunLoopThreadInfo   *threadInfo = GSRunLoopInfoForThread(nil);
+    GSThreadRelatedTaskContainer   *threadInfo = GSRunLoopInfoForThread(nil);
     int		poll_return;
     int		fdEnd;	/* Number of descriptors being monitored. */
     int		fdIndex;

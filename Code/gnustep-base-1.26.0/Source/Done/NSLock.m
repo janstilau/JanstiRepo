@@ -295,7 +295,7 @@ MFINALIZE
 MISLOCKED
 MLOCK
 
-- (BOOL) lockBeforeDate: (NSDate*)limit
+- (BOOL) lockBeforeDate: (NSDate*)limit // 不断地调用 tryLock 以及 yield 函数.
 {
     do
     {
@@ -428,7 +428,7 @@ MUNLOCK
     pthread_cond_wait(&_condition, &_mutex);
 }
 
-- (BOOL) waitUntilDate: (NSDate*)limit
+- (BOOL) waitUntilDate: (NSDate*)limit //
 {
     NSTimeInterval ti = [limit timeIntervalSince1970];
     double secs, subsecs;
@@ -528,7 +528,7 @@ MUNLOCK
     return [_condition lockBeforeDate: limit];
 }
 
-- (void) lockWhenCondition: (NSInteger)value
+- (void) lockWhenCondition: (NSInteger)value // 如果当前的值, 不是设定的 condition 值, 直接进行 wait 操作. 
 {
     [_condition lock];
     while (value != _condition_value)

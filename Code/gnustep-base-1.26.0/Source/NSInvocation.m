@@ -18,16 +18,6 @@
 #include <sys/mman.h>
 #endif
 
-#if     defined(HAVE_MMAP)
-#  if   !defined(MAP_ANONYMOUS)
-#    if defined(MAP_ANON)
-#      define MAP_ANONYMOUS   MAP_ANON
-#    else
-#      undef  HAVE_MMAP
-#    endif
-#  endif
-#endif
-
 @implementation GSCodeBuffer
 
 + (GSCodeBuffer*) memoryWithSize: (NSUInteger)_size
@@ -38,33 +28,6 @@
 - (void*) buffer
 {
   return buffer;
-}
-
-- (void) dealloc
-{
-  DESTROY(frame);
-  if (size > 0)
-    {
-#if	defined(HAVE_FFI_PREP_CLOSURE_LOC)
-      ffi_closure_free(buffer);
-#else
-#if     defined(HAVE_MMAP)
-      munmap(buffer, size);
-#else
-#if     !defined(_WIN32) && defined(HAVE_MPROTECT)
-      if (mprotect(buffer, NSPageSize(), PROT_READ|PROT_WRITE) == -1)
-	{
-	  NSLog(@"Failed to protect memory as writable: %@", [NSError _last]);
-	}
-#endif
-      NSDeallocateMemoryPages(buffer, NSPageSize());
-#endif
-#endif
-      buffer = 0;
-      executable = 0;
-      size = 0;
-    }
-  [super dealloc];
 }
 
 - (void*) executable
@@ -677,80 +640,6 @@ _arg_addr(NSInvocation *inv, int index)
    );
 
   return [NSString stringWithUTF8String: buffer];
-}
-
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-  const char	*types = [_sig methodType];
-  unsigned int	i;
-
-  [aCoder encodeValueOfObjCType: @encode(char*)
-			     at: &types];
-
-  [aCoder encodeObject: _target];
-
-  [aCoder encodeValueOfObjCType: _inf[2].type
-			     at: &_selector];
-
-  for (i = 3; i <= _numArgs; i++)
-    {
-      const char	*type = _inf[i].type;
-      void		*datum;
-
-      datum = _arg_addr(self, i-1);
-
-      if (*type == _C_ID)
-	{
-	  [aCoder encodeObject: *(id*)datum];
-	}
-      else
-	{
-	  [aCoder encodeValueOfObjCType: type at: datum];
-	}
-    }
-  if (*_inf[0].type != _C_VOID)
-    {
-      [aCoder encodeValueOfObjCType: @encode(BOOL) at: &_validReturn];
-      if (_validReturn)
-	{
-	  [aCoder encodeValueOfObjCType: _inf[0].type at: _retval];
-	}
-    }
-}
-
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-  NSMethodSignature	*newSig;
-  const char		*types;
-  void			*datum;
-  unsigned int		i;
-
-  [aCoder decodeValueOfObjCType: @encode(char*) at: &types];
-  newSig = [NSMethodSignature signatureWithObjCTypes: types];
-  NSZoneFree(NSDefaultMallocZone(), (void*)types);
-
-  DESTROY(self);
-  self = RETAIN([NSInvocation invocationWithMethodSignature: newSig]);
-
-  [aCoder decodeValueOfObjCType: @encode(id) at: &_target];
-
-  [aCoder decodeValueOfObjCType: @encode(SEL) at: &_selector];
-
-  for (i = 3; i <= _numArgs; i++)
-    {
-      datum = _arg_addr(self, i-1);
-      [aCoder decodeValueOfObjCType: _inf[i].type at: datum];
-    }
-  _argsRetained = YES;
-  if (*_inf[0].type != _C_VOID)
-    {
-      [aCoder decodeValueOfObjCType: @encode(BOOL) at: &_validReturn];
-      if (_validReturn)
-        {
-          [aCoder decodeValueOfObjCType: _inf[0].type at: _retval];
-        }
-    }
-  return self;
 }
 
 @end

@@ -121,8 +121,6 @@ GSPrivateThreadID()
  * FIXME ... This is code for the microsoft compiler;
  * how do we make it work for gcc/clang?
  */
-#if defined(_WIN32) && defined(HAVE_WINDOWS_H)
-// Usage: SetThreadName (-1, "MainThread");
 #include <windows.h>
 const DWORD MS_VC_EXCEPTION=0x406D1388;
 
@@ -135,38 +133,6 @@ typedef struct tagTHREADNAME_INFO
     DWORD dwFlags; // Reserved for future use, must be zero.
 } THREADNAME_INFO;
 #pragma pack(pop)
-
-static int SetThreadName(DWORD dwThreadID, const char *threadName)
-{
-    THREADNAME_INFO info;
-    int result;
-    
-    info.dwType = 0x1000;
-    info.szName = threadName;
-    info.dwThreadID = dwThreadID;
-    info.dwFlags = 0;
-    
-    __try
-    {
-        RaiseException(MS_VC_EXCEPTION, 0,
-                       sizeof(info)/sizeof(ULONG_PTR), (ULONG_PTR*)&info);
-        result = 0;
-    }
-    __except(EXCEPTION_EXECUTE_HANDLER)
-    {
-        result = -1;
-    }
-}
-
-#define PTHREAD_SETNAME(a)  SetThreadName(-1, a)
-
-#endif
-#endif
-
-#ifndef PTHREAD_SETNAME
-#define PTHREAD_SETNAME(a) -1
-#endif
-
 
 // Some older BSD systems used a non-standard range of thread priorities.
 // Use these if they exist, otherwise define standard ones.
@@ -829,7 +795,7 @@ unregisterActiveThread(NSThread *thread)
 
 + (void) sleepForTimeInterval: (NSTimeInterval)ti
 {
-    GSSleepUntilIntervalSinceReferenceDate(GSPrivateTimeNow() + ti);
+    GSSleepUntilIntervalSinceReferenceDate(GSPrivateTimeNow() + ti); // 不断地调用 yield 就可以了
 }
 
 /**
@@ -1080,47 +1046,32 @@ nsthreadLauncher(void *thread)
     BOOL  signalled = NO;
     
     [lock lock];
-#if defined(_WIN32)
-    if (INVALID_HANDLE_VALUE != event)
+    NSTimeInterval        start = 0.0;
+    
+    /* The write could concievably fail if the pipe is full.
+     * In that case we need to release the lock temporarily to allow the other
+     * thread to consume data from the pipe.  It's possible that the thread
+     * and its runloop might stop during that ... so we need to check that
+     * outputFd is still valid.
+     */
+    while (outputFd >= 0
+           && NO == (signalled = (write(outputFd, "0", 1) == 1) ? YES : NO))
     {
-        if (SetEvent(event) == 0)
-        {
-            NSLog(@"Set event failed - %@", [NSError _last]);
-        }
-        else
-        {
-            signalled = YES;
-        }
-    }
-#else
-    {
-        NSTimeInterval        start = 0.0;
+        NSTimeInterval    now = [NSDate timeIntervalSinceReferenceDate];
         
-        /* The write could concievably fail if the pipe is full.
-         * In that case we need to release the lock temporarily to allow the other
-         * thread to consume data from the pipe.  It's possible that the thread
-         * and its runloop might stop during that ... so we need to check that
-         * outputFd is still valid.
-         */
-        while (outputFd >= 0
-               && NO == (signalled = (write(outputFd, "0", 1) == 1) ? YES : NO))
+        if (0.0 == start)
         {
-            NSTimeInterval    now = [NSDate timeIntervalSinceReferenceDate];
-            
-            if (0.0 == start)
-            {
-                start = now;
-            }
-            else if (now - start >= 1.0)
-            {
-                NSLog(@"Unable to signal %@ within a second; blocked?", self);
-                break;
-            }
-            [lock unlock];
-            [lock lock];
+            start = now;
         }
+        else if (now - start >= 1.0)
+        {
+            NSLog(@"Unable to signal %@ within a second; blocked?", self);
+            break;
+        }
+        [lock unlock];
+        [lock lock];
     }
-#endif
+    
     if (YES == signalled)
     {
         [performers addObject: performer];
@@ -1157,24 +1108,6 @@ nsthreadLauncher(void *thread)
     [lock lock];
     p = AUTORELEASE(performers);
     performers = nil;
-#ifdef _WIN32
-    if (event != INVALID_HANDLE_VALUE)
-    {
-        CloseHandle(event);
-        event = INVALID_HANDLE_VALUE;
-    }
-#else
-    if (inputFd >= 0)
-    {
-        close(inputFd);
-        inputFd = -1;
-    }
-    if (outputFd >= 0)
-    {
-        close(outputFd);
-        outputFd = -1;
-    }
-#endif
     [lock unlock];
     [p makeObjectsPerformSelector: @selector(timerPerformerInvalidate)];
 }

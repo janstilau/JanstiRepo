@@ -1,26 +1,3 @@
-/** Interface for NSStream for GNUStep
-   Copyright (C) 2006 Free Software Foundation, Inc.
-
-   Written by:  Derek Zhou <derekzhou@gmail.com>
-   Date: 2006
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   */
-
 #ifndef __NSStream_h_GNUSTEP_BASE_INCLUDE
 #define __NSStream_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -29,29 +6,25 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
-enum {   
-  NSStreamStatusNotOpen = 0,   
-  NSStreamStatusOpening = 1,
-  NSStreamStatusOpen = 2,   
-  NSStreamStatusReading = 3,   
-  NSStreamStatusWriting = 4,   
-  NSStreamStatusAtEnd = 5,   
-  NSStreamStatusClosed = 6,   
-  NSStreamStatusError = 7
+enum {
+    NSStreamStatusNotOpen = 0,
+    NSStreamStatusOpening = 1,
+    NSStreamStatusOpen = 2,
+    NSStreamStatusReading = 3,
+    NSStreamStatusWriting = 4,
+    NSStreamStatusAtEnd = 5,
+    NSStreamStatusClosed = 6,
+    NSStreamStatusError = 7
 };
 typedef NSUInteger NSStreamStatus;
 
 enum {   
-  NSStreamEventNone = 0,    
-  NSStreamEventOpenCompleted = 1,    
-  NSStreamEventHasBytesAvailable = 2,
-  NSStreamEventHasSpaceAvailable = 4,    
-  NSStreamEventErrorOccurred = 8,    
-  NSStreamEventEndEncountered = 16
+    NSStreamEventNone = 0,
+    NSStreamEventOpenCompleted = 1,
+    NSStreamEventHasBytesAvailable = 2,
+    NSStreamEventHasSpaceAvailable = 4,
+    NSStreamEventErrorOccurred = 8,
+    NSStreamEventEndEncountered = 16
 };
 typedef NSUInteger NSStreamEvent;
 
@@ -64,17 +37,17 @@ typedef NSUInteger NSStreamEvent;
 @class NSURL;
 
 /**
- * NSStream is an abstract class for objects representing streams. 
+ * NSStream is an abstract class for objects representing streams.
  */
 @interface NSStream : NSObject
 
 /**
- * Creates and returns by reference an NSInputStream object and NSOutputStream 
+ * Creates and returns by reference an NSInputStream object and NSOutputStream
  * object for a socket connection with the specified port on host.
  */
 + (void) getStreamsToHost: (NSHost *)host 
-                     port: (NSInteger)port 
-              inputStream: (NSInputStream **)inputStream 
+                     port: (NSInteger)port
+              inputStream: (NSInputStream **)inputStream
              outputStream: (NSOutputStream **)outputStream;
 
 /**
@@ -123,13 +96,13 @@ typedef NSUInteger NSStreamEvent;
 - (void) setDelegate: (id)delegate;
 
 /**
- * Sets the value of the property specified by key to property, returns YES 
+ * Sets the value of the property specified by key to property, returns YES
  * if the key-value pair are accepted by the receiver.
  */
 - (BOOL) setProperty: (id)property forKey: (NSString *)key;
 
 /**
- * Returns an NSError object representing the stream error, or nil if no error 
+ * Returns an NSError object representing the stream error, or nil if no error
  * has been encountered.
  */
 - (NSError *) streamError;
@@ -156,19 +129,19 @@ typedef NSUInteger NSStreamEvent;
 + (id) inputStreamWithData: (NSData *)data;
 
 /**
- * Creates and returns an initialized NSInputStream object that reads data from 
+ * Creates and returns an initialized NSInputStream object that reads data from
  * the file at the specified path.
  */
 + (id) inputStreamWithFileAtPath: (NSString *)path;
- 
+
 /**
- * Creates and returns an initialized NSInputStream object that reads data from 
+ * Creates and returns an initialized NSInputStream object that reads data from
  * the specified URL.
  */
 + (id) inputStreamWithURL: (NSURL *)url;
 
 /**
- * Returns a pointer to the read buffer in buffer and, by reference, the number 
+ * Returns a pointer to the read buffer in buffer and, by reference, the number
  * of bytes available in len.
  */
 - (BOOL) getBuffer: (uint8_t **)buffer length: (NSUInteger *)len;
@@ -182,11 +155,11 @@ typedef NSUInteger NSStreamEvent;
 
 /**
  * Returns an initialized NSInputStream object for reading from data.
- */ 
+ */
 - (id) initWithData: (NSData *)data;
 
 /**
- * Returns an initialized NSInputStream object for reading from the file at the 
+ * Returns an initialized NSInputStream object for reading from the file at the
  * specified path.
  */
 - (id) initWithFileAtPath: (NSString *)path;
@@ -230,13 +203,13 @@ typedef NSUInteger NSStreamEvent;
 
 /**
  * Returns YES if the receiver can be written to,
- * or if a write must be attempted 
+ * or if a write must be attempted
  * in order to determine if space is available.
  */
 - (BOOL) hasSpaceAvailable;
 
 /**
- * Returns an initialized NSOutputStream object that can write to buffer, 
+ * Returns an initialized NSOutputStream object that can write to buffer,
  * up to a maximum of capacity bytes.
  */
 - (id) initToBuffer: (uint8_t *)buffer capacity: (NSUInteger)capacity;
@@ -244,7 +217,7 @@ typedef NSUInteger NSStreamEvent;
 /**
  * Returns an initialized NSOutputStream object for writing to the file
  * specified by path.<br />
- * If shouldAppend is YES, newly written data will be appended to any 
+ * If shouldAppend is YES, newly written data will be appended to any
  * existing file contents.
  */
 - (id) initToFileAtPath: (NSString *)path append: (BOOL)shouldAppend;
@@ -296,11 +269,6 @@ GS_EXPORT NSString * const NSStreamSOCKSProxyVersionKey;
 - (void) stream: (NSStream*)sStream handleEvent: (NSStreamEvent)anEvent;
 @end
 #endif
-
-#if	defined(__cplusplus)
-}
-#endif
-
 #if	!NO_GNUSTEP && !defined(GNUSTEP_BASE_INTERNAL)
 #import	<GNUstepBase/NSStream+GNUstepBase.h>
 #endif

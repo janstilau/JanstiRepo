@@ -807,7 +807,6 @@
 		189070171610BF3C0003C892 /* Makefile.preamble */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.preamble; sourceTree = "<group>"; };
 		189070181610BF3C0003C892 /* NSMessagePort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMessagePort.m; sourceTree = "<group>"; };
 		189070191610BF3C0003C892 /* NSMessagePortNameServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMessagePortNameServer.m; sourceTree = "<group>"; };
-		1890701A1610BF3C0003C892 /* NSStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStream.m; sourceTree = "<group>"; };
 		1890701B1610BF3C0003C892 /* NSUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUserDefaults.m; sourceTree = "<group>"; };
 		1890701C1610BF3C0003C892 /* win32-def.top */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "win32-def.top"; sourceTree = "<group>"; };
 		1890701D1610BF3C0003C892 /* win32-load.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "win32-load.h"; sourceTree = "<group>"; };
@@ -854,6 +853,7 @@
 		063150402359A45700EC6A60 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906FA91610BF3C0003C892 /* NSLock.m */,
 				063150412359A45700EC6A60 /* NSNotificationCenter.m */,
 				063150422359A45700EC6A60 /* NSJSONSerialization.m */,
 				063150432359A45700EC6A60 /* NSKeyValueCoding.m */,
@@ -874,6 +874,14 @@
 				063150522359A45700EC6A60 /* NSArray.m */,
 			);
 			path = Done;
+			sourceTree = "<group>";
+		};
+		0669BA4F235C4D2A00D61077 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				18906FE31610BF3C0003C892 /* NSURLRequest.m */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		18394B031610D85D00335E85 /* Additions */ = {
@@ -983,6 +991,7 @@
 		18394BFF1610E9D600335E85 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				0669BA4F235C4D2A00D61077 /* Network */,
 				063150402359A45700EC6A60 /* Done */,
 				0631503F2359906300EC6A60 /* ThreadRelated */,
 				18F8D04F1724534E00420DA5 /* KVO */,
@@ -1033,7 +1042,6 @@
 				18906FA61610BF3C0003C892 /* NSKeyedArchiver.m */,
 				18906FA71610BF3C0003C892 /* NSKeyedUnarchiver.m */,
 				18906FA81610BF3C0003C892 /* NSLocale.m */,
-				18906FA91610BF3C0003C892 /* NSLock.m */,
 				18906FAA1610BF3C0003C892 /* NSLog.m */,
 				18906FAB1610BF3C0003C892 /* NSMapTable.m */,
 				18906FAC1610BF3C0003C892 /* NSMessagePort.m */,
@@ -1083,7 +1091,6 @@
 				18906FE01610BF3C0003C892 /* NSURLHandle.m */,
 				18906FE11610BF3C0003C892 /* NSURLProtectionSpace.m */,
 				18906FE21610BF3C0003C892 /* NSURLProtocol.m */,
-				18906FE31610BF3C0003C892 /* NSURLRequest.m */,
 				18906FE41610BF3C0003C892 /* NSURLResponse.m */,
 				18906FE71610BF3C0003C892 /* NSUserDefaults.m */,
 				AD197C03189A4D5F000F6CF9 /* NSUserNotification.m */,
@@ -1419,7 +1426,6 @@
 				189070171610BF3C0003C892 /* Makefile.preamble */,
 				189070181610BF3C0003C892 /* NSMessagePort.m */,
 				189070191610BF3C0003C892 /* NSMessagePortNameServer.m */,
-				1890701A1610BF3C0003C892 /* NSStream.m */,
 				1890701B1610BF3C0003C892 /* NSUserDefaults.m */,
 			);
 			path = win32;

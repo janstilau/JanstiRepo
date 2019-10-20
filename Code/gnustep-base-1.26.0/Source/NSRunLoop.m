@@ -128,67 +128,66 @@ static inline BOOL timerInvalidated(NSTimer *t)
     if (!context) { return found; }
     GSIArray    performers = context->modeRelatedPerformers;
     unsigned    count = GSIArrayCount(performers);
-    if (count > 0)
+    if (!count) { return NO; }
+    
+    NSAutoreleasePool    *arp = [NSAutoreleasePool new];
+    GSRunLoopModeRelatedPerformer    *array[count];
+    NSMapEnumerator    enumerator;
+    GSRunLoopCtxt        *originalContext;
+    void            *mode;
+    unsigned        i;
+    
+    found = YES;
+    
+    /* We have to remove the performers before firing, so we copy
+     * the pointers without releasing the objects, and then set
+     * the performers to be empty.  The copied objects in 'array'
+     * will be released later.
+     */
+    for (i = 0; i < count; i++)
     {
-        NSAutoreleasePool    *arp = [NSAutoreleasePool new];
-        GSRunLoopModeRelatedPerformer    *array[count];
-        NSMapEnumerator    enumerator;
-        GSRunLoopCtxt        *originalContext;
-        void            *mode;
-        unsigned        i;
-        
-        found = YES;
-        
-        /* We have to remove the performers before firing, so we copy
-         * the pointers without releasing the objects, and then set
-         * the performers to be empty.  The copied objects in 'array'
-         * will be released later.
-         */
-        for (i = 0; i < count; i++)
+        array[i] = GSIArrayItemAtIndex(performers, i).obj;
+    }
+    performers->count = 0; // 只要在 context 的 performs , 代表着就是, 只要 context 有机会运行, 里面的内容都要进行.
+    
+    /* Remove the requests that we are about to fire from all modes.
+     */
+    originalContext = context;
+    enumerator = NSEnumerateMapTable(_contextMap);
+    // 下面的意思是, 同样的一个调用, 可能在不同的 mode 里面都进行了注册, 如果一个 mode 里面进行了调用, 要去除另一个 mode 的调用.
+    while (NSNextMapEnumeratorPair(&enumerator, &mode, (void**)&context))
+    {
+        if (context != nil && context != originalContext)
         {
-            array[i] = GSIArrayItemAtIndex(performers, i).obj;
-        }
-        performers->count = 0; // 只要在 context 的 performs , 代表着就是, 只要 context 有机会运行, 里面的内容都要进行.
-        
-        /* Remove the requests that we are about to fire from all modes.
-         */
-        originalContext = context;
-        enumerator = NSEnumerateMapTable(_contextMap);
-        // 下面的意思是, 同样的一个调用, 可能在不同的 mode 里面都进行了注册, 如果一个 mode 里面进行了调用, 要去除另一个 mode 的调用.
-        while (NSNextMapEnumeratorPair(&enumerator, &mode, (void**)&context))
-        {
-            if (context != nil && context != originalContext)
+            GSIArray    performers = context->modeRelatedPerformers;
+            unsigned    tmpCount = GSIArrayCount(performers);
+            
+            while (tmpCount--)
             {
-                GSIArray    performers = context->modeRelatedPerformers;
-                unsigned    tmpCount = GSIArrayCount(performers);
+                GSRunLoopModeRelatedPerformer    *p;
                 
-                while (tmpCount--)
+                p = GSIArrayItemAtIndex(performers, tmpCount).obj;
+                for (i = 0; i < count; i++)
                 {
-                    GSRunLoopModeRelatedPerformer    *p;
-                    
-                    p = GSIArrayItemAtIndex(performers, tmpCount).obj;
-                    for (i = 0; i < count; i++)
+                    if (p == array[i])
                     {
-                        if (p == array[i])
-                        {
-                            GSIArrayRemoveItemAtIndex(performers, tmpCount);
-                        }
+                        GSIArrayRemoveItemAtIndex(performers, tmpCount);
                     }
                 }
             }
         }
-        NSEndMapTableEnumeration(&enumerator);
-        
-        /* Finally, fire the requests ands release them.
-         */
-        for (i = 0; i < count; i++)
-        {
-            [array[i] modeRelatedPerformerFire];
-            RELEASE(array[i]);
-            IF_NO_GC([arp emptyPool];)
-        }// 真正的注册的回调的调用.
-        [arp drain];
     }
+    NSEndMapTableEnumeration(&enumerator);
+    
+    /* Finally, fire the requests ands release them.
+     */
+    for (i = 0; i < count; i++)
+    {
+        [array[i] modeRelatedPerformerFire];
+        RELEASE(array[i]);
+        IF_NO_GC([arp emptyPool];)
+    }// 真正的注册的回调的调用.
+    [arp drain];
     return found;
 }
 

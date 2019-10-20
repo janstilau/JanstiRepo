@@ -57,11 +57,23 @@ typedef NSUInteger NSURLRequestCachePolicy;
  * URL, how to cache the results, and when to deal with a slow/hung
  * load process by timing out.
  */
+
+// 一个简简单单的数据类而已.
+
 @interface NSURLRequest : NSObject <NSCoding, NSCopying, NSMutableCopying>
 {
-#if	GS_EXPOSE(NSURLRequest)
-    void *_NSURLRequestInternal;
-#endif
+@public:
+    NSData            *body;
+    NSInputStream            *bodyStream;
+    NSString            *method;
+    NSMutableDictionary        *headers; // 所以, 所谓的 headers 不过是一个 NSDictary, 不过是在序列化的时候, 变成了 http header 的那个形式而已.
+    BOOL                shouldHandleCookies;
+    BOOL                          debug;
+    NSURL                *URL;
+    NSURL                *mainDocumentURL;
+    NSURLRequestCachePolicy    cachePolicy;
+    NSTimeInterval        timeoutInterval;
+    NSMutableDictionary        *properties;
 }
 
 /*
