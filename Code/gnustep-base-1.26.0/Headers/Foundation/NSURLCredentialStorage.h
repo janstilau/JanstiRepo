@@ -1,27 +1,3 @@
-/* Interface for NSURLCredentialStorage for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <frm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
-
 #ifndef __NSURLCredentialStorage_h_GNUSTEP_BASE_INCLUDE
 #define __NSURLCredentialStorage_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -29,11 +5,6 @@
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_2,GS_API_LATEST) && GS_API_VERSION( 11300,GS_API_LATEST)
 
 #import	<Foundation/NSObject.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSDictionary;
 @class NSString;
 @class NSURLCredential;
@@ -46,12 +17,23 @@ extern NSString *const NSURLCredentialStorageChangedNotification;
 
 /**
  * Provides shared storage of credentials.
+ *
+ * 类似于 NSURLCachedResponse 一样, 就是为了存储相对应的 crential 的一个工具类. 本质上就是key value 对应.
+ * 而 space 的 hash 值是通过下面的函数计算出来的.
+ *  - (NSUInteger) hash
+     {
+         return [[self host] hash]
+         + [self port]
+         + [[self realm] hash]
+         + [[self protocol] hash]
+         + (uintptr_t)self->proxyType
+         + (uintptr_t)self->authenticationMethod;
+     }
  */
 @interface NSURLCredentialStorage : NSObject
 {
-#if	GS_EXPOSE(NSURLCredentialStorage)
-  void *_NSURLCredentialStorageInternal;
-#endif
+    NSMutableDictionary    *credentials;
+    NSMutableDictionary    *defaults;
 }
 
 /**
@@ -79,7 +61,7 @@ extern NSString *const NSURLCredentialStorageChangedNotification;
  * nil if none is set.
  */
 - (NSURLCredential *) defaultCredentialForProtectionSpace:
-  (NSURLProtectionSpace *)space;
+(NSURLProtectionSpace *)space;
 
 /**
  * Removes the credential from both in-memory and persistent storage
@@ -101,14 +83,9 @@ extern NSString *const NSURLCredentialStorageChangedNotification;
  * been set in space.
  */
 - (void) setDefaultCredential: (NSURLCredential *)credential
-	   forProtectionSpace: (NSURLProtectionSpace *)space;
+           forProtectionSpace: (NSURLProtectionSpace *)space;
 
 @end
 
-#if	defined(__cplusplus)
-}
 #endif
-
-#endif
-
 #endif

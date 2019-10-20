@@ -30,10 +30,6 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSString;
 
 /**
@@ -44,18 +40,19 @@ typedef enum {
   NSURLCredentialPersistenceForSession,	/** Save for current session */
   NSURLCredentialPersistencePermanent,	/** Save forever (on disk) */
   NSURLCredentialPersistenceSynchronizable
-
 } NSURLCredentialPersistence;
 
 
 /**
  * Represents a user/password credential
+ * Credential 不可能是这么简单的东西, 这里 , GNU 只是处理了账号密码这一种情形.
  */
 @interface NSURLCredential : NSObject <NSCopying>
 {
-#if	GS_EXPOSE(NSURLCredential)
-  void *_NSURLCredentialInternal;
-#endif
+    NSString            *user;
+    NSString            *password;
+    NSURLCredentialPersistence    persistence;
+    BOOL                hasPassword;
 }
 
 /**
@@ -108,10 +105,6 @@ typedef enum {
 - (NSString *) user;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

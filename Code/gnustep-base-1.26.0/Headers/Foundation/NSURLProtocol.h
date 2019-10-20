@@ -103,14 +103,7 @@ didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 
 
 /**
- * <p>Subclasses of NSURLProtocol implement basic handling of URL
- * loading for specific protocols.  The NSURLProtocol class
- * itsself is a semi-abstract class giving the essential
- * structure for the subclasses.
- * </p>
- * <p>You never instantiate NSURLProtocol yourself ... it should only
- * ever be done by other classes within the URL loading system.
- * </p>
+Don't instantiate an NSURLProtocol subclass directly. Instead, create subclasses for any custom protocols or URL schemes that your app supports. When a download starts, the system creates the appropriate protocol object to handle the corresponding URL request. You define your protocol class and call the registerClass: class method during your app’s launch time so that the system is aware of your protocol.
  */
 @interface NSURLProtocol : NSObject
 {

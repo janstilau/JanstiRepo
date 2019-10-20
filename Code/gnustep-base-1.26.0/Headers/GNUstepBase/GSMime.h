@@ -1,30 +1,30 @@
 /** Interface for MIME parsing classes
-
-   Copyright (C) 2000-2016 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald  <rfm@gnu.org>
-
-   Date: October 2000
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   AutogsdocSource: Additions/GSMime.m
-*/
+ 
+ Copyright (C) 2000-2016 Free Software Foundation, Inc.
+ 
+ Written by:  Richard Frith-Macdonald  <rfm@gnu.org>
+ 
+ Date: October 2000
+ 
+ This file is part of the GNUstep Base Library.
+ 
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+ 
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free
+ Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ Boston, MA 02111 USA.
+ 
+ AutogsdocSource: Additions/GSMime.m
+ */
 
 #ifndef __GSMime_h_GNUSTEP_BASE_INCLUDE
 #define __GSMime_h_GNUSTEP_BASE_INCLUDE
@@ -58,32 +58,32 @@ extern "C" {
  */
 @interface	GSMimeCodingContext : NSObject
 {
-  BOOL		atEnd;	/* Flag to say that data has ended.	*/
+    BOOL		atEnd;	/* Flag to say that data has ended.	*/
 }
 - (BOOL) atEnd;
 - (BOOL) decodeData: (const void*)sData
              length: (NSUInteger)length
-	   intoData: (NSMutableData*)dData;
+           intoData: (NSMutableData*)dData;
 - (void) setAtEnd: (BOOL)flag;
 @end
 
 @interface      GSMimeHeader : NSObject <NSCopying>
 {
 #if	GS_EXPOSE(GSMimeHeader)
-  NSString              *name;
-  NSString              *lower;
-  NSString              *value;
-  NSMutableDictionary   *objects;
-  NSMutableDictionary	*params;
+    NSString              *name;
+    NSString              *lower;
+    NSString              *value;
+    NSMutableDictionary   *objects;
+    NSMutableDictionary	*params;
 #endif
 #if     GS_NONFRAGILE
 #else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
+    /* Pointer to private additional data used to avoid breaking ABI
+     * when we don't have the non-fragile ABI available.
+     * Use this mechanism rather than changing the instance variable
+     * layout (see Source/GSInternal.h for details).
+     */
+@private id _internal GS_UNUSED_IVAR;
 #endif
 }
 + (GSMimeHeader*) headerWithName: (NSString*)n
@@ -98,10 +98,10 @@ extern "C" {
 - (NSUInteger) estimatedSize;
 - (NSString*) fullValue;
 - (id) initWithName: (NSString*)n
-	      value: (NSString*)v;
+              value: (NSString*)v;
 - (id) initWithName: (NSString*)n
-	      value: (NSString*)v
-	 parameters: (NSDictionary*)p;
+              value: (NSString*)v
+         parameters: (NSDictionary*)p;
 - (NSString*) name;
 - (NSString*) namePreservingCase: (BOOL)preserve;
 - (id) objectForKey: (NSString*)k;
@@ -128,11 +128,11 @@ extern "C" {
 @interface	GSMimeDocument : NSObject <NSCopying>
 {
 #if	GS_EXPOSE(GSMimeDocument)
-  NSMutableArray	*headers;
-  id			content;
+    NSMutableArray	*headers;
+    id			content;
 #endif
 #if	!GS_NONFRAGILE
-  void			*_unused;
+    void			*_unused;
 #endif
 }
 
@@ -146,8 +146,8 @@ extern "C" {
 + (NSData*) decodeBase64: (NSData*)source;
 + (NSString*) decodeBase64String: (NSString*)source;
 + (GSMimeDocument*) documentWithContent: (id)newContent
-				   type: (NSString*)type
-				   name: (NSString*)name;
+                                   type: (NSString*)type
+                                   name: (NSString*)name;
 /**
  * Encode the source data to base64 encoding and return the result.<br />
  * The resulting data is ASCII text and contains only the base64 encoded
@@ -166,7 +166,7 @@ extern "C" {
 - (void) addHeader: (GSMimeHeader*)info;
 - (GSMimeHeader*) addHeader: (NSString*)name
                       value: (NSString*)value
-		 parameters: (NSDictionary*)parameters;
+                 parameters: (NSDictionary*)parameters;
 - (NSArray*) allHeaders;
 - (id) content;
 - (id) contentByID: (NSString*)key;
@@ -197,60 +197,60 @@ extern "C" {
 - (GSMimeHeader*) makeContentID;
 - (GSMimeHeader*) makeHeader: (NSString*)name
                        value: (NSString*)value
-		  parameters: (NSDictionary*)parameters;
+                  parameters: (NSDictionary*)parameters;
 - (GSMimeHeader*) makeMessageID;
 - (NSMutableData*) rawMimeData;
 - (NSMutableData*) rawMimeData: (BOOL)isOuter;
 - (NSMutableData*) rawMimeData: (BOOL)isOuter foldedAt: (NSUInteger)fold;
 - (void) setContent: (id)newContent;
 - (void) setContent: (id)newContent
-	       type: (NSString*)type;
+               type: (NSString*)type;
 - (void) setContent: (id)newContent
-	       type: (NSString*)type
-	       name: (NSString*)name;
+               type: (NSString*)type
+               name: (NSString*)name;
 - (void) setContentType: (NSString*)newType;
 - (void) setHeader: (GSMimeHeader*)info;
 - (GSMimeHeader*) setHeader: (NSString*)name
                       value: (NSString*)value
-		 parameters: (NSDictionary*)parameters;
+                 parameters: (NSDictionary*)parameters;
 
 @end
 
 @interface	GSMimeParser : NSObject
 {
 #if	GS_EXPOSE(GSMimeParser)
-  NSMutableData		*data;
-  unsigned char		*bytes;
-  unsigned		dataEnd;
-  unsigned		sectionStart;
-  unsigned		lineStart;
-  unsigned		lineEnd;
-  unsigned		input;
-  /* During header parsing, we use this field to count white space we are
-   * expecting to have after an encoded word.
-   * During bnody parsing, we use the field to count expected content bytes.
-   */
-  unsigned		expect;
-  unsigned		rawBodyLength;
-  struct {
-    unsigned int	inBody:1;
-    unsigned int	isHttp:1;
-    unsigned int	complete:1;
-    unsigned int	hadErrors:1;
-    unsigned int	buggyQuotes:1;
-    unsigned int	wantEndOfLine:1;
-    unsigned int	excessData:1;
-    unsigned int	headersOnly:1;
-    unsigned int        encodedWord:1;
-  } flags;
-  NSData		*boundary;	// Also overloaded to hold excess
-  GSMimeDocument	*document;
-  GSMimeParser		*child;
-  GSMimeCodingContext	*context;
-  NSStringEncoding	_defaultEncoding;
+    NSMutableData		*data;
+    unsigned char		*bytes;
+    unsigned		dataEnd;
+    unsigned		sectionStart;
+    unsigned		lineStart;
+    unsigned		lineEnd;
+    unsigned		input;
+    /* During header parsing, we use this field to count white space we are
+     * expecting to have after an encoded word.
+     * During bnody parsing, we use the field to count expected content bytes.
+     */
+    unsigned		expect;
+    unsigned		rawBodyLength;
+    struct {
+        unsigned int	inBody:1;
+        unsigned int	isHttp:1;
+        unsigned int	complete:1;
+        unsigned int	hadErrors:1;
+        unsigned int	buggyQuotes:1;
+        unsigned int	wantEndOfLine:1;
+        unsigned int	excessData:1;
+        unsigned int	headersOnly:1;
+        unsigned int        encodedWord:1;
+    } flags;
+    NSData		*boundary;	// Also overloaded to hold excess
+    GSMimeDocument	*document;
+    GSMimeParser		*child;
+    GSMimeCodingContext	*context;
+    NSStringEncoding	_defaultEncoding;
 #endif
 #if	!GS_NONFRAGILE
-  void			*_unused;
+    void			*_unused;
 #endif
 }
 
@@ -260,9 +260,9 @@ extern "C" {
 - (GSMimeCodingContext*) contextFor: (GSMimeHeader*)info;
 - (NSMutableData*) data;
 - (BOOL) decodeData: (NSData*)sData
-	  fromRange: (NSRange)aRange
-	   intoData: (NSMutableData*)dData
-	withContext: (GSMimeCodingContext*)con;
+          fromRange: (NSRange)aRange
+           intoData: (NSMutableData*)dData
+        withContext: (GSMimeCodingContext*)con;
 - (NSData*) excess;
 - (void) expectNoHeaders;
 - (BOOL) isComplete;
@@ -299,10 +299,10 @@ extern "C" {
  */
 @interface GSMimeSerializer : NSObject <NSCopying>
 {
-  NSUInteger    foldAt;         /** Fold long lines at this position */
-  BOOL          use8bit;        /** Output does not need to be 7bit-safe */
-  NSString      *dataEncoding;  /** To make 8bit data 7bit-safe */
-  NSString      *textEncoding;  /** To make 8bit text 7bit-safe */
+    NSUInteger    foldAt;         /** Fold long lines at this position */
+    BOOL          use8bit;        /** Output does not need to be 7bit-safe */
+    NSString      *dataEncoding;  /** To make 8bit data 7bit-safe */
+    NSString      *textEncoding;  /** To make 8bit text 7bit-safe */
 }
 
 /** Returns an autorelease GSMimeSerializer configured for transfer
@@ -334,7 +334,7 @@ extern "C" {
 
 /** Returns the maximum line length (excluding the trailing CRLF) to which
  * we will encode data. See also the -setFoldAt: method.
- */ 
+ */
 - (NSUInteger) foldAt;
 
 /** This method allows you to control the position at which lines in
@@ -388,11 +388,11 @@ GS_EXPORT NSString* const GSMimeErrorDomain;
 /** The error codes used in the GSMimeErrorDomain
  */
 typedef enum {
-  GSMimeSMTPAbort,
-  GSMimeSMTPTimeout,
-  GSMimeSMTPCommsEnd,
-  GSMimeSMTPCommsError,
-  GSMimeSMTPServerResponse
+    GSMimeSMTPAbort,
+    GSMimeSMTPTimeout,
+    GSMimeSMTPCommsEnd,
+    GSMimeSMTPCommsError,
+    GSMimeSMTPServerResponse
 } GSMimeErrorCode;
 
 @class	NSError;
@@ -407,7 +407,7 @@ typedef enum {
 #if	GS_NONFRAGILE
 #  if	defined(GS_GSMimeSMTPClient_IVARS)
 @public
-GS_GSMimeSMTPClient_IVARS;
+    GS_GSMimeSMTPClient_IVARS;
 #  endif
 #else
 @private id _internal;
@@ -427,7 +427,7 @@ GS_GSMimeSMTPClient_IVARS;
  * If limit is nil then a date in the distant future is used.<br />
  * If the queue is emptied in time, this method returns YES, otherwise it
  * returns NO.
- */ 
+ */
 - (BOOL) flush: (NSDate*)limit;
 
 /** Returns the last error encountered, or nil if there is none recorded.
@@ -500,11 +500,11 @@ GS_GSMimeSMTPClient_IVARS;
  */
 @interface	NSObject (GSMimeSMTPClient)
 - (void) smtpClient: (GSMimeSMTPClient*)client
-	 mimeFailed: (GSMimeDocument*)doc;	/* Failed to send */
+         mimeFailed: (GSMimeDocument*)doc;	/* Failed to send */
 - (void) smtpClient: (GSMimeSMTPClient*)client
-	 mimeSent: (GSMimeDocument*)doc;	/* Sent successfully */
+           mimeSent: (GSMimeDocument*)doc;	/* Sent successfully */
 - (void) smtpClient: (GSMimeSMTPClient*)client
-	 mimeUnsent: (GSMimeDocument*)doc;	/* Aborted (not sent) */
+         mimeUnsent: (GSMimeDocument*)doc;	/* Aborted (not sent) */
 @end
 
 
