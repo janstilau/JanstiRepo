@@ -1,15 +1,3 @@
-/* Caveats:
- 
- Some implementations will need to be changed.
- Does not support all justification directives for `%@' in format strings
- on non-GNU-libc systems.
- */
-
-/*
- Locales somewhat supported.
- Limited choice of default encodings.
- */
-
 #define GS_UNSAFE_REGEX 1
 #import "common.h"
 #include <stdio.h>
@@ -46,35 +34,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#if	defined(HAVE_SYS_FCNTL_H)
-#  include	<sys/fcntl.h>
-#elif	defined(HAVE_FCNTL_H)
-#  include	<fcntl.h>
-#endif
-
 #include <stdio.h>
 #include <wchar.h>
-
-#ifdef HAVE_MALLOC_H
-#  ifndef __OpenBSD__
-#    include <malloc.h>
-#  endif
-#endif
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#endif
-#if	defined(HAVE_UNICODE_UCOL_H)
-# include <unicode/ucol.h>
-#endif
-#if	defined(HAVE_UNICODE_UNORM2_H)
-# include <unicode/unorm2.h>
-#endif
-#if     defined(HAVE_UNICODE_USTRING_H)
-# include <unicode/ustring.h>
-#endif
-#if     defined(HAVE_UNICODE_USEARCH_H)
-# include <unicode/usearch.h>
-#endif
 
 /* Create local inline versions of key functions for case-insensitive operations
  */
@@ -126,7 +87,7 @@ static BOOL                     (*nonBaseImp)(id, SEL, unichar) = 0;
 
 /* Macro to return the receiver if it is already immutable, but an
  * autoreleased copy otherwise.  Used where we have to return an
- * immutable string, but we don't want to change the parameter from 
+ * immutable string, but we don't want to change the parameter from
  * a mutable string to an immutable one.
  */
 #define	IMMUTABLE(S)	AUTORELEASE([(S) copyWithZone: NSDefaultMallocZone()])
@@ -770,11 +731,6 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 #endif
 #endif
 
-+ (void) atExit
-{
-    DESTROY(placeholderMap);
-}
-
 + (void) initialize
 {
     /*
@@ -819,77 +775,6 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
     }
 }
 
-+ (id) allocWithZone: (NSZone*)z
-{
-    if (self == NSStringClass)
-    {
-        /*
-         * For a constant string, we return a placeholder object that can
-         * be converted to a real object when its initialisation method
-         * is called.
-         */
-        if (z == NSDefaultMallocZone() || z == 0)
-        {
-            /*
-             * As a special case, we can return a placeholder for a string
-             * in the default zone extremely efficiently.
-             */
-            return defaultPlaceholderString;
-        }
-        else
-        {
-            id	obj;
-            
-            /*
-             * For anything other than the default zone, we need to
-             * locate the correct placeholder in the (lock protected)
-             * table of placeholders.
-             */
-            (void)pthread_mutex_lock(&placeholderLock);
-            obj = (id)NSMapGet(placeholderMap, (void*)z);
-            if (obj == nil)
-            {
-                /*
-                 * There is no placeholder object for this zone, so we
-                 * create a new one and use that.
-                 */
-                obj = (id)[GSPlaceholderStringClass allocWithZone: z];
-                NSMapInsert(placeholderMap, (void*)z, (void*)obj);
-            }
-            (void)pthread_mutex_unlock(&placeholderLock);
-            return obj;
-        }
-    }
-    else if ([self isKindOfClass: GSStringClass] == YES)
-    {
-        [NSException raise: NSInternalInconsistencyException
-                    format: @"Called +allocWithZone: on private string class"];
-        return nil;	/* NOT REACHED */
-    }
-    else
-    {
-        /*
-         * For user provided strings, we simply allocate an object of
-         * the given class.
-         */
-        return NSAllocateObject (self, 0, z);
-    }
-}
-
-/**
- * Return the class used to store constant strings (those ascii strings
- * placed in the source code using the @"this is a string" syntax).<br />
- * Use this method to obtain the constant string class rather than
- * using the obsolete name <em>NXConstantString</em> in your code ...
- * with more recent compiler versions the name of this class is variable
- * (and will automatically be changed by GNUstep to avoid conflicts
- * with the default implementation in the Objective-C runtime library).
- */
-+ (Class) constantStringClass
-{
-    return [@"" class];
-}
-
 /**
  * Create an empty string.
  */
@@ -904,10 +789,6 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 + (id) stringWithString: (NSString*)aString
 {
     NSString	*obj;
-    
-    if (NULL == aString)
-        [NSException raise: NSInvalidArgumentException
-                    format: @"[NSString+stringWithString:]: NULL string"];
     obj = [self allocWithZone: NSDefaultMallocZone()];
     obj = [obj initWithString: aString];
     return AUTORELEASE(obj);
@@ -1165,33 +1046,6 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                                 encoding: encoding
                             freeWhenDone: YES];
     }
-}
-
-/** <init /> <override-subclass />
- * Initialises the receiver with the supplied length of bytes, using the
- * specified encoding.<br />
- * For NSUnicodeStringEncoding and NSUTF8String encoding, a Byte Order
- * Marker (if present at the start of the data) is removed automatically.<br />
- * If the data is not in a format which can be used internally unmodified,
- * it is copied, otherwise it is used as is.  If the data is not copied
- * the flag determines whether the string will free it when it is no longer
- * needed (ie whether the new NSString instance 'owns' the memory).<br />
- * In the case of non-owned memory, it is the caller's responsibility to
- * ensure that the data continues to exist and is not modified until the
- * receiver is deallocated.<br />
- * If the data can not be interpreted using the encoding, the receiver
- * is released and nil is returned.
- * <p>Note, this is the most basic initialiser for strings.
- * In the GNUstep implementation, your subclasses may override
- * this initialiser in order to have all other functionality.</p>
- */
-- (id) initWithBytesNoCopy: (void*)bytes
-                    length: (NSUInteger)length
-                  encoding: (NSStringEncoding)encoding
-              freeWhenDone: (BOOL)flag
-{
-    self = [self init];
-    return self;
 }
 
 /**
@@ -2058,7 +1912,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 - (NSString*) stringByReplacingOccurrencesOfString: (NSString*)replace
                                         withString: (NSString*)by
 {
-    return [self 
+    return [self
             stringByReplacingOccurrencesOfString: replace
             withString: by
             options: 0
@@ -2066,8 +1920,8 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 }
 
 /**
- * Returns a new string where the substring in the given range is replaced by 
- * the passed string. 
+ * Returns a new string where the substring in the given range is replaced by
+ * the passed string.
  */
 - (NSString*) stringByReplacingCharactersInRange: (NSRange)aRange 
                                       withString: (NSString*)by
@@ -2428,7 +2282,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                                 break;
                             }
                             pos++;
-                        }                        
+                        }
                     }
                 }
                 else
@@ -2454,7 +2308,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                                 break;
                             }
                             pos++;
-                        }                        
+                        }
                     }
                 }
                 GS_ENDITEMBUF2()
@@ -2636,7 +2490,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                                 break;
                             }
                             pos++;
-                        }                        
+                        }
                     }
                     else
                     {
@@ -2648,7 +2502,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                                 break;
                             }
                             pos++;
-                        }                        
+                        }
                     }
                 }
                 
@@ -2678,7 +2532,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
         if (NULL != coll)
         {
             NSRange       result = NSMakeRange(NSNotFound, 0);
-            UErrorCode    status = U_ZERO_ERROR; 
+            UErrorCode    status = U_ZERO_ERROR;
             NSUInteger    countSelf = searchRange.length;
             UStringSearch *search = NULL;
             GS_BEGINITEMBUF(charsSelf, (countSelf * sizeof(unichar)), unichar)
@@ -2698,7 +2552,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                 int32_t matchLength;
                 
                 if ((mask & NSBackwardsSearch) == NSBackwardsSearch)
-                {		
+                {
                     matchLocation = usearch_last(search, &status);
                 }
                 else
@@ -2729,7 +2583,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                             }
                         }
                     }
-                    else 
+                    else
                     {
                         result = NSMakeRange(searchRange.location
                                              + matchLocation, matchLength);
@@ -3684,7 +3538,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * eg. If the receiver is @"hello" then the provided buffer must be
  * at least six bytes long and the value of maxLength must be at least
  * six if NSASCIIStringEncoding is requested, but they must be at least
- * twelve if NSUnicodeStringEncoding is requested. 
+ * twelve if NSUnicodeStringEncoding is requested.
  */
 - (BOOL) getCString: (char*)buffer
           maxLength: (NSUInteger)maxLength
@@ -3862,7 +3716,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
         
         v = strtoul(ptr, 0, 10);
         return (int)v;
-    } 
+    }
 }
 
 - (NSInteger) integerValue
@@ -3883,7 +3737,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
         
         v = (uint64_t)strtoull(ptr, 0, 10);
         return (NSInteger)v;
-    } 
+    }
 }
 
 - (long long) longLongValue
@@ -3904,7 +3758,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
         
         l = strtoull(ptr, 0, 10);
         return (long long)l;
-    } 
+    }
 }
 
 // Working With Encodings
@@ -4435,7 +4289,7 @@ static NSFileManager *fm = nil;
     if (length > 0)
     {
         /* Trim trailing path separators as long as they are not part of
-         * the root. 
+         * the root.
          */
         aLength = length - 1;
         while (aLength > root && pathSepMember(buf[aLength]) == YES)
@@ -4503,8 +4357,8 @@ static NSFileManager *fm = nil;
     
     /* MacOS-X prohibits an extension beginning with a path separator,
      * but this code extends that a little to prohibit any root except
-     * one beginning with '~' from being used as an extension. 
-     */ 
+     * one beginning with '~' from being used as an extension.
+     */
     root = rootOf(aString, [aString length]);
     if (root > 0 && [aString characterAtIndex: 0] != '~')
     {
@@ -5289,7 +5143,7 @@ static NSFileManager *fm = nil;
     }
     
     /*
-     *	For absolute paths, we must 
+     *	For absolute paths, we must
      *	remove '/../' sequences and their matching parent directories.
      */
     r = (NSRange){root, l-root};
@@ -5323,7 +5177,7 @@ static NSFileManager *fm = nil;
                     r.length = NSMaxRange(r2) - r.location;
                     r.location++;		// Location Just after last separator
                 }
-                r.length += 2;		// Add the `..' 
+                r.length += 2;		// Add the `..'
             }
             if (NO == atEnd)
             {
@@ -5608,12 +5462,12 @@ static NSFileManager *fm = nil;
 
 /**
  * <p>Compares this instance with string. If locale is an NSLocale
- * instance and ICU is available, performs a comparison using the 
- * ICU collator for that locale. If locale is an instance of a class 
+ * instance and ICU is available, performs a comparison using the
+ * ICU collator for that locale. If locale is an instance of a class
  * other than NSLocale, perform a comparison using +[NSLocale currentLocale].
  * If locale is nil, or ICU is not available, use a POSIX-style
  * collation (for example, latin capital letters A-Z are ordered before
- * all of the lowercase letter, a-z.) 
+ * all of the lowercase letter, a-z.)
  * </p>
  * <p>mask may be <code>NSLiteralSearch</code>, which requests a literal
  * byte-by-byte
@@ -5648,7 +5502,7 @@ static NSFileManager *fm = nil;
         if (nil == locale)
         {
             /* See comments in GSICUCollatorOpen about the posix locale.
-             * It's bad for case insensitive search, but needed for numeric    
+             * It's bad for case insensitive search, but needed for numeric
              */
             if (mask & NSNumericSearch)
             {
@@ -5666,7 +5520,7 @@ static NSFileManager *fm = nil;
         if (coll != NULL)
         {
             NSUInteger countSelf = compareRange.length;
-            NSUInteger countOther = [string length];       
+            NSUInteger countOther = [string length];
             unichar *charsSelf;
             unichar *charsOther;
             UCollationResult result;
@@ -5684,8 +5538,8 @@ static NSFileManager *fm = nil;
                                   charsSelf, countSelf, charsOther, countOther);
             
             NSZoneFree(NSDefaultMallocZone(), charsSelf);
-            NSZoneFree(NSDefaultMallocZone(), charsOther);	  
-            ucol_close(coll); 
+            NSZoneFree(NSDefaultMallocZone(), charsOther);
+            ucol_close(coll);
             
             switch (result)
             {
@@ -5905,7 +5759,7 @@ static NSFileManager *fm = nil;
             }
             else
             {
-                self = [self initWithData: (NSData*)bytes 
+                self = [self initWithData: (NSData*)bytes
                                  encoding: NSUTF8StringEncoding];
             }
         }

@@ -175,11 +175,14 @@
 
 /**
  *  NSUndoManager provides a general mechanism supporting implementation of
- *  user action "undo" in applications.  Essentially, it allows you to store
+ *  user action "undo" in applications.
+ *  Essentially, it allows you to store
  *  sequences of messages and receivers that need to be invoked to undo or
- *  redo an action.  The various methods in this class provide for grouping
+ *  redo an action.
+ *  The various methods in this class provide for grouping
  *  of sets of actions, execution of undo or redo actions, and tuning behavior
- *  parameters such as the size of the undo stack.  Each application entity
+ *  parameters such as the size of the undo stack.
+ *   Each application entity
  *  with its own editing history (e.g., a document) should have its own undo
  *  manager instance.  Obtain an instance through a simple
  *  <code>[[NSUndoManager alloc] init]</code> message.
@@ -953,14 +956,14 @@
     {
         if ([actionName isEqual: @""])
         {
-            return _(@"Undo");
+            return @"Undo";
         }
         else
         {
-            return [NSString stringWithFormat: @"%@ %@", _(@"Undo"), actionName];
+            return [NSString stringWithFormat: @"%@ %@", @"Undo", actionName];
         }
     }
-    return _(@"Undo");
+    return @"Undo";
 }
 
 /**

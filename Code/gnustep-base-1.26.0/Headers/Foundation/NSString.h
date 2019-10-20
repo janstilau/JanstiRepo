@@ -1,97 +1,9 @@
-/* Interface for NSString for GNUstep
-   Copyright (C) 1995, 1996, 1999 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Date: 1995
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-  */
-
-/**
-<chapter>
- <heading>Portable path handling</heading>
- <p>Portable path handling (across both unix-like and mswindows operating
- systems) requires some care.  A modern operating system uses the concept
- of a single root to the filesystem, but mswindows has multiple filesystems
- with no common root, so code must be aware of this.  There is also the
- more minor issue that windows often uses a backslash as a separator between
- the components of a path and unix-like systems always use forward slash.<br />
- On windows there is also the issue that two styles of path are used,
- most commonly with a drive letter and a path on that drive
- (eg. 'C:\directory\file') but also UNC paths
- (eg. '//host/share/directory/file') so path handling functions must deal
- with both formats.
- </p>
- <p>GNUstep has three path handling modes, 'gnustep', 'unix', and 'windows'.
- The mode defaults to 'gnustep' but may be set using the GSPathHandling()
- function.<br />
- You should probably stick to using the default 'gnustep' mode in which the
- path handling methods cope with both 'unix' and 'windows' style paths in
- portable and tolerant manner:<br />
- Paths are read in literally so they can be in the native format provided
- by the operating system or in a non-native format. See
- [NSFileManager-stringWithFileSystemRepresentation:length:].<br />
- Paths are written out using the native format of the system the application
- is running on (eg on windows slashes are converted to backslashes).
- See [NSFileManager-fileSystemRepresentationWithPath:].<br />
- The path handling methods accept either a forward or backward slash as a
- path separator when parsing any path.<br />
- Unless operating in 'unix' mode, a leading letter followed by a colon is
- considered the start of a windows style path (the drive specifier), and a
- path beginning with something of the form '//host/share/' is considered
- the start of a UNC style path.<br />
- The path handling methods add forward slashes when building new paths
- internally or when standardising paths, so those path strings provide
- a portable representation (as long as they are relative paths, not including
- system specific roots).<br />
- An important case to note is that on windows a path which looks at first
- glance like an absolute path may actually be a relative one.<br />
- 'C:file' is a relative path because it specifies  a file on the C drive
- but does not say what directory it is in.<br />
-Similarly, '/dir/file' is a relative path because it specifies the full
-location fo a file on a drive, but does not specify which drive it is on.
- </p>
-<p>As a consequence of this path handling, you are able to work completely
-portably using relative paths (adding components, extensions and
-relative paths to a pth, or removing components, extensions and relative
-paths from a path etc), and when you save paths as strings in files
-which may be transferred to another platform, you should save a relative
-path.<br />
-When you need to know absolute paths of various points in the filesystem,
-you can use various path utility functions to obtain those absolute paths.
-For instance, instead of saving an absolute path to a file, you might want
-to save a path relative to a user's home directory.  You could do that by
-calling NSHomeDirectory() to get the home directory, and only saving the
-part of the full path after that prefix.
-</p>
-</chapter>
- */ 
-
 #ifndef __NSString_h_GNUSTEP_BASE_INCLUDE
 #define __NSString_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
 #import	<Foundation/NSObject.h>
 #import	<Foundation/NSRange.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 /**
  * Type for representing unicode characters.  (16-bit)
@@ -116,27 +28,27 @@ typedef uint16_t unichar;
 
 enum 
 {
-  NSCaseInsensitiveSearch = 1,
-  NSLiteralSearch = 2,
-  NSBackwardsSearch = 4,
-  NSAnchoredSearch = 8,
-  NSNumericSearch = 64	/* MacOS-X 10.2 */
+    NSCaseInsensitiveSearch = 1,
+    NSLiteralSearch = 2,
+    NSBackwardsSearch = 4,
+    NSAnchoredSearch = 8,
+    NSNumericSearch = 64	/* MacOS-X 10.2 */
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST) 
- ,
- NSDiacriticInsensitiveSearch = 128,
- NSWidthInsensitiveSearch = 256,
- NSForcedOrderingSearch = 512
+    ,
+    NSDiacriticInsensitiveSearch = 128,
+    NSWidthInsensitiveSearch = 256,
+    NSForcedOrderingSearch = 512
 #endif
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_7,GS_API_LATEST) 
- ,
- /**
-  * Treats the search string as a regular expression.  This option may be
-  * combined with NSCaseInsensitiveSearch and NSAnchoredSearch, but no other
-  * search options.
-  *
-  * This option may only be used with the -rangeOfString: family of methods.
-  */
- NSRegularExpressionSearch = 1024
+    ,
+    /**
+     * Treats the search string as a regular expression.  This option may be
+     * combined with NSCaseInsensitiveSearch and NSAnchoredSearch, but no other
+     * search options.
+     *
+     * This option may only be used with the -rangeOfString: family of methods.
+     */
+    NSRegularExpressionSearch = 1024
 #endif
 };
 typedef NSUInteger NSStringCompareOptions;
@@ -153,7 +65,7 @@ typedef NSUInteger NSStringCompareOptions;
  *  NSWindowsCP1253StringEncoding, NSWindowsCP1254StringEncoding,
  *  NSWindowsCP1250StringEncoding, NSISO2022JPStringEncoding,
  *  NSMacOSRomanStringEncoding, NSProprietaryStringEncoding</code>.</p>
- *  
+ *
  *  <p>Additional encodings available under GNUstep are:
  *  <code>NSKOI8RStringEncoding, NSISOLatin3StringEncoding,
  *  NSISOLatin4StringEncoding, NSISOCyrillicStringEncoding,
@@ -167,73 +79,65 @@ typedef NSUInteger NSStringCompareOptions;
  */
 typedef enum _NSStringEncoding
 {
-/* NB. Must not have an encoding with value zero - so we can use zero to
-   tell that a variable that should contain an encoding has not yet been
-   initialised */
-  GSUndefinedEncoding = 0,
-  NSASCIIStringEncoding = 1,
-  NSNEXTSTEPStringEncoding = 2,
-  NSJapaneseEUCStringEncoding = 3,
-  NSUTF8StringEncoding = 4,
-  NSISOLatin1StringEncoding = 5,	// ISO-8859-1; West European
-  NSSymbolStringEncoding = 6,
-  NSNonLossyASCIIStringEncoding = 7,
-  NSShiftJISStringEncoding = 8,
-  NSISOLatin2StringEncoding = 9,	// ISO-8859-2; East European
-  NSUnicodeStringEncoding = 10,
-  NSUTF16StringEncoding = NSUnicodeStringEncoding,      // An alias
-  NSWindowsCP1251StringEncoding = 11,
-  NSWindowsCP1252StringEncoding = 12,	// WinLatin1
-  NSWindowsCP1253StringEncoding = 13,	// Greek
-  NSWindowsCP1254StringEncoding = 14,	// Turkish
-  NSWindowsCP1250StringEncoding = 15,	// WinLatin2
-  NSISO2022JPStringEncoding = 21,
-  NSMacOSRomanStringEncoding = 30,
-  NSProprietaryStringEncoding = 31,
-
-  NSKOI8RStringEncoding = 50,		// Russian/Cyrillic
-  NSISOLatin3StringEncoding = 51,	// ISO-8859-3; South European
-  NSISOLatin4StringEncoding = 52,	// ISO-8859-4; North European
-  NSISOCyrillicStringEncoding = 22,	// ISO-8859-5
-  NSISOArabicStringEncoding = 53,	// ISO-8859-6
-  NSISOGreekStringEncoding = 54,	// ISO-8859-7
-  NSISOHebrewStringEncoding = 55,	// ISO-8859-8
-  NSISOLatin5StringEncoding = 57,	// ISO-8859-9; Turkish
-  NSISOLatin6StringEncoding = 58,	// ISO-8859-10; Nordic
-  NSISOThaiStringEncoding = 59,		// ISO-8859-11
-/* Possible future ISO-8859 additions
-					// ISO-8859-12
-*/
-  NSISOLatin7StringEncoding = 61,	// ISO-8859-13
-  NSISOLatin8StringEncoding = 62,	// ISO-8859-14
-  NSISOLatin9StringEncoding = 63,	// ISO-8859-15; Replaces ISOLatin1
-  NSGB2312StringEncoding = 56,
-  NSUTF7StringEncoding = 64,		// RFC 2152
-  NSGSM0338StringEncoding,		// GSM (mobile phone) default alphabet
-  NSBIG5StringEncoding,			// Traditional chinese
-  NSKoreanEUCStringEncoding		// Korean
-
+    /* NB. Must not have an encoding with value zero - so we can use zero to
+     tell that a variable that should contain an encoding has not yet been
+     initialised */
+    GSUndefinedEncoding = 0,
+    NSASCIIStringEncoding = 1,
+    NSNEXTSTEPStringEncoding = 2,
+    NSJapaneseEUCStringEncoding = 3,
+    NSUTF8StringEncoding = 4,
+    NSISOLatin1StringEncoding = 5,	// ISO-8859-1; West European
+    NSSymbolStringEncoding = 6,
+    NSNonLossyASCIIStringEncoding = 7,
+    NSShiftJISStringEncoding = 8,
+    NSISOLatin2StringEncoding = 9,	// ISO-8859-2; East European
+    NSUnicodeStringEncoding = 10,
+    NSUTF16StringEncoding = NSUnicodeStringEncoding,      // An alias
+    NSWindowsCP1251StringEncoding = 11,
+    NSWindowsCP1252StringEncoding = 12,	// WinLatin1
+    NSWindowsCP1253StringEncoding = 13,	// Greek
+    NSWindowsCP1254StringEncoding = 14,	// Turkish
+    NSWindowsCP1250StringEncoding = 15,	// WinLatin2
+    NSISO2022JPStringEncoding = 21,
+    NSMacOSRomanStringEncoding = 30,
+    NSProprietaryStringEncoding = 31,
+    
+    NSKOI8RStringEncoding = 50,		// Russian/Cyrillic
+    NSISOLatin3StringEncoding = 51,	// ISO-8859-3; South European
+    NSISOLatin4StringEncoding = 52,	// ISO-8859-4; North European
+    NSISOCyrillicStringEncoding = 22,	// ISO-8859-5
+    NSISOArabicStringEncoding = 53,	// ISO-8859-6
+    NSISOGreekStringEncoding = 54,	// ISO-8859-7
+    NSISOHebrewStringEncoding = 55,	// ISO-8859-8
+    NSISOLatin5StringEncoding = 57,	// ISO-8859-9; Turkish
+    NSISOLatin6StringEncoding = 58,	// ISO-8859-10; Nordic
+    NSISOThaiStringEncoding = 59,		// ISO-8859-11
+    /* Possible future ISO-8859 additions
+     // ISO-8859-12
+     */
+    NSISOLatin7StringEncoding = 61,	// ISO-8859-13
+    NSISOLatin8StringEncoding = 62,	// ISO-8859-14
+    NSISOLatin9StringEncoding = 63,	// ISO-8859-15; Replaces ISOLatin1
+    NSGB2312StringEncoding = 56,
+    NSUTF7StringEncoding = 64,		// RFC 2152
+    NSGSM0338StringEncoding,		// GSM (mobile phone) default alphabet
+    NSBIG5StringEncoding,			// Traditional chinese
+    NSKoreanEUCStringEncoding		// Korean
+    
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST) 
-  ,
-  NSUTF16BigEndianStringEncoding = 0x90000100,
-  NSUTF16LittleEndianStringEncoding = 0x94000100,
-  NSUTF32StringEncoding = 0x8c000100,
-  NSUTF32BigEndianStringEncoding = 0x98000100,
-  NSUTF32LittleEndianStringEncoding = 0x9c000100
+    ,
+    NSUTF16BigEndianStringEncoding = 0x90000100,
+    NSUTF16LittleEndianStringEncoding = 0x94000100,
+    NSUTF32StringEncoding = 0x8c000100,
+    NSUTF32BigEndianStringEncoding = 0x98000100,
+    NSUTF32LittleEndianStringEncoding = 0x9c000100
 #endif
 } NSStringEncoding;
 
 enum {
-  NSOpenStepUnicodeReservedBase = 0xF400
+    NSOpenStepUnicodeReservedBase = 0xF400
 };
-
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST) 
-enum {
-  NSStringEncodingConversionAllowLossy = 1,
-  NSStringEncodingConversionExternalRepresentation = 2
-};
-typedef NSUInteger NSStringEncodingConversionOptions;
-#endif
 
 /**
  * <p>
@@ -283,13 +187,13 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 
 + (id) string;
 + (id) stringWithCharacters: (const unichar*)chars
-		     length: (NSUInteger)length;
+                     length: (NSUInteger)length;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST) && GS_API_VERSION( 10200,GS_API_LATEST)
 + (id) stringWithCString: (const char*)byteString
-		encoding: (NSStringEncoding)encoding;
+                encoding: (NSStringEncoding)encoding;
 #endif
 + (id) stringWithCString: (const char*)byteString
-		  length: (NSUInteger)length;
+                  length: (NSUInteger)length;
 + (id) stringWithCString: (const char*)byteString;
 + (id) stringWithFormat: (NSString*)format, ... NS_FORMAT_FUNCTION(1,2);
 + (id) stringWithContentsOfFile:(NSString *)path;
@@ -298,12 +202,12 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 - (id) init;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST) && GS_API_VERSION( 10200,GS_API_LATEST)
 - (id) initWithBytes: (const void*)bytes
-	      length: (NSUInteger)length
-	    encoding: (NSStringEncoding)encoding;
+              length: (NSUInteger)length
+            encoding: (NSStringEncoding)encoding;
 - (id) initWithBytesNoCopy: (void*)bytes
-		    length: (NSUInteger)length
-		  encoding: (NSStringEncoding)encoding 
-	      freeWhenDone: (BOOL)flag;
+                    length: (NSUInteger)length
+                  encoding: (NSStringEncoding)encoding
+              freeWhenDone: (BOOL)flag;
 #endif
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST)
 + (id) stringWithContentsOfFile: (NSString*)path
@@ -331,13 +235,13 @@ typedef NSUInteger NSStringEncodingConversionOptions;
                     encoding: (NSStringEncoding)enc
                        error: (NSError**)error;
 - (BOOL) writeToFile: (NSString*)path
-	  atomically: (BOOL)atomically
-	    encoding: (NSStringEncoding)enc
-	       error: (NSError**)error;
+          atomically: (BOOL)atomically
+            encoding: (NSStringEncoding)enc
+               error: (NSError**)error;
 - (BOOL) writeToURL: (NSURL*)url
-	 atomically: (BOOL)atomically
-	   encoding: (NSStringEncoding)enc
-	      error: (NSError**)error;
+         atomically: (BOOL)atomically
+           encoding: (NSStringEncoding)enc
+              error: (NSError**)error;
 #endif
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST)
 - (NSString*)stringByReplacingOccurrencesOfString: (NSString*)replace
@@ -350,22 +254,22 @@ typedef NSUInteger NSStringEncodingConversionOptions;
                                       withString: (NSString*)by;
 #endif
 - (id) initWithCharactersNoCopy: (unichar*)chars
-			 length: (NSUInteger)length
-		   freeWhenDone: (BOOL)flag;
+                         length: (NSUInteger)length
+                   freeWhenDone: (BOOL)flag;
 - (id) initWithCharacters: (const unichar*)chars
-		   length: (NSUInteger)length;
+                   length: (NSUInteger)length;
 - (id) initWithCStringNoCopy: (char*)byteString
-		      length: (NSUInteger)length
-	        freeWhenDone: (BOOL)flag;
+                      length: (NSUInteger)length
+                freeWhenDone: (BOOL)flag;
 - (id) initWithCString: (const char*)byteString
-	        length: (NSUInteger)length;
+                length: (NSUInteger)length;
 - (id) initWithCString: (const char*)byteString;
 - (id) initWithString: (NSString*)string;
 - (id) initWithFormat: (NSString*)format, ... NS_FORMAT_FUNCTION(1,2);
 - (id) initWithFormat: (NSString*)format
-	    arguments: (va_list)argList NS_FORMAT_FUNCTION(1,0);
+            arguments: (va_list)argList NS_FORMAT_FUNCTION(1,0);
 - (id) initWithData: (NSData*)data
-	   encoding: (NSStringEncoding)encoding;
+           encoding: (NSStringEncoding)encoding;
 - (id) initWithContentsOfFile: (NSString*)path;
 
 // Getting a String's Length
@@ -375,11 +279,11 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 - (unichar) characterAtIndex: (NSUInteger)index;
 - (void) getCharacters: (unichar*)buffer;
 - (void) getCharacters: (unichar*)buffer
-		 range: (NSRange)aRange;
+                 range: (NSRange)aRange;
 
 // Combining Strings
 - (NSString*) stringByAppendingFormat: (NSString*)format, ...
-  NS_FORMAT_FUNCTION(1,2);
+NS_FORMAT_FUNCTION(1,2);
 - (NSString*) stringByAppendingString: (NSString*)aString;
 
 // Dividing Strings into Substrings
@@ -390,16 +294,16 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 // Finding Ranges of Characters and Substrings
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet;
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
-			    options: (NSUInteger)mask;
+                            options: (NSUInteger)mask;
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
-			    options: (NSUInteger)mask
-			      range: (NSRange)aRange;
+                            options: (NSUInteger)mask
+                              range: (NSRange)aRange;
 - (NSRange) rangeOfString: (NSString*)string;
 - (NSRange) rangeOfString: (NSString*)string
-		  options: (NSUInteger)mask;
+                  options: (NSUInteger)mask;
 - (NSRange) rangeOfString: (NSString*)aString
-		  options: (NSUInteger)mask
-		    range: (NSRange)aRange;
+                  options: (NSUInteger)mask
+                    range: (NSRange)aRange;
 
 // Determining Composed Character Sequences
 - (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex;
@@ -429,10 +333,10 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 // Identifying and Comparing Strings
 - (NSComparisonResult) compare: (NSString*)aString;
 - (NSComparisonResult) compare: (NSString*)aString	
-		       options: (NSUInteger)mask;
+                       options: (NSUInteger)mask;
 - (NSComparisonResult) compare: (NSString*)aString
-		       options: (NSUInteger)mask
-			 range: (NSRange)aRange;
+                       options: (NSUInteger)mask
+                         range: (NSRange)aRange;
 - (BOOL) hasPrefix: (NSString*)aString;
 - (BOOL) hasSuffix: (NSString*)aString;
 - (BOOL) isEqual: (id)anObject;
@@ -441,7 +345,7 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 
 // Getting a Shared Prefix
 - (NSString*) commonPrefixWithString: (NSString*)aString
-			     options: (NSUInteger)mask;
+                             options: (NSUInteger)mask;
 
 // Changing Case
 - (NSString*) capitalizedString;
@@ -455,10 +359,10 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST) && GS_API_VERSION( 10200,GS_API_LATEST)
 - (const char*) cStringUsingEncoding: (NSStringEncoding)encoding;
 - (BOOL) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
-	   encoding: (NSStringEncoding)encoding;
+          maxLength: (NSUInteger)maxLength
+           encoding: (NSStringEncoding)encoding;
 - (id) initWithCString: (const char*)byteString
-	      encoding: (NSStringEncoding)encoding;
+              encoding: (NSStringEncoding)encoding;
 - (NSUInteger) lengthOfBytesUsingEncoding: (NSStringEncoding)encoding;
 - (NSUInteger) maximumLengthOfBytesUsingEncoding: (NSStringEncoding)encoding;
 #endif
@@ -467,10 +371,10 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 - (NSUInteger) cStringLength;
 - (void) getCString: (char*)buffer;
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength;
+          maxLength: (NSUInteger)maxLength;
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
-	      range: (NSRange)aRange
+          maxLength: (NSUInteger)maxLength
+              range: (NSRange)aRange
      remainingRange: (NSRange*)leftoverRange;
 
 // Getting Numeric Values
@@ -481,7 +385,7 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 - (BOOL) canBeConvertedToEncoding: (NSStringEncoding)encoding;
 - (NSData*) dataUsingEncoding: (NSStringEncoding)encoding;
 - (NSData*) dataUsingEncoding: (NSStringEncoding)encoding
-	 allowLossyConversion: (BOOL)flag;
+         allowLossyConversion: (BOOL)flag;
 + (NSStringEncoding) defaultCStringEncoding;
 - (NSString*) description;
 - (NSStringEncoding) fastestEncoding;
@@ -498,9 +402,9 @@ typedef NSUInteger NSStringEncodingConversionOptions;
  * only accurate if outputArray was non-nil.
  */
 - (NSUInteger) completePathIntoString: (NSString**)outputName
-			caseSensitive: (BOOL)flag
-		     matchesIntoArray: (NSArray**)outputArray
-			  filterTypes: (NSArray*)filterTypes;
+                        caseSensitive: (BOOL)flag
+                     matchesIntoArray: (NSArray**)outputArray
+                          filterTypes: (NSArray*)filterTypes;
 
 /**
  * Converts the receiver to a C string path expressed in the character
@@ -528,7 +432,7 @@ typedef NSUInteger NSStringEncodingConversionOptions;
  * perform the conversion.
  */
 - (BOOL) getFileSystemRepresentation: (GSNativeChar*)buffer
-			   maxLength: (NSUInteger)size;
+                           maxLength: (NSUInteger)size;
 
 /**
  * Returns a string containing the last path component of the receiver.<br />
@@ -761,28 +665,28 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 - (NSArray*) stringsByAppendingPaths: (NSArray*)paths;
 
 + (NSString*) localizedStringWithFormat: (NSString*)format, ...
-  NS_FORMAT_FUNCTION(1,2);
+NS_FORMAT_FUNCTION(1,2);
 
 + (id) stringWithString: (NSString*)aString;
 + (id) stringWithContentsOfURL: (NSURL*)url;
 + (id) stringWithUTF8String: (const char*)bytes;
 - (id) initWithFormat: (NSString*)format
-	       locale: (NSDictionary*)locale, ... NS_FORMAT_FUNCTION(1,3);
+               locale: (NSDictionary*)locale, ... NS_FORMAT_FUNCTION(1,3);
 - (id) initWithFormat: (NSString*)format
-	       locale: (NSDictionary*)locale
-	    arguments: (va_list)argList NS_FORMAT_FUNCTION(1,0);
+               locale: (NSDictionary*)locale
+            arguments: (va_list)argList NS_FORMAT_FUNCTION(1,0);
 - (id) initWithUTF8String: (const char *)bytes;
 - (id) initWithContentsOfURL: (NSURL*)url;
 - (NSString*) substringWithRange: (NSRange)aRange;
 - (NSComparisonResult) caseInsensitiveCompare: (NSString*)aString;
 - (NSComparisonResult) compare: (NSString*)string 
-		       options: (NSUInteger)mask 
-			 range: (NSRange)compareRange 
-			locale: (id)locale;
+                       options: (NSUInteger)mask
+                         range: (NSRange)compareRange
+                        locale: (id)locale;
 - (NSComparisonResult) localizedCompare: (NSString *)string;
 - (NSComparisonResult) localizedCaseInsensitiveCompare: (NSString *)string;
 - (BOOL) writeToFile: (NSString*)filename
-	  atomically: (BOOL)useAuxiliaryFile;
+          atomically: (BOOL)useAuxiliaryFile;
 - (BOOL) writeToURL: (NSURL*)url atomically: (BOOL)atomically;
 - (double) doubleValue;
 + (NSStringEncoding*) availableStringEncodings;
@@ -795,8 +699,8 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 - (const char*) lossyCString;
 - (NSString*) stringByAddingPercentEscapesUsingEncoding: (NSStringEncoding)e;
 - (NSString*) stringByPaddingToLength: (NSUInteger)newLength
-			   withString: (NSString*)padString
-		      startingAtIndex: (NSUInteger)padIndex;
+                           withString: (NSString*)padString
+                      startingAtIndex: (NSUInteger)padIndex;
 - (NSString*) stringByReplacingPercentEscapesUsingEncoding: (NSStringEncoding)e;
 - (NSString*) stringByTrimmingCharactersInSet: (NSCharacterSet*)aSet;
 - (const char *)UTF8String;
@@ -807,9 +711,9 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 - (void) getParagraphStart: (NSUInteger *)startIndex
                        end: (NSUInteger *)parEndIndex
                contentsEnd: (NSUInteger *)contentsEndIndex
-                 forRange: (NSRange)range;
+                  forRange: (NSRange)range;
 /** Not implemented */
- - (NSRange) paragraphRangeForRange: (NSRange)range;
+- (NSRange) paragraphRangeForRange: (NSRange)range;
 #endif
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST) 
@@ -838,8 +742,8 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_10,GS_API_LATEST) 
 
 /**
-  * Returns YES if the receiver contains string, otherwise, NO.
-  */
+ * Returns YES if the receiver contains string, otherwise, NO.
+ */
 - (BOOL) containsString: (NSString *)string;
 
 #endif
@@ -855,9 +759,9 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 // Creating Temporary Strings
 + (id) string;
 + (id) stringWithCharacters: (const unichar*)characters
-		     length: (NSUInteger)length;
+                     length: (NSUInteger)length;
 + (id) stringWithCString: (const char*)byteString
-		  length: (NSUInteger)length;
+                  length: (NSUInteger)length;
 + (id) stringWithCString: (const char*)byteString;
 + (id) stringWithFormat: (NSString*)format, ... NS_FORMAT_FUNCTION(1,2);
 + (id) stringWithContentsOfFile: (NSString*)path;
@@ -872,11 +776,11 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 - (void) deleteCharactersInRange: (NSRange)range;
 - (void) insertString: (NSString*)aString atIndex: (NSUInteger)loc;
 - (void) replaceCharactersInRange: (NSRange)range 
-		       withString: (NSString*)aString;
+                       withString: (NSString*)aString;
 - (NSUInteger) replaceOccurrencesOfString: (NSString*)replace
-				 withString: (NSString*)by
-				    options: (NSUInteger)opts
-				      range: (NSRange)searchRange;
+                               withString: (NSString*)by
+                                  options: (NSUInteger)opts
+                                    range: (NSRange)searchRange;
 - (void) setString: (NSString*)aString;
 
 @end
@@ -915,55 +819,50 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 {
 @public
 #ifdef GNUSTEP_NEW_STRING_ABI
-  /**
-   * Flags.  The low 16 bits are reserved for the compiler, the top 16 for use
-   * by the Foundation Framework.  Currently only the low 2 bits are used, to
-   * indicate the encoding of the string, with the following values:
-   *
-   * 0. ASCII (UTF-8 using only 7-bit characters)
-   * 1. UTF-8
-   * 2. UTF-16
-   * 3. UTF-32
-   *
-   */
-  uint32_t flags;
-  /**
-   * The number of characters (UTF-16 code units) in the string.
-   */
-  uint32_t nxcslen;
-  /**
-   * The number of bytes in the string.  For fixed-length encodings, this is a
-   * fixed multiple of nxcslen, but for UTF-8 it can be different.
-   */
-  uint32_t size;
-  /**
-   * Hash value.
-   */
-  uint32_t hash;
-  /**
-   * Pointer to the byte data of the string.  Note that `char*` is the correct
-   * type only if the low two bits of the flags indicate that this is an ASCII
-   * or UTF-8 string, otherwise it is a pointer to 16- or 32-bit characters in
-   * native byte order.
-   */
-  const char * const nxcsptr;
+    /**
+     * Flags.  The low 16 bits are reserved for the compiler, the top 16 for use
+     * by the Foundation Framework.  Currently only the low 2 bits are used, to
+     * indicate the encoding of the string, with the following values:
+     *
+     * 0. ASCII (UTF-8 using only 7-bit characters)
+     * 1. UTF-8
+     * 2. UTF-16
+     * 3. UTF-32
+     *
+     */
+    uint32_t flags;
+    /**
+     * The number of characters (UTF-16 code units) in the string.
+     */
+    uint32_t nxcslen;
+    /**
+     * The number of bytes in the string.  For fixed-length encodings, this is a
+     * fixed multiple of nxcslen, but for UTF-8 it can be different.
+     */
+    uint32_t size;
+    /**
+     * Hash value.
+     */
+    uint32_t hash;
+    /**
+     * Pointer to the byte data of the string.  Note that `char*` is the correct
+     * type only if the low two bits of the flags indicate that this is an ASCII
+     * or UTF-8 string, otherwise it is a pointer to 16- or 32-bit characters in
+     * native byte order.
+     */
+    const char * const nxcsptr;
 #else
-  const char * const nxcsptr;
-  const unsigned int nxcslen;
+    const char * const nxcsptr;
+    const unsigned int nxcslen;
 #endif
 }
 @end
 
 #ifdef NeXT_RUNTIME
 /** For internal use with NeXT runtime;
-    needed, until Apple Radar 2870817 is fixed. */
+ needed, until Apple Radar 2870817 is fixed. */
 extern struct objc_class _NSConstantStringClassReference;
 #endif
-
-#if	defined(__cplusplus)
-}
-#endif
-
 #if     !NO_GNUSTEP && !defined(GNUSTEP_BASE_INTERNAL)
 #import <GNUstepBase/NSString+GNUstepBase.h>
 #import <GNUstepBase/NSMutableString+GNUstepBase.h>

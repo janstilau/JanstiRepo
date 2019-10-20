@@ -867,6 +867,7 @@
 				063150502359A45700EC6A60 /* xmltools.cpp */,
 				063150512359A45700EC6A60 /* udocumenttoxml.cpp */,
 				063150522359A45700EC6A60 /* NSArray.m */,
+				18906FCB1610BF3C0003C892 /* NSRunLoop.m */,
 			);
 			path = Done;
 			sourceTree = "<group>";
@@ -874,6 +875,7 @@
 		0669BA4F235C4D2A00D61077 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				18906F781610BF3C0003C892 /* NSCachedURLResponse.m */,
 				18906FDA1610BF3C0003C892 /* NSURLAuthenticationChallenge.m */,
 				18906FDC1610BF3C0003C892 /* NSURLConnection.m */,
 				18906FE21610BF3C0003C892 /* NSURLProtocol.m */,
@@ -1005,7 +1007,6 @@
 				18906F751610BF3C0003C892 /* NSAutoreleasePool.m */,
 				18906F761610BF3C0003C892 /* NSBundle.m */,
 				18906F771610BF3C0003C892 /* NSCache.m */,
-				18906F781610BF3C0003C892 /* NSCachedURLResponse.m */,
 				18906F791610BF3C0003C892 /* NSCalendar.m */,
 				18906F7A1610BF3C0003C892 /* NSCalendarDate.m */,
 				18906F7C1610BF3C0003C892 /* NSCallBacks.m */,
@@ -1072,7 +1073,6 @@
 				18906FC81610BF3C0003C892 /* NSProxy.m */,
 				18906FC91610BF3C0003C892 /* NSRange.m */,
 				18906FCA1610BF3C0003C892 /* NSRegularExpression.m */,
-				18906FCB1610BF3C0003C892 /* NSRunLoop.m */,
 				18906FCC1610BF3C0003C892 /* NSScanner.m */,
 				18906FCD1610BF3C0003C892 /* NSSerializer.m */,
 				18906FCE1610BF3C0003C892 /* NSSet.m */,
