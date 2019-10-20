@@ -1404,11 +1404,6 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
     return [[[request URL] scheme] isEqualToString: @"ftp"];
 }
 
-+ (NSURLRequest*) canonicalRequestForRequest: (NSURLRequest*)request
-{
-    return request;
-}
-
 - (void) startLoading
 {
     if (self->cachedResponse)
@@ -1473,6 +1468,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
     }
 }
 
+// FTP 的很简单, 没有发送请求和解析相应的过程, 就是得到数据之后抛给代理. 这里 GNU 没有实现完成.
 - (void) stream: (NSStream *) stream handleEvent: (NSStreamEvent) event
 {
     if (stream == self->input)
@@ -1542,7 +1538,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
     // check for GET/PUT/DELETE etc so that we can also write to a file
     NSData	*data;
     NSURLResponse	*r;
-    
+    // 这里, 直接同步读取数据了.
     data = [NSData dataWithContentsOfFile: [[self->request URL] path]
             /* options: error: - don't use that because it is based on self */];
     if (data == nil)
