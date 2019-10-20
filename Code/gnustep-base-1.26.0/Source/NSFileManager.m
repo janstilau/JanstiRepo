@@ -1026,40 +1026,11 @@ static NSStringEncoding	defaultEncoding;
 {
   NSString *currentDir = nil;
 
-#if defined(_WIN32)
-  int len = GetCurrentDirectoryW(0, 0);
-  if (len > 0)
-    {
-      _CHAR *lpath = (_CHAR*)calloc(len+10,sizeof(_CHAR));
-
-      if (lpath != 0)
-	{
-	  if (GetCurrentDirectoryW(len, lpath)>0)
-	    {
-	      NSString	*path;
-
-	      // Windows may count the trailing nul ... we don't want to.
-	      if (len > 0 && lpath[len] == 0) len--;
-	      path = [[NSString alloc] initWithCharacters: lpath length: len];
-	      // Standardise to get rid of backslashes
-	      currentDir = [path stringByStandardizingPath];
-	      RELEASE(path);
-	    }
-	  free(lpath);
-	}
-    }
-#else
   char path[PATH_MAX];
-#ifdef HAVE_GETCWD
-  if (getcwd(path, PATH_MAX-1) == 0)
-    return nil;
-#else
   if (getwd(path) == 0)
     return nil;
-#endif /* HAVE_GETCWD */
   currentDir = [self stringWithFileSystemRepresentation: path
 						 length: strlen(path)];
-#endif /* !_WIN32 */
 
   return currentDir;
 }

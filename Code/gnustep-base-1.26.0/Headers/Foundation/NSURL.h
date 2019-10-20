@@ -1,36 +1,8 @@
-/* NSURL.h - Class NSURL
-   Copyright (C) 1999 Free Software Foundation, Inc.
-   
-   Written by: 	Manuel Guesdon <mguesdon@sbuilders.com>
-   Date:	Jan 1999
-   
-   This file is part of the GNUstep Library.
-   
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-*/
-
 #ifndef __NSURL_h_GNUSTEP_BASE_INCLUDE
 #define __NSURL_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
 #import	<Foundation/NSURLHandle.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 #if	OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 
@@ -47,15 +19,39 @@ GS_EXPORT NSString* const NSURLFileScheme;
 typedef NSUInteger NSURLBookmarkResolutionOptions;
 enum
 {
-  NSURLBookmarkResolutionWithoutUI = (1 << 8),
-  NSURLBookmarkResolutionWithoutMounting = (1 << 9),
+    NSURLBookmarkResolutionWithoutUI = (1 << 8),
+    NSURLBookmarkResolutionWithoutMounting = (1 << 9),
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_7, GS_API_LATEST)
-  NSURLBookmarkResolutionWithSecurityScope = (1 << 10)
+    NSURLBookmarkResolutionWithSecurityScope = (1 << 10)
 #endif
 };
 #endif
 
+
+/*
+URL 的解析数据类.
+*/
+typedef struct {
+    id    absolute;        // Cache absolute string or nil
+    char    *scheme;
+    char    *user;
+    char    *password;
+    char    *host;
+    char    *port;
+    char    *path;            // May never be NULL
+    char    *parameters;
+    char    *query;
+    char    *fragment;
+    BOOL    pathIsAbsolute;
+    BOOL    emptyPath;
+    BOOL    hasNoPath;
+    BOOL    isGeneric;
+    BOOL    isFile;
+} parsedURL;
+
 /**
+ *
+ *
  * This class permits manipulation of URLs and the resources to which they
  * refer.  They can be used to represent absolute URLs or relative URLs
  * which are based upon an absolute URL.  The relevant RFCs describing
@@ -63,18 +59,21 @@ enum
  * 1808, 1738, and 2396.<br />
  * Handling of the underlying resources is carried out by NSURLHandle
  * objects, but NSURL provides a simplified API wrapping these objects.
+ *
+ *
+ * https://johnny:p4ssw0rd@www.example.com:443/script.ext;param=value?query=value#ref
+ *
+ * 这个类, 就是对于字符串路径的包装, 把那些和URL相关的概念, 和解析办法都移到了这个类而已.
  */
 @interface NSURL: NSObject <NSCoding, NSCopying, NSURLHandleClient>
 {
-#if	GS_EXPOSE(NSURL)
-@private
-  NSString	*_urlString;
-  NSURL		*_baseURL;
-  void		*_clients;
-  void		*_data;
-#endif
+@public
+    NSString	*_urlString;
+    NSURL		*_baseURL;
+    void		*_clients;
+    parsedURL	*_parseModel;
 }
- 
+
 /**
  * Create and return a file URL with the supplied path.<br />
  * The value of aPath must be a valid filesystem path.<br />
@@ -102,7 +101,7 @@ enum
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_10, GS_API_LATEST)
 + (id) URLByResolvingAliasFileAtURL: (NSURL*)url 
-                            options: (NSURLBookmarkResolutionOptions)options 
+                            options: (NSURLBookmarkResolutionOptions)options
                               error: (NSError**)error;
 #endif
 
@@ -151,8 +150,8 @@ enum
  * 'host:port' in addition to a simple host name or address.
  */
 - (id) initWithScheme: (NSString*)aScheme
-		 host: (NSString*)aHost
-		 path: (NSString*)aPath;
+                 host: (NSString*)aHost
+                 path: (NSString*)aPath;
 
 /**
  * Initialise as an absolute URL.<br />
@@ -169,7 +168,7 @@ enum
  * If the string cannot be parsed the method returns nil.
  */
 - (id) initWithString: (NSString*)aUrlString
-	relativeToURL: (NSURL*)aBaseUrl;
+        relativeToURL: (NSURL*)aBaseUrl;
 
 #if GS_HAS_DECLARED_PROPERTIES
 @property (readonly, getter=isFileURL) BOOL fileURL;
@@ -249,7 +248,7 @@ enum
  * </p>
  */
 - (void) loadResourceDataNotifyingClient: (id)client
-			      usingCache: (BOOL)shouldUseCache;
+                              usingCache: (BOOL)shouldUseCache;
 
 /**
  * Returns the parameter portion of the receiver or nil if there is no
@@ -355,7 +354,7 @@ enum
  * Calls [NSURLHandle-writeProperty:forKey:] to set the named property.
  */
 - (BOOL) setProperty: (id)property
-	      forKey: (NSString*)propertyKey;
+              forKey: (NSString*)propertyKey;
 
 /**
  * Calls [NSURLHandle-writeData:] to write the specified data object
@@ -408,7 +407,7 @@ enum
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 - (BOOL) getResourceValue: (id*)value 
-                   forKey: (NSString *)key 
+                   forKey: (NSString *)key
                     error: (NSError**)error;
 #endif
 /**
@@ -438,7 +437,7 @@ enum
  * has become available, only that a chunk of data has arrived.
  */
 - (void) URL: (NSURL*)sender
-  resourceDataDidBecomeAvailable: (NSData*)newBytes;
+resourceDataDidBecomeAvailable: (NSData*)newBytes;
 
 /** <override-dummy />
  * Loading of resource data is complete.
@@ -455,7 +454,7 @@ enum
  * Loading of resource data has failed, for given human-readable reason.
  */
 - (void) URL: (NSURL*)sender
-  resourceDidFailLoadingWithReason: (NSString*)reason;
+resourceDidFailLoadingWithReason: (NSString*)reason;
 @end
 
 /** URL Resource Value Constants **/
@@ -582,10 +581,6 @@ GS_EXPORT NSString* const NSURLUbiquitousItemDownloadingStatusCurrent;
 #endif
 
 #endif	/* GS_API_MACOSX */
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #if     !NO_GNUSTEP && !defined(GNUSTEP_BASE_INTERNAL)
 #import <GNUstepBase/NSURL+GNUstepBase.h>

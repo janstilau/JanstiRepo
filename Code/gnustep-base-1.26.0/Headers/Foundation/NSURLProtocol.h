@@ -1,26 +1,26 @@
 /* Interface for NSURLProtocol for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <frm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */ 
+ Copyright (C) 2006 Software Foundation, Inc.
+ 
+ Written by:  Richard Frith-Macdonald <frm@gnu.org>
+ Date: 2006
+ 
+ This file is part of the GNUstep Base Library.
+ 
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+ 
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free
+ Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ Boston, MA 02111 USA.
+ */
 
 #ifndef __NSURLProtocol_h_GNUSTEP_BASE_INCLUDE
 #define __NSURLProtocol_h_GNUSTEP_BASE_INCLUDE
@@ -29,10 +29,6 @@
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_2,GS_API_LATEST) && GS_API_VERSION( 11300,GS_API_LATEST)
 
 #import	<Foundation/NSObject.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 #import	<Foundation/NSURLCache.h>
 
@@ -55,41 +51,41 @@ extern "C" {
  * Informs a client that a cached response is valid.
  */
 - (void) URLProtocol: (NSURLProtocol *)protocol
-  cachedResponseIsValid: (NSCachedURLResponse *)cachedResponse;
+cachedResponseIsValid: (NSCachedURLResponse *)cachedResponse;
 
 /**
  * Informs a client that loading of a request has failed.
  */
 - (void) URLProtocol: (NSURLProtocol *)protocol
-    didFailWithError: (NSError *)error;
+didFailWithError: (NSError *)error;
 
 /**
  * Informs a client that data has been loaded.  Only new data since the
  * last call to this method must be provided.
  */
 - (void) URLProtocol: (NSURLProtocol *)protocol
-	 didLoadData: (NSData *)data;
+didLoadData: (NSData *)data;
 
 /**
  * Informs a client that an authentication challenge has been received.
  */
 - (void) URLProtocol: (NSURLProtocol *)protocol
-  didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
+didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 
 /**
  * Informs a client that a response for the current load has been created.<br />
  * Also supplies the policy to be used for caching the response.
  */
 - (void) URLProtocol: (NSURLProtocol *)protocol
-  didReceiveResponse: (NSURLResponse *)response
-  cacheStoragePolicy: (NSURLCacheStoragePolicy)policy;
+didReceiveResponse: (NSURLResponse *)response
+cacheStoragePolicy: (NSURLCacheStoragePolicy)policy;
 
 /**
  * Informs a client that a redirect has occurred.<br />
  */
 - (void) URLProtocol: (NSURLProtocol *)protocol
-  wasRedirectedToRequest: (NSURLRequest *)request
-  redirectResponse: (NSURLResponse *)redirectResponse;
+wasRedirectedToRequest: (NSURLRequest *)request
+redirectResponse: (NSURLResponse *)redirectResponse;
 
 
 /**
@@ -101,7 +97,7 @@ extern "C" {
  * Informs a client that an authentication challenge has been cancelled.
  */
 - (void) URLProtocol: (NSURLProtocol *)protocol
-  didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
+didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 
 @end
 
@@ -118,9 +114,18 @@ extern "C" {
  */
 @interface NSURLProtocol : NSObject
 {
-#if	GS_EXPOSE(NSURLProtocol)
-  void *_NSURLProtocolInternal;
-#endif
+    NSInputStream            *input;
+    NSOutputStream        *output;
+    NSCachedURLResponse        *cachedResponse;
+    id <NSURLProtocolClient>    client;        // Not retained
+    NSURLRequest            *request;
+    NSString                      *in;
+    NSString                      *out;
+#if    USE_ZLIB
+    z_stream            z;        // context for decompress
+    BOOL                compressing;    // are we compressing?
+    BOOL                decompressing;    // are we decompressing?
+    NSData            *compressed;    // only partially decompressed
 }
 
 /**
@@ -147,8 +152,8 @@ extern "C" {
  * setting the property named key to value in the request.
  */
 + (void) setProperty: (id)value
-	      forKey: (NSString *)key
-	   inRequest: (NSMutableURLRequest *)request;
+              forKey: (NSString *)key
+           inRequest: (NSMutableURLRequest *)request;
 
 /**
  * Unregisters a class which was previously registered using the
@@ -174,8 +179,8 @@ extern "C" {
  * of the load.
  */
 - (id) initWithRequest: (NSURLRequest *)request
-	cachedResponse: (NSCachedURLResponse *)cachedResponse
-		client: (id <NSURLProtocolClient>)client;
+        cachedResponse: (NSCachedURLResponse *)cachedResponse
+                client: (id <NSURLProtocolClient>)client;
 
 /**
  * Returns the request handled by the receiver.
@@ -210,7 +215,7 @@ extern "C" {
  * The abstract class implementaton just uses [NSObject-isEqual:]
  */
 + (BOOL) requestIsCacheEquivalent: (NSURLRequest *)a
-			toRequest: (NSURLRequest *)b;
+                        toRequest: (NSURLRequest *)b;
 
 /** <override-subclass />
  * Starts loading of a request.
@@ -223,10 +228,6 @@ extern "C" {
 - (void) stopLoading;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

@@ -121,7 +121,6 @@
 		18394B911610D9D000335E85 /* NSURLConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EC41610BF3C0003C892 /* NSURLConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B921610D9D000335E85 /* NSURLCredential.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EC51610BF3C0003C892 /* NSURLCredential.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B931610D9D000335E85 /* NSURLCredentialStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EC61610BF3C0003C892 /* NSURLCredentialStorage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B941610D9D000335E85 /* NSURLDownload.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EC71610BF3C0003C892 /* NSURLDownload.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B951610D9D000335E85 /* NSURLError.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EC81610BF3C0003C892 /* NSURLError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B961610D9D000335E85 /* NSURLHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EC91610BF3C0003C892 /* NSURLHandle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B971610D9D000335E85 /* NSURLProtectionSpace.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906ECA1610BF3C0003C892 /* NSURLProtectionSpace.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -240,7 +239,6 @@
 		18394C681610EB7F00335E85 /* NSURLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FDC1610BF3C0003C892 /* NSURLConnection.m */; };
 		18394C691610EB7F00335E85 /* NSURLCredential.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FDD1610BF3C0003C892 /* NSURLCredential.m */; };
 		18394C6A1610EB8000335E85 /* NSURLCredentialStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FDE1610BF3C0003C892 /* NSURLCredentialStorage.m */; };
-		18394C6B1610EB8000335E85 /* NSURLDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FDF1610BF3C0003C892 /* NSURLDownload.m */; };
 		18394C6C1610EB8000335E85 /* NSURLHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FE01610BF3C0003C892 /* NSURLHandle.m */; };
 		18394C6D1610EB8000335E85 /* NSURLProtectionSpace.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FE11610BF3C0003C892 /* NSURLProtectionSpace.m */; };
 		18394C6E1610EB8000335E85 /* NSURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906FE21610BF3C0003C892 /* NSURLProtocol.m */; };
@@ -510,7 +508,6 @@
 		18906EC41610BF3C0003C892 /* NSURLConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLConnection.h; sourceTree = "<group>"; };
 		18906EC51610BF3C0003C892 /* NSURLCredential.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLCredential.h; sourceTree = "<group>"; };
 		18906EC61610BF3C0003C892 /* NSURLCredentialStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLCredentialStorage.h; sourceTree = "<group>"; };
-		18906EC71610BF3C0003C892 /* NSURLDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLDownload.h; sourceTree = "<group>"; };
 		18906EC81610BF3C0003C892 /* NSURLError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLError.h; sourceTree = "<group>"; };
 		18906EC91610BF3C0003C892 /* NSURLHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLHandle.h; sourceTree = "<group>"; };
 		18906ECA1610BF3C0003C892 /* NSURLProtectionSpace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSURLProtectionSpace.h; sourceTree = "<group>"; };
@@ -762,7 +759,6 @@
 		18906FDC1610BF3C0003C892 /* NSURLConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLConnection.m; sourceTree = "<group>"; };
 		18906FDD1610BF3C0003C892 /* NSURLCredential.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLCredential.m; sourceTree = "<group>"; };
 		18906FDE1610BF3C0003C892 /* NSURLCredentialStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLCredentialStorage.m; sourceTree = "<group>"; };
-		18906FDF1610BF3C0003C892 /* NSURLDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLDownload.m; sourceTree = "<group>"; };
 		18906FE01610BF3C0003C892 /* NSURLHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLHandle.m; sourceTree = "<group>"; };
 		18906FE11610BF3C0003C892 /* NSURLProtectionSpace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLProtectionSpace.m; sourceTree = "<group>"; };
 		18906FE21610BF3C0003C892 /* NSURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSURLProtocol.m; sourceTree = "<group>"; };
@@ -867,7 +863,6 @@
 				0631504B2359A45700EC6A60 /* NSAttributedString.m */,
 				0631504C2359A45700EC6A60 /* NSNull.m */,
 				0631504D2359A45700EC6A60 /* NSNotification.m */,
-				0631504E2359A45700EC6A60 /* NSURLCache.m */,
 				0631504F2359A45700EC6A60 /* NSTimer.m */,
 				063150502359A45700EC6A60 /* xmltools.cpp */,
 				063150512359A45700EC6A60 /* udocumenttoxml.cpp */,
@@ -879,7 +874,10 @@
 		0669BA4F235C4D2A00D61077 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				18906FD91610BF3C0003C892 /* NSURL.m */,
 				18906FE31610BF3C0003C892 /* NSURLRequest.m */,
+				18906FE41610BF3C0003C892 /* NSURLResponse.m */,
+				0631504E2359A45700EC6A60 /* NSURLCache.m */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1082,16 +1080,13 @@
 				18906FD71610BF3C0003C892 /* NSTimeZone.m */,
 				18906FE51610BF3C0003C892 /* NSUnarchiver.m */,
 				18906FE61610BF3C0003C892 /* NSUndoManager.m */,
-				18906FD91610BF3C0003C892 /* NSURL.m */,
 				18906FDA1610BF3C0003C892 /* NSURLAuthenticationChallenge.m */,
 				18906FDC1610BF3C0003C892 /* NSURLConnection.m */,
 				18906FDD1610BF3C0003C892 /* NSURLCredential.m */,
 				18906FDE1610BF3C0003C892 /* NSURLCredentialStorage.m */,
-				18906FDF1610BF3C0003C892 /* NSURLDownload.m */,
 				18906FE01610BF3C0003C892 /* NSURLHandle.m */,
 				18906FE11610BF3C0003C892 /* NSURLProtectionSpace.m */,
 				18906FE21610BF3C0003C892 /* NSURLProtocol.m */,
-				18906FE41610BF3C0003C892 /* NSURLResponse.m */,
 				18906FE71610BF3C0003C892 /* NSUserDefaults.m */,
 				AD197C03189A4D5F000F6CF9 /* NSUserNotification.m */,
 				AD197C04189A4D5F000F6CF9 /* NSUUID.m */,
@@ -1257,7 +1252,6 @@
 				18906EC41610BF3C0003C892 /* NSURLConnection.h */,
 				18906EC51610BF3C0003C892 /* NSURLCredential.h */,
 				18906EC61610BF3C0003C892 /* NSURLCredentialStorage.h */,
-				18906EC71610BF3C0003C892 /* NSURLDownload.h */,
 				18906EC81610BF3C0003C892 /* NSURLError.h */,
 				18906EC91610BF3C0003C892 /* NSURLHandle.h */,
 				18906ECA1610BF3C0003C892 /* NSURLProtectionSpace.h */,
@@ -1544,7 +1538,6 @@
 				18394B911610D9D000335E85 /* NSURLConnection.h in Headers */,
 				18394B921610D9D000335E85 /* NSURLCredential.h in Headers */,
 				18394B931610D9D000335E85 /* NSURLCredentialStorage.h in Headers */,
-				18394B941610D9D000335E85 /* NSURLDownload.h in Headers */,
 				18394B951610D9D000335E85 /* NSURLError.h in Headers */,
 				18394B961610D9D000335E85 /* NSURLHandle.h in Headers */,
 				18394B971610D9D000335E85 /* NSURLProtectionSpace.h in Headers */,
@@ -1854,7 +1847,6 @@
 				18394C691610EB7F00335E85 /* NSURLCredential.m in Sources */,
 				18394C6A1610EB8000335E85 /* NSURLCredentialStorage.m in Sources */,
 				063150642359A45700EC6A60 /* NSArray.m in Sources */,
-				18394C6B1610EB8000335E85 /* NSURLDownload.m in Sources */,
 				18394C6C1610EB8000335E85 /* NSURLHandle.m in Sources */,
 				18394C6D1610EB8000335E85 /* NSURLProtectionSpace.m in Sources */,
 				18394C6E1610EB8000335E85 /* NSURLProtocol.m in Sources */,
