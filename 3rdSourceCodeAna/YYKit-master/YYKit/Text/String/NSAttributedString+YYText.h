@@ -1,14 +1,3 @@
-//
-//  NSAttributedString+YYText.h
-//  YYKit <https://github.com/ibireme/YYKit>
-//
-//  Created by ibireme on 14/10/7.
-//  Copyright (c) 2015 ibireme.
-//
-//  This source code is licensed under the MIT-style license found in the
-//  LICENSE file in the root directory of this source tree.
-//
-
 #import <UIKit/UIKit.h>
 #import <CoreText/CoreText.h>
 
@@ -28,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface NSAttributedString (YYText)
 
+
+// 序列化和反序列化, 将所有的操作, 封装到了 YYTextArchiver 中.
 /**
  Archive the string to data.
  @return Returns nil if an error occurs.

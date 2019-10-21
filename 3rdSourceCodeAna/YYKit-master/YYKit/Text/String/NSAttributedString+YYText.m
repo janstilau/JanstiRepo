@@ -47,12 +47,14 @@ YYSYNTH_DUMMY_CLASS(NSAttributedString_YYText)
     return one;
 }
 
+// 对于系统的方法做了一层封装, 增加了错误处理.
 - (NSDictionary *)attributesAtIndex:(NSUInteger)index {
     if (index > self.length || self.length == 0) return nil;
     if (self.length > 0 && index == self.length) index--;
     return [self attributesAtIndex:index effectiveRange:NULL];
 }
 
+// 对于系统的方法做了一层封装, 增加了错误的处理.
 - (id)attribute:(NSString *)attributeName atIndex:(NSUInteger)index {
     if (!attributeName) return nil;
     if (index > self.length || self.length == 0) return nil;
@@ -60,6 +62,7 @@ YYSYNTH_DUMMY_CLASS(NSAttributedString_YYText)
     return [self attribute:attributeName atIndex:index effectiveRange:NULL];
 }
 
+// 返回第一个字符所占有的属性信息.
 - (NSDictionary *)attributes {
     return [self attributesAtIndex:0];
 }
@@ -68,27 +71,13 @@ YYSYNTH_DUMMY_CLASS(NSAttributedString_YYText)
     return [self fontAtIndex:0];
 }
 
+// API 调用的一层封装.
 - (UIFont *)fontAtIndex:(NSUInteger)index {
-    /*
-     In iOS7 and later, UIFont is toll-free bridged to CTFontRef,
-     although Apple does not mention it in documentation.
-     
-     In iOS6, UIFont is a wrapper for CTFontRef, so CoreText can alse use UIfont,
-     but UILabel/UITextView cannot use CTFontRef.
-     
-     We use UIFont for both CoreText and UIKit.
-     */
     UIFont *font = [self attribute:NSFontAttributeName atIndex:index];
-    if (kSystemVersion <= 6) {
-        if (font) {
-            if (CFGetTypeID((__bridge CFTypeRef)(font)) == CTFontGetTypeID()) {
-                font = [UIFont fontWithCTFont:(CTFontRef)font];
-            }
-        }
-    }
     return font;
 }
 
+// 紧缩, 表示间距.
 - (NSNumber *)kern {
     return [self kernAtIndex:0];
 }
@@ -103,17 +92,6 @@ YYSYNTH_DUMMY_CLASS(NSAttributedString_YYText)
 
 - (UIColor *)colorAtIndex:(NSUInteger)index {
     UIColor *color = [self attribute:NSForegroundColorAttributeName atIndex:index];
-    if (!color) {
-        CGColorRef ref = (__bridge CGColorRef)([self attribute:(NSString *)kCTForegroundColorAttributeName atIndex:index]);
-        color = [UIColor colorWithCGColor:ref];
-    }
-    if (color && ![color isKindOfClass:[UIColor class]]) {
-        if (CFGetTypeID((__bridge CFTypeRef)(color)) == CGColorGetTypeID()) {
-            color = [UIColor colorWithCGColor:(__bridge CGColorRef)(color)];
-        } else {
-            color = nil;
-        }
-    }
     return color;
 }
 
@@ -139,10 +117,6 @@ YYSYNTH_DUMMY_CLASS(NSAttributedString_YYText)
 
 - (UIColor *)strokeColorAtIndex:(NSUInteger)index {
     UIColor *color = [self attribute:NSStrokeColorAttributeName atIndex:index];
-    if (!color) {
-        CGColorRef ref = (__bridge CGColorRef)([self attribute:(NSString *)kCTStrokeColorAttributeName atIndex:index]);
-        color = [UIColor colorWithCGColor:ref];
-    }
     return color;
 }
 
@@ -158,6 +132,7 @@ YYSYNTH_DUMMY_CLASS(NSAttributedString_YYText)
     return [self strikethroughStyleAtIndex:0];
 }
 
+//  删除线
 - (NSUnderlineStyle)strikethroughStyleAtIndex:(NSUInteger)index {
     NSNumber *style = [self attribute:NSStrikethroughStyleAttributeName atIndex:index];
     return style.integerValue;
@@ -168,10 +143,7 @@ YYSYNTH_DUMMY_CLASS(NSAttributedString_YYText)
 }
 
 - (UIColor *)strikethroughColorAtIndex:(NSUInteger)index {
-    if (kSystemVersion >= 7) {
-        return [self attribute:NSStrikethroughColorAttributeName atIndex:index];
-    }
-    return nil;
+    return [self attribute:NSStrikethroughColorAttributeName atIndex:index];
 }
 
 - (NSUnderlineStyle)underlineStyle {
@@ -188,14 +160,7 @@ YYSYNTH_DUMMY_CLASS(NSAttributedString_YYText)
 }
 
 - (UIColor *)underlineColorAtIndex:(NSUInteger)index {
-    UIColor *color = nil;
-    if (kSystemVersion >= 7) {
-        color = [self attribute:NSUnderlineColorAttributeName atIndex:index];
-    }
-    if (!color) {
-        CGColorRef ref = (__bridge CGColorRef)([self attribute:(NSString *)kCTUnderlineColorAttributeName atIndex:index]);
-        color = [UIColor colorWithCGColor:ref];
-    }
+    UIColor *color = [self attribute:NSUnderlineColorAttributeName atIndex:index];
     return color;
 }
 
@@ -207,37 +172,22 @@ YYSYNTH_DUMMY_CLASS(NSAttributedString_YYText)
     return [self attribute:NSLigatureAttributeName atIndex:index];
 }
 
-- (NSString *)textEffect {
-    return [self textEffectAtIndex:0];
-}
-
-- (NSString *)textEffectAtIndex:(NSUInteger)index {
-    if (kSystemVersion >= 7) {
-        return [self attribute:NSTextEffectAttributeName atIndex:index];
-    }
-    return nil;
-}
-
+// 倾斜
 - (NSNumber *)obliqueness {
     return [self obliquenessAtIndex:0];
 }
 
 - (NSNumber *)obliquenessAtIndex:(NSUInteger)index {
-    if (kSystemVersion >= 7) {
-        return [self attribute:NSObliquenessAttributeName atIndex:index];
-    }
-    return nil;
+    return [self attribute:NSObliquenessAttributeName atIndex:index];
 }
 
+// 拉伸. 可以用于做紧缩效果.
 - (NSNumber *)expansion {
     return [self expansionAtIndex:0];
 }
 
 - (NSNumber *)expansionAtIndex:(NSUInteger)index {
-    if (kSystemVersion >= 7) {
-        return [self attribute:NSExpansionAttributeName atIndex:index];
-    }
-    return nil;
+    return [self attribute:NSExpansionAttributeName atIndex:index];
 }
 
 - (NSNumber *)baselineOffset {
@@ -245,10 +195,7 @@ YYSYNTH_DUMMY_CLASS(NSAttributedString_YYText)
 }
 
 - (NSNumber *)baselineOffsetAtIndex:(NSUInteger)index {
-    if (kSystemVersion >= 7) {
-        return [self attribute:NSBaselineOffsetAttributeName atIndex:index];
-    }
-    return nil;
+    return [self attribute:NSBaselineOffsetAttributeName atIndex:index];
 }
 
 - (BOOL)verticalGlyphForm {
@@ -284,20 +231,7 @@ YYSYNTH_DUMMY_CLASS(NSAttributedString_YYText)
 }
 
 - (NSParagraphStyle *)paragraphStyleAtIndex:(NSUInteger)index {
-    /*
-     NSParagraphStyle is NOT toll-free bridged to CTParagraphStyleRef.
-     
-     CoreText can use both NSParagraphStyle and CTParagraphStyleRef,
-     but UILabel/UITextView can only use NSParagraphStyle.
-     
-     We use NSParagraphStyle in both CoreText and UIKit.
-     */
     NSParagraphStyle *style = [self attribute:NSParagraphStyleAttributeName atIndex:index];
-    if (style) {
-        if (CFGetTypeID((__bridge CFTypeRef)(style)) == CTParagraphStyleGetTypeID()) { \
-            style = [NSParagraphStyle styleWithCTStyle:(__bridge CTParagraphStyleRef)(style)];
-        }
-    }
     return style;
 }
 
@@ -311,6 +245,7 @@ NSParagraphStyle *style = [self paragraphStyleAtIndex:index]; \
 if (!style) style = [NSParagraphStyle defaultParagraphStyle]; \
 return style. _attr_;
 
+// 这里, 用宏的方式, 减少了大量的重复代码.
 - (NSTextAlignment)alignment {
     ParagraphAttribute(alignment);
 }
@@ -437,6 +372,8 @@ return style. _attr_;
 
 #undef ParagraphAttribute
 #undef ParagraphAttributeAtIndex
+
+// 下面的都是 YYKit 自定义的一些属性.
 
 - (YYTextShadow *)textShadow {
     return [self textShadowAtIndex:0];

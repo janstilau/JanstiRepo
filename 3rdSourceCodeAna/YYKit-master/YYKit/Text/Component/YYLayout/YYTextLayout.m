@@ -2155,7 +2155,6 @@ fail:
                 layer:(CALayer *)layer
                 debug:(YYTextDebugOption *)debug
                cancel:(BOOL (^)(void))cancel{
-    // if (cancel && cancel()) return; 可以作为之后判断的模板. 在这里面, 还是在子线程中, 所以大量调用了 isCancel 的判断.
     @autoreleasepool {
         if (self.needDrawBlockBorder && context) {
             if (cancel && cancel()) return;

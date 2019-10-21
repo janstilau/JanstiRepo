@@ -13,24 +13,25 @@
 @implementation YYTextAttributeExample
 
 - (void)viewDidLoad {
+    self.navigationController.navigationBar.alpha = 0.5;
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     __weak typeof(self) _self = self;
     [YYTextExampleHelper addDebugOptionToViewController:self];
     
-    NSMutableAttributedString *text = [NSMutableAttributedString new];
+    NSMutableAttributedString *textCollecter = [NSMutableAttributedString new];
     
     {
-        NSMutableAttributedString *one = [[NSMutableAttributedString alloc] initWithString:@"Shadow"];
-        one.font = [UIFont boldSystemFontOfSize:30];
-        one.color = [UIColor whiteColor];
+        NSMutableAttributedString *attriText = [[NSMutableAttributedString alloc] initWithString:@"Shadow"];
+        attriText.font = [UIFont boldSystemFontOfSize:30];
+        attriText.color = [UIColor whiteColor];
         YYTextShadow *shadow = [YYTextShadow new];
         shadow.color = [UIColor colorWithWhite:0.000 alpha:0.490];
         shadow.offset = CGSizeMake(0, 1);
         shadow.radius = 5;
-        one.textShadow = shadow;
-        [text appendAttributedString:one];
-        [text appendAttributedString:[self padding]];
+        attriText.textShadow = shadow;
+        [textCollecter appendAttributedString:attriText];
+        [textCollecter appendAttributedString:[self padding]];
     }
     
     {
@@ -42,8 +43,8 @@
         shadow.offset = CGSizeMake(0, 1);
         shadow.radius = 1;
         one.textInnerShadow = shadow;
-        [text appendAttributedString:one];
-        [text appendAttributedString:[self padding]];
+        [textCollecter appendAttributedString:one];
+        [textCollecter appendAttributedString:[self padding]];
     }
     
     {
@@ -68,8 +69,8 @@
         innerShadow.radius = 1;
         one.textInnerShadow = innerShadow;
         
-        [text appendAttributedString:one];
-        [text appendAttributedString:[self padding]];
+        [textCollecter appendAttributedString:one];
+        [textCollecter appendAttributedString:[self padding]];
     }
     
     {
@@ -93,8 +94,8 @@
         }];
         one.color = [UIColor colorWithPatternImage:background];
         
-        [text appendAttributedString:one];
-        [text appendAttributedString:[self padding]];
+        [textCollecter appendAttributedString:one];
+        [textCollecter appendAttributedString:[self padding]];
     }
     
     {
@@ -110,12 +111,12 @@
         border.insets = UIEdgeInsetsMake(0, -4, 0, -4);
         one.textBackgroundBorder = border;
         
-        [text appendAttributedString:[self padding]];
-        [text appendAttributedString:one];
-        [text appendAttributedString:[self padding]];
-        [text appendAttributedString:[self padding]];
-        [text appendAttributedString:[self padding]];
-        [text appendAttributedString:[self padding]];
+        [textCollecter appendAttributedString:[self padding]];
+        [textCollecter appendAttributedString:one];
+        [textCollecter appendAttributedString:[self padding]];
+        [textCollecter appendAttributedString:[self padding]];
+        [textCollecter appendAttributedString:[self padding]];
+        [textCollecter appendAttributedString:[self padding]];
     }
     
     {
@@ -148,8 +149,8 @@
                              [_self showMessage:[NSString stringWithFormat:@"Tap: %@", [text.string substringWithRange:range]]];
                          }];
         
-        [text appendAttributedString:one];
-        [text appendAttributedString:[self padding]];
+        [textCollecter appendAttributedString:one];
+        [textCollecter appendAttributedString:[self padding]];
     }
     
     {
@@ -178,8 +179,8 @@
         };
         [one setTextHighlight:highlight range:one.rangeOfAll];
         
-        [text appendAttributedString:one];
-        [text appendAttributedString:[self padding]];
+        [textCollecter appendAttributedString:one];
+        [textCollecter appendAttributedString:[self padding]];
     }
     
     {
@@ -214,12 +215,14 @@
         [highlight setInnerShadow:innerShadow0];
         [one setTextHighlight:highlight range:one.rangeOfAll];
         
-        [text appendAttributedString:one];
+        [textCollecter appendAttributedString:one];
     }
     
     
     YYLabel *label = [YYLabel new];
-    label.attributedText = text;
+    label.layer.borderColor = [[UIColor redColor] CGColor];
+    label.layer.borderWidth = 1;
+    label.attributedText = textCollecter;
     label.width = self.view.width;
     label.height = self.view.height - (kiOS7Later ? 64 : 44);
     label.top = (kiOS7Later ? 64 : 0);

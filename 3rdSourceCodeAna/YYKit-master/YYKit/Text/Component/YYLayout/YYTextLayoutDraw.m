@@ -9,7 +9,6 @@
 #import "YYTextLayoutDraw.h"
 #import "YYTextLayout.h"
 
-// 这里仅仅是做一个限制工作.
  inline CGSize YYTextClipCGSize(CGSize size) {
     if (size.width > YYTextContainerMaxSize.width) size.width = YYTextContainerMaxSize.width;
     if (size.height > YYTextContainerMaxSize.height) size.height = YYTextContainerMaxSize.height;

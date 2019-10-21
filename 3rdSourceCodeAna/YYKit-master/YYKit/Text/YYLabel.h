@@ -1,14 +1,3 @@
-//
-//  YYLabel.h
-//  YYKit <https://github.com/ibireme/YYKit>
-//
-//  Created by ibireme on 15/2/25.
-//  Copyright (c) 2015 ibireme.
-//
-//  This source code is licensed under the MIT-style license found in the
-//  LICENSE file in the root directory of this source tree.
-//
-
 #import <UIKit/UIKit.h>
 
 #if __has_include(<YYKit/YYKit.h>)
@@ -31,10 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
  @discussion The API and behavior is similar to UILabel, but provides more features:
  
  * It supports asynchronous layout and rendering (to avoid blocking UI thread).
- * It extends the CoreText attributes to support more text effects.
- * It allows to add UIImage, UIView and CALayer as text attachments.
- * It allows to add 'highlight' link to some range of text to allow user interact with.
- * It allows to add container path and exclusion paths to control text container's shape.
+ * It extends the CoreText attributes to support more text effects. // 这里, 它是明确的知道了, AttributeString 到底是什么东西.
+ * It allows to add UIImage, UIView and CALayer as text attachments.// 自定义 UIView 才能实现.
+ * It allows to add 'highlight' link to some range of text to allow user interact with. // 自定义 UIView, 监听点击.
+ * It allows to add container path and exclusion paths to control text container's shape. // 未知.
  * It supports vertical form layout to display CJK text.
  
  See NSAttributedString+YYText.h for more convenience methods to set the attributes.

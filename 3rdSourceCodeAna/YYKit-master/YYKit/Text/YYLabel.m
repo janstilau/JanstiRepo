@@ -45,8 +45,8 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     NSTimer *_longPressTimer;
     CGPoint _touchBeganPoint;
     
-    struct { // 节省空间, 个人感觉没有必要.
-        unsigned int layoutNeedUpdate : 1; // 设置需要需要重新计算布局. 在 frame, bounds 改变, 以及明确的调用 _setLayoutNeedUpdate 之后, 这个值变为YES.
+    struct {
+        unsigned int layoutNeedUpdate : 1;
         unsigned int showingHighlight : 1;
         
         unsigned int trackingTouch : 1;
@@ -57,7 +57,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         unsigned int hasLongPressAction : 1;
         
         unsigned int contentsNeedFade : 1;
-    } _state;
+    } _currentState;
 }
 @end
 
@@ -121,7 +121,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     if (!CGSizeEqualToSize(oldSize, newSize)) {
         _innerContainer.size = self.bounds.size;
         if (!_ignoreCommonProperties) {
-            _state.layoutNeedUpdate = YES;
+            _currentState.layoutNeedUpdate = YES;
         }
         if (_displaysAsynchronously && _clearContentsBeforeAsynchronouslyDisplay) {
             [self _clearContents];
@@ -137,7 +137,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     if (!CGSizeEqualToSize(oldSize, newSize)) {
         _innerContainer.size = self.bounds.size;
         if (!_ignoreCommonProperties) {
-            _state.layoutNeedUpdate = YES;
+            _currentState.layoutNeedUpdate = YES;
         }
         if (_displaysAsynchronously && _clearContentsBeforeAsynchronouslyDisplay) {
             [self _clearContents];
@@ -193,8 +193,8 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
 #pragma mark - Private
 
 - (void)_updateIfNeeded {
-    if (_state.layoutNeedUpdate) {
-        _state.layoutNeedUpdate = NO;
+    if (_currentState.layoutNeedUpdate) {
+        _currentState.layoutNeedUpdate = NO;
         [self _updateLayout];
         [self.layer setNeedsDisplay];
     }
@@ -206,7 +206,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
 }
 
 - (void)_setLayoutNeedUpdate {
-    _state.layoutNeedUpdate = YES;
+    _currentState.layoutNeedUpdate = YES;
     [self _clearInnerLayout];
     [self _setLayoutNeedRedraw];
 }
@@ -272,7 +272,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
 
 - (void)_trackDidLongPress {
     [self _endLongPressTimer];
-    if (_state.hasLongPressAction && _textLongPressAction) {
+    if (_currentState.hasLongPressAction && _textLongPressAction) {
         NSRange range = NSMakeRange(NSNotFound, 0);
         CGRect rect = CGRectNull;
         CGPoint point = [self _convertPointToLayout:_touchBeganPoint];
@@ -295,7 +295,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
             rect = [self _convertRectFromLayout:rect];
             longPressAction(self, _innerText, _highlightRange, rect);
             [self _removeHighlightAnimated:YES];
-            _state.trackingTouch = NO;
+            _currentState.trackingTouch = NO;
         }
     }
 }
@@ -336,17 +336,17 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         if (!_highlightLayout) _highlight = nil;
     }
     
-    if (_highlightLayout && !_state.showingHighlight) {
-        _state.showingHighlight = YES;
-        _state.contentsNeedFade = animated;
+    if (_highlightLayout && !_currentState.showingHighlight) {
+        _currentState.showingHighlight = YES;
+        _currentState.contentsNeedFade = animated;
         [self _setLayoutNeedRedraw];
     }
 }
 
 - (void)_hideHighlightAnimated:(BOOL)animated {
-    if (_state.showingHighlight) {
-        _state.showingHighlight = NO;
-        _state.contentsNeedFade = animated;
+    if (_currentState.showingHighlight) {
+        _currentState.showingHighlight = NO;
+        _currentState.contentsNeedFade = animated;
         [self _setLayoutNeedRedraw];
     }
 }
@@ -361,7 +361,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
 - (void)_endTouch {
     [self _endLongPressTimer];
     [self _removeHighlightAnimated:YES];
-    _state.trackingTouch = NO;
+    _currentState.trackingTouch = NO;
 }
 
 - (CGPoint)_convertPointToLayout:(CGPoint)point {
@@ -533,22 +533,22 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     _highlight = [self _getHighlightAtPoint:point range:&_highlightRange];
     _highlightLayout = nil;
     _shrinkHighlightLayout = nil;
-    _state.hasTapAction = _textTapAction != nil;
-    _state.hasLongPressAction = _textLongPressAction != nil;
+    _currentState.hasTapAction = _textTapAction != nil;
+    _currentState.hasLongPressAction = _textLongPressAction != nil;
     
     if (_highlight || _textTapAction || _textLongPressAction) {
         _touchBeganPoint = point;
-        _state.trackingTouch = YES;
-        _state.swallowTouch = YES;
-        _state.touchMoved = NO;
+        _currentState.trackingTouch = YES;
+        _currentState.swallowTouch = YES;
+        _currentState.touchMoved = NO;
         [self _startLongPressTimer];
         if (_highlight) [self _showHighlightAnimated:NO];
     } else {
-        _state.trackingTouch = NO;
-        _state.swallowTouch = NO;
-        _state.touchMoved = NO;
+        _currentState.trackingTouch = NO;
+        _currentState.swallowTouch = NO;
+        _currentState.touchMoved = NO;
     }
-    if (!_state.swallowTouch) {
+    if (!_currentState.swallowTouch) {
         [super touchesBegan:touches withEvent:event];
     }
 }
@@ -559,20 +559,20 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     UITouch *touch = touches.anyObject;
     CGPoint point = [touch locationInView:self];
     
-    if (_state.trackingTouch) {
-        if (!_state.touchMoved) {
+    if (_currentState.trackingTouch) {
+        if (!_currentState.touchMoved) {
             CGFloat moveH = point.x - _touchBeganPoint.x;
             CGFloat moveV = point.y - _touchBeganPoint.y;
             if (fabs(moveH) > fabs(moveV)) {
-                if (fabs(moveH) > kLongPressAllowableMovement) _state.touchMoved = YES;
+                if (fabs(moveH) > kLongPressAllowableMovement) _currentState.touchMoved = YES;
             } else {
-                if (fabs(moveV) > kLongPressAllowableMovement) _state.touchMoved = YES;
+                if (fabs(moveV) > kLongPressAllowableMovement) _currentState.touchMoved = YES;
             }
-            if (_state.touchMoved) {
+            if (_currentState.touchMoved) {
                 [self _endLongPressTimer];
             }
         }
-        if (_state.touchMoved && _highlight) {
+        if (_currentState.touchMoved && _highlight) {
             YYTextHighlight *highlight = [self _getHighlightAtPoint:point range:NULL];
             if (highlight == _highlight) {
                 [self _showHighlightAnimated:_fadeOnHighlight];
@@ -582,7 +582,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         }
     }
     
-    if (!_state.swallowTouch) {
+    if (!_currentState.swallowTouch) {
         [super touchesMoved:touches withEvent:event];
     }
 }
@@ -591,9 +591,9 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     UITouch *touch = touches.anyObject;
     CGPoint point = [touch locationInView:self];
     
-    if (_state.trackingTouch) {
+    if (_currentState.trackingTouch) {
         [self _endLongPressTimer];
-        if (!_state.touchMoved && _textTapAction) {
+        if (!_currentState.touchMoved && _textTapAction) {
             NSRange range = NSMakeRange(NSNotFound, 0);
             CGRect rect = CGRectNull;
             CGPoint point = [self _convertPointToLayout:_touchBeganPoint];
@@ -608,7 +608,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         }
         
         if (_highlight) {
-            if (!_state.touchMoved || [self _getHighlightAtPoint:point range:NULL] == _highlight) {
+            if (!_currentState.touchMoved || [self _getHighlightAtPoint:point range:NULL] == _highlight) {
                 YYTextAction tapAction = _highlight.tapAction ? _highlight.tapAction : _highlightTapAction;
                 if (tapAction) {
                     YYTextPosition *start = [YYTextPosition positionWithOffset:_highlightRange.location];
@@ -623,14 +623,14 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         }
     }
     
-    if (!_state.swallowTouch) {
+    if (!_currentState.swallowTouch) {
         [super touchesEnded:touches withEvent:event];
     }
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     [self _endTouch];
-    if (!_state.swallowTouch) [super touchesCancelled:touches withEvent:event];
+    if (!_currentState.swallowTouch) [super touchesCancelled:touches withEvent:event];
 }
 
 #pragma mark - Properties
@@ -993,7 +993,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     if (_displaysAsynchronously && _clearContentsBeforeAsynchronouslyDisplay) {
         [self _clearContents];
     }
-    _state.layoutNeedUpdate = NO;
+    _currentState.layoutNeedUpdate = NO;
     [self _setLayoutNeedRedraw];
     [self _endTouch];
     [self invalidateIntrinsicContentSize];
@@ -1061,16 +1061,16 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
 - (YYAsyncLayerDisplayTask *)newAsyncDisplayTask {
     
     // capture current context
-    BOOL contentsNeedFade = _state.contentsNeedFade;
+    BOOL contentsNeedFade = _currentState.contentsNeedFade;
     NSAttributedString *text = _innerText;
     YYTextContainer *container = _innerContainer;
     YYTextVerticalAlignment verticalAlignment = _textVerticalAlignment;
     YYTextDebugOption *debug = _debugOption;
     NSMutableArray *attachmentViews = _attachmentViews;
     NSMutableArray *attachmentLayers = _attachmentLayers;
-    BOOL layoutNeedUpdate = _state.layoutNeedUpdate;
+    BOOL layoutNeedUpdate = _currentState.layoutNeedUpdate;
     BOOL fadeForAsync = _displaysAsynchronously && _fadeOnAsynchronouslyDisplay;
-    __block YYTextLayout *currentLayout = (_state.showingHighlight && _highlightLayout) ? self._highlightLayout : self._innerLayout;
+    __block YYTextLayout *currentLayout = (_currentState.showingHighlight && _highlightLayout) ? self._highlightLayout : self._innerLayout;
     __block YYTextLayout *shrinkLayout = nil;
     __block BOOL layoutUpdated = NO;
     if (layoutNeedUpdate) {
@@ -1163,10 +1163,10 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         
         __strong YYLabel *view = (YYLabel *)layer.delegate;
         if (!view) return;
-        if (view->_state.layoutNeedUpdate && layoutUpdated) {
+        if (view->_currentState.layoutNeedUpdate && layoutUpdated) {
             view->_innerLayout = currentLayout;
             view->_shrinkInnerLayout = shrinkLayout;
-            view->_state.layoutNeedUpdate = NO;
+            view->_currentState.layoutNeedUpdate = NO;
         }
         
         CGSize size = layer.bounds.size;
