@@ -529,6 +529,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
 }
 
 #pragma mark - Touches
+// 可以在这里学习一下手势的处理过程到底是怎么回事.
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self _updateIfNeeded];
@@ -549,9 +550,9 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         _currentState.swallowTouch = YES; //
         _currentState.touchMoved = NO;
         [self _startLongPressTimer];
-        if (_highlight) [self _showHighlightAnimated:NO];
+        if (_highlight) [self _showHighlightAnimated:NO]; // 更新 highLight 位置的高亮.
     } else {
-        _currentState.trackingTouch = NO;
+        _currentState.trackingTouch = NO; // 如果没有触摸回调, 那么这个属性为 NO, 其他的 touch 函数中什么都不会处理.
         _currentState.swallowTouch = NO;
         _currentState.touchMoved = NO;
     }
