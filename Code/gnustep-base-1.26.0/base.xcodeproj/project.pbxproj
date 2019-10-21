@@ -350,8 +350,6 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.S";
 			fileType = pattern.proxy;
-			inputFiles = (
-			);
 			isEditable = 1;
 			outputFiles = (
 				"${OBJECT_FILE_DIR}/${INPUT_FILE_NAME}.o",
@@ -849,6 +847,8 @@
 		063150402359A45700EC6A60 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906F871610BF3C0003C892 /* NSCountedSet.m */,
+				18906F751610BF3C0003C892 /* NSAutoreleasePool.m */,
 				18906F8E1610BF3C0003C892 /* NSDictionary.m */,
 				18906F941610BF3C0003C892 /* NSException.m */,
 				18906F731610BF3C0003C892 /* NSAssertionHandler.m */,
@@ -1007,7 +1007,6 @@
 				18F8D04F1724534E00420DA5 /* KVO */,
 				18906F701610BF3C0003C892 /* NSAffineTransform.m */,
 				18906F711610BF3C0003C892 /* NSArchiver.m */,
-				18906F751610BF3C0003C892 /* NSAutoreleasePool.m */,
 				18906F761610BF3C0003C892 /* NSBundle.m */,
 				18906F771610BF3C0003C892 /* NSCache.m */,
 				18906F791610BF3C0003C892 /* NSCalendar.m */,
@@ -1021,7 +1020,6 @@
 				18906F841610BF3C0003C892 /* NSConcretePointerFunctions.m */,
 				18906F851610BF3C0003C892 /* NSConnection.m */,
 				18906F861610BF3C0003C892 /* NSCopyObject.m */,
-				18906F871610BF3C0003C892 /* NSCountedSet.m */,
 				18906F891610BF3C0003C892 /* NSDate.m */,
 				18906F8A1610BF3C0003C892 /* NSDateFormatter.m */,
 				18906F8B1610BF3C0003C892 /* NSDebug.m */,

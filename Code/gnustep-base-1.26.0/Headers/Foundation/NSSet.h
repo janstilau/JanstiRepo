@@ -1,31 +1,3 @@
-/** Interface for NSSet, NSMutableSet, NSCountedSet for GNUStep
-   Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Created: Sep 1995
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   AutogsdocSource: NSSet.m
-   AutogsdocSource: NSCountedSet.m
-
-   */
-
 #ifndef _NSSet_h_GNUSTEP_BASE_INCLUDE
 #define _NSSet_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -34,19 +6,15 @@
 #import <Foundation/NSEnumerator.h>
 #import <GNUstepBase/GSBlocks.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class GS_GENERIC_CLASS(NSArray, ElementT);
 @class GS_GENERIC_CLASS(NSEnumerator, ElementT);
 @class GS_GENERIC_CLASS(NSDictionary, KeyT:id<NSCopying>, ValT);
 @class NSString;
 
 @interface GS_GENERIC_CLASS(NSSet, __covariant ElementT) : NSObject <NSCoding,
-                                                             NSCopying,
-                                                             NSMutableCopying,
-                                                             NSFastEnumeration>
+NSCopying,
+NSMutableCopying,
+NSFastEnumeration>
 
 + (instancetype) set;
 + (instancetype) setWithArray: (GS_GENERIC_CLASS(NSArray, ElementT)*)objects;
@@ -54,7 +22,7 @@ extern "C" {
 + (instancetype) setWithObjects: (GS_GENERIC_TYPE(ElementT))firstObject, ...;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 + (instancetype) setWithObjects: (const GS_GENERIC_TYPE(ElementT)[])objects
-		                  count: (NSUInteger)count;
+count: (NSUInteger)count;
 #endif
 + (instancetype) setWithSet: (GS_GENERIC_CLASS(NSSet, ElementT)*)aSet;
 
@@ -69,10 +37,10 @@ extern "C" {
 - (instancetype) initWithArray: (GS_GENERIC_CLASS(NSArray, ElementT)*)other;
 - (instancetype) initWithObjects: (GS_GENERIC_TYPE(ElementT))firstObject, ...;
 - (instancetype) initWithObjects: (const GS_GENERIC_TYPE(ElementT)[])objects
-		                   count: (NSUInteger)count;
+count: (NSUInteger)count;
 - (instancetype) initWithSet: (GS_GENERIC_CLASS(NSSet, ElementT)*)other;
 - (instancetype) initWithSet: (GS_GENERIC_CLASS(NSSet, ElementT)*)other
-                   copyItems: (BOOL)flag;
+copyItems: (BOOL)flag;
 
 - (BOOL) intersectsSet: (GS_GENERIC_CLASS(NSSet, ElementT)*)otherSet;
 - (BOOL) isEqualToSet: (GS_GENERIC_CLASS(NSSet, ElementT)*)other;
@@ -111,28 +79,28 @@ DEFINE_BLOCK_TYPE(GSSetFilterBlock, BOOL, GS_GENERIC_TYPE(ElementT), BOOL*);
  * that it should be enumerated in reverse order.
  */
 - (void) enumerateObjectsWithOptions: (NSEnumerationOptions)opts
-                          usingBlock: (GSSetEnumeratorBlock)aBlock;
+usingBlock: (GSSetEnumeratorBlock)aBlock;
 
 - (GS_GENERIC_CLASS(NSSet, ElementT) *) objectsPassingTest:
-    (GSSetFilterBlock)aBlock;
+(GSSetFilterBlock)aBlock;
 
 - (GS_GENERIC_CLASS(NSSet, ElementT) *) objectsWithOptions:
-    (NSEnumerationOptions)opts
-                                    passingTest: (GSSetFilterBlock)aBlock;
+(NSEnumerationOptions)opts
+passingTest: (GSSetFilterBlock)aBlock;
 #endif
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST)
 - (GS_GENERIC_CLASS(NSSet, ElementT) *) setByAddingObject:
-    (GS_GENERIC_TYPE(ElementT))anObject;
+(GS_GENERIC_TYPE(ElementT))anObject;
 - (GS_GENERIC_CLASS(NSSet, ElementT) *) setByAddingObjectsFromSet:
-    (GS_GENERIC_CLASS(NSSet, ElementT) *)other;
+(GS_GENERIC_CLASS(NSSet, ElementT) *)other;
 - (GS_GENERIC_CLASS(NSSet, ElementT) *) setByAddingObjectsFromArray:
-    (GS_GENERIC_CLASS(NSArray, ElementT) *)other;
+(GS_GENERIC_CLASS(NSArray, ElementT) *)other;
 #endif
 @end
 
 @interface GS_GENERIC_CLASS(NSMutableSet, ElementT):
-  GS_GENERIC_CLASS(NSSet, ElementT)
+GS_GENERIC_CLASS(NSSet, ElementT)
 
 + (instancetype) setWithCapacity: (NSUInteger)numItems;
 
@@ -150,7 +118,7 @@ DEFINE_BLOCK_TYPE(GSSetFilterBlock, BOOL, GS_GENERIC_TYPE(ElementT), BOOL*);
 @end
 
 @interface GS_GENERIC_CLASS(NSCountedSet, ElementT) :
-  GS_GENERIC_CLASS(NSMutableSet, ElementT)
+GS_GENERIC_CLASS(NSMutableSet, ElementT)
 
 - (NSUInteger) countForObject: (GS_GENERIC_TYPE(ElementT))anObject;
 
@@ -192,7 +160,7 @@ DEFINE_BLOCK_TYPE(GSSetFilterBlock, BOOL, GS_GENERIC_TYPE(ElementT), BOOL*);
  * </p>
  */
 - (GS_GENERIC_TYPE(ElementT)) unique:
-    (GS_GENERIC_TYPE(ElementT)) NS_CONSUMED anObject NS_RETURNS_RETAINED;
+(GS_GENERIC_TYPE(ElementT)) NS_CONSUMED anObject NS_RETURNS_RETAINED;
 @end
 
 /*
@@ -233,9 +201,4 @@ void	GSUPurge(NSUInteger count);
 id	GSUSet(id anObject, NSUInteger count);
 
 #endif	/* GS_API_NONE */
-
-#if	defined(__cplusplus)
-}
-#endif
-
 #endif

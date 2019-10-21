@@ -188,8 +188,8 @@ NS_AUTOMATED_REFCOUNT_UNAVAILABLE
      with exceptions. */
   NSAutoreleasePool *_child;
   /* A collection of the objects to be released. */
-  struct autorelease_array_list *_released;
-  struct autorelease_array_list *_released_head;
+  struct autorelease_array_list *_tail;
+  struct autorelease_array_list *_head;
   /* The total number of objects autoreleased in this pool. */
   unsigned _released_count;
   /* The method to add an object to this pool */

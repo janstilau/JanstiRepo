@@ -896,7 +896,7 @@ unregisterActiveThread(NSThread *thread)
 {
     pthread_spin_init(&lockInfo.spin, 0);
     lockInfo.held = NSCreateHashTable(NSNonOwnedPointerHashCallBacks, 10);
-    init_autorelease_thread_vars(&_autorelease_vars);
+    init_autorelease_thread_vars(&_autorelease_vars); // 自动释放池相关的设置.
     return self;
 }
 

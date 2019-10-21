@@ -1796,20 +1796,7 @@ static id gs_weak_load(id obj)
  */
 - (id) autorelease
 {
-    if (double_release_check_enabled)
-    {
-        NSUInteger release_count;
-        NSUInteger retain_count = [self retainCount];
-        release_count = [autorelease_class autoreleaseCountForObject:self];
-        if (release_count > retain_count)
-            [NSException
-             raise: NSGenericException
-             format: @"Autorelease would release object too many times.\n"
-             @"%"PRIuPTR" release(s) versus %"PRIuPTR" retain(s)",
-             release_count, retain_count];
-    }
-    
-    (*autorelease_imp)(autorelease_class, autorelease_sel, self);
+    (*autorelease_imp)(autorelease_class, autorelease_sel, self); // 就是直接调用NSAutoReleasePool 的方法.
     return self;
 }
 
