@@ -107,7 +107,8 @@ static dispatch_queue_t YYAsyncLayerGetReleaseQueue() {
  Calling this method causes the layer to recache its content. This results in the layer potentially calling either the displayLayer: or drawLayer:inContext: method of its delegate. The existing content in the layer’s contents property is removed to make way for the new content.
  */
 - (void)setNeedsDisplay {
-    [self _cancelAsyncDisplay]; // 这里, cancel 就是将哨兵的计数器加一, 然后异步渲染完成之后, 如果发现计数器和自己的不一样了, 就不进行 contents 的赋值操作. 也就是说, 生成 contents 的过程不去取消, 仅仅是最后不进行赋值. 这个操作其实很常见, 例如图片的异步下载, 下载操作是不会取消的, 取消的仅仅是最后的 image = downloadImage 的赋值语句.
+    [self _cancelAsyncDisplay];
+    // 这里, cancel 就是将哨兵的计数器加一, 然后异步渲染完成之后, 如果发现计数器和自己的不一样了, 就不进行 contents 的赋值操作. 也就是说, 生成 contents 的过程不去取消, 仅仅是最后不进行赋值. 这个操作其实很常见, 例如图片的异步下载, 下载操作是不会取消的, 取消的仅仅是最后的 image = downloadImage 的赋值语句.
     [super setNeedsDisplay];
 }
 
@@ -116,12 +117,8 @@ static dispatch_queue_t YYAsyncLayerGetReleaseQueue() {
  The layer calls this method at appropriate times to update the layer’s content.
  If the layer has a delegate object, this method attempts to call the delegate’s displayLayer: method, which the delegate can use to update the layer’s contents.
  If the delegate does not implement the displayLayer: method, this method creates a backing store and calls the layer’s drawInContext: method to fill that backing store with content.
- layer’s drawInContext 不会执行任何事情, 之后调用自己delegate 的  drawLayer:inContext:, 当然了, 这个函数就会跑到 drawRect 方法里面, 把 context 的值传过去.
- 所以, 改变一个视图的 layer 可以在 displayLayer, 在这里面, 直接替换 contents 的值就可以. 不然的话, 就是在 drawRect 里面, 这个时候, 就是在上下文中进行画图.
- The new backing store replaces the previous contents of the layer.
  
- Subclasses can override this method and use it to set the layer’s contents property directly. You might do this if your custom layer subclass handles layer updates differently.
- 这里, 就是重写了 display 方法, 自己掌握了 contents 的赋值.
+ CALayer
  */
 
 - (void)display {
@@ -138,7 +135,10 @@ static dispatch_queue_t YYAsyncLayerGetReleaseQueue() {
     __strong id<YYAsyncLayerDelegate> delegate = (id)self.delegate;
     YYAsyncLayerDisplayTask *task = [delegate newAsyncDisplayTask];
     /*
-     这个 task 有三个值, 一个是 willDisplay, 代表绘制之前应该调用, 一个是 display 表示绘制的主过程, 一个是 didDisplay 表示绘制之后应该完成的人物.
+     这个 task 有三个值,
+     一个是 willDisplay, 代表绘制之前应该调用,
+     一个是 display 表示绘制的主过程,
+     一个是 didDisplay 表示绘制之后应该完成的任务.
      */
     if (!task.display) { // 如果, 没有主任务, 那么调用之前, 清空 contents, 之后, 然后退出.
         if (task.willDisplay) task.willDisplay(self);
@@ -151,7 +151,7 @@ static dispatch_queue_t YYAsyncLayerGetReleaseQueue() {
         if (task.willDisplay) task.willDisplay(self); // 执行 willDisplay 任务.
         YYSentinel *sentinel = _sentinel;
         int32_t value = sentinel.value;
-        // isCancelled 就是拿当前值和之后value 进行比较, 这里为什么要专门进行一次赋值擦欧洲.
+        // 闭包里面, 存储的是当前 sentinel 的值, 和 sentinel 里面一直更新的值相比较, 如果不一样, 代表着有这个方法重新进入了, 也就是这一次的操作, 应该取消了.
         BOOL (^isCancelled)(void) = ^BOOL(void) {
             return value != sentinel.value;
         };
@@ -200,7 +200,7 @@ static dispatch_queue_t YYAsyncLayerGetReleaseQueue() {
                 // 上面的操作, 是设置背景色.
                 CGColorRelease(backgroundColor);
             }
-            // 执行真正的绘制人物.
+            // 执行真正的绘制任务. 这个任务, 是YYLabel 传递过来的.
             task.display(context, size, isCancelled);
             if (isCancelled()) {
                 // 如果, 绘制之后发现取消了, 那么执行失败回调.
@@ -236,27 +236,30 @@ static dispatch_queue_t YYAsyncLayerGetReleaseQueue() {
     // 同步也就是没有那些 isCancelled 的判断操作了.其他的都一样.
     [_sentinel increase];
     if (task.willDisplay) task.willDisplay(self);
+    
+    // 生成一个 imageContext, opaque 控制着是否要存储 alpha 的信息, contentScale 控制着, 一个逻辑点要多少的像素点填充.
     UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, self.contentsScale);
     CGContextRef context = UIGraphicsGetCurrentContext();
     if (self.opaque && context) {
         CGSize size = self.bounds.size;
         size.width *= self.contentsScale;
         size.height *= self.contentsScale;
+        // 非常厉害的代码风格控制手法, 将栈的操作, 控制在一个明显的代码段中.
         CGContextSaveGState(context); {
             if (!self.backgroundColor || CGColorGetAlpha(self.backgroundColor) < 1) {
                 CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
                 CGContextAddRect(context, CGRectMake(0, 0, size.width, size.height));
                 CGContextFillPath(context);
-            }
+            } // 填充白色.
             if (self.backgroundColor) {
                 CGContextSetFillColorWithColor(context, self.backgroundColor);
                 CGContextAddRect(context, CGRectMake(0, 0, size.width, size.height));
                 CGContextFillPath(context);
-            }
+            } // 填充背景色.
         } CGContextRestoreGState(context);
     }
-    task.display(context, self.bounds.size, ^{return NO;});
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    task.display(context, self.bounds.size, ^{return NO;}); // 同步绘画, 不会有 cancel 的时候.
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext(); // 获取 backingImage, 然后设置为自己的 contents.
     UIGraphicsEndImageContext();
     self.contents = (__bridge id)(image.CGImage);
     if (task.didDisplay) task.didDisplay(self, YES);

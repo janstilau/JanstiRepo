@@ -126,7 +126,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         if (_displaysAsynchronously && _clearContentsBeforeAsynchronouslyDisplay) {
             [self _clearContents];
         }
-        [self _setLayoutNeedRedraw];
+        [self _setLayerNeedRedraw];
     }
 }
 
@@ -142,7 +142,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         if (_displaysAsynchronously && _clearContentsBeforeAsynchronouslyDisplay) {
             [self _clearContents];
         }
-        [self _setLayoutNeedRedraw];
+        [self _setLayerNeedRedraw];
     }
 }
 
@@ -208,10 +208,10 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
 - (void)_setLayoutNeedUpdate {
     _currentState.layoutNeedUpdate = YES;
     [self _clearInnerLayout];
-    [self _setLayoutNeedRedraw];
+    [self _setLayerNeedRedraw];
 }
 
-- (void)_setLayoutNeedRedraw {
+- (void)_setLayerNeedRedraw {
     [self.layer setNeedsDisplay];
 }
 
@@ -339,7 +339,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     if (_highlightLayout && !_currentState.showingHighlight) {
         _currentState.showingHighlight = YES;
         _currentState.contentsNeedFade = animated;
-        [self _setLayoutNeedRedraw];
+        [self _setLayerNeedRedraw];
     }
 }
 
@@ -347,7 +347,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     if (_currentState.showingHighlight) {
         _currentState.showingHighlight = NO;
         _currentState.contentsNeedFade = animated;
-        [self _setLayoutNeedRedraw];
+        [self _setLayerNeedRedraw];
     }
 }
 
@@ -439,6 +439,8 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     return shadow;
 }
 
+// 所谓的 updateOuter, 就是将这些属性, 暴露到外界去. 将这些, 属性, 赋值到当前 YYLabel 的属性里面.
+
 - (void)_updateOuterLineBreakMode {
     if (_innerContainer.truncationType) {
         switch (_innerContainer.truncationType) {
@@ -468,11 +470,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     _lineBreakMode = _innerText.lineBreakMode;
     NSShadow *shadow = _innerText.shadow;
     _shadowColor = shadow.shadowColor;
-#if !TARGET_INTERFACE_BUILDER
     _shadowOffset = shadow.shadowOffset;
-#else
-    _shadowOffset = CGPointMake(shadow.shadowOffset.width, shadow.shadowOffset.height);
-#endif
     
     _shadowBlurRadius = shadow.shadowBlurRadius;
     _attributedText = _innerText;
@@ -635,12 +633,14 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
 
 #pragma mark - Properties
 
+// text 的改变, 会引起下面所有的属性的重新计算, 然后设置当前的状态失效并且触发重绘的操作.
 - (void)setText:(NSString *)text {
     if (_text == text || [_text isEqualToString:text]) return;
     _text = text.copy;
     BOOL needAddAttributes = _innerText.length == 0 && text.length > 0;
     [_innerText replaceCharactersInRange:NSMakeRange(0, _innerText.length) withString:text ? text : @""];
     [_innerText removeDiscontinuousAttributesInRange:NSMakeRange(0, _innerText.length)];
+    // YYLabel 完全是用 NSAttributeString 来控制自己的显示, 其实可能 Label 也是这样的. 因为 attributeString 的功能完全可以替换 plainString
     if (needAddAttributes) {
         _innerText.font = _font;
         _innerText.color = _textColor;
@@ -994,7 +994,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         [self _clearContents];
     }
     _currentState.layoutNeedUpdate = NO;
-    [self _setLayoutNeedRedraw];
+    [self _setLayerNeedRedraw];
     [self _endTouch];
     [self invalidateIntrinsicContentSize];
 }
@@ -1008,6 +1008,8 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     _displaysAsynchronously = displaysAsynchronously;
     ((YYAsyncLayer *)self.layer).displaysAsynchronously = displaysAsynchronously;
 }
+
+// 可以看到, 上面所有的属性的重新设置, 都会引起相应的值得改变, 然后进行重绘的操作. 由于, setNeedDisplay 仅仅是一个标志位的设置, 并不会引起重绘操作的进行, 所以这里会有着系统 UIKIT 的性能优化.
 
 #pragma mark - AutoLayout
 
@@ -1050,7 +1052,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     BOOL needDraw = _debugOption.needDrawDebug;
     _debugOption = debugOption.copy;
     if (_debugOption.needDrawDebug != needDraw) {
-        [self _setLayoutNeedRedraw];
+        [self _setLayerNeedRedraw];
     }
 }
 
@@ -1105,7 +1107,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         [attachmentLayers removeAllObjects];
     };
     
-    // task.display 已经是在子线程中执行了, 所以里面调用了好几次 isCancelled 判断.
+    // 真正的绘画过程, YYLabel 到底显示什么样子, 就看这里面对于 context 上画什么东西.
     task.display = ^(CGContextRef context, CGSize size, BOOL (^isCancelled)(void)) {
         if (isCancelled()) return; // 如果, 取消了, 直接返回. 注意, isCancelled 是一个闭包, 所以这是一个动态值.
         if (text.length == 0) return; //如果没有文字, 直接返回.

@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  YYSentinel is a thread safe incrementing counter. 
  It may be used in some multi-threaded situation.
  YYSentinel 哨兵. 现在仅仅用在了 AsyncLayer 里面了
+  主要起一个检验的作用, 如果闭包里面的值和当前值不一样了, 就代表已经更新了.
  */
 @interface YYSentinel : NSObject
 

@@ -2149,52 +2149,54 @@ fail:
 
 // 通过各个类, 进行了绘制的分发工作. 优秀.
 - (void)drawInContext:(CGContextRef)context
-                 size:(CGSize)size
-                point:(CGPoint)point
+                 size:(CGSize)contextSize
+                point:(CGPoint)offsetPoint
                  view:(UIView *)view
                 layer:(CALayer *)layer
                 debug:(YYTextDebugOption *)debug
-               cancel:(BOOL (^)(void))cancel{
+               cancel:(BOOL (^)(void))cancelAction{
+    
     @autoreleasepool {
+        // 里面具体的逻辑没有看, 总之, 如果是 YYKit 增加的一些属性, 在 layout 类中会解析然后变成 needDrawBlockBorder 这些属性, 然后在专门有一个方法去进行相应的绘制的工作.
         if (self.needDrawBlockBorder && context) {
-            if (cancel && cancel()) return;
-            YYTextDrawBlockBorder(self, context, size, point, cancel);
+            if (cancelAction && cancelAction()) return;
+            YYTextDrawBlockBorder(self, context, contextSize, offsetPoint, cancelAction);
         }
         if (self.needDrawBackgroundBorder && context) {
-            if (cancel && cancel()) return;
-            YYTextDrawBorder(self, context, size, point, YYTextBorderTypeBackgound, cancel);
+            if (cancelAction && cancelAction()) return;
+            YYTextDrawBorder(self, context, contextSize, offsetPoint, YYTextBorderTypeBackgound, cancelAction);
         }
         if (self.needDrawShadow && context) {
-            if (cancel && cancel()) return;
-            YYTextDrawShadow(self, context, size, point, cancel);
+            if (cancelAction && cancelAction()) return;
+            YYTextDrawShadow(self, context, contextSize, offsetPoint, cancelAction);
         }
         if (self.needDrawUnderline && context) {
-            if (cancel && cancel()) return;
-            YYTextDrawDecoration(self, context, size, point, YYTextDecorationTypeUnderline, cancel);
+            if (cancelAction && cancelAction()) return;
+            YYTextDrawDecoration(self, context, contextSize, offsetPoint, YYTextDecorationTypeUnderline, cancelAction);
         }
         if (self.needDrawText && context) {
-            if (cancel && cancel()) return;
-            YYTextDrawText(self, context, size, point, cancel);
+            if (cancelAction && cancelAction()) return;
+            YYTextDrawText(self, context, contextSize, offsetPoint, cancelAction);
         }
         if (self.needDrawAttachment && (context || view || layer)) {
-            if (cancel && cancel()) return;
-            YYTextDrawAttachment(self, context, size, point, view, layer, cancel);
+            if (cancelAction && cancelAction()) return;
+            YYTextDrawAttachment(self, context, contextSize, offsetPoint, view, layer, cancelAction);
         }
         if (self.needDrawInnerShadow && context) {
-            if (cancel && cancel()) return;
-            YYTextDrawInnerShadow(self, context, size, point, cancel);
+            if (cancelAction && cancelAction()) return;
+            YYTextDrawInnerShadow(self, context, contextSize, offsetPoint, cancelAction);
         }
         if (self.needDrawStrikethrough && context) {
-            if (cancel && cancel()) return;
-            YYTextDrawDecoration(self, context, size, point, YYTextDecorationTypeStrikethrough, cancel);
+            if (cancelAction && cancelAction()) return;
+            YYTextDrawDecoration(self, context, contextSize, offsetPoint, YYTextDecorationTypeStrikethrough, cancelAction);
         }
         if (self.needDrawBorder && context) {
-            if (cancel && cancel()) return;
-            YYTextDrawBorder(self, context, size, point, YYTextBorderTypeNormal, cancel);
+            if (cancelAction && cancelAction()) return;
+            YYTextDrawBorder(self, context, contextSize, offsetPoint, YYTextBorderTypeNormal, cancelAction);
         }
         if (debug.needDrawDebug && context) {
-            if (cancel && cancel()) return;
-            YYTextDrawDebug(self, context, size, point, debug);
+            if (cancelAction && cancelAction()) return;
+            YYTextDrawDebug(self, context, contextSize, offsetPoint, debug);
         }
     }
 }
@@ -2206,12 +2208,10 @@ fail:
 }
 
 - (void)addAttachmentToView:(UIView *)view layer:(CALayer *)layer {
-    YYAssertMainThread();
     [self drawInContext:NULL size:CGSizeZero point:CGPointZero view:view layer:layer debug:nil cancel:nil];
 }
 
 - (void)removeAttachmentFromViewAndLayer {
-    YYAssertMainThread();
     for (YYTextAttachment *a in self.attachments) {
         if ([a.content isKindOfClass:[UIView class]]) {
             UIView *v = a.content;

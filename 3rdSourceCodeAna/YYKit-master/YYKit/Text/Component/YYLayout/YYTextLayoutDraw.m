@@ -455,7 +455,7 @@ void YYTextDrawText(YYTextLayout *layout, CGContextRef context, CGSize size, CGP
     CGContextSaveGState(context); {
         
         CGContextTranslateCTM(context, point.x, point.y);
-        CGContextTranslateCTM(context, 0, size.height);
+        CGContextTranslateCTM(context, 0, size.height); // 这两步, 是 iOS 和 macOS 的之间的切换
         CGContextScaleCTM(context, 1, -1);
         
         BOOL isVertical = layout.container.verticalForm;
@@ -478,19 +478,14 @@ void YYTextDrawText(YYTextLayout *layout, CGContextRef context, CGSize size, CGP
             if (cancel && cancel()) break;
         }
         
-        // Use this to draw frame for test/debug.
-        // CGContextTranslateCTM(context, verticalOffset, size.height);
-        // CTFrameDraw(layout.frame, context);
-        
     } CGContextRestoreGState(context);
 }
 
 // 绘制边框.
 void YYTextDrawBlockBorder(YYTextLayout *layout, CGContextRef context, CGSize size, CGPoint point, BOOL (^cancel)(void)) {
-    CGContextSaveGState(context); // 入栈出栈. 在每一个 draw 方法里面, 都有这个过程.
+    CGContextSaveGState(context);
     
     CGContextTranslateCTM(context, point.x, point.y);
-    // Changes the origin of the user coordinate system in a context. 这样, 就不用每次计算位置的时候, 加上 origin 的偏移量了, 优秀. 在下面的代码里面, point 不会出现了.
     BOOL isVertical = layout.container.verticalForm;
     CGFloat verticalOffset = isVertical ? (size.width - layout.container.size.width) : 0;
     
