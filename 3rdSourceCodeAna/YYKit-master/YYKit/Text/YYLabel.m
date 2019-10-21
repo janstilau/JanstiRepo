@@ -49,14 +49,14 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
         unsigned int layoutNeedUpdate : 1;
         unsigned int showingHighlight : 1;
         
-        unsigned int trackingTouch : 1;
-        unsigned int swallowTouch : 1;
-        unsigned int touchMoved : 1;
+        unsigned int trackingTouch : 1; // 正在触摸
+        unsigned int swallowTouch : 1; // 是否将事件向上抛出, 在这里, 将所有的触摸事件进行了本地的处理, 模拟了 gesture 的处理过程.
+        unsigned int touchMoved : 1; // 触摸移动了
         
-        unsigned int hasTapAction : 1;
-        unsigned int hasLongPressAction : 1;
-        
-        unsigned int contentsNeedFade : 1;
+        unsigned int hasTapAction : 1; // 是否有触摸事件, 根据_textTapAction
+        unsigned int hasLongPressAction : 1; // 是否有长按事件, 根据 _textLongPressTapAction 属性
+         
+        unsigned int contentsNeedFade : 1; // 动画控制..
     } _currentState;
 }
 @end
@@ -270,9 +270,11 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     _longPressTimer = nil;
 }
 
+// 这其实就是 longPressGesture 的处理过程.
 - (void)_trackDidLongPress {
-    [self _endLongPressTimer];
-    if (_currentState.hasLongPressAction && _textLongPressAction) {
+    [self _endLongPressTimer]; // 当触发了 longPress 之后, 立马取消 timer.
+    if (_currentState.hasLongPressAction
+        && _textLongPressAction) { // 如果有长按事件回调.
         NSRange range = NSMakeRange(NSNotFound, 0);
         CGRect rect = CGRectNull;
         CGPoint point = [self _convertPointToLayout:_touchBeganPoint];
@@ -283,8 +285,11 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
             range = textRange.asRange;
             rect = textRect;
         }
+        // 通过 layout, 将这些值算出来, 然后抛给 _textLongPressAction 进行回调的处理.
+        // 所有的位置相关的信息, 都在 layout 中, 让代码变得非常简洁.
         _textLongPressAction(self, _innerText, range, rect);
     }
+    // 这里同样的, 将这些信息上抛给回调中取.
     if (_highlight) {
         YYTextAction longPressAction = _highlight.longPressAction ? _highlight.longPressAction : _highlightLongPressAction;
         if (longPressAction) {
@@ -312,6 +317,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
             startIndex--;
         }
     }
+    // 上面 startIndex 的获取过程不看, 这里, 如果能够获取的 YYTextHighlight 的属性, 代表着有高亮的操作.
     NSRange highlightRange = {0};
     YYTextHighlight *highlight = [_innerText attribute:YYTextHighlightAttributeName
                                                atIndex:startIndex
@@ -323,6 +329,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     return highlight;
 }
 
+// 在这里, 改变了 showingHighlight 的状态, 然后触发重绘操作.
 - (void)_showHighlightAnimated:(BOOL)animated {
     if (!_highlight) return;
     if (!_highlightLayout) {
@@ -534,10 +541,12 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     _currentState.hasTapAction = _textTapAction != nil;
     _currentState.hasLongPressAction = _textLongPressAction != nil;
     
-    if (_highlight || _textTapAction || _textLongPressAction) {
+    if (_highlight || // 当前触摸位置的动作
+        _textTapAction || // 整个 YYLabel 的触摸动作
+        _textLongPressAction) { // 整个 YYLabel 的长按动作.
         _touchBeganPoint = point;
         _currentState.trackingTouch = YES;
-        _currentState.swallowTouch = YES;
+        _currentState.swallowTouch = YES; //
         _currentState.touchMoved = NO;
         [self _startLongPressTimer];
         if (_highlight) [self _showHighlightAnimated:NO];
@@ -566,10 +575,19 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
             } else {
                 if (fabs(moveV) > kLongPressAllowableMovement) _currentState.touchMoved = YES;
             }
-            if (_currentState.touchMoved) {
+            // 根据偏移量, 来判断, 其实这里可以变为 swipeGesture 的实现.
+            /*
+             cancelsTouchesInView
+             delaysTouchesBegan
+             delaysTouchesEnded
+             上面三个属性的实现逻辑, 应该和这里的实现是类似的.
+             */
+            if (_currentState.touchMoved) { // 如果移动了, 就放弃 longPressTimer
                 [self _endLongPressTimer];
             }
         }
+        
+        // 下面就是替换高亮的区域了.
         if (_currentState.touchMoved && _highlight) {
             YYTextHighlight *highlight = [self _getHighlightAtPoint:point range:NULL];
             if (highlight == _highlight) {
@@ -591,6 +609,7 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     
     if (_currentState.trackingTouch) {
         [self _endLongPressTimer];
+        // 如果没有移动, 那么就可以调用点击事件的回调了, tapGesture 的处理过程.
         if (!_currentState.touchMoved && _textTapAction) {
             NSRange range = NSMakeRange(NSNotFound, 0);
             CGRect rect = CGRectNull;
@@ -604,8 +623,8 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
             }
             _textTapAction(self, _innerText, range, rect);
         }
-        
-        if (_highlight) {
+        // 如果点击位置有高亮的回调,
+        if (_highlight) { // 并且没有移动, 或者移动的范围, 没有出高亮回调的范围, 那么这个回调还是可以使用.
             if (!_currentState.touchMoved || [self _getHighlightAtPoint:point range:NULL] == _highlight) {
                 YYTextAction tapAction = _highlight.tapAction ? _highlight.tapAction : _highlightTapAction;
                 if (tapAction) {
