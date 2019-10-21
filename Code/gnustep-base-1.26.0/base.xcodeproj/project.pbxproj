@@ -350,6 +350,8 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.S";
 			fileType = pattern.proxy;
+			inputFiles = (
+			);
 			isEditable = 1;
 			outputFiles = (
 				"${OBJECT_FILE_DIR}/${INPUT_FILE_NAME}.o",
@@ -847,6 +849,9 @@
 		063150402359A45700EC6A60 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906F8E1610BF3C0003C892 /* NSDictionary.m */,
+				18906F941610BF3C0003C892 /* NSException.m */,
+				18906F731610BF3C0003C892 /* NSAssertionHandler.m */,
 				18906F881610BF3C0003C892 /* NSData.m */,
 				18906FA91610BF3C0003C892 /* NSLock.m */,
 				063150412359A45700EC6A60 /* NSNotificationCenter.m */,
@@ -1002,7 +1007,6 @@
 				18F8D04F1724534E00420DA5 /* KVO */,
 				18906F701610BF3C0003C892 /* NSAffineTransform.m */,
 				18906F711610BF3C0003C892 /* NSArchiver.m */,
-				18906F731610BF3C0003C892 /* NSAssertionHandler.m */,
 				18906F751610BF3C0003C892 /* NSAutoreleasePool.m */,
 				18906F761610BF3C0003C892 /* NSBundle.m */,
 				18906F771610BF3C0003C892 /* NSCache.m */,
@@ -1023,11 +1027,9 @@
 				18906F8B1610BF3C0003C892 /* NSDebug.m */,
 				18906F8C1610BF3C0003C892 /* NSDecimal.m */,
 				18906F8D1610BF3C0003C892 /* NSDecimalNumber.m */,
-				18906F8E1610BF3C0003C892 /* NSDictionary.m */,
 				18906F8F1610BF3C0003C892 /* NSDistantObject.m */,
 				18906F901610BF3C0003C892 /* NSDistributedLock.m */,
 				18906F911610BF3C0003C892 /* NSDistributedNotificationCenter.m */,
-				18906F941610BF3C0003C892 /* NSException.m */,
 				18906F951610BF3C0003C892 /* NSFileHandle.m */,
 				18906F961610BF3C0003C892 /* NSFileManager.m */,
 				18906F971610BF3C0003C892 /* NSFormatter.m */,

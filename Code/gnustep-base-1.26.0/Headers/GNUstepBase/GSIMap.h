@@ -907,7 +907,7 @@ extern "C" {
     }
     
     /**
-     * Returns the next node in the map, or a nul pointer if at the end.
+     根据 enumerator 中当前的位置, 寻找下一个 node 在 map 中的位置.
      */
     GS_STATIC_INLINE GSIMapNode
     GSIMapEnumeratorNextNode(GSIMapEnumerator enumerator)

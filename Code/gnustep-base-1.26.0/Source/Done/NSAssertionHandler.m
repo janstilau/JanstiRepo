@@ -1,30 +1,3 @@
-/** NSAssertionHandler - Object encapsulation of assertions
-   Copyright (C) 1995, 1997 Free Software Foundation, Inc.
-
-   Written by:  Adam Fedor <fedor@boulder.colorado.edu>
-   Date: Apr 1995
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-
-   <title>NSAssertionHandler class reference</title>
-   $Date$ $Revision$
-   */
-
 #import "common.h"
 #import "Foundation/NSException.h"
 #import "Foundation/NSDictionary.h"
@@ -35,10 +8,11 @@
 /* Key for thread dictionary. */
 NSString *const NSAssertionHandlerKey = @"NSAssertionHandler";
 
-
+// 这个类的唯一的作用, 就是将 NSAssert 宏触发的信息, 包装成为一个 异常 对象, 然后抛出. 用异常捕获进行
 /**
  * Returns the assertion handler object for the current thread.<br />
  * If none exists, creates one and returns it.
+ * // 懒加载
  */
 + (NSAssertionHandler*) currentHandler
 {

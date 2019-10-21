@@ -24,68 +24,53 @@
 #include <setjmp.h>
 #include <stdarg.h>
 
-#if	defined(__WIN64__)
-/* This hack is to deal with the fact that currently (June 2016) the
- * implementation of longjmp in mingw-w64  sometimes crashes in msvcrt.dll
- * but the builtin version provided by gcc seems to work.
- */
-#define	setjmp(X)	__builtin_setjmp(X)
-#define	longjmp(X,Y)	__builtin_longjmp(X,Y)
-#endif
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSDictionary;
 
 /**
-   <p>
-   The <code>NSException</code> class helps manage errors in a program. It
-   provides a mechanism for lower-level methods to provide information about
-   problems to higher-level methods, which more often than not, have a
-   better ability to decide what to do about the problems.
-   </p>
-   <p>
-   Exceptions are typically handled by enclosing a sensitive section
-   of code inside the macros <code>NS_DURING</code> and <code>NS_HANDLER</code>,
-   and then handling any problems after this, up to the
-   <code>NS_ENDHANDLER</code> macro:
-   </p>
-   <example>
-   NS_DURING
-    code that might cause an exception
-   NS_HANDLER
-    code that deals with the exception. If this code cannot deal with
-    it, you can re-raise the exception like this
-    [localException raise]
-    so the next higher level of code can handle it
-   NS_ENDHANDLER
-   </example>
-   <p>
-   The local variable <code>localException</code> is the name of the exception
-   object you can use in the <code>NS_HANDLER</code> section.
-   The easiest way to cause an exception is using the +raise:format:,...
-   method.
-   </p>
-   <p>
-   If there is no NS_HANDLER ... NS_ENDHANDLER block enclosing (directly or
-   indirectly) code where an exception is raised, then control passes to
-   the <em>uncaught exception handler</em> function and the program is
-   then terminated.<br />
-   The uncaught exception handler is set using NSSetUncaughtExceptionHandler()
-   and if not set, defaults to a function which will simply print an error
-   message before the program terminates.
-   </p>
-*/
+ <p>
+ The <code>NSException</code> class helps manage errors in a program.
+ It provides a mechanism for lower-level methods to provide information about
+ problems to higher-level methods, which more often than not, have a
+ better ability to decide what to do about the problems.
+ </p>
+ <p>
+ Exceptions are typically handled by enclosing a sensitive section
+ of code inside the macros <code>NS_DURING</code> and <code>NS_HANDLER</code>,
+ and then handling any problems after this, up to the
+ <code>NS_ENDHANDLER</code> macro:
+ </p>
+ <example>
+ NS_DURING
+ code that might cause an exception
+ NS_HANDLER
+ code that deals with the exception. If this code cannot deal with
+ it, you can re-raise the exception like this
+ [localException raise]
+ so the next higher level of code can handle it
+ NS_ENDHANDLER
+ </example>
+ <p>
+ The local variable <code>localException</code> is the name of the exception
+ object you can use in the <code>NS_HANDLER</code> section.
+ The easiest way to cause an exception is using the +raise:format:,...
+ method.
+ </p>
+ <p>
+ If there is no NS_HANDLER ... NS_ENDHANDLER block enclosing (directly or
+ indirectly) code where an exception is raised, then control passes to
+ the <em>uncaught exception handler</em> function and the program is
+ then terminated.<br />
+ The uncaught exception handler is set using NSSetUncaughtExceptionHandler()
+ and if not set, defaults to a function which will simply print an error
+ message before the program terminates.
+ </p>
+ */
 @interface NSException : NSObject <NSCoding, NSCopying>
 {    
-#if	GS_EXPOSE(NSException)
-@private
-  NSString *_e_name;
-  NSString *_e_reason;
-  void *_reserved;
-#endif
+@public
+    NSString *_e_name;
+    NSString *_e_reason;
+    void *_reserved;
 }
 
 /**
@@ -95,8 +80,8 @@ extern "C" {
  * exception is created you must -raise it.
  */
 + (NSException*) exceptionWithName: (NSString*)name
-			    reason: (NSString*)reason
-			  userInfo: (NSDictionary*)userInfo;
+                            reason: (NSString*)reason
+                          userInfo: (NSDictionary*)userInfo;
 
 /**
  * Creates an exception with a name and a reason using the
@@ -104,8 +89,8 @@ extern "C" {
  * <em>raised</em> using the -raise method.
  */
 + (void) raise: (NSString*)name
-	format: (NSString*)format,...
-  NS_FORMAT_FUNCTION(2,3) GS_NORETURN_METHOD;
+        format: (NSString*)format,...
+NS_FORMAT_FUNCTION(2,3) GS_NORETURN_METHOD;
 
 /**
  * Creates an exception with a name and a reason string using the
@@ -114,9 +99,9 @@ extern "C" {
  * using the -raise method.
  */
 + (void) raise: (NSString*)name
-	format: (NSString*)format
+        format: (NSString*)format
      arguments: (va_list)argList
-  NS_FORMAT_FUNCTION(2,0) GS_NORETURN_METHOD;
+NS_FORMAT_FUNCTION(2,0) GS_NORETURN_METHOD;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST) && GS_API_VERSION( 11501,GS_API_LATEST)
 /** Returns an array of the call stack return addresses at the point when
@@ -126,23 +111,20 @@ extern "C" {
 - (NSArray*) callStackReturnAddresses;
 #endif
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST) && GS_API_VERSION( 11903,GS_API_LATEST)
-/**
- * Returns an array of the symbolic names of the call stack return addresses.  
+ * Returns an array of the symbolic names of the call stack return addresses.
  * Note that, on some platforms, symbols are only exported in
  * position-independent code and so these may only return numeric addresses for
- * code in static libraries or the main application.  
+ * code in static libraries or the main application.
  */
 - (NSArray*) callStackSymbols;
-#endif
 
 /**
  * <init/>Initializes a newly allocated NSException object with a
  * name, reason and a dictionary userInfo.
  */
 - (id) initWithName: (NSString*)name 
-	     reason: (NSString*)reason 
-	   userInfo: (NSDictionary*)userInfo;
+             reason: (NSString*)reason
+           userInfo: (NSDictionary*)userInfo;
 
 /** Returns the name of the exception. */
 - (NSString*) name;
@@ -300,22 +282,22 @@ GS_EXPORT void
 NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler *handler);
 
 /* NS_DURING, NS_HANDLER and NS_ENDHANDLER are always used like: 
-
-	NS_DURING
-	    some code which might raise an error
-	NS_HANDLER
-	    code that will be jumped to if an error occurs
-	NS_ENDHANDLER
-
-   If any error is raised within the first block of code, the second block
-   of code will be jumped to.  Typically, this code will clean up any
-   resources allocated in the routine, possibly case on the error code
-   and perform special processing, and default to RERAISE the error to
-   the next handler.  Within the scope of the handler, a local variable
-   called "localException" holds information about the exception raised.
-
-   It is illegal to exit the first block of code by any other means than
-   NS_VALRETURN, NS_VOIDRETURN, or just falling out the bottom.
+ 
+ NS_DURING
+ some code which might raise an error
+ NS_HANDLER
+ code that will be jumped to if an error occurs
+ NS_ENDHANDLER
+ 
+ If any error is raised within the first block of code, the second block
+ of code will be jumped to.  Typically, this code will clean up any
+ resources allocated in the routine, possibly case on the error code
+ and perform special processing, and default to RERAISE the error to
+ the next handler.  Within the scope of the handler, a local variable
+ called "localException" holds information about the exception raised.
+ 
+ It is illegal to exit the first block of code by any other means than
+ NS_VALRETURN, NS_VOIDRETURN, or just falling out the bottom.
  */
 #if     USER_NATIVE_OBJC_EXCEPTIONS
 
@@ -334,27 +316,27 @@ GS_EXPORT void _NSAddHandler( NSHandler *handler );
 /** Private support routine.  Do not call directly. */
 GS_EXPORT void _NSRemoveHandler( NSHandler *handler );
 
-#define NS_DURING { NSHandler NSLocalHandler;			\
-		    _NSAddHandler(&NSLocalHandler);		\
-		    if (!setjmp(NSLocalHandler.jumpState)) {
+#define NS_DURING \
+{ NSHandler NSLocalHandler;			\
+_NSAddHandler(&NSLocalHandler);		\
+if (!setjmp(NSLocalHandler.jumpState)) {
 
 #define NS_HANDLER _NSRemoveHandler(&NSLocalHandler); } else { \
-		    NSException __attribute__((unused)) *localException \
-		      = NSLocalHandler.exception; \
-		    {
-
+NSException __attribute__((unused)) *localException \
+= NSLocalHandler.exception; \
+{
 #define NS_ENDHANDLER }}}
 
 #define NS_VALRETURN(val)  do { __typeof__(val) temp = (val);	\
-			_NSRemoveHandler(&NSLocalHandler);	\
-			return(temp); } while (0)
+_NSRemoveHandler(&NSLocalHandler);	\
+return(temp); } while (0)
 
 #define NS_VALUERETURN(object, id) do { id temp = object;	\
-			_NSRemoveHandler(&NSLocalHandler);	\
-			return(temp); } while (0) 
+_NSRemoveHandler(&NSLocalHandler);	\
+return(temp); } while (0)
 
 #define NS_VOIDRETURN	do { _NSRemoveHandler(&NSLocalHandler);	\
-			return; } while (0)
+return; } while (0)
 
 #endif // _NATIVE_OBJC_EXCEPTIONS
 
@@ -393,15 +375,15 @@ GS_EXPORT void _NSRemoveHandler( NSHandler *handler );
 + (NSAssertionHandler*) currentHandler;
 
 - (void) handleFailureInFunction: (NSString*)functionName 
-			    file: (NSString*)fileName 
-		      lineNumber: (NSInteger)line 
-		     description: (NSString*)format,... GS_NORETURN_METHOD;
+                            file: (NSString*)fileName
+                      lineNumber: (NSInteger)line
+                     description: (NSString*)format,... GS_NORETURN_METHOD;
 
 - (void) handleFailureInMethod: (SEL)aSelector 
-			object: object 
-			  file: (NSString*)fileName 
-		    lineNumber: (NSInteger)line 
-		   description: (NSString*)format,... GS_NORETURN_METHOD;
+                        object: object
+                          file: (NSString*)fileName
+                    lineNumber: (NSInteger)line
+                   description: (NSString*)format,... GS_NORETURN_METHOD;
 
 @end
 extern NSString *const NSAssertionHandlerKey;
@@ -414,32 +396,33 @@ extern NSString *const NSAssertionHandlerKey;
  * See [NSAssertionHandler] for details.<br />
  * When condition is false, raise an exception using desc and args. */
 #define NSAssert(condition, desc, args...)			\
-  do {							        \
-    if (!(condition)) {			                        \
-      [[NSAssertionHandler currentHandler] 		        \
-        handleFailureInMethod: _cmd 			        \
-        object: self 					        \
-        file: [NSString stringWithUTF8String: __FILE__] 	\
-        lineNumber: __LINE__ 				        \
-        description: (desc) , ## args]; 			\
-    }							        \
-  } while(0)
+do {							        \
+if (!(condition)) {			                        \
+[[NSAssertionHandler currentHandler] 		        \
+handleFailureInMethod: _cmd 			        \
+object: self 					        \
+file: [NSString stringWithUTF8String: __FILE__] 	\
+lineNumber: __LINE__ 				        \
+description: (desc) , ## args]; 			\
+}							        \
+} while(0)
+// 所以, 这就是 NSAssert 宏的定义, 仅仅是调用 [NSAssertionHandler currentHandler] 的对应方法进行一次方法的调用而已.
 
 /** Used in plain C code (not in an ObjC method body).<br />
  * See [NSAssertionHandler] for details.<br />
  * When condition is false, raise an exception using desc
  */
 #define NSCAssert(condition, desc, args...)		        \
-  do {							        \
-    if (!(condition)) {					        \
-      [[NSAssertionHandler currentHandler] 		        \
-      handleFailureInFunction: [NSString stringWithUTF8String:  \
-        __PRETTY_FUNCTION__] 				        \
-      file: [NSString stringWithUTF8String: __FILE__] 		\
-      lineNumber: __LINE__ 				        \
-      description: (desc) , ## args]; 			        \
-    }							        \
-  } while(0)
+do {							        \
+if (!(condition)) {					        \
+[[NSAssertionHandler currentHandler] 		        \
+handleFailureInFunction: [NSString stringWithUTF8String:  \
+__PRETTY_FUNCTION__] 				        \
+file: [NSString stringWithUTF8String: __FILE__] 		\
+lineNumber: __LINE__ 				        \
+description: (desc) , ## args]; 			        \
+}							        \
+} while(0)
 #endif
 
 /** Used in an ObjC method body (obsolete ... use NSAssert).<br />
@@ -447,85 +430,82 @@ extern NSString *const NSAssertionHandlerKey;
  * When condition is false, raise an exception using desc and arg1, arg2,
  * arg3, arg4, arg5 */
 #define NSAssert5(condition, desc, arg1, arg2, arg3, arg4, arg5)	\
-  NSAssert((condition), (desc), (arg1), (arg2), (arg3), (arg4), (arg5))
+NSAssert((condition), (desc), (arg1), (arg2), (arg3), (arg4), (arg5))
 
 /** Used in an ObjC method body (obsolete ... use NSAssert).<br />
  * See [NSAssertionHandler] for details.<br />
  * When condition is false, raise an exception using desc and arg1, arg2,
  * arg3, arg4 */
 #define NSAssert4(condition, desc, arg1, arg2, arg3, arg4)	\
-  NSAssert((condition), (desc), (arg1), (arg2), (arg3), (arg4))
+NSAssert((condition), (desc), (arg1), (arg2), (arg3), (arg4))
 
 /** Used in an ObjC method body (obsolete ... use NSAssert).<br />
  * See [NSAssertionHandler] for details.<br />
  * When condition is false, raise an exception using desc and arg1, arg2,
  * arg3 */
 #define NSAssert3(condition, desc, arg1, arg2, arg3)	\
-  NSAssert((condition), (desc), (arg1), (arg2), (arg3))
+NSAssert((condition), (desc), (arg1), (arg2), (arg3))
 
 /** Used in an ObjC method body (obsolete ... use NSAssert).<br />
  * See [NSAssertionHandler] for details.<br />
  * When condition is false, raise an exception using desc and arg1, arg2 */
 #define NSAssert2(condition, desc, arg1, arg2)		\
-  NSAssert((condition), (desc), (arg1), (arg2))
+NSAssert((condition), (desc), (arg1), (arg2))
 
 /** Used in an ObjC method body (obsolete ... use NSAssert).<br />
  * See [NSAssertionHandler] for details.<br />
  * When condition is false, raise an exception using desc  and arg1 */
 #define NSAssert1(condition, desc, arg1)		\
-  NSAssert((condition), (desc), (arg1))
+NSAssert((condition), (desc), (arg1))
 
 /** Used in an ObjC method body.<br />
  * See [NSAssertionHandler] for details.<br />
  * When condition is false, raise an exception saying that an invalid
  * parameter was supplied to the method. */
 #define NSParameterAssert(condition)			\
-  NSAssert((condition), @"Invalid parameter not satisfying: %s", #condition)
+NSAssert((condition), @"Invalid parameter not satisfying: %s", #condition)
+// 只不过是对于 NSAssert 的一层包装而已.
 
 /** Obsolete ... use NSCAssert().<br />
  * See [NSAssertionHandler] for details.<br />
  * When condition is false, raise an exception using desc and arg1, arg2,
  * arg3, arg4, arg5 */
 #define NSCAssert5(condition, desc, arg1, arg2, arg3, arg4, arg5)	\
-    NSCAssert((condition), (desc), (arg1), (arg2), (arg3), (arg4), (arg5))
+NSCAssert((condition), (desc), (arg1), (arg2), (arg3), (arg4), (arg5))
 
 /** Obsolete ... use NSCAssert().<br />
  * See [NSAssertionHandler] for details.<br />
  * When condition is false, raise an exception using desc and arg1, arg2,
  * arg3, arg4 */
 #define NSCAssert4(condition, desc, arg1, arg2, arg3, arg4)	\
-    NSCAssert((condition), (desc), (arg1), (arg2), (arg3), (arg4))
+NSCAssert((condition), (desc), (arg1), (arg2), (arg3), (arg4))
 
 /** Obsolete ... use NSCAssert().<br />
  * See [NSAssertionHandler] for details.<br />
  * When condition is false, raise an exception using desc and arg1, arg2,
  * arg3 */
 #define NSCAssert3(condition, desc, arg1, arg2, arg3)	\
-    NSCAssert((condition), (desc), (arg1), (arg2), (arg3))
+NSCAssert((condition), (desc), (arg1), (arg2), (arg3))
 
 /** Obsolete ... use NSCAssert().<br />
  * See [NSAssertionHandler] for details.<br />
  * When condition is false, raise an exception using desc and arg1, arg2
  */
 #define NSCAssert2(condition, desc, arg1, arg2)		\
-    NSCAssert((condition), (desc), (arg1), (arg2))
+NSCAssert((condition), (desc), (arg1), (arg2))
 
 /** Obsolete ... use NSCAssert().<br />
  * See [NSAssertionHandler] for details.<br />
  * When condition is false, raise an exception using desc and arg1
  */
 #define NSCAssert1(condition, desc, arg1)		\
-    NSCAssert((condition), (desc), (arg1))
+NSCAssert((condition), (desc), (arg1))
 
 /** Used in plain C code (not in an ObjC method body).<br />
  * See [NSAssertionHandler] for details.<br />
  * When condition is false, raise an exception saying that an invalid
  * parameter was supplied to the method. */
 #define NSCParameterAssert(condition)			\
-    NSCAssert((condition), @"Invalid parameter not satisfying: %s", #condition)
-
-#if	defined(__cplusplus)
-}
-#endif
+NSCAssert((condition), @"Invalid parameter not satisfying: %s", #condition)
 
 #endif /* __NSException_h_GNUSTEP_BASE_INCLUDE */

@@ -40,10 +40,6 @@
 #import <Foundation/Foundation.h>
 #endif
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 
 @class	GCObject;
 
@@ -114,9 +110,5 @@ typedef struct {
   NSMapTable	*_map;
 }
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif /* __INCLUDED_GCOBJECT_H */
