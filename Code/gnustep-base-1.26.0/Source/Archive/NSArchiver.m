@@ -60,43 +60,6 @@ static Class	NSMutableDataMallocClass;
  */
 @implementation NSArchiver
 {
-#if    GS_EXPOSE(NSArchiver)
-@private
-    NSMutableData    *_data;        /* Data to write into.        */
-    id        _destination;        /* Serialization destination.    */
-    IMP        _serImp;    /* Method to serialize with.    */
-    IMP        _tagImp;    /* Serialize a type tag.    */
-    IMP        _xRefImp;    /* Serialize a crossref.    */
-    IMP        _encodeObjectImp;    /* Method to encode an id.    */
-    IMP        _eValImp;    /* Method to encode others.    */
-#ifndef    _IN_NSARCHIVER_M
-#define    GSIMapTable    void*
-#endif
-    GSIMapTable    _clsMap;    /* Class cross references.    */
-    GSIMapTable    _conditionIdMap;    /* Conditionally coded.        */
-    GSIMapTable    _unconditionIdMap;    /* Unconditionally coded.    */
-    GSIMapTable    _pointerMap;    /* Constant pointers.        */
-    GSIMapTable    _namesMap;    /* Mappings for class names.    */
-    GSIMapTable    _objectsMap;    /* Mappings for objects.    */
-#ifndef    _IN_NSARCHIVER_M
-#undef    GSIMapTable
-#endif
-    unsigned    _xRefC;        /* Counter for cross-reference.    */
-    unsigned    _xRefO;        /* Counter for cross-reference.    */
-    unsigned    _xRefP;        /* Counter for cross-reference.    */
-    unsigned    _startPos;    /* Where in data we started.    */
-    BOOL        _encodingRoot;
-    BOOL        _initialPass;
-#endif
-#if     GS_NONFRAGILE
-#else
-    /* Pointer to private additional data used to avoid breaking ABI
-     * when we don't have the non-fragile ABI available.
-     * Use this mechanism rather than changing the instance variable
-     * layout (see Source/GSInternal.h for details).
-     */
-@private id _internal GS_UNUSED_IVAR;
-#endif
 }
 
 + (void) initialize
@@ -115,7 +78,6 @@ static Class	NSMutableDataMallocClass;
 - (id) init
 {
     NSMutableData	*d;
-    
     d = [[NSMutableDataMallocClass allocWithZone: [self zone]] init];
     self = [self initForWritingWithMutableData: d];
     RELEASE(d);
@@ -195,8 +157,8 @@ static Class	NSMutableDataMallocClass;
 }
 
 /**
- *  Writes serialized representation of object and, recursively, any
- *  other objects it holds references to, to byte array.
+ 这个就是利用 archive 进行 encode 之后, 取得它的内部值然后进行一次 copy 而已.
+ 
  */
 + (NSData*) archivedDataWithRootObject: (id)rootObject
 {
@@ -232,14 +194,13 @@ static Class	NSMutableDataMallocClass;
 }
 
 /**
- *  Writes out serialized representation of object and, recursively, any
- *  other objects it holds references to.
+ 先归档取得 NSData , 然后写入到文件中.
+ 
  */
 + (BOOL) archiveRootObject: (id)rootObject
                     toFile: (NSString*)path
 {
     id	d = [self archivedDataWithRootObject: rootObject];
-    
     return [d writeToFile: path atomically: YES];
 }
 
@@ -247,132 +208,43 @@ static Class	NSMutableDataMallocClass;
                          count: (NSUInteger)count
                             at: (const void*)buf
 {
-    uint32_t      c;
-    uint8_t	bytes[20];
-    uint8_t	*bytePtr = 0;
-    uint8_t	byteCount = 0;
-    NSUInteger	i;
-    NSUInteger	offset = 0;
-    uint32_t	size;
-    uint32_t	version;
-    uchar		info;
-    
-    type = GSSkipTypeQualifierAndLayoutInfo(type);
-    size = objc_sizeof_type(type);
-    version = [self systemVersion];
-    
-    if (12402 == version)
-    {
-        NSUInteger	tmp = count;
-        
-        bytes[sizeof(bytes) - ++byteCount] = (uint8_t)(tmp % 128);
-        tmp /= 128;
-        while (tmp > 0)
-        {
-            bytes[sizeof(bytes) - ++byteCount] = (uint8_t)(128 | (tmp % 128));
-            tmp /= 128;
-        }
-        bytePtr = &bytes[sizeof(bytes) - byteCount];
-    }
-    
-    /* We normally store the count as a 32bit integer ... but if it's
-     * very big, we store 0xffffffff and then an additional 64bit value
-     * containing the actual count.
-     */
-    if (count >= 0xffffffff)
-    {
-        c = 0xffffffff;
-    }
-    else
-    {
-        c = count;
-    }
-    
-    switch (*type)
-    {
-        case _C_ID:	info = _GSC_NONE;		break;
-        case _C_CHR:	info = _GSC_CHR;		break;
-        case _C_UCHR:	info = _GSC_UCHR; 		break;
-        case _C_SHT:	info = _GSC_SHT | _GSC_S_SHT;	break;
-        case _C_USHT:	info = _GSC_USHT | _GSC_S_SHT;	break;
-        case _C_INT:	info = _GSC_INT | _GSC_S_INT;	break;
-        case _C_UINT:	info = _GSC_UINT | _GSC_S_INT;	break;
-        case _C_LNG:	info = _GSC_LNG | _GSC_S_LNG;	break;
-        case _C_ULNG:	info = _GSC_ULNG | _GSC_S_LNG; break;
-        case _C_LNG_LNG:	info = _GSC_LNG_LNG | _GSC_S_LNG_LNG;	break;
-        case _C_ULNG_LNG:	info = _GSC_ULNG_LNG | _GSC_S_LNG_LNG;	break;
-        case _C_FLT:	info = _GSC_FLT;	break;
-        case _C_DBL:	info = _GSC_DBL;	break;
-#if __GNUC__ > 2 && defined(_C_BOOL)
-        case _C_BOOL:	info = _GSC_BOOL;	break;
-#endif
-        default:		info = _GSC_NONE;	break;
-    }
-    
-    /*
-     *	Simple types can be serialized immediately, more complex ones
-     *	are dealt with by our [encodeValueOfObjCType:at:] method.
-     */
-    if (info == _GSC_NONE)
-    {
-        if (_initialPass == NO)
-        {
-            (*_tagImp)(_destination, tagSel, _GSC_ARY_B);
-            if (12402 == version)
-            {
-                for (i = 0; i < byteCount; i++)
-                {
-                    (*_serImp)(_destination, serSel, bytePtr + i, @encode(uint8_t), nil);
-                }
-            }
-            else
-            {
-                (*_serImp)(_destination, serSel, &c, @encode(uint32_t), nil);
-                if (0xffffffff == c)
-                {
-                    (*_serImp)(_destination, serSel, &count, @encode(NSUInteger), nil);
-                }
-            }
-        }
-        
-        for (i = 0; i < c; i++)
-        {
-            (*_eValImp)(self, encodeValueOfObjCTypeAtSEL, type, (char*)buf + offset);
-            offset += size;
-        }
-    }
-    else if (_initialPass == NO)
-    {
-        (*_tagImp)(_destination, tagSel, _GSC_ARY_B);
-        if (12402 == version)
-        {
-            for (i = 0; i < byteCount; i++)
-            {
-                (*_serImp)(_destination, serSel, bytePtr + i, @encode(uint8_t), nil);
-            }
-        }
-        else
-        {
-            (*_serImp)(_destination, serSel, &c, @encode(uint32_t), nil);
-            if (0xffffffff == c)
-            {
-                (*_serImp)(_destination, serSel, &count, @encode(NSUInteger), nil);
-            }
-        }
-        
-        (*_tagImp)(_destination, tagSel, info);
-        for (i = 0; i < count; i++)
-        {
-            (*_serImp)(_destination, serSel, (char*)buf + offset, type, nil);
-            offset += size;
-        }
-    }
+    // 这里, 直接用 NSCode 的实现也能达到目的.
 }
 
+/*
+ NSDictionary 的归档方法.
+ {
+     [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
+     if (count > 0)
+     {
+     NSEnumerator    *enumerator = [self keyEnumerator];
+     id        key;
+     IMP        enc;
+     IMP        nxt;
+     IMP        ofk;
+ 
+     nxt = [enumerator methodForSelector: @selector(nextObject)];
+     enc = [aCoder methodForSelector: @selector(encodeObject:)];
+     ofk = [self methodForSelector: @selector(objectForKey:)];
+ 
+     while ((key = (*nxt)(enumerator, @selector(nextObject))) != nil)
+     {
+     id    val = (*ofk)(self, @selector(objectForKey:), key);
+ 
+     (*enc)(aCoder, @selector(encodeObject:), key);
+     (*enc)(aCoder, @selector(encodeObject:), val);
+     }
+     }
+ }
+ 
+ 
+ */
+
+// 最最重要的方法.
 - (void) encodeValueOfObjCType: (const char*)type
                             at: (const void*)buf
 {
-    type = GSSkipTypeQualifierAndLayoutInfo(type);
+    type = GSSkipTypeQualifierAndLayoutInfo(type); 
     switch (*type)
     {
         case _C_ID:
@@ -617,6 +489,7 @@ static Class	NSMutableDataMallocClass;
             }
             return;
             
+            // 上面的是在是太复杂, 这里比较简单, 就是先存 type ,后存 data
         case _C_CHR:
             (*_tagImp)(_destination, tagSel, _GSC_CHR);
             (*_serImp)(_destination, serSel, (void*)buf, @encode(signed char), nil);
@@ -694,6 +567,7 @@ static Class	NSMutableDataMallocClass;
     }
 }
 
+// 这就是最初会调用的方法.
 - (void) encodeRootObject: (id)rootObject
 {
     if (_encodingRoot) // 防卫式处理.
@@ -708,17 +582,17 @@ static Class	NSMutableDataMallocClass;
      *	First pass - find conditional objects.
      */
     _initialPass = YES;
-//    (*_eObjImp)(self, encodeObjectSEL, rootObject); 这里为了效率, 牺牲了太多的可读性, 其实就是调用下面的方法了.
-    [self encodeObject:rootObject]; // 这个方法, 在进行一些记录之后, 又会调用 rootObject 的 encodeObject 方法.
+    //    (*_eObjImp)(self, encodeObjectSEL, rootObject); 这里为了效率, 牺牲了太多的可读性, 其实就是调用下面的方法了.
+    [self encodeObject:rootObject];
     
     /*
      *	Second pass - write archive.
      */
     _initialPass = NO;
-//    (*_eObjImp)(self, encodeObjectSEL, rootObject);
+    //    (*_eObjImp)(self, encodeObjectSEL, rootObject);
     [self encodeObject:rootObject];
+    // 之所以, 会有两个同样的调用, 是因为 _initialPass 变化了, 导致里面的实现会有不同的走向.
     
-    // 所以, 在执行了上面方法之后, 这里已经完成了值得记录的工作.
     /*
      *	Write sizes of crossref arrays to head of archive.
      */
@@ -731,64 +605,6 @@ static Class	NSMutableDataMallocClass;
     _encodingRoot = NO;
 }
 
-// 向 objectMap 里面添加数据, 向 _conditionIdMap 里面添加数据.
-- (void) encodeConditionalObject: (id)anObject
-{
-    if (_encodingRoot == NO)
-    {
-        [NSException raise: NSInvalidArgumentException
-                    format: @"conditionally encoding without root object"];
-        return;
-    }
-    
-    if (_initialPass)
-    {
-        GSIMapNode	node;
-        
-        /*
-         *	Conditionally encoding 'nil' is a no-op.
-         */
-        if (anObject == nil) { return; }
-        
-        /*
-         *	If we have already conditionally encoded this object, we can
-         *	ignore it this time.
-         */
-        node = GSIMapNodeForKey(_conditionIdMap, (GSIMapKey)anObject);
-        if (node != 0) { return; }
-        
-        /*
-         *	If we have unconditionally encoded this object, we can ignore
-         *	it now.
-         */
-        node = GSIMapNodeForKey(_unconditionIdMap, (GSIMapKey)anObject);
-        if (node != 0) { return; }
-        GSIMapAddPair(_conditionIdMap, (GSIMapKey)anObject, (GSIMapVal)(NSUInteger)0);
-    } else if (anObject == nil)
-    {
-        (*_encodeObjectImp)(self, encodeObjectSEL, nil);
-    } else {
-        GSIMapNode	node;
-        
-        if (_objectsMap->nodeCount)
-        {
-            node = GSIMapNodeForKey(_objectsMap, (GSIMapKey)anObject);
-            if (node)
-            {
-                anObject = (id)node->value.ptr;
-            }
-        }
-        
-        node = GSIMapNodeForKey(_conditionIdMap, (GSIMapKey)anObject);
-        if (node != 0)
-        {
-            (*_encodeObjectImp)(self, encodeObjectSEL, nil);
-        } else
-        {
-            (*_encodeObjectImp)(self, encodeObjectSEL, anObject);
-        }
-    }
-}
 
 - (void) encodeDataObject: (NSData*)anObject
 {
@@ -812,17 +628,62 @@ static Class	NSMutableDataMallocClass;
     }
 }
 
+// 向 objectMap 里面添加数据, 向 _conditionIdMap 里面添加数据.
+- (void) encodeConditionalObject: (id)anObject
+{
+    if (_encodingRoot == NO)
+    {
+        [NSException raise: NSInvalidArgumentException
+                    format: @"conditionally encoding without root object"];
+        return;
+    }
+    
+    if (_initialPass)
+    {
+        GSIMapNode    node;
+        
+        /*
+         *    If we have already conditionally encoded this object, we can
+         *    ignore it this time.
+         */
+        node = GSIMapNodeForKey(_conditionIdMap, (GSIMapKey)anObject);
+        if (node != 0) { return; }
+        
+        /*
+         *    If we have unconditionally encoded this object, we can ignore
+         *    it now.
+         */
+        node = GSIMapNodeForKey(_unconditionIdMap, (GSIMapKey)anObject);
+        if (node != 0) { return; }
+        GSIMapAddPair(_conditionIdMap, (GSIMapKey)anObject, (GSIMapVal)(NSUInteger)0);
+    } else {
+        GSIMapNode    node;
+        
+        if (_objectsMap->nodeCount)
+        {
+            node = GSIMapNodeForKey(_objectsMap, (GSIMapKey)anObject);
+            if (node)
+            {
+                anObject = (id)node->value.ptr;
+            }
+        }
+        
+        node = GSIMapNodeForKey(_conditionIdMap, (GSIMapKey)anObject);
+        if (node != 0)
+        {
+            (*_encodeObjectImp)(self, encodeObjectSEL, nil);
+        } else
+        {
+            (*_encodeObjectImp)(self, encodeObjectSEL, anObject);
+        }
+    }
+}
+
+// 如何 encode 对象的真正实现.
 - (void) encodeObject: (id)targetObj
 {
     if (targetObj == nil)
     {
-        if (_initialPass == NO)
-        {
-            /*
-             *	Special case - encode a nil pointer as a crossref of zero.
-             */
-            (*_tagImp)(_destination, tagSel, _GSC_ID | _GSC_XREF, _GSC_X_0);
-        }
         return;
     }
     
@@ -840,7 +701,7 @@ static Class	NSMutableDataMallocClass;
      */
     node = GSIMapNodeForKey(_unconditionIdMap, (GSIMapKey)targetObj);
     
-    if (_initialPass)
+    if (_initialPass) // 代表着还是 encodeRoot 的第一个阶段. 在这个阶段里面, encodeObject 里面的对象, 都是必须 encode 的.
     {
         if (node == 0)
         {
@@ -851,7 +712,8 @@ static Class	NSMutableDataMallocClass;
             GSIMapRemoveKey(_conditionIdMap, (GSIMapKey)targetObj);
             GSIMapAddPair(_unconditionIdMap,
                           (GSIMapKey)targetObj, (GSIMapVal)(NSUInteger)0);
-            [targetObj encodeWithCoder: self];
+            [targetObj encodeWithCoder: self]; // 这里, 就会调用到各个具体类的方法里面了.
+            // 然后, 在那里, 又会转到 encodeObject 中来, 所以这是一个会递归调用给的代码.
         }
         return;
     }
@@ -1013,8 +875,7 @@ static Class	NSMutableDataMallocClass;
 @implementation	NSArchiver (GNUstep)
 
 /**
- *  Allow reuse of archiver (clears class substitution maps, etc.) but
- *  do not clear out current serialized data.
+// 一些清空操作, 将所有的数据归置到最初状态.
  */
 - (void) resetArchiver
 {
@@ -1069,6 +930,7 @@ static Class	NSMutableDataMallocClass;
 
 /**
  *  Writes out header for GNUstep archive format.
+ 将一些头部信息写入到 data 中.
  */
 - (void) serializeHeaderAt: (unsigned)positionInData
                    version: (unsigned)systemVersion

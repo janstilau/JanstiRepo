@@ -16,12 +16,23 @@
  *  [NSUnarchiver], [NSKeyedArchiver], [NSKeyedUnarchiver], or [NSPortCoder].
  *  </p>
  *  <p><code>NSPortCoder</code> is used within the distributed objects
- *  framework.  For archiving to/from disk, the <em>Keyed...</em> classes are
+ *  framework.
+    For archiving to/from disk, the <em>Keyed...</em> classes are
  *  preferred for new implementations, since they provide greater
  *  forward/backward compatibility in the face of class changes.</p>
  */
+
+
+/*
+ 这是一个接口类, 定义了一套通用的序列化, 反序列化的规则, 但是不管具体的类型的序列化和反序列化的方式.
+ 所以, 这个类里面, 有着大量的 subClass 的实现.
+ 看这个类, 应该注重的是, 如何根据这些 primitiveMthod
+ 
+ A coder stores object type information along with the data, so an object decoded from a stream of bytes is normally of the same class as the object that was originally encoded into the stream
+ 
+ */
 @interface NSCoder : NSObject
-// Encoding Data
+
 
 /**
  *  Encodes array of count structures or objects of given type, which may be

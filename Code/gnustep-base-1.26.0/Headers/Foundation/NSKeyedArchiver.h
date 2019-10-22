@@ -23,12 +23,12 @@
     NSMutableData	*_data;		/* Data to write into.		*/
     id		_delegate;	/* Delegate controls operation.	*/
     NSMapTable	*_clsMap;	/* Map classes to names.	*/
-    GSIMapTable	_cIdMap;	/* Conditionally coded.		*/
-    GSIMapTable	_uIdMap;	/* Unconditionally coded.	*/
-    GSIMapTable	_repMap;	/* Mappings for objects.	*/
-    unsigned	_keyNum;	/* Counter for keys in object.	*/
-    NSMutableDictionary	*_enc;	/* Object being encoded.	*/
-    NSMutableArray	*_obj;	/* Array of objects.		*/
+    GSIMapTable	_conditionMap;	/* Conditionally coded.		*/
+    GSIMapTable	_unconditionalMap;	/* Unconditionally coded.	*/
+    GSIMapTable	_objectMap;	/* Mappings for objects.	*/
+    unsigned	_idCounter;	/* Counter for keys in object.	*/
+    NSMutableDictionary	*_encodingObjs;	/* Object being encoded.	*/
+    NSMutableArray	*_allObjs;	/* Array of objects.		*/
     NSPropertyListFormat	_format;
 }
 

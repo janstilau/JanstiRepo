@@ -8,7 +8,30 @@
 
 #if	OS_API_VERSION(GS_API_OSSPEC,GS_API_LATEST)
 
+// 二进制的归档解档操作太过于复杂, 还是用 keyValue 的理解简单一些.
 @interface NSArchiver : NSCoder
+{
+@public
+    NSMutableData    *_data;        /* Data to write into.*/ // 序列化后的二进制数据到底存储在什么位置.
+    id        _destination;        /* Serialization destination.    */
+    IMP        _serImp;    /* Method to serialize with.    */
+    IMP        _tagImp;    /* Serialize a type tag.    */
+    IMP        _xRefImp;    /* Serialize a crossref.    */
+    IMP        _encodeObjectImp;    /* Method to encode an id.    */
+    IMP        _eValImp;    /* Method to encode others.    */
+    GSIMapTable    _clsMap;    /* Class cross references.    */
+    GSIMapTable    _conditionIdMap;    /* Conditionally coded.        */
+    GSIMapTable    _unconditionIdMap;    /* Unconditionally coded.    */
+    GSIMapTable    _pointerMap;    /* Constant pointers.        */
+    GSIMapTable    _namesMap;    /* Mappings for class names.    */
+    GSIMapTable    _objectsMap;    /* Mappings for objects.    */ // 归档对象的记录池
+    unsigned    _xRefC;        /* Counter for cross-reference.    */
+    unsigned    _xRefO;        /* Counter for cross-reference.    */
+    unsigned    _xRefP;        /* Counter for cross-reference.    */
+    unsigned    _startPos;    /* Where in data we started.    */
+    BOOL        _encodingRoot;
+    BOOL        _initialPass; // 只会做一些记录的事情, 不会执行真正的写入 data 的操作.
+}
 
 /* Initializing an archiver */
 - (id) initForWritingWithMutableData: (NSMutableData*)mdata;
@@ -90,38 +113,21 @@
 
 @interface NSUnarchiver : NSCoder
 {
-#if	GS_EXPOSE(NSUnarchiver)
-@private
+@public
     NSData		*data;		/* Data to write into.		*/
     Class			dataClass;	/* What sort of data is it?	*/
     id			src;		/* Deserialization source.	*/
     IMP			desImp;		/* Method to deserialize with.	*/
     void			(*tagImp)(id, SEL, unsigned char*, unsigned*,unsigned*);
     IMP			dValImp;	/* Method to decode data with.	*/
-#ifndef	_IN_NSUNARCHIVER_M
-#define	GSIArray	void*
-#endif
     GSIArray		clsMap;		/* Class crossreference map.	*/
     GSIArray		objMap;		/* Object crossreference map.	*/
     GSIArray		ptrMap;		/* Pointer crossreference map.	*/
-#ifndef	_IN_NSUNARCHIVER_M
-#undef	GSIArray
-#endif
     unsigned		cursor;		/* Position in data buffer.	*/
     unsigned		version;	/* Version of archiver used.	*/
     NSZone		*zone;		/* Zone for allocating objs.	*/
     NSMutableDictionary	*objDict;	/* Class information store.	*/
     NSMutableArray	*objSave;
-#endif
-#if     GS_NONFRAGILE
-#else
-    /* Pointer to private additional data used to avoid breaking ABI
-     * when we don't have the non-fragile ABI available.
-     * Use this mechanism rather than changing the instance variable
-     * layout (see Source/GSInternal.h for details).
-     */
-@private id _internal GS_UNUSED_IVAR;
-#endif
 }
 
 /* Initializing an unarchiver */

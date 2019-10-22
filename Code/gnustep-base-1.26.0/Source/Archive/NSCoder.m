@@ -8,46 +8,20 @@
 
 @implementation NSCoder
 
-/* We used to use a system version which actually reflected the version
- * of GNUstep-base ... but people screwed that up by releasing versions
- * of base with unofficial version numbers conflicting with the scheme.
- * So ... we are now starting from a basepoint of 1 million ... on the
- * basis that the old numbering scheme derived from the gnustep-base
- * major.minor.subminor versioning (in which each can range from 0 to 99)
- * should not have allowed anyone to create an archive with a version
- * greater than 999999.
- * In future, the system version will change if (and only if) the format
- * of the encoded data changes.
- */
 #define	MAX_SUPPORTED_SYSTEM_VERSION	1000000
 
 static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
 
-+ (void) initialize
-{
-    if (self == [NSCoder class])
-    {
-        unsigned	sv;
-        
-        /* The GSCoderSystemVersion user default is provided for testing
-         * and to allow new code to communicate (via Distributed Objects)
-         * with systems running older versions.
-         */
-        sv = [[NSUserDefaults standardUserDefaults]
-              integerForKey: @"GSCoderSystemVersion"];
-        if (sv > 0 && sv <= MAX_SUPPORTED_SYSTEM_VERSION)
-        {
-            systemVersion = sv;
-        }
-    }
-}
 
+// 最最最核心的方法, 大部分的 encode 操作, 都是提取 type 值然后归并到这个方法里面.
 - (void) encodeValueOfObjCType: (const char*)type
                             at: (const void*)address
 {
     [self subclassResponsibility: _cmd];
 }
 
+
+// 最最最核心的方法, 大部分的 decode 的操作, 都是规定到这个方法里面
 - (void) decodeValueOfObjCType: (const char*)type
                             at: (void*)address
 {
@@ -65,15 +39,11 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
     return nil;
 }
 
-- (NSInteger) versionForClassName: (NSString*)className
-{
-    [self subclassResponsibility: _cmd];
-    return (NSInteger)NSNotFound;
-}
+#pragma mark - Encode
 
 // Encoding Data
 
-- (void) encodeArrayOfObjCType: (const char*)type
+- (void) encodeArrayOfObjCType: (const char*)type // 这就代表了, array 里面所有的值得类型, 都是 type 类型的
                          count: (NSUInteger)count
                             at: (const void*)array
 {
@@ -83,7 +53,7 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
     IMP		imp;
     
     imp = [self methodForSelector: @selector(encodeValueOfObjCType:at:)];
-    for (i = 0; i < count; i++, where += size)
+    for (i = 0; i < count; i++, where += size) // wherer + size, 这就是类型的意义.
     {
         (*imp)(self, @selector(encodeValueOfObjCType:at:), type, where);
     }
@@ -166,6 +136,8 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
     va_end(ap);
 }
 
+
+#pragma makr - Decode
 // Decoding Data
 
 - (void) decodeArrayOfObjCType: (const char*)type
@@ -276,18 +248,6 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
     va_end(ap);
 }
 
-// Managing Zones
-
-- (NSZone*) objectZone
-{
-    return NSDefaultMallocZone();
-}
-
-- (void) setObjectZone: (NSZone*)zone
-{
-    ;
-}
-
 
 // Getting a Version
 
@@ -320,6 +280,8 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
     [self subclassResponsibility: _cmd];
     return NO;
 }
+
+#pragma mark - KeyDecode
 
 - (BOOL) decodeBoolForKey: (NSString*)aKey
 {
@@ -388,6 +350,8 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
     return nil;
 }
 
+#pragma mark - KeyEncode
+
 - (void) encodeBool: (BOOL) aBool forKey: (NSString*)aKey
 {
     [self subclassResponsibility: _cmd];
@@ -440,86 +404,5 @@ static unsigned	systemVersion = MAX_SUPPORTED_SYSTEM_VERSION;
     [self subclassResponsibility: _cmd];
 }
 
-@end
-
-
-
-#import	"GSPrivate.h"
-
-@implementation	_NSKeyedCoderOldStyleArray
-- (const void*) bytes
-{
-    return _a;
-}
-- (NSUInteger) count
-{
-    return _c;
-}
-- (void) dealloc
-{
-    DESTROY(_d);
-    [super dealloc];
-}
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-    id		o;
-    void		*address;
-    unsigned	i;
-    
-    _c = [aCoder decodeIntForKey: @"NS.count"];
-    _t[0] = (char)[aCoder decodeIntForKey: @"NS.type"];
-    _t[1] = '\0';
-    
-    /*
-     * We decode the size from the remote end, but discard it as we
-     * are probably safer to use the local size of the datatype involved.
-     */
-    _s = [aCoder decodeIntForKey: @"NS.size"];
-    _s = objc_sizeof_type(_t);
-    
-    _d = o = [[NSMutableData alloc] initWithLength: _c * _s];
-    _a = address = [o mutableBytes];
-    for (i = 0; i < _c; i++)
-    {
-        [aCoder decodeValueOfObjCType: _t at: address];
-        address += _s;
-    }
-    return self;
-}
-
-- (id) initWithObjCType: (const char*)t count: (NSInteger)c at: (const void*)a
-{
-    t = GSSkipTypeQualifierAndLayoutInfo(t);
-    _t[0] = *t;
-    _t[1] = '\0';
-    _s = objc_sizeof_type(_t);
-    _c = c;
-    _a = a;
-    return self;
-}
-
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-    int	i;
-    
-    [aCoder encodeInt: _c forKey: @"NS.count"];
-    [aCoder encodeInt: *_t forKey: @"NS.type"];
-    [aCoder encodeInt: _s forKey: @"NS.size"];
-    for (i = 0; i < _c; i++)
-    {
-        [aCoder encodeValueOfObjCType: _t at: _a];
-        _a += _s;
-    }
-}
-
-- (NSUInteger) size
-{
-    return _s;
-}
-
-- (const char*) type
-{
-    return _t;
-}
 @end
 
