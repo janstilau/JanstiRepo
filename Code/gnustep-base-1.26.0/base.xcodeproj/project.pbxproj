@@ -25,6 +25,7 @@
 		063150622359A45700EC6A60 /* xmltools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 063150502359A45700EC6A60 /* xmltools.cpp */; };
 		063150632359A45700EC6A60 /* udocumenttoxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 063150512359A45700EC6A60 /* udocumenttoxml.cpp */; };
 		063150642359A45700EC6A60 /* NSArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 063150522359A45700EC6A60 /* NSArray.m */; };
+		06C8F8E0235F56610076B0E8 /* person.plist in Resources */ = {isa = PBXBuildFile; fileRef = 06C8F8DF235F56610076B0E8 /* person.plist */; };
 		180878891618537A006EBD74 /* objc-load.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890700B1610BF3C0003C892 /* objc-load.m */; };
 		18394B351610D9D000335E85 /* Foundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906E681610BF3C0003C892 /* Foundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B361610D9D000335E85 /* FoundationErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906E691610BF3C0003C892 /* FoundationErrors.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -399,6 +400,7 @@
 		063150522359A45700EC6A60 /* NSArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSArray.m; sourceTree = "<group>"; };
 		06AB682C2350D840001FF62A /* Foundation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Foundation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		06AB682D2350D840001FF62A /* gdnc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gdnc; sourceTree = BUILT_PRODUCTS_DIR; };
+		06C8F8DF235F56610076B0E8 /* person.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = person.plist; sourceTree = "<group>"; };
 		18394AA31610CC4E00335E85 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		18394AA41610CC4E00335E85 /* GSConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSConfig.h; sourceTree = "<group>"; };
 		18641D0E1678AD04003C6E11 /* GSSocks4Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSocks4Parser.h; sourceTree = "<group>"; };
@@ -894,6 +896,7 @@
 		06C8F8DE235F2FFF0076B0E8 /* Archive */ = {
 			isa = PBXGroup;
 			children = (
+				06C8F8DF235F56610076B0E8 /* person.plist */,
 				18906F801610BF3C0003C892 /* NSCoder.m */,
 				18906F711610BF3C0003C892 /* NSArchiver.m */,
 				18906FE51610BF3C0003C892 /* NSUnarchiver.m */,
@@ -1659,6 +1662,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06C8F8E0235F56610076B0E8 /* person.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

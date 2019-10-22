@@ -95,7 +95,7 @@ static NSDictionary *makeReference(unsigned ref)
 }
 
 @interface	NSKeyedArchiver (Private)
-- (id) _encodeObject: (id)anObject conditional: (BOOL)conditional;
+- (id) priveteEncode: (id)anObject conditional: (BOOL)conditional;
 @end
 
 @implementation	NSKeyedArchiver (Internal)
@@ -122,7 +122,7 @@ static NSDictionary *makeReference(unsigned ref)
         m = [NSMutableArray arrayWithCapacity: c];
         for (i = 0; i < c; i++)
         {
-            o = [self _encodeObject: [anArray objectAtIndex: i] conditional: NO];
+            o = [self priveteEncode: [anArray objectAtIndex: i] conditional: NO];
             [m addObject: o];
         }
         o = m;
@@ -143,7 +143,7 @@ static NSDictionary *makeReference(unsigned ref)
  * archiving of objects. It returns the object to be stored in the
  * mapping dictionary (_encodingObjs).
  */
-- (id) _encodeObject: (id)anObject conditional: (BOOL)conditional
+- (id) priveteEncode: (id)anObject conditional: (BOOL)conditional
 {
     id			original = anObject;
     GSIMapNode		node;
@@ -510,7 +510,7 @@ static NSDictionary *makeReference(unsigned ref)
 {
     NSString	*aKey = [NSString stringWithFormat: @"$%u", _keyNum++];
     
-    anObject = [self _encodeObject: anObject conditional: YES];
+    anObject = [self priveteEncode: anObject conditional: YES];
     [_encodingObjs setObject: anObject forKey: aKey];
 }
 
@@ -518,7 +518,7 @@ static NSDictionary *makeReference(unsigned ref)
 {
     CHECKKEY
     
-    anObject = [self _encodeObject: anObject conditional: YES];
+    anObject = [self priveteEncode: anObject conditional: YES];
     [_encodingObjs setObject: anObject forKey: aKey];
 }
 
@@ -568,7 +568,7 @@ static NSDictionary *makeReference(unsigned ref)
 {
     NSString	*aKey = [NSString stringWithFormat: @"$%u", _keyNum++];
     
-    anObject = [self _encodeObject: anObject conditional: NO];
+    anObject = [self priveteEncode: anObject conditional: NO];
     [_encodingObjs setObject: anObject forKey: aKey];
 }
 
@@ -576,7 +576,7 @@ static NSDictionary *makeReference(unsigned ref)
 {
     CHECKKEY
     
-    anObject = [self _encodeObject: anObject conditional: NO];
+    anObject = [self priveteEncode: anObject conditional: NO];
     [_encodingObjs setObject: anObject forKey: aKey];
 }
 
