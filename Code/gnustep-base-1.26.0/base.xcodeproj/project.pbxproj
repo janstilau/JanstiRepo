@@ -835,13 +835,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0631503F2359906300EC6A60 /* ThreadRelated */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ThreadRelated;
-			sourceTree = SOURCE_ROOT;
-		};
 		063150402359A45700EC6A60 /* Done */ = {
 			isa = PBXGroup;
 			children = (
@@ -1016,7 +1009,6 @@
 				06C8F8DE235F2FFF0076B0E8 /* Archive */,
 				0669BA4F235C4D2A00D61077 /* Network */,
 				063150402359A45700EC6A60 /* Done */,
-				0631503F2359906300EC6A60 /* ThreadRelated */,
 				18F8D04F1724534E00420DA5 /* KVO */,
 				18906F701610BF3C0003C892 /* NSAffineTransform.m */,
 				18906F761610BF3C0003C892 /* NSBundle.m */,
