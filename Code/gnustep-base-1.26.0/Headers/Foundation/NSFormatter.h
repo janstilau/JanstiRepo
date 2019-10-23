@@ -1,26 +1,26 @@
 /* Interface of NSFormatter class
-   Copyright (C) 1998 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   Created: November 1998
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */
+ Copyright (C) 1998 Free Software Foundation, Inc.
+ 
+ Written by:  Richard Frith-Macdonald <richard@brainstorm.co.uk>
+ Created: November 1998
+ 
+ This file is part of the GNUstep Base Library.
+ 
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+ 
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free
+ Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ Boston, MA 02111 USA.
+ */
 
 #ifndef __NSFormatter_h_GNUSTEP_BASE_INCLUDE
 #define __NSFormatter_h_GNUSTEP_BASE_INCLUDE
@@ -31,10 +31,6 @@
 #import	<Foundation/NSRange.h>
 
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 @class	NSString, NSAttributedString, NSDictionary;
 
@@ -55,7 +51,7 @@ extern "C" {
  *  an attributed string is not provided.
  */
 - (NSAttributedString*) attributedStringForObjectValue: (id)anObject
-				 withDefaultAttributes: (NSDictionary*)attr;
+                                 withDefaultAttributes: (NSDictionary*)attr;
 
 /**
  * For use in applications where user interactively edits a string.  If the
@@ -78,7 +74,7 @@ extern "C" {
  *  YES.
  */
 - (BOOL) getObjectValue: (id*)anObject
-	      forString: (NSString*)string
+              forString: (NSString*)string
        errorDescription: (NSString**)error;
 
 /**
@@ -91,8 +87,8 @@ extern "C" {
  *  should delete the last character the user typed.
  */
 - (BOOL) isPartialStringValid: (NSString*)partialString
-	     newEditingString: (NSString**)newString
-	     errorDescription: (NSString**)error;
+             newEditingString: (NSString**)newString
+             errorDescription: (NSString**)error;
 
 /**
  *  Checks whether a change to a string leaves it a valid string that, if it
@@ -121,10 +117,6 @@ extern "C" {
  */
 - (NSString*) stringForObjectValue: (id)anObject;
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 #endif

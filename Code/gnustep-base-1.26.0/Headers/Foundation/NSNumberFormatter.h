@@ -8,51 +8,47 @@
 #import	<Foundation/NSFormatter.h>
 #import	<Foundation/NSDecimalNumber.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class	NSString, NSAttributedString, NSDictionary,
-        NSError, NSLocale, NSNumber;
+NSError, NSLocale, NSNumber;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4, GS_API_LATEST)
 enum
 {
-  NSNumberFormatterNoStyle = 0,
-  NSNumberFormatterDecimalStyle = 1,
-  NSNumberFormatterCurrencyStyle = 2,
-  NSNumberFormatterPercentStyle = 3,
-  NSNumberFormatterScientificStyle = 4,
-  NSNumberFormatterSpellOutStyle = 5
+    NSNumberFormatterNoStyle = 0,
+    NSNumberFormatterDecimalStyle = 1,
+    NSNumberFormatterCurrencyStyle = 2,
+    NSNumberFormatterPercentStyle = 3,
+    NSNumberFormatterScientificStyle = 4,
+    NSNumberFormatterSpellOutStyle = 5
 };
 typedef NSUInteger NSNumberFormatterStyle;
 
 enum
 {
-  NSNumberFormatterBehaviorDefault = 0,
-  NSNumberFormatterBehavior10_0 = 1000,
-  NSNumberFormatterBehavior10_4 = 1040
+    NSNumberFormatterBehaviorDefault = 0,
+    NSNumberFormatterBehavior10_0 = 1000,
+    NSNumberFormatterBehavior10_4 = 1040
 };
 typedef NSUInteger NSNumberFormatterBehavior;
 
 enum
 {
-  NSNumberFormatterPadBeforePrefix = 0,
-  NSNumberFormatterPadAfterPrefix = 1,
-  NSNumberFormatterPadBeforeSuffix = 2,
-  NSNumberFormatterPadAfterSuffix = 3
+    NSNumberFormatterPadBeforePrefix = 0,
+    NSNumberFormatterPadAfterPrefix = 1,
+    NSNumberFormatterPadBeforeSuffix = 2,
+    NSNumberFormatterPadAfterSuffix = 3
 };
 typedef NSUInteger NSNumberFormatterPadPosition;
 
 enum
 {
-  NSNumberFormatterRoundCeiling = 0,
-  NSNumberFormatterRoundFloor = 1,
-  NSNumberFormatterRoundDown = 2,
-  NSNumberFormatterRoundUp = 3,
-  NSNumberFormatterRoundHalfEven = 4,
-  NSNumberFormatterRoundHalfDown = 5,
-  NSNumberFormatterRoundHalfUp = 6
+    NSNumberFormatterRoundCeiling = 0,
+    NSNumberFormatterRoundFloor = 1,
+    NSNumberFormatterRoundDown = 2,
+    NSNumberFormatterRoundUp = 3,
+    NSNumberFormatterRoundHalfEven = 4,
+    NSNumberFormatterRoundHalfDown = 5,
+    NSNumberFormatterRoundHalfUp = 6
 };
 typedef NSUInteger NSNumberFormatterRoundingMode;
 #endif
@@ -97,34 +93,34 @@ typedef NSUInteger NSNumberFormatterRoundingMode;
 {
 #if	GS_EXPOSE(NSNumberFormatter)
 @private
-  BOOL _hasThousandSeparators;
-  BOOL _allowsFloats;
-  BOOL _localizesFormat;
-  unichar _thousandSeparator;
-  unichar _decimalSeparator;
-  NSDecimalNumberHandler *_roundingBehavior;
-  NSDecimalNumber *_maximum;
-  NSDecimalNumber *_minimum;
-  NSAttributedString *_attributedStringForNil;
-  NSAttributedString *_attributedStringForNotANumber;
-  NSAttributedString *_attributedStringForZero;
-  NSString *_negativeFormat;
-  NSString *_positiveFormat;
-  NSDictionary *_attributesForPositiveValues;
-  NSDictionary *_attributesForNegativeValues;
+    BOOL _hasThousandSeparators;
+    BOOL _allowsFloats;
+    BOOL _localizesFormat;
+    unichar _thousandSeparator;
+    unichar _decimalSeparator;
+    NSDecimalNumberHandler *_roundingBehavior;
+    NSDecimalNumber *_maximum;
+    NSDecimalNumber *_minimum;
+    NSAttributedString *_attributedStringForNil;
+    NSAttributedString *_attributedStringForNotANumber;
+    NSAttributedString *_attributedStringForZero;
+    NSString *_negativeFormat;
+    NSString *_positiveFormat;
+    NSDictionary *_attributesForPositiveValues;
+    NSDictionary *_attributesForNegativeValues;
 #endif
 #if     GS_NONFRAGILE
 #  if	defined(GS_NSNumberFormatter_IVARS)
 @public
-GS_NSNumberFormatter_IVARS;
+    GS_NSNumberFormatter_IVARS;
 #  endif
 #else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
+    /* Pointer to private additional data used to avoid breaking ABI
+     * when we don't have the non-fragile ABI available.
+     * Use this mechanism rather than changing the instance variable
+     * layout (see Source/GSInternal.h for details).
+     */
+@private id _internal GS_UNUSED_IVAR;
 #endif
 }
 
@@ -487,14 +483,10 @@ GS_NSNumberFormatter_IVARS;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 + (NSString *) localizedStringFromNumber: (NSNumber *) num
-    numberStyle: (NSNumberFormatterStyle) localizationStyle;
+                             numberStyle: (NSNumberFormatterStyle) localizationStyle;
 #endif
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif	/* GS_API_MACOSX */
 
