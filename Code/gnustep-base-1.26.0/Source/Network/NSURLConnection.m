@@ -23,6 +23,8 @@
 
 @end
 
+
+// 一个简单的实现了 Connection 代理的一个类, 就是为了处理简单的网络交互.
 @implementation _NSURLConnectionDataCollector
 
 - (void) dealloc
@@ -47,7 +49,7 @@
 {
     if (nil != (self = [super init]))
     {
-        _data = [NSMutableData new];      // Empty data unless we get an error
+        _data = [[NSMutableData alloc] init];      // Empty data unless we get an error
     }
     return self;
 }
@@ -94,31 +96,17 @@
 
 @end
 
-typedef struct
-{
-    NSMutableURLRequest		*_request;
-    NSURLProtocol			*_protocol;
-    id				_delegate;
-    BOOL				_debug;
-} Internal;
-
-#define	this	((Internal*)(self->_NSURLConnectionInternal))
-#define	inst	((Internal*)(o->_NSURLConnectionInternal))
-
 @implementation	NSURLConnection
 
-+ (id) allocWithZone: (NSZone*)z
-{
-    NSURLConnection	*o = [super allocWithZone: z];
-    
-    if (o != nil)
-    {
-        o->_NSURLConnectionInternal = NSZoneCalloc([self zone],
-                                                   1, sizeof(Internal));
-    }
-    return o;
-}
+/*
+ 
+ HTTP 的交互逻辑是一致的, 所以, URLConnection 和 Session, 还是要复用这块的逻辑. 也就是在 HTTPProtocol 里面的逻辑. 所以, 每一次网络请求, 其实是 HTTPProtocol 在处理数据的交互.
+ URLConnection 和 Session 更多的是一个组织者, 在 HTTPProtocol 的上层, 做一些数据的组织.
+ 比如, 一个下载任务, 会是创建一个缓存文件, 然后不断地将 data 填充到这个缓存文件中. 这个过程, 如果直接在 HTTPProtocol 上交互, 会变得及其复杂. 所以, 会专门有 downloadTask 的概念产生.
+ */
 
+
+// 这里, 直接代理给了 NSURLProtocol 对象.
 + (BOOL) canHandleRequest: (NSURLRequest *)request
 {
     return ([NSURLProtocol _classToHandleRequest: request] != nil);
@@ -128,88 +116,60 @@ typedef struct
                                    delegate: (id)delegate
 {
     NSURLConnection	*o = [self alloc];
-    
     o = [o initWithRequest: request delegate: delegate];
     return AUTORELEASE(o);
 }
 
 - (void) cancel
 {
-    [this->_protocol stopLoading];
-    DESTROY(this->_protocol);
-    DESTROY(this->_delegate);
-}
-
-- (void) dealloc
-{
-    if (this != 0)
-    {
-        [self cancel];
-        DESTROY(this->_request);
-        DESTROY(this->_delegate);
-        NSZoneFree([self zone], this);
-        _NSURLConnectionInternal = 0;
-    }
-    [super dealloc];
-}
-
-- (void) finalize
-{
-    if (this != 0)
-    {
-        [self cancel];
-    }
+    [self->_protocol stopLoading];
+    DESTROY(self->_protocol);
+    DESTROY(self->_delegate);
 }
 
 - (id) initWithRequest: (NSURLRequest *)request delegate: (id)delegate
 {
-    if ((self = [super init]) != nil)
+    if ((self = [super init]) == nil) { return nil; }
+    
+    self->_request = [request mutableCopyWithZone: [self zone]];
+    if ([self->_request HTTPShouldHandleCookies] == YES)
     {
-        this->_request = [request mutableCopyWithZone: [self zone]];
-        
-        /* Enrich the request with the appropriate HTTP cookies,
-         * if desired.
-         */
-        if ([this->_request HTTPShouldHandleCookies] == YES)
+        // 这里应该在 reqeust 的构造过程中添加吧.
+        NSArray *cookies;
+        cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage]
+                   cookiesForURL: [self->_request URL]];
+        if ([cookies count] > 0)
         {
-            NSArray *cookies;
+            NSDictionary    *headers;
+            NSEnumerator    *enumerator;
+            NSString        *header;
             
-            cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage]
-                       cookiesForURL: [this->_request URL]];
-            if ([cookies count] > 0)
+            headers = [NSHTTPCookie requestHeaderFieldsWithCookies: cookies];
+            enumerator = [headers keyEnumerator];
+            while (nil != (header = [enumerator nextObject]))
             {
-                NSDictionary	*headers;
-                NSEnumerator	*enumerator;
-                NSString		*header;
-                
-                headers = [NSHTTPCookie requestHeaderFieldsWithCookies: cookies];
-                enumerator = [headers keyEnumerator];
-                while (nil != (header = [enumerator nextObject]))
-                {
-                    [this->_request addValue: [headers valueForKey: header]
-                          forHTTPHeaderField: header];
-                }
+                [self->_request addValue: [headers valueForKey: header]
+                      forHTTPHeaderField: header];
             }
         }
-        
-        /* According to bug #35686, Cocoa has a bizarre deviation from the
-         * convention that delegates are retained here.
-         * For compatibility we retain the delegate and release it again
-         * when the operation is over.
-         */
-        this->_delegate = [delegate retain];
-        this->_protocol = [[NSURLProtocol alloc]
-                           initWithRequest: this->_request
-                           cachedResponse: nil
-                           client: (id<NSURLProtocolClient>)self];
-        [this->_protocol startLoading];
-        this->_debug = GSDebugSet(@"NSURLConnection");
     }
+    
+    /* According to bug #35686, Cocoa has a bizarre deviation from the
+     * convention that delegates are retained here.
+     * For compatibility we retain the delegate and release it again
+     * when the operation is over.
+     */
+    self->_delegate = [delegate retain];
+    // 创建真正的网络交互的对象.
+    self->_protocol = [[NSURLProtocol alloc]
+                       initWithRequest: self->_request
+                       cachedResponse: nil
+                       client: (id<NSURLProtocolClient>)self];
+    [self->_protocol startLoading];
     return self;
 }
 
 @end
-
 
 
 @implementation NSObject (NSURLConnectionDelegate)
@@ -282,6 +242,7 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
 {
     NSData	*data = nil;
     
+    // 对于这种传出参数, 应该在函数的开始, 进行归零处理. 否则, 不能很好的体现这个函数里面对于传出参数的影响.
     if (0 != response)
     {
         *response = nil;
@@ -290,58 +251,53 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
     {
         *error = nil;
     }
-    if ([self canHandleRequest: request] == YES)
+    if ([self canHandleRequest: request] != YES) { return data; }
+    
+    _NSURLConnectionDataCollector    *collector = [_NSURLConnectionDataCollector new];
+    NSURLConnection *conn = [[self alloc] initWithRequest: request delegate: collector];
+    if (nil != conn)
     {
-        _NSURLConnectionDataCollector	*collector;
-        NSURLConnection			*conn;
+        NSRunLoop    *loop;
+        NSDate    *limit;
         
-        collector = [_NSURLConnectionDataCollector new];
-        conn = [[self alloc] initWithRequest: request delegate: collector];
-        if (nil != conn)
+        [collector setConnection: conn];
+        loop = [NSRunLoop currentRunLoop];
+        
+        // 这里, 专门创建一个 runloop 来进行信息的收集工作.
+        // 有了 runloop, 这块代码就会一直卡在这里, 所以内存分配方面的考虑也不用了.
+        while ([collector done] == NO && [limit timeIntervalSinceNow] > 0.0)
         {
-            NSRunLoop	*loop;
-            NSDate	*limit;
-            
-            [collector setConnection: conn];
-            loop = [NSRunLoop currentRunLoop];
-            limit = [[NSDate alloc] initWithTimeIntervalSinceNow:
-                     [request timeoutInterval]];
-            
-            while ([collector done] == NO && [limit timeIntervalSinceNow] > 0.0)
-            {
-                [loop runMode: NSDefaultRunLoopMode beforeDate: limit];
-            }
-            [limit release];
-            if (NO == [collector done])
-            {
-                data = nil;
-                if (0 != response)
-                {
-                    *response = nil;
-                }
-                if (0 != error)
-                {
-                    *error = [NSError errorWithDomain: NSURLErrorDomain
-                                                 code: NSURLErrorTimedOut
-                                             userInfo: nil];
-                }
-            }
-            else
-            {
-                data = [[[collector data] retain] autorelease];
-                if (0 != response)
-                {
-                    *response = [[[collector response] retain] autorelease];
-                }
-                if (0 != error)
-                {
-                    *error = [[[collector error] retain] autorelease];
-                }
-            }
-            [conn release];
+            [loop runMode: NSDefaultRunLoopMode beforeDate: limit];
         }
-        [collector release];
+        [limit release];
+        if (NO == [collector done])
+        {
+            data = nil;
+            if (0 != response)
+            {
+                *response = nil;
+            }
+            if (0 != error)
+            {
+                *error = [NSError errorWithDomain: NSURLErrorDomain
+                                             code: NSURLErrorTimedOut
+                                         userInfo: nil];
+            }
+        } else {
+            data = [[[collector data] retain] autorelease];
+            if (0 != response)
+            {
+                *response = [[[collector response] retain] autorelease];
+            }
+            if (0 != error)
+            {
+                *error = [[[collector error] retain] autorelease];
+            }
+        }
+        [conn release];
     }
+    [collector release];
+    
     return data;
 }
 
@@ -350,6 +306,7 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
 
 @implementation	NSURLConnection (URLProtocolClient)
 
+// connection 对于 protocol 的代理处理, 基本就是将处理转移到了外界. 可以在这里, 根据当前的任务类型, 做一些管理工作.
 - (void) URLProtocol: (NSURLProtocol *)protocol
 cachedResponseIsValid: (NSCachedURLResponse *)cachedResponse
 {
@@ -359,9 +316,9 @@ cachedResponseIsValid: (NSCachedURLResponse *)cachedResponse
 - (void) URLProtocol: (NSURLProtocol *)protocol
     didFailWithError: (NSError *)error
 {
-    id    o = this->_delegate;
+    id    o = self->_delegate;
     
-    this->_delegate = nil;
+    self->_delegate = nil;
     [o connection: self didFailWithError: error];
     DESTROY(o);
 }
@@ -369,13 +326,13 @@ cachedResponseIsValid: (NSCachedURLResponse *)cachedResponse
 - (void) URLProtocol: (NSURLProtocol *)protocol
          didLoadData: (NSData *)data
 {
-    [this->_delegate connection: self didReceiveData: data];
+    [self->_delegate connection: self didReceiveData: data];
 }
 
 - (void) URLProtocol: (NSURLProtocol *)protocol
 didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
 {
-    [this->_delegate connection: self
+    [self->_delegate connection: self
 didReceiveAuthenticationChallenge: challenge];
 }
 
@@ -383,7 +340,7 @@ didReceiveAuthenticationChallenge: challenge];
   didReceiveResponse: (NSURLResponse *)response
   cacheStoragePolicy: (NSURLCacheStoragePolicy)policy
 {
-    [this->_delegate connection: self didReceiveResponse: response];
+    [self->_delegate connection: self didReceiveResponse: response];
     if (policy == NSURLCacheStorageAllowed
         || policy == NSURLCacheStorageAllowedInMemoryOnly)
     {
@@ -391,35 +348,32 @@ didReceiveAuthenticationChallenge: challenge];
     }
 }
 
+// 如果需要重定向, 这里是直接创建一下新的加载过程, 放弃之前的加载. 这也应该是浏览器的默认实现.
 - (void) URLProtocol: (NSURLProtocol *)protocol
 wasRedirectedToRequest: (NSURLRequest *)request
     redirectResponse: (NSURLResponse *)redirectResponse
 {
-    request = [this->_delegate connection: self
+    request = [self->_delegate connection: self
                           willSendRequest: request
                          redirectResponse: redirectResponse];
     if (request != nil)
     {
-        [this->_protocol stopLoading];
-        DESTROY(this->_protocol);
-        ASSIGNCOPY(this->_request, request);
-        this->_protocol = [[NSURLProtocol alloc]
-                           initWithRequest: this->_request
+        [self->_protocol stopLoading];
+        DESTROY(self->_protocol);
+        ASSIGNCOPY(self->_request, request);
+        self->_protocol = [[NSURLProtocol alloc]
+                           initWithRequest: self->_request
                            cachedResponse: nil
                            client: (id<NSURLProtocolClient>)self];
-        [this->_protocol startLoading];
-    }
-    else if (this->_debug)
-    {
-        NSLog(@"%@ delegate cancelled redirect", self);
+        [self->_protocol startLoading];
     }
 }
 
 - (void) URLProtocolDidFinishLoading: (NSURLProtocol *)protocol
 {
-    id    o = this->_delegate;
+    id    o = self->_delegate;
     
-    this->_delegate = nil;
+    self->_delegate = nil;
     [o connectionDidFinishLoading: self];
     DESTROY(o);
 }
@@ -427,7 +381,7 @@ wasRedirectedToRequest: (NSURLRequest *)request
 - (void) URLProtocol: (NSURLProtocol *)protocol
 didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
 {
-    [this->_delegate connection: self
+    [self->_delegate connection: self
 didCancelAuthenticationChallenge: challenge];
 }
 
