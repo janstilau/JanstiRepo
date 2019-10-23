@@ -42,18 +42,8 @@ static NSHTTPCookieStorage   *storage = nil;
 - init
 {
     self->_policy = NSHTTPCookieAcceptPolicyAlways;
-    self->_cookies = [NSMutableArray new];
-    [[NSDistributedNotificationCenter defaultCenter]
-     addObserver: self
-     selector: @selector(cookiesChangedNotification:)
-     name: NSHTTPCookieManagerCookiesChangedNotification
-     object: objectObserver];
-    [[NSDistributedNotificationCenter defaultCenter]
-     addObserver: self
-     selector: @selector(acceptPolicyChangeNotification:)
-     name: NSHTTPCookieManagerAcceptPolicyChangedNotification
-     object: objectObserver];
-    [self _updateFromCookieStore];
+    self->_cookieArrayM = [NSMutableArray new];
+    [self _updateFromCookieStore]; // 从序列化文件中, 读取之前的 cookie 数据.
     return self;
 }
 
@@ -78,25 +68,24 @@ static NSHTTPCookieStorage   *storage = nil;
         if (ok == NO)
             return nil;
     }
-    path = [path stringByAppendingPathComponent: @"Cookies.plist"];
+    path = [path stringByAppendingPathComponent: @"Cookies.plist"]; // cookies 的这些信息, 存放到了一个 plist 文件中.
     return path;
 }
 
-- (BOOL) _expireCookies: (BOOL)endUserSession
+- (BOOL) _expireCookies: (BOOL)endUserSession // 清理 cookie , 如果时间过期了, 这个方法会在每次进行存储删除的时候调用.
 {
     BOOL changed = NO;
     NSDate *now = [NSDate date];
-    unsigned count = [self->_cookies count];
+    unsigned count = [self->_cookieArrayM count];
     
-    /* FIXME: Handle Max-age */
-    while (count-- > 0)
+    while (count-- > 0) // 这种变修改容器, 变改变 index 的方式, 只能是在对容器的内部实现比较了解的情况下才能使用.
     {
-        NSHTTPCookie	*ck = [self->_cookies objectAtIndex: count];
+        NSHTTPCookie	*ck = [self->_cookieArrayM objectAtIndex: count];
         NSDate *expDate = [ck expiresDate];
         if ((endUserSession && expDate == nil) ||
             (expDate != nil && [expDate compare: now] != NSOrderedDescending))
         {
-            [self->_cookies removeObject: ck];
+            [self->_cookieArrayM removeObject: ck];
             changed = YES;
         }
     }
@@ -106,22 +95,14 @@ static NSHTTPCookieStorage   *storage = nil;
 - (void) _updateFromCookieStore
 {
     int i;
-    NSArray *properties;
+    NSArray *properties; // 这里标明, cookies 是按照数组存放到了 plist 文件中的.
     NSString *path = [self _cookieStorePath];
     
     if (path == nil)
     {
         return;
     }
-    properties = nil;
-    NS_DURING
-    if (YES == [[NSFileManager defaultManager] fileExistsAtPath: path])
-    {
-        properties = [[NSString stringWithContentsOfFile: path] propertyList];
-    }
-    NS_HANDLER
-    NSLog(@"NSHTTPCookieStorage: Error reading cookies plist");
-    NS_ENDHANDLER
+    properties = [[NSString stringWithContentsOfFile: path] propertyList];
     if (nil == properties)
         return;
     for (i = 0; i < [properties count]; i++)
@@ -131,14 +112,14 @@ static NSHTTPCookieStorage   *storage = nil;
         
         props = [properties objectAtIndex: i];
         cookie = [NSHTTPCookie cookieWithProperties: props];
-        if (NO == [self->_cookies containsObject: cookie])
+        if (NO == [self->_cookieArrayM containsObject: cookie])
         {
-            [self->_cookies addObject:cookie];
+            [self->_cookieArrayM addObject:cookie];
         }
     }
 }
 
-- (void) _updateToCookieStore
+- (void) _updateToCookieStore // 每次进行 cookie 的修改, 都要进行这个的调用, 保持序列化的数据一致.
 {
     int i, count;
     NSMutableArray *properties;
@@ -148,20 +129,17 @@ static NSHTTPCookieStorage   *storage = nil;
     {
         return;
     }
-    count = [self->_cookies count];
+    count = [self->_cookieArrayM count];
     properties = [NSMutableArray arrayWithCapacity: count];
     for (i = 0; i < count; i++)
-        [properties addObject: [[self->_cookies objectAtIndex: i] properties]];
-    [properties writeToFile: path atomically: YES];
+        [properties addObject: [[self->_cookieArrayM objectAtIndex: i] properties]];
+    [properties writeToFile: path atomically: YES]; // 数组存储.
 }
 
 - (void) _doExpireUpdateAndNotify
 {
     [self _expireCookies: NO];
     [self _updateToCookieStore];
-    [[NSDistributedNotificationCenter defaultCenter]
-     postNotificationName: NSHTTPCookieManagerCookiesChangedNotification
-     object: objectObserver];
 }
 
 - (void) cookiesChangedNotification: (NSNotification *)note
@@ -185,13 +163,13 @@ static NSHTTPCookieStorage   *storage = nil;
 
 - (NSArray *) cookies
 {
-    return [[self->_cookies copy] autorelease];
+    return [[self->_cookieArrayM copy] autorelease];
 }
 
-- (NSArray *) cookiesForURL: (NSURL *)URL
+- (NSArray *) cookiesForURL: (NSURL *)URL // 就是遍历, 然后筛选现在存储的 cookie
 {
     NSMutableArray *a = [NSMutableArray array];
-    NSEnumerator *ckenum = [self->_cookies objectEnumerator];
+    NSEnumerator *ckenum = [self->_cookieArrayM objectEnumerator];
     NSHTTPCookie *cookie;
     NSString *receive_domain = [URL host];
     
@@ -205,9 +183,9 @@ static NSHTTPCookieStorage   *storage = nil;
 
 - (void) deleteCookie: (NSHTTPCookie *)cookie
 {
-    if ([self->_cookies indexOfObject: cookie] != NSNotFound)
+    if ([self->_cookieArrayM indexOfObject: cookie] != NSNotFound)
     {
-        [self->_cookies removeObject: cookie];
+        [self->_cookieArrayM removeObject: cookie];
         [self _doExpireUpdateAndNotify];
     }
     else
@@ -216,7 +194,7 @@ static NSHTTPCookieStorage   *storage = nil;
 
 - (void) _setCookieNoNotify: (NSHTTPCookie *)cookie
 {
-    NSEnumerator *ckenum = [self->_cookies objectEnumerator];
+    NSEnumerator *ckenum = [self->_cookieArrayM objectEnumerator];
     NSHTTPCookie *ck, *remove_ck;
     NSString *name = [cookie name];
     NSString *path = [cookie path];
@@ -243,9 +221,9 @@ static NSHTTPCookieStorage   *storage = nil;
         }
     }
     if (remove_ck)
-        [self->_cookies removeObject: remove_ck];
+        [self->_cookieArrayM removeObject: remove_ck];
     
-    [self->_cookies addObject: cookie];
+    [self->_cookieArrayM addObject: cookie];
 }
 
 - (void) setCookie: (NSHTTPCookie *)cookie
@@ -278,10 +256,10 @@ static NSHTTPCookieStorage   *storage = nil;
     {
         NSHTTPCookie	*ck = [cookies objectAtIndex: count];
         
-        if (self->_policy == NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain
-            && [[URL host] hasSuffix: [mainDocumentURL host]] == NO)
+        if (self->_policy == NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain &&
+            [[URL host] hasSuffix: [mainDocumentURL host]] == NO){ // URL 不是mainDocumentURL的下级 url
             continue;
-        
+        }
         [self _setCookieNoNotify: ck];
         changed = YES;
     }

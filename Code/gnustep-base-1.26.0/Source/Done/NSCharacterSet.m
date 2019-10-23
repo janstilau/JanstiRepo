@@ -197,23 +197,7 @@
     return self;
 }
 
-- (BOOL) longCharacterIsMember: (UTF32Char)aCharacter
-{
-    unsigned	byte = aCharacter/8;
-    
-    if (aCharacter >= GSUNICODE_MAX)
-    {
-        [NSException raise: NSInvalidArgumentException
-                    format: @"[%@-%@] argument (0x%08x) is too large",
-         NSStringFromClass([self class]), NSStringFromSelector(_cmd),
-         aCharacter];
-    }
-    if (byte < _length && GSISSET(_data[byte], aCharacter % 8))
-    {
-        return YES;
-    }
-    return NO;
-}
+
 @end
 
 @implementation NSMutableBitmapCharSet
@@ -612,13 +596,8 @@ static Class concreteMutableClass = nil;
     {
         abstractClass = [NSCharacterSet class];
         abstractMutableClass = [NSMutableCharacterSet class];
-#if defined(GNUSTEP_INDEX_CHARSET)
-        concreteClass = [_GSIndexCharSet class];
-        concreteMutableClass = [_GSMutableIndexCharSet class];
-#else
         concreteClass = [NSBitmapCharSet class];
         concreteMutableClass = [NSMutableBitmapCharSet class];
-#endif
         beenHere = YES;
     }
 }
@@ -630,26 +609,28 @@ static Class concreteMutableClass = nil;
  */
 + (NSCharacterSet*) _staticSet: (const void*)bytes
                         length: (unsigned)length
-                        number: (int)number
+                        number: (int)key
 {
     static pthread_mutex_t cache_lock = PTHREAD_MUTEX_INITIALIZER;
     
     pthread_mutex_lock(&cache_lock);
-    if (cache_set[number] == nil && bytes != 0)
+    if (cache_set[key] == nil && bytes != 0)
     {
         NSData	*bitmap;
         
         bitmap = [[NSDataStatic alloc] initWithBytesNoCopy: (void*)bytes
                                                     length: length
                                               freeWhenDone: NO];
-        cache_set[number]
-        = [[_GSStaticCharSet alloc] initWithBitmap: bitmap number: number];
-        [[NSObject leakAt: &cache_set[number]] release];
-        RELEASE(bitmap);
+        cache_set[key]
+        = [[_GSStaticCharSet alloc] initWithBitmap: bitmap number: key];
     }
     pthread_mutex_unlock(&cache_lock);
-    return cache_set[number];
+    return cache_set[key];
 }
+
+/*
+  所有的下面库内定义好的 set, 其实都是在文件内部提前写好的. 也就是说, 是硬编码的.
+ */
 
 + (id) alphanumericCharacterSet
 {
@@ -770,6 +751,7 @@ static Class concreteMutableClass = nil;
     return AUTORELEASE([[concreteClass alloc] initWithBitmap: data]);
 }
 
+// 将 astring 里面所有的字符收集起来, 然后创建一个 charSet.
 + (id) characterSetWithCharactersInString: (NSString*)aString
 {
     NSMutableCharacterSet	*ms;
@@ -782,6 +764,8 @@ static Class concreteMutableClass = nil;
     return AUTORELEASE(cs);
 }
 
+
+// 将 UNICODE 的固定 range 组成的 set 返回
 + (id) characterSetWithRange: (NSRange)aRange
 {
     NSMutableCharacterSet	*ms;
@@ -794,6 +778,7 @@ static Class concreteMutableClass = nil;
     return AUTORELEASE(cs);
 }
 
+// 读取, 然后直接生成 charSet
 + (id) characterSetWithContentsOfFile: (NSString*)aFile
 {
     if ([@"bitmap" isEqual: [aFile pathExtension]])
@@ -822,32 +807,6 @@ static Class concreteMutableClass = nil;
         }
     }
     return m;
-}
-
-- (BOOL) characterIsMember: (unichar)aCharacter
-{
-    [self subclassResponsibility: _cmd];
-    return 0;
-}
-
-- (id) copyWithZone: (NSZone*)zone
-{
-    if (NSShouldRetainWithZone(self, zone))
-    {
-        return RETAIN(self);
-    }
-    else
-    {
-        id	obj;
-        
-        obj = [concreteClass allocWithZone: zone];
-        obj = [obj initWithBitmap: [self bitmapRepresentation]];
-        return obj;
-    }
-}
-
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
 }
 
 - (BOOL) hasMemberInPlane: (uint8_t)aPlane
@@ -967,29 +926,6 @@ static Class concreteMutableClass = nil;
     superset = [self isEqual: m];
     RELEASE(m);
     return superset;
-}
-
-- (BOOL) longCharacterIsMember: (UTF32Char)aCharacter
-{
-    int	plane = (aCharacter >> 16);
-    
-    if (aCharacter >= GSUNICODE_MAX)
-    {
-        [NSException raise: NSInvalidArgumentException
-                    format: @"[%@-%@] argument (0x%08x) is too large",
-         NSStringFromClass([self class]), NSStringFromSelector(_cmd),
-         aCharacter];
-    }
-    if (plane == 0)
-    {
-        unichar	u = (unichar)(aCharacter & 0xffff);
-        
-        return [self characterIsMember: u];
-    }
-    else
-    {
-        return NO;
-    }
 }
 
 - (id) mutableCopyWithZone: (NSZone*)zone
@@ -1345,11 +1281,6 @@ static Class concreteMutableClass = nil;
     return self;
 }
 
-- (BOOL) longCharacterIsMember: (UTF32Char)aCharacter
-{
-    return [indexes containsIndex: (int)aCharacter];
-}
-
 @end
 
 @implementation _GSMutableIndexCharSet
@@ -1579,7 +1510,6 @@ static Class concreteMutableClass = nil;
     {
         [NSException raise:NSInvalidArgumentException
                     format:@"Removing characters from nil string"];
-        /* NOT REACHED */
     }
     
     length = [aString length];

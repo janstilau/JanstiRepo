@@ -8,8 +8,9 @@
 @class NSData;
 
 /**
- *  Represents a set of unicode characters.  Used by [NSScanner] and [NSString]
- *  for parsing-related methods.
+
+ An object representing a fixed set of Unicode character values for use in search operations.
+ NSCharacterSet and NSMutableCharacterSet.  更多的是一个借口类的概念, 类方法返回的很有可能是子类的对象.
  */
 @interface NSCharacterSet : NSObject <NSCoding, NSCopying, NSMutableCopying>
 
@@ -145,8 +146,7 @@
 - (NSData*) bitmapRepresentation;
 
 /**
- * Returns YES if the receiver contains <em>aCharacter</em>, NO if
- * it does not.
+Primitive Method, 也是子类化的必须要实现的一个方法.
  */
 - (BOOL) characterIsMember: (unichar)aCharacter;
 
@@ -179,6 +179,8 @@
 
 /**
  *  An [NSCharacterSet] that can be modified.
+ *
+ *    characterSet 的 可变版本, 也就是暴露了那些可以进行数据操作的方法.
  */
 @interface NSMutableCharacterSet : NSCharacterSet
 

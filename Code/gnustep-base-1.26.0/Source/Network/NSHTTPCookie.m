@@ -7,34 +7,22 @@
 #import "Foundation/NSCalendarDate.h"
 #import "GNUstepBase/Unicode.h"
 
-NSString * const NSHTTPCookieComment = @"Comment";
-NSString * const NSHTTPCookieCommentURL = @"CommentURL";
-NSString * const NSHTTPCookieDiscard = @"Discard";
-NSString * const NSHTTPCookieDomain = @"Domain";
-NSString * const NSHTTPCookieExpires = @"Expires";
-NSString * const NSHTTPCookieMaximumAge = @"MaximumAge";
-NSString * const NSHTTPCookieName = @"Name";
+NSString * const NSHTTPCookieComment = @"Comment"; // 不知道干什么的
+NSString * const NSHTTPCookieCommentURL = @"CommentURL"; // 不知道干什么的
+NSString * const NSHTTPCookieDiscard = @"Discard"; // 不知道干什么的
+NSString * const NSHTTPCookieDomain = @"Domain"; // cookie 所在的域
+NSString * const NSHTTPCookieExpires = @"Expires"; // cookie 的过期时间
+NSString * const NSHTTPCookieMaximumAge = @"MaximumAge"; // 不知道干什么的
+NSString * const NSHTTPCookieName = @"Name"; // key 值
 NSString * const NSHTTPCookieOriginURL = @"OriginURL";
-NSString * const NSHTTPCookiePath = @"Path";
-NSString * const NSHTTPCookiePort = @"Port";
-NSString * const NSHTTPCookieSecure = @"Secure";
-NSString * const NSHTTPCookieValue = @"Value";
-NSString * const NSHTTPCookieVersion = @"Version";
-static NSString * const HTTPCookieHTTPOnly = @"HTTPOnly";
+NSString * const NSHTTPCookiePath = @"Path"; // path 值
+NSString * const NSHTTPCookiePort = @"Port"; //
+NSString * const NSHTTPCookieSecure = @"Secure"; //  标记为 Secure 的Cookie只应通过被HTTPS协议加密过的请求发送给服务端
+NSString * const NSHTTPCookieValue = @"Value"; // value 值
+NSString * const NSHTTPCookieVersion = @"Version"; // version 值
+static NSString * const HTTPCookieHTTPOnly = @"HTTPOnly"; // 标明了 HTTPOnly 的 cookie 无法被 js 代码拿到
 
-// Internal data storage
-typedef struct {
-    NSDictionary	*_properties;
-} Internal;
 
-#define	this	((Internal*)(self->_NSHTTPCookieInternal))
-#define	inst	((Internal*)(o->_NSHTTPCookieInternal))
-
-/* Bitmap of characters considered white space if in an old style property
- * list. This is the same as the set given by the isspace() function in the
- * POSIX locale, but (for cross-locale portability of property list files)
- * is fixed, rather than locale dependent.
- */
 static const unsigned char whitespace[32] = {
     '\x00',
     '\x3f',
@@ -79,17 +67,6 @@ static NSRange GSRangeOfCookie(NSString *string);
 
 @implementation NSHTTPCookie
 
-+ (id) allocWithZone: (NSZone*)z
-{
-    NSHTTPCookie	*o = [super allocWithZone: z];
-    
-    if (o != nil)
-    {
-        o->_NSHTTPCookieInternal = NSZoneCalloc(z, 1, sizeof(Internal));
-    }
-    return o;
-}
-
 + (id) cookieWithProperties: (NSDictionary *)properties
 {
     NSHTTPCookie	*o;
@@ -104,24 +81,22 @@ static NSRange GSRangeOfCookie(NSString *string);
 {
     int version;
     NSString *defaultPath, *defaultDomain;
-    NSMutableArray *a;
+    NSMutableArray *result;
     
     if ([header isEqual: @"Set-Cookie"])
         version = 0;
     else if ([header isEqual: @"Set-Cookie2"])
         version = 1;
     else
-        return nil;
+        return nil; // 如果不是 cookie 相关的 field 值, 直接返回 nil.
     
-    a = [NSMutableArray array];
+    result = [NSMutableArray array];
     defaultDomain = [url host];
     defaultPath = [url path];
     if ([[url absoluteString] hasSuffix: @"/"] == NO)
         defaultPath = [defaultPath stringByDeletingLastPathComponent];
+    // 这里, 如果 cookie 里面没有明确的标明 path 和 domain, 是用的 url 的 host 和 path 进行的设置.
     
-    /* We could use an NSScanner here, but this string could contain all
-     sorts of odd stuff. It's not quite a property list either - it has
-     dates and also could have tokens without values. */
     while (1)
     {
         NSHTTPCookie *cookie;
@@ -139,46 +114,49 @@ static NSRange GSRangeOfCookie(NSString *string);
         NS_ENDHANDLER
         if ([dict count])
         {
+            // 将 从字符串提取信息到 dict 的过程, 放到了 GSPropertyListFromCookieFormat, 现在 dict 里面就是cookie相关的信息 dict 里.
             if ([dict objectForKey: NSHTTPCookiePath] == nil)
                 [dict setObject: defaultPath forKey: NSHTTPCookiePath];
             if ([dict objectForKey: NSHTTPCookieDomain] == nil)
                 [dict setObject: defaultDomain forKey: NSHTTPCookieDomain];
             cookie = [NSHTTPCookie cookieWithProperties: dict];
-            if (cookie)
-                [a addObject: cookie];
+            if (cookie) {[result addObject: cookie]; } // 生成 cookie, 并且添加到了返回结果中.
         }
         if ([field length] <= NSMaxRange(range))
             break;
-        field = [field substringFromIndex: NSMaxRange(range)+1];
+        field = [field substringFromIndex: NSMaxRange(range)+1]; // 不断地切割 field, 将 cookie 的值一个个取出来.
     }
-    return a;
+    return result;
 }
 
+
+// 因为, cookie 就是放到了 http header 里面, 所以这就是一个提取 cookie 的一个简便方法.
 + (NSArray *) cookiesWithResponseHeaderFields: (NSDictionary *)headerFields
                                        forURL: (NSURL *)URL
 {
     NSEnumerator   *henum = [headerFields keyEnumerator];
-    NSMutableArray *a = [NSMutableArray array];
+    NSMutableArray *resultM = [NSMutableArray array];
     NSString *header;
     
     while ((header = [henum nextObject]))
     {
-        NSMutableArray *suba
-        = [self _parseField: [headerFields objectForKey: header]
-                  forHeader: header andURL: URL];
-        if (suba)
-            [a addObjectsFromArray: suba];
+        NSMutableArray *aCookie = [self _parseField: [headerFields objectForKey: header]
+                                          forHeader: header
+                                             andURL: URL];
+        if (aCookie)
+            [resultM addObjectsFromArray: aCookie];
     }
     
-    return a;
+    return resultM;
 }
 
+// 这里就是一个逆过程, 将 cookie 的值, 转化成为一个 NSDiction 中
 + (NSDictionary *) requestHeaderFieldsWithCookies: (NSArray *)cookies
 {
     int version;
-    NSString *field;
-    NSHTTPCookie *ck;
-    NSEnumerator *ckenum = [cookies objectEnumerator];
+    NSString *cookieText;
+    NSHTTPCookie *aCookie;
+    NSEnumerator *cookieEnumerator = [cookies objectEnumerator];
     
     if ([cookies count] == 0)
     {
@@ -187,59 +165,50 @@ static NSRange GSRangeOfCookie(NSString *string);
     }
     /* Assume these cookies all came from the same URL so we format based
      on the version of the first. */
-    field = nil;
+    cookieText = nil;
     version = [(NSHTTPCookie *)[cookies objectAtIndex: 0] version];
     if (version)
-        field = @"$Version=\"1\"";
-    while ((ck = [ckenum nextObject]))
+        cookieText = @"$Version=\"1\"";
+    // 这里, 用的第一个元素的 version 值, 当做了所有的 version 值.
+    while ((aCookie = [cookieEnumerator nextObject]))
     {
         NSString *str;
-        str = [NSString stringWithFormat: @"%@=%@", [ck name], [ck value]];
-        if (field)
-            field = [field stringByAppendingFormat: @"; %@", str];
+        str = [NSString stringWithFormat: @"%@=%@", [aCookie name], [aCookie value]]; // cookie最原始的内容
+        if (cookieText)
+            cookieText = [cookieText stringByAppendingFormat: @"; %@", str]; // domain 的内容
         else
-            field = str;
-        if (version && [ck path])
-            field = [field stringByAppendingFormat: @"; $Path=\"%@\"", [ck path]];
+            cookieText = str;
+        if (version && [aCookie path]) // path 只会在 version 为 1 的时候才会有用.
+            cookieText = [cookieText stringByAppendingFormat: @"; $Path=\"%@\"", [aCookie path]]; // path 的内容
     }
     
-    return [NSDictionary dictionaryWithObject: field forKey: @"Cookie"];
+    return [NSDictionary dictionaryWithObject: cookieText forKey: @"Cookie"];
 }
 
 - (NSString *) comment
 {
-    return [this->_properties objectForKey: NSHTTPCookieComment];
+    return [self->_properties objectForKey: NSHTTPCookieComment];
 }
 
 - (NSURL *) commentURL
 {
-    return [this->_properties objectForKey: NSHTTPCookieCommentURL];
-}
-
-- (void) dealloc
-{
-    if (this != 0)
-    {
-        RELEASE(this->_properties);
-        NSZoneFree([self zone], this);
-    }
-    [super dealloc];
+    return [self->_properties objectForKey: NSHTTPCookieCommentURL];
 }
 
 - (NSString *) domain
 {
-    return [this->_properties objectForKey: NSHTTPCookieDomain];
+    return [self->_properties objectForKey: NSHTTPCookieDomain];
 }
 
 - (NSDate *) expiresDate
 {
-    return [this->_properties objectForKey: NSHTTPCookieExpires];
+    return [self->_properties objectForKey: NSHTTPCookieExpires];
 }
 
 - (BOOL) _isValidProperty: (NSString *)prop
 {
-    return ([prop length]
-            && [prop rangeOfString: @"\n"].location == NSNotFound);
+    return ([prop length] &&
+            [prop rangeOfString: @"\n"].location == NSNotFound);
 }
 
 - (id) initWithProperties: (NSDictionary *)properties
@@ -249,10 +218,10 @@ static NSRange GSRangeOfCookie(NSString *string);
         return nil;
     
     /* Check a few values.  Based on Mac OS X tests. */
-    if (![self _isValidProperty: [properties objectForKey: NSHTTPCookiePath]]
-        || ![self _isValidProperty: [properties objectForKey: NSHTTPCookieDomain]]
-        || ![self _isValidProperty: [properties objectForKey: NSHTTPCookieName]]
-        || ![self _isValidProperty: [properties objectForKey: NSHTTPCookieValue]]
+    if (![self _isValidProperty: [properties objectForKey: NSHTTPCookiePath]] ||
+        ![self _isValidProperty: [properties objectForKey: NSHTTPCookieDomain]] ||
+        ![self _isValidProperty: [properties objectForKey: NSHTTPCookieName]] ||
+        ![self _isValidProperty: [properties objectForKey: NSHTTPCookieValue]]
         )
     {
         [self release];
@@ -281,54 +250,54 @@ static NSRange GSRangeOfCookie(NSString *string);
                      forKey: NSHTTPCookieDiscard];
     }
     
-    this->_properties = [rawProps copy];
+    self->_properties = [rawProps copy];
     return self;
 }
 
 - (BOOL) isSecure
 {
-    return [[this->_properties objectForKey: NSHTTPCookieSecure] boolValue];
+    return [[self->_properties objectForKey: NSHTTPCookieSecure] boolValue];
 }
 
 - (BOOL) isHTTPOnly
 {
-    return [[this->_properties objectForKey: HTTPCookieHTTPOnly] boolValue];
+    return [[self->_properties objectForKey: HTTPCookieHTTPOnly] boolValue];
 }
 
 - (BOOL) isSessionOnly
 {
-    return [[this->_properties objectForKey: NSHTTPCookieDiscard] boolValue];
+    return [[self->_properties objectForKey: NSHTTPCookieDiscard] boolValue];
 }
 
 - (NSString *) name
 {
-    return [this->_properties objectForKey: NSHTTPCookieName];
+    return [self->_properties objectForKey: NSHTTPCookieName];
 }
 
 - (NSString *) path
 {
-    return [this->_properties objectForKey: NSHTTPCookiePath];
+    return [self->_properties objectForKey: NSHTTPCookiePath];
 }
 
 - (NSArray *) portList
 {
-    return [[this->_properties objectForKey: NSHTTPCookiePort]
+    return [[self->_properties objectForKey: NSHTTPCookiePort]
             componentsSeparatedByString: @","];
 }
 
 - (NSDictionary *) properties
 {
-    return this->_properties;
+    return self->_properties;
 }
 
 - (NSString *) value
 {
-    return [this->_properties objectForKey: NSHTTPCookieValue];
+    return [self->_properties objectForKey: NSHTTPCookieValue];
 }
 
 - (NSUInteger) version
 {
-    return [[this->_properties objectForKey: NSHTTPCookieVersion] integerValue];
+    return [[self->_properties objectForKey: NSHTTPCookieVersion] integerValue];
 }
 
 - (NSString *) description

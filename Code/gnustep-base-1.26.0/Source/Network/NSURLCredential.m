@@ -5,6 +5,14 @@
 
 @implementation	NSURLCredential
 
+// 这个类的内部, 应该会有 type 信息, 来表示不同的验证的机制.
+// 这个类, 本身就是一个数据类, 它的使用, 会在网络交互的过程类中. 具体的几乎逻辑, 没有写出
+// GNU 的这个类仅仅有着 user, pwd 这种 basic 的验证方式.
+
+/*
+ The URL Loading System supports password-based user credentials, certificate-based user credentials, and certificate-based server credentials.
+ */
+
 + (id) allocWithZone: (NSZone*)z
 {
     NSURLCredential	*o = [super allocWithZone: z];

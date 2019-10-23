@@ -854,7 +854,7 @@ static NSURLProtocol	*placeholder = nil;
                    [[NSHTTPCookieStorage sharedHTTPCookieStorage]
                     setCookies: cookies
                     forURL: url
-                    mainDocumentURL: [self->request mainDocumentURL]];
+                    mainDocumentURL: [self->request mainDocumentURL]]; // This URL will be used for the “only from same domain as main document” cookie accept policy.
                }
                
                /* Tell the client that we have a response and how

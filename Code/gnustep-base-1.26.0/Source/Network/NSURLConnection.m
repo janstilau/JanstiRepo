@@ -134,7 +134,6 @@
     self->_request = [request mutableCopyWithZone: [self zone]];
     if ([self->_request HTTPShouldHandleCookies] == YES)
     {
-        // 这里应该在 reqeust 的构造过程中添加吧.
         NSArray *cookies;
         cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage]
                    cookiesForURL: [self->_request URL]];

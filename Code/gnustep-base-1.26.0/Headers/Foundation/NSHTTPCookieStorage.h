@@ -43,7 +43,7 @@ extern NSString * const NSHTTPCookieManagerCookiesChangedNotification;
 @interface NSHTTPCookieStorage :  NSObject
 {
     NSHTTPCookieAcceptPolicy    _policy;
-    NSMutableArray        *_cookies;
+    NSMutableArray        *_cookieArrayM;
 }
 
 /**
