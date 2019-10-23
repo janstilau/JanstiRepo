@@ -1094,7 +1094,7 @@ int main(int argc, char *argv[], char *env[])
   [procLock lock];
   if (nil == host)
     {
-      start = (unsigned long)GSPrivateTimeNow();
+      start = (unsigned long)SystemTimeInterval();
       ASSIGN(host, thost);
       pid = tpid;
     }

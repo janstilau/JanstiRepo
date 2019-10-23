@@ -274,7 +274,7 @@ GSBreakTime(NSTimeInterval when,
  就是调用系统的一些方法返回一个时间戳.
  */
 NSTimeInterval
-GSPrivateTimeNow(void)
+SystemTimeInterval(void)
 {
     NSTimeInterval t;
     

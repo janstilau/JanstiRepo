@@ -592,7 +592,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
     unsigned              i;
     
     ei = 0.0;	// Only needed to avoid compiler warning
-    now = GSPrivateTimeNow();
+    now = SystemTimeInterval();
     
     /* Fire the oldest/first valid timer whose fire date has passed
      * and fire it.

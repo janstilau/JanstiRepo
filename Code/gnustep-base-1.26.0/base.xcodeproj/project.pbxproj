@@ -163,7 +163,6 @@
 		18394C041610EB7F00335E85 /* NSAssertionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F731610BF3C0003C892 /* NSAssertionHandler.m */; };
 		18394C061610EB7F00335E85 /* NSAutoreleasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F751610BF3C0003C892 /* NSAutoreleasePool.m */; };
 		18394C071610EB7F00335E85 /* NSBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F761610BF3C0003C892 /* NSBundle.m */; };
-		18394C081610EB7F00335E85 /* NSCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F771610BF3C0003C892 /* NSCache.m */; };
 		18394C091610EB7F00335E85 /* NSCachedURLResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F781610BF3C0003C892 /* NSCachedURLResponse.m */; };
 		18394C0A1610EB7F00335E85 /* NSCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F791610BF3C0003C892 /* NSCalendar.m */; };
 		18394C0B1610EB7F00335E85 /* NSCalendarDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18906F7A1610BF3C0003C892 /* NSCalendarDate.m */; };
@@ -668,7 +667,6 @@
 		18906F731610BF3C0003C892 /* NSAssertionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAssertionHandler.m; sourceTree = "<group>"; };
 		18906F751610BF3C0003C892 /* NSAutoreleasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSAutoreleasePool.m; sourceTree = "<group>"; };
 		18906F761610BF3C0003C892 /* NSBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBundle.m; sourceTree = "<group>"; };
-		18906F771610BF3C0003C892 /* NSCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCache.m; sourceTree = "<group>"; };
 		18906F781610BF3C0003C892 /* NSCachedURLResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCachedURLResponse.m; sourceTree = "<group>"; };
 		18906F791610BF3C0003C892 /* NSCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCalendar.m; sourceTree = "<group>"; };
 		18906F7A1610BF3C0003C892 /* NSCalendarDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCalendarDate.m; sourceTree = "<group>"; };
@@ -836,6 +834,7 @@
 		063150402359A45700EC6A60 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906F891610BF3C0003C892 /* NSDate.m */,
 				18906F7D1610BF3C0003C892 /* NSCharacterSet.m */,
 				18906FC91610BF3C0003C892 /* NSRange.m */,
 				18906F871610BF3C0003C892 /* NSCountedSet.m */,
@@ -1013,7 +1012,6 @@
 				18F8D04F1724534E00420DA5 /* KVO */,
 				18906F701610BF3C0003C892 /* NSAffineTransform.m */,
 				18906F761610BF3C0003C892 /* NSBundle.m */,
-				18906F771610BF3C0003C892 /* NSCache.m */,
 				18906F791610BF3C0003C892 /* NSCalendar.m */,
 				18906F7A1610BF3C0003C892 /* NSCalendarDate.m */,
 				18906F7F1610BF3C0003C892 /* NSClassDescription.m */,
@@ -1022,7 +1020,6 @@
 				18906F841610BF3C0003C892 /* NSConcretePointerFunctions.m */,
 				18906F851610BF3C0003C892 /* NSConnection.m */,
 				18906F861610BF3C0003C892 /* NSCopyObject.m */,
-				18906F891610BF3C0003C892 /* NSDate.m */,
 				18906F8A1610BF3C0003C892 /* NSDateFormatter.m */,
 				18906F8B1610BF3C0003C892 /* NSDebug.m */,
 				18906F8C1610BF3C0003C892 /* NSDecimal.m */,
@@ -1751,7 +1748,6 @@
 				18394C061610EB7F00335E85 /* NSAutoreleasePool.m in Sources */,
 				18394C071610EB7F00335E85 /* NSBundle.m in Sources */,
 				063150612359A45700EC6A60 /* NSTimer.m in Sources */,
-				18394C081610EB7F00335E85 /* NSCache.m in Sources */,
 				18394C091610EB7F00335E85 /* NSCachedURLResponse.m in Sources */,
 				18394C0A1610EB7F00335E85 /* NSCalendar.m in Sources */,
 				18394C0B1610EB7F00335E85 /* NSCalendarDate.m in Sources */,

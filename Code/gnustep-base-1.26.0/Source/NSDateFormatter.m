@@ -101,26 +101,6 @@ static NSDateFormatterBehavior _defaultBehavior = 0;
     return nil;
 }
 
-- (id) copyWithZone: (NSZone*)zone
-{
-    NSDateFormatter	*o = (id)NSCopyObject(self, 0, zone);
-    
-    IF_NO_GC(RETAIN(o->_dateFormat));
-    if (0 != internal)
-    {
-        GS_COPY_INTERNAL(o, zone)
-        IF_NO_GC(RETAIN(GSIVar(o,_locale));)
-#if GS_USE_ICU == 1
-        {
-            UErrorCode err = U_ZERO_ERROR;
-            GSIVar(o,_formatter) = udat_clone (internal->_formatter, &err);
-        }
-#endif
-    }
-    
-    return o;
-}
-
 - (NSString*) dateFormat
 {
     return _dateFormat;

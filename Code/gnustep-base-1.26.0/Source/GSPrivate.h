@@ -52,7 +52,7 @@
  */
 #define GREGORIAN_REFERENCE 730486
 
-NSTimeInterval   GSPrivateTimeNow() GS_ATTRIB_PRIVATE;
+NSTimeInterval   SystemTimeInterval() GS_ATTRIB_PRIVATE;
 
 #include "GNUstepBase/GSObjCRuntime.h"
 
