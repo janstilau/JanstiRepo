@@ -59,7 +59,6 @@ typedef struct {
     @package
     BOOL _readonly; ///< used only in YYTextLayout.implementation
     dispatch_semaphore_t _lock;
-    
     CGSize _size;
     UIEdgeInsets _insets;
     UIBezierPath *_path;
@@ -100,7 +99,8 @@ typedef struct {
 
 - (id)copyWithZone:(NSZone *)zone {
     YYTextContainer *one = [self.class new];
-    // 线程安全. copy 就是把所有的值进行了一次拷贝工作, 如果是指针对象, 就调用它的 copy.
+    // copy 就是把所有的值进行了一次拷贝工作, 如果是指针对象, 就调用它的 copy.
+    // 因为主要是为了做线程同步, 所以, 这里信号量直接就叫 lock
     dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
     one->_size = _size;
     one->_insets = _insets;
@@ -156,6 +156,7 @@ typedef struct {
 
 
 // 线程安全的两个宏.
+// 可以定义宏, 只要宏能够节省空间就可以. 宏可以用于定义代码段, 这些代码段经常重复并且不能通过函数进行替换. 其他情况下, 还是用函数好.
 #define Getter(...) \
 dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER); \
 __VA_ARGS__; \
@@ -283,8 +284,6 @@ dispatch_semaphore_signal(_lock);
 @end
 
 
-
-
 @interface YYTextLayout ()
 
 @property (nonatomic, readwrite) YYTextContainer *container;
@@ -331,7 +330,7 @@ dispatch_semaphore_signal(_lock);
     return self;
 }
 
-
+// layout 的所有这些 size, insets , 都是汇集到 container 进行生成的. 因为 cotnainer 就是一个完整的数据类, 包含了所有的这些参数.
 + (NSArray *)layoutWithContainers:(NSArray *)containers text:(NSAttributedString *)text {
     return [self layoutWithContainers:containers text:text range:NSMakeRange(0, text.length)];
 }
@@ -365,7 +364,9 @@ dispatch_semaphore_signal(_lock);
     return [self layoutWithContainer:container text:text range:NSMakeRange(0, text.length)];
 }
 
-+ (YYTextLayout *)layoutWithContainer:(YYTextContainer *)container text:(NSAttributedString *)text range:(NSRange)range {
++ (YYTextLayout *)layoutWithContainer:(YYTextContainer *)container
+                                 text:(NSAttributedString *)text
+                                range:(NSRange)range {
     YYTextLayout *layout = NULL;
     CGPathRef cgPath = nil;
     CGRect cgPathBox = {0};
@@ -406,17 +407,6 @@ dispatch_semaphore_signal(_lock);
     static BOOL needFixJoinedEmojiBug = NO;
     // It may use larger constraint size when create CTFrame with
     // CTFramesetterCreateFrame in iOS 10.
-    static BOOL needFixLayoutSizeBug = NO;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        CGFloat systemVersionFloat = [UIDevice currentDevice].systemVersion.floatValue;
-        if (8.3 <= systemVersionFloat && systemVersionFloat < 9) {
-            needFixJoinedEmojiBug = YES;
-        }
-        if (systemVersionFloat >= 10) {
-            needFixLayoutSizeBug = YES;
-        }
-    });
     if (needFixJoinedEmojiBug) {
         [((NSMutableAttributedString *)text) setClearColorToJoinedEmoji];
     }
@@ -433,16 +423,6 @@ dispatch_semaphore_signal(_lock);
     if (container.path == nil && container.exclusionPaths.count == 0) {
         if (container.size.width <= 0 || container.size.height <= 0) goto fail;
         CGRect rect = (CGRect) {CGPointZero, container.size };
-        if (needFixLayoutSizeBug) {
-            constraintSizeIsExtended = YES;
-            constraintRectBeforeExtended = UIEdgeInsetsInsetRect(rect, container.insets);
-            constraintRectBeforeExtended = CGRectStandardize(constraintRectBeforeExtended);
-            if (container.isVerticalForm) {
-                rect.size.width = YYTextContainerMaxSize.width;
-            } else {
-                rect.size.height = YYTextContainerMaxSize.height;
-            }
-        }
         rect = UIEdgeInsetsInsetRect(rect, container.insets);
         rect = CGRectStandardize(rect);
         cgPathBox = rect;
@@ -521,6 +501,7 @@ dispatch_semaphore_signal(_lock);
     }
     
     // calculate line frame
+    // 遍历一下 CTLine. 获取数据
     NSUInteger lineCurrentIdx = 0;
     for (NSUInteger i = 0; i < lineCount; i++) {
         CTLineRef ctLine = CFArrayGetValueAtIndex(ctLines, i);
@@ -536,15 +517,15 @@ dispatch_semaphore_signal(_lock);
         position.y = cgPathBox.size.height + cgPathBox.origin.y - ctLineOrigin.y;
         
         YYTextLine *line = [YYTextLine lineWithCTLine:ctLine position:position vertical:isVerticalForm];
-        CGRect rect = line.bounds;
+        CGRect lineRect = line.bounds;
         
         if (constraintSizeIsExtended) {
             if (isVerticalForm) {
-                if (rect.origin.x + rect.size.width >
+                if (lineRect.origin.x + lineRect.size.width >
                     constraintRectBeforeExtended.origin.x +
                     constraintRectBeforeExtended.size.width) break;
             } else {
-                if (rect.origin.y + rect.size.height >
+                if (lineRect.origin.y + lineRect.size.height >
                     constraintRectBeforeExtended.origin.y +
                     constraintRectBeforeExtended.size.height) break;
             }
@@ -553,14 +534,14 @@ dispatch_semaphore_signal(_lock);
         BOOL newRow = YES;
         if (rowMaySeparated && position.x != lastPosition.x) {
             if (isVerticalForm) {
-                if (rect.size.width > lastRect.size.width) {
-                    if (rect.origin.x > lastPosition.x && lastPosition.x > rect.origin.x - rect.size.width) newRow = NO;
+                if (lineRect.size.width > lastRect.size.width) {
+                    if (lineRect.origin.x > lastPosition.x && lastPosition.x > lineRect.origin.x - lineRect.size.width) newRow = NO;
                 } else {
                     if (lastRect.origin.x > position.x && position.x > lastRect.origin.x - lastRect.size.width) newRow = NO;
                 }
             } else {
-                if (rect.size.height > lastRect.size.height) {
-                    if (rect.origin.y < lastPosition.y && lastPosition.y < rect.origin.y + rect.size.height) newRow = NO;
+                if (lineRect.size.height > lastRect.size.height) {
+                    if (lineRect.origin.y < lastPosition.y && lastPosition.y < lineRect.origin.y + lineRect.size.height) newRow = NO;
                 } else {
                     if (lastRect.origin.y < position.y && position.y < lastRect.origin.y + lastRect.size.height) newRow = NO;
                 }
@@ -568,7 +549,7 @@ dispatch_semaphore_signal(_lock);
         }
         
         if (newRow) rowIdx++;
-        lastRect = rect;
+        lastRect = lineRect;
         lastPosition = position;
         
         line.index = lineCurrentIdx;
@@ -577,10 +558,11 @@ dispatch_semaphore_signal(_lock);
         rowCount = rowIdx + 1;
         lineCurrentIdx ++;
         
-        if (i == 0) textBoundingRect = rect;
+        if (i == 0) textBoundingRect = lineRect;
         else {
             if (maximumNumberOfRows == 0 || rowIdx < maximumNumberOfRows) {
-                textBoundingRect = CGRectUnion(textBoundingRect, rect);
+                // 这里, 会加起所有的 CTLineRect, 所以最后, textBoundingRect 就是 text 的尺寸.
+                textBoundingRect = CGRectUnion(textBoundingRect, lineRect);
             }
         }
     }
@@ -604,7 +586,7 @@ dispatch_semaphore_signal(_lock);
         }
         
         // Give user a chance to modify the line's position.
-        if (container.linePositionModifier) {
+        if (container.linePositionModifier) { // 如果会有 modifier, 那么会改变 line 的位置, 所以, 这里重新计算一下位置.
             [container.linePositionModifier modifyLines:lines fromText:text inContainer:container];
             textBoundingRect = CGRectZero;
             for (NSUInteger i = 0, max = lines.count; i < max; i++) {

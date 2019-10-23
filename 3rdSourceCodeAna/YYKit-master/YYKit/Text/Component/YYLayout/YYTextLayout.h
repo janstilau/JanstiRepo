@@ -533,7 +533,6 @@ extern const CGSize YYTextContainerMaxSize;
  If it returns YES, the further draw progress will be canceled.
  Pass nil to ignore this feature.
  */
-// 这个函数, 感觉将 attach 和 其他的绘制放到一起, 有点问题. 现在的处理时, 在 didDisplay 里面, 通过传入 context = nil. 来组织绘图, 令人容易产生混淆.
 - (void)drawInContext:(nullable CGContextRef)context
                  size:(CGSize)size
                 point:(CGPoint)point

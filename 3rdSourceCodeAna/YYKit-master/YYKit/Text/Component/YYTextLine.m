@@ -30,6 +30,7 @@
     if (_CTLine) CFRelease(_CTLine);
 }
 
+// 在这里, 会计算出其他的量.
 - (void)setCTLine:(_Nonnull CTLineRef)CTLine {
     if (_CTLine != CTLine) {
         if (CTLine) CFRetain(CTLine);
@@ -87,13 +88,14 @@
         CFIndex glyphCount = CTRunGetGlyphCount(run);
         if (glyphCount == 0) continue;
         NSDictionary *attrs = (id)CTRunGetAttributes(run);
-        YYTextAttachment *attachment = attrs[YYTextAttachmentAttributeName];
+        YYTextAttachment *attachment = attrs[YYTextAttachmentAttributeName]; // 这里就是为什么这些东西放到 attriString 里的好处了. NSDiction 是个字典, 可以放任意的数据. 只要能拿到, 就可以做操作.
         if (attachment) {
             CGPoint runPosition = CGPointZero;
             CTRunGetPositions(run, CFRangeMake(0, 1), &runPosition);
             
             CGFloat ascent, descent, leading, runWidth;
             CGRect runTypoBounds;
+            // 这里, 之所以可以获得正确的尺寸, 是因为 attach 在设置的时候, 已经存储了 delegate 的信息, 而这个信息里面, 有着尺寸的计算.
             runWidth = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, &leading);
             
             if (_vertical) {
@@ -106,6 +108,7 @@
                 runTypoBounds = CGRectMake(runPosition.x, runPosition.y - ascent, runWidth, ascent + descent);
             }
             
+            // 这里收集到了 attach 的各种数据,
             NSRange runRange = YYNSRangeFromCFRange(CTRunGetStringRange(run));
             [attachments addObject:attachment];
             [attachmentRanges addObject:[NSValue valueWithRange:runRange]];
