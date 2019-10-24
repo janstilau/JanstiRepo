@@ -37,6 +37,10 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     
     NSRange _highlightRange; ///< current highlight range
     YYTextHighlight *_highlight; ///< highlight attribute in `_highlightRange`
+    
+/**
+ * highLightLayout 是在高亮点击的时候, 赋值 innerLyaout, 然后根据_highlight设置高亮区域文字的 attris, 然后在绘制 label 的时候, 根据 highLightLayout 进行绘制, 由于仅仅只有高亮文本的属性发生了改变, 所以, 会和原来的 label 一样, 仅仅高亮地方的文字发生了改变.
+ */
     YYTextLayout *_highlightLayout; ///< when _state.showingHighlight=YES, this layout should be displayed
     
     YYTextLayout *_shrinkInnerLayout;

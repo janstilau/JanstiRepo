@@ -127,6 +127,7 @@ UIKIT_EXTERN NSString *const YYTextBackgroundBorderAttributeName;
 /// The value of this attribute is a `YYTextBorder` object.
 /// Use this attribute to add a code block border to one or more line of text.
 /// The border will be drawn below the text glyphs.
+/// 类似代码块的背景
 UIKIT_EXTERN NSString *const YYTextBlockBorderAttributeName;
 
 /// The value of this attribute is a `YYTextAttachment` object.
@@ -160,6 +161,8 @@ UIKIT_EXTERN NSString *const YYTextTruncationToken; ///< Horizontal ellipsis (U+
  @param text          The whole text.
  @param range         The text range in `text` (if no range, the range.location is NSNotFound).
  @param rect          The text frame in `containerView` (if no data, the rect is CGRectNull).
+ 
+ 这个 BLOCK 的四个参数, 是在 YYLabel 中, 根据 layout 的信息构建出来的. 一般来说, 我们不需要所有的信息, 但是作者提供了他认为详细的信息.
  */
 typedef void(^YYTextAction)(UIView *containerView, NSAttributedString *text, NSRange range, CGRect rect);
 
@@ -170,7 +173,8 @@ typedef void(^YYTextAction)(UIView *containerView, NSAttributedString *text, NSR
  string under the key named YYTextBackedStringAttributeName).
  
  It may used for copy/paste plain text from attributed string.
- Example: If :) is replace by a custom emoji (such as😊), the backed string can be set to @":)".
+ Example: If :) is replace by a custom emoji (such as😊), the backed string can be set to @":)"
+ * 这个类的意义在于, 很多时候, 显示出来的文本并不是我们想要的文本. 我们发送出去的文本, 是一些用字符表示的东西. 所以, 在富文本的属性中, 可以存储原始文本.
  */
 @interface YYTextBackedString : NSObject <NSCoding, NSCopying>
 + (instancetype)stringWithString:(nullable NSString *)string;
@@ -186,6 +190,9 @@ typedef void(^YYTextAction)(UIView *containerView, NSAttributedString *text, NSR
  Add this to a range of text will make the specified characters 'binding together'.
  YYTextView will treat the range of text as a single character during text 
  selection and edit.
+ 
+  将一段文字设置了这个属性之后, 删除的时候, 就可以删除这一段位置. 这里需要在删除的时候, 对于这个属性进行判断.
+ 
  */
 @interface YYTextBinding : NSObject <NSCoding, NSCopying>
 + (instancetype)bindingWithDeleteConfirm:(BOOL)deleteConfirm;
@@ -199,8 +206,11 @@ typedef void(^YYTextAction)(UIView *containerView, NSAttributedString *text, NSR
  the key named YYTextShadowAttributeName or YYTextInnerShadowAttributeName).
  
  It's similar to `NSShadow`, but offers more options.
+ 
+ 一个数据类, 记载着阴影相关的东西. 增加了 blendMode,  subShadow, 并且提供了相应的转化.
  */
 @interface YYTextShadow : NSObject <NSCoding, NSCopying>
+
 + (instancetype)shadowWithColor:(nullable UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius;
 
 @property (nullable, nonatomic, strong) UIColor *color; ///< shadow color
@@ -221,6 +231,9 @@ typedef void(^YYTextAction)(UIView *containerView, NSAttributedString *text, NSR
  
  When it's used as underline, the line is drawn below text glyphs;
  when it's used as strikethrough, the line is drawn above text glyphs.
+ 
+ 删除线和下划线. 不太明白为什么定义为 Decoration
+ 
  */
 @interface YYTextDecoration : NSObject <NSCoding, NSCopying>
 + (instancetype)decorationWithStyle:(YYTextLineStyle)style;
@@ -248,6 +261,7 @@ typedef void(^YYTextAction)(UIView *containerView, NSAttributedString *text, NSR
 @interface YYTextBorder : NSObject <NSCoding, NSCopying>
 + (instancetype)borderWithLineStyle:(YYTextLineStyle)lineStyle lineWidth:(CGFloat)width strokeColor:(nullable UIColor *)color;
 + (instancetype)borderWithFillColor:(nullable UIColor *)color cornerRadius:(CGFloat)cornerRadius;
+
 @property (nonatomic) YYTextLineStyle lineStyle;              ///< border line style
 @property (nonatomic) CGFloat strokeWidth;                    ///< border line width
 @property (nullable, nonatomic, strong) UIColor *strokeColor; ///< border line color
@@ -268,6 +282,9 @@ typedef void(^YYTextAction)(UIView *containerView, NSAttributedString *text, NSR
  the content will be placed in text metric. If the content is `UIImage`, 
  then it will be drawn to CGContext; if the content is `UIView` or `CALayer`, 
  then it will be added to the text container's view or layer.
+ 
+ 图文混排, 内部实现原理是设置一个 CTRunDelegate, 用占位字符和 delegate 返回的 size 占据文本位置, 然后在 draw 的时候, 绘制相应的视图.
+ 
  */
 @interface YYTextAttachment : NSObject<NSCoding, NSCopying>
 + (instancetype)attachmentWithContent:(nullable id)content;
@@ -287,6 +304,8 @@ typedef void(^YYTextAction)(UIView *containerView, NSAttributedString *text, NSR
  highlight text can be toucheds down by users. If a range of text is turned into 
  highlighted state, the `attributes` in `YYTextHighlight` will be used to modify 
  (set or remove) the original attributes in the range for display.
+ 
+ YYTextHighlight 不只是 点击事件的存储, 也存储了当点击的时候, CTRun 应该有的状态. 应该算是点击事件, 和展示状态的混合体.
  */
 @interface YYTextHighlight : NSObject <NSCoding, NSCopying>
 

@@ -13,19 +13,20 @@
 
 @implementation CTFrameParser
 
-
+// 这里, ascent 和 descent 的大小, 其实会影响到图片在整行中的位置的.
 static CGFloat ascentCallback(void *ref){
-    return [(NSNumber*)[(__bridge NSDictionary*)ref objectForKey:@"height"] floatValue];
+    return [(NSNumber*)[(__bridge NSDictionary*)ref objectForKey:@"height"] floatValue] - 20;
 }
 
 static CGFloat descentCallback(void *ref){
-    return 0;
+    return 20;
 }
 
 static CGFloat widthCallback(void* ref){
     return [(NSNumber*)[(__bridge NSDictionary*)ref objectForKey:@"width"] floatValue];
 }
 
+// 根据 config 的值, 生成相对应的属性信息.
 + (NSMutableDictionary *)attributesWithConfig:(CTFrameParserConfig *)config {
     CGFloat fontSize = config.fontSize;
     CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"ArialMT", fontSize, NULL);
@@ -38,14 +39,11 @@ static CGFloat widthCallback(void* ref){
     };
     
     CTParagraphStyleRef theParagraphRef = CTParagraphStyleCreate(theSettings, kNumberOfSettings);
-    
     UIColor * textColor = config.textColor;
-    
     NSMutableDictionary * dict = [NSMutableDictionary dictionary];
     dict[(id)kCTForegroundColorAttributeName] = (id)textColor.CGColor;
     dict[(id)kCTFontAttributeName] = (__bridge id)fontRef;
     dict[(id)kCTParagraphStyleAttributeName] = (__bridge id)theParagraphRef;
-    
     CFRelease(theParagraphRef);
     CFRelease(fontRef);
     return dict;
@@ -82,28 +80,32 @@ static CGFloat widthCallback(void* ref){
                                                                                    config:config];
                     [result appendAttributedString:as];
                 } else if ([type isEqualToString:@"img"]) {
-                    // 创建 CoreTextImageData
+                    // 收集 image 的信息, 存放到图片数组中.
                     CoreTextImageData *imageData = [[CoreTextImageData alloc] init];
                     imageData.name = dict[@"name"];
                     imageData.position = [result length];
                     [imageArray addObject:imageData];
-                    // 创建空白占位符，并且设置它的CTRunDelegate信息
+                    
+                    // 创建空白占位符，并且设置它的CTRunDelegate信息, 充当 image 的占位符号.
                     NSAttributedString *as = [self parseImageDataFromNSDictionary:dict config:config];
                     [result appendAttributedString:as];
                 } else if ([type isEqualToString:@"link"]) {
                     //
                     NSUInteger startPos = result.length;
-                    NSAttributedString *as = [self parseAttributedContentFromNSDictionary:dict
-                                                                                   config:config];
-                    [result appendAttributedString:as];
                     // 创建 CoreTextLinkData
                     NSUInteger length = result.length - startPos;
                     NSRange linkRange = NSMakeRange(startPos, length);
                     CoreTextLinkData *linkData = [[CoreTextLinkData alloc] init];
                     linkData.title = dict[@"content"];
                     linkData.url = dict[@"url"];
-                    linkData.range = linkRange;
+                    linkData.range = linkRange; // 记录一下可点击区域的范围
                     [linkArray addObject:linkData];
+                    
+                    // 生成可点击区域的文字.
+                    NSAttributedString *as =
+                    [self parseAttributedContentFromNSDictionary:dict
+                                                          config:config];
+                    [result appendAttributedString:as];
                 }
             }
         }
@@ -130,8 +132,8 @@ static CGFloat widthCallback(void* ref){
     NSDictionary * attributes = [self attributesWithConfig:config];
     NSMutableAttributedString * space = [[NSMutableAttributedString alloc] initWithString:content
                                                                                attributes:attributes];
-    // NSMutableString, 就是一个带有信息的字符串. 是将字符串和字符附带信息集合到一起的一个东西. 所以, 这里
-    // kCTRunDelegateAttributeName 这种和显示无关的东西, 也放在了 NSAttributeString 里面.
+    // NSMutableString, 就是一个带有信息的字符串. 是将字符串和字符附带信息集合到一起的一个东西.
+    // 所以, 这里 kCTRunDelegateAttributeName 这种和显示无关的东西, 也放在了 NSAttributeString 里面.
     CFAttributedStringSetAttribute((CFMutableAttributedStringRef)space, CFRangeMake(0, 1),
                                    kCTRunDelegateAttributeName, delegate);
     CFRelease(delegate);
@@ -179,7 +181,6 @@ static CGFloat widthCallback(void* ref){
 + (CoreTextData *)parseAttributedContent:(NSAttributedString *)content config:(CTFrameParserConfig*)config {
     // 创建CTFramesetterRef实例
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)content);
-    
     // 获得要缓制的区域的高度
     CGSize restrictSize = CGSizeMake(config.width, CGFLOAT_MAX);
     CGSize coreTextSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0,0), nil, restrictSize, nil);

@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  A text line object wrapped `CTLineRef`, see `YYTextLayout` for more.
+ 
+ 对于 CTLine 的包装.
  */
 
 @interface YYTextLine : NSObject
@@ -35,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, strong) NSArray<NSArray<YYTextRunGlyphRange *> *> *verticalRotateRange; ///< Run rotate range
 
 @property (nonatomic, readonly) CTLineRef CTLine;   ///< CoreText line
-@property (nonatomic, readonly) NSRange range;      ///< string range
+@property (nonatomic, readonly) NSRange range;      ///< string range 这个 CTLine 占据的 string 的 range
 @property (nonatomic, readonly) BOOL vertical;      ///< vertical form
 
 @property (nonatomic, readonly) CGRect bounds;      ///< bounds (ascent + descent)
@@ -54,6 +56,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) CGFloat lineWidth;  ///< line width
 @property (nonatomic, readonly) CGFloat trailingWhitespaceWidth;
 
+// 这三个, 代表着图文混排中, 各个元素的信息.
+/*
+ 之所以要把这些东西存起来, 是因为在处理点击事件的时候, 是无法得到各个图文混排的图元素的位置的. CTRunDelegate 只会在绘制的时候被调用, 然后将占位字符绘制到很大的一个区域而已, 但是这个区域到底有多大, 必须在点击事件的时候获取才行.
+ 所以, 提前存储这些信息, 才能快速的处理点击的逻辑.
+ */
 @property (nullable, nonatomic, readonly) NSArray<YYTextAttachment *> *attachments; ///< YYTextAttachment
 @property (nullable, nonatomic, readonly) NSArray<NSValue *> *attachmentRanges;     ///< NSRange(NSValue)
 @property (nullable, nonatomic, readonly) NSArray<NSValue *> *attachmentRects;      ///< CGRect(NSValue)

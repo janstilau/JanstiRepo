@@ -438,6 +438,7 @@ return style. _attr_;
     NSMutableString *result = [NSMutableString string];
     if (range.length == 0) return result;
     NSString *string = self.string;
+    // 如果有 YYTextBackedStringAttributeName 就取 back String, 否则, 就是当前的 string.
     [self enumerateAttribute:YYTextBackedStringAttributeName inRange:range options:kNilOptions usingBlock:^(id value, NSRange range, BOOL *stop) {
         YYTextBackedString *backed = value;
         if (backed && backed.string) {
@@ -460,7 +461,7 @@ return style. _attr_;
     attach.content = content;
     attach.contentMode = contentMode;
     [atr setTextAttachment:attach range:NSMakeRange(0, atr.length)];
-    
+    // YYTextRunDelegate, 用于控制显示区域.
     YYTextRunDelegate *delegate = [YYTextRunDelegate new];
     delegate.width = width;
     delegate.ascent = ascent;
@@ -674,6 +675,9 @@ return style. _attr_;
 }
 
 #pragma mark - Property Setter
+
+
+// 为了模拟 UILabel 的属性效果.
 
 - (void)setFont:(UIFont *)font {
     /*
@@ -1179,6 +1183,7 @@ return style. _attr_;
                      userInfo:(NSDictionary *)userInfo
                     tapAction:(YYTextAction)tapAction
               longPressAction:(YYTextAction)longPressAction {
+    // 包装一个 YYTextHighlight, 然后放到 attributeString 中.
     YYTextHighlight *highlight = [YYTextHighlight highlightWithBackgroundColor:backgroundColor];
     highlight.userInfo = userInfo;
     highlight.tapAction = tapAction;

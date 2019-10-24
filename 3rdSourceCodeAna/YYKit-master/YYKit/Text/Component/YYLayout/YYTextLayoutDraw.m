@@ -222,6 +222,7 @@ void YYTextDrawRun(YYTextLine *line, CTRunRef run, CGContextRef context, CGSize 
     }
 }
 
+// 设置绘画的边线的样式.
 void YYTextSetLinePatternInContext(YYTextLineStyle style, CGFloat width, CGFloat phase, CGContextRef context){
     CGContextSetLineWidth(context, width);
     CGContextSetLineCap(context, kCGLineCapButt);
@@ -263,6 +264,7 @@ void YYTextDrawBorderRects(CGContextRef context, CGSize size, YYTextBorder *bord
     }
     
     NSMutableArray *paths = [NSMutableArray new];
+    // 这里将所有的绘画区域, 链接起来.
     for (NSValue *value in rects) {
         CGRect rect = value.CGRectValue;
         if (isVertical) {
@@ -277,8 +279,10 @@ void YYTextDrawBorderRects(CGContextRef context, CGSize size, YYTextBorder *bord
     }
     
     if (border.fillColor) {
+        // 填充底部, 然后回复状态.
         CGContextSaveGState(context);
         CGContextSetFillColorWithColor(context, border.fillColor.CGColor);
+//        CGContextSetFillColorWithColor(context, [UIColor purpleColor].CGColor);
         for (UIBezierPath *path in paths) {
             CGContextAddPath(context, path.CGPath);
         }
@@ -359,6 +363,7 @@ void YYTextDrawBorderRects(CGContextRef context, CGSize size, YYTextBorder *bord
             }
             CGContextStrokePath(context);
             CGContextRestoreGState(context);
+            // 绘制边线.
         }
     }
     
@@ -451,6 +456,7 @@ void YYTextDrawLineStyle(CGContextRef context, CGFloat length, CGFloat lineWidth
     } CGContextRestoreGState(context);
 }
 
+// 这个函数, 反而是最简单的函数. 相对于
 void YYTextDrawText(YYTextLayout *layout, CGContextRef context, CGSize size, CGPoint point, BOOL (^cancel)(void)) {
     CGContextSaveGState(context); {
         
@@ -470,7 +476,7 @@ void YYTextDrawText(YYTextLayout *layout, CGContextRef context, CGSize size, CGP
             CGFloat posY = size.height - line.position.y;
             CFArrayRef runs = CTLineGetGlyphRuns(line.CTLine);
             for (NSUInteger r = 0, rMax = CFArrayGetCount(runs); r < rMax; r++) {
-                CTRunRef run = CFArrayGetValueAtIndex(runs, r);
+                CTRunRef run = CFArrayGetValueAtIndex(runs, r); // 能得到 CTRun, 已经能获取到 attris 了.
                 CGContextSetTextMatrix(context, CGAffineTransformIdentity);
                 CGContextSetTextPosition(context, posX, posY);
                 YYTextDrawRun(line, run, context, size, isVertical, lineRunRanges[r], verticalOffset);
@@ -489,14 +495,14 @@ void YYTextDrawBlockBorder(YYTextLayout *layout, CGContextRef context, CGSize si
     BOOL isVertical = layout.container.verticalForm;
     CGFloat verticalOffset = isVertical ? (size.width - layout.container.size.width) : 0;
     
-    NSArray *lines = layout.lines; // 还是绕不开要去看 textLayout 的源码.
+    NSArray *lines = layout.lines;
     for (NSInteger l = 0, lMax = lines.count; l < lMax; l++) {
         if (cancel && cancel()) break;
         
         YYTextLine *line = lines[l];
         if (layout.truncatedLine && layout.truncatedLine.index == line.index) line = layout.truncatedLine;
         CFArrayRef runs = CTLineGetGlyphRuns(line.CTLine);
-        for (NSInteger r = 0, rMax = CFArrayGetCount(runs); r < rMax; r++) {
+        for (NSInteger r = 0, rMax = CFArrayGetCount(runs); r < rMax; r++) { //
             CTRunRef run = CFArrayGetValueAtIndex(runs, r);
             CFIndex glyphCount = CTRunGetGlyphCount(run);
             if (glyphCount == 0) continue;
@@ -586,7 +592,7 @@ void YYTextDrawBorder(YYTextLayout *layout, CGContextRef context, CGSize size, C
             if (glyphCount == 0) continue;
             
             NSDictionary *attrs = (id)CTRunGetAttributes(run);
-            YYTextBorder *border = attrs[borderKey];
+            YYTextBorder *border = attrs[borderKey]; // 在这获取到 border 的信息.
             if (!border) continue;
             
             CFRange runRange = CTRunGetStringRange(run);
@@ -668,6 +674,7 @@ void YYTextDrawBorder(YYTextLayout *layout, CGContextRef context, CGSize size, C
                 [drawRects addObject:[NSValue valueWithCGRect:curRect]];
             }
             
+            // 这里, 只所以要是一个数组, 是因为可能会有换行, 那么就是多个区域了.
             YYTextDrawBorderRects(context, size, border, drawRects, isVertical);
             
             if (l == endLineIndex) {
@@ -685,6 +692,7 @@ void YYTextDrawBorder(YYTextLayout *layout, CGContextRef context, CGSize size, C
     CGContextRestoreGState(context);
 }
 
+// 绘制下划线和删除线.
 void YYTextDrawDecoration(YYTextLayout *layout, CGContextRef context, CGSize size, CGPoint point, YYTextDecorationType type, BOOL (^cancel)(void)) {
     NSArray *lines = layout.lines;
     
@@ -776,6 +784,7 @@ void YYTextDrawDecoration(YYTextLayout *layout, CGContextRef context, CGSize siz
                     } CGContextRestoreGState(context);
                     shadow = shadow.subShadow;
                 }
+                // 划线, underlineStart 控制着线的位置.
                 YYTextDrawLineStyle(context, length, thickness, underline.style, underlineStart, color, isVertical);
             }
             
@@ -817,19 +826,20 @@ void YYTextDrawAttachment(YYTextLayout *layout, CGContextRef context, CGSize siz
     BOOL isVertical = layout.container.verticalForm;
     CGFloat verticalOffset = isVertical ? (size.width - layout.container.size.width) : 0;
     
+    // attachments 在 layout 的 parse 过程就存储好了.
     for (NSUInteger i = 0, max = layout.attachments.count; i < max; i++) {
-        YYTextAttachment *a = layout.attachments[i];
-        if (!a.content) continue;
+        YYTextAttachment *attachItem = layout.attachments[i];
+        if (!attachItem.content) continue;
         
         UIImage *image = nil;
         UIView *view = nil;
         CALayer *layer = nil;
-        if ([a.content isKindOfClass:[UIImage class]]) {
-            image = a.content;
-        } else if ([a.content isKindOfClass:[UIView class]]) {
-            view = a.content;
-        } else if ([a.content isKindOfClass:[CALayer class]]) {
-            layer = a.content;
+        if ([attachItem.content isKindOfClass:[UIImage class]]) {
+            image = attachItem.content;
+        } else if ([attachItem.content isKindOfClass:[UIView class]]) {
+            view = attachItem.content;
+        } else if ([attachItem.content isKindOfClass:[CALayer class]]) {
+            layer = attachItem.content;
         }
         if (!image && !view && !layer) continue;
         if (image && !context) continue;
@@ -838,13 +848,16 @@ void YYTextDrawAttachment(YYTextLayout *layout, CGContextRef context, CGSize siz
         if (cancel && cancel()) break;
         
         CGSize asize = image ? image.size : view ? view.frame.size : layer.frame.size;
+        /**
+         * attachmentRects 是在 layout 的生成过程就
+         */
         CGRect rect = ((NSValue *)layout.attachmentRects[i]).CGRectValue;
         if (isVertical) {
-            rect = UIEdgeInsetsInsetRect(rect, UIEdgeInsetRotateVertical(a.contentInsets));
+            rect = UIEdgeInsetsInsetRect(rect, UIEdgeInsetRotateVertical(attachItem.contentInsets));
         } else {
-            rect = UIEdgeInsetsInsetRect(rect, a.contentInsets);
+            rect = UIEdgeInsetsInsetRect(rect, attachItem.contentInsets);
         }
-        rect = YYCGRectFitWithContentMode(rect, asize, a.contentMode);
+        rect = YYCGRectFitWithContentMode(rect, asize, attachItem.contentMode);
         rect = CGRectPixelRound(rect);
         rect = CGRectStandardize(rect);
         rect.origin.x += point.x + verticalOffset;
@@ -855,16 +868,17 @@ void YYTextDrawAttachment(YYTextLayout *layout, CGContextRef context, CGSize siz
                 CGContextSaveGState(context);
                 CGContextTranslateCTM(context, 0, CGRectGetMaxY(rect) + CGRectGetMinY(rect));
                 CGContextScaleCTM(context, 1, -1);
-                CGContextDrawImage(context, rect, ref);
+                CGContextDrawImage(context, rect, ref); // 所以, attach 就是 draw 上去的.
                 CGContextRestoreGState(context);
             }
         } else if (view) {
             view.frame = rect;
-            [targetView addSubview:view];
+            [targetView addSubview:view]; // 而对于其他的, 则是直接添加上去
         } else if (layer) {
             layer.frame = rect;
-            [targetLayer addSublayer:layer];
+            [targetLayer addSublayer:layer]; // 而对于其他的, 则是直接添加上去
         }
+        // 虽然这个方法叫做 draw ,但是其实是做视图展示的东西. 这里, 直接用 addSubView 这种东西也是合适的.
     }
 }
 
@@ -879,27 +893,30 @@ void YYTextDrawShadow(YYTextLayout *layout, CGContextRef context, CGSize size, C
         CGContextTranslateCTM(context, point.x, point.y);
         CGContextTranslateCTM(context, 0, size.height);
         CGContextScaleCTM(context, 1, -1);
+        
         NSArray *lines = layout.lines;
         for (NSUInteger l = 0, lMax = layout.lines.count; l < lMax; l++) {
             if (cancel && cancel()) break;
             YYTextLine *line = lines[l];
-            if (layout.truncatedLine && layout.truncatedLine.index == line.index) line = layout.truncatedLine;
+            if (layout.truncatedLine && layout.truncatedLine.index == line.index) {
+                line = layout.truncatedLine; // 这是最后一个被截断的那个 YYLine
+            }
             NSArray *lineRunRanges = line.verticalRotateRange;
             CGFloat linePosX = line.position.x;
             CGFloat linePosY = size.height - line.position.y;
             CFArrayRef runs = CTLineGetGlyphRuns(line.CTLine);
             for (NSUInteger r = 0, rMax = CFArrayGetCount(runs); r < rMax; r++) {
-                CTRunRef run = CFArrayGetValueAtIndex(runs, r);
+                CTRunRef run = CFArrayGetValueAtIndex(runs, r); // 获取到每一个 CTRun
                 CGContextSetTextMatrix(context, CGAffineTransformIdentity);
                 CGContextSetTextPosition(context, linePosX, linePosY);
                 NSDictionary *attrs = (id)CTRunGetAttributes(run);
                 YYTextShadow *shadow = attrs[YYTextShadowAttributeName];
-                YYTextShadow *nsShadow = [YYTextShadow shadowWithNSShadow:attrs[NSShadowAttributeName]]; // NSShadow compatible
+                YYTextShadow *nsShadow = [YYTextShadow shadowWithNSShadow:attrs[NSShadowAttributeName]];
                 if (nsShadow) {
                     nsShadow.subShadow = shadow;
                     shadow = nsShadow;
-                }
-                while (shadow) {
+                } // 获取 CTRun 的 shadow 的信息.
+                while (shadow) { // 绘制 Shadow.
                     if (!shadow.color) {
                         shadow = shadow.subShadow;
                         continue;

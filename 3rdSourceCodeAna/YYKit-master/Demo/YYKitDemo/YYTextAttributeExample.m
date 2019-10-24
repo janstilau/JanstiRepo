@@ -154,22 +154,24 @@
     }
     
     {
-        NSMutableAttributedString *one = [[NSMutableAttributedString alloc] initWithString:@"Another Link"];
+        NSMutableAttributedString *one = [[NSMutableAttributedString alloc] initWithString:@"Another \n Link \n HEHEHE"];
         one.font = [UIFont boldSystemFontOfSize:30];
         one.color = [UIColor redColor];
         
         YYTextBorder *border = [YYTextBorder new];
-        border.cornerRadius = 50;
+        border.cornerRadius = 0;
         border.insets = UIEdgeInsetsMake(0, -10, 0, -10);
-        border.strokeWidth = 0.5;
+        border.fillColor = [UIColor blueColor];
+        border.strokeWidth = 2;
         border.strokeColor = one.color;
         border.lineStyle = YYTextLineStyleSingle;
         one.textBackgroundBorder = border;
         
         YYTextBorder *highlightBorder = border.copy;
-        highlightBorder.strokeWidth = 0;
-        highlightBorder.strokeColor = one.color;
-        highlightBorder.fillColor = one.color;
+        highlightBorder.cornerRadius = 50;
+        highlightBorder.strokeWidth = 1;
+        highlightBorder.strokeColor = [UIColor greenColor];
+        highlightBorder.fillColor = [UIColor yellowColor];
         
         YYTextHighlight *highlight = [YYTextHighlight new];
         [highlight setColor:[UIColor whiteColor]];

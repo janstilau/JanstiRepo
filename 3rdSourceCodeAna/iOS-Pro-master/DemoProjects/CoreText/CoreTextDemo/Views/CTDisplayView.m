@@ -225,8 +225,7 @@ typedef enum CTDisplayViewState : NSInteger {
     CGPoint point = [recognizer locationInView:self];
     if (_state == CTDisplayViewStateNormal) {
         for (CoreTextImageData * imageData in self.data.imageArray) {
-            // 翻转坐标系，因为imageData中的坐标是CoreText的坐标系
-            // 遍历, 看一下是不是点击的位置, 是在图片的范围里面.
+            // 根据存储的图片的位置, 判断手势的位置是不是图片的位置
             CGRect imageRect = imageData.imagePosition;
             CGPoint imagePosition = imageRect.origin;
             imagePosition.y = self.bounds.size.height - imageRect.origin.y - imageRect.size.height;
@@ -241,7 +240,7 @@ typedef enum CTDisplayViewState : NSInteger {
                 return;
             }
         }
-        
+        // 根据存储的链接的位置, 判断手势的位置是不是链接的位置.
         CoreTextLinkData *linkData = [CoreTextUtils touchLinkInView:self atPoint:point data:self.data];
         if (linkData) {
             NSLog(@"hint link!");
@@ -251,6 +250,7 @@ typedef enum CTDisplayViewState : NSInteger {
             return;
         }
     } else {
+        // 如果没有点击处理, 更新状态.
         self.state = CTDisplayViewStateNormal;
     }
 }
@@ -259,6 +259,7 @@ typedef enum CTDisplayViewState : NSInteger {
     CGPoint point = [recognizer locationInView:self];
     if (recognizer.state == UIGestureRecognizerStateBegan ||
         recognizer.state == UIGestureRecognizerStateChanged) {
+        // 这里, 是通过 coreText 计算出 index 的值.
         CFIndex index = [CoreTextUtils touchContentOffsetInView:self atPoint:point data:self.data];
         if (index != -1 && index < self.data.content.length) {
             _selectionStartPosition = index;

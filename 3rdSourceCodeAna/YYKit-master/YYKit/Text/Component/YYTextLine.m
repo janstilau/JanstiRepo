@@ -72,6 +72,7 @@
         _bounds.origin.x += _firstGlyphPos;
     }
     
+    // 在这里, 重新梳理了 attach 的所有信息.
     _attachments = nil;
     _attachmentRanges = nil;
     _attachmentRects = nil;
@@ -95,7 +96,7 @@
             
             CGFloat ascent, descent, leading, runWidth;
             CGRect runTypoBounds;
-            // 这里, 之所以可以获得正确的尺寸, 是因为 attach 在设置的时候, 已经存储了 delegate 的信息, 而这个信息里面, 有着尺寸的计算.
+            // 在这里, 一定会去 RunDelegate 去获取这些信息.
             runWidth = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, &leading);
             
             if (_vertical) {

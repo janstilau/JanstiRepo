@@ -111,6 +111,12 @@ YYTextAttributeType YYTextAttributeGetType(NSString *name){
 }
 
 
+/**
+ * 这个文件的内部, 更多的是数据类的归档接档工作.
+ * 各个功能, 需要有一个数据类作为算法运转的基础, 这里是对于 YYKit 添加到富文本中的属性的一个集中的配置.
+ * 在这个文件中, 更多的是对于归档接档的实现, 具体这些类怎么用, 还是要到其他类中体现.
+ */
+
 @implementation YYTextBackedString
 
 + (instancetype)stringWithString:(NSString *)string {
@@ -181,7 +187,7 @@ YYTextAttributeType YYTextAttributeGetType(NSString *name){
     shadow.offset = nsShadow.shadowOffset;
     shadow.radius = nsShadow.shadowBlurRadius;
     id color = nsShadow.shadowColor;
-    if (color) {
+    if (color) { // 做了一下相应的转化工作
         if (CGColorGetTypeID() == CFGetTypeID((__bridge CFTypeRef)(color))) {
             color = [UIColor colorWithCGColor:(__bridge CGColorRef)(color)];
         }

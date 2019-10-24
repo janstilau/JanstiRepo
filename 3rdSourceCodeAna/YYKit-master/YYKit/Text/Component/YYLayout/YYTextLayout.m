@@ -286,32 +286,35 @@ dispatch_semaphore_signal(_lock);
 
 @interface YYTextLayout ()
 
-@property (nonatomic, readwrite) YYTextContainer *container;
-@property (nonatomic, readwrite) NSAttributedString *text;
+@property (nonatomic, readwrite) YYTextContainer *container; // 文字的显示范围的原始信息.
+@property (nonatomic, readwrite) NSAttributedString *text; // 原始的类
 @property (nonatomic, readwrite) NSRange range;
 
 @property (nonatomic, readwrite) CTFramesetterRef frameSetter;
-@property (nonatomic, readwrite) CTFrameRef frame;
-@property (nonatomic, readwrite) NSArray *lines;
-@property (nonatomic, readwrite) YYTextLine *truncatedLine;
-@property (nonatomic, readwrite) NSArray *attachments;
-@property (nonatomic, readwrite) NSArray *attachmentRanges;
-@property (nonatomic, readwrite) NSArray *attachmentRects;
+@property (nonatomic, readwrite) CTFrameRef frame; // coreText 的frame 引用
+@property (nonatomic, readwrite) NSArray *lines;// coreText 的 CTLine 的引用.
+@property (nonatomic, readwrite) YYTextLine *truncatedLine; // 最后一行, 会被截取
+@property (nonatomic, readwrite) NSArray *attachments; // 图文混排的内容
+@property (nonatomic, readwrite) NSArray *attachmentRanges; // 图文混排
+@property (nonatomic, readwrite) NSArray *attachmentRects; // 图文混排
 @property (nonatomic, readwrite) NSSet *attachmentContentsSet;
 @property (nonatomic, readwrite) NSUInteger rowCount;
 @property (nonatomic, readwrite) NSRange visibleRange;
-@property (nonatomic, readwrite) CGRect textBoundingRect;
-@property (nonatomic, readwrite) CGSize textBoundingSize;
+@property (nonatomic, readwrite) CGRect textBoundingRect; // 文字区域
+@property (nonatomic, readwrite) CGSize textBoundingSize; // 文字大小.
 
+// 控制点击效果, attributes 的 highlight 属性进行控制.
 @property (nonatomic, readwrite) BOOL containsHighlight;
+// 绘制相关的一些属性, 在绘制的过程中, 会根据这些值进行不同的绘制分发.
+// 这些属性, 都是靠 attributes 里面的特殊的 key 值进行的控制. 可以说是数据控制视图非常优秀的实现.
 @property (nonatomic, readwrite) BOOL needDrawBlockBorder;
 @property (nonatomic, readwrite) BOOL needDrawBackgroundBorder;
 @property (nonatomic, readwrite) BOOL needDrawShadow;
+@property (nonatomic, readwrite) BOOL needDrawStrikethrough;
 @property (nonatomic, readwrite) BOOL needDrawUnderline;
 @property (nonatomic, readwrite) BOOL needDrawText;
 @property (nonatomic, readwrite) BOOL needDrawAttachment;
 @property (nonatomic, readwrite) BOOL needDrawInnerShadow;
-@property (nonatomic, readwrite) BOOL needDrawStrikethrough;
 @property (nonatomic, readwrite) BOOL needDrawBorder;
 
 @property (nonatomic, assign) NSUInteger *lineRowsIndex;
@@ -401,7 +404,6 @@ dispatch_semaphore_signal(_lock);
     container->_readonly = YES;
     maximumNumberOfRows = container.maximumNumberOfRows; // 这里, 仅仅是一个数值的传递作用.
     
-    // 太细节的东西不用看.
     // CoreText bug when draw joined emoji since iOS 8.3.
     // See -[NSMutableAttributedString setClearColorToJoinedEmoji] for more information.
     static BOOL needFixJoinedEmojiBug = NO;
@@ -460,8 +462,6 @@ dispatch_semaphore_signal(_lock);
     }
     if (!cgPath) goto fail;
     // 在这里, cgPath 代表着包裹着展示区域的路径.
-    
-    
     
     // frame setter config
     frameAttrs = [NSMutableDictionary dictionary];
@@ -561,6 +561,7 @@ dispatch_semaphore_signal(_lock);
         if (i == 0) textBoundingRect = lineRect;
         else {
             if (maximumNumberOfRows == 0 || rowIdx < maximumNumberOfRows) {
+                // 首先是对于行数的判断.
                 // 这里, 会加起所有的 CTLineRect, 所以最后, textBoundingRect 就是 text 的尺寸.
                 textBoundingRect = CGRectUnion(textBoundingRect, lineRect);
             }
@@ -572,7 +573,7 @@ dispatch_semaphore_signal(_lock);
             if (rowCount > maximumNumberOfRows) {
                 needTruncation = YES;
                 rowCount = maximumNumberOfRows;
-                do {
+                do { // 这里, 对于生成的 line 做了裁剪, 减少 max line 的行数.
                     YYTextLine *line = lines.lastObject;
                     if (!line) break;
                     if (line.row < rowCount) break;
@@ -582,7 +583,7 @@ dispatch_semaphore_signal(_lock);
         }
         YYTextLine *lastLine = lines.lastObject;
         if (!needTruncation && lastLine.range.location + lastLine.range.length < text.length) {
-            needTruncation = YES;
+            needTruncation = YES; // 如果最后一行不能到 text 的末尾, 那么就需要裁剪.
         }
         
         // Give user a chance to modify the line's position.
@@ -664,7 +665,7 @@ dispatch_semaphore_signal(_lock);
     }
     
     visibleRange = YYNSRangeFromCFRange(CTFrameGetVisibleStringRange(ctFrame));
-    if (needTruncation) {
+    if (needTruncation) { // 如果需要裁剪, 那么就改变最后一样的内容.
         YYTextLine *lastLine = lines.lastObject;
         NSRange lastRange = lastLine.range;
         visibleRange.length = lastRange.location + lastRange.length - visibleRange.location;
@@ -808,6 +809,7 @@ dispatch_semaphore_signal(_lock);
         layout.needDrawText = YES;
         
         void (^block)(NSDictionary *attrs, NSRange range, BOOL *stop) = ^(NSDictionary *attrs, NSRange range, BOOL *stop) {
+            // 根据 attrs 容器里面的值, 设置 layout 的属性值, 将容器那种不太直观的表现, 改变为更加直观的属性的表现方式.
             if (attrs[YYTextHighlightAttributeName]) layout.containsHighlight = YES;
             if (attrs[YYTextBlockBorderAttributeName]) layout.needDrawBlockBorder = YES;
             if (attrs[YYTextBackgroundBorderAttributeName]) layout.needDrawBackgroundBorder = YES;
@@ -820,6 +822,7 @@ dispatch_semaphore_signal(_lock);
         };
         
         [layout.text enumerateAttributesInRange:visibleRange options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:block];
+        // 对于 layout text 每一个CTRun 的 attri 做遍历.
         if (truncatedLine) {
             [truncationToken enumerateAttributesInRange:NSMakeRange(0, truncationToken.length) options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:block];
         }
@@ -2129,7 +2132,7 @@ fail:
 }
 
 
-// 通过各个类, 进行了绘制的分发工作. 优秀.
+// 绘制, 所有的 显示工作都是在这里完成的.
 - (void)drawInContext:(CGContextRef)context
                  size:(CGSize)contextSize
                 point:(CGPoint)offsetPoint
@@ -2140,6 +2143,7 @@ fail:
     
     @autoreleasepool {
         // 里面具体的逻辑没有看, 总之, 如果是 YYKit 增加的一些属性, 在 layout 类中会解析然后变成 needDrawBlockBorder 这些属性, 然后在专门有一个方法去进行相应的绘制的工作.
+        
         if (self.needDrawBlockBorder && context) {
             if (cancelAction && cancelAction()) return;
             YYTextDrawBlockBorder(self, context, contextSize, offsetPoint, cancelAction);
