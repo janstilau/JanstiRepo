@@ -35,8 +35,8 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
     NSMutableArray *_attachmentViews; // 表示, 正在显示的
     NSMutableArray *_attachmentLayers; // 表示, 正在显示的.
     
-    NSRange _highlightRange; ///< current highlight range
-    YYTextHighlight *_highlight; ///< highlight attribute in `_highlightRange`
+    NSRange _highlightRange; ///< current highlight range  在点击事件中, 会不断地更新这个区域.
+    YYTextHighlight *_highlight; ///< highlight attribute in `_highlightRange` 在点击事件中, 会不断地更新
     
 /**
  * highLightLayout 是在高亮点击的时候, 赋值 innerLyaout, 然后根据_highlight设置高亮区域文字的 attris, 然后在绘制 label 的时候, 根据 highLightLayout 进行绘制, 由于仅仅只有高亮文本的属性发生了改变, 所以, 会和原来的 label 一样, 仅仅高亮地方的文字发生了改变.
