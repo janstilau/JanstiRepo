@@ -278,6 +278,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @discussion If you control the label content only through "textLayout", then
  you may set this value to YES for higher performance.
+ 
+ 这个属性, 在完全可以由 layout 控制的时候, 会设置为 YES.
  */
 @property (nonatomic) BOOL ignoreCommonProperties;
 

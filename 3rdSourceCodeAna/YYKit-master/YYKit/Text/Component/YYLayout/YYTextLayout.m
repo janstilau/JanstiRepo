@@ -1193,7 +1193,6 @@ fail:
         CGRect bounds = ((YYTextLine *)_lines[i]).bounds;
         if (CGRectContainsPoint(bounds, point)) return i;
     }
-    
     return NSNotFound;
 }
 
