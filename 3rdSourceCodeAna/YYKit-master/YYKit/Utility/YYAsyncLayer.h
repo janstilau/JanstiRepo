@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A display task used by YYAsyncLayer to render the contents in background queue.
  */
+
+// 这就是一个数据类, 保存了各个任务. 由于是 block, 捕获变量变得异常简单.
 @interface YYAsyncLayerDisplayTask : NSObject
 
 /**

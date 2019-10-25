@@ -1091,6 +1091,7 @@ static const CGFloat kAsyncFadeDuration = 0.08;
 - (YYAsyncLayerDisplayTask *)newAsyncDisplayTask {
     
     // capture current context
+    // 这里, 利用 block, 保存了 context 的值.
     BOOL contentsNeedFade = _currentState.contentsNeedFade;
     NSAttributedString *text = _innerText;
     YYTextContainer *container = _innerContainer;
@@ -1100,7 +1101,7 @@ static const CGFloat kAsyncFadeDuration = 0.08;
     NSMutableArray *attachmentLayers = _layerAttachMents;
     BOOL layoutNeedUpdate = _currentState.layoutNeedUpdate;
     BOOL fadeForAsync = _displaysAsynchronously && _fadeOnAsynchronouslyDisplay;
-    __block YYTextLayout *currentLayout = (_currentState.showingHighlight && _highlightLayout) ? self._highlightLayout : self._innerLayout;
+    __block YYTextLayout *currentLayout = (_currentState.showingHighlight && _highlightLayout) ? self._highlightLayout : self._innerLayout; // 如果有高亮的, 就是在高亮点击的状态.
     __block YYTextLayout *shrinkLayout = nil;
     __block BOOL layoutUpdated = NO;
     if (layoutNeedUpdate) {
@@ -1110,9 +1111,9 @@ static const CGFloat kAsyncFadeDuration = 0.08;
     
     // create display task
     YYAsyncLayerDisplayTask *task = [[YYAsyncLayerDisplayTask alloc] init];
-    // willDisplay 是在主线程中进行的. 主要是做一些清空的操作.
+    // willDisplay 做的事情, 都是 draw 的过程无法控制的过程. 最主要的原因是,attachmentViews,attachmentLayers 是通过 addSubView 和 addSubLayer 的形式, 进行的视图的控制.
     task.willDisplay = ^(CALayer *layer) {
-        [layer removeAnimationForKey:@"contents"]; // 首先, 把动画移出了.
+        [layer removeAnimationForKey:@"contents"]; // 首先, 把动画移出了. 之所以要移除, 是因为在 didDisplay 中添加了动画.
         
         // If the attachment is not in new layout, or we don't know the new layout currently,
         // the attachment should be removed.
@@ -1166,6 +1167,7 @@ static const CGFloat kAsyncFadeDuration = 0.08;
             }
         }
         point = CGPointPixelRound(point);
+        // 参数都是一些位置的信息, 而真正该画什么内容, 其实还是保存在 drawLayout 当中
         [drawLayout drawInContext:context size:size point:point view:nil layer:nil debug:debug cancel:isCancelled];
     };
     
@@ -1223,6 +1225,7 @@ static const CGFloat kAsyncFadeDuration = 0.08;
             else if ([a.content isKindOfClass:[CALayer class]]) [attachmentLayers addObject:a.content];
         }
         
+        // 如果, 需要动画, 那么就增加一个动画到 layer 上面.
         if (contentsNeedFade) {
             CATransition *transition = [CATransition animation];
             transition.duration = kHighlightFadeDuration;
