@@ -101,6 +101,8 @@ NS_ASSUME_NONNULL_BEGIN
  receiver's properties.
  
  @return Whether succeed.
+ 
+ 根据 JSON 的数据, 进行赋值的操作.
  */
 - (BOOL)modelSetWithJSON:(id)json;
 
