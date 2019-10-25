@@ -464,7 +464,7 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
 
 @implementation _YYModelMeta
 - (instancetype)initWithClass:(Class)cls {
-    YYClassInfo *classInfo = [YYClassInfo classInfoWithClass:cls];
+    YYClassInfo *classInfo = [YYClassInfo classInfoWithClass:cls]; // classInfo 里面是类的所有的元信息.
     if (!classInfo) return nil;
     self = [super init];
     
@@ -486,36 +486,39 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
         }
     }
     
-    // Get container property's generic class
+    // 容器类里面的 Item 的类型.
     NSDictionary *genericMapper = nil;
     if ([cls respondsToSelector:@selector(modelContainerPropertyGenericClass)]) {
         genericMapper = [(id<YYModel>)cls modelContainerPropertyGenericClass];
         if (genericMapper) {
-            NSMutableDictionary *tmp = [NSMutableDictionary new];
-            [genericMapper enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            NSMutableDictionary *genericResult = [NSMutableDictionary new];
+            [genericMapper enumerateKeysAndObjectsUsingBlock:^(id key, id classValue, BOOL *stop) {
                 if (![key isKindOfClass:[NSString class]]) return;
-                Class meta = object_getClass(obj);
+                Class meta = object_getClass(classValue);
                 if (!meta) return;
+                // 这里就是判断, value 值是一个类对象.
                 if (class_isMetaClass(meta)) {
-                    tmp[key] = obj;
-                } else if ([obj isKindOfClass:[NSString class]]) {
-                    Class cls = NSClassFromString(obj);
+                    genericResult[key] = classValue;
+                } else if ([classValue isKindOfClass:[NSString class]]) {
+                    Class cls = NSClassFromString(classValue);
                     if (cls) {
-                        tmp[key] = cls;
+                        genericResult[key] = cls;
                     }
                 }
             }];
-            genericMapper = tmp;
+            genericMapper = genericResult;
         }
     }
     
-    // Create all property metas.
+    // 遍历到 NSOBject, 不包含, 然后得到所有的属性的信息.
     NSMutableDictionary *allPropertyMetas = [NSMutableDictionary new];
     YYClassInfo *curClassInfo = classInfo;
     while (curClassInfo && curClassInfo.superCls != nil) { // recursive parse super class, but ignore root class (NSObject/NSProxy)
         for (YYClassPropertyInfo *propertyInfo in curClassInfo.propertyInfos.allValues) {
             if (!propertyInfo.name) continue;
+            // 如果有黑名单, 那么黑名单里面的不要
             if (blacklist && [blacklist containsObject:propertyInfo.name]) continue;
+            // 如果有白名单, 那么只要白名单里面的.
             if (whitelist && ![whitelist containsObject:propertyInfo.name]) continue;
             _YYModelPropertyMeta *meta = [_YYModelPropertyMeta metaWithClassInfo:classInfo
                                                                     propertyInfo:propertyInfo

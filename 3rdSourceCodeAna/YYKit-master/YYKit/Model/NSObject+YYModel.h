@@ -395,6 +395,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param dic  The json/kv dictionary.
  
  @return Returns the modified dictionary, or nil to ignore this model.
+ before the transform.
  */
 - (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic;
 
@@ -410,6 +411,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param dic  The json/kv dictionary.
  
  @return Returns YES if the model is valid, or NO to ignore this model.
+ 
+ 做一些特殊的转换的地方
  */
 - (BOOL)modelCustomTransformFromDictionary:(NSDictionary *)dic;
 
