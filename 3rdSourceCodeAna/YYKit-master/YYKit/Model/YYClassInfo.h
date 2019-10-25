@@ -5,6 +5,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Type encoding's type.
+ 
+ // 不同的类型, 用不同的 mask, mask 写在开头.
+ 
  */
 typedef NS_OPTIONS(NSUInteger, YYEncodingType) {
     YYEncodingTypeMask       = 0xFF, ///< mask of type value
@@ -66,7 +69,8 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
 
 
 /**
- Instance variable information.
+  这就是 IVar 的一个数据类, 在 initWithIvar 中, 通过 iVar 的 C 方法, 获得所有需要的信息, 然后存到属性中.
+  虽然可以通过方法获取到相应的数据, 缓存下来, 可以大大的隔离复杂度, 让上层接口更好的进行组织.
  */
 @interface YYClassIvarInfo : NSObject
 @property (nonatomic, assign, readonly) Ivar ivar;              ///< ivar opaque struct
@@ -86,7 +90,7 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
 
 
 /**
- Method information.
+  Method 的数据类, 在初始化的过程中, 会获取所需要的各种信息.
  */
 @interface YYClassMethodInfo : NSObject
 @property (nonatomic, assign, readonly) Method method;                  ///< method opaque struct
@@ -108,7 +112,7 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
 
 
 /**
- Property information.
+ 属性相关信息的数据类.
  */
 @interface YYClassPropertyInfo : NSObject
 @property (nonatomic, assign, readonly) objc_property_t property; ///< property's opaque struct
@@ -133,6 +137,8 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
 
 /**
  Class information for a class.
+ 这是上面的那些信息的集合体.
+ 
  */
 @interface YYClassInfo : NSObject
 @property (nonatomic, assign, readonly) Class cls; ///< class object

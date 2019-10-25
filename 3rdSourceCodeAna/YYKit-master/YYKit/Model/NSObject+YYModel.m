@@ -122,7 +122,7 @@ static force_inline NSNumber *YYNSNumberCreateFromID(__unsafe_unretained id valu
 /// Parse string to date.
 static force_inline NSDate *YYNSDateFromString(__unsafe_unretained NSString *string) {
     typedef NSDate* (^YYNSDateParseBlock)(NSString *string);
-    #define kParserNum 34
+#define kParserNum 34
     static YYNSDateParseBlock blocks[kParserNum + 1] = {0};
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -153,12 +153,12 @@ static force_inline NSDate *YYNSDateFromString(__unsafe_unretained NSString *str
             formatter2.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
             formatter2.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
             formatter2.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-
+            
             NSDateFormatter *formatter3 = [[NSDateFormatter alloc] init];
             formatter3.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
             formatter3.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
             formatter3.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS";
-
+            
             NSDateFormatter *formatter4 = [[NSDateFormatter alloc] init];
             formatter4.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
             formatter4.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
@@ -171,7 +171,7 @@ static force_inline NSDate *YYNSDateFromString(__unsafe_unretained NSString *str
                     return [formatter2 dateFromString:string];
                 }
             };
-
+            
             blocks[23] = ^(NSString *string) {
                 if ([string characterAtIndex:10] == 'T') {
                     return [formatter3 dateFromString:string];
@@ -193,11 +193,11 @@ static force_inline NSDate *YYNSDateFromString(__unsafe_unretained NSString *str
             NSDateFormatter *formatter = [NSDateFormatter new];
             formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
             formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
-
+            
             NSDateFormatter *formatter2 = [NSDateFormatter new];
             formatter2.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
             formatter2.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-
+            
             blocks[20] = ^(NSString *string) { return [formatter dateFromString:string]; };
             blocks[24] = ^(NSString *string) { return [formatter dateFromString:string]?: [formatter2 dateFromString:string]; };
             blocks[25] = ^(NSString *string) { return [formatter dateFromString:string]; };
@@ -213,11 +213,11 @@ static force_inline NSDate *YYNSDateFromString(__unsafe_unretained NSString *str
             NSDateFormatter *formatter = [NSDateFormatter new];
             formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
             formatter.dateFormat = @"EEE MMM dd HH:mm:ss Z yyyy";
-
+            
             NSDateFormatter *formatter2 = [NSDateFormatter new];
             formatter2.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
             formatter2.dateFormat = @"EEE MMM dd HH:mm:ss.SSS Z yyyy";
-
+            
             blocks[30] = ^(NSString *string) { return [formatter dateFromString:string]; };
             blocks[34] = ^(NSString *string) { return [formatter2 dateFromString:string]; };
         }
@@ -227,7 +227,7 @@ static force_inline NSDate *YYNSDateFromString(__unsafe_unretained NSString *str
     YYNSDateParseBlock parser = blocks[string.length];
     if (!parser) return nil;
     return parser(string);
-    #undef kParserNum
+#undef kParserNum
 }
 
 
@@ -441,7 +441,7 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
 /// A class info in object model.
 @interface _YYModelMeta : NSObject {
     @package
-    YYClassInfo *_classInfo;
+    YYClassInfo *_classInfo; // 原始信息, 这个信息里面是各种 OC 元信息的数据类.
     /// Key:mapped key and key path, Value:_YYModelPropertyMeta.
     NSDictionary *_mapper;
     /// Array<_YYModelPropertyMeta>, all property meta of this model.
@@ -1295,7 +1295,7 @@ static NSString *ModelDescription(NSObject *model) {
         case YYEncodingTypeNSString: case YYEncodingTypeNSMutableString: {
             return [NSString stringWithFormat:@"\"%@\"",model];
         }
-        
+            
         case YYEncodingTypeNSValue:
         case YYEncodingTypeNSData: case YYEncodingTypeNSMutableData: {
             NSString *tmp = model.description;
@@ -1354,7 +1354,7 @@ static NSString *ModelDescription(NSObject *model) {
             }
             return desc;
         }
-        
+            
         default: {
             NSMutableString *desc = [NSMutableString new];
             [desc appendFormat:@"<%@: %p>", model.class, model];
@@ -1363,8 +1363,8 @@ static NSString *ModelDescription(NSObject *model) {
             // sort property names
             NSArray *properties = [modelMeta->_allPropertyMetas
                                    sortedArrayUsingComparator:^NSComparisonResult(_YYModelPropertyMeta *p1, _YYModelPropertyMeta *p2) {
-                                       return [p1->_name compare:p2->_name];
-                                   }];
+                return [p1->_name compare:p2->_name];
+            }];
             
             [desc appendFormat:@" {\n"];
             for (NSUInteger i = 0, max = properties.count; i < max; i++) {
@@ -1419,7 +1419,7 @@ static NSString *ModelDescription(NSObject *model) {
 
 @implementation NSObject (YYModel)
 
-+ (NSDictionary *)_yy_dictionaryWithJSON:(id)json {
++ (NSDictionary *)yy_dictFromRawData:(id)json {
     if (!json || json == (id)kCFNull) return nil;
     NSDictionary *dic = nil;
     NSData *jsonData = nil;
@@ -1438,7 +1438,7 @@ static NSString *ModelDescription(NSObject *model) {
 }
 
 + (instancetype)modelWithJSON:(id)json {
-    NSDictionary *dic = [self _yy_dictionaryWithJSON:json];
+    NSDictionary *dic = [self yy_dictFromRawData:json];
     return [self modelWithDictionary:dic];
 }
 
@@ -1446,19 +1446,19 @@ static NSString *ModelDescription(NSObject *model) {
     if (!dictionary || dictionary == (id)kCFNull) return nil;
     if (![dictionary isKindOfClass:[NSDictionary class]]) return nil;
     
-    Class cls = [self class];
+    Class cls = [self class]; // 生成的类首先是自己的类,
     _YYModelMeta *modelMeta = [_YYModelMeta metaWithClass:cls];
     if (modelMeta->_hasCustomClassFromDictionary) {
-        cls = [cls modelCustomClassForDictionary:dictionary] ?: cls;
+        cls = [cls modelCustomClassForDictionary:dictionary] ?: cls; // 如果自己类中, 根据 dic 返回了其他的类对象, 那么就生成相应的类的对象. 因为 YYModel 中, 有着 meta 这个东西, 所以这个转化操作插入的没有什么额外操作.
     }
     
-    NSObject *one = [cls new];
-    if ([one modelSetWithDictionary:dictionary]) return one;
+    NSObject *result = [cls new];
+    if ([result modelSetWithDictionary:dictionary]) return result;
     return nil;
 }
 
 - (BOOL)modelSetWithJSON:(id)json {
-    NSDictionary *dic = [NSObject _yy_dictionaryWithJSON:json];
+    NSDictionary *dic = [NSObject yy_dictFromRawData:json];
     return [self modelSetWithDictionary:dic];
 }
 

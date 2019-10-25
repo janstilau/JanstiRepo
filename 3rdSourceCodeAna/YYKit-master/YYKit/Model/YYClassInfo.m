@@ -69,7 +69,7 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
         case '[': return YYEncodingTypeCArray | qualifier;
         case '(': return YYEncodingTypeUnion | qualifier;
         case '{': return YYEncodingTypeStruct | qualifier;
-        case '@': {
+        case '@': { //@"NSArray"
             if (len == 2 && *(type + 1) == '?')
                 return YYEncodingTypeBlock | qualifier;
             else
@@ -106,19 +106,19 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
     if (!method) return nil;
     self = [super init];
     _method = method;
-    _sel = method_getName(method);
-    _imp = method_getImplementation(method);
+    _sel = method_getName(method); //这里, SEL 叫做 getName, 所以在 OC 看来, SEL 就是函数名. 只不过数据结构没暴露出来.
+    _imp = method_getImplementation(method); // 获取函数指针.
     const char *name = sel_getName(_sel);
     if (name) {
-        _name = [NSString stringWithUTF8String:name];
+        _name = [NSString stringWithUTF8String:name]; // 获取 方法名
     }
     const char *typeEncoding = method_getTypeEncoding(method);
     if (typeEncoding) {
-        _typeEncoding = [NSString stringWithUTF8String:typeEncoding];
+        _typeEncoding = [NSString stringWithUTF8String:typeEncoding]; // 获取函数签名
     }
     char *returnType = method_copyReturnType(method);
     if (returnType) {
-        _returnTypeEncoding = [NSString stringWithUTF8String:returnType];
+        _returnTypeEncoding = [NSString stringWithUTF8String:returnType]; // 获取返回值类型.
         free(returnType);
     }
     unsigned int argumentCount = method_getNumberOfArguments(method);
@@ -130,7 +130,7 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
             [argumentTypes addObject:type ? type : @""];
             if (argumentType) free(argumentType);
         }
-        _argumentTypeEncodings = argumentTypes;
+        _argumentTypeEncodings = argumentTypes; // 获取各个参数的类型.
     }
     return self;
 }
@@ -145,12 +145,13 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
     _property = property;
     const char *name = property_getName(property);
     if (name) {
-        _name = [NSString stringWithUTF8String:name];
+        _name = [NSString stringWithUTF8String:name]; // 属性名.
     }
     
     YYEncodingType type = 0;
     unsigned int attrCount;
-    objc_property_attribute_t *attrs = property_copyAttributeList(property, &attrCount);
+    objc_property_attribute_t *attrs = property_copyAttributeList(property, &attrCount); // 获得属性的各种类型.
+    // 这里, 根据 property 的属性值, 将这个 info 类中的各个属性的值确定下来了.
     for (unsigned int i = 0; i < attrCount; i++) {
         switch (attrs[i].name[0]) {
             case 'T': { // Type encoding
