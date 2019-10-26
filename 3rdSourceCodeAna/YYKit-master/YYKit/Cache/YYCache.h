@@ -1,14 +1,3 @@
-//
-//  YYCache.h
-//  YYKit <https://github.com/ibireme/YYKit>
-//
-//  Created by ibireme on 15/2/13.
-//  Copyright (c) 2015 ibireme.
-//
-//  This source code is licensed under the MIT-style license found in the
-//  LICENSE file in the root directory of this source tree.
-//
-
 #import <Foundation/Foundation.h>
 
 @class YYMemoryCache, YYDiskCache;
@@ -21,6 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
  It use `YYMemoryCache` to store objects in a small and fast memory cache,
  and use `YYDiskCache` to persisting objects to a large and slow disk cache.
  See `YYMemoryCache` and `YYDiskCache` for more information.
+ 将业务分发到两个类, 这个类是总组织者.
  */
 @interface YYCache : NSObject
 

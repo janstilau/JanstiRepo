@@ -64,7 +64,7 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
 
 
 @implementation YYDiskCache {
-    YYKVStorage *_kv;
+    YYKVStorage *_kv; // 真正的存储对象.
     dispatch_semaphore_t _lock;
     dispatch_queue_t _queue;
 }

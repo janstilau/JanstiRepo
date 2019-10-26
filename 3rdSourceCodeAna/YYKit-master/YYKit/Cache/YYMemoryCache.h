@@ -83,7 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
  @discussion The cache holds an internal timer to check whether the cache reaches 
  its limits, and if the limit is reached, it begins to evict objects.
  */
-@property NSTimeInterval autoTrimInterval;
+@property NSTimeInterval autoTrimInterval; // trim 修剪, 整修.
 
 /**
  If `YES`, the cache will remove all objects when the app receives a memory warning.
