@@ -23,6 +23,7 @@
     return [[YYWeakProxy alloc] initWithTarget:target];
 }
 
+// 将所有的操作, 都转发到这个 target 上面.
 - (id)forwardingTargetForSelector:(SEL)selector {
     return _target;
 }
@@ -36,6 +37,8 @@
     return [NSObject instanceMethodSignatureForSelector:@selector(init)];
 }
 
+
+// 伪装自己, 是一个 target 对象.
 - (BOOL)respondsToSelector:(SEL)aSelector {
     return [_target respondsToSelector:aSelector];
 }

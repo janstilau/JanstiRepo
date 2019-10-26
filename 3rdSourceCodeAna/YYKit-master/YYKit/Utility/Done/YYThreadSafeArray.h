@@ -24,6 +24,13 @@
  use enumerate using block instead. When enumerate or sort with block/callback,
  do *NOT* send message to the array inside the block/callback.
  */
+
+/**
+ * 虽然是NSMutableArray的子类, 但是这里继承的是接口, 而不是数据.
+ * 在内部有一个 NSMutableArray 的成员, 所有的 NSMutableArray 的接口, 都是代理到了这个成员操作里面, 然后在周围增加了线程的限制代码.
+ * 该类实现了 NSMutableArray 的所有暴露出来的接口, 包括 YYKit 的自定义的一些方法. 但是, 如果是其他分类定义一些方法, 在这个类使用, 会产生问题. 因为, 那些方法会直接操作 NSArray 内部的数据, 而不是处理里面的数组成员.
+ */
+
 @interface YYThreadSafeArray : NSMutableArray
 
 @end

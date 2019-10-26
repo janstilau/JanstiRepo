@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  YYTransaction let you perform a selector once before current runloop sleep.
  */
+
+
+// 可以通过这个类, 猜想 UI 刷新, 以及自动释放池的生成销毁的实现.
 @interface YYTransaction : NSObject
 
 /**

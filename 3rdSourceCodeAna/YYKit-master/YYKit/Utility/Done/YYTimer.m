@@ -61,6 +61,8 @@ dispatch_semaphore_signal(_lock);
 }
 
 - (void)invalidate {
+    
+    // 加锁
     dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
     if (_valid) {
         dispatch_source_cancel(_source);
@@ -78,13 +80,13 @@ dispatch_semaphore_signal(_lock);
     dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
     id target = _target;
     if (!target) {
-        dispatch_semaphore_signal(_lock);
+        dispatch_semaphore_signal(_lock); // 在对于类内部的状态的访问结束之后, 立马进行解锁.
         [self invalidate];
     } else {
-        dispatch_semaphore_signal(_lock);
+        dispatch_semaphore_signal(_lock); // 在对于类内部的状态的访问结束之后, 立马进行解锁.
         [target performSelector:_selector withObject:self];
-        if (!_repeats) {
-            [self invalidate];
+        if (!_repeats) { // _repeats 是一个不可变成员, 所以这, 包括 _selector 都没有进行加锁.
+            [self invalidate]; //  invalidate 的过程本身就进行加锁操作.
         }
     }
 #pragma clang diagnostic pop

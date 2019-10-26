@@ -12,6 +12,8 @@
 #import "YYTransaction.h"
 
 
+// RunLoop 的监听者切口, 在这个切口中, 创建注册回调的方法.
+
 @interface YYTransaction()
 @property (nonatomic, strong) id target;
 @property (nonatomic, assign) SEL selector;
@@ -72,10 +74,10 @@ static void YYTransactionSetup() {
 }
 
 - (BOOL)isEqual:(id)object {
-    if (self == object) return YES;
-    if (![object isMemberOfClass:self.class]) return NO;
+    if (self == object) return YES; // 判断自己
+    if (![object isMemberOfClass:self.class]) return NO; // 判断类型
     YYTransaction *other = object;
-    return other.selector == _selector && other.target == _target;
+    return other.selector == _selector && other.target == _target; // 判断各个基本的数据.
 }
 
 @end

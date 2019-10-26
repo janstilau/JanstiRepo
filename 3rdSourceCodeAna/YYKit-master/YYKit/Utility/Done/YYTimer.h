@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
  * It always fire on main thread.
  
  */
+
+// 一个对于 GCD Timer 的封装.
 @interface YYTimer : NSObject
 
 + (YYTimer *)timerWithTimeInterval:(NSTimeInterval)interval

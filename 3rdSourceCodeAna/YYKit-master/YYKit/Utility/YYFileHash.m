@@ -31,7 +31,7 @@
     return [self hashForFile:filePath types:types usingBlock:nil];
 }
 
-+ (YYFileHash *)hashForFile:(NSString *)filePath types:(YYFileHashType)types usingBlock:(void(^)(UInt64 totalSize, UInt64 processedSize, BOOL *stop))block {
++ (YYFileHash *)hashForFile:(NSString *)filePath types:(YYFileHashType)types usingBlock:(void(^)(UInt64 totalSize, UInt64 processedSize, BOOL *stop))usingBlock {
     YYFileHash *hash = nil;
     
     BOOL stop = NO, done = NO;
@@ -117,7 +117,7 @@ digist_length[ctx_index] = Length;
     }
     if (hash_type_this == 0) goto cleanup;
     
-    buf = malloc(block ? BUF_SIZE : BUF_SIZE_NO_PROGRESS);
+    buf = malloc(usingBlock ? BUF_SIZE : BUF_SIZE_NO_PROGRESS);
     if (!buf) goto cleanup;
     
     if (filePath.length == 0) goto cleanup;
@@ -137,7 +137,7 @@ digist_length[ctx_index] = Length;
         
     // read stream and calculate checksum in a single loop
     // 'dispatch_io' has better performance, I will rewrite it later...
-    if (block) {
+    if (usingBlock) {
         while (!done && !stop) {
             size_t size = fread(buf, 1, BUF_SIZE, fd);
             if (size < BUF_SIZE) {
@@ -151,7 +151,7 @@ digist_length[ctx_index] = Length;
             if (!done) {
                 loop++;
                 if ((loop % BLOCK_LOOP_FACTOR) == 0) {
-                    block(file_size, readed, &stop);
+                    usingBlock(file_size, readed, &stop);
                 }
             }
         }

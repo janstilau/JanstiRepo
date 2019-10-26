@@ -575,6 +575,27 @@
 			path = YYLayout;
 			sourceTree = "<group>";
 		};
+		06F6F79B23647C3600C2DBDB /* Done */ = {
+			isa = PBXGroup;
+			children = (
+				D9B260451BEE79370038C00A /* YYThreadSafeArray.h */,
+				D9B260461BEE79370038C00A /* YYThreadSafeArray.m */,
+				D9B260471BEE79370038C00A /* YYThreadSafeDictionary.h */,
+				D9B260481BEE79370038C00A /* YYThreadSafeDictionary.m */,
+				D9B2604D1BEE79370038C00A /* YYWeakProxy.h */,
+				D9B2604E1BEE79370038C00A /* YYWeakProxy.m */,
+				D9B2603D1BEE79370038C00A /* YYGestureRecognizer.h */,
+				D9B2603E1BEE79370038C00A /* YYGestureRecognizer.m */,
+				D9B260491BEE79370038C00A /* YYTimer.h */,
+				D9B2604A1BEE79370038C00A /* YYTimer.m */,
+				D9B2604B1BEE79370038C00A /* YYTransaction.h */,
+				D9B2604C1BEE79370038C00A /* YYTransaction.m */,
+				D9B260431BEE79370038C00A /* YYSentinel.h */,
+				D9B260441BEE79370038C00A /* YYSentinel.m */,
+			);
+			path = Done;
+			sourceTree = "<group>";
+		};
 		D9067E041B98A39200F346EB /* Feed List */ = {
 			isa = PBXGroup;
 			children = (
@@ -1130,30 +1151,17 @@
 		D9B260361BEE79370038C00A /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				06F6F79B23647C3600C2DBDB /* Done */,
 				D9B260411BEE79370038C00A /* YYReachability.h */,
 				D9B260421BEE79370038C00A /* YYReachability.m */,
-				D9B2603D1BEE79370038C00A /* YYGestureRecognizer.h */,
-				D9B2603E1BEE79370038C00A /* YYGestureRecognizer.m */,
 				D9B2603B1BEE79370038C00A /* YYFileHash.h */,
 				D9B2603C1BEE79370038C00A /* YYFileHash.m */,
 				D9B2603F1BEE79370038C00A /* YYKeychain.h */,
 				D9B260401BEE79370038C00A /* YYKeychain.m */,
-				D9B2604D1BEE79370038C00A /* YYWeakProxy.h */,
-				D9B2604E1BEE79370038C00A /* YYWeakProxy.m */,
-				D9B260491BEE79370038C00A /* YYTimer.h */,
-				D9B2604A1BEE79370038C00A /* YYTimer.m */,
-				D9B2604B1BEE79370038C00A /* YYTransaction.h */,
-				D9B2604C1BEE79370038C00A /* YYTransaction.m */,
 				D9B260371BEE79370038C00A /* YYAsyncLayer.h */,
 				D9B260381BEE79370038C00A /* YYAsyncLayer.m */,
-				D9B260431BEE79370038C00A /* YYSentinel.h */,
-				D9B260441BEE79370038C00A /* YYSentinel.m */,
 				D9B260391BEE79370038C00A /* YYDispatchQueuePool.h */,
 				D9B2603A1BEE79370038C00A /* YYDispatchQueuePool.m */,
-				D9B260451BEE79370038C00A /* YYThreadSafeArray.h */,
-				D9B260461BEE79370038C00A /* YYThreadSafeArray.m */,
-				D9B260471BEE79370038C00A /* YYThreadSafeDictionary.h */,
-				D9B260481BEE79370038C00A /* YYThreadSafeDictionary.m */,
 			);
 			path = Utility;
 			sourceTree = "<group>";

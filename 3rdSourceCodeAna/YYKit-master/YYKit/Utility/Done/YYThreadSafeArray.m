@@ -13,6 +13,7 @@
 #import "NSArray+YYAdd.h"
 
 
+// 用宏, 可以大大的减少代码量.
 #define INIT(...) self = super.init; \
 if (!self) return nil; \
 __VA_ARGS__; \
@@ -58,6 +59,8 @@ dispatch_semaphore_signal(_lock);
 }
 
 #pragma mark - method
+
+// get 方法, 必然会有一个 holder 的概念.
 
 - (NSUInteger)count {
     LOCK(NSUInteger count = _arr.count); return count;
