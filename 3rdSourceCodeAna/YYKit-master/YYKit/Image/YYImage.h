@@ -21,6 +21,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/*
+ UIImage objects are immutable, so you always create them from existing image data.
+ UIImage 是对于 ImageData 的一层包装.
+ imageNamed 这个方法, 是为了从 bundle 里面读取数据, 所以, 而 bundle 里面的数据是打包在程序里面的. 所以, 系统认为这是一个常用的数据, 会进行缓存的处理.
+ imageWithContentsOfFile 是从文件系统里面读取数据. 这些文件, 可能是从网络下载下来的. 所以不会进行缓存, 每次加载, 都是文件读取
+ 
+ 不可变对象, 可以多线程无危险的访问.
+ Because image objects are immutable, you cannot change their properties after creation.
+ Most image properties are set automatically using metadata in the accompanying image file or image data.
+ The immutable nature of image objects also means that they are safe to create and use from any thread.
+ 
+ */
+ 
+
 /**
  A YYImage object is a high-level way to display animated image data.
  

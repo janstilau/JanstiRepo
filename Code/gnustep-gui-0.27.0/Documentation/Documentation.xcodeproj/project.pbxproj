@@ -1,0 +1,179 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		067A4D1B2366D9780000AD96 /* GuiAdditions.gsdoc */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = GuiAdditions.gsdoc; sourceTree = "<group>"; };
+		067A4D1C2366D9780000AD96 /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
+		067A4D1D2366D9780000AD96 /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = .DS_Store; sourceTree = "<group>"; };
+		067A4D1E2366D9780000AD96 /* gcloseall.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = gcloseall.1; sourceTree = "<group>"; };
+		067A4D1F2366D9780000AD96 /* General */ = {isa = PBXFileReference; lastKnownFileType = folder; path = General; sourceTree = "<group>"; };
+		067A4D202366D9780000AD96 /* Gui.gsdoc */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Gui.gsdoc; sourceTree = "<group>"; };
+		067A4D212366D9780000AD96 /* todo.texi */ = {isa = PBXFileReference; lastKnownFileType = text; path = todo.texi; sourceTree = "<group>"; };
+		067A4D222366D9780000AD96 /* GNUmakefile.postamble */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile.postamble; sourceTree = "<group>"; };
+		067A4D232366D9780000AD96 /* GuiUser */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GuiUser; sourceTree = "<group>"; };
+		067A4D242366D9780000AD96 /* set_show_service.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = set_show_service.1; sourceTree = "<group>"; };
+		067A4D252366D9780000AD96 /* manual */ = {isa = PBXFileReference; lastKnownFileType = folder; path = manual; sourceTree = "<group>"; };
+		067A4D262366D9780000AD96 /* ReleaseNotes.gsdoc */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ReleaseNotes.gsdoc; sourceTree = "<group>"; };
+		067A4D272366D9780000AD96 /* announce.texi */ = {isa = PBXFileReference; lastKnownFileType = text; path = announce.texi; sourceTree = "<group>"; };
+		067A4D282366D9780000AD96 /* make_services.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = make_services.1; sourceTree = "<group>"; };
+		067A4D292366D9780000AD96 /* say.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = say.1; sourceTree = "<group>"; };
+		067A4D2A2366D9780000AD96 /* install.texi */ = {isa = PBXFileReference; lastKnownFileType = text; path = install.texi; sourceTree = "<group>"; };
+		067A4D2B2366D9780000AD96 /* GSSpeechServer.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = GSSpeechServer.1; sourceTree = "<group>"; };
+		067A4D2C2366D9780000AD96 /* news.texi */ = {isa = PBXFileReference; lastKnownFileType = text; path = news.texi; sourceTree = "<group>"; };
+		067A4D2D2366D9780000AD96 /* readme.texi */ = {isa = PBXFileReference; lastKnownFileType = text; path = readme.texi; sourceTree = "<group>"; };
+		067A4D2E2366D9780000AD96 /* .cvsignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
+		067A4D2F2366D9780000AD96 /* gclose.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = gclose.1; sourceTree = "<group>"; };
+		067A4D302366D9780000AD96 /* gopen.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = gopen.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		067A4D152366D9780000AD96 = {
+			isa = PBXGroup;
+			children = (
+				067A4D1B2366D9780000AD96 /* GuiAdditions.gsdoc */,
+				067A4D1C2366D9780000AD96 /* GNUmakefile */,
+				067A4D1D2366D9780000AD96 /* .DS_Store */,
+				067A4D1E2366D9780000AD96 /* gcloseall.1 */,
+				067A4D1F2366D9780000AD96 /* General */,
+				067A4D202366D9780000AD96 /* Gui.gsdoc */,
+				067A4D212366D9780000AD96 /* todo.texi */,
+				067A4D222366D9780000AD96 /* GNUmakefile.postamble */,
+				067A4D232366D9780000AD96 /* GuiUser */,
+				067A4D242366D9780000AD96 /* set_show_service.1 */,
+				067A4D252366D9780000AD96 /* manual */,
+				067A4D262366D9780000AD96 /* ReleaseNotes.gsdoc */,
+				067A4D272366D9780000AD96 /* announce.texi */,
+				067A4D282366D9780000AD96 /* make_services.1 */,
+				067A4D292366D9780000AD96 /* say.1 */,
+				067A4D2A2366D9780000AD96 /* install.texi */,
+				067A4D2B2366D9780000AD96 /* GSSpeechServer.1 */,
+				067A4D2C2366D9780000AD96 /* news.texi */,
+				067A4D2D2366D9780000AD96 /* readme.texi */,
+				067A4D2E2366D9780000AD96 /* .cvsignore */,
+				067A4D2F2366D9780000AD96 /* gclose.1 */,
+				067A4D302366D9780000AD96 /* gopen.1 */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		067A4D1A2366D9780000AD96 /* Documentation */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 067A4D312366D9780000AD96 /* Build configuration list for PBXLegacyTarget "Documentation" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/justinlau/JanstiRepo/Code/gnustep-gui-0.27.0/Documentation";
+			dependencies = (
+			);
+			name = Documentation;
+			passBuildSettingsInEnvironment = 1;
+			productName = Documentation;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		067A4D162366D9780000AD96 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 067A4D192366D9780000AD96 /* Build configuration list for PBXProject "Documentation" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 067A4D152366D9780000AD96;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				067A4D1A2366D9780000AD96 /* Documentation */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		067A4D172366D9780000AD96 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		067A4D182366D9780000AD96 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		067A4D322366D9780000AD96 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Documentation;
+			};
+			name = Debug;
+		};
+		067A4D332366D9780000AD96 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Documentation;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		067A4D192366D9780000AD96 /* Build configuration list for PBXProject "Documentation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				067A4D172366D9780000AD96 /* Debug */,
+				067A4D182366D9780000AD96 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		067A4D312366D9780000AD96 /* Build configuration list for PBXLegacyTarget "Documentation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				067A4D322366D9780000AD96 /* Debug */,
+				067A4D332366D9780000AD96 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 067A4D162366D9780000AD96 /* Project object */;
+}
