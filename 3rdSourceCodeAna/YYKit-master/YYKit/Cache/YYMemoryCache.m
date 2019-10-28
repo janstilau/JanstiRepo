@@ -23,7 +23,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
  A node in linked map.
  Typically, you should not use this class directly.
  
- 一个简单的数据类, 里面存储了 Object  的相关的信息.  这个 node, 可以组成一个链表.
+ 每个插入的对象组成的数据类, 这个数据类中 prev, next 作为链表的组成. 并且, 维护这个节点在 哈希表 中的位置.
  */
 @interface _YYLinkedMapNode : NSObject {
     @package
@@ -45,19 +45,22 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
  
  Typically, you should not use this class directly.
  
- 这里, 用的还是最经典的链表加哈希表的设计. 哈希表做存值取值的功能, 链表进行顺序的保证.
+ 链表用于维护顺序, 哈希表用于 O1 的时间复杂度的实现.
+ 插入删除操作是建立在链表的基础上, 在维护链表的顺序的同时, 进行哈希表数据结构的维护.
+ 查值操作是建立在哈希表的基础上,  首先根据哈希表找到节点, 然后根据节点的 pre, next 指针操作链表.
  */
 @interface _YYLinkedMap : NSObject {
     @package
-    CFMutableDictionaryRef _dic; // 为什么这里用这么个东西, 主要是为了防止 NSMutableDict自动 copy.
-    NSUInteger _totalCost;
-    NSUInteger _totalCount;
+    CFMutableDictionaryRef _dic; // 哈希表, 用于维护 O1 的时间复杂度
+    NSUInteger _totalCost; // 类内部维护的值, 在相关方法更新数据.
+    NSUInteger _totalCount; // 类内部维护的值, 在相关方法更新数据.
     _YYLinkedMapNode *_head; // MRU, do not change it directly
     _YYLinkedMapNode *_tail; // LRU, do not change it directly
     BOOL _releaseOnMainThread;
     BOOL _releaseAsynchronously;
 }
 
+// _YYLinkedMap 面向的都是_YYLinkedMapNode, 在该节点里面, 已经做好了对于 key, value, cost, time 等信息的封装工作.
 /// Insert a node at head and update the total cost.
 /// Node and node.key should not be nil.
 - (void)insertNodeAtHead:(_YYLinkedMapNode *)node;
@@ -79,11 +82,12 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 @end
 
 
-// 这个类, 基本就是链表哈希表的使用. 这个数据结构, 基本上是进行链表的操作. 在操作链表的同时, 进行哈希表的更新. 不要单独对于哈希表进行操作, 这样就违反了这个类的设计初衷了.
+// 这个类, 基本就是链表哈希表的使用. 在这种数据结构中, 不能直接进行哈希表结构的调整, 而是在链表的操作基础上更新. 这样才符合这个类的设计意图.
 @implementation _YYLinkedMap
 
 - (instancetype)init {
     self = [super init];
+    // 之所以用这样的一个类, 而不是 NSMutableDict, 是为了key在进行存储的时候, 不进行 copy 操作. 在作者看来, Cache 的操作引入 copy, 耗费性能.
     _dic = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     _releaseOnMainThread = NO;
     _releaseAsynchronously = YES;
@@ -94,7 +98,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     CFRelease(_dic);
 }
 
-//对于 LinkMap, 这里表示的很清楚, 操作的方法只有对于链表的操作. 对于哈希表的操作, 要包含在链表里面.
+// 函数名已经很明显的显示了自己的意义. 在这个函数里面, 没有进行了安全性的校验. 或者可以这样说, 安全性的校验, 是在这个函数的调用之前, 应该由调用者进行安全性的校验.
 - (void)insertNodeAtHead:(_YYLinkedMapNode *)node {
     // 哈希表操作
     CFDictionarySetValue(_dic, (__bridge const void *)(node->_key), (__bridge const void *)(node));
@@ -115,10 +119,10 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 - (void)bringNodeToHead:(_YYLinkedMapNode *)node {
     if (_head == node) return; // 头节点, 无需操作
     
-    if (_tail == node) { //其他节点, 更新前序节点的尾节点.
+    if (_tail == node) { //尾节点, 更新尾节点的数据
         _tail = node->_prev;
         _tail->_next = nil;
-    } else {
+    } else { //其他节点, 更新数据
         node->_next->_prev = node->_prev;
         node->_prev->_next = node->_next;
     }
@@ -128,6 +132,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     _head = node;
 }
 
+// 方法里面没有进行安全验证, 安全责任交给调用者.
 - (void)removeNode:(_YYLinkedMapNode *)node {
     // 哈希表操作
     CFDictionaryRemoveValue(_dic, (__bridge const void *)(node->_key));
@@ -143,6 +148,8 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 
 // 在进行 trim 的时候调用这个方法.
 // 可以使用上面的 removeNode 方法, 但是这里直接写节点的操作要高效的多.
+// 根据 LRU 的方法, 在进行删除操作的时候, 是从尾部开始.
+// 这里也是为什么要进行存储 tail 了, 有了 tail, 直接根据 tail 指针进行操作, 不然就只能从头遍历.
 - (_YYLinkedMapNode *)removeTailNode {
     if (!_tail) return nil;
     _YYLinkedMapNode *tail = _tail;
@@ -164,23 +171,22 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     _totalCount = 0;
     _head = nil;
     _tail = nil;
-    if (CFDictionaryGetCount(_dic) > 0) {
-        // 因为下面会有多线程操作, 所以需要 holder.
-        CFMutableDictionaryRef holder = _dic;
-        _dic = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    if (CFDictionaryGetCount(_dic) == 0) { return; }
         
-        if (_releaseAsynchronously) {
-            dispatch_queue_t queue = _releaseOnMainThread ? dispatch_get_main_queue() : YYMemoryCacheGetReleaseQueue();
-            dispatch_async(queue, ^{
-                CFRelease(holder); // hold and release in specified queue
-            });
-        } else if (_releaseOnMainThread && !pthread_main_np()) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                CFRelease(holder); // hold and release in specified queue
-            });
-        } else {
-            CFRelease(holder);
-        }
+    // 对于这种多线程操作, 通过 holder 保存当前值, 是很通用的做法.
+    CFMutableDictionaryRef holder = _dic;
+    _dic = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    if (_releaseAsynchronously) { // 如果是异步就 dispatch_async,
+        dispatch_queue_t queue = _releaseOnMainThread ? dispatch_get_main_queue() : YYMemoryCacheGetReleaseQueue();
+        dispatch_async(queue, ^{
+            CFRelease(holder); // hold and release in specified queue
+        });
+    } else if (_releaseOnMainThread && !pthread_main_np()) { // 如果是同步, 也要受 _releaseOnMainThread 的影响, 所以在不是主线程的时候, 也要 dispatch_async
+        dispatch_async(dispatch_get_main_queue(), ^{
+            CFRelease(holder); // hold and release in specified queue
+        });
+    } else { // 同步释放.
+        CFRelease(holder);
     }
 }
 
@@ -191,7 +197,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 @implementation YYMemoryCache {
     pthread_mutex_t _lock;
     _YYLinkedMap *_lru; // 真正的存储对象.
-    dispatch_queue_t _timeQueue;
+    dispatch_queue_t _trimQueue;
 }
 
 // 每个五秒中, 做一次 trim 的操作. 这里, 通过递归, 完成了一个简单的定时器. 而且无法取消.
@@ -201,12 +207,13 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
         __strong typeof(_self) self = _self;
         if (!self) return;
         [self _trimInBackground];
-        [self _trimRecursively];
+        [self _trimRecursively]; // 自己调用自己, 完成定时操作. 因为是 DISPATCH_QUEUE_SERIAL queue, 所以是顺序执行.
     });
 }
 
 - (void)_trimInBackground { // 仅仅做一个任务的提交工作.
-    dispatch_async(_timeQueue, ^{
+    dispatch_async(_trimQueue, ^{
+        // 这个调用有先后顺序, 有可能上面的操作让下面的操作条件完成了, 所以在每个函数开始都要做判断.
         [self _trimToCost:self->_costLimit];
         [self _trimToCount:self->_countLimit];
         [self _trimToAge:self->_ageLimit];
@@ -226,10 +233,11 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     if (finish) return; // 剪枝处理.
     
     NSMutableArray *holder = [NSMutableArray new];
+    // 对于, 无法预测步骤次数的循环, 用 while. 可以判断次数的, 用 for.
     while (!finish) { // 通过这种方式, 逐步的删除元素.
-        if (pthread_mutex_trylock(&_lock) == 0) { // tryLock, 为了不影响其他业务, 比如, set, contains 的凑走.
+        if (pthread_mutex_trylock(&_lock) == 0) { // tryLock, 为了不影响其他业务, 这样在其他的业务中, lock 的优先级会高.
             if (_lru->_totalCost > costLimit) {
-                _YYLinkedMapNode *node = [_lru removeTailNode];
+                _YYLinkedMapNode *node = [_lru removeTailNode]; // 现在还没有进行真正的释放操作, 仅仅是收集操作.
                 if (node) [holder addObject:node];
             } else {
                 finish = YES;
@@ -239,7 +247,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
             usleep(10 * 1000); //10 ms
         }
     }
-    if (holder.count) { // 之所以有 holder 的概念, 是为了 _releaseOnMainThread 的设定. 要在特定的线程, 进行内容的释放操作.
+    if (holder.count) { // 上面的操作, 不能真正释放内存, holder 的意义就是在于, 保住命. 这里, 作者是通过 block 进行的保命操作.
         dispatch_queue_t queue = _lru->_releaseOnMainThread ? dispatch_get_main_queue() : YYMemoryCacheGetReleaseQueue();
         dispatch_async(queue, ^{
             [holder count]; // release in queue
@@ -343,7 +351,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     self = super.init;
     pthread_mutex_init(&_lock, NULL);
     _lru = [_YYLinkedMap new];
-    _timeQueue = dispatch_queue_create("com.ibireme.cache.memory", DISPATCH_QUEUE_SERIAL);
+    _trimQueue = dispatch_queue_create("com.ibireme.cache.memory", DISPATCH_QUEUE_SERIAL);
     
     _countLimit = NSUIntegerMax;
     _costLimit = NSUIntegerMax;
@@ -418,7 +426,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     return contains;
 }
 
-// 取值操作, 加锁, 并且更新找到 node 的位置.
+// 取值操作, 加锁, 取值代表着对于这个数据有兴趣, 提高它的优先级.
 - (id)objectForKey:(id)key {
     if (!key) return nil;
     pthread_mutex_lock(&_lock);
@@ -463,11 +471,11 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
         [_lru insertNodeAtHead:node];
     }
     if (_lru->_totalCost > _costLimit) { // 如果超出界限了, 就进行缩减操作. 可以看到, 这是一个异步操作.
-        dispatch_async(_timeQueue, ^{
+        dispatch_async(_trimQueue, ^{
             [self trimToCost:_costLimit];
         });
     }
-    if (_lru->_totalCount > _countLimit) { // 如果个数超出了. 那么久减去最后一个 node.
+    if (_lru->_totalCount > _countLimit) { // 如果个数超出了. 那么久就减去最后一个 node.
         _YYLinkedMapNode *node = [_lru removeTailNode];
         if (_lru->_releaseAsynchronously) {
             dispatch_queue_t queue = _lru->_releaseOnMainThread ? dispatch_get_main_queue() : YYMemoryCacheGetReleaseQueue();
