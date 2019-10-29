@@ -5,7 +5,7 @@
 #import "UIControlAction.h"
 
 @implementation UIControl {
-    NSMutableArray *_registeredActions;
+    NSMutableArray *_registeredActions; // 最核心的数据, UIControl 和 UIView 的不同的根源.
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -19,7 +19,7 @@
     return self;
 }
 
-
+// 和自己的想法不同, 这里是通过组合出一个数据类, 然后将所有的操作, 保存在数据类里面. 合适的数据类, 可以大大的减少逻辑的复杂性.
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents
 {
     UIControlAction *controlAction = [[UIControlAction alloc] init];
@@ -75,6 +75,7 @@
     return allEvents;
 }
 
+//
 - (void)_sendActionsForControlEvents:(UIControlEvents)controlEvents withEvent:(UIEvent *)event
 {
     for (UIControlAction *controlAction in _registeredActions) {
@@ -84,11 +85,7 @@
     }
 }
 
-- (void)sendActionsForControlEvents:(UIControlEvents)controlEvents
-{
-    [self _sendActionsForControlEvents:controlEvents withEvent:nil];
-}
-
+// 真正的方法实现. 当触发的时候, 会汇集到这个方法, 然后调用相应的回调.
 - (void)sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event
 {
     [[UIApplication sharedApplication] sendAction:action to:target from:self forEvent:event];

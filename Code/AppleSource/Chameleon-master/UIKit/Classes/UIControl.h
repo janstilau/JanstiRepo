@@ -57,7 +57,6 @@ typedef NS_ENUM(NSInteger, UIControlContentVerticalAlignment) {
 - (NSSet *)allTargets;
 - (UIControlEvents)allControlEvents;
 
-- (void)sendActionsForControlEvents:(UIControlEvents)controlEvents;
 - (void)sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event;
 
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event;
