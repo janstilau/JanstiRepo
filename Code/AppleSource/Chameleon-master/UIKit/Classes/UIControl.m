@@ -109,6 +109,7 @@
 {
 }
 
+// 在 UIControl 里面, 没有对于 super 的调用操作. 所以, 这也是为什么 UIButton 没有了向上传递事件的原因.
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [touches anyObject];

@@ -618,9 +618,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		06055A252368170D00EE2744 /* Done */ = {
+		06055A26236825C200EE2744 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				1489853B12EE2CFE003D4751 /* UIResponder.h */,
+				1489853C12EE2CFE003D4751 /* UIResponder.m */,
 			);
 			path = Done;
 			sourceTree = "<group>";
@@ -697,7 +699,7 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				06055A252368170D00EE2744 /* Done */,
+				06055A26236825C200EE2744 /* Done */,
 				148984E412EE2CFE003D4751 /* AppKitIntegration.h */,
 				148984E512EE2CFE003D4751 /* NSIndexPath+UITableView.h */,
 				1489850512EE2CFE003D4751 /* UIControl.h */,
@@ -794,8 +796,6 @@
 				1489853812EE2CFE003D4751 /* UIPopoverController.m */,
 				1489853912EE2CFE003D4751 /* UIProgressView.h */,
 				1489853A12EE2CFE003D4751 /* UIProgressView.m */,
-				1489853B12EE2CFE003D4751 /* UIResponder.h */,
-				1489853C12EE2CFE003D4751 /* UIResponder.m */,
 				1489853D12EE2CFE003D4751 /* UIResponderAppKitIntegration.h */,
 				1489853E12EE2CFE003D4751 /* UIResponderAppKitIntegration.m */,
 				1489860012EE2D9F003D4751 /* UIRotationGestureRecognizer.h */,

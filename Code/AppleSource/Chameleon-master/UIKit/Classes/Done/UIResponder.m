@@ -4,11 +4,13 @@
 
 @implementation UIResponder
 
+// 默认是返回 nil, 各个子类要根据自己的实现, 返回不同的数据. UIView 返回自己的 superView 或者 UIViewController.
 - (UIResponder *)nextResponder
 {
     return nil;
 }
 
+// _firstResponder 这个概念是和 Window 联系在一起的. 所以, 要首先找到相应的 window 对象.
 - (UIWindow *)_responderWindow
 {
     if ([self isKindOfClass:[UIView class]]) {
@@ -18,11 +20,13 @@
     }
 }
 
+// 判断 window 对象保存的是不是自己.
 - (BOOL)isFirstResponder
 {
     return ([[self _responderWindow] _firstResponder] == self);
 }
 
+// 默认返回 NO, 这个会在下面的 becomeFirstResponder 中调用.
 - (BOOL)canBecomeFirstResponder
 {
     return NO;
@@ -32,45 +36,36 @@
 {
     if ([self isFirstResponder]) {
         return YES;
-    } else {
-        UIWindow *window = [self _responderWindow];
-        UIResponder *firstResponder = [window _firstResponder];
-        
-        if (window && [self canBecomeFirstResponder]) {
-            BOOL didResign = NO;
-            
-            if (firstResponder && [firstResponder canResignFirstResponder]) {
-                didResign = [firstResponder resignFirstResponder];
-            } else {
-                didResign = YES;
-            }
-            
-            if (didResign) {
-                [window _setFirstResponder:self];
-                
-                if ([self conformsToProtocol:@protocol(UIKeyInput)]) {
-                    // I have no idea how iOS manages this stuff, but here I'm modeling UIMenuController since it also uses the first
-                    // responder to do its work. My thinking is that if there were an on-screen keyboard, something here could detect
-                    // if self conforms to UITextInputTraits and UIKeyInput and/or UITextInput and then build/fetch the correct keyboard
-                    // and assign that to the inputView property which would seperate the keyboard and inputs themselves from the stuff
-                    // that actually displays them on screen. Of course on the Mac we don't need an on-screen keyboard, but there's
-                    // possibly an argument to be made for supporting custom inputViews anyway.
-                    UIInputController *controller = [UIInputController sharedInputController];
-                    controller.inputAccessoryView = self.inputAccessoryView;
-                    controller.inputView = self.inputView;
-                    controller.keyInputResponder = (UIResponder<UIKeyInput> *)self;
-                    [controller setInputVisible:YES animated:YES];
-                    
-                    // key input won't very well work without this
-                    [window makeKeyWindow];
-                }
-                
-                return YES;
-            }
+    }
+    
+    UIWindow *window = [self _responderWindow];
+    UIResponder *firstResponder = [window _firstResponder];
+    if (window && [self canBecomeFirstResponder]) { // 只有当前in the active view hierarchy, 并且可以成为第一响应者.
+        BOOL didResign = NO;
+        // 有了 canResignFirstResponder 的判断, resignFirstResponder 里面就应该可以正常调用, 否则就应该算是逻辑错误了.
+        if (firstResponder && [firstResponder canResignFirstResponder]) {
+            didResign = [firstResponder resignFirstResponder];
+        } else {
+            didResign = YES;
         }
         
-        return NO;
+        if (didResign) { // 只有在当前响应者放弃了响应者权利之后, 才能进行下面的逻辑.
+            [window _setFirstResponder:self]; // 一个简单的赋值操作.
+            
+            if ([self conformsToProtocol:@protocol(UIKeyInput)]) {
+                // 这里应该是为了可以让键盘弹出的操作.
+                UIInputController *controller = [UIInputController sharedInputController];
+                controller.inputAccessoryView = self.inputAccessoryView;
+                controller.inputView = self.inputView;
+                controller.keyInputResponder = (UIResponder<UIKeyInput> *)self;
+                [controller setInputVisible:YES animated:YES];
+                [window makeKeyWindow];
+            }
+            return YES;
+        }
     }
+    
+    return NO;
 }
 
 - (BOOL)canResignFirstResponder
@@ -117,12 +112,7 @@
     return [[self nextResponder] undoManager];
 }
 
-// curiously, the documentation states that all of the following methods do nothing by default but that
-// "immediate UIKit subclasses of UIResponder, particularly UIView, forward the message up the responder chain."
-// oddly, though, if I use class_getInstanceMethod() to print the address of the actual C function being used
-// by UIView, UIViewController, and UIResponder, they all point to the same function. So.... someone is wrong.
-// I'm going to leave it like this for now because this is a lot simpler, IMO, and seems nicely logical.
-
+// 以下的实现, 都是简简单单的调用下一个响应者对应的方法.
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [[self nextResponder] touchesBegan:touches withEvent:event];
