@@ -426,6 +426,7 @@ static UIApplication *_theApplication = nil;
     return [windows sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"windowLevel" ascending:YES]]];
 }
 
+// 所谓的 keyWindow 是 makeKeyAndVisible 调用设定的, 之所有有 keyWindow 这个概念, 是因为在桌面端, 可能会有 window.
 - (UIWindow *)keyWindow
 {
     for (UIWindow *window in self.windows) {
@@ -437,9 +438,10 @@ static UIApplication *_theApplication = nil;
     return nil;
 }
 
+
 - (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)event
 {
-    if (!target) {
+    if (!target) { // 如果没有 target , 找第一响应者,
         // The docs say this method will start with the first responder if target==nil. Initially I thought this meant that there was always a given
         // or set first responder (attached to the window, probably). However it doesn't appear that is the case. Instead it seems UIKit is perfectly
         // happy to function without ever having any UIResponder having had a becomeFirstResponder sent to it. This method seems to work by starting
@@ -470,8 +472,7 @@ static UIApplication *_theApplication = nil;
             }
         }
     }
-    
-    if (target) {
+    if (target) { // 有 target, 直接调用.
         typedef void(*EventActionMethod)(id, SEL, id, UIEvent *);
         EventActionMethod method = (EventActionMethod)[target methodForSelector:action];
         method(target, action, sender, event);
