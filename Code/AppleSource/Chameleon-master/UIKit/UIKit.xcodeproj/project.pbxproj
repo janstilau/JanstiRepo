@@ -122,8 +122,6 @@
 		148985B412EE2CFF003D4751 /* UINavigationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489852E12EE2CFE003D4751 /* UINavigationItem.m */; };
 		148985B512EE2CFF003D4751 /* UINibLoading.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489852F12EE2CFE003D4751 /* UINibLoading.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985B612EE2CFF003D4751 /* UINibLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489853012EE2CFE003D4751 /* UINibLoading.m */; };
-		148985B712EE2CFF003D4751 /* UIPageControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489853112EE2CFE003D4751 /* UIPageControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		148985B812EE2CFF003D4751 /* UIPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489853212EE2CFE003D4751 /* UIPageControl.m */; };
 		148985B912EE2CFF003D4751 /* UIPasteboard.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489853312EE2CFE003D4751 /* UIPasteboard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985BA12EE2CFF003D4751 /* UIPasteboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489853412EE2CFE003D4751 /* UIPasteboard.m */; };
 		148985BB12EE2CFF003D4751 /* UIPinchGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489853512EE2CFE003D4751 /* UIPinchGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -270,8 +268,6 @@
 		7011107D133BE0F400C86512 /* UIDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7011107B133BE0F300C86512 /* UIDatePicker.m */; };
 		7806ED2A133A1D7500273BC6 /* UITabBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 7806ED28133A1D7500273BC6 /* UITabBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7806ED2B133A1D7500273BC6 /* UITabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7806ED29133A1D7500273BC6 /* UITabBar.m */; };
-		78CB48AC133A9C51008636DA /* UISearchBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CB48AA133A9C51008636DA /* UISearchBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		78CB48AD133A9C51008636DA /* UISearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CB48AB133A9C51008636DA /* UISearchBar.m */; };
 		78CB48B0133AA536008636DA /* UITabBarItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CB48AE133AA535008636DA /* UITabBarItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		78CB48B1133AA536008636DA /* UITabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 78CB48AF133AA535008636DA /* UITabBarItem.m */; };
 		78CB48B4133AA8AF008636DA /* UISegmentedControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CB48B2133AA8AF008636DA /* UISegmentedControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -402,8 +398,6 @@
 		1489852E12EE2CFE003D4751 /* UINavigationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINavigationItem.m; sourceTree = "<group>"; };
 		1489852F12EE2CFE003D4751 /* UINibLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibLoading.h; sourceTree = "<group>"; };
 		1489853012EE2CFE003D4751 /* UINibLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINibLoading.m; sourceTree = "<group>"; };
-		1489853112EE2CFE003D4751 /* UIPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPageControl.h; sourceTree = "<group>"; };
-		1489853212EE2CFE003D4751 /* UIPageControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPageControl.m; sourceTree = "<group>"; };
 		1489853312EE2CFE003D4751 /* UIPasteboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPasteboard.h; sourceTree = "<group>"; };
 		1489853412EE2CFE003D4751 /* UIPasteboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPasteboard.m; sourceTree = "<group>"; };
 		1489853512EE2CFE003D4751 /* UIPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPinchGestureRecognizer.h; sourceTree = "<group>"; };
@@ -551,8 +545,6 @@
 		7011107B133BE0F300C86512 /* UIDatePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIDatePicker.m; sourceTree = "<group>"; };
 		7806ED28133A1D7500273BC6 /* UITabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITabBar.h; sourceTree = "<group>"; };
 		7806ED29133A1D7500273BC6 /* UITabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITabBar.m; sourceTree = "<group>"; };
-		78CB48AA133A9C51008636DA /* UISearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UISearchBar.h; sourceTree = "<group>"; };
-		78CB48AB133A9C51008636DA /* UISearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UISearchBar.m; sourceTree = "<group>"; };
 		78CB48AE133AA535008636DA /* UITabBarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITabBarItem.h; sourceTree = "<group>"; };
 		78CB48AF133AA535008636DA /* UITabBarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITabBarItem.m; sourceTree = "<group>"; };
 		78CB48B2133AA8AF008636DA /* UISegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UISegmentedControl.h; sourceTree = "<group>"; };
@@ -770,8 +762,6 @@
 				1489852E12EE2CFE003D4751 /* UINavigationItem.m */,
 				1489852F12EE2CFE003D4751 /* UINibLoading.h */,
 				1489853012EE2CFE003D4751 /* UINibLoading.m */,
-				1489853112EE2CFE003D4751 /* UIPageControl.h */,
-				1489853212EE2CFE003D4751 /* UIPageControl.m */,
 				1489853312EE2CFE003D4751 /* UIPasteboard.h */,
 				1489853412EE2CFE003D4751 /* UIPasteboard.m */,
 				1489853712EE2CFE003D4751 /* UIPopoverController.h */,
@@ -788,8 +778,6 @@
 				1489854412EE2CFE003D4751 /* UIScreenMode.m */,
 				1489854512EE2CFE003D4751 /* UIScrollView.h */,
 				1489854612EE2CFE003D4751 /* UIScrollView.m */,
-				78CB48AA133A9C51008636DA /* UISearchBar.h */,
-				78CB48AB133A9C51008636DA /* UISearchBar.m */,
 				78D533DB133A9434006F17CA /* UISearchDisplayController.h */,
 				78D533DC133A9434006F17CA /* UISearchDisplayController.m */,
 				78CB48B2133AA8AF008636DA /* UISegmentedControl.h */,
@@ -819,10 +807,10 @@
 				1489855912EE2CFE003D4751 /* UITextInputTraits.h */,
 				1489855A12EE2CFE003D4751 /* UITextView.h */,
 				1489855B12EE2CFE003D4751 /* UITextView.m */,
-				1489855C12EE2CFE003D4751 /* UIToolbar.h */,
 				1489855D12EE2CFE003D4751 /* UIToolbar.m */,
 				1489856012EE2CFE003D4751 /* UIView.h */,
 				1489856112EE2CFE003D4751 /* UIView.m */,
+				1489855C12EE2CFE003D4751 /* UIToolbar.h */,
 				1489856212EE2CFE003D4751 /* UIViewAdapter.h */,
 				1489856312EE2CFE003D4751 /* UIViewAdapter.m */,
 				1489856412EE2CFE003D4751 /* UIViewController.h */,
@@ -962,7 +950,6 @@
 				78CB48B0133AA536008636DA /* UITabBarItem.h in Headers */,
 				14A726E01213303400648C9B /* UIWindow+UIPrivate.h in Headers */,
 				78D533DD133A9434006F17CA /* UISearchDisplayController.h in Headers */,
-				78CB48AC133A9C51008636DA /* UISearchBar.h in Headers */,
 				1489856A12EE2CFF003D4751 /* AppKitIntegration.h in Headers */,
 				1489856B12EE2CFF003D4751 /* NSIndexPath+UITableView.h in Headers */,
 				1489857512EE2CFF003D4751 /* UIActionSheet.h in Headers */,
@@ -1027,7 +1014,6 @@
 				38615C78133A81B900841EEA /* UIFont+UIPrivate.h in Headers */,
 				148985B312EE2CFF003D4751 /* UINavigationItem.h in Headers */,
 				148985B512EE2CFF003D4751 /* UINibLoading.h in Headers */,
-				148985B712EE2CFF003D4751 /* UIPageControl.h in Headers */,
 				148985B912EE2CFF003D4751 /* UIPasteboard.h in Headers */,
 				148985A212EE2CFF003D4751 /* UIKey.h in Headers */,
 				148985BB12EE2CFF003D4751 /* UIPinchGestureRecognizer.h in Headers */,
@@ -1181,7 +1167,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				78CB48B1133AA536008636DA /* UITabBarItem.m in Sources */,
-				78CB48AD133A9C51008636DA /* UISearchBar.m in Sources */,
 				14CC840711EFA8AF005988CC /* UIRoundedRectButton.m in Sources */,
 				14FA8C60121DA4A000C4264B /* UINinePartImage.m in Sources */,
 				14FA8C68121DA4A000C4264B /* UIScroller.m in Sources */,
@@ -1231,7 +1216,6 @@
 				148985B212EE2CFF003D4751 /* UINavigationController.m in Sources */,
 				148985B412EE2CFF003D4751 /* UINavigationItem.m in Sources */,
 				148985B612EE2CFF003D4751 /* UINibLoading.m in Sources */,
-				148985B812EE2CFF003D4751 /* UIPageControl.m in Sources */,
 				148985BA12EE2CFF003D4751 /* UIPasteboard.m in Sources */,
 				148985BC12EE2CFF003D4751 /* UIPinchGestureRecognizer.m in Sources */,
 				148985BE12EE2CFF003D4751 /* UIPopoverController.m in Sources */,
