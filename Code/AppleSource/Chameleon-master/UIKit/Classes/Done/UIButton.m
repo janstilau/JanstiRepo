@@ -13,7 +13,6 @@ static NSString *UIButtonContentTypeBackgroundImage = @"UIButtonContentTypeBackg
 static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
 
 @implementation UIButton {
-    UIImageView *_backgroundImageView;
     NSMutableDictionary *_content;
     UIImage *_adjustedHighlightImage;
     UIImage *_adjustedDisabledImage;
@@ -38,11 +37,13 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
 - (id)initWithFrame:(CGRect)frame
 {
     if ((self=[super initWithFrame:frame])) {
-        _buttonType = UIButtonTypeCustom;
+        _buttonType = UIButtonTypeCustom; // 默认就是 custom
         _content = [[NSMutableDictionary alloc] init];
+        
         _titleLabel = [[UILabel alloc] init];
         _imageView = [[UIImageView alloc] init];
         _backgroundImageView = [[UIImageView alloc] init];
+        
         _adjustsImageWhenHighlighted = YES;
         _adjustsImageWhenDisabled = YES;
         _showsTouchWhenHighlighted = NO;
@@ -105,6 +106,7 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
     return [self _contentForState:state type:type] ?: [self _contentForState:UIControlStateNormal type:type];
 }
 
+// 根据 state 的不同, 取不同的值, 设置 Label 和 ImageView 的值.
 - (void)_updateContent
 {
     const UIControlState state = self.state;
@@ -115,6 +117,7 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
     UIImage *image = [self _contentForState:state type:UIButtonContentTypeImage];
     UIImage *backgroundImage = [self _contentForState:state type:UIButtonContentTypeBackgroundImage];
     
+    // 首先找到相应状态的值, 如果没有该值, 那么选 Normal 状态的值.
     if (!image) {
         image = [self imageForState:state];	// find the correct default image to show
         if (_adjustsImageWhenDisabled && state & UIControlStateDisabled) {
@@ -149,6 +152,7 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
 
 - (void)_setContent:(id)value forState:(UIControlState)state type:(NSString *)type
 {
+    // 对于每一种属性, 都是一个 Dict 进行了存储.
     NSMutableDictionary *typeContent = [_content objectForKey:type];
     
     if (!typeContent) {
@@ -166,6 +170,7 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
     [self _updateContent];
 }
 
+// 所有的方法, 都聚集到_content的修改.
 - (void)setTitle:(NSString *)title forState:(UIControlState)state
 {
     [self _setContent:title forState:state type:UIButtonContentTypeTitle];
@@ -217,6 +222,9 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
     return [self _normalContentForState:state type:UIButtonContentTypeImage];
 }
 
+#pragma mark -
+
+// 一个切口, 可以让外界自定义背景区域, 在 layoutSubViews 中使用.
 - (CGRect)backgroundRectForBounds:(CGRect)bounds
 {
     return bounds;
@@ -227,16 +235,11 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
     return UIEdgeInsetsInsetRect(bounds,_contentEdgeInsets);
 }
 
-- (CGSize)_backgroundSizeForState:(UIControlState)state
-{
-    UIImage *backgroundImage = [self backgroundImageForState:state];
-    return backgroundImage? backgroundImage.size : CGSizeZero;
-}
-
 - (CGSize)_titleSizeForState:(UIControlState)state
 {
     NSString *title = [self titleForState:state];
-    return ([title length] > 0)? [title sizeWithFont:_titleLabel.font constrainedToSize:CGSizeMake(CGFLOAT_MAX,CGFLOAT_MAX)] : CGSizeZero;
+    CGSize titleSize = [title sizeWithFont:_titleLabel.font constrainedToSize:CGSizeMake(CGFLOAT_MAX,CGFLOAT_MAX)];
+    return ([title length] > 0)?  titleSize: CGSizeZero;
 }
 
 - (CGSize)_imageSizeForState:(UIControlState)state
@@ -303,7 +306,9 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
     UIEdgeInsets inset = _titleEdgeInsets;
     inset.left += [self _imageSizeForState:state].width;
     
-    return [self _componentRectForSize:[self _titleSizeForState:state] inContentRect:UIEdgeInsetsInsetRect(contentRect,inset) withState:state];
+    return [self _componentRectForSize:[self _titleSizeForState:state]
+                         inContentRect:UIEdgeInsetsInsetRect(contentRect,inset)
+                             withState:state];
 }
 
 - (CGRect)imageRectForContentRect:(CGRect)contentRect
@@ -316,8 +321,10 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
     return [self _componentRectForSize:[self _imageSizeForState:state] inContentRect:UIEdgeInsetsInsetRect(contentRect,inset) withState:state];
 }
 
+// 在这个方法的内部, 会调整 ImageView, Label, 和 BackGroundImageView 的 frame.
 - (void)layoutSubviews
 {
+    // 在 layoutSubviews 的时候, 根据 insets 的值, 会调整 label 和 iamgeView 的位置.
     [super layoutSubviews];
     
     const CGRect bounds = self.bounds;
@@ -328,13 +335,15 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
     _imageView.frame = [self imageRectForContentRect:contentRect];
 }
 
+// 重写 UIControl 的方法, 增加了对于 ImageView, Label, BackgroundImageView 的内容处理.
 - (void)_stateDidChange
 {
     [super _stateDidChange];
     [self _updateContent];
 }
 
-- (CGSize)sizeThatFits:(CGSize)size
+// 参数完全没有用到, 完全靠自己的内容, sizeToFit 会调用到这个方法. 所以, 重写这个方法, 在这个方法里面
+- (CGSize)sizeThatFits:(CGSize)targetSize
 {
     const UIControlState state = self.state;
     
@@ -353,14 +362,6 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
     }
     
     return fitSize;
-}
-
-- (void)rightClick:(UITouch *)touch withEvent:(UIEvent *)event
-{
-    // I'm swallowing right clicks on buttons by default, which is why this is here.
-    // This isn't a strong decision, but there's a few places in Twitterrific where passing a right click through a button doesn't feel right.
-    // It also doesn't feel immediately right to treat a right-click on a button as a normal click event, either, so this seems to be a
-    // decent way to avoid the problem in general and define a kind of "standard" behavior in this case.
 }
 
 @end

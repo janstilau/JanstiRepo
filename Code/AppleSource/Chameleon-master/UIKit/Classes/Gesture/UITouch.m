@@ -114,6 +114,7 @@
     return _beganPhaseLocationOnScreen;
 }
 
+// 目前来说, 现在仅仅是一个记录作用, 没有用到其他的逻辑中.
 - (NSArray *)gestureRecognizers
 {
     return [_gestureRecognizers copy];

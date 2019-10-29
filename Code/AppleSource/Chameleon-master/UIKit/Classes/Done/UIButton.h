@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #import "UIControl.h"
 
 typedef NS_ENUM(NSInteger, UIButtonType) {
@@ -39,6 +10,12 @@ typedef NS_ENUM(NSInteger, UIButtonType) {
 };
 
 @class UILabel, UIImageView, UIImage;
+
+/**
+ * 从这个类的实现来看, UIButton 实际上做的, 不是点击回调这些事情, 而是对于不同状态下的界面的不同展示.
+ * 在 Highlight, Selected, Enable 等各个状态下, 一个 Button 应该有不同的展示, 而这种展示, 随着当前状态的不同, 会及时进行更新.
+ * UIControl 追踪着 touch 事件, 在这个过程中, 会不断地更改 state, UIControl 默认是调用 setNeedsDisplay 进行重绘. 而 Button 将不同状态的文字, 图片, 背景图显示进行了存储, 在 state 更改之后, 会对这些进行替换, 达到按钮的按压效果.
+ */
 
 @interface UIButton : UIControl {
 @package
@@ -64,15 +41,18 @@ typedef NS_ENUM(NSInteger, UIButtonType) {
 - (CGRect)imageRectForContentRect:(CGRect)contentRect;
 
 @property (nonatomic, readonly) UIButtonType buttonType;
+
 @property (nonatomic,readonly,strong) UILabel *titleLabel;
 @property (nonatomic,readonly,strong) UIImageView *imageView;
+@property (nonatomic, strong) UIImageView *backgroundImageView;
+
 @property (nonatomic) BOOL reversesTitleShadowWhenHighlighted;
-@property (nonatomic) BOOL adjustsImageWhenHighlighted;
-@property (nonatomic) BOOL adjustsImageWhenDisabled;
+@property (nonatomic) BOOL adjustsImageWhenHighlighted; // 影响到unEnable时候的图片显示
+@property (nonatomic) BOOL adjustsImageWhenDisabled; // 影响到高亮时候的图片显示
 @property (nonatomic) BOOL showsTouchWhenHighlighted;		// no effect
-@property (nonatomic) UIEdgeInsets contentEdgeInsets;
-@property (nonatomic) UIEdgeInsets titleEdgeInsets;
-@property (nonatomic) UIEdgeInsets imageEdgeInsets;
+@property (nonatomic) UIEdgeInsets contentEdgeInsets; // 在最终的 layoutSubviews 的时候起作用
+@property (nonatomic) UIEdgeInsets titleEdgeInsets; // 在最终的 layoutSubviews 的时候起作用
+@property (nonatomic) UIEdgeInsets imageEdgeInsets; // 在最终的 layoutSubviews 的时候起作用
 
 @property (nonatomic, readonly, strong) NSString *currentTitle;
 @property (nonatomic, readonly, strong) UIColor *currentTitleColor;

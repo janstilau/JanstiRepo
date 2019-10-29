@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #import "UIWindow+UIPrivate.h"
 #import "UIView+UIPrivate.h"
 #import "UIScreen+UIPrivate.h"
@@ -390,19 +361,9 @@ The UIApplication object calls this method to dispatch events to the window. Win
 // 最重要的方法, 事件分发.
 - (void)_processTouchEvent:(UITouchEvent *)event
 {
-    // normally there'd be no need to retain the view here, but this works around a strange problem I ran into.
-    // what can happen is, now that UIView's -removeFromSuperview will remove the view from the active touch
-    // instead of just cancel the touch (which is how I had implemented it previously - which was wrong), the
-    // situation can arise where, in response to a touch event of some kind, the view may remove itself from its
-    // superview in some fashion, which means that the handling of the touchesEnded:withEvent: (or whatever)
-    // methods could somehow result in the view itself being destroyed before the method is even finished running!
-    // a strong reference here works around this problem since the view is kept alive until we're done with it.
-    // If someone can figure out some other, better way to fix this without it having to have this hacky-feeling
-    // stuff here, that'd be cool, but be aware that this is here for a reason and that the problem it prevents is
-    // somewhat contrived but not uncommon.
     UIView *view = event.touch.view;
 
-    // first deliver new touches to all possible gesture recognizers
+    // 在 touch 刚开始的时候, 将 touch 所在 View 和 所有 superView 上的所有 gesture, 添加到 touch 中去.
     if (event.touch.phase == UITouchPhaseBegan) {
         for (UIView *subview = view; subview != nil; subview = [subview superview]) {
             for (UIGestureRecognizer *gesture in subview.gestureRecognizers) {
@@ -420,9 +381,10 @@ The UIApplication object calls this method to dispatch events to the window. Win
     // then allow all tracking gesture recognizers to have their way with the touches in this event before
     // anything else is done.
     for (UIGestureRecognizer *gesture in event.touch.gestureRecognizers) {
-        [gesture _continueTrackingWithEvent:event];
+        [gesture _continueTrackingWithEvent:event]; // 手势的处理过程.
         
-        const BOOL recognized = (gesture.state == UIGestureRecognizerStateRecognized || gesture.state == UIGestureRecognizerStateBegan);
+        const BOOL recognized = (gesture.state == UIGestureRecognizerStateRecognized ||
+                                 gesture.state == UIGestureRecognizerStateBegan);
         const BOOL possible = (gesture.state == UIGestureRecognizerStatePossible);
         
         gestureRecognized |= recognized;
@@ -436,7 +398,8 @@ The UIApplication object calls this method to dispatch events to the window. Win
             if ([gesture.view isKindOfClass:[UIScrollView class]]) {
                 UIScrollView *scrollView = (UIScrollView *)gesture.view;
                 
-                if ([gesture isEqual:scrollView.panGestureRecognizer] || [gesture isEqual:scrollView.scrollWheelGestureRecognizer]) {
+                if ([gesture isEqual:scrollView.panGestureRecognizer] ||
+                    [gesture isEqual:scrollView.scrollWheelGestureRecognizer]) {
                     delaysTouchesBegan |= scrollView.delaysContentTouches;
                 }
             }
@@ -465,6 +428,9 @@ The UIApplication object calls this method to dispatch events to the window. Win
             }
         }
     } else {
+        
+        // 调用 touch 所在 view 的各个 touch 方法.
+        
         if (event.touch.phase == UITouchPhaseBegan) {
             if ((!gestureRecognized && !possibleGestures) || !delaysTouchesBegan) {
                 [view touchesBegan:event.allTouches withEvent:event];
@@ -476,7 +442,11 @@ The UIApplication object calls this method to dispatch events to the window. Win
             // so we do this by marking it both delivered and cancelled without actually sending it to the view.
             event.touch.wasDeliveredToView = YES;
             event.touch.wasCancelledInView = YES;
-        } else if (delaysTouchesBegan && !gestureRecognized && !possibleGestures && !event.touch.wasDeliveredToView && event.touch.phase != UITouchPhaseCancelled) {
+        } else if (delaysTouchesBegan &&
+                   !gestureRecognized &&
+                   !possibleGestures &&
+                   !event.touch.wasDeliveredToView &&
+                   event.touch.phase != UITouchPhaseCancelled) {
             // need to fake-send a touches began using the cached time and location in the touch
             // a followup move or ended or cancelled touch will be sent below if necessary
             const NSTimeInterval currentTimestamp = event.touch.timestamp;
@@ -495,7 +465,9 @@ The UIApplication object calls this method to dispatch events to the window. Win
             event.touch.timestamp = currentTimestamp;
         }
         
-        if (event.touch.phase != UITouchPhaseBegan && event.touch.wasDeliveredToView && !event.touch.wasCancelledInView) {
+        if (event.touch.phase != UITouchPhaseBegan &&
+            event.touch.wasDeliveredToView &&
+            !event.touch.wasCancelledInView) {
             if (event.touch.phase == UITouchPhaseCancelled) {
                 [view touchesCancelled:event.allTouches withEvent:event];
                 event.touch.wasCancelledInView = YES;

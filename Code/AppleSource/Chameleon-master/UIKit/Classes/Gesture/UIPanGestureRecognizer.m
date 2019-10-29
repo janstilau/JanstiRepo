@@ -64,7 +64,6 @@
     if (self.state == UIGestureRecognizerStatePossible) {
         if ([event isKindOfClass:[UITouchEvent class]]) {
             UITouchEvent *touchEvent = (UITouchEvent *)event;
-            
             if (touchEvent.touchEventGesture != UITouchEventGestureBegin) {
                 self.state = UIGestureRecognizerStateFailed;
             }
@@ -76,9 +75,9 @@
 {
     if ([event isKindOfClass:[UITouchEvent class]]) {
         UITouchEvent *touchEvent = (UITouchEvent *)event;
-        
         if (touchEvent.touchEventGesture == UITouchEventGesturePan) {
             if (self.state == UIGestureRecognizerStatePossible) {
+                //  记录上一次
                 _lastMovementTime = touchEvent.timestamp;
                 [self setTranslation:touchEvent.translation inView:touchEvent.touch.view];
                 self.state = UIGestureRecognizerStateBegan;

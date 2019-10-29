@@ -158,18 +158,21 @@ static UIColor *LightTextColor = nil;
     return YES;
 }
 
+// 对于下面方法的包装.
 - (void)set
 {
     [self setFill];
     [self setStroke];
 }
 
+// 调用 coreGraphics 的方法.
 - (void)setFill
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSetFillColorWithColor(ctx, [self _bestRepresentationForProposedScale:_UIGraphicsGetContextScaleFactor(ctx)].CGColor);
 }
 
+// 调用 coreGraphics 的方法.
 - (void)setStroke
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();

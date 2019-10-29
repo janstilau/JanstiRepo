@@ -387,9 +387,7 @@
     if (_touchEvent && _touchEvent.touchEventGesture != UITouchEventGestureNone) {
         _touchEvent.touch.phase = UITouchPhaseEnded;
         [self updateTouchLocation:_touchEvent.touch withEvent:theEvent];
-
         [[UIApplication sharedApplication] sendEvent:_touchEvent];
-        
         [_touchEvent endTouchEvent];
         _touchEvent = nil;
     }

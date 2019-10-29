@@ -109,26 +109,22 @@
     return [[_trackingTouches objectAtIndex:touchIndex] locationInView:view];
 }
 
-- (void)setState:(UIGestureRecognizerState)state
+- (void)setState:(UIGestureRecognizerState)newState
 {
-    if (_delegateHas.shouldBegin && _state == UIGestureRecognizerStatePossible && (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateBegan)) {
+    if (_delegateHas.shouldBegin &&
+        _state == UIGestureRecognizerStatePossible &&
+        (newState == UIGestureRecognizerStateRecognized || newState == UIGestureRecognizerStateBegan)) {
         if (![_delegate gestureRecognizerShouldBegin:self]) {
-            state = UIGestureRecognizerStateFailed;
+            newState = UIGestureRecognizerStateFailed;
         }
     }
     
-    // the docs didn't say explicitly if these state transitions were verified, but I suspect they are. if anything, a check like this
-    // should help debug things. it also helps me better understand the whole thing, so it's not a total waste of time :)
-
     typedef struct { UIGestureRecognizerState fromState, toState; BOOL shouldNotify; } StateTransition;
 
     #define NumberOfStateTransitions 9
     static const StateTransition allowedTransitions[NumberOfStateTransitions] = {
-        // discrete gestures
         {UIGestureRecognizerStatePossible,		UIGestureRecognizerStateRecognized,     YES},
         {UIGestureRecognizerStatePossible,		UIGestureRecognizerStateFailed,          NO},
-
-        // continuous gestures
         {UIGestureRecognizerStatePossible,		UIGestureRecognizerStateBegan,          YES},
         {UIGestureRecognizerStateBegan,			UIGestureRecognizerStateChanged,        YES},
         {UIGestureRecognizerStateBegan,			UIGestureRecognizerStateCancelled,      YES},
@@ -141,23 +137,17 @@
     const StateTransition *transition = NULL;
 
     for (NSUInteger t=0; t<NumberOfStateTransitions; t++) {
-        if (allowedTransitions[t].fromState == _state && allowedTransitions[t].toState == state) {
+        if (allowedTransitions[t].fromState == _state && allowedTransitions[t].toState == newState) {
             transition = &allowedTransitions[t];
             break;
         }
     }
-
-    NSAssert2((transition != NULL), @"invalid state transition from %ld to %ld", _state, state);
-
+    
+    // 状态发生了改变, 调用存储的回调.
     if (transition) {
         _state = transition->toState;
-        
         if (transition->shouldNotify) {
             for (UIAction *actionRecord in _registeredActions) {
-                // docs mention that the action messages are sent on the next run loop, so we'll do that here.
-                // note that this means that reset can't happen until the next run loop, either otherwise
-                // the state property is going to be wrong when the action handler looks at it, so as a result
-                // I'm also delaying the reset call (if necessary) below in -continueTrackingWithEvent:
                 [actionRecord.target performSelector:actionRecord.action withObject:self afterDelay:0];
             }
         }
@@ -189,6 +179,7 @@
 {
 }
 
+// 各个子类, 根据这些方法, 进行判断
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 }
@@ -207,11 +198,11 @@
 
 - (void)_beginTrackingTouch:(UITouch *)touch withEvent:(UITouchEvent *)event
 {
-    if (self.enabled) {
-        if (!_delegateHas.shouldReceiveTouch || [_delegate gestureRecognizer:self shouldReceiveTouch:touch]) {
-            [touch _addGestureRecognizer:self];
-            [_trackingTouches addObject:touch];
-        }
+    if (!self.enabled) { return; }
+        
+    if (!_delegateHas.shouldReceiveTouch || [_delegate gestureRecognizer:self shouldReceiveTouch:touch]) {
+        [touch _addGestureRecognizer:self];
+        [_trackingTouches addObject:touch];
     }
 }
 
@@ -223,6 +214,7 @@
     NSMutableSet *cancelled = [NSMutableSet new];
     BOOL multitouchSequenceIsEnded = YES;
     
+    // 根据 touch 的状态的不同, 判断 gesture 的阶段.
     for (UITouch *touch in _trackingTouches) {
         if (touch.phase == UITouchPhaseBegan) {
             multitouchSequenceIsEnded = NO;
@@ -239,7 +231,9 @@
         }
     }
 
-    if (_state == UIGestureRecognizerStatePossible || _state == UIGestureRecognizerStateBegan || _state == UIGestureRecognizerStateChanged) {
+    if (_state == UIGestureRecognizerStatePossible ||
+        _state == UIGestureRecognizerStateBegan ||
+        _state == UIGestureRecognizerStateChanged) {
         if ([began count]) {
             [self touchesBegan:began withEvent:event];
         }

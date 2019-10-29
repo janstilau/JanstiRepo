@@ -225,6 +225,7 @@
 }
 
 // 更新状态. 这里仅仅做状态的改变, 真正的绘制过程, 不同的子类要根据当前的状态, 绘制不同的展示. 也就是下面的 state 的状态.
+// 在 UIButton 里面, 重写了这个方法, 进行了 Button 不同状态下的 Label 和 ImageView 的更新.
 - (void)_stateDidChange
 {
     [self setNeedsDisplay];
