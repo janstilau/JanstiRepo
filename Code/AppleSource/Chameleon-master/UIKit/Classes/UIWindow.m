@@ -376,6 +376,9 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
     return self.layer.zPosition;
 }
 
+/**
+The UIApplication object calls this method to dispatch events to the window. Window objects dispatch touch events to the view in which the touch occurred, and dispatch other types of events to the most appropriate target object. You can call this method as needed in your app to dispatch custom events that you create. For example, you might call this method to dispatch a custom event to the window’s responder chain.
+ */
 - (void)sendEvent:(UIEvent *)event
 {
     if ([event isKindOfClass:[UITouchEvent class]]) {
@@ -383,18 +386,10 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
     }
 }
 
+
+// 最重要的方法, 事件分发.
 - (void)_processTouchEvent:(UITouchEvent *)event
 {
-    // we only support a single touch, so there is a *lot* in here that would break or need serious changes
-    // to properly support mulitouch. I still don't really like how all this works - especially with the
-    // gesture recognizers, but I've been struggling to come up with a better way for far too long and just
-    // have to deal with what I've got now.
-    
-    // if there's no touch for this window, return immediately
-    if (event.touch.window != self) {
-        return;
-    }
-    
     // normally there'd be no need to retain the view here, but this works around a strange problem I ran into.
     // what can happen is, now that UIView's -removeFromSuperview will remove the view from the active touch
     // instead of just cancel the touch (which is how I had implemented it previously - which was wrong), the
