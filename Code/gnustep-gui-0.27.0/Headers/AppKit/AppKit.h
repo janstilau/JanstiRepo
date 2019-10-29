@@ -207,5 +207,7 @@
 #endif
 
 #import <AppKit/PSOperators.h>
+#import <Foundation/Foundation.h>
+#import <Foundation/Foundation.h>
 
 #endif /* _GNUstep_H_AppKit */

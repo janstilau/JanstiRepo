@@ -1,35 +1,3 @@
-/** <title>NSView</title>
-
-   <abstract>Encapsulates all drawing functionality</abstract>
-
-   Copyright <copy>(C) 1996-2015 Free Software Foundation, Inc.</copy>
-
-   Author:  Scott Christley <scottc@net-community.com>
-   Date: 1996
-   Heavily changed and extended by Ovidiu Predescu <ovidiu@net-community.com>.
-   Date: 1997
-   Author:  Felipe A. Rodriguez <far@ix.netcom.com>
-   Date: August 1998
-
-   This file is part of the GNUstep GUI Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; see the file COPYING.LIB.
-   If not, see <http://www.gnu.org/licenses/> or write to the 
-   Free Software Foundation, 51 Franklin Street, Fifth Floor, 
-   Boston, MA 02110-1301, USA.
-*/
-
 #ifndef _GNUstep_H_NSView
 #define _GNUstep_H_NSView
 #import <GNUstepBase/GSVersionMacros.h>
@@ -58,44 +26,44 @@ typedef NSInteger NSTrackingRectTag;
 typedef NSInteger NSToolTipTag;
 
 /** Describes the type of border used by an NSView.
-  <list>
-   <item>NSNoBorder</item>
-   <item>NSLineBorder</item>
-   <item>NSBezelBorder</item>
-   <item>NSGrooveBorder</item>
-  </list>
-*/
+ <list>
+ <item>NSNoBorder</item>
+ <item>NSLineBorder</item>
+ <item>NSBezelBorder</item>
+ <item>NSGrooveBorder</item>
+ </list>
+ */
 enum _NSBorderType {
-  NSNoBorder,
-  NSLineBorder,
-  NSBezelBorder,
-  NSGrooveBorder
+    NSNoBorder,
+    NSLineBorder,
+    NSBezelBorder,
+    NSGrooveBorder
 };
 typedef NSUInteger NSBorderType;
 
 typedef NSInteger NSViewLayerContentsRedrawPolicy;
 enum {
-  NSViewLayerContentsRedrawNever = 0,
-  NSViewLayerContentsRedrawOnSetNeedsDisplay = 1,
-  NSViewLayerContentsRedrawDuringViewResize = 2,
-  NSViewLayerContentsRedrawBeforeViewResize = 3,
-  NSViewLayerContentsRedrawCrossfade = 4
+    NSViewLayerContentsRedrawNever = 0,
+    NSViewLayerContentsRedrawOnSetNeedsDisplay = 1,
+    NSViewLayerContentsRedrawDuringViewResize = 2,
+    NSViewLayerContentsRedrawBeforeViewResize = 3,
+    NSViewLayerContentsRedrawCrossfade = 4
 };
 
 typedef NSInteger NSViewLayerContentsPlacement;
 enum {
-  NSViewLayerContentsPlacementScaleAxesIndependently = 0,
-  NSViewLayerContentsPlacementScaleProportionallyToFit = 1,
-  NSViewLayerContentsPlacementScaleProportionallyToFill = 2,
-  NSViewLayerContentsPlacementCenter = 3,
-  NSViewLayerContentsPlacementTop = 4,
-  NSViewLayerContentsPlacementTopRight = 5,
-  NSViewLayerContentsPlacementRight = 6,
-  NSViewLayerContentsPlacementBottomRight = 7,
-  NSViewLayerContentsPlacementBottom = 8,
-  NSViewLayerContentsPlacementBottomLeft = 9,
-  NSViewLayerContentsPlacementLeft = 10,
-  NSViewLayerContentsPlacementTopLeft = 11
+    NSViewLayerContentsPlacementScaleAxesIndependently = 0,
+    NSViewLayerContentsPlacementScaleProportionallyToFit = 1,
+    NSViewLayerContentsPlacementScaleProportionallyToFill = 2,
+    NSViewLayerContentsPlacementCenter = 3,
+    NSViewLayerContentsPlacementTop = 4,
+    NSViewLayerContentsPlacementTopRight = 5,
+    NSViewLayerContentsPlacementRight = 6,
+    NSViewLayerContentsPlacementBottomRight = 7,
+    NSViewLayerContentsPlacementBottom = 8,
+    NSViewLayerContentsPlacementBottomLeft = 9,
+    NSViewLayerContentsPlacementLeft = 10,
+    NSViewLayerContentsPlacementTopLeft = 11
 };
 
 /*
@@ -104,84 +72,25 @@ enum {
  * resized when the view's superview is resized
  */
 enum {
-  NSViewNotSizable	= 0,	// view does not resize with its superview
-  NSViewMinXMargin	= 1,	// left margin between views can stretch
-  NSViewWidthSizable	= 2,	// view's width can stretch
-  NSViewMaxXMargin	= 4,	// right margin between views can stretch
-  NSViewMinYMargin	= 8,	// bottom margin between views can stretch
-  NSViewHeightSizable	= 16,	// view's height can stretch
-  NSViewMaxYMargin	= 32 	// top margin between views can stretch
+    NSViewNotSizable	= 0,	// view does not resize with its superview
+    NSViewMinXMargin	= 1,	// left margin between views can stretch
+    NSViewWidthSizable	= 2,	// view's width can stretch
+    NSViewMaxXMargin	= 4,	// right margin between views can stretch
+    NSViewMinYMargin	= 8,	// bottom margin between views can stretch
+    NSViewHeightSizable	= 16,	// view's height can stretch
+    NSViewMaxYMargin	= 32 	// top margin between views can stretch
 };
 
 /*
  * constants defining if and how a view (or cell) should draw a focus ring
  */
 typedef enum _NSFocusRingType {
-  NSFocusRingTypeDefault = 0,
-  NSFocusRingTypeNone = 1,
-  NSFocusRingTypeExterior = 2
+    NSFocusRingTypeDefault = 0,
+    NSFocusRingTypeNone = 1,
+    NSFocusRingTypeExterior = 2
 } NSFocusRingType;
 
 @interface NSView : NSResponder
-{
-  NSRect _frame;
-  NSRect _bounds;
-  id _frameMatrix;
-  id _boundsMatrix;
-  id _matrixToWindow;
-  id _matrixFromWindow;
-  id _coreAnimationData;
-
-  NSView* _super_view;
-PACKAGE_SCOPE
-  NSMutableArray *_sub_views;
-@protected
-  NSWindow *_window;
-PACKAGE_SCOPE
-  NSMutableArray *_tracking_rects;
-  NSMutableArray *_cursor_rects;
-@protected
-  NSRect _invalidRect;
-  NSRect _visibleRect;
-  NSInteger _gstate;
-  void *_nextKeyView;
-  void *_previousKeyView;
-  CGFloat _alphaValue;
-
-@public
-  /*
-   * Flags for internal use by NSView and it's subclasses.
-   */
-  struct _rFlagsType {
-    unsigned	flipped_view:1;         /* Flipped state the last time we checked. */ 
-    unsigned	has_subviews:1;		/* The view has subviews.	*/
-    unsigned	has_currects:1;		/* The view has cursor rects.	*/
-    unsigned	has_trkrects:1;		/* The view has tracking rects.	*/
-    unsigned	has_draginfo:1;		/* View has drag types. 	*/
-    unsigned	opaque_view:1;		/* For views whose opacity may	*/
-					/* change to keep track of it.	*/
-    unsigned	valid_rects:1;		/* Some cursor rects may be ok.	*/
-    unsigned	needs_display:1;	/* view needs display.   	*/
-    unsigned	has_tooltips:1;		/* The view has tooltips set.	*/
-    unsigned	ignores_backing:1;      /* The view does not trigger    */
-                                        /* backing flush when drawn     */
-  } _rFlags;
-
-  BOOL _is_rotated_from_base;
-  BOOL _is_rotated_or_scaled_from_base;
-  BOOL _post_frame_changes;
-  BOOL _post_bounds_changes;
-  BOOL _autoresizes_subviews;
-  BOOL _coordinates_valid;
-  BOOL _allocate_gstate;
-  BOOL _renew_gstate;
-  BOOL _is_hidden;
-  BOOL _in_live_resize;
-
-  NSUInteger _autoresizingMask;
-  NSFocusRingType _focusRingType;
-  NSRect _autoresizingFrameError;
-}
 
 /*
  * Initializing NSView Objects
@@ -206,7 +115,7 @@ PACKAGE_SCOPE
 - (void) replaceSubview: (NSView*)oldView
                    with: (NSView*)newView;
 - (void) sortSubviewsUsingFunction: (NSComparisonResult (*)(id ,id ,void*))compare
-			   context: (void*)context;
+                           context: (void*)context;
 - (NSArray*) subviews;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
 - (void) setSubviews: (NSArray *)newSubviews;
@@ -272,17 +181,17 @@ PACKAGE_SCOPE
  */
 - (NSRect) centerScanRect: (NSRect)aRect;
 - (NSPoint) convertPoint: (NSPoint)aPoint
-		fromView: (NSView*)aView;
+                fromView: (NSView*)aView;
 - (NSPoint) convertPoint: (NSPoint)aPoint
-		  toView: (NSView*)aView;
+                  toView: (NSView*)aView;
 - (NSRect) convertRect: (NSRect)aRect
-	      fromView: (NSView*)aView;
+              fromView: (NSView*)aView;
 - (NSRect) convertRect: (NSRect)aRect
-		toView: (NSView*)aView;
+                toView: (NSView*)aView;
 - (NSSize) convertSize: (NSSize)aSize
-	      fromView: (NSView*)aView;
+              fromView: (NSView*)aView;
 - (NSSize) convertSize: (NSSize)aSize
-		toView: (NSView*)aView;
+                toView: (NSView*)aView;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
 - (NSPoint) convertPointFromBase: (NSPoint)aPoint;
 - (NSPoint) convertPointToBase: (NSPoint)aPoint;
@@ -396,7 +305,7 @@ PACKAGE_SCOPE
 - (BOOL) acceptsFirstMouse: (NSEvent*)theEvent;
 - (NSView*) hitTest: (NSPoint)aPoint;
 - (BOOL) mouse: (NSPoint)aPoint
-	inRect: (NSRect)aRect;
+        inRect: (NSRect)aRect;
 - (BOOL) performKeyEquivalent: (NSEvent*)theEvent;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (BOOL) performMnemonic: (NSString *)aString;
@@ -407,23 +316,23 @@ PACKAGE_SCOPE
  * Dragging
  */
 - (BOOL) dragFile: (NSString*)filename
-	 fromRect: (NSRect)rect
-	slideBack: (BOOL)slideFlag
-	    event: (NSEvent*)event;
+         fromRect: (NSRect)rect
+        slideBack: (BOOL)slideFlag
+            event: (NSEvent*)event;
 - (void) dragImage: (NSImage*)anImage
-		at: (NSPoint)viewLocation
-	    offset: (NSSize)initialOffset
-	     event: (NSEvent*)event
-	pasteboard: (NSPasteboard*)pboard
-	    source: (id)sourceObject
-	 slideBack: (BOOL)slideFlag;
+                at: (NSPoint)viewLocation
+            offset: (NSSize)initialOffset
+             event: (NSEvent*)event
+        pasteboard: (NSPasteboard*)pboard
+            source: (id)sourceObject
+         slideBack: (BOOL)slideFlag;
 - (void) registerForDraggedTypes: (NSArray*)newTypes;
 - (void) unregisterDraggedTypes;
 - (BOOL) shouldDelayWindowOrderingForEvent: (NSEvent*)anEvent;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_2, GS_API_LATEST)
 - (BOOL) dragPromisedFilesOfTypes: (NSArray *)typeArray
                          fromRect: (NSRect)aRect
-                           source: (id)sourceObject 
+                           source: (id)sourceObject
                         slideBack: (BOOL)slideBack
                             event: (NSEvent *)theEvent;
 #endif
@@ -473,7 +382,7 @@ PACKAGE_SCOPE
  * Tool Tips
  */
 - (NSToolTipTag) addToolTipRect: (NSRect)aRect 
-                          owner: (id)anObject 
+                          owner: (id)anObject
                        userData: (void *)data;
 - (void) removeAllToolTips;
 - (void) removeToolTip: (NSToolTipTag)tag;
@@ -584,18 +493,18 @@ PACKAGE_SCOPE
  */
 - (void) addToPageSetup;
 - (void) beginPage: (int)ordinalNum
-	     label: (NSString*)aString
-	      bBox: (NSRect)pageRect
-	     fonts: (NSString*)fontNames;
+             label: (NSString*)aString
+              bBox: (NSRect)pageRect
+             fonts: (NSString*)fontNames;
 - (void) beginPageSetupRect: (NSRect)aRect
-		  placement: (NSPoint)location;
+                  placement: (NSPoint)location;
 - (void) beginPrologueBBox: (NSRect)boundingBox
-	      creationDate: (NSString*)dateCreated
-		 createdBy: (NSString*)anApplication
-		     fonts: (NSString*)fontNames
-		   forWhom: (NSString*)user
-		     pages: (int)numPages
-		     title: (NSString*)aTitle;
+              creationDate: (NSString*)dateCreated
+                 createdBy: (NSString*)anApplication
+                     fonts: (NSString*)fontNames
+                   forWhom: (NSString*)user
+                     pages: (int)numPages
+                     title: (NSString*)aTitle;
 - (void) beginSetup;
 - (void) beginTrailer;
 - (void) drawPageBorderWithSize: (NSSize)borderSize;
@@ -609,7 +518,7 @@ PACKAGE_SCOPE
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (void)beginDocument;
 - (void)beginPageInRect:(NSRect)aRect 
-	    atPlacement:(NSPoint)location;
+            atPlacement:(NSPoint)location;
 - (void)endDocument;
 #endif
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4, GS_API_LATEST)

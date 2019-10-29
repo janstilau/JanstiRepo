@@ -1,35 +1,3 @@
-/** <title>NSApplication</title>
-
-   <abstract>The one and only application class.</abstract>
-
-   Copyright (C) 1996-2015 Free Software Foundation, Inc.
-
-   Author: Scott Christley <scottc@net-community.com>
-   Date: 1996
-   Author: Felipe A. Rodriguez <far@ix.netcom.com>
-   Date: August 1998
-   Author: Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   Date: December 1998
-
-   This file is part of the GNUstep GUI Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; see the file COPYING.LIB.
-   If not, see <http://www.gnu.org/licenses/> or write to the 
-   Free Software Foundation, 51 Franklin Street, Fifth Floor, 
-   Boston, MA 02110-1301, USA.
-*/
-
 #import "config.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -97,9 +65,9 @@ NSThread *GSAppKitThread;
 
 /* Notifications used to implement hide and unhide functionality. */
 static NSString	*GSHideOtherApplicationsNotification
-  = @"GSHideOtherApplicationsNotification";
+= @"GSHideOtherApplicationsNotification";
 static NSString	*GSUnhideAllApplicationsNotification
-  = @"GSUnhideAllApplicationsNotification";
+= @"GSUnhideAllApplicationsNotification";
 
 /*
  * Base library exception handler
@@ -107,53 +75,53 @@ static NSString	*GSUnhideAllApplicationsNotification
 static NSUncaughtExceptionHandler *defaultUncaughtExceptionHandler;
 
 /*
- * Gui library user friendly exception handler 
+ * Gui library user friendly exception handler
  */
 static void
 _NSAppKitUncaughtExceptionHandler (NSException *exception)
 {
-  NSInteger retVal;
-
-  /* Reset the exception handler to the Base library's one, to prevent
+    NSInteger retVal;
+    
+    /* Reset the exception handler to the Base library's one, to prevent
      recursive calls to the gui one. */
-  NSSetUncaughtExceptionHandler(defaultUncaughtExceptionHandler);  
-
-  /*
-   * If there is no graphics context to run the alert panel in or
-   * its a severe error, use a non-graphical exception handler
-   */
-  if (GSCurrentContext() == nil
-    || [[exception name] isEqual: NSWindowServerCommunicationException]
-    || [[exception name] isEqual: GSWindowServerInternalException])
+    NSSetUncaughtExceptionHandler(defaultUncaughtExceptionHandler);
+    
+    /*
+     * If there is no graphics context to run the alert panel in or
+     * its a severe error, use a non-graphical exception handler
+     */
+    if (GSCurrentContext() == nil
+        || [[exception name] isEqual: NSWindowServerCommunicationException]
+        || [[exception name] isEqual: GSWindowServerInternalException])
     {
-      /* The following will raise again the exception using the base 
-	 library exception handler */
-      [exception raise];
+        /* The following will raise again the exception using the base
+         library exception handler */
+        [exception raise];
     }
-
-  retVal = GSRunExceptionPanel 
+    
+    retVal = GSRunExceptionPanel
     ([NSString stringWithFormat: _(@"Critical Error in %@"),
-	       [[NSProcessInfo processInfo] processName]],
+      [[NSProcessInfo processInfo] processName]],
      exception,
-     _(@"Abort"), 
+     _(@"Abort"),
      nil,
 #ifdef DEBUG
      _(@"Debug"));
 #else
-     nil);
+    nil);
 #endif
-
-  /* The user wants to abort */
-  if (retVal == NSAlertDefault)
+    
+    /* The user wants to abort */
+    if (retVal == NSAlertDefault)
     {
-      /* The following will raise again the exception using the base 
-	 library exception handler */
-      [exception raise];
+        /* The following will raise again the exception using the base
+         library exception handler */
+        [exception raise];
     }
-  else
+    else
     {
-      /* Debug button: abort so we can trace the error in gdb */
-      abort();
+        /* Debug button: abort so we can trace the error in gdb */
+        abort();
     }
 }
 
@@ -161,17 +129,17 @@ _NSAppKitUncaughtExceptionHandler (NSException *exception)
 NSBundle *
 GSGuiBundle(void)
 {
-  /* This is the bundle from where we load localization of messages.  */
-  static NSBundle *guiBundle = nil;
-
-  if (!guiBundle)
+    /* This is the bundle from where we load localization of messages.  */
+    static NSBundle *guiBundle = nil;
+    
+    if (!guiBundle)
     {
-      /* Create the gui bundle we use to localize messages.  */
-      guiBundle = [NSBundle bundleForLibrary: @"gnustep-gui"
-			    version: OBJC_STRINGIFY(GNUSTEP_GUI_MAJOR_VERSION.GNUSTEP_GUI_MINOR_VERSION)];
-      RETAIN(guiBundle);
+        /* Create the gui bundle we use to localize messages.  */
+        guiBundle = [NSBundle bundleForLibrary: @"gnustep-gui"
+                                       version: OBJC_STRINGIFY(GNUSTEP_GUI_MAJOR_VERSION.GNUSTEP_GUI_MINOR_VERSION)];
+        RETAIN(guiBundle);
     }
-  return guiBundle;
+    return guiBundle;
 }
 
 @interface GSBackend : NSObject
@@ -182,178 +150,178 @@ GSGuiBundle(void)
 static NSString *
 gnustep_backend_path(NSString *dir, NSString *name)
 {
-  NSString *path;
-  NSEnumerator *benum;
-
-  NSDebugFLLog(@"BackendBundle", @"Looking for %@", name);
-  
-  /* Find the backend framework */
-  benum = [NSStandardLibraryPaths() objectEnumerator];
-  while ((path = [benum nextObject]))
+    NSString *path;
+    NSEnumerator *benum;
+    
+    NSDebugFLLog(@"BackendBundle", @"Looking for %@", name);
+    
+    /* Find the backend framework */
+    benum = [NSStandardLibraryPaths() objectEnumerator];
+    while ((path = [benum nextObject]))
     {
-      path = [path stringByAppendingPathComponent: dir];
-      path = [path stringByAppendingPathComponent: name];
-      if ([[NSFileManager defaultManager] fileExistsAtPath: path])
-	{
-	  break;
-	}
+        path = [path stringByAppendingPathComponent: dir];
+        path = [path stringByAppendingPathComponent: name];
+        if ([[NSFileManager defaultManager] fileExistsAtPath: path])
+        {
+            break;
+        }
     }
-  return path;
+    return path;
 }
 
 /* Find and load the backend framework, if there is one. The name is
-   taken from a user default containing the name of the backend framework,
-   such as 'GNUstep-back', or simply 'back', or for historical reasons,
-   'libgnustep-back'.  */
+ taken from a user default containing the name of the backend framework,
+ such as 'GNUstep-back', or simply 'back', or for historical reasons,
+ 'libgnustep-back'.  */
 static NSString *
 gnustep_backend_framework(NSString *bundleName)
 {
-  if (bundleName == nil)
-    bundleName = @"GNUstep_back.framework";
-  else
+    if (bundleName == nil)
+        bundleName = @"GNUstep_back.framework";
+    else
     {
-      if ([bundleName hasPrefix: @"GNUstep-"])
-	bundleName = [bundleName stringByAppendingString: @".framework"];
-      else 
-	{
-	if  ([bundleName hasPrefix: @"libgnustep-"])
-	  {
-	    bundleName = [bundleName substringFromIndex: [@"libgnustep-" length]];
-	  }
-	bundleName = [NSString stringWithFormat: @"GNUstep-%@.framework",
-			       bundleName];
-	} 
+        if ([bundleName hasPrefix: @"GNUstep-"])
+            bundleName = [bundleName stringByAppendingString: @".framework"];
+        else
+        {
+            if  ([bundleName hasPrefix: @"libgnustep-"])
+            {
+                bundleName = [bundleName substringFromIndex: [@"libgnustep-" length]];
+            }
+            bundleName = [NSString stringWithFormat: @"GNUstep-%@.framework",
+                          bundleName];
+        }
     }
-
-  return gnustep_backend_path(@"Frameworks", bundleName);
+    
+    return gnustep_backend_path(@"Frameworks", bundleName);
 }
 
 /* Find and load the backend bundle, if there is one. The name is
-   taken from a user default containing the name of the backend bundle,
-   such as 'back', or for historical reasons, 'libgnustep-back'. New
-   versions may also have a version number associated with it.  */
+ taken from a user default containing the name of the backend bundle,
+ such as 'back', or for historical reasons, 'libgnustep-back'. New
+ versions may also have a version number associated with it.  */
 static NSString *
 gnustep_backend_bundle(NSString *bundleName)
 {
-  NSString *path, *bundleWithVersion;
-  int version = GNUSTEP_GUI_MAJOR_VERSION * 100 + GNUSTEP_GUI_MINOR_VERSION;
-  
-  if (bundleName == nil)
+    NSString *path, *bundleWithVersion;
+    int version = GNUSTEP_GUI_MAJOR_VERSION * 100 + GNUSTEP_GUI_MINOR_VERSION;
+    
+    if (bundleName == nil)
     {
-      bundleName = @"libgnustep-back";
+        bundleName = @"libgnustep-back";
     }
-  else
+    else
     {
-      if ([bundleName hasPrefix: @"libgnustep-"] == NO)
-	{
-	  bundleName = [NSString stringWithFormat: @"libgnustep-%@",
-				 bundleName];
-	} 
+        if ([bundleName hasPrefix: @"libgnustep-"] == NO)
+        {
+            bundleName = [NSString stringWithFormat: @"libgnustep-%@",
+                          bundleName];
+        }
     }
-  bundleWithVersion = [NSString stringWithFormat: @"%@-%03d.bundle",
-				bundleName, version];
-  bundleName = [bundleName stringByAppendingString: @".bundle"];
-  path = gnustep_backend_path(@"Bundles", bundleWithVersion);
-  if (path == nil)
+    bundleWithVersion = [NSString stringWithFormat: @"%@-%03d.bundle",
+                         bundleName, version];
+    bundleName = [bundleName stringByAppendingString: @".bundle"];
+    path = gnustep_backend_path(@"Bundles", bundleWithVersion);
+    if (path == nil)
     {
-      NSLog(@"Did not find correct version of backend (%@), "
-	@"falling back to std (%@).", bundleWithVersion, bundleName);
-      path = gnustep_backend_path(@"Bundles", bundleName);
+        NSLog(@"Did not find correct version of backend (%@), "
+              @"falling back to std (%@).", bundleWithVersion, bundleName);
+        path = gnustep_backend_path(@"Bundles", bundleName);
     }
-  return path;
+    return path;
 }
 
 BOOL
 initialize_gnustep_backend(void)
 {
-  static int first = 1;
-
-  if (first)
+    static int first = 1;
+    
+    if (first)
     {
-      Class backend;
-
-      /*
-      Remember which thread we are running in. This thread will be the
-      -gui thread, ie. the only thread that may do any rendering. With
-      the exception of a few methods explicitly marked as thread-safe,
-      other threads should not call any methods in -gui.
-      */
-      GSAppKitThread = [NSThread currentThread];
-
-      first = 0;
+        Class backend;
+        
+        /*
+         Remember which thread we are running in. This thread will be the
+         -gui thread, ie. the only thread that may do any rendering. With
+         the exception of a few methods explicitly marked as thread-safe,
+         other threads should not call any methods in -gui.
+         */
+        GSAppKitThread = [NSThread currentThread];
+        
+        first = 0;
 #ifdef BACKEND_BUNDLE
-      {      
-	NSBundle *theBundle;
-	NSString *path, *bundleName;
-	NSUserDefaults	*defs = [NSUserDefaults standardUserDefaults];
-
-	/* What backend ? */
-	bundleName = [defs stringForKey: @"GSBackend"];
-	path = gnustep_backend_framework (bundleName);
-	if (path == nil)
-	  {
-	    NSDebugLLog(@"BackendBundle", @"Did not find backend framework.");
-	    path = gnustep_backend_bundle (bundleName);
-	  }
-
-	/* FIXME/TODO - update localized error messages.  */
-
-	/* Backend found ? */
-	if (bundleName == nil)
-	  bundleName = @"back";
-	NSCAssert1(path != nil, _(@"Unable to find backend %@"), bundleName);
-	NSDebugLog(@"Loading Backend from %@", path);
-	NSDebugFLLog(@"BackendBundle", @"Loading Backend from %@", path);
-
-	/* Create a bundle object.  (Should normally succeed).  */
-	theBundle = [NSBundle bundleWithPath: path];
-	NSCAssert1(theBundle != nil, 
-		   _(@"Can't create NSBundle object for backend at path %@"),
-		   path);
-
-	/* Now load the object file from the bundle.  */
-	NSCAssert1 ([theBundle load],
-		    _(@"Can't load object file from backend at path %@"),
-		    path);
-	
-	/* Now get the GSBackend class, which should have just been loaded
-	 * from the bundle.  */
-	backend = NSClassFromString (@"GSBackend");
-	NSCAssert1 (backend != Nil, 
-	  _(@"Backend at path %@ doesn't contain the GSBackend class"), path);
-	[backend initializeBackend];
-      }
-
+        {
+            NSBundle *theBundle;
+            NSString *path, *bundleName;
+            NSUserDefaults	*defs = [NSUserDefaults standardUserDefaults];
+            
+            /* What backend ? */
+            bundleName = [defs stringForKey: @"GSBackend"];
+            path = gnustep_backend_framework (bundleName);
+            if (path == nil)
+            {
+                NSDebugLLog(@"BackendBundle", @"Did not find backend framework.");
+                path = gnustep_backend_bundle (bundleName);
+            }
+            
+            /* FIXME/TODO - update localized error messages.  */
+            
+            /* Backend found ? */
+            if (bundleName == nil)
+                bundleName = @"back";
+            NSCAssert1(path != nil, _(@"Unable to find backend %@"), bundleName);
+            NSDebugLog(@"Loading Backend from %@", path);
+            NSDebugFLLog(@"BackendBundle", @"Loading Backend from %@", path);
+            
+            /* Create a bundle object.  (Should normally succeed).  */
+            theBundle = [NSBundle bundleWithPath: path];
+            NSCAssert1(theBundle != nil,
+                       _(@"Can't create NSBundle object for backend at path %@"),
+                       path);
+            
+            /* Now load the object file from the bundle.  */
+            NSCAssert1 ([theBundle load],
+                        _(@"Can't load object file from backend at path %@"),
+                        path);
+            
+            /* Now get the GSBackend class, which should have just been loaded
+             * from the bundle.  */
+            backend = NSClassFromString (@"GSBackend");
+            NSCAssert1 (backend != Nil,
+                        _(@"Backend at path %@ doesn't contain the GSBackend class"), path);
+            [backend initializeBackend];
+        }
+        
 #else
-      /* GSBackend will be in a separate library linked in with the app.
-       This would be cleaner with ...classNamed: @"GSBackend", but that 
-       doesn't work in some cases (Mac OS X for instance).  */
-      [GSBackend initializeBackend];
+        /* GSBackend will be in a separate library linked in with the app.
+         This would be cleaner with ...classNamed: @"GSBackend", but that
+         doesn't work in some cases (Mac OS X for instance).  */
+        [GSBackend initializeBackend];
 #endif
     }
-  return YES;
+    return YES;
 }
 
 void
 gsapp_user_bundles(void)
 {
-  NSUserDefaults *defs=[NSUserDefaults standardUserDefaults];
-  NSArray *a=[defs arrayForKey: @"GSAppKitUserBundles"];
-  NSUInteger i, c;
-  c = [a count];
-  if (a == nil || c == 0)
-    return;
-  NSLog(@"Loading %d user defined AppKit bundles", (int)c);
-  for (i = 0; i < c; i++)
+    NSUserDefaults *defs=[NSUserDefaults standardUserDefaults];
+    NSArray *a=[defs arrayForKey: @"GSAppKitUserBundles"];
+    NSUInteger i, c;
+    c = [a count];
+    if (a == nil || c == 0)
+        return;
+    NSLog(@"Loading %d user defined AppKit bundles", (int)c);
+    for (i = 0; i < c; i++)
     {
-      NSBundle *b = [NSBundle bundleWithPath: [a objectAtIndex: i]];
-      if (!b)
-	{
-	  NSLog(@"* Unable to load '%@'", [a objectAtIndex: i]);
-	  continue;
-	}
-      NSLog(@"Loaded '%@'\n", [a objectAtIndex: i]);
-      [[[b principalClass] alloc] init];
+        NSBundle *b = [NSBundle bundleWithPath: [a objectAtIndex: i]];
+        if (!b)
+        {
+            NSLog(@"* Unable to load '%@'", [a objectAtIndex: i]);
+            continue;
+        }
+        NSLog(@"Loaded '%@'\n", [a objectAtIndex: i]);
+        [[[b principalClass] alloc] init];
     }
 }
 
@@ -361,20 +329,20 @@ gsapp_user_bundles(void)
  * Types
  */
 struct _NSModalSession {
-  NSInteger		runState;
-  NSInteger		entryLevel;
-  NSWindow		*window;
-  NSModalSession	previous;
+    NSInteger		runState;
+    NSInteger		entryLevel;
+    NSWindow		*window;
+    NSModalSession	previous;
 };
- 
+
 @interface NSApplication (Private)
 - (void) _appIconInit;
 - (void) _loadAppIconImage;
 - (NSDictionary*) _notificationUserInfo;
 - (void) _openDocument: (NSString*)name;
 - (id) _targetForAction: (SEL)aSelector
-	      keyWindow: (NSWindow *)keyWindow
-	     mainWindow: (NSWindow *)mainWindow;
+              keyWindow: (NSWindow *)keyWindow
+             mainWindow: (NSWindow *)mainWindow;
 - (void) _windowDidBecomeKey: (NSNotification*) notification;
 - (void) _windowDidBecomeMain: (NSNotification*) notification;
 - (void) _windowDidResignKey: (NSNotification*) notification;
@@ -395,10 +363,10 @@ struct _NSModalSession {
 @implementation NSWindow (ApplicationPrivate)
 /**
  * Associate sheet with the window it's attached to.  The window is not retained.
- */ 
+ */
 - (void) setAttachedSheet: (id) sheet
 {
-  _attachedSheet = sheet;
+    _attachedSheet = sheet;
 }
 @end
 
@@ -426,78 +394,78 @@ NSApplication	*NSApp = nil;
 
 - (BOOL) canBecomeMainWindow
 {
-  return NO;
+    return NO;
 }
 
 - (BOOL) canBecomeKeyWindow
 {
-  return NO;
+    return NO;
 }
 
 - (BOOL) worksWhenModal
 {
-  return YES;
+    return YES;
 }
 
 - (void) orderWindow: (NSWindowOrderingMode)place relativeTo: (NSInteger)otherWin
 {     
-  if ([[NSUserDefaults standardUserDefaults]
-	boolForKey: @"GSSuppressAppIcon"] == NO)
+    if ([[NSUserDefaults standardUserDefaults]
+         boolForKey: @"GSSuppressAppIcon"] == NO)
     {
-      [super orderWindow: place relativeTo: otherWin];
+        [super orderWindow: place relativeTo: otherWin];
     }
 }
 
 - (void) _initDefaults
 {
-  [super _initDefaults];
-  /* Set the title of the window to the process name. Even as the
+    [super _initDefaults];
+    /* Set the title of the window to the process name. Even as the
      window shows no title bar, the window manager may show it.  */
-  [self setTitle: [[NSProcessInfo processInfo] processName]];
-  [self setExcludedFromWindowsMenu: YES];
-  [self setReleasedWhenClosed: NO];
-
+    [self setTitle: [[NSProcessInfo processInfo] processName]];
+    [self setExcludedFromWindowsMenu: YES];
+    [self setReleasedWhenClosed: NO];
+    
 #if	MINI_ICON
-  /* Hack ... 
-   * At least one window manager won't miniaturize a window unless
-   * it's at the standard level.  If the app icon is suppressed, we
-   * may still want a miniaturised version while the app is hidden.
-   */
-  if (YES == [[NSUserDefaults standardUserDefaults]
-    boolForKey: @"GSSuppressAppIcon"])
+    /* Hack ...
+     * At least one window manager won't miniaturize a window unless
+     * it's at the standard level.  If the app icon is suppressed, we
+     * may still want a miniaturised version while the app is hidden.
+     */
+    if (YES == [[NSUserDefaults standardUserDefaults]
+                boolForKey: @"GSSuppressAppIcon"])
     {
-      return;
+        return;
     }
 #endif
-  /* App icons and mini windows are displayed at dock level by default. Yet,
+    /* App icons and mini windows are displayed at dock level by default. Yet,
      with the current window level mapping in -back, some window managers
      will order pop up and context menus behind app icons and mini windows.
      Therefore, it is possible to have app icons and mini windows displayed
      at normal window level under control of a user preference. */
-  // See also NSMiniWindow -_initDefaults in NSWindow.m
-  if ([[NSUserDefaults standardUserDefaults]
-	boolForKey: @"GSAllowWindowsOverIcons"] == YES)
-    _windowLevel = NSDockWindowLevel;
+    // See also NSMiniWindow -_initDefaults in NSWindow.m
+    if ([[NSUserDefaults standardUserDefaults]
+         boolForKey: @"GSAllowWindowsOverIcons"] == YES)
+        _windowLevel = NSDockWindowLevel;
 }
 
 - (void) rightMouseDown: (NSEvent *)theEvent
 {
-  NSMenu *menu = nil;
-  NSInterfaceStyle style = NSInterfaceStyleForKey(@"NSMenuInterfaceStyle", nil);
-
-  if (style == NSMacintoshInterfaceStyle || style == NSWindows95InterfaceStyle)
+    NSMenu *menu = nil;
+    NSInterfaceStyle style = NSInterfaceStyleForKey(@"NSMenuInterfaceStyle", nil);
+    
+    if (style == NSMacintoshInterfaceStyle || style == NSWindows95InterfaceStyle)
     {
-      menu = [NSApp _dockMenu];
+        menu = [NSApp _dockMenu];
     }
-  if (menu)
+    if (menu)
     {
-      [NSMenu popUpContextMenu: menu
-		     withEvent: theEvent
-		       forView: [self contentView]];
+        [NSMenu popUpContextMenu: menu
+                       withEvent: theEvent
+                         forView: [self contentView]];
     }
-  else
+    else
     {
-      [super rightMouseDown: theEvent];
+        [super rightMouseDown: theEvent];
     }
 }
 
@@ -511,35 +479,35 @@ static NSCell* tileCell = nil;
 
 static NSSize scaledIconSizeForSize(NSSize imageSize)
 {
-  NSSize iconSize, retSize;
-  
-  iconSize = GSGetIconSize();
-  retSize.width = imageSize.width * iconSize.width / 64;
-  retSize.height = imageSize.height * iconSize.height / 64;
-  return retSize;
+    NSSize iconSize, retSize;
+    
+    iconSize = GSGetIconSize();
+    retSize.width = imageSize.width * iconSize.width / 64;
+    retSize.height = imageSize.height * iconSize.height / 64;
+    return retSize;
 }
 
 + (void) initialize
 {
-  NSImage	*tileImage;
-  NSSize	iconSize;
-
-  iconSize = GSGetIconSize();
-  /* _appIconInit will set our image */
-  dragCell = [[NSCell alloc] initImageCell: nil];
-  [dragCell setBordered: NO];
-  
-  tileImage = [[GSCurrentServer() iconTileImage] copy];
-  [tileImage setScalesWhenResized: YES];
-  [tileImage setSize: iconSize];
-  tileCell = [[NSCell alloc] initImageCell: tileImage];
-  RELEASE(tileImage);
-  [tileCell setBordered: NO];
+    NSImage	*tileImage;
+    NSSize	iconSize;
+    
+    iconSize = GSGetIconSize();
+    /* _appIconInit will set our image */
+    dragCell = [[NSCell alloc] initImageCell: nil];
+    [dragCell setBordered: NO];
+    
+    tileImage = [[GSCurrentServer() iconTileImage] copy];
+    [tileImage setScalesWhenResized: YES];
+    [tileImage setSize: iconSize];
+    tileCell = [[NSCell alloc] initImageCell: tileImage];
+    RELEASE(tileImage);
+    [tileCell setBordered: NO];
 }
 
 - (BOOL) acceptsFirstMouse: (NSEvent*)theEvent
 {
-  return YES;
+    return YES;
 }
 
 - (void) concludeDragOperation: (id<NSDraggingInfo>)sender
@@ -548,7 +516,7 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
 
 - (NSDragOperation) draggingEntered: (id<NSDraggingInfo>)sender
 {
-  return NSDragOperationGeneric;
+    return NSDragOperationGeneric;
 }
 
 - (void) draggingExited: (id<NSDraggingInfo>)sender
@@ -557,170 +525,170 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
 
 - (NSDragOperation) draggingUpdated: (id<NSDraggingInfo>)sender
 {
-  return NSDragOperationGeneric;
+    return NSDragOperationGeneric;
 }
 
 - (void) drawRect: (NSRect)rect
 {
-  NSSize iconSize = GSGetIconSize();
-  
-  [tileCell drawWithFrame: NSMakeRect(0, 0, iconSize.width, iconSize.height)
-  		   inView: self];
-  [dragCell drawWithFrame: NSMakeRect(0, 0, iconSize.width, iconSize.height)
-		   inView: self];
-  
-  if ([NSApp isHidden])
+    NSSize iconSize = GSGetIconSize();
+    
+    [tileCell drawWithFrame: NSMakeRect(0, 0, iconSize.width, iconSize.height)
+                     inView: self];
+    [dragCell drawWithFrame: NSMakeRect(0, 0, iconSize.width, iconSize.height)
+                     inView: self];
+    
+    if ([NSApp isHidden])
     {
-      NSRectEdge mySides[] = {NSMinXEdge, NSMinYEdge, NSMaxXEdge, NSMaxYEdge};
-      CGFloat myGrays[] = {NSBlack, NSWhite, NSWhite, NSBlack};
-      NSDrawTiledRects(NSMakeRect(4, 4, 3, 2), rect, mySides, myGrays, 4);
+        NSRectEdge mySides[] = {NSMinXEdge, NSMinYEdge, NSMaxXEdge, NSMaxYEdge};
+        CGFloat myGrays[] = {NSBlack, NSWhite, NSWhite, NSBlack};
+        NSDrawTiledRects(NSMakeRect(4, 4, 3, 2), rect, mySides, myGrays, 4);
     }
 }
 
 - (id) initWithFrame: (NSRect)frame
 {
-  self = [super initWithFrame: frame];
-  [self registerForDraggedTypes: [NSArray arrayWithObjects:
-    NSFilenamesPboardType, nil]];
-  return self;
+    self = [super initWithFrame: frame];
+    [self registerForDraggedTypes: [NSArray arrayWithObjects:
+                                    NSFilenamesPboardType, nil]];
+    return self;
 }
 
 - (void) mouseDown: (NSEvent*)theEvent
 {
-  if ([theEvent clickCount] >= 2)
+    if ([theEvent clickCount] >= 2)
     {
-      /* if not hidden raise windows which are possibly obscured. */
-      if ([NSApp isHidden] == NO)
+        /* if not hidden raise windows which are possibly obscured. */
+        if ([NSApp isHidden] == NO)
         {
-          NSArray *windows = RETAIN(GSOrderedWindows());
-          NSWindow *aWin;
-          NSEnumerator *iter = [windows reverseObjectEnumerator];
-          
-          while ((aWin = [iter nextObject]))
-            { 
-              if ([aWin isVisible] == YES && [aWin isMiniaturized] == NO
-                && aWin != [NSApp keyWindow] && aWin != [NSApp mainWindow]
-                && aWin != [self window] 
-                && ([aWin styleMask] & NSMiniWindowMask) == 0)
+            NSArray *windows = RETAIN(GSOrderedWindows());
+            NSWindow *aWin;
+            NSEnumerator *iter = [windows reverseObjectEnumerator];
+            
+            while ((aWin = [iter nextObject]))
+            {
+                if ([aWin isVisible] == YES && [aWin isMiniaturized] == NO
+                    && aWin != [NSApp keyWindow] && aWin != [NSApp mainWindow]
+                    && aWin != [self window]
+                    && ([aWin styleMask] & NSMiniWindowMask) == 0)
                 {
-                  [aWin orderFrontRegardless];
+                    [aWin orderFrontRegardless];
                 }
             }
-	
-          if ([NSApp isActive] == YES)
+            
+            if ([NSApp isActive] == YES)
             {
-              if ([NSApp keyWindow] != nil)
+                if ([NSApp keyWindow] != nil)
                 {
-                  [[NSApp keyWindow] orderFront: self];
+                    [[NSApp keyWindow] orderFront: self];
                 }
-              else if ([NSApp mainWindow] != nil)
+                else if ([NSApp mainWindow] != nil)
                 {
-                  [[NSApp mainWindow] makeKeyAndOrderFront: self];
+                    [[NSApp mainWindow] makeKeyAndOrderFront: self];
                 }
-              else
+                else
                 {
-                  /* We need give input focus to some window otherwise we'll 
+                    /* We need give input focus to some window otherwise we'll
                      never get keyboard events. FIXME: doesn't work. */
                     NSWindow *menu_window= [[NSApp mainMenu] window];
                     NSDebugLLog(@"Focus",
-		      @"No key on activation - make menu key");
+                                @"No key on activation - make menu key");
                     [GSServerForWindow(menu_window) setinputfocus:
-		      [menu_window windowNumber]];
+                     [menu_window windowNumber]];
                 }
             }
-	  
-          RELEASE(windows);
+            
+            RELEASE(windows);
         }
-      [NSApp unhide: self]; // or activate or do nothing.
+        [NSApp unhide: self]; // or activate or do nothing.
     }
-  else
+    else
     {
-      NSPoint	lastLocation;
-      NSPoint	location;
-      NSUInteger eventMask = NSLeftMouseDownMask | NSLeftMouseUpMask
-	| NSPeriodicMask | NSOtherMouseUpMask | NSRightMouseUpMask;
-      NSDate	*theDistantFuture = [NSDate distantFuture];
-      BOOL	done = NO;
-
-      lastLocation = [theEvent locationInWindow];
-      [NSEvent startPeriodicEventsAfterDelay: 0.02 withPeriod: 0.02];
-
-      while (!done)
-	{
-	  theEvent = [NSApp nextEventMatchingMask: eventMask
-					untilDate: theDistantFuture
-					   inMode: NSEventTrackingRunLoopMode
-					  dequeue: YES];
-	
-	  switch ([theEvent type])
-	    {
-	      case NSRightMouseUp:
-	      case NSOtherMouseUp:
-	      case NSLeftMouseUp:
-	      /* any mouse up means we're done */
-		done = YES;
-		break;
-	      case NSPeriodic:
-		location = [_window mouseLocationOutsideOfEventStream];
-		if (NSEqualPoints(location, lastLocation) == NO)
-		  {
-		    NSPoint	origin = [_window frame].origin;
-
-		    origin.x += (location.x - lastLocation.x);
-		    origin.y += (location.y - lastLocation.y);
-		    [_window setFrameOrigin: origin];
-		  }
-		break;
-
-	      default:
-		break;
-	    }
-	}
-      [NSEvent stopPeriodicEvents];
+        NSPoint	lastLocation;
+        NSPoint	location;
+        NSUInteger eventMask = NSLeftMouseDownMask | NSLeftMouseUpMask
+        | NSPeriodicMask | NSOtherMouseUpMask | NSRightMouseUpMask;
+        NSDate	*theDistantFuture = [NSDate distantFuture];
+        BOOL	done = NO;
+        
+        lastLocation = [theEvent locationInWindow];
+        [NSEvent startPeriodicEventsAfterDelay: 0.02 withPeriod: 0.02];
+        
+        while (!done)
+        {
+            theEvent = [NSApp nextEventMatchingMask: eventMask
+                                          untilDate: theDistantFuture
+                                             inMode: NSEventTrackingRunLoopMode
+                                            dequeue: YES];
+            
+            switch ([theEvent type])
+            {
+                case NSRightMouseUp:
+                case NSOtherMouseUp:
+                case NSLeftMouseUp:
+                    /* any mouse up means we're done */
+                    done = YES;
+                    break;
+                case NSPeriodic:
+                    location = [_window mouseLocationOutsideOfEventStream];
+                    if (NSEqualPoints(location, lastLocation) == NO)
+                    {
+                        NSPoint	origin = [_window frame].origin;
+                        
+                        origin.x += (location.x - lastLocation.x);
+                        origin.y += (location.y - lastLocation.y);
+                        [_window setFrameOrigin: origin];
+                    }
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+        [NSEvent stopPeriodicEvents];
     }
 }                                                        
 
 - (BOOL) prepareForDragOperation: (id<NSDraggingInfo>)sender
 {
-  return YES;
+    return YES;
 }
 
 - (BOOL) performDragOperation: (id<NSDraggingInfo>)sender
 {
-  NSArray	*types;
-  NSPasteboard	*dragPb;
-
-  dragPb = [sender draggingPasteboard];
-  types = [dragPb types];
-  if ([types containsObject: NSFilenamesPboardType] == YES)
+    NSArray	*types;
+    NSPasteboard	*dragPb;
+    
+    dragPb = [sender draggingPasteboard];
+    types = [dragPb types];
+    if ([types containsObject: NSFilenamesPboardType] == YES)
     {
-      NSArray	*names = [dragPb propertyListForType: NSFilenamesPboardType];
-      NSUInteger index;
-
-      [NSApp activateIgnoringOtherApps: YES];
-      for (index = 0; index < [names count]; index++)
-	{
-	  [NSApp _openDocument: [names objectAtIndex: index]];
-	}
-      return YES;
+        NSArray	*names = [dragPb propertyListForType: NSFilenamesPboardType];
+        NSUInteger index;
+        
+        [NSApp activateIgnoringOtherApps: YES];
+        for (index = 0; index < [names count]; index++)
+        {
+            [NSApp _openDocument: [names objectAtIndex: index]];
+        }
+        return YES;
     }
-  return NO;
+    return NO;
 }
 
 - (void) setImage: (NSImage *)anImage
 {
-  NSImage *imgCopy = [anImage copy];
-
-  if (imgCopy)
+    NSImage *imgCopy = [anImage copy];
+    
+    if (imgCopy)
     {
-      NSSize imageSize = [imgCopy size];
-
-      [imgCopy setScalesWhenResized: YES];
-      [imgCopy setSize: scaledIconSizeForSize(imageSize)];
+        NSSize imageSize = [imgCopy size];
+        
+        [imgCopy setScalesWhenResized: YES];
+        [imgCopy setSize: scaledIconSizeForSize(imageSize)];
     }
-  [dragCell setImage: imgCopy];
-  RELEASE(imgCopy);
-  [self setNeedsDisplay: YES];
+    [dragCell setImage: imgCopy];
+    RELEASE(imgCopy);
+    [self setNeedsDisplay: YES];
 }
 
 @end
@@ -730,7 +698,7 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  * <code>NSApplication</code> (or a subclass) instantiated.  Usually this is
  * created through the +sharedApplication method.  Once created, this instance
  * is always accessible through the global variable '<code>NSApp</code>'.</p>
- * 
+ *
  * <p>The NSApplication instance manages the main run loop, dispatches
  * events, and manages resources.  It sets up the connection to the window
  * server and provides special methods for putting up "modal" (always on top)
@@ -758,33 +726,33 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 + (void) initialize
 {
-  if (self == [NSApplication class])
+    if (self == [NSApplication class])
     {
-      CREATE_AUTORELEASE_POOL(pool);
-      /*
-       * Dummy functions to fool linker into linking files that contain
-       * only catagories - static libraries seem to have problems here.
-       */
-      extern void	GSStringDrawingDummyFunction(void);
-
-      GSStringDrawingDummyFunction();
-
-      [self setVersion: 1];
-     
-      /* Cache the NSAutoreleasePool class */
-      arpClass = [NSAutoreleasePool class];
-      nc = [NSNotificationCenter defaultCenter];
-      [pool drain];
+        CREATE_AUTORELEASE_POOL(pool);
+        /*
+         * Dummy functions to fool linker into linking files that contain
+         * only catagories - static libraries seem to have problems here.
+         */
+        extern void	GSStringDrawingDummyFunction(void);
+        
+        GSStringDrawingDummyFunction();
+        
+        [self setVersion: 1];
+        
+        /* Cache the NSAutoreleasePool class */
+        arpClass = [NSAutoreleasePool class];
+        nc = [NSNotificationCenter defaultCenter];
+        [pool drain];
     }
 }
 
 // Helper method
 + (void) _invokeWithAutoreleasePool: (NSInvocation*) inv
 {
-  CREATE_AUTORELEASE_POOL(pool);
-
-  [inv invoke];
-  [pool drain];
+    CREATE_AUTORELEASE_POOL(pool);
+    
+    [inv invoke];
+    [pool drain];
 }
 
 /**
@@ -792,20 +760,20 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  * invocation wrapped by an autorelease pool.
  */
 + (void) detachDrawingThread: (SEL)selector
-		    toTarget: (id)target
-		  withObject: (id)argument
+                    toTarget: (id)target
+                  withObject: (id)argument
 {
-  NSInvocation *inv;
-
-  inv = [NSInvocation
-            invocationWithMethodSignature: 
-                [target methodSignatureForSelector: selector]]; 
-  [inv setTarget: target];
-  [inv setSelector: selector];
-  [inv setArgument: argument atIndex: 2];
-  [NSThread detachNewThreadSelector: @selector(_invokeWithAutoreleasePool:) 
-	    toTarget: self 
-	    withObject: inv];
+    NSInvocation *inv;
+    
+    inv = [NSInvocation
+           invocationWithMethodSignature:
+           [target methodSignatureForSelector: selector]];
+    [inv setTarget: target];
+    [inv setSelector: selector];
+    [inv setArgument: argument atIndex: 2];
+    [NSThread detachNewThreadSelector: @selector(_invokeWithAutoreleasePool:)
+                             toTarget: self
+                           withObject: inv];
 }
 
 /**
@@ -844,13 +812,13 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 + (NSApplication *) sharedApplication
 {
-  /* If the global application does not yet exist then create it.  */
-  if (NSApp == nil)
+    /* If the global application does not yet exist then create it.  */
+    if (NSApp == nil)
     {
-      /* -init sets NSApp.  */
-      [[self alloc] init];
+        /* -init sets NSApp.  */
+        [[self alloc] init];
     }
-  return NSApp;
+    return NSApp;
 }
 
 /*
@@ -862,69 +830,69 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (void) _init
 {
-  GSDisplayServer *srv;
-  NSDictionary *attributes;
-  /* Initialization must be enclosed in an autorelease pool.  */
-  CREATE_AUTORELEASE_POOL(_app_init_pool);
- 
-  /* 
-   * Set NSApp as soon as possible, since other gui classes (which
-   * we refer or use in this method) might be calling [NSApplication
-   * sharedApplication] during their initialization, and we want
-   * those calls to succeed.  
-   */
-  NSApp = self;
-
-  /* Initialize the backend here.  */
-  initialize_gnustep_backend();
-
-  /* Load user-defined bundles */
-  gsapp_user_bundles();
-
-  /* Connect to our window server.  */
-  srv = [GSDisplayServer serverWithAttributes: nil];
-  RETAIN(srv);
-  [GSDisplayServer setCurrentServer: srv];
-
-  /* Create a default context with the attributes of the main screen.  */
-  attributes = [[NSScreen mainScreen] deviceDescription];
-  _default_context = [NSGraphicsContext graphicsContextWithAttributes: attributes];
-  RETAIN(_default_context);
-  [NSGraphicsContext setCurrentContext: _default_context];
-
-  /* Initialize font manager.  */
-  [NSFontManager sharedFontManager];
-
-  _hidden = [[NSMutableArray alloc] init];
-  _inactive = [[NSMutableArray alloc] init];
-  _unhide_on_activation = YES;
-  _app_is_hidden = NO;
-  /* Ivar already automatically initialized to NO when the app is
+    GSDisplayServer *srv;
+    NSDictionary *attributes;
+    /* Initialization must be enclosed in an autorelease pool.  */
+    CREATE_AUTORELEASE_POOL(_app_init_pool);
+    
+    /*
+     * Set NSApp as soon as possible, since other gui classes (which
+     * we refer or use in this method) might be calling [NSApplication
+     * sharedApplication] during their initialization, and we want
+     * those calls to succeed.
+     */
+    NSApp = self;
+    
+    /* Initialize the backend here.  */
+    initialize_gnustep_backend();
+    
+    /* Load user-defined bundles */
+    gsapp_user_bundles();
+    
+    /* Connect to our window server.  */
+    srv = [GSDisplayServer serverWithAttributes: nil];
+    RETAIN(srv);
+    [GSDisplayServer setCurrentServer: srv];
+    
+    /* Create a default context with the attributes of the main screen.  */
+    attributes = [[NSScreen mainScreen] deviceDescription];
+    _default_context = [NSGraphicsContext graphicsContextWithAttributes: attributes];
+    RETAIN(_default_context);
+    [NSGraphicsContext setCurrentContext: _default_context];
+    
+    /* Initialize font manager.  */
+    [NSFontManager sharedFontManager];
+    
+    _hidden = [[NSMutableArray alloc] init];
+    _inactive = [[NSMutableArray alloc] init];
+    _unhide_on_activation = YES;
+    _app_is_hidden = NO;
+    /* Ivar already automatically initialized to NO when the app is
      created.  */
-  //_app_is_active = NO;
-  //_main_menu = nil;
-  _windows_need_update = YES;
-
-  /* Save the base library exception handler */
-  defaultUncaughtExceptionHandler = NSGetUncaughtExceptionHandler();
-  /* Set a new exception handler for the gui library.  */
-  NSSetUncaughtExceptionHandler(_NSAppKitUncaughtExceptionHandler);
-
-  _listener = [GSServicesManager newWithApplication: self];
-
-  /* NSEvent doesn't use -init so we use +alloc instead of +new.  */
-  _current_event = [NSEvent alloc]; // no current event
-  null_event = [NSEvent alloc];    // create dummy event
-
-  /* We are the end of responder chain.  */
-  [self setNextResponder: nil];
-
-  /* Create our app icon.
+    //_app_is_active = NO;
+    //_main_menu = nil;
+    _windows_need_update = YES;
+    
+    /* Save the base library exception handler */
+    defaultUncaughtExceptionHandler = NSGetUncaughtExceptionHandler();
+    /* Set a new exception handler for the gui library.  */
+    NSSetUncaughtExceptionHandler(_NSAppKitUncaughtExceptionHandler);
+    
+    _listener = [GSServicesManager newWithApplication: self];
+    
+    /* NSEvent doesn't use -init so we use +alloc instead of +new.  */
+    _current_event = [NSEvent alloc]; // no current event
+    null_event = [NSEvent alloc];    // create dummy event
+    
+    /* We are the end of responder chain.  */
+    [self setNextResponder: nil];
+    
+    /* Create our app icon.
      NB We are doing this here because WindowMaker will not map the app icon
      window unless it is the very first window being mapped. */
-  [self _appIconInit];
-
-  [_app_init_pool drain];
+    [self _appIconInit];
+    
+    [_app_init_pool drain];
 }
 
 
@@ -950,36 +918,36 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  * only once (this is according to the openstep specification).  Since
  * +sharedApplication automatically calls this method, making also
  * sure it calls it only once, you definitely want to use
- * +sharedApplication instead of calling -init directly.  
+ * +sharedApplication instead of calling -init directly.
  */
 - (id) init
 {
-  /*
-   * As per openstep specification, calling -init twice is a bug in
-   * the program.  +sharedApplication automatically makes sure it
-   * never calls -init more than once, and programmers should normally
-   * use +sharedApplication in programs.
-   *
-   * Please refrain from trying to have this method work with multiple
-   * calls (such as returning NSApp instead of raising an assertion).
-   * No matter what you do, you can't protect subclass -init custom
-   * code from multiple executions by changing the implementation here
-   * - so it's just simpler and cleaner that multiple -init executions
-   * are always forbidden, and subclasses inherit exactly the same
-   * kind of multiple execution protection as the superclass has, and
-   * initialization code behaves always in the same way for this class
-   * and for subclasses.
-   */
-  NSAssert (NSApp == nil, _(@"[NSApplication -init] called more than once"));
-
-  /*
-   * The appkit should run in the main thread ... so to be sure we perform
-   * all the initialisation there.
-   */
-  [self performSelectorOnMainThread: @selector(_init)
-			 withObject: self
-		      waitUntilDone: YES];
-  return NSApp;
+    /*
+     * As per openstep specification, calling -init twice is a bug in
+     * the program.  +sharedApplication automatically makes sure it
+     * never calls -init more than once, and programmers should normally
+     * use +sharedApplication in programs.
+     *
+     * Please refrain from trying to have this method work with multiple
+     * calls (such as returning NSApp instead of raising an assertion).
+     * No matter what you do, you can't protect subclass -init custom
+     * code from multiple executions by changing the implementation here
+     * - so it's just simpler and cleaner that multiple -init executions
+     * are always forbidden, and subclasses inherit exactly the same
+     * kind of multiple execution protection as the superclass has, and
+     * initialization code behaves always in the same way for this class
+     * and for subclasses.
+     */
+    NSAssert (NSApp == nil, _(@"[NSApplication -init] called more than once"));
+    
+    /*
+     * The appkit should run in the main thread ... so to be sure we perform
+     * all the initialisation there.
+     */
+    [self performSelectorOnMainThread: @selector(_init)
+                           withObject: self
+                        waitUntilDone: YES];
+    return NSApp;
 }
 
 /**
@@ -995,182 +963,182 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (void) finishLaunching
 {
-  NSDocumentController	*sdc;
-  NSUserDefaults	*defs = [NSUserDefaults standardUserDefaults];
-  NSString		*filePath;
-  NSArray		*windows_list;
-  NSUInteger		count;
-  NSUInteger		i;
-  BOOL			hadDuplicates = NO;
-  BOOL			didAutoreopen = NO;
-  NSArray               *files = nil;
-
-  /* post notification that launch will finish */
-  [nc postNotificationName: NSApplicationWillFinishLaunchingNotification
-      object: self];
-
-  /* Register our listener to incoming services requests etc. */
-  [_listener registerAsServiceProvider];
-
-  /*
-   * Establish the current key and main windows.  We need to do this in case
-   * the windows were created and set to be key/main earlier - before the
-   * app was active.
-   */
-  windows_list = [self windows];
-  count = [windows_list count];
-  for (i = 0; i < count; i++)
+    NSDocumentController	*sdc;
+    NSUserDefaults	*defs = [NSUserDefaults standardUserDefaults];
+    NSString		*filePath;
+    NSArray		*windows_list;
+    NSUInteger		count;
+    NSUInteger		i;
+    BOOL			hadDuplicates = NO;
+    BOOL			didAutoreopen = NO;
+    NSArray               *files = nil;
+    
+    /* post notification that launch will finish */
+    [nc postNotificationName: NSApplicationWillFinishLaunchingNotification
+                      object: self];
+    
+    /* Register our listener to incoming services requests etc. */
+    [_listener registerAsServiceProvider];
+    
+    /*
+     * Establish the current key and main windows.  We need to do this in case
+     * the windows were created and set to be key/main earlier - before the
+     * app was active.
+     */
+    windows_list = [self windows];
+    count = [windows_list count];
+    for (i = 0; i < count; i++)
     {
-      NSWindow	*win = [windows_list objectAtIndex: i];
-
-      if ([win isKeyWindow] == YES)
-	{
-	  if (_key_window == nil)
-	    {
-	      _key_window = win;
-	    }
-	  else
-	    {
-	      hadDuplicates = YES;
-	      NSDebugLog(@"Duplicate keyWindow ignored");
-	      [win resignKeyWindow];
-	    }
-	}
-      if ([win isMainWindow] == YES)
-	{
-	  if (_main_window == nil)
-	    {
-	      _main_window = win;
-	    }
-	  else
-	    {
-	      hadDuplicates = YES;
-	      NSDebugLog(@"Duplicate mainWindow ignored");
-	      [win resignMainWindow];
-	    }
-	}
-    }
-
-  /*
-   * If there was more than one window set as key or main, we must make sure
-   * that the one we have recorded is the real one by making it become key/main
-   * again.
-   */
-  if (hadDuplicates)
-    {
-      [_main_window resignMainWindow];
-      [_main_window becomeMainWindow];
-      [_main_window orderFrontRegardless];
-      [_key_window resignKeyWindow];
-      [_key_window becomeKeyWindow];
-      [_key_window orderFrontRegardless];
-    }
-
-  // Make sure there is one designated main window
-  if (_main_window == nil)
-    {
-      for (i = 0; i < count; i++)
+        NSWindow	*win = [windows_list objectAtIndex: i];
+        
+        if ([win isKeyWindow] == YES)
         {
-          NSWindow	*win = [windows_list objectAtIndex: i];
-
-          if ([win isVisible] && [win canBecomeMainWindow])
+            if (_key_window == nil)
             {
-              _main_window = win;
-              break;
+                _key_window = win;
+            }
+            else
+            {
+                hadDuplicates = YES;
+                NSDebugLog(@"Duplicate keyWindow ignored");
+                [win resignKeyWindow];
+            }
+        }
+        if ([win isMainWindow] == YES)
+        {
+            if (_main_window == nil)
+            {
+                _main_window = win;
+            }
+            else
+            {
+                hadDuplicates = YES;
+                NSDebugLog(@"Duplicate mainWindow ignored");
+                [win resignMainWindow];
             }
         }
     }
-
-  /* Register self as observer to window events. */
-  [nc addObserver: self selector: @selector(_windowWillClose:)
-      name: NSWindowWillCloseNotification object: nil];
-  [nc addObserver: self selector: @selector(_windowDidBecomeKey:)
-      name: NSWindowDidBecomeKeyNotification object: nil];
-  [nc addObserver: self selector: @selector(_windowDidBecomeMain:)
-      name: NSWindowDidBecomeMainNotification object: nil];
-  [nc addObserver: self selector: @selector(_windowDidResignKey:)
-      name: NSWindowDidResignKeyNotification object: nil];
-  [nc addObserver: self selector: @selector(_windowDidResignMain:)
-      name: NSWindowDidResignMainNotification object: nil];
-
-  /* register as observer for hide/unhide notifications */
-  [[[NSWorkspace sharedWorkspace] notificationCenter]
-    addObserver: self selector: @selector(_workspaceNotification:)
-      name: GSHideOtherApplicationsNotification object: nil];
-  [[[NSWorkspace sharedWorkspace] notificationCenter]
-    addObserver: self selector: @selector(_workspaceNotification:)
-      name: GSUnhideAllApplicationsNotification object: nil];
-
-  // Don't activate the application, when the delegate hid it
-  if (![self isHidden])
+    
+    /*
+     * If there was more than one window set as key or main, we must make sure
+     * that the one we have recorded is the real one by making it become key/main
+     * again.
+     */
+    if (hadDuplicates)
     {
-      [self activateIgnoringOtherApps: YES];
+        [_main_window resignMainWindow];
+        [_main_window becomeMainWindow];
+        [_main_window orderFrontRegardless];
+        [_key_window resignKeyWindow];
+        [_key_window becomeKeyWindow];
+        [_key_window orderFrontRegardless];
     }
-
-  /*
-   * Instantiate the NSDocumentController if we are a doc-based app
-   * and eventually reopen all autosaved documents
-   */
-  sdc = [NSDocumentController sharedDocumentController];
-  if ([[sdc documentClassNames] count] > 0)
+    
+    // Make sure there is one designated main window
+    if (_main_window == nil)
     {
-      didAutoreopen = [sdc _reopenAutosavedDocuments];
-    }
-
-  /*
-   *	Now check to see if we were launched with arguments asking to
-   *	open a file.  We permit some variations on the default name.
-   */
-
-  if ((files = [self _openFiles]) != nil)
-    {
-      [_listener application: self openFiles: files];
-    } 
-  else if ((filePath = [defs stringForKey: @"GSFilePath"]) != nil
-    || (filePath = [defs stringForKey: @"NSOpen"]) != nil)
-    {
-      [_listener application: self openFile: filePath];
-    }
-  else if ((filePath = [defs stringForKey: @"GSTempPath"]) != nil)
-    {
-      [_listener application: self openTempFile: filePath];
-    }
-  else if ((filePath = [defs stringForKey: @"NSPrint"]) != nil)
-    {
-      [_listener application: self printFile: filePath];
-      [self terminate: self];
-    }
-  else if (!didAutoreopen && ![defs boolForKey: @"autolaunch"])
-    {
-      // For document based applications we automatically open a fresh document
-      // unless denied by the delegate. For non-document based applications we
-      // open a fresh document only when requested by the delegate.
-      // Note: We consider an application document based if the shared document
-      // controller reports at least one editable type.
-      BOOL docBased =
-	[[sdc documentClassNames] count] > 0 && [sdc defaultType] != nil;
-      BOOL shouldOpen = docBased ? YES : NO;
-
-      if ([_delegate respondsToSelector:
-                       @selector(applicationShouldOpenUntitledFile:)])
+        for (i = 0; i < count; i++)
         {
-	  shouldOpen = [_delegate applicationShouldOpenUntitledFile: self];
-	}
-      if (shouldOpen)
-	{
-	  if (docBased)
-	    {
-	      NSError *err = nil;
-	      if ([sdc openUntitledDocumentAndDisplay: YES error: &err] == nil)
-		{
-		  [sdc presentError: err];
-		}
-	    }
-	  else if ([_delegate respondsToSelector:
-                                @selector(applicationOpenUntitledFile:)])
-	    {
-	      [_delegate applicationOpenUntitledFile: self];
-	    }
+            NSWindow	*win = [windows_list objectAtIndex: i];
+            
+            if ([win isVisible] && [win canBecomeMainWindow])
+            {
+                _main_window = win;
+                break;
+            }
+        }
+    }
+    
+    /* Register self as observer to window events. */
+    [nc addObserver: self selector: @selector(_windowWillClose:)
+               name: NSWindowWillCloseNotification object: nil];
+    [nc addObserver: self selector: @selector(_windowDidBecomeKey:)
+               name: NSWindowDidBecomeKeyNotification object: nil];
+    [nc addObserver: self selector: @selector(_windowDidBecomeMain:)
+               name: NSWindowDidBecomeMainNotification object: nil];
+    [nc addObserver: self selector: @selector(_windowDidResignKey:)
+               name: NSWindowDidResignKeyNotification object: nil];
+    [nc addObserver: self selector: @selector(_windowDidResignMain:)
+               name: NSWindowDidResignMainNotification object: nil];
+    
+    /* register as observer for hide/unhide notifications */
+    [[[NSWorkspace sharedWorkspace] notificationCenter]
+     addObserver: self selector: @selector(_workspaceNotification:)
+     name: GSHideOtherApplicationsNotification object: nil];
+    [[[NSWorkspace sharedWorkspace] notificationCenter]
+     addObserver: self selector: @selector(_workspaceNotification:)
+     name: GSUnhideAllApplicationsNotification object: nil];
+    
+    // Don't activate the application, when the delegate hid it
+    if (![self isHidden])
+    {
+        [self activateIgnoringOtherApps: YES];
+    }
+    
+    /*
+     * Instantiate the NSDocumentController if we are a doc-based app
+     * and eventually reopen all autosaved documents
+     */
+    sdc = [NSDocumentController sharedDocumentController];
+    if ([[sdc documentClassNames] count] > 0)
+    {
+        didAutoreopen = [sdc _reopenAutosavedDocuments];
+    }
+    
+    /*
+     *	Now check to see if we were launched with arguments asking to
+     *	open a file.  We permit some variations on the default name.
+     */
+    
+    if ((files = [self _openFiles]) != nil)
+    {
+        [_listener application: self openFiles: files];
+    }
+    else if ((filePath = [defs stringForKey: @"GSFilePath"]) != nil
+             || (filePath = [defs stringForKey: @"NSOpen"]) != nil)
+    {
+        [_listener application: self openFile: filePath];
+    }
+    else if ((filePath = [defs stringForKey: @"GSTempPath"]) != nil)
+    {
+        [_listener application: self openTempFile: filePath];
+    }
+    else if ((filePath = [defs stringForKey: @"NSPrint"]) != nil)
+    {
+        [_listener application: self printFile: filePath];
+        [self terminate: self];
+    }
+    else if (!didAutoreopen && ![defs boolForKey: @"autolaunch"])
+    {
+        // For document based applications we automatically open a fresh document
+        // unless denied by the delegate. For non-document based applications we
+        // open a fresh document only when requested by the delegate.
+        // Note: We consider an application document based if the shared document
+        // controller reports at least one editable type.
+        BOOL docBased =
+        [[sdc documentClassNames] count] > 0 && [sdc defaultType] != nil;
+        BOOL shouldOpen = docBased ? YES : NO;
+        
+        if ([_delegate respondsToSelector:
+             @selector(applicationShouldOpenUntitledFile:)])
+        {
+            shouldOpen = [_delegate applicationShouldOpenUntitledFile: self];
+        }
+        if (shouldOpen)
+        {
+            if (docBased)
+            {
+                NSError *err = nil;
+                if ([sdc openUntitledDocumentAndDisplay: YES error: &err] == nil)
+                {
+                    [sdc presentError: err];
+                }
+            }
+            else if ([_delegate respondsToSelector:
+                      @selector(applicationOpenUntitledFile:)])
+            {
+                [_delegate applicationOpenUntitledFile: self];
+            }
         }
     }
 }
@@ -1180,74 +1148,74 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  *
  * <p>The -run method calls this the first time it is called, before starting
  * the event loop for the first time and after calling finishLaunching.</p>
- */  
+ */
 - (void) _didFinishLaunching
 {
-  /* finish the launching post notification that launching has finished */
-  [nc postNotificationName: NSApplicationDidFinishLaunchingNotification
-		    object: self];
-
-  NS_DURING
+    /* finish the launching post notification that launching has finished */
+    [nc postNotificationName: NSApplicationDidFinishLaunchingNotification
+                      object: self];
+    
+    NS_DURING
     {
-      [[[NSWorkspace sharedWorkspace] notificationCenter]
-          postNotificationName: NSWorkspaceDidLaunchApplicationNotification
-          object: [NSWorkspace sharedWorkspace]
-          userInfo: [self _notificationUserInfo]];
+        [[[NSWorkspace sharedWorkspace] notificationCenter]
+         postNotificationName: NSWorkspaceDidLaunchApplicationNotification
+         object: [NSWorkspace sharedWorkspace]
+         userInfo: [self _notificationUserInfo]];
     }
-  NS_HANDLER
+    NS_HANDLER
     {
-      NSLog (_(@"Problem during launch app notification: %@"),
-             [localException reason]);
-      [localException raise];
+        NSLog (_(@"Problem during launch app notification: %@"),
+               [localException reason]);
+        [localException raise];
     }
-  NS_ENDHANDLER
+    NS_ENDHANDLER
 }
 
 - (void) dealloc
 {
-  GSDisplayServer *srv = GSServerForWindow(_app_icon_window);
-
-  if (srv == nil)
+    GSDisplayServer *srv = GSServerForWindow(_app_icon_window);
+    
+    if (srv == nil)
     {
-      srv = GSCurrentServer();
+        srv = GSCurrentServer();
     }
-  [[[NSWorkspace sharedWorkspace] notificationCenter]
-    removeObserver: self];
-  [nc removeObserver: self];
-
-  RELEASE(_hidden);
-  RELEASE(_inactive);
-  RELEASE(_listener);
-  RELEASE(null_event);
-  RELEASE(_current_event);
-
-  /* We may need to tidy up nested modal session structures. */
-  while (_session != 0)
+    [[[NSWorkspace sharedWorkspace] notificationCenter]
+     removeObserver: self];
+    [nc removeObserver: self];
+    
+    RELEASE(_hidden);
+    RELEASE(_inactive);
+    RELEASE(_listener);
+    RELEASE(null_event);
+    RELEASE(_current_event);
+    
+    /* We may need to tidy up nested modal session structures. */
+    while (_session != 0)
     {
-      NSModalSession tmp = _session;
-
-      _session = tmp->previous;
-      NSZoneFree(NSDefaultMallocZone(), tmp);
+        NSModalSession tmp = _session;
+        
+        _session = tmp->previous;
+        NSZoneFree(NSDefaultMallocZone(), tmp);
     }
-
-  /* Release the menus, then set them to nil so we don't try updating
+    
+    /* Release the menus, then set them to nil so we don't try updating
      them after they have been deallocated.  */
-  DESTROY(_main_menu);
-  DESTROY(_windows_menu);
-
-  TEST_RELEASE(_app_icon);
-  TEST_RELEASE(_app_icon_window);
-  TEST_RELEASE(_infoPanel);
-
-  /* Destroy the default context */
-  [NSGraphicsContext setCurrentContext: nil];
-  DESTROY(_default_context);
-
-  /* Close the server */
-  [srv closeServer];
-  DESTROY(srv);
-
-  [super dealloc];
+    DESTROY(_main_menu);
+    DESTROY(_windows_menu);
+    
+    TEST_RELEASE(_app_icon);
+    TEST_RELEASE(_app_icon_window);
+    TEST_RELEASE(_infoPanel);
+    
+    /* Destroy the default context */
+    [NSGraphicsContext setCurrentContext: nil];
+    DESTROY(_default_context);
+    
+    /* Close the server */
+    [srv closeServer];
+    DESTROY(srv);
+    
+    [super dealloc];
 }
 
 /**
@@ -1259,82 +1227,82 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (void) activateIgnoringOtherApps: (BOOL)flag
 {
-  // TODO: Currently the flag is ignored
-  if (_app_is_active == NO)
+    // TODO: Currently the flag is ignored
+    if (_app_is_active == NO)
     {
-      NSUInteger	count;
-      NSUInteger	i;
-      NSDictionary	*info;
-
-     /*
-       * Menus should observe this notification in order to make themselves
-       * visible when the application is active.
-       */
-      [nc postNotificationName: NSApplicationWillBecomeActiveNotification
-          object: self];
-
-      _app_is_active = YES;
-
-      if ([[NSUserDefaults standardUserDefaults]
-	boolForKey: @"GSSuppressAppIcon"])
-	{
-	  [_app_icon_window orderOut: self];
-	}
-
-      /* Make sure to calculate count after the notification, since
+        NSUInteger	count;
+        NSUInteger	i;
+        NSDictionary	*info;
+        
+        /*
+         * Menus should observe this notification in order to make themselves
+         * visible when the application is active.
+         */
+        [nc postNotificationName: NSApplicationWillBecomeActiveNotification
+                          object: self];
+        
+        _app_is_active = YES;
+        
+        if ([[NSUserDefaults standardUserDefaults]
+             boolForKey: @"GSSuppressAppIcon"])
+        {
+            [_app_icon_window orderOut: self];
+        }
+        
+        /* Make sure to calculate count after the notification, since
          inactive status might be changed by a notifiee.  */
-      count = [_inactive count];
-      for (i = 0; i < count; i++)
+        count = [_inactive count];
+        for (i = 0; i < count; i++)
         {
-          [[_inactive objectAtIndex: i] orderFrontRegardless];
+            [[_inactive objectAtIndex: i] orderFrontRegardless];
         }
-      [_inactive removeAllObjects];
-
-      if (_unhide_on_activation)
+        [_inactive removeAllObjects];
+        
+        if (_unhide_on_activation)
         {
-          [self unhide: nil];
+            [self unhide: nil];
         }
-     
-      if ([self keyWindow] == nil && _hidden_key != nil
-          && [[self windows] indexOfObjectIdenticalTo: _hidden_key] != NSNotFound)
+        
+        if ([self keyWindow] == nil && _hidden_key != nil
+            && [[self windows] indexOfObjectIdenticalTo: _hidden_key] != NSNotFound)
         {
-          [_hidden_key makeKeyWindow];
-          _hidden_key = nil;
+            [_hidden_key makeKeyWindow];
+            _hidden_key = nil;
         }
-
-      if ([self mainWindow] == nil && _hidden_main != nil
-          && [[self windows] indexOfObjectIdenticalTo: _hidden_main] != NSNotFound)
+        
+        if ([self mainWindow] == nil && _hidden_main != nil
+            && [[self windows] indexOfObjectIdenticalTo: _hidden_main] != NSNotFound)
         {
-          [_hidden_main makeMainWindow];
-          _hidden_main = nil;
+            [_hidden_main makeMainWindow];
+            _hidden_main = nil;
         }
-      
-      if ([self keyWindow] != nil)
+        
+        if ([self keyWindow] != nil)
         {
-          [[self keyWindow] orderFront: self];
+            [[self keyWindow] orderFront: self];
         }
-      else if ([self mainWindow] != nil)
+        else if ([self mainWindow] != nil)
         {
-          [[self mainWindow] makeKeyAndOrderFront: self];
+            [[self mainWindow] makeKeyAndOrderFront: self];
         }
-      else
+        else
         {
-          /* We need give input focus to some window otherwise we'll never get
+            /* We need give input focus to some window otherwise we'll never get
              keyboard events. FIXME: doesn't work. */
-          NSWindow *menu_window= [[self mainMenu] window];
-          NSDebugLLog(@"Focus", @"No key on activation - make menu key");
-          [GSServerForWindow(menu_window) setinputfocus: 
-                                [menu_window windowNumber]];
+            NSWindow *menu_window= [[self mainMenu] window];
+            NSDebugLLog(@"Focus", @"No key on activation - make menu key");
+            [GSServerForWindow(menu_window) setinputfocus:
+             [menu_window windowNumber]];
         }
-
-      info = [self _notificationUserInfo];
-      [nc postNotificationName: NSApplicationDidBecomeActiveNotification
-          object: self
-		      userInfo: info];
-      [[[NSWorkspace sharedWorkspace] notificationCenter]
-          postNotificationName: NSApplicationDidBecomeActiveNotification
-		      object: [NSWorkspace sharedWorkspace]
-          userInfo: info];
+        
+        info = [self _notificationUserInfo];
+        [nc postNotificationName: NSApplicationDidBecomeActiveNotification
+                          object: self
+                        userInfo: info];
+        [[[NSWorkspace sharedWorkspace] notificationCenter]
+         postNotificationName: NSApplicationDidBecomeActiveNotification
+         object: [NSWorkspace sharedWorkspace]
+         userInfo: info];
     }
 }
 
@@ -1344,96 +1312,96 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (void) deactivate
 {
-  if (_app_is_active == YES)
+    if (_app_is_active == YES)
     {
-      NSArray		*windows_list;
-      NSDictionary	*info;
-      NSWindow		*win;
-      NSEnumerator	*iter;
-
-      [nc postNotificationName: NSApplicationWillResignActiveNotification
-          object: self];
-      
-      _app_is_active = NO;
-
-      if ([self keyWindow] != nil)
+        NSArray		*windows_list;
+        NSDictionary	*info;
+        NSWindow		*win;
+        NSEnumerator	*iter;
+        
+        [nc postNotificationName: NSApplicationWillResignActiveNotification
+                          object: self];
+        
+        _app_is_active = NO;
+        
+        if ([self keyWindow] != nil)
         {
-          _hidden_key = [self keyWindow];
-          [_hidden_key resignKeyWindow];
+            _hidden_key = [self keyWindow];
+            [_hidden_key resignKeyWindow];
         }
-      // The main window is saved for when the app is activated again.
-      // This is necessary for menu in window.
-      if ([self mainWindow] != nil)
+        // The main window is saved for when the app is activated again.
+        // This is necessary for menu in window.
+        if ([self mainWindow] != nil)
         {
-          _hidden_main = [self mainWindow];
-          [_hidden_main resignMainWindow];
+            _hidden_main = [self mainWindow];
+            [_hidden_main resignMainWindow];
         }
-      
-      windows_list = GSOrderedWindows();
-      iter = [windows_list reverseObjectEnumerator];
-
-      while ((win = [iter nextObject]))
+        
+        windows_list = GSOrderedWindows();
+        iter = [windows_list reverseObjectEnumerator];
+        
+        while ((win = [iter nextObject]))
         {
-          NSModalSession theSession;
-	   
-          if ([win isVisible] == NO)
+            NSModalSession theSession;
+            
+            if ([win isVisible] == NO)
             {
-              continue;		/* Already invisible	*/
+                continue;		/* Already invisible	*/
             }
-          if ([win canHide] == NO)
+            if ([win canHide] == NO)
             {
-              continue;		/* Can't be hidden	*/
+                continue;		/* Can't be hidden	*/
             }
-          if (win == _app_icon_window)
+            if (win == _app_icon_window)
             {
-              continue;		/* can't hide the app icon.	*/
+                continue;		/* can't hide the app icon.	*/
             }
-          /* Don't order out modal windows */
-          theSession = _session;
-          while (theSession != 0)
+            /* Don't order out modal windows */
+            theSession = _session;
+            while (theSession != 0)
             {
-              if (win == theSession->window)
-                break;
-              theSession = theSession->previous;
+                if (win == theSession->window)
+                    break;
+                theSession = theSession->previous;
             }
-          if (theSession)
-            continue;
-          
-          if ([win hidesOnDeactivate] == YES)
+            if (theSession)
+                continue;
+            
+            if ([win hidesOnDeactivate] == YES)
             {
-	      /* NB Order is important here. When a hide on deactivate window
-		 is ordered out while the application is inactive, it gets
-		 removed from the _inactive list. Therefore, we must first
-		 order out the window and then add it to the _inactive list. */
-              [win orderOut: self];
-              [_inactive addObject: win];
+                /* NB Order is important here. When a hide on deactivate window
+                 is ordered out while the application is inactive, it gets
+                 removed from the _inactive list. Therefore, we must first
+                 order out the window and then add it to the _inactive list. */
+                [win orderOut: self];
+                [_inactive addObject: win];
             }
         }
-      
-      if (YES == [[NSUserDefaults standardUserDefaults]
-	boolForKey: @"GSSuppressAppIcon"])
-	{
+        
+        if (YES == [[NSUserDefaults standardUserDefaults]
+                    boolForKey: @"GSSuppressAppIcon"])
+        {
 #if	MINI_ICON
-	  NSRect	f = [[[self mainMenu] window] frame];
-	  NSPoint	p = f.origin;
-
-	  p.y += f.size.height;
-          [_app_icon_window setFrameTopLeftPoint: p];
-	  [_app_icon_window orderFrontRegardless];
-          [_app_icon_window miniaturize: self];
+            NSRect	f = [[[self mainMenu] window] frame];
+            NSPoint	p = f.origin;
+            
+            p.y += f.size.height;
+            [_app_icon_window setFrameTopLeftPoint: p];
+            [_app_icon_window orderFrontRegardless];
+            [_app_icon_window miniaturize: self];
 #else
-	  [_app_icon_window orderFrontRegardless];
+            [_app_icon_window orderFrontRegardless];
 #endif
-	}
-
-      info = [self _notificationUserInfo];
-      [nc postNotificationName: NSApplicationDidResignActiveNotification
-          object: self
-		      userInfo: info];
-      [[[NSWorkspace sharedWorkspace] notificationCenter]
-          postNotificationName: NSApplicationDidResignActiveNotification
-		      object: [NSWorkspace sharedWorkspace]
-          userInfo: info];
+        }
+        
+        info = [self _notificationUserInfo];
+        [nc postNotificationName: NSApplicationDidResignActiveNotification
+                          object: self
+                        userInfo: info];
+        [[[NSWorkspace sharedWorkspace] notificationCenter]
+         postNotificationName: NSApplicationDidResignActiveNotification
+         object: [NSWorkspace sharedWorkspace]
+         userInfo: info];
     }
 }
 
@@ -1444,7 +1412,7 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (BOOL) isActive
 {
-  return _app_is_active;
+    return _app_is_active;
 }
 
 /**
@@ -1452,10 +1420,10 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (void) hideOtherApplications: (id)sender
 {
-  [[[NSWorkspace sharedWorkspace] notificationCenter]
-    postNotificationName: GSHideOtherApplicationsNotification
-		  object: [NSWorkspace sharedWorkspace]
-		userInfo: [self _notificationUserInfo]];
+    [[[NSWorkspace sharedWorkspace] notificationCenter]
+     postNotificationName: GSHideOtherApplicationsNotification
+     object: [NSWorkspace sharedWorkspace]
+     userInfo: [self _notificationUserInfo]];
 }
 
 /**
@@ -1463,10 +1431,10 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (void) unhideAllApplications: (id)sender
 {
-  [[[NSWorkspace sharedWorkspace] notificationCenter]
-    postNotificationName: GSUnhideAllApplicationsNotification
-		  object: [NSWorkspace sharedWorkspace]
-		userInfo: [self _notificationUserInfo]];
+    [[[NSWorkspace sharedWorkspace] notificationCenter]
+     postNotificationName: GSUnhideAllApplicationsNotification
+     object: [NSWorkspace sharedWorkspace]
+     userInfo: [self _notificationUserInfo]];
 }
 
 #define NSLogUncaughtExceptionMask 1
@@ -1481,23 +1449,23 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (void) _handleException: (NSException *)exception
 {
-  NSInteger mask = [[NSUserDefaults standardUserDefaults] integerForKey: @"NSExceptionHandlerMask"];
-
-  /**
-   * If we are in debug mode, then rethrow the exception so that
-   * the application can be stopped.
-   **/
-
-  // log the exception.
-  if (mask & NSLogUncaughtExceptionMask) 
+    NSInteger mask = [[NSUserDefaults standardUserDefaults] integerForKey: @"NSExceptionHandlerMask"];
+    
+    /**
+     * If we are in debug mode, then rethrow the exception so that
+     * the application can be stopped.
+     **/
+    
+    // log the exception.
+    if (mask & NSLogUncaughtExceptionMask)
     {
-      [self reportException: exception];
+        [self reportException: exception];
     }
-
-  // allow the default handler to handle the exception.
-  if (mask & NSHandleUncaughtExceptionMask) 
+    
+    // allow the default handler to handle the exception.
+    if (mask & NSHandleUncaughtExceptionMask)
     {
-      [exception raise];
+        [exception raise];
     }
 }
 
@@ -1516,76 +1484,76 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (void) run
 {
-  NSEvent *e;
-  id distantFuture = [NSDate distantFuture];     /* Cache this, safe */
-
-  if (_runLoopPool != nil)
+    NSEvent *e;
+    id distantFuture = [NSDate distantFuture];     /* Cache this, safe */
+    
+    if (_runLoopPool != nil)
     {
-      [NSException raise: NSInternalInconsistencyException
-		   format: @"NSApp's run called recursively"];
+        [NSException raise: NSInternalInconsistencyException
+                    format: @"NSApp's run called recursively"];
     }
-
-  /*
-   *  Set this flag here in case the application is actually terminated
-   *  inside -finishLaunching.
-   */
-  _app_is_running = YES;
-
-  if (_app_is_launched == NO)
+    
+    /*
+     *  Set this flag here in case the application is actually terminated
+     *  inside -finishLaunching.
+     */
+    _app_is_running = YES;
+    
+    if (_app_is_launched == NO)
     {
-      _app_is_launched = YES;
-      IF_NO_GC(_runLoopPool = [arpClass new]);
-
-      [self finishLaunching];
-      [self _didFinishLaunching];
-
-      [_listener updateServicesMenu];
-      [_main_menu update];
-      DESTROY(_runLoopPool);
+        _app_is_launched = YES;
+        IF_NO_GC(_runLoopPool = [arpClass new]);
+        
+        [self finishLaunching];
+        [self _didFinishLaunching];
+        
+        [_listener updateServicesMenu];
+        [_main_menu update];
+        DESTROY(_runLoopPool);
     }
- 
-  while (_app_is_running)
+    
+    while (_app_is_running)
     {
-      IF_NO_GC(_runLoopPool = [arpClass new]);
-
-      // Catch and report any uncaught exceptions.
-      NS_DURING
-	{	  	  
-	  e = [self nextEventMatchingMask: NSAnyEventMask
-				untilDate: distantFuture
-				   inMode: NSDefaultRunLoopMode
-				  dequeue: YES];
-
-	  if (e != nil)
-	    {
-	      NSEventType	type = [e type];
-
-	      [self sendEvent: e];
-
-	      // update (en/disable) the services menu's items
-	      if (type != NSPeriodic && type != NSMouseMoved)
-		{
-		  [_listener updateServicesMenu];
-		  [_main_menu update];
-		}
-	    }
-	}
-      NS_HANDLER
-	{
-	  [self _handleException: localException];
-	}
-      NS_ENDHANDLER;
-
-      DESTROY (_runLoopPool);
+        IF_NO_GC(_runLoopPool = [arpClass new]);
+        
+        // Catch and report any uncaught exceptions.
+        NS_DURING
+        {
+            e = [self nextEventMatchingMask: NSAnyEventMask
+                                  untilDate: distantFuture
+                                     inMode: NSDefaultRunLoopMode
+                                    dequeue: YES];
+            
+            if (e != nil)
+            {
+                NSEventType	type = [e type];
+                
+                [self sendEvent: e];
+                
+                // update (en/disable) the services menu's items
+                if (type != NSPeriodic && type != NSMouseMoved)
+                {
+                    [_listener updateServicesMenu];
+                    [_main_menu update];
+                }
+            }
+        }
+        NS_HANDLER
+        {
+            [self _handleException: localException];
+        }
+        NS_ENDHANDLER;
+        
+        DESTROY (_runLoopPool);
     }
-
-  /* Every single non trivial line of code must be enclosed into an
+    
+    /* Every single non trivial line of code must be enclosed into an
      autorelease pool.  Create an autorelease pool here to wrap
      synchronize and the NSDebugLog.  */
-  IF_NO_GC(_runLoopPool = [arpClass new]);
-
-  [[NSUserDefaults standardUserDefaults] synchronize];
-  DESTROY (_runLoopPool);
+    IF_NO_GC(_runLoopPool = [arpClass new]);
+    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    DESTROY (_runLoopPool);
 }
 
 /**
@@ -1593,7 +1561,7 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (BOOL) isRunning
 {
-  return _app_is_running;
+    return _app_is_running;
 }
 
 /*
@@ -1609,20 +1577,20 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (void) abortModal
 {
-/* FIXME: The previous, now commented out, code here did only work from within the modal loop, 
-   which is contrary to the purpose of this method. Calling stopModalWithCode: works a bit better,
-   but still relies on the modal loop to cooperate. Calling that method via performSelectorOnMainThread:...
-   and moving the exception into stopModalWithCode:, looks like another option. Still this would 
-   rely on the loop getting executed.
-
-  if (_session == 0)
-    {
-      [NSException raise: NSAbortModalException
-		  format: @"abortModal called while not in a modal session"];
-    }
-  [NSException raise: NSAbortModalException format: @"abortModal"];
-*/
-  [self stopModalWithCode: NSRunAbortedResponse];
+    /* FIXME: The previous, now commented out, code here did only work from within the modal loop,
+     which is contrary to the purpose of this method. Calling stopModalWithCode: works a bit better,
+     but still relies on the modal loop to cooperate. Calling that method via performSelectorOnMainThread:...
+     and moving the exception into stopModalWithCode:, looks like another option. Still this would
+     rely on the loop getting executed.
+     
+     if (_session == 0)
+     {
+     [NSException raise: NSAbortModalException
+     format: @"abortModal called while not in a modal session"];
+     }
+     [NSException raise: NSAbortModalException format: @"abortModal"];
+     */
+    [self stopModalWithCode: NSRunAbortedResponse];
 }
 
 /**
@@ -1632,40 +1600,40 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (NSModalSession) beginModalSessionForWindow: (NSWindow*)theWindow
 {
-  NSModalSession theSession;
-
-  theSession = (NSModalSession)NSZoneMalloc(NSDefaultMallocZone(),
-		    sizeof(struct _NSModalSession));
-  theSession->runState = NSRunContinuesResponse;
-  theSession->entryLevel = [theWindow level];
-  theSession->window = theWindow;
-  theSession->previous = _session;
-  _session = theSession;
-
-  /*
-   * Displaying / raising window but centering panel only if not up
-   * seems to match the behavior on OS X (Panther).
-   */
-  if ([theWindow isKindOfClass: [NSPanel class]])
+    NSModalSession theSession;
+    
+    theSession = (NSModalSession)NSZoneMalloc(NSDefaultMallocZone(),
+                                              sizeof(struct _NSModalSession));
+    theSession->runState = NSRunContinuesResponse;
+    theSession->entryLevel = [theWindow level];
+    theSession->window = theWindow;
+    theSession->previous = _session;
+    _session = theSession;
+    
+    /*
+     * Displaying / raising window but centering panel only if not up
+     * seems to match the behavior on OS X (Panther).
+     */
+    if ([theWindow isKindOfClass: [NSPanel class]])
     {
-      if ([theWindow isVisible] == NO)
-          [theWindow center];
-      [theWindow setLevel: NSModalPanelWindowLevel];
+        if ([theWindow isVisible] == NO)
+            [theWindow center];
+        [theWindow setLevel: NSModalPanelWindowLevel];
     }
-  [theWindow orderFrontRegardless];
-  if ([self isActive] == YES)
+    [theWindow orderFrontRegardless];
+    if ([self isActive] == YES)
     {
-      if ([theWindow canBecomeKeyWindow] == YES)
-	{
-	  [theWindow makeKeyWindow];
-	}
-      else if ([theWindow canBecomeMainWindow] == YES)
-	{
-	  [theWindow makeMainWindow];
-	}
+        if ([theWindow canBecomeKeyWindow] == YES)
+        {
+            [theWindow makeKeyWindow];
+        }
+        else if ([theWindow canBecomeMainWindow] == YES)
+        {
+            [theWindow makeMainWindow];
+        }
     }
-
-  return theSession;
+    
+    return theSession;
 }
 
 /**
@@ -1674,64 +1642,64 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (void) endModalSession: (NSModalSession)theSession
 {
-  NSModalSession	tmp = _session;
-  NSArray		*windows = [self windows];
-
-  if (theSession == 0)
+    NSModalSession	tmp = _session;
+    NSArray		*windows = [self windows];
+    
+    if (theSession == 0)
     {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"null pointer passed to endModalSession:"];
+        [NSException raise: NSInvalidArgumentException
+                    format: @"null pointer passed to endModalSession:"];
     }
-  /* Remove this session from linked list of sessions. */
-  while (tmp != 0 && tmp != theSession)
+    /* Remove this session from linked list of sessions. */
+    while (tmp != 0 && tmp != theSession)
     {
-      tmp = tmp->previous;
+        tmp = tmp->previous;
     }
-  if (tmp == 0)
+    if (tmp == 0)
     {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"unknown session passed to endModalSession:"];
+        [NSException raise: NSInvalidArgumentException
+                    format: @"unknown session passed to endModalSession:"];
     }
-  while (_session != theSession)
+    while (_session != theSession)
     {
-      tmp = _session;
-      _session = tmp->previous;
-      if ([windows indexOfObjectIdenticalTo: tmp->window] != NSNotFound)
-	{
-	  [tmp->window setLevel: tmp->entryLevel];
-	}
-      NSZoneFree(NSDefaultMallocZone(), tmp);
-    }
-  _session = _session->previous;
-  if ([windows indexOfObjectIdenticalTo: theSession->window] != NSNotFound)
-    {
-      [theSession->window setLevel: theSession->entryLevel];
-    }
-  NSZoneFree(NSDefaultMallocZone(), theSession);
-
-  // Bring the next modal window to front
-  if ((_session != 0) && 
-      ([windows indexOfObjectIdenticalTo: _session->window] != NSNotFound))
-    {
-      NSWindow *theWindow = _session->window;
-
-      // Same code as in beginModalSessionForWindow:
-      [theWindow orderFrontRegardless];      
-      if ([self isActive] == YES)
+        tmp = _session;
+        _session = tmp->previous;
+        if ([windows indexOfObjectIdenticalTo: tmp->window] != NSNotFound)
         {
-          if ([theWindow canBecomeKeyWindow] == YES)
+            [tmp->window setLevel: tmp->entryLevel];
+        }
+        NSZoneFree(NSDefaultMallocZone(), tmp);
+    }
+    _session = _session->previous;
+    if ([windows indexOfObjectIdenticalTo: theSession->window] != NSNotFound)
+    {
+        [theSession->window setLevel: theSession->entryLevel];
+    }
+    NSZoneFree(NSDefaultMallocZone(), theSession);
+    
+    // Bring the next modal window to front
+    if ((_session != 0) &&
+        ([windows indexOfObjectIdenticalTo: _session->window] != NSNotFound))
+    {
+        NSWindow *theWindow = _session->window;
+        
+        // Same code as in beginModalSessionForWindow:
+        [theWindow orderFrontRegardless];
+        if ([self isActive] == YES)
+        {
+            if ([theWindow canBecomeKeyWindow] == YES)
             {
-              [theWindow makeKeyWindow];
+                [theWindow makeKeyWindow];
             }
-          else if ([theWindow canBecomeMainWindow] == YES)
+            else if ([theWindow canBecomeMainWindow] == YES)
             {
-              [theWindow makeMainWindow];
+                [theWindow makeMainWindow];
             }
         }
     }
-  else
+    else
     {
-      [_main_menu update];
+        [_main_menu update];
     }
 }
 
@@ -1743,65 +1711,65 @@ static NSSize scaledIconSizeForSize(NSSize imageSize)
  */
 - (NSInteger) runModalForWindow: (NSWindow*)theWindow
 {
-  NSModalSession theSession = 0;
-  NSInteger code = NSRunContinuesResponse;
-
-  NS_DURING
+    NSModalSession theSession = 0;
+    NSInteger code = NSRunContinuesResponse;
+    
+    NS_DURING
     {
-      NSDate		*limit;
-      GSDisplayServer	*srv;
-
-      theSession = [self beginModalSessionForWindow: theWindow];
-      limit = [NSDate distantFuture];
-      srv = GSCurrentServer();
-
-      while (code == NSRunContinuesResponse)
-	{
-	  /*
-	   * Try to handle events for this session, discarding others.
-	   */
-	  code = [self runModalSession: theSession];
-	  if (code == NSRunContinuesResponse)
-	    {
-	      /*
-	       * Wait until there are more events to handle.
-	       */
-	      DPSPeekEvent(srv, NSAnyEventMask, limit, NSModalPanelRunLoopMode);
-	    }
-	}
-
-      [self endModalSession: theSession];
+        NSDate		*limit;
+        GSDisplayServer	*srv;
+        
+        theSession = [self beginModalSessionForWindow: theWindow];
+        limit = [NSDate distantFuture];
+        srv = GSCurrentServer();
+        
+        while (code == NSRunContinuesResponse)
+        {
+            /*
+             * Try to handle events for this session, discarding others.
+             */
+            code = [self runModalSession: theSession];
+            if (code == NSRunContinuesResponse)
+            {
+                /*
+                 * Wait until there are more events to handle.
+                 */
+                DPSPeekEvent(srv, NSAnyEventMask, limit, NSModalPanelRunLoopMode);
+            }
+        }
+        
+        [self endModalSession: theSession];
     }
-  NS_HANDLER
+    NS_HANDLER
     {
-      if (theSession != 0)
-	{
-	  NSWindow *win_to_close = theSession->window;
-	  
-	  [self endModalSession: theSession];
-	  [win_to_close close];
-	}
-      if ([[localException name] isEqual: NSAbortModalException] == NO)
-	{
-	  [localException raise];
-     	} 
-      code = NSRunAbortedResponse;
+        if (theSession != 0)
+        {
+            NSWindow *win_to_close = theSession->window;
+            
+            [self endModalSession: theSession];
+            [win_to_close close];
+        }
+        if ([[localException name] isEqual: NSAbortModalException] == NO)
+        {
+            [localException raise];
+        }
+        code = NSRunAbortedResponse;
     }
-  NS_ENDHANDLER
-
-  return code;
+    NS_ENDHANDLER
+    
+    return code;
 }
 
 /** 
-<p>
-Processes any events for a modal session described by the theSession
-variable. When finished, it returns the state of the session (i.e.
-whether it is still running or has been stopped, etc) 
-</p>
-<p>If there are no pending events for the session, this method returns
-immediately.
-</p>
-<p>
+ <p>
+ Processes any events for a modal session described by the theSession
+ variable. When finished, it returns the state of the session (i.e.
+ whether it is still running or has been stopped, etc)
+ </p>
+ <p>If there are no pending events for the session, this method returns
+ immediately.
+ </p>
+ <p>
  Although Apple's docs state that, before processing the events, it makes the
  session window key and orders the window front, this method does not attempt
  to do this, because: 1) we don't want to interfere with use of other apps
@@ -1810,109 +1778,109 @@ immediately.
  window); 3) most of the time -beginModalSessionForWindow: will have been
  called in advance.  If the latter is not the case, you may need to order the
  window front yourself in advance.
-</p>
-<p>
-See Also: -runModalForWindow:
-</p>
-*/
+ </p>
+ <p>
+ See Also: -runModalForWindow:
+ </p>
+ */
 - (NSInteger) runModalSession: (NSModalSession)theSession
 {
-  NSAutoreleasePool	*pool;
-  GSDisplayServer	*srv;
-  BOOL		done = NO;
-  NSEvent	*event;
-  NSDate	*limit;
-  
-  if (theSession != _session)
+    NSAutoreleasePool	*pool;
+    GSDisplayServer	*srv;
+    BOOL		done = NO;
+    NSEvent	*event;
+    NSDate	*limit;
+    
+    if (theSession != _session)
     {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"runModalSession: with wrong session"];
+        [NSException raise: NSInvalidArgumentException
+                    format: @"runModalSession: with wrong session"];
     }
-
-  // Use the default context for all events.
-  srv = GSCurrentServer();
-
-  // Only handle input which is already available.
-  limit = [NSDate distantPast];
-
-  /*
-   *	Deal with the events in the queue.
-   */
-  while (done == NO && theSession->runState == NSRunContinuesResponse)
+    
+    // Use the default context for all events.
+    srv = GSCurrentServer();
+    
+    // Only handle input which is already available.
+    limit = [NSDate distantPast];
+    
+    /*
+     *	Deal with the events in the queue.
+     */
+    while (done == NO && theSession->runState == NSRunContinuesResponse)
     {
-      IF_NO_GC(pool = [arpClass new]);
-
-      event = DPSGetEvent(srv, NSAnyEventMask, limit, NSModalPanelRunLoopMode);
-      if (event != nil)
-	{
-	  NSWindow	*eventWindow = [event window];
-
-	  /*
-	   * We handle events for the session window, events for any
-	   * window which works when modal, and any window management
-	   * events.  All others are ignored/discarded.
-	   */
-	  if (eventWindow == theSession->window
-	    || [eventWindow worksWhenModal] == YES
-	    || [event type] == NSAppKitDefined)
-	    {
-	      ASSIGN(_current_event, event);
-	    }
-	  else
-	    {
-	      event = nil;	// Ignore/discard this event.
-	    }
-	}
-      else
-	{
-	  done = YES;		// No more events pending.
-	}
-
-      if (event != nil)
-	{
-	  NSEventType	type = [_current_event type];
-
-	  [self sendEvent: _current_event];
-
-	  // update (en/disable) the services menu's items
-	  if (type != NSPeriodic && type != NSMouseMoved)
-	    {
-	      [_listener updateServicesMenu];
-	      [_main_menu update];
-	    }
-
-	  /*
-	   *	Check to see if the window has gone away - if so, end session.
-	   */
-	  if ([[self windows] indexOfObjectIdenticalTo: _session->window]
-	    == NSNotFound
-            || ![_session->window isVisible])
-	    {
-	      [self stopModal];
-	    }
-	}
-      [pool drain];
+        IF_NO_GC(pool = [arpClass new]);
+        
+        event = DPSGetEvent(srv, NSAnyEventMask, limit, NSModalPanelRunLoopMode);
+        if (event != nil)
+        {
+            NSWindow	*eventWindow = [event window];
+            
+            /*
+             * We handle events for the session window, events for any
+             * window which works when modal, and any window management
+             * events.  All others are ignored/discarded.
+             */
+            if (eventWindow == theSession->window
+                || [eventWindow worksWhenModal] == YES
+                || [event type] == NSAppKitDefined)
+            {
+                ASSIGN(_current_event, event);
+            }
+            else
+            {
+                event = nil;	// Ignore/discard this event.
+            }
+        }
+        else
+        {
+            done = YES;		// No more events pending.
+        }
+        
+        if (event != nil)
+        {
+            NSEventType	type = [_current_event type];
+            
+            [self sendEvent: _current_event];
+            
+            // update (en/disable) the services menu's items
+            if (type != NSPeriodic && type != NSMouseMoved)
+            {
+                [_listener updateServicesMenu];
+                [_main_menu update];
+            }
+            
+            /*
+             *	Check to see if the window has gone away - if so, end session.
+             */
+            if ([[self windows] indexOfObjectIdenticalTo: _session->window]
+                == NSNotFound
+                || ![_session->window isVisible])
+            {
+                [self stopModal];
+            }
+        }
+        [pool drain];
     }
-
-  NSAssert(_session == theSession, @"Session was changed while running");
-
-  return theSession->runState;
+    
+    NSAssert(_session == theSession, @"Session was changed while running");
+    
+    return theSession->runState;
 }
 
 /**
-<p>
-   Returns the window that is part of the current modal session, if any.
-</p>
-<p>
-See -runModalForWindow:
-</p>
-*/
+ <p>
+ Returns the window that is part of the current modal session, if any.
+ </p>
+ <p>
+ See -runModalForWindow:
+ </p>
+ */
 - (NSWindow *) modalWindow
 {
-  if (_session != 0) 
-    return (_session->window);
-  else
-    return nil;
+    if (_session != 0)
+        return (_session->window);
+    else
+        return nil;
 }
 
 /**
@@ -1920,16 +1888,16 @@ See -runModalForWindow:
  */
 - (void) stop: (id)sender
 {
-  if (_session != 0)
-    [self stopModal];
-  else
+    if (_session != 0)
+        [self stopModal];
+    else
     {
-      _app_is_running = NO;
-      /*
-       * add dummy event to queue to assure loop cycles
-       * at least one more time
-       */
-      DPSPostEvent(GSCurrentServer(), null_event, NO);
+        _app_is_running = NO;
+        /*
+         * add dummy event to queue to assure loop cycles
+         * at least one more time
+         */
+        DPSPostEvent(GSCurrentServer(), null_event, NO);
     }
 }
 
@@ -1940,7 +1908,7 @@ See -runModalForWindow:
  */
 - (void) stopModal
 {
-  [self stopModalWithCode: NSRunStoppedResponse];
+    [self stopModalWithCode: NSRunStoppedResponse];
 }
 
 /**
@@ -1950,19 +1918,19 @@ See -runModalForWindow:
  */
 - (void) stopModalWithCode: (NSInteger)returnCode
 {
-  /* According to the spec, there is no exception which is thrown
-   * if we are not currently in a modal session.   While it is not
-   * good practice to call this when we're not, we shouldn't throw
-   * an exception.
-   */
-  if (_session != 0 && _session->runState == NSRunContinuesResponse)
+    /* According to the spec, there is no exception which is thrown
+     * if we are not currently in a modal session.   While it is not
+     * good practice to call this when we're not, we shouldn't throw
+     * an exception.
+     */
+    if (_session != 0 && _session->runState == NSRunContinuesResponse)
     {
-      if (returnCode == NSRunContinuesResponse)
-	{
-	  [NSException raise: NSInvalidArgumentException
-	    format: @"stopModalWithCode: with NSRunContinuesResponse"];
-	}
-      _session->runState = returnCode;
+        if (returnCode == NSRunContinuesResponse)
+        {
+            [NSException raise: NSInvalidArgumentException
+                        format: @"stopModalWithCode: with NSRunContinuesResponse"];
+        }
+        _session->runState = returnCode;
     }
 }
 
@@ -1974,25 +1942,25 @@ See -runModalForWindow:
 - (NSInteger) runModalForWindow: (NSWindow *)theWindow
                relativeToWindow: (NSWindow *)docWindow
 {
-  if ((docWindow != nil) && (theWindow != nil))
+    if ((docWindow != nil) && (theWindow != nil))
     {
-      NSRect  docFrame = [docWindow frame];
-      NSPoint point = docFrame.origin;
-      NSRect  theFrame = [theWindow frame];
-      NSSize  size  = theFrame.size;
-  
-      // Calculate window position...
-      point.x += (docFrame.size.width - size.width) / 2;
-      point.y += (docFrame.size.height - size.height) / 2;
-
-      NSDebugLLog(@"NSWindow", @"Positioning window %@ relative to %@ at %@", 
-            NSStringFromRect(theFrame), NSStringFromRect(docFrame), NSStringFromPoint(point));
-      // Position window...
-      [theWindow setFrameOrigin: point];
+        NSRect  docFrame = [docWindow frame];
+        NSPoint point = docFrame.origin;
+        NSRect  theFrame = [theWindow frame];
+        NSSize  size  = theFrame.size;
+        
+        // Calculate window position...
+        point.x += (docFrame.size.width - size.width) / 2;
+        point.y += (docFrame.size.height - size.height) / 2;
+        
+        NSDebugLLog(@"NSWindow", @"Positioning window %@ relative to %@ at %@",
+                    NSStringFromRect(theFrame), NSStringFromRect(docFrame), NSStringFromPoint(point));
+        // Position window...
+        [theWindow setFrameOrigin: point];
     }
-  [theWindow orderWindow: NSWindowAbove
-	     relativeTo: [docWindow windowNumber]];
-  return [self runModalForWindow: theWindow];
+    [theWindow orderWindow: NSWindowAbove
+                relativeTo: [docWindow windowNumber]];
+    return [self runModalForWindow: theWindow];
 }
 
 /**
@@ -2001,7 +1969,7 @@ See -runModalForWindow:
  * after the session ends.  The selector should take three arguments:
  * NSWindow *, int, void *.  It is passed the sheet window, the return code,
  * and the contextInfo passed in here.
-
+ 
  * <em>Under GNUstep, the sheet aspect is not implemented (just centers
  * window on the screen), but modalDelegate didEndSelector is called if
  * both non-nil.</em>
@@ -2010,35 +1978,35 @@ See -runModalForWindow:
      modalForWindow: (NSWindow *)docWindow
       modalDelegate: (id)modalDelegate
      didEndSelector: (SEL)didEndSelector
-	contextInfo: (void *)contextInfo
+        contextInfo: (void *)contextInfo
 {
-  // FIXME
-  NSInteger ret;
-
-  [sheet setParentWindow: docWindow];
-  [docWindow setAttachedSheet: sheet];
-
-  [[NSNotificationCenter defaultCenter] 
-          postNotificationName: NSWindowWillBeginSheetNotification
-                        object: docWindow];
-  ret = [self runModalForWindow: sheet 
-	      relativeToWindow: docWindow];
-
-  if (modalDelegate && [modalDelegate respondsToSelector: didEndSelector])
+    // FIXME
+    NSInteger ret;
+    
+    [sheet setParentWindow: docWindow];
+    [docWindow setAttachedSheet: sheet];
+    
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName: NSWindowWillBeginSheetNotification
+     object: docWindow];
+    ret = [self runModalForWindow: sheet
+                 relativeToWindow: docWindow];
+    
+    if (modalDelegate && [modalDelegate respondsToSelector: didEndSelector])
     {
-      void (*didEnd)(id, SEL, id, NSInteger, void*);
-
-      didEnd = (void (*)(id, SEL, id, NSInteger, void*))[modalDelegate methodForSelector: 
-								 didEndSelector];
-      didEnd(modalDelegate, didEndSelector, sheet, ret, contextInfo);
+        void (*didEnd)(id, SEL, id, NSInteger, void*);
+        
+        didEnd = (void (*)(id, SEL, id, NSInteger, void*))[modalDelegate methodForSelector:
+                                                           didEndSelector];
+        didEnd(modalDelegate, didEndSelector, sheet, ret, contextInfo);
     }
-
-  [sheet close];
-  [docWindow setAttachedSheet: nil];
-  [sheet setParentWindow: nil];
-  [[NSNotificationCenter defaultCenter] 
-          postNotificationName: NSWindowDidEndSheetNotification
-                        object: docWindow];
+    
+    [sheet close];
+    [docWindow setAttachedSheet: nil];
+    [sheet setParentWindow: nil];
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName: NSWindowDidEndSheetNotification
+     object: docWindow];
 }
 
 /**
@@ -2046,8 +2014,8 @@ See -runModalForWindow:
  */
 - (void) endSheet: (NSWindow *)sheet
 {
-  // FIXME
-  [self stopModal];
+    // FIXME
+    [self stopModal];
 }
 
 /**
@@ -2056,8 +2024,8 @@ See -runModalForWindow:
 - (void) endSheet: (NSWindow *)sheet
        returnCode: (NSInteger)returnCode
 {
-  // FIXME
-  [self stopModalWithCode: returnCode];
+    // FIXME
+    [self stopModalWithCode: returnCode];
 }
 
 
@@ -2068,8 +2036,8 @@ See -runModalForWindow:
 /* Private method used by GSDragView to dispatch drag events as Cocoa does. */
 - (void) _postAndSendEvent: (NSEvent *)anEvent
 {
-  ASSIGN(_current_event, anEvent);
-  [self sendEvent: anEvent];
+    ASSIGN(_current_event, anEvent);
+    [self sendEvent: anEvent];
 }
 
 /**
@@ -2079,54 +2047,54 @@ See -runModalForWindow:
  */
 - (void) sendEvent: (NSEvent *)theEvent
 {
-  NSEventType type;
-
-  type = [theEvent type];
-  switch (type)
+    NSEventType type;
+    
+    type = [theEvent type];
+    switch (type)
     {
-      case NSPeriodic:	/* NSApplication traps the periodic events	*/
-	break;
-
-      case NSKeyDown:
-	{
-	  NSDebugLLog(@"NSEvent", @"send key down event\n");
-	  /* Key equivalents must be looked up explicitly in the Services menu
-	     after checking the main menu, as NSMenu's -performKeyEquivalent:
-	     ignores the Services menu. See the comment in that method for a
-	     rationale. */
-	  if ([[self keyWindow] performKeyEquivalent: theEvent] == NO
-	    && [[self mainMenu] performKeyEquivalent: theEvent] == NO
-	    && [[self servicesMenu] performKeyEquivalent: theEvent] == NO)
-	    {
-	      [[theEvent window] sendEvent: theEvent];
-	    }
-	  break;
-	}
-
-      case NSKeyUp:
-	{
-	  NSDebugLLog(@"NSEvent", @"send key up event\n");
-	  [[theEvent window] sendEvent: theEvent];
-	  break;
-	}
-
-      default:	/* pass all other events to the event's window	*/
-	{
-	  NSWindow *window = [theEvent window];
-
-	  if (!theEvent)
-	    NSDebugLLog(@"NSEvent", @"NSEvent is nil!\n");
-	  if (type == NSMouseMoved)
-	    NSDebugLLog(@"NSMotionEvent", @"Send move (%d) to %@", 
-			(int)type, window);
-	  else
-	    NSDebugLLog(@"NSEvent", @"Send NSEvent type: %@ to %@", 
-			theEvent, window);
-	  if (window)
-	    [window sendEvent: theEvent];
-	  else if (type == NSRightMouseDown)
-	    [self rightMouseDown: theEvent];
-	}
+        case NSPeriodic:	/* NSApplication traps the periodic events	*/
+            break;
+            
+        case NSKeyDown:
+        {
+            NSDebugLLog(@"NSEvent", @"send key down event\n");
+            /* Key equivalents must be looked up explicitly in the Services menu
+             after checking the main menu, as NSMenu's -performKeyEquivalent:
+             ignores the Services menu. See the comment in that method for a
+             rationale. */
+            if ([[self keyWindow] performKeyEquivalent: theEvent] == NO
+                && [[self mainMenu] performKeyEquivalent: theEvent] == NO
+                && [[self servicesMenu] performKeyEquivalent: theEvent] == NO)
+            {
+                [[theEvent window] sendEvent: theEvent];
+            }
+            break;
+        }
+            
+        case NSKeyUp:
+        {
+            NSDebugLLog(@"NSEvent", @"send key up event\n");
+            [[theEvent window] sendEvent: theEvent];
+            break;
+        }
+            
+        default:	/* pass all other events to the event's window	*/
+        {
+            NSWindow *window = [theEvent window];
+            
+            if (!theEvent)
+                NSDebugLLog(@"NSEvent", @"NSEvent is nil!\n");
+            if (type == NSMouseMoved)
+                NSDebugLLog(@"NSMotionEvent", @"Send move (%d) to %@",
+                            (int)type, window);
+            else
+                NSDebugLLog(@"NSEvent", @"Send NSEvent type: %@ to %@",
+                            theEvent, window);
+            if (window)
+                [window sendEvent: theEvent];
+            else if (type == NSRightMouseDown)
+                [self rightMouseDown: theEvent];
+        }
     }
 }
 
@@ -2135,13 +2103,13 @@ See -runModalForWindow:
  */
 - (NSEvent*) currentEvent
 {
-  return _current_event;
+    return _current_event;
 }
 
 /* Utility for pen-device input.  See NSResponder. */
 - (BOOL) shouldBeTreatedAsInkEvent: (NSEvent *)theEvent
 {
-  return [[theEvent window] shouldBeTreatedAsInkEvent: theEvent];
+    return [[theEvent window] shouldBeTreatedAsInkEvent: theEvent];
 }
 
 /**
@@ -2151,9 +2119,9 @@ See -runModalForWindow:
  * up to lastEvent.
  */
 - (void) discardEventsMatchingMask: (NSUInteger)mask
-		       beforeEvent: (NSEvent *)lastEvent
+                       beforeEvent: (NSEvent *)lastEvent
 {
-  DPSDiscardEvents(GSCurrentServer(), mask, lastEvent);
+    DPSDiscardEvents(GSCurrentServer(), mask, lastEvent);
 }
 
 /**
@@ -2163,58 +2131,58 @@ See -runModalForWindow:
  * See (EventType) for the list of masks.
  */
 - (NSEvent*) nextEventMatchingMask: (NSUInteger)mask
-			 untilDate: (NSDate*)expiration
-			    inMode: (NSString*)mode
-			   dequeue: (BOOL)flag
+                         untilDate: (NSDate*)expiration
+                            inMode: (NSString*)mode
+                           dequeue: (BOOL)flag
 {
-  NSEvent	*event;
-
-  if (_windows_need_update)
+    NSEvent	*event;
+    
+    if (_windows_need_update)
     {
-      [self updateWindows];
+        [self updateWindows];
     }
-  if (!expiration)
-    expiration = [NSDate distantPast];
-
-  if (flag)
-    event = DPSGetEvent(GSCurrentServer(), mask, expiration, mode);
-  else
-    event = DPSPeekEvent(GSCurrentServer(), mask, expiration, mode);
-
-  if (event == null_event)
+    if (!expiration)
+        expiration = [NSDate distantPast];
+    
+    if (flag)
+        event = DPSGetEvent(GSCurrentServer(), mask, expiration, mode);
+    else
+        event = DPSPeekEvent(GSCurrentServer(), mask, expiration, mode);
+    
+    if (event == null_event)
     {
-      // Never return the null_event
-      event = nil;
+        // Never return the null_event
+        event = nil;
     }
-
-  if (event)
+    
+    if (event)
     {
-IF_NO_GC(NSAssert([event retainCount] > 0, NSInternalInconsistencyException));
-      /*
-       * If we are not in a tracking loop, we may want to unhide a hidden
-       * because the mouse has been moved.
-       */
-      if (mode != NSEventTrackingRunLoopMode)
-	{
-	  _windows_need_update = YES;
-	  if ([NSCursor isHiddenUntilMouseMoves])
-	    {
-	      NSEventType type = [event type];
-
-	      if ((type == NSLeftMouseDown) || (type == NSLeftMouseUp)
-		|| (type == NSOtherMouseDown) || (type == NSOtherMouseUp)
-		|| (type == NSRightMouseDown) || (type == NSRightMouseUp)
-		|| (type == NSMouseMoved))
-		{
-		  [NSCursor setHiddenUntilMouseMoves: NO];
-		}
-	    }
-	}
-
-      if (flag)
-        ASSIGN(_current_event, event);
+        IF_NO_GC(NSAssert([event retainCount] > 0, NSInternalInconsistencyException));
+        /*
+         * If we are not in a tracking loop, we may want to unhide a hidden
+         * because the mouse has been moved.
+         */
+        if (mode != NSEventTrackingRunLoopMode)
+        {
+            _windows_need_update = YES;
+            if ([NSCursor isHiddenUntilMouseMoves])
+            {
+                NSEventType type = [event type];
+                
+                if ((type == NSLeftMouseDown) || (type == NSLeftMouseUp)
+                    || (type == NSOtherMouseDown) || (type == NSOtherMouseUp)
+                    || (type == NSRightMouseDown) || (type == NSRightMouseUp)
+                    || (type == NSMouseMoved))
+                {
+                    [NSCursor setHiddenUntilMouseMoves: NO];
+                }
+            }
+        }
+        
+        if (flag)
+            ASSIGN(_current_event, event);
     }
-  return event;
+    return event;
 }
 
 /**
@@ -2225,7 +2193,7 @@ IF_NO_GC(NSAssert([event retainCount] > 0, NSInternalInconsistencyException));
  */
 - (void) postEvent: (NSEvent *)event atStart: (BOOL)flag
 {
-  DPSPostEvent(GSCurrentServer(), event, flag);
+    DPSPostEvent(GSCurrentServer(), event, flag);
 }
 
 /**
@@ -2240,20 +2208,20 @@ IF_NO_GC(NSAssert([event retainCount] > 0, NSInternalInconsistencyException));
  */
 - (BOOL) sendAction: (SEL)aSelector to: (id)aTarget from: (id)sender
 {
-  id resp = [self targetForAction: aSelector to: aTarget from: sender];
-
-  if (resp != nil)
+    id resp = [self targetForAction: aSelector to: aTarget from: sender];
+    
+    if (resp != nil)
     {
-      IMP actionIMP = [resp methodForSelector: aSelector];
-
-      if (0 != actionIMP)
+        IMP actionIMP = [resp methodForSelector: aSelector];
+        
+        if (0 != actionIMP)
         {
-          actionIMP(resp, aSelector, sender);
-          return YES;
+            actionIMP(resp, aSelector, sender);
+            return YES;
         }
     }
-
-  return NO;
+    
+    return NO;
 }
 
 /**
@@ -2264,42 +2232,42 @@ IF_NO_GC(NSAssert([event retainCount] > 0, NSInternalInconsistencyException));
  */
 - (id) targetForAction: (SEL)theAction to: (id)theTarget from: (id)sender
 {
-  /*
-   * If target responds to the selector then have it perform it.
-   */
-  if (theTarget)
+    /*
+     * If target responds to the selector then have it perform it.
+     */
+    if (theTarget)
     {
-      if ([theTarget respondsToSelector: theAction])
+        if ([theTarget respondsToSelector: theAction])
         {
-          return theTarget;
+            return theTarget;
         }
-      else
+        else
         {
-          NSLog(@"Target %@ does not respont to action %@", theTarget, NSStringFromSelector(theAction));
-          return nil;
+            NSLog(@"Target %@ does not respont to action %@", theTarget, NSStringFromSelector(theAction));
+            return nil;
         }
     }
-  else if ([sender isKindOfClass: [NSToolbarItem class]])
+    else if ([sender isKindOfClass: [NSToolbarItem class]])
     {
-      /* Special case for toolbar items which must look up the target in the
+        /* Special case for toolbar items which must look up the target in the
          responder chain of the window containing their toolbar not in the key
          or main window.
          Note: If (and only if) the toolbar's window is key window we must
          pass it as such to _targetForAction:... so that toolbar items in a
          modal dialog panel work.
-       */
-      NSWindow *toolbarWindow =
-	[[[(NSToolbarItem *)sender toolbar] _toolbarView] window];
-      NSWindow *keyWindow = [self keyWindow];
-      if (keyWindow != toolbarWindow)
-        keyWindow = nil;
-      return [self _targetForAction: theAction
-			  keyWindow: keyWindow
-			 mainWindow: toolbarWindow];
+         */
+        NSWindow *toolbarWindow =
+        [[[(NSToolbarItem *)sender toolbar] _toolbarView] window];
+        NSWindow *keyWindow = [self keyWindow];
+        if (keyWindow != toolbarWindow)
+            keyWindow = nil;
+        return [self _targetForAction: theAction
+                            keyWindow: keyWindow
+                           mainWindow: toolbarWindow];
     }
-  else
+    else
     {
-      return [self targetForAction: theAction];
+        return [self targetForAction: theAction];
     }
 }
 
@@ -2314,23 +2282,23 @@ IF_NO_GC(NSAssert([event retainCount] > 0, NSInternalInconsistencyException));
  */
 - (id) targetForAction: (SEL)aSelector
 {
-  if (!aSelector)
+    if (!aSelector)
     {
-      return nil;
+        return nil;
     }
-  
-  /* During a modal session actions must not be sent to the main window of
-   * the application, but rather to the dialog window of the modal session.
-   * Note that the modal session window is not necessarily the key window,
-   * as a panel with worksWhenModal = YES, e.g., the font panel, can still
-   * become key window during a modal session.
-   */
-  NSWindow *mainWindow = [self mainWindow];
-  if (_session != 0)
-    mainWindow = _session->window;
-  return [self _targetForAction: aSelector
-		      keyWindow: [self keyWindow]
-		     mainWindow: mainWindow];
+    
+    /* During a modal session actions must not be sent to the main window of
+     * the application, but rather to the dialog window of the modal session.
+     * Note that the modal session window is not necessarily the key window,
+     * as a panel with worksWhenModal = YES, e.g., the font panel, can still
+     * become key window during a modal session.
+     */
+    NSWindow *mainWindow = [self mainWindow];
+    if (_session != 0)
+        mainWindow = _session->window;
+    return [self _targetForAction: aSelector
+                        keyWindow: [self keyWindow]
+                       mainWindow: mainWindow];
 }
 
 
@@ -2342,89 +2310,89 @@ IF_NO_GC(NSAssert([event retainCount] > 0, NSInternalInconsistencyException));
  */
 - (BOOL) tryToPerform: (SEL)aSelector with: (id)anObject
 {
-  if ([super tryToPerform: aSelector with: anObject] == YES)
+    if ([super tryToPerform: aSelector with: anObject] == YES)
     {
-      return YES;
+        return YES;
     }
-  if (_delegate != nil && [_delegate respondsToSelector: aSelector])
+    if (_delegate != nil && [_delegate respondsToSelector: aSelector])
     {
-      IMP actionIMP = [_delegate methodForSelector: aSelector];
-      if (0 != actionIMP)
+        IMP actionIMP = [_delegate methodForSelector: aSelector];
+        if (0 != actionIMP)
         {
-          actionIMP(_delegate, aSelector, anObject);
-          return YES;
+            actionIMP(_delegate, aSelector, anObject);
+            return YES;
         }
     }
-  return NO;
+    return NO;
 }
 
 /**<p>Sets the application's icon. Any windows that use the old application
-icon image as their mini window image will be updated to use the new
-image.</p><p>See Also: -applicationIconImage</p>
-*/
+ icon image as their mini window image will be updated to use the new
+ image.</p><p>See Also: -applicationIconImage</p>
+ */
 - (void) setApplicationIconImage: (NSImage*)anImage
 {
-  NSEnumerator *iterator;
-  NSWindow *current;
-  NSImage *old_app_icon = _app_icon;
-  NSSize miniWindowSize;
-  NSSize imageSize;
-  GSDisplayServer *server;
-
-  // Ignore attempts to set nil as the icon image.
-  if (nil == anImage)
-    return;
-
-  RETAIN(old_app_icon);
-
-  // Use a copy as we change the name and size
-  ASSIGNCOPY(_app_icon, anImage);
-
-  server = GSCurrentServer();
-  miniWindowSize = server != 0 ? [server iconSize] : NSZeroSize;
-  if (miniWindowSize.width <= 0 || miniWindowSize.height <= 0) 
+    NSEnumerator *iterator;
+    NSWindow *current;
+    NSImage *old_app_icon = _app_icon;
+    NSSize miniWindowSize;
+    NSSize imageSize;
+    GSDisplayServer *server;
+    
+    // Ignore attempts to set nil as the icon image.
+    if (nil == anImage)
+        return;
+    
+    RETAIN(old_app_icon);
+    
+    // Use a copy as we change the name and size
+    ASSIGNCOPY(_app_icon, anImage);
+    
+    server = GSCurrentServer();
+    miniWindowSize = server != 0 ? [server iconSize] : NSZeroSize;
+    if (miniWindowSize.width <= 0 || miniWindowSize.height <= 0)
     {
-      miniWindowSize = NSMakeSize(48, 48);
+        miniWindowSize = NSMakeSize(48, 48);
     }
-
-  // restrict size when the icon is larger than the mini window.
-  imageSize = [_app_icon size];
-  if (imageSize.width > miniWindowSize.width
-    || imageSize.height > miniWindowSize.height)
+    
+    // restrict size when the icon is larger than the mini window.
+    imageSize = [_app_icon size];
+    if (imageSize.width > miniWindowSize.width
+        || imageSize.height > miniWindowSize.height)
     {
-      [_app_icon setSize: miniWindowSize];
+        [_app_icon setSize: miniWindowSize];
     }
-
-  // Let horizontal menu change icon
-  [_main_menu _organizeMenu];
-
-  if (_app_icon_window != nil)
+    
+    // Let horizontal menu change icon
+    [_main_menu _organizeMenu];
+    
+    if (_app_icon_window != nil)
     {
-      [(NSAppIconView *)[_app_icon_window contentView] setImage: _app_icon];
+        [(NSAppIconView *)[_app_icon_window contentView] setImage: _app_icon];
     }
-
-  // Swap the old image for the new one wherever it's used
-  iterator = [[self windows] objectEnumerator];
-  while ((current = [iterator nextObject]) != nil)
+    
+    // Swap the old image for the new one wherever it's used
+    iterator = [[self windows] objectEnumerator];
+    while ((current = [iterator nextObject]) != nil)
     {
-      if ([current miniwindowImage] == old_app_icon)
-        [current setMiniwindowImage: _app_icon];
+        if ([current miniwindowImage] == old_app_icon)
+            [current setMiniwindowImage: _app_icon];
     }
-
-  DESTROY(old_app_icon);
+    
+    DESTROY(old_app_icon);
 }
 
 /**<p>Returns the current icon be used for the application.</p>
-   <p>See Also: -setApplicationIconImage:</p>
+ <p>See Also: -setApplicationIconImage:</p>
  */
 - (NSImage*) applicationIconImage
 {
-  if (!_app_icon)
+    if (!_app_icon)
     {
-      /* load the application icon */
-      [self _loadAppIconImage];
+        /* load the application icon */
+        [self _loadAppIconImage];
     }
-  return _app_icon;
+    return _app_icon;
 }
 
 /**
@@ -2433,7 +2401,7 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (NSWindow*) iconWindow
 {
-  return _app_icon_window;
+    return _app_icon_window;
 }
 
 /*
@@ -2441,7 +2409,7 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 
 /**<p> Request this application to "hide" (unmap all windows from the screen
- * except the icon window).  Posts 
+ * except the icon window).  Posts
  * <code>NSApplicationWillHideNotification</code> and
  * <code>NSApplicationDidHideNotification</code>.  On OS X this activates
  * the next app that is running, however on GNUstep this is up to the window
@@ -2450,132 +2418,132 @@ image.</p><p>See Also: -applicationIconImage</p>
 - (void) hide: (id)sender
 {
 #ifdef __MINGW32__
-  [self miniaturizeAll: sender];
+    [self miniaturizeAll: sender];
 #else
-  if (_app_is_hidden == NO)
+    if (_app_is_hidden == NO)
     {
-      if (![[NSUserDefaults standardUserDefaults]
-	     boolForKey: @"GSSuppressAppIcon"])
-	{
-	  NSArray		*windows_list;
-	  NSDictionary  	*info;
-	  NSWindow		*win;
-	  NSEnumerator  	*iter;
-
-	  [nc postNotificationName: NSApplicationWillHideNotification
-	                    object: self];
-
-	  if ([self keyWindow] != nil)
-	    {
-	      _hidden_key = [self keyWindow];
-	      [_hidden_key resignKeyWindow];
-	    }
-	  
-	  // The main window is saved for when the app is activated again.
-	  // This is necessary for menu in window.
-	  if ([self mainWindow] != nil)
-	    {
-	      _hidden_main = [self mainWindow];
-	      [_hidden_main resignMainWindow];
-	    }
-	  
-	  windows_list = GSOrderedWindows();
-	  iter = [windows_list reverseObjectEnumerator];
-	  
-	  while ((win = [iter nextObject]))
-	    {
-	      if ([win isVisible] == NO && ![win isMiniaturized])
-		{
-		  continue;		/* Already invisible	*/
-		}
-	      if ([win canHide] == NO)
-		{
-		  continue;		/* Not hideable	*/
-		}
-	      if (win == _app_icon_window)
-		{
-		  continue;		/* can't hide the app icon.	*/
-		}
-	      if (_app_is_active == YES && [win hidesOnDeactivate] == YES)
-		{
-		  continue;		/* Will be hidden by deactivation	*/
-		}
-	      [_hidden addObject: win];
-	      [win orderOut: self];
-	    }
-	  _app_is_hidden = YES;
-	  
-	  if (YES == [[NSUserDefaults standardUserDefaults]
-		       boolForKey: @"GSSuppressAppIcon"])
-	    {
+        if (![[NSUserDefaults standardUserDefaults]
+              boolForKey: @"GSSuppressAppIcon"])
+        {
+            NSArray		*windows_list;
+            NSDictionary  	*info;
+            NSWindow		*win;
+            NSEnumerator  	*iter;
+            
+            [nc postNotificationName: NSApplicationWillHideNotification
+                              object: self];
+            
+            if ([self keyWindow] != nil)
+            {
+                _hidden_key = [self keyWindow];
+                [_hidden_key resignKeyWindow];
+            }
+            
+            // The main window is saved for when the app is activated again.
+            // This is necessary for menu in window.
+            if ([self mainWindow] != nil)
+            {
+                _hidden_main = [self mainWindow];
+                [_hidden_main resignMainWindow];
+            }
+            
+            windows_list = GSOrderedWindows();
+            iter = [windows_list reverseObjectEnumerator];
+            
+            while ((win = [iter nextObject]))
+            {
+                if ([win isVisible] == NO && ![win isMiniaturized])
+                {
+                    continue;		/* Already invisible	*/
+                }
+                if ([win canHide] == NO)
+                {
+                    continue;		/* Not hideable	*/
+                }
+                if (win == _app_icon_window)
+                {
+                    continue;		/* can't hide the app icon.	*/
+                }
+                if (_app_is_active == YES && [win hidesOnDeactivate] == YES)
+                {
+                    continue;		/* Will be hidden by deactivation	*/
+                }
+                [_hidden addObject: win];
+                [win orderOut: self];
+            }
+            _app_is_hidden = YES;
+            
+            if (YES == [[NSUserDefaults standardUserDefaults]
+                        boolForKey: @"GSSuppressAppIcon"])
+            {
 #if	MINI_ICON
-	      NSRect	f = [[[self mainMenu] window] frame];
-	      NSPoint	p = f.origin;
-	      
-	      p.y += f.size.height;
-	      [_app_icon_window setFrameTopLeftPoint: p];
-	      [_app_icon_window orderFrontRegardless];
-	      [_app_icon_window miniaturize: self];
+                NSRect	f = [[[self mainMenu] window] frame];
+                NSPoint	p = f.origin;
+                
+                p.y += f.size.height;
+                [_app_icon_window setFrameTopLeftPoint: p];
+                [_app_icon_window orderFrontRegardless];
+                [_app_icon_window miniaturize: self];
 #else
-	      [_app_icon_window orderFrontRegardless];
+                [_app_icon_window orderFrontRegardless];
 #endif
-	    }
-	  else
-	    {
-	      [[_app_icon_window contentView] setNeedsDisplay: YES];
-	    }
-	  
-	  /*
-	   * On hiding we also deactivate the application which will make the menus
-	   * go away too.
-	   */
-	  [self deactivate];
-	  _unhide_on_activation = YES;
-	  
-	  info = [self _notificationUserInfo];
-	  [nc postNotificationName: NSApplicationDidHideNotification
-			    object: self
-		          userInfo: info];
-	  [[[NSWorkspace sharedWorkspace] notificationCenter]
-	    postNotificationName: NSApplicationDidHideNotification
-		          object: [NSWorkspace sharedWorkspace]
-		        userInfo: info];
-	}
-      else
-	{
-	  /*Minimize all windows if there isn't an AppIcon. This isn't the
-	    most elegant solution, but avoids to loss the app if the user
-	    hide it. */
-	  [self miniaturizeAll: sender];
-	}
+            }
+            else
+            {
+                [[_app_icon_window contentView] setNeedsDisplay: YES];
+            }
+            
+            /*
+             * On hiding we also deactivate the application which will make the menus
+             * go away too.
+             */
+            [self deactivate];
+            _unhide_on_activation = YES;
+            
+            info = [self _notificationUserInfo];
+            [nc postNotificationName: NSApplicationDidHideNotification
+                              object: self
+                            userInfo: info];
+            [[[NSWorkspace sharedWorkspace] notificationCenter]
+             postNotificationName: NSApplicationDidHideNotification
+             object: [NSWorkspace sharedWorkspace]
+             userInfo: info];
+        }
+        else
+        {
+            /*Minimize all windows if there isn't an AppIcon. This isn't the
+             most elegant solution, but avoids to loss the app if the user
+             hide it. */
+            [self miniaturizeAll: sender];
+        }
     }
 #endif
 }
 
 /**<p>Returns whether app is currently in hidden state.</p>
-   <p>See Also: -hide: -unhide:</p>
+ <p>See Also: -hide: -unhide:</p>
  */
 - (BOOL) isHidden
 {
-  return _app_is_hidden;
+    return _app_is_hidden;
 }
 
 /**<p>Unhides and activates this application.</p>
-   <p>See Also: -unhideWithoutActivation -hide: -isHidden</p>
+ <p>See Also: -unhideWithoutActivation -hide: -isHidden</p>
  */
 - (void) unhide: (id)sender
 {
-  if (_app_is_hidden)
+    if (_app_is_hidden)
     {
-      [self unhideWithoutActivation];
-      _unhide_on_activation = NO;
+        [self unhideWithoutActivation];
+        _unhide_on_activation = NO;
     }
-  if (_app_is_active == NO)
+    if (_app_is_active == NO)
     {
-      /*
-       * Activation should make the applications menus visible.
-       */
-      [self activateIgnoringOtherApps: YES];
+        /*
+         * Activation should make the applications menus visible.
+         */
+        [self activateIgnoringOtherApps: YES];
     }
 }
 
@@ -2584,41 +2552,41 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (void) unhideWithoutActivation
 {
-  if (_app_is_hidden == YES)
+    if (_app_is_hidden == YES)
     {
-      NSDictionary	*info;
-      NSUInteger	count;
-      NSUInteger	i;
-
-      [nc postNotificationName: NSApplicationWillUnhideNotification
-			object: self];
-
-      /* Make sure we set this before ordering windows to avoid possible
-	 recursive loops (some methods window/backend methods check if
-	 the app is hidden before ordering a window).  */
-      _app_is_hidden = NO;
-
-      count = [_hidden count];
-      for (i = 0; i < count; i++)
+        NSDictionary	*info;
+        NSUInteger	count;
+        NSUInteger	i;
+        
+        [nc postNotificationName: NSApplicationWillUnhideNotification
+                          object: self];
+        
+        /* Make sure we set this before ordering windows to avoid possible
+         recursive loops (some methods window/backend methods check if
+         the app is hidden before ordering a window).  */
+        _app_is_hidden = NO;
+        
+        count = [_hidden count];
+        for (i = 0; i < count; i++)
         {
-          NSWindow *win = [_hidden objectAtIndex: i];
-          [win orderFrontRegardless];
-          if ([win isMiniaturized])
+            NSWindow *win = [_hidden objectAtIndex: i];
+            [win orderFrontRegardless];
+            if ([win isMiniaturized])
             {
-              [GSServerForWindow(win) miniwindow: [win windowNumber]];
+                [GSServerForWindow(win) miniwindow: [win windowNumber]];
             }
         }
-      [_hidden removeAllObjects];
-      [[_app_icon_window contentView] setNeedsDisplay: YES];
-
-      info = [self _notificationUserInfo];
-      [nc postNotificationName: NSApplicationDidUnhideNotification
-			object: self
-		      userInfo: info];
-      [[[NSWorkspace sharedWorkspace] notificationCenter]
-        postNotificationName: NSApplicationDidUnhideNotification
-		      object: [NSWorkspace sharedWorkspace]
-		    userInfo: info];
+        [_hidden removeAllObjects];
+        [[_app_icon_window contentView] setNeedsDisplay: YES];
+        
+        info = [self _notificationUserInfo];
+        [nc postNotificationName: NSApplicationDidUnhideNotification
+                          object: self
+                        userInfo: info];
+        [[[NSWorkspace sharedWorkspace] notificationCenter]
+         postNotificationName: NSApplicationDidUnhideNotification
+         object: [NSWorkspace sharedWorkspace]
+         userInfo: info];
     }
 }
 
@@ -2628,27 +2596,27 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (void) arrangeInFront: (id)sender
 {
-  NSMenu	*menu;
-
-  menu = [self windowsMenu];
-  if (menu)
+    NSMenu	*menu;
+    
+    menu = [self windowsMenu];
+    if (menu)
     {
-      NSArray	*itemArray;
-      NSUInteger count;
-      NSUInteger i;
-
-      itemArray = [menu itemArray];
-      count = [itemArray count];
-      for (i = 0; i < count; i++)
-	{
-	  id win = [(NSMenuItem*)[itemArray objectAtIndex: i] target];
-
-	  if ([win isKindOfClass: [NSWindow class]] &&
-	      [win isVisible] && ![win isMiniaturized])
-	    {
-	      [win orderFront: sender];
-	    }
-	}
+        NSArray	*itemArray;
+        NSUInteger count;
+        NSUInteger i;
+        
+        itemArray = [menu itemArray];
+        count = [itemArray count];
+        for (i = 0; i < count; i++)
+        {
+            id win = [(NSMenuItem*)[itemArray objectAtIndex: i] target];
+            
+            if ([win isKindOfClass: [NSWindow class]] &&
+                [win isVisible] && ![win isMiniaturized])
+            {
+                [win orderFront: sender];
+            }
+        }
     }
 }
 
@@ -2657,8 +2625,8 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (BOOL) validateUserInterfaceItem: (id <NSValidatedUserInterfaceItem>)anItem
 {
-  // FIXME
-  return YES;
+    // FIXME
+    return YES;
 }
 
 /*
@@ -2672,7 +2640,7 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (NSWindow*) keyWindow
 {
-  return _key_window;
+    return _key_window;
 }
 
 /**
@@ -2682,7 +2650,7 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (NSWindow*) mainWindow
 {
-  return _main_window;
+    return _main_window;
 }
 
 /**
@@ -2692,29 +2660,29 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (NSWindow*) makeWindowsPerform: (SEL)aSelector inOrder: (BOOL)flag
 {
-  NSArray *window_list;
-  NSUInteger i, c;
-
-  // so i suppose when flag is YES it only runs on visible windows
-  if (flag)
+    NSArray *window_list;
+    NSUInteger i, c;
+    
+    // so i suppose when flag is YES it only runs on visible windows
+    if (flag)
     {
-      window_list = GSOrderedWindows();
+        window_list = GSOrderedWindows();
     }
-  else
+    else
     {
-      window_list = [self windows];
+        window_list = [self windows];
     }
-  
-  for (i = 0, c = [window_list count]; i < c; i++)
+    
+    for (i = 0, c = [window_list count]; i < c; i++)
     {
-      NSWindow *window = [window_list objectAtIndex: i];
-
-      if ([window performSelector: aSelector] != nil)
+        NSWindow *window = [window_list objectAtIndex: i];
+        
+        if ([window performSelector: aSelector] != nil)
         {
-          return window;
+            return window;
         }
     }
-  return nil;
+    return nil;
 }
 
 /**
@@ -2722,11 +2690,11 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (void) miniaturizeAll: sender
 {
-  NSArray *window_list = [self windows];
-  NSUInteger i, count;
-
-  for (i = 0, count = [window_list count]; i < count; i++)
-    [[window_list objectAtIndex: i] miniaturize: sender];
+    NSArray *window_list = [self windows];
+    NSUInteger i, count;
+    
+    for (i = 0, count = [window_list count]; i < count; i++)
+        [[window_list objectAtIndex: i] miniaturize: sender];
 }
 
 /**
@@ -2735,7 +2703,7 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (void) preventWindowOrdering
 {
-  //TODO
+    //TODO
 }
 
 /**
@@ -2748,7 +2716,7 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (void) setWindowsNeedUpdate: (BOOL)flag
 {
-  _windows_need_update = flag;
+    _windows_need_update = flag;
 }
 
 /**
@@ -2759,20 +2727,20 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (void) updateWindows
 {
-  NSArray	*window_list = [self windows];
-  NSUInteger	count = [window_list count];
-  NSUInteger	i;
-
-  _windows_need_update = NO;
-  [nc postNotificationName: NSApplicationWillUpdateNotification object: self];
-
-  for (i = 0; i < count; i++)
+    NSArray	*window_list = [self windows];
+    NSUInteger	count = [window_list count];
+    NSUInteger	i;
+    
+    _windows_need_update = NO;
+    [nc postNotificationName: NSApplicationWillUpdateNotification object: self];
+    
+    for (i = 0; i < count; i++)
     {
-      NSWindow *win = [window_list objectAtIndex: i];
-      if ([win isVisible])
-	[win update];
+        NSWindow *win = [window_list objectAtIndex: i];
+        if ([win isVisible])
+            [win update];
     }
-  [nc postNotificationName: NSApplicationDidUpdateNotification object: self];
+    [nc postNotificationName: NSApplicationDidUpdateNotification object: self];
 }
 
 /**
@@ -2780,7 +2748,7 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (NSArray*) windows
 {
-  return GSAllWindows();
+    return GSAllWindows();
 }
 
 /**
@@ -2789,7 +2757,7 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (NSWindow *) windowWithWindowNumber: (NSInteger)windowNum
 {
-  return GSWindowWithNumber(windowNum);
+    return GSWindowWithNumber(windowNum);
 }
 
 /*
@@ -2797,127 +2765,127 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 
 /** Calls -orderFrontStandardAboutPanelWithOptions: with nil passed as
-    the options dictionary.
-*/
+ the options dictionary.
+ */
 - (void) orderFrontStandardAboutPanel: sender
 {
-  [self orderFrontStandardAboutPanelWithOptions: nil];
+    [self orderFrontStandardAboutPanelWithOptions: nil];
 }
 
 /** OS X compatibility: Calls -orderFrontStandardInfoPanelWithOptions: .
-*/
+ */
 - (void) orderFrontStandardAboutPanelWithOptions: (NSDictionary *)dictionary
 {
-  [self orderFrontStandardInfoPanelWithOptions: dictionary];
+    [self orderFrontStandardInfoPanelWithOptions: dictionary];
 }
 
 /* infoPanel, GNUstep API */
 /** Calls -orderFrontStandardInfoPanelWithOptions: with nil passed as
-    the options dictionary.
-*/
+ the options dictionary.
+ */
 - (void) orderFrontStandardInfoPanel: sender
 {
-  [self orderFrontStandardInfoPanelWithOptions: nil];
+    [self orderFrontStandardInfoPanelWithOptions: nil];
 }
 
 /** 
-   <p> 
-   Orders front the standard info panel for the application,
-   taking the needed information from the <code>dictionary</code>
-   argument.  There is a single standard info panel per application;
-   it is created the first time that this method is invoked, and then
-   reused in all subsequent calls.  The application standard info
-   panel is immutable and can not be changed after creation.  Useful
-   keys for the <code>dictionary</code> are:
-   </p>
-
-   <deflist>
-   <term>ApplicationName</term>
-   <desc>A string with the name of the
-   application (eg, <var>"Gorm"</var>).  If not available, the
-   <file>Info-gnustep.plist</file> file is searched for the value of
-   <var>ApplicationName</var> followed by
-   <var>NSHumanReadableShortName</var>. If this also fails, the
-   string returned by [NSProcessInfo-processName] is used.
-   </desc>
-
-   <term>ApplicationDescription</term> 
-   <desc> A string with a very short
-   description of the application (eg, <var>"GNUstep Graphics
-   Objects Relationship Modeller"</var>).  If not available,
-   <file>Info-gnustep.plist</file> is searched for that key; if this
-   fails, no application description is shown.
-   </desc>
-
-   <term>ApplicationIcon</term> 
-   <desc> An image to be shown near the title.
-   If not available, <file>Info-gnustep.plist</file> is searched for
-   <var>ApplicationIcon</var>; if this fails, NSApp's -applicationIconImage
-   method is used instead.  
-   </desc>
-
-   <term>ApplicationRelease</term> 
-   <desc> A string with the name of the
-   application, release included (eg, <var>"Gorm 0.1"</var>).  If
-   not available, the value for <var>ApplicationVersion</var> is
-   used instead.  If this fails, <file>Info-gnustep.plist</file> is
-   searched for <var>ApplicationRelease</var> or
-   <var>NSAppVersion</var>, otherwise, <var>"Unknown"</var> is
-   used.
-   </desc>
-
-   <term>FullVersionID</term> 
-   <desc> A string with the full version of the
-   application (eg, <var>"0.1.2b"</var> or
-   <var>"snap011100"</var>).  If not available,
-   <var>Version</var> is used instead.  If this fails,
-   <file>Info-gnustep.plist</file> is looked for
-   <var>NSBuildVersion</var>.  If all fails, no full version is
-   shown.
-   </desc>
+ <p>
+ Orders front the standard info panel for the application,
+ taking the needed information from the <code>dictionary</code>
+ argument.  There is a single standard info panel per application;
+ it is created the first time that this method is invoked, and then
+ reused in all subsequent calls.  The application standard info
+ panel is immutable and can not be changed after creation.  Useful
+ keys for the <code>dictionary</code> are:
+ </p>
  
-   <term>Authors</term> 
-   <desc> An array of strings, each one with the name
-   of an author (eg, <var>[NSArray arrayWithObject: "Nicola Pero
-   &lt;n.pero\@mi.flashnet.it&gt;"]</var>).  If not found,
-   <file>Info-gnustep.plist</file> is searched for <var>Authors</var>,
-   if this fails, <var>"Unknown"</var> is displayed.
-   </desc>
-
-   <term>URL</term> 
-   <desc> [This field is still under work, so it might be
-   changed] A string with an URL (eg, <var>"See
-   http://www.gnustep.org"</var>).
-   </desc>
-
-   <term>Copyright</term> 
-   <desc> A string with copyright owners (eg,
-   <var>"Copyright (C) 2000 The Free Software Foundation,
-   Inc."</var>).  Support for multiple line strings is planned but
-   not yet available.  If not found, <file>Info-gnustep.plist</file>
-   is searched for <var>Copyright</var> and then (failing this) for
-   <var>NSHumanReadableCopyright</var>.  If all fails,
-   <var>"Copyright Information Not Available"</var> is used.
-   </desc>
-
-   <term>CopyrightDescription</term>
-   <desc>A string describing the kind of
-   copyright (eg, <var>"Released under the GNU General Public
-   License 2.0"</var>).  If not available,
-   <file>Info-gnustep.plist</file> is searched for
-   <var>CopyrightDescription</var>.  If this fails, no copyright
-   description is shown.
-   </desc>
-   </deflist>
+ <deflist>
+ <term>ApplicationName</term>
+ <desc>A string with the name of the
+ application (eg, <var>"Gorm"</var>).  If not available, the
+ <file>Info-gnustep.plist</file> file is searched for the value of
+ <var>ApplicationName</var> followed by
+ <var>NSHumanReadableShortName</var>. If this also fails, the
+ string returned by [NSProcessInfo-processName] is used.
+ </desc>
+ 
+ <term>ApplicationDescription</term>
+ <desc> A string with a very short
+ description of the application (eg, <var>"GNUstep Graphics
+ Objects Relationship Modeller"</var>).  If not available,
+ <file>Info-gnustep.plist</file> is searched for that key; if this
+ fails, no application description is shown.
+ </desc>
+ 
+ <term>ApplicationIcon</term>
+ <desc> An image to be shown near the title.
+ If not available, <file>Info-gnustep.plist</file> is searched for
+ <var>ApplicationIcon</var>; if this fails, NSApp's -applicationIconImage
+ method is used instead.
+ </desc>
+ 
+ <term>ApplicationRelease</term>
+ <desc> A string with the name of the
+ application, release included (eg, <var>"Gorm 0.1"</var>).  If
+ not available, the value for <var>ApplicationVersion</var> is
+ used instead.  If this fails, <file>Info-gnustep.plist</file> is
+ searched for <var>ApplicationRelease</var> or
+ <var>NSAppVersion</var>, otherwise, <var>"Unknown"</var> is
+ used.
+ </desc>
+ 
+ <term>FullVersionID</term>
+ <desc> A string with the full version of the
+ application (eg, <var>"0.1.2b"</var> or
+ <var>"snap011100"</var>).  If not available,
+ <var>Version</var> is used instead.  If this fails,
+ <file>Info-gnustep.plist</file> is looked for
+ <var>NSBuildVersion</var>.  If all fails, no full version is
+ shown.
+ </desc>
+ 
+ <term>Authors</term>
+ <desc> An array of strings, each one with the name
+ of an author (eg, <var>[NSArray arrayWithObject: "Nicola Pero
+ &lt;n.pero\@mi.flashnet.it&gt;"]</var>).  If not found,
+ <file>Info-gnustep.plist</file> is searched for <var>Authors</var>,
+ if this fails, <var>"Unknown"</var> is displayed.
+ </desc>
+ 
+ <term>URL</term>
+ <desc> [This field is still under work, so it might be
+ changed] A string with an URL (eg, <var>"See
+ http://www.gnustep.org"</var>).
+ </desc>
+ 
+ <term>Copyright</term>
+ <desc> A string with copyright owners (eg,
+ <var>"Copyright (C) 2000 The Free Software Foundation,
+ Inc."</var>).  Support for multiple line strings is planned but
+ not yet available.  If not found, <file>Info-gnustep.plist</file>
+ is searched for <var>Copyright</var> and then (failing this) for
+ <var>NSHumanReadableCopyright</var>.  If all fails,
+ <var>"Copyright Information Not Available"</var> is used.
+ </desc>
+ 
+ <term>CopyrightDescription</term>
+ <desc>A string describing the kind of
+ copyright (eg, <var>"Released under the GNU General Public
+ License 2.0"</var>).  If not available,
+ <file>Info-gnustep.plist</file> is searched for
+ <var>CopyrightDescription</var>.  If this fails, no copyright
+ description is shown.
+ </desc>
+ </deflist>
  */
 - (void) orderFrontStandardInfoPanelWithOptions: (NSDictionary *)dictionary
 {
-  if (_infoPanel == nil)
-    _infoPanel = [[GSInfoPanel alloc] initWithDictionary: dictionary];
-  
-  [_infoPanel setTitle: NSLocalizedString (@"Info", 
-					   @"Title of the Info Panel")];
-  [_infoPanel orderFront: self];
+    if (_infoPanel == nil)
+        _infoPanel = [[GSInfoPanel alloc] initWithDictionary: dictionary];
+    
+    [_infoPanel setTitle: NSLocalizedString (@"Info",
+                                             @"Title of the Info Panel")];
+    [_infoPanel orderFront: self];
 }
 
 /*
@@ -2929,45 +2897,45 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (NSMenu*) mainMenu
 {
-  return _main_menu;
+    return _main_menu;
 }
 
 /**
  * Sets the main menu of the receiver.  This is sent update messages by the
  * main event loop.
- */ 
+ */
 - (void) setMainMenu: (NSMenu*)aMenu
 {
-  if (_main_menu == aMenu)
+    if (_main_menu == aMenu)
     {
-      return;
+        return;
     }
-
-  if (_main_menu != nil)
+    
+    if (_main_menu != nil)
     {
-      [_main_menu setMain: NO];
+        [_main_menu setMain: NO];
     }
-
-  ASSIGN(_main_menu, aMenu);
-
-  if (_main_menu != nil)
+    
+    ASSIGN(_main_menu, aMenu);
+    
+    if (_main_menu != nil)
     {
-      [_main_menu setMain: YES];
+        [_main_menu setMain: YES];
     }
 }
 
 /*
-   Overrides to show transient version of main menu as in NeXTstep.
-*/
+ Overrides to show transient version of main menu as in NeXTstep.
+ */
 - (void) rightMouseDown: (NSEvent*)theEvent
 {
-  // On right mouse down display the main menu transient
-  if (_main_menu != nil)
-    [NSMenu popUpContextMenu: _main_menu
-	    withEvent: theEvent
-	    forView: nil];
-  else
-    [super rightMouseDown: theEvent];
+    // On right mouse down display the main menu transient
+    if (_main_menu != nil)
+        [NSMenu popUpContextMenu: _main_menu
+                       withEvent: theEvent
+                         forView: nil];
+    else
+        [super rightMouseDown: theEvent];
 }
 
 /**
@@ -2987,10 +2955,10 @@ image.</p><p>See Also: -applicationIconImage</p>
  * so you don't need to call this method.
  */
 - (void) addWindowsItem: (NSWindow*)aWindow
-		  title: (NSString*)aString
-	       filename: (BOOL)isFilename
+                  title: (NSString*)aString
+               filename: (BOOL)isFilename
 {
-  [self changeWindowsItem: aWindow  title: aString  filename: isFilename];
+    [self changeWindowsItem: aWindow  title: aString  filename: isFilename];
 }
 
 /**
@@ -2999,23 +2967,23 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (void) removeWindowsItem: (NSWindow*)aWindow
 {
-  if (_windows_menu)
+    if (_windows_menu)
     {
-      NSArray	*itemArray;
-      NSUInteger count;
-
-      itemArray = [_windows_menu itemArray];
-      count = [itemArray count];
-      while (count-- > 0)
-	{
-	  NSMenuItem *item = [itemArray objectAtIndex: count];
-
-	  if ([item target] == aWindow)
-	    {
-	      [_windows_menu removeItemAtIndex: count];
-	      return;
-	    }
-	}
+        NSArray	*itemArray;
+        NSUInteger count;
+        
+        itemArray = [_windows_menu itemArray];
+        count = [itemArray count];
+        while (count-- > 0)
+        {
+            NSMenuItem *item = [itemArray objectAtIndex: count];
+            
+            if ([item target] == aWindow)
+            {
+                [_windows_menu removeItemAtIndex: count];
+                return;
+            }
+        }
     }
 }
 
@@ -3023,144 +2991,144 @@ image.</p><p>See Also: -applicationIconImage</p>
 // when window represents an editable document
 - (void) setImageForWindowsItem: (NSMenuItem *)item
 {
-  NSImage *oldImage = [item image];
-  NSImage *newImage;
-
-  if (!([[item target] styleMask] & NSClosableWindowMask))
-    return;
-
-  if ([[item target] isDocumentEdited])
+    NSImage *oldImage = [item image];
+    NSImage *newImage;
+    
+    if (!([[item target] styleMask] & NSClosableWindowMask))
+        return;
+    
+    if ([[item target] isDocumentEdited])
     {
-      newImage = [NSImage imageNamed: @"common_CloseBroken"];
+        newImage = [NSImage imageNamed: @"common_CloseBroken"];
     }
-  else
+    else
     {
-      newImage = [NSImage imageNamed: @"common_Close"];
+        newImage = [NSImage imageNamed: @"common_Close"];
     }
-
-  if (newImage != oldImage)
+    
+    if (newImage != oldImage)
     {
-      [item setImage: newImage];
+        [item setImage: newImage];
     }
 }
 
 /** Changes the Window menu item associated with aWindow to aString. If no
-    associated window item exists, one is created. If isFilename is YES, then
-    aString is assumed to be a filename representation the way
-    [NSWindow-setTitleWithRepresentedFilename:] would format it, otherwise
-    the string is displayed literally in the menu item.
+ associated window item exists, one is created. If isFilename is YES, then
+ aString is assumed to be a filename representation the way
+ [NSWindow-setTitleWithRepresentedFilename:] would format it, otherwise
+ the string is displayed literally in the menu item.
  */
 - (void) changeWindowsItem: (NSWindow*)aWindow
-		     title: (NSString*)aString
-		  filename: (BOOL)isFilename
+                     title: (NSString*)aString
+                  filename: (BOOL)isFilename
 {
-  NSArray	*itemArray;
-  NSUInteger	count;
-  NSUInteger	i;
-  id		item;
-
-  if (![aWindow isKindOfClass: [NSWindow class]])
-    [NSException raise: NSInvalidArgumentException
-		 format: @"Object of bad type passed as window"];
-
-  if (isFilename)
+    NSArray	*itemArray;
+    NSUInteger	count;
+    NSUInteger	i;
+    id		item;
+    
+    if (![aWindow isKindOfClass: [NSWindow class]])
+        [NSException raise: NSInvalidArgumentException
+                    format: @"Object of bad type passed as window"];
+    
+    if (isFilename)
     {
-      NSRange	r = [aString rangeOfString: @"  --  "];
-
-      if (r.length > 0)
-	{
-	  aString = [aString substringToIndex: r.location];
-	}
+        NSRange	r = [aString rangeOfString: @"  --  "];
+        
+        if (r.length > 0)
+        {
+            aString = [aString substringToIndex: r.location];
+        }
     }
-
-  /*
-   * If there is no menu and nowhere to put one, we can't do anything.
-   */
-  if (_windows_menu == nil)
-    return;
-
-  /*
-   * Check if the window is already in the menu.  
-   */
-  itemArray = [_windows_menu itemArray];
-  count = [itemArray count];
-  for (i = 0; i < count; i++)
+    
+    /*
+     * If there is no menu and nowhere to put one, we can't do anything.
+     */
+    if (_windows_menu == nil)
+        return;
+    
+    /*
+     * Check if the window is already in the menu.
+     */
+    itemArray = [_windows_menu itemArray];
+    count = [itemArray count];
+    for (i = 0; i < count; i++)
     {
-      NSMenuItem *item = [itemArray objectAtIndex: i];
-      
-      if ([item target] == aWindow)
-	{
-	  /*
-	   * If our menu item already exists and with the correct
-	   * title, we need not continue.  
-	   */
-	  if ([[item title] isEqualToString: aString])
-	    {
-	      return;
-	    }
-	  else
-	    {
-	      /* 
-	       * Else, we need to remove the old item and add it again
-	       * with the new title.  Then new item might be located
-	       * somewhere else in the menu than the old one (because
-	       * items in the menu are sorted by title) ... this is
-	       * why we remove the old one and then insert it again.
-	       */
-	      [_windows_menu removeItem: item];
-	      break;
-	    }
-	}
+        NSMenuItem *item = [itemArray objectAtIndex: i];
+        
+        if ([item target] == aWindow)
+        {
+            /*
+             * If our menu item already exists and with the correct
+             * title, we need not continue.
+             */
+            if ([[item title] isEqualToString: aString])
+            {
+                return;
+            }
+            else
+            {
+                /*
+                 * Else, we need to remove the old item and add it again
+                 * with the new title.  Then new item might be located
+                 * somewhere else in the menu than the old one (because
+                 * items in the menu are sorted by title) ... this is
+                 * why we remove the old one and then insert it again.
+                 */
+                [_windows_menu removeItem: item];
+                break;
+            }
+        }
     }
-
-  /*
-   * Can't permit an untitled window in the window menu ... so if the 
-   * window has not title, we don't add it to the menu.
-   */
-  if (aString == nil || [aString isEqualToString: @""])
-    return;
-  
-  /*
-   * Now we insert a menu item for the window in the correct order.
-   * Window menu items are inserted in alphabetic order at the bottom
-   * of the windows menu except for two special items with actions
-   * 'performMiniaturize: ' and 'performClose: '.  If these exist the
-   * they are kept at the below all window entries in the menu.
-   */
-  itemArray = [_windows_menu itemArray];
-  count = [itemArray count];
-
-  if (count > 0 && sel_isEqual([[itemArray objectAtIndex: count-1] action],
-		@selector(performClose:)))
-    count--;
-  if (count > 0 && sel_isEqual([[itemArray objectAtIndex: count-1] action],
-		@selector(performMiniaturize:)))
-    count--;
-  for (i = 0; i < count; i++)
+    
+    /*
+     * Can't permit an untitled window in the window menu ... so if the
+     * window has not title, we don't add it to the menu.
+     */
+    if (aString == nil || [aString isEqualToString: @""])
+        return;
+    
+    /*
+     * Now we insert a menu item for the window in the correct order.
+     * Window menu items are inserted in alphabetic order at the bottom
+     * of the windows menu except for two special items with actions
+     * 'performMiniaturize: ' and 'performClose: '.  If these exist the
+     * they are kept at the below all window entries in the menu.
+     */
+    itemArray = [_windows_menu itemArray];
+    count = [itemArray count];
+    
+    if (count > 0 && sel_isEqual([[itemArray objectAtIndex: count-1] action],
+                                 @selector(performClose:)))
+        count--;
+    if (count > 0 && sel_isEqual([[itemArray objectAtIndex: count-1] action],
+                                 @selector(performMiniaturize:)))
+        count--;
+    for (i = 0; i < count; i++)
     {
-      NSMenuItem *item = [itemArray objectAtIndex: i];
-      if ([[item target] isKindOfClass: [NSWindow class]] &&
-	  sel_isEqual([item action], @selector(makeKeyAndOrderFront:)))
-	break;
+        NSMenuItem *item = [itemArray objectAtIndex: i];
+        if ([[item target] isKindOfClass: [NSWindow class]] &&
+            sel_isEqual([item action], @selector(makeKeyAndOrderFront:)))
+            break;
     }
-
-  while (i < count)
+    
+    while (i < count)
     {
-      item = [itemArray objectAtIndex: i];
-
-      if ([[item title] compare: aString] == NSOrderedDescending)
-	break;
-      i++;
+        item = [itemArray objectAtIndex: i];
+        
+        if ([[item title] compare: aString] == NSOrderedDescending)
+            break;
+        i++;
     }
-
-  item = [_windows_menu insertItemWithTitle: aString
-			action: @selector(makeKeyAndOrderFront:)
-			keyEquivalent: @""
-			atIndex: i];
-  [item setTarget: aWindow];
-
-  // When changing for a window with a file, we should also set the image.
-  [self setImageForWindowsItem: item];
+    
+    item = [_windows_menu insertItemWithTitle: aString
+                                       action: @selector(makeKeyAndOrderFront:)
+                                keyEquivalent: @""
+                                      atIndex: i];
+    [item setTarget: aWindow];
+    
+    // When changing for a window with a file, we should also set the image.
+    [self setImageForWindowsItem: item];
 }
 
 /**
@@ -3169,35 +3137,35 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (void) updateWindowsItem: (NSWindow*)aWindow
 {
-  NSMenu *menu;
-
-  menu = [self windowsMenu];
-  if (menu != nil)
+    NSMenu *menu;
+    
+    menu = [self windowsMenu];
+    if (menu != nil)
     {
-      NSArray	*itemArray;
-      NSUInteger count;
-      NSUInteger i;
-      BOOL	found = NO;
-
-      itemArray = [menu itemArray];
-      count = [itemArray count];
-      for (i = 0; i < count; i++)
-	{
-	  NSMenuItem *item = [itemArray objectAtIndex: i];
-
-	  if ([item target] == aWindow)
-	    {
-	      [self setImageForWindowsItem: item];
-	      break;
-	    }
-	}
-
-      if (found == NO)
-	{
-	  [self changeWindowsItem: aWindow
-			    title: [aWindow title]
-			 filename: [aWindow _hasTitleWithRepresentedFilename]];
-	}
+        NSArray	*itemArray;
+        NSUInteger count;
+        NSUInteger i;
+        BOOL	found = NO;
+        
+        itemArray = [menu itemArray];
+        count = [itemArray count];
+        for (i = 0; i < count; i++)
+        {
+            NSMenuItem *item = [itemArray objectAtIndex: i];
+            
+            if ([item target] == aWindow)
+            {
+                [self setImageForWindowsItem: item];
+                break;
+            }
+        }
+        
+        if (found == NO)
+        {
+            [self changeWindowsItem: aWindow
+                              title: [aWindow title]
+                           filename: [aWindow _hasTitleWithRepresentedFilename]];
+        }
     }
 }
 
@@ -3207,53 +3175,53 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (void) setWindowsMenu: (NSMenu*)aMenu
 {
-  if (_windows_menu == aMenu)
+    if (_windows_menu == aMenu)
     {
-      return;
+        return;
     }
-
-  /*
-   * Remove all the windows from the old windows menu.
-   */
-  if (_windows_menu != nil)
-    {
-      NSArray *itemArray = [_windows_menu itemArray];
-      NSUInteger i, count = [itemArray count];
-      
-      for (i = 0; i < count; i++)
-	{
-	  NSMenuItem *anItem = [itemArray objectAtIndex: i];
-	  id win = [anItem target];
-
-	  if ([win isKindOfClass: [NSWindow class]])
-	    {
-	      [_windows_menu removeItem: anItem];
-	    }
-	}
-    }
-
-  /* Set the new _windows_menu.  */
-  ASSIGN (_windows_menu, aMenu);
-  
-  {
+    
     /*
-     * Now use [-changeWindowsItem:title:filename:] to build the new menu.
+     * Remove all the windows from the old windows menu.
      */
-    NSArray * windows = [self windows];
-    NSUInteger i, count = [windows count];
-    for (i = 0; i < count; i++)
-      {
-	NSWindow	*win = [windows objectAtIndex: i];
-	
-	if (([win isExcludedFromWindowsMenu] == NO)
-	    && ([win isVisible] || [win isMiniaturized]))
-	  {
-	    [self changeWindowsItem: win
-			      title: [win title]
-			   filename: [win _hasTitleWithRepresentedFilename]];
-	  }
-      }
-  }
+    if (_windows_menu != nil)
+    {
+        NSArray *itemArray = [_windows_menu itemArray];
+        NSUInteger i, count = [itemArray count];
+        
+        for (i = 0; i < count; i++)
+        {
+            NSMenuItem *anItem = [itemArray objectAtIndex: i];
+            id win = [anItem target];
+            
+            if ([win isKindOfClass: [NSWindow class]])
+            {
+                [_windows_menu removeItem: anItem];
+            }
+        }
+    }
+    
+    /* Set the new _windows_menu.  */
+    ASSIGN (_windows_menu, aMenu);
+    
+    {
+        /*
+         * Now use [-changeWindowsItem:title:filename:] to build the new menu.
+         */
+        NSArray * windows = [self windows];
+        NSUInteger i, count = [windows count];
+        for (i = 0; i < count; i++)
+        {
+            NSWindow	*win = [windows objectAtIndex: i];
+            
+            if (([win isExcludedFromWindowsMenu] == NO)
+                && ([win isVisible] || [win isMiniaturized]))
+            {
+                [self changeWindowsItem: win
+                                  title: [win title]
+                               filename: [win _hasTitleWithRepresentedFilename]];
+            }
+        }
+    }
 }
 
 /**
@@ -3262,7 +3230,7 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (NSMenu*) windowsMenu
 {
-  return _windows_menu;
+    return _windows_menu;
 }
 
 /*
@@ -3277,18 +3245,18 @@ image.</p><p>See Also: -applicationIconImage</p>
  * or return one of returnTypes
  */
 - (void) registerServicesMenuSendTypes: (NSArray *)sendTypes
-			   returnTypes: (NSArray *)returnTypes
+                           returnTypes: (NSArray *)returnTypes
 {
-  [_listener registerSendTypes: sendTypes
-		  returnTypes: returnTypes];
+    [_listener registerSendTypes: sendTypes
+                     returnTypes: returnTypes];
 }
 
 /** <p>Returns the services menu of the receiver.</p>
-    <p>See Also: -setServicesMenu:</p>
+ <p>See Also: -setServicesMenu:</p>
  */
 - (NSMenu *) servicesMenu
 {
-  return [_listener servicesMenu];
+    return [_listener servicesMenu];
 }
 
 /**<p> Returns the services provided previously registered using the
@@ -3296,7 +3264,7 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (id) servicesProvider
 {
-  return [_listener servicesProvider];
+    return [_listener servicesProvider];
 }
 
 /**<p>ets the services menu for the receiver.  This should be called, otherwise
@@ -3306,7 +3274,7 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (void) setServicesMenu: (NSMenu *)aMenu
 {
-  [_listener setServicesMenu: aMenu];
+    [_listener setServicesMenu: aMenu];
 }
 
 /**
@@ -3317,7 +3285,7 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (void) setServicesProvider: (id)anObject
 {
-  [_listener setServicesProvider: anObject];
+    [_listener setServicesProvider: anObject];
 }
 
 /**
@@ -3328,15 +3296,15 @@ image.</p><p>See Also: -applicationIconImage</p>
  * nil otherwise.
  */
 - (id) validRequestorForSendType: (NSString *)sendType
-		      returnType: (NSString *)returnType
+                      returnType: (NSString *)returnType
 {
-  if (_delegate != nil && ![_delegate isKindOfClass: [NSResponder class]]
-    && [_delegate respondsToSelector:
-                    @selector(validRequestorForSendType:returnType:)])
-    return [_delegate validRequestorForSendType: sendType
-				     returnType: returnType];
-
-  return nil;
+    if (_delegate != nil && ![_delegate isKindOfClass: [NSResponder class]]
+        && [_delegate respondsToSelector:
+            @selector(validRequestorForSendType:returnType:)])
+        return [_delegate validRequestorForSendType: sendType
+                                         returnType: returnType];
+    
+    return nil;
 }
 
 /**
@@ -3344,7 +3312,7 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (NSGraphicsContext *) context
 {
-  return _default_context;
+    return _default_context;
 }
 
 /**
@@ -3352,112 +3320,112 @@ image.</p><p>See Also: -applicationIconImage</p>
  */
 - (void) reportException: (NSException *)anException
 {
-  if (anException)
-    NSLog (_(@"reported exception - %@"), anException);
+    if (anException)
+        NSLog (_(@"reported exception - %@"), anException);
 }
 
 - (BOOL) presentError: (NSError *)error
 {
-  NSAlert *alert;
-  NSInteger result;
-
-  error = [self willPresentError: error];
-  alert = [NSAlert alertWithError: error];
-  result = [alert runModal];
-
-  if (result != NSAlertErrorReturn)
+    NSAlert *alert;
+    NSInteger result;
+    
+    error = [self willPresentError: error];
+    alert = [NSAlert alertWithError: error];
+    result = [alert runModal];
+    
+    if (result != NSAlertErrorReturn)
     {
-      // Convert result (1, 0, -1) into index (0, 1, 2)
-      result = 1 - result;
-      return [[error recoveryAttempter] attemptRecoveryFromError: error
-                 optionIndex: result];
+        // Convert result (1, 0, -1) into index (0, 1, 2)
+        result = 1 - result;
+        return [[error recoveryAttempter] attemptRecoveryFromError: error
+                                                       optionIndex: result];
     }
-  else
+    else
     {
-      return NO;
+        return NO;
     }
 }
 
 struct _DelegateWrapper
 {
-  id delegate;
-  SEL selector;
-  NSError *error;
-  void *context;
+    id delegate;
+    SEL selector;
+    NSError *error;
+    void *context;
 };
 
 - (void) presentError: (NSError*)error
        modalForWindow: (NSWindow*)window
-             delegate: (id)delegate 
+             delegate: (id)delegate
    didPresentSelector: (SEL)sel
           contextInfo: (void*)context
 {
-  NSAlert *alert;
-  struct _DelegateWrapper *wrapper;
-
-  error = [self willPresentError: error];
-  alert = [NSAlert alertWithError: error];
-  // FIXME: Who is trying to recover the error?
-  wrapper = malloc(sizeof(struct _DelegateWrapper));
-  wrapper->delegate = delegate;
-  wrapper->selector = sel;
-  wrapper->error = error;
-  wrapper->context = context;
-
-  [alert beginSheetModalForWindow: window
-         modalDelegate: self
-         didEndSelector: @selector(_didPresentError:returnCode:contextInfo:)
-         contextInfo: wrapper];
+    NSAlert *alert;
+    struct _DelegateWrapper *wrapper;
+    
+    error = [self willPresentError: error];
+    alert = [NSAlert alertWithError: error];
+    // FIXME: Who is trying to recover the error?
+    wrapper = malloc(sizeof(struct _DelegateWrapper));
+    wrapper->delegate = delegate;
+    wrapper->selector = sel;
+    wrapper->error = error;
+    wrapper->context = context;
+    
+    [alert beginSheetModalForWindow: window
+                      modalDelegate: self
+                     didEndSelector: @selector(_didPresentError:returnCode:contextInfo:)
+                        contextInfo: wrapper];
 }
 
 - (void) _didPresentError: (NSWindow*)sheet 
                returnCode: (NSInteger)result
               contextInfo: (void*)context
 {
-  struct _DelegateWrapper *wrapper;
-  id delegate;
-  SEL sel;
-  NSError *error;
-  void *orgContext;
-  BOOL recover;
-  
-  wrapper = (struct _DelegateWrapper*)context;
-  delegate = wrapper->delegate;
-  sel = wrapper->selector;
-  error = wrapper->error;
-  orgContext = wrapper->context;
-  free(wrapper);
-
-  if (result != NSAlertErrorReturn)
+    struct _DelegateWrapper *wrapper;
+    id delegate;
+    SEL sel;
+    NSError *error;
+    void *orgContext;
+    BOOL recover;
+    
+    wrapper = (struct _DelegateWrapper*)context;
+    delegate = wrapper->delegate;
+    sel = wrapper->selector;
+    error = wrapper->error;
+    orgContext = wrapper->context;
+    free(wrapper);
+    
+    if (result != NSAlertErrorReturn)
     {
-      // Convert result (1, 0, -1) into index (0, 1, 2)
-      result = 1 - result;
-      recover = [[error recoveryAttempter] attemptRecoveryFromError: error
-                 optionIndex: result];
+        // Convert result (1, 0, -1) into index (0, 1, 2)
+        result = 1 - result;
+        recover = [[error recoveryAttempter] attemptRecoveryFromError: error
+                                                          optionIndex: result];
     }
-  else
+    else
     {
-      recover = NO;
+        recover = NO;
     }
-  
-  if ([delegate respondsToSelector: sel])
+    
+    if ([delegate respondsToSelector: sel])
     {
-      void (*didEnd)(id, SEL, BOOL, void*);
-
-      didEnd = (void (*)(id, SEL, BOOL, void*))[delegate methodForSelector: sel];
-      didEnd(delegate, sel, recover, orgContext);
+        void (*didEnd)(id, SEL, BOOL, void*);
+        
+        didEnd = (void (*)(id, SEL, BOOL, void*))[delegate methodForSelector: sel];
+        didEnd(delegate, sel, recover, orgContext);
     }
 }
 
 - (NSError*) willPresentError: (NSError*)error
 {
-  if ([_delegate respondsToSelector: @selector(application:willPresentError:)])
+    if ([_delegate respondsToSelector: @selector(application:willPresentError:)])
     {
-      return [_delegate application: self willPresentError: error];
+        return [_delegate application: self willPresentError: error];
     }
-  else
+    else
     {
-      return error;
+        return error;
     }
 }
 
@@ -3473,44 +3441,44 @@ struct _DelegateWrapper
  */
 - (void) terminate: (id)sender
 {
-  NSDocumentController		*sdc;
-  NSApplicationTerminateReply	termination;
-
-  /* First ask the shared document controller to save any unsaved changes */
-  sdc = [NSDocumentController sharedDocumentController];
-  if ([[sdc documentClassNames] count] > 0)
+    NSDocumentController		*sdc;
+    NSApplicationTerminateReply	termination;
+    
+    /* First ask the shared document controller to save any unsaved changes */
+    sdc = [NSDocumentController sharedDocumentController];
+    if ([[sdc documentClassNames] count] > 0)
     {
-      if ([sdc reviewUnsavedDocumentsWithAlertTitle: _(@"Quit")
-					cancellable: YES] == NO)
-	{
-	  return;
-	}
+        if ([sdc reviewUnsavedDocumentsWithAlertTitle: _(@"Quit")
+                                          cancellable: YES] == NO)
+        {
+            return;
+        }
     }
-
-  /* Now ask the application delegate whether its okay to terminate */
-  termination = NSTerminateNow;
-  if ([_delegate respondsToSelector: @selector(applicationShouldTerminate:)])
+    
+    /* Now ask the application delegate whether its okay to terminate */
+    termination = NSTerminateNow;
+    if ([_delegate respondsToSelector: @selector(applicationShouldTerminate:)])
     {
-      /* The old API has applicationShouldTerminate: return a BOOL,
-       * so if we are linked in to an application which used that
-       * API, the delegate might return a BOOL rather than an
-       * NSTerminateNow.  That's fine as both NSTerminateNow
-       * and BOOL are integral types (though potentially of different sizes),
-       * and NSTerminateNow is defined as YES and NSTerminateCancel as NO.
-       * So all we need to do is mask the low byte of the return value in
-       * case there is uninitialised random data in the higher bytes.
-       */
-      termination = ([_delegate applicationShouldTerminate: self] & 0xff);
+        /* The old API has applicationShouldTerminate: return a BOOL,
+         * so if we are linked in to an application which used that
+         * API, the delegate might return a BOOL rather than an
+         * NSTerminateNow.  That's fine as both NSTerminateNow
+         * and BOOL are integral types (though potentially of different sizes),
+         * and NSTerminateNow is defined as YES and NSTerminateCancel as NO.
+         * So all we need to do is mask the low byte of the return value in
+         * case there is uninitialised random data in the higher bytes.
+         */
+        termination = ([_delegate applicationShouldTerminate: self] & 0xff);
     }
-
-  if (termination == NSTerminateNow)
+    
+    if (termination == NSTerminateNow)
     {
-      [self replyToApplicationShouldTerminate: YES];
+        [self replyToApplicationShouldTerminate: YES];
     }
-  /*
+    /*
      Don't need to do anything on NSTerminateLater, as long as user code
      follows the contract (to call replyTo... later).
-  */
+     */
 }
 
 /**
@@ -3520,52 +3488,52 @@ struct _DelegateWrapper
  */
 - (void) replyToApplicationShouldTerminate: (BOOL)shouldTerminate
 {
-  // Prevent cycles in terminate: call.
-  if (shouldTerminate && _app_is_running)
+    // Prevent cycles in terminate: call.
+    if (shouldTerminate && _app_is_running)
     {
-      [nc postNotificationName: NSApplicationWillTerminateNotification
-	  object: self];
-      
-      _app_is_running = NO;
-
-      GSRemoveIcon(_app_icon_window);
-      [[self windows] makeObjectsPerformSelector: @selector(close)];
-      [NSCursor setHiddenUntilMouseMoves: NO];
-      
-      /* Store our user information.  */
-      [[NSUserDefaults standardUserDefaults] synchronize];
-
-      /* Tell the Workspace that we really did terminate.  */
-      [[[NSWorkspace sharedWorkspace] notificationCenter]
-        postNotificationName: NSWorkspaceDidTerminateApplicationNotification
-		      object: [NSWorkspace sharedWorkspace]
-		    userInfo: [self _notificationUserInfo]];
-
-      /* Destroy the main run loop pool (this also destroys any nested
+        [nc postNotificationName: NSApplicationWillTerminateNotification
+                          object: self];
+        
+        _app_is_running = NO;
+        
+        GSRemoveIcon(_app_icon_window);
+        [[self windows] makeObjectsPerformSelector: @selector(close)];
+        [NSCursor setHiddenUntilMouseMoves: NO];
+        
+        /* Store our user information.  */
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        /* Tell the Workspace that we really did terminate.  */
+        [[[NSWorkspace sharedWorkspace] notificationCenter]
+         postNotificationName: NSWorkspaceDidTerminateApplicationNotification
+         object: [NSWorkspace sharedWorkspace]
+         userInfo: [self _notificationUserInfo]];
+        
+        /* Destroy the main run loop pool (this also destroys any nested
          pools which might have been created inside this one).  */
-      DESTROY (_runLoopPool);
-
-      /* Now free the NSApplication object.  Enclose the operation
+        DESTROY (_runLoopPool);
+        
+        /* Now free the NSApplication object.  Enclose the operation
          into an autorelease pool, in case some -dealloc method needs
          to use any temporary object.  */
-      {
-        NSAutoreleasePool *pool;
-	
-        IF_NO_GC(pool = [arpClass new]);
-
-        DESTROY(NSApp);
-
-        DESTROY(pool);
-      }
-
-      /* And finally, stop the program.  */
-      exit(0);
+        {
+            NSAutoreleasePool *pool;
+            
+            IF_NO_GC(pool = [arpClass new]);
+            
+            DESTROY(NSApp);
+            
+            DESTROY(pool);
+        }
+        
+        /* And finally, stop the program.  */
+        exit(0);
     }
 }
 
 - (void) replyToOpenOrPrint: (NSApplicationDelegateReply)reply
 {
-  // FIXME
+    // FIXME
 }
 
 /**
@@ -3576,7 +3544,7 @@ struct _DelegateWrapper
  * notifications has name mirroring the notification name, so for instance
  * an <em>NSApplicationDidBecomeActiveNotification</em> is handled by an
  * <code>applicationDidBecomeActive:</code> method.
- * </p> 
+ * </p>
  * <list>
  *   <item>NSApplicationDidBecomeActiveNotification</item>
  *   <item>NSApplicationDidFinishLaunchingNotification</item>
@@ -3611,7 +3579,7 @@ struct _DelegateWrapper
  * </list>
  * <p>The delegate is also called upon to respond to any actions which
  *   are not handled by a window, a window delgate, or by the application
- *   object itself.  This is controlled by the -targetForAction: method. 
+ *   object itself.  This is controlled by the -targetForAction: method.
  * </p>
  * <p>Finally, the application delegate is responsible for handling
  *   messages sent to the application from remote processes (see the
@@ -3621,7 +3589,7 @@ struct _DelegateWrapper
  */
 - (id) delegate
 {
-  return _delegate;
+    return _delegate;
 }
 
 /**
@@ -3635,29 +3603,29 @@ struct _DelegateWrapper
  */
 - (void) setDelegate: (id)anObject
 {
-  if (_delegate)
-    [nc removeObserver: _delegate name: nil object: self];
-  _delegate = anObject;
-
+    if (_delegate)
+        [nc removeObserver: _delegate name: nil object: self];
+    _delegate = anObject;
+    
 #define SET_DELEGATE_NOTIFICATION(notif_name) \
-  if ([_delegate respondsToSelector: @selector(application##notif_name:)]) \
-    [nc addObserver: _delegate \
-      selector: @selector(application##notif_name:) \
-      name: NSApplication##notif_name##Notification object: self]
-
-  SET_DELEGATE_NOTIFICATION(DidBecomeActive);
-  SET_DELEGATE_NOTIFICATION(DidFinishLaunching);
-  SET_DELEGATE_NOTIFICATION(DidHide);
-  SET_DELEGATE_NOTIFICATION(DidResignActive);
-  SET_DELEGATE_NOTIFICATION(DidUnhide);
-  SET_DELEGATE_NOTIFICATION(DidUpdate);
-  SET_DELEGATE_NOTIFICATION(WillBecomeActive);
-  SET_DELEGATE_NOTIFICATION(WillFinishLaunching);
-  SET_DELEGATE_NOTIFICATION(WillHide);
-  SET_DELEGATE_NOTIFICATION(WillResignActive);
-  SET_DELEGATE_NOTIFICATION(WillTerminate);
-  SET_DELEGATE_NOTIFICATION(WillUnhide);
-  SET_DELEGATE_NOTIFICATION(WillUpdate);
+if ([_delegate respondsToSelector: @selector(application##notif_name:)]) \
+[nc addObserver: _delegate \
+selector: @selector(application##notif_name:) \
+name: NSApplication##notif_name##Notification object: self]
+    
+    SET_DELEGATE_NOTIFICATION(DidBecomeActive);
+    SET_DELEGATE_NOTIFICATION(DidFinishLaunching);
+    SET_DELEGATE_NOTIFICATION(DidHide);
+    SET_DELEGATE_NOTIFICATION(DidResignActive);
+    SET_DELEGATE_NOTIFICATION(DidUnhide);
+    SET_DELEGATE_NOTIFICATION(DidUpdate);
+    SET_DELEGATE_NOTIFICATION(WillBecomeActive);
+    SET_DELEGATE_NOTIFICATION(WillFinishLaunching);
+    SET_DELEGATE_NOTIFICATION(WillHide);
+    SET_DELEGATE_NOTIFICATION(WillResignActive);
+    SET_DELEGATE_NOTIFICATION(WillTerminate);
+    SET_DELEGATE_NOTIFICATION(WillUnhide);
+    SET_DELEGATE_NOTIFICATION(WillUpdate);
 }
 
 /*
@@ -3670,8 +3638,8 @@ struct _DelegateWrapper
  */
 - (NSArray *) orderedDocuments
 {
-  // FIXME
-  return nil;
+    // FIXME
+    return nil;
 }
 
 /**
@@ -3682,17 +3650,17 @@ struct _DelegateWrapper
  */
 - (NSArray *) orderedWindows
 {
-  NSArray *arr = GSOrderedWindows();
-  NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:[arr count]];
-  NSEnumerator *iter = [arr objectEnumerator];
-  id win;
-  while ((win = [iter nextObject]))
+    NSArray *arr = GSOrderedWindows();
+    NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:[arr count]];
+    NSEnumerator *iter = [arr objectEnumerator];
+    id win;
+    while ((win = [iter nextObject]))
     {
-      if (![win isKindOfClass:[NSPanel class]])
-        [ret addObject:win];
+        if (![win isKindOfClass:[NSPanel class]])
+            [ret addObject:win];
     }
-  
-  return AUTORELEASE(ret);
+    
+    return AUTORELEASE(ret);
 }
 
 /*
@@ -3705,7 +3673,7 @@ struct _DelegateWrapper
  */
 - (void) cancelUserAttentionRequest: (NSInteger)request
 {
-  // FIXME
+    // FIXME
 }
 
 /**
@@ -3716,18 +3684,18 @@ struct _DelegateWrapper
  */
 - (NSInteger) requestUserAttention: (NSRequestUserAttentionType)requestType
 {
-  // FIXME
-  return 0;
+    // FIXME
+    return 0;
 }
 
 - (NSApplicationPresentationOptions) currentPresentationOptions
 {
-  return _presentationOptions;
+    return _presentationOptions;
 }
 
 - (NSApplicationPresentationOptions) presentationOptions
 {
-  return _presentationOptions;
+    return _presentationOptions;
 }
 
 /**
@@ -3736,7 +3704,7 @@ struct _DelegateWrapper
  */
 - (void)setPresentationOptions: (NSApplicationPresentationOptions)options
 {
-  _presentationOptions = options;
+    _presentationOptions = options;
 }
 
 /*
@@ -3744,55 +3712,55 @@ struct _DelegateWrapper
  */
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  [super encodeWithCoder: aCoder];
-  if ([aCoder allowsKeyedCoding])
+    [super encodeWithCoder: aCoder];
+    if ([aCoder allowsKeyedCoding])
     {
-      /*
-      if (_delegate != nil)
-        {
-	  [aCoder encodeObject: _delegate forKey: @"NSDelegate"];
-	}
-      [aCoder encodeObject: _main_menu forKey: @"NSMainMenu"]; // ???
-      [aCoder encodeObject: _windows_menu forKey: @"NSWindowsMenu"]; // ???
-      */
+        /*
+         if (_delegate != nil)
+         {
+         [aCoder encodeObject: _delegate forKey: @"NSDelegate"];
+         }
+         [aCoder encodeObject: _main_menu forKey: @"NSMainMenu"]; // ???
+         [aCoder encodeObject: _windows_menu forKey: @"NSWindowsMenu"]; // ???
+         */
     }
-  else
+    else
     {
-      [aCoder encodeConditionalObject: _delegate];
-      [aCoder encodeObject: _main_menu];
-      [aCoder encodeConditionalObject: _windows_menu];
+        [aCoder encodeConditionalObject: _delegate];
+        [aCoder encodeObject: _main_menu];
+        [aCoder encodeConditionalObject: _windows_menu];
     }
 }
 
 - (id) initWithCoder: (NSCoder*)aDecoder
 {
-  id	obj;
-
-  [super initWithCoder: aDecoder];
-  if ([aDecoder allowsKeyedCoding])
+    id	obj;
+    
+    [super initWithCoder: aDecoder];
+    if ([aDecoder allowsKeyedCoding])
     {
-      /*
-      if ([aDecoder containsValueForKey: @"NSDelegate"])
-	{
-	  obj = [aDecoder decodeObjectForKey: @"NSDelegate"];
-	  [self setDelegate: obj];
-	}
-      obj = [aDecoder decodeObjectForKey: @"NSMainMenu"];
-      [self setMainMenu: obj];
-      obj = [aDecoder decodeObjectForKey: @"NSWindowsMenu"];
-      [self setWindowsMenu: obj];
-      */
+        /*
+         if ([aDecoder containsValueForKey: @"NSDelegate"])
+         {
+         obj = [aDecoder decodeObjectForKey: @"NSDelegate"];
+         [self setDelegate: obj];
+         }
+         obj = [aDecoder decodeObjectForKey: @"NSMainMenu"];
+         [self setMainMenu: obj];
+         obj = [aDecoder decodeObjectForKey: @"NSWindowsMenu"];
+         [self setWindowsMenu: obj];
+         */
     }
-  else
+    else
     {
-      obj = [aDecoder decodeObject];
-      [self setDelegate: obj];
-      obj = [aDecoder decodeObject];
-      [self setMainMenu: obj];
-      obj = [aDecoder decodeObject];
-      [self setWindowsMenu: obj];
+        obj = [aDecoder decodeObject];
+        [self setDelegate: obj];
+        obj = [aDecoder decodeObject];
+        [self setMainMenu: obj];
+        obj = [aDecoder decodeObject];
+        [self setWindowsMenu: obj];
     }
-  return self;
+    return self;
 }
 
 @end /* NSApplication */
@@ -3802,483 +3770,483 @@ struct _DelegateWrapper
 
 - (void) _loadAppIconImage
 {
-  NSDictionary	*infoDict;
-  NSString	*appIconFile;
-  NSImage	*image = nil;
-
-  infoDict = [[NSBundle mainBundle] infoDictionary];
-  appIconFile = [infoDict objectForKey: @"NSIcon"];
-  if (appIconFile && ![appIconFile isEqual: @""])
+    NSDictionary	*infoDict;
+    NSString	*appIconFile;
+    NSImage	*image = nil;
+    
+    infoDict = [[NSBundle mainBundle] infoDictionary];
+    appIconFile = [infoDict objectForKey: @"NSIcon"];
+    if (appIconFile && ![appIconFile isEqual: @""])
     {
-      image = [NSImage imageNamed: appIconFile];
+        image = [NSImage imageNamed: appIconFile];
     }
-
-  // Try to look up the icon file.
-  appIconFile = [infoDict objectForKey: @"CFBundleIconFile"];
-  if (appIconFile && ![appIconFile isEqual: @""])
+    
+    // Try to look up the icon file.
+    appIconFile = [infoDict objectForKey: @"CFBundleIconFile"];
+    if (appIconFile && ![appIconFile isEqual: @""])
     {
-      image = [NSImage imageNamed: appIconFile];
+        image = [NSImage imageNamed: appIconFile];
     }
-
-  if (image == nil)
+    
+    if (image == nil)
     {
-      image = [NSImage imageNamed: @"GNUstep"];
+        image = [NSImage imageNamed: @"GNUstep"];
     }
-  else
+    else
     {
-      /* Set the new image to be named 'NSApplicationIcon' ... to do that we
-       * must first check that any existing image of the same name has its
-       * name removed.
-       */
-      [(NSImage*)[NSImage imageNamed: @"NSApplicationIcon"] setName: nil];
-      // We need to copy the image as we may have a proxy here
-      image = AUTORELEASE([image copy]);
-      [image setName: @"NSApplicationIcon"];
+        /* Set the new image to be named 'NSApplicationIcon' ... to do that we
+         * must first check that any existing image of the same name has its
+         * name removed.
+         */
+        [(NSImage*)[NSImage imageNamed: @"NSApplicationIcon"] setName: nil];
+        // We need to copy the image as we may have a proxy here
+        image = AUTORELEASE([image copy]);
+        [image setName: @"NSApplicationIcon"];
     }
-  [self setApplicationIconImage: image];
+    [self setApplicationIconImage: image];
 }
 
 - (void) _appIconInit
 {
-  NSAppIconView	*iv;
-  NSUInteger	mask = NSIconWindowMask;
-  BOOL  	suppress;
-  
-  suppress = [[NSUserDefaults standardUserDefaults]
-    boolForKey: @"GSSuppressAppIcon"];
+    NSAppIconView	*iv;
+    NSUInteger	mask = NSIconWindowMask;
+    BOOL  	suppress;
+    
+    suppress = [[NSUserDefaults standardUserDefaults]
+                boolForKey: @"GSSuppressAppIcon"];
 #if	MINI_ICON
-  if (suppress)
+    if (suppress)
     {
-      mask = NSMiniaturizableWindowMask;
+        mask = NSMiniaturizableWindowMask;
     }
 #endif
-  
-  _app_icon_window = [[NSIconWindow alloc] initWithContentRect: NSZeroRect 
-				styleMask: mask
-				  backing: NSBackingStoreRetained
-				    defer: NO
-				   screen: nil];
-
-
-
-  {
-    NSRect iconContentRect;
-    NSRect iconFrame;
-    NSRect iconViewFrame;
-
-    iconContentRect = GSGetIconFrame(_app_icon_window);
-    iconFrame = [_app_icon_window frameRectForContentRect: iconContentRect];
-    iconViewFrame = NSMakeRect(0, 0,
-      iconContentRect.size.width, iconContentRect.size.height);
-    [_app_icon_window setFrame: iconFrame display: YES];
-
-    iv = [[NSAppIconView alloc] initWithFrame: iconViewFrame]; 
-    [iv setImage: [self applicationIconImage]];
-    [_app_icon_window setContentView: iv];
-    RELEASE(iv);
-  }
-
-  if (NO == suppress)
+    
+    _app_icon_window = [[NSIconWindow alloc] initWithContentRect: NSZeroRect
+                                                       styleMask: mask
+                                                         backing: NSBackingStoreRetained
+                                                           defer: NO
+                                                          screen: nil];
+    
+    
+    
     {
-      /* The icon window is not suppressed ... display it.
-       */
-      [_app_icon_window orderFrontRegardless];
+        NSRect iconContentRect;
+        NSRect iconFrame;
+        NSRect iconViewFrame;
+        
+        iconContentRect = GSGetIconFrame(_app_icon_window);
+        iconFrame = [_app_icon_window frameRectForContentRect: iconContentRect];
+        iconViewFrame = NSMakeRect(0, 0,
+                                   iconContentRect.size.width, iconContentRect.size.height);
+        [_app_icon_window setFrame: iconFrame display: YES];
+        
+        iv = [[NSAppIconView alloc] initWithFrame: iconViewFrame];
+        [iv setImage: [self applicationIconImage]];
+        [_app_icon_window setContentView: iv];
+        RELEASE(iv);
+    }
+    
+    if (NO == suppress)
+    {
+        /* The icon window is not suppressed ... display it.
+         */
+        [_app_icon_window orderFrontRegardless];
     }
 }
 
 - (NSDictionary*) _notificationUserInfo
 {
-  NSString	*path;
-  NSString	*port;
-  NSNumber	*processIdentifier;
-  NSDictionary	*userInfo;
-
-  processIdentifier = [NSNumber numberWithInt:
-    [[NSProcessInfo processInfo] processIdentifier]];
-  port = [(GSServicesManager*)_listener port];
-  path = [[NSBundle mainBundle] bundlePath];
-  if (port == nil)
+    NSString	*path;
+    NSString	*port;
+    NSNumber	*processIdentifier;
+    NSDictionary	*userInfo;
+    
+    processIdentifier = [NSNumber numberWithInt:
+                         [[NSProcessInfo processInfo] processIdentifier]];
+    port = [(GSServicesManager*)_listener port];
+    path = [[NSBundle mainBundle] bundlePath];
+    if (port == nil)
     {
-      if (path == nil)
-	{
-	  userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-	    processIdentifier, @"NSApplicationProcessIdentifier",
-	    nil];
-	}
-      else
-	{
-	  userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-	    path, @"NSApplicationPath",
-	    processIdentifier, @"NSApplicationProcessIdentifier",
-	    nil];
-	}
+        if (path == nil)
+        {
+            userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                        processIdentifier, @"NSApplicationProcessIdentifier",
+                        nil];
+        }
+        else
+        {
+            userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                        path, @"NSApplicationPath",
+                        processIdentifier, @"NSApplicationProcessIdentifier",
+                        nil];
+        }
     }
-  else if (path == nil)
+    else if (path == nil)
     {
-      userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-	port, @"NSApplicationName",
-	processIdentifier, @"NSApplicationProcessIdentifier",
-	nil];
+        userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                    port, @"NSApplicationName",
+                    processIdentifier, @"NSApplicationProcessIdentifier",
+                    nil];
     }
-  else
+    else
     {
-      userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-	port, @"NSApplicationName",
-	path, @"NSApplicationPath",
-	processIdentifier, @"NSApplicationProcessIdentifier",
-	nil];
+        userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                    port, @"NSApplicationName",
+                    path, @"NSApplicationPath",
+                    processIdentifier, @"NSApplicationProcessIdentifier",
+                    nil];
     }
-  return userInfo;
+    return userInfo;
 }
 
 - (void) _openDocument: (NSString*)filePath
 {
-  [_listener application: self openFile: filePath];
+    [_listener application: self openFile: filePath];
 }
 
 - (id) _targetForAction: (SEL)aSelector window: (NSWindow *)window
 {
-  id resp, delegate;
-  NSDocumentController *sdc;
-  
-  if (window == nil)
+    id resp, delegate;
+    NSDocumentController *sdc;
+    
+    if (window == nil)
     {
-      return nil;
+        return nil;
     }
-
-  /* traverse the responder chain including the window's delegate */
-  resp = [window firstResponder];
-  while (resp != nil && resp != self)
+    
+    /* traverse the responder chain including the window's delegate */
+    resp = [window firstResponder];
+    while (resp != nil && resp != self)
     {
-      if ([resp respondsToSelector: aSelector])
-	{
-	  return resp;
-	}
-      if (resp == window)
-	{
-	  delegate = [window delegate];
-	  if ([delegate respondsToSelector: aSelector])
-	    {
-	      return delegate;
-	    }
-	}
-      resp = [resp nextResponder];
+        if ([resp respondsToSelector: aSelector])
+        {
+            return resp;
+        }
+        if (resp == window)
+        {
+            delegate = [window delegate];
+            if ([delegate respondsToSelector: aSelector])
+            {
+                return delegate;
+            }
+        }
+        resp = [resp nextResponder];
     }
-
-  /* in a document based app try the window's document */
-  sdc = [NSDocumentController sharedDocumentController];
-  if ([[sdc documentClassNames] count] > 0)
+    
+    /* in a document based app try the window's document */
+    sdc = [NSDocumentController sharedDocumentController];
+    if ([[sdc documentClassNames] count] > 0)
     {
-      resp = [sdc documentForWindow: window];
-
-      if (resp != nil && [resp respondsToSelector: aSelector])
-	{
-	  return resp;
-	}
+        resp = [sdc documentForWindow: window];
+        
+        if (resp != nil && [resp respondsToSelector: aSelector])
+        {
+            return resp;
+        }
     }
-
-  /* nothing found */
-  return nil;
+    
+    /* nothing found */
+    return nil;
 }
 
 - (id) _targetForAction: (SEL)aSelector
-	      keyWindow: (NSWindow *)keyWindow
-	     mainWindow: (NSWindow *)mainWindow
+              keyWindow: (NSWindow *)keyWindow
+             mainWindow: (NSWindow *)mainWindow
 {
-  NSDocumentController *sdc;
-  id resp;
-
-  if (aSelector == NULL)
+    NSDocumentController *sdc;
+    id resp;
+    
+    if (aSelector == NULL)
+        return nil;
+    
+    /* start looking in the key window's responder chain */
+    resp = [self _targetForAction: aSelector window: keyWindow];
+    if (resp != nil)
+    {
+        return resp;
+    }
+    
+    /* next check the main window's responder chain (provided it is not
+     * the key window) */
+    if (mainWindow != keyWindow)
+    {
+        resp = [self _targetForAction: aSelector window: mainWindow];
+        if (resp != nil)
+        {
+            return resp;
+        }
+    }
+    
+    /* try the shared application imstance and its delegate */
+    if ([self respondsToSelector: aSelector])
+    {
+        return self;
+    }
+    
+    if (_delegate != nil && [_delegate respondsToSelector: aSelector])
+    {
+        return _delegate;
+    }
+    
+    /* Try the NSApplication's responder list to determine if any of them
+     * respond to the selector.
+     */
+    resp = [self nextResponder];
+    while (resp != nil)
+    {
+        if ([resp respondsToSelector: aSelector])
+        {
+            return resp;
+        }
+        resp = [resp nextResponder];
+    }
+    
+    /* as last resort in a document based app, try the document controller */
+    sdc = [NSDocumentController sharedDocumentController];
+    if ([[sdc documentClassNames] count] > 0
+        && [sdc respondsToSelector: aSelector])
+    {
+        return sdc;
+    }
+    
+    /* give up */
     return nil;
-
-  /* start looking in the key window's responder chain */
-  resp = [self _targetForAction: aSelector window: keyWindow];
-  if (resp != nil)
-    {
-      return resp;
-    }
-
-  /* next check the main window's responder chain (provided it is not
-   * the key window) */
-  if (mainWindow != keyWindow)
-    {
-      resp = [self _targetForAction: aSelector window: mainWindow];
-      if (resp != nil)
-	{
-	  return resp;
-	}
-    }
-
-  /* try the shared application imstance and its delegate */
-  if ([self respondsToSelector: aSelector])
-    {
-      return self;
-    }
-
-  if (_delegate != nil && [_delegate respondsToSelector: aSelector])
-    {
-      return _delegate;
-    }
-
-  /* Try the NSApplication's responder list to determine if any of them 
-   * respond to the selector.
-   */
-  resp = [self nextResponder];
-  while (resp != nil)
-    {
-      if ([resp respondsToSelector: aSelector])
-	{
-	  return resp;
-	}
-      resp = [resp nextResponder];
-    }
-
-  /* as last resort in a document based app, try the document controller */
-  sdc = [NSDocumentController sharedDocumentController];
-  if ([[sdc documentClassNames] count] > 0
-    && [sdc respondsToSelector: aSelector])
-    {
-      return sdc;
-    }
-
-  /* give up */
-  return nil;
 }
 
 - (void) _windowDidBecomeKey: (NSNotification*) notification
 {
-  id	obj = [notification object];
-
-  if (_key_window == nil && [obj isKindOfClass: [NSWindow class]])
+    id	obj = [notification object];
+    
+    if (_key_window == nil && [obj isKindOfClass: [NSWindow class]])
     {
-      _key_window = obj;
-      [_main_menu update];
+        _key_window = obj;
+        [_main_menu update];
     }
-  else if (_key_window != obj)
+    else if (_key_window != obj)
     {
-      NSLog(@"Bogus attempt to set key window");
+        NSLog(@"Bogus attempt to set key window");
     }
 }
 
 - (void) _windowDidBecomeMain: (NSNotification*) notification
 {
-  id	obj = [notification object];
-
-  if (_main_window == nil && [obj isKindOfClass: [NSWindow class]])
+    id	obj = [notification object];
+    
+    if (_main_window == nil && [obj isKindOfClass: [NSWindow class]])
     {
-      _main_window = obj;
-      [_main_menu update];
+        _main_window = obj;
+        [_main_menu update];
     }
-  else if (_main_window != obj)
+    else if (_main_window != obj)
     {
-      NSLog(@"Bogus attempt to set main window");
+        NSLog(@"Bogus attempt to set main window");
     }
 }
 
 - (void) _windowDidResignKey: (NSNotification*) notification
 {
-  id	obj = [notification object];
-
-  if (_key_window == obj)
+    id	obj = [notification object];
+    
+    if (_key_window == obj)
     {
-      _key_window = nil;
-      [NSCursor setHiddenUntilMouseMoves: NO];
+        _key_window = nil;
+        [NSCursor setHiddenUntilMouseMoves: NO];
     }
-  else
+    else
     {
-      NSLog(@"Bogus attempt to resign key window");
+        NSLog(@"Bogus attempt to resign key window");
     }
 }
 
 - (void) _windowDidResignMain: (NSNotification*) notification
 {
-  id	obj = [notification object];
-
-  if (_main_window == obj)
+    id	obj = [notification object];
+    
+    if (_main_window == obj)
     {
-      _main_window = nil;
+        _main_window = nil;
     }
-  else
+    else
     {
-      NSLog(@"Bogus attempt to resign key window");
+        NSLog(@"Bogus attempt to resign key window");
     }
 }
 
 - (void) _lastWindowClosed
 {
-  if ([_delegate respondsToSelector:
-    @selector(applicationShouldTerminateAfterLastWindowClosed:)])
+    if ([_delegate respondsToSelector:
+         @selector(applicationShouldTerminateAfterLastWindowClosed:)])
     {
-      if ([_delegate
-	applicationShouldTerminateAfterLastWindowClosed: self])
+        if ([_delegate
+             applicationShouldTerminateAfterLastWindowClosed: self])
         {
-          [self terminate: self];
+            [self terminate: self];
         }
     }
-  /* wlux 2009-10-17: If we use MS Windows style menus, terminate
+    /* wlux 2009-10-17: If we use MS Windows style menus, terminate
      the application by default when the last window is closed. */
-  else if (NSInterfaceStyleForKey(@"NSMenuInterfaceStyle", nil) == 
-	   NSWindows95InterfaceStyle)
+    else if (NSInterfaceStyleForKey(@"NSMenuInterfaceStyle", nil) ==
+             NSWindows95InterfaceStyle)
     {
-      [self terminate: self];
+        [self terminate: self];
     }
 }
 
 - (void) _windowWillClose: (NSNotification*) notification
 {
-  NSWindow *win = [notification object];
-
-  if (_app_is_running)
+    NSWindow *win = [notification object];
+    
+    if (_app_is_running)
     {
-      /* FIXME Don't use GSOrderedWindows(), since it may not return all
-	 windows when the application is hidden. E.g., given a hidden
-	 application with a single window with canHide == NO, if the user
-	 closes this window it would appear as if the last window was closed. */
-      NSArray *windows_list = GSOrderedWindows();
-      NSEnumerator *iter = [windows_list objectEnumerator];
-      BOOL wasLast = YES;
-      NSWindow *tmp;
-
-      while ((tmp = [iter nextObject]))
+        /* FIXME Don't use GSOrderedWindows(), since it may not return all
+         windows when the application is hidden. E.g., given a hidden
+         application with a single window with canHide == NO, if the user
+         closes this window it would appear as if the last window was closed. */
+        NSArray *windows_list = GSOrderedWindows();
+        NSEnumerator *iter = [windows_list objectEnumerator];
+        BOOL wasLast = YES;
+        NSWindow *tmp;
+        
+        while ((tmp = [iter nextObject]))
         {
-          if (tmp != win && [tmp canBecomeMainWindow] == YES)
+            if (tmp != win && [tmp canBecomeMainWindow] == YES)
             {
-              wasLast = NO;
-	      break;
+                wasLast = NO;
+                break;
             }
         }
-
-      /* Perform _lastWindowDidClose at the end of the event loop cycle so
-	 that all interested objects are notified before we terminate the
-	 application. In particular, this means that a modified document
-	 associated with the closed window has been closed before -terminate:
-	 is called and therefore the user isn't asked twice whether she wants
-	 to save that document's unsaved changes. */
-      if (wasLast)
-	{
-	  [self performSelector: @selector(_lastWindowClosed)
-		     withObject: nil
-		     afterDelay: 0.1];
-	}
+        
+        /* Perform _lastWindowDidClose at the end of the event loop cycle so
+         that all interested objects are notified before we terminate the
+         application. In particular, this means that a modified document
+         associated with the closed window has been closed before -terminate:
+         is called and therefore the user isn't asked twice whether she wants
+         to save that document's unsaved changes. */
+        if (wasLast)
+        {
+            [self performSelector: @selector(_lastWindowClosed)
+                       withObject: nil
+                       afterDelay: 0.1];
+        }
     }
 }
 
 - (void) _workspaceNotification: (NSNotification*) notification
 {
-  NSString	*name = [notification name];
-  NSDictionary	*info = [notification userInfo];
-
-  /*
-   * Handle hiding and unhiding of this app if necessary.
-   */
-  if ([name isEqualToString: GSUnhideAllApplicationsNotification] == YES)
+    NSString	*name = [notification name];
+    NSDictionary	*info = [notification userInfo];
+    
+    /*
+     * Handle hiding and unhiding of this app if necessary.
+     */
+    if ([name isEqualToString: GSUnhideAllApplicationsNotification] == YES)
     {
-      [self unhideWithoutActivation];
+        [self unhideWithoutActivation];
     }
-  else if ([name isEqualToString: GSHideOtherApplicationsNotification] == YES)
+    else if ([name isEqualToString: GSHideOtherApplicationsNotification] == YES)
     {
-      NSString	*port = [info objectForKey: @"NSApplicationName"];
-
-      if ([port isEqual: [[GSServicesManager manager] port]] == NO)
-	{
-	  [self hide: self];
-	}
+        NSString	*port = [info objectForKey: @"NSApplicationName"];
+        
+        if ([port isEqual: [[GSServicesManager manager] port]] == NO)
+        {
+            [self hide: self];
+        }
     }
 }
 
 - (NSArray *) _openFiles
 {
-  NSMutableArray *files = nil;
-  NSArray *args = [[NSProcessInfo processInfo] arguments];
-  NSEnumerator *en = [args objectEnumerator];
-  NSString *file = nil;
-
-  [en nextObject]; // skip the first element, which is always empty...
-  while ((file = [en nextObject]) != nil)
+    NSMutableArray *files = nil;
+    NSArray *args = [[NSProcessInfo processInfo] arguments];
+    NSEnumerator *en = [args objectEnumerator];
+    NSString *file = nil;
+    
+    [en nextObject]; // skip the first element, which is always empty...
+    while ((file = [en nextObject]) != nil)
     {
-      if ([file length] == 0)
+        if ([file length] == 0)
         {
-          continue;
+            continue;
         }
-
-      if ([file characterAtIndex: 0] != '-')
-	{
-	  if (files == nil)
-	    {
-	      files = [NSMutableArray array];
-	    }
-	  [files addObject: file];
-	}
-      else
-	{
-	  break;
-	}
+        
+        if ([file characterAtIndex: 0] != '-')
+        {
+            if (files == nil)
+            {
+                files = [NSMutableArray array];
+            }
+            [files addObject: file];
+        }
+        else
+        {
+            break;
+        }
     }
-
-  return files;
+    
+    return files;
 }
 
 - (NSMenu *) _dockMenu
 {
-  NSUInteger i, j, n; 
-  NSMenu *dockMenu, *windowsMenu;
-
-  // ask delegate for a dock menu, if none create a new one
-  dockMenu = nil;
-  if ([_delegate respondsToSelector: @selector(applicationDockMenu:)])
+    NSUInteger i, j, n;
+    NSMenu *dockMenu, *windowsMenu;
+    
+    // ask delegate for a dock menu, if none create a new one
+    dockMenu = nil;
+    if ([_delegate respondsToSelector: @selector(applicationDockMenu:)])
     {
-      // NB we make a copy of the menu since we are going to modify it
-      dockMenu = [[_delegate applicationDockMenu: self] copy];
+        // NB we make a copy of the menu since we are going to modify it
+        dockMenu = [[_delegate applicationDockMenu: self] copy];
     }
-  if (dockMenu == nil)
+    if (dockMenu == nil)
     {
-      dockMenu = [[NSMenu alloc] initWithTitle:@""];
+        dockMenu = [[NSMenu alloc] initWithTitle:@""];
     }
-
-  // copy window menu entries to the top of the menu
-  windowsMenu = [NSApp windowsMenu];
-  for (i = j = 0, n = [windowsMenu numberOfItems]; i < n; i++)
+    
+    // copy window menu entries to the top of the menu
+    windowsMenu = [NSApp windowsMenu];
+    for (i = j = 0, n = [windowsMenu numberOfItems]; i < n; i++)
     {
-      NSMenuItem *item = [windowsMenu itemAtIndex: i];
-      if ([[item target] isKindOfClass:[NSWindow class]] &&
-          sel_isEqual([item action], @selector(makeKeyAndOrderFront:)))
+        NSMenuItem *item = [windowsMenu itemAtIndex: i];
+        if ([[item target] isKindOfClass:[NSWindow class]] &&
+            sel_isEqual([item action], @selector(makeKeyAndOrderFront:)))
         {
-          [[dockMenu insertItemWithTitle: [item title]
-                                  action: @selector(makeKeyAndOrderFront:)
-                           keyEquivalent: @""
-                                 atIndex: j++]
-                    setTarget: [item target]];
+            [[dockMenu insertItemWithTitle: [item title]
+                                    action: @selector(makeKeyAndOrderFront:)
+                             keyEquivalent: @""
+                                   atIndex: j++]
+             setTarget: [item target]];
         }
     }
-  if (j > 0)
+    if (j > 0)
     {
-      [dockMenu insertItem: [NSMenuItem separatorItem] atIndex: j++];
+        [dockMenu insertItem: [NSMenuItem separatorItem] atIndex: j++];
     }
-
-  // insert standard entries to show or hide and to quit the application at
-  // the bottom
-  if (j < [dockMenu numberOfItems])
+    
+    // insert standard entries to show or hide and to quit the application at
+    // the bottom
+    if (j < [dockMenu numberOfItems])
     {
-      [dockMenu addItem: [NSMenuItem separatorItem]];
+        [dockMenu addItem: [NSMenuItem separatorItem]];
     }
-  if ([self isHidden])
+    if ([self isHidden])
     {
-      [dockMenu addItemWithTitle:_(@"Show")
-                          action:@selector(unhide:)
-                   keyEquivalent:@""];
+        [dockMenu addItemWithTitle:_(@"Show")
+                            action:@selector(unhide:)
+                     keyEquivalent:@""];
     }
-  else
+    else
     {
-      [dockMenu addItemWithTitle:_(@"Hide")
-                          action:@selector(hide:)
-                   keyEquivalent:@""];
+        [dockMenu addItemWithTitle:_(@"Hide")
+                            action:@selector(hide:)
+                     keyEquivalent:@""];
     }
-  [dockMenu addItemWithTitle:_(@"Quit")
-                      action:@selector(terminate:)
-               keyEquivalent:@""];
-
-  // return the menu
-  return dockMenu;
+    [dockMenu addItemWithTitle:_(@"Quit")
+                        action:@selector(terminate:)
+                 keyEquivalent:@""];
+    
+    // return the menu
+    return dockMenu;
 }
 
 @end // NSApplication (Private)
@@ -4288,10 +4256,10 @@ struct _DelegateWrapper
 
 - (void) _windowWillDealloc: (NSWindow *)window
 {
-  if (window == _key_window)
-    _key_window = nil;
-  if (window == _main_window)
-    _main_window = nil;
+    if (window == _key_window)
+        _key_window = nil;
+    if (window == _main_window)
+        _main_window = nil;
 }
 
 @end

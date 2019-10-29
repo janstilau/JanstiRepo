@@ -1,32 +1,3 @@
-/* 
-   NSImage.h
-
-   Load, manipulate and display images
-
-   Copyright (C) 1996-2016 Free Software Foundation, Inc.
-
-   Written by:  Adam Fedor <fedor@colorado.edu>
-   Date: Feb 1996
-   
-   This file is part of the GNUstep GUI Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; see the file COPYING.LIB.
-   If not, see <http://www.gnu.org/licenses/> or write to the 
-   Free Software Foundation, 51 Franklin Street, Fifth Floor, 
-   Boston, MA 02110-1301, USA.
-*/ 
-
 #ifndef _GNUstep_H_NSImage
 #define _GNUstep_H_NSImage
 #import <GNUstepBase/GSVersionMacros.h>
@@ -77,10 +48,10 @@ APPKIT_EXPORT NSString *NSImageNameCaution;
  *  </list>
  */
 typedef enum {
-  NSImageCacheDefault,
-  NSImageCacheAlways,
-  NSImageCacheBySize,
-  NSImageCacheNever
+    NSImageCacheDefault,
+    NSImageCacheAlways,
+    NSImageCacheBySize,
+    NSImageCacheNever
 } NSImageCacheMode;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
@@ -118,35 +89,14 @@ APPKIT_EXTERN NSString *const NSImageNameFolderBurnable;
 APPKIT_EXTERN NSString *const NSImageNameFolderSmart;
 APPKIT_EXTERN NSString *const NSImageNameNetwork;
 #endif
- 
+
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 APPKIT_EXTERN NSString *const NSImageNameFolder;
 #endif
 
 @interface NSImage : NSObject <NSCoding, NSCopying>
 {
-  // Attributes
-  NSString	*_name;
-  NSString	*_fileName;
-  NSSize	_size;
-  struct __imageFlags {
-    unsigned	archiveByName: 1;
-    unsigned	scalable: 1;
-    unsigned	dataRetained: 1;
-    unsigned	flipDraw: 1;
-    unsigned	sizeWasExplicitlySet: 1;
-    unsigned	useEPSOnResolutionMismatch: 1;
-    unsigned	colorMatchPreferred: 1;
-    unsigned	multipleResolutionMatching: 1;
-    unsigned	cacheSeparately: 1;
-    unsigned	unboundedCacheDepth: 1;
-    unsigned	syncLoad: 1;
-  } _flags;
-  NSMutableArray	*_reps;
-  NSColor		*_color;
-  NSView                *_lockedView;
-  id		        _delegate;
-  NSImageCacheMode      _cacheMode;
+
 }
 
 //
@@ -292,24 +242,24 @@ APPKIT_EXTERN NSString *const NSImageNameFolder;
 // Using the Image 
 //
 - (void) compositeToPoint: (NSPoint)aPoint
-		operation: (NSCompositingOperation)op;
+                operation: (NSCompositingOperation)op;
 - (void) compositeToPoint: (NSPoint)aPoint
-		 fromRect: (NSRect)aRect
-		operation: (NSCompositingOperation)op;
+                 fromRect: (NSRect)aRect
+                operation: (NSCompositingOperation)op;
 - (void) dissolveToPoint: (NSPoint)aPoint
-		fraction: (CGFloat)aFloat;
+                fraction: (CGFloat)aFloat;
 - (void) dissolveToPoint: (NSPoint)aPoint
-		fromRect: (NSRect)aRect
-		fraction: (CGFloat)aFloat;
+                fromRect: (NSRect)aRect
+                fraction: (CGFloat)aFloat;
 
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (void) compositeToPoint: (NSPoint)aPoint
-		 fromRect: (NSRect)srcRect
-		operation: (NSCompositingOperation)op
-		 fraction: (CGFloat)delta;
+                 fromRect: (NSRect)srcRect
+                operation: (NSCompositingOperation)op
+                 fraction: (CGFloat)delta;
 - (void) compositeToPoint: (NSPoint)aPoint
-		operation: (NSCompositingOperation)op
-		 fraction: (CGFloat)delta;
+                operation: (NSCompositingOperation)op
+                 fraction: (CGFloat)delta;
 #endif 
 
 //
@@ -344,12 +294,12 @@ APPKIT_EXTERN NSString *const NSImageNameFolder;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 /**
  * Finds the best representation for drawing in the specified rect.
- * 
+ *
  * context and hints are currently ignored.
  */
 - (NSImageRep *)bestRepresentationForRect: (NSRect)rect
-				  context: (NSGraphicsContext *)context
-				    hints: (NSDictionary *)hints;
+                                  context: (NSGraphicsContext *)context
+                                    hints: (NSDictionary *)hints;
 #endif
 
 - (NSArray*) representations;
@@ -380,16 +330,16 @@ APPKIT_EXTERN NSString *const NSImageNameFolder;
 // Drawing 
 //
 - (BOOL) drawRepresentation: (NSImageRep*)imageRep
-		     inRect: (NSRect)aRect;
+                     inRect: (NSRect)aRect;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 /** Calls -drawAtPoint:fromRect:operation:fraction: with
  *  <code>dstRect</code> given by <code>point</code> and the size of
  *  <code>srcRect</code>.
  */
 - (void) drawAtPoint: (NSPoint)point
-	    fromRect: (NSRect)srcRect
-	   operation: (NSCompositingOperation)op
-	    fraction: (CGFloat)delta;
+            fromRect: (NSRect)srcRect
+           operation: (NSCompositingOperation)op
+            fraction: (CGFloat)delta;
 
 /** <p>Takes the part of the receiver given by <code>srcRect</code> and
  *  draws it in <code>dstRect</code> in the current coordinate system,
@@ -402,22 +352,22 @@ APPKIT_EXTERN NSString *const NSImageNameFolder;
  *  </p><p>
  *  Note that compositing and dissolving doesn't work on all devices
  *  (printers, in particular).
- *  </p> 
+ *  </p>
  */
 - (void) drawInRect: (NSRect)dstRect
-	   fromRect: (NSRect)srcRect
-	  operation: (NSCompositingOperation)op
-	   fraction: (CGFloat)delta;
+           fromRect: (NSRect)srcRect
+          operation: (NSCompositingOperation)op
+           fraction: (CGFloat)delta;
 #endif 
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 
 - (void) drawInRect: (NSRect)dstRect
-	   fromRect: (NSRect)srcRect
-	  operation: (NSCompositingOperation)op
-	   fraction: (CGFloat)delta
+           fromRect: (NSRect)srcRect
+          operation: (NSCompositingOperation)op
+           fraction: (CGFloat)delta
      respectFlipped: (BOOL)respectFlipped
-	      hints: (NSDictionary*)hints;
+              hints: (NSDictionary*)hints;
 
 #endif
 
@@ -468,7 +418,7 @@ APPKIT_EXTERN NSString *const NSImageNameFolder;
 //
 - (NSData*) TIFFRepresentation;
 - (NSData*) TIFFRepresentationUsingCompression: (NSTIFFCompression)comp
-					factor: (float)aFloat;
+                                        factor: (float)aFloat;
 
 //
 // Managing NSImageRep Subclasses 
@@ -488,8 +438,8 @@ APPKIT_EXTERN NSString *const NSImageNameFolder;
 @interface NSImage (GSQuartz)
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 - (CGImageRef)CGImageForProposedRect: (NSRect *)proposedDestRect 
-                         context: (NSGraphicsContext *)referenceContext 
-                           hints: (NSDictionary *)hints;
+                             context: (NSGraphicsContext *)referenceContext
+                               hints: (NSDictionary *)hints;
 #endif
 @end
 
@@ -506,7 +456,7 @@ APPKIT_EXTERN NSString *const NSImageNameFolder;
 @protocol GSImageDelegateProtocol
 
 - (NSImage*) imageDidNotDraw: (id)sender
-		      inRect: (NSRect)aRect;
+                      inRect: (NSRect)aRect;
 
 @end
 #endif

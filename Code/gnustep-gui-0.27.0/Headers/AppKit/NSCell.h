@@ -1,32 +1,3 @@
-/* -*-objc-*-
-   NSCell.h
-
-   The abstract cell class
-
-   Copyright (C) 1996 Free Software Foundation, Inc.
-
-   Author:  Scott Christley <scottc@net-community.com>
-   Date: 1996
-   
-   This file is part of the GNUstep GUI Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; see the file COPYING.LIB.
-   If not, see <http://www.gnu.org/licenses/> or write to the 
-   Free Software Foundation, 51 Franklin Street, Fifth Floor, 
-   Boston, MA 02110-1301, USA.
-*/ 
-
 #ifndef _GNUstep_H_NSCell
 #define _GNUstep_H_NSCell
 #import <GNUstepBase/GSVersionMacros.h>
@@ -51,75 +22,75 @@
 @class NSFormatter;
 
 enum _NSCellType {
-  NSNullCellType,
-  NSTextCellType,
-  NSImageCellType
+    NSNullCellType,
+    NSTextCellType,
+    NSImageCellType
 };
 typedef NSUInteger NSCellType;
 
 enum {
-  NSAnyType,
-  NSIntType,
-  NSPositiveIntType,   
-  NSFloatType,
-  NSPositiveFloatType,   
-  NSDoubleType,   
-  NSPositiveDoubleType,
-  NSDateType
+    NSAnyType,
+    NSIntType,
+    NSPositiveIntType,
+    NSFloatType,
+    NSPositiveFloatType,
+    NSDoubleType,
+    NSPositiveDoubleType,
+    NSDateType
 };
 
 enum {
-  NSNoImage = 0,
-  NSImageOnly,
-  NSImageLeft,
-  NSImageRight,
-  NSImageBelow,
-  NSImageAbove,
-  NSImageOverlaps
+    NSNoImage = 0,
+    NSImageOnly,
+    NSImageLeft,
+    NSImageRight,
+    NSImageBelow,
+    NSImageAbove,
+    NSImageOverlaps
 };
 typedef NSUInteger NSCellImagePosition;
 
 enum _NSCellAttribute {
-  NSCellDisabled,
-  NSCellState,
-  NSPushInCell,
-  NSCellEditable,
-  NSChangeGrayCell,
-  NSCellHighlighted,   
-  NSCellLightsByContents,  
-  NSCellLightsByGray,   
-  NSChangeBackgroundCell,  
-  NSCellLightsByBackground,  
-  NSCellIsBordered,  
-  NSCellHasOverlappingImage,  
-  NSCellHasImageHorizontal,  
-  NSCellHasImageOnLeftOrBottom, 
-  NSCellChangesContents,  
-  NSCellIsInsetButton,
-  NSCellAllowsMixedState
+    NSCellDisabled,
+    NSCellState,
+    NSPushInCell,
+    NSCellEditable,
+    NSChangeGrayCell,
+    NSCellHighlighted,
+    NSCellLightsByContents,
+    NSCellLightsByGray,
+    NSChangeBackgroundCell,
+    NSCellLightsByBackground,
+    NSCellIsBordered,
+    NSCellHasOverlappingImage,
+    NSCellHasImageHorizontal,
+    NSCellHasImageOnLeftOrBottom,
+    NSCellChangesContents,
+    NSCellIsInsetButton,
+    NSCellAllowsMixedState
 };
 typedef NSUInteger NSCellAttribute;
 
 enum {
-  NSNoCellMask			= 0,
-  NSContentsCellMask		= 1,
-  NSPushInCellMask		= 2,
-  NSChangeGrayCellMask		= 4,
-  NSChangeBackgroundCellMask	= 8
+    NSNoCellMask			= 0,
+    NSContentsCellMask		= 1,
+    NSPushInCellMask		= 2,
+    NSChangeGrayCellMask		= 4,
+    NSChangeBackgroundCellMask	= 8
 };
 
 enum {
-  GSCellTextImageXDist = 2,	// horizontal distance between the text and image rects.
-  GSCellTextImageYDist = 2	// vertical distance between the text and image rects.
+    GSCellTextImageXDist = 2,	// horizontal distance between the text and image rects.
+    GSCellTextImageYDist = 2	// vertical distance between the text and image rects.
 };
 
 /* 
- * We try to do as in macosx. 
+ * We try to do as in macosx.
  */
 enum { 
-  NSMixedState			= -1,
-  NSOffState			= 0,
-  NSOnState			= 1
+    NSMixedState			= -1,
+    NSOffState			= 0,
+    NSOnState			= 1
 };
 typedef NSUInteger NSCellStateValue;
 
@@ -137,78 +108,78 @@ typedef NSUInteger NSCellStateValue;
  *  or down) to fit exactly in the cell size.</p>
  */
 enum {
-  NSScaleProportionally = 0,
-  NSScaleToFit = 1,
-  NSScaleNone = 2,
-  NSImageScaleProportionallyDown = 0,
-  NSImageScaleAxesIndependently = 1,
-  NSImageScaleNone = 2,
-  NSImageScaleProportionallyUpOrDown = 3
+    NSScaleProportionally = 0,
+    NSScaleToFit = 1,
+    NSScaleNone = 2,
+    NSImageScaleProportionallyDown = 0,
+    NSImageScaleAxesIndependently = 1,
+    NSImageScaleNone = 2,
+    NSImageScaleProportionallyUpOrDown = 3
 };
 typedef NSUInteger NSImageScaling;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
 enum {
-  NSCellHitNone = 0,
-  NSCellHitContentArea = 1,
-  NSCellHitEditableTextArea = 2,
-  NSCellHitTrackableArea = 4
+    NSCellHitNone = 0,
+    NSCellHitContentArea = 1,
+    NSCellHitEditableTextArea = 2,
+    NSCellHitTrackableArea = 4
 };
 #endif
 
 @interface NSCell : NSObject <NSCopying, NSCoding>
 {
-  // Attributes
-  id _contents;
-  NSImage *_cell_image;
-  NSFont *_font;
-  id _object_value;
-  struct GSCellFlagsType { 
-    // total 32 bits.  0 bits left.
-    unsigned contents_is_attributed_string: 1;
-    unsigned is_highlighted: 1;
-    unsigned is_disabled: 1;
-    unsigned is_editable: 1;
-    unsigned is_rich_text: 1;
-    unsigned imports_graphics: 1;
-    unsigned shows_first_responder: 1; 
-    unsigned refuses_first_responder: 1; 
-    unsigned sends_action_on_end_editing: 1; 
-    unsigned is_bordered: 1;   
-    unsigned is_bezeled: 1;   
-    unsigned is_scrollable: 1;
-    unsigned reserved: 1;
-    unsigned text_align: 3; // 5 values
-    unsigned is_selectable: 1;
-    unsigned allows_mixed_state: 1;
-    unsigned has_valid_object_value: 1;
-    unsigned type: 2;           // 3 values
-    unsigned image_position: 3; // 7 values
-    unsigned entry_type: 4;     // 8 values
-    unsigned allows_undo: 1;
-    unsigned line_break_mode: 3; // 6 values
-
-    // total 20 bits.  4 bits extension, 8 bits left.
-    int state: 2; // 3 values but one negative
-    unsigned mnemonic_location: 8;
-    unsigned control_tint: 3;
-    unsigned control_size: 2;
-    unsigned focus_ring_type: 2; // 3 values
-    unsigned base_writing_direction: 2; // 3 values
-    // 4 bits reserved for subclass use
-    unsigned subclass_bool_one: 1;
-    unsigned subclass_bool_two: 1;
-    unsigned subclass_bool_three: 1;
-    unsigned subclass_bool_four: 1;
-    // Set while the cell is edited/selected
-    unsigned in_editing: 1;
-  } _cell;
-  NSUInteger _mouse_down_flags;
-  NSUInteger _action_mask;
-  NSFormatter *_formatter;
-  NSMenu *_menu;
-  id _represented_object; 
-  void *_reserved1;
+    // Attributes
+    id _contents;
+    NSImage *_cell_image;
+    NSFont *_font;
+    id _object_value;
+    struct GSCellFlagsType {
+        // total 32 bits.  0 bits left.
+        unsigned contents_is_attributed_string: 1;
+        unsigned is_highlighted: 1;
+        unsigned is_disabled: 1;
+        unsigned is_editable: 1;
+        unsigned is_rich_text: 1;
+        unsigned imports_graphics: 1;
+        unsigned shows_first_responder: 1;
+        unsigned refuses_first_responder: 1;
+        unsigned sends_action_on_end_editing: 1;
+        unsigned is_bordered: 1;
+        unsigned is_bezeled: 1;
+        unsigned is_scrollable: 1;
+        unsigned reserved: 1;
+        unsigned text_align: 3; // 5 values
+        unsigned is_selectable: 1;
+        unsigned allows_mixed_state: 1;
+        unsigned has_valid_object_value: 1;
+        unsigned type: 2;           // 3 values
+        unsigned image_position: 3; // 7 values
+        unsigned entry_type: 4;     // 8 values
+        unsigned allows_undo: 1;
+        unsigned line_break_mode: 3; // 6 values
+        
+        // total 20 bits.  4 bits extension, 8 bits left.
+        int state: 2; // 3 values but one negative
+        unsigned mnemonic_location: 8;
+        unsigned control_tint: 3;
+        unsigned control_size: 2;
+        unsigned focus_ring_type: 2; // 3 values
+        unsigned base_writing_direction: 2; // 3 values
+        // 4 bits reserved for subclass use
+        unsigned subclass_bool_one: 1;
+        unsigned subclass_bool_two: 1;
+        unsigned subclass_bool_three: 1;
+        unsigned subclass_bool_four: 1;
+        // Set while the cell is edited/selected
+        unsigned in_editing: 1;
+    } _cell;
+    NSUInteger _mouse_down_flags;
+    NSUInteger _action_mask;
+    NSFormatter *_formatter;
+    NSMenu *_menu;
+    id _represented_object;
+    void *_reserved1;
 }
 
 //
@@ -252,7 +223,7 @@ enum {
 //
 - (NSInteger)cellAttribute:(NSCellAttribute)aParameter;
 - (void)setCellAttribute:(NSCellAttribute)aParameter
-		      to:(NSInteger)value;
+                      to:(NSInteger)value;
 
 //
 // Setting the NSCell's Type 
@@ -375,7 +346,7 @@ enum {
 - (void)setMenu:(NSMenu *)aMenu;
 - (NSMenu *)menu;
 - (NSMenu *)menuForEvent:(NSEvent *)anEvent 
-                  inRect:(NSRect)cellFrame 
+                  inRect:(NSRect)cellFrame
                   ofView:(NSView *)aView;
 #endif
 
@@ -433,21 +404,21 @@ enum {
 // Tracking the Mouse 
 //
 - (BOOL)continueTracking:(NSPoint)lastPoint
-		      at:(NSPoint)currentPoint
-		  inView:(NSView *)controlView;
+                      at:(NSPoint)currentPoint
+                  inView:(NSView *)controlView;
 - (NSInteger)mouseDownFlags;
 - (void)getPeriodicDelay:(float *)delay
-		interval:(float *)interval;
+                interval:(float *)interval;
 - (BOOL)startTrackingAt:(NSPoint)startPoint
-		 inView:(NSView *)controlView;
+                 inView:(NSView *)controlView;
 - (void)stopTracking:(NSPoint)lastPoint
-		  at:(NSPoint)stopPoint
-	      inView:(NSView *)controlView
-		  mouseIsUp:(BOOL)flag;
+                  at:(NSPoint)stopPoint
+              inView:(NSView *)controlView
+           mouseIsUp:(BOOL)flag;
 - (BOOL)trackMouse:(NSEvent *)theEvent
-	    inRect:(NSRect)cellFrame
-	    ofView:(NSView *)controlView
-	    untilMouseUp:(BOOL)flag;
+            inRect:(NSRect)cellFrame
+            ofView:(NSView *)controlView
+      untilMouseUp:(BOOL)flag;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
 - (NSUInteger)hitTestForEvent:(NSEvent *)event
                        inRect:(NSRect)cellFrame
@@ -458,7 +429,7 @@ enum {
 // Managing the Cursor 
 //
 - (void)resetCursorRect:(NSRect)cellFrame
-		 inView:(NSView *)controlView;
+                 inView:(NSView *)controlView;
 
 //
 // Handling Keyboard Alternatives 
@@ -484,17 +455,17 @@ enum {
 //
 - (NSView *)controlView;
 - (void)drawInteriorWithFrame:(NSRect)cellFrame
-		       inView:(NSView *)controlView;
+                       inView:(NSView *)controlView;
 - (void)drawWithFrame:(NSRect)cellFrame
-	       inView:(NSView *)controlView;
+               inView:(NSView *)controlView;
 - (void)highlight:(BOOL)lit
-	withFrame:(NSRect)cellFrame
-	   inView:(NSView *)controlView;
+        withFrame:(NSRect)cellFrame
+           inView:(NSView *)controlView;
 - (BOOL)isHighlighted;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (void)setHighlighted: (BOOL) flag;
 - (NSColor*)highlightColorWithFrame:(NSRect)cellFrame
-			     inView:(NSView *)controlView;
+                             inView:(NSView *)controlView;
 - (void)setControlTint:(NSControlTint)controlTint;
 - (NSControlTint)controlTint;
 #endif
@@ -507,16 +478,16 @@ enum {
 // Editing Text 
 //
 - (void)editWithFrame:(NSRect)aRect
-	       inView:(NSView *)controlView	
-	       editor:(NSText *)textObject	
-	       delegate:(id)anObject	
-		event:(NSEvent *)theEvent;
+               inView:(NSView *)controlView
+               editor:(NSText *)textObject
+             delegate:(id)anObject
+                event:(NSEvent *)theEvent;
 - (void)selectWithFrame:(NSRect)aRect
-		 inView:(NSView *)controlView	 
-		 editor:(NSText *)textObject	 
-		 delegate:(id)anObject	 
-		  start:(NSInteger)selStart	 
-		 length:(NSInteger)selLength;
+                 inView:(NSView *)controlView
+                 editor:(NSText *)textObject
+               delegate:(id)anObject
+                  start:(NSInteger)selStart
+                 length:(NSInteger)selLength;
 - (void)endEditing:(NSText *)textObject;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (BOOL)sendsActionOnEndEditing;
@@ -539,7 +510,7 @@ enum {
 - (NSSize) _sizeText: (NSString*) title;
 - (void) _drawText: (NSString*)aString  inFrame: (NSRect)cellFrame;
 - (void) _drawAttributedText: (NSAttributedString*)aString  
-		     inFrame: (NSRect)aRect;
+                     inFrame: (NSRect)aRect;
 - (BOOL) _sendsActionOn:(NSUInteger)eventTypeMask;
 - (NSAttributedString*) _drawAttributedString;
 - (void) _drawBorderAndBackgroundWithFrame: (NSRect)cellFrame 
@@ -547,7 +518,7 @@ enum {
 - (void) _drawFocusRingWithFrame: (NSRect)cellFrame 
                           inView: (NSView*)controlView;
 - (void) _drawEditorWithFrame: (NSRect)cellFrame
-		       inView: (NSView*)controlView;
+                       inView: (NSView*)controlView;
 - (void) _setInEditing: (BOOL)flag;
 - (void) _updateFieldEditor: (NSText*)textObject;
 @end

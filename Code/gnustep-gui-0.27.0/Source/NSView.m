@@ -82,11 +82,67 @@ NSView *viewIsPrinting = nil;
  <p>Subclasses can override -drawRect: in order to
  implement their appearance.  Other methods of NSView and NSResponder
  can also be overridden to handle user generated events.</p>
- 
  </unit>
  */
 
 @implementation NSView
+{
+    struct _NSRect _frame;
+    struct _NSRect _bounds;
+    id _frameMatrix;
+    id _boundsMatrix;
+    id _matrixToWindow;
+    id _matrixFromWindow;
+    id _coreAnimationData;
+    
+    NSView* _super_view;
+    NSMutableArray *_sub_views;
+@protected
+    NSWindow *_window;
+    NSMutableArray *_tracking_rects;
+    NSMutableArray *_cursor_rects;
+@protected
+    struct _NSRect _invalidRect;
+    struct _NSRect _visibleRect;
+    NSInteger _gstate;
+    void *_nextKeyView;
+    void *_previousKeyView;
+    float _alphaValue;
+    
+@public
+    /*
+     * Flags for internal use by NSView and it's subclasses.
+     */
+    struct _rFlagsType {
+        unsigned    flipped_view:1;         /* Flipped state the last time we checked. */
+        unsigned    has_subviews:1;        /* The view has subviews.    */
+        unsigned    has_currects:1;        /* The view has cursor rects.    */
+        unsigned    has_trkrects:1;        /* The view has tracking rects.    */
+        unsigned    has_draginfo:1;        /* View has drag types.     */
+        unsigned    opaque_view:1;        /* For views whose opacity may    */
+        /* change to keep track of it.    */
+        unsigned    valid_rects:1;        /* Some cursor rects may be ok.    */
+        unsigned    needs_display:1;    /* view needs display.       */
+        unsigned    has_tooltips:1;        /* The view has tooltips set.    */
+        unsigned    ignores_backing:1;      /* The view does not trigger    */
+        /* backing flush when drawn     */
+    } _rFlags;
+    
+    BOOL _is_rotated_from_base;
+    BOOL _is_rotated_or_scaled_from_base;
+    BOOL _post_frame_changes;
+    BOOL _post_bounds_changes;
+    BOOL _autoresizes_subviews;
+    BOOL _coordinates_valid;
+    BOOL _allocate_gstate;
+    BOOL _renew_gstate;
+    BOOL _is_hidden;
+    BOOL _in_live_resize;
+    
+    NSUInteger _autoresizingMask;
+    NSFocusRingType _focusRingType;
+    struct _NSRect _autoresizingFrameError;
+}
 
 /*
  * Class variables */
@@ -101,7 +157,6 @@ static SEL	preSel;
 static SEL	invalidateSel;
 
 static void	(*preImp)(NSAffineTransform*, SEL, NSAffineTransform*);
-static void	(*invalidateImp)(NSView*, SEL);
 
 /*
  *	Stuff to maintain a map table so we know what views are
@@ -180,6 +235,9 @@ GSSetDragTypes(NSView* obj, NSArray *types)
  *	all subviews as well.
  *	This method must be called whenever the size, shape or position of
  *	the view is changed in any way.
+ 
+ 设置自己, 和所有子 view 的_coordinates_valid状态.
+ 
  */
 - (void) _invalidateCoordinates
 {
@@ -207,7 +265,7 @@ GSSetDragTypes(NSView* obj, NSArray *types)
                     
                     if (sub->_coordinates_valid == YES)
                     {
-                        (*invalidateImp)(sub, invalidateSel);
+                        [sub _invalidateCoordinates];
                     }
                 }
             }
@@ -329,6 +387,7 @@ GSSetDragTypes(NSView* obj, NSArray *types)
     }
 }
 
+// 当一个视图添加到 window 之后, 它会通知它所有的子视图.
 - (void) _viewDidMoveToWindow
 {
     [self viewDidMoveToWindow];
@@ -354,10 +413,10 @@ GSSetDragTypes(NSView* obj, NSArray *types)
 {
     BOOL old_allocate_gstate;
     
-    [self viewWillMoveToWindow: newWindow];
+    [self viewWillMoveToWindow: newWindow]; // 暴露出去的template_method.
     if (_coordinates_valid)
     {
-        (*invalidateImp)(self, invalidateSel);
+        [self _invalidateCoordinates];
     }
     if (_rFlags.has_currects != 0)
     {
@@ -375,53 +434,19 @@ GSSetDragTypes(NSView* obj, NSArray *types)
     old_allocate_gstate = _allocate_gstate;
     [self releaseGState];
     _allocate_gstate = old_allocate_gstate;
-    
-    if (_rFlags.has_draginfo)
-    {
-        NSArray *t = GSGetDragTypes(self);
-        
-        if (_window != nil)
-        {
-            [GSDisplayServer removeDragTypes: t fromWindow: _window];
-            if ([_window autorecalculatesKeyViewLoop])
-            {
-                [_window recalculateKeyViewLoop];
-            }
-        }
-        if (newWindow != nil)
-        {
-            [GSDisplayServer addDragTypes: t toWindow: newWindow];
-            if ([newWindow autorecalculatesKeyViewLoop])
-            {
-                [newWindow recalculateKeyViewLoop];
-            }
-        }
-    }
-    
     _window = newWindow;
-    
     if (_rFlags.has_subviews)
     {
-        NSUInteger count = [_sub_views count];
-        
-        if (count > 0)
-        {
-            NSUInteger i;
-            NSView *array[count];
-            
-            [_sub_views getObjects: array];
-            for (i = 0; i < count; ++i)
-            {
-                [array[i] _viewWillMoveToWindow: newWindow];
-            }
-        }
+        [_sub_views enumerateObjectsUsingBlock:^(NSView* subView, NSUInteger idx, BOOL * _Nonnull stop) {
+            [subView _viewWillMoveToWindow:newWindow];
+        }];
     }
 }
 
 - (void) _viewWillMoveToSuperview: (NSView*)newSuper
 {
     [self viewWillMoveToSuperview: newSuper];
-    _super_view = newSuper;
+    _super_view = newSuper; // 更新 superView. 所以 view 是保存了 subView 和 superView
 }
 
 /*
@@ -518,9 +543,6 @@ GSSetDragTypes(NSView* obj, NSArray *types)
         preImp = (void (*)(NSAffineTransform*, SEL, NSAffineTransform*))
         [matrixClass instanceMethodForSelector: preSel];
         
-        invalidateImp = (void (*)(NSView*, SEL))
-        [self instanceMethodForSelector: invalidateSel];
-        
         flip = [matrixClass new];
         [flip setTransformStruct: ats];
         
@@ -546,9 +568,10 @@ GSSetDragTypes(NSView* obj, NSArray *types)
     return [GSCurrentContext() focusView];
 }
 
-/*
- * Instance methods
- */
+
+
+#pragma mark - Instance methods
+
 - (id) init
 {
     return [self initWithFrame: NSZeroRect];
@@ -560,6 +583,7 @@ GSSetDragTypes(NSView* obj, NSArray *types)
     if (!self)
         return self;
     
+    // 错误处理
     if (frameRect.size.width < 0)
     {
         NSWarnMLog(@"given negative width");
@@ -571,11 +595,10 @@ GSSetDragTypes(NSView* obj, NSArray *types)
         frameRect.size.height = 0;
     }
     _frame = frameRect;			// Set frame rectangle
+    // bounds 处理
     _bounds.origin = NSZeroPoint;		// Set bounds rectangle
     _bounds.size = _frame.size;
     
-    // _frameMatrix = [NSAffineTransform new];    // Map fromsuperview to frame
-    // _boundsMatrix = [NSAffineTransform new];   // Map from superview to bounds
     _matrixToWindow = [NSAffineTransform new];   // Map to window coordinates
     _matrixFromWindow = [NSAffineTransform new]; // Map from window coordinates
     
@@ -583,155 +606,14 @@ GSSetDragTypes(NSView* obj, NSArray *types)
     _tracking_rects = [NSMutableArray new];
     _cursor_rects = [NSMutableArray new];
     
-    // Some values are already set by initialisation
-    //_super_view = nil;
-    //_window = nil;
-    //_is_rotated_from_base = NO;
-    //_is_rotated_or_scaled_from_base = NO;
     _rFlags.needs_display = YES;
     _post_bounds_changes = YES;
     _post_frame_changes = YES;
     _autoresizes_subviews = YES;
     _autoresizingMask = NSViewNotSizable;
-    //_coordinates_valid = NO;
-    //_nextKeyView = 0;
-    //_previousKeyView = 0;
-    
     _alphaValue = 1.0;
     
     return self;
-}
-
-- (void) dealloc
-{
-    NSView *tmp;
-    NSUInteger count;
-    
-    // Remove all key value bindings for this view.
-    [GSKeyValueBinding unbindAllForObject: self];
-    
-    /*
-     * Remove self from view chain.  Try to mimic MacOS-X behavior ...
-     * We send setNextKeyView: messages to all view for which we are the
-     * next key view, setting their next key view to nil.
-     *
-     * First we do the obvious stuff using the standard methods.
-     */
-    [self setNextKeyView: nil];
-    tmp = [self previousKeyView];
-    if ([tmp nextKeyView] == self)
-        [tmp setNextKeyView: nil];
-    
-    /*
-     * Now, we locate any remaining cases where a view has us as its next
-     * view, and ask the view to change that.
-     */
-    if (pKV(self) != 0)
-    {
-        count = GSIArrayCount(pKV(self));
-        while (count-- > 0)
-        {
-            tmp = GSIArrayItemAtIndex(pKV(self), count).obj;
-            if ([tmp nextKeyView] == self)
-            {
-                [tmp setNextKeyView: nil];
-            }
-        }
-    }
-    
-    /*
-     * Now we clean up the previous view array, in case subclasses have
-     * overridden the default -setNextKeyView: method and broken things.
-     * We also relase the memory we used.
-     */
-    if (pKV(self) != 0)
-    {
-        count = GSIArrayCount(pKV(self));
-        while (count-- > 0)
-        {
-            tmp = GSIArrayItemAtIndex(pKV(self), count).obj;
-            if (tmp != nil && nKV(tmp) != 0)
-            {
-                NSUInteger otherCount = GSIArrayCount(nKV(tmp));
-                
-                while (otherCount-- > 1)
-                {
-                    if (GSIArrayItemAtIndex(nKV(tmp), otherCount).obj == self)
-                    {
-                        GSIArrayRemoveItemAtIndex(nKV(tmp), otherCount);
-                    }
-                }
-                if (GSIArrayItemAtIndex(nKV(tmp), 0).obj == self)
-                {
-                    GSIArraySetItemAtIndex(nKV(tmp), (GSIArrayItem)nil, 0);
-                }
-            }
-        }
-        GSIArrayClear(pKV(self));
-        NSZoneFree(NSDefaultMallocZone(), pKV(self));
-        _previousKeyView = 0;
-    }
-    
-    /*
-     * Now we clean up all views which have us as their previous view.
-     * We also release the memory we used.
-     */
-    if (nKV(self) != 0)
-    {
-        count = GSIArrayCount(nKV(self));
-        while (count-- > 0)
-        {
-            tmp = GSIArrayItemAtIndex(nKV(self), count).obj;
-            if (tmp != nil && pKV(tmp) != 0)
-            {
-                NSUInteger otherCount = GSIArrayCount(pKV(tmp));
-                
-                while (otherCount-- > 1)
-                {
-                    if (GSIArrayItemAtIndex(pKV(tmp), otherCount).obj == self)
-                    {
-                        GSIArrayRemoveItemAtIndex(pKV(tmp), otherCount);
-                    }
-                }
-                if (GSIArrayItemAtIndex(pKV(tmp), 0).obj == self)
-                {
-                    GSIArraySetItemAtIndex(pKV(tmp), (GSIArrayItem)nil, 0);
-                }
-            }
-        }
-        GSIArrayClear(nKV(self));
-        NSZoneFree(NSDefaultMallocZone(), nKV(self));
-        _nextKeyView = 0;
-    }
-    
-    /*
-     * Now remove our subviews, AFTER cleaning up the view chain, in case
-     * any of our subviews were in the chain.
-     */
-    while ([_sub_views count] > 0)
-    {
-        [[_sub_views lastObject] removeFromSuperviewWithoutNeedingDisplay];
-    }
-    
-    RELEASE(_matrixToWindow);
-    RELEASE(_matrixFromWindow);
-    TEST_RELEASE(_frameMatrix);
-    TEST_RELEASE(_boundsMatrix);
-    TEST_RELEASE(_sub_views);
-    if (_rFlags.has_tooltips != 0)
-    {
-        [GSToolTips removeTipsForView: self];
-    }
-    if (_rFlags.has_currects != 0)
-    {
-        [self discardCursorRects];	// Handle release of cursors
-    }
-    TEST_RELEASE(_cursor_rects);
-    TEST_RELEASE(_tracking_rects);
-    [self unregisterDraggedTypes];
-    [self releaseGState];
-    
-    [super dealloc];
 }
 
 /**
@@ -749,11 +631,8 @@ GSSetDragTypes(NSView* obj, NSArray *types)
          relativeTo: (NSView*)otherView
 {
     NSUInteger index;
-    
-    if (aView == nil)
-    {
-        return;
-    }
+    if (aView == nil) { return; }
+    // 明显的逻辑错误, 抛出异常, 子视图不能添加父视图作为子视图.
     if ([self isDescendantOf: aView])
     {
         [NSException raise: NSInvalidArgumentException
@@ -765,37 +644,15 @@ GSSetDragTypes(NSView* obj, NSArray *types)
         return;
     
     RETAIN(aView);
-    [aView removeFromSuperview];
-    
-    // Do this after the removeFromSuperview, as aView may already
-    // be a subview and the index could change.
-    if (otherView == nil)
-    {
-        index = NSNotFound;
-    }
-    else
-    {
-        index = [_sub_views indexOfObjectIdenticalTo: otherView];
-    }
-    if (index == NSNotFound)
-    {
-        if (place == NSWindowBelow)
-            index = 0;
-        else
-            index = [_sub_views count];
-    }
-    else if (place != NSWindowBelow)
-    {
-        index += 1;
-    }
-    
-    [aView _viewWillMoveToWindow: _window];
-    [aView _viewWillMoveToSuperview: self];
-    [aView setNextResponder: self];
-    [_sub_views insertObject: aView atIndex: index];
-    _rFlags.has_subviews = 1;
+    [aView removeFromSuperview]; // 首先, 会调用 remove 方法, 所以会自动进行层级关系的管理.
+    index = [_sub_views count];
+    [aView _viewWillMoveToWindow: _window]; // 为什么会调用 viewWillMoveToWindow 的原因
+    [aView _viewWillMoveToSuperview: self]; // 为什么会调用 viewWillMoveToSuperView 的原因
+    [aView setNextResponder: self]; // 响应者链条的管理
+    [_sub_views insertObject: aView atIndex: index]; // 数据的管理.
+    _rFlags.has_subviews = 1; // 状态管理
     [aView resetCursorRects];
-    [aView setNeedsDisplay: YES];
+    [aView setNeedsDisplay: YES]; // 自身的子视图改变, 设置重绘??? 为什么自己要重绘.
     [aView _viewDidMoveToWindow];
     [aView viewDidMoveToSuperview];
     [self didAddSubview: aView];
@@ -834,6 +691,7 @@ GSSetDragTypes(NSView* obj, NSArray *types)
 
 /**
  * Returns YES if aView is an ancestor of the receiver.
+ * 递归调用. 其实用循环也可以, 而已循环的思路更加清晰.
  */
 - (BOOL) isDescendantOf: (NSView*)aView
 {
@@ -889,7 +747,7 @@ GSSetDragTypes(NSView* obj, NSArray *types)
 {
     if (_super_view != nil)
     {
-        [_super_view setNeedsDisplayInRect: _frame];
+        [_super_view setNeedsDisplayInRect: _frame]; // 将自身的 frame, 设置为 superView 的 dirty Rect.
         [self removeFromSuperviewWithoutNeedingDisplay];
     }
 }
@@ -906,27 +764,14 @@ GSSetDragTypes(NSView* obj, NSArray *types)
 - (void) removeSubview: (NSView*)aView
 {
     id view;
-    /*
-     * This must be first because it invokes -resignFirstResponder:,
-     * which assumes the view is still in the view hierarchy
-     */
-    for (view = [_window firstResponder];
-         view != nil && [view respondsToSelector: @selector(superview)];
-         view = [view superview])
-    {
-        if (view == aView)
-        {
-            [_window makeFirstResponder: _window];
-            break;
-        }
-    }
-    [self willRemoveSubview: aView];
+    [self willRemoveSubview: aView]; // do nothing
     aView->_super_view = nil;
-    [aView _viewWillMoveToWindow: nil];
-    [aView _viewWillMoveToSuperview: nil];
+    [aView _viewWillMoveToWindow: nil]; // template method
+    [aView _viewWillMoveToSuperview: nil]; // template method
     [aView setNextResponder: nil];
     RETAIN(aView);
     [_sub_views removeObjectIdenticalTo: aView];
+    // 更新状态.
     [aView setNeedsDisplay: NO];
     [aView _viewDidMoveToWindow];
     [aView viewDidMoveToSuperview];
@@ -964,7 +809,7 @@ GSSetDragTypes(NSView* obj, NSArray *types)
         [newView removeFromSuperview];
         [newView _viewWillMoveToWindow: _window];
         [newView _viewWillMoveToSuperview: self];
-        [newView setNextResponder: self];
+        [newView setNextResponder: self]; // 这里, 维护响应者链条
         [_sub_views addObject: newView];
         _rFlags.has_subviews = 1;
         [newView resetCursorRects];
@@ -1086,6 +931,8 @@ GSSetDragTypes(NSView* obj, NSArray *types)
  * Note, this method is also used when removing a view from a window
  * (in which case, newWindow is nil) to let all the subviews know
  * that they have also been removed from the window.
+ *
+ * 以下是暴露出来的一些切口方法, 让程序员可以在适当的时间完成特定的操作.
  */
 - (void) viewWillMoveToWindow: (NSWindow*)newWindow
 {
@@ -1145,17 +992,6 @@ static NSSize _computeScale(NSSize fs, NSSize bs)
     BOOL	changedSize = NO;
     NSSize old_size = _frame.size;
     
-    if (frameRect.size.width < 0)
-    {
-        NSWarnMLog(@"given negative width");
-        frameRect.size.width = 0;
-    }
-    if (frameRect.size.height < 0)
-    {
-        NSWarnMLog(@"given negative height");
-        frameRect.size.height = 0;
-    }
-    
     if (NSEqualPoints(_frame.origin, frameRect.origin) == NO)
     {
         changedOrigin = YES;
@@ -1165,40 +1001,25 @@ static NSSize _computeScale(NSSize fs, NSSize bs)
         changedSize = YES;
     }
     
-    if (changedSize == YES || changedOrigin == YES)
+    if (changedSize == NO && changedOrigin == NO) { return; }
+    
+    [self _setFrameAndClearAutoresizingError: frameRect];
+    
+    if (changedSize == YES)
     {
-        [self _setFrameAndClearAutoresizingError: frameRect];
-        
-        if (changedSize == YES)
-        {
-            if (_is_rotated_or_scaled_from_base == YES)
-            {
-                NSAffineTransform *matrix;
-                NSRect frame = _frame;
-                
-                frame.origin = NSMakePoint(0, 0);
-                matrix = [_boundsMatrix copy];
-                [matrix invert];
-                [matrix boundingRectFor: frame result: &_bounds];
-                RELEASE(matrix);
-            }
-            else
-            {
-                _bounds.size = frameRect.size;
-            }
-        }
-        
-        if (_coordinates_valid)
-        {
-            (*invalidateImp)(self, invalidateSel);
-        }
-        [self resetCursorRects];
-        [self resizeSubviewsWithOldSize: old_size];
-        if (_post_frame_changes)
-        {
-            [nc postNotificationName: NSViewFrameDidChangeNotification
-                              object: self];
-        }
+        _bounds.size = frameRect.size;
+    }
+    
+    if (_coordinates_valid)
+    {
+        [self _invalidateCoordinates];
+    }
+    [self resetCursorRects];
+    [self resizeSubviewsWithOldSize: old_size];
+    if (_post_frame_changes)
+    {
+        [nc postNotificationName: NSViewFrameDidChangeNotification
+                          object: self];
     }
 }
 
@@ -1211,7 +1032,7 @@ static NSSize _computeScale(NSSize fs, NSSize bs)
         
         if (_coordinates_valid)
         {
-            (*invalidateImp)(self, invalidateSel);
+            [self _invalidateCoordinates];
         }
         [self _setFrameAndClearAutoresizingError: newFrame];
         [self resetCursorRects];
@@ -1276,7 +1097,7 @@ static NSSize _computeScale(NSSize fs, NSSize bs)
         
         if (_coordinates_valid)
         {
-            (*invalidateImp)(self, invalidateSel);
+            [self _invalidateCoordinates];
         }
         [self resetCursorRects];
         [self resizeSubviewsWithOldSize: old_size];
@@ -1306,7 +1127,7 @@ static NSSize _computeScale(NSSize fs, NSSize bs)
         
         if (_coordinates_valid)
         {
-            (*invalidateImp)(self, invalidateSel);
+            [self _invalidateCoordinates];
         }
         [self resetCursorRects];
         if (_post_frame_changes)
@@ -1408,7 +1229,7 @@ static NSSize _computeScale(NSSize fs, NSSize bs)
         
         if (_coordinates_valid)
         {
-            (*invalidateImp)(self, invalidateSel);
+            [self _invalidateCoordinates];
         }
         [self resetCursorRects];
         if (_post_bounds_changes)
@@ -1489,7 +1310,7 @@ static NSSize _computeScale(NSSize fs, NSSize bs)
     
     if (_coordinates_valid)
     {
-        (*invalidateImp)(self, invalidateSel);
+        [self _invalidateCoordinates];
     }
     [self resetCursorRects];
     if (_post_bounds_changes)
@@ -1522,7 +1343,8 @@ static NSSize _computeScale(NSSize fs, NSSize bs)
         
         if (_coordinates_valid)
         {
-            (*invalidateImp)(self, invalidateSel);
+            [self _invalidateCoordinates];
+            [self _invalidateCoordinates];
         }
         [self resetCursorRects];
         if (_post_bounds_changes)
@@ -1563,7 +1385,7 @@ static NSSize _computeScale(NSSize fs, NSSize bs)
         
         if (_coordinates_valid)
         {
-            (*invalidateImp)(self, invalidateSel);
+            [self _invalidateCoordinates];
         }
         [self resetCursorRects];
         if (_post_bounds_changes)
@@ -1597,7 +1419,7 @@ static NSSize _computeScale(NSSize fs, NSSize bs)
         
         if (_coordinates_valid)
         {
-            (*invalidateImp)(self, invalidateSel);
+            [self _invalidateCoordinates];
         }
         [self resetCursorRects];
         if (_post_bounds_changes)
@@ -1680,7 +1502,6 @@ static NSSize _computeScale(NSSize fs, NSSize bs)
     
     if (aView != nil)
     {
-        NSAssert(_window == [aView window], NSInvalidArgumentException);
         inBase = [[aView _matrixToWindow] transformPoint: aPoint];
     }
     else
@@ -1702,7 +1523,6 @@ static NSSize _computeScale(NSSize fs, NSSize bs)
     
     if (aView != nil)
     {
-        NSAssert(_window == [aView window], NSInvalidArgumentException);
         return [[aView _matrixFromWindow] transformPoint: inBase];
     }
     else
@@ -1767,7 +1587,6 @@ convert_rect_using_matrices(NSRect aRect, NSAffineTransform *matrix1,
     
     if (aView != nil)
     {
-        NSAssert(_window == [aView window], NSInvalidArgumentException);
         matrix1 = [aView _matrixToWindow];
     }
     else
@@ -1801,7 +1620,6 @@ convert_rect_using_matrices(NSRect aRect, NSAffineTransform *matrix1,
     
     if (aView != nil)
     {
-        NSAssert(_window == [aView window], NSInvalidArgumentException);
         matrix2 = [aView _matrixFromWindow];
     }
     else
@@ -1819,7 +1637,6 @@ convert_rect_using_matrices(NSRect aRect, NSAffineTransform *matrix1,
     
     if (aView)
     {
-        NSAssert(_window == [aView window], NSInvalidArgumentException);
         inBase = [[aView _matrixToWindow] transformSize: aSize];
         if (inBase.height < 0.0)
         {
@@ -1850,7 +1667,6 @@ convert_rect_using_matrices(NSRect aRect, NSAffineTransform *matrix1,
     if (aView)
     {
         NSSize inOther;
-        NSAssert(_window == [aView window], NSInvalidArgumentException);
         inOther = [[aView _matrixFromWindow] transformSize: inBase];
         if (inOther.height < 0.0)
         {
@@ -2630,23 +2446,7 @@ static void autoresize(CGFloat oldContainerSize,
     }
 }
 
-/**
- This method is invoked to handle drawing inside the view.  The
- default NSView's implementation does nothing; subclasses might
- override it to draw something inside the view.  Since NSView's
- implementation is guaranteed to be empty, you should not call
- super's implementation when you override it in subclasses.
- drawRect: is invoked when the focus has already been locked on the
- view; you can use arbitrary postscript functions in drawRect: to
- draw inside your view; the coordinate system in which you draw is
- the view's own coordinate system (this means for example that you
- should refer to the rectangle covered by the view using its bounds,
- and not its frame).  The argument of drawRect: is the rectangle
- which needs to be redrawn.  In a lossy implementation, you can
- ignore the argument and redraw the whole view; if you are aiming at
- performance, you may want to redraw only what is inside the
- rectangle which needs to be redrawn; this usually improves drawing
- performance considerably.  */
+// 默认什么都不做.
 - (void) drawRect: (NSRect)rect
 {}
 
@@ -2756,16 +2556,12 @@ extern NSThread *GSAppKitThread; /* TODO */
 }
 
 /**
- * As an exception to the general rules for threads and gui, this
- * method is thread-safe and may be called from any thread. Display
- * will always be done in the main thread. (Note that other methods are
- * in general not thread-safe; if you want to access other properties of
- * views from multiple threads, you need to provide the synchronization.)
+ * 设置重绘
  */
 - (void) setNeedsDisplay: (BOOL)flag
 {
     NSNumber *n = [[NSNumber alloc] initWithBool: flag];
-    if (GSCurrentThread() != GSAppKitThread)
+    if (GSCurrentThread() != GSAppKitThread) // 警告, 只能在主线程调用.
     {
         NSDebugMLLog (@"MacOSXCompatibility",
                       @"setNeedsDisplay: called on secondary thread");
@@ -4521,246 +4317,6 @@ static NSView* findByTag(NSView *view, NSInteger aTag, NSUInteger *level)
 }  
 
 /*
- * NSCoding protocol
- */
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-    if ([aCoder allowsKeyedCoding])
-    {
-        NSUInteger vFlags = 0;
-        
-        // encoding
-        [aCoder encodeConditionalObject: [self nextKeyView]
-                                 forKey: @"NSNextKeyView"];
-        [aCoder encodeConditionalObject: [self previousKeyView]
-                                 forKey: @"NSPreviousKeyView"];
-        [aCoder encodeObject: _sub_views
-                      forKey: @"NSSubviews"];
-        [aCoder encodeRect: _frame
-                    forKey: @"NSFrame"];
-        
-        // autosizing masks.
-        vFlags = _autoresizingMask;
-        
-        // add the autoresize flag.
-        if (_autoresizes_subviews)
-        {
-            vFlags |= 0x100;
-        }
-        
-        // add the hidden flag
-        if (_is_hidden)
-        {
-            vFlags |= 0x80000000;
-        }
-        
-        [aCoder encodeInt: vFlags
-                   forKey: @"NSvFlags"];
-        
-        //
-        // Don't attempt to archive the superview of a view which is the
-        // content view for a window.
-        //
-        if (([[self window] contentView] != self) && _super_view != nil)
-        {
-            [aCoder encodeConditionalObject: _super_view forKey: @"NSSuperview"];
-        }
-    }
-    else
-    {
-        NSDebugLLog(@"NSView", @"NSView: start encoding\n");
-        [super encodeWithCoder: aCoder];
-        
-        [aCoder encodeRect: _frame];
-        [aCoder encodeRect: _bounds];
-        [aCoder encodeValueOfObjCType: @encode(BOOL) at: &_is_rotated_from_base];
-        [aCoder encodeValueOfObjCType: @encode(BOOL)
-                                   at: &_is_rotated_or_scaled_from_base];
-        [aCoder encodeValueOfObjCType: @encode(BOOL) at: &_post_frame_changes];
-        [aCoder encodeValueOfObjCType: @encode(BOOL) at: &_autoresizes_subviews];
-        [aCoder encodeValueOfObjCType: @encode(NSUInteger) at: &_autoresizingMask];
-        [aCoder encodeConditionalObject: [self nextKeyView]];
-        [aCoder encodeConditionalObject: [self previousKeyView]];
-        [aCoder encodeObject: _sub_views];
-        NSDebugLLog(@"NSView", @"NSView: finish encoding\n");
-    }
-}
-
-- (id) initWithCoder: (NSCoder*)aDecoder
-{
-    NSEnumerator *e;
-    NSView	*sub;
-    NSArray	*subs;
-    
-    // decode the superclass...
-    self = [super initWithCoder: aDecoder];
-    if (!self)
-        return nil;
-    
-    // initialize these here, since they're needed in either case.
-    // _frameMatrix = [NSAffineTransform new];    // Map fromsuperview to frame
-    // _boundsMatrix = [NSAffineTransform new];   // Map from superview to bounds
-    _matrixToWindow = [NSAffineTransform new];  // Map to window coordinates
-    _matrixFromWindow = [NSAffineTransform new];// Map from window coordinates
-    
-    if ([aDecoder allowsKeyedCoding])
-    {
-        NSView *prevKeyView = nil;
-        NSView *nextKeyView = nil;
-        
-        if ([aDecoder containsValueForKey: @"NSFrame"])
-        {
-            _frame = [aDecoder decodeRectForKey: @"NSFrame"];
-        }
-        else
-        {
-            _frame = NSZeroRect;
-            if ([aDecoder containsValueForKey: @"NSFrameSize"])
-            {
-                _frame.size = [aDecoder decodeSizeForKey: @"NSFrameSize"];
-            }
-        }
-        
-        // Set bounds rectangle
-        _bounds.origin = NSZeroPoint;
-        _bounds.size = _frame.size;
-        if ([aDecoder containsValueForKey: @"NSBounds"])
-        {
-            [self setBounds: [aDecoder decodeRectForKey: @"NSBounds"]];
-        }
-        
-        _sub_views = [NSMutableArray new];
-        _tracking_rects = [NSMutableArray new];
-        _cursor_rects = [NSMutableArray new];
-        
-        _is_rotated_from_base = NO;
-        _is_rotated_or_scaled_from_base = NO;
-        _rFlags.needs_display = YES;
-        _post_bounds_changes = YES;
-        _post_frame_changes = YES;
-        _autoresizes_subviews = YES;
-        _autoresizingMask = NSViewNotSizable;
-        _coordinates_valid = NO;
-        /*
-         * Note: don't zero _nextKeyView and _previousKeyView, as the key view
-         * chain may already have been established by super's initWithCoder:
-         *
-         * _nextKeyView = 0;
-         * _previousKeyView = 0;
-         */
-        
-        // previous and next key views...
-        prevKeyView = [aDecoder decodeObjectForKey: @"NSPreviousKeyView"];
-        nextKeyView = [aDecoder decodeObjectForKey: @"NSNextKeyView"];
-        if (nextKeyView != nil)
-        {
-            [self setNextKeyView: nextKeyView];
-        }
-        if (prevKeyView != nil)
-        {
-            [self setPreviousKeyView: prevKeyView];
-        }
-        if ([aDecoder containsValueForKey: @"NSvFlags"])
-        {
-            NSUInteger vFlags = [aDecoder decodeIntForKey: @"NSvFlags"];
-            
-            // We are lucky here, Apple use the same constants
-            // in the lower bits of the flags
-            [self setAutoresizingMask: vFlags & 0x3F];
-            [self setAutoresizesSubviews: ((vFlags & 0x100) == 0x100)];
-            [self setHidden: ((vFlags & 0x80000000) == 0x80000000)];
-        }
-        
-        // iterate over subviews and put them into the view...
-        subs = [aDecoder decodeObjectForKey: @"NSSubviews"];
-        e = [subs objectEnumerator];
-        while ((sub = [e nextObject]) != nil)
-        {
-            NSAssert([sub class] != [NSCustomView class],
-                     NSInternalInconsistencyException);
-            NSAssert([sub window] == nil,
-                     NSInternalInconsistencyException);
-            NSAssert([sub superview] == nil,
-                     NSInternalInconsistencyException);
-            [sub _viewWillMoveToWindow: _window];
-            [sub _viewWillMoveToSuperview: self];
-            [sub setNextResponder: self];
-            [_sub_views addObject: sub];
-            _rFlags.has_subviews = 1;
-            [sub resetCursorRects];
-            [sub setNeedsDisplay: YES];
-            [sub _viewDidMoveToWindow];
-            [sub viewDidMoveToSuperview];
-            [self didAddSubview: sub];
-        }
-        
-        // the superview...
-        //[aDecoder decodeObjectForKey: @"NSSuperview"];
-    }
-    else
-    {
-        NSRect	rect;
-        
-        NSDebugLLog(@"NSView", @"NSView: start decoding\n");
-        
-        _frame = [aDecoder decodeRect];
-        
-        _bounds.origin = NSZeroPoint;
-        _bounds.size = _frame.size;
-        
-        rect = [aDecoder decodeRect];
-        [self setBounds: rect];
-        
-        _sub_views = [NSMutableArray new];
-        _tracking_rects = [NSMutableArray new];
-        _cursor_rects = [NSMutableArray new];
-        
-        _super_view = nil;
-        _window = nil;
-        _rFlags.needs_display = YES;
-        [aDecoder decodeValueOfObjCType: @encode(BOOL)
-                                     at: &_is_rotated_from_base];
-        [aDecoder decodeValueOfObjCType: @encode(BOOL)
-                                     at: &_is_rotated_or_scaled_from_base];
-        _post_bounds_changes = YES;
-        [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &_post_frame_changes];
-        [aDecoder decodeValueOfObjCType: @encode(BOOL)
-                                     at: &_autoresizes_subviews];
-        [aDecoder decodeValueOfObjCType: @encode(NSUInteger)
-                                     at: &_autoresizingMask];
-        _coordinates_valid = NO;
-        [self setNextKeyView: [aDecoder decodeObject]];
-        [[aDecoder decodeObject] setNextKeyView: self];
-        
-        [aDecoder decodeValueOfObjCType: @encode(id) at: &subs];
-        NSDebugLLog(@"NSView", @"NSView: finish decoding\n");
-        
-        // iterate over subviews and put them into the view...
-        e = [subs objectEnumerator];
-        while ((sub = [e nextObject]) != nil)
-        {
-            NSAssert([sub window] == nil,
-                     NSInternalInconsistencyException);
-            NSAssert([sub superview] == nil,
-                     NSInternalInconsistencyException);
-            [sub _viewWillMoveToWindow: _window];
-            [sub _viewWillMoveToSuperview: self];
-            [sub setNextResponder: self];
-            [_sub_views addObject: sub];
-            _rFlags.has_subviews = 1;
-            [sub resetCursorRects];
-            [sub setNeedsDisplay: YES];
-            [sub _viewDidMoveToWindow];
-            [sub viewDidMoveToSuperview];
-            [self didAddSubview: sub];
-        }
-        RELEASE(subs);
-    }
-    
-    return self;
-}
-
-/*
  * Accessor methods
  */
 - (void) setAutoresizesSubviews: (BOOL)flag
@@ -5014,7 +4570,7 @@ static NSView* findByTag(NSView *view, NSInteger aTag, NSUInteger *level)
     }
     else
     {
-        [super rightMouseDown: theEvent];
+        [super rightMouseDown: theEvent]; // super 也就是 NSResponder 的做法, 也就是找到下一个响应者, 然后调用它的方法.
     }
 }
 
@@ -5095,58 +4651,6 @@ static NSView* findByTag(NSView *view, NSInteger aTag, NSUInteger *level)
 {
     // FIXME: implement this
     return;
-}
-
-@end
-
-@implementation NSView(KeyViewLoop)
-
-static NSComparisonResult
-cmpFrame(id view1, id view2, void *context)
-{
-    BOOL flippedSuperView = [(NSView *)context isFlipped];
-    NSRect frame1 = [view1 frame];
-    NSRect frame2 = [view2 frame];
-    
-    if (NSMinY(frame1) < NSMinY(frame2))
-        return flippedSuperView ? NSOrderedAscending : NSOrderedDescending;
-    if (NSMaxY(frame1) > NSMaxY(frame2))
-        return flippedSuperView ? NSOrderedDescending : NSOrderedAscending;
-    
-    // FIXME Should use NSMaxX in a Hebrew or Arabic locale
-    if (NSMinX(frame1) < NSMinX(frame2))
-        return NSOrderedAscending;
-    if (NSMinX(frame1) > NSMinX(frame2))
-        return NSOrderedDescending;
-    return NSOrderedSame;
-}
-
-- (void) _setUpKeyViewLoopWithNextKeyView: (NSView *)nextKeyView
-{
-    if (_rFlags.has_subviews)
-    {
-        [self _recursiveSetUpKeyViewLoopWithNextKeyView: nextKeyView];
-    }
-    else
-    {
-        [self setNextKeyView: nextKeyView];
-    }
-}
-
-- (void) _recursiveSetUpKeyViewLoopWithNextKeyView: (NSView *)nextKeyView
-{
-    NSArray *sortedViews;
-    NSView *aView;
-    NSEnumerator *e;
-    
-    sortedViews = [_sub_views sortedArrayUsingFunction: cmpFrame context: self];
-    e = [sortedViews reverseObjectEnumerator];
-    while ((aView = [e nextObject]) != nil)
-    {
-        [aView _setUpKeyViewLoopWithNextKeyView: nextKeyView];
-        nextKeyView = aView;
-    }
-    [self setNextKeyView: nextKeyView];
 }
 
 @end

@@ -84,13 +84,7 @@
     {
       return NO;
     }
-
-#if HAVE_LIBPNG
-  if ([self _bitmapIsPNG: data])
-    return YES;
-#endif
-
-  if ([self _bitmapIsPNM: data])
+    if ([self _bitmapIsPNM: data])
     return YES;
 
 #if HAVE_LIBJPEG
