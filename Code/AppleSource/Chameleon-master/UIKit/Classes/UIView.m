@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #import "UIView+UIPrivate.h"
 #import "UIWindow.h"
 #import "UIGraphics.h"
@@ -52,7 +23,7 @@ static BOOL _animationsEnabled = YES;
 @implementation UIView {
     __unsafe_unretained UIView *_superview;
     __unsafe_unretained UIViewController *_viewController;
-    NSMutableSet *_subviews;
+    NSMutableSet *_subviews; // 无序????
     BOOL _implementsDrawRect;
     NSMutableSet *_gestureRecognizers;
 }
@@ -64,6 +35,7 @@ static BOOL _animationsEnabled = YES;
     }
 }
 
+// 一个切口, 给程序员自定义自己 Layer 的权力.
 + (Class)layerClass
 {
     return [CALayer class];
@@ -103,16 +75,7 @@ static BOOL _animationsEnabled = YES;
     return self;
 }
 
-- (void)dealloc
-{
-    [_gestureRecognizers makeObjectsPerformSelector:@selector(_setView:) withObject:nil];
-    [[_subviews allObjects] makeObjectsPerformSelector:@selector(_removeFromDeallocatedSuperview)];
-
-    _layer.layoutManager = nil;
-    _layer.delegate = nil;
-    [_layer removeFromSuperlayer];
-}
-
+// 记录了自己所属的 viewController
 - (void)_setViewController:(UIViewController *)theViewController
 {
     _viewController = theViewController;
@@ -138,14 +101,12 @@ static BOOL _animationsEnabled = YES;
     return self.superview;
 }
 
+// 这里, 没有返回真正的自己的容器对象, 而是新组建了一个容器返回了.
 - (NSArray *)subviews
 {
     NSArray *sublayers = _layer.sublayers;
     NSMutableArray *subviews = [NSMutableArray arrayWithCapacity:[sublayers count]];
 
-    // This builds the results from the layer instead of just using _subviews because I want the results to match
-    // the order that CALayer has them. It's unclear in the docs if the returned order from this method is guarenteed or not,
-    // however several other aspects of the system (namely the hit testing) depends on this order being correct.
     for (CALayer *layer in sublayers) {
         id potentialView = [layer delegate];
         if ([_subviews containsObject:potentialView]) {
@@ -170,7 +131,7 @@ static BOOL _animationsEnabled = YES;
         [self _UIAppearanceSetNeedsUpdate];
         [self willMoveToWindow:toWindow];
 
-        for (UIView *subview in self.subviews) {
+        for (UIView *subview in self.subviews) { // 通知自己的子 View.
             [subview _willMoveFromWindow:fromWindow toWindow:toWindow];
         }
         
@@ -227,16 +188,14 @@ static BOOL _animationsEnabled = YES;
 
 - (void)addSubview:(UIView *)subview
 {
-    NSAssert((!subview || [subview isKindOfClass:[UIView class]]), @"the subview must be a UIView");
-
     if (subview && subview.superview != self) {
         UIWindow *oldWindow = subview.window;
         UIWindow *newWindow = self.window;
         
         [subview _willMoveFromWindow:oldWindow toWindow:newWindow];
-        [subview willMoveToSuperview:self];
+        [subview willMoveToSuperview:self]; // 暴露给程序员自定义的接口.
 
-        if (subview.superview) {
+        if (subview.superview) { // 清楚原来的 superView 相关逻辑.
             [subview.layer removeFromSuperlayer];
             [subview.superview->_subviews removeObject:subview];
         }
@@ -353,6 +312,8 @@ static BOOL _animationsEnabled = YES;
 {
 }
 
+
+// 简简单单的递归调用.
 - (CGPoint)convertPoint:(CGPoint)toConvert fromView:(UIView *)fromView
 {
     // NOTE: this is a lot more complex than it needs to be - I just noticed the docs say this method requires fromView and self to
@@ -435,6 +396,7 @@ static BOOL _animationsEnabled = YES;
     if (self.tag == tagToFind) {
         foundView = self;
     } else {
+        // 从后向前找.
         for (UIView *view in [self.subviews reverseObjectEnumerator]) {
             foundView = [view viewWithTag:tagToFind];
             if (foundView)
@@ -445,6 +407,7 @@ static BOOL _animationsEnabled = YES;
     return foundView;
 }
 
+// 循环判断.
 - (BOOL)isDescendantOfView:(UIView *)view
 {
     if (view) {
@@ -460,6 +423,7 @@ static BOOL _animationsEnabled = YES;
     return NO;
 }
 
+// 简简单单的通知 layer 需要进行更新了.
 - (void)setNeedsDisplay
 {
     [_layer setNeedsDisplay];
