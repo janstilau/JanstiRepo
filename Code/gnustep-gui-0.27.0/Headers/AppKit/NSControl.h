@@ -1,32 +1,3 @@
-/* 
-   NSControl.h
-
-   The abstract control class
-
-   Copyright (C) 1996 Free Software Foundation, Inc.
-
-   Author:  Scott Christley <scottc@net-community.com>
-   Date: 1996
-   
-   This file is part of the GNUstep GUI Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Library General Public
-   License along with this library; see the file COPYING.LIB.
-   If not, write to the Free Software Foundation,
-   51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/ 
-
 #ifndef _GNUstep_H_NSControl
 #define _GNUstep_H_NSControl
 #import <GNUstepBase/GSVersionMacros.h>
@@ -46,10 +17,10 @@
 
 @interface NSControl : NSView
 {
-  // Attributes
-  NSInteger _tag;
-  id _cell; // id so compiler wont complain too much for subclasses
-  BOOL _ignoresMultiClick;
+    // Attributes
+    NSInteger _tag;
+    id _cell; // id so compiler wont complain too much for subclasses
+    BOOL _ignoresMultiClick;
 }
 
 //
@@ -119,8 +90,8 @@
 - (void)setAlignment:(NSTextAlignment)mode;
 - (void)setFont:(NSFont *)fontObject;
 - (void)setFloatingPointFormat:(BOOL)autoRange
-			  left:(NSUInteger)leftDigits
-			 right:(NSUInteger)rightDigits;
+                          left:(NSUInteger)leftDigits
+                         right:(NSUInteger)rightDigits;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (void)setFormatter:(NSFormatter*)newFormatter;
 - (id)formatter;
@@ -158,7 +129,7 @@
 - (SEL)action;
 - (BOOL)isContinuous;
 - (BOOL)sendAction:(SEL)theAction
-		to:(id)theTarget;
+                to:(id)theTarget;
 - (NSInteger)sendActionOn:(NSInteger)mask;
 - (void)setAction:(SEL)aSelector;
 - (void)setContinuous:(BOOL)flag;
@@ -214,28 +185,28 @@ APPKIT_EXPORT NSString *NSControlTextDidChangeNotification;
 - (BOOL) control: (NSControl *)control  isValidObject:(id)object;
 
 - (BOOL) control: (NSControl *)control
-  textShouldBeginEditing: (NSText *)fieldEditor;
+textShouldBeginEditing: (NSText *)fieldEditor;
 
 - (BOOL) control: (NSControl *)control
-  textShouldEndEditing: (NSText *)fieldEditor;
+textShouldEndEditing: (NSText *)fieldEditor;
 
 - (BOOL) control: (NSControl *)control 
-  didFailToFormatString: (NSString *)string 
-  errorDescription: (NSString *)error;
+didFailToFormatString: (NSString *)string
+errorDescription: (NSString *)error;
 
 - (void) control: (NSControl *)control 
-  didFailToValidatePartialString: (NSString *)string 
-  errorDescription: (NSString *)error;
+didFailToValidatePartialString: (NSString *)string
+errorDescription: (NSString *)error;
 
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (BOOL) control: (NSControl *)control 
-  textView: (NSTextView *)textView 
-  doCommandBySelector: (SEL)command;
+        textView: (NSTextView *)textView
+doCommandBySelector: (SEL)command;
 
 - (NSArray *) control: (NSControl *)control 
-  textView: (NSTextView *)textView 
-  completions: (NSArray *)words 
-  forPartialWordRange: (NSRange)charRange 
+             textView: (NSTextView *)textView
+          completions: (NSArray *)words
+  forPartialWordRange: (NSRange)charRange
   indexOfSelectedItem: (int *)index;
 #endif
 

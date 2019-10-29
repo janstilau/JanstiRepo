@@ -6704,26 +6704,7 @@ For a more detailed explanation, -setSortDescriptors:. */
  */
 - (NSInteger) _numRows
 {
-  GSKeyValueBinding *theBinding;
-
-  // If we have content binding the data source is used only
-  // like a delegate
-  theBinding = [GSKeyValueBinding getBinding: NSContentBinding 
-                                   forObject: self];
-  if (theBinding != nil)
-    {
-      return [(NSArray *)[theBinding sourceValueFor: NSContentBinding] count];
-    }
-  else if ([_dataSource respondsToSelector:
-		    @selector(numberOfRowsInTableView:)])
-    {
-      return [_dataSource numberOfRowsInTableView:self];
-    }
-  else
-    {
-      // FIXME
-      return 0;
-    }
+   return [_dataSource numberOfRowsInTableView:self];
 }
 
 - (BOOL) _isDraggingSource

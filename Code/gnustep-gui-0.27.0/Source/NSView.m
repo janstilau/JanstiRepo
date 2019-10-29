@@ -393,19 +393,9 @@ GSSetDragTypes(NSView* obj, NSArray *types)
     [self viewDidMoveToWindow];
     if (_rFlags.has_subviews)
     {
-        NSUInteger count = [_sub_views count];
-        
-        if (count > 0)
-        {
-            NSUInteger i;
-            NSView *array[count];
-            
-            [_sub_views getObjects: array];
-            for (i = 0; i < count; ++i)
-            {
-                [array[i] _viewDidMoveToWindow];
-            }
-        }
+        [_sub_views enumerateObjectsUsingBlock:^(NSView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [obj _viewDidMoveToWindow];
+        }];
     }
 }
 
@@ -496,31 +486,6 @@ GSSetDragTypes(NSView* obj, NSArray *types)
 - (NSString*) _subtreeDescription
 {
     return [self _subtreeDescriptionWithPrefix: @""];
-}
-
-- (NSString*) _flagDescription
-{
-    return @"";
-}
-
-- (NSString*) _resizeDescription
-{
-    return [NSString stringWithFormat: @"h=%c%c%c v=%c%c%c",
-            (_autoresizingMask & NSViewMinXMargin) ? '&' : '-',
-            (_autoresizingMask & NSViewWidthSizable) ? '&' : '-',
-            (_autoresizingMask & NSViewMaxXMargin) ? '&' : '-',
-            (_autoresizingMask & NSViewMinYMargin) ? '&' : '-',
-            (_autoresizingMask & NSViewHeightSizable) ? '&' : '-',
-            (_autoresizingMask & NSViewMaxYMargin) ? '&' : '-',
-            nil];
-}
-
-- (NSString*) description
-{
-    return [NSString stringWithFormat: @"%@ %@ %@ f=%@ b=%@",
-            [self _flagDescription],
-            [self _resizeDescription], [super description],
-            NSStringFromRect(_frame), NSStringFromRect(_bounds), nil];
 }
 
 /*
@@ -2183,6 +2148,9 @@ static void autoresize(CGFloat oldContainerSize,
 }
 
 /*
+ 
+ 
+ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  * The following display* methods work based on these invariants:
  * - When a view is marked as needing display, all views above it
  *   in the hierarchy are marked as well.

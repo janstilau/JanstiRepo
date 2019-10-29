@@ -455,6 +455,7 @@ APPKIT_EXPORT NSString *NSTableViewSelectionIsChangingNotification;
 @optional
 #else
 @end
+
 @interface NSObject (NSTableViewDelegate)
 #endif
 - (BOOL) selectionShouldChangeInTableView: (NSTableView *)aTableView;
