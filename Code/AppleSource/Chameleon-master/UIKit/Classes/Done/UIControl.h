@@ -1,5 +1,6 @@
 #import "UIView.h"
 
+// Control 的 Event, 是各个 Control 通过追踪事件判断出来的.
 typedef NS_OPTIONS(NSUInteger, UIControlEvents) {
     UIControlEventTouchDown           = 1 <<  0,
     UIControlEventTouchDownRepeat     = 1 <<  1,
@@ -25,6 +26,7 @@ typedef NS_OPTIONS(NSUInteger, UIControlEvents) {
     UIControlEventAllEvents           = 0xFFFFFFFF
 };
 
+// 根据 touch 的过程, state 的状态不断的更新. 他们之前是或的关系, 也就是说, 可以同时有着多种状态.
 typedef NS_OPTIONS(NSUInteger, UIControlState) {
     UIControlStateNormal               = 0,
     UIControlStateHighlighted          = 1 << 0,
@@ -34,6 +36,7 @@ typedef NS_OPTIONS(NSUInteger, UIControlState) {
     UIControlStateReserved             = 0xFF000000
 };
 
+// 这就是一个状态值, 至于这个状态值到底有什么意义, 是需要各个子类自定义的.
 typedef NS_ENUM(NSInteger, UIControlContentHorizontalAlignment) {
     UIControlContentHorizontalAlignmentCenter = 0,
     UIControlContentHorizontalAlignmentLeft    = 1,
@@ -41,6 +44,7 @@ typedef NS_ENUM(NSInteger, UIControlContentHorizontalAlignment) {
     UIControlContentHorizontalAlignmentFill   = 3,
 };
 
+// 这就是一个状态值, 至于这个状态值到底有什么意义, 是需要各个子类自定义的.
 typedef NS_ENUM(NSInteger, UIControlContentVerticalAlignment) {
     UIControlContentVerticalAlignmentCenter  = 0,
     UIControlContentVerticalAlignmentTop     = 1,

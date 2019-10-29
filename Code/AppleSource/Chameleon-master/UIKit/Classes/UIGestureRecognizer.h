@@ -1,36 +1,7 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, UIGestureRecognizerState) {
-    UIGestureRecognizerStatePossible,
+    UIGestureRecognizerStatePossible, // 最原始的状态.
     UIGestureRecognizerStateBegan,
     UIGestureRecognizerStateChanged,
     UIGestureRecognizerStateEnded,
@@ -43,8 +14,17 @@ typedef NS_ENUM(NSInteger, UIGestureRecognizerState) {
 
 @protocol UIGestureRecognizerDelegate <NSObject>
 @optional
+/**
+ When a gesture recognizer attempts to transition from the Possible (NSGestureRecognizerStatePossible) state to a different state, such as NSGestureRecognizerStateBegan, the gesture recognizer calls this method to see if the transition should occur. Returning NO from this delegate method causes the gesture recognizer to transition to the NSGestureRecognizerStateFailed state.
+ */
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
+/**
+ Called, for a new touch, before the system calls the touchesBegan:withEvent: method on the gesture recognizer. Return NO to prevent the gesture recognizer from seeing this touch.
+ */
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch;
+/**
+ This method is called when recognition of a gesture by either gestureRecognizer and otherGestureRecognizer would block the other gesture recognizer from recognizing its gesture. Returning YES is guaranteed to allow simultaneous recognition; returning NO is not guaranteed to prevent simultaneous recognition because the other gesture recognizer’s delegate may return YES.
+ */
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
 @end
 
@@ -54,6 +34,9 @@ typedef NS_ENUM(NSInteger, UIGestureRecognizerState) {
 - (void)addTarget:(id)target action:(SEL)action;
 - (void)removeTarget:(id)target action:(SEL)action;
 
+/**
+ Creates a dependency relationship between the receiver and another gesture recognizer when the objects are created.
+ */
 - (void)requireGestureRecognizerToFail:(UIGestureRecognizer *)otherGestureRecognizer;
 - (CGPoint)locationInView:(UIView *)view;
 

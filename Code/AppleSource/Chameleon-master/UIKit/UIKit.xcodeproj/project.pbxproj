@@ -621,6 +621,8 @@
 		06055A26236825C200EE2744 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				1489850512EE2CFE003D4751 /* UIControl.h */,
+				1489850612EE2CFE003D4751 /* UIControl.m */,
 				1489853B12EE2CFE003D4751 /* UIResponder.h */,
 				1489853C12EE2CFE003D4751 /* UIResponder.m */,
 			);
@@ -702,8 +704,6 @@
 				06055A26236825C200EE2744 /* Done */,
 				148984E412EE2CFE003D4751 /* AppKitIntegration.h */,
 				148984E512EE2CFE003D4751 /* NSIndexPath+UITableView.h */,
-				1489850512EE2CFE003D4751 /* UIControl.h */,
-				1489850612EE2CFE003D4751 /* UIControl.m */,
 				148984E612EE2CFE003D4751 /* NSIndexPath+UITableView.m */,
 				148984E712EE2CFE003D4751 /* UIAcceleration.h */,
 				148984E812EE2CFE003D4751 /* UIAcceleration.m */,

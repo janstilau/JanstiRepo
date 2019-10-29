@@ -75,7 +75,6 @@
     return allEvents;
 }
 
-//
 - (void)_sendActionsForControlEvents:(UIControlEvents)controlEvents withEvent:(UIEvent *)event
 {
     for (UIControlAction *controlAction in _registeredActions) {
@@ -88,9 +87,22 @@
 // 真正的方法实现. 当触发的时候, 会汇集到这个方法, 然后调用相应的回调.
 - (void)sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event
 {
+    /**
+    Normally, this method is invoked by a UIControl object that the user has touched.
+    The default implementation dispatches the action method to the given target object or, if no target is specified, to the first responder. Subclasses may override this method to perform special dispatching of action messages.
+
+    By default, this method pushes two parameters when calling the target. These last two parameters are optional for the receiver because it is up to the caller (usually a UIControl object) to remove any parameters it added. This design enables the action selector to be one of the following:
+
+    - (void)action
+
+    - (void)action:(id)sender
+
+    - (void)action:(id)sender forEvent:(UIEvent *)event
+    */
     [[UIApplication sharedApplication] sendAction:action to:target from:self forEvent:event];
 }
 
+// 在 touch 的过程中, 会调用这几个函数, 来判断是否 touch 应该继续.
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
 {
     return YES;
@@ -110,21 +122,23 @@
 }
 
 // 在 UIControl 里面, 没有对于 super 的调用操作. 所以, 这也是为什么 UIButton 没有了向上传递事件的原因.
+// UIControl 通过检测 touch 的过程, 将action的调用逻辑, 封装到了自己的内部.
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [touches anyObject];
     _touchInside = YES;
     _tracking = [self beginTrackingWithTouch:touch withEvent:event];
 
-    self.highlighted = YES;
+    self.highlighted = YES; // 更改 highLighted 状态. 这个状态的改变, 会引起视图的变化.
 
-    if (_tracking) {
+    if (_tracking) { // beginTrackingWithTouch 控制的状态.
         UIControlEvents currentEvents = UIControlEventTouchDown;
 
         if (touch.tapCount > 1) {
             currentEvents |= UIControlEventTouchDownRepeat;
         }
-
+        // 所以, event 到底是什么, 是根据 touch 的交互用代码判断出来的.
+        // 在 _sendActionsForControlEvents 方法里, 根据 event 进行 target action 的调用.
         [self _sendActionsForControlEvents:currentEvents withEvent:event];
     }
 }
@@ -138,16 +152,19 @@
     self.highlighted = _touchInside;
 
     if (_tracking) {
+        // 这里, tracking 要两次判断, 第一次判断之前的状态, 第二次判断现有的状态.
         _tracking = [self continueTrackingWithTouch:touch withEvent:event];
         if (_tracking) {
             UIControlEvents currentEvents = ((_touchInside)? UIControlEventTouchDragInside : UIControlEventTouchDragOutside);
 
             if (!wasTouchInside && _touchInside) {
+                // 如果之前没有进入, 现在进入了, 就是dragEnter
                 currentEvents |= UIControlEventTouchDragEnter;
             } else if (wasTouchInside && !_touchInside) {
+                // 如果之前在进入状态, 现在拉出了, 就是 dragExit
                 currentEvents |= UIControlEventTouchDragExit;
             }
-
+            // currentEvents 的值, 还是代码通过追踪touch过程计算出来的.
             [self _sendActionsForControlEvents:currentEvents withEvent:event];
         }
     }
@@ -182,12 +199,6 @@
     _tracking = NO;
 }
 
-- (void)_stateDidChange
-{
-    [self setNeedsDisplay];
-    [self setNeedsLayout];
-}
-
 - (void)setEnabled:(BOOL)newEnabled
 {
     if (newEnabled != _enabled) {
@@ -211,6 +222,13 @@
         _selected = newSelected;
         [self _stateDidChange];
     }
+}
+
+// 更新状态. 这里仅仅做状态的改变, 真正的绘制过程, 不同的子类要根据当前的状态, 绘制不同的展示. 也就是下面的 state 的状态.
+- (void)_stateDidChange
+{
+    [self setNeedsDisplay];
+    [self setNeedsLayout];
 }
 
 - (UIControlState)state

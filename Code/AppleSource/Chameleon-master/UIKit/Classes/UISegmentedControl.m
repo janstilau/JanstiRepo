@@ -332,7 +332,7 @@ static NSString *kSSSegmentedControlEnabledKey = @"enabled";
     
     _selectedSegmentIndex = index;
     [self setNeedsDisplay];
-    [self sendActionsForControlEvents:UIControlEventValueChanged];
+//    [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
 

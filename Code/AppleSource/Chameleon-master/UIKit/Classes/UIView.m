@@ -780,6 +780,12 @@ static BOOL _animationsEnabled = YES;
     return _layer.hidden;
 }
 
+/**
+ You can call this method to indicate that the layout of a layer’s sublayers has changed and must be updated. The system typically calls this method automatically when the layer’s bounds change or when sublayers are added or removed. In macOS, if your layer’s layoutManager property contains an object that implements the invalidateLayoutOfLayer: method, that method is called too.
+
+ During the next update cycle, the system calls the layoutSublayers method of any layers requiring layout updates.
+ */
+
 - (void)setNeedsLayout
 {
     [_layer setNeedsLayout];

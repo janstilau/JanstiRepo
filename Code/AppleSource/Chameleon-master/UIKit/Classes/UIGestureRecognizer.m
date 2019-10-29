@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #import "UIGestureRecognizer.h"
 #import "UIGestureRecognizerSubclass.h"
 #import "UITouch+UIPrivate.h"
@@ -35,9 +6,9 @@
 #import "UITouchEvent.h"
 
 @implementation UIGestureRecognizer {
-    NSMutableArray *_registeredActions;
+    NSMutableArray *_registeredActions; // 对于 target, action 的包装.
     NSMutableArray *_trackingTouches;
-    __unsafe_unretained UIView *_view;
+    __unsafe_unretained UIView *_view; // gesture 相关联的 view
     
     struct {
         unsigned shouldBegin : 1;
@@ -63,6 +34,24 @@
     return self;
 }
 
+
+- (void)addTarget:(id)target action:(SEL)action
+{
+    UIAction *actionRecord = [[UIAction alloc] init];
+    actionRecord.target = target;
+    actionRecord.action = action;
+    [_registeredActions addObject:actionRecord];
+}
+
+- (void)removeTarget:(id)target action:(SEL)action
+{
+    UIAction *actionRecord = [[UIAction alloc] init];
+    actionRecord.target = target;
+    actionRecord.action = action;
+    // 之所以可以这样调用, 是因为 UIAction 的 isEqual 方法进行了复写.
+    [_registeredActions removeObject:actionRecord];
+}
+
 - (void)_setView:(UIView *)v
 {
     if (v != _view) {
@@ -81,27 +70,9 @@
     }
 }
 
-- (void)addTarget:(id)target action:(SEL)action
-{
-    NSAssert(target != nil, @"target must not be nil");
-    NSAssert(action != NULL, @"action must not be NULL");
-    
-    UIAction *actionRecord = [[UIAction alloc] init];
-    actionRecord.target = target;
-    actionRecord.action = action;
-    [_registeredActions addObject:actionRecord];
-}
-
-- (void)removeTarget:(id)target action:(SEL)action
-{
-    UIAction *actionRecord = [[UIAction alloc] init];
-    actionRecord.target = target;
-    actionRecord.action = action;
-    [_registeredActions removeObject:actionRecord];
-}
-
 - (void)requireGestureRecognizerToFail:(UIGestureRecognizer *)otherGestureRecognizer
 {
+    // 居然没有实现....
 }
 
 - (NSUInteger)numberOfTouches
@@ -300,32 +271,6 @@
 {
     [touch _removeGestureRecognizer:self];
     [_trackingTouches removeObject:touch];
-}
-
-- (NSString *)description
-{
-    NSString *state = @"";
-    switch (self.state) {
-        case UIGestureRecognizerStatePossible:
-            state = @"Possible";
-            break;
-        case UIGestureRecognizerStateBegan:
-            state = @"Began";
-            break;
-        case UIGestureRecognizerStateChanged:
-            state = @"Changed";
-            break;
-        case UIGestureRecognizerStateEnded:
-            state = @"Ended";
-            break;
-        case UIGestureRecognizerStateCancelled:
-            state = @"Cancelled";
-            break;
-        case UIGestureRecognizerStateFailed:
-            state = @"Failed";
-            break;
-    }
-    return [NSString stringWithFormat:@"<%@: %p; state = %@; view = %@>", [self className], self, state, self.view];
 }
 
 @end
