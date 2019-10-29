@@ -149,6 +149,7 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
 
 - (CGSize)sizeWithFont:(UIFont *)font constrainedToSize:(CGSize)size
 {
+    
     return [self sizeWithFont:font constrainedToSize:size lineBreakMode:UILineBreakModeWordWrap];
 }
 
@@ -197,7 +198,7 @@ static CFArrayRef CreateCTLinesForString(NSString *string, CGSize constrainedToS
                 case UITextAlignmentLeft:
                 default:					flush = 0;		break;
             }
-            
+            // 所以, Alignment 仅仅是一个数据值, 它影响的是绘制的时候, 绘制文字的位置.
             CGFloat penOffset = CTLineGetPenOffsetForFlush(line, flush, rect.size.width);
             CGContextSetTextPosition(ctx, penOffset, textOffset);
             CTLineDraw(line, ctx);

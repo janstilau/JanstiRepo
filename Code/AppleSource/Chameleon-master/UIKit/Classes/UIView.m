@@ -848,6 +848,7 @@ static BOOL _animationsEnabled = YES;
     }
 }
 
+// UIViewContentMode 的更改, 仅仅是改变 Layer 的contentsGravity属性的取值
 - (void)setContentMode:(UIViewContentMode)mode
 {
     if (mode != _contentMode) {
@@ -869,6 +870,7 @@ static BOOL _animationsEnabled = YES;
                 break;
 
             case UIViewContentModeRedraw:
+                // The option to redisplay the view when the bounds change by invoking the setNeedsDisplay method.
                 _layer.needsDisplayOnBoundsChange = YES;
                 break;
                 

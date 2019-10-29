@@ -35,7 +35,7 @@ NSString *const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
     if ((self=[super initWithFrame:frame])) {
         _textLayer = [[UITextLayer alloc] initWithContainer:self isField:YES];
         [self.layer insertSublayer:_textLayer atIndex:0];
-        
+
         self.textAlignment = UITextAlignmentLeft;
         self.font = [UIFont systemFontOfSize:17];
         self.borderStyle = UITextBorderStyleNone;
