@@ -479,6 +479,8 @@ static BOOL _animationsEnabled = YES;
     }
 }
 
+
+// 核心方法.
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx
 {
     // We only get here if the UIView subclass implements drawRect:. To do this without a drawRect: is a huge waste of memory.

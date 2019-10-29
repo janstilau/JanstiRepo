@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #import "UIImageView+UIPrivate.h"
 #import "UIImage.h"
 #import "UIGraphics.h"
@@ -60,7 +31,7 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
 {
     if ((self=[super initWithFrame:frame])) {
         _drawMode = _UIImageViewDrawModeNormal;
-        self.userInteractionEnabled = NO;
+        self.userInteractionEnabled = NO; // UIImageView 仅仅作为显示使用, 所以默认情况下, userInteractionEnabled = NO
         self.opaque = NO;
     }
     return self;
@@ -69,30 +40,31 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
 - (id)initWithImage:(UIImage *)theImage
 {
     CGRect frame = CGRectZero;
-
+    
     if (theImage) {
-        frame.size = theImage.size;
+        frame.size = theImage.size; // 默认, 会使用 Image 的 size, 作为self.size
     }
-        
+    
     if ((self = [self initWithFrame:frame])) {
         self.image = theImage;
     }
-
+    
     return self;
 }
 
-
+// 重写 sizeThatFits, 根据 Image 的 size 进行调整.
 - (CGSize)sizeThatFits:(CGSize)size
 {
     return _image? _image.size : CGSizeZero;
 }
 
+// 高亮状态改变, 重绘. 之前没有注意过, imageView 也有高亮状态.
 - (void)setHighlighted:(BOOL)h
 {
     if (h != _highlighted) {
         _highlighted = h;
         [self setNeedsDisplay];
-
+        
         if ([self isAnimating]) {
             [self startAnimating];
         }
@@ -132,10 +104,13 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
     }
 }
 
+
+// 核心方法.
 - (void)displayLayer:(CALayer *)theLayer
 {
     [super displayLayer:theLayer];
     
+    // 根据状态的不同, 取不同的 Image 对象.
     UIImage *displayImage = (_highlighted && _highlightedImage)? _highlightedImage : _image;
     const CGFloat scale = self.window.screen.scale;
     const CGRect bounds = self.bounds;
@@ -147,14 +122,12 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
         UIGraphicsEndImageContext();
     }
     
-    // adjust the image if required.
-    // this will likely only ever be used UIButton, but it seemed a good place for it.
-    // I wonder how the real UIKit does this...
+    // 如果需要, 绘制不同的 Image
     if (displayImage && (_drawMode != _UIImageViewDrawModeNormal)) {
         CGRect imageBounds;
         imageBounds.origin = CGPointZero;
         imageBounds.size = displayImage.size;
-
+        
         UIGraphicsBeginImageContextWithOptions(imageBounds.size, NO, scale);
         
         CGBlendMode blendMode = kCGBlendModeNormal;
@@ -170,10 +143,10 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
         
         [displayImage drawInRect:imageBounds blendMode:blendMode alpha:alpha];
         displayImage = UIGraphicsGetImageFromCurrentImageContext();
-
+        
         UIGraphicsEndImageContext();
     }
-
+    
     UIImageRep *bestRepresentation = [displayImage _bestRepresentationForProposedScale:scale];
     theLayer.contents = (__bridge id)bestRepresentation.CGImage;
     
@@ -182,6 +155,7 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
     }
 }
 
+// 如果, size 更改了, 那么就进行刷新操作.
 - (void)_displayIfNeededChangingFromOldSize:(CGSize)oldSize toNewSize:(CGSize)newSize
 {
     if (!CGSizeEqualToSize(newSize,oldSize) && self._hasResizableImage) {
@@ -201,10 +175,11 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
     [super setBounds:newBounds];
 }
 
+
+// 仅仅是增加了一个 contents 的动画.
 - (void)startAnimating
 {
     NSArray *images = _highlighted? _highlightedAnimationImages : _animationImages;
-
     CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
     animation.calculationMode = kCAAnimationDiscrete;
     animation.duration = self.animationDuration ?: ([images count] * (1/30.0));
@@ -212,7 +187,6 @@ static NSArray *CGImagesWithUIImages(NSArray *images)
     animation.values = CGImagesWithUIImages(images);
     animation.removedOnCompletion = NO;
     animation.fillMode = kCAFillModeBoth;
-
     [self.layer addAnimation:animation forKey:@"contents"];
 }
 
