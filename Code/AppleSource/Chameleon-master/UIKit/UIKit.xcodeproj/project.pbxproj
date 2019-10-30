@@ -573,6 +573,7 @@
 		06055A26236825C200EE2744 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				1489855912EE2CFE003D4751 /* UITextInputTraits.h */,
 				1489852B12EE2CFE003D4751 /* UINavigationController.h */,
 				1489852C12EE2CFE003D4751 /* UINavigationController.m */,
 				1489852912EE2CFE003D4751 /* UINavigationBar.h */,
@@ -786,7 +787,6 @@
 				1489855812EE2CFE003D4751 /* UITextField.m */,
 				14FE4939171C988B009C7794 /* UITextInput.h */,
 				14FE4940171C9989009C7794 /* UITextInput.m */,
-				1489855912EE2CFE003D4751 /* UITextInputTraits.h */,
 				1489855A12EE2CFE003D4751 /* UITextView.h */,
 				1489855B12EE2CFE003D4751 /* UITextView.m */,
 				1489855D12EE2CFE003D4751 /* UIToolbar.m */,

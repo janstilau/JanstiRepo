@@ -91,14 +91,10 @@ static BOOL _animationsEnabled = YES;
     return _superview.window;
 }
 
+// 返回下一个响应者.
 - (UIResponder *)nextResponder
 {
     return (UIResponder *)[self _viewController] ?: (UIResponder *)_superview;
-}
-
-- (id)_UIAppearanceContainer
-{
-    return self.superview;
 }
 
 // 这里, 没有返回真正的自己的容器对象, 而是新组建了一个容器返回了.
@@ -120,33 +116,23 @@ static BOOL _animationsEnabled = YES;
 - (void)_willMoveFromWindow:(UIWindow *)fromWindow toWindow:(UIWindow *)toWindow
 {
     if (fromWindow != toWindow) {
-        
-        // need to manage the responder chain. apparently UIKit (at least by version 4.2) seems to make sure that if a view was first responder
-        // and it or it's parent views are disconnected from their window, the first responder gets reset to nil. Honestly, I don't think this
-        // was always true - but it's certainly a much better and less-crashy design. Hopefully this check here replicates the behavior properly.
         if ([self isFirstResponder]) {
             [self resignFirstResponder];
         }
         
-        [self _UIAppearanceSetNeedsUpdate];
         [self willMoveToWindow:toWindow];
 
         for (UIView *subview in self.subviews) { // 通知自己的子 View.
             [subview _willMoveFromWindow:fromWindow toWindow:toWindow];
         }
         
-        [[self _viewController] beginAppearanceTransition:(toWindow != nil) animated:NO];
+        [[self _viewController] beginAppearanceTransition:(toWindow != nil) animated:NO]; // 在这里, 会通知 vc 的 ViewWillAppear 和 ViewDidAppear.
     }
 }
 
 - (void)_didMoveToScreen
 {
-    if (_implementsDrawRect && self.contentScaleFactor != self.window.screen.scale) {
-        self.contentScaleFactor = self.window.screen.scale;
-    } else {
-        [self setNeedsDisplay];
-    }
-    
+    [self setNeedsDisplay];
     for (UIView *subview in self.subviews) {
         [subview _didMoveToScreen];
     }
@@ -175,11 +161,6 @@ static BOOL _animationsEnabled = YES;
                     }
                 }];
             } else {
-                // this is sort of strange, but testing against iOS 6 seems to indicate that appearance transitions
-                // that don't occur within an animation block still do something like this.. it waits until the runloop
-                // cycles before really finishing. I can think of some good reasons for this behavior, so I think it
-                // makes sense to try to replicate it, but I know the real thing doesn't do it like this... :/
-                // (although to be fair, the real thing doesn't do anything much like I'm doing it, so...)
                 [controller performSelector:@selector(endAppearanceTransition) withObject:nil afterDelay:0];
             }
         }
@@ -288,6 +269,7 @@ static BOOL _animationsEnabled = YES;
     }
 }
 
+// 自定义行为的切口.
 - (void)didAddSubview:(UIView *)subview
 {
 }
