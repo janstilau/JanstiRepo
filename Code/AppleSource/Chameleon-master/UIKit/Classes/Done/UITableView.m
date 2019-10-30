@@ -1,37 +1,8 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #import "UITableView.h"
 #import "UITableViewCell+UIPrivate.h"
 #import "UIColor.h"
 #import "UITouch.h"
-#import "UITableViewSection.h"
+#import "UITableViewSectionRecord.h"
 #import "UITableViewSectionLabel.h"
 #import "UIScreenAppKitIntegration.h"
 #import "UIWindow.h"
@@ -41,7 +12,6 @@
 #import <AppKit/NSMenuItem.h>
 #import <AppKit/NSEvent.h>
 
-// http://stackoverflow.com/questions/235120/whats-the-uitableview-index-magnifying-glass-character
 NSString *const UITableViewIndexSearch = @"{search}";
 
 const CGFloat _UITableViewDefaultRowHeight = 43;
@@ -50,10 +20,12 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     BOOL _needsReload;
     NSIndexPath *_selectedRow;
     NSIndexPath *_highlightedRow;
+    
     NSMutableDictionary *_cachedCells;
     NSMutableSet *_reusableCells;
-    NSMutableArray *_sections;
     
+    NSMutableArray<UITableViewSectionRecord*> *_sections;
+    // 这个库的作者, 将 delegate 的各个能力进行了存储, 减少了 respond 的调用.
     struct {
         unsigned heightForRowAtIndexPath : 1;
         unsigned heightForHeaderInSection : 1;
@@ -90,7 +62,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
         _cachedCells = [[NSMutableDictionary alloc] init];
         _sections = [[NSMutableArray alloc] init];
         _reusableCells = [[NSMutableSet alloc] init];
-
+        
         self.separatorColor = [UIColor colorWithRed:.88f green:.88f blue:.88f alpha:1];
         self.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         self.showsHorizontalScrollIndicator = NO;
@@ -98,7 +70,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
         self.allowsSelectionDuringEditing = NO;
         self.sectionHeaderHeight = self.sectionFooterHeight = 22;
         self.alwaysBounceVertical = YES;
-
+        
         if (_style == UITableViewStylePlain) {
             self.backgroundColor = [UIColor whiteColor];
         }
@@ -108,11 +80,11 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     return self;
 }
 
-
+// 存储 DataSource 并且更新 dataSource 的能力
 - (void)setDataSource:(id<UITableViewDataSource>)newSource
 {
     _dataSource = newSource;
-
+    
     _dataSourceHas.numberOfSectionsInTableView = [_dataSource respondsToSelector:@selector(numberOfSectionsInTableView:)];
     _dataSourceHas.titleForHeaderInSection = [_dataSource respondsToSelector:@selector(tableView:titleForHeaderInSection:)];
     _dataSourceHas.titleForFooterInSection = [_dataSource respondsToSelector:@selector(tableView:titleForFooterInSection:)];
@@ -122,10 +94,11 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     [self _setNeedsReload];
 }
 
+// 存储 Delegate 并且更新 deleagate 的能力.
 - (void)setDelegate:(id<UITableViewDelegate>)newDelegate
 {
     [super setDelegate:newDelegate];
-
+    
     _delegateHas.heightForRowAtIndexPath = [newDelegate respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)];
     _delegateHas.heightForHeaderInSection = [newDelegate respondsToSelector:@selector(tableView:heightForHeaderInSection:)];
     _delegateHas.heightForFooterInSection = [newDelegate respondsToSelector:@selector(tableView:heightForFooterInSection:)];
@@ -146,15 +119,11 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     [self setNeedsLayout];
 }
 
+// 非常重要的方法. 更新 section 相关的信息, 主要是高度.
 - (void)_updateSectionsCache
 {
-    // uses the dataSource to rebuild the cache.
-    // if there's no dataSource, this can't do anything else.
-    // note that I'm presently caching and hanging on to views and titles for section headers which is something
-    // the real UIKit appears to fetch more on-demand than this. so far this has not been a problem.
-
-    // remove all previous section header/footer views
-    for (UITableViewSection *previousSectionRecord in _sections) {
+    // 对于每个 section 的 header 和 footer 没有进行缓存的处理, 所以在这里进行删除操作.
+    for (UITableViewSectionRecord *previousSectionRecord in _sections) {
         [previousSectionRecord.headerView removeFromSuperview];
         [previousSectionRecord.footerView removeFromSuperview];
     }
@@ -163,57 +132,51 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     [_sections removeAllObjects];
     
     if (_dataSource) {
-        // compute the heights/offsets of everything
         const CGFloat defaultRowHeight = _rowHeight ?: _UITableViewDefaultRowHeight;
         const NSInteger numberOfSections = [self numberOfSections];
-        for (NSInteger section=0; section<numberOfSections; section++) {
-            const NSInteger numberOfRowsInSection = [self numberOfRowsInSection:section];
+        for (NSInteger sectionIndex=0; sectionIndex<numberOfSections; sectionIndex++) {
+            // 在这里, 进行 UITableViewSection 的数据拼接.
+            const NSInteger numberOfRowsInSection = [self numberOfRowsInSection:sectionIndex];
+            UITableViewSectionRecord *sectionRecord = [[UITableViewSectionRecord alloc] init];
+            sectionRecord.headerTitle = _dataSourceHas.titleForHeaderInSection? [self.dataSource tableView:self titleForHeaderInSection:sectionIndex] : nil;
+            sectionRecord.footerTitle = _dataSourceHas.titleForFooterInSection? [self.dataSource tableView:self titleForFooterInSection:sectionIndex] : nil;
+            sectionRecord.headerHeight = _delegateHas.heightForHeaderInSection? [self.delegate tableView:self heightForHeaderInSection:sectionIndex] : _sectionHeaderHeight;
+            sectionRecord.footerHeight = _delegateHas.heightForFooterInSection ? [self.delegate tableView:self heightForFooterInSection:sectionIndex] : _sectionFooterHeight;
+            sectionRecord.headerView = (sectionRecord.headerHeight > 0 && _delegateHas.viewForHeaderInSection)? [self.delegate tableView:self viewForHeaderInSection:sectionIndex] : nil;
+            sectionRecord.footerView = (sectionRecord.footerHeight > 0 && _delegateHas.viewForFooterInSection)? [self.delegate tableView:self viewForFooterInSection:sectionIndex] : nil;
             
-            UITableViewSection *sectionRecord = [[UITableViewSection alloc] init];
-            sectionRecord.headerTitle = _dataSourceHas.titleForHeaderInSection? [self.dataSource tableView:self titleForHeaderInSection:section] : nil;
-            sectionRecord.footerTitle = _dataSourceHas.titleForFooterInSection? [self.dataSource tableView:self titleForFooterInSection:section] : nil;
-            
-            sectionRecord.headerHeight = _delegateHas.heightForHeaderInSection? [self.delegate tableView:self heightForHeaderInSection:section] : _sectionHeaderHeight;
-            sectionRecord.footerHeight = _delegateHas.heightForFooterInSection ? [self.delegate tableView:self heightForFooterInSection:section] : _sectionFooterHeight;
-
-            sectionRecord.headerView = (sectionRecord.headerHeight > 0 && _delegateHas.viewForHeaderInSection)? [self.delegate tableView:self viewForHeaderInSection:section] : nil;
-            sectionRecord.footerView = (sectionRecord.footerHeight > 0 && _delegateHas.viewForFooterInSection)? [self.delegate tableView:self viewForFooterInSection:section] : nil;
-
-            // make a default section header view if there's a title for it and no overriding view
+            // 寻找是否需要创建一个UITableViewSectionLabel作为 section 的 header 和 footer.
             if (!sectionRecord.headerView && sectionRecord.headerHeight > 0 && sectionRecord.headerTitle) {
                 sectionRecord.headerView = [UITableViewSectionLabel sectionLabelWithTitle:sectionRecord.headerTitle];
             }
-            
-            // make a default section footer view if there's a title for it and no overriding view
             if (!sectionRecord.footerView && sectionRecord.footerHeight > 0 && sectionRecord.footerTitle) {
                 sectionRecord.footerView = [UITableViewSectionLabel sectionLabelWithTitle:sectionRecord.footerTitle];
             }
-
+            
+            // 在这里就添加了 section 的 header 和 footer
             if (sectionRecord.headerView) {
                 [self addSubview:sectionRecord.headerView];
             } else {
                 sectionRecord.headerHeight = 0;
             }
-            
             if (sectionRecord.footerView) {
                 [self addSubview:sectionRecord.footerView];
             } else {
                 sectionRecord.footerHeight = 0;
             }
-
+            
+            // 在这里更新每个 row 的 height, 并且存储总的 row 的 height
             CGFloat *rowHeights = malloc(numberOfRowsInSection * sizeof(CGFloat));
             CGFloat totalRowsHeight = 0;
-            
             for (NSInteger row=0; row<numberOfRowsInSection; row++) {
-                const CGFloat rowHeight = _delegateHas.heightForRowAtIndexPath? [self.delegate tableView:self heightForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]] : defaultRowHeight;
+                const CGFloat rowHeight = _delegateHas.heightForRowAtIndexPath? [self.delegate tableView:self heightForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:sectionIndex]] : defaultRowHeight;
                 rowHeights[row] = rowHeight;
                 totalRowsHeight += rowHeight;
             }
             
-            sectionRecord.rowsHeight = totalRowsHeight;
+            sectionRecord.rowsTotalHeight = totalRowsHeight;
             [sectionRecord setNumberOfRows:numberOfRowsInSection withHeights:rowHeights];
             free(rowHeights);
-            
             [_sections addObject:sectionRecord];
         }
     }
@@ -221,11 +184,6 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
 
 - (void)_updateSectionsCacheIfNeeded
 {
-    // if there's a cache already in place, this doesn't do anything,
-    // otherwise calls _updateSectionsCache.
-    // this is called from _setContentSize and other places that require access
-    // to the section caches (mostly for size-related information)
-    
     if ([_sections count] == 0) {
         [self _updateSectionsCache];
     }
@@ -233,43 +191,34 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
 
 - (void)_setContentSize
 {
-    // first calls _updateSectionsCacheIfNeeded, then sets the scroll view's size
-    // taking into account the size of the header, footer, and all rows.
-    // should be called by reloadData, setFrame, header/footer setters.
-    
     [self _updateSectionsCacheIfNeeded];
-    
+    // 根据 headerView 的高度, footerView 的高度, 以及存储的每个 section 的高度, 计算出来 contentSize
     CGFloat height = _tableHeaderView? _tableHeaderView.frame.size.height : 0;
-    
-    for (UITableViewSection *section in _sections) {
+    for (UITableViewSectionRecord *section in _sections) {
         height += [section sectionHeight];
     }
-    
     if (_tableFooterView) {
         height += _tableFooterView.frame.size.height;
     }
-    
-    self.contentSize = CGSizeMake(0,height);	
+    self.contentSize = CGSizeMake(0,height);
 }
 
+// 为什么说 TableView 里面 autolayout 不起作用, 就是在这里, UITableView 管理了所有的布局相关的事情.
+// 这是最重要的方法, tableView 的核心所在.
+// 这个方法, 在 scroll 的时候回频繁的调用, 来保持 tableView 展示的信息是准确的.
 - (void)_layoutTableView
 {
-    // lays out headers and rows that are visible at the time. this should also do cell
-    // dequeuing and keep a list of all existing cells that are visible and those
-    // that exist but are not visible and are reusable
-    // if there's no section cache, no rows will be laid out but the header/footer will (if any).
-    
-    const CGSize boundsSize = self.bounds.size;
-    const CGFloat contentOffset = self.contentOffset.y;
+    const CGSize boundsSize = self.bounds.size; // tableView 的大小
+    const CGFloat contentOffset = self.contentOffset.y; // tableView 的偏移量.
     const CGRect visibleBounds = CGRectMake(0,contentOffset,boundsSize.width,boundsSize.height);
-    CGFloat tableHeight = 0;
+    CGFloat layoutTopLine = 0;
     
-    if (_tableHeaderView) {
+    if (_tableHeaderView) { // 在这里, 前置规定了 headerView 的 width 是 tableView 的 width. 并且规定 headerView 的 top 为 0;
         CGRect tableHeaderFrame = _tableHeaderView.frame;
         tableHeaderFrame.origin = CGPointZero;
         tableHeaderFrame.size.width = boundsSize.width;
         _tableHeaderView.frame = tableHeaderFrame;
-        tableHeight += tableHeaderFrame.size.height;
+        layoutTopLine += tableHeaderFrame.size.height;
     }
     
     // layout sections and rows
@@ -278,25 +227,24 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     [_cachedCells removeAllObjects];
     
     for (NSInteger section=0; section<numberOfSections; section++) {
-        CGRect sectionRect = [self rectForSection:section];
-        tableHeight += sectionRect.size.height;
-        if (CGRectIntersectsRect(sectionRect, visibleBounds)) {
+        CGRect sectionRect = [self rectForSection:section]; // 拿到 section 的 frame 的信息.
+        layoutTopLine += sectionRect.size.height;
+        if (CGRectIntersectsRect(sectionRect, visibleBounds)) { // 如果, section的区域和可见区域有重叠, 才会进行绘制.
+            UITableViewSectionRecord *sectionRecord = [_sections objectAtIndex:section];
             const CGRect headerRect = [self rectForHeaderInSection:section];
             const CGRect footerRect = [self rectForFooterInSection:section];
-            UITableViewSection *sectionRecord = [_sections objectAtIndex:section];
-            const NSInteger numberOfRows = sectionRecord.numberOfRows;
-            
             if (sectionRecord.headerView) {
                 sectionRecord.headerView.frame = headerRect;
             }
-            
             if (sectionRecord.footerView) {
                 sectionRecord.footerView.frame = footerRect;
             }
-            
+            // 之前, 仅仅是将 sectionRecord.headerView 添加到了 tableView 上, 在这里, 才会进行位置的确认.
+            const NSInteger numberOfRows = sectionRecord.numberOfRows;
             for (NSInteger row=0; row<numberOfRows; row++) {
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
                 CGRect rowRect = [self rectForRowAtIndexPath:indexPath];
+                // 如果 cell 的区域在可见判断, 在这里进行 cell 的添加操作, 并且进行位置的计算.
                 if (CGRectIntersectsRect(rowRect,visibleBounds) && rowRect.size.height > 0) {
                     UITableViewCell *cell = [availableCells objectForKey:indexPath] ?: [self.dataSource tableView:self cellForRowAtIndexPath:indexPath];
                     if (cell) {
@@ -314,7 +262,6 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
         }
     }
     
-    // remove old cells, but save off any that might be reusable
     for (UITableViewCell *cell in [availableCells allValues]) {
         if (cell.reuseIdentifier) {
             [_reusableCells addObject:cell];
@@ -339,9 +286,10 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
         }
     }
     
+    // 设置 footerView 的 frame
     if (_tableFooterView) {
         CGRect tableFooterFrame = _tableFooterView.frame;
-        tableFooterFrame.origin = CGPointMake(0,tableHeight);
+        tableFooterFrame.origin = CGPointMake(0,layoutTopLine);
         tableFooterFrame.size.width = boundsSize.width;
         _tableFooterView.frame = tableFooterFrame;
     }
@@ -349,7 +297,10 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
 
 - (CGRect)_CGRectFromVerticalOffset:(CGFloat)offset height:(CGFloat)height
 {
-    return CGRectMake(0,offset,self.bounds.size.width,height);
+    return CGRectMake(0,
+                      offset,
+                      self.bounds.size.width,
+                      height);
 }
 
 - (CGFloat)_offsetForSection:(NSInteger)index
@@ -366,7 +317,9 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
 - (CGRect)rectForSection:(NSInteger)section
 {
     [self _updateSectionsCacheIfNeeded];
-    return [self _CGRectFromVerticalOffset:[self _offsetForSection:section] height:[[_sections objectAtIndex:section] sectionHeight]];
+    CGFloat sectionHeight = [[_sections objectAtIndex:section] sectionHeight];
+    CGFloat sectionTop = [self _offsetForSection:section];
+    return [self _CGRectFromVerticalOffset:sectionTop height:sectionHeight];
 }
 
 - (CGRect)rectForHeaderInSection:(NSInteger)section
@@ -378,25 +331,25 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
 - (CGRect)rectForFooterInSection:(NSInteger)section
 {
     [self _updateSectionsCacheIfNeeded];
-    UITableViewSection *sectionRecord = [_sections objectAtIndex:section];
+    UITableViewSectionRecord *sectionRecord = [_sections objectAtIndex:section];
     CGFloat offset = [self _offsetForSection:section];
     offset += sectionRecord.headerHeight;
-    offset += sectionRecord.rowsHeight;
+    offset += sectionRecord.rowsTotalHeight;
     return [self _CGRectFromVerticalOffset:offset height:sectionRecord.footerHeight];
 }
 
 - (CGRect)rectForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self _updateSectionsCacheIfNeeded];
-
+    
     if (indexPath && indexPath.section < [_sections count]) {
-        UITableViewSection *sectionRecord = [_sections objectAtIndex:indexPath.section];
+        UITableViewSectionRecord *sectionRecord = [_sections objectAtIndex:indexPath.section];
         const NSUInteger row = indexPath.row;
         
         if (row < sectionRecord.numberOfRows) {
-            CGFloat *rowHeights = sectionRecord.rowHeights;
+            CGFloat *rowHeights = sectionRecord.rowHeightArray;
             CGFloat offset = [self _offsetForSection:indexPath.section];
-
+            
             offset += sectionRecord.headerHeight;
             
             for (NSInteger currentRow=0; currentRow<row; currentRow++) {
@@ -425,26 +378,27 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     return [_cachedCells objectForKey:indexPath];
 }
 
+// 只要 section 中存储了各种高度信息, indexPath 就很容易获得.
 - (NSArray *)indexPathsForRowsInRect:(CGRect)rect
 {
     // This needs to return the index paths even if the cells don't exist in any caches or are not on screen
     // For now I'm assuming the cells stretch all the way across the view. It's not clear to me if the real
     // implementation gets anal about this or not (haven't tested it).
-
+    
     [self _updateSectionsCacheIfNeeded];
-
+    
     NSMutableArray *results = [[NSMutableArray alloc] init];
     const NSInteger numberOfSections = [_sections count];
     CGFloat offset = _tableHeaderView? _tableHeaderView.frame.size.height : 0;
     
     for (NSInteger section=0; section<numberOfSections; section++) {
-        UITableViewSection *sectionRecord = [_sections objectAtIndex:section];
-        CGFloat *rowHeights = sectionRecord.rowHeights;
+        UITableViewSectionRecord *sectionRecord = [_sections objectAtIndex:section];
+        CGFloat *rowHeights = sectionRecord.rowHeightArray;
         const NSInteger numberOfRows = sectionRecord.numberOfRows;
         
         offset += sectionRecord.headerHeight;
-
-        if (offset + sectionRecord.rowsHeight >= rect.origin.y) {
+        
+        if (offset + sectionRecord.rowsTotalHeight >= rect.origin.y) {
             for (NSInteger row=0; row<numberOfRows; row++) {
                 const CGFloat height = rowHeights[row];
                 CGRect simpleRowRect = CGRectMake(rect.origin.x, offset, rect.size.width, height);
@@ -458,7 +412,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
                 offset += height;
             }
         } else {
-            offset += sectionRecord.rowsHeight;
+            offset += sectionRecord.rowsTotalHeight;
         }
         
         offset += sectionRecord.footerHeight;
@@ -476,10 +430,10 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
 - (NSArray *)indexPathsForVisibleRows
 {
     [self _layoutTableView];
-
+    
     NSMutableArray *indexes = [NSMutableArray arrayWithCapacity:[_cachedCells count]];
-    const CGRect bounds = self.bounds;
-
+    const CGRect bounds = self.bounds; // 这里有问题吧, 应该是 visibleRect
+    
     // Special note - it's unclear if UIKit returns these in sorted order. Because we're assuming that visibleCells returns them in order (top-bottom)
     // and visibleCells uses this method, I'm going to make the executive decision here and assume that UIKit probably does return them sorted - since
     // there's nothing warning that they aren't. :)
@@ -489,7 +443,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
             [indexes addObject:indexPath];
         }
     }
-
+    
     return indexes;
 }
 
@@ -510,7 +464,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     if (newHeader != _tableHeaderView) {
         [_tableHeaderView removeFromSuperview];
         _tableHeaderView = newHeader;
-        [self _setContentSize];
+        [self _setContentSize]; // 需要更新 contentSize
         [self addSubview:_tableHeaderView];
     }
 }
@@ -536,6 +490,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
 
 - (NSInteger)numberOfSections
 {
+    // 如果 dataSource 不实现这个方法, 要提供一个默认的值.
     if (_dataSourceHas.numberOfSectionsInTableView) {
         return [self.dataSource numberOfSectionsInTableView:self];
     } else {
@@ -550,18 +505,15 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
 
 - (void)reloadData
 {
-    // clear the caches and remove the cells since everything is going to change
     [[_cachedCells allValues] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [_reusableCells makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [_reusableCells removeAllObjects];
     [_cachedCells removeAllObjects];
-
-    // clear prior selection
+    
     _selectedRow = nil;
     _highlightedRow = nil;
     
-    // trigger the section cache to be repopulated
-    [self _updateSectionsCache];
+    [self _updateSectionsCache]; // 更新 section 的高度信息.
     [self _setContentSize];
     
     _needsReload = NO;
@@ -587,6 +539,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
 
 - (void)layoutSubviews
 {
+    // 在这里, _backgroundView 是个自己 pinZeroEdge 的
     _backgroundView.frame = self.bounds;
     [self _reloadDataIfNeeded];
     [self _layoutTableView];
@@ -598,11 +551,9 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     const CGRect oldFrame = self.frame;
     if (!CGRectEqualToRect(oldFrame,frame)) {
         [super setFrame:frame];
-
         if (oldFrame.size.width != frame.size.width) {
             [self _updateSectionsCache];
         }
-
         [self _setContentSize];
     }
 }
@@ -623,6 +574,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     return nil;
 }
 
+// tableView 记录 selected 的信息, 而不是在 cell 中.
 - (void)deselectRowAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated
 {
     if (indexPath && [indexPath isEqual:_selectedRow]) {
@@ -678,6 +630,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     }
 }
 
+// 滑动. 根据 UITableViewScrollPosition 的不同, 要计算出不同的位置.
 - (void)_scrollRectToVisible:(CGRect)aRect atScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated
 {
     if (!CGRectIsNull(aRect) && aRect.size.height > 0) {
@@ -689,12 +642,12 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
             case UITableViewScrollPositionTop:
                 aRect.size.height = self.bounds.size.height;
                 break;
-
+                
             case UITableViewScrollPositionMiddle:
                 aRect.origin.y -= (self.bounds.size.height / 2.f) - aRect.size.height;
                 aRect.size.height = self.bounds.size.height;
                 break;
-
+                
             case UITableViewScrollPositionBottom:
                 aRect.origin.y -= self.bounds.size.height - aRect.size.height;
                 aRect.size.height = self.bounds.size.height;
@@ -715,22 +668,18 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     [self _scrollRectToVisible:[self rectForRowAtIndexPath:indexPath] atScrollPosition:scrollPosition animated:animated];
 }
 
+// 在 _reusableCells 中查找 cell. 可能会找不到.
 - (UITableViewCell *)dequeueReusableCellWithIdentifier:(NSString *)identifier
 {
+    // 更新 _reusableCells
     for (UITableViewCell *cell in _reusableCells) {
         if ([cell.reuseIdentifier isEqualToString:identifier]) {
             UITableViewCell *strongCell = cell;
-            
-            // the above strongCell reference seems totally unnecessary, but without it ARC apparently
-            // ends up releasing the cell when it's removed on this line even though we're referencing it
-            // later in this method by way of the cell variable. I do not like this.
             [_reusableCells removeObject:cell];
-
             [strongCell prepareForReuse];
             return strongCell;
         }
     }
-    
     return nil;
 }
 
@@ -772,6 +721,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
 {
 }
 
+// 更新 _highlightedRow 的信息.
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (!_highlightedRow) {
@@ -781,7 +731,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
         _highlightedRow = [self indexPathForRowAtPoint:location];
         [self cellForRowAtIndexPath:_highlightedRow].highlighted = YES;
     }
-
+    
     if (_highlightedRow) {
         [self cellForRowAtIndexPath:_highlightedRow].highlighted = NO;
         [self _setUserSelectedRowAtIndexPath:_highlightedRow];
@@ -821,13 +771,14 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
 {
     if (self.editing) {
         self.editing = NO;
-
+        
         if (_delegateHas.didEndEditingRowAtIndexPath) {
             [self.delegate tableView:self didEndEditingRowAtIndexPath:indexPath];
         }
     }
 }
 
+// tableView 的 edit 模式, 还是要到 cell 中实现.
 - (void)_showEditMenuForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // re-checking for safety since _showEditMenuForRowAtIndexPath is deferred. this may be overly paranoid.
@@ -842,11 +793,11 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
         if ([menuItemTitle length] == 0) {
             menuItemTitle = @"Delete";
         }
-
+        
         cell.highlighted = YES;
         
         NSMenuItem *theItem = [[NSMenuItem alloc] initWithTitle:menuItemTitle action:NULL keyEquivalent:@""];
-
+        
         NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
         [menu setAutoenablesItems:NO];
         [menu setAllowsContextMenuPlugIns:NO];
@@ -855,99 +806,22 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
         // calculate the mouse's current position so we can present the menu from there since that's normal OSX behavior
         NSPoint mouseLocation = [NSEvent mouseLocation];
         CGPoint screenPoint = [self.window.screen convertPoint:NSPointToCGPoint(mouseLocation) fromScreen:nil];
-
+        
         // modally present a menu with the single delete option on it, if it was selected, then do the delete, otherwise do nothing
         const BOOL didSelectItem = [menu popUpMenuPositioningItem:nil atLocation:NSPointFromCGPoint(screenPoint) inView:self.window.screen.UIKitView];
         
         UIApplicationInterruptTouchesInView(nil);
-
+        
         if (didSelectItem) {
             [_dataSource tableView:self commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:indexPath];
         }
-
+        
         cell.highlighted = NO;
     }
-
+    
     // all done
     [self _endEditingRowAtIndexPath:indexPath];
 }
 
-- (void)rightClick:(UITouch *)touch withEvent:(UIEvent *)event
-{
-    CGPoint location = [touch locationInView:self];
-    NSIndexPath *touchedRow = [self indexPathForRowAtPoint:location];
-    
-    // this is meant to emulate UIKit's swipe-to-delete feature on Mac by way of a right-click menu
-    if (touchedRow && [self _canEditRowAtIndexPath:touchedRow]) {
-        [self _beginEditingRowAtIndexPath:touchedRow];
-    }
-}
-
-// these can come down to use from AppKit if the table view somehow ends up in the responder chain.
-// arrow keys move the selection, page up/down keys scroll the view
-
-- (void)moveUp:(id)sender
-{
-    NSIndexPath *selection = self.indexPathForSelectedRow;
-    
-    if (selection.row > 0) {
-        selection = [NSIndexPath indexPathForRow:selection.row-1 inSection:selection.section];
-    } else if (selection.row == 0 && selection.section > 0) {
-        for (NSInteger section = selection.section - 1; section >= 0; section--) {
-            const NSInteger rows = [self numberOfRowsInSection:section];
-            
-            if (rows > 0) {
-                selection = [NSIndexPath indexPathForRow:rows-1 inSection:section];
-                break;
-            }
-        }
-    }
-    
-    if (![selection isEqual:self.indexPathForSelectedRow]) {
-        [self _setUserSelectedRowAtIndexPath:selection];
-        [NSCursor setHiddenUntilMouseMoves:YES];
-    }
-}
-
-- (void)moveDown:(id)sender
-{
-    NSIndexPath *selection = self.indexPathForSelectedRow;
-    
-    if ((selection.row + 1) < [self numberOfRowsInSection:selection.section]) {
-        selection = [NSIndexPath indexPathForRow:selection.row+1 inSection:selection.section];
-    } else {
-        for (NSInteger section = selection.section + 1; section < self.numberOfSections; section++) {
-            const NSInteger rows = [self numberOfRowsInSection:section];
-            
-            if (rows > 0) {
-                selection = [NSIndexPath indexPathForRow:0 inSection:section];
-                break;
-            }
-        }
-    }
-    
-    if (![selection isEqual:self.indexPathForSelectedRow]) {
-        [self _setUserSelectedRowAtIndexPath:selection];
-        [NSCursor setHiddenUntilMouseMoves:YES];
-    }
-}
-
-- (void)pageUp:(id)sender
-{
-    NSArray *visibleRows = [self indexPathsForVisibleRows];
-
-    if ([visibleRows count] > 0) {
-        [self scrollToRowAtIndexPath:[visibleRows objectAtIndex:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-        [NSCursor setHiddenUntilMouseMoves:YES];
-        [self flashScrollIndicators];
-    }
-}
-
-- (void)pageDown:(id)sender
-{
-	[self scrollToRowAtIndexPath:[[self indexPathsForVisibleRows] lastObject] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    [NSCursor setHiddenUntilMouseMoves:YES];
-	[self flashScrollIndicators];
-}
 
 @end

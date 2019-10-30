@@ -27,12 +27,26 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIViewController.h"
-#import "UITableView.h"
+#import <Foundation/Foundation.h>
 
-@interface UITableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
-- (id)initWithStyle:(UITableViewStyle)style;
+@class UIView;
 
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic) BOOL clearsSelectionOnViewWillAppear;
+// 一个数据类, 存储有关于 Section 的东西.
+@interface UITableViewSectionRecord : NSObject
+
+- (CGFloat)sectionHeight;
+
+- (void)setNumberOfRows:(NSInteger)rows withHeights:(CGFloat *)newRowHeights;
+
+@property (nonatomic, assign) CGFloat rowsTotalHeight; // 单元格的总长度
+@property (nonatomic, assign) CGFloat headerHeight; // header 的长度
+@property (nonatomic, assign) CGFloat footerHeight; // footer 的长度
+@property (nonatomic, readonly) NSInteger numberOfRows; // 单元格的个数
+@property (nonatomic, readonly) CGFloat *rowHeightArray; // 单元格的长度, 一个数组
+@property (nonatomic, strong) UIView *headerView; // headerView
+@property (nonatomic, strong) UIView *footerView; // footerView
+@property (nonatomic, copy) NSString *headerTitle;
+@property (nonatomic, copy) NSString *footerTitle;
+
 @end
+

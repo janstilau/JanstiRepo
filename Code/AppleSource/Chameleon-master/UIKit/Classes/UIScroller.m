@@ -3,23 +3,9 @@
 #import "UIBezierPath.h"
 #import "UIColor.h"
 
-
 static const BOOL _UIScrollerGutterEnabled = NO;
 static const BOOL _UIScrollerJumpToSpotThatIsClicked = NO;	// _UIScrollerGutterEnabled must be YES for this to have any meaning
 static const CGFloat _UIScrollerMinimumAlpha = 0;
-
-
-CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
-{
-    const CGFloat minViewSize = 50;
-    
-    if (boundsSize.width <= minViewSize || boundsSize.height <= minViewSize) {
-        return 6;
-    } else {
-        return 10;
-    }
-}
-
 
 @implementation UIScroller {
     CGFloat _dragOffset;
@@ -46,20 +32,20 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
     [super setFrame:frame];
 }
 
+// 消失动画.
 - (void)_fadeOut
 {
     [_fadeTimer invalidate];
     _fadeTimer = nil;
-
+    
     [UIView animateWithDuration:0.33
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionTransitionNone | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState
-                     animations:^(void) {
-                         self.alpha = _UIScrollerMinimumAlpha;
-                     }
+                     animations:^(void){self.alpha = _UIScrollerMinimumAlpha;}
                      completion:NULL];
 }
 
+// 注册消失动画
 - (void)_fadeOutAfterDelay:(NSTimeInterval)time
 {
     [_fadeTimer invalidate];
@@ -70,20 +56,17 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
 {
     [_fadeTimer invalidate];
     _fadeTimer = nil;
-
     [UIView animateWithDuration:0.33
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionTransitionNone | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState
-                     animations:^(void) {
-                         self.alpha = 1;
-                     }
+                     animations:^(void) { self.alpha = 1; }
                      completion:NULL];
 }
 
 - (void)flash
 {
     [self _fadeIn];
-
+    
     if (!_alwaysVisible) {
         [self _fadeOutAfterDelay:1.5];
     }
@@ -92,7 +75,7 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
 - (void)quickFlash
 {
     self.alpha = 1;
-
+    
     if (!_alwaysVisible) {
         [self _fadeOutAfterDelay:0.5];
     }
@@ -101,7 +84,7 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
 - (void)setAlwaysVisible:(BOOL)v
 {
     _alwaysVisible = v;
-
+    
     if (_alwaysVisible) {
         [self _fadeIn];
     } else if (self.alpha > _UIScrollerMinimumAlpha && !_fadeTimer) {
@@ -151,6 +134,7 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
     [self setNeedsDisplay];
 }
 
+// 慢慢改变 contentOffset
 - (void)setContentOffsetWithLastTouch
 {
     const CGRect bounds = self.bounds;
@@ -160,7 +144,7 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
     const CGFloat point = _isVertical? _lastTouchLocation.y : _lastTouchLocation.x;
     const CGFloat knobPosition = MIN(MAX(0, point-_dragOffset), (dimension-knobSize));
     const CGFloat contentOffset = (knobPosition / (dimension-knobSize)) * maxContentOffset;
-
+    
     [self setContentOffset:contentOffset];
 }
 
@@ -185,10 +169,10 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
 - (void)autoPageContent
 {
     const CGRect knobRect = [self knobRect];
-
+    
     if (!CGRectContainsPoint(knobRect, _lastTouchLocation) && CGRectContainsPoint(self.bounds, _lastTouchLocation)) {
         BOOL shouldPageUp;
-
+        
         if (_isVertical) {
             shouldPageUp = (_lastTouchLocation.y < knobRect.origin.y);
         } else {
@@ -200,7 +184,7 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
         } else {
             [self pageDown];
         }
-
+        
         [_delegate _UIScroller:self contentOffsetDidChange:_contentOffset];
     }
 }
@@ -211,6 +195,7 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
     _holdTimer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(autoPageContent) userInfo:nil repeats:YES];
 }
 
+// 滑动条如何显示, 不是在里面有一个子 view, 而是画出来的.
 - (void)drawRect:(CGRect)rect
 {
     CGRect knobRect = [self knobRect];
@@ -226,9 +211,9 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
         knobRect.origin.x += 2;
         knobRect.size.width -= 4;
     }
-
+    
     UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:knobRect cornerRadius:4];
-
+    
     if (_indicatorStyle == UIScrollViewIndicatorStyleBlack) {
         [[[UIColor blackColor] colorWithAlphaComponent:0.5] setFill];
     } else if (_indicatorStyle == UIScrollViewIndicatorStyleWhite) {
@@ -247,8 +232,8 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
 {
     _lastTouchLocation = [[touches anyObject] locationInView:self];
     const CGRect knobRect = [self knobRect];
-
-    if (CGRectContainsPoint(knobRect,_lastTouchLocation)) {
+    
+    if (CGRectContainsPoint(knobRect,_lastTouchLocation)) { // 如果, 点击点在滑动块上.
         if (_isVertical) {
             _dragOffset = _lastTouchLocation.y - knobRect.origin.y;
         } else {
@@ -256,25 +241,13 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize)
         }
         _draggingKnob = YES;
         [_delegate _UIScrollerDidBeginDragging:self withEvent:event];
-    } else if (_UIScrollerGutterEnabled) {
-        [_delegate _UIScrollerDidBeginDragging:self withEvent:event];
-
-        if (_UIScrollerJumpToSpotThatIsClicked) {
-            _dragOffset = [self knobSize] / 2.f;
-            _draggingKnob = YES;
-            [self setContentOffsetWithLastTouch];
-            [_delegate _UIScroller:self contentOffsetDidChange:_contentOffset];
-        } else {
-            [self autoPageContent];
-            _holdTimer = [NSTimer scheduledTimerWithTimeInterval:0.33 target:self selector:@selector(startHoldPaging) userInfo:nil repeats:NO];
-        }
     }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     _lastTouchLocation = [[touches anyObject] locationInView:self];
-
+    
     if (_draggingKnob) {
         [self setContentOffsetWithLastTouch];
         [_delegate _UIScroller:self contentOffsetDidChange:_contentOffset];

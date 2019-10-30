@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #import "UITableViewCell+UIPrivate.h"
 #import "UITableViewCellSeparator.h"
 #import "UIColor.h"
@@ -37,6 +8,7 @@
 extern CGFloat _UITableViewDefaultRowHeight;
 
 @implementation UITableViewCell {
+    // 系统添加的一些预定义的子控件.
     UITableViewCellStyle _style;
     UITableViewCellSeparator *_seperatorView;
     UIView *_contentView;
@@ -50,10 +22,8 @@ extern CGFloat _UITableViewDefaultRowHeight;
         _indentationWidth = 10;
         _style = UITableViewCellStyleDefault;
         _selectionStyle = UITableViewCellSelectionStyleBlue;
-
         _seperatorView = [[UITableViewCellSeparator alloc] init];
         [self addSubview:_seperatorView];
-        
         self.accessoryType = UITableViewCellAccessoryNone;
         self.editingAccessoryType = UITableViewCellAccessoryNone;
     }
@@ -69,17 +39,17 @@ extern CGFloat _UITableViewDefaultRowHeight;
     return self;
 }
 
-
+// 核心方法, 根据各个属性的配置, 将不同的子 View 的位置和次序进行调整. 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-
+    
     const CGRect bounds = self.bounds;
     BOOL showingSeperator = !_seperatorView.hidden;
     
     CGRect contentFrame = CGRectMake(0,0,bounds.size.width,bounds.size.height-(showingSeperator? 1 : 0));
     CGRect accessoryRect = CGRectMake(bounds.size.width,0,0,0);
-
+    
     if(_accessoryView) {
         accessoryRect.size = [_accessoryView sizeThatFits: bounds.size];
         accessoryRect.origin.x = bounds.size.width - accessoryRect.size.width;
@@ -105,10 +75,10 @@ extern CGFloat _UITableViewDefaultRowHeight;
     
     if (_style == UITableViewCellStyleDefault) {
         const CGFloat padding = 5;
-
+        
         const BOOL showImage = (_imageView.image != nil);
         const CGFloat imageWidth = (showImage? 30:0);
-
+        
         _imageView.frame = CGRectMake(padding,0,imageWidth,contentFrame.size.height);
         
         CGRect textRect;
@@ -118,6 +88,7 @@ extern CGFloat _UITableViewDefaultRowHeight;
     }
 }
 
+// 这些都是懒加载.
 - (UIView *)contentView
 {
     if (!_contentView) {
@@ -224,6 +195,7 @@ extern CGFloat _UITableViewDefaultRowHeight;
     }
 }
 
+// 切口, 自定义的时候使用.
 - (void)prepareForReuse
 {
 }

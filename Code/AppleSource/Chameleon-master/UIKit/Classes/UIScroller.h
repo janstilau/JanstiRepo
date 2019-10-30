@@ -11,6 +11,7 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize);
 - (void)_UIScrollerDidEndDragging:(UIScroller *)scroller withEvent:(UIEvent *)event;
 @end
 
+// 滑动条. 
 @interface UIScroller : UIView
 
 // NOTE: UIScroller set's its own alpha to 0 when it is created, so it is NOT visible by default!
