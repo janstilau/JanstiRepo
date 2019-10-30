@@ -585,6 +585,8 @@
 		06055A26236825C200EE2744 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				1489854512EE2CFE003D4751 /* UIScrollView.h */,
+				1489854612EE2CFE003D4751 /* UIScrollView.m */,
 				1489851A12EE2CFE003D4751 /* UIImageView.h */,
 				1489851B12EE2CFE003D4751 /* UIImageView.m */,
 				1489850012EE2CFE003D4751 /* UIButton.h */,
@@ -776,8 +778,6 @@
 				1489854212EE2CFE003D4751 /* UIScreenAppKitIntegration.m */,
 				1489854312EE2CFE003D4751 /* UIScreenMode.h */,
 				1489854412EE2CFE003D4751 /* UIScreenMode.m */,
-				1489854512EE2CFE003D4751 /* UIScrollView.h */,
-				1489854612EE2CFE003D4751 /* UIScrollView.m */,
 				78D533DB133A9434006F17CA /* UISearchDisplayController.h */,
 				78D533DC133A9434006F17CA /* UISearchDisplayController.m */,
 				78CB48B2133AA8AF008636DA /* UISegmentedControl.h */,
