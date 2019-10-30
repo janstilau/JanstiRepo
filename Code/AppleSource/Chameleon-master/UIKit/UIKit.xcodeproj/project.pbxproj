@@ -63,8 +63,6 @@
 		1489857712EE2CFF003D4751 /* UIActionSheetAppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = 148984F112EE2CFE003D4751 /* UIActionSheetAppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1489857812EE2CFF003D4751 /* UIActivityIndicatorView.h in Headers */ = {isa = PBXBuildFile; fileRef = 148984F212EE2CFE003D4751 /* UIActivityIndicatorView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1489857912EE2CFF003D4751 /* UIActivityIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 148984F312EE2CFE003D4751 /* UIActivityIndicatorView.m */; };
-		1489857A12EE2CFF003D4751 /* UIAlertView.h in Headers */ = {isa = PBXBuildFile; fileRef = 148984F412EE2CFE003D4751 /* UIAlertView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1489857B12EE2CFF003D4751 /* UIAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 148984F512EE2CFE003D4751 /* UIAlertView.m */; };
 		1489857C12EE2CFF003D4751 /* UIApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 148984F612EE2CFE003D4751 /* UIApplication.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1489857D12EE2CFF003D4751 /* UIApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 148984F712EE2CFE003D4751 /* UIApplication.m */; };
 		1489857E12EE2CFF003D4751 /* UIApplicationAppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = 148984F812EE2CFE003D4751 /* UIApplicationAppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -128,8 +126,6 @@
 		148985BC12EE2CFF003D4751 /* UIPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489853612EE2CFE003D4751 /* UIPinchGestureRecognizer.m */; };
 		148985BD12EE2CFF003D4751 /* UIPopoverController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489853712EE2CFE003D4751 /* UIPopoverController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985BE12EE2CFF003D4751 /* UIPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489853812EE2CFE003D4751 /* UIPopoverController.m */; };
-		148985BF12EE2CFF003D4751 /* UIProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489853912EE2CFE003D4751 /* UIProgressView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		148985C012EE2CFF003D4751 /* UIProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489853A12EE2CFE003D4751 /* UIProgressView.m */; };
 		148985C112EE2CFF003D4751 /* UIResponder.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489853B12EE2CFE003D4751 /* UIResponder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985C212EE2CFF003D4751 /* UIResponder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489853C12EE2CFE003D4751 /* UIResponder.m */; };
 		148985C312EE2CFF003D4751 /* UIResponderAppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489853D12EE2CFE003D4751 /* UIResponderAppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -337,8 +333,6 @@
 		148984F112EE2CFE003D4751 /* UIActionSheetAppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIActionSheetAppKitIntegration.h; sourceTree = "<group>"; };
 		148984F212EE2CFE003D4751 /* UIActivityIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIActivityIndicatorView.h; sourceTree = "<group>"; };
 		148984F312EE2CFE003D4751 /* UIActivityIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIActivityIndicatorView.m; sourceTree = "<group>"; };
-		148984F412EE2CFE003D4751 /* UIAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIAlertView.h; sourceTree = "<group>"; };
-		148984F512EE2CFE003D4751 /* UIAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIAlertView.m; sourceTree = "<group>"; };
 		148984F612EE2CFE003D4751 /* UIApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIApplication.h; sourceTree = "<group>"; };
 		148984F712EE2CFE003D4751 /* UIApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIApplication.m; sourceTree = "<group>"; };
 		148984F812EE2CFE003D4751 /* UIApplicationAppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIApplicationAppKitIntegration.h; sourceTree = "<group>"; };
@@ -402,8 +396,6 @@
 		1489853612EE2CFE003D4751 /* UIPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPinchGestureRecognizer.m; sourceTree = "<group>"; };
 		1489853712EE2CFE003D4751 /* UIPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPopoverController.h; sourceTree = "<group>"; };
 		1489853812EE2CFE003D4751 /* UIPopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPopoverController.m; sourceTree = "<group>"; };
-		1489853912EE2CFE003D4751 /* UIProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIProgressView.h; sourceTree = "<group>"; };
-		1489853A12EE2CFE003D4751 /* UIProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIProgressView.m; sourceTree = "<group>"; };
 		1489853B12EE2CFE003D4751 /* UIResponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIResponder.h; sourceTree = "<group>"; };
 		1489853C12EE2CFE003D4751 /* UIResponder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIResponder.m; sourceTree = "<group>"; };
 		1489853D12EE2CFE003D4751 /* UIResponderAppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIResponderAppKitIntegration.h; sourceTree = "<group>"; };
@@ -581,6 +573,8 @@
 		06055A26236825C200EE2744 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				148984F212EE2CFE003D4751 /* UIActivityIndicatorView.h */,
+				148984F312EE2CFE003D4751 /* UIActivityIndicatorView.m */,
 				1489854F12EE2CFE003D4751 /* UITableView.h */,
 				1489855012EE2CFE003D4751 /* UITableView.m */,
 				1489855112EE2CFE003D4751 /* UITableViewCell.h */,
@@ -715,10 +709,6 @@
 				148984EF12EE2CFE003D4751 /* UIActionSheet.h */,
 				148984F012EE2CFE003D4751 /* UIActionSheet.m */,
 				148984F112EE2CFE003D4751 /* UIActionSheetAppKitIntegration.h */,
-				148984F212EE2CFE003D4751 /* UIActivityIndicatorView.h */,
-				148984F312EE2CFE003D4751 /* UIActivityIndicatorView.m */,
-				148984F412EE2CFE003D4751 /* UIAlertView.h */,
-				148984F512EE2CFE003D4751 /* UIAlertView.m */,
 				14FDE99A153C9A1800A2D499 /* UIAppearance.h */,
 				148984F612EE2CFE003D4751 /* UIApplication.h */,
 				148984F712EE2CFE003D4751 /* UIApplication.m */,
@@ -768,8 +758,6 @@
 				1489853412EE2CFE003D4751 /* UIPasteboard.m */,
 				1489853712EE2CFE003D4751 /* UIPopoverController.h */,
 				1489853812EE2CFE003D4751 /* UIPopoverController.m */,
-				1489853912EE2CFE003D4751 /* UIProgressView.h */,
-				1489853A12EE2CFE003D4751 /* UIProgressView.m */,
 				1489853D12EE2CFE003D4751 /* UIResponderAppKitIntegration.h */,
 				1489853E12EE2CFE003D4751 /* UIResponderAppKitIntegration.m */,
 				1489853F12EE2CFE003D4751 /* UIScreen.h */,
@@ -949,7 +937,6 @@
 				1489857512EE2CFF003D4751 /* UIActionSheet.h in Headers */,
 				1489857712EE2CFF003D4751 /* UIActionSheetAppKitIntegration.h in Headers */,
 				1489857812EE2CFF003D4751 /* UIActivityIndicatorView.h in Headers */,
-				1489857A12EE2CFF003D4751 /* UIAlertView.h in Headers */,
 				1489857C12EE2CFF003D4751 /* UIApplication.h in Headers */,
 				1489857E12EE2CFF003D4751 /* UIApplicationAppKitIntegration.h in Headers */,
 				1489857F12EE2CFF003D4751 /* UIApplicationDelegate.h in Headers */,
@@ -1012,7 +999,6 @@
 				148985A212EE2CFF003D4751 /* UIKey.h in Headers */,
 				148985BB12EE2CFF003D4751 /* UIPinchGestureRecognizer.h in Headers */,
 				148985BD12EE2CFF003D4751 /* UIPopoverController.h in Headers */,
-				148985BF12EE2CFF003D4751 /* UIProgressView.h in Headers */,
 				148985C112EE2CFF003D4751 /* UIResponder.h in Headers */,
 				148985C312EE2CFF003D4751 /* UIResponderAppKitIntegration.h in Headers */,
 				148985C512EE2CFF003D4751 /* UIScreen.h in Headers */,
@@ -1183,7 +1169,6 @@
 				1489856C12EE2CFF003D4751 /* NSIndexPath+UITableView.m in Sources */,
 				1489857612EE2CFF003D4751 /* UIActionSheet.m in Sources */,
 				1489857912EE2CFF003D4751 /* UIActivityIndicatorView.m in Sources */,
-				1489857B12EE2CFF003D4751 /* UIAlertView.m in Sources */,
 				1489857D12EE2CFF003D4751 /* UIApplication.m in Sources */,
 				1489858112EE2CFF003D4751 /* UIBarButtonItem.m in Sources */,
 				1489858312EE2CFF003D4751 /* UIBarItem.m in Sources */,
@@ -1212,7 +1197,6 @@
 				148985BA12EE2CFF003D4751 /* UIPasteboard.m in Sources */,
 				148985BC12EE2CFF003D4751 /* UIPinchGestureRecognizer.m in Sources */,
 				148985BE12EE2CFF003D4751 /* UIPopoverController.m in Sources */,
-				148985C012EE2CFF003D4751 /* UIProgressView.m in Sources */,
 				148985C212EE2CFF003D4751 /* UIResponder.m in Sources */,
 				148985C412EE2CFF003D4751 /* UIResponderAppKitIntegration.m in Sources */,
 				148985C612EE2CFF003D4751 /* UIScreen.m in Sources */,

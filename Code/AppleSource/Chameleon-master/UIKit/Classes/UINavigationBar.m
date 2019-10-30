@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #import "UINavigationBar.h"
 #import "UIGraphics.h"
 #import "UIColor.h"
@@ -91,7 +62,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
 + (UIView *)_viewWithBarButtonItem:(UIBarButtonItem *)item
 {
     if (!item) return nil;
-
+    
     if (item.customView) {
         [self _setBarButtonSize:item.customView];
         return item.customView;
@@ -156,15 +127,15 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
 {
     {
         NSMutableArray *previousViews = [[NSMutableArray alloc] init];
-
+        
         if (_leftView) [previousViews addObject:_leftView];
         if (_centerView) [previousViews addObject:_centerView];
         if (_rightView) [previousViews addObject:_rightView];
-
+        
         if (animated) {
             CGFloat moveCenterBy = self.bounds.size.width - ((_centerView)? _centerView.frame.origin.x : 0);
             CGFloat moveLeftBy = self.bounds.size.width * 0.33f;
-
+            
             if (transition == _UINavigationBarTransitionPush) {
                 moveCenterBy *= -1.f;
                 moveLeftBy *= -1.f;
@@ -174,20 +145,20 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
                                   delay:kAnimationDuration * 0.2
                                 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionNone
                              animations:^(void) {
-                                 _leftView.alpha = 0;
-                                 _rightView.alpha = 0;
-                                 _centerView.alpha = 0;
-                             }
+                _leftView.alpha = 0;
+                _rightView.alpha = 0;
+                _centerView.alpha = 0;
+            }
                              completion:NULL];
             
             [UIView animateWithDuration:kAnimationDuration
                              animations:^(void) {
-                                 if (_leftView)     _leftView.frame = CGRectOffset(_leftView.frame, moveLeftBy, 0);
-                                 if (_centerView)   _centerView.frame = CGRectOffset(_centerView.frame, moveCenterBy, 0);
-                             }
+                if (_leftView)     _leftView.frame = CGRectOffset(_leftView.frame, moveLeftBy, 0);
+                if (_centerView)   _centerView.frame = CGRectOffset(_centerView.frame, moveCenterBy, 0);
+            }
                              completion:^(BOOL finished) {
-                                 [previousViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-                             }];
+                [previousViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+            }];
         } else {
             [previousViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         }
@@ -206,16 +177,16 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
         } else {
             _leftView = [[self class] _viewWithBarButtonItem:topItem.leftBarButtonItem];
         }
-
+        
         if (_leftView) {
             leftFrame = _leftView.frame;
             leftFrame.origin = CGPointMake(kButtonEdgeInsets.left, kButtonEdgeInsets.top);
             _leftView.frame = leftFrame;
             [self addSubview:_leftView];
         }
-
+        
         _rightView = [[self class] _viewWithBarButtonItem:topItem.rightBarButtonItem];
-
+        
         if (_rightView) {
             _rightView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
             rightFrame = _rightView.frame;
@@ -226,7 +197,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
         }
         
         _centerView = topItem.titleView;
-
+        
         if (!_centerView) {
             UILabel *titleLabel = [[UILabel alloc] init];
             titleLabel.text = topItem.title;
@@ -236,12 +207,12 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
             titleLabel.font = [UIFont boldSystemFontOfSize:14];
             _centerView = titleLabel;
         }
-
+        
         CGRect centerFrame = CGRectZero;
         
         centerFrame.origin.y = kButtonEdgeInsets.top;
         centerFrame.size.height = kMaxButtonHeight;
-
+        
         if (_leftView && _rightView) {
             centerFrame.origin.x = CGRectGetMaxX(leftFrame) + kButtonEdgeInsets.left;
             centerFrame.size.width = CGRectGetMinX(rightFrame) - kButtonEdgeInsets.right - centerFrame.origin.x;
@@ -259,40 +230,40 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
         _centerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _centerView.frame = centerFrame;
         [self insertSubview:_centerView atIndex:0];
-
+        
         if (animated) {
             CGFloat moveCenterBy = self.bounds.size.width - ((_centerView)? _centerView.frame.origin.x : 0);
             CGFloat moveLeftBy = self.bounds.size.width * 0.33f;
-
+            
             if (transition == _UINavigationBarTransitionPush) {
                 moveLeftBy *= -1.f;
                 moveCenterBy *= -1.f;
             }
-
+            
             CGRect destinationLeftFrame = _leftView? _leftView.frame : CGRectZero;
             CGRect destinationCenterFrame = _centerView? _centerView.frame : CGRectZero;
             
             if (_leftView)      _leftView.frame = CGRectOffset(_leftView.frame, -moveLeftBy, 0);
             if (_centerView)    _centerView.frame = CGRectOffset(_centerView.frame, -moveCenterBy, 0);
-
+            
             _leftView.alpha = 0;
             _rightView.alpha = 0;
             _centerView.alpha = 0;
             
             [UIView animateWithDuration:kAnimationDuration
                              animations:^(void) {
-                                 _leftView.frame = destinationLeftFrame;
-                                 _centerView.frame = destinationCenterFrame;
-                             }];
-
+                _leftView.frame = destinationLeftFrame;
+                _centerView.frame = destinationCenterFrame;
+            }];
+            
             [UIView animateWithDuration:kAnimationDuration * 0.8
                                   delay:kAnimationDuration * 0.2
                                 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionNone
                              animations:^(void) {
-                                 _leftView.alpha = 1;
-                                 _rightView.alpha = 1;
-                                 _centerView.alpha = 1;
-                             }
+                _leftView.alpha = 1;
+                _rightView.alpha = 1;
+                _centerView.alpha = 1;
+            }
                              completion:NULL];
         }
     } else {
@@ -325,11 +296,11 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
 - (void)pushNavigationItem:(UINavigationItem *)item animated:(BOOL)animated
 {
     BOOL shouldPush = YES;
-
+    
     if (_delegateHas.shouldPushItem) {
         shouldPush = [_delegate navigationBar:self shouldPushItem:item];
     }
-
+    
     if (shouldPush) {
         [_navStack addObject:item];
         [self _setViewsWithTransition:_UINavigationBarTransitionPush animated:animated];
@@ -346,7 +317,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
     
     if (previousItem) {
         BOOL shouldPop = YES;
-
+        
         if (_delegateHas.shouldPopItem) {
             shouldPop = [_delegate navigationBar:self shouldPopItem:previousItem];
         }

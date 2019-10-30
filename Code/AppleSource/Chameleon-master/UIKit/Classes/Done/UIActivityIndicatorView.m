@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #import "UIActivityIndicatorView.h"
 #import "UIImage.h"
 #import "UIGraphics.h"
@@ -45,6 +16,7 @@ static CGSize UIActivityIndicatorViewStyleSize(UIActivityIndicatorViewStyle styl
     }
 }
 
+// 根据 style 的不同, 生成不同的菊花照片.
 static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle style, UIColor *toothColor, NSInteger frame, NSInteger numberOfFrames, CGFloat scale)
 {
     const CGSize frameSize = UIActivityIndicatorViewStyleSize(style);
@@ -94,7 +66,7 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
 {
     CGRect frame = CGRectZero;
     frame.size = UIActivityIndicatorViewStyleSize(style);
-    
+    // 固定大小.
     if ((self=[super initWithFrame:frame])) {
         _animating = NO;
         self.activityIndicatorViewStyle = style;
@@ -102,7 +74,6 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
         self.opaque = NO;
         self.contentMode = UIViewContentModeCenter;
     }
-
     return self;
 }
 
@@ -111,10 +82,10 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     if ((self = [self initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite])) {
         self.frame = frame;
     }
-
     return self;
 }
 
+// 根据自身的内容, 返回 size.
 - (CGSize)sizeThatFits:(CGSize)aSize
 {
     return UIActivityIndicatorViewStyleSize(self.activityIndicatorViewStyle);
@@ -126,7 +97,6 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
         if (_activityIndicatorViewStyle != style) {
             _activityIndicatorViewStyle = style;
             [self setNeedsDisplay];
-            
             if (_animating) {
                 [self startAnimating];	// this will reset the images in the animation if it was already animating
             }
@@ -161,6 +131,7 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     }
 }
 
+// 添加一个动画.
 - (void)_startAnimation
 {
     @synchronized (self) {
@@ -203,6 +174,7 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
     @synchronized (self) {
         _animating = YES;
         self.hidden = NO;
+        // 在主线程做 UI 更新
         [self performSelectorOnMainThread:@selector(_startAnimation) withObject:nil waitUntilDone:NO];
     }
 }
@@ -211,6 +183,7 @@ static UIImage *UIActivityIndicatorViewFrameImage(UIActivityIndicatorViewStyle s
 {
     @synchronized (self) {
         _animating = NO;
+        // 在主线程做 UI 更新
         [self performSelectorOnMainThread:@selector(_stopAnimation) withObject:nil waitUntilDone:NO];
     }
 }
