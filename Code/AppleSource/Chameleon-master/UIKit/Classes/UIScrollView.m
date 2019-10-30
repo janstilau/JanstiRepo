@@ -5,7 +5,6 @@
 #import "UIScrollViewAnimationScroll.h"
 #import "UIScrollViewAnimationDeceleration.h"
 #import "UIPanGestureRecognizer.h"
-#import "UIScrollWheelGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
 
 static const NSTimeInterval UIScrollViewAnimationDuration = 0.33;
@@ -36,7 +35,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
         unsigned scrollViewDidEndScrollingAnimation : 1;
         unsigned scrollViewWillBeginDecelerating : 1;
         unsigned scrollViewDidEndDecelerating : 1;
-    } _delegateCan;
+    } _delegateCan; // _delegateCan 是根据 delegate 的能力保存的, 也就是不用每次调用 respond 方法, 相当于对于 delegate 进行了缓存.
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -65,9 +64,6 @@ const float UIScrollViewDecelerationRateFast = 0.99;
         _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_gestureDidChange:)];
         [self addGestureRecognizer:_panGestureRecognizer];
 
-        _scrollWheelGestureRecognizer = [[UIScrollWheelGestureRecognizer alloc] initWithTarget:self action:@selector(_gestureDidChange:)];
-        [self addGestureRecognizer:_scrollWheelGestureRecognizer];
-
         _verticalScroller = [[UIScroller alloc] init];
         _verticalScroller.delegate = self;
         [self addSubview:_verticalScroller];
@@ -81,15 +77,9 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     return self;
 }
 
-- (void)dealloc
-{
-    _horizontalScroller.delegate = nil;
-    _verticalScroller.delegate = nil;
-    
-}
-
 - (void)setDelegate:(id)newDelegate
 {
+    // 在进行 delegate 的设置的时候, 对 delegate 的相应能力进行了管理.
     _delegate = newDelegate;
     _delegateCan.scrollViewDidScroll = [_delegate respondsToSelector:@selector(scrollViewDidScroll:)];
     _delegateCan.scrollViewWillBeginDragging = [_delegate respondsToSelector:@selector(scrollViewWillBeginDragging:)];
@@ -127,16 +117,19 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     [self setNeedsLayout];
 }
 
+// 属性验证, 范围验证.
 - (BOOL)_canScrollHorizontal
 {
     return self.scrollEnabled && (_contentSize.width > self.bounds.size.width);
 }
 
+// 属性验证, 范围验证.
 - (BOOL)_canScrollVertical
 {
     return self.scrollEnabled && (_contentSize.height > self.bounds.size.height);
 }
 
+// 更新滚动条的范围和具体的 offset 位置.
 - (void)_updateScrollers
 {
     _verticalScroller.contentSize = _contentSize.height;
@@ -148,41 +141,40 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     _horizontalScroller.hidden = !self._canScrollHorizontal;
 }
 
+// 所以, scrollView 的 scrollEnable 就是手势可不可以接受事件.
 - (void)setScrollEnabled:(BOOL)enabled
 {
     self.panGestureRecognizer.enabled = enabled;
-    self.scrollWheelGestureRecognizer.enabled = enabled;
     [self _updateScrollers];
     [self setNeedsLayout];
 }
 
 - (BOOL)isScrollEnabled
 {
-    return self.panGestureRecognizer.enabled || self.scrollWheelGestureRecognizer.enabled;
+    return self.panGestureRecognizer.enabled;
 }
 
 - (void)_cancelScrollAnimation
 {
     [_scrollTimer invalidate];
     _scrollTimer = nil;
-    
     _scrollAnimation = nil;
-    
     if (_delegateCan.scrollViewDidEndScrollingAnimation) {
         [_delegate scrollViewDidEndScrollingAnimation:self];
     }
-
     if (_decelerating) {
         _horizontalScroller.alwaysVisible = NO;
         _verticalScroller.alwaysVisible = NO;
         _decelerating = NO;
-        
         if (_delegateCan.scrollViewDidEndDecelerating) {
             [_delegate scrollViewDidEndDecelerating:self];
         }
     }
 }
 
+
+// 这里, 应该是根据 当前的 animation 的值, 进行 scrollView 的 contentOffset 的更改
+// animate 中会有 scrollView 的变化, 这里作者的 API 取名有点问题.
 - (void)_updateScrollAnimation
 {
     if ([_scrollAnimation animate]) {
@@ -190,41 +182,46 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     }
 }
 
+// 如果滚动需要减速停止的效果, 就加入一个 animation, 其实就是一个定时不断改变 scrollView 的位置. 当需要的时候, 比如重新开始滚动的时候, 需要将这个动画和相应的定时器移除.
 - (void)_setScrollAnimation:(UIScrollViewAnimation *)animation
 {
-    [self _cancelScrollAnimation];
+    [self _cancelScrollAnimation]; // 首先取消原来的动画.
     
     _scrollAnimation = animation;
 
     if (!_scrollTimer) {
-        _scrollTimer = [NSTimer scheduledTimerWithTimeInterval:1/(NSTimeInterval)UIScrollViewScrollAnimationFramesPerSecond target:self selector:@selector(_updateScrollAnimation) userInfo:nil repeats:YES];
+        _scrollTimer = [NSTimer scheduledTimerWithTimeInterval:1/(NSTimeInterval)UIScrollViewScrollAnimationFramesPerSecond
+                                                        target:self
+                                                      selector:@selector(_updateScrollAnimation)
+                                                      userInfo:nil repeats:YES];
     }
 }
 
-- (CGPoint)_confinedContentOffset:(CGPoint)contentOffset
+// 限制, offset 的范围, 在自己的可滚动的范围之内.
+- (CGPoint)_confinedContentOffset:(CGPoint)targetOffset
 {
     const CGRect scrollerBounds = UIEdgeInsetsInsetRect(self.bounds, _contentInset);
     
-    if ((_contentSize.width-contentOffset.x) < scrollerBounds.size.width) {
-        contentOffset.x = (_contentSize.width - scrollerBounds.size.width);
+    if ((_contentSize.width-targetOffset.x) < scrollerBounds.size.width) {
+        targetOffset.x = (_contentSize.width - scrollerBounds.size.width);
     }
     
-    if ((_contentSize.height-contentOffset.y) < scrollerBounds.size.height) {
-        contentOffset.y = (_contentSize.height - scrollerBounds.size.height);
+    if ((_contentSize.height-targetOffset.y) < scrollerBounds.size.height) {
+        targetOffset.y = (_contentSize.height - scrollerBounds.size.height);
     }
     
-    contentOffset.x = MAX(contentOffset.x,0);
-    contentOffset.y = MAX(contentOffset.y,0);
+    targetOffset.x = MAX(targetOffset.x,0);
+    targetOffset.y = MAX(targetOffset.y,0);
     
     if (_contentSize.width <= scrollerBounds.size.width) {
-        contentOffset.x = 0;
+        targetOffset.x = 0;
     }
     
     if (_contentSize.height <= scrollerBounds.size.height) {
-        contentOffset.y = 0;
+        targetOffset.y = 0;
     }
     
-    return contentOffset;
+    return targetOffset;
 }
 
 - (void)_setRestrainedContentOffset:(CGPoint)offset
@@ -248,13 +245,14 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     self.contentOffset = [self _confinedContentOffset:_contentOffset];
 }
 
+
+// layoutSubview 仅仅管理两个滚动条的位置.
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     
     const CGRect bounds = self.bounds;
     const CGFloat scrollerSize = UIScrollerWidthForBoundsSize(bounds.size);
-    
     _verticalScroller.frame = CGRectMake(bounds.origin.x+bounds.size.width-scrollerSize-_scrollIndicatorInsets.right,bounds.origin.y+_scrollIndicatorInsets.top,scrollerSize,bounds.size.height-_scrollIndicatorInsets.top-_scrollIndicatorInsets.bottom);
     _horizontalScroller.frame = CGRectMake(bounds.origin.x+_scrollIndicatorInsets.left,bounds.origin.y+bounds.size.height-scrollerSize-_scrollIndicatorInsets.bottom,bounds.size.width-_scrollIndicatorInsets.left-_scrollIndicatorInsets.right,scrollerSize);
 }
@@ -265,6 +263,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     [self _confineContent];
 }
 
+// 每次进行子 View 的管理, 都要把滚动条往上提.
 - (void)_bringScrollersToFront
 {
     [super bringSubviewToFront:_horizontalScroller];
@@ -289,6 +288,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     [self _bringScrollersToFront];
 }
 
+// 这里, 没有明确的说明, 为什么 bounds 的改变可以造成 scrollView 的改变.
 - (void)_updateBounds
 {
     CGRect bounds = self.bounds;
@@ -319,9 +319,8 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     } else {
         _contentOffset.x = roundf(theOffset.x);
         _contentOffset.y = roundf(theOffset.y);
-
         [self _updateBounds];
-
+        // 在这里, 进行了 scrollViewDidScroll 的调用.
         if (_delegateCan.scrollViewDidScroll) {
             [_delegate scrollViewDidScroll:self];
         }
@@ -333,6 +332,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     [self setContentOffset:theOffset animated:NO];
 }
 
+// contentInset, 间接影响了 offset 的取值.
 - (void)setContentInset:(UIEdgeInsets)contentInset
 {
     if (!UIEdgeInsetsEqualToEdgeInsets(contentInset, _contentInset)) {
@@ -355,6 +355,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     }
 }
 
+// 滚动条其实是占据了下方, 右方的所有区域, 只不过, 根据 contentOffset 更新小黑块的位置, 这在 WM的 progressView 中进行了体现.
 - (void)flashScrollIndicators
 {
     [_horizontalScroller flash];
@@ -429,16 +430,14 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     }
 }
 
+// _dragging 这个状态, 是根据 panGesture 的手势不同阶段, 进行值的改变.
 - (void)_beginDragging
 {
     if (!_dragging) {
         _dragging = YES;
-
         _horizontalScroller.alwaysVisible = YES;
         _verticalScroller.alwaysVisible = YES;
-        
         [self _cancelScrollAnimation];
-
         if (_delegateCan.scrollViewWillBeginDragging) {
             [_delegate scrollViewWillBeginDragging:self];
         }
@@ -449,7 +448,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
 {
     if (_dragging) {
         _dragging = NO;
-        
+        // 渐渐取消演示的动画, 封装到了各个 animation 的子类里面.
         UIScrollViewAnimation *decelerationAnimation = _pagingEnabled? [self _pageSnapAnimation] : [self _decelerationAnimationWithVelocity:velocity];
 
         if (_delegateCan.scrollViewDidEndDragging) {
@@ -502,6 +501,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
             
             [self _setRestrainedContentOffset:proposedOffset];
         } else {
+            // 如果没有弹性, 那么直接设置 offset.
             [self setContentOffset:confinedOffset];
         }
     }
@@ -509,83 +509,17 @@ const float UIScrollViewDecelerationRateFast = 0.99;
 
 - (void)_gestureDidChange:(UIGestureRecognizer *)gesture
 {
-    // the scrolling gestures are broken into two components due to the somewhat fundamental differences
-    // in how they are handled by the system. The UIPanGestureRecognizer will only track scrolling gestures
-    // that come from actual touch scroller devices. This does *not* include old fashioned mouse wheels.
-    // the non-standard UIScrollWheelGestureRecognizer is a discrete recognizer which only responds to
-    // non-gesture scroll events such as those from non-touch devices. HOWEVER the system sends momentum
-    // scroll events *after* the touch gesture has ended which allows for us to distinguish the difference
-    // here between actual touch gestures and the momentum gestures and thus feed them into the playing
-    // deceleration animation as we receive them so that we can preserve the system's proper feel for that.
-
-    // Also important to note is that with a legacy scroll device, each movement of the wheel is going to
-    // trigger a beginDrag, dragged, endDragged sequence. I believe that's an acceptable compromise however
-    // it might cause some potentially strange behavior in client code that is not expecting such rapid
-    // state changes along these lines.
-    
-    // Another note is that only touch-based panning gestures will trigger calls to _dragBy: which means
-    // that only touch devices can possibly pull the content outside of the scroll view's bounds while
-    // active. An old fashioned wheel will not be able to do that and its scroll events are confined to
-    // the bounds of the scroll view.
-    
-    // There are some semi-legacy devices like the magic mouse which 10.6 doesn't seem to consider a true
-    // touch device, so it doesn't send the gestureBegin/ended stuff that's used to recognize such things
-    // but it *will* send momentum events. This means that those devices on 10.6 won't give you the feeling
-    // of being able to grab and pull your content away from the bounds like a proper touch trackpad will.
-    // As of 10.7 it appears Apple fixed this and they do actually send the proper gesture events, so on
-    // 10.7 the magic mouse should end up acting like any other touch input device as far as we're concerned.
-    
-    // Momentum scrolling doesn't work terribly well with how the paging stuff is now handled. Something
-    // could be improved there. I'm not sure if the paging animation should just pretend it's longer to
-    // kind of "mask" the OS' momentum events, or if a flag should be set, or if it should work so that
-    // even in paging mode the deceleration and stuff happens like usual and it only snaps to the correct
-    // page *after* the usual deceleration is done. I can't decide what might be best, but since we
-    // don't use paging mode in Twitterrific at the moment, I'm not suffeciently motivated to worry about it. :)
-    
-    if (gesture == _panGestureRecognizer) {
-        if (_panGestureRecognizer.state == UIGestureRecognizerStateBegan) {
-            [self _beginDragging];
-        } else if (_panGestureRecognizer.state == UIGestureRecognizerStateChanged) {
-            [self _dragBy:[_panGestureRecognizer translationInView:self]];
-            [_panGestureRecognizer setTranslation:CGPointZero inView:self];
-        } else if (_panGestureRecognizer.state == UIGestureRecognizerStateEnded) {
-            [self _endDraggingWithDecelerationVelocity:[_panGestureRecognizer velocityInView:self]];
-        }
-    } else if (gesture == _scrollWheelGestureRecognizer) {
-        if (_scrollWheelGestureRecognizer.state == UIGestureRecognizerStateRecognized) {
-            const CGPoint delta = [_scrollWheelGestureRecognizer translationInView:self];
-
-            if (_decelerating) {
-                // note that we might be "decelerating" but actually just snapping to a page boundary in paging mode,
-                // so we need to verify if we can actually send this message to the current animation or not.
-                // if we can't, then we'll just eat the scroll event and let the animation finish instead.
-                // additional note: the reason this is done this way at all is so that the system's momentum
-                // messages can be preserved perfectly rather than trying to emulate them myself. this results
-                // in a better feeling end product even if the bouncing at the edges isn't quite entirely right.
-                // see notes in UIScrollViewAnimationDeceleration.m for more.
-                
-                // updated note: this used to be guarded by respondsToSelector: but I have instead added a blank
-                // implementation of -momentumScrollBy: to UIScrollAnimation's base class. If a specific animation
-                // cannot deal with a momentum scroll, then it will be ignored.
-                [_scrollAnimation momentumScrollBy:delta];
-            } else {
-                CGPoint offset = self.contentOffset;
-                offset.x += delta.x;
-                offset.y += delta.y;
-                offset = [self _confinedContentOffset:offset];
-                
-                if (!CGPointEqualToPoint(offset, _contentOffset)) {
-                    [self _beginDragging];
-                    self.contentOffset = offset;
-                    [self _endDraggingWithDecelerationVelocity:CGPointZero];
-                }
-                    
-                [self _quickFlashScrollIndicators];
-            }
-        }
+    if (_panGestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        [self _beginDragging];
+    } else if (_panGestureRecognizer.state == UIGestureRecognizerStateChanged) {
+        [self _dragBy:[_panGestureRecognizer translationInView:self]];
+        [_panGestureRecognizer setTranslation:CGPointZero inView:self];
+    } else if (_panGestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        [self _endDraggingWithDecelerationVelocity:[_panGestureRecognizer velocityInView:self]];
     }
 }
 
+// 滚动条的代理方法.
 - (void)_UIScrollerDidBeginDragging:(UIScroller *)scroller withEvent:(UIEvent *)event
 {
     [self _beginDragging];
@@ -657,6 +591,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     return zoomingView? zoomingView.transform.a : 1.f;
 }
 
+// 在这里表现的很清楚, 当进行 zoom 的时候, contentSize 就是根据 zoomView 的frame 进行的设置.
 - (void)setZoomScale:(float)scale animated:(BOOL)animated
 {
     UIView *zoomingView = [self _zoomingView];
@@ -683,11 +618,6 @@ const float UIScrollViewDecelerationRateFast = 0.99;
 
 - (void)zoomToRect:(CGRect)rect animated:(BOOL)animated
 {
-}
-
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"<%@: %p; frame = (%.0f %.0f; %.0f %.0f); clipsToBounds = %@; layer = %@; contentOffset = {%.0f, %.0f}>", [self className], self, self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height, (self.clipsToBounds ? @"YES" : @"NO"), self.layer, self.contentOffset.x, self.contentOffset.y];
 }
 
 // after some experimentation, it seems UIScrollView blocks or captures the touch events that fall through and
