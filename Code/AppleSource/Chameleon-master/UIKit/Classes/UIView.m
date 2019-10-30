@@ -804,6 +804,7 @@ static BOOL _animationsEnabled = YES;
 
 - (void)_layoutSubviews
 {
+    // 内部方法, 做了一些对于其他地方的通知操作, 然后调用 layoutSubviews
     const BOOL wereEnabled = [UIView areAnimationsEnabled];
     [UIView setAnimationsEnabled:NO];
     [self _UIAppearanceUpdateIfNeeded];

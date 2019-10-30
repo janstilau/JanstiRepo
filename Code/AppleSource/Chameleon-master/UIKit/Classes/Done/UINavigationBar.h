@@ -16,11 +16,6 @@
 - (void)pushNavigationItem:(UINavigationItem *)item animated:(BOOL)animated;
 - (UINavigationItem *)popNavigationItemAnimated:(BOOL)animated;
 
-- (void)setBackgroundImage:(UIImage *)backgroundImage forBarMetrics:(UIBarMetrics)barMetrics;
-- (UIImage *)backgroundImageForBarMetrics:(UIBarMetrics)barMetrics;
-- (void)setTitleVerticalPositionAdjustment:(CGFloat)adjustment forBarMetrics:(UIBarMetrics)barMetrics;
-- (CGFloat)titleVerticalPositionAdjustmentForBarMetrics:(UIBarMetrics)barMetrics;
-
 @property (nonatomic, assign) id delegate;
 @property (nonatomic, copy) NSArray *items;
 @property (nonatomic, assign) UIBarStyle barStyle;

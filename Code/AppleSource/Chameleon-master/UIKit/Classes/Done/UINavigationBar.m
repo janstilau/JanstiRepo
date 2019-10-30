@@ -22,8 +22,9 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
     _UINavigationBarTransitionPop,
 };
 
+// 一个 navgationBar 在一个 NavigationController 里面, 然后根据各个 item 展示自己的内容.
 @implementation UINavigationBar {
-    NSMutableArray *_navStack;
+    NSMutableArray<UINavigationItem*>*_itemStack;
     
     UIView *_leftView;
     UIView *_centerView;
@@ -85,7 +86,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
     frame.size.height = kBarHeight;
     
     if ((self=[super initWithFrame:frame])) {
-        _navStack = [[NSMutableArray alloc] init];
+        _itemStack = [[NSMutableArray alloc] init];
         _barStyle = UIBarStyleDefault;
         _tintColor = [UIColor colorWithRed:21/255.f green:21/255.f blue:25/255.f alpha:1];
         
@@ -94,28 +95,14 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
     return self;
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)setDelegate:(id)newDelegate
-{
-    _delegate = newDelegate;
-    _delegateHas.shouldPushItem = [_delegate respondsToSelector:@selector(navigationBar:shouldPushItem:)];
-    _delegateHas.didPushItem = [_delegate respondsToSelector:@selector(navigationBar:didPushItem:)];
-    _delegateHas.shouldPopItem = [_delegate respondsToSelector:@selector(navigationBar:shouldPopItem:)];
-    _delegateHas.didPopItem = [_delegate respondsToSelector:@selector(navigationBar:didPopItem:)];
-}
-
 - (UINavigationItem *)topItem
 {
-    return [_navStack lastObject];
+    return [_itemStack lastObject];
 }
 
 - (UINavigationItem *)backItem
 {
-    return ([_navStack count] <= 1)? nil : [_navStack objectAtIndex:[_navStack count]-2];
+    return ([_itemStack count] <= 1)? nil : [_itemStack objectAtIndex:[_itemStack count]-2];
 }
 
 - (void)_backButtonTapped:(id)sender
@@ -123,9 +110,17 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
     [self popNavigationItemAnimated:YES];
 }
 
-- (void)_setViewsWithTransition:(_UINavigationBarTransition)transition animated:(BOOL)animated
+
+// 核心方法.
+
+/**
+ 从这个方法可以清楚, navigationBar 就是是一个 根据栈管理自己的 left, right, centerView 的顶部试图.  这个顶部视图, 根据 UINavigationItem 存储了一些数据信息, 这些信息, 可以用来控制 navigationBar 的展示.
+ */
+
+- (void)updateViewsWithTransition:(_UINavigationBarTransition)transition animated:(BOOL)animated
 {
     {
+        // 当前在 navgationBar 上面的 view 的动态消失.
         NSMutableArray *previousViews = [[NSMutableArray alloc] init];
         
         if (_leftView) [previousViews addObject:_leftView];
@@ -150,7 +145,6 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
                 _centerView.alpha = 0;
             }
                              completion:NULL];
-            
             [UIView animateWithDuration:kAnimationDuration
                              animations:^(void) {
                 if (_leftView)     _leftView.frame = CGRectOffset(_leftView.frame, moveLeftBy, 0);
@@ -172,12 +166,16 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
         CGRect leftFrame = CGRectZero;
         CGRect rightFrame = CGRectZero;
         
+        // 根据 item 里面的属性, 创建 leftView
+        // 这里, backBarButtonItem 指的是, item 在 top 下方的时候, 自己想要在 back 的位置展示的信息.
+        // leftBarButtonItem 指的是, 当 item 在 top 的时候, 自己的 back 应该显示的信息. 都算是自定义的一个切口.
         if (backItem) {
             _leftView = [[self class] _backButtonWithTitle:backItem.backBarButtonItem.title ?: backItem.title];
         } else {
             _leftView = [[self class] _viewWithBarButtonItem:topItem.leftBarButtonItem];
         }
         
+        // 自身添加 leftView.
         if (_leftView) {
             leftFrame = _leftView.frame;
             leftFrame.origin = CGPointMake(kButtonEdgeInsets.left, kButtonEdgeInsets.top);
@@ -185,6 +183,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
             [self addSubview:_leftView];
         }
         
+        //
         _rightView = [[self class] _viewWithBarButtonItem:topItem.rightBarButtonItem];
         
         if (_rightView) {
@@ -281,10 +280,10 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
 
 - (void)setItems:(NSArray *)items animated:(BOOL)animated
 {
-    if (![_navStack isEqualToArray:items]) {
-        [_navStack removeAllObjects];
-        [_navStack addObjectsFromArray:items];
-        [self _setViewsWithTransition:_UINavigationBarTransitionPush animated:animated];
+    if (![_itemStack isEqualToArray:items]) {
+        [_itemStack removeAllObjects];
+        [_itemStack addObjectsFromArray:items];
+        [self updateViewsWithTransition:_UINavigationBarTransitionPush animated:animated];
     }
 }
 
@@ -293,23 +292,30 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
     [self setItems:items animated:NO];
 }
 
+
+/**
+ Pushes the given navigation item onto the navigation bar's stack and updates the UI.
+ */
 - (void)pushNavigationItem:(UINavigationItem *)item animated:(BOOL)animated
 {
     BOOL shouldPush = YES;
-    
     if (_delegateHas.shouldPushItem) {
         shouldPush = [_delegate navigationBar:self shouldPushItem:item];
     }
     
     if (shouldPush) {
-        [_navStack addObject:item];
-        [self _setViewsWithTransition:_UINavigationBarTransitionPush animated:animated];
+        [_itemStack addObject:item];
+        [self updateViewsWithTransition:_UINavigationBarTransitionPush animated:animated];
         
         if (_delegateHas.didPushItem) {
             [_delegate navigationBar:self didPushItem:item];
         }
     }
 }
+
+/**
+ Pops the top item from the navigation bar's stack and updates the UI.
+ */
 
 - (UINavigationItem *)popNavigationItemAnimated:(BOOL)animated
 {
@@ -323,8 +329,8 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
         }
         
         if (shouldPop) {
-            [_navStack removeObject:previousItem];
-            [self _setViewsWithTransition:_UINavigationBarTransitionPop animated:animated];
+            [_itemStack removeObject:previousItem];
+            [self updateViewsWithTransition:_UINavigationBarTransitionPop animated:animated];
             
             if (_delegateHas.didPopItem) {
                 [_delegate navigationBar:self didPopItem:previousItem];
@@ -344,40 +350,18 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
         // next step is to add animation support-- that will require changing _setViewsWithTransition:animated:
         //  such that it won't perform any coordinate translations, only fade in/out
         
-        [self _setViewsWithTransition:_UINavigationBarTransitionNone animated:NO];
+        [self updateViewsWithTransition:_UINavigationBarTransitionNone animated:NO];
     }
 }
 
 - (void)drawRect:(CGRect)rect
 {
     const CGRect bounds = self.bounds;
-    
-    // I kind of suspect that the "right" thing to do is to draw the background and then paint over it with the tintColor doing some kind of blending
-    // so that it actually doesn "tint" the image instead of define it. That'd probably work better with the bottom line coloring and stuff, too, but
-    // for now hardcoding stuff works well enough.
-    
     [self.tintColor setFill];
     UIRectFill(bounds);
 }
 
-- (void)setBackgroundImage:(UIImage *)backgroundImage forBarMetrics:(UIBarMetrics)barMetrics
-{
-}
-
-- (UIImage *)backgroundImageForBarMetrics:(UIBarMetrics)barMetrics
-{
-    return nil;
-}
-
-- (void)setTitleVerticalPositionAdjustment:(CGFloat)adjustment forBarMetrics:(UIBarMetrics)barMetrics
-{
-}
-
-- (CGFloat)titleVerticalPositionAdjustmentForBarMetrics:(UIBarMetrics)barMetrics
-{
-    return 0;
-}
-
+// 固定的长宽
 - (CGSize)sizeThatFits:(CGSize)size
 {
     size.height = kBarHeight;

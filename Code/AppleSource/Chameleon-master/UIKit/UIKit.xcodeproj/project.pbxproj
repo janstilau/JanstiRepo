@@ -573,6 +573,12 @@
 		06055A26236825C200EE2744 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				1489852B12EE2CFE003D4751 /* UINavigationController.h */,
+				1489852C12EE2CFE003D4751 /* UINavigationController.m */,
+				1489852912EE2CFE003D4751 /* UINavigationBar.h */,
+				1489852A12EE2CFE003D4751 /* UINavigationBar.m */,
+				1489852D12EE2CFE003D4751 /* UINavigationItem.h */,
+				1489852E12EE2CFE003D4751 /* UINavigationItem.m */,
 				148984F212EE2CFE003D4751 /* UIActivityIndicatorView.h */,
 				148984F312EE2CFE003D4751 /* UIActivityIndicatorView.m */,
 				1489854F12EE2CFE003D4751 /* UITableView.h */,
@@ -746,12 +752,6 @@
 				1489852612EE2CFE003D4751 /* UIMenuController.m */,
 				1489852712EE2CFE003D4751 /* UIMenuItem.h */,
 				1489852812EE2CFE003D4751 /* UIMenuItem.m */,
-				1489852912EE2CFE003D4751 /* UINavigationBar.h */,
-				1489852A12EE2CFE003D4751 /* UINavigationBar.m */,
-				1489852B12EE2CFE003D4751 /* UINavigationController.h */,
-				1489852C12EE2CFE003D4751 /* UINavigationController.m */,
-				1489852D12EE2CFE003D4751 /* UINavigationItem.h */,
-				1489852E12EE2CFE003D4751 /* UINavigationItem.m */,
 				1489852F12EE2CFE003D4751 /* UINibLoading.h */,
 				1489853012EE2CFE003D4751 /* UINibLoading.m */,
 				1489853312EE2CFE003D4751 /* UIPasteboard.h */,

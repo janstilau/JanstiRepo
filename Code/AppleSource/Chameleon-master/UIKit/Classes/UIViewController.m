@@ -149,6 +149,7 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     return (UIInterfaceOrientation)UIDeviceOrientationPortrait;
 }
 
+// 根据自己的 title, 生成一个 UINavigationItem
 - (UINavigationItem *)navigationItem
 {
     if (!_navigationItem) {
