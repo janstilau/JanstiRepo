@@ -14,7 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- Provides extensions for `NSKeyedUnarchiver`.
+ 简单的对于归档解档的封装, 增加了捕获异常的能力.
  */
 @interface NSKeyedUnarchiver (YYAdd)
 

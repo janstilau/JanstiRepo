@@ -18,7 +18,7 @@ YYSYNTH_DUMMY_CLASS(NSObject_YYAddForKVO)
 
 
 static const int block_key;
-
+// 通过这样的一个中间类, 很好的管理了回调.
 @interface _YYNSObjectKVOBlockTarget : NSObject
 
 @property (nonatomic, copy) void (^block)(__weak id obj, id oldVal, id newVal);

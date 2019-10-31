@@ -15,7 +15,8 @@
 
 YYSYNTH_DUMMY_CLASS(NSNotificationCenter_YYAdd)
 
-
+// 并没有特别的东西, 仅仅是对于方法的一个封装而已. 对于传值, 还是使用的 NSDictionary, 对于有着特定范围的传值来说, 用 NSDictionary 是无可厚非的.
+// 但是如果使用范围比较广, NSDictionary 这种 keyValue 对应的策略, 是会让使用者感到不舒服的.
 @implementation NSNotificationCenter (YYAdd)
 
 - (void)postNotificationOnMainThread:(NSNotification *)notification {

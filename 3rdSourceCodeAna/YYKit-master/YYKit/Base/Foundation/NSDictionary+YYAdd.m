@@ -164,8 +164,11 @@ YYSYNTH_DUMMY_CLASS(NSDictionary_YYAdd)
 
 @implementation NSDictionary (YYAdd)
 
+#pragma mark - PlistRelated
+
 + (NSDictionary *)dictionaryWithPlistData:(NSData *)plist {
     if (!plist) return nil;
+    // 虽然我们知道, NSDictionary 就是 Plist 这种 XML 进行的存储, 但是 NSDictionary 没有暴露相关的方法. 所以, 这里是提供了一种 NSDictionary 和 data 之间转化的方法.
     NSDictionary *dictionary = [NSPropertyListSerialization propertyListWithData:plist options:NSPropertyListImmutable format:NULL error:NULL];
     if ([dictionary isKindOfClass:[NSDictionary class]]) return dictionary;
     return nil;
@@ -187,12 +190,11 @@ YYSYNTH_DUMMY_CLASS(NSDictionary_YYAdd)
     return nil;
 }
 
-// 由于 oc 的语言特性, 这里可以不传闭包, 而是用字符串化进行传递.
 - (NSArray *)allKeysSorted {
     return [[self allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 }
 
-// 优秀.
+// 一个简单的封装, 因为想要有序的值的集合这种要求其实是很常见的, 所以, 这里作者专门抽取到了分类中来了.
 - (NSArray *)allValuesSortedByKeys {
     NSArray *sortedKeys = [self allKeysSorted];
     NSMutableArray *arr = [[NSMutableArray alloc] init];
@@ -202,6 +204,7 @@ YYSYNTH_DUMMY_CLASS(NSDictionary_YYAdd)
     return [arr copy];
 }
 
+// 原来 NSDictionary 不提供这样的方法啊
 - (BOOL)containsObjectForKey:(id)key {
     if (!key) return NO;
     return self[key] != nil;
@@ -216,6 +219,7 @@ YYSYNTH_DUMMY_CLASS(NSDictionary_YYAdd)
     return [dic copy];
 }
 
+// 简单的调动NSJSONSerialization
 - (NSString *)jsonStringEncoded {
     if ([NSJSONSerialization isValidJSONObject:self]) {
         NSError *error;
@@ -226,6 +230,7 @@ YYSYNTH_DUMMY_CLASS(NSDictionary_YYAdd)
     return nil;
 }
 
+// NSJSONWritingPrettyPrinted 在 NSJSONSerialization 仅仅是在输出的时候, 控制了一下每行在不同层级下的空格数量.
 - (NSString *)jsonPrettyStringEncoded {
     if ([NSJSONSerialization isValidJSONObject:self]) {
         NSError *error;
@@ -236,6 +241,7 @@ YYSYNTH_DUMMY_CLASS(NSDictionary_YYAdd)
     return nil;
 }
 
+// 这里, 涉及到了 XML 的解析操作.
 + (NSDictionary *)dictionaryWithXML:(id)xml {
     _YYXMLDictionaryParser *parser = nil;
     if ([xml isKindOfClass:[NSString class]]) {
@@ -256,7 +262,6 @@ static NSNumber *NSNumberFromID(id value) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         dot = [NSCharacterSet characterSetWithRange:NSMakeRange('.', 1)];
-        // 找出 dot 来.
     });
     if (!value || value == [NSNull null]) return nil;
     if ([value isKindOfClass:[NSNumber class]]) return value;
@@ -282,7 +287,8 @@ if ([value isKindOfClass:[NSNumber class]]) return ((NSNumber *)value)._type_;  
 if ([value isKindOfClass:[NSString class]]) return NSNumberFromID(value)._type_; \
 return def;
 
-// 优秀. 为什么要有一个 defaultValue, 其实在HLTool 里面经常出现这种情况, 如果没有某个值的话, 就用默认值. 这样的写法统一, 要比每次都在业务类里面专门进行一次逻辑处理好的多.
+// 很多的业务场景, 都有取值, 取不到就默认值的情况. 所以, 这里进行了默认值的处理.
+// 良好的宏, 可以减少大量的代码量.
 - (BOOL)boolValueForKey:(NSString *)key default:(BOOL)def {
     RETURN_VALUE(boolValue);
 }

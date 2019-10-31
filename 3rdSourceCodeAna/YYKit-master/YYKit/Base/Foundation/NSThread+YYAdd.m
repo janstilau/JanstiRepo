@@ -39,6 +39,7 @@ static inline void YYAutoreleasePoolPush() {
         /*
          do not retain pool on push,
          but release on pop to avoid memory analyze warning
+         这里, 是因为内存的问题, 没有选择用 NSMuatbleArray.
          */
         CFArrayCallBacks callbacks = {0};
         callbacks.retain = PoolStackRetainCallBack;
@@ -58,6 +59,8 @@ static inline void YYAutoreleasePoolPop() {
     [poolStack removeLastObject]; // pop
 }
 
+
+// 模仿系统的 Runloop 的自动释放池添加和回收..
 static void YYRunLoopAutoreleasePoolObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info) {
     switch (activity) {
         case kCFRunLoopEntry: {
@@ -73,7 +76,7 @@ static void YYRunLoopAutoreleasePoolObserverCallBack(CFRunLoopObserverRef observ
         default: break;
     }
 }
-// 监听 runloop 的状态切换.
+// 监听 runloop 的状态切换. 在 Runloop 的不同切口节点, 增加回调.
 static void YYRunloopAutoreleasePoolSetup() {
     CFRunLoopRef runloop = CFRunLoopGetCurrent();
 
@@ -96,14 +99,13 @@ static void YYRunloopAutoreleasePoolSetup() {
 
 @implementation NSThread (YYAdd)
 
-// 主线程的 runloop 会自动开启, 但是子线程的应该是没有开启.
-
 + (void)addAutoreleasePoolToCurrentRunloop {
     if ([NSThread isMainThread]) return; // The main thread already has autorelease pool.
     NSThread *thread = [self currentThread];
     if (!thread) return;
-    if (thread.threadDictionary[YYNSThreadAutoleasePoolKey]) return; // already added
-    YYRunloopAutoreleasePoolSetup(); // threadDictionary 这个东西, 就是碰过专门开放给开发者放东西用的.
+    // thread.threadDictionary 做了线程相关的一个容器, 可以放置任何的东西.
+    if (thread.threadDictionary[YYNSThreadAutoleasePoolKey]) return;
+    YYRunloopAutoreleasePoolSetup();
     thread.threadDictionary[YYNSThreadAutoleasePoolKey] = YYNSThreadAutoleasePoolKey; // mark the state
 }
 

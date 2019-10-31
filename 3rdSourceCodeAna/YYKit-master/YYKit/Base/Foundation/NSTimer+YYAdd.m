@@ -17,8 +17,8 @@ YYSYNTH_DUMMY_CLASS(NSTimer_YYAdd)
 
 @implementation NSTimer (YYAdd)
 
-// 这里是52个方法里面的技巧. 主要就是为了 NSTimer 类对象不怕循环引用.
-// 这个方法, 是所有的 timer 都会进行触发的, 具体执行什么样的回调, 根据 timeInfo 里面的信息, 这里, timeInfo 直接就是 block, 作者连封装到内部的意愿都没有.
+// Timer 添加到 Runloop 的时候, 本身一定是被强引用的, runloop 是一个滞后的操作机制, 一定要保证在执行对应的切口的回调的时候, 回调的容器是有效的. 所以, timer 其实不太需要在类中被强引用.
+// 这里, 作者的思路是, timer 的 target 引用 NSTimer 的类对象, 然后类对象调用一个方法. 而这个方法, 真正执行的方法, 其实是在参数中进行传递的.
 + (void)_yy_ExecBlock:(NSTimer *)timer {
     if ([timer userInfo]) {
         void (^block)(NSTimer *timer) = (void (^)(NSTimer *timer))[timer userInfo];

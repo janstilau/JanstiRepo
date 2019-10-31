@@ -18,6 +18,7 @@ YYSYNTH_DUMMY_CLASS(NSArray_YYAdd)
 
 @implementation NSArray (YYAdd)
 
+// 同样的, NSArray 没有暴露出来和 NSData 的转换关系, 它的内部就是根据 NSPropertyListSerialization 做的转化.
 + (NSArray *)arrayWithPlistData:(NSData *)plist {
     if (!plist) return nil;
     NSArray *array = [NSPropertyListSerialization propertyListWithData:plist options:NSPropertyListImmutable format:NULL error:NULL];
@@ -41,7 +42,8 @@ YYSYNTH_DUMMY_CLASS(NSArray_YYAdd)
     return nil;
 }
 
-- (id)randomObject { // 优秀.
+// 生成一个随机数, 然后取余之后返回对应 index 的值.
+- (id)randomObject {
     if (self.count) {
         return self[arc4random_uniform((u_int32_t)self.count)];
     }
@@ -52,6 +54,7 @@ YYSYNTH_DUMMY_CLASS(NSArray_YYAdd)
     return index < self.count ? self[index] : nil;
 }
 
+// 通过 NSJSONSerialization 进行.
 - (NSString *)jsonStringEncoded {
     if ([NSJSONSerialization isValidJSONObject:self]) {
         NSError *error = nil;
@@ -78,6 +81,8 @@ YYSYNTH_DUMMY_CLASS(NSArray_YYAdd)
 
 @implementation NSMutableArray (YYAdd)
 
+
+// Plist 的转化, plist 是一种特殊的 XML 文件格式, 解析的细节包装在了 NSPropertyListSerialization 这个类中.
 + (NSMutableArray *)arrayWithPlistData:(NSData *)plist {
     if (!plist) return nil;
     NSMutableArray *array = [NSPropertyListSerialization propertyListWithData:plist options:NSPropertyListMutableContainersAndLeaves format:NULL error:NULL];
@@ -107,6 +112,8 @@ YYSYNTH_DUMMY_CLASS(NSArray_YYAdd)
 
 #pragma clang diagnostic pop
 
+// 对于双向数组的模拟, 不过底层的数据结构还是一个单一的数组.
+// C++ 的 dqueue 是真正的可以实现双向数组.
 
 - (id)popFirstObject {
     id obj = nil;
@@ -162,7 +169,7 @@ YYSYNTH_DUMMY_CLASS(NSArray_YYAdd)
     }
 }
 
-// 优秀
+// 遍历随机 exchanged.
 - (void)shuffle {
     for (NSUInteger i = self.count; i > 1; i--) {
         [self exchangeObjectAtIndex:(i - 1)
