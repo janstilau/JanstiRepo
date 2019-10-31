@@ -168,7 +168,7 @@ static NSString *kSSSegmentedControlEnabledKey = @"enabled";
             textRect = UIEdgeInsetsInsetRect(textRect, _textEdgeInsets);
             
             if (enabled) {
-                [_textShadowColor set];                
+                [_textShadowColor set];
                 [string drawInRect:CGRectOffset(textRect, _textShadowOffset.width, _textShadowOffset.height) withFont:_font lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];
                 [_textColor set];
             } else {
@@ -332,7 +332,7 @@ static NSString *kSSSegmentedControlEnabledKey = @"enabled";
     
     _selectedSegmentIndex = index;
     [self setNeedsDisplay];
-//    [self sendActionsForControlEvents:UIControlEventValueChanged];
+    //    [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
 
