@@ -118,8 +118,6 @@
 		148985B212EE2CFF003D4751 /* UINavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489852C12EE2CFE003D4751 /* UINavigationController.m */; };
 		148985B312EE2CFF003D4751 /* UINavigationItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489852D12EE2CFE003D4751 /* UINavigationItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985B412EE2CFF003D4751 /* UINavigationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489852E12EE2CFE003D4751 /* UINavigationItem.m */; };
-		148985B512EE2CFF003D4751 /* UINibLoading.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489852F12EE2CFE003D4751 /* UINibLoading.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		148985B612EE2CFF003D4751 /* UINibLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489853012EE2CFE003D4751 /* UINibLoading.m */; };
 		148985B912EE2CFF003D4751 /* UIPasteboard.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489853312EE2CFE003D4751 /* UIPasteboard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985BA12EE2CFF003D4751 /* UIPasteboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489853412EE2CFE003D4751 /* UIPasteboard.m */; };
 		148985BB12EE2CFF003D4751 /* UIPinchGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489853512EE2CFE003D4751 /* UIPinchGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -134,8 +132,6 @@
 		148985C612EE2CFF003D4751 /* UIScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489854012EE2CFE003D4751 /* UIScreen.m */; };
 		148985C712EE2CFF003D4751 /* UIScreenAppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489854112EE2CFE003D4751 /* UIScreenAppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985C812EE2CFF003D4751 /* UIScreenAppKitIntegration.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489854212EE2CFE003D4751 /* UIScreenAppKitIntegration.m */; };
-		148985C912EE2CFF003D4751 /* UIScreenMode.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489854312EE2CFE003D4751 /* UIScreenMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		148985CA12EE2CFF003D4751 /* UIScreenMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489854412EE2CFE003D4751 /* UIScreenMode.m */; };
 		148985CB12EE2CFF003D4751 /* UIScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489854512EE2CFE003D4751 /* UIScrollView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985CC12EE2CFF003D4751 /* UIScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489854612EE2CFE003D4751 /* UIScrollView.m */; };
 		148985CD12EE2CFF003D4751 /* UISplitViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489854712EE2CFE003D4751 /* UISplitViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -161,12 +157,8 @@
 		148985E512EE2CFF003D4751 /* UITouch.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489855F12EE2CFE003D4751 /* UITouch.m */; };
 		148985E612EE2CFF003D4751 /* UIView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489856012EE2CFE003D4751 /* UIView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985E712EE2CFF003D4751 /* UIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489856112EE2CFE003D4751 /* UIView.m */; };
-		148985E812EE2CFF003D4751 /* UIViewAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489856212EE2CFE003D4751 /* UIViewAdapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		148985E912EE2CFF003D4751 /* UIViewAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489856312EE2CFE003D4751 /* UIViewAdapter.m */; };
 		148985EA12EE2CFF003D4751 /* UIViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489856412EE2CFE003D4751 /* UIViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985EB12EE2CFF003D4751 /* UIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489856512EE2CFE003D4751 /* UIViewController.m */; };
-		148985EC12EE2CFF003D4751 /* UIWebView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489856612EE2CFE003D4751 /* UIWebView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		148985ED12EE2CFF003D4751 /* UIWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489856712EE2CFE003D4751 /* UIWebView.m */; };
 		148985EE12EE2CFF003D4751 /* UIWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489856812EE2CFE003D4751 /* UIWindow.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985EF12EE2CFF003D4751 /* UIWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489856912EE2CFE003D4751 /* UIWindow.m */; };
 		1489860212EE2D9F003D4751 /* UIRotationGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489860012EE2D9F003D4751 /* UIRotationGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -388,8 +380,6 @@
 		1489852C12EE2CFE003D4751 /* UINavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINavigationController.m; sourceTree = "<group>"; };
 		1489852D12EE2CFE003D4751 /* UINavigationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINavigationItem.h; sourceTree = "<group>"; };
 		1489852E12EE2CFE003D4751 /* UINavigationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINavigationItem.m; sourceTree = "<group>"; };
-		1489852F12EE2CFE003D4751 /* UINibLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UINibLoading.h; sourceTree = "<group>"; };
-		1489853012EE2CFE003D4751 /* UINibLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UINibLoading.m; sourceTree = "<group>"; };
 		1489853312EE2CFE003D4751 /* UIPasteboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPasteboard.h; sourceTree = "<group>"; };
 		1489853412EE2CFE003D4751 /* UIPasteboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPasteboard.m; sourceTree = "<group>"; };
 		1489853512EE2CFE003D4751 /* UIPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPinchGestureRecognizer.h; sourceTree = "<group>"; };
@@ -404,8 +394,6 @@
 		1489854012EE2CFE003D4751 /* UIScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIScreen.m; sourceTree = "<group>"; };
 		1489854112EE2CFE003D4751 /* UIScreenAppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIScreenAppKitIntegration.h; sourceTree = "<group>"; };
 		1489854212EE2CFE003D4751 /* UIScreenAppKitIntegration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIScreenAppKitIntegration.m; sourceTree = "<group>"; };
-		1489854312EE2CFE003D4751 /* UIScreenMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIScreenMode.h; sourceTree = "<group>"; };
-		1489854412EE2CFE003D4751 /* UIScreenMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIScreenMode.m; sourceTree = "<group>"; };
 		1489854512EE2CFE003D4751 /* UIScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIScrollView.h; sourceTree = "<group>"; };
 		1489854612EE2CFE003D4751 /* UIScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIScrollView.m; sourceTree = "<group>"; };
 		1489854712EE2CFE003D4751 /* UISplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UISplitViewController.h; sourceTree = "<group>"; };
@@ -431,12 +419,8 @@
 		1489855F12EE2CFE003D4751 /* UITouch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITouch.m; sourceTree = "<group>"; };
 		1489856012EE2CFE003D4751 /* UIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIView.h; sourceTree = "<group>"; };
 		1489856112EE2CFE003D4751 /* UIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIView.m; sourceTree = "<group>"; };
-		1489856212EE2CFE003D4751 /* UIViewAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewAdapter.h; sourceTree = "<group>"; };
-		1489856312EE2CFE003D4751 /* UIViewAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewAdapter.m; sourceTree = "<group>"; };
 		1489856412EE2CFE003D4751 /* UIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewController.h; sourceTree = "<group>"; };
 		1489856512EE2CFE003D4751 /* UIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewController.m; sourceTree = "<group>"; };
-		1489856612EE2CFE003D4751 /* UIWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIWebView.h; sourceTree = "<group>"; };
-		1489856712EE2CFE003D4751 /* UIWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIWebView.m; sourceTree = "<group>"; };
 		1489856812EE2CFE003D4751 /* UIWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIWindow.h; sourceTree = "<group>"; };
 		1489856912EE2CFE003D4751 /* UIWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIWindow.m; sourceTree = "<group>"; };
 		1489860012EE2D9F003D4751 /* UIRotationGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIRotationGestureRecognizer.h; sourceTree = "<group>"; };
@@ -573,6 +557,8 @@
 		06055A26236825C200EE2744 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				7806ED28133A1D7500273BC6 /* UITabBar.h */,
+				7806ED29133A1D7500273BC6 /* UITabBar.m */,
 				1489855912EE2CFE003D4751 /* UITextInputTraits.h */,
 				1489852B12EE2CFE003D4751 /* UINavigationController.h */,
 				1489852C12EE2CFE003D4751 /* UINavigationController.m */,
@@ -598,8 +584,18 @@
 				1489852212EE2CFE003D4751 /* UILabel.m */,
 				1489850512EE2CFE003D4751 /* UIControl.h */,
 				1489850612EE2CFE003D4751 /* UIControl.m */,
+				1489854D12EE2CFE003D4751 /* UITabBarController.h */,
+				1489854E12EE2CFE003D4751 /* UITabBarController.m */,
 				1489853B12EE2CFE003D4751 /* UIResponder.h */,
 				1489853C12EE2CFE003D4751 /* UIResponder.m */,
+				78CB48D7133AB91E008636DA /* UISlider.h */,
+				78CB48D8133AB920008636DA /* UISlider.m */,
+				1489855C12EE2CFE003D4751 /* UIToolbar.h */,
+				1489855D12EE2CFE003D4751 /* UIToolbar.m */,
+				1489856412EE2CFE003D4751 /* UIViewController.h */,
+				1489856512EE2CFE003D4751 /* UIViewController.m */,
+				1489851812EE2CFE003D4751 /* UIImagePickerController.h */,
+				1489851912EE2CFE003D4751 /* UIImagePickerController.m */,
 			);
 			path = Done;
 			sourceTree = "<group>";
@@ -742,8 +738,6 @@
 				1489851612EE2CFE003D4751 /* UIImage.m */,
 				1489851712EE2CFE003D4751 /* UIImageAppKitIntegration.h */,
 				14E20662156FE88D0040349D /* UIImageAppKitIntegration.m */,
-				1489851812EE2CFE003D4751 /* UIImagePickerController.h */,
-				1489851912EE2CFE003D4751 /* UIImagePickerController.m */,
 				537472D3133ADD4B00EBD5EA /* UIInterface.h */,
 				537472D4133ADD4B00EBD5EA /* UIInterface.m */,
 				1489851E12EE2CFE003D4751 /* UIKit.h */,
@@ -753,8 +747,6 @@
 				1489852612EE2CFE003D4751 /* UIMenuController.m */,
 				1489852712EE2CFE003D4751 /* UIMenuItem.h */,
 				1489852812EE2CFE003D4751 /* UIMenuItem.m */,
-				1489852F12EE2CFE003D4751 /* UINibLoading.h */,
-				1489853012EE2CFE003D4751 /* UINibLoading.m */,
 				1489853312EE2CFE003D4751 /* UIPasteboard.h */,
 				1489853412EE2CFE003D4751 /* UIPasteboard.m */,
 				1489853712EE2CFE003D4751 /* UIPopoverController.h */,
@@ -765,22 +757,14 @@
 				1489854012EE2CFE003D4751 /* UIScreen.m */,
 				1489854112EE2CFE003D4751 /* UIScreenAppKitIntegration.h */,
 				1489854212EE2CFE003D4751 /* UIScreenAppKitIntegration.m */,
-				1489854312EE2CFE003D4751 /* UIScreenMode.h */,
-				1489854412EE2CFE003D4751 /* UIScreenMode.m */,
 				78D533DB133A9434006F17CA /* UISearchDisplayController.h */,
 				78D533DC133A9434006F17CA /* UISearchDisplayController.m */,
 				78CB48B2133AA8AF008636DA /* UISegmentedControl.h */,
 				78CB48B3133AA8AF008636DA /* UISegmentedControl.m */,
-				78CB48D7133AB91E008636DA /* UISlider.h */,
-				78CB48D8133AB920008636DA /* UISlider.m */,
 				1489854712EE2CFE003D4751 /* UISplitViewController.h */,
 				1489854812EE2CFE003D4751 /* UISplitViewController.m */,
 				1489854912EE2CFE003D4751 /* UIStringDrawing.h */,
 				1489854A12EE2CFE003D4751 /* UIStringDrawing.m */,
-				7806ED28133A1D7500273BC6 /* UITabBar.h */,
-				7806ED29133A1D7500273BC6 /* UITabBar.m */,
-				1489854D12EE2CFE003D4751 /* UITabBarController.h */,
-				1489854E12EE2CFE003D4751 /* UITabBarController.m */,
 				78CB48AE133AA535008636DA /* UITabBarItem.h */,
 				78CB48AF133AA535008636DA /* UITabBarItem.m */,
 				1489855712EE2CFE003D4751 /* UITextField.h */,
@@ -789,17 +773,9 @@
 				14FE4940171C9989009C7794 /* UITextInput.m */,
 				1489855A12EE2CFE003D4751 /* UITextView.h */,
 				1489855B12EE2CFE003D4751 /* UITextView.m */,
-				1489855D12EE2CFE003D4751 /* UIToolbar.m */,
 				1489856012EE2CFE003D4751 /* UIView.h */,
 				1489856112EE2CFE003D4751 /* UIView.m */,
-				1489855C12EE2CFE003D4751 /* UIToolbar.h */,
-				1489856212EE2CFE003D4751 /* UIViewAdapter.h */,
-				1489856312EE2CFE003D4751 /* UIViewAdapter.m */,
-				1489856412EE2CFE003D4751 /* UIViewController.h */,
-				1489856512EE2CFE003D4751 /* UIViewController.m */,
 				1434E8651770F4570023F2C5 /* UIViewControllerAppKitIntegration.h */,
-				1489856612EE2CFE003D4751 /* UIWebView.h */,
-				1489856712EE2CFE003D4751 /* UIWebView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -994,7 +970,6 @@
 				14FDE99C153C9A1800A2D499 /* UIAppearance.h in Headers */,
 				38615C78133A81B900841EEA /* UIFont+UIPrivate.h in Headers */,
 				148985B312EE2CFF003D4751 /* UINavigationItem.h in Headers */,
-				148985B512EE2CFF003D4751 /* UINibLoading.h in Headers */,
 				148985B912EE2CFF003D4751 /* UIPasteboard.h in Headers */,
 				148985A212EE2CFF003D4751 /* UIKey.h in Headers */,
 				148985BB12EE2CFF003D4751 /* UIPinchGestureRecognizer.h in Headers */,
@@ -1003,7 +978,6 @@
 				148985C312EE2CFF003D4751 /* UIResponderAppKitIntegration.h in Headers */,
 				148985C512EE2CFF003D4751 /* UIScreen.h in Headers */,
 				148985C712EE2CFF003D4751 /* UIScreenAppKitIntegration.h in Headers */,
-				148985C912EE2CFF003D4751 /* UIScreenMode.h in Headers */,
 				148985CB12EE2CFF003D4751 /* UIScrollView.h in Headers */,
 				148985CD12EE2CFF003D4751 /* UISplitViewController.h in Headers */,
 				148985CF12EE2CFF003D4751 /* UIStringDrawing.h in Headers */,
@@ -1017,9 +991,7 @@
 				148985E212EE2CFF003D4751 /* UIToolbar.h in Headers */,
 				148985E412EE2CFF003D4751 /* UITouch.h in Headers */,
 				148985E612EE2CFF003D4751 /* UIView.h in Headers */,
-				148985E812EE2CFF003D4751 /* UIViewAdapter.h in Headers */,
 				148985EA12EE2CFF003D4751 /* UIViewController.h in Headers */,
-				148985EC12EE2CFF003D4751 /* UIWebView.h in Headers */,
 				148985EE12EE2CFF003D4751 /* UIWindow.h in Headers */,
 				1489860212EE2D9F003D4751 /* UIRotationGestureRecognizer.h in Headers */,
 				1489860612EE2DBD003D4751 /* UISwipeGestureRecognizer.h in Headers */,
@@ -1193,7 +1165,6 @@
 				148985B012EE2CFF003D4751 /* UINavigationBar.m in Sources */,
 				148985B212EE2CFF003D4751 /* UINavigationController.m in Sources */,
 				148985B412EE2CFF003D4751 /* UINavigationItem.m in Sources */,
-				148985B612EE2CFF003D4751 /* UINibLoading.m in Sources */,
 				148985BA12EE2CFF003D4751 /* UIPasteboard.m in Sources */,
 				148985BC12EE2CFF003D4751 /* UIPinchGestureRecognizer.m in Sources */,
 				148985BE12EE2CFF003D4751 /* UIPopoverController.m in Sources */,
@@ -1201,7 +1172,6 @@
 				148985C412EE2CFF003D4751 /* UIResponderAppKitIntegration.m in Sources */,
 				148985C612EE2CFF003D4751 /* UIScreen.m in Sources */,
 				148985C812EE2CFF003D4751 /* UIScreenAppKitIntegration.m in Sources */,
-				148985CA12EE2CFF003D4751 /* UIScreenMode.m in Sources */,
 				148985CC12EE2CFF003D4751 /* UIScrollView.m in Sources */,
 				148985CE12EE2CFF003D4751 /* UISplitViewController.m in Sources */,
 				148985D012EE2CFF003D4751 /* UIStringDrawing.m in Sources */,
@@ -1215,9 +1185,7 @@
 				148985E312EE2CFF003D4751 /* UIToolbar.m in Sources */,
 				148985E512EE2CFF003D4751 /* UITouch.m in Sources */,
 				148985E712EE2CFF003D4751 /* UIView.m in Sources */,
-				148985E912EE2CFF003D4751 /* UIViewAdapter.m in Sources */,
 				148985EB12EE2CFF003D4751 /* UIViewController.m in Sources */,
-				148985ED12EE2CFF003D4751 /* UIWebView.m in Sources */,
 				148985EF12EE2CFF003D4751 /* UIWindow.m in Sources */,
 				1489860312EE2D9F003D4751 /* UIRotationGestureRecognizer.m in Sources */,
 				1489860712EE2DBD003D4751 /* UISwipeGestureRecognizer.m in Sources */,

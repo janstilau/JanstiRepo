@@ -21,6 +21,8 @@ typedef NS_ENUM(NSInteger, UIModalTransitionStyle) {
 
 @class UINavigationItem, UINavigationController, UIBarButtonItem, UISplitViewController;
 
+// VC 主要做的是, 管理 View 的切换的工作. 他更多像是一个数据类, 程序通过控制这个数据类, 来进行它所存储的 view 的各种显示, 隐藏的管理. 在不同的操作下, 调用不同的动画, 将 view 添加或者删除在当前的屏幕上. 也就是说, 有了 VC 的这一层中介, 可以将 View 的转换过程进行封装.
+
 @interface UIViewController : UIResponder
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle;	// won't load a nib no matter what you do!
 

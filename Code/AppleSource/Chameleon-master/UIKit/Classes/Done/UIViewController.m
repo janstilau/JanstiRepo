@@ -19,13 +19,13 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 
 @implementation UIViewController {
     UIView *_view;
-    UINavigationItem *_navigationItem;
+    UINavigationItem *_navigationItem; // 和 navigationBar 配套使用的数据.
     NSMutableArray *_childViewControllers;
     __unsafe_unretained UIViewController *_parentViewController;
     
     NSUInteger _appearanceTransitionStack;
     BOOL _appearanceTransitionIsAnimated;
-    BOOL _viewIsAppearing;
+    BOOL _viewIsAppearing; // 这个值, 用来记录当前 view 的显示状态.
     _UIViewControllerParentageTransition _parentageTransition;
 }
 
@@ -36,9 +36,8 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
 {
+    // 在 init 的时候, 就注册了 didReceiveMemoryWarning 的回调了.
     if ((self=[super init])) {
-        _contentSizeForViewInPopover = CGSizeMake(320,1100);
-        _hidesBottomBarWhenPushed = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:[UIApplication sharedApplication]];
     }
     return self;
@@ -50,16 +49,7 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     [_view _setViewController:nil];
 }
 
-- (NSString *)nibName
-{
-    return nil;
-}
-
-- (NSBundle *)nibBundle
-{
-    return nil;
-}
-
+// view 的 nextResponder 会是它的 VC, 而 VC 的又是它的 view 的 superView. 所以, 算是在 view 的响应链条中, 插入了一个 VC.
 - (UIResponder *)nextResponder
 {
     return _view.superview;
@@ -80,6 +70,7 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     return (_view != nil);
 }
 
+// view 的懒加载过程.
 - (UIView *)view
 {
     if ([self isViewLoaded]) {
@@ -87,8 +78,8 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     } else {
         const BOOL wereEnabled = [UIView areAnimationsEnabled];
         [UIView setAnimationsEnabled:NO];
-        [self loadView];
-        [self viewDidLoad];
+        [self loadView]; // 加载 View 的过程, 默认是生成一个 UIView, 不通过 nib 进行加载.
+        [self viewDidLoad]; // 然后调用 viewDidLoad.
         [UIView setAnimationsEnabled:wereEnabled];
         return _view;
     }
@@ -146,7 +137,7 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 
 - (UIInterfaceOrientation)interfaceOrientation
 {
-    return (UIInterfaceOrientation)UIDeviceOrientationPortrait;
+    return (UIInterfaceOrientation)1;
 }
 
 // 根据自己的 title, 生成一个 UINavigationItem
@@ -203,6 +194,7 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 {
 }
 
+// 虽然这两个方法没有实现, 但是我们知道, VC 的 view 其实就在 View 的 hieracry 中. VC 更多的是将 View 相关的一系列工作转移到一个固定的类中.
 - (void)presentModalViewController:(UIViewController *)modalViewController animated:(BOOL)animated
 {
     /*
@@ -276,6 +268,7 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 {
 }
 
+// 遍历 parentVC.
 - (id)_nearestParentViewControllerThatIsKindOf:(Class)c
 {
     UIViewController *controller = _parentViewController;
@@ -296,16 +289,6 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 {
     return [self _nearestParentViewControllerThatIsKindOf:[UISplitViewController class]];
 }
-
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"<%@: %p; title = %@; view = %@>", [self className], self, self.title, self.view];
-}
-
-
-
-
-
 
 - (BOOL)isMovingFromParentViewController
 {
@@ -359,6 +342,7 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     return nil;
 }
 
+// copy, 不给外界操作内部数据的机会.
 - (NSArray *)childViewControllers
 {
     return [_childViewControllers copy];
@@ -378,15 +362,14 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     childController->_parentViewController = self;
 }
 
+// 通过一个专门的有含义的方法, 维护数据的统一.
 - (void)_removeFromParentViewController
 {
     if (_parentViewController) {
         [_parentViewController->_childViewControllers removeObject:self];
-        
         if ([_parentViewController->_childViewControllers count] == 0) {
             _parentViewController->_childViewControllers = nil;
         }
-        
         _parentViewController = nil;
     }
 }
@@ -396,7 +379,7 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     NSAssert(self.parentViewController != nil, @"view controller has no parent");
 
     [self _removeFromParentViewController];
-    [self didMoveToParentViewController:nil];
+    [self didMoveToParentViewController:nil]; // 暴露给外界的一个借口.
 }
 
 - (BOOL)shouldAutomaticallyForwardRotationMethods
@@ -409,14 +392,20 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     return YES;
 }
 
-- (void)transitionFromViewController:(UIViewController *)fromViewController toViewController:(UIViewController *)toViewController duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
+// 这是一个 ContainerVC 的事情, 如果它要更改 subView 的显示, 就要用调用这个方法. 不过我们经常不调用这个方法, 而是直接 removeFromSuperView, addSubView 了. 在这个方法的内部, 会有着 beginAppearance, endAppearance 的调用, 管理着 View 的添加的删除. 伴随着一个转场动画.
+- (void)transitionFromViewController:(UIViewController *)fromViewController
+                    toViewController:(UIViewController *)toViewController
+                            duration:(NSTimeInterval)duration
+                             options:(UIViewAnimationOptions)options
+                          animations:(void (^)(void))animations
+                          completion:(void (^)(BOOL finished))completion
 {
-    NSAssert(fromViewController.parentViewController == toViewController.parentViewController && fromViewController.parentViewController != nil, @"child controllers must share common parent");
     const BOOL animated = (duration > 0);
     
-    [fromViewController beginAppearanceTransition:NO animated:animated];
-    [toViewController beginAppearanceTransition:YES animated:animated];
-
+    [fromViewController beginAppearanceTransition:NO animated:animated]; // 通知开始转场 添加
+    [toViewController beginAppearanceTransition:YES animated:animated]; // 通知开始转场 去除
+    
+    // 一个简单的转场动画
     [UIView transitionWithView:self.view
                       duration:duration
                        options:options
@@ -424,28 +413,25 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
                         if (animations) {
                             animations();
                         }
-                        
                         [self.view addSubview:toViewController.view];
                     }
                     completion:^(BOOL finished) {
                         if (completion) {
                             completion(finished);
                         }
-
                         [fromViewController.view removeFromSuperview];
-
-                        [fromViewController endAppearanceTransition];
-                        [toViewController endAppearanceTransition];
+                        [fromViewController endAppearanceTransition]; // 通知结束转场
+                        [toViewController endAppearanceTransition]; // 通知结束转场.
                     }];
 }
 
 - (void)beginAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated
 {
-    if (_appearanceTransitionStack == 0 || (_appearanceTransitionStack > 0 && _viewIsAppearing != isAppearing)) {
+    if (_appearanceTransitionStack == 0 ||
+        (_appearanceTransitionStack > 0 && _viewIsAppearing != isAppearing)) {
         _appearanceTransitionStack = 1;
         _appearanceTransitionIsAnimated = animated;
         _viewIsAppearing = isAppearing;
-        
         if ([self shouldAutomaticallyForwardAppearanceMethods]) {
             for (UIViewController *child in self.childViewControllers) {
                 if ([child isViewLoaded] && [child.view isDescendantOfView:self.view]) {
@@ -453,12 +439,12 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
                 }
             }
         }
-
+        
         if (_viewIsAppearing) {
             [self view];    // ensures the view is loaded before viewWillAppear: happens
-            [self viewWillAppear:_appearanceTransitionIsAnimated];
+            [self viewWillAppear:_appearanceTransitionIsAnimated]; // 在这里, 通知 VC.
         } else {
-            [self viewWillDisappear:_appearanceTransitionIsAnimated];
+            [self viewWillDisappear:_appearanceTransitionIsAnimated]; // 在这里, 通知 VC.
         }
     } else {
         _appearanceTransitionStack++;
@@ -469,16 +455,14 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 {
     if (_appearanceTransitionStack > 0) {
         _appearanceTransitionStack--;
-        
         if (_appearanceTransitionStack == 0) {
             if ([self shouldAutomaticallyForwardAppearanceMethods]) {
                 for (UIViewController *child in self.childViewControllers) {
                     [child endAppearanceTransition];
                 }
             }
-
             if (_viewIsAppearing) {
-                [self viewDidAppear:_appearanceTransitionIsAnimated];
+                [self viewDidAppear:_appearanceTransitionIsAnimated]; // 在这里, 通知 VC.
             } else {
                 [self viewDidDisappear:_appearanceTransitionIsAnimated];
             }

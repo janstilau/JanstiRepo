@@ -224,6 +224,7 @@
         [self _setNeedsDeferredUpdate];
     }
     // 更新 navigationBar 的视图.
+    // viewControler 会提供自己在 navigationBar 中的状态. 如果自定义了, 就用自定义的数据, 否则的化, 就是当前 VC 的 title 组成一个数据.
     [_navigationBar pushNavigationItem:viewController.navigationItem animated:animated];
 }
 

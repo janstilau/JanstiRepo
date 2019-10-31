@@ -113,6 +113,8 @@ static BOOL _animationsEnabled = YES;
     return subviews;
 }
 
+// 由于 VC 可能不是通过 transitionFromViewController 进行变化. 这里, view 会在添加到 windwon 的时候, 主动调用一次.
+
 - (void)_willMoveFromWindow:(UIWindow *)fromWindow toWindow:(UIWindow *)toWindow
 {
     if (fromWindow != toWindow) {
@@ -126,7 +128,8 @@ static BOOL _animationsEnabled = YES;
             [subview _willMoveFromWindow:fromWindow toWindow:toWindow];
         }
         
-        [[self _viewController] beginAppearanceTransition:(toWindow != nil) animated:NO]; // 在这里, 会通知 vc 的 ViewWillAppear 和 ViewDidAppear.
+        [[self _viewController] beginAppearanceTransition:(toWindow != nil) animated:NO];
+        // 在这里, 会通知 vc 的 ViewWillAppear 和 ViewDidAppear.
     }
 }
 

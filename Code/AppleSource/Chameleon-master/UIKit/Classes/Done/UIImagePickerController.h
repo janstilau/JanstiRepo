@@ -27,11 +27,29 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIScrollView.h"
+#import "UINavigationController.h"
 
-@class NSView, UINSClipView;
+typedef NS_ENUM(NSInteger, UIImagePickerControllerSourceType) {
+    UIImagePickerControllerSourceTypePhotoLibrary,
+    UIImagePickerControllerSourceTypeCamera,
+    UIImagePickerControllerSourceTypeSavedPhotosAlbum
+};
 
-@interface UIViewAdapter : UIScrollView
-- (id)initWithNSView:(NSView *)aNSView;
-@property (nonatomic, strong) NSView *NSView;
+extern NSString *const UIImagePickerControllerMediaType;
+extern NSString *const UIImagePickerControllerOriginalImage;
+extern NSString *const UIImagePickerControllerEditedImage;
+extern NSString *const UIImagePickerControllerCropRect;
+extern NSString *const UIImagePickerControllerMediaURL;
+
+@protocol UIImagePickerControllerDelegate <NSObject>
+@end
+// USImagePicker 做了更好的封装和设计.
+@interface UIImagePickerController : UINavigationController
++ (NSArray *)availableMediaTypesForSourceType:(UIImagePickerControllerSourceType)sourceType;
++ (BOOL)isSourceTypeAvailable:(UIImagePickerControllerSourceType)sourceType;
+
+@property (nonatomic) UIImagePickerControllerSourceType sourceType;
+@property (nonatomic, assign) id <UINavigationControllerDelegate, UIImagePickerControllerDelegate> delegate;
+@property (nonatomic, copy) NSArray *mediaTypes;
+@property (nonatomic) BOOL allowsEditing;
 @end
