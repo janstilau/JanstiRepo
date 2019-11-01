@@ -113,6 +113,8 @@ static inline UIViewAnimationOptions UIViewAnimationOptionTransition(UIViewAnima
     }
 }
 
+
+// 在所有的 CAAnimation 都结束, 或者第一个 CAAnimation 开始的时候, 通知自己的 delegate animationDidStart, End
 - (void)notifyAnimationsDidStartIfNeeded
 {
     if (!_didStart) {
@@ -137,6 +139,8 @@ static inline UIViewAnimationOptions UIViewAnimationOptionTransition(UIViewAnima
     }
 }
 
+
+// 监听 CAAnimation的开始和结束.
 - (void)animationDidStart:(CAAnimation *)theAnimation
 {
     [self notifyAnimationsDidStartIfNeeded];
