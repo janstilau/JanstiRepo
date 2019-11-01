@@ -596,6 +596,8 @@
 				78CB48AF133AA535008636DA /* UITabBarItem.m */,
 				1489854712EE2CFE003D4751 /* UISplitViewController.h */,
 				1489854812EE2CFE003D4751 /* UISplitViewController.m */,
+				1489856012EE2CFE003D4751 /* UIView.h */,
+				1489856112EE2CFE003D4751 /* UIView.m */,
 			);
 			path = Done;
 			sourceTree = "<group>";
@@ -767,8 +769,6 @@
 				14FE4940171C9989009C7794 /* UITextInput.m */,
 				1489855A12EE2CFE003D4751 /* UITextView.h */,
 				1489855B12EE2CFE003D4751 /* UITextView.m */,
-				1489856012EE2CFE003D4751 /* UIView.h */,
-				1489856112EE2CFE003D4751 /* UIView.m */,
 				1434E8651770F4570023F2C5 /* UIViewControllerAppKitIntegration.h */,
 			);
 			path = Classes;
