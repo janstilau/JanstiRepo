@@ -108,11 +108,13 @@ static void URLInBlackListAdd(NSURL *url) {
 
 
 @implementation YYWebImageOperation
+// 这里, 将父类的三个值, 都进行了重新绑定.
 @synthesize executing = _executing;
 @synthesize finished = _finished;
 @synthesize cancelled = _cancelled;
 
 /// Network thread entry point.
+// 开启了这个线程的 runloop
 + (void)_networkThreadMain:(id)object {
     @autoreleasepool {
         [[NSThread currentThread] setName:@"com.ibireme.yykit.webimage.request"];
@@ -122,7 +124,7 @@ static void URLInBlackListAdd(NSURL *url) {
     }
 }
 
-/// Global image request network thread, used by NSURLConnection delegate.
+// 专门有一个线程, 做下载的工作.
 + (NSThread *)_networkThread {
     static NSThread *thread = nil;
     static dispatch_once_t onceToken;
@@ -378,6 +380,8 @@ static void URLInBlackListAdd(NSURL *url) {
 }
 
 #pragma mark - NSURLConnectionDelegate runs in operation thread
+
+// 作者完全又做了一次网络的解析工作.
 
 - (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection *)connection {
     return _shouldUseCredentialStorage;
@@ -674,6 +678,7 @@ static void URLInBlackListAdd(NSURL *url) {
         [_lock lock];
         self.started = YES;
         if ([self isCancelled]) {
+            // 在这个过程, runloop 会保持 self 的命.
             [self performSelector:@selector(_cancelOperation) onThread:[[self class] _networkThread] withObject:nil waitUntilDone:NO modes:@[NSDefaultRunLoopMode]];
             self.finished = YES;
         } else if ([self isReady] && ![self isFinished] && ![self isExecuting]) {

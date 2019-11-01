@@ -92,6 +92,10 @@ static int _YYWebImageHighlightedSetterKey;
                completion:completion];
 }
 
+
+// 这个函数, 或者 UIView 层级的工作是, 具体的 image 的赋值的过程.
+// 首先是内存中检测, 如果内存中进行了存储, 直接设置显示内容然后返回.
+// 然后是生成一个任务, 并且在组装任务的 progress 回调和 completion 回调. 在回调里面, 要检测当初的任务的 id 是否和现在最新的任务 id 是一致的, 不一致代表imageurl 进行了更新.
 - (void)setImageWithURL:(NSURL *)imageURL
             placeholder:(UIImage *)placeholder
                 options:(YYWebImageOptions)options
@@ -117,35 +121,41 @@ static int _YYWebImageHighlightedSetterKey;
             }
         }
         
-        if (!imageURL) {
+        if (!imageURL) { // imageUrl 数据失效.
             if (!(options & YYWebImageOptionIgnorePlaceHolder)) {
                 self.image = placeholder;
             }
             return;
         }
         
-        // get the image from memory as quickly as possible
+        // 首先尝试从内存中取值, 如果图片就在内存中, 直接执行回调然后返回.
         UIImage *imageFromMemory = nil;
-        if (manager.cache &&
+        if (manager.cache && // 如果使用了图片缓存.
             !(options & YYWebImageOptionUseNSURLCache) &&
             !(options & YYWebImageOptionRefreshImageCache)) {
+            // 读取内存中缓存的图片.
             imageFromMemory = [manager.cache getImageForKey:[manager cacheKeyForURL:imageURL] withType:YYImageCacheTypeMemory];
         }
-        if (imageFromMemory) {
+        if (imageFromMemory) { // 可以取得到内存的图片
             if (!(options & YYWebImageOptionAvoidSetImage)) {
+                // 赋值.
                 self.image = imageFromMemory;
             }
+            // 执行回调.
             if(completion) completion(imageFromMemory, imageURL, YYWebImageFromMemoryCacheFast, YYWebImageStageFinished, nil);
             return;
         }
         
+        // 设置占位图片.
         if (!(options & YYWebImageOptionIgnorePlaceHolder)) {
             self.image = placeholder;
         }
         
         __weak typeof(self) _self = self;
+        // 在子线程, 执行下载任务.
         dispatch_async([_YYWebImageSetter setterQueue], ^{
             YYWebImageProgressBlock _progress = nil;
+            // 如果传入了 progress 回调, 就生成相应的回调. 这里, 专门做一次线程的切换处理.
             if (progress) _progress = ^(NSInteger receivedSize, NSInteger expectedSize) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     progress(receivedSize, expectedSize);
@@ -157,23 +167,24 @@ static int _YYWebImageHighlightedSetterKey;
             YYWebImageCompletionBlock _completion = ^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
                 __strong typeof(_self) self = _self;
                 BOOL setImage = (stage == YYWebImageStageFinished || stage == YYWebImageStageProgress) && image && !(options & YYWebImageOptionAvoidSetImage);
+                // 在主线程执行操作.
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    BOOL sentinelChanged = weakSetter && weakSetter.sentinel != newSentinel;
+                    BOOL sentinelChanged = weakSetter && weakSetter.sentinel != newSentinel; // 如果当前图片的任务失效了, cancel了 或者 set 了新的 imageUrl
                     if (setImage && self && !sentinelChanged) {
                         BOOL showFade = ((options & YYWebImageOptionSetImageWithFadeAnimation) && !self.highlighted);
-                        if (showFade) {
+                        if (showFade) { // 如果有渐隐效果, 增加动画.
                             CATransition *transition = [CATransition animation];
                             transition.duration = stage == YYWebImageStageFinished ? _YYWebImageFadeTime : _YYWebImageProgressiveFadeTime;
                             transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
                             transition.type = kCATransitionFade;
                             [self.layer addAnimation:transition forKey:_YYWebImageFadeAnimationKey];
                         }
-                        self.image = image;
+                        self.image = image; // image 赋值.
                     }
                     if (completion) {
-                        if (sentinelChanged) {
+                        if (sentinelChanged) { // 如果任务失效了, completion 的回到传入相应状态
                             completion(nil, url, YYWebImageFromNone, YYWebImageStageCancelled, nil);
-                        } else {
+                        } else { // 传出现在的 状态.
                             completion(image, url, from, stage, error);
                         }
                     }

@@ -64,7 +64,7 @@ const NSTimeInterval _YYWebImageProgressiveFadeTime = 0.4;
     dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
     if (sentinel == _sentinel) {
         if (_operation) [_operation cancel];
-        _operation = operation;
+        _operation = operation; // 在这里, 进行了 opertaion 的强引用.
         sentinel = OSAtomicIncrement32(&_sentinel);
     } else {
         [operation cancel];
@@ -77,6 +77,7 @@ const NSTimeInterval _YYWebImageProgressiveFadeTime = 0.4;
     return [self cancelWithNewURL:nil];
 }
 
+// 取消之前的下载操作. 并返回当前的 operationID
 - (int32_t)cancelWithNewURL:(NSURL *)imageURL {
     int32_t sentinel;
     dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);

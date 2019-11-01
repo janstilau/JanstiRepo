@@ -74,6 +74,7 @@
     if (_username && _password) {
         operation.credential = [NSURLCredential credentialWithUser:_username password:_password persistence:NSURLCredentialPersistenceForSession];
     }
+    // 添加到 queue 中.
     if (operation) {
         NSOperationQueue *queue = _queue;
         if (queue) {

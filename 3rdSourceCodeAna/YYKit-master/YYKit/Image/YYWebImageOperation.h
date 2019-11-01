@@ -36,6 +36,13 @@ NS_ASSUME_NONNULL_BEGIN
      3. Process the image by invoke the `transform` block.
      4. Put the image to cache and return it with `completion` block.
  
+ 这个类, 之所以把
+ @synthesize executing = _executing;
+ @synthesize finished = _finished;
+ @synthesize cancelled = _cancelled;
+ 上面的三个字段进行重新的绑定, 是因为它并没有完全按照 NSOperation 的流程去定义.
+ 在 start 之后, 会将具体的操作, 在下载线程中进行, 原有的逻辑, 会继续, 会去调用自己的 finish 方法, 改变状态. 所以, 在这个类的内部, 完全进行了重写.
+ runLoop 会保住这个 opertaion 的命.
  */
 @interface YYWebImageOperation : NSOperation
 

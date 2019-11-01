@@ -65,6 +65,7 @@ typedef NS_OPTIONS(NSUInteger, YYWebImageOptions) {
     
     /// Set the image to view with a fade animation.
     /// This will add a "fade" animation on image view's layer for better user experience.
+    /// 更换 Image 的过程, 是一个渐隐的效果
     YYWebImageOptionSetImageWithFadeAnimation = 1 << 12,
     
     /// Do not set the image to the view when image fetch complete.

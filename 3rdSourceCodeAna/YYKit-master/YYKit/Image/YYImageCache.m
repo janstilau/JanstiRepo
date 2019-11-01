@@ -46,6 +46,7 @@ static inline dispatch_queue_t YYImageCacheDecodeQueue() {
 
 @implementation YYImageCache
 
+// 先获取图片的高度, 然后获取每一行的字节数.
 - (NSUInteger)imageCost:(UIImage *)image {
     CGImageRef cgImage = image.CGImage;
     if (!cgImage) return 1;
@@ -94,6 +95,8 @@ static inline dispatch_queue_t YYImageCacheDecodeQueue() {
     return [self initWithPath:@""];
 }
 
+// 使用的 YYMemoryCache 作为内存中的存储.
+// 使用的 YYDiskCache 作为硬盘上的存储.
 - (instancetype)initWithPath:(NSString *)path {
     YYMemoryCache *memoryCache = [YYMemoryCache new];
     memoryCache.shouldRemoveAllObjectsOnMemoryWarning = YES;
@@ -120,6 +123,7 @@ static inline dispatch_queue_t YYImageCacheDecodeQueue() {
 }
 
 - (void)setImage:(UIImage *)image imageData:(NSData *)imageData forKey:(NSString *)key withType:(YYImageCacheType)type {
+    
     if (!key || (image == nil && imageData.length == 0)) return;
     
     __weak typeof(self) _self = self;
@@ -188,6 +192,7 @@ static inline dispatch_queue_t YYImageCacheDecodeQueue() {
     return [self getImageForKey:key withType:YYImageCacheTypeAll];
 }
 
+// 如果内存中有, 先读取内存中的值. 否则, 读取硬盘上的值. 并且更新缓存.
 - (UIImage *)getImageForKey:(NSString *)key withType:(YYImageCacheType)type {
     if (!key) return nil;
     if (type & YYImageCacheTypeMemory) {
@@ -205,6 +210,8 @@ static inline dispatch_queue_t YYImageCacheDecodeQueue() {
     return nil;
 }
 
+
+// 异步取值, 主线程回调.
 - (void)getImageForKey:(NSString *)key withType:(YYImageCacheType)type withBlock:(void (^)(UIImage *image, YYImageCacheType type))block {
     if (!block) return;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

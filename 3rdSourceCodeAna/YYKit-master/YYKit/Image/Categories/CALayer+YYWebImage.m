@@ -161,6 +161,7 @@ static int _YYWebImageSetterKey;
                             transition.type = kCATransitionFade;
                             [self addAnimation:transition forKey:_YYWebImageFadeAnimationKey];
                         }
+                        // 唯一的变化.
                         self.contents = (id)image.CGImage;
                     }
                     if (completion) {
