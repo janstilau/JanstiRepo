@@ -19,6 +19,7 @@ YYSYNTH_DUMMY_CLASS(UIView_YYAdd)
 @implementation UIView (YYAdd)
 
 - (UIImage *)snapshotImage {
+    // 创建一个绘画上下文, 然后将 view 的内容画上去, 然后从上下文中取得图片.
     UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, 0);
     [self.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *snap = UIGraphicsGetImageFromCurrentImageContext();
@@ -54,6 +55,7 @@ YYSYNTH_DUMMY_CLASS(UIView_YYAdd)
     return data;
 }
 
+// 简单的对于 shadow 的疯转
 - (void)setLayerShadow:(UIColor*)color offset:(CGSize)offset radius:(CGFloat)radius {
     self.layer.shadowColor = color.CGColor;
     self.layer.shadowOffset = offset;
@@ -70,7 +72,7 @@ YYSYNTH_DUMMY_CLASS(UIView_YYAdd)
     }
 }
 
-
+// 简单的对于 responsder 的回溯的封装.
 - (UIViewController *)viewController {
     for (UIView *view = self; view; view = view.superview) {
         UIResponder *nextResponder = [view nextResponder];

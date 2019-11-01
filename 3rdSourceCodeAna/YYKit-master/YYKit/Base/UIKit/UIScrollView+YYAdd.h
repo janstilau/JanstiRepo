@@ -14,7 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- Provides extensions for `UIScrollView`.
+  全部都是根据 contentSize 和 contentInset, bounds 计算出对应的 contentOffset 然后进行 contentOffset 的修改.
  */
 @interface UIScrollView (YYAdd)
 

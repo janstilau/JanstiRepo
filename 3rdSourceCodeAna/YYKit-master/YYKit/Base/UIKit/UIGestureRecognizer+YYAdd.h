@@ -13,6 +13,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// YYKit 这种, 所有的添加回调直接到对象的技术, 都是建立一个 action 的数据类, 然后将这个数据类的对象, 存放到关联到的数组里面进行存储.
+
 /**
  Provides extensions for `UIGestureRecognizer`.
  */

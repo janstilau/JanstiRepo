@@ -18,6 +18,8 @@ YYSYNTH_DUMMY_CLASS(UIControl_YYAdd)
 
 static const int block_key;
 
+// 通过关联对象的技术, 引入中间数据类.
+
 @interface _YYUIControlBlockTarget : NSObject
 
 @property (nonatomic, copy) void (^block)(id sender);
@@ -56,6 +58,7 @@ static const int block_key;
     [[self _yy_allUIControlBlockTargets] removeAllObjects];
 }
 
+// 首先会进行删除的操作, 保证进行 addtarget.
 - (void)setTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
     if (!target || !action || !controlEvents) return;
     NSSet *targets = [self allTargets];

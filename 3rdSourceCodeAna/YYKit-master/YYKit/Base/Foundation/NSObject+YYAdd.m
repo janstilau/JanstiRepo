@@ -355,7 +355,6 @@ struct dummy arg = va_arg(args, struct dummy); \
     Method originalMethod = class_getInstanceMethod(self, originalSel);
     Method newMethod = class_getInstanceMethod(self, newSel);
     if (!originalMethod || !newMethod) return NO;
-    // 这里我其实不太明白, 这里为什么要进行一下 class_addMethod 的处理.
     class_addMethod(self,
                     originalSel,
                     class_getMethodImplementation(self, originalSel),
@@ -379,7 +378,7 @@ struct dummy arg = va_arg(args, struct dummy); \
     return YES;
 }
 
-// 这个可以说是非常优秀了, 非常常用
+// 将关联对象这种技术进行封装.
 - (void)setAssociateValue:(id)value withKey:(void *)key {
     objc_setAssociatedObject(self, key, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }

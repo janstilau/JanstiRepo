@@ -22,6 +22,7 @@ YYSYNTH_DUMMY_CLASS(UITextField_YYAdd)
     [self setSelectedTextRange:range];
 }
 
+// 这里不太明白 UITextPosition 的含义到底是什么, 应该在 YYTextView 里面会有涉及.
 - (void)setSelectedRange:(NSRange)range {
     UITextPosition *beginning = self.beginningOfDocument;
     UITextPosition *startPosition = [self positionFromPosition:beginning offset:range.location];
