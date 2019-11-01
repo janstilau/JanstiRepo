@@ -60,8 +60,11 @@ typedef NS_ENUM(NSUInteger, YYAnimatedImageType) {
     CGRect _curContentsRect;
     BOOL _curImageHasContentsRect; ///< image has implementated "animatedImageContentsRectAtIndex:"
 }
+
 @property (nonatomic, readwrite) BOOL currentIsPlayingAnimation;
+
 - (void)calcMaxBufferCount;
+
 @end
 
 /// An operation for image fetch
@@ -153,7 +156,6 @@ typedef NS_ENUM(NSUInteger, YYAnimatedImageType) {
             [_link addToRunLoop:[NSRunLoop mainRunLoop] forMode:_runloopMode];
         }
         _link.paused = YES;
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }

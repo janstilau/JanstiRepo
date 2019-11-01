@@ -18,8 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @discussion It is a fully compatible `UIImageView` subclass.
  If the `image` or `highlightedImage` property adopt to the `YYAnimatedImage` protocol,
- then it can be used to play the multi-frame animation. The animation can also be 
- controlled with the UIImageView methods `-startAnimating`, `-stopAnimating` and `-isAnimating`.
+ then it can be used to play the multi-frame animation. // 这里是根据 Image 的信息做的判断. 如果 Image 可以进行动画, 那么就进行动画.
+ The animation can also be controlled with the UIImageView methods `-startAnimating`, `-stopAnimating` and `-isAnimating`.
  
  This view request the frame data just in time. When the device has enough free memory, 
  this view may cache some or all future frames in an inner buffer for lower CPU cost.
