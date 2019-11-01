@@ -1,39 +1,11 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #import "UIViewAnimationGroup.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIColor.h"
 #import "UIApplication.h"
 
-static NSMutableSet *runningAnimationGroups = nil;
+static NSMutableSet *runningAnimationGroupSet = nil;
 
+// 根据 UIViewAnimationCurve 枚举值, 生成实际的 CAMediaTimingFunction 对象.
 static inline CAMediaTimingFunction *CAMediaTimingFunctionFromUIViewAnimationCurve(UIViewAnimationCurve curve)
 {
     switch (curve) {
@@ -71,7 +43,7 @@ static inline UIViewAnimationOptions UIViewAnimationOptionTransition(UIViewAnima
 }
 
 @implementation UIViewAnimationGroup {
-    NSUInteger _waitingAnimations;
+    NSUInteger _waitingAnimationNum;
     BOOL _didStart;
     CFTimeInterval _animationBeginTime;
     UIView *_transitionView;
@@ -82,19 +54,20 @@ static inline UIViewAnimationOptions UIViewAnimationOptionTransition(UIViewAnima
 + (void)initialize
 {
     if (self == [UIViewAnimationGroup class]) {
-        runningAnimationGroups = [NSMutableSet setWithCapacity:1];
+        runningAnimationGroupSet = [NSMutableSet setWithCapacity:1];
     }
 }
 
 - (id)initWithAnimationOptions:(UIViewAnimationOptions)options
 {
     if ((self=[super init])) {
-        _waitingAnimations = 1;
+        _waitingAnimationNum = 1;
         _animationBeginTime = CACurrentMediaTime();
         _animatingViews = [NSMutableSet setWithCapacity:2];
         
         self.duration = 0.2;
         
+        // 在这里, 根据 options, 去除对应的属性值来.
         self.repeatCount = UIViewAnimationOptionIsSet(options, UIViewAnimationOptionRepeat)? FLT_MAX : 0;
         self.allowUserInteraction = UIViewAnimationOptionIsSet(options, UIViewAnimationOptionAllowUserInteraction);
         self.repeatAutoreverses = UIViewAnimationOptionIsSet(options, UIViewAnimationOptionAutoreverse);
@@ -135,7 +108,7 @@ static inline UIViewAnimationOptions UIViewAnimationOptionTransition(UIViewAnima
 
 - (NSArray *)allAnimatingViews
 {
-    @synchronized(runningAnimationGroups) {
+    @synchronized(runningAnimationGroupSet) {
         return [_animatingViews allObjects];
     }
 }
@@ -144,72 +117,57 @@ static inline UIViewAnimationOptions UIViewAnimationOptionTransition(UIViewAnima
 {
     if (!_didStart) {
         _didStart = YES;
-        
-        @synchronized(runningAnimationGroups) {
-            [runningAnimationGroups addObject:self];
+        @synchronized(runningAnimationGroupSet) {
+            [runningAnimationGroupSet addObject:self];
         }
-
-        if ([self.delegate respondsToSelector:self.willStartSelector]) {
-            typedef void(*WillStartMethod)(id, SEL, NSString *, void *);
-            WillStartMethod method = (WillStartMethod)[self.delegate methodForSelector:self.willStartSelector];
-            method(self.delegate, self.willStartSelector, self.name, self.context);
-        }
+        // 只要有一个动画开始执行, 更改状态.
     }
 }
 
 - (void)notifyAnimationsDidStopIfNeededUsingStatus:(BOOL)animationsDidFinish
 {
-    if (_waitingAnimations == 0) {
-        if ([self.delegate respondsToSelector:self.didStopSelector]) {
-            NSNumber *finishedArgument = [NSNumber numberWithBool:animationsDidFinish];
-            typedef void(*DidFinishMethod)(id, SEL, NSString *, NSNumber *, void *);
-            DidFinishMethod method = (DidFinishMethod)[self.delegate methodForSelector:self.didStopSelector];
-            method(self.delegate, self.didStopSelector, self.name, finishedArgument, self.context);
-        }
-        
-        if (self.completionBlock) {
+    if (_waitingAnimationNum == 0) {
+        if (self.completionBlock) { // 如果全部动画做完了. 调用 completionBlock.
             self.completionBlock(animationsDidFinish);
         }
-
-        @synchronized(runningAnimationGroups) {
+        @synchronized(runningAnimationGroupSet) {
             [_animatingViews removeAllObjects];
-            [runningAnimationGroups removeObject:self];
+            [runningAnimationGroupSet removeObject:self];
         }
     }
 }
 
 - (void)animationDidStart:(CAAnimation *)theAnimation
 {
-    NSAssert([NSThread isMainThread], @"expecting this to be on the main thread");
-
     [self notifyAnimationsDidStartIfNeeded];
 }
 
 - (void)animationDidStop:(CAAnimation *)theAnimation finished:(BOOL)flag
 {
-    NSAssert([NSThread isMainThread], @"expecting this to be on the main thread");
-
-    _waitingAnimations--;
+    _waitingAnimationNum--;
     [self notifyAnimationsDidStopIfNeededUsingStatus:flag];
 }
 
 - (CAAnimation *)addAnimation:(CAAnimation *)animation
 {
+    // 在这里, 根据自身的状态, 对 CAAnimation 进行赋值操作. 这些状态, 都是根据 UIVIewAnimationOptions 进行传递的.
     animation.timingFunction = CAMediaTimingFunctionFromUIViewAnimationCurve(self.curve);
     animation.duration = self.duration;
     animation.beginTime = _animationBeginTime + self.delay;
     animation.repeatCount = self.repeatCount;
     animation.autoreverses = self.repeatAutoreverses;
     animation.fillMode = kCAFillModeBackwards;
-    animation.delegate = self;
+    animation.delegate = self; // 监听每一个动画.
     animation.removedOnCompletion = YES;
-    _waitingAnimations++;
+    _waitingAnimationNum++;
     return animation;
 }
 
+// 这里, 是动画系统调用的. 也就是说, 动画系统会对 layer 进行取值, 取多少次, 就加上多少个 animation. 应该是动画系统根据 keypath 进行取值.
+// 生成的 CABasicAnimation 没有设置 toValue, 应该是默认是当前的属性值.
 - (id)actionForView:(UIView *)view forKey:(NSString *)keyPath
 {
-    @synchronized(runningAnimationGroups) {
+    @synchronized(runningAnimationGroupSet) {
         [_animatingViews addObject:view];
     }
 
@@ -231,9 +189,12 @@ static inline UIViewAnimationOptions UIViewAnimationOptionTransition(UIViewAnima
 
 - (void)commit
 {
-    if (_transitionView && self.transition != UIViewAnimationGroupTransitionNone) {
+    // 如果有着转场动画, 那么就给 _transitionView 的 layer 增加一个转场动画.
+    // 转场动画, 就是一个 layer 的动画, 它和提交转场动画的时候, animaiton block 里面的动画是分开的.
+    if (_transitionView &&
+        self.transition != UIViewAnimationGroupTransitionNone) {
+        // 如果有转场动画.
         CATransition *trans = [CATransition animation];
-        
         switch (self.transition) {
             case UIViewAnimationGroupTransitionFlipFromLeft:
                 trans.type = kCATransitionPush;
@@ -275,7 +236,7 @@ static inline UIViewAnimationOptions UIViewAnimationOptionTransition(UIViewAnima
         [_transitionView.layer addAnimation:[self addAnimation:trans] forKey:kCATransition];
     }
     
-    _waitingAnimations--;
+    _waitingAnimationNum--; // 这里为什么要减一
     [self notifyAnimationsDidStopIfNeededUsingStatus:YES];
 }
 

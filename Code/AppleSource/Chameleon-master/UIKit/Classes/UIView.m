@@ -17,7 +17,7 @@ NSString *const UIViewBoundsDidChangeNotification = @"UIViewBoundsDidChangeNotif
 NSString *const UIViewDidMoveToSuperviewNotification = @"UIViewDidMoveToSuperviewNotification";
 NSString *const UIViewHiddenDidChangeNotification = @"UIViewHiddenDidChangeNotification";
 
-static NSMutableArray *_animationGroups;
+static NSMutableArray *_animationGroupStack;
 static BOOL _animationsEnabled = YES;
 
 @implementation UIView {
@@ -31,7 +31,7 @@ static BOOL _animationsEnabled = YES;
 + (void)initialize
 {
     if (self == [UIView class]) {
-        _animationGroups = [[NSMutableArray alloc] init];
+        _animationGroupStack = [[NSMutableArray alloc] init];
     }
 }
 
@@ -423,6 +423,30 @@ static BOOL _animationsEnabled = YES;
 {
 }
 
+- (BOOL)respondsToSelector:(SEL)aSelector
+{
+    // For notes about why this is done, see displayLayer: above.
+    if (aSelector == @selector(displayLayer:)) {
+        return !_implementsDrawRect;
+    } else {
+        return [super respondsToSelector:aSelector];
+    }
+}
+
+#pragma mark - CALayerDelegate
+
+/*
+ You can implement the methods of this protocol to provide the layer’s content, handle the layout of sublayers, and provide custom animation actions to perform.
+ The object that implements this protocol must be assigned to the delegate property of the layer object.
+ */
+
+/*
+ The displayLayer: delegate method is invoked when the layer is marked for its content to be reloaded, typically initiated by the setNeedsDisplay method.
+ The typical technique for updating is to set the layer's contents property.
+ 在 displayLayer 里面, 一般做的事, 将 layer 的 contents 进行设置, 这样 layer 就会显示.
+ 然后, layer 的重绘过程就会结束, 其他的代理方法也就不会执行了.
+ */
+
 - (void)displayLayer:(CALayer *)theLayer
 {
     // Okay, this is some crazy stuff right here. Basically, the real UIKit avoids creating any contents for its layer if there's no drawRect:
@@ -454,18 +478,8 @@ static BOOL _animationsEnabled = YES;
     _layer.backgroundColor = [self.backgroundColor _bestRepresentationForProposedScale:self.window.screen.scale].CGColor;
 }
 
-- (BOOL)respondsToSelector:(SEL)aSelector
-{
-    // For notes about why this is done, see displayLayer: above.
-    if (aSelector == @selector(displayLayer:)) {
-        return !_implementsDrawRect;
-    } else {
-        return [super respondsToSelector:aSelector];
-    }
-}
 
-
-// 核心方法.
+// 核心方法. 如果  displayLayer 没有实现的化, 就会到达这里来. 在这里, 应该利用上下文进行绘制工作. 也就是说, layer 的内部管理者上下文的创建.
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx
 {
     // We only get here if the UIView subclass implements drawRect:. To do this without a drawRect: is a huge waste of memory.
@@ -475,68 +489,20 @@ static BOOL _animationsEnabled = YES;
 
     UIGraphicsPushContext(ctx);
     CGContextSaveGState(ctx);
-    
     if (_clearsContextBeforeDrawing) {
         CGContextClearRect(ctx, bounds);
     }
-
     if (_backgroundColor) {
         [_backgroundColor setFill];
         CGContextFillRect(ctx,bounds);
     }
-
-    /*
-     NOTE: This kind of logic would seem to be ideal and result in the best font rendering when possible. The downside here is that
-     the rendering is then inconsistent throughout the app depending on how certain views are constructed or configured.
-     I'm not sure what to do about this. It appears to be impossible to subpixel render text drawn into a transparent layer because
-     of course there are no pixels behind the text to use when doing the subpixel blending. If it is turned on in that case, it looks
-     bad depending on what is ultimately composited behind it. Turning it off everywhere makes everything "equally bad," in a sense,
-     but at least stuff doesn't jump out as obviously different. However this doesn't look very nice on OSX. iOS appears to not use
-     any subpixel smoothing anywhere but doesn't seem to look bad when using it. There are many possibilities for why. Some I can
-     think of are they are setting some kind of graphics context mode I just haven't found yet, the rendering engines are
-     fundamentally different, the fonts themselves are actually different, the DPI of the devices, voodoo, or the loch ness monster.
-     */
-
-    /*
-     UPDATE: I've since flattened some of the main views in Twitterrific/Ostrich and so now I'd like to have subpixel turned on for
-     the Mac, so I'm putting this code back in here. It tries to be smart about when to do it (because if it's on when it shouldn't
-     be the results look very bad). As the note above said, this can and does result in some inconsistency with the rendering in
-     the app depending on how things are done. Typical UIKit code is going to be lots of layers and thus text will mostly look bad
-     with straight ports but at this point I really can't come up with a much better solution so it'll have to do.
-     */
-    
-    /*
-     UPDATE AGAIN: So, subpixel with light text against a dark background looks kinda crap and we can't seem to figure out how
-     to make it not-crap right now. After messing with some fonts and things, we're currently turning subpixel off again instead.
-     I have a feeling this may go round and round forever because some people can't stand subpixel and others can't stand not
-     having it - even when its light-on-dark. We could turn it on here and selectively disable it in Twitterrific when using the
-     dark theme, but that seems weird, too. We'd all rather there be just one approach here and skipping smoothing at least means
-     that the whole app is consistent (views that aren't flattened won't look any different from the flattened views in terms of
-     text rendering, at least). Bah.
-     */
-
-    //const BOOL shouldSmoothFonts = (_backgroundColor && (CGColorGetAlpha(_backgroundColor.CGColor) == 1)) || self.opaque;
-    //CGContextSetShouldSmoothFonts(ctx, shouldSmoothFonts);
-
     CGContextSetShouldSmoothFonts(ctx, NO);
-
     CGContextSetShouldSubpixelPositionFonts(ctx, YES);
     CGContextSetShouldSubpixelQuantizeFonts(ctx, YES);
-    
     [[UIColor blackColor] set];
-    [self drawRect:bounds];
-
+    [self drawRect:bounds]; // 在这里, 在进行了一些准备工作以后, 就会调用 drawRect 方法.
     CGContextRestoreGState(ctx);
     UIGraphicsPopContext();
-}
-
-- (id)actionForLayer:(CALayer *)theLayer forKey:(NSString *)event
-{
-    if (_animationsEnabled && [_animationGroups lastObject] && theLayer == _layer) {
-        return [[_animationGroups lastObject] actionForView:self forKey:event] ?: (id)[NSNull null];
-    } else {
-        return [NSNull null];
-    }
 }
 
 - (void)_superviewSizeDidChangeFrom:(CGSize)oldSize to:(CGSize)newSize
@@ -546,18 +512,6 @@ static BOOL _animationsEnabled = YES;
         const CGSize delta = CGSizeMake(newSize.width-oldSize.width, newSize.height-oldSize.height);
         
 #define hasAutoresizingFor(x) ((_autoresizingMask & (x)) == (x))
-        
-        /*
-         
-         top + bottom + height      => y = floor(y + (y / HEIGHT * delta)); height = floor(height + (height / HEIGHT * delta))
-         top + height               => t = y + height; y = floor(y + (y / t * delta); height = floor(height + (height / t * delta);
-         bottom + height            => height = floor(height + (height / (HEIGHT - y) * delta))
-         top + bottom               => y = floor(y + (delta / 2))
-         height                     => height = floor(height + delta)
-         top                        => y = floor(y + delta)
-         bottom                     => y = floor(y)
-
-         */
 
         if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin)) {
             frame.origin.y = floorf(frame.origin.y + (frame.origin.y / oldSize.height * delta.height));
@@ -596,7 +550,6 @@ static BOOL _animationsEnabled = YES;
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleRightMargin)) {
             frame.origin.x = floorf(frame.origin.x);
         }
-
         self.frame = frame;
     }
 }
@@ -604,11 +557,7 @@ static BOOL _animationsEnabled = YES;
 - (void)_boundsDidChangeFrom:(CGRect)oldBounds to:(CGRect)newBounds
 {
     if (!CGRectEqualToRect(oldBounds, newBounds)) {
-        // setNeedsLayout doesn't seem like it should be necessary, however there was a rendering bug in a table in Flamingo that
-        // went away when this was placed here. There must be some strange ordering issue with how that layout manager stuff works.
-        // I never quite narrowed it down. This was an easy fix, if perhaps not ideal.
         [self setNeedsLayout];
-
         if (!CGSizeEqualToSize(oldBounds.size, newBounds.size)) {
             if (_autoresizesSubviews) {
                 for (UIView *subview in [_subviews allObjects]) {
@@ -623,6 +572,8 @@ static BOOL _animationsEnabled = YES;
 {
     return [NSSet setWithObject:@"center"];
 }
+
+// 下面是关于 frame 的变化的一些设置的回调. 可以看到, 大部分其实还是在操作 layer.
 
 - (CGRect)frame
 {
@@ -791,12 +742,12 @@ static BOOL _animationsEnabled = YES;
 {
     // 内部方法, 做了一些对于其他地方的通知操作, 然后调用 layoutSubviews
     const BOOL wereEnabled = [UIView areAnimationsEnabled];
-    [UIView setAnimationsEnabled:NO];
+    [UIView setAnimationsEnabled:NO]; // 在 UIView 的 layout 里面, 会关闭和打开 animation 的值, 这个值是全局的一个值, 表示是否动画.
     [self _UIAppearanceUpdateIfNeeded];
-    [[self _viewController] viewWillLayoutSubviews];
-    [self layoutSubviews];
-    [[self _viewController] viewDidLayoutSubviews];
-    [UIView setAnimationsEnabled:wereEnabled];
+    [[self _viewController] viewWillLayoutSubviews]; // 通知 VC, 注入切口
+    [self layoutSubviews]; // 自己的 layout 的切口
+    [[self _viewController] viewDidLayoutSubviews]; // 通知 VC, 注入切口
+    [UIView setAnimationsEnabled:wereEnabled]; // 打开动画控制.
 }
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
@@ -806,7 +757,7 @@ static BOOL _animationsEnabled = YES;
 
 - (BOOL)_isAnimatedUserInteractionEnabled
 {
-    for (UIViewAnimationGroup *group in _animationGroups) {
+    for (UIViewAnimationGroup *group in _animationGroupStack) {
         if (!group.allowUserInteraction) {
             for (UIView *animatingView in group.allAnimatingViews) {
                 if ([self isDescendantOfView:animatingView]) {
@@ -941,46 +892,147 @@ static BOOL _animationsEnabled = YES;
     return [_gestureRecognizers allObjects];
 }
 
+#pragma mark - AnimaitonRelated
+
+// 在这里, 还是通过 [_animationGroupStack lastObject] 进行取值, 也就是说, 在 commits 的调用里面会到这里来, 因为在 groupCommit 之后就是 _animationGroupStack 的 removeLastObject 的操作了.
+- (id)actionForLayer:(CALayer *)theLayer forKey:(NSString *)event
+{
+    if (_animationsEnabled && // 全局控制标明, 可以做动画
+        [_animationGroupStack lastObject] && theLayer == _layer) {
+        return [[_animationGroupStack lastObject] actionForView:self forKey:event] ?: (id)[NSNull null];
+    } else {
+        return [NSNull null];
+    }
+}
+
+// 入栈操作, 然后下面的所有的设置, 都是取得这个栈的最后一个值, 然后进行设置.
+// 之所以要全部通过栈的 lastObject 进行操作, 是因为在入栈出栈的过程中, 还非常有可能有着入栈的操作.
 + (void)_beginAnimationsWithOptions:(UIViewAnimationOptions)options
 {
-    [_animationGroups addObject:[[UIViewAnimationGroup alloc] initWithAnimationOptions:options]];
+    [_animationGroupStack addObject:[[UIViewAnimationGroup alloc] initWithAnimationOptions:options]];
+}
+
+// 出栈操作, 将 animationGroup 中的信息, 创建一个动画, 提交给相应的 layer
++ (void)commitAnimations
+{
+    if ([_animationGroupStack count] > 0) {
+        [[_animationGroupStack lastObject] commit];
+        [_animationGroupStack removeLastObject];
+    }
 }
 
 + (void)_setAnimationName:(NSString *)name context:(void *)context
 {
-    [[_animationGroups lastObject] setName:name];
-    [[_animationGroups lastObject] setContext:context];
+    [[_animationGroupStack lastObject] setName:name];
+    [[_animationGroupStack lastObject] setContext:context];
 }
 
 + (void)_setAnimationCompletionBlock:(void (^)(BOOL finished))completion
 {
-    [(UIViewAnimationGroup *)[_animationGroups lastObject] setCompletionBlock:completion];
+    [(UIViewAnimationGroup *)[_animationGroupStack lastObject] setCompletionBlock:completion];
 }
 
 + (void (^)(BOOL))_animationCompletionBlock
 {
-    return [(UIViewAnimationGroup *)[_animationGroups lastObject] completionBlock];
+    return [(UIViewAnimationGroup *)[_animationGroupStack lastObject] completionBlock];
 }
 
 + (void)_setAnimationTransitionView:(UIView *)view
 {
-    [[_animationGroups lastObject] setTransitionView:view shouldCache:NO];
+    [[_animationGroupStack lastObject] setTransitionView:view shouldCache:NO];
 }
 
 + (BOOL)_isAnimating
 {
-    return ([_animationGroups count] != 0);
+    return ([_animationGroupStack count] != 0);
 }
 
-+ (void)animateWithDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
++ (void)setAnimationBeginsFromCurrentState:(BOOL)beginFromCurrentState
+{
+    [[_animationGroupStack lastObject] setBeginsFromCurrentState:beginFromCurrentState];
+}
+
++ (void)setAnimationCurve:(UIViewAnimationCurve)curve
+{
+    [[_animationGroupStack lastObject] setCurve:curve];
+}
+
++ (void)setAnimationDelay:(NSTimeInterval)delay
+{
+    [[_animationGroupStack lastObject] setDelay:delay];
+}
+
++ (void)setAnimationDelegate:(id)delegate
+{
+    [[_animationGroupStack lastObject] setDelegate:delegate];
+}
+
++ (void)setAnimationDidStopSelector:(SEL)selector
+{
+    [[_animationGroupStack lastObject] setDidStopSelector:selector];
+}
+
++ (void)setAnimationDuration:(NSTimeInterval)duration
+{
+    [[_animationGroupStack lastObject] setDuration:duration];
+}
+
++ (void)setAnimationRepeatAutoreverses:(BOOL)repeatAutoreverses
+{
+    [[_animationGroupStack lastObject] setRepeatAutoreverses:repeatAutoreverses];
+}
+
++ (void)setAnimationRepeatCount:(float)repeatCount
+{
+    [[_animationGroupStack lastObject] setRepeatCount:repeatCount];
+}
+
++ (void)setAnimationWillStartSelector:(SEL)selector
+{
+    [[_animationGroupStack lastObject] setWillStartSelector:selector];
+}
+
++ (void)setAnimationTransition:(UIViewAnimationTransition)transition forView:(UIView *)view cache:(BOOL)cache
+{
+    [self _setAnimationTransitionView:view];
+    
+    switch (transition) {
+        case UIViewAnimationTransitionNone:
+            [[_animationGroupStack lastObject] setTransition:UIViewAnimationGroupTransitionNone];
+            break;
+            
+        case UIViewAnimationTransitionFlipFromLeft:
+            [[_animationGroupStack lastObject] setTransition:UIViewAnimationGroupTransitionFlipFromLeft];
+            break;
+            
+        case UIViewAnimationTransitionFlipFromRight:
+            [[_animationGroupStack lastObject] setTransition:UIViewAnimationGroupTransitionFlipFromRight];
+            break;
+            
+        case UIViewAnimationTransitionCurlUp:
+            [[_animationGroupStack lastObject] setTransition:UIViewAnimationGroupTransitionCurlUp];
+            break;
+            
+        case UIViewAnimationTransitionCurlDown:
+            [[_animationGroupStack lastObject] setTransition:UIViewAnimationGroupTransitionCurlDown];
+            break;
+    }
+}
+
+// 类方法, 会创建出一个数据对象来, 进行参数的收集工作, 然后这个数据对象, 会运用 CAAnimation 创建各种动画提交给动画系统. 所以, 类方法本质上还是没有脱离原始的动画系统.
+// 这里复杂的是, animation block 里面还可能提交新的动画, 所以, 这是一个栈的结构.
+
++ (void)animateWithDuration:(NSTimeInterval)duration
+                      delay:(NSTimeInterval)delay
+                    options:(UIViewAnimationOptions)options
+                 animations:(void (^)(void))animations
+                 completion:(void (^)(BOOL finished))completion
 {
     [self _beginAnimationsWithOptions:options | UIViewAnimationOptionTransitionNone];
     [self setAnimationDuration:duration];
     [self setAnimationDelay:delay];
     [self _setAnimationCompletionBlock:completion];
-    
-    animations();
-    
+    animations(); // 如果在 animaiton 里面, 还有animateWithDuration:delay... 的调用, 会进行入栈, 只有出栈后, 这个动画才会提交.
     [self commitAnimations];
 }
 
@@ -998,17 +1050,19 @@ static BOOL _animationsEnabled = YES;
     [self animateWithDuration:duration animations:animations completion:NULL];
 }
 
-+ (void)transitionWithView:(UIView *)view duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
++ (void)transitionWithView:(UIView *)view
+                  duration:(NSTimeInterval)duration
+                   options:(UIViewAnimationOptions)options
+                animations:(void (^)(void))animations
+                completion:(void (^)(BOOL finished))completion
 {
     [self _beginAnimationsWithOptions:options];
     [self setAnimationDuration:duration];
     [self _setAnimationCompletionBlock:completion];
     [self _setAnimationTransitionView:view];
-    
     if (animations) {
-        animations();
+        animations(); // 在这里, 实际的修改了各个属性的值.
     }
-    
     [self commitAnimations];
 }
 
@@ -1033,86 +1087,6 @@ static BOOL _animationsEnabled = YES;
 {
     [self _beginAnimationsWithOptions:UIViewAnimationCurveEaseInOut];
     [self _setAnimationName:animationID context:context];
-}
-
-+ (void)commitAnimations
-{
-    if ([_animationGroups count] > 0) {
-        [[_animationGroups lastObject] commit];
-        [_animationGroups removeLastObject];
-    }
-}
-
-+ (void)setAnimationBeginsFromCurrentState:(BOOL)beginFromCurrentState
-{
-    [[_animationGroups lastObject] setBeginsFromCurrentState:beginFromCurrentState];
-}
-
-+ (void)setAnimationCurve:(UIViewAnimationCurve)curve
-{
-    [[_animationGroups lastObject] setCurve:curve];
-}
-
-+ (void)setAnimationDelay:(NSTimeInterval)delay
-{
-    [[_animationGroups lastObject] setDelay:delay];
-}
-
-+ (void)setAnimationDelegate:(id)delegate
-{
-    [[_animationGroups lastObject] setDelegate:delegate];
-}
-
-+ (void)setAnimationDidStopSelector:(SEL)selector
-{
-    [[_animationGroups lastObject] setDidStopSelector:selector];
-}
-
-+ (void)setAnimationDuration:(NSTimeInterval)duration
-{
-    [[_animationGroups lastObject] setDuration:duration];
-}
-
-+ (void)setAnimationRepeatAutoreverses:(BOOL)repeatAutoreverses
-{
-    [[_animationGroups lastObject] setRepeatAutoreverses:repeatAutoreverses];
-}
-
-+ (void)setAnimationRepeatCount:(float)repeatCount
-{
-    [[_animationGroups lastObject] setRepeatCount:repeatCount];
-}
-
-+ (void)setAnimationWillStartSelector:(SEL)selector
-{
-    [[_animationGroups lastObject] setWillStartSelector:selector];
-}
-
-+ (void)setAnimationTransition:(UIViewAnimationTransition)transition forView:(UIView *)view cache:(BOOL)cache
-{
-    [self _setAnimationTransitionView:view];
-    
-    switch (transition) {
-        case UIViewAnimationTransitionNone:
-            [[_animationGroups lastObject] setTransition:UIViewAnimationGroupTransitionNone];
-            break;
-            
-        case UIViewAnimationTransitionFlipFromLeft:
-            [[_animationGroups lastObject] setTransition:UIViewAnimationGroupTransitionFlipFromLeft];
-            break;
-            
-        case UIViewAnimationTransitionFlipFromRight:
-            [[_animationGroups lastObject] setTransition:UIViewAnimationGroupTransitionFlipFromRight];
-            break;
-            
-        case UIViewAnimationTransitionCurlUp:
-            [[_animationGroups lastObject] setTransition:UIViewAnimationGroupTransitionCurlUp];
-            break;
-            
-        case UIViewAnimationTransitionCurlDown:
-            [[_animationGroups lastObject] setTransition:UIViewAnimationGroupTransitionCurlDown];
-            break;
-    }
 }
 
 + (BOOL)areAnimationsEnabled

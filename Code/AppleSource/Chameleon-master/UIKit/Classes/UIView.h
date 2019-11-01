@@ -44,6 +44,7 @@ typedef NS_ENUM(NSInteger, UIViewAnimationTransition) {
 };
 
 typedef NS_OPTIONS(NSUInteger, UIViewAnimationOptions) {
+    // 动画相关.
     UIViewAnimationOptionLayoutSubviews            = 1 <<  0,		// not currently supported
     UIViewAnimationOptionAllowUserInteraction      = 1 <<  1,
     UIViewAnimationOptionBeginFromCurrentState     = 1 <<  2,
@@ -54,11 +55,13 @@ typedef NS_OPTIONS(NSUInteger, UIViewAnimationOptions) {
     UIViewAnimationOptionAllowAnimatedContent      = 1 <<  7,		// not currently supported
     UIViewAnimationOptionShowHideTransitionViews   = 1 <<  8,
     
+    // 时间相关
     UIViewAnimationOptionCurveEaseInOut            = 0 << 16,
     UIViewAnimationOptionCurveEaseIn               = 1 << 16,
     UIViewAnimationOptionCurveEaseOut              = 2 << 16,
     UIViewAnimationOptionCurveLinear               = 3 << 16,
     
+    // 转场相关
     UIViewAnimationOptionTransitionNone            = 0 << 20,
     UIViewAnimationOptionTransitionFlipFromLeft    = 1 << 20,
     UIViewAnimationOptionTransitionFlipFromRight   = 2 << 20,
