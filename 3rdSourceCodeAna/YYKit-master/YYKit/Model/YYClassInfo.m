@@ -81,11 +81,13 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
 
 @implementation YYClassIvarInfo
 
+// 在这里, 进行了 ivar 信息的提取工作.
+// Ivar 本身是一个指针, typedef struct objc_ivar *Ivar, 具体的 objc_ivar 的信息, 苹果没有暴露出来.
 - (instancetype)initWithIvar:(Ivar)ivar {
     if (!ivar) return nil;
     self = [super init];
     _ivar = ivar;
-    const char *name = ivar_getName(ivar);
+    const char *name = ivar_getName(ivar); // 获取名称, 这里, 获取的不是属性的名称, 而是成员变量的名称, 也就是如果是属性, 前面会加_下划线开头.
     if (name) {
         _name = [NSString stringWithUTF8String:name];
     }
@@ -102,6 +104,11 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
 
 @implementation YYClassMethodInfo
 
+/*
+ typedef struct objc_method *Method;
+ objc_method 应该是对于 OC 方法的一个包装. SEL 作为 key 值, IMP 作为 value 值. 所以, 对于 METHOD, 类的方法的概念, 他应该有着名称和实现至少两个数据. 还会有函数签名的信息.
+ */
+
 - (instancetype)initWithMethod:(Method)method {
     if (!method) return nil;
     self = [super init];
@@ -113,6 +120,7 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
         _name = [NSString stringWithUTF8String:name]; // 获取 方法名
     }
     const char *typeEncoding = method_getTypeEncoding(method);
+    // @16@0:8, 方法的 typeEncoding. 表示返回值的类型, 参数的类型, 以及返回值和参数的大小.
     if (typeEncoding) {
         _typeEncoding = [NSString stringWithUTF8String:typeEncoding]; // 获取函数签名
     }
@@ -139,6 +147,12 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
 
 @implementation YYClassPropertyInfo
 
+
+/*
+ // @property (nonatomic, strong, readonly) NSString *name;           ///< property's name, 名称
+ nonatomic, strong, readonly, NSString, name
+ 以上 5 个信息, 都是属性的 attribute, 都有着不同的名字, value 也各不相同.
+ */
 - (instancetype)initWithProperty:(objc_property_t)property {
     if (!property) return nil;
     self = [super init];
@@ -150,20 +164,22 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
     
     YYEncodingType type = 0;
     unsigned int attrCount;
-    objc_property_attribute_t *attrs = property_copyAttributeList(property, &attrCount); // 获得属性的各种类型.
+    objc_property_attribute_t *attrs = property_copyAttributeList(property, &attrCount); // 获得属性的各种类型. 一个属性, 可能会有各种信息, 比如 readonly, getter, setter 等等.
     // 这里, 根据 property 的属性值, 将这个 info 类中的各个属性的值确定下来了.
     for (unsigned int i = 0; i < attrCount; i++) {
-        switch (attrs[i].name[0]) {
+        switch (attrs[i].name[0]) { // 根据属性的 name, 来判断是哪个信息, value 来确定该信息的值.
             case 'T': { // Type encoding
                 if (attrs[i].value) {
                     _typeEncoding = [NSString stringWithUTF8String:attrs[i].value];
                     type = YYEncodingGetType(attrs[i].value);
                     
+                    // 如果, 这是一个对象属性, 那么继续分析下面的内容. "@\"NSString\"", 类型的名称, 被固定的格式, 包装在了字符串中.
                     if ((type & YYEncodingTypeMask) == YYEncodingTypeObject && _typeEncoding.length) {
                         NSScanner *scanner = [NSScanner scannerWithString:_typeEncoding];
                         if (![scanner scanString:@"@\"" intoString:NULL]) continue;
                         
                         NSString *clsName = nil;
+                        // 这里, 因为是固定的格式, 所以从字符串中很简单的就能够提取出 className 的值来.
                         if ([scanner scanUpToCharactersFromSet: [NSCharacterSet characterSetWithCharactersInString:@"\"<"] intoString:&clsName]) {
                             if (clsName.length) _cls = objc_getClass(clsName.UTF8String);
                         }
@@ -228,7 +244,7 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
     
     _type = type;
     if (_name.length) {
-        if (!_getter) {
+        if (!_getter) { // 如果 _getter 没有值, 就用默认值, 如果有值, 就代表着, 有着 getter 的 attribute 进行了专门的配置.
             _getter = NSSelectorFromString(_name);
         }
         if (!_setter) {
@@ -316,6 +332,7 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
     return _needUpdate;
 }
 
+// 这里, 简单做了一个缓存的处理, 之所以用 CFDictionary, 是因为更加灵活, 可以用各种内存管理的策略.
 + (instancetype)classInfoWithClass:(Class)cls {
     if (!cls) return nil;
     static CFMutableDictionaryRef classCache;

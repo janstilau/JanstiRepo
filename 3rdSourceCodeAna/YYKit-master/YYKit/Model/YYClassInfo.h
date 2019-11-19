@@ -5,9 +5,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Type encoding's type.
- 
- // 不同的类型, 用不同的 mask, mask 写在开头.
- 
+ 不同的类型, 用不同的 mask, mask 写在开头.
+ 这里, 是或的关系, 也就是说,  用了一个枚举值, 记录了所有的信息. 类型, 限制符, 内存修饰符.
  */
 typedef NS_OPTIONS(NSUInteger, YYEncodingType) {
     YYEncodingTypeMask       = 0xFF, ///< mask of type value
@@ -69,8 +68,9 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
 
 
 /**
-  这就是 IVar 的一个数据类, 在 initWithIvar 中, 通过 iVar 的 C 方法, 获得所有需要的信息, 然后存到属性中.
-  虽然可以通过方法获取到相应的数据, 缓存下来, 可以大大的隔离复杂度, 让上层接口更好的进行组织.
+  这就是 IVar 的一个数据类, 在 initWithIvar 中,  获得所有需要的信息, 然后存到属性中.
+  将所需要的信息, 都进行显示的存储, 可以在上层使用的时候, 快速的得到这些信息.
+  如果在上层使用的时候, 再去进行objc_方法的信息的获取, 太过于复杂. 提前将信息的获取工作, 封装到一个数据类中, 可以更好地分离逻辑.
  */
 @interface YYClassIvarInfo : NSObject
 @property (nonatomic, assign, readonly) Ivar ivar;              ///< ivar opaque struct
@@ -93,13 +93,13 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
   Method 的数据类, 在初始化的过程中, 会获取所需要的各种信息.
  */
 @interface YYClassMethodInfo : NSObject
-@property (nonatomic, assign, readonly) Method method;                  ///< method opaque struct
-@property (nonatomic, strong, readonly) NSString *name;                 ///< method name
-@property (nonatomic, assign, readonly) SEL sel;                        ///< method's selector
-@property (nonatomic, assign, readonly) IMP imp;                        ///< method's implementation
-@property (nonatomic, strong, readonly) NSString *typeEncoding;         ///< method's parameter and return types
-@property (nonatomic, strong, readonly) NSString *returnTypeEncoding;   ///< return value's type
-@property (nullable, nonatomic, strong, readonly) NSArray<NSString *> *argumentTypeEncodings; ///< array of arguments' type
+@property (nonatomic, assign, readonly) Method method;                  ///< method opaque struct, 下面各种数据的来源, 是一个不公开的数据机构.
+@property (nonatomic, strong, readonly) NSString *name;                 ///< method name, 方法名称
+@property (nonatomic, assign, readonly) SEL sel;                        ///< method's selector, 方法名对应的 SEL
+@property (nonatomic, assign, readonly) IMP imp;                        ///< method's implementation, 方法实现
+@property (nonatomic, strong, readonly) NSString *typeEncoding;         ///< method's parameter and return types, 方法的函数签名
+@property (nonatomic, strong, readonly) NSString *returnTypeEncoding;   ///< return value's type, 方法的返回值类型
+@property (nullable, nonatomic, strong, readonly) NSArray<NSString *> *argumentTypeEncodings; ///< array of arguments' type, 方法的各个参数的类型.
 
 /**
  Creates and returns a method info object.
@@ -115,13 +115,14 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
  属性相关信息的数据类.
  */
 @interface YYClassPropertyInfo : NSObject
-@property (nonatomic, assign, readonly) objc_property_t property; ///< property's opaque struct
-@property (nonatomic, strong, readonly) NSString *name;           ///< property's name
-@property (nonatomic, assign, readonly) YYEncodingType type;      ///< property's type
+ 
+@property (nonatomic, assign, readonly) objc_property_t property; ///< property's opaque struct, 下面各个数据的来源
+@property (nonatomic, strong, readonly) NSString *name;           ///< property's name, 名称
+@property (nonatomic, assign, readonly) YYEncodingType type;      ///< property's type, 类型
 @property (nonatomic, strong, readonly) NSString *typeEncoding;   ///< property's encoding value
 @property (nonatomic, strong, readonly) NSString *ivarName;       ///< property's ivar name
-@property (nullable, nonatomic, assign, readonly) Class cls;      ///< may be nil
-@property (nullable, nonatomic, strong, readonly) NSArray<NSString *> *protocols; ///< may nil
+@property (nullable, nonatomic, assign, readonly) Class cls;      ///< may be nil, 所属类
+@property (nullable, nonatomic, strong, readonly) NSArray<NSString *> *protocols; ///< may nil, 实现的协议.
 @property (nonatomic, assign, readonly) SEL getter;               ///< getter (nonnull)
 @property (nonatomic, assign, readonly) SEL setter;               ///< setter (nonnull)
 
@@ -137,8 +138,7 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
 
 /**
  Class information for a class.
- 这是上面的那些信息的集合体.
- 
+ 类的 info 类中, 包含了上面的成员变量, 方法, 属性 info 的各种信息, 并且添加了类相关的各种信息.
  */
 @interface YYClassInfo : NSObject
 @property (nonatomic, assign, readonly) Class cls; ///< class object
