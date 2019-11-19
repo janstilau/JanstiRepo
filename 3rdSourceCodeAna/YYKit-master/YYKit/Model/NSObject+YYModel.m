@@ -441,7 +441,7 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
 /// A class info in object model.
 @interface _YYModelMeta : NSObject {
     @package
-    YYClassInfo *_classInfo; // 原始信息, 这个信息里面是各种 OC 元信息的数据类.
+    YYClassInfo *_classInfo; // 存放了类的各种原始信息.
     /// Key:mapped key and key path, Value:_YYModelPropertyMeta.
     NSDictionary *_mapper;
     /// Array<_YYModelPropertyMeta>, all property meta of this model.
@@ -468,7 +468,12 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     if (!classInfo) return nil;
     self = [super init];
     
+    // 所有暴露出去的切口, 最终还是要转换成为数据, 有了数据就可以存储, 就可以然后处理切口的逻辑.
+    // 不然, 只能在转换的过程中, 去判断有没有实现这个切口, 现场获取数据进行逻辑的分支. 这样会让转化函数过于复杂, 提前通过数据进行存储, 转化函数, 仅仅判断数据有无就可以正确的进行后续的逻辑了.
+    
     // Get black list
+    // All the properties in blacklist will be ignored in model transform process.
+    // 一个暴露出去的切口, 方面自定义转换过程.
     NSSet *blacklist = nil;
     if ([cls respondsToSelector:@selector(modelPropertyBlacklist)]) {
         NSArray *properties = [(id<YYModel>)cls modelPropertyBlacklist];
@@ -478,6 +483,7 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     }
     
     // Get white list
+    // If a property is not in the whitelist, it will be ignored in model transform process.
     NSSet *whitelist = nil;
     if ([cls respondsToSelector:@selector(modelPropertyWhitelist)]) {
         NSArray *properties = [(id<YYModel>)cls modelPropertyWhitelist];
@@ -486,7 +492,7 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
         }
     }
     
-    // 容器类里面的 Item 的类型.
+    // 容器类里面元素的类型.
     NSDictionary *genericMapper = nil;
     if ([cls respondsToSelector:@selector(modelContainerPropertyGenericClass)]) {
         genericMapper = [(id<YYModel>)cls modelContainerPropertyGenericClass];
@@ -494,10 +500,10 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
             NSMutableDictionary *genericResult = [NSMutableDictionary new];
             [genericMapper enumerateKeysAndObjectsUsingBlock:^(id key, id classValue, BOOL *stop) {
                 if (![key isKindOfClass:[NSString class]]) return;
-                Class meta = object_getClass(classValue);
-                if (!meta) return;
+                Class metaClz = object_getClass(classValue);
+                if (!metaClz) return;
                 // 这里就是判断, value 值是一个类对象.
-                if (class_isMetaClass(meta)) {
+                if (class_isMetaClass(metaClz)) {
                     genericResult[key] = classValue;
                 } else if ([classValue isKindOfClass:[NSString class]]) {
                     Class cls = NSClassFromString(classValue);
@@ -516,9 +522,9 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     while (curClassInfo && curClassInfo.superCls != nil) { // recursive parse super class, but ignore root class (NSObject/NSProxy)
         for (YYClassPropertyInfo *propertyInfo in curClassInfo.propertyInfos.allValues) {
             if (!propertyInfo.name) continue;
-            // 如果有黑名单, 那么黑名单里面的不要
+            // 如果有黑名单, 那么黑名单里面的不要.
             if (blacklist && [blacklist containsObject:propertyInfo.name]) continue;
-            // 如果有白名单, 那么只要白名单里面的.
+            // 如果有白名单, 那么不在白名单里面的不要.
             if (whitelist && ![whitelist containsObject:propertyInfo.name]) continue;
             _YYModelPropertyMeta *meta = [_YYModelPropertyMeta metaWithClassInfo:classInfo
                                                                     propertyInfo:propertyInfo

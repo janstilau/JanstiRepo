@@ -364,7 +364,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return Class to create from this dictionary, `nil` to use current class.
  
- 根据 dictionary 里面的值, 取生成不同的 Class 对象. 这比在业务中取 type 值然后显示的写明生成的对象要方便一些.
+ 根据 dictionary 里面的值, 取生成不同的 Class 对象.
+ 这比在业务中取 type 值然后显示的写明生成的对象要方便一些.
  不过, 通过 type 在代码里面明确的写明, 代码的可读性会好很多.
  
  */
