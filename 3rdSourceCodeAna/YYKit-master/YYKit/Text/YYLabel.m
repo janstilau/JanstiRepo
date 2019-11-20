@@ -18,7 +18,6 @@ static dispatch_queue_t YYLabelGetReleaseQueue() {
 }
 #endif
 
-
 static const CGFloat kLongPressMinimumDuration = 0.5;
 static const CGFloat kLongPressAllowableMovement = 9.0;
 static const CGFloat kHighlightFadeDuration = 0.15;
