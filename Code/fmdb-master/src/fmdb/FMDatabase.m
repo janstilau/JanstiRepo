@@ -40,11 +40,11 @@ NS_ASSUME_NONNULL_END
 #pragma mark FMDatabase instantiation and deallocation
 
 + (instancetype)databaseWithPath:(NSString *)aPath {
-    return FMDBReturnAutoreleased([[self alloc] initWithPath:aPath]);
+    return [[self alloc] initWithPath:aPath];
 }
 
 + (instancetype)databaseWithURL:(NSURL *)url {
-    return FMDBReturnAutoreleased([[self alloc] initWithURL:url]);
+    return [[self alloc] initWithURL:url];
 }
 
 - (instancetype)init {
@@ -55,14 +55,11 @@ NS_ASSUME_NONNULL_END
     return [self initWithPath:url.path];
 }
 
+// Designated mathod, 在这个方法的内部, 仅仅是做一些成员变量的初始化工作.
 - (instancetype)initWithPath:(NSString *)path {
-    
-    assert(sqlite3_threadsafe()); // whoa there big boy- gotta make sure sqlite it happy with what we're going to do.
-    
     self = [super init];
-    
     if (self) {
-        _databasePath               = [path copy];
+        _databasePath               = [path copy]; // 数据库的存储地址, 仅仅在 init 函数中会进行设置.
         _openResultSets             = [[NSMutableSet alloc] init];
         _db                         = nil;
         _logsErrors                 = YES;
@@ -70,28 +67,11 @@ NS_ASSUME_NONNULL_END
         _maxBusyRetryTimeInterval   = 2;
         _isOpen                     = NO;
     }
-    
     return self;
 }
 
-#if ! __has_feature(objc_arc)
-- (void)finalize {
-    [self close];
-    [super finalize];
-}
-#endif
-
 - (void)dealloc {
     [self close];
-    FMDBRelease(_openResultSets);
-    FMDBRelease(_cachedStatements);
-    FMDBRelease(_dateFormat);
-    FMDBRelease(_databasePath);
-    FMDBRelease(_openFunctions);
-    
-#if ! __has_feature(objc_arc)
-    [super dealloc];
-#endif
 }
 
 - (NSURL *)databaseURL {
@@ -145,47 +125,33 @@ NS_ASSUME_NONNULL_END
 }
 
 - (const char*)sqlitePath {
-    
-    if (!_databasePath) {
-        return ":memory:";
-    }
-    
-    if ([_databasePath length] == 0) {
-        return ""; // this creates a temporary database (it's an sqlite thing).
-    }
-    
-    return [_databasePath fileSystemRepresentation];
-    
+    return [_databasePath fileSystemRepresentation]; // 返回 C 语言的路径.
 }
 
 #pragma mark Open and close database
 
 - (BOOL)open {
-    if (_isOpen) {
+    if (_isOpen) { // guard 函数.
         return YES;
     }
-    
     // if we previously tried to open and it failed, make sure to close it before we try again
-    
     if (_db) {
         [self close];
     }
     
     // now open database
     
-    int err = sqlite3_open([self sqlitePath], (sqlite3**)&_db );
+    int err = sqlite3_open([self sqlitePath], (sqlite3**)&_db ); // 这里, 用了这种方式, 进行数据库的打开工作.
     if(err != SQLITE_OK) {
         NSLog(@"error opening!: %d", err);
         return NO;
     }
     
+    
     if (_maxBusyRetryTimeInterval > 0.0) {
-        // set the handler
         [self setMaxBusyRetryTimeInterval:_maxBusyRetryTimeInterval];
     }
-    
     _isOpen = YES;
-    
     return YES;
 }
 
@@ -301,18 +267,13 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
 }
 
 - (void)setMaxBusyRetryTimeInterval:(NSTimeInterval)timeout {
-    
     _maxBusyRetryTimeInterval = timeout;
-    
-    if (!_db) {
-        return;
-    }
+    if (!_db) { return; }
     
     if (timeout > 0) {
+        // 此函数设置一个回调函数，只要尝试打开另一个线程或进程已锁定的数据库表时，该函数将被调用。
         sqlite3_busy_handler(_db, &FMDBDatabaseBusyHandler, (__bridge void *)(self));
-    }
-    else {
-        // turn it off otherwise
+    } else {
         sqlite3_busy_handler(_db, nil, nil);
     }
 }
@@ -519,21 +480,10 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
 }
 
 - (BOOL)databaseExists {
-    
-    if (!_isOpen) {
-        
+    if (!_isOpen) { // 必须先打开, 才能进行后面的操作.
         NSLog(@"The FMDatabase %@ is not open.", self);
-        
-#ifndef NS_BLOCK_ASSERTIONS
-        if (_crashOnErrors) {
-            NSAssert(false, @"The FMDatabase %@ is not open.", self);
-            abort();
-        }
-#endif
-        
         return NO;
     }
-    
     return YES;
 }
 
@@ -946,6 +896,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     return rs;
 }
 
+// 执行语句
 - (FMResultSet *)executeQuery:(NSString*)sql, ... {
     va_list args;
     va_start(args, sql);
@@ -1511,14 +1462,12 @@ static NSString *FMDBEscapeSavePointName(NSString *savepointName) {
     return _shouldCacheStatements;
 }
 
+// 是否需要存储执行的语句.
 - (void)setShouldCacheStatements:(BOOL)value {
-    
     _shouldCacheStatements = value;
-    
     if (_shouldCacheStatements && !_cachedStatements) {
         [self setCachedStatements:[NSMutableDictionary dictionary]];
     }
-    
     if (!_shouldCacheStatements) {
         [self setCachedStatements:nil];
     }

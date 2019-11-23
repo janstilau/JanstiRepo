@@ -876,7 +876,7 @@ typedef NS_ENUM(int, FMDBCheckpointMode) {
 
 /** The path of the database file
  */
-
+// readonly, 仅仅只能在初始化函数中设置这个值.
 @property (nonatomic, readonly, nullable) NSString *databasePath;
 
 /** The file URL of the database file.

@@ -44,9 +44,6 @@ int main (int argc, const char * argv[]) {
             return 0;
         }
         
-        // kind of experimentalish.
-        [db setShouldCacheStatements:YES];
-        
         // create a bad statement, just to test the error code.
         [db executeUpdate:@"blah blah blah"];
         
