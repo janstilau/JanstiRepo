@@ -23,10 +23,10 @@ class PlayViewController: UIViewController, UITextFieldDelegate, AVAudioPlayerDe
 		navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
 		navigationItem.leftItemsSupplementBackButton = true
 		updateForChangedRecording()
-
+		
 		NotificationCenter.default.addObserver(self, selector: #selector(storeChanged(notification:)), name: Store.changedNotification, object: nil)
 	}
-
+	
 	@objc func storeChanged(notification: Notification) {
 		guard let item = notification.object as? Item, item === recording else { return }
 		updateForChangedRecording()

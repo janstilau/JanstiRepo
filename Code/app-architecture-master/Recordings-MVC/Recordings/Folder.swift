@@ -30,7 +30,7 @@ class Folder: Item, Codable {
 				break
 			}
 		}
-
+		
 		let uuid = try c.decode(UUID.self, forKey: .uuid)
 		let name = try c.decode(String.self, forKey: .name)
 		super.init(name: name, uuid: uuid)
@@ -39,7 +39,7 @@ class Folder: Item, Codable {
 			c.parent = self
 		}
 	}
-
+	
 	func encode(to encoder: Encoder) throws {
 		var c = encoder.container(keyedBy: FolderKeys.self)
 		try c.encode(name, forKey: .name)
@@ -89,7 +89,7 @@ class Folder: Item, Codable {
 			Item.parentFolderKey: self
 		])
 	}
-
+	
 	override func item(atUUIDPath path: ArraySlice<UUID>) -> Item? {
 		guard path.count > 1 else { return super.item(atUUIDPath: path) }
 		guard path.first == uuid else { return nil }

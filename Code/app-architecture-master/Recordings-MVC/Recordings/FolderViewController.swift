@@ -85,7 +85,7 @@ class FolderViewController: UITableViewController {
 			guard
 				let folderVC = segue.destination as? FolderViewController,
 				let selectedFolder = selectedItem as? Folder
-			else { fatalError() }
+				else { fatalError() }
 			folderVC.folder = selectedFolder
 		}
 		else if identifier == .showRecorder {
@@ -93,9 +93,9 @@ class FolderViewController: UITableViewController {
 			recordVC.folder = folder
 		} else if identifier == .showPlayer {
 			guard
-			let playVC = (segue.destination as? UINavigationController)?.topViewController as? PlayViewController,
-			let recording = selectedItem as? Recording
-			else { fatalError() }
+				let playVC = (segue.destination as? UINavigationController)?.topViewController as? PlayViewController,
+				let recording = selectedItem as? Recording
+				else { fatalError() }
 			playVC.recording = recording
 			if let indexPath = tableView.indexPathForSelectedRow {
 				tableView.deselectRow(at: indexPath, animated: true)

@@ -6,8 +6,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 	
 	var window: UIWindow?
 	
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-		let splitViewController = window!.rootViewController as! UISplitViewController
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+		guard let rootViewController = window?.rootViewController else {
+			assert(false, "window have no rootViewControoler")
+			return false
+		}
+		guard let splitViewController = rootViewController as? UISplitViewController else {
+			assert(false, "rootViewController is not a UISplitViewController")
+			return false
+		}
 		splitViewController.delegate = self
 		splitViewController.preferredDisplayMode = .allVisible
 		return true

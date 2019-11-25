@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		06417BA3238813ED001191F2 /* Demo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06417BA2238813ED001191F2 /* Demo.swift */; };
 		835F5B741F39C581006B1400 /* empty.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 835F5B731F39C269006B1400 /* empty.m4a */; };
 		8379F0CD1F2F197500CDB032 /* FolderViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8379F0CC1F2F197500CDB032 /* FolderViewControllerTests.swift */; };
 		C90B60971EC00343008C9347 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90B60961EC00343008C9347 /* Store.swift */; };
@@ -37,7 +36,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		06417BA2238813ED001191F2 /* Demo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Demo.swift; sourceTree = "<group>"; };
 		835F5B731F39C269006B1400 /* empty.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = empty.m4a; sourceTree = "<group>"; };
 		8379F0C21F2F193F00CDB032 /* RecordingsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecordingsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8379F0C61F2F193F00CDB032 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -144,7 +142,6 @@
 		C9EB56BF1EAE33C1000EC5F4 /* Recordings */ = {
 			isa = PBXGroup;
 			children = (
-				06417BA2238813ED001191F2 /* Demo.swift */,
 				C9CFB03A1EC09B12004529FC /* App+Views */,
 				C9CFB0331EC09411004529FC /* Model */,
 				C9CFB02C1EC085B2004529FC /* Helpers */,
@@ -210,6 +207,7 @@
 					};
 					C9EB56BC1EAE33C1000EC5F4 = {
 						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = RF2LPG6C4X;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -270,7 +268,6 @@
 			files = (
 				C9CFB02E1EC085CF004529FC /* Recorder.swift in Sources */,
 				C9CFB0351EC09427004529FC /* Item.swift in Sources */,
-				06417BA3238813ED001191F2 /* Demo.swift in Sources */,
 				C90B60971EC00343008C9347 /* Store.swift in Sources */,
 				C9CFB0301EC08ACF004529FC /* Utilities.swift in Sources */,
 				C9CFB0391EC09464004529FC /* Folder.swift in Sources */,
@@ -469,6 +466,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
 				INFOPLIST_FILE = Recordings/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.objc.Recordings-MVC";
@@ -482,6 +480,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
 				INFOPLIST_FILE = Recordings/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.objc.Recordings-MVC";
