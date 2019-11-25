@@ -1,6 +1,13 @@
 import UIKit
 
 class FolderViewController: UITableViewController {
+	/*
+	* 默认是根 Folder, 这里, 设置了监听, 在改变之后进行 tableView 的重绘操作, 并且更改自己的 title.
+	*/
+	/*
+	属性监听, 是为代码提供一个时机, 在 set 的前后, 做一些事情. 在 willSet, didSet 里面重新更改 value 的值, 不会再一次触发监听操作.
+	如果想要控制 set 的值, 在一个合适的范围里面, 应该在 set 方法里面控制. 监听, 更多的是一个回调的概念
+	*/
 	var folder: Folder = Store.shared.rootFolder {
 		didSet {
 			tableView.reloadData()
@@ -11,6 +18,7 @@ class FolderViewController: UITableViewController {
 			}
 		}
 	}
+	
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
