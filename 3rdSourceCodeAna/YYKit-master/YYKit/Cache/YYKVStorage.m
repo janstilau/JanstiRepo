@@ -33,25 +33,25 @@ static NSString *const kTrashDirectoryName = @"trash";
 /*
  File:
  /path/
-      /manifest.sqlite
-      /manifest.sqlite-shm
-      /manifest.sqlite-wal
-      /data/
-           /e10adc3949ba59abbe56e057f20f883e
-           /e10adc3949ba59abbe56e057f20f883e
-      /trash/
-            /unused_file_or_folder
+ /manifest.sqlite
+ /manifest.sqlite-shm
+ /manifest.sqlite-wal
+ /data/
+ /e10adc3949ba59abbe56e057f20f883e
+ /e10adc3949ba59abbe56e057f20f883e
+ /trash/
+ /unused_file_or_folder
  
  SQL:
  create table if not exists manifest (
-    key                 text,
-    filename            text,
-    size                integer,
-    inline_data         blob,
-    modification_time   integer,
-    last_access_time    integer,
-    extended_data       blob,
-    primary key(key)
+ key                 text,
+ filename            text,
+ size                integer,
+ inline_data         blob,
+ modification_time   integer,
+ last_access_time    integer,
+ extended_data       blob,
+ primary key(key)
  ); 
  create index if not exists last_access_time_idx on manifest(last_access_time);
  */
@@ -78,7 +78,6 @@ static NSString *const kTrashDirectoryName = @"trash";
 
 - (BOOL)_dbOpen {
     if (_db) return YES;
-    
     int result = sqlite3_open(_dbPath.UTF8String, &_db);
     if (result == SQLITE_OK) {
         CFDictionaryKeyCallBacks keyCallbacks = kCFCopyStringDictionaryKeyCallBacks;
@@ -146,7 +145,17 @@ static NSString *const kTrashDirectoryName = @"trash";
 }
 
 - (BOOL)_dbInitialize {
-    NSString *sql = @"pragma journal_mode = wal; pragma synchronous = normal; create table if not exists manifest (key text, filename text, size integer, inline_data blob, modification_time integer, last_access_time integer, extended_data blob, primary key(key)); create index if not exists last_access_time_idx on manifest(last_access_time);";
+    NSString *sql = @"pragma journal_mode = wal; pragma synchronous = normal;\
+    create table if not exists manifest (\
+    key text,\
+    filename text,\
+    size integer,\
+    inline_data blob,\
+    modification_time integer,\
+    last_access_time integer,\
+    extended_data blob,\
+    primary key(key)); \
+    create index if not exists last_access_time_idx on manifest(last_access_time);";
     return [self _dbExecute:sql];
 }
 
@@ -170,6 +179,7 @@ static NSString *const kTrashDirectoryName = @"trash";
     return result == SQLITE_OK;
 }
 
+// 这里没有太明白为了什么, 难道是 sqlite 必须要进行 prepare 才能进行执行吗
 - (sqlite3_stmt *)_dbPrepareStmt:(NSString *)sql {
     if (![self _dbCheck] || sql.length == 0 || !_dbStmtCache) return NULL;
     sqlite3_stmt *stmt = (sqlite3_stmt *)CFDictionaryGetValue(_dbStmtCache, (__bridge const void *)(sql));
@@ -186,6 +196,7 @@ static NSString *const kTrashDirectoryName = @"trash";
     return stmt;
 }
 
+// 简简单单的进行字符串的拼接.
 - (NSString *)_dbJoinedKeys:(NSArray *)keys {
     NSMutableString *string = [NSMutableString new];
     for (NSUInteger i = 0,max = keys.count; i < max; i++) {
@@ -209,19 +220,25 @@ static NSString *const kTrashDirectoryName = @"trash";
     sqlite3_stmt *stmt = [self _dbPrepareStmt:sql];
     if (!stmt) return NO;
     
+    // 对于 insert SQL 的各个参数, 进行绑定.
     int timestamp = (int)time(NULL);
     sqlite3_bind_text(stmt, 1, key.UTF8String, -1, NULL);
     sqlite3_bind_text(stmt, 2, fileName.UTF8String, -1, NULL);
     sqlite3_bind_int(stmt, 3, (int)value.length);
+    // 如果没有外部存储, 那么就是 value 的值就存到数据库中.
     if (fileName.length == 0) {
         sqlite3_bind_blob(stmt, 4, value.bytes, (int)value.length, 0);
     } else {
+        // 如果有了外部存储, 那么久不会存储二进制的值到数据库总.
         sqlite3_bind_blob(stmt, 4, NULL, 0, 0);
     }
+    // 对于保存操作, 创建时间, 和最后的修改时间是一样的.
     sqlite3_bind_int(stmt, 5, timestamp);
     sqlite3_bind_int(stmt, 6, timestamp);
+    // 目前不太明白, extendedData 到底是干什么的.
     sqlite3_bind_blob(stmt, 7, extendedData.bytes, (int)extendedData.length, 0);
     
+    // 执行 SQL 语句.
     int result = sqlite3_step(stmt);
     if (result != SQLITE_DONE) {
         if (_errorLogsEnabled) NSLog(@"%s line:%d sqlite insert error (%d): %s", __FUNCTION__, __LINE__, result, sqlite3_errmsg(_db));
@@ -247,7 +264,7 @@ static NSString *const kTrashDirectoryName = @"trash";
 - (BOOL)_dbUpdateAccessTimeWithKeys:(NSArray *)keys {
     if (![self _dbCheck]) return NO;
     int t = (int)time(NULL);
-     NSString *sql = [NSString stringWithFormat:@"update manifest set last_access_time = %d where key in (%@);", t, [self _dbJoinedKeys:keys]];
+    NSString *sql = [NSString stringWithFormat:@"update manifest set last_access_time = %d where key in (%@);", t, [self _dbJoinedKeys:keys]];
     
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare_v2(_db, sql.UTF8String, -1, &stmt, NULL);
@@ -280,6 +297,7 @@ static NSString *const kTrashDirectoryName = @"trash";
     return YES;
 }
 
+// 这里, 直接调用了 where key in (%@) 这样的方式.
 - (BOOL)_dbDeleteItemWithKeys:(NSArray *)keys {
     if (![self _dbCheck]) return NO;
     NSString *sql =  [NSString stringWithFormat:@"delete from manifest where key in (%@);", [self _dbJoinedKeys:keys]];
@@ -301,6 +319,7 @@ static NSString *const kTrashDirectoryName = @"trash";
 }
 
 - (BOOL)_dbDeleteItemsWithSizeLargerThan:(int)size {
+    // 直接就是根据数据库里面的数据进行删除, 数据的意义就在于, 可以加快算法的结构, 当然可以通过读取整个数据获取到数据的大小, 但是, 进行存储了之后, 才能让整个容器工具类变为可用的工具类.
     NSString *sql = @"delete from manifest where size > ?1;";
     sqlite3_stmt *stmt = [self _dbPrepareStmt:sql];
     if (!stmt) return NO;
@@ -314,6 +333,7 @@ static NSString *const kTrashDirectoryName = @"trash";
 }
 
 - (BOOL)_dbDeleteItemsWithTimeEarlierThan:(int)time {
+    // 根据数据库里面的 time 进行筛选.
     NSString *sql = @"delete from manifest where last_access_time < ?1;";
     sqlite3_stmt *stmt = [self _dbPrepareStmt:sql];
     if (!stmt) return NO;
@@ -474,6 +494,7 @@ static NSString *const kTrashDirectoryName = @"trash";
 }
 
 - (NSMutableArray *)_dbGetFilenamesWithSizeLargerThan:(int)size {
+    // 还是通过数据库的 size, 来获取所有的文件.
     NSString *sql = @"select filename from manifest where size > ?1 and filename is not null;";
     sqlite3_stmt *stmt = [self _dbPrepareStmt:sql];
     if (!stmt) return nil;
@@ -481,6 +502,7 @@ static NSString *const kTrashDirectoryName = @"trash";
     
     NSMutableArray *filenames = [NSMutableArray new];
     do {
+        // 一个查询操作, 怎么变成 OC 中的数据呢, 这里给出了答案.
         int result = sqlite3_step(stmt);
         if (result == SQLITE_ROW) {
             char *filename = (char *)sqlite3_column_text(stmt, 0);
@@ -526,6 +548,7 @@ static NSString *const kTrashDirectoryName = @"trash";
 }
 
 - (NSMutableArray *)_dbGetItemSizeInfoOrderByTimeAscWithLimit:(int)count {
+    // 这里, 根据最后的访问时间, 从数据库里面读取数据. 并且最后生成 item 对象.
     NSString *sql = @"select key, filename, size from manifest order by last_access_time asc limit ?1;";
     sqlite3_stmt *stmt = [self _dbPrepareStmt:sql];
     if (!stmt) return nil;
@@ -571,6 +594,7 @@ static NSString *const kTrashDirectoryName = @"trash";
 }
 
 - (int)_dbGetTotalItemSize {
+    // 根据数据库中的 size sum, 返回最后的和.
     NSString *sql = @"select sum(size) from manifest;";
     sqlite3_stmt *stmt = [self _dbPrepareStmt:sql];
     if (!stmt) return -1;
@@ -597,17 +621,21 @@ static NSString *const kTrashDirectoryName = @"trash";
 
 #pragma mark - file
 
+// 简单的二进制文件的存储.
 - (BOOL)_fileWriteWithName:(NSString *)filename data:(NSData *)data {
+    // 根据 filename 进行存储.
     NSString *path = [_dataPath stringByAppendingPathComponent:filename];
     return [data writeToFile:path atomically:NO];
 }
 
+// 简单的分局 fileName 进行读取的操作.
 - (NSData *)_fileReadWithName:(NSString *)filename {
     NSString *path = [_dataPath stringByAppendingPathComponent:filename];
     NSData *data = [NSData dataWithContentsOfFile:path];
     return data;
 }
 
+// 简单的删除操作.
 - (BOOL)_fileDeleteWithName:(NSString *)filename {
     NSString *path = [_dataPath stringByAppendingPathComponent:filename];
     return [[NSFileManager defaultManager] removeItemAtPath:path error:NULL];
@@ -661,7 +689,9 @@ static NSString *const kTrashDirectoryName = @"trash";
     return [self initWithPath:@"" type:YYKVStorageTypeFile];
 }
 
+// 在 init 方法里面, 封装所有的初始化操作.
 - (instancetype)initWithPath:(NSString *)path type:(YYKVStorageType)type {
+    // 首先是两个防卫式的判断语句.
     if (path.length == 0 || path.length > kPathLengthMax) {
         NSLog(@"YYKVStorage init error: invalid path: [%@].", path);
         return nil;
@@ -674,6 +704,8 @@ static NSString *const kTrashDirectoryName = @"trash";
     self = [super init];
     _path = path.copy;
     _type = type;
+    // 所有的文件, 都是在一个固定的路径下面, 这个路径, 应该由类内部进行管理.
+    // 所有的文件, 都建立在 path 的基础上. 所以, path 不会是最终的各个数据文件的路径, 而是他们的前缀
     _dataPath = [path stringByAppendingPathComponent:kDataDirectoryName];
     _trashPath = [path stringByAppendingPathComponent:kTrashDirectoryName];
     _trashQueue = dispatch_queue_create("com.ibireme.cache.disk.trash", DISPATCH_QUEUE_SERIAL);
@@ -718,6 +750,8 @@ static NSString *const kTrashDirectoryName = @"trash";
     }
 }
 
+#pragma mark - Save
+
 - (BOOL)saveItem:(YYKVStorageItem *)item {
     return [self saveItemWithKey:item.key value:item.value filename:item.filename extendedData:item.extendedData];
 }
@@ -733,6 +767,7 @@ static NSString *const kTrashDirectoryName = @"trash";
     }
     
     if (filename.length) {
+        // 如果是文件存储, 那么首先进行文件的存储工作, 然后进行数据库的存储.
         if (![self _fileWriteWithName:filename data:value]) {
             return NO;
         }
@@ -752,14 +787,18 @@ static NSString *const kTrashDirectoryName = @"trash";
     }
 }
 
+#pragma mark - Remove
+
 - (BOOL)removeItemForKey:(NSString *)key {
     if (key.length == 0) return NO;
     switch (_type) {
         case YYKVStorageTypeSQLite: {
+            // 如果是数据库存储, 那么就直接进行数据库的删除操作.
             return [self _dbDeleteItemWithKey:key];
         } break;
         case YYKVStorageTypeFile:
         case YYKVStorageTypeMixed: {
+            // 如果是文件存储, 那么就先删除文件, 然后删除相应的数据库数据.
             NSString *filename = [self _dbGetFilenameWithKey:key];
             if (filename) {
                 [self _fileDeleteWithName:filename];
@@ -814,6 +853,8 @@ static NSString *const kTrashDirectoryName = @"trash";
     return NO;
 }
 
+// 对于内存中的 LRU, 可以根据链表的顺序进行删减. 对于数据库里面的 LRU, 可以直接通过数据库的排序进行
+
 - (BOOL)removeItemsEarlierThanTime:(int)time {
     if (time <= 0) return YES;
     if (time == INT_MAX) return [self removeAllItems];
@@ -852,6 +893,7 @@ static NSString *const kTrashDirectoryName = @"trash";
     BOOL suc = NO;
     do {
         int perCount = 16;
+        // 读取 16 条数据, 逐条进行删减, 没有一次性的读取所有的数据.
         items = [self _dbGetItemSizeInfoOrderByTimeAscWithLimit:perCount];
         for (YYKVStorageItem *item in items) {
             if (total > maxSize) {
@@ -869,6 +911,8 @@ static NSString *const kTrashDirectoryName = @"trash";
     if (suc) [self _dbCheckpoint];
     return suc;
 }
+
+// 这个和上面 removeItemsToFitSize 是完全一样的, 只不过是 while 的判断条件, 从 size 变成了 count
 
 - (BOOL)removeItemsToFitCount:(int)maxCount {
     if (maxCount == INT_MAX) return YES;
@@ -919,6 +963,7 @@ static NSString *const kTrashDirectoryName = @"trash";
         int perCount = 32;
         NSArray *items = nil;
         BOOL suc = NO;
+        // 这种, 逐次的取一些数据, 然后进行删减的工作, 很像是设置一个 timer, 然后每次进行一部分的工作.
         do {
             items = [self _dbGetItemSizeInfoOrderByTimeAscWithLimit:perCount];
             for (YYKVStorageItem *item in items) {
@@ -956,12 +1001,15 @@ static NSString *const kTrashDirectoryName = @"trash";
     return item;
 }
 
+#pragma mark - Get
+
 - (YYKVStorageItem *)getItemInfoForKey:(NSString *)key {
     if (key.length == 0) return nil;
     YYKVStorageItem *item = [self _dbGetItemWithKey:key excludeInlineData:YES];
     return item;
 }
 
+// get 的同时, 进行数据库的更新操作
 - (NSData *)getItemValueForKey:(NSString *)key {
     if (key.length == 0) return nil;
     NSData *value = nil;
@@ -980,6 +1028,7 @@ static NSString *const kTrashDirectoryName = @"trash";
             value = [self _dbGetValueWithKey:key];
         } break;
         case YYKVStorageTypeMixed: {
+            // 如果外部存储, 那么就按照外部的值为准, 否则, 就是数据库里面的值.
             NSString *filename = [self _dbGetFilenameWithKey:key];
             if (filename) {
                 value = [self _fileReadWithName:filename];
@@ -993,6 +1042,7 @@ static NSString *const kTrashDirectoryName = @"trash";
         } break;
     }
     if (value) {
+        // 更新最后的访问时间.
         [self _dbUpdateAccessTimeWithKey:key];
     }
     return value;

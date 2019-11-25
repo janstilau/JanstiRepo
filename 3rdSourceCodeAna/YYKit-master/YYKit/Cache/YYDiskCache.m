@@ -61,7 +61,11 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     dispatch_semaphore_signal(_globalInstancesLock);
 }
 
-
+/*
+ 
+ 这个类, 主要是调用 YYKVStorage 的功能, 在各个 YYKVStorage 的功能之上, 增加了一些异步调用的方法.
+ 
+ */
 
 @implementation YYDiskCache {
     YYKVStorage *_kv; // 真正的存储对象.
@@ -69,6 +73,7 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     dispatch_queue_t _queue;
 }
 
+// 一个简易的定时器, 不断的进行调用. 主要还是调用 _trimInBackground 方法, _trimRecursively 和 dispatch_after 作为定时的功能实现.
 - (void)_trimRecursively {
     __weak typeof(self) _self = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_autoTrimInterval * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
@@ -132,7 +137,7 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
 - (NSString *)_filenameForKey:(NSString *)key {
     NSString *filename = nil;
     if (_customFileNameBlock) filename = _customFileNameBlock(key);
-    if (!filename) filename = key.md5String;
+    if (!filename) filename = key.md5String; // 根据 MD5 来进行一次简单的加密操作.
     return filename;
 }
 
@@ -163,7 +168,7 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     if (!self) return nil;
     
     YYDiskCache *globalCache = _YYDiskCacheGetGlobal(path);
-    if (globalCache) return globalCache;
+    if (globalCache) return globalCache; // 这里, 对于不同的 path, 进行了缓存处理.
     
     YYKVStorageType type;
     if (threshold == 0) {
@@ -174,7 +179,7 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
         type = YYKVStorageTypeMixed;
     }
     
-    YYKVStorage *kv = [[YYKVStorage alloc] initWithPath:path type:type];
+    YYKVStorage *kv = [[YYKVStorage alloc] initWithPath:path type:type]; // 真正的存储的功能所在.
     if (!kv) return nil;
     
     _kv = kv;
@@ -195,6 +200,7 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     return self;
 }
 
+// 将检测的功能, 代理给了 _kv
 - (BOOL)containsObjectForKey:(NSString *)key {
     if (!key) return NO;
     Lock();
@@ -203,23 +209,25 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     return contains;
 }
 
+// 异步的 containsObjectForKey 方法.
 - (void)containsObjectForKey:(NSString *)key withBlock:(void(^)(NSString *key, BOOL contains))block {
     if (!block) return;
     __weak typeof(self) _self = self;
-    dispatch_async(_queue, ^{
+    dispatch_async(_queue, ^{ // 在子线程, 进行 block 的回调处理.
         __strong typeof(_self) self = _self;
         BOOL contains = [self containsObjectForKey:key];
         block(key, contains);
     });
 }
 
+// 通过 _kv 进行值得读取, 在读取到了二进制数据之后, 做了解档的操作.
 - (id<NSCoding>)objectForKey:(NSString *)key {
     if (!key) return nil;
     Lock();
     YYKVStorageItem *item = [_kv getItemForKey:key];
     Unlock();
     if (!item.value) return nil;
-    
+    // item.Value 里面存储的是二进制的数据, 这里要有一个归档接档的操作.
     id object = nil;
     if (_customUnarchiveBlock) {
         object = _customUnarchiveBlock(item.value);
@@ -237,6 +245,7 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     return object;
 }
 
+// 异步的 objectForKey 操作.
 - (void)objectForKey:(NSString *)key withBlock:(void(^)(NSString *key, id<NSCoding> object))block {
     if (!block) return;
     __weak typeof(self) _self = self;
@@ -249,13 +258,14 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
 
 - (void)setObject:(id<NSCoding>)object forKey:(NSString *)key {
     if (!key) return;
-    if (!object) {
+    if (!object) { // set 方法里面, 对于 nil 的判断, 是一个通用的写法.
         [self removeObjectForKey:key];
         return;
     }
     
     NSData *extendedData = [YYDiskCache getExtendedDataFromObject:object];
     NSData *value = nil;
+    // 首先, 把要进行存储的对象, 进行归档.
     if (_customArchiveBlock) {
         value = _customArchiveBlock(object);
     } else {
@@ -268,26 +278,30 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     }
     if (!value) return;
     NSString *filename = nil;
+    // 如果归档的数据的值超过了阈值, 那么就进行文件存储.
     if (_kv.type != YYKVStorageTypeSQLite) {
         if (value.length > _inlineThreshold) {
             filename = [self _filenameForKey:key];
         }
     }
     
+    // 最终, 还是调用了 _kv 的方法, 进行了真正的存储.
     Lock();
     [_kv saveItemWithKey:key value:value filename:filename extendedData:extendedData];
     Unlock();
 }
 
+// setObject 的异步方法.
 - (void)setObject:(id<NSCoding>)object forKey:(NSString *)key withBlock:(void(^)(void))block {
     __weak typeof(self) _self = self;
     dispatch_async(_queue, ^{
         __strong typeof(_self) self = _self;
-        [self setObject:object forKey:key];
+        [self setObject:object forKey:key]; // 在  setObject forKey 中有着加锁操作
         if (block) block();
     });
 }
 
+// 直接是 _kv 的方法调用.
 - (void)removeObjectForKey:(NSString *)key {
     if (!key) return;
     Lock();
@@ -295,6 +309,7 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     Unlock();
 }
 
+// removeObjectForKey 的异步方法.
 - (void)removeObjectForKey:(NSString *)key withBlock:(void(^)(NSString *key))block {
     __weak typeof(self) _self = self;
     dispatch_async(_queue, ^{
@@ -304,12 +319,14 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     });
 }
 
+// _kv 的方法调用.
 - (void)removeAllObjects {
     Lock();
     [_kv removeAllItems];
     Unlock();
 }
 
+// _kv 的removeAll 的异步方法.
 - (void)removeAllObjectsWithBlock:(void(^)(void))block {
     __weak typeof(self) _self = self;
     dispatch_async(_queue, ^{
@@ -334,6 +351,7 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     });
 }
 
+// 代理给 _kv
 - (NSInteger)totalCount {
     Lock();
     int count = [_kv getItemsCount];
@@ -341,6 +359,7 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     return count;
 }
 
+// totalCount 的异步方法.
 - (void)totalCountWithBlock:(void(^)(NSInteger totalCount))block {
     if (!block) return;
     __weak typeof(self) _self = self;
@@ -351,6 +370,7 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     });
 }
 
+// 代理给 _kv
 - (NSInteger)totalCost {
     Lock();
     int count = [_kv getItemsSize];
@@ -358,6 +378,7 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     return count;
 }
 
+// totalCost 的异步方法
 - (void)totalCostWithBlock:(void(^)(NSInteger totalCost))block {
     if (!block) return;
     __weak typeof(self) _self = self;
