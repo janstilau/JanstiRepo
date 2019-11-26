@@ -19,20 +19,25 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 }
 #endif
 
+/*
+ 这个类就很好的体现了, 链表和哈希表配合使用的场景.
+ 链表来维持顺序, 而哈希表则用来维护快速查找的功能. 哈希表中, 存储的是带有前驱后续节点指针的节点, 在节点里面还存储, 存储着 key, value, time, cost 等其他的信息.
+ 真正进行数据结构的修改, 完全建立在链表的操作之上, 哈希表的存储和删除操作, 内嵌到链表的操作过程之中.
+ 之所以这样做, 是因为这个数据结构, 暴露出去的更多的应该是顺序功能.
+ */
+
 /**
  A node in linked map.
  Typically, you should not use this class directly.
- 
- 每个插入的对象组成的数据类, 这个数据类中 prev, next 作为链表的组成. 并且, 维护这个节点在 哈希表 中的位置.
  */
 @interface _YYLinkedMapNode : NSObject {
     @package
     __unsafe_unretained _YYLinkedMapNode *_prev; // retained by dic
     __unsafe_unretained _YYLinkedMapNode *_next; // retained by dic
-    id _key;
-    id _value;
-    NSUInteger _cost;
-    NSTimeInterval _time;
+    id _key; // key
+    id _value; // value
+    NSUInteger _cost; // 记录自己的 cost
+    NSTimeInterval _time; // 记录自己的 time
 }
 @end
 
@@ -40,10 +45,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 @end
 
 /**
- A linked map used by YYMemoryCache.
- It's not thread-safe and does not validate the parameters.
- 
- Typically, you should not use this class directly.
+ LinkedMap 能够很好的体现出, 这个数据结构到底是干什么的.
  
  链表用于维护顺序, 哈希表用于 O1 的时间复杂度的实现.
  插入删除操作是建立在链表的基础上, 在维护链表的顺序的同时, 进行哈希表数据结构的维护.
@@ -52,15 +54,14 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 @interface _YYLinkedMap : NSObject {
     @package
     CFMutableDictionaryRef _dic; // 哈希表, 用于维护 O1 的时间复杂度
-    NSUInteger _totalCost; // 类内部维护的值, 在相关方法更新数据.
-    NSUInteger _totalCount; // 类内部维护的值, 在相关方法更新数据.
+    NSUInteger _totalCost; // 类内部维护的值, 在相关方法更新数据. // 在每次更新数据的时候, 维护着这个值, 不然就要遍历所有的节点进行相加了.
+    NSUInteger _totalCount; // 类内部维护的值, 在相关方法更新数据. // 在每次更新数据的时候, 维护着这个值, 不然就要遍历所有的节点进行相加了.
     _YYLinkedMapNode *_head; // MRU, do not change it directly
     _YYLinkedMapNode *_tail; // LRU, do not change it directly
     BOOL _releaseOnMainThread;
     BOOL _releaseAsynchronously;
 }
 
-// _YYLinkedMap 面向的都是_YYLinkedMapNode, 在该节点里面, 已经做好了对于 key, value, cost, time 等信息的封装工作.
 /// Insert a node at head and update the total cost.
 /// Node and node.key should not be nil.
 - (void)insertNodeAtHead:(_YYLinkedMapNode *)node;
@@ -82,7 +83,6 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 @end
 
 
-// 这个类, 基本就是链表哈希表的使用. 在这种数据结构中, 不能直接进行哈希表结构的调整, 而是在链表的操作基础上更新. 这样才符合这个类的设计意图.
 @implementation _YYLinkedMap
 
 - (instancetype)init {
@@ -100,7 +100,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 
 // 函数名已经很明显的显示了自己的意义. 在这个函数里面, 没有进行了安全性的校验. 或者可以这样说, 安全性的校验, 是在这个函数的调用之前, 应该由调用者进行安全性的校验.
 - (void)insertNodeAtHead:(_YYLinkedMapNode *)node {
-    // 哈希表操作
+    // 哈希表操作, 为了确保 O1 的查询效率.
     CFDictionarySetValue(_dic, (__bridge const void *)(node->_key), (__bridge const void *)(node));
     // 累加值
     _totalCost += node->_cost;
@@ -136,7 +136,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 - (void)removeNode:(_YYLinkedMapNode *)node {
     // 哈希表操作
     CFDictionaryRemoveValue(_dic, (__bridge const void *)(node->_key));
-    // 累加操作
+    // 累加值的操作.
     _totalCost -= node->_cost;
     _totalCount--;
     // 链表操作.
@@ -169,12 +169,14 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 - (void)removeAll {
     _totalCost = 0;
     _totalCount = 0;
+    // 链表的操作清楚很简单. 简简单单的将头指针, 尾指针进行删除就可以了.
     _head = nil;
     _tail = nil;
     if (CFDictionaryGetCount(_dic) == 0) { return; }
         
     // 对于这种多线程操作, 通过 holder 保存当前值, 是很通用的做法.
     CFMutableDictionaryRef holder = _dic;
+    // 首先将 _dic 重置到一个新的量.
     _dic = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     if (_releaseAsynchronously) { // 如果是异步就 dispatch_async,
         dispatch_queue_t queue = _releaseOnMainThread ? dispatch_get_main_queue() : YYMemoryCacheGetReleaseQueue();
@@ -211,7 +213,8 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     });
 }
 
-- (void)_trimInBackground { // 仅仅做一个任务的提交工作.
+// 在trim队列中, 提交一个任务.
+- (void)_trimInBackground {
     dispatch_async(_trimQueue, ^{
         // 这个调用有先后顺序, 有可能上面的操作让下面的操作条件完成了, 所以在每个函数开始都要做判断.
         [self _trimToCost:self->_costLimit];
@@ -222,6 +225,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 
 - (void)_trimToCost:(NSUInteger)costLimit {
     BOOL finish = NO;
+    // 这里, 将临界区的范围设置的很小.
     pthread_mutex_lock(&_lock);
     if (costLimit == 0) {
         [_lru removeAll];
@@ -237,7 +241,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     while (!finish) { // 通过这种方式, 逐步的删除元素.
         if (pthread_mutex_trylock(&_lock) == 0) { // tryLock, 为了不影响其他业务, 这样在其他的业务中, lock 的优先级会高.
             if (_lru->_totalCost > costLimit) {
-                _YYLinkedMapNode *node = [_lru removeTailNode]; // 现在还没有进行真正的释放操作, 仅仅是收集操作.
+                _YYLinkedMapNode *node = [_lru removeTailNode]; // 在这个操作的内部, 会进行 _totalCost 数值的更新.
                 if (node) [holder addObject:node];
             } else {
                 finish = YES;
@@ -247,10 +251,10 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
             usleep(10 * 1000); //10 ms
         }
     }
-    if (holder.count) { // 上面的操作, 不能真正释放内存, holder 的意义就是在于, 保住命. 这里, 作者是通过 block 进行的保命操作.
+    if (holder.count) { // 上面的操作, 会将数据在 LRU 中进行删除, 但是没有真正的进行释放. 而释放的操作, 在这里.
         dispatch_queue_t queue = _lru->_releaseOnMainThread ? dispatch_get_main_queue() : YYMemoryCacheGetReleaseQueue();
         dispatch_async(queue, ^{
-            [holder count]; // release in queue
+            [holder count]; // release in queue, 这里, 调用一个方法, 仅仅是为了保住 holder 的生命周期.
         });
     }
 }
@@ -300,6 +304,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
         [_lru removeAll];
         finish = YES;
     } else if (!_lru->_tail || (now - _lru->_tail->_time) <= ageLimit) {
+        // 因为 LRU 的链表, 所以, 如果尾结点的 time 符合了限制条件, 那么就能够认为是已经达到了条件.
         finish = YES;
     }
     pthread_mutex_unlock(&_lock);
@@ -308,6 +313,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     NSMutableArray *holder = [NSMutableArray new];
     while (!finish) {
         if (pthread_mutex_trylock(&_lock) == 0) {
+            // 相应的, 这里的判断条件, 也就变成了尾结点的 time 进行的判断.
             if (_lru->_tail && (now - _lru->_tail->_time) > ageLimit) {
                 _YYLinkedMapNode *node = [_lru removeTailNode];
                 if (node) [holder addObject:node];
@@ -327,6 +333,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     }
 }
 
+// shouldRemoveAllObjectsOnMemoryWarning, didReceiveMemoryWarningBlock 的配置, 在这里发挥了作用
 - (void)_appDidReceiveMemoryWarningNotification {
     if (self.didReceiveMemoryWarningBlock) {
         self.didReceiveMemoryWarningBlock(self);
@@ -335,7 +342,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
         [self removeAllObjects];
     }
 }
-
+// shouldRemoveAllObjectsWhenEnteringBackground, didEnterBackgroundBlock 的配置, 在这里发挥了作用
 - (void)_appDidEnterBackgroundNotification {
     if (self.didEnterBackgroundBlock) {
         self.didEnterBackgroundBlock(self);
@@ -363,7 +370,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_appDidReceiveMemoryWarningNotification) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_appDidEnterBackgroundNotification) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
-    [self _trimRecursively];
+    [self _trimRecursively]; // 这里, 调用这个方法, 仅仅是为了启动这个定时器.
     return self;
 }
 
@@ -446,7 +453,7 @@ static inline dispatch_queue_t YYMemoryCacheGetReleaseQueue() {
 // 设置操作, 加锁,
 - (void)setObject:(id)object forKey:(id)key withCost:(NSUInteger)cost {
     if (!key) return;
-    if (!object) { // 如果 obj 为 nil, 就是删除操作. 这个有好有坏.
+    if (!object) { // 如果是 nil, 就进行删除操作, 这已经是现在比较标准的设计的思路了.
         [self removeObjectForKey:key];
         return;
     }

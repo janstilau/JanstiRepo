@@ -6,10 +6,11 @@
 
 - (instancetype) init {
     NSLog(@"Use \"initWithName\" or \"initWithPath\" to create YYCache instance.");
+    // 这里直接报错要好一些.
     return [self initWithPath:@""];
 }
 
-// name 还是用于生成路径. 只不过这个路径是默认在 cacheDirectory 中.
+// 因为, diskCache 是建立在文件的基础上. 所以, name 的作用主要是用来在特定的目录下生成一个路径, 然后根据这个路径, 创建真正进行存储的 diskCache 对象.
 - (instancetype)initWithName:(NSString *)name {
     if (name.length == 0) return nil;
     NSString *cacheFolder = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
@@ -24,6 +25,7 @@
     // 主要应该观察的是, DiskCache 是用什么样的方式进行的存储.
     YYDiskCache *diskCache = [[YYDiskCache alloc] initWithPath:path];
     if (!diskCache) return nil;
+    
     NSString *name = [path lastPathComponent];
     YYMemoryCache *memoryCache = [YYMemoryCache new];
     memoryCache.name = name;
@@ -36,6 +38,7 @@
     return self;
 }
 
+// 所有的类工厂方法, 仅仅就是在方法内部进行实例的生成而已.
 + (instancetype)cacheWithName:(NSString *)name {
 	return [[self alloc] initWithName:name];
 }
@@ -44,28 +47,31 @@
     return [[self alloc] initWithPath:path];
 }
 
+// 代理到真正的 cache 独享中.
 - (BOOL)containsObjectForKey:(NSString *)key {
     return [_memoryCache containsObjectForKey:key] || [_diskCache containsObjectForKey:key];
 }
 
-
-// 代理给 YYMemory 和 YYDisk
+// 作者的各种方法, 都提供了同步异步两种方式进行了处理. 异步的方案都不是很复杂.
 - (void)containsObjectForKey:(NSString *)key withBlock:(void (^)(NSString *key, BOOL contains))block {
     if (!block) return;
     
+    // 首先是内存缓存判断, 然后在异步调用回调.
     if ([_memoryCache containsObjectForKey:key]) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             block(key, YES);
         });
     } else  {
+        // 如果内存缓存没有命中, 直接调用 disk 缓存的方法,  disk 缓存中, 直接定义了异步的方法.
         [_diskCache containsObjectForKey:key withBlock:block];
     }
 }
 
-// 分发给它的成员.
 - (id<NSCoding>)objectForKey:(NSString *)key {
+    // 首先, 判断内存缓存能否命中.
     id<NSCoding> object = [_memoryCache objectForKey:key];
     if (!object) {
+        // 然后判断, disk 缓存是否命中, 并且更新内存缓存.
         object = [_diskCache objectForKey:key];
         if (object) {
             [_memoryCache setObject:object forKey:key];
@@ -82,7 +88,7 @@
             block(key, object);
         });
     } else {
-        // 这里, 做了 diskCache 和 memoryCache 的同步操作. 基本上的缓存策略也是, 优先内存缓存.
+        // 直接利用了 disk 缓存的方法, 并将传递过来的回调, 组织到参数 block 中.
         [_diskCache objectForKey:key withBlock:^(NSString *key, id<NSCoding> object) {
             if (object && ![_memoryCache objectForKey:key]) {
                 [_memoryCache setObject:object forKey:key];
@@ -92,7 +98,7 @@
     }
 }
 
-// 双向存储.
+// 双向保存
 - (void)setObject:(id<NSCoding>)object forKey:(NSString *)key {
     [_memoryCache setObject:object forKey:key];
     [_diskCache setObject:object forKey:key];
@@ -124,13 +130,14 @@
     [_diskCache removeAllObjectsWithBlock:block];
 }
 
+
 - (void)removeAllObjectsWithProgressBlock:(void(^)(int removedCount, int totalCount))progress
                                  endBlock:(void(^)(BOOL error))end {
-    [_memoryCache removeAllObjects]; // 内存的
+    [_memoryCache removeAllObjects];
     [_diskCache removeAllObjectsWithProgressBlock:progress endBlock:end];
-    
 }
 
+// 以上的所有操作, 都是内存瞬间完成, 而 disk 的则调用相应方法, 逐步删除
 - (NSString *)description {
     if (_name) return [NSString stringWithFormat:@"<%@: %p> (%@)", self.class, self, _name];
     else return [NSString stringWithFormat:@"<%@: %p>", self.class, self];

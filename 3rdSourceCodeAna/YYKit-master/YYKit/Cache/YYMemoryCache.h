@@ -22,9 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
  
  * It uses LRU (least-recently-used) to remove objects; NSCache's eviction method
    is non-deterministic.
+  相比 NSCache 不太清楚的内部实现, 自己实现一个缓存类, 可以有了更加精度的控制.
  * It can be controlled by cost, count and age; NSCache's limits are imprecise.
+ 更加精度的控制.
  * It can be configured to automatically evict objects when receive memory 
    warning or app enter background.
+ 更加精度的控制.
  
  The time of `Access Methods` in YYMemoryCache is typically in constant time (O(1)).
  */
@@ -56,6 +59,8 @@ NS_ASSUME_NONNULL_BEGIN
  @discussion The default value is NSUIntegerMax, which means no limit.
  This is not a strict limit—if the cache goes over the limit, some objects in the
  cache could be evicted later in backgound thread.
+ 
+ 在添加缓存的时候, 会根据这个值进行删除的工作. 也会定时进行筛检删除工作.
  */
 @property NSUInteger countLimit;
 
@@ -125,6 +130,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property BOOL releaseAsynchronously;
 
+// 上面的各个属性, 都能算作这个类的配置. 在类的生成过程中, 会给与这些值一些默认值. 在类的其他的函数中, 会根据这些配置值进行操作.
 
 #pragma mark - Access Methods
 ///=============================================================================
@@ -150,6 +156,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Sets the value of the specified key in the cache (0 cost).
  
+ 如果没有设置 cost 的值, 那么其实是按照 0 cost 进行的存储.
  @param object The object to be stored in the cache. If nil, it calls `removeObjectForKey:`.
  @param key    The key with which to associate the value. If nil, this method has no effect.
  @discussion Unlike an NSMutableDictionary object, a cache does not copy the key 
