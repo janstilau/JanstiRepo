@@ -235,7 +235,6 @@ static NSString *const kTrashDirectoryName = @"trash";
     // 对于保存操作, 创建时间, 和最后的修改时间是一样的.
     sqlite3_bind_int(stmt, 5, timestamp);
     sqlite3_bind_int(stmt, 6, timestamp);
-    // 目前不太明白, extendedData 到底是干什么的.
     sqlite3_bind_blob(stmt, 7, extendedData.bytes, (int)extendedData.length, 0);
     
     // 执行 SQL 语句.

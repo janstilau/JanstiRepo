@@ -20,11 +20,15 @@ NS_ASSUME_NONNULL_BEGIN
  YYDiskCache has these features:
  
  * It use LRU (least-recently-used) to remove objects.
+ 相比于memoryCache 的链表结构, Disk 的更多的是利用了数据库的排序功能.
+ 对于 DishCache 来说, 数据量要大一些, 所以, 数据更多的存储在了数据库, 而不是手动用链表这个结构进行维护.
  * It can be controlled by cost, count, and age.
+ 在数据库中, 有着相应的字段, 对于 limit 的判断, 是根据 sum(column) 的数据库语句完成的.
  * It can be configured to automatically evict objects when there's no free disk space.
+ 作者自己测试, 对于 20k 以上的数据, 用外部文件比较好. 这个时候, 数据库中会存储对应文件的路径. 那么数据, 只要数据库中有这个路径, 那么数据就是存外部文件中读取, 否则, 数据是存储到数据库中.
  * It can automatically decide the storage type (sqlite/file) for each object to get
       better performance.
- 
+ 作者根据自己的判断, 选择了不同的存储方式.
  You may compile the latest version of sqlite and ignore the libsqlite3.dylib in
  iOS system to get 2x~4x speed up.
  */
@@ -36,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///=============================================================================
 
 /** The name of the cache. Default is nil. */
+// name 最终会被变为数据库, 文件缓存的路径, 而这个路径是在类的内部进行的维护.
 @property (nullable, copy) NSString *name;
 
 /** The path of the cache (read-only). */
@@ -49,6 +54,8 @@ NS_ASSUME_NONNULL_BEGIN
  objects will be stored in sqlite. 
  
  The default value is 20480 (20KB).
+ 
+  在进行存储的时候, 会根据这个值得大小, 选择是文件存储还是数据库存储.
  */
 @property (readonly) NSUInteger inlineThreshold;
 
@@ -58,6 +65,8 @@ NS_ASSUME_NONNULL_BEGIN
  conform to the `NSCoding` protocol.
  
  The default value is nil.
+ 
+ 一个自定义归档解档的属性.
  */
 @property (nullable, copy) NSData *(^customArchiveBlock)(id object);
 
@@ -67,6 +76,8 @@ NS_ASSUME_NONNULL_BEGIN
  conform to the `NSCoding` protocol.
  
  The default value is nil.
+ 
+ 一个自定义归档解档的属性.
  */
 @property (nullable, copy) id (^customUnarchiveBlock)(NSData *data);
 
@@ -76,6 +87,8 @@ NS_ASSUME_NONNULL_BEGIN
  default file name.
  
  The default value is nil.
+ 
+ 通过 key 进行存储. 在这里, 是通过 md5 进行的 key 对应的文件名的生成.
  */
 @property (nullable, copy) NSString *(^customFileNameBlock)(NSString *key);
 
@@ -112,6 +125,8 @@ NS_ASSUME_NONNULL_BEGIN
  be evicted later in background queue.
  */
 @property NSTimeInterval ageLimit;
+
+// 上面的三个值, 和 memoryCache 是一致的.
 
 /**
  The minimum free disk space (in bytes) which the cache should kept.
@@ -379,6 +394,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)trimToAge:(NSTimeInterval)age withBlock:(void(^)(void))block;
 
+
+// 一个添加额外数据的接口, Extended 也会被保存到数据库中. 一般来说, 数据库中该值都为 NULL
 
 #pragma mark - Extended Data
 ///=============================================================================
