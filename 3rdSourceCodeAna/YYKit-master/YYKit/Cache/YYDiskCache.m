@@ -66,6 +66,10 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
 /*
  这个类, 主要是调用 YYKVStorage 的功能, 在各个 YYKVStorage 的功能之上, 增加了一些异步调用的方法.
  直接调用
+ 
+ 从这个类里面, 我们也能够看到多线程怎么进行的.
+ 想要子线程完成一个任务, 那么就自定义一个队列, 然后将相关的任务提交到这个队列中.
+ 而加锁, 则是在需要进行线程同步的地方, 加上相关的锁的处理.
  */
 
 @implementation YYDiskCache {

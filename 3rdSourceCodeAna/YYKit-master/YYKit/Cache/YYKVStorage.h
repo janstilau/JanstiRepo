@@ -1,14 +1,3 @@
-//
-//  YYKVStorage.h
-//  YYKit <https://github.com/ibireme/YYKit>
-//
-//  Created by ibireme on 15/4/22.
-//  Copyright (c) 2015 ibireme.
-//
-//  This source code is licensed under the MIT-style license found in the
-//  LICENSE file in the root directory of this source tree.
-//
-
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -19,26 +8,28 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface YYKVStorageItem : NSObject
 @property (nonatomic, strong) NSString *key;                ///< key
-@property (nonatomic, strong) NSData *value;                ///< value
-@property (nullable, nonatomic, strong) NSString *filename; ///< filename (nil if inline)
-@property (nonatomic) int size;                             ///< value's size in bytes
-@property (nonatomic) int modTime;                          ///< modification unix timestamp
-@property (nonatomic) int accessTime;                       ///< last access unix timestamp
+@property (nonatomic, strong) NSData *value;                ///< value, 注意是二进制的值, 这里面的值, 会被存到数据库或者文件中.
+@property (nullable, nonatomic, strong) NSString *filename; ///< filename 当有值的时候, 存储到文件中,
+@property (nonatomic) int size;                             ///< value's size in bytes 二进制数据的大小, 会被存储到数据库中
+@property (nonatomic) int modTime;                          ///< modification unix timestamp 创建时间, 会被存储到数据库汇总
+@property (nonatomic) int accessTime;                       ///< last access unix timestamp 最后访问时间 ,会被存储到数据库中.
 @property (nullable, nonatomic, strong) NSData *extendedData; ///< extended data (nil if no extended data)
 @end
 
 /**
  Storage type, indicated where the `YYKVStorageItem.value` stored.
  
- @discussion Typically, write data to sqlite is faster than extern file, but 
- reading performance is dependent on data size. In my test (on iPhone 6 64G), 
- read data from extern file is faster than from sqlite when the data is larger 
+ @discussion Typically, write data to sqlite is faster than extern file, but
+ reading performance is dependent on data size. In my test (on iPhone 6 64G),
+ read data from extern file is faster than from sqlite when the data is larger
  than 20KB.
  
- * If you want to store large number of small datas (such as contacts cache), 
-   use YYKVStorageTypeSQLite to get better performance.
+ * If you want to store large number of small datas (such as contacts cache),
+ use YYKVStorageTypeSQLite to get better performance.
+ 如果是大量的小值, 还是存放到数据库中
  * If you want to store large files (such as image cache),
-   use YYKVStorageTypeFile to get better performance.
+ use YYKVStorageTypeFile to get better performance.
+ 如果是数据比较大的值, 存放到文件中.
  * You can use YYKVStorageTypeMixed and choice your storage type for each item.
  
  See <http://www.sqlite.org/intern-v-extern-blob.html> for more information.
@@ -61,15 +52,15 @@ typedef NS_ENUM(NSUInteger, YYKVStorageType) {
  YYKVStorage is a key-value storage based on sqlite and file system.
  Typically, you should not use this class directly.
  
- @discussion The designated initializer for YYKVStorage is `initWithPath:type:`. 
+ @discussion The designated initializer for YYKVStorage is `initWithPath:type:`.
  After initialized, a directory is created based on the `path` to hold key-value data.
  Once initialized you should not read or write this directory without the instance.
  
  You may compile the latest version of sqlite and ignore the libsqlite3.dylib in
  iOS system to get 2x~4x speed up.
  
- @warning The instance of this class is *NOT* thread safe, you need to make sure 
- that there's only one thread to access the instance at the same time. If you really 
+ @warning The instance of this class is *NOT* thread safe, you need to make sure
+ that there's only one thread to access the instance at the same time. If you really
  need to process large amounts of data in multi-thread, you should split the data
  to multiple KVStorage instance (sharding).
  */
@@ -92,13 +83,13 @@ typedef NS_ENUM(NSUInteger, YYKVStorageType) {
 + (instancetype)new UNAVAILABLE_ATTRIBUTE;
 
 /**
- The designated initializer. 
+ The designated initializer.
  
  @param path  Full path of a directory in which the storage will write data. If
-    the directory is not exists, it will try to create one, otherwise it will 
-    read the data in this directory.
- @param type  The storage type. After first initialized you should not change the 
-    type of the specified path.
+ the directory is not exists, it will try to create one, otherwise it will
+ read the data in this directory.
+ @param type  The storage type. After first initialized you should not change the
+ type of the specified path.
  @return  A new storage object, or nil if an error occurs.
  @warning Multiple instances with the same path will make the storage unstable.
  */
@@ -114,12 +105,12 @@ typedef NS_ENUM(NSUInteger, YYKVStorageType) {
  Save an item or update the item with 'key' if it already exists.
  
  @discussion This method will save the item.key, item.value, item.filename and
- item.extendedData to disk or sqlite, other properties will be ignored. item.key 
+ item.extendedData to disk or sqlite, other properties will be ignored. item.key
  and item.value should not be empty (nil or zero length).
  
  If the `type` is YYKVStorageTypeFile, then the item.filename should not be empty.
  If the `type` is YYKVStorageTypeSQLite, then the item.filename will be ignored.
- It the `type` is YYKVStorageTypeMixed, then the item.value will be saved to file 
+ It the `type` is YYKVStorageTypeMixed, then the item.value will be saved to file
  system if the item.filename is not empty, otherwise it will be saved to sqlite.
  
  @param item  An item.
@@ -220,7 +211,7 @@ typedef NS_ENUM(NSUInteger, YYKVStorageType) {
  Remove all items in background queue.
  
  @discussion This method will remove the files and sqlite database to a trash
- folder, and then clear the folder in background queue. So this method is much 
+ folder, and then clear the folder in background queue. So this method is much
  faster than `removeAllItemsWithProgressBlock:endBlock:`.
  
  @return Whether succeed.
@@ -289,8 +280,8 @@ typedef NS_ENUM(NSUInteger, YYKVStorageType) {
  Get items value with an array of keys.
  
  @param keys  An array of specified keys.
- @return A dictionary which key is 'key' and value is 'value', or nil if not 
-    exists / error occurs.
+ @return A dictionary which key is 'key' and value is 'value', or nil if not
+ exists / error occurs.
  */
 - (nullable NSDictionary<NSString *, NSData *> *)getItemValueForKeys:(NSArray<NSString *> *)keys;
 
