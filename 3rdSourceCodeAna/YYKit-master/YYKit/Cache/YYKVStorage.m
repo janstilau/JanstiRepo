@@ -44,17 +44,19 @@ static NSString *const kTrashDirectoryName = @"trash";
  
  SQL:
  create table if not exists manifest (
- key                 text,
- filename            text,
- size                integer,
- inline_data         blob,
- modification_time   integer,
- last_access_time    integer,
- extended_data       blob,
+ key                 text, // key 是主键.
+ filename            text, // 文件存储的路径
+ size                integer, // 整体二进制数据的大小
+ inline_data         blob, // 二进制数据, 如果是文件存储, 那么这个数据为空
+ modification_time   integer, // 修改时间或者是创建时间
+ last_access_time    integer, // 最后访问时间
+ extended_data       blob, // 外部数据. 这个数据到底有什么用, 完全是调用者进行处理.
  primary key(key)
  ); 
- create index if not exists last_access_time_idx on manifest(last_access_time);
+ create index if not exists last_access_time_idx on manifest(last_access_time); // 通过last_access_time建立索引, 原理未知.
  */
+
+// YYKVStorageItem 是存储在数据库信息的对象表示. 可以说是完全的数据库信息的一一对应. 其实 coreData 的各个类也是类似的概念.
 
 @implementation YYKVStorageItem
 @end
