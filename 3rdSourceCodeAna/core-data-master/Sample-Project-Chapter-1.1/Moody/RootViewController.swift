@@ -10,29 +10,25 @@ import UIKit
 import CoreLocation
 import CoreData
 
-/**
- Swift 里面, 数据和方法更多的是放到了一起, 而不是有着明显的数据和方法的分割了.
- */
-
-class RootViewController: UIViewController, SegueHandler {
-    /**
-     这里, 通过 SegueIdentifier 的定义, 将 rootVC 中 SegueIdentifier 和 segueHandler 中的进行了对应.
+class RootViewController: UIViewController, SeguePerformer {
+    /*
+     SeguePerformer 中真正需要实现类实现的, 也就是 SegueIdentifier 的实现, 相比较于 typealiase, 这里是直接定义了这样的一个类. 那么, rootVC 这个类, 也就符合了 SeguePerformer 这个 协议. 这个协议里面定义了几个方法, RootVc 符合限制, 所以就可以拿来使用了.
      */
     enum SegueIdentifier: String {
         case embedNavigation = "embedNavigationController"
         case embedCamera = "embedCamera"
     }
-
+    
     @IBOutlet weak var hideCameraConstraint: NSLayoutConstraint!
-    var managedObjectContext: NSManagedObjectContext! // 隐式解包.
-
+    var managedObjectContext: NSManagedObjectContext!
+    
+    // 这里其实就是传递 manageContext 的过程. 不过, 这里有着大量的 as 类型判断, 难道 swift 里面就不用考虑依赖的问题吗.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segueIdentifier(for: segue) {
         case .embedNavigation:
-            // 在 case 的这个小区域里面, 也是可以使用 guard 的, guard 中的变量, 在整个 case 中都可以继续使用.
             guard let nc = segue.destination as? UINavigationController,
-                let vc = nc.viewControllers.first as? MoodsTableViewController
-            else { fatalError("wrong view controller type") }
+                let vc = nc.viewControllers.first as? ManageContextContainer
+                else { fatalError("wrong view controller type") }
             vc.managedObjectContext = managedObjectContext
             nc.delegate = self
         case .embedCamera:
@@ -41,18 +37,10 @@ class RootViewController: UIViewController, SegueHandler {
             cameraViewController?.delegate = self
         }
     }
-
-
+    
+    
     // MARK: Private
-
     fileprivate var cameraViewController: CameraViewController?
-
-    fileprivate func setCameraVisibility(_ visible: Bool) {
-        hideCameraConstraint.isActive = !visible
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .beginFromCurrentState, animations: {
-            self.view.layoutIfNeeded()
-        }, completion: nil)
-    }
 }
 
 
@@ -61,14 +49,17 @@ extension RootViewController: UINavigationControllerDelegate {
         let cameraVisible = (viewController as? MoodDetailViewController) == nil
         setCameraVisibility(cameraVisible)
     }
+    func setCameraVisibility(_ visible: Bool) {
+        hideCameraConstraint.isActive = !visible
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .beginFromCurrentState, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
 }
 
-
+// CameraViewControllerDelegate 的内容, 放到了 extension 里面, 和其他的代码逻辑进行分离.
 extension RootViewController: CameraViewControllerDelegate {
     func didCapture(_ image: UIImage) {
-        /**
-         Context 要发生变化了, 这个变化是, 要插入一个 Mood 的数据. 在变化发生以后, 进行保存的操作.
-         */
         managedObjectContext.performChanges {
             _ = Mood.insert(into: self.managedObjectContext, image: image)
         }

@@ -16,12 +16,6 @@ protocol TableViewDataSourceDelegate: class {
     func configure(_ cell: Cell, for object: Object)
 }
 
-
-/// Note: this class doesn't support working with multiple sections
-/**
- dataSource 从, TableView 中进行了脱离.
- TableViewDataSource 处理的都是和数据源相关的方法, 但是数据源里面cell 如何显示, 是变化的, 所以, TableViewDataSourceDelegate 这个协议就是讲 cell 的显示工作, 转移到了外部. 因为 cell 的显示, 也是 tableView 中最为重要的一部分
- */
 class TableViewDataSource<Delegate: TableViewDataSourceDelegate>: NSObject, UITableViewDataSource, NSFetchedResultsControllerDelegate {
     // 这两个仅仅是重命名而已. 它确定了 tableViewDataSource 中操作的数据, 和这个类中操作的数据, 类型是一致的.
     typealias ManageObject = Delegate.Object

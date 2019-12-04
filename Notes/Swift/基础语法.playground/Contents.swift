@@ -49,8 +49,11 @@ str = .none
 
 // 运算符
 
+class A {
+    
+}
 
-let a: Int? = nil
-let b: String = "BBB"
-print(a ?? b)
-
+let aValue = A()
+print(type(of: aValue) == A.self)
+print("End")
+ 

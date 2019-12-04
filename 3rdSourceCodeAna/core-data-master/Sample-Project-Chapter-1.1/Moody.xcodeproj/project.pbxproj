@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06E6E45D23980C3900EEB9F0 /* ManageContextContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E6E45C23980C3900EEB9F0 /* ManageContextContainer.swift */; };
 		172A3EEE1B09E70F00B7DAB2 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172A3EED1B09E70F00B7DAB2 /* RootViewController.swift */; };
 		172A3EF31B09F9E300B7DAB2 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172A3EF21B09F9E300B7DAB2 /* CameraViewController.swift */; };
 		1737F8F31B0B18C70070B608 /* CaptureSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1737F8F21B0B18C70070B608 /* CaptureSession.swift */; };
@@ -18,7 +19,7 @@
 		174495781AFBA94C007C9A75 /* MoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174495771AFBA94C007C9A75 /* MoodView.swift */; };
 		174495881AFBF246007C9A75 /* MoodsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174495871AFBF246007C9A75 /* MoodsTableViewController.swift */; };
 		1744958A1AFBF990007C9A75 /* MoodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174495891AFBF990007C9A75 /* MoodTableViewCell.swift */; };
-		176699681B83244700AC71A8 /* SegueHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176699671B83244700AC71A8 /* SegueHandler.swift */; };
+		176699681B83244700AC71A8 /* SeguePerformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176699671B83244700AC71A8 /* SeguePerformer.swift */; };
 		1771F3151DD9DAB0004CCA43 /* Mood.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E7CD9CA1B11E23F0008FE1F /* Mood.swift */; };
 		1771F31F1DD9DAFC004CCA43 /* MoodyStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176699B71B833E7D00AC71A8 /* MoodyStack.swift */; };
 		1771F3211DD9DB18004CCA43 /* DominantColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FFCD6D1B57A2DC00F70F4D /* DominantColors.swift */; };
@@ -56,6 +57,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		06E6E45C23980C3900EEB9F0 /* ManageContextContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageContextContainer.swift; sourceTree = "<group>"; };
 		172A3EED1B09E70F00B7DAB2 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		172A3EF21B09F9E300B7DAB2 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CameraViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1737F8F21B0B18C70070B608 /* CaptureSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureSession.swift; sourceTree = "<group>"; };
@@ -68,7 +70,7 @@
 		174495771AFBA94C007C9A75 /* MoodView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoodView.swift; sourceTree = "<group>"; };
 		174495871AFBF246007C9A75 /* MoodsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MoodsTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		174495891AFBF990007C9A75 /* MoodTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MoodTableViewCell.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		176699671B83244700AC71A8 /* SegueHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegueHandler.swift; sourceTree = "<group>"; };
+		176699671B83244700AC71A8 /* SeguePerformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeguePerformer.swift; sourceTree = "<group>"; };
 		176699B71B833E7D00AC71A8 /* MoodyStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MoodyStack.swift; path = Moody/MoodyStack.swift; sourceTree = SOURCE_ROOT; };
 		1771F3291DD9DCB0004CCA43 /* Moody-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Moody-Bridging-Header.h"; sourceTree = "<group>"; };
 		1771F32A1DD9E502004CCA43 /* ManagedObjectObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectObserver.swift; sourceTree = "<group>"; };
@@ -223,10 +225,11 @@
 		17FAD1F61BB94B5500045FA1 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				176699671B83244700AC71A8 /* SegueHandler.swift */,
+				176699671B83244700AC71A8 /* SeguePerformer.swift */,
 				1771F3341DD9E563004CCA43 /* Utilities.swift */,
 				1737F8F21B0B18C70070B608 /* CaptureSession.swift */,
 				3EE072D61B9EC49500113955 /* IconGenerator.swift */,
+				06E6E45C23980C3900EEB9F0 /* ManageContextContainer.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -340,6 +343,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06E6E45D23980C3900EEB9F0 /* ManageContextContainer.swift in Sources */,
 				1771F32D1DD9E511004CCA43 /* ManagedObject.swift in Sources */,
 				174495881AFBF246007C9A75 /* MoodsTableViewController.swift in Sources */,
 				1771F3221DD9DB18004CCA43 /* RandomNumbers.mm in Sources */,
@@ -361,7 +365,7 @@
 				1771F3261DD9DB18004CCA43 /* KMeans.swift in Sources */,
 				1771F3251DD9DB18004CCA43 /* LABPixel+ClusteredType.swift in Sources */,
 				1771F31F1DD9DAFC004CCA43 /* MoodyStack.swift in Sources */,
-				176699681B83244700AC71A8 /* SegueHandler.swift in Sources */,
+				176699681B83244700AC71A8 /* SeguePerformer.swift in Sources */,
 				1771F3151DD9DAB0004CCA43 /* Mood.swift in Sources */,
 				17F961651B944DDC0084C990 /* TableViewDataSource.swift in Sources */,
 				1771F32F1DD9E523004CCA43 /* NSManagedObjectContext+Observers.swift in Sources */,

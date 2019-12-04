@@ -9,14 +9,16 @@
 import UIKit
 import CoreData
 
+// 由于 SeguePerformer 协议, 使得 segueIdentifier 这个函数自动可以适配到新的类.
+// 将具体的功能, 按照协议进行拆分. 将相关的逻辑放到了一起. 问题在于, 这个类变得复杂了.
 
-class MoodsTableViewController: UITableViewController, SegueHandler {
+class MoodsTableViewController: UITableViewController, SeguePerformer, ManageContextContainer {
 
     enum SegueIdentifier: String {
         case showMoodDetail = "showMoodDetail"
     }
 
-    var managedObjectContext: NSManagedObjectContext! // 这里, 也是用的隐式解包
+    var managedObjectContext: NSManagedObjectContext!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,11 +43,11 @@ class MoodsTableViewController: UITableViewController, SegueHandler {
     fileprivate func setupTableView() {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 100
-        
         let request = Mood.sortedFetchRequest
         request.fetchBatchSize = 20
         request.returnsObjectsAsFaults = false
         let featchVC = NSFetchedResultsController(fetchRequest: request, managedObjectContext: managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        // TableView 的真正的逻辑, 被封装到了 TableViewDataSource 这个类的内部了. 上面的操作, 都是在构造这个类的初始化参数.
         dataSource = TableViewDataSource(tableView: tableView, cellIdentifier: "MoodCell", fetchedResultsController: featchVC, delegate: self)
     }
 
