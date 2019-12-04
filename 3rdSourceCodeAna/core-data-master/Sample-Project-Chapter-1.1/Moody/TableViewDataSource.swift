@@ -50,14 +50,14 @@ class TableViewDataSource<Delegate: TableViewDataSourceDelegate>: NSObject, UITa
     }
 
 
-    // MARK: Private
+    // MARK: - Private
 
     fileprivate let tableView: UITableView
     fileprivate let fetchedResultsController: NSFetchedResultsController<ManageObject>
     fileprivate weak var delegate: Delegate! // 必须要有这个属性. 但是这个属性又不能在 init 方法里面直接指定.
     fileprivate let cellIdentifier: String
 
-    // MARK: UITableViewDataSource
+    // MARK: - UITableViewDataSource
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let section = fetchedResultsController.sections?[section] else { return 0 }
@@ -75,13 +75,17 @@ class TableViewDataSource<Delegate: TableViewDataSourceDelegate>: NSObject, UITa
         return cell
     }
 
-    // MARK: NSFetchedResultsControllerDelegate
+    // MARK: - NSFetchedResultsControllerDelegate
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
     }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChange anObject: Any,
+                    at indexPath: IndexPath?,
+                    for type: NSFetchedResultsChangeType,
+                    newIndexPath: IndexPath?) {
         switch type {
         case .insert:
             guard let indexPath = newIndexPath else { fatalError("Index path should be not nil") }

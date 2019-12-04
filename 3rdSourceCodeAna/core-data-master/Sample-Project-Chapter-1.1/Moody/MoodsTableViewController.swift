@@ -46,7 +46,10 @@ class MoodsTableViewController: UITableViewController, SeguePerformer, ManageCon
         let request = Mood.sortedFetchRequest
         request.fetchBatchSize = 20
         request.returnsObjectsAsFaults = false
-        let featchVC = NSFetchedResultsController(fetchRequest: request, managedObjectContext: managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        let featchVC = NSFetchedResultsController(fetchRequest: request,
+                                                  managedObjectContext: managedObjectContext,
+                                                  sectionNameKeyPath: nil,
+                                                  cacheName: nil)
         // TableView 的真正的逻辑, 被封装到了 TableViewDataSource 这个类的内部了. 上面的操作, 都是在构造这个类的初始化参数.
         dataSource = TableViewDataSource(tableView: tableView, cellIdentifier: "MoodCell", fetchedResultsController: featchVC, delegate: self)
     }
