@@ -19,6 +19,7 @@ struct NotiParser {
         notification = note
     }
 
+    // 这里, 通过明确的函数, 对松散的字符串 key 字典取值的方法, 做了强类型的封装操作.
     var insertedObjects: Set<NSManagedObject> {
         return objects(forKey: NSInsertedObjectsKey)
     }
@@ -51,6 +52,7 @@ struct NotiParser {
     // MARK: Private
 
     fileprivate func objects(forKey key: String) -> Set<NSManagedObject> {
+        // as 在无缝衔接的时候使用 ?? 这里有些不明白.
         return ((notification as NSNotification).userInfo?[key] as? Set<NSManagedObject>) ?? Set()
     }
 
@@ -59,8 +61,7 @@ struct NotiParser {
 
 extension NSManagedObjectContext {
 
-    /// Adds the given block to the default `NSNotificationCenter`'s dispatch table for the given context's objects-did-change notifications.
-    /// - returns: An opaque object to act as the observer. This must be sent to the default `NSNotificationCenter`'s `removeObserver()`.
+    // 将通知的监听, 通过 block 的方式进行了监听. block 的内部会构造一个 parser 对象, 然后调用业务处理 block.
     func addObjectsDidChangeNotificationObserver(_ handler: @escaping (NotiParser) -> ()) -> NSObjectProtocol {
         let nc = NotificationCenter.default
         return nc.addObserver(forName: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: self, queue: nil) { notification in

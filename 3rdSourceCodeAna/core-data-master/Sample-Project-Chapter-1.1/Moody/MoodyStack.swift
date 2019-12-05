@@ -29,5 +29,3 @@ func createMoodyContain(completion: @escaping (NSPersistentContainer) -> Void) {
         }
     }
 }
-
-

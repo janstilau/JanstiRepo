@@ -18,8 +18,8 @@ final class ManagedObjectObserver {
 
     init?(object: NSManagedObject, changeHandler: @escaping (ChangeType) -> ()) {
         guard let moc = object.managedObjectContext else { return nil }
-        token = moc.addObjectsDidChangeNotificationObserver { [weak self] note in
-            guard let changeType = self?.changeType(of: object, in: note) else { return }
+        token = moc.addObjectsDidChangeNotificationObserver { [weak self] noti in
+            guard let changeType = self?.changeType(of: object, in: noti) else { return }
             changeHandler(changeType)
         }
     }
@@ -30,7 +30,7 @@ final class ManagedObjectObserver {
 
     // MARK: Private
 
-    fileprivate var token: NSObjectProtocol!
+    fileprivate var token: NSObjectProtocol! // NSNotification 返回的句柄, 用来后期消除用.
 
     fileprivate func changeType(of object: NSManagedObject, in noti: NotiParser) -> ChangeType? {
         let deleted = noti.deletedObjects.union(noti.invalidatedObjects)

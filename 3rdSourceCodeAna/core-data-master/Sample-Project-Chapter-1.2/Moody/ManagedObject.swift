@@ -17,13 +17,13 @@ protocol ManagedObject: class, NSFetchRequestResult {
 
 extension ManagedObject {
     static  var defaultSortDescriptors: [NSSortDescriptor] { return [] }
-
+    
     static var sortedFetchRequest: NSFetchRequest<Self> {
         let request = NSFetchRequest<Self>(entityName: entityName)
         request.sortDescriptors = defaultSortDescriptors
         return request
     }
-
+    
     public static func sortedFetchRequest(with predicate: NSPredicate) -> NSFetchRequest<Self> {
         let request = sortedFetchRequest
         request.predicate = predicate
@@ -31,25 +31,26 @@ extension ManagedObject {
     }
 }
 
-
+// 当实现类本身是一个 NSManagedObject 的子类的话, 会添加下面的这些方法.
 extension ManagedObject where Self: NSManagedObject {
     static var entityName: String { return entity().name!  }
-
+    
     /**
-     * configurationBlock 这里有一个默认参数, 所以这个函数的定义比较难看懂.
      NSManagedObjectContext:fetch
      An array of objects that meet the criteria specified by request fetched from the receiver and from the persistent stores associated with the receiver’s persistent store coordinator.
+     configurationBlock 并不是必须的, 将这个值得类型, 设置为 Optional 不更好一点吗.
      */
     static func fetch(in context: NSManagedObjectContext,
-                      configurationBlock: (NSFetchRequest<Self>) -> () = { _ in }) -> [Self] {
-        let request = NSFetchRequest<Self>(entityName: Self.entityName)
-        configurationBlock(request)
+                      configurationBlock: (NSFetchRequest<Self>) -> Void = { _ in }) -> [Self] {
+        let request = NSFetchRequest<Self>(entityName: Self.entityName) // 这里, 其实可以写成 entityName
+        configurationBlock(request) // 通过传入的 Block, 做 request 的配置工作, 最后, 进行 fetch 的操作.
         return try! context.fetch(request)
     }
-
+    
+    // 先查找有没有这个对象, 如果没有, 进行创建.
     static func findOrCreate(in context: NSManagedObjectContext,
                              matching predicate: NSPredicate,
-                             configure: (Self) -> ()) -> Self {
+                             configure: (Self) -> Void) -> Self {
         if let object = findOrFetch(in: context, matching: predicate) {
             return object
         }
@@ -57,29 +58,22 @@ extension ManagedObject where Self: NSManagedObject {
         configure(newObject)
         return newObject
     }
-
+    
+    // 先从缓存中找, 没有的话, 执行重新的 fetch 操作.
     static func findOrFetch(in context: NSManagedObjectContext, matching predicate: NSPredicate) -> Self? {
-//        这里, 用 guard 感觉怪怪的, 应该就是正常的guard. guard 不应该用在这个地方.
-//        guard let object = materializedObject(in: context, matching: predicate) else {
-//            return fetch(in: context) { request in
-//                request.predicate = predicate
-//                request.returnsObjectsAsFaults = false
-//                request.fetchLimit = 1
-//            }.first
-//        }
-//        return object
         if let object = materializedObject(in: context, matching: predicate) {
             return object
         }
         return fetch(in: context) { request in
             request.predicate = predicate
             request.returnsObjectsAsFaults = false
-            request.fetchLimit = 1
+            request.fetchLimit = 1 // 只拿一条.
         }.first
     }
-
+    
     static func materializedObject(in context: NSManagedObjectContext, matching predicate: NSPredicate) -> Self? {
         for object in context.registeredObjects where !object.isFault {
+            // 如果, 这个对象是自己的类型, 并且符合 predictate 的话, 直接返回.
             guard let result = object as? Self, predicate.evaluate(with: result) else { continue }
             return result
         }

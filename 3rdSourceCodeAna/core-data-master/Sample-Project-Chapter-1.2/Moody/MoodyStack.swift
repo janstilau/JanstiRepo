@@ -8,7 +8,7 @@
 
 import CoreData
 
-
+// 没有发生变化.
 func createMoodyContainer(completion: @escaping (NSPersistentContainer) -> ()) {
     let container = NSPersistentContainer(name: "Moody")
     container.loadPersistentStores { _, error in

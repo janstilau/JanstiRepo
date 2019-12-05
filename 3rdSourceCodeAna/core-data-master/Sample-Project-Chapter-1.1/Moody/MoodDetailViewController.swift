@@ -18,6 +18,7 @@ class MoodDetailViewController: UIViewController {
 
     var mood: Mood! {
         didSet {
+            // 生成一个 observer, 在 Mood 改变之后重新设置. 传入一个闭包, 在 ManagedObjectObserver 的内部, 监听 context 的变化, 然后执行闭包.
             observer = ManagedObjectObserver(object: mood) { [weak self] type in
                 guard type == .delete else { return }
                 _ = self?.navigationController?.popViewController(animated: true)
@@ -41,7 +42,7 @@ class MoodDetailViewController: UIViewController {
 
     // MARK: Private
     fileprivate func updateViews() {
-        moodView?.colors = mood.colors
+        moodView?.colors = mood.colors // 更新内容视图
         navigationItem.title = mood.dateDescription
     }
 

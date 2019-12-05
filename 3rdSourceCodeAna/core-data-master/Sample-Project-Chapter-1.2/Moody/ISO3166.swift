@@ -8,6 +8,12 @@
 
 import Foundation
 
+/*
+ ISO3166 这个类专门用来包装类型码的, 真正使用的是 ISO3166.Country, 以及 ISO3166.Continent 这两个枚举类.
+ 在初始化的时候, 要使用 RawValue 的构造函数进行初始化, 来获取到相应的 enum 值.
+ 用明确的类型来替换 Int 值, 让代码整体更加的安全.
+ */
+
 struct ISO3166 {
     enum Country: Int16 {
         case guy = 328
@@ -274,7 +280,9 @@ struct ISO3166 {
     }
 }
 
-private let countriesAndContinents: [(ISO3166.Continent, ISO3166.Country)] = [
+// 对于现存的一些数据的初始化, 完全按照 enum 里面的值进行初始化, 如果使用 Int 值, 难免会有错误.
+
+private let existContinentAndCountry: [(ISO3166.Continent, ISO3166.Country)] = [
     (.as, .afg),
     (.eu, .alb),
     (.an, .ata),
@@ -535,14 +543,17 @@ private let countriesAndContinents: [(ISO3166.Continent, ISO3166.Country)] = [
     (.af, .zmb),
 ]
 
+// 根据 country 来返回对应的 continent 数据. 将 enum 从一个简单的 Int 的表示, 变为一个类型的最大的好处就在这里了, 可以将合适的代码, 搬移到这个地方.
 extension ISO3166.Continent {
+    // 这并不是类的 init, 所以不必寻找 designaged init 方法.
     init?(country: ISO3166.Country) {
-        let cc = countriesAndContinents.first { $0.1 == country }
+        let cc = existContinentAndCountry.first { $0.1 == country }
         guard let (continent, _) = cc else { return nil }
         self = continent
     }
 }
 
+// 根据 String, 返回具体的 contury 枚举值.
 extension ISO3166.Country {
     static func fromISO3166(_ s: String) -> ISO3166.Country {
         switch (s.lowercased()) {
@@ -1051,6 +1062,7 @@ extension ISO3166.Country {
     }
 }
 
+// 返回枚举值得具体的字符串的表示.
 extension ISO3166.Country {
     var threeLetterName: String {
         switch self {
@@ -1313,6 +1325,8 @@ extension ISO3166.Country: CustomStringConvertible {
     var description: String { return threeLetterName }
 }
 
+
+// 国际化的一些操作, 没有细看.
 extension ISO3166.Continent: CustomStringConvertible {
     var description: String {
         return NSLocalizedString(localizationKey, tableName: nil, bundle: Bundle(for: Continent.self), value: localizationKey, comment: "")

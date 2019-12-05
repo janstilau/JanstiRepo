@@ -10,6 +10,23 @@ import UIKit
 import CoreLocation
 import CoreData
 
+/*
+    @NSManaged public var countries: NSSet?
+    
+    @objc(addCountriesObject:)
+    @NSManaged public func addToCountries(_ value: Country)
+
+    @objc(removeCountriesObject:)
+    @NSManaged public func removeFromCountries(_ value: Country)
+
+    @objc(addCountries:)
+    @NSManaged public func addToCountries(_ values: NSSet)
+
+    @objc(removeCountries:)
+    @NSManaged public func removeFromCountries(_ values: NSSet)
+ 
+    // @objc, 在 OC 代码中, 重新命名的一个机会.
+ */
 
 final class Continent: NSManagedObject {
     @NSManaged fileprivate(set) var countries: Set<Country>
@@ -26,10 +43,6 @@ final class Continent: NSManagedObject {
     }
 
     static func findOrCreateContinent(for isoCountry: ISO3166.Country, in context: NSManagedObjectContext) -> Continent? {
-        /**
-         首先, 判断一下 continent 的 code 存不存在.
-         如果存在, 就 findOrCreate 一下.
-         */
         guard let iso3166 = ISO3166.Continent(country: isoCountry) else { return nil }
         let predicate = NSPredicate(format: "%K == %d", #keyPath(numericISO3166Code), Int(iso3166.rawValue))
         let continent = findOrCreate(in: context, matching: predicate) {
@@ -39,9 +52,7 @@ final class Continent: NSManagedObject {
         return continent
     }
 
-
     // MARK: Private
-
     @NSManaged fileprivate var numericISO3166Code: Int16
 }
 
