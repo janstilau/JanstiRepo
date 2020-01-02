@@ -25,17 +25,17 @@
     NSMutableAttributedString *text = [NSMutableAttributedString new];
     UIFont *font = [UIFont systemFontOfSize:16];
     
-    {
-        NSString *title = @"This is UIImage attachment:";
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:title attributes:nil]];
-        
-        UIImage *image = [UIImage imageNamed:@"dribbble64_imageio"];
-        image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:UIImageOrientationUp];
-        
-        NSMutableAttributedString *attachText = [NSMutableAttributedString attachmentStringWithContent:image contentMode:UIViewContentModeCenter attachmentSize:image.size alignToFont:font alignment:YYTextVerticalAlignmentCenter];
-        [text appendAttributedString:attachText];
-        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n" attributes:nil]];
-    }
+//    {
+//        NSString *title = @"This is UIImage attachment:";
+//        [text appendAttributedString:[[NSAttributedString alloc] initWithString:title attributes:nil]];
+//        
+//        UIImage *image = [UIImage imageNamed:@"dribbble64_imageio"];
+//        image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:UIImageOrientationUp];
+//        
+//        NSMutableAttributedString *attachText = [NSMutableAttributedString attachmentStringWithContent:image contentMode:UIViewContentModeCenter attachmentSize:image.size alignToFont:font alignment:YYTextVerticalAlignmentCenter];
+//        [text appendAttributedString:attachText];
+//        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n" attributes:nil]];
+//    }
     
     {
         NSString *title = @"This is UIView attachment: ";

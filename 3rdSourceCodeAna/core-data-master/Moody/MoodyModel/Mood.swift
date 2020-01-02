@@ -150,6 +150,8 @@ extension Sequence where Iterator.Element == UIColor {
 }
 
 
+// MARK: - Sync
+
 private let ColorsTransformerName = "ColorsTransformer"
 
 extension Mood {
@@ -170,11 +172,11 @@ extension Mood {
 
 
 extension UIColor {
-
     fileprivate var rgb: [UInt8] {
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
+        // get 方法传入指针, 指针要进行包装 UnsafeMutablePointer<CGFloat>?.
         getRed(&red, green: &green, blue: &blue, alpha: nil)
         return [UInt8(red * 255), UInt8(green * 255), UInt8(blue * 255)]
     }
