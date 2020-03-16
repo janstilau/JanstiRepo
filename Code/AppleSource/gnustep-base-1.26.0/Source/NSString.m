@@ -733,10 +733,6 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 
 + (void) initialize
 {
-    /*
-     * Flag required as we call this method explicitly from GSBuildStrings()
-     * to ensure that NSString is initialised properly.
-     */
     static BOOL	beenHere = NO;
     
     if (self == [NSString class] && beenHere == NO)
@@ -744,7 +740,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
         beenHere = YES;
         cMemberSel = @selector(characterIsMember:);
         charAtIndexSel = @selector(characterAtIndex:);
-        gcrSel = @selector(getCharacters:range:);
+        getCharInRangeSel = @selector(getCharacters:range:);
         ranSel = @selector(rangeOfComposedCharacterSequenceAtIndex:);
         
         nonBase = [NSCharacterSet nonBaseCharacterSet];
@@ -773,247 +769,6 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
         register_printf_atsign();
         [self registerAtExit];
     }
-}
-
-/**
- * Create an empty string.
- */
-+ (id) string
-{
-    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()] init]);
-}
-
-/**
- * Create a copy of aString.
- */
-+ (id) stringWithString: (NSString*)aString
-{
-    NSString	*obj;
-    obj = [self allocWithZone: NSDefaultMallocZone()];
-    obj = [obj initWithString: aString];
-    return AUTORELEASE(obj);
-}
-
-/**
- * Create a string of unicode characters.
- */
-+ (id) stringWithCharacters: (const unichar*)chars
-                     length: (NSUInteger)length
-{
-    NSString	*obj;
-    
-    obj = [self allocWithZone: NSDefaultMallocZone()];
-    obj = [obj initWithCharacters: chars length: length];
-    return AUTORELEASE(obj);
-}
-
-/**
- * Create a string based on the given C (char[]) string, which should be
- * null-terminated and encoded in the default C string encoding.  (Characters
- * will be converted to unicode representation internally.)
- */
-+ (id) stringWithCString: (const char*)byteString
-{
-    NSString	*obj;
-    
-    if (NULL == byteString)
-        [NSException raise: NSInvalidArgumentException
-                    format: @"[NSString+stringWithCString:]: NULL cString"];
-    obj = [self allocWithZone: NSDefaultMallocZone()];
-    obj = [obj initWithCString: byteString];
-    return AUTORELEASE(obj);
-}
-
-/**
- * Create a string based on the given C (char[]) string, which should be
- * null-terminated and encoded in the specified C string encoding.
- * Characters may be converted to unicode representation internally.
- */
-+ (id) stringWithCString: (const char*)byteString
-                encoding: (NSStringEncoding)encoding
-{
-    NSString	*obj;
-    
-    if (NULL == byteString)
-        [NSException raise: NSInvalidArgumentException
-                    format: @"[NSString+stringWithCString:encoding:]: NULL cString"];
-    obj = [self allocWithZone: NSDefaultMallocZone()];
-    obj = [obj initWithCString: byteString encoding: encoding];
-    return AUTORELEASE(obj);
-}
-
-/**
- * Create a string based on the given C (char[]) string, which may contain
- * null bytes and should be encoded in the default C string encoding.
- * (Characters will be converted to unicode representation internally.)
- */
-+ (id) stringWithCString: (const char*)byteString
-                  length: (NSUInteger)length
-{
-    NSString	*obj;
-    
-    obj = [self allocWithZone: NSDefaultMallocZone()];
-    obj = [obj initWithCString: byteString length: length];
-    return AUTORELEASE(obj);
-}
-
-/**
- * Create a string based on the given UTF-8 string, null-terminated.<br />
- * Raises NSInvalidArgumentException if given NULL pointer.
- */
-+ (id) stringWithUTF8String: (const char *)bytes
-{
-    NSString	*obj;
-    
-    if (NULL == bytes)
-        [NSException raise: NSInvalidArgumentException
-                    format: @"[NSString+stringWithUTF8String:]: NULL cString"];
-    if (self == NSStringClass)
-    {
-        obj = defaultPlaceholderString;
-    }
-    else
-    {
-        obj = [self allocWithZone: NSDefaultMallocZone()];
-    }
-    obj = [obj initWithUTF8String: bytes];
-    return AUTORELEASE(obj);
-}
-
-/**
- * Load contents of file at path into a new string.  Will interpret file as
- * containing direct unicode if it begins with the unicode byte order mark,
- * else converts to unicode using default C string encoding.
- */
-+ (id) stringWithContentsOfFile: (NSString *)path
-{
-    NSString	*obj;
-    
-    obj = [self allocWithZone: NSDefaultMallocZone()];
-    obj = [obj initWithContentsOfFile: path];
-    return AUTORELEASE(obj);
-}
-
-/**
- * Load contents of file at path into a new string using the
- * -initWithContentsOfFile:usedEncoding:error: method.
- */
-+ (id) stringWithContentsOfFile: (NSString *)path
-                   usedEncoding: (NSStringEncoding*)enc
-                          error: (NSError**)error
-{
-    NSString	*obj;
-    
-    obj = [self allocWithZone: NSDefaultMallocZone()];
-    obj = [obj initWithContentsOfFile: path usedEncoding: enc error: error];
-    return AUTORELEASE(obj);
-}
-
-/**
- * Load contents of file at path into a new string using the
- * -initWithContentsOfFile:encoding:error: method.
- */
-+ (id) stringWithContentsOfFile: (NSString*)path
-                       encoding: (NSStringEncoding)enc
-                          error: (NSError**)error
-{
-    NSString	*obj;
-    
-    obj = [self allocWithZone: NSDefaultMallocZone()];
-    obj = [obj initWithContentsOfFile: path encoding: enc error: error];
-    return AUTORELEASE(obj);
-}
-
-/**
- * Load contents of given URL into a new string.  Will interpret contents as
- * containing direct unicode if it begins with the unicode byte order mark,
- * else converts to unicode using default C string encoding.
- */
-+ (id) stringWithContentsOfURL: (NSURL *)url
-{
-    NSString	*obj;
-    
-    obj = [self allocWithZone: NSDefaultMallocZone()];
-    obj = [obj initWithContentsOfURL: url];
-    return AUTORELEASE(obj);
-}
-
-+ (id) stringWithContentsOfURL: (NSURL*)url
-                  usedEncoding: (NSStringEncoding*)enc
-                         error: (NSError**)error
-{
-    NSString	*obj;
-    
-    obj = [self allocWithZone: NSDefaultMallocZone()];
-    obj = [obj initWithContentsOfURL: url usedEncoding: enc error: error];
-    return AUTORELEASE(obj);
-}
-
-+ (id) stringWithContentsOfURL: (NSURL*)url
-                      encoding: (NSStringEncoding)enc
-                         error: (NSError**)error
-{
-    NSString	*obj;
-    
-    obj = [self allocWithZone: NSDefaultMallocZone()];
-    obj = [obj initWithContentsOfURL: url encoding: enc error: error];
-    return AUTORELEASE(obj);
-}
-
-/**
- * Creates a new string using C printf-style formatting.  First argument should
- * be a constant format string, like '<code>@"float val = %f"</code>', remaining
- * arguments should be the variables to print the values of, comma-separated.
- */
-+ (id) stringWithFormat: (NSString*)format,...
-{
-    va_list ap;
-    NSString	*obj;
-    
-    if (NULL == format)
-        [NSException raise: NSInvalidArgumentException
-                    format: @"[NSString+stringWithFormat:]: NULL format"];
-    va_start(ap, format);
-    obj = [self allocWithZone: NSDefaultMallocZone()];
-    obj = [obj initWithFormat: format arguments: ap];
-    va_end(ap);
-    return AUTORELEASE(obj);
-}
-
-
-/**
- * <p>In MacOS-X class clusters do not have designated initialisers,
- * and there is a general rule that -init is treated as the designated
- * initialiser of the class cluster, but that other intitialisers
- * may not work as expected and would need to be individually overridden
- * in any subclass.
- * </p>
- * <p>GNUstep tries to make it easier to subclass a class cluster,
- * by making class clusters follow the same convention as normal
- * classes, so the designated initialiser is the <em>richest</em>
- * initialiser.  This means that all other initialisers call the
- * documented designated initialiser (which calls -init only for
- * MacOS-X compatibility), and anyone writing a subclass only needs
- * to override that one initialiser in order to have all the other
- * ones work.
- * </p>
- * <p>For MacOS-X compatibility, you may also need to override various
- * other initialisers.  Exactly which ones, you will need to determine
- * by trial on a MacOS-X system ... and may vary between releases of
- * MacOS-X.  So to be safe, on MacOS-X you probably need to re-implement
- * <em>all</em> the class cluster initialisers you might use in conjunction
- * with your subclass.
- * </p>
- * <p>NB. The GNUstep designated initialiser for the NSString class cluster
- * has changed to -initWithBytesNoCopy:length:encoding:freeWhenDone:
- * from -initWithCharactersNoCopy:length:freeWhenDone: and older code
- * subclassing NSString will need to be updated.
- * </p>
- */
-- (id) init
-{
-    self = [super init];
-    return self;
 }
 
 /**
@@ -2946,11 +2701,11 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                     if (gotFetchImps == NO)
                     {
                         gotFetchImps = YES;
-                        sgImp=(void (*)())[self methodForSelector: gcrSel];
-                        ogImp=(void (*)())[aString methodForSelector: gcrSel];
+                        sgImp=(void (*)())[self methodForSelector: getCharInRangeSel];
+                        ogImp=(void (*)())[aString methodForSelector: getCharInRangeSel];
                     }
-                    (*sgImp)(self, gcrSel, sBuf, sRange);
-                    (*ogImp)(aString, gcrSel, oBuf, oRange);
+                    (*sgImp)(self, getCharInRangeSel, sBuf, sRange);
+                    (*ogImp)(aString, getCharInRangeSel, oBuf, oRange);
                     
                     if (GSeq_compare(&sSeq, &oSeq) == NSOrderedSame)
                     {

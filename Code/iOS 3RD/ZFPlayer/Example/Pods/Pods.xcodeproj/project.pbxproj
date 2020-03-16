@@ -1,0 +1,1228 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01B188D96E7391C038CBF0299453E969 /* ZFPortraitControlView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9147EA5BA9D9BC2BDC6BD9CD55617FDF /* ZFPortraitControlView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		03110534BE651EBAF2313563CD8200F2 /* MJRefreshStateHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 49BE2BB60D4CA2E183D7CC65AC886403 /* MJRefreshStateHeader.m */; };
+		03485851BCC0CA11DA05C0AC386CE309 /* ZFPlayerNotification.h in Headers */ = {isa = PBXBuildFile; fileRef = DA90972FC7F1B1D5DDB28EB22FF8A803 /* ZFPlayerNotification.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		051B5564C29FEAF76D0955E89C9377D8 /* ZFAVPlayerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 860C066050F63D97E978FC580B0249DE /* ZFAVPlayerManager.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		06A23446D67E7EB5F91F3DD9869AB8BF /* ZFPlayerControlView.h in Headers */ = {isa = PBXBuildFile; fileRef = 716BAF059D4F90173E18E6E851DBC676 /* ZFPlayerControlView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		06DD445D03462FEB2762949A4900BABB /* ZFUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = CBC3CCC987719B46714662CDC808CA17 /* ZFUtilities.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		10B320645982B481D026D252158928E1 /* MJRefreshAutoNormalFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D130E7AB62E8B8088A807CFB9F49C68 /* MJRefreshAutoNormalFooter.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		12EB562AD08A633E889EF42CFDF365D1 /* ZFNetworkSpeedMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = C807B72CAEEF2C0B774A6045B829AC43 /* ZFNetworkSpeedMonitor.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		139697D9E4AC066C9F1F60627027D6C5 /* MJRefreshBackFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B3D48486386FA0CA12DF2F4654DD415 /* MJRefreshBackFooter.m */; };
+		1AD158C0433B4552126BCB09F03623ED /* UIView+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5C32162A4D41087066197209044188 /* UIView+MJExtension.m */; };
+		1B46580F8553F6287C9A7F1F4388934A /* MJRefreshComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B034F0B9BFF86A8B3592F1D124915CB /* MJRefreshComponent.m */; };
+		1D5E6EFF91D9CE761E34FE23B10AB6C4 /* MJRefreshStateHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 9919A66F2840DB0185FB5E550D2841BA /* MJRefreshStateHeader.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		1EFCDA3ED41164C869431BBD17E17B72 /* ZFPlayerGestureControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 912CA5326A2EC9CEBB57EEF9F546662F /* ZFPlayerGestureControl.m */; };
+		259FB29638FDB81C16D85CDA48A9288C /* UIView+ZFFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 16FB508451ECA5BDAAF8107FC377EDE5 /* UIView+ZFFrame.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		28929A8088269A65FE972815E6BF98B7 /* ZFLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = D8651FDDA66D0053D484C247F76BEFE1 /* ZFLoadingView.m */; };
+		2A9B91A3F37582467ECF54A3A626053B /* MJRefreshNormalHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = DBD935864F4EAADB98D2E2EB3570211F /* MJRefreshNormalHeader.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		2D79705C9E9111F3795C662FCBA866CC /* MJRefreshBackNormalFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = C2CDF45AB182EBF584EBFB9E5FDB2CAD /* MJRefreshBackNormalFooter.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		2F10992ACA27F357F768E796B512720F /* UIView+MJExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = 8C1580911B697E9618157E8E61B74AA3 /* UIView+MJExtension.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		30A6398F5A3F95D43BEEBF5BE25AA7F9 /* MJRefreshBackFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4439873416A0FEE436C55B0C8F241B73 /* MJRefreshBackFooter.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		363D854351FFEAAFC017056CB609B81F /* ZFIJKPlayerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = E4FCA7DD79655A64E0062EBD23421954 /* ZFIJKPlayerManager.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		3CBD3CE6DF5CA49E5FB95214C04250B1 /* FDFullscreenPopGesture-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = ED99207F95D6A1F137115565E3E91AD4 /* FDFullscreenPopGesture-dummy.m */; };
+		3E31C8867C06508EBFDD334AFEE42378 /* ZFPlayerControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = C3719DB514753384737F452DAEA45D8E /* ZFPlayerControlView.m */; };
+		3FBCEF4BE6244B82EE1C21C190CF4F8B /* ZFOrientationObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EC53FA0D91E8419B9D6A1117B24DE1 /* ZFOrientationObserver.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		46D863FE0ACB4C80373A37AB6AAA672C /* UIView+ZFFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = CF07E46DE45F5A6565FBBBE348DA010C /* UIView+ZFFrame.m */; };
+		477E7FD45E71B3DC68C7BE15A3354EFA /* MJRefreshAutoNormalFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9C2A73108F6053192C376ED03988EB /* MJRefreshAutoNormalFooter.m */; };
+		491C3309A94031C2F125BF35ABAF39E6 /* MJRefreshGifHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 70169314EF9A40275CEB6001AFA82C8D /* MJRefreshGifHeader.m */; };
+		4C8383EECB7E5B805B672554F26C4DAC /* UIViewController+ZFPlayerRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 05752AB21E7D5304E80634D6F75B17D0 /* UIViewController+ZFPlayerRotation.m */; };
+		4E73EE2458B47A5FF977FBE4DD89B8E8 /* ZFOrientationObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CB49075D55C49CDF17F85C13D9D21A3 /* ZFOrientationObserver.m */; };
+		51E08D25F972BEC7610D95BD6F135DBE /* ZFPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 73EEDFE77F536AA9235E2792E8E0F55A /* ZFPlayerView.m */; };
+		561D21352D1DB03DBB305DB889AAE93E /* UIScrollView+ZFPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 855AEEE4CDA22905E4D5DE97CC0A90B2 /* UIScrollView+ZFPlayer.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		58ED4686D930580F2BE9D63E5A671025 /* ZFKVOController.m in Sources */ = {isa = PBXBuildFile; fileRef = B65625F48C1019B77599339087171EDA /* ZFKVOController.m */; };
+		5F5FD28C1193583E77E3D5AB31231EEE /* MJRefresh-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FB0ECD6F37EF94AE3A376012DB7512 /* MJRefresh-dummy.m */; };
+		613092854AFB83B31847D51357CDB004 /* ZFPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = F11F4EA5E8A93CBFB1BE04916AE1D69C /* ZFPlayer.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		68A84B33C46228A574DD01B9A8FFC464 /* UINavigationController+FDFullscreenPopGesture.h in Headers */ = {isa = PBXBuildFile; fileRef = 7C8FB89B49991FA2D0AB29624B861E5F /* UINavigationController+FDFullscreenPopGesture.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		6AE1E852D15BAB4FB9A0A8051BBBFDD3 /* ZFSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 23F95CE4592DB3A587C26AD097CFCF69 /* ZFSliderView.m */; };
+		6D2F5B7F5DBF7A8E22C936153254E24F /* ZFReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5752DFE9E64B7441D40843E7405CA403 /* ZFReachabilityManager.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		6E64A8A8E5B45CC7BA700777A0A588F4 /* ZFPortraitControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7831C567CD39F9E8094FD2149AAA0734 /* ZFPortraitControlView.m */; };
+		725CC8DF14A3844A66DCE932B1BFF0FA /* MJRefreshHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = CBB33D4264A53D781C77084794218804 /* MJRefreshHeader.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		733C434921A5B70F549341604334C324 /* ZFVolumeBrightnessView.m in Sources */ = {isa = PBXBuildFile; fileRef = F08062E93419E006E58E333F1BF6470C /* ZFVolumeBrightnessView.m */; };
+		7497DFD7BD1BD80E3854691DAED632DD /* MJRefreshComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = E31390F57C7387C9D84AD27C4B12D365 /* MJRefreshComponent.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		778EDA88AD8089DDDCB9BAD14FC61504 /* MJRefreshFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CAFBD4FF8610D0A67E53624840DE6DA /* MJRefreshFooter.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		7E8CE4189B86E32C6F2C994871C65531 /* MJRefreshBackStateFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A0588FA4811D0DA6900DFB6B272CE7E /* MJRefreshBackStateFooter.m */; };
+		7E92196E1F5F3DFB3AEC643C23E674C8 /* MJRefreshAutoStateFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FFF446F4BD3DC88FAEE83437FE92383 /* MJRefreshAutoStateFooter.m */; };
+		8070880DA5C7994F1B9EFD267AD646FC /* ZFSliderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 57DA7A8248AD11E723D1720E8BE7CC02 /* ZFSliderView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		81480792CD6ED7819683C63B2ECC81BA /* MJRefreshConst.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E0E08A0136922CB1BC72A10B1E9286 /* MJRefreshConst.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		82935DB0B0EA3295EE2B1E38D1C0EAE4 /* NSBundle+MJRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = BFDBC54E73B0072EC1946B0CD329255A /* NSBundle+MJRefresh.m */; };
+		8496977A6639BB029807D4AEB634C419 /* UIScrollView+MJRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = 335ABE56406F8C9D6CEDBFCC3C88DE95 /* UIScrollView+MJRefresh.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		849F83D2B307471CC1F2679452E05800 /* ZFNetworkSpeedMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 940955CEFD4F495E8C3CB2C2839140F7 /* ZFNetworkSpeedMonitor.m */; };
+		8540D7C92A51F917D80AABEDDDE44417 /* MJRefreshAutoStateFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = A39BB55F85D6AB272781664F7E118AE3 /* MJRefreshAutoStateFooter.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		8A18B5C1BDE43ECDD7853255208EE5B3 /* MJRefreshFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = F8A846DA2518445545F7301CE1BC3C0D /* MJRefreshFooter.m */; };
+		8AB803EEDFCAA952696BDEA8AB7DE41A /* KSMediaPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E4A859D56538DD2BE7CCFD1A42DF326 /* KSMediaPlayerManager.m */; };
+		8B48875B8E7DACCB7C4C50719BE77C77 /* ZFVolumeBrightnessView.h in Headers */ = {isa = PBXBuildFile; fileRef = 421C78C527468906A3E76A606DDA4404 /* ZFVolumeBrightnessView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		8EA82FE7B84449D5E4AC49915CF8455B /* ZFReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8514FF9BD7A4E6318A1ADD7C4C54CC94 /* ZFReachabilityManager.m */; };
+		9418695D01C26BE3FE688296849686CA /* UIImageView+ZFCache.h in Headers */ = {isa = PBXBuildFile; fileRef = C7E38E8DEEDB23EDF47A7556F03B33A4 /* UIImageView+ZFCache.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		992B9CB666DBCFBB3AE7B572AC6E2055 /* ZFPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = EA9535F8EC948E7CB87CC51914A0AA19 /* ZFPlayerController.m */; };
+		9D58742F2AC3545A2F002EC9939CF59A /* ZFFloatView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2006444E0878FE257E90A55467EFAD74 /* ZFFloatView.m */; };
+		A037EC9A6E2B36B02103F64A4955DA8A /* ZFPlayerLogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DCF17733ED35B97033547763CDB19323 /* ZFPlayerLogManager.m */; };
+		AA5E9FD358E84F75F429F683FAB93F6B /* Pods-ZFPlayer_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = F77B6E186AFA371B333DAF379DDE2E0D /* Pods-ZFPlayer_Example-dummy.m */; };
+		AAFD65CCA7932B998C7A2FD411E3E76D /* ZFSpeedLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99ADA39F293E3DBA03B812EDC3316E5A /* ZFSpeedLoadingView.m */; };
+		AC344D8C4DA804641A402511D4911AAF /* ZFIJKPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 98F44ACDBE2BDA6D55554D042EE2C71F /* ZFIJKPlayerManager.m */; };
+		AE27FE8438D28A27E822EF13B8062F02 /* NSBundle+MJRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = 61A73A26CB94BCFA586CBD0BAC9F8135 /* NSBundle+MJRefresh.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		AEBFCD60D316911D54797AA8CD5E7804 /* MJRefreshHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = F4AE4FB8CFEC66550FA71A35DD390153 /* MJRefreshHeader.m */; };
+		B0E053196779C295CAD5B467489A21D2 /* UIScrollView+MJRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = C6EEA0791C7AED6B716B8B945CC96D12 /* UIScrollView+MJRefresh.m */; };
+		B4DC332DB0A3E5CD0A3C4CBAE791461F /* ZFAVPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DE2175DB1FEEC8773044D5CD83576D66 /* ZFAVPlayerManager.m */; };
+		B5469A8FD7B17B6553E1BA812A0B2ED2 /* ZFSmallFloatControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 526DF69EDA2E095AEF5002F2C734F0A0 /* ZFSmallFloatControlView.m */; };
+		B7983FC56C67ECDA7390E3595DBB59C3 /* ZFUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A035FF5946A491CE86B66BE8C107BBC6 /* ZFUtilities.m */; };
+		B901695204B1B2E59072DB6F243001EC /* UIScrollView+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 56661187A6A0641748DEC979C1C4498B /* UIScrollView+MJExtension.m */; };
+		B9793ABA2C9E0FC07995CC2E0180921D /* ZFPlayerNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BA1B2A2B6182B2C64348630CBB77D44 /* ZFPlayerNotification.m */; };
+		BB86867A8B715C629357735FCFC81814 /* MJRefreshGifHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 4DDB76B101746577BD863D58CF771351 /* MJRefreshGifHeader.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		BF3A020C7FA58F603F5DA9479E9BE010 /* ZFLandScapeControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA0FA7AF0DAF8058C0C5501467AA80C /* ZFLandScapeControlView.m */; };
+		C004135D45BBE347D296466DA9F9EF32 /* ZFSmallFloatControlView.h in Headers */ = {isa = PBXBuildFile; fileRef = E04AD63F95D032FF4BF89F2F63772F52 /* ZFSmallFloatControlView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		C07B0EE809D0649E1BA37FE5C913B6AF /* ZFSpeedLoadingView.h in Headers */ = {isa = PBXBuildFile; fileRef = DEB5C7502D7CEC9C1106E9E3816B43E4 /* ZFSpeedLoadingView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		C0CB7E75D924C706BD8E31177DD2F9F9 /* UIScrollView+ZFPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 93DE7A7A0CFFD1C8DDBD3958B55B5A02 /* UIScrollView+ZFPlayer.m */; };
+		C8B20034E3F2BF5470F8A44F5DEE2E74 /* ZFLandScapeControlView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9508C14D182CED6251CB5031A3417040 /* ZFLandScapeControlView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		CE9619F296C947D181060D88D9F5C316 /* KSMediaPlayerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = A3A41C2B96D455CE8D1351118D4B2CCC /* KSMediaPlayerManager.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		D2FD8E9409D56558CA21BC7C143CBB7A /* MJRefreshNormalHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8E2E096AFB640D7B2DD9FE89CB7355 /* MJRefreshNormalHeader.m */; };
+		D62676165CB66D40A2894AFFCB1D1331 /* ZFPlayerLogManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE17BEFCCE9E7B2B8E4C365509A8DF7 /* ZFPlayerLogManager.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		DAD68826BF41EDD87F61ACB96A9BB06E /* ZFPlayerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4D72125400F6ED8E9986378069E1B837 /* ZFPlayerView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		DF1E5C5712871055949A66ABEE52B5BE /* MJRefreshAutoFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = C84B48189F745CD23E33B64FC0AC4F2A /* MJRefreshAutoFooter.m */; };
+		DFEFC5E6ECD2ED1D12224C5AEF6F76AB /* ZFLoadingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0570283851C2C5FAFF1B205B2BE1B566 /* ZFLoadingView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		E0E351588354C36E41771D2B51B1527D /* UINavigationController+FDFullscreenPopGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEF3EEB8C2F41D623983A73A36A7306 /* UINavigationController+FDFullscreenPopGesture.m */; };
+		E14F3EC4E687268A35CCE55D337B7BA2 /* MJRefreshBackNormalFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 44A0315CAC788476AD35986FAD18CAE1 /* MJRefreshBackNormalFooter.m */; };
+		E1C406023DC03738F6ADBFB2B34DD90D /* ZFPlayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = D3BBEA2A7C357CA17A1D08275CB114AA /* ZFPlayerController.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		E2EAAD13872B4D1F2057D9C4A47239A6 /* UIImageView+ZFCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 06918E04A7565461907DA8D579A2DF75 /* UIImageView+ZFCache.m */; };
+		E4BA1E30409473575812484CEC66C7D8 /* MJRefreshAutoGifFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = BDA47DDA0A5FCFE585D75EE4D8BA25BC /* MJRefreshAutoGifFooter.m */; };
+		E7D27A72714C1736CBCC5506AD4955F3 /* MJRefreshConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F5F40DB4995B2C199411BEB9E06750 /* MJRefreshConst.m */; };
+		E821672CA74D18600FE0BBA99A1AB52B /* ZFKVOController.h in Headers */ = {isa = PBXBuildFile; fileRef = DBA77C01CA5A827016DC2E114C13101A /* ZFKVOController.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		E8BA1ECCC4053414F16619CF1607634B /* ZFPlayer-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3F4D9C3B9550380805943D39FC6F03 /* ZFPlayer-dummy.m */; };
+		EBCCA31A939FB31C4A42DB5752A039B8 /* ZFPlayerMediaPlayback.h in Headers */ = {isa = PBXBuildFile; fileRef = A6516BF16AA6C0A42FCBAB485BECD695 /* ZFPlayerMediaPlayback.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		ED71760D75BF9B6C8BC98062BDFD07D1 /* MJRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = 8769BB8F5B8AA45CBCFE2E04FEC6EAEE /* MJRefresh.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		EF0408C522F5F9F4383EA45FF59A89FA /* MJRefreshBackGifFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 9B32F13B1D1CAD7D320EED49ECFAC7A7 /* MJRefreshBackGifFooter.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		F26B4C42AD33F4C183E2B10F07733998 /* ZFPlayerMediaControl.h in Headers */ = {isa = PBXBuildFile; fileRef = EA011D7A281CCE50B38A22EE53176E95 /* ZFPlayerMediaControl.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		F4C593492844D37C58705DACB3409C28 /* MJRefreshAutoGifFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 168C5920675A70A6E03FBA66AC3D976D /* MJRefreshAutoGifFooter.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		F684BDC9EB74BD5FD12E3ABFDE779E12 /* MJRefreshBackStateFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 94943466B4879C08E7ACEB6E176B8C99 /* MJRefreshBackStateFooter.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		F9A343C6D8F49920309D4A606644C315 /* ZFPlayerGestureControl.h in Headers */ = {isa = PBXBuildFile; fileRef = F40D5466E1D4C3EC681F398F7E475BE7 /* ZFPlayerGestureControl.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		FBE9AA032F1C8EAEDDF51FD448A85983 /* ZFFloatView.h in Headers */ = {isa = PBXBuildFile; fileRef = 99065286D2FB6DEABB9AF8CFA769F6F2 /* ZFFloatView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		FE58C05D0A4BA35CFD780D486397AFCF /* MJRefreshBackGifFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B95984CFCD557D93E0B17EC1ADF29C8 /* MJRefreshBackGifFooter.m */; };
+		FED5770569AAA0E45EF74522CB617B64 /* MJRefreshAutoFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B0FA30F7AF4C42421352088A2D68409 /* MJRefreshAutoFooter.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		FEEAFBEC41C329F18AEDA18220883FF5 /* UIScrollView+MJExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A82E88B22DA57C006B29C790FDD657 /* UIScrollView+MJExtension.h */; settings = {ATTRIBUTES = (Project, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		604A5C69085F51D7C172C3296D438365 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 93FD1F93E0C30B2749BD8A6EC148F233;
+			remoteInfo = ZFPlayer;
+		};
+		C90AF10EC0FBE1BE22C85747A7ABD655 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6868056D761E163D10FDAF8CF1C4D9B8;
+			remoteInfo = MJRefresh;
+		};
+		DF2E1CEEC1D9D2EA54BDF5F7AC3DC941 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8FE0EB310F454719A11FBFEAAC09FE3E;
+			remoteInfo = FDFullscreenPopGesture;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0570283851C2C5FAFF1B205B2BE1B566 /* ZFLoadingView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFLoadingView.h; path = ZFPlayer/Classes/ControlView/ZFLoadingView.h; sourceTree = "<group>"; };
+		05752AB21E7D5304E80634D6F75B17D0 /* UIViewController+ZFPlayerRotation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+ZFPlayerRotation.m"; path = "ZFPlayer/Classes/Core/UIViewController+ZFPlayerRotation.m"; sourceTree = "<group>"; };
+		05F5F40DB4995B2C199411BEB9E06750 /* MJRefreshConst.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshConst.m; path = MJRefresh/MJRefreshConst.m; sourceTree = "<group>"; };
+		06918E04A7565461907DA8D579A2DF75 /* UIImageView+ZFCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+ZFCache.m"; path = "ZFPlayer/Classes/ControlView/UIImageView+ZFCache.m"; sourceTree = "<group>"; };
+		06EC53FA0D91E8419B9D6A1117B24DE1 /* ZFOrientationObserver.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFOrientationObserver.h; path = ZFPlayer/Classes/Core/ZFOrientationObserver.h; sourceTree = "<group>"; };
+		0839A16CD3E56CD8E3B961DA7B5593A1 /* MJRefresh-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MJRefresh-prefix.pch"; sourceTree = "<group>"; };
+		0CAFBD4FF8610D0A67E53624840DE6DA /* MJRefreshFooter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshFooter.h; path = MJRefresh/Base/MJRefreshFooter.h; sourceTree = "<group>"; };
+		0D6B5F3F71F9CDF4BD44C3E963D88AB3 /* Pods-ZFPlayer_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ZFPlayer_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
+		13A82E88B22DA57C006B29C790FDD657 /* UIScrollView+MJExtension.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIScrollView+MJExtension.h"; path = "MJRefresh/UIScrollView+MJExtension.h"; sourceTree = "<group>"; };
+		168C5920675A70A6E03FBA66AC3D976D /* MJRefreshAutoGifFooter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshAutoGifFooter.h; path = MJRefresh/Custom/Footer/Auto/MJRefreshAutoGifFooter.h; sourceTree = "<group>"; };
+		16FB508451ECA5BDAAF8107FC377EDE5 /* UIView+ZFFrame.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+ZFFrame.h"; path = "ZFPlayer/Classes/ControlView/UIView+ZFFrame.h"; sourceTree = "<group>"; };
+		1B3D48486386FA0CA12DF2F4654DD415 /* MJRefreshBackFooter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshBackFooter.m; path = MJRefresh/Base/MJRefreshBackFooter.m; sourceTree = "<group>"; };
+		1CEF3EEB8C2F41D623983A73A36A7306 /* UINavigationController+FDFullscreenPopGesture.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UINavigationController+FDFullscreenPopGesture.m"; path = "FDFullscreenPopGesture/UINavigationController+FDFullscreenPopGesture.m"; sourceTree = "<group>"; };
+		1D3F4D9C3B9550380805943D39FC6F03 /* ZFPlayer-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ZFPlayer-dummy.m"; sourceTree = "<group>"; };
+		2006444E0878FE257E90A55467EFAD74 /* ZFFloatView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFFloatView.m; path = ZFPlayer/Classes/Core/ZFFloatView.m; sourceTree = "<group>"; };
+		23F95CE4592DB3A587C26AD097CFCF69 /* ZFSliderView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFSliderView.m; path = ZFPlayer/Classes/ControlView/ZFSliderView.m; sourceTree = "<group>"; };
+		2F8E2E096AFB640D7B2DD9FE89CB7355 /* MJRefreshNormalHeader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshNormalHeader.m; path = MJRefresh/Custom/Header/MJRefreshNormalHeader.m; sourceTree = "<group>"; };
+		2FCAA13C086F6C923B8EF6122A0D35A6 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		335ABE56406F8C9D6CEDBFCC3C88DE95 /* UIScrollView+MJRefresh.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIScrollView+MJRefresh.h"; path = "MJRefresh/UIScrollView+MJRefresh.h"; sourceTree = "<group>"; };
+		388609D16586DF46A7413C63EB5DC910 /* libPods-ZFPlayer_Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-ZFPlayer_Example.a"; path = "libPods-ZFPlayer_Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B0FA30F7AF4C42421352088A2D68409 /* MJRefreshAutoFooter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshAutoFooter.h; path = MJRefresh/Base/MJRefreshAutoFooter.h; sourceTree = "<group>"; };
+		3B95984CFCD557D93E0B17EC1ADF29C8 /* MJRefreshBackGifFooter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshBackGifFooter.m; path = MJRefresh/Custom/Footer/Back/MJRefreshBackGifFooter.m; sourceTree = "<group>"; };
+		421C78C527468906A3E76A606DDA4404 /* ZFVolumeBrightnessView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFVolumeBrightnessView.h; path = ZFPlayer/Classes/ControlView/ZFVolumeBrightnessView.h; sourceTree = "<group>"; };
+		4439873416A0FEE436C55B0C8F241B73 /* MJRefreshBackFooter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshBackFooter.h; path = MJRefresh/Base/MJRefreshBackFooter.h; sourceTree = "<group>"; };
+		44A0315CAC788476AD35986FAD18CAE1 /* MJRefreshBackNormalFooter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshBackNormalFooter.m; path = MJRefresh/Custom/Footer/Back/MJRefreshBackNormalFooter.m; sourceTree = "<group>"; };
+		49BE2BB60D4CA2E183D7CC65AC886403 /* MJRefreshStateHeader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshStateHeader.m; path = MJRefresh/Custom/Header/MJRefreshStateHeader.m; sourceTree = "<group>"; };
+		4D72125400F6ED8E9986378069E1B837 /* ZFPlayerView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFPlayerView.h; path = ZFPlayer/Classes/Core/ZFPlayerView.h; sourceTree = "<group>"; };
+		4DDB76B101746577BD863D58CF771351 /* MJRefreshGifHeader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshGifHeader.h; path = MJRefresh/Custom/Header/MJRefreshGifHeader.h; sourceTree = "<group>"; };
+		4DFB7537A6121A65336F8FAEB06BA445 /* ZFPlayer.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = ZFPlayer.bundle; path = ZFPlayer/Classes/ControlView/ZFPlayer.bundle; sourceTree = "<group>"; };
+		526DF69EDA2E095AEF5002F2C734F0A0 /* ZFSmallFloatControlView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFSmallFloatControlView.m; path = ZFPlayer/Classes/ControlView/ZFSmallFloatControlView.m; sourceTree = "<group>"; };
+		53391A4DF32B47F52B8AF0BF668F559C /* ZFPlayer.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = ZFPlayer.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		56661187A6A0641748DEC979C1C4498B /* UIScrollView+MJExtension.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIScrollView+MJExtension.m"; path = "MJRefresh/UIScrollView+MJExtension.m"; sourceTree = "<group>"; };
+		5752DFE9E64B7441D40843E7405CA403 /* ZFReachabilityManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFReachabilityManager.h; path = ZFPlayer/Classes/Core/ZFReachabilityManager.h; sourceTree = "<group>"; };
+		57DA7A8248AD11E723D1720E8BE7CC02 /* ZFSliderView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFSliderView.h; path = ZFPlayer/Classes/ControlView/ZFSliderView.h; sourceTree = "<group>"; };
+		58FB0ECD6F37EF94AE3A376012DB7512 /* MJRefresh-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "MJRefresh-dummy.m"; sourceTree = "<group>"; };
+		5A0588FA4811D0DA6900DFB6B272CE7E /* MJRefreshBackStateFooter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshBackStateFooter.m; path = MJRefresh/Custom/Footer/Back/MJRefreshBackStateFooter.m; sourceTree = "<group>"; };
+		5D130E7AB62E8B8088A807CFB9F49C68 /* MJRefreshAutoNormalFooter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshAutoNormalFooter.h; path = MJRefresh/Custom/Footer/Auto/MJRefreshAutoNormalFooter.h; sourceTree = "<group>"; };
+		61A73A26CB94BCFA586CBD0BAC9F8135 /* NSBundle+MJRefresh.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSBundle+MJRefresh.h"; path = "MJRefresh/NSBundle+MJRefresh.h"; sourceTree = "<group>"; };
+		6A5C32162A4D41087066197209044188 /* UIView+MJExtension.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+MJExtension.m"; path = "MJRefresh/UIView+MJExtension.m"; sourceTree = "<group>"; };
+		6B034F0B9BFF86A8B3592F1D124915CB /* MJRefreshComponent.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshComponent.m; path = MJRefresh/Base/MJRefreshComponent.m; sourceTree = "<group>"; };
+		6DDB7D3F64B0E513C9ED829EE48C2BCF /* Pods-ZFPlayer_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ZFPlayer_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		70169314EF9A40275CEB6001AFA82C8D /* MJRefreshGifHeader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshGifHeader.m; path = MJRefresh/Custom/Header/MJRefreshGifHeader.m; sourceTree = "<group>"; };
+		716BAF059D4F90173E18E6E851DBC676 /* ZFPlayerControlView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFPlayerControlView.h; path = ZFPlayer/Classes/ControlView/ZFPlayerControlView.h; sourceTree = "<group>"; };
+		73EEDFE77F536AA9235E2792E8E0F55A /* ZFPlayerView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFPlayerView.m; path = ZFPlayer/Classes/Core/ZFPlayerView.m; sourceTree = "<group>"; };
+		76F63C101002C44E6D6A155BC91AECD4 /* ZFPlayer.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ZFPlayer.xcconfig; sourceTree = "<group>"; };
+		7831C567CD39F9E8094FD2149AAA0734 /* ZFPortraitControlView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFPortraitControlView.m; path = ZFPlayer/Classes/ControlView/ZFPortraitControlView.m; sourceTree = "<group>"; };
+		7BA1B2A2B6182B2C64348630CBB77D44 /* ZFPlayerNotification.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFPlayerNotification.m; path = ZFPlayer/Classes/Core/ZFPlayerNotification.m; sourceTree = "<group>"; };
+		7C8FB89B49991FA2D0AB29624B861E5F /* UINavigationController+FDFullscreenPopGesture.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UINavigationController+FDFullscreenPopGesture.h"; path = "FDFullscreenPopGesture/UINavigationController+FDFullscreenPopGesture.h"; sourceTree = "<group>"; };
+		84E0E08A0136922CB1BC72A10B1E9286 /* MJRefreshConst.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshConst.h; path = MJRefresh/MJRefreshConst.h; sourceTree = "<group>"; };
+		8514FF9BD7A4E6318A1ADD7C4C54CC94 /* ZFReachabilityManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFReachabilityManager.m; path = ZFPlayer/Classes/Core/ZFReachabilityManager.m; sourceTree = "<group>"; };
+		855AEEE4CDA22905E4D5DE97CC0A90B2 /* UIScrollView+ZFPlayer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIScrollView+ZFPlayer.h"; path = "ZFPlayer/Classes/Core/UIScrollView+ZFPlayer.h"; sourceTree = "<group>"; };
+		85D03BEC2CA9B2DB28398618379E7744 /* libFDFullscreenPopGesture.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libFDFullscreenPopGesture.a; path = libFDFullscreenPopGesture.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		85DBED2BC867634D5E592DFDBD5F322B /* FDFullscreenPopGesture-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "FDFullscreenPopGesture-prefix.pch"; sourceTree = "<group>"; };
+		860C066050F63D97E978FC580B0249DE /* ZFAVPlayerManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFAVPlayerManager.h; path = ZFPlayer/Classes/AVPlayer/ZFAVPlayerManager.h; sourceTree = "<group>"; };
+		8769BB8F5B8AA45CBCFE2E04FEC6EAEE /* MJRefresh.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefresh.h; path = MJRefresh/MJRefresh.h; sourceTree = "<group>"; };
+		8C1580911B697E9618157E8E61B74AA3 /* UIView+MJExtension.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+MJExtension.h"; path = "MJRefresh/UIView+MJExtension.h"; sourceTree = "<group>"; };
+		8E4A859D56538DD2BE7CCFD1A42DF326 /* KSMediaPlayerManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KSMediaPlayerManager.m; path = ZFPlayer/Classes/KSYMediaPlayer/KSMediaPlayerManager.m; sourceTree = "<group>"; };
+		8FFF446F4BD3DC88FAEE83437FE92383 /* MJRefreshAutoStateFooter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshAutoStateFooter.m; path = MJRefresh/Custom/Footer/Auto/MJRefreshAutoStateFooter.m; sourceTree = "<group>"; };
+		912CA5326A2EC9CEBB57EEF9F546662F /* ZFPlayerGestureControl.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFPlayerGestureControl.m; path = ZFPlayer/Classes/Core/ZFPlayerGestureControl.m; sourceTree = "<group>"; };
+		9147EA5BA9D9BC2BDC6BD9CD55617FDF /* ZFPortraitControlView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFPortraitControlView.h; path = ZFPlayer/Classes/ControlView/ZFPortraitControlView.h; sourceTree = "<group>"; };
+		93DE7A7A0CFFD1C8DDBD3958B55B5A02 /* UIScrollView+ZFPlayer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIScrollView+ZFPlayer.m"; path = "ZFPlayer/Classes/Core/UIScrollView+ZFPlayer.m"; sourceTree = "<group>"; };
+		940955CEFD4F495E8C3CB2C2839140F7 /* ZFNetworkSpeedMonitor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFNetworkSpeedMonitor.m; path = ZFPlayer/Classes/ControlView/ZFNetworkSpeedMonitor.m; sourceTree = "<group>"; };
+		94943466B4879C08E7ACEB6E176B8C99 /* MJRefreshBackStateFooter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshBackStateFooter.h; path = MJRefresh/Custom/Footer/Back/MJRefreshBackStateFooter.h; sourceTree = "<group>"; };
+		9508C14D182CED6251CB5031A3417040 /* ZFLandScapeControlView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFLandScapeControlView.h; path = ZFPlayer/Classes/ControlView/ZFLandScapeControlView.h; sourceTree = "<group>"; };
+		98F44ACDBE2BDA6D55554D042EE2C71F /* ZFIJKPlayerManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFIJKPlayerManager.m; path = ZFPlayer/Classes/ijkplayer/ZFIJKPlayerManager.m; sourceTree = "<group>"; };
+		99065286D2FB6DEABB9AF8CFA769F6F2 /* ZFFloatView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFFloatView.h; path = ZFPlayer/Classes/Core/ZFFloatView.h; sourceTree = "<group>"; };
+		9919A66F2840DB0185FB5E550D2841BA /* MJRefreshStateHeader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshStateHeader.h; path = MJRefresh/Custom/Header/MJRefreshStateHeader.h; sourceTree = "<group>"; };
+		99ADA39F293E3DBA03B812EDC3316E5A /* ZFSpeedLoadingView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFSpeedLoadingView.m; path = ZFPlayer/Classes/ControlView/ZFSpeedLoadingView.m; sourceTree = "<group>"; };
+		9B32F13B1D1CAD7D320EED49ECFAC7A7 /* MJRefreshBackGifFooter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshBackGifFooter.h; path = MJRefresh/Custom/Footer/Back/MJRefreshBackGifFooter.h; sourceTree = "<group>"; };
+		9C9C2A73108F6053192C376ED03988EB /* MJRefreshAutoNormalFooter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshAutoNormalFooter.m; path = MJRefresh/Custom/Footer/Auto/MJRefreshAutoNormalFooter.m; sourceTree = "<group>"; };
+		9CB49075D55C49CDF17F85C13D9D21A3 /* ZFOrientationObserver.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFOrientationObserver.m; path = ZFPlayer/Classes/Core/ZFOrientationObserver.m; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9DFC8B20A1A81405EEDEE5E4849182DB /* Pods-ZFPlayer_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ZFPlayer_Example-resources.sh"; sourceTree = "<group>"; };
+		A035FF5946A491CE86B66BE8C107BBC6 /* ZFUtilities.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFUtilities.m; path = ZFPlayer/Classes/ControlView/ZFUtilities.m; sourceTree = "<group>"; };
+		A39BB55F85D6AB272781664F7E118AE3 /* MJRefreshAutoStateFooter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshAutoStateFooter.h; path = MJRefresh/Custom/Footer/Auto/MJRefreshAutoStateFooter.h; sourceTree = "<group>"; };
+		A3A41C2B96D455CE8D1351118D4B2CCC /* KSMediaPlayerManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KSMediaPlayerManager.h; path = ZFPlayer/Classes/KSYMediaPlayer/KSMediaPlayerManager.h; sourceTree = "<group>"; };
+		A6516BF16AA6C0A42FCBAB485BECD695 /* ZFPlayerMediaPlayback.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFPlayerMediaPlayback.h; path = ZFPlayer/Classes/Core/ZFPlayerMediaPlayback.h; sourceTree = "<group>"; };
+		A878FA1DAA3793AE566A5E72A071C386 /* ZFPlayer-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ZFPlayer-prefix.pch"; sourceTree = "<group>"; };
+		AF170EF4C88DDA1E11DD16421E7C510A /* Pods-ZFPlayer_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ZFPlayer_Example-acknowledgements.plist"; sourceTree = "<group>"; };
+		AFFE5DAF6078E8DDAFAF4CDD29BF544B /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		B65625F48C1019B77599339087171EDA /* ZFKVOController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFKVOController.m; path = ZFPlayer/Classes/Core/ZFKVOController.m; sourceTree = "<group>"; };
+		B76704C2E60123DCBBDD268C2C9EDD83 /* MJRefresh.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MJRefresh.xcconfig; sourceTree = "<group>"; };
+		BDA47DDA0A5FCFE585D75EE4D8BA25BC /* MJRefreshAutoGifFooter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshAutoGifFooter.m; path = MJRefresh/Custom/Footer/Auto/MJRefreshAutoGifFooter.m; sourceTree = "<group>"; };
+		BFDBC54E73B0072EC1946B0CD329255A /* NSBundle+MJRefresh.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSBundle+MJRefresh.m"; path = "MJRefresh/NSBundle+MJRefresh.m"; sourceTree = "<group>"; };
+		C2CDF45AB182EBF584EBFB9E5FDB2CAD /* MJRefreshBackNormalFooter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshBackNormalFooter.h; path = MJRefresh/Custom/Footer/Back/MJRefreshBackNormalFooter.h; sourceTree = "<group>"; };
+		C3719DB514753384737F452DAEA45D8E /* ZFPlayerControlView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFPlayerControlView.m; path = ZFPlayer/Classes/ControlView/ZFPlayerControlView.m; sourceTree = "<group>"; };
+		C5B1B18F0A35CC23E78F4DC240C36A4D /* Pods-ZFPlayer_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ZFPlayer_Example.release.xcconfig"; sourceTree = "<group>"; };
+		C6EEA0791C7AED6B716B8B945CC96D12 /* UIScrollView+MJRefresh.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIScrollView+MJRefresh.m"; path = "MJRefresh/UIScrollView+MJRefresh.m"; sourceTree = "<group>"; };
+		C7E38E8DEEDB23EDF47A7556F03B33A4 /* UIImageView+ZFCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImageView+ZFCache.h"; path = "ZFPlayer/Classes/ControlView/UIImageView+ZFCache.h"; sourceTree = "<group>"; };
+		C807B72CAEEF2C0B774A6045B829AC43 /* ZFNetworkSpeedMonitor.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFNetworkSpeedMonitor.h; path = ZFPlayer/Classes/ControlView/ZFNetworkSpeedMonitor.h; sourceTree = "<group>"; };
+		C84B48189F745CD23E33B64FC0AC4F2A /* MJRefreshAutoFooter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshAutoFooter.m; path = MJRefresh/Base/MJRefreshAutoFooter.m; sourceTree = "<group>"; };
+		CBB33D4264A53D781C77084794218804 /* MJRefreshHeader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshHeader.h; path = MJRefresh/Base/MJRefreshHeader.h; sourceTree = "<group>"; };
+		CBC3CCC987719B46714662CDC808CA17 /* ZFUtilities.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFUtilities.h; path = ZFPlayer/Classes/ControlView/ZFUtilities.h; sourceTree = "<group>"; };
+		CDE17BEFCCE9E7B2B8E4C365509A8DF7 /* ZFPlayerLogManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFPlayerLogManager.h; path = ZFPlayer/Classes/Core/ZFPlayerLogManager.h; sourceTree = "<group>"; };
+		CF07E46DE45F5A6565FBBBE348DA010C /* UIView+ZFFrame.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+ZFFrame.m"; path = "ZFPlayer/Classes/ControlView/UIView+ZFFrame.m"; sourceTree = "<group>"; };
+		D3BBEA2A7C357CA17A1D08275CB114AA /* ZFPlayerController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFPlayerController.h; path = ZFPlayer/Classes/Core/ZFPlayerController.h; sourceTree = "<group>"; };
+		D43569A558AD9E8D8B9C79388BBD9F9E /* FDFullscreenPopGesture.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = FDFullscreenPopGesture.xcconfig; sourceTree = "<group>"; };
+		D8651FDDA66D0053D484C247F76BEFE1 /* ZFLoadingView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFLoadingView.m; path = ZFPlayer/Classes/ControlView/ZFLoadingView.m; sourceTree = "<group>"; };
+		DA90972FC7F1B1D5DDB28EB22FF8A803 /* ZFPlayerNotification.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFPlayerNotification.h; path = ZFPlayer/Classes/Core/ZFPlayerNotification.h; sourceTree = "<group>"; };
+		DBA77C01CA5A827016DC2E114C13101A /* ZFKVOController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFKVOController.h; path = ZFPlayer/Classes/Core/ZFKVOController.h; sourceTree = "<group>"; };
+		DBD935864F4EAADB98D2E2EB3570211F /* MJRefreshNormalHeader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshNormalHeader.h; path = MJRefresh/Custom/Header/MJRefreshNormalHeader.h; sourceTree = "<group>"; };
+		DCF17733ED35B97033547763CDB19323 /* ZFPlayerLogManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFPlayerLogManager.m; path = ZFPlayer/Classes/Core/ZFPlayerLogManager.m; sourceTree = "<group>"; };
+		DE2175DB1FEEC8773044D5CD83576D66 /* ZFAVPlayerManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFAVPlayerManager.m; path = ZFPlayer/Classes/AVPlayer/ZFAVPlayerManager.m; sourceTree = "<group>"; };
+		DEB5C7502D7CEC9C1106E9E3816B43E4 /* ZFSpeedLoadingView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFSpeedLoadingView.h; path = ZFPlayer/Classes/ControlView/ZFSpeedLoadingView.h; sourceTree = "<group>"; };
+		E04AD63F95D032FF4BF89F2F63772F52 /* ZFSmallFloatControlView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFSmallFloatControlView.h; path = ZFPlayer/Classes/ControlView/ZFSmallFloatControlView.h; sourceTree = "<group>"; };
+		E31390F57C7387C9D84AD27C4B12D365 /* MJRefreshComponent.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MJRefreshComponent.h; path = MJRefresh/Base/MJRefreshComponent.h; sourceTree = "<group>"; };
+		E49D6D248DD1CEE584E6776B9164A1B2 /* libMJRefresh.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libMJRefresh.a; path = libMJRefresh.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4FCA7DD79655A64E0062EBD23421954 /* ZFIJKPlayerManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFIJKPlayerManager.h; path = ZFPlayer/Classes/ijkplayer/ZFIJKPlayerManager.h; sourceTree = "<group>"; };
+		EA011D7A281CCE50B38A22EE53176E95 /* ZFPlayerMediaControl.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFPlayerMediaControl.h; path = ZFPlayer/Classes/Core/ZFPlayerMediaControl.h; sourceTree = "<group>"; };
+		EA9535F8EC948E7CB87CC51914A0AA19 /* ZFPlayerController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFPlayerController.m; path = ZFPlayer/Classes/Core/ZFPlayerController.m; sourceTree = "<group>"; };
+		ED363DD89BB17FB9F31F94524BA59CBB /* libZFPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libZFPlayer.a; path = libZFPlayer.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED99207F95D6A1F137115565E3E91AD4 /* FDFullscreenPopGesture-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "FDFullscreenPopGesture-dummy.m"; sourceTree = "<group>"; };
+		F08062E93419E006E58E333F1BF6470C /* ZFVolumeBrightnessView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFVolumeBrightnessView.m; path = ZFPlayer/Classes/ControlView/ZFVolumeBrightnessView.m; sourceTree = "<group>"; };
+		F11F4EA5E8A93CBFB1BE04916AE1D69C /* ZFPlayer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFPlayer.h; path = ZFPlayer/Classes/Core/ZFPlayer.h; sourceTree = "<group>"; };
+		F40D5466E1D4C3EC681F398F7E475BE7 /* ZFPlayerGestureControl.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ZFPlayerGestureControl.h; path = ZFPlayer/Classes/Core/ZFPlayerGestureControl.h; sourceTree = "<group>"; };
+		F4AE4FB8CFEC66550FA71A35DD390153 /* MJRefreshHeader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshHeader.m; path = MJRefresh/Base/MJRefreshHeader.m; sourceTree = "<group>"; };
+		F77B6E186AFA371B333DAF379DDE2E0D /* Pods-ZFPlayer_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-ZFPlayer_Example-dummy.m"; sourceTree = "<group>"; };
+		F8A846DA2518445545F7301CE1BC3C0D /* MJRefreshFooter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MJRefreshFooter.m; path = MJRefresh/Base/MJRefreshFooter.m; sourceTree = "<group>"; };
+		FAA87E2386C51016E0B70C8F4D54E446 /* MJRefresh.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = MJRefresh.bundle; path = MJRefresh/MJRefresh.bundle; sourceTree = "<group>"; };
+		FFA0FA7AF0DAF8058C0C5501467AA80C /* ZFLandScapeControlView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ZFLandScapeControlView.m; path = ZFPlayer/Classes/ControlView/ZFLandScapeControlView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0944441DC2BF6AA28D72B9B6409AB784 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34293BAE72F02CFBF74A363378B426F6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C7C90401FE0605D4D0B5309FC7AD075 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EE73EA500B01F7C80F973DB7489924C8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		06ACE1929ED0358CC6CD484D3AAFC44B /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				D43569A558AD9E8D8B9C79388BBD9F9E /* FDFullscreenPopGesture.xcconfig */,
+				ED99207F95D6A1F137115565E3E91AD4 /* FDFullscreenPopGesture-dummy.m */,
+				85DBED2BC867634D5E592DFDBD5F322B /* FDFullscreenPopGesture-prefix.pch */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/FDFullscreenPopGesture";
+			sourceTree = "<group>";
+		};
+		06C2237CDA2C7CD5755FBA1D251563AB /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				0E9BCCB116E2B717B16797CE20269C16 /* Pods-ZFPlayer_Example */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		077068D5855CAD7C748D577CD32BDA23 /* ijkplayer */ = {
+			isa = PBXGroup;
+			children = (
+				E4FCA7DD79655A64E0062EBD23421954 /* ZFIJKPlayerManager.h */,
+				98F44ACDBE2BDA6D55554D042EE2C71F /* ZFIJKPlayerManager.m */,
+			);
+			name = ijkplayer;
+			sourceTree = "<group>";
+		};
+		0CC1C47478C60CCD6610B27D5991A232 /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				98AFAD30F30872A049CBA7E875212989 /* ZFPlayer */,
+			);
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		0E9BCCB116E2B717B16797CE20269C16 /* Pods-ZFPlayer_Example */ = {
+			isa = PBXGroup;
+			children = (
+				0D6B5F3F71F9CDF4BD44C3E963D88AB3 /* Pods-ZFPlayer_Example-acknowledgements.markdown */,
+				AF170EF4C88DDA1E11DD16421E7C510A /* Pods-ZFPlayer_Example-acknowledgements.plist */,
+				F77B6E186AFA371B333DAF379DDE2E0D /* Pods-ZFPlayer_Example-dummy.m */,
+				9DFC8B20A1A81405EEDEE5E4849182DB /* Pods-ZFPlayer_Example-resources.sh */,
+				6DDB7D3F64B0E513C9ED829EE48C2BCF /* Pods-ZFPlayer_Example.debug.xcconfig */,
+				C5B1B18F0A35CC23E78F4DC240C36A4D /* Pods-ZFPlayer_Example.release.xcconfig */,
+			);
+			name = "Pods-ZFPlayer_Example";
+			path = "Target Support Files/Pods-ZFPlayer_Example";
+			sourceTree = "<group>";
+		};
+		14280E3BCFDE015F6413AC3D318366F2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				85D03BEC2CA9B2DB28398618379E7744 /* libFDFullscreenPopGesture.a */,
+				E49D6D248DD1CEE584E6776B9164A1B2 /* libMJRefresh.a */,
+				388609D16586DF46A7413C63EB5DC910 /* libPods-ZFPlayer_Example.a */,
+				ED363DD89BB17FB9F31F94524BA59CBB /* libZFPlayer.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		50EAB21FFEFF9887249CFED9C07916D4 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				B76704C2E60123DCBBDD268C2C9EDD83 /* MJRefresh.xcconfig */,
+				58FB0ECD6F37EF94AE3A376012DB7512 /* MJRefresh-dummy.m */,
+				0839A16CD3E56CD8E3B961DA7B5593A1 /* MJRefresh-prefix.pch */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/MJRefresh";
+			sourceTree = "<group>";
+		};
+		595FAADBD2B7B51397AA93E3FE2E72DA /* AVPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				860C066050F63D97E978FC580B0249DE /* ZFAVPlayerManager.h */,
+				DE2175DB1FEEC8773044D5CD83576D66 /* ZFAVPlayerManager.m */,
+			);
+			name = AVPlayer;
+			sourceTree = "<group>";
+		};
+		626B6E8B5371331041BD3125430D1CAA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FAA87E2386C51016E0B70C8F4D54E446 /* MJRefresh.bundle */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		6FAE48AFAF2CE459C68BF1B65005365B /* ControlView */ = {
+			isa = PBXGroup;
+			children = (
+				C7E38E8DEEDB23EDF47A7556F03B33A4 /* UIImageView+ZFCache.h */,
+				06918E04A7565461907DA8D579A2DF75 /* UIImageView+ZFCache.m */,
+				16FB508451ECA5BDAAF8107FC377EDE5 /* UIView+ZFFrame.h */,
+				CF07E46DE45F5A6565FBBBE348DA010C /* UIView+ZFFrame.m */,
+				9508C14D182CED6251CB5031A3417040 /* ZFLandScapeControlView.h */,
+				FFA0FA7AF0DAF8058C0C5501467AA80C /* ZFLandScapeControlView.m */,
+				0570283851C2C5FAFF1B205B2BE1B566 /* ZFLoadingView.h */,
+				D8651FDDA66D0053D484C247F76BEFE1 /* ZFLoadingView.m */,
+				C807B72CAEEF2C0B774A6045B829AC43 /* ZFNetworkSpeedMonitor.h */,
+				940955CEFD4F495E8C3CB2C2839140F7 /* ZFNetworkSpeedMonitor.m */,
+				716BAF059D4F90173E18E6E851DBC676 /* ZFPlayerControlView.h */,
+				C3719DB514753384737F452DAEA45D8E /* ZFPlayerControlView.m */,
+				9147EA5BA9D9BC2BDC6BD9CD55617FDF /* ZFPortraitControlView.h */,
+				7831C567CD39F9E8094FD2149AAA0734 /* ZFPortraitControlView.m */,
+				57DA7A8248AD11E723D1720E8BE7CC02 /* ZFSliderView.h */,
+				23F95CE4592DB3A587C26AD097CFCF69 /* ZFSliderView.m */,
+				E04AD63F95D032FF4BF89F2F63772F52 /* ZFSmallFloatControlView.h */,
+				526DF69EDA2E095AEF5002F2C734F0A0 /* ZFSmallFloatControlView.m */,
+				DEB5C7502D7CEC9C1106E9E3816B43E4 /* ZFSpeedLoadingView.h */,
+				99ADA39F293E3DBA03B812EDC3316E5A /* ZFSpeedLoadingView.m */,
+				CBC3CCC987719B46714662CDC808CA17 /* ZFUtilities.h */,
+				A035FF5946A491CE86B66BE8C107BBC6 /* ZFUtilities.m */,
+				421C78C527468906A3E76A606DDA4404 /* ZFVolumeBrightnessView.h */,
+				F08062E93419E006E58E333F1BF6470C /* ZFVolumeBrightnessView.m */,
+				A9CEA26C9400906F7E45088C1E431217 /* Resources */,
+			);
+			name = ControlView;
+			sourceTree = "<group>";
+		};
+		98AFAD30F30872A049CBA7E875212989 /* ZFPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				595FAADBD2B7B51397AA93E3FE2E72DA /* AVPlayer */,
+				6FAE48AFAF2CE459C68BF1B65005365B /* ControlView */,
+				ACEA4A983CB374A1C2CBFE01F0604FCB /* Core */,
+				077068D5855CAD7C748D577CD32BDA23 /* ijkplayer */,
+				FA5F6BE60E1F70D570368E173FD74243 /* KSYMediaPlayer */,
+				FC68DC00A444F717316281B90CCAA531 /* Pod */,
+				C13B571423AEF3B9D1A2385F47F2916C /* Support Files */,
+			);
+			name = ZFPlayer;
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		9D4175E0E8E841A7B32F9324262F7129 /* FDFullscreenPopGesture */ = {
+			isa = PBXGroup;
+			children = (
+				7C8FB89B49991FA2D0AB29624B861E5F /* UINavigationController+FDFullscreenPopGesture.h */,
+				1CEF3EEB8C2F41D623983A73A36A7306 /* UINavigationController+FDFullscreenPopGesture.m */,
+				06ACE1929ED0358CC6CD484D3AAFC44B /* Support Files */,
+			);
+			name = FDFullscreenPopGesture;
+			path = FDFullscreenPopGesture;
+			sourceTree = "<group>";
+		};
+		A9CEA26C9400906F7E45088C1E431217 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4DFB7537A6121A65336F8FAEB06BA445 /* ZFPlayer.bundle */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		ACEA4A983CB374A1C2CBFE01F0604FCB /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				855AEEE4CDA22905E4D5DE97CC0A90B2 /* UIScrollView+ZFPlayer.h */,
+				93DE7A7A0CFFD1C8DDBD3958B55B5A02 /* UIScrollView+ZFPlayer.m */,
+				05752AB21E7D5304E80634D6F75B17D0 /* UIViewController+ZFPlayerRotation.m */,
+				99065286D2FB6DEABB9AF8CFA769F6F2 /* ZFFloatView.h */,
+				2006444E0878FE257E90A55467EFAD74 /* ZFFloatView.m */,
+				DBA77C01CA5A827016DC2E114C13101A /* ZFKVOController.h */,
+				B65625F48C1019B77599339087171EDA /* ZFKVOController.m */,
+				06EC53FA0D91E8419B9D6A1117B24DE1 /* ZFOrientationObserver.h */,
+				9CB49075D55C49CDF17F85C13D9D21A3 /* ZFOrientationObserver.m */,
+				F11F4EA5E8A93CBFB1BE04916AE1D69C /* ZFPlayer.h */,
+				D3BBEA2A7C357CA17A1D08275CB114AA /* ZFPlayerController.h */,
+				EA9535F8EC948E7CB87CC51914A0AA19 /* ZFPlayerController.m */,
+				F40D5466E1D4C3EC681F398F7E475BE7 /* ZFPlayerGestureControl.h */,
+				912CA5326A2EC9CEBB57EEF9F546662F /* ZFPlayerGestureControl.m */,
+				CDE17BEFCCE9E7B2B8E4C365509A8DF7 /* ZFPlayerLogManager.h */,
+				DCF17733ED35B97033547763CDB19323 /* ZFPlayerLogManager.m */,
+				EA011D7A281CCE50B38A22EE53176E95 /* ZFPlayerMediaControl.h */,
+				A6516BF16AA6C0A42FCBAB485BECD695 /* ZFPlayerMediaPlayback.h */,
+				DA90972FC7F1B1D5DDB28EB22FF8A803 /* ZFPlayerNotification.h */,
+				7BA1B2A2B6182B2C64348630CBB77D44 /* ZFPlayerNotification.m */,
+				4D72125400F6ED8E9986378069E1B837 /* ZFPlayerView.h */,
+				73EEDFE77F536AA9235E2792E8E0F55A /* ZFPlayerView.m */,
+				5752DFE9E64B7441D40843E7405CA403 /* ZFReachabilityManager.h */,
+				8514FF9BD7A4E6318A1ADD7C4C54CC94 /* ZFReachabilityManager.m */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		C13B571423AEF3B9D1A2385F47F2916C /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				76F63C101002C44E6D6A155BC91AECD4 /* ZFPlayer.xcconfig */,
+				1D3F4D9C3B9550380805943D39FC6F03 /* ZFPlayer-dummy.m */,
+				A878FA1DAA3793AE566A5E72A071C386 /* ZFPlayer-prefix.pch */,
+			);
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/ZFPlayer";
+			sourceTree = "<group>";
+		};
+		CD9EDC5A4A986CD197F171F1CFD4106F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9D4175E0E8E841A7B32F9324262F7129 /* FDFullscreenPopGesture */,
+				E98C8E4ABED235269A3FA7C9AE27086D /* MJRefresh */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				0CC1C47478C60CCD6610B27D5991A232 /* Development Pods */,
+				D89477F20FB1DE18A04690586D7808C4 /* Frameworks */,
+				CD9EDC5A4A986CD197F171F1CFD4106F /* Pods */,
+				14280E3BCFDE015F6413AC3D318366F2 /* Products */,
+				06C2237CDA2C7CD5755FBA1D251563AB /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		D89477F20FB1DE18A04690586D7808C4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E98C8E4ABED235269A3FA7C9AE27086D /* MJRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				8769BB8F5B8AA45CBCFE2E04FEC6EAEE /* MJRefresh.h */,
+				3B0FA30F7AF4C42421352088A2D68409 /* MJRefreshAutoFooter.h */,
+				C84B48189F745CD23E33B64FC0AC4F2A /* MJRefreshAutoFooter.m */,
+				168C5920675A70A6E03FBA66AC3D976D /* MJRefreshAutoGifFooter.h */,
+				BDA47DDA0A5FCFE585D75EE4D8BA25BC /* MJRefreshAutoGifFooter.m */,
+				5D130E7AB62E8B8088A807CFB9F49C68 /* MJRefreshAutoNormalFooter.h */,
+				9C9C2A73108F6053192C376ED03988EB /* MJRefreshAutoNormalFooter.m */,
+				A39BB55F85D6AB272781664F7E118AE3 /* MJRefreshAutoStateFooter.h */,
+				8FFF446F4BD3DC88FAEE83437FE92383 /* MJRefreshAutoStateFooter.m */,
+				4439873416A0FEE436C55B0C8F241B73 /* MJRefreshBackFooter.h */,
+				1B3D48486386FA0CA12DF2F4654DD415 /* MJRefreshBackFooter.m */,
+				9B32F13B1D1CAD7D320EED49ECFAC7A7 /* MJRefreshBackGifFooter.h */,
+				3B95984CFCD557D93E0B17EC1ADF29C8 /* MJRefreshBackGifFooter.m */,
+				C2CDF45AB182EBF584EBFB9E5FDB2CAD /* MJRefreshBackNormalFooter.h */,
+				44A0315CAC788476AD35986FAD18CAE1 /* MJRefreshBackNormalFooter.m */,
+				94943466B4879C08E7ACEB6E176B8C99 /* MJRefreshBackStateFooter.h */,
+				5A0588FA4811D0DA6900DFB6B272CE7E /* MJRefreshBackStateFooter.m */,
+				E31390F57C7387C9D84AD27C4B12D365 /* MJRefreshComponent.h */,
+				6B034F0B9BFF86A8B3592F1D124915CB /* MJRefreshComponent.m */,
+				84E0E08A0136922CB1BC72A10B1E9286 /* MJRefreshConst.h */,
+				05F5F40DB4995B2C199411BEB9E06750 /* MJRefreshConst.m */,
+				0CAFBD4FF8610D0A67E53624840DE6DA /* MJRefreshFooter.h */,
+				F8A846DA2518445545F7301CE1BC3C0D /* MJRefreshFooter.m */,
+				4DDB76B101746577BD863D58CF771351 /* MJRefreshGifHeader.h */,
+				70169314EF9A40275CEB6001AFA82C8D /* MJRefreshGifHeader.m */,
+				CBB33D4264A53D781C77084794218804 /* MJRefreshHeader.h */,
+				F4AE4FB8CFEC66550FA71A35DD390153 /* MJRefreshHeader.m */,
+				DBD935864F4EAADB98D2E2EB3570211F /* MJRefreshNormalHeader.h */,
+				2F8E2E096AFB640D7B2DD9FE89CB7355 /* MJRefreshNormalHeader.m */,
+				9919A66F2840DB0185FB5E550D2841BA /* MJRefreshStateHeader.h */,
+				49BE2BB60D4CA2E183D7CC65AC886403 /* MJRefreshStateHeader.m */,
+				61A73A26CB94BCFA586CBD0BAC9F8135 /* NSBundle+MJRefresh.h */,
+				BFDBC54E73B0072EC1946B0CD329255A /* NSBundle+MJRefresh.m */,
+				13A82E88B22DA57C006B29C790FDD657 /* UIScrollView+MJExtension.h */,
+				56661187A6A0641748DEC979C1C4498B /* UIScrollView+MJExtension.m */,
+				335ABE56406F8C9D6CEDBFCC3C88DE95 /* UIScrollView+MJRefresh.h */,
+				C6EEA0791C7AED6B716B8B945CC96D12 /* UIScrollView+MJRefresh.m */,
+				8C1580911B697E9618157E8E61B74AA3 /* UIView+MJExtension.h */,
+				6A5C32162A4D41087066197209044188 /* UIView+MJExtension.m */,
+				626B6E8B5371331041BD3125430D1CAA /* Resources */,
+				50EAB21FFEFF9887249CFED9C07916D4 /* Support Files */,
+			);
+			name = MJRefresh;
+			path = MJRefresh;
+			sourceTree = "<group>";
+		};
+		FA5F6BE60E1F70D570368E173FD74243 /* KSYMediaPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				A3A41C2B96D455CE8D1351118D4B2CCC /* KSMediaPlayerManager.h */,
+				8E4A859D56538DD2BE7CCFD1A42DF326 /* KSMediaPlayerManager.m */,
+			);
+			name = KSYMediaPlayer;
+			sourceTree = "<group>";
+		};
+		FC68DC00A444F717316281B90CCAA531 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				2FCAA13C086F6C923B8EF6122A0D35A6 /* LICENSE */,
+				AFFE5DAF6078E8DDAFAF4CDD29BF544B /* README.md */,
+				53391A4DF32B47F52B8AF0BF668F559C /* ZFPlayer.podspec */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		04E6AB2BFC6F6A36FA832E5C2F224963 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				68A84B33C46228A574DD01B9A8FFC464 /* UINavigationController+FDFullscreenPopGesture.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0E88DC7272A89C3E8B2D4DA6E9B08FA3 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		155DCE49615885B57A5111DEFF853C7D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED71760D75BF9B6C8BC98062BDFD07D1 /* MJRefresh.h in Headers */,
+				FED5770569AAA0E45EF74522CB617B64 /* MJRefreshAutoFooter.h in Headers */,
+				F4C593492844D37C58705DACB3409C28 /* MJRefreshAutoGifFooter.h in Headers */,
+				10B320645982B481D026D252158928E1 /* MJRefreshAutoNormalFooter.h in Headers */,
+				8540D7C92A51F917D80AABEDDDE44417 /* MJRefreshAutoStateFooter.h in Headers */,
+				30A6398F5A3F95D43BEEBF5BE25AA7F9 /* MJRefreshBackFooter.h in Headers */,
+				EF0408C522F5F9F4383EA45FF59A89FA /* MJRefreshBackGifFooter.h in Headers */,
+				2D79705C9E9111F3795C662FCBA866CC /* MJRefreshBackNormalFooter.h in Headers */,
+				F684BDC9EB74BD5FD12E3ABFDE779E12 /* MJRefreshBackStateFooter.h in Headers */,
+				7497DFD7BD1BD80E3854691DAED632DD /* MJRefreshComponent.h in Headers */,
+				81480792CD6ED7819683C63B2ECC81BA /* MJRefreshConst.h in Headers */,
+				778EDA88AD8089DDDCB9BAD14FC61504 /* MJRefreshFooter.h in Headers */,
+				BB86867A8B715C629357735FCFC81814 /* MJRefreshGifHeader.h in Headers */,
+				725CC8DF14A3844A66DCE932B1BFF0FA /* MJRefreshHeader.h in Headers */,
+				2A9B91A3F37582467ECF54A3A626053B /* MJRefreshNormalHeader.h in Headers */,
+				1D5E6EFF91D9CE761E34FE23B10AB6C4 /* MJRefreshStateHeader.h in Headers */,
+				AE27FE8438D28A27E822EF13B8062F02 /* NSBundle+MJRefresh.h in Headers */,
+				FEEAFBEC41C329F18AEDA18220883FF5 /* UIScrollView+MJExtension.h in Headers */,
+				8496977A6639BB029807D4AEB634C419 /* UIScrollView+MJRefresh.h in Headers */,
+				2F10992ACA27F357F768E796B512720F /* UIView+MJExtension.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		44D01925EEC455116E36542955EB69D9 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE9619F296C947D181060D88D9F5C316 /* KSMediaPlayerManager.h in Headers */,
+				9418695D01C26BE3FE688296849686CA /* UIImageView+ZFCache.h in Headers */,
+				561D21352D1DB03DBB305DB889AAE93E /* UIScrollView+ZFPlayer.h in Headers */,
+				259FB29638FDB81C16D85CDA48A9288C /* UIView+ZFFrame.h in Headers */,
+				051B5564C29FEAF76D0955E89C9377D8 /* ZFAVPlayerManager.h in Headers */,
+				FBE9AA032F1C8EAEDDF51FD448A85983 /* ZFFloatView.h in Headers */,
+				363D854351FFEAAFC017056CB609B81F /* ZFIJKPlayerManager.h in Headers */,
+				E821672CA74D18600FE0BBA99A1AB52B /* ZFKVOController.h in Headers */,
+				C8B20034E3F2BF5470F8A44F5DEE2E74 /* ZFLandScapeControlView.h in Headers */,
+				DFEFC5E6ECD2ED1D12224C5AEF6F76AB /* ZFLoadingView.h in Headers */,
+				12EB562AD08A633E889EF42CFDF365D1 /* ZFNetworkSpeedMonitor.h in Headers */,
+				3FBCEF4BE6244B82EE1C21C190CF4F8B /* ZFOrientationObserver.h in Headers */,
+				613092854AFB83B31847D51357CDB004 /* ZFPlayer.h in Headers */,
+				E1C406023DC03738F6ADBFB2B34DD90D /* ZFPlayerController.h in Headers */,
+				06A23446D67E7EB5F91F3DD9869AB8BF /* ZFPlayerControlView.h in Headers */,
+				F9A343C6D8F49920309D4A606644C315 /* ZFPlayerGestureControl.h in Headers */,
+				D62676165CB66D40A2894AFFCB1D1331 /* ZFPlayerLogManager.h in Headers */,
+				F26B4C42AD33F4C183E2B10F07733998 /* ZFPlayerMediaControl.h in Headers */,
+				EBCCA31A939FB31C4A42DB5752A039B8 /* ZFPlayerMediaPlayback.h in Headers */,
+				03485851BCC0CA11DA05C0AC386CE309 /* ZFPlayerNotification.h in Headers */,
+				DAD68826BF41EDD87F61ACB96A9BB06E /* ZFPlayerView.h in Headers */,
+				01B188D96E7391C038CBF0299453E969 /* ZFPortraitControlView.h in Headers */,
+				6D2F5B7F5DBF7A8E22C936153254E24F /* ZFReachabilityManager.h in Headers */,
+				8070880DA5C7994F1B9EFD267AD646FC /* ZFSliderView.h in Headers */,
+				C004135D45BBE347D296466DA9F9EF32 /* ZFSmallFloatControlView.h in Headers */,
+				C07B0EE809D0649E1BA37FE5C913B6AF /* ZFSpeedLoadingView.h in Headers */,
+				06DD445D03462FEB2762949A4900BABB /* ZFUtilities.h in Headers */,
+				8B48875B8E7DACCB7C4C50719BE77C77 /* ZFVolumeBrightnessView.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		6868056D761E163D10FDAF8CF1C4D9B8 /* MJRefresh */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B2B92CAB768E6E8058714483F0A8D7A9 /* Build configuration list for PBXNativeTarget "MJRefresh" */;
+			buildPhases = (
+				155DCE49615885B57A5111DEFF853C7D /* Headers */,
+				A40CC699A205464AF8BB3CD95A5D3B09 /* Sources */,
+				3C7C90401FE0605D4D0B5309FC7AD075 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MJRefresh;
+			productName = MJRefresh;
+			productReference = E49D6D248DD1CEE584E6776B9164A1B2 /* libMJRefresh.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		8D6DF8EF7605B16752C1C336D41F67E8 /* Pods-ZFPlayer_Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 29C433B73B23BD36C0D41F374731E8A0 /* Build configuration list for PBXNativeTarget "Pods-ZFPlayer_Example" */;
+			buildPhases = (
+				0E88DC7272A89C3E8B2D4DA6E9B08FA3 /* Headers */,
+				3F10016DAB96982A1C597B68EEFCCEEC /* Sources */,
+				0944441DC2BF6AA28D72B9B6409AB784 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C5DDE163A70B279DCC1D3D7140FDB647 /* PBXTargetDependency */,
+				5E0A673F0C16D02D11B0AA1CC0581A0B /* PBXTargetDependency */,
+				91ADF36CA8C90A83993425A8E7E4BB92 /* PBXTargetDependency */,
+			);
+			name = "Pods-ZFPlayer_Example";
+			productName = "Pods-ZFPlayer_Example";
+			productReference = 388609D16586DF46A7413C63EB5DC910 /* libPods-ZFPlayer_Example.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		8FE0EB310F454719A11FBFEAAC09FE3E /* FDFullscreenPopGesture */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 814D3C2DCED5681C17EB84CCB59BD799 /* Build configuration list for PBXNativeTarget "FDFullscreenPopGesture" */;
+			buildPhases = (
+				04E6AB2BFC6F6A36FA832E5C2F224963 /* Headers */,
+				1E35F3BFD0BEE0580371F51BF2288436 /* Sources */,
+				34293BAE72F02CFBF74A363378B426F6 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FDFullscreenPopGesture;
+			productName = FDFullscreenPopGesture;
+			productReference = 85D03BEC2CA9B2DB28398618379E7744 /* libFDFullscreenPopGesture.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		93FD1F93E0C30B2749BD8A6EC148F233 /* ZFPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F3069606C3F4A956C12EB51A693F33F /* Build configuration list for PBXNativeTarget "ZFPlayer" */;
+			buildPhases = (
+				44D01925EEC455116E36542955EB69D9 /* Headers */,
+				CF9EAAF958C8ADA8B5BDBB34751ABDC6 /* Sources */,
+				EE73EA500B01F7C80F973DB7489924C8 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ZFPlayer;
+			productName = ZFPlayer;
+			productReference = ED363DD89BB17FB9F31F94524BA59CBB /* libZFPlayer.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = 14280E3BCFDE015F6413AC3D318366F2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8FE0EB310F454719A11FBFEAAC09FE3E /* FDFullscreenPopGesture */,
+				6868056D761E163D10FDAF8CF1C4D9B8 /* MJRefresh */,
+				8D6DF8EF7605B16752C1C336D41F67E8 /* Pods-ZFPlayer_Example */,
+				93FD1F93E0C30B2749BD8A6EC148F233 /* ZFPlayer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1E35F3BFD0BEE0580371F51BF2288436 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CBD3CE6DF5CA49E5FB95214C04250B1 /* FDFullscreenPopGesture-dummy.m in Sources */,
+				E0E351588354C36E41771D2B51B1527D /* UINavigationController+FDFullscreenPopGesture.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F10016DAB96982A1C597B68EEFCCEEC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA5E9FD358E84F75F429F683FAB93F6B /* Pods-ZFPlayer_Example-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A40CC699A205464AF8BB3CD95A5D3B09 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F5FD28C1193583E77E3D5AB31231EEE /* MJRefresh-dummy.m in Sources */,
+				DF1E5C5712871055949A66ABEE52B5BE /* MJRefreshAutoFooter.m in Sources */,
+				E4BA1E30409473575812484CEC66C7D8 /* MJRefreshAutoGifFooter.m in Sources */,
+				477E7FD45E71B3DC68C7BE15A3354EFA /* MJRefreshAutoNormalFooter.m in Sources */,
+				7E92196E1F5F3DFB3AEC643C23E674C8 /* MJRefreshAutoStateFooter.m in Sources */,
+				139697D9E4AC066C9F1F60627027D6C5 /* MJRefreshBackFooter.m in Sources */,
+				FE58C05D0A4BA35CFD780D486397AFCF /* MJRefreshBackGifFooter.m in Sources */,
+				E14F3EC4E687268A35CCE55D337B7BA2 /* MJRefreshBackNormalFooter.m in Sources */,
+				7E8CE4189B86E32C6F2C994871C65531 /* MJRefreshBackStateFooter.m in Sources */,
+				1B46580F8553F6287C9A7F1F4388934A /* MJRefreshComponent.m in Sources */,
+				E7D27A72714C1736CBCC5506AD4955F3 /* MJRefreshConst.m in Sources */,
+				8A18B5C1BDE43ECDD7853255208EE5B3 /* MJRefreshFooter.m in Sources */,
+				491C3309A94031C2F125BF35ABAF39E6 /* MJRefreshGifHeader.m in Sources */,
+				AEBFCD60D316911D54797AA8CD5E7804 /* MJRefreshHeader.m in Sources */,
+				D2FD8E9409D56558CA21BC7C143CBB7A /* MJRefreshNormalHeader.m in Sources */,
+				03110534BE651EBAF2313563CD8200F2 /* MJRefreshStateHeader.m in Sources */,
+				82935DB0B0EA3295EE2B1E38D1C0EAE4 /* NSBundle+MJRefresh.m in Sources */,
+				B901695204B1B2E59072DB6F243001EC /* UIScrollView+MJExtension.m in Sources */,
+				B0E053196779C295CAD5B467489A21D2 /* UIScrollView+MJRefresh.m in Sources */,
+				1AD158C0433B4552126BCB09F03623ED /* UIView+MJExtension.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF9EAAF958C8ADA8B5BDBB34751ABDC6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8AB803EEDFCAA952696BDEA8AB7DE41A /* KSMediaPlayerManager.m in Sources */,
+				E2EAAD13872B4D1F2057D9C4A47239A6 /* UIImageView+ZFCache.m in Sources */,
+				C0CB7E75D924C706BD8E31177DD2F9F9 /* UIScrollView+ZFPlayer.m in Sources */,
+				46D863FE0ACB4C80373A37AB6AAA672C /* UIView+ZFFrame.m in Sources */,
+				4C8383EECB7E5B805B672554F26C4DAC /* UIViewController+ZFPlayerRotation.m in Sources */,
+				B4DC332DB0A3E5CD0A3C4CBAE791461F /* ZFAVPlayerManager.m in Sources */,
+				9D58742F2AC3545A2F002EC9939CF59A /* ZFFloatView.m in Sources */,
+				AC344D8C4DA804641A402511D4911AAF /* ZFIJKPlayerManager.m in Sources */,
+				58ED4686D930580F2BE9D63E5A671025 /* ZFKVOController.m in Sources */,
+				BF3A020C7FA58F603F5DA9479E9BE010 /* ZFLandScapeControlView.m in Sources */,
+				28929A8088269A65FE972815E6BF98B7 /* ZFLoadingView.m in Sources */,
+				849F83D2B307471CC1F2679452E05800 /* ZFNetworkSpeedMonitor.m in Sources */,
+				4E73EE2458B47A5FF977FBE4DD89B8E8 /* ZFOrientationObserver.m in Sources */,
+				E8BA1ECCC4053414F16619CF1607634B /* ZFPlayer-dummy.m in Sources */,
+				992B9CB666DBCFBB3AE7B572AC6E2055 /* ZFPlayerController.m in Sources */,
+				3E31C8867C06508EBFDD334AFEE42378 /* ZFPlayerControlView.m in Sources */,
+				1EFCDA3ED41164C869431BBD17E17B72 /* ZFPlayerGestureControl.m in Sources */,
+				A037EC9A6E2B36B02103F64A4955DA8A /* ZFPlayerLogManager.m in Sources */,
+				B9793ABA2C9E0FC07995CC2E0180921D /* ZFPlayerNotification.m in Sources */,
+				51E08D25F972BEC7610D95BD6F135DBE /* ZFPlayerView.m in Sources */,
+				6E64A8A8E5B45CC7BA700777A0A588F4 /* ZFPortraitControlView.m in Sources */,
+				8EA82FE7B84449D5E4AC49915CF8455B /* ZFReachabilityManager.m in Sources */,
+				6AE1E852D15BAB4FB9A0A8051BBBFDD3 /* ZFSliderView.m in Sources */,
+				B5469A8FD7B17B6553E1BA812A0B2ED2 /* ZFSmallFloatControlView.m in Sources */,
+				AAFD65CCA7932B998C7A2FD411E3E76D /* ZFSpeedLoadingView.m in Sources */,
+				B7983FC56C67ECDA7390E3595DBB59C3 /* ZFUtilities.m in Sources */,
+				733C434921A5B70F549341604334C324 /* ZFVolumeBrightnessView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5E0A673F0C16D02D11B0AA1CC0581A0B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MJRefresh;
+			target = 6868056D761E163D10FDAF8CF1C4D9B8 /* MJRefresh */;
+			targetProxy = C90AF10EC0FBE1BE22C85747A7ABD655 /* PBXContainerItemProxy */;
+		};
+		91ADF36CA8C90A83993425A8E7E4BB92 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ZFPlayer;
+			target = 93FD1F93E0C30B2749BD8A6EC148F233 /* ZFPlayer */;
+			targetProxy = 604A5C69085F51D7C172C3296D438365 /* PBXContainerItemProxy */;
+		};
+		C5DDE163A70B279DCC1D3D7140FDB647 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FDFullscreenPopGesture;
+			target = 8FE0EB310F454719A11FBFEAAC09FE3E /* FDFullscreenPopGesture */;
+			targetProxy = DF2E1CEEC1D9D2EA54BDF5F7AC3DC941 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		040434BED47679A7F63B2CC44F8D0626 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B76704C2E60123DCBBDD268C2C9EDD83 /* MJRefresh.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/MJRefresh/MJRefresh-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = MJRefresh;
+				PRODUCT_NAME = MJRefresh;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1A6B7D781BC026B3515F8BC715A4632B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C5B1B18F0A35CC23E78F4DC240C36A4D /* Pods-ZFPlayer_Example.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4B73901EB9C3F7055B3C85841BEC6512 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D43569A558AD9E8D8B9C79388BBD9F9E /* FDFullscreenPopGesture.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/FDFullscreenPopGesture/FDFullscreenPopGesture-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = FDFullscreenPopGesture;
+				PRODUCT_NAME = FDFullscreenPopGesture;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4BE66A09A74FD25164AAB3C2645B9B93 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		4D12BB0BBFC6900A9F64A33B1D46FD03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6DDB7D3F64B0E513C9ED829EE48C2BCF /* Pods-ZFPlayer_Example.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6D1A8E6A736A21B2B8B51A69B8563232 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 76F63C101002C44E6D6A155BC91AECD4 /* ZFPlayer.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/ZFPlayer/ZFPlayer-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = ZFPlayer;
+				PRODUCT_NAME = ZFPlayer;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7EF7227D9B20A1D549000096ACCB23D7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		BF3FFD8C58D4D47A29033B15571C7510 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D43569A558AD9E8D8B9C79388BBD9F9E /* FDFullscreenPopGesture.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/FDFullscreenPopGesture/FDFullscreenPopGesture-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = FDFullscreenPopGesture;
+				PRODUCT_NAME = FDFullscreenPopGesture;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D5DB558C6D1BEC12A3B67A969F2DF3D9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B76704C2E60123DCBBDD268C2C9EDD83 /* MJRefresh.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/MJRefresh/MJRefresh-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = MJRefresh;
+				PRODUCT_NAME = MJRefresh;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DB999AE61209A96FDF8A7CFC778370A0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 76F63C101002C44E6D6A155BC91AECD4 /* ZFPlayer.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/ZFPlayer/ZFPlayer-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = ZFPlayer;
+				PRODUCT_NAME = ZFPlayer;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1F3069606C3F4A956C12EB51A693F33F /* Build configuration list for PBXNativeTarget "ZFPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6D1A8E6A736A21B2B8B51A69B8563232 /* Debug */,
+				DB999AE61209A96FDF8A7CFC778370A0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		29C433B73B23BD36C0D41F374731E8A0 /* Build configuration list for PBXNativeTarget "Pods-ZFPlayer_Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D12BB0BBFC6900A9F64A33B1D46FD03 /* Debug */,
+				1A6B7D781BC026B3515F8BC715A4632B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7EF7227D9B20A1D549000096ACCB23D7 /* Debug */,
+				4BE66A09A74FD25164AAB3C2645B9B93 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		814D3C2DCED5681C17EB84CCB59BD799 /* Build configuration list for PBXNativeTarget "FDFullscreenPopGesture" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B73901EB9C3F7055B3C85841BEC6512 /* Debug */,
+				BF3FFD8C58D4D47A29033B15571C7510 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B2B92CAB768E6E8058714483F0A8D7A9 /* Build configuration list for PBXNativeTarget "MJRefresh" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				040434BED47679A7F63B2CC44F8D0626 /* Debug */,
+				D5DB558C6D1BEC12A3B67A969F2DF3D9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}

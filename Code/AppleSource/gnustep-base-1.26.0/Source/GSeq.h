@@ -44,7 +44,7 @@
  *      +initialize or the GSString.m setup() function.
  */
 static SEL	charAtIndexSel = NULL;
-static SEL	gcrSel = NULL;
+static SEL	getCharInRangeSel = NULL;
 static SEL	ranSel = NULL;
 
 /*
@@ -431,7 +431,7 @@ GSEQ_STRCOMP(NSString *ss, NSString *os, NSUInteger mask, NSRange aRange)
 
 #if	GSEQ_S == GSEQ_NS
       sgImp = (void (*)(NSString*,SEL,unichar*,NSRange))
-	[(id)s methodForSelector: gcrSel];
+	[(id)s methodForSelector: getCharInRangeSel];
       GSEQ_SGETR(sBuf, aRange);
 #else
 #if	GSEQ_S == GSEQ_CS
@@ -442,7 +442,7 @@ GSEQ_STRCOMP(NSString *ss, NSString *os, NSUInteger mask, NSRange aRange)
 #endif
 #if	GSEQ_O == GSEQ_NS
       ogImp = (void (*)(NSString*,SEL,unichar*,NSRange))
-	[(id)o methodForSelector: gcrSel];
+	[(id)o methodForSelector: getCharInRangeSel];
       GSEQ_OGETR(oBuf, NSMakeRange(0, oLen));
 #else
 #if	GSEQ_O == GSEQ_CS
@@ -569,11 +569,11 @@ GSEQ_STRCOMP(NSString *ss, NSString *os, NSUInteger mask, NSRange aRange)
 #endif
 #if	GSEQ_S == GSEQ_NS
       sgImp = (void (*)(NSString*, SEL, unichar*, NSRange))
-	[(id)s methodForSelector: gcrSel];
+	[(id)s methodForSelector: getCharInRangeSel];
 #endif
 #if	GSEQ_O == GSEQ_NS
       ogImp = (void (*)(NSString*, SEL, unichar*, NSRange))
-	[(id)o methodForSelector: gcrSel];
+	[(id)o methodForSelector: getCharInRangeSel];
 #endif
 
       while (sCount < end)
@@ -679,13 +679,13 @@ GSEQ_STRRANGE(NSString *ss, NSString *os, NSUInteger mask, NSRange aRange)
   scImp = (unichar (*)(NSString*,SEL,NSUInteger))
     [(id)s methodForSelector: charAtIndexSel];
   sgImp = (void (*)(NSString*,SEL,unichar*,NSRange))
-    [(id)s methodForSelector: gcrSel];
+    [(id)s methodForSelector: getCharInRangeSel];
 #endif
 #if	GSEQ_O == GSEQ_NS
   ocImp = (unichar (*)(NSString*,SEL,NSUInteger))
     [(id)o methodForSelector: charAtIndexSel];
   ogImp = (void (*)(NSString*,SEL,unichar*,NSRange))
-    [(id)o methodForSelector: gcrSel];
+    [(id)o methodForSelector: getCharInRangeSel];
 #endif
 #if	GSEQ_S == GSEQ_NS || GSEQ_S == GSEQ_US
   srImp = (NSRange (*)(NSString*,SEL,NSUInteger))

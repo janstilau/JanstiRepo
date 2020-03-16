@@ -622,7 +622,7 @@ setup(BOOL rerun)
         beenHere = YES;
         
         charAtIndexSel = @selector(characterAtIndex:);
-        gcrSel = @selector(getCharacters:range:);
+        getCharInRangeSel = @selector(getCharacters:range:);
         ranSel = @selector(rangeOfComposedCharacterSequenceAtIndex:);
         
         /*
@@ -670,7 +670,7 @@ setup(BOOL rerun)
         [GSStringClass instanceMethodForSelector: hashSel];
         
         charAtIndexSel = @selector(characterAtIndex:);
-        gcrSel = @selector(getCharacters:range:);
+        getCharInRangeSel = @selector(getCharacters:range:);
         ranSel = @selector(rangeOfComposedCharacterSequenceAtIndex:);
     }
 }

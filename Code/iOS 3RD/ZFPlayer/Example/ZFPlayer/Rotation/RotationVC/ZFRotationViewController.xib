@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ZFRotationViewController">
+            <connections>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5AI-Ho-ebb">
+                    <rect key="frame" x="0.0" y="310" width="162.5" height="47"/>
+                    <subviews>
+                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="hoE-7d-exz">
+                            <rect key="frame" x="8" y="8" width="51" height="31"/>
+                            <connections>
+                                <action selector="rotationTypeChanged:" destination="-1" eventType="valueChanged" id="JVv-v5-DWs"/>
+                            </connections>
+                        </switch>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jfP-hf-zKI">
+                            <rect key="frame" x="65" y="11.5" width="89.5" height="24"/>
+                            <string key="text">TurnOnVCRotation
+开启控制器旋转</string>
+                            <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="162.5" id="C1u-tz-ODg"/>
+                        <constraint firstItem="hoE-7d-exz" firstAttribute="top" secondItem="5AI-Ho-ebb" secondAttribute="topMargin" id="LQz-2b-0aZ"/>
+                        <constraint firstItem="hoE-7d-exz" firstAttribute="leading" secondItem="5AI-Ho-ebb" secondAttribute="leadingMargin" id="NZq-DG-dnr"/>
+                        <constraint firstItem="jfP-hf-zKI" firstAttribute="centerY" secondItem="hoE-7d-exz" secondAttribute="centerY" id="Xk0-rn-bWb"/>
+                        <constraint firstItem="jfP-hf-zKI" firstAttribute="leading" secondItem="hoE-7d-exz" secondAttribute="trailing" constant="8" id="fxp-E3-DWi"/>
+                        <constraint firstAttribute="height" constant="47" id="uqW-Uq-zWM"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oZj-R3-h1k">
+                    <rect key="frame" x="206.5" y="310" width="168.5" height="47"/>
+                    <subviews>
+                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hbD-HS-MXM">
+                            <rect key="frame" x="8" y="8" width="51" height="31"/>
+                            <connections>
+                                <action selector="autoRotationChanged:" destination="-1" eventType="valueChanged" id="tD4-l4-Mjz"/>
+                            </connections>
+                        </switch>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Yi-79-x6R">
+                            <rect key="frame" x="65" y="11.5" width="103.5" height="24"/>
+                            <string key="text">WhetherAutoRotation
+是否开启自动旋转</string>
+                            <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="hbD-HS-MXM" firstAttribute="leading" secondItem="oZj-R3-h1k" secondAttribute="leadingMargin" id="3jf-b0-7wd"/>
+                        <constraint firstItem="7Yi-79-x6R" firstAttribute="centerY" secondItem="hbD-HS-MXM" secondAttribute="centerY" id="EFo-0h-W2w"/>
+                        <constraint firstItem="hbD-HS-MXM" firstAttribute="top" secondItem="oZj-R3-h1k" secondAttribute="topMargin" id="O0N-mH-A8Q"/>
+                        <constraint firstAttribute="height" constant="47" id="O0e-r5-Ag4"/>
+                        <constraint firstAttribute="width" constant="168.5" id="RF3-fp-5YT"/>
+                        <constraint firstItem="7Yi-79-x6R" firstAttribute="leading" secondItem="hbD-HS-MXM" secondAttribute="trailing" constant="8" id="W0d-Dd-Jks"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="5AI-Ho-ebb" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="OOu-HO-cKS"/>
+                <constraint firstItem="5AI-Ho-ebb" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="W2v-ku-BBw"/>
+                <constraint firstAttribute="trailing" secondItem="oZj-R3-h1k" secondAttribute="trailing" id="WQc-dB-BtS"/>
+                <constraint firstAttribute="trailing" secondItem="oZj-R3-h1k" secondAttribute="trailing" id="eMH-mT-FGK"/>
+                <constraint firstItem="oZj-R3-h1k" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="g9y-EV-bYw"/>
+            </constraints>
+            <point key="canvasLocation" x="135" y="154"/>
+        </view>
+    </objects>
+</document>

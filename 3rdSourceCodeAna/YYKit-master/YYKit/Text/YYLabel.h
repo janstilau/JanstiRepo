@@ -300,25 +300,24 @@ NS_ASSUME_NONNULL_BEGIN
  label.ignoreCommonProperties = YES;
  
  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
- 
- // Create attributed string.
- NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:@"Some Text"];
- text.font = [UIFont systemFontOfSize:16];
- text.color = [UIColor grayColor];
- [text setColor:[UIColor redColor] range:NSMakeRange(0, 4)];
- 
- // Create text container
- YYTextContainer *container = [YYTextContainer new];
- container.size = CGSizeMake(100, CGFLOAT_MAX);
- container.maximumNumberOfRows = 0;
- 
- // Generate a text layout.
- YYTextLayout *layout = [YYTextLayout layoutWithContainer:container text:text];
- 
- dispatch_async(dispatch_get_main_queue(), ^{
- label.size = layout.textBoundingSize;
- label.textLayout = layout;
- });
+     // Create attributed string.
+     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:@"Some Text"];
+     text.font = [UIFont systemFontOfSize:16];
+     text.color = [UIColor grayColor];
+     [text setColor:[UIColor redColor] range:NSMakeRange(0, 4)];
+     
+     // Create text container
+     YYTextContainer *container = [YYTextContainer new];
+     container.size = CGSizeMake(100, CGFLOAT_MAX);
+     container.maximumNumberOfRows = 0;
+     
+     // Generate a text layout.
+     YYTextLayout *layout = [YYTextLayout layoutWithContainer:container text:text];
+     
+     dispatch_async(dispatch_get_main_queue(), ^{
+     label.size = layout.textBoundingSize;
+     label.textLayout = layout;
+    });
  });
  
  */
