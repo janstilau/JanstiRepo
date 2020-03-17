@@ -20,6 +20,7 @@
 static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/635942-14593722fe3f0695.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240";
 
 @interface ZFNoramlViewController ()
+
 @property (nonatomic, strong) ZFPlayerController *player;
 @property (nonatomic, strong) UIImageView *containerView;
 @property (nonatomic, strong) ZFPlayerControlView *controlView;
