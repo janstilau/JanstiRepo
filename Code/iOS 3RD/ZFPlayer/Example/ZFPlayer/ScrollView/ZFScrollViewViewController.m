@@ -142,7 +142,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 - (UIButton *)playBtn {
     if (!_playBtn) {
         _playBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_playBtn setImage:[UIImage imageNamed:@"new_allPlay_44x44_"] forState:UIControlStateNormal];
+        [_playBtn setImage:[UIImage imageNamed:@"paly_btn_img"] forState:UIControlStateNormal];
         [_playBtn addTarget:self action:@selector(playClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _playBtn;
