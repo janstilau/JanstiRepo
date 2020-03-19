@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		061D121A24235F7300DDF9E1 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 061D121524235F7300DDF9E1 /* UIView+Debug.m */; };
+		061D121B24235F7300DDF9E1 /* UIColor+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 061D121924235F7300DDF9E1 /* UIColor+Debug.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -71,6 +73,11 @@
 
 /* Begin PBXFileReference section */
 		0040F8EE0D7B4F3A7F8AB74C /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		061D121524235F7300DDF9E1 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
+		061D121624235F7300DDF9E1 /* UIColor+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Debug.h"; sourceTree = "<group>"; };
+		061D121724235F7300DDF9E1 /* UIView+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Debug.h"; sourceTree = "<group>"; };
+		061D121824235F7300DDF9E1 /* MCDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCDebug.h; sourceTree = "<group>"; };
+		061D121924235F7300DDF9E1 /* UIColor+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Debug.m"; sourceTree = "<group>"; };
 		19B3D184FECD92F512BC2B45 /* Pods-ZFPlayer_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZFPlayer_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-ZFPlayer_Example/Pods-ZFPlayer_Example.release.xcconfig"; sourceTree = "<group>"; };
 		33764A6C5440702A1511A383 /* Pods_ZFPlayer_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZFPlayer_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		359925C5989084AB9F6D488A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -238,6 +245,11 @@
 		6003F593195388D20070C39A /* Example for ZFPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				061D121824235F7300DDF9E1 /* MCDebug.h */,
+				061D121624235F7300DDF9E1 /* UIColor+Debug.h */,
+				061D121924235F7300DDF9E1 /* UIColor+Debug.m */,
+				061D121724235F7300DDF9E1 /* UIView+Debug.h */,
+				061D121524235F7300DDF9E1 /* UIView+Debug.m */,
 				D23F3DB122A79F0100BC4E19 /* Main */,
 				D209360720B659070002C956 /* Normal */,
 				CCED248520DBF1730077E02A /* CollectionView */,
@@ -569,7 +581,7 @@
 				ORGANIZATIONNAME = "紫枫";
 				TargetAttributes = {
 					6003F589195388D20070C39A = {
-						DevelopmentTeam = R2U8SE68WE;
+						DevelopmentTeam = RF2LPG6C4X;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -676,6 +688,7 @@
 				D2F268B922A674BC008C1F6D /* ZFDouyinCollectionViewCell.m in Sources */,
 				D2B1EC562188315500FD94C3 /* ZFTableHeaderViewController.m in Sources */,
 				D20935FE20B658AE0002C956 /* ZFTableViewCell.m in Sources */,
+				061D121A24235F7300DDF9E1 /* UIView+Debug.m in Sources */,
 				D2F268A622A653EB008C1F6D /* ZFTableSectionModel.m in Sources */,
 				6003F59E195388D20070C39A /* ZFAppDelegate.m in Sources */,
 				D2F268B622A67489008C1F6D /* ZFCollectionViewCell.m in Sources */,
@@ -684,6 +697,7 @@
 				D260A00E228BE402009FC79C /* ZFADControlView.m in Sources */,
 				D2F268C222A67B86008C1F6D /* ZFKeyboardViewController.m in Sources */,
 				CCF66D7420C57BE5001B6121 /* ZFDouYinControlView.m in Sources */,
+				061D121B24235F7300DDF9E1 /* UIColor+Debug.m in Sources */,
 				D2F268B522A67489008C1F6D /* ZFCollectionViewListController.m in Sources */,
 				D2F268B422A67489008C1F6D /* ZFCollectionViewController.m in Sources */,
 				D2F268B322A67489008C1F6D /* ZFHorizontalCollectionViewController.m in Sources */,
@@ -837,7 +851,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = NO;
-				DEVELOPMENT_TEAM = R2U8SE68WE;
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ZFPlayer",
@@ -849,7 +863,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULEMAP_FILE = "";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.demo.ZFPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.demo.ZFPlayerSelf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
@@ -864,7 +878,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = NO;
-				DEVELOPMENT_TEAM = R2U8SE68WE;
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/ZFPlayer",
@@ -876,7 +890,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULEMAP_FILE = "";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.demo.ZFPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.demo.ZFPlayerSelf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
