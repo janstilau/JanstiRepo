@@ -20,6 +20,4 @@
 /// 导航栏高度
 #define KNavBarHeight ISIPHONE_X ? 88 : 64
 
-#import "UIView+Debug.h"
-
 #endif

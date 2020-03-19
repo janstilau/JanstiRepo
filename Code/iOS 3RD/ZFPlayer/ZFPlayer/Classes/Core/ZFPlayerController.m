@@ -578,7 +578,7 @@
 }
 
 - (void)setAssetURLs:(NSArray<NSURL *> * _Nullable)assetURLs {
-    objc_setAssociatedObject(self, @selector(dataSource), assetURLs, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(assetURLs), assetURLs, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)setVolume:(float)volume {
