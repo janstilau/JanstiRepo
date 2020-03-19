@@ -1,27 +1,3 @@
-//
-//  ZFPlayerController.h
-//  ZFPlayer
-//
-// Copyright (c) 2016年 任子丰 ( http://github.com/renzifeng )
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "ZFPlayerMediaPlayback.h"
@@ -134,7 +110,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Use this method to seek to a specified time for the current player and to be notified when the seek operation is complete.
-
+ 
  @param time seek time.
  @param completionHandler completion handler.
  */
@@ -158,7 +134,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) float brightness;
 
 /// The play asset URL.
-@property (nonatomic) NSURL *assetURL;
+@property (nonatomic) NSURL *currentAssetURL;
 
 /// If tableView or collectionView has only one section , use `assetURLs`.
 /// If tableView or collectionView has more sections , use `sectionAssetURLs`.
@@ -182,7 +158,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// For example, when the player is playing, application goes into the background or pushed to another viewController
 @property (nonatomic, getter=isPauseByEvent) BOOL pauseByEvent;
 
-/// The current player controller is disappear, not dealloc
+// 该值用来判断, 当前的player控制的界面是不是正在显示, 该值控制了大量的内部逻辑, 所以应该是该类的使用者, 在合适的时机, 替换一下该值.
 @property (nonatomic, getter=isViewControllerDisappear) BOOL viewControllerDisappear;
 
 /// You can custom the AVAudioSession,
@@ -222,13 +198,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)playTheNext;
 
 /**
-  Play the previous url ,while the `assetURLs` is not NULL.
+ Play the previous url ,while the `assetURLs` is not NULL.
  */
 - (void)playThePrevious;
 
 /**
  Play the index of url ,while the `assetURLs` is not NULL.
-
+ 
  @param index play the index.
  */
 - (void)playTheIndex:(NSInteger)index;
@@ -324,7 +300,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModeLandscape.
-
+ 
  @param orientation UIInterfaceOrientation
  @param animated is animated.
  */
@@ -332,7 +308,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModePortrait.
-
+ 
  @param fullScreen is fullscreen.
  @param animated is animated.
  */
@@ -340,7 +316,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  FullScreen mode is determined by ZFFullScreenMode.
-
+ 
  @param fullScreen is fullscreen.
  @param animated is animated.
  */
@@ -437,7 +413,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Play the indexPath of url, while the `assetURLs` or `sectionAssetURLs` is not NULL.
-
+ 
  @param indexPath Play the indexPath of url.
  */
 - (void)playTheIndexPath:(NSIndexPath *)indexPath;
@@ -467,22 +443,6 @@ NS_ASSUME_NONNULL_BEGIN
  @param completionHandler Scroll completion callback.
  */
 - (void)playTheIndexPath:(NSIndexPath *)indexPath scrollToTop:(BOOL)scrollToTop completionHandler:(void (^ __nullable)(void))completionHandler;
-
-@end
-
-@interface ZFPlayerController (ZFPlayerDeprecated)
-
-/**
- Add the playerView to cell.
- */
-- (void)updateScrollViewPlayerToCell  __attribute__((deprecated("use `addPlayerViewToCell:` instead.")));
-
-/**
- Add the playerView to containerView.
- 
- @param containerView The playerView containerView.
- */
-- (void)updateNoramlPlayerWithContainerView:(UIView *)containerView __attribute__((deprecated("use `addPlayerViewToContainerView:` instead.")));
 
 @end
 

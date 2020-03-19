@@ -1,27 +1,3 @@
-//
-//  ZFPlayerController.m
-//  ZFPlayer
-//
-// Copyright (c) 2016年 任子丰 ( http://github.com/renzifeng )
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 #import "ZFPlayerController.h"
 #import <objc/runtime.h>
 #import <MediaPlayer/MediaPlayer.h>
@@ -64,7 +40,7 @@
     return self;
 }
 
-/// Get system volume
+// 这里, MPVolumeView 是和系统的音量控制挂钩的, 当音量变化的时候, 这个view的滑块变化, 当滑块变化的时候, 音量变化. 猜测是 MPVolumeSlider 这个类的内部, 直接和系统音量控制进行了挂钩. 所以, ZFPlayer 直接获取了该类, 并且用该类进行音量控制的处理.
 - (void)configureVolume {
     MPVolumeView *volumeView = [[MPVolumeView alloc] init];
     self.volumeViewSlider = nil;
@@ -103,6 +79,7 @@
     return player;
 }
 
+// 最终的 designatedInit 方法. 所有的初始化都会聚集到该方法.
 - (instancetype)initWithScrollView:(UIScrollView *)scrollView playerManager:(id<ZFPlayerMediaPlayback>)playerManager containerViewTag:(NSInteger)containerViewTag {
     ZFPlayerController *player = [self init];
     player.scrollView = scrollView;
@@ -112,7 +89,9 @@
     return player;
 }
 
-- (instancetype)initWithScrollView:(UIScrollView *)scrollView playerManager:(id<ZFPlayerMediaPlayback>)playerManager containerView:(UIView *)containerView {
+// 最终的 designatedInit 方法. 所有的初始化都会聚集到该方法.
+- (instancetype)initWithScrollView:(UIScrollView *)scrollView playerManager:(id<ZFPlayerMediaPlayback>)playerManager
+                     containerView:(UIView *)containerView {
     ZFPlayerController *player = [self init];
     player.scrollView = scrollView;
     player.containerView = containerView;
@@ -238,9 +217,9 @@
     if (!_notification) {
         _notification = [[ZFPlayerNotification alloc] init];
         @weakify(self)
-        _notification.willResignActive = ^(ZFPlayerNotification * _Nonnull registrar) {
+        _notification.willResignActive = ^(ZFPlayerNotification * registrar) {
             @strongify(self)
-            if (self.isViewControllerDisappear) return;
+            if (self.isViewControllerDisappear) return; // 如果, 不在屏幕上显示, 不做处理.
             if (self.pauseWhenAppResignActive && self.currentPlayerManager.isPlaying) {
                 self.pauseByEvent = YES;
             }
@@ -359,7 +338,7 @@
         NSInteger index = self.currentPlayIndex + 1;
         if (index >= self.assetURLs.count) return;
         NSURL *assetURL = [self.assetURLs objectAtIndex:index];
-        self.assetURL = assetURL;
+        self.currentAssetURL = assetURL;
         self.currentPlayIndex = [self.assetURLs indexOfObject:assetURL];
     }
 }
@@ -369,7 +348,7 @@
         NSInteger index = self.currentPlayIndex - 1;
         if (index < 0) return;
         NSURL *assetURL = [self.assetURLs objectAtIndex:index];
-        self.assetURL = assetURL;
+        self.currentAssetURL = assetURL;
         self.currentPlayIndex = [self.assetURLs indexOfObject:assetURL];
     }
 }
@@ -378,7 +357,7 @@
     if (self.assetURLs.count > 0) {
         if (index >= self.assetURLs.count) return;
         NSURL *assetURL = [self.assetURLs objectAtIndex:index];
-        self.assetURL = assetURL;
+        self.currentAssetURL = assetURL;
         self.currentPlayIndex = index;
     }
 }
@@ -461,7 +440,7 @@
 
 #pragma mark - getter
 
-- (NSURL *)assetURL {
+- (NSURL *)currentAssetURL {
     return objc_getAssociatedObject(self, _cmd);
 }
 
@@ -471,14 +450,14 @@
 
 - (BOOL)isLastAssetURL {
     if (self.assetURLs.count > 0) {
-        return self.assetURL == self.assetURLs.lastObject;
+        return self.currentAssetURL == self.assetURLs.lastObject;
     }
     return NO;
 }
 
 - (BOOL)isFirstAssetURL {
     if (self.assetURLs.count > 0) {
-        return self.assetURL == self.assetURLs.firstObject;
+        return self.currentAssetURL == self.assetURLs.firstObject;
     }
     return NO;
 }
@@ -572,8 +551,8 @@
 
 #pragma mark - setter
 
-- (void)setAssetURL:(NSURL *)assetURL {
-    objc_setAssociatedObject(self, @selector(assetURL), assetURL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setCurrentAssetURL:(NSURL *)assetURL {
+    objc_setAssociatedObject(self, @selector(currentAssetURL), assetURL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.currentPlayerManager.assetURL = assetURL;
 }
 
@@ -608,6 +587,7 @@
     [UIScreen mainScreen].brightness = brightness;
 }
 
+// 在 pauseByEvent 的 set 方法里面, 做了真正的播放的控制.
 - (void)setPauseByEvent:(BOOL)pauseByEvent {
     objc_setAssociatedObject(self, @selector(isPauseByEvent), @(pauseByEvent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (pauseByEvent) {
@@ -663,8 +643,8 @@
 
 - (void)setViewControllerDisappear:(BOOL)viewControllerDisappear {
     objc_setAssociatedObject(self, @selector(isViewControllerDisappear), @(viewControllerDisappear), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (self.scrollView) self.scrollView.zf_viewControllerDisappear = viewControllerDisappear;
-    if (!self.currentPlayerManager.isPreparedToPlay) return;
+    if (self.scrollView) self.scrollView.zf_viewControllerDisappear = viewControllerDisappear; // ScrollView 有着相关的逻辑, 也依靠是否显示的值.
+    if (!self.currentPlayerManager.isPreparedToPlay) return; // 如果现在视频不是在已经准备完善的状态, 不做处理.
     if (viewControllerDisappear) {
         [self removeDeviceOrientationObserver];
         if (self.currentPlayerManager.isPlaying) self.pauseByEvent = YES;
@@ -717,6 +697,7 @@
 
 #pragma mark - getter
 
+// 手机的转向由一个专门的类进行处理. 
 - (ZFOrientationObserver *)orientationObserver {
     @weakify(self)
     ZFOrientationObserver *orientationObserver = objc_getAssociatedObject(self, _cmd);
@@ -1221,7 +1202,7 @@
         assetURL = self.assetURLs[indexPath.row];
         self.currentPlayIndex = indexPath.row;
     }
-    self.assetURL = assetURL;
+    self.currentAssetURL = assetURL;
 }
 
 - (void)playTheIndexPath:(NSIndexPath *)indexPath scrollToTop:(BOOL)scrollToTop completionHandler:(void (^ _Nullable)(void))completionHandler {
@@ -1238,12 +1219,12 @@
             @strongify(self)
             if (completionHandler) completionHandler();
             self.playingIndexPath = indexPath;
-            self.assetURL = assetURL;
+            self.currentAssetURL = assetURL;
         }];
     } else {
         if (completionHandler) completionHandler();
         self.playingIndexPath = indexPath;
-        self.assetURL = assetURL;
+        self.currentAssetURL = assetURL;
     }
 }
 
@@ -1262,7 +1243,7 @@
 
 - (void)playTheIndexPath:(NSIndexPath *)indexPath assetURL:(NSURL *)assetURL scrollToTop:(BOOL)scrollToTop {
     self.playingIndexPath = indexPath;
-    self.assetURL = assetURL;
+    self.currentAssetURL = assetURL;
     if (scrollToTop) {
         [self.scrollView zf_scrollToRowAtIndexPath:indexPath completionHandler:nil];
     }
@@ -1270,23 +1251,3 @@
 
 @end
 
-@implementation ZFPlayerController (ZFPlayerDeprecated)
-
-- (void)updateScrollViewPlayerToCell {
-    if (self.currentPlayerManager.view && self.playingIndexPath && self.containerViewTag) {
-        UIView *cell = [self.scrollView zf_getCellForIndexPath:self.playingIndexPath];
-        self.containerView = [cell viewWithTag:self.containerViewTag];
-        [self.orientationObserver cellModelRotateView:self.currentPlayerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
-        [self layoutPlayerSubViews];
-    }
-}
-
-- (void)updateNoramlPlayerWithContainerView:(UIView *)containerView {
-    if (self.currentPlayerManager.view && self.containerView) {
-        self.containerView = containerView;
-        [self.orientationObserver cellOtherModelRotateView:self.currentPlayerManager.view containerView:self.containerView];
-        [self layoutPlayerSubViews];
-    }
-}
-
-@end

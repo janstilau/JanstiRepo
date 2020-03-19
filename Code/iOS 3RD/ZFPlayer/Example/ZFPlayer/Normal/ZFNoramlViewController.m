@@ -16,11 +16,12 @@
 #import <ZFPlayer/UIView+ZFFrame.h>
 #import <ZFPlayer/UIImageView+ZFCache.h>
 #import "ZFUtilities.h"
+#import <MediaPlayer/MediaPlayer.h>
 
 static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/635942-14593722fe3f0695.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240";
 
 @interface ZFNoramlViewController ()
-@property (nonatomic, strong) ZFPlayerController *player;
+@property (nonatomic, strong) ZFPlayerController *playerController;
 @property (nonatomic, strong) UIImageView *containerView;
 @property (nonatomic, strong) ZFPlayerControlView *controlView;
 @property (nonatomic, strong) UIButton *playBtn;
@@ -42,46 +43,49 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     [self.containerView addSubview:self.playBtn];
     [self.view addSubview:self.changeBtn];
     [self.view addSubview:self.nextBtn];
+    
+    [self setupPlayer];
+}
 
+- (void)setupPlayer {
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
     /// 播放器相关
-    self.player = [ZFPlayerController playerWithPlayerManager:playerManager containerView:self.containerView];
-    self.player.controlView = self.controlView;
+    self.playerController = [ZFPlayerController playerWithPlayerManager:playerManager containerView:self.containerView];
+    self.playerController.controlView = self.controlView;
     /// 设置退到后台继续播放
-    self.player.pauseWhenAppResignActive = NO;
+    self.playerController.pauseWhenAppResignActive = NO;
     
     @weakify(self)
-    self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
+    self.playerController.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
-        /// 解决导航栏上移问题
         self.navigationController.navigationBar.zf_height = KNavBarHeight;
         [self setNeedsStatusBarAppearanceUpdate];
     };
     
     /// 播放完成
-    self.player.playerDidToEnd = ^(id  _Nonnull asset) {
+    self.playerController.playerDidToEnd = ^(id  _Nonnull asset) {
         @strongify(self)
-        [self.player.currentPlayerManager replay];
-        [self.player playTheNext];
-        if (!self.player.isLastAssetURL) {
-            NSString *title = [NSString stringWithFormat:@"视频标题%zd",self.player.currentPlayIndex];
+        [self.playerController.currentPlayerManager replay];
+        [self.playerController playTheNext];
+        if (!self.playerController.isLastAssetURL) {
+            NSString *title = [NSString stringWithFormat:@"视频标题%zd",self.playerController.currentPlayIndex];
             [self.controlView showTitle:title coverURLString:kVideoCover fullScreenMode:ZFFullScreenModeLandscape];
         } else {
-            [self.player stop];
+            [self.playerController stop];
         }
     };
     
-    self.player.assetURLs = self.assetURLs;
+    self.playerController.assetURLs = self.assetURLs;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.player.viewControllerDisappear = NO;
+    self.playerController.viewControllerDisappear = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    self.player.viewControllerDisappear = YES;
+    self.playerController.viewControllerDisappear = YES;
 }
 
 - (void)viewWillLayoutSubviews {
@@ -111,21 +115,24 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     self.nextBtn.frame = CGRectMake(x, y, w, h);
 }
 
+#pragma mark - Action
+
+
 - (void)changeVideo:(UIButton *)sender {
     NSString *URLString = @"https://www.apple.com/105/media/cn/mac/family/2018/46c4b917_abfd_45a3_9b51_4e3054191797/films/bruce/mac-bruce-tpl-cn-2018_1280x720h.mp4";
-    self.player.assetURL = [NSURL URLWithString:URLString];
+    self.playerController.currentAssetURL = [NSURL URLWithString:URLString];
     [self.controlView showTitle:@"Apple" coverURLString:kVideoCover fullScreenMode:ZFFullScreenModeAutomatic];
 }
 
 - (void)playClick:(UIButton *)sender {
-    [self.player playTheIndex:0];
+    [self.playerController playTheIndex:0];
     [self.controlView showTitle:@"视频标题" coverURLString:kVideoCover fullScreenMode:ZFFullScreenModeAutomatic];
 }
 
 - (void)nextClick:(UIButton *)sender {
-    if (!self.player.isLastAssetURL) {
-        [self.player playTheNext];
-        NSString *title = [NSString stringWithFormat:@"视频标题%zd",self.player.currentPlayIndex];
+    if (!self.playerController.isLastAssetURL) {
+        [self.playerController playTheNext];
+        NSString *title = [NSString stringWithFormat:@"视频标题%zd",self.playerController.currentPlayIndex];
         [self.controlView showTitle:title coverURLString:kVideoCover fullScreenMode:ZFFullScreenModeAutomatic];
     } else {
         NSLog(@"最后一个视频了");
@@ -137,31 +144,38 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+#pragma mark - StatusBar
+
+// 根据 self.player.isFullScreen 是否是全屏状态, 进行不同的展示.
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    if (self.player.isFullScreen) {
+    if (self.playerController.isFullScreen) {
         return UIStatusBarStyleLightContent;
     }
     return UIStatusBarStyleDefault;
 }
 
 - (BOOL)prefersStatusBarHidden {
-    return self.player.isStatusBarHidden;
+    return self.playerController.isStatusBarHidden;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
     return UIStatusBarAnimationSlide;
 }
 
+#pragma mark - Rotate
+
 - (BOOL)shouldAutorotate {
-    return self.player.shouldAutorotate;
+    return self.playerController.shouldAutorotate;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    if (self.player.isFullScreen && self.player.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) {
+    if (self.playerController.isFullScreen && self.playerController.orientationObserver.fullScreenMode == ZFFullScreenModeLandscape) {
         return UIInterfaceOrientationMaskLandscape;
     }
     return UIInterfaceOrientationMaskPortrait;
 }
+
+#pragma mark - LazySetup
 
 - (ZFPlayerControlView *)controlView {
     if (!_controlView) {

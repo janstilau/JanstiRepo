@@ -69,7 +69,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     ZFAVPlayerManager *adPlayerManager = [[ZFAVPlayerManager alloc] init];
     self.adPlayer = [ZFPlayerController playerWithPlayerManager:adPlayerManager containerView:self.controlView];
     self.adPlayer.controlView = self.adControlView;
-    self.adPlayer.assetURL = [NSURL URLWithString:@"https://fcvideo.cdn.bcebos.com/smart/f103c4fc97d2b2e63b15d2d5999d6477.mp4"];
+    self.adPlayer.currentAssetURL = [NSURL URLWithString:@"https://fcvideo.cdn.bcebos.com/smart/f103c4fc97d2b2e63b15d2d5999d6477.mp4"];
     self.adPlayer.exitFullScreenWhenStop = NO;
     self.adPlayer.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
         @strongify(self)
