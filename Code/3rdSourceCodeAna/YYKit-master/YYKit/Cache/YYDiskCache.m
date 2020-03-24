@@ -78,7 +78,9 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     dispatch_queue_t _asyncQueue;
 }
 
-// 一个简易的定时器, 不断的进行调用. 主要还是调用 _trimInBackground 方法, _trimRecursively 和 dispatch_after 作为定时的功能实现.
+/*
+    可以看到, 这个类和YYMemoryCache里面的函数, 大部分还是相同的.
+ */
 - (void)_trimRecursively {
     __weak typeof(self) _self = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_autoTrimInterval * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
@@ -89,6 +91,8 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     });
 }
 
+
+// 这里, 直接是LOCK住了.
 - (void)_trimInBackground {
     __weak typeof(self) _self = self;
     dispatch_async(_asyncQueue, ^{
@@ -103,7 +107,6 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     });
 }
 
-// 所有的操作, 都代理给了 _kv 进行处理.
 - (void)_trimToCost:(NSUInteger)costLimit {
     if (costLimit >= INT_MAX) return;
     [_kv removeItemsToFitSize:(int)costLimit];
@@ -170,6 +173,8 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
     return [self initWithPath:path inlineThreshold:1024 * 20]; // 20KB
 }
 
+
+// 所有的初始化操作, 还是要放在init方法, 而不是什么懒加载.
 - (instancetype)initWithPath:(NSString *)path
              inlineThreshold:(NSUInteger)threshold {
     self = [super init];

@@ -174,6 +174,7 @@ static NSString *const kTrashDirectoryName = @"trash";
 }
 
 // 这里进行了缓存处理.
+// 这里, 如果可以拿到statement,就复用,reset一下.
 - (sqlite3_stmt *)_dbPrepareStmt:(NSString *)sql {
     if (![self _dbCheck] || sql.length == 0 || !_dbStmtCache) return NULL;
     sqlite3_stmt *stmt = (sqlite3_stmt *)CFDictionaryGetValue(_dbStmtCache, (__bridge const void *)(sql));

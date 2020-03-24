@@ -2,6 +2,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 一个所有的信息都进行了存储的数据类. KVStore 里面所有的操作, 都是根据这个数据类进行的信息来进行的操作.
+
 @interface YYKVStorageItem : NSObject
 @property (nonatomic, strong) NSString *key;                ///< key
 @property (nonatomic, strong) NSData *value;                ///< value, 注意是二进制的值, 这里面的值, 会被存到数据库或者文件中.
