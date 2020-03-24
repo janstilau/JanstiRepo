@@ -395,7 +395,7 @@ longestEffectiveRange: (NSRange*)aRange
     {
         result = [GSAttributedStringClass alloc];
         result = [result initWithString: newSubstring
-                                           attributes: attrs];
+                             attributes: attrs];
     }
     else
     {
