@@ -10,6 +10,7 @@
 #import "ZFDouYinViewController.h"
 #import "ZFTableSectionModel.h"
 #import "ZFDouyinCollectionViewController.h"
+#import "MCAVTestViewController.h"
 
 static NSString *kIdentifier = @"kIdentifier";
 
@@ -70,7 +71,8 @@ static NSString *kIdentifier = @"kIdentifier";
 }
 
 - (NSArray <ZFTableItem *>*)createItemsByOther {
-    return @[[ZFTableItem itemWithTitle:@"广告" subTitle:@"Advertising" viewControllerName:@"ZFADViewController"]];
+    return @[[ZFTableItem itemWithTitle:@"广告" subTitle:@"Advertising" viewControllerName:@"ZFADViewController"],
+            [ZFTableItem itemWithTitle:@"测试" subTitle:@"Testing" viewControllerName:@"MCAVTestViewController"]];
 }
 
 - (void)viewWillLayoutSubviews {

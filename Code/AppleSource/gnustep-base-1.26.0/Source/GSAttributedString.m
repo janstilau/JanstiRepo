@@ -30,7 +30,7 @@
 
 @interface GSMutableAttributedString : NSMutableAttributedString
 {
-    NSMutableString	*_textChars;
+    NSMutableString	*_storageChars;
     NSMutableArray	*_infoArray;
     NSString		*_textProxy;
 }
@@ -528,9 +528,9 @@ _attributesAtIndexEffectiveRange(
      * its own string subclass into the attributed string.
      */
     if (aString == nil)
-        _textChars = [[NSMutableString allocWithZone: z] init];
+        _storageChars = [[NSMutableString allocWithZone: z] init];
     else
-        _textChars = [aString mutableCopyWithZone: z];
+        _storageChars = [aString mutableCopyWithZone: z];
     return self;
 }
 
@@ -541,7 +541,7 @@ _attributesAtIndexEffectiveRange(
      */
     if (_textProxy == nil)
     {
-        _textProxy = [[_textChars immutableProxy] retain];
+        _textProxy = [[_storageChars immutableProxy] retain];
     }
     return _textProxy;
 }
@@ -550,23 +550,14 @@ _attributesAtIndexEffectiveRange(
                      effectiveRange: (NSRange*)aRange
 {
     return _attributesAtIndexEffectiveRange(
-                                            index, aRange, [_textChars length], _infoArray, nil);
+                                            index, aRange, [_storageChars length], _infoArray, nil);
 }
 
-/*
- *	Primitive method! Sets attributes and values for a given range of
- *	characters, replacing any previous attributes and values for that
- *	range.
- *
- *	Sets the attributes for the characters in aRange to attributes.
- *	These new attributes replace any attributes previously associated
- *	with the characters in aRange. Raises an NSRangeException if any
- *	part of aRange lies beyond the end of the receiver's characters.
- *	See also: - addAtributes: range: , - removeAttributes: range:
- */
 - (void) setAttributes: (NSDictionary*)attributes
                  range: (NSRange)range
 {
+    if (range.length == 0) { return; }
+    
     unsigned	stringLength;
     unsigned	arrayIndex = 0;
     unsigned	currentAttriItemSize;
@@ -576,19 +567,12 @@ _attributesAtIndexEffectiveRange(
     NSZone	*z = [self zone];
     AttributeItem	*info;
     
-    if (range.length == 0)
-    {
-        return;
-    }
-    if (attributes == nil)
-    {
-        attributes = blank->attrs; // 如果, 没有 attributes, 就用默认的空属性.
-    }
-    stringLength = [_textChars length];
-    currentAttriItemSize = (*countImp)(_infoArray, countSel);
+    if (attributes == nil) { attributes = blank->attrs; } // 如果, 没有 attributes, 就用默认的空属性.
+    stringLength = [_storageChars length];
+    currentAttriItemSize = [_infoArray count];
     beginIndex = range.location;
     endIndex = NSMaxRange(range);
-    if (endIndex < stringLength)
+    if (endIndex < stringLength) // 是在字符串内的.
     {
         attrs = _attributesAtIndexEffectiveRange(
                                                  endIndex, &effectiveRange, stringLength, _infoArray, &arrayIndex);
@@ -627,9 +611,7 @@ _attributesAtIndexEffectiveRange(
             RELEASE(info);
             arrayIndex--;
         }
-    }
-    else
-    {
+    } else {
         arrayIndex = currentAttriItemSize - 1;
     }
     
@@ -687,15 +669,15 @@ _attributesAtIndexEffectiveRange(
     {
         aString = @"";
     }
-    tmpLength = [_textChars length];
+    tmpLength = [_storageChars length];
     if (range.location == tmpLength)
     {
         /*
          * Special case - replacing a zero length string at the end
          * simply appends the new string and attributes are inherited.
          */
-        [_textChars appendString: aString];
-        goto finish;
+        [_storageChars appendString: aString];
+//        goto finish;
     }
     
     arraySize = (*countImp)(_infoArray, countSel);
@@ -705,8 +687,8 @@ _attributesAtIndexEffectiveRange(
          * Special case - if the string has only one set of attributes
          * then the replacement characters will get them too.
          */
-        [_textChars replaceCharactersInRange: range withString: aString];
-        goto finish;
+        [_storageChars replaceCharactersInRange: range withString: aString];
+//        goto finish;
     }
     
     /*
@@ -753,7 +735,7 @@ _attributesAtIndexEffectiveRange(
                 }
             }
         }
-        if (NSMaxRange(range) < [_textChars length])
+        if (NSMaxRange(range) < [_storageChars length])
         {
             info->loc = NSMaxRange(range);
         }
@@ -803,15 +785,13 @@ _attributesAtIndexEffectiveRange(
         info->loc += moveLocations;
         arrayIndex++;
     }
-    [_textChars replaceCharactersInRange: range withString: aString];
-finish:
-    
+    [_storageChars replaceCharactersInRange: range withString: aString];
 }
 
 - (void) dealloc
 {
     [_textProxy release];
-    RELEASE(_textChars);
+    RELEASE(_storageChars);
     RELEASE(_infoArray);
     [super dealloc];
 }
@@ -819,7 +799,7 @@ finish:
 // The superclass implementation is correct but too slow
 - (NSUInteger) length
 {
-    return [_textChars length];
+    return [_storageChars length];
 }
 
 @end

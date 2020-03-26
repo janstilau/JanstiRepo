@@ -1,14 +1,3 @@
-//
-//  YYTextView.h
-//  YYKit <https://github.com/ibireme/YYKit>
-//
-//  Created by ibireme on 15/2/25.
-//  Copyright (c) 2015 ibireme.
-//
-//  This source code is licensed under the MIT-style license found in the
-//  LICENSE file in the root directory of this source tree.
-//
-
 #import <UIKit/UIKit.h>
 
 #if __has_include(<YYKit/YYKit.h>)
@@ -27,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  The YYTextViewDelegate protocol defines a set of optional methods you can use
- to receive editing-related messages for YYTextView objects. 
+ to receive editing-related messages for YYTextView objects.
  
  @discussion The API and behavior is similar to UITextViewDelegate,
  see UITextViewDelegate's documentation for more information.
@@ -196,7 +185,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  The styled placeholder text displayed by the text view (when the text view is empty).
- Set a new value to this property also replaces the value of the `placeholderText`, 
+ Set a new value to this property also replaces the value of the `placeholderText`,
  `placeholderFont`, `placeholderTextColor`.
  
  @discussion It only support the attributes declared in CoreText and YYTextAttribute.
@@ -216,7 +205,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) UIEdgeInsets textContainerInset;
 
 /**
- An array of UIBezierPath objects representing the exclusion paths inside the 
+ An array of UIBezierPath objects representing the exclusion paths inside the
  receiver's bounding rectangle. Default value is nil.
  */
 @property (nullable, nonatomic, copy) NSArray<UIBezierPath *> *exclusionPaths;
@@ -325,7 +314,7 @@ NS_ASSUME_NONNULL_BEGIN
  The custom input view to display when the text view becomes the first responder.
  It can be used to replace system keyboard.
  
- @discussion If set the value while first responder, it will not take effect until 
+ @discussion If set the value while first responder, it will not take effect until
  'reloadInputViews' is called.
  */
 @property (nullable, nonatomic, readwrite, strong) __kindof UIView *inputView;

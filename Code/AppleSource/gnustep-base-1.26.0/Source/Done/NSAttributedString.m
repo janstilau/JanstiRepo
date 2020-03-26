@@ -21,7 +21,7 @@ static Class	dictionaryClass = 0;
 
 static SEL	equalSel;
 static SEL	setAttributesInRangeSel;
-static SEL	getSel;
+static SEL	getAttriAtIndexWithEffctiveRangeSel;
 static SEL	allocDictSel;
 static SEL	initDictSel;
 static SEL	addDictSel;
@@ -71,7 +71,7 @@ static Class GSMutableAttributedStringClass;
         
         equalSel = @selector(isEqual:);
         setAttributesInRangeSel = @selector(setAttributes:range:);
-        getSel = @selector(attributesAtIndex:effectiveRange:);
+        getAttriAtIndexWithEffctiveRangeSel = @selector(attributesAtIndex:effectiveRange:);
         allocDictSel = @selector(allocWithZone:);
         initDictSel = @selector(initWithDictionary:);
         addDictSel = @selector(addEntriesFromDictionary:);
@@ -130,25 +130,6 @@ static Class GSMutableAttributedStringClass;
     return [self initWithString: (NSString*)attributedString attributes: nil];
 }
 
-- (NSString*) description // 一点点的遍历, 通过 index 和 range 来进行 index 的变化
-{
-    NSRange		r = NSMakeRange(0, 0);
-    unsigned		index = NSMaxRange(r);
-    unsigned		length = [self length];
-    NSString		*string = [self string];
-    NSDictionary		*attrs;
-    NSMutableString	*desc;
-    
-    desc = [NSMutableString stringWithCapacity: length];
-    while (index < length &&
-           (attrs = [self attributesAtIndex: index effectiveRange: &r]) != nil)
-    {
-        index = NSMaxRange(r);
-        [desc appendFormat: @"%@%@", [string substringWithRange: r], attrs];
-    }
-    return desc;
-}
-
 //Retrieving character information
 /**
  *  Return length of the underlying string.
@@ -170,15 +151,15 @@ static Class GSMutableAttributedStringClass;
     NSDictionary	*attrDictionary, *tmpDictionary;
     NSRange	tmpRange;
     IMP		getImp;
-    getImp = [self methodForSelector: getSel];
-    attrDictionary = (*getImp)(self, getSel, index, outPutRangePointer);
+    getImp = [self methodForSelector: getAttriAtIndexWithEffctiveRangeSel];
+    attrDictionary = (*getImp)(self, getAttriAtIndexWithEffctiveRangeSel, index, outPutRangePointer);
     if (outPutRangePointer == 0)
         return attrDictionary;
     
     while (outPutRangePointer->location > rangeLimit.location)
     {
         //Check extend range backwards
-        tmpDictionary = (*getImp)(self, getSel, outPutRangePointer->location-1, &tmpRange);
+        tmpDictionary = (*getImp)(self, getAttriAtIndexWithEffctiveRangeSel, outPutRangePointer->location-1, &tmpRange);
         if ([tmpDictionary isEqualToDictionary: attrDictionary])
         {
             outPutRangePointer->length = NSMaxRange(*outPutRangePointer) - tmpRange.location;
@@ -192,7 +173,7 @@ static Class GSMutableAttributedStringClass;
     while (NSMaxRange(*outPutRangePointer) < NSMaxRange(rangeLimit))
     {
         //Check extend range forwards
-        tmpDictionary = (*getImp)(self, getSel, NSMaxRange(*outPutRangePointer), &tmpRange);
+        tmpDictionary = (*getImp)(self, getAttriAtIndexWithEffctiveRangeSel, NSMaxRange(*outPutRangePointer), &tmpRange);
         if ([tmpDictionary isEqualToDictionary: attrDictionary])
         {
             outPutRangePointer->length = NSMaxRange(tmpRange) - outPutRangePointer->location;
@@ -274,12 +255,12 @@ longestEffectiveRange: (NSRange*)aRange
      * If attrValue == nil then eImp will be zero
      */
     eImp = (BOOL(*)(id,SEL,id))[attrValue methodForSelector: equalSel];
-    getImp = [self methodForSelector: getSel];
+    getImp = [self methodForSelector: getAttriAtIndexWithEffctiveRangeSel];
     
     while (aRange->location > rangeLimit.location)
     {
         //Check extend range backwards
-        tmpDictionary = (*getImp)(self, getSel,  aRange->location-1, &tmpRange);
+        tmpDictionary = (*getImp)(self, getAttriAtIndexWithEffctiveRangeSel,  aRange->location-1, &tmpRange);
         tmpAttrValue = [tmpDictionary objectForKey: attributeName];
         if (tmpAttrValue == attrValue
             || (eImp != 0 && (*eImp)(attrValue, equalSel, tmpAttrValue)))
@@ -295,7 +276,7 @@ longestEffectiveRange: (NSRange*)aRange
     while (NSMaxRange(*aRange) < NSMaxRange(rangeLimit))
     {
         //Check extend range forwards
-        tmpDictionary = (*getImp)(self, getSel,  NSMaxRange(*aRange), &tmpRange);
+        tmpDictionary = (*getImp)(self, getAttriAtIndexWithEffctiveRangeSel,  NSMaxRange(*aRange), &tmpRange);
         tmpAttrValue = [tmpDictionary objectForKey: attributeName];
         if (tmpAttrValue == attrValue
             || (eImp != 0 && (*eImp)(attrValue, equalSel, tmpAttrValue)))
@@ -474,8 +455,8 @@ longestEffectiveRange: (NSRange*)aRange
     tmpLength = [self length];
     GS_RANGE_CHECK(aRange, tmpLength);
     
-    getImp = [self methodForSelector: getSel];
-    attrDict = (*getImp)(self, getSel, aRange.location, &effectiveRange);
+    getImp = [self methodForSelector: getAttriAtIndexWithEffctiveRangeSel];
+    attrDict = (*getImp)(self, getAttriAtIndexWithEffctiveRangeSel, aRange.location, &effectiveRange);
     
     if (effectiveRange.location < NSMaxRange(aRange))
     {
@@ -500,7 +481,7 @@ longestEffectiveRange: (NSRange*)aRange
             }
             else if (NSMaxRange(effectiveRange) < tmpLength)
             {
-                attrDict = (*getImp)(self, getSel, NSMaxRange(effectiveRange),
+                attrDict = (*getImp)(self, getAttriAtIndexWithEffctiveRangeSel, NSMaxRange(effectiveRange),
                                      &effectiveRange);
             }
         }
@@ -532,8 +513,8 @@ longestEffectiveRange: (NSRange*)aRange
          @"in class NSMutableAttributedString"];
     }
     
-    getImp = [self methodForSelector: getSel];
-    attrDict = (*getImp)(self, getSel, aRange.location, &effectiveRange);
+    getImp = [self methodForSelector: getAttriAtIndexWithEffctiveRangeSel];
+    attrDict = (*getImp)(self, getAttriAtIndexWithEffctiveRangeSel, aRange.location, &effectiveRange);
     
     if (effectiveRange.location < NSMaxRange(aRange))
     {
@@ -558,7 +539,7 @@ longestEffectiveRange: (NSRange*)aRange
             }
             else if (NSMaxRange(effectiveRange) < tmpLength)
             {
-                attrDict = (*getImp)(self, getSel, NSMaxRange(effectiveRange),
+                attrDict = (*getImp)(self, getAttriAtIndexWithEffctiveRangeSel, NSMaxRange(effectiveRange),
                                      &effectiveRange);
             }
         }
@@ -579,8 +560,8 @@ longestEffectiveRange: (NSRange*)aRange
     tmpLength = [self length];
     GS_RANGE_CHECK(aRange, tmpLength);
     
-    getImp = [self methodForSelector: getSel];
-    attrDict = (*getImp)(self, getSel, aRange.location, &effectiveRange);
+    getImp = [self methodForSelector: getAttriAtIndexWithEffctiveRangeSel];
+    attrDict = (*getImp)(self, getAttriAtIndexWithEffctiveRangeSel, aRange.location, &effectiveRange);
     
     if (effectiveRange.location < NSMaxRange(aRange))
     {
@@ -605,7 +586,7 @@ longestEffectiveRange: (NSRange*)aRange
             }
             else if (NSMaxRange(effectiveRange) < tmpLength)
             {
-                attrDict = (*getImp)(self, getSel, NSMaxRange(effectiveRange),
+                attrDict = (*getImp)(self, getAttriAtIndexWithEffctiveRangeSel, NSMaxRange(effectiveRange),
                                      &effectiveRange);
             }
         }
@@ -648,36 +629,32 @@ longestEffectiveRange: (NSRange*)aRange
         return;
     }
     
+    // 首先, 做的是字符串的替换的工作.
     tmpStr = [attributedString string];
     [self replaceCharactersInRange: aRange withString: tmpStr];
     max = [tmpStr length];
     
-    if (max > 0)
+    if (max <= 0) { return; }
+    unsigned    loc = 0;
+    NSRange    effectiveRange = NSMakeRange(0, loc);
+    NSRange    clipRange = NSMakeRange(0, max);
+    IMP    getImp;
+    IMP    setImp;
+    getImp = [attributedString methodForSelector: getAttriAtIndexWithEffctiveRangeSel];
+    setImp = [self methodForSelector: setAttributesInRangeSel];
+    while (loc < max)
     {
-        unsigned	loc = 0;
-        NSRange	effectiveRange = NSMakeRange(0, loc);
-        NSRange	clipRange = NSMakeRange(0, max);
-        IMP	getImp;
-        IMP	setImp;
+        NSRange    ownRange;
         
-        getImp = [attributedString methodForSelector: getSel];
-        setImp = [self methodForSelector: setAttributesInRangeSel];
-        while (loc < max)
-        {
-            NSRange	ownRange;
-            
-            attrDict = (*getImp)(attributedString, getSel, loc, &effectiveRange);
-            ownRange = NSIntersectionRange(clipRange, effectiveRange);
-            ownRange.location += aRange.location;
-            (*setImp)(self, setAttributesInRangeSel, attrDict, ownRange);
-            loc = NSMaxRange(effectiveRange);
-        }
+        attrDict = (*getImp)(attributedString, getAttriAtIndexWithEffctiveRangeSel, loc, &effectiveRange);
+        ownRange = NSIntersectionRange(clipRange, effectiveRange);
+        ownRange.location += aRange.location;
+        (*setImp)(self, setAttributesInRangeSel, attrDict, ownRange);
+        loc = NSMaxRange(effectiveRange);
     }
 }
 
-/** <override-subclass />
- *  Replaces substring; replacement is granted attributes equal to those of
- *  the first character of the portion replaced.
+/**
  */
 - (void) replaceCharactersInRange: (NSRange)aRange
                        withString: (NSString*)aString

@@ -1,7 +1,7 @@
 #import "ZFKVOController.h"
 
 @interface ZFKVOEntry : NSObject
-@property (nonatomic, weak)   NSObject *observer;
+@property (nonatomic, weak)   NSObject *observer; // 这里用的是 weak. 主要是不想双向引用.
 @property (nonatomic, strong) NSString *keyPath;
 
 @end
@@ -9,11 +9,10 @@
 @implementation ZFKVOEntry
 @synthesize observer;
 @synthesize keyPath;
-
 @end
 
 @interface ZFKVOController ()
-@property (nonatomic, weak) NSObject *target;
+@property (nonatomic, weak) NSObject *target; // weak, 弱引用, 防止内存泄漏.
 @property (nonatomic, strong) NSMutableArray *observerArray;
 @end
 

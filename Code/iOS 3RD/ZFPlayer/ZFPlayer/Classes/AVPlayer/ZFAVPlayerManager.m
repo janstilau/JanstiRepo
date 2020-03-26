@@ -75,6 +75,9 @@ static NSString *const kPresentationSize         = @"presentationSize";
 
 @implementation ZFAVPlayerManager
 
+// 这就是, 一个类如果想要实现一个 protocol 中的 property 应该做的事情, 仅仅提供实体变量就行, 定义直接用 protocol 里面的 property.
+// 相比 MC 现在的实现方式, 这种方式应该是更加的优雅.
+
 @synthesize view                           = _view;
 @synthesize currentTime                    = _currentTime;
 @synthesize totalTime                      = _totalTime;
@@ -110,15 +113,36 @@ static NSString *const kPresentationSize         = @"presentationSize";
     return self;
 }
 
+// 所有的媒体播放的时候, 都必须调用调用该函数.
 - (void)prepareToPlay {
     if (!_assetURL) return;
     _isPreparedToPlay = YES;
     [self initializePlayer];
-    if (self.shouldAutoPlay) {
+    if (self.shouldAutoPlay) { // 如果, 自动播放, 那么在prepare准备好之后, 直接播放.
         [self play];
     }
     self.loadState = ZFPlayerLoadStatePrepare;
     if (self.playerPrepareToPlay) self.playerPrepareToPlay(self, self.assetURL);
+}
+
+- (void)initializePlayer {
+    // 一顿初始化操作.
+    _asset = [AVURLAsset URLAssetWithURL:self.assetURL options:self.requestHeader];
+    _playerItem = [AVPlayerItem playerItemWithAsset:_asset];
+    _player = [AVPlayer playerWithPlayerItem:_playerItem];
+    [self enableAudioTracks:YES inPlayerItem:_playerItem];
+    
+    ZFPlayerPresentView *presentView = (ZFPlayerPresentView *)self.view;
+    presentView.player = _player;
+    self.scalingMode = _scalingMode;
+    if (@available(iOS 9.0, *)) {
+        _playerItem.canUseNetworkResourcesForLiveStreamingWhilePaused = NO;
+    }
+    if (@available(iOS 10.0, *)) {
+        _playerItem.preferredForwardBufferDuration = 5;
+        _player.automaticallyWaitsToMinimizeStalling = NO;
+    }
+    [self initItemObserver];
 }
 
 - (void)reloadPlayer {
@@ -130,6 +154,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     if (!_isPreparedToPlay) {
         [self prepareToPlay];
     } else {
+        // 直接就是调用 player 进行 play 的操作. 并且更改自己的状态.
         [self.player play];
         self.player.rate = self.rate;
         self->_isPlaying = YES;
@@ -138,6 +163,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
 }
 
 - (void)pause {
+    // 直接就是调用 player 进行 pause 的操作. 并且更改自己的状态.
     [self.player pause];
     self->_isPlaying = NO;
     self.playState = ZFPlayerPlayStatePaused;
@@ -145,6 +171,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     [_asset cancelLoading];
 }
 
+// 一次 reset 操作.
 - (void)stop {
     [_playerItemKVO safelyRemoveAllObservers];
     self.loadState = ZFPlayerLoadStateUnknown;
@@ -159,7 +186,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     _player = nil;
     _assetURL = nil;
     _playerItem = nil;
-    _isPreparedToPlay = NO;
+    _isPreparedToPlay = NO; // 这里, _isPreparedToPlay 被重置了, 所以 play 的时候, 还会再次初始化一次.
     self->_currentTime = 0;
     self->_totalTime = 0;
     self->_bufferTime = 0;
@@ -227,26 +254,8 @@ static NSString *const kPresentationSize         = @"presentationSize";
     return 0;
 }
 
-- (void)initializePlayer {
-    _asset = [AVURLAsset URLAssetWithURL:self.assetURL options:self.requestHeader];
-    _playerItem = [AVPlayerItem playerItemWithAsset:_asset];
-    _player = [AVPlayer playerWithPlayerItem:_playerItem];
-    [self enableAudioTracks:YES inPlayerItem:_playerItem];
-    
-    ZFPlayerPresentView *presentView = (ZFPlayerPresentView *)self.view;
-    presentView.player = _player;
-    self.scalingMode = _scalingMode;
-    if (@available(iOS 9.0, *)) {
-        _playerItem.canUseNetworkResourcesForLiveStreamingWhilePaused = NO;
-    }
-    if (@available(iOS 10.0, *)) {
-        _playerItem.preferredForwardBufferDuration = 5;
-        _player.automaticallyWaitsToMinimizeStalling = NO;
-    }
-    [self itemObserving];
-}
-
 /// Playback speed switching method
+/// 没太明白这个的作用.
 - (void)enableAudioTracks:(BOOL)enable inPlayerItem:(AVPlayerItem*)playerItem {
     for (AVPlayerItemTrack *track in playerItem.tracks){
         if ([track.assetTrack.mediaType isEqual:AVMediaTypeVideo]) {
@@ -280,8 +289,10 @@ static NSString *const kPresentationSize         = @"presentationSize";
     });
 }
 
-- (void)itemObserving {
+- (void)initItemObserver {
     [_playerItemKVO safelyRemoveAllObservers];
+    
+    // 这里, 对于 AVPlayerItem 的各种状态改变进行了监听.
     _playerItemKVO = [[ZFKVOController alloc] initWithTarget:_playerItem];
     [_playerItemKVO safelyAddObserver:self
                            forKeyPath:kStatus
@@ -305,6 +316,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
                               context:nil];
     
     CMTime interval = CMTimeMakeWithSeconds(self.timeRefreshInterval > 0 ? self.timeRefreshInterval : 0.1, NSEC_PER_SEC);
+    // 这里, 对于播放的进度进行了监听.
     @weakify(self)
     _timeObserver = [self.player addPeriodicTimeObserverForInterval:interval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         @strongify(self)
@@ -316,6 +328,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
         }
     }];
     
+    // 这里, 对播放完毕进行了监听.
     _itemEndObserver = [[NSNotificationCenter defaultCenter] addObserverForName:AVPlayerItemDidPlayToEndTimeNotification object:self.playerItem queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
         @strongify(self)
         if (!self) return;
@@ -378,6 +391,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
 
 #pragma mark - getter
 
+// 懒加载, 产生一个PlayerView, 这个 PlayView 中集成了 AVPlayerLayer, 以及一个 AVPlayer
 - (UIView *)view {
     if (!_view) {
         _view = [[ZFPlayerPresentView alloc] init];
@@ -389,6 +403,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     return _rate == 0 ?1:_rate;
 }
 
+// 直接调用的currentItem的方法.
 - (NSTimeInterval)totalTime {
     NSTimeInterval sec = CMTimeGetSeconds(self.player.currentItem.duration);
     if (isnan(sec)) {
@@ -407,6 +422,8 @@ static NSString *const kPresentationSize         = @"presentationSize";
 
 #pragma mark - setter
 
+// 专门的使用set方法, 主要是为了使用各种回调Block可以使用.
+// 这个类, 是内部管理的player的状态的代理.
 - (void)setPlayState:(ZFPlayerPlaybackState)playState {
     _playState = playState;
     if (self.playerPlayStateChanged) self.playerPlayStateChanged(self, playState);
@@ -417,6 +434,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     if (self.playerLoadStateChanged) self.playerLoadStateChanged(self, loadState);
 }
 
+// 只要替换了要播放的Url, 就立刻调用缓存的方法.
 - (void)setAssetURL:(NSURL *)assetURL {
     if (self.player) [self stop];
     _assetURL = assetURL;
@@ -435,6 +453,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     self.player.muted = muted;
 }
 
+// 这里, 仅仅是一个简单的替换的工作, 就是使用的layer的videoGravity属性.
 - (void)setScalingMode:(ZFPlayerScalingMode)scalingMode {
     _scalingMode = scalingMode;
     ZFPlayerPresentView *presentView = (ZFPlayerPresentView *)self.view;

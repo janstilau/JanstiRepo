@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		061D121A24235F7300DDF9E1 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 061D121524235F7300DDF9E1 /* UIView+Debug.m */; };
 		061D121B24235F7300DDF9E1 /* UIColor+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 061D121924235F7300DDF9E1 /* UIColor+Debug.m */; };
+		06D57E1D242CA36400D3EBBF /* MCAVTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D57E1C242CA36400D3EBBF /* MCAVTestViewController.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -78,6 +79,8 @@
 		061D121724235F7300DDF9E1 /* UIView+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Debug.h"; sourceTree = "<group>"; };
 		061D121824235F7300DDF9E1 /* MCDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCDebug.h; sourceTree = "<group>"; };
 		061D121924235F7300DDF9E1 /* UIColor+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Debug.m"; sourceTree = "<group>"; };
+		06D57E1B242CA36400D3EBBF /* MCAVTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCAVTestViewController.h; sourceTree = "<group>"; };
+		06D57E1C242CA36400D3EBBF /* MCAVTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCAVTestViewController.m; sourceTree = "<group>"; };
 		19B3D184FECD92F512BC2B45 /* Pods-ZFPlayer_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZFPlayer_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-ZFPlayer_Example/Pods-ZFPlayer_Example.release.xcconfig"; sourceTree = "<group>"; };
 		33764A6C5440702A1511A383 /* Pods_ZFPlayer_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZFPlayer_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		359925C5989084AB9F6D488A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -250,6 +253,8 @@
 				061D121924235F7300DDF9E1 /* UIColor+Debug.m */,
 				061D121724235F7300DDF9E1 /* UIView+Debug.h */,
 				061D121524235F7300DDF9E1 /* UIView+Debug.m */,
+				06D57E1B242CA36400D3EBBF /* MCAVTestViewController.h */,
+				06D57E1C242CA36400D3EBBF /* MCAVTestViewController.m */,
 				D23F3DB122A79F0100BC4E19 /* Main */,
 				D209360720B659070002C956 /* Normal */,
 				CCED248520DBF1730077E02A /* CollectionView */,
@@ -721,6 +726,7 @@
 				CC47EB6B20C969EC0040419D /* ZFViewController.m in Sources */,
 				D20935FF20B658AE0002C956 /* ZFAutoPlayerViewController.m in Sources */,
 				D2EEFE6320BBB03E0097D6D9 /* ZFNotAutoPlayViewController.m in Sources */,
+				06D57E1D242CA36400D3EBBF /* MCAVTestViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

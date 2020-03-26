@@ -48,6 +48,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 }
 
 - (void)setupPlayer {
+    
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
     /// 播放器相关
     self.playerController = [ZFPlayerController playerWithPlayerManager:playerManager containerView:self.containerView];

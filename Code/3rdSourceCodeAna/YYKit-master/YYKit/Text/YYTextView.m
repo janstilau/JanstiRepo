@@ -1,14 +1,3 @@
-//
-//  YYTextView.m
-//  YYKit <https://github.com/ibireme/YYKit>
-//
-//  Created by ibireme on 15/2/25.
-//  Copyright (c) 2015 ibireme.
-//
-//  This source code is licensed under the MIT-style license found in the
-//  LICENSE file in the root directory of this source tree.
-//
-
 #import "YYTextView.h"
 #import "YYKitMacro.h"
 #import "YYTextInput.h"
@@ -79,7 +68,6 @@ typedef NS_ENUM(NSUInteger, YYTextMoveDirection) {
 
 
 @interface YYTextView () <UIScrollViewDelegate, UIAlertViewDelegate, YYTextDebugTarget, YYTextKeyboardObserver> {
-    
     YYTextRange *_selectedTextRange; /// nonnull
     YYTextRange *_markedTextRange;
     
@@ -126,6 +114,7 @@ typedef NS_ENUM(NSUInteger, YYTextMoveDirection) {
     NSMutableArray *_redoStack;
     NSRange _lastTypeRange;
     
+    // 状态值. 这里用位域技术进行了空间的优化.
     struct {
         unsigned int trackingGrabber : 2;       ///< YYTextGrabberDirection, current tracking grabber
         unsigned int trackingCaret : 1;         ///< track the caret
@@ -1861,11 +1850,12 @@ typedef NS_ENUM(NSUInteger, YYTextMoveDirection) {
     [self didChangeValueForKey:@"textParser"];
 }
 
+// 这里, willChangeValueForKey 手动的进行 KVO 的通知操作.
 - (void)_setAttributedText:(NSAttributedString *)attributedText {
     if (_attributedText == attributedText || [_attributedText isEqual:attributedText]) return;
     [self willChangeValueForKey:@"attributedText"];
     _attributedText = attributedText.copy;
-    if (!_attributedText) _attributedText = [NSAttributedString new];
+    if (!_attributedText) _attributedText = [NSAttributedString new]; // 如果空值, 这里自己创建一个空的NSAttributedString的值.
     [self didChangeValueForKey:@"attributedText"];
 }
 
