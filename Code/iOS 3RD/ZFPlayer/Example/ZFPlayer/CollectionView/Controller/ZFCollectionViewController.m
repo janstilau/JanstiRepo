@@ -62,7 +62,7 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
             [self playTheVideoAtIndexPath:indexPath scrollToTop:YES];
         } else if (self.player.isFullScreen) {
             [self.player enterFullScreen:NO animated:YES];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.player.orientationObserver.duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.player.orientationObserver.rotateDuration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self.player stopCurrentPlayingCell];
             });
         }

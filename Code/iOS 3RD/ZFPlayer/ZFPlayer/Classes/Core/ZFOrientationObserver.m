@@ -13,7 +13,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor redColor];
 }
 
 - (BOOL)shouldAutorotate {
@@ -29,7 +29,7 @@
 
 @end
 
-//
+// 寻找屏幕上面最最顶层的一个VC.
 
 @interface UIWindow (CurrentViewController)
 
@@ -86,7 +86,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _duration = 0.30;
+        _rotateDuration = 0.30;
         _fullScreenMode = ZFFullScreenModeLandscape;
         _supportInterfaceOrientation = ZFInterfaceOrientationMaskAllButUpsideDown;
         _allowOrentitaionRotation = YES;
@@ -135,7 +135,7 @@
 
 - (void)handleDeviceOrientationChange {
     if (self.fullScreenMode == ZFFullScreenModePortrait || !self.allowOrentitaionRotation) return;
-
+    
     if (UIDeviceOrientationIsValidInterfaceOrientation([UIDevice currentDevice].orientation)) {
         UIInterfaceOrientation currentOrientation = (UIInterfaceOrientation)[UIDevice currentDevice].orientation;
         if (_currentOrientation == currentOrientation) return;
@@ -185,10 +185,10 @@
         if (self.blackView.superview != nil) [self.blackView removeFromSuperview];
     }
     if (self.orientationWillChange) self.orientationWillChange(self, self.isFullScreen);
-  
+    
     [superview addSubview:self.view];
     if (animated) {
-        [UIView animateWithDuration:self.duration animations:^{
+        [UIView animateWithDuration:_rotateDuration animations:^{
             self.view.frame = superview.bounds;
             [self.view layoutIfNeeded];
             [self interfaceOrientation:orientation];
@@ -247,9 +247,9 @@
     frame = [superview convertRect:superview.bounds toView:self.fullScreenContainerView];
     
     if (animated) {
-        [UIView animateWithDuration:self.duration animations:^{
+        [UIView animateWithDuration:_rotateDuration animations:^{
             self.view.transform = [self getTransformRotationAngle:orientation];
-            [UIView animateWithDuration:self.duration animations:^{
+            [UIView animateWithDuration:_rotateDuration animations:^{
                 self.view.frame = frame;
                 [self.view layoutIfNeeded];
             }];
@@ -330,7 +330,7 @@
     if (self.orientationWillChange) self.orientationWillChange(self, self.isFullScreen);
     CGRect frame = [superview convertRect:superview.bounds toView:self.fullScreenContainerView];
     if (animated) {
-        [UIView animateWithDuration:self.duration animations:^{
+        [UIView animateWithDuration:_rotateDuration animations:^{
             self.view.frame = frame;
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
@@ -423,6 +423,7 @@
     return _fullScreenContainerView;
 }
 
+// 在全屏的时候, 调用statusBar的更新.
 - (void)setFullScreen:(BOOL)fullScreen {
     _fullScreen = fullScreen;
     [[UIWindow zf_currentViewController] setNeedsStatusBarAppearanceUpdate];

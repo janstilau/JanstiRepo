@@ -68,7 +68,7 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 @property (nonatomic) ZFFullScreenMode fullScreenMode;
 
 /// rotate duration, default is 0.30
-@property (nonatomic) float duration;
+@property (nonatomic) float rotateDuration;
 
 /// The statusbar hidden.
 @property (nonatomic, getter=isStatusBarHidden) BOOL statusBarHidden;
