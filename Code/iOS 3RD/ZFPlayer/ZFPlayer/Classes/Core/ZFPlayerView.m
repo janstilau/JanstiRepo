@@ -3,7 +3,6 @@
 
 @interface ZFPlayerView ()
 
-@property (nonatomic, weak) UIView *fitView;
 @end
 
 @implementation ZFPlayerView
@@ -31,6 +30,8 @@
     }
     return self;
 }
+
+// 该类的用途就在于此, 将所有的touch事件, 全部覆盖, 使得整个View没有任何的交互.
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {}
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {}
