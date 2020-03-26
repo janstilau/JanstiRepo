@@ -44,7 +44,7 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
                    containerView:(UIView *)containerView;
 
 /// Container view of a full screen state player.
-@property (nonatomic, strong) UIView *fullScreenContainerView;
+@property (nonatomic, strong) UIView *keyWindow;
 
 /// Container view of a small screen state player.
 @property (nonatomic, weak) UIView *containerView;
@@ -64,8 +64,7 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 /// The block invoked when player rotated.
 @property (nonatomic, copy, nullable) void(^orientationDidChanged)(ZFOrientationObserver *observer, BOOL isFullScreen);
 
-/// Full screen mode, the default landscape into full screen
-@property (nonatomic) ZFFullScreenMode fullScreenMode;
+@property (nonatomic) ZFFullScreenMode fullScreenMode; // 在哪种方向上全屏
 
 /// rotate duration, default is 0.30
 @property (nonatomic) float rotateDuration;
@@ -73,8 +72,8 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 /// The statusbar hidden.
 @property (nonatomic, getter=isStatusBarHidden) BOOL statusBarHidden;
 
-/// The current orientation of the player.
-/// Default is UIInterfaceOrientationPortrait.
+
+// readonly. 只能由方法改变, 或者由内部机制改变.
 @property (nonatomic, readonly) UIInterfaceOrientation currentOrientation;
 
 /// Whether allow the video orientation rotate.
@@ -84,10 +83,8 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 /// The support Interface Orientation,default is ZFInterfaceOrientationMaskAllButUpsideDown
 @property (nonatomic, assign) ZFInterfaceOrientationMask supportInterfaceOrientation;
 
-/// Add the device orientation observer.
+// 这两个方法, 完全交给了外界. 由外界来控制, 到底应不应该监听屏幕的旋转.
 - (void)addDeviceOrientationObserver;
-
-/// Remove the device orientation observer.
 - (void)removeDeviceOrientationObserver;
 
 /// Enter the fullScreen while the ZFFullScreenMode is ZFFullScreenModeLandscape.

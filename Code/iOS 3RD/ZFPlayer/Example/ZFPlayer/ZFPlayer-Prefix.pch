@@ -14,6 +14,8 @@
     @import UIKit;
     @import Foundation;
 
+#import "UIView+Debug.h"
+#import "UIColor+Debug.h"
 // iphoneX iphoneXs iphoneXS MAX 宏定义
 #define ISIPHONE_X ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? ((NSInteger)(([[UIScreen mainScreen] currentMode].size.height/[[UIScreen mainScreen] currentMode].size.width)*100) == 216) : NO)
 

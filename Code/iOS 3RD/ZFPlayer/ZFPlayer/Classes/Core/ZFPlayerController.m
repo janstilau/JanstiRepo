@@ -196,7 +196,7 @@
     if (self.containerView && self.currentPlayerManager.view) {
         UIView *superview = nil;
         if (self.isFullScreen) {
-            superview = self.orientationObserver.fullScreenContainerView;
+            superview = self.orientationObserver.keyWindow;
         } else if (self.containerView) {
             superview = self.containerView;
         }
