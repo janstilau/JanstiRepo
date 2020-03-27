@@ -1,44 +1,25 @@
-//
-//  ZFPlayerGestureControl.m
-//  ZFPlayer
-//
-// Copyright (c) 2016年 任子丰 ( http://github.com/renzifeng )
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 #import "ZFPlayerGestureControl.h"
 
 @interface ZFPlayerGestureControl ()<UIGestureRecognizerDelegate>
 
+// 各个交互的手势信息.
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 @property (nonatomic, strong) UITapGestureRecognizer *doubleTap;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGR;
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchGR;
+
+// 滑动的手势方向信息.
 @property (nonatomic) ZFPanDirection panDirection;
 @property (nonatomic) ZFPanLocation panLocation;
 @property (nonatomic) ZFPanMovingDirection panMovingDirection;
+
 @property (nonatomic, weak) UIView *targetView;
 
 @end
 
 @implementation ZFPlayerGestureControl
 
+// 在这个方法里面, 添加了各种各样的手势, 并且通过懒加载进行了初始化的工作.
 - (void)addGestureToView:(UIView *)view {
     self.targetView = view;
     self.targetView.multipleTouchEnabled = YES;
@@ -50,6 +31,7 @@
     [self.targetView addGestureRecognizer:self.pinchGR];
 }
 
+// 进行手势的移除的操作, 这会在 playManager 替换的时候进行.
 - (void)removeGestureToView:(UIView *)view {
     [view removeGestureRecognizer:self.singleTap];
     [view removeGestureRecognizer:self.doubleTap];
@@ -57,6 +39,7 @@
     [view removeGestureRecognizer:self.pinchGR];
 }
 
+// 手势的代理工作. 在这里, 通过 disablePanMovingDirection 的设置, 可以屏蔽某些手势.
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
     if (gestureRecognizer == self.panGR) {
         CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self.targetView];
@@ -71,6 +54,7 @@
     return YES;
 }
 
+// 手势的代理. 在这里, 通过各个 disable 的设置, 可以进行某些操作的屏蔽.
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     ZFPlayerGestureType type = ZFPlayerGestureTypeUnknown;
     if (gestureRecognizer == self.singleTap) type = ZFPlayerGestureTypeSingleTap;
@@ -183,6 +167,10 @@
     }
     return _pinchGR;
 }
+
+#pragma mark - ActionHandle
+
+// 就是简单的触发回调调用, 对于 Pan, 进行了大量的取值操作.
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)tap {
     if (self.singleTapped) self.singleTapped(self);

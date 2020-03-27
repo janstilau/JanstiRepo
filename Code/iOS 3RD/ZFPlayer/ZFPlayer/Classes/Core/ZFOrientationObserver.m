@@ -424,6 +424,8 @@
 }
 
 // 在全屏的时候, 调用statusBar的更新.
+// 这里调用了 Update 方法, 而实际上控制的如何显示的代码, 是写在各个 VC 里面.
+
 - (void)setFullScreen:(BOOL)fullScreen {
     _fullScreen = fullScreen;
     [[UIWindow zf_currentViewController] setNeedsStatusBarAppearanceUpdate];

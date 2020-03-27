@@ -1,51 +1,30 @@
-//
-//  ZFPlayerGestureControl.h
-//  ZFPlayer
-//
-// Copyright (c) 2016年 任子丰 ( http://github.com/renzifeng )
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, ZFPlayerGestureType) {
     ZFPlayerGestureTypeUnknown,
-    ZFPlayerGestureTypeSingleTap,
-    ZFPlayerGestureTypeDoubleTap,
-    ZFPlayerGestureTypePan,
-    ZFPlayerGestureTypePinch
+    ZFPlayerGestureTypeSingleTap, // 单点效果, 一般用于控制层的显示和隐藏
+    ZFPlayerGestureTypeDoubleTap, // 双点效果, 一般用于视频的播放和暂停
+    ZFPlayerGestureTypePan, // 移动效果, 一般左边用户
+    ZFPlayerGestureTypePinch // 捏合效果, 在这个类库中, 用于进行了填充效果的变化工作.
 };
 
+// 这两个枚举值, 是根据 translate 的 x, y 的绝对值的比较获得的. 这要比之前记录一个值, 然后判断当前值和新值之间的间距要好用.
 typedef NS_ENUM(NSUInteger, ZFPanDirection) {
     ZFPanDirectionUnknown,
-    ZFPanDirectionV,
-    ZFPanDirectionH,
+    ZFPanDirectionV, // 竖直滑动
+    ZFPanDirectionH, // 左右滑动
 };
 
+// 是在左半部分滑动的, 还是在右半部分滑动的. 这个是根据 gesture 在 View 的位置来进行的判断.
 typedef NS_ENUM(NSUInteger, ZFPanLocation) {
     ZFPanLocationUnknown,
     ZFPanLocationLeft,
     ZFPanLocationRight,
 };
 
+// 下面的这四个值, 是在 ZFPanDirection 确定之后, 根据 x, y 值的正负判断出来的.
 typedef NS_ENUM(NSUInteger, ZFPanMovingDirection) {
     ZFPanMovingDirectionUnkown,
     ZFPanMovingDirectionTop,
@@ -54,7 +33,7 @@ typedef NS_ENUM(NSUInteger, ZFPanMovingDirection) {
     ZFPanMovingDirectionRight,
 };
 
-/// This enumeration lists some of the gesture types that the player has by default.
+// 这个是用来判断. 当前要不要进行某个手势的判断.
 typedef NS_OPTIONS(NSUInteger, ZFPlayerDisableGestureTypes) {
     ZFPlayerDisableGestureTypesNone         = 0,
     ZFPlayerDisableGestureTypesSingleTap    = 1 << 0,
@@ -64,13 +43,16 @@ typedef NS_OPTIONS(NSUInteger, ZFPlayerDisableGestureTypes) {
     ZFPlayerDisableGestureTypesAll          = (ZFPlayerDisableGestureTypesSingleTap | ZFPlayerDisableGestureTypesDoubleTap | ZFPlayerDisableGestureTypesPan | ZFPlayerDisableGestureTypesPinch)
 };
 
-/// This enumeration lists some of the pan gesture moving direction that the player not support.
+// 这个是用来判断, pan 这种手势, 哪一种不想要处理.
 typedef NS_OPTIONS(NSUInteger, ZFPlayerDisablePanMovingDirection) {
     ZFPlayerDisablePanMovingDirectionNone         = 0,       /// Not disable pan moving direction.
     ZFPlayerDisablePanMovingDirectionVertical     = 1 << 0,  /// Disable pan moving vertical direction.
     ZFPlayerDisablePanMovingDirectionHorizontal   = 1 << 1,  /// Disable pan moving horizontal direction.
     ZFPlayerDisablePanMovingDirectionAll          = (ZFPlayerDisablePanMovingDirectionVertical | ZFPlayerDisablePanMovingDirectionHorizontal)  /// Disable pan moving all direction.
 };
+
+
+// 视频的操作有一个很常规的模式, 所以, 这个类就是这个操作模式的实现. 通过添加不同的手势, 来实现触摸的逻辑, 而这些触摸之后真正要实现什么样的逻辑, 通过回调的方式暴露出去.
 
 @interface ZFPlayerGestureControl : NSObject
 
@@ -95,31 +77,18 @@ typedef NS_OPTIONS(NSUInteger, ZFPlayerDisablePanMovingDirection) {
 /// Pinch gesture callback.
 @property (nonatomic, copy, nullable) void(^pinched)(ZFPlayerGestureControl *control, float scale);
 
-/// The single tap gesture.
+// 这些都是 readonly. 表明这些都是内部创建的, 不要进行修改.
 @property (nonatomic, strong, readonly) UITapGestureRecognizer *singleTap;
-
-/// The double tap gesture.
 @property (nonatomic, strong, readonly) UITapGestureRecognizer *doubleTap;
-
-/// The pan tap gesture.
 @property (nonatomic, strong, readonly) UIPanGestureRecognizer *panGR;
-
-/// The pinch tap gesture.
 @property (nonatomic, strong, readonly) UIPinchGestureRecognizer *pinchGR;
 
-/// The pan gesture direction.
+// 实时的更改这几个值, 在回调中可以读取到新的值.
 @property (nonatomic, readonly) ZFPanDirection panDirection;
-
-/// The pan location.
 @property (nonatomic, readonly) ZFPanLocation panLocation;
-
-/// The moving drection.
 @property (nonatomic, readonly) ZFPanMovingDirection panMovingDirection;
 
-/// The gesture types that the player not support.
 @property (nonatomic) ZFPlayerDisableGestureTypes disableTypes;
-
-/// The pan gesture moving direction that the player not support.
 @property (nonatomic) ZFPlayerDisablePanMovingDirection disablePanMovingDirection;
 
 /**

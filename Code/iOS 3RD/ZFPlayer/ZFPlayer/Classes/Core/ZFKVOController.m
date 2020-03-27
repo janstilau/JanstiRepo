@@ -45,7 +45,6 @@
                  forKeyPath:keyPath
                     options:options
                     context:context];
-        
         ZFKVOEntry *entry = [[ZFKVOEntry alloc] init];
         entry.observer = observer;
         entry.keyPath  = keyPath;
