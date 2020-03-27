@@ -29,7 +29,11 @@ typedef NS_ENUM(NSUInteger, ZFPlayerBackgroundState) {
 
 @property (nonatomic, copy, nullable) void(^audioInterruptionCallback)(AVAudioSessionInterruptionType interruptionType);
 
+// 在视频 prepare 完成之后, 进行了 addNotification. 也就是在可以播放视频的时候, 开始监听各种事件
+
 - (void)addNotification;
+
+// 在视频 stop 之后, 进行 removeNotification, 也就是视频结束播放之后, 停止监听.
 
 - (void)removeNotification;
 

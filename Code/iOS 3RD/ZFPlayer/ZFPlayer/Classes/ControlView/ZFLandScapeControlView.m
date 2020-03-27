@@ -51,11 +51,14 @@
         [self addSubview:self.lockBtn];
         
         // 设置子控件的响应事件
-        [self makeSubViewsAction];
+        [self setupActions];
         [self resetControlView];
         
         /// statusBarFrame changed
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layoutControllerViews) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
+        
+        self.layer.borderColor = [[UIColor redColor] CGColor];
+        self.layer.borderWidth = 2;
     }
     return self;
 }
@@ -148,7 +151,7 @@
     }
 }
 
-- (void)makeSubViewsAction {
+- (void)setupActions {
     [self.backBtn addTarget:self action:@selector(backBtnClickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.playOrPauseBtn addTarget:self action:@selector(playPauseButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.lockBtn addTarget:self action:@selector(lockButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -161,6 +164,7 @@
     [self setNeedsLayout];
 }
 
+// 在这里, 直接调用了 player 的退出全屏视图的方法.
 - (void)backBtnClickAction:(UIButton *)sender {
     self.lockBtn.selected = NO;
     self.player.lockedScreen = NO;
@@ -177,7 +181,7 @@
     [self playOrPause];
 }
 
-/// 根据当前播放状态取反
+// 直接调用的 player 的方法.
 - (void)playOrPause {
     self.playOrPauseBtn.selected = !self.playOrPauseBtn.isSelected;
     self.playOrPauseBtn.isSelected? [self.player.currentPlayerManager play]: [self.player.currentPlayerManager pause];

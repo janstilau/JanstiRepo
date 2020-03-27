@@ -1,5 +1,8 @@
 #import <UIKit/UIKit.h>
 
+
+// 作者自己写的一套图片缓存的框架. 直接使用 SDWebImage 就好.
+
 typedef void (^ZFDownLoadDataCallBack)(NSData *data, NSError *error);
 typedef void (^ZFDownloadProgressBlock)(unsigned long long total, unsigned long long current);
 

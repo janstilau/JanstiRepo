@@ -44,6 +44,7 @@
     [self removeNotification];
 }
 
+// 这个通知是在子线程中发出的, 所以这里要进行一次切换操作. 通过询问 Reason 的 key 值, 来进行不同的回调调用.
 - (void)audioSessionRouteChangeNotification:(NSNotification*)notification {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSDictionary *interuptionDict = notification.userInfo;
@@ -65,21 +66,25 @@
     });
 }
 
+// 这里是 声音变化 的回调
 - (void)volumeDidChangeNotification:(NSNotification *)notification {
     float volume = [[[notification userInfo] objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
     if (self.volumeChanged) self.volumeChanged(volume);
 }
 
+// 这里是 失去焦点 的回调.
 - (void)applicationWillResignActiveNotification {
     self.backgroundState = ZFPlayerBackgroundStateBackground;
     if (_willResignActive) _willResignActive(self);
 }
 
+// 这里是 恢复焦点 的回调.
 - (void)applicationDidBecomeActiveNotification {
     self.backgroundState = ZFPlayerBackgroundStateForeground;
     if (_didBecomeActive) _didBecomeActive(self);
 }
 
+// 这里是被打断的回调.
 - (void)audioSessionInterruptionNotification:(NSNotification *)notification {
     NSDictionary *interuptionDict = notification.userInfo;
     AVAudioSessionInterruptionType interruptionType = [[interuptionDict valueForKey:AVAudioSessionInterruptionTypeKey] integerValue];

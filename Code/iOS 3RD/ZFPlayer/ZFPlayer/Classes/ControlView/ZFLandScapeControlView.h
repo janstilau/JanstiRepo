@@ -8,7 +8,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 横屏全屏的控制界面. 在回复之后, 消失.
+
 @interface ZFLandScapeControlView : UIView
+
+// 所有的都是 readonly. 所以, 这些 view 都是内部生成, 暴露给外界进行调用的.
 
 /// 顶部工具栏
 @property (nonatomic, strong, readonly) UIView *topToolView;
@@ -37,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 锁定屏幕按钮
 @property (nonatomic, strong, readonly) UIButton *lockBtn;
 
-/// 播放器
+/// 播放器, 这里, 直接把播放器暴露出来了. 让视图直接可以进行 player 的调用.
 @property (nonatomic, weak) ZFPlayerController *player;
 
 /// slider滑动中
