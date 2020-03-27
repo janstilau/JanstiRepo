@@ -9,6 +9,8 @@
 #import "ZFPlayerMediaControl.h"
 #endif
 
+// 该 View 把视频控制的 View 集合到了一起. 因为基本上, 视频控制都是一套的, 所以, 这里的集合没有问题.
+
 @interface ZFPlayerControlView : UIView <ZFPlayerMediaControl>
 
 /// 竖屏控制层的View

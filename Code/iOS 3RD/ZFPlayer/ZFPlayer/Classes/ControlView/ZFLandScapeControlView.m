@@ -193,7 +193,7 @@
 
 - (void)lockButtonClickAction:(UIButton *)sender {
     sender.selected = !sender.selected;
-    self.player.lockedScreen = sender.selected;
+    self.player.lockedScreen = sender.selected; // 当 Lock 之后, 其实就不监听屏幕的旋转了
 }
 
 #pragma mark - ZFSliderViewDelegate
@@ -207,6 +207,7 @@
         self.slider.isdragging = YES;
         if (self.sliderValueChanging) self.sliderValueChanging(value, self.slider.isForward);
         @weakify(self)
+        // 直接调用 player 的方法, 来达到播放控制的效果.
         [self.player seekToTime:self.player.totalTime*value completionHandler:^(BOOL finished) {
             @strongify(self)
             if (finished) {

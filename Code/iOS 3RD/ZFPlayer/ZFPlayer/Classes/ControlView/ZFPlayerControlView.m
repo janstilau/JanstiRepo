@@ -165,6 +165,7 @@
     self.controlViewAppeared = YES;
     [self cancelAutoFadeOutControlView];
     @weakify(self)
+    // 第一次见这么使用.
     self.afterBlock = dispatch_block_create(0, ^{
         @strongify(self)
         [self hideControlViewWithAnimated:YES];
@@ -319,6 +320,7 @@
 }
 
 /// 单击手势事件
+// 按钮会阻碍手势的识别,  所以如果 controlView 出现的话, 这里不会调用.
 - (void)gestureSingleTapped:(ZFPlayerGestureControl *)gestureControl {
     if (!self.player) return;
     if (self.player.isSmallFloatViewShow && !self.player.isFullScreen) {

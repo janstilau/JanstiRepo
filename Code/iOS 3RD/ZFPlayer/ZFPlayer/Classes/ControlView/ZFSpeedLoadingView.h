@@ -8,6 +8,8 @@
 #import <UIKit/UIKit.h>
 #import "ZFLoadingView.h"
 
+// 这个 View 需要进行重写, 感觉网络监控不是太有用.
+
 @interface ZFSpeedLoadingView : UIView
 
 @property (nonatomic, strong) ZFLoadingView *loadingView;

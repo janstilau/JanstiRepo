@@ -56,6 +56,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 如果是暂停状态，seek完是否播放，默认YES
 @property (nonatomic, assign) BOOL seekToPlay;
 
+
+// 以下的这些方法, 都是外界调用的. 都是为了控制这个 View 的显示效果.
 /// 重置控制层
 - (void)resetControlView;
 
