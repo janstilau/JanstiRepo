@@ -28,6 +28,8 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
     ZFInterfaceOrientationMaskAllButUpsideDown = (ZFInterfaceOrientationMaskPortrait | ZFInterfaceOrientationMaskLandscapeLeft | ZFInterfaceOrientationMaskLandscapeRight),
 };
 
+// 这个类主要就是监听设备的旋转, 然后会调用对于 palyerView 的一个动画, 这个动画, 可以完成对于全屏切换的效果.
+
 @interface ZFOrientationObserver : NSObject
 
 /// update the rotateView and containerView.
