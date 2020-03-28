@@ -14,9 +14,8 @@
 #endif
 
 @interface ZFPlayerControlView () <ZFSliderViewDelegate>
-/// 竖屏控制层的View
+// 这两个控制层的更新, 总是一起的, 只不过是总是一个在显示, 一个在隐藏.
 @property (nonatomic, strong) ZFPortraitControlView *portraitControlView;
-/// 横屏控制层的View
 @property (nonatomic, strong) ZFLandScapeControlView *landScapeControlView;
 /// 加载loading
 @property (nonatomic, strong) ZFSpeedLoadingView *activity;
@@ -164,6 +163,7 @@
     [self addSubview:self.volumeBrightnessView];
 }
 
+// 这里也可以是用 performSelector 的写法, 不过, 这样写提供了一个新的思路.
 - (void)autoFadeOutControlView {
     self.controlViewAppeared = YES;
     [self cancelAutoFadeOutControlView];
@@ -190,6 +190,7 @@
     if (self.controlViewAppearedCallback) {
         self.controlViewAppearedCallback(NO);
     }
+    // 这里, 如果时间设置为 0 , 就没有动画了. 这样写就减少了一个 if 判断了
     [UIView animateWithDuration:animated ? self.autoFadeTimeInterval : 0 animations:^{
         if (self.player.isFullScreen) {
             [self.landScapeControlView hideControlView];
@@ -298,7 +299,13 @@
 
 #pragma mark - ZFPlayerControlViewDelegate
 
+// 各种手势, 由 ZFPlayerController 传出来, 然后在 ControlView 中, 进行 ZFPlayerController 的各种对于播放控制的调用, 同时, 更新 ControlView 的视图.
+
+// 除了 Pan 手势, 是直接对于 palyer 进行了操作. 该类的各种回调都仅仅是做 View 的更新操作. 不直接进行 player 的管理.
+// 各种 Btn 是在 portraitControlView, landScapeControlView 中直接对 player 进行了控制, 然后反过来, 更新 ControlView 的视图.
+
 /// 手势筛选，返回NO不响应该手势
+// 将是否应该相应手势, 交给了自己的子类来进行相应
 - (BOOL)gestureTriggerCondition:(ZFPlayerGestureControl *)gestureControl gestureType:(ZFPlayerGestureType)gestureType gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer touch:(nonnull UITouch *)touch {
     CGPoint point = [touch locationInView:self];
     if (self.player.isSmallFloatViewShow && !self.player.isFullScreen && gestureType != ZFPlayerGestureTypeSingleTap) {
@@ -326,7 +333,7 @@
 // 按钮会阻碍手势的识别,  所以如果 controlView 出现的话, 这里不会调用.
 - (void)gestureSingleTapped:(ZFPlayerGestureControl *)gestureControl {
     if (!self.player) return;
-    if (self.player.isSmallFloatViewShow && !self.player.isFullScreen) {
+    if (self.player.isSmallFloatViewShow && !self.player.isFullScreen) { // 如果是小屏播放, 那么就进入全屏展示.
         [self.player enterFullScreen:YES animated:YES];
     } else {
         if (self.controlViewAppeared) {
@@ -339,7 +346,7 @@
     }
 }
 
-/// 双击手势事件
+/// 双击手势事件, 一般用来处理暂停播放的请求.
 - (void)gestureDoubleTapped:(ZFPlayerGestureControl *)gestureControl {
     if (self.player.isFullScreen) {
         [self.landScapeControlView playOrPause];
@@ -349,6 +356,7 @@
 }
 
 /// 开始滑动手势事件
+/// 在手势开始的时候, 记录一下当前的播放时间.
 - (void)gestureBeganPan:(ZFPlayerGestureControl *)gestureControl panDirection:(ZFPanDirection)direction panLocation:(ZFPanLocation)location {
     if (direction == ZFPanDirectionH) {
         self.sumTime = self.player.currentTime;
@@ -371,11 +379,12 @@
         if (velocity.x == 0) return;
         [self sliderValueChangingValue:self.sumTime/totalMovieDuration isForward:style];
     } else if (direction == ZFPanDirectionV) {
+        // 如果是竖排的手势, 就是调节亮度和音量, 调用 player 的相应的设置, 然后更新视图.
         if (location == ZFPanLocationLeft) { /// 调节亮度
             self.player.brightness -= (velocity.y) / 10000;
             [self.volumeBrightnessView updateProgress:self.player.brightness withVolumeBrightnessType:ZFVolumeBrightnessTypeumeBrightness];
         } else if (location == ZFPanLocationRight) { /// 调节声音
-            self.player.volume -= (velocity.y) / 10000;
+            self.player.volume -= (velocity.y) / 10000; // 在这里, 进行音量的更改操作. 
             if (self.player.isFullScreen) {
                 [self.volumeBrightnessView updateProgress:self.player.volume withVolumeBrightnessType:ZFVolumeBrightnessTypeVolume];
             }
@@ -413,18 +422,22 @@
     }
 }
 
-/// 准备播放
+#pragma mark - PlayItemStateDelegate
+
+// PlayerItem 的状态变化, 由 ZFPlayerController 传递出来, 然后在 ControlView 中做 View 的更新操作
+
+/// 准备播放, 可以播放了, 进行控制层的隐藏.
 - (void)videoPlayer:(ZFPlayerController *)videoPlayer prepareToPlay:(NSURL *)assetURL {
     [self hideControlViewWithAnimated:NO];
 }
 
-/// 播放状态改变
+/// 播放状态改变. 这里面, 主要是 UI 的改变.
 - (void)videoPlayer:(ZFPlayerController *)videoPlayer playStateChanged:(ZFPlayerPlaybackState)state {
     if (state == ZFPlayerPlayStatePlaying) {
         [self.portraitControlView playBtnSelectedState:YES];
         [self.landScapeControlView playBtnSelectedState:YES];
         self.failBtn.hidden = YES;
-        /// 开始播放时候判断是否显示loading
+        /// 开始播放时候判断是否显示loading. 播放状态和 Load状态是两码事.
         if (videoPlayer.currentPlayerManager.loadState == ZFPlayerLoadStateStalled && !self.prepareShowLoading) {
             [self.activity startAnimating];
         } else if ((videoPlayer.currentPlayerManager.loadState == ZFPlayerLoadStateStalled || videoPlayer.currentPlayerManager.loadState == ZFPlayerLoadStatePrepare) && self.prepareShowLoading) {
@@ -442,7 +455,7 @@
     }
 }
 
-/// 加载状态改变
+/// 加载状态改变, View 层的改变.
 - (void)videoPlayer:(ZFPlayerController *)videoPlayer loadStateChanged:(ZFPlayerLoadState)state {
     if (state == ZFPlayerLoadStatePrepare) {
         self.coverImageView.hidden = NO;
@@ -466,7 +479,7 @@
     }
 }
 
-/// 播放进度改变回调
+/// 播放进度改变回调, View 层的改变. 时间进度的改变.
 - (void)videoPlayer:(ZFPlayerController *)videoPlayer currentTime:(NSTimeInterval)currentTime totalTime:(NSTimeInterval)totalTime {
     [self.portraitControlView videoPlayer:videoPlayer currentTime:currentTime totalTime:totalTime];
     [self.landScapeControlView videoPlayer:videoPlayer currentTime:currentTime totalTime:totalTime];
@@ -475,7 +488,7 @@
     }
 }
 
-/// 缓冲改变回调
+/// 缓冲改变回调, View  层的改变.
 - (void)videoPlayer:(ZFPlayerController *)videoPlayer bufferTime:(NSTimeInterval)bufferTime {
     [self.portraitControlView videoPlayer:videoPlayer bufferTime:bufferTime];
     [self.landScapeControlView videoPlayer:videoPlayer bufferTime:bufferTime];
@@ -486,7 +499,9 @@
     [self.landScapeControlView videoPlayer:videoPlayer presentationSizeChanged:size];
 }
 
-/// 视频view即将旋转
+#pragma mark - Orientation 的处理.
+
+// 在这里, 进行方向旋转的统一处理. 旋转, 可能是手机设备旋转, 也可能是点击放大返回按钮. 但是, ControlView 对于旋转的处理都在这里.
 - (void)videoPlayer:(ZFPlayerController *)videoPlayer orientationWillChange:(ZFOrientationObserver *)observer {
     self.portraitControlView.hidden = observer.isFullScreen;
     self.landScapeControlView.hidden = !observer.isFullScreen;
@@ -548,6 +563,7 @@
 
 #pragma mark - Private Method
 
+// 更新控制杆, 并且显示快进快退条.
 - (void)sliderValueChangingValue:(CGFloat)value isForward:(BOOL)forward {
     if (self.horizontalPanShowControlView) {
         /// 显示控制层
@@ -599,6 +615,8 @@
 
 #pragma mark - setter
 
+
+// 这里, 进行了 Player 的传递, 所以在 landScapeControlView 里面, 可以直接调用 player 的方法.
 - (void)setPlayer:(ZFPlayerController *)player {
     _player = player;
     self.landScapeControlView.player = player;

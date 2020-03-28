@@ -7,6 +7,8 @@
 #import "ZFPlayer.h"
 #endif
 
+// 这个 View 的布局, 还是完完全全是正常排列的. 不过是在将该 View 的 Transform 进行了改变, 使得变成了横向的效果了.
+
 @interface ZFLandScapeControlView () <ZFSliderViewDelegate>
 /// 顶部工具栏
 @property (nonatomic, strong) UIView *topToolView;
@@ -202,6 +204,7 @@
     self.slider.isdragging = YES;
 }
 
+// 直接对于 player 进行了控制.
 - (void)sliderTouchEnded:(float)value {
     if (self.player.totalTime > 0) {
         self.slider.isdragging = YES;

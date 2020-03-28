@@ -14,11 +14,18 @@
 /*!
  *  Refresh interval for timed observations of AVPlayer
  */
+
+// 播放状态的回调.
 static NSString *const kStatus                   = @"status";
+// 缓冲了多少内容
 static NSString *const kLoadedTimeRanges         = @"loadedTimeRanges";
 static NSString *const kPlaybackBufferEmpty      = @"playbackBufferEmpty";
+// 表示可以播放视频了, 和 playbackBufferEmpty 是相反的属性
 static NSString *const kPlaybackLikelyToKeepUp   = @"playbackLikelyToKeepUp";
+// PlayerItem 所表示的视频的尺寸, 这个信息在视频加载的时候是 Zero. 在加载之后, 获取到该信息, 然后触发回调.
 static NSString *const kPresentationSize         = @"presentationSize";
+
+// 这个 View, 就是实际的进行视频播放的视图. 里面的 layer, 是一个 playerLayer
 
 @interface ZFPlayerPresentView : ZFPlayerView
 
@@ -68,7 +75,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     ZFKVOController *_playerItemKVO;
 }
 @property (nonatomic, strong) AVPlayerLayer *playerLayer;
-@property (nonatomic, assign) BOOL isBuffering;
+@property (nonatomic, assign) BOOL isBuffering; // 控制属性, 表示当前正在缓冲数据
 @property (nonatomic, assign) BOOL isReadyToPlay;
 
 @end
@@ -98,7 +105,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
 @synthesize presentationSize               = _presentationSize;
 @synthesize isPlaying                      = _isPlaying;
 @synthesize rate                           = _rate;
-@synthesize isPreparedToPlay               = _isPreparedToPlay;
+@synthesize isPreparedToPlay               = _isPreparedToPlay; // 用这个值来表示, 是否播放相关的初始化工作已经完成.
 @synthesize shouldAutoPlay                 = _shouldAutoPlay;
 @synthesize scalingMode                    = _scalingMode;
 @synthesize playerPlayFailed               = _playerPlayFailed;
@@ -113,7 +120,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     return self;
 }
 
-// 所有的媒体播放的时候, 都必须调用调用该函数.
+// 这个函数, 做的是一些播放的初始化的工作. 在适当的时候 ,调用这个方法, 可以将逻辑集中到一个地方.
 - (void)prepareToPlay {
     if (!_assetURL) return;
     _isPreparedToPlay = YES;
@@ -126,7 +133,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
 }
 
 - (void)initializePlayer {
-    // 一顿初始化操作.
+    // 为了初始化, 和播放相关的所有数据.
     _asset = [AVURLAsset URLAssetWithURL:self.assetURL options:self.requestHeader];
     _playerItem = [AVPlayerItem playerItemWithAsset:_asset];
     _player = [AVPlayer playerWithPlayerItem:_playerItem];
@@ -136,6 +143,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     presentView.player = _player;
     self.scalingMode = _scalingMode;
     if (@available(iOS 9.0, *)) {
+        // 流媒体, 在暂停的时候, 要不要一直进行网络请求,
         _playerItem.canUseNetworkResourcesForLiveStreamingWhilePaused = NO;
     }
     if (@available(iOS 10.0, *)) {
@@ -157,7 +165,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
         // 直接就是调用 player 进行 play 的操作. 并且更改自己的状态.
         [self.player play];
         self.player.rate = self.rate;
-        self->_isPlaying = YES;
+        _isPlaying = YES;
         self.playState = ZFPlayerPlayStatePlaying;
     }
 }
@@ -266,6 +274,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
 
 /**
  *  缓冲较差时候回调这里
+ *  这里并没有调用什么加载的方法, 仅仅是做了一个定时器,  不断的进行重新播放的尝试 .
  */
 - (void)bufferingSomeSecond {
     // playbackBufferEmpty会反复进入，因此在bufferingOneSecond延时播放执行完之前再调用bufferingSomeSecond都忽略
@@ -316,7 +325,8 @@ static NSString *const kPresentationSize         = @"presentationSize";
                               context:nil];
     
     CMTime interval = CMTimeMakeWithSeconds(self.timeRefreshInterval > 0 ? self.timeRefreshInterval : 0.1, NSEC_PER_SEC);
-    // 这里, 对于播放的进度进行了监听.
+    
+    // 这里, 对于播放的进度进行了监听, 传递出来的就是当前的播放时刻.
     @weakify(self)
     _timeObserver = [self.player addPeriodicTimeObserverForInterval:interval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         @strongify(self)
@@ -403,7 +413,6 @@ static NSString *const kPresentationSize         = @"presentationSize";
     return _rate == 0 ?1:_rate;
 }
 
-// 直接调用的currentItem的方法.
 - (NSTimeInterval)totalTime {
     NSTimeInterval sec = CMTimeGetSeconds(self.player.currentItem.duration);
     if (isnan(sec)) {
@@ -434,7 +443,7 @@ static NSString *const kPresentationSize         = @"presentationSize";
     if (self.playerLoadStateChanged) self.playerLoadStateChanged(self, loadState);
 }
 
-// 只要替换了要播放的Url, 就立刻调用缓存的方法.
+// 只要替换了要播放的Url, Play 的与准备方法..
 - (void)setAssetURL:(NSURL *)assetURL {
     if (self.player) [self stop];
     _assetURL = assetURL;

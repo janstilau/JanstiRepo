@@ -84,9 +84,11 @@ typedef NS_ENUM(NSInteger, ZFPlayerScalingMode) {
 @property (nonatomic, readonly) CGSize presentationSize;
 
 /// The playback state.
+// Play 状态的改变, 更多的是认为的操作.
 @property (nonatomic, readonly) ZFPlayerPlaybackState playState;
 
 /// The player load state.
+// LoadState 的改变, 更多的监听 PlayItem 的 value. 表示资源的可播放状态.
 @property (nonatomic, readonly) ZFPlayerLoadState loadState;
 
 ///------------------------------------

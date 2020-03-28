@@ -101,6 +101,10 @@
 }
 
 - (void)playerManagerCallbcak {
+    
+    // 可以发现, 是在这里, 通过 manager 的各种播放状态的回调, 控制了播放视图的更新.
+    // 然后, ControlView 那里, 可以直接调用 PlayerController 的播放控制的方法. 而这些方法, 又转移到了 PlayerManager 中.
+    
     @weakify(self)
     self.currentPlayerManager.playerPrepareToPlay = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSURL * _Nonnull assetURL) {
         @strongify(self)
@@ -176,6 +180,7 @@
         }
     };
     
+    //
     self.currentPlayerManager.presentationSizeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, CGSize size){
         @strongify(self)
         if (self.orientationObserver.fullScreenMode == ZFFullScreenModeAutomatic) {
@@ -201,7 +206,7 @@
             superview = self.containerView;
         }
         [superview addSubview:self.currentPlayerManager.view];
-        [self.currentPlayerManager.view addSubview:self.controlView];
+        [self.currentPlayerManager.view addSubview:self.controlView]; // 这里, 进行了 ControlView 的添加工作.
         
         self.currentPlayerManager.view.frame = superview.bounds;
         self.currentPlayerManager.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -819,6 +824,7 @@
     if (!gestureControl) {
         gestureControl = [[ZFPlayerGestureControl alloc] init];
         @weakify(self)
+        // 这里, 手势应该进行什么处理, 都是交给了 controlView 了
         gestureControl.triggerCondition = ^BOOL(ZFPlayerGestureControl * _Nonnull control, ZFPlayerGestureType type, UIGestureRecognizer * _Nonnull gesture, UITouch *touch) {
             @strongify(self)
             if ([self.controlView respondsToSelector:@selector(gestureTriggerCondition:gestureType:gestureRecognizer:touch:)]) {

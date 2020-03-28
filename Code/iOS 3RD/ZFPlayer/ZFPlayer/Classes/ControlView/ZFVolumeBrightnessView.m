@@ -103,6 +103,7 @@
     self.iconImageView.image = playerImage;
     self.hidden = NO;
     self.alpha = 1;
+    // 这里, 用了常见的方法.
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideTipView) object:nil];
     [self performSelector:@selector(hideTipView) withObject:nil afterDelay:1.5];
 }
