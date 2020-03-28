@@ -73,6 +73,9 @@
                                                  selector:@selector(volumeChanged:)
                                                      name:@"AVSystemController_SystemVolumeDidChangeNotification"
                                                    object:nil];
+        
+        self.layer.borderColor = [[UIColor purpleColor] CGColor];
+        self.layer.borderWidth = 2;
     }
     return self;
 }

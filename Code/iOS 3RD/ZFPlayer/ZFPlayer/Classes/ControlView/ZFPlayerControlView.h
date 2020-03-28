@@ -22,7 +22,7 @@
 /// 加载loading
 @property (nonatomic, strong, readonly) ZFSpeedLoadingView *activity;
 
-/// 快进快退View
+/// 就是左滑右滑的时候, 出现的快进快退的产经
 @property (nonatomic, strong, readonly) UIView *fastView;
 
 /// 快进快退进度progress
