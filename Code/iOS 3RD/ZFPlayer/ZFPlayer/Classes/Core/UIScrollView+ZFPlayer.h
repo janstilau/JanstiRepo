@@ -127,7 +127,7 @@ typedef NS_ENUM(NSInteger, ZFPlayerContainerType) {
 @property (nonatomic) CGFloat zf_playerApperaPercent;
 
 /// The current player controller is disappear, not dealloc
-@property (nonatomic) BOOL zf_viewControllerDisappear;
+@property (nonatomic) BOOL zf_hiddenOnWindow;
 
 /// Has stopped playing
 @property (nonatomic, assign) BOOL zf_stopPlay;

@@ -277,6 +277,7 @@
  Find the playing cell while the scrollDirection is vertical.
  */
 - (void)_findCorrectCellWhenScrollViewDirectionVertical:(void (^ __nullable)(NSIndexPath *indexPath))handler {
+    // 如果不是自动播放, 直接 return
     if (!self.zf_shouldAutoPlay) return;
     if (self.zf_containerType == ZFPlayerContainerTypeView) return;
     
@@ -672,7 +673,7 @@
     [self zf_filterShouldPlayCellWhileScrolling:^(NSIndexPath *indexPath) {
         @strongify(self)
         /// 如果当前控制器已经消失，直接return
-        if (self.zf_viewControllerDisappear) return;
+        if (self.zf_hiddenOnWindow) return;
         if ([ZFReachabilityManager sharedManager].isReachableViaWWAN && !self.zf_WWANAutoPlay) {
             /// 移动网络
             self.zf_shouldPlayIndexPath = indexPath;
@@ -750,7 +751,7 @@
     return [objc_getAssociatedObject(self, _cmd) floatValue];
 }
 
-- (BOOL)zf_viewControllerDisappear {
+- (BOOL)zf_hiddenOnWindow {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
@@ -839,8 +840,8 @@
     objc_setAssociatedObject(self, @selector(zf_playerDisapperaPercent), @(zf_playerDisapperaPercent), OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (void)setZf_viewControllerDisappear:(BOOL)zf_viewControllerDisappear {
-    objc_setAssociatedObject(self, @selector(zf_viewControllerDisappear), @(zf_viewControllerDisappear), OBJC_ASSOCIATION_COPY_NONATOMIC);
+- (void)setZf_hiddenOnWindow:(BOOL)zf_viewControllerDisappear {
+    objc_setAssociatedObject(self, @selector(zf_hiddenOnWindow), @(zf_viewControllerDisappear), OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 - (void)setZf_stopPlay:(BOOL)zf_stopPlay {

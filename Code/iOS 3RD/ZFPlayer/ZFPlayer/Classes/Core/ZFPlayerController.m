@@ -669,7 +669,7 @@ AVAudioSessionCategoryPlayAndRecord
 
 - (void)setHiddenOnWindow:(BOOL)hidden {
     objc_setAssociatedObject(self, @selector(isHiddenOnWindow), @(hidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (self.scrollView) self.scrollView.zf_viewControllerDisappear = hidden; // ScrollView 有着相关的逻辑, 也依靠是否显示的值.
+    if (self.scrollView) self.scrollView.zf_hiddenOnWindow = hidden; // ScrollView 有着相关的逻辑, 也依靠是否显示的值.
     if (!self.playerManager.isPreparedToPlay) return; // 如果现在视频不是在已经准备完善的状态, 不做处理.
     if (hidden) {
         // 如果, 不显示在屏幕上, 那就停止监听屏幕的转动. 并且控制播放器的暂停
@@ -1055,23 +1055,25 @@ AVAudioSessionCategoryPlayAndRecord
     self.scrollView.zf_containerViewTag = containerViewTag;
 }
 
+// 这里, 仅仅是将 playerView 加到了 cell 上, 没有进行真正的播放替换工作.
 - (void)setPlayingIndexPath:(NSIndexPath *)playingIndexPath {
     objc_setAssociatedObject(self, @selector(playingIndexPath), playingIndexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (playingIndexPath) {
-        // Stop the current playing cell video.
-        [self stop];
-        self.isSmallFloatViewShow = NO;
-        if (self.smallFloatView) self.smallFloatView.hidden = YES;
-        
-        UIView *cell = [self.scrollView zf_getCellForIndexPath:playingIndexPath];
-        self.containerView = [cell viewWithTag:self.containerViewTag];
-        [self.orientationObserver cellModelRotateView:self.playerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
-        [self addDeviceOrientationObserver];
-        self.scrollView.zf_playingIndexPath = playingIndexPath;
-        [self layoutPlayerSubViews];
-    } else {
-        self.scrollView.zf_playingIndexPath = playingIndexPath;
+    if (!playingIndexPath) {
+        self.scrollView.zf_playingIndexPath = nil;
+        return;
     }
+    [self stop];
+    self.isSmallFloatViewShow = NO;
+    if (self.smallFloatView) self.smallFloatView.hidden = YES;
+    
+    UIView *cell = [self.scrollView zf_getCellForIndexPath:playingIndexPath];
+    // 首先, 更新 orientation.
+    self.containerView = [cell viewWithTag:self.containerViewTag];
+    [self.orientationObserver cellModelRotateView:self.playerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
+    [self addDeviceOrientationObserver];
+    self.scrollView.zf_playingIndexPath = playingIndexPath;
+    // 然后将 palyerView 填充到 cell 上面.
+    [self layoutPlayerSubViews];
 }
 
 - (void)setShouldAutoPlay:(BOOL)shouldAutoPlay {
@@ -1221,6 +1223,7 @@ AVAudioSessionCategoryPlayAndRecord
     [self.scrollView zf_filterShouldPlayCellWhileScrolling:handler];
 }
 
+// 在这里, 进行了播放的真正切换.
 - (void)playTheIndexPath:(NSIndexPath *)indexPath {
     self.playingIndexPath = indexPath;
     NSURL *assetURL;
@@ -1233,6 +1236,7 @@ AVAudioSessionCategoryPlayAndRecord
     self.currentAssetURL = assetURL;
 }
 
+// 切换播放 asset, 并且进行 scroll, 提供回调.
 - (void)playTheIndexPath:(NSIndexPath *)indexPath scrollToTop:(BOOL)scrollToTop completionHandler:(void (^ _Nullable)(void))completionHandler {
     NSURL *assetURL;
     if (self.sectionAssetURLs.count) {
