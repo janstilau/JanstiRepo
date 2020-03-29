@@ -15,6 +15,7 @@ typedef NS_ENUM(NSUInteger, ZFPlayerBackgroundState) {
 
 @property (nonatomic, readonly) ZFPlayerBackgroundState backgroundState;
 
+//
 @property (nonatomic, copy, nullable) void(^willResignActive)(ZFPlayerNotification *registrar);
 
 @property (nonatomic, copy, nullable) void(^didBecomeActive)(ZFPlayerNotification *registrar);

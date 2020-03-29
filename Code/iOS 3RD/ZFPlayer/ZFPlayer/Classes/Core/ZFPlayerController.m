@@ -239,6 +239,7 @@ AVAudioSessionCategoryPlayAndRecord
 
 #pragma mark - getter
 
+// 目前来说, notification 的各个回调, 没有用到太多.
 - (ZFPlayerNotification *)notification {
     if (!_notification) {
         _notification = [[ZFPlayerNotification alloc] init];
@@ -248,13 +249,12 @@ AVAudioSessionCategoryPlayAndRecord
             if (self.isHiddenOnWindow) return; // 如果, 不在屏幕上显示, 不做处理.
             if (self.pauseWhenAppResignActive && self.playerManager.isPlaying) {
                 self.pauseByEvent = YES;
-            }
-            self.orientationObserver.lockedScreen = YES;
-            [[UIApplication sharedApplication].keyWindow endEditing:YES];
-            if (!self.pauseWhenAppResignActive) {
+            } else {
                 [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
                 [[AVAudioSession sharedInstance] setActive:YES error:nil];
             }
+            self.orientationObserver.lockedScreen = YES;
+            [[UIApplication sharedApplication].keyWindow endEditing:YES];
         };
         _notification.didBecomeActive = ^(ZFPlayerNotification * _Nonnull registrar) {
             @strongify(self)

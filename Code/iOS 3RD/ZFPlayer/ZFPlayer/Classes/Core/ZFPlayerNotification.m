@@ -2,7 +2,7 @@
 
 @interface ZFPlayerNotification ()
 
-@property (nonatomic, assign) ZFPlayerBackgroundState backgroundState;
+@property (nonatomic, assign) ZFPlayerBackgroundState backgroundState; // 这个值目前完全没有被用到.
 
 @end
 
