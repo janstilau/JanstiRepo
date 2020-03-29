@@ -40,8 +40,6 @@ static NSString *kIdentifier = @"kIdentifier";
     [self requestData];
     
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
-//    KSMediaPlayerManager *playerManager = [[KSMediaPlayerManager alloc] init];
-//    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
     
     /// player的tag值必须在cell里设置
     self.player = [ZFPlayerController playerWithScrollView:self.tableView playerManager:playerManager containerViewTag:100];
@@ -52,6 +50,7 @@ static NSString *kIdentifier = @"kIdentifier";
     /// 移动网络依然自动播放
     self.player.WWANAutoPlay = YES;
     
+    // 在这里, 进行了视频播放完毕的自动下滑的工作.
     @weakify(self)
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
         @strongify(self)

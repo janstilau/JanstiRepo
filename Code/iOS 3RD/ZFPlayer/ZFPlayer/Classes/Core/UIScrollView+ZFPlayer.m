@@ -65,10 +65,11 @@
 }
 
 /**
-  The percentage of scrolling processed in vertical scrolling.
+ The percentage of scrolling processed in vertical scrolling.
  */
 - (void)_scrollViewScrollingDirectionVertical {
     CGFloat offsetY = self.contentOffset.y;
+    // 通过和上一次的比较, 记录滑动的方向.
     self.zf_scrollDirection = (offsetY - self.zf_lastOffsetY > 0) ? ZFPlayerScrollDirectionUp : ZFPlayerScrollDirectionDown;
     self.zf_lastOffsetY = offsetY;
     if (self.zf_stopPlay) return;
@@ -188,7 +189,7 @@
             if (self.zf_playerDidDisappearInScrollView) self.zf_playerDidDisappearInScrollView(self.zf_playingIndexPath);
             return;
         }
-       playerView = [cell viewWithTag:self.zf_containerViewTag];
+        playerView = [cell viewWithTag:self.zf_containerViewTag];
     } else if (self.zf_containerType == ZFPlayerContainerTypeView) {
         if (!self.zf_containerView) return;
         playerView = self.zf_containerView;
@@ -278,7 +279,7 @@
 - (void)_findCorrectCellWhenScrollViewDirectionVertical:(void (^ __nullable)(NSIndexPath *indexPath))handler {
     if (!self.zf_shouldAutoPlay) return;
     if (self.zf_containerType == ZFPlayerContainerTypeView) return;
-
+    
     NSArray *visiableCells = nil;
     NSIndexPath *indexPath = nil;
     if ([self _isTableView]) {
@@ -534,7 +535,7 @@
     return [self isKindOfClass:[UICollectionView class]];
 }
 
-#pragma mark - public method
+#pragma mark - Swizzled method
 
 - (UIView *)zf_getCellForIndexPath:(NSIndexPath *)indexPath {
     if ([self _isTableView]) {
@@ -681,6 +682,27 @@
         self.zf_playingIndexPath = indexPath;
     }];
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #pragma mark - getter
 

@@ -52,7 +52,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
     /// 播放器相关
     self.playerController = [ZFPlayerController playerWithPlayerManager:playerManager containerView:self.containerView];
-    self.playerController.controlView = self.controlView;
+    self.playerController.controlView = self.controlView; // 这里, ControlView 完全是可以自定义的.
     /// 设置退到后台继续播放
     self.playerController.pauseWhenAppResignActive = NO;
     

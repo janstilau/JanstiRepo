@@ -25,8 +25,8 @@ typedef NS_ENUM(NSInteger, ZFPlayerScrollViewDirection) {
  * The player container type
  */
 typedef NS_ENUM(NSInteger, ZFPlayerContainerType) {
-    ZFPlayerContainerTypeView,
-    ZFPlayerContainerTypeCell
+    ZFPlayerContainerTypeView, // 专门一个 view 播放视频.
+    ZFPlayerContainerTypeCell // Cell 中播放视频
 };
 
 @interface UIScrollView (ZFPlayer)
