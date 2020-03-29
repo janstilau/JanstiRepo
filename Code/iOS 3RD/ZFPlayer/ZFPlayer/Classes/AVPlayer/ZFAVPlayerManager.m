@@ -84,32 +84,41 @@ static NSString *const kPresentationSize         = @"presentationSize";
 
 // 这就是, 一个类如果想要实现一个 protocol 中的 property 应该做的事情, 仅仅提供实体变量就行, 定义直接用 protocol 里面的 property.
 // 相比 MC 现在的实现方式, 这种方式应该是更加的优雅.
+/*
+  除了 playerPrepareToPlay, playerReadyToPlay, playerDidToEnd 外, 其他的回调, 仅仅是传递到 ControlView 中, 做视图的更新操作.
+ 
+ playerPrepareToPlay 是在 初始化 player, 监听完毕视频的状态变化后调用的, 在外界, 做了 通知监听, 设备旋转监听的操作.
+ playerReadyToPlay 是在 assetItem 可以状态变为可以播放时调用的, 在外界, 做了 AudioSession 的一些设置.
+ playerDidToEnd 是在 assetItem 播放完毕时调用的, 这个主要是不同的业务场景不同配置.
+ */
+ 
+@synthesize playerPlayTimeChanged          = _playerPlayTimeChanged;
+@synthesize playerBufferTimeChanged        = _playerBufferTimeChanged;
+@synthesize playerPlayStateChanged         = _playerPlayStateChanged;
+@synthesize playerLoadStateChanged         = _playerLoadStateChanged;
+@synthesize playerPlayFailed               = _playerPlayFailed;
+@synthesize presentationSizeChanged        = _presentationSizeChanged;
+@synthesize playerPrepareToPlay            = _playerPrepareToPlay;
+@synthesize playerReadyToPlay              = _playerReadyToPlay;
+@synthesize playerDidToEnd                 = _playerDidToEnd;
 
 @synthesize view                           = _view;
 @synthesize currentTime                    = _currentTime;
 @synthesize totalTime                      = _totalTime;
-@synthesize playerPlayTimeChanged          = _playerPlayTimeChanged;
-@synthesize playerBufferTimeChanged        = _playerBufferTimeChanged;
-@synthesize playerDidToEnd                 = _playerDidToEnd;
+
 @synthesize bufferTime                     = _bufferTime;
 @synthesize playState                      = _playState;
 @synthesize loadState                      = _loadState;
 @synthesize assetURL                       = _assetURL;
-@synthesize playerPrepareToPlay            = _playerPrepareToPlay;
-@synthesize playerReadyToPlay              = _playerReadyToPlay;
-@synthesize playerPlayStateChanged         = _playerPlayStateChanged;
-@synthesize playerLoadStateChanged         = _playerLoadStateChanged;
 @synthesize seekTime                       = _seekTime;
 @synthesize muted                          = _muted;
 @synthesize volume                         = _volume;
 @synthesize presentationSize               = _presentationSize;
 @synthesize isPlaying                      = _isPlaying;
 @synthesize rate                           = _rate;
-@synthesize isPreparedToPlay               = _isPreparedToPlay; // 用这个值来表示, 是否播放相关的初始化工作已经完成.
+@synthesize isPreparedToPlay               = _isPreparedToPlay;
 @synthesize shouldAutoPlay                 = _shouldAutoPlay;
 @synthesize scalingMode                    = _scalingMode;
-@synthesize playerPlayFailed               = _playerPlayFailed;
-@synthesize presentationSizeChanged        = _presentationSizeChanged;
 
 - (instancetype)init {
     self = [super init];
@@ -318,6 +327,8 @@ static NSString *const kPresentationSize         = @"presentationSize";
     }
 }
 
+#pragma mark - ObserverHandler
+
 /**
  *  缓冲较差时候回调这里
  *  这里并没有调用什么加载的方法, 仅仅是做了一个定时器,  不断的进行重新播放的尝试 .
@@ -344,8 +355,6 @@ static NSString *const kPresentationSize         = @"presentationSize";
     });
 }
 
-#pragma mark - ObserverHandler
-
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([keyPath isEqualToString:kStatus]) {
@@ -364,10 +373,14 @@ static NSString *const kPresentationSize         = @"presentationSize";
     });
 }
 
+/*
+ When a player item is created, its status is AVPlayerItemStatusUnknown, meaning its media hasn’t been loaded and has not yet been enqueued for playback. Associating a player item with an AVPlayer immediately begins enqueuing the item’s media and preparing it for playback. When the player item’s media has been loaded and is ready for use, its status will change to AVPlayerItemStatusReadyToPlay. You can observe this change using key-value observing.
+ 从上面的描述可以知道, 获取视频元信息这件事会在挂钩之后立马进行.
+ */
 - (void)assetPlayStatusUpdated {
     if (_player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
-        if (!self.isReadyToPlay) {
-            self.isReadyToPlay = YES;
+        if (!_isReadyToPlay) {
+            _isReadyToPlay = YES;
             self.loadState = ZFPlayerLoadStatePlaythroughOK;
             if (_playerReadyToPlay) _playerReadyToPlay(self, self.assetURL);
         }
@@ -375,9 +388,9 @@ static NSString *const kPresentationSize         = @"presentationSize";
             [self seekToTime:self.seekTime completionHandler:nil];
             self.seekTime = 0;
         }
-        if (_isPlaying) [self play];
+        if (_isPlaying) [self play]; // _isPlaying 是在调动的时候变化的, 而 Item 的状态变化是网络的回调. 所以, 如果 Item 变为可播放的时候, 可能已经是 isPlayering.
         _player.muted = self.muted;
-        NSArray *loadedRanges = _playerItem.seekableTimeRanges;
+        NSArray *loadedRanges = _playerItem.seekableTimeRanges; // timeRange is composed with duration and start.
         if (loadedRanges.count > 0) {
             /// Fix https://github.com/renzifeng/ZFPlayer/issues/475
             if (_playerPlayTimeChanged) _playerPlayTimeChanged(self, self.currentTime, self.totalTime);
@@ -481,7 +494,6 @@ static NSString *const kPresentationSize         = @"presentationSize";
     if (_playerLoadStateChanged) _playerLoadStateChanged(self, loadState);
 }
 
-// 只要替换了要播放的Url, Play 的与准备方法..
 - (void)setAssetURL:(NSURL *)assetURL {
     if (_player) [self stop];
     _assetURL = assetURL;

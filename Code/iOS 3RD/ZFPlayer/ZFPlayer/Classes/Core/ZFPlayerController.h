@@ -158,8 +158,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// For example, when the player is playing, application goes into the background or pushed to another viewController
 @property (nonatomic, getter=isPauseByEvent) BOOL pauseByEvent;
 
-// 该值用来判断, 当前的player控制的界面是不是正在显示, 该值控制了大量的内部逻辑, 所以应该是该类的使用者, 在合适的时机, 替换一下该值.
-@property (nonatomic, getter=isViewControllerDisappear) BOOL viewControllerDisappear;
+// 该值用来判断, 当前的player控制的界面是不是正在显示. 该类的时候着, 应该在合适的时机更新该值.
+@property (nonatomic, getter=isHiddenOnWindow) BOOL hiddenOnWindow;
 
 /// You can custom the AVAudioSession,
 /// default is NO.

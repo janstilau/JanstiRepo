@@ -85,12 +85,12 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.player.viewControllerDisappear = NO;
+    self.player.hiddenOnWindow = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    self.player.viewControllerDisappear = YES;
+    self.player.hiddenOnWindow = YES;
 }
 
 - (void)viewWillLayoutSubviews {
@@ -149,7 +149,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
             [self.adPlayer stopCurrentPlayingView];
             self.player.playerManager.shouldAutoPlay = YES;
             [self.player.playerManager play];
-            self.player.viewControllerDisappear = NO;
+            self.player.hiddenOnWindow = NO;
         };
         
         _adControlView.fullScreenCallback = ^{

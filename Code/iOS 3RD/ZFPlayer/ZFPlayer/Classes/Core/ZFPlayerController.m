@@ -102,9 +102,22 @@
     return player;
 }
 
+/*
+AVAudioSessionCategoryAmbient
+使用这个category的应用会随着静音键和屏幕关闭而静音。并且不会中止其它应用播放声音，可以和其它自带应用如iPod，safari等同时播放声音。注意：该Category无法在后台播放声音，所以开启应用打断音乐程序播放音乐应该使用这个Category。
+AVAudioSessionCategorySoloAmbient
+类似于AVAudioSessionCategoryAmbient 不同之处在于它会中止其它应用播放声音。 这个category为默认category。该Category无法在后台播放声音
+AVAudioSessionCategoryPlayback
+使用这个category的应用不会随着静音键和屏幕关闭而静音。可在后台播放声音
+AVAudioSessionCategoryRecord
+用于需要录音的应用，设置该category后，除了来电铃声，闹钟或日历提醒之外的其它系统声音都不会被播放。该Category只提供单纯录音功能。
+AVAudioSessionCategoryPlayAndRecord
+用于既需要播放声音又需要录音的应用，语音聊天应用(如微信）应该使用这个category。该Category提供录音和播放功能。如果你的应用需要用到iPhone上的听筒，该category是你唯一的选择，在该Category下声音的默认出口为听筒（在没有外接设备的情况下）。
+ */
+
 - (void)playerManagerCallbcak {
     
-    // 可以发现, 是在这里, 通过 manager 的各种播放状态的回调, 控制了播放视图的更新.
+    // PlayerManager 中, 监听播放的各种状态, 然后通过回调的方式传出. PlayerController 里面, 将这些回调, 传递到 ControlView 中.
     // 然后, ControlView 那里, 可以直接调用 PlayerController 的播放控制的方法. 而这些方法, 又转移到了 PlayerManager 中.
     
     @weakify(self)
@@ -123,15 +136,18 @@
         }
     };
     
+
     self.playerManager.playerReadyToPlay = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSURL * _Nonnull assetURL) {
         @strongify(self)
         if (self.playerReadyToPlay) self.playerReadyToPlay(asset,assetURL);
         if (!self.customAudioSession) {
             // Apps using this category don't mute when the phone's mute button is turned on, but play sound when the phone is silent
             [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionAllowBluetooth error:nil];
+            // YES if the session’s active state was changed successfully, or NO if it was not.
+            // 也就是说, 在上面的setCategory设置之后, 要主动调用 setActive 让上面的设置生效.
             [[AVAudioSession sharedInstance] setActive:YES error:nil];
         }
-        if (self.viewControllerDisappear) self.pauseByEvent = YES;
+        if (self.hiddenOnWindow) self.pauseByEvent = YES;
     };
     
     self.playerManager.playerPlayTimeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval currentTime, NSTimeInterval duration) {
@@ -144,10 +160,10 @@
     
     self.playerManager.playerBufferTimeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval bufferTime) {
         @strongify(self)
+        if (self.playerBufferTimeChanged) self.playerBufferTimeChanged(asset,bufferTime);
         if ([self.controlView respondsToSelector:@selector(videoPlayer:bufferTime:)]) {
             [self.controlView videoPlayer:self bufferTime:bufferTime];
         }
-        if (self.playerBufferTimeChanged) self.playerBufferTimeChanged(asset,bufferTime);
     };
     
     self.playerManager.playerPlayStateChanged = ^(id  _Nonnull asset, ZFPlayerPlaybackState playState) {
@@ -229,7 +245,7 @@
         @weakify(self)
         _notification.willResignActive = ^(ZFPlayerNotification * registrar) {
             @strongify(self)
-            if (self.isViewControllerDisappear) return; // 如果, 不在屏幕上显示, 不做处理.
+            if (self.isHiddenOnWindow) return; // 如果, 不在屏幕上显示, 不做处理.
             if (self.pauseWhenAppResignActive && self.playerManager.isPlaying) {
                 self.pauseByEvent = YES;
             }
@@ -242,7 +258,7 @@
         };
         _notification.didBecomeActive = ^(ZFPlayerNotification * _Nonnull registrar) {
             @strongify(self)
-            if (self.isViewControllerDisappear) return;
+            if (self.isHiddenOnWindow) return;
             if (self.isPauseByEvent) self.pauseByEvent = NO;
             self.orientationObserver.lockedScreen = NO;
         };
@@ -551,7 +567,7 @@
     return [objc_getAssociatedObject(self, _cmd) integerValue];
 }
 
-- (BOOL)isViewControllerDisappear {
+- (BOOL)isHiddenOnWindow {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
@@ -651,16 +667,17 @@
     objc_setAssociatedObject(self, @selector(currentPlayIndex), @(currentPlayIndex), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)setViewControllerDisappear:(BOOL)viewControllerDisappear {
-    objc_setAssociatedObject(self, @selector(isViewControllerDisappear), @(viewControllerDisappear), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (self.scrollView) self.scrollView.zf_viewControllerDisappear = viewControllerDisappear; // ScrollView 有着相关的逻辑, 也依靠是否显示的值.
+- (void)setHiddenOnWindow:(BOOL)hidden {
+    objc_setAssociatedObject(self, @selector(isHiddenOnWindow), @(hidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (self.scrollView) self.scrollView.zf_viewControllerDisappear = hidden; // ScrollView 有着相关的逻辑, 也依靠是否显示的值.
     if (!self.playerManager.isPreparedToPlay) return; // 如果现在视频不是在已经准备完善的状态, 不做处理.
-    if (viewControllerDisappear) {
+    if (hidden) {
+        // 如果, 不显示在屏幕上, 那就停止监听屏幕的转动. 并且控制播放器的暂停
         [self removeDeviceOrientationObserver];
         if (self.playerManager.isPlaying) self.pauseByEvent = YES;
     } else {
-        if (self.isPauseByEvent) self.pauseByEvent = NO;
         [self addDeviceOrientationObserver];
+        if (self.isPauseByEvent) self.pauseByEvent = NO;
     }
 }
 

@@ -92,14 +92,14 @@ static NSString *kIdentifier = @"kIdentifier";
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.player.viewControllerDisappear = NO;
+    self.player.hiddenOnWindow = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 //    self.tableView.delegate = nil;
 //    [self.player stopCurrentPlayingCell];
-    self.player.viewControllerDisappear = YES;
+    self.player.hiddenOnWindow = YES;
 }
 
 - (void)viewWillLayoutSubviews {
