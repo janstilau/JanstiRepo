@@ -63,7 +63,7 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
     
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
         @strongify(self)
-        [self.player.currentPlayerManager replay];
+        [self.player.playerManager replay];
     };
     
     /// 停止的时候找出最合适的播放

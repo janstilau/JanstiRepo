@@ -407,7 +407,7 @@
             }
         }];
         if (self.seekToPlay) {
-            [self.player.currentPlayerManager play];
+            [self.player.playerManager play];
         }
         self.sumTime = 0;
     }
@@ -416,9 +416,9 @@
 /// 捏合手势事件，这里改变了视频的填充模式
 - (void)gesturePinched:(ZFPlayerGestureControl *)gestureControl scale:(float)scale {
     if (scale > 1) {
-        self.player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFill;
+        self.player.playerManager.scalingMode = ZFPlayerScalingModeAspectFill;
     } else {
-        self.player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFit;
+        self.player.playerManager.scalingMode = ZFPlayerScalingModeAspectFit;
     }
 }
 
@@ -438,9 +438,9 @@
         [self.landScapeControlView playBtnSelectedState:YES];
         self.failBtn.hidden = YES;
         /// 开始播放时候判断是否显示loading. 播放状态和 Load状态是两码事.
-        if (videoPlayer.currentPlayerManager.loadState == ZFPlayerLoadStateStalled && !self.prepareShowLoading) {
+        if (videoPlayer.playerManager.loadState == ZFPlayerLoadStateStalled && !self.prepareShowLoading) {
             [self.activity startAnimating];
-        } else if ((videoPlayer.currentPlayerManager.loadState == ZFPlayerLoadStateStalled || videoPlayer.currentPlayerManager.loadState == ZFPlayerLoadStatePrepare) && self.prepareShowLoading) {
+        } else if ((videoPlayer.playerManager.loadState == ZFPlayerLoadStateStalled || videoPlayer.playerManager.loadState == ZFPlayerLoadStatePrepare) && self.prepareShowLoading) {
             [self.activity startAnimating];
         }
     } else if (state == ZFPlayerPlayStatePaused) {
@@ -459,20 +459,20 @@
 - (void)videoPlayer:(ZFPlayerController *)videoPlayer loadStateChanged:(ZFPlayerLoadState)state {
     if (state == ZFPlayerLoadStatePrepare) {
         self.coverImageView.hidden = NO;
-        [self.portraitControlView playBtnSelectedState:videoPlayer.currentPlayerManager.shouldAutoPlay];
-        [self.landScapeControlView playBtnSelectedState:videoPlayer.currentPlayerManager.shouldAutoPlay];
+        [self.portraitControlView playBtnSelectedState:videoPlayer.playerManager.shouldAutoPlay];
+        [self.landScapeControlView playBtnSelectedState:videoPlayer.playerManager.shouldAutoPlay];
     } else if (state == ZFPlayerLoadStatePlaythroughOK || state == ZFPlayerLoadStatePlayable) {
         self.coverImageView.hidden = YES;
         if (self.effectViewShow) {
             self.effectView.hidden = NO;
         } else {
             self.effectView.hidden = YES;
-            self.player.currentPlayerManager.view.backgroundColor = [UIColor blackColor];
+            self.player.playerManager.view.backgroundColor = [UIColor blackColor];
         }
     }
-    if (state == ZFPlayerLoadStateStalled && videoPlayer.currentPlayerManager.isPlaying && !self.prepareShowLoading) {
+    if (state == ZFPlayerLoadStateStalled && videoPlayer.playerManager.isPlaying && !self.prepareShowLoading) {
         [self.activity startAnimating];
-    } else if ((state == ZFPlayerLoadStateStalled || state == ZFPlayerLoadStatePrepare) && videoPlayer.currentPlayerManager.isPlaying && self.prepareShowLoading) {
+    } else if ((state == ZFPlayerLoadStateStalled || state == ZFPlayerLoadStatePrepare) && videoPlayer.playerManager.isPlaying && self.prepareShowLoading) {
         [self.activity startAnimating];
     } else {
         [self.activity stopAnimating];
@@ -610,7 +610,7 @@
 
 /// 加载失败
 - (void)failBtnClick:(UIButton *)sender {
-    [self.player.currentPlayerManager reloadPlayer];
+    [self.player.playerManager reloadPlayer];
 }
 
 #pragma mark - setter
@@ -622,12 +622,12 @@
     self.landScapeControlView.player = player;
     self.portraitControlView.player = player;
     /// 解决播放时候黑屏闪一下问题
-    [player.currentPlayerManager.view insertSubview:self.bgImgView atIndex:0];
+    [player.playerManager.view insertSubview:self.bgImgView atIndex:0];
     [self.bgImgView addSubview:self.effectView];
-    [player.currentPlayerManager.view insertSubview:self.coverImageView atIndex:1];
-    self.coverImageView.frame = player.currentPlayerManager.view.bounds;
+    [player.playerManager.view insertSubview:self.coverImageView atIndex:1];
+    self.coverImageView.frame = player.playerManager.view.bounds;
     self.coverImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.bgImgView.frame = player.currentPlayerManager.view.bounds;
+    self.bgImgView.frame = player.playerManager.view.bounds;
     self.bgImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.effectView.frame = self.bgImgView.bounds;
     self.coverImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

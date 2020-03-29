@@ -38,7 +38,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.coverImageView.frame = self.player.currentPlayerManager.view.bounds;
+    self.coverImageView.frame = self.player.playerManager.view.bounds;
     
     CGFloat min_x = 0;
     CGFloat min_y = 0;
@@ -77,7 +77,7 @@
         self.coverImageView.hidden = YES;
         self.effectView.hidden = NO;
     }
-    if ((state == ZFPlayerLoadStateStalled || state == ZFPlayerLoadStatePrepare) && videoPlayer.currentPlayerManager.isPlaying) {
+    if ((state == ZFPlayerLoadStateStalled || state == ZFPlayerLoadStatePrepare) && videoPlayer.playerManager.isPlaying) {
         [self.sliderView startAnimating];
     } else {
         [self.sliderView stopAnimating];
@@ -90,8 +90,8 @@
 }
 
 - (void)gestureSingleTapped:(ZFPlayerGestureControl *)gestureControl {
-    if (self.player.currentPlayerManager.isPlaying) {
-        [self.player.currentPlayerManager pause];
+    if (self.player.playerManager.isPlaying) {
+        [self.player.playerManager pause];
         self.playBtn.hidden = NO;
         self.playBtn.transform = CGAffineTransformMakeScale(1.5f, 1.5f);
         [UIView animateWithDuration:0.2f delay:0
@@ -100,16 +100,16 @@
                             } completion:^(BOOL finished) {
                             }];
     } else {
-        [self.player.currentPlayerManager play];
+        [self.player.playerManager play];
         self.playBtn.hidden = YES;
     }
 }
 
 - (void)setPlayer:(ZFPlayerController *)player {
     _player = player;
-    [player.currentPlayerManager.view insertSubview:self.bgImgView atIndex:0];
+    [player.playerManager.view insertSubview:self.bgImgView atIndex:0];
     [self.bgImgView addSubview:self.effectView];
-    [player.currentPlayerManager.view insertSubview:self.coverImageView atIndex:1];
+    [player.playerManager.view insertSubview:self.coverImageView atIndex:1];
 }
 
 - (void)showCoverViewWithUrl:(NSString *)coverUrl withImageMode:(UIViewContentMode)contentMode {

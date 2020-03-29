@@ -190,7 +190,7 @@ static NSString *kDouYinIdentifier = @"douYinIdentifier";
         [self.player stopCurrentPlayingCell];
     }
     /// 如果没有播放，则点击进详情页会自动播放
-    if (!self.player.currentPlayerManager.isPlaying) {
+    if (!self.player.playerManager.isPlaying) {
         [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
     }
     /// 到详情页

@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *containerView;
 
 /// The currentPlayerManager must conform `ZFPlayerMediaPlayback` protocol.
-@property (nonatomic, strong) id<ZFPlayerMediaPlayback> currentPlayerManager;
+@property (nonatomic, strong) id<ZFPlayerMediaPlayback> playerManager;
 
 /// The custom controlView must conform `ZFPlayerMediaControl` protocol.
 @property (nonatomic, strong) UIView<ZFPlayerMediaControl> *controlView;

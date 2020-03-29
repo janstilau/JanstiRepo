@@ -159,7 +159,7 @@ static NSString *kIdentifier = @"kIdentifier";
         [self.player stopCurrentPlayingCell];
     }
     /// 如果没有播放，则点击进详情页会自动播放
-    if (!self.player.currentPlayerManager.isPlaying) {
+    if (!self.player.playerManager.isPlaying) {
         [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
     }
     /// 到详情页
@@ -169,7 +169,7 @@ static NSString *kIdentifier = @"kIdentifier";
     /// 详情页返回的回调
     detailVC.detailVCPopCallback = ^{
         @strongify(self)
-        if (self.player.currentPlayerManager.playState == ZFPlayerPlayStatePlayStopped) {
+        if (self.player.playerManager.playState == ZFPlayerPlayStatePlayStopped) {
             [self.player stopCurrentPlayingCell];
         } else {
             [self.player addPlayerViewToCell];

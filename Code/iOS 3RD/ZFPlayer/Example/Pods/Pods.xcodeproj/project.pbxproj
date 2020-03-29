@@ -913,6 +913,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D43569A558AD9E8D8B9C79388BBD9F9E /* FDFullscreenPopGesture.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1016,6 +1017,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 76F63C101002C44E6D6A155BC91AECD4 /* ZFPlayer.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1103,6 +1105,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D43569A558AD9E8D8B9C79388BBD9F9E /* FDFullscreenPopGesture.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1151,6 +1154,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 76F63C101002C44E6D6A155BC91AECD4 /* ZFPlayer.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";

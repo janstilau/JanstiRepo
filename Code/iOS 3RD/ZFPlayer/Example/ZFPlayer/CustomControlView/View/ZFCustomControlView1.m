@@ -125,7 +125,7 @@
             @strongify(self)
             if (finished) {
                 self.slider.isdragging = NO;
-                [self.player.currentPlayerManager play];
+                [self.player.playerManager play];
             }
         }];
     } else {
@@ -147,7 +147,7 @@
 /// 根据当前播放状态取反
 - (void)playOrPause {
     self.playOrPauseBtn.selected = !self.playOrPauseBtn.isSelected;
-    self.playOrPauseBtn.isSelected? [self.player.currentPlayerManager play]: [self.player.currentPlayerManager pause];
+    self.playOrPauseBtn.isSelected? [self.player.playerManager play]: [self.player.playerManager pause];
 }
 
 - (void)playBtnSelectedState:(BOOL)selected {
@@ -400,9 +400,9 @@
 /// 捏合手势事件，这里改变了视频的填充模式
 - (void)gesturePinched:(ZFPlayerGestureControl *)gestureControl scale:(float)scale {
     if (scale > 1) {
-        self.player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFill;
+        self.player.playerManager.scalingMode = ZFPlayerScalingModeAspectFill;
     } else {
-        self.player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFit;
+        self.player.playerManager.scalingMode = ZFPlayerScalingModeAspectFit;
     }
 }
 
@@ -416,9 +416,9 @@
     if (state == ZFPlayerPlayStatePlaying) {
         [self playBtnSelectedState:YES];
         /// 开始播放时候判断是否显示loading
-        if (videoPlayer.currentPlayerManager.loadState == ZFPlayerLoadStateStalled) {
+        if (videoPlayer.playerManager.loadState == ZFPlayerLoadStateStalled) {
             [self.activity startAnimating];
-        } else if ((videoPlayer.currentPlayerManager.loadState == ZFPlayerLoadStateStalled || videoPlayer.currentPlayerManager.loadState == ZFPlayerLoadStatePrepare)) {
+        } else if ((videoPlayer.playerManager.loadState == ZFPlayerLoadStateStalled || videoPlayer.playerManager.loadState == ZFPlayerLoadStatePrepare)) {
             [self.activity startAnimating];
         }
     } else if (state == ZFPlayerPlayStatePaused) {
@@ -436,11 +436,11 @@
         self.coverImageView.hidden = NO;
     } else if (state == ZFPlayerLoadStatePlaythroughOK || state == ZFPlayerLoadStatePlayable) {
         self.coverImageView.hidden = YES;
-        self.player.currentPlayerManager.view.backgroundColor = [UIColor blackColor];
+        self.player.playerManager.view.backgroundColor = [UIColor blackColor];
     }
-    if (state == ZFPlayerLoadStateStalled && videoPlayer.currentPlayerManager.isPlaying) {
+    if (state == ZFPlayerLoadStateStalled && videoPlayer.playerManager.isPlaying) {
         [self.activity startAnimating];
-    } else if ((state == ZFPlayerLoadStateStalled || state == ZFPlayerLoadStatePrepare) && videoPlayer.currentPlayerManager.isPlaying) {
+    } else if ((state == ZFPlayerLoadStateStalled || state == ZFPlayerLoadStatePrepare) && videoPlayer.playerManager.isPlaying) {
         [self.activity startAnimating];
     } else {
         [self.activity stopAnimating];
@@ -505,11 +505,11 @@
 - (void)setPlayer:(ZFPlayerController *)player {
     _player = player;
     /// 解决播放时候黑屏闪一下问题
-    [player.currentPlayerManager.view insertSubview:self.bgImgView atIndex:0];
-    [player.currentPlayerManager.view insertSubview:self.coverImageView atIndex:1];
-    self.coverImageView.frame = player.currentPlayerManager.view.bounds;
+    [player.playerManager.view insertSubview:self.bgImgView atIndex:0];
+    [player.playerManager.view insertSubview:self.coverImageView atIndex:1];
+    self.coverImageView.frame = player.playerManager.view.bounds;
     self.coverImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.bgImgView.frame = player.currentPlayerManager.view.bounds;
+    self.bgImgView.frame = player.playerManager.view.bounds;
     self.bgImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.coverImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }

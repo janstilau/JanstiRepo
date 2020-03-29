@@ -93,8 +93,8 @@
 
 - (void)setPlayer:(ZFPlayerController *)player {
     _player = player;
-    player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFill;
-    [player.currentPlayerManager.view insertSubview:self.bgImgView atIndex:0];
+    player.playerManager.scalingMode = ZFPlayerScalingModeAspectFill;
+    [player.playerManager.view insertSubview:self.bgImgView atIndex:0];
 }
 
 - (UIImageView *)bgImgView {

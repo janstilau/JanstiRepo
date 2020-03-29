@@ -52,7 +52,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     /// 播放完成
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
         @strongify(self)
-        [self.player.currentPlayerManager replay];
+        [self.player.playerManager replay];
         [self.player playTheNext];
         if (!self.player.isLastAssetURL) {
             NSString *title = [NSString stringWithFormat:@"视频标题%zd",self.player.currentPlayIndex];

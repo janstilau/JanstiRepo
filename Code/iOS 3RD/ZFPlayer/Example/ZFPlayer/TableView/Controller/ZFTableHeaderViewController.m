@@ -149,7 +149,7 @@ static NSString *kIdentifier = @"kIdentifier";
 - (void)playTheIndex:(NSInteger)index {
     /// 在这里判断能否播放。。。
     ZFTableData *data = self.dataSource[index];
-    self.player.currentPlayerManager.assetURL = [NSURL URLWithString:data.video_url];
+    self.player.playerManager.assetURL = [NSURL URLWithString:data.video_url];
     [self.controlView showTitle:data.title coverURLString:data.thumbnail_url fullScreenMode:ZFFullScreenModeLandscape];
     
     if (self.tableView.contentOffset.y > self.headerView.frame.size.height) {

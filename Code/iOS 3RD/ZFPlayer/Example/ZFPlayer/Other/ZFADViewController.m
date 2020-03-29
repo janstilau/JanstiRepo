@@ -52,7 +52,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     /// 播放完成
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
         @strongify(self)
-        [self.player.currentPlayerManager replay];
+        [self.player.playerManager replay];
         [self.player playTheNext];
         if (!self.player.isLastAssetURL) {
             NSString *title = [NSString stringWithFormat:@"视频标题%zd",self.player.currentPlayIndex];
@@ -78,8 +78,8 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     self.adPlayer.playerDidToEnd = ^(id  _Nonnull asset) {
         @strongify(self)
         [self.adPlayer stopCurrentPlayingView];
-        self.player.currentPlayerManager.shouldAutoPlay = YES;
-        [self.player.currentPlayerManager play];
+        self.player.playerManager.shouldAutoPlay = YES;
+        [self.player.playerManager play];
     };
 }
 
@@ -147,8 +147,8 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
         _adControlView.skipCallback = ^{
             @strongify(self)
             [self.adPlayer stopCurrentPlayingView];
-            self.player.currentPlayerManager.shouldAutoPlay = YES;
-            [self.player.currentPlayerManager play];
+            self.player.playerManager.shouldAutoPlay = YES;
+            [self.player.playerManager play];
             self.player.viewControllerDisappear = NO;
         };
         

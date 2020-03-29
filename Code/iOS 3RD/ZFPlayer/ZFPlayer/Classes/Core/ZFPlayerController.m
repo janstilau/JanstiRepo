@@ -40,7 +40,9 @@
     return self;
 }
 
-// 这里, MPVolumeView 是和系统的音量控制挂钩的, 当音量变化的时候, 这个view的滑块变化, 当滑块变化的时候, 音量变化. 猜测是 MPVolumeSlider 这个类的内部, 直接和系统音量控制进行了挂钩. 所以, ZFPlayer 直接获取了该类, 并且用该类进行音量控制的处理.
+// 这里, MPVolumeView 这个类是直接和系统音量控制挂钩的.
+// 当音量变化的时候, 这个view的滑块变化, 当滑块变化的时候, 音量变化.
+// ZFPlayer 中, 直接获取到该类. 用作 Player 控制系统的音量的入口.
 - (void)configureVolume {
     MPVolumeView *volumeView = [[MPVolumeView alloc] init];
     self.volumeViewSlider = nil;
@@ -53,7 +55,7 @@
 }
 
 - (void)dealloc {
-    [self.currentPlayerManager stop];
+    [self.playerManager stop];
 }
 
 + (instancetype)playerWithPlayerManager:(id<ZFPlayerMediaPlayback>)playerManager containerView:(nonnull UIView *)containerView {
@@ -74,7 +76,7 @@
 - (instancetype)initWithPlayerManager:(id<ZFPlayerMediaPlayback>)playerManager containerView:(nonnull UIView *)containerView {
     ZFPlayerController *player = [self init];
     player.containerView = containerView;
-    player.currentPlayerManager = playerManager;
+    player.playerManager = playerManager;
     player.containerType = ZFPlayerContainerTypeView;
     return player;
 }
@@ -84,7 +86,7 @@
     ZFPlayerController *player = [self init];
     player.scrollView = scrollView;
     player.containerViewTag = containerViewTag;
-    player.currentPlayerManager = playerManager;
+    player.playerManager = playerManager;
     player.containerType = ZFPlayerContainerTypeCell;
     return player;
 }
@@ -95,7 +97,7 @@
     ZFPlayerController *player = [self init];
     player.scrollView = scrollView;
     player.containerView = containerView;
-    player.currentPlayerManager = playerManager;
+    player.playerManager = playerManager;
     player.containerType = ZFPlayerContainerTypeView;
     return player;
 }
@@ -106,9 +108,9 @@
     // 然后, ControlView 那里, 可以直接调用 PlayerController 的播放控制的方法. 而这些方法, 又转移到了 PlayerManager 中.
     
     @weakify(self)
-    self.currentPlayerManager.playerPrepareToPlay = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSURL * _Nonnull assetURL) {
+    self.playerManager.playerPrepareToPlay = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSURL * _Nonnull assetURL) {
         @strongify(self)
-        self.currentPlayerManager.view.hidden = NO;
+        self.playerManager.view.hidden = NO;
         [self.notification addNotification];
         [self addDeviceOrientationObserver];
         if (self.scrollView) {
@@ -121,7 +123,7 @@
         }
     };
     
-    self.currentPlayerManager.playerReadyToPlay = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSURL * _Nonnull assetURL) {
+    self.playerManager.playerReadyToPlay = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSURL * _Nonnull assetURL) {
         @strongify(self)
         if (self.playerReadyToPlay) self.playerReadyToPlay(asset,assetURL);
         if (!self.customAudioSession) {
@@ -132,7 +134,7 @@
         if (self.viewControllerDisappear) self.pauseByEvent = YES;
     };
     
-    self.currentPlayerManager.playerPlayTimeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval currentTime, NSTimeInterval duration) {
+    self.playerManager.playerPlayTimeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval currentTime, NSTimeInterval duration) {
         @strongify(self)
         if (self.playerPlayTimeChanged) self.playerPlayTimeChanged(asset,currentTime,duration);
         if ([self.controlView respondsToSelector:@selector(videoPlayer:currentTime:totalTime:)]) {
@@ -140,7 +142,7 @@
         }
     };
     
-    self.currentPlayerManager.playerBufferTimeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval bufferTime) {
+    self.playerManager.playerBufferTimeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval bufferTime) {
         @strongify(self)
         if ([self.controlView respondsToSelector:@selector(videoPlayer:bufferTime:)]) {
             [self.controlView videoPlayer:self bufferTime:bufferTime];
@@ -148,7 +150,7 @@
         if (self.playerBufferTimeChanged) self.playerBufferTimeChanged(asset,bufferTime);
     };
     
-    self.currentPlayerManager.playerPlayStateChanged = ^(id  _Nonnull asset, ZFPlayerPlaybackState playState) {
+    self.playerManager.playerPlayStateChanged = ^(id  _Nonnull asset, ZFPlayerPlaybackState playState) {
         @strongify(self)
         if (self.playerPlayStateChanged) self.playerPlayStateChanged(asset, playState);
         if ([self.controlView respondsToSelector:@selector(videoPlayer:playStateChanged:)]) {
@@ -156,7 +158,7 @@
         }
     };
     
-    self.currentPlayerManager.playerLoadStateChanged = ^(id  _Nonnull asset, ZFPlayerLoadState loadState) {
+    self.playerManager.playerLoadStateChanged = ^(id  _Nonnull asset, ZFPlayerLoadState loadState) {
         @strongify(self)
         if (self.playerLoadStateChanged) self.playerLoadStateChanged(asset, loadState);
         if ([self.controlView respondsToSelector:@selector(videoPlayer:loadStateChanged:)]) {
@@ -164,7 +166,7 @@
         }
     };
     
-    self.currentPlayerManager.playerDidToEnd = ^(id  _Nonnull asset) {
+    self.playerManager.playerDidToEnd = ^(id  _Nonnull asset) {
         @strongify(self)
         if (self.playerDidToEnd) self.playerDidToEnd(asset);
         if ([self.controlView respondsToSelector:@selector(videoPlayerPlayEnd:)]) {
@@ -172,7 +174,7 @@
         }
     };
     
-    self.currentPlayerManager.playerPlayFailed = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, id  _Nonnull error) {
+    self.playerManager.playerPlayFailed = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, id  _Nonnull error) {
         @strongify(self)
         if (self.playerPlayFailed) self.playerPlayFailed(asset, error);
         if ([self.controlView respondsToSelector:@selector(videoPlayerPlayFailed:error:)]) {
@@ -181,7 +183,7 @@
     };
     
     //
-    self.currentPlayerManager.presentationSizeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, CGSize size){
+    self.playerManager.presentationSizeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, CGSize size){
         @strongify(self)
         if (self.orientationObserver.fullScreenMode == ZFFullScreenModeAutomatic) {
             if (size.width > size.height) {
@@ -197,22 +199,25 @@
     };
 }
 
+
+// 在这里, 进行了 View 的装填的工作.
 - (void)layoutPlayerSubViews {
-    if (self.containerView && self.currentPlayerManager.view) {
+    if (self.containerView && self.playerManager.view) {
         UIView *superview = nil;
-        if (self.isFullScreen) {
+        if (self.isFullScreen) { // 如果是全屏, 就是播放视图, 装到 KeyWindow 里面.
             superview = self.orientationObserver.keyWindow;
-        } else if (self.containerView) {
+        } else if (self.containerView) { // 否则, 就传到传进来的 ContainerView 里面.
             superview = self.containerView;
         }
-        [superview addSubview:self.currentPlayerManager.view];
-        [self.currentPlayerManager.view addSubview:self.controlView]; // 这里, 进行了 ControlView 的添加工作.
+        [superview addSubview:self.playerManager.view];
+        [self.playerManager.view addSubview:self.controlView]; // 这里, 进行了 ControlView 的添加工作.
         
-        self.currentPlayerManager.view.frame = superview.bounds;
-        self.currentPlayerManager.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        self.controlView.frame = self.currentPlayerManager.view.bounds;
+        // 这里, 做了 playerView 和 controlView 的适配工作.
+        self.playerManager.view.frame = superview.bounds;
+        self.playerManager.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.controlView.frame = self.playerManager.view.bounds;
         self.controlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self.orientationObserver updateRotateView:self.currentPlayerManager.view containerView:self.containerView];
+        [self.orientationObserver updateRotateView:self.playerManager.view containerView:self.containerView];
     }
 }
 
@@ -225,7 +230,7 @@
         _notification.willResignActive = ^(ZFPlayerNotification * registrar) {
             @strongify(self)
             if (self.isViewControllerDisappear) return; // 如果, 不在屏幕上显示, 不做处理.
-            if (self.pauseWhenAppResignActive && self.currentPlayerManager.isPlaying) {
+            if (self.pauseWhenAppResignActive && self.playerManager.isPlaying) {
                 self.pauseByEvent = YES;
             }
             self.orientationObserver.lockedScreen = YES;
@@ -243,8 +248,8 @@
         };
         _notification.oldDeviceUnavailable = ^(ZFPlayerNotification * _Nonnull registrar) {
             @strongify(self)
-            if (self.currentPlayerManager.isPlaying) {
-                [self.currentPlayerManager play];
+            if (self.playerManager.isPlaying) {
+                [self.playerManager play];
             }
         };
     }
@@ -262,16 +267,16 @@
 
 #pragma mark - setter
 
-- (void)setCurrentPlayerManager:(id<ZFPlayerMediaPlayback>)currentPlayerManager {
+- (void)setPlayerManager:(id<ZFPlayerMediaPlayback>)currentPlayerManager {
     if (!currentPlayerManager) return;
-    if (_currentPlayerManager.isPreparedToPlay) {
-        [_currentPlayerManager stop];
-        [_currentPlayerManager.view removeFromSuperview];
+    if (_playerManager.isPreparedToPlay) {
+        [_playerManager stop];
+        [_playerManager.view removeFromSuperview];
         [self.orientationObserver removeDeviceOrientationObserver];
-        [self.gestureControl removeGestureToView:self.currentPlayerManager.view];
+        [self.gestureControl removeGestureToView:self.playerManager.view];
     }
-    _currentPlayerManager = currentPlayerManager;
-    _currentPlayerManager.view.hidden = YES;
+    _playerManager = currentPlayerManager;
+    _playerManager.view.hidden = YES;
     self.gestureControl.disableTypes = self.disableGestureTypes;
     [self.gestureControl addGestureToView:currentPlayerManager.view];
     [self playerManagerCallbcak];
@@ -309,15 +314,15 @@
 @implementation ZFPlayerController (ZFPlayerTimeControl)
 
 - (NSTimeInterval)currentTime {
-    return self.currentPlayerManager.currentTime;
+    return self.playerManager.currentTime;
 }
 
 - (NSTimeInterval)totalTime {
-    return self.currentPlayerManager.totalTime;
+    return self.playerManager.totalTime;
 }
 
 - (NSTimeInterval)bufferTime {
-    return self.currentPlayerManager.bufferTime;
+    return self.playerManager.bufferTime;
 }
 
 - (float)progress {
@@ -331,7 +336,7 @@
 }
 
 - (void)seekToTime:(NSTimeInterval)time completionHandler:(void (^)(BOOL))completionHandler {
-    [self.currentPlayerManager seekToTime:time completionHandler:completionHandler];
+    [self.playerManager seekToTime:time completionHandler:completionHandler];
 }
 
 @end
@@ -373,15 +378,15 @@
     if (self.isFullScreen && self.exitFullScreenWhenStop) {
         [self.orientationObserver exitFullScreenWithAnimated:NO];
     }
-    [self.currentPlayerManager stop];
-    [self.currentPlayerManager.view removeFromSuperview];
+    [self.playerManager stop];
+    [self.playerManager.view removeFromSuperview];
     if (self.scrollView) {
         self.scrollView.zf_stopPlay = YES;
     }
 }
 
 - (void)replaceCurrentPlayerManager:(id<ZFPlayerMediaPlayback>)playerManager {
-    self.currentPlayerManager = playerManager;
+    self.playerManager = playerManager;
 }
 
 //// Add video to the cell
@@ -390,10 +395,10 @@
     self.smallFloatView.hidden = YES;
     UIView *cell = [self.scrollView zf_getCellForIndexPath:self.playingIndexPath];
     self.containerView = [cell viewWithTag:self.containerViewTag];
-    [self.containerView addSubview:self.currentPlayerManager.view];
-    self.currentPlayerManager.view.frame = self.containerView.bounds;
-    self.currentPlayerManager.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.orientationObserver cellModelRotateView:self.currentPlayerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
+    [self.containerView addSubview:self.playerManager.view];
+    self.playerManager.view.frame = self.containerView.bounds;
+    self.playerManager.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.orientationObserver cellModelRotateView:self.playerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
     if ([self.controlView respondsToSelector:@selector(videoPlayer:floatViewShow:)]) {
         [self.controlView videoPlayer:self floatViewShow:NO];
     }
@@ -404,10 +409,10 @@
     self.isSmallFloatViewShow = NO;
     self.smallFloatView.hidden = YES;
     self.containerView = containerView;
-    [self.containerView addSubview:self.currentPlayerManager.view];
-    self.currentPlayerManager.view.frame = self.containerView.bounds;
-    self.currentPlayerManager.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.orientationObserver cellOtherModelRotateView:self.currentPlayerManager.view containerView:self.containerView];
+    [self.containerView addSubview:self.playerManager.view];
+    self.playerManager.view.frame = self.containerView.bounds;
+    self.playerManager.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.orientationObserver cellOtherModelRotateView:self.playerManager.view containerView:self.containerView];
     if ([self.controlView respondsToSelector:@selector(videoPlayer:floatViewShow:)]) {
         [self.controlView videoPlayer:self floatViewShow:NO];
     }
@@ -417,10 +422,10 @@
 - (void)addPlayerViewToKeyWindow {
     self.isSmallFloatViewShow = YES;
     self.smallFloatView.hidden = NO;
-    [self.smallFloatView addSubview:self.currentPlayerManager.view];
-    self.currentPlayerManager.view.frame = self.smallFloatView.bounds;
-    self.currentPlayerManager.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.orientationObserver cellOtherModelRotateView:self.currentPlayerManager.view containerView:self.smallFloatView];
+    [self.smallFloatView addSubview:self.playerManager.view];
+    self.playerManager.view.frame = self.smallFloatView.bounds;
+    self.playerManager.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.orientationObserver cellOtherModelRotateView:self.playerManager.view containerView:self.smallFloatView];
     if ([self.controlView respondsToSelector:@selector(videoPlayer:floatViewShow:)]) {
         [self.controlView videoPlayer:self floatViewShow:YES];
     }
@@ -492,11 +497,11 @@
 }
 
 - (ZFPlayerPlaybackState)playState {
-    return self.currentPlayerManager.playState;
+    return self.playerManager.playState;
 }
 
 - (BOOL)isPlaying {
-    return self.currentPlayerManager.isPlaying;
+    return self.playerManager.isPlaying;
 }
 
 - (BOOL)pauseWhenAppResignActive {
@@ -558,7 +563,7 @@
 
 - (void)setCurrentAssetURL:(NSURL *)assetURL {
     objc_setAssociatedObject(self, @selector(currentAssetURL), assetURL, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    self.currentPlayerManager.assetURL = assetURL;
+    self.playerManager.assetURL = assetURL;
 }
 
 - (void)setAssetURLs:(NSArray<NSURL *> * _Nullable)assetURLs {
@@ -596,9 +601,9 @@
 - (void)setPauseByEvent:(BOOL)pauseByEvent {
     objc_setAssociatedObject(self, @selector(isPauseByEvent), @(pauseByEvent), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (pauseByEvent) {
-        [self.currentPlayerManager pause];
+        [self.playerManager pause];
     } else {
-        [self.currentPlayerManager play];
+        [self.playerManager play];
     }
 }
 
@@ -649,10 +654,10 @@
 - (void)setViewControllerDisappear:(BOOL)viewControllerDisappear {
     objc_setAssociatedObject(self, @selector(isViewControllerDisappear), @(viewControllerDisappear), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (self.scrollView) self.scrollView.zf_viewControllerDisappear = viewControllerDisappear; // ScrollView 有着相关的逻辑, 也依靠是否显示的值.
-    if (!self.currentPlayerManager.isPreparedToPlay) return; // 如果现在视频不是在已经准备完善的状态, 不做处理.
+    if (!self.playerManager.isPreparedToPlay) return; // 如果现在视频不是在已经准备完善的状态, 不做处理.
     if (viewControllerDisappear) {
         [self removeDeviceOrientationObserver];
-        if (self.currentPlayerManager.isPlaying) self.pauseByEvent = YES;
+        if (self.playerManager.isPlaying) self.pauseByEvent = YES;
     } else {
         if (self.isPauseByEvent) self.pauseByEvent = NO;
         [self addDeviceOrientationObserver];
@@ -1043,7 +1048,7 @@
         
         UIView *cell = [self.scrollView zf_getCellForIndexPath:playingIndexPath];
         self.containerView = [cell viewWithTag:self.containerViewTag];
-        [self.orientationObserver cellModelRotateView:self.currentPlayerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
+        [self.orientationObserver cellModelRotateView:self.playerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
         [self addDeviceOrientationObserver];
         self.scrollView.zf_playingIndexPath = playingIndexPath;
         [self layoutPlayerSubViews];

@@ -62,15 +62,15 @@ static NSString *kIdentifier = @"kIdentifier";
     @weakify(self)
     self.player.playerDidToEnd = ^(id  _Nonnull asset) {
         @strongify(self)
-        [self.player.currentPlayerManager replay];
+        [self.player.playerManager replay];
     };
     
     self.player.presentationSizeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, CGSize size) {
         @strongify(self)
         if (size.width >= size.height) {
-            self.player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFit;
+            self.player.playerManager.scalingMode = ZFPlayerScalingModeAspectFit;
         } else {
-            self.player.currentPlayerManager.scalingMode = ZFPlayerScalingModeAspectFill;
+            self.player.playerManager.scalingMode = ZFPlayerScalingModeAspectFill;
         }
     };
     

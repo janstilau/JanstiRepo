@@ -186,7 +186,7 @@
 // 直接调用的 player 的方法.
 - (void)playOrPause {
     self.playOrPauseBtn.selected = !self.playOrPauseBtn.isSelected;
-    self.playOrPauseBtn.isSelected? [self.player.currentPlayerManager play]: [self.player.currentPlayerManager pause];
+    self.playOrPauseBtn.isSelected? [self.player.playerManager play]: [self.player.playerManager pause];
 }
 
 - (void)playBtnSelectedState:(BOOL)selected {
@@ -217,7 +217,7 @@
                 self.slider.isdragging = NO;
                 if (self.sliderValueChanged) self.sliderValueChanged(value);
                 if (self.seekToPlay) {
-                    [self.player.currentPlayerManager play];
+                    [self.player.playerManager play];
                 }
             }
         }];

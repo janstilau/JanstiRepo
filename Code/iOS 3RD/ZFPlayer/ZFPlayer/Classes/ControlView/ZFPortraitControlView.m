@@ -144,7 +144,7 @@
 /// 根据当前播放状态取反
 - (void)playOrPause {
     self.playOrPauseBtn.selected = !self.playOrPauseBtn.isSelected;
-    self.playOrPauseBtn.isSelected? [self.player.currentPlayerManager play]: [self.player.currentPlayerManager pause];
+    self.playOrPauseBtn.isSelected? [self.player.playerManager play]: [self.player.playerManager pause];
 }
 
 - (void)playBtnSelectedState:(BOOL)selected {
@@ -170,7 +170,7 @@
             }
         }];
         if (self.seekToPlay) {
-            [self.player.currentPlayerManager play];
+            [self.player.playerManager play];
         }
     } else {
         self.slider.isdragging = NO;
