@@ -166,11 +166,11 @@
     [self setNeedsLayout];
 }
 
-// 在这里, 直接调用了 player 的退出全屏视图的方法.
 - (void)backBtnClickAction:(UIButton *)sender {
     self.lockBtn.selected = NO;
     self.player.lockedScreen = NO;
     self.lockBtn.selected = NO;
+    // 直接控制 playerController.
     if (self.player.orientationObserver.supportInterfaceOrientation & ZFInterfaceOrientationMaskPortrait) {
         [self.player enterFullScreen:NO animated:YES];
     }
@@ -183,19 +183,24 @@
     [self playOrPause];
 }
 
-// 直接调用的 player 的方法.
 - (void)playOrPause {
+    // 直接控制 playerController.
     self.playOrPauseBtn.selected = !self.playOrPauseBtn.isSelected;
-    self.playOrPauseBtn.isSelected? [self.player.playerManager play]: [self.player.playerManager pause];
-}
-
-- (void)playBtnSelectedState:(BOOL)selected {
-    self.playOrPauseBtn.selected = selected;
+    if (self.playOrPauseBtn.selected) {
+        [self.player.playerManager play];
+    } else {
+        [self.player.playerManager pause];
+    }
 }
 
 - (void)lockButtonClickAction:(UIButton *)sender {
     sender.selected = !sender.selected;
-    self.player.lockedScreen = sender.selected; // 当 Lock 之后, 其实就不监听屏幕的旋转了
+    // 直接控制 playerController.
+    self.player.lockedScreen = sender.selected;
+}
+
+- (void)playBtnSelectedState:(BOOL)selected {
+    self.playOrPauseBtn.selected = selected;
 }
 
 #pragma mark - ZFSliderViewDelegate
@@ -204,13 +209,13 @@
     self.slider.isdragging = YES;
 }
 
-// 直接对于 player 进行了控制.
+// 只有, 在 End 的时候, 才会调用 palyer 的方法.
 - (void)sliderTouchEnded:(float)value {
     if (self.player.totalTime > 0) {
         self.slider.isdragging = YES;
         if (self.sliderValueChanging) self.sliderValueChanging(value, self.slider.isForward);
         @weakify(self)
-        // 直接调用 player 的方法, 来达到播放控制的效果.
+        // 直接控制 playerController.
         [self.player seekToTime:self.player.totalTime*value completionHandler:^(BOOL finished) {
             @strongify(self)
             if (finished) {
