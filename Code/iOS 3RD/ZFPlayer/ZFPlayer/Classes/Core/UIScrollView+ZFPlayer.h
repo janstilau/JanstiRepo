@@ -85,6 +85,8 @@ typedef NS_ENUM(NSInteger, ZFPlayerContainerType) {
 
 @interface UIScrollView (ZFPlayerCannotCalled)
 
+
+// 各种时机的回调, 都传递出去了, 由外界来做各个事件的自定义工作.
 /// The block invoked When the player appearing.
 @property (nonatomic, copy, nullable) void(^zf_playerAppearingInScrollView)(NSIndexPath *indexPath, CGFloat playerApperaPercent);
 
@@ -110,6 +112,8 @@ typedef NS_ENUM(NSInteger, ZFPlayerContainerType) {
 @property (nonatomic, copy, nullable) void(^zf_scrollViewDidScrollCallback)(NSIndexPath *indexPath);
 
 /// The block invoked When the player should play.
+// 当, 赋值 shouldPlayIndex 的时候, 会调用这个方法.
+// 作者的命名和调用设计有问题.
 @property (nonatomic, copy, nullable) void(^zf_playerShouldPlayInScrollView)(NSIndexPath *indexPath);
 
 /// The current player scroll slides off the screen percent.
@@ -159,10 +163,10 @@ typedef NS_ENUM(NSInteger, ZFPlayerContainerType) {
 
 
 /// Filter the cell that should be played when the scroll is stopped (to play when the scroll is stopped).
-- (void)zf_filterShouldPlayCellWhileScrolled:(void (^ __nullable)(NSIndexPath *indexPath))handler;
+- (void)zf_findShouldPlayIndexWhenStopped:(void (^ __nullable)(NSIndexPath *indexPath))handler;
 
 /// Filter the cell that should be played while scrolling (you can use this to filter the highlighted cell).
-- (void)zf_filterShouldPlayCellWhileScrolling:(void (^ __nullable)(NSIndexPath *indexPath))handler;
+- (void)zf_findShouldPlayIndexWhenScrolling:(void (^ __nullable)(NSIndexPath *indexPath))handler;
 
 @end
 

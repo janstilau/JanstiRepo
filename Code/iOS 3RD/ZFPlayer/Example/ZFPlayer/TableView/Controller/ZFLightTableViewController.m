@@ -73,6 +73,7 @@ static NSString *kIdentifier = @"kIdentifier";
         }
     };
     
+    // 在滑动的过程中, 会调用 playerShouldPlayInScrollView, 咋这里, 就可控制.
     self.player.zf_playerShouldPlayInScrollView = ^(NSIndexPath * _Nonnull indexPath) {
         @strongify(self)
         if (indexPath == nil) { /// 没有找到可以播放视频

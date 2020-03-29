@@ -48,13 +48,45 @@
 
 #pragma mark - private method
 
+/*
+ 当 ScrollView 完全停止的时候, 调用 zf_scrollViewDidEndScrollingCallback. 传入停止的位置应该播放的 IndexPath.
+ */
+
 - (void)_scrollViewDidStopScroll {
     @weakify(self)
-    [self zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath * _Nonnull indexPath) {
+    [self zf_findShouldPlayIndexWhenStopped:^(NSIndexPath * _Nonnull indexPath) {
         @strongify(self)
         if (self.zf_scrollViewDidEndScrollingCallback) self.zf_scrollViewDidEndScrollingCallback(indexPath);
     }];
 }
+
+- (void)zf_findShouldPlayIndexWhenStopped:(void (^ __nullable)(NSIndexPath *indexPath))handler {
+    if (!self.zf_shouldAutoPlay) return;
+    @weakify(self)
+    [self zf_findShouldPlayIndexWhenScrolling:^(NSIndexPath *indexPath) {
+        @strongify(self)
+        /// 如果当前控制器已经消失，直接return
+        if (self.zf_hiddenOnWindow) return;
+        if ([ZFReachabilityManager sharedManager].isReachableViaWWAN && !self.zf_WWANAutoPlay) {
+            /// 移动网络
+            self.zf_shouldPlayIndexPath = indexPath;
+            return;
+        }
+        if (handler) handler(indexPath);
+        self.zf_playingIndexPath = indexPath;
+    }];
+}
+
+
+// 这个方法, 就是计算出当前应该播放哪个 indexPath
+- (void)zf_findShouldPlayIndexWhenScrolling:(void (^ __nullable)(NSIndexPath *indexPath))handler {
+    if (self.zf_scrollViewDirection == ZFPlayerScrollViewDirectionVertical) {
+        [self _findCorrectCellWhenScrollViewDirectionVertical:handler];
+    } else {
+        [self _findCorrectCellWhenScrollViewDirectionHorizontal:handler];
+    }
+}
+
 
 - (void)_scrollViewBeginDragging {
     if (self.zf_scrollViewDirection == ZFPlayerScrollViewDirectionVertical) {
@@ -64,6 +96,25 @@
     }
 }
 
+#pragma mark - ScrollDidScroll
+
+/*
+ 在 ScrollView 的滑动的过程中, 通过原来记录的 playingIndexPath 的值. 不断地计算, 在不同的时机, 调用回调
+ zf_playerAppearingInScrollView
+ zf_playerDisappearingInScrollView
+ zf_playerWillAppearInScrollView
+ zf_playerDidAppearInScrollView
+ zf_playerWillDisappearInScrollView
+ zf_playerDidDisappearInScrollView
+ */
+
+- (void)zf_scrollViewDidScroll {
+    if (self.zf_scrollViewDirection == ZFPlayerScrollViewDirectionVertical) {
+        [self _scrollViewScrollingDirectionVertical];
+    } else {
+        [self _scrollViewScrollingDirectionHorizontal];
+    }
+}
 /**
  The percentage of scrolling processed in vertical scrolling.
  */
@@ -572,7 +623,6 @@
     [self zf_scrollToRowAtIndexPath:indexPath animateWithDuration:animated ? 0.4 : 0.0 completionHandler:completionHandler];
 }
 
-/// Scroll to indexPath with animations duration.
 - (void)zf_scrollToRowAtIndexPath:(NSIndexPath *)indexPath animateWithDuration:(NSTimeInterval)duration completionHandler:(void (^ __nullable)(void))completionHandler {
     BOOL animated = duration > 0.0;
     if ([self _isTableView]) {
@@ -605,14 +655,6 @@
 
 - (void)zf_scrollViewDidScrollToTop {
     [self _scrollViewDidStopScroll];
-}
-
-- (void)zf_scrollViewDidScroll {
-    if (self.zf_scrollViewDirection == ZFPlayerScrollViewDirectionVertical) {
-        [self _scrollViewScrollingDirectionVertical];
-    } else {
-        [self _scrollViewScrollingDirectionHorizontal];
-    }
 }
 
 - (void)zf_scrollViewWillBeginDragging {
@@ -658,36 +700,6 @@
 @end
 
 @implementation UIScrollView (ZFPlayerCannotCalled)
-
-- (void)zf_filterShouldPlayCellWhileScrolling:(void (^ __nullable)(NSIndexPath *indexPath))handler {
-    if (self.zf_scrollViewDirection == ZFPlayerScrollViewDirectionVertical) {
-        [self _findCorrectCellWhenScrollViewDirectionVertical:handler];
-    } else {
-        [self _findCorrectCellWhenScrollViewDirectionHorizontal:handler];
-    }
-}
-
-- (void)zf_filterShouldPlayCellWhileScrolled:(void (^ __nullable)(NSIndexPath *indexPath))handler {
-    if (!self.zf_shouldAutoPlay) return;
-    @weakify(self)
-    [self zf_filterShouldPlayCellWhileScrolling:^(NSIndexPath *indexPath) {
-        @strongify(self)
-        /// 如果当前控制器已经消失，直接return
-        if (self.zf_hiddenOnWindow) return;
-        if ([ZFReachabilityManager sharedManager].isReachableViaWWAN && !self.zf_WWANAutoPlay) {
-            /// 移动网络
-            self.zf_shouldPlayIndexPath = indexPath;
-            return;
-        }
-        if (handler) handler(indexPath);
-        self.zf_playingIndexPath = indexPath;
-    }];
-}
-
-
-
-
-
 
 
 

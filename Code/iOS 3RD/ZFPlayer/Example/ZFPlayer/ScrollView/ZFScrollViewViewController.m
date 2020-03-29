@@ -102,7 +102,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
 #pragma mark - action
 
 - (void)playClick:(UIButton *)sender {
-    NSString *URLString = [@"http://flv3.bn.netease.com/tvmrepo/2018/6/H/9/EDJTRBEH9/SD/EDJTRBEH9-mobile.mp4" stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    NSString *URLString = [@"http://tb-video.bdstatic.com/tieba-smallvideo-transcode/3612804_e50cb68f52adb3c4c3f6135c0edcc7b0_3.mp4" stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     self.player.playerManager.assetURL = [NSURL URLWithString:URLString];
     [self.controlView showTitle:@"UIScrollView播放" coverURLString:@"https://upload-images.jianshu.io/upload_images/635942-14593722fe3f0695.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" fullScreenMode:ZFFullScreenModeAutomatic];
 }

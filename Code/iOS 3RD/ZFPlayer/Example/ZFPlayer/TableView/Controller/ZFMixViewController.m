@@ -65,6 +65,7 @@ static NSString *kDouYinIdentifier = @"douYinIdentifier";
     };
     
     /// 停止的时候找出最合适的播放(只能找到设置了tag值cell)
+    // 当 cell 没有设置 PlayerContainer 的时候, 是不会调用这里的.
     self.player.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
         @strongify(self)
         if (!self.player.playingIndexPath) {
@@ -76,12 +77,12 @@ static NSString *kDouYinIdentifier = @"douYinIdentifier";
     /// 滑动中找到适合的就自动播放
     /// 如果是停止后再寻找播放可以忽略这个回调
     /// 如果在滑动中就要寻找到播放的indexPath，并且开始播放，那就要这样写
-    self.player.zf_playerShouldPlayInScrollView = ^(NSIndexPath * _Nonnull indexPath) {
-        @strongify(self)
-        if ([indexPath compare:self.player.playingIndexPath] != NSOrderedSame) {
-            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
-        }
-    };
+//    self.player.zf_playerShouldPlayInScrollView = ^(NSIndexPath * _Nonnull indexPath) {
+//        @strongify(self)
+//        if ([indexPath compare:self.player.playingIndexPath] != NSOrderedSame) {
+//            [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+//        }
+//    };
      
 }
 
@@ -95,7 +96,7 @@ static NSString *kDouYinIdentifier = @"douYinIdentifier";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     @weakify(self)
-    [self.tableView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
+    [self.tableView zf_findShouldPlayIndexWhenStopped:^(NSIndexPath *indexPath) {
         @strongify(self)
         [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
     }];

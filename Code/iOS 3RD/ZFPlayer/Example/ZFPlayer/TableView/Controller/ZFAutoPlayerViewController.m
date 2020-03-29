@@ -70,7 +70,7 @@ static NSString *kIdentifier = @"kIdentifier";
         self.tableView.scrollsToTop = !isFullScreen;
     };
     
-    /// 停止的时候找出最合适的播放
+    /// 所以, 这个类就是在 ScrollView 停止的时候做了一下配置.
     self.player.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
         @strongify(self)
         if (!self.player.playingIndexPath) {
@@ -103,7 +103,7 @@ static NSString *kIdentifier = @"kIdentifier";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     @weakify(self)
-    [self.tableView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
+    [self.tableView zf_findShouldPlayIndexWhenStopped:^(NSIndexPath *indexPath) {
         @strongify(self)
         [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
     }];

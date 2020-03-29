@@ -277,6 +277,8 @@ AVAudioSessionCategoryPlayAndRecord
         _smallFloatView = [[ZFFloatView alloc] init];
         _smallFloatView.parentView = [UIApplication sharedApplication].keyWindow;
         _smallFloatView.hidden = YES;
+        _smallFloatView.layer.borderColor = [[UIColor greenColor] CGColor];
+        _smallFloatView.layer.borderWidth = 0.3;
     }
     return _smallFloatView;
 }
@@ -435,6 +437,7 @@ AVAudioSessionCategoryPlayAndRecord
 }
 
 /// Add to the keyWindow
+// 在这, 将 palyerView 加到了 smallFloatView 上面.
 - (void)addPlayerViewToKeyWindow {
     self.isSmallFloatViewShow = YES;
     self.smallFloatView.hidden = NO;
@@ -957,6 +960,7 @@ AVAudioSessionCategoryPlayAndRecord
 - (void)setScrollView:(UIScrollView *)scrollView {
     objc_setAssociatedObject(self, @selector(scrollView), scrollView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.scrollView.zf_WWANAutoPlay = self.isWWANAutoPlay;
+    // 通过计算, 原来记录的 playingIndexPath 马上就要出现了. 调用更新 ControlView. 在 ControlView 里面, 会进行几个 ControlView 的切换.
     @weakify(self)
     scrollView.zf_playerWillAppearInScrollView = ^(NSIndexPath * _Nonnull indexPath) {
         @strongify(self)
@@ -1001,15 +1005,18 @@ AVAudioSessionCategoryPlayAndRecord
         if ([self.controlView respondsToSelector:@selector(playerAppearingInScrollView:playerApperaPercent:)]) {
             [self.controlView playerAppearingInScrollView:self playerApperaPercent:playerApperaPercent];
         }
-        if (!self.stopWhileNotVisible && playerApperaPercent >= self.playerApperaPercent) {
-            if (self.containerType == ZFPlayerContainerTypeView) {
-                [self addPlayerViewToContainerView:self.containerView];
-            } else if (self.containerType == ZFPlayerContainerTypeCell) {
-                [self addPlayerViewToCell];
-            }
+        if( playerApperaPercent < self.playerApperaPercent) { return; }
+        // 如果离开了自动关闭, 那么不会回来的时候, 自动播放.
+        if (self.stopWhileNotVisible) { return; }
+        // 下面自动进行播放恢复.
+        if (self.containerType == ZFPlayerContainerTypeView) {
+            [self addPlayerViewToContainerView:self.containerView];
+        } else if (self.containerType == ZFPlayerContainerTypeCell) {
+            [self addPlayerViewToCell];
         }
     };
     
+    // 当 ScrollView 的 palyerView 消失的时候 ,调用该回调.
     scrollView.zf_playerDisappearingInScrollView = ^(NSIndexPath * _Nonnull indexPath, CGFloat playerDisapperaPercent) {
         @strongify(self)
         if (self.isFullScreen) return;
@@ -1017,23 +1024,25 @@ AVAudioSessionCategoryPlayAndRecord
         if ([self.controlView respondsToSelector:@selector(playerDisappearingInScrollView:playerDisapperaPercent:)]) {
             [self.controlView playerDisappearingInScrollView:self playerDisapperaPercent:playerDisapperaPercent];
         }
+        if (playerDisapperaPercent < self.playerDisapperaPercent) { return; }
         /// stop playing
-        if (self.stopWhileNotVisible && playerDisapperaPercent >= self.playerDisapperaPercent) {
+        if (self.stopWhileNotVisible) {
             if (self.containerType == ZFPlayerContainerTypeView) {
                 [self stopCurrentPlayingView];
             } else if (self.containerType == ZFPlayerContainerTypeCell) {
                 [self stopCurrentPlayingCell];
             }
+        } else {
+            [self addPlayerViewToKeyWindow];
         }
-        /// add to window
-        if (!self.stopWhileNotVisible && playerDisapperaPercent >= self.playerDisapperaPercent) [self addPlayerViewToKeyWindow];
     };
     
+    // ShouldPlayInScrollView 是指当前滑动的位子, 应该播放的视频. 如果想要跟随着拖动切换视频, 应该在这个回调里面, 调用相应的代码.
     scrollView.zf_playerShouldPlayInScrollView = ^(NSIndexPath * _Nonnull indexPath) {
         @strongify(self)
         if (self.zf_playerShouldPlayInScrollView) self.zf_playerShouldPlayInScrollView(indexPath);
     };
-    
+    // DidEndScrollingCallback 指的是滑动结束的时候, 所拿到的 indexPath.
     scrollView.zf_scrollViewDidEndScrollingCallback = ^(NSIndexPath * _Nonnull indexPath) {
         @strongify(self)
         if (self.zf_scrollViewDidEndScrollingCallback) self.zf_scrollViewDidEndScrollingCallback(indexPath);
@@ -1216,11 +1225,11 @@ AVAudioSessionCategoryPlayAndRecord
 #pragma mark - Public method
 
 - (void)zf_filterShouldPlayCellWhileScrolled:(void (^ __nullable)(NSIndexPath *indexPath))handler {
-    [self.scrollView zf_filterShouldPlayCellWhileScrolled:handler];
+    [self.scrollView zf_findShouldPlayIndexWhenStopped:handler];
 }
 
 - (void)zf_filterShouldPlayCellWhileScrolling:(void (^ __nullable)(NSIndexPath *indexPath))handler {
-    [self.scrollView zf_filterShouldPlayCellWhileScrolling:handler];
+    [self.scrollView zf_findShouldPlayIndexWhenScrolling:handler];
 }
 
 // 在这里, 进行了播放的真正切换.

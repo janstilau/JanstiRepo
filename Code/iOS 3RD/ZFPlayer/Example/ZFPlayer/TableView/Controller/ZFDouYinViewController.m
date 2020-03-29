@@ -103,7 +103,7 @@ static NSString *kIdentifier = @"kIdentifier";
         [self requestData];
         [self.tableView reloadData];
         /// 找到可以播放的视频并播放
-        [self.tableView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
+        [self.tableView zf_findShouldPlayIndexWhenStopped:^(NSIndexPath *indexPath) {
             @strongify(self)
             [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
         }];
@@ -132,7 +132,7 @@ static NSString *kIdentifier = @"kIdentifier";
     /// 指定到某一行播放
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:NO];
-    [self.tableView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
+    [self.tableView zf_findShouldPlayIndexWhenStopped:^(NSIndexPath *indexPath) {
         @strongify(self)
         [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
     }];

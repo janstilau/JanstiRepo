@@ -88,6 +88,7 @@
     CGFloat min_view_w = self.zf_width;
     CGFloat min_view_h = self.zf_height;
     
+    // 这几个 ControlView 的位置, 都是一样的. 所以, 在不同的时刻, 显示不同的 ControlView. 以此来达到切换的目的.
     self.portraitControlView.frame = self.bounds;
     self.landScapeControlView.frame = self.bounds;
     self.floatControlView.frame = self.bounds;

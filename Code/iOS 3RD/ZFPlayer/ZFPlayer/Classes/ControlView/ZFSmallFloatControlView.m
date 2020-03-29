@@ -13,6 +13,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self addSubview:self.closeBtn];
+        self.layer.borderColor = [[UIColor yellowColor] CGColor];
+        self.layer.borderWidth = 3;
     }
     return self;
 }

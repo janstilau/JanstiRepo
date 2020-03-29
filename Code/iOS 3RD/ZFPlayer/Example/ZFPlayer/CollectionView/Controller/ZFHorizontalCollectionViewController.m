@@ -88,7 +88,7 @@ static NSString * const reuseIdentifier = @"collectionViewCell";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     @weakify(self)
-    [self.collectionView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
+    [self.collectionView zf_findShouldPlayIndexWhenStopped:^(NSIndexPath *indexPath) {
         @strongify(self)
         [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
     }];

@@ -143,7 +143,7 @@ static NSString *kIdentifier = @"kIdentifier";
         [self.tableView reloadData];
         
         /// 找到可播放的cell
-        [self.tableView zf_filterShouldPlayCellWhileScrolled:^(NSIndexPath *indexPath) {
+        [self.tableView zf_findShouldPlayIndexWhenStopped:^(NSIndexPath *indexPath) {
             @strongify(self)
             [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
         }];
