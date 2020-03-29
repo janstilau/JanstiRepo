@@ -166,14 +166,4 @@ typedef NS_ENUM(NSInteger, ZFPlayerContainerType) {
 
 @end
 
-@interface UIScrollView (ZFPlayerDeprecated)
-
-/// The block invoked When the player did stop scroll.
-@property (nonatomic, copy, nullable) void(^zf_scrollViewDidStopScrollCallback)(NSIndexPath *indexPath) __attribute__((deprecated("use `ZFPlayerController.zf_scrollViewDidEndScrollingCallback` instead.")));
-
-/// The block invoked When the player should play.
-@property (nonatomic, copy, nullable) void(^zf_shouldPlayIndexPathCallback)(NSIndexPath *indexPath) __attribute__((deprecated("use `ZFPlayerController.zf_playerShouldPlayInScrollView` instead.")));
-
-@end
-
 NS_ASSUME_NONNULL_END
