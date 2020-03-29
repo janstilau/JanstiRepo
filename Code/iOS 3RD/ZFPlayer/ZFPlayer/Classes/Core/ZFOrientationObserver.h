@@ -60,10 +60,8 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 /// Lock screen orientation
 @property (nonatomic, getter=isLockedScreen) BOOL lockedScreen;
 
-/// The block invoked When player will rotate.
+// 旋转的回调. 目前来说, 是触发自定义旋转. 传递到 ControlView 上, 然后让 ControlView 重新布局.
 @property (nonatomic, copy, nullable) void(^orientationWillChange)(ZFOrientationObserver *observer, BOOL isFullScreen);
-
-/// The block invoked when player rotated.
 @property (nonatomic, copy, nullable) void(^orientationDidChanged)(ZFOrientationObserver *observer, BOOL isFullScreen);
 
 @property (nonatomic) ZFFullScreenMode fullScreenMode; // 在哪种方向上全屏
@@ -80,6 +78,7 @@ typedef NS_OPTIONS(NSUInteger, ZFInterfaceOrientationMask) {
 
 /// Whether allow the video orientation rotate.
 /// default is YES.
+// 如果不让旋转, 那么就是不监听设备的旋转了, 但是按全屏按钮, 还是会全屏的.
 @property (nonatomic) BOOL allowOrentitaionRotation;
 
 /// The support Interface Orientation,default is ZFInterfaceOrientationMaskAllButUpsideDown

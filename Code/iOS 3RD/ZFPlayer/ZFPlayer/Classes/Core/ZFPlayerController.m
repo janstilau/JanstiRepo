@@ -198,9 +198,9 @@ AVAudioSessionCategoryPlayAndRecord
         }
     };
     
-    //
     self.playerManager.presentationSizeChanged = ^(id<ZFPlayerMediaPlayback>  _Nonnull asset, CGSize size){
         @strongify(self)
+        // 如果是自动进行全屏的判断, 那么会根据视屏的宽高来设置竖屏全屏还是横屏全屏.
         if (self.orientationObserver.fullScreenMode == ZFFullScreenModeAutomatic) {
             if (size.width > size.height) {
                 self.orientationObserver.fullScreenMode = ZFFullScreenModeLandscape;
