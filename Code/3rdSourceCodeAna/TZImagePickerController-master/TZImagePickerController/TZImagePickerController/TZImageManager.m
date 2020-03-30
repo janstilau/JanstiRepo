@@ -28,16 +28,13 @@ static dispatch_once_t onceToken;
 + (instancetype)manager {
     dispatch_once(&onceToken, ^{
         manager = [[self alloc] init];
-        // manager.cachingImageManager = [[PHCachingImageManager alloc] init];
-        // manager.cachingImageManager.allowsCachingHighQualityImages = YES;
-        
         [manager configTZScreenWidth];
     });
     return manager;
 }
 
 + (void)deallocManager {
-    onceToken = 0;
+    onceToken = 0; // 从这里可以看出, dispatch_once 的一次性的校验, 是和第一个参数的值相关的.
     manager = nil;
 }
 
@@ -47,8 +44,6 @@ static dispatch_once_t onceToken;
 }
 
 - (void)setColumnNumber:(NSInteger)columnNumber {
-    [self configTZScreenWidth];
-
     _columnNumber = columnNumber;
     CGFloat margin = 4;
     CGFloat itemWH = (TZScreenWidth - 2 * margin - 4) / columnNumber - margin;
@@ -66,9 +61,6 @@ static dispatch_once_t onceToken;
 
 /// Return YES if Authorized 返回YES如果得到了授权
 - (BOOL)authorizationStatusAuthorized {
-    if (self.isPreviewNetworkImage) {
-        return YES;
-    }
     NSInteger status = [PHPhotoLibrary authorizationStatus];
     if (status == 0) {
         /**
@@ -81,17 +73,13 @@ static dispatch_once_t onceToken;
 }
 
 - (void)requestAuthorizationWithCompletion:(void (^)(void))completion {
-    void (^callCompletionBlock)(void) = ^(){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion) {
-                completion();
-            }
-        });
-    };
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-            callCompletionBlock();
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) {
+                    completion();
+                }
+            });
         }];
     });
 }
@@ -99,13 +87,13 @@ static dispatch_once_t onceToken;
 #pragma mark - Get Album
 
 /// Get Album 获得相册/相册数组
+// 获取相机胶卷的 AlbumModel
 - (void)getCameraRollAlbum:(BOOL)allowPickingVideo allowPickingImage:(BOOL)allowPickingImage needFetchAssets:(BOOL)needFetchAssets completion:(void (^)(TZAlbumModel *model))completion {
     __block TZAlbumModel *model;
     PHFetchOptions *option = [[PHFetchOptions alloc] init];
     if (!allowPickingVideo) option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeImage];
     if (!allowPickingImage) option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld",
                                                 PHAssetMediaTypeVideo];
-    // option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:self.sortAscendingByModificationDate]];
     if (!self.sortAscendingByModificationDate) {
         option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:self.sortAscendingByModificationDate]];
     }
@@ -115,6 +103,7 @@ static dispatch_once_t onceToken;
         if (![collection isKindOfClass:[PHAssetCollection class]]) continue;
         // 过滤空相册
         if (collection.estimatedAssetCount <= 0) continue;
+        
         if ([self isCameraRollAlbum:collection]) {
             PHFetchResult *fetchResult = [PHAsset fetchAssetsInAssetCollection:collection options:option];
             model = [self modelWithResult:fetchResult name:collection.localizedTitle isCameraRoll:YES needFetchAssets:needFetchAssets];
@@ -181,10 +170,12 @@ static dispatch_once_t onceToken;
     return [self getAssetsFromFetchResult:result allowPickingVideo:config.allowPickingVideo allowPickingImage:config.allowPickingImage completion:completion];
 }
 
+// 这里有点不好, 假定了 result 就是 Collection 类型的.
 - (void)getAssetsFromFetchResult:(PHFetchResult *)result allowPickingVideo:(BOOL)allowPickingVideo allowPickingImage:(BOOL)allowPickingImage completion:(void (^)(NSArray<TZAssetModel *> *))completion {
     NSMutableArray *photoArr = [NSMutableArray array];
     [result enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL * _Nonnull stop) {
         TZAssetModel *model = [self assetModelWithAsset:asset allowPickingVideo:allowPickingVideo allowPickingImage:allowPickingImage];
+        // 不过这里有过滤.
         if (model) {
             [photoArr addObject:model];
         }
@@ -207,6 +198,7 @@ static dispatch_once_t onceToken;
     if (completion) completion(model);
 }
 
+// 这里, 通过 allowPickingVideo, allowPickingImage 来进行了一次过滤. 不太好.
 - (TZAssetModel *)assetModelWithAsset:(PHAsset *)asset allowPickingVideo:(BOOL)allowPickingVideo allowPickingImage:(BOOL)allowPickingImage {
     BOOL canSelect = YES;
     if ([self.pickerDelegate respondsToSelector:@selector(isAssetCanSelect:)]) {
@@ -269,7 +261,7 @@ static dispatch_once_t onceToken;
 }
 
 /// Get photo bytes 获得一组照片的大小
-- (void)getPhotosBytesWithArray:(NSArray *)photos completion:(void (^)(NSString *totalBytes))completion {
+- (void)getPhotosBytesWithArray:(NSArray<TZAssetModel*> *)photos completion:(void (^)(NSString *totalBytes))completion {
     if (!photos || !photos.count) {
         if (completion) completion(@"0B");
         return;
