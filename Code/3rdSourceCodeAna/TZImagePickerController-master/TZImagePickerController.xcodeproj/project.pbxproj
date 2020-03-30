@@ -224,6 +224,8 @@
 		06A33AC72431F53800BAE06D /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				06A33ACC2431FD1B00BAE06D /* TZAlbumPickerController.h */,
+				06A33ACD2431FD1B00BAE06D /* TZAlbumPickerController.m */,
 				90EBF5D41C2E298000CB9BCC /* UIView+Layout.h */,
 				90EBF5D51C2E298000CB9BCC /* UIView+Layout.m */,
 				6DD050291DF659ED0057C78D /* TZProgressView.h */,
@@ -319,8 +321,6 @@
 		900EEFF51C2BBF7600EA709B /* TZImagePickerController */ = {
 			isa = PBXGroup;
 			children = (
-				06A33ACC2431FD1B00BAE06D /* TZAlbumPickerController.h */,
-				06A33ACD2431FD1B00BAE06D /* TZAlbumPickerController.m */,
 				06A33AC72431F53800BAE06D /* Done */,
 				900EEFF61C2BBF9500EA709B /* TZImagePickerController.h */,
 				900EEFF71C2BBF9500EA709B /* TZImagePickerController.m */,

@@ -124,9 +124,10 @@ static dispatch_once_t onceToken;
     }
 }
 
-- (void)getAllAlbums:(BOOL)allowPickingVideo allowPickingImage:(BOOL)allowPickingImage needFetchAssets:(BOOL)needFetchAssets completion:(void (^)(NSArray<TZAlbumModel *> *))completion{
-    NSMutableArray *albumArr = [NSMutableArray array];
+- (void)getAllAlbums:(BOOL)allowPickingVideo allowPickingImage:(BOOL)allowPickingImage needFetchAssets:(BOOL)needFetchAssets completion:(void (^)(NSArray<TZAlbumModel *> *))completionCallBack{
+    NSMutableArray *albumArr = [NSMutableArray arrayWithCapacity:20];
     PHFetchOptions *option = [[PHFetchOptions alloc] init];
+    // 非常烂的代码.
     if (!allowPickingVideo) option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeImage];
     if (!allowPickingImage) option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld",
                                                 PHAssetMediaTypeVideo];
@@ -134,13 +135,15 @@ static dispatch_once_t onceToken;
     if (!self.sortAscendingByModificationDate) {
         option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:self.sortAscendingByModificationDate]];
     }
-    // 我的照片流 1.6.10重新加入..
+    
+    // 这里, 取得各种各样的相册. 注意, 各个相册之间的资源可能是重复的. 所以, 应该用 identifier 进行存储.
     PHFetchResult *myPhotoStreamAlbum = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumMyPhotoStream options:nil];
     PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
     PHFetchResult *topLevelUserCollections = [PHCollectionList fetchTopLevelUserCollectionsWithOptions:nil];
     PHFetchResult *syncedAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumSyncedAlbum options:nil];
     PHFetchResult *sharedAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumCloudShared options:nil];
     NSArray *allAlbums = @[myPhotoStreamAlbum,smartAlbums,topLevelUserCollections,syncedAlbums,sharedAlbums];
+    
     for (PHFetchResult *fetchResult in allAlbums) {
         for (PHAssetCollection *collection in fetchResult) {
             // 有可能是PHCollectionList类的的对象，过滤掉
@@ -165,8 +168,8 @@ static dispatch_once_t onceToken;
             }
         }
     }
-    if (completion) {
-        completion(albumArr);
+    if (completionCallBack) {
+        completionCallBack(albumArr);
     }
 }
 
@@ -926,11 +929,3 @@ static dispatch_once_t onceToken;
 
 @end
 
-
-//@implementation TZSortDescriptor
-//
-//- (id)reversedSortDescriptor {
-//    return [NSNumber numberWithBool:![TZImageManager manager].sortAscendingByModificationDate];
-//}
-//
-//@end

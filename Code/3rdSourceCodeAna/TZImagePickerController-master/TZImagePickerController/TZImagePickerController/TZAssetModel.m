@@ -50,6 +50,7 @@
     }
 }
 
+// 这里, selectedCount 的值, 是动态计算出来的.
 - (void)checkSelectedModels {
     self.selectedCount = 0;
     NSMutableSet *selectedAssets = [NSMutableSet setWithCapacity:_selectedModels.count];
