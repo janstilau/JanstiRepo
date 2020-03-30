@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+// 该视图, 目前用在了 iCloud 的下载过程中.
+
 @interface TZProgressView : UIView
 
 @property (nonatomic, assign) double progress;

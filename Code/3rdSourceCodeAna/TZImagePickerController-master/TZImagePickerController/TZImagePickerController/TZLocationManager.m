@@ -9,7 +9,10 @@
 #import "TZLocationManager.h"
 #import "TZImagePickerController.h"
 
+// 这个类做的比较简单, 就是对于 CLLocationManager 的一层封装而已. 将 Block 进行存储, 然后在 CLLocationManager 的代理触发之后, 执行相应的 Block 操作.
+
 @interface TZLocationManager ()<CLLocationManagerDelegate>
+
 @property (nonatomic, strong) CLLocationManager *locationManager;
 /// 定位成功的回调block
 @property (nonatomic, copy) void (^successBlock)(NSArray<CLLocation *> *);
@@ -21,6 +24,7 @@
 
 @implementation TZLocationManager
 
+// 这里设计的不好, 命名应该写到 init 方法的内部.
 + (instancetype)manager {
     static TZLocationManager *manager;
     static dispatch_once_t onceToken;
@@ -45,6 +49,7 @@
     [self startLocationWithSuccessBlock:nil failureBlock:nil geocoderBlock:geocoderBlock];
 }
 
+// 所有的方法的统一处理.
 - (void)startLocationWithSuccessBlock:(void (^)(NSArray<CLLocation *> *))successBlock failureBlock:(void (^)(NSError *error))failureBlock geocoderBlock:(void (^)(NSArray *geocoderArray))geocoderBlock {
     [self.locationManager startUpdatingLocation];
     _successBlock = successBlock;

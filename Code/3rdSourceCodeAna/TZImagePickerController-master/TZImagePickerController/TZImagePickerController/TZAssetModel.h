@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+
+// 其实, 这个枚举里面的值, 要比 PHAsset 所带的值要更加业务相关.
 typedef enum : NSUInteger {
     TZAssetModelMediaTypePhoto = 0,
     TZAssetModelMediaTypeLivePhoto,
@@ -18,11 +20,12 @@ typedef enum : NSUInteger {
 } TZAssetModelMediaType;
 
 @class PHAsset;
+
 @interface TZAssetModel : NSObject
 
+@property (nonatomic, assign) TZAssetModelMediaType type;
 @property (nonatomic, strong) PHAsset *asset;
 @property (nonatomic, assign) BOOL isSelected;      ///< The select status of a photo, default is No
-@property (nonatomic, assign) TZAssetModelMediaType type;
 @property (nonatomic, copy) NSString *timeLength;
 
 /// Init a photo dataModel With a PHAsset

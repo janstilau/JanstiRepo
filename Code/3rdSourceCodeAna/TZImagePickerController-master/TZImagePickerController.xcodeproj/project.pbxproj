@@ -217,6 +217,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06A33AC72431F53800BAE06D /* Done */ = {
+			isa = PBXGroup;
+			children = (
+				90EBF5D41C2E298000CB9BCC /* UIView+Layout.h */,
+				90EBF5D51C2E298000CB9BCC /* UIView+Layout.m */,
+				6DD050291DF659ED0057C78D /* TZProgressView.h */,
+				6DD0502A1DF659ED0057C78D /* TZProgressView.m */,
+			);
+			path = Done;
+			sourceTree = "<group>";
+		};
 		6DC358641CC8BAE300898D29 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -304,6 +315,7 @@
 		900EEFF51C2BBF7600EA709B /* TZImagePickerController */ = {
 			isa = PBXGroup;
 			children = (
+				06A33AC72431F53800BAE06D /* Done */,
 				900EEFF61C2BBF9500EA709B /* TZImagePickerController.h */,
 				900EEFF71C2BBF9500EA709B /* TZImagePickerController.m */,
 				900EEFFC1C2BD58B00EA709B /* TZPhotoPickerController.h */,
@@ -320,8 +332,6 @@
 				90CE84B61C3BABB6003D0779 /* TZVideoPlayerController.m */,
 				6D46082F1DFFC60D004FB009 /* TZGifPhotoPreviewController.h */,
 				6D4608301DFFC60D004FB009 /* TZGifPhotoPreviewController.m */,
-				6DD050291DF659ED0057C78D /* TZProgressView.h */,
-				6DD0502A1DF659ED0057C78D /* TZProgressView.m */,
 				90CE84AC1C3A89EF003D0779 /* TZImageManager.h */,
 				90CE84AD1C3A89EF003D0779 /* TZImageManager.m */,
 				901CC3F821CB757500C55443 /* TZImageRequestOperation.h */,
@@ -330,8 +340,6 @@
 				6DC84D091DF5358500A107A9 /* TZImageCropManager.m */,
 				902938D61EE2D02C000F2F8F /* TZLocationManager.h */,
 				902938D71EE2D02C000F2F8F /* TZLocationManager.m */,
-				90EBF5D41C2E298000CB9BCC /* UIView+Layout.h */,
-				90EBF5D51C2E298000CB9BCC /* UIView+Layout.m */,
 				6D5358CB1D64600F00928CC6 /* NSBundle+TZImagePicker.h */,
 				6D5358CC1D64600F00928CC6 /* NSBundle+TZImagePicker.m */,
 				6DC358641CC8BAE300898D29 /* Resources */,
@@ -487,20 +495,22 @@
 				TargetAttributes = {
 					900E657B1C2BB8D5003D9A9E = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = LTFQDC2QVX;
+						DevelopmentTeam = RF2LPG6C4X;
 						ProvisioningStyle = Automatic;
 					};
 					900E65941C2BB8D5003D9A9E = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = RF2LPG6C4X;
 						TestTargetID = 900E657B1C2BB8D5003D9A9E;
 					};
 					900E659F1C2BB8D5003D9A9E = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = RF2LPG6C4X;
 						TestTargetID = 900E657B1C2BB8D5003D9A9E;
 					};
 					9F763A411FA071CF00D9E526 = {
 						CreatedOnToolsVersion = 9.0.1;
-						DevelopmentTeam = LTFQDC2QVX;
+						DevelopmentTeam = RF2LPG6C4X;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -800,7 +810,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = LTFQDC2QVX;
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/TZImagePickerController",
@@ -824,7 +834,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = LTFQDC2QVX;
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/TZImagePickerController",
@@ -845,6 +855,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
 				INFOPLIST_FILE = TZImagePickerControllerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = tanzhen.TZImagePickerControllerTests;
@@ -857,6 +868,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
 				INFOPLIST_FILE = TZImagePickerControllerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = tanzhen.TZImagePickerControllerTests;
@@ -868,6 +880,7 @@
 		900E65B01C2BB8D5003D9A9E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
 				INFOPLIST_FILE = TZImagePickerControllerUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = tanzhen.TZImagePickerControllerUITests;
@@ -880,6 +893,7 @@
 		900E65B11C2BB8D5003D9A9E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
 				INFOPLIST_FILE = TZImagePickerControllerUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = tanzhen.TZImagePickerControllerUITests;
@@ -910,7 +924,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = LTFQDC2QVX;
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -951,7 +965,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = LTFQDC2QVX;
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
