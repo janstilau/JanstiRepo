@@ -33,26 +33,6 @@
 @end
 
 
-@interface TZPhotoPreviewView : UIView
-@property (nonatomic, strong) UIImageView *imageView;
-@property (nonatomic, strong) UIScrollView *scrollView;
-@property (nonatomic, strong) UIView *imageContainerView;
-@property (nonatomic, strong) TZProgressView *progressView;
-
-@property (nonatomic, assign) BOOL allowCrop;
-@property (nonatomic, assign) CGRect cropRect;
-@property (nonatomic, assign) BOOL scaleAspectFillCrop;
-@property (nonatomic, strong) TZAssetModel *model;
-@property (nonatomic, strong) id asset;
-@property (nonatomic, copy) void (^singleTapGestureBlock)(void);
-@property (nonatomic, copy) void (^imageProgressUpdateBlock)(double progress);
-
-@property (nonatomic, assign) int32_t imageRequestID;
-
-- (void)recoverSubviews;
-@end
-
-
 @class AVPlayer, AVPlayerLayer;
 @interface TZVideoPreviewCell : TZAssetPreviewCell
 @property (strong, nonatomic) AVPlayer *player;

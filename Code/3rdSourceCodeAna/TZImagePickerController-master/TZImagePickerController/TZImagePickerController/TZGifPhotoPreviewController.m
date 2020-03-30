@@ -12,6 +12,7 @@
 #import "UIView+Layout.h"
 #import "TZPhotoPreviewCell.h"
 #import "TZImageManager.h"
+#import "TZPhotoPreviewView.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -139,6 +140,7 @@
     }
 }
 
+// 强耦合性.
 - (void)doneButtonClick {
     if (self.navigationController) {
         TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
+#import "TZPhotoPreviewView.h"
 
 typedef enum : NSUInteger {
     TZAssetCellTypePhoto = 0,

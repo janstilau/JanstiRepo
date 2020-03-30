@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+// 一个简单的对于 AVPlayer 的封装工作.
+
 @class TZAssetModel;
 @interface TZVideoPlayerController : UIViewController
 
