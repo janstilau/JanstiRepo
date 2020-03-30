@@ -28,6 +28,7 @@
 
 @class TZAlbumCell, TZAssetCell;
 @protocol TZImagePickerControllerDelegate;
+
 @interface TZImagePickerController : UINavigationController
 
 #pragma mark -
@@ -285,12 +286,6 @@
 - (BOOL)isAssetCanSelect:(PHAsset *)asset;
 @end
 
-
-@interface TZAlbumPickerController : UIViewController
-@property (nonatomic, assign) NSInteger columnNumber;
-@property (assign, nonatomic) BOOL isFirstAppear;
-- (void)configTableView;
-@end
 
 
 @interface UIImage (MyBundle)
