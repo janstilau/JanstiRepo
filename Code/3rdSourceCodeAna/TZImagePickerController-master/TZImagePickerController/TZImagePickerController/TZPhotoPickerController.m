@@ -53,6 +53,7 @@ static CGFloat itemMargin = 5;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 - (UIImagePickerController *)imagePickerVc {
     if (_imagePickerVc == nil) {
         _imagePickerVc = [[UIImagePickerController alloc] init];
@@ -452,7 +453,7 @@ static CGFloat itemMargin = 5;
     TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
     [tzImagePickerVc hideProgressHUD];
     _doneButton.enabled = YES;
-
+    
     if (tzImagePickerVc.autoDismiss) {
         [self.navigationController dismissViewControllerAnimated:YES completion:^{
             [self callDelegateMethodWithPhotos:photos assets:assets infoArr:infoArr];
@@ -561,7 +562,7 @@ static CGFloat itemMargin = 5;
                     break;
                 }
             }
-            [strongSelf refreshBottomToolBarStatus];
+            [strongSelf updateBottomToolBar];
             if (tzImagePickerVc.showSelectedIndex || tzImagePickerVc.showPhotoCannotSelectLayer) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"TZ_PHOTO_PICKER_RELOAD_NOTIFICATION" object:strongSelf.navigationController];
             }
@@ -581,7 +582,7 @@ static CGFloat itemMargin = 5;
                 if (tzImagePickerVc.showSelectedIndex || tzImagePickerVc.showPhotoCannotSelectLayer) {
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"TZ_PHOTO_PICKER_RELOAD_NOTIFICATION" object:strongSelf.navigationController];
                 }
-                [strongSelf refreshBottomToolBarStatus];
+                [strongSelf updateBottomToolBar];
                 [UIView showOscillatoryAnimationWithLayer:strongLayer type:TZOscillatoryAnimationToSmaller];
             } else {
                 NSString *title = [NSString stringWithFormat:[NSBundle tz_localizedStringForKey:@"Select a maximum of %zd photos"], tzImagePickerVc.maxImagesCount];
@@ -596,7 +597,8 @@ static CGFloat itemMargin = 5;
     // take a photo / 去拍照
     TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
     if (((tzImagePickerVc.sortAscendingByModificationDate && indexPath.item >= _models.count) || (!tzImagePickerVc.sortAscendingByModificationDate && indexPath.item == 0)) && _showTakePhotoBtn)  {
-        [self takePhoto]; return;
+        // 如果
+        [self takePhotoCellDidClicked]; return;
     }
     // preview phote or video / 预览照片或视频
     NSInteger index = indexPath.item;
@@ -639,16 +641,15 @@ static CGFloat itemMargin = 5;
 #pragma mark - Private Method
 
 /// 拍照按钮点击事件
-- (void)takePhoto {
+- (void)takePhotoCellDidClicked {
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     if ((authStatus == AVAuthorizationStatusRestricted || authStatus ==AVAuthorizationStatusDenied)) {
-        
         NSDictionary *infoDict = [TZCommonTools tz_getInfoDictionary];
         // 无权限 做一个友好的提示
         NSString *appName = [infoDict valueForKey:@"CFBundleDisplayName"];
         if (!appName) appName = [infoDict valueForKey:@"CFBundleName"];
         if (!appName) appName = [infoDict valueForKey:@"CFBundleExecutable"];
-
+        
         NSString *title = [NSBundle tz_localizedStringForKey:@"Can not use camera"];
         NSString *message = [NSString stringWithFormat:[NSBundle tz_localizedStringForKey:@"Please allow %@ to access your camera in \"Settings -> Privacy -> Camera\""],appName];
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
@@ -660,21 +661,19 @@ static CGFloat itemMargin = 5;
         [alertController addAction:settingAct];
         [self.navigationController presentViewController:alertController animated:YES completion:nil];
     } else if (authStatus == AVAuthorizationStatusNotDetermined) {
-        // fix issue 466, 防止用户首次拍照拒绝授权时相机页黑屏
         [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
-            if (granted) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self pushImagePickerController];
-                });
-            }
+            if (!granted) { return; }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self takePhoto];
+            });
         }];
     } else {
-        [self pushImagePickerController];
+        [self takePhoto];
     }
 }
 
 // 调用相机
-- (void)pushImagePickerController {
+- (void)takePhoto {
     // 提前定位
     TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
     if (tzImagePickerVc.allowCameraLocation) {
@@ -709,7 +708,7 @@ static CGFloat itemMargin = 5;
     }
 }
 
-- (void)refreshBottomToolBarStatus {
+- (void)updateBottomToolBar {
     TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
     
     _previewButton.enabled = tzImagePickerVc.selectedModels.count > 0;
@@ -743,7 +742,7 @@ static CGFloat itemMargin = 5;
             [strongSelf checkSelectedModels];
         }
         [strongSelf.collectionView reloadData];
-        [strongSelf refreshBottomToolBarStatus];
+        [strongSelf updateBottomToolBar];
     }];
     [photoPreviewVc setDoneButtonClickBlock:^(BOOL isSelectOriginalPhoto) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -805,6 +804,9 @@ static CGFloat itemMargin = 5;
 
 #pragma mark - UIImagePickerControllerDelegate
 
+/*
+ 先保存, 然后进行 UI 的修改.
+ */
 - (void)imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [picker dismissViewControllerAnimated:YES completion:nil];
     NSString *type = [info objectForKey:UIImagePickerControllerMediaType];
@@ -846,7 +848,7 @@ static CGFloat itemMargin = 5;
         [_models insertObject:assetModel atIndex:0];
     }
     
-    if (tzImagePickerVc.maxImagesCount <= 1) {
+    if (tzImagePickerVc.maxImagesCount <= 1) { // 如果仅仅是单选, 那么选中后立马执行回调了.
         if (tzImagePickerVc.allowCrop && asset.mediaType == PHAssetMediaTypeImage) {
             TZPhotoPreviewController *photoPreviewVc = [[TZPhotoPreviewController alloc] init];
             if (tzImagePickerVc.sortAscendingByModificationDate) {
@@ -869,7 +871,7 @@ static CGFloat itemMargin = 5;
         } else {
             assetModel.isSelected = YES;
             [tzImagePickerVc addSelectedModel:assetModel];
-            [self refreshBottomToolBarStatus];
+            [self updateBottomToolBar];
         }
     }
     _collectionView.hidden = YES;
@@ -885,7 +887,6 @@ static CGFloat itemMargin = 5;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    // NSLog(@"%@ dealloc",NSStringFromClass(self.class));
 }
 
 #pragma mark - Asset Caching
