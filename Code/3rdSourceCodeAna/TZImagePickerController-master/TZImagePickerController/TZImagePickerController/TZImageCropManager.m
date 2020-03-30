@@ -141,16 +141,16 @@
         NSTimeInterval duration = 0.0f;
         
         for (size_t i = 0; i < count; i+=interval) {
-            CGImageRef image = CGImageSourceCreateImageAtIndex(source, i, NULL);
-            if (!image) {
+            CGImageRef cgImage = CGImageSourceCreateImageAtIndex(source, i, NULL);
+            if (!cgImage) {
                 continue;
             }
             
             duration += [self sd_frameDurationAtIndex:i source:source] * MIN(interval, 3);
             
-            [images addObject:[UIImage imageWithCGImage:image scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp]];
+            [images addObject:[UIImage imageWithCGImage:cgImage scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp]];
             
-            CGImageRelease(image);
+            CGImageRelease(cgImage);
         }
         
         if (!duration) {

@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TZPhotoPreviewView : UIView
 
+@property (nonatomic, strong) TZAssetModel *model;
+
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *imageContainerView;
@@ -22,7 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL allowCrop;
 @property (nonatomic, assign) CGRect cropRect;
 @property (nonatomic, assign) BOOL scaleAspectFillCrop;
-@property (nonatomic, strong) TZAssetModel *model;
 @property (nonatomic, strong) id asset;
 @property (nonatomic, copy) void (^singleTapGestureBlock)(void);
 @property (nonatomic, copy) void (^imageProgressUpdateBlock)(double progress);

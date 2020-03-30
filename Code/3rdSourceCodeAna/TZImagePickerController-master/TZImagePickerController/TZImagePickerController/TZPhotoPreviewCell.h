@@ -11,19 +11,18 @@
 @class TZAssetModel;
 @interface TZAssetPreviewCell : UICollectionViewCell
 @property (nonatomic, strong) TZAssetModel *model;
-@property (nonatomic, copy) void (^singleTapGestureBlock)(void);
+@property (nonatomic, strong) void (^singleTapGestureBlock)(void);
 - (void)configSubviews;
 - (void)photoPreviewCollectionViewDidScroll;
 @end
 
 
 @class TZAssetModel,TZProgressView,TZPhotoPreviewView;
+
 @interface TZPhotoPreviewCell : TZAssetPreviewCell
 
 @property (nonatomic, copy) void (^imageProgressUpdateBlock)(double progress);
-
 @property (nonatomic, strong) TZPhotoPreviewView *previewView;
-
 @property (nonatomic, assign) BOOL allowCrop;
 @property (nonatomic, assign) CGRect cropRect;
 @property (nonatomic, assign) BOOL scaleAspectFillCrop;

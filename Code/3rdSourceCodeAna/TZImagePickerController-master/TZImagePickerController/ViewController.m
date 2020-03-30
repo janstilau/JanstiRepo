@@ -359,20 +359,21 @@
     // imagePickerVc.allowCameraLocation = NO;
     
     // 自定义gif播放方案
-    [[TZImagePickerConfig sharedInstance] setGifImagePlayBlock:^(TZPhotoPreviewView *view, UIImageView *imageView, NSData *gifData, NSDictionary *info) {
+    // 这里, 就是在原有的 ImageView 上面添加了一层.
+    [[TZImagePickerConfig sharedInstance] setGifImagePlayBlock:^(TZPhotoPreviewView *view, UIImageView *sourceImageView, NSData *gifData, NSDictionary *info) {
         FLAnimatedImage *animatedImage = [FLAnimatedImage animatedImageWithGIFData:gifData];
         FLAnimatedImageView *animatedImageView;
-        for (UIView *subview in imageView.subviews) {
+        for (UIView *subview in sourceImageView.subviews) {
             if ([subview isKindOfClass:[FLAnimatedImageView class]]) {
                 animatedImageView = (FLAnimatedImageView *)subview;
-                animatedImageView.frame = imageView.bounds;
+                animatedImageView.frame = sourceImageView.bounds;
                 animatedImageView.animatedImage = nil;
             }
         }
         if (!animatedImageView) {
-            animatedImageView = [[FLAnimatedImageView alloc] initWithFrame:imageView.bounds];
+            animatedImageView = [[FLAnimatedImageView alloc] initWithFrame:sourceImageView.bounds];
             animatedImageView.runLoopMode = NSDefaultRunLoopMode;
-            [imageView addSubview:animatedImageView];
+            [sourceImageView addSubview:animatedImageView];
         }
         animatedImageView.animatedImage = animatedImage;
     }];
