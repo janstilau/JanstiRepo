@@ -1065,6 +1065,7 @@ AVAudioSessionCategoryPlayAndRecord
 }
 
 // 这里, 仅仅是将 playerView 加到了 cell 上, 没有进行真正的播放替换工作.
+// 作者没有将一块逻辑, 统一放到一个地方. 导致相同功能的逻辑, 有多处时间, 令人费解.
 - (void)setPlayingIndexPath:(NSIndexPath *)playingIndexPath {
     objc_setAssociatedObject(self, @selector(playingIndexPath), playingIndexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     if (!playingIndexPath) {
