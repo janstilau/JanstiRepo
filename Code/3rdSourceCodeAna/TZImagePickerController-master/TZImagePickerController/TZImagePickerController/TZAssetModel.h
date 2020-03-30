@@ -44,7 +44,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) PHFetchResult *result;
 
 @property (nonatomic, strong) NSArray *models;
-@property (nonatomic, strong) NSArray *selectedModels;
+@property (nonatomic, strong) NSArray<TZAssetModel *> *selectedModels;
 @property (nonatomic, assign) NSUInteger selectedCount;
 
 @property (nonatomic, assign) BOOL isCameraRoll;

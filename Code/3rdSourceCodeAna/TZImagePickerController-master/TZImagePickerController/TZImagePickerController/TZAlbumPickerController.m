@@ -28,9 +28,29 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.isFirstAppear = YES;
+    [self initData];
+    [self setupViews];
+    [self configureNavBar];
+}
+
+- (void)initData {
+    _isFirstAppear = YES;
+}
+
+- (void)setupViews {
     self.view.backgroundColor = [UIColor whiteColor];
     
+    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView.rowHeight = 70;
+    _tableView.backgroundColor = [UIColor whiteColor];
+    _tableView.tableFooterView = [[UIView alloc] init];
+    _tableView.dataSource = self;
+    _tableView.delegate = self;
+    [_tableView registerClass:[TZAlbumCell class] forCellReuseIdentifier:@"TZAlbumCell"];
+    [self.view addSubview:self->_tableView];
+}
+
+- (void)configureNavBar {
     TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
     UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithTitle:imagePickerVc.cancelBtnTitleStr style:UIBarButtonItemStylePlain target:imagePickerVc action:@selector(cancelButtonClick)];
     [TZCommonTools configBarButtonItem:cancelItem tzImagePickerVc:imagePickerVc];
@@ -39,6 +59,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    // 所有的配置, 都要到 TZImagePickerController 中去读取.
+    // TZImagePickerController 更多的是, 一个配置类, 而不简单的是 NavigationController 类.
     TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
     [imagePickerVc hideProgressHUD];
     if (imagePickerVc.allowPickingImage) {
@@ -55,10 +77,7 @@
 }
 
 - (void)configTableView {
-    if (![[TZImageManager manager] authorizationStatusAuthorized]) {
-        return;
-    }
-
+    if (![[TZImageManager manager] authorizationStatusAuthorized]) { return; }
     if (self.isFirstAppear) {
         TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
         [imagePickerVc showProgressHUD];
@@ -79,25 +98,10 @@
                     [self configTableView];
                 }
                 
-                if (!self->_tableView) {
-                    self->_tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-                    self->_tableView.rowHeight = 70;
-                    self->_tableView.backgroundColor = [UIColor whiteColor];
-                    self->_tableView.tableFooterView = [[UIView alloc] init];
-                    self->_tableView.dataSource = self;
-                    self->_tableView.delegate = self;
-                    [self->_tableView registerClass:[TZAlbumCell class] forCellReuseIdentifier:@"TZAlbumCell"];
-                    [self.view addSubview:self->_tableView];
-                } else {
-                    [self->_tableView reloadData];
-                }
+                [self->_tableView reloadData];
             });
         }];
     });
-}
-
-- (void)dealloc {
-    // NSLog(@"%@ dealloc",NSStringFromClass(self.class));
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
