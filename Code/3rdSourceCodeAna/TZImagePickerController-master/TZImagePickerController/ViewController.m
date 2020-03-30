@@ -22,7 +22,7 @@
 #import "FLAnimatedImage.h"
 #import "TZImageUploadOperation.h"
 
-@interface ViewController ()<TZImagePickerControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UIAlertViewDelegate,UINavigationControllerDelegate> {
+@interface ViewController ()<TZImagePickerControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate> {
     NSMutableArray *_selectedPhotos;
     NSMutableArray *_selectedAssets;
     BOOL _isSelectOriginalPhoto;
@@ -201,11 +201,13 @@
             TZGifPhotoPreviewController *vc = [[TZGifPhotoPreviewController alloc] init];
             TZAssetModel *model = [TZAssetModel modelWithAsset:asset type:TZAssetModelMediaTypePhotoGif timeLength:@""];
             vc.model = model;
+            vc.modalPresentationStyle = UIModalPresentationFullScreen;
             [self presentViewController:vc animated:YES completion:nil];
         } else if (isVideo && !self.allowPickingMuitlpleVideoSwitch.isOn) { // perview video / 预览视频
             TZVideoPlayerController *vc = [[TZVideoPlayerController alloc] init];
             TZAssetModel *model = [TZAssetModel modelWithAsset:asset type:TZAssetModelMediaTypeVideo timeLength:@""];
             vc.model = model;
+            vc.modalPresentationStyle = UIModalPresentationFullScreen;
             [self presentViewController:vc animated:YES completion:nil];
         } else { // preview photos / 预览照片
             TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithSelectedAssets:_selectedAssets selectedPhotos:_selectedPhotos index:indexPath.item];
@@ -215,6 +217,7 @@
             imagePickerVc.allowPickingMultipleVideo = self.allowPickingMuitlpleVideoSwitch.isOn;
             imagePickerVc.showSelectedIndex = self.showSelectedIndexSwitch.isOn;
             imagePickerVc.isSelectOriginalPhoto = _isSelectOriginalPhoto;
+            imagePickerVc.modalPresentationStyle = UIModalPresentationFullScreen;
             [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
                 self->_selectedPhotos = [NSMutableArray arrayWithArray:photos];
                 self->_selectedAssets = [NSMutableArray arrayWithArray:assets];
@@ -257,6 +260,10 @@
         return;
     }
     TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:self.maxCountTF.text.integerValue columnNumber:self.columnNumberTF.text.integerValue delegate:self pushPhotoPickerVc:YES];
+    // imagePickerVc.barItemTextColor = [UIColor blackColor];
+    // [imagePickerVc.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor]}];
+    // imagePickerVc.navigationBar.tintColor = [UIColor blackColor];
+    // imagePickerVc.naviBgColor = [UIColor whiteColor];
     // imagePickerVc.navigationBar.translucent = NO;
     
 #pragma mark - 五类个性化设置，这些参数都可以不传，此时会走默认设置
@@ -273,7 +280,8 @@
         imagePickerController.videoQuality = UIImagePickerControllerQualityTypeHigh;
     }];
     
-    // imagePickerVc.photoWidth = 800;
+    // imagePickerVc.photoWidth = 1600;
+    // imagePickerVc.photoPreviewMaxWidth = 1600;
     
     // 2. Set the appearance
     // 2. 在这里设置imagePickerVc的外观
@@ -321,6 +329,7 @@
     NSInteger widthHeight = self.view.tz_width - 2 * left;
     NSInteger top = (self.view.tz_height - widthHeight) / 2;
     imagePickerVc.cropRect = CGRectMake(left, top, widthHeight, widthHeight);
+    imagePickerVc.scaleAspectFillCrop = YES;
     // 设置横屏下的裁剪尺寸
     // imagePickerVc.cropRectLandscape = CGRectMake((self.view.tz_height - widthHeight) / 2, left, widthHeight, widthHeight);
     /*
@@ -345,6 +354,9 @@
     
     // 设置是否显示图片序号
     imagePickerVc.showSelectedIndex = self.showSelectedIndexSwitch.isOn;
+    
+    // 设置拍照时是否需要定位，仅对选择器内部拍照有效，外部拍照的，请拷贝demo时手动把pushImagePickerController里定位方法的调用删掉
+    // imagePickerVc.allowCameraLocation = NO;
     
     // 自定义gif播放方案
     [[TZImagePickerConfig sharedInstance] setGifImagePlayBlock:^(TZPhotoPreviewView *view, UIImageView *imageView, NSData *gifData, NSDictionary *info) {
@@ -379,6 +391,7 @@
 
     }];
     
+    imagePickerVc.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:imagePickerVc animated:YES completion:nil];
 }
 
@@ -399,8 +412,12 @@
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     if (authStatus == AVAuthorizationStatusRestricted || authStatus == AVAuthorizationStatusDenied) {
         // 无相机权限 做一个友好的提示
-        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"无法使用相机" message:@"请在iPhone的""设置-隐私-相机""中允许访问相机" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"设置", nil];
-        [alert show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"无法使用相机" message:@"请在iPhone的""设置-隐私-相机""中允许访问相机" preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+        }]];
+        [self presentViewController:alertController animated:YES completion:nil];
     } else if (authStatus == AVAuthorizationStatusNotDetermined) {
         // fix issue 466, 防止用户首次拍照拒绝授权时相机页黑屏
         [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
@@ -412,8 +429,12 @@
         }];
         // 拍照之前还需要检查相册权限
     } else if ([PHPhotoLibrary authorizationStatus] == 2) { // 已被拒绝，没有相册权限，将无法保存拍的照片
-        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"无法访问相册" message:@"请在iPhone的""设置-隐私-相册""中允许访问相册" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"设置", nil];
-        [alert show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"无法访问相册" message:@"请在iPhone的""设置-隐私-相册""中允许访问相册" preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+        }]];
+        [self presentViewController:alertController animated:YES completion:nil];
     } else if ([PHPhotoLibrary authorizationStatus] == 0) { // 未请求过相册权限
         [[TZImageManager manager] requestAuthorizationWithCompletion:^{
             [self takePhoto];
@@ -463,9 +484,9 @@
     [tzImagePickerVc showProgressHUD];
     if ([type isEqualToString:@"public.image"]) {
         UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-        
+        NSDictionary *meta = [info objectForKey:UIImagePickerControllerMediaMetadata];
         // save photo and get asset / 保存图片，获取到asset
-        [[TZImageManager manager] savePhotoWithImage:image location:self.location completion:^(PHAsset *asset, NSError *error){
+        [[TZImageManager manager] savePhotoWithImage:image meta:meta location:self.location completion:^(PHAsset *asset, NSError *error){
             [tzImagePickerVc hideProgressHUD];
             if (error) {
                 NSLog(@"图片保存失败 %@",error);
@@ -516,14 +537,6 @@
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     if ([picker isKindOfClass:[UIImagePickerController class]]) {
         [picker dismissViewControllerAnimated:YES completion:nil];
-    }
-}
-
-#pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) { // 去设置界面，开启相机访问权限
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
     }
 }
 
@@ -583,7 +596,7 @@
     _selectedPhotos = [NSMutableArray arrayWithArray:@[coverImage]];
     _selectedAssets = [NSMutableArray arrayWithArray:@[asset]];
     // open this code to send video / 打开这段代码发送视频
-    [[TZImageManager manager] getVideoOutputPathWithAsset:asset presetName:AVAssetExportPreset640x480 success:^(NSString *outputPath) {
+    [[TZImageManager manager] getVideoOutputPathWithAsset:asset presetName:AVAssetExportPresetLowQuality success:^(NSString *outputPath) {
         // NSData *data = [NSData dataWithContentsOfFile:outputPath];
         NSLog(@"视频导出到本地完成,沙盒路径为:%@",outputPath);
         // Export completed, send video here, send by outputPath or NSData
