@@ -1242,6 +1242,7 @@ AVAudioSessionCategoryPlayAndRecord
         assetURL = self.assetURLs[indexPath.row];
         self.currentPlayIndex = indexPath.row;
     }
+    // 这里才是真正的播放的切换.
     self.currentAssetURL = assetURL;
 }
 
