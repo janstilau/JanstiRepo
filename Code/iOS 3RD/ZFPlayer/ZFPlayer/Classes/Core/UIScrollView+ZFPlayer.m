@@ -106,6 +106,9 @@
  zf_playerDidAppearInScrollView
  zf_playerWillDisappearInScrollView
  zf_playerDidDisappearInScrollView
+ 
+ 在该函数里面, 没有进行 shouldPlayIndex 的赋值操作. ShouldPlayIndex 的操作, 是放到了 setOffset 里面了.
+ 这样,
  */
 
 - (void)zf_scrollViewDidScroll {
@@ -115,9 +118,13 @@
         [self _scrollViewScrollingDirectionHorizontal];
     }
 }
-/**
- The percentage of scrolling processed in vertical scrolling.
+
+/*
+ _scrollViewScrollingDirectionVertical
+ _scrollViewScrollingDirectionHorizontal
+ 这两个方法的基本思路就是, 计算出 palyerView 距离 ScrollView 的顶部, 底部的距离, 然后根据这个距离的正负,  判断 PlayerView 的位置的状态, 调用不同的回调.
  */
+
 - (void)_scrollViewScrollingDirectionVertical {
     CGFloat offsetY = self.contentOffset.y;
     // 通过和上一次的比较, 记录滑动的方向.
@@ -142,12 +149,12 @@
         playerView = self.zf_containerView;
     }
     
-    CGRect rect1 = [playerView convertRect:playerView.frame toView:self];
-    CGRect rect = [self convertRect:rect1 toView:self.superview];
+    CGRect playFrameInScroll = [playerView convertRect:playerView.frame toView:self];
+    CGRect playFrameInScrollSuperView = [self convertRect:playFrameInScroll toView:self.superview];
     /// playerView top to scrollView top space.
-    CGFloat topSpacing = CGRectGetMinY(rect) - CGRectGetMinY(self.frame) - CGRectGetMinY(playerView.frame);
+    CGFloat topSpacing = CGRectGetMinY(playFrameInScrollSuperView) - CGRectGetMinY(self.frame) - CGRectGetMinY(playerView.frame);
     /// playerView bottom to scrollView bottom space.
-    CGFloat bottomSpacing = CGRectGetMaxY(self.frame) - CGRectGetMaxY(rect) + CGRectGetMinY(playerView.frame);
+    CGFloat bottomSpacing = CGRectGetMaxY(self.frame) - CGRectGetMaxY(playFrameInScrollSuperView) + CGRectGetMinY(playerView.frame);
     /// The height of the content area.
     CGFloat contentInsetHeight = CGRectGetMaxY(self.frame) - CGRectGetMinY(self.frame);
     
@@ -156,28 +163,28 @@
     
     if (self.zf_scrollDirection == ZFPlayerScrollDirectionUp) { /// Scroll up
         /// Player is disappearing.
-        if (topSpacing <= 0 && CGRectGetHeight(rect) != 0) {
-            playerDisapperaPercent = -topSpacing/CGRectGetHeight(rect);
+        if (topSpacing <= 0 && CGRectGetHeight(playFrameInScrollSuperView) != 0) {
+            playerDisapperaPercent = -topSpacing/CGRectGetHeight(playFrameInScrollSuperView);
             if (playerDisapperaPercent > 1.0) playerDisapperaPercent = 1.0;
             if (self.zf_playerDisappearingInScrollView) self.zf_playerDisappearingInScrollView(self.zf_playingIndexPath, playerDisapperaPercent);
         }
         
         /// Top area
-        if (topSpacing <= 0 && topSpacing > -CGRectGetHeight(rect)/2) {
+        if (topSpacing <= 0 && topSpacing > -CGRectGetHeight(playFrameInScrollSuperView)/2) {
             /// When the player will disappear.
             if (self.zf_playerWillDisappearInScrollView) self.zf_playerWillDisappearInScrollView(self.zf_playingIndexPath);
-        } else if (topSpacing <= -CGRectGetHeight(rect)) {
+        } else if (topSpacing <= -CGRectGetHeight(playFrameInScrollSuperView)) {
             /// When the player did disappeared.
             if (self.zf_playerDidDisappearInScrollView) self.zf_playerDidDisappearInScrollView(self.zf_playingIndexPath);
         } else if (topSpacing > 0 && topSpacing <= contentInsetHeight) {
             /// Player is appearing.
-            if (CGRectGetHeight(rect) != 0) {
-                playerApperaPercent = -(topSpacing-contentInsetHeight)/CGRectGetHeight(rect);
+            if (CGRectGetHeight(playFrameInScrollSuperView) != 0) {
+                playerApperaPercent = -(topSpacing-contentInsetHeight)/CGRectGetHeight(playFrameInScrollSuperView);
                 if (playerApperaPercent > 1.0) playerApperaPercent = 1.0;
                 if (self.zf_playerAppearingInScrollView) self.zf_playerAppearingInScrollView(self.zf_playingIndexPath, playerApperaPercent);
             }
             /// In visable area
-            if (topSpacing <= contentInsetHeight && topSpacing > contentInsetHeight-CGRectGetHeight(rect)/2) {
+            if (topSpacing <= contentInsetHeight && topSpacing > contentInsetHeight-CGRectGetHeight(playFrameInScrollSuperView)/2) {
                 /// When the player will appear.
                 if (self.zf_playerWillAppearInScrollView) self.zf_playerWillAppearInScrollView(self.zf_playingIndexPath);
             } else {
@@ -188,28 +195,28 @@
         
     } else if (self.zf_scrollDirection == ZFPlayerScrollDirectionDown) { /// Scroll Down
         /// Player is disappearing.
-        if (bottomSpacing <= 0 && CGRectGetHeight(rect) != 0) {
-            playerDisapperaPercent = -bottomSpacing/CGRectGetHeight(rect);
+        if (bottomSpacing <= 0 && CGRectGetHeight(playFrameInScrollSuperView) != 0) {
+            playerDisapperaPercent = -bottomSpacing/CGRectGetHeight(playFrameInScrollSuperView);
             if (playerDisapperaPercent > 1.0) playerDisapperaPercent = 1.0;
             if (self.zf_playerDisappearingInScrollView) self.zf_playerDisappearingInScrollView(self.zf_playingIndexPath, playerDisapperaPercent);
         }
         
         /// Bottom area
-        if (bottomSpacing <= 0 && bottomSpacing > -CGRectGetHeight(rect)/2) {
+        if (bottomSpacing <= 0 && bottomSpacing > -CGRectGetHeight(playFrameInScrollSuperView)/2) {
             /// When the player will disappear.
             if (self.zf_playerWillDisappearInScrollView) self.zf_playerWillDisappearInScrollView(self.zf_playingIndexPath);
-        } else if (bottomSpacing <= -CGRectGetHeight(rect)) {
+        } else if (bottomSpacing <= -CGRectGetHeight(playFrameInScrollSuperView)) {
             /// When the player did disappeared.
             if (self.zf_playerDidDisappearInScrollView) self.zf_playerDidDisappearInScrollView(self.zf_playingIndexPath);
         } else if (bottomSpacing > 0 && bottomSpacing <= contentInsetHeight) {
             /// Player is appearing.
-            if (CGRectGetHeight(rect) != 0) {
-                playerApperaPercent = -(bottomSpacing-contentInsetHeight)/CGRectGetHeight(rect);
+            if (CGRectGetHeight(playFrameInScrollSuperView) != 0) {
+                playerApperaPercent = -(bottomSpacing-contentInsetHeight)/CGRectGetHeight(playFrameInScrollSuperView);
                 if (playerApperaPercent > 1.0) playerApperaPercent = 1.0;
                 if (self.zf_playerAppearingInScrollView) self.zf_playerAppearingInScrollView(self.zf_playingIndexPath, playerApperaPercent);
             }
             /// In visable area
-            if (bottomSpacing <= contentInsetHeight && bottomSpacing > contentInsetHeight-CGRectGetHeight(rect)/2) {
+            if (bottomSpacing <= contentInsetHeight && bottomSpacing > contentInsetHeight-CGRectGetHeight(playFrameInScrollSuperView)/2) {
                 /// When the player will appear.
                 if (self.zf_playerWillAppearInScrollView) self.zf_playerWillAppearInScrollView(self.zf_playingIndexPath);
             } else {
@@ -326,6 +333,7 @@
 
 /**
  Find the playing cell while the scrollDirection is vertical.
+ 先找显示的第一个,  后找显示的最后一个, 如果都不行, 就从显示的中进行查询. 所有的这些操作, 都会设置 shouldPlayerIndex. 然后会把这个 indexPath 传递出去.
  */
 - (void)_findCorrectCellWhenScrollViewDirectionVertical:(void (^ __nullable)(NSIndexPath *indexPath))handler {
     // 如果不是自动播放, 直接 return

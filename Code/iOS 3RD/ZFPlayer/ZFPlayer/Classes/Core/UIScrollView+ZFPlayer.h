@@ -85,6 +85,9 @@ typedef NS_ENUM(NSInteger, ZFPlayerContainerType) {
 
 @interface UIScrollView (ZFPlayerCannotCalled)
 
+/*
+ 这个分类里面, 提供了各种各样的时机回调, 真正对于 player 的切换, 应该是放到各个回调的内部. ScrollView, 作为视图, 并没有提供直接控制 player 的方法.
+ */
 
 // 各种时机的回调, 都传递出去了, 由外界来做各个事件的自定义工作.
 /// The block invoked When the player appearing.
@@ -140,9 +143,11 @@ typedef NS_ENUM(NSInteger, ZFPlayerContainerType) {
 @property (nonatomic, assign) BOOL zf_stopWhileNotVisible;
 
 /// The indexPath is playing.
+// 这个 IndexPath 不会在 ScrollView 中进行复制, 而是由外界传入. 也就是外界设置播放的切换之后, 同步状态到 ScrollView 中.
 @property (nonatomic, nullable) NSIndexPath *zf_playingIndexPath;
 
 /// The indexPath should be play while scrolling.
+// 这个 IndexPath 会在 ScrollView 的内部不断的进行设值操作, 然后会不断的触发 zf_playerShouldPlayInScrollView 这个回调. 如果想要跟着滑动切换播放的话, 需要设置这个回调.
 @property (nonatomic, nullable) NSIndexPath *zf_shouldPlayIndexPath;
 
 /// WWANA networks play automatically,default NO.
