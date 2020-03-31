@@ -32,7 +32,9 @@
 @implementation TZAlbumModel
 
 /*
- PHFetchResult 是一个类似数组的, 具有泛型特点的容器类.
+ needFetchAssets 实际起作用, 是在这里.
+ 如果需要获取各个相册里面的内容, 在这里明确的调用一下获取里面的资源.
+ 注意, 这里获取的还是图片的元信息, 真正的图片内容, 还是要专门进行 fetch 的操作.
  */
 
 - (void)setResult:(PHFetchResult *)result needFetchAssets:(BOOL)needFetchAssets {

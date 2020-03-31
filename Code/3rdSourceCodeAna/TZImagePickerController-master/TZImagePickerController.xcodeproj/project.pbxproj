@@ -345,6 +345,8 @@
 				900EF0111C2C107400EA709B /* TZPhotoPreviewController.m */,
 				901CC3F821CB757500C55443 /* TZImageRequestOperation.h */,
 				901CC3F921CB757500C55443 /* TZImageRequestOperation.m */,
+				6DC84D081DF5358500A107A9 /* TZImageCropManager.h */,
+				6DC84D091DF5358500A107A9 /* TZImageCropManager.m */,
 				06A33AC72431F53800BAE06D /* Done */,
 				900EEFF61C2BBF9500EA709B /* TZImagePickerController.h */,
 				900EEFF71C2BBF9500EA709B /* TZImagePickerController.m */,
@@ -352,8 +354,6 @@
 				900EEFFD1C2BD58B00EA709B /* TZPhotoPickerController.m */,
 				900EEFFF1C2BD7E400EA709B /* TZAssetCell.h */,
 				900EF0001C2BD7E400EA709B /* TZAssetCell.m */,
-				6DC84D081DF5358500A107A9 /* TZImageCropManager.h */,
-				6DC84D091DF5358500A107A9 /* TZImageCropManager.m */,
 				6DC358641CC8BAE300898D29 /* Resources */,
 			);
 			path = TZImagePickerController;

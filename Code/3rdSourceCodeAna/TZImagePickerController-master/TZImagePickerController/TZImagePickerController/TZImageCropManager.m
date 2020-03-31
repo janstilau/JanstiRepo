@@ -100,6 +100,7 @@
 + (UIImage *)circularClipImage:(UIImage *)image {
     UIGraphicsBeginImageContextWithOptions(image.size, NO, [UIScreen mainScreen].scale);
     
+    // 把图片画到画布上, 然后做一次裁剪的工作.
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGRect rect = CGRectMake(0, 0, image.size.width, image.size.height);
     CGContextAddEllipseInRect(ctx, rect);
@@ -116,6 +117,8 @@
 
 
 @implementation UIImage (TZGif)
+
+// 对于 gif 图的解析工作.
 
 + (UIImage *)sd_tz_animatedGIFWithData:(NSData *)data {
     if (!data) {

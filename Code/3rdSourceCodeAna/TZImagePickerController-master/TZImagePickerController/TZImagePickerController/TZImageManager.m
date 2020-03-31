@@ -98,6 +98,7 @@ static dispatch_once_t onceToken;
         option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:self.sortAscendingByModificationDate]];
     }
     PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+    // 这里, 直接认为里面的是 PHAssetCollection 类型的. 可以直接把 PHFetchResult 当做是一个数组来用.
     for (PHAssetCollection *collection in smartAlbums) {
         // 有可能是PHCollectionList类的的对象，过滤掉
         if (![collection isKindOfClass:[PHAssetCollection class]]) continue;
@@ -105,6 +106,7 @@ static dispatch_once_t onceToken;
         if (collection.estimatedAssetCount <= 0) continue;
         
         if ([self isCameraRollAlbum:collection]) {
+            
             PHFetchResult *fetchResult = [PHAsset fetchAssetsInAssetCollection:collection options:option];
             model = [self modelWithResult:fetchResult name:collection.localizedTitle isCameraRoll:YES needFetchAssets:needFetchAssets];
             if (completion) completion(model);
@@ -113,6 +115,8 @@ static dispatch_once_t onceToken;
     }
 }
 
+
+// 获取所有的相册, 生成对应的 album 数据.
 - (void)getAllAlbums:(BOOL)allowPickingVideo allowPickingImage:(BOOL)allowPickingImage needFetchAssets:(BOOL)needFetchAssets completion:(void (^)(NSArray<TZAlbumModel *> *))completionCallBack{
     NSMutableArray *albumArr = [NSMutableArray arrayWithCapacity:20];
     PHFetchOptions *option = [[PHFetchOptions alloc] init];
@@ -165,17 +169,17 @@ static dispatch_once_t onceToken;
 #pragma mark - Get Assets
 
 /// Get Assets 获得照片数组
-- (void)getAssetsFromFetchResult:(PHFetchResult *)result completion:(void (^)(NSArray<TZAssetModel *> *))completion {
+// 这里命名有问题, 既然里面用的时候, 完全是把 FetchResult 当做相册来用了, 这里方法名, 就应该用 album.
+- (void)getAssetsFromFetchResult:(PHFetchResult *)album completion:(void (^)(NSArray<TZAssetModel *> *))completion {
     TZImagePickerConfig *config = [TZImagePickerConfig sharedInstance];
-    return [self getAssetsFromFetchResult:result allowPickingVideo:config.allowPickingVideo allowPickingImage:config.allowPickingImage completion:completion];
+    return [self getAssetsFromFetchResult:album allowPickingVideo:config.allowPickingVideo allowPickingImage:config.allowPickingImage completion:completion];
 }
 
-// 这里有点不好, 假定了 result 就是 Collection 类型的.
-- (void)getAssetsFromFetchResult:(PHFetchResult *)result allowPickingVideo:(BOOL)allowPickingVideo allowPickingImage:(BOOL)allowPickingImage completion:(void (^)(NSArray<TZAssetModel *> *))completion {
+
+- (void)getAssetsFromFetchResult:(PHFetchResult *)album allowPickingVideo:(BOOL)allowPickingVideo allowPickingImage:(BOOL)allowPickingImage completion:(void (^)(NSArray<TZAssetModel *> *))completion {
     NSMutableArray *photoArr = [NSMutableArray array];
-    [result enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL * _Nonnull stop) {
+    [album enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL * _Nonnull stop) {
         TZAssetModel *model = [self assetModelWithAsset:asset allowPickingVideo:allowPickingVideo allowPickingImage:allowPickingImage];
-        // 不过这里有过滤.
         if (model) {
             [photoArr addObject:model];
         }
@@ -198,7 +202,7 @@ static dispatch_once_t onceToken;
     if (completion) completion(model);
 }
 
-// 这里, 通过 allowPickingVideo, allowPickingImage 来进行了一次过滤. 不太好.
+// 通过 allowPickingVideo, allowPickingImage 来进行了一次过滤. 也就是生成的时候, 返回 nil 表示无效
 - (TZAssetModel *)assetModelWithAsset:(PHAsset *)asset allowPickingVideo:(BOOL)allowPickingVideo allowPickingImage:(BOOL)allowPickingImage {
     BOOL canSelect = YES;
     if ([self.pickerDelegate respondsToSelector:@selector(isAssetCanSelect:)]) {
@@ -277,6 +281,7 @@ static dispatch_once_t onceToken;
             options.version = PHImageRequestOptionsVersionOriginal;
         }
         [[PHImageManager defaultManager] requestImageDataForAsset:model.asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
+            // 这里, 就是直接拿到了图片的 data 数据.
             if (model.type != TZAssetModelMediaTypeVideo) dataLength += imageData.length;
             assetCount ++;
             if (assetCount >= photos.count) {
@@ -302,6 +307,7 @@ static dispatch_once_t onceToken;
 #pragma mark - Get Photo
 
 /// Get photo 获得照片本身
+// 注意, 这里的取图还是按照屏幕的宽度进行的. 真正的原图, 调用框架的方法, 从PHAsset中专门获取的.
 - (PHImageRequestID)getPhotoWithAsset:(PHAsset *)asset completion:(void (^)(UIImage *, NSDictionary *, BOOL isDegraded))completion {
     CGFloat fullScreenWidth = TZScreenWidth;
     if (fullScreenWidth > _photoPreviewMaxWidth) {
