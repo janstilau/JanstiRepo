@@ -37,6 +37,7 @@
 - (void)setModel:(TZAssetModel *)model {
     _model = model;
     self.representedAssetIdentifier = model.asset.localIdentifier;
+    // 这里, 图片选择的时候, 用的是小图.
     int32_t imageRequestID = [[TZImageManager manager] getPhotoWithAsset:model.asset photoWidth:self.tz_width completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
         // Set the cell's thumbnail image if it's still showing the same asset.
         if ([self.representedAssetIdentifier isEqualToString:model.asset.localIdentifier]) {

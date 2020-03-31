@@ -204,6 +204,7 @@
     _collectionView.contentOffset = CGPointMake(0, 0);
     _collectionView.contentSize = CGSizeMake(self.models.count * (self.view.tz_width + 20), 0);
     [self.view addSubview:_collectionView];
+    // 这里, 注册了三个不同的 preview 的 cell, 根据资源的不同, 展示不同的 cell.
     [_collectionView registerClass:[TZPhotoPreviewCell class] forCellWithReuseIdentifier:@"TZPhotoPreviewCell"];
     [_collectionView registerClass:[TZVideoPreviewCell class] forCellWithReuseIdentifier:@"TZVideoPreviewCell"];
     [_collectionView registerClass:[TZGifPreviewCell class] forCellWithReuseIdentifier:@"TZGifPreviewCell"];
@@ -220,6 +221,7 @@
         _cropBgView.frame = self.view.bounds;
         _cropBgView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_cropBgView];
+        // 在这里, 在预览的界面上, 增加了一层裁剪的蒙版视图.
         [TZImageCropManager overlayClippingWithView:_cropBgView cropRect:_tzImagePickerVc.cropRect containerView:self.view needCircleCrop:_tzImagePickerVc.needCircleCrop];
         
         _cropView = [UIView new];

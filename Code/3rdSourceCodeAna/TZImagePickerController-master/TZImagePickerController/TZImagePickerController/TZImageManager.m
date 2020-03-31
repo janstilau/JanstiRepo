@@ -431,6 +431,7 @@ static dispatch_once_t onceToken;
         [option setProgressHandler:progressHandler];
     }
     option.resizeMode = PHImageRequestOptionsResizeModeFast;
+    // PHImageManagerMaximumSize 这个东西, 来控制选中的到底是不是原图.
     return [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFit options:option resultHandler:^(UIImage *result, NSDictionary *info) {
         BOOL cancelled = [[info objectForKey:PHImageCancelledKey] boolValue];
         if (!cancelled && result) {

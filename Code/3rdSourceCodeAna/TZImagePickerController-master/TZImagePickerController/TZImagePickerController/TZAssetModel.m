@@ -31,6 +31,10 @@
 
 @implementation TZAlbumModel
 
+/*
+ PHFetchResult 是一个类似数组的, 具有泛型特点的容器类.
+ */
+
 - (void)setResult:(PHFetchResult *)result needFetchAssets:(BOOL)needFetchAssets {
     _result = result;
     if (needFetchAssets) {

@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 获取原图的操作. 将原图的获取, 集中到了这里.
+
 @interface TZImageRequestOperation : NSOperation
 
 typedef void(^TZImageRequestCompletedBlock)(UIImage *photo, NSDictionary *info, BOOL isDegraded);
