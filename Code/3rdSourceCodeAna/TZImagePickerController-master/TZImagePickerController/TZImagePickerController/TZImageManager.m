@@ -621,6 +621,9 @@ static dispatch_once_t onceToken;
     // If you need to upload to the server, but server does't support to upload by streaming,
     // You can compress the resolution to lower. Or you can support more higher resolution.
     if ([presets containsObject:presetName]) {
+        /*
+         AVAssetExportSession 的内部, 包含了大量的编码解码的逻辑. 但是, 从外界来看, 只是赋值一些属性, 它就可以自动产出 MP4 格式的文件. 这就是封装的好处.
+         */
         AVAssetExportSession *session = [[AVAssetExportSession alloc] initWithAsset:videoAsset presetName:presetName];
         NSDateFormatter *formater = [[NSDateFormatter alloc] init];
         [formater setDateFormat:@"yyyy-MM-dd-HH:mm:ss-SSS"];
