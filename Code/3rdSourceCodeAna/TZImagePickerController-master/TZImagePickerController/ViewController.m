@@ -22,6 +22,7 @@
 #import "FLAnimatedImage.h"
 #import "TZImageUploadOperation.h"
 #import "SDAVAssetExportSession.h"
+#import "WAVideoBox.h"
 
 
 @interface ViewController ()<TZImagePickerControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate> {
@@ -600,7 +601,12 @@
     _selectedPhotos = [NSMutableArray arrayWithArray:@[coverImage]];
     _selectedAssets = [NSMutableArray arrayWithArray:@[asset]];
     // open this code to send video / 打开这段代码发送视频
-    
+    static WAVideoBox *videoBox;
+    if (!videoBox) {
+        videoBox = [[WAVideoBox alloc] init];
+        videoBox.ratio = WAVideoExportRatio1280x720;
+        videoBox.videoQuality = 5;
+    }
     PHVideoRequestOptions* options = [[PHVideoRequestOptions alloc] init];
     options.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
     options.networkAccessAllowed = YES;
@@ -608,43 +614,14 @@
         // NSLog(@"Info:\n%@",info);
         AVURLAsset *videoAsset = (AVURLAsset*)avasset;
         // NSLog(@"AVAsset URL: %@",myAsset.URL);
-        SDAVAssetExportSession *encoder = [SDAVAssetExportSession.alloc initWithAsset:videoAsset];
-           encoder.outputFileType = AVFileTypeMPEG4;
-           encoder.outputURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/video.mp4", NSHomeDirectory()]];
-           encoder.videoSettings = @
-           {
-               AVVideoCodecKey: AVVideoCodecH264,
-               AVVideoWidthKey: @1920,
-               AVVideoHeightKey: @1080,
-               AVVideoCompressionPropertiesKey: @
-               {
-                   AVVideoAverageBitRateKey: @6000000,
-                   AVVideoProfileLevelKey: AVVideoProfileLevelH264High40,
-               },
-           };
-           encoder.audioSettings = @
-           {
-               AVFormatIDKey: @(kAudioFormatMPEG4AAC),
-               AVNumberOfChannelsKey: @2,
-               AVSampleRateKey: @44100,
-               AVEncoderBitRateKey: @128000,
-           };
-
-           [encoder exportAsynchronouslyWithCompletionHandler:^
-           {
-               if (encoder.status == AVAssetExportSessionStatusCompleted)
-               {
-                   NSLog(@"Video export succeeded");
-               }
-               else if (encoder.status == AVAssetExportSessionStatusCancelled)
-               {
-                   NSLog(@"Video export cancelled");
-               }
-               else
-               {
-                   NSLog(@"Video export failed with error: %@ (%d)", encoder.error.localizedDescription, encoder.error.code);
-               }
-           }];
+        [videoBox clean];
+        [videoBox appendVideoByAsset:videoAsset];
+        [videoBox asyncFinishEditByFilePath:[NSString stringWithFormat:@"%@/temp.mp4", NSHomeDirectory()] progress:^(float progress) {
+            NSLog(@"progress: %@", @(progress));
+        } complete:^(NSError *error) {
+            NSLog(@"Error: %@", error);
+            NSLog(@"path:%@", [NSString stringWithFormat:@"%@/temp.mp4", NSHomeDirectory()]);
+        }];
     }];
     
    

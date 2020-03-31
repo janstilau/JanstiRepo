@@ -12,6 +12,24 @@
 		06A33AD224321EEC00BAE06D /* TZPhotoPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A33AD124321EEC00BAE06D /* TZPhotoPreviewView.m */; };
 		06A33AD324321FA000BAE06D /* TZPhotoPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A33AD124321EEC00BAE06D /* TZPhotoPreviewView.m */; };
 		06AEE161243380F4006E7670 /* SDAVAssetExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE160243380F4006E7670 /* SDAVAssetExportSession.m */; };
+		06AEE1BF2433862F006E7670 /* WAVideoBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE1912433862F006E7670 /* WAVideoBox.m */; };
+		06AEE1C12433862F006E7670 /* WAAVSEImageMixCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE1962433862F006E7670 /* WAAVSEImageMixCommand.m */; };
+		06AEE1C22433862F006E7670 /* WAAVSEGearboxCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE1982433862F006E7670 /* WAAVSEGearboxCommand.m */; };
+		06AEE1C32433862F006E7670 /* WAAVSEGearboxCommandModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE1992433862F006E7670 /* WAAVSEGearboxCommandModel.m */; };
+		06AEE1C42433862F006E7670 /* WAAVSERotateCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE19B2433862F006E7670 /* WAAVSERotateCommand.m */; };
+		06AEE1C52433862F006E7670 /* WAAVSEExtractSoundCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE19E2433862F006E7670 /* WAAVSEExtractSoundCommand.m */; };
+		06AEE1C62433862F006E7670 /* WAAVSECommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE1A02433862F006E7670 /* WAAVSECommand.m */; };
+		06AEE1C72433862F006E7670 /* WAAVSEExportCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE1A12433862F006E7670 /* WAAVSEExportCommand.m */; };
+		06AEE1C82433862F006E7670 /* WAAVSEReplaceSoundCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE1A32433862F006E7670 /* WAAVSEReplaceSoundCommand.m */; };
+		06AEE1C92433862F006E7670 /* WAAVSERangeCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE1A52433862F006E7670 /* WAAVSERangeCommand.m */; };
+		06AEE1CA2433862F006E7670 /* WAAVSEDubbedCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE1A72433862F006E7670 /* WAAVSEDubbedCommand.m */; };
+		06AEE1CB2433862F006E7670 /* WAAVSEComposition.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE1A92433862F006E7670 /* WAAVSEComposition.m */; };
+		06AEE1CC2433862F006E7670 /* WAAVSEVideoMixCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AEE1AA2433862F006E7670 /* WAAVSEVideoMixCommand.m */; };
+		06AEE1D22433862F006E7670 /* nature.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 06AEE1B52433862F006E7670 /* nature.mp4 */; };
+		06AEE1D32433862F006E7670 /* gifTest.gif in Resources */ = {isa = PBXBuildFile; fileRef = 06AEE1B62433862F006E7670 /* gifTest.gif */; };
+		06AEE1D42433862F006E7670 /* test3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 06AEE1B72433862F006E7670 /* test3.mp4 */; };
+		06AEE1D52433862F006E7670 /* test2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 06AEE1B82433862F006E7670 /* test2.mp4 */; };
+		06AEE1D62433862F006E7670 /* test1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 06AEE1B92433862F006E7670 /* test1.mp4 */; };
 		6D32B9BD1CD83640005CE1E0 /* LxGridViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D32B9BC1CD83640005CE1E0 /* LxGridViewFlowLayout.m */; };
 		6D4608311DFFC60D004FB009 /* TZGifPhotoPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D4608301DFFC60D004FB009 /* TZGifPhotoPreviewController.m */; };
 		6D5358CD1D64600F00928CC6 /* NSBundle+TZImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D5358CC1D64600F00928CC6 /* NSBundle+TZImagePicker.m */; };
@@ -124,6 +142,37 @@
 		06A33AD124321EEC00BAE06D /* TZPhotoPreviewView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TZPhotoPreviewView.m; sourceTree = "<group>"; };
 		06AEE15F243380F4006E7670 /* SDAVAssetExportSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDAVAssetExportSession.h; sourceTree = "<group>"; };
 		06AEE160243380F4006E7670 /* SDAVAssetExportSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDAVAssetExportSession.m; sourceTree = "<group>"; };
+		06AEE1912433862F006E7670 /* WAVideoBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAVideoBox.m; sourceTree = "<group>"; };
+		06AEE1942433862F006E7670 /* WAAVSEExportCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSEExportCommand.h; sourceTree = "<group>"; };
+		06AEE1952433862F006E7670 /* WAAVSECommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSECommand.h; sourceTree = "<group>"; };
+		06AEE1962433862F006E7670 /* WAAVSEImageMixCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSEImageMixCommand.m; sourceTree = "<group>"; };
+		06AEE1972433862F006E7670 /* WAAVSEReplaceSoundCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSEReplaceSoundCommand.h; sourceTree = "<group>"; };
+		06AEE1982433862F006E7670 /* WAAVSEGearboxCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSEGearboxCommand.m; sourceTree = "<group>"; };
+		06AEE1992433862F006E7670 /* WAAVSEGearboxCommandModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSEGearboxCommandModel.m; sourceTree = "<group>"; };
+		06AEE19A2433862F006E7670 /* WAAVSERangeCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSERangeCommand.h; sourceTree = "<group>"; };
+		06AEE19B2433862F006E7670 /* WAAVSERotateCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSERotateCommand.m; sourceTree = "<group>"; };
+		06AEE19C2433862F006E7670 /* WAAVSEVideoMixCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSEVideoMixCommand.h; sourceTree = "<group>"; };
+		06AEE19D2433862F006E7670 /* WAAVSEComposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSEComposition.h; sourceTree = "<group>"; };
+		06AEE19E2433862F006E7670 /* WAAVSEExtractSoundCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSEExtractSoundCommand.m; sourceTree = "<group>"; };
+		06AEE19F2433862F006E7670 /* WAAVSEDubbedCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSEDubbedCommand.h; sourceTree = "<group>"; };
+		06AEE1A02433862F006E7670 /* WAAVSECommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSECommand.m; sourceTree = "<group>"; };
+		06AEE1A12433862F006E7670 /* WAAVSEExportCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSEExportCommand.m; sourceTree = "<group>"; };
+		06AEE1A22433862F006E7670 /* WAAVSEGearboxCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSEGearboxCommand.h; sourceTree = "<group>"; };
+		06AEE1A32433862F006E7670 /* WAAVSEReplaceSoundCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSEReplaceSoundCommand.m; sourceTree = "<group>"; };
+		06AEE1A42433862F006E7670 /* WAAVSEImageMixCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSEImageMixCommand.h; sourceTree = "<group>"; };
+		06AEE1A52433862F006E7670 /* WAAVSERangeCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSERangeCommand.m; sourceTree = "<group>"; };
+		06AEE1A62433862F006E7670 /* WAAVSEGearboxCommandModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSEGearboxCommandModel.h; sourceTree = "<group>"; };
+		06AEE1A72433862F006E7670 /* WAAVSEDubbedCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSEDubbedCommand.m; sourceTree = "<group>"; };
+		06AEE1A82433862F006E7670 /* WAAVSEExtractSoundCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSEExtractSoundCommand.h; sourceTree = "<group>"; };
+		06AEE1A92433862F006E7670 /* WAAVSEComposition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSEComposition.m; sourceTree = "<group>"; };
+		06AEE1AA2433862F006E7670 /* WAAVSEVideoMixCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSEVideoMixCommand.m; sourceTree = "<group>"; };
+		06AEE1AB2433862F006E7670 /* WAAVSERotateCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSERotateCommand.h; sourceTree = "<group>"; };
+		06AEE1AC2433862F006E7670 /* WAVideoBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAVideoBox.h; sourceTree = "<group>"; };
+		06AEE1B52433862F006E7670 /* nature.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = nature.mp4; sourceTree = "<group>"; };
+		06AEE1B62433862F006E7670 /* gifTest.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = gifTest.gif; sourceTree = "<group>"; };
+		06AEE1B72433862F006E7670 /* test3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test3.mp4; sourceTree = "<group>"; };
+		06AEE1B82433862F006E7670 /* test2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test2.mp4; sourceTree = "<group>"; };
+		06AEE1B92433862F006E7670 /* test1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test1.mp4; sourceTree = "<group>"; };
 		6D12FC191D66B71E00182C44 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		6D12FC1A1D66B71E00182C44 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		6D32B9BB1CD83640005CE1E0 /* LxGridViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LxGridViewFlowLayout.h; sourceTree = "<group>"; };
@@ -241,6 +290,68 @@
 			path = Done;
 			sourceTree = "<group>";
 		};
+		06AEE18D2433862F006E7670 /* WAVideoBox */ = {
+			isa = PBXGroup;
+			children = (
+				06AEE1B42433862F006E7670 /* Sources */,
+				06AEE1902433862F006E7670 /* WAVideoBox */,
+			);
+			path = WAVideoBox;
+			sourceTree = "<group>";
+		};
+		06AEE1902433862F006E7670 /* WAVideoBox */ = {
+			isa = PBXGroup;
+			children = (
+				06AEE1932433862F006E7670 /* WAAVSeCommand */,
+				06AEE1AC2433862F006E7670 /* WAVideoBox.h */,
+				06AEE1912433862F006E7670 /* WAVideoBox.m */,
+			);
+			path = WAVideoBox;
+			sourceTree = "<group>";
+		};
+		06AEE1932433862F006E7670 /* WAAVSeCommand */ = {
+			isa = PBXGroup;
+			children = (
+				06AEE1942433862F006E7670 /* WAAVSEExportCommand.h */,
+				06AEE1952433862F006E7670 /* WAAVSECommand.h */,
+				06AEE1962433862F006E7670 /* WAAVSEImageMixCommand.m */,
+				06AEE1972433862F006E7670 /* WAAVSEReplaceSoundCommand.h */,
+				06AEE1982433862F006E7670 /* WAAVSEGearboxCommand.m */,
+				06AEE1992433862F006E7670 /* WAAVSEGearboxCommandModel.m */,
+				06AEE19A2433862F006E7670 /* WAAVSERangeCommand.h */,
+				06AEE19B2433862F006E7670 /* WAAVSERotateCommand.m */,
+				06AEE19C2433862F006E7670 /* WAAVSEVideoMixCommand.h */,
+				06AEE19D2433862F006E7670 /* WAAVSEComposition.h */,
+				06AEE19E2433862F006E7670 /* WAAVSEExtractSoundCommand.m */,
+				06AEE19F2433862F006E7670 /* WAAVSEDubbedCommand.h */,
+				06AEE1A02433862F006E7670 /* WAAVSECommand.m */,
+				06AEE1A12433862F006E7670 /* WAAVSEExportCommand.m */,
+				06AEE1A22433862F006E7670 /* WAAVSEGearboxCommand.h */,
+				06AEE1A32433862F006E7670 /* WAAVSEReplaceSoundCommand.m */,
+				06AEE1A42433862F006E7670 /* WAAVSEImageMixCommand.h */,
+				06AEE1A52433862F006E7670 /* WAAVSERangeCommand.m */,
+				06AEE1A62433862F006E7670 /* WAAVSEGearboxCommandModel.h */,
+				06AEE1A72433862F006E7670 /* WAAVSEDubbedCommand.m */,
+				06AEE1A82433862F006E7670 /* WAAVSEExtractSoundCommand.h */,
+				06AEE1A92433862F006E7670 /* WAAVSEComposition.m */,
+				06AEE1AA2433862F006E7670 /* WAAVSEVideoMixCommand.m */,
+				06AEE1AB2433862F006E7670 /* WAAVSERotateCommand.h */,
+			);
+			path = WAAVSeCommand;
+			sourceTree = "<group>";
+		};
+		06AEE1B42433862F006E7670 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				06AEE1B52433862F006E7670 /* nature.mp4 */,
+				06AEE1B62433862F006E7670 /* gifTest.gif */,
+				06AEE1B72433862F006E7670 /* test3.mp4 */,
+				06AEE1B82433862F006E7670 /* test2.mp4 */,
+				06AEE1B92433862F006E7670 /* test1.mp4 */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
 		6DC358641CC8BAE300898D29 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -328,6 +439,7 @@
 		900EEFF51C2BBF7600EA709B /* TZImagePickerController */ = {
 			isa = PBXGroup;
 			children = (
+				06AEE18D2433862F006E7670 /* WAVideoBox */,
 				06AEE15F243380F4006E7670 /* SDAVAssetExportSession.h */,
 				06AEE160243380F4006E7670 /* SDAVAssetExportSession.m */,
 				06A33AD024321EEC00BAE06D /* TZPhotoPreviewView.h */,
@@ -562,13 +674,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06AEE1D22433862F006E7670 /* nature.mp4 in Resources */,
 				90020E1320F8840800D3AB10 /* TZImagePickerController.podspec in Resources */,
 				90A74B85203287C200D84C2A /* Localizable.strings in Resources */,
+				06AEE1D32433862F006E7670 /* gifTest.gif in Resources */,
 				900E658F1C2BB8D5003D9A9E /* LaunchScreen.storyboard in Resources */,
+				06AEE1D42433862F006E7670 /* test3.mp4 in Resources */,
 				90020E1520F8840F00D3AB10 /* README.md in Resources */,
+				06AEE1D62433862F006E7670 /* test1.mp4 in Resources */,
 				6DC358661CC8BAFD00898D29 /* TZImagePickerController.bundle in Resources */,
 				900E658C1C2BB8D5003D9A9E /* Assets.xcassets in Resources */,
 				900E658A1C2BB8D5003D9A9E /* Main.storyboard in Resources */,
+				06AEE1D52433862F006E7670 /* test2.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,23 +721,36 @@
 				9038D5911C3974F0007DE549 /* TZTestCell.m in Sources */,
 				900EF00F1C2C0B1100EA709B /* TZAssetModel.m in Sources */,
 				900EEFFE1C2BD58B00EA709B /* TZPhotoPickerController.m in Sources */,
+				06AEE1C22433862F006E7670 /* WAAVSEGearboxCommand.m in Sources */,
+				06AEE1CA2433862F006E7670 /* WAAVSEDubbedCommand.m in Sources */,
 				06AEE161243380F4006E7670 /* SDAVAssetExportSession.m in Sources */,
+				06AEE1C72433862F006E7670 /* WAAVSEExportCommand.m in Sources */,
+				06AEE1C42433862F006E7670 /* WAAVSERotateCommand.m in Sources */,
+				06AEE1C92433862F006E7670 /* WAAVSERangeCommand.m in Sources */,
 				90EBF5D61C2E298000CB9BCC /* UIView+Layout.m in Sources */,
 				90CE84B71C3BABB6003D0779 /* TZVideoPlayerController.m in Sources */,
+				06AEE1C52433862F006E7670 /* WAAVSEExtractSoundCommand.m in Sources */,
 				06A33ACE2431FD1B00BAE06D /* TZAlbumPickerController.m in Sources */,
+				06AEE1C12433862F006E7670 /* WAAVSEImageMixCommand.m in Sources */,
 				900EF0021C2BD7E400EA709B /* TZAssetCell.m in Sources */,
 				6DD0502B1DF659ED0057C78D /* TZProgressView.m in Sources */,
 				6D32B9BD1CD83640005CE1E0 /* LxGridViewFlowLayout.m in Sources */,
 				6D4608311DFFC60D004FB009 /* TZGifPhotoPreviewController.m in Sources */,
+				06AEE1BF2433862F006E7670 /* WAVideoBox.m in Sources */,
+				06AEE1C82433862F006E7670 /* WAAVSEReplaceSoundCommand.m in Sources */,
 				900EF0161C2C134900EA709B /* TZPhotoPreviewCell.m in Sources */,
 				900E65871C2BB8D5003D9A9E /* ViewController.m in Sources */,
 				90CE84AE1C3A89EF003D0779 /* TZImageManager.m in Sources */,
 				901F2295215CABD600F604ED /* FLAnimatedImage.m in Sources */,
 				06A33AD224321EEC00BAE06D /* TZPhotoPreviewView.m in Sources */,
 				900E65841C2BB8D5003D9A9E /* AppDelegate.m in Sources */,
+				06AEE1CB2433862F006E7670 /* WAAVSEComposition.m in Sources */,
+				06AEE1C62433862F006E7670 /* WAAVSECommand.m in Sources */,
 				901F2296215CABD600F604ED /* FLAnimatedImageView.m in Sources */,
+				06AEE1CC2433862F006E7670 /* WAAVSEVideoMixCommand.m in Sources */,
 				9019FD8D21EC25D7009ADEAE /* TZImageUploadOperation.m in Sources */,
 				900E65811C2BB8D5003D9A9E /* main.m in Sources */,
+				06AEE1C32433862F006E7670 /* WAAVSEGearboxCommandModel.m in Sources */,
 				900EF0121C2C107400EA709B /* TZPhotoPreviewController.m in Sources */,
 				901CC3FC21CB758500C55443 /* TZImageRequestOperation.m in Sources */,
 				6D5358CD1D64600F00928CC6 /* NSBundle+TZImagePicker.m in Sources */,
