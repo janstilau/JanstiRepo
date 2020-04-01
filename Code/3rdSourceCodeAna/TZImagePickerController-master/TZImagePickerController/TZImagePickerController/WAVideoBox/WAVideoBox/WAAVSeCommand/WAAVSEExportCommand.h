@@ -9,9 +9,11 @@
 #import "WAAVSECommand.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
+// 最终, 还是用的 AVAssetExportSession 进行的输出.
+
 @interface WAAVSEExportCommand : WAAVSECommand
 
-@property (nonatomic , strong)AVAssetExportSession *exportSession;
+@property (nonatomic , strong) AVAssetExportSession *exportSession;
 
 /**
  只有在开启画布的时候并且不是自动分辩率下才有效

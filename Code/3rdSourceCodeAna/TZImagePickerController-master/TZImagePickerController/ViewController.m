@@ -605,7 +605,7 @@
     if (!videoBox) {
         videoBox = [[WAVideoBox alloc] init];
         videoBox.ratio = WAVideoExportRatio1280x720;
-        videoBox.videoQuality = 5;
+        videoBox.videoQuality = 1;
     }
     PHVideoRequestOptions* options = [[PHVideoRequestOptions alloc] init];
     options.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;

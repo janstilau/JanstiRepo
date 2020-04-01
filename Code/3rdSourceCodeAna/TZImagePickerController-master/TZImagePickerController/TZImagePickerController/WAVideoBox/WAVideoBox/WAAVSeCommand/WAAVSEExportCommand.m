@@ -68,7 +68,8 @@
         }
         
         if (self.ratioParam) {
-            self.exportSession.fileLengthLimit = CMTimeGetSeconds(self.composition.duration) * self.ratioParam * self.composition.videoQuality * 1024 * 1024;
+            CGFloat totalDuration = CMTimeGetSeconds(self.composition.duration);
+            self.exportSession.fileLengthLimit = totalDuration * self.ratioParam * self.composition.videoQuality * 1024 * 1024;
         }
         
     }
