@@ -23,6 +23,7 @@
 #import "TZImageUploadOperation.h"
 #import "SDAVAssetExportSession.h"
 #import "WAVideoBox.h"
+#import "MCVideoExporter.h"
 
 
 @interface ViewController ()<TZImagePickerControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate> {
@@ -56,6 +57,8 @@
 @property (weak, nonatomic) IBOutlet UISwitch *needCircleCropSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *allowPickingMuitlpleVideoSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *showSelectedIndexSwitch;
+
+@property (nonatomic, strong) MCVideoExporter *exporter;
 
 @end
 
@@ -91,6 +94,7 @@
     _selectedPhotos = [NSMutableArray array];
     _selectedAssets = [NSMutableArray array];
     [self configCollectionView];
+    _exporter = [[MCVideoExporter alloc] init];
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -601,43 +605,36 @@
     _selectedPhotos = [NSMutableArray arrayWithArray:@[coverImage]];
     _selectedAssets = [NSMutableArray arrayWithArray:@[asset]];
     // open this code to send video / 打开这段代码发送视频
-    static WAVideoBox *videoBox;
-    if (!videoBox) {
-        videoBox = [[WAVideoBox alloc] init];
-        videoBox.ratio = WAVideoExportRatio1280x720;
-        videoBox.videoQuality = 1;
-    }
-    PHVideoRequestOptions* options = [[PHVideoRequestOptions alloc] init];
-    options.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
-    options.networkAccessAllowed = YES;
-    [[PHImageManager defaultManager] requestAVAssetForVideo:asset options:options resultHandler:^(AVAsset* avasset, AVAudioMix* audioMix, NSDictionary* info){
-        // NSLog(@"Info:\n%@",info);
-        AVURLAsset *videoAsset = (AVURLAsset*)avasset;
-        // NSLog(@"AVAsset URL: %@",myAsset.URL);
-        [videoBox clean];
-        [videoBox appendVideoByAsset:videoAsset];
-        [videoBox asyncFinishEditByFilePath:[NSString stringWithFormat:@"%@/temp.mp4", NSHomeDirectory()] progress:^(float progress) {
-            NSLog(@"progress: %@", @(progress));
-        } complete:^(NSError *error) {
-            NSLog(@"Error: %@", error);
-            NSLog(@"path:%@", [NSString stringWithFormat:@"%@/temp.mp4", NSHomeDirectory()]);
-        }];
-    }];
-    
-   
      
-//    [[TZImageManager manager] getVideoOutputPathWithAsset:asset presetName:AVAssetExportPreset1280x720 success:^(NSString *outputPath) {
-//        // NSData *data = [NSData dataWithContentsOfFile:outputPath];
-//        NSLog(@"视频导出到本地完成,沙盒路径为:%@",outputPath);
-//        NSData *data = [NSData dataWithContentsOfFile:outputPath];
-//        NSLog(@"%@", @(data.length/1000000));
-//        // Export completed, send video here, send by outputPath or NSData
-//        // 导出完成，在这里写上传代码，通过路径或者通过NSData上传
-//    } failure:^(NSString *errorMessage, NSError *error) {
-//        NSLog(@"视频导出失败:%@,error:%@",errorMessage, error);
-//    }];
+    [[TZImageManager manager] getVideoOutputPathWithAsset:asset presetName:AVAssetExportPresetMediumQuality success:^(NSString *outputPath) {
+        // NSData *data = [NSData dataWithContentsOfFile:outputPath];
+        NSLog(@"视频导出到本地完成,沙盒路径为:%@",outputPath);
+        NSData *data = [NSData dataWithContentsOfFile:outputPath];
+        NSLog(@"%@", @(data.length/1000000));
+        // Export completed, send video here, send by outputPath or NSData
+        // 导出完成，在这里写上传代码，通过路径或者通过NSData上传
+    } failure:^(NSString *errorMessage, NSError *error) {
+        NSLog(@"视频导出失败:%@,error:%@",errorMessage, error);
+    }];
     [_collectionView reloadData];
     // _collectionView.contentSize = CGSizeMake(0, ((_selectedPhotos.count + 2) / 3 ) * (_margin + _itemWH));
+}
+
+- (void)exportUsingWABox:(PHAsset*)asset {
+    static WAVideoBox *videoBox;
+     if (!videoBox) {
+         videoBox = [[WAVideoBox alloc] init];
+         videoBox.ratio = WAVideoExportRatio1280x720;
+         videoBox.videoQuality = 1;
+     }
+     PHVideoRequestOptions* options = [[PHVideoRequestOptions alloc] init];
+     options.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
+     options.networkAccessAllowed = YES;
+     [[PHImageManager defaultManager] requestAVAssetForVideo:asset options:options resultHandler:^(AVAsset* avasset, AVAudioMix* audioMix, NSDictionary* info){
+         
+         self.exporter.asset = asset;
+         [self.exporter startExport];
+     }];
 }
 
 // If user picking a gif image and allowPickingMultipleVideo is NO, this callback will be called.

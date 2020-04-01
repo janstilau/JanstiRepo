@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06026E0424348CE2005D2675 /* MCVideoExporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 06026E0324348CE2005D2675 /* MCVideoExporter.m */; };
 		06A33ACE2431FD1B00BAE06D /* TZAlbumPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A33ACD2431FD1B00BAE06D /* TZAlbumPickerController.m */; };
 		06A33ACF2431FE2100BAE06D /* TZAlbumPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A33ACD2431FD1B00BAE06D /* TZAlbumPickerController.m */; };
 		06A33AD224321EEC00BAE06D /* TZPhotoPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A33AD124321EEC00BAE06D /* TZPhotoPreviewView.m */; };
@@ -136,6 +137,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		06026E0224348CE2005D2675 /* MCVideoExporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCVideoExporter.h; sourceTree = "<group>"; };
+		06026E0324348CE2005D2675 /* MCVideoExporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCVideoExporter.m; sourceTree = "<group>"; };
 		06A33ACC2431FD1B00BAE06D /* TZAlbumPickerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TZAlbumPickerController.h; sourceTree = "<group>"; };
 		06A33ACD2431FD1B00BAE06D /* TZAlbumPickerController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TZAlbumPickerController.m; sourceTree = "<group>"; };
 		06A33AD024321EEC00BAE06D /* TZPhotoPreviewView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TZPhotoPreviewView.h; sourceTree = "<group>"; };
@@ -392,6 +395,8 @@
 				900E65831C2BB8D5003D9A9E /* AppDelegate.m */,
 				900E65851C2BB8D5003D9A9E /* ViewController.h */,
 				900E65861C2BB8D5003D9A9E /* ViewController.m */,
+				06026E0224348CE2005D2675 /* MCVideoExporter.h */,
+				06026E0324348CE2005D2675 /* MCVideoExporter.m */,
 				9019FD8B21EC25D7009ADEAE /* TZImageUploadOperation.h */,
 				9019FD8C21EC25D7009ADEAE /* TZImageUploadOperation.m */,
 				6D32B9BB1CD83640005CE1E0 /* LxGridViewFlowLayout.h */,
@@ -738,6 +743,7 @@
 				6D4608311DFFC60D004FB009 /* TZGifPhotoPreviewController.m in Sources */,
 				06AEE1BF2433862F006E7670 /* WAVideoBox.m in Sources */,
 				06AEE1C82433862F006E7670 /* WAAVSEReplaceSoundCommand.m in Sources */,
+				06026E0424348CE2005D2675 /* MCVideoExporter.m in Sources */,
 				900EF0161C2C134900EA709B /* TZPhotoPreviewCell.m in Sources */,
 				900E65871C2BB8D5003D9A9E /* ViewController.m in Sources */,
 				90CE84AE1C3A89EF003D0779 /* TZImageManager.m in Sources */,

@@ -62,14 +62,14 @@
         //  2.1､把视频轨道加入到混合器做出新的轨道
         if (self.assetVideoTrack != nil) {
             
+            // 向 Conpositon 里面, 添加了一个 Video 的 Track, 但是这个 Track 里面现在没有数据 , Adds an empty track to the receiver.
             AVMutableCompositionTrack *compostionVideoTrack = [self.composition.mutableComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
-            
+            // 向 Video Track 里面, 输入一个归到. 可以用音频处理软件 premiere 来理解.
             [compostionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, [asset duration]) ofTrack:self.assetVideoTrack atTime:insertionPoint error:&error];
 
             self.composition.duration = self.composition.mutableComposition.duration;
             
             self.trackDegress = [self degressFromTransform:self.assetVideoTrack.preferredTransform];
-           
             self.composition.mutableComposition.naturalSize = compostionVideoTrack.naturalSize;
             if (self.trackDegress % 360) {
                 [self performVideoCompopsition];

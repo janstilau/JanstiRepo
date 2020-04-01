@@ -9,6 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #import "WAAVSEGearboxCommandModel.h"
+
+/*
+ 这几个值, 仅仅是对于 AVAssetExportSession 中的 presentName 的包装而已.
+ */
 typedef NS_ENUM(NSUInteger,WAVideoExportRatio) {
     WAVideoExportRatioLowQuality,// 自动分辩率
     WAVideoExportRatioMediumQuality,// 自动分辩率
@@ -23,9 +27,9 @@ typedef NS_ENUM(NSUInteger,WAVideoExportRatio) {
  比如先变速，再换音轨，明显后面才换的音轨不会有变速效果
  
  WAVideoBox的工作区域:
-    ----缓存区,appedVideo后缓存区域
-    ----工作区,视频指令区域，只有在这区域的视频才是有效操作
-    ----合成区,完成视频指令后待合成区域
+    ----缓存区, appedVideo后缓存区域
+    ----工作区, 视频指令区域，只有在这区域的视频才是有效操作
+    ----合成区, 完成视频指令后待合成区域
  
  1､appendVideo:会将视频加入到缓存区，将工作区内容合成一个视频（无法再拆散）,并移到合成区，清空工作区
  2､视频操作指令:缓存区视频放到工作区，视频操作只对工作区视频有效

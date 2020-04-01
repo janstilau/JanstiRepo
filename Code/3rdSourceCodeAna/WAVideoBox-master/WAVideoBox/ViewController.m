@@ -38,7 +38,7 @@
     return [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%f.mp4", [[NSDate date] timeIntervalSinceReferenceDate]]];
 }
 
-- (void)enterVideoPlayWithPath:(NSString *)filePath{
+- (void)enterVideoPlayWithFile:(NSString *)filePath{
     PlayViewController *playVc = [PlayViewController new];
     [playVc loadWithFilePath:filePath];
     [self.navigationController pushViewController:playVc animated:YES];
@@ -56,7 +56,7 @@
     
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself enterVideoPlayWithPath:filePath];
+            [wself enterVideoPlayWithFile:filePath];
         }
     }];
 }
@@ -72,7 +72,7 @@
     _videoBox.videoQuality = 6; // 有两种方法可以压缩
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself enterVideoPlayWithPath:filePath];
+            [wself enterVideoPlayWithFile:filePath];
         }
         wself.videoBox.ratio = WAVideoExportRatio960x540;
         wself.videoBox.videoQuality = 0;
@@ -91,7 +91,7 @@
         NSLog(@"progress -- %f",progress);
     } complete:^(NSError *error) {
         if (!error) {
-            [wself enterVideoPlayWithPath:filePath];
+            [wself enterVideoPlayWithFile:filePath];
         }
     }];
 }
@@ -106,7 +106,7 @@
     [_videoBox rotateVideoByDegress:90];
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself enterVideoPlayWithPath:filePath];
+            [wself enterVideoPlayWithFile:filePath];
         }
     }];
 }
@@ -122,7 +122,7 @@
     
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself enterVideoPlayWithPath:filePath];
+            [wself enterVideoPlayWithFile:filePath];
         }
     }];
 }
@@ -138,7 +138,7 @@
     
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself enterVideoPlayWithPath:filePath];
+            [wself enterVideoPlayWithFile:filePath];
         }
     }];
 }
@@ -154,7 +154,7 @@
     
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself enterVideoPlayWithPath:filePath];
+            [wself enterVideoPlayWithFile:filePath];
         }
     }];
     
@@ -171,7 +171,7 @@
     
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself enterVideoPlayWithPath:filePath];
+            [wself enterVideoPlayWithFile:filePath];
         }
     }];
 }
@@ -199,7 +199,7 @@
         NSLog(@"progress --- %f",progress);
     }  complete:^(NSError * error) {
         if (!error) {
-            [wself enterVideoPlayWithPath:filePath];
+            [wself enterVideoPlayWithFile:filePath];
         }
     }];
     
@@ -241,7 +241,7 @@
         NSLog(@"progress --- %f",progress);
     }  complete:^(NSError * error) {
         if (!error) {
-            [wself enterVideoPlayWithPath:filePath];
+            [wself enterVideoPlayWithFile:filePath];
         }
     }];
     
@@ -249,19 +249,19 @@
 }
 
 - (IBAction)natureVideo:(id)sender {
-     [self enterVideoPlayWithPath:_videoPath];
+     [self enterVideoPlayWithFile:_videoPath];
 }
 
 - (IBAction)playTest1:(id)sender {
-    [self enterVideoPlayWithPath:_testOnePath];
+    [self enterVideoPlayWithFile:_testOnePath];
 }
 
 - (IBAction)playTest2:(id)sender {
-    [self enterVideoPlayWithPath:_testTwoPath];
+    [self enterVideoPlayWithFile:_testTwoPath];
 }
 
 - (IBAction)playTest3:(id)sender {
-    [self enterVideoPlayWithPath:_testThreePath];
+    [self enterVideoPlayWithFile:_testThreePath];
 }
 
 

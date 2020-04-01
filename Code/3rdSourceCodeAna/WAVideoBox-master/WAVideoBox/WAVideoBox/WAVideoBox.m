@@ -454,7 +454,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     if ([[NSThread currentThread] isMainThread]) {
         NSAssert(NO, @"You shouldn't make it in main thread!");
     }
-    
+    // runSynchronously 大部分都是在 proocessingQueue. 只有这里才是 ContextQueue
     runSynchronouslyOnVideoBoxContextQueue(^{
         [self finishEditByFilePath:filePath progress:progress complete:complete];
     });
@@ -700,7 +700,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 
 #pragma mark notification
 - (void)AVEditorNotification:(NSNotification *)notification{
-    
+    // runAsynchronously 都是在 ContextQueue, 只有这里, 才是 ProcessingQueue
     runAsynchronouslyOnVideoBoxProcessingQueue(^{
         if ([[notification name] isEqualToString:WAAVSEExportCommandCompletionNotification] && self.exportCommand == notification.object) {
             

@@ -18,6 +18,8 @@
 
 @implementation PlayViewController
 
+// 这个类很简单, 就是播放视频而已.
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     _playerController = [[AVPlayerViewController alloc] init];
