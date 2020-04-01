@@ -25,7 +25,6 @@
     _playerController.player = [AVPlayer playerWithURL:url];
     _playerController.view.frame = self.view.bounds;
     _playerController.showsPlaybackControls = YES;
-  
     [self.view addSubview:_playerController.view];
  
 }

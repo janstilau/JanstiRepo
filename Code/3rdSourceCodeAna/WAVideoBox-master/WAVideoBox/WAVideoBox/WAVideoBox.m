@@ -74,7 +74,6 @@ void runSynchronouslyOnVideoBoxProcessingQueue(void (^block)(void))
 
 void runAsynchronouslyOnVideoBoxProcessingQueue(void (^block)(void))
 {
-    
     if (dispatch_get_specific(videoBoxProcessQueueKey)){
         block();
     }else{
@@ -102,12 +101,19 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 
 @implementation WAVideoBox
 
+/*
+ dispatch_queue_set_specific
+ dispatch_get_specific
+ dispatch_queue_get_specific
+ 这两个 API, 就是为了给 queue 绑定一个值. 线程也有类似的代码.
+ 在运行时, dispatch_get_specific 如果能够返回值, 那么就证明当前的代码, 是运行在对应的 queue 中.
+ 在这里, 作用通过这两个 API, 来进行任务的调度.
+ */
 
 + (void)initialize{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _tmpDirectory = [NSTemporaryDirectory() stringByAppendingPathComponent:@"WAVideoBoxTmp"];
-      
         
         _videoBoxContextQueue = dispatch_queue_create("VideoBoxContextQueue", DISPATCH_QUEUE_SERIAL);
         dispatch_queue_set_specific(_videoBoxContextQueue, videoBoxContextQueueKey, &videoBoxContextQueueKey, NULL);
@@ -471,11 +477,9 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 }
 
 - (void)clean{
-    
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self __internalClean];
     });
-
 }
 
 - (void)__internalClean{

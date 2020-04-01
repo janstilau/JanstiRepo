@@ -12,15 +12,10 @@
 @interface ViewController ()
 
 @property (nonatomic , copy) NSString *videoPath;
-
 @property (nonatomic , copy) NSString *testOnePath;
-
 @property (nonatomic , copy) NSString *testTwoPath;
-
 @property (nonatomic , copy) NSString *testThreePath;
-
 @property (nonatomic , strong) WAVideoBox *videoBox;
-
 
 @end
 
@@ -28,10 +23,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _videoBox = [WAVideoBox new];
+    _videoBox = [[WAVideoBox alloc] init];
   
     _videoPath = [[NSBundle mainBundle] pathForResource:@"nature.mp4" ofType:nil];
-  
     _testOnePath = [[NSBundle mainBundle] pathForResource:@"test1.mp4" ofType:nil];
     _testTwoPath = [[NSBundle mainBundle] pathForResource:@"test2.mp4" ofType:nil];
     _testThreePath = [[NSBundle mainBundle] pathForResource:@"test3.mp4" ofType:nil];
@@ -40,12 +34,11 @@
 
 #pragma mari private method
 
-- (NSString *)buildFilePath{
-    
+- (NSString *)outputVideoPath{
     return [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%f.mp4", [[NSDate date] timeIntervalSinceReferenceDate]]];
 }
 
-- (void)goToPlayVideoByFilePath:(NSString *)filePath{
+- (void)enterVideoPlayWithPath:(NSString *)filePath{
     PlayViewController *playVc = [PlayViewController new];
     [playVc loadWithFilePath:filePath];
     [self.navigationController pushViewController:playVc animated:YES];
@@ -55,7 +48,7 @@
 - (IBAction)rangeVideo:(id)sender {
     
     [_videoBox clean];
-    NSString *filePath = [self buildFilePath];
+    NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
     
     [_videoBox appendVideoByPath:_videoPath];
@@ -63,7 +56,7 @@
     
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself goToPlayVideoByFilePath:filePath];
+            [wself enterVideoPlayWithPath:filePath];
         }
     }];
 }
@@ -71,7 +64,7 @@
 - (IBAction)compressVideo:(id)sender {
     
     [_videoBox clean];
-    NSString *filePath = [self buildFilePath];
+    NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
     
     [_videoBox appendVideoByPath:_videoPath];
@@ -79,7 +72,7 @@
     _videoBox.videoQuality = 6; // 有两种方法可以压缩
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself goToPlayVideoByFilePath:filePath];
+            [wself enterVideoPlayWithPath:filePath];
         }
         wself.videoBox.ratio = WAVideoExportRatio960x540;
         wself.videoBox.videoQuality = 0;
@@ -88,7 +81,7 @@
 
 - (IBAction)addWaterMark:(id)sender {
     [_videoBox clean];
-    NSString *filePath = [self buildFilePath];
+    NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
     
     [_videoBox appendVideoByPath:_videoPath];
@@ -98,7 +91,7 @@
         NSLog(@"progress -- %f",progress);
     } complete:^(NSError *error) {
         if (!error) {
-            [wself goToPlayVideoByFilePath:filePath];
+            [wself enterVideoPlayWithPath:filePath];
         }
     }];
 }
@@ -106,14 +99,14 @@
 - (IBAction)rotateVideo:(id)sender {
     
     [_videoBox clean];
-    NSString *filePath = [self buildFilePath];
+    NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
     
     [_videoBox appendVideoByPath:_videoPath];
     [_videoBox rotateVideoByDegress:90];
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself goToPlayVideoByFilePath:filePath];
+            [wself enterVideoPlayWithPath:filePath];
         }
     }];
 }
@@ -121,7 +114,7 @@
 - (IBAction)replaceVideo:(id)sender {
     
     [_videoBox clean];
-    NSString *filePath = [self buildFilePath];
+    NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
     
     [_videoBox appendVideoByPath:_videoPath];
@@ -129,7 +122,7 @@
     
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself goToPlayVideoByFilePath:filePath];
+            [wself enterVideoPlayWithPath:filePath];
         }
     }];
 }
@@ -137,7 +130,7 @@
 - (IBAction)mixVideo:(id)sender {
     
     [_videoBox clean];
-    NSString *filePath = [self buildFilePath];
+    NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
     
     [_videoBox appendVideoByPath:_testThreePath];
@@ -145,7 +138,7 @@
     
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself goToPlayVideoByFilePath:filePath];
+            [wself enterVideoPlayWithPath:filePath];
         }
     }];
 }
@@ -153,7 +146,7 @@
 - (IBAction)mixSound:(id)sender {
     
     [_videoBox clean];
-    NSString *filePath = [self buildFilePath];
+    NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
     
     [_videoBox appendVideoByPath:_videoPath];
@@ -161,7 +154,7 @@
     
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself goToPlayVideoByFilePath:filePath];
+            [wself enterVideoPlayWithPath:filePath];
         }
     }];
     
@@ -170,7 +163,7 @@
 - (IBAction)gearVideo:(id)sender {
     
     [_videoBox clean];
-    NSString *filePath = [self buildFilePath];
+    NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
     
     [_videoBox appendVideoByPath:_videoPath];
@@ -178,7 +171,7 @@
     
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
-            [wself goToPlayVideoByFilePath:filePath];
+            [wself enterVideoPlayWithPath:filePath];
         }
     }];
 }
@@ -187,7 +180,7 @@
 #pragma mark 混合操作
 - (IBAction)composeEdit:(id)sender {
     [_videoBox clean];
-    NSString *filePath = [self buildFilePath];
+    NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
     
     // 将1号拼接到video，用2号的音频替换，给视频加一个水印，旋转180度，混上3号的音,速度加快两倍，把生好的视频裁6-12秒，压缩
@@ -206,7 +199,7 @@
         NSLog(@"progress --- %f",progress);
     }  complete:^(NSError * error) {
         if (!error) {
-            [wself goToPlayVideoByFilePath:filePath];
+            [wself enterVideoPlayWithPath:filePath];
         }
     }];
     
@@ -217,7 +210,7 @@
 - (IBAction)magicEdit:(id)sender {
     
     [_videoBox clean];
-    NSString *filePath = [self buildFilePath];
+    NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
     
     // 放入原视频，换成1号的音，再把3号视频放入混音,剪其中8秒
@@ -248,7 +241,7 @@
         NSLog(@"progress --- %f",progress);
     }  complete:^(NSError * error) {
         if (!error) {
-            [wself goToPlayVideoByFilePath:filePath];
+            [wself enterVideoPlayWithPath:filePath];
         }
     }];
     
@@ -256,19 +249,19 @@
 }
 
 - (IBAction)natureVideo:(id)sender {
-     [self goToPlayVideoByFilePath:_videoPath];
+     [self enterVideoPlayWithPath:_videoPath];
 }
 
 - (IBAction)playTest1:(id)sender {
-    [self goToPlayVideoByFilePath:_testOnePath];
+    [self enterVideoPlayWithPath:_testOnePath];
 }
 
 - (IBAction)playTest2:(id)sender {
-    [self goToPlayVideoByFilePath:_testTwoPath];
+    [self enterVideoPlayWithPath:_testTwoPath];
 }
 
 - (IBAction)playTest3:(id)sender {
-    [self goToPlayVideoByFilePath:_testThreePath];
+    [self enterVideoPlayWithPath:_testThreePath];
 }
 
 
