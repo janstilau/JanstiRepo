@@ -626,6 +626,9 @@ static dispatch_once_t onceToken;
          */
         AVAssetExportSession *session = [[AVAssetExportSession alloc] initWithAsset:videoAsset presetName:presetName];
         NSDateFormatter *formater = [[NSDateFormatter alloc] init];
+        CMTime start = CMTimeMakeWithSeconds(1.0, 600);
+        CMTime duration = CMTimeMakeWithSeconds(30.0, 600);
+        session.timeRange = CMTimeRangeMake(start, duration);
         [formater setDateFormat:@"yyyy-MM-dd-HH:mm:ss-SSS"];
         // 如果您试图覆盖现有的文件，或者在应用程序的沙箱之外编写文件, 所以, 这里通过时间来进行命名.
         NSString *outputPath = [NSHomeDirectory() stringByAppendingFormat:@"/tmp/video-%@.mp4", [formater stringFromDate:[NSDate date]]];
