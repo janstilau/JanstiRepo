@@ -198,6 +198,12 @@ static NSString *const kPresentationSize         = @"presentationSize";
     _timeObserver = [_player addPeriodicTimeObserverForInterval:interval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         @strongify(self)
         if (!self) return;
+        /*
+         An array of time ranges within which it is possible to seek.
+         这个值, 其实在这里就是当做了一个标记, 就是已经获取到了关于资源的信息了.
+         很快这个值, 就变成了 0 到 asset 的 duration 的值了.
+         这里, 当这个值有值的时候, 就认为, 视频已经处于可用的状态, 可以调用播放进度更改的回调了.
+         */
         NSArray *loadedRanges = self.playerItem.seekableTimeRanges;
         if (_isPlaying && self.loadState == ZFPlayerLoadStateStalled) self.player.rate = self.rate;
         if (loadedRanges.count > 0) {
@@ -296,6 +302,10 @@ static NSString *const kPresentationSize         = @"presentationSize";
 
 /// Calculate buffer progress
 - (NSTimeInterval)availableDuration {
+    /*
+     An array of time ranges indicating media data that is readily available.
+     这里, 作者是将 loadedTimeRanges 的第一个, 当做是已经缓存了的数据的范围.
+     */
     NSArray *timeRangeArray = _playerItem.loadedTimeRanges;
     CMTime currentTime = [_player currentTime];
     BOOL foundRange = NO;

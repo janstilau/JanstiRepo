@@ -69,6 +69,12 @@
     }];
     [[TZImageManager manager] getVideoWithAsset:_model.asset completion:^(AVPlayerItem *playerItem, NSDictionary *info) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            /*
+             AVAsset 仅仅是资源, 而资源在播放的过程中, 是需要状态管理的. Player 不直接对接资源, 而是 playerItem.
+             PlayerItem 里面有各种状态需要监听, 但是仔细去看, 都是播放的状态, 而不是资源的状态. 管理与之相关联的asset的呈现状态
+             AVAssetTrack -> AVPlayerItemTrack
+             想到这里, 就能够知道, 为什么需要 PlayerItem 这样一个东西了. 对于 AVAsset 的状态处理, 都包含在了 PlayerItem 的内部. PlyerItem 的各种状态, 是包含了网络, 缓存, 资源可用性各种考虑暴露出来的上层的一个状态.
+             */
             self->_player = [AVPlayer playerWithPlayerItem:playerItem];
             self->_playerLayer = [AVPlayerLayer playerLayerWithPlayer:self->_player];
             self->_playerLayer.frame = self.view.bounds;
@@ -163,6 +169,16 @@
 #pragma mark - Click Event
 
 - (void)playButtonClick {
+    /*
+     kCMTimeZero 的值
+     {
+       value = 0
+       timescale = 1
+       flags = kCMTimeFlags_Valid
+       epoch = 0
+     }
+     */
+    
     CMTime currentTime = _player.currentItem.currentTime;
     CMTime durationTime = _player.currentItem.duration;
     if (_player.rate == 0.0f) {
