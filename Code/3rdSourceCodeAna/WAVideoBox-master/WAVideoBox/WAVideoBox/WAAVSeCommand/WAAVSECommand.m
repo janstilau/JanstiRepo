@@ -68,6 +68,8 @@
         CMTime insertionPoint = kCMTimeZero;
         NSError *error = nil;
         
+        
+        
         self.composition.mutableComposition = [AVMutableComposition composition];
         //  2.1､把视频轨道加入到混合器做出新的轨道
         if (self.assetVideoTrack != nil) {
