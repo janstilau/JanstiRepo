@@ -194,21 +194,47 @@ static NSString *const kPresentationSize         = @"presentationSize";
     CMTime interval = CMTimeMakeWithSeconds(self.timeRefreshInterval > 0 ? self.timeRefreshInterval : 0.1, NSEC_PER_SEC);
     
     // 这里, 对于播放的进度进行了监听, 传递出来的就是当前的播放时刻.
+    //
     @weakify(self)
     _timeObserver = [_player addPeriodicTimeObserverForInterval:interval queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         @strongify(self)
         if (!self) return;
-        /*
-         An array of time ranges within which it is possible to seek.
-         这个值, 其实在这里就是当做了一个标记, 就是已经获取到了关于资源的信息了.
-         很快这个值, 就变成了 0 到 asset 的 duration 的值了.
-         这里, 当这个值有值的时候, 就认为, 视频已经处于可用的状态, 可以调用播放进度更改的回调了.
-         */
         NSArray *loadedRanges = self.playerItem.seekableTimeRanges;
         if (_isPlaying && self.loadState == ZFPlayerLoadStateStalled) self.player.rate = self.rate;
         if (loadedRanges.count > 0) {
             if (self.playerPlayTimeChanged) self.playerPlayTimeChanged(self, self.currentTime, self.totalTime);
         }
+    }];
+    
+    /*
+     - (void)addBoundaryTimeObserver {
+         NSMutableArray *times = [NSMutableArray array];
+          // Set initial time to zero
+         CMTime currentTime = kCMTimeZero;
+         // Get asset duration
+         CMTime assetDuration = self.asset.duration;
+         // Divide the asset duration into quarters
+         CMTime interval = CMTimeMultiplyByFloat64(assetDuration, 0.25);
+
+          // Build boundary times at 25%, 50%, 75%, 100%
+         while (CMTIME_COMPARE_INLINE(currentTime, <, assetDuration)) {
+             currentTime = CMTimeAdd(currentTime, interval);
+             [times addObject:[NSValue valueWithCMTime:currentTime]];
+         }
+         // Add time observer
+         self.timeObserverToken =
+             [self.player addBoundaryTimeObserverForTimes:times
+                                                    queue:dispatch_get_main_queue()
+                                               usingBlock:^{
+                 // Use weak reference to self
+                 // Update user interface state
+             }];
+     }
+     这里, BoundaryTime 指的是, 当数组里面的时间点到达之后, 调用 Block 里面的代码.
+     同 addPeriodicTimeObserverForInterval 比较, 这里有了更加可控的时间点回调.
+     */
+    [_player addBoundaryTimeObserverForTimes:@[] queue:dispatch_get_main_queue() usingBlock:^{
+        
     }];
     
     // 这里, 对播放完毕进行了监听.
