@@ -104,6 +104,8 @@
 /// 检查照片大小是否满足最小要求
 - (BOOL)isPhotoSelectableWithAsset:(PHAsset *)asset;
 
+- (AVMutableVideoComposition *)fixedCompositionWithAsset:(AVAsset *)videoAsset;
+
 /// 修正图片转向
 - (UIImage *)fixOrientation:(UIImage *)aImage;
 

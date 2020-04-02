@@ -141,6 +141,7 @@
 		06026E0324348CE2005D2675 /* MCVideoExporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCVideoExporter.m; sourceTree = "<group>"; };
 		06026E0524349071005D2675 /* SDAVAssetExportSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDAVAssetExportSession.m; sourceTree = "<group>"; };
 		06026E0624349071005D2675 /* SDAVAssetExportSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDAVAssetExportSession.h; sourceTree = "<group>"; };
+		0633558B2435D0600010AC1E /* AVAssetData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AVAssetData.h; sourceTree = "<group>"; };
 		06A33ACC2431FD1B00BAE06D /* TZAlbumPickerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TZAlbumPickerController.h; sourceTree = "<group>"; };
 		06A33ACD2431FD1B00BAE06D /* TZAlbumPickerController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TZAlbumPickerController.m; sourceTree = "<group>"; };
 		06A33AD024321EEC00BAE06D /* TZPhotoPreviewView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TZPhotoPreviewView.h; sourceTree = "<group>"; };
@@ -412,6 +413,7 @@
 				900E658D1C2BB8D5003D9A9E /* LaunchScreen.storyboard */,
 				900E65901C2BB8D5003D9A9E /* Info.plist */,
 				900E657F1C2BB8D5003D9A9E /* Supporting Files */,
+				0633558B2435D0600010AC1E /* AVAssetData.h */,
 			);
 			path = TZImagePickerController;
 			sourceTree = "<group>";

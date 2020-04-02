@@ -14,9 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MCVideoExporter : NSObject
 
 @property (nonatomic, strong) AVAsset *asset;
+@property (nonatomic, strong) void (^imgGeneratedCallBack)(NSArray<UIImage*>* imgs);
 
 - (void)startExport;
-
+- (UIImage *)generateCoverImage;
+- (void)generateImages;
 
 @end
 

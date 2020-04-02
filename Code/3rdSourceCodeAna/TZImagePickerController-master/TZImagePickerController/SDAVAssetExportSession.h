@@ -1,37 +1,7 @@
-//
-//  SDAVAssetExportSession.h
-//
-// This file is part of the SDAVAssetExportSession package.
-//
-// Created by Olivier Poitrey <rs@dailymotion.com> on 13/03/13.
-// Copyright 2013 Olivier Poitrey. All rights servered.
-//
-// For the full copyright and license information, please view the LICENSE
-// file that was distributed with this source code.
-//
-
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 
 @protocol SDAVAssetExportSessionDelegate;
-
-
-/**
- * An `SDAVAssetExportSession` object transcodes the contents of an AVAsset source object to create an output
- * of the form described by specified video and audio settings. It implements most of the API of Apple provided
- * `AVAssetExportSession` but with the capability to provide you own video and audio settings instead of the
- * limited set of Apple provided presets.
- *
- * After you have initialized an export session with the asset that contains the source media, video and audio
- * settings, and the output file type (outputFileType), you can start the export running by invoking 
- * `exportAsynchronouslyWithCompletionHandler:`. Because the export is performed asynchronously, this method
- * returns immediately — you can observe progress to check on the progress.
- *
- * The completion handler you supply to `exportAsynchronouslyWithCompletionHandler:` is called whether the export
- * fails, completes, or is cancelled. Upon completion, the status property indicates whether the export has
- * completed successfully. If it has failed, the value of the error property supplies additional information
- * about the reason for the failure.
- */
 
 @interface SDAVAssetExportSession : NSObject
 
@@ -39,6 +9,7 @@
 
 /**
  * The asset with which the export session was initialized.
+ * readonly, 只能在初始化方法里面设置.
  */
 @property (nonatomic, strong, readonly) AVAsset *asset;
 
@@ -102,6 +73,7 @@
  *
  * You can observe this property using key-value observing.
  *
+ * 该值会直接影响输出视频的时间段.
  */
 @property (nonatomic, assign) CMTimeRange timeRange;
 
@@ -109,6 +81,10 @@
  * Indicates whether the movie should be optimized for network use.
  *
  * You can observe this property using key-value observing.
+ *
+ * When the value of this property is YES, the writer writes the output file in such a way that playback can start after only a small amount of the file is downloaded.
+ *
+ * 这个应该算作是默认项, 因为我们现在的主要的途径, 就是为了上传之后用户下载.
  */
 @property (nonatomic, assign) BOOL shouldOptimizeForNetworkUse;
 
@@ -132,6 +108,7 @@
  * A value of 0 means the export has not yet begun, 1 means the export is complete.
  *
  * Unlike Apple provided `AVAssetExportSession`, this property can be observed using key-value observing.
+ * 这个, 可以观察. 所以, 进度需要从这个值进行获取.
  */
 @property (nonatomic, assign, readonly) float progress;
 
@@ -144,44 +121,9 @@
  */
 @property (nonatomic, assign, readonly) AVAssetExportSessionStatus status;
 
-/**
- * Returns an asset export session configured with a specified asset.
- *
- * @param asset The asset you want to export
- * @return An asset export session initialized to export `asset`.
- */
 + (id)exportSessionWithAsset:(AVAsset *)asset;
-
-/**
- * Initializes an asset export session with a specified asset.
- *
- * @param asset The asset you want to export
- * @return An asset export session initialized to export `asset`.
- */
 - (id)initWithAsset:(AVAsset *)asset;
-
-/**
- * Starts the asynchronous execution of an export session.
- *
- * This method starts an asynchronous export operation and returns immediately. status signals the terminal
- * state of the export session, and if a failure occurs, error describes the problem.
- *
- * If internal preparation for export fails, handler is invoked synchronously. The handler may also be called
- * asynchronously, after the method returns, in the following cases:
- *
- * 1. If a failure occurs during the export, including failures of loading, re-encoding, or writing media data to the output.
- * 2. If cancelExport is invoked.
- * 3. After the export session succeeds, having completely written its output to the outputURL.
- *
- * @param handler A block that is invoked when writing is complete or in the event of writing failure.
- */
 - (void)exportAsynchronouslyWithCompletionHandler:(void (^)(void))handler;
-
-/**
- * Cancels the execution of an export session.
- *
- * You can invoke this method when the export is running.
- */
 - (void)cancelExport;
 
 @end

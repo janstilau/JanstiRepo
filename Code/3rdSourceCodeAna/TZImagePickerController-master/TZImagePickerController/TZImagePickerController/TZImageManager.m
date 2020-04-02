@@ -627,9 +627,11 @@ static dispatch_once_t onceToken;
         AVAssetExportSession *session = [[AVAssetExportSession alloc] initWithAsset:videoAsset presetName:presetName];
         NSDateFormatter *formater = [[NSDateFormatter alloc] init];
         [formater setDateFormat:@"yyyy-MM-dd-HH:mm:ss-SSS"];
+        // 如果您试图覆盖现有的文件，或者在应用程序的沙箱之外编写文件, 所以, 这里通过时间来进行命名.
         NSString *outputPath = [NSHomeDirectory() stringByAppendingFormat:@"/tmp/video-%@.mp4", [formater stringFromDate:[NSDate date]]];
         
         // Optimize for network use.
+        // When the value of this property is YES, the writer writes the output file in such a way that playback can start after only a small amount of the file is downloaded. 猜测, 输出的文件会把视频的元信息, 放到了视频文件的头部.
         session.shouldOptimizeForNetworkUse = true;
         
         NSArray *supportedTypeArray = session.supportedFileTypes;

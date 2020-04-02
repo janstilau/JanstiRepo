@@ -59,13 +59,15 @@
     SDAVAssetExportSession *encoder = [SDAVAssetExportSession.alloc initWithAsset:_asset];
     encoder.outputFileType = AVFileTypeMPEG4;
     encoder.outputURL = [NSURL fileURLWithPath:[self outputVideoPath]];
+    CMTimeRange duration = CMTimeRangeMake(kCMTimeZero, [_asset duration]);
+    duration.duration.value /= 2;
+    encoder.timeRange = duration;
     NSLog(@"%@", [self outputVideoPath]);
-    
     encoder.videoSettings = @
     {
         AVVideoCodecKey: AVVideoCodecH264,
-        AVVideoWidthKey: @1280,
-        AVVideoHeightKey: @720,
+        AVVideoWidthKey: @720,
+        AVVideoHeightKey: @1280,
         AVVideoCompressionPropertiesKey: @
         {
             AVVideoAverageBitRateKey: @2500000,
@@ -79,7 +81,6 @@
         AVSampleRateKey: @44100,
         AVEncoderBitRateKey: @128000,
     };
-
     [encoder exportAsynchronouslyWithCompletionHandler:^
     {
         if (encoder.status == AVAssetExportSessionStatusCompleted)
@@ -96,5 +97,42 @@
         }
     }];
 }
+
+
+- (UIImage *)generateCoverImage {
+    AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:_asset];
+    Float64 durationSeconds = CMTimeGetSeconds([_asset duration]);
+    CMTime midpoint = CMTimeMakeWithSeconds(durationSeconds/2.0, 600);
+    NSError *error;
+    CMTime actualTime;
+    CGImageRef halfWayImage = [imageGenerator copyCGImageAtTime:midpoint actualTime:&actualTime error:&error];
+    if (!halfWayImage) { return  nil; }
+    UIImage *result = [UIImage imageWithCGImage:halfWayImage];
+    CGImageRelease(halfWayImage);
+    return result;
+}
+
+- (void)generateImages {
+    AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:_asset];
+    Float64 durationSeconds = CMTimeGetSeconds([_asset duration]);
+    CMTime beginPoint = CMTimeMakeWithSeconds(0, 600);
+    CMTime midpoint = CMTimeMakeWithSeconds(durationSeconds/2.0, 600);
+    CMTime endPoint = CMTimeMakeWithSeconds(durationSeconds, 600);
+    NSArray *times = @[
+        [NSValue valueWithCMTime:beginPoint],
+        [NSValue valueWithCMTime:midpoint],
+        [NSValue valueWithCMTime:endPoint]
+    ];
+    NSMutableArray *resultM = [NSMutableArray arrayWithCapacity:3];
+    [imageGenerator generateCGImagesAsynchronouslyForTimes:times completionHandler:^(CMTime requestedTime, CGImageRef image, CMTime actualTime, AVAssetImageGeneratorResult result, NSError *error) {
+        if (!image) { return; }
+        UIImage *resultImg = [UIImage imageWithCGImage:image];
+        [resultM addObject:resultImg];
+        if (resultM.count == times.count) {
+            self.imgGeneratedCallBack? self.imgGeneratedCallBack(resultM): nil;
+        }
+    }];
+}
+
 
 @end

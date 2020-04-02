@@ -632,7 +632,14 @@
      options.networkAccessAllowed = YES;
      [[PHImageManager defaultManager] requestAVAssetForVideo:asset options:options resultHandler:^(AVAsset* avasset, AVAudioMix* audioMix, NSDictionary* info){
          self.exporter.asset = avasset;
-         [self.exporter startExport];
+//         [self.exporter startExport];
+         UIImage *midImage = [self.exporter generateCoverImage];
+         NSLog(@"%@", midImage);
+         
+         [self.exporter setImgGeneratedCallBack:^(NSArray<UIImage *> *imgs) {
+             NSLog(@"%@", imgs);
+         }];
+         [self.exporter generateImages];
      }];
 }
 
