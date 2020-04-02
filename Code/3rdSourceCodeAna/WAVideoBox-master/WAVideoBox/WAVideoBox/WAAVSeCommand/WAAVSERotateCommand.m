@@ -15,7 +15,7 @@
   
     [super performVideoCompopsition];
     
-    if(self.composition.mutableVideoComposition.instructions.count > 1){
+    if(self.mcComposition.videoComposition.instructions.count > 1){
          NSAssert(NO, @"This method does not support multi-video processing for the time being.");
         //暂不支持不同分辩率的视频合并马上再旋转
         //ps:可以分开操作，先旋转一个再apeed再旋转即可,使用骚操作完成
@@ -23,7 +23,7 @@
     
     degress -= degress % 360 % 90 ;
     
-    for (AVMutableVideoCompositionInstruction *instruction in self.composition.mutableVideoComposition.instructions) {
+    for (AVMutableVideoCompositionInstruction *instruction in self.mcComposition.videoComposition.instructions) {
         
         AVMutableVideoCompositionLayerInstruction *layerInstruction = (AVMutableVideoCompositionLayerInstruction *)(instruction.layerInstructions)[0];
         CGAffineTransform t1;
@@ -34,27 +34,27 @@
         degress -= degress % 360 % 90;
         
         if (degress == 90) {
-            t1 = CGAffineTransformMakeTranslation(self.composition.mutableVideoComposition.renderSize.height, 0.0);
-            renderSize = CGSizeMake(self.composition.mutableVideoComposition.renderSize.height, self.composition.mutableVideoComposition.renderSize.width);
+            t1 = CGAffineTransformMakeTranslation(self.mcComposition.videoComposition.renderSize.height, 0.0);
+            renderSize = CGSizeMake(self.mcComposition.videoComposition.renderSize.height, self.mcComposition.videoComposition.renderSize.width);
         }else if (degress == 180){
-            t1 = CGAffineTransformMakeTranslation(self.composition.mutableVideoComposition.renderSize.width, self.composition.mutableVideoComposition.renderSize.height);
-            renderSize = CGSizeMake(self.composition.mutableVideoComposition.renderSize.width, self.composition.mutableVideoComposition.renderSize.height);
+            t1 = CGAffineTransformMakeTranslation(self.mcComposition.videoComposition.renderSize.width, self.mcComposition.videoComposition.renderSize.height);
+            renderSize = CGSizeMake(self.mcComposition.videoComposition.renderSize.width, self.mcComposition.videoComposition.renderSize.height);
         }else if (degress == 270){
-            t1 = CGAffineTransformMakeTranslation(0.0, self.composition.mutableVideoComposition.renderSize.width);
-            renderSize = CGSizeMake(self.composition.mutableVideoComposition.renderSize.height, self.composition.mutableVideoComposition.renderSize.width);
+            t1 = CGAffineTransformMakeTranslation(0.0, self.mcComposition.videoComposition.renderSize.width);
+            renderSize = CGSizeMake(self.mcComposition.videoComposition.renderSize.height, self.mcComposition.videoComposition.renderSize.width);
         }else{
             t1 = CGAffineTransformMakeTranslation(0.0, 0.0);
-            renderSize = CGSizeMake(self.composition.mutableVideoComposition.renderSize.width, self.composition.mutableVideoComposition.renderSize.height);
+            renderSize = CGSizeMake(self.mcComposition.videoComposition.renderSize.width, self.mcComposition.videoComposition.renderSize.height);
         }
         
         // Rotate transformation
         t2 = CGAffineTransformRotate(t1, (degress / 180.0) * M_PI );
         
-        self.composition.mutableComposition.naturalSize = self.composition.mutableVideoComposition.renderSize = renderSize;
+        self.mcComposition.totalComposition.naturalSize = self.mcComposition.videoComposition.renderSize = renderSize;
         
         CGAffineTransform existingTransform;
         
-        if (![layerInstruction getTransformRampForTime:[self.composition.mutableComposition duration] startTransform:&existingTransform endTransform:NULL timeRange:NULL]) {
+        if (![layerInstruction getTransformRampForTime:[self.mcComposition.totalComposition duration] startTransform:&existingTransform endTransform:NULL timeRange:NULL]) {
             [layerInstruction setTransform:t2 atTime:kCMTimeZero];
         } else {
             CGAffineTransform newTransform =  CGAffineTransformConcat(existingTransform, t2);
@@ -66,19 +66,19 @@
     }
     
     // 将容器大小旋转，若没有anmaitionTool的修改，则直接跳过此步
-    if (self.composition.videoLayer || self.composition.parentLayer) {
+    if (self.mcComposition.videoLayer || self.mcComposition.parentLayer) {
         
-        for (CALayer *sublayer in self.composition.parentLayer.sublayers) {
-            if (sublayer == self.composition.videoLayer) {
+        for (CALayer *sublayer in self.mcComposition.parentLayer.sublayers) {
+            if (sublayer == self.mcComposition.videoLayer) {
                 continue;
             }
-            [self converRect:sublayer naturalRenderSize:self.composition.mutableVideoComposition.renderSize renderSize:self.composition.mutableVideoComposition.renderSize];
+            [self converRect:sublayer naturalRenderSize:self.mcComposition.videoComposition.renderSize renderSize:self.mcComposition.videoComposition.renderSize];
             sublayer.transform = CATransform3DRotate(sublayer.transform, -(degress / 180.0 * M_PI), 0, 0, 1);
         }
         
         if (degress == 90 || degress == 270) {
-            self.composition.videoLayer.frame = CGRectMake(0, 0, self.composition.videoLayer.bounds.size.height, self.composition.videoLayer.bounds.size.width);
-            self.composition.parentLayer.frame = CGRectMake(0, 0, self.composition.parentLayer.bounds.size.height, self.composition.parentLayer.bounds.size.width);
+            self.mcComposition.videoLayer.frame = CGRectMake(0, 0, self.mcComposition.videoLayer.bounds.size.height, self.mcComposition.videoLayer.bounds.size.width);
+            self.mcComposition.parentLayer.frame = CGRectMake(0, 0, self.mcComposition.parentLayer.bounds.size.height, self.mcComposition.parentLayer.bounds.size.width);
         }
         
     }

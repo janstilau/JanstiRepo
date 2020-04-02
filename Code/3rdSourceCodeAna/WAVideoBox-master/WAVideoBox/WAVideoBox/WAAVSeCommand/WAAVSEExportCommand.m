@@ -34,41 +34,41 @@
     [manager removeItemAtPath:path error:nil];
     
     // Step 2
-    if (self.composition.presetName.length == 0) {
-        self.composition.presetName = AVAssetExportPresetHighestQuality;
+    if (self.mcComposition.presetName.length == 0) {
+        self.mcComposition.presetName = AVAssetExportPresetHighestQuality;
     }
     
-    if (!self.composition.fileType) {
-        self.composition.fileType = AVFileTypeMPEG4;
+    if (!self.mcComposition.fileType) {
+        self.mcComposition.fileType = AVFileTypeMPEG4;
     }
     
-    self.exportSession = [[AVAssetExportSession alloc] initWithAsset:asset presetName:self.composition.presetName];
+    self.exportSession = [[AVAssetExportSession alloc] initWithAsset:asset presetName:self.mcComposition.presetName];
    
     self.exportSession.shouldOptimizeForNetworkUse = YES;
-    self.exportSession.videoComposition = self.composition.mutableVideoComposition;
-    self.exportSession.audioMix = self.composition.mutableAudioMix;
+    self.exportSession.videoComposition = self.mcComposition.videoComposition;
+    self.exportSession.audioMix = self.mcComposition.audioMix;
     
-    self.exportSession.timeRange = CMTimeRangeMake(kCMTimeZero, [self.composition duration]);
+    self.exportSession.timeRange = CMTimeRangeMake(kCMTimeZero, [self.mcComposition duration]);
     
     self.exportSession.outputURL = [NSURL fileURLWithPath:path];
-    self.exportSession.outputFileType = self.composition.fileType;
+    self.exportSession.outputFileType = self.mcComposition.fileType;
     
     if (self.videoQuality) {
         
-        if ([self.composition.presetName isEqualToString:AVAssetExportPreset640x480]) {
+        if ([self.mcComposition.presetName isEqualToString:AVAssetExportPreset640x480]) {
             self.ratioParam = 0.02 ;
         }
         
-        if ([self.composition.presetName isEqualToString:AVAssetExportPreset960x540]) {
+        if ([self.mcComposition.presetName isEqualToString:AVAssetExportPreset960x540]) {
             self.ratioParam = 0.04 ;
         }
         
-        if ([self.composition.presetName isEqualToString:AVAssetExportPreset1280x720]) {
+        if ([self.mcComposition.presetName isEqualToString:AVAssetExportPreset1280x720]) {
             self.ratioParam = 0.08 ;
         }
         
         if (self.ratioParam) {
-            self.exportSession.fileLengthLimit = CMTimeGetSeconds(self.composition.duration) * self.ratioParam * self.composition.videoQuality * 1024 * 1024;
+            self.exportSession.fileLengthLimit = CMTimeGetSeconds(self.mcComposition.duration) * self.ratioParam * self.mcComposition.videoQuality * 1024 * 1024;
         }
         
     }
@@ -99,7 +99,7 @@
 }
 
 - (void)performSaveByPath:(NSString *)path{
-    [self performSaveAsset:self.composition.mutableComposition byPath:path];
+    [self performSaveAsset:self.mcComposition.totalComposition byPath:path];
 }
 
 @end

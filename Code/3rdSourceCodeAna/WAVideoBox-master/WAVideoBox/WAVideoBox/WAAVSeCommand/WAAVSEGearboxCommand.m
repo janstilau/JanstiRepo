@@ -19,34 +19,34 @@
     [super performWithAsset:asset];
     
     CMTime insertPoint = kCMTimeZero;
-    for (AVMutableVideoCompositionInstruction *instruction in self.composition.instructions) {
+    for (AVMutableVideoCompositionInstruction *instruction in self.mcComposition.videoInstructions) {
         CMTime duration = instruction.timeRange.duration;
         [instruction setTimeRange:CMTimeRangeMake(insertPoint, CMTimeMake(duration.value / scale, duration.timescale))];
         insertPoint = CMTimeAdd(instruction.timeRange.start, instruction.timeRange.duration);
     }
     
     
-    [[self.composition.mutableComposition tracksWithMediaType:AVMediaTypeVideo] enumerateObjectsUsingBlock:^(AVMutableCompositionTrack  *videoTrack, NSUInteger idx, BOOL * _Nonnull stop) {
+    [[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo] enumerateObjectsUsingBlock:^(AVMutableCompositionTrack  *videoTrack, NSUInteger idx, BOOL * _Nonnull stop) {
         //        AVMutableVideoCompositionInstruction *instruction = self.composition.instructions[1];
         [videoTrack scaleTimeRange:videoTrack.timeRange toDuration: CMTimeMake(videoTrack.timeRange.duration.value / scale, videoTrack.timeRange.duration.timescale)];
     }];
 
-    [[self.composition.mutableComposition tracksWithMediaType:AVMediaTypeAudio] enumerateObjectsUsingBlock:^(AVMutableCompositionTrack  *audioTrack, NSUInteger idx, BOOL * _Nonnull stop) {
+    [[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio] enumerateObjectsUsingBlock:^(AVMutableCompositionTrack  *audioTrack, NSUInteger idx, BOOL * _Nonnull stop) {
         [audioTrack scaleTimeRange:audioTrack.timeRange toDuration: CMTimeMake(audioTrack.timeRange.duration.value / scale, audioTrack.timeRange.duration.timescale)];
     }];
     
-    self.composition.duration = CMTimeMultiplyByFloat64(self.composition.duration, 1 / scale);
+    self.mcComposition.duration = CMTimeMultiplyByFloat64(self.mcComposition.duration, 1 / scale);
     
     // 保证最后一条能到视频最后
-    AVMutableVideoCompositionInstruction *instruction = [self.composition.instructions lastObject];
-    [instruction setTimeRange:CMTimeRangeMake(instruction.timeRange.start, CMTimeSubtract(self.composition.duration, instruction.timeRange.start))];
+    AVMutableVideoCompositionInstruction *instruction = [self.mcComposition.videoInstructions lastObject];
+    [instruction setTimeRange:CMTimeRangeMake(instruction.timeRange.start, CMTimeSubtract(self.mcComposition.duration, instruction.timeRange.start))];
 }
 
 
 - (void)performWithAsset:(AVAsset *)asset models:(NSArray<WAAVSEGearboxCommandModel *> *)gearboxModels{
     [super performWithAsset:asset];
     
-    if (self.composition.instructions.count > 1) {
+    if (self.mcComposition.videoInstructions.count > 1) {
         NSAssert(NO, @"This method does not support multi-video processing for the time being.");
     }
     
@@ -57,12 +57,12 @@
         
         scaleDuration = CMTimeMultiplyByFloat64(model.duration, 1 / model.scale);
         // 视图变速
-        for (AVMutableCompositionTrack  *videoTrack in [self.composition.mutableComposition tracksWithMediaType:AVMediaTypeVideo]) {
+        for (AVMutableCompositionTrack  *videoTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo]) {
             [videoTrack scaleTimeRange:CMTimeRangeMake(model.beganDuration, model.duration) toDuration:scaleDuration];
         }
         
         // 音频变速
-        for (AVMutableCompositionTrack  *audioTrack in [self.composition.mutableComposition tracksWithMediaType:AVMediaTypeAudio]) {
+        for (AVMutableCompositionTrack  *audioTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio]) {
             
             [audioTrack scaleTimeRange:CMTimeRangeMake(model.beganDuration, model.duration) toDuration: scaleDuration];
         }
@@ -73,8 +73,8 @@
     }
     
     
-    for (AVMutableVideoCompositionInstruction *instruction in self.composition.instructions) {
-        [instruction setTimeRange:CMTimeRangeMake(kCMTimeZero,self.composition.duration)];
+    for (AVMutableVideoCompositionInstruction *instruction in self.mcComposition.videoInstructions) {
+        [instruction setTimeRange:CMTimeRangeMake(kCMTimeZero,self.mcComposition.duration)];
     }
     
 }

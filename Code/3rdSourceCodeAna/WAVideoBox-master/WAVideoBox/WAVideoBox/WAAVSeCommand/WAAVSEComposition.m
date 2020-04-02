@@ -17,11 +17,11 @@
     return _audioMixParams;
 }
 
-- (NSMutableArray<AVMutableVideoCompositionInstruction *> *)instructions{
-    if (!_instructions) {
-        _instructions = [NSMutableArray array];
+- (NSMutableArray<AVMutableVideoCompositionInstruction *> *)videoInstructions{
+    if (!_videoInstructions) {
+        _videoInstructions = [NSMutableArray array];
     }
-    return _instructions;
+    return _videoInstructions;
 }
 
 @end

@@ -14,32 +14,32 @@
     
     [super performWithAsset:asset];
 
-    if (CMTimeCompare(self.composition.duration, CMTimeAdd(range.start, range.duration)) != 1) {
+    if (CMTimeCompare(self.mcComposition.duration, CMTimeAdd(range.start, range.duration)) != 1) {
         NSAssert(NO, @"Range out of video duration");
     }
     
     // 轨道裁剪
-    for (AVMutableCompositionTrack *compositionTrack in [self.composition.mutableComposition tracksWithMediaType:AVMediaTypeAudio]) {
+    for (AVMutableCompositionTrack *compositionTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio]) {
         
         [self subTimeRaneWithTrack:compositionTrack range:range];
         
     }
     
-    for (AVMutableCompositionTrack *compositionTrack in [self.composition.mutableComposition tracksWithMediaType:AVMediaTypeVideo]) {
+    for (AVMutableCompositionTrack *compositionTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo]) {
         
         [self subTimeRaneWithTrack:compositionTrack range:range];
         
     }
     
-    self.composition.duration = range.duration;
+    self.mcComposition.duration = range.duration;
    
 }
 
 - (void)subTimeRaneWithTrack:(AVMutableCompositionTrack *)compositionTrack range:(CMTimeRange)range{
     
     CMTime endPoint = CMTimeAdd(range.start, range.duration);
-    if (CMTimeCompare(self.composition.duration,endPoint) != -1) {
-        [compositionTrack removeTimeRange:CMTimeRangeMake(endPoint,CMTimeSubtract(self.composition.duration, endPoint))];
+    if (CMTimeCompare(self.mcComposition.duration,endPoint) != -1) {
+        [compositionTrack removeTimeRange:CMTimeRangeMake(endPoint,CMTimeSubtract(self.mcComposition.duration, endPoint))];
     }
     
     if (CMTimeGetSeconds(range.start)) {

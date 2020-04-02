@@ -53,22 +53,22 @@
         CGSize natureSize = mixAssetVideoTrack.naturalSize;
         NSInteger degress = [self degressFromTransform:mixAssetVideoTrack.preferredTransform];
         
-        AVMutableCompositionTrack *videoTrack =  [[self.composition.mutableComposition tracksWithMediaType:AVMediaTypeVideo] lastObject];
+        AVMutableCompositionTrack *videoTrack =  [[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo] lastObject];
         BOOL needNewInstrunction = YES;
         
-        if (!(degress % 360) && !self.composition.instructions.count && CGSizeEqualToSize(natureSize, self.composition.mutableComposition.naturalSize) && videoTrack) {
-             [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, mixAsset.duration) ofTrack:mixAssetVideoTrack atTime:self.composition.duration error:&error];
+        if (!(degress % 360) && !self.mcComposition.videoInstructions.count && CGSizeEqualToSize(natureSize, self.mcComposition.totalComposition.naturalSize) && videoTrack) {
+             [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, mixAsset.duration) ofTrack:mixAssetVideoTrack atTime:self.mcComposition.duration error:&error];
             needNewInstrunction = NO;
-        }else if (!(degress % 360) && self.composition.instructions.count) {
+        }else if (!(degress % 360) && self.mcComposition.videoInstructions.count) {
             CGAffineTransform transform;
-            AVMutableVideoCompositionInstruction *instruction = [self.composition.instructions lastObject];
+            AVMutableVideoCompositionInstruction *instruction = [self.mcComposition.videoInstructions lastObject];
             AVMutableVideoCompositionLayerInstruction *layerInstruction = (AVMutableVideoCompositionLayerInstruction *)instruction.layerInstructions[0];
-            [layerInstruction getTransformRampForTime:self.composition.duration startTransform:&transform endTransform:NULL timeRange:NULL];
+            [layerInstruction getTransformRampForTime:self.mcComposition.duration startTransform:&transform endTransform:NULL timeRange:NULL];
             
-            if (CGAffineTransformEqualToTransform (transform, mixAssetVideoTrack.preferredTransform) && CGSizeEqualToSize(self.composition.lastInstructionSize, natureSize)) {
+            if (CGAffineTransformEqualToTransform (transform, mixAssetVideoTrack.preferredTransform) && CGSizeEqualToSize(self.mcComposition.lastInstructionSize, natureSize)) {
                 
                 [instruction setTimeRange:CMTimeRangeMake(instruction.timeRange.start, CMTimeAdd(instruction.timeRange.duration, mixAsset.duration))];
-                [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, mixAsset.duration) ofTrack:mixAssetVideoTrack atTime:self.composition.duration error:&error];
+                [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, mixAsset.duration) ofTrack:mixAssetVideoTrack atTime:self.mcComposition.duration error:&error];
                 needNewInstrunction = NO;
             }else{
                 needNewInstrunction = YES;
@@ -79,16 +79,16 @@
 
             [super performVideoCompopsition];
         
-            AVMutableCompositionTrack *newVideoTrack = [self.composition.mutableComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+            AVMutableCompositionTrack *newVideoTrack = [self.mcComposition.totalComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
         
-            [newVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, mixAsset.duration) ofTrack:mixAssetVideoTrack atTime:self.composition.duration error:&error];
+            [newVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, mixAsset.duration) ofTrack:mixAssetVideoTrack atTime:self.mcComposition.duration error:&error];
         
             AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-            [instruction setTimeRange:CMTimeRangeMake(self.composition.duration, mixAsset.duration)];
+            [instruction setTimeRange:CMTimeRangeMake(self.mcComposition.duration, mixAsset.duration)];
 
             AVMutableVideoCompositionLayerInstruction *layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:newVideoTrack];
         
-            CGSize renderSize = self.composition.mutableVideoComposition.renderSize;
+            CGSize renderSize = self.mcComposition.videoComposition.renderSize;
         
             if (degress == 90 || degress == 270) {
                 natureSize = CGSizeMake(natureSize.height, natureSize.width);
@@ -97,7 +97,7 @@
         
             CGFloat scale = MIN(renderSize.width / natureSize.width, renderSize.height / natureSize.height);
             
-            self.composition.lastInstructionSize = CGSizeMake(natureSize.width * scale, natureSize.height * scale);
+            self.mcComposition.lastInstructionSize = CGSizeMake(natureSize.width * scale, natureSize.height * scale);
         
             // 移至中心点
             CGPoint translate = CGPointMake((renderSize.width - natureSize.width * scale  ) * 0.5, (renderSize.height - natureSize.height * scale ) * 0.5);
@@ -109,35 +109,35 @@
         
             instruction.layerInstructions = @[layerInstruction];
         
-            [self.composition.instructions addObject:instruction];
-            self.composition.mutableVideoComposition.instructions = self.composition.instructions;
+            [self.mcComposition.videoInstructions addObject:instruction];
+            self.mcComposition.videoComposition.instructions = self.mcComposition.videoInstructions;
         }
         
     }
     
     if (mixAssetAudioTrack) {
-        if (self.composition.mutableAudioMix) {
-            AVMutableCompositionTrack *audioTrack = [self.composition.mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
-            [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, mixAsset.duration) ofTrack:mixAssetAudioTrack atTime:self.composition.duration error:&error];
+        if (self.mcComposition.audioMix) {
+            AVMutableCompositionTrack *audioTrack = [self.mcComposition.totalComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+            [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, mixAsset.duration) ofTrack:mixAssetAudioTrack atTime:self.mcComposition.duration error:&error];
             
             AVMutableAudioMixInputParameters *audioParam = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mixAssetAudioTrack];
             [audioParam setVolume:1.0 atTime:kCMTimeZero];
-            [self.composition.audioMixParams addObject:audioParam];
+            [self.mcComposition.audioMixParams addObject:audioParam];
             
-            self.composition.mutableAudioMix.inputParameters = self.composition.audioMixParams;
+            self.mcComposition.audioMix.inputParameters = self.mcComposition.audioMixParams;
         }else{
             
-            AVMutableCompositionTrack *audioTrack =  [[self.composition.mutableComposition tracksWithMediaType:AVMediaTypeAudio] lastObject];
+            AVMutableCompositionTrack *audioTrack =  [[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio] lastObject];
             
             if (!audioTrack) {
-                audioTrack = [self.composition.mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+                audioTrack = [self.mcComposition.totalComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
             }
-            [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, mixAsset.duration) ofTrack:mixAssetAudioTrack atTime:self.composition.duration error:&error];
+            [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, mixAsset.duration) ofTrack:mixAssetAudioTrack atTime:self.mcComposition.duration error:&error];
         }
 
     }
     
-    self.composition.duration = CMTimeAdd(self.composition.duration, mixAsset.duration);
+    self.mcComposition.duration = CMTimeAdd(self.mcComposition.duration, mixAsset.duration);
     
 }
 

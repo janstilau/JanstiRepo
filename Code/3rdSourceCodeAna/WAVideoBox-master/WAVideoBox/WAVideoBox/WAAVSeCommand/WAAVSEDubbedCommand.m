@@ -35,11 +35,11 @@
     
     [super performAudioCompopsition];
     
-    if (CMTimeCompare(self.composition.duration, _insertTime) != 1) {
+    if (CMTimeCompare(self.mcComposition.duration, _insertTime) != 1) {
         return;
     }
     
-    for (AVMutableAudioMixInputParameters *parameters in self.composition.audioMixParams) {
+    for (AVMutableAudioMixInputParameters *parameters in self.mcComposition.audioMixParams) {
         [parameters setVolume:self.audioVolume atTime:kCMTimeZero];
     }
     
@@ -48,19 +48,19 @@
         audioTrack = [[mixAsset tracksWithMediaType:AVMediaTypeAudio] firstObject];
     }
     
-    AVMutableCompositionTrack *mixAudioTrack = [self.composition.mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    AVMutableCompositionTrack *mixAudioTrack = [self.mcComposition.totalComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
 
     
     CMTime endPoint = CMTimeAdd(_insertTime, mixAsset.duration);
-    CMTime duration = CMTimeSubtract(CMTimeMinimum(endPoint, self.composition.duration), _insertTime);
+    CMTime duration = CMTimeSubtract(CMTimeMinimum(endPoint, self.mcComposition.duration), _insertTime);
     
     [mixAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, duration) ofTrack:audioTrack atTime:_insertTime error:nil];
     
     AVMutableAudioMixInputParameters *mixParam = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mixAudioTrack];
     [mixParam setVolume:self.mixVolume atTime:_insertTime];
-    [self.composition.audioMixParams addObject:mixParam];
+    [self.mcComposition.audioMixParams addObject:mixParam];
     
-    self.composition.mutableAudioMix.inputParameters = self.composition.audioMixParams;
+    self.mcComposition.audioMix.inputParameters = self.mcComposition.audioMixParams;
     
 }
 

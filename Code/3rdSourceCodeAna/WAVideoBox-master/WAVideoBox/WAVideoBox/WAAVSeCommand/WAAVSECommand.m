@@ -11,20 +11,20 @@
 /*
  Asset包含旨在一起显示或处理的每个轨道的集合，每个轨道均包含（但不限于）音频，视频，文本，隐藏式字幕和字幕。
  Asset对象提供有关整个资源的信息，例如其持续时间或标题，以及呈现的提示，如自然大小
- 轨道由一个实例AVAssetTrack表示，如图6-2所示。在典型的简单情况下，一个音轨表示音频分量，另一个表示视频分量; 在复杂的组合中，可能存在多个重叠的音频和视频轨道。
+ 轨道由一个实例AVAssetTrack表示。在典型的简单情况下，一个音轨表示音频分量，另一个表示视频分量; 在复杂的组合中，可能存在多个重叠的音频和视频轨道。
  
- 是一个表示时间为有理数字的C结构，分子（int64_t值）和分母（int32_t 时间刻度）。在概念上，时间刻度指定分子占据的每个单位的分数。
- 因此，如果时间刻度是4，每个单位代表四分之一秒; 如果时间尺度为10，则每个单位表示十分之一秒，依此类推。您经常使用600的时间刻度，因为这是几种常用的帧速率的倍数：24 fps的电影，30 fps的NTSC（用于北美和日本的电视）和25 fps的PAL（用于欧洲电视）。使用600的时间刻度，您可以准确地表示这些系统中的任何数量的帧。
+ CMTime 是一个表示时间为有理数字的C结构，分子（int64_t值）和分母（int32_t 时间刻度）。在概念上，时间刻度指定分子占据的每个单位的分数。
+ 因此，如果时间刻度是4，每个单位代表四分之一秒; 如果时间尺度为10，则每个单位表示十分之一秒，依此类推。
+ 经常使用600的时间刻度，因为这是几种常用的帧速率的倍数：24 fps的电影，30 fps的NTSC（用于北美和日本的电视）和25 fps的PAL（用于欧洲电视）。使用600的时间刻度，您可以准确地表示这些系统中的任何数量的帧。
  除了简单的时间值之外，CMTime结构可以表示非数值值：+无穷大，-infinity和无限期。
  */
 
 @interface WAAVSECommand ()
 
 @property (nonatomic , strong) AVAssetTrack *assetVideoTrack;
-
 @property (nonatomic , strong) AVAssetTrack *assetAudioTrack;
-
 @property (nonatomic , assign) NSInteger trackDegress;
+@property (nonatomic, strong) AVAsset *backingAsset;
 
 @end
 
@@ -37,22 +37,20 @@
 - (instancetype)initWithComposition:(WAAVSEComposition *)composition{
     self = [super init];
     if(self != nil) {
-        self.composition = composition;
+        self.mcComposition = composition;
     }
     return self;
 }
 
 
-- (void)performWithAsset:(AVAsset *)asset
-{
-    
+- (void)performWithAsset:(AVAsset *)asset {
+    _backingAsset = asset;
     // 1.1､视频资源的轨道
     if (!self.assetVideoTrack) {
         if ([asset tracksWithMediaType:AVMediaTypeVideo].count != 0) {
             self.assetVideoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];
         }
     }
-    
     // 1.2､音频资源的轨道
     if (!self.assetAudioTrack) {
         if ([asset tracksWithMediaType:AVMediaTypeAudio].count != 0) {
@@ -61,97 +59,90 @@
     }
     
     // 2､创建混合器
-  
-    if(!self.composition.mutableComposition) {
-        
-        // 要混合的时间
+    if(!self.mcComposition.totalComposition) {
         CMTime insertionPoint = kCMTimeZero;
         NSError *error = nil;
-        
-        
-        
-        self.composition.mutableComposition = [AVMutableComposition composition];
+        self.mcComposition.totalComposition = [AVMutableComposition composition];
         //  2.1､把视频轨道加入到混合器做出新的轨道
         if (self.assetVideoTrack != nil) {
-            
             // 向 Conpositon 里面, 添加了一个 Video 的 Track, 但是这个 Track 里面现在没有数据 , Adds an empty track to the receiver.
-            AVMutableCompositionTrack *compostionVideoTrack = [self.composition.mutableComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
-            // 向 Video Track 里面, 输入一个归到. 可以用音频处理软件 premiere 来理解.
-            [compostionVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, [asset duration]) ofTrack:self.assetVideoTrack atTime:insertionPoint error:&error];
-
-            self.composition.duration = self.composition.mutableComposition.duration;
-            
+            AVMutableCompositionTrack *videoTrack = [self.mcComposition.totalComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+            [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, [asset duration]) ofTrack:self.assetVideoTrack atTime:insertionPoint error:&error];
+            /*
+             Inserts all the tracks within a given time range of a specified asset into the receiver.
+             - (BOOL)insertTimeRange:(CMTimeRange)timeRange ofAsset:(AVAsset *)asset atTime:(CMTime)startTime error:(NSError * _Nullable *)outError;
+             */
+            // 在插入了一条轨道之后, self.composition.mutableComposition.duration 里面就有值了.
+            self.mcComposition.duration = self.mcComposition.totalComposition.duration;
+            self.mcComposition.totalComposition.naturalSize = videoTrack.naturalSize; // 音频轨道返回 CGSizeZero.
             self.trackDegress = [self degressFromTransform:self.assetVideoTrack.preferredTransform];
-            self.composition.mutableComposition.naturalSize = compostionVideoTrack.naturalSize;
-            if (self.trackDegress % 360) {
+            if (self.trackDegress % 360) { // 如果方向不是正的.
                 [self performVideoCompopsition];
             }
-            
         }
-        
         //  2.2､把音频轨道加入到混合器做出新的轨道
         if (self.assetAudioTrack != nil) {
-            
-            AVMutableCompositionTrack *compositionAudioTrack = [self.composition.mutableComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
-        
+            AVMutableCompositionTrack *compositionAudioTrack = [self.mcComposition.totalComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
             [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, [asset duration]) ofTrack:self.assetAudioTrack atTime:insertionPoint error:&error];
         }
-        
     }
     
 }
 
 - (void)performVideoCompopsition{
-   
-    if(!self.composition.mutableVideoComposition) {
+    // 创建视频编辑的自定义处理器.
+    if(!self.mcComposition.videoComposition) {
+        self.mcComposition.videoComposition = [AVMutableVideoComposition videoComposition];
+        // A time interval for which the video composition should render composed video frames.
+        // 这个值控制, 编辑器以多高的频率来渲染原来的视频. 如果这个值调大, 会发生卡顿. 例如, 调成 30, 30 也就变成了一秒钟渲染一次.
+        self.mcComposition.videoComposition.frameDuration = CMTimeMake(1, 30); // 30 fps
+        // 编辑器渲染的大小, 如果宽高, 都变为一半, 那就是渲染左上角. 这个值不会进行拉伸操作, 如果只渲染左半部分, 那么最后的视频, 左半部分显示在中间, 其他黑框.
+        self.mcComposition.videoComposition.renderSize = self.assetVideoTrack.naturalSize;
         
-        self.composition.mutableVideoComposition = [AVMutableVideoComposition videoComposition];
-        self.composition.mutableVideoComposition.frameDuration = CMTimeMake(1, 30); // 30 fps
-        self.composition.mutableVideoComposition.renderSize = self.assetVideoTrack.naturalSize;
-    
-        
+        // AVMutableVideoCompositionInstruction
         AVMutableVideoCompositionInstruction *passThroughInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-        passThroughInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, [self.composition.mutableComposition duration]);
-
-        AVAssetTrack *videoTrack = [self.composition.mutableComposition tracksWithMediaType:AVMediaTypeVideo][0];
-
+        passThroughInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, [self.mcComposition.totalComposition duration]);
+//        passThroughInstruction.backgroundColor = [[UIColor redColor] CGColor];
+        AVAssetTrack *videoTrack = [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo][0];
+        // An object used to modify the transform, cropping, and opacity ramps applied to a given track in a composition.
+        //  增加渐变, 裁剪, 变形.
         AVMutableVideoCompositionLayerInstruction *passThroughLayer = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
         [passThroughLayer setTransform:[self transformFromDegress:self.trackDegress natureSize:self.assetVideoTrack.naturalSize] atTime:kCMTimeZero];
+// 增加裁剪, 只会输出裁剪位置的视频
+//        [passThroughLayer setCropRectangle:CGRectMake(200, 300, 200, 300) atTime:kCMTimeZero];
+//        渐变移动裁剪位置.
+//        [passThroughLayer setCropRectangleRampFromStartCropRectangle:CGRectMake(0, 0, 200, 300) toEndCropRectangle:CGRectMake(500, 500, 200, 300) timeRange:CMTimeRangeMake(kCMTimeZero, self.backingAsset.duration)];
+// 从亮到最后完全变暗.
+//        [passThroughLayer setOpacityRampFromStartOpacity:1 toEndOpacity:0 timeRange:CMTimeRangeMake(kCMTimeZero, self.backingAsset.duration)];
         passThroughInstruction.layerInstructions = @[passThroughLayer];
+        [self.mcComposition.videoInstructions addObject:passThroughInstruction];
+        self.mcComposition.videoComposition.instructions = self.mcComposition.videoInstructions;
         
-        [self.composition.instructions addObject:passThroughInstruction];
-        self.composition.mutableVideoComposition.instructions = self.composition.instructions;
-        
-        if (self.trackDegress == 90 || self.trackDegress == 270) {
-              self.composition.mutableVideoComposition.renderSize = CGSizeMake(self.assetVideoTrack.naturalSize.height, self.assetVideoTrack.naturalSize.width);
+        if (self.trackDegress == 90 || self.trackDegress == 270) { // 如果是竖屏, 还要改变 renderSize
+              self.mcComposition.videoComposition.renderSize = CGSizeMake(self.assetVideoTrack.naturalSize.height, self.assetVideoTrack.naturalSize.width);
         }
-        
-        self.composition.lastInstructionSize = self.composition.mutableComposition.naturalSize  = self.composition.mutableVideoComposition.renderSize;
-        
+        self.mcComposition.lastInstructionSize = self.mcComposition.totalComposition.naturalSize  = self.mcComposition.videoComposition.renderSize;
     }
-
 }
 
 - (void)performAudioCompopsition{
-    if (!self.composition.mutableAudioMix) {
-        
-        self.composition.mutableAudioMix = [AVMutableAudioMix audioMix];
-        
-        for (AVMutableCompositionTrack *compostionVideoTrack in [self.composition.mutableComposition tracksWithMediaType:AVMediaTypeAudio]) {
-      
-            AVMutableAudioMixInputParameters *audioParam = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:compostionVideoTrack];
-            [audioParam setVolume:1.0 atTime:kCMTimeZero];
-            [self.composition.audioMixParams addObject:audioParam];
+    if (!self.mcComposition.audioMix) {
+        self.mcComposition.audioMix = [AVMutableAudioMix audioMix];
+        for (AVMutableCompositionTrack *compostionVideoTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio]) {
+            AVMutableAudioMixInputParameters *audioParam = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:compostionVideoTrack]; // 这里, 已经获取到音轨了.
+            [audioParam setVolume:1.0 atTime:kCMTimeZero]; // 所以这里的变化, 只会影响到这个音轨.
+            // 增加渐变效果.
+//            [audioParam setVolumeRampFromStartVolume:1 toEndVolume:0 timeRange:CMTimeRangeMake(kCMTimeZero, self.backingAsset.duration)];
+            [self.mcComposition.audioMixParams addObject:audioParam];
         }
-        self.composition.mutableAudioMix.inputParameters = self.composition.audioMixParams;
+        self.mcComposition.audioMix.inputParameters = self.mcComposition.audioMixParams;
     }
 }
 
-
+// 这里, 应该和照片方向是一个概念.
 - (NSUInteger)degressFromTransform:(CGAffineTransform)transForm
 {
     NSUInteger degress = 0;
-    
     if(transForm.a == 0 && transForm.b == 1.0 && transForm.c == -1.0 && transForm.d == 0){
         // Portrait
         degress = 90;
@@ -165,10 +156,10 @@
         // LandscapeLeft
         degress = 180;
     }
-    
     return degress;
 }
 
+// 根据 videoTrack 的preferredTransform, 修正, 具体原理不知道.
 - (CGAffineTransform)transformFromDegress:(float)degress natureSize:(CGSize)natureSize{
     /** 矩阵校正 */
     // x = ax1 + cy1 + tx,y = bx1 + dy2 + ty
@@ -182,7 +173,6 @@
         return CGAffineTransformIdentity;
     }
 }
-
 
 
 NSString *const WAAVSEExportCommandCompletionNotification = @"WAAVSEExportCommandCompletionNotification";

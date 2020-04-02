@@ -16,7 +16,7 @@
 - (instancetype)initWithComposition:(WAAVSEComposition *)composition;
 
 
-@property (nonatomic , strong) WAAVSEComposition *composition;
+@property (nonatomic , strong) WAAVSEComposition *mcComposition;
 
 /**
  视频信息初始化
@@ -37,9 +37,6 @@
 
  /**
   计算旋转角度
-  
-  @param transform transForm
-  @return 角度
   */
 - (NSUInteger)degressFromTransform:(CGAffineTransform)transForm;
 

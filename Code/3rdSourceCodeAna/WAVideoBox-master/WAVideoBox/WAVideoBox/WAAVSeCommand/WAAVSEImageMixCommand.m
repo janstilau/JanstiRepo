@@ -24,43 +24,38 @@
     CGSize videoSize;
     
     // 3､通过videoCompostion合成
-    if ([[self.composition.mutableComposition tracksWithMediaType:AVMediaTypeVideo] count] != 0) {
-        // 3.1､
-       
+    if ([[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo] count] != 0) {
         // 3.2､创建视频画面合成器
         [super performVideoCompopsition];
-        
-        videoSize = self.composition.mutableVideoComposition.renderSize;
-        
+        videoSize = self.mcComposition.videoComposition.renderSize;
         CALayer *imageLayer;
         if (self.imageLayerRect) {
             imageLayer = [self buildImageLayerWithRect:self.imageLayerRect(videoSize)];
-            
             if (self.fileUrl) {
                 [imageLayer addAnimation:[self buildAnimationForGif] forKey:@"gif"];
             }
         }
         
-        if (!self.composition.videoLayer || !self.composition.parentLayer) {
+        if (!self.mcComposition.videoLayer || !self.mcComposition.parentLayer) {
             CALayer *parentLayer = [CALayer layer];
             CALayer *videoLayer = [CALayer layer];
             parentLayer.frame = CGRectMake(0, 0, videoSize.width, videoSize.height);
             videoLayer.frame = CGRectMake(0, 0, videoSize.width, videoSize.height);
-            self.composition.videoLayer = videoLayer;
-            self.composition.parentLayer = parentLayer;
+            self.mcComposition.videoLayer = videoLayer;
+            self.mcComposition.parentLayer = parentLayer;
         }
         
         if (self.imageBg) {
-            self.composition.videoLayer.opaque = YES;
-             self.composition.videoLayer.opacity = 0.8;
-            [self.composition.parentLayer addSublayer:imageLayer];
-            [self.composition.parentLayer addSublayer:self.composition.videoLayer];
+            self.mcComposition.videoLayer.opaque = YES;
+             self.mcComposition.videoLayer.opacity = 0.8;
+            [self.mcComposition.parentLayer addSublayer:imageLayer];
+            [self.mcComposition.parentLayer addSublayer:self.mcComposition.videoLayer];
         }else{
-            [self.composition.parentLayer addSublayer:self.composition.videoLayer];
-            [self.composition.parentLayer addSublayer:imageLayer];
+            [self.mcComposition.parentLayer addSublayer:self.mcComposition.videoLayer];
+            [self.mcComposition.parentLayer addSublayer:imageLayer];
         }
         
-        self.composition.mutableVideoComposition.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer: self.composition.videoLayer inLayer: self.composition.parentLayer];
+        self.mcComposition.videoComposition.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer: self.mcComposition.videoLayer inLayer: self.mcComposition.parentLayer];
         
     }
   
