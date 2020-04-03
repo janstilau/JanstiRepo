@@ -148,7 +148,6 @@
     
     [_videoBox appendVideoByPath:_videoPath];
     [_videoBox dubbedSoundBySoundPath:_testThreePath];
-    
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
             [wself enterVideoPlayWithFile:filePath];

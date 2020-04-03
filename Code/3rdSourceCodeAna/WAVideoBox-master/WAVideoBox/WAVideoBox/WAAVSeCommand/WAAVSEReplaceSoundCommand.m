@@ -19,16 +19,16 @@
     CMTime duration;
     NSError *error = nil;
     
-    NSArray *natureTrackAry = [[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio] copy];
+    NSArray *natureTrackAry = [[self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeAudio] copy];
     
     for (AVCompositionTrack *track in natureTrackAry) {
-        [self.mcComposition.totalComposition removeTrack:track];
+        [self.mcComposition.totalEditComposition removeTrack:track];
     }
     
     duration = CMTimeMinimum([replaceAsset duration], self.mcComposition.duration);
     
     for (AVAssetTrack *audioTrack in [replaceAsset tracksWithMediaType:AVMediaTypeAudio]) {
-        AVMutableCompositionTrack *compositionAudioTrack = [self.mcComposition.totalComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+        AVMutableCompositionTrack *compositionAudioTrack = [self.mcComposition.totalEditComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
         [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, duration) ofTrack:audioTrack atTime:insertionPoint error:&error];
     }
     

@@ -18,17 +18,19 @@
 
 - (void)performWithAsset:(AVAsset *)asset timeRange:(CMTimeRange)range{
     [super performWithAsset:asset];
+    
     if (CMTimeCompare(self.mcComposition.duration, CMTimeAdd(range.start, range.duration)) != 1) {
         NSAssert(NO, @"Range out of video duration");
     }
     // 轨道裁剪
-    for (AVMutableCompositionTrack *compositionTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio]) {
+    for (AVMutableCompositionTrack *compositionTrack in [self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeAudio]) {
         [self subTimeRaneWithTrack:compositionTrack range:range];
     }
     
-    for (AVMutableCompositionTrack *compositionTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo]) {
+    for (AVMutableCompositionTrack *compositionTrack in [self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeVideo]) {
         [self subTimeRaneWithTrack:compositionTrack range:range];
     }
+    
     self.mcComposition.duration = range.duration;
 }
 

@@ -86,7 +86,9 @@
     return self;
 }
 
-
+// 把资源的视频轨, 音轨抽取出来, 放到一个 AVMutableComposition 中.
+// 这个函数内部, 都进行了判断才执行, 因为每个子 Command 都进行了 Super 的调用
+// 根 Command 类的 performWithAsset 主要是是资源的准备工作. 真正对于资源的编辑, 是各个子 Command 内部.
 - (void)performWithAsset:(AVAsset *)asset {
     _backingAsset = asset;
     // 1.1､视频资源的轨道
@@ -103,11 +105,11 @@
     }
     
     // 2､创建混合器
-    if(!self.mcComposition.totalComposition) {
+    if(!self.mcComposition.totalEditComposition) {
         CMTime insertionPoint = kCMTimeZero;
         NSError *error = nil;
         AVMutableComposition *totalComposition = [AVMutableComposition composition];
-        self.mcComposition.totalComposition = totalComposition;
+        self.mcComposition.totalEditComposition = totalComposition;
         //  2.1､把视频轨道加入到混合器做出新的轨道
         if (self.assetVideoTrack != nil) {
             // 向 Conpositon 里面, 添加了一个 Video 的 Track, 但是这个 Track 里面现在没有数据 , Adds an empty track to the receiver.
@@ -120,8 +122,9 @@
             totalComposition.naturalSize = videoTrack.naturalSize; // 如果是音频轨道返回 CGSizeZero.
             // 在插入了一条轨道之后, self.composition.mutableComposition.duration 里面就有值了.
             self.mcComposition.duration = totalComposition.duration;
+            
             self.trackDegress = [self degressFromTransform:self.assetVideoTrack.preferredTransform];
-            if (self.trackDegress % 360) { // 如果方向不是正的.
+            if (self.trackDegress % 360 != 0) { // 如果方向不是正的.
                 [self performVideoCompopsition];
             }
         }
@@ -146,9 +149,9 @@
         
         // AVMutableVideoCompositionInstruction
         AVMutableVideoCompositionInstruction *passThroughInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-        passThroughInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, [self.mcComposition.totalComposition duration]);
+        passThroughInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, [self.mcComposition.totalEditComposition duration]);
 //        passThroughInstruction.backgroundColor = [[UIColor redColor] CGColor];
-        AVAssetTrack *videoTrack = [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo][0];
+        AVAssetTrack *videoTrack = [self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeVideo][0];
         // An object used to modify the transform, cropping, and opacity ramps applied to a given track in a composition.
         //  增加渐变, 裁剪, 变形.
         AVMutableVideoCompositionLayerInstruction *passThroughLayer = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
@@ -166,14 +169,14 @@
         if (self.trackDegress == 90 || self.trackDegress == 270) { // 如果是竖屏, 还要改变 renderSize
               self.mcComposition.videoEditComposition.renderSize = CGSizeMake(self.assetVideoTrack.naturalSize.height, self.assetVideoTrack.naturalSize.width);
         }
-        self.mcComposition.lastInstructionSize = self.mcComposition.totalComposition.naturalSize  = self.mcComposition.videoEditComposition.renderSize;
+        self.mcComposition.lastInstructionSize = self.mcComposition.totalEditComposition.naturalSize  = self.mcComposition.videoEditComposition.renderSize;
     }
 }
 
 - (void)performAudioCompopsition{
     if (!self.mcComposition.audioEditComposition) {
         self.mcComposition.audioEditComposition = [AVMutableAudioMix audioMix];
-        for (AVMutableCompositionTrack *audioTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio]) {
+        for (AVMutableCompositionTrack *audioTrack in [self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeAudio]) {
             AVMutableAudioMixInputParameters *audioParam =
             [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:audioTrack]; // 这里, 已经获取到音轨了.
             [audioParam setVolume:1.0 atTime:kCMTimeZero]; // 所以这里的变化, 只会影响到这个音轨.

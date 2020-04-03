@@ -14,10 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface WACommandComposition : NSObject
 
-/**
- 视频轨道信息
- */
-@property (nonatomic , strong) AVMutableComposition *totalComposition;
+ /*
+  总的视频合成数据类.
+  */
+@property (nonatomic , strong) AVMutableComposition *totalEditComposition;
 
 /**
  视频操作指令

@@ -102,7 +102,7 @@
 }
 
 - (void)performSaveByPath:(NSString *)path{
-    [self performSaveAsset:self.mcComposition.totalComposition byPath:path];
+    [self performSaveAsset:self.mcComposition.totalEditComposition byPath:path];
 }
 
 @end

@@ -20,7 +20,7 @@
 
 - (void)performWithAsset:(AVAsset *)asset{
     [super performWithAsset:asset];
-    if (![[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo] count]) { return; }
+    if (![[self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeVideo] count]) { return; }
     // 3､通过videoCompostion合成
     // 3.2､创建视频画面合成器
     [super performVideoCompopsition];

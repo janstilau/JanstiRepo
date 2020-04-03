@@ -25,7 +25,6 @@
 }
 
 @property (nonatomic , strong) WACommandComposition *cacheComposition;
-
 @property (nonatomic , weak) WAAVSEExportCommand *exportCommand;
 
 @property (nonatomic , strong) NSMutableArray <WACommandComposition *>*workSpace;
@@ -130,8 +129,16 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     
     self.videoQuality = 0;
     self.ratio = WAVideoExportRatio960x540;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(AVEditorNotification:) name:WAAVSEExportCommandCompletionNotification object:nil];
+    // WAAVSEExportCommandCompletionNotification 这个只会在 ExportCommand 里面会抛出.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(AVEditorCompleteNotification:) name:WAAVSEExportCommandCompletionNotification object:nil];
+    [self setupSpaces];
     return self;
+}
+
+- (void)setupSpaces {
+    _composeSpace = [NSMutableArray array];
+    _workSpace = [NSMutableArray array];
+    _tmpVideoSpace = [NSMutableArray array];
 }
 
 - (void)dealloc{
@@ -152,6 +159,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     return [self appendVideoByAsset:asset];
 }
 
+// 获取到资源之后, 第一步是建立一个 WACommandComposition, 将资源的音轨, 视频轨导出到 AVMutableCompositionTrack 上, 集合到一个 AVMutableComposition 中.
 - (BOOL)appendVideoByAsset:(AVAsset *)videoAsset{
     if (!videoAsset || !videoAsset.playable) {
         return NO;
@@ -173,7 +181,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
             [command performWithAsset:videoAsset];
         }else{
             WAAVSEVideoMixCommand *mixcommand = [[WAAVSEVideoMixCommand alloc] initWithComposition:self.cacheComposition];
-            [mixcommand performWithAsset:self.cacheComposition.totalComposition mixAsset:videoAsset];
+            [mixcommand performWithAsset:self.cacheComposition.totalEditComposition mixAsset:videoAsset];
         }
         
     });
@@ -185,15 +193,23 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
         [self.workSpace insertObjects:self.composeSpace atIndexes:[[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, self.composeSpace.count)]];
         
         [self.composeSpace removeAllObjects];
-        
         [self commitCompostionToWorkspace];
-        
     });
     
 }
 
-#pragma mark 裁剪
+#pragma mark Actions
 
+// 以下的所有对于视频进行操作的动作, 都会调用 commitCompostionToWorkspace 这个方法. 也就是把准备好的资源, 提交给工作区.
+// 然后就是从工作区里面取 WACommandComposition, 创建不同的 command.
+- (void)commitCompostionToWorkspace{
+    if (self.cacheComposition) {
+        [self.workSpace addObject:self.cacheComposition];
+        self.cacheComposition = nil;
+    }
+}
+
+// 简单的, 将浮点型转化成为 CMTimeRange 的类型.
 - (BOOL)rangeVideoByBeganPoint:(CGFloat)beganPoint endPoint:(CGFloat)endPoint{
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
@@ -201,38 +217,34 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
             double duration  = CMTimeGetSeconds(composition.duration);
             CMTime timeFrom = CMTimeMake(beganPoint / duration  * composition.duration.value, composition.duration.timescale);
             CMTime timeTo = CMTimeMake((endPoint  - beganPoint)/ duration * composition.duration.value, composition.duration.timescale);
+            // 因为, Async 其实就是提交任务的概念. 所以, 这里嵌套提交是没有问题的.
             [self rangeVideoByTimeRange:CMTimeRangeMake(timeFrom, timeTo)];
         }
     });
-    
     return YES;
 }
 
 - (BOOL)rangeVideoByTimeRange:(CMTimeRange)range{
-    
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
         for (WACommandComposition *composition in self.workSpace) {
             WAAVSERangeCommand *rangeCommand = [[WAAVSERangeCommand alloc] initWithComposition:composition];
-            [rangeCommand performWithAsset:composition.totalComposition timeRange:range];
+            [rangeCommand performWithAsset:composition.totalEditComposition timeRange:range];
         }
     });
     return YES;
 }
 
 - (BOOL)rotateVideoByDegress:(NSInteger)degress{
-    
+    // 如果是 360 的倍数, 根本不需要转.
     if (!degress % 360) {
         return NO;
     }
-    
     runAsynchronouslyOnVideoBoxContextQueue(^{
-
         [self commitCompostionToWorkspace];
-        
         for (WACommandComposition *composition in self.workSpace) {
             WAAVSERotateCommand *rotateCommand = [[WAAVSERotateCommand alloc] initWithComposition:composition];
-            [rotateCommand performWithAsset:composition.totalComposition degress:degress];
+            [rotateCommand performWithAsset:composition.totalEditComposition degress:degress];
         }
  
     });
@@ -242,23 +254,17 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 }
 
 - (BOOL)appendWaterMark:(UIImage *)waterImg relativeRect:(CGRect)relativeRect{
-    
     if (!waterImg) {
         return NO;
     }
     
     runAsynchronouslyOnVideoBoxContextQueue(^{
-        
         [self commitCompostionToWorkspace];
-        
         for (WACommandComposition *composition in self.workSpace) {
             WAAVSEImageMixCommand *command = [[WAAVSEImageMixCommand alloc] initWithComposition:composition];
             command.imageBg = NO;
             command.image = waterImg;
-           
-           
             [command imageLayerRectWithVideoSize:^CGRect(CGSize videoSize) {
-                
                 CGFloat height = 0;
                 if (relativeRect.size.height) {
                     height = videoSize.height * relativeRect.size.height;
@@ -267,7 +273,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
                 }
                 return CGRectMake(videoSize.width * relativeRect.origin.x,videoSize.height * relativeRect.origin.y,videoSize.width * relativeRect.size.width, height);
             }];
-            [command performWithAsset:composition.totalComposition];
+            [command performWithAsset:composition.totalEditComposition];
         }
  
     });
@@ -288,6 +294,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
         gifWidth = [[dict valueForKey:(NSString*)kCGImagePropertyPixelWidth] floatValue];
         gifHeight = [[dict valueForKey:(NSString*)kCGImagePropertyPixelHeight] floatValue];
         if (gifSource) { CFRelease(gifSource); }
+        
         for (WACommandComposition *composition in self.workSpace) {
             WAAVSEImageMixCommand *command = [[WAAVSEImageMixCommand alloc] initWithComposition:composition];
             command.imageBg = NO;
@@ -301,49 +308,40 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
                 }
                 return CGRectMake(videoSize.width * relativeRect.origin.x,videoSize.height * relativeRect.origin.y,videoSize.width * relativeRect.size.width, height);
             }];
-            [command performWithAsset:composition.totalComposition];
+            [command performWithAsset:composition.totalEditComposition];
         }
     });
     return YES;
 }
 
-#pragma mark 变速
 - (BOOL)gearBoxWithScale:(CGFloat)scale{
-    
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
-        
         for (WACommandComposition *composition in self.workSpace) {
             WAAVSEGearboxCommand *gearBox =  [[WAAVSEGearboxCommand alloc] initWithComposition:composition];
-            [gearBox performWithAsset:composition.totalComposition scale:scale];
+            [gearBox performWithAsset:composition.totalEditComposition scale:scale];
         }
     });
     return YES;
 }
 
 - (BOOL)gearBoxTimeByScaleArray:(NSArray<WAAVSEGearboxCommandModel *> *)scaleArray{
-    
     if (!scaleArray.count) {
         return NO;
     }
-    
 
     runAsynchronouslyOnVideoBoxContextQueue(^{
-       
         [self commitCompostionToWorkspace];
-        
-        
         for (WACommandComposition *composition in self.workSpace) {
            
             WAAVSEGearboxCommand *gearBox =  [[WAAVSEGearboxCommand alloc] initWithComposition:composition];
-            [gearBox performWithAsset:composition.totalComposition models:scaleArray];
+            [gearBox performWithAsset:composition.totalEditComposition models:scaleArray];
         }
     });
     
     return YES;
 }
 
-#pragma mark 换音
 - (BOOL)replaceSoundBySoundPath:(NSString *)soundPath{
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:soundPath]) {
@@ -354,12 +352,13 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     if (!soundAsset.playable) {
         return NO;
     }
+    
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
         
         for (WACommandComposition *composition in self.workSpace) {
             WAAVSEReplaceSoundCommand *replaceCommand = [[WAAVSEReplaceSoundCommand alloc] initWithComposition:composition];
-            [replaceCommand performWithAsset:composition.totalComposition replaceAsset:soundAsset];
+            [replaceCommand performWithAsset:composition.totalEditComposition replaceAsset:soundAsset];
         }
     });
     
@@ -367,7 +366,6 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     return YES;
 }
 
-#pragma mark 混音
 - (BOOL)dubbedSoundBySoundPath:(NSString *)soundPath{
     
     return [self dubbedSoundBySoundPath:soundPath volume:0.5 mixVolume:0.5 insertTime:0];
@@ -386,12 +384,13 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
+        
         for (WACommandComposition *composition in self.workSpace) {
             WAAVSEDubbedCommand *command = [[WAAVSEDubbedCommand alloc] initWithComposition:composition];
-            command.insertTime = CMTimeMakeWithSeconds(insetDuration, composition.totalComposition.duration.timescale);
+            command.insertTime = CMTimeMakeWithSeconds(insetDuration, composition.totalEditComposition.duration.timescale);
             command.audioVolume = volume;
             command.mixVolume = mixVolume;
-            [command performWithAsset:composition.totalComposition mixAsset:soundAsset];
+            [command performWithAsset:composition.totalEditComposition mixAsset:soundAsset];
         }
     });
     
@@ -399,12 +398,12 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 }
 
 - (BOOL)extractVideoSound{
-    
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
+        
         for (WACommandComposition *composition in self.workSpace) {
             WAAVSEExtractSoundCommand *command = [[WAAVSEExtractSoundCommand alloc] initWithComposition:composition];
-            [command performWithAsset:composition.totalComposition];
+            [command performWithAsset:composition.totalEditComposition];
         }
     });
     
@@ -479,34 +478,23 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 }
 
 #pragma mark private
-- (void)commitCompostionToWorkspace{
-    if (self.cacheComposition) {
-        [self.workSpace addObject:self.cacheComposition];
-        self.cacheComposition = nil;
-    }
-}
+
 
 - (void)commitCompostionToComposespace{
-    
-    if (!self.workSpace.count) {
-        return;
-    }
-    
+    if (!self.workSpace.count) { return; }
     // workspace的最后一个compostion可寻求合并
+    WACommandComposition *currentComposition = [self.workSpace lastObject];
     for (int i = 0; i < self.workSpace.count - 1; i++) {
         [self.composeSpace addObject:self.workSpace[i]];
     }
-    
-    WACommandComposition *currentComposition = [self.workSpace lastObject];
-    
     [self.workSpace removeAllObjects];
-    
-    if (!currentComposition.videoEditComposition && !currentComposition.audioEditComposition && self.composeSpace.count == self.directCompostionIndex) { // 可以直接合并
+    if (!currentComposition.videoEditComposition &&
+        !currentComposition.audioEditComposition &&
+        self.composeSpace.count == self.directCompostionIndex) { // 可以直接合并
         if (self.composeSpace.count > 0) {
             WACommandComposition *compositon = [self.composeSpace lastObject];
-            
             WAAVSEVideoMixCommand *mixCommand = [[WAAVSEVideoMixCommand alloc] initWithComposition:compositon];
-            [mixCommand performWithAsset:compositon.totalComposition mixAsset:(AVAsset *)currentComposition.totalComposition];
+            [mixCommand performWithAsset:compositon.totalEditComposition mixAsset:(AVAsset *)currentComposition.totalEditComposition];
         }else{
             self.directCompostionIndex = self.composeSpace.count;
             [self.composeSpace addObject:currentComposition];
@@ -527,7 +515,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     // 这里需要逐帧扫描
     if (self.videoQuality && self.composeCount == 1 && self.tmpVideoSpace.count == 0 && !composition.videoEditComposition) {
         WAAVSECommand *command = [[WAAVSECommand alloc] initWithComposition:composition];
-        [command performWithAsset:composition.totalComposition];
+        [command performWithAsset:composition.totalEditComposition];
         [command performVideoCompopsition];
     }
     WAAVSEExportCommand *exportCommand = [[WAAVSEExportCommand alloc] initWithComposition:composition];
@@ -547,7 +535,6 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 }
 
 - (void)successToProcessCurrentCompostion{
-    
     [self.composeSpace removeObjectAtIndex:0];
     [self.tmpVideoSpace addObject:self.tmpPath];
     
@@ -557,7 +544,6 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
         self.tmpPath = nil;
         
         WAAVSEVideoMixCommand *mixComand = [WAAVSEVideoMixCommand new];
-        
         NSMutableArray *assetAry = [NSMutableArray array];
         for (NSString *filePath in self.tmpVideoSpace) {
             [assetAry addObject:[AVAsset assetWithURL:[NSURL fileURLWithPath:filePath]]];
@@ -578,8 +564,46 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     }
 }
 
+
+- (NSString *)tmpVideoFilePath{
+    return [_tmpDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%f.mp4",[NSDate timeIntervalSinceReferenceDate]]];
+}
+
+- (void)displayLinkCallback:(CADisplayLink *)link{
+    if (self.progress && self.exportCommand) {
+        if (self.composeCount == 1) {
+            self.progress(1.0 / self.composeCount * (self.composeCount - self.composeSpace.count) + 1.0 / self.composeCount * self.exportCommand.exportSession.progress);
+        }else{
+            self.progress(1.0 / self.composeCount * (self.composeCount - self.composeSpace.count - 1) + 1.0 / self.composeCount * self.exportCommand.exportSession.progress);
+        }
+       
+    }
+}
+
+#pragma mark - End
+
+- (void)AVEditorCompleteNotification:(NSNotification *)notification{
+    runAsynchronouslyOnVideoBoxProcessingQueue(^{
+        if ([[notification name] isEqualToString:WAAVSEExportCommandCompletionNotification] &&
+            self.exportCommand == notification.object) {
+            NSError *error = [notification.userInfo objectForKey:WAAVSEExportCommandError];
+            if (self.cancel) {
+                error = [NSError errorWithDomain:AVFoundationErrorDomain code:-10000 userInfo:@{NSLocalizedFailureReasonErrorKey:@"User cancel process!"}];
+            }
+            if (error) {
+                [self failToProcessVideo:error];
+            }else{
+                if(!self.tmpPath){// 成功合成
+                    [self successToProcessVideo];
+                }else{
+                    [self successToProcessCurrentCompostion];
+                }
+            }
+        }
+    });
+}
+
 - (void)failToProcessVideo:(NSError *)error{
-   
     // 清理失败文件
     if ([[NSFileManager defaultManager] fileExistsAtPath:self.filePath]) {
         [[NSFileManager defaultManager] removeItemAtPath:self.filePath error:nil];
@@ -593,32 +617,32 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     
     if (self.suspend) {
         self.suspend = NO;
+        /*
+         Calling this function decrements the suspension count of a suspended dispatch queue or dispatch event source object. While the count is greater than zero, the object remains suspended. When the suspension count returns to zero, any blocks submitted to the dispatch queue or any events observed by the dispatch source while suspended are delivered.
+
+         With one exception, each call to dispatch_resume must balance a call to dispatch_suspend. New dispatch event source objects returned by dispatch_source_create have a suspension count of 1 and must be resumed before any events are delivered. This approach allows your application to fully configure the dispatch event source object prior to delivery of the first event. In all other cases, it is undefined to call dispatch_resume more times than dispatch_suspend, which would result in a negative suspension count.
+         */
         dispatch_resume(_videoBoxContextQueue);
     }
-    
 }
 
 - (void)successToProcessVideo{
-    
     if (self.editorComplete) {
+        // 这里, 相当于一个 get 操作. 复制现有值.
         void (^editorComplete)(NSError *error) = self.editorComplete;
         dispatch_async(dispatch_get_main_queue(), ^{
             editorComplete(nil);
         });
     }
     [self __internalClean];
-    
     if (self.suspend) {
         self.suspend = NO;
         dispatch_resume(_videoBoxContextQueue);
     }
-   
 }
 
 - (void)finishEditByFilePath:(NSString *)filePath progress:(void (^)(float progress))progress complete:(void (^)(NSError *error))complete{
-    
     [self commitCompostionToWorkspace];
-    
     [self commitCompostionToComposespace];
     
     if (!self.composeSpace.count) {
@@ -648,51 +672,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
             return ;
         }
     });
-    
 }
-
-- (NSString *)tmpVideoFilePath{
-    return [_tmpDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%f.mp4",[NSDate timeIntervalSinceReferenceDate]]];
-}
-
-- (void)displayLinkCallback:(CADisplayLink *)link{
-    if (self.progress && self.exportCommand) {
-        if (self.composeCount == 1) {
-            self.progress(1.0 / self.composeCount * (self.composeCount - self.composeSpace.count) + 1.0 / self.composeCount * self.exportCommand.exportSession.progress);
-        }else{
-            self.progress(1.0 / self.composeCount * (self.composeCount - self.composeSpace.count - 1) + 1.0 / self.composeCount * self.exportCommand.exportSession.progress);
-        }
-       
-    }
-}
-
-#pragma mark notification
-- (void)AVEditorNotification:(NSNotification *)notification{
-    // runAsynchronously 都是在 ContextQueue, 只有这里, 才是 ProcessingQueue
-    runAsynchronouslyOnVideoBoxProcessingQueue(^{
-        if ([[notification name] isEqualToString:WAAVSEExportCommandCompletionNotification] && self.exportCommand == notification.object) {
-            
-            NSError *error = [notification.userInfo objectForKey:WAAVSEExportCommandError];
-            
-            if (self.cancel) {
-                error = [NSError errorWithDomain:AVFoundationErrorDomain code:-10000 userInfo:@{NSLocalizedFailureReasonErrorKey:@"User cancel process!"}];
-            }
-            
-            if (error) {
-                [self failToProcessVideo:error];
-            }else{
-                if(!self.tmpPath){// 成功合成
-                    [self successToProcessVideo];
-                }else{
-                    [self successToProcessCurrentCompostion];
-                }
-            }
-            
-        }
-    });
-    
-}
-
 
 #pragma mark getter and setter
 - (void)setRatio:(WAVideoExportRatio)ratio{
@@ -726,31 +706,5 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     }
 }
 
-#pragma mark getter
-- (NSMutableArray *)composeSpace{
-    if (!_composeSpace) {
-        if (!_composeSpace) {
-             _composeSpace = [NSMutableArray array];
-        }
-    }
-    return _composeSpace;
-}
 
-- (NSMutableArray *)workSpace{
-    if (!_workSpace) {
-        if (!_workSpace) {
-            _workSpace = [NSMutableArray array];
-        }
-    }
-    return _workSpace;
-}
-
-- (NSMutableArray *)tmpVideoSpace{
-    if (!_tmpVideoSpace) {
-        if (!_tmpVideoSpace) {
-            _tmpVideoSpace = [NSMutableArray array];
-        }
-    }
-    return _tmpVideoSpace;
-}
 @end

@@ -12,10 +12,10 @@
 - (void)performWithAsset:(AVAsset *)asset{
     [super performWithAsset:asset];
    
-    NSArray *natureTrackAry = [[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo] copy];
+    NSArray *natureTrackAry = [[self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeVideo] copy];
     
     for (AVCompositionTrack *track in natureTrackAry) {
-        [self.mcComposition.totalComposition removeTrack:track];
+        [self.mcComposition.totalEditComposition removeTrack:track];
     }
     self.mcComposition.fileType = AVFileTypeAppleM4A;
     self.mcComposition.presetName = AVAssetExportPresetAppleM4A;

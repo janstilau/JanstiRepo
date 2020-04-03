@@ -48,7 +48,7 @@
         audioTrack = [[mixAsset tracksWithMediaType:AVMediaTypeAudio] firstObject];
     }
     
-    AVMutableCompositionTrack *mixAudioTrack = [self.mcComposition.totalComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    AVMutableCompositionTrack *mixAudioTrack = [self.mcComposition.totalEditComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
 
     
     CMTime endPoint = CMTimeAdd(_insertTime, mixAsset.duration);

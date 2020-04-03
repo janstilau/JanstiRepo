@@ -26,12 +26,12 @@
     }
     
     
-    [[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo] enumerateObjectsUsingBlock:^(AVMutableCompositionTrack  *videoTrack, NSUInteger idx, BOOL * _Nonnull stop) {
+    [[self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeVideo] enumerateObjectsUsingBlock:^(AVMutableCompositionTrack  *videoTrack, NSUInteger idx, BOOL * _Nonnull stop) {
         //        AVMutableVideoCompositionInstruction *instruction = self.composition.instructions[1];
         [videoTrack scaleTimeRange:videoTrack.timeRange toDuration: CMTimeMake(videoTrack.timeRange.duration.value / scale, videoTrack.timeRange.duration.timescale)];
     }];
 
-    [[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio] enumerateObjectsUsingBlock:^(AVMutableCompositionTrack  *audioTrack, NSUInteger idx, BOOL * _Nonnull stop) {
+    [[self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeAudio] enumerateObjectsUsingBlock:^(AVMutableCompositionTrack  *audioTrack, NSUInteger idx, BOOL * _Nonnull stop) {
         [audioTrack scaleTimeRange:audioTrack.timeRange toDuration: CMTimeMake(audioTrack.timeRange.duration.value / scale, audioTrack.timeRange.duration.timescale)];
     }];
     
@@ -57,12 +57,12 @@
         
         scaleDuration = CMTimeMultiplyByFloat64(model.duration, 1 / model.scale);
         // 视图变速
-        for (AVMutableCompositionTrack  *videoTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo]) {
+        for (AVMutableCompositionTrack  *videoTrack in [self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeVideo]) {
             [videoTrack scaleTimeRange:CMTimeRangeMake(model.beganDuration, model.duration) toDuration:scaleDuration];
         }
         
         // 音频变速
-        for (AVMutableCompositionTrack  *audioTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio]) {
+        for (AVMutableCompositionTrack  *audioTrack in [self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeAudio]) {
             
             [audioTrack scaleTimeRange:CMTimeRangeMake(model.beganDuration, model.duration) toDuration: scaleDuration];
         }

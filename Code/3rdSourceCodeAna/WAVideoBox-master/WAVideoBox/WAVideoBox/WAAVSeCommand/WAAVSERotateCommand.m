@@ -43,9 +43,9 @@
         }
         // Rotate transformation
         t2 = CGAffineTransformRotate(t1, (degress / 180.0) * M_PI );
-        self.mcComposition.totalComposition.naturalSize = self.mcComposition.videoEditComposition.renderSize = renderSize;
+        self.mcComposition.totalEditComposition.naturalSize = self.mcComposition.videoEditComposition.renderSize = renderSize;
         CGAffineTransform existingTransform;
-        if (![layerInstruction getTransformRampForTime:[self.mcComposition.totalComposition duration] startTransform:&existingTransform endTransform:NULL timeRange:NULL]) {
+        if (![layerInstruction getTransformRampForTime:[self.mcComposition.totalEditComposition duration] startTransform:&existingTransform endTransform:NULL timeRange:NULL]) {
             [layerInstruction setTransform:t2 atTime:kCMTimeZero];
         } else {
             CGAffineTransform newTransform =  CGAffineTransformConcat(existingTransform, t2);
