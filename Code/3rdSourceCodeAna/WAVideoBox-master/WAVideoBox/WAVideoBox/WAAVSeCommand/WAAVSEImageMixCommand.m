@@ -19,46 +19,43 @@
 @implementation WAAVSEImageMixCommand
 
 - (void)performWithAsset:(AVAsset *)asset{
-    
     [super performWithAsset:asset];
-    CGSize videoSize;
-    
+    if (![[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo] count]) { return; }
     // 3､通过videoCompostion合成
-    if ([[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo] count] != 0) {
-        // 3.2､创建视频画面合成器
-        [super performVideoCompopsition];
-        videoSize = self.mcComposition.videoEditComposition.renderSize;
-        CALayer *imageLayer;
-        if (self.imageLayerRect) {
-            imageLayer = [self buildImageLayerWithRect:self.imageLayerRect(videoSize)];
-            if (self.fileUrl) {
-                [imageLayer addAnimation:[self buildAnimationForGif] forKey:@"gif"];
-            }
+    // 3.2､创建视频画面合成器
+    [super performVideoCompopsition];
+    CGSize videoSize = self.mcComposition.videoEditComposition.renderSize;
+    CALayer *imageLayer;
+    if (self.imageLayerRect) {
+        imageLayer = [self buildImageLayerWithRect:self.imageLayerRect(videoSize)];
+        if (self.fileUrl) {
+            [imageLayer addAnimation:[self buildAnimationForGif] forKey:@"gif"];
         }
-        
-        if (!self.mcComposition.videoLayer || !self.mcComposition.parentLayer) {
-            CALayer *parentLayer = [CALayer layer];
-            CALayer *videoLayer = [CALayer layer];
-            parentLayer.frame = CGRectMake(0, 0, videoSize.width, videoSize.height);
-            videoLayer.frame = CGRectMake(0, 0, videoSize.width, videoSize.height);
-            self.mcComposition.videoLayer = videoLayer;
-            self.mcComposition.parentLayer = parentLayer;
-        }
-        
-        if (self.imageBg) {
-            self.mcComposition.videoLayer.opaque = YES;
-             self.mcComposition.videoLayer.opacity = 0.8;
-            [self.mcComposition.parentLayer addSublayer:imageLayer];
-            [self.mcComposition.parentLayer addSublayer:self.mcComposition.videoLayer];
-        }else{
-            [self.mcComposition.parentLayer addSublayer:self.mcComposition.videoLayer];
-            [self.mcComposition.parentLayer addSublayer:imageLayer];
-        }
-        
-        self.mcComposition.videoEditComposition.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer: self.mcComposition.videoLayer inLayer: self.mcComposition.parentLayer];
-        
     }
-  
+    if (!self.mcComposition.videoLayer || !self.mcComposition.parentLayer) {
+        CALayer *parentLayer = [CALayer layer];
+        CALayer *videoLayer = [CALayer layer];
+        parentLayer.frame = CGRectMake(0, 0, videoSize.width, videoSize.height);
+        videoLayer.frame = CGRectMake(0, 0, videoSize.width, videoSize.height);
+        self.mcComposition.videoLayer = videoLayer;
+        self.mcComposition.parentLayer = parentLayer;
+    }
+    
+    if (self.imageBg) {
+        self.mcComposition.videoLayer.opaque = YES;
+         self.mcComposition.videoLayer.opacity = 0.8;
+        [self.mcComposition.parentLayer addSublayer:imageLayer];
+        [self.mcComposition.parentLayer addSublayer:self.mcComposition.videoLayer];
+    }else{
+        [self.mcComposition.parentLayer addSublayer:self.mcComposition.videoLayer];
+        [self.mcComposition.parentLayer addSublayer:imageLayer];
+    }
+    /*
+     AVVideoCompositionCoreAnimationTool
+     An object used to incorporate Core Animation into a video composition.
+     */
+    // 这里我不太明白, 几个 Layer 是如何合成到视频上的. 和视频的 Size 的关系.
+    self.mcComposition.videoEditComposition.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer: self.mcComposition.videoLayer inLayer: self.mcComposition.parentLayer];
 }
 
 - (void)imageLayerRectWithVideoSize:(CGRect (^)(CGSize))imageLayerRect{
@@ -68,7 +65,6 @@
 }
 
 - (CALayer *)buildImageLayerWithRect:(CGRect)rect{
-    
     CALayer *imageLayer = [CALayer layer];
     if (self.image) {
         imageLayer.contents = (__bridge id) (self.image.CGImage);
@@ -78,30 +74,32 @@
 }
 
 - (CAKeyframeAnimation *)buildAnimationForGif{
-    
+    // KeyFrame 的 path 是 contents.
     CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
     animation.beginTime = AVCoreAnimationBeginTimeAtZero;
     animation.removedOnCompletion = YES;
     
-    NSMutableArray * frames = [NSMutableArray new];    NSMutableArray *delayTimes = [NSMutableArray new];
+    NSMutableArray * frames = [NSMutableArray new];
+    NSMutableArray *delayTimes = [NSMutableArray new];
     CGFloat totalTime = 0.0;
     CGFloat gifWidth;
     CGFloat gifHeight;
     CGImageSourceRef gifSource = CGImageSourceCreateWithURL((CFURLRef)self.fileUrl, NULL);
    
+    // 下面的这个方法, 是通用给的处理 Gif 的方法.
+    // The number of images. If the image source is a multilayered PSD file, the function returns 1.
     size_t frameCount = CGImageSourceGetCount(gifSource);
-    
     for (size_t i = 0; i < frameCount; ++i) {
         CGImageRef frame = CGImageSourceCreateImageAtIndex(gifSource, i, NULL);
-        [frames addObject:(__bridge id)frame];        CGImageRelease(frame);
-
+        [frames addObject:(__bridge id)frame];
+        CGImageRelease(frame);
+        
         NSDictionary *dict = (NSDictionary*)CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(gifSource, i, NULL));
         gifWidth = [[dict valueForKey:(NSString*)kCGImagePropertyPixelWidth] floatValue];
         gifHeight = [[dict valueForKey:(NSString*)kCGImagePropertyPixelHeight] floatValue];
-      
+        
         NSDictionary *gifDict = [dict valueForKey:(NSString*)kCGImagePropertyGIFDictionary];
         [delayTimes addObject:[gifDict valueForKey:(NSString*)kCGImagePropertyGIFUnclampedDelayTime]];
-        
         totalTime = totalTime + [[gifDict valueForKey:(NSString*)kCGImagePropertyGIFUnclampedDelayTime] floatValue];
     }
     
@@ -111,16 +109,13 @@
     CGFloat currentTime = 0;
     NSInteger count = delayTimes.count;
     for (int i = 0; i < count; ++i) {
-        
         [times addObject:[NSNumber numberWithFloat:(currentTime / totalTime)]];
         currentTime += [[delayTimes objectAtIndex:i] floatValue];
     }
-    
     NSMutableArray *images = [NSMutableArray arrayWithCapacity:3];
     for (int i = 0; i < count; ++i) {
         [images addObject:[frames objectAtIndex:i]];
     }
-    
     animation.keyTimes = times;
     animation.values = images;
     animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];

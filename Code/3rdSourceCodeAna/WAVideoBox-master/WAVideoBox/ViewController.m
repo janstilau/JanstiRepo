@@ -46,14 +46,11 @@
 
 #pragma mark 常规操作
 - (IBAction)rangeVideo:(id)sender {
-    
     [_videoBox clean];
     NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
-    
     [_videoBox appendVideoByPath:_videoPath];
     [_videoBox rangeVideoByTimeRange:CMTimeRangeMake(CMTimeMake(3600, 600), CMTimeMake(3600, 600))];
-    
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
             [wself enterVideoPlayWithFile:filePath];
@@ -62,14 +59,13 @@
 }
 
 - (IBAction)compressVideo:(id)sender {
-    
     [_videoBox clean];
     NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
-    
     [_videoBox appendVideoByPath:_videoPath];
     _videoBox.ratio = WAVideoExportRatio1280x720;
-    _videoBox.videoQuality = 6; // 有两种方法可以压缩
+    _videoBox.videoQuality = 6;
+    // 所谓的压缩操作, 就是指定 presentName, 最终, 影响的就是 fileLengthLimit 的值的大小.
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
             [wself enterVideoPlayWithFile:filePath];
@@ -84,6 +80,7 @@
     NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
     
+    // 添加水印, 就是靠着 animationTool 完成的.
     [_videoBox appendVideoByPath:_videoPath];
     [_videoBox appendImages:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"gifTest" ofType:@"gif"]]  relativeRect:CGRectMake(0.6, 0.2, 0.3, 0)];
     

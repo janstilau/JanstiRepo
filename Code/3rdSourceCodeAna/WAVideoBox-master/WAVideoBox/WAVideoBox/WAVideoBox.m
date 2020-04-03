@@ -143,31 +143,28 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 
 #pragma mark pubilc method
 #pragma mark 资源
+
 - (BOOL)appendVideoByPath:(NSString *)videoPath{
-    
     if (videoPath.length == 0 ) {
         return NO;
     }
-    
     AVAsset *asset = [AVAsset assetWithURL:[NSURL fileURLWithPath:videoPath]];
     return [self appendVideoByAsset:asset];
-    
 }
 
 - (BOOL)appendVideoByAsset:(AVAsset *)videoAsset{
-    
     if (!videoAsset || !videoAsset.playable) {
         return NO;
     }
-    
-    runSynchronouslyOnVideoBoxProcessingQueue(^{ // 取消指令
+    // 该函数是一切操作的起点, 所以在这个函数的开头, 做 Cancel 的处理.
+    // 将所有的操作, 放到一个队列里面, 减少多线程同步的代码复杂度.
+    runSynchronouslyOnVideoBoxProcessingQueue(^{
         self.cancel = NO;
     });
     
     runAsynchronouslyOnVideoBoxContextQueue(^{
         // 清空工作区
         [self commitCompostionToComposespace];
-        
         if (!self.cacheComposition) {
             self.cacheComposition = [WACommandComposition new];
             self.cacheComposition.presetName = self.presetName;
@@ -184,9 +181,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 }
 
 - (void)commit{
-    
     runAsynchronouslyOnVideoBoxContextQueue(^{
-  
         [self.workSpace insertObjects:self.composeSpace atIndexes:[[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, self.composeSpace.count)]];
         
         [self.composeSpace removeAllObjects];
@@ -201,7 +196,6 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 
 - (BOOL)rangeVideoByBeganPoint:(CGFloat)beganPoint endPoint:(CGFloat)endPoint{
     runAsynchronouslyOnVideoBoxContextQueue(^{
-        
         [self commitCompostionToWorkspace];
         for (WACommandComposition *composition in self.workSpace) {
             double duration  = CMTimeGetSeconds(composition.duration);
@@ -217,15 +211,12 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 - (BOOL)rangeVideoByTimeRange:(CMTimeRange)range{
     
     runAsynchronouslyOnVideoBoxContextQueue(^{
-
         [self commitCompostionToWorkspace];
-        
         for (WACommandComposition *composition in self.workSpace) {
             WAAVSERangeCommand *rangeCommand = [[WAAVSERangeCommand alloc] initWithComposition:composition];
             [rangeCommand performWithAsset:composition.totalComposition timeRange:range];
         }
     });
-  
     return YES;
 }
 
@@ -285,35 +276,23 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 }
 
 - (BOOL)appendImages:(NSURL *)imagesUrl relativeRect:(CGRect)relativeRect{
-    
-    if (!imagesUrl) {
-        return NO;
-    }
-    
+    if (!imagesUrl) { return NO; }
     runAsynchronouslyOnVideoBoxContextQueue(^{
-        
         [self commitCompostionToWorkspace];
-        
         CGImageSourceRef gifSource = CGImageSourceCreateWithURL((CFURLRef)imagesUrl, NULL);
         CGFloat gifWidth;
         CGFloat gifHeight;
-        
+        // CFBridgingRelease Moves a non-Objective-C pointer to Objective-C and also transfers ownership to ARC.
+        // CFBridgingRetain Casts an Objective-C pointer to a Core Foundation pointer and also transfers ownership to the caller.
         NSDictionary *dict = (NSDictionary*)CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(gifSource, 0, NULL));
         gifWidth = [[dict valueForKey:(NSString*)kCGImagePropertyPixelWidth] floatValue];
         gifHeight = [[dict valueForKey:(NSString*)kCGImagePropertyPixelHeight] floatValue];
-        
-        if (gifSource) {
-            CFRelease(gifSource);
-        }
-        
+        if (gifSource) { CFRelease(gifSource); }
         for (WACommandComposition *composition in self.workSpace) {
             WAAVSEImageMixCommand *command = [[WAAVSEImageMixCommand alloc] initWithComposition:composition];
             command.imageBg = NO;
             command.fileUrl = imagesUrl;
-            
-            
             [command imageLayerRectWithVideoSize:^CGRect(CGSize videoSize) {
-                
                 CGFloat height = 0;
                 if (relativeRect.size.height) {
                     height = videoSize.height * relativeRect.size.height;
@@ -324,11 +303,8 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
             }];
             [command performWithAsset:composition.totalComposition];
         }
-        
     });
-    
     return YES;
-    
 }
 
 #pragma mark 变速
@@ -478,14 +454,13 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     });
 }
 
+// 一个全方位的重置工作.
 - (void)__internalClean{
-    
     for (NSString *tmpPath in self.tmpVideoSpace) {
         if ([[NSFileManager defaultManager] fileExistsAtPath:tmpPath]) {
             [[NSFileManager defaultManager] removeItemAtPath:tmpPath error:nil];
         }
     }
-    
     self.cacheComposition = nil;
     [self.tmpVideoSpace removeAllObjects];
     [self.workSpace removeAllObjects];
