@@ -55,9 +55,9 @@
     
     // 所以, 视频如何编辑, 音频如何编辑, 是在导出的时候, 才起作用的. 之前做的, 都是指令的编辑工作.
     // The instructions for video composition, and indicates whether video composition is enabled for export.
-    self.exportSession.videoComposition = self.mcComposition.videoComposition;
+    self.exportSession.videoComposition = self.mcComposition.videoEditComposition;
     // The parameters for audio mixing and an indication whether to enable nondefault audio mixing for export.
-    self.exportSession.audioMix = self.mcComposition.audioComposition;
+    self.exportSession.audioMix = self.mcComposition.audioEditComposition;
     
     if (self.videoQuality) {
         if ([self.mcComposition.presetName isEqualToString:AVAssetExportPreset640x480]) {

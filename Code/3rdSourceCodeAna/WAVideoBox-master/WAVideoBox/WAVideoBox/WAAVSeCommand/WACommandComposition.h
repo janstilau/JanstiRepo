@@ -27,12 +27,12 @@ NS_ASSUME_NONNULL_BEGIN
  层指令（由AVMutableVideoCompositionLayerInstruction类表示）可用于将转换，变换斜坡，不透明度和不透明度斜坡应用于组合中的视频轨道。
  视频构图类还使您能够使用该animationTool属性将核心动画框架的效果引入到您的视频中
  */
-@property (nonatomic , strong) AVMutableVideoComposition *videoComposition;
+@property (nonatomic , strong) AVMutableVideoComposition *videoEditComposition;
 
 /**
  音频操作指令
  */
-@property (nonatomic , strong) AVMutableAudioMix *audioComposition;
+@property (nonatomic , strong) AVMutableAudioMix *audioEditComposition;
 
 /**
  视频操作参数数组

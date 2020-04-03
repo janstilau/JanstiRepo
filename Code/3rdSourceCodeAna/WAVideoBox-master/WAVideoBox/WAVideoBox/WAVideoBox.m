@@ -526,7 +526,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     
     [self.workSpace removeAllObjects];
     
-    if (!currentComposition.videoComposition && !currentComposition.audioComposition && self.composeSpace.count == self.directCompostionIndex) { // 可以直接合并
+    if (!currentComposition.videoEditComposition && !currentComposition.audioEditComposition && self.composeSpace.count == self.directCompostionIndex) { // 可以直接合并
         if (self.composeSpace.count > 0) {
             WACommandComposition *compositon = [self.composeSpace lastObject];
             
@@ -550,7 +550,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     }
     
     // 这里需要逐帧扫描
-    if (self.videoQuality && self.composeCount == 1 && self.tmpVideoSpace.count == 0 && !composition.videoComposition) {
+    if (self.videoQuality && self.composeCount == 1 && self.tmpVideoSpace.count == 0 && !composition.videoEditComposition) {
         WAAVSECommand *command = [[WAAVSECommand alloc] initWithComposition:composition];
         [command performWithAsset:composition.totalComposition];
         [command performVideoCompopsition];

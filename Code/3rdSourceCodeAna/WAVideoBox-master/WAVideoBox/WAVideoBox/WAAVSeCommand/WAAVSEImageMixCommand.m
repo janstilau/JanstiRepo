@@ -27,7 +27,7 @@
     if ([[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeVideo] count] != 0) {
         // 3.2､创建视频画面合成器
         [super performVideoCompopsition];
-        videoSize = self.mcComposition.videoComposition.renderSize;
+        videoSize = self.mcComposition.videoEditComposition.renderSize;
         CALayer *imageLayer;
         if (self.imageLayerRect) {
             imageLayer = [self buildImageLayerWithRect:self.imageLayerRect(videoSize)];
@@ -55,7 +55,7 @@
             [self.mcComposition.parentLayer addSublayer:imageLayer];
         }
         
-        self.mcComposition.videoComposition.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer: self.mcComposition.videoLayer inLayer: self.mcComposition.parentLayer];
+        self.mcComposition.videoEditComposition.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer: self.mcComposition.videoLayer inLayer: self.mcComposition.parentLayer];
         
     }
   

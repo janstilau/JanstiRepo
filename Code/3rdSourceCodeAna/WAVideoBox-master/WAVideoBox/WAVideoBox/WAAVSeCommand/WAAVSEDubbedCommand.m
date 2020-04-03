@@ -60,7 +60,7 @@
     [mixParam setVolume:self.mixVolume atTime:_insertTime];
     [self.mcComposition.audioInstructions addObject:mixParam];
     
-    self.mcComposition.audioComposition.inputParameters = self.mcComposition.audioInstructions;
+    self.mcComposition.audioEditComposition.inputParameters = self.mcComposition.audioInstructions;
     
 }
 

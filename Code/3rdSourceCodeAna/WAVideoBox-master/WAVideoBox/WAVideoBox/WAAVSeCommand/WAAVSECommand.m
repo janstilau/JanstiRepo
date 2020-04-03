@@ -20,13 +20,14 @@
  
  AVMutableComposition
     - AVMutableCompositionTrack Video
-        AVCompositionTrackSegment
-        AVCompositionTrackSegment
-        AVCompositionTrackSegment
+        - insertTimeRange:(CMTimeRange)timeRange ofTrack:(AVAssetTrack *)track atTime:(CMTime)startTime error:(NSError **)outError
+        - AVCompositionTrackSegment
+        - AVCompositionTrackSegment
+        - AVCompositionTrackSegment
     - AVMutableCompositionTrack Audio
-        AVCompositionTrackSegment
-        AVCompositionTrackSegment
-        AVCompositionTrackSegment
+        - AVCompositionTrackSegment
+        - AVCompositionTrackSegment
+        - AVCompositionTrackSegment
  
  AVMutableAudioMix 表示对于音频的操作, 包含对于所有的 Audio AVMutableCompositionTrack 的操作. 所以, 它不是 AVMutableComposition 的一部分.
     - AVMutableAudioMixInputParameters 表示了, 如何操作某个AVMutableCompositionTrack上面的音频
@@ -134,14 +135,14 @@
 
 - (void)performVideoCompopsition{
     // 创建视频编辑的自定义处理器.
-    if(!self.mcComposition.videoComposition) {
-        AVMutableVideoComposition *videoComposition = [AVMutableVideoComposition videoComposition];
-        self.mcComposition.videoComposition = videoComposition;
+    if(!self.mcComposition.videoEditComposition) {
+        AVMutableVideoComposition *videoEditComposition = [AVMutableVideoComposition videoComposition];
+        self.mcComposition.videoEditComposition = videoEditComposition;
         // A time interval for which the video composition should render composed video frames.
         // 这个值控制, 编辑器以多高的频率来渲染原来的视频. 如果这个值调大, 会发生卡顿. 例如, 调成 30, 30 也就变成了一秒钟渲染一次.
-        videoComposition.frameDuration = CMTimeMake(1, 30); // 30 fps
+        videoEditComposition.frameDuration = CMTimeMake(1, 30); // 30 fps
         // 编辑器渲染的大小, 如果宽高, 都变为一半, 那就是渲染左上角. 这个值不会进行拉伸操作, 如果只渲染左半部分, 那么最后的视频, 左半部分显示在中间, 其他黑框.
-        videoComposition.renderSize = self.assetVideoTrack.naturalSize;
+        videoEditComposition.renderSize = self.assetVideoTrack.naturalSize;
         
         // AVMutableVideoCompositionInstruction
         AVMutableVideoCompositionInstruction *passThroughInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
@@ -160,18 +161,18 @@
 //        [passThroughLayer setOpacityRampFromStartOpacity:1 toEndOpacity:0 timeRange:CMTimeRangeMake(kCMTimeZero, self.backingAsset.duration)];
         passThroughInstruction.layerInstructions = @[passThroughLayer];
         [self.mcComposition.videoInstructions addObject:passThroughInstruction];
-        self.mcComposition.videoComposition.instructions = self.mcComposition.videoInstructions;
+        self.mcComposition.videoEditComposition.instructions = self.mcComposition.videoInstructions;
         
         if (self.trackDegress == 90 || self.trackDegress == 270) { // 如果是竖屏, 还要改变 renderSize
-              self.mcComposition.videoComposition.renderSize = CGSizeMake(self.assetVideoTrack.naturalSize.height, self.assetVideoTrack.naturalSize.width);
+              self.mcComposition.videoEditComposition.renderSize = CGSizeMake(self.assetVideoTrack.naturalSize.height, self.assetVideoTrack.naturalSize.width);
         }
-        self.mcComposition.lastInstructionSize = self.mcComposition.totalComposition.naturalSize  = self.mcComposition.videoComposition.renderSize;
+        self.mcComposition.lastInstructionSize = self.mcComposition.totalComposition.naturalSize  = self.mcComposition.videoEditComposition.renderSize;
     }
 }
 
 - (void)performAudioCompopsition{
-    if (!self.mcComposition.audioComposition) {
-        self.mcComposition.audioComposition = [AVMutableAudioMix audioMix];
+    if (!self.mcComposition.audioEditComposition) {
+        self.mcComposition.audioEditComposition = [AVMutableAudioMix audioMix];
         for (AVMutableCompositionTrack *audioTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio]) {
             AVMutableAudioMixInputParameters *audioParam =
             [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:audioTrack]; // 这里, 已经获取到音轨了.
@@ -180,7 +181,7 @@
 //            [audioParam setVolumeRampFromStartVolume:1 toEndVolume:0 timeRange:CMTimeRangeMake(kCMTimeZero, self.backingAsset.duration)];
             [self.mcComposition.audioInstructions addObject:audioParam];
         }
-        self.mcComposition.audioComposition.inputParameters = self.mcComposition.audioInstructions;
+        self.mcComposition.audioEditComposition.inputParameters = self.mcComposition.audioInstructions;
     }
 }
 

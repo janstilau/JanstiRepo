@@ -88,7 +88,7 @@
 
             AVMutableVideoCompositionLayerInstruction *layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:newVideoTrack];
         
-            CGSize renderSize = self.mcComposition.videoComposition.renderSize;
+            CGSize renderSize = self.mcComposition.videoEditComposition.renderSize;
         
             if (degress == 90 || degress == 270) {
                 natureSize = CGSizeMake(natureSize.height, natureSize.width);
@@ -110,13 +110,13 @@
             instruction.layerInstructions = @[layerInstruction];
         
             [self.mcComposition.videoInstructions addObject:instruction];
-            self.mcComposition.videoComposition.instructions = self.mcComposition.videoInstructions;
+            self.mcComposition.videoEditComposition.instructions = self.mcComposition.videoInstructions;
         }
         
     }
     
     if (mixAssetAudioTrack) {
-        if (self.mcComposition.audioComposition) {
+        if (self.mcComposition.audioEditComposition) {
             AVMutableCompositionTrack *audioTrack = [self.mcComposition.totalComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
             [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, mixAsset.duration) ofTrack:mixAssetAudioTrack atTime:self.mcComposition.duration error:&error];
             
@@ -124,7 +124,7 @@
             [audioParam setVolume:1.0 atTime:kCMTimeZero];
             [self.mcComposition.audioInstructions addObject:audioParam];
             
-            self.mcComposition.audioComposition.inputParameters = self.mcComposition.audioInstructions;
+            self.mcComposition.audioEditComposition.inputParameters = self.mcComposition.audioInstructions;
         }else{
             
             AVMutableCompositionTrack *audioTrack =  [[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio] lastObject];

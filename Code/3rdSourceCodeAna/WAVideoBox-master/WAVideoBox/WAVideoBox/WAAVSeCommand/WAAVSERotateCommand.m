@@ -15,7 +15,7 @@
   
     [super performVideoCompopsition];
     
-    if(self.mcComposition.videoComposition.instructions.count > 1){
+    if(self.mcComposition.videoEditComposition.instructions.count > 1){
          NSAssert(NO, @"This method does not support multi-video processing for the time being.");
         //暂不支持不同分辩率的视频合并马上再旋转
         //ps:可以分开操作，先旋转一个再apeed再旋转即可,使用骚操作完成
@@ -23,7 +23,7 @@
     
     degress -= degress % 360 % 90 ;
     
-    for (AVMutableVideoCompositionInstruction *instruction in self.mcComposition.videoComposition.instructions) {
+    for (AVMutableVideoCompositionInstruction *instruction in self.mcComposition.videoEditComposition.instructions) {
         
         AVMutableVideoCompositionLayerInstruction *layerInstruction = (AVMutableVideoCompositionLayerInstruction *)(instruction.layerInstructions)[0];
         CGAffineTransform t1;
@@ -34,23 +34,23 @@
         degress -= degress % 360 % 90;
         
         if (degress == 90) {
-            t1 = CGAffineTransformMakeTranslation(self.mcComposition.videoComposition.renderSize.height, 0.0);
-            renderSize = CGSizeMake(self.mcComposition.videoComposition.renderSize.height, self.mcComposition.videoComposition.renderSize.width);
+            t1 = CGAffineTransformMakeTranslation(self.mcComposition.videoEditComposition.renderSize.height, 0.0);
+            renderSize = CGSizeMake(self.mcComposition.videoEditComposition.renderSize.height, self.mcComposition.videoEditComposition.renderSize.width);
         }else if (degress == 180){
-            t1 = CGAffineTransformMakeTranslation(self.mcComposition.videoComposition.renderSize.width, self.mcComposition.videoComposition.renderSize.height);
-            renderSize = CGSizeMake(self.mcComposition.videoComposition.renderSize.width, self.mcComposition.videoComposition.renderSize.height);
+            t1 = CGAffineTransformMakeTranslation(self.mcComposition.videoEditComposition.renderSize.width, self.mcComposition.videoEditComposition.renderSize.height);
+            renderSize = CGSizeMake(self.mcComposition.videoEditComposition.renderSize.width, self.mcComposition.videoEditComposition.renderSize.height);
         }else if (degress == 270){
-            t1 = CGAffineTransformMakeTranslation(0.0, self.mcComposition.videoComposition.renderSize.width);
-            renderSize = CGSizeMake(self.mcComposition.videoComposition.renderSize.height, self.mcComposition.videoComposition.renderSize.width);
+            t1 = CGAffineTransformMakeTranslation(0.0, self.mcComposition.videoEditComposition.renderSize.width);
+            renderSize = CGSizeMake(self.mcComposition.videoEditComposition.renderSize.height, self.mcComposition.videoEditComposition.renderSize.width);
         }else{
             t1 = CGAffineTransformMakeTranslation(0.0, 0.0);
-            renderSize = CGSizeMake(self.mcComposition.videoComposition.renderSize.width, self.mcComposition.videoComposition.renderSize.height);
+            renderSize = CGSizeMake(self.mcComposition.videoEditComposition.renderSize.width, self.mcComposition.videoEditComposition.renderSize.height);
         }
         
         // Rotate transformation
         t2 = CGAffineTransformRotate(t1, (degress / 180.0) * M_PI );
         
-        self.mcComposition.totalComposition.naturalSize = self.mcComposition.videoComposition.renderSize = renderSize;
+        self.mcComposition.totalComposition.naturalSize = self.mcComposition.videoEditComposition.renderSize = renderSize;
         
         CGAffineTransform existingTransform;
         
@@ -72,7 +72,7 @@
             if (sublayer == self.mcComposition.videoLayer) {
                 continue;
             }
-            [self converRect:sublayer naturalRenderSize:self.mcComposition.videoComposition.renderSize renderSize:self.mcComposition.videoComposition.renderSize];
+            [self converRect:sublayer naturalRenderSize:self.mcComposition.videoEditComposition.renderSize renderSize:self.mcComposition.videoEditComposition.renderSize];
             sublayer.transform = CATransform3DRotate(sublayer.transform, -(degress / 180.0 * M_PI), 0, 0, 1);
         }
         
