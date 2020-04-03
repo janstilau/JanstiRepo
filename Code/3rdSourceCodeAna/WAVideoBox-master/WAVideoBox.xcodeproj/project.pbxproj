@@ -130,6 +130,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0604A22524378DC30045E943 /* Done */ = {
+			isa = PBXGroup;
+			children = (
+				3B90281121E1F2F3001B1497 /* WAAVSEImageMixCommand.h */,
+				3B90280321E1F2F3001B1497 /* WAAVSEImageMixCommand.m */,
+				3B222FF721E863DC0056CE83 /* WAAVSEExtractSoundCommand.h */,
+				3B222FF821E863DC0056CE83 /* WAAVSEExtractSoundCommand.m */,
+				3B90280F21E1F2F3001B1497 /* WAAVSEGearboxCommand.h */,
+				3B90280521E1F2F3001B1497 /* WAAVSEGearboxCommand.m */,
+				3B90281321E1F2F3001B1497 /* WAAVSEGearboxCommandModel.h */,
+				3B90280621E1F2F3001B1497 /* WAAVSEGearboxCommandModel.m */,
+				3B90280B21E1F2F3001B1497 /* WAAVSEDubbedCommand.h */,
+				3B90281421E1F2F3001B1497 /* WAAVSEDubbedCommand.m */,
+				3B90280921E1F2F3001B1497 /* WAAVSEVideoMixCommand.h */,
+				3B90281621E1F2F3001B1497 /* WAAVSEVideoMixCommand.m */,
+				3B90281721E1F2F3001B1497 /* WAAVSERotateCommand.h */,
+				3B90280821E1F2F3001B1497 /* WAAVSERotateCommand.m */,
+				3B90280721E1F2F3001B1497 /* WAAVSERangeCommand.h */,
+				3B90281221E1F2F3001B1497 /* WAAVSERangeCommand.m */,
+				3B90280421E1F2F3001B1497 /* WAAVSEReplaceSoundCommand.h */,
+				3B90281021E1F2F3001B1497 /* WAAVSEReplaceSoundCommand.m */,
+			);
+			path = Done;
+			sourceTree = "<group>";
+		};
 		3B9027BF21E1F2E7001B1497 = {
 			isa = PBXGroup;
 			children = (
@@ -201,30 +226,13 @@
 		3B9027FF21E1F2F3001B1497 /* WAAVSeCommand */ = {
 			isa = PBXGroup;
 			children = (
+				0604A22524378DC30045E943 /* Done */,
 				3B90280A21E1F2F3001B1497 /* WAEditComposition.h */,
 				3B90281521E1F2F3001B1497 /* WAEditComposition.m */,
 				3B90280221E1F2F3001B1497 /* WAAVSECommand.h */,
 				3B90280C21E1F2F3001B1497 /* WAAVSECommand.m */,
 				3B90280021E1F2F3001B1497 /* WAAVSEExportCommand.h */,
 				3B90280E21E1F2F3001B1497 /* WAAVSEExportCommand.m */,
-				3B90281121E1F2F3001B1497 /* WAAVSEImageMixCommand.h */,
-				3B90280321E1F2F3001B1497 /* WAAVSEImageMixCommand.m */,
-				3B90280421E1F2F3001B1497 /* WAAVSEReplaceSoundCommand.h */,
-				3B90281021E1F2F3001B1497 /* WAAVSEReplaceSoundCommand.m */,
-				3B90280F21E1F2F3001B1497 /* WAAVSEGearboxCommand.h */,
-				3B90280521E1F2F3001B1497 /* WAAVSEGearboxCommand.m */,
-				3B90281321E1F2F3001B1497 /* WAAVSEGearboxCommandModel.h */,
-				3B90280621E1F2F3001B1497 /* WAAVSEGearboxCommandModel.m */,
-				3B90280721E1F2F3001B1497 /* WAAVSERangeCommand.h */,
-				3B90281221E1F2F3001B1497 /* WAAVSERangeCommand.m */,
-				3B90281721E1F2F3001B1497 /* WAAVSERotateCommand.h */,
-				3B90280821E1F2F3001B1497 /* WAAVSERotateCommand.m */,
-				3B90280921E1F2F3001B1497 /* WAAVSEVideoMixCommand.h */,
-				3B90281621E1F2F3001B1497 /* WAAVSEVideoMixCommand.m */,
-				3B90280B21E1F2F3001B1497 /* WAAVSEDubbedCommand.h */,
-				3B90281421E1F2F3001B1497 /* WAAVSEDubbedCommand.m */,
-				3B222FF721E863DC0056CE83 /* WAAVSEExtractSoundCommand.h */,
-				3B222FF821E863DC0056CE83 /* WAAVSEExtractSoundCommand.m */,
 			);
 			path = WAAVSeCommand;
 			sourceTree = "<group>";

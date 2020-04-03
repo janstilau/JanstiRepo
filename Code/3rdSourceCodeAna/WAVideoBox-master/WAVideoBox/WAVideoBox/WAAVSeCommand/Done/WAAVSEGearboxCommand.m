@@ -27,7 +27,6 @@
     
     
     [[self.editComposition.totalEditComposition tracksWithMediaType:AVMediaTypeVideo] enumerateObjectsUsingBlock:^(AVMutableCompositionTrack  *videoTrack, NSUInteger idx, BOOL * _Nonnull stop) {
-        //        AVMutableVideoCompositionInstruction *instruction = self.composition.instructions[1];
         [videoTrack scaleTimeRange:videoTrack.timeRange toDuration: CMTimeMake(videoTrack.timeRange.duration.value / scale, videoTrack.timeRange.duration.timescale)];
     }];
 
@@ -63,15 +62,12 @@
         
         // 音频变速
         for (AVMutableCompositionTrack  *audioTrack in [self.editComposition.totalEditComposition tracksWithMediaType:AVMediaTypeAudio]) {
-            
             [audioTrack scaleTimeRange:CMTimeRangeMake(model.beganDuration, model.duration) toDuration: scaleDuration];
         }
         
         // instruction变速
         duration = CMTimeAdd(duration, model.duration);
-        
     }
-    
     
     for (AVMutableVideoCompositionInstruction *instruction in self.editComposition.videoInstructions) {
         [instruction setTimeRange:CMTimeRangeMake(kCMTimeZero,self.editComposition.duration)];

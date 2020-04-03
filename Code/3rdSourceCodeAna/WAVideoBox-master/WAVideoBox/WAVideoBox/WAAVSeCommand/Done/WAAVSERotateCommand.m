@@ -52,12 +52,10 @@
             [layerInstruction setTransform:newTransform atTime:kCMTimeZero];
         }
         instruction.layerInstructions = @[layerInstruction];
-        
     }
     
     // 将容器大小旋转，若没有anmaitionTool的修改，则直接跳过此步
     if (self.editComposition.videoLayer || self.editComposition.parentLayer) {
-        
         for (CALayer *sublayer in self.editComposition.parentLayer.sublayers) {
             if (sublayer == self.editComposition.videoLayer) {
                 continue;
@@ -65,12 +63,10 @@
             [self converRect:sublayer naturalRenderSize:self.editComposition.videoEditComposition.renderSize renderSize:self.editComposition.videoEditComposition.renderSize];
             sublayer.transform = CATransform3DRotate(sublayer.transform, -(degress / 180.0 * M_PI), 0, 0, 1);
         }
-        
         if (degress == 90 || degress == 270) {
             self.editComposition.videoLayer.frame = CGRectMake(0, 0, self.editComposition.videoLayer.bounds.size.height, self.editComposition.videoLayer.bounds.size.width);
             self.editComposition.parentLayer.frame = CGRectMake(0, 0, self.editComposition.parentLayer.bounds.size.height, self.editComposition.parentLayer.bounds.size.width);
         }
-        
     }
    
 }

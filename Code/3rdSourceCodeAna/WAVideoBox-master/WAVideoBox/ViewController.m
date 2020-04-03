@@ -50,7 +50,7 @@
     NSString *filePath = [self outputVideoPath];
     __weak typeof(self) wself = self;
     [_videoBox appendVideoByPath:_videoPath];
-    [_videoBox rangeVideoByTimeRange:CMTimeRangeMake(CMTimeMake(3600, 600), CMTimeMake(3600, 600))];
+    [_videoBox rangeVideoByTimeRange:CMTimeRangeMake(CMTimeMake(1200, 600), CMTimeMake(5400, 600))];
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
             [wself enterVideoPlayWithFile:filePath];
@@ -65,13 +65,28 @@
     [_videoBox appendVideoByPath:_videoPath];
     _videoBox.ratio = WAVideoExportRatio1280x720;
     _videoBox.videoQuality = 6;
-    // 所谓的压缩操作, 就是指定 presentName, 最终, 影响的就是 fileLengthLimit 的值的大小.
+    // 所谓的压缩操作, 就是指定 presentName, 还有就是 VideoQuality 的大小. 最终是用的 AVAssetExportSession 进行的输出, 靠的是 fileLengthLimit 做的大小的限制.
     [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
             [wself enterVideoPlayWithFile:filePath];
         }
         wself.videoBox.ratio = WAVideoExportRatio960x540;
         wself.videoBox.videoQuality = 0;
+    }];
+}
+
+- (IBAction)rotateVideo:(id)sender {
+    
+    [_videoBox clean];
+    NSString *filePath = [self outputVideoPath];
+    __weak typeof(self) wself = self;
+    
+    [_videoBox appendVideoByPath:_videoPath];
+    [_videoBox rotateVideoByDegress:90];
+    [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
+        if (!error) {
+            [wself enterVideoPlayWithFile:filePath];
+        }
     }];
 }
 
@@ -87,21 +102,6 @@
     [_videoBox asyncFinishEditByFilePath:filePath progress:^(float progress) {
         NSLog(@"progress -- %f",progress);
     } complete:^(NSError *error) {
-        if (!error) {
-            [wself enterVideoPlayWithFile:filePath];
-        }
-    }];
-}
-
-- (IBAction)rotateVideo:(id)sender {
-    
-    [_videoBox clean];
-    NSString *filePath = [self outputVideoPath];
-    __weak typeof(self) wself = self;
-    
-    [_videoBox appendVideoByPath:_videoPath];
-    [_videoBox rotateVideoByDegress:90];
-    [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
         if (!error) {
             [wself enterVideoPlayWithFile:filePath];
         }

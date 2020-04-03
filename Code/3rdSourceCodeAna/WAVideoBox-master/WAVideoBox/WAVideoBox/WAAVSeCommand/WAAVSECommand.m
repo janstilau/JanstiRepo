@@ -22,6 +22,14 @@
     - AVMutableCompositionTrack Video
         - insertTimeRange:(CMTimeRange)timeRange ofTrack:(AVAssetTrack *)track atTime:(CMTime)startTime error:(NSError **)outError
         - AVCompositionTrackSegment
+            - sourceURL
+            -   typedef struct
+                {
+                    CMTimeRange source; // 在原视频的时间段是多少. sourceTimeRange [0.000,+18.543]
+                    CMTimeRange target; // 在现有的 track 的时间段是多少.  timeRange [0.000,+6.181]
+                    以上的值, 是在加速之后的, 所以, Track 的 scale 操作, 是直接影响到了每个 segments 的 timeMapping 的.
+                } CMTimeMapping
+            - sourceTrackID
         - AVCompositionTrackSegment
         - AVCompositionTrackSegment
     - AVMutableCompositionTrack Audio
@@ -39,17 +47,17 @@
     - AVMutableAudioMixInputParameters
  
  AVMutableVideoComposition
-    - frameDuration
+    - frameDuration // A time interval for which the video composition should render composed video frames.
     - renderSize
     - renderScale
-    - animationTool
+    - animationTool // An object used to incorporate Core Animation into a video composition. 一般用来做水印了.
     - instructions
         - AVMutableVideoCompositionInstruction
             - timeRange
             - backgroundColor
-            - layerInstructions
+            - layerInstructions // An array of video composition layer instruction instances of that specify how video frames from source tracks should be layered and composed.
                 - AVMutableVideoCompositionLayerInstruction
-                    - AVAssetTrack
+                    - AVMutableCompositionTrack -- trackID
                     - Opacity
                     - OpacityRamp
                     - Transform
@@ -60,6 +68,10 @@
                 - AVMutableVideoCompositionLayerInstruction
         - AVMutableVideoCompositionInstruction
         - AVMutableVideoCompositionInstruction
+ 
+ 音频和视频如何进行编辑, 不是 AVMutableComposition 的一部分.
+ AVMutableComposition 只是管理各个 Track.
+ 而音频, 视频的编辑功能对象, 引用着各个 Track, 所以最后输出的时候, 会产生结果.
  */
 
 @interface WAAVSECommand ()
@@ -151,7 +163,7 @@
         AVMutableVideoCompositionInstruction *passThroughInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
         passThroughInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, [self.editComposition.totalEditComposition duration]);
 //        passThroughInstruction.backgroundColor = [[UIColor redColor] CGColor];
-        AVAssetTrack *videoTrack = [self.editComposition.totalEditComposition tracksWithMediaType:AVMediaTypeVideo][0];
+        AVMutableCompositionTrack *videoTrack = [self.editComposition.totalEditComposition tracksWithMediaType:AVMediaTypeVideo][0];
         // An object used to modify the transform, cropping, and opacity ramps applied to a given track in a composition.
         //  增加渐变, 裁剪, 变形.
         AVMutableVideoCompositionLayerInstruction *passThroughLayer = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];

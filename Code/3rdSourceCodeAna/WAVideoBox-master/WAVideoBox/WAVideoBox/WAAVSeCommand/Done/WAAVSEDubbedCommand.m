@@ -8,6 +8,8 @@
 
 #import "WAAVSEDubbedCommand.h"
 
+// 混音很简答, 就是插入一个新的 AudioTrack 就可以了.
+
 @implementation WAAVSEDubbedCommand
 
 - (instancetype)init

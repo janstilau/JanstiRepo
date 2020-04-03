@@ -32,13 +32,20 @@
     }
     
     self.editComposition.duration = range.duration;
+    
+//    CMTime sourceDuration = asset.duration;
+//    self.editComposition.duration = sourceDuration;
+//    self.editComposition.duration = CMTimeSubtract(sourceDuration, range.duration);
 }
 
 /*
  裁剪操作, 是在 Track 进行裁剪的.
  Removing a time range does not cause the track to be removed from the composition. Instead it removes or truncates track segments that intersect with the time range.
+ Segment 是自我管理的, 如果切了中间的一部分, 那么就是两边两个 Segment 了.
  */
 - (void)subTimeRaneWithTrack:(AVMutableCompositionTrack *)compositionTrack range:(CMTimeRange)range{
+//        [compositionTrack removeTimeRange:range];
+//        return;
     CMTime endPoint = CMTimeAdd(range.start, range.duration);
     if (CMTimeCompare(self.editComposition.duration,endPoint) != -1) {
         [compositionTrack removeTimeRange:CMTimeRangeMake(endPoint,CMTimeSubtract(self.editComposition.duration, endPoint))];
@@ -46,6 +53,9 @@
     if (CMTimeGetSeconds(range.start)) {
         [compositionTrack removeTimeRange:CMTimeRangeMake(kCMTimeZero, range.start)];
     }
+    
+    //    [compositionTrack removeTimeRange:range];
+    //    return;
 }
 
 @end

@@ -180,7 +180,9 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
             WAAVSECommand *command = [[WAAVSECommand alloc] initWithComposition:self.cacheComposition];
             [command performWithAsset:videoAsset];
         }else{
+            // 如果, 接连插入了两个视频数据, 就要做组合操作了.
             WAAVSEVideoMixCommand *mixcommand = [[WAAVSEVideoMixCommand alloc] initWithComposition:self.cacheComposition];
+            // 这里, 第一个值是 self.cacheComposition.totalEditComposition, 也就是这个函数调用后, 结果还会在 self.cacheComposition.totalEditComposition 上.
             [mixcommand performWithAsset:self.cacheComposition.totalEditComposition mixAsset:videoAsset];
         }
         
@@ -201,7 +203,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 #pragma mark Actions
 
 // 以下的所有对于视频进行操作的动作, 都会调用 commitCompostionToWorkspace 这个方法. 也就是把准备好的资源, 提交给工作区.
-// 然后就是从工作区里面取 WACommandComposition, 创建不同的 command.
+// 其实只会提交一次, 因为 self.cacheComposition 只有在 AppendAsset 的时候, 才会有值.
 - (void)commitCompostionToWorkspace{
     if (self.cacheComposition) {
         [self.workSpace addObject:self.cacheComposition];
@@ -223,7 +225,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     });
     return YES;
 }
-
+// 将裁剪的工作, 封装到了 WAAVSERangeCommand 中, 里面主要是针对 track 的剪切操作. 类比视频编辑软件.
 - (BOOL)rangeVideoByTimeRange:(CMTimeRange)range{
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
@@ -246,7 +248,6 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
             WAAVSERotateCommand *rotateCommand = [[WAAVSERotateCommand alloc] initWithComposition:composition];
             [rotateCommand performWithAsset:composition.totalEditComposition degress:degress];
         }
- 
     });
     
     return YES;
@@ -425,7 +426,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     if ([[NSThread currentThread] isMainThread]) {
         NSAssert(NO, @"You shouldn't make it in main thread!");
     }
-    // runSynchronously 大部分都是在 proocessingQueue. 只有这里才是 ContextQueue
+    // runSynchronously 大部分都是在 proocessingQueue. 只有这里才是 ContextQueue, 而这正是调用了 sync 的方法.
     runSynchronouslyOnVideoBoxContextQueue(^{
         [self finishEditByFilePath:filePath progress:progress complete:complete];
     });
@@ -479,7 +480,6 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 
 #pragma mark private
 
-
 - (void)commitCompostionToComposespace{
     if (!self.workSpace.count) { return; }
     // workspace的最后一个compostion可寻求合并
@@ -505,19 +505,24 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 
 }
 
+// 最后输出工作.
 - (void)processVideoByComposition:(WAEditComposition *)composition{
     
     NSString *filePath = self.filePath;
     if(self.composeSpace.count != 1 || self.tmpVideoSpace.count){
-        self.tmpPath = filePath = [self tmpVideoFilePath];
+        self.tmpPath = filePath = [self tmpVideoFilePath]; // 如果, 要输出的不止一个, 就是要全部输出后最后合并.
     }
     
     // 这里需要逐帧扫描
-    if (self.videoQuality && self.composeCount == 1 && self.tmpVideoSpace.count == 0 && !composition.videoEditComposition) {
+    if (self.videoQuality &&
+        self.composeCount == 1 &&
+        self.tmpVideoSpace.count == 0 &&
+        !composition.videoEditComposition) {
         WAAVSECommand *command = [[WAAVSECommand alloc] initWithComposition:composition];
         [command performWithAsset:composition.totalEditComposition];
         [command performVideoCompopsition];
     }
+    
     WAAVSEExportCommand *exportCommand = [[WAAVSEExportCommand alloc] initWithComposition:composition];
     exportCommand.videoQuality = self.videoQuality;
     self.exportCommand = exportCommand;
@@ -541,8 +546,8 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     if (self.composeSpace.count > 0) {
         [self processVideoByComposition:self.composeSpace.firstObject];
     }else{
+        // 所有视频输出完成, 要做最后的合并操作.
         self.tmpPath = nil;
-        
         WAAVSEVideoMixCommand *mixComand = [WAAVSEVideoMixCommand new];
         NSMutableArray *assetAry = [NSMutableArray array];
         for (NSString *filePath in self.tmpVideoSpace) {
@@ -552,7 +557,6 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
         if (self.videoQuality) { // 需要逐帧对画面处理
             [mixComand performVideoCompopsition];
         }
-        
         mixComand.editComposition.presetName = self.presetName;
         mixComand.editComposition.videoQuality = self.videoQuality;
         
@@ -569,6 +573,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     return [_tmpDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%f.mp4",[NSDate timeIntervalSinceReferenceDate]]];
 }
 
+// 更新进度. 根据 composeCount 来进行计算.
 - (void)displayLinkCallback:(CADisplayLink *)link{
     if (self.progress && self.exportCommand) {
         if (self.composeCount == 1) {
@@ -593,7 +598,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
             if (error) {
                 [self failToProcessVideo:error];
             }else{
-                if(!self.tmpPath){// 成功合成
+                if(!self.tmpPath){// 没有 self.tmpPath, 代表着就一个视频要合成.
                     [self successToProcessVideo];
                 }else{
                     [self successToProcessCurrentCompostion];
@@ -641,6 +646,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     }
 }
 
+// 能来到这一步, 就代表着, 之前的 Command 已经执行完了, 也就是说, 对于视频的编辑, 已经做完了. 该输出了.
 - (void)finishEditByFilePath:(NSString *)filePath progress:(void (^)(float progress))progress complete:(void (^)(NSError *error))complete{
     [self commitCompostionToWorkspace];
     [self commitCompostionToComposespace];
@@ -660,10 +666,8 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     }
     
     runSynchronouslyOnVideoBoxProcessingQueue(^{
-        
         self.suspend = YES;
-        dispatch_suspend(_videoBoxContextQueue);
-        
+        dispatch_suspend(_videoBoxContextQueue); // 不做视频的编辑工作了, 开始做输出操作. 这就是一个消费者生成者问题.
         if (self.cancel) {
             [self failToProcessVideo:[NSError errorWithDomain:AVFoundationErrorDomain code:-10000 userInfo:@{NSLocalizedFailureReasonErrorKey:@"User cancel process!"}]];
             return ;
