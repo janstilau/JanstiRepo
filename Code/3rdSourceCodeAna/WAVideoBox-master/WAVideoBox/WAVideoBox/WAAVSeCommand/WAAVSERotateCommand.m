@@ -12,9 +12,7 @@
 
 - (void)performWithAsset:(AVAsset *)asset degress:(NSUInteger)degress{
     [super performWithAsset:asset];
-  
     [super performVideoCompopsition];
-    
     if(self.mcComposition.videoEditComposition.instructions.count > 1){
          NSAssert(NO, @"This method does not support multi-video processing for the time being.");
         //暂不支持不同分辩率的视频合并马上再旋转
@@ -24,15 +22,12 @@
     degress -= degress % 360 % 90 ;
     
     for (AVMutableVideoCompositionInstruction *instruction in self.mcComposition.videoEditComposition.instructions) {
-        
         AVMutableVideoCompositionLayerInstruction *layerInstruction = (AVMutableVideoCompositionLayerInstruction *)(instruction.layerInstructions)[0];
         CGAffineTransform t1;
         CGAffineTransform t2;
         CGSize renderSize;
-        
         // 角度调整
         degress -= degress % 360 % 90;
-        
         if (degress == 90) {
             t1 = CGAffineTransformMakeTranslation(self.mcComposition.videoEditComposition.renderSize.height, 0.0);
             renderSize = CGSizeMake(self.mcComposition.videoEditComposition.renderSize.height, self.mcComposition.videoEditComposition.renderSize.width);
@@ -46,21 +41,16 @@
             t1 = CGAffineTransformMakeTranslation(0.0, 0.0);
             renderSize = CGSizeMake(self.mcComposition.videoEditComposition.renderSize.width, self.mcComposition.videoEditComposition.renderSize.height);
         }
-        
         // Rotate transformation
         t2 = CGAffineTransformRotate(t1, (degress / 180.0) * M_PI );
-        
         self.mcComposition.totalComposition.naturalSize = self.mcComposition.videoEditComposition.renderSize = renderSize;
-        
         CGAffineTransform existingTransform;
-        
         if (![layerInstruction getTransformRampForTime:[self.mcComposition.totalComposition duration] startTransform:&existingTransform endTransform:NULL timeRange:NULL]) {
             [layerInstruction setTransform:t2 atTime:kCMTimeZero];
         } else {
             CGAffineTransform newTransform =  CGAffineTransformConcat(existingTransform, t2);
             [layerInstruction setTransform:newTransform atTime:kCMTimeZero];
         }
-        
         instruction.layerInstructions = @[layerInstruction];
         
     }

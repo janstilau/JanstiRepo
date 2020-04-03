@@ -14,12 +14,8 @@
 @implementation WAAVSEVideoMixCommand
 
 - (void)performWithAsset:(AVAsset *)asset mixAsset:(AVAsset *)mixAsset{
-    
     [super performWithAsset:asset];
-
     [self mixWithAsset:mixAsset];
-    
-    
 }
 
 - (void)performWithAssets:(NSArray *)assets{
@@ -49,7 +45,6 @@
     }
     
     if (mixAssetVideoTrack) {
-        
         CGSize natureSize = mixAssetVideoTrack.naturalSize;
         NSInteger degress = [self degressFromTransform:mixAssetVideoTrack.preferredTransform];
         
@@ -76,9 +71,7 @@
         }
       
         if (needNewInstrunction) {
-
             [super performVideoCompopsition];
-        
             AVMutableCompositionTrack *newVideoTrack = [self.mcComposition.totalComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
         
             [newVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, mixAsset.duration) ofTrack:mixAssetVideoTrack atTime:self.mcComposition.duration error:&error];
