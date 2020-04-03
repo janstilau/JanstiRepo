@@ -116,15 +116,15 @@
     }
     
     if (mixAssetAudioTrack) {
-        if (self.mcComposition.audioMix) {
+        if (self.mcComposition.audioComposition) {
             AVMutableCompositionTrack *audioTrack = [self.mcComposition.totalComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
             [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, mixAsset.duration) ofTrack:mixAssetAudioTrack atTime:self.mcComposition.duration error:&error];
             
             AVMutableAudioMixInputParameters *audioParam = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mixAssetAudioTrack];
             [audioParam setVolume:1.0 atTime:kCMTimeZero];
-            [self.mcComposition.audioMixParams addObject:audioParam];
+            [self.mcComposition.audioInstructions addObject:audioParam];
             
-            self.mcComposition.audioMix.inputParameters = self.mcComposition.audioMixParams;
+            self.mcComposition.audioComposition.inputParameters = self.mcComposition.audioInstructions;
         }else{
             
             AVMutableCompositionTrack *audioTrack =  [[self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio] lastObject];

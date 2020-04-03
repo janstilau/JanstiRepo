@@ -7,16 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "WAAVSEComposition.h"
+#import "WACommandComposition.h"
 #import <UIKit/UIKit.h>
 
 
 @interface WAAVSECommand : NSObject
 
-- (instancetype)initWithComposition:(WAAVSEComposition *)composition;
+- (instancetype)initWithComposition:(WACommandComposition *)composition;
 
 
-@property (nonatomic , strong) WAAVSEComposition *mcComposition;
+@property (nonatomic , strong) WACommandComposition *mcComposition;
 
 /**
  视频信息初始化

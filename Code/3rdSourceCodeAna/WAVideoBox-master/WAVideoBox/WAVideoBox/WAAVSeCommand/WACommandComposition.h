@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 这个类是一个数据类. 用来存放有关于视频合成的各个对象.
 
-@interface WAAVSEComposition : NSObject
+@interface WACommandComposition : NSObject
 
 /**
  视频轨道信息
@@ -32,7 +32,18 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  音频操作指令
  */
-@property (nonatomic , strong) AVMutableAudioMix *audioMix;
+@property (nonatomic , strong) AVMutableAudioMix *audioComposition;
+
+/**
+ 视频操作参数数组
+ */
+@property (nonatomic , strong) NSMutableArray<AVMutableVideoCompositionInstruction *> *videoInstructions;
+
+/**
+ 音频操作参数数组
+ */
+@property (nonatomic , strong) NSMutableArray<AVMutableAudioMixInputParameters *> *audioInstructions;
+
 
 /**
  视频时长(变速/裁剪后)  PS:后续版本会为每条轨道单独设置duration
@@ -53,16 +64,6 @@ NS_ASSUME_NONNULL_BEGIN
  输出文件格式
  */
 @property (nonatomic , copy) AVFileType fileType;
-
-/**
- 视频操作参数数组
- */
-@property (nonatomic , strong) NSMutableArray<AVMutableVideoCompositionInstruction *> *videoInstructions; 
-
-/**
- 音频操作参数数组
- */
-@property (nonatomic , strong) NSMutableArray<AVMutableAudioMixInputParameters *> *audioMixParams;
 
 /**
  画布父容器

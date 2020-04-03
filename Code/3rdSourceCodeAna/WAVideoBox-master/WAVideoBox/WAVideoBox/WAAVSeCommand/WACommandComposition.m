@@ -6,15 +6,15 @@
 //  Copyright © 2017 黄锐灏. All rights reserved.
 //
 
-#import "WAAVSEComposition.h"
+#import "WACommandComposition.h"
 
-@implementation WAAVSEComposition
+@implementation WACommandComposition
 
 - (NSMutableArray<AVMutableAudioMixInputParameters *> *)audioMixParams{
-    if (!_audioMixParams) {
-        _audioMixParams = [NSMutableArray array];
+    if (!_audioInstructions) {
+        _audioInstructions = [NSMutableArray array];
     }
-    return _audioMixParams;
+    return _audioInstructions;
 }
 
 - (NSMutableArray<AVMutableVideoCompositionInstruction *> *)videoInstructions{

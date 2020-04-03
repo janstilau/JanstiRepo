@@ -15,7 +15,7 @@
 
 @implementation WAAVSEExportCommand
 
-- (instancetype)initWithComposition:(WAAVSEComposition *)composition{
+- (instancetype)initWithComposition:(WACommandComposition *)composition{
     if (self = [super initWithComposition:composition]) {
         self.videoQuality = 0;
     }
@@ -46,7 +46,7 @@
    
     self.exportSession.shouldOptimizeForNetworkUse = YES;
     self.exportSession.videoComposition = self.mcComposition.videoComposition;
-    self.exportSession.audioMix = self.mcComposition.audioMix;
+    self.exportSession.audioMix = self.mcComposition.audioComposition;
     
     self.exportSession.timeRange = CMTimeRangeMake(kCMTimeZero, [self.mcComposition duration]);
     

@@ -31,10 +31,11 @@
 @implementation WAAVSECommand
 
 - (instancetype)init{
-    return [self initWithComposition:[WAAVSEComposition new]];
+    // 也就是说 ,一定会有一个
+    return [self initWithComposition:[WACommandComposition new]];
 }
 
-- (instancetype)initWithComposition:(WAAVSEComposition *)composition{
+- (instancetype)initWithComposition:(WACommandComposition *)composition{
     self = [super init];
     if(self != nil) {
         self.mcComposition = composition;
@@ -126,16 +127,16 @@
 }
 
 - (void)performAudioCompopsition{
-    if (!self.mcComposition.audioMix) {
-        self.mcComposition.audioMix = [AVMutableAudioMix audioMix];
+    if (!self.mcComposition.audioComposition) {
+        self.mcComposition.audioComposition = [AVMutableAudioMix audioMix];
         for (AVMutableCompositionTrack *compostionVideoTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio]) {
             AVMutableAudioMixInputParameters *audioParam = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:compostionVideoTrack]; // 这里, 已经获取到音轨了.
             [audioParam setVolume:1.0 atTime:kCMTimeZero]; // 所以这里的变化, 只会影响到这个音轨.
             // 增加渐变效果.
 //            [audioParam setVolumeRampFromStartVolume:1 toEndVolume:0 timeRange:CMTimeRangeMake(kCMTimeZero, self.backingAsset.duration)];
-            [self.mcComposition.audioMixParams addObject:audioParam];
+            [self.mcComposition.audioInstructions addObject:audioParam];
         }
-        self.mcComposition.audioMix.inputParameters = self.mcComposition.audioMixParams;
+        self.mcComposition.audioComposition.inputParameters = self.mcComposition.audioInstructions;
     }
 }
 

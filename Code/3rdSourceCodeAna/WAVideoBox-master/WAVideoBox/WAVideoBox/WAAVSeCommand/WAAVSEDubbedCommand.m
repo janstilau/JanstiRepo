@@ -20,7 +20,7 @@
     return self;
 }
 
-- (instancetype)initWithComposition:(WAAVSEComposition *)composition{
+- (instancetype)initWithComposition:(WACommandComposition *)composition{
     if (self = [super initWithComposition:composition]) {
         self.audioVolume = 0.5;
         self.mixVolume = 0.5;
@@ -39,7 +39,7 @@
         return;
     }
     
-    for (AVMutableAudioMixInputParameters *parameters in self.mcComposition.audioMixParams) {
+    for (AVMutableAudioMixInputParameters *parameters in self.mcComposition.audioInstructions) {
         [parameters setVolume:self.audioVolume atTime:kCMTimeZero];
     }
     
@@ -58,9 +58,9 @@
     
     AVMutableAudioMixInputParameters *mixParam = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mixAudioTrack];
     [mixParam setVolume:self.mixVolume atTime:_insertTime];
-    [self.mcComposition.audioMixParams addObject:mixParam];
+    [self.mcComposition.audioInstructions addObject:mixParam];
     
-    self.mcComposition.audioMix.inputParameters = self.mcComposition.audioMixParams;
+    self.mcComposition.audioComposition.inputParameters = self.mcComposition.audioInstructions;
     
 }
 
