@@ -648,7 +648,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 
 // 能来到这一步, 就代表着, 之前的 Command 已经执行完了, 也就是说, 对于视频的编辑, 已经做完了. 该输出了.
 - (void)finishEditByFilePath:(NSString *)filePath progress:(void (^)(float progress))progress complete:(void (^)(NSError *error))complete{
-    [self commitCompostionToWorkspace];
+    [self commitCompostionToWorkspace]; // 这个调用, 就是为了导到 Composespace 中去
     [self commitCompostionToComposespace];
     
     if (!self.composeSpace.count) {
@@ -666,7 +666,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     }
     
     runSynchronouslyOnVideoBoxProcessingQueue(^{
-        self.suspend = YES;
+        self.suspend = YES; // 这就是一个标志位, 标志的需要进行 _videoBoxContextQueue 的重启操作.
         dispatch_suspend(_videoBoxContextQueue); // 不做视频的编辑工作了, 开始做输出操作. 这就是一个消费者生成者问题.
         if (self.cancel) {
             [self failToProcessVideo:[NSError errorWithDomain:AVFoundationErrorDomain code:-10000 userInfo:@{NSLocalizedFailureReasonErrorKey:@"User cancel process!"}]];
