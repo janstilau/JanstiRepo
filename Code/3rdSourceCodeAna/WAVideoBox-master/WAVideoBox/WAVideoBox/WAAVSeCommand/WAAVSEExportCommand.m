@@ -15,7 +15,7 @@
 
 @implementation WAAVSEExportCommand
 
-- (instancetype)initWithComposition:(WACommandComposition *)composition{
+- (instancetype)initWithComposition:(WAEditComposition *)composition{
     if (self = [super initWithComposition:composition]) {
         self.videoQuality = 0;
     }
@@ -39,39 +39,39 @@
     [manager removeItemAtPath:path error:nil];
     
     // Setup output parameters
-    if (self.mcComposition.presetName.length == 0) {
-        self.mcComposition.presetName = AVAssetExportPresetHighestQuality;
+    if (self.editComposition.presetName.length == 0) {
+        self.editComposition.presetName = AVAssetExportPresetHighestQuality;
     }
-    if (!self.mcComposition.fileType) {
-        self.mcComposition.fileType = AVFileTypeMPEG4;
+    if (!self.editComposition.fileType) {
+        self.editComposition.fileType = AVFileTypeMPEG4;
     }
     
-    self.exportSession = [[AVAssetExportSession alloc] initWithAsset:asset presetName:self.mcComposition.presetName];
+    self.exportSession = [[AVAssetExportSession alloc] initWithAsset:asset presetName:self.editComposition.presetName];
    
     self.exportSession.shouldOptimizeForNetworkUse = YES;
-    self.exportSession.timeRange = CMTimeRangeMake(kCMTimeZero, [self.mcComposition duration]);
+    self.exportSession.timeRange = CMTimeRangeMake(kCMTimeZero, [self.editComposition duration]);
     self.exportSession.outputURL = [NSURL fileURLWithPath:path];
-    self.exportSession.outputFileType = self.mcComposition.fileType;
+    self.exportSession.outputFileType = self.editComposition.fileType;
     
     // 所以, 视频如何编辑, 音频如何编辑, 是在导出的时候, 才起作用的. 之前做的, 都是指令的编辑工作.
     // The instructions for video composition, and indicates whether video composition is enabled for export.
-    self.exportSession.videoComposition = self.mcComposition.videoEditComposition;
+    self.exportSession.videoComposition = self.editComposition.videoEditComposition;
     // The parameters for audio mixing and an indication whether to enable nondefault audio mixing for export.
-    self.exportSession.audioMix = self.mcComposition.audioEditComposition;
+    self.exportSession.audioMix = self.editComposition.audioEditComposition;
     
     if (self.videoQuality) {
-        if ([self.mcComposition.presetName isEqualToString:AVAssetExportPreset640x480]) {
+        if ([self.editComposition.presetName isEqualToString:AVAssetExportPreset640x480]) {
             self.ratioParam = 0.02 ;
         }
-        if ([self.mcComposition.presetName isEqualToString:AVAssetExportPreset960x540]) {
+        if ([self.editComposition.presetName isEqualToString:AVAssetExportPreset960x540]) {
             self.ratioParam = 0.04 ;
         }
-        if ([self.mcComposition.presetName isEqualToString:AVAssetExportPreset1280x720]) {
+        if ([self.editComposition.presetName isEqualToString:AVAssetExportPreset1280x720]) {
             self.ratioParam = 0.08 ;
         }
         // fileLengthLimit 如何计算得出, 没有太明白作者的意图. 不过, 这里仅仅通过fileLengthLimit来控制输出的视频质量, 效果很差.
         if (self.ratioParam) {
-            self.exportSession.fileLengthLimit = CMTimeGetSeconds(self.mcComposition.duration) * self.ratioParam * self.mcComposition.videoQuality * 1024 * 1024;
+            self.exportSession.fileLengthLimit = CMTimeGetSeconds(self.editComposition.duration) * self.ratioParam * self.editComposition.videoQuality * 1024 * 1024;
         }
     }
     
@@ -102,7 +102,7 @@
 }
 
 - (void)performSaveByPath:(NSString *)path{
-    [self performSaveAsset:self.mcComposition.totalEditComposition byPath:path];
+    [self performSaveAsset:self.editComposition.totalEditComposition byPath:path];
 }
 
 @end

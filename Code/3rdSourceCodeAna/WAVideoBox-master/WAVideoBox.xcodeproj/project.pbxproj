@@ -27,7 +27,7 @@
 		3B90282121E1F2F3001B1497 /* WAAVSEReplaceSoundCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B90281021E1F2F3001B1497 /* WAAVSEReplaceSoundCommand.m */; };
 		3B90282221E1F2F3001B1497 /* WAAVSERangeCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B90281221E1F2F3001B1497 /* WAAVSERangeCommand.m */; };
 		3B90282321E1F2F3001B1497 /* WAAVSEDubbedCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B90281421E1F2F3001B1497 /* WAAVSEDubbedCommand.m */; };
-		3B90282421E1F2F3001B1497 /* WACommandComposition.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B90281521E1F2F3001B1497 /* WACommandComposition.m */; };
+		3B90282421E1F2F3001B1497 /* WAEditComposition.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B90281521E1F2F3001B1497 /* WAEditComposition.m */; };
 		3B90282521E1F2F3001B1497 /* WAAVSEVideoMixCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B90281621E1F2F3001B1497 /* WAAVSEVideoMixCommand.m */; };
 		3B90282C21E1FAC3001B1497 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B90282B21E1FAC3001B1497 /* PlayViewController.m */; };
 		3B90283421E1FF22001B1497 /* test3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3B90282F21E1FF21001B1497 /* test3.mp4 */; };
@@ -83,7 +83,7 @@
 		3B90280721E1F2F3001B1497 /* WAAVSERangeCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSERangeCommand.h; sourceTree = "<group>"; };
 		3B90280821E1F2F3001B1497 /* WAAVSERotateCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSERotateCommand.m; sourceTree = "<group>"; };
 		3B90280921E1F2F3001B1497 /* WAAVSEVideoMixCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSEVideoMixCommand.h; sourceTree = "<group>"; };
-		3B90280A21E1F2F3001B1497 /* WACommandComposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WACommandComposition.h; sourceTree = "<group>"; };
+		3B90280A21E1F2F3001B1497 /* WAEditComposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAEditComposition.h; sourceTree = "<group>"; };
 		3B90280B21E1F2F3001B1497 /* WAAVSEDubbedCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSEDubbedCommand.h; sourceTree = "<group>"; };
 		3B90280C21E1F2F3001B1497 /* WAAVSECommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSECommand.m; sourceTree = "<group>"; };
 		3B90280E21E1F2F3001B1497 /* WAAVSEExportCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSEExportCommand.m; sourceTree = "<group>"; };
@@ -93,7 +93,7 @@
 		3B90281221E1F2F3001B1497 /* WAAVSERangeCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSERangeCommand.m; sourceTree = "<group>"; };
 		3B90281321E1F2F3001B1497 /* WAAVSEGearboxCommandModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSEGearboxCommandModel.h; sourceTree = "<group>"; };
 		3B90281421E1F2F3001B1497 /* WAAVSEDubbedCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSEDubbedCommand.m; sourceTree = "<group>"; };
-		3B90281521E1F2F3001B1497 /* WACommandComposition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WACommandComposition.m; sourceTree = "<group>"; };
+		3B90281521E1F2F3001B1497 /* WAEditComposition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAEditComposition.m; sourceTree = "<group>"; };
 		3B90281621E1F2F3001B1497 /* WAAVSEVideoMixCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAVSEVideoMixCommand.m; sourceTree = "<group>"; };
 		3B90281721E1F2F3001B1497 /* WAAVSERotateCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAVSERotateCommand.h; sourceTree = "<group>"; };
 		3B90281821E1F2F3001B1497 /* WAVideoBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAVideoBox.h; sourceTree = "<group>"; };
@@ -201,8 +201,8 @@
 		3B9027FF21E1F2F3001B1497 /* WAAVSeCommand */ = {
 			isa = PBXGroup;
 			children = (
-				3B90280A21E1F2F3001B1497 /* WACommandComposition.h */,
-				3B90281521E1F2F3001B1497 /* WACommandComposition.m */,
+				3B90280A21E1F2F3001B1497 /* WAEditComposition.h */,
+				3B90281521E1F2F3001B1497 /* WAEditComposition.m */,
 				3B90280221E1F2F3001B1497 /* WAAVSECommand.h */,
 				3B90280C21E1F2F3001B1497 /* WAAVSECommand.m */,
 				3B90280021E1F2F3001B1497 /* WAAVSEExportCommand.h */,
@@ -377,7 +377,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B9027D021E1F2E7001B1497 /* ViewController.m in Sources */,
-				3B90282421E1F2F3001B1497 /* WACommandComposition.m in Sources */,
+				3B90282421E1F2F3001B1497 /* WAEditComposition.m in Sources */,
 				3B90282221E1F2F3001B1497 /* WAAVSERangeCommand.m in Sources */,
 				3B90281C21E1F2F3001B1497 /* WAAVSEGearboxCommandModel.m in Sources */,
 				3B90282C21E1FAC3001B1497 /* PlayViewController.m in Sources */,

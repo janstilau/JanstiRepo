@@ -24,12 +24,12 @@
     CADisplayLink *_progressLink;
 }
 
-@property (nonatomic , strong) WACommandComposition *cacheComposition;
+@property (nonatomic , strong) WAEditComposition *cacheComposition;
 @property (nonatomic , weak) WAAVSEExportCommand *exportCommand;
 
-@property (nonatomic , strong) NSMutableArray <WACommandComposition *>*workSpace;
+@property (nonatomic , strong) NSMutableArray <WAEditComposition *>*workSpace;
 
-@property (nonatomic , strong) NSMutableArray <WACommandComposition *>*composeSpace;
+@property (nonatomic , strong) NSMutableArray <WAEditComposition *>*composeSpace;
 
 @property (nonatomic , strong) NSMutableArray <NSString *>*tmpVideoSpace; //临时视频文件
 
@@ -174,7 +174,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
         // 清空工作区
         [self commitCompostionToComposespace];
         if (!self.cacheComposition) {
-            self.cacheComposition = [WACommandComposition new];
+            self.cacheComposition = [WAEditComposition new];
             self.cacheComposition.presetName = self.presetName;
             self.cacheComposition.videoQuality = self.videoQuality;
             WAAVSECommand *command = [[WAAVSECommand alloc] initWithComposition:self.cacheComposition];
@@ -213,7 +213,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 - (BOOL)rangeVideoByBeganPoint:(CGFloat)beganPoint endPoint:(CGFloat)endPoint{
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
-        for (WACommandComposition *composition in self.workSpace) {
+        for (WAEditComposition *composition in self.workSpace) {
             double duration  = CMTimeGetSeconds(composition.duration);
             CMTime timeFrom = CMTimeMake(beganPoint / duration  * composition.duration.value, composition.duration.timescale);
             CMTime timeTo = CMTimeMake((endPoint  - beganPoint)/ duration * composition.duration.value, composition.duration.timescale);
@@ -227,7 +227,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 - (BOOL)rangeVideoByTimeRange:(CMTimeRange)range{
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
-        for (WACommandComposition *composition in self.workSpace) {
+        for (WAEditComposition *composition in self.workSpace) {
             WAAVSERangeCommand *rangeCommand = [[WAAVSERangeCommand alloc] initWithComposition:composition];
             [rangeCommand performWithAsset:composition.totalEditComposition timeRange:range];
         }
@@ -242,7 +242,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     }
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
-        for (WACommandComposition *composition in self.workSpace) {
+        for (WAEditComposition *composition in self.workSpace) {
             WAAVSERotateCommand *rotateCommand = [[WAAVSERotateCommand alloc] initWithComposition:composition];
             [rotateCommand performWithAsset:composition.totalEditComposition degress:degress];
         }
@@ -260,7 +260,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
-        for (WACommandComposition *composition in self.workSpace) {
+        for (WAEditComposition *composition in self.workSpace) {
             WAAVSEImageMixCommand *command = [[WAAVSEImageMixCommand alloc] initWithComposition:composition];
             command.imageBg = NO;
             command.image = waterImg;
@@ -295,7 +295,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
         gifHeight = [[dict valueForKey:(NSString*)kCGImagePropertyPixelHeight] floatValue];
         if (gifSource) { CFRelease(gifSource); }
         
-        for (WACommandComposition *composition in self.workSpace) {
+        for (WAEditComposition *composition in self.workSpace) {
             WAAVSEImageMixCommand *command = [[WAAVSEImageMixCommand alloc] initWithComposition:composition];
             command.imageBg = NO;
             command.fileUrl = imagesUrl;
@@ -317,7 +317,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 - (BOOL)gearBoxWithScale:(CGFloat)scale{
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
-        for (WACommandComposition *composition in self.workSpace) {
+        for (WAEditComposition *composition in self.workSpace) {
             WAAVSEGearboxCommand *gearBox =  [[WAAVSEGearboxCommand alloc] initWithComposition:composition];
             [gearBox performWithAsset:composition.totalEditComposition scale:scale];
         }
@@ -332,7 +332,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
-        for (WACommandComposition *composition in self.workSpace) {
+        for (WAEditComposition *composition in self.workSpace) {
            
             WAAVSEGearboxCommand *gearBox =  [[WAAVSEGearboxCommand alloc] initWithComposition:composition];
             [gearBox performWithAsset:composition.totalEditComposition models:scaleArray];
@@ -356,7 +356,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
         
-        for (WACommandComposition *composition in self.workSpace) {
+        for (WAEditComposition *composition in self.workSpace) {
             WAAVSEReplaceSoundCommand *replaceCommand = [[WAAVSEReplaceSoundCommand alloc] initWithComposition:composition];
             [replaceCommand performWithAsset:composition.totalEditComposition replaceAsset:soundAsset];
         }
@@ -385,7 +385,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
         
-        for (WACommandComposition *composition in self.workSpace) {
+        for (WAEditComposition *composition in self.workSpace) {
             WAAVSEDubbedCommand *command = [[WAAVSEDubbedCommand alloc] initWithComposition:composition];
             command.insertTime = CMTimeMakeWithSeconds(insetDuration, composition.totalEditComposition.duration.timescale);
             command.audioVolume = volume;
@@ -401,7 +401,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     runAsynchronouslyOnVideoBoxContextQueue(^{
         [self commitCompostionToWorkspace];
         
-        for (WACommandComposition *composition in self.workSpace) {
+        for (WAEditComposition *composition in self.workSpace) {
             WAAVSEExtractSoundCommand *command = [[WAAVSEExtractSoundCommand alloc] initWithComposition:composition];
             [command performWithAsset:composition.totalEditComposition];
         }
@@ -483,7 +483,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 - (void)commitCompostionToComposespace{
     if (!self.workSpace.count) { return; }
     // workspace的最后一个compostion可寻求合并
-    WACommandComposition *currentComposition = [self.workSpace lastObject];
+    WAEditComposition *currentComposition = [self.workSpace lastObject];
     for (int i = 0; i < self.workSpace.count - 1; i++) {
         [self.composeSpace addObject:self.workSpace[i]];
     }
@@ -492,7 +492,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
         !currentComposition.audioEditComposition &&
         self.composeSpace.count == self.directCompostionIndex) { // 可以直接合并
         if (self.composeSpace.count > 0) {
-            WACommandComposition *compositon = [self.composeSpace lastObject];
+            WAEditComposition *compositon = [self.composeSpace lastObject];
             WAAVSEVideoMixCommand *mixCommand = [[WAAVSEVideoMixCommand alloc] initWithComposition:compositon];
             [mixCommand performWithAsset:compositon.totalEditComposition mixAsset:(AVAsset *)currentComposition.totalEditComposition];
         }else{
@@ -505,7 +505,7 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
 
 }
 
-- (void)processVideoByComposition:(WACommandComposition *)composition{
+- (void)processVideoByComposition:(WAEditComposition *)composition{
     
     NSString *filePath = self.filePath;
     if(self.composeSpace.count != 1 || self.tmpVideoSpace.count){
@@ -553,10 +553,10 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
             [mixComand performVideoCompopsition];
         }
         
-        mixComand.mcComposition.presetName = self.presetName;
-        mixComand.mcComposition.videoQuality = self.videoQuality;
+        mixComand.editComposition.presetName = self.presetName;
+        mixComand.editComposition.videoQuality = self.videoQuality;
         
-        WAAVSEExportCommand *exportCommand = [[WAAVSEExportCommand alloc] initWithComposition:mixComand.mcComposition];
+        WAAVSEExportCommand *exportCommand = [[WAAVSEExportCommand alloc] initWithComposition:mixComand.editComposition];
         exportCommand.videoQuality = self.videoQuality;
         self.exportCommand = exportCommand;
         [exportCommand performSaveByPath:self.filePath];

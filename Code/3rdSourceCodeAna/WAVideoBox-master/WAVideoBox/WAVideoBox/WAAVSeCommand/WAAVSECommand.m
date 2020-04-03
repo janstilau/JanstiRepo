@@ -75,13 +75,13 @@
 
 - (instancetype)init{
     // 也就是说 ,一定会有一个
-    return [self initWithComposition:[WACommandComposition new]];
+    return [self initWithComposition:[WAEditComposition new]];
 }
 
-- (instancetype)initWithComposition:(WACommandComposition *)composition{
+- (instancetype)initWithComposition:(WAEditComposition *)composition{
     self = [super init];
     if(self != nil) {
-        self.mcComposition = composition;
+        self.editComposition = composition;
     }
     return self;
 }
@@ -105,11 +105,11 @@
     }
     
     // 2､创建混合器
-    if(!self.mcComposition.totalEditComposition) {
+    if(!self.editComposition.totalEditComposition) {
         CMTime insertionPoint = kCMTimeZero;
         NSError *error = nil;
         AVMutableComposition *totalComposition = [AVMutableComposition composition];
-        self.mcComposition.totalEditComposition = totalComposition;
+        self.editComposition.totalEditComposition = totalComposition;
         //  2.1､把视频轨道加入到混合器做出新的轨道
         if (self.assetVideoTrack != nil) {
             // 向 Conpositon 里面, 添加了一个 Video 的 Track, 但是这个 Track 里面现在没有数据 , Adds an empty track to the receiver.
@@ -121,7 +121,7 @@
              */
             totalComposition.naturalSize = videoTrack.naturalSize; // 如果是音频轨道返回 CGSizeZero.
             // 在插入了一条轨道之后, self.composition.mutableComposition.duration 里面就有值了.
-            self.mcComposition.duration = totalComposition.duration;
+            self.editComposition.duration = totalComposition.duration;
             
             self.trackDegress = [self degressFromTransform:self.assetVideoTrack.preferredTransform];
             if (self.trackDegress % 360 != 0) { // 如果方向不是正的.
@@ -138,9 +138,9 @@
 
 - (void)performVideoCompopsition{
     // 创建视频编辑的自定义处理器.
-    if(!self.mcComposition.videoEditComposition) {
+    if(!self.editComposition.videoEditComposition) {
         AVMutableVideoComposition *videoEditComposition = [AVMutableVideoComposition videoComposition];
-        self.mcComposition.videoEditComposition = videoEditComposition;
+        self.editComposition.videoEditComposition = videoEditComposition;
         // A time interval for which the video composition should render composed video frames.
         // 这个值控制, 编辑器以多高的频率来渲染原来的视频. 如果这个值调大, 会发生卡顿. 例如, 调成 30, 30 也就变成了一秒钟渲染一次.
         videoEditComposition.frameDuration = CMTimeMake(1, 30); // 30 fps
@@ -149,9 +149,9 @@
         
         // AVMutableVideoCompositionInstruction
         AVMutableVideoCompositionInstruction *passThroughInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-        passThroughInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, [self.mcComposition.totalEditComposition duration]);
+        passThroughInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, [self.editComposition.totalEditComposition duration]);
 //        passThroughInstruction.backgroundColor = [[UIColor redColor] CGColor];
-        AVAssetTrack *videoTrack = [self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeVideo][0];
+        AVAssetTrack *videoTrack = [self.editComposition.totalEditComposition tracksWithMediaType:AVMediaTypeVideo][0];
         // An object used to modify the transform, cropping, and opacity ramps applied to a given track in a composition.
         //  增加渐变, 裁剪, 变形.
         AVMutableVideoCompositionLayerInstruction *passThroughLayer = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
@@ -163,28 +163,28 @@
 // 从亮到最后完全变暗.
 //        [passThroughLayer setOpacityRampFromStartOpacity:1 toEndOpacity:0 timeRange:CMTimeRangeMake(kCMTimeZero, self.backingAsset.duration)];
         passThroughInstruction.layerInstructions = @[passThroughLayer];
-        [self.mcComposition.videoInstructions addObject:passThroughInstruction];
-        self.mcComposition.videoEditComposition.instructions = self.mcComposition.videoInstructions;
+        [self.editComposition.videoInstructions addObject:passThroughInstruction];
+        self.editComposition.videoEditComposition.instructions = self.editComposition.videoInstructions;
         
         if (self.trackDegress == 90 || self.trackDegress == 270) { // 如果是竖屏, 还要改变 renderSize
-              self.mcComposition.videoEditComposition.renderSize = CGSizeMake(self.assetVideoTrack.naturalSize.height, self.assetVideoTrack.naturalSize.width);
+              self.editComposition.videoEditComposition.renderSize = CGSizeMake(self.assetVideoTrack.naturalSize.height, self.assetVideoTrack.naturalSize.width);
         }
-        self.mcComposition.lastInstructionSize = self.mcComposition.totalEditComposition.naturalSize  = self.mcComposition.videoEditComposition.renderSize;
+        self.editComposition.lastInstructionSize = self.editComposition.totalEditComposition.naturalSize  = self.editComposition.videoEditComposition.renderSize;
     }
 }
 
 - (void)performAudioCompopsition{
-    if (!self.mcComposition.audioEditComposition) {
-        self.mcComposition.audioEditComposition = [AVMutableAudioMix audioMix];
-        for (AVMutableCompositionTrack *audioTrack in [self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeAudio]) {
+    if (!self.editComposition.audioEditComposition) {
+        self.editComposition.audioEditComposition = [AVMutableAudioMix audioMix];
+        for (AVMutableCompositionTrack *audioTrack in [self.editComposition.totalEditComposition tracksWithMediaType:AVMediaTypeAudio]) {
             AVMutableAudioMixInputParameters *audioParam =
             [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:audioTrack]; // 这里, 已经获取到音轨了.
             [audioParam setVolume:1.0 atTime:kCMTimeZero]; // 所以这里的变化, 只会影响到这个音轨.
             // 增加渐变效果.
 //            [audioParam setVolumeRampFromStartVolume:1 toEndVolume:0 timeRange:CMTimeRangeMake(kCMTimeZero, self.backingAsset.duration)];
-            [self.mcComposition.audioInstructions addObject:audioParam];
+            [self.editComposition.audioInstructions addObject:audioParam];
         }
-        self.mcComposition.audioEditComposition.inputParameters = self.mcComposition.audioInstructions;
+        self.editComposition.audioEditComposition.inputParameters = self.editComposition.audioInstructions;
     }
 }
 

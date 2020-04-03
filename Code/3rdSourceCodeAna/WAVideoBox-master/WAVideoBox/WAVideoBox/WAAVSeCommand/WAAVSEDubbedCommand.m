@@ -20,7 +20,7 @@
     return self;
 }
 
-- (instancetype)initWithComposition:(WACommandComposition *)composition{
+- (instancetype)initWithComposition:(WAEditComposition *)composition{
     if (self = [super initWithComposition:composition]) {
         self.audioVolume = 0.5;
         self.mixVolume = 0.5;
@@ -35,11 +35,11 @@
     
     [super performAudioCompopsition];
     
-    if (CMTimeCompare(self.mcComposition.duration, _insertTime) != 1) {
+    if (CMTimeCompare(self.editComposition.duration, _insertTime) != 1) {
         return;
     }
     
-    for (AVMutableAudioMixInputParameters *parameters in self.mcComposition.audioInstructions) {
+    for (AVMutableAudioMixInputParameters *parameters in self.editComposition.audioInstructions) {
         [parameters setVolume:self.audioVolume atTime:kCMTimeZero];
     }
     
@@ -48,19 +48,19 @@
         audioTrack = [[mixAsset tracksWithMediaType:AVMediaTypeAudio] firstObject];
     }
     
-    AVMutableCompositionTrack *mixAudioTrack = [self.mcComposition.totalEditComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+    AVMutableCompositionTrack *mixAudioTrack = [self.editComposition.totalEditComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
 
     
     CMTime endPoint = CMTimeAdd(_insertTime, mixAsset.duration);
-    CMTime duration = CMTimeSubtract(CMTimeMinimum(endPoint, self.mcComposition.duration), _insertTime);
+    CMTime duration = CMTimeSubtract(CMTimeMinimum(endPoint, self.editComposition.duration), _insertTime);
     
     [mixAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, duration) ofTrack:audioTrack atTime:_insertTime error:nil];
     
     AVMutableAudioMixInputParameters *mixParam = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:mixAudioTrack];
     [mixParam setVolume:self.mixVolume atTime:_insertTime];
-    [self.mcComposition.audioInstructions addObject:mixParam];
+    [self.editComposition.audioInstructions addObject:mixParam];
     
-    self.mcComposition.audioEditComposition.inputParameters = self.mcComposition.audioInstructions;
+    self.editComposition.audioEditComposition.inputParameters = self.editComposition.audioInstructions;
     
 }
 

@@ -20,11 +20,11 @@
 
 - (void)performWithAsset:(AVAsset *)asset{
     [super performWithAsset:asset];
-    if (![[self.mcComposition.totalEditComposition tracksWithMediaType:AVMediaTypeVideo] count]) { return; }
+    if (![[self.editComposition.totalEditComposition tracksWithMediaType:AVMediaTypeVideo] count]) { return; }
     // 3､通过videoCompostion合成
     // 3.2､创建视频画面合成器
     [super performVideoCompopsition];
-    CGSize videoSize = self.mcComposition.videoEditComposition.renderSize;
+    CGSize videoSize = self.editComposition.videoEditComposition.renderSize;
     CALayer *imageLayer;
     if (self.imageLayerRect) {
         imageLayer = [self buildImageLayerWithRect:self.imageLayerRect(videoSize)];
@@ -32,30 +32,30 @@
             [imageLayer addAnimation:[self buildAnimationForGif] forKey:@"gif"];
         }
     }
-    if (!self.mcComposition.videoLayer || !self.mcComposition.parentLayer) {
+    if (!self.editComposition.videoLayer || !self.editComposition.parentLayer) {
         CALayer *parentLayer = [CALayer layer];
         CALayer *videoLayer = [CALayer layer];
         parentLayer.frame = CGRectMake(0, 0, videoSize.width, videoSize.height);
         videoLayer.frame = CGRectMake(0, 0, videoSize.width, videoSize.height);
-        self.mcComposition.videoLayer = videoLayer;
-        self.mcComposition.parentLayer = parentLayer;
+        self.editComposition.videoLayer = videoLayer;
+        self.editComposition.parentLayer = parentLayer;
     }
     
     if (self.imageBg) {
-        self.mcComposition.videoLayer.opaque = YES;
-         self.mcComposition.videoLayer.opacity = 0.8;
-        [self.mcComposition.parentLayer addSublayer:imageLayer];
-        [self.mcComposition.parentLayer addSublayer:self.mcComposition.videoLayer];
+        self.editComposition.videoLayer.opaque = YES;
+         self.editComposition.videoLayer.opacity = 0.8;
+        [self.editComposition.parentLayer addSublayer:imageLayer];
+        [self.editComposition.parentLayer addSublayer:self.editComposition.videoLayer];
     }else{
-        [self.mcComposition.parentLayer addSublayer:self.mcComposition.videoLayer];
-        [self.mcComposition.parentLayer addSublayer:imageLayer];
+        [self.editComposition.parentLayer addSublayer:self.editComposition.videoLayer];
+        [self.editComposition.parentLayer addSublayer:imageLayer];
     }
     /*
      AVVideoCompositionCoreAnimationTool
      An object used to incorporate Core Animation into a video composition.
      */
     // 这里我不太明白, 几个 Layer 是如何合成到视频上的. 和视频的 Size 的关系.
-    self.mcComposition.videoEditComposition.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer: self.mcComposition.videoLayer inLayer: self.mcComposition.parentLayer];
+    self.editComposition.videoEditComposition.animationTool = [AVVideoCompositionCoreAnimationTool videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer: self.editComposition.videoLayer inLayer: self.editComposition.parentLayer];
 }
 
 - (void)imageLayerRectWithVideoSize:(CGRect (^)(CGSize))imageLayerRect{

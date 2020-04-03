@@ -6,9 +6,9 @@
 //  Copyright © 2017 黄锐灏. All rights reserved.
 //
 
-#import "WACommandComposition.h"
+#import "WAEditComposition.h"
 
-@implementation WACommandComposition
+@implementation WAEditComposition
 
 - (NSMutableArray<AVMutableAudioMixInputParameters *> *)audioMixParams{
     if (!_audioInstructions) {

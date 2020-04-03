@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 这个类是一个数据类. 用来存放有关于视频合成的各个对象.
 
-@interface WACommandComposition : NSObject
+@interface WAEditComposition : NSObject
 
  /*
   总的视频合成数据类.
