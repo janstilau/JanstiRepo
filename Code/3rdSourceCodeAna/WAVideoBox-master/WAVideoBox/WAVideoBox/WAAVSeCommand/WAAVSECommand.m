@@ -17,6 +17,25 @@
  因此，如果时间刻度是4，每个单位代表四分之一秒; 如果时间尺度为10，则每个单位表示十分之一秒，依此类推。
  经常使用600的时间刻度，因为这是几种常用的帧速率的倍数：24 fps的电影，30 fps的NTSC（用于北美和日本的电视）和25 fps的PAL（用于欧洲电视）。使用600的时间刻度，您可以准确地表示这些系统中的任何数量的帧。
  除了简单的时间值之外，CMTime结构可以表示非数值值：+无穷大，-infinity和无限期。
+ 
+ AVMutableComposition
+    - AVMutableCompositionTrack Video
+        AVCompositionTrackSegment
+        AVCompositionTrackSegment
+        AVCompositionTrackSegment
+    - AVMutableCompositionTrack Audio
+        AVCompositionTrackSegment
+        AVCompositionTrackSegment
+        AVCompositionTrackSegment
+ 
+ AVMutableAudioMix 表示对于音频的操作, 包含对于所有的 Audio AVMutableCompositionTrack 的操作. 所以, 它不是 AVMutableComposition 的一部分.
+    - AVMutableAudioMixInputParameters 表示了, 如何操作某个AVMutableCompositionTrack上面的音频
+         - AVMutableCompositionTrack Audio
+         - setVolume
+         - audioTimePitchAlgorithm
+         - setVolumeRamp timeRange.
+    - AVMutableAudioMixInputParameters
+    - AVMutableAudioMixInputParameters
  */
 
 @interface WAAVSECommand ()
@@ -63,19 +82,20 @@
     if(!self.mcComposition.totalComposition) {
         CMTime insertionPoint = kCMTimeZero;
         NSError *error = nil;
-        self.mcComposition.totalComposition = [AVMutableComposition composition];
+        AVMutableComposition *totalComposition = [AVMutableComposition composition];
+        self.mcComposition.totalComposition = totalComposition;
         //  2.1､把视频轨道加入到混合器做出新的轨道
         if (self.assetVideoTrack != nil) {
             // 向 Conpositon 里面, 添加了一个 Video 的 Track, 但是这个 Track 里面现在没有数据 , Adds an empty track to the receiver.
-            AVMutableCompositionTrack *videoTrack = [self.mcComposition.totalComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+            AVMutableCompositionTrack *videoTrack = [totalComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
             [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, [asset duration]) ofTrack:self.assetVideoTrack atTime:insertionPoint error:&error];
             /*
              Inserts all the tracks within a given time range of a specified asset into the receiver.
              - (BOOL)insertTimeRange:(CMTimeRange)timeRange ofAsset:(AVAsset *)asset atTime:(CMTime)startTime error:(NSError * _Nullable *)outError;
              */
+            totalComposition.naturalSize = videoTrack.naturalSize; // 如果是音频轨道返回 CGSizeZero.
             // 在插入了一条轨道之后, self.composition.mutableComposition.duration 里面就有值了.
-            self.mcComposition.duration = self.mcComposition.totalComposition.duration;
-            self.mcComposition.totalComposition.naturalSize = videoTrack.naturalSize; // 音频轨道返回 CGSizeZero.
+            self.mcComposition.duration = totalComposition.duration;
             self.trackDegress = [self degressFromTransform:self.assetVideoTrack.preferredTransform];
             if (self.trackDegress % 360) { // 如果方向不是正的.
                 [self performVideoCompopsition];
@@ -83,17 +103,17 @@
         }
         //  2.2､把音频轨道加入到混合器做出新的轨道
         if (self.assetAudioTrack != nil) {
-            AVMutableCompositionTrack *compositionAudioTrack = [self.mcComposition.totalComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+            AVMutableCompositionTrack *compositionAudioTrack = [totalComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
             [compositionAudioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, [asset duration]) ofTrack:self.assetAudioTrack atTime:insertionPoint error:&error];
         }
     }
-    
 }
 
 - (void)performVideoCompopsition{
     // 创建视频编辑的自定义处理器.
     if(!self.mcComposition.videoComposition) {
-        self.mcComposition.videoComposition = [AVMutableVideoComposition videoComposition];
+        AVMutableVideoComposition *videoComposition = [AVMutableVideoComposition videoComposition];
+        self.mcComposition.videoComposition = videoComposition;
         // A time interval for which the video composition should render composed video frames.
         // 这个值控制, 编辑器以多高的频率来渲染原来的视频. 如果这个值调大, 会发生卡顿. 例如, 调成 30, 30 也就变成了一秒钟渲染一次.
         self.mcComposition.videoComposition.frameDuration = CMTimeMake(1, 30); // 30 fps
@@ -129,8 +149,9 @@
 - (void)performAudioCompopsition{
     if (!self.mcComposition.audioComposition) {
         self.mcComposition.audioComposition = [AVMutableAudioMix audioMix];
-        for (AVMutableCompositionTrack *compostionVideoTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio]) {
-            AVMutableAudioMixInputParameters *audioParam = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:compostionVideoTrack]; // 这里, 已经获取到音轨了.
+        for (AVMutableCompositionTrack *audioTrack in [self.mcComposition.totalComposition tracksWithMediaType:AVMediaTypeAudio]) {
+            AVMutableAudioMixInputParameters *audioParam =
+            [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:audioTrack]; // 这里, 已经获取到音轨了.
             [audioParam setVolume:1.0 atTime:kCMTimeZero]; // 所以这里的变化, 只会影响到这个音轨.
             // 增加渐变效果.
 //            [audioParam setVolumeRampFromStartVolume:1 toEndVolume:0 timeRange:CMTimeRangeMake(kCMTimeZero, self.backingAsset.duration)];

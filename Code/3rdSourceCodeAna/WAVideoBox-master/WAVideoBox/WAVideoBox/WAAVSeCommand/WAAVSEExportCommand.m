@@ -30,14 +30,13 @@
     
     NSFileManager *manager = [NSFileManager defaultManager];
     [manager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-    // Remove Existing File
+    // AVAssetExportSession 如果输出的位置有文件, 直接导出失败.
     [manager removeItemAtPath:path error:nil];
     
-    // Step 2
+    // Setup output parameters
     if (self.mcComposition.presetName.length == 0) {
         self.mcComposition.presetName = AVAssetExportPresetHighestQuality;
     }
-    
     if (!self.mcComposition.fileType) {
         self.mcComposition.fileType = AVFileTypeMPEG4;
     }
@@ -45,37 +44,32 @@
     self.exportSession = [[AVAssetExportSession alloc] initWithAsset:asset presetName:self.mcComposition.presetName];
    
     self.exportSession.shouldOptimizeForNetworkUse = YES;
-    self.exportSession.videoComposition = self.mcComposition.videoComposition;
-    self.exportSession.audioMix = self.mcComposition.audioComposition;
-    
     self.exportSession.timeRange = CMTimeRangeMake(kCMTimeZero, [self.mcComposition duration]);
-    
     self.exportSession.outputURL = [NSURL fileURLWithPath:path];
     self.exportSession.outputFileType = self.mcComposition.fileType;
     
+    // 所以, 视频如何编辑, 音频如何编辑, 是在导出的时候, 才起作用的. 之前做的, 都是指令的编辑工作.
+    self.exportSession.videoComposition = self.mcComposition.videoComposition;
+    self.exportSession.audioMix = self.mcComposition.audioComposition;
+    
     if (self.videoQuality) {
-        
         if ([self.mcComposition.presetName isEqualToString:AVAssetExportPreset640x480]) {
             self.ratioParam = 0.02 ;
         }
-        
         if ([self.mcComposition.presetName isEqualToString:AVAssetExportPreset960x540]) {
             self.ratioParam = 0.04 ;
         }
-        
         if ([self.mcComposition.presetName isEqualToString:AVAssetExportPreset1280x720]) {
             self.ratioParam = 0.08 ;
         }
-        
+        // fileLengthLimit 如何计算得出, 没有太明白作者的意图. 不过, 这里仅仅通过fileLengthLimit来控制输出的视频质量, 效果很差.
         if (self.ratioParam) {
             self.exportSession.fileLengthLimit = CMTimeGetSeconds(self.mcComposition.duration) * self.ratioParam * self.mcComposition.videoQuality * 1024 * 1024;
         }
-        
     }
     
-  
+    // 然后就是常规的输出操作.
     [self.exportSession exportAsynchronouslyWithCompletionHandler:^(void){
-
         switch (self.exportSession.status) {
             case AVAssetExportSessionStatusCompleted:
                  [[NSNotificationCenter defaultCenter] postNotificationName:WAAVSEExportCommandCompletionNotification object:self];
@@ -94,7 +88,6 @@
             default:
                 break;
         }
-        
     }];
 }
 
