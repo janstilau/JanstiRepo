@@ -26,6 +26,11 @@
     
 }
 
+/*
+ AVAssetExportSession 这个类到底是什么实现, 完完全全是封装到在自己的内部的. 仅仅是暴露了一些可以操作的属性和指令, 达到了简单输出的效果.
+ An object that transcodes the contents of an asset source object to create an output of the form described by a specified export preset.
+ */
+
 - (void)performSaveAsset:(AVAsset *)asset byPath:(NSString *)path{
     
     NSFileManager *manager = [NSFileManager defaultManager];
@@ -49,7 +54,9 @@
     self.exportSession.outputFileType = self.mcComposition.fileType;
     
     // 所以, 视频如何编辑, 音频如何编辑, 是在导出的时候, 才起作用的. 之前做的, 都是指令的编辑工作.
+    // The instructions for video composition, and indicates whether video composition is enabled for export.
     self.exportSession.videoComposition = self.mcComposition.videoComposition;
+    // The parameters for audio mixing and an indication whether to enable nondefault audio mixing for export.
     self.exportSession.audioMix = self.mcComposition.audioComposition;
     
     if (self.videoQuality) {
@@ -68,7 +75,10 @@
         }
     }
     
-    // 然后就是常规的输出操作.
+    /* 然后就是常规的输出操作.
+     Because the export is performed asynchronously, this method returns immediately
+     You can use progress to check on the progress.
+    */
     [self.exportSession exportAsynchronouslyWithCompletionHandler:^(void){
         switch (self.exportSession.status) {
             case AVAssetExportSessionStatusCompleted:

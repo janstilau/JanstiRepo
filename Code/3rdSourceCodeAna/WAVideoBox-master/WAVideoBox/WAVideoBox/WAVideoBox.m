@@ -131,7 +131,6 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
     self.videoQuality = 0;
     self.ratio = WAVideoExportRatio960x540;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(AVEditorNotification:) name:WAAVSEExportCommandCompletionNotification object:nil];
-    
     return self;
 }
 
@@ -550,21 +549,18 @@ void runAsynchronouslyOnVideoBoxContextQueue(void (^block)(void))
         self.tmpPath = filePath = [self tmpVideoFilePath];
     }
     
-    
     // 这里需要逐帧扫描
     if (self.videoQuality && self.composeCount == 1 && self.tmpVideoSpace.count == 0 && !composition.videoComposition) {
         WAAVSECommand *command = [[WAAVSECommand alloc] initWithComposition:composition];
         [command performWithAsset:composition.totalComposition];
         [command performVideoCompopsition];
     }
-    
     WAAVSEExportCommand *exportCommand = [[WAAVSEExportCommand alloc] initWithComposition:composition];
     exportCommand.videoQuality = self.videoQuality;
     self.exportCommand = exportCommand;
     [exportCommand performSaveByPath:filePath];
 
     if (self.progress && !_progressLink) {
-        
         _progressLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkCallback:)];
         if (@available(iOS 10.0, *)) {
             _progressLink.preferredFramesPerSecond = 10;

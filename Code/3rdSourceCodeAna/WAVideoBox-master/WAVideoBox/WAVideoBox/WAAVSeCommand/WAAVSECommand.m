@@ -36,6 +36,29 @@
          - setVolumeRamp timeRange.
     - AVMutableAudioMixInputParameters
     - AVMutableAudioMixInputParameters
+ 
+ AVMutableVideoComposition
+    - frameDuration
+    - renderSize
+    - renderScale
+    - animationTool
+    - instructions
+        - AVMutableVideoCompositionInstruction
+            - timeRange
+            - backgroundColor
+            - layerInstructions
+                - AVMutableVideoCompositionLayerInstruction
+                    - AVAssetTrack
+                    - Opacity
+                    - OpacityRamp
+                    - Transform
+                    - TransformRamp
+                    - CropRectangle
+                    - CropRectangleRamp
+                - AVMutableVideoCompositionLayerInstruction
+                - AVMutableVideoCompositionLayerInstruction
+        - AVMutableVideoCompositionInstruction
+        - AVMutableVideoCompositionInstruction
  */
 
 @interface WAAVSECommand ()
@@ -116,9 +139,9 @@
         self.mcComposition.videoComposition = videoComposition;
         // A time interval for which the video composition should render composed video frames.
         // 这个值控制, 编辑器以多高的频率来渲染原来的视频. 如果这个值调大, 会发生卡顿. 例如, 调成 30, 30 也就变成了一秒钟渲染一次.
-        self.mcComposition.videoComposition.frameDuration = CMTimeMake(1, 30); // 30 fps
+        videoComposition.frameDuration = CMTimeMake(1, 30); // 30 fps
         // 编辑器渲染的大小, 如果宽高, 都变为一半, 那就是渲染左上角. 这个值不会进行拉伸操作, 如果只渲染左半部分, 那么最后的视频, 左半部分显示在中间, 其他黑框.
-        self.mcComposition.videoComposition.renderSize = self.assetVideoTrack.naturalSize;
+        videoComposition.renderSize = self.assetVideoTrack.naturalSize;
         
         // AVMutableVideoCompositionInstruction
         AVMutableVideoCompositionInstruction *passThroughInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
