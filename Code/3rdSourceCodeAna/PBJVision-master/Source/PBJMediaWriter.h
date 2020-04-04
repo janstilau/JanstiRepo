@@ -2,6 +2,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 @protocol PBJMediaWriterDelegate;
+
 @interface PBJMediaWriter : NSObject
 
 - (id)initWithOutputURL:(NSURL *)outputURL;
@@ -33,6 +34,7 @@
 @protocol PBJMediaWriterDelegate <NSObject>
 @optional
 // authorization status provides the opportunity to prompt the user for allowing capture device access
+// 这两个代理, 仅仅做的是对于权限的管理操作
 - (void)mediaWriterDidObserveAudioAuthorizationStatusDenied:(PBJMediaWriter *)mediaWriter;
 - (void)mediaWriterDidObserveVideoAuthorizationStatusDenied:(PBJMediaWriter *)mediaWriter;
 

@@ -163,6 +163,15 @@
 			name = Core;
 			sourceTree = "<group>";
 		};
+		0667AE6B24385D0F00F67734 /* Done */ = {
+			isa = PBXGroup;
+			children = (
+				061858EE1846B06400DEC416 /* PBJFocusView.h */,
+				061858EF1846B06400DEC416 /* PBJFocusView.m */,
+			);
+			name = Done;
+			sourceTree = "<group>";
+		};
 		067D52F917D8577D00541B5E /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
@@ -215,11 +224,10 @@
 		0683D1C7179F2E1700EE66D6 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				0667AE6B24385D0F00F67734 /* Done */,
 				06156D1A1C38E8BD007EE71E /* Core */,
 				0683D1D6179F2E1700EE66D6 /* PBJViewController.h */,
 				0683D1D7179F2E1700EE66D6 /* PBJViewController.m */,
-				061858EE1846B06400DEC416 /* PBJFocusView.h */,
-				061858EF1846B06400DEC416 /* PBJFocusView.m */,
 				060F7B10179F45FA00E27091 /* PBJStrobeView.h */,
 				060F7B11179F45FA00E27091 /* PBJStrobeView.m */,
 				0683D1C8179F2E1700EE66D6 /* Supporting Files */,

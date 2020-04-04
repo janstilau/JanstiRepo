@@ -13,11 +13,12 @@ static NSString * const PBJViewControllerPhotoAlbum = @"PBJVision";
 
 #pragma mark - ExtendedHitButton
 
+
+// 这个类很简单, 就是扩大点击区域而已.
+
 @interface ExtendedHitButton : UIButton
 
 + (instancetype)extendedHitButton;
-
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event;
 
 @end
 
@@ -79,9 +80,7 @@ static NSString * const PBJViewControllerPhotoAlbum = @"PBJVision";
 
 #pragma mark - PBJViewController
 
-@interface PBJViewController () <
-UIGestureRecognizerDelegate,
-PBJVisionDelegate>
+@interface PBJViewController () < UIGestureRecognizerDelegate, PBJVisionDelegate>
 {
     PBJStrobeView *_strobeView;
     UIButton *_doneButton;
@@ -94,7 +93,7 @@ PBJVisionDelegate>
     
     UIView *_previewView;
     AVCaptureVideoPreviewLayer *_previewLayer;
-    PBJFocusView *_focusView;
+    PBJFocusView *_focusView; // 一个提示用户的视图类.
     GLKViewController *_effectsViewController;
     
     UILabel *_instructionLabel;
@@ -151,8 +150,8 @@ PBJVisionDelegate>
     // done button
     _doneButton = [ExtendedHitButton extendedHitButton];
     _doneButton.frame = CGRectMake(viewWidth - 25.0f - 15.0f, 18.0f, 25.0f, 25.0f);
-    UIImage *buttonImage = [UIImage imageNamed:@"capture_done"];
-    [_doneButton setImage:buttonImage forState:UIControlStateNormal];
+//    UIImage *buttonImage = [UIImage imageNamed:@"capture_done"];
+    [_doneButton setTitle:@"完成" forState:UIControlStateNormal];
     [_doneButton addTarget:self action:@selector(_handleDoneButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_doneButton];
     
@@ -169,8 +168,9 @@ PBJVisionDelegate>
     // onion skin
     _effectsViewController = [[GLKViewController alloc] init];
     _effectsViewController.preferredFramesPerSecond = 60;
-    
     GLKView *view = (GLKView *)_effectsViewController.view;
+    view.layer.borderColor = [[UIColor purpleColor] CGColor];
+    view.layer.borderWidth = 2;
     CGRect viewFrame = _previewView.bounds;
     view.frame = viewFrame;
     view.context = [[PBJVision sharedInstance] context];
@@ -285,24 +285,29 @@ PBJVisionDelegate>
 
 - (void)_startCapture
 {
+    /*
+     The default value of this property is NO. When most apps have no touches as user input for a short period, the system puts the device into a "sleep” state where the screen dims. This is done for the purposes of conserving power. However, apps that don't have user input except for the accelerometer—games, for instance—can, by setting this property to YES, disable the “idle timer” to avert system sleep.
+     */
     [UIApplication sharedApplication].idleTimerDisabled = YES;
-    
+    // 提示语的显示隐藏.
     [UIView animateWithDuration:0.2f delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         _instructionLabel.alpha = 0;
         _instructionLabel.transform = CGAffineTransformMakeTranslation(0, 10.0f);
     } completion:^(BOOL finished) {
     }];
+    // 真正的进行录制的操作.
     [[PBJVision sharedInstance] startVideoCapture];
 }
 
 - (void)_pauseCapture
 {
+    // 提示语的显示隐藏.
     [UIView animateWithDuration:0.2f delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         _instructionLabel.alpha = 1;
         _instructionLabel.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished) {
     }];
-    
+    // 真正的进行录制的操作.
     [[PBJVision sharedInstance] pauseVideoCapture];
     _effectsViewController.view.hidden = !_onionButton.selected;
 }
