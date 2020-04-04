@@ -605,17 +605,17 @@
     _selectedPhotos = [NSMutableArray arrayWithArray:@[coverImage]];
     _selectedAssets = [NSMutableArray arrayWithArray:@[asset]];
     // open this code to send video / 打开这段代码发送视频
-//    [self exportUsingWABox:asset];
-    [[TZImageManager manager] getVideoOutputPathWithAsset:asset presetName:AVAssetExportPresetMediumQuality success:^(NSString *outputPath) {
-        // NSData *data = [NSData dataWithContentsOfFile:outputPath];
-        NSLog(@"视频导出到本地完成,沙盒路径为:%@",outputPath);
-        NSData *data = [NSData dataWithContentsOfFile:outputPath];
-        NSLog(@"%@", @(data.length/1000000));
-        // Export completed, send video here, send by outputPath or NSData
-        // 导出完成，在这里写上传代码，通过路径或者通过NSData上传
-    } failure:^(NSString *errorMessage, NSError *error) {
-        NSLog(@"视频导出失败:%@,error:%@",errorMessage, error);
-    }];
+    [self exportUsingWABox:asset];
+//    [[TZImageManager manager] getVideoOutputPathWithAsset:asset presetName:AVAssetExportPresetMediumQuality success:^(NSString *outputPath) {
+//        // NSData *data = [NSData dataWithContentsOfFile:outputPath];
+//        NSLog(@"视频导出到本地完成,沙盒路径为:%@",outputPath);
+//        NSData *data = [NSData dataWithContentsOfFile:outputPath];
+//        NSLog(@"%@", @(data.length/1000000));
+//        // Export completed, send video here, send by outputPath or NSData
+//        // 导出完成，在这里写上传代码，通过路径或者通过NSData上传
+//    } failure:^(NSString *errorMessage, NSError *error) {
+//        NSLog(@"视频导出失败:%@,error:%@",errorMessage, error);
+//    }];
     [_collectionView reloadData];
     // _collectionView.contentSize = CGSizeMake(0, ((_selectedPhotos.count + 2) / 3 ) * (_margin + _itemWH));
 }
@@ -632,14 +632,14 @@
      options.networkAccessAllowed = YES;
      [[PHImageManager defaultManager] requestAVAssetForVideo:asset options:options resultHandler:^(AVAsset* avasset, AVAudioMix* audioMix, NSDictionary* info){
          self.exporter.asset = avasset;
-//         [self.exporter startExport];
-         UIImage *midImage = [self.exporter generateCoverImage];
-         NSLog(@"%@", midImage);
-         
-         [self.exporter setImgGeneratedCallBack:^(NSArray<UIImage *> *imgs) {
-             NSLog(@"%@", imgs);
-         }];
-         [self.exporter generateImages];
+         [self.exporter startExport];
+//         UIImage *midImage = [self.exporter generateCoverImage];
+//         NSLog(@"%@", midImage);
+//
+//         [self.exporter setImgGeneratedCallBack:^(NSArray<UIImage *> *imgs) {
+//             NSLog(@"%@", imgs);
+//         }];
+//         [self.exporter generateImages];
      }];
 }
 
