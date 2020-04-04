@@ -140,6 +140,14 @@
     }];
 }
 
+- (void)extracted:(NSString *)filePath wself:(ViewController *const __weak)wself {
+    [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
+        if (!error) {
+            [wself enterVideoPlayWithFile:filePath];
+        }
+    }];
+}
+
 - (IBAction)mixSound:(id)sender {
     
     [_videoBox clean];
@@ -148,11 +156,7 @@
     
     [_videoBox appendVideoByPath:_videoPath];
     [_videoBox dubbedSoundBySoundPath:_testThreePath];
-    [_videoBox asyncFinishEditByFilePath:filePath complete:^(NSError *error) {
-        if (!error) {
-            [wself enterVideoPlayWithFile:filePath];
-        }
-    }];
+    [self extracted:filePath wself:wself];
     
 }
 
