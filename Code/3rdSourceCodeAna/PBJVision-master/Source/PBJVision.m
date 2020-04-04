@@ -86,6 +86,7 @@ PBJMediaWriterDelegate>
     AVCaptureDeviceInput *_captureDeviceInputAudio;
     
     AVCapturePhotoOutput *_captureOutputPhoto;
+    // 因为这两个 Data Ouput 的存在, Writer 才能够写入数据.
     AVCaptureAudioDataOutput *_captureOutputAudio;
     AVCaptureVideoDataOutput *_captureOutputVideo;
     
@@ -749,7 +750,7 @@ typedef void (^PBJVisionBlock)(void);
 
 #pragma mark - camera
 
-// only call from the session queue
+// 这里仅仅做一些对象的创建, 以及消息的监听工作. 真正对于 CaptureSession 的组装, 要到 setupSession 中才进行.
 - (void)_setupCamera
 {
     if (_captureSession) {return;}
@@ -806,6 +807,7 @@ typedef void (^PBJVisionBlock)(void);
     _captureOutputVideo = [[AVCaptureVideoDataOutput alloc] init];
     
     // 把代理方法, 全部移交到 CaptureQueue 里面.
+    // Sets the delegate that will accept captured buffers and the dispatch queue on which the delegate will be called.
     if (_cameraMode != PBJCameraModePhoto && _flags.audioCaptureEnabled) {
         [_captureOutputAudio setSampleBufferDelegate:self queue:_captureCaptureDispatchQueue];
     }
@@ -900,24 +902,22 @@ typedef void (^PBJVisionBlock)(void);
 // _setupSession is always called from the captureSession queue
 - (void)_setupSession
 {
-    if (!_captureSession) {
-        DLog(@"error, no session running to setup");
-        return;
-    }
+    if (!_captureSession) { return; }
     
-    BOOL shouldSwitchDevice = (_currentDevice == nil) ||
+    BOOL shouldSwitchDevice =
+    (_currentDevice == nil) ||
     ((_currentDevice == _captureDeviceFront) && (_cameraDevice != PBJCameraDeviceFront)) ||
     ((_currentDevice == _captureDeviceBack) && (_cameraDevice != PBJCameraDeviceBack));
     
     AVCaptureOutput *cameraOutput = _captureOutputPhoto;
-    BOOL shouldSwitchMode = (_currentOutput == nil) ||
+    BOOL shouldSwitchMode =
+    (_currentOutput == nil) ||
     ((_currentOutput == cameraOutput) && (_cameraMode != PBJCameraModePhoto)) ||
     ((_currentOutput == _captureOutputVideo) && (_cameraMode != PBJCameraModeVideo));
     
     DLog(@"switchDevice %d switchMode %d", shouldSwitchDevice, shouldSwitchMode);
     
-    if (!shouldSwitchDevice && !shouldSwitchMode)
-        return;
+    if (!shouldSwitchDevice && !shouldSwitchMode) { return; }
     
     AVCaptureDeviceInput *newDeviceInput = nil;
     AVCaptureOutput *newCaptureOutput = nil;
@@ -927,13 +927,12 @@ typedef void (^PBJVisionBlock)(void);
     
     // setup session device
     
-    if (shouldSwitchDevice) {
+    if (shouldSwitchDevice) { // 这里会做一下对于 Input 的管理操作.
         switch (_cameraDevice) {
             case PBJCameraDeviceFront:
             {
                 if (_captureDeviceInputBack)
                     [_captureSession removeInput:_captureDeviceInputBack];
-                
                 if (_captureDeviceInputFront && [_captureSession canAddInput:_captureDeviceInputFront]) {
                     [_captureSession addInput:_captureDeviceInputFront];
                     newDeviceInput = _captureDeviceInputFront;
@@ -945,7 +944,6 @@ typedef void (^PBJVisionBlock)(void);
             {
                 if (_captureDeviceInputFront)
                     [_captureSession removeInput:_captureDeviceInputFront];
-                
                 if (_captureDeviceInputBack && [_captureSession canAddInput:_captureDeviceInputBack]) {
                     [_captureSession addInput:_captureDeviceInputBack];
                     newDeviceInput = _captureDeviceInputBack;
@@ -962,34 +960,24 @@ typedef void (^PBJVisionBlock)(void);
     // setup session input/output
     
     if (shouldSwitchMode) {
-        
         // disable audio when in use for photos, otherwise enable it
-        
         if (self.cameraMode == PBJCameraModePhoto) {
             if (_captureDeviceInputAudio)
                 [_captureSession removeInput:_captureDeviceInputAudio];
-            
             if (_captureOutputAudio)
                 [_captureSession removeOutput:_captureOutputAudio];
-            
         } else if (!_captureDeviceAudio && !_captureDeviceInputAudio && !_captureOutputAudio &&  _flags.audioCaptureEnabled) {
-            
             NSError *error = nil;
             _captureDeviceAudio = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
             _captureDeviceInputAudio = [AVCaptureDeviceInput deviceInputWithDevice:_captureDeviceAudio error:&error];
             if (error) {
                 DLog(@"error setting up audio input (%@)", error);
             }
-            
             _captureOutputAudio = [[AVCaptureAudioDataOutput alloc] init];
             [_captureOutputAudio setSampleBufferDelegate:self queue:_captureCaptureDispatchQueue];
-            
         }
-        
         [_captureSession removeOutput:_captureOutputVideo];
-        
         [_captureSession removeOutput:_captureOutputPhoto];
-        
         switch (_cameraMode) {
             case PBJCameraModeVideo:
             {

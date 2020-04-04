@@ -7,6 +7,7 @@
 @property (nonatomic, strong) AVAssetReader *reader;
 @property (nonatomic, strong) AVAssetReaderVideoCompositionOutput *videoOutput;
 @property (nonatomic, strong) AVAssetReaderAudioMixOutput *audioOutput;
+
 @property (nonatomic, strong) AVAssetWriter *writer;
 @property (nonatomic, strong) AVAssetWriterInput *videoInput;
 @property (nonatomic, strong) AVAssetWriterInputPixelBufferAdaptor *videoPixelBufferAdaptor;
@@ -39,7 +40,7 @@
     return self;
 }
 
-- (NSError *)isPrepareSuccess {
+- (NSError *)prepare {
     if (!self.outputURL){
         return
         [NSError errorWithDomain:AVFoundationErrorDomain code:AVErrorExportFailed userInfo:@{
@@ -63,7 +64,7 @@
     NSParameterAssert(handler != nil);
     [self cancelExport];
     // 如果, 没有输出路径, 直接报错.
-    NSError *error = [self isPrepareSuccess];
+    NSError *error = [self prepare];
     if (error) {
         _error = error;
         handler();
@@ -73,7 +74,7 @@
     self.completionHandler = handler;
     self.reader.timeRange = self.timeRange;
     self.writer.shouldOptimizeForNetworkUse = self.shouldOptimizeForNetworkUse;
-    self.writer.metadata = self.metadata; // 一般是默认值.
+    self.writer.metadata = self.metadata;
     
     NSArray *videoTracks = [self.asset tracksWithMediaType:AVMediaTypeVideo];
     
@@ -82,13 +83,8 @@
     } else {
         duration = CMTimeGetSeconds(self.asset.duration);
     }
-    //
-    // Video output
-    //
-    // AVAssetReaderTrackOutput  是读取一个 track 的数据
-    // AVAssetReaderVideoCompositionOutput 是读取多个 tracks 的数据.
-    // 创建Asset读取器后，设置至少一个输出以接收正在读取的媒体数据
-    if (videoTracks.count > 0) {
+    
+    if (videoTracks.count > 0) { // 如果有视频.
         self.videoOutput = [AVAssetReaderVideoCompositionOutput assetReaderVideoCompositionOutputWithVideoTracks:videoTracks videoSettings:self.videoInputSettings];
         // 这个控制, 是不是获取的数据会被 copy 一次, 为了性能, 这里设置为 NO.
         self.videoOutput.alwaysCopiesSampleData = NO;
@@ -97,6 +93,11 @@
         } else {
             self.videoOutput.videoComposition = [self buildDefaultVideoComposition];
         }
+        /*
+         创建Asset读取器后，设置至少一个输出以接收正在读取的媒体数据。
+         如果你只想从一个或多个轨道读取媒体数据并可能将该数据转换为其他格式，请使用AVAssetReaderTrackOutput类，
+         为要从asset中读取的每个AVAssetTrack对象使用单个轨道输出对象
+         */
         if ([self.reader canAddOutput:self.videoOutput]) {
             [self.reader addOutput:self.videoOutput];
         }
