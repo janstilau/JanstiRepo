@@ -60,18 +60,17 @@
     encoder.outputFileType = AVFileTypeMPEG4;
     encoder.outputURL = [NSURL fileURLWithPath:[self outputVideoPath]];
     CMTimeRange duration = CMTimeRangeMake(kCMTimeZero, [_asset duration]);
-    duration.duration.value /= 2;
     encoder.timeRange = duration;
     NSLog(@"%@", [self outputVideoPath]);
     encoder.videoSettings = @
     {
         AVVideoCodecKey: AVVideoCodecH264,
-        AVVideoWidthKey: @720,
-        AVVideoHeightKey: @1280,
+        AVVideoWidthKey: @1280,
+        AVVideoHeightKey: @720,
         AVVideoCompressionPropertiesKey: @
         {
             AVVideoAverageBitRateKey: @2500000,
-            AVVideoProfileLevelKey: AVVideoProfileLevelH264HighAutoLevel,
+            AVVideoProfileLevelKey: AVVideoProfileLevelH264High41,
         },
     };
     encoder.audioSettings = @

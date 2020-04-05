@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <title>每日首充</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/script.js"></script>
+</head>
+<body style="opacity:0">
+    <div class="container-bg"> </div>
+<div class="banner-container container">
+    <div class="title-banner-bg"></div>
+    <h1>
+        <img src="img/title-zhifubao.png" alt="" width="300">
+    </h1>
+</div>
+
+<div class="btn-recharge-container container">
+    <div class="btn-recharge-row">
+        <button class="btn btn-recharge" id="btn-recharge-1" data-amount="1" data-number="6" data-prod="8" disabled>每日1元首充</button>
+        <div class="recharge-type-intro">3天VIP+6朵花+1次抽奖(100%中奖)</div>
+    </div>
+    <div class="btn-recharge-row">
+        <button class="btn btn-recharge" id="btn-recharge-10" data-amount="10" data-number="50" data-prod="9" disabled>每日10元首充</button>
+        <div class="recharge-type-intro">50朵花+2次抽奖(100%中奖)</div>
+    </div>
+
+    <div class="btn-recharge-row">
+        <button class="btn btn-recharge" id="btn-recharge-66" data-amount="66" data-number="266" data-prod="13" disabled>每日66元首充</button>
+        <div class="recharge-type-intro">266朵鲜花+30天VIP</div>
+        <img class="reacharge-month-card" src="./img/icon-month-card.png" width="52px" height="52px" alt="">
+    </div>
+    <div class="btn-recharge-row">
+        <button class="btn btn-recharge" id="btn-recharge-88" data-amount="88" data-number="355" data-prod="10" disabled>每日88元首充</button>
+        <div class="recharge-type-intro">355朵花</div>
+    </div>
+    <div class="btn-recharge-row">
+        <button class="btn btn-recharge" id="btn-recharge-188" data-amount="188" data-number="761" data-prod="11" disabled>每日188元首充</button>
+        <div class="recharge-type-intro">761朵花</div>
+    </div>
+    <div class="btn-recharge-row">
+        <button class="btn btn-recharge" id="btn-recharge-288" data-amount="288" data-number="1150" data-prod="12" disabled>每日288元首充</button>
+        <div class="recharge-type-intro">1150朵花</div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="turntable">
+        <div class="hide" id="left-draw-number">剩余<span class="number-text"></span>次</div>
+        <button class="start-btn" type="button" disabled></button>
+        <ul class="award-items">
+            <li><div class="text-wrapper">1天VIP</div></li>
+            <li><div class="text-wrapper">3天VIP</div></li>
+            <li><div class="text-wrapper">5天VIP</div></li>
+            <li><div class="text-wrapper">2朵花</div></li>
+            <li><div class="text-wrapper">10朵花</div></li>
+            <li><div class="text-wrapper">50朵花</div></li>
+            <li><div class="text-wrapper">99朵花</div></li>
+            <li><div class="text-wrapper">520朵花</div></li>
+        </ul>
+    </div>
+</div>
+
+<div class="container text-ruler">
+    <div class="ruler-title">
+        活动规则
+    </div>
+    <p>活动规则：</p>
+    <p>1、每人每天可参与1元、10元、66元、88元、188元、288元首充各一次，充值和抽奖获得的鲜花、VIP将自动打入用户的摩擦账户。</p>
+    <p>2、本活动为特惠活动，与平台其他优惠不同享，请以摩擦官方解释为准。</p>
+    <p>3、客服电话：<a href="tel:028-65789575">028-65789575</a>。</p>
+</div>
+
+<div class="dialog">
+    <div class="dialog-header">请选择支付方式</div>
+    <div class="dialog-body">
+        <ul class="app-icon-group">
+            <li><a class="pay-btn pay-alipay" data-pay="2" href="#"><img class="app-icon" srcset="img/icon-alipay@2x.png 2x" src="img/icon-alipay.png" alt="支付宝">支付宝</a></li>
+            <li><a class="pay-btn pay-wechat" data-pay="1" href="#"><img class="app-icon" srcset="img/icon-wechat@2x.png 2x" src="img/icon-wechat.png" alt="微信">微信</a></li>
+        </ul>
+    </div>
+</div>
+<div class="dialog-overlay"></div>
+</body>
+</html>

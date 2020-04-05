@@ -91,7 +91,7 @@
         if (self.videoComposition) {
             self.videoOutput.videoComposition = self.videoComposition;
         } else {
-            self.videoOutput.videoComposition = [self buildDefaultVideoComposition];
+            self.videoOutput.videoComposition = [self fixedCompositionWithAsset:self.asset];
         }
         /*
          创建Asset读取器后，设置至少一个输出以接收正在读取的媒体数据。
@@ -107,20 +107,22 @@
         // Video input
         //
         self.videoInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:self.videoSettings];
+        AVAssetTrack *videoTrack = videoTracks.firstObject;
+        self.videoInput.transform = videoTrack.preferredTransform;
         self.videoInput.expectsMediaDataInRealTime = NO;
         if ([self.writer canAddInput:self.videoInput])
         {
             [self.writer addInput:self.videoInput];
         }
-        NSDictionary *pixelBufferAttributes = @
-        {
-            (id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA),
-            (id)kCVPixelBufferWidthKey: @(self.videoOutput.videoComposition.renderSize.width),
-            (id)kCVPixelBufferHeightKey: @(self.videoOutput.videoComposition.renderSize.height),
-            @"IOSurfaceOpenGLESTextureCompatibility": @YES,
-            @"IOSurfaceOpenGLESFBOCompatibility": @YES,
-        };
-        self.videoPixelBufferAdaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:self.videoInput sourcePixelBufferAttributes:pixelBufferAttributes];
+//        NSDictionary *pixelBufferAttributes = @
+//        {
+//            (id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA),
+//            (id)kCVPixelBufferWidthKey: @(self.videoOutput.videoComposition.renderSize.width),
+//            (id)kCVPixelBufferHeightKey: @(self.videoOutput.videoComposition.renderSize.height),
+//            @"IOSurfaceOpenGLESTextureCompatibility": @YES,
+//            @"IOSurfaceOpenGLESFBOCompatibility": @YES,
+//        };
+//        self.videoPixelBufferAdaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:self.videoInput sourcePixelBufferAttributes:pixelBufferAttributes];
     }
     
     //
@@ -239,75 +241,44 @@
     return YES;
 }
 
-/// 获取视频角度
-- (int)degressFromVideoFileWithAsset:(AVAsset *)asset {
-    int degress = 0;
-    NSArray *tracks = [asset tracksWithMediaType:AVMediaTypeVideo];
-    if([tracks count] > 0) {
-        AVAssetTrack *videoTrack = [tracks objectAtIndex:0];
-        CGAffineTransform t = videoTrack.preferredTransform;
-        if(t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0){
-            // Portrait
-            degress = 90;
-        } else if(t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0){
-            // PortraitUpsideDown
-            degress = 270;
-        } else if(t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0){
-            // LandscapeRight
-            degress = 0;
-        } else if(t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0){
-            // LandscapeLeft
-            degress = 180;
-        }
-    }
-    return degress;
-}
-
+/// 获取优化后的视频转向信息
 - (AVMutableVideoComposition *)fixedCompositionWithAsset:(AVAsset *)videoAsset {
     AVMutableVideoComposition *videoComposition = [AVMutableVideoComposition videoComposition];
     videoComposition.frameDuration = CMTimeMake(1, 30);
     NSArray *tracks = [videoAsset tracksWithMediaType:AVMediaTypeVideo];
     AVAssetTrack *videoTrack = [tracks objectAtIndex:0];
     videoComposition.renderSize = videoTrack.naturalSize;
+    CGSize size = videoTrack.naturalSize;
     
     // 视频转向
     int degrees = [self degressFromVideoFileWithAsset:videoAsset];
-    if (degrees != 0) {
-        CGAffineTransform translateToCenter;
-        CGAffineTransform mixedTransform;
-        videoComposition.frameDuration = CMTimeMake(1, 30);
-        
-        NSArray *tracks = [videoAsset tracksWithMediaType:AVMediaTypeVideo];
-        AVAssetTrack *videoTrack = [tracks objectAtIndex:0];
-        
-        AVMutableVideoCompositionInstruction *roateInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-        roateInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, [videoAsset duration]);
-        AVMutableVideoCompositionLayerInstruction *roateLayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
-        
-        if (degrees == 90) {
-            // 顺时针旋转90°
-            translateToCenter = CGAffineTransformMakeTranslation(videoTrack.naturalSize.height, 0.0);
-            mixedTransform = CGAffineTransformRotate(translateToCenter,M_PI_2);
-            videoComposition.renderSize = CGSizeMake(videoTrack.naturalSize.height,videoTrack.naturalSize.width);
-            [roateLayerInstruction setTransform:mixedTransform atTime:kCMTimeZero];
-        } else if(degrees == 180){
-            // 顺时针旋转180°
-            translateToCenter = CGAffineTransformMakeTranslation(videoTrack.naturalSize.width, videoTrack.naturalSize.height);
-            mixedTransform = CGAffineTransformRotate(translateToCenter,M_PI);
-            videoComposition.renderSize = CGSizeMake(videoTrack.naturalSize.width,videoTrack.naturalSize.height);
-            [roateLayerInstruction setTransform:mixedTransform atTime:kCMTimeZero];
-        } else if(degrees == 270){
-            // 顺时针旋转270°
-            translateToCenter = CGAffineTransformMakeTranslation(0.0, videoTrack.naturalSize.width);
-            mixedTransform = CGAffineTransformRotate(translateToCenter,M_PI_2*3.0);
-            videoComposition.renderSize = CGSizeMake(videoTrack.naturalSize.height,videoTrack.naturalSize.width);
-            [roateLayerInstruction setTransform:mixedTransform atTime:kCMTimeZero];
-        }
-        
-        roateInstruction.layerInstructions = @[roateLayerInstruction];
-        // 加入视频方向信息
-        videoComposition.instructions = @[roateInstruction];
+    AVMutableVideoCompositionInstruction *roateInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+    roateInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, [videoAsset duration]);
+    AVMutableVideoCompositionLayerInstruction *roateLayerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
+    CGAffineTransform translateToCenter;
+    CGAffineTransform mixedTransform;
+    if (degrees == 90) {
+        // 顺时针旋转90°
+        translateToCenter = CGAffineTransformMakeTranslation(videoTrack.naturalSize.height, 0.0);
+        mixedTransform = CGAffineTransformRotate(translateToCenter,M_PI_2);
+        videoComposition.renderSize = CGSizeMake(videoTrack.naturalSize.width,videoTrack.naturalSize.height);
+        [roateLayerInstruction setTransform:CGAffineTransformIdentity atTime:kCMTimeZero];
+    } else if(degrees == 180){
+        // 顺时针旋转180°
+        translateToCenter = CGAffineTransformMakeTranslation(videoTrack.naturalSize.width, videoTrack.naturalSize.height);
+        mixedTransform = CGAffineTransformRotate(translateToCenter,M_PI);
+        videoComposition.renderSize = CGSizeMake(videoTrack.naturalSize.width,videoTrack.naturalSize.height);
+        [roateLayerInstruction setTransform:mixedTransform atTime:kCMTimeZero];
+    } else if(degrees == 270){
+        // 顺时针旋转270°
+        translateToCenter = CGAffineTransformMakeTranslation(0.0, videoTrack.naturalSize.width);
+        mixedTransform = CGAffineTransformRotate(translateToCenter,M_PI_2*3.0);
+        videoComposition.renderSize = CGSizeMake(videoTrack.naturalSize.height,videoTrack.naturalSize.width);
+        [roateLayerInstruction setTransform:mixedTransform atTime:kCMTimeZero];
     }
+    roateInstruction.layerInstructions = @[roateLayerInstruction];
+    videoComposition.instructions = @[roateInstruction];
+    
     return videoComposition;
 }
 
@@ -331,7 +302,7 @@
     if (trackFrameRate == 0) {
         trackFrameRate = 30;
     }
-    videoComposition.frameDuration = CMTimeMake(1, trackFrameRate);
+    videoComposition.frameDuration = CMTimeMake(1, 30);
     
     CGSize targetSize = CGSizeMake([self.videoSettings[AVVideoWidthKey] floatValue], [self.videoSettings[AVVideoHeightKey] floatValue]);
     CGSize naturalSize = [videoTrack naturalSize];
@@ -349,7 +320,7 @@
         naturalSize.width = naturalSize.height;
         naturalSize.height = width;
     }
-    videoComposition.renderSize = naturalSize;
+    videoComposition.renderSize = CGSizeMake(1080, 1920);
     
     // center inside
     {
@@ -367,11 +338,13 @@
         matrix = CGAffineTransformScale(matrix, ratio / xratio, ratio / yratio);
         transform = CGAffineTransformConcat(transform, matrix);
     }
+    
+    CGSize trackSize = videoTrack.naturalSize;
     // Make a "pass through video track" video composition.
     AVMutableVideoCompositionInstruction *passThroughInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
     passThroughInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, self.asset.duration);
     AVMutableVideoCompositionLayerInstruction *layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
-    [layerInstruction setTransform:transform atTime:kCMTimeZero];
+    [layerInstruction setTransform:videoTrack.preferredTransform atTime:kCMTimeZero];
     passThroughInstruction.layerInstructions = @[layerInstruction];
     videoComposition.instructions = @[passThroughInstruction];
     
@@ -474,6 +447,32 @@
     self.audioInput = nil;
     self.inputQueue = nil;
     self.completionHandler = nil;
+}
+
+
+
+/// 获取视频角度
+- (int)degressFromVideoFileWithAsset:(AVAsset *)asset {
+    int degress = 0;
+    NSArray *tracks = [asset tracksWithMediaType:AVMediaTypeVideo];
+    if([tracks count] > 0) {
+        AVAssetTrack *videoTrack = [tracks objectAtIndex:0];
+        CGAffineTransform t = videoTrack.preferredTransform;
+        if(t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0){
+            // Portrait
+            degress = 90;
+        } else if(t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0){
+            // PortraitUpsideDown
+            degress = 270;
+        } else if(t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0){
+            // LandscapeRight
+            degress = 0;
+        } else if(t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0){
+            // LandscapeLeft
+            degress = 180;
+        }
+    }
+    return degress;
 }
 
 @end
