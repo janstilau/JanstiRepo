@@ -46,17 +46,19 @@ static NSString *kIdentifier = @"kIdentifier";
     /// playerManager
     ZFAVPlayerManager *playerManager = [[ZFAVPlayerManager alloc] init];
     /// player的tag值必须在cell里设置
+    // 通过这个方法, 就是 scrollView, 但 type 又是 containerView 模式的.
     self.player = [ZFPlayerController playerWithScrollView:self.tableView playerManager:playerManager containerView:self.headerView.coverImageView];
     self.player.playerDisapperaPercent = 1.0;
     self.player.playerApperaPercent = 0.0;
     self.player.stopWhileNotVisible = NO;
+    self.player.controlView = self.controlView;
+    
     CGFloat margin = 20;
     CGFloat w = ZFPlayer_ScreenWidth/2;
     CGFloat h = w * 9/16;
     CGFloat x = ZFPlayer_ScreenWidth - w - margin;
     CGFloat y = ZFPlayer_ScreenHeight - h - margin;
     self.player.smallFloatView.frame = CGRectMake(x, y, w, h);
-    self.player.controlView = self.controlView;
     
     @weakify(self)
     self.player.orientationWillChange = ^(ZFPlayerController * _Nonnull player, BOOL isFullScreen) {
@@ -152,6 +154,7 @@ static NSString *kIdentifier = @"kIdentifier";
     self.player.playerManager.assetURL = [NSURL URLWithString:data.video_url];
     [self.controlView showTitle:data.title coverURLString:data.thumbnail_url fullScreenMode:ZFFullScreenModeLandscape];
     
+    // 这里, 判断应该把 playerView 加到哪一个 container 上面.
     if (self.tableView.contentOffset.y > self.headerView.frame.size.height) {
         [self.player addPlayerViewToKeyWindow];
     } else {

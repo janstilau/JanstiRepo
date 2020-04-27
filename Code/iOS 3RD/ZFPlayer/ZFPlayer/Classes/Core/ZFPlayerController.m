@@ -275,6 +275,7 @@ AVAudioSessionCategoryPlayAndRecord
 - (ZFFloatView *)smallFloatView {
     if (!_smallFloatView) {
         _smallFloatView = [[ZFFloatView alloc] init];
+        // smallFloatView 的 parentView 直接就是 keyWindow
         _smallFloatView.parentView = [UIApplication sharedApplication].keyWindow;
         _smallFloatView.hidden = YES;
         _smallFloatView.layer.borderColor = [[UIColor greenColor] CGColor];
@@ -444,7 +445,8 @@ AVAudioSessionCategoryPlayAndRecord
 }
 
 /// Add to the keyWindow
-// 在这, 将 palyerView 加到了 smallFloatView 上面.
+// 这里, 是小窗模式, 将 player 的 view 添加到小窗上, 而小窗是添加到了 keywindow 上面了.
+// 这里, 应该是小窗播放的意思.
 - (void)addPlayerViewToKeyWindow {
     self.isSmallFloatViewShow = YES;
     self.smallFloatView.hidden = NO;

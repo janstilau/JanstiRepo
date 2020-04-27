@@ -136,6 +136,7 @@
     self.zf_lastOffsetY = offsetY;
     if (self.zf_stopPlay) return;
     
+    // 这里, 根据 type 值的不同, 获取到 playerView 到底是 cell 上的, 还是 containerView 上的.
     UIView *playerView;
     if (self.zf_containerType == ZFPlayerContainerTypeCell) {
         // Avoid being paused the first time you play it.
