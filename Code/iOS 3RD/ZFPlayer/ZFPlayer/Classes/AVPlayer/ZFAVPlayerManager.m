@@ -233,9 +233,6 @@ static NSString *const kPresentationSize         = @"presentationSize";
      这里, BoundaryTime 指的是, 当数组里面的时间点到达之后, 调用 Block 里面的代码.
      同 addPeriodicTimeObserverForInterval 比较, 这里有了更加可控的时间点回调.
      */
-    [_player addBoundaryTimeObserverForTimes:@[] queue:dispatch_get_main_queue() usingBlock:^{
-        
-    }];
     
     // 这里, 对播放完毕进行了监听.
     _itemEndObserver = [[NSNotificationCenter defaultCenter] addObserverForName:AVPlayerItemDidPlayToEndTimeNotification object:_playerItem queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {

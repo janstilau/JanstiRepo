@@ -160,7 +160,7 @@ static NSString *kIdentifier = @"kIdentifier";
     }
     /// 如果没有播放，则点击进详情页会自动播放
     if (!self.player.playerManager.isPlaying) {
-        [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+//        [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
     }
     /// 到详情页
     ZFPlayerDetailViewController *detailVC = [ZFPlayerDetailViewController new];
@@ -176,6 +176,7 @@ static NSString *kIdentifier = @"kIdentifier";
         }
     };
     /// 详情页点击播放的回调
+    // 
     detailVC.detailVCPlayCallback = ^{
         @strongify(self)
         [self zf_playTheVideoAtIndexPath:indexPath];

@@ -110,6 +110,8 @@ static const CGFloat kAnimate = 0.3;
     self.bufferProgressView.zf_centerY = min_view_h * 0.5;
     self.sliderProgressView.zf_centerY = min_view_h * 0.5;
     self.sliderBtn.zf_centerY          = min_view_h * 0.5;
+    
+    self.backgroundColor = [UIColor greenColor];
 }
 
 /**

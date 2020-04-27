@@ -50,6 +50,15 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
     self.playBtn.frame = CGRectMake(x, y, w, h);
 }
 
+
+// 这里, 是通过 didMoveToParentViewController 这个函数里面, parent 的 nil 与否判断是否是退出操作的.
+// Called after the view controller is added or removed from a container view controller.
+/*
+ Your view controller can override this method when it wants to react to being added to a container.
+ If you are implementing your own container view controller, it must call the didMoveToParentViewController: method of the child view controller after the transition to the new controller is complete or, if there is no transition, immediately after calling the addChildViewController: method.
+ The removeFromParentViewController method automatically calls the didMoveToParentViewController: method of the child view controller after it removes the child.
+ 也就是说, NAVVc, 或者 TabVc 在添加 childVC 的时候, 其实是调用了 didMoveToParentViewController 的了.
+ */
 - (void)didMoveToParentViewController:(UIViewController *)parent {
     if (!parent) {
         if (self.detailVCPopCallback) {
@@ -105,6 +114,7 @@ static NSString *kVideoCover = @"https://upload-images.jianshu.io/upload_images/
         _playBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_playBtn setImage:[UIImage imageNamed:@"new_allPlay_44x44_"] forState:UIControlStateNormal];
         [_playBtn addTarget:self action:@selector(playClick:) forControlEvents:UIControlEventTouchUpInside];
+        [_playBtn addBorderLine];
     }
     return _playBtn;
 }

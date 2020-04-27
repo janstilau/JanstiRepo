@@ -51,7 +51,77 @@
 @implementation MCVideoExporter
 
 - (NSString *)outputVideoPath {
-    return [NSString stringWithFormat:@"%@/%@.mp4", NSHomeDirectory(), [NSDate date]];
+    NSInteger time = [[NSDate date] timeIntervalSince1970];
+    return [NSHomeDirectory() stringByAppendingFormat:@"/tmp/video-%@.mp4",  @(time)];
+}
+
+- (int)assetDegree:(AVAsset *)asset {
+    int degress = 0;
+    NSArray *tracks = [asset tracksWithMediaType:AVMediaTypeVideo];
+    if([tracks count] > 0) {
+        AVAssetTrack *videoTrack = [tracks objectAtIndex:0];
+        CGAffineTransform t = videoTrack.preferredTransform;
+        if(t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0){
+            degress = 90;
+        } else if(t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0){
+            degress = 270;
+        } else if(t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0){
+            degress = 0;
+        } else if(t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0){
+            degress = 180;
+        }
+    }
+    return degress;
+}
+
+- (void)getTargetWidth:(NSInteger *)widthRef Height:(NSInteger *)heightRef asset:(AVAsset *)asset {
+    const NSInteger kMaxWidth = 1280;
+    const NSInteger kMaxHeight = 720;
+    AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];
+    const CGSize videoSize = videoTrack.naturalSize;
+    if (videoSize.width <= 0 || videoSize.height <= 0) {
+        *widthRef = 0;
+        *heightRef = 0;
+        return;
+    }
+    int degree = [self assetDegree:asset];
+    NSInteger kVideoWidth;
+    NSInteger kVideoHeight;
+    NSInteger kStandardMaxWidth;
+    NSInteger kStandardMaxHeight;
+    if (degree == 90 || degree == 270) {
+        kVideoWidth = videoSize.height;
+        kVideoHeight = videoSize.width;
+    } else {
+        kVideoWidth = videoSize.width;
+        kVideoHeight = videoSize.height;
+    }
+    if (kVideoWidth > kVideoHeight) { // 横视频
+        kStandardMaxWidth = kMaxWidth;
+        kStandardMaxHeight = kMaxHeight;
+    } else {// 竖视频
+        kStandardMaxWidth = kMaxHeight;
+        kStandardMaxHeight = kMaxWidth;
+    }
+    const CGFloat kStandardWHRatio = kStandardMaxWidth*1.0/kStandardMaxHeight;
+    const CGFloat kVideoWHRatio = kVideoWidth*1.0 / kVideoHeight;
+    if (kVideoWHRatio > kStandardWHRatio) { //  横边为标准, 宽度全占据
+        if (kVideoWidth > kStandardMaxWidth) {
+            *widthRef = kStandardMaxWidth;
+            *heightRef = kStandardMaxWidth/kVideoWHRatio;
+        } else {
+            *widthRef = kVideoWidth;
+            *heightRef = kVideoWidth/kVideoWHRatio;
+        }
+    } else { //  竖边为标准, 高度全占据
+        if (kVideoHeight > kStandardMaxHeight) {
+            *heightRef = kStandardMaxHeight;
+            *widthRef = kStandardMaxHeight * kVideoWHRatio;
+        } else {
+            *heightRef = kVideoHeight;
+            *widthRef = kVideoHeight * kVideoWHRatio;
+        }
+    }
 }
 
 - (void)startExport {
@@ -62,15 +132,25 @@
     CMTimeRange duration = CMTimeRangeMake(kCMTimeZero, [_asset duration]);
     encoder.timeRange = duration;
     NSLog(@"%@", [self outputVideoPath]);
+    NSInteger targetWidth = 0;
+    NSInteger targetHeight = 0;
+    [self getTargetWidth:&targetWidth Height:&targetHeight asset:_asset];
+    AVAssetTrack *track = [[_asset tracksWithMediaType:AVMediaTypeVideo] firstObject];
+    CGFloat videoCurrentBitRate = track.estimatedDataRate;
+    CGFloat defualtBitRate = targetWidth*targetHeight*2;
+    CGFloat targetBitRate = defualtBitRate;
+    if (videoCurrentBitRate > 0) {
+        targetBitRate = MIN(defualtBitRate, videoCurrentBitRate);
+    }
+    
     encoder.videoSettings = @
     {
         AVVideoCodecKey: AVVideoCodecH264,
-        AVVideoWidthKey: @1280,
-        AVVideoHeightKey: @720,
-        AVVideoCompressionPropertiesKey: @
-        {
-            AVVideoAverageBitRateKey: @2500000,
-            AVVideoProfileLevelKey: AVVideoProfileLevelH264High41,
+        AVVideoWidthKey: @(targetWidth),
+        AVVideoHeightKey: @(targetHeight),
+        AVVideoCompressionPropertiesKey: @ {
+            AVVideoAverageBitRateKey: @(targetBitRate),
+            AVVideoProfileLevelKey: AVVideoProfileLevelH264HighAutoLevel,
         },
     };
     encoder.audioSettings = @
@@ -79,6 +159,9 @@
         AVNumberOfChannelsKey: @2,
         AVSampleRateKey: @44100,
         AVEncoderBitRateKey: @128000,
+    };
+    encoder.progressHandler = ^(float progress) {
+        NSLog(@"Encode progress - %@", @(progress));
     };
     [encoder exportAsynchronouslyWithCompletionHandler:^
     {

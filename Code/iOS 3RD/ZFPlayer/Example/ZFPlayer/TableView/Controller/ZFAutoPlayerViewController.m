@@ -91,6 +91,12 @@ static NSString *kIdentifier = @"kIdentifier";
     };
      
     */
+    self.player.zf_playerShouldPlayInScrollView = ^(NSIndexPath * _Nonnull indexPath) {
+       @strongify(self)
+       if ([indexPath compare:self.player.playingIndexPath] != NSOrderedSame) {
+           [self playTheVideoAtIndexPath:indexPath scrollToTop:NO];
+       }
+    };
 }
 
 - (void)viewWillLayoutSubviews {
@@ -204,11 +210,13 @@ static NSString *kIdentifier = @"kIdentifier";
     detailVC.player = self.player;
     @weakify(self)
     /// 详情页返回的回调
-    detailVC.detailVCPopCallback = ^{
+    detailVC.detailVCPopCallback = ^{ // 在这里, 进行了详情页退出的同步操作.
         @strongify(self)
-        [self.player addPlayerViewToCell];
+        [self.player addPlayerViewToCell]; // 这里, 仅仅是把 playerView 添加到了 cell 上, 但没有对 video 的播放进行控制. 所以, video 还是继续进行播放了.
     };
     /// 详情页点击播放的回调
+    // 这里, zf_playTheVideoAtIndexPath 做了一层数据同步的操作, 在 detailVC 里面, 立马又把 player 的 view 添加到了 detailVC 里面.
+    // 说实话, 这种写法很有问题.
     detailVC.detailVCPlayCallback = ^{
         @strongify(self)
         [self zf_playTheVideoAtIndexPath:indexPath];

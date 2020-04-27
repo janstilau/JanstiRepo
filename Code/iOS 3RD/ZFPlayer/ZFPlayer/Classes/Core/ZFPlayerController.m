@@ -391,12 +391,15 @@ AVAudioSessionCategoryPlayAndRecord
 }
 
 - (void)stop {
+    // 停止监听通知行为
     [self.notification removeNotification];
     [self.orientationObserver removeDeviceOrientationObserver];
     if (self.isFullScreen && self.exitFullScreenWhenStop) {
         [self.orientationObserver exitFullScreenWithAnimated:NO];
     }
+    // 真正的播放器的停止操作.
     [self.playerManager stop];
+    // 播放器视图的清空操作.
     [self.playerManager.view removeFromSuperview];
     if (self.scrollView) {
         self.scrollView.zf_stopPlay = YES;
@@ -408,6 +411,8 @@ AVAudioSessionCategoryPlayAndRecord
 }
 
 //// Add video to the cell
+// player 要在 cell 上面进行播放了.
+// 所以, 这里函数的内部, 就是简单的 view 的位置的转换操作.
 - (void)addPlayerViewToCell {
     self.isSmallFloatViewShow = NO;
     self.smallFloatView.hidden = YES;
@@ -423,6 +428,8 @@ AVAudioSessionCategoryPlayAndRecord
 }
 
 //// Add video to the container view
+// player 要在 cell 上面进行播放了.
+// 所以, 这里函数的内部, 就是简单的 view 的位置的转换操作.
 - (void)addPlayerViewToContainerView:(UIView *)containerView {
     self.isSmallFloatViewShow = NO;
     self.smallFloatView.hidden = YES;
@@ -1064,28 +1071,6 @@ AVAudioSessionCategoryPlayAndRecord
     self.scrollView.zf_containerViewTag = containerViewTag;
 }
 
-// 这里, 仅仅是将 playerView 加到了 cell 上, 没有进行真正的播放替换工作.
-// 作者没有将一块逻辑, 统一放到一个地方. 导致相同功能的逻辑, 有多处时间, 令人费解.
-- (void)setPlayingIndexPath:(NSIndexPath *)playingIndexPath {
-    objc_setAssociatedObject(self, @selector(playingIndexPath), playingIndexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    if (!playingIndexPath) {
-        self.scrollView.zf_playingIndexPath = nil;
-        return;
-    }
-    [self stop];
-    self.isSmallFloatViewShow = NO;
-    if (self.smallFloatView) self.smallFloatView.hidden = YES;
-    
-    UIView *cell = [self.scrollView zf_getCellForIndexPath:playingIndexPath];
-    // 首先, 更新 orientation.
-    self.containerView = [cell viewWithTag:self.containerViewTag];
-    [self.orientationObserver cellModelRotateView:self.playerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
-    [self addDeviceOrientationObserver];
-    self.scrollView.zf_playingIndexPath = playingIndexPath;
-    // 然后将 palyerView 填充到 cell 上面.
-    [self layoutPlayerSubViews];
-}
-
 - (void)setShouldAutoPlay:(BOOL)shouldAutoPlay {
     objc_setAssociatedObject(self, @selector(shouldAutoPlay), @(shouldAutoPlay), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     self.scrollView.zf_shouldAutoPlay = shouldAutoPlay;
@@ -1284,12 +1269,38 @@ AVAudioSessionCategoryPlayAndRecord
     }
 }
 
+// 这个函数, 就是在修改 indexPath 的同时, 同时指定了 assetURL.
+// 如果只有 indexPath 的传入, 那么需要提前, 传入 sectionAssetURLs, 或者 assetURLs 的值, 才能够得到 currentAssetURL 的值进行传递.
+// playingIndexPath 的修改, 仅仅是进行播放视图的转移操作. 而 currentAssetURL 的修改, 才导致了真正的视频播放数据的切换.
 - (void)playTheIndexPath:(NSIndexPath *)indexPath assetURL:(NSURL *)assetURL scrollToTop:(BOOL)scrollToTop {
     self.playingIndexPath = indexPath;
     self.currentAssetURL = assetURL;
     if (scrollToTop) {
         [self.scrollView zf_scrollToRowAtIndexPath:indexPath completionHandler:nil];
     }
+}
+
+// 这里, 仅仅是将 playerView 加到了 cell 上, 没有进行真正的播放替换工作.
+// 作者没有将一块逻辑, 统一放到一个地方. 导致相同功能的逻辑, 有多处时间, 令人费解.
+- (void)setPlayingIndexPath:(NSIndexPath *)playingIndexPath {
+    objc_setAssociatedObject(self, @selector(playingIndexPath), playingIndexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (!playingIndexPath) {
+        self.scrollView.zf_playingIndexPath = nil;
+        return;
+    }
+    [self stop]; // 停止.
+    self.isSmallFloatViewShow = NO;
+    if (self.smallFloatView) self.smallFloatView.hidden = YES;
+    
+    // 以下的代码, 是将 player 的 view 添加到对应的 cell 上面.
+    UIView *cell = [self.scrollView zf_getCellForIndexPath:playingIndexPath];
+    // 首先, 更新 orientation.
+    self.containerView = [cell viewWithTag:self.containerViewTag];
+    [self.orientationObserver cellModelRotateView:self.playerManager.view rotateViewAtCell:cell playerViewTag:self.containerViewTag];
+    [self addDeviceOrientationObserver];
+    self.scrollView.zf_playingIndexPath = playingIndexPath;
+    // 然后将 palyerView 填充到 cell 上面.
+    [self layoutPlayerSubViews];
 }
 
 @end

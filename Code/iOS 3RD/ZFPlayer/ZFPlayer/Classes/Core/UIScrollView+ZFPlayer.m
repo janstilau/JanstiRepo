@@ -67,6 +67,7 @@
         @strongify(self)
         /// 如果当前控制器已经消失，直接return
         if (self.zf_hiddenOnWindow) return;
+        // 如果,
         if ([ZFReachabilityManager sharedManager].isReachableViaWWAN && !self.zf_WWANAutoPlay) {
             /// 移动网络
             self.zf_shouldPlayIndexPath = indexPath;
@@ -100,10 +101,13 @@
 
 /*
  在 ScrollView 的滑动的过程中, 通过原来记录的 playingIndexPath 的值. 不断地计算, 在不同的时机, 调用回调
+ 
  zf_playerAppearingInScrollView
  zf_playerDisappearingInScrollView
+ 
  zf_playerWillAppearInScrollView
  zf_playerDidAppearInScrollView
+ 
  zf_playerWillDisappearInScrollView
  zf_playerDidDisappearInScrollView
  
