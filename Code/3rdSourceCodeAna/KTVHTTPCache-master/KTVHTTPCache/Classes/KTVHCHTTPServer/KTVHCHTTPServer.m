@@ -12,9 +12,11 @@
 #import "KTVHCURLTool.h"
 #import "KTVHCLog.h"
 
+// 这个类, 就是对于 Server 类的包装, 提供一个门面方面外界调用.
+
 @interface KTVHCHTTPServer ()
 
-@property (nonatomic, strong) HTTPServer *server;
+@property (nonatomic, strong) HTTPServer *server; // 功能性实例
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 @property (nonatomic) BOOL wantsRunning;
 
@@ -154,6 +156,9 @@
 - (void)beginBackgroundTask
 {
     KTVHCLogHTTPServer(@"%p, begin background task", self);
+    /*
+     Mark the start of a task that should continue if the app enters the background.
+     */
     self.backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
         KTVHCLogHTTPServer(@"%p, background task expiration", self);
         [self endBackgroundTask];

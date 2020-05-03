@@ -33,6 +33,11 @@ FOUNDATION_EXPORT const unsigned char KTVHTTPCacheVersionString[];
 
 #endif
 
+/*
+ 该类是一个接口类, 所有的操作是类方法, 然后具体的操作, 是分发到各个功能类的单例对象上了.
+ 其本质是对 HTTP 请求进行缓存，对传输内容并没有限制，因此应用场景不限于音视频在线播放，也可以用于文件下载、图片加载、普通网络请求等场景。
+ 
+ */
 /**
  *  KTVHTTPCache is a smart media cache framework.
  */
@@ -51,6 +56,8 @@ FOUNDATION_EXPORT const unsigned char KTVHTTPCacheVersionString[];
  *
  *  @param error : Pointer to receive service error.
  *  @return YES when the proxy service is successfully started, otherwise NO.
+ *
+ *  初始化工作, 应该在项目启动的时候, 进行调用.
  */
 + (BOOL)proxyStart:(NSError **)error;
 
@@ -325,30 +332,5 @@ FOUNDATION_EXPORT const unsigned char KTVHTTPCacheVersionString[];
  *  @param URL : The URL for HTTP content.
  */
 + (void)logCleanErrorForURL:(NSURL *)URL;
-
-@end
-
-/**
- *  Deprecated
- *
- *  This part is for compatibility with historical versions.
- *
- *  @warning This part will be removed in future versions.
- */
-#pragma mark - Deprecated
-
-@interface KTVHTTPCache (Deprecated)
-
-+ (void)logDeleteRecordLog                                                      __attribute__((deprecated("Use +logDeleteRecordLogFile instead.")));
-+ (NSString *)logRecordLogFilePath                                              __attribute__((deprecated("Use +logRecordLogFileURL instead.")));
-+ (NSString *)proxyURLStringWithOriginalURLString:(NSString *)URLString         __attribute__((deprecated("Use +proxyURLWithOriginalURL: instead.")));
-+ (NSURL *)cacheCompleteFileURLIfExistedWithURL:(NSURL *)URL                    __attribute__((deprecated("Use +cacheCompleteFileURLWithURL: instead.")));
-+ (NSString *)cacheCompleteFilePathIfExistedWithURLString:(NSString *)URLString __attribute__((deprecated("Use +cacheCompleteFileURLWithURL: instead.")));
-+ (KTVHCDataCacheItem *)cacheCacheItemWithURLString:(NSString *)URLString       __attribute__((deprecated("Use +cacheCacheItemWithURL: instead.")));
-+ (void)cacheDeleteCacheWithURLString:(NSString *)URLString                     __attribute__((deprecated("Use +cacheDeleteCacheWithURL: instead.")));
-+ (void)tokenSetURLFilter:(NSURL * (^)(NSURL * URL))URLFilter                   __attribute__((deprecated("Use +encodeSetURLConverter: instead.")));
-+ (void)downloadSetAcceptContentTypes:(NSArray<NSString *> *)acceptContentTypes __attribute__((deprecated("Use +downloadSetAcceptableContentTypes: instead.")));
-+ (NSArray<NSString *> *)downloadAcceptContentTypes                             __attribute__((deprecated("Use +downloadAcceptableContentTypes instead.")));
-+ (void)downloadSetUnsupportContentTypeFilter:(BOOL(^)(NSURL *URL, NSString *contentType))contentTypeFilter __attribute__((deprecated("Use +downloadSetUnacceptableContentTypeDisposer: instead.")));
 
 @end

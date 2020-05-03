@@ -28,6 +28,7 @@
 
 - (void)setupItems
 {
+    // 获取所有的缓存数据.
     self.items = [KTVHTTPCache cacheAllCacheItems];
     [self.tableView reloadData];
 }
