@@ -12,19 +12,25 @@ class MyTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        self.setupViewControllers()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func setupViewControllers() {
+        
     }
-    */
+    
+    func setupChildController(_ childVC: UIViewController,
+                              title: String,
+                              imageName: String,
+                              selectedImageName: String) {
+        childVC.tabBarItem.title = title
+        childVC.tabBarItem.image = UIImage(named: imageName)
+        childVC.tabBarItem.selectedImage = UIImage(named: selectedImageName)
+        
+        let navVC = MyNavigationController(rootViewController: childVC)
+        self.addChild(childVC)
+    }
+    
 
 }

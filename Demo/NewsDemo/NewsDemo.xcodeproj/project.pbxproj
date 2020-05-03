@@ -13,6 +13,7 @@
 		06D471CF245F05CC006C19E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06D471CD245F05CC006C19E9 /* LaunchScreen.storyboard */; };
 		06D471D7245F0964006C19E9 /* MyTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471D6245F0964006C19E9 /* MyTabBarController.swift */; };
 		06D471D9245F097B006C19E9 /* MyNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471D8245F097B006C19E9 /* MyNavigationController.swift */; };
+		06D471DB245F0C8E006C19E9 /* MyHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471DA245F0C8E006C19E9 /* MyHomeViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		06D471D0245F05CC006C19E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		06D471D6245F0964006C19E9 /* MyTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTabBarController.swift; sourceTree = "<group>"; };
 		06D471D8245F097B006C19E9 /* MyNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNavigationController.swift; sourceTree = "<group>"; };
+		06D471DA245F0C8E006C19E9 /* MyHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyHomeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				06D471D0245F05CC006C19E9 /* Info.plist */,
 				06D471D6245F0964006C19E9 /* MyTabBarController.swift */,
 				06D471D8245F097B006C19E9 /* MyNavigationController.swift */,
+				06D471DA245F0C8E006C19E9 /* MyHomeViewController.swift */,
 			);
 			path = NewsDemo;
 			sourceTree = "<group>";
@@ -141,6 +144,7 @@
 				06D471D9245F097B006C19E9 /* MyNavigationController.swift in Sources */,
 				06D471C3245F05CB006C19E9 /* AppDelegate.swift in Sources */,
 				06D471D7245F0964006C19E9 /* MyTabBarController.swift in Sources */,
+				06D471DB245F0C8E006C19E9 /* MyHomeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
