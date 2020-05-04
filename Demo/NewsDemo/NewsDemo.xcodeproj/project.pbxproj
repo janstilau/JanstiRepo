@@ -17,6 +17,8 @@
 		06387884246035E100678BD9 /* MineTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06387882246035E100678BD9 /* MineTableCell.xib */; };
 		0638788824604F0300678BD9 /* UserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0638788724604F0300678BD9 /* UserDetail.swift */; };
 		0638788A2460508A00678BD9 /* MoreLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063878892460508A00678BD9 /* MoreLoginViewController.swift */; };
+		0638788C2460531000678BD9 /* settingPlist.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0638788B2460531000678BD9 /* settingPlist.plist */; };
+		0638788E2460533B00678BD9 /* SettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0638788D2460533B00678BD9 /* SettingModel.swift */; };
 		06D471C3245F05CB006C19E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471C2245F05CB006C19E9 /* AppDelegate.swift */; };
 		06D471CA245F05CB006C19E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06D471C8245F05CB006C19E9 /* Main.storyboard */; };
 		06D471CC245F05CC006C19E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 06D471CB245F05CC006C19E9 /* Assets.xcassets */; };
@@ -42,6 +44,8 @@
 		06387882246035E100678BD9 /* MineTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MineTableCell.xib; sourceTree = "<group>"; };
 		0638788724604F0300678BD9 /* UserDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetail.swift; sourceTree = "<group>"; };
 		063878892460508A00678BD9 /* MoreLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreLoginViewController.swift; sourceTree = "<group>"; };
+		0638788B2460531000678BD9 /* settingPlist.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = settingPlist.plist; sourceTree = "<group>"; };
+		0638788D2460533B00678BD9 /* SettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingModel.swift; sourceTree = "<group>"; };
 		06D471BF245F05CB006C19E9 /* NewsDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06D471C2245F05CB006C19E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		06D471C9245F05CB006C19E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -103,6 +107,7 @@
 			children = (
 				0638787F24602FDE00678BD9 /* MyCellModel.swift */,
 				0638788724604F0300678BD9 /* UserDetail.swift */,
+				0638788D2460533B00678BD9 /* SettingModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -198,6 +203,7 @@
 		06D471EA2460183F006C19E9 /* Mine */ = {
 			isa = PBXGroup;
 			children = (
+				0638788B2460531000678BD9 /* settingPlist.plist */,
 				0638788624604ED600678BD9 /* Model */,
 				0638788524604ED600678BD9 /* View */,
 				06D471E0246001A8006C19E9 /* MineViewController.swift */,
@@ -285,6 +291,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				06D471CF245F05CC006C19E9 /* LaunchScreen.storyboard in Resources */,
+				0638788C2460531000678BD9 /* settingPlist.plist in Resources */,
 				06D471CC245F05CC006C19E9 /* Assets.xcassets in Resources */,
 				06D471CA245F05CB006C19E9 /* Main.storyboard in Resources */,
 				06387884246035E100678BD9 /* MineTableCell.xib in Resources */,
@@ -348,6 +355,7 @@
 				06D471E1246001A8006C19E9 /* MineViewController.swift in Sources */,
 				06D471DD2460018C006C19E9 /* VideoViewController.swift in Sources */,
 				0638787B246020FF00678BD9 /* ViewExtension.swift in Sources */,
+				0638788E2460533B00678BD9 /* SettingModel.swift in Sources */,
 				06D471DB245F0C8E006C19E9 /* HomeViewController.swift in Sources */,
 				06D471DF2460019A006C19E9 /* HuoshanViewController.swift in Sources */,
 				0638787424601FDB00678BD9 /* Const.swift in Sources */,

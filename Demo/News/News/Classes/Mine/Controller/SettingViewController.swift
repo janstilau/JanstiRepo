@@ -12,6 +12,9 @@ import Kingfisher
 class SettingViewController: UITableViewController {
     
     /// 存储 plist 文件中的数据
+    /*
+     可以看到, 在这个项目里面, 还是用 Swift 的数组, 进行属性的值的保存了.
+     */
     var sections = [[SettingModel]]()
     
     override func viewWillAppear(_ animated: Bool) {
@@ -31,11 +34,6 @@ class SettingViewController: UITableViewController {
         super.viewDidLoad()
         // 设置 UI
         setupUI()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Table view data source
