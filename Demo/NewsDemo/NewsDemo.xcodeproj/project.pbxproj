@@ -15,6 +15,8 @@
 		0638788024602FDE00678BD9 /* MyCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0638787F24602FDE00678BD9 /* MyCellModel.swift */; };
 		06387883246035E100678BD9 /* MineTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06387881246035E100678BD9 /* MineTableCell.swift */; };
 		06387884246035E100678BD9 /* MineTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06387882246035E100678BD9 /* MineTableCell.xib */; };
+		0638788824604F0300678BD9 /* UserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0638788724604F0300678BD9 /* UserDetail.swift */; };
+		0638788A2460508A00678BD9 /* MoreLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063878892460508A00678BD9 /* MoreLoginViewController.swift */; };
 		06D471C3245F05CB006C19E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471C2245F05CB006C19E9 /* AppDelegate.swift */; };
 		06D471CA245F05CB006C19E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06D471C8245F05CB006C19E9 /* Main.storyboard */; };
 		06D471CC245F05CC006C19E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 06D471CB245F05CC006C19E9 /* Assets.xcassets */; };
@@ -38,6 +40,8 @@
 		0638787F24602FDE00678BD9 /* MyCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCellModel.swift; sourceTree = "<group>"; };
 		06387881246035E100678BD9 /* MineTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineTableCell.swift; sourceTree = "<group>"; };
 		06387882246035E100678BD9 /* MineTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MineTableCell.xib; sourceTree = "<group>"; };
+		0638788724604F0300678BD9 /* UserDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetail.swift; sourceTree = "<group>"; };
+		063878892460508A00678BD9 /* MoreLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreLoginViewController.swift; sourceTree = "<group>"; };
 		06D471BF245F05CB006C19E9 /* NewsDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06D471C2245F05CB006C19E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		06D471C9245F05CB006C19E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -84,6 +88,23 @@
 				0638787D24602D1E00678BD9 /* Network.swift */,
 			);
 			path = Tool;
+			sourceTree = "<group>";
+		};
+		0638788524604ED600678BD9 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				06387881246035E100678BD9 /* MineTableCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0638788624604ED600678BD9 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0638787F24602FDE00678BD9 /* MyCellModel.swift */,
+				0638788724604F0300678BD9 /* UserDetail.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		06D471B6245F05CB006C19E9 = {
@@ -177,10 +198,11 @@
 		06D471EA2460183F006C19E9 /* Mine */ = {
 			isa = PBXGroup;
 			children = (
+				0638788624604ED600678BD9 /* Model */,
+				0638788524604ED600678BD9 /* View */,
 				06D471E0246001A8006C19E9 /* MineViewController.swift */,
-				0638787F24602FDE00678BD9 /* MyCellModel.swift */,
-				06387881246035E100678BD9 /* MineTableCell.swift */,
 				06387882246035E100678BD9 /* MineTableCell.xib */,
+				063878892460508A00678BD9 /* MoreLoginViewController.swift */,
 			);
 			path = Mine;
 			sourceTree = "<group>";
@@ -331,8 +353,10 @@
 				0638787424601FDB00678BD9 /* Const.swift in Sources */,
 				0638788024602FDE00678BD9 /* MyCellModel.swift in Sources */,
 				063878792460209F00678BD9 /* ColorExtension.swift in Sources */,
+				0638788824604F0300678BD9 /* UserDetail.swift in Sources */,
 				06387883246035E100678BD9 /* MineTableCell.swift in Sources */,
 				063878772460208500678BD9 /* TableViewExtension.swift in Sources */,
+				0638788A2460508A00678BD9 /* MoreLoginViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,24 +1,70 @@
 PODS:
   - Alamofire (4.9.1)
   - HandyJSON (5.0.1)
+  - IBAnimatable (6.1.0)
+  - Kingfisher (5.13.4):
+    - Kingfisher/Core (= 5.13.4)
+  - Kingfisher/Core (5.13.4)
+  - MJRefresh (3.4.1)
+  - RxCocoa (5.1.1):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxRelay (5.1.1):
+    - RxSwift (~> 5)
+  - RxSwift (5.1.1)
+  - SGPagingView (1.6.7)
+  - SQLite.swift (0.12.2):
+    - SQLite.swift/standard (= 0.12.2)
+  - SQLite.swift/standard (0.12.2)
+  - SVProgressHUD (2.2.5)
+  - SwiftTheme (0.5.2)
   - SwiftyJSON (5.0.0)
 
 DEPENDENCIES:
   - Alamofire
   - HandyJSON
+  - IBAnimatable
+  - Kingfisher
+  - MJRefresh
+  - RxCocoa
+  - RxSwift
+  - SGPagingView
+  - SQLite.swift
+  - SVProgressHUD
+  - SwiftTheme
   - SwiftyJSON
 
 SPEC REPOS:
   https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git:
     - Alamofire
     - HandyJSON
+    - IBAnimatable
+    - Kingfisher
+    - MJRefresh
+    - RxCocoa
+    - RxRelay
+    - RxSwift
+    - SGPagingView
+    - SQLite.swift
+    - SVProgressHUD
+    - SwiftTheme
     - SwiftyJSON
 
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   HandyJSON: d45b8415c501e3affc59ca9762c1197ff0feb646
+  IBAnimatable: 99dddd4c0625884a301ba3ecbc1615f8a390368e
+  Kingfisher: d2279a7abece3c7f25a80cd2b7f363ca5cf3f44c
+  MJRefresh: 3153c59a363159092c08b2177ec3a7d09f90bfaf
+  RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
+  RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
+  SGPagingView: 21152cbb9e25a7259ea2415b028c22f55f362ea2
+  SQLite.swift: d2b4642190917051ce6bd1d49aab565fe794eea3
+  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+  SwiftTheme: 8b02c479bb4441b2b6790ac126e961b1b6fb0932
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 1b2bcf950ad7edd42fb3ad26c92a7290e3acb055
+PODFILE CHECKSUM: e02cc0eaebdee67b73cd4f319bd03a83159108e5
 
 COCOAPODS: 1.9.1
