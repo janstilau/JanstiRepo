@@ -7,16 +7,22 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
 
 class MineViewController: UIViewController {
     
     
     var tableView: UITableView?
+    var sections = [[MyCellModel]]()
+    var concerns = [MyConcern]()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.lightGray
         setupViews()
+        requestData()
     }
     
     func setupViews() {
@@ -31,6 +37,39 @@ class MineViewController: UIViewController {
         view.addSubview(tableView!)
     }
 
+}
+
+extension MineViewController {
+    func requestData() {
+        let url = BASE_URL + "/user/tab/tabs/?"
+        let params = [
+            "devece_id": kDeviceId
+        ]
+        Alamofire.request(url, parameters: params).responseJSON { (response) in
+            guard response.result.isSuccess else {
+                print("网络请求失败")
+                return
+            }
+            if let value = response.result.value {
+                let json = JSON(value)
+                guard json["message"] == "success" else {
+                    return
+                }
+                if let data = json["data"].dictionary,
+                    let sections = data["sections"]?.array {
+                    var sectionArray = [AnyObject]()
+                    for item in sections {
+                        var rows = [MyCellModel]()
+                        for row in item.arrayObject! {
+                            let myCellModel = MyCellModel.deserialize(from: row as? NSDictionary)
+                            rows.append(myCellModel!)
+                        }
+                        sectionArray.append(rows as AnyObject)
+                    }
+                }
+            }
+        }
+    }
 }
 
 /*
@@ -94,3 +133,222 @@ extension MineViewController : UITableViewDelegate, UITableViewDataSource{
     
     
 }
+
+
+/*
+ {
+   "data" : {
+     "sections" : [
+       [
+         {
+           "icons" : {
+             "day" : {
+               "height" : 24,
+               "url_list" : [
+                 {
+                   "url" : "http:\/\/sf1-ttcdn-tos.pstatp.com\/img\/mosaic-legacy\/1e0660002e8c1d26332ce~noop.webp"
+                 }
+               ],
+               "width" : 24,
+               "radius" : 0,
+               "uri" : ""
+             },
+             "night" : {
+               "uri" : "",
+               "url_list" : [
+                 {
+                   "url" : "http:\/\/sf1-ttcdn-tos.pstatp.com\/img\/mosaic-legacy\/1e0660002e8c1d26332ce~noop.webp"
+                 }
+               ],
+               "width" : 24,
+               "radius" : 0,
+               "height" : 24
+             }
+           },
+           "tip_text" : "",
+           "grey_text" : "",
+           "key" : "mall",
+           "url" : "sslocal:\/\/webview?url=https%3a%2f%2fis.snssdk.com%2ffeoffline%2fwallet_portal%2findex.html&title=%E6%88%91%E7%9A%84%E9%92%B1%E5%8C%85&hide_more=1&hide_bar=1&bounce_disable=1&hide_status_bar=1&back_button_color=white&status_bar_color=white&background_colorkey=3&should_append_common_param=1&disable_web_progressView=1&use_offline=1&show_load_anim=0",
+           "text" : "钱包",
+           "tip_new" : 0
+         },
+         {
+           "icons" : {
+             "day" : {
+               "uri" : "",
+               "url_list" : [
+                 {
+                   "url" : "http:\/\/sf1-ttcdn-tos.pstatp.com\/img\/mosaic-legacy\/1e0740002e78806e1f2b3~noop.webp"
+                 }
+               ],
+               "width" : 24,
+               "radius" : 0,
+               "height" : 24
+             },
+             "night" : {
+               "uri" : "",
+               "url_list" : [
+                 {
+                   "url" : "http:\/\/sf1-ttcdn-tos.pstatp.com\/img\/mosaic-legacy\/1e0740002e78806e1f2b3~noop.webp"
+                 }
+               ],
+               "width" : 24,
+               "radius" : 0,
+               "height" : 24
+             }
+           },
+           "tip_text" : "",
+           "grey_text" : "",
+           "key" : "msg_notification",
+           "url" : "sslocal:\/\/message",
+           "text" : "消息通知",
+           "tip_new" : 0
+         }
+       ],
+       [
+         {
+           "icons" : {
+             "day" : {
+               "uri" : "",
+               "url_list" : [
+                 {
+                   "url" : "http:\/\/sf1-ttcdn-tos.pstatp.com\/img\/mosaic-legacy\/1e0710002e60645fdecad~noop.webp"
+                 }
+               ],
+               "width" : 24,
+               "radius" : 0,
+               "height" : 24
+             },
+             "night" : {
+               "uri" : "",
+               "url_list" : [
+                 {
+                   "url" : "http:\/\/sf1-ttcdn-tos.pstatp.com\/img\/mosaic-legacy\/1e0710002e60645fdecad~noop.webp"
+                 }
+               ],
+               "width" : 24,
+               "radius" : 0,
+               "height" : 24
+             }
+           },
+           "tip_text" : "",
+           "grey_text" : "",
+           "key" : "free_flow_service",
+           "url" : "sslocal:\/\/webview?url=https%3a%2f%2fi.snssdk.com%2factivity%2fcarrier_flow%2fredirect%2f%3f&bounce_disable=1&title=%E5%85%8D%E6%B5%81%E9%87%8F%E6%9C%8D%E5%8A%A1",
+           "text" : "免流量服务",
+           "tip_new" : 0
+         },
+         {
+           "icons" : {
+             "day" : {
+               "uri" : "",
+               "url_list" : [
+                 {
+                   "url" : "http:\/\/sf1-ttcdn-tos.pstatp.com\/img\/mosaic-legacy\/1e0700002e5835e8795dc~noop.webp"
+                 }
+               ],
+               "width" : 24,
+               "radius" : 0,
+               "height" : 24
+             },
+             "night" : {
+               "uri" : "",
+               "url_list" : [
+                 {
+                   "url" : "http:\/\/sf1-ttcdn-tos.pstatp.com\/img\/mosaic-legacy\/1e0700002e5835e8795dc~noop.webp"
+                 }
+               ],
+               "width" : 24,
+               "height" : 24,
+               "radius" : 0
+             }
+           },
+           "tip_text" : "",
+           "grey_text" : "",
+           "key" : "ads_serving",
+           "url" : "sslocal:\/\/webview?url=https%3a%2f%2flite.snssdk.com%2fself_service%2fapi%2fv1%2fpages%2flogin%3f%24from%3d1%26hide_bar%3d0%26bounce_disable%3d1",
+           "text" : "广告推广",
+           "tip_new" : 0
+         }
+       ],
+       [
+         {
+           "icons" : {
+             "day" : {
+               "uri" : "",
+               "url_list" : [
+                 {
+                   "url" : "http:\/\/sf1-ttcdn-tos.pstatp.com\/img\/mosaic-legacy\/1e06a0002e9c41f5391b4~noop.webp"
+                 }
+               ],
+               "width" : 24,
+               "height" : 24,
+               "radius" : 0
+             },
+             "night" : {
+               "uri" : "",
+               "url_list" : [
+                 {
+                   "url" : "http:\/\/sf1-ttcdn-tos.pstatp.com\/img\/mosaic-legacy\/1e06a0002e9c41f5391b4~noop.webp"
+                 }
+               ],
+               "width" : 24,
+               "height" : 24,
+               "radius" : 0
+             }
+           },
+           "tip_text" : "",
+           "grey_text" : "",
+           "key" : "feedback",
+           "url" : "sslocal:\/\/webview?url=https%3A%2F%2Fi.snssdk.com%2Ffeedback%2Farticle_news%2Fquestion_list%2F&hide_more=1&bounce_disable=1&hide_bar=1&hide_back_close=1&hide_close_btn=1&should_append_common_param=1&use_bd=1",
+           "text" : "用户反馈",
+           "tip_new" : 0
+         },
+         {
+           "icons" : {
+             "day" : {
+               "uri" : "origin\/6649\/8382300936",
+               "url_list" : [
+                 {
+                   "url" : "http:\/\/p1.pstatp.com\/origin\/6649\/8382300936"
+                 },
+                 {
+                   "url" : "http:\/\/pb3.pstatp.com\/origin\/6649\/8382300936"
+                 },
+                 {
+                   "url" : "http:\/\/pb3.pstatp.com\/origin\/6649\/8382300936"
+                 }
+               ],
+               "width" : 24,
+               "height" : 24
+             },
+             "night" : {
+               "url_list" : [
+                 {
+                   "url" : "http:\/\/p1.pstatp.com\/origin\/6653\/7036384588"
+                 },
+                 {
+                   "url" : "http:\/\/pb3.pstatp.com\/origin\/6653\/7036384588"
+                 },
+                 {
+                   "url" : "http:\/\/pb3.pstatp.com\/origin\/6653\/7036384588"
+                 }
+               ],
+               "width" : 24,
+               "uri" : "origin\/6653\/7036384588",
+               "height" : 24
+             }
+           },
+           "tip_text" : "",
+           "grey_text" : "",
+           "key" : "config",
+           "url" : "sslocal:\/\/more",
+           "text" : "系统设置",
+           "tip_new" : 0
+         }
+       ]
+     ]
+   },
+   "message" : "success"
+ }
+ */

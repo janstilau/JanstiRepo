@@ -17,3 +17,4 @@ let kScreenWidth = UIScreen.main.bounds.width
 /// 屏幕高度
 let kScreenHeight = UIScreen.main.bounds.height
 
+let kDeviceId = "6096495334"
