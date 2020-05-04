@@ -13,7 +13,12 @@
 		06D471CF245F05CC006C19E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06D471CD245F05CC006C19E9 /* LaunchScreen.storyboard */; };
 		06D471D7245F0964006C19E9 /* MyTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471D6245F0964006C19E9 /* MyTabBarController.swift */; };
 		06D471D9245F097B006C19E9 /* MyNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471D8245F097B006C19E9 /* MyNavigationController.swift */; };
-		06D471DB245F0C8E006C19E9 /* MyHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471DA245F0C8E006C19E9 /* MyHomeViewController.swift */; };
+		06D471DB245F0C8E006C19E9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471DA245F0C8E006C19E9 /* HomeViewController.swift */; };
+		06D471DD2460018C006C19E9 /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471DC2460018C006C19E9 /* VideoViewController.swift */; };
+		06D471DF2460019A006C19E9 /* HuoshanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471DE2460019A006C19E9 /* HuoshanViewController.swift */; };
+		06D471E1246001A8006C19E9 /* MineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471E0246001A8006C19E9 /* MineViewController.swift */; };
+		06D471E324600CBC006C19E9 /* MyTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471E224600CBC006C19E9 /* MyTabBar.swift */; };
+		D878F01467FA2262B0176A81 /* Pods_NewsDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E9A0079CB653857F3B80699 /* Pods_NewsDemo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,7 +30,14 @@
 		06D471D0245F05CC006C19E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		06D471D6245F0964006C19E9 /* MyTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTabBarController.swift; sourceTree = "<group>"; };
 		06D471D8245F097B006C19E9 /* MyNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNavigationController.swift; sourceTree = "<group>"; };
-		06D471DA245F0C8E006C19E9 /* MyHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyHomeViewController.swift; sourceTree = "<group>"; };
+		06D471DA245F0C8E006C19E9 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		06D471DC2460018C006C19E9 /* VideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
+		06D471DE2460019A006C19E9 /* HuoshanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HuoshanViewController.swift; sourceTree = "<group>"; };
+		06D471E0246001A8006C19E9 /* MineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineViewController.swift; sourceTree = "<group>"; };
+		06D471E224600CBC006C19E9 /* MyTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTabBar.swift; sourceTree = "<group>"; };
+		2E9A0079CB653857F3B80699 /* Pods_NewsDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NewsDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		40B30D35A2B0BD4A01C3C51E /* Pods-NewsDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsDemo.release.xcconfig"; path = "Target Support Files/Pods-NewsDemo/Pods-NewsDemo.release.xcconfig"; sourceTree = "<group>"; };
+		A7B33AB49F14064F0A5C8B7C /* Pods-NewsDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsDemo.debug.xcconfig"; path = "Target Support Files/Pods-NewsDemo/Pods-NewsDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D878F01467FA2262B0176A81 /* Pods_NewsDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +57,8 @@
 			children = (
 				06D471C1245F05CB006C19E9 /* NewsDemo */,
 				06D471C0245F05CB006C19E9 /* Products */,
+				F03C9131B6384A41AC8BE446 /* Pods */,
+				BBAE2A60901BC665592FBBC5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,16 +73,93 @@
 		06D471C1245F05CB006C19E9 /* NewsDemo */ = {
 			isa = PBXGroup;
 			children = (
-				06D471C2245F05CB006C19E9 /* AppDelegate.swift */,
+				06D471E424601826006C19E9 /* Classes */,
 				06D471C8245F05CB006C19E9 /* Main.storyboard */,
 				06D471CB245F05CC006C19E9 /* Assets.xcassets */,
 				06D471CD245F05CC006C19E9 /* LaunchScreen.storyboard */,
 				06D471D0245F05CC006C19E9 /* Info.plist */,
-				06D471D6245F0964006C19E9 /* MyTabBarController.swift */,
-				06D471D8245F097B006C19E9 /* MyNavigationController.swift */,
-				06D471DA245F0C8E006C19E9 /* MyHomeViewController.swift */,
 			);
 			path = NewsDemo;
+			sourceTree = "<group>";
+		};
+		06D471E424601826006C19E9 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				06D471EA2460183F006C19E9 /* Mine */,
+				06D471E524601826006C19E9 /* Home */,
+				06D471E624601826006C19E9 /* Video */,
+				06D471E724601826006C19E9 /* Huoshan */,
+				06D471E824601826006C19E9 /* Others */,
+				06D471E924601826006C19E9 /* Main */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		06D471E524601826006C19E9 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				06D471DA245F0C8E006C19E9 /* HomeViewController.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		06D471E624601826006C19E9 /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				06D471DC2460018C006C19E9 /* VideoViewController.swift */,
+			);
+			path = Video;
+			sourceTree = "<group>";
+		};
+		06D471E724601826006C19E9 /* Huoshan */ = {
+			isa = PBXGroup;
+			children = (
+				06D471DE2460019A006C19E9 /* HuoshanViewController.swift */,
+			);
+			path = Huoshan;
+			sourceTree = "<group>";
+		};
+		06D471E824601826006C19E9 /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				06D471D6245F0964006C19E9 /* MyTabBarController.swift */,
+				06D471D8245F097B006C19E9 /* MyNavigationController.swift */,
+				06D471C2245F05CB006C19E9 /* AppDelegate.swift */,
+			);
+			path = Others;
+			sourceTree = "<group>";
+		};
+		06D471E924601826006C19E9 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				06D471E224600CBC006C19E9 /* MyTabBar.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		06D471EA2460183F006C19E9 /* Mine */ = {
+			isa = PBXGroup;
+			children = (
+				06D471E0246001A8006C19E9 /* MineViewController.swift */,
+			);
+			path = Mine;
+			sourceTree = "<group>";
+		};
+		BBAE2A60901BC665592FBBC5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2E9A0079CB653857F3B80699 /* Pods_NewsDemo.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F03C9131B6384A41AC8BE446 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A7B33AB49F14064F0A5C8B7C /* Pods-NewsDemo.debug.xcconfig */,
+				40B30D35A2B0BD4A01C3C51E /* Pods-NewsDemo.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -77,6 +169,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 06D471D3245F05CC006C19E9 /* Build configuration list for PBXNativeTarget "NewsDemo" */;
 			buildPhases = (
+				990B84C2A6EF86CFE4C8FF7B /* [CP] Check Pods Manifest.lock */,
 				06D471BB245F05CB006C19E9 /* Sources */,
 				06D471BC245F05CB006C19E9 /* Frameworks */,
 				06D471BD245F05CB006C19E9 /* Resources */,
@@ -136,6 +229,31 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		990B84C2A6EF86CFE4C8FF7B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-NewsDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		06D471BB245F05CB006C19E9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -144,7 +262,11 @@
 				06D471D9245F097B006C19E9 /* MyNavigationController.swift in Sources */,
 				06D471C3245F05CB006C19E9 /* AppDelegate.swift in Sources */,
 				06D471D7245F0964006C19E9 /* MyTabBarController.swift in Sources */,
-				06D471DB245F0C8E006C19E9 /* MyHomeViewController.swift in Sources */,
+				06D471E324600CBC006C19E9 /* MyTabBar.swift in Sources */,
+				06D471E1246001A8006C19E9 /* MineViewController.swift in Sources */,
+				06D471DD2460018C006C19E9 /* VideoViewController.swift in Sources */,
+				06D471DB245F0C8E006C19E9 /* HomeViewController.swift in Sources */,
+				06D471DF2460019A006C19E9 /* HuoshanViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,6 +408,7 @@
 		};
 		06D471D4245F05CC006C19E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A7B33AB49F14064F0A5C8B7C /* Pods-NewsDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -305,6 +428,7 @@
 		};
 		06D471D5245F05CC006C19E9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 40B30D35A2B0BD4A01C3C51E /* Pods-NewsDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

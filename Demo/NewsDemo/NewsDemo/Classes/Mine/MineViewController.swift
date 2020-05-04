@@ -1,14 +1,14 @@
 //
-//  MyHomeViewController.swift
+//  MineViewController.swift
 //  NewsDemo
 //
-//  Created by JustinLau on 2020/5/3.
+//  Created by JustinLau on 2020/5/4.
 //  Copyright © 2020 JustinLau. All rights reserved.
 //
 
 import UIKit
 
-class MyHomeViewController: UIViewController {
+class MineViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
