@@ -13,7 +13,6 @@ class MyTabBarController: UITabBarController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // 这里, 父类的属性, 也可以直接不用 self 就取用到了.
-        print(tabBar.subviews)
     }
 
     override func viewDidLoad() {
@@ -57,6 +56,7 @@ class MyTabBarController: UITabBarController {
         childVC.tabBarItem.title = title
         childVC.tabBarItem.image = UIImage(named: imageName)
         childVC.tabBarItem.selectedImage = UIImage(named: selectedImageName)
+        childVC.title = title
         
         let navVC = MyNavigationController(rootViewController: childVC)
         addChild(navVC)

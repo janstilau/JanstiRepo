@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0638787424601FDB00678BD9 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0638787324601FDB00678BD9 /* Const.swift */; };
+		063878772460208500678BD9 /* TableViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063878762460208500678BD9 /* TableViewExtension.swift */; };
+		063878792460209F00678BD9 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063878782460209F00678BD9 /* ColorExtension.swift */; };
+		0638787B246020FF00678BD9 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0638787A246020FF00678BD9 /* ViewExtension.swift */; };
 		06D471C3245F05CB006C19E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D471C2245F05CB006C19E9 /* AppDelegate.swift */; };
 		06D471CA245F05CB006C19E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06D471C8245F05CB006C19E9 /* Main.storyboard */; };
 		06D471CC245F05CC006C19E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 06D471CB245F05CC006C19E9 /* Assets.xcassets */; };
@@ -22,6 +26,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0638787324601FDB00678BD9 /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
+		063878762460208500678BD9 /* TableViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewExtension.swift; sourceTree = "<group>"; };
+		063878782460209F00678BD9 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		0638787A246020FF00678BD9 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		06D471BF245F05CB006C19E9 /* NewsDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06D471C2245F05CB006C19E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		06D471C9245F05CB006C19E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -52,6 +60,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		063878752460207700678BD9 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				063878762460208500678BD9 /* TableViewExtension.swift */,
+				063878782460209F00678BD9 /* ColorExtension.swift */,
+				0638787A246020FF00678BD9 /* ViewExtension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		06D471B6245F05CB006C19E9 = {
 			isa = PBXGroup;
 			children = (
@@ -122,9 +140,9 @@
 		06D471E824601826006C19E9 /* Others */ = {
 			isa = PBXGroup;
 			children = (
-				06D471D6245F0964006C19E9 /* MyTabBarController.swift */,
-				06D471D8245F097B006C19E9 /* MyNavigationController.swift */,
+				063878752460207700678BD9 /* Extension */,
 				06D471C2245F05CB006C19E9 /* AppDelegate.swift */,
+				0638787324601FDB00678BD9 /* Const.swift */,
 			);
 			path = Others;
 			sourceTree = "<group>";
@@ -132,6 +150,8 @@
 		06D471E924601826006C19E9 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				06D471D8245F097B006C19E9 /* MyNavigationController.swift */,
+				06D471D6245F0964006C19E9 /* MyTabBarController.swift */,
 				06D471E224600CBC006C19E9 /* MyTabBar.swift */,
 			);
 			path = Main;
@@ -265,8 +285,12 @@
 				06D471E324600CBC006C19E9 /* MyTabBar.swift in Sources */,
 				06D471E1246001A8006C19E9 /* MineViewController.swift in Sources */,
 				06D471DD2460018C006C19E9 /* VideoViewController.swift in Sources */,
+				0638787B246020FF00678BD9 /* ViewExtension.swift in Sources */,
 				06D471DB245F0C8E006C19E9 /* HomeViewController.swift in Sources */,
 				06D471DF2460019A006C19E9 /* HuoshanViewController.swift in Sources */,
+				0638787424601FDB00678BD9 /* Const.swift in Sources */,
+				063878792460209F00678BD9 /* ColorExtension.swift in Sources */,
+				063878772460208500678BD9 /* TableViewExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
