@@ -12,7 +12,6 @@ import SwiftyJSON
 
 class MineViewController: UIViewController {
     
-    
     var tableView: UITableView?
     var sections = [[MyCellModel]]()
     var concerns = [MyConcern]()
@@ -26,15 +25,7 @@ class MineViewController: UIViewController {
     }
     
     func setupViews() {
-        tableView = UITableView(frame: view.bounds, style: .plain)
-        tableView?.delegate = self
-        tableView?.dataSource = self
-        tableView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        tableView?.backgroundColor = UIColor.globalBGColor()
-        tableView?.tableFooterView = UIView()
-        tableView?.disableAdjustBehavior()
-        tableView?.disableEstimateHeight()
-        view.addSubview(tableView!)
+        setupTableView()
     }
 
 }
@@ -56,19 +47,17 @@ extension MineViewController {
                     return
                 }
                 if let data = json["data"].dictionary,
-                    let sections = data["sections"]?.array {
-                    var sectionArray = [AnyObject]()
-                    for item in sections {
-                        var rows = [MyCellModel]()
-                        for row in item.arrayObject! {
-                            let myCellModel = MyCellModel.deserialize(from: row as? NSDictionary)
-                            rows.append(myCellModel!)
-                        }
-                        sectionArray.append(rows as AnyObject)
-                    }
+                    let sections = data["sections"]?.arrayObject {
+                    let sectionArray = [AnyObject]()
+                    print("\(sections) + \(sectionArray)")
                 }
             }
         }
+        loadData()
+    }
+    
+    func loadData() {
+        
     }
 }
 
@@ -85,6 +74,21 @@ extension MineViewController : UITableViewDelegate, UITableViewDataSource{
     
     static let kSetionHeaderHeight: CGFloat = 20
     static let kSetionFooterHeight: CGFloat = 10
+    static let kCellId = String(describing: MineTableCell.self)
+    
+    func setupTableView() {
+        tableView = UITableView(frame: view.bounds, style: .plain)
+        tableView?.delegate = self
+        tableView?.dataSource = self
+        tableView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        tableView?.backgroundColor = UIColor.globalBGColor()
+        tableView?.tableFooterView = UIView()
+        tableView?.disableAdjustBehavior()
+        tableView?.disableEstimateHeight()
+        let nib = UINib(nibName: MineViewController.kCellId, bundle: nil)
+        tableView?.register(nib, forCellReuseIdentifier: MineViewController.kCellId)
+        view.addSubview(tableView!)
+    }
     
     // 在这个时候, tableView 就是参数里面的值, 如果想要引用到对象里面的 tableView, 就要用 self.tableView 使用, 在使用的时候, IDE 会自动添加 ?, 可选链调用
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -102,11 +106,11 @@ extension MineViewController : UITableViewDelegate, UITableViewDataSource{
     // Mark: Number
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return sections.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return sections[section].count
     }
     
     // Mark: View
@@ -114,7 +118,7 @@ extension MineViewController : UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let height = MineViewController.kSetionHeaderHeight
         let header = UIView(frame: CGRect(x: 0.0, y: 0.0, width: kScreenWidth, height: height))
-        header.backgroundColor = UIColor.randomColor()
+        header.backgroundColor = UIColor.groupTableViewBackground
         return header
     }
     
@@ -126,11 +130,13 @@ extension MineViewController : UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
-        cell.textLabel?.text = "Text"
+        let cell = tableView.dequeueReusableCell(withIdentifier: MineViewController.kCellId, for: indexPath)
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
     
 }
 

@@ -23,4 +23,26 @@ extension UIColor {
     static func globalBGColor() -> UIColor {
         return UIColor(r: 248, g: 249, b: 247)
     }
+    
+    static func globalBackgroundColor() -> UIColor {
+        return UIColor(r: 248, g: 249, b: 247)
+    }
+
+    /// 背景红色
+    static func globalRedColor() -> UIColor {
+        return UIColor(r: 230, g: 100, b: 95)
+    }
+
+    /// 背景灰色 132
+    static func grayColor132() -> UIColor {
+        return UIColor(r: 132, g: 132, b: 132)
+    }
+
+    /// 背景灰色 232
+    static func grayColor232() -> UIColor {
+        return UIColor(r: 232, g: 232, b: 232)
+    }
 }
+
+
+

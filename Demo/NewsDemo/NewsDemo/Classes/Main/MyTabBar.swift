@@ -46,7 +46,7 @@ class MyTabBar: UITabBar {
 
         // 这里, CGFloat 是一个 Struct, 而不是 Double 的别名. 不清楚为什么这样设计出来.
         let width = bounds.width
-        let height = bounds.height
+        let height:CGFloat = 49
         let btnWidth = width / 5.0
         let btnHeight = height
 
