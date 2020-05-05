@@ -22,8 +22,14 @@ class LBFMFindHeaderView: UIView {
     //        "http://fdfs.xmcdn.com/group48/M02/63/E3/wKgKnFtW37mR9fH7AAAcl17u2wA113.png",
     //        "http://fdfs.xmcdn.com/group46/M09/8A/98/wKgKlltVs3-gubjFAAAxXboXKFE462.png"
     //    ]
-    let dataArray = ["电子书城","全民朗读","大咖主播","活动","直播微课","听单","游戏中心","边听变看","商城","0元购"]
+    // 数据源.
+    let dataSource = ["电子书城","全民朗读","大咖主播","活动","直播微课","听单","游戏中心","边听变看","商城","0元购"]
     
+    /*
+     lazy 这种方式, 使得懒加载变为非常流行.
+     相比在构造方法里面, 做 setup 的代码的安排, 这种方式, 生成代码和属性的定义更加的紧密. 而且, 不会有初始化顺序错误的问题.
+     代码和属性放在一起, 也不会让类中代码, 占据大量的空间进行初始化的操作.
+     */
     private lazy var collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout.init()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -34,6 +40,7 @@ class LBFMFindHeaderView: UIView {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.backgroundColor = UIColor.white
+        // LBFMFindCell.self 返回一个 class
         collectionView.register(LBFMFindCell.self, forCellWithReuseIdentifier:"LBFMFindCell")
         return collectionView
     }()
@@ -43,7 +50,11 @@ class LBFMFindHeaderView: UIView {
         self.addSubview(self.collectionView)
         let footerView = UIView()
         footerView.backgroundColor = LBFMDownColor
+        footerView.addBorderLine()
         self.addSubview(footerView)
+        /*
+         Snapkit 的作者, 就是 Masonry 的作者, 所以使用的方式, 应该是一样的.
+         */
         footerView.snp.makeConstraints { (make) in
             make.left.right.bottom.equalToSuperview()
             make.height.equalTo(10)
@@ -58,12 +69,12 @@ class LBFMFindHeaderView: UIView {
 extension LBFMFindHeaderView: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dataArray.count
+        return dataSource.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:LBFMFindCell = collectionView.dequeueReusableCell(withReuseIdentifier: "LBFMFindCell", for: indexPath) as! LBFMFindCell
-        cell.dataString = self.dataArray[indexPath.row]
+        cell.dataString = self.dataSource[indexPath.row]
         return cell
     }
 }

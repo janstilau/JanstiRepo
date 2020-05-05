@@ -88,4 +88,5 @@ public class LTLayout: NSObject {
     
     /* 内部使用 - 外界不需要调用 */
     internal var isSinglePageView: Bool = false
+    
 }
