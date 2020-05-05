@@ -25,7 +25,7 @@ let LBFMDownColor = UIColor.init(red: 240/255.0, green: 241/255.0, blue: 244/255
 // iphone X
 let isIphoneX = LBFMScreenHeight == 812 ? true : false
 // LBFMNavBarHeight
-let LBFMNavBarHeight : CGFloat = isIphoneX ? 88 : 64
+let LBFMNavBarHeight: CGFloat = isIphoneX ? 88 : 64
 // LBFMTabBarHeight
-let LBFMTabBarHeight : CGFloat = isIphoneX ? 49 + 34 : 49
+let LBFMTabBarHeight: CGFloat = isIphoneX ? 49 + 34 : 49
 
