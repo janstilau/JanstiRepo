@@ -41,8 +41,19 @@
     return self;
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    [self loadSubviews];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"HTML" style:UIBarButtonItemStylePlain target:self action:@selector(export)];
+}
+
 - (void)loadSubviews
 {
+    /* 优雅的方式.*/
     self.textView = ({
         LMNTextView *textView = [[LMNTextView alloc] initWithTextStorage:self.draft.textStorage];
         textView.backgroundColor = [UIColor whiteColor];
@@ -71,34 +82,6 @@
     [self.view addSubview:self.toolBar];
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
-    
-    [self loadSubviews];
-    
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"HTML" style:UIBarButtonItemStylePlain target:self action:@selector(export)];
-}
-
-- (void)layoutTextView
-{
-    CGFloat toolbarHeight = 44.f;
-    self.textView.frame = self.view.bounds;
-    self.toolBar.frame = ({
-        CGRect rect = self.view.bounds;
-        rect.size.height = toolbarHeight;
-        rect.origin.y = CGRectGetHeight(self.view.bounds) - CGRectGetHeight(rect) - self.keyboardHeight;
-        rect;
-    });
-    UIEdgeInsets insets = self.textView.contentInset;
-    insets.bottom = self.keyboardHeight + 10.f;
-    if (self.toolBar.hidden == NO) {
-        insets.bottom += toolbarHeight;
-    }
-    self.textView.contentInset = insets;
-}
-
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
@@ -119,6 +102,24 @@
         rect.size.height = 44.f;
         rect;
     });
+}
+
+- (void)layoutTextView
+{
+    CGFloat toolbarHeight = 44.f;
+    self.textView.frame = self.view.bounds;
+    self.toolBar.frame = ({
+        CGRect rect = self.view.bounds;
+        rect.size.height = toolbarHeight;
+        rect.origin.y = CGRectGetHeight(self.view.bounds) - CGRectGetHeight(rect) - self.keyboardHeight;
+        rect;
+    });
+    UIEdgeInsets insets = self.textView.contentInset;
+    insets.bottom = self.keyboardHeight + 10.f;
+    if (self.toolBar.hidden == NO) {
+        insets.bottom += toolbarHeight;
+    }
+    self.textView.contentInset = insets;
 }
 
 - (void)viewWillAppear:(BOOL)animated
