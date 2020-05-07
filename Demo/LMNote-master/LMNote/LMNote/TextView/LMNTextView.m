@@ -89,9 +89,9 @@ if (!ignore) {  \
                                                  name:UIKeyboardWillShowNotification
                                                object:nil];
     [_textStorage addObserver:self
-                       forKeyPath:@"inProcessEditing"
-                          options:NSKeyValueObservingOptionNew
-                          context:NULL];
+                   forKeyPath:@"inProcessEditing"
+                      options:NSKeyValueObservingOptionNew
+                      context:NULL];
 }
 
 - (void)removeObservers
@@ -143,11 +143,11 @@ static CGFloat const kDefaultTextInset = 5.f;   // 默认文字会有5.f的缩�
     UIEdgeInsets textContainerInset = self.textContainerInset;
     NSTextContainer *textContainer = self.textContainer;
     LMNTextStorage *textStorage = _textStorage;
-
+    
     __block CGFloat yOffset = 0;
     __block NSRange range = NSMakeRange(0, 0);
     CGFloat limitWidth = textContainer.size.width - kDefaultTextInset * 2;
-
+    
     NSMutableArray *exclusionPaths = [NSMutableArray array];
     [text enumerateLinesUsingBlock:^(NSString *textLine, BOOL *stop) {
         range.length = textLine.length;
@@ -211,7 +211,7 @@ static CGFloat const kDefaultTextInset = 5.f;   // 默认文字会有5.f的缩�
             // 1.f 是为小数精度做微调。
             UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectInset(rect, 0, 1.f)];
             [exclusionPaths addObject:path];
-
+            
             if (!specialLine.leftView) {
                 [specialLine loadLeftView];
             }
@@ -249,7 +249,7 @@ static CGFloat const kDefaultTextInset = 5.f;   // 默认文字会有5.f的缩�
         yOffset += lineHeight;
         range.location = NSMaxRange(range) + 1;
     }];
-
+    
     // 派发到下次任务中，不然会 Crash
     dispatch_async(dispatch_get_main_queue(), ^{
         self.scrollEnabled = NO;
@@ -394,7 +394,7 @@ static CGFloat const kDefaultTextInset = 5.f;   // 默认文字会有5.f的缩�
     if (index >= self.text.length) {
         index = self.text.length;
     }
-
+    
     CGFloat width = CGRectGetWidth(self.frame);
     UIEdgeInsets textContainerInset = self.textContainerInset;
     width -= (textContainerInset.left + textContainerInset.right + kDefaultTextInset * 2);
@@ -410,7 +410,7 @@ static CGFloat const kDefaultTextInset = 5.f;   // 默认文字会有5.f的缩�
     attachment.image = [UIImage new];
     attachment.bounds = bounds;
     NSAttributedString *imgStr = [NSAttributedString attributedStringWithAttachment:attachment];
-
+    
     LMNLine *lineAtIndex = [_textStorage lineAtLocation:index];
     NSMutableAttributedString *replacementString = [[NSMutableAttributedString alloc] init];
     [replacementString appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n" attributes:lineAtIndex.attributes]];
@@ -430,7 +430,7 @@ static CGFloat const kDefaultTextInset = 5.f;   // 默认文字会有5.f的缩�
     
     macro_commitUpdating({
         [_textStorage replaceCharactersInRange:NSMakeRange(insertLocation, 0) withAttributedString:replacementString];
-
+        
         LMNLine *line = [_textStorage lineAtLocation:index];
         if (!inCurrentLine) {
             line = line.next;
