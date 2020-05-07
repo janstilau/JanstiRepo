@@ -8,9 +8,22 @@
 
 import UIKit
 
+/*
+ 这个 cell, 就是常见的 cell. 不过都是用代码生成的.
+ 使用的方法, 和平时没有任何的区别. 不过就是 Swift 版本的, Swift 的写法.
+ */
+
 class LBFMFindAttentionCell: UITableViewCell {
+    
     private var eventInfos:LBFMEventInfosModel?
     
+    /*
+     所有的属性, 都是懒加载进行的初始化的工作. 看来, 这是 Swift 的主流写法.
+     猜想, 这种写法是因为, Swift 里面, 所有的成员变量, 如果不是 nil 都是要进行初始化的. 而 init 方法里面, 规定了必须要把初始化完成之后才能使用该对象.
+     如果把所有的初始化放到 INIT 里面, 那么要有新的 view 的时候, init 必须要进行修改. 还不能调用类中的方法.
+     这种懒加载的方式, 既避免了 Swift 的 init 二段式的限制, 又能保证 Swfit 里面, 变量已经初始化的要求了.
+     还让各个不同 View 的初始化分离清晰.
+     */
     // 头像
     lazy var picView:UIImageView = {
         let imageView = UIImageView()
@@ -163,9 +176,16 @@ class LBFMFindAttentionCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+    
+    /*
+     之前的 set 方法, 第一句总是 _Model = model.
+     didSet 的方式, 使得代码变得更加的统一了.
+     */
     var eventInfosModel:LBFMEventInfosModel? {
         didSet {
             guard let model = eventInfosModel else {return}
+            
+            // 下面的这段代码, 就是最简单的, view 的显示更新操作. 还是应该放到一个单独的函数里面, 这样以后cell自我更新的时候, 直接调用就可以了.
             self.picView.kf.setImage(with: URL(string: (model.authorInfo?.avatarUrl!)!))
             self.nameLabel.text = model.authorInfo?.nickname
             let zanNum:Int = (model.statInfo?.praiseCount)!

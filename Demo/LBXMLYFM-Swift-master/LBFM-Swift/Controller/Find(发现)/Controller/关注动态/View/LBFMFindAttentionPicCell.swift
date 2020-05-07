@@ -9,17 +9,18 @@
 import UIKit
 
 class LBFMFindAttentionPicCell: UICollectionViewCell {
+    
     private lazy var imageView : UIImageView = {
         let imageView = UIImageView()
         return imageView
     }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        // 布局
         setupLayout()
     }
-    // 布局
+    
     func setupLayout() {
         self.addSubview(self.imageView)
         self.imageView.layer.masksToBounds = true
@@ -35,9 +36,10 @@ class LBFMFindAttentionPicCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // guard 这个写法, 能用就多用.
     var picModel :LBFMFindAPicInfos? {
         didSet {
-            guard let model = picModel else {return}
+                        guard let model = picModel else {return}
             self.imageView.kf.setImage(with: URL(string:model.originUrl! ))
         }
     }

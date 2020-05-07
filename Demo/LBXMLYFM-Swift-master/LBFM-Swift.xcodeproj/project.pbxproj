@@ -66,7 +66,7 @@
 		3A9CF5C8222774AF0093B36A /* FindAttention.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A9CF5C5222774AF0093B36A /* FindAttention.json */; };
 		3A9CF5C9222774AF0093B36A /* FindDud.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A9CF5C6222774AF0093B36A /* FindDud.json */; };
 		3A9CF5CA222774AF0093B36A /* FindRecommend.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A9CF5C7222774AF0093B36A /* FindRecommend.json */; };
-		3A9CF5CE222774F70093B36A /* registerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CF5CD222774F70093B36A /* registerCell.swift */; };
+		3A9CF5CE222774F70093B36A /* LBFMFindAttentionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CF5CD222774F70093B36A /* LBFMFindAttentionController.swift */; };
 		3A9CF5D0222775070093B36A /* LBFMFindRecommendController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CF5CF222775070093B36A /* LBFMFindRecommendController.swift */; };
 		3A9CF5D22227751D0093B36A /* LBFMFindDudController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CF5D12227751D0093B36A /* LBFMFindDudController.swift */; };
 		3A9CF5D42227761E0093B36A /* LBFMFindHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CF5D32227761E0093B36A /* LBFMFindHeaderView.swift */; };
@@ -246,7 +246,7 @@
 		3A9CF5C5222774AF0093B36A /* FindAttention.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FindAttention.json; sourceTree = "<group>"; };
 		3A9CF5C6222774AF0093B36A /* FindDud.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FindDud.json; sourceTree = "<group>"; };
 		3A9CF5C7222774AF0093B36A /* FindRecommend.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FindRecommend.json; sourceTree = "<group>"; };
-		3A9CF5CD222774F70093B36A /* registerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = registerCell.swift; sourceTree = "<group>"; };
+		3A9CF5CD222774F70093B36A /* LBFMFindAttentionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBFMFindAttentionController.swift; sourceTree = "<group>"; };
 		3A9CF5CF222775070093B36A /* LBFMFindRecommendController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBFMFindRecommendController.swift; sourceTree = "<group>"; };
 		3A9CF5D12227751D0093B36A /* LBFMFindDudController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBFMFindDudController.swift; sourceTree = "<group>"; };
 		3A9CF5D32227761E0093B36A /* LBFMFindHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBFMFindHeaderView.swift; sourceTree = "<group>"; };
@@ -922,7 +922,7 @@
 			children = (
 				3A9CF5E022277E120093B36A /* View */,
 				3A9CF5DD222779F00093B36A /* ViewModel */,
-				3A9CF5CD222774F70093B36A /* registerCell.swift */,
+				3A9CF5CD222774F70093B36A /* LBFMFindAttentionController.swift */,
 			);
 			path = "关注动态";
 			sourceTree = "<group>";
@@ -1869,7 +1869,7 @@
 				3AD3A9AF222A399600367138 /* LBFMFindRecommendPicCell.swift in Sources */,
 				3ACA6E6C2223C97700202E98 /* LBFMHomeLiveViewModel.swift in Sources */,
 				3AEAA628221106E400B46FA7 /* LBFMRecommendAPI.swift in Sources */,
-				3A9CF5CE222774F70093B36A /* registerCell.swift in Sources */,
+				3A9CF5CE222774F70093B36A /* LBFMFindAttentionController.swift in Sources */,
 				3A9CF55922261E1B0093B36A /* LBFMHomeBroadcastAPI.swift in Sources */,
 				3A95333F2203F1DD00E4DC70 /* LBFMListenController.swift in Sources */,
 				3ADC9B6F22321B6700CAF62B /* LBFMPlayCommentCell.swift in Sources */,
