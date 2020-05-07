@@ -1917,6 +1917,7 @@ typedef NS_ENUM(NSUInteger, YYTextMoveDirection) {
     _attributedText = [NSAttributedString new];
     
     // UITextInputTraits
+    // 这些东西都没有在实际的代码里面起作用.
     _autocapitalizationType = UITextAutocapitalizationTypeSentences;
     _autocorrectionType = UITextAutocorrectionTypeDefault;
     _spellCheckingType = UITextSpellCheckingTypeDefault;

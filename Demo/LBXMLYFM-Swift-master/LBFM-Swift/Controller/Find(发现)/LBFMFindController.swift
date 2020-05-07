@@ -32,9 +32,19 @@ class LBFMFindController: UIViewController {
     
     // MARK:- ScrollRelated
     
+    /*
+     这个类, 很像是 WMPageViewController . 应该做的事情也是类似的.
+     */
     private lazy var advancedManager: LTAdvancedManager = {
         let statusBarH = UIApplication.shared.statusBarFrame.size.height
-        let advancedManager = LTAdvancedManager(frame: CGRect(x: 0, y: LBFMNavBarHeight, width: LBFMScreenWidth, height: LBFMScreenHeight - LBFMNavBarHeight), viewControllers: viewControllers, titles: titles, currentViewController: self, layout: layout, headerViewHandle: {[weak self] in
+        let advancedManager = LTAdvancedManager(
+            frame: CGRect(x: 0, y: LBFMNavBarHeight, width: LBFMScreenWidth, height: LBFMScreenHeight - LBFMNavBarHeight),
+            viewControllers: viewControllers,
+            titles: titles,
+            currentViewController: self,
+            layout: layout,
+            headerViewHandle: {
+                [weak self] in
             guard let strongSelf = self else { return UIView() }
             let headerView = strongSelf.headerView
             return headerView
@@ -54,7 +64,7 @@ class LBFMFindController: UIViewController {
         let layout = LTLayout()
         layout.isAverage = true
         layout.sliderWidth = 80
-        layout.titleViewBgColor = UIColor.white
+        layout.titleViewBgColor = UIColor.green
         layout.titleColor = UIColor(r: 178, g: 178, b: 178)
         layout.titleSelectColor = UIColor(r: 16, g: 16, b: 16)
         layout.bottomLineColor = UIColor.red

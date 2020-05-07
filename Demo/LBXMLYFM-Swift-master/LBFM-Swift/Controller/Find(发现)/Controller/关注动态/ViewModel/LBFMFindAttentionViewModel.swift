@@ -12,7 +12,6 @@ import HandyJSON
 
 class LBFMFindAttentionViewModel: NSObject {
     var eventInfos:[LBFMEventInfosModel]?
-    // - 数据源更新
     typealias LBFMAddDataBlock = () ->Void
     var updataBlock:LBFMAddDataBlock?
 }
@@ -20,11 +19,9 @@ class LBFMFindAttentionViewModel: NSObject {
 // - 请求数据
 extension LBFMFindAttentionViewModel {
     func refreshDataSource() {
-        // 1. 获取json文件路径
+        // 这里的获取路径的方式, 和 OC 没有任何的区别.
         let path = Bundle.main.path(forResource: "FindAttention", ofType: "json")
-        // 2. 获取json文件里面的内容,NSData格式
         let jsonData=NSData(contentsOfFile: path!)
-        // 3. 解析json内容
         let json = JSON(jsonData!)
         if let mappedObject = JSONDeserializer<LBFMEventInfosModel>.deserializeModelArrayFrom(json: json["data"]["eventInfos"].description) {
             self.eventInfos = mappedObject as? [LBFMEventInfosModel]

@@ -23,7 +23,7 @@
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
     
-    NSMutableAttributedString *text = [NSMutableAttributedString new];
+    NSMutableAttributedString *result = [NSMutableAttributedString new];
     NSArray *tags = @[@"◉red", @"◉orange", @"◉yellow", @"◉green", @"◉blue", @"◉purple", @"◉gray"];
     NSArray *tagStrokeColors = @[
         UIColorHex(fa3f39),
@@ -56,6 +56,7 @@
         tagText.color = [UIColor whiteColor];
         [tagText setTextBinding:[YYTextBinding bindingWithDeleteConfirm:NO] range:tagText.rangeOfAll];
         
+        // 所谓的 tag, 其实就是一个 Border. 只不过, 有着 YYTextBinding 的约束, 使得在 TextView 里面作为一个整体而存在.
         YYTextBorder *border = [YYTextBorder new];
         border.strokeWidth = 1.5;
         border.strokeColor = tagStrokeColor;
@@ -64,16 +65,17 @@
         border.insets = UIEdgeInsetsMake(-2, -5.5, -2, -8);
         [tagText setTextBackgroundBorder:border range:[tagText.string rangeOfString:tag]];
         
-        [text appendAttributedString:tagText];
+        [result appendAttributedString:tagText];
     }
-    text.lineSpacing = 10;
-    text.lineBreakMode = NSLineBreakByWordWrapping;
+    result.lineSpacing = 10;
+    result.lineBreakMode = NSLineBreakByWordWrapping;
     
-    [text appendString:@"\n"];
-    [text appendAttributedString:text]; // repeat for test
+    [result appendString:@"\n"];
+    [result appendAttributedString:result]; // repeat for test
     
     YYTextView *textView = [YYTextView new];
-    textView.attributedText = text;
+    textView.autocapitalizationType = UITextAutocapitalizationTypeWords;
+    textView.attributedText = result;
     textView.size = self.view.size;
     textView.textContainerInset = UIEdgeInsetsMake(10 + (kiOS7Later ? 64 : 0), 10, 10, 10);
     textView.allowsCopyAttributedString = YES;
@@ -85,7 +87,7 @@
         textView.height -= 64;
     }
     textView.scrollIndicatorInsets = textView.contentInset;
-    textView.selectedRange = NSMakeRange(text.length, 0);
+    textView.selectedRange = NSMakeRange(result.length, 0);
     [self.view addSubview:textView];
     self.textView = textView;
     
