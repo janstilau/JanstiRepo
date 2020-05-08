@@ -14,9 +14,11 @@ class LBFMFindRecommendPicCell: UICollectionViewCell {
         let imageView = UIImageView()
         return imageView
     }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(self.imageView)
+        // 切圆角的方式, 和 OC 没有任何的区别.
         self.imageView.layer.masksToBounds = true
         self.imageView.layer.cornerRadius = 5
         self.imageView.clipsToBounds = true

@@ -610,7 +610,7 @@
 				066F70882461A411008CA7F3 /* Extension */,
 				3A9533442203F23300E4DC70 /* Main */,
 				3A9533392203F19400E4DC70 /* 喜马拉雅 */,
-				3A9533352203F19300E4DC70 /* Find(发现) */,
+				3A9533352203F19300E4DC70 /* Find(发现)Done */,
 				3A9533342203F19300E4DC70 /* Home(首页) */,
 				3A9533362203F19400E4DC70 /* Listen(我听) */,
 				3A9533382203F19400E4DC70 /* Mine(我的) */,
@@ -643,7 +643,7 @@
 			path = "Home(首页)";
 			sourceTree = "<group>";
 		};
-		3A9533352203F19300E4DC70 /* Find(发现) */ = {
+		3A9533352203F19300E4DC70 /* Find(发现)Done */ = {
 			isa = PBXGroup;
 			children = (
 				3A95333C2203F1D000E4DC70 /* LBFMFindController.swift */,
@@ -653,7 +653,7 @@
 				3A9CF56E222638250093B36A /* View */,
 				3A9CF570222638250093B36A /* ViewModel */,
 			);
-			path = "Find(发现)";
+			path = "Find(发现)Done";
 			sourceTree = "<group>";
 		};
 		3A9533362203F19400E4DC70 /* Listen(我听) */ = {
@@ -901,33 +901,33 @@
 		3A9CF572222638AE0093B36A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				3A9CF5CB222774E70093B36A /* 关注动态 */,
-				3A9CF5CC222774E70093B36A /* 推荐动态 */,
-				3A9CF575222638AE0093B36A /* 趣配音 */,
+				3A9CF5CB222774E70093B36A /* 关注动态Done */,
+				3A9CF5CC222774E70093B36A /* 推荐动态Done */,
+				3A9CF575222638AE0093B36A /* 趣配音Done */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
 		};
-		3A9CF575222638AE0093B36A /* 趣配音 */ = {
+		3A9CF575222638AE0093B36A /* 趣配音Done */ = {
 			isa = PBXGroup;
 			children = (
 				3A9CF5D12227751D0093B36A /* LBFMFindDudController.swift */,
 				3A9CF5DB222779640093B36A /* LBFMFindDudCell.swift */,
 			);
-			path = "趣配音";
+			path = "趣配音Done";
 			sourceTree = "<group>";
 		};
-		3A9CF5CB222774E70093B36A /* 关注动态 */ = {
+		3A9CF5CB222774E70093B36A /* 关注动态Done */ = {
 			isa = PBXGroup;
 			children = (
 				3A9CF5E022277E120093B36A /* View */,
 				3A9CF5DD222779F00093B36A /* ViewModel */,
 				3A9CF5CD222774F70093B36A /* LBFMFindAttentionController.swift */,
 			);
-			path = "关注动态";
+			path = "关注动态Done";
 			sourceTree = "<group>";
 		};
-		3A9CF5CC222774E70093B36A /* 推荐动态 */ = {
+		3A9CF5CC222774E70093B36A /* 推荐动态Done */ = {
 			isa = PBXGroup;
 			children = (
 				3A9CF5CF222775070093B36A /* LBFMFindRecommendController.swift */,
@@ -935,7 +935,7 @@
 				3AD3A9A9222A2EF800367138 /* View */,
 				3AD3A9A7222A2EF700367138 /* ViewModel */,
 			);
-			path = "推荐动态";
+			path = "推荐动态Done";
 			sourceTree = "<group>";
 		};
 		3A9CF5DD222779F00093B36A /* ViewModel */ = {

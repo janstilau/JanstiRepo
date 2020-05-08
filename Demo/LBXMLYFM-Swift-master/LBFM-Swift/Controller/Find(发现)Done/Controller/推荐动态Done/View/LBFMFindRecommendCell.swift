@@ -9,6 +9,7 @@
 import UIKit
 
 class LBFMFindRecommendCell: UITableViewCell {
+    
     private var findRecommendSteam:LBFMFindRStreamList?
     
     // 头像
@@ -16,6 +17,7 @@ class LBFMFindRecommendCell: UITableViewCell {
         let imageView = UIImageView()
         return imageView
     }()
+    
     //昵称
     lazy var nameLabel : UILabel = {
         let label = UILabel()
@@ -29,6 +31,7 @@ class LBFMFindRecommendCell: UITableViewCell {
         label.numberOfLines = 0
         return label
     }()
+    
     // 日期
     lazy var dateLabel : UILabel = {
         let label = UILabel()
@@ -36,6 +39,7 @@ class LBFMFindRecommendCell: UITableViewCell {
         label.textColor = UIColor.lightGray
         return label
     }()
+    
     // 赞
     lazy var zanLabel : UILabel = {
         let label = UILabel()
@@ -43,10 +47,12 @@ class LBFMFindRecommendCell: UITableViewCell {
         label.textColor = UIColor.lightGray
         return label
     }()
+    
     lazy var zanImageView:UIImageView = {
         let imageView = UIImageView()
         return imageView
     }()
+    
     // 评论
     lazy var commnetLabel : UILabel = {
         let label = UILabel()
@@ -69,7 +75,6 @@ class LBFMFindRecommendCell: UITableViewCell {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(LBFMFindRecommendPicCell.self, forCellWithReuseIdentifier:"LBFMFindRecommendPicCell")
-        
         return collectionView
     }()
     
@@ -79,6 +84,11 @@ class LBFMFindRecommendCell: UITableViewCell {
         setUpLayout()
     }
     
+    /*
+     生成 View 的代码, 可以分发到各个 View 的属性中进行懒加载. 但是布局的方法还是要在一个统一的地方.
+     懒加载有好处, 就是使用的时候, 可以完全不考虑该变量是否已经生成过了.
+     OC 里面的懒加载, 仅仅是一个语法糖, 还是需要程序员自己的逻辑控制, 是否已经生成了. Swift 的 lazy 机制, 使得现在的代码, 完全可以不考虑生成的过程了. 直接使用.
+     */
     func setUpLayout(){
         self.addSubview(self.picView)
         self.picView.image = UIImage(named: "news.png")
@@ -197,6 +207,11 @@ class LBFMFindRecommendCell: UITableViewCell {
             self.collectionView.reloadData()
         }
     }
+    
+    /*
+     下面的代码感觉是重复代码. 之前的关注动态里面也见到过.
+     */
+    
     // 计算文字的高度
     func height(for commentModel: LBFMFindRStreamList?) -> CGFloat {
         var height: CGFloat = 30

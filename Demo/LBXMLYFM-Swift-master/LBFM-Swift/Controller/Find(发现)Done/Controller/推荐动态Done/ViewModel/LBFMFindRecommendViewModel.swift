@@ -10,6 +10,7 @@ import UIKit
 import SwiftyJSON
 import HandyJSON
 
+
 class LBFMFindRecommendViewModel: NSObject {
     var findRecommendModel:LBFMFindRecommendModel?
     var streamList:[LBFMFindRStreamList]?

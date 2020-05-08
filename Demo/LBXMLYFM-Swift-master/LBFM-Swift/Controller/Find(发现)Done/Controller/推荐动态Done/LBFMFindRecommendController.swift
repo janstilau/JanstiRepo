@@ -9,9 +9,15 @@
 import UIKit
 import LTScrollView
 
-class LBFMFindRecommendController: UIViewController ,LTTableViewProtocal{
+/*
+ 这个作者的编码习惯感觉不是太好.
+ 这一块的业务基本和关注动态的设计没有什么不同的.
+ */
+
+class LBFMFindRecommendController: UIViewController, LTTableViewProtocal{
     
     private let LBFMFindRecommendCellID = "LBFMFindRecommendCell"
+    
     private lazy var tableView: UITableView = {
         let tableView = tableViewConfig(CGRect(x: 0, y: 0, width:LBFMScreenWidth, height: LBFMScreenHeight - LBFMNavBarHeight - LBFMTabBarHeight), self, self, nil)
         tableView.register(LBFMFindRecommendCell.self, forCellReuseIdentifier: LBFMFindRecommendCellID)
