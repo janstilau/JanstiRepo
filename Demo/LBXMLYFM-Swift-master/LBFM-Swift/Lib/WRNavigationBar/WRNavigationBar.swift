@@ -595,8 +595,6 @@ extension UIViewController: WRAwakeProtocol
             objc_setAssociatedObject(self, &AssociatedKeys.navBarBackgroundAlpha, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
             if customNavBar.isKind(of: UINavigationBar.self) {
-//                let navBar = customNavBar as! UINavigationBar
-//                navBar.wr_setBackgroundAlpha(alpha: newValue)
             }
             else {
                 if canUpdateNavBarBarTintColorOrBackgroundAlpha == true {

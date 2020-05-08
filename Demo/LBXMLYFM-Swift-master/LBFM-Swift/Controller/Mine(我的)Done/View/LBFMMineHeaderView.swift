@@ -7,17 +7,25 @@
 //
 
 import UIKit
-/// 添加按钮点击代理方法
+
+/*
+ Delegate shopBtnClick 的方法命名, 感觉不符合 OC 的标准, 是不是原来 OC 的命名标准在 Swift 里面不管用了.
+ */
 protocol LBFMMineHeaderViewDelegate:NSObjectProtocol {
     func shopBtnClick(tag:Int)
 }
 
-// 我的页面顶部headerview
 class LBFMMineHeaderView: UIView {
+    /*
+     Delegate 的写法, 和 OC 没有太大的不同.
+     */
     weak var delegate : LBFMMineHeaderViewDelegate?
-    /// 上下浮动的vip标签view
+
     private lazy var animationView:LBFMVipAnimationView = {
         let view = LBFMVipAnimationView()
+        view.layer.masksToBounds = true
+        view.layer.cornerRadius = 10
+        view.addBorderLine()
         return view
     }()
     
@@ -60,6 +68,10 @@ class LBFMMineHeaderView: UIView {
         label.textColor = UIColor.gray
         label.font = UIFont.systemFont(ofSize: 15)
         label.textAlignment = NSTextAlignment.center
+        label.layer.borderColor = UIColor.gray.cgColor
+        label.layer.borderWidth = 0.5
+        label.layer.masksToBounds = true
+        label.layer.cornerRadius = 13
         return label
     }()
     
@@ -78,26 +90,26 @@ class LBFMMineHeaderView: UIView {
         return view
     }()
     
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpLayout()
         setUpShopView()
+        for aView in self.subviews {
+            aView.addBorderLine()
+        }
         self.backgroundColor = UIColor.white
     }
     
     func setUpLayout(){
         
         self.addSubview(self.animationView)
-        self.animationView.layer.masksToBounds = true
-        self.animationView.layer.cornerRadius = 10
         self.animationView.snp.makeConstraints { (make) in
             make.width.equalTo(120)
             make.height.equalTo(80)
             make.top.equalTo(120)
             make.right.equalToSuperview().offset(-20)
         }
-        /// vip动画view的旋转角度
+        // 在这里, 进行了旋转的工作.
         self.animationView.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 12)
         
         self.addSubview(self.imageView)
@@ -130,10 +142,14 @@ class LBFMMineHeaderView: UIView {
         }
         
         self.addSubview(self.clearLabel)
-        self.clearLabel.layer.borderColor = UIColor.gray.cgColor
-        self.clearLabel.layer.borderWidth = 0.5
-        self.clearLabel.layer.masksToBounds = true
-        self.clearLabel.layer.cornerRadius = 13
+        /*
+         这里的代码有问题, 这些值的配置, 为什么不在懒加载里面写到. setUpLayout 就应该做布局相关的工作.
+         转移到 clearLabel 的懒加载中.
+         */
+//        self.clearLabel.layer.borderColor = UIColor.gray.cgColor
+//        self.clearLabel.layer.borderWidth = 0.5
+//        self.clearLabel.layer.masksToBounds = true
+//        self.clearLabel.layer.cornerRadius = 13
         self.clearLabel.snp.makeConstraints { (make) in
             make.left.equalTo(self.imageView)
             make.bottom.equalToSuperview().offset(-110)
@@ -155,7 +171,6 @@ class LBFMMineHeaderView: UIView {
         
     }
     
-    // 我的页面顶部视图的购买等按钮
     func setUpShopView(){
         let margin:CGFloat = LBFMScreenWidth / 10
         let titleArray = ["已购","优惠券","喜点","直播喜钻","我的钱包"]
@@ -169,6 +184,8 @@ class LBFMMineHeaderView: UIView {
                 button.setTitleColor(UIColor.black, for: UIControl.State.normal)
                 button.titleLabel?.font = UIFont.systemFont(ofSize: 25)
             }
+            button.tag = index
+            button.addTarget(self, action: #selector(gridBtnClick(button:)), for: UIControl.Event.touchUpInside)
             self.shopView.addSubview(button)
             
             let titleLabel = UILabel()
@@ -182,12 +199,18 @@ class LBFMMineHeaderView: UIView {
                 make.width.equalTo(margin+30)
                 make.top.equalTo(button.snp.bottom).offset(10)
             })
-            button.tag = index
-            button.addTarget(self, action: #selector(gridBtnClick(button:)), for: UIControl.Event.touchUpInside)
         }
     }
     
-    /// 开始动画
+    /*
+     相比, OC 里面 delegate 非空判断之后, 方法实现判断. 这种方法显得更加的简洁.
+     */
+    @objc func gridBtnClick(button:UIButton){
+           delegate?.shopBtnClick(tag: button.tag)
+    }
+    
+    // 这里, 动画的起始和结束, 是受到外界控制的. 在 VC 里面, 根据 ViewDidAppear 和 DidDisApprear 进行的调用.
+    // 开始动画, 就是用的最简单的 UIView 动画的封装.
     func setAnimationViewAnimation(){
         let yorig:CGFloat = 100.0 + 64
         let opts: UIView.AnimationOptions = [.autoreverse , .repeat]
@@ -200,10 +223,6 @@ class LBFMMineHeaderView: UIView {
     // 停止动画
     func stopAnimationViewAnimation(){
         self.animationView.layer.removeAllAnimations()
-    }
-    // - 购买等按钮点击事件
-    @objc func gridBtnClick(button:UIButton){
-        delegate?.shopBtnClick(tag: button.tag)
     }
     
     required init?(coder aDecoder: NSCoder) {

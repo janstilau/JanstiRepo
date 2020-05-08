@@ -7,7 +7,11 @@
 //
 
 import UIKit
-/// 上下浮动vip领取view
+
+/*
+ 一个基本的 View, 构建 View 然后进行约束控制.
+ */
+
 class LBFMVipAnimationView: UIView {
     // 图片
     private lazy var imageView:UIImageView = {
@@ -78,8 +82,6 @@ class LBFMVipAnimationView: UIView {
             make.width.height.equalTo(20)
             make.top.equalTo(20)
         }
-        
-        
     }
     
     required init?(coder aDecoder: NSCoder) {

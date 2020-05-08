@@ -8,6 +8,8 @@
 
 import UIKit
 
+// 设置页面, 用的是 TableView 原始的 cell.
+
 class LBFMMineSetController: UIViewController {
     private lazy var dataSource: Array = {
         return [[["title": "智能硬件"]],

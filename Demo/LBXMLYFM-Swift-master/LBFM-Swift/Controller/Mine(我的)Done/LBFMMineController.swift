@@ -7,12 +7,21 @@
 //
 
 import UIKit
+
+/*
+ 我的 部分的代码, 没有什么太亮眼的, 仅仅是作为 Swift 实现了界面的搭建.
+ */
+
 let kNavBarBottom = WRNavigationBar.navBarBottom()
 
 class LBFMMineController: UIViewController {
     private let LBFMMineMakeCellID = "LBFMMineMakeCell"
     private let LBFMMineShopCellID = "LBFMMineShopCell"
     
+    // 这里, 感觉 Array [] 表示, 和 Dict 也用 [] 表示, 有点混乱, 不如之前分开的号.
+    /*
+        这里也可以用 let 常量定义的, 但是作者还是使用了懒加载.
+     */
     private lazy var dataSource: Array = {
         return [[["icon":"钱数", "title": "分享赚钱"],
                  ["icon":"沙漏", "title": "免流量服务"]],
@@ -22,12 +31,16 @@ class LBFMMineController: UIViewController {
     }()
     
     
-    // 懒加载顶部头视图
+    /*
+      LBFMMineHeaderView 封装了细节. 使得 VC 里面的代码比较简洁.
+     */
     private lazy var headerView:LBFMMineHeaderView = {
         let view = LBFMMineHeaderView.init(frame: CGRect(x:0, y:0, width:LBFMScreenWidth, height: 300))
         view.delegate = self
+        view.addBorderLine()
         return view
     }()
+    
     // 懒加载TableView
     private lazy var tableView : UITableView = {
         let tableView = UITableView.init(frame:CGRect(x:0, y:0, width:LBFMScreenWidth, height:LBFMScreenHeight), style: UITableView.Style.plain)
@@ -52,7 +65,6 @@ class LBFMMineController: UIViewController {
         self.headerView.setAnimationViewAnimation()
     }
     
-    // - 导航栏左边按钮
     private lazy var leftBarButton:UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         button.frame = CGRect(x:0, y:0, width:30, height: 30)
@@ -60,7 +72,7 @@ class LBFMMineController: UIViewController {
         button.addTarget(self, action: #selector(leftBarButtonClick), for: UIControl.Event.touchUpInside)
         return button
     }()
-    // - 导航栏右边按钮
+    
     private lazy var rightBarButton:UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         button.frame = CGRect(x:0, y:0, width:30, height: 30)
@@ -68,6 +80,14 @@ class LBFMMineController: UIViewController {
         button.addTarget(self, action: #selector(rightBarButtonClick), for: UIControl.Event.touchUpInside)
         return button
     }()
+    
+    @objc func leftBarButtonClick() {
+    }
+    
+    @objc func rightBarButtonClick() {
+        let setVC = LBFMMineSetController()
+        self.navigationController?.pushViewController(setVC, animated: true)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,20 +98,8 @@ class LBFMMineController: UIViewController {
         self.navigationItem.title = "我的"
         self.view.backgroundColor = UIColor.white
         self.view.addSubview(self.tableView)
-        
-        // 导航栏左右item
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: leftBarButton)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(customView: rightBarButton)
-    }
-    
-    // - 导航栏左边消息点击事件
-    @objc func leftBarButtonClick() {
-        
-    }
-    // - 导航栏右边设置点击事件
-    @objc func rightBarButtonClick() {
-        let setVC = LBFMMineSetController()
-        self.navigationController?.pushViewController(setVC, animated: true)
     }
 }
 
@@ -118,6 +126,9 @@ extension LBFMMineController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
+            /*
+             这里, 一个专门的 Sesion 展示本应该作为 TableView SesionHeader 的事情.
+             */
             let cell:LBFMMineMakeCell = tableView.dequeueReusableCell(withIdentifier: LBFMMineMakeCellID, for: indexPath) as! LBFMMineMakeCell
             cell.selectionStyle = .none
             return cell
@@ -164,8 +175,7 @@ extension LBFMMineController : UITableViewDelegate, UITableViewDataSource {
     // 控制向上滚动显示导航栏标题和左右按钮
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
-        if (offsetY > 0)
-        {
+        if (offsetY > 0) {
             let alpha = offsetY / CGFloat(kNavBarBottom)
             navBarBackgroundAlpha = alpha
         }else{
@@ -174,10 +184,13 @@ extension LBFMMineController : UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-/// 首页视图左消息，右设置 按钮点击代理方法
+/*
+ 相比较, OC 里面定义一个分类, 比较正式, 还需要添加专门的名称.
+ Swift 里面, 随意的增加 Extension. 仅仅作为方法的分割使用.
+ */
 extension LBFMMineController : LBFMMineHeaderViewDelegate {
     func shopBtnClick(tag:Int) {
-        
+        print("Top btn clicked: \(tag)")
     }
 }
 

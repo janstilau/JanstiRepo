@@ -86,9 +86,6 @@
 		3AB649042228C17300733761 /* LBFMMineMakeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB649032228C17300733761 /* LBFMMineMakeCell.swift */; };
 		3AB649062228C1B300733761 /* LBFMCVLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB649052228C1B300733761 /* LBFMCVLayerView.swift */; };
 		3AB649092228C4CA00733761 /* LBFMMineSetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB649082228C4CA00733761 /* LBFMMineSetController.swift */; };
-		3AB6490B2228C69B00733761 /* LBFMMineAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB6490A2228C69B00733761 /* LBFMMineAPI.swift */; };
-		3AB6490D2228C6AA00733761 /* LBFMMineModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB6490C2228C6AA00733761 /* LBFMMineModel.swift */; };
-		3AB6490F2228C6C000733761 /* LBFMMineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB6490E2228C6C000733761 /* LBFMMineViewModel.swift */; };
 		3ACA6E112222559000202E98 /* LBFMListenHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA6E102222559000202E98 /* LBFMListenHeaderView.swift */; };
 		3ACA6E1322225A3700202E98 /* LBFMListenChannelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA6E1222225A3700202E98 /* LBFMListenChannelController.swift */; };
 		3ACA6E162223608900202E98 /* LBFMListenFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACA6E152223608900202E98 /* LBFMListenFooterView.swift */; };
@@ -266,9 +263,6 @@
 		3AB649032228C17300733761 /* LBFMMineMakeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBFMMineMakeCell.swift; sourceTree = "<group>"; };
 		3AB649052228C1B300733761 /* LBFMCVLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBFMCVLayerView.swift; sourceTree = "<group>"; };
 		3AB649082228C4CA00733761 /* LBFMMineSetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBFMMineSetController.swift; sourceTree = "<group>"; };
-		3AB6490A2228C69B00733761 /* LBFMMineAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBFMMineAPI.swift; sourceTree = "<group>"; };
-		3AB6490C2228C6AA00733761 /* LBFMMineModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBFMMineModel.swift; sourceTree = "<group>"; };
-		3AB6490E2228C6C000733761 /* LBFMMineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBFMMineViewModel.swift; sourceTree = "<group>"; };
 		3ACA6E102222559000202E98 /* LBFMListenHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBFMListenHeaderView.swift; sourceTree = "<group>"; };
 		3ACA6E1222225A3700202E98 /* LBFMListenChannelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBFMListenChannelController.swift; sourceTree = "<group>"; };
 		3ACA6E152223608900202E98 /* LBFMListenFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LBFMListenFooterView.swift; sourceTree = "<group>"; };
@@ -429,7 +423,6 @@
 				3A9533312203F11D00E4DC70 /* Common */,
 				3A9533322203F11D00E4DC70 /* Controller */,
 				3A9533332203F11D00E4DC70 /* Lib */,
-				3A9533302203F11D00E4DC70 /* Orther */,
 				3A1400682202D61D00C98D59 /* Main.storyboard */,
 				3A14006B2202D62000C98D59 /* Assets.xcassets */,
 				3A14006D2202D62000C98D59 /* LaunchScreen.storyboard */,
@@ -574,26 +567,12 @@
 			path = API;
 			sourceTree = "<group>";
 		};
-		3A40DACD222000A700A4C734 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
 		3A40DACE222000A700A4C734 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				3A40DAD72220014300A4C734 /* LBFMListenModel.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		3A9533302203F11D00E4DC70 /* Orther */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Orther;
 			sourceTree = "<group>";
 		};
 		3A9533312203F11D00E4DC70 /* Common */ = {
@@ -609,11 +588,10 @@
 			children = (
 				066F70882461A411008CA7F3 /* Extension */,
 				3A9533442203F23300E4DC70 /* Main */,
-				3A9533392203F19400E4DC70 /* 喜马拉雅 */,
 				3A9533352203F19300E4DC70 /* Find(发现)Done */,
 				3A9533342203F19300E4DC70 /* Home(首页) */,
 				3A9533362203F19400E4DC70 /* Listen(我听) */,
-				3A9533382203F19400E4DC70 /* Mine(我的) */,
+				3A9533382203F19400E4DC70 /* Mine(我的)Done */,
 				3A9533372203F19400E4DC70 /* Play(播放) */,
 			);
 			path = Controller;
@@ -663,7 +641,6 @@
 				3A40DACC222000A700A4C734 /* API */,
 				3A40DACE222000A700A4C734 /* Model */,
 				3A40DACB222000A700A4C734 /* View */,
-				3A40DACD222000A700A4C734 /* ViewModel */,
 				3A40DAC4221FFE5100A4C734 /* 听订阅 */,
 				3A40DAC6221FFE5100A4C734 /* 听推荐 */,
 				3A40DAC5221FFE5100A4C734 /* 一键听 */,
@@ -684,24 +661,14 @@
 			path = "Play(播放)";
 			sourceTree = "<group>";
 		};
-		3A9533382203F19400E4DC70 /* Mine(我的) */ = {
+		3A9533382203F19400E4DC70 /* Mine(我的)Done */ = {
 			isa = PBXGroup;
 			children = (
 				3A9533402203F1E900E4DC70 /* LBFMMineController.swift */,
 				3AB649072228C4B400733761 /* Controller */,
-				3AB648FC2228BFE100733761 /* API */,
-				3AB648FB2228BFE100733761 /* Model */,
 				3AB648FD2228BFE100733761 /* View */,
-				3AB648FE2228BFE100733761 /* ViewModel */,
 			);
-			path = "Mine(我的)";
-			sourceTree = "<group>";
-		};
-		3A9533392203F19400E4DC70 /* 喜马拉雅 */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "喜马拉雅";
+			path = "Mine(我的)Done";
 			sourceTree = "<group>";
 		};
 		3A9533442203F23300E4DC70 /* Main */ = {
@@ -983,22 +950,6 @@
 			path = WRCycleScrollView;
 			sourceTree = "<group>";
 		};
-		3AB648FB2228BFE100733761 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				3AB6490C2228C6AA00733761 /* LBFMMineModel.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		3AB648FC2228BFE100733761 /* API */ = {
-			isa = PBXGroup;
-			children = (
-				3AB6490A2228C69B00733761 /* LBFMMineAPI.swift */,
-			);
-			path = API;
-			sourceTree = "<group>";
-		};
 		3AB648FD2228BFE100733761 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1008,14 +959,6 @@
 				3AB649052228C1B300733761 /* LBFMCVLayerView.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		3AB648FE2228BFE100733761 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				3AB6490E2228C6C000733761 /* LBFMMineViewModel.swift */,
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		3AB649072228C4B400733761 /* Controller */ = {
@@ -1825,7 +1768,6 @@
 				3ACA6E4322239D8800202E98 /* LBFMHomeVipViewModel.swift in Sources */,
 				3ACA6E1B2223651500202E98 /* LBFMListenSubscibeCell.swift in Sources */,
 				3ACA6E6E2223C98A00202E98 /* LBFMHomeLiveModel.swift in Sources */,
-				3AB6490B2228C69B00733761 /* LBFMMineAPI.swift in Sources */,
 				3ADC9B66223217B800CAF62B /* LBFMPlayDetailController.swift in Sources */,
 				3ACA6E1F222368BB00202E98 /* LBFMOneKeyListenLTCell.swift in Sources */,
 				3AB53E12228653DC00302A5B /* WRCycleScrollView.swift in Sources */,
@@ -1908,7 +1850,6 @@
 				3A9CF5DC222779640093B36A /* LBFMFindDudCell.swift in Sources */,
 				3AB53E0F228653DC00302A5B /* WRNavigationBar.swift in Sources */,
 				3A40DAA9221FD4F300A4C734 /* LBFMGuessYouLikeCell.swift in Sources */,
-				3AB6490D2228C6AA00733761 /* LBFMMineModel.swift in Sources */,
 				3A9CF5E322277F110093B36A /* LBFMCustomLabel.swift in Sources */,
 				066F708D2461A411008CA7F3 /* ColorExtension.swift in Sources */,
 				3A95337B2204207A00E4DC70 /* AppDelegate.swift in Sources */,
@@ -1973,7 +1914,6 @@
 				3A26D5E62216BBAF0080A362 /* LBFMRecommendHeaderCell.swift in Sources */,
 				3A9CF562222621BC0093B36A /* LBFMRadioSquareCell.swift in Sources */,
 				3A40DAC3221FEAA500A4C734 /* LBRecommendForYouCell.swift in Sources */,
-				3AB6490F2228C6C000733761 /* LBFMMineViewModel.swift in Sources */,
 				3A9533822204254800E4DC70 /* LBFMHomeClassifyController.swift in Sources */,
 				3ADC9B4B22320C5F00CAF62B /* LBFMClassifySubVerticalCell.swift in Sources */,
 				3A95333B2203F1BF00E4DC70 /* LBFMHomeController.swift in Sources */,
