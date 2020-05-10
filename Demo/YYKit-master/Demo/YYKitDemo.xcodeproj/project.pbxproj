@@ -1576,7 +1576,7 @@
 					"$(PROJECT_DIR)/**",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.ibireme.YYKitDemoss;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ibireme.YYKitDemosss;
 				PRODUCT_NAME = YYKitDemo;
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1605,7 +1605,7 @@
 					"$(PROJECT_DIR)/**",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.ibireme.YYKitDemoss;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ibireme.YYKitDemosss;
 				PRODUCT_NAME = YYKitDemo;
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";

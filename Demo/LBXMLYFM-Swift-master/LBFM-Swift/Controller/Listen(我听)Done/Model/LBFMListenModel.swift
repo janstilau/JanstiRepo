@@ -32,7 +32,6 @@ struct AlbumResultsModel: HandyJSON {
     var unreadNum: Int = 0
 }
 
-
 /// 一键听 Model
 struct ChannelResultsModel: HandyJSON {
     var bigCover: String?

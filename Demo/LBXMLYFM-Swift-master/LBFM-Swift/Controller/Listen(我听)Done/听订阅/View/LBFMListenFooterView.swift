@@ -15,14 +15,17 @@ protocol LBFMListenFooterViewDelegate:NSObjectProtocol {
 
 /// 订阅和一键听底部添加按钮
 class LBFMListenFooterView: UIView {
+    
     weak var delegate : LBFMListenFooterViewDelegate?
     
-    private var addButton: UIButton = {
+    private var centerBtn: UIButton = {
         let button = UIButton.init(type: UIButton.ButtonType.custom)
         button.setTitleColor(UIColor.black, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         button.backgroundColor = UIColor.white
         button.addTarget(self, action: #selector(addButtonClick), for: UIControl.Event.touchUpInside)
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = 20
         return button
     }()
     
@@ -31,30 +34,28 @@ class LBFMListenFooterView: UIView {
         setUpLayout()
     }
     
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     func setUpLayout(){
-        self.addSubview(addButton)
-        addButton.snp.makeConstraints { (make) in
+        self.addSubview(centerBtn)
+        centerBtn.snp.makeConstraints { (make) in
             make.top.equalToSuperview().offset(30)
             make.height.equalTo(40)
             make.width.equalTo(120)
             make.centerX.equalToSuperview()
         }
-        addButton.layer.masksToBounds = true
-        addButton.layer.cornerRadius = 20
     }
     
+    // DidSet 里面, 做 UI 的处理工作
     var listenFooterViewTitle:String?{
         didSet {
-            addButton.setTitle(listenFooterViewTitle, for: UIControl.State.normal)
+            centerBtn.setTitle(listenFooterViewTitle, for: UIControl.State.normal)
         }
     }
     
     @objc func addButtonClick(){
         delegate?.listenFooterAddBtnClick()
     }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
 }

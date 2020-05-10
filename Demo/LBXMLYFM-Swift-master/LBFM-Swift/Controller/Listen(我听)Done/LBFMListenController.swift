@@ -9,6 +9,10 @@
 import UIKit
 import LTScrollView
 
+/*
+ 主要还是利用了LTAdvancedManager做的实现.
+ */
+
 class LBFMListenController: UIViewController {
     // 头部 - headerView
     private lazy var headerView:LBFMListenHeaderView = {
@@ -16,19 +20,7 @@ class LBFMListenController: UIViewController {
         return view
     }()
     
-    // 添加控制器
-    private lazy var viewControllers: [UIViewController] = {
-        let listenSubscibeVC = LBFMListenSubscibeController()
-        let listenChannelVC = LBFMListenChannelController()
-        let listenRecommendVC = LBFMListenRecommendController()
-        return [listenSubscibeVC, listenChannelVC, listenRecommendVC]
-    }()
-    
-    // 添加l控制器上部标题
-    private lazy var titles: [String] = {
-        return ["订阅", "一键听", "推荐"]
-    }()
-    
+    // MARK: - NAVBAR
     
     // 导航栏左边按钮
     private lazy var leftBarButton:UIButton = {
@@ -55,18 +47,7 @@ class LBFMListenController: UIViewController {
         print("右边按钮")
     }
     
-    private lazy var layout: LTLayout = {
-        let layout = LTLayout()
-        layout.isAverage = true
-        layout.sliderWidth = 80
-        layout.titleViewBgColor = UIColor.white
-        layout.titleColor = UIColor(r: 178, g: 178, b: 178)
-        layout.titleSelectColor = UIColor(r: 16, g: 16, b: 16)
-        layout.bottomLineColor = UIColor.red
-        layout.sliderHeight = 56
-        /* 更多属性设置请参考 LTLayout 中 public 属性说明 */
-        return layout
-    }()
+    // MARK:- Setup
     
     private lazy var advancedManager: LTAdvancedManager = {
         let statusBarH = UIApplication.shared.statusBarFrame.size.height
@@ -86,6 +67,32 @@ class LBFMListenController: UIViewController {
         return advancedManager
     }()
     
+    private lazy var layout: LTLayout = {
+        let layout = LTLayout()
+        layout.isAverage = true
+        layout.sliderWidth = 80
+        layout.titleViewBgColor = UIColor.white
+        layout.titleColor = UIColor(r: 178, g: 178, b: 178)
+        layout.titleSelectColor = UIColor(r: 16, g: 16, b: 16)
+        layout.bottomLineColor = UIColor.red
+        layout.sliderHeight = 56
+        /* 更多属性设置请参考 LTLayout 中 public 属性说明 */
+        return layout
+    }()
+    
+    // 添加控制器
+       private lazy var viewControllers: [UIViewController] = {
+           let listenSubscibeVC = LBFMListenSubscibeController()
+           let listenChannelVC = LBFMListenChannelController()
+           let listenRecommendVC = LBFMListenRecommendController()
+           return [listenSubscibeVC, listenChannelVC, listenRecommendVC]
+       }()
+       
+       // 添加l控制器上部标题
+       private lazy var titles: [String] = {
+           return ["订阅", "一键听", "推荐"]
+       }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
@@ -97,11 +104,8 @@ class LBFMListenController: UIViewController {
         view.addSubview(advancedManager)
         advancedManagerConfig()
     }
-
-    deinit {
-        print(" --- deinit --- ")
-    }
 }
+
 extension LBFMListenController : LTAdvancedScrollViewDelegate {
     // 具体使用请参考以下
     private func advancedManagerConfig() {

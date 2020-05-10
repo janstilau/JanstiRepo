@@ -590,7 +590,7 @@
 				3A9533442203F23300E4DC70 /* Main */,
 				3A9533352203F19300E4DC70 /* Find(发现)Done */,
 				3A9533342203F19300E4DC70 /* Home(首页) */,
-				3A9533362203F19400E4DC70 /* Listen(我听) */,
+				3A9533362203F19400E4DC70 /* Listen(我听)Done */,
 				3A9533382203F19400E4DC70 /* Mine(我的)Done */,
 				3A9533372203F19400E4DC70 /* Play(播放) */,
 			);
@@ -634,7 +634,7 @@
 			path = "Find(发现)Done";
 			sourceTree = "<group>";
 		};
-		3A9533362203F19400E4DC70 /* Listen(我听) */ = {
+		3A9533362203F19400E4DC70 /* Listen(我听)Done */ = {
 			isa = PBXGroup;
 			children = (
 				3A95333E2203F1DD00E4DC70 /* LBFMListenController.swift */,
@@ -645,7 +645,7 @@
 				3A40DAC6221FFE5100A4C734 /* 听推荐 */,
 				3A40DAC5221FFE5100A4C734 /* 一键听 */,
 			);
-			path = "Listen(我听)";
+			path = "Listen(我听)Done";
 			sourceTree = "<group>";
 		};
 		3A9533372203F19400E4DC70 /* Play(播放) */ = {

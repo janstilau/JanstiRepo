@@ -12,7 +12,6 @@ class LBFMListenHeaderView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.white
         setUpLayout()
     }
     
@@ -31,7 +30,6 @@ class LBFMListenHeaderView: UIView {
             make.height.equalTo(10)
         }
         
-        
         let margin:CGFloat = self.frame.width/8
         let titleArray = ["下载","历史","已购","喜欢"]
         let imageArray = ["下载","历史","购物车","喜欢"]
@@ -39,6 +37,8 @@ class LBFMListenHeaderView: UIView {
         for index in 0..<4 {
             let button = UIButton.init(frame: CGRect(x:margin*CGFloat(index)*2+margin/2,y:10,width:margin,height:margin))
             button.setImage(UIImage(named: imageArray[index]), for: UIControl.State.normal)
+            button.tag = index
+            button.addTarget(self, action: #selector(gridBtnClick(sender:)), for: UIControl.Event.touchUpInside)
             self.addSubview(button)
             
             let titleLabel = UILabel()
@@ -64,13 +64,14 @@ class LBFMListenHeaderView: UIView {
                 make.width.equalTo(margin+20)
                 make.top.equalTo(margin+10+25)
             })
-            button.tag = index
-            button.addTarget(self, action: #selector(gridBtnClick(sender:)), for: UIControl.Event.touchUpInside)
             
+            button.addBorderLine()
+            titleLabel.addBorderLine()
+            numLabel.addBorderLine()
         }
-
     }
+    
     @objc func gridBtnClick(sender:UIButton){
-        print("点击")
+        print("点击 \(sender.tag)")
     }
 }

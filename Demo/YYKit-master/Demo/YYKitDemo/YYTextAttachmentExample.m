@@ -24,6 +24,7 @@
     
     NSMutableAttributedString *text = [NSMutableAttributedString new];
     UIFont *font = [UIFont systemFontOfSize:16];
+    UIFont *alignFont = font;
     
 //    {
 //        NSString *title = @"This is UIImage attachment:";
@@ -44,7 +45,35 @@
         UISwitch *switcher = [UISwitch new];
         [switcher sizeToFit];
         
-        NSMutableAttributedString *attachText = [NSMutableAttributedString attachmentStringWithContent:switcher contentMode:UIViewContentModeCenter attachmentSize:switcher.size alignToFont:font alignment:YYTextVerticalAlignmentCenter];
+        CGSize targetSize = switcher.size;
+        targetSize.width += 20;
+        targetSize.height += 40;
+        
+        NSMutableAttributedString *attachText = [NSMutableAttributedString attachmentStringWithContent:switcher contentMode:UIViewContentModeScaleToFill attachmentSize:targetSize alignToFont:alignFont alignment:YYTextVerticalAlignmentBottom];
+        [text appendAttributedString:attachText];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n" attributes:nil]];
+    }
+    
+    {
+        NSString *title = @"This is UIView attachment: ";
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:title attributes:nil]];
+        
+        UISwitch *switcher = [UISwitch new];
+        [switcher sizeToFit];
+        
+        NSMutableAttributedString *attachText = [NSMutableAttributedString attachmentStringWithContent:switcher contentMode:UIViewContentModeCenter attachmentSize:switcher.size alignToFont:alignFont alignment:YYTextVerticalAlignmentCenter];
+        [text appendAttributedString:attachText];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n" attributes:nil]];
+    }
+    
+    {
+        NSString *title = @"This is UIView attachment: ";
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:title attributes:nil]];
+        
+        UISwitch *switcher = [UISwitch new];
+        [switcher sizeToFit];
+        
+        NSMutableAttributedString *attachText = [NSMutableAttributedString attachmentStringWithContent:switcher contentMode:UIViewContentModeCenter attachmentSize:switcher.size alignToFont:font alignment:YYTextVerticalAlignmentBottom];
         [text appendAttributedString:attachText];
         [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n" attributes:nil]];
     }

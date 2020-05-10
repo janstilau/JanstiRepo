@@ -878,7 +878,15 @@ void YYTextDrawAttachment(YYTextLayout *layout, CGContextRef context, CGSize siz
             layer.frame = rect;
             [targetLayer addSublayer:layer]; // 而对于其他的, 则是直接添加上去
         }
+        
         // 虽然这个方法叫做 draw ,但是其实是做视图展示的东西. 这里, 直接用 addSubView 这种东西也是合适的.
+        UIView *previousView = [targetView viewWithTag:7898];
+        [previousView removeFromSuperview];
+        UIView *redView = [[UIView alloc] init];
+        redView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.3];
+        redView.frame = rect;
+        redView.tag = 7898;
+        [targetView addSubview:redView];
     }
 }
 

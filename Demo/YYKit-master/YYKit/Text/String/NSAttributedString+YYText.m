@@ -485,6 +485,7 @@ return style. _attr_;
     attach.contentMode = contentMode;
     [atr setTextAttachment:attach range:NSMakeRange(0, atr.length)];
     
+    // 这里, alignment 和 Font 共同决定着, Attach 的位置信息. 
     YYTextRunDelegate *delegate = [YYTextRunDelegate new];
     delegate.width = attachmentSize.width;
     switch (alignment) {

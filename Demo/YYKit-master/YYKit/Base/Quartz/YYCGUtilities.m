@@ -192,6 +192,8 @@ NSString *YYUIViewContentModeToCAGravity(UIViewContentMode contentMode) {
     }
 }
 
+// 在这里, attach 的 UIViewContentMode 起了作用.
+// 用于计算 Attach 的显示位置.
 CGRect YYCGRectFitWithContentMode(CGRect rect, CGSize size, UIViewContentMode mode) {
     rect = CGRectStandardize(rect);
     size.width = size.width < 0 ? -size.width : size.width;

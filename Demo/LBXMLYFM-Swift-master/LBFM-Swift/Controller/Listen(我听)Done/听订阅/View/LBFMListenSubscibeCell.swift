@@ -21,6 +21,7 @@ class LBFMListenSubscibeCell: UITableViewCell {
     private var titleLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18)
+        var array = [1]
         return label
     }()
     

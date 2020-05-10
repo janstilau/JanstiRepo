@@ -12,6 +12,7 @@ import SwiftyJSON
 
 
 class LBFMListenMoreChannelController: UIViewController {
+    
     private var channelClassInfo:[ChannelClassInfoModel]?
     private var channelInfo:[ChannelInfosModel]?
     // 标志最后一次选中的左边的cell
@@ -40,10 +41,8 @@ class LBFMListenMoreChannelController: UIViewController {
         tableView.backgroundColor = UIColor.white
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView.register(LBFMListenChannelCell.self, forCellReuseIdentifier: LBFMRightTableViewCellID)
-        
         return tableView
     }()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -151,6 +150,7 @@ extension LBFMListenMoreChannelController : UITableViewDelegate, UITableViewData
         return footView
     }
     
+    // 左边的 TableView 的点击效果.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //  点击左边tableview 让右边滚动到指定的分区, 这里要让上次选中的左边的cell字体颜色和竖条显示变黑
         //  本次选中变亮色
@@ -172,6 +172,7 @@ extension LBFMListenMoreChannelController : UITableViewDelegate, UITableViewData
         }
     }
     
+    // 右边的 TableView 的滑动效果.
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == self.rightTableView {
             // 取出当前视图区域在最上面的cell得indexpath
