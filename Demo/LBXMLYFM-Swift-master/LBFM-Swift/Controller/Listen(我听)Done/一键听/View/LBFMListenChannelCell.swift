@@ -81,6 +81,8 @@ class LBFMListenChannelCell: UITableViewCell {
             make.bottom.right.equalToSuperview().offset(-15)
             make.width.height.equalTo(45)
         }
+        
+        self.addBorderLine()
     }
     // 一键听主页数据模型
     var channelResults:ChannelResultsModel? {

@@ -9,7 +9,7 @@
 import UIKit
 
 class LBFMPlayController: UIViewController {
-
+    
     // 外部传值请求接口
     private var albumId :Int = 0
     private var trackUid:Int = 0
@@ -20,6 +20,7 @@ class LBFMPlayController: UIViewController {
         self.trackUid = trackUid
         self.uid = uid
     }
+    
     private let LBFMPlayHeaderViewID      = "LBFMPlayHeaderView"
     private let LBFMPlayFooterViewID      = "LBFMPlayFooterView"
     

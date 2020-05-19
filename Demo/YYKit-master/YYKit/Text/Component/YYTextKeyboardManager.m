@@ -1,14 +1,3 @@
-//
-//  YYTextKeyboardManager.m
-//  YYKit <https://github.com/ibireme/YYKit>
-//
-//  Created by ibireme on 15/6/3.
-//  Copyright (c) 2015 ibireme.
-//
-//  This source code is licensed under the MIT-style license found in the
-//  LICENSE file in the root directory of this source tree.
-//
-
 #import "YYTextKeyboardManager.h"
 #import "UIApplication+YYAdd.h"
 #import <objc/runtime.h>
@@ -109,9 +98,14 @@ static int _YYTextKeyboardViewFrameObserverKey;
     return [super init];
 }
 
+// 这个方法, 只会在 defaultManager 中调用. 也就是 init 方法无效了, _init 才有效.
 - (instancetype)_init {
     self = [super init];
+    // 弱引用.
     _observers = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsWeakMemory|NSPointerFunctionsObjectPointerPersonality capacity:0];
+    /*
+     监听两个键盘的通知.
+     */
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(_keyboardFrameWillChangeNotification:)
                                                  name:UIKeyboardWillChangeFrameNotification
@@ -266,17 +260,17 @@ static int _YYTextKeyboardViewFrameObserverKey;
     /*
      iOS 6/7:
      UITextEffectsWindow
-        UIPeripheralHostView << keyboard
+     UIPeripheralHostView << keyboard
      
      iOS 8:
      UITextEffectsWindow
-        UIInputSetContainerView
-            UIInputSetHostView << keyboard
+     UIInputSetContainerView
+     UIInputSetHostView << keyboard
      
      iOS 9:
      UIRemoteKeyboardWindow
-        UIInputSetContainerView
-            UIInputSetHostView << keyboard
+     UIInputSetContainerView
+     UIInputSetHostView << keyboard
      */
     if (!window) return nil;
     

@@ -82,9 +82,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         rootVC.viewControllers = [
             LBFMNavigationController.init(rootViewController: home),
             LBFMNavigationController.init(rootViewController: listen),
-            LBFMNavigationController.init(rootViewController: play),
             LBFMNavigationController.init(rootViewController: find),
             LBFMNavigationController.init(rootViewController: mine),
+            LBFMNavigationController.init(rootViewController: play),
         ]
     }
     

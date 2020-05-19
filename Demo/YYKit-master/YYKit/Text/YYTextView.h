@@ -190,6 +190,10 @@ NS_ASSUME_NONNULL_BEGIN
  
  @discussion It only support the attributes declared in CoreText and YYTextAttribute.
  See `NSAttributedString+YYText` for more convenience methods to set the attributes.
+ 
+ 实际上, 所有的上面的 placeholderText, placeholderFont, placeholderTextColor 最终, 还是汇集到了 NSAttributedString 中.
+ 这也体现了, NSAttributedString 的集合的特性.
+  
  */
 @property (nullable, nonatomic, copy) NSAttributedString *placeholderAttributedText;
 

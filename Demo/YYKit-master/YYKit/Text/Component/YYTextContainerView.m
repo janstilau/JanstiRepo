@@ -88,6 +88,7 @@
             point.y = (self.bounds.size.height - boundingSize.height);
         }
     }
+    // 最终, 其实的展示的代码, 还是要靠 layout 进行. 就是一张图片.
     [_layout drawInContext:UIGraphicsGetCurrentContext() size:self.bounds.size point:point view:self layer:self.layer debug:_debugOption cancel:nil];
     
     // update attachment
@@ -126,6 +127,9 @@
     return [self.hostView canPerformAction:action withSender:sender];
 }
 
+/*
+ 完全代理给外界了.
+ */
 - (id)forwardingTargetForSelector:(SEL)aSelector {
     return self.hostView;
 }

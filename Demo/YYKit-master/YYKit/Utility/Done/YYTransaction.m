@@ -12,7 +12,10 @@
 #import "YYTransaction.h"
 
 
-// RunLoop 的监听者切口, 在这个切口中, 创建注册回调的方法.
+/*
+ 这个类, 就是对于 Runloop 的一个监听. 在 TextView 进行了使用.
+ 目的在于, 重复提交刷新的操作. 然后统一在下一次 runloop 中进行刷新.
+ */
 
 @interface YYTransaction()
 @property (nonatomic, strong) id target;
@@ -21,6 +24,7 @@
 
 static NSMutableSet *transactionSet = nil;
 
+// 在每一次的 Runloop 的回调里面, 进行了一次 Set 的清空操作.
 static void YYRunLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info) {
     if (transactionSet.count == 0) return;
     NSSet *currentSet = transactionSet;
@@ -53,6 +57,7 @@ static void YYTransactionSetup() {
 
 @implementation YYTransaction
 
+// 这里, 不断的向里面放东西, 但是如果是重复提交, 由于 Set 的特性, 是没有效果的.
 + (YYTransaction *)transactionWithTarget:(id)target selector:(SEL)selector{
     if (!target || !selector) return nil;
     YYTransaction *t = [YYTransaction new];

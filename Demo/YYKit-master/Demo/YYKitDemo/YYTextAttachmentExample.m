@@ -44,10 +44,18 @@
         
         UISwitch *switcher = [UISwitch new];
         [switcher sizeToFit];
+        [switcher addTarget:self action:@selector(switched:) forControlEvents:UIControlEventValueChanged];
         
         CGSize targetSize = switcher.size;
         targetSize.width += 20;
         targetSize.height += 40;
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            switcher.on = YES;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                switcher.on = NO;
+            });
+        });
         
         NSMutableAttributedString *attachText = [NSMutableAttributedString attachmentStringWithContent:switcher contentMode:UIViewContentModeScaleToFill attachmentSize:targetSize alignToFont:alignFont alignment:YYTextVerticalAlignmentBottom];
         [text appendAttributedString:attachText];
@@ -78,6 +86,7 @@
         [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n" attributes:nil]];
     }
     
+    __weak YYAnimatedImageView *imageView;
     {
         NSString *title = @"This is Animated Image attachment:";
         [text appendAttributedString:[[NSAttributedString alloc] initWithString:title attributes:nil]];
@@ -90,13 +99,14 @@
             image.preloadAllAnimatedImageFrames = YES;
             YYAnimatedImageView *imageView = [[YYAnimatedImageView alloc] initWithImage:image];
             
-            NSMutableAttributedString *attachText = [NSMutableAttributedString attachmentStringWithContent:imageView contentMode:UIViewContentModeCenter attachmentSize:imageView.size alignToFont:font alignment:YYTextVerticalAlignmentCenter];
+            NSMutableAttributedString *attachText = [NSMutableAttributedString attachmentStringWithContent:imageView contentMode:UIViewContentModeCenter attachmentSize:imageView.size alignToFont:font alignment:YYTextVerticalAlignmentBottom];
             [text appendAttributedString:attachText];
         }
         
         YYImage *image = [YYImage imageNamed:@"wall-e.webp"];
         image.preloadAllAnimatedImageFrames = YES;
-        YYAnimatedImageView *imageView = [[YYAnimatedImageView alloc] initWithImage:image];
+        YYAnimatedImageView *simageView = [[YYAnimatedImageView alloc] initWithImage:image];
+        imageView = simageView;
         imageView.autoPlayAnimatedImage = NO;
         [imageView startAnimating];
         [YYImageExampleHelper addTapControlToAnimatedImageView:imageView];
@@ -104,6 +114,7 @@
         
         NSMutableAttributedString *attachText = [NSMutableAttributedString attachmentStringWithContent:imageView contentMode:UIViewContentModeCenter attachmentSize:imageView.size alignToFont:font alignment:YYTextVerticalAlignmentBottom];
         [text appendAttributedString:attachText];
+        
         
         [text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n" attributes:nil]];
     }
@@ -121,6 +132,7 @@
     _label.attributedText = text;
     [self addSeeMoreButton];
     [self.view addSubview:_label];
+    [_label sizeToFit];
     
     _label.layer.borderWidth = CGFloatFromPixel(1);
     _label.layer.borderColor = [UIColor colorWithRed:0.000 green:0.463 blue:1.000 alpha:1.000].CGColor;
@@ -141,6 +153,14 @@
     };
     gesture.delegate = self;
     [_label addGestureRecognizer:gesture];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"%@", _label);
+    });
+}
+
+- (void)switched:(UISwitch*)switcher {
+    NSLog(@"%@", switcher);
 }
 
 - (void)addSeeMoreButton {

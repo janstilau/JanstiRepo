@@ -7,9 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		061BA694247195AE00823661 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 061BA68F247195AE00823661 /* UIView+Debug.m */; };
+		061BA695247195AE00823661 /* UIColor+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 061BA690247195AE00823661 /* UIColor+Debug.m */; };
 		067A3B07226C527900BD046E /* Demo.xib in Resources */ = {isa = PBXBuildFile; fileRef = 067A3B06226C527900BD046E /* Demo.xib */; };
 		067A3B35226C6B2900BD046E /* YYTextLayoutDraw.m in Sources */ = {isa = PBXBuildFile; fileRef = 067A3B34226C6B2900BD046E /* YYTextLayoutDraw.m */; };
 		067A3B39226C815000BD046E /* YYTextContainer+CommonMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 067A3B38226C815000BD046E /* YYTextContainer+CommonMethod.m */; };
+		06E925CF247135590094C3B0 /* zuozhu.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 06E925CE247135590094C3B0 /* zuozhu.jpg */; };
 		06EE2A94226C21CA00B50EC1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 06EE2A96226C21CA00B50EC1 /* InfoPlist.strings */; };
 		06EE2A9B226C25F400B50EC1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 06EE2A9D226C25F400B50EC1 /* Localizable.strings */; };
 		ABDC320D1BEAFB870012A159 /* YYTextTagExample.m in Sources */ = {isa = PBXBuildFile; fileRef = ABDC320C1BEAFB870012A159 /* YYTextTagExample.m */; };
@@ -201,12 +204,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		061BA68F247195AE00823661 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
+		061BA690247195AE00823661 /* UIColor+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Debug.m"; sourceTree = "<group>"; };
+		061BA691247195AE00823661 /* UIView+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Debug.h"; sourceTree = "<group>"; };
+		061BA692247195AE00823661 /* UIColor+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Debug.h"; sourceTree = "<group>"; };
+		061BA693247195AE00823661 /* MCDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCDebug.h; sourceTree = "<group>"; };
 		067A3B05226C476300BD046E /* UILabelDash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UILabelDash.h; sourceTree = "<group>"; };
 		067A3B06226C527900BD046E /* Demo.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Demo.xib; sourceTree = "<group>"; };
 		067A3B33226C6B2800BD046E /* YYTextLayoutDraw.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YYTextLayoutDraw.h; sourceTree = "<group>"; };
 		067A3B34226C6B2900BD046E /* YYTextLayoutDraw.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YYTextLayoutDraw.m; sourceTree = "<group>"; };
 		067A3B37226C815000BD046E /* YYTextContainer+CommonMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "YYTextContainer+CommonMethod.h"; sourceTree = "<group>"; };
 		067A3B38226C815000BD046E /* YYTextContainer+CommonMethod.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "YYTextContainer+CommonMethod.m"; sourceTree = "<group>"; };
+		06E925CE247135590094C3B0 /* zuozhu.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = zuozhu.jpg; sourceTree = "<group>"; };
 		06EE2A8F226C217D00B50EC1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		06EE2A90226C218400B50EC1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		06EE2A91226C218900B50EC1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -562,6 +571,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		061BA68E247195AE00823661 /* Debug */ = {
+			isa = PBXGroup;
+			children = (
+				061BA68F247195AE00823661 /* UIView+Debug.m */,
+				061BA690247195AE00823661 /* UIColor+Debug.m */,
+				061BA691247195AE00823661 /* UIView+Debug.h */,
+				061BA692247195AE00823661 /* UIColor+Debug.h */,
+				061BA693247195AE00823661 /* MCDebug.h */,
+			);
+			path = Debug;
+			sourceTree = "<group>";
+		};
 		067A3B36226C811800BD046E /* YYLayout */ = {
 			isa = PBXGroup;
 			children = (
@@ -911,6 +932,8 @@
 		D9B25F9F1BEE79370038C00A /* YYKit */ = {
 			isa = PBXGroup;
 			children = (
+				061BA68E247195AE00823661 /* Debug */,
+				06E925CE247135590094C3B0 /* zuozhu.jpg */,
 				D9B2604F1BEE79370038C00A /* YYKit.h */,
 				06EE2A96226C21CA00B50EC1 /* InfoPlist.strings */,
 				06EE2A9D226C25F400B50EC1 /* Localizable.strings */,
@@ -1270,6 +1293,7 @@
 				06EE2A9B226C25F400B50EC1 /* Localizable.strings in Resources */,
 				D9CC99F61B8B568B00A9466D /* mew_baseline.gif in Resources */,
 				D9CC99FA1B8B568B00A9466D /* mew_interlaced.png in Resources */,
+				06E925CF247135590094C3B0 /* zuozhu.jpg in Resources */,
 				D98193311BC829F900BA0604 /* twitter_0.json in Resources */,
 				D9CC99F71B8B568B00A9466D /* mew_progressive.jpg in Resources */,
 			);
@@ -1308,6 +1332,7 @@
 				D9B260681BEE79370038C00A /* UIImage+YYAdd.m in Sources */,
 				D9067DF11B975D3900F346EB /* YYTextExampleHelper.m in Sources */,
 				D9971BB01B84D55A00A7B424 /* YYTextAttributeExample.m in Sources */,
+				061BA695247195AE00823661 /* UIColor+Debug.m in Sources */,
 				067A3B39226C815000BD046E /* YYTextContainer+CommonMethod.m in Sources */,
 				D9B260A01BEE79370038C00A /* YYWeakProxy.m in Sources */,
 				D9B260951BEE79370038C00A /* YYAsyncLayer.m in Sources */,
@@ -1320,6 +1345,7 @@
 				D97FC1131BA191C800E7ECBF /* YYTableViewCell.m in Sources */,
 				D9067DF41B9813B500F346EB /* YYTextEditExample.m in Sources */,
 				D9B260881BEE79370038C00A /* YYTextMagnifier.m in Sources */,
+				061BA694247195AE00823661 /* UIView+Debug.m in Sources */,
 				D9B2606F1BEE79370038C00A /* YYDiskCache.m in Sources */,
 				D9237BCC1BC2BA650092A558 /* WBStatusComposeTextParser.m in Sources */,
 				D9B260501BEE79370038C00A /* NSArray+YYAdd.m in Sources */,

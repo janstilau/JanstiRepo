@@ -20,6 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface YYTextContainerView : UIView
 
 /// First responder's aciton will forward to this view.
+/*
+ 这个类, 仅仅是展示的作用, 其他所有的功能, 还是要交给外界.
+ */
 @property (nullable, nonatomic, weak) UIView *hostView;
 
 /// Debug option for layout debug. Set this property will let the view redraw it's contents.
