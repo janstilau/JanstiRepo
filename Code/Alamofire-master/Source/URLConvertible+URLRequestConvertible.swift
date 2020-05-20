@@ -123,6 +123,7 @@ extension URLRequest {
         let url = try url.asURL()
         self.init(url: url)
         httpMethod = method.rawValue
+        // 这里, 直接将 headers 所代表的字典, 赋值给了 allHTTPHeaderFields.
         allHTTPHeaderFields = headers?.dictionary
     }
 }

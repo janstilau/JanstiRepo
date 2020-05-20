@@ -24,7 +24,11 @@
 
 import Foundation
 
-/// An order-preserving and case-insensitive representation of HTTP headers.
+/*
+ HTTPHeaders, 应该是一个字典
+ 这里, 作者将这个东西变为了一个数组.
+ 在 AFN 里面, 作者仅仅是在构建 Request 的过程中, 将 header 字典里面的值, 一个个的赋值到了 forHTTPHeaderField 中去了. 
+ */
 public struct HTTPHeaders {
     private var headers: [HTTPHeader] = []
 

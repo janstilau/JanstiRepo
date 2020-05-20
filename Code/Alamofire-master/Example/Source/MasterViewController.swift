@@ -45,7 +45,7 @@ class MasterViewController: UITableViewController {
                     return AF.request("https://httpbin.org/delete", method: .delete)
                 case "DOWNLOAD":
                     detailViewController.segueIdentifier = "DOWNLOAD"
-                    let destination = DownloadRequest.suggestedDownloadDestination(for: .cachesDirectory,
+                    let destination = DownloadRequest.suggestedDownloadDestination(for: .cachesDirectory,                                                                                   in: .userDomainMask)
                     return AF.download("https://httpbin.org/stream/1", to: destination)
                 default:
                     return nil

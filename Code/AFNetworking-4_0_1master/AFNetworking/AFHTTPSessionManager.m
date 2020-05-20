@@ -260,6 +260,7 @@
 {
     NSError *serializationError = nil;
     NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:method URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:&serializationError];
+    
     for (NSString *headerField in headers.keyEnumerator) {
         [request setValue:headers[headerField] forHTTPHeaderField:headerField];
     }
@@ -273,6 +274,9 @@
         return nil;
     }
 
+    /*
+     在 MCNetwork 里面, 将上面的程序进行了接管. 没有直接调用 Get, Post 那些方法. 而是构建出 Request 对象之后, 直接调用的下面的 dataTaskWithRequest 的方法.
+     */
     __block NSURLSessionDataTask *dataTask = nil;
     dataTask = [self dataTaskWithRequest:request
                           uploadProgress:uploadProgress

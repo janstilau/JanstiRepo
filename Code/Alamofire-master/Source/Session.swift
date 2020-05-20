@@ -264,6 +264,10 @@ open class Session {
                       headers: HTTPHeaders? = nil,
                       interceptor: RequestInterceptor? = nil,
                       requestModifier: RequestModifier? = nil) -> DataRequest {
+        /*
+         这一步, 就是在构建 Request 的过程. 只不过从构建一个 Request 对象, 变味了构建一个 RequestConvertible 对象.
+         但是代码的业务先后逻辑都是一样的.
+         */
         let convertible = RequestConvertible(url: convertible,
                                              method: method,
                                              parameters: parameters,
