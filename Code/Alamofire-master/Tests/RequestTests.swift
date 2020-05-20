@@ -51,7 +51,7 @@ final class RequestResponseTestCase: BaseTestCase {
 
     func testRequestResponseWithProgress() {
         // Given
-        let randomBytes = 1 * 1024 * 1024
+        let randomBytes = 1 * 25 * 1024
         let urlString = "https://httpbin.org/bytes/\(randomBytes)"
 
         let expectation = self.expectation(description: "Bytes download progress should be reported: \(urlString)")
@@ -127,6 +127,7 @@ final class RequestResponseTestCase: BaseTestCase {
         }
     }
 
+    #if !SWIFT_PACKAGE
     func testPOSTRequestWithBase64EncodedImages() {
         // Given
         let urlString = "https://httpbin.org/post"
@@ -176,6 +177,7 @@ final class RequestResponseTestCase: BaseTestCase {
             XCTFail("form parameter in JSON should not be nil")
         }
     }
+    #endif
 
     // MARK: Queues
 
@@ -198,7 +200,7 @@ final class RequestResponseTestCase: BaseTestCase {
         XCTAssertEqual(response?.result.isSuccess, true)
     }
 
-    func testThatRequestsWorksWithRequestAndSerializationQueue() {
+    func testThatRequestsWorksWithRequestAndSerializationQueues() {
         // Given
         let requestQueue = DispatchQueue(label: "org.alamofire.testRequestQueue")
         let serializationQueue = DispatchQueue(label: "org.alamofire.testSerializationQueue")
@@ -216,6 +218,31 @@ final class RequestResponseTestCase: BaseTestCase {
 
         // Then
         XCTAssertEqual(response?.result.isSuccess, true)
+    }
+
+    func testThatRequestsWorksWithConcurrentRequestAndSerializationQueues() {
+        // Given
+        let requestQueue = DispatchQueue(label: "org.alamofire.testRequestQueue", attributes: .concurrent)
+        let serializationQueue = DispatchQueue(label: "org.alamofire.testSerializationQueue", attributes: .concurrent)
+        let session = Session(requestQueue: requestQueue, serializationQueue: serializationQueue)
+        let count = 10
+        let expectation = self.expectation(description: "request should complete")
+        expectation.expectedFulfillmentCount = count
+        var responses: [DataResponse<Any, AFError>] = []
+
+        // When
+        DispatchQueue.concurrentPerform(iterations: count) { _ in
+            session.request("https://httpbin.org/get").responseJSON { resp in
+                responses.append(resp)
+                expectation.fulfill()
+            }
+        }
+
+        waitForExpectations(timeout: timeout, handler: nil)
+
+        // Then
+        XCTAssertEqual(responses.count, count)
+        XCTAssertTrue(responses.allSatisfy { $0.result.isSuccess })
     }
 
     // MARK: Encodable Parameters
@@ -311,7 +338,7 @@ final class RequestResponseTestCase: BaseTestCase {
         let session = Session(eventMonitors: [eventMonitor])
 
         let expect = expectation(description: "request should receive appropriate lifetime events")
-        expect.expectedFulfillmentCount = 3
+        expect.expectedFulfillmentCount = 4
 
         eventMonitor.requestDidResumeTask = { _, _ in expect.fulfill() }
         eventMonitor.requestDidResume = { _ in expect.fulfill() }
@@ -323,7 +350,7 @@ final class RequestResponseTestCase: BaseTestCase {
         eventMonitor.requestDidCancelTask = { _, _ in expect.fulfill() }
 
         // When
-        let request = session.request(URLRequest.makeHTTPBinRequest())
+        let request = session.request(URLRequest.makeHTTPBinRequest()).response { _ in expect.fulfill() }
         for _ in 0..<100 {
             request.resume()
         }
@@ -369,7 +396,7 @@ final class RequestResponseTestCase: BaseTestCase {
         let session = Session(startRequestsImmediately: false, eventMonitors: [eventMonitor])
 
         let expect = expectation(description: "request should receive appropriate lifetime events")
-        expect.expectedFulfillmentCount = 3
+        expect.expectedFulfillmentCount = 4
 
         eventMonitor.requestDidResumeTask = { _, _ in expect.fulfill() }
         eventMonitor.requestDidResume = { _ in expect.fulfill() }
@@ -381,7 +408,7 @@ final class RequestResponseTestCase: BaseTestCase {
         eventMonitor.requestDidCancelTask = { _, _ in expect.fulfill() }
 
         // When
-        let request = session.request(URLRequest.makeHTTPBinRequest())
+        let request = session.request(URLRequest.makeHTTPBinRequest()).response { _ in expect.fulfill() }
         for _ in 0..<100 {
             request.resume()
         }
@@ -523,7 +550,7 @@ final class RequestResponseTestCase: BaseTestCase {
         eventMonitor.requestDidSuspendTask = { _, _ in expect.fulfill() }
 
         // When
-        let request = session.request(URLRequest.makeHTTPBinRequest()).response { _ in expect.fulfill() }
+        let request = session.request(URLRequest.makeHTTPBinRequest(path: "delay/5")).response { _ in expect.fulfill() }
         // Cancellation stops task creation, so don't cancel the request until the task has been created.
         eventMonitor.requestDidCreateTask = { _, _ in
             DispatchQueue.concurrentPerform(iterations: 100) { i in
@@ -619,7 +646,7 @@ final class RequestResponseTestCase: BaseTestCase {
         eventMonitor.requestDidCancelTask = { _, _ in didCancelTask.fulfill() }
 
         // When
-        let request = session.request(URLRequest.makeHTTPBinRequest()).response { _ in
+        let request = session.request(URLRequest.makeHTTPBinRequest(path: "delay/5")).response { _ in
             responseHandler.fulfill()
         }
 
@@ -1099,7 +1126,7 @@ final class RequestCURLDescriptionTestCase: BaseTestCase {
     // MARK: Test Helper Methods
 
     private func cURLCommandComponents(from cURLString: String) -> [String] {
-        return cURLString.components(separatedBy: .whitespacesAndNewlines)
+        cURLString.components(separatedBy: .whitespacesAndNewlines)
             .filter { $0 != "" && $0 != "\\" }
     }
 }

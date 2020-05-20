@@ -127,24 +127,40 @@ final class NetworkReachabilityManagerTestCase: BaseTestCase {
 
     func testThatHostManagerCanBeDeinitialized() {
         // Given
+        let expect = expectation(description: "reachability queue should clear")
         var manager: NetworkReachabilityManager? = NetworkReachabilityManager(host: "localhost")
+        weak var weakManager = manager
 
         // When
+        manager?.startListening(onUpdatePerforming: { _ in })
+        manager?.stopListening()
+        manager?.reachabilityQueue.async { expect.fulfill() }
         manager = nil
 
+        waitForExpectations(timeout: timeout)
+
         // Then
-        XCTAssertNil(manager)
+        XCTAssertNil(manager, "strong reference should be nil")
+        XCTAssertNil(weakManager, "weak reference should be nil")
     }
 
     func testThatAddressManagerCanBeDeinitialized() {
         // Given
+        let expect = expectation(description: "reachability queue should clear")
         var manager: NetworkReachabilityManager? = NetworkReachabilityManager()
+        weak var weakManager = manager
 
         // When
+        manager?.startListening(onUpdatePerforming: { _ in })
+        manager?.stopListening()
+        manager?.reachabilityQueue.async { expect.fulfill() }
         manager = nil
 
+        waitForExpectations(timeout: timeout)
+
         // Then
-        XCTAssertNil(manager)
+        XCTAssertNil(manager, "strong reference should be nil")
+        XCTAssertNil(weakManager, "weak reference should be nil")
     }
 
     // MARK: - Listener
@@ -257,7 +273,7 @@ final class NetworkReachabilityManagerTestCase: BaseTestCase {
         XCTAssertEqual(status, .reachable(.ethernetOrWiFi))
     }
 
-#if os(iOS) || os(tvOS)
+    #if os(iOS) || os(tvOS)
     func testThatStatusIsReachableOnCellularStatusWhenIsWWAN() {
         // Given
         let flags: SCNetworkReachabilityFlags = [.reachable, .isWWAN]
@@ -279,5 +295,5 @@ final class NetworkReachabilityManagerTestCase: BaseTestCase {
         // Then
         XCTAssertEqual(status, .notReachable)
     }
-#endif
+    #endif
 }

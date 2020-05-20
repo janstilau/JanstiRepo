@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		066E375F2474272B00328F48 /* GenericLearn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066E375E2474272B00328F48 /* GenericLearn.swift */; };
 		066F708C2461A411008CA7F3 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066F70892461A411008CA7F3 /* ViewExtension.swift */; };
 		066F708D2461A411008CA7F3 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066F708A2461A411008CA7F3 /* ColorExtension.swift */; };
 		066F708E2461A411008CA7F3 /* TableViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066F708B2461A411008CA7F3 /* TableViewExtension.swift */; };
@@ -181,6 +182,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		066E375E2474272B00328F48 /* GenericLearn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericLearn.swift; sourceTree = "<group>"; };
 		066F70892461A411008CA7F3 /* ViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		066F708A2461A411008CA7F3 /* ColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		066F708B2461A411008CA7F3 /* TableViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewExtension.swift; sourceTree = "<group>"; };
@@ -678,6 +680,7 @@
 				3A953355220408C900E4DC70 /* LBFMBasicContentView.swift */,
 				3A9533572204096900E4DC70 /* LBFMBouncesContentView.swift */,
 				3A953359220409CD00E4DC70 /* LBFMIrregularityBasicContentView.swift */,
+				066E375E2474272B00328F48 /* GenericLearn.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -1843,6 +1846,7 @@
 				3ACA6E5F2223BAEE00202E98 /* LBFMHomeVipEnjoyCell.swift in Sources */,
 				3ACA6E6A2223C8FF00202E98 /* LBFMHomeLiveAPI.swift in Sources */,
 				3AB53E13228653DC00302A5B /* WRCycleCell.swift in Sources */,
+				066E375F2474272B00328F48 /* GenericLearn.swift in Sources */,
 				3ADC9B9F22324CC100CAF62B /* LBFMPlayDetailIntroController.swift in Sources */,
 				3A26D5E22216BB5D0080A362 /* LBFMRecommendHeaderView.swift in Sources */,
 				3ADC9B632232166600CAF62B /* LBFMPlayModel.swift in Sources */,

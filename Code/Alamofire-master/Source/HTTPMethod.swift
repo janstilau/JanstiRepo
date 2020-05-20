@@ -1,33 +1,19 @@
-//
-//  HTTPMethod.swift
-//
-//  Copyright (c) 2014-2018 Alamofire Software Foundation (http://alamofire.org/)
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//
 
 /// Type representing HTTP methods. Raw `String` value is stored and compared case-sensitively, so
 /// `HTTPMethod.get != HTTPMethod(rawValue: "get")`.
 ///
 /// See https://tools.ietf.org/html/rfc7231#section-4.3
+
+/*
+ 这里, 用这种方式, 做了类似于 enum 的事情. 目前不太明白, 这么做的目的在于什么.
+ public static var max: Int { get }
+ Int 的 max 也是用这种方式进行的获取.
+ 这其实面向对象设计的好处. 将相关的值, 封装到了类的内部. 而不是全局宏定义或者全局变量的方式.
+ 不过, 这里感觉用 enum 更好一些.
+ */
+
 public struct HTTPMethod: RawRepresentable, Equatable, Hashable {
-    /// `CONNECT` method.
+    
     public static let connect = HTTPMethod(rawValue: "CONNECT")
     /// `DELETE` method.
     public static let delete = HTTPMethod(rawValue: "DELETE")
