@@ -260,13 +260,14 @@ open class Session {
     open func request(_ convertible: URLConvertible,
                       method: HTTPMethod = .get,
                       parameters: Parameters? = nil,
-                      encoding: ParameterEncoding = URLEncoding.default,
+                      encoding: ParameterEncoding = URLEncoding.default, //
                       headers: HTTPHeaders? = nil,
                       interceptor: RequestInterceptor? = nil,
                       requestModifier: RequestModifier? = nil) -> DataRequest {
         /*
-         这一步, 就是在构建 Request 的过程. 只不过从构建一个 Request 对象, 变味了构建一个 RequestConvertible 对象.
+         这一步, 就是在构建 Request 的过程. 只不过从构建一个 Request 对象, 变成了构建一个 RequestConvertible 对象.
          但是代码的业务先后逻辑都是一样的.
+         URLEncoding.default, 他所做的工作, 就是 AFN 里面的 AFURLRequestSerialization 所做的工作, 都是讲一个 URLRequest, 通过 parameters 进行填充.
          */
         let convertible = RequestConvertible(url: convertible,
                                              method: method,

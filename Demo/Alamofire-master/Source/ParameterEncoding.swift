@@ -28,6 +28,9 @@ import Foundation
 public typealias Parameters = [String: Any]
 
 /// A type used to define how a set of parameters are applied to a `URLRequest`.
+/*
+ 这个协议的功能就是, 传入一个 URLRequest, 然后一堆参数, 能够将这些参数, 填充到这个 URLRequest 中去, 然后返回这个填充好的 URLRequest.
+ */
 public protocol ParameterEncoding {
     /// Creates a `URLRequest` by encoding parameters and applying them on the passed request.
     ///
@@ -42,8 +45,9 @@ public protocol ParameterEncoding {
 
 // MARK: -
 
-/// Creates a url-encoded query string to be set as or appended to any existing URL query string or set as the HTTP
-/// body of the URL request. Whether the query string is set or appended to any existing URL query string or set as
+/// Creates a url-encoded query string to be set as or appended to any existing URL query string
+/// or set as the HTTP body of the URL request.
+/// Whether the query string is set or appended to any existing URL query string or set as
 /// the HTTP body depends on the destination of the encoding.
 ///
 /// The `Content-Type` HTTP header field of an encoded request with HTTP body is set to
@@ -56,6 +60,9 @@ public protocol ParameterEncoding {
 ///
 /// `BoolEncoding` can be used to configure how boolean values are encoded. The default behavior is to encode
 /// `true` as 1 and `false` as 0.
+/*
+ 这个类, 就是 AFURLRequestSerialization 所做的工作.
+ */
 public struct URLEncoding: ParameterEncoding {
     // MARK: Helper Types
 
@@ -72,6 +79,8 @@ public struct URLEncoding: ParameterEncoding {
 
         func encodesParametersInURL(for method: HTTPMethod) -> Bool {
             switch self {
+                // methodDependent 的书写过程是, 首先 [].contains(method), 能够确认这是一个数组, method 能够确认这是一个 HTTPMethod 的数组.
+                // 然后才能是.get, .head, .delete 填入数组的内容.
             case .methodDependent: return [.get, .head, .delete].contains(method)
             case .queryString: return true
             case .httpBody: return false
@@ -114,6 +123,10 @@ public struct URLEncoding: ParameterEncoding {
     }
 
     // MARK: Properties
+    
+    /*
+     首先, 是一些类属性, 存放着常用的一些 URLEncoding 的对象. 这些对象仅仅是 destination 不同.
+     */
 
     /// Returns a default `URLEncoding` instance with a `.methodDependent` destination.
     public static var `default`: URLEncoding { URLEncoding() }
@@ -123,7 +136,10 @@ public struct URLEncoding: ParameterEncoding {
 
     /// Returns a `URLEncoding` instance with an `.httpBody` destination.
     public static var httpBody: URLEncoding { URLEncoding(destination: .httpBody) }
-
+    
+    /*
+     下面的三种属性, 分别控制着在序列化的时候, 应该最终输出什么样的 Request.
+     */
     /// The destination defining where the encoded query string is to be applied to the URL request.
     public let destination: Destination
 
@@ -151,18 +167,41 @@ public struct URLEncoding: ParameterEncoding {
     }
 
     // MARK: Encoding
-
-    public func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
+    /*
+        真正的对于 Request 进行封装的过程.
+     */
+    public func encode(_ urlRequest: URLRequestConvertible,
+                       with parameters: Parameters?) throws -> URLRequest {
+        // 首先是获取到一个 urlRequest 对象. 这个对象是可变的, asURLRequest 可能发出错误, 所以这里要使用 try.
         var urlRequest = try urlRequest.asURLRequest()
-
+        // 如果, parameters 就是 nil, 那么直接返回刚刚生成的 urlRequest
+        /*
+            注意, 这里 parameters = parameters 的命名相同.
+            原因在于, 一般参数的命名, 就是考虑了它的业务场景, 因为可变性, Optional性 来改变变量的命名, 会导致变量名过于复杂.
+            所以, let aName = aName, 这种写法后, aName 相当于进行了类型的转化操作.
+        */
         guard let parameters = parameters else { return urlRequest }
-
-        if let method = urlRequest.method, destination.encodesParametersInURL(for: method) {
+        
+        /*
+            在 OC 里面, 就是判断 urlRequest 的 httpMethod 是不是在某个 Set 里面.
+            而在 Swift 里面, 这个功能被专门的分到 Destination 内部了.
+         */
+        if let method = urlRequest.method,
+            destination.encodesParametersInURL(for: method) {
             guard let url = urlRequest.url else {
                 throw AFError.parameterEncodingFailed(reason: .missingURL)
             }
-
-            if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false), !parameters.isEmpty {
+            /*
+             URLComponents 就是一个 URL 解析的类.
+             可以给他设置 URL 的各个部分, 他会自动的生成最终的 URL.
+             也可以给他一个完整的 URL , 他可以分析出这个 URL 的各个部分.
+             */
+            
+            if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                !parameters.isEmpty {
+                /*
+                 这里, 不是太明白 percentEncodedQuery 返回一个 String. 而 String.map 后是什么?
+                 */
                 let percentEncodedQuery = (urlComponents.percentEncodedQuery.map { $0 + "&" } ?? "") + query(parameters)
                 urlComponents.percentEncodedQuery = percentEncodedQuery
                 urlRequest.url = urlComponents.url

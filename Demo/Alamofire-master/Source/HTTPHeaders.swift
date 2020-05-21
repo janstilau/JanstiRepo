@@ -27,7 +27,7 @@ import Foundation
 /*
  HTTPHeaders, 应该是一个字典
  这里, 作者将这个东西变为了一个数组.
- 在 AFN 里面, 作者仅仅是在构建 Request 的过程中, 将 header 字典里面的值, 一个个的赋值到了 forHTTPHeaderField 中去了. 
+ 在 AFN 里面, 作者仅仅是在构建 Request 的过程中, 将 header 字典里面的值, 一个个的赋值到了 forHTTPHeaderField 中去了.
  */
 public struct HTTPHeaders {
     private var headers: [HTTPHeader] = []
@@ -37,9 +37,11 @@ public struct HTTPHeaders {
 
     /// Creates an instance from an array of `HTTPHeader`s. Duplicate case-insensitive names are collapsed into the last
     /// name and value encountered.
+    /*
+     构造函数中, 也是使用的 update 方法进行的操作.
+     */
     public init(_ headers: [HTTPHeader]) {
         self.init()
-
         headers.forEach { update($0) }
     }
 
@@ -47,7 +49,6 @@ public struct HTTPHeaders {
     /// and value encountered.
     public init(_ dictionary: [String: String]) {
         self.init()
-
         dictionary.forEach { update(HTTPHeader(name: $0.key, value: $0.value)) }
     }
 
@@ -56,6 +57,9 @@ public struct HTTPHeaders {
     /// - Parameters:
     ///   - name:  The `HTTPHeader` name.
     ///   - value: The `HTTPHeader value.
+    /*
+     Update 方法, 是 primitive 方法. 所有的逻辑, 都归到这个方法, 然后 Update 的逻辑修改, 会影响到其他的所有的方法.
+     */
     public mutating func add(name: String, value: String) {
         update(HTTPHeader(name: name, value: value))
     }
@@ -79,18 +83,24 @@ public struct HTTPHeaders {
     /// Case-insensitively updates or appends the provided `HTTPHeader` into the instance.
     ///
     /// - Parameter header: The `HTTPHeader` to update or append.
+    /*
+     非常 Swift 的写法. 首先, 使用 Guard 进行条件的判断.
+     */
     public mutating func update(_ header: HTTPHeader) {
         guard let index = headers.index(of: header.name) else {
             headers.append(header)
             return
         }
-
+        // Swift 版本的 Array 替换的操作.
         headers.replaceSubrange(index...index, with: [header])
     }
 
     /// Case-insensitively removes an `HTTPHeader`, if it exists, from the instance.
     ///
     /// - Parameter name: The name of the `HTTPHeader` to remove.
+    /*
+     Array 的下标访问, 是由程序员控制的安全性. 所以, 所有的下标访问, 都应该有程序员先进行校验的工作.
+     */
     public mutating func remove(name: String) {
         guard let index = headers.index(of: name) else { return }
 
@@ -105,6 +115,9 @@ public struct HTTPHeaders {
     /// Returns an instance sorted by header name.
     ///
     /// - Returns: A copy of the current instance sorted by name.
+    /*
+     sort 和 sorted 的, 对应着可变和不可变之分.
+     */
     public func sorted() -> HTTPHeaders {
         HTTPHeaders(headers.sorted { $0.name < $1.name })
     }
@@ -116,13 +129,16 @@ public struct HTTPHeaders {
     /// - Returns:        The value of header, if it exists.
     public func value(for name: String) -> String? {
         guard let index = headers.index(of: name) else { return nil }
-
         return headers[index].value
     }
 
     /// Case-insensitively access the header with the given name.
     ///
     /// - Parameter name: The name of the header.
+    /*
+     因为, Swift 可以复写下标方法, 所以, 这个类就如同字典来进行操作.
+     在 Set 方法里面, 根据 value 的 nil 与否, 来判断是进行删除操作, 还是更新操作.
+     */
     public subscript(_ name: String) -> String? {
         get { value(for: name) }
         set {
@@ -144,6 +160,11 @@ public struct HTTPHeaders {
     }
 }
 
+/*
+ init(dictionaryLiteral elements: (Self.Key, Self.Value)...)
+ 从这里可以看出来, 字典字面量初始化, 就是一个 元组 的数组, 这个元组的第一个值是 key, 这个元组的第二个值是 value.
+ 因为, 这个初始化方法, 限制了类型, 编译器会帮助我们, 只有是 (String, String) 类型的元组组成的数组, 才会调用下面的构造方法.
+ */
 extension HTTPHeaders: ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (String, String)...) {
         self.init()
@@ -152,6 +173,9 @@ extension HTTPHeaders: ExpressibleByDictionaryLiteral {
     }
 }
 
+/*
+ 只有, HTTPHeader 组成的数组, 才会调用下面的初始化方法.
+ */
 extension HTTPHeaders: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: HTTPHeader...) {
         self.init(elements)
@@ -182,6 +206,10 @@ extension HTTPHeaders: Collection {
     }
 }
 
+/*
+ 所以, HTTPHeaders 中, 对于不同协议的支持, 完完全全的写到了各个扩展里面, 这样就使得代码逻辑更加的清除.
+ */
+
 extension HTTPHeaders: CustomStringConvertible {
     public var description: String {
         headers.map { $0.description }
@@ -194,8 +222,10 @@ extension HTTPHeaders: CustomStringConvertible {
 /// A representation of a single HTTP header's name / value pair.
 public struct HTTPHeader: Hashable {
     /// Name of the header.
+    // Name 直接用的字符串
     public let name: String
-
+    
+    // value 也是直接用的字符串
     /// Value of the header.
     public let value: String
 
@@ -215,6 +245,12 @@ extension HTTPHeader: CustomStringConvertible {
         "\(name): \(value)"
     }
 }
+
+/*
+ 类型的重要性就在这里.
+ 用静态方法, 生成了各种 HTTPHeader 实例.
+ 在这里, 定义了各种特殊的 HTTPHeader 对象. 要比HTTPHeader(name: "Accept", value: "AcceptValue")的方式更加的安全, 更加方便调用者来使用.
+ */
 
 extension HTTPHeader {
     /// Returns an `Accept` header.
@@ -323,16 +359,30 @@ extension HTTPHeader {
     }
 }
 
+/*
+ 这里, 通过 Element 的限制, 为 Array[Element] 增加了一个方法.
+ 一个函数和方法, 泛型程度越高, 那么它能够做的事情越少.
+ 多用 let, 表示常量.
+ 多用已经存在的方法, 这样代码逻辑统一, 只要修改 primitive method 的话, 就可以影响到对应的逻辑.
+ */
 extension Array where Element == HTTPHeader {
     /// Case-insensitively finds the index of an `HTTPHeader` with the provided name, if it exists.
     func index(of name: String) -> Int? {
         let lowercasedName = name.lowercased()
+        /*
+         多使用闭包的省略形式, 如果熟悉了这种写法, 可以体会到 Swift 的设计美感.
+         */
         return firstIndex { $0.name.lowercased() == lowercasedName }
     }
 }
 
 // MARK: - Defaults
-
+/*
+ 定义一个, 类属性, 来返回公用的属性.
+ 这个生成方式, 1. 使用了前面的定义的数组初始化方法.
+ 2. 使用了下面各个 HttpHeader 的类属性. 这里用 .直接就可以进行类属性的提取.
+ 3. 'default' 这个值, 初始化不在编译时, 不在项目启动是, 而应该是在项目使用到这个值的时候才进行, 实验证明也确实是如此的.
+ */
 public extension HTTPHeaders {
     /// The default set of `HTTPHeaders` used by Alamofire. Includes `Accept-Encoding`, `Accept-Language`, and
     /// `User-Agent`.
@@ -348,12 +398,15 @@ extension HTTPHeader {
     /// See the [Accept-Encoding HTTP header documentation](https://tools.ietf.org/html/rfc7230#section-4.2.3) .
     public static let defaultAcceptEncoding: HTTPHeader = {
         let encodings: [String]
+        print("init defaultAcceptEncoding")
         if #available(iOS 11.0, macOS 10.13, tvOS 11.0, watchOS 4.0, *) {
             encodings = ["br", "gzip", "deflate"]
         } else {
             encodings = ["gzip", "deflate"]
         }
-
+        /*
+         前面是制作业务信息, 后面是直接调用自己定义的方法, 来处理这些业务信息.
+         */
         return .acceptEncoding(encodings.qualityEncoded())
     }()
 
@@ -362,6 +415,9 @@ extension HTTPHeader {
     ///
     /// See the [Accept-Language HTTP header documentation](https://tools.ietf.org/html/rfc7231#section-5.3.5).
     public static let defaultAcceptLanguage: HTTPHeader = {
+        /*
+         就和 Enum 一样, 可以直接用 .acceptLanguage 来进行对象的生成操作.
+         */
         .acceptLanguage(Locale.preferredLanguages.prefix(6).qualityEncoded())
     }()
 
@@ -379,6 +435,7 @@ extension HTTPHeader {
         let appVersion = info?["CFBundleShortVersionString"] as? String ?? "Unknown"
         let appBuild = info?[kCFBundleVersionKey as String] as? String ?? "Unknown"
 
+        // 这里, 用懒加载的方式, 将 OSNameVersion 的生成过程, 封装到了一个单元里面. 
         let osNameVersion: String = {
             let version = ProcessInfo.processInfo.operatingSystemVersion
             let versionString = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
@@ -421,7 +478,9 @@ extension Collection where Element == String {
 }
 
 // MARK: - System Type Extensions
-
+/*
+ 这里不是太明白.
+ */
 extension URLRequest {
     /// Returns `allHTTPHeaderFields` as `HTTPHeaders`.
     public var headers: HTTPHeaders {

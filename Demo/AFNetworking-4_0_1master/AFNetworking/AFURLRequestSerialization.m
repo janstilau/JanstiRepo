@@ -59,6 +59,7 @@ NSString * AFPercentEscapedStringFromString(NSString *string) {
     NSUInteger index = 0;
     NSMutableString *escaped = @"".mutableCopy;
 
+    // 分批分步进行替换的方法. 就是不改变原有值, 然后用填充新值的方式.
     while (index < string.length) {
         NSUInteger length = MIN(string.length - index, batchSize);
         NSRange range = NSMakeRange(index, length);
@@ -79,12 +80,13 @@ NSString * AFPercentEscapedStringFromString(NSString *string) {
 #pragma mark -
 
 @interface AFQueryStringPair : NSObject
+
 @property (readwrite, nonatomic, strong) id field;
 @property (readwrite, nonatomic, strong) id value;
 
 - (instancetype)initWithField:(id)field value:(id)value;
-
 - (NSString *)URLEncodedStringValue;
+
 @end
 
 @implementation AFQueryStringPair
@@ -480,6 +482,10 @@ forHTTPHeaderField:(NSString *)field
 
     NSMutableURLRequest *mutableRequest = [request mutableCopy];
 
+    /*
+     首先, 是根据 HTTPRequestHeaders 里面, 对于 Request 里面的 HTTPHeaderField 进行一些赋值的行为.
+     在生成它的时候, 作者首先在里面设置了两个值, Accept-Language, 以及 User-Agent
+     */
     [self.HTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL * __unused stop) {
         if (![request valueForHTTPHeaderField:field]) {
             [mutableRequest setValue:value forHTTPHeaderField:field];
@@ -487,8 +493,10 @@ forHTTPHeaderField:(NSString *)field
     }];
 
     NSString *query = nil;
+    // 生成 HTTP Query 的信息.
     if (parameters) {
         if (self.queryStringSerialization) {
+            // 如果提供了自定义的Block, 那么就自动以操纵. 带有错误检查机制.
             NSError *serializationError;
             query = self.queryStringSerialization(request, parameters, &serializationError);
 
@@ -500,6 +508,7 @@ forHTTPHeaderField:(NSString *)field
                 return nil;
             }
         } else {
+            // 否则, 用最基本的 Query 生成算法.
             switch (self.queryStringSerializationStyle) {
                 case AFHTTPRequestQueryStringDefaultStyle:
                     query = AFQueryStringFromParameters(parameters);
@@ -508,6 +517,7 @@ forHTTPHeaderField:(NSString *)field
         }
     }
 
+    // 如果, Query 需要拼接到 URL 里面, 那么就改变 URL, 将 QUERY 拼接进去.
     if ([self.HTTPMethodsEncodingParametersInURI containsObject:[[request HTTPMethod] uppercaseString]]) {
         if (query && query.length > 0) {
             mutableRequest.URL = [NSURL URLWithString:[[mutableRequest.URL absoluteString] stringByAppendingFormat:mutableRequest.URL.query ? @"&%@" : @"?%@", query]];
@@ -517,6 +527,7 @@ forHTTPHeaderField:(NSString *)field
         if (!query) {
             query = @"";
         }
+        // 否则, 就把 QUERY, 当做 HTTP 的 body 进行处理.
         if (![mutableRequest valueForHTTPHeaderField:@"Content-Type"]) {
             [mutableRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
         }

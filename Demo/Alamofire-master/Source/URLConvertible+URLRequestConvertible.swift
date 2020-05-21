@@ -95,6 +95,7 @@ public protocol URLRequestConvertible {
 
 extension URLRequestConvertible {
     /// The `URLRequest` returned by discarding any `Error` encountered.
+    // 由于, asURLRequest 可能抛出错误, 所以, 这里 urlRequest 是 URLRequest?, 里面使用的是 try? asURLRequest()
     public var urlRequest: URLRequest? { try? asURLRequest() }
 }
 
