@@ -8,10 +8,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/*
+ 所有的都和 Array 里面的操作相同, 只不过, 每次传入的值都变成了 KeyType 和 ObjectType.
+ */
+
 /** Block extension for NSDictionary.
 
- Both inspired by and resembling Smalltalk syntax, this utility
- allows iteration of a dictionary in a concise way that
+ Both inspired by and resembling Smalltalk syntax,
+ this utility allows iteration of a dictionary in a concise way that
  saves quite a bit of boilerplate code.
 
  Includes code by the following:
