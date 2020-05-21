@@ -6,9 +6,6 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 
 @class NSDictionary;
@@ -22,9 +19,13 @@ extern "C" {
  */
 @interface NSURLResponse :  NSObject <NSCoding, NSCopying>
 {
-#if	GS_EXPOSE(NSURLResponse)
-  void *_NSURLResponseInternal;
-#endif
+    long long        expectedContentLength;
+    NSURL            *URL;
+    NSString        *MIMEType;
+    NSString        *textEncodingName;
+    NSString        *statusText;
+    NSMutableDictionary    *headers; /* _GSMutableInsensitiveDictionary */
+    int            statusCode;
 }
 
 /**
@@ -39,8 +40,8 @@ extern "C" {
  * text encoding name provided.
  */
 - (id) initWithURL: (NSURL *)URL
-  MIMEType: (NSString *)MIMEType
-  expectedContentLength: (NSInteger)length
+          MIMEType: (NSString *)MIMEType
+expectedContentLength: (NSInteger)length
   textEncodingName: (NSString *)name;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_7,GS_API_LATEST)
@@ -49,7 +50,7 @@ extern "C" {
  * headerFields provided.
  */
 - (id) initWithURL: (NSURL*)URL
-	statusCode: (NSInteger)statusCode
+        statusCode: (NSInteger)statusCode
        HTTPVersion: (NSString*)HTTPVersion
       headerFields: (NSDictionary*)headerFields;
 #endif
@@ -108,10 +109,6 @@ extern "C" {
 - (NSInteger) statusCode;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

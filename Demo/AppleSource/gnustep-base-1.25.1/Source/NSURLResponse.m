@@ -10,21 +10,7 @@
 #import "NSCallBacks.h"
 #import "GNUstepBase/GSMime.h"
 
-
-// Internal data storage
-typedef struct {
-  long long		expectedContentLength;
-  NSURL			*URL;
-  NSString		*MIMEType;
-  NSString		*textEncodingName;
-  NSString		*statusText;
-  NSMutableDictionary	*headers; /* _GSMutableInsensitiveDictionary */
-  int			statusCode;
-} Internal;
- 
-#define	this	((Internal*)(self->_NSURLResponseInternal))
-#define	inst	((Internal*)(o->_NSURLResponseInternal))
-
+@class NSMutableDictionary;
 
 @interface	_GSMutableInsensitiveDictionary : NSMutableDictionary
 @end
@@ -32,22 +18,21 @@ typedef struct {
 
 // 这其实仅仅是一个数据类而已.
 
-
 @implementation	NSURLResponse (Private)
 
 - (void) _checkHeaders
 {
-  if (NSURLResponseUnknownLength == this->expectedContentLength)
+  if (NSURLResponseUnknownLength == self->expectedContentLength)
     {
       NSString	*s= [self _valueForHTTPHeaderField: @"content-length"];
 
       if ([s length] > 0)
 	{
-	  this->expectedContentLength = [s intValue];
+	  self->expectedContentLength = [s intValue];
 	}
     }
 
-  if (nil == this->MIMEType)
+  if (nil == self->MIMEType)
     {
       GSMimeHeader	*c;
       GSMimeParser	*p;
@@ -64,9 +49,9 @@ typedef struct {
       c = AUTORELEASE([GSMimeHeader new]);
       [p scanHeaderBody: s into: c];
       RELEASE(p);
-      ASSIGNCOPY(this->MIMEType, [c value]);
+      ASSIGNCOPY(self->MIMEType, [c value]);
       v = [c parameterForKey: @"charset"];
-      ASSIGNCOPY(this->textEncodingName, v);
+      ASSIGNCOPY(self->textEncodingName, v);
     }
 }
 
@@ -103,20 +88,20 @@ typedef struct {
 }
 - (void) _setStatusCode: (NSInteger)code text: (NSString*)text
 {
-  this->statusCode = code;
-  ASSIGNCOPY(this->statusText, text);
+  self->statusCode = code;
+  ASSIGNCOPY(self->statusText, text);
 }
 - (void) _setValue: (NSString *)value forHTTPHeaderField: (NSString *)field
 {
-  if (this->headers == 0)
+  if (self->headers == 0)
     {
-      this->headers = [_GSMutableInsensitiveDictionary new];
+      self->headers = [_GSMutableInsensitiveDictionary new];
     }
-  [this->headers setObject: value forKey: field];
+  [self->headers setObject: value forKey: field];
 }
 - (NSString *) _valueForHTTPHeaderField: (NSString *)field
 {
-  return [this->headers objectForKey: field];
+  return [self->headers objectForKey: field];
 }
 @end
 
@@ -152,15 +137,15 @@ typedef struct {
 	textEncodingName: [self textEncodingName]];
       if (o != nil)
 	{
-	  ASSIGN(inst->statusText, this->statusText);
-	  inst->statusCode = this->statusCode;
-	  if (this->headers == 0)
+	  ASSIGN(inst->statusText, self->statusText);
+	  inst->statusCode = self->statusCode;
+	  if (self->headers == 0)
 	    {
 	      inst->headers = 0;
 	    }
 	  else
 	    {
-	      inst->headers = [this->headers mutableCopy];
+	      inst->headers = [self->headers mutableCopy];
 	    }
 	}
     }
@@ -169,21 +154,21 @@ typedef struct {
 
 - (void) dealloc
 {
-  if (this != 0)
+  if (self != 0)
     {
-      RELEASE(this->URL);
-      RELEASE(this->MIMEType);
-      RELEASE(this->textEncodingName);
-      RELEASE(this->statusText);
-      RELEASE(this->headers);
-      NSZoneFree([self zone], this);
+      RELEASE(self->URL);
+      RELEASE(self->MIMEType);
+      RELEASE(self->textEncodingName);
+      RELEASE(self->statusText);
+      RELEASE(self->headers);
+      NSZoneFree([self zone], self);
     }
   [super dealloc];
 }
 
 - (long long) expectedContentLength
 {
-  return this->expectedContentLength;
+  return self->expectedContentLength;
 }
 
 /**
@@ -197,10 +182,10 @@ typedef struct {
 {
   if ((self = [super init]) != nil)
     {
-      ASSIGN(this->URL, URL);
-      ASSIGNCOPY(this->MIMEType, MIMEType);
-      ASSIGNCOPY(this->textEncodingName, name);
-      this->expectedContentLength = length;
+      ASSIGN(self->URL, URL);
+      ASSIGNCOPY(self->MIMEType, MIMEType);
+      ASSIGNCOPY(self->textEncodingName, name);
+      self->expectedContentLength = length;
     }
   return self;
 }
@@ -216,8 +201,8 @@ typedef struct {
 	  textEncodingName: nil];
   if (nil != self)
     {
-      this->statusCode = statusCode;
-      this->headers = [headerFields copy];
+      self->statusCode = statusCode;
+      self->headers = [headerFields copy];
       [self _checkHeaders];
     }
   return self;
@@ -225,7 +210,7 @@ typedef struct {
 
 - (NSString *) MIMEType
 {
-  return this->MIMEType;
+  return self->MIMEType;
 }
 
 /**
@@ -284,12 +269,12 @@ typedef struct {
 
 - (NSString *) textEncodingName
 {
-  return this->textEncodingName;
+  return self->textEncodingName;
 }
 
 - (NSURL *) URL
 {
-  return this->URL;
+  return self->URL;
 }
 
 @end
@@ -305,12 +290,12 @@ typedef struct {
 
 - (NSDictionary *) allHeaderFields
 {
-  return AUTORELEASE([this->headers copy]);
+  return AUTORELEASE([self->headers copy]);
 }
 
 - (NSInteger) statusCode
 {
-  return this->statusCode;
+  return self->statusCode;
 }
 @end
 

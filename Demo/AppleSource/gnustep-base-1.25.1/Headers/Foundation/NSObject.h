@@ -12,10 +12,6 @@
 
 #import	<GNUstepBase/GNUstep.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSArchiver;
 @class NSArray;
 @class NSCoder;
@@ -566,10 +562,6 @@ GS_EXPORT NSRecursiveLock *gnustep_global_lock;
  */
 - (BOOL) isContentDiscarded;
 @end
-#endif
-#if	defined(__cplusplus)
-}
-#endif
 
 #if     !NO_GNUSTEP && !defined(GNUSTEP_BASE_INTERNAL)
 #import <GNUstepBase/NSObject+GNUstepBase.h>
