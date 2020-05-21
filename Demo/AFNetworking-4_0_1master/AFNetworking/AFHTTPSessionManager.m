@@ -1,24 +1,3 @@
-// AFHTTPSessionManager.m
-// Copyright (c) 2011–2016 Alamofire Software Foundation ( http://alamofire.org/ )
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 #import "AFHTTPSessionManager.h"
 
 #import "AFURLRequestSerialization.h"
@@ -41,10 +20,13 @@
 #endif
 
 @interface AFHTTPSessionManager ()
+
 @property (readwrite, nonatomic, strong) NSURL *baseURL;
+
 @end
 
 @implementation AFHTTPSessionManager
+
 @dynamic responseSerializer;
 
 + (instancetype)manager {
@@ -70,17 +52,28 @@
     if (!self) {
         return nil;
     }
-
+    
     // Ensure terminal slash for baseURL path, so that NSURL +URLWithString:relativeToURL: works as expected
     if ([[url path] length] > 0 && ![[url absoluteString] hasSuffix:@"/"]) {
         url = [url URLByAppendingPathComponent:@""];
     }
-
+    
     self.baseURL = url;
-
+    /*
+     HttpSessionManager, 将
+     requestSerializer 设置为 AFHTTPRequestSerializer
+     responseSerializer 设置为 AFJSONResponseSerializer.
+     也就是说, 这子类化, 对父类的某些特性, 进行了特化.
+     */
+    /*
+     AFURLSessionManager 是没有 requestSerializer 的概念的, 它对接的是, Request.
+     AFURLSessionManager 是将 URL, Parameter 各种信息, 构建成为一个 Request 的过程.
+     AFJSONResponseSerializer 则是, 将 Response 的 data 进行解析的过程.
+     具体的问题, 放到具体的类中进行操作. AFHTTPRequestSerializer 专门进行 Request 的生成工作.
+     */
     self.requestSerializer = [AFHTTPRequestSerializer serializer];
     self.responseSerializer = [AFJSONResponseSerializer serializer];
-
+    
     return self;
 }
 
@@ -88,13 +81,11 @@
 
 - (void)setRequestSerializer:(AFHTTPRequestSerializer <AFURLRequestSerialization> *)requestSerializer {
     NSParameterAssert(requestSerializer);
-
     _requestSerializer = requestSerializer;
 }
 
 - (void)setResponseSerializer:(AFHTTPResponseSerializer <AFURLResponseSerialization> *)responseSerializer {
     NSParameterAssert(responseSerializer);
-
     [super setResponseSerializer:responseSerializer];
 }
 
@@ -111,7 +102,7 @@
         NSString *reason = [NSString stringWithFormat:@"A security policy configured with `%@` can only be applied on a manager with a secure base URL (i.e. https)", pinningMode];
         @throw [NSException exceptionWithName:@"Invalid Security Policy" reason:reason userInfo:nil];
     }
-
+    
     [super setSecurityPolicy:securityPolicy];
 }
 
@@ -188,10 +179,12 @@
                 failure(nil, serializationError);
             });
         }
-        
         return nil;
     }
     
+    /*
+     Post, 如果带有文件的化, 直接走 upload 的方法.
+     */
     __block NSURLSessionDataTask *task = [self uploadTaskWithStreamedRequest:request progress:uploadProgress completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error) {
         if (error) {
             if (failure) {
@@ -248,6 +241,11 @@
     return dataTask;
 }
 
+/*
+ 上面的大部分的操作, 都仅仅是 HTTPMethod 的封装而已, 在这里, 将对应的任务归总到 dataTaskWithHTTPMethod.
+ 在这个方法的内部, 首先根据 requestSerializer 生成对应的 Request 对象. 然后调用父类的 dataTaskWithRequest 方法. 在父类里面, 有着对于任务的管理.
+ */
+
 
 - (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
                                        URLString:(NSString *)URLString
@@ -264,16 +262,17 @@
     for (NSString *headerField in headers.keyEnumerator) {
         [request setValue:headers[headerField] forHTTPHeaderField:headerField];
     }
+    
     if (serializationError) {
         if (failure) {
             dispatch_async(self.completionQueue ?: dispatch_get_main_queue(), ^{
                 failure(nil, serializationError);
             });
         }
-
+        
         return nil;
     }
-
+    
     /*
      在 MCNetwork 里面, 将上面的程序进行了接管. 没有直接调用 Get, Post 那些方法. 而是构建出 Request 对象之后, 直接调用的下面的 dataTaskWithRequest 的方法.
      */
@@ -292,70 +291,8 @@
             }
         }
     }];
-
+    
     return dataTask;
-}
-
-#pragma mark - NSObject
-
-- (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p, baseURL: %@, session: %@, operationQueue: %@>", NSStringFromClass([self class]), self, [self.baseURL absoluteString], self.session, self.operationQueue];
-}
-
-#pragma mark - NSSecureCoding
-
-+ (BOOL)supportsSecureCoding {
-    return YES;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)decoder {
-    NSURL *baseURL = [decoder decodeObjectOfClass:[NSURL class] forKey:NSStringFromSelector(@selector(baseURL))];
-    NSURLSessionConfiguration *configuration = [decoder decodeObjectOfClass:[NSURLSessionConfiguration class] forKey:@"sessionConfiguration"];
-    if (!configuration) {
-        NSString *configurationIdentifier = [decoder decodeObjectOfClass:[NSString class] forKey:@"identifier"];
-        if (configurationIdentifier) {
-            configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:configurationIdentifier];
-        }
-    }
-
-    self = [self initWithBaseURL:baseURL sessionConfiguration:configuration];
-    if (!self) {
-        return nil;
-    }
-
-    self.requestSerializer = [decoder decodeObjectOfClass:[AFHTTPRequestSerializer class] forKey:NSStringFromSelector(@selector(requestSerializer))];
-    self.responseSerializer = [decoder decodeObjectOfClass:[AFHTTPResponseSerializer class] forKey:NSStringFromSelector(@selector(responseSerializer))];
-    AFSecurityPolicy *decodedPolicy = [decoder decodeObjectOfClass:[AFSecurityPolicy class] forKey:NSStringFromSelector(@selector(securityPolicy))];
-    if (decodedPolicy) {
-        self.securityPolicy = decodedPolicy;
-    }
-
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)coder {
-    [super encodeWithCoder:coder];
-
-    [coder encodeObject:self.baseURL forKey:NSStringFromSelector(@selector(baseURL))];
-    if ([self.session.configuration conformsToProtocol:@protocol(NSCoding)]) {
-        [coder encodeObject:self.session.configuration forKey:@"sessionConfiguration"];
-    } else {
-        [coder encodeObject:self.session.configuration.identifier forKey:@"identifier"];
-    }
-    [coder encodeObject:self.requestSerializer forKey:NSStringFromSelector(@selector(requestSerializer))];
-    [coder encodeObject:self.responseSerializer forKey:NSStringFromSelector(@selector(responseSerializer))];
-    [coder encodeObject:self.securityPolicy forKey:NSStringFromSelector(@selector(securityPolicy))];
-}
-
-#pragma mark - NSCopying
-
-- (instancetype)copyWithZone:(NSZone *)zone {
-    AFHTTPSessionManager *HTTPClient = [[[self class] allocWithZone:zone] initWithBaseURL:self.baseURL sessionConfiguration:self.session.configuration];
-
-    HTTPClient.requestSerializer = [self.requestSerializer copyWithZone:zone];
-    HTTPClient.responseSerializer = [self.responseSerializer copyWithZone:zone];
-    HTTPClient.securityPolicy = [self.securityPolicy copyWithZone:zone];
-    return HTTPClient;
 }
 
 @end
