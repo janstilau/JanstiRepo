@@ -1742,17 +1742,13 @@ compare(id elem1, id elem2, void* context)
         GS_DISPATCH_CREATE_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
         FOR_IN (id, obj, enumerator)
         GS_DISPATCH_SUBMIT_BLOCK(enumQueueGroup, enumQueue, if (YES == shouldStop) {return;}, return, aBlock, obj, count, &shouldStop);
-        if (isReverse)
-        {
+        if (isReverse) {
             count--;
-        }
-        else
-        {
+        } else {
             count++;
         }
         
-        if (shouldStop)
-        {
+        if (shouldStop) {
             break;
         }
         END_FOR_IN(enumerator)
@@ -1860,10 +1856,11 @@ compare(id elem1, id elem2, void* context)
     {
         indexLock = [NSLock new];
     }
+    
     {
         GS_DISPATCH_CREATE_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
         FOR_IN (id, obj, enumerator)
-#     if __has_feature(blocks) && (GS_USE_LIBDISPATCH == 1)
+        
         dispatch_group_async(enumQueueGroup, enumQueue, ^(void){
             if (shouldStop)
             {
@@ -1880,14 +1877,6 @@ compare(id elem1, id elem2, void* context)
                 [indexLock unlock];
             }
         });
-#     else
-        if (CALL_BLOCK(predicate, obj, count, &shouldStop))
-        {
-            
-            index = count;
-            shouldStop = YES;
-        }
-#     endif
         if (shouldStop)
         {
             break;

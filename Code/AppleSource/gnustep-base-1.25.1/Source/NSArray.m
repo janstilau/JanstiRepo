@@ -1499,7 +1499,6 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
 - (NSUInteger) indexOfObjectWithOptions: (NSEnumerationOptions)opts
                             passingTest: (GSPredicateBlock)predicate
 {
-    /* TODO: Concurrency. */
     id<NSFastEnumeration> enumerator = self;
     BLOCK_SCOPE BOOL      shouldStop = NO;
     NSUInteger            count = 0;
@@ -1521,9 +1520,14 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
     {
         GS_DISPATCH_CREATE_QUEUE_AND_GROUP_FOR_ENUMERATION(enumQueue, opts)
         FOR_IN (id, obj, enumerator)
-#     if __has_feature(blocks) && (GS_USE_LIBDISPATCH == 1)
         dispatch_group_async(enumQueueGroup, enumQueue, ^(void){
-            if (shouldStop)
+            
+            BOOL shouldStopThisTime = NO;
+            [indexLock lock];
+            shouldStopThisTime = shouldStop;
+            [indexLock unlock];
+            
+            if (shouldStopThisTime)
             {
                 return;
             }
@@ -1538,14 +1542,6 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
                 [indexLock unlock];
             }
         });
-#     else
-        if (CALL_BLOCK(predicate, obj, count, &shouldStop))
-        {
-            
-            index = count;
-            shouldStop = YES;
-        }
-#     endif
         if (shouldStop)
         {
             break;

@@ -11,8 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** Block extensions for NSArray.
 
- Both inspired by and resembling Smalltalk syntax, these utilities
- allows for iteration of an array in a concise way that
+ Both inspired by and resembling Smalltalk syntax,
+ these utilities allows for iteration of an array in a concise way that
  saves quite a bit of boilerplate code for filtering or finding
  objects or an object.
 
@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** Loops through an array and executes the given block with each object.
 
  @param block A single-argument, void-returning code block.
+ 对应于 Swift 的 forEach
  */
 - (void)bk_each:(void (^)(ObjectType obj))block;
 
@@ -40,11 +41,14 @@ NS_ASSUME_NONNULL_BEGIN
  Enumeration will occur on appropriate background queues. This
  will have a noticeable speed increase, especially on dual-core
  devices, but you *must* be aware of the thread safety of the
- objects you message from within the block. Be aware that the
- order of objects is not necessarily the order each block will
+ objects you message from within the block.
+ Be aware that the order of objects is not necessarily the order each block will
  be called in.
 
  @param block A single-argument, void-returning code block.
+ 
+ 该功能, 没有在 Swfit 里面寻找到. Apply 是多线程版本的 forEach.
+ 
  */
 - (void)bk_apply:(void (^)(ObjectType obj))block;
 
@@ -56,6 +60,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param block A single-argument, `BOOL`-returning code block.
  @return Returns the object, if found, or `nil`.
  @see bk_select:
+ 
+ Swift 的 first 函数, 当找到第一个匹配的就返回
  */
 - (nullable id)bk_match:(BOOL (^)(ObjectType obj))block;
 
@@ -64,6 +70,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param block A single-argument, BOOL-returning code block.
  @return Returns an array of the objects found.
  @see bk_match:
+ 
+ Swift 的 filter 函数, 找到所有的匹配项.
  */
 - (NSArray *)bk_select:(BOOL (^)(ObjectType obj))block;
 
@@ -118,6 +126,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param initial The value of the reduction at its start.
  @param block A block that takes the current sum and the next object to return the new sum.
  @return An accumulated value.
+ */
+/*
+ OC 里面, 类型是无法进行类型的标识的. 所以, 无法通过编译器做很好的类型限制工作.
  */
 - (nullable id)bk_reduce:(nullable id)initial withBlock:(__nullable id (^)(__nullable id sum, ObjectType obj))block;
 
