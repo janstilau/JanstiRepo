@@ -28,6 +28,11 @@
  编译器底层做的事情.
  */
 
+@interface NSEnumerator
+
+@end
+
+
 static BOOL GSMacOSXCompatiblePropertyLists(void)
 {
     if (GSPrivateDefaultsFlag(NSWriteOldStylePropertyLists) == YES)
@@ -319,8 +324,8 @@ static SEL	removeLastSel;
 
 // 没看.
 - (int) countByEnumeratingWithState: (NSFastEnumerationState*)state
-                                   objects: (__unsafe_unretained id[])stackbuf
-                                     count: (int)len
+                            objects: (__unsafe_unretained id[])stackbuf
+                              count: (int)len
 {
     NSInteger count;
     
@@ -1497,7 +1502,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
 }
 
 - (int) indexOfObjectWithOptions: (NSEnumerationOptions)opts
-                            passingTest: (GSPredicateBlock)predicate
+                     passingTest: (GSPredicateBlock)predicate
 {
     id<NSFastEnumeration> enumerator = self;
     BLOCK_SCOPE BOOL      shouldStop = NO;
@@ -1560,8 +1565,8 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
 }
 
 - (int) indexOfObjectAtIndexes: (NSIndexSet*)indexSet
-                              options: (NSEnumerationOptions)opts
-                          passingTest: (GSPredicateBlock)predicate
+                       options: (NSEnumerationOptions)opts
+                   passingTest: (GSPredicateBlock)predicate
 {
     return [[self objectsAtIndexes: indexSet]
             indexOfObjectWithOptions: 0
