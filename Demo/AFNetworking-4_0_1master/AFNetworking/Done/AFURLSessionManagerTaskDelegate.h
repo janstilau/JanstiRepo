@@ -68,14 +68,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithTask:(NSURLSessionTask *)task;
 
 @property (nonatomic, weak) AFURLSessionManager *manager;
-@property (nonatomic, strong) NSMutableData *mutableData;
-@property (nonatomic, strong) NSProgress *uploadProgress;
+@property (nonatomic, strong) NSMutableData *mutableData; // 下载过程中的 data
+@property (nonatomic, strong) NSProgress *uploadProgress; // 进度, 主要是回调使用
 @property (nonatomic, strong) NSProgress *downloadProgress;
 @property (nonatomic, copy) NSURL *downloadFileURL;
 #if AF_CAN_INCLUDE_SESSION_TASK_METRICS
 @property (nonatomic, strong) NSURLSessionTaskMetrics *sessionTaskMetrics AF_API_AVAILABLE(ios(10), macosx(10.12), watchos(3), tvos(10));
 #endif
-
+/*
+ 各种回调. 
+ */
 @property (nonatomic, copy) AFURLSessionDownloadTaskDidFinishDownloadingBlock downloadTaskDidFinishDownloading;
 @property (nonatomic, copy) AFURLSessionTaskProgressBlock uploadProgressBlock;
 @property (nonatomic, copy) AFURLSessionTaskProgressBlock downloadProgressBlock;

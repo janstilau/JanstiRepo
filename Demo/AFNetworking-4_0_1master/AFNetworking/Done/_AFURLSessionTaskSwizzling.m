@@ -80,6 +80,9 @@ static inline BOOL af_addMethod(Class theClass, SEL selector, Method method) {
         IMP originalAFResumeIMP = method_getImplementation(class_getInstanceMethod([self class], @selector(af_resume)));
         Class currentClass = [localDataTask class];
         
+        /*
+         这里, 是把 SessionDataTask 的af_resume, af_suspend 和自己的进行了替换.
+         */
         while (class_getInstanceMethod(currentClass, @selector(resume))) {
             Class superClass = [currentClass superclass];
             IMP classResumeIMP = method_getImplementation(class_getInstanceMethod(currentClass, @selector(resume)));
@@ -113,6 +116,10 @@ static inline BOOL af_addMethod(Class theClass, SEL selector, Method method) {
     NSAssert(NO, @"State method should never be called in the actual dummy class");
     return NSURLSessionTaskStateCanceling;
 }
+
+/*
+ 替换的目的就是在于, 当 DataTask 进行恢复, 或者停止的时刻, 发送一个通知. 这个通知, 会 AFURLSessionManagerTests 中进行处理.
+ */
 
 - (void)af_resume {
     NSAssert([self respondsToSelector:@selector(state)], @"Does not respond to state");

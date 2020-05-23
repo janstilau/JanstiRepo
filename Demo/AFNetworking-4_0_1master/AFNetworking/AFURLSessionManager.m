@@ -12,7 +12,7 @@
 @property (readwrite, nonatomic, strong) NSOperationQueue *operationQueue;
 @property (readwrite, nonatomic, strong) NSURLSession *session;
 @property (readwrite, nonatomic, strong) NSMutableDictionary *mutableTaskDelegatesKeyedByTaskIdentifier;
-@property (readonly, nonatomic, copy) NSString *taskDescriptionForSessionTasks;
+@property (readwrite, nonatomic, copy) NSString *taskDescriptionForSessionTasks;
 @property (readwrite, nonatomic, strong) NSLock *lock;
 @property (readwrite, nonatomic, copy) AFURLSessionDidBecomeInvalidBlock sessionDidBecomeInvalid;
 @property (readwrite, nonatomic, copy) AFURLSessionDidReceiveAuthenticationChallengeBlock sessionDidReceiveAuthenticationChallenge;
@@ -69,6 +69,9 @@
     self.lock = [[NSLock alloc] init];
     self.lock.name = AFURLSessionManagerLockName;
     
+    self.session = [NSURLSession sessionWithConfiguration:self.sessionConfiguration delegate:self delegateQueue:self.operationQueue];
+    self.taskDescriptionForSessionTasks = [NSString stringWithFormat:@"%p", self];
+    
     [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
         for (NSURLSessionDataTask *task in dataTasks) {
             [self addDelegateForDataTask:task uploadProgress:nil downloadProgress:nil completionHandler:nil];
@@ -92,70 +95,32 @@
 
 #pragma mark -
 
-- (NSURLSession *)session {
-    
-    @synchronized (self) {
-        if (!_session) {
-            _session = [NSURLSession sessionWithConfiguration:self.sessionConfiguration delegate:self delegateQueue:self.operationQueue];
-        }
-    }
-    return _session;
-}
-
-#pragma mark -
-
-
-- (NSString *)taskDescriptionForSessionTasks {
-    return [NSString stringWithFormat:@"%p", self];
-}
-
-- (void)taskDidResume:(NSNotification *)notification {
-    NSURLSessionTask *task = notification.object;
-    if ([task respondsToSelector:@selector(taskDescription)]) {
-        if ([task.taskDescription isEqualToString:self.taskDescriptionForSessionTasks]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:AFNetworkingTaskDidResumeNotification object:task];
-            });
-        }
-    }
-}
-
-- (void)taskDidSuspend:(NSNotification *)notification {
-    NSURLSessionTask *task = notification.object;
-    if ([task respondsToSelector:@selector(taskDescription)]) {
-        if ([task.taskDescription isEqualToString:self.taskDescriptionForSessionTasks]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:AFNetworkingTaskDidSuspendNotification object:task];
-            });
-        }
-    }
-}
-
-#pragma mark -
+/*
+ 这里, 所有的对于 mutableTaskDelegatesKeyedByTaskIdentifier 的操作. 都进行了 Lock. 因为, 用户在调用网络请求的时候, 所在的线程是不一定的.
+ 虽然调用了 Lock, 但是这里仅仅是网络任务的管理工作, 也就是 MutableDict 的更改, 网络请求不会拥堵在一起.
+ */
 
 - (AFURLSessionManagerTaskDelegate *)delegateForTask:(NSURLSessionTask *)task {
-    NSParameterAssert(task);
-    
     AFURLSessionManagerTaskDelegate *delegate = nil;
     [self.lock lock];
     delegate = self.mutableTaskDelegatesKeyedByTaskIdentifier[@(task.taskIdentifier)];
     [self.lock unlock];
-    
     return delegate;
 }
 
 - (void)setDelegate:(AFURLSessionManagerTaskDelegate *)delegate
             forTask:(NSURLSessionTask *)task
 {
-    NSParameterAssert(task);
-    NSParameterAssert(delegate);
-    
     [self.lock lock];
     self.mutableTaskDelegatesKeyedByTaskIdentifier[@(task.taskIdentifier)] = delegate;
     [self addNotificationObserverForTask:task];
     [self.lock unlock];
 }
 
+/*
+ 这个方法, 会在 DataTask 生成的函数中调用, 所以, 进行一个网络请求, 其实就是生成一个 Delegate 对象, 然后管理这个对象就可以了.
+ 可以说, SessionManager 这个类, 就是网络控制. 而所有的业务业务逻辑, 都在 Delegate 对象的 Block 中.
+ */
 - (void)addDelegateForDataTask:(NSURLSessionDataTask *)dataTask
                 uploadProgress:(nullable void (^)(NSProgress *uploadProgress)) uploadProgressBlock
               downloadProgress:(nullable void (^)(NSProgress *downloadProgress)) downloadProgressBlock
@@ -164,12 +129,11 @@
     AFURLSessionManagerTaskDelegate *delegate = [[AFURLSessionManagerTaskDelegate alloc] initWithTask:dataTask];
     delegate.manager = self;
     delegate.completionHandler = completionHandler;
-    
     dataTask.taskDescription = self.taskDescriptionForSessionTasks;
-    [self setDelegate:delegate forTask:dataTask];
-    
     delegate.uploadProgressBlock = uploadProgressBlock;
     delegate.downloadProgressBlock = downloadProgressBlock;
+    
+    [self setDelegate:delegate forTask:dataTask];
 }
 
 - (void)addDelegateForUploadTask:(NSURLSessionUploadTask *)uploadTask
@@ -209,9 +173,10 @@
     delegate.downloadProgressBlock = downloadProgressBlock;
 }
 
+/*
+ 这里会在任务结束之后调用. 进行任务的清理工作.
+ */
 - (void)removeDelegateForTask:(NSURLSessionTask *)task {
-    NSParameterAssert(task);
-    
     [self.lock lock];
     [self removeNotificationObserverForTask:task];
     [self.mutableTaskDelegatesKeyedByTaskIdentifier removeObjectForKey:@(task.taskIdentifier)];
@@ -242,6 +207,9 @@
     return tasks;
 }
 
+/*
+ 写一个综合性的方法, 让其他方法进行调用. 这样逻辑集中, 也利于扩展.
+ */
 - (NSArray *)tasks {
     return [self tasksForKeyPath:NSStringFromSelector(_cmd)];
 }
@@ -273,13 +241,20 @@
 
 #pragma mark -
 
+/*
+  _responseSerializer 并不是在 Manager 中使用, 而是在 Delegate 类中进行的使用.
+ */
 - (void)setResponseSerializer:(id <AFURLResponseSerialization>)responseSerializer {
-    NSParameterAssert(responseSerializer);
-    
     _responseSerializer = responseSerializer;
 }
 
 #pragma mark -
+
+/*
+ 专门设置了两个方法, 进行自定义通知的处理.
+ 注意, 这里, 发送通知的 Object, 就是各个 Task.
+ */
+
 - (void)addNotificationObserverForTask:(NSURLSessionTask *)task {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskDidResume:) name:AFNSURLSessionTaskDidResumeNotification object:task];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskDidSuspend:) name:AFNSURLSessionTaskDidSuspendNotification object:task];
@@ -288,6 +263,30 @@
 - (void)removeNotificationObserverForTask:(NSURLSessionTask *)task {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AFNSURLSessionTaskDidSuspendNotification object:task];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AFNSURLSessionTaskDidResumeNotification object:task];
+}
+
+- (void)taskDidResume:(NSNotification *)notification {
+    // 这里, self.taskDescriptionForSessionTasks 主要是为了进行任务筛选用的. 如果是本 manager 进行管理的 task, 才会进行后续的操作.
+    // AFNetworkingTaskDidResumeNotification, AFNetworkingTaskDidSuspendNotification 主要是为了 AFN 的 UIKit 进行服务的, 对于平时的使用, 是没有影响的.
+    NSURLSessionTask *task = notification.object;
+    if ([task respondsToSelector:@selector(taskDescription)]) {
+        if ([task.taskDescription isEqualToString:self.taskDescriptionForSessionTasks]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:AFNetworkingTaskDidResumeNotification object:task];
+            });
+        }
+    }
+}
+
+- (void)taskDidSuspend:(NSNotification *)notification {
+    NSURLSessionTask *task = notification.object;
+    if ([task respondsToSelector:@selector(taskDescription)]) {
+        if ([task.taskDescription isEqualToString:self.taskDescriptionForSessionTasks]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:AFNetworkingTaskDidSuspendNotification object:task];
+            });
+        }
+    }
 }
 
 #pragma mark -
@@ -305,6 +304,11 @@
 }
 
 #pragma mark -
+
+/*
+ 下面的这些方法, 都是通过 session 创建出对应的 DataTask 来, 然后创建一个新的 Delegate 对象.
+ 真正的网络, 还是 Session 的黑盒操作. Manager 里面, 更多的是对于回调的控制.
+ */
 
 - (NSURLSessionUploadTask *)uploadTaskWithRequest:(NSURLRequest *)request
                                          fromFile:(NSURL *)fileURL
@@ -371,7 +375,6 @@
     return downloadTask;
 }
 
-#pragma mark -
 - (NSProgress *)uploadProgressForTask:(NSURLSessionTask *)task {
     return [[self delegateForTask:task] uploadProgress];
 }
@@ -478,6 +481,11 @@
 }
 
 #pragma mark - NSURLSessionDelegate
+
+/*
+ 如果是 Session 自己的代理方法, 在 Manager 中进行处理.
+ 如果是各个 Task 的方法, 在各个 Delegate 对象中进行处理.
+ */
 
 - (void)URLSession:(NSURLSession *)session
 didBecomeInvalidWithError:(NSError *)error
