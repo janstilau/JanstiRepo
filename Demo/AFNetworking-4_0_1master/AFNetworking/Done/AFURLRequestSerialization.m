@@ -22,6 +22,9 @@ typedef NSString * (^AFQueryStringSerializationBlock)(NSURLRequest *request, id 
  should be percent-escaped in the query string.
  - parameter string: The string to be percent-escaped.
  - returns: The percent-escaped string.
+ 
+ 在这个方法里面, 会对原有的字符串, 进行百分号转义, 返回新的字符串.
+ 
  */
 NSString * AFPercentEscapedStringFromString(NSString *string) {
     static NSString * const kAFCharactersGeneralDelimitersToEncode = @":#[]@"; // does not include "?" or "/" due to RFC 3986 - Section 3.4
@@ -58,6 +61,11 @@ NSString * AFPercentEscapedStringFromString(NSString *string) {
 
 #pragma mark -
 
+/*
+ 这里, 通过这个类将 key, value 进行一次简单的封装, 而且, 通过这个类, 将 key, value 原本 hash 表的结构拆除, 变为可以排序的状态.
+ 这样, 保证了生成的 Url 的值是一致的.
+ */
+
 @interface AFQueryStringPair : NSObject
 
 @property (readwrite, nonatomic, strong) id field;
@@ -86,7 +94,9 @@ NSString * AFPercentEscapedStringFromString(NSString *string) {
     if (!self.value || [self.value isEqual:[NSNull null]]) {
         return AFPercentEscapedStringFromString([self.field description]);
     } else {
-        return [NSString stringWithFormat:@"%@=%@", AFPercentEscapedStringFromString([self.field description]), AFPercentEscapedStringFromString([self.value description])];
+        return [NSString stringWithFormat:@"%@=%@",
+                AFPercentEscapedStringFromString([self.field description]),
+                AFPercentEscapedStringFromString([self.value description])];
     }
 }
 
@@ -102,7 +112,6 @@ NSString * AFQueryStringFromParameters(NSDictionary *parameters) {
     for (AFQueryStringPair *pair in AFQueryStringPairsFromDictionary(parameters)) {
         [mutablePairs addObject:[pair URLEncodedStringValue]];
     }
-    
     return [mutablePairs componentsJoinedByString:@"&"];
 }
 
@@ -110,9 +119,12 @@ NSArray * AFQueryStringPairsFromDictionary(NSDictionary *dictionary) {
     return AFQueryStringPairsFromKeyAndValue(nil, dictionary);
 }
 
+/*
+ 这里, 这个方法是会递归调用的. 对象, NULL, Set, 数组, 都会到这个方法里面, 生成对应的字符串的表示.
+ */
+
 NSArray * AFQueryStringPairsFromKeyAndValue(NSString *key, id value) {
     NSMutableArray *mutableQueryStringComponents = [NSMutableArray array];
-    
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"description" ascending:YES selector:@selector(compare:)];
     
     if ([value isKindOfClass:[NSDictionary class]]) {
@@ -156,7 +168,13 @@ static NSArray * AFHTTPRequestSerializerObservedKeyPaths() {
     static NSArray *_AFHTTPRequestSerializerObservedKeyPaths = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _AFHTTPRequestSerializerObservedKeyPaths = @[NSStringFromSelector(@selector(allowsCellularAccess)), NSStringFromSelector(@selector(cachePolicy)), NSStringFromSelector(@selector(HTTPShouldHandleCookies)), NSStringFromSelector(@selector(HTTPShouldUsePipelining)), NSStringFromSelector(@selector(networkServiceType)), NSStringFromSelector(@selector(timeoutInterval))];
+        _AFHTTPRequestSerializerObservedKeyPaths = @[
+            NSStringFromSelector(@selector(allowsCellularAccess)),
+            NSStringFromSelector(@selector(cachePolicy)),
+            NSStringFromSelector(@selector(HTTPShouldHandleCookies)),
+            NSStringFromSelector(@selector(HTTPShouldUsePipelining)),
+            NSStringFromSelector(@selector(networkServiceType)),
+            NSStringFromSelector(@selector(timeoutInterval))];
     });
     
     return _AFHTTPRequestSerializerObservedKeyPaths;
@@ -339,22 +357,28 @@ forHTTPHeaderField:(NSString *)field
                                 parameters:(id)parameters
                                      error:(NSError *__autoreleasing *)error
 {
-    NSParameterAssert(method);
-    NSParameterAssert(URLString);
-    
     NSURL *url = [NSURL URLWithString:URLString];
-    
-    NSParameterAssert(url);
-    
     NSMutableURLRequest *mutableRequest = [[NSMutableURLRequest alloc] initWithURL:url];
     mutableRequest.HTTPMethod = method;
     
+    /*
+     这里, 为 Request, 增加了一下默认的配置.
+     NSStringFromSelector(@selector(allowsCellularAccess)),
+     NSStringFromSelector(@selector(cachePolicy)),
+     NSStringFromSelector(@selector(HTTPShouldHandleCookies)),
+     NSStringFromSelector(@selector(HTTPShouldUsePipelining)),
+     NSStringFromSelector(@selector(networkServiceType)),
+     NSStringFromSelector(@selector(timeoutInterval))];
+     */
     for (NSString *keyPath in AFHTTPRequestSerializerObservedKeyPaths()) {
         if ([self.mutableObservedChangedKeyPaths containsObject:keyPath]) {
             [mutableRequest setValue:[self valueForKeyPath:keyPath] forKey:keyPath];
         }
     }
     
+    /*
+     然后把 Params 的值, 赋值到 Request 里面去.
+     */
     mutableRequest = [[self requestBySerializingRequest:mutableRequest withParameters:parameters error:error] mutableCopy];
     
     return mutableRequest;
@@ -369,9 +393,16 @@ forHTTPHeaderField:(NSString *)field
     NSParameterAssert(method);
     NSParameterAssert(![method isEqualToString:@"GET"] && ![method isEqualToString:@"HEAD"]);
     
+    /*
+     对于基本的参数信息, 还是按照原本的方式进行拼装, 生成 Request
+     */
     NSMutableURLRequest *mutableRequest = [self requestWithMethod:method URLString:URLString parameters:nil error:error];
     
-    __block AFStreamingMultipartFormData *formData = [[AFStreamingMultipartFormData alloc] initWithURLRequest:mutableRequest stringEncoding:NSUTF8StringEncoding];
+    /*
+     这里涉及到了, multi-part 的数据的拼接方式. 具体细节, 包装到了 AFStreamingMultipartFormData 的内部.
+     */
+    __block AFStreamingMultipartFormData *formData =
+    [[AFStreamingMultipartFormData alloc] initWithURLRequest:mutableRequest stringEncoding:NSUTF8StringEncoding];
     
     if (parameters) {
         for (AFQueryStringPair *pair in AFQueryStringPairsFromDictionary(parameters)) {
@@ -394,6 +425,9 @@ forHTTPHeaderField:(NSString *)field
         block(formData);
     }
     
+    /*
+     将最终的 Request 的生成,  完全封装到了 AFStreamingMultipartFormData 的内部.
+     */
     return [formData requestByFinalizingMultipartFormData];
 }
 
@@ -401,9 +435,6 @@ forHTTPHeaderField:(NSString *)field
                              writingStreamContentsToFile:(NSURL *)fileURL
                                        completionHandler:(void (^)(NSError *error))handler
 {
-    NSParameterAssert(request.HTTPBodyStream);
-    NSParameterAssert([fileURL isFileURL]);
-    
     NSInputStream *inputStream = request.HTTPBodyStream;
     NSOutputStream *outputStream = [[NSOutputStream alloc] initWithURL:fileURL append:NO];
     __block NSError *error = nil;
@@ -451,19 +482,20 @@ forHTTPHeaderField:(NSString *)field
     return mutableRequest;
 }
 
-#pragma mark - AFURLRequestSerialization
+/*
+ 这里, 在父类完成了 Request 的构建之后, 将构建出来
+ */
 
 - (NSURLRequest *)requestBySerializingRequest:(NSURLRequest *)request
                                withParameters:(id)parameters
                                         error:(NSError *__autoreleasing *)error
 {
-    NSParameterAssert(request);
-    
     NSMutableURLRequest *mutableRequest = [request mutableCopy];
     
     /*
      首先, 是根据 HTTPRequestHeaders 里面, 对于 Request 里面的 HTTPHeaderField 进行一些赋值的行为.
-     在生成它的时候, 作者首先在里面设置了两个值, Accept-Language, 以及 User-Agent
+     默认是
+     Accept-Language, 以及 User-Agent
      */
     [self.HTTPRequestHeaders enumerateKeysAndObjectsUsingBlock:^(id field, id value, BOOL * __unused stop) {
         if (![request valueForHTTPHeaderField:field]) {
@@ -478,12 +510,10 @@ forHTTPHeaderField:(NSString *)field
             // 如果提供了自定义的Block, 那么就自动以操纵. 带有错误检查机制.
             NSError *serializationError;
             query = self.queryStringSerialization(request, parameters, &serializationError);
-            
             if (serializationError) {
                 if (error) {
                     *error = serializationError;
                 }
-                
                 return nil;
             }
         } else {
@@ -496,17 +526,18 @@ forHTTPHeaderField:(NSString *)field
         }
     }
     
-    // 如果, Query 需要拼接到 URL 里面, 那么就改变 URL, 将 QUERY 拼接进去.
+    /*
+        如果, Query 需要拼接到 URL 里面, 那么就改变 URL, 将 QUERY 拼接进去.
+        否则, 就将生成的 Query 字符串, 当做 Request 的 Body.
+     */
     if ([self.HTTPMethodsEncodingParametersInURI containsObject:[[request HTTPMethod] uppercaseString]]) {
         if (query && query.length > 0) {
             mutableRequest.URL = [NSURL URLWithString:[[mutableRequest.URL absoluteString] stringByAppendingFormat:mutableRequest.URL.query ? @"&%@" : @"?%@", query]];
         }
     } else {
-        // #2864: an empty string is a valid x-www-form-urlencoded payload
         if (!query) {
             query = @"";
         }
-        // 否则, 就把 QUERY, 当做 HTTP 的 body 进行处理.
         if (![mutableRequest valueForHTTPHeaderField:@"Content-Type"]) {
             [mutableRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
         }
@@ -538,44 +569,6 @@ forHTTPHeaderField:(NSString *)field
             [self.mutableObservedChangedKeyPaths addObject:keyPath];
         }
     }
-}
-
-#pragma mark - NSSecureCoding
-
-+ (BOOL)supportsSecureCoding {
-    return YES;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)decoder {
-    self = [self init];
-    if (!self) {
-        return nil;
-    }
-    
-    self.mutableHTTPRequestHeaders = [[decoder decodeObjectOfClass:[NSDictionary class] forKey:NSStringFromSelector(@selector(mutableHTTPRequestHeaders))] mutableCopy];
-    self.queryStringSerializationStyle = (AFHTTPRequestQueryStringSerializationStyle)[[decoder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(queryStringSerializationStyle))] unsignedIntegerValue];
-    
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)coder {
-    dispatch_sync(self.requestHeaderModificationQueue, ^{
-        [coder encodeObject:self.mutableHTTPRequestHeaders forKey:NSStringFromSelector(@selector(mutableHTTPRequestHeaders))];
-    });
-    [coder encodeObject:@(self.queryStringSerializationStyle) forKey:NSStringFromSelector(@selector(queryStringSerializationStyle))];
-}
-
-#pragma mark - NSCopying
-
-- (instancetype)copyWithZone:(NSZone *)zone {
-    AFHTTPRequestSerializer *serializer = [[[self class] allocWithZone:zone] init];
-    dispatch_sync(self.requestHeaderModificationQueue, ^{
-        serializer.mutableHTTPRequestHeaders = [self.mutableHTTPRequestHeaders mutableCopyWithZone:zone];
-    });
-    serializer.queryStringSerializationStyle = self.queryStringSerializationStyle;
-    serializer.queryStringSerialization = self.queryStringSerialization;
-    
-    return serializer;
 }
 
 @end
@@ -679,9 +672,6 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
                          name:(NSString *)name
                         error:(NSError * __autoreleasing *)error
 {
-    NSParameterAssert(fileURL);
-    NSParameterAssert(name);
-    
     NSString *fileName = [fileURL lastPathComponent];
     NSString *mimeType = AFContentTypeForPathExtension([fileURL pathExtension]);
     
@@ -694,11 +684,6 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
                      mimeType:(NSString *)mimeType
                         error:(NSError * __autoreleasing *)error
 {
-    NSParameterAssert(fileURL);
-    NSParameterAssert(name);
-    NSParameterAssert(fileName);
-    NSParameterAssert(mimeType);
-    
     if (![fileURL isFileURL]) {
         NSDictionary *userInfo = @{NSLocalizedFailureReasonErrorKey: NSLocalizedStringFromTable(@"Expected URL to be a file URL", @"AFNetworking", nil)};
         if (error) {
@@ -741,10 +726,6 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
                            length:(int64_t)length
                          mimeType:(NSString *)mimeType
 {
-    NSParameterAssert(name);
-    NSParameterAssert(fileName);
-    NSParameterAssert(mimeType);
-    
     NSMutableDictionary *mutableHeaders = [NSMutableDictionary dictionary];
     [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"; filename=\"%@\"", name, fileName] forKey:@"Content-Disposition"];
     [mutableHeaders setValue:mimeType forKey:@"Content-Type"];
@@ -765,10 +746,6 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
                       fileName:(NSString *)fileName
                       mimeType:(NSString *)mimeType
 {
-    NSParameterAssert(name);
-    NSParameterAssert(fileName);
-    NSParameterAssert(mimeType);
-    
     NSMutableDictionary *mutableHeaders = [NSMutableDictionary dictionary];
     [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"; filename=\"%@\"", name, fileName] forKey:@"Content-Disposition"];
     [mutableHeaders setValue:mimeType forKey:@"Content-Type"];
@@ -779,8 +756,6 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 - (void)appendPartWithFormData:(NSData *)data
                           name:(NSString *)name
 {
-    NSParameterAssert(name);
-    
     NSMutableDictionary *mutableHeaders = [NSMutableDictionary dictionary];
     [mutableHeaders setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"", name] forKey:@"Content-Disposition"];
     
@@ -790,8 +765,6 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
 - (void)appendPartWithHeaders:(NSDictionary *)headers
                          body:(NSData *)body
 {
-    NSParameterAssert(body);
-    
     AFHTTPBodyPart *bodyPart = [[AFHTTPBodyPart alloc] init];
     bodyPart.stringEncoding = self.stringEncoding;
     bodyPart.headers = headers;
@@ -818,6 +791,9 @@ NSTimeInterval const kAFUploadStream3GSuggestedDelay = 0.2;
     [self.bodyStream setInitialAndFinalBoundaries];
     [self.request setHTTPBodyStream:self.bodyStream];
     
+    /*
+     在这里, 进行了 Content-Length 的重新设置.
+     */
     [self.request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", self.boundary] forHTTPHeaderField:@"Content-Type"];
     [self.request setValue:[NSString stringWithFormat:@"%llu", [self.bodyStream contentLength]] forHTTPHeaderField:@"Content-Length"];
     
@@ -1227,12 +1203,14 @@ typedef enum {
 
 #pragma mark - AFURLRequestSerialization
 
+/*
+ 这里, 没有复用到父类的逻辑, 重新进行了一次参数的拼接, 只不过在最后, 将参数进行了 JSON 化.
+ */
+
 - (NSURLRequest *)requestBySerializingRequest:(NSURLRequest *)request
                                withParameters:(id)parameters
                                         error:(NSError *__autoreleasing *)error
 {
-    NSParameterAssert(request);
-    
     if ([self.HTTPMethodsEncodingParametersInURI containsObject:[[request HTTPMethod] uppercaseString]]) {
         return [super requestBySerializingRequest:request withParameters:parameters error:error];
     }
@@ -1270,37 +1248,13 @@ typedef enum {
     return mutableRequest;
 }
 
-#pragma mark - NSSecureCoding
-
-- (instancetype)initWithCoder:(NSCoder *)decoder {
-    self = [super initWithCoder:decoder];
-    if (!self) {
-        return nil;
-    }
-    
-    self.writingOptions = [[decoder decodeObjectOfClass:[NSNumber class] forKey:NSStringFromSelector(@selector(writingOptions))] unsignedIntegerValue];
-    
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)coder {
-    [super encodeWithCoder:coder];
-    
-    [coder encodeObject:@(self.writingOptions) forKey:NSStringFromSelector(@selector(writingOptions))];
-}
-
-#pragma mark - NSCopying
-
-- (instancetype)copyWithZone:(NSZone *)zone {
-    AFJSONRequestSerializer *serializer = [super copyWithZone:zone];
-    serializer.writingOptions = self.writingOptions;
-    
-    return serializer;
-}
-
 @end
 
 #pragma mark -
+
+/*
+ 这里, 和 JSON 一样, 最后将 Body 的 data , 进行了 XML 化.
+ */
 
 @implementation AFPropertyListRequestSerializer
 
