@@ -375,6 +375,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06480DCA24791C3B001BDF0D /* Done */ = {
+			isa = PBXGroup;
+			children = (
+				2995224B1BBF125A00859F49 /* AFSecurityPolicy.h */,
+				2995224C1BBF125A00859F49 /* AFSecurityPolicy.m */,
+				299522491BBF125A00859F49 /* AFNetworkReachabilityManager.h */,
+				2995224A1BBF125A00859F49 /* AFNetworkReachabilityManager.m */,
+				1F083A4920364648004D80C7 /* AFCompatibilityMacros.h */,
+				299522461BBF125A00859F49 /* AFHTTPSessionManager.h */,
+				299522471BBF125A00859F49 /* AFHTTPSessionManager.m */,
+			);
+			path = Done;
+			sourceTree = "<group>";
+		};
 		298D7C561BC2C88F00FD3B3E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -516,13 +530,7 @@
 		299522451BBF125A00859F49 /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
-				1F083A4920364648004D80C7 /* AFCompatibilityMacros.h */,
-				299522461BBF125A00859F49 /* AFHTTPSessionManager.h */,
-				299522471BBF125A00859F49 /* AFHTTPSessionManager.m */,
-				299522491BBF125A00859F49 /* AFNetworkReachabilityManager.h */,
-				2995224A1BBF125A00859F49 /* AFNetworkReachabilityManager.m */,
-				2995224B1BBF125A00859F49 /* AFSecurityPolicy.h */,
-				2995224C1BBF125A00859F49 /* AFSecurityPolicy.m */,
+				06480DCA24791C3B001BDF0D /* Done */,
 				2995224D1BBF125A00859F49 /* AFURLRequestSerialization.h */,
 				2995224E1BBF125A00859F49 /* AFURLRequestSerialization.m */,
 				2995224F1BBF125A00859F49 /* AFURLResponseSerialization.h */,

@@ -245,8 +245,6 @@
  上面的大部分的操作, 都仅仅是 HTTPMethod 的封装而已, 在这里, 将对应的任务归总到 dataTaskWithHTTPMethod.
  在这个方法的内部, 首先根据 requestSerializer 生成对应的 Request 对象. 然后调用父类的 dataTaskWithRequest 方法. 在父类里面, 有着对于任务的管理.
  */
-
-
 - (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
                                        URLString:(NSString *)URLString
                                       parameters:(nullable id)parameters
@@ -257,6 +255,10 @@
                                          failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure
 {
     NSError *serializationError = nil;
+    
+    /*
+     所以说, requestSerializer 这个类, 仅仅是会在 HTTPSession 中使用. 
+     */
     NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:method URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:&serializationError];
     
     for (NSString *headerField in headers.keyEnumerator) {
