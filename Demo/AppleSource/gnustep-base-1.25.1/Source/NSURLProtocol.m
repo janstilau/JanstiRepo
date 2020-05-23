@@ -48,12 +48,12 @@ debugRead(id handle, int len, const unsigned char *ptr)
 {
     int           pos;
     uint8_t       *hex;
-    NSUInteger    hl;
+    int    hl;
     
     hl = ((len + 2) / 3) * 4;
     hex = malloc(hl + 1);
     hex[hl] = '\0';
-    GSPrivateEncodeBase64(ptr, (NSUInteger)len, hex);
+    GSPrivateEncodeBase64(ptr, (int)len, hex);
     
     for (pos = 0; pos < len; pos++)
     {
@@ -84,12 +84,12 @@ debugWrite(id handle, int len, const unsigned char *ptr)
 {
     int           pos;
     uint8_t       *hex;
-    NSUInteger    hl;
+    int    hl;
     
     hl = ((len + 2) / 3) * 4;
     hex = malloc(hl + 1);
     hex[hl] = '\0';
-    GSPrivateEncodeBase64(ptr, (NSUInteger)len, hex);
+    GSPrivateEncodeBase64(ptr, (int)len, hex);
     
     for (pos = 0; pos < len; pos++)
     {
@@ -824,7 +824,7 @@ static NSURLProtocol	*placeholder = nil;
                     nil];
         }
         
-        NSUInteger            count;
+        int            count;
         [this->input setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
                           forKey: NSStreamSocketSecurityLevelKey];
         [this->output setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
@@ -847,7 +847,7 @@ static NSURLProtocol	*placeholder = nil;
                            forMode: NSDefaultRunLoopMode];
     [this->output scheduleInRunLoop: [NSRunLoop currentRunLoop]
                             forMode: NSDefaultRunLoopMode];
-    // 这里, 将自己加入到 runloop 里面, 其实是将自己作为 source0 加入到 runloop 里面. 但是这里没有明确的开启 runloop. 在 schedule 里面, 也没有明确的调用 runloop 的 run 方法的调用. 
+    // 这里, 将自己加入到 runloop 里面, 其实是将自己作为 source0 加入到 runloop 里面. 但是这里没有明确的开启 runloop. 在 schedule 里面, 也没有明确的调用 runloop 的 run 方法的调用.
     [this->input open];
     [this->output open]; // 然后后面就是 根据 input, output 的回调进行处理.
 }
@@ -1358,11 +1358,11 @@ static NSURLProtocol	*placeholder = nil;
                  * where the query part may be missing
                  */
                 [sendDataM appendData: [[this->request HTTPMethod]
-                                dataUsingEncoding: NSASCIIStringEncoding]]; // 写 Http 的方法
+                                        dataUsingEncoding: NSASCIIStringEncoding]]; // 写 Http 的方法
                 [sendDataM appendBytes: " " length: 1];
                 u = [this->request URL];
                 httpValue = [[u fullPath] stringByAddingPercentEscapesUsingEncoding:
-                     NSUTF8StringEncoding];
+                             NSUTF8StringEncoding];
                 if ([httpValue hasPrefix: @"/"] == NO)
                 {
                     [sendDataM appendBytes: "/" length: 1];
@@ -1716,7 +1716,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
             {
                 NSLog(@"FTP input stream has bytes available");
                 // implement FTP protocol
-//                [this->client URLProtocol: self didLoadData: [NSData dataWithBytes: buffer length: len]];    // notify
+                //                [this->client URLProtocol: self didLoadData: [NSData dataWithBytes: buffer length: len]];    // notify
                 return;
             }
             case NSStreamEventEndEncountered: 	// can this occur in parallel to NSStreamEventHasBytesAvailable???

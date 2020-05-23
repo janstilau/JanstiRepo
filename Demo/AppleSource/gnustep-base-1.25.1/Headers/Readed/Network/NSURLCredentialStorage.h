@@ -6,10 +6,6 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSDictionary;
 @class NSString;
 @class NSURLCredential;
@@ -83,10 +79,6 @@ extern NSString *const NSURLCredentialStorageChangedNotification;
 	   forProtectionSpace: (NSURLProtectionSpace *)space;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

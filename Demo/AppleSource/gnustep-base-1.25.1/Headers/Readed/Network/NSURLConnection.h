@@ -6,10 +6,6 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSCachedURLResponse;
 @class NSData;
 @class NSError;
@@ -22,14 +18,15 @@ extern "C" {
  NSURLConnection 的接口很少, 仅仅提供了开始和结束 load 的控制.
  During a request, the connection maintains a strong reference to its delegate. It releases that strong reference when the connection finishes loading, fails, or is canceled.
  */
-    
+
 /**
  */
 @interface NSURLConnection : NSObject
 {
-#if	GS_EXPOSE(NSURLConnection)
-  void *_NSURLConnectionInternal;
-#endif
+    NSMutableURLRequest        *_request;
+    NSURLProtocol            *_protocol; // 真正的网络交互的操作, 完全交给了 NSURLProtocol, NSURLConnection 仅仅是一个包装类.
+    id                _delegate;
+    BOOL                _debug;
 }
 
 /**
@@ -46,7 +43,7 @@ extern "C" {
  * using the -initWithRequest:delegate: method.
  */
 + (NSURLConnection *) connectionWithRequest: (NSURLRequest *)request
-				   delegate: (id)delegate;
+                                   delegate: (id)delegate;
 
 /**
  * Cancel the asynchronous load in progress (if any) for this connection.
@@ -127,7 +124,7 @@ extern "C" {
  *     -connection:didFailWithError: message, but never
  *     both.<br />
  *     Once either of these terminal messages is sent the
- *     delegate will receive no further messages from the 
+ *     delegate will receive no further messages from the
  *     NSURLConnection.
  *   </item>
  * </list>
@@ -151,7 +148,7 @@ extern "C" {
  * been cancelled for the request loading on connection.
  */
 - (void) connection: (NSURLConnection *)connection
-  didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
+didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 
 /*
  * Called when an NSURLConnection has failed to load successfully.
@@ -171,7 +168,7 @@ extern "C" {
  * -cancelAuthenticationChallenge: to the challenge sender when done.
  */
 - (void) connection: (NSURLConnection *)connection
-  didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
+didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 
 /**
  * Called when content data arrives during a load operations ... this
@@ -194,7 +191,7 @@ extern "C" {
  * If it returns nil, nothing will be stored in the cache.
  */
 - (NSCachedURLResponse *) connection: (NSURLConnection *)connection
-  willCacheResponse: (NSCachedURLResponse *)cachedResponse;
+                   willCacheResponse: (NSCachedURLResponse *)cachedResponse;
 
 /**
  * Informs the delegate that the connection must change the URL of
@@ -211,8 +208,8 @@ extern "C" {
  * due to a response from the server.
  */
 - (NSURLRequest *) connection: (NSURLConnection *)connection
-	      willSendRequest: (NSURLRequest *)request
-	     redirectResponse: (NSURLResponse *)response;
+              willSendRequest: (NSURLRequest *)request
+             redirectResponse: (NSURLResponse *)response;
 @end
 
 /**
@@ -226,14 +223,10 @@ extern "C" {
  * Returns the result of the load or nil if the load failed.
  */
 + (NSData *) sendSynchronousRequest: (NSURLRequest *)request // 异步发送请求, 然后将 response 在输出参数中进行记录.
-		  returningResponse: (NSURLResponse **)response
-			      error: (NSError **)error;
+                  returningResponse: (NSURLResponse **)response
+                              error: (NSError **)error;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

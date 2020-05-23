@@ -23,15 +23,7 @@
 
 @end
 
-@implementation _NSURLConnectionDataCollector  // 牛逼!!!!!!!!!!!
-
-- (void) dealloc
-{
-    [_data release];
-    [_error release];
-    [_response release];
-    [super dealloc];
-}
+@implementation _NSURLConnectionDataCollector 
 
 - (BOOL) done
 {
@@ -94,30 +86,9 @@
 
 @end
 
-typedef struct
-{
-    NSMutableURLRequest		*_request;
-    NSURLProtocol			*_protocol; // 真正的网络交互的操作, 完全交给了 NSURLProtocol, NSURLConnection 仅仅是一个包装类.
-    id				_delegate;
-    BOOL				_debug;
-} Internal;
-
-#define	this	((Internal*)(self->_NSURLConnectionInternal))
-#define	inst	((Internal*)(o->_NSURLConnectionInternal))
 
 @implementation	NSURLConnection
 
-+ (id) allocWithZone: (NSZone*)z
-{
-    NSURLConnection	*o = [super allocWithZone: z];
-    
-    if (o != nil)
-    {
-        o->_NSURLConnectionInternal = NSZoneCalloc([self zone],
-                                                   1, sizeof(Internal));
-    }
-    return o;
-}
 
 + (BOOL) canHandleRequest: (NSURLRequest *)request
 {
@@ -135,27 +106,26 @@ typedef struct
 
 - (void) cancel
 {
-    [this->_protocol stopLoading];
-    DESTROY(this->_protocol);
-    DESTROY(this->_delegate);
+    [self->_protocol stopLoading];
+    DESTROY(self->_protocol);
+    DESTROY(self->_delegate);
 }
 
 - (void) dealloc
 {
-    if (this != 0)
+    if (self != 0)
     {
         [self cancel]; // 主要是调用 protocol 停止 loading.
-        DESTROY(this->_request);
-        DESTROY(this->_delegate);
-        NSZoneFree([self zone], this);
-        _NSURLConnectionInternal = 0;
+        DESTROY(self->_request);
+        DESTROY(self->_delegate);
+        NSZoneFree([self zone], self);
     }
     [super dealloc];
 }
 
 - (void) finalize
 {
-    if (this != 0)
+    if (self != 0)
     {
         [self cancel];
     }
@@ -165,19 +135,20 @@ typedef struct
 {
     if ((self = [super init]) != nil)
     {
-        this->_request = [request mutableCopyWithZone: [self zone]]; // 首先, request 进行了 copy, copy 的作用在于, 在后续的操作的时候, 不会收到影响.
+        self->_request = [request mutableCopyWithZone: [self zone]]; // 首先, request 进行了 copy, copy 的作用在于, 在后续的操作的时候, 不会收到影响.
         
         /* Enrich the request with the appropriate HTTP cookies,
          * if desired.
          */
-        if ([this->_request HTTPShouldHandleCookies] == YES) // 如果, 原来的 request 里面设置了要包含 cookie 的东西, 就在这里加上 cookie 的内容, 到 request 的 http Header 里面.
+        if ([self->_request HTTPShouldHandleCookies] == YES)
+            // 如果, 原来的 request 里面设置了要包含 cookie 的东西, 就在这里加上 cookie 的内容, 到 request 的 http Header 里面.
             // 我们之前一直说, request 是一个数据类, 那么这个数据类里面, 设置了我们需要 HTTPShouldHandleCookies, 那么现在在这里, 如果request 里面设置了需要cookie, 就把这些信息, 放到 httpHeader 中.
             // 而什么时候会设置cookie 的内容呢, 要在 NSURLProtocol 里面, 在判断, request 中需要 cookie 的时候, 直接将值设置到了 HTTPShouldHandleCookies 中去了.
         {
             NSArray *cookies;
             
             cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage]
-                       cookiesForURL: [this->_request URL]];
+                       cookiesForURL: [self->_request URL]];
             if ([cookies count] > 0)
             {
                 NSDictionary	*headers;
@@ -188,7 +159,7 @@ typedef struct
                 enumerator = [headers keyEnumerator];
                 while (nil != (header = [enumerator nextObject]))
                 {
-                    [this->_request addValue: [headers valueForKey: header]
+                    [self->_request addValue: [headers valueForKey: header]
                           forHTTPHeaderField: header];
                 }
             }
@@ -199,13 +170,12 @@ typedef struct
          * For compatibility we retain the delegate and release it again
          * when the operation is over.
          */
-        this->_delegate = [delegate retain]; // 在这个类的内部, 应该有对于 delegate 的解引用操作
-        this->_protocol = [[NSURLProtocol alloc] // 在初始化的时候, 定义了一个新的 NSURLProtocol
-                           initWithRequest: this->_request
+        self->_delegate = [delegate retain]; // 在这个类的内部, 应该有对于 delegate 的解引用操作
+        self->_protocol = [[NSURLProtocol alloc] // 在初始化的时候, 定义了一个新的 NSURLProtocol
+                           initWithRequest: self->_request
                            cachedResponse: nil
                            client: (id<NSURLProtocolClient>)self];
-        [this->_protocol startLoading];
-        this->_debug = GSDebugSet(@"NSURLConnection");
+        [self->_protocol startLoading];
     }
     return self;
 }
@@ -369,8 +339,8 @@ cachedResponseIsValid: (NSCachedURLResponse *)cachedResponse
 - (void) URLProtocol: (NSURLProtocol *)protocol
     didFailWithError: (NSError *)error
 {
-    id    connectionDelegate = this->_delegate;
-    this->_delegate = nil;
+    id    connectionDelegate = self->_delegate;
+    self->_delegate = nil;
     [connectionDelegate connection: self didFailWithError: error]; // 在 Protocol 中发生了问题, 然后通过 connection 知会connection 的代理.
     DESTROY(connectionDelegate);
 }
@@ -378,13 +348,13 @@ cachedResponseIsValid: (NSCachedURLResponse *)cachedResponse
 - (void) URLProtocol: (NSURLProtocol *)protocol
          didLoadData: (NSData *)data
 {
-    [this->_delegate connection: self didReceiveData: data]; // socket 在到达了 body 的时候, 会到这里来.
+    [self->_delegate connection: self didReceiveData: data]; // socket 在到达了 body 的时候, 会到这里来.
 }
 
 - (void) URLProtocol: (NSURLProtocol *)protocol
 didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
 {
-    [this->_delegate connection: self
+    [self->_delegate connection: self
 didReceiveAuthenticationChallenge: challenge];
 }
 
@@ -392,24 +362,24 @@ didReceiveAuthenticationChallenge: challenge];
   didReceiveResponse: (NSURLResponse *)response
   cacheStoragePolicy: (NSURLCacheStoragePolicy)policy // 这里, iOS 的后面的版本, 其实是去除了 policy 了, 其实在NSURLC onnectionDataDelegate 里面, 是没有 policy 这个参数的.
 {
-    [this->_delegate connection: self didReceiveResponse: response];
+    [self->_delegate connection: self didReceiveResponse: response];
 }
 
 - (void) URLProtocol: (NSURLProtocol *)protocol
 wasRedirectedToRequest: (NSURLRequest *)newRequest
     redirectResponse: (NSURLResponse *)redirectResponse // protocol 的重定向消息会到达这里.
 {
-    if (this->_debug)
+    if (self->_debug)
     {
         NSLog(@"%@ tell delegate %@ about redirect to %@ as a result of %@",
-              self, this->_delegate, newRequest, redirectResponse);
+              self, self->_delegate, newRequest, redirectResponse);
     }
-    newRequest = [this->_delegate connection: self
+    newRequest = [self->_delegate connection: self
                              willSendRequest: newRequest
                             redirectResponse: redirectResponse];
-    if (this->_protocol == nil)
+    if (self->_protocol == nil)
     {
-        if (this->_debug)
+        if (self->_debug)
         {
             NSLog(@"%@ delegate cancelled request", self);
         }
@@ -419,22 +389,22 @@ wasRedirectedToRequest: (NSURLRequest *)newRequest
     }
     if (newRequest != nil)
     {
-        if (this->_debug)
+        if (self->_debug)
         {
             NSLog(@"%@ delegate allowed redirect to %@", self, newRequest);
         }
         /* Follow the redirect ... stop the old load and start a new one.
          */
-        [this->_protocol stopLoading]; // 这里, 先停止之前的 loading, 然后开始新的 request loading
-        DESTROY(this->_protocol);
-        ASSIGNCOPY(this->_request, newRequest);
-        this->_protocol = [[NSURLProtocol alloc]
-                           initWithRequest: this->_request
+        [self->_protocol stopLoading]; // 这里, 先停止之前的 loading, 然后开始新的 request loading
+        DESTROY(self->_protocol);
+        ASSIGNCOPY(self->_request, newRequest);
+        self->_protocol = [[NSURLProtocol alloc]
+                           initWithRequest: self->_request
                            cachedResponse: nil
                            client: (id<NSURLProtocolClient>)self];
-        [this->_protocol startLoading];
+        [self->_protocol startLoading];
     }
-    else if (this->_debug)
+    else if (self->_debug)
     {
         NSLog(@"%@ delegate cancelled redirect", self);
     }
@@ -442,9 +412,9 @@ wasRedirectedToRequest: (NSURLRequest *)newRequest
 
 - (void) URLProtocolDidFinishLoading: (NSURLProtocol *)protocol // protocol 在解析完成之后.
 {
-    id    o = this->_delegate;
+    id    o = self->_delegate;
     
-    this->_delegate = nil;
+    self->_delegate = nil;
     [o connectionDidFinishLoading: self];
     DESTROY(o);
 }
@@ -452,7 +422,7 @@ wasRedirectedToRequest: (NSURLRequest *)newRequest
 - (void) URLProtocol: (NSURLProtocol *)protocol
 didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
 {
-    [this->_delegate connection: self
+    [self->_delegate connection: self
 didCancelAuthenticationChallenge: challenge];
 }
 

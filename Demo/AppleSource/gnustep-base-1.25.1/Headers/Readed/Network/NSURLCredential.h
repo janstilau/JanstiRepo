@@ -6,10 +6,6 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSString;
 
 /**
@@ -99,10 +95,6 @@ The URL Loading System supports password-based user credentials,
 - (NSString *) user;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

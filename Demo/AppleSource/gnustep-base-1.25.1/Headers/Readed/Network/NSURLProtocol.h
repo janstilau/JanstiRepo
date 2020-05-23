@@ -6,10 +6,6 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 #import	<Foundation/NSURLCache.h>
 
 @class NSCachedURLResponse;
@@ -21,10 +17,10 @@ extern "C" {
 @class NSURLRequest;
 @class NSURLResponse;
 
-    
-    /*
-     An abstract class that handles the loading of protocol-specific URL data.
-     */
+
+/*
+ An abstract class that handles the loading of protocol-specific URL data.
+ */
 
 /**
  * Defines the API for NSURLProtocol loading
@@ -35,7 +31,7 @@ extern "C" {
  * Informs a client that a cached response is valid.
  */
 - (void) URLProtocol: (NSURLProtocol *)protocol
-  cachedResponseIsValid: (NSCachedURLResponse *)cachedResponse;
+cachedResponseIsValid: (NSCachedURLResponse *)cachedResponse;
 
 /**
  * Informs a client that loading of a request has failed.
@@ -48,13 +44,13 @@ extern "C" {
  * last call to this method must be provided.
  */
 - (void) URLProtocol: (NSURLProtocol *)protocol
-	 didLoadData: (NSData *)data;
+         didLoadData: (NSData *)data;
 
 /**
  * Informs a client that an authentication challenge has been received.
  */
 - (void) URLProtocol: (NSURLProtocol *)protocol
-  didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
+didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 
 /**
  * Informs a client that a response for the current load has been created.<br />
@@ -68,8 +64,8 @@ extern "C" {
  * Informs a client that a redirect has occurred.<br />
  */
 - (void) URLProtocol: (NSURLProtocol *)protocol
-  wasRedirectedToRequest: (NSURLRequest *)request
-  redirectResponse: (NSURLResponse *)redirectResponse;
+wasRedirectedToRequest: (NSURLRequest *)request
+    redirectResponse: (NSURLResponse *)redirectResponse;
 
 
 /**
@@ -81,7 +77,7 @@ extern "C" {
  * Informs a client that an authentication challenge has been cancelled.
  */
 - (void) URLProtocol: (NSURLProtocol *)protocol
-  didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
+didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 
 @end
 
@@ -99,7 +95,7 @@ extern "C" {
 @interface NSURLProtocol : NSObject
 {
 #if	GS_EXPOSE(NSURLProtocol)
-  void *_NSURLProtocolInternal;
+    void *_NSURLProtocolInternal;
 #endif
 }
 
@@ -127,8 +123,8 @@ extern "C" {
  * setting the property named key to value in the request.
  */
 + (void) setProperty: (id)value
-	      forKey: (NSString *)key
-	   inRequest: (NSMutableURLRequest *)request;
+              forKey: (NSString *)key
+           inRequest: (NSMutableURLRequest *)request;
 
 /**
  * Unregisters a class which was previously registered using the
@@ -154,8 +150,8 @@ extern "C" {
  * of the load.
  */
 - (id) initWithRequest: (NSURLRequest *)request
-	cachedResponse: (NSCachedURLResponse *)cachedResponse
-		client: (id <NSURLProtocolClient>)client;
+        cachedResponse: (NSCachedURLResponse *)cachedResponse
+                client: (id <NSURLProtocolClient>)client;
 
 /**
  * Returns the request handled by the receiver.
@@ -190,7 +186,7 @@ extern "C" {
  * The abstract class implementaton just uses [NSObject-isEqual:]
  */
 + (BOOL) requestIsCacheEquivalent: (NSURLRequest *)a
-			toRequest: (NSURLRequest *)b;
+                        toRequest: (NSURLRequest *)b;
 
 /** <override-subclass />
  * Starts loading of a request.
@@ -203,10 +199,6 @@ extern "C" {
 - (void) stopLoading;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

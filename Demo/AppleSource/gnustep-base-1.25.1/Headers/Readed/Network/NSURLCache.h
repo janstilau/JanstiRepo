@@ -14,6 +14,9 @@
 
 /**
  * Specifies the cache storage policy.
+ *
+ *
+ * NSURLCacheStoragePolicy 这个东西, 也就在 NSURLCache 里面有用, 表示当前客户端如何保存. 和 HTTP 的那一套没有关系.
  */
 typedef enum
 {
@@ -79,10 +82,10 @@ typedef enum
 @interface NSURLCache : NSObject
 {
     unsigned        diskCapacity;
-    unsigned        memoryCapacity;
     unsigned        diskUsage;
+    unsigned        memoryCapacity;
     unsigned        memoryUsage;
-    NSString        *path;
+    NSString        *path;// 存储的路径.
     NSMutableDictionary    *memory;
 }
 

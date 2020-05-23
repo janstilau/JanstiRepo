@@ -9,37 +9,21 @@
  For convenience, NSURLSessionConfiguration has a property called requestCachePolicy;
  all requests created from sessions that use self configuration inherit their cache policy from the configuration.
  Currently, only HTTP and HTTPS responses are cached.
- 
- 也就是说, 现在 http, https 的请求, 系统的类库会根据 reqeust 里面的 cachePolicy 操作 NSURLCache 的内容.
- 
- 所以, 很多类它的功能是配置, 尤其是那些用 configuration 结尾的类. 有些操作, 最后是有一个真正具体的数据类来进行的, 而这些真正具体的数据类的内容, 其实是要从配置类中获取的.
- 
- Http request 的默认缓存策略是用 http 协议的缓存策略
- 1. 有没有缓存. 有的话下一步, 不然直接 sourceload
- 2. 过没过期. 没过期直接返回. 过期了下一步
- 3. 会发一个 head 询问有没有进行变化, 变化了 sourceLoad, 没变化直接返回缓存.
  */
 
-// 这个类居然没有看见保存的代码.
-// 如果想要人工管理缓存, 可以用 storeCachedResponse:forRequest: 这个方法.
-
+/*
+ 只要, 资源是被这个类进行管理的, 用全局静态变量也是没有问题的.
+ */
 static NSURLCache	*shared = nil;
 
 @implementation	NSURLCache
 
-+ (id) allocWithZone: (NSZone*)z
-{
-    NSURLCache	*o = [super allocWithZone: z];
-    
-    if (o != nil)
-    {
-        o->_NSURLCacheInternal = NSZoneCalloc(z, 1, sizeof(Internal));
-    }
-    return o;
-}
 
 + (void) setSharedURLCache: (NSURLCache *)cache
 {
+    /*
+     因为不能管理调用者的线程, 所以该加锁的地方, 还是要进行加锁.
+     */
     [gnustep_global_lock lock];
     ASSIGN(shared, cache);
     [gnustep_global_lock unlock];
@@ -59,7 +43,9 @@ static NSURLCache	*shared = nil;
 + (NSURLCache *) sharedURLCache
 {
     NSURLCache	*c;
-    
+    /*
+     因为会有 set 方法暴露出去, 所以这里的静态变量, 没有写到方法的内部.
+     */
     [gnustep_global_lock lock];
     if (shared == nil)
     {
@@ -73,6 +59,9 @@ static NSURLCache	*shared = nil;
     return AUTORELEASE(c);
 }
 
+/*
+ 这里, 用的是 Request 作为 key, 而 Request 里面, hash 是通过 URL 的 hash 得到的.
+ */
 - (NSCachedURLResponse *) cachedResponseForRequest: (NSURLRequest *)request
 {
     return [self->memory objectForKey: request]; // 其实就是一个字典.
@@ -104,6 +93,9 @@ static NSURLCache	*shared = nil;
         self->memoryUsage = 0;
         self->memoryCapacity = memoryCapacity;
         self->path = [path copy];
+        /*
+         这里感觉有点问题, path 得到了, 不应该有个 loading 的操作.
+         */
         self->memory = [NSMutableDictionary new];
     }
     return self;
