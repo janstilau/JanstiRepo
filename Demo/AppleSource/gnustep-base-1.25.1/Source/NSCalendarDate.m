@@ -446,11 +446,11 @@ GSPrivateTimeNow(void)
  * by calling -initWithYear:month:day:hour:minute:second:timeZone:
  */
 + (id) dateWithYear: (NSInteger)year
-	      month: (NSUInteger)month
-	        day: (NSUInteger)day
-	       hour: (NSUInteger)hour
-	     minute: (NSUInteger)minute
-	     second: (NSUInteger)second
+	      month: (int)month
+	        day: (int)day
+	       hour: (int)hour
+	     minute: (int)minute
+	     second: (int)second
 	   timeZone: (NSTimeZone *)aTimeZone
 {
   NSCalendarDate *d = [[self alloc] initWithYear: year
@@ -1531,11 +1531,11 @@ static inline int getDigits(const char *from, char *to, int limit, BOOL *error)
  * </list>
  */
 - (id) initWithYear: (NSInteger)year
-	      month: (NSUInteger)month
-	        day: (NSUInteger)day
-	       hour: (NSUInteger)hour
-	     minute: (NSUInteger)minute
-	     second: (NSUInteger)second
+	      month: (int)month
+	        day: (int)day
+	       hour: (int)hour
+	     minute: (int)minute
+	     second: (int)second
 	   timeZone: (NSTimeZone *)aTimeZone
 {
   unsigned int		c;

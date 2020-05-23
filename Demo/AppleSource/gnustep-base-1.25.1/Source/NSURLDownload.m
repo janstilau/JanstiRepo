@@ -169,7 +169,7 @@
 }
 
 - (void) download: (NSURLDownload *)download
-  didReceiveDataOfLength: (NSUInteger)length
+  didReceiveDataOfLength: (int)length
 {
   return;
 }

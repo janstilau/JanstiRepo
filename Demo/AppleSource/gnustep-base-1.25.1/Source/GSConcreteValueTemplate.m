@@ -146,7 +146,7 @@
   return NO;
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
 #if TYPE_ORDER == 0
   return [data hash];

@@ -164,7 +164,7 @@ static Class	gcClass = 0;
   return [[GCDictionary allocWithZone: zone] initWithDictionary: self];
 }
 
-- (NSUInteger) count
+- (int) count
 {
   return NSCountMapTable(_map);
 }
@@ -260,7 +260,7 @@ static Class	gcClass = 0;
 
 - (id) initWithObjects: (const id[])objects
 	       forKeys: (const id <NSCopying>[])keys
-		 count: (NSUInteger)count
+		 count: (int)count
 {
   NSUInteger	size = (count * 4) / 3;
   NSZone	*z = NSDefaultMallocZone();
@@ -362,7 +362,7 @@ static Class	gcClass = 0;
   return [self initWithCapacity: 0];
 }
 
-- (id) initWithCapacity: (NSUInteger)aNumItems
+- (id) initWithCapacity: (int)aNumItems
 {
   NSUInteger	size = (aNumItems * 4) / 3;
 

@@ -251,7 +251,7 @@ typedef ssize_t (*GSTLSIOW)(gnutls_transport_ptr_t, const void *, size_t);
 
 /* Read data from the session.
  */
-- (NSInteger) read: (void*)buf length: (NSUInteger)len;
+- (NSInteger) read: (void*)buf length: (int)len;
 
 /** Get a report of the SSL/TLS status of the current session.
  */
@@ -259,7 +259,7 @@ typedef ssize_t (*GSTLSIOW)(gnutls_transport_ptr_t, const void *, size_t);
 
 /* Write data to the session.
  */
-- (NSInteger) write: (const void*)buf length: (NSUInteger)len;
+- (NSInteger) write: (const void*)buf length: (int)len;
 
 /* For internal use to verify the remmote system's vertificate.
  * Returns 0 on success, negative on failure.

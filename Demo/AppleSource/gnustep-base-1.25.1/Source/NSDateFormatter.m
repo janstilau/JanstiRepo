@@ -850,7 +850,7 @@ static NSDateFormatterBehavior _defaultBehavior = 0;
 }
 
 + (NSString *) dateFormatFromTemplate: (NSString *) aTemplate
-                              options: (NSUInteger) opts
+                              options: (int) opts
                                locale: (NSLocale *) locale
 {
 #if GS_USE_ICU == 1

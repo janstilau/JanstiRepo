@@ -354,7 +354,7 @@ static NSArray	*defaultMode = nil;
  * <em>not</em> posted.
  */
 - (void) dequeueNotificationsMatching: (NSNotification*)notification
-			 coalesceMask: (NSUInteger)coalesceMask
+			 coalesceMask: (int)coalesceMask
 {
   NSNotificationQueueRegistration	*item;
   NSNotificationQueueRegistration	*prev;
@@ -469,7 +469,7 @@ static NSArray	*defaultMode = nil;
  */
 - (void) enqueueNotification: (NSNotification*)notification
 		postingStyle: (NSPostingStyle)postingStyle
-		coalesceMask: (NSUInteger)coalesceMask
+		coalesceMask: (int)coalesceMask
 		    forModes: (NSArray*)modes
 {
   if (modes == nil)

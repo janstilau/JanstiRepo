@@ -1135,12 +1135,12 @@ unregisterActiveThread(NSThread *thread)
 }
 
 // 这个会在线程启动的时候尽心刚设置.
-- (void) setStackSize: (NSUInteger)stackSize
+- (void) setStackSize: (int)stackSize
 {
     _stackSize = stackSize;
 }
 
-- (NSUInteger) stackSize
+- (int) stackSize
 {
     return _stackSize;
 }

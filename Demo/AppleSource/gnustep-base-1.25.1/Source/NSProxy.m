@@ -260,7 +260,7 @@
 /**
  * Returns the address of the receiver ... so it can be stored in a dictionary.
  */
-- (NSUInteger) hash
+- (int) hash
 {
   /*
    * Ideally we would shift left to lose any zero bits produced by the
@@ -501,7 +501,7 @@
 /**
  * Return the retain count for the receiver.
  */
-- (NSUInteger) retainCount
+- (int) retainCount
 {
   return NSExtraRefCount(self) + 1;
 }

@@ -44,7 +44,7 @@ extern "C" {
  * Return a set containing the single value anIndex, or returns nil if
  * anIndex is NSNotFound.
  */
-+ (id) indexSetWithIndex: (NSUInteger)anIndex;
++ (id) indexSetWithIndex: (int)anIndex;
 
 /**
  * Return a set containing all the values in aRange, or returns nil if
@@ -55,7 +55,7 @@ extern "C" {
 /**
  * Returns YES if the receiver contains anIndex, NO otherwise.
  */
-- (BOOL) containsIndex: (NSUInteger)anIndex;
+- (BOOL) containsIndex: (int)anIndex;
 
 /**
  * Returns YES if the receiver contains all the index values present
@@ -72,13 +72,13 @@ extern "C" {
 /**
  * Returns the number of index values present in the receiver.
  */
-- (NSUInteger) count;
+- (int) count;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST)
 /** Not implemented
  * Returns the number of indexes set within the specified range.
  */
-- (NSUInteger) countOfIndexesInRange: (NSRange)range;
+- (int) countOfIndexesInRange: (NSRange)range;
 #endif
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST)
@@ -100,7 +100,7 @@ DEFINE_BLOCK_TYPE(GSIndexSetEnumerationBlock, void, NSUInteger, BOOL*);
  * Returns the first index value in the receiver or NSNotFound if the
  * receiver is empty.
  */
-- (NSUInteger) firstIndex;
+- (int) firstIndex;
 
 /**
  * Copies index values into aBuffer until there are no index values left or
@@ -111,39 +111,39 @@ DEFINE_BLOCK_TYPE(GSIndexSetEnumerationBlock, void, NSUInteger, BOOL*);
  * If aRange is a null pointer, this method attempts to get <em>all</em>
  * index values from the set (and of course no range can be returned in it).
  */
-- (NSUInteger) getIndexes: (NSUInteger*)aBuffer
-                 maxCount: (NSUInteger)aCount
+- (int) getIndexes: (NSUInteger*)aBuffer
+                 maxCount: (int)aCount
              inIndexRange: (NSRangePointer)aRange;
 
 /**
  * Return the first index value in the receiver which is greater than
  * anIndex.
  */
-- (NSUInteger) indexGreaterThanIndex: (NSUInteger)anIndex;
+- (int) indexGreaterThanIndex: (int)anIndex;
 
 /**
  * Return the first index value in the receiver which is greater than
  * or equal to anIndex.
  */
-- (NSUInteger) indexGreaterThanOrEqualToIndex: (NSUInteger)anIndex;
+- (int) indexGreaterThanOrEqualToIndex: (int)anIndex;
 
 /**
  * Return the first index value in the receiver which is less than
  * anIndex.
  */
-- (NSUInteger) indexLessThanIndex: (NSUInteger)anIndex;
+- (int) indexLessThanIndex: (int)anIndex;
 
 /**
  * Return the first index value in the receiver which is less than
  * or equal to anIndex.
  */
-- (NSUInteger) indexLessThanOrEqualToIndex: (NSUInteger)anIndex;
+- (int) indexLessThanOrEqualToIndex: (int)anIndex;
 
 /**
  * Initialise the receiver to contain anIndex.  Returns the initialised
  * object or nil if anIndex is NSNotFound.
  */
-- (id) initWithIndex: (NSUInteger)anIndex;
+- (id) initWithIndex: (int)anIndex;
 
 /** <init />
  * Initialise the receiver to contain all index values in aRange.
@@ -171,7 +171,7 @@ DEFINE_BLOCK_TYPE(GSIndexSetEnumerationBlock, void, NSUInteger, BOOL*);
  * Returns the last index value in the receiver or NSNotFound if the
  * receiver is empty.
  */
-- (NSUInteger) lastIndex;
+- (int) lastIndex;
 @end
     
     
@@ -180,7 +180,7 @@ DEFINE_BLOCK_TYPE(GSIndexSetEnumerationBlock, void, NSUInteger, BOOL*);
 /**
  * Adds anIndex to the set of indexes stored in the receiver.
  */
-- (void) addIndex: (NSUInteger)anIndex;
+- (void) addIndex: (int)anIndex;
 
 /**
  * Adds all the indexes from aSet to the set of indexes stored in the receiver.
@@ -200,7 +200,7 @@ DEFINE_BLOCK_TYPE(GSIndexSetEnumerationBlock, void, NSUInteger, BOOL*);
 /**
  * Removes anIndex from the set of indexes stored in the receiver.
  */
-- (void) removeIndex: (NSUInteger)anIndex;
+- (void) removeIndex: (int)anIndex;
 
 /**
  * Removes all the indexes in aSet from the set of indexes
@@ -221,7 +221,7 @@ DEFINE_BLOCK_TYPE(GSIndexSetEnumerationBlock, void, NSUInteger, BOOL*);
  * If amount is positive, a 'hole' will be left in the index range after
  * anIndex.
  */
-- (void) shiftIndexesStartingAtIndex: (NSUInteger)anIndex
+- (void) shiftIndexesStartingAtIndex: (int)anIndex
                                   by: (NSInteger)amount;
 
 @end

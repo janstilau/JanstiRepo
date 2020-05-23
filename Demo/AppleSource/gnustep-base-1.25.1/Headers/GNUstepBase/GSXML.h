@@ -433,11 +433,11 @@ extern "C" {
  * For XPath queries returning a node set.
  */
 @interface GSXPathNodeSet : GSXPathObject
-- (NSUInteger) count;
-- (NSUInteger) length;
+- (int) count;
+- (int) length;
 
 /** Please note that index starts from 0.  */
-- (GSXMLNode *) nodeAtIndex: (NSUInteger)index;
+- (GSXMLNode *) nodeAtIndex: (int)index;
 @end
 
 @interface GSXMLDocument (XSLT)

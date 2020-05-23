@@ -1549,12 +1549,12 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
 }
 
 
-- (void) setFormatWidth: (NSUInteger) number
+- (void) setFormatWidth: (int) number
 {
   [internal setAttribute: number forKey: UNUM_FORMAT_WIDTH];
 }
 
-- (NSUInteger) formatWidth
+- (int) formatWidth
 {
   return (NSUInteger)[internal attributeForKey: UNUM_FORMAT_WIDTH];
 }
@@ -1844,12 +1844,12 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
   return [internal symbolForKey: UNUM_MONETARY_SEPARATOR_SYMBOL];
 }
 
-- (void) setGroupingSize: (NSUInteger) number
+- (void) setGroupingSize: (int) number
 {
   [internal setAttribute: number forKey: UNUM_GROUPING_SIZE];
 }
 
-- (NSUInteger) groupingSize
+- (int) groupingSize
 {
 #if GS_USE_ICU == 1
   return (NSUInteger)[internal attributeForKey: UNUM_GROUPING_SIZE];
@@ -1858,12 +1858,12 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
 #endif
 }
 
-- (void) setSecondaryGroupingSize: (NSUInteger) number
+- (void) setSecondaryGroupingSize: (int) number
 {
   [internal setAttribute: number forKey: UNUM_SECONDARY_GROUPING_SIZE];
 }
 
-- (NSUInteger) secondaryGroupingSize
+- (int) secondaryGroupingSize
 {
 #if GS_USE_ICU == 1
   return (NSUInteger)[internal attributeForKey: UNUM_SECONDARY_GROUPING_SIZE];
@@ -1895,42 +1895,42 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
 }
 
 
-- (void) setMinimumIntegerDigits: (NSUInteger) number
+- (void) setMinimumIntegerDigits: (int) number
 {
   [internal setAttribute: number forKey: UNUM_MIN_INTEGER_DIGITS];
 }
 
-- (NSUInteger) minimumIntegerDigits
+- (int) minimumIntegerDigits
 {
   return (NSUInteger)[internal attributeForKey: UNUM_MIN_INTEGER_DIGITS];
 }
 
-- (void) setMinimumFractionDigits: (NSUInteger) number
+- (void) setMinimumFractionDigits: (int) number
 {
   [internal setAttribute: number forKey: UNUM_MIN_FRACTION_DIGITS];
 }
 
-- (NSUInteger) minimumFractionDigits
+- (int) minimumFractionDigits
 {
   return (NSUInteger)[internal attributeForKey: UNUM_MIN_FRACTION_DIGITS];
 }
 
-- (void) setMaximumIntegerDigits: (NSUInteger) number
+- (void) setMaximumIntegerDigits: (int) number
 {
   [internal setAttribute: number forKey: UNUM_MAX_INTEGER_DIGITS];
 }
 
-- (NSUInteger) maximumIntegerDigits
+- (int) maximumIntegerDigits
 {
   return (NSUInteger)[internal attributeForKey: UNUM_MAX_INTEGER_DIGITS];
 }
 
-- (void) setMaximumFractionDigits: (NSUInteger) number
+- (void) setMaximumFractionDigits: (int) number
 {
   [internal setAttribute: number forKey: UNUM_MAX_FRACTION_DIGITS];
 }
 
-- (NSUInteger) maximumFractionDigits
+- (int) maximumFractionDigits
 {
   return (NSUInteger)[internal attributeForKey: UNUM_MAX_FRACTION_DIGITS];
 }
@@ -2028,22 +2028,22 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
   return [internal boolForKey: UNUM_SIGNIFICANT_DIGITS_USED];
 }
 
-- (void) setMinimumSignificantDigits: (NSUInteger) number
+- (void) setMinimumSignificantDigits: (int) number
 {
   [internal setAttribute: number forKey: UNUM_MIN_SIGNIFICANT_DIGITS];
 }
 
-- (NSUInteger) minimumSignificantDigits
+- (int) minimumSignificantDigits
 {
   return (NSUInteger)[internal attributeForKey: UNUM_MIN_SIGNIFICANT_DIGITS];
 }
 
-- (void) setMaximumSignificantDigits: (NSUInteger) number
+- (void) setMaximumSignificantDigits: (int) number
 {
   [internal setAttribute: number forKey: UNUM_MAX_SIGNIFICANT_DIGITS];
 }
 
-- (NSUInteger) maximumSignificantDigits
+- (int) maximumSignificantDigits
 {
   return (NSUInteger)[internal attributeForKey: UNUM_MAX_SIGNIFICANT_DIGITS];
 }

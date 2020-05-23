@@ -250,7 +250,7 @@ NSRegularExpressionOptionsToURegexpFlags(NSRegularExpressionOptions opts)
 }
 #endif
 
-- (NSUInteger) hash
+- (int) hash
 {
   return [[self pattern] hash] ^ options;
 }
@@ -564,7 +564,7 @@ prepareResult(NSRegularExpression *regex,
  * possible when compiling with a compiler that doesn't support blocks.
  */
 #if __has_feature(blocks)
-- (NSUInteger) numberOfMatchesInString: (NSString*)string
+- (int) numberOfMatchesInString: (NSString*)string
                                options: (NSMatchingOptions)opts
                                  range: (NSRange)range
 
@@ -705,7 +705,7 @@ prepareResult(NSRegularExpression *regex,
   uregex_close(r);
 #endif
 
-- (NSUInteger) numberOfMatchesInString: (NSString*)string
+- (int) numberOfMatchesInString: (NSString*)string
                                options: (NSMatchingOptions)opts
                                  range: (NSRange)range
 
@@ -786,7 +786,7 @@ prepareResult(NSRegularExpression *regex,
 #endif
 
 #if HAVE_UREGEX_OPENUTEXT
-- (NSUInteger) replaceMatchesInString: (NSMutableString*)string
+- (int) replaceMatchesInString: (NSMutableString*)string
                               options: (NSMatchingOptions)opts
                                 range: (NSRange)range
                          withTemplate: (NSString*)template
@@ -895,7 +895,7 @@ prepareResult(NSRegularExpression *regex,
   return AUTORELEASE(ret);
 }
 #else
-- (NSUInteger) replaceMatchesInString: (NSMutableString*)string
+- (int) replaceMatchesInString: (NSMutableString*)string
                               options: (NSMatchingOptions)opts
                                 range: (NSRange)range
                          withTemplate: (NSString*)template
@@ -998,7 +998,7 @@ prepareResult(NSRegularExpression *regex,
   return options;
 }
 
-- (NSUInteger) numberOfCaptureGroups
+- (int) numberOfCaptureGroups
 {
   UErrorCode s = 0;
   return uregex_groupCount(regex, &s);

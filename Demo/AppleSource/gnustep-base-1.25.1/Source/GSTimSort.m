@@ -490,7 +490,7 @@ static IMP ensureCapImp;
 - (id)initWithObjects: (id*)theObjects
             sortRange: (NSRange)theSortRange
            comparator: (NSComparator)comparator;
-- (void)mergeAtIndex: (NSUInteger)index;
+- (void)mergeAtIndex: (int)index;
 - (void)suggestMerge;
 - (void)forceMerge;
 @end
@@ -646,7 +646,7 @@ descriptorOrComparator: (id)descriptorOrComparator
     }
 }
 
-- (void) ensureTempCapacity: (NSUInteger)elementsRequired
+- (void) ensureTempCapacity: (int)elementsRequired
 {
     if (elementsRequired <= tempCapacity)
     {
@@ -1010,7 +1010,7 @@ descriptorOrComparator: (id)descriptorOrComparator
     NS_ENDHANDLER
 }
 
-- (void) mergeAtIndex: (NSUInteger)i
+- (void) mergeAtIndex: (int)i
 {
     NSRange r1;
     NSRange r2;

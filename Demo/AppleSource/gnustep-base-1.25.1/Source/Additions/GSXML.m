@@ -431,7 +431,7 @@ static NSMapTable	*attrNames = 0;
   return UTF8Str(((xmlDocPtr)(lib))->encoding);
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return (((NSUInteger)(intptr_t)lib) >> 3);
 }
@@ -642,7 +642,7 @@ static NSMapTable	*nsNames = 0;
   [super dealloc];
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return (((NSUInteger)(intptr_t)lib) >> 3);
 }
@@ -1107,7 +1107,7 @@ static NSMapTable	*nodeNames = 0;
     }
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return (((NSUInteger)(intptr_t)lib) >> 3);
 }
@@ -3770,7 +3770,7 @@ fatalErrorFunction(void *ctx, const unsigned char *msg, ...)
 /**
  * Returns the number of nodes in the receiver.
  */
-- (NSUInteger) count
+- (int) count
 {
   if (xmlXPathNodeSetIsEmpty (((xmlXPathObject*)_lib)->nodesetval))
     {
@@ -3782,7 +3782,7 @@ fatalErrorFunction(void *ctx, const unsigned char *msg, ...)
 /**
  * Deprecated
  */
-- (NSUInteger) length
+- (int) length
 {
   if (xmlXPathNodeSetIsEmpty (((xmlXPathObject*)_lib)->nodesetval))
     {
@@ -3796,7 +3796,7 @@ fatalErrorFunction(void *ctx, const unsigned char *msg, ...)
  * Returns the node from the receiver at the specified index, or nil
  * if no such node exists.
  */
-- (GSXMLNode *) nodeAtIndex: (NSUInteger)index
+- (GSXMLNode *) nodeAtIndex: (int)index
 {
   if (xmlXPathNodeSetIsEmpty (((xmlXPathObject*)_lib)->nodesetval))
     {
@@ -4520,43 +4520,43 @@ static BOOL warned = NO; if (warned == NO) { warned = YES; NSLog(@"WARNING, use 
  */
 @interface	NSArray (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc;
 @end
 
 @interface	NSData (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc;
 @end
 
 @interface	NSDate (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc;
 @end
 
 @interface	NSDictionary (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc;
 @end
 
 @interface	NSObject (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc;
 @end
 
 @interface	NSNumber (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc;
 @end
 
 @interface	NSString (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc;
 @end
 
@@ -4607,7 +4607,7 @@ static void indentation(unsigned level, NSMutableString *str)
 
 @implementation	NSArray (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc
 {
   unsigned 		i;
@@ -4643,7 +4643,7 @@ static void indentation(unsigned level, NSMutableString *str)
 
 @implementation	NSData (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc
 {
   NSData	*d;
@@ -4660,7 +4660,7 @@ static void indentation(unsigned level, NSMutableString *str)
 
 @implementation	NSDate (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc
 {
   NSString		*s;
@@ -4676,7 +4676,7 @@ static void indentation(unsigned level, NSMutableString *str)
 
 @implementation	NSDictionary (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc
 {
   NSEnumerator	*kEnum = [self keyEnumerator];
@@ -4717,7 +4717,7 @@ static void indentation(unsigned level, NSMutableString *str)
 
 @implementation	NSNumber (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc
 {
   const char	*t = [self objCType];
@@ -4758,7 +4758,7 @@ static void indentation(unsigned level, NSMutableString *str)
 
 @implementation	NSObject (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc
 {
   [[self description] appendToXMLRPC: str indent: indent for: rpc];
@@ -4767,7 +4767,7 @@ static void indentation(unsigned level, NSMutableString *str)
 
 @implementation	NSString (GSXMLRPC)
 - (void) appendToXMLRPC: (NSMutableString*)str
-		 indent: (NSUInteger)indent
+		 indent: (int)indent
 		    for: (GSXMLRPC*)rpc
 {
   BOOL	compact = [rpc compact];

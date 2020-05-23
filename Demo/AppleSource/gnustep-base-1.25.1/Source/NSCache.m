@@ -33,7 +33,7 @@
  */
 @interface NSCache (EvictionPolicy)
 /** The method controlling eviction policy in an NSCache. */
-- (void) _evictObjectsToMakeSpaceForObjectWithCost: (NSUInteger)cost;
+- (void) _evictObjectsToMakeSpaceForObjectWithCost: (int)cost;
 @end
 
 
@@ -51,7 +51,7 @@
     return self;
 }
 
-- (NSUInteger) countLimit
+- (int) countLimit
 {
     return _countLimit;
 }
@@ -119,7 +119,7 @@
     }
 }
 
-- (void) setCountLimit: (NSUInteger)lim
+- (void) setCountLimit: (int)lim
 {
     _countLimit = lim;
 }
@@ -139,7 +139,7 @@
     ASSIGN(_name, cacheName);
 }
 
-- (void) setObject: (id)obj forKey: (id)key cost: (NSUInteger)num
+- (void) setObject: (id)obj forKey: (id)key cost: (int)num
 {
     _GSCachedObject *oldObject = [_objects objectForKey: key];
     _GSCachedObject *newObject;
@@ -169,12 +169,12 @@
     [self setObject: obj forKey: key cost: 0];
 }
 
-- (void) setTotalCostLimit: (NSUInteger)lim
+- (void) setTotalCostLimit: (int)lim
 {
     _costLimit = lim;
 }
 
-- (NSUInteger)totalCostLimit
+- (int)totalCostLimit
 {
     return _costLimit;
 }
@@ -189,7 +189,7 @@
  NSDiscardableContent 这个协议, 就是在这个地方被统一使用的.
  
  */
-- (void)_evictObjectsToMakeSpaceForObjectWithCost: (NSUInteger)cost
+- (void)_evictObjectsToMakeSpaceForObjectWithCost: (int)cost
 {
     NSUInteger spaceNeeded = 0;
     NSUInteger count = [_objects count];

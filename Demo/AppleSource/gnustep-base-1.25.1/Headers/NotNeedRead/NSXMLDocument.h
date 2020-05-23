@@ -106,7 +106,7 @@ typedef NSUInteger NSXMLDocumentContentKind;
  * Initialise using the data downloaded from the spplied url.
  */
 - (id) initWithContentsOfURL: (NSURL*)url
-                     options: (NSUInteger)mask
+                     options: (int)mask
                        error: (NSError**)error;
 
 /** <init />
@@ -114,7 +114,7 @@ typedef NSUInteger NSXMLDocumentContentKind;
  * Parse errors are returned in error.
  */
 - (id) initWithData: (NSData*)data
-            options: (NSUInteger)mask
+            options: (int)mask
               error: (NSError**)error;
 
 /**
@@ -128,7 +128,7 @@ typedef NSUInteger NSXMLDocumentContentKind;
  * Parse errors are returned in the error argument.
 */
 - (id) initWithXMLString: (NSString*)string
-                 options: (NSUInteger)mask
+                 options: (int)mask
                    error: (NSError**)error;
 
 /**
@@ -196,17 +196,17 @@ typedef NSUInteger NSXMLDocumentContentKind;
 /**
  * Inserts child at index.
  */
-- (void) insertChild: (NSXMLNode*)child atIndex: (NSUInteger)index;
+- (void) insertChild: (NSXMLNode*)child atIndex: (int)index;
 
 /**
  * Inserts a number of children at the index.
  */
-- (void) insertChildren: (NSArray*)children atIndex: (NSUInteger)index;
+- (void) insertChildren: (NSArray*)children atIndex: (int)index;
 
 /**
  * Removes the child at the index.
  */
-- (void) removeChildAtIndex: (NSUInteger)index;
+- (void) removeChildAtIndex: (int)index;
 
 /**
  * Replaces all existing child nodes with the ones in the array.
@@ -221,7 +221,7 @@ typedef NSUInteger NSXMLDocumentContentKind;
 /**
  * Replacs the child at the specified index.
  */
-- (void) replaceChildAtIndex: (NSUInteger)index withNode: (NSXMLNode*)theNode;
+- (void) replaceChildAtIndex: (int)index withNode: (NSXMLNode*)theNode;
 
 /**
  * Outputs XML data using -XMLDataWithOptions: with NSXMLNodeOptionsNone.
@@ -231,7 +231,7 @@ typedef NSUInteger NSXMLDocumentContentKind;
 /**
  * Outputs the reciever encoded using the specified options.
  */
-- (NSData*) XMLDataWithOptions: (NSUInteger)theOptions;
+- (NSData*) XMLDataWithOptions: (int)theOptions;
 
 /**
  * Returns a new document created by applying xslt (with a set of

@@ -59,12 +59,12 @@
 
 @interface GSAvahiNetService (GSAvahiNetServicePrivate)
 - (void) newData: (NSData*)data
-       forRRCode: (NSUInteger)rrCode;
+       forRRCode: (int)rrCode;
 
 - (void) removedData: (NSData*)data
-           forRRCode: (NSUInteger)rrCode;
+           forRRCode: (int)rrCode;
 
-- (void) allForNowForRRCode: (NSUInteger)rrCode;
+- (void) allForNowForRRCode: (int)rrCode;
 
 - (void) entryGroup: (AvahiEntryGroup*)group
        enteredState: (AvahiEntryGroupState)state;
@@ -1538,7 +1538,7 @@ didUpdateRecordData: (id)data
  * Called whenever a new event appears for the resource record
  * <code>code</code>. Postpones the timeout.
  */
-- (void) rescheduleBrowserTimeoutForRRCode: (NSUInteger)code
+- (void) rescheduleBrowserTimeoutForRRCode: (int)code
 {
   NSTimer *aTimer = nil;
   [_lock lock];
@@ -1568,7 +1568,7 @@ didUpdateRecordData: (id)data
  * Private method to add new data for a record type.
  */
 - (void) newData: (NSData*)data
-       forRRCode: (NSUInteger)code
+       forRRCode: (int)code
 {
   NSString *rrType = NSStringFromRRCode(code);
   id oldValue = nil;
@@ -1631,7 +1631,7 @@ didUpdateRecordData: (id)data
  * Private method to remove stale data for a resource record.
  */
 - (void) removedData: (NSData*)data
-           forRRCode: (NSUInteger)code
+           forRRCode: (int)code
 {
   NSString *rrType = NSStringFromRRCode(code);
   id oldValue = nil;
@@ -1706,7 +1706,7 @@ didUpdateRecordData: (id)data
  * Called both by the native timeout mechanism and the Avahi callback to notify
  * the delegate about record data changes.
  */
-- (void) allForNowForRRCode: (NSUInteger)code
+- (void) allForNowForRRCode: (int)code
 {
   NSString *rrType = nil;
   NSData *data = nil;
@@ -1880,7 +1880,7 @@ didUpdateRecordData: (id)data
 
 - (BOOL) addRecordData: (NSData*)data
          forRecordType: (NSString*)type
-               withTTL: (NSUInteger)ttl
+               withTTL: (int)ttl
 {
   int rrCode = RRCodeFromNSString(type);
   int ret = 0;

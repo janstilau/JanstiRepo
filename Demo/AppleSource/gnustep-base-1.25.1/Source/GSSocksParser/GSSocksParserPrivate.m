@@ -33,12 +33,12 @@
 #import <stdio.h>
 
 @interface NSString (GSSocksParser)
-- (NSString *) stringByRepeatingCurrentString: (NSUInteger)times;
+- (NSString *) stringByRepeatingCurrentString: (int)times;
 @end
 
 @implementation NSString (GSSocksParser)
 
-- (NSString *) stringByRepeatingCurrentString: (NSUInteger)times
+- (NSString *) stringByRepeatingCurrentString: (int)times
 {
   return [@"" stringByPaddingToLength: times * [self length]
                            withString: self

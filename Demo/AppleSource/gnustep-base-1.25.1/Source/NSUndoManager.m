@@ -572,7 +572,7 @@
  * The default value is 0 meaning the number is only limited by
  * memory availability.
  */
-- (NSUInteger) levelsOfUndo
+- (int) levelsOfUndo
 {
   return _levelsOfUndo;
 }
@@ -871,7 +871,7 @@
  * When set to 0 the stack size is limited by the range of a unsigned int,
  * available memory.
  */
-- (void) setLevelsOfUndo: (NSUInteger)num
+- (void) setLevelsOfUndo: (int)num
 {
   _levelsOfUndo = num;
   if (num > 0)

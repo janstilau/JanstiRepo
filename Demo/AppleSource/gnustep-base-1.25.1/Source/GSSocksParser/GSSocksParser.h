@@ -37,12 +37,12 @@
 @protocol GSSocksParserDelegate <NSObject>
 
 - (void) parser: (GSSocksParser *)aParser
- needsMoreBytes: (NSUInteger)aLength;
+ needsMoreBytes: (int)aLength;
 - (void) parser: (GSSocksParser *)aParser
   formedRequest: (NSData *)aRequest;
 - (void) parser: (GSSocksParser *)aParser
 finishedWithAddress: (NSString *)anAddress
-port: (NSUInteger)aPort;
+port: (int)aPort;
 
 - (void) parser: (GSSocksParser *)aParser
 encounteredError: (NSError *)anError;
@@ -59,13 +59,13 @@ encounteredError: (NSError *)anError;
 
 - (id) initWithConfiguration: (NSDictionary *)aConfiguration
                      address: (NSString *)anAddress
-                        port: (NSUInteger)aPort;
+                        port: (int)aPort;
 
 - (id<GSSocksParserDelegate>) delegate;
 - (void) setDelegate: (id<GSSocksParserDelegate>)aDelegate;
 
 - (NSString *) address;
-- (NSUInteger) port;
+- (int) port;
 
 - (void) start;
 - (void) parseNextChunk: (NSData *)aChunk;

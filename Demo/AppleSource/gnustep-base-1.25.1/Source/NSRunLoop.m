@@ -70,7 +70,7 @@ static NSDate	*theFuture = nil;
 - (id) initWithSelector: (SEL)aSelector
                  target: (id)target
                argument: (id)argument
-                  order: (NSUInteger)order;
+                  order: (int)order;
 @end
 
 @implementation GSRunLoopPerformer
@@ -104,7 +104,7 @@ static NSDate	*theFuture = nil;
 - (id) initWithSelector: (SEL)aSelector
                  target: (id)aTarget
                argument: (id)anArgument
-                  order: (NSUInteger)theOrder
+                  order: (int)theOrder
 {
     self = [super init];
     if (self)
@@ -1434,7 +1434,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
 - (void) performSelector: (SEL)aSelector
                   target: (id)target
                 argument: (id)argument
-                   order: (NSUInteger)order
+                   order: (int)order
                    modes: (NSArray*)modes
 {
     unsigned		count = [modes count];

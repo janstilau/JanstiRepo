@@ -55,12 +55,12 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 
 + (id) data;
 + (id) dataWithBytes: (const void*)bytes
-	      length: (NSUInteger)length;
+	      length: (int)length;
 + (id) dataWithBytesNoCopy: (void*)bytes
-		    length: (NSUInteger)length;
+		    length: (int)length;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 + (id) dataWithBytesNoCopy: (void*)aBuffer
-		    length: (NSUInteger)bufferSize
+		    length: (int)bufferSize
 	      freeWhenDone: (BOOL)shouldFree;
 #endif
 + (id) dataWithContentsOfFile: (NSString*)path;
@@ -82,16 +82,16 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
  * indirectly) holds a strong reference the receiver will cause a retain cycle. 
  */
 - (instancetype) initWithBytesNoCopy: (void*)bytes
-                              length: (NSUInteger)length
+                              length: (int)length
                          deallocator: (GSDataDeallocatorBlock)deallocBlock;
 #endif
 - (id) initWithBytes: (const void*)aBuffer
-	      length: (NSUInteger)bufferSize;
+	      length: (int)bufferSize;
 - (id) initWithBytesNoCopy: (void*)aBuffer
-		    length: (NSUInteger)bufferSize;
+		    length: (int)bufferSize;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (id) initWithBytesNoCopy: (void*)aBuffer
-		    length: (NSUInteger)bufferSize
+		    length: (int)bufferSize
 	      freeWhenDone: (BOOL)shouldFree;
 #endif
 - (id) initWithContentsOfFile: (NSString*)path;
@@ -107,7 +107,7 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 - (NSString*) description;
 - (void) getBytes: (void*)buffer;
 - (void) getBytes: (void*)buffer
-	   length: (NSUInteger)length;
+	   length: (int)length;
 - (void) getBytes: (void*)buffer
 	    range: (NSRange)aRange;
 - (NSData*) subdataWithRange: (NSRange)aRange;
@@ -121,7 +121,7 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 // Querying a Data Object
 
 - (BOOL) isEqualToData: (NSData*)other;
-- (NSUInteger) length;
+- (int) length;
 
 /**
  * <p>Writes a copy of the data encapsulated by the receiver to a file
@@ -174,14 +174,14 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
  * </p>
  */
 - (BOOL) writeToFile: (NSString *)path
-             options: (NSUInteger)writeOptionsMask
+             options: (int)writeOptionsMask
                error: (NSError **)errorPtr;
 
 /**
  * Writes a copy of the contents of the receiver to the specified URL.
  */
 - (BOOL) writeToURL: (NSURL *)url
-            options: (NSUInteger)writeOptionsMask
+            options: (int)writeOptionsMask
               error: (NSError **)errorPtr;
 #endif
 @end
@@ -260,8 +260,8 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 #define	_GSC_CID	0x17	/* Class encoded as id	*/
 
 @interface NSData (GNUstepExtensions)
-+ (id) dataWithShmID: (int)anID length: (NSUInteger) length;
-+ (id) dataWithSharedBytes: (const void*)bytes length: (NSUInteger) length;
++ (id) dataWithShmID: (int)anID length: (int) length;
++ (id) dataWithSharedBytes: (const void*)bytes length: (int) length;
 
 /*
  *	-deserializeTypeTag:andCrossRef:atCursor:
@@ -276,21 +276,21 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 
 @interface NSMutableData :  NSData
 
-+ (id) dataWithCapacity: (NSUInteger)numBytes;
-+ (id) dataWithLength: (NSUInteger)length;
-- (id) initWithCapacity: (NSUInteger)capacity;
-- (id) initWithLength: (NSUInteger)length;
++ (id) dataWithCapacity: (int)numBytes;
++ (id) dataWithLength: (int)length;
+- (id) initWithCapacity: (int)capacity;
+- (id) initWithLength: (int)length;
 
 // Adjusting Capacity
 
-- (void) increaseLengthBy: (NSUInteger)extraLength;
-- (void) setLength: (NSUInteger)size;
+- (void) increaseLengthBy: (int)extraLength;
+- (void) setLength: (int)size;
 - (void*) mutableBytes;
 
 // Appending Data
 
 - (void) appendBytes: (const void*)aBuffer
-	      length: (NSUInteger)bufferSize;
+	      length: (int)bufferSize;
 - (void) appendData: (NSData*)other;
 
 // Modifying Data
@@ -300,7 +300,7 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (void) replaceBytesInRange: (NSRange)aRange
 		   withBytes: (const void*)bytes
-		      length: (NSUInteger)length;
+		      length: (int)length;
 #endif
 - (void) resetBytesInRange: (NSRange)aRange;
 - (void) setData: (NSData*)data;
@@ -329,8 +329,8 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
  *	Capacity management - GNUstep gives you control over the size of
  *	the data buffer as well as the 'length' of valid data in it.
  */
-- (NSUInteger) capacity;
-- (id) setCapacity: (NSUInteger)newCapacity;
+- (int) capacity;
+- (id) setCapacity: (int)newCapacity;
 
 - (int) shmID;	/* Shared memory ID for data buffer (if any)	*/
 

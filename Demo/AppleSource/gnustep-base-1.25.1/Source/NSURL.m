@@ -1258,7 +1258,7 @@ static NSUInteger	urlAlign;
     }
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return [[self absoluteString] hash];
 }

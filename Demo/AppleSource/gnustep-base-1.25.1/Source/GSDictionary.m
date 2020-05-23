@@ -71,7 +71,7 @@ static SEL	objectForKeySel;
   return RETAIN(self); // 不可变对象的通用写法
 }
 
-- (NSUInteger) count
+- (int) count
 {
   return map.nodeCount;
 }
@@ -107,7 +107,7 @@ static SEL	objectForKeySel;
     }
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return map.nodeCount;
 }
@@ -152,7 +152,7 @@ static SEL	objectForKeySel;
  */
 - (id) initWithObjects: (const id[])objs
                forKeys: (const id <NSCopying>[])keys
-                 count: (NSUInteger)c
+                 count: (int)c
 {
   NSUInteger	i;
 
@@ -327,16 +327,16 @@ static SEL	objectForKeySel;
   return nil;
 }
 
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
+- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
 				   objects: (__unsafe_unretained id[])stackbuf
-				     count: (NSUInteger)len
+				     count: (int)len
 {
   state->mutationsPtr = (unsigned long *)self;
   return GSIMapCountByEnumeratingWithStateObjectsCount
     (&map, state, stackbuf, len);
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
   NSUInteger	size = GSPrivateMemorySize(self, exclude);
 
@@ -382,7 +382,7 @@ static SEL	objectForKeySel;
 }
 
 /* Designated initialiser */
-- (id) initWithCapacity: (NSUInteger)cap
+- (id) initWithCapacity: (int)cap
 {
   GSIMapInitWithZoneAndCapacity(&map, [self zone], cap);
   return self;
@@ -459,9 +459,9 @@ static SEL	objectForKeySel;
   _version++;
 }
 
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
+- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
 				   objects: (__unsafe_unretained id[])stackbuf
-				     count: (NSUInteger)len
+				     count: (int)len
 {
   state->mutationsPtr = (unsigned long *)&_version;
   return GSIMapCountByEnumeratingWithStateObjectsCount

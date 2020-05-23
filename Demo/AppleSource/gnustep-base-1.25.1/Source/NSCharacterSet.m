@@ -47,7 +47,7 @@
 /* Private class from NSIndexSet.m
  */
 @interface	_GSStaticIndexSet : NSIndexSet
-- (id) _initWithBytes: (const void*)bytes length: (NSUInteger)length;
+- (id) _initWithBytes: (const void*)bytes length: (int)length;
 @end
 
 @interface NSBitmapCharSet : NSCharacterSet
@@ -1181,7 +1181,7 @@ static Class concreteMutableClass = nil;
  */
 
 @interface      NSIndexSet (NSCharacterSet)
-- (NSUInteger) _gapGreaterThanIndex: (NSUInteger)anIndex;
+- (int) _gapGreaterThanIndex: (int)anIndex;
 @end
 
 

@@ -372,7 +372,7 @@ appendUIntData(NSMutableData *d, NSUInteger i)
 /**
  *  Return length of the underlying string.
  */
-- (NSUInteger) length
+- (int) length
 {
   return [[self string] length];
 }
@@ -393,7 +393,7 @@ appendUIntData(NSMutableData *d, NSUInteger i)
  *  and values still hold.  This may not be the maximum range, depending
  *  on the implementation.
  */
-- (NSDictionary*) attributesAtIndex: (NSUInteger)index
+- (NSDictionary*) attributesAtIndex: (int)index
 		     effectiveRange: (NSRange*)aRange
 {
   [self subclassResponsibility: _cmd];/* Primitive method! */
@@ -405,7 +405,7 @@ appendUIntData(NSMutableData *d, NSUInteger i)
  *  is non-nil, this gets filled with the range over which the attribute-value
  *  set is the same as at index, clipped to rangeLimit.
  */
-- (NSDictionary*) attributesAtIndex: (NSUInteger)index
+- (NSDictionary*) attributesAtIndex: (int)index
 	      longestEffectiveRange: (NSRange*)aRange
 			    inRange: (NSRange)rangeLimit
 {
@@ -460,7 +460,7 @@ appendUIntData(NSMutableData *d, NSUInteger i)
  *  may not be the maximum range, depending on the implementation.
  */
 - (id) attribute: (NSString*)attributeName
-	 atIndex: (NSUInteger)index
+	 atIndex: (int)index
   effectiveRange: (NSRange*)aRange
 {
     
@@ -492,7 +492,7 @@ appendUIntData(NSMutableData *d, NSUInteger i)
  *  applies, clipped to rangeLimit.
  */
 - (id) attribute: (NSString*)attributeName
-	 atIndex: (NSUInteger)index
+	 atIndex: (int)index
   longestEffectiveRange: (NSRange*)aRange
 	 inRange: (NSRange)rangeLimit
 {
@@ -984,7 +984,7 @@ appendUIntData(NSMutableData *d, NSUInteger i)
  *  Inserts attributed string within this one, preserving attributes.
  */
 - (void) insertAttributedString: (NSAttributedString*)attributedString
-			atIndex: (NSUInteger)index
+			atIndex: (int)index
 {
   [self replaceCharactersInRange: NSMakeRange(index,0)
 	    withAttributedString: attributedString];
@@ -1097,12 +1097,12 @@ appendUIntData(NSMutableData *d, NSUInteger i)
   [super dealloc];
 }
 
-- (NSUInteger) length
+- (int) length
 {
   return [[_owner string] length];
 }
 
-- (unichar) characterAtIndex: (NSUInteger)index
+- (unichar) characterAtIndex: (int)index
 {
   return [[_owner string] characterAtIndex: index];
 }
@@ -1122,7 +1122,7 @@ appendUIntData(NSMutableData *d, NSUInteger i)
   return [[_owner string] cString];
 }
 
-- (NSUInteger) cStringLength
+- (int) cStringLength
 {
   return [[_owner string] cStringLength];
 }

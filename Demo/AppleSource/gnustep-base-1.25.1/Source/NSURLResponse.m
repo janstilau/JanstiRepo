@@ -10,7 +10,8 @@
 #import "NSCallBacks.h"
 #import "GNUstepBase/GSMime.h"
 
-@class NSMutableDictionary;
+@interface NSMutableDictionary:NSObject
+@end
 
 @interface	_GSMutableInsensitiveDictionary : NSMutableDictionary
 @end
@@ -19,41 +20,6 @@
 // 这其实仅仅是一个数据类而已.
 
 @implementation	NSURLResponse (Private)
-
-- (void) _checkHeaders
-{
-  if (NSURLResponseUnknownLength == self->expectedContentLength)
-    {
-      NSString	*s= [self _valueForHTTPHeaderField: @"content-length"];
-
-      if ([s length] > 0)
-	{
-	  self->expectedContentLength = [s intValue];
-	}
-    }
-
-  if (nil == self->MIMEType)
-    {
-      GSMimeHeader	*c;
-      GSMimeParser	*p;
-      NSScanner		*s;
-      NSString		*v;
-
-      v = [self _valueForHTTPHeaderField: @"content-type"];
-      if (v == nil)
-        {
-	  v = @"text/plain";	// No content type given.
-	}
-      s = [NSScanner scannerWithString: v];
-      p = [GSMimeParser new];
-      c = AUTORELEASE([GSMimeHeader new]);
-      [p scanHeaderBody: s into: c];
-      RELEASE(p);
-      ASSIGNCOPY(self->MIMEType, [c value]);
-      v = [c parameterForKey: @"charset"];
-      ASSIGNCOPY(self->textEncodingName, v);
-    }
-}
 
 - (void) _setHeaders: (id)headers
 {
@@ -84,7 +50,6 @@
 	  [self _setValue: v forHTTPHeaderField: n];
 	}
     }
-  [self _checkHeaders];
 }
 - (void) _setStatusCode: (NSInteger)code text: (NSString*)text
 {
@@ -109,63 +74,6 @@
 
 @implementation	NSURLResponse
 
-+ (id) allocWithZone: (NSZone*)z
-{
-  NSURLResponse	*o = [super allocWithZone: z];
-
-  if (o != nil)
-    {
-      o->_NSURLResponseInternal = NSZoneCalloc(z, 1, sizeof(Internal));
-    }
-  return o;
-}
-
-- (id) copyWithZone: (NSZone*)z
-{
-  NSURLResponse	*o;
-
-  if (NSShouldRetainWithZone(self, z) == YES)
-    {
-      o = RETAIN(self);
-    }
-  else
-    {
-      o = [[self class] allocWithZone: z];
-      o = [o initWithURL: [self URL]
-	MIMEType: [self MIMEType]
-	expectedContentLength: [self expectedContentLength]
-	textEncodingName: [self textEncodingName]];
-      if (o != nil)
-	{
-	  ASSIGN(inst->statusText, self->statusText);
-	  inst->statusCode = self->statusCode;
-	  if (self->headers == 0)
-	    {
-	      inst->headers = 0;
-	    }
-	  else
-	    {
-	      inst->headers = [self->headers mutableCopy];
-	    }
-	}
-    }
-  return o;
-}
-
-- (void) dealloc
-{
-  if (self != 0)
-    {
-      RELEASE(self->URL);
-      RELEASE(self->MIMEType);
-      RELEASE(self->textEncodingName);
-      RELEASE(self->statusText);
-      RELEASE(self->headers);
-      NSZoneFree([self zone], self);
-    }
-  [super dealloc];
-}
-
 - (long long) expectedContentLength
 {
   return self->expectedContentLength;
@@ -177,7 +85,7 @@
  */
 - (id) initWithURL: (NSURL *)URL
   MIMEType: (NSString *)MIMEType
-  expectedContentLength: (NSInteger)length
+  expectedContentLength: (int)length
   textEncodingName: (NSString *)name
 {
   if ((self = [super init]) != nil)
@@ -191,7 +99,7 @@
 }
 
 - (id) initWithURL: (NSURL*)URL
-	statusCode: (NSInteger)statusCode
+	statusCode: (int)statusCode
        HTTPVersion: (NSString*)HTTPVersion
       headerFields: (NSDictionary*)headerFields
 {
@@ -203,7 +111,6 @@
     {
       self->statusCode = statusCode;
       self->headers = [headerFields copy];
-      [self _checkHeaders];
     }
   return self;
 }
@@ -263,7 +170,7 @@
     {
       name = @"unknown";
     }
-// FIXME ... add type specific extension
+
   return name;
 }
 

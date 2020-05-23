@@ -146,7 +146,7 @@ static BOOL     initialized = NO;
   [super dealloc];
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   const char	*sel = sel_getName(_selector);
 

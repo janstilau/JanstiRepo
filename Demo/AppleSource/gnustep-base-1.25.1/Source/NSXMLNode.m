@@ -501,7 +501,7 @@ isEqualTree(xmlNodePtr nodeA, xmlNodePtr nodeB)
   return self;
 }
 
-- (xmlNodePtr) _childNodeAtIndex: (NSUInteger)index
+- (xmlNodePtr) _childNodeAtIndex: (int)index
 {
   NSUInteger count = 0;
   xmlNodePtr theNode = internal->node;
@@ -528,7 +528,7 @@ isEqualTree(xmlNodePtr nodeA, xmlNodePtr nodeB)
   return children;
 }
 
-- (void) _insertChild: (NSXMLNode*)child atIndex: (NSUInteger)index
+- (void) _insertChild: (NSXMLNode*)child atIndex: (int)index
 {
   /* this private method provides the common insertion
    * implementation used by NSXMLElement and NSXMLDocument
@@ -1109,13 +1109,13 @@ execute_xpath(xmlNodePtr node, NSString *xpath_exp, NSDictionary *constants,
   return [self XMLStringWithOptions: NSXMLNodePreserveWhitespace];
 }
 
-- (NSXMLNode*) childAtIndex: (NSUInteger)index
+- (NSXMLNode*) childAtIndex: (int)index
 {
   xmlNodePtr childNode = [self _childNodeAtIndex: index];
   return [NSXMLNode _objectForNode: childNode];
 }
 
-- (NSUInteger) childCount
+- (int) childCount
 {
   NSUInteger count = 0;
   xmlNodePtr children = NULL;
@@ -1313,12 +1313,12 @@ execute_xpath(xmlNodePtr node, NSString *xpath_exp, NSDictionary *constants,
     }
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return [[self name] hash];
 }
 
-- (NSUInteger) index
+- (int) index
 {
   xmlNodePtr theNode = internal->node;
   int count = 0;
@@ -1346,7 +1346,7 @@ execute_xpath(xmlNodePtr node, NSString *xpath_exp, NSDictionary *constants,
   return [self initWithKind: theKind options: 0];
 }
 
-- (id) initWithKind: (NSXMLNodeKind)theKind options: (NSUInteger)theOptions
+- (id) initWithKind: (NSXMLNodeKind)theKind options: (int)theOptions
 {
   Class theSubclass = [NSXMLNode class];
   void *theNode = NULL;
@@ -1515,7 +1515,7 @@ execute_xpath(xmlNodePtr node, NSString *xpath_exp, NSDictionary *constants,
   return internal->kind;
 }
 
-- (NSUInteger) level
+- (int) level
 {
   NSXMLNode *parent = [self parent];
   
@@ -2001,7 +2001,7 @@ execute_xpath(xmlNodePtr node, NSString *xpath_exp, NSDictionary *constants,
   return [self XMLStringWithOptions: NSXMLNodeOptionsNone];
 }
 
-- (NSString*) XMLStringWithOptions: (NSUInteger)theOptions
+- (NSString*) XMLStringWithOptions: (int)theOptions
 {
   NSString     *string = nil;
   xmlBufferPtr buffer;
@@ -2216,12 +2216,12 @@ execute_xpath(xmlNodePtr node, NSString *xpath_exp, NSDictionary *constants,
   return nil;
 }
 
-- (NSXMLNode*) childAtIndex: (NSUInteger)index
+- (NSXMLNode*) childAtIndex: (int)index
 {
   return nil;
 }
 
-- (NSUInteger) childCount
+- (int) childCount
 {
   return 0;
 }
@@ -2240,7 +2240,7 @@ execute_xpath(xmlNodePtr node, NSString *xpath_exp, NSDictionary *constants,
 {
 }
 
-- (NSUInteger) index
+- (int) index
 {
   return 0;
 }
@@ -2260,7 +2260,7 @@ execute_xpath(xmlNodePtr node, NSString *xpath_exp, NSDictionary *constants,
   return [self init];
 }
 
-- (id) initWithKind: (NSXMLNodeKind)theKind options: (NSUInteger)theOptions
+- (id) initWithKind: (NSXMLNodeKind)theKind options: (int)theOptions
 {
   return [self init];
 }
@@ -2270,7 +2270,7 @@ execute_xpath(xmlNodePtr node, NSString *xpath_exp, NSDictionary *constants,
   return 0;
 }
 
-- (NSUInteger) level
+- (int) level
 {
   return 0;
 }
@@ -2360,7 +2360,7 @@ execute_xpath(xmlNodePtr node, NSString *xpath_exp, NSDictionary *constants,
   return nil;
 }
 
-- (NSString*) XMLStringWithOptions: (NSUInteger)theOptions
+- (NSString*) XMLStringWithOptions: (int)theOptions
 {
   return nil;
 }

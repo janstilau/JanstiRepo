@@ -456,7 +456,7 @@ typedef NSUInteger NSDirectoryEnumerationOptions;
  * with unicode strings.
  */
 - (NSString*) stringWithFileSystemRepresentation: (const GSNativeChar*)string
-					  length: (NSUInteger)len;
+					  length: (int)len;
 
 - (NSArray*) subpathsAtPath: (NSString*)path;
 
@@ -677,9 +677,9 @@ GS_EXPORT NSString* const NSFileSystemFreeNodes;
 - (NSNumber*) fileGroupOwnerAccountID;
 - (NSString*) fileGroupOwnerAccountName;
 - (NSDate*) fileModificationDate;
-- (NSUInteger) filePosixPermissions;
-- (NSUInteger) fileSystemNumber;
-- (NSUInteger) fileSystemFileNumber;
+- (int) filePosixPermissions;
+- (int) fileSystemNumber;
+- (int) fileSystemFileNumber;
 @end
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST)

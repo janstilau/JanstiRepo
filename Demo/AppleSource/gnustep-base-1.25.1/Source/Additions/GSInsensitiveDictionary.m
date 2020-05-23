@@ -94,7 +94,7 @@ static SEL	objSel;
   return RETAIN(self);
 }
 
-- (NSUInteger) count
+- (int) count
 {
   return map.nodeCount;
 }
@@ -130,7 +130,7 @@ static SEL	objSel;
     }
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return map.nodeCount;
 }
@@ -170,7 +170,7 @@ static SEL	objSel;
 }
 
 /* Designated initialiser */
-- (id) initWithObjects: (const id[])objs forKeys: (const id <NSCopying>[])keys count: (NSUInteger)c
+- (id) initWithObjects: (const id[])objs forKeys: (const id <NSCopying>[])keys count: (int)c
 {
   NSUInteger	i;
 
@@ -370,7 +370,7 @@ static SEL	objSel;
 }
 
 /* Designated initialiser */
-- (id) initWithCapacity: (NSUInteger)cap
+- (id) initWithCapacity: (int)cap
 {
   GSIMapInitWithZoneAndCapacity(&map, [self zone], cap);
   return self;

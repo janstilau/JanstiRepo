@@ -102,7 +102,7 @@ DEFINE_BLOCK_TYPE(GSRegexBlock, void, NSTextCheckingResult*,
                           options: (NSMatchingOptions)options
                             range: (NSRange)range
                        usingBlock: (GSRegexBlock)block;
-- (NSUInteger) numberOfMatchesInString: (NSString*)string
+- (int) numberOfMatchesInString: (NSString*)string
                                options: (NSMatchingOptions)options
                                  range: (NSRange)range;
 
@@ -115,7 +115,7 @@ DEFINE_BLOCK_TYPE(GSRegexBlock, void, NSTextCheckingResult*,
 - (NSRange) rangeOfFirstMatchInString: (NSString*)string
                               options: (NSMatchingOptions)options
                                 range: (NSRange)range;
-- (NSUInteger) replaceMatchesInString: (NSMutableString*)string
+- (int) replaceMatchesInString: (NSMutableString*)string
                               options: (NSMatchingOptions)options
                                 range: (NSRange)range
                          withTemplate: (NSString*)templat;
@@ -132,7 +132,7 @@ DEFINE_BLOCK_TYPE(GSRegexBlock, void, NSTextCheckingResult*,
 @property (readonly) NSUInteger numberOfCaptureGroups;
 #else
 - (NSRegularExpressionOptions) options;
-- (NSUInteger) numberOfCaptureGroups;
+- (int) numberOfCaptureGroups;
 #endif
 #endif // GS_USE_ICU
 @end

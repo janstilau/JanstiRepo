@@ -29,19 +29,19 @@ extern "C" {
                                forKeys: (GS_GENERIC_CLASS(NSArray,KeyT)*)keys;
 + (instancetype) dictionaryWithObjects: (const GS_GENERIC_TYPE(ValT)[])objects
   forKeys: (const GS_GENERIC_TYPE_F(KeyT,id<NSCopying>)[])keys
-  count: (NSUInteger)count;
+  count: (int)count;
 + (instancetype) dictionaryWithObjectsAndKeys: (id)firstObject, ...;
 
 - (GS_GENERIC_CLASS(NSArray,KeyT)*) allKeys;
 - (GS_GENERIC_CLASS(NSArray,KeyT)*) allKeysForObject:
   (GS_GENERIC_TYPE(ValT))anObject;
 - (GS_GENERIC_CLASS(NSArray,ValT)*) allValues;
-- (NSUInteger) count;						// Primitive
+- (int) count;						// Primitive
 - (NSString*) description;
 - (NSString*) descriptionInStringsFileFormat;
 - (NSString*) descriptionWithLocale: (id)locale;
 - (NSString*) descriptionWithLocale: (id)locale
-			     indent: (NSUInteger)level;
+			     indent: (int)level;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 DEFINE_BLOCK_TYPE(GSKeysAndObjectsEnumeratorBlock, void,
@@ -70,7 +70,7 @@ DEFINE_BLOCK_TYPE(GSKeysAndObjectsEnumeratorBlock, void,
 - (id) initWithObjectsAndKeys: (GS_GENERIC_TYPE(ValT))firstObject, ...;
 - (id) initWithObjects: (const GS_GENERIC_TYPE(ValT)[])objects
 	       forKeys: (const GS_GENERIC_TYPE_F(KeyT,id<NSCopying>)[])keys
-		 count: (NSUInteger)count; // Primitive
+		 count: (int)count; // Primitive
 - (BOOL) isEqualToDictionary: (GS_GENERIC_CLASS(NSDictionary,KeyT, ValT)*)other;
 
 - (GS_GENERIC_CLASS(NSEnumerator,KeyT)*) keyEnumerator;	// Primitive
@@ -112,11 +112,11 @@ DEFINE_BLOCK_TYPE(GSKeysAndObjectsPredicateBlock, BOOL,
 @interface  GS_GENERIC_CLASS(NSMutableDictionary, KeyT:id<NSCopying>, ValT) :
   GS_GENERIC_CLASS(NSDictionary, KeyT, ValT)
 
-+ (instancetype) dictionaryWithCapacity: (NSUInteger)numItems;
++ (instancetype) dictionaryWithCapacity: (int)numItems;
 
 - (void) addEntriesFromDictionary:
     (GS_GENERIC_CLASS(NSDictionary, KeyT, ValT)*)otherDictionary;
-- (instancetype) initWithCapacity: (NSUInteger)numItems;	// Primitive
+- (instancetype) initWithCapacity: (int)numItems;	// Primitive
 - (void) removeAllObjects;
 /**
  * Removes the object with the specified key from the receiver. This method

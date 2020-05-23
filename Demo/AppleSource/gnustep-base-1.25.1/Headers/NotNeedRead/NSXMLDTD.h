@@ -76,24 +76,24 @@ extern "C" {
 /** Load data from URL and initialise the receiver with the contents.
  */
 - (id) initWithContentsOfURL: (NSURL*)url
-                     options: (NSUInteger)mask
+                     options: (int)mask
                        error: (NSError**)error;
 
 /** <init />
  */
 - (id) initWithData: (NSData*)data
-            options: (NSUInteger)mask
+            options: (int)mask
               error: (NSError**)error;
 
 /**
  * Inserts a child node at the specified index in the document.
  */
-- (void) insertChild: (NSXMLNode*)child atIndex: (NSUInteger)index;
+- (void) insertChild: (NSXMLNode*)child atIndex: (int)index;
 
 /**
  * Inserts a number of child nodes at the specified index.
  */
-- (void) insertChildren: (NSArray*)children atIndex: (NSUInteger)index;
+- (void) insertChildren: (NSArray*)children atIndex: (int)index;
 
 /**
  * Returns the notation declaration named.
@@ -113,12 +113,12 @@ extern "C" {
 /**
  * Remove the indexed child node.
  */
-- (void) removeChildAtIndex: (NSUInteger)index;
+- (void) removeChildAtIndex: (int)index;
 
 /**
  * Replaces the child at index with another child.
  */
-- (void) replaceChildAtIndex: (NSUInteger)index withNode: (NSXMLNode*)theNode;
+- (void) replaceChildAtIndex: (int)index withNode: (NSXMLNode*)theNode;
 
 /**
  * Replaces all existing children with the child nodes in the array.

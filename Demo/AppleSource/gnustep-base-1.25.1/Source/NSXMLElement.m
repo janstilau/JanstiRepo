@@ -70,7 +70,7 @@ extern void ensure_oldNs(xmlNodePtr node);
   return [self initWithKind: NSXMLElementKind options: 0];
 }
 
-- (id) initWithKind: (NSXMLNodeKind)theKind options: (NSUInteger)theOptions
+- (id) initWithKind: (NSXMLNodeKind)theKind options: (int)theOptions
 {
   if (NSXMLElementKind == theKind)
     {
@@ -640,7 +640,7 @@ extern void ensure_oldNs(xmlNodePtr node);
   return nil;
 }
 
-- (void) insertChild: (NSXMLNode*)child atIndex: (NSUInteger)index
+- (void) insertChild: (NSXMLNode*)child atIndex: (int)index
 {
   NSXMLNodeKind	theKind = [child kind];
   NSUInteger childCount = [self childCount];
@@ -671,7 +671,7 @@ extern void ensure_oldNs(xmlNodePtr node);
   [self _insertChild: child atIndex: index];
 }
 
-- (void) insertChildren: (NSArray*)children atIndex: (NSUInteger)index
+- (void) insertChildren: (NSArray*)children atIndex: (int)index
 {
   NSEnumerator	*enumerator = [children objectEnumerator];
   NSXMLNode	*child;
@@ -682,7 +682,7 @@ extern void ensure_oldNs(xmlNodePtr node);
     }
 }
 
-- (void) removeChildAtIndex: (NSUInteger)index
+- (void) removeChildAtIndex: (int)index
 {
   NSXMLNode *child;
 
@@ -713,7 +713,7 @@ extern void ensure_oldNs(xmlNodePtr node);
   [self insertChild: child atIndex: [self childCount]];
 }
 
-- (void) replaceChildAtIndex: (NSUInteger)index withNode: (NSXMLNode*)theNode
+- (void) replaceChildAtIndex: (int)index withNode: (NSXMLNode*)theNode
 {
   [self insertChild: theNode atIndex: index];
   [self removeChildAtIndex: index + 1];

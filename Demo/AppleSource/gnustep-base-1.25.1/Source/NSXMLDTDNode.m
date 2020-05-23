@@ -53,7 +53,7 @@ GS_PRIVATE_INTERNAL(NSXMLDTDNode)
   GS_CREATE_INTERNAL(NSXMLDTDNode);
 }
 
-- (id) initWithKind: (NSXMLNodeKind)theKind options: (NSUInteger)theOptions
+- (id) initWithKind: (NSXMLNodeKind)theKind options: (int)theOptions
 {
   if (NSXMLEntityDeclarationKind == theKind
     || NSXMLElementDeclarationKind == theKind

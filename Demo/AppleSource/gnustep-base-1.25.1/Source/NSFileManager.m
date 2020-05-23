@@ -2303,7 +2303,7 @@ static NSStringEncoding	defaultEncoding;
     (const GSNativeChar*)[path cStringUsingEncoding: NSUnicodeStringEncoding];
 }
 - (NSString*) stringWithFileSystemRepresentation: (const GSNativeChar*)string
-                                          length: (NSUInteger)len
+                                          length: (int)len
 {
     return [NSString stringWithCharacters: string length: len];
 }
@@ -2314,7 +2314,7 @@ static NSStringEncoding	defaultEncoding;
     (const GSNativeChar*)[path cStringUsingEncoding: defaultEncoding];
 }
 - (NSString*) stringWithFileSystemRepresentation: (const GSNativeChar*)string
-                                          length: (NSUInteger)len
+                                          length: (int)len
 {
     return AUTORELEASE([[NSString allocWithZone: NSDefaultMallocZone()]
                         initWithBytes: string length: len encoding: defaultEncoding]);
@@ -2726,7 +2726,7 @@ static inline void gsedRelease(GSEnumeratedDirectory X)
  * Return the file posix permissions attribute (or NSNotFound if
  * the attribute is not present in the dictionary).
  */
-- (NSUInteger) filePosixPermissions
+- (int) filePosixPermissions
 {
     NSNumber	*n = [self objectForKey: NSFilePosixPermissions];
     
@@ -2741,7 +2741,7 @@ static inline void gsedRelease(GSEnumeratedDirectory X)
  * Return the file system number attribute (or NSNotFound if
  * the attribute is not present in the dictionary).
  */
-- (NSUInteger) fileSystemNumber
+- (int) fileSystemNumber
 {
     NSNumber	*n = [self objectForKey: NSFileSystemNumber];
     
@@ -2756,7 +2756,7 @@ static inline void gsedRelease(GSEnumeratedDirectory X)
  * Return the file system file identification number attribute
  * or NSNotFound if the attribute is not present in the dictionary).
  */
-- (NSUInteger) fileSystemFileNumber
+- (int) fileSystemFileNumber
 {
     NSNumber	*n = [self objectForKey: NSFileSystemFileNumber];
     
@@ -3278,7 +3278,7 @@ static NSSet	*fileKeys = nil;
     }
 }
 
-- (NSUInteger) count
+- (int) count
 {
     return [fileKeys count];
 }
@@ -3452,7 +3452,7 @@ static NSSet	*fileKeys = nil;
     return [NSDate dateWithTimeIntervalSince1970: statbuf.st_mtime];
 }
 
-- (NSUInteger) filePosixPermissions
+- (int) filePosixPermissions
 {
     return (statbuf.st_mode & ~S_IFMT);
 }
@@ -3589,12 +3589,12 @@ static NSSet	*fileKeys = nil;
     return statbuf.st_size;
 }
 
-- (NSUInteger) fileSystemFileNumber
+- (int) fileSystemFileNumber
 {
     return statbuf.st_ino;
 }
 
-- (NSUInteger) fileSystemNumber
+- (int) fileSystemNumber
 {
 #if defined(_WIN32)
     DWORD volumeSerialNumber = 0;

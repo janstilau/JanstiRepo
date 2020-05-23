@@ -326,7 +326,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     return;
 }
 
-- (void) _resetEvents: (NSUInteger)mask
+- (void) _resetEvents: (int)mask
 {
     return;
 }
@@ -387,7 +387,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     [self _setStatus: NSStreamStatusError];
 }
 
-- (void) _resetEvents: (NSUInteger)mask
+- (void) _resetEvents: (int)mask
 {
     _events &= ~mask;
 }
@@ -706,7 +706,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     [super dealloc];
 }
 
-- (NSInteger) read: (uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) read: (uint8_t *)buffer maxLength: (int)len
 {
     NSUInteger dataSize;
     
@@ -775,7 +775,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
 
 @implementation GSBufferOutputStream
 
-- (id) initToBuffer: (uint8_t *)buffer capacity: (NSUInteger)capacity
+- (id) initToBuffer: (uint8_t *)buffer capacity: (int)capacity
 {
     if ((self = [super init]) != nil)
     {
@@ -786,7 +786,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     return self;
 }
 
-- (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) write: (const uint8_t *)buffer maxLength: (int)len
 {
     // 在这个函数里面, 会记录 _pointer 的位置, 也就是写入缓存区的偏移量.
     if ([self streamStatus] == NSStreamStatusClosed
@@ -851,7 +851,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
     [super dealloc];
 }
 
-- (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) write: (const uint8_t *)buffer maxLength: (int)len
 {
     if (buffer == 0)
     {

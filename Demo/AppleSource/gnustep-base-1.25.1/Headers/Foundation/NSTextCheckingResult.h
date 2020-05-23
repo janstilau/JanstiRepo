@@ -87,7 +87,7 @@ enum
 - (NSDate*) date;
 - (NSTimeInterval) duration;
 - (NSArray*) grammarDetails;
-- (NSUInteger) numberOfRanges;
+- (int) numberOfRanges;
 - (NSOrthography*) orthography;
 - (NSString*) phoneNumber;
 - (NSRange) range;
@@ -99,8 +99,8 @@ enum
 #endif
 + (NSTextCheckingResult*)
   regularExpressionCheckingResultWithRanges: (NSRangePointer)ranges
-  count: (NSUInteger)count
+  count: (int)count
   regularExpression: (NSRegularExpression*)regularExpression;
-- (NSRange) rangeAtIndex: (NSUInteger)idx;
+- (NSRange) rangeAtIndex: (int)idx;
 - (NSTextCheckingResult*) resultByAdjustingRangesWithOffset: (NSInteger)offset;
 @end

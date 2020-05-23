@@ -6,7 +6,10 @@
 
 #import	<Foundation/NSObject.h>
 
-
+/*
+ 从这里可以看出. NSURLResponse 就是一个纯数据类而已.
+ 它只是表示的是, HTTP 的响应头信息. 响应体还是需要 data 拼接完毕之后, 解析之后才能够使用.
+ */
 
 @class NSDictionary;
 @class NSString;
@@ -24,6 +27,9 @@
     NSString        *MIMEType;
     NSString        *textEncodingName;
     NSString        *statusText;
+    /*
+     响应头里面的信息, 其实就是放到了一个字典里面了. 因为就是 keyValue 对应而已, 放到一个字典里面, 容易扩展.
+     */
     NSMutableDictionary    *headers; /* _GSMutableInsensitiveDictionary */
     int            statusCode;
 }

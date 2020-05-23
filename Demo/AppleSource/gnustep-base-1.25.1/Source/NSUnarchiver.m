@@ -512,7 +512,7 @@ static unsigned	encodingVersion;
 }
 
 - (void) decodeArrayOfObjCType: (const char*)type
-                         count: (NSUInteger)expected
+                         count: (int)expected
                             at: (void*)buf
 {
     NSUInteger	i;

@@ -93,7 +93,7 @@ static const int kUUIDByteCount = 16;
   return (comparison == 0) ? YES : NO;
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   // more expensive than casting but that's not alignment-safe
   NSUInteger    uintegerArray[kUUIDByteCount/sizeof(NSUInteger)];

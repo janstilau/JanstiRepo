@@ -44,7 +44,7 @@ typedef NSUInteger NSBinarySearchingOptions;
 #endif
 + (instancetype) arrayWithObject: (id)anObject;
 + (instancetype) arrayWithObjects: (id)firstObject, ...;
-+ (instancetype) arrayWithObjects: (const id[])objects count: (NSUInteger)count;
++ (instancetype) arrayWithObjects: (const id[])objects count: (int)count;
 
 - (GS_GENERIC_CLASS(NSArray, ElementT) *) arrayByAddingObject:
   (GS_GENERIC_TYPE(ElementT))anObject;
@@ -59,15 +59,15 @@ typedef NSUInteger NSBinarySearchingOptions;
  NSArray 不能当做一个对象来看待, 它更多的是一个接口.
  * Returns the number of elements contained in the receiver.
  */
-- (NSUInteger) count;
+- (int) count;
 - (void) getObjects: (__unsafe_unretained GS_GENERIC_TYPE(ElementT)[])aBuffer;
 - (void) getObjects: (__unsafe_unretained GS_GENERIC_TYPE(ElementT)[])aBuffer
               range: (NSRange)aRange;
-- (NSUInteger) indexOfObject: (GS_GENERIC_TYPE(ElementT))anObject;
-- (NSUInteger) indexOfObject: (GS_GENERIC_TYPE(ElementT))anObject
+- (int) indexOfObject: (GS_GENERIC_TYPE(ElementT))anObject;
+- (int) indexOfObject: (GS_GENERIC_TYPE(ElementT))anObject
                      inRange: (NSRange)aRange;
-- (NSUInteger) indexOfObjectIdenticalTo: (GS_GENERIC_TYPE(ElementT))anObject;
-- (NSUInteger) indexOfObjectIdenticalTo: (GS_GENERIC_TYPE(ElementT))anObject
+- (int) indexOfObjectIdenticalTo: (GS_GENERIC_TYPE(ElementT))anObject;
+- (int) indexOfObjectIdenticalTo: (GS_GENERIC_TYPE(ElementT))anObject
                                 inRange: (NSRange)aRange;
 - (instancetype) init;
 - (instancetype) initWithArray: (GS_GENERIC_CLASS(NSArray, ElementT)*)array;
@@ -94,7 +94,7 @@ typedef NSUInteger NSBinarySearchingOptions;
  * other initialisers work.
  */
 - (instancetype) initWithObjects: (const GS_GENERIC_TYPE(ElementT)[])objects
-                           count: (NSUInteger)count;
+                           count: (int)count;
 - (GS_GENERIC_TYPE(ElementT)) lastObject;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 - (GS_GENERIC_TYPE(ElementT)) firstObject;
@@ -104,7 +104,7 @@ typedef NSUInteger NSBinarySearchingOptions;
  * Returns the object at the specified index.
  * Raises an exception of the index is beyond the array.
  */
-- (GS_GENERIC_TYPE(ElementT)) objectAtIndex: (NSUInteger)index;
+- (GS_GENERIC_TYPE(ElementT)) objectAtIndex: (int)index;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4, GS_API_LATEST)
 - (GS_GENERIC_CLASS(NSArray, ElementT) *) objectsAtIndexes:
@@ -146,7 +146,7 @@ typedef NSUInteger NSBinarySearchingOptions;
 - (NSString*) description;
 - (NSString*) descriptionWithLocale: (id)locale;
 - (NSString*) descriptionWithLocale: (id)locale
-			     indent: (NSUInteger)level;
+			     indent: (int)level;
 
 - (BOOL) writeToFile: (NSString*)path atomically: (BOOL)useAuxiliaryFile;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
@@ -232,14 +232,14 @@ DEFINE_BLOCK_TYPE(GSPredicateBlock, BOOL, GS_GENERIC_TYPE(ElementT),
  * specifies that it is thread-safe.  The NSEnumerationReverse bit specifies
  * that it should be enumerated in reverse order.
  */
-- (NSUInteger) indexOfObjectWithOptions: (NSEnumerationOptions)opts
+- (int) indexOfObjectWithOptions: (NSEnumerationOptions)opts
 			    passingTest: (GSPredicateBlock)predicate;
 
 /**
  * Returns the index of the first object in the array that matches the
  * condition specified by the block.
  */
-- (NSUInteger) indexOfObjectPassingTest: (GSPredicateBlock)predicate;
+- (int) indexOfObjectPassingTest: (GSPredicateBlock)predicate;
 
 /**
  * Returns the index of the first object in the specified range in a collection
@@ -249,7 +249,7 @@ DEFINE_BLOCK_TYPE(GSPredicateBlock, BOOL, GS_GENERIC_TYPE(ElementT),
  * specifies that it is thread-safe.  The NSEnumerationReverse bit specifies
  * that it should be enumerated in reverse order.
  */
-- (NSUInteger) indexOfObjectAtIndexes: (NSIndexSet*)indexSet
+- (int) indexOfObjectAtIndexes: (NSIndexSet*)indexSet
 			      options: (NSEnumerationOptions)opts
 			  passingTest: (GSPredicateBlock)predicate;
 
@@ -275,7 +275,7 @@ DEFINE_BLOCK_TYPE(GSPredicateBlock, BOOL, GS_GENERIC_TYPE(ElementT),
  * If NSBinarySearchingInsertionIndex is specified, searches for the index
  * at which such an object should be inserted.
  */
-- (NSUInteger) indexOfObject: (id)key
+- (int) indexOfObject: (id)key
                inSortedRange: (NSRange)range
                      options: (NSBinarySearchingOptions)options
              usingComparator: (NSComparator)comparator;
@@ -284,13 +284,13 @@ DEFINE_BLOCK_TYPE(GSPredicateBlock, BOOL, GS_GENERIC_TYPE(ElementT),
  * Accessor for subscripting.  This is called by the compiler when you write
  * code like anArray[12].  It should not be called directly.
  */
-- (GS_GENERIC_TYPE(ElementT)) objectAtIndexedSubscript: (NSUInteger)anIndex;
+- (GS_GENERIC_TYPE(ElementT)) objectAtIndexedSubscript: (int)anIndex;
 @end
 
 
 @interface GS_GENERIC_CLASS(NSMutableArray, ElementT) : NSArray
 
-+ (instancetype) arrayWithCapacity: (NSUInteger)numItems;
++ (instancetype) arrayWithCapacity: (int)numItems;
 
 /** <override-subclass />
  * Adds anObject at the end of the array, thus increasing the size of
@@ -299,8 +299,8 @@ DEFINE_BLOCK_TYPE(GSPredicateBlock, BOOL, GS_GENERIC_TYPE(ElementT),
 - (void) addObject: (GS_GENERIC_TYPE(ElementT))anObject;
 - (void) addObjectsFromArray: (GS_GENERIC_CLASS(NSArray, ElementT)*)otherArray;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
-- (void) exchangeObjectAtIndex: (NSUInteger)i1
-	     withObjectAtIndex: (NSUInteger)i2;
+- (void) exchangeObjectAtIndex: (int)i1
+	     withObjectAtIndex: (int)i2;
 #endif
 
 /** <init /> <override-subclass />
@@ -310,7 +310,7 @@ DEFINE_BLOCK_TYPE(GSPredicateBlock, BOOL, GS_GENERIC_TYPE(ElementT),
  * and needs to be re-implemented in subclasses in order to have all
  * other initialisers work.
  */
-- (instancetype) initWithCapacity: (NSUInteger)numItems;
+- (instancetype) initWithCapacity: (int)numItems;
 
 /** <override-subclass />
  * Inserts an object into the receiver at the specified location.<br />
@@ -319,7 +319,7 @@ DEFINE_BLOCK_TYPE(GSPredicateBlock, BOOL, GS_GENERIC_TYPE(ElementT),
  * The object is retained by the array.
  */
 - (void) insertObject: (GS_GENERIC_TYPE(ElementT))anObject
-              atIndex: (NSUInteger)index;
+              atIndex: (int)index;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4, GS_API_LATEST)
 - (void) insertObjects: (GS_GENERIC_CLASS(NSArray, ElementT) *)objects
              atIndexes: (NSIndexSet *)indexes;
@@ -330,7 +330,7 @@ DEFINE_BLOCK_TYPE(GSPredicateBlock, BOOL, GS_GENERIC_TYPE(ElementT),
  * The size of the array decreases by one.<br />
  * Raises an exception if given an array index which is too large.<br />
  */
-- (void) removeObjectAtIndex: (NSUInteger)index;
+- (void) removeObjectAtIndex: (int)index;
 
 - (void) removeObjectsAtIndexes: (NSIndexSet *)indexes;
 
@@ -339,7 +339,7 @@ DEFINE_BLOCK_TYPE(GSPredicateBlock, BOOL, GS_GENERIC_TYPE(ElementT),
  * Raises an exception if given an array index which is too large.<br />
  * The object is retained by the array.
  */
-- (void) replaceObjectAtIndex: (NSUInteger)index
+- (void) replaceObjectAtIndex: (int)index
 		   withObject: (GS_GENERIC_TYPE(ElementT))anObject;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4, GS_API_LATEST)
@@ -367,7 +367,7 @@ DEFINE_BLOCK_TYPE(GSPredicateBlock, BOOL, GS_GENERIC_TYPE(ElementT),
 - (void) removeObjectsInArray: (GS_GENERIC_CLASS(NSArray, ElementT)*)otherArray;
 - (void) removeObjectsInRange: (NSRange)aRange;
 - (void) removeObjectsFromIndices: (NSUInteger*)indices
-		       numIndices: (NSUInteger)count;
+		       numIndices: (int)count;
 
 - (void) sortUsingFunction:
     (NSComparisonResult (*)(GS_GENERIC_TYPE(ElementT),
@@ -394,7 +394,7 @@ DEFINE_BLOCK_TYPE(GSPredicateBlock, BOOL, GS_GENERIC_TYPE(ElementT),
  * this method appends abObject to the array.
  */
 - (void) setObject: (GS_GENERIC_TYPE(ElementT))anObject
-atIndexedSubscript: (NSUInteger)anIndex;
+atIndexedSubscript: (int)anIndex;
 #endif
 @end
 

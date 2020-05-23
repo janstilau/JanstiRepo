@@ -78,7 +78,7 @@ typedef struct {
   return self;
 }
 
-- (void) insertObject: (id)obj inNumbersAtIndex: (NSUInteger)index
+- (void) insertObject: (id)obj inNumbersAtIndex: (int)index
 {
   if (![obj isEqualToString:@"NaN"])
     {
@@ -86,13 +86,13 @@ typedef struct {
     }
 }
 
-- (void) removeObjectFromNumbersAtIndex: (NSUInteger)index
+- (void) removeObjectFromNumbersAtIndex: (int)index
 {
   if (![[numbers objectAtIndex:index] isEqualToString:@"One"])
     [numbers removeObjectAtIndex:index];
 }
 
-- (void) replaceObjectInNumbersAtIndex: (NSUInteger)index withObject: (id)obj
+- (void) replaceObjectInNumbersAtIndex: (int)index withObject: (id)obj
 {
   if (index == 1)
     obj = @"Two";

@@ -108,7 +108,7 @@
   return self;
 }
 
-- (NSUInteger) count
+- (int) count
 {
   if (array == nil)
     {
@@ -117,7 +117,7 @@
   return [array count];
 }
 
-- (id) objectAtIndex: (NSUInteger)index
+- (id) objectAtIndex: (int)index
 {
   if (array == nil)
     {
@@ -198,7 +198,7 @@
   [super dealloc];
 }
 
-- (void) removeObjectAtIndex: (NSUInteger)index
+- (void) removeObjectAtIndex: (int)index
 {
   NSIndexSet *indexes = nil;
 
@@ -219,7 +219,7 @@
     }
 }
 
-- (void) insertObject: (id)anObject atIndex: (NSUInteger)index
+- (void) insertObject: (id)anObject atIndex: (int)index
 {
   NSIndexSet *indexes = nil;
 
@@ -241,7 +241,7 @@
     }
 }
 
-- (void) replaceObjectAtIndex: (NSUInteger)index withObject: (id)anObject
+- (void) replaceObjectAtIndex: (int)index withObject: (id)anObject
 {
   NSIndexSet *indexes = nil;
 
@@ -308,7 +308,7 @@
   return self;
 }
 
-- (void) removeObjectAtIndex: (NSUInteger)index
+- (void) removeObjectAtIndex: (int)index
 {
   NSIndexSet *indexes = nil;
   NSMutableArray *temp;
@@ -335,7 +335,7 @@
     }
 }
 
-- (void) insertObject: (id)anObject atIndex: (NSUInteger)index
+- (void) insertObject: (id)anObject atIndex: (int)index
 {
   NSIndexSet *indexes = nil;
   NSMutableArray *temp;
@@ -362,7 +362,7 @@
     }
 }
 
-- (void) replaceObjectAtIndex: (NSUInteger)index withObject: (id)anObject
+- (void) replaceObjectAtIndex: (int)index withObject: (id)anObject
 {
   NSIndexSet *indexes = nil;
   NSMutableArray *temp;
@@ -453,7 +453,7 @@
     }
 }
 
-- (void) removeObjectAtIndex: (NSUInteger)index
+- (void) removeObjectAtIndex: (int)index
 {
   NSIndexSet *indexes = nil;
 
@@ -473,7 +473,7 @@
     }
 }
 
-- (void) insertObject: (id)anObject atIndex: (NSUInteger)index
+- (void) insertObject: (id)anObject atIndex: (int)index
 {
   NSIndexSet *indexes = nil;
 
@@ -513,7 +513,7 @@
     }
 }
 
-- (void) replaceObjectAtIndex: (NSUInteger)index withObject: (id)anObject
+- (void) replaceObjectAtIndex: (int)index withObject: (id)anObject
 {
   NSIndexSet *indexes = nil;
 

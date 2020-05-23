@@ -255,7 +255,7 @@ enum {
 
 /** Return the number of operations in the queue at an instant.
  */
-- (NSUInteger) operationCount;
+- (int) operationCount;
 #endif
 
 /** Returns all the operations in the queue at an instant.

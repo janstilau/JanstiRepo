@@ -275,7 +275,7 @@ static GSTcpTune        *tune = nil;
  * Encapsulates low level read operation to get data from the operating
  * system.
  */
-- (NSInteger) read: (void*)buf length: (NSUInteger)len
+- (NSInteger) read: (void*)buf length: (int)len
 {
   int	result;
 
@@ -305,7 +305,7 @@ static GSTcpTune        *tune = nil;
  * Encapsulates low level write operation to send data to the operating
  * system.
  */
-- (NSInteger) write: (const void*)buf length: (NSUInteger)len
+- (NSInteger) write: (const void*)buf length: (int)len
 {
   int	result;
 

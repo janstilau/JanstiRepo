@@ -416,12 +416,12 @@ UTextInitWithNSString(UText *txt, NSString *str)
   return self;
 }
 
-- (NSUInteger) length
+- (int) length
 {
   return utext_nativeLength(&txt);
 }
 
-- (unichar) characterAtIndex: (NSUInteger)idx
+- (unichar) characterAtIndex: (int)idx
 {
   unichar c;
 
@@ -460,12 +460,12 @@ UTextInitWithNSString(UText *txt, NSString *str)
   return self;
 }
 
-- (NSUInteger) length
+- (int) length
 {
   return utext_nativeLength(&txt);
 }
 
-- (unichar) characterAtIndex: (NSUInteger)idx
+- (unichar) characterAtIndex: (int)idx
 {
   unichar c;
   [self getCharacters: &c range: NSMakeRange(idx, 1)];

@@ -3,66 +3,12 @@
 #import "GSURLPrivate.h"
 #import "Foundation/NSCoder.h"
 
-// Internal data storage
-typedef struct {
-  NSData			*data;
-  NSURLResponse			*response;
-  NSDictionary			*userInfo;
-  NSURLCacheStoragePolicy	storagePolicy;
-} Internal;
- 
-#define	this	((Internal*)(self->_NSCachedURLResponseInternal))
-
-
 // 这真的是一个纯纯的数据类, 一点逻辑都没写在这个类里面.
 @implementation	NSCachedURLResponse
 
-+ (id) allocWithZone: (NSZone*)z
-{
-  NSCachedURLResponse	*o = [super allocWithZone: z];
-
-  if (o != nil)
-    {
-      o->_NSCachedURLResponseInternal = NSZoneMalloc(z, sizeof(Internal));
-      memset(o->_NSCachedURLResponseInternal, '\0', sizeof(Internal));
-    }
-  return o;
-}
-
-- (id) copyWithZone: (NSZone*)z
-{
-  NSCachedURLResponse	*o;
-
-  if (NSShouldRetainWithZone(self, z) == YES)
-    {
-      o = RETAIN(self);
-    }
-  else
-    {
-      o = [[self class] allocWithZone: z];
-      o = [o initWithResponse: [self response]
-			 data: [self data]
-		     userInfo: [self userInfo]
-		storagePolicy: [self storagePolicy]];
-    }
-  return o;
-}
-
-- (void) dealloc
-{
-  if (this != 0)
-    {
-      RELEASE(this->data);
-      RELEASE(this->response);
-      RELEASE(this->userInfo);
-      NSZoneFree([self zone], this);
-    }
-  [super dealloc];
-}
-
 - (NSData *) data
 {
-  return this->data;
+  return self->data;
 }
 
 - (id) initWithResponse: (NSURLResponse *)response data: (NSData *)data
@@ -80,27 +26,27 @@ typedef struct {
 {
   if ((self = [super init]) != nil)
     {
-      ASSIGNCOPY(this->data, data);
-      ASSIGNCOPY(this->response, response);
-      ASSIGNCOPY(this->userInfo, userInfo);
-      this->storagePolicy = storagePolicy;
+      ASSIGNCOPY(self->data, data);
+      ASSIGNCOPY(self->response, response);
+      ASSIGNCOPY(self->userInfo, userInfo);
+      self->storagePolicy = storagePolicy;
     }
   return self;
 }
 
 - (NSURLResponse *) response
 {
-  return this->response;
+  return self->response;
 }
 
 - (NSURLCacheStoragePolicy) storagePolicy
 {
-  return this->storagePolicy;
+  return self->storagePolicy;
 }
 
 - (NSDictionary *) userInfo
 {
-  return this->userInfo;
+  return self->userInfo;
 }
 
 @end

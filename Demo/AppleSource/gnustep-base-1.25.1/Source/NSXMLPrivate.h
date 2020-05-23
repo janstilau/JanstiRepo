@@ -213,8 +213,8 @@ StringFromXMLString(const unsigned char *bytes, unsigned length)
 - (void) _addSubNode: (NSXMLNode *)subNode;
 - (void) _removeSubNode: (NSXMLNode *)subNode;
 - (id) _initWithNode: (xmlNodePtr)node kind: (NSXMLNodeKind)kind;
-- (xmlNodePtr) _childNodeAtIndex: (NSUInteger)index;
-- (void) _insertChild: (NSXMLNode*)child atIndex: (NSUInteger)index;
+- (xmlNodePtr) _childNodeAtIndex: (int)index;
+- (void) _insertChild: (NSXMLNode*)child atIndex: (int)index;
 - (void) _invalidate;
 @end
 

@@ -831,7 +831,7 @@ tsbytes(uintptr_t s, char *buf)
   return NO;
 }
 
-- (unichar) characterAtIndex: (NSUInteger)anIndex
+- (unichar) characterAtIndex: (int)anIndex
 {
   uintptr_t s = (uintptr_t)self;
   NSUInteger length = (s >> TINY_STRING_LENGTH_SHIFT) & TINY_STRING_LENGTH_MASK;
@@ -878,7 +878,7 @@ tsbytes(uintptr_t s, char *buf)
 }
 
 - (BOOL) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	   encoding: (NSStringEncoding)encoding
 {
   uintptr_t s = (uintptr_t)self;
@@ -932,7 +932,7 @@ tsbytes(uintptr_t s, char *buf)
   return [super getCString: buffer maxLength: maxLength encoding: encoding];
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   uintptr_t s = (uintptr_t)self;
   int   length = (s >> TINY_STRING_LENGTH_SHIFT) & TINY_STRING_LENGTH_MASK;
@@ -991,7 +991,7 @@ tsbytes(uintptr_t s, char *buf)
   return tinyEqualToString((uintptr_t)self, aString);
 }
 
-- (NSUInteger) length
+- (int) length
 {
   uintptr_t s = (uintptr_t)self;
   return (s >> TINY_STRING_LENGTH_SHIFT) & TINY_STRING_LENGTH_MASK;
@@ -1025,7 +1025,7 @@ tsbytes(uintptr_t s, char *buf)
   return obj;
 }
 
-- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex
+- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (int)anIndex
 {
   uintptr_t s = (uintptr_t)self;
   NSUInteger    l = (s >> TINY_STRING_LENGTH_SHIFT) & TINY_STRING_LENGTH_MASK;
@@ -1076,7 +1076,7 @@ tsbytes(uintptr_t s, char *buf)
   return self;
 }
 
-- (NSUInteger) retainCount
+- (int) retainCount
 {
   return UINT_MAX;
 }
@@ -1091,7 +1091,7 @@ tsbytes(uintptr_t s, char *buf)
   return;
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
   if (0 == NSHashGet(exclude, self))
     {
@@ -1177,7 +1177,7 @@ createTinyString(const char *str, int length)
   return self;		// placeholders never get released.
 }
 
-- (unichar) characterAtIndex: (NSUInteger)index
+- (unichar) characterAtIndex: (int)index
 {
   [NSException raise: NSInternalInconsistencyException
 	      format: @"attempt to use uninitialised string"];
@@ -1299,7 +1299,7 @@ fixBOM(unsigned char **bytes, NSUInteger*length, BOOL *owned,
 }
 
 - (id) initWithBytes: (const void*)bytes
-	      length: (NSUInteger)length
+	      length: (int)length
 	    encoding: (NSStringEncoding)encoding
 {
   const void	*original;
@@ -1384,7 +1384,7 @@ fixBOM(unsigned char **bytes, NSUInteger*length, BOOL *owned,
 }
 
 - (id) initWithBytesNoCopy: (void*)bytes
-		    length: (NSUInteger)length
+		    length: (int)length
 		  encoding: (NSStringEncoding)encoding
 	      freeWhenDone: (BOOL)flag
 {
@@ -1521,7 +1521,7 @@ fixBOM(unsigned char **bytes, NSUInteger*length, BOOL *owned,
 }
 
 - (id) initWithCharacters: (const unichar*)chars
-		   length: (NSUInteger)length
+		   length: (int)length
 {
   return [self initWithBytes: (const void*)chars
 		      length: length * sizeof(unichar)
@@ -1529,7 +1529,7 @@ fixBOM(unsigned char **bytes, NSUInteger*length, BOOL *owned,
 }
 
 - (id) initWithCharactersNoCopy: (unichar*)chars
-			 length: (NSUInteger)length
+			 length: (int)length
 		   freeWhenDone: (BOOL)flag
 {
   return [self initWithBytesNoCopy: (void*)chars
@@ -1539,7 +1539,7 @@ fixBOM(unsigned char **bytes, NSUInteger*length, BOOL *owned,
 }
 
 - (id) initWithCString: (const char*)chars
-		length: (NSUInteger)length
+		length: (int)length
 {
   return [self initWithBytes: (const void*)chars
 		      length: length
@@ -1547,7 +1547,7 @@ fixBOM(unsigned char **bytes, NSUInteger*length, BOOL *owned,
 }
 
 - (id) initWithCStringNoCopy: (char*)chars
-		      length: (NSUInteger)length
+		      length: (int)length
 		freeWhenDone: (BOOL)flag
 {
   return [self initWithBytesNoCopy: (void*)chars
@@ -1746,7 +1746,7 @@ fixBOM(unsigned char **bytes, NSUInteger*length, BOOL *owned,
   return (id)me;
 }
 
-- (NSUInteger) length
+- (int) length
 {
   [NSException raise: NSInternalInconsistencyException
 	      format: @"attempt to use uninitialised string"];
@@ -3661,7 +3661,7 @@ transmute(GSStr self, NSString *aString)
  * Return a 28-bit hash value for the string contents - this
  * MUST match the algorithm used by the NSString base class.
  */
-- (NSUInteger) hash
+- (int) hash
 {
   if (self->_flags.hash == 0)
     {
@@ -3730,7 +3730,7 @@ transmute(GSStr self, NSString *aString)
 }
 
 - (id) initWithBytes: (const void*)chars
-	      length: (NSUInteger)length
+	      length: (int)length
 	    encoding: (NSStringEncoding)encoding
 {
   if (length > 0)
@@ -3747,7 +3747,7 @@ transmute(GSStr self, NSString *aString)
 }
 
 - (id) initWithBytesNoCopy: (void*)chars
-		    length: (NSUInteger)length
+		    length: (int)length
 		  encoding: (NSStringEncoding)encoding
 	      freeWhenDone: (BOOL)flag
 {
@@ -3761,7 +3761,7 @@ transmute(GSStr self, NSString *aString)
 }
 
 - (id) initWithCharacters: (const unichar*)chars
-		   length: (NSUInteger)length
+		   length: (int)length
 {
   return [self initWithBytes: chars
 		      length: length * sizeof(unichar)
@@ -3769,7 +3769,7 @@ transmute(GSStr self, NSString *aString)
 }
 
 - (id) initWithCharactersNoCopy: (unichar*)chars
-			 length: (NSUInteger)length
+			 length: (int)length
 		   freeWhenDone: (BOOL)flag
 {
   return [self initWithBytesNoCopy: chars
@@ -3794,7 +3794,7 @@ transmute(GSStr self, NSString *aString)
 }
 
 - (id) initWithCString: (const char*)chars
-		length: (NSUInteger)length
+		length: (int)length
 {
   return [self initWithBytes: chars
 		      length: length
@@ -3802,7 +3802,7 @@ transmute(GSStr self, NSString *aString)
 }
 
 - (id) initWithCStringNoCopy: (char*)chars
-		      length: (NSUInteger)length
+		      length: (int)length
 	        freeWhenDone: (BOOL)flag
 {
   return [self initWithBytesNoCopy: chars
@@ -3816,7 +3816,7 @@ transmute(GSStr self, NSString *aString)
   return YES;
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
   NSUInteger    size = GSPrivateMemorySize(self, exclude);
 
@@ -3847,13 +3847,13 @@ transmute(GSStr self, NSString *aString)
   return canBeConvertedToEncoding_c((GSStr)self, enc);
 }
 
-- (unichar) characterAtIndex: (NSUInteger)index
+- (unichar) characterAtIndex: (int)index
 {
   return characterAtIndex_c((GSStr)self, index);
 }
 
 - (NSComparisonResult) compare: (NSString*)aString
-		       options: (NSUInteger)mask
+		       options: (int)mask
 			 range: (NSRange)aRange
 {
   if (mask & NSNumericSearch)
@@ -3901,7 +3901,7 @@ agree, create a new GSCInlineString otherwise.
   return cString_c((GSStr)self, encoding);
 }
 
-- (NSUInteger) cStringLength
+- (int) cStringLength
 {
   return cStringLength_c((GSStr)self, externalEncoding);
 }
@@ -3964,20 +3964,20 @@ agree, create a new GSCInlineString otherwise.
 }
 
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 {
   getCString_c((GSStr)self, buffer, maxLength, (NSRange){0, _count}, 0);
 }
 
 - (BOOL) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	   encoding: (NSStringEncoding)encoding
 {
   return getCStringE_c((GSStr)self, buffer, maxLength, encoding);
 }
 
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	      range: (NSRange)aRange
      remainingRange: (NSRange*)leftoverRange
 {
@@ -4015,12 +4015,12 @@ agree, create a new GSCInlineString otherwise.
   return isEqual_c((GSStr)self, anObject);
 }
 
-- (NSUInteger) length
+- (int) length
 {
   return _count;
 }
 
-- (NSUInteger) lengthOfBytesUsingEncoding: (NSStringEncoding)encoding
+- (int) lengthOfBytesUsingEncoding: (NSStringEncoding)encoding
 {
   return cStringLength_c((GSStr)self, encoding);
 }
@@ -4061,13 +4061,13 @@ agree, create a new GSCInlineString otherwise.
   return obj;
 }
 
-- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex
+- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (int)anIndex
 {
   return rangeOfSequence_c((GSStr)self, anIndex);
 }
 
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
-			    options: (NSUInteger)mask
+			    options: (int)mask
 			      range: (NSRange)aRange
 {
   GS_RANGE_CHECK(aRange, _count);
@@ -4226,13 +4226,13 @@ agree, create a new GSCInlineString otherwise.
   return canBeConvertedToEncoding_u((GSStr)self, enc);
 }
 
-- (unichar) characterAtIndex: (NSUInteger)index
+- (unichar) characterAtIndex: (int)index
 {
   return characterAtIndex_u((GSStr)self, index);
 }
 
 - (NSComparisonResult) compare: (NSString*)aString
-		       options: (NSUInteger)mask
+		       options: (int)mask
 			 range: (NSRange)aRange
 {
   if (mask & NSNumericSearch)
@@ -4261,7 +4261,7 @@ agree, create a new GSCInlineString otherwise.
   return cString_u((GSStr)self, encoding);
 }
 
-- (NSUInteger) cStringLength
+- (int) cStringLength
 {
   return cStringLength_u((GSStr)self, externalEncoding);
 }
@@ -4325,19 +4325,19 @@ agree, create a new GSCInlineString otherwise.
 }
 
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 {
   getCString_u((GSStr)self, buffer, maxLength, (NSRange){0, _count}, 0);
 }
 
 - (BOOL) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	   encoding: (NSStringEncoding)encoding
 {
   return getCStringE_u((GSStr)self, buffer, maxLength, encoding);
 }
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	      range: (NSRange)aRange
      remainingRange: (NSRange*)leftoverRange
 {
@@ -4376,12 +4376,12 @@ agree, create a new GSCInlineString otherwise.
   return isEqual_u((GSStr)self, anObject);
 }
 
-- (NSUInteger) length
+- (int) length
 {
   return _count;
 }
 
-- (NSUInteger) lengthOfBytesUsingEncoding: (NSStringEncoding)encoding
+- (int) lengthOfBytesUsingEncoding: (NSStringEncoding)encoding
 {
   return cStringLength_u((GSStr)self, encoding);
 }
@@ -4436,13 +4436,13 @@ agree, create a new GSCInlineString otherwise.
   return obj;
 }
 
-- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex
+- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (int)anIndex
 {
   return rangeOfSequence_u((GSStr)self, anIndex);
 }
 
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
-			    options: (NSUInteger)mask
+			    options: (int)mask
 			      range: (NSRange)aRange
 {
   GS_RANGE_CHECK(aRange, _count);
@@ -4678,7 +4678,7 @@ agree, create a new GSUInlineString otherwise.
     return canBeConvertedToEncoding_c((GSStr)self, enc);
 }
 
-- (unichar) characterAtIndex: (NSUInteger)index
+- (unichar) characterAtIndex: (int)index
 {
   if (_flags.wide == 1)
     return characterAtIndex_u((GSStr)self, index);
@@ -4687,7 +4687,7 @@ agree, create a new GSUInlineString otherwise.
 }
 
 - (NSComparisonResult) compare: (NSString*)aString
-		       options: (NSUInteger)mask
+		       options: (int)mask
 			 range: (NSRange)aRange
 {
   if (mask & NSNumericSearch)
@@ -4745,7 +4745,7 @@ agree, create a new GSUInlineString otherwise.
     return cString_c((GSStr)self, encoding);
 }
 
-- (NSUInteger) cStringLength
+- (int) cStringLength
 {
   if (_flags.wide == 1)
     return cStringLength_u((GSStr)self, externalEncoding);
@@ -4870,7 +4870,7 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
 }
 
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 {
   if (_flags.wide == 1)
     getCString_u((GSStr)self, buffer, maxLength, (NSRange){0, _count}, 0);
@@ -4879,7 +4879,7 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
 }
 
 - (BOOL) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	   encoding: (NSStringEncoding)encoding
 {
   if (_flags.wide == 1)
@@ -4889,7 +4889,7 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
 }
 
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	      range: (NSRange)aRange
      remainingRange: (NSRange*)leftoverRange
 {
@@ -4910,7 +4910,7 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
 }
 
 - (id) initWithBytes: (const void*)bytes
-	      length: (NSUInteger)length
+	      length: (int)length
 	    encoding: (NSStringEncoding)encoding
 {
   unsigned char	*chars = 0;
@@ -5074,7 +5074,7 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
 }
 
 - (id) initWithBytesNoCopy: (void*)bytes
-		    length: (NSUInteger)length
+		    length: (int)length
 		  encoding: (NSStringEncoding)encoding
 	      freeWhenDone: (BOOL)flag
 {
@@ -5088,7 +5088,7 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
   return self;
 }
 
-- (id) initWithCapacity: (NSUInteger)capacity
+- (id) initWithCapacity: (int)capacity
 {
   if (capacity < 2)
     {
@@ -5104,7 +5104,7 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
 }
 
 - (id) initWithCharactersNoCopy: (unichar*)chars
-			 length: (NSUInteger)length
+			 length: (int)length
 		   freeWhenDone: (BOOL)flag
 {
   return [self initWithBytesNoCopy: (void*)chars
@@ -5114,7 +5114,7 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
 }
 
 - (id) initWithCStringNoCopy: (char*)chars
-		      length: (NSUInteger)length
+		      length: (int)length
 	        freeWhenDone: (BOOL)flag
 {
   return [self initWithBytesNoCopy: (void*)chars
@@ -5195,12 +5195,12 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
     return isEqual_c((GSStr)self, anObject);
 }
 
-- (NSUInteger) length
+- (int) length
 {
   return _count;
 }
 
-- (NSUInteger) lengthOfBytesUsingEncoding: (NSStringEncoding)encoding
+- (int) lengthOfBytesUsingEncoding: (NSStringEncoding)encoding
 {
   if (_flags.wide == 1)
     return cStringLength_u((GSStr)self, encoding);
@@ -5308,7 +5308,7 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
   return obj;
 }
 
-- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex
+- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (int)anIndex
 {
   if (_flags.wide == 1)
     return rangeOfSequence_u((GSStr)self, anIndex);
@@ -5317,7 +5317,7 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
 }
 
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
-			    options: (NSUInteger)mask
+			    options: (int)mask
 			      range: (NSRange)aRange
 {
   GS_RANGE_CHECK(aRange, _count);
@@ -5629,7 +5629,7 @@ NSAssert(_flags.owned == 1 && _zone != 0, NSInternalInconsistencyException);
     return _count;
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
   NSUInteger    size = GSPrivateMemorySize(self, exclude);
 
@@ -5755,7 +5755,7 @@ literalIsEqual(NXConstantString *self, id anObject)
   return nxcsptr;
 }
 
-- (unichar) characterAtIndex: (NSUInteger)index
+- (unichar) characterAtIndex: (int)index
 {
   NSUInteger	l = 0;
   unichar	u;
@@ -5919,7 +5919,7 @@ literalIsEqual(NXConstantString *self, id anObject)
 }
 
 - (BOOL) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	   encoding: (NSStringEncoding)encoding
 {
   const uint8_t *ptr = (const uint8_t*)nxcsptr;
@@ -5986,7 +5986,7 @@ literalIsEqual(NXConstantString *self, id anObject)
 /* Must match the implementation in NSString
  * To avoid allocating memory, we build the hash incrementally.
  */
-- (NSUInteger) hash
+- (int) hash
 {
   if (nxcslen > 0)
     {
@@ -6033,7 +6033,7 @@ literalIsEqual(NXConstantString *self, id anObject)
 }
 
 - (id) initWithBytes: (const void*)bytes
-	      length: (NSUInteger)length
+	      length: (int)length
 	    encoding: (NSStringEncoding)encoding
 {
   [NSException raise: NSGenericException
@@ -6042,7 +6042,7 @@ literalIsEqual(NXConstantString *self, id anObject)
 }
 
 - (id) initWithBytesNoCopy: (void*)bytes
-		    length: (NSUInteger)length
+		    length: (int)length
 		  encoding: (NSStringEncoding)encoding
 	      freeWhenDone: (BOOL)flag
 {
@@ -6075,7 +6075,7 @@ literalIsEqual(NXConstantString *self, id anObject)
 #endif
 }
 
-- (NSUInteger) length
+- (int) length
 {
   return lengthUTF8((const uint8_t*)nxcsptr, nxcslen, 0, 0);
 }
@@ -6086,7 +6086,7 @@ literalIsEqual(NXConstantString *self, id anObject)
 }
 
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
-			    options: (NSUInteger)mask
+			    options: (int)mask
 			      range: (NSRange)aRange
 {
   NSUInteger	index;
@@ -6156,7 +6156,7 @@ literalIsEqual(NXConstantString *self, id anObject)
   return range;
 }
 
-- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex
+- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (int)anIndex
 {
   NSUInteger	start = 0;
   NSUInteger	pos = 0;

@@ -22,9 +22,9 @@ typedef struct
 } NSFastEnumerationState;
 
 @protocol NSFastEnumeration
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState *)state
+- (int) countByEnumeratingWithState: (NSFastEnumerationState *)state
 				   objects: (__unsafe_unretained id[])stackbuf
-				     count: (NSUInteger)len;
+				     count: (int)len;
 @end
 
 @interface GS_GENERIC_CLASS(NSEnumerator, IterT) : NSObject <NSFastEnumeration>

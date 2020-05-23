@@ -20,7 +20,7 @@ implementations of the NSString methods in NSString itself.
 @implementation CustomString
 
 - initWithBytes: (void *)c
-	 length: (NSUInteger)l
+	 length: (int)l
        encoding: (NSStringEncoding)encoding
 {
   if (l > 0)
@@ -49,7 +49,7 @@ implementations of the NSString methods in NSString itself.
 }
 
 - initWithBytesNoCopy: (void *)c
-	       length: (NSUInteger)l
+	       length: (int)l
 	     encoding: (NSStringEncoding)encoding
          freeWhenDone: (BOOL)freeWhenDone
 {
@@ -80,7 +80,7 @@ implementations of the NSString methods in NSString itself.
 }
 
 - initWithCharactersNoCopy: (void *)c
-	            length: (NSUInteger)l
+	            length: (int)l
               freeWhenDone: (BOOL)flag
 {
   return [self initWithBytesNoCopy: c
@@ -99,12 +99,12 @@ implementations of the NSString methods in NSString itself.
   [super dealloc];
 }
 
-- (NSUInteger) length
+- (int) length
 {
   return length;
 }
 
-- (unichar) characterAtIndex: (NSUInteger)index
+- (unichar) characterAtIndex: (int)index
 {
   return characters[index];
 }

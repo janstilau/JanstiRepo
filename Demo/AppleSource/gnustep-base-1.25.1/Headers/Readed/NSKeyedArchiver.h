@@ -168,7 +168,7 @@ extern "C" {
  * and associates the encoded value with aKey.
  */
 - (void) encodeBytes: (const uint8_t*)aPointer
-              length: (NSUInteger)length
+              length: (int)length
               forKey: (NSString*)aKey;
 
 /**

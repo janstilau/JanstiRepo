@@ -136,7 +136,7 @@ typedef struct {
     [super dealloc];
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
     return [[self host] hash] + [self port]
     + [[self realm] hash] + [[self protocol] hash]

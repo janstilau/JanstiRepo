@@ -181,7 +181,7 @@ typedef NSUInteger NSStreamEvent;
 /**
  * Reads up to len bytes into buffer, returning the actual number of bytes read.
  */
-- (NSInteger) read: (uint8_t *)buffer maxLength: (NSUInteger)len;
+- (NSInteger) read: (uint8_t *)buffer maxLength: (int)len;
 
 @end
 
@@ -195,7 +195,7 @@ typedef NSUInteger NSStreamEvent;
  * Creates and returns an initialized NSOutputStream object
  * that can write to buffer, up to a maximum of capacity bytes.
  */
-+ (id) outputStreamToBuffer: (uint8_t *)buffer capacity: (NSUInteger)capacity;
++ (id) outputStreamToBuffer: (uint8_t *)buffer capacity: (int)capacity;
 
 /**
  * Creates and returns an initialized NSOutputStream object
@@ -220,7 +220,7 @@ typedef NSUInteger NSStreamEvent;
  * Returns an initialized NSOutputStream object that can write to buffer, 
  * up to a maximum of capacity bytes.
  */
-- (id) initToBuffer: (uint8_t *)buffer capacity: (NSUInteger)capacity;
+- (id) initToBuffer: (uint8_t *)buffer capacity: (int)capacity;
 
 /**
  * Returns an initialized NSOutputStream object for writing to the file
@@ -239,7 +239,7 @@ typedef NSUInteger NSStreamEvent;
  * Writes the contents of buffer, up to a maximum of len bytes,
  * to the receiver.
  */
-- (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len;
+- (NSInteger) write: (const uint8_t *)buffer maxLength: (int)len;
 
 @end
 

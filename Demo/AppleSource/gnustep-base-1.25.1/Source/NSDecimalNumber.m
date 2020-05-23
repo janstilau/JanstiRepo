@@ -587,7 +587,7 @@ static NSDecimalNumber *one;
 		     isNegative: NO];
 }
 
-- (id) initWithUnsignedInteger: (NSUInteger)value
+- (id) initWithUnsignedInteger: (int)value
 {
   return [self initWithMantissa: value
 		       exponent: 0
@@ -688,7 +688,7 @@ static NSDecimalNumber *one;
   return (unsigned int)NSDecimalDouble(&data);
 }
 
-- (NSUInteger) unsignedIntegerValue
+- (int) unsignedIntegerValue
 {
   return (NSUInteger)NSDecimalDouble(&data);
 }
@@ -903,13 +903,13 @@ static NSDecimalNumber *one;
   return [NSDecimalNumber decimalNumberWithDecimal: result];
 }
 
-- (NSDecimalNumber*) decimalNumberByRaisingToPower: (NSUInteger)power
+- (NSDecimalNumber*) decimalNumberByRaisingToPower: (int)power
 {
   return [self decimalNumberByRaisingToPower: power
 				withBehavior: [[self class] defaultBehavior]];
 }
 
-- (NSDecimalNumber*) decimalNumberByRaisingToPower: (NSUInteger)power
+- (NSDecimalNumber*) decimalNumberByRaisingToPower: (int)power
   withBehavior: (id <NSDecimalNumberBehaviors>)behavior
 {
   NSDecimal result;

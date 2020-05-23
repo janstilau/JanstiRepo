@@ -1814,7 +1814,7 @@ static id gs_weak_load(id obj)
  * The default implementation returns a value based on the address
  * of the instance.
  */
-- (NSUInteger) hash
+- (int) hash
 {
     /*
      *  malloc() must return pointers aligned to point to any data type
@@ -2093,7 +2093,7 @@ static id gs_weak_load(id obj)
  * By convention, objects which should (or can) never be deallocated
  * return the maximum unsigned integer value.
  */
-- (NSUInteger) retainCount
+- (int) retainCount
 {
     return getRetainCount(self);
 }
@@ -2350,13 +2350,13 @@ static id gs_weak_load(id obj)
  * level information.
  */
 - (NSString*) descriptionWithLocale: (id)aLocale
-                             indent: (NSUInteger)level
+                             indent: (int)level
 {
     return [self descriptionWithLocale: aLocale];
 }
 
 + (NSString*) descriptionWithLocale: (id)aLocale
-                             indent: (NSUInteger)level
+                             indent: (int)level
 {
     return [self descriptionWithLocale: aLocale];
 }
@@ -2516,7 +2516,7 @@ GSPrivateMemorySize(NSObject *self, NSHashTable *exclude)
 {
     return 0;
 }
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
     return GSPrivateMemorySize(self, exclude);
 }

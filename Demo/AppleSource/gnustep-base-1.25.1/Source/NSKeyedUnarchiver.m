@@ -409,7 +409,7 @@ static NSMapTable	*globalClassMap = 0;
 }
 
 - (void) decodeArrayOfObjCType: (const char*)type
-			 count: (NSUInteger)expected
+			 count: (int)expected
 			    at: (void*)buf
 {
   id	 	o = [self decodeObject];

@@ -752,7 +752,7 @@ static NSOperationQueue *mainQueue = nil;
   return [s autorelease];
 }
 
-- (NSUInteger) operationCount
+- (int) operationCount
 {
   NSUInteger	c;
 

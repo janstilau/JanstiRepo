@@ -1459,6 +1459,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06480DE324796FB0001BDF0D /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				06EDD90D2248BEA800C87605 /* NSURLCache.h */,
+				06EDD8FE2248BEA800C87605 /* NSURLRequest.h */,
+				06EDD90F2248BEA800C87605 /* NSURLResponse.h */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
 		064A9568226AF8C3009AAB1A /* KVO */ = {
 			isa = PBXGroup;
 			children = (
@@ -1552,6 +1562,7 @@
 		06EDD8DA2248BEA800C87605 /* Readed */ = {
 			isa = PBXGroup;
 			children = (
+				06480DE324796FB0001BDF0D /* Network */,
 				06EDD9162248BEA800C87605 /* Foundation.h */,
 				06EDD8E32248BEA800C87605 /* NSArray.h */,
 				06EDD8DD2248BEA800C87605 /* NSAttributedString.h */,
@@ -1585,14 +1596,11 @@
 				06EDD8E22248BEA800C87605 /* NSTimer.h */,
 				06EDD8F22248BEA800C87605 /* NSURL.h */,
 				06EDD9402248BEA800C87605 /* NSURLAuthenticationChallenge.h */,
-				06EDD90D2248BEA800C87605 /* NSURLCache.h */,
 				06EDD9152248BEA800C87605 /* NSURLConnection.h */,
 				06EDD9272248BEA800C87605 /* NSURLCredential.h */,
 				06EDD9472248BEA800C87605 /* NSURLCredentialStorage.h */,
 				06EDD8FB2248BEA800C87605 /* NSURLProtectionSpace.h */,
 				06EDD91C2248BEA800C87605 /* NSURLProtocol.h */,
-				06EDD8FE2248BEA800C87605 /* NSURLRequest.h */,
-				06EDD90F2248BEA800C87605 /* NSURLResponse.h */,
 				06EDD8E92248BEA800C87605 /* NSValue.h */,
 				06EE2A8E226C191200B50EC1 /* Time */,
 				064A2278224F840100A6B909 /* URLSessionLearn.h */,

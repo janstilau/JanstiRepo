@@ -52,9 +52,9 @@
   return nil;
 }
 
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
+- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
 				   objects: (id*)stackbuf
-				     count: (NSUInteger)len
+				     count: (int)len
 {
   IMP nextObject = [self methodForSelector: @selector(nextObject)];
   int i;

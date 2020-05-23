@@ -3,15 +3,12 @@
 #define	EXPOSE_NSURLRequest_IVARS	1
 #import "GSURLPrivate.h"
 #import "GSPrivate.h"
+#import "NSMutableDictionary.h"
 
 #import "Foundation/NSCoder.h"
 
-
-/* Defines to get easy access to internals from mutable/immutable
- * versions of the class and from categories.
- */
-#define	self	((Internal*)(self->_NSURLRequestInternal))
-#define	inst	((Internal*)(((NSURLRequest*)o)->_NSURLRequestInternal))
+@interface NSMutableDictionary:NSObject
+@end
 
 @interface	_GSMutableInsensitiveDictionary : NSMutableDictionary
 
@@ -19,66 +16,14 @@
 
 @implementation	NSURLRequest
 
-+ (id) allocWithZone: (NSZone*)z //  这里不明白为啥一定要写在 allocWithZone 方法里面.
-{
-    NSURLRequest	*o = [super allocWithZone: z];
-    return o;
-}
-
-+ (id) requestWithURL: (NSURL *)URL
-{
-    return [self requestWithURL: URL
-                    cachePolicy: NSURLRequestUseProtocolCachePolicy
-                timeoutInterval: 60.0];
-}
-
-+ (id) requestWithURL: (NSURL *)URL
-          cachePolicy: (NSURLRequestCachePolicy)cachePolicy
-      timeoutInterval: (NSTimeInterval)timeoutInterval
-{
-    NSURLRequest	*o = [[self class] allocWithZone: NSDefaultMallocZone()];
-    
-    o = [o initWithURL: URL
-           cachePolicy: cachePolicy
-       timeoutInterval: timeoutInterval];
-    return AUTORELEASE(o);
-}
-
 - (NSURLRequestCachePolicy) cachePolicy
 {
     return self->cachePolicy;
 }
 
-- (id) copyWithZone: (NSZone*)z
-{
-    NSURLRequest	*o;
-    
-    if (NSShouldRetainWithZone(self, z) == YES
-        && [self isKindOfClass: [NSMutableURLRequest class]] == NO)
-    {
-        o = RETAIN(self); // 不可变对象, 直接自身.
-    }
-    else
-    {
-        o = [[self class] allocWithZone: z];
-        o = [o initWithURL: [self URL]
-               cachePolicy: [self cachePolicy]
-           timeoutInterval: [self timeoutInterval]];
-        if (o != nil)
-        {
-            inst->properties = [self->properties mutableCopy];
-            ASSIGN(inst->mainDocumentURL, self->mainDocumentURL);
-            ASSIGN(inst->body, self->body);
-            ASSIGN(inst->bodyStream, self->bodyStream);
-            ASSIGN(inst->method, self->method);
-            inst->shouldHandleCookies = self->shouldHandleCookies;
-            inst->debug = self->debug;
-            inst->headers = [self->headers mutableCopy];
-        } // 内部元素一顿复制操作.
-    }
-    return o;
-}
-
+/*
+ 因为这是在 MRC 环境, 所以, 这里 dealloc 会进行 Release 的操作.
+ */
 - (void) dealloc
 {
     if (self != 0)
@@ -95,17 +40,17 @@
     [super dealloc];
 }
 
-- (NSString*) description
-{
-    return [NSString stringWithFormat: @"<%@ %@>",
-            NSStringFromClass([self class]), [[self URL] absoluteString]];
-}
-
-- (NSUInteger) hash // 这里, Request 的 hash 是通过URL 的 hash 达成的. 在 MC 的代码里面, 去除时间戳这些东西, 其实也是为了这些, 因为 在 get 的时候, 所有的参数都是URL 的一部分.
+/*
+  这里, Request 的 hash 是通过URL 的 hash 达成的. 在 MC 的代码里面, 去除时间戳这些东西, 其实也是为了这些, 因为 在 get 的时候, 所有的参数都是URL 的一部分.
+ */
+- (int) hash
 {
     return [self->URL hash];
 }
 
+/*
+ 初始化方法的代理使用.
+ */
 - (id) init
 {
     return [self initWithURL: nil];
@@ -135,48 +80,50 @@
         self->method = @"GET";// 默认 get
         self->shouldHandleCookies = YES;
     }
-    // 所以, 这其实就是一顿记录的事情.
     return self;
 }
 
-- (BOOL) isEqual: (id)o
+- (BOOL) isEqual: (NSURLRequest *)o
 {
+    /*
+        一顿的判断操作.
+     */
     if ([o isKindOfClass: [NSURLRequest class]] == NO)
     {
         return NO;
     }
-    if (self->URL != inst->URL
-        && [self->URL isEqual: inst->URL] == NO)
+    if (self->URL != o->URL
+        && [self->URL isEqual: o->URL] == NO)
     {
         return NO;
     }
-    if (self->mainDocumentURL != inst->mainDocumentURL
-        && [self->mainDocumentURL isEqual: inst->mainDocumentURL] == NO)
+    if (self->mainDocumentURL != o->mainDocumentURL
+        && [self->mainDocumentURL isEqual: o->mainDocumentURL] == NO)
     {
         return NO;
     }
-    if (self->method != inst->method
-        && [self->method isEqual: inst->method] == NO)
+    if (self->method != o->method
+        && [self->method isEqual: o->method] == NO)
     {
         return NO;
     }
-    if (self->body != inst->body
-        && [self->body isEqual: inst->body] == NO)
+    if (self->body != o->body
+        && [self->body isEqual: o->body] == NO)
     {
         return NO;
     }
-    if (self->bodyStream != inst->bodyStream
-        && [self->bodyStream isEqual: inst->bodyStream] == NO)
+    if (self->bodyStream != o->bodyStream
+        && [self->bodyStream isEqual: o->bodyStream] == NO)
     {
         return NO;
     }
-    if (self->properties != inst->properties
-        && [self->properties isEqual: inst->properties] == NO)
+    if (self->properties != o->properties
+        && [self->properties isEqual: o->properties] == NO)
     {
         return NO;
     }
-    if (self->headers != inst->headers
-        && [self->headers isEqual: inst->headers] == NO)
+    if (self->headers != o->headers
+        && [self->headers isEqual: o->headers] == NO)
     {
         return NO;
     }
@@ -186,29 +133,6 @@
 - (NSURL *) mainDocumentURL
 {
     return self->mainDocumentURL; // self 指向了 internal
-}
-
-- (id) mutableCopyWithZone: (NSZone*)z
-{
-    NSMutableURLRequest	*o;
-    
-    o = [NSMutableURLRequest allocWithZone: z];
-    o = [o initWithURL: [self URL]
-           cachePolicy: [self cachePolicy]
-       timeoutInterval: [self timeoutInterval]];
-    if (o != nil)
-    {
-        [o setMainDocumentURL: self->mainDocumentURL];
-        inst->properties = [self->properties mutableCopy];
-        ASSIGN(inst->mainDocumentURL, self->mainDocumentURL);
-        ASSIGN(inst->body, self->body);
-        ASSIGN(inst->bodyStream, self->bodyStream);
-        ASSIGN(inst->method, self->method);
-        inst->shouldHandleCookies = self->shouldHandleCookies;
-        inst->debug = self->debug;
-        inst->headers = [self->headers mutableCopy];
-    } // 一顿复制操作. mutableCopy
-    return o;
 }
 
 - (int) setDebug: (int)flag
@@ -228,11 +152,18 @@
 {
     return self->URL;
 }
+/*
+ 从以上就看出来了, 所谓的 Request , 就是一个数据类而已.
+ */
 
 @end
 
 
 @implementation NSMutableURLRequest
+
+/*
+ 所谓的 Mutable 就是将 set 的权力暴露出来了.
+ */
 
 - (void) setCachePolicy: (NSURLRequestCachePolicy)cachePolicy
 {

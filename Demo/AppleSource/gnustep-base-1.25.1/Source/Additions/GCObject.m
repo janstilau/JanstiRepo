@@ -449,7 +449,7 @@ static pthread_mutex_t *allocationLock = NULL;
 /**
  * Returns the receivers reference count.
  */
-- (NSUInteger) retainCount
+- (int) retainCount
 {
   return gc.flags.refCount;
 }

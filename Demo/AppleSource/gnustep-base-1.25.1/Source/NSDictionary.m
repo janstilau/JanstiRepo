@@ -121,7 +121,7 @@ static SEL	appendStringSel;
  * Returns an unsigned integer which is the number of elements
  * stored in the dictionary.
  */
-- (NSUInteger) count
+- (int) count
 {
   [self subclassResponsibility: _cmd];
   return 0;
@@ -202,7 +202,7 @@ static SEL	appendStringSel;
  */
 - (id) initWithObjects: (const id[])objects
 	       forKeys: (const id <NSCopying>[])keys
-		 count: (NSUInteger)count
+		 count: (int)count
 {
   self = [self init];
   return self;
@@ -421,13 +421,13 @@ static SEL	appendStringSel;
  */
 + (id) dictionaryWithObjects: (const id[])objects
 		     forKeys: (const id <NSCopying>[])keys
-		       count: (NSUInteger)count
+		       count: (int)count
 {
   return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
     initWithObjects: objects forKeys: keys count: count]);
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return [self count];
 }
@@ -1172,7 +1172,7 @@ compareIt(id o1, id o2, void* context)
  * items are listed is undefined.
  */
 - (NSString*) descriptionWithLocale: (id)locale
-			     indent: (NSUInteger)level
+			     indent: (int)level
 {
   NSMutableString	*result = nil;
 
@@ -1200,15 +1200,15 @@ compareIt(id o1, id o2, void* context)
     }
   return o;
 }
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state
+- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state
                                    objects: (__unsafe_unretained id[])stackbuf
-                                     count: (NSUInteger)len
+                                     count: (int)len
 {
   [self subclassResponsibility: _cmd];
   return 0;
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
   NSUInteger	size = [super sizeInBytesExcluding: exclude];
 
@@ -1307,7 +1307,7 @@ compareIt(id o1, id o2, void* context)
  * and needs to be re-implemented in subclasses in order to have all
  * other initialisers work.
  */
-- (id) initWithCapacity: (NSUInteger)numItems
+- (id) initWithCapacity: (int)numItems
 {
   self = [self init];
   return self;
@@ -1345,7 +1345,7 @@ compareIt(id o1, id o2, void* context)
  *  added, this can avoid the reallocate-and-copy process if the size of the
  *  ultimate contents is known in advance.
  */
-+ (id) dictionaryWithCapacity: (NSUInteger)numItems
++ (id) dictionaryWithCapacity: (int)numItems
 {
   return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
     initWithCapacity: numItems]);
@@ -1360,7 +1360,7 @@ compareIt(id o1, id o2, void* context)
  */
 - (id) initWithObjects: (const id[])objects
 	       forKeys: (const id <NSCopying>[])keys
-		 count: (NSUInteger)count
+		 count: (int)count
 {
   self = [self initWithCapacity: count];
   if (self != nil)

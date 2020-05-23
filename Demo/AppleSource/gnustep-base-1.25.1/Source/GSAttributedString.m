@@ -69,7 +69,7 @@
 - (id) initWithString: (NSString*)aString
 	   attributes: (NSDictionary*)attributes;
 - (NSString*) string;
-- (NSDictionary*) attributesAtIndex: (NSUInteger)index
+- (NSDictionary*) attributesAtIndex: (int)index
 		     effectiveRange: (NSRange*)aRange;
 
 @end
@@ -84,7 +84,7 @@
 - (id) initWithString: (NSString*)aString
 	   attributes: (NSDictionary*)attributes;
 - (NSString*) string;
-- (NSDictionary*) attributesAtIndex: (NSUInteger)index
+- (NSDictionary*) attributesAtIndex: (int)index
 		     effectiveRange: (NSRange*)aRange;
 - (void) setAttributes: (NSDictionary*) attributes
 		 range: (NSRange)range;
@@ -527,7 +527,7 @@ _attributesAtIndexEffectiveRange(
   return AUTORELEASE([_textChars copyWithZone: NSDefaultMallocZone()]); // stirng, 就是返回 backing stroe String.
 }
 
-- (NSDictionary*) attributesAtIndex: (NSUInteger)index
+- (NSDictionary*) attributesAtIndex: (int)index
 		     effectiveRange: (NSRange*)aRange
 {
   return _attributesAtIndexEffectiveRange(
@@ -543,7 +543,7 @@ _attributesAtIndexEffectiveRange(
 
 
 // The superclass implementation is correct but too slow
-- (NSUInteger) length
+- (int) length
 {
   return [_textChars length];
 }
@@ -643,7 +643,7 @@ SANITY();
   return _textProxy;
 }
 
-- (NSDictionary*) attributesAtIndex: (NSUInteger)index
+- (NSDictionary*) attributesAtIndex: (int)index
 		     effectiveRange: (NSRange*)aRange
 {
   unsigned	dummy;
@@ -915,7 +915,7 @@ SANITY();
 }
 
 // The superclass implementation is correct but too slow
-- (NSUInteger) length
+- (int) length
 {
   return [_textChars length];
 }

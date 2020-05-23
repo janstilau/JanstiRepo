@@ -78,13 +78,13 @@ GS_EXPORT NSString * const NSMetadataQueryGatheringProgressNotification;
 }
 
 /* Instance methods */
-- (id) valueOfAttribute: (id)attr forResultAtIndex: (NSUInteger)index;
+- (id) valueOfAttribute: (id)attr forResultAtIndex: (int)index;
 - (NSArray *) groupedResults;
 - (NSDictionary *) valueLists;
-- (NSUInteger) indexOfResult: (id)result;
+- (int) indexOfResult: (id)result;
 - (NSArray *) results;
-- (id) resultAtIndex: (NSUInteger)index;
-- (NSUInteger) resultCount;
+- (id) resultAtIndex: (int)index;
+- (int) resultCount;
 
 // Enable/Disable updates
 - (void) enableUpdates;
@@ -154,7 +154,7 @@ GS_EXPORT NSString * const NSMetadataQueryGatheringProgressNotification;
 
 - (NSString *) attribute;
 - (id) value;
-- (NSUInteger) count;
+- (int) count;
 
 @end
 
@@ -169,8 +169,8 @@ GS_EXPORT NSString * const NSMetadataQueryGatheringProgressNotification;
 - (NSString *) attribute;
 - (id) value;
 - (NSArray *) subgroups;
-- (NSUInteger) resultCount;
-- (id) resultAtIndex: (NSUInteger)index;
+- (int) resultCount;
+- (id) resultAtIndex: (int)index;
 - (NSArray *) results;
 
 @end

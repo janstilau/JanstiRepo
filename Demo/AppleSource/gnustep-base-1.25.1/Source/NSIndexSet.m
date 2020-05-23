@@ -101,7 +101,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     return AUTORELEASE(o);
 }
 
-+ (id) indexSetWithIndex: (NSUInteger)anIndex
++ (id) indexSetWithIndex: (int)anIndex
 {
     id	o = [self allocWithZone: NSDefaultMallocZone()];
     
@@ -117,7 +117,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     return AUTORELEASE(o);
 }
 
-- (BOOL) containsIndex: (NSUInteger)anIndex
+- (BOOL) containsIndex: (int)anIndex
 {
     NSUInteger	pos;
     NSRange	r;
@@ -195,7 +195,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     }
 }
 
-- (NSUInteger) count
+- (int) count
 {
     if (_array == 0 || GSIArrayCount(_array) == 0)
     {
@@ -216,7 +216,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     }
 }
 
-- (NSUInteger) countOfIndexesInRange: (NSRange)range
+- (int) countOfIndexesInRange: (NSRange)range
 {
     if (_array == 0 || GSIArrayCount(_array) == 0)
     {
@@ -378,7 +378,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     }
 }
 
-- (NSUInteger) firstIndex
+- (int) firstIndex
 {
     if (_array == 0 || GSIArrayCount(_array) == 0)
     {
@@ -387,8 +387,8 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     return GSIArrayItemAtIndex(_array, 0).ext.location;
 }
 
-- (NSUInteger) getIndexes: (NSUInteger*)aBuffer
-                 maxCount: (NSUInteger)aCount
+- (int) getIndexes: (NSUInteger*)aBuffer
+                 maxCount: (int)aCount
              inIndexRange: (NSRangePointer)aRange
 {
     NSUInteger	pos;
@@ -451,12 +451,12 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     return i;
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
     return [self count];
 }
 
-- (NSUInteger) indexGreaterThanIndex: (NSUInteger)anIndex
+- (int) indexGreaterThanIndex: (int)anIndex
 {
     NSUInteger	pos;
     NSRange	r;
@@ -478,7 +478,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     return r.location;
 }
 
-- (NSUInteger) indexGreaterThanOrEqualToIndex: (NSUInteger)anIndex
+- (int) indexGreaterThanOrEqualToIndex: (int)anIndex
 {
     NSUInteger	pos;
     NSRange	r;
@@ -500,7 +500,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     return r.location;
 }
 
-- (NSUInteger) indexLessThanIndex: (NSUInteger)anIndex
+- (int) indexLessThanIndex: (int)anIndex
 {
     NSUInteger	pos;
     NSRange	r;
@@ -527,7 +527,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     return NSMaxRange(r) - 1;
 }
 
-- (NSUInteger) indexLessThanOrEqualToIndex: (NSUInteger)anIndex
+- (int) indexLessThanOrEqualToIndex: (int)anIndex
 {
     NSUInteger	pos;
     NSRange	r;
@@ -683,7 +683,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     return self;
 }
 
-- (id) initWithIndex: (NSUInteger)anIndex
+- (id) initWithIndex: (int)anIndex
 {
     if (anIndex == NSNotFound)
     {
@@ -811,7 +811,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     return YES;
 }
 
-- (NSUInteger) lastIndex
+- (int) lastIndex
 {
     if (_array == 0 || GSIArrayCount(_array) == 0)
     {
@@ -968,7 +968,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
 #undef	_other
 #define	_other	((GSIArray)(((NSMutableIndexSet*)aSet)->_data))
 
-- (void) addIndex: (NSUInteger)anIndex
+- (void) addIndex: (int)anIndex
 {
     [self addIndexesInRange: NSMakeRange(anIndex, 1)];
 }
@@ -1092,7 +1092,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     }
 }
 
-- (void) removeIndex: (NSUInteger)anIndex
+- (void) removeIndex: (int)anIndex
 {
     [self removeIndexesInRange: NSMakeRange(anIndex, 1)];
 }
@@ -1227,7 +1227,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     SANITY();
 }
 
-- (void) shiftIndexesStartingAtIndex: (NSUInteger)anIndex by: (NSInteger)amount
+- (void) shiftIndexesStartingAtIndex: (int)anIndex by: (NSInteger)amount
 {
     if (amount != 0 && _array != 0 && GSIArrayCount(_array) > 0)
     {
@@ -1355,7 +1355,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
 @implementation	NSIndexSet (NSCharacterSet)
 /* Extra method to let NSCharacterSet play with index sets more efficiently.
  */
-- (NSUInteger) _gapGreaterThanIndex: (NSUInteger)anIndex
+- (int) _gapGreaterThanIndex: (int)anIndex
 {
     NSUInteger	pos;
     NSRange	r;
@@ -1407,7 +1407,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     [super dealloc];
 }
 
-- (id) _initWithBytes: (const void*)bytes length: (NSUInteger)length
+- (id) _initWithBytes: (const void*)bytes length: (int)length
 {
     NSAssert(length % sizeof(GSIArrayItem) == 0, NSInvalidArgumentException);
     NSAssert(length % __alignof__(GSIArrayItem) == 0, NSInvalidArgumentException);

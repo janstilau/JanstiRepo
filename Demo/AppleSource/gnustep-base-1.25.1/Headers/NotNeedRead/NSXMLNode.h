@@ -210,13 +210,13 @@ typedef NSUInteger NSXMLNodeKind;
 
 /** Returns the child node if the receiver at the specified index.
  */
-- (NSXMLNode*) childAtIndex: (NSUInteger)index;
+- (NSXMLNode*) childAtIndex: (int)index;
 
 /** Returns the number of immediate child nodes of the receiver.<br />
  * This method is more efficient than getting the array of children
  * and counting it.
  */
-- (NSUInteger) childCount;
+- (int) childCount;
 
 /** Returns n array containing the immediate child nodes of the receiver.
  */
@@ -228,7 +228,7 @@ typedef NSUInteger NSXMLNodeKind;
 
 /** Return the index of the receiver within its parent node.
  */
-- (NSUInteger) index;
+- (int) index;
 
 /** Initialises the receiver as a specific kind of node.<br />
  * Calls -initWithKind:options: using NSXMLNodeOptionsNone and
@@ -240,12 +240,12 @@ typedef NSUInteger NSXMLNodeKind;
  * Initialises the receiver as the specified kind of node and with the
  * specified options.
  */
-- (id) initWithKind: (NSXMLNodeKind)theKind options: (NSUInteger)theOptions;
+- (id) initWithKind: (NSXMLNodeKind)theKind options: (int)theOptions;
 
 /** Return the level of the receiver within the tree of nodes.<br />
  *  A document or a node which is not inside another is at level 0.
  */
-- (NSUInteger) level;
+- (int) level;
 
 /** Returns the name of the receiver without any namespace prefix.
  */
@@ -381,7 +381,7 @@ typedef NSUInteger NSXMLNodeKind;
  * Returns the text of the receiver as XML (ie in the form it would have
  * in an XML document), with the specified options controlling it.
  */
-- (NSString*) XMLStringWithOptions: (NSUInteger)theOptions;
+- (NSString*) XMLStringWithOptions: (int)theOptions;
 
 @end
 

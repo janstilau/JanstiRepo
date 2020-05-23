@@ -125,7 +125,7 @@ extern "C" {
  * Returns amount of space used for header info at beginning of messages.
  * Subclasses should override (this implementation returns 0).
  */
-- (NSUInteger) reservedSpaceLength;
+- (int) reservedSpaceLength;
 
 /**
  * Internal method for sending message, for use by subclasses.
@@ -134,7 +134,7 @@ extern "C" {
 		  msgid: (NSInteger)msgid
 	     components: (NSMutableArray*)components
 		   from: (NSPort*)receivingPort
-	       reserved: (NSUInteger)length;
+	       reserved: (int)length;
 
 /**
  * Internal method for sending message, for use by subclasses.
@@ -142,7 +142,7 @@ extern "C" {
 - (BOOL) sendBeforeDate: (NSDate*)when
 	     components: (NSMutableArray*)components
 		   from: (NSPort*)receivingPort
-	       reserved: (NSUInteger)length;
+	       reserved: (int)length;
 #endif
 @end
 

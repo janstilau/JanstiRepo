@@ -300,19 +300,19 @@ extern "C" {
 + (NSNumber*) numberWithInteger: (NSInteger)value;
 /** Return a number intialised with NSUInteger.
  */
-+ (NSNumber*) numberWithUnsignedInteger: (NSUInteger)value;
++ (NSNumber*) numberWithUnsignedInteger: (int)value;
 /** Initialise the receiver with NSInteger content.
  */
 - (id) initWithInteger: (NSInteger)value;
 /** Initialise the receiver with NSUInteger content.
  */
-- (id) initWithUnsignedInteger: (NSUInteger)value;
+- (id) initWithUnsignedInteger: (int)value;
 /** Return the contents of the receiver as NSInteger.
  */
 - (NSInteger) integerValue;
 /** Return the contents of the receiver as NSUInteger.
  */
-- (NSUInteger) unsignedIntegerValue;
+- (int) unsignedIntegerValue;
 #endif
 
 @end

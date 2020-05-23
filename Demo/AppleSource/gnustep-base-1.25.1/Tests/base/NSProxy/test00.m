@@ -26,11 +26,11 @@
 {
   [_remote release];
 }
-- (unichar) characterAtIndex: (NSUInteger)i
+- (unichar) characterAtIndex: (int)i
 {
   return [_remote characterAtIndex: i];
 }
-- (NSUInteger) length
+- (int) length
 {
   return [_remote length];
 }
@@ -54,7 +54,7 @@
 {
   [_remote release];
 }
-- (NSUInteger) hash
+- (int) hash
 {
   if (_remote)
     return [_remote hash];

@@ -946,7 +946,7 @@ GSTLSHandlePush(gnutls_transport_ptr_t handle, const void *buffer, size_t len)
   [super finalize];
 }
 
-- (NSInteger) read: (void*)buf length: (NSUInteger)len
+- (NSInteger) read: (void*)buf length: (int)len
 {
   if (YES == [session active])
     {
@@ -1048,7 +1048,7 @@ GSTLSHandlePush(gnutls_transport_ptr_t handle, const void *buffer, size_t len)
   return nil;
 }
 
-- (NSInteger) write: (const void*)buf length: (NSUInteger)len
+- (NSInteger) write: (const void*)buf length: (int)len
 {
   if (YES == [session active])
     {

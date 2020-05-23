@@ -100,7 +100,7 @@ struct sockaddr_in;
 - (void) setNonBlocking: (BOOL)flag;
 - (void) postReadNotification;
 - (void) postWriteNotification;
-- (NSInteger) read: (void*)buf length: (NSUInteger)len;
+- (NSInteger) read: (void*)buf length: (int)len;
 - (void) receivedEvent: (void*)data
 		  type: (RunLoopEventType)type
 	         extra: (void*)extra
@@ -111,7 +111,7 @@ struct sockaddr_in;
 - (BOOL) useCompression;
 - (void) watchReadDescriptorForModes: (NSArray*)modes;
 - (void) watchWriteDescriptor;
-- (NSInteger) write: (const void*)buf length: (NSUInteger)len;
+- (NSInteger) write: (const void*)buf length: (int)len;
 
 @end
 

@@ -296,7 +296,7 @@ otherTime(NSDate* other)
     [coder encodeValueOfObjCType: @encode(NSTimeInterval) at: &interval];
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
     return (NSUInteger)[self timeIntervalSinceReferenceDate];
 }
@@ -513,7 +513,7 @@ otherTime(NSDate* other)
     }
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
     return (unsigned)_seconds_since_ref;
 }

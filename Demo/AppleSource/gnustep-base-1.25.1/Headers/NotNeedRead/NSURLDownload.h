@@ -159,7 +159,7 @@ extern "C" {
  * Called when some data has been received.
  */
 - (void) download: (NSURLDownload *)download
-  didReceiveDataOfLength: (NSUInteger)length;
+  didReceiveDataOfLength: (int)length;
 
 /**
  * Called when a response is received.<br />

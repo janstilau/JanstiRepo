@@ -131,7 +131,7 @@ extern "C" {
  * (eg found by calling the same method on objects pointed to by the
  * receiver's instance variables).
  */
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude;
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude;
 @end
 
 /** This is an informal protocol ... classes may implement the method and

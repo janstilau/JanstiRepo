@@ -221,7 +221,7 @@ enum
 - (id) initWithCalendarIdentifier: (NSString *) string;
 - (NSString *) calendarIdentifier;
 
-- (NSDateComponents *) components: (NSUInteger) unitFlags
+- (NSDateComponents *) components: (int) unitFlags
                          fromDate: (NSDate *) date;
 /**
  * Compute the different between the specified components in the two dates.
@@ -234,27 +234,27 @@ enum
  * Please note that the NSWrapCalendarComponents option that should affect the
  * calculations is not presently supported.
  */
-- (NSDateComponents *) components: (NSUInteger) unitFlags
+- (NSDateComponents *) components: (int) unitFlags
                          fromDate: (NSDate *) startingDate
                            toDate: (NSDate *) resultDate
-                          options: (NSUInteger) opts;
+                          options: (int) opts;
 - (NSDate *) dateByAddingComponents: (NSDateComponents *) comps
                              toDate: (NSDate *) date
-                            options: (NSUInteger) opts;
+                            options: (int) opts;
 - (NSDate *) dateFromComponents: (NSDateComponents *) comps;
 
 - (NSLocale *) locale;
 - (void)setLocale: (NSLocale *) locale;
-- (NSUInteger) firstWeekday;
-- (void) setFirstWeekday: (NSUInteger) weekday;
-- (NSUInteger) minimumDaysInFirstWeek;
-- (void) setMinimumDaysInFirstWeek: (NSUInteger) mdw;
+- (int) firstWeekday;
+- (void) setFirstWeekday: (int) weekday;
+- (int) minimumDaysInFirstWeek;
+- (void) setMinimumDaysInFirstWeek: (int) mdw;
 - (NSTimeZone *) timeZone;
 - (void) setTimeZone: (NSTimeZone *) tz;
 
 - (NSRange) maximumRangeOfUnit: (NSCalendarUnit) unit;
 - (NSRange) minimumRangeofUnit: (NSCalendarUnit) unit;
-- (NSUInteger) ordinalityOfUnit: (NSCalendarUnit) smaller
+- (int) ordinalityOfUnit: (NSCalendarUnit) smaller
                          inUnit: (NSCalendarUnit) larger
                         forDate: (NSDate *) date;
 - (NSRange) rangeOfUnit: (NSCalendarUnit) smaller

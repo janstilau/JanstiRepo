@@ -339,7 +339,7 @@ static NSRange GSRangeOfCookie(NSString *string);
     return [this->_properties objectForKey: NSHTTPCookieValue];
 }
 
-- (NSUInteger) version
+- (int) version
 {
     return [[this->_properties objectForKey: NSHTTPCookieVersion] integerValue];
 }
@@ -350,7 +350,7 @@ static NSRange GSRangeOfCookie(NSString *string);
             [self name], [self value]];
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
     return [[self properties] hash];
 }

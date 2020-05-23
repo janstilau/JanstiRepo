@@ -255,9 +255,9 @@ GSPrivateSockaddrSetup(NSString *machine, uint16_t port,
 - (void) bye;           /* Close down the handled session.   */
 - (BOOL) handshake;     /* A handshake/hello is in progress. */
 - (void) hello;         /* Start up the session handshake.   */
-- (NSInteger) read: (uint8_t *)buffer maxLength: (NSUInteger)len;
+- (NSInteger) read: (uint8_t *)buffer maxLength: (int)len;
 - (void) stream: (NSStream*)stream handleEvent: (NSStreamEvent)event;
-- (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len;
+- (NSInteger) write: (const uint8_t *)buffer maxLength: (int)len;
 @end
 
 
@@ -308,7 +308,7 @@ GSPrivateSockaddrSetup(NSString *machine, uint16_t port,
     return ostream;
 }
 
-- (NSInteger) read: (uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) read: (uint8_t *)buffer maxLength: (int)len
 {
     [self subclassResponsibility: _cmd];
     return 0;
@@ -319,7 +319,7 @@ GSPrivateSockaddrSetup(NSString *machine, uint16_t port,
     [self subclassResponsibility: _cmd];
 }
 
-- (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) write: (const uint8_t *)buffer maxLength: (int)len
 {
     [self subclassResponsibility: _cmd];
     return 0;
@@ -643,7 +643,7 @@ static NSArray  *keys = nil;
     return ostream;
 }
 
-- (NSInteger) read: (uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) read: (uint8_t *)buffer maxLength: (int)len
 {
     return [session read: buffer length: len];
 }
@@ -716,7 +716,7 @@ static NSArray  *keys = nil;
     return;
 }
 
-- (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) write: (const uint8_t *)buffer maxLength: (int)len
 {
     return [session write: buffer length: len];
 }
@@ -1006,7 +1006,7 @@ static NSString * const GSSOCKSAckConn = @"GSSOCKSAckConn";
     return self;
 }
 
-- (NSInteger) read: (uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) read: (uint8_t *)buffer maxLength: (int)len
 {
     return [istream _read: buffer maxLength: len];
 }
@@ -1395,7 +1395,7 @@ static NSString * const GSSOCKSAckConn = @"GSSOCKSAckConn";
     }
 }
 
-- (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) write: (const uint8_t *)buffer maxLength: (int)len
 {
     return [ostream _write: buffer maxLength: len];
 }
@@ -1525,7 +1525,7 @@ setNonBlocking(SOCKET fd)
     return result;
 }
 
-- (NSInteger) _read: (uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) _read: (uint8_t *)buffer maxLength: (int)len
 {
     [self subclassResponsibility: _cmd];
     return -1;
@@ -1690,7 +1690,7 @@ setNonBlocking(SOCKET fd)
     return _sock;
 }
 
-- (NSInteger) _write: (const uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) _write: (const uint8_t *)buffer maxLength: (int)len
 {
     [self subclassResponsibility: _cmd];
     return -1;
@@ -1873,7 +1873,7 @@ open_ok:
     _sock = INVALID_SOCKET;
 }
 
-- (NSInteger) read: (uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) read: (uint8_t *)buffer maxLength: (int)len
 {
     if (buffer == 0)
     {
@@ -1892,7 +1892,7 @@ open_ok:
         return [_handler read: buffer maxLength: len];
 }
 
-- (NSInteger) _read: (uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) _read: (uint8_t *)buffer maxLength: (int)len
 {
     int readLen;
     
@@ -2148,7 +2148,7 @@ open_ok:
     }
 }
 
-- (NSInteger) _write: (const uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) _write: (const uint8_t *)buffer maxLength: (int)len
 {
     int writeLen;
     
@@ -2370,7 +2370,7 @@ open_ok:
     _sock = INVALID_SOCKET;
 }
 
-- (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) write: (const uint8_t *)buffer maxLength: (int)len
 {
     if (len == 0)
     {

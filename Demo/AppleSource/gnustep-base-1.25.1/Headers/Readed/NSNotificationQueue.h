@@ -80,14 +80,14 @@ struct _NSNotificationQueueList;
 /* Inserting and Removing Notifications From a Queue */
 
 - (void) dequeueNotificationsMatching: (NSNotification*)notification
-			 coalesceMask: (NSUInteger)coalesceMask;
+			 coalesceMask: (int)coalesceMask;
 
 - (void) enqueueNotification: (NSNotification*)notification
 	        postingStyle: (NSPostingStyle)postingStyle;
 
 - (void) enqueueNotification: (NSNotification*)notification
 	        postingStyle: (NSPostingStyle)postingStyle
-	        coalesceMask: (NSUInteger)coalesceMask
+	        coalesceMask: (int)coalesceMask
 		    forModes: (NSArray*)modes;
 
 @end

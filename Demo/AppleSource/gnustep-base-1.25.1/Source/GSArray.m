@@ -36,12 +36,12 @@ static Class	GSInlineArrayClass;
 @end
 
 @interface GSMutableArray (GSArrayBehavior)
-- (void) _raiseRangeExceptionWithIndex: (NSUInteger)index from: (SEL)sel;
+- (void) _raiseRangeExceptionWithIndex: (int)index from: (SEL)sel;
 @end
 
 @implementation GSArray
 
-- (void) _raiseRangeExceptionWithIndex: (NSUInteger)index from: (SEL)sel
+- (void) _raiseRangeExceptionWithIndex: (int)index from: (SEL)sel
 {
     NSDictionary *info;
     NSException  *exception;
@@ -110,7 +110,7 @@ static Class	GSInlineArrayClass;
 
 /* This is the designated initializer for NSArray. */
 // 子类复写父类的 designated init. 所以会直接调用到这里. NSArray 那里, 应该说没有实现 initWithObjects 这个方法.
-- (id) initWithObjects: (const id[])objects count: (NSUInteger)count
+- (id) initWithObjects: (const id[])objects count: (int)count
 {
     if (count > 0)
     {
@@ -187,17 +187,17 @@ static Class	GSInlineArrayClass;
     return self;
 }
 
-- (NSUInteger) count
+- (int) count
 {
     return _count;
 }
 
-- (NSUInteger) hash // 这里, hash 只是简单的返回 count, 不过一般来说, NSArray 不会再放入另外容器类里面了.
+- (int) hash // 这里, hash 只是简单的返回 count, 不过一般来说, NSArray 不会再放入另外容器类里面了.
 {
     return _count;
 }
 
-- (NSUInteger) indexOfObject: anObject
+- (int) indexOfObject: anObject
 {
     if (anObject == nil)
         return NSNotFound;
@@ -226,7 +226,7 @@ static Class	GSInlineArrayClass;
     return NSNotFound;
 }
 
-- (NSUInteger) indexOfObjectIdenticalTo: anObject // 这个函数才是真正的内存比较.
+- (int) indexOfObjectIdenticalTo: anObject // 这个函数才是真正的内存比较.
 {
     NSUInteger i;
     
@@ -282,7 +282,7 @@ static Class	GSInlineArrayClass;
     return YES;
 }
 
-- (id) objectAtIndex: (NSUInteger)index
+- (id) objectAtIndex: (int)index
 {
     if (index >= _count)
     {
@@ -323,9 +323,9 @@ static Class	GSInlineArrayClass;
     }
 }
 
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state
+- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state
                                    objects: (__unsafe_unretained id[])stackbuf
-                                     count: (NSUInteger)len
+                                     count: (int)len
 {
     /* For immutable arrays we can return the contents pointer directly. */
     NSUInteger count = _count - state->state;
@@ -360,7 +360,7 @@ static Class	GSInlineArrayClass;
     return [self initWithObjects: 0 count: 0];
 }
 //
-- (id) initWithObjects: (const id[])objects count: (NSUInteger)count
+- (id) initWithObjects: (const id[])objects count: (int)count
 {
     _contents_array
     = (id*)(((void*)self) + class_getInstanceSize([self class]));
@@ -436,8 +436,8 @@ static Class	GSInlineArrayClass;
     return [copy initWithObjects: _contents_array count: _count]; // 新建一个内存空间, 然后直接用初始化方法进行 copy.
 }
 
-- (void) exchangeObjectAtIndex: (NSUInteger)i1
-             withObjectAtIndex: (NSUInteger)i2
+- (void) exchangeObjectAtIndex: (int)i1
+             withObjectAtIndex: (int)i2
 {
     _version++;
     if (i1 >= _count)
@@ -463,7 +463,7 @@ static Class	GSInlineArrayClass;
     return [self initWithCapacity: 0];
 }
 
-- (id) initWithCapacity: (NSUInteger)cap // 直接创建固定大小的内存, 避免数据的迁移操作.
+- (id) initWithCapacity: (int)cap // 直接创建固定大小的内存, 避免数据的迁移操作.
 {
     if (cap == 0)
     {
@@ -503,7 +503,7 @@ static Class	GSInlineArrayClass;
     return self;
 }
 
-- (id) initWithObjects: (const id[])objects count: (NSUInteger)count
+- (id) initWithObjects: (const id[])objects count: (int)count
 {
     self = [self initWithCapacity: count];
     if (self != nil && count > 0)
@@ -525,7 +525,7 @@ static Class	GSInlineArrayClass;
     return self;
 }
 
-- (void) insertObject: (id)anObject atIndex: (NSUInteger)index
+- (void) insertObject: (id)anObject atIndex: (int)index
 {
     _version++;
     if (!anObject)
@@ -675,7 +675,7 @@ static Class	GSInlineArrayClass;
     _version++;
 }
 
-- (void) removeObjectAtIndex: (NSUInteger)index
+- (void) removeObjectAtIndex: (int)index
 {
     id	obj;
     
@@ -777,7 +777,7 @@ static Class	GSInlineArrayClass;
     }
 }
 
-- (void) replaceObjectAtIndex: (NSUInteger)index withObject: (id)anObject
+- (void) replaceObjectAtIndex: (int)index withObject: (id)anObject
 {
     id	obj;
     
@@ -877,9 +877,9 @@ static Class	GSInlineArrayClass;
     return AUTORELEASE([enumerator initWithArray: (GSArray*)self]);
 }
 
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state
+- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state
                                    objects: (__unsafe_unretained id[])stackbuf
-                                     count: (NSUInteger)len
+                                     count: (int)len
 {
     NSInteger count;
     
@@ -906,7 +906,7 @@ static Class	GSInlineArrayClass;
     return count;
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
     NSUInteger	size = GSPrivateMemorySize(self, exclude);
     
@@ -983,7 +983,7 @@ static Class	GSInlineArrayClass;
  *      added is 'less than' the item in the array, NSOrderedDescending
  *      if it is greater, and NSOrderedSame if it is equal.
  */
-- (NSUInteger) insertionPosition: (id)item
+- (int) insertionPosition: (id)item
                    usingFunction: (NSComparisonResult (*)(id, id, void *))sorter
                          context: (void *)context
 {
@@ -1035,7 +1035,7 @@ static Class	GSInlineArrayClass;
     return index;
 }
 
-- (NSUInteger) insertionPosition: (id)item
+- (int) insertionPosition: (id)item
                    usingSelector: (SEL)comp
 {
     NSUInteger	upper = _count;
@@ -1110,7 +1110,7 @@ static Class	GSInlineArrayClass;
     return self;		// placeholders never get released.
 }
 
-- (id) objectAtIndex: (NSUInteger)index
+- (id) objectAtIndex: (int)index
 {
     [NSException raise: NSInternalInconsistencyException
                 format: @"Attempt to use uninitialised array"];
@@ -1163,7 +1163,7 @@ static Class	GSInlineArrayClass;
     }
 }
 
-- (id) initWithObjects: (const id[])objects count: (NSUInteger)count
+- (id) initWithObjects: (const id[])objects count: (int)count
 { // GSInlineArrayClass == [GSInlineArray class]
     self = (id)NSAllocateObject(GSInlineArrayClass, sizeof(id)*count,
                                 [self zone]);
@@ -1171,7 +1171,7 @@ static Class	GSInlineArrayClass;
     return [self initWithObjects: objects count: count];
 }
 
-- (NSUInteger) count
+- (int) count
 {
     [NSException raise: NSInternalInconsistencyException
                 format: @"Attempt to use uninitialised array"];

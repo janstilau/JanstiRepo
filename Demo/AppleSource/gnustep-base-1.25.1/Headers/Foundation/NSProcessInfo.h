@@ -105,7 +105,7 @@ enum {
 #if GS_HAS_DECLARED_PROPERTIES
 @property (readonly) NSUInteger systemUptime;
 #else
-- (NSUInteger) systemUptime;
+- (int) systemUptime;
 #endif
 #endif
 
@@ -167,7 +167,7 @@ enum {
  * <item>GSCygwinOperatingSystem - cygwin unix-like environment</item>
  * </list>
  */
-- (NSUInteger) operatingSystem;
+- (int) operatingSystem;
 
 /**
  * Return a human readable string representing the operating system type.<br />
@@ -217,9 +217,9 @@ enum {
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST) 
 /** Not implemented */
-- (NSUInteger) processorCount;
+- (int) processorCount;
 /** Not implemented */
-- (NSUInteger) activeProcessorCount;
+- (int) activeProcessorCount;
 /** Not implemented */
 - (unsigned long long) physicalMemory;
 #endif

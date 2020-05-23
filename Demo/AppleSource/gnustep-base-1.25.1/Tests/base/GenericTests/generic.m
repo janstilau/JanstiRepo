@@ -1,7 +1,7 @@
 #import "generic.h"
 
 @interface NSObject (PretendToBeNSString)
-- (NSUInteger)length;
+- (int)length;
 @end
 
 @implementation NSObject(TestAdditions)
@@ -9,7 +9,7 @@
 {
   return ([self isEqual:anObject] && [anObject isEqual:self]);
 }
-- (NSUInteger) length
+- (int) length
 {
   return 0;
 }

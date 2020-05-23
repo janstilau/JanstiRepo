@@ -29,7 +29,7 @@
 
 @implementation NSArray (GNUstepBase)
 
-- (NSUInteger) insertionPosition: (id)item
+- (int) insertionPosition: (id)item
 		   usingFunction: (NSComparisonResult (*)(id, id, void *))sorter
 		         context: (void *)context
 {
@@ -86,7 +86,7 @@
   return index;
 }
 
-- (NSUInteger) insertionPosition: (id)item
+- (int) insertionPosition: (id)item
 		   usingSelector: (SEL)comp
 {
   NSUInteger	count = [self count];

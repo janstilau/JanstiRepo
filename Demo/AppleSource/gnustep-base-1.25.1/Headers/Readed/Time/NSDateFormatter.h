@@ -243,7 +243,7 @@ GS_NSDateFormatter_IVARS;
                              dateStyle: (NSDateFormatterStyle) dateStyle
                              timeStyle: (NSDateFormatterStyle) timeStyle;
 + (NSString *) dateFormatFromTemplate: (NSString *) aTemplate
-                              options: (NSUInteger) opts
+                              options: (int) opts
                                locale: (NSLocale *) locale;
 
 - (BOOL) doesRelativeDateFormatting;

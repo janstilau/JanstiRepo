@@ -91,7 +91,7 @@ static Class NSCountedSet_concrete_class;
     }
 }
 
-- (NSUInteger) _countForObject: (id)anObject
+- (int) _countForObject: (id)anObject
 {
   return [self countForObject: anObject];
 }
@@ -101,7 +101,7 @@ static Class NSCountedSet_concrete_class;
  * specified object (as determined by the [-isEqual:] method) has
  * been added to the set and not removed from it.
  */
-- (NSUInteger) countForObject: (id)anObject
+- (int) countForObject: (id)anObject
 {
   [self subclassResponsibility: _cmd];
   return 0;

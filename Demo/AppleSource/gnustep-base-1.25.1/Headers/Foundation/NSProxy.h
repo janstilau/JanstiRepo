@@ -68,7 +68,7 @@ GS_ROOT_CLASS @interface NSProxy <NSObject>
 - (void) dealloc;
 - (NSString*) description;
 - (void) forwardInvocation: (NSInvocation*)anInvocation;
-- (NSUInteger) hash;
+- (int) hash;
 - (id) init;
 - (BOOL) isEqual: (id)anObject;
 - (BOOL) isKindOfClass: (Class)aClass;
@@ -78,7 +78,7 @@ GS_ROOT_CLASS @interface NSProxy <NSObject>
 - (oneway void) release;
 - (BOOL) respondsToSelector: (SEL)aSelector;
 - (id) retain;
-- (NSUInteger) retainCount;
+- (int) retainCount;
 - (id) self;
 - (Class) superclass;
 - (NSZone*) zone;

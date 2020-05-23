@@ -45,7 +45,7 @@ extern "C" {
  * Failure to allocate memory to hold the random data or,<br />
  * Failure of the underlying random data generation.
  */
-+ (id) dataWithRandomBytesOfLength: (NSUInteger)length;
++ (id) dataWithRandomBytesOfLength: (int)length;
 
 /** Returns an NSString object containing a backslash escaped representation
  * of the receiver.

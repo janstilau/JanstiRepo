@@ -88,7 +88,7 @@ randombytes(uint8_t *buf, unsigned len)
  */
 @implementation NSData (GNUstepBase)
 
-+ (id) dataWithRandomBytesOfLength: (NSUInteger)length
++ (id) dataWithRandomBytesOfLength: (int)length
 {
   uint8_t       *buf = 0;
   NSData        *d;

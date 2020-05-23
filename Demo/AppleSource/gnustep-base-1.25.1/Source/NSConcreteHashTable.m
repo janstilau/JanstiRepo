@@ -900,15 +900,15 @@ const NSHashTableCallBacks NSPointerToStructHashCallBacks =
   return NSCopyHashTableWithZone(self, aZone);
 }
 
-- (NSUInteger) count
+- (int) count
 {
   GSIMapRemoveWeak(self);
   return (NSUInteger)nodeCount;
 }
 
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
+- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
 				   objects: (id*)stackbuf
-				     count: (NSUInteger)len
+				     count: (int)len
 {
   state->mutationsPtr = (unsigned long *)&version;
   return GSIMapCountByEnumeratingWithStateObjectsCount
@@ -931,7 +931,7 @@ const NSHashTableCallBacks NSPointerToStructHashCallBacks =
   GSIMapEmptyMap(self);
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return (NSUInteger)nodeCount;
 }
@@ -948,7 +948,7 @@ const NSHashTableCallBacks NSPointerToStructHashCallBacks =
 }
 
 - (id) initWithPointerFunctions: (NSPointerFunctions*)functions
-		       capacity: (NSUInteger)initialCapacity
+		       capacity: (int)initialCapacity
 {
   legacy = NO;
   if (![functions isKindOfClass: [NSConcretePointerFunctions class]])
@@ -1042,7 +1042,7 @@ const NSHashTableCallBacks NSPointerToStructHashCallBacks =
     }
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
   NSUInteger	size = [super sizeInBytesExcluding: exclude];
 

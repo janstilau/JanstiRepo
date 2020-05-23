@@ -52,13 +52,13 @@ extern "C" {
  */
 
 - (void) encodeArrayOfObjCType: (const char*)type
-			 count: (NSUInteger)count
+			 count: (int)count
 			    at: (const void*)array;
 
 /**
  *  Stores bytes directly into archive.  
  */
-- (void) encodeBytes: (void*)d length: (NSUInteger)l;
+- (void) encodeBytes: (void*)d length: (int)l;
 
 /**
  *  Encode object if it is/will be encoded unconditionally by this coder,
@@ -127,7 +127,7 @@ extern "C" {
  *  well.  Objects will be retained and you must release them.
  */
 - (void) decodeArrayOfObjCType: (const char*)type
-                         count: (NSUInteger)count
+                         count: (int)count
                             at: (void*)address;
 
 /**
@@ -301,7 +301,7 @@ extern "C" {
  * and associates the encoded value with aKey.
  */
 - (void) encodeBytes: (const uint8_t*)aPointer
-	      length: (NSUInteger)length
+	      length: (int)length
 	      forKey: (NSString*)aKey;
 
 /** <override-subclass />

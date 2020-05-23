@@ -190,11 +190,11 @@ extern "C" {
 
 /** Sets the size of the receiver's stack.
  */
-- (void) setStackSize: (NSUInteger)stackSize;
+- (void) setStackSize: (int)stackSize;
 
 /** Returns the size of the receiver's stack.
  */
-- (NSUInteger) stackSize;
+- (int) stackSize;
 
 /** Starts the receiver executing.
  */

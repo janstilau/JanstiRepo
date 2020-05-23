@@ -488,7 +488,7 @@ static NSDictionary *makeReference(unsigned ref)
 }
 
 - (void) encodeBytes: (const uint8_t*)aPointer
-              length: (NSUInteger)length
+              length: (int)length
               forKey: (NSString*)aKey
 {
     [_encodeObjectDictM setObject: [NSData dataWithBytes: aPointer length: length]

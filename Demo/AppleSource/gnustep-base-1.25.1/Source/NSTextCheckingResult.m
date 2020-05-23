@@ -43,7 +43,7 @@
 @implementation NSTextCheckingResult
 + (NSTextCheckingResult*)
   regularExpressionCheckingResultWithRanges: (NSRangePointer)ranges
-  count: (NSUInteger)count
+  count: (int)count
   regularExpression: (NSRegularExpression*)regularExpression
 {
   GSRegularExpressionCheckingResult *result =
@@ -81,7 +81,7 @@
   return 0;
 }
 
-- (NSUInteger) numberOfRanges
+- (int) numberOfRanges
 {
   return 1;
 }
@@ -129,7 +129,7 @@
 }
 
 
-- (NSRange) rangeAtIndex: (NSUInteger)idx
+- (NSRange) rangeAtIndex: (int)idx
 {
   if (idx >= [self numberOfRanges])
     {
@@ -158,7 +158,7 @@
   [super dealloc];
 }
 
-- (NSUInteger) numberOfRanges
+- (int) numberOfRanges
 {
   return rangeCount;
 }
@@ -168,7 +168,7 @@
   return ranges[0];
 }
 
-- (NSRange) rangeAtIndex: (NSUInteger)idx
+- (NSRange) rangeAtIndex: (int)idx
 {
   if (idx >= rangeCount)
     {

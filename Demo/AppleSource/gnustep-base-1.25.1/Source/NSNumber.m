@@ -379,7 +379,7 @@ static BOOL useSmallFloat;
   return self;
 }
 
-- (NSUInteger) retainCount
+- (int) retainCount
 {
   return UINT_MAX;
 }
@@ -491,7 +491,7 @@ boxDouble(double d, uintptr_t mask)
   return self;
 }
 
-- (NSUInteger) retainCount
+- (int) retainCount
 {
   return UINT_MAX;
 }
@@ -547,7 +547,7 @@ boxDouble(double d, uintptr_t mask)
   return self;
 }
 
-- (NSUInteger) retainCount
+- (int) retainCount
 {
   return UINT_MAX;
 }
@@ -681,7 +681,7 @@ static NSBoolNumber *boolN;		// Boolean NO (integer 0)
   return NO;
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return (unsigned)[self doubleValue];
 }
@@ -939,7 +939,7 @@ if (aValue >= -1 && aValue <= 12)\
   return [self numberWithLongLong: aValue];
 }
 
-+ (NSNumber *) numberWithUnsignedInteger: (NSUInteger)aValue
++ (NSNumber *) numberWithUnsignedInteger: (int)aValue
 {
   if (self != NSNumberClass)
     {

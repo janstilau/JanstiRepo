@@ -49,11 +49,11 @@ extern "C" {
        calendarFormat: (NSString*)format
 	       locale: (NSDictionary*)dictionary;
 + (id) dateWithYear: (NSInteger)year
-	      month: (NSUInteger)month
-	        day: (NSUInteger)day
-	       hour: (NSUInteger)hour
-	     minute: (NSUInteger)minute
-	     second: (NSUInteger)second
+	      month: (int)month
+	        day: (int)day
+	       hour: (int)hour
+	     minute: (int)minute
+	     second: (int)second
 	   timeZone: (NSTimeZone*)aTimeZone;
 
 // Initializing an NSCalendar Date
@@ -64,11 +64,11 @@ extern "C" {
        calendarFormat: (NSString*)fmt
 	       locale: (NSDictionary*)locale;
 - (id) initWithYear: (NSInteger)year
-	      month: (NSUInteger)month
-	        day: (NSUInteger)day
-	       hour: (NSUInteger)hour
-	     minute: (NSUInteger)minute
-	     second: (NSUInteger)second
+	      month: (int)month
+	        day: (int)day
+	       hour: (int)hour
+	     minute: (int)minute
+	     second: (int)second
 	   timeZone: (NSTimeZone*)aTimeZone;
 
 // Retrieving Date Elements

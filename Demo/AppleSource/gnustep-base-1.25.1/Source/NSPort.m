@@ -195,7 +195,7 @@ static Class	NSPort_concrete_class;
   [aLoop removePort: self forMode: aMode];
 }
 
-- (NSUInteger) reservedSpaceLength
+- (int) reservedSpaceLength
 {
   [self subclassResponsibility: _cmd];
   return 0;
@@ -204,7 +204,7 @@ static Class	NSPort_concrete_class;
 - (BOOL) sendBeforeDate: (NSDate*)when
              components: (NSMutableArray*)components
                    from: (NSPort*)receivingPort
-               reserved: (NSUInteger)length
+               reserved: (int)length
 {
   return [self sendBeforeDate: when
 			msgid: 0
@@ -217,7 +217,7 @@ static Class	NSPort_concrete_class;
 		  msgid: (NSInteger)msgid
              components: (NSMutableArray*)components
                    from: (NSPort*)receivingPort
-               reserved: (NSUInteger)length
+               reserved: (int)length
 {
   [self subclassResponsibility: _cmd];
   return YES;

@@ -46,7 +46,7 @@ extern "C" {
   * This method is used to return the ISO year rather than the normal
   * calendar year.
   */
-- (NSUInteger) isoYear;
+- (int) isoYear;
 
 /**
  * The ISO standard week of the year is based on the first week of the

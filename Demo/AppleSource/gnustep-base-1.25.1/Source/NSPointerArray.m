@@ -101,7 +101,7 @@ static Class	concreteClass = Nil;
   return nil;
 }
 
-- (NSUInteger) count
+- (int) count
 {
   [self subclassResponsibility: _cmd];
   return 0;
@@ -166,12 +166,12 @@ static Class	concreteClass = Nil;
   [self insertPointer: pointer atIndex: [self count]];
 }
 
-- (void) insertPointer: (void*)pointer atIndex: (NSUInteger)index
+- (void) insertPointer: (void*)pointer atIndex: (int)index
 {
   [self subclassResponsibility: _cmd];
 }
 
-- (void*) pointerAtIndex: (NSUInteger)index
+- (void*) pointerAtIndex: (int)index
 {
   [self subclassResponsibility: _cmd];
   return 0;
@@ -183,17 +183,17 @@ static Class	concreteClass = Nil;
   return nil;
 }
 
-- (void) removePointerAtIndex: (NSUInteger)index
+- (void) removePointerAtIndex: (int)index
 {
   [self subclassResponsibility: _cmd];
 }
 
-- (void) replacePointerAtIndex: (NSUInteger)index withPointer: (void*)item
+- (void) replacePointerAtIndex: (int)index withPointer: (void*)item
 {
   [self subclassResponsibility: _cmd];
 }
 
-- (void) setCount: (NSUInteger)count
+- (void) setCount: (int)count
 {
   [self subclassResponsibility: _cmd];
 }
@@ -222,7 +222,7 @@ static Class	concreteClass = Nil;
 
 @implementation NSConcretePointerArray
 
-- (void) _raiseRangeExceptionWithIndex: (NSUInteger)index from: (SEL)sel
+- (void) _raiseRangeExceptionWithIndex: (int)index from: (SEL)sel
 {
   NSDictionary *info;
   NSException  *exception;
@@ -314,7 +314,7 @@ static Class	concreteClass = Nil;
   return c;
 }
 
-- (NSUInteger) count
+- (int) count
 {
   return _count;
 }
@@ -363,7 +363,7 @@ static Class	concreteClass = Nil;
     }
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return _count;
 }
@@ -426,7 +426,7 @@ static Class	concreteClass = Nil;
   return self;
 }
 
-- (void) insertPointer: (void*)pointer atIndex: (NSUInteger)index
+- (void) insertPointer: (void*)pointer atIndex: (int)index
 {
   NSUInteger	i;
   
@@ -472,7 +472,7 @@ static Class	concreteClass = Nil;
   return YES;
 }
 
-- (void*) pointerAtIndex: (NSUInteger)index
+- (void*) pointerAtIndex: (int)index
 {
   if (index >= _count)
     {
@@ -489,7 +489,7 @@ static Class	concreteClass = Nil;
   return [pf autorelease];
 }
 
-- (void) removePointerAtIndex: (NSUInteger)index
+- (void) removePointerAtIndex: (int)index
 {
   if (index >= _count)
     {
@@ -503,7 +503,7 @@ static Class	concreteClass = Nil;
   [self setCount: _count - 1];
 }
 
-- (void) replacePointerAtIndex: (NSUInteger)index withPointer: (void*)item
+- (void) replacePointerAtIndex: (int)index withPointer: (void*)item
 {
   if (index >= _count)
     {
@@ -512,7 +512,7 @@ static Class	concreteClass = Nil;
   pointerFunctionsReplace(&_pf, &_contents[index], item);
 }
 
-- (void) setCount: (NSUInteger)count
+- (void) setCount: (int)count
 {
   if (count > _count)
     {

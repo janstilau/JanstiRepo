@@ -168,7 +168,7 @@ static Class	mutableSetClass;
   return RETAIN(self);
 }
 
-- (NSUInteger) count
+- (int) count
 {
   return map.nodeCount;
 }
@@ -203,7 +203,7 @@ static Class	mutableSetClass;
     }
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return map.nodeCount;
 }
@@ -240,7 +240,7 @@ static Class	mutableSetClass;
 }
 
 /* Designated initialiser */
-- (id) initWithObjects: (const id*)objs count: (NSUInteger)c
+- (id) initWithObjects: (const id*)objs count: (int)c
 {
   NSUInteger i;
 
@@ -521,16 +521,16 @@ static Class	mutableSetClass;
   return AUTORELEASE([[GSSetEnumerator alloc] initWithSet: self]);
 }
 
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state
+- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state
                                    objects: (id*)stackbuf
-                                     count: (NSUInteger)len
+                                     count: (int)len
 {
   state->mutationsPtr = (unsigned long *)self;
   return GSIMapCountByEnumeratingWithStateObjectsCount
     (&map, state, stackbuf, len);
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
   NSUInteger	size = GSPrivateMemorySize(self, exclude);
 
@@ -620,14 +620,14 @@ static Class	mutableSetClass;
 }
 
 /* Designated initialiser */
-- (id) initWithCapacity: (NSUInteger)cap
+- (id) initWithCapacity: (int)cap
 {
   GSIMapInitWithZoneAndCapacity(&map, [self zone], cap);
   return self;
 }
 
 - (id) initWithObjects: (const id*)objects
-		 count: (NSUInteger)count
+		 count: (int)count
 {
   self = [self initWithCapacity: count];
 
@@ -801,9 +801,9 @@ static Class	mutableSetClass;
     }
 }
 
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state
+- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state
                                    objects: (id*)stackbuf
-                                     count: (NSUInteger)len
+                                     count: (int)len
 {
   state->mutationsPtr = (unsigned long *)&_version;
   return GSIMapCountByEnumeratingWithStateObjectsCount

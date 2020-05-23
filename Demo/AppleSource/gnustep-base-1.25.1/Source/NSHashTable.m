@@ -57,7 +57,7 @@ static Class	concreteClass = 0;
 }
 
 - (id) initWithOptions: (NSPointerFunctionsOptions)options
-	      capacity: (NSUInteger)initialCapacity
+	      capacity: (int)initialCapacity
 {
   NSPointerFunctions	*k;
   id			o;
@@ -69,7 +69,7 @@ static Class	concreteClass = 0;
 }
 
 - (id) initWithPointerFunctions: (NSPointerFunctions*)functions
-		       capacity: (NSUInteger)initialCapacity
+		       capacity: (int)initialCapacity
 {
   [self subclassResponsibility: _cmd];
   return nil;
@@ -115,14 +115,14 @@ static Class	concreteClass = 0;
   return nil;
 }
 
-- (NSUInteger) count
+- (int) count
 {
   return (NSUInteger)[self subclassResponsibility: _cmd];
 }
 
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
+- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
 				   objects: (id*)stackbuf
-				     count: (NSUInteger)len
+				     count: (int)len
 {
   return (NSUInteger)[self subclassResponsibility: _cmd];
 }
@@ -132,7 +132,7 @@ static Class	concreteClass = 0;
   [self subclassResponsibility: _cmd];
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return [self count];
 }

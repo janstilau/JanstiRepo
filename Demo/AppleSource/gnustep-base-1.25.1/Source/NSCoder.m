@@ -129,7 +129,7 @@
 // Decoding Data
 // Decode 的作用和 encode 相反, 通过将二进制的数据复原成为想要的数据类型. 不过, decode 的数据, 要以返回值的形式传出来.
 - (void) decodeArrayOfObjCType: (const char*)type
-                         count: (NSUInteger)count
+                         count: (int)count
                             at: (void*)address
 {
     unsigned	i;
@@ -340,7 +340,7 @@
 }
 
 - (void) encodeBytes: (const uint8_t*)aPointer
-              length: (NSUInteger)length
+              length: (int)length
               forKey: (NSString*)aKey
 {
     [self subclassResponsibility: _cmd];
@@ -397,7 +397,7 @@
 {
     return _a;
 }
-- (NSUInteger) count
+- (int) count
 {
     return _c;
 }
@@ -458,7 +458,7 @@
     }
 }
 
-- (NSUInteger) size
+- (int) size
 {
     return _s;
 }

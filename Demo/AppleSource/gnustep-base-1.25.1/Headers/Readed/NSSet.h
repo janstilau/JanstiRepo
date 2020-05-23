@@ -54,14 +54,14 @@ extern "C" {
 + (instancetype) setWithObjects: (GS_GENERIC_TYPE(ElementT))firstObject, ...;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 + (instancetype) setWithObjects: (const GS_GENERIC_TYPE(ElementT)[])objects
-		                  count: (NSUInteger)count;
+		                  count: (int)count;
 #endif
 + (instancetype) setWithSet: (GS_GENERIC_CLASS(NSSet, ElementT)*)aSet;
 
 - (GS_GENERIC_CLASS(NSArray, ElementT)*) allObjects;
 - (GS_GENERIC_TYPE(ElementT)) anyObject;
 - (BOOL) containsObject: (GS_GENERIC_TYPE(ElementT))anObject;
-- (NSUInteger) count;
+- (int) count;
 - (NSString*) description;
 - (NSString*) descriptionWithLocale: (id)locale;
 
@@ -69,7 +69,7 @@ extern "C" {
 - (instancetype) initWithArray: (GS_GENERIC_CLASS(NSArray, ElementT)*)other;
 - (instancetype) initWithObjects: (GS_GENERIC_TYPE(ElementT))firstObject, ...;
 - (instancetype) initWithObjects: (const GS_GENERIC_TYPE(ElementT)[])objects
-		                   count: (NSUInteger)count;
+		                   count: (int)count;
 - (instancetype) initWithSet: (GS_GENERIC_CLASS(NSSet, ElementT)*)other;
 - (instancetype) initWithSet: (GS_GENERIC_CLASS(NSSet, ElementT)*)other
                    copyItems: (BOOL)flag;
@@ -134,11 +134,11 @@ DEFINE_BLOCK_TYPE(GSSetFilterBlock, BOOL, GS_GENERIC_TYPE(ElementT), BOOL*);
 @interface GS_GENERIC_CLASS(NSMutableSet, ElementT):
   GS_GENERIC_CLASS(NSSet, ElementT)
 
-+ (instancetype) setWithCapacity: (NSUInteger)numItems;
++ (instancetype) setWithCapacity: (int)numItems;
 
 - (void) addObject: (GS_GENERIC_TYPE(ElementT))anObject;
 - (void) addObjectsFromArray: (GS_GENERIC_CLASS(NSArray, ElementT)*)array;
-- (instancetype) initWithCapacity: (NSUInteger)numItems;
+- (instancetype) initWithCapacity: (int)numItems;
 - (void) intersectSet: (GS_GENERIC_CLASS(NSSet, ElementT)*)other;
 - (void) minusSet: (GS_GENERIC_CLASS(NSSet, ElementT)*)other;
 - (void) removeAllObjects;
@@ -152,7 +152,7 @@ DEFINE_BLOCK_TYPE(GSSetFilterBlock, BOOL, GS_GENERIC_TYPE(ElementT), BOOL*);
 @interface GS_GENERIC_CLASS(NSCountedSet, ElementT) :
   GS_GENERIC_CLASS(NSMutableSet, ElementT)
 
-- (NSUInteger) countForObject: (GS_GENERIC_TYPE(ElementT))anObject;
+- (int) countForObject: (GS_GENERIC_TYPE(ElementT))anObject;
 
 @end
 

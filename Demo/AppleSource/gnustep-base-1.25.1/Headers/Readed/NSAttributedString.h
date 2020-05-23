@@ -30,7 +30,7 @@ extern "C" {
 - (id) initWithString: (NSString*)aString attributes: (NSDictionary*)attributes;
 
 //Retrieving character information
-- (NSUInteger) length;
+- (int) length;
 /** Returns the string content of the receiver.<br />
  * NB. this is actually a proxy to the internal content (which may change)
  * so if you need an immutable instance yu should copy the returned value,
@@ -39,19 +39,19 @@ extern "C" {
 - (NSString*) string;					//Primitive method!
 
 // 获取某个位置的属性信息, 以及那个位置属性信息影响的范围.
-- (NSDictionary*) attributesAtIndex: (NSUInteger)index
+- (NSDictionary*) attributesAtIndex: (int)index
 		     effectiveRange: (NSRange*)aRange;	//Primitive method!
 
 // 获取某个位置的属性信息, 以及在某个范围内, 这个属性信息影响的最长范围.
-- (NSDictionary*) attributesAtIndex: (NSUInteger)index
+- (NSDictionary*) attributesAtIndex: (int)index
 	      longestEffectiveRange: (NSRange*)aRange
 			    inRange: (NSRange)rangeLimit;
 // 获取某个属性在某个位置的信息, 以及最长影响的范围.
 - (id) attribute: (NSString*)attributeName
-	 atIndex: (NSUInteger)index
+	 atIndex: (int)index
   effectiveRange: (NSRange*)aRange;
 // 加了范围的限制.
-- (id) attribute: (NSString*)attributeName atIndex: (NSUInteger)index
+- (id) attribute: (NSString*)attributeName atIndex: (int)index
   longestEffectiveRange: (NSRange*)aRange inRange: (NSRange)rangeLimit;
 
 // 比较, 先是 指针, 然后是字符串, 然后是属性及其属性范围.
@@ -83,7 +83,7 @@ extern "C" {
 //Changing characters and attributes
 - (void) appendAttributedString: (NSAttributedString*)attributedString;
 - (void) insertAttributedString: (NSAttributedString*)attributedString
-			atIndex: (NSUInteger)index;
+			atIndex: (int)index;
 - (void) replaceCharactersInRange: (NSRange)aRange
 	     withAttributedString: (NSAttributedString*)attributedString;
 - (void) replaceCharactersInRange: (NSRange)aRange

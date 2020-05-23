@@ -50,7 +50,7 @@ extern "C" {
  * if it is greater, and NSOrderedSame if it is equal.
  * </p>
  */
-- (NSUInteger) insertionPosition: (id)item
+- (int) insertionPosition: (id)item
 		   usingFunction: (NSComparisonResult (*)(id, id, void *))sorter
 		         context: (void *)context;
 
@@ -64,7 +64,7 @@ extern "C" {
  * it is greate.
  * </p>
  */
-- (NSUInteger) insertionPosition: (id)item
+- (int) insertionPosition: (id)item
 		   usingSelector: (SEL)comp;
 @end
 

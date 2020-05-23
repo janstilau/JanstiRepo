@@ -177,7 +177,7 @@ NSString * const NSMetadataQueryGatheringProgressNotification
   return [self subclassResponsibility: _cmd];
 }
 
-- (NSUInteger) indexOfResult: (id)result
+- (int) indexOfResult: (id)result
 {
   [self subclassResponsibility: _cmd];
   return NSNotFound;
@@ -222,12 +222,12 @@ NSString * const NSMetadataQueryGatheringProgressNotification
   return this->_predicate;
 }
 
-- (id) resultAtIndex: (NSUInteger)index
+- (id) resultAtIndex: (int)index
 {
   return [self subclassResponsibility: _cmd];
 }
 
-- (NSUInteger) resultCount
+- (int) resultCount
 {
   [self subclassResponsibility: _cmd];
   return 0;
@@ -304,7 +304,7 @@ NSString * const NSMetadataQueryGatheringProgressNotification
   [self subclassResponsibility: _cmd];
 }
 
-- (id) valueOfAttribute: (id)attr forResultAtIndex: (NSUInteger)index
+- (id) valueOfAttribute: (id)attr forResultAtIndex: (int)index
 {
   return [self subclassResponsibility: _cmd];
 }
@@ -345,7 +345,7 @@ _NSMetadataQueryAttributeValueTupleInternal)
   return this->_attribute;
 }
 
-- (NSUInteger) count
+- (int) count
 {
   return this->_count;
 }
@@ -414,12 +414,12 @@ _NSMetadataQueryResultGroupInternal)
   return self;
 }
 
-- (id) resultAtIndex: (NSUInteger)index
+- (id) resultAtIndex: (int)index
 {
   return [this->_subgroups objectAtIndex:index];
 }
 
-- (NSUInteger) resultCount
+- (int) resultCount
 {
   return [this->_subgroups count];
 }

@@ -868,7 +868,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * Create a string of unicode characters.
  */
 + (id) stringWithCharacters: (const unichar*)chars
-		     length: (NSUInteger)length
+		     length: (int)length
 {
   NSString	*obj;
 
@@ -916,7 +916,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * (Characters will be converted to unicode representation internally.)
  */
 + (id) stringWithCString: (const char*)byteString
-		  length: (NSUInteger)length
+		  length: (int)length
 {
   NSString	*obj;
 
@@ -1093,7 +1093,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * is released and nil is returned.
  */
 - (id) initWithBytes: (const void*)bytes
-	      length: (NSUInteger)length
+	      length: (int)length
 	    encoding: (NSStringEncoding)encoding
 {
   if (length == 0)
@@ -1135,7 +1135,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * this initialiser in order to have all other functionality.</p>
  */
 - (id) initWithBytesNoCopy: (void*)bytes
-		    length: (NSUInteger)length
+		    length: (int)length
 		  encoding: (NSStringEncoding)encoding
 	      freeWhenDone: (BOOL)flag
 {
@@ -1150,7 +1150,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * See -initWithBytesNoCopy:length:encoding:freeWhenDone: for more details.
  */
 - (id) initWithCharactersNoCopy: (unichar*)chars
-			 length: (NSUInteger)length
+			 length: (int)length
 		   freeWhenDone: (BOOL)flag
 {
   return [self initWithBytesNoCopy: chars
@@ -1164,7 +1164,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  *  of null bytes.  Copies the string and frees copy when deallocated.</p>
  */
 - (id) initWithCharacters: (const unichar*)chars
-		   length: (NSUInteger)length
+		   length: (int)length
 {
   return [self initWithBytes: chars
 		      length: length * sizeof(unichar)
@@ -1179,7 +1179,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * See -initWithBytesNoCopy:length:encoding:freeWhenDone: for more details.
  */
 - (id) initWithCStringNoCopy: (char*)byteString
-		      length: (NSUInteger)length
+		      length: (int)length
 		freeWhenDone: (BOOL)flag
 {
   return [self initWithBytesNoCopy: byteString
@@ -1206,7 +1206,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  *  presence of null bytes.  Characters converted to unicode based on the
  *  default C encoding.  Copies the string.</p>
  */
-- (id) initWithCString: (const char*)byteString  length: (NSUInteger)length
+- (id) initWithCString: (const char*)byteString  length: (int)length
 {
   return [self initWithBytes: byteString
 		      length: length
@@ -1717,7 +1717,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * Returns the number of Unicode characters in this string, including the
  * individual characters of composed character sequences,
  */
-- (NSUInteger) length
+- (int) length
 {
   [self subclassResponsibility: _cmd];
   return 0;
@@ -1729,7 +1729,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * Returns unicode character at index.  <code>unichar</code> is an unsigned
  * short.  Thus, a 16-bit character is returned.
  */
-- (unichar) characterAtIndex: (NSUInteger)index
+- (unichar) characterAtIndex: (int)index
 {
   [self subclassResponsibility: _cmd];
   return (unichar)0;
@@ -2026,7 +2026,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * If the supplied index is greater than or equal to the length of the
  * receiver an exception is raised.
  */
-- (NSString*) substringFromIndex: (NSUInteger)index
+- (NSString*) substringFromIndex: (int)index
 {
   return [self substringWithRange: ((NSRange){index, [self length]-index})];
 }
@@ -2039,7 +2039,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * If the supplied index is greater than the length of the receiver
  * an exception is raised.
  */
-- (NSString*) substringToIndex: (NSUInteger)index
+- (NSString*) substringToIndex: (int)index
 {
   return [self substringWithRange: ((NSRange){0,index})];
 }
@@ -2103,7 +2103,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * string).
  */
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
-			    options: (NSUInteger)mask
+			    options: (int)mask
 {
   NSRange all = NSMakeRange(0, [self length]);
 
@@ -2122,7 +2122,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * string).  Search only carried out within aRange.
  */
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
-			    options: (NSUInteger)mask
+			    options: (int)mask
 			      range: (NSRange)aRange
 {
   unsigned int	i;
@@ -2189,7 +2189,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * set to the range of the whole of the receiver.
  */
 - (NSRange) rangeOfString: (NSString*)string
-		  options: (NSUInteger)mask
+		  options: (int)mask
 {
   NSRange	all = NSMakeRange(0, [self length]);
 
@@ -2224,7 +2224,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * string.  Options should be OR'd together using <code>'|'</code>.
  */
 - (NSRange) rangeOfString: (NSString *)aString
-		  options: (NSUInteger)mask
+		  options: (int)mask
 		    range: (NSRange)aRange
 {
   return [self rangeOfString: aString
@@ -2690,7 +2690,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
   return strRangeNsNs(self, aString, mask, searchRange);
 }
 
-- (NSUInteger) indexOfString: (NSString *)substring
+- (int) indexOfString: (NSString *)substring
 {
   NSRange range = {0, [self length]};
 
@@ -2698,8 +2698,8 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
   return range.length ? range.location : NSNotFound;
 }
 
-- (NSUInteger) indexOfString: (NSString*)substring
-                   fromIndex: (NSUInteger)index
+- (int) indexOfString: (NSString*)substring
+                   fromIndex: (int)index
 {
   NSRange range = {index, [self length] - index};
 
@@ -2714,7 +2714,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
  * character sequence anIndex (note indices start from 0), returns the full
  * range of this sequence.
  */
-- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex
+- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (int)anIndex
 {
 static NSCharacterSet	*nonbase = nil;
 static SEL              nbSel;
@@ -2773,7 +2773,7 @@ static BOOL             (*nbImp)(id, SEL, unichar) = 0;
  * sequences may be used to express the same character.</p>
  */
 - (NSComparisonResult) compare: (NSString*)aString
-		       options: (NSUInteger)mask
+		       options: (int)mask
 {
   return [self compare: aString options: mask
 		 range: ((NSRange){0, [self length]})];
@@ -2790,7 +2790,7 @@ static BOOL             (*nbImp)(id, SEL, unichar) = 0;
  */
 // xxx Should implement full POSIX.2 collate
 - (NSComparisonResult) compare: (NSString*)aString
-		       options: (NSUInteger)mask
+		       options: (int)mask
 			 range: (NSRange)aRange
 {
   return [self compare: aString
@@ -2873,7 +2873,7 @@ static BOOL             (*nbImp)(id, SEL, unichar) = 0;
  * for other purposes in a bitfield in the concrete string subclasses, so we
  * must not use the full unsigned integer.
  */
-- (NSUInteger) hash
+- (int) hash
 {
   uint32_t	ret = 0;
   int   	len = (int)[self length];
@@ -2919,7 +2919,7 @@ static BOOL             (*nbImp)(id, SEL, unichar) = 0;
  *  the same character.
  */
 - (NSString*) commonPrefixWithString: (NSString*)aString
-			     options: (NSUInteger)mask
+			     options: (int)mask
 {
   if (mask & NSLiteralSearch)
     {
@@ -3500,7 +3500,7 @@ static BOOL             (*nbImp)(id, SEL, unichar) = 0;
  * specified encoding (without adding a nul character terminator).<br />
  * Returns 0 if the conversion is not possible.
  */
-- (NSUInteger) lengthOfBytesUsingEncoding: (NSStringEncoding)encoding
+- (int) lengthOfBytesUsingEncoding: (NSStringEncoding)encoding
 {
   NSData	*d;
 
@@ -3513,7 +3513,7 @@ static BOOL             (*nbImp)(id, SEL, unichar) = 0;
  * specified encoding (without adding a nul character terminator).  This may
  * be larger than the actual number of bytes needed.
  */
-- (NSUInteger) maximumLengthOfBytesUsingEncoding: (NSStringEncoding)encoding
+- (int) maximumLengthOfBytesUsingEncoding: (NSStringEncoding)encoding
 {
   if (encoding == NSUnicodeStringEncoding)
     return [self length] * 2;
@@ -3566,7 +3566,7 @@ static BOOL             (*nbImp)(id, SEL, unichar) = 0;
  *  information loss, the results are unpredictable.  Check
  *  -canBeConvertedToEncoding: first.
  */
-- (NSUInteger) cStringLength
+- (int) cStringLength
 {
   NSData	*d;
 
@@ -3591,7 +3591,7 @@ static BOOL             (*nbImp)(id, SEL, unichar) = 0;
  * Use -getCString:maxLength:encoding: instead.
  */
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 {
   [self getCString: buffer maxLength: maxLength
 	     range: ((NSRange){0, [self length]})
@@ -3617,7 +3617,7 @@ static BOOL             (*nbImp)(id, SEL, unichar) = 0;
  * twelve if NSUnicodeStringEncoding is requested. 
  */
 - (BOOL) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	   encoding: (NSStringEncoding)encoding
 {
   if (0 == maxLength || 0 == buffer) return NO;
@@ -3663,7 +3663,7 @@ static BOOL             (*nbImp)(id, SEL, unichar) = 0;
  * Use -getCString:maxLength:encoding: instead.
  */
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	      range: (NSRange)aRange
      remainingRange: (NSRange*)leftoverRange
 {
@@ -4007,7 +4007,7 @@ static BOOL             (*nbImp)(id, SEL, unichar) = 0;
   return NSUnicodeStringEncoding;
 }
 
-- (NSUInteger) completePathIntoString: (NSString**)outputName
+- (int) completePathIntoString: (NSString**)outputName
                         caseSensitive: (BOOL)flag
                      matchesIntoArray: (NSArray**)outputArray
                           filterTypes: (NSArray*)filterTypes
@@ -4091,7 +4091,7 @@ static NSFileManager *fm = nil;
 }
 
 - (BOOL) getFileSystemRepresentation: (GSNativeChar*)buffer
-			   maxLength: (NSUInteger)size
+			   maxLength: (int)size
 {
   const unichar	*ptr;
   unsigned	i;
@@ -4132,7 +4132,7 @@ static NSFileManager *fm = nil;
 }
 
 - (BOOL) getFileSystemRepresentation: (GSNativeChar*)buffer
-			   maxLength: (NSUInteger)size
+			   maxLength: (int)size
 {
   const char* ptr;
 
@@ -4708,9 +4708,9 @@ static NSFileManager *fm = nil;
  * as required).  The first character from padString to be appended
  * is specified by padIndex.<br />
  */
-- (NSString*) stringByPaddingToLength: (NSUInteger)newLength
+- (NSString*) stringByPaddingToLength: (int)newLength
 			   withString: (NSString*)padString
-		      startingAtIndex: (NSUInteger)padIndex
+		      startingAtIndex: (int)padIndex
 {
   unsigned	length = [self length];
   unsigned	padLength;
@@ -5569,7 +5569,7 @@ static NSFileManager *fm = nil;
  * </p>
  */
 - (NSComparisonResult) compare: (NSString *)string
-		       options: (NSUInteger)mask
+		       options: (int)mask
 			 range: (NSRange)compareRange
 			locale: (id)locale
 {
@@ -6033,7 +6033,7 @@ static NSFileManager *fm = nil;
   return GSPropertyListFromStringsFormat(self);
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
   NSUInteger    size = [super sizeInBytesExcluding: exclude];
 
@@ -6085,7 +6085,7 @@ static NSFileManager *fm = nil;
 /**
  * Constructs an empty string with initial buffer size of capacity.
  */
-+ (NSMutableString*) stringWithCapacity: (NSUInteger)capacity
++ (NSMutableString*) stringWithCapacity: (int)capacity
 {
   return AUTORELEASE([[GSMutableStringClass allocWithZone:
     NSDefaultMallocZone()] initWithCapacity: capacity]);
@@ -6096,7 +6096,7 @@ static NSFileManager *fm = nil;
  */
 // Inefficient implementation.
 + (id) stringWithCharacters: (const unichar*)characters
-		     length: (NSUInteger)length
+		     length: (int)length
 {
   return AUTORELEASE([[GSMutableStringClass allocWithZone:
     NSDefaultMallocZone()] initWithCharacters: characters length: length]);
@@ -6130,7 +6130,7 @@ static NSFileManager *fm = nil;
  * (Characters will be converted to unicode representation internally.)
  */
 + (id) stringWithCString: (const char*)byteString
-		  length: (NSUInteger)length
+		  length: (int)length
 {
   return AUTORELEASE([[GSMutableStringClass allocWithZone:
     NSDefaultMallocZone()] initWithCString: byteString length: length]);
@@ -6156,14 +6156,14 @@ static NSFileManager *fm = nil;
  * and needs to be re-implemented in subclasses in order to have all
  * other initialisers work.
  */
-- (id) initWithCapacity: (NSUInteger)capacity
+- (id) initWithCapacity: (int)capacity
 {
   self = [self init];
   return self;
 }
 
 - (id) initWithCharactersNoCopy: (unichar*)chars
-			 length: (NSUInteger)length
+			 length: (int)length
 		   freeWhenDone: (BOOL)flag
 {
   if ((self = [self initWithCapacity: length]) != nil && length > 0)
@@ -6181,7 +6181,7 @@ static NSFileManager *fm = nil;
 }
 
 - (id) initWithCStringNoCopy: (char*)chars
-		      length: (NSUInteger)length
+		      length: (int)length
 		freeWhenDone: (BOOL)flag
 {
   if ((self = [self initWithCapacity: length]) != nil && length > 0)
@@ -6245,7 +6245,7 @@ static NSFileManager *fm = nil;
 /**
  * Modifies this instance by inserting aString at loc.
  */
-- (void) insertString: (NSString*)aString atIndex: (NSUInteger)loc
+- (void) insertString: (NSString*)aString atIndex: (int)loc
 {
   NSRange range = {loc, 0};
   [self replaceCharactersInRange: range withString: aString];
@@ -6272,9 +6272,9 @@ static NSFileManager *fm = nil;
  * Raises NSRangeException if part of searchRange is beyond the end
  * of the receiver.
  */
-- (NSUInteger) replaceOccurrencesOfString: (NSString*)replace
+- (int) replaceOccurrencesOfString: (NSString*)replace
                                withString: (NSString*)by
-                                  options: (NSUInteger)opts
+                                  options: (int)opts
                                     range: (NSRange)searchRange
 {
   NSRange	range;

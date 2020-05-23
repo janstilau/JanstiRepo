@@ -98,7 +98,7 @@
  * be constant after the object's creation, or that the object may not be
  * modified while stored in an unordered collection.
  */
-- (NSUInteger) hash;
+- (int) hash;
 /**
  * Returns the receiver.  In a proxy, this may (but is not required to) return
  * the proxied object.
@@ -171,7 +171,7 @@
  * autorelease operations.  Its value is therefore largely meaningless.  It can
  * occasionally be useful for debugging.
  */
-- (NSUInteger) retainCount NS_AUTOMATED_REFCOUNT_UNAVAILABLE;
+- (int) retainCount NS_AUTOMATED_REFCOUNT_UNAVAILABLE;
 /**
  * Returns the description of the object.  This is used by the %@ format
  * specifier in strings.

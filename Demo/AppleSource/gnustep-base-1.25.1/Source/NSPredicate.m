@@ -638,7 +638,7 @@ extern void     GSPropertyListMake(id,NSDictionary*,BOOL,BOOL,unsigned,id*);
                               rightExpression: (NSExpression *)right
                                      modifier: (NSComparisonPredicateModifier)modifier
                                          type: (NSPredicateOperatorType)type
-                                      options: (NSUInteger)opts
+                                      options: (int)opts
 {
   return AUTORELEASE([[self alloc] initWithLeftExpression: left 
                                           rightExpression: right
@@ -665,7 +665,7 @@ extern void     GSPropertyListMake(id,NSDictionary*,BOOL,BOOL,unsigned,id*);
               rightExpression: (NSExpression *)right
                      modifier: (NSComparisonPredicateModifier)modifier
                          type: (NSPredicateOperatorType)type
-                      options: (NSUInteger)opts
+                      options: (int)opts
 {
   if ((self = [super init]) != nil)
     {
@@ -700,7 +700,7 @@ extern void     GSPropertyListMake(id,NSDictionary*,BOOL,BOOL,unsigned,id*);
   return _left;
 }
 
-- (NSUInteger) options
+- (int) options
 {
   return _options;
 }

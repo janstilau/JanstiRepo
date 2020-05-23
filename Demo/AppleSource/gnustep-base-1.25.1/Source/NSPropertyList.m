@@ -448,7 +448,7 @@ foundIgnorableWhitespace: (NSString *)string
 - (id) initWithData: (NSData*)plData
 	 mutability: (NSPropertyListMutabilityOptions)m;
 - (id) rootObject;
-- (id) objectAtIndex: (NSUInteger)index;
+- (id) objectAtIndex: (int)index;
 
 @end
 
@@ -2992,7 +2992,7 @@ NSAssert(pos + 4 < _length, NSInvalidArgumentException);
   return [self objectAtIndex: root_index];
 }
 
-- (BOOL)_pushObject: (NSUInteger)index
+- (BOOL)_pushObject: (int)index
 {
   uintptr_t val;
   if (nil == _stack)
@@ -3005,7 +3005,7 @@ NSAssert(pos + 4 < _length, NSInvalidArgumentException);
   return NO == NSHashInsertIfAbsent(_stack, (void*)val);
 }
 
-- (void)_popObject: (NSUInteger)index
+- (void)_popObject: (int)index
 {
   if (_stack != nil)
     {
@@ -3014,7 +3014,7 @@ NSAssert(pos + 4 < _length, NSInvalidArgumentException);
     }
 }
 
-- (id) objectAtIndex: (NSUInteger)index
+- (id) objectAtIndex: (int)index
 {
   unsigned char	next;
   unsigned counter = [self offsetForIndex: index];

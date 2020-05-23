@@ -75,7 +75,7 @@ static Class	gcClass = 0;
   return result;
 }
 
-- (NSUInteger) count
+- (int) count
 {
   return _count;
 }
@@ -144,7 +144,7 @@ static Class	gcClass = 0;
     }
 }
 
-- (id) initWithObjects: (const id[])objects count: (NSUInteger)count
+- (id) initWithObjects: (const id[])objects count: (int)count
 {
   _contents = NSZoneMalloc([self zone], count * (sizeof(id) + sizeof(BOOL)));
   _isGCObject = (BOOL*)&_contents[count];
@@ -203,7 +203,7 @@ static Class	gcClass = 0;
     return [[GCMutableArray allocWithZone: zone] initWithArray: self];
 }
 
-- (id) objectAtIndex: (NSUInteger)index
+- (id) objectAtIndex: (int)index
 {
   if (index >= _count)
     {
@@ -282,7 +282,7 @@ static Class	gcClass = 0;
   return self;
 }
 
-- (id) initWithCapacity: (NSUInteger)aNumItems
+- (id) initWithCapacity: (int)aNumItems
 {
   if (aNumItems < 1)
     {
@@ -296,7 +296,7 @@ static Class	gcClass = 0;
   return self;
 }
 
-- (id) initWithObjects: (const id [])objects count: (NSUInteger)count
+- (id) initWithObjects: (const id [])objects count: (int)count
 {
   self = [self initWithCapacity: count];
   if (self != nil)
@@ -320,7 +320,7 @@ static Class	gcClass = 0;
   return self;
 }
 
-- (void) insertObject: (id)anObject atIndex: (NSUInteger)index
+- (void) insertObject: (id)anObject atIndex: (int)index
 {
   NSUInteger i;
 
@@ -376,7 +376,7 @@ static Class	gcClass = 0;
   [self removeObjectsInRange: NSMakeRange(0, _count)];
 }
 
-- (void) removeObjectAtIndex: (NSUInteger)index
+- (void) removeObjectAtIndex: (int)index
 {
   [self removeObjectsInRange: NSMakeRange(index, 1)];
 }
@@ -408,7 +408,7 @@ static Class	gcClass = 0;
   _count -= range.length;
 }
 
-- (void) replaceObjectAtIndex: (NSUInteger)index  withObject: (id)anObject
+- (void) replaceObjectAtIndex: (int)index  withObject: (id)anObject
 {
   if (anObject == nil)
     {

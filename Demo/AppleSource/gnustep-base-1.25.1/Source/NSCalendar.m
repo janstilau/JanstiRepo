@@ -306,7 +306,7 @@ static NSRecursiveLock *classLock = nil;
 }
 
 
-- (NSDateComponents *) components: (NSUInteger) unitFlags
+- (NSDateComponents *) components: (int) unitFlags
                          fromDate: (NSDate *) date
 {
 #if GS_USE_ICU == 1
@@ -375,10 +375,10 @@ do \
   } while (0)
 
 
-- (NSDateComponents *) components: (NSUInteger) unitFlags
+- (NSDateComponents *) components: (int) unitFlags
                          fromDate: (NSDate *) startingDate
                            toDate: (NSDate *) resultDate
-                          options: (NSUInteger) opts
+                          options: (int) opts
 {
 #if GS_USE_ICU == 1 && (U_ICU_VERSION_MAJOR_NUM > 4 \
   || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >= 8))
@@ -454,7 +454,7 @@ do \
 
 - (NSDate *) dateByAddingComponents: (NSDateComponents *) comps
                              toDate: (NSDate *) date
-                            options: (NSUInteger) opts
+                            options: (int) opts
 {
 #if GS_USE_ICU == 1
   NSInteger amount;
@@ -601,12 +601,12 @@ do \
   [self _setLocaleIdentifier: [self _localeIDWithLocale: locale]];
 }
 
-- (NSUInteger) firstWeekday
+- (int) firstWeekday
 {
   return my->firstWeekday;
 }
 
-- (void) setFirstWeekday: (NSUInteger)weekday
+- (void) setFirstWeekday: (int)weekday
 {
   my->firstWeekday = weekday;
 #if GS_USE_ICU == 1
@@ -614,12 +614,12 @@ do \
 #endif
 }
 
-- (NSUInteger) minimumDaysInFirstWeek
+- (int) minimumDaysInFirstWeek
 {
   return my->minimumDaysInFirstWeek;
 }
 
-- (void) setMinimumDaysInFirstWeek: (NSUInteger)mdw
+- (void) setMinimumDaysInFirstWeek: (int)mdw
 {
   my->minimumDaysInFirstWeek = (int32_t)mdw;
 #if GS_USE_ICU == 1
@@ -694,7 +694,7 @@ do \
 #endif
 }
 
-- (NSUInteger) ordinalityOfUnit: (NSCalendarUnit) smaller
+- (int) ordinalityOfUnit: (NSCalendarUnit) smaller
                          inUnit: (NSCalendarUnit) larger
                         forDate: (NSDate *) date
 {

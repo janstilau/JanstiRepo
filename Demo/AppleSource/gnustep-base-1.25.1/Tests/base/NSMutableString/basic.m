@@ -12,7 +12,7 @@
 @implementation CustomString
 
 - (id) initWithBytesNoCopy: (void *)c
-		    length: (NSUInteger)l
+		    length: (int)l
 		  encoding: (NSStringEncoding)encoding
 	      freeWhenDone: (BOOL)freeWhenDone
 {
@@ -52,12 +52,12 @@
   [super dealloc];
 }
 
-- (NSUInteger) length
+- (int) length
 {
   return length;
 }
 
-- (unichar) characterAtIndex: (NSUInteger)index
+- (unichar) characterAtIndex: (int)index
 {
   return characters[index];
 }

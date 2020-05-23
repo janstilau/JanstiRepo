@@ -65,7 +65,7 @@ Use an NSMethodSignature object to forward messages that the receiving object do
  * Number of bytes that the full set of arguments occupies on the stack, which
  * is platform(hardware)-dependent.
  */
-- (NSUInteger) frameLength;
+- (int) frameLength;
 
 /**
  * Returns Objective-C <code>@encode(...)</code> compatible string.  Arguments
@@ -74,7 +74,7 @@ Use an NSMethodSignature object to forward messages that the receiving object do
  * <code><em>_cmd</em></code> (type <code>SEL</code>, at position 1).<br />
  * Type strings may include leading type qualifiers.
  */
-- (const char*) getArgumentTypeAtIndex: (NSUInteger)index;
+- (const char*) getArgumentTypeAtIndex: (int)index;
 
 /**
  * Pertains to distributed objects; method is asynchronous when invoked and
@@ -86,7 +86,7 @@ Use an NSMethodSignature object to forward messages that the receiving object do
  * Number of bytes that the return value occupies on the stack, which is
  * platform(hardware)-dependent.
  */
-- (NSUInteger) methodReturnLength;
+- (int) methodReturnLength;
 
 /**
  * Returns an Objective-C <code>@encode(...)</code> compatible string
@@ -99,7 +99,7 @@ Use an NSMethodSignature object to forward messages that the receiving object do
  * Returns number of arguments to method, including the implicit
  * <code><em>self</em></code> and <code><em>_cmd</em></code>.
  */
-- (NSUInteger) numberOfArguments;
+- (int) numberOfArguments;
 
 @end
 

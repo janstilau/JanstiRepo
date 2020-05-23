@@ -95,7 +95,7 @@
   [super dealloc];
 }
 
-- (NSInteger) read: (uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) read: (uint8_t *)buffer maxLength: (int)len
 {
   int readLen;
 
@@ -230,7 +230,7 @@
   [super dealloc];
 }
 
-- (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) write: (const uint8_t *)buffer maxLength: (int)len
 {
   int writeLen;
 
@@ -537,7 +537,7 @@
     initWithData: [url resourceDataUsingCache: YES]];
 }
 
-- (NSInteger) read: (uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) read: (uint8_t *)buffer maxLength: (int)len
 {
   [self subclassResponsibility: _cmd];
   return -1;
@@ -547,7 +547,7 @@
 
 @implementation NSOutputStream
 
-+ (id) outputStreamToBuffer: (uint8_t *)buffer capacity: (NSUInteger)capacity
++ (id) outputStreamToBuffer: (uint8_t *)buffer capacity: (int)capacity
 {
   return AUTORELEASE([[GSBufferOutputStream alloc] 
     initToBuffer: buffer capacity: capacity]);  
@@ -570,7 +570,7 @@
   return NO;
 }
 
-- (id) initToBuffer: (uint8_t *)buffer capacity: (NSUInteger)capacity
+- (id) initToBuffer: (uint8_t *)buffer capacity: (int)capacity
 {
   DESTROY(self);
   return [[GSBufferOutputStream alloc] initToBuffer: buffer capacity: capacity];
@@ -589,7 +589,7 @@
   return [[GSDataOutputStream alloc] init];
 }
 
-- (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len
+- (NSInteger) write: (const uint8_t *)buffer maxLength: (int)len
 {
   [self subclassResponsibility: _cmd];
   return -1;  

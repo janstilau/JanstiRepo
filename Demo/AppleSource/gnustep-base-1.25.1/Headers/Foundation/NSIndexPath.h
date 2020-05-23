@@ -37,12 +37,12 @@ extern "C" {
 /**
  * Return a path containing the single value anIndex.
  */
-+ (id) indexPathWithIndex: (NSUInteger)anIndex;
++ (id) indexPathWithIndex: (int)anIndex;
 
 /**
  * Return a path containing all the indexes in the supplied array.
  */
-+ (id) indexPathWithIndexes: (NSUInteger*)indexes length: (NSUInteger)length;
++ (id) indexPathWithIndexes: (NSUInteger*)indexes length: (int)length;
 
 /**
  * Compares other with the receiver.<br />
@@ -62,12 +62,12 @@ extern "C" {
  * Return the index at the specified position or NSNotFound if there
  * is no index at the specified position.
  */
-- (NSUInteger) indexAtPosition: (NSUInteger)position;
+- (int) indexAtPosition: (int)position;
 
 /**
  * Return path formed by adding anIndex to the receiver.
  */
-- (NSIndexPath *) indexPathByAddingIndex: (NSUInteger)anIndex;
+- (NSIndexPath *) indexPathByAddingIndex: (int)anIndex;
 
 /**
  * Return path formed by removing the last index from the receiver.
@@ -78,18 +78,18 @@ extern "C" {
  * Returns the shared instance containing the specified index, creating it
  * and destroying the receiver if necessary.
  */
-- (id) initWithIndex: (NSUInteger)anIndex;
+- (id) initWithIndex: (int)anIndex;
 
 /** <init />
  * Returns the shared instance containing the specified index array,
  * creating it and destroying the receiver if necessary.
  */
-- (id) initWithIndexes: (NSUInteger*)indexes length: (NSUInteger)length;
+- (id) initWithIndexes: (NSUInteger*)indexes length: (int)length;
 
 /**
  * Returns the number of index values present in the receiver.
  */
-- (NSUInteger) length;
+- (int) length;
 
 @end
 

@@ -50,12 +50,12 @@ extern "C" {
 /**
  * Returns the maximum number of objects that are supported by this cache.
  */
-- (NSUInteger) countLimit;
+- (int) countLimit;
 
 /**
  * Returns the total cost of all objects held in the cache.
  */
-- (NSUInteger) totalCostLimit;
+- (int) totalCostLimit;
 
 /**
  * Returns the cache's delegate.
@@ -95,7 +95,7 @@ extern "C" {
  * advisory; caches may choose to disregard it temporarily or permanently.  A
  * limit of 0 is used to indicate no limit; this is the default.
  */
-- (void) setCountLimit: (NSUInteger)lim;
+- (void) setCountLimit: (int)lim;
 
 /**
  * Sets the delegate for this cache.  The delegate will be notified when an
@@ -121,7 +121,7 @@ extern "C" {
  */
 - (void) setObject: (GS_GENERIC_TYPE(ValT))obj
             forKey: (GS_GENERIC_TYPE(KeyT))key
-              cost: (NSUInteger)num;
+              cost: (int)num;
 
 /**
  * Adds an object to the cache without associating a cost with it.
@@ -134,7 +134,7 @@ extern "C" {
  * advisory; caches may choose to disregard it temporarily or permanently.  A
  * limit of 0 is used to indicate no limit; this is the default.
  */
-- (void) setTotalCostLimit: (NSUInteger)lim;
+- (void) setTotalCostLimit: (int)lim;
 @end
 
 /**

@@ -199,13 +199,13 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 
 + (id) string;
 + (id) stringWithCharacters: (const unichar*)chars
-		     length: (NSUInteger)length;
+		     length: (int)length;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST) && GS_API_VERSION( 10200,GS_API_LATEST)
 + (id) stringWithCString: (const char*)byteString
 		encoding: (NSStringEncoding)encoding;
 #endif
 + (id) stringWithCString: (const char*)byteString
-		  length: (NSUInteger)length;
+		  length: (int)length;
 + (id) stringWithCString: (const char*)byteString;
 + (id) stringWithFormat: (NSString*)format, ... NS_FORMAT_FUNCTION(1,2);
 + (id) stringWithContentsOfFile:(NSString *)path;
@@ -214,10 +214,10 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 - (id) init;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST) && GS_API_VERSION( 10200,GS_API_LATEST)
 - (id) initWithBytes: (const void*)bytes
-	      length: (NSUInteger)length
+	      length: (int)length
 	    encoding: (NSStringEncoding)encoding;
 - (id) initWithBytesNoCopy: (void*)bytes
-		    length: (NSUInteger)length
+		    length: (int)length
 		  encoding: (NSStringEncoding)encoding 
 	      freeWhenDone: (BOOL)flag;
 #endif
@@ -266,15 +266,15 @@ typedef NSUInteger NSStringEncodingConversionOptions;
                                       withString: (NSString*)by;
 #endif
 - (id) initWithCharactersNoCopy: (unichar*)chars
-			 length: (NSUInteger)length
+			 length: (int)length
 		   freeWhenDone: (BOOL)flag;
 - (id) initWithCharacters: (const unichar*)chars
-		   length: (NSUInteger)length;
+		   length: (int)length;
 - (id) initWithCStringNoCopy: (char*)byteString
-		      length: (NSUInteger)length
+		      length: (int)length
 	        freeWhenDone: (BOOL)flag;
 - (id) initWithCString: (const char*)byteString
-	        length: (NSUInteger)length;
+	        length: (int)length;
 - (id) initWithCString: (const char*)byteString;
 - (id) initWithString: (NSString*)string;
 - (id) initWithFormat: (NSString*)format, ... NS_FORMAT_FUNCTION(1,2);
@@ -285,10 +285,10 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 - (id) initWithContentsOfFile: (NSString*)path;
 
 // Getting a String's Length
-- (NSUInteger) length;
+- (int) length;
 
 // Accessing Characters
-- (unichar) characterAtIndex: (NSUInteger)index;
+- (unichar) characterAtIndex: (int)index;
 - (void) getCharacters: (unichar*)buffer;
 - (void) getCharacters: (unichar*)buffer
 		 range: (NSRange)aRange;
@@ -300,25 +300,25 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 
 // Dividing Strings into Substrings
 - (NSArray*) componentsSeparatedByString: (NSString*)separator;
-- (NSString*) substringFromIndex: (NSUInteger)index;
-- (NSString*) substringToIndex: (NSUInteger)index;
+- (NSString*) substringFromIndex: (int)index;
+- (NSString*) substringToIndex: (int)index;
 
 // Finding Ranges of Characters and Substrings
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet;
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
-			    options: (NSUInteger)mask;
+			    options: (int)mask;
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
-			    options: (NSUInteger)mask
+			    options: (int)mask
 			      range: (NSRange)aRange;
 - (NSRange) rangeOfString: (NSString*)string;
 - (NSRange) rangeOfString: (NSString*)string
-		  options: (NSUInteger)mask;
+		  options: (int)mask;
 - (NSRange) rangeOfString: (NSString*)aString
-		  options: (NSUInteger)mask
+		  options: (int)mask
 		    range: (NSRange)aRange;
 
 // Determining Composed Character Sequences
-- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex;
+- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (int)anIndex;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_2,GS_API_LATEST) 
 /** Returns a copy of the receiver normalised using the KD form.
@@ -345,19 +345,19 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 // Identifying and Comparing Strings
 - (NSComparisonResult) compare: (NSString*)aString;
 - (NSComparisonResult) compare: (NSString*)aString	
-		       options: (NSUInteger)mask;
+		       options: (int)mask;
 - (NSComparisonResult) compare: (NSString*)aString
-		       options: (NSUInteger)mask
+		       options: (int)mask
 			 range: (NSRange)aRange;
 - (BOOL) hasPrefix: (NSString*)aString;
 - (BOOL) hasSuffix: (NSString*)aString;
 - (BOOL) isEqual: (id)anObject;
 - (BOOL) isEqualToString: (NSString*)aString;
-- (NSUInteger) hash;
+- (int) hash;
 
 // Getting a Shared Prefix
 - (NSString*) commonPrefixWithString: (NSString*)aString
-			     options: (NSUInteger)mask;
+			     options: (int)mask;
 
 // Changing Case
 - (NSString*) capitalizedString;
@@ -371,21 +371,21 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST) && GS_API_VERSION( 10200,GS_API_LATEST)
 - (const char*) cStringUsingEncoding: (NSStringEncoding)encoding;
 - (BOOL) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	   encoding: (NSStringEncoding)encoding;
 - (id) initWithCString: (const char*)byteString
 	      encoding: (NSStringEncoding)encoding;
-- (NSUInteger) lengthOfBytesUsingEncoding: (NSStringEncoding)encoding;
-- (NSUInteger) maximumLengthOfBytesUsingEncoding: (NSStringEncoding)encoding;
+- (int) lengthOfBytesUsingEncoding: (NSStringEncoding)encoding;
+- (int) maximumLengthOfBytesUsingEncoding: (NSStringEncoding)encoding;
 #endif
 
 #endif
-- (NSUInteger) cStringLength;
+- (int) cStringLength;
 - (void) getCString: (char*)buffer;
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength;
+	  maxLength: (int)maxLength;
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	      range: (NSRange)aRange
      remainingRange: (NSRange*)leftoverRange;
 
@@ -413,7 +413,7 @@ typedef NSUInteger NSStringEncodingConversionOptions;
  * completions.  Returns 0 if no match found, else a positive number that is
  * only accurate if outputArray was non-nil.
  */
-- (NSUInteger) completePathIntoString: (NSString**)outputName
+- (int) completePathIntoString: (NSString**)outputName
 			caseSensitive: (BOOL)flag
 		     matchesIntoArray: (NSArray**)outputArray
 			  filterTypes: (NSArray*)filterTypes;
@@ -444,7 +444,7 @@ typedef NSUInteger NSStringEncodingConversionOptions;
  * perform the conversion.
  */
 - (BOOL) getFileSystemRepresentation: (GSNativeChar*)buffer
-			   maxLength: (NSUInteger)size;
+			   maxLength: (int)size;
 
 /**
  * Returns a string containing the last path component of the receiver.<br />
@@ -692,7 +692,7 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 - (NSString*) substringWithRange: (NSRange)aRange;
 - (NSComparisonResult) caseInsensitiveCompare: (NSString*)aString;
 - (NSComparisonResult) compare: (NSString*)string 
-		       options: (NSUInteger)mask 
+		       options: (int)mask 
 			 range: (NSRange)compareRange 
 			locale: (id)locale;
 - (NSComparisonResult) localizedCompare: (NSString *)string;
@@ -710,9 +710,9 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 - (NSRange) lineRangeForRange: (NSRange)aRange;
 - (const char*) lossyCString;
 - (NSString*) stringByAddingPercentEscapesUsingEncoding: (NSStringEncoding)e;
-- (NSString*) stringByPaddingToLength: (NSUInteger)newLength
+- (NSString*) stringByPaddingToLength: (int)newLength
 			   withString: (NSString*)padString
-		      startingAtIndex: (NSUInteger)padIndex;
+		      startingAtIndex: (int)padIndex;
 - (NSString*) stringByReplacingPercentEscapesUsingEncoding: (NSStringEncoding)e;
 - (NSString*) stringByTrimmingCharactersInSet: (NSCharacterSet*)aSet;
 - (const char *)UTF8String;
@@ -771,27 +771,27 @@ typedef NSUInteger NSStringEncodingConversionOptions;
 // Creating Temporary Strings
 + (id) string;
 + (id) stringWithCharacters: (const unichar*)characters
-		     length: (NSUInteger)length;
+		     length: (int)length;
 + (id) stringWithCString: (const char*)byteString
-		  length: (NSUInteger)length;
+		  length: (int)length;
 + (id) stringWithCString: (const char*)byteString;
 + (id) stringWithFormat: (NSString*)format, ... NS_FORMAT_FUNCTION(1,2);
 + (id) stringWithContentsOfFile: (NSString*)path;
-+ (NSMutableString*) stringWithCapacity: (NSUInteger)capacity;
++ (NSMutableString*) stringWithCapacity: (int)capacity;
 
 // Initializing Newly Allocated Strings
-- (id) initWithCapacity: (NSUInteger)capacity;
+- (id) initWithCapacity: (int)capacity;
 
 // Modify A String
 - (void) appendFormat: (NSString*)format, ... NS_FORMAT_FUNCTION(1,2);
 - (void) appendString: (NSString*)aString;
 - (void) deleteCharactersInRange: (NSRange)range;
-- (void) insertString: (NSString*)aString atIndex: (NSUInteger)loc;
+- (void) insertString: (NSString*)aString atIndex: (int)loc;
 - (void) replaceCharactersInRange: (NSRange)range 
 		       withString: (NSString*)aString;
-- (NSUInteger) replaceOccurrencesOfString: (NSString*)replace
+- (int) replaceOccurrencesOfString: (NSString*)replace
 				 withString: (NSString*)by
-				    options: (NSUInteger)opts
+				    options: (int)opts
 				      range: (NSRange)searchRange;
 - (void) setString: (NSString*)aString;
 

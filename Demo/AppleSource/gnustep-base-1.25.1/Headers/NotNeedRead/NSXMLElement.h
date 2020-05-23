@@ -166,17 +166,17 @@ extern "C" {
 /**
  * Inerts a child node.
  */
-- (void) insertChild: (NSXMLNode*)child atIndex: (NSUInteger)index;
+- (void) insertChild: (NSXMLNode*)child atIndex: (int)index;
 
 /**
  * Inserts a number of children.
  */
-- (void) insertChildren: (NSArray*)children atIndex: (NSUInteger)index;
+- (void) insertChildren: (NSArray*)children atIndex: (int)index;
 
 /**
  * Removes a child node.
  */
-- (void) removeChildAtIndex: (NSUInteger)index;
+- (void) removeChildAtIndex: (int)index;
 
 /**
  * Replaces all existing child nodes with those from the array.
@@ -191,7 +191,7 @@ extern "C" {
 /**
  * Replaces the child at the specified index.
  */
-- (void) replaceChildAtIndex: (NSUInteger)index withNode: (NSXMLNode*)theNode;
+- (void) replaceChildAtIndex: (int)index withNode: (NSXMLNode*)theNode;
 
 /**
  * Merges adjacent text nodes. If a node's value is the empty string,

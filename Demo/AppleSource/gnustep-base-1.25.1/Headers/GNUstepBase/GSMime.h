@@ -62,7 +62,7 @@ extern "C" {
 }
 - (BOOL) atEnd;
 - (BOOL) decodeData: (const void*)sData
-             length: (NSUInteger)length
+             length: (int)length
 	   intoData: (NSMutableData*)dData;
 - (void) setAtEnd: (BOOL)flag;
 @end
@@ -95,7 +95,7 @@ extern "C" {
 - (id) copyWithZone: (NSZone*)z;
 /** How big this header might be when represented as raw MIME data.
  */
-- (NSUInteger) estimatedSize;
+- (int) estimatedSize;
 - (NSString*) fullValue;
 - (id) initWithName: (NSString*)n
 	      value: (NSString*)v;
@@ -112,9 +112,9 @@ extern "C" {
 - (NSMutableData*) rawMimeData;
 - (NSMutableData*) rawMimeDataPreservingCase: (BOOL)preserve;
 - (NSMutableData*) rawMimeDataPreservingCase: (BOOL)preserve
-                                    foldedAt: (NSUInteger)fold;
+                                    foldedAt: (int)fold;
 - (void) rawMimeDataPreservingCase: (BOOL)preserve
-                          foldedAt: (NSUInteger)fold
+                          foldedAt: (int)fold
                                 to: (NSMutableData*)md;
 - (void) setObject: (id)o  forKey: (NSString*)k;
 - (void) setParameter: (NSString*)v forKey: (NSString*)k;
@@ -190,7 +190,7 @@ extern "C" {
 - (void) deleteHeaderNamed: (NSString*)name;
 /** How big this document might be when represented as raw MIME data.
  */
-- (NSUInteger) estimatedSize;
+- (int) estimatedSize;
 - (GSMimeHeader*) headerNamed: (NSString*)name;
 - (NSArray*) headersNamed: (NSString*)name;
 - (NSString*) makeBoundary;
@@ -201,7 +201,7 @@ extern "C" {
 - (GSMimeHeader*) makeMessageID;
 - (NSMutableData*) rawMimeData;
 - (NSMutableData*) rawMimeData: (BOOL)isOuter;
-- (NSMutableData*) rawMimeData: (BOOL)isOuter foldedAt: (NSUInteger)fold;
+- (NSMutableData*) rawMimeData: (BOOL)isOuter foldedAt: (int)fold;
 - (void) setContent: (id)newContent;
 - (void) setContent: (id)newContent
 	       type: (NSString*)type;
@@ -335,7 +335,7 @@ extern "C" {
 /** Returns the maximum line length (excluding the trailing CRLF) to which
  * we will encode data. See also the -setFoldAt: method.
  */ 
-- (NSUInteger) foldAt;
+- (int) foldAt;
 
 /** This method allows you to control the position at which lines in
  * headers and the body data are wrapped.<br />
@@ -346,7 +346,7 @@ extern "C" {
  * long value (greater than the 998 character limit supported by SMTP)
  * actually sets a value of zero, meaning that there is no limit.
  */
-- (void) setFoldAt: (NSUInteger)position;
+- (void) setFoldAt: (int)position;
 
 /** Sets the content transfer encoding used when 8bit data needs to be sent
  * in a 7bit safe form.<br />

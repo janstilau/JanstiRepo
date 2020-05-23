@@ -126,12 +126,12 @@
   _version++;
 }
 
-- (NSUInteger) count
+- (int) count
 {
   return map.nodeCount;
 }
 
-- (NSUInteger) countForObject: (id)anObject
+- (int) countForObject: (id)anObject
 {
   if (anObject)
     {
@@ -173,7 +173,7 @@
   GSIMapEndEnumerator(&enumerator);
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return map.nodeCount;
 }
@@ -184,7 +184,7 @@
 }
 
 /* Designated initialiser */
-- (id) initWithCapacity: (NSUInteger)cap
+- (id) initWithCapacity: (int)cap
 {
   GSIMapInitWithZoneAndCapacity(&map, [self zone], cap);
   return self;
@@ -213,7 +213,7 @@
   return self;
 }
 
-- (id) initWithObjects: (const id[])objs count: (NSUInteger)c
+- (id) initWithObjects: (const id[])objs count: (int)c
 {
   NSUInteger	i;
 
@@ -369,16 +369,16 @@
   return result;
 }
 
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state
+- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state
                                    objects: (id*)stackbuf
-                                     count: (NSUInteger)len
+                                     count: (int)len
 {
   state->mutationsPtr = (unsigned long *)&_version;
   return GSIMapCountByEnumeratingWithStateObjectsCount
     (&map, state, stackbuf, len);
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
   NSUInteger	size = GSPrivateMemorySize(self, exclude);
 

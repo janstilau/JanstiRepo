@@ -1252,7 +1252,7 @@ static void determineOperatingSystem()
     }
 }
 
-- (NSUInteger) operatingSystem
+- (int) operatingSystem
 {
   if (_operatingSystem == 0)
     {
@@ -1306,7 +1306,7 @@ static void determineOperatingSystem()
   return;
 }
 
-- (NSUInteger) processorCount
+- (int) processorCount
 {
   static NSUInteger	procCount = 0;
   static BOOL		beenHere = NO;
@@ -1367,7 +1367,7 @@ static void determineOperatingSystem()
   return procCount;
 }
 
-- (NSUInteger) activeProcessorCount
+- (int) activeProcessorCount
 {
 #if	defined(_WIN32)
   SYSTEM_INFO info;
@@ -1465,7 +1465,7 @@ static void determineOperatingSystem()
   return availMem;
 }
 
-- (NSUInteger) systemUptime
+- (int) systemUptime
 {
   NSUInteger uptime = 0;
 

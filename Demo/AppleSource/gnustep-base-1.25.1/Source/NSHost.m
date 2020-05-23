@@ -657,7 +657,7 @@ myHostName()
  *	is for all hosts to hash to the same value - which makes it very
  *	inefficient to store them in a set, dictionary, map or hash table.
  */
-- (NSUInteger) hash
+- (int) hash
 {
   return 1;
 }

@@ -726,7 +726,7 @@ static NSRecursiveLock *classLock = nil;
     if (U_FAILURE(status))
         return nil;
     
-    return [NSString stringWithCharacters: buffer length: (NSUInteger)length];
+    return [NSString stringWithCharacters: buffer length: (int)length];
 #else
     return nil;	// FIXME
 #endif

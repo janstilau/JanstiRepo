@@ -31,7 +31,7 @@
  */
 @implementation NSCalendarDate (GNUstepBase)
 
-- (NSUInteger) isoYear
+- (int) isoYear
 {
   NSUInteger year = [self yearOfCommonEra];
   NSUInteger week = [self weekOfYear];

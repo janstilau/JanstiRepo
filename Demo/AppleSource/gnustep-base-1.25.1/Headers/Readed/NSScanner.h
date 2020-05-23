@@ -54,8 +54,8 @@ extern "C" {
 /*
  * Configuring an NSScanner
  */
-- (NSUInteger) scanLocation;
-- (void) setScanLocation: (NSUInteger)anIndex;
+- (int) scanLocation;
+- (void) setScanLocation: (int)anIndex;
 
 - (BOOL) caseSensitive;
 - (void) setCaseSensitive: (BOOL)flag;

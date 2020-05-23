@@ -135,7 +135,7 @@
   return self;
 }
 
-- (NSUInteger) count
+- (int) count
 {
   if (set == nil)
     {
@@ -658,7 +658,7 @@
   return self;
 }
 
-- (NSUInteger) count
+- (int) count
 {
   return [set count];
 }

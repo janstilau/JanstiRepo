@@ -153,7 +153,7 @@ GS_PRIVATE_INTERNAL(NSXMLDTD)
 }
 
 - (id) initWithContentsOfURL: (NSURL*)url
-                     options: (NSUInteger)mask
+                     options: (int)mask
                        error: (NSError**)error
 {
   NSData	*data;
@@ -166,7 +166,7 @@ GS_PRIVATE_INTERNAL(NSXMLDTD)
 }
 
 - (id) initWithData: (NSData*)data
-            options: (NSUInteger)mask
+            options: (int)mask
               error: (NSError**)error
 {
   NSXMLDocument *tempDoc = 
@@ -192,7 +192,7 @@ GS_PRIVATE_INTERNAL(NSXMLDTD)
   return self;
 }
 
-- (id) initWithKind: (NSXMLNodeKind)theKind options: (NSUInteger)theOptions
+- (id) initWithKind: (NSXMLNodeKind)theKind options: (int)theOptions
 {
   if (NSXMLDTDKind == theKind)
     {
@@ -208,7 +208,7 @@ GS_PRIVATE_INTERNAL(NSXMLDTD)
     }
 }
 
-- (void) insertChild: (NSXMLNode*)child atIndex: (NSUInteger)index
+- (void) insertChild: (NSXMLNode*)child atIndex: (int)index
 {
   NSXMLNodeKind	theKind = [child kind];
   NSUInteger childCount = [self childCount];
@@ -228,7 +228,7 @@ GS_PRIVATE_INTERNAL(NSXMLDTD)
   [self _insertChild: child atIndex: index];
 }
 
-- (void) insertChildren: (NSArray*)children atIndex: (NSUInteger)index
+- (void) insertChildren: (NSArray*)children atIndex: (int)index
 {
   NSEnumerator	*enumerator = [children objectEnumerator];
   NSXMLNode	*child;
@@ -272,7 +272,7 @@ GS_PRIVATE_INTERNAL(NSXMLDTD)
   return StringFromXMLStringPtr(theNode->ExternalID); 
 }
 
-- (void) removeChildAtIndex: (NSUInteger)index
+- (void) removeChildAtIndex: (int)index
 {
   NSXMLNode *child;
 
@@ -286,7 +286,7 @@ GS_PRIVATE_INTERNAL(NSXMLDTD)
   [child detach];
 }
 
-- (void) replaceChildAtIndex: (NSUInteger)index withNode: (NSXMLNode*)theNode
+- (void) replaceChildAtIndex: (int)index withNode: (NSXMLNode*)theNode
 {
   [self insertChild: theNode atIndex: index];
   [self removeChildAtIndex: index + 1];

@@ -66,7 +66,7 @@ typedef enum GSSocks5ResponseStatus {
 
 - (id) initWithConfiguration: (NSDictionary *)aConfiguration
                      address: (NSString *)anAddress
-                        port: (NSUInteger)aPort
+                        port: (int)aPort
 {
   if (nil != (self = [super init]))
     {

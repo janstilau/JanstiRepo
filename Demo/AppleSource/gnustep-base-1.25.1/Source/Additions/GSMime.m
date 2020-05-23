@@ -147,7 +147,7 @@ isWSP(int c)
 
 @interface GSMimeDocument (Private)
 - (GSMimeHeader*) _lastHeaderNamed: (NSString*)name;
-- (NSUInteger) _indexOfHeaderNamed: (NSString*)name;
+- (int) _indexOfHeaderNamed: (NSString*)name;
 @end
 
 /*
@@ -549,7 +549,7 @@ wordData(NSString *word, BOOL *encoded)
  * Return YES on success, NO if there is an error.
  */
 - (BOOL) decodeData: (const void*)sData
-	     length: (NSUInteger)length
+	     length: (int)length
 	   intoData: (NSMutableData*)dData
 {
   NSUInteger	size = [dData length];
@@ -577,7 +577,7 @@ wordData(NSString *word, BOOL *encoded)
 @end
 @implementation	GSMimeBase64DecoderContext
 - (BOOL) decodeData: (const void*)sData
-	     length: (NSUInteger)length
+	     length: (int)length
 	   intoData: (NSMutableData*)dData
 {
   NSUInteger	size = [dData length];
@@ -677,7 +677,7 @@ wordData(NSString *word, BOOL *encoded)
 @end
 @implementation	GSMimeQuotedDecoderContext
 - (BOOL) decodeData: (const void*)sData
-	     length: (NSUInteger)length
+	     length: (int)length
 	   intoData: (NSMutableData*)dData
 {
   NSUInteger	size = [dData length];
@@ -810,7 +810,7 @@ wordData(NSString *word, BOOL *encoded)
 
 @implementation	GSMimeUUCodingContext
 - (BOOL) decodeData: (const void*)sData
-	     length: (NSUInteger)length
+	     length: (int)length
 	   intoData: (NSMutableData*)dData
 {
   [super decodeData: sData length: length intoData: dData];
@@ -3557,7 +3557,7 @@ static NSCharacterSet	*tokenSet = nil;
   return desc;
 }
 
-- (NSUInteger) estimatedSize
+- (int) estimatedSize
 {
   return ([name length] + [value length] + [params count] * 20) + 6;
 }
@@ -3600,7 +3600,7 @@ static NSCharacterSet	*tokenSet = nil;
     }
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return [lower hash];
 }
@@ -4251,7 +4251,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
  * multiple lines.
  */
 - (NSMutableData*) rawMimeDataPreservingCase: (BOOL)preserve
-                                    foldedAt: (NSUInteger)fold
+                                    foldedAt: (int)fold
 {
   NSMutableData	*md = [NSMutableData dataWithCapacity: 128];
 
@@ -4260,7 +4260,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
 }
 
 - (void) rawMimeDataPreservingCase: (BOOL)preserve
-                          foldedAt: (NSUInteger)fold
+                          foldedAt: (int)fold
                                 to: (NSMutableData*)md
 {
   NSEnumerator	*e = [params keyEnumerator];
@@ -4518,7 +4518,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
   return value;
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
   NSUInteger    size = [super sizeInBytesExcluding: exclude];
 
@@ -6151,7 +6151,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
     }
 }
 
-- (void) _descriptionTo: (NSMutableString*)m level: (NSUInteger)level
+- (void) _descriptionTo: (NSMutableString*)m level: (int)level
 {
   NSUInteger            count;
   NSUInteger            index;
@@ -6226,7 +6226,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
   return AUTORELEASE(s);  
 }
 
-- (NSUInteger) estimatedSize
+- (int) estimatedSize
 {
   NSUInteger    total = 0;
   NSEnumerator	*enumerator = [headers objectEnumerator];
@@ -6262,7 +6262,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
   return total;
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return [[self content] hash];
 }
@@ -6506,7 +6506,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
  * fill in as much detail as possible before generating data.
  * </p>
  */
-- (NSMutableData*) rawMimeData: (BOOL)isOuter foldedAt: (NSUInteger)fold
+- (NSMutableData*) rawMimeData: (BOOL)isOuter foldedAt: (int)fold
 {
   NSMutableArray	*partData = nil;
   NSMutableData		*md = [NSMutableData dataWithCapacity: 1024];
@@ -7206,7 +7206,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
   return hdr;
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
   NSUInteger    size = [super sizeInBytesExcluding: exclude];
 
@@ -7227,7 +7227,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
  * NB. The supplied name <em>must</em> be lowercase.<br />
  * This method is for internal use
  */
-- (NSUInteger) _indexOfHeaderNamed: (NSString*)name
+- (int) _indexOfHeaderNamed: (NSString*)name
 {
   NSUInteger	count = [headers count];
 
@@ -7768,7 +7768,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
   RELEASE(arp);
 }
 
-- (NSUInteger) foldAt
+- (int) foldAt
 {
   return foldAt;
 }
@@ -7820,7 +7820,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
   ASSIGN(dataEncoding, encoding);
 }
 
-- (void) setFoldAt: (NSUInteger)position
+- (void) setFoldAt: (int)position
 {
   if (position < 20 || position > 998)
     {

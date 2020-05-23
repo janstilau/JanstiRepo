@@ -1158,15 +1158,15 @@ const NSMapTableValueCallBacks NSOwnedPointerMapValueCallBacks =
     return NSCopyMapTableWithZone(self, aZone);
 }
 
-- (NSUInteger) count
+- (int) count
 {
     GSIMapRemoveWeak(self);
     return (NSUInteger)nodeCount;
 }
 
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
+- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
                                    objects: (id*)stackbuf
-                                     count: (NSUInteger)len
+                                     count: (int)len
 {
     state->mutationsPtr = (unsigned long *)&version;
     return GSIMapCountByEnumeratingWithStateObjectsCount
@@ -1189,7 +1189,7 @@ const NSMapTableValueCallBacks NSOwnedPointerMapValueCallBacks =
     GSIMapEmptyMap(self);
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
     return (NSUInteger)nodeCount;
 }
@@ -1209,7 +1209,7 @@ const NSMapTableValueCallBacks NSOwnedPointerMapValueCallBacks =
 
 - (id) initWithKeyPointerFunctions: (NSPointerFunctions*)keyFunctions
              valuePointerFunctions: (NSPointerFunctions*)valueFunctions
-                          capacity: (NSUInteger)initialCapacity
+                          capacity: (int)initialCapacity
 {
     static NSConcretePointerFunctions	*defaultFunctions = nil;
     
@@ -1374,7 +1374,7 @@ const NSMapTableValueCallBacks NSOwnedPointerMapValueCallBacks =
     return [p autorelease];
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
     NSUInteger	size = [super sizeInBytesExcluding: exclude];
     

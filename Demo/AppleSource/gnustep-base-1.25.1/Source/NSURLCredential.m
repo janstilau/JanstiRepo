@@ -75,7 +75,7 @@ typedef struct {
   return this->hasPassword;
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return [this->user hash];
 }

@@ -2036,7 +2036,7 @@ static Class		tcpPortClass;
   [d handlePortMessage: m];
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return (unsigned)portNum;
 }
@@ -2291,7 +2291,7 @@ static Class		tcpPortClass;
  * the start can be written directly without having to copy data to another
  * buffer etc.
  */
-- (NSUInteger) reservedSpaceLength
+- (int) reservedSpaceLength
 {
   return sizeof(GSPortItemHeader) + sizeof(GSPortMsgHeader);
 }
@@ -2300,7 +2300,7 @@ static Class		tcpPortClass;
 		  msgid: (NSInteger)msgId
              components: (NSMutableArray*)components
                    from: (NSPort*)receivingPort
-               reserved: (NSUInteger)length
+               reserved: (int)length
 {
   BOOL		sent = NO;
   GSTcpHandle	*h;

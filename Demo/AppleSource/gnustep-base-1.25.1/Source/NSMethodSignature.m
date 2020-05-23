@@ -530,7 +530,7 @@ next_arg(const char *typePtr, NSArgumentInfo *info, char *outTypes)
     return AUTORELEASE([[[self class] alloc] _initWithObjCTypes: t]);
 }
 
-- (NSArgumentInfo) argumentInfoAtIndex: (NSUInteger)index
+- (NSArgumentInfo) argumentInfoAtIndex: (int)index
 {
     if (index >= _numArgs) // 越界异常, 所以, 需要程序要保证范围的准确.
     {
@@ -545,13 +545,13 @@ next_arg(const char *typePtr, NSArgumentInfo *info, char *outTypes)
     return _inf[index+1];
 }
 
-- (NSUInteger) frameLength
+- (int) frameLength
 {
     return _argFrameLength;
 }
 
 // 将所有的信息, 存储到 _inf 里面, 然后在对外的接口里面, 仅仅是传出 _inf 里面响应的一些信息.
-- (const char*) getArgumentTypeAtIndex: (NSUInteger)index
+- (const char*) getArgumentTypeAtIndex: (int)index
 {
     if (index >= _numArgs)
     {
@@ -576,7 +576,7 @@ next_arg(const char *typePtr, NSArgumentInfo *info, char *outTypes)
     return (_inf[0].qual & _F_ONEWAY) ? YES : NO;
 }
 
-- (NSUInteger) methodReturnLength
+- (int) methodReturnLength
 {
     if (_inf == 0)
     {
@@ -596,7 +596,7 @@ next_arg(const char *typePtr, NSArgumentInfo *info, char *outTypes)
     return _inf[0].qtype;
 }
 
-- (NSUInteger) numberOfArguments
+- (int) numberOfArguments
 {
     return _numArgs;
 }

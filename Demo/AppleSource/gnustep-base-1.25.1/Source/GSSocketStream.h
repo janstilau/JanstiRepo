@@ -88,7 +88,7 @@ SOCKIVARS
 @interface GSSocketInputStream (AddedBehaviors)
 - (struct sockaddr*) _address;
 - (void) _setAddress: (struct sockaddr*)address;
-- (NSInteger) _read: (uint8_t *)buffer maxLength: (NSUInteger)len;
+- (NSInteger) _read: (uint8_t *)buffer maxLength: (int)len;
 - (void) _setClosing: (BOOL)passive;
 - (void) _setHandler: (id)h;
 - (void) _setPassive: (BOOL)passive;
@@ -139,7 +139,7 @@ SOCKIVARS
                       port: (NSInteger)port
                     family: (NSInteger)family;
 - (SOCKET) _sock;
-- (NSInteger) _write: (const uint8_t *)buffer maxLength: (NSUInteger)len;
+- (NSInteger) _write: (const uint8_t *)buffer maxLength: (int)len;
 @end
 
 @interface GSInetOutputStream : GSSocketOutputStream

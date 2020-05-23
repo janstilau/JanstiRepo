@@ -89,18 +89,18 @@ typedef NSUInteger NSMapTableOptions;
  */
 - (id) initWithKeyOptions: (NSPointerFunctionsOptions)keyOptions
 	     valueOptions: (NSPointerFunctionsOptions)valueOptions
-	         capacity: (NSUInteger)initialCapacity;
+	         capacity: (int)initialCapacity;
 
 /** Initialiser using full pointer function information to describe
  * the keys and values.
  */
 - (id) initWithKeyPointerFunctions: (NSPointerFunctions*)keyFunctions
 	     valuePointerFunctions: (NSPointerFunctions*)valueFunctions
-			  capacity: (NSUInteger)initialCapacity;
+			  capacity: (int)initialCapacity;
 
 /** Return the number of items stored in the map.
  */
-- (NSUInteger) count;
+- (int) count;
 
 /** Return a dictionary containing the keys and values in the receiver.
  */

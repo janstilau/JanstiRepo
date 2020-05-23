@@ -6,10 +6,6 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSData;
 @class NSDictionary;
 @class NSURLRequest;
@@ -21,9 +17,9 @@ extern "C" {
  */
 typedef enum
 {
-  NSURLCacheStorageAllowed,	/** Unrestricted caching */
-  NSURLCacheStorageAllowedInMemoryOnly,	/** In memory caching only */
-  NSURLCacheStorageNotAllowed /** No caching allowed */
+    NSURLCacheStorageAllowed,	/** Unrestricted caching */
+    NSURLCacheStorageAllowedInMemoryOnly,	/** In memory caching only */
+    NSURLCacheStorageNotAllowed /** No caching allowed */
 } NSURLCacheStoragePolicy;
 
 /*
@@ -35,7 +31,10 @@ typedef enum
  */
 @interface NSCachedURLResponse : NSObject <NSCoding, NSCopying> // 这个类并没有返回 request 的信息, 也就是对应的关系, 其实是由NSURLCache 管理的.
 {
-  void *_NSCachedURLResponseInternal;
+    NSData            *data;
+    NSURLResponse            *response;
+    NSDictionary            *userInfo;
+    NSURLCacheStoragePolicy    storagePolicy;
 }
 
 /**
@@ -54,9 +53,9 @@ typedef enum
  * Returns the receiver initialized with the provided parameters.
  */
 - (id) initWithResponse: (NSURLResponse *)response
-		   data: (NSData *)data
-	       userInfo: (NSDictionary *)userInfo // 这个东西, 就是 app 的一个切口, 可以在这里面存储任何和 app 相关的内容, 如果有必要的话.
-	  storagePolicy: (NSURLCacheStoragePolicy)storagePolicy;
+                   data: (NSData *)data
+               userInfo: (NSDictionary *)userInfo // 这个东西, 就是 app 的一个切口, 可以在这里面存储任何和 app 相关的内容, 如果有必要的话.
+          storagePolicy: (NSURLCacheStoragePolicy)storagePolicy;
 
 /**
  * Returns the response with which the receiver was initialised.
@@ -79,7 +78,12 @@ typedef enum
 
 @interface NSURLCache : NSObject
 {
-  void *_NSURLCacheInternal;
+    unsigned        diskCapacity;
+    unsigned        memoryCapacity;
+    unsigned        diskUsage;
+    unsigned        memoryUsage;
+    NSString        *path;
+    NSMutableDictionary    *memory;
 }
 
 /**
@@ -117,32 +121,32 @@ typedef enum
  * Returns the current size (butes) of the data stored in the on-disk
  * cache.
  */
-- (NSUInteger) currentDiskUsage;
+- (int) currentDiskUsage;
 
 /**
  * Returns the current size (butes) of the data stored in the in-memory
  * cache.
  */
-- (NSUInteger) currentMemoryUsage;
+- (int) currentMemoryUsage;
 
 /**
  * Returns the disk capacity (in bytes) of the cache.
  */
-- (NSUInteger) diskCapacity;
+- (int) diskCapacity;
 
 /**
  * Returns the receiver initialised with the specified capacities
  * (in bytes) and using the specified location on disk for persistent
  * storage.
  */
-- (id) initWithMemoryCapacity: (NSUInteger)memoryCapacity
-		 diskCapacity: (NSUInteger)diskCapacity
-		     diskPath: (NSString *)path;
+- (id) initWithMemoryCapacity: (int)memoryCapacity
+                 diskCapacity: (int)diskCapacity
+                     diskPath: (NSString *)path;
 
 /**
  * Returns the memory capacity (in bytes) of the cache.
  */
-- (NSUInteger) memoryCapacity;
+- (int) memoryCapacity;
 
 /**
  * Empties the cache.
@@ -158,25 +162,21 @@ typedef enum
 /**
  * Sets the disk capacity (in bytes) truncating cache contents if necessary.
  */
-- (void) setDiskCapacity: (NSUInteger)diskCapacity;
+- (void) setDiskCapacity: (int)diskCapacity;
 
 /**
  * Sets the memory capacity (in bytes) truncating cache contents if necessary.
  */
-- (void) setMemoryCapacity: (NSUInteger)memoryCapacity;
+- (void) setMemoryCapacity: (int)memoryCapacity;
 
 /**
  * Stores cachedResponse in the cache, keyed on request.<br />
  * Replaces any existing response with the same key.
  */
 - (void) storeCachedResponse: (NSCachedURLResponse *)cachedResponse
-		  forRequest: (NSURLRequest *)request;
+                  forRequest: (NSURLRequest *)request;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

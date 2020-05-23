@@ -1579,7 +1579,7 @@ typedef	struct {
   [d handlePortMessage: m];
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return [name hash];
 }
@@ -1768,7 +1768,7 @@ typedef	struct {
  * the start can be written directly without having to copy data to another
  * buffer etc.
  */
-- (NSUInteger) reservedSpaceLength
+- (int) reservedSpaceLength
 {
   return sizeof(GSPortItemHeader) + sizeof(GSPortMsgHeader);
 }
@@ -1777,7 +1777,7 @@ typedef	struct {
 		  msgid: (NSInteger)msgId
              components: (NSMutableArray*)components
                    from: (NSPort*)receivingPort
-               reserved: (NSUInteger)length
+               reserved: (int)length
 {
   BOOL		sent = NO;
   GSMessageHandle	*h;

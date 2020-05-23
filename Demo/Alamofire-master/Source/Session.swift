@@ -7,7 +7,9 @@ import Foundation
 
 open class Session {
     /// Shared singleton instance used by all `AF.request` APIs. Cannot be modified.
-    // 这里 `default` 的命名是因为, default 是关键字. 这也是第一看到, `name` 这种特殊的命名方式.
+    /* 这里 `default` 的命名是因为, default 是关键字. 这也是第一看到, `name` 这种特殊的命名方式.
+     Swfit 保证, 类的 static 只会进行一次初始化操作. 实际上, 底层是调用了 DiapatchOnce.
+    */
     public static let `default` = Session()
 
     /// Underlying `URLSession` used to create `URLSessionTasks` for this instance, and for which this instance's

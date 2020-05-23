@@ -333,7 +333,7 @@ GSPrivateMemorySize(NSObject *self, NSHashTable *exclude)
 {
   return 0;
 }
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
   if (0 == NSHashGet(exclude, self))
     {

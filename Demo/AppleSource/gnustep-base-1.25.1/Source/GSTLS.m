@@ -1828,7 +1828,7 @@ retrieve_callback(gnutls_session_t session,
   return problem;
 }
 
-- (NSInteger) read: (void*)buf length: (NSUInteger)len
+- (NSInteger) read: (void*)buf length: (int)len
 {
   int   result = gnutls_record_recv(session, buf, len);
 
@@ -1875,7 +1875,7 @@ retrieve_callback(gnutls_session_t session,
   return result;
 }
 
-- (NSInteger) write: (const void*)buf length: (NSUInteger)len
+- (NSInteger) write: (const void*)buf length: (int)len
 {
   int   result = gnutls_record_send(session, buf, len);
 

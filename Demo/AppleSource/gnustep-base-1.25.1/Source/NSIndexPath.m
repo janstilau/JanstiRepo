@@ -26,12 +26,12 @@ static	NSIndexPath	*dummy = nil;
   return [super allocWithZone: aZone];
 }
 
-+ (id) indexPathWithIndex: (NSUInteger)anIndex
++ (id) indexPathWithIndex: (int)anIndex
 {
   return [self indexPathWithIndexes: &anIndex length: 1];
 }
 
-+ (id) indexPathWithIndexes: (NSUInteger*)indexes length: (NSUInteger)length
++ (id) indexPathWithIndexes: (NSUInteger*)indexes length: (int)length
 {
   id	o = [self allocWithZone: NSDefaultMallocZone()];
 
@@ -178,12 +178,12 @@ static	NSIndexPath	*dummy = nil;
   memcpy(aBuffer, _indexes, _length * sizeof(NSUInteger));
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return _hash;
 }
 
-- (NSUInteger) indexAtPosition: (NSUInteger)position
+- (int) indexAtPosition: (int)position
 {
   if (position >= _length)
     {
@@ -195,7 +195,7 @@ static	NSIndexPath	*dummy = nil;
 /**
  * Return path formed by adding the index to the receiver.
  */
-- (NSIndexPath *) indexPathByAddingIndex: (NSUInteger)anIndex
+- (NSIndexPath *) indexPathByAddingIndex: (int)anIndex
 {
   NSUInteger	buffer[_length + 1];
 
@@ -324,7 +324,7 @@ static	NSIndexPath	*dummy = nil;
   return self;
 }
 
-- (id) initWithIndex: (NSUInteger)anIndex
+- (id) initWithIndex: (int)anIndex
 {
   return [self initWithIndexes: &anIndex length: 1];
 }
@@ -333,7 +333,7 @@ static	NSIndexPath	*dummy = nil;
  * Initialise the receiver to contain the specified indexes.<br />
  * May return an existing index path.
  */
-- (id) initWithIndexes: (NSUInteger*)indexes length: (NSUInteger)length
+- (id) initWithIndexes: (NSUInteger*)indexes length: (int)length
 {
   NSIndexPath	*found;
   NSUInteger	h = 0;
@@ -409,7 +409,7 @@ static	NSIndexPath	*dummy = nil;
   return YES;
 }
 
-- (NSUInteger) length
+- (int) length
 {
   return _length;
 }

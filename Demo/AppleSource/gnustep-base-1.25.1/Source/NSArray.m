@@ -192,7 +192,7 @@ static SEL	removeLastSel;
  * Returns an autoreleased array containing the specified
  * objects, preserving order.
  */
-+ (id) arrayWithObjects: (const id[])objects count: (NSUInteger)count
++ (id) arrayWithObjects: (const id[])objects count: (int)count
 {
     return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
                         initWithObjects: objects count: count]);
@@ -311,16 +311,16 @@ static SEL	removeLastSel;
 }
 
 
-- (NSUInteger) count
+- (int) count
 {
     [self subclassResponsibility: _cmd];
     return 0;
 }
 
 // 没看.
-- (NSUInteger) countByEnumeratingWithState: (NSFastEnumerationState*)state
+- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state
                                    objects: (__unsafe_unretained id[])stackbuf
-                                     count: (NSUInteger)len
+                                     count: (int)len
 {
     NSInteger count;
     
@@ -432,7 +432,7 @@ static SEL	removeLastSel;
  * Returns the same value as -count
  这里, 让 count 当 hash 值. 感觉太简单了.
  */
-- (NSUInteger) hash
+- (int) hash
 {
     return [self count];
 }
@@ -446,7 +446,7 @@ static SEL	removeLastSel;
  数组里面, 想要查询值在不在其中, 都是要用到遍历的方式.
  下面的这两个函数, 一个是判断, 这个值是否就是传入的那个值, 也就是判断的是指针值是否相等. 一个是调用 isEqual 方法, 也就是用 isEqual 进行的判断. 不过, NSObject 的 isEqual 默认就是判断地址值. 所以, 如果一个类没有复写 isEqual 的话, 这两个方法是相同的.
  */
-- (NSUInteger) indexOfObjectIdenticalTo: (id)anObject
+- (int) indexOfObjectIdenticalTo: (id)anObject
 {
     NSUInteger c = [self count];
     
@@ -468,7 +468,7 @@ static SEL	removeLastSel;
  * Returns NSNotFound on failure.
  这个方法就是遍历操作, 不过是在这里面, 用到其实要使用的是每个方法的Equal 方法, 这里, 系统的类的实现性能优先, 直接用的 Imp
  */
-- (NSUInteger) indexOfObject: (id)anObject
+- (int) indexOfObject: (id)anObject
 {
     NSUInteger	c = [self count];
     
@@ -1085,7 +1085,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
  * they appear in the receiver.
  */
 - (NSString*) descriptionWithLocale: (id)locale
-                             indent: (NSUInteger)level
+                             indent: (int)level
 {
     NSString	*result = nil;
     
@@ -1496,7 +1496,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
             passingTest: predicate];
 }
 
-- (NSUInteger) indexOfObjectWithOptions: (NSEnumerationOptions)opts
+- (int) indexOfObjectWithOptions: (NSEnumerationOptions)opts
                             passingTest: (GSPredicateBlock)predicate
 {
     id<NSFastEnumeration> enumerator = self;
@@ -1554,12 +1554,12 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
     return index;
 }
 
-- (NSUInteger) indexOfObjectPassingTest: (GSPredicateBlock)predicate
+- (int) indexOfObjectPassingTest: (GSPredicateBlock)predicate
 {
     return [self indexOfObjectWithOptions: 0 passingTest: predicate];
 }
 
-- (NSUInteger) indexOfObjectAtIndexes: (NSIndexSet*)indexSet
+- (int) indexOfObjectAtIndexes: (NSIndexSet*)indexSet
                               options: (NSEnumerationOptions)opts
                           passingTest: (GSPredicateBlock)predicate
 {
@@ -1568,7 +1568,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
             passingTest: predicate];
 }
 
-- (NSUInteger) sizeInBytesExcluding: (NSHashTable*)exclude
+- (int) sizeInBytesExcluding: (NSHashTable*)exclude
 {
     NSUInteger	size = [super sizeInBytesExcluding: exclude];
     
@@ -1629,7 +1629,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
     return NSMutableArrayClass;
 }
 
-- (id) initWithCapacity: (NSUInteger)numItems
+- (id) initWithCapacity: (int)numItems
 {
     self = [self init];
     return self;
@@ -1643,8 +1643,8 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
 /**
  
  */
-- (void) exchangeObjectAtIndex: (NSUInteger)i1
-             withObjectAtIndex: (NSUInteger)i2
+- (void) exchangeObjectAtIndex: (int)i1
+             withObjectAtIndex: (int)i2
 {
     id	tmp = [self objectAtIndex: i1];
     
@@ -1658,12 +1658,12 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
  这是一个 primitive method, 其他的方法通过调用这个函数, 可以达到自己的目的.
  自己编写代码的时候, 很少写出这种全局都使用的 primitive 的函数, 因为直接操作内存做某些事的诱惑实在太大了, 如果习惯于这种写法, 那么之后, 修改primitive 函数, 就能达到修改所有的函数的目的, 通过函数的组装, 能够达到逻辑的统一. 这种便利性, 要比直接操作内存那小小的效率要高得多.
  */
-- (void) replaceObjectAtIndex: (NSUInteger)index withObject: (id)anObject
+- (void) replaceObjectAtIndex: (int)index withObject: (id)anObject
 {
     [self subclassResponsibility: _cmd];
 }
 
-- (void) setObject: (id)anObject atIndexedSubscript: (NSUInteger)anIndex
+- (void) setObject: (id)anObject atIndexedSubscript: (int)anIndex
 {
     if ([self count] == anIndex)
     {
@@ -1727,7 +1727,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
            withObjectsFromArray: [anArray subarrayWithRange: anotherRange]];
 }
 
-- (void) insertObject: anObject atIndex: (NSUInteger)index
+- (void) insertObject: anObject atIndex: (int)index
 {
     [self subclassResponsibility: _cmd];
 }
@@ -1751,7 +1751,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
     }
 }
 
-- (void) removeObjectAtIndex: (NSUInteger)index
+- (void) removeObjectAtIndex: (int)index
 {
     [self subclassResponsibility: _cmd];
 }
@@ -1760,7 +1760,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
  * Creates an autoreleased mutable array able to store at least numItems.
  * See the -initWithCapacity: method.
  */
-+ (id) arrayWithCapacity: (NSUInteger)numItems
++ (id) arrayWithCapacity: (int)numItems
 {
     return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
                         initWithCapacity: numItems]);
@@ -1769,7 +1769,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
 /**
  这里, NSMutableArray 复写了父类了的指定构造函数, 在 alloc 的时候, 返回的就是 NSMutableArray 对象了
  */
-- (id) initWithObjects: (const id[])objects count: (NSUInteger)count
+- (id) initWithObjects: (const id[])objects count: (int)count
 {
     self = [self initWithCapacity: count];
     if (count > 0)
@@ -2047,7 +2047,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
  * of the order in which they are specified in the indices array.
  */
 - (void) removeObjectsFromIndices: (NSUInteger*)indices
-                       numIndices: (NSUInteger)count
+                       numIndices: (int)count
 {
     if (count > 0)
     {

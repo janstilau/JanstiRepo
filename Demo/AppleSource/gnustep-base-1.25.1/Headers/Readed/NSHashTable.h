@@ -51,10 +51,10 @@ typedef NSUInteger NSHashTableOptions;
 
 
 - (id) initWithOptions: (NSPointerFunctionsOptions)options
-	      capacity: (NSUInteger)initialCapacity;
+	      capacity: (int)initialCapacity;
 
 - (id) initWithPointerFunctions: (NSPointerFunctions*)functions
-		       capacity: (NSUInteger)initialCapacity;
+		       capacity: (int)initialCapacity;
 
 /** Adds the object to the receiver.
  */
@@ -76,7 +76,7 @@ typedef NSUInteger NSHashTableOptions;
 
 /** Return the number of items atored in the receiver.
  */
-- (NSUInteger) count;
+- (int) count;
 
 /** Removes from the receiver any items which are not also present in 'other'.
  */

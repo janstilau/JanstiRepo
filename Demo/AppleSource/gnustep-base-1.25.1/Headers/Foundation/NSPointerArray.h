@@ -45,7 +45,7 @@ extern "C" {
 
 /** Returns the number of items in the array.
  */
-- (NSUInteger) count;
+- (int) count;
 
 /** Initialises the receiver with the specified options.
  */
@@ -67,12 +67,12 @@ extern "C" {
  * can insert at the end of an object to append to it, so the behavior of
  * this class in MacOS is inconsistent and must be considered buggy.
  */
-- (void) insertPointer: (void*)pointer atIndex: (NSUInteger)index;
+- (void) insertPointer: (void*)pointer atIndex: (int)index;
 
 /** Returns the item at the given index or raises an exception if index
  * is out of range.
  */
-- (void*) pointerAtIndex: (NSUInteger)index;
+- (void*) pointerAtIndex: (int)index;
 
 /** Returns an autorelease NSPointerFunctions instance giving the
  * functions in use by the receiver.
@@ -82,17 +82,17 @@ extern "C" {
 /** Removes the item at the specified index, adjusting the positions of
  * all higher indexed items.
  */
-- (void) removePointerAtIndex: (NSUInteger)index;
+- (void) removePointerAtIndex: (int)index;
 
 /* Replaces the item at the specified index.  The index must be less than
  * the current count or an exception is raised.
  */
-- (void) replacePointerAtIndex: (NSUInteger)index withPointer: (void*)item;
+- (void) replacePointerAtIndex: (int)index withPointer: (void*)item;
 
 /** Sets the number of items in the receiver.  Adds nil/zero items to pad
  * the end of the array, or removes extraneous items from the end.
  */
-- (void) setCount: (NSUInteger)count;
+- (void) setCount: (int)count;
 
 @end
 

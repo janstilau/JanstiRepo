@@ -49,13 +49,13 @@
   return [_parent canBeConvertedToEncoding: enc];
 }
 
-- (unichar) characterAtIndex: (NSUInteger)index
+- (unichar) characterAtIndex: (int)index
 {
   return [_parent characterAtIndex: index];
 }
 
 - (NSComparisonResult) compare: (NSString*)aString
-		       options: (NSUInteger)mask
+		       options: (int)mask
 			 range: (NSRange)aRange
 {
   return [_parent compare: aString options: mask range: aRange];
@@ -71,7 +71,7 @@
   return [_parent cStringUsingEncoding: encoding];
 }
 
-- (NSUInteger) cStringLength
+- (int) cStringLength
 {
   return [_parent cStringLength];
 }
@@ -124,20 +124,20 @@
 }
 
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 {
   [_parent getCString: buffer maxLength: maxLength];
 }
 
 - (BOOL) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	   encoding: (NSStringEncoding)encoding
 {
   return [_parent getCString: buffer maxLength: maxLength encoding: encoding];
 }
 
 - (void) getCString: (char*)buffer
-	  maxLength: (NSUInteger)maxLength
+	  maxLength: (int)maxLength
 	      range: (NSRange)aRange
      remainingRange: (NSRange*)leftoverRange
 {
@@ -147,7 +147,7 @@
        remainingRange: leftoverRange];
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return [_parent hash];
 }
@@ -168,12 +168,12 @@
   return [_parent isEqualToString: anObject];
 }
 
-- (NSUInteger) length
+- (int) length
 {
   return [_parent length];
 }
 
-- (NSUInteger) lengthOfBytesUsingEncoding: (NSStringEncoding)encoding
+- (int) lengthOfBytesUsingEncoding: (NSStringEncoding)encoding
 {
   return [_parent lengthOfBytesUsingEncoding: encoding];
 }
@@ -183,25 +183,25 @@
   return [_parent lossyCString];
 }
 
-- (NSUInteger) maximumLengthOfBytesUsingEncoding: (NSStringEncoding)encoding
+- (int) maximumLengthOfBytesUsingEncoding: (NSStringEncoding)encoding
 {
   return [_parent maximumLengthOfBytesUsingEncoding: encoding];
 }
 
-- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (NSUInteger)anIndex
+- (NSRange) rangeOfComposedCharacterSequenceAtIndex: (int)anIndex
 {
   return [_parent rangeOfComposedCharacterSequenceAtIndex: anIndex];
 }
 
 - (NSRange) rangeOfCharacterFromSet: (NSCharacterSet*)aSet
-			    options: (NSUInteger)mask
+			    options: (int)mask
 			      range: (NSRange)aRange
 {
   return [_parent rangeOfCharacterFromSet: aSet options: mask range: aRange];
 }
 
 - (NSRange) rangeOfString: (NSString*)aString
-		  options: (NSUInteger)mask
+		  options: (int)mask
 		    range: (NSRange)aRange
 {
   return [_parent rangeOfString: aString options: mask range: aRange];

@@ -50,7 +50,7 @@
 
 - (id) initWithConfiguration: (NSDictionary *)aConfiguration
                      address: (NSString *)anAddress
-                        port: (NSUInteger)aPort
+                        port: (int)aPort
 {
   NSString *version;
   Class concreteClass;
@@ -104,7 +104,7 @@
   return address;
 }
 
-- (NSUInteger) port
+- (int) port
 {
   return port;
 }

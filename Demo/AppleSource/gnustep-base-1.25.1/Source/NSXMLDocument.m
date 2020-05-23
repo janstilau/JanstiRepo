@@ -84,7 +84,7 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
 }
 
 - (id) initWithContentsOfURL: (NSURL*)url
-                     options: (NSUInteger)mask
+                     options: (int)mask
                        error: (NSError**)error
 {
   NSData	*data;
@@ -97,7 +97,7 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
 }
 
 - (id) initWithData: (NSData*)data
-            options: (NSUInteger)mask
+            options: (int)mask
               error: (NSError**)error
 {
   // Check for nil data and throw an exception 
@@ -164,7 +164,7 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
   return self;
 }
 
-- (id) initWithKind: (NSXMLNodeKind)theKind options: (NSUInteger)theOptions
+- (id) initWithKind: (NSXMLNodeKind)theKind options: (int)theOptions
 {
   if (NSXMLDocumentKind == theKind)
     {
@@ -191,7 +191,7 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
 }
 
 - (id) initWithXMLString: (NSString*)string
-                 options: (NSUInteger)mask
+                 options: (int)mask
                    error: (NSError**)error
 {
   if (nil == string)
@@ -345,7 +345,7 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
     return @"1.0";
 }
 
-- (void) insertChild: (NSXMLNode*)child atIndex: (NSUInteger)index
+- (void) insertChild: (NSXMLNode*)child atIndex: (int)index
 {
   NSXMLNodeKind	theKind = [child kind];
   NSUInteger childCount = [self childCount];
@@ -366,7 +366,7 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
   [self _insertChild: child atIndex: index];
 }
 
-- (void) insertChildren: (NSArray*)children atIndex: (NSUInteger)index
+- (void) insertChildren: (NSArray*)children atIndex: (int)index
 {
   NSEnumerator	*enumerator = [children objectEnumerator];
   NSXMLNode	*child;
@@ -377,7 +377,7 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
     }
 }
 
-- (void) removeChildAtIndex: (NSUInteger)index
+- (void) removeChildAtIndex: (int)index
 {
   NSXMLNode *child;
 
@@ -408,7 +408,7 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
   [self insertChild: child atIndex: [self childCount]];
 }
  
-- (void) replaceChildAtIndex: (NSUInteger)index withNode: (NSXMLNode*)theNode
+- (void) replaceChildAtIndex: (int)index withNode: (NSXMLNode*)theNode
 {
   [self insertChild: theNode atIndex: index];
   [self removeChildAtIndex: index + 1];
@@ -419,7 +419,7 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
   return [self XMLDataWithOptions: NSXMLNodeOptionsNone]; 
 }
 
-- (NSData *) XMLDataWithOptions: (NSUInteger)theOptions
+- (NSData *) XMLDataWithOptions: (int)theOptions
 {
   NSString *xmlString = [self XMLStringWithOptions: theOptions];
 
@@ -561,20 +561,20 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
 }
 
 - (id) initWithContentsOfURL: (NSURL*)url
-                     options: (NSUInteger)mask
+                     options: (int)mask
                        error: (NSError**)error
 {
   return [self init];
 }
 
 - (id) initWithData: (NSData*)data
-            options: (NSUInteger)mask
+            options: (int)mask
               error: (NSError**)error
 {
   return [self init];
 }
 
-- (id) initWithKind: (NSXMLNodeKind)theKind options: (NSUInteger)theOptions
+- (id) initWithKind: (NSXMLNodeKind)theKind options: (int)theOptions
 {
   return [self init];
 }
@@ -585,7 +585,7 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
 }
 
 - (id) initWithXMLString: (NSString*)string
-                 options: (NSUInteger)mask
+                 options: (int)mask
                    error: (NSError**)error
 {
   return [self init];
@@ -648,15 +648,15 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
   return nil;
 }
 
-- (void) insertChild: (NSXMLNode*)child atIndex: (NSUInteger)index
+- (void) insertChild: (NSXMLNode*)child atIndex: (int)index
 {
 }
 
-- (void) insertChildren: (NSArray*)children atIndex: (NSUInteger)index
+- (void) insertChildren: (NSArray*)children atIndex: (int)index
 {
 }
 
-- (void) removeChildAtIndex: (NSUInteger)index
+- (void) removeChildAtIndex: (int)index
 {
 }
 
@@ -668,7 +668,7 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
 {
 }
  
-- (void) replaceChildAtIndex: (NSUInteger)index withNode: (NSXMLNode*)theNode
+- (void) replaceChildAtIndex: (int)index withNode: (NSXMLNode*)theNode
 {
 }
 
@@ -677,7 +677,7 @@ GS_PRIVATE_INTERNAL(NSXMLDocument)
   return nil;
 }
 
-- (NSData *) XMLDataWithOptions: (NSUInteger)theOptions
+- (NSData *) XMLDataWithOptions: (int)theOptions
 {
   return nil;
 }

@@ -370,8 +370,8 @@ GS_NSNumberFormatter_IVARS;
 - (void) setRoundingMode: (NSNumberFormatterRoundingMode) mode;
 - (NSNumberFormatterRoundingMode) roundingMode;
 
-- (void) setFormatWidth: (NSUInteger) number;
-- (NSUInteger) formatWidth;
+- (void) setFormatWidth: (int) number;
+- (int) formatWidth;
 - (void) setMultiplier: (NSNumber *) number;
 - (NSNumber *) multiplier;
 
@@ -431,24 +431,24 @@ GS_NSNumberFormatter_IVARS;
 - (BOOL) alwaysShowsDecimalSeparator;
 - (void) setCurrencyDecimalSeparator: (NSString *) string;
 - (NSString *) currencyDecimalSeparator;
-- (void) setGroupingSize: (NSUInteger) number;
-- (NSUInteger) groupingSize;
-- (void) setSecondaryGroupingSize: (NSUInteger) number;
-- (NSUInteger) secondaryGroupingSize;
+- (void) setGroupingSize: (int) number;
+- (int) groupingSize;
+- (void) setSecondaryGroupingSize: (int) number;
+- (int) secondaryGroupingSize;
 
 - (void) setPaddingCharacter: (NSString *) string;
 - (NSString *) paddingCharacter;
 - (void) setPaddingPosition: (NSNumberFormatterPadPosition) position;
 - (NSNumberFormatterPadPosition) paddingPosition;
 
-- (void) setMinimumIntegerDigits: (NSUInteger) number;
-- (NSUInteger) minimumIntegerDigits;
-- (void) setMinimumFractionDigits: (NSUInteger) number;
-- (NSUInteger) minimumFractionDigits;
-- (void) setMaximumIntegerDigits: (NSUInteger) number;
-- (NSUInteger) maximumIntegerDigits;
-- (void) setMaximumFractionDigits: (NSUInteger) number;
-- (NSUInteger) maximumFractionDigits;
+- (void) setMinimumIntegerDigits: (int) number;
+- (int) minimumIntegerDigits;
+- (void) setMinimumFractionDigits: (int) number;
+- (int) minimumFractionDigits;
+- (void) setMaximumIntegerDigits: (int) number;
+- (int) maximumIntegerDigits;
+- (void) setMaximumFractionDigits: (int) number;
+- (int) maximumFractionDigits;
 
 /**
  * Returns the number for this string.
@@ -470,10 +470,10 @@ GS_NSNumberFormatter_IVARS;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
 - (void) setUsesSignificantDigits: (BOOL) flag;
 - (BOOL) usesSignificantDigits;
-- (void) setMinimumSignificantDigits: (NSUInteger) number;
-- (NSUInteger) minimumSignificantDigits;
-- (void) setMaximumSignificantDigits: (NSUInteger) number;
-- (NSUInteger) maximumSignificantDigits;
+- (void) setMinimumSignificantDigits: (int) number;
+- (int) minimumSignificantDigits;
+- (void) setMaximumSignificantDigits: (int) number;
+- (int) maximumSignificantDigits;
 
 - (void) setCurrencyGroupingSeparator: (NSString *) string;
 - (NSString *) currencyGroupingSeparator;

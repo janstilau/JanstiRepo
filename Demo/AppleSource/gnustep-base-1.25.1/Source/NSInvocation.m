@@ -30,7 +30,7 @@
 
 @implementation GSCodeBuffer
 
-+ (GSCodeBuffer*) memoryWithSize: (NSUInteger)_size
++ (GSCodeBuffer*) memoryWithSize: (int)_size
 {
     return [[[self alloc] initWithSize: _size] autorelease];
 }
@@ -72,7 +72,7 @@
     return executable;
 }
 
-- (id) initWithSize: (NSUInteger)_size
+- (id) initWithSize: (int)_size
 {
     NSAssert(_size > 0, @"Tried to allocate zero length buffer.");
     NSAssert(_size <= NSPageSize(), @"Tried to allocate more than one page.");

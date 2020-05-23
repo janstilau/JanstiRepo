@@ -283,7 +283,7 @@ _scanLocation++;\
     if (value)
     {
         if (overflow ||
-            (num > (negative ? (NSUInteger)INT_MIN : (NSUInteger)INT_MAX)))
+            (num > (negative ? (NSUInteger)INT_MIN : (int)INT_MAX)))
             *value = negative ? INT_MIN: INT_MAX; // 如果越界了, 返回界限值.
         else if (negative)
             *value = -num;
@@ -317,7 +317,7 @@ _scanLocation++;\
  * Internal version used by scanHexInt:, scanHexLongLong: etc.
  */
 - (BOOL) scanUnsignedLongLong_: (unsigned long long int*)value // container
-                         radix: (NSUInteger)radix // 进制
+                         radix: (int)radix // 进制
                        maximum: (unsigned long long)max // 最大值.
                      gotDigits: (BOOL)gotDigits
 {
@@ -1015,7 +1015,7 @@ _scanLocation++;\
  * scanning the string.  This is the position at which the next scan
  * operation will begin.
  */
-- (NSUInteger) scanLocation
+- (int) scanLocation
 {
     return _scanLocation;
 }
@@ -1026,7 +1026,7 @@ _scanLocation++;\
  * Raises an NSRangeException if index is beyond the end of the
  * scanned string.
  */
-- (void) setScanLocation: (NSUInteger)anIndex
+- (void) setScanLocation: (int)anIndex
 {
     if (_scanLocation <= myLength())
         _scanLocation = anIndex;
@@ -1214,7 +1214,7 @@ GSScanInt(unichar *buf, unsigned length, int *result)
     if (result)
     {
         if (overflow
-            || (num > (negative ? (NSUInteger)INT_MIN : (NSUInteger)INT_MAX)))
+            || (num > (negative ? (NSUInteger)INT_MIN : (int)INT_MAX)))
             *result = negative ? INT_MIN: INT_MAX;
         else if (negative)
             *result = -num;

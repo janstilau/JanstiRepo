@@ -2124,7 +2124,7 @@ localZoneString, [zone name], sign, s/3600, (s/60)%60);
   [aCoder encodeObject: [self name]];
 }
 
-- (NSUInteger) hash
+- (int) hash
 {
   return [[self name] hash];
 }
