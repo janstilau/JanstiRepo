@@ -71,6 +71,9 @@
  * it makes no sense externally, it can still be used to show that
  * different threads generated different logs.
  */
+/*
+    通过宏定义, 调用不同的操作系统下的 C 函数.
+ */
 NSUInteger
 GSPrivateThreadID()
 {
@@ -174,6 +177,9 @@ static NSNotificationCenter *nc = nil;
  *   run.
  * </p>
  */
+
+@class NSConditionLock;
+
 @interface GSPerformHolder : NSObject
 {
     id			receiver;

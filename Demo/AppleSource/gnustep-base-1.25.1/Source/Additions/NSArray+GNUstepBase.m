@@ -1,25 +1,3 @@
-/* Implementation of extension methods to base additions
-
-   Copyright (C) 2010 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
 
 */
 #import "common.h"
@@ -30,123 +8,123 @@
 @implementation NSArray (GNUstepBase)
 
 - (int) insertionPosition: (id)item
-		   usingFunction: (NSComparisonResult (*)(id, id, void *))sorter
-		         context: (void *)context
+            usingFunction: (NSComparisonResult (*)(id, id, void *))sorter
+                  context: (void *)context
 {
-  NSUInteger	count = [self count];
-  NSUInteger	upper = count;
-  NSUInteger	lower = 0;
-  NSUInteger	index;
-  SEL		oaiSel;
-  IMP		oai;
-
-  if (item == nil)
+    NSUInteger	count = [self count];
+    NSUInteger	upper = count;
+    NSUInteger	lower = 0;
+    NSUInteger	index;
+    SEL		oaiSel;
+    IMP		oai;
+    
+    if (item == nil)
     {
-      [NSException raise: NSGenericException
-		  format: @"Attempt to find position for nil object in array"];
+        [NSException raise: NSGenericException
+                    format: @"Attempt to find position for nil object in array"];
     }
-  if (sorter == 0)
+    if (sorter == 0)
     {
-      [NSException raise: NSGenericException
-		  format: @"Attempt to find position with null comparator"];
+        [NSException raise: NSGenericException
+                    format: @"Attempt to find position with null comparator"];
     }
-
-  oaiSel = @selector(objectAtIndex:);
-  oai = [self methodForSelector: oaiSel];
-  /*
-   *	Binary search for an item equal to the one to be inserted.
-   */
-  for (index = upper/2; upper != lower; index = lower+(upper-lower)/2)
+    
+    oaiSel = @selector(objectAtIndex:);
+    oai = [self methodForSelector: oaiSel];
+    /*
+     *	Binary search for an item equal to the one to be inserted.
+     */
+    for (index = upper/2; upper != lower; index = lower+(upper-lower)/2)
     {
-      NSComparisonResult comparison;
-
-      comparison = (*sorter)(item, (*oai)(self, oaiSel, index), context);
-      if (comparison == NSOrderedAscending)
+        NSComparisonResult comparison;
+        
+        comparison = (*sorter)(item, (*oai)(self, oaiSel, index), context);
+        if (comparison == NSOrderedAscending)
         {
-          upper = index;
+            upper = index;
         }
-      else if (comparison == NSOrderedDescending)
+        else if (comparison == NSOrderedDescending)
         {
-          lower = index + 1;
+            lower = index + 1;
         }
-      else
+        else
         {
-          break;
+            break;
         }
     }
-  /*
-   *	Now skip past any equal items so the insertion point is AFTER any
-   *	items that are equal to the new one.
-   */
-  while (index < count && (*sorter)(item, (*oai)(self, oaiSel, index), context)
-    != NSOrderedAscending)
+    /*
+     *	Now skip past any equal items so the insertion point is AFTER any
+     *	items that are equal to the new one.
+     */
+    while (index < count && (*sorter)(item, (*oai)(self, oaiSel, index), context)
+           != NSOrderedAscending)
     {
-      index++;
+        index++;
     }
-  return index;
+    return index;
 }
 
 - (int) insertionPosition: (id)item
-		   usingSelector: (SEL)comp
+            usingSelector: (SEL)comp
 {
-  NSUInteger	count = [self count];
-  NSUInteger	upper = count;
-  NSUInteger	lower = 0;
-  NSUInteger	index;
-  NSComparisonResult	(*imp)(id, SEL, id);
-  SEL		oaiSel;
-  IMP		oai;
-
-  if (item == nil)
+    NSUInteger	count = [self count];
+    NSUInteger	upper = count;
+    NSUInteger	lower = 0;
+    NSUInteger	index;
+    NSComparisonResult	(*imp)(id, SEL, id);
+    SEL		oaiSel;
+    IMP		oai;
+    
+    if (item == nil)
     {
-      [NSException raise: NSGenericException
-		  format: @"Attempt to find position for nil object in array"];
+        [NSException raise: NSGenericException
+                    format: @"Attempt to find position for nil object in array"];
     }
-  if (comp == 0)
+    if (comp == 0)
     {
-      [NSException raise: NSGenericException
-		  format: @"Attempt to find position with null comparator"];
+        [NSException raise: NSGenericException
+                    format: @"Attempt to find position with null comparator"];
     }
-  imp = (NSComparisonResult (*)(id, SEL, id))[item methodForSelector: comp];
-  if (imp == 0)
+    imp = (NSComparisonResult (*)(id, SEL, id))[item methodForSelector: comp];
+    if (imp == 0)
     {
-      [NSException raise: NSGenericException
-		  format: @"Attempt to find position with unknown method"];
+        [NSException raise: NSGenericException
+                    format: @"Attempt to find position with unknown method"];
     }
-
-  oaiSel = @selector(objectAtIndex:);
-  oai = [self methodForSelector: oaiSel];
-  /*
-   *	Binary search for an item equal to the one to be inserted.
-   */
-  for (index = upper/2; upper != lower; index = lower+(upper-lower)/2)
+    
+    oaiSel = @selector(objectAtIndex:);
+    oai = [self methodForSelector: oaiSel];
+    /*
+     *	Binary search for an item equal to the one to be inserted.
+     */
+    for (index = upper/2; upper != lower; index = lower+(upper-lower)/2)
     {
-      NSComparisonResult comparison;
-
-      comparison = (*imp)(item, comp, (*oai)(self, oaiSel, index));
-      if (comparison == NSOrderedAscending)
+        NSComparisonResult comparison;
+        
+        comparison = (*imp)(item, comp, (*oai)(self, oaiSel, index));
+        if (comparison == NSOrderedAscending)
         {
-          upper = index;
+            upper = index;
         }
-      else if (comparison == NSOrderedDescending)
+        else if (comparison == NSOrderedDescending)
         {
-          lower = index + 1;
+            lower = index + 1;
         }
-      else
+        else
         {
-          break;
+            break;
         }
     }
-  /*
-   *	Now skip past any equal items so the insertion point is AFTER any
-   *	items that are equal to the new one.
-   */
-  while (index < count
-    && (*imp)(item, comp, (*oai)(self, oaiSel, index)) != NSOrderedAscending)
+    /*
+     *	Now skip past any equal items so the insertion point is AFTER any
+     *	items that are equal to the new one.
+     */
+    while (index < count
+           && (*imp)(item, comp, (*oai)(self, oaiSel, index)) != NSOrderedAscending)
     {
-      index++;
+        index++;
     }
-  return index;
+    return index;
 }
 
 @end

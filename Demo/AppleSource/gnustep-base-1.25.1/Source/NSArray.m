@@ -28,10 +28,6 @@
  编译器底层做的事情.
  */
 
-@interface NSEnumerator
-
-@end
-
 
 static BOOL GSMacOSXCompatiblePropertyLists(void)
 {
@@ -44,9 +40,9 @@ extern void     GSPropertyListMake(id,NSDictionary*,BOOL,BOOL,unsigned,id*);
 
 @interface NSArrayEnumerator : NSEnumerator
 {
-    NSArray	*array;
-    NSUInteger	pos;
-    IMP		get;
+    NSArray	*array; // 原始容器的引用
+    NSUInteger	pos; // 当前迭代的顺序.
+    IMP		get; // get 函数
     NSUInteger	(*cnt)(NSArray*, SEL);
 }
 - (id) initWithArray: (NSArray*)anArray;
@@ -107,105 +103,10 @@ static SEL	removeLastSel;
     }
 }
 
-+ (id) allocWithZone: (NSZone*)z
-{
-    // 如果不是自定义的子类, 就是上面的方法, 如果是自定义的子类, 那么 alloc WithZone 就是正常的分配内存, 返回对象.
-    if (self != NSArrayClass) {
-        return NSAllocateObject(self, 0, z);
-    }
-    /*
-     在 alloc 里面, 返回一个 placeHolder 类, 在 placeHolder 的 init 方法里面, 返回实际的对象.
-     */
-    return defaultPlaceholderArray;
-}
-
-+ (id) array // 所以这个方法是一点意义没有的. 但是 NSMutableArray 也可以使用这个
-{
-    id	o;
-    o = [self allocWithZone: NSDefaultMallocZone()];
-    o = [o initWithObjects: (id*)0 count: 0];
-    return AUTORELEASE(o); // Gnu 的代码里面有很多宏, 而这些宏其实都是简单的代码. 猜想这样做是为了之后可以方便修改.
-}
-
-/**
- * Returns a new autoreleased NSArray instance containing all the objects from
- * array, in the same order as the original.
- */
-+ (id) arrayWithArray: (NSArray*)array
-{
-    id	o;
-    
-    o = [self allocWithZone: NSDefaultMallocZone()];
-    o = [o initWithArray: array];
-    return AUTORELEASE(o);
-}
-
-/**
- * Returns an autoreleased array based upon the file.  The new array is
- * created using [NSObject+allocWithZone:] and initialised using the
- * [NSArray-initWithContentsOfFile:] method. See the documentation for those
- * methods for more detail.
- */
-+ (id) arrayWithContentsOfFile: (NSString*)file
-{
-    id	o;
-    o = [self allocWithZone: NSDefaultMallocZone()];
-    o = [o initWithContentsOfFile: file];
-    return AUTORELEASE(o);
-}
-
-/**
- * Returns an autoreleased array from the contents of aURL.  The new array is
- * created using [NSObject+allocWithZone:] and initialised using the
- * -initWithContentsOfURL: method. See the documentation for those
- * methods for more detail.
- */
-+ (id) arrayWithContentsOfURL: (NSURL*)aURL
-{
-    id	o;
-    
-    o = [self allocWithZone: NSDefaultMallocZone()];
-    o = [o initWithContentsOfURL: aURL];
-    return AUTORELEASE(o);
-}
-
-/**
- * Returns an autoreleased array containing anObject.
- */
-+ (id) arrayWithObject: (id)anObject
-{
-    id	o;
-    o = [self allocWithZone: NSDefaultMallocZone()];
-    o = [o initWithObjects: &anObject count: 1];
-    return AUTORELEASE(o);
-}
-
-/**
- * Returns an autoreleased array containing the list
- * of objects, preserving order.
- */
-+ (id) arrayWithObjects: firstObject, ...
-{
-    id	a = [self allocWithZone: NSDefaultMallocZone()];
-    
-    GS_USEIDLIST(firstObject,
-                 a = [a initWithObjects: __objects count: __count]);
-    return AUTORELEASE(a);
-}
-
-/**
- * Returns an autoreleased array containing the specified
- * objects, preserving order.
- */
-+ (id) arrayWithObjects: (const id[])objects count: (int)count
-{
-    return AUTORELEASE([[self allocWithZone: NSDefaultMallocZone()]
-                        initWithObjects: objects count: count]);
-}
-
 /*
  从上面我们可以看到, 类方法仅仅是 alloc init 的调用而已, 这也是为什么苹果现在推崇 alloc init 这种两部的写法. 在上面的方法里面, 差别就是 init方法的调用.
  类方法, 和 init 方法有什么区别呢, 从上面看是没有什么区别的. 徒增复杂度.
+ 类方法全部删除了, 占得地方, 对于分析没有一点好处.
  */
 
 /**
@@ -234,6 +135,9 @@ static SEL	removeLastSel;
         // 这个宏 会将分配一块内存空间给 objects, 然后下面的方法会进行这个空间的赋值操作. 所以, NSArray 的 backing 还是需要实际的C++ 的内存分配才能够进行的. GSArrayClass 就是实际的进行内存管理的类, 它是 NSArray 的子类, 代表着它符合NSA rray 的所有接口.
         [self getObjects: objects]; // 执行完这个操作之后, objects 里面, 就已经有了原来类的所有数据了,  并且 objects 里面的长度进行了 +1/
         objects[c] = anObject;
+        /*
+         在 GSArrayClass initWithObjects 中, 会有对于引用计数 +1 的操作.
+         */
         na = [[GSArrayClass allocWithZone: NSDefaultMallocZone()]
               initWithObjects: objects count: c+1];
         GS_ENDIDBUF();
@@ -259,22 +163,10 @@ static SEL	removeLastSel;
     
     {
         GS_BEGINIDBUF(objects, e);
-        
+        // 显示把自己的值, 放到了数组的起始位置
         [self getObjects: objects];
-        if ([anotherArray isProxy]) // 这里, 如果 anotherArray 是一个proxy, 那么其实这个对象不能使用 getObjects 这个方法的, 因为这个方法的内部, 用到了 IMP. 所以, 只能用 objectAtIndex 这样的方法, 因为这样的方法会被传递到 proxy 代理的对象中区.
-        {
-            NSUInteger	i = c;
-            NSUInteger	j = 0;
-            
-            while (i < e)
-            {
-                objects[i++] = [anotherArray objectAtIndex: j++];
-            }
-        }
-        else
-        {
-            [anotherArray getObjects: &objects[c]]; // 这里, 它为了提高效率, 直接是传递的指针, 然后操作指针.
-        }
+        // 然后对方把自己的值, 放到数组的偏移位置.
+        [anotherArray getObjects: &objects[c]]; // 这里, 它为了提高效率, 直接是传递的指针, 然后操作指针.
         na = [NSArrayClass arrayWithObjects: objects count: e];
         
         GS_ENDIDBUF();
@@ -313,57 +205,6 @@ static SEL	removeLastSel;
 {
     NSArray	*copy = [NSArrayClass allocWithZone: zone];
     return [copy initWithArray: self copyItems: YES];
-}
-
-
-- (int) count
-{
-    [self subclassResponsibility: _cmd];
-    return 0;
-}
-
-// 没看.
-- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state
-                            objects: (__unsafe_unretained id[])stackbuf
-                              count: (int)len
-{
-    NSInteger count;
-    
-    /* In a mutable subclass, the mutationsPtr should be set to point to a
-     * value (unsigned long) which will be changed (incremented) whenever
-     * the container is mutated (content added, removed, re-ordered).
-     * This is cached in the caller at the start and compared at each
-     * iteration.   If it changes during the iteration then
-     * objc_enumerationMutation() will be called, throwing an exception.
-     * The abstract base class implementation points to a fixed value
-     * (the enumeration state pointer should exist and be unchanged for as
-     * long as the enumeration process runs), which is fine for enumerating
-     * an immutable array.
-     */
-    state->mutationsPtr = (unsigned long *)&state->mutationsPtr;
-    count = MIN(len, [self count] - state->state);
-    /* If a mutation has occurred then it's possible that we are being asked to
-     * get objects from after the end of the array.  Don't pass negative values
-     * to memcpy.
-     */
-    if (count > 0)
-    {
-        IMP	imp = [self methodForSelector: @selector(objectAtIndex:)];
-        int	p = state->state;
-        int	i;
-        
-        for (i = 0; i < count; i++, p++)
-        {
-            stackbuf[i] = (*imp)(self, @selector(objectAtIndex:), p);
-        }
-        state->state += count;
-    }
-    else
-    {
-        count = 0;
-    }
-    state->itemsPtr = stackbuf;
-    return count;
 }
 
 /**
@@ -421,10 +262,10 @@ static SEL	removeLastSel;
  * an area of memory large enough to hold them.
  */
 /*
- OC 的方法里面, get 一般就是用在这个时候, 将数据放到一个 buf 里面, 这个 buf 是输出参数, 必须实现分配, 由调用者来确保它是有效的.
+ OC 的方法里面, get 一般就是用在这个时候, 将数据放到一个 buf 里面, 这个 buf 是输出参数, 必须事先分配, 由调用者来确保它是有效的.
  这个方法里面, 并没有内存的管理. 内存的管理仅仅是出现在 init 方法里面, 所以这个方法的后面, 一般紧接着的就是 init 方法.
  */
-- (void) getObjects: (__unsafe_unretained id[])aBuffer
+- (void)getObjects: (__unsafe_unretained id[])aBuffer
 {
     NSUInteger i, c = [self count];
     IMP	get = [self methodForSelector: objectAtSel];
@@ -449,7 +290,7 @@ static SEL	removeLastSel;
 
 /*
  数组里面, 想要查询值在不在其中, 都是要用到遍历的方式.
- 下面的这两个函数, 一个是判断, 这个值是否就是传入的那个值, 也就是判断的是指针值是否相等. 一个是调用 isEqual 方法, 也就是用 isEqual 进行的判断. 不过, NSObject 的 isEqual 默认就是判断地址值. 所以, 如果一个类没有复写 isEqual 的话, 这两个方法是相同的.
+ Identical 是直接的地址比对.
  */
 - (int) indexOfObjectIdenticalTo: (id)anObject
 {
@@ -468,10 +309,7 @@ static SEL	removeLastSel;
 }
 
 /**
- * Returns the index of the first object found in the receiver
- * which is equal to anObject (using anObject's [NSObject-isEqual:] method).
- * Returns NSNotFound on failure.
- 这个方法就是遍历操作, 不过是在这里面, 用到其实要使用的是每个方法的Equal 方法, 这里, 系统的类的实现性能优先, 直接用的 Imp
+    更多情况下, 我们需要的是值语义的比对, 而不是地址比对, 所以在 indexOfObject 里面, 使用的是 isEqual.
  */
 - (int) indexOfObject: (id)anObject
 {
@@ -491,12 +329,6 @@ static SEL	removeLastSel;
     return NSNotFound;
 }
 
-- (id) init
-{
-    self = [super init];
-    return self;
-}
-
 /**
  * Initialize the receiver with the contents of array.
  * The order of array is preserved.<br />
@@ -509,19 +341,7 @@ static SEL	removeLastSel;
     NSUInteger	c = [array count];
     GS_BEGINIDBUF(objects, c); // 分配存储空间.
     
-    if ([array isProxy])
-    {
-        NSUInteger	i;
-        
-        for (i = 0; i < c; i++)
-        {
-            objects[i] = [array objectAtIndex: i];
-        }
-    }
-    else
-    {
-        [array getObjects: objects];
-    }
+    [array getObjects: objects];
     if (shouldCopy == YES)
     {
         NSUInteger	i;
@@ -556,20 +376,7 @@ static SEL	removeLastSel;
 {
     NSUInteger	c = [array count];
     GS_BEGINIDBUF(objects, c);
-    
-    if ([array isProxy])
-    {
-        NSUInteger	i;
-        
-        for (i = 0; i < c; i++)
-        {
-            objects[i] = [array objectAtIndex: i];
-        }
-    }
-    else
-    {
-        [array getObjects: objects];
-    }
+    [array getObjects: objects];
     self = [self initWithObjects: objects count: c];
     GS_ENDIDBUF();
     return self;
@@ -659,7 +466,7 @@ static SEL	removeLastSel;
     {
         result = [myString propertyList];
         /*
-         这里, 将字符串, 转换成为了一个 NSDictionary 对象. 字符串的转换, 本身是一个超级复杂的问题, GNU 将所需要的逻辑, 都封装到了 PropertyList, JSON 相关的一个类中. 这两个类, 感觉虽然算法精妙, 但对实际开发帮助不大, 看完就忘.
+         在 propertyList 中, 会将 myString 转换成为, 对应的类型, 在 myString 中, 一定有着自己应该转换的类型信息.
          */
     }
     NS_HANDLER // 标志异常处理的区间.
@@ -724,9 +531,7 @@ static SEL	removeLastSel;
 }
 
 // 可以看到, 其他的所有操作, 都是建立在 objectAtIndex 和 count 的基础上的, 接口类中, 将这些操作都写好, 子类仅仅重写 objectAtIndex 和 count 就能实现自定义. 缺点是, 子类用父类的代码, 就不能利用自己已知的数据结构, 直接访问数据, 还是要使用 objectAtIndex 和 count 的才可以.
-
 /*
- 
  这种判断 equal 的方法都很类似, 显示判断指针, 然后是主要的属性值, 然后如果是容器类, 就会判断各个数据是否相等, 这里, 其实是调用数据的 isEqual 方法, 这样数据也可以按照, 指针, 关键属性这种方式判断相等与否, 而不是直接判断指针.
  */
 - (BOOL) isEqualToArray: (NSArray*)otherArray
@@ -763,7 +568,6 @@ static SEL	removeLastSel;
 
 /**
  * Returns the first object in the receiver, or nil if the receiver is empty.
- 简单的封装, 完全符合自己想法
  */
 - (id) firstObject
 {
@@ -776,7 +580,6 @@ static SEL	removeLastSel;
 /**
  * Makes each object in the array perform aSelector.<br />
  * This is done sequentially from the first to the last object.
- 简单的封装, 完全符合自己想法
  */
 - (void) makeObjectsPerformSelector: (SEL)aSelector
 {
@@ -801,34 +604,6 @@ static SEL	removeLastSel;
     [self makeObjectsPerformSelector: aSelector];
 }
 
-/**
- * Makes each object in the array perform aSelector with arg.<br />
- * This is done sequentially from the first to the last object.
- */
-- (void) makeObjectsPerformSelector: (SEL)aSelector withObject: (id)arg
-{
-    NSUInteger    c = [self count];
-    
-    if (c > 0)
-    {
-        IMP	        get = [self methodForSelector: objectAtSel];
-        NSUInteger	i = 0;
-        
-        while (i < c)
-        {
-            [(*get)(self, objectAtSel, i++) performSelector: aSelector
-                                                 withObject: arg];
-        }
-    }
-}
-
-/**
- * Obsolete version of -makeObjectsPerformSelector:withObject:
- */
-- (void) makeObjectsPerform: (SEL)aSelector withObject: (id)argument
-{
-    [self makeObjectsPerformSelector: aSelector withObject: argument];
-}
 
 static NSComparisonResult
 compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一个 selector.
@@ -876,15 +651,6 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
 }
 
 /**
- * Subclasses may provide a hint for sorting ...  The default GNUstep
- * implementation just returns nil.
- */
-- (NSData*) sortedArrayHint
-{
-    return nil;
-}
-
-/**
  * Returns an autoreleased array in which the objects are ordered
  * according to a sort with comparator, where the comparator function
  * is passed two objects to compare, and the context as the third
@@ -927,7 +693,6 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
 /**
  * Returns a string formed by concatenating the objects in the receiver,
  * with the specified separator string inserted between each part.
- 实现, 符合自己的想法.
  */
 - (NSString*) componentsJoinedByString: (NSString*)separator
 {
@@ -952,36 +717,6 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
         }
     }
     return GS_IMMUTABLE(s);
-}
-
-/**
- * Assumes that the receiver is an array of paths, and returns an
- * array formed by selecting the subset of those patch matching
- * the specified array of extensions.
- 这个函数没用过, 按效果, 应用途径很少, 并且, 如果真的想要达到效果, 也会自己实现, 明显的 extensions 在这里就应该用 set.
- 系统给的库, 有的时候太过度设计了. 所以, 类的文档, 很多时候可以不读的.
- */
-- (NSArray*) pathsMatchingExtensions: (NSArray*)extensions
-{
-    NSUInteger i, c = [self count];
-    NSMutableArray *a = AUTORELEASE([[NSMutableArray alloc] initWithCapacity: 1]);
-    Class	cls = [NSString class];
-    IMP	get = [self methodForSelector: objectAtSel];
-    IMP	add = [a methodForSelector: addSel];
-    
-    for (i = 0; i < c; i++)
-    {
-        id o = (*get)(self, objectAtSel, i);
-        
-        if ([o isKindOfClass: cls])
-        {
-            if ([extensions containsObject: [o pathExtension]]) // 这里其实也有一遍循环操作. 所以, 如果量特别大, 可以先替换 set, 然后用 set 进行比较.
-            {
-                (*add)(a, addSel, o);
-            }
-        }
-    }
-    return GS_IMMUTABLE(a);
 }
 
 /**
@@ -1059,44 +794,6 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
     e = [NSArrayEnumeratorReverse allocWithZone: NSDefaultMallocZone()];
     e = [e initWithArray: self]; // 这里, 一定是 NSArrayEnumeratorReverse 的内部, 可以拿到 Array 的内部数据结构.
     return AUTORELEASE(e);
-}
-
-/**
- * Returns the result of invoking -descriptionWithLocale:indent: with a nil
- * locale and zero indent.
- */
-- (NSString*) description // 所以, 这里其实是个函数调用的关系.
-{
-    return [self descriptionWithLocale: nil]; // 国际化的代码应该看一下. 万一用到了呢. 不过, 应该和 QT 国际化的思路差不多才对.
-}
-
-/**
- * Returns the result of invoking -descriptionWithLocale:indent:
- * with a zero indent.
- */
-- (NSString*) descriptionWithLocale: (id)locale
-{
-    return [self descriptionWithLocale: locale indent: 0];
-}
-
-/**
- * Returns the receiver as a text property list in the traditional format.<br />
- * See [NSString-propertyList] for details.<br />
- * If locale is nil, no formatting is done, otherwise entries are formatted
- * according to the locale, and indented according to level.<br />
- * Unless locale is nil, a level of zero indents items by four spaces,
- * while a level of one indents them by a tab.<br />
- * The items in the property list string appear in the same order as
- * they appear in the receiver.
- */
-- (NSString*) descriptionWithLocale: (id)locale
-                             indent: (int)level
-{
-    NSString	*result = nil;
-    
-    GSPropertyListMake(self, locale, NO, YES, level == 1 ? 3 : 2, &result);
-    
-    return result;
 }
 
 // 用 propertyList 的方式, 写入到一个文件的路径中.
@@ -1177,233 +874,6 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
 - (id) valueForKeyPath: (NSString*)path
 {
     id	result = nil;
-    
-    if ([path hasPrefix: @"@"])
-    {
-        NSRange   r;
-        
-        r = [path rangeOfString: @"."];// 首先, 判断一下有没有 . 的链接. 如果有话,就要按照路径进行一层层的查找.
-        if (r.length == 0)
-        {
-            if ([path isEqualToString: @"@count"] == YES)
-            {
-                result = [NSNumber numberWithUnsignedInteger: [self count]];
-            }
-            else
-            {
-                result = [self valueForKey: path];
-            }
-        }
-        else
-        {
-            NSString      *op = [path substringToIndex: r.location];
-            NSString      *remains = [path substringFromIndex: NSMaxRange(r)];
-            NSUInteger    count = [self count];
-            
-            if ([op isEqualToString: @"@count"] == YES)
-            {
-                result = [NSNumber numberWithUnsignedInteger: count];
-            }
-            else if ([op isEqualToString: @"@avg"] == YES)
-            {
-                double        d = 0;
-                
-                if (count > 0)
-                {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    while ((o = [e nextObject]) != nil)
-                    {
-                        d += [[o valueForKeyPath: remains] doubleValue];
-                    }
-                    d /= count;
-                }
-                result = [NSNumber numberWithDouble: d]; // 这里通过迭代器, 实现了递归操作.
-            }
-            else if ([op isEqualToString: @"@max"] == YES)
-            {
-                if (count > 0)
-                {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    while ((o = [e nextObject]) != nil)
-                    {
-                        o = [o valueForKeyPath: remains];
-                        if (result == nil
-                            || [result compare: o] == NSOrderedAscending)
-                        {
-                            result = o;
-                        }
-                    }
-                }
-            }
-            else if ([op isEqualToString: @"@min"] == YES)
-            {
-                if (count > 0)
-                {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    while ((o = [e nextObject]) != nil)
-                    {
-                        o = [o valueForKeyPath: remains];
-                        if (result == nil
-                            || [result compare: o] == NSOrderedDescending)
-                        {
-                            result = o;
-                        }
-                    }
-                }
-            }
-            else if ([op isEqualToString: @"@sum"] == YES)
-            {
-                double        d = 0;
-                
-                if (count > 0)
-                {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    while ((o = [e nextObject]) != nil)
-                    {
-                        d += [[o valueForKeyPath: remains] doubleValue];
-                    }
-                }
-                result = [NSNumber numberWithDouble: d];
-            }
-            else if ([op isEqualToString: @"@distinctUnionOfArrays"] == YES)
-            {
-                if (count > 0)
-                {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    result = [NSMutableSet set];
-                    while ((o = [e nextObject]) != nil)
-                    {
-                        o = [o valueForKeyPath: remains];
-                        [result addObjectsFromArray: o];
-                    }
-                    result = [result allObjects];
-                }
-                else
-                {
-                    result = [NSArray array];
-                }
-            }
-            else if ([op isEqualToString: @"@distinctUnionOfObjects"] == YES)
-            {
-                if (count > 0)
-                {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    result = [NSMutableSet set];
-                    while ((o = [e nextObject]) != nil)
-                    {
-                        o = [o valueForKeyPath: remains];
-                        [result addObject: o];
-                    }
-                    result = [result allObjects];
-                }
-                else
-                {
-                    result = [NSArray array];
-                }
-            }
-            else if ([op isEqualToString: @"@distinctUnionOfSets"] == YES)
-            {
-                if (count > 0)
-                {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    result = [NSMutableSet set];
-                    while ((o = [e nextObject]) != nil)
-                    {
-                        o = [o valueForKeyPath: remains];
-                        [result addObjectsFromArray: [o allObjects]];
-                    }
-                    result = [result allObjects];
-                }
-                else
-                {
-                    result = [NSArray array];
-                }
-            }
-            else if ([op isEqualToString: @"@unionOfArrays"] == YES)
-            {
-                if (count > 0)
-                {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    result = [GSMutableArray array];
-                    while ((o = [e nextObject]) != nil)
-                    {
-                        o = [o valueForKeyPath: remains];
-                        [result addObjectsFromArray: o];
-                    }
-                    result = GS_IMMUTABLE(result);
-                }
-                else
-                {
-                    result = [NSArray array];
-                }
-            }
-            else if ([op isEqualToString: @"@unionOfObjects"] == YES)
-            {
-                if (count > 0)
-                {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    result = [GSMutableArray array];
-                    while ((o = [e nextObject]) != nil)
-                    {
-                        o = [o valueForKeyPath: remains];
-                        [result addObject: o];
-                    }
-                    result = GS_IMMUTABLE(result);
-                }
-                else
-                {
-                    result = [NSArray array];
-                }
-            }
-            else if ([op isEqualToString: @"@unionOfSets"] == YES)
-            {
-                if (count > 0)
-                {
-                    NSEnumerator  *e = [self objectEnumerator];
-                    id            o;
-                    
-                    result = [GSMutableArray array];
-                    while ((o = [e nextObject]) != nil)
-                    {
-                        o = [o valueForKeyPath: remains];
-                        [result addObjectsFromArray: [o allObjects]];
-                    }
-                    result = GS_IMMUTABLE(result);
-                }
-                else
-                {
-                    result = [NSArray array];
-                }
-            }
-            else
-            {
-                result = [super valueForKeyPath: path];
-            }
-        }
-    }
-    else
-    {
-        result = [super valueForKeyPath: path];
-    }
-    
     return result;
 }
 
@@ -1601,53 +1071,12 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
  */
 @implementation NSMutableArray
 
-+ (void) initialize
-{
-    if (self == [NSMutableArray class])
-    {
-    }
-}
-
-+ (id) allocWithZone: (NSZone*)z
-{
-    if (self == NSMutableArrayClass)
-    {
-        return NSAllocateObject(GSMutableArrayClass, 0, z);
-    }
-    else
-    {
-        return NSAllocateObject(self, 0, z);
-    }
-}
-
-+ (id) arrayWithObject: (id)anObject
-{
-    NSMutableArray	*obj = [self allocWithZone: NSDefaultMallocZone()];
-    
-    obj = [obj initWithObjects: &anObject count: 1];
-    return AUTORELEASE(obj);
-}
-
-// 这个函数, 没有在类中找到的.
-- (Class) classForCoder
-{
-    return NSMutableArrayClass;
-}
-
 - (id) initWithCapacity: (int)numItems
 {
     self = [self init];
     return self;
 }
 
-- (void) addObject: (id)anObject
-{
-    [self subclassResponsibility: _cmd];
-}
-
-/**
- 
- */
 - (void) exchangeObjectAtIndex: (int)i1
              withObjectAtIndex: (int)i2
 {
@@ -2285,8 +1714,6 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
 /**
  * Returns the next object in the enumeration or nil if there are no more
  * objects.<br />
- * NB. modifying a mutable array during an enumeration can break things ...
- * don't do it.
  */
 - (id) nextObject
 {

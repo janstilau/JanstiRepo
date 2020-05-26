@@ -213,7 +213,7 @@ open class Session {
      这个东西, 其实就是一个数据类, 将生成 Request 的过程, 封装到了这个类的内部.
      上面是 OC 的实现, 和 OC 的实现相比, 过程没有太大的区别. 主要是, 整个数据都建立在协议的基础上, 而不再是具体的业务类了.
      */
-    struct RequestConvertible: URLRequestConvertible {
+    struct RequestConvertible: URLRequestConvertible, Sequence {
         let url: URLConvertible
         let method: HTTPMethod
         let parameters: Parameters?

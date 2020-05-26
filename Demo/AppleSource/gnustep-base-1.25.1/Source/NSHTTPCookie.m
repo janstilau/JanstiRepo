@@ -22,16 +22,9 @@ NSString * const NSHTTPCookieValue = @"Value";
 NSString * const NSHTTPCookieVersion = @"Version";
 static NSString * const HTTPCookieHTTPOnly = @"HTTPOnly";
 
-// Internal data storage
-typedef struct {
-    NSDictionary	*_properties;
-} Internal;
-
-#define	this	((Internal*)(self->_NSHTTPCookieInternal))
-#define	inst	((Internal*)(o->_NSHTTPCookieInternal))
 
 /* Bitmap of characters considered white space if in an old style property
- * list. This is the same as the set given by the isspace() function in the
+ * list. self is the same as the set given by the isspace() function in the
  * POSIX locale, but (for cross-locale portability of property list files)
  * is fixed, rather than locale dependent.
  */
@@ -78,17 +71,6 @@ static id GSPropertyListFromCookieFormat(NSString *string, int version);
 static NSRange GSRangeOfCookie(NSString *string);
 
 @implementation NSHTTPCookie
-
-+ (id) allocWithZone: (NSZone*)z
-{
-    NSHTTPCookie	*o = [super allocWithZone: z];
-    
-    if (o != nil)
-    {
-        o->_NSHTTPCookieInternal = NSZoneCalloc(z, 1, sizeof(Internal)); // 就是一个字典.
-    }
-    return o;
-}
 
 + (id) cookieWithProperties: (NSDictionary *)properties
 {
@@ -226,32 +208,32 @@ static NSRange GSRangeOfCookie(NSString *string);
 
 - (NSString *) comment // 这些信息, 都应该是在 setCookie 里面传过来的.
 {
-    return [this->_properties objectForKey: NSHTTPCookieComment];
+    return [self->_properties objectForKey: NSHTTPCookieComment];
 }
 
 - (NSURL *) commentURL
 {
-    return [this->_properties objectForKey: NSHTTPCookieCommentURL];
+    return [self->_properties objectForKey: NSHTTPCookieCommentURL];
 }
 
 - (void) dealloc
 {
-    if (this != 0)
+    if (self != 0)
     {
-        RELEASE(this->_properties);
-        NSZoneFree([self zone], this);
+        RELEASE(self->_properties);
+        NSZoneFree([self zone], self);
     }
     [super dealloc];
 }
 
 - (NSString *) domain
 {
-    return [this->_properties objectForKey: NSHTTPCookieDomain];
+    return [self->_properties objectForKey: NSHTTPCookieDomain];
 }
 
 - (NSDate *) expiresDate
 {
-    return [this->_properties objectForKey: NSHTTPCookieExpires];
+    return [self->_properties objectForKey: NSHTTPCookieExpires];
 }
 
 - (BOOL) _isValidProperty: (NSString *)prop
@@ -294,54 +276,54 @@ static NSRange GSRangeOfCookie(NSString *string);
                      forKey: NSHTTPCookieDiscard]; // 如果没有过期时间, 那么就代表, 这个 cookie 应该舍弃.
     }
     
-    this->_properties = [rawProperties copy];
+    self->_properties = [rawProperties copy];
     return self;
 }
 
 - (BOOL) isSecure
 {
-    return [[this->_properties objectForKey: NSHTTPCookieSecure] boolValue];
+    return [[self->_properties objectForKey: NSHTTPCookieSecure] boolValue];
 }
 
 - (BOOL) isHTTPOnly
 {
-    return [[this->_properties objectForKey: HTTPCookieHTTPOnly] boolValue];
+    return [[self->_properties objectForKey: HTTPCookieHTTPOnly] boolValue];
 }
 
 - (BOOL) isSessionOnly
 {
-    return [[this->_properties objectForKey: NSHTTPCookieDiscard] boolValue];
+    return [[self->_properties objectForKey: NSHTTPCookieDiscard] boolValue];
 }
 
 - (NSString *) name
 {
-    return [this->_properties objectForKey: NSHTTPCookieName];
+    return [self->_properties objectForKey: NSHTTPCookieName];
 }
 
 - (NSString *) path
 {
-    return [this->_properties objectForKey: NSHTTPCookiePath];
+    return [self->_properties objectForKey: NSHTTPCookiePath];
 }
 
 - (NSArray *) portList
 {
-    return [[this->_properties objectForKey: NSHTTPCookiePort]
+    return [[self->_properties objectForKey: NSHTTPCookiePort]
             componentsSeparatedByString: @","];
 }
 
 - (NSDictionary *) properties
 {
-    return this->_properties;
+    return self->_properties;
 }
 
 - (NSString *) value
 {
-    return [this->_properties objectForKey: NSHTTPCookieValue];
+    return [self->_properties objectForKey: NSHTTPCookieValue];
 }
 
 - (int) version
 {
-    return [[this->_properties objectForKey: NSHTTPCookieVersion] integerValue];
+    return [[self->_properties objectForKey: NSHTTPCookieVersion] integerValue];
 }
 
 - (NSString *) description
@@ -635,7 +617,7 @@ _setCookieKey(NSMutableDictionary *dict, NSString *key, NSString *value)
 {
     if ([dict count] == 0)
     {
-        /* This must be the name=value pair */
+        /* self must be the name=value pair */
         if ([value length] == 0)
             return NO;
         [dict setObject: key forKey: NSHTTPCookieName];
@@ -860,7 +842,7 @@ GSRangeOfCookie(NSString *string)
     {
         if (pld->ptr[pld->pos] == ',')
         {
-            /* Look ahead for something that will tell us if this is a
+            /* Look ahead for something that will tell us if self is a
              separate cookie or not */
             unsigned saved_pos = pld->pos;
             while (pld->ptr[pld->pos] != '=' && pld->ptr[pld->pos] != ';'

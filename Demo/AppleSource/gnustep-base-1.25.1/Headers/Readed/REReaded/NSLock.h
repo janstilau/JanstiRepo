@@ -5,10 +5,6 @@
 
 #import  <Foundation/NSObject.h>
 
-#if  defined(__cplusplus)
-extern "C" {
-#endif
-
 /**
  * Protocol defining lock and unlock operations.
  */
@@ -40,19 +36,14 @@ extern "C" {
  */
 @interface NSLock : NSObject <NSLocking>
 {
-#if	GS_EXPOSE(NSLock)
-@private
-  gs_mutex_t	_mutex; // 功能的实现
-  NSString	*_name; // 提示信息.
-#endif
+    gs_mutex_t	_mutex; // 功能的实现
+    NSString	*_name; // 提示信息.
 }
 
-#if !NO_GNUSTEP
 /** Report whether this lock is held by the current thread.<br />
  * Raises an exception if this is not supported by the system lock mechanism.
  */
 - (BOOL) isLockedByCurrentThread;
-#endif
 
 /**
  *  Try to acquire lock and return before limit, YES if succeeded, NO if not.
@@ -93,10 +84,13 @@ extern "C" {
 {
 #if	GS_EXPOSE(NSCondition)
 @private
-    // 先通过 mutext 得到锁, 然后 _condition 进行 wait 操作, 在这个 wait 的过程中, 会释放 mutext 的锁, 好让其他的线程获取锁. 其他线程完成操作之后, 可以进行 singal, 或者 broadcast 唤醒 wait 的线程. 在被唤醒之后, 首先还是要通过 mutext 获得锁, 然后进行之后的操作.
-  gs_cond_t	_condition;
-  gs_mutex_t	_mutex;
-  NSString	*_name;
+    /*
+        先通过 mutext 得到锁, 然后 _condition 进行 wait 操作, 在这个 wait 的过程中, 会释放 mutext 的锁, 好让其他的线程获取锁.
+        其他线程完成操作之后, 可以进行 singal, 或者 broadcast 唤醒 wait 的线程. 在被唤醒之后, 首先还是要通过 mutext 获得锁, 然后进行之后的操作.
+     */
+    gs_cond_t	_condition;
+    gs_mutex_t	_mutex;
+    NSString	*_name;
 #endif
 }
 /**
@@ -145,9 +139,9 @@ extern "C" {
 {
 #if	GS_EXPOSE(NSConditionLock)
 @private
-  NSCondition *_condition; // 其实就是对于 NSCondition 的封装.
-  int   _condition_value;
-  NSString      *_name;
+    NSCondition *_condition; // 其实就是对于 NSCondition 的封装.
+    int   _condition_value;
+    NSString      *_name;
 #endif
 }
 
@@ -237,16 +231,16 @@ extern "C" {
 /**
  * Allows the lock to be recursively acquired by the same thread.
  *
- * If the same thread locks the mutex (n) times then that same 
- * thread must also unlock it (n) times before another thread 
+ * If the same thread locks the mutex (n) times then that same
+ * thread must also unlock it (n) times before another thread
  * can acquire the lock.
  */
 @interface NSRecursiveLock : NSObject <NSLocking>
 {
 #if	GS_EXPOSE(NSRecursiveLock)
 @private
-  gs_mutex_t	_mutex;
-  NSString      *_name;
+    gs_mutex_t	_mutex;
+    NSString      *_name;
 #endif
 }
 
@@ -289,10 +283,6 @@ extern "C" {
 #endif
 
 @end
-
-#if  defined(__cplusplus)
-}
-#endif
 
 #if     !NO_GNUSTEP && !defined(GNUSTEP_BASE_INTERNAL)
 #import <GNUstepBase/NSLock+GNUstepBase.h>

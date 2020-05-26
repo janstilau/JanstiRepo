@@ -1501,6 +1501,14 @@
 			path = KVO;
 			sourceTree = "<group>";
 		};
+		06D1349B247A8E3D00867039 /* REReaded */ = {
+			isa = PBXGroup;
+			children = (
+				06EDD8DB2248BEA800C87605 /* NSLock.h */,
+			);
+			path = REReaded;
+			sourceTree = "<group>";
+		};
 		06EDD8AC2248BEA800C87605 /* GNUstepBase */ = {
 			isa = PBXGroup;
 			children = (
@@ -1569,6 +1577,7 @@
 		06EDD8DA2248BEA800C87605 /* Readed */ = {
 			isa = PBXGroup;
 			children = (
+				06D1349B247A8E3D00867039 /* REReaded */,
 				06480DE324796FB0001BDF0D /* Network */,
 				06EDD9162248BEA800C87605 /* Foundation.h */,
 				06EDD8E32248BEA800C87605 /* NSArray.h */,
@@ -1587,7 +1596,6 @@
 				0673913F227403BA008CB110 /* NSKeyedArchiver.plist */,
 				06EDD8E82248BEA800C87605 /* NSKeyValueCoding.h */,
 				06EDD9352248BEA800C87605 /* NSKeyValueObserving.h */,
-				06EDD8DB2248BEA800C87605 /* NSLock.h */,
 				06EDD9082248BEA800C87605 /* NSMapTable.h */,
 				06EDD8DF2248BEA800C87605 /* NSNotification.h */,
 				06EDD9242248BEA800C87605 /* NSNotificationQueue.h */,

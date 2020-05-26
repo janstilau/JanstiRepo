@@ -66,7 +66,7 @@ extern NSString * const NSHTTPCookieVersion; /** Obtain cookie version */
  */
 @interface NSHTTPCookie :  NSObject
 {
-    void	*_NSHTTPCookieInternal;
+    NSDictionary    *_properties;
 }
 
 /**
