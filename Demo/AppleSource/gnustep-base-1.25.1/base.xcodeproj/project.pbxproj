@@ -1504,6 +1504,7 @@
 		06D1349B247A8E3D00867039 /* REReaded */ = {
 			isa = PBXGroup;
 			children = (
+				06EDD8E32248BEA800C87605 /* NSArray.h */,
 				06EDD8DB2248BEA800C87605 /* NSLock.h */,
 			);
 			path = REReaded;
@@ -1580,7 +1581,6 @@
 				06D1349B247A8E3D00867039 /* REReaded */,
 				06480DE324796FB0001BDF0D /* Network */,
 				06EDD9162248BEA800C87605 /* Foundation.h */,
-				06EDD8E32248BEA800C87605 /* NSArray.h */,
 				06EDD8DD2248BEA800C87605 /* NSAttributedString.h */,
 				06EDD92B2248BEA800C87605 /* NSCache.h */,
 				06EDD8E02248BEA800C87605 /* NSCoder.h */,
