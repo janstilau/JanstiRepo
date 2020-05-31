@@ -53,9 +53,13 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
         _titleLabel.backgroundColor = [UIColor clearColor];
         _titleLabel.textAlignment = UITextAlignmentLeft;
         _titleLabel.shadowOffset = CGSizeZero;
+        
         [self addSubview:_backgroundImageView];
         [self addSubview:_imageView];
         [self addSubview:_titleLabel];
+        /*
+         UIButton 的内部, 就是在管理着上面这个三个类的视图状态.
+         */
     }
     return self;
 }
@@ -106,7 +110,9 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
     return [self _contentForState:state type:type] ?: [self _contentForState:UIControlStateNormal type:type];
 }
 
-// 根据 state 的不同, 取不同的值, 设置 Label 和 ImageView 的值.
+/*
+ 所有的, 关于状态的管理, 都是通过一个 Dict 进行的.
+ */
 - (void)_updateContent
 {
     const UIControlState state = self.state;
@@ -248,6 +254,10 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
     return image ? image.size : CGSizeZero;
 }
 
+/*
+ UIControlContentAlignment 的值, 目前来看仅仅在 Button 里面用到了.
+ */
+
 - (CGRect)_componentRectForSize:(CGSize)size inContentRect:(CGRect)contentRect withState:(UIControlState)state
 {
     CGRect rect;
@@ -342,7 +352,6 @@ static NSString *UIButtonContentTypeImage = @"UIButtonContentTypeImage";
     [self _updateContent];
 }
 
-// 参数完全没有用到, 完全靠自己的内容, sizeToFit 会调用到这个方法. 所以, 重写这个方法, 在这个方法里面
 - (CGSize)sizeThatFits:(CGSize)targetSize
 {
     const UIControlState state = self.state;

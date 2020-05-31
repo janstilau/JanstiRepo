@@ -95,8 +95,6 @@
 		1489859B12EE2CFF003D4751 /* UIImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489851512EE2CFE003D4751 /* UIImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1489859C12EE2CFF003D4751 /* UIImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489851612EE2CFE003D4751 /* UIImage.m */; };
 		1489859D12EE2CFF003D4751 /* UIImageAppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489851712EE2CFE003D4751 /* UIImageAppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1489859E12EE2CFF003D4751 /* UIImagePickerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489851812EE2CFE003D4751 /* UIImagePickerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1489859F12EE2CFF003D4751 /* UIImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489851912EE2CFE003D4751 /* UIImagePickerController.m */; };
 		148985A012EE2CFF003D4751 /* UIImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489851A12EE2CFE003D4751 /* UIImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985A112EE2CFF003D4751 /* UIImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489851B12EE2CFE003D4751 /* UIImageView.m */; };
 		148985A212EE2CFF003D4751 /* UIKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489851C12EE2CFE003D4751 /* UIKey.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -355,8 +353,6 @@
 		1489851512EE2CFE003D4751 /* UIImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImage.h; sourceTree = "<group>"; };
 		1489851612EE2CFE003D4751 /* UIImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImage.m; sourceTree = "<group>"; };
 		1489851712EE2CFE003D4751 /* UIImageAppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageAppKitIntegration.h; sourceTree = "<group>"; };
-		1489851812EE2CFE003D4751 /* UIImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImagePickerController.h; sourceTree = "<group>"; };
-		1489851912EE2CFE003D4751 /* UIImagePickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImagePickerController.m; sourceTree = "<group>"; };
 		1489851A12EE2CFE003D4751 /* UIImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageView.h; sourceTree = "<group>"; };
 		1489851B12EE2CFE003D4751 /* UIImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageView.m; sourceTree = "<group>"; };
 		1489851C12EE2CFE003D4751 /* UIKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIKey.h; sourceTree = "<group>"; };
@@ -553,51 +549,37 @@
 		06055A26236825C200EE2744 /* Done */ = {
 			isa = PBXGroup;
 			children = (
-				7806ED28133A1D7500273BC6 /* UITabBar.h */,
-				7806ED29133A1D7500273BC6 /* UITabBar.m */,
-				1489855912EE2CFE003D4751 /* UITextInputTraits.h */,
-				1489852B12EE2CFE003D4751 /* UINavigationController.h */,
-				1489852C12EE2CFE003D4751 /* UINavigationController.m */,
 				1489852912EE2CFE003D4751 /* UINavigationBar.h */,
 				1489852A12EE2CFE003D4751 /* UINavigationBar.m */,
+				1489852B12EE2CFE003D4751 /* UINavigationController.h */,
+				1489852C12EE2CFE003D4751 /* UINavigationController.m */,
 				1489852D12EE2CFE003D4751 /* UINavigationItem.h */,
 				1489852E12EE2CFE003D4751 /* UINavigationItem.m */,
-				148984F212EE2CFE003D4751 /* UIActivityIndicatorView.h */,
-				148984F312EE2CFE003D4751 /* UIActivityIndicatorView.m */,
+				1489853B12EE2CFE003D4751 /* UIResponder.h */,
+				1489853C12EE2CFE003D4751 /* UIResponder.m */,
+				1489854512EE2CFE003D4751 /* UIScrollView.h */,
+				1489854612EE2CFE003D4751 /* UIScrollView.m */,
+				78CB48D7133AB91E008636DA /* UISlider.h */,
+				78CB48D8133AB920008636DA /* UISlider.m */,
+				1489854712EE2CFE003D4751 /* UISplitViewController.h */,
+				1489854812EE2CFE003D4751 /* UISplitViewController.m */,
+				7806ED28133A1D7500273BC6 /* UITabBar.h */,
+				7806ED29133A1D7500273BC6 /* UITabBar.m */,
+				1489854D12EE2CFE003D4751 /* UITabBarController.h */,
+				1489854E12EE2CFE003D4751 /* UITabBarController.m */,
+				78CB48AE133AA535008636DA /* UITabBarItem.h */,
+				78CB48AF133AA535008636DA /* UITabBarItem.m */,
 				1489854F12EE2CFE003D4751 /* UITableView.h */,
 				1489855012EE2CFE003D4751 /* UITableView.m */,
 				1489855112EE2CFE003D4751 /* UITableViewCell.h */,
 				1489855212EE2CFE003D4751 /* UITableViewCell.m */,
-				1489854512EE2CFE003D4751 /* UIScrollView.h */,
-				1489854612EE2CFE003D4751 /* UIScrollView.m */,
-				1489851A12EE2CFE003D4751 /* UIImageView.h */,
-				1489851B12EE2CFE003D4751 /* UIImageView.m */,
-				1489850012EE2CFE003D4751 /* UIButton.h */,
-				1489850112EE2CFE003D4751 /* UIButton.m */,
-				1489850C12EE2CFE003D4751 /* UIFont.h */,
-				1489850D12EE2CFE003D4751 /* UIFont.m */,
-				1489852112EE2CFE003D4751 /* UILabel.h */,
-				1489852212EE2CFE003D4751 /* UILabel.m */,
-				1489850512EE2CFE003D4751 /* UIControl.h */,
-				1489850612EE2CFE003D4751 /* UIControl.m */,
-				1489854D12EE2CFE003D4751 /* UITabBarController.h */,
-				1489854E12EE2CFE003D4751 /* UITabBarController.m */,
-				1489853B12EE2CFE003D4751 /* UIResponder.h */,
-				1489853C12EE2CFE003D4751 /* UIResponder.m */,
-				78CB48D7133AB91E008636DA /* UISlider.h */,
-				78CB48D8133AB920008636DA /* UISlider.m */,
+				1489855912EE2CFE003D4751 /* UITextInputTraits.h */,
 				1489855C12EE2CFE003D4751 /* UIToolbar.h */,
 				1489855D12EE2CFE003D4751 /* UIToolbar.m */,
-				1489856412EE2CFE003D4751 /* UIViewController.h */,
-				1489856512EE2CFE003D4751 /* UIViewController.m */,
-				1489851812EE2CFE003D4751 /* UIImagePickerController.h */,
-				1489851912EE2CFE003D4751 /* UIImagePickerController.m */,
-				78CB48AE133AA535008636DA /* UITabBarItem.h */,
-				78CB48AF133AA535008636DA /* UITabBarItem.m */,
-				1489854712EE2CFE003D4751 /* UISplitViewController.h */,
-				1489854812EE2CFE003D4751 /* UISplitViewController.m */,
 				1489856012EE2CFE003D4751 /* UIView.h */,
 				1489856112EE2CFE003D4751 /* UIView.m */,
+				1489856412EE2CFE003D4751 /* UIViewController.h */,
+				1489856512EE2CFE003D4751 /* UIViewController.m */,
 			);
 			path = Done;
 			sourceTree = "<group>";
@@ -632,6 +614,25 @@
 				1489856912EE2CFE003D4751 /* UIWindow.m */,
 			);
 			path = Gesture;
+			sourceTree = "<group>";
+		};
+		068035DD2483D4B800054455 /* ReRead */ = {
+			isa = PBXGroup;
+			children = (
+				148984F212EE2CFE003D4751 /* UIActivityIndicatorView.h */,
+				148984F312EE2CFE003D4751 /* UIActivityIndicatorView.m */,
+				1489850012EE2CFE003D4751 /* UIButton.h */,
+				1489850112EE2CFE003D4751 /* UIButton.m */,
+				1489850512EE2CFE003D4751 /* UIControl.h */,
+				1489850612EE2CFE003D4751 /* UIControl.m */,
+				1489850C12EE2CFE003D4751 /* UIFont.h */,
+				1489850D12EE2CFE003D4751 /* UIFont.m */,
+				1489851A12EE2CFE003D4751 /* UIImageView.h */,
+				1489851B12EE2CFE003D4751 /* UIImageView.m */,
+				1489852112EE2CFE003D4751 /* UILabel.h */,
+				1489852212EE2CFE003D4751 /* UILabel.m */,
+			);
+			path = ReRead;
 			sourceTree = "<group>";
 		};
 		0867D691FE84028FC02AAC07 /* UIKit */ = {
@@ -706,6 +707,7 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				068035DD2483D4B800054455 /* ReRead */,
 				06055A28236863F400EE2744 /* Gesture */,
 				06055A26236825C200EE2744 /* Done */,
 				148984E412EE2CFE003D4751 /* AppKitIntegration.h */,
@@ -926,7 +928,6 @@
 				7806ED2A133A1D7500273BC6 /* UITabBar.h in Headers */,
 				1489859B12EE2CFF003D4751 /* UIImage.h in Headers */,
 				1489859D12EE2CFF003D4751 /* UIImageAppKitIntegration.h in Headers */,
-				1489859E12EE2CFF003D4751 /* UIImagePickerController.h in Headers */,
 				148985A012EE2CFF003D4751 /* UIImageView.h in Headers */,
 				148985A412EE2CFF003D4751 /* UIKit.h in Headers */,
 				148985A512EE2CFF003D4751 /* UIKitView.h in Headers */,
@@ -1147,7 +1148,6 @@
 				1489859812EE2CFF003D4751 /* UIGestureRecognizer.m in Sources */,
 				1489859A12EE2CFF003D4751 /* UIGraphics.m in Sources */,
 				1489859C12EE2CFF003D4751 /* UIImage.m in Sources */,
-				1489859F12EE2CFF003D4751 /* UIImagePickerController.m in Sources */,
 				148985A112EE2CFF003D4751 /* UIImageView.m in Sources */,
 				148985A312EE2CFF003D4751 /* UIKey.m in Sources */,
 				148985A612EE2CFF003D4751 /* UIKitView.m in Sources */,

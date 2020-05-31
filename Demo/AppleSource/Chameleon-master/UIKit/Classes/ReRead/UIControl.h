@@ -36,7 +36,6 @@ typedef NS_OPTIONS(NSUInteger, UIControlState) {
     UIControlStateReserved             = 0xFF000000
 };
 
-// 这就是一个状态值, 至于这个状态值到底有什么意义, 是需要各个子类自定义的.
 typedef NS_ENUM(NSInteger, UIControlContentHorizontalAlignment) {
     UIControlContentHorizontalAlignmentCenter = 0,
     UIControlContentHorizontalAlignmentLeft    = 1,
@@ -44,7 +43,6 @@ typedef NS_ENUM(NSInteger, UIControlContentHorizontalAlignment) {
     UIControlContentHorizontalAlignmentFill   = 3,
 };
 
-// 这就是一个状态值, 至于这个状态值到底有什么意义, 是需要各个子类自定义的.
 typedef NS_ENUM(NSInteger, UIControlContentVerticalAlignment) {
     UIControlContentVerticalAlignmentCenter  = 0,
     UIControlContentVerticalAlignmentTop     = 1,
@@ -53,6 +51,12 @@ typedef NS_ENUM(NSInteger, UIControlContentVerticalAlignment) {
 };
 
 @class UITouch;
+
+
+
+/*
+ 这个类, 最最核心的, 就是对于点击的处理过程
+ */
 
 @interface UIControl : UIView
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;

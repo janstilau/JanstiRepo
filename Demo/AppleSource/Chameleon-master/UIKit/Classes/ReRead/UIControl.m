@@ -88,17 +88,23 @@
 - (void)sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event
 {
     /**
-    Normally, this method is invoked by a UIControl object that the user has touched.
-    The default implementation dispatches the action method to the given target object or, if no target is specified, to the first responder. Subclasses may override this method to perform special dispatching of action messages.
+     Normally, this method is invoked by a UIControl object that the user has touched.
+     The default implementation dispatches the action method to the given target object or, if no target is specified, to the first responder. Subclasses may override this method to perform special dispatching of action messages.
+     
+     By default, this method pushes two parameters when calling the target. These last two parameters are optional for the receiver because it is up to the caller (usually a UIControl object) to remove any parameters it added. This design enables the action selector to be one of the following:
+     
+     - (void)action
+     
+     - (void)action:(id)sender
+     
+     - (void)action:(id)sender forEvent:(UIEvent *)even
+     */
+    
+    /*
+     If aTarget is nil, sharedApplication looks for an object that can respond to the message—that is, an object that implements a method matching anAction. It begins with the first responder of the key window. If the first responder can’t respond, it tries the first responder’s next responder and continues following next responder links up the responder chain. If none of the objects in the key window’s responder chain can handle the message, sharedApplication attempts to send the message to the key window’s delegate.
 
-    By default, this method pushes two parameters when calling the target. These last two parameters are optional for the receiver because it is up to the caller (usually a UIControl object) to remove any parameters it added. This design enables the action selector to be one of the following:
-
-    - (void)action
-
-    - (void)action:(id)sender
-
-    - (void)action:(id)sender forEvent:(UIEvent *)event
-    */
+     If the delegate doesn’t respond and the main window is different from the key window, sharedApplication begins again with the first responder in the main window. If objects in the main window can’t respond, sharedApplication attempts to send the message to the main window’s delegate. If still no object has responded, sharedApplication tries to handle the message itself. If sharedApplication can’t respond, it attempts to send the message to its own delegate.
+     */
     [[UIApplication sharedApplication] sendAction:action to:target from:self forEvent:event];
 }
 
@@ -128,12 +134,12 @@
     UITouch *touch = [touches anyObject];
     _touchInside = YES;
     _tracking = [self beginTrackingWithTouch:touch withEvent:event];
-
+    
     self.highlighted = YES; // 更改 highLighted 状态. 这个状态的改变, 会引起视图的变化.
-
+    
     if (_tracking) { // beginTrackingWithTouch 控制的状态.
         UIControlEvents currentEvents = UIControlEventTouchDown;
-
+        
         if (touch.tapCount > 1) {
             currentEvents |= UIControlEventTouchDownRepeat;
         }
@@ -148,15 +154,15 @@
     UITouch *touch = [touches anyObject];
     const BOOL wasTouchInside = _touchInside;
     _touchInside = [self pointInside:[touch locationInView:self] withEvent:event];
-
+    
     self.highlighted = _touchInside;
-
+    
     if (_tracking) {
         // 这里, tracking 要两次判断, 第一次判断之前的状态, 第二次判断现有的状态.
         _tracking = [self continueTrackingWithTouch:touch withEvent:event];
         if (_tracking) {
             UIControlEvents currentEvents = ((_touchInside)? UIControlEventTouchDragInside : UIControlEventTouchDragOutside);
-
+            
             if (!wasTouchInside && _touchInside) {
                 // 如果之前没有进入, 现在进入了, 就是dragEnter
                 currentEvents |= UIControlEventTouchDragEnter;
@@ -174,14 +180,14 @@
 {
     UITouch *touch = [touches anyObject];
     _touchInside = [self pointInside:[touch locationInView:self] withEvent:event];
-
+    
     self.highlighted = NO;
-
+    
     if (_tracking) {
         [self endTrackingWithTouch:touch withEvent:event];
         [self _sendActionsForControlEvents:((_touchInside)? UIControlEventTouchUpInside : UIControlEventTouchUpOutside) withEvent:event];
     }
-
+    
     _tracking = NO;
     _touchInside = NO;
 }
@@ -189,12 +195,12 @@
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
     self.highlighted = NO;
-
+    
     if (_tracking) {
         [self cancelTrackingWithEvent:event];
         [self _sendActionsForControlEvents:UIControlEventTouchCancel withEvent:event];
     }
-
+    
     _touchInside = NO;
     _tracking = NO;
 }
@@ -239,7 +245,7 @@
     if (_highlighted)	state |= UIControlStateHighlighted;
     if (!_enabled)		state |= UIControlStateDisabled;
     if (_selected)		state |= UIControlStateSelected;
-
+    
     return state;
 }
 

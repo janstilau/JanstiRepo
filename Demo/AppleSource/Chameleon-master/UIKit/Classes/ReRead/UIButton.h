@@ -14,7 +14,8 @@ typedef NS_ENUM(NSInteger, UIButtonType) {
 /**
  * 从这个类的实现来看, UIButton 实际上做的, 不是点击回调这些事情, 而是对于不同状态下的界面的不同展示.
  * 在 Highlight, Selected, Enable 等各个状态下, 一个 Button 应该有不同的展示, 而这种展示, 随着当前状态的不同, 会及时进行更新.
- * UIControl 追踪着 touch 事件, 在这个过程中, 会不断地更改 state, UIControl 默认是调用 setNeedsDisplay 进行重绘. 而 Button 将不同状态的文字, 图片, 背景图显示进行了存储, 在 state 更改之后, 会对这些进行替换, 达到按钮的按压效果.
+ * UIControl 追踪着 touch 事件, 在这个过程中, 会不断地更改 state, UIControl 默认是调用 setNeedsDisplay 进行重绘.
+ *  而 Button 将不同状态的文字, 图片, 背景图显示进行了存储, 在 state 更改之后, 会对这些进行替换, 达到按钮的按压效果.
  */
 
 @interface UIButton : UIControl {
