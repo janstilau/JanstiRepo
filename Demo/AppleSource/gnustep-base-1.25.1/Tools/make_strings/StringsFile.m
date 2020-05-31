@@ -176,13 +176,13 @@ static NSString *parse_string(NSString **ptr)
 	      {
 		l = [l substringFromIndex: 10];
 		pos = [l rangeOfString: @" */"].location;
-                if (pos == NSNotFound) continue;
+                if (pos == -1) continue;
 		[se setComment: [l substringToIndex: pos]];
 	      }
 	    else
 	      {
 		pos = [l rangeOfString: @"*/"].location;
-                if (pos == NSNotFound)
+                if (pos == -1)
                   {
                     fprintf(stderr,"parse error in '%s', missing '*\'\n",
                       [filename cString]);
@@ -194,20 +194,20 @@ static NSString *parse_string(NSString **ptr)
 	      }
 
 	    pos = [l rangeOfString: @"*/"].location;
-	    if (pos == NSNotFound) continue;
+	    if (pos == -1) continue;
 	    l = [l substringFromIndex: pos+2];
 	  }
 
 	while (1)
 	  {
 	    pos = [l rangeOfString: @"\""].location;
-	    if (pos == NSNotFound) break;
+	    if (pos == -1) break;
 
 	    l = [l substringFromIndex: pos+1];
 	    key = parse_string(&l);
 
 	    pos = [l rangeOfString: @"="].location;
-	    if (pos == NSNotFound)
+	    if (pos == -1)
 	      {
 		fprintf(stderr,"parse error in '%s', expecting '='\n",
                   [filename cString]);
@@ -215,7 +215,7 @@ static NSString *parse_string(NSString **ptr)
 	      }
 	    l = [l substringFromIndex: pos+1];
 	    pos = [l rangeOfString: @"\""].location;
-	    if (pos == NSNotFound)
+	    if (pos == -1)
 	      {
 		fprintf(stderr,"parse error in '%s', expecting second string\n",
                   [filename cString]);
@@ -225,7 +225,7 @@ static NSString *parse_string(NSString **ptr)
 	    trans = parse_string(&l);
 
 	    pos = [l rangeOfString: @";"].location;
-	    if (pos == NSNotFound)
+	    if (pos == -1)
 	      {
 		fprintf(stderr,"parse error in '%s', expecting ';'\n",
                   [filename cString]);

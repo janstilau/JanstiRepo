@@ -1265,7 +1265,7 @@ quotedFromString(NSString *aString)
 	  /*
 	   * If we have the same pipe twice we don't want to close it twice
 	   */
-	  if ([toClose indexOfObjectIdenticalTo: hdl] == NSNotFound)
+	  if ([toClose indexOfObjectIdenticalTo: hdl] == -1)
 	    {
 	      [toClose addObject: hdl];
 	    }
@@ -1538,7 +1538,7 @@ GSPrivateCheckTasks()
       /*
        * If we have the same pipe twice we don't want to close it twice
        */
-      if ([toClose indexOfObjectIdenticalTo: hdl] == NSNotFound)
+      if ([toClose indexOfObjectIdenticalTo: hdl] == -1)
 	{
 	  [toClose addObject: hdl];
 	}

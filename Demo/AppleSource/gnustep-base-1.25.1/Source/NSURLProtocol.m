@@ -1834,7 +1834,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
     NSString      *type;
     BOOL          base64 = NO;
     
-    if (comma.location == NSNotFound)
+    if (comma.location == -1)
     {
         NSDictionary      *ui;
         NSError           *error;

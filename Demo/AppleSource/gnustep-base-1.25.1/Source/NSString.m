@@ -2144,7 +2144,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
     {
       start = aRange.location; stop = NSMaxRange(aRange); step = 1;
     }
-  range.location = NSNotFound;
+  range.location = -1;
   range.length = 0;
 
   cImp = (unichar(*)(id,SEL,NSUInteger))
@@ -2247,7 +2247,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 
   if ((mask & NSRegularExpressionSearch) == NSRegularExpressionSearch)
     {
-      NSRange			r = {NSNotFound, 0};
+      NSRange			r = {-1, 0};
       NSError			*e = nil;
       NSUInteger		options = 0;
       NSRegularExpression	*regex = [NSRegularExpression alloc];
@@ -2299,7 +2299,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
             {
               /* Range to search is smaller than string to look for.
                */
-              result = NSMakeRange(NSNotFound, 0);
+              result = NSMakeRange(-1, 0);
             }
           else if ((mask & NSAnchoredSearch) == NSAnchoredSearch
             || searchRange.length == 1)
@@ -2320,7 +2320,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                     }
                   else
                     {
-                      result = NSMakeRange(NSNotFound, 0);
+                      result = NSMakeRange(-1, 0);
                     }
                 }
               else
@@ -2331,7 +2331,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                     }
                   else
                     {
-                      result = NSMakeRange(NSNotFound, 0);
+                      result = NSMakeRange(-1, 0);
                     }
                 }
             }
@@ -2403,7 +2403,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 
               if (pos >= end)
                 {
-                  result = NSMakeRange(NSNotFound, 0);
+                  result = NSMakeRange(-1, 0);
                 }
               else
                 {
@@ -2432,7 +2432,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
         {
           /* Range to search is smaller than string to look for.
            */
-          result = NSMakeRange(NSNotFound, 0);
+          result = NSMakeRange(-1, 0);
         }
       else
         {
@@ -2479,7 +2479,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                     }
                   if (index < countOther)
                     {
-                      result = NSMakeRange(NSNotFound, 0);
+                      result = NSMakeRange(-1, 0);
                     }
                   else
                     {
@@ -2495,7 +2495,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
                     }
                   else
                     {
-                      result = NSMakeRange(NSNotFound, 0);
+                      result = NSMakeRange(-1, 0);
                     }
                 }
               GS_ENDITEMBUF2()
@@ -2596,7 +2596,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 
               if (pos >= end)
                 {
-                  result = NSMakeRange(NSNotFound, 0);
+                  result = NSMakeRange(-1, 0);
                 }
               else
                 {
@@ -2619,7 +2619,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
 
       if (NULL != coll)
 	{
-	  NSRange       result = NSMakeRange(NSNotFound, 0);
+	  NSRange       result = NSMakeRange(-1, 0);
 	  UErrorCode    status = U_ZERO_ERROR; 
 	  NSUInteger    countSelf = searchRange.length;
 	  UStringSearch *search = NULL;
@@ -2695,7 +2695,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
   NSRange range = {0, [self length]};
 
   range = [self rangeOfString: substring options: 0 range: range locale: nil];
-  return range.length ? range.location : NSNotFound;
+  return range.length ? range.location : -1;
 }
 
 - (int) indexOfString: (NSString*)substring
@@ -2704,7 +2704,7 @@ GSICUCollatorOpen(NSStringCompareOptions mask, NSLocale *locale)
   NSRange range = {index, [self length] - index};
 
   range = [self rangeOfString: substring options: 0 range: range locale: nil];
-  return range.length ? range.location : NSNotFound;
+  return range.length ? range.location : -1;
 }
 
 // Determining Composed Character Sequences
@@ -3740,7 +3740,7 @@ static BOOL             (*nbImp)(id, SEL, unichar) = 0;
 
   setupNonspace();
   r = [self rangeOfCharacterFromSet: nonspace];
-  if (NSNotFound == r.location) return 0.0;
+  if (-1 == r.location) return 0.0;
   r.length = [self length] - r.location;
   if (r.length > 32) r.length = 32;
   [self getCharacters: buf range: r];
@@ -3761,7 +3761,7 @@ static BOOL             (*nbImp)(id, SEL, unichar) = 0;
 
   setupNonspace();
   r = [self rangeOfCharacterFromSet: nonspace];
-  if (NSNotFound == r.location) return 0.0;
+  if (-1 == r.location) return 0.0;
   r.length = [self length] - r.location;
   if (r.length > 32) r.length = 32;
   [self getCharacters: buf range: r];
@@ -6049,7 +6049,7 @@ static NSFileManager *fm = nil;
   */
 - (BOOL) containsString: (NSString *)string
 {
-  return [self rangeOfString: string].location != NSNotFound;
+  return [self rangeOfString: string].location != -1;
 }
 
 @end

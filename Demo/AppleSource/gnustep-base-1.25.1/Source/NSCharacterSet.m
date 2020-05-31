@@ -1195,13 +1195,13 @@ static Class concreteMutableClass = nil;
     
     tmp = [NSMutableBitmapCharSet new];
     while ((index = [indexes indexGreaterThanOrEqualToIndex: index])
-           != NSNotFound)
+           != -1)
     {
         NSRange	r;
         
         r.location = index;
         index = [indexes _gapGreaterThanIndex: index];
-        if (index == NSNotFound)
+        if (index == -1)
         {
             r.length = 1;
         }
@@ -1243,7 +1243,7 @@ static Class concreteMutableClass = nil;
     NSUInteger	found;
     
     found = [indexes indexGreaterThanOrEqualToIndex: 0x10000 * aPlane];
-    if (found != NSNotFound && found < 0x10000 * (aPlane + 1))
+    if (found != -1 && found < 0x10000 * (aPlane + 1))
     {
         return YES;
     }
@@ -1434,14 +1434,14 @@ static Class concreteMutableClass = nil;
     /* Loop until there are no more indexes to process in the set and
      * the intersection operation has therefore completed.
      */
-    while (i0 != NSNotFound)
+    while (i0 != -1)
     {
-        if (i1 == NSNotFound)
+        if (i1 == -1)
         {
             /* No more indexes in other set ... remove everything from the
              * last gap onwards, and finish.
              */
-            [indexes removeIndexesInRange: NSMakeRange(index, NSNotFound-index)];
+            [indexes removeIndexesInRange: NSMakeRange(index, -1-index)];
             break;
         }
         if (i1 > i0)
@@ -1496,7 +1496,7 @@ static Class concreteMutableClass = nil;
     }
     
     index = [otherIndexes indexGreaterThanOrEqualToIndex: 0];
-    while (index != NSNotFound)
+    while (index != -1)
     {
         NSRange	r;
         
@@ -1526,13 +1526,13 @@ static Class concreteMutableClass = nil;
         index = 0;
     }
     
-    while (index != NSNotFound)
+    while (index != -1)
     {
         NSRange	r;
         
         r.location = index;
         index = [indexes indexGreaterThanIndex: index];
-        if (index == NSNotFound)
+        if (index == -1)
         {
             /* No more indexes, so we have a gap to the end of all
              * unicode characters which we can invert.

@@ -24,7 +24,7 @@
     contextToForward = context;
     
     dot = [keyPath rangeOfString: @"."];
-    if (dot.location == NSNotFound)
+    if (dot.location == -1)
     {
         [NSException raise: NSInvalidArgumentException
                     format: @"NSKeyValueObservationForwarder was not given a key path"];
@@ -38,7 +38,7 @@
      | NSKeyValueObservingOptionOld
                 context: target];
     dot = [remainingKeyPath rangeOfString: @"."];
-    if (dot.location != NSNotFound)
+    if (dot.location != -1)
     {
         child = [[NSKeyValueObservationForwarder alloc]
                  initWithKeyPath: remainingKeyPath

@@ -61,10 +61,10 @@ int main()
   
   PASS([vals1 hash] == 2, "-hash returns two for an array with two objects");
   
-  PASS([vals1 indexOfObject:nil] == NSNotFound, 
-       "-indexOfObject: gives NSNotFound for a nil object");
-  PASS([vals1 indexOfObject:val3] == NSNotFound,
-       "-indexOfObject: gives NSNotFound for a object not in the array");
+  PASS([vals1 indexOfObject:nil] == -1, 
+       "-indexOfObject: gives -1 for a nil object");
+  PASS([vals1 indexOfObject:val3] == -1,
+       "-indexOfObject: gives -1 for a object not in the array");
   PASS([vals1 isEqualToArray:vals1],
        "Array is equal to itself using -isEqualToArray:");
   PASS(![vals1 isEqualToArray:vals2],"Similar arrays are not equal using -isEqualToArray:");

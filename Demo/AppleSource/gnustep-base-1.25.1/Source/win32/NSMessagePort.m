@@ -1087,7 +1087,7 @@ again:
       [self receivedEventWrite];	// Start async write.
     }
 
-  if ([this->wMsgs indexOfObjectIdenticalTo: h] == NSNotFound)
+  if ([this->wMsgs indexOfObjectIdenticalTo: h] == -1)
     {
       sent = YES;			// Write completed synchronously
     }
@@ -1105,7 +1105,7 @@ again:
 	     forMode: NSDefaultRunLoopMode];
 
       while ([self isValid] == YES
-	&& [this->wMsgs indexOfObjectIdenticalTo: h] != NSNotFound
+	&& [this->wMsgs indexOfObjectIdenticalTo: h] != -1
 	&& [when timeIntervalSinceNow] > 0)
 	{
 	  M_UNLOCK(this->lock);
@@ -1122,7 +1122,7 @@ again:
 		forMode: NSDefaultRunLoopMode
 		    all: NO];
 
-      if ([this->wMsgs indexOfObjectIdenticalTo: h] == NSNotFound)
+      if ([this->wMsgs indexOfObjectIdenticalTo: h] == -1)
 	{
 	  sent = YES;
 	}

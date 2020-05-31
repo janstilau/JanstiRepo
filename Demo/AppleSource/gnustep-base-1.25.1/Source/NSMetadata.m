@@ -180,7 +180,7 @@ NSString * const NSMetadataQueryGatheringProgressNotification
 - (int) indexOfResult: (id)result
 {
   [self subclassResponsibility: _cmd];
-  return NSNotFound;
+  return -1;
 }
 
 - (id) init

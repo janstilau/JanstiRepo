@@ -848,7 +848,7 @@ static NSLock	*cached_proxies_gate = nil;
   GS_M_LOCK(IrefGate);
   if ([self isValid] == YES)
     {
-      if ([IrunLoops indexOfObjectIdenticalTo: loop] == NSNotFound)
+      if ([IrunLoops indexOfObjectIdenticalTo: loop] == -1)
 	{
 	  NSUInteger		c = [IrequestModes count];
 
@@ -1557,7 +1557,7 @@ static NSLock	*cached_proxies_gate = nil;
     {
       NSUInteger	pos = [IrunLoops indexOfObjectIdenticalTo: loop];
 
-      if (pos != NSNotFound)
+      if (pos != -1)
 	{
 	  NSUInteger	c = [IrequestModes count];
 
@@ -1960,7 +1960,7 @@ static NSLock	*cached_proxies_gate = nil;
   unsigned	seq;
   NSRunLoop	*runLoop = GSRunLoopForThread(nil);
 
-  if ([IrunLoops indexOfObjectIdenticalTo: runLoop] == NSNotFound)
+  if ([IrunLoops indexOfObjectIdenticalTo: runLoop] == -1)
     {
       if (ImultipleThreads == NO)
 	{
@@ -2519,7 +2519,7 @@ static NSLock	*cached_proxies_gate = nil;
       const char	*encoded_types = forward_type;
 
       NSParameterAssert (IisValid);
-      if ([IrunLoops indexOfObjectIdenticalTo: runLoop] == NSNotFound)
+      if ([IrunLoops indexOfObjectIdenticalTo: runLoop] == -1)
 	{
 	  if (ImultipleThreads == YES)
 	    {
@@ -3103,7 +3103,7 @@ static NSLock	*cached_proxies_gate = nil;
    * get the reply in this thread.
    */
   runLoop = GSRunLoopForThread(nil);
-  if ([IrunLoops indexOfObjectIdenticalTo: runLoop] == NSNotFound)
+  if ([IrunLoops indexOfObjectIdenticalTo: runLoop] == -1)
     {
       if (ImultipleThreads == YES)
 	{
@@ -3288,7 +3288,7 @@ static NSLock	*cached_proxies_gate = nil;
 {
   GS_M_LOCK(IrefGate);
   if (cacheCoders == YES && IcachedDecoders != nil
-    && [IcachedDecoders indexOfObjectIdenticalTo: c] == NSNotFound)
+    && [IcachedDecoders indexOfObjectIdenticalTo: c] == -1)
     {
       [IcachedDecoders addObject: c];
     }
@@ -3309,7 +3309,7 @@ static NSLock	*cached_proxies_gate = nil;
 {
   GS_M_LOCK(IrefGate);
   if (cacheCoders == YES && IcachedEncoders != nil
-    && [IcachedEncoders indexOfObjectIdenticalTo: c] == NSNotFound)
+    && [IcachedEncoders indexOfObjectIdenticalTo: c] == -1)
     {
       [IcachedEncoders addObject: c];
     }

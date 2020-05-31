@@ -244,7 +244,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
      * Now add the observer.
      */
     dot = [aPath rangeOfString:@"."]; // 如果添加的是 keyPath, 那么就调用 forwarder
-    if (dot.location != NSNotFound)
+    if (dot.location != -1)
     {
         forwarder = [[NSKeyValueObservationForwarder alloc]
                      initWithKeyPath: aPath
@@ -287,7 +287,7 @@ cifframe_callback(ffi_cif *cif, void *retp, void **args, void *user)
         IF_NO_GC(AUTORELEASE(info);)
         [self setObservationInfo: nil]; // 将自己的  ObservationInfo 设置为 nil, willChange, didChange 里面找不到对应的 info, 也就不会进行KVO了.
     }
-    if ([aPath rangeOfString:@"."].location != NSNotFound)
+    if ([aPath rangeOfString:@"."].location != -1)
         [forwarder finalize];
 }
 

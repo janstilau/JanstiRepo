@@ -337,7 +337,7 @@ int main()
   strRange("hello", "hello", NSAnchoredSearch | NSBackwardsSearch,
     NSMakeRange(0,5), NSMakeRange(0,5));
   strRange("hello", "hElLo", NSLiteralSearch,
-    NSMakeRange(0,5), NSMakeRange(NSNotFound,0));
+    NSMakeRange(0,5), NSMakeRange(-1,0));
   strRange("hello", "hElLo", NSCaseInsensitiveSearch,
     NSMakeRange(0,5), NSMakeRange(0,5));
   strRange("hello", "hell", NSAnchoredSearch,
@@ -397,12 +397,12 @@ int main()
   strRangeFromSet("boaboaboa", 
     [NSCharacterSet whitespaceCharacterSet],
     NSCaseInsensitiveSearch | NSBackwardsSearch,
-    NSMakeRange(0,9), NSMakeRange(NSNotFound,0));
+    NSMakeRange(0,9), NSMakeRange(-1,0));
   
   strRangeFromSet("boaboaboa", 
     [NSCharacterSet whitespaceCharacterSet],
     NSCaseInsensitiveSearch | NSBackwardsSearch,
-    NSMakeRange(2,6), NSMakeRange(NSNotFound,0));
+    NSMakeRange(2,6), NSMakeRange(-1,0));
   
   strRangeFromSet("bo boaboa", 
     [NSCharacterSet whitespaceCharacterSet],

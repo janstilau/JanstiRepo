@@ -187,7 +187,7 @@ static	NSIndexPath	*dummy = nil;
 {
   if (position >= _length)
     {
-      return NSNotFound;
+      return -1;
     }
   return _indexes[position];
 }

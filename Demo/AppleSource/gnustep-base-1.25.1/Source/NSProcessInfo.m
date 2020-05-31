@@ -1439,7 +1439,7 @@ static void determineOperatingSystem()
 	  memInfo = [NSString stringWithContentsOfFile: @"/proc/meminfo"];
 	  r = [memInfo rangeOfString: @"MemTotal:"];
 
-	  if (r.location == NSNotFound)
+	  if (r.location == -1)
 	    {
 	      NSLog(@"Cannot determine amount of physical memory.");
 	      return 0;

@@ -7,7 +7,7 @@
 #import <Foundation/NSValue.h>
 
 static NSUInteger fooCount = 0;
-static NSUInteger lastIndex = NSNotFound;
+static NSUInteger lastIndex = -1;
 int main()
 {
   START_SET("NSArray Blocks")
@@ -24,18 +24,18 @@ int main()
   PASS((2 == fooCount) && (lastIndex == 2),
        "Can forward enumerate array using a block");
   fooCount = 0;
-  lastIndex = NSNotFound;
+  lastIndex = -1;
   [array enumerateObjectsWithOptions: NSEnumerationConcurrent
                           usingBlock: enumBlock];
   PASS((2 == fooCount) && (lastIndex == 2),
        "Can forward enumerate array concurrently using a block");
   fooCount = 0;
-  lastIndex = NSNotFound;
+  lastIndex = -1;
   [array enumerateObjectsWithOptions: NSEnumerationReverse
                           usingBlock: enumBlock];
   PASS((0 == lastIndex), "Can enumerate array in reverse using a block");
   fooCount = 0;
-  lastIndex = NSNotFound;
+  lastIndex = -1;
   enumBlock = ^(id obj, NSUInteger index, BOOL *stop){if ([obj isEqual: @"foo"]){
     fooCount++;} else if ([obj isEqual: @"bar"]){ *stop=YES;}; lastIndex =
     index;};
@@ -57,7 +57,7 @@ int main()
   PASS(0 == [sortedArray indexOfObject:[NSNumber numberWithInteger:2] inSortedRange:NSMakeRange(0, [sortedArray count]) options:NSBinarySearchingFirstEqual usingComparator:^ NSComparisonResult (NSNumber *a, NSNumber *b) { return [a compare:b]; }], "Can find index of first object in sorted array");
   PASS(1 == [sortedArray indexOfObject:[NSNumber numberWithInteger:2] inSortedRange:NSMakeRange(0, [sortedArray count]) options:NSBinarySearchingLastEqual usingComparator:^ NSComparisonResult (NSNumber *a, NSNumber *b) { return [a compare:b]; }], "Can find index of first object in sorted array");
   PASS(3 == [sortedArray indexOfObject:[NSNumber numberWithInteger:4] inSortedRange:NSMakeRange(0, [sortedArray count]) options:NSBinarySearchingInsertionIndex usingComparator:^ NSComparisonResult (NSNumber *a, NSNumber *b) { return [a compare:b]; }], "Can find insertion index in sorted array");
-  PASS(NSNotFound == [sortedArray indexOfObject:[NSNumber numberWithInteger:4] inSortedRange:NSMakeRange(0, [sortedArray count]) options:0 usingComparator:^ NSComparisonResult (NSNumber *a, NSNumber *b) { return [a compare:b]; }], "Can not find non existant object in sorted array");
+  PASS(-1 == [sortedArray indexOfObject:[NSNumber numberWithInteger:4] inSortedRange:NSMakeRange(0, [sortedArray count]) options:0 usingComparator:^ NSComparisonResult (NSNumber *a, NSNumber *b) { return [a compare:b]; }], "Can not find non existant object in sorted array");
 # else
   SKIP("No Blocks support in the compiler.")
 # endif

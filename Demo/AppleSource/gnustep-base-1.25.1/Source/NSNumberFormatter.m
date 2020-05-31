@@ -1174,7 +1174,7 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
         }
 
       prefixRange = [useFormat rangeOfCharacterFromSet: formattingCharacters];
-      if (NSNotFound != prefixRange.location)
+      if (-1 != prefixRange.location)
         {
           prefix = [useFormat substringToIndex: prefixRange.location];
         }
@@ -1195,7 +1195,7 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
           displayThousandsSeparators = YES;
         }
 
-      if (NSNotFound
+      if (-1
 	!= [useFormat rangeOfString: defaultDecimalSeparator].location)
         {
           decimalPlaceRange = [useFormat rangeOfString: defaultDecimalSeparator
@@ -1242,7 +1242,7 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
       
       //sort out the padding for the integer part
       intPartRange = [useFormat rangeOfCharacterFromSet: placeHolders];
-      if (intPartRange.location != NSNotFound)
+      if (intPartRange.location != -1)
         {
           int nextFormatCharLoc = intPartRange.location;
           while (([placeHolders characterIsMember:
@@ -1405,7 +1405,7 @@ static NSUInteger _defaultBehavior = NSNumberFormatterBehavior10_4;
   
   // FIXME: Not sure if this is correct....
   range = [string rangeOfString: @"."];
-  if (range.location == NSNotFound)
+  if (range.location == -1)
     {
       intNum = unum_parseInt64(internal->_formatter,
         ustring, length, NULL, &err);

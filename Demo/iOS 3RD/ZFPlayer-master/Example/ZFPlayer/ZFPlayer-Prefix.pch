@@ -1,0 +1,30 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#import <Availability.h>
+#import "ZFAppDelegate.h"
+
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#ifdef __OBJC__
+    @import UIKit;
+    @import Foundation;
+
+// iphoneX iphoneXs iphoneXS MAX 宏定义
+#define ISIPHONE_X ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? ((NSInteger)(([[UIScreen mainScreen] currentMode].size.height/[[UIScreen mainScreen] currentMode].size.width)*100) == 216) : NO)
+
+/// 导航栏高度
+#define KNavBarHeight ISIPHONE_X ? 88 : 64
+
+#define kAPPDelegate ((ZFAppDelegate*)[[UIApplication sharedApplication] delegate])
+
+/// 播放器view的tag，列表中UI控件唯一tag值
+#define kPlayerViewTag 100
+
+
+#endif

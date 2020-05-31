@@ -129,16 +129,16 @@ static void testEszett(void)
 				 options: 0
 				   range: NSMakeRange(0, 7)];
     
-  PASS(NSEqualRanges(range, NSMakeRange(NSNotFound, 0)), "without NSCaseInsensitiveSearch, "
-       "range of sS in <Eszett>abcdef is {NSNotFound, 0}. got {%d,%d}",
+  PASS(NSEqualRanges(range, NSMakeRange(-1, 0)), "without NSCaseInsensitiveSearch, "
+       "range of sS in <Eszett>abcdef is {-1, 0}. got {%d,%d}",
        (int)range.location, (int)range.length);
     
   range = [EszettPrefixStr rangeOfString: @"sS"
 				 options: NSCaseInsensitiveSearch | NSAnchoredSearch | NSBackwardsSearch
 				   range: NSMakeRange(0, 7)];
     
-  PASS(NSEqualRanges(range, NSMakeRange(NSNotFound, 0)), "for anchored backwards search, "
-       "range of sS in <Eszett>abcdef is {NSNotFound, 0}. got {%d,%d}",
+  PASS(NSEqualRanges(range, NSMakeRange(-1, 0)), "for anchored backwards search, "
+       "range of sS in <Eszett>abcdef is {-1, 0}. got {%d,%d}",
        (int)range.location, (int)range.length);
 
   range = [EszettPrefixStr rangeOfString: @"sS"

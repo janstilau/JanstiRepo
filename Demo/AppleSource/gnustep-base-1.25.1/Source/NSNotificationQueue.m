@@ -488,7 +488,7 @@ static NSArray	*defaultMode = nil;
 	  NSString	*mode;
 
 	  mode = [[NSRunLoop currentRunLoop] currentMode];
-	  if (mode == nil || [modes indexOfObject: mode] != NSNotFound)
+	  if (mode == nil || [modes indexOfObject: mode] != -1)
 	    {
 	      [_center postNotification: notification]; // 这里, 如果是  Now, 并且模式不对的话, 就直接丢弃了.
 	    }
@@ -531,7 +531,7 @@ notify(NSNotificationCenter *center, NSNotificationQueueList *list,
    */
   while (item != 0)
     {
-      if (mode == nil || [item->modes indexOfObject: mode] != NSNotFound)
+      if (mode == nil || [item->modes indexOfObject: mode] != -1)
 	{
 	  if (pos == len)
 	    {
@@ -657,7 +657,7 @@ GSPrivateNotifyMore(NSString *mode)
 	  r = item->queue->_idleQueue->head;
 	  while (r != 0)
 	    {
-	      if (mode == nil || [r->modes indexOfObject: mode] != NSNotFound)
+	      if (mode == nil || [r->modes indexOfObject: mode] != -1)
 		{
 		  return YES;
 		}

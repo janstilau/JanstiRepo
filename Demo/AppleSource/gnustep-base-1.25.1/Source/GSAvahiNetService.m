@@ -1406,7 +1406,7 @@ didUpdateRecordData: (id)data
 {
   NSMutableArray *addresses = nil;
   // Index of the address in the array:
-  NSUInteger index = NSNotFound;
+  NSUInteger index = -1;
   if (data == nil)
     {
       return;
@@ -1420,7 +1420,7 @@ didUpdateRecordData: (id)data
                    forKey: @"addresses"];
     }
   index = [addresses indexOfObjectIdenticalTo: data];
-  if (index != NSNotFound)
+  if (index != -1)
     {
       [addresses removeObjectAtIndex: index];
     }
@@ -1658,7 +1658,7 @@ didUpdateRecordData: (id)data
   else if ([oldValue isKindOfClass: [NSMutableArray class]])
     {
       NSUInteger index = [oldValue indexOfObjectIdenticalTo: data];
-      if (index != NSNotFound)
+      if (index != -1)
         {
           NSUInteger count;
           [oldValue removeObjectAtIndex: index];

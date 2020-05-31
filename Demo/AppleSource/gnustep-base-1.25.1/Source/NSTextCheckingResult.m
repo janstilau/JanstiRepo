@@ -99,7 +99,7 @@
 - (NSRange) range
 {
   [self subclassResponsibility: _cmd];
-  return NSMakeRange(NSNotFound, 0);
+  return NSMakeRange(-1, 0);
 }
 
 - (NSRegularExpression*) regularExpression
@@ -200,7 +200,7 @@
     {
       NSRange r = ranges[i];
 
-      if ((offset > 0 && NSNotFound - r.location <= offset)
+      if ((offset > 0 && -1 - r.location <= offset)
         || (offset < 0 && r.location < -offset))
 	{
 	  [NSException raise: NSInvalidArgumentException

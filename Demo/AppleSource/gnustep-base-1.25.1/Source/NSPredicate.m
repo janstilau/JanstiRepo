@@ -1016,7 +1016,7 @@ GSICUStringMatchesRegex(NSString *string, NSString *regex, NSStringCompareOption
 	  }
 	return ([rightResult rangeOfString: leftResult
 				   options: compareOptions].location
-	  != NSNotFound ? YES : NO);
+	  != -1 ? YES : NO);
       case NSCustomSelectorPredicateOperatorType:
 	{
 	  BOOL (*function)(id,SEL,id)

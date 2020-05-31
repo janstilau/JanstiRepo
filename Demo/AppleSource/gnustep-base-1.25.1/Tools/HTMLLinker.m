@@ -966,7 +966,7 @@ static int verbose = 0;
     /* Look for the #.  */
     NSRange hashRange = [link rangeOfString: @"#"];
     
-    if (hashRange.location == NSNotFound)
+    if (hashRange.location == -1)
       {
 	fileLink = link;
 	nameLink = nil;

@@ -223,7 +223,7 @@ static NSHTTPCookieStorage   *storage = nil;
 
 - (void) deleteCookie: (NSHTTPCookie *)cookie
 {
-    if ([this->_cookies indexOfObject: cookie] != NSNotFound)
+    if ([this->_cookies indexOfObject: cookie] != -1)
     {
         [this->_cookies removeObject: cookie];
         [self _doExpireUpdateAndNotify];

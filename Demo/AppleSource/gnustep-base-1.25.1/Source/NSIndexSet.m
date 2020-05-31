@@ -157,7 +157,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     NSUInteger	pos;
     NSRange	r;
     
-    if (NSNotFound - aRange.length < aRange.location)
+    if (-1 - aRange.length < aRange.location)
     {
         [NSException raise: NSInvalidArgumentException
                     format: @"[%@-%@]: Bad range",
@@ -382,7 +382,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
 {
     if (_array == 0 || GSIArrayCount(_array) == 0)
     {
-        return NSNotFound;
+        return -1;
     }
     return GSIArrayItemAtIndex(_array, 0).ext.location;
 }
@@ -404,10 +404,10 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     }
     if (aRange == 0)
     {
-        fullRange = (NSRange){0, NSNotFound};
+        fullRange = (NSRange){0, -1};
         aRange = &fullRange;
     }
-    else if (NSNotFound - aRange->length < aRange->location)
+    else if (-1 - aRange->length < aRange->location)
     {
         [NSException raise: NSInvalidArgumentException
                     format: @"[%@-%@]: Bad range",
@@ -461,14 +461,14 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     NSUInteger	pos;
     NSRange	r;
     
-    if (anIndex++ == NSNotFound)
+    if (anIndex++ == -1)
     {
-        return NSNotFound;
+        return -1;
     }
     if (_array == 0 || GSIArrayCount(_array) == 0
         || (pos = posForIndex(_array, anIndex)) >= GSIArrayCount(_array))
     {
-        return NSNotFound;
+        return -1;
     }
     r = GSIArrayItemAtIndex(_array, pos).ext;
     if (NSLocationInRange(anIndex, r))
@@ -483,14 +483,14 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     NSUInteger	pos;
     NSRange	r;
     
-    if (anIndex == NSNotFound)
+    if (anIndex == -1)
     {
-        return NSNotFound;
+        return -1;
     }
     if (_array == 0 || GSIArrayCount(_array) == 0
         || (pos = posForIndex(_array, anIndex)) >= GSIArrayCount(_array))
     {
-        return NSNotFound;
+        return -1;
     }
     r = GSIArrayItemAtIndex(_array, pos).ext;
     if (NSLocationInRange(anIndex, r))
@@ -507,12 +507,12 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     
     if (anIndex-- == 0)
     {
-        return NSNotFound;
+        return -1;
     }
     if (_array == 0 || GSIArrayCount(_array) == 0
         || (pos = posForIndex(_array, anIndex)) >= GSIArrayCount(_array))
     {
-        return NSNotFound;
+        return -1;
     }
     r = GSIArrayItemAtIndex(_array, pos).ext;
     if (NSLocationInRange(anIndex, r))
@@ -521,7 +521,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     }
     if (pos-- == 0)
     {
-        return NSNotFound;
+        return -1;
     }
     r = GSIArrayItemAtIndex(_array, pos).ext;
     return NSMaxRange(r) - 1;
@@ -535,7 +535,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     if (_array == 0 || GSIArrayCount(_array) == 0
         || (pos = posForIndex(_array, anIndex)) >= GSIArrayCount(_array))
     {
-        return NSNotFound;
+        return -1;
     }
     r = GSIArrayItemAtIndex(_array, pos).ext;
     if (NSLocationInRange(anIndex, r))
@@ -544,7 +544,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     }
     if (pos-- == 0)
     {
-        return NSNotFound;
+        return -1;
     }
     r = GSIArrayItemAtIndex(_array, pos).ext;
     return NSMaxRange(r) - 1;
@@ -685,9 +685,9 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
 
 - (id) initWithIndex: (int)anIndex
 {
-    if (anIndex == NSNotFound)
+    if (anIndex == -1)
     {
-        DESTROY(self);	// NSNotFound is not legal
+        DESTROY(self);	// -1 is not legal
     }
     else
     {
@@ -700,9 +700,9 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
 {
     if (aRange.length > 0)
     {
-        if (NSMaxRange(aRange) == NSNotFound)
+        if (NSMaxRange(aRange) == -1)
         {
-            DESTROY(self);	// NSNotFound is not legal
+            DESTROY(self);	// -1 is not legal
         }
         else
         {
@@ -744,7 +744,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     NSUInteger	p1;
     NSUInteger	p2;
     
-    if (NSNotFound - aRange.length < aRange.location)
+    if (-1 - aRange.length < aRange.location)
     {
         [NSException raise: NSInvalidArgumentException
                     format: @"[%@-%@]: Bad range",
@@ -815,7 +815,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
 {
     if (_array == 0 || GSIArrayCount(_array) == 0)
     {
-        return NSNotFound;
+        return -1;
     }
     return NSMaxRange(GSIArrayItemAtIndex(_array, GSIArrayCount(_array)-1).ext)-1;
 }
@@ -840,13 +840,13 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     BOOL          isReverse = opts & NSEnumerationReverse;
     BLOCK_SCOPE BOOL      shouldStop = NO;
     
-    if ((0 == [self count]) || (NSNotFound == range.location))
+    if ((0 == [self count]) || (-1 == range.location))
     {
         return;
     }
     
     startArrayIndex = posForIndex(_array, range.location);
-    if (NSNotFound == startArrayIndex)
+    if (-1 == startArrayIndex)
     {
         startArrayIndex = 0;
     }
@@ -854,7 +854,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     lastInRange = (NSMaxRange(range) - 1);
     endArrayIndex = MIN(posForIndex(_array, lastInRange),
                         (GSIArrayCount(_array) - 1));
-    if (NSNotFound == endArrayIndex)
+    if (-1 == endArrayIndex)
     {
         endArrayIndex = GSIArrayCount(_array) - 1;
     }
@@ -942,7 +942,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     NSRange       range;
     
     firstIndex = [self firstIndex];
-    if (NSNotFound == firstIndex)
+    if (-1 == firstIndex)
     {
         return;
     }
@@ -994,7 +994,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
 {
     NSUInteger	pos;
     
-    if (NSNotFound - aRange.length < aRange.location)
+    if (-1 - aRange.length < aRange.location)
     {
         [NSException raise: NSInvalidArgumentException
                     format: @"[%@-%@]: Bad range",
@@ -1119,7 +1119,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     NSUInteger	pos;
     NSRange	r;
     
-    if (NSNotFound - aRange.length < aRange.location)
+    if (-1 - aRange.length < aRange.location)
     {
         [NSException raise: NSInvalidArgumentException
                     format: @"[%@-%@]: Bad range",
@@ -1269,14 +1269,14 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
                 {
                     NSRange	r = GSIArrayItemAtIndex(_array, --c).ext;
                     
-                    if (NSNotFound - amount <= r.location)
+                    if (-1 - amount <= r.location)
                     {
                         GSIArrayRemoveItemAtIndex(_array, c);
                     }
-                    else if (NSNotFound - amount < NSMaxRange(r))
+                    else if (-1 - amount < NSMaxRange(r))
                     {
                         r.location += amount;
-                        r.length = NSNotFound - r.location;
+                        r.length = -1 - r.location;
                         GSIArraySetItemAtIndex(_array, (GSIArrayItem)r, c);
                     }
                     else
@@ -1360,13 +1360,13 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
     NSUInteger	pos;
     NSRange	r;
     
-    if (anIndex++ == NSNotFound)
+    if (anIndex++ == -1)
     {
-        return NSNotFound;
+        return -1;
     }
     if (_array == 0 || GSIArrayCount(_array) == 0)
     {
-        return NSNotFound;
+        return -1;
     }
     
     if ((pos = posForIndex(_array, anIndex)) >= GSIArrayCount(_array))
@@ -1374,7 +1374,7 @@ static NSUInteger posForIndex(GSIArray array, NSUInteger index)
         r = GSIArrayItemAtIndex(_array, pos-1).ext;
         if (anIndex > NSMaxRange(r))
         {
-            return NSNotFound;
+            return -1;
         }
         return anIndex;	// anIndex is the gap after the last index.
     }

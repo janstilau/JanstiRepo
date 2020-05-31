@@ -103,7 +103,7 @@ typedef struct {
   my->cal = 
     ucal_open ((const UChar *)cTzId, tzLen, cLocaleId, UCAL_DEFAULT, &err);
 
-  if (NSNotFound == my->firstWeekday)
+  if (-1 == my->firstWeekday)
     {
       my->firstWeekday
         = ucal_getAttribute(my->cal, UCAL_FIRST_DAY_OF_WEEK);
@@ -114,7 +114,7 @@ typedef struct {
         (int32_t)my->firstWeekday);
     }
 
-  if (NSNotFound == my->minimumDaysInFirstWeek)
+  if (-1 == my->minimumDaysInFirstWeek)
     {
       my->minimumDaysInFirstWeek
         = ucal_getAttribute(my->cal, UCAL_MINIMAL_DAYS_IN_FIRST_WEEK);
@@ -235,8 +235,8 @@ static NSRecursiveLock *classLock = nil;
   _NSCalendarInternal =
     NSZoneCalloc([self zone], sizeof(Calendar), 1);
 
-  my->firstWeekday = NSNotFound;
-  my->minimumDaysInFirstWeek = NSNotFound;
+  my->firstWeekday = -1;
+  my->minimumDaysInFirstWeek = -1;
 
   if ([string isEqualToString: NSGregorianCalendar])
     my->identifier = NSGregorianCalendar;

@@ -200,7 +200,7 @@ static Class	GSInlineArrayClass;
 - (int) indexOfObject: anObject
 {
     if (anObject == nil)
-        return NSNotFound;
+        return -1;
     /*
      *	For large arrays, speed things up a little by caching the method.
      */
@@ -223,7 +223,7 @@ static Class	GSInlineArrayClass;
     {
         return 0;
     }
-    return NSNotFound;
+    return -1;
 }
 
 - (int) indexOfObjectIdenticalTo: anObject // 这个函数才是真正的内存比较.
@@ -237,7 +237,7 @@ static Class	GSInlineArrayClass;
             return i;
         }
     }
-    return NSNotFound;
+    return -1;
 }
 
 // 先指针, 后数量, 最后是各个比较.

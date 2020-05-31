@@ -1528,7 +1528,7 @@ wordData(NSString *word, BOOL *encoded)
     (unsigned)l, (unsigned)l, (unsigned)l, [d bytes]);
 
   r = [self _endOfHeaders: d];
-  if (r.location == NSNotFound)
+  if (r.location == -1)
     {
       [data appendBytes: [d bytes] length: [d length]];
       bytes = (unsigned char*)[data bytes];
@@ -3162,7 +3162,7 @@ unfold(const unsigned char *src, const unsigned char *end, BOOL *folded)
 
 /* Scan the provided data for an empty line (a CRLF immediately followed
  * by another CRLF).  Return the range of the empty line or a zero length
- * range at index NSNotFound.<br />
+ * range at index -1.<br />
  * Permits a bare LF as a line terminator for maximum compatibility.<br />
  * Also checks for an empty line overlapping the existing data and the
  * new data.<br />
@@ -3202,7 +3202,7 @@ unfold(const unsigned char *src, const unsigned char *end, BOOL *folded)
     {
       if (len < 1)
 	{
-	  return NSMakeRange(NSNotFound, 0);
+	  return NSMakeRange(-1, 0);
 	}
       c = C(0);
       if ('\n' == c)
@@ -3211,7 +3211,7 @@ unfold(const unsigned char *src, const unsigned char *end, BOOL *folded)
 	}
       if (len < 2)
 	{
-	  return NSMakeRange(NSNotFound, 0);
+	  return NSMakeRange(-1, 0);
 	}
       if ('\r' == c && '\n' == C(1))
 	{
@@ -3225,7 +3225,7 @@ unfold(const unsigned char *src, const unsigned char *end, BOOL *folded)
     {
       if (pos + 2 >= len)
 	{
-	  return NSMakeRange(NSNotFound, 0);
+	  return NSMakeRange(-1, 0);
 	}
       c = C(pos);
       if ('\n' == c)
@@ -3302,7 +3302,7 @@ unfold(const unsigned char *src, const unsigned char *end, BOOL *folded)
       pos++;
     }
 
-  return NSMakeRange(NSNotFound, 0);
+  return NSMakeRange(-1, 0);
 }
 
 - (BOOL) _scanHeaderParameters: (NSScanner*)scanner into: (GSMimeHeader*)info
@@ -3788,7 +3788,7 @@ static NSCharacterSet	*tokenSet = nil;
 
 /* Given a byte buffer and a minimum position in the buffer,
  * return the first white space found before the starting position.
- * If no white space is found, return NSNotFound.
+ * If no white space is found, return -1.
  */
 static NSUInteger
 lastWhiteSpace(const uint8_t *ptr, NSUInteger minimum, NSUInteger from)
@@ -3802,7 +3802,7 @@ lastWhiteSpace(const uint8_t *ptr, NSUInteger minimum, NSUInteger from)
           return from;
         }
     }
-  return NSNotFound;
+  return -1;
 }
 
 static char* _charsToEncode = "()<>@,;:_\"/[]?.=";
@@ -4090,7 +4090,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
                   else
                     {
                       next = lastWhiteSpace(ptr, pos, pos + fold - offset);
-                      if (NSNotFound == next)
+                      if (-1 == next)
                         {
                           /* The header text has no whitespace usable as
                            * a folding point before the end of the line.
@@ -5479,7 +5479,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
     {
       NSUInteger	index = [self _indexOfHeaderNamed: name];
 
-      if (index != NSNotFound)
+      if (index != -1)
 	{
 	  [headers replaceObjectAtIndex: index withObject: info];
 	}
@@ -5489,17 +5489,17 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
 
 	  index = [headers count];
 	  tmp = [self _indexOfHeaderNamed: @"content-disposition"];
-	  if (tmp != NSNotFound && tmp < index)
+	  if (tmp != -1 && tmp < index)
 	    {
 	      index = tmp;
 	    }
 	  tmp = [self _indexOfHeaderNamed: @"content-transfer-encoding"];
-	  if (tmp != NSNotFound && tmp < index)
+	  if (tmp != -1 && tmp < index)
 	    {
 	      index = tmp;
 	    }
 	  tmp = [self _indexOfHeaderNamed: CteContentType];
-	  if (tmp != NSNotFound && tmp < index)
+	  if (tmp != -1 && tmp < index)
 	    {
 	      index = tmp;
 	    }
@@ -7223,7 +7223,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
 @implementation GSMimeDocument (Private)
 /**
  * Returns the index of the first header matching the specified name
- * or NSNotFound if no match is found.<br />
+ * or -1 if no match is found.<br />
  * NB. The supplied name <em>must</em> be lowercase.<br />
  * This method is for internal use
  */
@@ -7250,7 +7250,7 @@ appendString(NSMutableData *m, NSUInteger offset, NSUInteger fold,
 	    }
 	}
     }
-  return NSNotFound;
+  return -1;
 }
 
 - (GSMimeHeader*) _lastHeaderNamed: (NSString*)name

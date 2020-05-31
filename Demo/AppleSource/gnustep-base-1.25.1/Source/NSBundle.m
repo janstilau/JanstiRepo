@@ -244,7 +244,7 @@ AbsolutePathOfExecutable(NSString *path, BOOL atLaunch)
       patharr = [pathlist componentsSeparatedByString:@":"];
 #endif
       /* Add . if not already in path */
-      if ([patharr indexOfObject: @"."] == NSNotFound)
+      if ([patharr indexOfObject: @"."] == -1)
 	{
 	  patharr = AUTORELEASE([patharr mutableCopy]);
 	  [patharr addObject: @"."];
@@ -1232,7 +1232,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
         {
           continue;
         }
-      if ([array indexOfObjectIdenticalTo: bundle] == NSNotFound)
+      if ([array indexOfObjectIdenticalTo: bundle] == -1)
         {
           [array addObject: bundle];
         }
@@ -1258,7 +1258,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
   while (NSNextMapEnumeratorPair(&enumerate, &key, (void **)&bundle))
     {
       if (bundle->_bundleType == NSBUNDLE_FRAMEWORK
-	&& [array indexOfObjectIdenticalTo: bundle] == NSNotFound)
+	&& [array indexOfObjectIdenticalTo: bundle] == -1)
 	{
 	  [array addObject: bundle];
 	}
@@ -2420,7 +2420,7 @@ IF_NO_GC(
   enumerate = [preferencesArray objectEnumerator];
   while ((locale = [enumerate nextObject]))
     {
-      if ([localizationsArray indexOfObject: locale] != NSNotFound)
+      if ([localizationsArray indexOfObject: locale] != -1)
 	[array addObject: locale];
     }
   /* I guess this is arbitrary if we can't find a match? */

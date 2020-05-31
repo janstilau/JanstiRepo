@@ -151,13 +151,13 @@
 	      tmp1 = [[NSString alloc] initWithData: capture 
 					   encoding: NSUTF8StringEncoding];
 	      // whether the headers are read
-	      if((r1 = [tmp1 rangeOfString: @"\r\n\r\n"]).location != NSNotFound)
+	      if((r1 = [tmp1 rangeOfString: @"\r\n\r\n"]).location != -1)
 		{
 		  headers = [tmp1 substringToIndex: r1.location + 2];
-		  if((r2 = [[headers lowercaseString] rangeOfString: @"content-length:"]).location != NSNotFound)
+		  if((r2 = [[headers lowercaseString] rangeOfString: @"content-length:"]).location != -1)
 		    {
 		      tmp2 = [headers substringFromIndex: r2.location + r2.length]; // content-length:<tmp2><end of headers>
-		      if((r2 = [tmp2 rangeOfString: @"\r\n"]).location != NSNotFound)
+		      if((r2 = [tmp2 rangeOfString: @"\r\n"]).location != -1)
 			{
 			  // full line with content-length is present
 			  tmp2 = [tmp2 substringToIndex: r2.location]; // number of content's bytes

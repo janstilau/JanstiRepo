@@ -377,9 +377,9 @@ static NSStringEncoding	defaultEncoding;
     {
         NSNumber	*tmpNum = [attributes fileOwnerAccountID];
         
-        num = tmpNum ? [tmpNum unsignedLongValue] : NSNotFound;
+        num = tmpNum ? [tmpNum unsignedLongValue] : -1;
     }
-    if (num != NSNotFound && num != [[old fileOwnerAccountID] unsignedLongValue])
+    if (num != -1 && num != [[old fileOwnerAccountID] unsignedLongValue])
     {
         if (chown(lpath, num, -1) != 0)
         {
@@ -442,9 +442,9 @@ static NSStringEncoding	defaultEncoding;
     {
         NSNumber	*tmpNum = [attributes fileGroupOwnerAccountID];
         
-        num = tmpNum ? [tmpNum unsignedLongValue] : NSNotFound;
+        num = tmpNum ? [tmpNum unsignedLongValue] : -1;
     }
-    if (num != NSNotFound
+    if (num != -1
         && num != [[old fileGroupOwnerAccountID] unsignedLongValue])
     {
         if (chown(lpath, -1, num) != 0)
@@ -499,7 +499,7 @@ static NSStringEncoding	defaultEncoding;
 #endif	/* _WIN32 */
     
     num = [attributes filePosixPermissions];
-    if (num != NSNotFound && num != [old filePosixPermissions])
+    if (num != -1 && num != [old filePosixPermissions])
     {
         if (_CHMOD(lpath, num) != 0)
         {
@@ -2658,7 +2658,7 @@ static inline void gsedRelease(GSEnumeratedDirectory X)
 }
 
 /**
- * Return the size of the file, or NSNotFound if the file size attribute
+ * Return the size of the file, or -1 if the file size attribute
  * is not found in the dictionary.
  */
 - (unsigned long long) fileSize
@@ -2667,7 +2667,7 @@ static inline void gsedRelease(GSEnumeratedDirectory X)
     
     if (n == nil)
     {
-        return NSNotFound;
+        return -1;
     }
     return [n unsignedLongLongValue];
 }
@@ -2723,7 +2723,7 @@ static inline void gsedRelease(GSEnumeratedDirectory X)
 }
 
 /**
- * Return the file posix permissions attribute (or NSNotFound if
+ * Return the file posix permissions attribute (or -1 if
  * the attribute is not present in the dictionary).
  */
 - (int) filePosixPermissions
@@ -2732,13 +2732,13 @@ static inline void gsedRelease(GSEnumeratedDirectory X)
     
     if (n == nil)
     {
-        return NSNotFound;
+        return -1;
     }
     return [n unsignedIntegerValue];
 }
 
 /**
- * Return the file system number attribute (or NSNotFound if
+ * Return the file system number attribute (or -1 if
  * the attribute is not present in the dictionary).
  */
 - (int) fileSystemNumber
@@ -2747,14 +2747,14 @@ static inline void gsedRelease(GSEnumeratedDirectory X)
     
     if (n == nil)
     {
-        return NSNotFound;
+        return -1;
     }
     return [n unsignedIntegerValue];
 }
 
 /**
  * Return the file system file identification number attribute
- * or NSNotFound if the attribute is not present in the dictionary).
+ * or -1 if the attribute is not present in the dictionary).
  */
 - (int) fileSystemFileNumber
 {
@@ -2762,7 +2762,7 @@ static inline void gsedRelease(GSEnumeratedDirectory X)
     
     if (n == nil)
     {
-        return NSNotFound;
+        return -1;
     }
     return [n unsignedIntegerValue];
 }

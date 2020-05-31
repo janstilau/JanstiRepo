@@ -1656,7 +1656,7 @@ failure:
       /* To replace the existing file on windows, it must be writable.
        */
       perm = [att filePosixPermissions];
-      if (perm != NSNotFound && (perm & 0200) == 0)
+      if (perm != -1 && (perm & 0200) == 0)
 	{
           [mgr changeFileAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
 	    [NSNumber numberWithUnsignedInt: 0777], NSFilePosixPermissions,

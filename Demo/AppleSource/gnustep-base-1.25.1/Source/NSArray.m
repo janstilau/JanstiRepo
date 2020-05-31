@@ -190,7 +190,7 @@ static SEL	removeLastSel;
  */
 - (BOOL) containsObject: (id)anObject
 {
-    return ([self indexOfObject: anObject] != NSNotFound);
+    return ([self indexOfObject: anObject] != -1);
 }
 
 /**
@@ -285,7 +285,7 @@ static SEL	removeLastSel;
 
 /**
  * Returns the index of the specified object in the receiver, or
- * NSNotFound if the object is not present.
+ * -1 if the object is not present.
  */
 
 /*
@@ -305,7 +305,7 @@ static SEL	removeLastSel;
             if (anObject == (*get)(self, objectAtSel, i))
                 return i;
     }
-    return NSNotFound;
+    return -1;
 }
 
 /**
@@ -326,7 +326,7 @@ static SEL	removeLastSel;
             if ((*eq)(anObject, equalSel, (*get)(self, objectAtSel, i)) == YES)
                 return i;
     }
-    return NSNotFound;
+    return -1;
 }
 
 /**
@@ -512,7 +512,7 @@ static SEL	removeLastSel;
     NSMutableArray *group = [NSMutableArray arrayWithCapacity: [indexes count]];
     
     NSUInteger i = [indexes firstIndex];
-    while (i != NSNotFound)
+    while (i != -1)
     {
         [group addObject: [self objectAtIndex: i]];
         i = [indexes indexGreaterThanIndex: i];
@@ -977,7 +977,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
     id<NSFastEnumeration> enumerator = self;
     BLOCK_SCOPE BOOL      shouldStop = NO;
     NSUInteger            count = 0;
-    BLOCK_SCOPE NSUInteger index = NSNotFound;
+    BLOCK_SCOPE NSUInteger index = -1;
     BLOCK_SCOPE NSLock    *indexLock = nil;
     
     /* If we are enumerating in reverse, use the reverse enumerator for fast
@@ -1119,7 +1119,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
     NSEnumerator	*enumerator = [objects objectEnumerator];
     id		object = [enumerator nextObject];
     
-    while (object != nil && index != NSNotFound)
+    while (object != nil && index != -1)
     {
         [self replaceObjectAtIndex: index withObject: object];
         object = [enumerator nextObject];
@@ -1177,7 +1177,7 @@ compare(id elem1, id elem2, void* context) // 在这里, 这个 context 是一�
     NSEnumerator	*enumerator = [objects objectEnumerator];
     id		object = [enumerator nextObject];
     
-    while (object != nil && index != NSNotFound)
+    while (object != nil && index != -1)
     {
         [self insertObject: object atIndex: index];
         object = [enumerator nextObject];

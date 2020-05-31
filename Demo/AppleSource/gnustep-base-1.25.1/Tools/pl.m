@@ -43,7 +43,7 @@ void create_output(id propertyList)
 
   // insert your code here
   outputIndex = [arguments indexOfObject: @"-output"];
-  if (outputIndex == NSNotFound)
+  if (outputIndex == -1)
     {
       const char *buffer = [[propertyList description] cString];
       NSData *outputData;
@@ -98,7 +98,7 @@ NSData *read_input()
 
   // insert your code here
   inputIndex = [arguments indexOfObject: @"-input"];
-  if (inputIndex == NSNotFound)
+  if (inputIndex == -1)
     {
       // setup the file handle.
       fileHandle = [NSFileHandle fileHandleWithStandardInput];

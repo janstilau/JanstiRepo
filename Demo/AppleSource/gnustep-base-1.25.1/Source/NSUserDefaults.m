@@ -1222,7 +1222,7 @@ newLanguages(NSArray *oldNames)
         DESTROY(_dictionaryRep);
         [_searchList removeObject: aName];
         index = [_searchList indexOfObject: processName];
-        index = (index == NSNotFound) ? 0 : (index + 1);
+        index = (index == -1) ? 0 : (index + 1);
         aName = [aName copy];
         [_searchList insertObject: aName atIndex: index];
         // Ensure that any persistent domain with the specified name is loaded.

@@ -1657,7 +1657,7 @@ scalarSize(char type)
     info = [objDict objectForKey: className];
     if (info == nil)
     {
-        return (NSInteger)NSNotFound;
+        return (NSInteger)-1;
     }
     return info->version;
 }

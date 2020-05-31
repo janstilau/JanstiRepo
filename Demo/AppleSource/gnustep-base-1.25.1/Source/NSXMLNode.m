@@ -472,7 +472,7 @@ isEqualTree(xmlNodePtr nodeA, xmlNodePtr nodeB)
 {
   if (!internal->subNodes)
     internal->subNodes = [[NSMutableArray alloc] init];
-  if ([internal->subNodes indexOfObjectIdenticalTo: subNode] == NSNotFound)
+  if ([internal->subNodes indexOfObjectIdenticalTo: subNode] == -1)
     {
       [internal->subNodes addObject: subNode];
     }

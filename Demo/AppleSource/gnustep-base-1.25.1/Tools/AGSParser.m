@@ -475,7 +475,7 @@ patata
    while ((tag = [e nextObject]) != nil)
      {
        if ([aComment rangeOfString: tag 
-                           options: NSCaseInsensitiveSearch].location != NSNotFound)
+                           options: NSCaseInsensitiveSearch].location != -1)
          {
             return NO;
          }

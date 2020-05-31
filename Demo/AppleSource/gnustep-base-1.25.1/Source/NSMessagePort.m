@@ -1033,7 +1033,7 @@ static Class	runLoopClass;
       forMode: NSDefaultRunLoopMode];
 
   while (valid == YES
-    && [wMsgs indexOfObjectIdenticalTo: components] != NSNotFound
+    && [wMsgs indexOfObjectIdenticalTo: components] != -1
     && [when timeIntervalSinceNow] > 0)
     {
       M_UNLOCK(myLock);
@@ -1050,7 +1050,7 @@ static Class	runLoopClass;
 	 forMode: NSDefaultRunLoopMode
 	     all: NO];
 
-  if ([wMsgs indexOfObjectIdenticalTo: components] == NSNotFound)
+  if ([wMsgs indexOfObjectIdenticalTo: components] == -1)
     {
       sent = YES;
     }

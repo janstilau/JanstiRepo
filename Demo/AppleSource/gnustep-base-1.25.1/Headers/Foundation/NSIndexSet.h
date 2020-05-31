@@ -15,13 +15,13 @@ extern "C" {
     
     /**
      * Instances of this class are collections of unsigned integers in the
-     * range 0 to NSNotFound-1.<br />
+     * range 0 to -1-1.<br />
      * Each integer can appear in a collection only once.
      
      An immutable collection of unique integer values that represent indexes in another collection.
      
      首先, 这个类里面的都是非负数, 表示的是容器中的下标.
-     The NSIndexSet class represents an immutable collection of unique unsigned integers, known as indexes because of the way they are used. This collection is referred to as an index set. Indexes must be in the range 0 .. NSNotFound - 1.
+     The NSIndexSet class represents an immutable collection of unique unsigned integers, known as indexes because of the way they are used. This collection is referred to as an index set. Indexes must be in the range 0 .. -1 - 1.
      
      You should not use index sets to store an arbitrary collection of integer values because index sets store indexes as sorted ranges. This makes them more efficient than storing a collection of individual integers. It also means that each index value can only appear once in the index set.
      上面一段话说的是, 不能把这个类当做一个任意的容器用, 因为 set 只会存储一遍,
@@ -42,13 +42,13 @@ extern "C" {
 
 /**
  * Return a set containing the single value anIndex, or returns nil if
- * anIndex is NSNotFound.
+ * anIndex is -1.
  */
 + (id) indexSetWithIndex: (int)anIndex;
 
 /**
  * Return a set containing all the values in aRange, or returns nil if
- * aRange contains NSNotFound.
+ * aRange contains -1.
  */
 + (id) indexSetWithIndexesInRange: (NSRange)aRange;
 
@@ -97,7 +97,7 @@ DEFINE_BLOCK_TYPE(GSIndexSetEnumerationBlock, void, NSUInteger, BOOL*);
 #endif
 
 /**
- * Returns the first index value in the receiver or NSNotFound if the
+ * Returns the first index value in the receiver or -1 if the
  * receiver is empty.
  */
 - (int) firstIndex;
@@ -141,13 +141,13 @@ DEFINE_BLOCK_TYPE(GSIndexSetEnumerationBlock, void, NSUInteger, BOOL*);
 
 /**
  * Initialise the receiver to contain anIndex.  Returns the initialised
- * object or nil if anIndex is NSNotFound.
+ * object or nil if anIndex is -1.
  */
 - (id) initWithIndex: (int)anIndex;
 
 /** <init />
  * Initialise the receiver to contain all index values in aRange.
- * Returns the initialised object or nil if aRange contains NSNotFound.
+ * Returns the initialised object or nil if aRange contains -1.
  */
 - (id) initWithIndexesInRange: (NSRange)aRange;
 
@@ -168,7 +168,7 @@ DEFINE_BLOCK_TYPE(GSIndexSetEnumerationBlock, void, NSUInteger, BOOL*);
 - (BOOL) isEqualToIndexSet: (NSIndexSet*)aSet;
 
 /**
- * Returns the last index value in the receiver or NSNotFound if the
+ * Returns the last index value in the receiver or -1 if the
  * receiver is empty.
  */
 - (int) lastIndex;

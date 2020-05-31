@@ -1188,7 +1188,7 @@ updateTimer(NSTimer *t, NSDate *d, NSTimeInterval now)
                          @"accept I/P before %d millisec from now in %@",
                          timeout_ms, mode);
             
-            if ([_contextStack indexOfObjectIdenticalTo: context] == NSNotFound)
+            if ([_contextStack indexOfObjectIdenticalTo: context] == -1)
             {
                 [_contextStack addObject: context];
             }

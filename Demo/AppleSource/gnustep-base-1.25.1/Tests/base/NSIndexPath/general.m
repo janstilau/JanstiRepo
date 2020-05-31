@@ -25,8 +25,8 @@ int main()
   PASS(index1 == index2,
        "index path gives a shared instance");
   
-  PASS([index1 indexAtPosition: 1] == NSNotFound, 
-	"indexAtPosition: with bad location gives NSNotFound");
+  PASS([index1 indexAtPosition: 1] == -1, 
+	"indexAtPosition: with bad location gives -1");
   
   index1 = [index1 indexPathByAddingIndex: 9];
   PASS([index1 length] == 2

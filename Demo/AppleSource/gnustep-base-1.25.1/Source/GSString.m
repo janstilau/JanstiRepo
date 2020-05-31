@@ -3392,7 +3392,7 @@ rangeOfCharacter_c(GSStr self, NSCharacterSet *aSet, unsigned mask,
       stop = NSMaxRange(aRange);
       step = 1;
     }
-  range.location = NSNotFound;
+  range.location = -1;
   range.length = 0;
 
   mImp = (BOOL(*)(id,SEL,unichar))
@@ -3449,7 +3449,7 @@ rangeOfCharacter_u(GSStr self, NSCharacterSet *aSet, unsigned mask,
       stop = NSMaxRange(aRange);
       step = 1;
     }
-  range.location = NSNotFound;
+  range.location = -1;
   range.length = 0;
 
   mImp = (BOOL(*)(id,SEL,unichar))
@@ -5892,7 +5892,7 @@ literalIsEqual(NXConstantString *self, id anObject)
   NSUInteger	max = NSMaxRange(aRange);
   NSUInteger	index = 0;
 
-  if (NSNotFound == aRange.location)
+  if (-1 == aRange.location)
     [NSException raise: NSRangeException format:
       @"in %s, range { %"PRIuPTR", %"PRIuPTR" } extends beyond string",
       GSNameFromSelector(_cmd), aRange.location, aRange.length];
@@ -6101,7 +6101,7 @@ literalIsEqual(NXConstantString *self, id anObject)
   start = aRange.location;
   stop = NSMaxRange(aRange);
 
-  range.location = NSNotFound;
+  range.location = -1;
   range.length = 0;
 
   if (stop  > start)
@@ -6197,7 +6197,7 @@ literalIsEqual(NXConstantString *self, id anObject)
 
   [NSException raise: NSInvalidArgumentException
     format: @"-rangeOfComposedCharacterSequenceAtIndex: index out of range"];
-  return NSMakeRange(NSNotFound, 0);
+  return NSMakeRange(-1, 0);
 }
 
 - (id) retain

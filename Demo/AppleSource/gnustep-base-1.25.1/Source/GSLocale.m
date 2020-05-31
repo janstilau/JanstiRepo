@@ -292,7 +292,7 @@ NSArray *
 GSLocaleVariants(NSString *locale)
 {
   NSRange under = [locale rangeOfString: @"_"];
-  if (under.location != NSNotFound)
+  if (under.location != -1)
     {
       return [NSArray arrayWithObjects:
 			locale,

@@ -242,8 +242,8 @@
 	// the actual request is the first line
 	req = [components objectAtIndex: 0];
 
-	if ([req rangeOfString: @"GET"].location == NSNotFound
-	  && [req rangeOfString: @"HEAD"].location == NSNotFound)
+	if ([req rangeOfString: @"GET"].location == -1
+	  && [req rangeOfString: @"HEAD"].location == -1)
 	  {
 	    retCode = @"501"; // HTTP 501: Not Implemented
 	  }
@@ -289,7 +289,7 @@
 	[response appendBytes: "\r\n" length: 2];
 	//do we need to add the body part?
 
-	if([req rangeOfString: @"HEAD"].location == NSNotFound)
+	if([req rangeOfString: @"HEAD"].location == -1)
 	  {
 	    statusCode = [retCode intValue];
 	

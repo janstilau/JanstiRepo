@@ -127,7 +127,7 @@ static NSRange GSRangeOfCookie(NSString *string);
         NSString *onecookie;
         NSRange range = GSRangeOfCookie(value);
         
-        if (range.location == NSNotFound)
+        if (range.location == -1)
             break;
         onecookie = [value substringWithRange: range];
         NS_DURING
@@ -239,7 +239,7 @@ static NSRange GSRangeOfCookie(NSString *string);
 - (BOOL) _isValidProperty: (NSString *)prop
 {
     return ([prop length]
-            && [prop rangeOfString: @"\n"].location == NSNotFound);
+            && [prop rangeOfString: @"\n"].location == -1);
 }
 
 - (id) initWithProperties: (NSDictionary *)properties
@@ -821,7 +821,7 @@ GSRangeOfCookie(NSString *string)
     /*
      * An empty string is a nil property list.
      */
-    range = NSMakeRange(NSNotFound, NSNotFound);
+    range = NSMakeRange(-1, -1);
     if ([string length] == 0)
     {
         return range;
@@ -858,7 +858,7 @@ GSRangeOfCookie(NSString *string)
         }
         pld->pos++;
     }
-    if (range.location == NSNotFound)
+    if (range.location == -1)
         range = NSMakeRange(0, [string length]);
     
     return range;

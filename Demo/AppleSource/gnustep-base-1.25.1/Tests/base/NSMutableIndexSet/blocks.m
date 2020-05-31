@@ -19,7 +19,7 @@ int main()
   NSMutableIndexSet *referenceSet = nil;
   __block NSMutableIndexSet *newSet = [NSMutableIndexSet indexSet];
   __block BOOL didContainWrongIndex = NO;
-  __block NSUInteger lastIndex = NSNotFound;
+  __block NSUInteger lastIndex = -1;
   NSLock *setLock = [NSLock new];
   void(^enumBlock)(NSUInteger,BOOL*) = ^(NSUInteger idx, BOOL*shouldStop){
       [setLock lock];
@@ -37,7 +37,7 @@ int main()
 
   newSet = [NSMutableIndexSet indexSet];
   didContainWrongIndex = NO;
-  lastIndex = NSNotFound;
+  lastIndex = -1;
 
   // Test reverse enumeration:
   [set enumerateIndexesWithOptions: NSEnumerationReverse
@@ -51,7 +51,7 @@ int main()
   [referenceSet addIndex: 20];
   newSet = [NSMutableIndexSet indexSet];
   didContainWrongIndex = NO;
-  lastIndex = NSNotFound;
+  lastIndex = -1;
 
   // Test subrange enumeration:
   [set enumerateIndexesInRange: NSMakeRange(4,20)
@@ -61,7 +61,7 @@ int main()
    PASS((20 == lastIndex), "Subrange enumeration stops at the correct index");
 
    newSet = [NSMutableIndexSet indexSet];
-   lastIndex = NSNotFound;
+   lastIndex = -1;
    referenceSet = [NSMutableIndexSet indexSetWithIndexesInRange: NSMakeRange(1,5)];
    [referenceSet addIndex: 20];
    enumBlock = ^(NSUInteger idx, BOOL*shouldStop){

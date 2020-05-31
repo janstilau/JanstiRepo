@@ -59,7 +59,7 @@ extern "C" {
 - (void) getIndexes: (NSUInteger*)aBuffer;
 
 /**
- * Return the index at the specified position or NSNotFound if there
+ * Return the index at the specified position or -1 if there
  * is no index at the specified position.
  */
 - (int) indexAtPosition: (int)position;

@@ -407,20 +407,20 @@ prepareResult(NSRegularExpression *regex,
       NSInteger start = uregex_start(r, i, s);
       NSInteger end = uregex_end(r, i, s);
       // The ICU API defines -1 as not found. Convert to
-      // NSNotFound if applicable.
+      // -1 if applicable.
       if (start == -1)
         {
-          start = NSNotFound;
+          start = -1;
         }
       if (end == -1)
         {
-          end = NSNotFound;
+          end = -1;
         }
 
       if (end < start)
         {
           flags |= NSMatchingInternalError;
-          end = start = NSNotFound;
+          end = start = -1;
         }
       ranges[i] = NSMakeRange(start, end-start);
     }
@@ -633,7 +633,7 @@ prepareResult(NSRegularExpression *regex,
                               options: (NSMatchingOptions)opts
                                 range: (NSRange)range
 {
-  __block NSRange r = {NSNotFound, 0};
+  __block NSRange r = {-1, 0};
 
   opts &= ~NSMatchingReportProgress;
   opts &= ~NSMatchingReportCompletion;
@@ -773,7 +773,7 @@ prepareResult(NSRegularExpression *regex,
                               options: (NSMatchingOptions)opts
                                 range: (NSRange)range
 {
-  NSRange result = {NSNotFound, 0};
+  NSRange result = {-1, 0};
 
   FAKE_BLOCK_HACK(result,
     {

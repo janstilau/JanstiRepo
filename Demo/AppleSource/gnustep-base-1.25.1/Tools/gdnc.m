@@ -799,7 +799,7 @@ ihandler(int sig)
       if (obs->notificationName == nil
 	|| [obs->notificationName isEqual: notificationName])
 	{
-	  if ([observers indexOfObjectIdenticalTo: obs] == NSNotFound)
+	  if ([observers indexOfObjectIdenticalTo: obs] == -1)
 	    {
 	      [observers addObject: obs];
 	    }
@@ -996,7 +996,7 @@ ihandler(int sig)
 	      GDNCObserver	*obs;
 
 	      obs = [byName objectAtIndex: pos - 1];
-	      if ([byObject indexOfObjectIdenticalTo: obs] != NSNotFound)
+	      if ([byObject indexOfObjectIdenticalTo: obs] != -1)
 		{
 		  [self removeObserver: obs];
 		}
@@ -1006,7 +1006,7 @@ ihandler(int sig)
 	      GDNCObserver	*obs;
 
 	      obs = [byObject objectAtIndex: pos - 1];
-	      if ([byName indexOfObjectIdenticalTo: obs] != NSNotFound)
+	      if ([byName indexOfObjectIdenticalTo: obs] != -1)
 		{
 		  [self removeObserver: obs];
 		}

@@ -313,7 +313,7 @@ static NSRecursiveLock *classLock = nil;
     
     // Strip script info from locale
     range = [result rangeOfString: @"-"];
-    if (range.location != NSNotFound)
+    if (range.location != -1)
     {
         NSUInteger start = range.location;
         NSUInteger length;
