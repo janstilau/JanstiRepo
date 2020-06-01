@@ -188,6 +188,10 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
     }
 }
 
+/*
+ 当 MenuItem 被点下之后, UIApplicaiton 会将对应的 SEL 发送到 Windown 的 FirstResponder. 这就是 _firstResponder 的意义所在, 一个特定的值, 在特定的时刻, 被获取然后处理事件.
+ 并且, UIKit 保证, 在一个 View 成为了 FirstResponder 只会, 会弹出它的 InputView.
+ */
 - (void)_didSelectMenuItem:(NSMenuItem *)sender
 {
     // the docs say that it calls -update when it detects a touch in the menu, so I assume it does this to try to prevent actions being sent

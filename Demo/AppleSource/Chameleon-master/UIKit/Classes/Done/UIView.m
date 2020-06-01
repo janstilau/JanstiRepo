@@ -75,7 +75,7 @@ static BOOL _animationsEnabled = YES;
     return self;
 }
 
-// 记录了自己所属的 viewController
+// 记录了自己所属的 viewController, ???, 苹果的源码, 真的会记录这个吗.
 - (void)_setViewController:(UIViewController *)theViewController
 {
     _viewController = theViewController;
@@ -91,30 +91,37 @@ static BOOL _animationsEnabled = YES;
     return _superview.window;
 }
 
-// 返回下一个响应者.
+// 返回下一个响应者. 这里是, 为什么 View 如果是 VC 的 view, 它的下一个响应者是 VC 的关键.
 - (UIResponder *)nextResponder
 {
     return (UIResponder *)[self _viewController] ?: (UIResponder *)_superview;
 }
 
 // 这里, 没有返回真正的自己的容器对象, 而是新组建了一个容器返回了.
+/*
+ 也就是说, 真正有序的, 是 Layer, 通过 Layer 的顺序, 来返回有序数的.
+ */
 - (NSArray *)subviews
 {
     NSArray *sublayers = _layer.sublayers;
     NSMutableArray *subviews = [NSMutableArray arrayWithCapacity:[sublayers count]];
-
     for (CALayer *layer in sublayers) {
         id potentialView = [layer delegate];
         if ([_subviews containsObject:potentialView]) {
             [subviews addObject:potentialView];
         }
     }
-    
     return subviews;
 }
 
-// 由于 VC 可能不是通过 transitionFromViewController 进行变化. 这里, view 会在添加到 windwon 的时候, 主动调用一次.
+/*
+ 在 AddSubView 的时候, 和 RemoveFromSuperView 的时候, 调用者两个方法.
+ 在这两个方法的内部, 会触发 willMoveToWindow, beginAppearanceTransition 这些方法.
+ WillMoveToWindow 里面, 可以写一些 View 显示, 消失的相关回调代码.
+ beginAppearanceTransition 则是通知自己的 VC 的 viewWillAppear, ViewWillDidAppear 之类的代码.
 
+ 这就是流程的好处. 当在关键的节点, 插入了流程代码, 以后所有的一些, 都会自动管理.
+ */
 - (void)_willMoveFromWindow:(UIWindow *)fromWindow toWindow:(UIWindow *)toWindow
 {
     if (fromWindow != toWindow) {
@@ -124,7 +131,8 @@ static BOOL _animationsEnabled = YES;
         
         [self willMoveToWindow:toWindow];
 
-        for (UIView *subview in self.subviews) { // 通知自己的子 View.
+        // 这里会触发递归.
+        for (UIView *subview in self.subviews) {
             [subview _willMoveFromWindow:fromWindow toWindow:toWindow];
         }
         
@@ -179,11 +187,14 @@ static BOOL _animationsEnabled = YES;
         [subview _willMoveFromWindow:oldWindow toWindow:newWindow];
         [subview willMoveToSuperview:self]; // 暴露给程序员自定义的接口.
 
-        if (subview.superview) { // 清楚原来的 superView 相关逻辑.
+        if (subview.superview) { // 清除原来的 superView 相关逻辑.
             [subview.layer removeFromSuperlayer];
             [subview.superview->_subviews removeObject:subview];
         }
         
+        /*
+         这里, 做指针的更改, 并且将 layer 装上去.
+         */
         [subview willChangeValueForKey:@"superview"];
         [_subviews addObject:subview];
         subview->_superview = self;
@@ -272,7 +283,9 @@ static BOOL _animationsEnabled = YES;
     }
 }
 
-// 自定义行为的切口.
+/*
+ 这些都是类的设计者, 给使用者暴露出来的接口. 他们什么时候被调用, 是在真正进行状态管理的私有方法里面决定的.
+ */
 - (void)didAddSubview:(UIView *)subview
 {
 }
@@ -378,6 +391,7 @@ static BOOL _animationsEnabled = YES;
 {
     UIView *foundView = nil;
     
+    // 首先会先找自己.
     if (self.tag == tagToFind) {
         foundView = self;
     } else {
@@ -887,6 +901,9 @@ static BOOL _animationsEnabled = YES;
     }	
 }
 
+/*
+ 这里, 其实没有说明, _gestureRecognizers 到底是 如何 和 View 的 touched 进行操作的.
+ */
 - (NSArray *)gestureRecognizers
 {
     return [_gestureRecognizers allObjects];

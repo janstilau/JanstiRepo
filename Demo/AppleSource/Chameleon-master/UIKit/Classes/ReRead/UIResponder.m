@@ -37,19 +37,21 @@
     if ([self isFirstResponder]) {
         return YES;
     }
-    
+    /*
+     FirstResponder 是一个 Window 的概念. 所以, 首先要找到 Window.
+     */
     UIWindow *window = [self _responderWindow];
     UIResponder *firstResponder = [window _firstResponder];
     if (window && [self canBecomeFirstResponder]) { // 只有当前in the active view hierarchy, 并且可以成为第一响应者.
         BOOL didResign = NO;
-        // 有了 canResignFirstResponder 的判断, resignFirstResponder 里面就应该可以正常调用, 否则就应该算是逻辑错误了.
+        
         if (firstResponder && [firstResponder canResignFirstResponder]) {
             didResign = [firstResponder resignFirstResponder];
         } else {
             didResign = YES;
         }
-        
-        if (didResign) { // 只有在当前响应者放弃了响应者权利之后, 才能进行下面的逻辑.
+        // 只有在当前响应者放弃了响应者权利之后, 才能进行下面的逻辑.
+        if (didResign) {
             [window _setFirstResponder:self]; // 一个简单的赋值操作.
             
             if ([self conformsToProtocol:@protocol(UIKeyInput)]) {
@@ -112,7 +114,9 @@
     return [[self nextResponder] undoManager];
 }
 
-// 以下的实现, 都是简简单单的调用下一个响应者对应的方法.
+/*
+ 这里, 说明了为什么调用链会一直向上传.
+ */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [[self nextResponder] touchesBegan:touches withEvent:event];

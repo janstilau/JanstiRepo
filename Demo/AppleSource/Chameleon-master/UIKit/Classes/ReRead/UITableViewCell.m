@@ -7,6 +7,11 @@
 
 extern CGFloat _UITableViewDefaultRowHeight;
 
+/*
+ 之所以, 会有 ContentView, 是因为 UITableView 设计了下面的这些 View, 也就是为使用者预先设计了一些模式来用.
+ 虽然没什么人来真的这样做.
+ */
+
 @implementation UITableViewCell {
     // 系统添加的一些预定义的子控件.
     UITableViewCellStyle _style;
@@ -88,7 +93,10 @@ extern CGFloat _UITableViewDefaultRowHeight;
     }
 }
 
-// 这些都是懒加载.
+/*
+ 这些都是懒加载, 是因为, 不同的 Style, 其实是展示不同的东西.
+ 并且, 实际上, 一般使用者很少使用这些玩意. 都是自己生成 View 添加上去.
+ */
 - (UIView *)contentView
 {
     if (!_contentView) {

@@ -16,6 +16,9 @@ NSString *const UITextViewTextDidEndEditingNotification = @"UITextViewTextDidEnd
 @interface UITextView () <UITextLayerTextDelegate>
 @end
 
+/*
+ YYTextView 的实现, 要比这个好太多了.
+ */
 
 @implementation UITextView {
     UITextLayer *_textLayer;
