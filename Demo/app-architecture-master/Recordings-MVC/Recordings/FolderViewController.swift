@@ -31,6 +31,9 @@ class FolderViewController: UITableViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: Store.changedNotification, object: nil)
 	}
 	
+	/*
+	在数据层发生了改变之后, View 层才会进行更新操作. 单项数据流
+	*/
 	@objc func handleChangeNotification(_ notification: Notification) {
 		// Handle changes to the current folder
 		if let item = notification.object as? Folder, item === folder {

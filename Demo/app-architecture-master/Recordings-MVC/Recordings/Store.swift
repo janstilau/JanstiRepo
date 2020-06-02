@@ -11,6 +11,10 @@ final class Store {
 	// swift 的单例模式.
 	static let shared = Store(url: documentDirectory)
 	
+	/*
+	Swift 里面的 static let, 自动就是懒加载的, 而且会保证线程同步问题.
+	*/
+	
 	let baseURL: URL?
 	var placeholder: URL?
 	// 更改 rootFolder 的 set 的权限.
@@ -35,6 +39,11 @@ final class Store {
 		return baseURL?.appendingPathComponent(recording.uuid.uuidString + ".m4a") ?? placeholder
 	}
 	
+	/*
+	这里, 就是调用 RootFolder 的序列化方法, 然后写入到文件里面, 然后发出通知.
+	可以看到, 所有的 View 事件, 最终是到达了数据层, 然后数据层保存了之后, 发出通知.
+	各个 view 在接收到通知之后, 进行 view 的更新操作.
+	*/
 	func save(_ notifying: Item, userInfo: [AnyHashable: Any]) {
 		if let url = baseURL, let data = try? JSONEncoder().encode(rootFolder) {
 			try! data.write(to: url.appendingPathComponent(.storeLocation))
