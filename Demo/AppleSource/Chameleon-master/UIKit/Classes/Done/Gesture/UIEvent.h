@@ -3,8 +3,6 @@
 typedef NS_ENUM(NSInteger, UIEventType) {
     UIEventTypeTouches,
     UIEventTypeMotion,
-    
-    // nonstandard
     UIEventTypeKeyboard,
     UIEventTypeAction
 };

@@ -549,6 +549,7 @@
 		06055A26236825C200EE2744 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				06055A28236863F400EE2744 /* Gesture */,
 				1489852912EE2CFE003D4751 /* UINavigationBar.h */,
 				1489852A12EE2CFE003D4751 /* UINavigationBar.m */,
 				1489852B12EE2CFE003D4751 /* UINavigationController.h */,
@@ -567,11 +568,7 @@
 				1489854E12EE2CFE003D4751 /* UITabBarController.m */,
 				78CB48AE133AA535008636DA /* UITabBarItem.h */,
 				78CB48AF133AA535008636DA /* UITabBarItem.m */,
-				1489854F12EE2CFE003D4751 /* UITableView.h */,
-				1489855012EE2CFE003D4751 /* UITableView.m */,
 				1489855912EE2CFE003D4751 /* UITextInputTraits.h */,
-				1489855C12EE2CFE003D4751 /* UIToolbar.h */,
-				1489855D12EE2CFE003D4751 /* UIToolbar.m */,
 				1489856012EE2CFE003D4751 /* UIView.h */,
 				1489856112EE2CFE003D4751 /* UIView.m */,
 				1489856412EE2CFE003D4751 /* UIViewController.h */,
@@ -635,6 +632,10 @@
 				1489855212EE2CFE003D4751 /* UITableViewCell.m */,
 				1489853B12EE2CFE003D4751 /* UIResponder.h */,
 				1489853C12EE2CFE003D4751 /* UIResponder.m */,
+				1489855C12EE2CFE003D4751 /* UIToolbar.h */,
+				1489855D12EE2CFE003D4751 /* UIToolbar.m */,
+				1489854F12EE2CFE003D4751 /* UITableView.h */,
+				1489855012EE2CFE003D4751 /* UITableView.m */,
 			);
 			path = ReRead;
 			sourceTree = "<group>";
@@ -712,7 +713,6 @@
 			isa = PBXGroup;
 			children = (
 				068035DD2483D4B800054455 /* ReRead */,
-				06055A28236863F400EE2744 /* Gesture */,
 				06055A26236825C200EE2744 /* Done */,
 				148984E412EE2CFE003D4751 /* AppKitIntegration.h */,
 				148984E512EE2CFE003D4751 /* NSIndexPath+UITableView.h */,

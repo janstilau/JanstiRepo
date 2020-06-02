@@ -28,9 +28,15 @@ typedef NS_ENUM(NSInteger, UIGestureRecognizerState) {
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
 @end
 
-@interface UIGestureRecognizer : NSObject
-- (id)initWithTarget:(id)target action:(SEL)action;
 
+/*
+ UIGestureRecognizer 内部会有状态值, 在状态值改变之后, 根据状态值的量, 以及前后改变的有效性, 调用 TargetAction 的方法.
+ 在各个子类的 TouchBegin, Move, End 相关的方法里面, 实现了各自的 state 改变的算法. 用来实现自定义化.
+ */
+
+@interface UIGestureRecognizer : NSObject
+
+- (id)initWithTarget:(id)target action:(SEL)action;
 - (void)addTarget:(id)target action:(SEL)action;
 - (void)removeTarget:(id)target action:(SEL)action;
 

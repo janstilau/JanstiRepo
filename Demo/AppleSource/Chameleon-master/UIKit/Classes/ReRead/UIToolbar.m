@@ -16,6 +16,12 @@ static const CGFloat kBarHeight = 28;
 
 @end
 
+/*
+ UIToolbarItem
+ 里面封装了一个 View. 根据数据类的类型的不同, 生成不同的 View
+ 系统默认了一个SystemType. 如果是这个类型的, 就生成 UIToolbarButton 这个对象的实例作为 View.
+ */
+
 @implementation UIToolbarItem
 
 - (id)initWithBarButtonItem:(UIBarButtonItem *)anItem
@@ -49,10 +55,11 @@ static const CGFloat kBarHeight = 28;
 @end
 
 
-
-
-
-
+/*
+ UIToolbarItem
+ 根据数据类, 做 View 的管理工作.
+ 这是一个视图管理类, 在这个管理类的内部. 根据 Item 的数据, 管理各个 Item 所自带的 View
+ */
 
 
 @implementation UIToolbar {
@@ -75,58 +82,57 @@ static const CGFloat kBarHeight = 28;
 - (void)setBarStyle:(UIBarStyle)newStyle
 {
     _barStyle = newStyle;
-
-    // this is for backward compatibility - UIBarStyleBlackTranslucent is deprecated 
+    
+    // this is for backward compatibility - UIBarStyleBlackTranslucent is deprecated
     if (_barStyle == UIBarStyleBlackTranslucent) {
         self.translucent = YES;
     }
 }
-
 /*
-- (void)_updateItemViews
-{
-    [_itemViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [_itemViews removeAllObjects];
-
-    NSUInteger numberOfFlexibleItems = 0;
-    
-    for (UIBarButtonItem *item in _items) {
-        if ((item->_isSystemItem) && (item->_systemItem == UIBarButtonSystemItemFlexibleSpace)) {
-            numberOfFlexibleItems++;
-        }
-    }
-
-    const CGSize size = self.bounds.size;
-    const CGFloat flexibleSpaceWidth = (numberOfFlexibleItems > 0)? MAX(0, size.width/numberOfFlexibleItems) : 0;
-    CGFloat left = 0;
-    
-    for (UIBarButtonItem *item in _items) {
-        UIView *view = item.customView;
-
-        if (!view) {
-            if (item->_isSystemItem && item->_systemItem == UIBarButtonSystemItemFlexibleSpace) {
-                left += flexibleSpaceWidth;
-            } else if (item->_isSystemItem && item->_systemItem == UIBarButtonSystemItemFixedSpace) {
-                left += item.width;
-            } else {
-                view = [[[UIToolbarButton alloc] initWithBarButtonItem:item] autorelease];
-            }
-        }
-        
-        if (view) {
-            CGRect frame = view.frame;
-            frame.origin.x = left;
-            frame.origin.y = (size.height / 2.f) - (frame.size.height / 2.f);
-            frame = CGRectStandardize(frame);
-            
-            view.frame = frame;
-            left += frame.size.width;
-            
-            [self addSubview:view];
-        }
-    }
-}
-*/
+ - (void)_updateItemViews
+ {
+ [_itemViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+ [_itemViews removeAllObjects];
+ 
+ NSUInteger numberOfFlexibleItems = 0;
+ 
+ for (UIBarButtonItem *item in _items) {
+ if ((item->_isSystemItem) && (item->_systemItem == UIBarButtonSystemItemFlexibleSpace)) {
+ numberOfFlexibleItems++;
+ }
+ }
+ 
+ const CGSize size = self.bounds.size;
+ const CGFloat flexibleSpaceWidth = (numberOfFlexibleItems > 0)? MAX(0, size.width/numberOfFlexibleItems) : 0;
+ CGFloat left = 0;
+ 
+ for (UIBarButtonItem *item in _items) {
+ UIView *view = item.customView;
+ 
+ if (!view) {
+ if (item->_isSystemItem && item->_systemItem == UIBarButtonSystemItemFlexibleSpace) {
+ left += flexibleSpaceWidth;
+ } else if (item->_isSystemItem && item->_systemItem == UIBarButtonSystemItemFixedSpace) {
+ left += item.width;
+ } else {
+ view = [[[UIToolbarButton alloc] initWithBarButtonItem:item] autorelease];
+ }
+ }
+ 
+ if (view) {
+ CGRect frame = view.frame;
+ frame.origin.x = left;
+ frame.origin.y = (size.height / 2.f) - (frame.size.height / 2.f);
+ frame = CGRectStandardize(frame);
+ 
+ view.frame = frame;
+ left += frame.size.width;
+ 
+ [self addSubview:view];
+ }
+ }
+ }
+ */
 
 // 没有做完.
 - (void)layoutSubviews
@@ -148,7 +154,7 @@ static const CGFloat kBarHeight = 28;
     const CGSize size = self.bounds.size;
     const CGFloat flexibleSpaceWidth = (numberOfFlexibleItems > 0)? ((size.width - itemWidth) / numberOfFlexibleItems) : 0;
     const CGFloat centerY = size.height / 2.f;
-
+    
     CGFloat x = 0;
     
     for (UIToolbarItem *toolbarItem in _toolbarItems) {
@@ -161,7 +167,7 @@ static const CGFloat kBarHeight = 28;
             frame.origin.y = floorf(centerY - (frame.size.height / 2.f));
             view.frame = frame;
         }
-
+        
         if (width < 0) {
             x += flexibleSpaceWidth;
         } else {
@@ -180,11 +186,11 @@ static const CGFloat kBarHeight = 28;
             if (view) {
                 [UIView animateWithDuration:animated? 0.2 : 0
                                  animations:^(void) {
-                                     view.alpha = 0;
-                                 }
+                    view.alpha = 0;
+                }
                                  completion:^(BOOL finished) {
-                                     [view removeFromSuperview];
-                                 }];
+                    [view removeFromSuperview];
+                }];
             }
         }
         
@@ -195,7 +201,7 @@ static const CGFloat kBarHeight = 28;
             [_toolbarItems addObject:toolbarItem];
             [self addSubview:toolbarItem.view];
         }
-                
+        
         // if animated, fade them in
         if (animated) {
             // 渐显
@@ -206,8 +212,8 @@ static const CGFloat kBarHeight = 28;
                     
                     [UIView animateWithDuration:0.2
                                      animations:^(void) {
-                                         view.alpha = 1;
-                                     }];
+                        view.alpha = 1;
+                    }];
                 }
             }
         }

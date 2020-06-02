@@ -44,6 +44,10 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
     }
 }
 
+/*
+ TouchBegin 的时候 注册一个延后操作, 在其他的事件发生的时候, 取消这个延后操作.
+ */
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if ([event isKindOfClass:[UITouchEvent class]]) {

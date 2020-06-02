@@ -116,6 +116,7 @@
 
 /*
  这里, 说明了为什么调用链会一直向上传.
+ 这里, 还是没有说清, 到底为了什么, Gesture 的相应的方法, 可以
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {

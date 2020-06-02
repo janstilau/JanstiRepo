@@ -119,7 +119,9 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     [self setNeedsLayout];
 }
 
-// 非常重要的方法. 更新 section 相关的信息, 主要是高度.
+/*
+ 在这里面, 更新一个 Section 相关的所有需要的数据
+ */
 - (void)_updateSectionsCache
 {
     // 对于每个 section 的 header 和 footer 没有进行缓存的处理, 所以在这里进行删除操作.
@@ -189,6 +191,9 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     }
 }
 
+/*
+ 在这个理, 根据 section 的信息, 以及 Header, Footer 进行 scrollContentView 的更新.
+ */
 - (void)_setContentSize
 {
     [self _updateSectionsCacheIfNeeded];
@@ -210,7 +215,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
 {
     const CGSize boundsSize = self.bounds.size; // tableView 的大小
     const CGFloat contentOffset = self.contentOffset.y; // tableView 的偏移量.
-    const CGRect visibleBounds = CGRectMake(0,contentOffset,boundsSize.width,boundsSize.height);
+    const CGRect visibleBounds = CGRectMake(0,contentOffset,boundsSize.width,boundsSize.height); // 计算出真正的可视区域.
     CGFloat layoutTopLine = 0;
     
     if (_tableHeaderView) { // 在这里, 前置规定了 headerView 的 width 是 tableView 的 width. 并且规定 headerView 的 top 为 0;
@@ -252,7 +257,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
                         [availableCells removeObjectForKey:indexPath];
                         cell.highlighted = [_highlightedRow isEqual:indexPath];
                         cell.selected = [_selectedRow isEqual:indexPath];
-                        cell.frame = rowRect;
+                        cell.frame = rowRect; // cell 添加上去之后, 会设置位置信息.
                         cell.backgroundColor = self.backgroundColor;
                         [cell _setSeparatorStyle:_separatorStyle color:_separatorColor];
                         [self addSubview:cell];
@@ -361,14 +366,6 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     }
     
     return CGRectZero;
-}
-
-- (void) beginUpdates
-{
-}
-
-- (void)endUpdates
-{
 }
 
 - (UITableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath

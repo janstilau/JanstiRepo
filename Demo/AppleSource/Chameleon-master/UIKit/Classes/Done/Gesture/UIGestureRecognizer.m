@@ -34,7 +34,9 @@
     return self;
 }
 
-
+/*
+ 从这里可以看到, 手势这个东西, 和 UIControl 一样, 是可以有多个 Target Sel一起存在的.
+ */
 - (void)addTarget:(id)target action:(SEL)action
 {
     UIAction *actionRecord = [[UIAction alloc] init];
@@ -60,6 +62,9 @@
     }
 }
 
+/*
+ 在设置 Delegate 的时候, 就先把 delegate 的能力获取到了, 这样, 不用每次动态的进行询问了.
+ */
 - (void)setDelegate:(id<UIGestureRecognizerDelegate>)aDelegate
 {
     if (aDelegate != _delegate) {
@@ -109,6 +114,9 @@
     return [[_trackingTouches objectAtIndex:touchIndex] locationInView:view];
 }
 
+/*
+ 在下面的 Touch 方法里面, 会不断的进行 state 的更改操作. 在更改操作完成后, 会到该方法内部, 然后该方法, 就不断的触发 target action 的回调.
+ */
 - (void)setState:(UIGestureRecognizerState)newState
 {
     if (_delegateHas.shouldBegin &&
@@ -121,6 +129,9 @@
     
     typedef struct { UIGestureRecognizerState fromState, toState; BOOL shouldNotify; } StateTransition;
 
+    /*
+     只有这些状态的切换, 才能当做是正常的.
+     */
     #define NumberOfStateTransitions 9
     static const StateTransition allowedTransitions[NumberOfStateTransitions] = {
         {UIGestureRecognizerStatePossible,		UIGestureRecognizerStateRecognized,     YES},
