@@ -4,12 +4,12 @@ class Folder: Item, Codable {
 	private(set) var contents: [Item]
 	override weak var store: Store? {
 		didSet {
-			contents.forEach { $0.store = store }
+			contents.forEach { $0.store = store } // 尾随闭包的写法.
 		}
 	}
 	
 	override init(name: String, uuid: UUID) {
-		contents = []
+		contents = [] // 子类引入的属性, 子类负责初始化.
 		super.init(name: name, uuid: uuid)
 	}
 	
@@ -62,7 +62,9 @@ class Folder: Item, Codable {
 		}
 		super.deleted()
 	}
-	
+	/*
+	每一次数据的改变, 都会进行 store 的存储工作.
+	*/
 	func add(_ item: Item) {
 		assert(contents.contains { $0 === item } == false)
 		contents.append(item)

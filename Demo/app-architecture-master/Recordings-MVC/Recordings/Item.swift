@@ -1,9 +1,9 @@
 import Foundation
 
 class Item {
-	let uuid: UUID
-	private(set) var name: String
-	weak var store: Store?
+	let uuid: UUID // 唯一标识.
+	private(set) var name: String //名字, 只读属性, 只能够通过初始化来设置.
+	weak var store: Store? // 这里, 感觉这个没有多大作用, 直接用单例不更好.
 	weak var parent: Folder? {
 		didSet {
 			store = parent?.store
@@ -16,11 +16,18 @@ class Item {
 		self.store = nil
 	}
 	
+	/*
+	每一次名字的修改, 都要进行保存操作.
+	*/
 	func setName(_ newName: String) {
 		name = newName
 		if let p = parent {
 			let (oldIndex, newIndex) = p.reSort(changedItem: self)
-			store?.save(self, userInfo: [Item.changeReasonKey: Item.renamed, Item.oldValueKey: oldIndex, Item.newValueKey: newIndex, Item.parentFolderKey: p])
+			store?.save(self, userInfo:
+				[Item.changeReasonKey: Item.renamed,
+				 Item.oldValueKey: oldIndex,
+				 Item.newValueKey: newIndex,
+				 Item.parentFolderKey: p])
 		}
 	}
 	

@@ -2,17 +2,16 @@ import UIKit
 
 class FolderViewController: UITableViewController {
 	/*
-	* 默认是根 Folder, 这里, 设置了监听, 在改变之后进行 tableView 的重绘操作, 并且更改自己的 title.
-	*/
-	/*
-	属性监听, 是为代码提供一个时机, 在 set 的前后, 做一些事情. 在 willSet, didSet 里面重新更改 value 的值, 不会再一次触发监听操作.
-	如果想要控制 set 的值, 在一个合适的范围里面, 应该在 set 方法里面控制. 监听, 更多的是一个回调的概念
+	默认是根 Folder, 这里, 设置了监听, 在改变之后进行 tableView 的重绘操作, 并且更改自己的 title.
+	
+	willSet, didSet 更多的是为了类的设计者进行准备的.
+	OC 里面, setVlue 里面, 进行后续的操作, 其实是将 值改变和后续处理混在了一起, 专门分出来, 有利于代码更加清晰.
 	*/
 	var folder: Folder = Store.shared.rootFolder {
 		didSet {
 			tableView.reloadData()
-			if folder === folder.store?.rootFolder {
-				title = .recordings
+			if folder === Store.shared.rootFolder {
+				title = .recordings // 这里, 因为知道, 一定会是 String, 所以可以用 String.recordings 来写, 其中, String 可以省略.
 			} else {
 				title = folder.name
 			}
@@ -26,6 +25,9 @@ class FolderViewController: UITableViewController {
 		navigationItem.leftItemsSupplementBackButton = true
 		navigationItem.leftBarButtonItem = editButtonItem
 		
+		/*
+		在这里, 通过 OC 的方式进行通知的绑定, 所以要进行 #selector 的标识.
+		*/
 		NotificationCenter.default.addObserver(self, selector: #selector(handleChangeNotification(_:)), name: Store.changedNotification, object: nil)
 	}
 	
@@ -87,6 +89,9 @@ class FolderViewController: UITableViewController {
 		performSegue(withIdentifier: .showRecorder, sender: self)
 	}
 	
+	/*
+	用 StoryBoard, 带来了编码不方便.
+	*/
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		guard let identifier = segue.identifier else { return }
 		if identifier == .showFolder {
@@ -121,6 +126,7 @@ class FolderViewController: UITableViewController {
 		return folder.contents.count
 	}
 	
+
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let item = folder.contents[indexPath.row]
 		let identifier = item is Recording ? "RecordingCell" : "FolderCell"
@@ -136,26 +142,14 @@ class FolderViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		folder.remove(folder.contents[indexPath.row])
 	}
-	
-	// MARK: UIStateRestoring
-	
-	override func encodeRestorableState(with coder: NSCoder) {
-		super.encodeRestorableState(with: coder)
-		coder.encode(folder.uuidPath, forKey: .uuidPathKey)
-	}
-	
-	override func decodeRestorableState(with coder: NSCoder) {
-		super.decodeRestorableState(with: coder)
-		if let uuidPath = coder.decodeObject(forKey: .uuidPathKey) as? [UUID], let folder = Store.shared.item(atUUIDPath: uuidPath) as? Folder {
-			self.folder = folder
-		} else {
-			if let index = navigationController?.viewControllers.index(of: self), index != 0 {
-				navigationController?.viewControllers.remove(at: index)
-			}
-		}
-	}
 }
 
+/*
+这应该算是, 之前的 Static const NSString * 的 Swfit 的写法了.
+首先, filePrivate 其实就是等同于 Static. 因为有它的存在, 里面的各个定义, 其实并不会污染到全局.
+其次, 定义在 String 的 extension 里面, 不用进行类型的定义了.
+所以, 这种常量定义的方式, 会是 Swift 里面的标配.
+*/
 fileprivate extension String {
 	static let uuidPathKey = "uuidPath"
 	static let showRecorder = "showRecorder"
