@@ -6,7 +6,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 	
 	var window: UIWindow?
 	/**
-	* guard 这个语言层面上提供的关键字, 是语言层面上, 对于防卫式写法的一次加强. 因为判断, 然后提前退出这个操作实在是太普遍了, 所以语言层面增加了对于这个的支持.
+	要注意, 对于 Guard 的使用, 在 Swift 里面, 是如此的普遍.
 	*/
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
 		guard let rootViewController = window?.rootViewController else {

@@ -564,15 +564,11 @@
 				1489854812EE2CFE003D4751 /* UISplitViewController.m */,
 				7806ED28133A1D7500273BC6 /* UITabBar.h */,
 				7806ED29133A1D7500273BC6 /* UITabBar.m */,
-				1489854D12EE2CFE003D4751 /* UITabBarController.h */,
-				1489854E12EE2CFE003D4751 /* UITabBarController.m */,
 				78CB48AE133AA535008636DA /* UITabBarItem.h */,
 				78CB48AF133AA535008636DA /* UITabBarItem.m */,
 				1489855912EE2CFE003D4751 /* UITextInputTraits.h */,
 				1489856012EE2CFE003D4751 /* UIView.h */,
 				1489856112EE2CFE003D4751 /* UIView.m */,
-				1489856412EE2CFE003D4751 /* UIViewController.h */,
-				1489856512EE2CFE003D4751 /* UIViewController.m */,
 			);
 			path = Done;
 			sourceTree = "<group>";
@@ -612,6 +608,10 @@
 		068035DD2483D4B800054455 /* ReRead */ = {
 			isa = PBXGroup;
 			children = (
+				1489854D12EE2CFE003D4751 /* UITabBarController.h */,
+				1489854E12EE2CFE003D4751 /* UITabBarController.m */,
+				1489856412EE2CFE003D4751 /* UIViewController.h */,
+				1489856512EE2CFE003D4751 /* UIViewController.m */,
 				1489852712EE2CFE003D4751 /* UIMenuItem.h */,
 				1489852812EE2CFE003D4751 /* UIMenuItem.m */,
 				1489852512EE2CFE003D4751 /* UIMenuController.h */,

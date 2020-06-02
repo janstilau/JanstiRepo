@@ -36,7 +36,9 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
 {
-    // 在 init 的时候, 就注册了 didReceiveMemoryWarning 的回调了.
+    /*
+     在 VC 的构造方法内部, 就进行了didReceiveMemoryWarning 的注册, 所以我们才能在这里面写内存的处理.
+     */
     if ((self=[super init])) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:[UIApplication sharedApplication]];
     }
@@ -49,7 +51,9 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     [_view _setViewController:nil];
 }
 
-// view 的 nextResponder 会是它的 VC, 而 VC 的又是它的 view 的 superView. 所以, 算是在 view 的响应链条中, 插入了一个 VC.
+/*
+ View 如果有着 _viewController 的话, 就会将自己的 nextResponder 设置为这个 VC, 所以, VC 的 nextResponder, 应该将控制权力返回给 superView.
+ */
 - (UIResponder *)nextResponder
 {
     return _view.superview;
@@ -70,7 +74,9 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     return (_view != nil);
 }
 
-// view 的懒加载过程.
+/*
+ View 的懒加载过程.
+ */
 - (UIView *)view
 {
     if ([self isViewLoaded]) {
@@ -85,48 +91,40 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     }
 }
 
-- (void)setView:(UIView *)aView
-{
-    if (aView != _view) {
-        [_view _setViewController:nil];
-        _view = aView;
-        [_view _setViewController:self];
-    }
-}
-
+/*
+ 这里, 其实有着一个 View 的自定义过程. 默认的是通过 UIView, 如果是 Nib 加载的话, 会加载 Nib 的 view.
+ */
 - (void)loadView
 {
     self.view = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,480)];
 }
 
+/*
+ 模板方法里面, 最重要的一个切口.
+ */
 - (void)viewDidLoad
 {
 }
 
-- (void)viewDidUnload
-{
-}
-
-- (void)didReceiveMemoryWarning
-{
-}
-
+/*
+ 这几个 view 相关的调用, 是但当自己关联的 View 进行 SuperView 的修改的时候, 主动调用的.
+ */
 - (void)viewWillAppear:(BOOL)animated
 {
 }
-
 - (void)viewDidAppear:(BOOL)animated
 {
 }
-
 - (void)viewWillDisappear:(BOOL)animated
 {
 }
-
 - (void)viewDidDisappear:(BOOL)animated
 {
 }
 
+/*
+ 这是在自己关联的 View, 进行 layoutSubview 的时候, 主动调用的.
+ */
 - (void)viewWillLayoutSubviews
 {
 }
@@ -140,7 +138,9 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     return (UIInterfaceOrientation)1;
 }
 
-// 根据自己的 title, 生成一个 UINavigationItem
+/*
+ 这就是为了 NavVC, 特地插入的一个数据, 完全是 Nav 相关的.
+ */
 - (UINavigationItem *)navigationItem
 {
     if (!_navigationItem) {
@@ -198,56 +198,56 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 - (void)presentModalViewController:(UIViewController *)modalViewController animated:(BOOL)animated
 {
     /*
-    if (!_modalViewController && _modalViewController != self) {
-        _modalViewController = modalViewController;
-        [_modalViewController _setParentViewController:self];
-
-        UIWindow *window = self.view.window;
-        UIView *selfView = self.view;
-        UIView *newView = _modalViewController.view;
-
-        newView.autoresizingMask = selfView.autoresizingMask;
-        newView.frame = _wantsFullScreenLayout? window.screen.bounds : window.screen.applicationFrame;
-
-        [window addSubview:newView];
-        [_modalViewController viewWillAppear:animated];
-
-        [self viewWillDisappear:animated];
-        selfView.hidden = YES;		// I think the real one may actually remove it, which would mean needing to remember the superview, I guess? Not sure...
-        [self viewDidDisappear:animated];
-
-        [_modalViewController viewDidAppear:animated];
-    }
+     if (!_modalViewController && _modalViewController != self) {
+     _modalViewController = modalViewController;
+     [_modalViewController _setParentViewController:self];
+     
+     UIWindow *window = self.view.window;
+     UIView *selfView = self.view;
+     UIView *newView = _modalViewController.view;
+     
+     newView.autoresizingMask = selfView.autoresizingMask;
+     newView.frame = _wantsFullScreenLayout? window.screen.bounds : window.screen.applicationFrame;
+     
+     [window addSubview:newView];
+     [_modalViewController viewWillAppear:animated];
+     
+     [self viewWillDisappear:animated];
+     selfView.hidden = YES;		// I think the real one may actually remove it, which would mean needing to remember the superview, I guess? Not sure...
+     [self viewDidDisappear:animated];
+     
+     [_modalViewController viewDidAppear:animated];
+     }
      */
 }
 
 - (void)dismissModalViewControllerAnimated:(BOOL)animated
 {
     /*
-    // NOTE: This is not implemented entirely correctly - the actual dismissModalViewController is somewhat subtle.
-    // There is supposed to be a stack of modal view controllers that dismiss in a specific way,e tc.
-    // The whole system of related view controllers is not really right - not just with modals, but everything else like
-    // navigationController, too, which is supposed to return the nearest nav controller down the chain and it doesn't right now.
-
-    if (_modalViewController) {
-        
-        // if the modalViewController being dismissed has a modalViewController of its own, then we need to go dismiss that, too.
-        // otherwise things can be left hanging around.
-        if (_modalViewController.modalViewController) {
-            [_modalViewController dismissModalViewControllerAnimated:animated];
-        }
-        
-        self.view.hidden = NO;
-        [self viewWillAppear:animated];
-        
-        [_modalViewController.view removeFromSuperview];
-        [_modalViewController _setParentViewController:nil];
-        _modalViewController = nil;
-
-        [self viewDidAppear:animated];
-    } else {
-        [self.parentViewController dismissModalViewControllerAnimated:animated];
-    }
+     // NOTE: This is not implemented entirely correctly - the actual dismissModalViewController is somewhat subtle.
+     // There is supposed to be a stack of modal view controllers that dismiss in a specific way,e tc.
+     // The whole system of related view controllers is not really right - not just with modals, but everything else like
+     // navigationController, too, which is supposed to return the nearest nav controller down the chain and it doesn't right now.
+     
+     if (_modalViewController) {
+     
+     // if the modalViewController being dismissed has a modalViewController of its own, then we need to go dismiss that, too.
+     // otherwise things can be left hanging around.
+     if (_modalViewController.modalViewController) {
+     [_modalViewController dismissModalViewControllerAnimated:animated];
+     }
+     
+     self.view.hidden = NO;
+     [self viewWillAppear:animated];
+     
+     [_modalViewController.view removeFromSuperview];
+     [_modalViewController _setParentViewController:nil];
+     _modalViewController = nil;
+     
+     [self viewDidAppear:animated];
+     } else {
+     [self.parentViewController dismissModalViewControllerAnimated:animated];
+     }
      */
 }
 
@@ -272,11 +272,11 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 - (id)_nearestParentViewControllerThatIsKindOf:(Class)c
 {
     UIViewController *controller = _parentViewController;
-
+    
     while (controller && ![controller isKindOfClass:c]) {
         controller = [controller parentViewController];
     }
-
+    
     return controller;
 }
 
@@ -305,7 +305,7 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     // expected to call super anyway, which means I could put some implementation in the base class versions safely.
     // Generally docs do tend to say things like, "parent implementation does nothing" when they mean you can skip
     // the call to super, and the docs currently say no such thing for -will/didMoveToParentViewController:.
-
+    
     // In all likely hood, all that would happen if you didn't call super from a -will/didMoveToParentViewController:
     // override is that -isMovingFromParentViewController and -isMovingToParentViewController would return the
     // wrong answer, and if you never use them, you'll never even notice that bug!
@@ -350,9 +350,6 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 
 - (void)addChildViewController:(UIViewController *)childController
 {
-    NSAssert(childController != nil, @"cannot add nil child view controller");
-    NSAssert(childController.parentViewController == nil, @"thou shalt have no other parent before me");
-    
     if (!_childViewControllers) {
         _childViewControllers = [NSMutableArray arrayWithCapacity:1];
     }
@@ -376,8 +373,6 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 
 - (void)removeFromParentViewController
 {
-    NSAssert(self.parentViewController != nil, @"view controller has no parent");
-
     [self _removeFromParentViewController];
     [self didMoveToParentViewController:nil]; // 暴露给外界的一个借口.
 }
@@ -393,6 +388,8 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 }
 
 // 这是一个 ContainerVC 的事情, 如果它要更改 subView 的显示, 就要用调用这个方法. 不过我们经常不调用这个方法, 而是直接 removeFromSuperView, addSubView 了. 在这个方法的内部, 会有着 beginAppearance, endAppearance 的调用, 管理着 View 的添加的删除. 伴随着一个转场动画.
+/*
+ */
 - (void)transitionFromViewController:(UIViewController *)fromViewController
                     toViewController:(UIViewController *)toViewController
                             duration:(NSTimeInterval)duration
@@ -410,19 +407,19 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
                       duration:duration
                        options:options
                     animations:^{
-                        if (animations) {
-                            animations();
-                        }
-                        [self.view addSubview:toViewController.view];
-                    }
+        if (animations) {
+            animations();
+        }
+        [self.view addSubview:toViewController.view];
+    }
                     completion:^(BOOL finished) {
-                        if (completion) {
-                            completion(finished);
-                        }
-                        [fromViewController.view removeFromSuperview];
-                        [fromViewController endAppearanceTransition]; // 通知结束转场
-                        [toViewController endAppearanceTransition]; // 通知结束转场.
-                    }];
+        if (completion) {
+            completion(finished);
+        }
+        [fromViewController.view removeFromSuperview];
+        [fromViewController endAppearanceTransition]; // 通知结束转场
+        [toViewController endAppearanceTransition]; // 通知结束转场.
+    }];
 }
 
 - (void)beginAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated

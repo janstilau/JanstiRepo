@@ -20,7 +20,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
 @implementation UIScrollView {
     UIScroller *_verticalScroller;
     UIScroller *_horizontalScroller;
-
+    
     UIScrollViewAnimation *_scrollAnimation;
     NSTimer *_scrollTimer;
     
@@ -63,11 +63,11 @@ const float UIScrollViewDecelerationRateFast = 0.99;
         
         _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_gestureDidChange:)];
         [self addGestureRecognizer:_panGestureRecognizer];
-
+        
         _verticalScroller = [[UIScroller alloc] init];
         _verticalScroller.delegate = self;
         [self addSubview:_verticalScroller];
-
+        
         _horizontalScroller = [[UIScroller alloc] init];
         _horizontalScroller.delegate = self;
         [self addSubview:_horizontalScroller];
@@ -188,7 +188,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     [self _cancelScrollAnimation]; // 首先取消原来的动画.
     
     _scrollAnimation = animation;
-
+    
     if (!_scrollTimer) {
         _scrollTimer = [NSTimer scheduledTimerWithTimeInterval:1/(NSTimeInterval)UIScrollViewScrollAnimationFramesPerSecond
                                                         target:self
@@ -400,10 +400,10 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     // quickly animate the snap (if necessary)
     if (!CGPointEqualToPoint(finalContentOffset, _contentOffset)) {
         return [[UIScrollViewAnimationScroll alloc] initWithScrollView:self
-                                                      fromContentOffset:_contentOffset
-                                                        toContentOffset:finalContentOffset
-                                                               duration:UIScrollViewQuickAnimationDuration
-                                                                  curve:UIScrollViewAnimationScrollCurveQuadraticEaseOut];
+                                                     fromContentOffset:_contentOffset
+                                                       toContentOffset:finalContentOffset
+                                                              duration:UIScrollViewQuickAnimationDuration
+                                                                 curve:UIScrollViewAnimationScrollCurveQuadraticEaseOut];
     } else {
         return nil;
     }
@@ -424,7 +424,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     
     if (!CGPointEqualToPoint(velocity, CGPointZero) || !CGPointEqualToPoint(confinedOffset, _contentOffset)) {
         return [[UIScrollViewAnimationDeceleration alloc] initWithScrollView:self
-                                                                     velocity:velocity];
+                                                                    velocity:velocity];
     } else {
         return nil;
     }
@@ -450,18 +450,18 @@ const float UIScrollViewDecelerationRateFast = 0.99;
         _dragging = NO;
         // 渐渐取消演示的动画, 封装到了各个 animation 的子类里面.
         UIScrollViewAnimation *decelerationAnimation = _pagingEnabled? [self _pageSnapAnimation] : [self _decelerationAnimationWithVelocity:velocity];
-
+        
         if (_delegateCan.scrollViewDidEndDragging) {
             [_delegate scrollViewDidEndDragging:self willDecelerate:(decelerationAnimation != nil)];
         }
-
+        
         if (decelerationAnimation) {
             [self _setScrollAnimation:decelerationAnimation];
-
+            
             _horizontalScroller.alwaysVisible = YES;
             _verticalScroller.alwaysVisible = YES;
             _decelerating = YES;
-
+            
             if (_delegateCan.scrollViewWillBeginDecelerating) {
                 [_delegate scrollViewWillBeginDecelerating:self];
             }
@@ -478,7 +478,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     if (_dragging) {
         _horizontalScroller.alwaysVisible = YES;
         _verticalScroller.alwaysVisible = YES;
-
+        
         const CGPoint originalOffset = self.contentOffset;
         
         CGPoint proposedOffset = originalOffset;
@@ -551,7 +551,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     const CGRect contentRect = CGRectMake(0,0,_contentSize.width, _contentSize.height);
     const CGRect visibleRect = self.bounds;
     CGRect goalRect = CGRectIntersection(rect, contentRect);
-
+    
     if (!CGRectIsNull(goalRect) && !CGRectContainsRect(visibleRect, goalRect)) {
         
         // clamp the goal rect to the largest possible size for it given the visible space available
@@ -596,17 +596,17 @@ const float UIScrollViewDecelerationRateFast = 0.99;
 {
     UIView *zoomingView = [self _zoomingView];
     scale = MIN(MAX(scale, _minimumZoomScale), _maximumZoomScale);
-
+    
     if (zoomingView && self.zoomScale != scale) {
         [UIView animateWithDuration:animated? UIScrollViewAnimationDuration : 0
                               delay:0
                             options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
                          animations:^(void) {
-                             zoomingView.transform = CGAffineTransformMakeScale(scale, scale);
-                             const CGSize size = zoomingView.frame.size;
-                             zoomingView.layer.position = CGPointMake(size.width/2.f, size.height/2.f);
-                             self.contentSize = size;
-                         }
+            zoomingView.transform = CGAffineTransformMakeScale(scale, scale);
+            const CGSize size = zoomingView.frame.size;
+            zoomingView.layer.position = CGPointMake(size.width/2.f, size.height/2.f);
+            self.contentSize = size;
+        }
                          completion:NULL];
     }
 }
@@ -638,39 +638,6 @@ const float UIScrollViewDecelerationRateFast = 0.99;
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-}
-
-- (void)scrollWheelMoved:(CGPoint)delta withEvent:(UIEvent *)event
-{
-}
-
-- (void)rightClick:(UITouch *)touch withEvent:(UIEvent *)event
-{
-}
-
-- (void)mouseMoved:(UITouch *)touch withEvent:(UIEvent *)event
-{
-    const CGPoint point = [touch locationInView:self];
-    const CGFloat scrollerSize = UIScrollerWidthForBoundsSize(self.bounds.size);
-    const BOOL shouldShowHorizontal = CGRectContainsPoint(CGRectInset(_horizontalScroller.frame, -scrollerSize, -scrollerSize), point);
-    const BOOL shouldShowVertical = CGRectContainsPoint(CGRectInset(_verticalScroller.frame, -scrollerSize, -scrollerSize), point);
-    const BOOL shouldShowScrollers = (shouldShowVertical || shouldShowHorizontal || _decelerating);
-    
-    _horizontalScroller.alwaysVisible = shouldShowScrollers;
-    _verticalScroller.alwaysVisible = shouldShowScrollers;
-}
-
-- (void)mouseExited:(UIView *)view withEvent:(UIEvent *)event
-{
-    if (!_decelerating) {
-        _horizontalScroller.alwaysVisible = NO;
-        _verticalScroller.alwaysVisible = NO;
-    }
-}
-
-- (id)mouseCursorForEvent:(UIEvent *)event
-{
-    return nil;
 }
 
 @end

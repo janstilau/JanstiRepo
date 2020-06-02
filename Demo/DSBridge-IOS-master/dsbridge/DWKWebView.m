@@ -13,7 +13,7 @@
     int dialogType;
     int callId;
     bool jsDialogBlock;
-    NSMutableDictionary<NSString *,id> *javaScriptNamespaceInterfaces;
+    NSMutableDictionary<NSString *,id> *JSNameSpaceMapper;
     NSMutableDictionary *handerMap;
     NSMutableArray<DSCallInfo *> * callInfoList;
     NSDictionary<NSString*,NSString*> *dialogTextDic;
@@ -35,7 +35,7 @@
     promptHandler=nil;
     jsDialogBlock=true;
     callInfoList=[NSMutableArray array];
-    javaScriptNamespaceInterfaces=[NSMutableDictionary dictionary];
+    JSNameSpaceMapper=[NSMutableDictionary dictionary];
     handerMap=[NSMutableDictionary dictionary];
     lastCallTime = 0;
     jsCache=@"";
@@ -247,7 +247,7 @@ initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completi
 {
     NSArray *nameStr=[JSBUtil parseNamespace:[method stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
 
-    id JavascriptInterfaceObject=javaScriptNamespaceInterfaces[nameStr[0]];
+    id JavascriptInterfaceObject=JSNameSpaceMapper[nameStr[0]];
     NSString *error=[NSString stringWithFormat:@"Error! \n Method %@ is not invoked, since there is not a implementation for it",method];
     NSMutableDictionary*result =[NSMutableDictionary dictionaryWithDictionary:@{@"code":@-1,@"data":@""}];
     if(!JavascriptInterfaceObject){
@@ -378,20 +378,20 @@ initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completi
            completionHandler:nil];
 }
 
-- (void) addJavascriptObject:(id)object namespace:(NSString *)namespace{
+- (void)addJavascriptObject:(id)object namespace:(NSString *)namespace{
     if(namespace==nil){
         namespace=@"";
     }
     if(object!=NULL){
-        [javaScriptNamespaceInterfaces setObject:object forKey:namespace];
+        [JSNameSpaceMapper setObject:object forKey:namespace];
     }
 }
 
-- (void) removeJavascriptObject:(NSString *)namespace {
+- (void)removeJavascriptObject:(NSString *)namespace {
     if(namespace==nil){
         namespace=@"";
     }
-    [javaScriptNamespaceInterfaces removeObjectForKey:namespace];
+    [JSNameSpaceMapper removeObjectForKey:namespace];
 }
 
 - (void)customJavascriptDialogLabelTitles:(NSDictionary *)dic{
@@ -399,6 +399,14 @@ initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completi
         dialogTextDic=dic;
     }
 }
+
+- (void)hasJavascriptMethod:(NSString *)handlerName methodExistCallback:(void (^)(bool exist))callback{
+    [self callHandler:@"_hasJavascriptMethod" arguments:@[handlerName] completionHandler:^(NSNumber* _Nullable value) {
+        callback([value boolValue]);
+    }];
+}
+
+#pragma mark - OnMessage
 
 - (id)onMessage:(NSDictionary *)msg type:(int)type{
     id ret=nil;
@@ -424,11 +432,11 @@ initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completi
     return ret;
 }
 
-- (bool) hasNativeMethod:(NSDictionary *) args
+- (bool)hasNativeMethod:(NSDictionary *) args
 {
     NSArray *nameStr=[JSBUtil parseNamespace:[args[@"name"]stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
     NSString * type= [args[@"type"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    id JavascriptInterfaceObject= [javaScriptNamespaceInterfaces objectForKey:nameStr[0]];
+    id JavascriptInterfaceObject= [JSNameSpaceMapper objectForKey:nameStr[0]];
     if(JavascriptInterfaceObject){
         bool syn=[JSBUtil methodByNameArg:1 selName:nameStr[1] class:[JavascriptInterfaceObject class]]!=nil;
         bool asyn=[JSBUtil methodByNameArg:2 selName:nameStr[1] class:[JavascriptInterfaceObject class]]!=nil;
@@ -475,12 +483,6 @@ initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completi
 
 - (void) disableJavascriptDialogBlock:(bool) disable{
     jsDialogBlock=!disable;
-}
-
-- (void)hasJavascriptMethod:(NSString *)handlerName methodExistCallback:(void (^)(bool exist))callback{
-    [self callHandler:@"_hasJavascriptMethod" arguments:@[handlerName] completionHandler:^(NSNumber* _Nullable value) {
-        callback([value boolValue]);
-    }];
 }
 
 @end
