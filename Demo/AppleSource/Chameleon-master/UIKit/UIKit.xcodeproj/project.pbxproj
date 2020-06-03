@@ -556,8 +556,6 @@
 				1489852C12EE2CFE003D4751 /* UINavigationController.m */,
 				1489852D12EE2CFE003D4751 /* UINavigationItem.h */,
 				1489852E12EE2CFE003D4751 /* UINavigationItem.m */,
-				1489854512EE2CFE003D4751 /* UIScrollView.h */,
-				1489854612EE2CFE003D4751 /* UIScrollView.m */,
 				78CB48D7133AB91E008636DA /* UISlider.h */,
 				78CB48D8133AB920008636DA /* UISlider.m */,
 				1489854712EE2CFE003D4751 /* UISplitViewController.h */,
@@ -608,6 +606,8 @@
 		068035DD2483D4B800054455 /* ReRead */ = {
 			isa = PBXGroup;
 			children = (
+				1489854512EE2CFE003D4751 /* UIScrollView.h */,
+				1489854612EE2CFE003D4751 /* UIScrollView.m */,
 				1489854D12EE2CFE003D4751 /* UITabBarController.h */,
 				1489854E12EE2CFE003D4751 /* UITabBarController.m */,
 				1489856412EE2CFE003D4751 /* UIViewController.h */,

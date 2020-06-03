@@ -79,7 +79,9 @@ const float UIScrollViewDecelerationRateFast = 0.99;
 
 - (void)setDelegate:(id)newDelegate
 {
-    // 在进行 delegate 的设置的时候, 对 delegate 的相应能力进行了管理.
+    /*
+     这里, 还是对于 Delegate 进行了功能的记录操作.
+     */
     _delegate = newDelegate;
     _delegateCan.scrollViewDidScroll = [_delegate respondsToSelector:@selector(scrollViewDidScroll:)];
     _delegateCan.scrollViewWillBeginDragging = [_delegate respondsToSelector:@selector(scrollViewWillBeginDragging:)];
@@ -93,28 +95,12 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     _delegateCan.scrollViewDidEndDecelerating = [_delegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)];
 }
 
+/*
+    放大缩小 View, 这个放大缩小 View, 就是 Delegate 进行获取的. 这里, 没有通过内省的那套机制, 而是直接用自己的标记位, 获取到对应的 view.
+ */
 - (UIView *)_zoomingView
 {
     return (_delegateCan.viewForZoomingInScrollView)? [_delegate viewForZoomingInScrollView:self] : nil;
-}
-
-- (void)setIndicatorStyle:(UIScrollViewIndicatorStyle)style
-{
-    _indicatorStyle = style;
-    _horizontalScroller.indicatorStyle = style;
-    _verticalScroller.indicatorStyle = style;
-}
-
-- (void)setShowsHorizontalScrollIndicator:(BOOL)show
-{
-    _showsHorizontalScrollIndicator = show;
-    [self setNeedsLayout];
-}
-
-- (void)setShowsVerticalScrollIndicator:(BOOL)show
-{
-    _showsVerticalScrollIndicator = show;
-    [self setNeedsLayout];
 }
 
 // 属性验证, 范围验证.
@@ -141,7 +127,9 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     _horizontalScroller.hidden = !self._canScrollHorizontal;
 }
 
-// 所以, scrollView 的 scrollEnable 就是手势可不可以接受事件.
+/*
+ 仅仅是自己的手势的管理.
+ */
 - (void)setScrollEnabled:(BOOL)enabled
 {
     self.panGestureRecognizer.enabled = enabled;
@@ -246,7 +234,9 @@ const float UIScrollViewDecelerationRateFast = 0.99;
 }
 
 
-// layoutSubview 仅仅管理两个滚动条的位置.
+/*
+ 仅仅是做了两个滚动条的位置管理.
+ */
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -288,7 +278,9 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     [self _bringScrollersToFront];
 }
 
-// 这里, 没有明确的说明, 为什么 bounds 的改变可以造成 scrollView 的改变.
+/*
+ 可以这样理解,  Bounds 其实是能够控制, 自己的 View 的窗口位置的. Bounds 修改了之后, 能够露出的位置改变了. 也就起到了滚动的效果.
+ */
 - (void)_updateBounds
 {
     CGRect bounds = self.bounds;

@@ -228,6 +228,9 @@ static const CGFloat _UIScrollerMinimumAlpha = 0;
     [path fill];
 }
 
+/*
+ 自己被触摸了, 记录一下状态量, 然后告知 ScrollView, 要准备进行滚动了.
+ */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     _lastTouchLocation = [[touches anyObject] locationInView:self];
@@ -244,6 +247,9 @@ static const CGFloat _UIScrollerMinimumAlpha = 0;
     }
 }
 
+/*
+ 手指在自己身上滑动了, 告诉ScrollView, 该移动自己的子视图了.
+ */
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     _lastTouchLocation = [[touches anyObject] locationInView:self];

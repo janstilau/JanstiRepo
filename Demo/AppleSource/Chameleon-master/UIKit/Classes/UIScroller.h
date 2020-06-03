@@ -11,7 +11,9 @@ CGFloat UIScrollerWidthForBoundsSize(CGSize boundsSize);
 - (void)_UIScrollerDidEndDragging:(UIScroller *)scroller withEvent:(UIEvent *)event;
 @end
 
-// 滑动条. 
+/*
+    滚动条就是一个特殊的 View. 将 ScrollView 的相关的逻辑, 移到这里面.
+ */
 @interface UIScroller : UIView
 
 // NOTE: UIScroller set's its own alpha to 0 when it is created, so it is NOT visible by default!
