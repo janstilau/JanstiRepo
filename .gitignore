@@ -53,6 +53,12 @@ Carthage/Build
 fastlane/report.xml
 fastlane/screenshots
 
+# Pods - for those of you who use CocoaPods
+Pods
+!Podfile
+!Podfile.lock
+# Pods
+
 #Code Injection
 #
 # After new code Injection tools there's a generated folder /iOSInjectionProject
