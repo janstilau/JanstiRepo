@@ -1,0 +1,80 @@
+PODS:
+  - Expecta (0.2.4)
+  - libextobjc (0.6):
+    - libextobjc/EXTADT (= 0.6)
+    - libextobjc/EXTConcreteProtocol (= 0.6)
+    - libextobjc/EXTKeyPathCoding (= 0.6)
+    - libextobjc/EXTNil (= 0.6)
+    - libextobjc/EXTSafeCategory (= 0.6)
+    - libextobjc/EXTScope (= 0.6)
+    - libextobjc/EXTSelectorChecking (= 0.6)
+    - libextobjc/EXTSynthesize (= 0.6)
+    - "libextobjc/NSInvocation+EXT (= 0.6)"
+    - "libextobjc/NSMethodSignature+EXT (= 0.6)"
+    - libextobjc/RuntimeExtensions (= 0.6)
+    - libextobjc/UmbrellaHeader (= 0.6)
+  - libextobjc/EXTADT (0.6):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTConcreteProtocol (0.6):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTKeyPathCoding (0.6):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTNil (0.6):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSafeCategory (0.6):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTScope (0.6):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSelectorChecking (0.6):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSynthesize (0.6):
+    - libextobjc/RuntimeExtensions
+  - "libextobjc/NSInvocation+EXT (0.6)":
+    - libextobjc/RuntimeExtensions
+  - "libextobjc/NSMethodSignature+EXT (0.6)":
+    - libextobjc/RuntimeExtensions
+  - libextobjc/RuntimeExtensions (0.6)
+  - libextobjc/UmbrellaHeader (0.6)
+  - OCMock (2.2.4)
+  - ReactiveCocoa (2.1.8):
+    - ReactiveCocoa/Core (= 2.1.8)
+    - ReactiveCocoa/no-arc (= 2.1.8)
+  - ReactiveCocoa/Core (2.1.8):
+    - ReactiveCocoa/no-arc
+  - ReactiveCocoa/no-arc (2.1.8)
+  - ReactiveViewModel (0.1.1):
+    - ReactiveCocoa (~> 2.1)
+  - Specta (0.2.1)
+  - UIColor-Utilities (1.0.1)
+
+DEPENDENCIES:
+  - Expecta (~> 0.2.3)
+  - libextobjc (~> 0.4)
+  - OCMock (~> 2.2.1)
+  - ReactiveCocoa (= 2.1.8)
+  - ReactiveViewModel (= 0.1.1)
+  - Specta (~> 0.2.1)
+  - UIColor-Utilities (= 1.0.1)
+
+SPEC REPOS:
+  trunk:
+    - Expecta
+    - libextobjc
+    - OCMock
+    - ReactiveCocoa
+    - ReactiveViewModel
+    - Specta
+    - UIColor-Utilities
+
+SPEC CHECKSUMS:
+  Expecta: cfaf1d3e2e194ca704a25e997093d30a1ce70b61
+  libextobjc: aed8b7d2b07f511c1a7ecaacb33ea03e327c69b7
+  OCMock: a6a7dc0e3997fb9f35d99f72528698ebf60d64f2
+  ReactiveCocoa: f89f2e009a87951b50321bf9feb958823fcc617e
+  ReactiveViewModel: 171492c2d30d3eb3c89730fd180c0f6a2ae7e774
+  Specta: 15a276a6343867b426d5ed135d5aa4d04123a573
+  UIColor-Utilities: 6746a54dcdb3bc012dd7aeaeea5588ae2100beb2
+
+PODFILE CHECKSUM: 3436b39cb39e0201dcdf2616e7983c252b47d661
+
+COCOAPODS: 1.9.1
