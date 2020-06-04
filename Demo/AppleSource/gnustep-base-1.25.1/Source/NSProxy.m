@@ -65,14 +65,6 @@
   return self;
 }
 
-/**
- * Returns a string describing the receiver.
- */
-+ (NSString*) description
-{
-  return [NSString stringWithFormat: @"<%s>", GSClassNameFromObject(self)];
-}
-
 + (IMP) instanceMethodForSelector: (SEL)aSelector
 {
   if (aSelector == 0)
@@ -167,14 +159,6 @@
 + (id) retain
 {
   return self;
-}
-
-/**
- * Returns the maximum unsigned integer value.
- */
-+ (NSUInteger) retainCount
-{
-  return UINT_MAX;
 }
 
 /**

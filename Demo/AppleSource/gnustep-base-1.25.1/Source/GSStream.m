@@ -64,7 +64,6 @@ NSString * const NSStreamSOCKSProxyVersionKey
  */
 
 /*
- 关于 runloop 的东西这里没有看, 不过他的基本思想在于, 将 自己注册给 runloop, 然后 runloop 就会在适当的时机, 进行回调, 调用自己实现的的 runloop 相关的接口, 在这个接口里面, 会进行 dispatch 函数, 这个函数里面, 会根据自身的状态, 进行事件的发送. 这个事件发送函数里面, 会调用最终的 stream handleEvent 方法. 所以, 流这种方式不会造成任务的阻塞, 是通过一点点的读取完成的流的写入和写出操作.
  */
 
 static RunLoopEventType typeForStream(NSStream *aStream)
@@ -341,10 +340,6 @@ static RunLoopEventType typeForStream(NSStream *aStream)
 }
 
 - (void) _setLoopID: (void *)ref
-{
-}
-
-- (void) _setStatus: (NSStreamStatus)newStatus
 {
 }
 

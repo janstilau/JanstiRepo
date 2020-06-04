@@ -6,41 +6,38 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-    
-    @class NSArray;
-    @class NSMutableArray;
-    @class NSSet;
-    @class NSMutableSet;
-    @class NSDictionary;
-    @class NSError;
-    @class NSString;
-    
-    /** An exception for an unknown key in [NSObject(NSKeyValueCoding)]. */
-    GS_EXPORT NSString* const NSUndefinedKeyException;
-    
-    /**
-     whereby 就是 bywhere
-     
-     KVC 是一种机制, 可以使得对象的字段可以用一种通用的方式进行访问, 这种方式是和字符串的 key 值一起使用的.
-     通过这种方式, 就可以不再使用字段相关的方法了. KVC 失去了编译时的方法检查, 但是在某些情况下能够带来灵活性.
-     
-     * <p>This describes an informal protocol for <em>key-value coding</em>, a
-     * mechanism whereby the fields of an object may be accessed and set using
-     * generic methods in conjunction with string keys rather than field-specific
-     * methods.  Key-based access loses compile-time validity checking, but can be
-     * convenient in certain kinds of situations.</p>
-     *
-     
-     KVC 是通过 NSObject 的分类完成的. 特定的类可以重写实现来达到自己的目的.
-     
-     * <p>The basic methods are implemented as a category of the [NSObject] class,
-     * but other classes override those default implementations to perform more
-     * specific operations.</p>
-     */
-    @interface NSObject (NSKeyValueCoding)
+
+@class NSArray;
+@class NSMutableArray;
+@class NSSet;
+@class NSMutableSet;
+@class NSDictionary;
+@class NSError;
+@class NSString;
+
+/** An exception for an unknown key in [NSObject(NSKeyValueCoding)]. */
+GS_EXPORT NSString* const NSUndefinedKeyException;
+
+/**
+ whereby 就是 bywhere
+ 
+ KVC 是一种机制, 可以使得对象的字段可以用一种通用的方式进行访问, 这种方式是和字符串的 key 值一起使用的.
+ 通过这种方式, 就可以不再使用字段相关的方法了. KVC 失去了编译时的方法检查, 但是在某些情况下能够带来灵活性.
+ 
+ * <p>This describes an informal protocol for <em>key-value coding</em>, a
+ * mechanism whereby the fields of an object may be accessed and set using
+ * generic methods in conjunction with string keys rather than field-specific
+ * methods.  Key-based access loses compile-time validity checking, but can be
+ * convenient in certain kinds of situations.</p>
+ *
+ 
+ KVC 是通过 NSObject 的分类完成的. 特定的类可以重写实现来达到自己的目的.
+ 
+ * <p>The basic methods are implemented as a category of the [NSObject] class,
+ * but other classes override those default implementations to perform more
+ * specific operations.</p>
+ */
+@interface NSObject (NSKeyValueCoding)
 
 /**
  控制, 该类在使用 kvc 的时候, 可不可以直接访问实例变量的值. 这种情况一般出现在类中没有找到对应的方法的时候.
@@ -167,7 +164,7 @@ extern "C" {
 - (void) setValue: (id)anObject forKey: (NSString*)aKey;
 
 /**
-    该方法会获取到最后一个 path 所依附的对象, 获取的方法是, 递归调用 value for key. 这个获取的数据, 是根据 . 进行分割的.
+ 该方法会获取到最后一个 path 所依附的对象, 获取的方法是, 递归调用 value for key. 这个获取的数据, 是根据 . 进行分割的.
  * Retrieves the object returned by invoking -valueForKey:
  * on the receiver with the first key component supplied by the key path.
  * Then invokes -setValue:forKeyPath: recursively on the
@@ -394,10 +391,6 @@ extern "C" {
 - (NSDictionary*) valuesForKeys: (NSArray*)keys;
 
 @end
-    
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif	/* GS_API_MACOSX */
 
