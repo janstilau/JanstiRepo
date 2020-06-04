@@ -23,15 +23,15 @@
 
 + (instancetype)allocWithZone:(struct _NSZone *)zone {
     MRCViewController *viewController = [super allocWithZone:zone];
-
+    
     @weakify(viewController)
     [[viewController
-        rac_signalForSelector:@selector(viewDidLoad)]
-        subscribeNext:^(id x) {
-            @strongify(viewController)
-            [viewController bindViewModel];
-        }];
-
+      rac_signalForSelector:@selector(viewDidLoad)]
+     subscribeNext:^(id x) {
+        @strongify(viewController)
+        [viewController bindViewModel];
+    }];
+    
     return viewController;
 }
 
@@ -45,7 +45,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.extendedLayoutIncludesOpaqueBars = YES;
     
@@ -57,30 +57,30 @@
 }
 
 - (void)bindViewModel {
-	// System title view
+    // System title view
     RAC(self, title) = RACObserve(self.viewModel, title);
-
+    
     UIView *titleView = self.navigationItem.titleView;
-
-	// Double title view
+    
+    // Double title view
     MRCDoubleTitleView *doubleTitleView = [[MRCDoubleTitleView alloc] init];
-
+    
     RAC(doubleTitleView.titleLabel, text)    = RACObserve(self.viewModel, title);
     RAC(doubleTitleView.subtitleLabel, text) = RACObserve(self.viewModel, subtitle);
-
+    
     @weakify(self)
     [[self
-    	rac_signalForSelector:@selector(viewWillTransitionToSize:withTransitionCoordinator:)]
-    	subscribeNext:^(id x) {
-        	@strongify(self)
-            doubleTitleView.titleLabel.text    = self.viewModel.title;
-            doubleTitleView.subtitleLabel.text = self.viewModel.subtitle;
-    	}];
-
-	// Loading title view
+      rac_signalForSelector:@selector(viewWillTransitionToSize:withTransitionCoordinator:)]
+     subscribeNext:^(id x) {
+        @strongify(self)
+        doubleTitleView.titleLabel.text    = self.viewModel.title;
+        doubleTitleView.subtitleLabel.text = self.viewModel.subtitle;
+    }];
+    
+    // Loading title view
     MRCLoadingTitleView *loadingTitleView = [[NSBundle mainBundle] loadNibNamed:@"MRCLoadingTitleView" owner:nil options:nil].firstObject;
     loadingTitleView.frame = CGRectMake((SCREEN_WIDTH - CGRectGetWidth(loadingTitleView.frame)) / 2.0, 0, CGRectGetWidth(loadingTitleView.frame), CGRectGetHeight(loadingTitleView.frame));
-
+    
     RAC(self.navigationItem, titleView) = [RACObserve(self.viewModel, titleViewType).distinctUntilChanged map:^(NSNumber *value) {
         MRCTitleViewType titleViewType = value.unsignedIntegerValue;
         switch (titleViewType) {
@@ -92,25 +92,25 @@
                 return (UIView *)loadingTitleView;
         }
     }];
-
+    
     [self.viewModel.errors subscribeNext:^(NSError *error) {
         @strongify(self)
-
+        
         MRCLogError(error);
-
+        
         if ([error.domain isEqual:OCTClientErrorDomain] && error.code == OCTClientErrorAuthenticationFailed) {
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:MRC_ALERT_TITLE
                                                                                      message:@"Your authorization has expired, please login again"
                                                                               preferredStyle:UIAlertControllerStyleAlert];
-
+            
             [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 @strongify(self)
                 [SSKeychain deleteAccessToken];
-
+                
                 MRCLoginViewModel *loginViewModel = [[MRCLoginViewModel alloc] initWithServices:self.viewModel.services params:nil];
                 [self.viewModel.services resetRootViewModel:loginViewModel];
             }]];
-
+            
             [self presentViewController:alertController animated:YES completion:NULL];
         } else if (error.code != OCTClientErrorTwoFactorAuthenticationOneTimePasswordRequired && error.code != OCTClientErrorConnectionFailed) {
             MRCError(error.localizedDescription);
@@ -146,7 +146,7 @@
 - (void)handlePopRecognizer:(UIPanGestureRecognizer *)recognizer {
     CGFloat progress = [recognizer translationInView:self.view].x / CGRectGetWidth(self.view.frame);
     progress = MIN(1.0, MAX(0.0, progress));
-
+    
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         // Create a interactive transition and pop the view controller
         self.interactivePopTransition = [[UIPercentDrivenInteractiveTransition alloc] init];
@@ -161,7 +161,7 @@
         } else {
             [self.interactivePopTransition cancelInteractiveTransition];
         }
-
+        
         self.interactivePopTransition = nil;
     }
 }

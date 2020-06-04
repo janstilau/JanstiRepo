@@ -248,8 +248,6 @@
 		38615C78133A81B900841EEA /* UIFont+UIPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 38615C77133A81B900841EEA /* UIFont+UIPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		537472D5133ADD4B00EBD5EA /* UIInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 537472D3133ADD4B00EBD5EA /* UIInterface.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		537472D6133ADD4B00EBD5EA /* UIInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 537472D4133ADD4B00EBD5EA /* UIInterface.m */; };
-		7011107C133BE0F400C86512 /* UIDatePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 7011107A133BE0F300C86512 /* UIDatePicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7011107D133BE0F400C86512 /* UIDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7011107B133BE0F300C86512 /* UIDatePicker.m */; };
 		7806ED2A133A1D7500273BC6 /* UITabBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 7806ED28133A1D7500273BC6 /* UITabBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7806ED2B133A1D7500273BC6 /* UITabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 7806ED29133A1D7500273BC6 /* UITabBar.m */; };
 		78CB48B0133AA536008636DA /* UITabBarItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 78CB48AE133AA535008636DA /* UITabBarItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -507,8 +505,6 @@
 		38615C77133A81B900841EEA /* UIFont+UIPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+UIPrivate.h"; sourceTree = "<group>"; };
 		537472D3133ADD4B00EBD5EA /* UIInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIInterface.h; sourceTree = "<group>"; };
 		537472D4133ADD4B00EBD5EA /* UIInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIInterface.m; sourceTree = "<group>"; };
-		7011107A133BE0F300C86512 /* UIDatePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIDatePicker.h; sourceTree = "<group>"; };
-		7011107B133BE0F300C86512 /* UIDatePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIDatePicker.m; sourceTree = "<group>"; };
 		7806ED28133A1D7500273BC6 /* UITabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITabBar.h; sourceTree = "<group>"; };
 		7806ED29133A1D7500273BC6 /* UITabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITabBar.m; sourceTree = "<group>"; };
 		78CB48AE133AA535008636DA /* UITabBarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITabBarItem.h; sourceTree = "<group>"; };
@@ -549,9 +545,10 @@
 		06055A26236825C200EE2744 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				148984F612EE2CFE003D4751 /* UIApplication.h */,
+				148984F712EE2CFE003D4751 /* UIApplication.m */,
 				06055A28236863F400EE2744 /* Gesture */,
 				1489852912EE2CFE003D4751 /* UINavigationBar.h */,
-				1489852A12EE2CFE003D4751 /* UINavigationBar.m */,
 				1489852B12EE2CFE003D4751 /* UINavigationController.h */,
 				1489852C12EE2CFE003D4751 /* UINavigationController.m */,
 				1489852D12EE2CFE003D4751 /* UINavigationItem.h */,
@@ -606,6 +603,7 @@
 		068035DD2483D4B800054455 /* ReRead */ = {
 			isa = PBXGroup;
 			children = (
+				1489852A12EE2CFE003D4751 /* UINavigationBar.m */,
 				1489854512EE2CFE003D4751 /* UIScrollView.h */,
 				1489854612EE2CFE003D4751 /* UIScrollView.m */,
 				1489854D12EE2CFE003D4751 /* UITabBarController.h */,
@@ -712,17 +710,15 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				068035DD2483D4B800054455 /* ReRead */,
-				06055A26236825C200EE2744 /* Done */,
 				148984E412EE2CFE003D4751 /* AppKitIntegration.h */,
+				06055A26236825C200EE2744 /* Done */,
 				148984E512EE2CFE003D4751 /* NSIndexPath+UITableView.h */,
 				148984E612EE2CFE003D4751 /* NSIndexPath+UITableView.m */,
+				068035DD2483D4B800054455 /* ReRead */,
 				148984EF12EE2CFE003D4751 /* UIActionSheet.h */,
 				148984F012EE2CFE003D4751 /* UIActionSheet.m */,
 				148984F112EE2CFE003D4751 /* UIActionSheetAppKitIntegration.h */,
 				14FDE99A153C9A1800A2D499 /* UIAppearance.h */,
-				148984F612EE2CFE003D4751 /* UIApplication.h */,
-				148984F712EE2CFE003D4751 /* UIApplication.m */,
 				148984F812EE2CFE003D4751 /* UIApplicationAppKitIntegration.h */,
 				148984F912EE2CFE003D4751 /* UIApplicationDelegate.h */,
 				148984FA12EE2CFE003D4751 /* UIBarButtonItem.h */,
@@ -735,8 +731,6 @@
 				1489850312EE2CFE003D4751 /* UIColor.m */,
 				1489850412EE2CFE003D4751 /* UIColorAppKitIntegration.h */,
 				1489850712EE2CFE003D4751 /* UIDataDetectors.h */,
-				7011107A133BE0F300C86512 /* UIDatePicker.h */,
-				7011107B133BE0F300C86512 /* UIDatePicker.m */,
 				1489850E12EE2CFE003D4751 /* UIFontAppKitIntegration.h */,
 				1489850F12EE2CFE003D4751 /* UIGeometry.h */,
 				1489851012EE2CFE003D4751 /* UIGeometry.m */,
@@ -991,7 +985,6 @@
 				1489860612EE2DBD003D4751 /* UISwipeGestureRecognizer.h in Headers */,
 				1489860A12EE2DDC003D4751 /* UIPanGestureRecognizer.h in Headers */,
 				149148BC12EE45ED00F7C34E /* UIGestureRecognizerSubclass.h in Headers */,
-				7011107C133BE0F400C86512 /* UIDatePicker.h in Headers */,
 				1413D21213D72A06004D77E9 /* UIScrollViewAnimation.h in Headers */,
 				1413D21413D72A06004D77E9 /* UIScrollViewAnimationDeceleration.h in Headers */,
 				1413D21613D72A06004D77E9 /* UIScrollViewAnimationScroll.h in Headers */,
@@ -1185,7 +1178,6 @@
 				7806ED2B133A1D7500273BC6 /* UITabBar.m in Sources */,
 				78CB48B5133AA8AF008636DA /* UISegmentedControl.m in Sources */,
 				78CB48DA133AB922008636DA /* UISlider.m in Sources */,
-				7011107D133BE0F400C86512 /* UIDatePicker.m in Sources */,
 				537472D6133ADD4B00EBD5EA /* UIInterface.m in Sources */,
 				14D8D942135DE90A00FE639A /* UIInputController.m in Sources */,
 				14541DB31360D6F300C1006D /* UIPhotosAlbum.m in Sources */,

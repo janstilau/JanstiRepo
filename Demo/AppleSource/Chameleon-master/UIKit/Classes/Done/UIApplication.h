@@ -23,9 +23,9 @@ extern NSString *const UIApplicationDidReceiveMemoryWarningNotification;
 extern NSString *const UITrackingRunLoopMode;
 
 typedef NS_ENUM(NSInteger, UIStatusBarStyle) {
-  UIStatusBarStyleDefault,
-  UIStatusBarStyleBlackTranslucent,
-  UIStatusBarStyleBlackOpaque
+    UIStatusBarStyleDefault,
+    UIStatusBarStyleBlackTranslucent,
+    UIStatusBarStyleBlackOpaque
 };
 
 typedef NS_ENUM(NSInteger, UIStatusBarAnimation) {
@@ -90,9 +90,9 @@ typedef NS_OPTIONS(NSUInteger, UIRemoteNotificationType) {
 // going to be suspect when entering sleep as well. so be aware - but basically these same constraints exist on iOS so
 // in many respects it shouldn't affect your code much or at all.
 typedef NS_ENUM(NSInteger, UIApplicationState) {
-  UIApplicationStateActive,
-  UIApplicationStateInactive,
-  UIApplicationStateBackground
+    UIApplicationStateActive,
+    UIApplicationStateInactive,
+    UIApplicationStateBackground
 };
 
 typedef NSUInteger UIBackgroundTaskIdentifier;

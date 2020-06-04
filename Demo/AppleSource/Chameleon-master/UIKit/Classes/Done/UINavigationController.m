@@ -49,21 +49,12 @@
     _navigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     _visibleViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    // 这里, iOS 7 之后, 应该发生了变化, _visibleViewController.view 应该可以在 navigationBar 之下了.
+    /*
+     所以, NavgationVC 的内部, 各种 bar 就是自己生成几个工具 View. 然后将 SubVC 的 view, 装到自己的控制逻辑下.
+     */
     [self.view addSubview:_visibleViewController.view];
     [self.view addSubview:_navigationBar];
     [self.view addSubview:_toolbar];
-}
-
-- (BOOL)shouldAutomaticallyForwardAppearanceMethods
-{
-    return NO;
-}
-
-- (void)_setNeedsDeferredUpdate
-{
-    _needsDeferredUpdate = YES;
-    [self.view setNeedsLayout];
 }
 
 - (void)_getNavbarRect:(CGRect *)navbarRect contentRect:(CGRect *)contentRect toolbarRect:(CGRect *)toolbarRect forBounds:(CGRect)bounds
@@ -86,7 +77,21 @@
     if (contentRect) *contentRect = content;
 }
 
-// 核心方法. 做内容更改的动画.
+- (BOOL)shouldAutomaticallyForwardAppearanceMethods
+{
+    return NO;
+}
+
+- (void)_setNeedsDeferredUpdate
+{
+    _needsDeferredUpdate = YES;
+    [self.view setNeedsLayout];
+}
+
+/*
+ Push 等逻辑的主要实现.
+ 所以, Push, Pop 仅仅是 OldView, NewView 的 View 的一个动画, 然后在这个动画过程中, 会调用各种 VC 的方法.
+ */
 - (void)_updateVisibleViewController:(BOOL)animated
 {
     _isUpdating = YES;
@@ -97,6 +102,9 @@
     const BOOL isPushing = (oldVisibleViewController.parentViewController != nil);
     const BOOL wasNavbarHidden = self.navigationBarHidden;
     
+    /*
+     这里, 会调用不同的 VC, ViewWill, Did, Appear, DisAppear 的函数.
+     */
     [oldVisibleViewController beginAppearanceTransition:NO animated:animated];
     [newVisibleViewController beginAppearanceTransition:YES animated:animated];
     
@@ -121,6 +129,10 @@
     
     CGAffineTransform navbarEndTransform = CGAffineTransformIdentity;
     
+    
+    /*
+     在 PushPop 的过程中, NavBar 也会有相应的动画.
+     */
     if (wasNavbarHidden && !_navigationBarHidden) {
         _navigationBar.transform = inStartTransform;
         _navigationBar.hidden = NO;
@@ -133,6 +145,10 @@
     newVisibleViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view insertSubview:newVisibleViewController.view atIndex:0];
     newVisibleViewController.view.transform = inStartTransform;
+    
+    /*
+     Push, Pop 之所以有动画的原因.
+     */
     
     [UIView animateWithDuration:animated? 0.33 : 0
                      animations:^{

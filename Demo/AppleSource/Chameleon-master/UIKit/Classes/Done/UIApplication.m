@@ -55,17 +55,20 @@ static UIApplication *_theApplication = nil;
         _applicationState = UIApplicationStateActive;
         _applicationSupportsShakeToEdit = YES;		// yeah... not *really* true, but UIKit defaults to YES :)
         
+        /*
+         这些通知的具体源头, 不知道在哪里, 不过 Application 在这里进行了接收.
+         */
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillFinishLaunching:) name:NSApplicationWillFinishLaunchingNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidFinishLaunching:) name:NSApplicationDidFinishLaunchingNotification object:nil];
-
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillTerminate:) name:NSApplicationWillTerminateNotification object:nil];
-
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillResignActive:) name:NSApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidBecomeActive:) name:NSApplicationDidBecomeActiveNotification object:nil];
         
         [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(_applicationWillResignActive:) name:NSWorkspaceScreensDidSleepNotification object:nil];
         [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(_applicationDidBecomeActive:) name:NSWorkspaceScreensDidWakeNotification object:nil];
-
+        
         [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(_computerWillSleep:) name:NSWorkspaceWillSleepNotification object:nil];
         [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(_computerDidWakeUp:) name:NSWorkspaceDidWakeNotification object:nil];
     }
@@ -229,7 +232,7 @@ static UIApplication *_theApplication = nil;
     if ([_backgroundTasks count] == 0) {
         return NO;
     }
-
+    
     // run the runloop in the default mode so things like connections and timers still work for processing our
     // background tasks. we'll make sure not to run this any longer than 1 second at a time, otherwise the alert
     // might hang around for a lot longer than is necessary since we might not have anything to run in the default
@@ -273,18 +276,18 @@ static UIApplication *_theApplication = nil;
     // quitting than they are with an alert appearing/disappearing suddenly that they might have had trouble reading and processing
     // before it's gone. that sort of thing creates anxiety.
     NSDate *blockingBackgroundExpiration = [NSDate dateWithTimeIntervalSinceNow:1.33];
-
+    
     for (;;) {
         if (![self _runRunLoopForBackgroundTasksBeforeDate:blockingBackgroundExpiration] || [NSDate timeIntervalSinceReferenceDate] >= [blockingBackgroundExpiration timeIntervalSinceReferenceDate]) {
             break;
         }
     }
-
+    
     // if it turns out we're all done with tasks (or maybe had none to begin with), we'll clean up the structures
     // and tell our app we can terminate immediately now.
     if ([_backgroundTasks count] == 0) {
         [self _cancelBackgroundTasks];
-    
+        
         // and reset our timer since we're done
         _backgroundTasksExpirationDate = nil;
         
@@ -302,11 +305,11 @@ static UIApplication *_theApplication = nil;
         [alert setInformativeText:@"Finishing some tasks..."];
         [alert addButtonWithTitle:@"Quit Now"];
         [alert layout];
-
+        
         // to avoid upsetting the user with an alert that flashes too quickly to read, we'll later artifically ensure that
         // the alert has been visible for at least some small amount of time to give them a chance to see and understand it.
         NSDate *minimumDisplayTime = [NSDate dateWithTimeIntervalSinceNow:2.33];
-
+        
         NSModalSession session = [NSApp beginModalSessionForWindow:alert.window];
         
         // run the runloop and wait for tasks to finish
@@ -322,7 +325,7 @@ static UIApplication *_theApplication = nil;
         
         // and reset our timer since we're done
         _backgroundTasksExpirationDate = nil;
-
+        
         // now just in case all of this happened too quickly and the user might not have had time to read and understand the alert,
         // we will kill some time for a bit as long as the alert is still visible. runModalSession: will not return NSRunContinuesResponse
         // if the user closed the alert, so in that case then this delay won't happen at all. however if the tasks finished too quickly
@@ -332,8 +335,8 @@ static UIApplication *_theApplication = nil;
                 break;
             }
         }
-
-
+        
+        
         [NSApp endModalSession:session];
         
         // tell the real NSApp we're all done here
@@ -360,9 +363,9 @@ static UIApplication *_theApplication = nil;
         // since we can just block here we don't need to put the app into a modal state or popup a window or anything because
         // the machine is about to go to sleep.. so we'll just do things in a blocking way in this case while still handling
         // any pending background tasks.
-
+        
         _backgroundTasksExpirationDate = [[NSDate alloc] initWithTimeIntervalSinceNow:29];
-
+        
         for (;;) {
             if (![self _runRunLoopForBackgroundTasksBeforeDate:_backgroundTasksExpirationDate]) {
                 break;
@@ -370,7 +373,7 @@ static UIApplication *_theApplication = nil;
         }
         
         [self _cancelBackgroundTasks];
-
+        
         // and reset our timer since we're done
         _backgroundTasksExpirationDate = nil;
     }
@@ -407,7 +410,7 @@ static UIApplication *_theApplication = nil;
 
 - (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)event
 {
-    if (!target) { // 如果没有 target , 找第一响应者,
+    if (!target) { // 如果没有 target , 就从发送者开始找, 而这个发送者, 一般来说, 就是第一响应者.
         id responder = sender;
         while (responder) {
             if ([responder respondsToSelector:action]) {
@@ -430,6 +433,9 @@ static UIApplication *_theApplication = nil;
     return NO;
 }
 
+/*
+ 事件的分发, 可以看到, 是直接把事件, 交给了 Window.
+ */
 - (void)sendEvent:(UIEvent *)event
 {
     if (event.type ==  UIEventTypeTouches) {
@@ -465,11 +471,11 @@ static UIApplication *_theApplication = nil;
 - (void)_applicationDidFinishLaunching:(NSNotification *)note
 {
     NSDictionary *options = nil;
-
+    
     if ([_delegate respondsToSelector:@selector(application:didFinishLaunchingOnDesktopWithOptions:)]) {
         [_delegate application:self didFinishLaunchingOnDesktopWithOptions:options];
     }
-
+    
     if ([_delegate respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)]) {
         [_delegate application:self didFinishLaunchingWithOptions:options];
     } else if ([_delegate respondsToSelector:@selector(applicationDidFinishLaunching:)]) {
@@ -509,7 +515,7 @@ static UIApplication *_theApplication = nil;
 {
     if (self.applicationState == UIApplicationStateInactive) {
         _applicationState = UIApplicationStateActive;
-
+        
         if ([_delegate respondsToSelector:@selector(applicationDidBecomeActive:)]) {
             [_delegate applicationDidBecomeActive:self];
         }
@@ -540,18 +546,21 @@ int UIApplicationMain(int argc, char *argv[], NSString *principalClassName, NSSt
     @autoreleasepool {
         UIApplication *app = principalClassName? [NSClassFromString(principalClassName) sharedApplication] : [UIApplication sharedApplication];
         id<UIApplicationDelegate> delegate = delegateClassName? [NSClassFromString(delegateClassName) new] : nil;
-
+        
         [app setDelegate:delegate];
-
+        
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         NSString *mainNibName = [infoDictionary objectForKey:@"NSMainNibFile"];
         NSArray *topLevelObjects = nil;
         NSNib *mainNib = [[NSNib alloc] initWithNibNamed:mainNibName bundle:[NSBundle mainBundle]];
-
+        
         [mainNib instantiateWithOwner:app topLevelObjects:&topLevelObjects];
         
         id<NSApplicationDelegate> backgroundTaskCatchingDelegate = [UINSApplicationDelegate new];
         [[NSApplication sharedApplication] setDelegate:backgroundTaskCatchingDelegate];
+        /*
+         在 Run 这个方法里面, 开启了运行循环操作.
+         */
         [[NSApplication sharedApplication] run];
         
         // the only purpose of this is to confuse ARC. I'm not sure how else to do it.
@@ -587,7 +596,7 @@ void UIApplicationInterruptTouchesInView(UIView *view)
     // the process of being evalulated since that could lead to very inconsistent behavior and really weird edge cases.
     // by deferring the cancel, it would then be able to take the right action if the touch phase was something *other*
     // than ended or cancelled by the time it attemped cancellation.
-
+    
     if (!view) {
         for (UIScreen *screen in [UIScreen screens]) {
             [screen.UIKitView performSelector:@selector(cancelTouchesInView:) withObject:nil afterDelay:0];
