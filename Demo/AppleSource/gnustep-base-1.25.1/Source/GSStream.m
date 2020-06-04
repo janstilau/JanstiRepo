@@ -85,6 +85,7 @@ static RunLoopEventType typeForStream(NSStream *aStream)
 }
 
 @implementation	NSRunLoop (NSStream)
+
 - (void) addStream: (NSStream*)aStream mode: (NSString*)mode
 {
     [self addEvent: [aStream _loopID]

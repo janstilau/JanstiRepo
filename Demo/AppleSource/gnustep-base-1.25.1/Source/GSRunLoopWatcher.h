@@ -3,6 +3,10 @@
 
 @class NSDate;
 
+/*
+ 这里的 watch, 不是Apple 里面的那个监听者.
+ */
+
 @interface GSRunLoopWatcher: NSObject // 这个东西, 是当输入源来看的.
 {
 @public
@@ -13,6 +17,7 @@
   RunLoopEventType	type;
   unsigned 		count;
 }
+
 - (id) initWithType: (RunLoopEventType)type
 	   receiver: (id)anObj
 	       data: (void*)data;

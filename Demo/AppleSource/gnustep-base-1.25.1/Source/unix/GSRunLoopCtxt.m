@@ -63,38 +63,6 @@ static const NSMapTableValueCallBacks WatcherMapValueCallBacks =
     wRetImp = [[GSRunLoopWatcher class] instanceMethodForSelector: wRetSel];
 }
 
-- (void) dealloc
-{
-    RELEASE(mode);
-    GSIArrayEmpty(performers);
-    NSZoneFree(performers->zone, (void*)performers);
-    GSIArrayEmpty(timers);
-    NSZoneFree(timers->zone, (void*)timers);
-    GSIArrayEmpty(watchers);
-    NSZoneFree(watchers->zone, (void*)watchers);
-    if (_efdMap != 0)
-    {
-        NSFreeMapTable(_efdMap);
-    }
-    if (_rfdMap != 0)
-    {
-        NSFreeMapTable(_rfdMap);
-    }
-    if (_wfdMap != 0)
-    {
-        NSFreeMapTable(_wfdMap);
-    }
-    GSIArrayEmpty(_trigger);
-    NSZoneFree(_trigger->zone, (void*)_trigger);
-#ifdef	HAVE_POLL_F
-    if (pollfds != 0)
-    {
-        NSZoneFree(NSDefaultMallocZone(), pollfds);
-    }
-#endif
-    [super dealloc];
-}
-
 /**
  * Remove any callback for the specified event which is set for an
  * uncompleted poll operation.<br />
@@ -667,10 +635,10 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
     int			fd;
     int			fdEnd = -1;
     unsigned		count;
-    unsigned		i;
+    unsigned		watcherCount;
     BOOL			immediate = NO;
     
-    i = GSIArrayCount(watchers);
+    watcherCount = GSIArrayCount(watchers);
     
     /* Find out how much time we should wait, and set SELECT_TIMEOUT. */
     if (milliseconds == 0)
@@ -716,56 +684,53 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
         fdEnd = fd;
     FD_SET (fd, &read_fds);
     
-    while (i-- > 0)
+    while (watcherCount-- > 0)
     {
-        GSRunLoopWatcher	*info;
+        GSRunLoopWatcher	*aRunLoopWatcher;
         int		fd;
         BOOL		trigger;
         
-        info = GSIArrayItemAtIndex(watchers, i).obj;
-        if (info->_invalidated == YES)
+        aRunLoopWatcher = GSIArrayItemAtIndex(watchers, watcherCount).obj;
+        if (aRunLoopWatcher->_invalidated == YES)
         {
-            GSIArrayRemoveItemAtIndex(watchers, i);
-        }
-        else if ([info runLoopShouldBlock: &trigger] == NO)
+            GSIArrayRemoveItemAtIndex(watchers, watcherCount);
+        } else if ([aRunLoopWatcher runLoopShouldBlock: &trigger] == NO)
         {
             if (trigger == YES)
             {
                 immediate = YES;
-                GSIArrayAddItem(_trigger, (GSIArrayItem)(id)info);
+                GSIArrayAddItem(_trigger, (GSIArrayItem)(id)aRunLoopWatcher);
             }
-        }
-        else
-        {
-            switch (info->type)
+        } else {
+            switch (aRunLoopWatcher->type)
             {
                 case ET_EDESC:
-                    fd = (int)(intptr_t)info->data;
+                    fd = (int)(intptr_t)aRunLoopWatcher->data;
                     if (fd > fdEnd)
                         fdEnd = fd;
                     FD_SET (fd, &exception_fds);
-                    NSMapInsert(_efdMap, (void*)(intptr_t)fd, info);
+                    NSMapInsert(_efdMap, (void*)(intptr_t)fd, aRunLoopWatcher);
                     break;
                     
                 case ET_RDESC:
-                    fd = (int)(intptr_t)info->data;
+                    fd = (int)(intptr_t)aRunLoopWatcher->data;
                     if (fd > fdEnd)
                         fdEnd = fd;
                     FD_SET (fd, &read_fds);
-                    NSMapInsert(_rfdMap, (void*)(intptr_t)fd, info);
+                    NSMapInsert(_rfdMap, (void*)(intptr_t)fd, aRunLoopWatcher);
                     break;
                     
                 case ET_WDESC:
-                    fd = (int)(intptr_t)info->data;
+                    fd = (int)(intptr_t)aRunLoopWatcher->data;
                     if (fd > fdEnd)
                         fdEnd = fd;
                     FD_SET (fd, &write_fds);
-                    NSMapInsert(_wfdMap, (void*)(intptr_t)fd, info);
+                    NSMapInsert(_wfdMap, (void*)(intptr_t)fd, aRunLoopWatcher);
                     break;
                     
                 case ET_RPORT:
                 {
-                    id port = info->receiver;
+                    id port = aRunLoopWatcher->receiver;
                     NSInteger port_fd_size = FDCOUNT;
                     NSInteger port_fd_count = FDCOUNT;
                     NSInteger port_fd_buffer[FDCOUNT];
@@ -788,7 +753,7 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
                         if (fd > fdEnd)
                             fdEnd = fd;
                         FD_SET (fd, &read_fds);
-                        NSMapInsert(_rfdMap, (void*)(intptr_t)fd, info);
+                        NSMapInsert(_rfdMap, (void*)(intptr_t)fd, aRunLoopWatcher);
                     }
                     if (port_fd_array != port_fd_buffer) free(port_fd_array);
                 }
@@ -856,10 +821,10 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
         watcher = (GSRunLoopWatcher*)GSIArrayItemAtIndex(_trigger, count).obj;
         if (watcher->_invalidated == NO)
         {
-            i = [contexts count];
-            while (i-- > 0)
+            watcherCount = [contexts count];
+            while (watcherCount-- > 0)
             {
-                GSRunLoopCtxt	*c = [contexts objectAtIndex: i];
+                GSRunLoopCtxt	*c = [contexts objectAtIndex: watcherCount];
                 
                 if (c != self)
                 {
@@ -919,10 +884,10 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
             = (GSRunLoopWatcher*)NSMapGet(_efdMap, (void*)(intptr_t)fdIndex);
             if (watcher != nil && watcher->_invalidated == NO)
             {
-                i = [contexts count];
-                while (i-- > 0)
+                watcherCount = [contexts count];
+                while (watcherCount-- > 0)
                 {
-                    GSRunLoopCtxt	*c = [contexts objectAtIndex: i];
+                    GSRunLoopCtxt	*c = [contexts objectAtIndex: watcherCount];
                     
                     if (c != self)
                         [c endEvent: (void*)(intptr_t)fdIndex for: watcher];
@@ -951,10 +916,10 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
             = (GSRunLoopWatcher*)NSMapGet(_wfdMap, (void*)(intptr_t)fdIndex);
             if (watcher != nil && watcher->_invalidated == NO)
             {
-                i = [contexts count];
-                while (i-- > 0)
+                watcherCount = [contexts count];
+                while (watcherCount-- > 0)
                 {
-                    GSRunLoopCtxt	*c = [contexts objectAtIndex: i];
+                    GSRunLoopCtxt	*c = [contexts objectAtIndex: watcherCount];
                     
                     if (c != self)
                         [c endEvent: (void*)(intptr_t)fdIndex for: watcher];
@@ -992,10 +957,10 @@ static void setPollfd(int fd, int event, GSRunLoopCtxt *ctxt)
             }
             if (watcher != nil && watcher->_invalidated == NO)
             {
-                i = [contexts count];
-                while (i-- > 0)
+                watcherCount = [contexts count];
+                while (watcherCount-- > 0)
                 {
-                    GSRunLoopCtxt	*c = [contexts objectAtIndex: i];
+                    GSRunLoopCtxt	*c = [contexts objectAtIndex: watcherCount];
                     
                     if (c != self)
                         [c endEvent: (void*)(intptr_t)fdIndex for: watcher];

@@ -4,10 +4,6 @@
 
 #import	<Foundation/NSMapTable.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSTimer, NSDate, NSPort;
 
 /**
@@ -18,16 +14,16 @@ extern "C" {
 GS_EXPORT NSString * const NSDefaultRunLoopMode;
 
 // GNU 的 runloop 有着自己的一套底层实现, 和 Foundation 的实现不太一样
-    
+
 @interface NSRunLoop : NSObject
 {
 #if	GS_EXPOSE(NSRunLoop)
-  @private
-  NSString		*_currentMode;
-  NSMapTable		*_contextMap;
-  NSMutableArray	*_contextStack;
-  NSMutableArray	*_timedPerformers;
-  void			*_extra;
+@private
+    NSString		*_currentMode;
+    NSMapTable		*_contextMap;
+    NSMutableArray	*_contextStack;
+    NSMutableArray	*_timedPerformers;
+    void			*_extra;
 #endif
 }
 
@@ -47,7 +43,7 @@ GS_EXPORT NSString * const NSDefaultRunLoopMode;
                  beforeDate: (NSDate*)limit_date;
 
 - (void) addTimer: (NSTimer*)timer
-	  forMode: (NSString*)mode;
+          forMode: (NSString*)mode;
 
 - (NSString*) currentMode;
 
@@ -82,16 +78,16 @@ GS_EXPORT NSString * const NSDefaultRunLoopMode;
 - (void) cancelPerformSelectorsWithTarget: (id)target;
 
 - (void) cancelPerformSelector: (SEL)aSelector
-			target: (id)target
-		      argument: (id)argument;
+                        target: (id)target
+                      argument: (id)argument;
 
 - (void) configureAsServer;
 
 - (void) performSelector: (SEL)aSelector
-		  target: (id)target
-		argument: (id)argument
-		   order: (int)order
-		   modes: (NSArray*)modes;
+                  target: (id)target
+                argument: (id)argument
+                   order: (int)order
+                   modes: (NSArray*)modes;
 
 - (void) removePort: (NSPort*)port
             forMode: (NSString*)mode;
@@ -123,8 +119,8 @@ typedef	enum {
  * category.
  */
 @protocol RunLoopEvents
-    
-    // 具体的runloop 我们以后在细究, 这里的意思就是, 由 runloop 告诉我们, 可以进行操作了.
+
+// 具体的runloop 我们以后在细究, 这里的意思就是, 由 runloop 告诉我们, 可以进行操作了.
 /** This is the message sent back to a watcher when an event is observed
  * by the run loop.<br />
  * The 'data', 'type' and 'mode' arguments are the same as the arguments
@@ -135,11 +131,11 @@ typedef	enum {
  * 'data' argument, but is not in the case of ET_RPORT).<br />
  * For windows it will be the handle or the windows message assciated
  * with the event.
- */ 
+ */
 - (void) receivedEvent: (void*)data
-		  type: (RunLoopEventType)type
-		 extra: (void*)extra
-	       forMode: (NSString*)mode;
+                  type: (RunLoopEventType)type
+                 extra: (void*)extra
+               forMode: (NSString*)mode;
 @end
 
 /** This informal protocol defiens optional methods of the run loop watcher.
@@ -171,9 +167,9 @@ typedef	enum {
  * -removeEvent:type:forMode:all: is made.
  */
 - (void) addEvent: (void*)data
-	     type: (RunLoopEventType)type
-	  watcher: (id<RunLoopEvents>)watcher
-	  forMode: (NSString*)mode;
+             type: (RunLoopEventType)type
+          watcher: (id<RunLoopEvents>)watcher
+          forMode: (NSString*)mode;
 /** Removes a watcher from the receiver ... the watcher must have been 
  * previously added using -addEvent:type:watcher:forMode:<br />
  * This method mirrors exactly one addition of a watcher unless removeAll
@@ -181,13 +177,9 @@ typedef	enum {
  * other paramters.
  */
 - (void) removeEvent: (void*)data
-	        type: (RunLoopEventType)type
-	     forMode: (NSString*)mode
-		 all: (BOOL)removeAll;
+                type: (RunLoopEventType)type
+             forMode: (NSString*)mode
+                 all: (BOOL)removeAll;
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif /*__NSRunLoop_h_GNUSTEP_BASE_INCLUDE */

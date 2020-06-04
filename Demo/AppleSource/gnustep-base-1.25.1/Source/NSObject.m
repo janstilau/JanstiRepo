@@ -1910,23 +1910,7 @@ static id gs_weak_load(id obj)
 - (id) performSelector: (SEL)aSelector
 {
     IMP msg;
-    
-    /* The Apple runtime API would do:
-     * msg = class_getMethodImplementation(object_getClass(self), aSelector);
-     * but this cannot ask self for information about any method reached by
-     * forwarding, so the returned forwarding function would ge a generic one
-     * rather than one aware of hardware issues with returning structures
-     * and floating points.  We therefore prefer the GNU API which is able to
-     * use forwarding callbacks to get better type information.
-     */
     msg = objc_msg_lookup(self, aSelector);
-    if (!msg)
-    {
-        [NSException raise: NSGenericException
-                    format: @"invalid selector '%s' passed to %s",
-         sel_getName(aSelector), sel_getName(_cmd)];
-        return nil;
-    }
     return (*msg)(self, aSelector); // 找到 IMP, 直接调用了
 }
 
@@ -1939,28 +1923,7 @@ static id gs_weak_load(id obj)
 - (id) performSelector: (SEL)aSelector withObject: (id)anObject
 {
     IMP msg;
-    
-    if (aSelector == 0)
-        [NSException raise: NSInvalidArgumentException
-                    format: @"%@ null selector given", NSStringFromSelector(_cmd)];
-    
-    /* The Apple runtime API would do:
-     * msg = class_getMethodImplementation(object_getClass(self), aSelector);
-     * but this cannot ask self for information about any method reached by
-     * forwarding, so the returned forwarding function would be a generic one
-     * rather than one aware of hardware issues with returning structures
-     * and floating points.  We therefore prefer the GNU API which is able to
-     * use forwarding callbacks to get better type information.
-     */
     msg = objc_msg_lookup(self, aSelector);
-    if (!msg)
-    {
-        [NSException raise: NSGenericException
-                    format: @"invalid selector '%s' passed to %s",
-         sel_getName(aSelector), sel_getName(_cmd)];
-        return nil;
-    }
-    
     return (*msg)(self, aSelector, anObject);
 }
 
@@ -1975,52 +1938,14 @@ static id gs_weak_load(id obj)
             withObject: (id) object2
 {
     IMP msg;
-    
-    if (aSelector == 0)
-        [NSException raise: NSInvalidArgumentException
-                    format: @"%@ null selector given", NSStringFromSelector(_cmd)];
-    
-    /* The Apple runtime API would do:
-     * msg = class_getMethodImplementation(object_getClass(self), aSelector);
-     * but this cannot ask self for information about any method reached by
-     * forwarding, so the returned forwarding function would ge a generic one
-     * rather than one aware of hardware issues with returning structures
-     * and floating points.  We therefore prefer the GNU API which is able to
-     * use forwarding callbacks to get better type information.
-     */
     msg = objc_msg_lookup(self, aSelector);
-    if (!msg)
-    {
-        [NSException raise: NSGenericException
-                    format: @"invalid selector '%s' passed to %s",
-         sel_getName(aSelector), sel_getName(_cmd)];
-        return nil;
-    }
-    
     return (*msg)(self, aSelector, object1, object2); // 直接调用,
 }
 
-/**
- * Decrements the retain count for the receiver if greater than zero,
- * otherwise calls the dealloc method instead.<br />
- * The default implementation calls the NSDecrementExtraRefCountWasZero()
- * function to test the extra reference count for the receiver (and
- * decrement it if non-zero) - if the extra reference count is zero then
- * the retain count is one, and the dealloc method is called.<br />
- * In GNUstep, the [NSObject+enableDoubleReleaseCheck:] method may be used
- * to turn on checking for ratain/release errors in this method.
- */
 - (oneway void) release
 {
     release_fast(self);
 }
-
-/**
- * The class implementation of the release method is a dummy method
- * having no effect.  It is present so that class objects can be stored
- * in containers (such as NSArray) which will send them retain and
- * release messages.
- */
 + (oneway void) release
 {
     return;

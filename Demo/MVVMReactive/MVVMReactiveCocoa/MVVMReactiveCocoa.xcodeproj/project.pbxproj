@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06AB334824890B7C00EA0C88 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AB333824890B7C00EA0C88 /* UIView+Debug.m */; };
+		06AB334924890B7C00EA0C88 /* UIColor+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 06AB333924890B7C00EA0C88 /* UIColor+Debug.m */; };
 		240393041B37CD380032C871 /* FMDatabaseQueue+MRCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 240393031B37CD380032C871 /* FMDatabaseQueue+MRCHelper.m */; };
 		240393121B37F11D0032C871 /* starred_repos.json in Resources */ = {isa = PBXBuildFile; fileRef = 240393111B37F11D0032C871 /* starred_repos.json */; };
 		240393141B37F14F0032C871 /* OCTRepositoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 240393131B37F14F0032C871 /* OCTRepositoryTests.m */; };
@@ -403,6 +405,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		06AB333824890B7C00EA0C88 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
+		06AB333924890B7C00EA0C88 /* UIColor+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Debug.m"; sourceTree = "<group>"; };
+		06AB333A24890B7C00EA0C88 /* UIView+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Debug.h"; sourceTree = "<group>"; };
+		06AB333B24890B7C00EA0C88 /* UIColor+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Debug.h"; sourceTree = "<group>"; };
+		06AB333C24890B7C00EA0C88 /* MCDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCDebug.h; sourceTree = "<group>"; };
 		145C40A7282374531F02687E /* libPods-MVVMReactiveCocoa.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MVVMReactiveCocoa.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CFF695F9C512FDAF1756F23 /* Pods-MVVMReactiveCocoa.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MVVMReactiveCocoa.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MVVMReactiveCocoa/Pods-MVVMReactiveCocoa.debug.xcconfig"; sourceTree = "<group>"; };
 		240393021B37CD380032C871 /* FMDatabaseQueue+MRCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FMDatabaseQueue+MRCHelper.h"; sourceTree = "<group>"; };
@@ -815,6 +822,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06AB333724890B7C00EA0C88 /* Debug */ = {
+			isa = PBXGroup;
+			children = (
+				06AB333824890B7C00EA0C88 /* UIView+Debug.m */,
+				06AB333924890B7C00EA0C88 /* UIColor+Debug.m */,
+				06AB333A24890B7C00EA0C88 /* UIView+Debug.h */,
+				06AB333B24890B7C00EA0C88 /* UIColor+Debug.h */,
+				06AB333C24890B7C00EA0C88 /* MCDebug.h */,
+			);
+			path = Debug;
+			sourceTree = "<group>";
+		};
 		240393101B37F0DA0032C871 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
@@ -860,37 +879,37 @@
 		240D00D11A654D300033CC86 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				24A077111D07120000AC3A58 /* YYFPSLabel.h */,
-				24A077121D07120000AC3A58 /* YYFPSLabel.m */,
-				249E5B4D1B07A8EA00BFDEA1 /* UIImage+RTTint.h */,
-				249E5B4E1B07A8EA00BFDEA1 /* UIImage+RTTint.m */,
-				249F34F61A72A197008F1C2A /* UIView+Borders.h */,
-				249F34F71A72A197008F1C2A /* UIView+Borders.m */,
 				240D00D21A654D300033CC86 /* MRCConfig.h */,
 				240D00D31A654D300033CC86 /* MRCConstant.h */,
 				240D00D41A654D300033CC86 /* MRCErrors.h */,
 				240D00D51A654D300033CC86 /* MRCErrors.m */,
+				241DAC761B0893A0005FDA9C /* MRCMemoryCache.h */,
+				241DAC771B0893A0005FDA9C /* MRCMemoryCache.m */,
 				240D00D61A654D300033CC86 /* MRCReactiveView.h */,
 				240D00D71A654D300033CC86 /* MRCRouter.h */,
 				240D00D81A654D300033CC86 /* MRCRouter.m */,
 				240D00D91A654D300033CC86 /* MRCUtil.h */,
 				240D00DA1A654D300033CC86 /* MRCUtil.m */,
-				240D00DB1A654D300033CC86 /* UIImage+ImageEffects.h */,
-				240D00DC1A654D300033CC86 /* UIImage+ImageEffects.m */,
-				2483A4501A69559000BA0594 /* UIImage+MRCOcticons.h */,
-				2483A4511A69559000BA0594 /* UIImage+MRCOcticons.m */,
-				24116E881A8F28CE00D25218 /* SSKeychain+MRCUtil.h */,
-				24116E891A8F28CE00D25218 /* SSKeychain+MRCUtil.m */,
-				241DAC761B0893A0005FDA9C /* MRCMemoryCache.h */,
-				241DAC771B0893A0005FDA9C /* MRCMemoryCache.m */,
-				249A89EC1B53B65100E18582 /* NSURL+MRCLink.h */,
-				249A89ED1B53B65100E18582 /* NSURL+MRCLink.m */,
 				249A8A261B53DCC400E18582 /* NSMutableAttributedString+MRCEvents.h */,
 				249A8A271B53DCC400E18582 /* NSMutableAttributedString+MRCEvents.m */,
+				249A89EC1B53B65100E18582 /* NSURL+MRCLink.h */,
+				249A89ED1B53B65100E18582 /* NSURL+MRCLink.m */,
 				249A8A341B53EBC600E18582 /* OCTEvent+MRCAttributedString.h */,
 				249A8A351B53EBC600E18582 /* OCTEvent+MRCAttributedString.m */,
 				249A8A3D1B54A30700E18582 /* OCTRef+MRCAdditions.h */,
 				249A8A3E1B54A30700E18582 /* OCTRef+MRCAdditions.m */,
+				24116E881A8F28CE00D25218 /* SSKeychain+MRCUtil.h */,
+				24116E891A8F28CE00D25218 /* SSKeychain+MRCUtil.m */,
+				240D00DB1A654D300033CC86 /* UIImage+ImageEffects.h */,
+				240D00DC1A654D300033CC86 /* UIImage+ImageEffects.m */,
+				2483A4501A69559000BA0594 /* UIImage+MRCOcticons.h */,
+				2483A4511A69559000BA0594 /* UIImage+MRCOcticons.m */,
+				249E5B4D1B07A8EA00BFDEA1 /* UIImage+RTTint.h */,
+				249E5B4E1B07A8EA00BFDEA1 /* UIImage+RTTint.m */,
+				249F34F61A72A197008F1C2A /* UIView+Borders.h */,
+				249F34F71A72A197008F1C2A /* UIView+Borders.m */,
+				24A077111D07120000AC3A58 /* YYFPSLabel.h */,
+				24A077121D07120000AC3A58 /* YYFPSLabel.m */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -1247,6 +1266,7 @@
 		242D4FD71A64B6FA0026ABC6 /* MVVMReactiveCocoa */ = {
 			isa = PBXGroup;
 			children = (
+				06AB333724890B7C00EA0C88 /* Debug */,
 				24313CAC1A7D3CA700FA357E /* Resource */,
 				240D00D11A654D300033CC86 /* Util */,
 				240D00CB1A654D300033CC86 /* Model */,
@@ -2117,6 +2137,7 @@
 				249E5B201B063CA600BFDEA1 /* MRCRepoSettingsOwnerTableViewCell.m in Sources */,
 				240D01291A654D300033CC86 /* OCTUser+MRCPersistence.m in Sources */,
 				240D012F1A654D300033CC86 /* MRCTabBarController.m in Sources */,
+				06AB334824890B7C00EA0C88 /* UIView+Debug.m in Sources */,
 				240D014B1A654D300033CC86 /* MRCHomepageViewModel.m in Sources */,
 				24143F061BD783D300555179 /* MRCTrendingSettingsViewModel.m in Sources */,
 				24A49AD51CDDE3DF0039A424 /* MRCCountryAndLanguageViewModel.m in Sources */,
@@ -2144,6 +2165,7 @@
 				2424533E1A811B9E00FFFCC1 /* MRCSourceEditorViewController.m in Sources */,
 				2489AD6A1B33AF0000D76523 /* MRCPublicReposViewController.m in Sources */,
 				24DF45631A6B8BA500F23474 /* MRCRepoDetailViewController.m in Sources */,
+				06AB334924890B7C00EA0C88 /* UIColor+Debug.m in Sources */,
 				2489AD731B345F5D00D76523 /* OCTClient+MRCUser.m in Sources */,
 				24F120361AA7447A00A22D9A /* MRCSettingsViewController.m in Sources */,
 				243688421B25E31A00D801D3 /* MRCUserListTableViewCell.m in Sources */,
