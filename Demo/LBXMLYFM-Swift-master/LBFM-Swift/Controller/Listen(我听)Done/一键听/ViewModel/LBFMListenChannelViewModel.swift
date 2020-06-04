@@ -10,6 +10,10 @@ import UIKit
 import HandyJSON
 import SwiftyJSON
 
+func work(b: @escaping ()->()) {
+    b()
+}
+
 
 class LBFMListenChannelViewModel: NSObject {
     var channelResults:[ChannelResultsModel]?
