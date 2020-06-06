@@ -255,7 +255,6 @@
 		06E1B31F247D6BEE00CD9D60 /* core */ = {
 			isa = PBXGroup;
 			children = (
-				06E1B37E247D6BEE00CD9D60 /* Algorithm.swift */,
 				06E1B367247D6BEE00CD9D60 /* AnyHashable.swift */,
 				06E1B33A247D6BEE00CD9D60 /* Array.swift */,
 				06E1B3BC247D6BEE00CD9D60 /* ArrayBody.swift */,
@@ -313,6 +312,7 @@
 				06E1B3B0247D6BEE00CD9D60 /* FixedArray.swift */,
 				06E1B36B247D6BEE00CD9D60 /* FlatMap.swift */,
 				06E1B3A1247D6BEE00CD9D60 /* Flatten.swift */,
+				06E1B3DD247D7C7B00CD9D60 /* Done */,
 				06E1B386247D6BEE00CD9D60 /* FloatingPoint.swift */,
 				06E1B3A5247D6BEE00CD9D60 /* FloatingPointParsing.swift.gyb */,
 				06E1B325247D6BEE00CD9D60 /* FloatingPointTypes.swift.gyb */,
@@ -348,7 +348,6 @@
 				06E1B398247D6BEE00CD9D60 /* NativeSet.swift */,
 				06E1B3D1247D6BEE00CD9D60 /* NewtypeWrapper.swift */,
 				06E1B395247D6BEE00CD9D60 /* ObjectIdentifier.swift */,
-				06E1B3CB247D6BEE00CD9D60 /* Optional.swift */,
 				06E1B39A247D6BEE00CD9D60 /* OptionSet.swift */,
 				06E1B3B8247D6BEE00CD9D60 /* OutputStream.swift */,
 				06E1B376247D6BEE00CD9D60 /* PlaygroundDisplay.swift */,
@@ -367,8 +366,6 @@
 				06E1B383247D6BEE00CD9D60 /* Reverse.swift */,
 				06E1B3C3247D6BEE00CD9D60 /* Runtime.swift.gyb */,
 				06E1B362247D6BEE00CD9D60 /* RuntimeFunctionCounters.swift */,
-				06E1B3DD247D7C7B00CD9D60 /* Done */,
-				06E1B39F247D6BEE00CD9D60 /* SequenceAlgorithms.swift */,
 				06E1B3CF247D6BEE00CD9D60 /* Set.swift */,
 				06E1B38A247D6BEE00CD9D60 /* SetAlgebra.swift */,
 				06E1B328247D6BEE00CD9D60 /* SetAnyHashableExtensions.swift */,
@@ -451,7 +448,10 @@
 		06E1B3DD247D7C7B00CD9D60 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				06E1B37E247D6BEE00CD9D60 /* Algorithm.swift */,
+				06E1B39F247D6BEE00CD9D60 /* SequenceAlgorithms.swift */,
 				06E1B375247D6BEE00CD9D60 /* Sequence.swift */,
+				06E1B3CB247D6BEE00CD9D60 /* Optional.swift */,
 			);
 			path = Done;
 			sourceTree = "<group>";

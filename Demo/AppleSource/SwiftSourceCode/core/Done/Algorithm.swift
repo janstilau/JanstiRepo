@@ -91,6 +91,13 @@ public func max<T: Comparable>(_ x: T, _ y: T, _ z: T, _ rest: T...) -> T {
 ///     }
 ///     // Prints "0: foo"
 ///     // Prints "1: bar"
+
+/*
+ 这个类, 就是 Sequence 类的一层包装, 把每个返回来的数据, 增加了 index 值.
+ 所以, 这个类仅仅是在实现 next 的时候, 返回的值带有 index 了而已.
+ 不过, 这体现了面向接口编程的极大好处. Base 到底是什么, 不用关心, EnumeratedSequence 仅仅会依靠协议暴露出的能力进行编程, 然后自己提供一层, 自己业务的封装而已.
+ */
+
 @frozen
 public struct EnumeratedSequence<Base: Sequence> {
   @usableFromInline

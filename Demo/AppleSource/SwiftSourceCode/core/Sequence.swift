@@ -225,6 +225,8 @@ public protocol IteratorProtocol {
     ///
     /// - Returns: The next element in the underlying sequence, if a next element
     ///   exists; otherwise, `nil`.
+    ///
+    /// 这里标注 mutating, 是因为, 对于大部分的迭代器来说, 还是要在内部存储一下迭代的状态的.
     mutating func next() -> Element?
 }
 
@@ -242,9 +244,12 @@ public protocol IteratorProtocol {
 ///     // Prints "2"
 ///     // Prints "3"
 ///
-/// 这里说的很清楚了, 这就是一个 primitiveMethod. 很多的方法, 都是建立在这个基本方法之上的.
-/// 这些方法, 提供了通用的逻辑, 然后提供了可以变化的参数, 一般来说是一个 Block. 通过这个 Block, 可以做业务上的变化.
+/// 这里说的很清楚了, 这就是一个 primitiveMethod.
+/// 很多的方法, 都是建立在这个基本方法之上的.
+/// 这些方法, 提供了通用的逻辑, 然后提供了可以变化的参数, 一般来说是一个 Block.
+///  通过这个 Block, 可以做业务上的变化.
 ///  Protocol 这种设计的方式, 将方法, 操作的能力, 抽象到了一个类中. 其他的类, 通过实现这个类的基本方法, 自动的继承了那些高级能力. 这个过程是自适应的.
+///
 /// While seemingly simple, this capability gives you access to a large number
 /// of operations that you can perform on any sequence. As an example, to
 /// check whether a sequence includes a particular value, you can test each
@@ -321,7 +326,6 @@ public protocol IteratorProtocol {
 ///
 ///
 /// 只要某个类, next() 方法实现了, 那么它就可以迭代自己. 默认的 makeIterator 的实现, 就是返回自己.
-///  因为不是所有的类, 都需要一个迭代器做迭代的. 他可以自己进行迭代的管理工作. 迭代器是一个中间层, 如果类本身就实现了迭代器的工作, 那么传递自身到需要迭代器的地方, 完成相应的业务.
 ///
 /// Here's a definition of a `Countdown` sequence that serves as its own
 /// iterator. The `makeIterator()` method is provided as a default
@@ -380,7 +384,8 @@ public protocol Sequence {
     ///
     /// - Complexity: O(1), except if the sequence also conforms to `Collection`.
     ///   In this case, see the documentation of `Collection.underestimatedCount`.
-    /// 这个值, 目前来看, 就是给使用者进行容量扩展用的
+    ///
+    /// 这个值, 目前来看, 就是给使用者进行容量扩展用的 默认值为0
     var underestimatedCount: Int { get }
     
     func _customContainsEquatableElement(
@@ -433,11 +438,11 @@ extension Sequence where Self.Iterator == Self {
 /// `Base` iterator before possibly returning the first available element.
 ///
 /// The underlying iterator's sequence may be infinite.
+/*
+ 首先, 存储一下原有的 Sequence, 注意, Swift 里面, 这个词就叫做是 base.
+ */
 @frozen
 public struct DropFirstSequence<Base: Sequence> {
-    /*
-     在 Swfit 里面, 私有的变量, 还是遵循了 下划线开头的传统.
-     */
     @usableFromInline
     internal let _base: Base
     @usableFromInline
@@ -453,11 +458,8 @@ public struct DropFirstSequence<Base: Sequence> {
 }
 
 /*
- 首先, DropFirstSequence 就是一个 Sequence, 因为他也有 makeIterator() 这个方法.
- 只有在 makeIterator() 调用的时候, 他才会真正的消耗原有 Sequence.
- 通过实现, 我们知道, 它只是在 makeIterator 的时候, 先提前调用了 Base 的 next 好多次.
- 通过实现, 我们也知道, 生成他, 并不会造成原有的 Sequence 的麻烦, 因为真正的消耗, 只有实际使用的时候才发生.
- Swfit 特别推崇 lazy 的概念.
+ 在生成迭代器的时候, 先进行一部分的消耗工作.
+ 所以, 只有在真正的进行迭代的时候, 才会进行迭代. 在生成这个对象的时候, 只是进行了值的保存工作.
  */
 extension DropFirstSequence: Sequence {
     public typealias Element = Base.Element
@@ -487,6 +489,9 @@ extension DropFirstSequence: Sequence {
 /// `Base` iterator.
 ///
 /// The underlying iterator's sequence may be infinite.
+/*
+ 在, 构造函数的内部, 还仅仅是做一个值的拷贝工作.
+ */
 @frozen
 public struct PrefixSequence<Base: Sequence> {
     @usableFromInline
@@ -496,12 +501,15 @@ public struct PrefixSequence<Base: Sequence> {
     
     @inlinable
     public init(_ base: Base, maxLength: Int) {
-        _precondition(maxLength >= 0, "Can't take a prefix of negative length")
         _base = base
         _maxLength = maxLength
     }
 }
 
+/*
+ 它的 Iterator, 也仅仅是做值的拷贝工作.
+ 这应该算是 baseIterator 的代理类.
+ */
 extension PrefixSequence {
     @frozen
     public struct Iterator {
@@ -518,13 +526,16 @@ extension PrefixSequence {
     }
 }
 /*
- 可以直接, A.B 的方式, 进行扩展, 不然, 下面的这一段代码, 只能写到上面的代码段里了.
- 在PrefixSequence的 Iterator 的 next 中, 每次都会消耗 remain 的值.
+ 直接可以用 A.B 的形式, 进行 extension 的扩展
+ 这里, 只要是类型, 符合一个协议, 在 Swift 里面, 都是用的扩展的方式完成的. 虽然 Iterator 仅仅有一个协议, 这个协议只有一个方法, 但是还是进行了分离.
  */
 extension PrefixSequence.Iterator: IteratorProtocol {
     public typealias Element = Base.Element
     
     @inlinable
+    /*
+     next 方法的内部, 会不断的更新 remain 的值. 然后就是代理给 baseIterator 的 next 方法了. 如果 remain 没有了, 就是到头了.
+     */
     public mutating func next() -> Element? {
         if _remaining != 0 {
             _remaining &-= 1
@@ -535,15 +546,19 @@ extension PrefixSequence.Iterator: IteratorProtocol {
     }
 }
 
+/*
+ 在实现 Sequence 的时候, 也是专门用一个 Extension 进行的实现.
+ */
 extension PrefixSequence: Sequence {
     @inlinable
-    /*
-     在默认的 makeIterator() 中, Iterator 的 base, maxLength 是 自己提供的.
-     */
+    
     public __consuming func makeIterator() -> Iterator {
         return Iterator(_base.makeIterator(), maxLength: _maxLength)
     }
     
+    /*
+     这里, 在自己的基础上, 返回了个 PrefixSequence, 就是将 base 和 新生成的 length 传入进入.
+    */
     @inlinable
     public __consuming func prefix(_ maxLength: Int) -> PrefixSequence<Base> {
         let length = Swift.min(maxLength, self._maxLength)
@@ -551,12 +566,15 @@ extension PrefixSequence: Sequence {
     }
 }
 
+/*
+ 可见, 上面的, 对于 Drop, 和 PreSquence 的实现里面, 效率是没有收到影响的. 只不过是一些状态值的改变而已.
+ */
+
 
 /// A sequence that lazily consumes and drops `n` elements from an underlying
 /// `Base` iterator before possibly returning the first available element.
 ///
 /// The underlying iterator's sequence may be infinite.
-/// 没太明白这个类的作用.
 @frozen
 public struct DropWhileSequence<Base: Sequence> {
     public typealias Element = Base.Element
@@ -566,6 +584,9 @@ public struct DropWhileSequence<Base: Sequence> {
     @usableFromInline
     internal var _nextElement: Element?
     
+    /*
+     在初始化方法里面, 就对 Sequence 里面的值, 进行一次过滤的操作, 直到最终到达一个符合 predicate 的点.
+     */
     @inlinable
     internal init(iterator: Base.Iterator, predicate: (Element) throws -> Bool) rethrows {
         _iterator = iterator
@@ -616,7 +637,7 @@ extension DropWhileSequence: Sequence {
     }
     
     @inlinable
-    public __consuming func drop(
+    public func drop(
         while predicate: (Element) throws -> Bool
     ) rethrows -> DropWhileSequence<Base> {
         guard let x = _nextElement, try predicate(x) else { return self }
@@ -630,7 +651,7 @@ extension DropWhileSequence: Sequence {
 
 /*
  下面, 所有的 Sequence 的 extension, 都是根据 Sequence 提供的可迭代的能力, 封装了相关功能的通用逻辑, 提出了业务变化点.
- 使用这些方法的时候, 其实应该知道, 或者猜想里面的内部实现. 这样才不会使用错这些方法.
+ 使用这些方法的时候, 一定要是在这些方法对应的场景下.
  比如, 使用 map, 其实也能够达到 forEach 的功能. 但是, map 的实际效果, 是返回一个进行变化的数组, 而不是仅仅是做某些操作.
  熟知每个方法的内部实现, 使用对应名称的方法, 能够使得代码更加的觉有自解释性.
  尽量使用, 符合业务功能含义的方法. 而不是能够实现功能, 使用了错误的方法.
@@ -663,14 +684,9 @@ extension Sequence {
     public func map<T>(
         _ transform: (Element) throws -> T
     ) rethrows -> [T] {
-        /*
-         underestimatedCount 返回一个初始者. underestimatedCount 就是为了让结果进行扩容用的,
-         因为返回的结果是数组, 如果从 0 开始增长的话, 要有很多次的搬移操作.
-         */
         let initialCapacity = underestimatedCount
         var result = ContiguousArray<T>()
-        // 扩容.
-        result.reserveCapacity(initialCapacity)
+        result.reserveCapacity(initialCapacity) // 扩容.
         /*
          通过 primitiveMethod, 获取数据, 然后进行业务处理.
          这里, underestimatedCount 以下的, 直接进行添加, 这里不用考虑数组扩容.
