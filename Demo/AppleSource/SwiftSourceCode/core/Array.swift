@@ -1024,6 +1024,9 @@ extension Array: RangeReplaceableCollection {
     _buffer._arrayOutOfPlaceUpdate(&newBuffer, oldCount, 0)
   }
 
+    /*
+     * 这里, 就是判断是不是唯一索引, 然后进行 copy 操作.
+     */
   @inlinable
   @_semantics("array.make_mutable")
   internal mutating func _makeUniqueAndReserveCapacityIfNotUnique() {

@@ -134,16 +134,6 @@ static SEL	appendStringSel;
 }
 
 /**
- * Return an enumerator object containing all the keys of the dictionary.
- *
- * 这些都应该由具体的类实现出来, 其他所有的方法, 都是根据这几个基本方法创建出来的.
- */
-- (NSEnumerator*) keyEnumerator
-{
-    return [self subclassResponsibility: _cmd];
-}
-
-/**
  * Returns the object in the dictionary corresponding to aKey, or nil if
  * the key is not present.
  */

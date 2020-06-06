@@ -5,7 +5,6 @@
 #import "Foundation/NSEnumerator.h"
 #import "Foundation/NSAutoreleasePool.h"
 #import "Foundation/NSException.h"
-#import "Foundation/NSPortCoder.h"
 // For private method _decodeArrayOfObjectsForKey:
 #import "Foundation/NSKeyedArchiver.h"
 
@@ -82,31 +81,6 @@ static SEL	objectForKeySel;
   [super dealloc];
 }
 
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-  if ([aCoder allowsKeyedCoding])
-    {
-      [super encodeWithCoder: aCoder];
-    }
-  else
-    {
-      unsigned	count = map.nodeCount;
-      SEL		sel = @selector(encodeObject:);
-      IMP		imp = [aCoder methodForSelector: sel];
-      GSIMapEnumerator_t	enumerator = GSIMapEnumeratorForMap(&map);
-      GSIMapNode	node = GSIMapEnumeratorNextNode(&enumerator);
-
-      [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
-      while (node != 0)
-	{
-	  (*imp)(aCoder, sel, node->key.obj);
-	  (*imp)(aCoder, sel, node->value.obj);
-	  node = GSIMapEnumeratorNextNode(&enumerator);
-	}
-      GSIMapEndEnumerator(&enumerator);
-    }
-}
-
 - (int) hash
 {
   return map.nodeCount;
@@ -115,35 +89,6 @@ static SEL	objectForKeySel;
 - (id) init
 {
   return [self initWithObjects: 0 forKeys: 0 count: 0];
-}
-
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-  if ([aCoder allowsKeyedCoding])
-    {
-      self = [super initWithCoder: aCoder];
-    }
-  else
-    {
-      unsigned	count;
-      id		key;
-      id		value;
-      SEL		sel = @selector(decodeValueOfObjCType:at:);
-      IMP		imp = [aCoder methodForSelector: sel];
-      const char	*type = @encode(id);
-
-      [aCoder decodeValueOfObjCType: @encode(unsigned)
-	                         at: &count];
-
-      GSIMapInitWithZoneAndCapacity(&map, [self zone], count);
-      while (count-- > 0)
-        {
-	  (*imp)(aCoder, sel, type, &key);
-	  (*imp)(aCoder, sel, type, &value);
-	  GSIMapAddPairNoRetain(&map, (GSIMapKey)key, (GSIMapVal)value);
-	}
-    }
-  return self;
 }
 
 /* Designated initialiser */
@@ -479,6 +424,9 @@ static SEL	objectForKeySel;
   return self;
 }
 
+/*
+ 这里, 就是 NSDictory 能够进行迭代的原因. 直接利用的 GIMap 的迭代器. 
+ */
 - (id) nextObject
 {
   GSIMapNode	node = GSIMapEnumeratorNextNode(&enumerator);
@@ -519,27 +467,6 @@ static SEL	objectForKeySel;
 @interface	NSGDictionary : NSDictionary
 @end
 @implementation	NSGDictionary
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-  NSLog(@"Warning - decoding archive containing obsolete %@ object - please delete/replace this archive", NSStringFromClass([self class]));
-  DESTROY(self);
-  self = (id)NSAllocateObject([GSDictionary class], 0, NSDefaultMallocZone());
-  self = [self initWithCoder: aCoder];
-  return self;
-}
-@end
-
-@interface	NSGMutableDictionary : NSMutableDictionary
-@end
-@implementation	NSGMutableDictionary
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-  NSLog(@"Warning - decoding archive containing obsolete %@ object - please delete/replace this archive", NSStringFromClass([self class]));
-  DESTROY(self);
-  self = (id)NSAllocateObject([GSMutableDictionary class], 0, NSDefaultMallocZone());
-  self = [self initWithCoder: aCoder];
-  return self;
-}
 @end
 
 @interface	GSCachedDictionary : GSDictionary

@@ -907,6 +907,9 @@ GSIMapEnumeratorBucket(GSIMapEnumerator enumerator)
 GS_STATIC_INLINE GSIMapNode 
 GSIMapEnumeratorNextNode(GSIMapEnumerator enumerator) // 这个函数内部, 在找到新的 node 之后, 其实还要维护 enumerator 的值,  方便它下一次进行取值.
 {
+    /*
+     作为迭代器, 会记录当前迭代到的位置值, 也会记录一下自己引用到的那个 Map, 下面的代码没有具体的查看. 就是根据 Node 查找一下 Node 的位置的过程. 在这个过程中, 会更新迭代器的 Node 的值.
+     */
   GSIMapNode	node = ((_GSIE)enumerator)->node;
   GSIMapTable	map = ((_GSIE)enumerator)->map;
 
