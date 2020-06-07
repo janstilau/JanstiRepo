@@ -1,27 +1,3 @@
-/** Concrete implementation of NSCountedSet based on GNU Set class
-   Copyright (C) 1998,2000 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   Created: October 1998
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02111 USA.
-   */
-
 #import "common.h"
 #import "Foundation/NSSet.h"
 #import "Foundation/NSAutoreleasePool.h"
@@ -49,19 +25,12 @@
 
 @interface GSCountedSetEnumerator : NSEnumerator
 {
-  GSCountedSet		*set;
+    GSCountedSet		*set;// 在 Enumerator 里面, 存放了原有容器的指针.
   GSIMapEnumerator_t	enumerator;
 }
 @end
 
 @implementation GSCountedSetEnumerator
-
-- (void) dealloc
-{
-  GSIMapEndEnumerator(&enumerator);
-  RELEASE(set);
-  [super dealloc];
-}
 
 - (id) initWithSet: (NSSet*)d
 {
@@ -143,34 +112,6 @@
 	}
     }
   return 0;
-}
-
-- (void) dealloc
-{
-  GSIMapEmptyMap(&map);
-  [super dealloc];
-}
-
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-  unsigned	count = map.nodeCount;
-  SEL		sel1 = @selector(encodeObject:);
-  IMP		imp1 = [aCoder methodForSelector: sel1];
-  SEL		sel2 = @selector(encodeValueOfObjCType:at:);
-  IMP		imp2 = [aCoder methodForSelector: sel2];
-  const char	*type = @encode(unsigned);
-  GSIMapEnumerator_t	enumerator = GSIMapEnumeratorForMap(&map);
-  GSIMapNode 		node = GSIMapEnumeratorNextNode(&enumerator);
-
-  (*imp2)(aCoder, sel2, type, &count);
-
-  while (node != 0)
-    {
-      (*imp1)(aCoder, sel1, node->key.obj);
-      (*imp2)(aCoder, sel2, type, &node->value.nsu);
-      node = GSIMapEnumeratorNextNode(&enumerator);
-    }
-  GSIMapEndEnumerator(&enumerator);
 }
 
 - (int) hash

@@ -7,15 +7,16 @@
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 /**
  * An NSPointerArray acts like a standard mutable array except that it
  * can contain nil and even non-object values.<br />
  * The count can also be set causing the array to shrink (discarding items)
  * or grow (adding nil/zero items).
+ */
+
+/*
+ A collection similar to an array, but with a broader range of available memory semantics.
+ but can also hold nil values
  */
 
 @interface NSPointerArray : NSObject <NSCopying, NSCoding>
@@ -114,9 +115,6 @@ extern "C" {
 
 @end
 
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 
