@@ -284,7 +284,6 @@
 				06E1B343247D6BEE00CD9D60 /* Collection.swift */,
 				06E1B352247D6BEE00CD9D60 /* CollectionAlgorithms.swift */,
 				06E1B334247D6BEE00CD9D60 /* CollectionDifference.swift */,
-				06E1B39E247D6BEE00CD9D60 /* CollectionOfOne.swift */,
 				06E1B34B247D6BEE00CD9D60 /* CommandLine.swift */,
 				06E1B392247D6BEE00CD9D60 /* CompilerProtocols.swift */,
 				06E1B3D0247D6BEE00CD9D60 /* ContiguousArray.swift */,
@@ -319,7 +318,6 @@
 				06E1B393247D6BEE00CD9D60 /* HashTable.swift */,
 				06E1B370247D6BEE00CD9D60 /* ICU.swift */,
 				06E1B3A9247D6BEE00CD9D60 /* Identifiable.swift */,
-				06E1B382247D6BEE00CD9D60 /* Indices.swift */,
 				06E1B391247D6BEE00CD9D60 /* InputStream.swift */,
 				06E1B339247D6BEE00CD9D60 /* IntegerParsing.swift */,
 				06E1B32C247D6BEE00CD9D60 /* Integers.swift */,
@@ -373,7 +371,6 @@
 				06E1B347247D6BEE00CD9D60 /* SIMDVector.swift */,
 				06E1B3CD247D6BEE00CD9D60 /* SIMDVectorTypes.swift.gyb */,
 				06E1B3C7247D6BEE00CD9D60 /* SipHash.swift */,
-				06E1B3A0247D6BEE00CD9D60 /* Slice.swift */,
 				06E1B354247D6BEE00CD9D60 /* SliceBuffer.swift */,
 				06E1B385247D6BEE00CD9D60 /* SmallString.swift */,
 				06E1B394247D6BEE00CD9D60 /* Sort.swift */,
@@ -442,6 +439,9 @@
 		06E1B3DD247D7C7B00CD9D60 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				06E1B39E247D6BEE00CD9D60 /* CollectionOfOne.swift */,
+				06E1B382247D6BEE00CD9D60 /* Indices.swift */,
+				06E1B3A0247D6BEE00CD9D60 /* Slice.swift */,
 				06E1B36C247D6BEE00CD9D60 /* Result.swift */,
 				06E1B34A247D6BEE00CD9D60 /* Comparable.swift */,
 				06E1B3B3247D6BEE00CD9D60 /* LazySequence.swift */,

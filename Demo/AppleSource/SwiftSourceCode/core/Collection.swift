@@ -71,9 +71,9 @@
 @frozen
 public struct IndexingIterator<Elements: Collection> {
     @usableFromInline
-    internal let _elements: Elements
+    internal let _elements: Elements // 存储一下, 迭代器对应的集合原始信息
     @usableFromInline
-    internal var _position: Elements.Index
+    internal var _position: Elements.Index // 存储一下, 迭代器的开始信息
     
     @inlinable
     @inline(__always)
@@ -125,7 +125,7 @@ extension IndexingIterator: IteratorProtocol, Sequence {
     ///   exists; otherwise, `nil`.
     /*
      不同容器的迭代器, next 的方式是不一样的. 比如, 数组是 index++, Map 是 bucket 和 node 的共同作用, 链表是 nextNode 的判断.
-     但是 Collection 将这些, 用 Element 的 index 和 subScript 进行了统一, 在 Collection 这一层, 将迭代的方式, 进行了抽象.
+     这里, 可以看到, 迭代器的取值操作, 进行了统一, 也就是不同的容器, 要重新定义下自己的 indexAfter, subscript 方法, 使得迭代器这里的算法, 可以通用.
      */
     @inlinable
     @inline(__always)
@@ -345,6 +345,8 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 /// or bidirectional collection must traverse the entire collection to count
 /// the number of contained elements, accessing its `count` property is an
 /// O(*n*) operation.
+
+
 public protocol Collection: Sequence {
     typealias IndexDistance = Int
     
@@ -361,6 +363,9 @@ public protocol Collection: Sequence {
     /// The position of the first element in a nonempty collection.
     ///
     /// If the collection is empty, `startIndex` is equal to `endIndex`.
+    /*
+     同 beginIterator, endIterator 相比, 没什么太大的不同.
+     */
     var startIndex: Index { get }
     
     /// The collection's "past the end" position---that is, the position one
@@ -386,12 +391,11 @@ public protocol Collection: Sequence {
     /// By default, a collection conforms to the `Sequence` protocol by
     /// supplying `IndexingIterator` as its associated `Iterator`
     /// type.
+    /*
+     IndexingIterator 中, next 是完全建立在 colleciton 的基础上, 进行的取值, 以及 index 更新的操作.
+     */
     associatedtype Iterator = IndexingIterator<Self>
     
-    // FIXME: Only needed for associated type inference. Otherwise,
-    // we get an `IndexingIterator` rather than properly deducing the
-    // Iterator type from makeIterator(). <rdar://problem/21539115>
-    /// Returns an iterator over the elements of the collection.
     override __consuming func makeIterator() -> Iterator
     
     /// A sequence that represents a contiguous subrange of the collection's
@@ -689,12 +693,18 @@ public protocol Collection: Sequence {
     /// - Parameter i: A valid index of the collection. `i` must be less than
     ///   `endIndex`.
     /// - Returns: The index value immediately after `i`.
+    /*
+     这个方法, 要交给每个 collection 自己去完成.
+     */
     func index(after i: Index) -> Index
     
     /// Replaces the given index with its successor.
     ///
     /// - Parameter i: A valid index of the collection. `i` must be less than
     ///   `endIndex`.
+    /*
+     这个就是调用上面的 index 实现的.
+     */
     func formIndex(after i: inout Index)
 }
 
@@ -706,6 +716,9 @@ extension Collection {
     ///   `endIndex`.
     @inlinable // protocol-only
     @inline(__always)
+    /*
+     往后走.
+     */
     public func formIndex(after i: inout Index) {
         i = index(after: i)
     }
@@ -900,15 +913,24 @@ extension Collection {
     /// - Complexity: O(1) if the collection conforms to
     ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the
     ///   resulting distance.
+    
+    /*
+     这里, 如果是 Array 的话, 会将这个实现进行重新的覆盖. 直接用 end - start 就可以了, 但是作为 Dictonary 来说, 非线性的类型, 只能是通过一个个遍历的方式, 来进行 distance 的获取操作.
+     */
     @inlinable
     public func distance(from start: Index, to end: Index) -> Int {
         _precondition(start <= end,
                       "Only BidirectionalCollections can have end come before start")
-        
+        /*
+         这里, 之所以用遍历的方式, 是因为如果可以随机访问的 collection, 距离的确认, 都是一件很难得事情. 例如链表.
+         */
         var start = start
         var count = 0
         while start != end {
             count = count + 1
+            /*
+             formIndex 是一个非常重要的方法.
+             */
             formIndex(after: &start)
         }
         return count
@@ -980,6 +1002,9 @@ extension Collection {
                       "Only BidirectionalCollections can be advanced by a negative amount")
         
         var i = i
+        /*
+         这里, 只能是一个个的往后确定, 因为对于不是连续的 collection, 只能是一个个的寻找下一个合适的位置.
+         */
         for _ in stride(from: 0, to: n, by: 1) {
             formIndex(after: &i)
         }
@@ -1193,6 +1218,9 @@ extension Collection {
     /// - Returns: An array containing the transformed elements of this
     ///   sequence.
     @inlinable
+    /*
+     Colelciton 协议, 对于 map 进行了重写, 因为 count 可以确认最终的输出数组的大小. 所以, 这里直接进行了空间的扩展.
+     */
     public func map<T>(
         _ transform: (Element) throws -> T
     ) rethrows -> [T] {
@@ -1236,6 +1264,9 @@ extension Collection {
     /// - Complexity: O(1) if the collection conforms to
     ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the number of
     ///   elements to drop from the beginning of the collection.
+    /*
+     这里, 直接进行的 range 的操作.
+     */
     @inlinable
     public __consuming func dropFirst(_ k: Int = 1) -> SubSequence {
         _precondition(k >= 0, "Can't drop a negative number of elements from a collection")
@@ -1282,6 +1313,9 @@ extension Collection {
     ///   returns `false` it will not be called again.
     ///
     /// - Complexity: O(*n*), where *n* is the length of the collection.
+    /*
+     省略开头的一些值. 可以看到, 这里还是操作的 range
+     */
     @inlinable
     public __consuming func drop(
         while predicate: (Element) throws -> Bool
@@ -1363,6 +1397,9 @@ extension Collection {
     /// - Complexity: O(1) if the collection conforms to
     ///   `RandomAccessCollection`; otherwise, O(*n*), where *n* is the length of
     ///   the collection.
+    /*
+     这里, 解决了之前 sequence 的一个问题, 就是效率不高. 在 Collection 里面, 有了更加高效的处理方式.
+     */
     @inlinable
     public __consuming func suffix(_ maxLength: Int) -> SubSequence {
         _precondition(

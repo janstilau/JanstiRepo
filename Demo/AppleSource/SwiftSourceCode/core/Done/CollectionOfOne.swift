@@ -10,6 +10,10 @@
 //
 //===----------------------------------------------------------------------===//
 
+
+/*
+ 不太明白这个类设计出来干啥用的.
+ */
 /// A collection containing a single element.
 ///
 /// You can use a `CollectionOfOne` instance when you need to efficiently
