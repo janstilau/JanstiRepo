@@ -271,7 +271,6 @@
 				06E1B379247D6BEE00CD9D60 /* Availability.swift */,
 				06E1B3C6247D6BEE00CD9D60 /* BidirectionalCollection.swift */,
 				06E1B3B6247D6BEE00CD9D60 /* Bitset.swift */,
-				06E1B3C4247D6BEE00CD9D60 /* Bool.swift */,
 				06E1B32E247D6BEE00CD9D60 /* BridgeObjectiveC.swift */,
 				06E1B373247D6BEE00CD9D60 /* BridgeStorage.swift */,
 				06E1B332247D6BEE00CD9D60 /* BridgingBuffer.swift */,
@@ -305,8 +304,6 @@
 				06E1B3C0247D6BEE00CD9D60 /* DropWhile.swift */,
 				06E1B360247D6BEE00CD9D60 /* Dump.swift */,
 				06E1B338247D6BEE00CD9D60 /* EmptyCollection.swift */,
-				06E1B390247D6BEE00CD9D60 /* Equatable.swift */,
-				06E1B3A8247D6BEE00CD9D60 /* ErrorType.swift */,
 				06E1B3AF247D6BEE00CD9D60 /* ExistentialCollection.swift.gyb */,
 				06E1B3A6247D6BEE00CD9D60 /* Filter.swift */,
 				06E1B3B0247D6BEE00CD9D60 /* FixedArray.swift */,
@@ -448,6 +445,9 @@
 		06E1B3DD247D7C7B00CD9D60 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				06E1B3A8247D6BEE00CD9D60 /* ErrorType.swift */,
+				06E1B390247D6BEE00CD9D60 /* Equatable.swift */,
+				06E1B3C4247D6BEE00CD9D60 /* Bool.swift */,
 				06E1B37E247D6BEE00CD9D60 /* Algorithm.swift */,
 				06E1B39F247D6BEE00CD9D60 /* SequenceAlgorithms.swift */,
 				06E1B375247D6BEE00CD9D60 /* Sequence.swift */,

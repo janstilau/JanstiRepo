@@ -14,6 +14,9 @@
 // Equatable
 //===----------------------------------------------------------------------===//
 
+/*
+ 因为 == 这个操作, 是整个系统运转的核心, 所以, 专门要为它定义一个协议. 这个协议的 primitive Method 就是 == 操作符的实现.
+ */
 /// A type that can be compared for value equality.
 ///
 /// Types that conform to the `Equatable` protocol can be compared for equality
@@ -44,14 +47,16 @@
 ///
 /// Adding `Equatable` conformance to your custom types means that you can use
 /// more convenient APIs when searching for particular instances in a
-/// collection. `Equatable` is also the base protocol for the `Hashable` and
+/// collection.
+/// 在 Collection 中, 应该是 Sequence 里面有很多扩展方法, 要求 Element 里面, 需要是 Equatable.
+/// `Equatable` is also the base protocol for the `Hashable` and
 /// `Comparable` protocols, which allow more uses of your custom type, such as
 /// constructing sets or sorting the elements of a collection.
 ///
 /// You can rely on automatic synthesis of the `Equatable` protocol's
 /// requirements for a custom type when you declare `Equatable` conformance in
 /// the type's original declaration and your type meets these criteria:
-///
+/// 当符合下面的条件的时候, Struct 和 Enum 会自动符合 Equatable
 /// - For a `struct`, all its stored properties must conform to `Equatable`.
 /// - For an `enum`, all its associated values must conform to `Equatable`. (An
 ///   `enum` without associated values has `Equatable` conformance even
@@ -164,6 +169,10 @@
 ///     let c = a
 ///     print(c === a, c === b, separator: ", ")
 ///     // Prints "true, false"
+/*
+ 因为这是操作符的重载, 所以要用 static 修饰.
+ 相比于, C++ 在类内部函数操作符重载, 默认操作符左边是 Self. Swift static, 两个操作参数的形式更加明确.
+ */
 public protocol Equatable {
   /// Returns a Boolean value indicating whether two values are equal.
   ///
@@ -176,6 +185,9 @@ public protocol Equatable {
   static func == (lhs: Self, rhs: Self) -> Bool
 }
 
+/*
+ != 要利用 == 完成, 因为这是 extension 和 primitive 的关系.
+ */
 extension Equatable {
   /// Returns a Boolean value indicating whether two values are not equal.
   ///
@@ -236,7 +248,7 @@ extension Equatable {
 /// The identical-to operator (`===`) returns `false` when comparing two
 /// references to different object instances, even if the two instances have
 /// the same value.
-///
+/// 这里表现了值相等和引用对象相等的差别.
 ///     let c = IntegerRef(10)
 ///     print(a == c)
 ///     // Prints "true"
@@ -246,6 +258,10 @@ extension Equatable {
 /// - Parameters:
 ///   - lhs: A reference to compare.
 ///   - rhs: Another reference to compare.
+
+/*
+ 虽然, 引用相等不是 Equatable 协议里面的, 但是应该放到这个文件里面, 文件管理按照功能来划分代码.
+ */
 @inlinable // trivial-implementation
 public func === (lhs: AnyObject?, rhs: AnyObject?) -> Bool {
   switch (lhs, rhs) {

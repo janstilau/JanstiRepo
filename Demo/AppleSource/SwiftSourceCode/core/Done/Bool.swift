@@ -11,7 +11,10 @@
 //===----------------------------------------------------------------------===//
 // Bool Datatype and Supporting Operators
 //===----------------------------------------------------------------------===//
-
+/*
+ 相比于, 内存不为 0x0000 就为 TRUE, 专门的创建一个类型, 表示判断, 意义要明显的多.
+ 可能对于习惯于上面内存表示判断的人, 这样的写法比较啰嗦, 但是不忘忘记当初自己习惯上面的写法, 花费了多少精力.
+ */
 /// A value type whose instances are either `true` or `false`.
 ///
 /// `Bool` represents Boolean values in Swift. Create instances of `Bool` by
@@ -63,6 +66,9 @@
 @frozen
 public struct Bool {
   @usableFromInline
+    /*
+     作为一个值类型, 它是占据内存空间的, 只有 1 bit. 所以, 这个类型只会有两个居民存在.
+     */
   internal var _value: Builtin.Int1
 
   /// Creates an instance initialized to `false`.
@@ -110,6 +116,11 @@ public struct Bool {
   ///   the new random value.
   /// - Returns: Either `true` or `false`, randomly chosen with equal
   ///   probability.
+    /*
+     RandomNumberGenerator 是一个协议, 它的 next 会返回一个UInt64.
+     所以, Generator 到底生成一个什么样的数字, 完全可以外界进行控制.
+     这里, 传递过来的是一个协议, 而不是实例. 面向抽象编程.
+     */
   @inlinable
   public static func random<T: RandomNumberGenerator>(
     using generator: inout T
@@ -133,6 +144,10 @@ public struct Bool {
   ///
   /// - Returns: Either `true` or `false`, randomly chosen with equal
   ///   probability.
+    /*
+     作为类的设计者, 应该提供一个最简便的方法, 给外界的使用者.
+     应该提供一个最通用的方法, 给外界需要自定义的人.
+     */
   @inlinable
   public static func random() -> Bool {
     var g = SystemRandomNumberGenerator()
@@ -164,6 +179,33 @@ extension Bool: _ExpressibleByBuiltinBooleanLiteral, ExpressibleByBooleanLiteral
   /// this Boolean literal initializer behind the scenes.
   ///
   /// - Parameter value: The value of the new instance.
+    
+    /*
+     struct Person:ExpressibleByBooleanLiteral {
+         typealias BooleanLiteralType = Bool
+         
+         var name: String
+         var age: Int
+         init(name: String, age: Int) {
+             self.name = name
+             self.age = age
+         }
+         init(booleanLiteral boolValue: Bool) {
+             if (boolValue) {
+                 self.name = "Justin"
+                 self.age = 23
+             } else {
+                 self.name = "Jansti"
+                 self.age = 18
+             }
+         }
+     }
+     let cPerson:Person = true
+
+     如果, 一个自定义的类, 想要直接通过 Bool 值进行初始化, 那么需要显式地申明自己想要这份能力. 也就是 ExpressibleByBooleanLiteral 接口的实现.
+     在这个接口里面, init(booleanLiteral boolValue: Bool) 需要被实现, 这个方法, 名字特殊, 有着 parameter label 进行限制.
+     相比于, C++ 无缘无故的给你进行转换, 这种写法, 要安全的多. 而且好像只能是通过系统提供的字面量进行初始化
+     */
   @_transparent
   public init(booleanLiteral value: Bool) {
     self = value
@@ -192,11 +234,17 @@ extension Bool: Hashable {
   /// - Parameter hasher: The hasher to use when combining the components
   ///   of this instance.
   @inlinable
+    /*
+     Swift 里面, 所有的 hash 函数, 都是通过 Hasher 来进行的.
+     */
   public func hash(into hasher: inout Hasher) {
     hasher.combine((self ? 1 : 0) as UInt8)
   }
 }
 
+/*
+ 不太明白, 这个是怎么调用的. 不能直接写出 var aBoolValue:Bool? = "true" 这种调用来.
+ */
 extension Bool: LosslessStringConvertible {
   /// Creates a new Boolean value from the given string.
   ///
@@ -219,7 +267,9 @@ extension Bool: LosslessStringConvertible {
 //===----------------------------------------------------------------------===//
 // Operators
 //===----------------------------------------------------------------------===//
-
+/*
+ 作为一个类型, 要考虑他相关的操作符. 也就是说, 需要显式地写出这个操作符的定义, 才能模拟出原有 C 风格的效果.
+ */
 extension Bool {
   /// Performs a logical NOT operation on a Boolean value.
   ///
@@ -242,6 +292,9 @@ extension Bool {
   }
 }
 
+/*
+ 模拟 C 分割的操作符, 注意, Swift 里面, 所有带有短路效果的操作符, 后面的参数都是自动闭包.
+ */
 extension Bool {
   /// Performs a logical AND operation on two Boolean values.
   ///
@@ -323,6 +376,9 @@ extension Bool {
   }
 }
 
+/*
+ 专门的写出这个函数来, 要比 boolValue = !boolValue 要显式的多.
+ */
 extension Bool {
   /// Toggles the Boolean variable's value.
   ///

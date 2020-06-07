@@ -74,6 +74,11 @@ import SwiftShims
 /// Including More Data in Errors
 /// =============================
 ///
+///
+/*
+ 这里就说的很明确, 如果数据类里面, 数据就是根据 enum 不同而变化的, 那么就用关联变量进行保存就可以了.
+ 如果, 数据是共享的, 那么就不用关联变量进行保存, enum 仅仅作为一个标志位
+*/
 /// Sometimes you may want different error states to include the same common
 /// data, such as the position in a file or some of your application's state.
 /// When you do, use a structure to represent errors. The following example
@@ -110,6 +115,15 @@ import SwiftShims
 ///         print("Other error: \(error)")
 ///     }
 ///     // Prints "Parsing error: mismatchedTag [19:5]"
+
+/*
+ 所以, 其实 Error 还是有一些 primitiveMethod 的, 不过这些都是内部方法, 都有着自己的默认实现的.
+ 
+ public protocol Error {
+ }
+ 
+ 这是  Error 的定义, 在暴露给开发者的接口里面, 是上面的写法.
+ */
 public protocol Error {
   var _domain: String { get }
   var _code: Int { get }
