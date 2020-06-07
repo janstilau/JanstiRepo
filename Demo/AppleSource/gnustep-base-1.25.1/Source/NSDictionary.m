@@ -46,28 +46,6 @@ static SEL	removeObjectForKeySel;
 static SEL	setObjectForKeySel;
 static SEL	appendStringSel;
 
-/**
- *  <p>This class and its subclasses store key-value pairs, where the key and
- *  the value are objects.  A great many utility methods for working with
- *  dictionaries are provided as part of this class, including the ability to
- *  retrieve multiple entries simultaneously, obtain sorted contents, and
- *  read/write from/to a serialized representation.</p> // 这个类主要的职责是定义公共的函数. 和 NSArray 一样.
- *
- *  <p>The keys are copied and values are retained by the implementation,
- *  and both are released when either their entry is dropped or the entire
- *  dictionary is deallocated.<br />
- *  As in the OS X implementation, keys must therefore implement the
- *  [(NSCopying)] protocol. //
- *  <p>Objects of this class are immutable.  For a mutable version, use the
- *  [NSMutableDictionary] subclass.</p>
- *
- *  <p>The basic functionality in <code>NSDictionary</code> is similar to that
- *  in Java's <code>HashMap</code>, and like that class it includes no locking
- *  code and is not thread-safe.  If the contents will be modified and
- *  accessed from multiple threads you should enclose critical operations
- *  within locks (see [NSLock]).</p>
- NSDictionary 是线程不安全的.
- */
 @implementation NSDictionary
 
 // 这个类定义了许多字典的方法, 但是实际的内存实现, 要在子类中完成.

@@ -163,11 +163,6 @@ static Class	mutableSetClass;
     }
 }
 
-- (id) copyWithZone: (NSZone*)z
-{
-  return RETAIN(self);
-}
-
 - (int) count
 {
   return map.nodeCount;
@@ -179,30 +174,6 @@ static Class	mutableSetClass;
   [super dealloc];
 }
 
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-  if ([aCoder allowsKeyedCoding])
-    {
-      [super encodeWithCoder: aCoder];
-    }
-  else
-    {
-      unsigned		count = map.nodeCount;
-      SEL			sel = @selector(encodeObject:);
-      IMP			imp = [aCoder methodForSelector: sel];
-      GSIMapEnumerator_t	enumerator = GSIMapEnumeratorForMap(&map);
-      GSIMapNode 		node = GSIMapEnumeratorNextNode(&enumerator);
-
-      [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
-      while (node != 0)
-	{
-	  (*imp)(aCoder, sel, node->key.obj);
-	  node = GSIMapEnumeratorNextNode(&enumerator);
-	}
-      GSIMapEndEnumerator(&enumerator);
-    }
-}
-
 - (int) hash
 {
   return map.nodeCount;
@@ -211,32 +182,6 @@ static Class	mutableSetClass;
 - (id) init
 {
   return [self initWithObjects: 0 count: 0];
-}
-
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-  if ([aCoder allowsKeyedCoding])
-    {
-      self = [super initWithCoder: aCoder];
-    }
-  else
-    {
-      unsigned	count;
-      id		value;
-      SEL		sel = @selector(decodeValueOfObjCType:at:);
-      IMP		imp = [aCoder methodForSelector: sel];
-      const char	*type = @encode(id);
-
-      (*imp)(aCoder, sel, @encode(unsigned), &count);
-
-      GSIMapInitWithZoneAndCapacity(&map, [self zone], count);
-      while (count-- > 0)
-        {
-	  (*imp)(aCoder, sel, type, &value);
-	  GSIMapAddKeyNoRetain(&map, (GSIMapKey)value);
-	}
-    }
-  return self;
 }
 
 /* Designated initialiser */

@@ -21,29 +21,29 @@
 #define	GSI_MAP_HASH(M, X)		[X.obj hash]
 #define	GSI_MAP_EQUAL(M, X,Y)		[X.obj isEqual: Y.obj]
 #define	GSI_MAP_RETAIN_KEY(M, X)	((X).obj) = \
-				[((id)(X).obj) copyWithZone: map->zone]
+[((id)(X).obj) copyWithZone: map->zone]
 
 #include	"GNUstepBase/GSIMap.h"
 
 @interface GSDictionary : NSDictionary // 是 NSDitionary 的子类.
 {
 @public
-  GSIMapTable_t	map;// 底层用的 mapTable
+    GSIMapTable_t	map;// 底层用的 mapTable
 }
 @end
 
 @interface GSMutableDictionary : NSMutableDictionary
 {
 @public
-  GSIMapTable_t	map;
-  NSUInteger _version;
+    GSIMapTable_t	map;
+    NSUInteger _version; // 每一的 mutate 操作, 都会进行 version 的++操作. 目前来说, version 到底做了什么, 还不是很清楚.
 }
 @end
 
 @interface GSDictionaryKeyEnumerator : NSEnumerator
 {
-  GSDictionary		*dictionary;
-  GSIMapEnumerator_t	enumerator;
+    GSDictionary		*dictionary;
+    GSIMapEnumerator_t	enumerator;
 }
 - (id) initWithDictionary: (NSDictionary*)d;
 @end
@@ -58,37 +58,31 @@ static SEL	objectForKeySel;
 
 + (void) initialize
 {
-  if (self == [GSDictionary class])
+    if (self == [GSDictionary class])
     {
-      nextObjectSel = @selector(nextObject);
-      objectForKeySel = @selector(objectForKey:);
+        nextObjectSel = @selector(nextObject);
+        objectForKeySel = @selector(objectForKey:);
     }
 }
 
 - (id) copyWithZone: (NSZone*)zone
 {
-  return RETAIN(self); // 不可变对象的通用写法
+    return RETAIN(self); // 不可变对象的通用写法
 }
 
 - (int) count
 {
-  return map.nodeCount;
-}
-
-- (void) dealloc
-{
-  GSIMapEmptyMap(&map);
-  [super dealloc];
+    return map.nodeCount;
 }
 
 - (int) hash
 {
-  return map.nodeCount;
+    return map.nodeCount;
 }
 
 - (id) init
 {
-  return [self initWithObjects: 0 forKeys: 0 count: 0];
+    return [self initWithObjects: 0 forKeys: 0 count: 0];
 }
 
 /* Designated initialiser */
@@ -99,207 +93,174 @@ static SEL	objectForKeySel;
                forKeys: (const id <NSCopying>[])keys
                  count: (int)c
 {
-  NSUInteger	i;
-
-  GSIMapInitWithZoneAndCapacity(&map, [self zone], c);
-  for (i = 0; i < c; i++)
+    NSUInteger	i;
+    
+    GSIMapInitWithZoneAndCapacity(&map, [self zone], c);
+    for (i = 0; i < c; i++)
     {
-      GSIMapNode	node;
-
-      if (keys[i] == nil)
-	{
-	  DESTROY(self);
-	  [NSException raise: NSInvalidArgumentException
-		      format: @"Tried to init dictionary with nil key"];
-	}
-      if (objs[i] == nil)
-	{
-	  DESTROY(self);
-	  [NSException raise: NSInvalidArgumentException
-		      format: @"Tried to init dictionary with nil value"];
-	}
-
-      node = GSIMapNodeForKey(&map, (GSIMapKey)(id)keys[i]);
-      if (node)
-	{
-	  IF_NO_GC(RETAIN(objs[i]));
-	  RELEASE(node->value.obj);
-	  node->value.obj = objs[i];
-	}
-      else
-	{
-	  GSIMapAddPair(&map, (GSIMapKey)(id)keys[i], (GSIMapVal)objs[i]);
-	}
+        GSIMapNode	node;
+        
+        if (keys[i] == nil)
+        {
+            DESTROY(self);
+            [NSException raise: NSInvalidArgumentException
+                        format: @"Tried to init dictionary with nil key"];
+        }
+        if (objs[i] == nil)
+        {
+            DESTROY(self);
+            [NSException raise: NSInvalidArgumentException
+                        format: @"Tried to init dictionary with nil value"];
+        }
+        
+        node = GSIMapNodeForKey(&map, (GSIMapKey)(id)keys[i]);
+        if (node)
+        {
+            IF_NO_GC(RETAIN(objs[i]));
+            RELEASE(node->value.obj);
+            node->value.obj = objs[i];
+        }
+        else
+        {
+            GSIMapAddPair(&map, (GSIMapKey)(id)keys[i], (GSIMapVal)objs[i]);
+        }
     }
-  return self;
+    return self;
 }
 
 /*
  *	This avoids using the designated initialiser for performance reasons.
  */
 - (id) initWithDictionary: (NSDictionary*)other
-		copyItems: (BOOL)shouldCopy
+                copyItems: (BOOL)shouldCopy
 {
-  NSZone	*z = [self zone];
-  NSUInteger	c = [other count];
-
-  GSIMapInitWithZoneAndCapacity(&map, z, c);
-  if (c > 0)
+    NSZone	*z = [self zone];
+    NSUInteger	c = [other count];
+    
+    GSIMapInitWithZoneAndCapacity(&map, z, c);
+    if (c > 0)
     {
-      NSEnumerator	*e = [other keyEnumerator];
-      IMP		nxtObj = [e methodForSelector: nextObjectSel];
-      IMP		otherObj = [other methodForSelector: objectForKeySel];
-      BOOL		isProxy = [other isProxy];
-      NSUInteger	i;
-
-      for (i = 0; i < c; i++)
-	{
-	  GSIMapNode	node;
-	  id		k;
-	  id		o;
-
-	  if (isProxy == YES)
-	    {
-	      k = [e nextObject];
-	      o = [other objectForKey: k];
-	    }
-	  else
-	    {
-	      k = (*nxtObj)(e, nextObjectSel);
-	      o = (*otherObj)(other, objectForKeySel, k);
-	    }
-	  k = [k copyWithZone: z];
-	  if (k == nil)
-	    {
-	      DESTROY(self);
-	      [NSException raise: NSInvalidArgumentException
-			  format: @"Tried to init dictionary with nil key"];
-	    }
-	  if (shouldCopy)
-	    {
-	      o = [o copyWithZone: z];
-	    }
-	  else
-	    {
-	      o = RETAIN(o);
-	    }
-	  if (o == nil)
-	    {
-	      DESTROY(self);
-	      [NSException raise: NSInvalidArgumentException
-			  format: @"Tried to init dictionary with nil value"];
-	    }
-
-	  node = GSIMapNodeForKey(&map, (GSIMapKey)k);
-	  if (node)
-	    {
-	      RELEASE(node->value.obj);
-	      node->value.obj = o;
-	    }
-	  else
-	    {
-	      GSIMapAddPairNoRetain(&map, (GSIMapKey)k, (GSIMapVal)o);
-	    }
-	}
+        NSEnumerator	*e = [other keyEnumerator];
+        IMP		nxtObj = [e methodForSelector: nextObjectSel];
+        IMP		otherObj = [other methodForSelector: objectForKeySel];
+        BOOL		isProxy = [other isProxy];
+        NSUInteger	i;
+        
+        for (i = 0; i < c; i++)
+        {
+            GSIMapNode	node;
+            id		k;
+            id		o;
+            
+            if (isProxy == YES)
+            {
+                k = [e nextObject];
+                o = [other objectForKey: k];
+            }
+            else
+            {
+                k = (*nxtObj)(e, nextObjectSel);
+                o = (*otherObj)(other, objectForKeySel, k);
+            }
+            k = [k copyWithZone: z];
+            if (k == nil)
+            {
+                DESTROY(self);
+                [NSException raise: NSInvalidArgumentException
+                            format: @"Tried to init dictionary with nil key"];
+            }
+            if (shouldCopy)
+            {
+                o = [o copyWithZone: z];
+            }
+            else
+            {
+                o = RETAIN(o);
+            }
+            if (o == nil)
+            {
+                DESTROY(self);
+                [NSException raise: NSInvalidArgumentException
+                            format: @"Tried to init dictionary with nil value"];
+            }
+            
+            node = GSIMapNodeForKey(&map, (GSIMapKey)k);
+            if (node)
+            {
+                RELEASE(node->value.obj);
+                node->value.obj = o;
+            }
+            else
+            {
+                GSIMapAddPairNoRetain(&map, (GSIMapKey)k, (GSIMapVal)o);
+            }
+        }
     }
-  return self;
+    return self;
 }
 
 - (BOOL) isEqualToDictionary: (NSDictionary*)other
 {
-  NSUInteger	count;
-
-  if (other == self)
+    NSUInteger	count;
+    
+    if (other == self)
     {
-      return YES;
+        return YES;
     }
-  count = map.nodeCount;
-  if (count == [other count])
+    count = map.nodeCount;
+    // 首先比较 node 的数量.
+    if (count == [other count])
     {
-      if (count > 0)
-	{
-	  GSIMapEnumerator_t	enumerator;
-	  GSIMapNode		node;
-	  IMP			otherObj = [other methodForSelector: objectForKeySel];
-
-	  enumerator = GSIMapEnumeratorForMap(&map);
-	  while ((node = GSIMapEnumeratorNextNode(&enumerator)) != 0)
-	    {
-	      id o1 = node->value.obj;
-	      id o2 = (*otherObj)(other, objectForKeySel, node->key.obj);
-
-	      if (o1 != o2 && [o1 isEqual: o2] == NO)
-		{
-		  GSIMapEndEnumerator(&enumerator);
-		  return NO;
-		}
-	    }
-	  GSIMapEndEnumerator(&enumerator);
-	}
-      return YES;
+        // 然后根据迭代器, 一点点的比较.j
+        if (count > 0)
+        {
+            GSIMapEnumerator_t	enumerator;
+            GSIMapNode		node;
+            IMP			otherObj = [other methodForSelector: objectForKeySel];
+            
+            enumerator = GSIMapEnumeratorForMap(&map);
+            while ((node = GSIMapEnumeratorNextNode(&enumerator)) != 0)
+            {
+                id o1 = node->value.obj;
+                id o2 = (*otherObj)(other, objectForKeySel, node->key.obj);
+                
+                if (o1 != o2 && [o1 isEqual: o2] == NO)
+                {
+                    GSIMapEndEnumerator(&enumerator);
+                    return NO;
+                }
+            }
+            GSIMapEndEnumerator(&enumerator);
+        }
+        return YES;
     }
-  return NO;
+    return NO;
 }
 
 - (NSEnumerator*) keyEnumerator
 {
-  return AUTORELEASE([[GSDictionaryKeyEnumerator allocWithZone:
-    NSDefaultMallocZone()] initWithDictionary: self]);
-}
-
-- (BOOL) makeImmutable
-{
-  return YES;
+    return AUTORELEASE([[GSDictionaryKeyEnumerator allocWithZone:
+                         NSDefaultMallocZone()] initWithDictionary: self]);
 }
 
 - (NSEnumerator*) objectEnumerator
 {
-  return AUTORELEASE([[GSDictionaryObjectEnumerator allocWithZone:
-    NSDefaultMallocZone()] initWithDictionary: self]);
+    return AUTORELEASE([[GSDictionaryObjectEnumerator allocWithZone:
+                         NSDefaultMallocZone()] initWithDictionary: self]);
 }
 
 - (id) objectForKey: aKey
 {
-  if (aKey != nil)
+    if (aKey != nil)
     {
-      GSIMapNode	node  = GSIMapNodeForKey(&map, (GSIMapKey)aKey);
-
-      if (node)
-	{
-	  return node->value.obj;
-	}
-    }
-  return nil;
-}
-
-- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
-				   objects: (__unsafe_unretained id[])stackbuf
-				     count: (int)len
-{
-  state->mutationsPtr = (unsigned long *)self;
-  return GSIMapCountByEnumeratingWithStateObjectsCount
-    (&map, state, stackbuf, len);
-}
-
-- (int) sizeInBytesExcluding: (NSHashTable*)exclude
-{
-  NSUInteger	size = GSPrivateMemorySize(self, exclude);
-
-  if (size > 0)
-    {
-      GSIMapEnumerator_t	enumerator = GSIMapEnumeratorForMap(&map);
-      GSIMapNode 		node = GSIMapEnumeratorNextNode(&enumerator);
-
-      size += GSIMapSize(&map) - sizeof(map);
-      while (node != 0)
+        GSIMapNode	node  = GSIMapNodeForKey(&map, (GSIMapKey)aKey);
+        
+        if (node)
         {
-          size += [node->key.obj sizeInBytesExcluding: exclude];
-          size += [node->value.obj sizeInBytesExcluding: exclude];
-          node = GSIMapEnumeratorNextNode(&enumerator);
+            return node->value.obj;
         }
-      GSIMapEndEnumerator(&enumerator);
     }
-  return size;
+    return nil;
 }
 
 @end
@@ -308,141 +269,121 @@ static SEL	objectForKeySel;
 
 + (void) initialize
 {
-  if (self == [GSMutableDictionary class])
+    if (self == [GSMutableDictionary class])
     {
-      GSObjCAddClassBehavior(self, [GSDictionary class]);
+        GSObjCAddClassBehavior(self, [GSDictionary class]);
     }
-}
-
-- (id) copyWithZone: (NSZone*)zone
-{
-  NSDictionary	*copy = [GSDictionary allocWithZone: zone];
-
-  return [copy initWithDictionary: self copyItems: NO];
-}
-
-- (id) init
-{
-  return [self initWithCapacity: 0];
 }
 
 /* Designated initialiser */
 - (id) initWithCapacity: (int)cap
 {
-  GSIMapInitWithZoneAndCapacity(&map, [self zone], cap);
-  return self;
-}
-
-- (BOOL) makeImmutable
-{
-  GSClassSwizzle(self, [GSDictionary class]);
-  return YES;
+    GSIMapInitWithZoneAndCapacity(&map, [self zone], cap);
+    return self;
 }
 
 - (id) makeImmutableCopyOnFail: (BOOL)force
 {
-  GSClassSwizzle(self, [GSDictionary class]);
-  return self;
+    GSClassSwizzle(self, [GSDictionary class]);
+    return self;
 }
 
+/*
+ 找到相应的 Node. 要么添加值, 要么修改 value 值.
+ */
 - (void) setObject: (id)anObject forKey: (id)aKey
 {
-  GSIMapNode	node;
-
-  _version++;
-  if (aKey == nil)
+    GSIMapNode	node;
+    
+    _version++;
+    if (aKey == nil)
     {
-      NSException	*e;
-
-      e = [NSException exceptionWithName: NSInvalidArgumentException
-				  reason: @"Tried to add nil key to dictionary"
-				userInfo: self];
-      [e raise];
+        NSException	*e;
+        
+        e = [NSException exceptionWithName: NSInvalidArgumentException
+                                    reason: @"Tried to add nil key to dictionary"
+                                  userInfo: self];
+        [e raise];
     }
-  if (anObject == nil)
+    if (anObject == nil)
     {
-      NSException	*e;
-      NSString		*s;
-
-      s = [NSString stringWithFormat:
-	@"Tried to add nil value for key '%@' to dictionary", aKey];
-      e = [NSException exceptionWithName: NSInvalidArgumentException
-				  reason: s
-				userInfo: self];
-      [e raise];
+        NSException	*e;
+        NSString		*s;
+        
+        s = [NSString stringWithFormat:
+             @"Tried to add nil value for key '%@' to dictionary", aKey];
+        e = [NSException exceptionWithName: NSInvalidArgumentException
+                                    reason: s
+                                  userInfo: self];
+        [e raise];
     }
-  node = GSIMapNodeForKey(&map, (GSIMapKey)aKey);
-  if (node)
+    node = GSIMapNodeForKey(&map, (GSIMapKey)aKey);
+    if (node)
     {
-      IF_NO_GC(RETAIN(anObject));
-      RELEASE(node->value.obj);
-      node->value.obj = anObject;
+        IF_NO_GC(RETAIN(anObject));
+        RELEASE(node->value.obj);
+        node->value.obj = anObject;
     }
-  else
+    else
     {
-      GSIMapAddPair(&map, (GSIMapKey)aKey, (GSIMapVal)anObject);
+        GSIMapAddPair(&map, (GSIMapKey)aKey, (GSIMapVal)anObject);
     }
-  _version++;
+    _version++;
 }
 
 - (void) removeAllObjects
 {
-  _version++;
-  GSIMapCleanMap(&map);
-  _version++;
+    _version++;
+    GSIMapCleanMap(&map);
+    _version++;
 }
 
+/*
+ 
+ */
 - (void) removeObjectForKey: (id)aKey
 {
-  if (aKey == nil)
+    if (aKey == nil)
     {
-      NSWarnMLog(@"attempt to remove nil key from dictionary %@", self);
-      return;
+        NSWarnMLog(@"attempt to remove nil key from dictionary %@", self);
+        return;
     }
-  _version++;
-  GSIMapRemoveKey(&map, (GSIMapKey)aKey);
-  _version++;
+    _version++;
+    GSIMapRemoveKey(&map, (GSIMapKey)aKey);
+    _version++;
 }
 
-- (int) countByEnumeratingWithState: (NSFastEnumerationState*)state 	
-				   objects: (__unsafe_unretained id[])stackbuf
-				     count: (int)len
-{
-  state->mutationsPtr = (unsigned long *)&_version;
-  return GSIMapCountByEnumeratingWithStateObjectsCount
-    (&map, state, stackbuf, len);
-}
 @end
 
 @implementation GSDictionaryKeyEnumerator
 
 - (id) initWithDictionary: (NSDictionary*)d
 {
-  [super init];
-  dictionary = (GSDictionary*)RETAIN(d);
-  enumerator = GSIMapEnumeratorForMap(&dictionary->map); // 这里, 直接将底层的数据结构传递给了 enumerator
-  return self;
+    [super init];
+    dictionary = (GSDictionary*)RETAIN(d);
+    enumerator = GSIMapEnumeratorForMap(&dictionary->map); // 这里, 直接将底层的数据结构传递给了 enumerator
+    return self;
 }
 
 /*
- 这里, 就是 NSDictory 能够进行迭代的原因. 直接利用的 GIMap 的迭代器. 
+ 这里, 就是 NSDictory 能够进行迭代的原因. 直接利用的 GIMap 的迭代器.
  */
 - (id) nextObject
 {
-  GSIMapNode	node = GSIMapEnumeratorNextNode(&enumerator);
-
-  if (node == 0)
+    GSIMapNode	node = GSIMapEnumeratorNextNode(&enumerator);
+    
+    if (node == 0)
     {
-      return nil;
+        return nil;
     }
-  return node->key.obj;
+    return node->key.obj;
 }
 
 - (void) dealloc
 {
-  GSIMapEndEnumerator(&enumerator);
-  RELEASE(dictionary);
-  [super dealloc];
+    GSIMapEndEnumerator(&enumerator);
+    RELEASE(dictionary);
+    [super dealloc];
 }
 
 @end
@@ -451,42 +392,14 @@ static SEL	objectForKeySel;
 
 - (id) nextObject
 {
-  GSIMapNode	node = GSIMapEnumeratorNextNode(&enumerator);
-
-  if (node == 0)
+    GSIMapNode	node = GSIMapEnumeratorNextNode(&enumerator);
+    
+    if (node == 0)
     {
-      return nil;
+        return nil;
     }
-  return node->value.obj; // 这里可以看出, 其实 key, object 的 enumeration 是没有区别的, 都是迭代器从数据结构里面取值的一个过程.
+    return node->value.obj; // 这里可以看出, 其实 key, object 的 enumeration 是没有区别的, 都是迭代器从数据结构里面取值的一个过程.
 }
 
 @end
 
-
-
-@interface	NSGDictionary : NSDictionary
-@end
-@implementation	NSGDictionary
-@end
-
-@interface	GSCachedDictionary : GSDictionary
-{
-  BOOL  _uncached;
-}
-@end
-@implementation	GSCachedDictionary
-- (void) dealloc
-{
-  if (NO == _uncached)
-    {
-      [NSException raise: NSInternalInconsistencyException
-                  format: @"Deallocating attributes which are still cached"];
-    }
-  [super dealloc];
-}
-- (void) _uncache
-{
-  _uncached = YES;
-  RELEASE(self);
-}
-@end
