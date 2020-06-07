@@ -12,7 +12,7 @@
 
 /// A type that can be compared using the relational operators `<`, `<=`, `>=`,
 /// and `>`.
-///
+/// 如果, 你想要实现一个有序的概念, 那么就应该让里面的元素, 实现 compareable 协议.
 /// The `Comparable` protocol is used for types that have an inherent order,
 /// such as numbers and strings. Many types in the standard library already
 /// conform to the `Comparable` protocol. Add `Comparable` conformance to your
@@ -47,6 +47,7 @@
 /// Conforming to the Comparable Protocol
 /// =====================================
 ///
+///
 /// Types with Comparable conformance implement the less-than operator (`<`)
 /// and the equal-to operator (`==`). These two operations impose a strict
 /// total order on the values of a type, in which exactly one of the following
@@ -61,7 +62,10 @@
 /// - `a < a` is always `false` (Irreflexivity)
 /// - `a < b` implies `!(b < a)` (Asymmetry)
 /// - `a < b` and `b < c` implies `a < c` (Transitivity)
-///
+/*
+ 因为, > 的实现, 可以根据 ==, < 的实现推导出来, 所以这个协议的 primitive method 没有包含 > 的声明.
+ 这也就是 protocol 的设计原则, 能够使用已有方法的, 就用已有的方法. 给实现类的约束越小越好.
+ */
 /// To add `Comparable` conformance to your custom types, define the `<` and
 /// `==` operators as static methods of your types. The `==` operator is a
 /// requirement of the `Equatable` protocol, which `Comparable` extends---see
@@ -146,6 +150,9 @@ public protocol Comparable: Equatable {
   /// - Parameters:
   ///   - lhs: A value to compare.
   ///   - rhs: Another value to compare.
+    /*
+     因为, == 是 Equatable 提出的限制, 所以这里说 < 是唯一的 comparable 的限制.
+     */
   static func < (lhs: Self, rhs: Self) -> Bool
 
   /// Returns a Boolean value indicating whether the value of the first
@@ -172,6 +179,10 @@ public protocol Comparable: Equatable {
   ///   - rhs: Another value to compare.
   static func > (lhs: Self, rhs: Self) -> Bool
 }
+
+/*
+ 可以看到, 下面的操作, 都是根据 primitive 翻转得到的.
+ */
 
 extension Comparable {
   /// Returns a Boolean value indicating whether the value of the first argument

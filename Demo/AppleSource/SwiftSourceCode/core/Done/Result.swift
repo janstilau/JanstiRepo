@@ -39,6 +39,7 @@ public enum Result<Success, Failure: Error> {
   ///   instance.
   /// - Returns: A `Result` instance with the result of evaluating `transform`
   ///   as the new success value if this instance represents a success.
+    // 这里, 返回的是一个 Result, 
   public func map<NewSuccess>(
     _ transform: (Success) -> NewSuccess
   ) -> Result<NewSuccess, Failure> {
