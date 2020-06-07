@@ -9,8 +9,18 @@
 /// `makeIterator()` method that returns an `IndexingIterator` instance,
 /// making it unnecessary to declare your own. When creating a custom
 /// collection type, add the minimal requirements of the `Collection`
-/// protocol: starting and ending indices and a subscript for accessing
-/// elements. With those elements defined, the inherited `makeIterator()`
+/// protocol:
+/// starting and ending indices and a subscript for accessing
+/// elements.
+///
+/// StartIndex
+/// EndIndex
+/// Subscript
+///
+/// StartIndex 和 EndIndex 可以确定 colleciton 的数量
+/// 而 Subscript 则可以进行取值操作.
+///
+/// With those elements defined, the inherited `makeIterator()`
 /// method satisfies the requirements of the `Sequence` protocol.
 ///
 /// Here's an example of a type that declares the minimal requirements for a
@@ -53,6 +63,11 @@
 ///     }
 ///     // Prints "15.0"
 ///     // Prints "20.0"
+
+
+/*
+ IndexingIterator 的构造, 仅仅是记录一下原始的 Collection, 以及起始迭代的位置.
+ */
 @frozen
 public struct IndexingIterator<Elements: Collection> {
     @usableFromInline
@@ -108,6 +123,10 @@ extension IndexingIterator: IteratorProtocol, Sequence {
     ///
     /// - Returns: The next element in the underlying sequence if a next element
     ///   exists; otherwise, `nil`.
+    /*
+     不同容器的迭代器, next 的方式是不一样的. 比如, 数组是 index++, Map 是 bucket 和 node 的共同作用, 链表是 nextNode 的判断.
+     但是 Collection 将这些, 用 Element 的 index 和 subScript 进行了统一, 在 Collection 这一层, 将迭代的方式, 进行了抽象.
+     */
     @inlinable
     @inline(__always)
     public mutating func next() -> Elements.Element? {
@@ -118,6 +137,9 @@ extension IndexingIterator: IteratorProtocol, Sequence {
     }
 }
 
+/*
+ 一个需求, 可以多次遍历, 每次遍历不会破坏状态, 可以通过下标进行访问.
+ */
 /// A sequence whose elements can be traversed multiple times,
 /// nondestructively, and accessed by an indexed subscript.
 ///
@@ -132,6 +154,7 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 /// search for the index of the first space, and then create a substring up to
 /// that position.
 ///
+/// Collection 的操作, 统一化, 使得 text 到底是什么类型无关, 只要它是 collection 类型的就可以.
 ///     let text = "Buffalo buffalo buffalo buffalo."
 ///     if let firstSpace = text.firstIndex(of: " ") {
 ///         print(text[..<firstSpace])
@@ -147,6 +170,7 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 /// Accessing Individual Elements
 /// =============================
 ///
+/// 这里可以先用数组的下标进行思考, 其他的非线性的数据结构, 应该专门定制了.
 /// You can access an element of a collection through its subscript by using
 /// any valid index except the collection's `endIndex` property. This property
 /// is a "past the end" index that does not correspond with any element of the
@@ -168,6 +192,7 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 ///     print(text.first)
 ///     // Prints "Optional("B")"
 ///
+/// 集合的使用, Index 是一个需要语言获取的值, 如果传入一些非法值, 集合内部会有未知结果.
 /// You can pass only valid indices to collection operations. You can find a
 /// complete set of a collection's valid indices by starting with the
 /// collection's `startIndex` property and finding every successor up to, and
@@ -202,7 +227,7 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 ///         print(text[..<firstSpace]
 ///         // Prints "Buffalo"
 ///     }
-///
+/// 所以, 这里就可以想象一下, prefix 的实现, 是不是就是寻找 index, 然后根据 index 进行的范围获取操作.
 /// The retrieved slice of `text` is equivalent in each of these cases.
 ///
 /// Slices Share Indices
