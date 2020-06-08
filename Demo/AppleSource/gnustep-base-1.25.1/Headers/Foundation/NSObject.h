@@ -1,7 +1,6 @@
 #ifndef __NSObject_h_GNUSTEP_BASE_INCLUDE
 #define __NSObject_h_GNUSTEP_BASE_INCLUDE
 
-#import	<Foundation/NSObjCRuntime.h>
 #import <objc/objc.h>
 #import	<Foundation/NSZone.h>
 
@@ -35,7 +34,7 @@
  * Returns the class of the receiver.  If the receiver is a proxy, then this
  * may return the class of the proxy target.  Use -isProxy to determine whether
  * the receiver is a proxy.  If you wish to find the real class of the
- * receiver, ignoring proxies, then use object_getClass().  
+ * receiver, ignoring proxies, then use object_getClass().
  */
 - (Class) class;
 /**

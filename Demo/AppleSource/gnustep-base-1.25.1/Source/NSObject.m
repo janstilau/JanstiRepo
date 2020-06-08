@@ -23,41 +23,6 @@
 #include <locale.h>
 #endif
 
-#if	defined(HAVE_SYS_SIGNAL_H)
-#  include	<sys/signal.h>
-#elif	defined(HAVE_SIGNAL_H)
-#  include	<signal.h>
-#endif
-
-#if __GNUC__ >= 4
-#if defined(__FreeBSD__)
-#include <fenv.h>
-#endif
-#endif // __GNUC__
-
-#define	IN_NSOBJECT_M	1
-#import "GSPrivate.h"
-
-
-#ifdef __GNUSTEP_RUNTIME__
-#include <objc/capabilities.h>
-#include <objc/hooks.h>
-#ifdef OBJC_CAP_ARC
-#include <objc/objc-arc.h>
-#endif
-#endif
-
-
-/* platforms which do not support weak */
-#if (__GNUC__ == 3) && defined (__WIN32)
-#define WEAK_ATTRIBUTE
-#undef SUPPORT_WEAK
-#else
-/* all platforms which support weak */
-#define WEAK_ATTRIBUTE __attribute__((weak))
-#define SUPPORT_WEAK 1
-#endif
-
 /* When this is `YES', every call to release/autorelease, checks to
  make sure isn't being set up to release itself too many times.
  This does not need mutex protection. */
@@ -118,33 +83,6 @@ static void GSMakeZombie(NSObject *o, Class c)
     }
 }
 #endif
-
-static void GSLogZombie(id o, SEL sel)
-{
-    Class	c = 0;
-    
-    if (0 != zombieMap)
-    {
-        [allocationLock lock];
-        c = NSMapGet(zombieMap, (void*)o);
-        [allocationLock unlock];
-    }
-    if (c == 0)
-    {
-        NSLog(@"*** -[??? %@]: message sent to deallocated instance %p",
-              NSStringFromSelector(sel), o);
-    }
-    else
-    {
-        NSLog(@"*** -[%@ %@]: message sent to deallocated instance %p",
-              c, NSStringFromSelector(sel), o);
-    }
-    if (GSPrivateEnvironmentFlag("CRASH_ON_ZOMBIE", NO) == YES)
-    {
-        abort();
-    }
-}
-
 
 /*
  *	Reference count and memory management
@@ -1115,16 +1053,16 @@ static id gs_weak_load(id obj)
  * <p>
  *   Memory for an instance of the receiver is allocated; a
  *   pointer to this newly created instance is returned.
-    其实, cpp 的 new , JS 的 new 也都是做的一样的事情, 先分配一份内存空间, 然后运行时语言, 会修改这份空间的某个值, 用来让这份空间成为某个特定类型的值.
-    然后, 在这个内存空间上, 调用初始化方法, 进行这份空间的初始化工作.
+ 其实, cpp 的 new , JS 的 new 也都是做的一样的事情, 先分配一份内存空间, 然后运行时语言, 会修改这份空间的某个值, 用来让这份空间成为某个特定类型的值.
+ 然后, 在这个内存空间上, 调用初始化方法, 进行这份空间的初始化工作.
  *  All  instance variables are set to 0. 这是通过 calloc 完成的. No initialization of the
  *   instance is performed apart from setup to be an instance of
  *   the correct class: 这里指的是设置了 isa 的指向. 除此之外, alloc 内部不会调用任何的初始化的方法.
  
-    it is your responsibility to initialize the
+ it is your responsibility to initialize the
  *   instance by calling an appropriate <code>init</code>
  *   method. 所以 alloc init 一般来说是连在一起的.
-
+ 
  If you are not using the garbage collector, it is
  *   also your responsibility to make sure the returned
  *   instance is destroyed when you finish using it, by calling
@@ -2371,7 +2309,6 @@ static id gs_weak_load(id obj)
     unsigned char	v[size];
     
     memset(v, '\0', size);
-    GSLogZombie(self, [anInvocation selector]);
     [anInvocation setReturnValue: (void*)v];
     return;
 }

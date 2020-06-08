@@ -29,10 +29,6 @@
 #import	<Foundation/NSObject.h>
 #import	<Foundation/NSException.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 
 @class NSArray;
@@ -71,10 +67,6 @@ GS_EXPORT NSString* const NSClassDescriptionNeededForClassNotification;
 
 @end
 
-#endif
-
-#if	defined(__cplusplus)
-}
 #endif
 
 #endif
