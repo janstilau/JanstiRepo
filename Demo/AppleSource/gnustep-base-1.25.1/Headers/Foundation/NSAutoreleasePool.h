@@ -37,7 +37,7 @@ typedef struct autorelease_thread_vars
     __unsafe_unretained id *pool_cache;
     int pool_cache_size;
     int pool_cache_count;
-} thread_vars_struct;
+} thread_autorelease_vars;
 
 /* Initialize an autorelease_thread_vars structure for a new thread.
  This function is called in NSThread each time an NSThread is created.
@@ -48,7 +48,7 @@ memset (TV, 0, sizeof (__typeof__ (*TV)))
 
 
 /**
- *  Each pool holds its objects-to-be-released in a linked-list of 
+ *  Each pool holds its objects-to-be-released in a linked-list of
  these structures.
  <example>
  {
@@ -106,9 +106,9 @@ typedef struct autorelease_array_list
  * <p>
  *   This mechanism provides a simple but controllable and reasonably
  *   efficient way of managing temporary objects.  An object can be
- *   autoreleased and then passed around and used until the topmost 
+ *   autoreleased and then passed around and used until the topmost
  *   pool in the stack is destroyed.
- * </p>   
+ * </p>
  * <p>
  *   Most methods return objects which are either owned by autorelease
  *   pools or by the receiver of the method, so the lifetime of the
@@ -153,7 +153,6 @@ typedef struct autorelease_array_list
 NS_AUTOMATED_REFCOUNT_UNAVAILABLE
 @interface NSAutoreleasePool : NSObject 
 {
-#if	GS_EXPOSE(NSAutoreleasePool) && !__has_feature(objc_arc)
     /* For re-setting the current pool when we are dealloc'ed. */
     NSAutoreleasePool *_parent;
     /* This pointer to our child pool is  necessary for co-existing
@@ -166,16 +165,6 @@ NS_AUTOMATED_REFCOUNT_UNAVAILABLE
     unsigned _released_count;
     /* The method to add an object to this pool */
     void 	(*_addImp)(id, SEL, id);
-#endif
-#if     GS_NONFRAGILE
-#else
-    /* Pointer to private additional data used to avoid breaking ABI
-     * when we don't have the non-fragile ABI available.
-     * Use this mechanism rather than changing the instance variable
-     * layout (see Source/GSInternal.h for details).
-     */
-@private id _internal GS_UNUSED_IVAR;
-#endif
 }
 
 /**

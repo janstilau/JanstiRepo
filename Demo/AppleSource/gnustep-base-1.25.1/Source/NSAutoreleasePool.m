@@ -5,17 +5,6 @@
 #import "Foundation/NSException.h"
 #import "Foundation/NSThread.h"
 
-#if __has_include(<objc/capabilities.h>)
-#  include <objc/capabilities.h>
-#  ifdef OBJC_ARC_AUTORELEASE_DEBUG
-#    include <objc/objc-arc.h>
-#    define ARC_RUNTIME 1
-#  endif
-#endif
-
-
-
-
 /* When this is `NO', autoreleased objects are never actually recorded
  in an NSAutoreleasePool, and are not sent a `release' message.
  Thus memory for objects use grows, and grows, and... */
@@ -191,12 +180,6 @@ pop_pool_from_cache (struct autorelease_thread_vars *tv)
     tv->current_pool = self;
     objc_autoreleasePoolPop(_released);
 }
-/**
- * Indicate to the runtime that we have an ARC-compatible implementation of
- * NSAutoreleasePool and that it doesn't need to bother creating objects for
- * pools.
- */
-- (void)_ARCCompatibleAutoreleasePool {}
 #else
 - (id) init
 {
@@ -210,7 +193,6 @@ pop_pool_from_cache (struct autorelease_thread_vars *tv)
                      sizeof(struct autorelease_array_list)
                      + (BEGINNING_POOL_SIZE * sizeof(id)));
         /* Currently no NEXT array in the list, so NEXT == NULL. */
-        _released->next = NULL;
         _released->size = BEGINNING_POOL_SIZE;
         _released->count = 0;
         _released_head = _released;
@@ -509,12 +491,6 @@ pop_pool_from_cache (struct autorelease_thread_vars *tv)
 {
     struct autorelease_thread_vars *tv = ARP_THREAD_VARS;
     
-    if (UINT_MAX == _released_count)
-    {
-        [NSException raise: NSInternalInconsistencyException
-                    format: @"NSAutoreleasePool -dealloc of deallocated pool"];
-    }
-    
     [self emptyPool];
     NSAssert(0 == _released_count, NSInternalInconsistencyException);
     
@@ -538,11 +514,9 @@ pop_pool_from_cache (struct autorelease_thread_vars *tv)
      * or to deallocate it again will raise an exception.
      * We reset to zero when we get i out of the cache as a new allocation.
      */
-    _released_count = UINT_MAX;
     
     /* Don't deallocate ourself, just save us for later use. */
     push_pool_to_cache (tv, self);
-    GSNOSUPERDEALLOC;
 }
 
 - (void) _reallyDealloc

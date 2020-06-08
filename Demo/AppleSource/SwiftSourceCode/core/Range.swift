@@ -16,7 +16,14 @@
 /// `Range<Bound>` of indices within a given collection.
 public protocol RangeExpression {
   /// The type for which the expression describes a range.
+    /*
+     对于 Range 来说, 不一定是 Int 作为范围的标志. 只要是 可比较的类型, 就可以.
+     例如, 链表中, 如果给了起始节点, 给了结束节点, 那么起始节点到结束节点遍历, 其实是可以实现 containes 这个操作的. 不过, 节点之间的比较怎么完成??
+     节点之间的比较, 也要进行遍历操作.
+     哈希表里面, Bullet 和 node 进行比较???
+     */
   associatedtype Bound: Comparable
+    
 
   /// Returns the range of indices described by this range expression within
   /// the given collection.
@@ -73,6 +80,9 @@ public protocol RangeExpression {
   func contains(_ element: Bound) -> Bool
 }
 
+/*
+ range 这种类型, 对于 ~= 的实现.
+ */
 extension RangeExpression {
   @inlinable
   public static func ~= (pattern: Self, value: Bound) -> Bool {
@@ -82,6 +92,7 @@ extension RangeExpression {
 
 /// A half-open interval from a lower bound up to, but not including, an upper
 /// bound.
+///  最原始的 Range, 是不包含 upper bound 的值的.
 ///
 /// You create a `Range` instance by using the half-open range operator
 /// (`..<`).
@@ -125,6 +136,7 @@ extension RangeExpression {
 /// `Stride` types, they cannot be used as the bounds of a countable range. If
 /// you need to iterate over consecutive floating-point values, see the
 /// `stride(from:to:by:)` function.
+
 @frozen
 public struct Range<Bound: Comparable> {
   /// The range's lower bound.
@@ -163,6 +175,9 @@ public struct Range<Bound: Comparable> {
   /// - Returns: `true` if `element` is contained in the range; otherwise,
   ///   `false`.
   @inlinable
+    /*
+     左闭右开, 左边 <=, 右边 <
+     */
   public func contains(_ element: Bound) -> Bool {
     return lowerBound <= element && element < upperBound
   }
@@ -203,7 +218,7 @@ where Bound: Strideable, Bound.Stride: SignedInteger
   @inlinable
   public func index(after i: Index) -> Index {
     _failEarlyRangeCheck(i, bounds: startIndex..<endIndex)
-
+    // advanced 是 Strideable 提供的方法.
     return i.advanced(by: 1)
   }
 
@@ -225,6 +240,7 @@ where Bound: Strideable, Bound.Stride: SignedInteger
 
   @inlinable
   public func distance(from start: Index, to end: Index) -> Int {
+    // distance 是  Strideable 提供的方法.
     return numericCast(start.distance(to: end))
   }
 

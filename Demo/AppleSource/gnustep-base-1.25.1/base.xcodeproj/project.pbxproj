@@ -1586,6 +1586,7 @@
 		06EDD8DA2248BEA800C87605 /* Readed */ = {
 			isa = PBXGroup;
 			children = (
+				06EDD9362248BEA800C87605 /* NSError.h */,
 				06EDD9372248BEA800C87605 /* NSPointerArray.h */,
 				06D1349B247A8E3D00867039 /* REReaded */,
 				06480DE324796FB0001BDF0D /* Network */,
@@ -1634,7 +1635,6 @@
 				06EDD8F42248BEA800C87605 /* NSDecimalNumber.h */,
 				06EDD90E2248BEA800C87605 /* NSDistributedLock.h */,
 				06EDD9042248BEA800C87605 /* NSDistributedNotificationCenter.h */,
-				06EDD9362248BEA800C87605 /* NSError.h */,
 				06EDD9012248BEA800C87605 /* NSErrorRecoveryAttempting.h */,
 				06EDD8FF2248BEA800C87605 /* NSExpression.h */,
 				06EDD9292248BEA800C87605 /* NSFileCoordinator.h */,

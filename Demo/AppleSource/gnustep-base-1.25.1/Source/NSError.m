@@ -69,47 +69,9 @@ NSString* const NSCocoaErrorDomain = @"NSCocoaErrorDomain";
   return _domain;
 }
 
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-  if ([aCoder allowsKeyedCoding])
-    {
-      [aCoder encodeInt: _code forKey: @"NSCode"];
-      [aCoder encodeObject: _domain forKey: @"NSDomain"];
-      [aCoder encodeObject: _userInfo forKey: @"NSUserInfo"];
-    }
-  else
-    {
-      [aCoder encodeValueOfObjCType: @encode(int) at: &_code];
-      [aCoder encodeValueOfObjCType: @encode(id) at: &_domain];
-      [aCoder encodeValueOfObjCType: @encode(id) at: &_userInfo];
-    }
-}
-
 - (id) init
 {
   return [self initWithDomain: nil code: 0 userInfo: nil];
-}
-
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-  if ([aCoder allowsKeyedCoding])
-    {
-      int	c;
-      id	d;
-      id	u;
-
-      c = [aCoder decodeIntForKey: @"NSCode"];
-      d = [aCoder decodeObjectForKey: @"NSDomain"];
-      u = [aCoder decodeObjectForKey: @"NSUserInfo"];
-      self = [self initWithDomain: d code: c userInfo: u];
-    }
-  else
-    {
-      [aCoder decodeValueOfObjCType: @encode(int) at: &_code];
-      [aCoder decodeValueOfObjCType: @encode(id) at: &_domain];
-      [aCoder decodeValueOfObjCType: @encode(id) at: &_userInfo];
-    }
-  return self;
 }
 
 - (id) initWithDomain: (NSString*)aDomain

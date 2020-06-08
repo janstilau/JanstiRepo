@@ -7,10 +7,6 @@
 
 #if	OS_API_VERSION(MAC_OS_X_VERSION_10_3,GS_API_LATEST)
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSArray, NSDictionary, NSString;
 
 /**
@@ -101,6 +97,11 @@ GS_EXPORT NSString* const NSCocoaErrorDomain;
  * These should be used instead of exceptions where an error is caused
  * by external factors (such as a resource file not being present)
  * rather than a programming error (where NSException should be used).
+ */
+
+/*
+ 这就是一个简简单单的数据类, 用来表示错误的.
+ 在捕获到错误之后, 到底应该做什么操作, 是捕获到错误的程序, 自己决定的.
  */
 @interface NSError : NSObject <NSCopying, NSCoding>
 {
@@ -202,10 +203,6 @@ GS_EXPORT NSString* const NSCocoaErrorDomain;
  */
 - (NSDictionary*) userInfo;
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 
