@@ -6,7 +6,8 @@
 /// element at a time as it advances through the sequence.
 ///
 /// Sequence 创建一个迭代器, 然后根据迭代器, 进行元素的访问. 迭代器的内部, 要记录 迭代的过程, 控制迭代按照顺序进行.
-/// 传统的迭代器, 会记录一下它所迭代容器, 以及当前迭代的位置. 但是如何记录状态, 比如 Array 只记录索引,  Dict 记录 Node 值, 是不一样的, Swift 的迭代, 变成了只提供 NextObject 这个能力的抽象.
+/// 传统的迭代器, 会记录一下它所迭代容器, 以及当前迭代的位置.
+/// 但是如何记录状态, 比如 Array 只记录索引,  Dict 记录 Node 值, 是不一样的, Swift 的迭代, 变成了只提供 NextObject 这个能力的抽象.
 ///
 /// Whenever you use a `for`-`in` loop with an array, set, or any other
 /// collection or sequence, you're using that type's iterator. Swift uses a
@@ -32,7 +33,7 @@
 /// the contents of the array.
 ///
 ///     For in 循环, 就是 while 循环, 和迭代器的综合使用的结果.
-///
+///     语言就是大号的语法糖的工厂.
 ///     var animalIterator = animals.makeIterator()
 ///     while let animal = animalIterator.next() {
 ///         print(animal)
@@ -94,7 +95,6 @@
 /// The `reduce1(_:)` method makes certain kinds of sequence operations
 /// simpler. Here's how to find the longest string in a sequence, using the
 /// `animals` array introduced earlier as an example:
-///     感觉这个例子有点问题, Reduce 应该和遍历没有太大的关系吧.
 ///     let longestAnimal = animals.reduce1 { current, element in
 ///         if current.count > element.count {
 ///             return current
@@ -194,6 +194,8 @@
 ///     // Prints "3..."
 ///     // Prints "2..."
 ///     // Prints "1..."
+
+
 public protocol IteratorProtocol {
     /// The type of element traversed by the iterator.
     associatedtype Element
@@ -207,6 +209,7 @@ public protocol IteratorProtocol {
     ///
     /// You must not call this method if any other copy of this iterator has been
     /// advanced with a call to its `next()` method.
+    /// 这里是怕,  copied iterator 的 next, 将序列的状态进行了消耗.
     ///
     /// The following example shows how an iterator can be used explicitly to
     /// emulate a `for`-`in` loop. First, retrieve a sequence's iterator, and
@@ -364,7 +367,8 @@ public protocol Sequence {
     associatedtype Element
     
     /// A type that provides the sequence's iteration interface and
-    /// encapsulates its iteration state. 泛型的要求.
+    /// encapsulates its iteration state.
+    /// encapsulates its iteration state 这个就表明了, iterator 是要进行状态的保存的.
     associatedtype Iterator: IteratorProtocol where Iterator.Element == Element
     
     /// A type that represents a subsequence of some of the sequence's elements.
@@ -374,7 +378,7 @@ public protocol Sequence {
     // typealias SubSequence = AnySequence<Element>
     
     /// Returns an iterator over the elements of this sequence.
-    __consuming func makeIterator() -> Iterator
+    func makeIterator() -> Iterator
     
     /// A value less than or equal to the number of elements in the sequence,
     /// calculated nondestructively.
@@ -385,7 +389,7 @@ public protocol Sequence {
     /// - Complexity: O(1), except if the sequence also conforms to `Collection`.
     ///   In this case, see the documentation of `Collection.underestimatedCount`.
     ///
-    /// 这个值, 目前来看, 就是给使用者进行容量扩展用的 默认值为0
+    /// 这个值, 做了一个提升效率的值, 来进行容器的初始化操作.
     var underestimatedCount: Int { get }
     
     func _customContainsEquatableElement(
@@ -439,7 +443,7 @@ extension Sequence where Self.Iterator == Self {
 ///
 /// The underlying iterator's sequence may be infinite.
 /*
- 首先, 存储一下原有的 Sequence, 注意, Swift 里面, 这个词就叫做是 base.
+ 这个类型的定义在这里, 虽然他就是为了实现 Sequence 里面, 但是, 它的定义式里面, 还是不会出现对于 Sequence 的适配, 而是在它的 extension 里面做的这件事情.
  */
 @frozen
 public struct DropFirstSequence<Base: Sequence> {
@@ -458,8 +462,10 @@ public struct DropFirstSequence<Base: Sequence> {
 }
 
 /*
- 在生成迭代器的时候, 先进行一部分的消耗工作.
- 所以, 只有在真正的进行迭代的时候, 才会进行迭代. 在生成这个对象的时候, 只是进行了值的保存工作.
+ 
+ 并不是, 这些包装类进行了延迟计算的功能, 本身迭代就是一个延迟计算的东西.
+ 就算是容器取值, 他也是在需要时才进行取值, 而不是生成迭代器, 就把所有的值都取了出来.
+ 
  */
 extension DropFirstSequence: Sequence {
     public typealias Element = Base.Element
@@ -490,7 +496,7 @@ extension DropFirstSequence: Sequence {
 ///
 /// The underlying iterator's sequence may be infinite.
 /*
- 在, 构造函数的内部, 还仅仅是做一个值的拷贝工作.
+ 这里, 只是这个类的定义. 它实现的功能, 再试要在 extension 里面.
  */
 @frozen
 public struct PrefixSequence<Base: Sequence> {
@@ -509,6 +515,7 @@ public struct PrefixSequence<Base: Sequence> {
 /*
  它的 Iterator, 也仅仅是做值的拷贝工作.
  这应该算是 baseIterator 的代理类.
+ 和他相关的类型的定义, 也没有方法最原始的定义区域里面, 而是放到了 extension 里面.
  */
 extension PrefixSequence {
     @frozen
@@ -526,8 +533,9 @@ extension PrefixSequence {
     }
 }
 /*
- 直接可以用 A.B 的形式, 进行 extension 的扩展
- 这里, 只要是类型, 符合一个协议, 在 Swift 里面, 都是用的扩展的方式完成的. 虽然 Iterator 仅仅有一个协议, 这个协议只有一个方法, 但是还是进行了分离.
+ PrefixSequence.Iterator 的定义, 和他实现 IteratorProtocol 的方法实现, 分开了.
+ 这里, 只要是类型, 符合一个协议, 在 Swift 里面, 都是用的扩展的方式完成的.
+ 虽然 Iterator 仅仅有一个协议, 这个协议只有一个方法, 但是还是进行了分离.
  */
 extension PrefixSequence.Iterator: IteratorProtocol {
     public typealias Element = Base.Element
@@ -546,9 +554,6 @@ extension PrefixSequence.Iterator: IteratorProtocol {
     }
 }
 
-/*
- 在实现 Sequence 的时候, 也是专门用一个 Extension 进行的实现.
- */
 extension PrefixSequence: Sequence {
     @inlinable
     
@@ -567,9 +572,8 @@ extension PrefixSequence: Sequence {
 }
 
 /*
- 可见, 上面的, 对于 Drop, 和 PreSquence 的实现里面, 效率是没有收到影响的. 只不过是一些状态值的改变而已.
+ 既然, 知道了实现原理, 就可以通过对于这些原理的利用, 做出自己想要的东西. 所以, 知其所以然来说, 还是很重要的.
  */
-
 
 /// A sequence that lazily consumes and drops `n` elements from an underlying
 /// `Base` iterator before possibly returning the first available element.
@@ -652,7 +656,8 @@ extension DropWhileSequence: Sequence {
 /*
  下面, 所有的 Sequence 的 extension, 都是根据 Sequence 提供的可迭代的能力, 封装了相关功能的通用逻辑, 提出了业务变化点.
  使用这些方法的时候, 一定要是在这些方法对应的场景下.
- 比如, 使用 map, 其实也能够达到 forEach 的功能. 但是, map 的实际效果, 是返回一个进行变化的数组, 而不是仅仅是做某些操作.
+ 
+ 比如, 使用 map, 其实也能够达到 forEach 的功能. 但是, map 的实际效果, 是返回一个包含所有变化闭包结果的数组, 而不是仅仅是做某些操作.
  熟知每个方法的内部实现, 使用对应名称的方法, 能够使得代码更加的觉有自解释性.
  尽量使用, 符合业务功能含义的方法. 而不是能够实现功能, 使用了错误的方法.
  */
@@ -676,14 +681,11 @@ extension Sequence {
     ///   sequence.
     ///
     /// - Complexity: O(*n*), where *n* is the length of the sequence.
-    /*
-     因为 Block 都是 throws 的, 所以, 函数都是 rethrows 的. 但是使用 map 的时候, 没有明显的写 try 啊.
-     在 map 的内部, 使用 transform 的时候, 都要明显的写出 try.
-     */
     @inlinable
     public func map<T>(
         _ transform: (Element) throws -> T
     ) rethrows -> [T] {
+        // 这里, 及时利用了 underestimatedCount, 进行了一个效率的提升.
         let initialCapacity = underestimatedCount
         var result = ContiguousArray<T>()
         result.reserveCapacity(initialCapacity) // 扩容.
@@ -702,6 +704,9 @@ extension Sequence {
         while let element = iterator.next() {
             result.append(try transform(element))
         }
+        /*
+         其实, map 的操作, 很简单, 但是主要是, 方法提供了这一层抽象, 它就能进行下一层的操作. 比如链式编程.
+         */
         return Array(result)
     }
     
@@ -753,6 +758,7 @@ extension Sequence {
     /// The default implementation returns 0. If you provide your own
     /// implementation, make sure to compute the value nondestructively.
     ///
+    ///  这是一个帮助提升效率的值, 所以, 应该是 O1
     /// - Complexity: O(1), except if the sequence also conforms to `Collection`.
     ///   In this case, see the documentation of `Collection.underestimatedCount`.
     @inlinable
@@ -797,7 +803,7 @@ extension Sequence {
     ///
     /// - Parameter body: A closure that takes an element of the sequence as a
     ///   parameter.
-    ///  如果, 仅仅是对每个 ele 进行操作, 用 forEach, 不过, 不能够停止.
+    /// for Each 使用的很少, 相比 forin, 他没有停止的刹车机制.
     @inlinable
     public func forEach(
         _ body: (Element) throws -> Void

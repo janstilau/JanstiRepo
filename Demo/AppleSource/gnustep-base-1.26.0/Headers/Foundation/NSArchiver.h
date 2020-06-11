@@ -8,7 +8,8 @@
 
 #if	OS_API_VERSION(GS_API_OSSPEC,GS_API_LATEST)
 
-// 二进制的归档解档操作太过于复杂, 还是用 keyValue 的理解简单一些.
+/*
+ */
 @interface NSArchiver : NSCoder
 {
 @public

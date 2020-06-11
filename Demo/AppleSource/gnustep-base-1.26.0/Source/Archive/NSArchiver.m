@@ -176,18 +176,8 @@ static Class	NSMutableDataMallocClass;
     resultM = nil;
     if (archiver)
     {
-        NS_DURING
-        {
-            [archiver encodeRootObject: rootObject];
-            resultM = AUTORELEASE([archiver->_data copy]);
-        }
-        NS_HANDLER
-        {
-            RELEASE(archiver);
-            [localException raise];
-        }
-        NS_ENDHANDLER
-        RELEASE(archiver);
+       [archiver encodeRootObject: rootObject];
+        resultM = AUTORELEASE([archiver->_data copy]);
     }
     
     return resultM;
@@ -214,37 +204,37 @@ static Class	NSMutableDataMallocClass;
 /*
  NSDictionary 的归档方法.
  {
-     [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
-     if (count > 0)
-     {
-     NSEnumerator    *enumerator = [self keyEnumerator];
-     id        key;
-     IMP        enc;
-     IMP        nxt;
-     IMP        ofk;
+ [aCoder encodeValueOfObjCType: @encode(unsigned) at: &count];
+ if (count > 0)
+ {
+ NSEnumerator    *enumerator = [self keyEnumerator];
+ id        key;
+ IMP        enc;
+ IMP        nxt;
+ IMP        ofk;
  
-     nxt = [enumerator methodForSelector: @selector(nextObject)];
-     enc = [aCoder methodForSelector: @selector(encodeObject:)];
-     ofk = [self methodForSelector: @selector(objectForKey:)];
+ nxt = [enumerator methodForSelector: @selector(nextObject)];
+ enc = [aCoder methodForSelector: @selector(encodeObject:)];
+ ofk = [self methodForSelector: @selector(objectForKey:)];
  
-     while ((key = (*nxt)(enumerator, @selector(nextObject))) != nil)
-     {
-     id    val = (*ofk)(self, @selector(objectForKey:), key);
+ while ((key = (*nxt)(enumerator, @selector(nextObject))) != nil)
+ {
+ id    val = (*ofk)(self, @selector(objectForKey:), key);
  
-     (*enc)(aCoder, @selector(encodeObject:), key);
-     (*enc)(aCoder, @selector(encodeObject:), val);
-     }
-     }
+ (*enc)(aCoder, @selector(encodeObject:), key);
+ (*enc)(aCoder, @selector(encodeObject:), val);
+ }
+ }
  }
  
  
  */
 
-// 最最重要的方法.
+// 最重要的方法.
 - (void) encodeValueOfObjCType: (const char*)type
                             at: (const void*)buf
 {
-    type = GSSkipTypeQualifierAndLayoutInfo(type); 
+    type = GSSkipTypeQualifierAndLayoutInfo(type);
     switch (*type)
     {
         case _C_ID:
@@ -875,7 +865,7 @@ static Class	NSMutableDataMallocClass;
 @implementation	NSArchiver (GNUstep)
 
 /**
-// 一些清空操作, 将所有的数据归置到最初状态.
+ // 一些清空操作, 将所有的数据归置到最初状态.
  */
 - (void) resetArchiver
 {
