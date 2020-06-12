@@ -14,6 +14,8 @@
 /// which can store its elements in either a contiguous region of memory or an
 /// `NSArray` instance if its `Element` type is a class or `@objc` protocol.
 ///
+/// Array 可能是通过 ContiguousArray 进行的存储, 也可能是经过 NSArray 进行的存储.
+///
 /// If your array's `Element` type is a class or `@objc` protocol and you do
 /// not need to bridge the array to `NSArray` or pass the array to Objective-C
 /// APIs, using `ContiguousArray` may be more efficient and have more

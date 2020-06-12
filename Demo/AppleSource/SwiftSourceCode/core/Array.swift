@@ -5,6 +5,8 @@
 /// to hold elements of a single type, the array's `Element` type. An array
 /// can store any kind of elements---from integers to strings to classes.
 ///
+/// single type 是 数组非常关键的一点, 它是随机访问的基础.
+///
 /// Swift makes it easy to create arrays in your code using an array literal:
 /// simply surround a comma-separated list of values with square brackets.
 /// Without any other information, Swift creates an array that includes the
@@ -151,6 +153,8 @@
 /// become an `Array`, there are no guarantees about representation or
 /// efficiency in this case.
 ///
+/// 数组如何存储 Size 不一样的各个元素呢, 感觉还是有一层包装吧.
+///
 /// Modifying Copies of Arrays
 /// ==========================
 ///
@@ -206,6 +210,7 @@
 /// mutating operation on that array incurs the cost of copying the array. An
 /// array that is the sole owner of its storage can perform mutating
 /// operations in place.
+/// 如果只有一个引用者, 那么其实就不会发生写时复制的工作.
 ///
 /// In the example below, a `numbers` array is created along with two copies
 /// that share the same storage. When the original `numbers` array is
@@ -298,6 +303,9 @@ public struct Array<Element>: _DestructorSafeContainer {
 }
 
 //===--- private helpers---------------------------------------------------===//
+/*
+ 以下, 对于 Array 的操作, 都转移到了 Buffer 里面.
+ */
 extension Array {
   /// Returns `true` if the array is native and does not need a deferred
   /// type check.  May be hoisted by the optimizer, which means its
@@ -322,6 +330,9 @@ extension Array {
     return _buffer.capacity
   }
 
+    /*
+     在任何 modify 方法之前, 都会调用该方法. 这里, 判断 buffer 是不是唯一的引用, 不是的话, 就进行拷贝的工作.
+     */
   @inlinable
   @_semantics("array.make_mutable")
   internal mutating func _makeMutableAndUnique() {
@@ -356,6 +367,10 @@ extension Array {
   }
 
   /// Check that the specified `index` is valid, i.e. `0 ≤ index ≤ count`.
+    /*
+     容器类的安全操作, 如果越界, 就抛出异常了.
+     这就是容器类, 为什么会越界崩溃的原因.
+     */
   @inlinable
   @_semantics("array.check_index")
   internal func _checkIndex(_ index: Int) {
@@ -363,6 +378,9 @@ extension Array {
     _precondition(index >= startIndex, "Negative Array index is out of range")
   }
 
+    /*
+     这里, 不太明白这些参数的作用.
+     */
   @_semantics("array.get_element")
   @inlinable // FIXME(inline-always)
   @inline(__always)
@@ -379,6 +397,10 @@ extension Array {
 #endif
   }
 
+    /*
+     _buffer.subscriptBaseAddress 的返回值类型是 UnsafeMutablePointer<Element>,
+     所以, + Index, 返回的新的 pointer, 是会考虑 element 的长度的.
+     */
   @inlinable
   @_semantics("array.get_element_address")
   internal func _getElementAddress(_ index: Int) -> UnsafeMutablePointer<Element> {
@@ -412,6 +434,9 @@ extension Array: _ArrayProtocol {
   ///     numbers.append(contentsOf: stride(from: 60, through: 100, by: 10))
   ///     // numbers.count == 10
   ///     // numbers.capacity == 12
+    /*
+     这里, 增加了一层抽象, _getCapacity 会根据 buffer 的 特性, 进行不同的访问.
+     */
   @inlinable
   public var capacity: Int {
     return _getCapacity()
@@ -437,6 +462,9 @@ extension Array: _ArrayProtocol {
   }
 }
 
+/*
+ 对于随机访问, 值可变的支持.
+ */
 extension Array: RandomAccessCollection, MutableCollection {
   /// The index type for arrays, `Int`.
   public typealias Index = Int

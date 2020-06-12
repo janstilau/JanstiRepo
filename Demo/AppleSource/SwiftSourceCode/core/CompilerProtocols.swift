@@ -954,7 +954,8 @@ public protocol _ExpressibleByFileReferenceLiteral {
   init(fileReferenceLiteralResourceName path: String)
 }
 
-/// A container is destructor safe if whether it may store to memory on
+/// A container is destructor safe if whether
+/// it may store to memory on
 /// destruction only depends on its type parameters destructors.
 /// For example, whether `Array<Element>` may store to memory on destruction
 /// depends only on `Element`.

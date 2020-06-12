@@ -847,134 +847,7 @@ extension Sequence {
     }
 }
 
-/*
- 虽然注释很多, 但是就是调用 Array 已经包装好的方法而已.
- */
-extension Sequence where Element: Equatable {
-    /// Returns the longest possible subsequences of the sequence, in order,
-    /// around elements equal to the given element.
-    ///
-    /// The resulting array consists of at most `maxSplits + 1` subsequences.
-    /// Elements that are used to split the sequence are not returned as part of
-    /// any subsequence.
-    ///
-    /// The following examples show the effects of the `maxSplits` and
-    /// `omittingEmptySubsequences` parameters when splitting a string at each
-    /// space character (" "). The first use of `split` returns each word that
-    /// was originally separated by one or more spaces.
-    ///
-    ///     let line = "BLANCHE:   I don't want realism. I want magic!"
-    ///     print(line.split(separator: " ")
-    ///               .map(String.init))
-    ///     // Prints "["BLANCHE:", "I", "don\'t", "want", "realism.", "I", "want", "magic!"]"
-    ///
-    /// The second example passes `1` for the `maxSplits` parameter, so the
-    /// original string is split just once, into two new strings.
-    ///
-    ///     print(line.split(separator: " ", maxSplits: 1)
-    ///               .map(String.init))
-    ///     // Prints "["BLANCHE:", "  I don\'t want realism. I want magic!"]"
-    ///
-    /// The final example passes `false` for the `omittingEmptySubsequences`
-    /// parameter, so the returned array contains empty strings where spaces
-    /// were repeated.
-    ///
-    ///     print(line.split(separator: " ", omittingEmptySubsequences: false)
-    ///               .map(String.init))
-    ///     // Prints "["BLANCHE:", "", "", "I", "don\'t", "want", "realism.", "I", "want", "magic!"]"
-    ///
-    /// - Parameters:
-    ///   - separator: The element that should be split upon.
-    ///   - maxSplits: The maximum number of times to split the sequence, or one
-    ///     less than the number of subsequences to return. If `maxSplits + 1`
-    ///     subsequences are returned, the last one is a suffix of the original
-    ///     sequence containing the remaining elements. `maxSplits` must be
-    ///     greater than or equal to zero. The default value is `Int.max`.
-    ///   - omittingEmptySubsequences: If `false`, an empty subsequence is
-    ///     returned in the result for each consecutive pair of `separator`
-    ///     elements in the sequence and for each instance of `separator` at the
-    ///     start or end of the sequence. If `true`, only nonempty subsequences
-    ///     are returned. The default value is `true`.
-    /// - Returns: An array of subsequences, split from this sequence's elements.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
-    @inlinable
-    public __consuming func split(
-        separator: Element,
-        maxSplits: Int = Int.max,
-        omittingEmptySubsequences: Bool = true
-    ) -> [ArraySlice<Element>] {
-        return split(
-            maxSplits: maxSplits,
-            omittingEmptySubsequences: omittingEmptySubsequences,
-            whereSeparator: { $0 == separator })
-    }
-}
-
 extension Sequence {
-    
-    /// Returns the longest possible subsequences of the sequence, in order, that
-    /// don't contain elements satisfying the given predicate. Elements that are
-    /// used to split the sequence are not returned as part of any subsequence.
-    ///
-    /// The following examples show the effects of the `maxSplits` and
-    /// `omittingEmptySubsequences` parameters when splitting a string using a
-    /// closure that matches spaces. The first use of `split` returns each word
-    /// that was originally separated by one or more spaces.
-    ///
-    ///     let line = "BLANCHE:   I don't want realism. I want magic!"
-    ///     print(line.split(whereSeparator: { $0 == " " })
-    ///               .map(String.init))
-    ///     // Prints "["BLANCHE:", "I", "don\'t", "want", "realism.", "I", "want", "magic!"]"
-    ///
-    /// The second example passes `1` for the `maxSplits` parameter, so the
-    /// original string is split just once, into two new strings.
-    ///
-    ///     print(
-    ///        line.split(maxSplits: 1, whereSeparator: { $0 == " " })
-    ///                       .map(String.init))
-    ///     // Prints "["BLANCHE:", "  I don\'t want realism. I want magic!"]"
-    ///
-    /// The final example passes `true` for the `allowEmptySlices` parameter, so
-    /// the returned array contains empty strings where spaces were repeated.
-    ///
-    ///     print(
-    ///         line.split(
-    ///             omittingEmptySubsequences: false,
-    ///             whereSeparator: { $0 == " " }
-    ///         ).map(String.init))
-    ///     // Prints "["BLANCHE:", "", "", "I", "don\'t", "want", "realism.", "I", "want", "magic!"]"
-    ///
-    /// - Parameters:
-    ///   - maxSplits: The maximum number of times to split the sequence, or one
-    ///     less than the number of subsequences to return. If `maxSplits + 1`
-    ///     subsequences are returned, the last one is a suffix of the original
-    ///     sequence containing the remaining elements. `maxSplits` must be
-    ///     greater than or equal to zero. The default value is `Int.max`.
-    ///   - omittingEmptySubsequences: If `false`, an empty subsequence is
-    ///     returned in the result for each pair of consecutive elements
-    ///     satisfying the `isSeparator` predicate and for each element at the
-    ///     start or end of the sequence satisfying the `isSeparator` predicate.
-    ///     If `true`, only nonempty subsequences are returned. The default
-    ///     value is `true`.
-    ///   - isSeparator: A closure that returns `true` if its argument should be
-    ///     used to split the sequence; otherwise, `false`.
-    /// - Returns: An array of subsequences, split from this sequence's elements.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
-    @inlinable
-    public __consuming func split(
-        maxSplits: Int = Int.max,
-        omittingEmptySubsequences: Bool = true,
-        whereSeparator isSeparator: (Element) throws -> Bool
-    ) rethrows -> [ArraySlice<Element>] {
-        _precondition(maxSplits >= 0, "Must take zero or more splits")
-        let whole = Array(self)// 首先, 利用自己生成一个 Array. 这里我有点疑问, 如果这个 Sequence 是无限的怎么办.
-        return try whole.split(
-            maxSplits: maxSplits,
-            omittingEmptySubsequences: omittingEmptySubsequences,
-            whereSeparator: isSeparator)
-    }
     
     /// Returns a subsequence, up to the given maximum length, containing the
     /// final elements of the sequence.
@@ -998,10 +871,6 @@ extension Sequence {
         _precondition(maxLength >= 0, "Can't take a suffix of negative length from a sequence")
         guard maxLength != 0 else { return [] }
         
-        // FIXME: <rdar://problem/21885650> Create reusable RingBuffer<T>
-        // Put incoming elements into a ring buffer to save space. Once all
-        // elements are consumed, reorder the ring buffer into a copy and return it.
-        // This saves memory for sequences particularly longer than `maxLength`.
         var ringBuffer = ContiguousArray<Element>()
         ringBuffer.reserveCapacity(Swift.min(maxLength, underestimatedCount))
         
@@ -1033,6 +902,7 @@ extension Sequence {
      如果是数组, 那么可以直接通过下标取得后面的数据, 时间复杂度为 0(1), 而用通用的基本方法, 只能是全部获取之后, 再去获取最后的数据.
      因为 Sequence 是没有 count 的, 所以还不能在遍历的过程中, 到达了某个点再去记录, 就要记录所有的值, 然后调整顺序.
      使用通用算法, 会带来性能的损失.
+     这里方法, 在 Collection 里面, 进行了重写. 用了更加有效率的 Index 进行的整体替换.
      */
     
     /// Returns a sequence containing all but the given number of initial
@@ -1055,6 +925,9 @@ extension Sequence {
     /// - Complexity: O(1), with O(*k*) deferred to each iteration of the result,
     ///   where *k* is the number of elements to drop from the beginning of
     ///   the sequence.
+    /*
+     这里, 返回了一个包装对象.
+     */
     @inlinable
     public __consuming func dropFirst(_ k: Int = 1) -> DropFirstSequence<Self> {
         return DropFirstSequence(self, dropping: k)
@@ -1080,7 +953,6 @@ extension Sequence {
     /// - Complexity: O(*n*), where *n* is the length of the sequence.
     @inlinable
     public __consuming func dropLast(_ k: Int = 1) -> [Element] {
-        _precondition(k >= 0, "Can't drop a negative number of elements from a sequence")
         guard k != 0 else { return Array(self) }
         
         // FIXME: <rdar://problem/21885650> Create reusable RingBuffer<T>
@@ -1269,3 +1141,136 @@ extension IteratorSequence: IteratorProtocol, Sequence {
  public typealias SubSequence = AnySequence<Element>
  }
  */
+
+
+
+/*
+ 虽然注释很多, 但是就是调用 Array 已经包装好的方法而已.
+ */
+extension Sequence where Element: Equatable {
+    /// Returns the longest possible subsequences of the sequence, in order,
+    /// around elements equal to the given element.
+    ///
+    /// The resulting array consists of at most `maxSplits + 1` subsequences.
+    /// Elements that are used to split the sequence are not returned as part of
+    /// any subsequence.
+    ///
+    /// The following examples show the effects of the `maxSplits` and
+    /// `omittingEmptySubsequences` parameters when splitting a string at each
+    /// space character (" "). The first use of `split` returns each word that
+    /// was originally separated by one or more spaces.
+    ///
+    ///     let line = "BLANCHE:   I don't want realism. I want magic!"
+    ///     print(line.split(separator: " ")
+    ///               .map(String.init))
+    ///     // Prints "["BLANCHE:", "I", "don\'t", "want", "realism.", "I", "want", "magic!"]"
+    ///
+    /// The second example passes `1` for the `maxSplits` parameter, so the
+    /// original string is split just once, into two new strings.
+    ///
+    ///     print(line.split(separator: " ", maxSplits: 1)
+    ///               .map(String.init))
+    ///     // Prints "["BLANCHE:", "  I don\'t want realism. I want magic!"]"
+    ///
+    /// The final example passes `false` for the `omittingEmptySubsequences`
+    /// parameter, so the returned array contains empty strings where spaces
+    /// were repeated.
+    ///
+    ///     print(line.split(separator: " ", omittingEmptySubsequences: false)
+    ///               .map(String.init))
+    ///     // Prints "["BLANCHE:", "", "", "I", "don\'t", "want", "realism.", "I", "want", "magic!"]"
+    ///
+    /// - Parameters:
+    ///   - separator: The element that should be split upon.
+    ///   - maxSplits: The maximum number of times to split the sequence, or one
+    ///     less than the number of subsequences to return. If `maxSplits + 1`
+    ///     subsequences are returned, the last one is a suffix of the original
+    ///     sequence containing the remaining elements. `maxSplits` must be
+    ///     greater than or equal to zero. The default value is `Int.max`.
+    ///   - omittingEmptySubsequences: If `false`, an empty subsequence is
+    ///     returned in the result for each consecutive pair of `separator`
+    ///     elements in the sequence and for each instance of `separator` at the
+    ///     start or end of the sequence. If `true`, only nonempty subsequences
+    ///     are returned. The default value is `true`.
+    /// - Returns: An array of subsequences, split from this sequence's elements.
+    ///
+    /// - Complexity: O(*n*), where *n* is the length of the sequence.
+    @inlinable
+    public __consuming func split(
+        separator: Element,
+        maxSplits: Int = Int.max,
+        omittingEmptySubsequences: Bool = true
+    ) -> [ArraySlice<Element>] {
+        return split(
+            maxSplits: maxSplits,
+            omittingEmptySubsequences: omittingEmptySubsequences,
+            whereSeparator: { $0 == separator })
+    }
+}
+
+
+extension Sequence {
+
+/// Returns the longest possible subsequences of the sequence, in order, that
+/// don't contain elements satisfying the given predicate. Elements that are
+/// used to split the sequence are not returned as part of any subsequence.
+///
+/// The following examples show the effects of the `maxSplits` and
+/// `omittingEmptySubsequences` parameters when splitting a string using a
+/// closure that matches spaces. The first use of `split` returns each word
+/// that was originally separated by one or more spaces.
+///
+///     let line = "BLANCHE:   I don't want realism. I want magic!"
+///     print(line.split(whereSeparator: { $0 == " " })
+///               .map(String.init))
+///     // Prints "["BLANCHE:", "I", "don\'t", "want", "realism.", "I", "want", "magic!"]"
+///
+/// The second example passes `1` for the `maxSplits` parameter, so the
+/// original string is split just once, into two new strings.
+///
+///     print(
+///        line.split(maxSplits: 1, whereSeparator: { $0 == " " })
+///                       .map(String.init))
+///     // Prints "["BLANCHE:", "  I don\'t want realism. I want magic!"]"
+///
+/// The final example passes `true` for the `allowEmptySlices` parameter, so
+/// the returned array contains empty strings where spaces were repeated.
+///
+///     print(
+///         line.split(
+///             omittingEmptySubsequences: false,
+///             whereSeparator: { $0 == " " }
+///         ).map(String.init))
+///     // Prints "["BLANCHE:", "", "", "I", "don\'t", "want", "realism.", "I", "want", "magic!"]"
+///
+/// - Parameters:
+///   - maxSplits: The maximum number of times to split the sequence, or one
+///     less than the number of subsequences to return. If `maxSplits + 1`
+///     subsequences are returned, the last one is a suffix of the original
+///     sequence containing the remaining elements. `maxSplits` must be
+///     greater than or equal to zero. The default value is `Int.max`.
+///   - omittingEmptySubsequences: If `false`, an empty subsequence is
+///     returned in the result for each pair of consecutive elements
+///     satisfying the `isSeparator` predicate and for each element at the
+///     start or end of the sequence satisfying the `isSeparator` predicate.
+///     If `true`, only nonempty subsequences are returned. The default
+///     value is `true`.
+///   - isSeparator: A closure that returns `true` if its argument should be
+///     used to split the sequence; otherwise, `false`.
+/// - Returns: An array of subsequences, split from this sequence's elements.
+///
+/// - Complexity: O(*n*), where *n* is the length of the sequence.
+    @inlinable
+    public __consuming func split(
+        maxSplits: Int = Int.max,
+        omittingEmptySubsequences: Bool = true,
+        whereSeparator isSeparator: (Element) throws -> Bool
+    ) rethrows -> [ArraySlice<Element>] {
+        _precondition(maxSplits >= 0, "Must take zero or more splits")
+        let whole = Array(self)// 首先, 利用自己生成一个 Array. 这里我有点疑问, 如果这个 Sequence 是无限的怎么办.
+        return try whole.split(
+            maxSplits: maxSplits,
+            omittingEmptySubsequences: omittingEmptySubsequences,
+            whereSeparator: isSeparator)
+    }
+}
