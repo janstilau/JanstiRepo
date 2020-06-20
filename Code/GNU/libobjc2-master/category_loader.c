@@ -15,6 +15,7 @@ static void register_methods(struct objc_class *cls, struct objc_method_list *l)
 	if (NULL == l) { return; }
 
 	// Add the method list at the head of the list of lists.
+    // 这里, 添加方法列表很简单, 一个简单的链表的相连操作.
 	l->next = cls->methods;
 	cls->methods = l;
 	// Update the dtable to catch the new methods, if the dtable has been
@@ -28,9 +29,11 @@ static void register_methods(struct objc_class *cls, struct objc_method_list *l)
 
 static void load_category(struct objc_category *cat, struct objc_class *class)
 {
+    /*
+     将实例方法, 类方法挂载到类对象, 和原类对象上.
+     */
 	register_methods(class, cat->instance_methods);
 	register_methods(class->isa, cat->class_methods);
-	//fprintf(stderr, "Loading %s (%s)\n", cat->class_name, cat->name);
 
 	if (cat->protocols)
 	{

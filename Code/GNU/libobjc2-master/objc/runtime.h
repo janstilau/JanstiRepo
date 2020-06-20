@@ -6,22 +6,6 @@
 #ifndef __LIBOBJC_RUNTIME_H_INCLUDED__
 #define __LIBOBJC_RUNTIME_H_INCLUDED__
 
-#ifndef __GNUSTEP_RUNTIME__
-#	define __GNUSTEP_RUNTIME__
-#endif
-
-#ifndef __has_feature
-#	define __has_feature(x) 0
-#endif
-
-#ifndef __unsafe_unretained
-#	ifndef __has_feature
-#		define __unsafe_unretained
-#	elif !__has_feature(objc_arc)
-#		define __unsafe_unretained
-#	endif
-#endif
-
 // Make sure we get the limit macros, even in C++ mode
 #ifndef __STDC_LIMIT_MACROS                                                     
 #	define __STDC_LIMIT_MACROS 1
@@ -33,31 +17,11 @@
 #include <sys/types.h>
 #include "Availability.h"
 
-// Undo GNUstep substitutions
-#ifdef class_setVersion
-#	undef class_setVersion
-#endif
-#ifdef class_getClassMethod
-#	undef class_getClassMethod
-#endif
-#ifdef objc_getClass
-#	undef objc_getClass
-#endif
-#ifdef objc_lookUpClass
-#	undef objc_lookUpClass
-#endif
-
 /**
  * Opaque type for Objective-C instance variable metadata.
+ * 所有的暴露出去的, 都是一个不透明的类型.
  */
 typedef struct objc_ivar* Ivar;
-
-// Don't redefine these types if the old GCC header was included first.
-#ifndef __objc_INCLUDE_GNU
-// Define the macro so that including the old GCC header does nothing.
-#	define __objc_INCLUDE_GNU
-#	define __objc_api_INCLUDE_GNU
-
 
 /**
  * Opaque type used for selectors.
@@ -76,15 +40,15 @@ typedef struct objc_class *Class;
 /**
  * Type for Objective-C objects.
  */
+/*
+ 拥有 isa 指针的对象, 就是一个 OC 对象. 而一个 isa 指针, 指向了 objc_class 结构体. objc_class 结构体, 就是类对象.
+ */
 typedef struct objc_object
 {
 	/**
 	 * Pointer to this object's class.  Accessing this directly is STRONGLY
 	 * discouraged.  You are recommended to use object_getClass() instead.
 	 */
-#ifndef __OBJC_RUNTIME_INTERNAL__
-	__attribute__((deprecated))
-#endif
 	Class isa;
 } *id;
 
@@ -171,6 +135,7 @@ struct objc_method_description
  *
  * All of the strings that these refer to are internal to the runtime and
  * should not be freed.
+ * 这就是一个 KeyValue 对应的 pair.
  */
 typedef struct
 {

@@ -34,6 +34,9 @@ struct objc_selector
 		 * is registered with the runtime, its name is replaced by an index
 		 * uniquely identifying this selector.  The index is used for dispatch.
 		 */
+        /*
+         如果, 一个 Selector 被注册了, 为了效率, 这里会进行 index 的替换工作.
+         */
 		uintptr_t index;
 	};
 	/**

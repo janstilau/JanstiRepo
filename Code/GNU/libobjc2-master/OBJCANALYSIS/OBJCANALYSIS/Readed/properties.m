@@ -255,6 +255,9 @@ objc_property_t class_getProperty(Class cls, const char *name)
 	{
 		return NULL;
 	}
+    /*
+     根据 property 的结构, 进行查找的工作. 如果一条 property list 上面没有, 就去下一条进行寻找
+     */
 	struct objc_property_list *properties = cls->properties;
 	while (NULL != properties)
 	{
@@ -274,17 +277,28 @@ objc_property_t class_getProperty(Class cls, const char *name)
 OBJC_PUBLIC
 objc_property_t* class_copyPropertyList(Class cls, unsigned int *outCount)
 {
+    /*
+     防卫式的判断, 提前终止程序的进行.
+     */
 	if (Nil == cls)
 	{
 		if (NULL != outCount) { *outCount = 0; }
 		return NULL;
 	}
+    /*
+     直接通过 cls 读取了属性的列表.
+     */
 	struct objc_property_list *properties = cls->properties;
 	if (!properties)
 	{
 		if (NULL != outCount) { *outCount = 0; }
 		return NULL;
 	}
+    
+    /*
+        这里体现了, struct objc_property_list 里面, 有一个 struct objc_property_list *next 的意义所在.
+        CLASS 里面, 不直接存储二维数组, 而是存储一个 objc_property_list, 然后通过里面的 next, 来读取到所有的属性信息.
+     */
 	unsigned int count = 0;
 	for (struct objc_property_list *l=properties ; NULL!=l ; l=l->next)
 	{
@@ -294,12 +308,22 @@ objc_property_t* class_copyPropertyList(Class cls, unsigned int *outCount)
 	{
 		*outCount = count;
 	}
+    /*
+     如果, 没有属性, 直接退出了.
+     返回值, 和传出参数, 虽然语言上没有限制, 但是作为通用的写法, 人工要写出符合逻辑的代码出来.
+     */
 	if (0 == count)
 	{
 		return NULL;
 	}
+    /*
+     这里, 有着明显的分配内存的活动, 需要让使用者进行相应的释放动作.
+     */
 	objc_property_t *list = calloc(sizeof(objc_property_t), count);
 	unsigned int out = 0;
+    /*
+     两个 for 循环, 取出所有的 property_t 的信息. property_at_index 直接暴露出了 property 的实现底层实现.
+     */
 	for (struct objc_property_list *l=properties ; NULL!=l ; l=l->next)
 	{
 		for (int i=0 ; i<l->count ; i++)
@@ -309,6 +333,7 @@ objc_property_t* class_copyPropertyList(Class cls, unsigned int *outCount)
 	}
 	return list;
 }
+
 static const char* property_getIVar(objc_property_t property)
 {
 	const char *iVar = property_getAttributes(property);
@@ -436,6 +461,9 @@ objc_property_attribute_t *property_copyAttributeList(objc_property_t property,
 		}
 		count++;
 	}
+    /*
+     这里, 没太明白上面各个的含义, 不过简单理解就可以.
+     */
 	objc_property_attribute_t *propAttrs = calloc(sizeof(objc_property_attribute_t), count);
 	memcpy(propAttrs, attrs, count * sizeof(objc_property_attribute_t));
 	if (NULL != outCount)

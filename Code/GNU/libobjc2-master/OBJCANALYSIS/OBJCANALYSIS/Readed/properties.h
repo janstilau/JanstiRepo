@@ -92,6 +92,55 @@ enum PropertyAttributeKind2
  * documentation.
  */
 // begin: objc_property
+/*
+ 1.property_attribute为T@”NSString”,&,N,V_exprice时：
+ T 是固定的，放在第一个
+ @”NSString” 代表这个property是一个字符串对象
+ & 代表强引用，其中与之并列的是：’C’代表Copy，’&’代表强引用，’W’表示weak，assign为空，默认为assign。
+ N 区分的nonatomic和atomic，默认为atomic，atomic为空，’N’代表是nonatomic
+ V_exprice V代表变量，后面紧跟着的是成员变量名，代表这个property的成员变量名为_exprice。
+
+ 2.property_attribute为T@”NSNumber”,R,N,V_yearsOld时：
+ T 是固定的，放在第一个
+ @”NSNumber” 代表这个property是一个NSNumber对象
+ R 代表readOnly属性，readwrite时为空
+ N 区分的nonatomic和atomic，默认为atomic，atomic为空，’N’代表是nonatomic
+ V_yearsOld V代表变量，后面紧跟着的是成员变量名，代表这个property的成员变量名为_yearsOld。
+
+ 3.对应的编码值
+ //下面对应的编码值可以在官方文档里面找到
+ //编码值   含意
+ //c     代表char类型
+ //i     代表int类型
+ //s     代表short类型
+ //l     代表long类型，在64位处理器上也是按照32位处理
+ //q     代表long long类型
+ //C     代表unsigned char类型
+ //I     代表unsigned int类型
+ //S     代表unsigned short类型
+ //L     代表unsigned long类型
+ //Q     代表unsigned long long类型
+ //f     代表float类型
+ //d     代表double类型
+ //B     代表C++中的bool或者C99中的_Bool
+ //v     代表void类型
+ //*     代表char *类型
+ //@     代表对象类型
+ //#     代表类对象 (Class)
+ //:     代表方法selector (SEL)
+ //[array type]  代表array
+ //{name=type…}  代表结构体
+ //(name=type…)  代表union
+ //bnum  A bit field of num bits
+ //^type     A pointer to type
+ //?     An unknown type (among other things, this code is used for function pointers)
+
+ 4.其他
+ G(name) getter=(name)
+ S(name) setter=(name)
+ D @dynamic
+ P 用于垃圾回收机制
+ */
 struct objc_property
 {
 	/**
@@ -101,6 +150,10 @@ struct objc_property
 	/**
 	 * The type encoding of the property.
 	 */
+    /*
+     一串, 关于 property 的描述信息. 例如.
+     property_attr:T@"NSString",&,N,V_name,
+     */
 	const char *attributes;
 	/**
 	 * The type encoding of the property.
