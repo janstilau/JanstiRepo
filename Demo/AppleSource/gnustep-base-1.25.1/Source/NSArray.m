@@ -309,7 +309,7 @@ static SEL	removeLastSel;
 }
 
 /**
-    更多情况下, 我们需要的是值语义的比对, 而不是地址比对, 所以在 indexOfObject 里面, 使用的是 isEqual.
+ 更多情况下, 我们需要的是值语义的比对, 而不是地址比对, 所以在 indexOfObject 里面, 使用的是 isEqual.
  */
 - (int) indexOfObject: (id)anObject
 {

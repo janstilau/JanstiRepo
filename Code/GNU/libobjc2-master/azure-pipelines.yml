@@ -1,0 +1,113 @@
+jobs:
+  - job: Linux
+    displayName: Ubuntu-18.04
+    pool:
+      vmImage: ubuntu-18.04
+    strategy:
+      matrix:
+        Debug:
+          BuildType: Debug
+        Release:
+          BuildType: Release
+    steps:
+    - checkout: self
+      submodules: true
+    - script: |
+        sudo add-apt-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8 main"
+        sudo apt-get update
+        sudo apt-get install -y ninja-build
+        sudo apt-get install -y clang-8
+
+    - task: CMake@1
+      inputs:
+        cmakeArgs: '.. -GNinja -DCMAKE_BUILD_TYPE=$(BuildType) -DTESTS=ON -DCMAKE_CXX_COMPILER=clang++-8 -DCMAKE_C_COMPILER=clang-8'
+
+    - script: |
+        ninja
+
+      workingDirectory: build
+      failOnStderr: true
+      displayName: 'Compile'
+
+    - script: |
+        ctest -j 4 --output-on-failure -T test
+
+      workingDirectory: build
+      failOnStderr: false
+    - task: PublishTestResults@2
+      inputs:
+          testResultsFormat: cTest
+          testResultsFiles: build/Testing/*/Test.xml
+  - job: Windows
+    displayName: Windows-2016
+    pool:
+      vmImage: vs2017-win2016
+    strategy:
+      matrix:
+        Debug-32:
+          BuildType: Debug
+          Arch: x64_x86
+          Flags: -m32
+        Release-32:
+          BuildType: Release
+          Arch: x64_x86
+          Flags: -m32
+        Debug-64:
+          BuildType: Debug
+          Arch: x64
+          Flags: -m64
+        Release-64:
+          BuildType: Release
+          Arch: x64
+          Flags: -m64
+    steps:
+    - checkout: self
+      submodules: true
+    - script: |
+        choco.exe install ninja
+        choco.exe install llvm
+
+
+
+    - script: |
+        echo Creating build directory...
+        mkdir build
+        cd build
+        echo Importing visual studio environment variables...
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat" $(Arch)
+        echo Checking that we're calling the correct link.exe
+        where link.exe
+        set CFLAGS=$(Flags)
+        set CXXFLAGS=$(Flags)
+        echo Running cmake...
+        cmake .. -G Ninja -DTESTS=ON -DCMAKE_C_COMPILER="c:/Program Files/LLVM/bin/clang-cl.exe" -DCMAKE_CXX_COMPILER="c:/Program Files/LLVM/bin/clang-cl.exe" -DCMAKE_BUILD_TYPE=$(BuildType)
+        echo CMake completed.
+
+      failOnStderr: false
+      displayName: 'CMake'
+
+    - script: |
+        cd build
+        echo Importing visual studio environment variables...
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat" $(Arch)
+        set CCC_OVERRIDE_OPTIONS=x-TC x-TP x/TC x/TP
+        echo Running ninja...
+        ninja
+        echo Ninja completed.
+
+      failOnStderr: false
+      displayName: 'Compile'
+
+    - script: |
+        cd build
+        echo Copying objc.dll into Test directory...
+        copy /y objc.dll Test
+        ctest -j 4 --output-on-failure -T test
+
+      failOnStderr: false
+      displayName: 'Test'
+
+    - task: PublishTestResults@2
+      inputs:
+          testResultsFormat: cTest
+          testResultsFiles: build/Testing/*/Test.xml
