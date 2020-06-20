@@ -6,10 +6,6 @@
 #ifndef __LIBOBJC_RUNTIME_H_INCLUDED__
 #define __LIBOBJC_RUNTIME_H_INCLUDED__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef __GNUSTEP_RUNTIME__
 #	define __GNUSTEP_RUNTIME__
 #endif
@@ -1195,9 +1191,5 @@ int objc_set_apple_compatible_objcxx_exceptions(int newValue) OBJC_NONPORTABLE;
 #define _C_ONEWAY   'V'
 
 #include "runtime-deprecated.h"
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // __LIBOBJC_RUNTIME_H_INCLUDED__
