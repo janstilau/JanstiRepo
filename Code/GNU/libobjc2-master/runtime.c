@@ -441,7 +441,9 @@ const char *class_getIvarLayout(Class cls)
     return (char*)cls->ivars;
 }
 
-
+/*
+ 直接取获取 cls 结构体里面的一个成员值而已.
+ */
 const char * class_getName(Class cls)
 {
     if (Nil == cls) { return "nil"; }
@@ -718,14 +720,20 @@ void objc_disposeClassPair(Class cls)
 
 Class objc_allocateClassPair(Class superclass, const char *name, size_t extraBytes)
 {
-    // Check the class doesn't already exist.
+    /*
+     首先, 做一次校验的工作.
+     */
     if (nil != objc_lookUpClass(name)) { return Nil; }
-    
+        
+    /*
+     真正的内存分配操作.
+     */
     Class newClass = gc->malloc(sizeof(struct objc_class) + extraBytes);
-    
     if (Nil == newClass) { return Nil; }
     
-    // Create the metaclass
+    /*
+     元类的内存分配的操作.
+     */
     Class metaClass = gc->malloc(sizeof(struct objc_class));
     
     if (Nil == superclass)
@@ -750,9 +758,14 @@ Class objc_allocateClassPair(Class superclass, const char *name, size_t extraByt
     metaClass->name = strdup(name);
     metaClass->info = objc_class_flag_meta | objc_class_flag_user_created;
     metaClass->dtable = uninstalled_dtable;
+    /*
+     原类的 instance_size 就是类对象的大小.
+     */
     metaClass->instance_size = sizeof(struct objc_class);
     
-    // Set up the new class
+    /*
+     设置类对象的各种信息.
+     */
     newClass->isa = metaClass;
     newClass->super_class = superclass;
     
@@ -760,14 +773,16 @@ Class objc_allocateClassPair(Class superclass, const char *name, size_t extraByt
     newClass->info = objc_class_flag_user_created;
     newClass->dtable = uninstalled_dtable;
     
+    /*
+     abi_version 就是 OC 语言的版本.
+     */
     newClass->abi_version = 2;
     metaClass->abi_version = 2;
     
     if (Nil == superclass)
     {
         newClass->instance_size = sizeof(struct objc_class*);
-    }
-    else
+    } else
     {
         newClass->instance_size = superclass->instance_size;
     }
@@ -798,6 +813,9 @@ Class object_getClass(id obj)
     return isa;
 }
 
+/*
+ 简单的进行, isa 的替换而已.
+ */
 Class object_setClass(id obj, Class cls)
 {
     CHECK_ARG(obj);

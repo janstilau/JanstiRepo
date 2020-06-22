@@ -66,6 +66,9 @@ struct objc_class
 	 * A bitfield containing various flags.  See the objc_class_flags
 	 * enumerated type for possible values.  
 	 */
+    /*
+     就是一个值的保存. 里面存储了各种 enum 相关的值, 根据位的与运算, 分别取出各个值. 和 isa 指针的获取一样.
+     */
 	unsigned long              info;
 	/**
 	 * The size of this class.  For classes using the non-fragile ABI, the
@@ -327,6 +330,9 @@ enum objc_class_flags
 	 * name, and its subclass and sibling class links will have been assigned,
 	 * if applicable.
 	 */
+    /*
+     
+     */
 	objc_class_flag_resolved = (1<<9),
 	/**
 	 * This class was created at run time and may be freed.
@@ -405,6 +411,9 @@ static BOOL isSmallObject(id obj)
 	return (addr & OBJC_SMALL_OBJECT_MASK) != 0;
 }
 
+/*
+ 直接获取 obj 的 isa 信息.
+ */
 __attribute__((always_inline))
 static inline Class classForObject(id obj)
 {

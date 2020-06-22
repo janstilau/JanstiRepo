@@ -153,6 +153,9 @@ PRIVATE BOOL objc_resolve_class(Class cls)
     if (objc_test_class_flag(cls, objc_class_flag_resolved)) { return YES; }
     
     // We can only resolve the class if its superclass is resolved.
+    /*
+     首先, 要对父类进行 resolve 的操作.
+     */
     if (cls->super_class)
     {
         Class super = cls->super_class;
@@ -165,26 +168,6 @@ PRIVATE BOOL objc_resolve_class(Class cls)
             }
         }
     }
-#ifdef OLDABI_COMPAT
-    else
-    {
-        struct objc_class_gsv1 *ocls = objc_legacy_class_for_class(cls);
-        if (ocls != NULL)
-        {
-            const char *super_name = (const char*)ocls->super_class;
-            if (super_name)
-            {
-                Class super = (Class)objc_getClass(super_name);
-                if (super == Nil)
-                {
-                    return NO;
-                }
-                cls->super_class = super;
-                return objc_resolve_class(cls);
-            }
-        }
-    }
-#endif
     
     
     // Remove the class from the unresolved class list
@@ -235,6 +218,8 @@ PRIVATE BOOL objc_resolve_class(Class cls)
             super = super->super_class;
         } while (Nil != super);
     }
+    
+    
     Class meta = cls->isa;
     
     // Make the root class the superclass of the metaclass (e.g. NSObject is
@@ -268,6 +253,11 @@ PRIVATE BOOL objc_resolve_class(Class cls)
         oldCls->isa->super_class = cls->isa->super_class;
     }
 #endif
+    
+    /*
+     前面的, 都是对于信息的操作. Resolve 里面, 真正有用的, 其实是 objc_send_load_message 的调用.
+     */
+    
     // Send the +load message, if required
     if (!objc_test_class_flag(cls, objc_class_flag_user_created))
     {

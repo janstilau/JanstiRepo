@@ -15,6 +15,9 @@ int main()
 {
 	Class a, b, c, d, e;
 
+    /*
+     在 objc_allocateClassPair 之后, 就应该调用 registerClassPair 的操作.
+     */
 	assert(class_getInstanceSize(objc_allocateClassPair(Nil, "Empty", 0)) == sizeof(Class));
 	a = objc_allocateClassPair([Test class], "A", 0);
 	objc_registerClassPair(a);
