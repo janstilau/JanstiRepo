@@ -1,32 +1,3 @@
-/* 
-   NSTableView.h
-
-   The table class.
-   
-   Copyright (C) 2000 Free Software Foundation, Inc.
-
-   Author:  Nicola Pero <n.pero@mi.flashnet.it>
-   Date: March 2000
-   
-   This file is part of the GNUstep GUI Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; see the file COPYING.LIB.
-   If not, see <http://www.gnu.org/licenses/> or write to the 
-   Free Software Foundation, 51 Franklin Street, Fifth Floor, 
-   Boston, MA 02110-1301, USA.
-*/ 
-
 #ifndef _GNUstep_H_NSTableView
 #define _GNUstep_H_NSTableView
 
@@ -44,8 +15,8 @@
 @class NSURL;
 
 typedef enum _NSTableViewDropOperation {
-  NSTableViewDropOn,
-  NSTableViewDropAbove
+    NSTableViewDropOn,
+    NSTableViewDropAbove
 } NSTableViewDropOperation;
 
 enum {
@@ -71,108 +42,108 @@ typedef enum _NSTableViewColumnAutoresizingStyle
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
 typedef enum _NSTableViewSelectionHighlightStyle
 {
-  NSTableViewSelectionHighlightStyleNone = -1,
-  NSTableViewSelectionHighlightStyleRegular = 0,
-  NSTableViewSelectionHighlightStyleSourceList = 1
+    NSTableViewSelectionHighlightStyleNone = -1,
+    NSTableViewSelectionHighlightStyleRegular = 0,
+    NSTableViewSelectionHighlightStyleSourceList = 1
 } NSTableViewSelectionHighlightStyle;
 #endif
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_7, GS_API_LATEST)
 typedef enum _NSTableViewAnimationOptions
 {
-  NSTableViewAnimationEffectNone = 0x0,
-  NSTableViewAnimationEffectFade = 0x1,
-  NSTableViewAnimationEffectGap  = 0x2,
-  NSTableViewAnimationSlideUp    = 0x10,
-  NSTableViewAnimationSlideDown  = 0x20,
-  NSTableViewAnimationSlideLeft  = 0x30,
-  NSTableViewAnimationSlideRight = 0x40,
+    NSTableViewAnimationEffectNone = 0x0,
+    NSTableViewAnimationEffectFade = 0x1,
+    NSTableViewAnimationEffectGap  = 0x2,
+    NSTableViewAnimationSlideUp    = 0x10,
+    NSTableViewAnimationSlideDown  = 0x20,
+    NSTableViewAnimationSlideLeft  = 0x30,
+    NSTableViewAnimationSlideRight = 0x40,
 } NSTableViewAnimationOptions;
 #endif
 
 
 @interface NSTableView : NSControl <NSUserInterfaceValidations>
 {
-  /*
-   * Real Ivars
-   */
-  id                 _dataSource;
-  NSMutableArray    *_tableColumns;
-  BOOL               _drawsGrid;
-  NSColor           *_gridColor;
-  NSColor           *_backgroundColor;
-  NSTableViewSelectionHighlightStyle _selectionHighlightStyle;
-  CGFloat              _rowHeight;
-  NSSize             _intercellSpacing;
-  id                 _delegate;
-  NSTableHeaderView *_headerView;
-  NSView            *_cornerView;
-  SEL                _action;
-  SEL                _doubleAction;
-  id                 _target;
-  NSInteger          _clickedRow;
-  NSInteger          _clickedColumn;
-  NSTableColumn     *_highlightedTableColumn;
-  NSMutableIndexSet    *_selectedColumns;
-  NSMutableIndexSet    *_selectedRows;
-  NSInteger          _selectedColumn;
-  NSInteger          _selectedRow;
-  BOOL               _allowsMultipleSelection;
-  BOOL               _allowsEmptySelection;
-  BOOL               _allowsColumnSelection;
-  BOOL               _allowsColumnResizing;
-  BOOL               _allowsColumnReordering;
-  BOOL               _autoresizesAllColumnsToFit;
-  BOOL               _selectingColumns;
-  NSText            *_textObject;
-  NSInteger          _editedRow;
-  NSInteger          _editedColumn;
-  NSCell            *_editedCell;
-  BOOL               _autosaveTableColumns;
-  NSString          *_autosaveName;
-  BOOL              _verticalMotionDrag;
-  NSArray           *_sortDescriptors;
-
-  /*
-   * Ivars Acting as Control... 
-   */
-  BOOL   _isValidating;
-
-  /*
-   * Ivars Acting as Cache 
-   */
-  NSInteger    _numberOfRows;
-  NSInteger    _numberOfColumns;
-  /* YES if _delegate responds to
+    /*
+     * Real Ivars
+     */
+    id                 _dataSource;
+    NSMutableArray    *_tableColumns;
+    BOOL               _drawsGrid;
+    NSColor           *_gridColor;
+    NSColor           *_backgroundColor;
+    NSTableViewSelectionHighlightStyle _selectionHighlightStyle;
+    CGFloat              _rowHeight;
+    NSSize             _intercellSpacing;
+    id                 _delegate;
+    NSTableHeaderView *_headerView;
+    NSView            *_cornerView;
+    SEL                _action;
+    SEL                _doubleAction;
+    id                 _target;
+    NSInteger          _clickedRow;
+    NSInteger          _clickedColumn;
+    NSTableColumn     *_highlightedTableColumn;
+    NSMutableIndexSet    *_selectedColumns;
+    NSMutableIndexSet    *_selectedRows;
+    NSInteger          _selectedColumn;
+    NSInteger          _selectedRow;
+    BOOL               _allowsMultipleSelection;
+    BOOL               _allowsEmptySelection;
+    BOOL               _allowsColumnSelection;
+    BOOL               _allowsColumnResizing;
+    BOOL               _allowsColumnReordering;
+    BOOL               _autoresizesAllColumnsToFit;
+    BOOL               _selectingColumns;
+    NSText            *_textObject;
+    NSInteger          _editedRow;
+    NSInteger          _editedColumn;
+    NSCell            *_editedCell;
+    BOOL               _autosaveTableColumns;
+    NSString          *_autosaveName;
+    BOOL              _verticalMotionDrag;
+    NSArray           *_sortDescriptors;
+    
+    /*
+     * Ivars Acting as Control...
+     */
+    BOOL   _isValidating;
+    
+    /*
+     * Ivars Acting as Cache
+     */
+    NSInteger    _numberOfRows;
+    NSInteger    _numberOfColumns;
+    /* YES if _delegate responds to
      tableView:willDisplayCell:forTableColumn:row: */
-  BOOL   _del_responds;
-  /* YES if _dataSource responds to
+    BOOL   _del_responds;
+    /* YES if _dataSource responds to
      tableView:setObjectValue:forTableColumn:row: */
-  BOOL   _dataSource_editable;
-
-  /*
-   * We cache column origins (precisely, the x coordinate of the left
-   * origin of each column).  When a column width is changed through
-   * [NSTableColumn setWidth:], then [NSTableView tile] gets called,
-   * which updates the cache.  */
-  CGFloat *_columnOrigins;
-
-  /*
-   *  We keep the superview's width in order to know when to
-   *  size the last column to fit
-   */
-  CGFloat _superview_width;
-
-  /* if YES [which happens only during a sizeToFit], we are doing
+    BOOL   _dataSource_editable;
+    
+    /*
+     * We cache column origins (precisely, the x coordinate of the left
+     * origin of each column).  When a column width is changed through
+     * [NSTableColumn setWidth:], then [NSTableView tile] gets called,
+     * which updates the cache.  */
+    CGFloat *_columnOrigins;
+    
+    /*
+     *  We keep the superview's width in order to know when to
+     *  size the last column to fit
+     */
+    CGFloat _superview_width;
+    
+    /* if YES [which happens only during a sizeToFit], we are doing
      computations on sizes so we ignore tile (produced for example by
      the NSTableColumns) during the computation.  We perform a global
      tile at the end */
-  BOOL _tilingDisabled;
-
-  NSDragOperation _draggingSourceOperationMaskForLocal;
-  NSDragOperation _draggingSourceOperationMaskForRemote;
-
-  NSInteger _beginEndUpdates;
+    BOOL _tilingDisabled;
+    
+    NSDragOperation _draggingSourceOperationMaskForLocal;
+    NSDragOperation _draggingSourceOperationMaskForRemote;
+    
+    NSInteger _beginEndUpdates;
 }
 
 /* Data Source */
@@ -267,8 +238,8 @@ typedef enum _NSTableViewAnimationOptions
 /* Editing Cells */
 /* ALL TODOS */
 - (void) editColumn: (NSInteger)columnIndex 
-                row: (NSInteger)rowIndex 
-          withEvent: (NSEvent *)theEvent 
+                row: (NSInteger)rowIndex
+          withEvent: (NSEvent *)theEvent
              select: (BOOL)flag;
 - (NSInteger) editedRow;
 - (NSInteger) editedColumn;
@@ -290,7 +261,7 @@ typedef enum _NSTableViewAnimationOptions
 - (NSInteger) columnAtPoint: (NSPoint)aPoint;
 - (NSInteger) rowAtPoint: (NSPoint)aPoint;
 - (NSRect) frameOfCellAtColumn: (NSInteger)columnIndex 
-			   row: (NSInteger)rowIndex;
+                           row: (NSInteger)rowIndex;
 - (void) setAutoresizesAllColumnsToFit: (BOOL)flag;
 - (BOOL) autoresizesAllColumnsToFit;
 - (void) sizeLastColumnToFit;
@@ -335,7 +306,7 @@ typedef enum _NSTableViewAnimationOptions
 /* NB: ALL TODOS */
 - (NSImage *) indicatorImageInTableColumn: (NSTableColumn *)aTableColumn;
 - (void) setIndicatorImage: (NSImage *)anImage
-	     inTableColumn: (NSTableColumn *)aTableColumn;
+             inTableColumn: (NSTableColumn *)aTableColumn;
 
 /* highlighting columns */
 /* NB: ALL TODOS */
@@ -386,11 +357,11 @@ typedef enum _NSTableViewAnimationOptions
 @interface NSTableView (GNUPrivate)
 - (void) _sendDoubleActionForColumn: (NSInteger)columnIndex;
 - (void) _selectColumn: (NSInteger)columnIndex  
-	     modifiers: (unsigned int)modifiers;
+             modifiers: (unsigned int)modifiers;
 @end
 
 /* 
- * Informal protocol NSTableDataSource 
+ * Informal protocol NSTableDataSource
  */
 
 @protocol NSTableViewDataSource
@@ -407,11 +378,11 @@ typedef enum _NSTableViewAnimationOptions
 - (NSInteger) numberOfRowsInTableView: (NSTableView *)aTableView;
 - (id) tableView: (NSTableView *)aTableView 
 objectValueForTableColumn: (NSTableColumn *)aTableColumn 
-	     row: (NSInteger)rowIndex;
+             row: (NSInteger)rowIndex;
 - (void) tableView: (NSTableView *)aTableView 
-    setObjectValue: (id)anObject 
+    setObjectValue: (id)anObject
     forTableColumn: (NSTableColumn *)aTableColumn
-	       row: (NSInteger)rowIndex;
+               row: (NSInteger)rowIndex;
 
 /* Dragging */
 - (BOOL) tableView: (NSTableView*)tableView
@@ -421,14 +392,14 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 - (NSDragOperation) tableView: (NSTableView*)tableView
                  validateDrop: (id <NSDraggingInfo>)info
                   proposedRow: (NSInteger)row
-	proposedDropOperation: (NSTableViewDropOperation)operation;
+        proposedDropOperation: (NSTableViewDropOperation)operation;
 - (BOOL) tableView: (NSTableView*)tableView
          writeRows: (NSArray*)rows
       toPasteboard: (NSPasteboard*)pboard;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_3, GS_API_LATEST)
 - (void) tableView: (NSTableView*)tableView
-  sortDescriptorsDidChange: (NSArray *)oldSortDescriptors;
+sortDescriptorsDidChange: (NSArray *)oldSortDescriptors;
 #endif
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4, GS_API_LATEST)
@@ -468,19 +439,19 @@ mouseDownInHeaderOfTableColumn: (NSTableColumn *)tableColumn;
 #endif
 - (BOOL)tableView: (NSTableView *)aTableView 
 shouldEditTableColumn: (NSTableColumn *)aTableColumn 
-	      row: (NSInteger)rowIndex;
+              row: (NSInteger)rowIndex;
 - (BOOL) tableView: (NSTableView *)aTableView 
    shouldSelectRow: (NSInteger)rowIndex;
 - (BOOL) tableView: (NSTableView *)aTableView 
 shouldSelectTableColumn: (NSTableColumn *)aTableColumn;
 - (void) tableView: (NSTableView *)aTableView 
-   willDisplayCell: (id)aCell 
+   willDisplayCell: (id)aCell
     forTableColumn: (NSTableColumn *)aTableColumn
-	       row: (NSInteger)rowIndex;
+               row: (NSInteger)rowIndex;
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
 - (NSCell *) tableView: (NSTableView *)aTableView 
 dataCellForTableColumn: (NSTableColumn *)aTableColumn
-		   row: (NSInteger)rowIndex;
+                   row: (NSInteger)rowIndex;
 #endif
 - (void) tableViewColumnDidMove: (NSNotification *)aNotification;
 - (void) tableViewColumnDidResize: (NSNotification *)aNotification;

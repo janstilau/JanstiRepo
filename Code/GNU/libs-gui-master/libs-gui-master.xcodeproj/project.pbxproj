@@ -1,0 +1,225 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		069E7D7124A49713005495F6 /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
+		069E7D7224A49713005495F6 /* Documentation */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Documentation; sourceTree = "<group>"; };
+		069E7D7324A49713005495F6 /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
+		069E7D7424A49713005495F6 /* Tools */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Tools; sourceTree = "<group>"; };
+		069E7D7524A49713005495F6 /* INSTALL */ = {isa = PBXFileReference; lastKnownFileType = text; path = INSTALL; sourceTree = "<group>"; };
+		069E7D7624A49713005495F6 /* ANNOUNCE */ = {isa = PBXFileReference; lastKnownFileType = text; path = ANNOUNCE; sourceTree = "<group>"; };
+		069E7D7724A49713005495F6 /* ChangeLog.4 */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChangeLog.4; sourceTree = "<group>"; };
+		069E7D7824A49713005495F6 /* ChangeLog.3 */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChangeLog.3; sourceTree = "<group>"; };
+		069E7D7924A49713005495F6 /* ColorPickers */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ColorPickers; sourceTree = "<group>"; };
+		069E7D7A24A49713005495F6 /* KeyBindings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = KeyBindings; sourceTree = "<group>"; };
+		069E7D7B24A49713005495F6 /* configure */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = configure; sourceTree = "<group>"; };
+		069E7D7C24A49713005495F6 /* ChangeLog */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChangeLog; sourceTree = "<group>"; };
+		069E7D7D24A49713005495F6 /* ChangeLog.2 */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChangeLog.2; sourceTree = "<group>"; };
+		069E7D7E24A49713005495F6 /* config */ = {isa = PBXFileReference; lastKnownFileType = folder; path = config; sourceTree = "<group>"; };
+		069E7D7F24A49713005495F6 /* ChangeLog.5 */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChangeLog.5; sourceTree = "<group>"; };
+		069E7D8024A49713005495F6 /* Images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Images; sourceTree = "<group>"; };
+		069E7D8124A49713005495F6 /* CODEOWNERS */ = {isa = PBXFileReference; lastKnownFileType = text; path = CODEOWNERS; sourceTree = "<group>"; };
+		069E7D8224A49713005495F6 /* gnustep-gui.spec.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = "gnustep-gui.spec.in"; sourceTree = "<group>"; };
+		069E7D8324A49713005495F6 /* install.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = install.sh; sourceTree = "<group>"; };
+		069E7D8424A49713005495F6 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
+		069E7D8524A49713005495F6 /* Source */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Source; sourceTree = "<group>"; };
+		069E7D8624A49713005495F6 /* Panels */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Panels; sourceTree = "<group>"; };
+		069E7D8724A49713005495F6 /* Printing */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Printing; sourceTree = "<group>"; };
+		069E7D8824A49713005495F6 /* Tests */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Tests; sourceTree = "<group>"; };
+		069E7D8924A49713005495F6 /* BUGS */ = {isa = PBXFileReference; lastKnownFileType = text; path = BUGS; sourceTree = "<group>"; };
+		069E7D8A24A49713005495F6 /* gui.make.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = gui.make.in; sourceTree = "<group>"; };
+		069E7D8B24A49713005495F6 /* MISSING */ = {isa = PBXFileReference; lastKnownFileType = text; path = MISSING; sourceTree = "<group>"; };
+		069E7D8C24A49713005495F6 /* GNUmakefile.postamble */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile.postamble; sourceTree = "<group>"; };
+		069E7D8D24A49713005495F6 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		069E7D8E24A49713005495F6 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
+		069E7D8F24A49713005495F6 /* COPYING.LIB */ = {isa = PBXFileReference; lastKnownFileType = text; path = COPYING.LIB; sourceTree = "<group>"; };
+		069E7D9024A49713005495F6 /* COPYING */ = {isa = PBXFileReference; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
+		069E7D9124A49713005495F6 /* NEWS */ = {isa = PBXFileReference; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
+		069E7D9224A49713005495F6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		069E7D9324A49713005495F6 /* Version */ = {isa = PBXFileReference; lastKnownFileType = text; path = Version; sourceTree = "<group>"; };
+		069E7D9424A49713005495F6 /* Headers */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Headers; sourceTree = "<group>"; };
+		069E7D9524A49713005495F6 /* Model */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Model; sourceTree = "<group>"; };
+		069E7D9624A49713005495F6 /* travis-deps.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "travis-deps.sh"; sourceTree = "<group>"; };
+		069E7D9724A49713005495F6 /* ChangeLog.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = ChangeLog.1; sourceTree = "<group>"; };
+		069E7D9824A49713005495F6 /* config.make.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = config.make.in; sourceTree = "<group>"; };
+		069E7D9924A49713005495F6 /* PrinterTypes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PrinterTypes; sourceTree = "<group>"; };
+		069E7D9A24A49713005495F6 /* TextConverters */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TextConverters; sourceTree = "<group>"; };
+		069E7D9B24A49713005495F6 /* Themes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Themes; sourceTree = "<group>"; };
+		069E7D9C24A49713005495F6 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .travis.yml; sourceTree = "<group>"; };
+		069E7D9D24A49713005495F6 /* .cvsignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		069E7D6B24A49713005495F6 = {
+			isa = PBXGroup;
+			children = (
+				069E7D7124A49713005495F6 /* GNUmakefile */,
+				069E7D7224A49713005495F6 /* Documentation */,
+				069E7D7324A49713005495F6 /* configure.ac */,
+				069E7D7424A49713005495F6 /* Tools */,
+				069E7D7524A49713005495F6 /* INSTALL */,
+				069E7D7624A49713005495F6 /* ANNOUNCE */,
+				069E7D7724A49713005495F6 /* ChangeLog.4 */,
+				069E7D7824A49713005495F6 /* ChangeLog.3 */,
+				069E7D7924A49713005495F6 /* ColorPickers */,
+				069E7D7A24A49713005495F6 /* KeyBindings */,
+				069E7D7B24A49713005495F6 /* configure */,
+				069E7D7C24A49713005495F6 /* ChangeLog */,
+				069E7D7D24A49713005495F6 /* ChangeLog.2 */,
+				069E7D7E24A49713005495F6 /* config */,
+				069E7D7F24A49713005495F6 /* ChangeLog.5 */,
+				069E7D8024A49713005495F6 /* Images */,
+				069E7D8124A49713005495F6 /* CODEOWNERS */,
+				069E7D8224A49713005495F6 /* gnustep-gui.spec.in */,
+				069E7D8324A49713005495F6 /* install.sh */,
+				069E7D8424A49713005495F6 /* Resources */,
+				069E7D8524A49713005495F6 /* Source */,
+				069E7D8624A49713005495F6 /* Panels */,
+				069E7D8724A49713005495F6 /* Printing */,
+				069E7D8824A49713005495F6 /* Tests */,
+				069E7D8924A49713005495F6 /* BUGS */,
+				069E7D8A24A49713005495F6 /* gui.make.in */,
+				069E7D8B24A49713005495F6 /* MISSING */,
+				069E7D8C24A49713005495F6 /* GNUmakefile.postamble */,
+				069E7D8D24A49713005495F6 /* README */,
+				069E7D8E24A49713005495F6 /* Sounds */,
+				069E7D8F24A49713005495F6 /* COPYING.LIB */,
+				069E7D9024A49713005495F6 /* COPYING */,
+				069E7D9124A49713005495F6 /* NEWS */,
+				069E7D9224A49713005495F6 /* .gitignore */,
+				069E7D9324A49713005495F6 /* Version */,
+				069E7D9424A49713005495F6 /* Headers */,
+				069E7D9524A49713005495F6 /* Model */,
+				069E7D9624A49713005495F6 /* travis-deps.sh */,
+				069E7D9724A49713005495F6 /* ChangeLog.1 */,
+				069E7D9824A49713005495F6 /* config.make.in */,
+				069E7D9924A49713005495F6 /* PrinterTypes */,
+				069E7D9A24A49713005495F6 /* TextConverters */,
+				069E7D9B24A49713005495F6 /* Themes */,
+				069E7D9C24A49713005495F6 /* .travis.yml */,
+				069E7D9D24A49713005495F6 /* .cvsignore */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		069E7D7024A49713005495F6 /* libs-gui-master */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 069E7D9E24A49713005495F6 /* Build configuration list for PBXLegacyTarget "libs-gui-master" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/justinlau/JanstiRepo/Code/GNU/libs-gui-master";
+			dependencies = (
+			);
+			name = "libs-gui-master";
+			passBuildSettingsInEnvironment = 1;
+			productName = "libs-gui-master";
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		069E7D6C24A49713005495F6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 069E7D6F24A49713005495F6 /* Build configuration list for PBXProject "libs-gui-master" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 069E7D6B24A49713005495F6;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				069E7D7024A49713005495F6 /* libs-gui-master */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		069E7D6D24A49713005495F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		069E7D6E24A49713005495F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		069E7D9F24A49713005495F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "libs-gui-master";
+			};
+			name = Debug;
+		};
+		069E7DA024A49713005495F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "libs-gui-master";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		069E7D6F24A49713005495F6 /* Build configuration list for PBXProject "libs-gui-master" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				069E7D6D24A49713005495F6 /* Debug */,
+				069E7D6E24A49713005495F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		069E7D9E24A49713005495F6 /* Build configuration list for PBXLegacyTarget "libs-gui-master" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				069E7D9F24A49713005495F6 /* Debug */,
+				069E7DA024A49713005495F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 069E7D6C24A49713005495F6 /* Project object */;
+}

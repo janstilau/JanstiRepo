@@ -14,6 +14,114 @@
 		06F42F5F24A3C6D300FF19D3 /* MyCircularQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F42F5E24A3C6D300FF19D3 /* MyCircularQueue.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		069E825524A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 064C2084223152F400D7EA63;
+			remoteInfo = DataStructure;
+		};
+		069E825724A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 064C20922231530F00D7EA63;
+			remoteInfo = Sequence;
+		};
+		069E825924A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06E57EA8223224B10077521B;
+			remoteInfo = "链表";
+		};
+		069E825B24A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0641AB0122337057002197C2;
+			remoteInfo = Recursive;
+		};
+		069E825D24A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0641AB0C2233706F002197C2;
+			remoteInfo = Sort;
+		};
+		069E825F24A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0641AB172233709F002197C2;
+			remoteInfo = Stack;
+		};
+		069E826124A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0641AB2222337130002197C2;
+			remoteInfo = Stock;
+		};
+		069E826324A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0641AB2D22337147002197C2;
+			remoteInfo = AStcok;
+		};
+		069E826524A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06F77F6B2233F2BC005C2557;
+			remoteInfo = Sort2;
+		};
+		069E826724A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06F77F7622341E13005C2557;
+			remoteInfo = Sort3;
+		};
+		069E826924A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06F77F8122342E78005C2557;
+			remoteInfo = BinarySearch;
+		};
+		069E826B24A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06F77F8C223433D9005C2557;
+			remoteInfo = String;
+		};
+		069E826D24A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06F7818E2236C2FA005C2557;
+			remoteInfo = BinaryTree;
+		};
+		069E826F24A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06F781992236CE06005C2557;
+			remoteInfo = BinaryTreeInArray;
+		};
+		069E827124A4CF0B005495F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06123B1B223D620700BD045E;
+			remoteInfo = Solution;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		06F42F4E24A3BF0400FF19D3 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -28,6 +136,43 @@
 
 /* Begin PBXFileReference section */
 		069E7D4124A466A6005495F6 /* BFS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BFS.swift; sourceTree = "<group>"; };
+		069E820B24A4CEB1005495F6 /* 4-队列.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "4-队列.md"; sourceTree = "<group>"; };
+		069E820C24A4CEB1005495F6 /* 2-链表.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "2-链表.md"; sourceTree = "<group>"; };
+		069E820E24A4CEB1005495F6 /* hashLink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hashLink.png; sourceTree = "<group>"; };
+		069E820F24A4CEB1005495F6 /* btree.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btree.png; sourceTree = "<group>"; };
+		069E821024A4CEB1005495F6 /* iteratetree.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iteratetree.png; sourceTree = "<group>"; };
+		069E821124A4CEB1005495F6 /* singleLink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = singleLink.png; sourceTree = "<group>"; };
+		069E821224A4CEB1005495F6 /* tree.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tree.png; sourceTree = "<group>"; };
+		069E821324A4CEB1005495F6 /* stack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stack.png; sourceTree = "<group>"; };
+		069E821424A4CEB1005495F6 /* hashFun.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hashFun.png; sourceTree = "<group>"; };
+		069E821524A4CEB1005495F6 /* simpleQueue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = simpleQueue.png; sourceTree = "<group>"; };
+		069E821624A4CEB1005495F6 /* linklist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = linklist.png; sourceTree = "<group>"; };
+		069E821724A4CEB1005495F6 /* stackFrame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stackFrame.png; sourceTree = "<group>"; };
+		069E821824A4CEB1005495F6 /* 8-树.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "8-树.md"; sourceTree = "<group>"; };
+		069E821924A4CEB1005495F6 /* 9-树.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "9-树.md"; sourceTree = "<group>"; };
+		069E821A24A4CEB1005495F6 /* 1-数组.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "1-数组.md"; sourceTree = "<group>"; };
+		069E821B24A4CEB1005495F6 /* 6-哈希算法.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "6-哈希算法.md"; sourceTree = "<group>"; };
+		069E821C24A4CEB1005495F6 /* iOS-style-guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "iOS-style-guide.md"; sourceTree = "<group>"; };
+		069E821D24A4CEB1005495F6 /* 3-栈.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "3-栈.md"; sourceTree = "<group>"; };
+		069E821E24A4CEB1005495F6 /* 5-散列表.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "5-散列表.md"; sourceTree = "<group>"; };
+		069E821F24A4CEB1005495F6 /* 7-排序.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "7-排序.md"; sourceTree = "<group>"; };
+		069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = DataStructure.xcodeproj; sourceTree = "<group>"; };
+		069E822524A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E822724A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E822924A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E822B24A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E822D24A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E822F24A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E823124A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E823324A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E823524A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E823724A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E823924A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E823B24A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E823D24A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E823F24A4CF0B005495F6 /* Stack.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Stack.xcodeproj; sourceTree = "<group>"; };
+		069E824324A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069E824524A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		06F42F5024A3BF0400FF19D3 /* CartoonSwift */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CartoonSwift; sourceTree = BUILT_PRODUCTS_DIR; };
 		06F42F5324A3BF0400FF19D3 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		06F42F5A24A3BF1700FF19D3 /* RankArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankArray.swift; sourceTree = "<group>"; };
@@ -55,6 +200,229 @@
 			path = Queue;
 			sourceTree = "<group>";
 		};
+		069E820924A4CEA6005495F6 /* Array */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Array;
+			sourceTree = "<group>";
+		};
+		069E820A24A4CEB1005495F6 /* 数据结构 */ = {
+			isa = PBXGroup;
+			children = (
+				069E821A24A4CEB1005495F6 /* 1-数组.md */,
+				069E820C24A4CEB1005495F6 /* 2-链表.md */,
+				069E821D24A4CEB1005495F6 /* 3-栈.md */,
+				069E820B24A4CEB1005495F6 /* 4-队列.md */,
+				069E821E24A4CEB1005495F6 /* 5-散列表.md */,
+				069E821B24A4CEB1005495F6 /* 6-哈希算法.md */,
+				069E821F24A4CEB1005495F6 /* 7-排序.md */,
+				069E821824A4CEB1005495F6 /* 8-树.md */,
+				069E821924A4CEB1005495F6 /* 9-树.md */,
+				069E820D24A4CEB1005495F6 /* img */,
+				069E821C24A4CEB1005495F6 /* iOS-style-guide.md */,
+			);
+			name = "数据结构";
+			path = "../../../数据结构";
+			sourceTree = "<group>";
+		};
+		069E820D24A4CEB1005495F6 /* img */ = {
+			isa = PBXGroup;
+			children = (
+				069E820E24A4CEB1005495F6 /* hashLink.png */,
+				069E820F24A4CEB1005495F6 /* btree.png */,
+				069E821024A4CEB1005495F6 /* iteratetree.png */,
+				069E821124A4CEB1005495F6 /* singleLink.png */,
+				069E821224A4CEB1005495F6 /* tree.png */,
+				069E821324A4CEB1005495F6 /* stack.png */,
+				069E821424A4CEB1005495F6 /* hashFun.png */,
+				069E821524A4CEB1005495F6 /* simpleQueue.png */,
+				069E821624A4CEB1005495F6 /* linklist.png */,
+				069E821724A4CEB1005495F6 /* stackFrame.png */,
+			);
+			path = img;
+			sourceTree = "<group>";
+		};
+		069E822024A4CF0B005495F6 /* DataStructure */ = {
+			isa = PBXGroup;
+			children = (
+				069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */,
+				069E822424A4CF0B005495F6 /* AStcok */,
+				069E822624A4CF0B005495F6 /* Sort */,
+				069E822824A4CF0B005495F6 /* StringToSearch */,
+				069E822A24A4CF0B005495F6 /* BinarySearch */,
+				069E822C24A4CF0B005495F6 /* Recursive */,
+				069E822E24A4CF0B005495F6 /* 链表 */,
+				069E823024A4CF0B005495F6 /* Sort3 */,
+				069E823224A4CF0B005495F6 /* Solution */,
+				069E823424A4CF0B005495F6 /* Sort2 */,
+				069E823624A4CF0B005495F6 /* DataStructure */,
+				069E823824A4CF0B005495F6 /* 数组 */,
+				069E823A24A4CF0B005495F6 /* HeapN */,
+				069E823C24A4CF0B005495F6 /* String */,
+				069E823E24A4CF0B005495F6 /* Stack */,
+				069E824224A4CF0B005495F6 /* BinaryTreeIterator */,
+				069E824424A4CF0B005495F6 /* BinaryTree */,
+			);
+			name = DataStructure;
+			path = ../../../Code/DataStructure;
+			sourceTree = "<group>";
+		};
+		069E822224A4CF0B005495F6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				069E825624A4CF0B005495F6 /* DataStructure */,
+				069E825824A4CF0B005495F6 /* Sequence */,
+				069E825A24A4CF0B005495F6 /* 链表 */,
+				069E825C24A4CF0B005495F6 /* Recursive */,
+				069E825E24A4CF0B005495F6 /* Sort */,
+				069E826024A4CF0B005495F6 /* Stack */,
+				069E826224A4CF0B005495F6 /* Stock */,
+				069E826424A4CF0B005495F6 /* AStcok */,
+				069E826624A4CF0B005495F6 /* Sort2 */,
+				069E826824A4CF0B005495F6 /* Sort3 */,
+				069E826A24A4CF0B005495F6 /* BinarySearch */,
+				069E826C24A4CF0B005495F6 /* String */,
+				069E826E24A4CF0B005495F6 /* BinaryTree */,
+				069E827024A4CF0B005495F6 /* BinaryTreeInArray */,
+				069E827224A4CF0B005495F6 /* Solution */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		069E822424A4CF0B005495F6 /* AStcok */ = {
+			isa = PBXGroup;
+			children = (
+				069E822524A4CF0B005495F6 /* main.cpp */,
+			);
+			path = AStcok;
+			sourceTree = "<group>";
+		};
+		069E822624A4CF0B005495F6 /* Sort */ = {
+			isa = PBXGroup;
+			children = (
+				069E822724A4CF0B005495F6 /* main.cpp */,
+			);
+			path = Sort;
+			sourceTree = "<group>";
+		};
+		069E822824A4CF0B005495F6 /* StringToSearch */ = {
+			isa = PBXGroup;
+			children = (
+				069E822924A4CF0B005495F6 /* main.cpp */,
+			);
+			path = StringToSearch;
+			sourceTree = "<group>";
+		};
+		069E822A24A4CF0B005495F6 /* BinarySearch */ = {
+			isa = PBXGroup;
+			children = (
+				069E822B24A4CF0B005495F6 /* main.cpp */,
+			);
+			path = BinarySearch;
+			sourceTree = "<group>";
+		};
+		069E822C24A4CF0B005495F6 /* Recursive */ = {
+			isa = PBXGroup;
+			children = (
+				069E822D24A4CF0B005495F6 /* main.cpp */,
+			);
+			path = Recursive;
+			sourceTree = "<group>";
+		};
+		069E822E24A4CF0B005495F6 /* 链表 */ = {
+			isa = PBXGroup;
+			children = (
+				069E822F24A4CF0B005495F6 /* main.cpp */,
+			);
+			path = "链表";
+			sourceTree = "<group>";
+		};
+		069E823024A4CF0B005495F6 /* Sort3 */ = {
+			isa = PBXGroup;
+			children = (
+				069E823124A4CF0B005495F6 /* main.cpp */,
+			);
+			path = Sort3;
+			sourceTree = "<group>";
+		};
+		069E823224A4CF0B005495F6 /* Solution */ = {
+			isa = PBXGroup;
+			children = (
+				069E823324A4CF0B005495F6 /* main.cpp */,
+			);
+			path = Solution;
+			sourceTree = "<group>";
+		};
+		069E823424A4CF0B005495F6 /* Sort2 */ = {
+			isa = PBXGroup;
+			children = (
+				069E823524A4CF0B005495F6 /* main.cpp */,
+			);
+			path = Sort2;
+			sourceTree = "<group>";
+		};
+		069E823624A4CF0B005495F6 /* DataStructure */ = {
+			isa = PBXGroup;
+			children = (
+				069E823724A4CF0B005495F6 /* main.cpp */,
+			);
+			path = DataStructure;
+			sourceTree = "<group>";
+		};
+		069E823824A4CF0B005495F6 /* 数组 */ = {
+			isa = PBXGroup;
+			children = (
+				069E823924A4CF0B005495F6 /* main.cpp */,
+			);
+			path = "数组";
+			sourceTree = "<group>";
+		};
+		069E823A24A4CF0B005495F6 /* HeapN */ = {
+			isa = PBXGroup;
+			children = (
+				069E823B24A4CF0B005495F6 /* main.cpp */,
+			);
+			path = HeapN;
+			sourceTree = "<group>";
+		};
+		069E823C24A4CF0B005495F6 /* String */ = {
+			isa = PBXGroup;
+			children = (
+				069E823D24A4CF0B005495F6 /* main.cpp */,
+			);
+			path = String;
+			sourceTree = "<group>";
+		};
+		069E823E24A4CF0B005495F6 /* Stack */ = {
+			isa = PBXGroup;
+			children = (
+				069E823F24A4CF0B005495F6 /* Stack.xcodeproj */,
+			);
+			path = Stack;
+			sourceTree = "<group>";
+		};
+		069E824024A4CF0B005495F6 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		069E824224A4CF0B005495F6 /* BinaryTreeIterator */ = {
+			isa = PBXGroup;
+			children = (
+				069E824324A4CF0B005495F6 /* main.cpp */,
+			);
+			path = BinaryTreeIterator;
+			sourceTree = "<group>";
+		};
+		069E824424A4CF0B005495F6 /* BinaryTree */ = {
+			isa = PBXGroup;
+			children = (
+				069E824524A4CF0B005495F6 /* main.cpp */,
+			);
+			path = BinaryTree;
+			sourceTree = "<group>";
+		};
 		06F42F4724A3BF0400FF19D3 = {
 			isa = PBXGroup;
 			children = (
@@ -74,7 +442,10 @@
 		06F42F5224A3BF0400FF19D3 /* CartoonSwift */ = {
 			isa = PBXGroup;
 			children = (
+				069E822024A4CF0B005495F6 /* DataStructure */,
+				069E820A24A4CEB1005495F6 /* 数据结构 */,
 				06F42F5324A3BF0400FF19D3 /* main.swift */,
+				069E820924A4CEA6005495F6 /* Array */,
 				069E7D4024A46671005495F6 /* Queue */,
 				06F42F5A24A3BF1700FF19D3 /* RankArray.swift */,
 				06F42F5C24A3C4B700FF19D3 /* SumOfThree.swift */,
@@ -128,12 +499,130 @@
 			mainGroup = 06F42F4724A3BF0400FF19D3;
 			productRefGroup = 06F42F5124A3BF0400FF19D3 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 069E822224A4CF0B005495F6 /* Products */;
+					ProjectRef = 069E822124A4CF0B005495F6 /* DataStructure.xcodeproj */;
+				},
+				{
+					ProductGroup = 069E824024A4CF0B005495F6 /* Products */;
+					ProjectRef = 069E823F24A4CF0B005495F6 /* Stack.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				06F42F4F24A3BF0400FF19D3 /* CartoonSwift */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		069E825624A4CF0B005495F6 /* DataStructure */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = DataStructure;
+			remoteRef = 069E825524A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E825824A4CF0B005495F6 /* Sequence */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = Sequence;
+			remoteRef = 069E825724A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E825A24A4CF0B005495F6 /* 链表 */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = "链表";
+			remoteRef = 069E825924A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E825C24A4CF0B005495F6 /* Recursive */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = Recursive;
+			remoteRef = 069E825B24A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E825E24A4CF0B005495F6 /* Sort */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = Sort;
+			remoteRef = 069E825D24A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E826024A4CF0B005495F6 /* Stack */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = Stack;
+			remoteRef = 069E825F24A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E826224A4CF0B005495F6 /* Stock */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = Stock;
+			remoteRef = 069E826124A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E826424A4CF0B005495F6 /* AStcok */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = AStcok;
+			remoteRef = 069E826324A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E826624A4CF0B005495F6 /* Sort2 */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = Sort2;
+			remoteRef = 069E826524A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E826824A4CF0B005495F6 /* Sort3 */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = Sort3;
+			remoteRef = 069E826724A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E826A24A4CF0B005495F6 /* BinarySearch */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = BinarySearch;
+			remoteRef = 069E826924A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E826C24A4CF0B005495F6 /* String */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = String;
+			remoteRef = 069E826B24A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E826E24A4CF0B005495F6 /* BinaryTree */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = BinaryTree;
+			remoteRef = 069E826D24A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E827024A4CF0B005495F6 /* BinaryTreeInArray */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = BinaryTreeInArray;
+			remoteRef = 069E826F24A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		069E827224A4CF0B005495F6 /* Solution */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = Solution;
+			remoteRef = 069E827124A4CF0B005495F6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		06F42F4C24A3BF0400FF19D3 /* Sources */ = {
