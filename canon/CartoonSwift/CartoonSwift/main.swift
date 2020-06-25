@@ -8,21 +8,15 @@
 
 import Foundation
 
-var result = RankArray.arrayRankTransform([40,10,20,30])
-print(result)
 
-result = RankArray.arrayRankTransform([1,2,3,4])
-print(result)
+let rowChar_0:[Character] = ["1","1","1","1","0"]
+let rowChar_1:[Character] = ["1","1","1","1","0"]
+let rowChar_2:[Character] = ["1","1","1","1","0"]
+let rowChar_3:[Character] = ["1","1","1","1","0"]
 
-result = RankArray.arrayRankTransform([1,2,2,4])
-print(result)
+let rowChas = [rowChar_0, rowChar_1, rowChar_2, rowChar_3]
 
-result = RankArray.arrayRankTransform([1,2,2,2])
-print(result)
+var aLand = Island()
+let result = aLand.numIslands(rowChas)
 
-result = RankArray.arrayRankTransform([3,212,332,1233])
-print(result)
-
-result = RankArray.arrayRankTransform([1,1,1,1])
-print(result)
-
+print("end")

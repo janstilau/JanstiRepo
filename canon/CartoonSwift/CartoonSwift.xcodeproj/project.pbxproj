@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		069E7D4224A466A6005495F6 /* BFS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E7D4124A466A6005495F6 /* BFS.swift */; };
 		06F42F5424A3BF0400FF19D3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F42F5324A3BF0400FF19D3 /* main.swift */; };
 		06F42F5B24A3BF1700FF19D3 /* RankArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F42F5A24A3BF1700FF19D3 /* RankArray.swift */; };
 		06F42F5D24A3C4B700FF19D3 /* SumOfThree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F42F5C24A3C4B700FF19D3 /* SumOfThree.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		069E7D4124A466A6005495F6 /* BFS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BFS.swift; sourceTree = "<group>"; };
 		06F42F5024A3BF0400FF19D3 /* CartoonSwift */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CartoonSwift; sourceTree = BUILT_PRODUCTS_DIR; };
 		06F42F5324A3BF0400FF19D3 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		06F42F5A24A3BF1700FF19D3 /* RankArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankArray.swift; sourceTree = "<group>"; };
@@ -44,10 +46,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		06F42F4724A3BF0400FF19D3 = {
+		069E7D4024A46671005495F6 /* Queue */ = {
 			isa = PBXGroup;
 			children = (
 				06F42F5E24A3C6D300FF19D3 /* MyCircularQueue.swift */,
+				069E7D4124A466A6005495F6 /* BFS.swift */,
+			);
+			path = Queue;
+			sourceTree = "<group>";
+		};
+		06F42F4724A3BF0400FF19D3 = {
+			isa = PBXGroup;
+			children = (
 				06F42F5224A3BF0400FF19D3 /* CartoonSwift */,
 				06F42F5124A3BF0400FF19D3 /* Products */,
 			);
@@ -65,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				06F42F5324A3BF0400FF19D3 /* main.swift */,
+				069E7D4024A46671005495F6 /* Queue */,
 				06F42F5A24A3BF1700FF19D3 /* RankArray.swift */,
 				06F42F5C24A3C4B700FF19D3 /* SumOfThree.swift */,
 			);
@@ -130,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				06F42F5F24A3C6D300FF19D3 /* MyCircularQueue.swift in Sources */,
+				069E7D4224A466A6005495F6 /* BFS.swift in Sources */,
 				06F42F5D24A3C4B700FF19D3 /* SumOfThree.swift in Sources */,
 				06F42F5424A3BF0400FF19D3 /* main.swift in Sources */,
 				06F42F5B24A3BF1700FF19D3 /* RankArray.swift in Sources */,
