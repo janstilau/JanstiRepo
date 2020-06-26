@@ -9,5 +9,6 @@
 import Foundation
 
 
-let result =  DailyTemperature.dailyTemperatures([73,74,75,71,69,72,76,73])
-print("end")
+let result = SplitArray.arrayPairSum([1,4,3,2])
+print(result)
+
