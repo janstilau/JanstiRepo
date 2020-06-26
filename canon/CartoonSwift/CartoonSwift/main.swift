@@ -9,14 +9,5 @@
 import Foundation
 
 
-let rowChar_0:[Character] = ["1","1","1","1","0"]
-let rowChar_1:[Character] = ["1","1","1","1","0"]
-let rowChar_2:[Character] = ["1","1","1","1","0"]
-let rowChar_3:[Character] = ["1","1","1","1","0"]
-
-let rowChas = [rowChar_0, rowChar_1, rowChar_2, rowChar_3]
-
-var aLand = Island()
-let result = aLand.numIslands(rowChas)
-
+let result =  DailyTemperature.dailyTemperatures([73,74,75,71,69,72,76,73])
 print("end")
