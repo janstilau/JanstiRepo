@@ -24,6 +24,12 @@
 		069E829124A652B0005495F6 /* RotateMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E829024A652B0005495F6 /* RotateMatrix.swift */; };
 		069E829324A660F6005495F6 /* DoublePointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E829224A660F6005495F6 /* DoublePointer.swift */; };
 		069E829524A6613E005495F6 /* InvertChars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E829424A6613E005495F6 /* InvertChars.swift */; };
+		069E829824A7207A005495F6 /* ZeroMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E829724A7207A005495F6 /* ZeroMatrix.swift */; };
+		069E829A24A723A6005495F6 /* DiagonalMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E829924A723A6005495F6 /* DiagonalMatrix.swift */; };
+		069E829C24A7304E005495F6 /* TowNumSum_2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E829B24A7304E005495F6 /* TowNumSum_2.swift */; };
+		069E829E24A73818005495F6 /* RemoveEle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E829D24A73818005495F6 /* RemoveEle.swift */; };
+		069E82A024A73EBB005495F6 /* MaxConsecutiveOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E829F24A73EBB005495F6 /* MaxConsecutiveOne.swift */; };
+		069E82A224A741B1005495F6 /* MinArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E82A124A741B1005495F6 /* MinArray.swift */; };
 		06F42F5424A3BF0400FF19D3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F42F5324A3BF0400FF19D3 /* main.swift */; };
 		06F42F5B24A3BF1700FF19D3 /* RankArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F42F5A24A3BF1700FF19D3 /* RankArray.swift */; };
 		06F42F5D24A3C4B700FF19D3 /* SumOfThree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F42F5C24A3C4B700FF19D3 /* SumOfThree.swift */; };
@@ -96,6 +102,12 @@
 		069E829024A652B0005495F6 /* RotateMatrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateMatrix.swift; sourceTree = "<group>"; };
 		069E829224A660F6005495F6 /* DoublePointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoublePointer.swift; sourceTree = "<group>"; };
 		069E829424A6613E005495F6 /* InvertChars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvertChars.swift; sourceTree = "<group>"; };
+		069E829724A7207A005495F6 /* ZeroMatrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZeroMatrix.swift; sourceTree = "<group>"; };
+		069E829924A723A6005495F6 /* DiagonalMatrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagonalMatrix.swift; sourceTree = "<group>"; };
+		069E829B24A7304E005495F6 /* TowNumSum_2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TowNumSum_2.swift; sourceTree = "<group>"; };
+		069E829D24A73818005495F6 /* RemoveEle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveEle.swift; sourceTree = "<group>"; };
+		069E829F24A73EBB005495F6 /* MaxConsecutiveOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaxConsecutiveOne.swift; sourceTree = "<group>"; };
+		069E82A124A741B1005495F6 /* MinArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinArray.swift; sourceTree = "<group>"; };
 		06F42F5024A3BF0400FF19D3 /* CartoonSwift */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CartoonSwift; sourceTree = BUILT_PRODUCTS_DIR; };
 		06F42F5324A3BF0400FF19D3 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		06F42F5A24A3BF1700FF19D3 /* RankArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankArray.swift; sourceTree = "<group>"; };
@@ -133,6 +145,12 @@
 				069E829024A652B0005495F6 /* RotateMatrix.swift */,
 				069E829224A660F6005495F6 /* DoublePointer.swift */,
 				069E829424A6613E005495F6 /* InvertChars.swift */,
+				069E829724A7207A005495F6 /* ZeroMatrix.swift */,
+				069E829924A723A6005495F6 /* DiagonalMatrix.swift */,
+				069E829B24A7304E005495F6 /* TowNumSum_2.swift */,
+				069E829D24A73818005495F6 /* RemoveEle.swift */,
+				069E829F24A73EBB005495F6 /* MaxConsecutiveOne.swift */,
+				069E82A124A741B1005495F6 /* MinArray.swift */,
 			);
 			path = Array;
 			sourceTree = "<group>";
@@ -453,6 +471,7 @@
 				069E829324A660F6005495F6 /* DoublePointer.swift in Sources */,
 				069E829524A6613E005495F6 /* InvertChars.swift in Sources */,
 				06F42F5F24A3C6D300FF19D3 /* MyCircularQueue.swift in Sources */,
+				069E82A224A741B1005495F6 /* MinArray.swift in Sources */,
 				069E828224A5B3DC005495F6 /* CloneGraph.swift in Sources */,
 				069E828F24A63D0A005495F6 /* MergeArray.swift in Sources */,
 				069E827B24A4EE68005495F6 /* ReversePolish.swift in Sources */,
@@ -460,12 +479,17 @@
 				069E7D4224A466A6005495F6 /* BFS.swift in Sources */,
 				069E828924A62C79005495F6 /* ArrayDetail.swift in Sources */,
 				069E829124A652B0005495F6 /* RotateMatrix.swift in Sources */,
+				069E829824A7207A005495F6 /* ZeroMatrix.swift in Sources */,
 				069E827924A4DD2E005495F6 /* DailyTemperature.swift in Sources */,
+				069E829A24A723A6005495F6 /* DiagonalMatrix.swift in Sources */,
 				069E828D24A636FB005495F6 /* SearchInsert.swift in Sources */,
 				06F42F5D24A3C4B700FF19D3 /* SumOfThree.swift in Sources */,
 				069E827524A4D591005495F6 /* MIniStack.swift in Sources */,
 				06F42F5424A3BF0400FF19D3 /* main.swift in Sources */,
+				069E829E24A73818005495F6 /* RemoveEle.swift in Sources */,
+				069E82A024A73EBB005495F6 /* MaxConsecutiveOne.swift in Sources */,
 				06F42F5B24A3BF1700FF19D3 /* RankArray.swift in Sources */,
+				069E829C24A7304E005495F6 /* TowNumSum_2.swift in Sources */,
 				069E827724A4D988005495F6 /* ValidSquare.swift in Sources */,
 				069E827E24A59BE8005495F6 /* DFS.swift in Sources */,
 				069E828524A5B62E005495F6 /* TwoSum.swift in Sources */,

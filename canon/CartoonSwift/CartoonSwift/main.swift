@@ -8,7 +8,6 @@
 
 import Foundation
 
-
-let result = SplitArray.arrayPairSum([1,4,3,2])
-print(result)
-
+var source = [2,3,1,2,4,3, 23, 32, 98, 223]
+let value = MinArray.minSubArrayLen(100, source)
+print("\(value)")

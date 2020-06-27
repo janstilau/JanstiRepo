@@ -46,6 +46,9 @@ import Foundation
    [16, 7,10,11]
  ]
  */
+/*
+ 这道题思路并不难, 但是寻找四个位置原始位置和对应位置的关系, 花费了不少时间. 并且, 遍历的开始和结束位置, 也花费了不少时间才理清.
+ */
 
 class RotateMatrix {
     static func rotate(_ matrix: inout [[Int]]) {
@@ -60,8 +63,14 @@ class RotateMatrix {
         let sizeCount = rowCount
         
         let midIdx = (rowCount-1) / 2
-        for row in 0...midIdx {
-            for column in 0...midIdx {
+        var columnEnd = sizeCount-1
+        let rowEnd = midIdx
+        var columnStart = 0
+        for row in 0...rowEnd {
+            columnStart = row
+            columnEnd -= 1
+            if columnStart > columnEnd { break }
+            for column in columnStart...columnEnd {
                 var stashValue = matrix[row][column]
                 var temp = -1
                 
