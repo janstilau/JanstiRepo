@@ -9,7 +9,16 @@
 import Foundation
 
 
-var nums = [0,0,1,1,1,2,2,3,3,4]
-var result = RemoveDuplicates.removeDuplicates(&nums)
-print(nums)
-print(result)
+let result = try FileManager.default.contentsOfDirectory(atPath: "/Users/justinlau/JanstiRepo/Code/GNU/CodingInterviewChinese2/")
+
+for aItem in result {
+    let fullPath = "/Users/justinlau/JanstiRepo/Code/GNU/CodingInterviewChinese2/\(aItem)"
+    if fullPath.hasSuffix("DS_Store") { continue }
+    let files = try FileManager.default.contentsOfDirectory(atPath: fullPath)
+    for aFile in files {
+        let filePath = "\(fullPath)/\(aFile)"
+        if filePath.hasSuffix("vcxproj") || filePath.hasSuffix("filters") {
+            try FileManager.default.removeItem(atPath: filePath)
+        }
+    }
+}
