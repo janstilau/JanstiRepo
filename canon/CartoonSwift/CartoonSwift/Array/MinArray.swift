@@ -20,11 +20,40 @@ import Foundation
  */
 
 class MinArray {
-    static func minSubArrayLen(_ s: Int, _ nums: [Int]) -> Int {
+    func minSubArrayLen(_ s: Int, _ nums: [Int]) -> Int {
+        guard !nums.isEmpty else {
+            return 0
+        }
+        
         var left = 0
         var right = 0
-        var currentSum = s
-        var minLength = 0
+        var minLength = Int.max
         
+        let count = nums.count
+        
+        var sum = 0
+        
+        while right < count {
+            sum += nums[right]
+            if sum >= s {
+                let aNewLength = right - left + 1
+                if aNewLength <= minLength {
+                    minLength = aNewLength
+                }
+                while sum >= s {
+                    let aNewLength = right - left + 1
+                    if aNewLength <= minLength {
+                        minLength = aNewLength
+                    }
+                    sum -= nums[left]
+                    left += 1
+                }
+                right += 1
+            } else {
+                right += 1
+            }
+        }
+        if (minLength == Int.max) { minLength = 0}
+        return minLength
     }
 }

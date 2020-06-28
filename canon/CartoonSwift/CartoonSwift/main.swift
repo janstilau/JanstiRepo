@@ -8,6 +8,27 @@
 
 import Foundation
 
-var source = [2,3,1,2,4,3, 23, 32, 98, 223]
-let value = MinArray.minSubArrayLen(100, source)
-print("\(value)")
+var values = [1, 2, 0, 3, 4, 0, 0, 5]
+print("Source \(values)")
+MoveZero.moveZeroes(&values)
+print("Changed \(values)")
+
+values = [2, 3, 1, 0, 0, 0, 5, 6, 2, 0, 2]
+print("Source \(values)")
+MoveZero.moveZeroes(&values)
+print("Changed \(values)")
+
+values = [123, 1, 23, 22, 0, 0, 0, 2, 0]
+print("Source \(values)")
+MoveZero.moveZeroes(&values)
+print("Changed \(values)")
+
+values = [0, 0, 0, 1, 2, 3, 4, 5, 0, 6]
+print("Source \(values)")
+MoveZero.moveZeroes(&values)
+print("Changed \(values)")
+
+values = [1]
+print("Source \(values)")
+MoveZero.moveZeroes(&values)
+print("Changed \(values)")
