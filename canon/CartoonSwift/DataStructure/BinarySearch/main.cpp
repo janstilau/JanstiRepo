@@ -8,6 +8,10 @@
 
 #include <iostream>
 
+/*
+ 整体的框架, 还是这样的, 而下面的各种, 按照不同的条件进行搜索, 主要还是在各个位置, 安插合适的判断条件.
+ 在合适的位置安插判断条件, 而不更改主流程, 让代码更加的清晰.
+ */
 int binarySearch(int datas[], int n, int value) {
     if (!datas) { return -1;}
     if (n < 1) { return -1; }
@@ -30,9 +34,16 @@ int binarySearch(int datas[], int n, int value) {
 int binarySearchRecuriveImp(int datas[], int left, int right, int value) {
     if (left < right) { return -1; }
     int mid = left + (right-left)/2;
-    if (datas[mid] == value) { return mid; }
-    if (datas[mid] > value) { return binarySearchRecuriveImp(datas, mid + 1, right, value);}
-    return binarySearchRecuriveImp(datas, left, mid - 1, value);
+    /*
+     这里, 不应该用 guard 处理. 到处使用 guard 处理逻辑, 反而打乱了清晰的处理流程.
+    */
+    if (datas[mid] == value) {
+        return mid;
+    } else if (datas[mid] > value) {
+        return binarySearchRecuriveImp(datas, mid + 1, right, value);
+    } else {
+        return binarySearchRecuriveImp(datas, left, mid - 1, value);
+    }
 }
 
 int binarySearchRecurive(int datas[], int n, int value) {
@@ -41,8 +52,6 @@ int binarySearchRecurive(int datas[], int n, int value) {
     if (value < datas[0] || datas[n-1] < value ) { return -1; }
     return binarySearchRecuriveImp(datas, 0, n, value);
 }
-
-// 这种二分查找的变体, 就用最简单的, 判断边界值周边的值是不是符合要求就好了. 那种不太直观的代码可能写起来简练一些, 但是没有可读性, 尽量避免那样.
 
 int binarySearchFirst(int datas[], int n, int value) {
     if (!datas) { return -1;}
@@ -58,6 +67,9 @@ int binarySearchFirst(int datas[], int n, int value) {
         } else if (midValue < value) {
             left = mid + 1;
         } else {
+            /*
+             查找第一个元素, 那么如果 mid 左侧的元素, 还是 value 的值的话, 第一个元素的位置一定在 mid 的左侧.
+             */
             if (mid == 0 || datas[mid-1] != value) { return mid;}
             right = mid - 1;
         }
@@ -79,6 +91,9 @@ int binarySearchLast(int datas[], int n, int value) {
         } else if (midValue < value) {
             left = mid + 1;
         } else {
+            /*
+            查找第一个元素, 那么如果 mid 右侧的元素, 还是 value 的值的话, 第一个元素的位置一定在 mid 的右侧.
+            */
             if (mid == n-1 || datas[mid+1] != value) { return mid;}
             left = mid+1;
         }
@@ -95,6 +110,7 @@ int binarySearchFirstBigerOrEqual(int datas[], int n, int value) {
     while (left <= right) {
         int mid = left + (right-left)/2;
         if (datas[mid] >= value) {
+            // 因为是 biggerOrEqual, 所以, 相等就合并到了 > 的判断条件里面
             if (mid == 0 || datas[mid - 1] < value) { return mid;}
             right = mid - 1;
         } else {

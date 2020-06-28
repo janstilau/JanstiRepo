@@ -128,6 +128,7 @@ int partion(int data[], int begin, int end) {
         int temp = data[left];
         data[left] = data[right];
         data[right] = temp;
+        // 在这个交换的过程中, 能够消除大量的逆序对.
     }
     int temp = data[begin];
     data[begin] = data[right];

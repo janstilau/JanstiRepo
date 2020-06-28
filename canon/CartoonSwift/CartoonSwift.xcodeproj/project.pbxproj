@@ -83,7 +83,6 @@
 		069E823924A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		069E823B24A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		069E823D24A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		069E823F24A4CF0B005495F6 /* Stack.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Stack.xcodeproj; sourceTree = "<group>"; };
 		069E824324A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		069E824524A4CF0B005495F6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		069E827424A4D591005495F6 /* MIniStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIniStack.swift; sourceTree = "<group>"; };
@@ -194,22 +193,21 @@
 		069E822024A4CF0B005495F6 /* DataStructure */ = {
 			isa = PBXGroup;
 			children = (
-				069E822424A4CF0B005495F6 /* AStcok */,
-				069E822624A4CF0B005495F6 /* Sort */,
-				069E822824A4CF0B005495F6 /* StringToSearch */,
-				069E822A24A4CF0B005495F6 /* BinarySearch */,
-				069E822C24A4CF0B005495F6 /* Recursive */,
 				069E822E24A4CF0B005495F6 /* 链表 */,
-				069E823024A4CF0B005495F6 /* Sort3 */,
-				069E823224A4CF0B005495F6 /* Solution */,
-				069E823424A4CF0B005495F6 /* Sort2 */,
-				069E823624A4CF0B005495F6 /* DataStructure */,
 				069E823824A4CF0B005495F6 /* 数组 */,
-				069E823A24A4CF0B005495F6 /* HeapN */,
-				069E823C24A4CF0B005495F6 /* String */,
-				069E823E24A4CF0B005495F6 /* Stack */,
-				069E824224A4CF0B005495F6 /* BinaryTreeIterator */,
+				069E822424A4CF0B005495F6 /* AStcok */,
+				069E822A24A4CF0B005495F6 /* BinarySearch */,
 				069E824424A4CF0B005495F6 /* BinaryTree */,
+				069E824224A4CF0B005495F6 /* BinaryTreeIterator */,
+				069E823624A4CF0B005495F6 /* DataStructure */,
+				069E823A24A4CF0B005495F6 /* HeapN */,
+				069E822C24A4CF0B005495F6 /* Recursive */,
+				069E823224A4CF0B005495F6 /* Solution */,
+				069E822624A4CF0B005495F6 /* Sort */,
+				069E823424A4CF0B005495F6 /* Sort2 */,
+				069E823024A4CF0B005495F6 /* Sort3 */,
+				069E823C24A4CF0B005495F6 /* String */,
+				069E822824A4CF0B005495F6 /* StringToSearch */,
 			);
 			path = DataStructure;
 			sourceTree = "<group>";
@@ -316,19 +314,6 @@
 				069E823D24A4CF0B005495F6 /* main.cpp */,
 			);
 			path = String;
-			sourceTree = "<group>";
-		};
-		069E823E24A4CF0B005495F6 /* Stack */ = {
-			isa = PBXGroup;
-			children = (
-				069E823F24A4CF0B005495F6 /* Stack.xcodeproj */,
-			);
-			path = Stack;
-			sourceTree = "<group>";
-		};
-		069E824024A4CF0B005495F6 /* Products */ = {
-			isa = PBXGroup;
-			name = Products;
 			sourceTree = "<group>";
 		};
 		069E824224A4CF0B005495F6 /* BinaryTreeIterator */ = {
@@ -448,12 +433,6 @@
 			mainGroup = 06F42F4724A3BF0400FF19D3;
 			productRefGroup = 06F42F5124A3BF0400FF19D3 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 069E824024A4CF0B005495F6 /* Products */;
-					ProjectRef = 069E823F24A4CF0B005495F6 /* Stack.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				06F42F4F24A3BF0400FF19D3 /* CartoonSwift */,

@@ -79,7 +79,8 @@ struct MyQueue {
     //        size++;
     //        return true;
     //    }
-    //    自动重排版本
+    
+    //    自动移动元素到起始位置.
     bool enqueue(int i) {
         if (tail == 10000) {
             if (head == 0) { return false;}
