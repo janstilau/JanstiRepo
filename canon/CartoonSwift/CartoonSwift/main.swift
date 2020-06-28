@@ -8,17 +8,8 @@
 
 import Foundation
 
-var result = Triangle.generate(3)
-print(result)
-result = Triangle.generate(4)
-print(result)
-result = Triangle.generate(5)
-print(result)
-result = Triangle.generate(6)
-print(result)
-result = Triangle.generate(7)
-print(result)
-result = Triangle.generate(8)
-print(result)
-result = Triangle.generate(9)
+
+var nums = [0,0,1,1,1,2,2,3,3,4]
+var result = RemoveDuplicates.removeDuplicates(&nums)
+print(nums)
 print(result)
