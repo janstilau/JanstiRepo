@@ -8,27 +8,17 @@
 
 import Foundation
 
-var values = [1, 2, 0, 3, 4, 0, 0, 5]
-print("Source \(values)")
-MoveZero.moveZeroes(&values)
-print("Changed \(values)")
-
-values = [2, 3, 1, 0, 0, 0, 5, 6, 2, 0, 2]
-print("Source \(values)")
-MoveZero.moveZeroes(&values)
-print("Changed \(values)")
-
-values = [123, 1, 23, 22, 0, 0, 0, 2, 0]
-print("Source \(values)")
-MoveZero.moveZeroes(&values)
-print("Changed \(values)")
-
-values = [0, 0, 0, 1, 2, 3, 4, 5, 0, 6]
-print("Source \(values)")
-MoveZero.moveZeroes(&values)
-print("Changed \(values)")
-
-values = [1]
-print("Source \(values)")
-MoveZero.moveZeroes(&values)
-print("Changed \(values)")
+var result = Triangle.generate(3)
+print(result)
+result = Triangle.generate(4)
+print(result)
+result = Triangle.generate(5)
+print(result)
+result = Triangle.generate(6)
+print(result)
+result = Triangle.generate(7)
+print(result)
+result = Triangle.generate(8)
+print(result)
+result = Triangle.generate(9)
+print(result)
