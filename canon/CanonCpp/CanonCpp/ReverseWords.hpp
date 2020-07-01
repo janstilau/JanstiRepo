@@ -47,4 +47,33 @@ public:
     }
 };
 
+class ReplaceSpace {
+public:
+    static string replaceSpace(string s) {
+        int size = (int)s.size();
+        int targetSize = 0;
+        for (int i = 0; i < size; i++) {
+            if (s[i] == ' ') {
+                targetSize += 3;
+            } else {
+                targetSize += 1;
+            }
+        }
+        char result[targetSize+1];
+        result[targetSize] = 0;
+        // Let's take LeetCode contest
+        for (int i = 0, j = 0; i < size; i++, j++) {
+            if (s[i] == ' ') {
+                result[j++] = '%';
+                result[j++] = '2';
+                result[j] = '0';
+            } else {
+                result[j] = s[i];
+            }
+        }
+        return string(result);
+    }
+};
+
+
 #endif /* ReverseWords_hpp */

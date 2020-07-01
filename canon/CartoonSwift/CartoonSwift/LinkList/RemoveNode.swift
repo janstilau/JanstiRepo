@@ -44,8 +44,32 @@ class RemoveNode {
         removedNode.val = removedNode.next!.val
         removedNode.next = removedNode.next!.next
     }
-    
-    func removeNthFromEnd(_ head: ListNode?, _ n: Int) -> ListNode? {
+}
+
+class FindNumIn2d {
+    static func findNumberIn2DArray(_ matrix: [[Int]], _ target: Int) -> Bool {
+        let rowCount = matrix.count
+        guard rowCount > 0 else {
+            return false
+        }
+        let columnCount = matrix[0].count
+        guard columnCount > 0 else {
+            return false
+        }
         
+        var rowIdx = rowCount-1
+        var columnIdx = 0
+        
+        while rowIdx >= 0 && columnIdx < columnCount {
+            if matrix[rowIdx][columnIdx] == target {
+                return true
+            } else if matrix[rowIdx][columnIdx] > target {
+                rowIdx -= 1
+            } else {
+                columnIdx += 1
+            }
+        }
+        return false
     }
 }
+

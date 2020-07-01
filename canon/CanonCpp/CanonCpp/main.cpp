@@ -14,8 +14,8 @@ using namespace std;
 int main(int argc, const char * argv[]) {
     
     string txt = "Let's take LeetCode contest";
-    auto reversed = ReverseWords::reverseWords(txt);
-    cout << reversed;
+    auto result = ReplaceSpace::replaceSpace(txt);
+    cout << result;
     return 0;
 }
 
