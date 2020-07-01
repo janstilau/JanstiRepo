@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0630232E24AA4078003AB0D4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0630232D24AA4078003AB0D4 /* main.cpp */; };
-		0630233524AA4082003AB0D4 /* AssignmentOperator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0630233424AA4082003AB0D4 /* AssignmentOperator.cpp */; };
-		0630233B24AA5092003AB0D4 /* FindDuplicationNoEdit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0630233A24AA5092003AB0D4 /* FindDuplicationNoEdit.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,6 +28,19 @@
 		0630233424AA4082003AB0D4 /* AssignmentOperator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AssignmentOperator.cpp; path = ../../01_AssignmentOperator/AssignmentOperator.cpp; sourceTree = "<group>"; };
 		0630233624AA4718003AB0D4 /* FindDuplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FindDuplication.cpp; path = ../../03_01_DuplicationInArray/FindDuplication.cpp; sourceTree = "<group>"; };
 		0630233A24AA5092003AB0D4 /* FindDuplicationNoEdit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FindDuplicationNoEdit.cpp; path = ../../03_02_DuplicationInArrayNoEdit/FindDuplicationNoEdit.cpp; sourceTree = "<group>"; };
+		069D1A6B24AC983500ABAFDA /* FindInPartiallySortedMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FindInPartiallySortedMatrix.cpp; path = ../../04_FindInPartiallySortedMatrix/FindInPartiallySortedMatrix.cpp; sourceTree = "<group>"; };
+		069D1A6D24AC98E600ABAFDA /* ReplaceSpaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ReplaceSpaces.cpp; path = ../../05_ReplaceSpaces/ReplaceSpaces.cpp; sourceTree = "<group>"; };
+		069D1A6F24AC990D00ABAFDA /* PrintListInReversedOrder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PrintListInReversedOrder.cpp; path = ../../06_PrintListInReversedOrder/PrintListInReversedOrder.cpp; sourceTree = "<group>"; };
+		069D1A9324AC99B500ABAFDA /* Tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Tree.h; sourceTree = "<group>"; };
+		069D1A9424AC99B500ABAFDA /* StringUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringUtil.h; sourceTree = "<group>"; };
+		069D1A9524AC99B500ABAFDA /* Tree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Tree.cpp; sourceTree = "<group>"; };
+		069D1A9624AC99B500ABAFDA /* Array.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Array.cpp; sourceTree = "<group>"; };
+		069D1A9724AC99B500ABAFDA /* List.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
+		069D1A9824AC99B500ABAFDA /* BinaryTree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BinaryTree.cpp; sourceTree = "<group>"; };
+		069D1A9924AC99B500ABAFDA /* List.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = List.cpp; sourceTree = "<group>"; };
+		069D1A9A24AC99B500ABAFDA /* Array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
+		069D1A9B24AC99B500ABAFDA /* BinaryTree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BinaryTree.h; sourceTree = "<group>"; };
+		069D1A9C24AC99B500ABAFDA /* StringUtil.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StringUtil.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,12 +73,34 @@
 		0630232C24AA4078003AB0D4 /* CodeEnhance */ = {
 			isa = PBXGroup;
 			children = (
+				069D1A9224AC99B500ABAFDA /* Utilities */,
 				0630232D24AA4078003AB0D4 /* main.cpp */,
 				0630233424AA4082003AB0D4 /* AssignmentOperator.cpp */,
 				0630233624AA4718003AB0D4 /* FindDuplication.cpp */,
 				0630233A24AA5092003AB0D4 /* FindDuplicationNoEdit.cpp */,
+				069D1A6B24AC983500ABAFDA /* FindInPartiallySortedMatrix.cpp */,
+				069D1A6D24AC98E600ABAFDA /* ReplaceSpaces.cpp */,
+				069D1A6F24AC990D00ABAFDA /* PrintListInReversedOrder.cpp */,
 			);
 			path = CodeEnhance;
+			sourceTree = "<group>";
+		};
+		069D1A9224AC99B500ABAFDA /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				069D1A9624AC99B500ABAFDA /* Array.cpp */,
+				069D1A9A24AC99B500ABAFDA /* Array.h */,
+				069D1A9824AC99B500ABAFDA /* BinaryTree.cpp */,
+				069D1A9B24AC99B500ABAFDA /* BinaryTree.h */,
+				069D1A9924AC99B500ABAFDA /* List.cpp */,
+				069D1A9724AC99B500ABAFDA /* List.h */,
+				069D1A9C24AC99B500ABAFDA /* StringUtil.cpp */,
+				069D1A9424AC99B500ABAFDA /* StringUtil.h */,
+				069D1A9524AC99B500ABAFDA /* Tree.cpp */,
+				069D1A9324AC99B500ABAFDA /* Tree.h */,
+			);
+			name = Utilities;
+			path = ../../../CanonCpp/Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,8 +160,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0630233524AA4082003AB0D4 /* AssignmentOperator.cpp in Sources */,
-				0630233B24AA5092003AB0D4 /* FindDuplicationNoEdit.cpp in Sources */,
 				0630232E24AA4078003AB0D4 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -7,15 +7,10 @@ Distributed under the BSD license.
 https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 *******************************************************************/
 
-//==================================================================
-// ¡¶½£Ö¸Offer¡ª¡ªÃûÆóÃæÊÔ¹Ù¾«½²µäĞÍ±à³ÌÌâ¡·´úÂë
-// ×÷Õß£ººÎº£ÌÎ
-//==================================================================
+// é¢è¯•é¢˜6ï¼šä»å°¾åˆ°å¤´æ‰“å°é“¾è¡¨
+// é¢˜ç›®ï¼šè¾“å…¥ä¸€ä¸ªé“¾è¡¨çš„å¤´ç»“ç‚¹ï¼Œä»å°¾åˆ°å¤´åè¿‡æ¥æ‰“å°å‡ºæ¯ä¸ªç»“ç‚¹çš„å€¼ã€‚
 
-// ÃæÊÔÌâ6£º´ÓÎ²µ½Í·´òÓ¡Á´±í
-// ÌâÄ¿£ºÊäÈëÒ»¸öÁ´±íµÄÍ·½áµã£¬´ÓÎ²µ½Í··´¹ıÀ´´òÓ¡³öÃ¿¸ö½áµãµÄÖµ¡£
-
-#include "..\Utilities\List.h"
+#include "List.h"
 #include <stack>
 
 void PrintListReversingly_Iteratively(ListNode* pHead)
@@ -50,7 +45,7 @@ void PrintListReversingly_Recursively(ListNode* pHead)
     }
 }
 
-// ====================²âÊÔ´úÂë====================
+// ====================æµ‹è¯•ä»£ç ====================
 void Test(ListNode* pHead)
 {
     PrintList(pHead);
@@ -80,7 +75,7 @@ void Test1()
     DestroyList(pNode1);
 }
 
-// Ö»ÓĞÒ»¸ö½áµãµÄÁ´±í: 1
+// åªæœ‰ä¸€ä¸ªç»“ç‚¹çš„é“¾è¡¨: 1
 void Test2()
 {
     printf("\nTest2 begins.\n");
@@ -92,7 +87,7 @@ void Test2()
     DestroyList(pNode1);
 }
 
-// ¿ÕÁ´±í
+// ç©ºé“¾è¡¨
 void Test3()
 {
     printf("\nTest3 begins.\n");
@@ -108,4 +103,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

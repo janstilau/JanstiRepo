@@ -100,7 +100,7 @@ static void test(char* testName, int numbers[], int lengthNumbers, int expected[
     } else
         printf("FAILED.\n");
 }
-
+/*
 // 重复的数字是数组中最小的数字
 void test1()
 {
@@ -148,7 +148,7 @@ void test6()
     int duplications[] = { -1 }; // not in use in the test function
     test("Test6", numbers, 0, duplications, sizeof(duplications) / sizeof(int), false);
 }
-
+*/
 //int main()
 //{
 //    test1();

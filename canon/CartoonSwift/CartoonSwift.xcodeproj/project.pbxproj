@@ -11,6 +11,7 @@
 		0630233D24AA59B0003AB0D4 /* BestBuyStock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0630233C24AA59B0003AB0D4 /* BestBuyStock.swift */; };
 		0630233F24AA5F12003AB0D4 /* RotateArrayK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0630233E24AA5F12003AB0D4 /* RotateArrayK.swift */; };
 		065E7A4424ABA1F4008C867E /* RemoveNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065E7A4324ABA1F4008C867E /* RemoveNode.swift */; };
+		069D1A9F24ACA00E00ABAFDA /* RebuldTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069D1A9E24ACA00E00ABAFDA /* RebuldTree.swift */; };
 		069E7D4224A466A6005495F6 /* BFS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E7D4124A466A6005495F6 /* BFS.swift */; };
 		069E827524A4D591005495F6 /* MIniStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E827424A4D591005495F6 /* MIniStack.swift */; };
 		069E827724A4D988005495F6 /* ValidSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E827624A4D988005495F6 /* ValidSquare.swift */; };
@@ -62,6 +63,7 @@
 		0630233C24AA59B0003AB0D4 /* BestBuyStock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestBuyStock.swift; sourceTree = "<group>"; };
 		0630233E24AA5F12003AB0D4 /* RotateArrayK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateArrayK.swift; sourceTree = "<group>"; };
 		065E7A4324ABA1F4008C867E /* RemoveNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveNode.swift; sourceTree = "<group>"; };
+		069D1A9E24ACA00E00ABAFDA /* RebuldTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RebuldTree.swift; sourceTree = "<group>"; };
 		069E7D4124A466A6005495F6 /* BFS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BFS.swift; sourceTree = "<group>"; };
 		069E820B24A4CEB1005495F6 /* 4-队列.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "4-队列.md"; sourceTree = "<group>"; };
 		069E820C24A4CEB1005495F6 /* 2-链表.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "2-链表.md"; sourceTree = "<group>"; };
@@ -149,6 +151,14 @@
 				065E7A4324ABA1F4008C867E /* RemoveNode.swift */,
 			);
 			path = LinkList;
+			sourceTree = "<group>";
+		};
+		069D1A9D24ACA00500ABAFDA /* Tree */ = {
+			isa = PBXGroup;
+			children = (
+				069D1A9E24ACA00E00ABAFDA /* RebuldTree.swift */,
+			);
+			path = Tree;
 			sourceTree = "<group>";
 		};
 		069E7D4024A46671005495F6 /* Queue */ = {
@@ -409,6 +419,7 @@
 		06F42F5224A3BF0400FF19D3 /* CartoonSwift */ = {
 			isa = PBXGroup;
 			children = (
+				069D1A9D24ACA00500ABAFDA /* Tree */,
 				065E7A4224ABA1E3008C867E /* LinkList */,
 				069E828324A5B61C005495F6 /* Easy */,
 				069E820A24A4CEB1005495F6 /* 数据结构 */,
@@ -490,6 +501,7 @@
 				06F42F5F24A3C6D300FF19D3 /* MyCircularQueue.swift in Sources */,
 				0630233D24AA59B0003AB0D4 /* BestBuyStock.swift in Sources */,
 				06BFEC0524A8F5A10005CCE4 /* ReverseString.swift in Sources */,
+				069D1A9F24ACA00E00ABAFDA /* RebuldTree.swift in Sources */,
 				069E82A224A741B1005495F6 /* MinArray.swift in Sources */,
 				069E828224A5B3DC005495F6 /* CloneGraph.swift in Sources */,
 				069E828F24A63D0A005495F6 /* MergeArray.swift in Sources */,
