@@ -8,14 +8,7 @@
 
 import Foundation
 
- public class ListNode {
-     public var val: Int
-     public var next: ListNode?
-     public init(_ val: Int) {
-         self.val = val
-         self.next = nil
-     }
- }
+
 
 /*
  Given a linked list, remove the n-th node from the end of list and return its head.

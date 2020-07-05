@@ -69,9 +69,9 @@ import Foundation
  
  */
 
-public class Node {
+public class GraphNode {
     public var val: Int
-    public var neighbors: [Node?]
+    public var neighbors: [GraphNode?]
     public init(_ val: Int) {
      self.val = val
      self.neighbors = []
@@ -79,7 +79,7 @@ public class Node {
  }
 
 class CloneGraph {
-    func cloneGraph(_ node: Node?) -> Node? {
+    func cloneGraph(_ node: GraphNode?) -> GraphNode? {
         return nil
     }
 }

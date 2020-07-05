@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0630232E24AA4078003AB0D4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0630232D24AA4078003AB0D4 /* main.cpp */; };
+		06B0EAD924AFA35000D8ADF7 /* QueueWithTwoStacks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06B0EAD824AFA35000D8ADF7 /* QueueWithTwoStacks.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +29,7 @@
 		0630233424AA4082003AB0D4 /* AssignmentOperator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AssignmentOperator.cpp; path = ../../01_AssignmentOperator/AssignmentOperator.cpp; sourceTree = "<group>"; };
 		0630233624AA4718003AB0D4 /* FindDuplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FindDuplication.cpp; path = ../../03_01_DuplicationInArray/FindDuplication.cpp; sourceTree = "<group>"; };
 		0630233A24AA5092003AB0D4 /* FindDuplicationNoEdit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FindDuplicationNoEdit.cpp; path = ../../03_02_DuplicationInArrayNoEdit/FindDuplicationNoEdit.cpp; sourceTree = "<group>"; };
+		065369A124AF9B8A00EF1C46 /* NextNodeInBinaryTrees.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = NextNodeInBinaryTrees.cpp; path = ../../../CanonCpp/08_NextNodeInBinaryTrees/NextNodeInBinaryTrees.cpp; sourceTree = "<group>"; };
 		069D1A6B24AC983500ABAFDA /* FindInPartiallySortedMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FindInPartiallySortedMatrix.cpp; path = ../../04_FindInPartiallySortedMatrix/FindInPartiallySortedMatrix.cpp; sourceTree = "<group>"; };
 		069D1A6D24AC98E600ABAFDA /* ReplaceSpaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ReplaceSpaces.cpp; path = ../../05_ReplaceSpaces/ReplaceSpaces.cpp; sourceTree = "<group>"; };
 		069D1A6F24AC990D00ABAFDA /* PrintListInReversedOrder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PrintListInReversedOrder.cpp; path = ../../06_PrintListInReversedOrder/PrintListInReversedOrder.cpp; sourceTree = "<group>"; };
@@ -41,6 +43,9 @@
 		069D1A9A24AC99B500ABAFDA /* Array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
 		069D1A9B24AC99B500ABAFDA /* BinaryTree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BinaryTree.h; sourceTree = "<group>"; };
 		069D1A9C24AC99B500ABAFDA /* StringUtil.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StringUtil.cpp; sourceTree = "<group>"; };
+		069D1AA024ADF3F500ABAFDA /* ConstructBinaryTree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConstructBinaryTree.cpp; path = ../../../CanonCpp/07_ConstructBinaryTree/ConstructBinaryTree.cpp; sourceTree = "<group>"; };
+		06B0EAD724AFA35000D8ADF7 /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Queue.h; path = ../../09_QueueWithTwoStacks/Queue.h; sourceTree = "<group>"; };
+		06B0EAD824AFA35000D8ADF7 /* QueueWithTwoStacks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QueueWithTwoStacks.cpp; path = ../../09_QueueWithTwoStacks/QueueWithTwoStacks.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +86,10 @@
 				069D1A6B24AC983500ABAFDA /* FindInPartiallySortedMatrix.cpp */,
 				069D1A6D24AC98E600ABAFDA /* ReplaceSpaces.cpp */,
 				069D1A6F24AC990D00ABAFDA /* PrintListInReversedOrder.cpp */,
+				069D1AA024ADF3F500ABAFDA /* ConstructBinaryTree.cpp */,
+				065369A124AF9B8A00EF1C46 /* NextNodeInBinaryTrees.cpp */,
+				06B0EAD724AFA35000D8ADF7 /* Queue.h */,
+				06B0EAD824AFA35000D8ADF7 /* QueueWithTwoStacks.cpp */,
 			);
 			path = CodeEnhance;
 			sourceTree = "<group>";
@@ -161,6 +170,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0630232E24AA4078003AB0D4 /* main.cpp in Sources */,
+				06B0EAD924AFA35000D8ADF7 /* QueueWithTwoStacks.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
