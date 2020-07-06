@@ -30,6 +30,7 @@
 		06525A9C24B22143007206D8 /* OddEvenList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06525A9B24B22143007206D8 /* OddEvenList.swift */; };
 		06525A9E24B22550007206D8 /* AddTwoNums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06525A9D24B22550007206D8 /* AddTwoNums.swift */; };
 		06525AA024B229F7007206D8 /* FlatList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06525A9F24B229F7007206D8 /* FlatList.swift */; };
+		06525AA224B23791007206D8 /* CopyRandomList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06525AA124B23791007206D8 /* CopyRandomList.swift */; };
 		065369A424AF9FDE00EF1C46 /* ReversePint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065369A324AF9FDE00EF1C46 /* ReversePint.swift */; };
 		065369A624AFA0D400EF1C46 /* QueueBasedOnStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065369A524AFA0D400EF1C46 /* QueueBasedOnStack.swift */; };
 		065E7A4424ABA1F4008C867E /* RemoveNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065E7A4324ABA1F4008C867E /* RemoveNode.swift */; };
@@ -105,6 +106,7 @@
 		06525A9B24B22143007206D8 /* OddEvenList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddEvenList.swift; sourceTree = "<group>"; };
 		06525A9D24B22550007206D8 /* AddTwoNums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTwoNums.swift; sourceTree = "<group>"; };
 		06525A9F24B229F7007206D8 /* FlatList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatList.swift; sourceTree = "<group>"; };
+		06525AA124B23791007206D8 /* CopyRandomList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyRandomList.swift; sourceTree = "<group>"; };
 		065369A324AF9FDE00EF1C46 /* ReversePint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversePint.swift; sourceTree = "<group>"; };
 		065369A524AFA0D400EF1C46 /* QueueBasedOnStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueBasedOnStack.swift; sourceTree = "<group>"; };
 		065E7A4324ABA1F4008C867E /* RemoveNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveNode.swift; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 				06525A9B24B22143007206D8 /* OddEvenList.swift */,
 				06525A9D24B22550007206D8 /* AddTwoNums.swift */,
 				06525A9F24B229F7007206D8 /* FlatList.swift */,
+				06525AA124B23791007206D8 /* CopyRandomList.swift */,
 			);
 			path = LinkList;
 			sourceTree = "<group>";
@@ -596,6 +599,7 @@
 				069E82A224A741B1005495F6 /* MinArray.swift in Sources */,
 				06525A8524B1ADC9007206D8 /* SearchTree.swift in Sources */,
 				069E828224A5B3DC005495F6 /* CloneGraph.swift in Sources */,
+				06525AA224B23791007206D8 /* CopyRandomList.swift in Sources */,
 				069E828F24A63D0A005495F6 /* MergeArray.swift in Sources */,
 				06525A9624B20FB9007206D8 /* CircleList.swift in Sources */,
 				06525A8B24B1C140007206D8 /* MakeBSTTree.swift in Sources */,
