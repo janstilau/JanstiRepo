@@ -13,7 +13,7 @@
  */
 import Foundation
 
-
+/*
 let node_1 = Node(1)
 let node_2 = Node(2)
 let node_3 = Node(3)
@@ -63,7 +63,8 @@ node_8.child = node_11
 let result = FlattenList.flatten(node_1)
 print(result)
 
+*/
 
 
-
-
+let order = BuildTreeFromInPostOrder()
+order.buildTree([9,3,15,20,7], [9,15,7,20,3])

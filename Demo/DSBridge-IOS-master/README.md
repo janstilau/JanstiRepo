@@ -493,6 +493,7 @@ Test whether the handler exist in Java, the `handlerName` can contain the namesp
 `type`: optional`["all"|"syn"|"asyn" ]`, default is "all".
 
 ```javascript
+moegoBattle.share
 dsBridge.hasNativeMethod('testAsyn') 
 //test namespace method
 dsBridge.hasNativeMethod('test.testAsyn')

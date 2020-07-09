@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06A9E3FB24B4E80900E3DC79 /* Word.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06A9E3F924B4E80900E3DC79 /* Word.cpp */; };
 		06BFEC1324A8F6180005CCE4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06BFEC1224A8F6180005CCE4 /* main.cpp */; };
 		06BFEC1B24A8F62A0005CCE4 /* ReverseWords.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06BFEC1924A8F62A0005CCE4 /* ReverseWords.cpp */; };
 /* End PBXBuildFile section */
@@ -24,6 +25,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		06A9E3F924B4E80900E3DC79 /* Word.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Word.cpp; sourceTree = "<group>"; };
+		06A9E3FA24B4E80900E3DC79 /* Word.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Word.hpp; sourceTree = "<group>"; };
 		06BFEC0F24A8F6180005CCE4 /* CanonCpp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CanonCpp; sourceTree = BUILT_PRODUCTS_DIR; };
 		06BFEC1224A8F6180005CCE4 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		06BFEC1924A8F62A0005CCE4 /* ReverseWords.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ReverseWords.cpp; sourceTree = "<group>"; };
@@ -63,6 +66,8 @@
 				06BFEC1224A8F6180005CCE4 /* main.cpp */,
 				06BFEC1924A8F62A0005CCE4 /* ReverseWords.cpp */,
 				06BFEC1A24A8F62A0005CCE4 /* ReverseWords.hpp */,
+				06A9E3F924B4E80900E3DC79 /* Word.cpp */,
+				06A9E3FA24B4E80900E3DC79 /* Word.hpp */,
 			);
 			path = CanonCpp;
 			sourceTree = "<group>";
@@ -124,6 +129,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06A9E3FB24B4E80900E3DC79 /* Word.cpp in Sources */,
 				06BFEC1B24A8F62A0005CCE4 /* ReverseWords.cpp in Sources */,
 				06BFEC1324A8F6180005CCE4 /* main.cpp in Sources */,
 			);
