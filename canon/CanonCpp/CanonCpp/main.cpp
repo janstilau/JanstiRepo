@@ -8,14 +8,14 @@
 
 #include <iostream>
 #include "ReverseWords.hpp"
+#include "Word.cpp"
 
 using namespace std;
 
 int main(int argc, const char * argv[]) {
     
-    string txt = "Let's take LeetCode contest";
-    auto result = ReplaceSpace::replaceSpace(txt);
-    cout << result;
+    auto value = MinWindow();
+    auto result = value.minWindow("ADOBECODEBANC", "ABC");
     return 0;
 }
 

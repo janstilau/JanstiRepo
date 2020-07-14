@@ -7,21 +7,16 @@ Distributed under the BSD license.
 https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 *******************************************************************/
 
-//==================================================================
-// ¡¶½£Ö¸Offer¡ª¡ªÃûÆóÃæÊÔ¹Ù¾«½²µäĞÍ±à³ÌÌâ¡·´úÂë
-// ×÷Õß£ººÎº£ÌÎ
-//==================================================================
-
-// ÃæÊÔÌâ21£ºµ÷ÕûÊı×éË³ĞòÊ¹ÆæÊıÎ»ÓÚÅ¼ÊıÇ°Ãæ
-// ÌâÄ¿£ºÊäÈëÒ»¸öÕûÊıÊı×é£¬ÊµÏÖÒ»¸öº¯ÊıÀ´µ÷Õû¸ÃÊı×éÖĞÊı×ÖµÄË³Ğò£¬Ê¹µÃËùÓĞ
-// ÆæÊıÎ»ÓÚÊı×éµÄÇ°°ë²¿·Ö£¬ËùÓĞÅ¼ÊıÎ»ÓÚÊı×éµÄºó°ë²¿·Ö¡£
+// é¢è¯•é¢˜21ï¼šè°ƒæ•´æ•°ç»„é¡ºåºä½¿å¥‡æ•°ä½äºå¶æ•°å‰é¢
+// é¢˜ç›®ï¼šè¾“å…¥ä¸€ä¸ªæ•´æ•°æ•°ç»„ï¼Œå®ç°ä¸€ä¸ªå‡½æ•°æ¥è°ƒæ•´è¯¥æ•°ç»„ä¸­æ•°å­—çš„é¡ºåºï¼Œä½¿å¾—æ‰€æœ‰
+// å¥‡æ•°ä½äºæ•°ç»„çš„å‰åŠéƒ¨åˆ†ï¼Œæ‰€æœ‰å¶æ•°ä½äºæ•°ç»„çš„ååŠéƒ¨åˆ†ã€‚
 
 #include <cstdio>
 
 void Reorder(int *pData, unsigned int length, bool (*func)(int));
 bool isEven(int n);
 
-// ====================·½·¨Ò»====================
+// ====================æ–¹æ³•ä¸€====================
 void ReorderOddEven_1(int *pData, unsigned int length)
 {
     if(pData == nullptr || length == 0)
@@ -30,13 +25,17 @@ void ReorderOddEven_1(int *pData, unsigned int length)
     int *pBegin = pData;
     int *pEnd = pData + length - 1;
 
+    /*
+     temp è¿™ä¸ªå˜é‡å, å…¶å®æ˜¯å¯ä»¥å‡ºç°åœ¨å¾ˆå°å¾ˆå°çš„èŒƒå›´å†…çš„.
+     åªè¦å‡ºç°äº†è¿™ä¸ªå˜é‡, å°±ä»£è¡¨ç€å…¶å®æ˜¯å¯ä»¥å¿½ç•¥è¿™ä¸ªå€¼.
+     */
     while(pBegin < pEnd)
     {
-        // ÏòºóÒÆ¶¯pBegin£¬Ö±µ½ËüÖ¸ÏòÅ¼Êı
+        // å‘åç§»åŠ¨pBeginï¼Œç›´åˆ°å®ƒæŒ‡å‘å¶æ•°
         while(pBegin < pEnd && (*pBegin & 0x1) != 0)
             pBegin ++;
 
-        // ÏòÇ°ÒÆ¶¯pEnd£¬Ö±µ½ËüÖ¸ÏòÆæÊı
+        // å‘å‰ç§»åŠ¨pEndï¼Œç›´åˆ°å®ƒæŒ‡å‘å¥‡æ•°
         while(pBegin < pEnd && (*pEnd & 0x1) == 0)
             pEnd --;
 
@@ -49,7 +48,7 @@ void ReorderOddEven_1(int *pData, unsigned int length)
     }
 }
 
-// ====================·½·¨¶ş====================
+// ====================æ–¹æ³•äºŒ====================
 void ReorderOddEven_2(int *pData, unsigned int length)
 {
     Reorder(pData, length, isEven);
@@ -65,11 +64,11 @@ void Reorder(int *pData, unsigned int length, bool (*func)(int))
 
     while(pBegin < pEnd) 
     {
-        // ÏòºóÒÆ¶¯pBegin
+        // å‘åç§»åŠ¨pBegin
         while(pBegin < pEnd && !func(*pBegin))
             pBegin ++;
 
-        // ÏòÇ°ÒÆ¶¯pEnd
+        // å‘å‰ç§»åŠ¨pEnd
         while(pBegin < pEnd && func(*pEnd))
             pEnd --;
 
@@ -87,7 +86,7 @@ bool isEven(int n)
     return (n & 1) == 0;
 }
 
-// ====================²âÊÔ´úÂë====================
+// ====================æµ‹è¯•ä»£ç ====================
 void PrintArray(int numbers[], int length)
 {
     if(length < 0)
@@ -101,12 +100,12 @@ void PrintArray(int numbers[], int length)
 
 void Test(char* testName, int numbers[], int length)
 {
-    if(testName != nullptr)
+    if(testName != nullptr) {
         printf("%s begins:\n", testName);
+    }
 
     int* copy = new int[length];
-    for(int i = 0; i < length; ++i)
-    {
+    for(int i = 0; i < length; ++i) {
         copy[i] = numbers[i];
     }
 
@@ -169,4 +168,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

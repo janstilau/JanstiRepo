@@ -7,14 +7,9 @@ Distributed under the BSD license.
 https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 *******************************************************************/
 
-//==================================================================
-// ¡¶½£Ö¸Offer¡ª¡ªÃûÆóÃæÊÔ¹Ù¾«½²µäĞÍ±à³ÌÌâ¡·´úÂë
-// ×÷Õß£ººÎº£ÌÎ
-//==================================================================
-
-// ÃæÊÔÌâ18£¨Ò»£©£ºÔÚO(1)Ê±¼äÉ¾³ıÁ´±í½áµã
-// ÌâÄ¿£º¸ø¶¨µ¥ÏòÁ´±íµÄÍ·Ö¸ÕëºÍÒ»¸ö½áµãÖ¸Õë£¬¶¨ÒåÒ»¸öº¯ÊıÔÚO(1)Ê±¼äÉ¾³ı¸Ã
-// ½áµã¡£
+// é¢è¯•é¢˜18ï¼ˆä¸€ï¼‰ï¼šåœ¨O(1)æ—¶é—´åˆ é™¤é“¾è¡¨ç»“ç‚¹
+// é¢˜ç›®ï¼šç»™å®šå•å‘é“¾è¡¨çš„å¤´æŒ‡é’ˆå’Œä¸€ä¸ªç»“ç‚¹æŒ‡é’ˆï¼Œå®šä¹‰ä¸€ä¸ªå‡½æ•°åœ¨O(1)æ—¶é—´åˆ é™¤è¯¥
+// ç»“ç‚¹ã€‚
 
 #include <cstdio>
 #include "..\Utilities\List.h"
@@ -24,39 +19,37 @@ void DeleteNode(ListNode** pListHead, ListNode* pToBeDeleted)
     if(!pListHead || !pToBeDeleted)
         return;
 
-    // ÒªÉ¾³ıµÄ½áµã²»ÊÇÎ²½áµã
-    if(pToBeDeleted->m_pNext != nullptr)
-    {
+    // è¦åˆ é™¤çš„ç»“ç‚¹ä¸æ˜¯å°¾ç»“ç‚¹
+    /*
+     nullptr C++ ä¸­ç‰¹æ„å®šä¹‰çš„ä¸€ä¸ªæ–°çš„å…³é”®å­—, ç”¨æ¥æ›¿æ¢ Null. ä½œä¸ºæŒ‡é’ˆä¸­, æœ‰æ„ä¹‰çš„æ ‡è¯†ç¬¦.
+     è¿™å¥—é¢˜æœ€ç²¾å¦™çš„åœ°æ–¹, å°±æ˜¯ç”¨ next é‡Œé¢çš„å€¼, æ¥è¦†ç›–è¦åˆ é™¤çš„èŠ‚ç‚¹çš„æ•°æ®, ç„¶ååˆ é™¤ next çš„å€¼.
+     */
+    if(pToBeDeleted->m_pNext != nullptr) {
         ListNode* pNext = pToBeDeleted->m_pNext;
         pToBeDeleted->m_nValue = pNext->m_nValue;
         pToBeDeleted->m_pNext = pNext->m_pNext;
  
         delete pNext;
         pNext = nullptr;
-    }
-    // Á´±íÖ»ÓĞÒ»¸ö½áµã£¬É¾³ıÍ·½áµã£¨Ò²ÊÇÎ²½áµã£©
-    else if(*pListHead == pToBeDeleted)
-    {
+    } else if(*pListHead == pToBeDeleted) // é“¾è¡¨åªæœ‰ä¸€ä¸ªç»“ç‚¹ï¼Œåˆ é™¤å¤´ç»“ç‚¹ï¼ˆä¹Ÿæ˜¯å°¾ç»“ç‚¹ï¼‰ {
         delete pToBeDeleted;
         pToBeDeleted = nullptr;
         *pListHead = nullptr;
-    }
-    // Á´±íÖĞÓĞ¶à¸ö½áµã£¬É¾³ıÎ²½áµã
-    else
-    {
+    } else {
+        /*
+         å¦‚æœè¦åˆ é™¤çš„æ˜¯å°¾èŠ‚ç‚¹, é‚£ä¹ˆå¿…é¡»è¦ä»å¤´å¯»æ‰¾, æ‰¾åˆ°å°¾ç»“ç‚¹çš„å‰ä¸€ä¸ªèŠ‚ç‚¹, è¿™æ ·æ‰èƒ½åˆ é™¤å°¾èŠ‚ç‚¹, å› ä¸ºå°¾ç»“ç‚¹æ˜¯æ²¡æœ‰åç»­èŠ‚ç‚¹, å¯ä»¥è¦†ç›–.
+         */
         ListNode* pNode = *pListHead;
-        while(pNode->m_pNext != pToBeDeleted)
-        {
+        while(pNode->m_pNext != pToBeDeleted) {
             pNode = pNode->m_pNext;            
         }
- 
         pNode->m_pNext = nullptr;
         delete pToBeDeleted;
         pToBeDeleted = nullptr;
     }
 }
 
-// ====================²âÊÔ´úÂë====================
+// ====================æµ‹è¯•ä»£ç ====================
 void Test(ListNode* pListHead, ListNode* pNode)
 {
     printf("The original list is: \n");
@@ -71,7 +64,7 @@ void Test(ListNode* pListHead, ListNode* pNode)
     PrintList(pListHead);
 }
 
-// Á´±íÖĞÓĞ¶à¸ö½áµã£¬É¾³ıÖĞ¼äµÄ½áµã
+// é“¾è¡¨ä¸­æœ‰å¤šä¸ªç»“ç‚¹ï¼Œåˆ é™¤ä¸­é—´çš„ç»“ç‚¹
 void Test1()
 {
     ListNode* pNode1 = CreateListNode(1);
@@ -90,7 +83,7 @@ void Test1()
     DestroyList(pNode1);
 }
 
-// Á´±íÖĞÓĞ¶à¸ö½áµã£¬É¾³ıÎ²½áµã
+// é“¾è¡¨ä¸­æœ‰å¤šä¸ªç»“ç‚¹ï¼Œåˆ é™¤å°¾ç»“ç‚¹
 void Test2()
 {
     ListNode* pNode1 = CreateListNode(1);
@@ -109,7 +102,7 @@ void Test2()
     DestroyList(pNode1);
 }
 
-// Á´±íÖĞÓĞ¶à¸ö½áµã£¬É¾³ıÍ·½áµã
+// é“¾è¡¨ä¸­æœ‰å¤šä¸ªç»“ç‚¹ï¼Œåˆ é™¤å¤´ç»“ç‚¹
 void Test3()
 {
     ListNode* pNode1 = CreateListNode(1);
@@ -128,7 +121,7 @@ void Test3()
     DestroyList(pNode1);
 }
 
-// Á´±íÖĞÖ»ÓĞÒ»¸ö½áµã£¬É¾³ıÍ·½áµã
+// é“¾è¡¨ä¸­åªæœ‰ä¸€ä¸ªç»“ç‚¹ï¼Œåˆ é™¤å¤´ç»“ç‚¹
 void Test4()
 {
     ListNode* pNode1 = CreateListNode(1);
@@ -136,7 +129,7 @@ void Test4()
     Test(pNode1, pNode1);
 }
 
-// Á´±íÎª¿Õ
+// é“¾è¡¨ä¸ºç©º
 void Test5()
 {
     Test(nullptr, nullptr);
@@ -152,4 +145,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

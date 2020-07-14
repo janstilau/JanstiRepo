@@ -6,15 +6,9 @@ Distributed under the BSD license.
 (See accompanying file LICENSE.txt at
 https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 *******************************************************************/
-
-//==================================================================
-// ¡¶½£Ö¸Offer¡ª¡ªÃûÆóÃæÊÔ¹Ù¾«½²µäĞÍ±à³ÌÌâ¡·´úÂë
-// ×÷Õß£ººÎº£ÌÎ
-//==================================================================
-
-// ÃæÊÔÌâ17£º´òÓ¡1µ½×î´óµÄnÎ»Êı
-// ÌâÄ¿£ºÊäÈëÊı×Ön£¬°´Ë³Ğò´òÓ¡³ö´Ó1×î´óµÄnÎ»Ê®½øÖÆÊı¡£±ÈÈçÊäÈë3£¬Ôò
-// ´òÓ¡³ö1¡¢2¡¢3Ò»Ö±µ½×î´óµÄ3Î»Êı¼´999¡£
+// é¢è¯•é¢˜17ï¼šæ‰“å°1åˆ°æœ€å¤§çš„nä½æ•°
+// é¢˜ç›®ï¼šè¾“å…¥æ•°å­—nï¼ŒæŒ‰é¡ºåºæ‰“å°å‡ºä»1æœ€å¤§çš„nä½åè¿›åˆ¶æ•°ã€‚æ¯”å¦‚è¾“å…¥3ï¼Œåˆ™
+// æ‰“å°å‡º1ã€2ã€3ä¸€ç›´åˆ°æœ€å¤§çš„3ä½æ•°å³999ã€‚
 
 #include <cstdio>
 #include <memory>
@@ -23,70 +17,63 @@ void PrintNumber(char* number);
 bool Increment(char* number);
 void Print1ToMaxOfNDigitsRecursively(char* number, int length, int index);
 
-// ====================·½·¨Ò»====================
+// ====================æ–¹æ³•ä¸€====================
 void Print1ToMaxOfNDigits_1(int n)
 {
     if (n <= 0)
         return;
 
-    char *number = new char[n + 1];
+    /*
+     ç›´æ¥å¤šå ç”¨ä¸€ä½, è¿™æ ·åœ¨åç»­çš„åˆ¤æ–­ä¸­, å…¶å®å°±å°‘äº†å¾ˆå¤šçš„éº»çƒ¦.
+     */
+    char *number = new char[n + 2];
     memset(number, '0', n);
     number[n] = '\0';
 
-    while (!Increment(number))
-    {
+    // è¿™åº”è¯¥æ˜¯æœ€ç›´è§‚çš„æ–¹æ³•äº†.
+    while (!Increment(number)) {
         PrintNumber(number);
     }
 
     delete[]number;
 }
 
-// ×Ö·û´®number±íÊ¾Ò»¸öÊı×Ö£¬ÔÚ numberÉÏÔö¼Ó1
-// Èç¹û×ö¼Ó·¨Òç³ö£¬Ôò·µ»Øtrue£»·ñÔòÎªfalse
-bool Increment(char* number)
-{
-    bool isOverflow = false;
-    int nTakeOver = 0;
+// å­—ç¬¦ä¸²numberè¡¨ç¤ºä¸€ä¸ªæ•°å­—ï¼Œåœ¨ numberä¸Šå¢åŠ 1
+// å¦‚æœåšåŠ æ³•æº¢å‡ºï¼Œåˆ™è¿”å›trueï¼›å¦åˆ™ä¸ºfalse
+bool Increment(char* number) {
+    int overFlowValue = 0;
     int nLength = strlen(number);
 
-    for (int i = nLength - 1; i >= 0; i--)
-    {
-        int nSum = number[i] - '0' + nTakeOver;
-        if (i == nLength - 1)
-            nSum++;
-
-        if (nSum >= 10)
-        {
-            if (i == 0)
-                isOverflow = true;
-            else
-            {
-                nSum -= 10;
-                nTakeOver = 1;
-                number[i] = '0' + nSum;
-            }
-        }
-        else
-        {
+    /*
+     
+     */
+    for (int i = nLength - 1; i >= 1; i--) {
+        int nSum = number[i] - '0' + overFlowValue;
+        if (i == nLength - 1) { nSum++; }
+        if (nSum >= 10) {
+            nSum -= 10;
+            overFlowValue = 1;
+            number[i] = '0' + nSum;
+        } else {
+            /*
+             å¦‚æœæ²¡æœ‰è¿›ä½, ç›´æ¥é€€å‡ºå¾ªç¯.
+             */
             number[i] = '0' + nSum;
             break;
         }
     }
 
-    return isOverflow;
+    return number[0] == '0';
 }
 
-// ====================·½·¨¶ş====================
-void Print1ToMaxOfNDigits_2(int n)
-{
-    if (n <= 0)
-        return;
+// ====================æ–¹æ³•äºŒ====================
+void Print1ToMaxOfNDigits_2(int n) {
+    if (n <= 0) { return; }
 
     char* number = new char[n + 1];
     number[n] = '\0';
 
-    for (int i = 0; i < 10; ++i)
-    {
+    for (int i = 0; i < 10; ++i) {
         number[0] = i + '0';
         Print1ToMaxOfNDigitsRecursively(number, n, 0);
     }
@@ -94,62 +81,51 @@ void Print1ToMaxOfNDigits_2(int n)
     delete[] number;
 }
 
-void Print1ToMaxOfNDigitsRecursively(char* number, int length, int index)
-{
-    if (index == length - 1)
-    {
+void Print1ToMaxOfNDigitsRecursively(char* number, int length, int index) {
+    if (index == length - 1) {
         PrintNumber(number);
         return;
     }
 
-    for (int i = 0; i < 10; ++i)
-    {
+    for (int i = 0; i < 10; ++i) {
         number[index + 1] = i + '0';
         Print1ToMaxOfNDigitsRecursively(number, length, index + 1);
     }
 }
 
-// ====================¹«¹²º¯Êı====================
-// ×Ö·û´®number±íÊ¾Ò»¸öÊı×Ö£¬Êı×ÖÓĞÈô¸É¸ö0¿ªÍ·
-// ´òÓ¡³öÕâ¸öÊı×Ö£¬²¢ºöÂÔ¿ªÍ·µÄ0
-void PrintNumber(char* number)
-{
+// ====================å…¬å…±å‡½æ•°====================
+// å­—ç¬¦ä¸²numberè¡¨ç¤ºä¸€ä¸ªæ•°å­—ï¼Œæ•°å­—æœ‰è‹¥å¹²ä¸ª0å¼€å¤´
+// æ‰“å°å‡ºè¿™ä¸ªæ•°å­—ï¼Œå¹¶å¿½ç•¥å¼€å¤´çš„0
+void PrintNumber(char* number){
     bool isBeginning0 = true;
     int nLength = strlen(number);
-
-    for (int i = 0; i < nLength; ++i)
-    {
-        if (isBeginning0 && number[i] != '0')
+    /*
+     è¿™é‡Œ, å°±æ˜¯åœ¨è¿‡æ»¤å¼€å§‹çš„ 0.
+     */
+    for (int i = 0; i < nLength; ++i) {
+        if (isBeginning0 && number[i] != '0') {
             isBeginning0 = false;
-
-        if (!isBeginning0)
-        {
+        }
+        if (!isBeginning0) {
             printf("%c", number[i]);
         }
     }
-
     printf("\t");
 }
 
-// ====================²âÊÔ´úÂë====================
-void Test(int n)
-{
+// ====================æµ‹è¯•ä»£ç ====================
+void Test(int n){
     printf("Test for %d begins:\n", n);
-
     Print1ToMaxOfNDigits_1(n);
     Print1ToMaxOfNDigits_2(n);
-
     printf("\nTest for %d ends.\n", n);
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]){
     Test(1);
     Test(2);
     Test(3);
     Test(0);
     Test(-1);
-
     return 0;
 }
-
