@@ -42,6 +42,7 @@
 		06789F3B24B2E3910046B5C7 /* RotateList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06789F3A24B2E3910046B5C7 /* RotateList.swift */; };
 		06789F3E24B2EECE0046B5C7 /* Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06789F3D24B2EECE0046B5C7 /* Hash.swift */; };
 		06789F4024B2EFF20046B5C7 /* DesignHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06789F3F24B2EFF20046B5C7 /* DesignHash.swift */; };
+		0690B47B24BF69980006357D /* PushPopStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0690B47A24BF69980006357D /* PushPopStack.swift */; };
 		069D1A9F24ACA00E00ABAFDA /* RebuldTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069D1A9E24ACA00E00ABAFDA /* RebuldTree.swift */; };
 		069E7D4224A466A6005495F6 /* BFS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E7D4124A466A6005495F6 /* BFS.swift */; };
 		069E827524A4D591005495F6 /* MIniStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069E827424A4D591005495F6 /* MIniStack.swift */; };
@@ -139,6 +140,7 @@
 		06789F3A24B2E3910046B5C7 /* RotateList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateList.swift; sourceTree = "<group>"; };
 		06789F3D24B2EECE0046B5C7 /* Hash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hash.swift; sourceTree = "<group>"; };
 		06789F3F24B2EFF20046B5C7 /* DesignHash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignHash.swift; sourceTree = "<group>"; };
+		0690B47A24BF69980006357D /* PushPopStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushPopStack.swift; sourceTree = "<group>"; };
 		069D1A9E24ACA00E00ABAFDA /* RebuldTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RebuldTree.swift; sourceTree = "<group>"; };
 		069E7D4124A466A6005495F6 /* BFS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BFS.swift; sourceTree = "<group>"; };
 		069E820B24A4CEB1005495F6 /* 4-队列.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "4-队列.md"; sourceTree = "<group>"; };
@@ -553,6 +555,7 @@
 				06A38FB024BA2F2200322129 /* LRU.swift */,
 				06A38FB224BAF14400322129 /* IslandNum.swift */,
 				06A38FB424BB46EE00322129 /* RainGain.swift */,
+				0690B47A24BF69980006357D /* PushPopStack.swift */,
 			);
 			path = Meeting;
 			sourceTree = "<group>";
@@ -748,6 +751,7 @@
 				06EBD37924B832B5009D2C86 /* BinarySearchTree.swift in Sources */,
 				069E827524A4D591005495F6 /* MIniStack.swift in Sources */,
 				06F42F5424A3BF0400FF19D3 /* main.swift in Sources */,
+				0690B47B24BF69980006357D /* PushPopStack.swift in Sources */,
 				061A5E7724B7812D000C36F2 /* TreeRecursive.swift in Sources */,
 				069E829E24A73818005495F6 /* RemoveEle.swift in Sources */,
 				069E82A024A73EBB005495F6 /* MaxConsecutiveOne.swift in Sources */,

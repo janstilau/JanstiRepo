@@ -6,14 +6,8 @@ Distributed under the BSD license.
 (See accompanying file LICENSE.txt at
 https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 *******************************************************************/
-
-//==================================================================
-// ¡¶½£Ö¸Offer¡ª¡ªÃûÆóÃæÊÔ¹Ù¾«½²µäĞÍ±à³ÌÌâ¡·´úÂë
-// ×÷Õß£ººÎº£ÌÎ
-//==================================================================
-
-// ÃæÊÔÌâ29£ºË³Ê±Õë´òÓ¡¾ØÕó
-// ÌâÄ¿£ºÊäÈëÒ»¸ö¾ØÕó£¬°´ÕÕ´ÓÍâÏòÀïÒÔË³Ê±ÕëµÄË³ĞòÒÀ´Î´òÓ¡³öÃ¿Ò»¸öÊı×Ö¡£
+// é¢è¯•é¢˜29ï¼šé¡ºæ—¶é’ˆæ‰“å°çŸ©é˜µ
+// é¢˜ç›®ï¼šè¾“å…¥ä¸€ä¸ªçŸ©é˜µï¼ŒæŒ‰ç…§ä»å¤–å‘é‡Œä»¥é¡ºæ—¶é’ˆçš„é¡ºåºä¾æ¬¡æ‰“å°å‡ºæ¯ä¸€ä¸ªæ•°å­—ã€‚
 
 #include <cstdio>
 
@@ -40,14 +34,14 @@ void PrintMatrixInCircle(int** numbers, int columns, int rows, int start)
     int endX = columns - 1 - start;
     int endY = rows - 1 - start;
 
-    // ´Ó×óµ½ÓÒ´òÓ¡Ò»ĞĞ
+    // ä»å·¦åˆ°å³æ‰“å°ä¸€è¡Œ
     for(int i = start; i <= endX; ++i)
     {
         int number = numbers[start][i];
         printNumber(number);
     }
 
-    // ´ÓÉÏµ½ÏÂ´òÓ¡Ò»ÁĞ
+    // ä»ä¸Šåˆ°ä¸‹æ‰“å°ä¸€åˆ—
     if(start < endY)
     {
         for(int i = start + 1; i <= endY; ++i)
@@ -57,7 +51,7 @@ void PrintMatrixInCircle(int** numbers, int columns, int rows, int start)
         }
     }
 
-    // ´ÓÓÒµ½×ó´òÓ¡Ò»ĞĞ
+    // ä»å³åˆ°å·¦æ‰“å°ä¸€è¡Œ
     if(start < endX && start < endY)
     {
         for(int i = endX - 1; i >= start; --i)
@@ -67,7 +61,7 @@ void PrintMatrixInCircle(int** numbers, int columns, int rows, int start)
         }
     }
 
-    // ´ÓÏÂµ½ÉÏ´òÓ¡Ò»ĞĞ
+    // ä»ä¸‹åˆ°ä¸Šæ‰“å°ä¸€è¡Œ
     if(start < endX && start < endY - 1)
     {
         for(int i = endY - 1; i >= start + 1; --i)
@@ -83,7 +77,7 @@ void printNumber(int number)
     printf("%d\t", number);
 }
 
-// ====================²âÊÔ´úÂë====================
+// ====================æµ‹è¯•ä»£ç ====================
 void Test(int columns, int rows)
 {
     printf("Test Begin: %d columns, %d rows.\n", columns, rows);
@@ -204,4 +198,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

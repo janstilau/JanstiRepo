@@ -29,6 +29,7 @@
 		0630233624AA4718003AB0D4 /* FindDuplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FindDuplication.cpp; path = ../../03_01_DuplicationInArray/FindDuplication.cpp; sourceTree = "<group>"; };
 		0630233A24AA5092003AB0D4 /* FindDuplicationNoEdit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FindDuplicationNoEdit.cpp; path = ../../03_02_DuplicationInArrayNoEdit/FindDuplicationNoEdit.cpp; sourceTree = "<group>"; };
 		065369A124AF9B8A00EF1C46 /* NextNodeInBinaryTrees.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = NextNodeInBinaryTrees.cpp; path = ../../../CanonCpp/08_NextNodeInBinaryTrees/NextNodeInBinaryTrees.cpp; sourceTree = "<group>"; };
+		0690B47724BF5D860006357D /* PrintMatrix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PrintMatrix.cpp; path = ../../29_PrintMatrix/PrintMatrix.cpp; sourceTree = "<group>"; };
 		069D1A6B24AC983500ABAFDA /* FindInPartiallySortedMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FindInPartiallySortedMatrix.cpp; path = ../../04_FindInPartiallySortedMatrix/FindInPartiallySortedMatrix.cpp; sourceTree = "<group>"; };
 		069D1A6D24AC98E600ABAFDA /* ReplaceSpaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ReplaceSpaces.cpp; path = ../../05_ReplaceSpaces/ReplaceSpaces.cpp; sourceTree = "<group>"; };
 		069D1A6F24AC990D00ABAFDA /* PrintListInReversedOrder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PrintListInReversedOrder.cpp; path = ../../06_PrintListInReversedOrder/PrintListInReversedOrder.cpp; sourceTree = "<group>"; };
@@ -50,6 +51,9 @@
 		06B3729624BB756900E587AD /* DeleteNodeInList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DeleteNodeInList.cpp; path = ../../18_01_DeleteNodeInList/DeleteNodeInList.cpp; sourceTree = "<group>"; };
 		06E5E43F24BD77B60014F024 /* NumericStrings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = NumericStrings.cpp; path = ../../20_NumericStrings/NumericStrings.cpp; sourceTree = "<group>"; };
 		06E5E44024BD826A0014F024 /* ReorderArray.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ReorderArray.cpp; path = ../../21_ReorderArray/ReorderArray.cpp; sourceTree = "<group>"; };
+		06E5E44124BE17160014F024 /* EntryNodeInListLoop.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = EntryNodeInListLoop.cpp; path = ../../23_EntryNodeInListLoop/EntryNodeInListLoop.cpp; sourceTree = "<group>"; };
+		06E5E44224BE18BF0014F024 /* ReverseList.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ReverseList.cpp; path = ../../24_ReverseList/ReverseList.cpp; sourceTree = "<group>"; };
+		06E5E44324BE26AA0014F024 /* SubstructureInTree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SubstructureInTree.cpp; path = ../../26_SubstructureInTree/SubstructureInTree.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +103,10 @@
 				06B3729624BB756900E587AD /* DeleteNodeInList.cpp */,
 				06E5E43F24BD77B60014F024 /* NumericStrings.cpp */,
 				06E5E44024BD826A0014F024 /* ReorderArray.cpp */,
+				06E5E44124BE17160014F024 /* EntryNodeInListLoop.cpp */,
+				06E5E44224BE18BF0014F024 /* ReverseList.cpp */,
+				06E5E44324BE26AA0014F024 /* SubstructureInTree.cpp */,
+				0690B47724BF5D860006357D /* PrintMatrix.cpp */,
 			);
 			path = CodeEnhance;
 			sourceTree = "<group>";

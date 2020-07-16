@@ -66,4 +66,5 @@ print(result)
 */
 
 
-
+let value = ValidateStackSequences()
+value.validateStackSequences([2, 1, 0], [2, 1, 0])

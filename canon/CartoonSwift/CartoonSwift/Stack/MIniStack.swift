@@ -84,6 +84,10 @@ class MinStack {
     func getMin() -> Int {
         return minimumDatas.last!
     }
+    
+    func min() -> Int {
+        return getMin()
+    }
 }
 
 /**
@@ -153,3 +157,4 @@ class MinStackInLeetCode {
     }
 
 }
+

@@ -7,15 +7,6 @@ Distributed under the BSD license.
 https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 *******************************************************************/
 
-//==================================================================
-// 《剑指Offer——名企面试官精讲典型编程题》代码
-// 作者：何海涛
-//==================================================================
-
-// 面试题24：反转链表
-// 题目：定义一个函数，输入一个链表的头结点，反转该链表并输出反转后链表的
-// 头结点。
-
 #include <cstdio>
 #include "..\Utilities\List.h"
 
@@ -40,7 +31,7 @@ ListNode* ReverseList(ListNode* pHead)
     return pReversedHead;
 }
 
-// ====================测试代码====================
+// ====================锟斤拷锟皆达拷锟斤拷====================
 ListNode* Test(ListNode* pHead)
 {
     printf("The original list is: \n");
@@ -54,7 +45,7 @@ ListNode* Test(ListNode* pHead)
     return pReversedHead;
 }
 
-// 输入的链表有多个结点
+// 锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷卸锟斤拷锟斤拷锟?
 void Test1()
 {
     ListNode* pNode1 = CreateListNode(1);
@@ -73,7 +64,7 @@ void Test1()
     DestroyList(pReversedHead);
 }
 
-// 输入的链表只有一个结点
+// 锟斤拷锟斤拷锟斤拷锟斤拷锟街伙拷锟揭伙拷锟斤拷锟斤拷
 void Test2()
 {
     ListNode* pNode1 = CreateListNode(1);
@@ -83,7 +74,7 @@ void Test2()
     DestroyList(pReversedHead);
 }
 
-// 输入空链表
+// 锟斤拷锟斤拷锟斤拷锟斤拷锟?
 void Test3()
 {
     Test(nullptr);
@@ -97,4 +88,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

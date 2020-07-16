@@ -197,3 +197,215 @@ class WaterContainer {
         return result
     }
 }
+
+/*
+ 1 2 3 4 5 6 7 8
+     p
+ */
+
+class GetKthFromEnd {
+    func getKthFromEnd(_ head: ListNode?, _ k: Int) -> ListNode? {
+        guard head != nil else {
+            return nil
+        }
+        guard k > 0 else {
+            return nil
+        }
+        var formerStepNode = head
+        for _ in 1...k {
+            if formerStepNode == nil { return nil }
+            formerStepNode = formerStepNode?.next
+        }
+        var latterStepNode = head
+        while formerStepNode != nil {
+            formerStepNode = formerStepNode?.next
+            latterStepNode = latterStepNode?.next
+        }
+        return latterStepNode
+    }
+}
+
+
+class MergeListInRes {
+    func mergeTwoLists(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
+        guard let l1 = l1 else {
+            return l2
+        }
+        guard let l2 = l2 else {
+            return l1
+        }
+        var mergedHead:ListNode? = nil
+        if l1.val <= l2.val {
+            mergedHead = l1
+            mergedHead?.next = mergeTwoLists(l1.next, l2)
+        } else {
+            mergedHead = l2
+            mergedHead?.next = mergeTwoLists(l1, l2.next)
+        }
+        return mergedHead
+    }
+}
+/*
+4
+23
+4567
+89
+ 
+4
+89
+*/
+class IsSubStructure {
+    func isSubNodeAllEqual(_ A: TreeNode?, _ B: TreeNode?) -> Bool {
+        guard let B = B else {
+            return true
+        }
+        guard let A = A else {
+            return false
+        }
+        if A.val != B.val {
+            return false
+        }
+        return isSubNodeAllEqual(A.left, B.left) && isSubNodeAllEqual(A.right, B.right)
+    }
+    func isSubStructure(_ A: TreeNode?, _ B: TreeNode?) -> Bool {
+        guard let A = A else {
+            return false
+        }
+        guard let B = B else {
+            return false
+        }
+        var result = false
+        if A.val == B.val {
+            result = isSubNodeAllEqual(A, B)
+            if result { return true }
+        }
+        result = isSubStructure(A.left, B)
+        if result { return true }
+        result = isSubStructure(A.right, B)
+        if result { return true }
+        return false
+    }
+}
+
+
+class MirrorTree {
+    func mirrorTree(_ root: TreeNode?) -> TreeNode? {
+        guard root != nil else {
+            return nil
+        }
+        overturnNode(root)
+        return root
+    }
+    
+    func overturnNode(_ root: TreeNode?) {
+        guard let root = root else {
+            return
+        }
+        
+        let temp = root.left
+        root.left = root.right
+        root.right = temp
+        
+        overturnNode(root.left)
+        overturnNode(root.right)
+    }
+}
+
+
+class IsSymmetric {
+    func isSymmetric(_ root: TreeNode?) -> Bool {
+        guard let root = root else {
+            return true
+        }
+        
+        if root.left == nil && root.right == nil {
+            return true
+        }
+        
+        if root.left == nil || root.right == nil {
+            return false
+        }
+        
+        return isSymmetricCountpart(left: root.left, right: root.right)
+    }
+    
+    func isSymmetricCountpart(left: TreeNode?, right: TreeNode?) -> Bool {
+        if left == nil && right == nil {
+            return true
+        }
+        if left == nil || right == nil {
+            return false
+        }
+        if left!.val != right!.val {
+            return false
+        }
+        return isSymmetricCountpart(left: left?.left, right: right?.right) &&
+            isSymmetricCountpart(left: left?.right, right: right?.left)
+    }
+}
+
+
+class SpiralOrder {
+    
+    struct MatrixPoint {
+        var x: Int
+        var y: Int
+    }
+    
+    func spiralOrder(_ matrix: [[Int]]) -> [Int] {
+        var result = [Int]()
+        guard !matrix.isEmpty else {
+            return result
+        }
+        guard !matrix[0].isEmpty else {
+            return result
+        }
+        
+        let height = matrix.count
+        let width = matrix[0].count
+        result.reserveCapacity(width * height)
+        
+        var leftTop = MatrixPoint(x: 0, y: 0)
+        var leftBottom = MatrixPoint(x:0, y: height-1)
+        var rightTop = MatrixPoint(x:width-1, y: 0)
+        var rightBottom = MatrixPoint(x:width-1, y: height-1)
+        var count = 0
+        
+        while true {
+            for topIdx in leftTop.x...rightTop.x {
+                result.append(matrix[leftTop.y][topIdx])
+//                print("x: \(topIdx), y: \(leftTop.y), ")
+                count += 1
+            }
+            if count == width * height { break }
+            for rightIdx in rightTop.y+1...rightBottom.y {
+                result.append(matrix[rightIdx][rightTop.x])
+//                print("x: \(rightTop.x), y: \(rightIdx), ")
+                count += 1
+            }
+            if count == width * height { break }
+            for bottomIdx in (leftBottom.x...rightBottom.x-1).reversed() {
+                result.append(matrix[leftBottom.y][bottomIdx])
+//                print("x: \(bottomIdx), y: \(leftBottom.y), ")
+                count += 1
+            }
+            if count == width * height { break }
+            for leftIdx in (leftTop.y+1..<leftBottom.y).reversed() {
+                result.append(matrix[leftIdx][leftTop.y])
+//                print("x: \(leftTop.y), y: \(leftIdx), ")
+                count += 1
+            }
+            if count == width * height { break }
+            leftTop.x += 1
+            leftTop.y += 1
+            leftBottom.x += 1
+            leftBottom.y -= 1
+            rightTop.x -= 1
+            rightTop.y += 1
+            rightBottom.x -= 1
+            rightBottom.y -= 1
+        }
+        
+        return result
+    }
+}
