@@ -66,5 +66,6 @@ print(result)
 */
 
 
-let value = ValidateStackSequences()
-value.validateStackSequences([2, 1, 0], [2, 1, 0])
+let value = VerifyPostorder()
+value.verifyPostorder([4, 8, 6, 12, 16, 14, 10])
+

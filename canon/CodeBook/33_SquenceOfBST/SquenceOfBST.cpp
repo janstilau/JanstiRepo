@@ -7,55 +7,58 @@ Distributed under the BSD license.
 https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 *******************************************************************/
 
-//==================================================================
-// ����ָOffer�����������Թپ������ͱ���⡷����
-// ���ߣ��κ���
-//==================================================================
-
-// ������33�������������ĺ����������
-// ��Ŀ������һ���������飬�жϸ������ǲ���ĳ�����������ĺ�������Ľ����
-// ������򷵻�true�����򷵻�false���������������������������ֶ�������ͬ��
+// 面试题33：二叉搜索树的后序遍历序列
+// 题目：输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。
+// 如果是则返回true，否则返回false。假设输入的数组的任意两个数字都互不相同。
 
 #include <cstdio>
 
-// BST��Binary Search Tree������������
-bool VerifySquenceOfBST(int sequence[], int length)
-{
+// BST：Binary Search Tree，二叉搜索树
+bool VerifySquenceOfBST(int sequence[], int length) {
+    
     if(sequence == nullptr || length <= 0)
         return false;
-
     int root = sequence[length - 1];
 
-    // �ڶ������������������Ľ��С�ڸ����
+    // 在二叉搜索树中左子树的结点小于根结点
     int i = 0;
-    for(; i < length - 1; ++ i)
-    {
-        if(sequence[i] > root)
+    for(; i < length - 1; ++ i) {
+        if(sequence[i] > root) {
             break;
+        }
     }
 
-    // �ڶ������������������Ľ����ڸ����
+    // 在二叉搜索树中右子树的结点大于根结点
+    // 因为之前的 ++ i 的操作, 这里的 j, 已经是右子树的起点了.
     int j = i;
-    for(; j < length - 1; ++ j)
-    {
-        if(sequence[j] < root)
+    for(; j < length - 1; ++ j) {
+        /*
+         在右子树里面, 所有的值都应该是超过 root 的, 如果发现了小于 root 的值, 那么这个树, 就是一颗坏树.
+         */
+        if(sequence[j] < root) {
             return false;
+        }
     }
 
-    // �ж��������ǲ��Ƕ���������
+    /*
+     判断左子树, 右子树的时候, 利用了指针的特性. 传递地址以及长度过去就可以了.
+     */
+    // 判断左子树是不是二叉搜索树
     bool left = true;
-    if(i > 0)
+    if(i > 0) {
         left = VerifySquenceOfBST(sequence, i);
+    }
 
-    // �ж��������ǲ��Ƕ���������
+    // 判断右子树是不是二叉搜索树
     bool right = true;
-    if(i < length - 1)
+    if(i < length - 1) {
         right = VerifySquenceOfBST(sequence + i, length - i - 1);
+    }
 
     return (left && right);
 }
 
-// ====================���Դ���====================
+// ====================测试代码====================
 void Test(const char* testName, int sequence[], int length, bool expected)
 {
     if(testName != nullptr)
@@ -119,7 +122,7 @@ void Test4()
     Test("Test4", data, sizeof(data)/sizeof(int), true);
 }
 
-// ����ֻ��1�����
+// 树中只有1个结点
 void Test5()
 {
     int data[] = {5};
@@ -132,19 +135,16 @@ void Test6()
     Test("Test6", data, sizeof(data)/sizeof(int), false);
 }
 
-void Test7()
-{
+void Test7() {
     int data[] = {4, 6, 12, 8, 16, 14, 10};
     Test("Test7", data, sizeof(data)/sizeof(int), false);
 }
 
-void Test8()
-{
+void Test8() {
     Test("Test8", nullptr, 0, false);
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     Test1();
     Test2();
     Test3();
@@ -153,7 +153,5 @@ int main(int argc, char* argv[])
     Test6();
     Test7();
     Test8();
-
     return 0;
 }
-

@@ -130,9 +130,49 @@ class LevelOrderLevelLevel {
     }
 }
 
-
+// [4, 8, 6, 12, 16, 14, 10]
 class VerifyPostorder {
     func verifyPostorder(_ postorder: [Int]) -> Bool {
-        return true
+        guard !postorder.isEmpty else {
+            return true
+        }
+        return isValidPostorder(postorder, left: 0, right: postorder.count - 1)
+    }
+    
+    func isValidPostorder(_ postOrder:[Int], left: Int, right: Int) -> Bool {
+        guard right - left >= 0 else {
+            return true
+        }
+        let leftBegin = left
+        let rightEnd = right
+        if rightEnd == leftBegin { return true }
+        let root = postOrder[rightEnd]
+        
+        var leftEnd = rightEnd
+        for idx in leftBegin...rightEnd-1 {
+            if postOrder[idx] > root {
+                leftEnd = idx - 1
+                break
+            }
+        }
+        
+        let rightBegin = leftEnd + 1
+        if (rightEnd > rightBegin) {
+            for idx in rightBegin...rightEnd {
+                if postOrder[idx] < root {
+                    return false
+                }
+            }
+        }
+        
+        var leftValid = true
+        if leftEnd > leftBegin {
+            leftValid = isValidPostorder(postOrder, left: leftBegin, right: leftEnd-1)
+        }
+        var rightValid = true
+        if rightEnd > rightBegin {
+            rightValid = isValidPostorder(postOrder, left: rightBegin, right: rightEnd-1)
+        }
+        return leftValid && rightValid
     }
 }
