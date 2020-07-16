@@ -10,6 +10,7 @@
 		06A9E3FB24B4E80900E3DC79 /* Word.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06A9E3F924B4E80900E3DC79 /* Word.cpp */; };
 		06BFEC1324A8F6180005CCE4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06BFEC1224A8F6180005CCE4 /* main.cpp */; };
 		06BFEC1B24A8F62A0005CCE4 /* ReverseWords.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06BFEC1924A8F62A0005CCE4 /* ReverseWords.cpp */; };
+		06F01E6924C09702002AAAB9 /* CopyNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 06F01E6724C09702002AAAB9 /* CopyNode.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +32,8 @@
 		06BFEC1224A8F6180005CCE4 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		06BFEC1924A8F62A0005CCE4 /* ReverseWords.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ReverseWords.cpp; sourceTree = "<group>"; };
 		06BFEC1A24A8F62A0005CCE4 /* ReverseWords.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ReverseWords.hpp; sourceTree = "<group>"; };
+		06F01E6724C09702002AAAB9 /* CopyNode.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CopyNode.cpp; sourceTree = "<group>"; };
+		06F01E6824C09702002AAAB9 /* CopyNode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CopyNode.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +71,8 @@
 				06BFEC1A24A8F62A0005CCE4 /* ReverseWords.hpp */,
 				06A9E3F924B4E80900E3DC79 /* Word.cpp */,
 				06A9E3FA24B4E80900E3DC79 /* Word.hpp */,
+				06F01E6724C09702002AAAB9 /* CopyNode.cpp */,
+				06F01E6824C09702002AAAB9 /* CopyNode.hpp */,
 			);
 			path = CanonCpp;
 			sourceTree = "<group>";
@@ -131,6 +136,7 @@
 			files = (
 				06A9E3FB24B4E80900E3DC79 /* Word.cpp in Sources */,
 				06BFEC1B24A8F62A0005CCE4 /* ReverseWords.cpp in Sources */,
+				06F01E6924C09702002AAAB9 /* CopyNode.cpp in Sources */,
 				06BFEC1324A8F6180005CCE4 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

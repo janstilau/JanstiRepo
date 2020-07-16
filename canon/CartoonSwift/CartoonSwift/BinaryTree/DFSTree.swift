@@ -33,13 +33,13 @@ class PreOrder {
         var stack = [TreeNode]()
         stack.append(root)
         while !stack.isEmpty {
-            let topNode = stack.removeLast()
+            let topNode = stack.removeLast() // 访问节点
             result.append(topNode.val)
             if let rightNode = topNode.right {
-                stack.append(rightNode)
+                stack.append(rightNode) // 添加节点到栈中, 不访问
             }
             if let leftNode = topNode.left {
-                stack.append(leftNode)
+                stack.append(leftNode) // 添加节点到栈中, 不访问
             }
         }
         return result
@@ -71,6 +71,12 @@ class PreOrder {
  Follow up: Recursive solution is trivial, could you do it iteratively?
  */
 
+/*
+ 栈的结构, 入栈不算访问数据, 出栈才算访问数据.
+ 所以, 用循环模拟递归的过程, 就是不断的控制入栈的顺序的过程.
+ 最晚进行访问的, 最先进行入栈的操作.
+ */
+
 class Inorder {
     func inorderTraversal(_ root: TreeNode?) -> [Int] {
 //        var nums = [Int]()
@@ -82,11 +88,11 @@ class Inorder {
         var current = root
         while current != nil || !stack.isEmpty {
             if current != nil {
-                stack.append(current!)
+                stack.append(current!) // 添加节点, 此时节点有可能是左节点, 也有可能是右节点.
                 current = current?.left
                 continue
             }
-            let topNode = stack.removeLast()
+            let topNode = stack.removeLast() // 访问节点
             result.append(topNode.val)
             current = topNode.right
         }

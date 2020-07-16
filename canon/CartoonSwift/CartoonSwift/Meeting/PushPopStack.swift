@@ -176,3 +176,27 @@ class VerifyPostorder {
         return leftValid && rightValid
     }
 }
+
+
+func InsertSortMy<T: Comparable>(_ array: [T]) -> [T] {
+    guard array.count > 1 else { return array }
+    
+    var result = array
+    for idx in 1..<array.count {
+        var insertIdx = idx
+        let value = result[idx]
+        for i in 0...idx {
+            if result[i] > value {
+                insertIdx = i
+                break
+            }
+        }
+        if insertIdx != idx {
+            for i in (insertIdx+1...idx).reversed() {
+                result[i] = result[i-1]
+            }
+        }
+        result[insertIdx] = value
+    }
+    return result
+}

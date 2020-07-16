@@ -7,14 +7,9 @@ Distributed under the BSD license.
 https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 *******************************************************************/
 
-//==================================================================
-// ¡¶½£Ö¸Offer¡ª¡ªÃûÆóÃæÊÔ¹Ù¾«½²µäĞÍ±à³ÌÌâ¡·´úÂë
-// ×÷Õß£ººÎº£ÌÎ
-//==================================================================
-
-// ÃæÊÔÌâ34£º¶ş²æÊ÷ÖĞºÍÎªÄ³Ò»ÖµµÄÂ·¾¶
-// ÌâÄ¿£ºÊäÈëÒ»¿Ã¶ş²æÊ÷ºÍÒ»¸öÕûÊı£¬´òÓ¡³ö¶ş²æÊ÷ÖĞ½áµãÖµµÄºÍÎªÊäÈëÕûÊıµÄËù
-// ÓĞÂ·¾¶¡£´ÓÊ÷µÄ¸ù½áµã¿ªÊ¼ÍùÏÂÒ»Ö±µ½Ò¶½áµãËù¾­¹ıµÄ½áµãĞÎ³ÉÒ»ÌõÂ·¾¶¡£
+// é¢è¯•é¢˜34ï¼šäºŒå‰æ ‘ä¸­å’Œä¸ºæŸä¸€å€¼çš„è·¯å¾„
+// é¢˜ç›®ï¼šè¾“å…¥ä¸€æ£µäºŒå‰æ ‘å’Œä¸€ä¸ªæ•´æ•°ï¼Œæ‰“å°å‡ºäºŒå‰æ ‘ä¸­ç»“ç‚¹å€¼çš„å’Œä¸ºè¾“å…¥æ•´æ•°çš„æ‰€
+// æœ‰è·¯å¾„ã€‚ä»æ ‘çš„æ ¹ç»“ç‚¹å¼€å§‹å¾€ä¸‹ä¸€ç›´åˆ°å¶ç»“ç‚¹æ‰€ç»è¿‡çš„ç»“ç‚¹å½¢æˆä¸€æ¡è·¯å¾„ã€‚
 
 #include <cstdio>
 #include "..\Utilities\BinaryTree.h"
@@ -43,8 +38,8 @@ void FindPath
     currentSum += pRoot->m_nValue;
     path.push_back(pRoot->m_nValue);
 
-    // Èç¹ûÊÇÒ¶½áµã£¬²¢ÇÒÂ·¾¶ÉÏ½áµãµÄºÍµÈÓÚÊäÈëµÄÖµ
-    // ´òÓ¡³öÕâÌõÂ·¾¶
+    // å¦‚æœæ˜¯å¶ç»“ç‚¹ï¼Œå¹¶ä¸”è·¯å¾„ä¸Šç»“ç‚¹çš„å’Œç­‰äºè¾“å…¥çš„å€¼
+    // æ‰“å°å‡ºè¿™æ¡è·¯å¾„
     bool isLeaf = pRoot->m_pLeft == nullptr && pRoot->m_pRight == nullptr;
     if(currentSum == expectedSum && isLeaf)
     {
@@ -56,19 +51,19 @@ void FindPath
         printf("\n");
     }
 
-    // Èç¹û²»ÊÇÒ¶½áµã£¬Ôò±éÀúËüµÄ×Ó½áµã
+    // å¦‚æœä¸æ˜¯å¶ç»“ç‚¹ï¼Œåˆ™éå†å®ƒçš„å­ç»“ç‚¹
     if(pRoot->m_pLeft != nullptr)
         FindPath(pRoot->m_pLeft, expectedSum, path, currentSum);
     if(pRoot->m_pRight != nullptr)
         FindPath(pRoot->m_pRight, expectedSum, path, currentSum);
 
-    // ÔÚ·µ»Øµ½¸¸½áµãÖ®Ç°£¬ÔÚÂ·¾¶ÉÏÉ¾³ıµ±Ç°½áµã£¬
-    // ²¢ÔÚcurrentSumÖĞ¼õÈ¥µ±Ç°½áµãµÄÖµ
+    // åœ¨è¿”å›åˆ°çˆ¶ç»“ç‚¹ä¹‹å‰ï¼Œåœ¨è·¯å¾„ä¸Šåˆ é™¤å½“å‰ç»“ç‚¹ï¼Œ
+    // å¹¶åœ¨currentSumä¸­å‡å»å½“å‰ç»“ç‚¹çš„å€¼
     currentSum -= pRoot->m_nValue;
     path.pop_back();
 } 
 
-// ====================²âÊÔ´úÂë====================
+// ====================æµ‹è¯•ä»£ç ====================
 void Test(char* testName, BinaryTreeNode* pRoot, int expectedSum)
 {
     if(testName != nullptr)
@@ -84,7 +79,7 @@ void Test(char* testName, BinaryTreeNode* pRoot, int expectedSum)
 //        5        12
 //       /\        
 //      4  7     
-// ÓĞÁ½ÌõÂ·¾¶ÉÏµÄ½áµãºÍÎª22
+// æœ‰ä¸¤æ¡è·¯å¾„ä¸Šçš„ç»“ç‚¹å’Œä¸º22
 void Test1()
 {
     BinaryTreeNode* pNode10 = CreateBinaryTreeNode(10);
@@ -107,7 +102,7 @@ void Test1()
 //        5        12
 //       /\        
 //      4  7     
-// Ã»ÓĞÂ·¾¶ÉÏµÄ½áµãºÍÎª15
+// æ²¡æœ‰è·¯å¾„ä¸Šçš„ç»“ç‚¹å’Œä¸º15
 void Test2()
 {
     BinaryTreeNode* pNode10 = CreateBinaryTreeNode(10);
@@ -134,7 +129,7 @@ void Test2()
 //         2
 //        /
 //       1
-// ÓĞÒ»ÌõÂ·¾¶ÉÏÃæµÄ½áµãºÍÎª15
+// æœ‰ä¸€æ¡è·¯å¾„ä¸Šé¢çš„ç»“ç‚¹å’Œä¸º15
 void Test3()
 {
     BinaryTreeNode* pNode5 = CreateBinaryTreeNode(5);
@@ -163,7 +158,7 @@ void Test3()
 //       4
 //        \
 //         5
-// Ã»ÓĞÂ·¾¶ÉÏÃæµÄ½áµãºÍÎª16
+// æ²¡æœ‰è·¯å¾„ä¸Šé¢çš„ç»“ç‚¹å’Œä¸º16
 void Test4()
 {
     BinaryTreeNode* pNode1 = CreateBinaryTreeNode(1);
@@ -183,7 +178,7 @@ void Test4()
     DestroyTree(pNode1);
 }
 
-// Ê÷ÖĞÖ»ÓĞ1¸ö½áµã
+// æ ‘ä¸­åªæœ‰1ä¸ªç»“ç‚¹
 void Test5()
 {
     BinaryTreeNode* pNode1 = CreateBinaryTreeNode(1);
@@ -194,7 +189,7 @@ void Test5()
     DestroyTree(pNode1);
 }
 
-// Ê÷ÖĞÃ»ÓĞ½áµã
+// æ ‘ä¸­æ²¡æœ‰ç»“ç‚¹
 void Test6()
 {
     printf("No paths should be found in Test6.\n");
@@ -212,4 +207,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

@@ -7,15 +7,10 @@ Distributed under the BSD license.
 https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 *******************************************************************/
 
-//==================================================================
-// ¡¶½£Ö¸Offer¡ª¡ªÃûÆóÃæÊÔ¹Ù¾«½²µäĞÍ±à³ÌÌâ¡·´úÂë
-// ×÷Õß£ººÎº£ÌÎ
-//==================================================================
-
-// ÃæÊÔÌâ35£º¸´ÔÓÁ´±íµÄ¸´ÖÆ
-// ÌâÄ¿£ºÇëÊµÏÖº¯ÊıComplexListNode* Clone(ComplexListNode* pHead)£¬¸´
-// ÖÆÒ»¸ö¸´ÔÓÁ´±í¡£ÔÚ¸´ÔÓÁ´±íÖĞ£¬Ã¿¸ö½áµã³ıÁËÓĞÒ»¸öm_pNextÖ¸ÕëÖ¸ÏòÏÂÒ»¸ö
-// ½áµãÍâ£¬»¹ÓĞÒ»¸öm_pSibling Ö¸ÏòÁ´±íÖĞµÄÈÎÒâ½áµã»òÕßnullptr¡£
+// é¢è¯•é¢˜35ï¼šå¤æ‚é“¾è¡¨çš„å¤åˆ¶
+// é¢˜ç›®ï¼šè¯·å®ç°å‡½æ•°ComplexListNode* Clone(ComplexListNode* pHead)ï¼Œå¤
+// åˆ¶ä¸€ä¸ªå¤æ‚é“¾è¡¨ã€‚åœ¨å¤æ‚é“¾è¡¨ä¸­ï¼Œæ¯ä¸ªç»“ç‚¹é™¤äº†æœ‰ä¸€ä¸ªm_pNextæŒ‡é’ˆæŒ‡å‘ä¸‹ä¸€ä¸ª
+// ç»“ç‚¹å¤–ï¼Œè¿˜æœ‰ä¸€ä¸ªm_pSibling æŒ‡å‘é“¾è¡¨ä¸­çš„ä»»æ„ç»“ç‚¹æˆ–è€…nullptrã€‚
 
 #include <cstdio>
 #include "ComplexList.h"
@@ -87,7 +82,7 @@ ComplexListNode* ReconnectNodes(ComplexListNode* pHead)
     return pClonedHead;
 }
 
-// ====================²âÊÔ´úÂë====================
+// ====================æµ‹è¯•ä»£ç ====================
 void Test(const char* testName, ComplexListNode* pHead)
 {
     if(testName != nullptr)
@@ -124,7 +119,7 @@ void Test1()
     Test("Test1", pNode1);
 }
 
-// m_pSiblingÖ¸Ïò½áµã×ÔÉí
+// m_pSiblingæŒ‡å‘ç»“ç‚¹è‡ªèº«
 //          -----------------
 //         \|/              |
 //  1-------2-------3-------4-------5
@@ -147,7 +142,7 @@ void Test2()
     Test("Test2", pNode1);
 }
 
-// m_pSiblingĞÎ³É»·
+// m_pSiblingå½¢æˆç¯
 //          -----------------
 //         \|/              |
 //  1-------2-------3-------4-------5
@@ -170,7 +165,7 @@ void Test3()
     Test("Test3", pNode1);
 }
 
-// Ö»ÓĞÒ»¸ö½áµã
+// åªæœ‰ä¸€ä¸ªç»“ç‚¹
 void Test4()
 {
     ComplexListNode* pNode1 = CreateNode(1);
@@ -179,7 +174,7 @@ void Test4()
     Test("Test4", pNode1);
 }
 
-// Â³°ôĞÔ²âÊÔ
+// é²æ£’æ€§æµ‹è¯•
 void Test5()
 {
     Test("Test5", nullptr);
@@ -195,4 +190,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

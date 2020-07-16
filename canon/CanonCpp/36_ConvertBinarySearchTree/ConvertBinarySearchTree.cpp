@@ -7,14 +7,9 @@ Distributed under the BSD license.
 https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 *******************************************************************/
 
-//==================================================================
-// ¡¶½£Ö¸Offer¡ª¡ªÃûÆóÃæÊÔ¹Ù¾«½²µäĞÍ±à³ÌÌâ¡·´úÂë
-// ×÷Õß£ººÎº£ÌÎ
-//==================================================================
-
-// ÃæÊÔÌâ36£º¶ş²æËÑË÷Ê÷ÓëË«ÏòÁ´±í
-// ÌâÄ¿£ºÊäÈëÒ»¿Ã¶ş²æËÑË÷Ê÷£¬½«¸Ã¶ş²æËÑË÷Ê÷×ª»»³ÉÒ»¸öÅÅĞòµÄË«ÏòÁ´±í¡£ÒªÇó
-// ²»ÄÜ´´½¨ÈÎºÎĞÂµÄ½áµã£¬Ö»ÄÜµ÷ÕûÊ÷ÖĞ½áµãÖ¸ÕëµÄÖ¸Ïò¡£
+// é¢è¯•é¢˜36ï¼šäºŒå‰æœç´¢æ ‘ä¸åŒå‘é“¾è¡¨
+// é¢˜ç›®ï¼šè¾“å…¥ä¸€æ£µäºŒå‰æœç´¢æ ‘ï¼Œå°†è¯¥äºŒå‰æœç´¢æ ‘è½¬æ¢æˆä¸€ä¸ªæ’åºçš„åŒå‘é“¾è¡¨ã€‚è¦æ±‚
+// ä¸èƒ½åˆ›å»ºä»»ä½•æ–°çš„ç»“ç‚¹ï¼Œåªèƒ½è°ƒæ•´æ ‘ä¸­ç»“ç‚¹æŒ‡é’ˆçš„æŒ‡å‘ã€‚
 
 #include <cstdio>
 #include "..\Utilities\BinaryTree.h"
@@ -26,8 +21,8 @@ BinaryTreeNode* Convert(BinaryTreeNode* pRootOfTree)
     BinaryTreeNode *pLastNodeInList = nullptr;
     ConvertNode(pRootOfTree, &pLastNodeInList);
 
-    // pLastNodeInListÖ¸ÏòË«ÏòÁ´±íµÄÎ²½áµã£¬
-    // ÎÒÃÇĞèÒª·µ»ØÍ·½áµã
+    // pLastNodeInListæŒ‡å‘åŒå‘é“¾è¡¨çš„å°¾ç»“ç‚¹ï¼Œ
+    // æˆ‘ä»¬éœ€è¦è¿”å›å¤´ç»“ç‚¹
     BinaryTreeNode *pHeadOfList = pLastNodeInList;
     while(pHeadOfList != nullptr && pHeadOfList->m_pLeft != nullptr)
         pHeadOfList = pHeadOfList->m_pLeft;
@@ -55,7 +50,7 @@ void ConvertNode(BinaryTreeNode* pNode, BinaryTreeNode** pLastNodeInList)
         ConvertNode(pCurrent->m_pRight, pLastNodeInList);
 }
 
-// ====================²âÊÔ´úÂë====================
+// ====================æµ‹è¯•ä»£ç ====================
 void PrintDoubleLinkedList(BinaryTreeNode* pHeadOfList)
 {
     BinaryTreeNode* pNode = pHeadOfList;
@@ -185,7 +180,7 @@ void Test3()
     DestroyList(pNode1);
 }
 
-// Ê÷ÖĞÖ»ÓĞ1¸ö½áµã
+// æ ‘ä¸­åªæœ‰1ä¸ªç»“ç‚¹
 void Test4()
 {
     BinaryTreeNode* pNode1 = CreateBinaryTreeNode(1);
@@ -194,7 +189,7 @@ void Test4()
     DestroyList(pNode1);
 }
 
-// Ê÷ÖĞÃ»ÓĞ½áµã
+// æ ‘ä¸­æ²¡æœ‰ç»“ç‚¹
 void Test5()
 {
     Test("Test5", nullptr);
@@ -210,4 +205,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

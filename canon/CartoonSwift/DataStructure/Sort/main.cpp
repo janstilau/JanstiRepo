@@ -99,10 +99,10 @@ void insertSort(int *datas, int length) {
     for (int i = 1; i < length; ++i) {
         int value = datas[i];
         int j = i-1;
-        for (; j >= 0; --j) { // 从已排序的区域, 从向前找, 如果需要搬移, 就向后搬移.
-            if (value < datas[j]) {
+        for (; j >= 0; --j) {
+            if (value < datas[j]) {// 从已排序的区域, 从向前找, 如果需要搬移, 就向后搬移.
                 datas[j+1] = datas[j];
-            } else {
+            } else { // 当发现了合适的位置, 直接跳出就可以了
                 break;
             }
         }

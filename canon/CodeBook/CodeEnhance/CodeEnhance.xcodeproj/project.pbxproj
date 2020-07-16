@@ -55,6 +55,12 @@
 		06E5E44124BE17160014F024 /* EntryNodeInListLoop.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = EntryNodeInListLoop.cpp; path = ../../23_EntryNodeInListLoop/EntryNodeInListLoop.cpp; sourceTree = "<group>"; };
 		06E5E44224BE18BF0014F024 /* ReverseList.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ReverseList.cpp; path = ../../24_ReverseList/ReverseList.cpp; sourceTree = "<group>"; };
 		06E5E44324BE26AA0014F024 /* SubstructureInTree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SubstructureInTree.cpp; path = ../../26_SubstructureInTree/SubstructureInTree.cpp; sourceTree = "<group>"; };
+		06F01E6A24C0B0A8002AAAB9 /* PathInTree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PathInTree.cpp; path = ../../../CanonCpp/34_PathInTree/PathInTree.cpp; sourceTree = "<group>"; };
+		06F01E6B24C0B0CA002AAAB9 /* CopyComplexList.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = CopyComplexList.cpp; path = ../../../CanonCpp/35_CopyComplexList/CopyComplexList.cpp; sourceTree = "<group>"; };
+		06F01E6C24C0B0CA002AAAB9 /* ComplexList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ComplexList.h; path = ../../../CanonCpp/35_CopyComplexList/ComplexList.h; sourceTree = "<group>"; };
+		06F01E6D24C0B0CB002AAAB9 /* ComplexList.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ComplexList.cpp; path = ../../../CanonCpp/35_CopyComplexList/ComplexList.cpp; sourceTree = "<group>"; };
+		06F01E6E24C0B0D3002AAAB9 /* ConvertBinarySearchTree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ConvertBinarySearchTree.cpp; path = ../../../CanonCpp/36_ConvertBinarySearchTree/ConvertBinarySearchTree.cpp; sourceTree = "<group>"; };
+		06F01E6F24C0B0DC002AAAB9 /* SerializeBinaryTrees.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SerializeBinaryTrees.cpp; path = ../../../CanonCpp/37_SerializeBinaryTrees/SerializeBinaryTrees.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +115,12 @@
 				06E5E44324BE26AA0014F024 /* SubstructureInTree.cpp */,
 				0690B47724BF5D860006357D /* PrintMatrix.cpp */,
 				0674B6CF24C014E00034C5A8 /* SquenceOfBST.cpp */,
+				06F01E6A24C0B0A8002AAAB9 /* PathInTree.cpp */,
+				06F01E6D24C0B0CB002AAAB9 /* ComplexList.cpp */,
+				06F01E6C24C0B0CA002AAAB9 /* ComplexList.h */,
+				06F01E6B24C0B0CA002AAAB9 /* CopyComplexList.cpp */,
+				06F01E6E24C0B0D3002AAAB9 /* ConvertBinarySearchTree.cpp */,
+				06F01E6F24C0B0DC002AAAB9 /* SerializeBinaryTrees.cpp */,
 			);
 			path = CodeEnhance;
 			sourceTree = "<group>";
