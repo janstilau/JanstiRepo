@@ -66,6 +66,15 @@ print(result)
 */
 
 
-let value = VerifyPostorder()
-value.verifyPostorder([4, 8, 6, 12, 16, 14, 10])
+let value = MedianFinder()
+var heap = [-1]
 
+value.addNum(1)
+value.addNum(2)
+value.addNum(3)
+value.addNum(4)
+value.addNum(5)
+value.addNum(7)
+value.addNum(8)
+value.addNum(9)
+value.addNum(10)

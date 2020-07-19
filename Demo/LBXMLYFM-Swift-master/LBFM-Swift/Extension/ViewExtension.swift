@@ -33,6 +33,7 @@ extension RegisterCellOrNib {
 }
 
 extension UIView {
+    
     func addBorderLine() {
         self.layer.borderColor = UIColor.randomColor().cgColor
         self.layer.borderWidth = 1.5

@@ -171,5 +171,41 @@ public:
     }
 };
 
+class Permutation {
+public:
+    vector<string> permutation(string txt) {
+        int length = txt.size();
+        auto result = vector<string>();
+        auto hashResult = set<string>();
+        if (length == 0) { return result; }
+        getPermutaion(txt, 0, result, hashResult);
+        return result;
+    }
+    
+    void getPermutaion(string &txt, int begin, vector<string>& result, set<string> &hashSet) {
+        if (begin >= txt.length()) {
+            if (hashSet.find(txt) == hashSet.end()) {
+                result.push_back(txt);
+                hashSet.insert(txt);
+            }
+        } else {
+            /*
+             只用考虑, 开始做了什么, 最后做了什么, 不要尝试去理解所有的细节.
+             */
+            for (int i = begin; i < txt.length(); ++i) {
+                char temp = txt[begin];
+                txt[begin] = txt[i];
+                txt[i] = temp;
+                
+                getPermutaion(txt, begin+1, result, hashSet);
+                
+                temp = txt[begin];
+                txt[begin] = txt[i];
+                txt[i] = temp;
+            }
+        }
+    }
+};
+
 
 #endif /* CopyNode_hpp */
