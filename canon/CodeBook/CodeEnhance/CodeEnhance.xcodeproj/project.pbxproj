@@ -23,6 +23,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		062E26ED24C45AD200C8FEC4 /* GreatestSumOfSubarrays.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GreatestSumOfSubarrays.cpp; path = ../../42_GreatestSumOfSubarrays/GreatestSumOfSubarrays.cpp; sourceTree = "<group>"; };
+		062E26EE24C480F800C8FEC4 /* DigitsInSequence.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DigitsInSequence.cpp; path = ../../44_DigitsInSequence/DigitsInSequence.cpp; sourceTree = "<group>"; };
 		0630232A24AA4078003AB0D4 /* CodeEnhance */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CodeEnhance; sourceTree = BUILT_PRODUCTS_DIR; };
 		0630232D24AA4078003AB0D4 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		0630233424AA4082003AB0D4 /* AssignmentOperator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AssignmentOperator.cpp; path = ../../01_AssignmentOperator/AssignmentOperator.cpp; sourceTree = "<group>"; };
@@ -50,6 +52,8 @@
 		06B0EAD824AFA35000D8ADF7 /* QueueWithTwoStacks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QueueWithTwoStacks.cpp; path = ../../09_QueueWithTwoStacks/QueueWithTwoStacks.cpp; sourceTree = "<group>"; };
 		06B3729424BB621700E587AD /* Print1ToMaxOfNDigits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Print1ToMaxOfNDigits.cpp; path = ../../17_Print1ToMaxOfNDigits/Print1ToMaxOfNDigits.cpp; sourceTree = "<group>"; };
 		06B3729624BB756900E587AD /* DeleteNodeInList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DeleteNodeInList.cpp; path = ../../18_01_DeleteNodeInList/DeleteNodeInList.cpp; sourceTree = "<group>"; };
+		06D7CEB124C454720058D290 /* KLeastNumbers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = KLeastNumbers.cpp; path = ../../40_KLeastNumbers/KLeastNumbers.cpp; sourceTree = "<group>"; };
+		06D7CEB224C4574C0058D290 /* StreamMedian.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = StreamMedian.cpp; path = ../../41_StreamMedian/StreamMedian.cpp; sourceTree = "<group>"; };
 		06E5E43F24BD77B60014F024 /* NumericStrings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = NumericStrings.cpp; path = ../../20_NumericStrings/NumericStrings.cpp; sourceTree = "<group>"; };
 		06E5E44024BD826A0014F024 /* ReorderArray.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ReorderArray.cpp; path = ../../21_ReorderArray/ReorderArray.cpp; sourceTree = "<group>"; };
 		06E5E44124BE17160014F024 /* EntryNodeInListLoop.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = EntryNodeInListLoop.cpp; path = ../../23_EntryNodeInListLoop/EntryNodeInListLoop.cpp; sourceTree = "<group>"; };
@@ -121,6 +125,10 @@
 				06F01E6B24C0B0CA002AAAB9 /* CopyComplexList.cpp */,
 				06F01E6E24C0B0D3002AAAB9 /* ConvertBinarySearchTree.cpp */,
 				06F01E6F24C0B0DC002AAAB9 /* SerializeBinaryTrees.cpp */,
+				06D7CEB124C454720058D290 /* KLeastNumbers.cpp */,
+				06D7CEB224C4574C0058D290 /* StreamMedian.cpp */,
+				062E26ED24C45AD200C8FEC4 /* GreatestSumOfSubarrays.cpp */,
+				062E26EE24C480F800C8FEC4 /* DigitsInSequence.cpp */,
 			);
 			path = CodeEnhance;
 			sourceTree = "<group>";

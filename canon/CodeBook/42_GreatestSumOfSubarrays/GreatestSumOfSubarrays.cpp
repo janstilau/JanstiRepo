@@ -1,20 +1,15 @@
 /*******************************************************************
-Copyright(c) 2016, Harry He
-All rights reserved.
+ Copyright(c) 2016, Harry He
+ All rights reserved.
+ 
+ Distributed under the BSD license.
+ (See accompanying file LICENSE.txt at
+ https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
+ *******************************************************************/
 
-Distributed under the BSD license.
-(See accompanying file LICENSE.txt at
-https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
-*******************************************************************/
-
-//==================================================================
-// ¡¶½£Ö¸Offer¡ª¡ªÃûÆóÃæÊÔ¹Ù¾«½²µäĞÍ±à³ÌÌâ¡·´úÂë
-// ×÷Õß£ººÎº£ÌÎ
-//==================================================================
-
-// ÃæÊÔÌâ42£ºÁ¬Ğø×ÓÊı×éµÄ×î´óºÍ
-// ÌâÄ¿£ºÊäÈëÒ»¸öÕûĞÍÊı×é£¬Êı×éÀïÓĞÕıÊıÒ²ÓĞ¸ºÊı¡£Êı×éÖĞÒ»¸ö»òÁ¬ĞøµÄ¶à¸öÕû
-// Êı×é³ÉÒ»¸ö×ÓÊı×é¡£ÇóËùÓĞ×ÓÊı×éµÄºÍµÄ×î´óÖµ¡£ÒªÇóÊ±¼ä¸´ÔÓ¶ÈÎªO(n)¡£
+// é¢è¯•é¢˜42ï¼šè¿ç»­å­æ•°ç»„çš„æœ€å¤§å’Œ
+// é¢˜ç›®ï¼šè¾“å…¥ä¸€ä¸ªæ•´å‹æ•°ç»„ï¼Œæ•°ç»„é‡Œæœ‰æ­£æ•°ä¹Ÿæœ‰è´Ÿæ•°ã€‚æ•°ç»„ä¸­ä¸€ä¸ªæˆ–è¿ç»­çš„å¤šä¸ªæ•´
+// æ•°ç»„æˆä¸€ä¸ªå­æ•°ç»„ã€‚æ±‚æ‰€æœ‰å­æ•°ç»„çš„å’Œçš„æœ€å¤§å€¼ã€‚è¦æ±‚æ—¶é—´å¤æ‚åº¦ä¸ºO(n)ã€‚
 
 #include <cstdio>
 
@@ -27,31 +22,34 @@ int FindGreatestSumOfSubArray(int *pData, int nLength)
         g_InvalidInput = true;
         return 0;
     }
-
+    
     g_InvalidInput = false;
-
+    
     int nCurSum = 0;
     int nGreatestSum = 0x80000000;
     for(int i = 0; i < nLength; ++i)
     {
+        /*
+         å¦‚æœä¹‹å‰çš„ç»“æœ, å°äº 0, é‚£ä¹ˆå°±ä»å½“å‰å…ƒç´ é‡æ–°å¼€å§‹.
+         */
         if(nCurSum <= 0)
             nCurSum = pData[i];
         else
             nCurSum += pData[i];
-
+        
         if(nCurSum > nGreatestSum)
             nGreatestSum = nCurSum;
     }
-
+    
     return nGreatestSum;
 } 
 
-// ====================²âÊÔ´úÂë====================
+// ====================æµ‹è¯•ä»£ç ====================
 void Test(char* testName, int* pData, int nLength, int expected, bool expectedFlag)
 {
     if(testName != nullptr)
         printf("%s begins: \n", testName);
-
+    
     int result = FindGreatestSumOfSubArray(pData, nLength);
     if(result == expected && expectedFlag == g_InvalidInput)
         printf("Passed.\n");
@@ -66,7 +64,7 @@ void Test1()
     Test("Test1", data, sizeof(data) / sizeof(int), 18, false);
 }
 
-// ËùÓĞÊı×Ö¶¼ÊÇ¸ºÊı
+// æ‰€æœ‰æ•°å­—éƒ½æ˜¯è´Ÿæ•°
 // -2, -8, -1, -5, -9
 void Test2()
 {
@@ -74,7 +72,7 @@ void Test2()
     Test("Test2", data, sizeof(data) / sizeof(int), -1, false);
 }
 
-// ËùÓĞÊı×Ö¶¼ÊÇÕıÊı
+// æ‰€æœ‰æ•°å­—éƒ½æ˜¯æ­£æ•°
 // 2, 8, 1, 5, 9
 void Test3()
 {
@@ -82,7 +80,7 @@ void Test3()
     Test("Test3", data, sizeof(data) / sizeof(int), 25, false);
 }
 
-// ÎŞĞ§ÊäÈë
+// æ— æ•ˆè¾“å…¥
 void Test4()
 {
     Test("Test4", nullptr, 0, 0, true);
@@ -94,7 +92,6 @@ int main(int argc, char* argv[])
     Test2();
     Test3();
     Test4();
-
+    
     return 0;
 }
-

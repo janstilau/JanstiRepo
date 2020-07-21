@@ -14,16 +14,17 @@
 #include <set>
 #include <map>
 #include <vector>
+#include <math.h>
 
 using namespace std;
 
 class Node {
 public:
-    int val;
+    long val;
     Node* next;
     Node* random;
     
-    Node(int _val) {
+    Node(long _val) {
         val = _val;
         next = NULL;
         random = NULL;
@@ -112,19 +113,19 @@ class TreeToDoublyList {
 public:
     class Node {
     public:
-        int val;
+        long val;
         Node* left;
         Node* right;
 
         Node() {}
 
-        Node(int _val) {
+        Node(long _val) {
             val = _val;
             left = NULL;
             right = NULL;
         }
 
-        Node(int _val, Node* _left, Node* _right) {
+        Node(long _val, Node* _left, Node* _right) {
             val = _val;
             left = _left;
             right = _right;
@@ -174,7 +175,7 @@ public:
 class Permutation {
 public:
     vector<string> permutation(string txt) {
-        int length = txt.size();
+        long length = txt.size();
         auto result = vector<string>();
         auto hashResult = set<string>();
         if (length == 0) { return result; }
@@ -182,7 +183,7 @@ public:
         return result;
     }
     
-    void getPermutaion(string &txt, int begin, vector<string>& result, set<string> &hashSet) {
+    void getPermutaion(string &txt, long begin, vector<string>& result, set<string> &hashSet) {
         if (begin >= txt.length()) {
             if (hashSet.find(txt) == hashSet.end()) {
                 result.push_back(txt);
@@ -192,7 +193,7 @@ public:
             /*
              只用考虑, 开始做了什么, 最后做了什么, 不要尝试去理解所有的细节.
              */
-            for (int i = begin; i < txt.length(); ++i) {
+            for (long i = begin; i < txt.length(); ++i) {
                 char temp = txt[begin];
                 txt[begin] = txt[i];
                 txt[i] = temp;
@@ -207,5 +208,52 @@ public:
     }
 };
 
+/*
+ 数字以0123456789101112131415…的格式序列化到一个字符序列中。在这个序列中，第5位（从下标0开始计数）是5，第13位是1，第19位是4，等等。
+
+ 请写一个函数，求任意第n位对应的数字。
+ */
+
+class FindNthDigit {
+public:
+    int findNthDigit(int n) {
+        if (n < 0) { return -1; }
+        long digitCount = 1;
+        long left = 0;
+        long right = 0;
+        while (true) {
+            long leftNum = (long)pow(10, digitCount-1);
+            if (leftNum == 1) { leftNum = 0; }
+            long rightNum = (long)(pow(10, digitCount) - 1);
+            const long numCount = rightNum - leftNum + 1;
+            right = left + numCount*digitCount;
+            if (left <= n && n < right) { break;}
+            digitCount += 1;
+            left = right;
+        }
+        
+        long numStart = (long)pow(10, digitCount-1);
+        if (numStart == 1) { numStart = 0; }
+        long space = (n - left) / digitCount;
+        long num = numStart + space;
+        long digitTarget = n - left - digitCount*space;
+        for (long i = 0; i < digitCount; ++i) {
+            long value = num % 10;
+            if (i+digitTarget+1 == digitCount) {
+                return value;
+            }
+            num /= 10;
+        }
+        return -1;
+    }
+};
+
+
+class MinNumber {
+public:
+    string minNumber(vector<int>& nums) {
+        return "";
+    }
+};
 
 #endif /* CopyNode_hpp */

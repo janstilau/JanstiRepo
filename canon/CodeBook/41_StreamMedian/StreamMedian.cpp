@@ -6,16 +6,10 @@ Distributed under the BSD license.
 (See accompanying file LICENSE.txt at
 https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 *******************************************************************/
-
-//==================================================================
-// ¡¶½£Ö¸Offer¡ª¡ªÃûÆóÃæÊÔ¹Ù¾«½²µäÐÍ±à³ÌÌâ¡·´úÂë
-// ×÷Õß£ººÎº£ÌÎ
-//==================================================================
-
-// ÃæÊÔÌâ41£ºÊý¾ÝÁ÷ÖÐµÄÖÐÎ»Êý
-// ÌâÄ¿£ºÈçºÎµÃµ½Ò»¸öÊý¾ÝÁ÷ÖÐµÄÖÐÎ»Êý£¿Èç¹û´ÓÊý¾ÝÁ÷ÖÐ¶Á³öÆæÊý¸öÊýÖµ£¬ÄÇÃ´
-// ÖÐÎ»Êý¾ÍÊÇËùÓÐÊýÖµÅÅÐòÖ®ºóÎ»ÓÚÖÐ¼äµÄÊýÖµ¡£Èç¹û´ÓÊý¾ÝÁ÷ÖÐ¶Á³öÅ¼Êý¸öÊýÖµ£¬
-// ÄÇÃ´ÖÐÎ»Êý¾ÍÊÇËùÓÐÊýÖµÅÅÐòÖ®ºóÖÐ¼äÁ½¸öÊýµÄÆ½¾ùÖµ¡£
+// é¢è¯•é¢˜41ï¼šæ•°æ®æµä¸­çš„ä¸­ä½æ•°
+// é¢˜ç›®ï¼šå¦‚ä½•å¾—åˆ°ä¸€ä¸ªæ•°æ®æµä¸­çš„ä¸­ä½æ•°ï¼Ÿå¦‚æžœä»Žæ•°æ®æµä¸­è¯»å‡ºå¥‡æ•°ä¸ªæ•°å€¼ï¼Œé‚£ä¹ˆ
+// ä¸­ä½æ•°å°±æ˜¯æ‰€æœ‰æ•°å€¼æŽ’åºä¹‹åŽä½äºŽä¸­é—´çš„æ•°å€¼ã€‚å¦‚æžœä»Žæ•°æ®æµä¸­è¯»å‡ºå¶æ•°ä¸ªæ•°å€¼ï¼Œ
+// é‚£ä¹ˆä¸­ä½æ•°å°±æ˜¯æ‰€æœ‰æ•°å€¼æŽ’åºä¹‹åŽä¸­é—´ä¸¤ä¸ªæ•°çš„å¹³å‡å€¼ã€‚
 
 #include <cstdio>
 #include <algorithm>
@@ -29,10 +23,11 @@ template<typename T> class DynamicArray
 public:
     void Insert(T num)
     {
-        if(((min.size() + max.size()) & 1) == 0)
-        {
-            if(max.size() > 0 && num < max[0])
-            {
+        if(((min.size() + max.size()) & 1) == 0) {
+            /*
+             å¦‚æžœ, çŽ°åœ¨å¥‡æ•°ä¸ªå…ƒç´ .
+             */
+            if(max.size() > 0 && num < max[0]) {
                 max.push_back(num);
                 push_heap(max.begin(), max.end(), less<T>());
 
@@ -83,7 +78,7 @@ private:
     vector<T> max;
 };
 
-// ====================²âÊÔ´úÂë====================
+// ====================æµ‹è¯•ä»£ç ====================
 void Test(char* testName, DynamicArray<double>& numbers, double expected)
 {
     if(testName != nullptr)

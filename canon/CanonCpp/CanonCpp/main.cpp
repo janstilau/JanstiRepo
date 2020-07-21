@@ -15,11 +15,8 @@ using namespace std;
 
 int main(int argc, const char * argv[]) {
     
-    Permutation aValue;
-    auto result = aValue.permutation("Abc");
-    for (int i = 0; i < result.size(); ++i) {
-        std::cout << result[i] << '\n';
-    }
+    FindNthDigit aValue;
+    aValue.findNthDigit(1000000000);
     
     return 0;
 }

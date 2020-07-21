@@ -7,14 +7,9 @@ Distributed under the BSD license.
 https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 *******************************************************************/
 
-//==================================================================
-// ¡¶½£Ö¸Offer¡ª¡ªÃûÆóÃæÊÔ¹Ù¾«½²µäĞÍ±à³ÌÌâ¡·´úÂë
-// ×÷Õß£ººÎº£ÌÎ
-//==================================================================
-
-// ÃæÊÔÌâ40£º×îĞ¡µÄk¸öÊı
-// ÌâÄ¿£ºÊäÈën¸öÕûÊı£¬ÕÒ³öÆäÖĞ×îĞ¡µÄk¸öÊı¡£ÀıÈçÊäÈë4¡¢5¡¢1¡¢6¡¢2¡¢7¡¢3¡¢8
-// Õâ8¸öÊı×Ö£¬Ôò×îĞ¡µÄ4¸öÊı×ÖÊÇ1¡¢2¡¢3¡¢4¡£
+// é¢è¯•é¢˜40ï¼šæœ€å°çš„kä¸ªæ•°
+// é¢˜ç›®ï¼šè¾“å…¥nä¸ªæ•´æ•°ï¼Œæ‰¾å‡ºå…¶ä¸­æœ€å°çš„kä¸ªæ•°ã€‚ä¾‹å¦‚è¾“å…¥4ã€5ã€1ã€6ã€2ã€7ã€3ã€8
+// è¿™8ä¸ªæ•°å­—ï¼Œåˆ™æœ€å°çš„4ä¸ªæ•°å­—æ˜¯1ã€2ã€3ã€4ã€‚
 
 #include <cstdio>
 #include "..\Utilities\Array.h"
@@ -26,7 +21,7 @@ https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 
 using namespace std;
 
-// ====================·½·¨1====================
+// ====================æ–¹æ³•1====================
 void GetLeastNumbers_Solution1(int* input, int n, int* output, int k)
 {
     if(input == nullptr || output == nullptr || k > n || n <= 0 || k <= 0)
@@ -53,7 +48,7 @@ void GetLeastNumbers_Solution1(int* input, int n, int* output, int k)
         output[i] = input[i];
 }
 
-// ====================·½·¨2====================
+// ====================æ–¹æ³•2====================
 typedef multiset<int, std::greater<int> >            intSet;
 typedef multiset<int, std::greater<int> >::iterator  setIterator;
 
@@ -67,15 +62,12 @@ void GetLeastNumbers_Solution2(const vector<int>& data, intSet& leastNumbers, in
     vector<int>::const_iterator iter = data.begin();
     for(; iter != data.end(); ++ iter)
     {
-        if((leastNumbers.size()) < k)
+        if((leastNumbers.size()) < k) {
             leastNumbers.insert(*iter);
-
-        else
-        {
+        } else {
             setIterator iterGreatest = leastNumbers.begin();
 
-            if(*iter < *(leastNumbers.begin()))
-            {
+            if(*iter < *(leastNumbers.begin())) {
                 leastNumbers.erase(iterGreatest);
                 leastNumbers.insert(*iter);
             }
@@ -83,7 +75,7 @@ void GetLeastNumbers_Solution2(const vector<int>& data, intSet& leastNumbers, in
     }
 }
 
-// ====================²âÊÔ´úÂë====================
+// ====================æµ‹è¯•ä»£ç ====================
 void Test(char* testName, int* data, int n, int* expectedResult, int k)
 {
     if(testName != nullptr)
@@ -124,7 +116,7 @@ void Test(char* testName, int* data, int n, int* expectedResult, int k)
     printf("\n\n");
 }
 
-// kĞ¡ÓÚÊı×éµÄ³¤¶È
+// kå°äºæ•°ç»„çš„é•¿åº¦
 void Test1()
 {
     int data[] = {4, 5, 1, 6, 2, 7, 3, 8};
@@ -132,7 +124,7 @@ void Test1()
     Test("Test1", data, sizeof(data) / sizeof(int), expected, sizeof(expected) / sizeof(int));
 }
 
-// kµÈÓÚÊı×éµÄ³¤¶È
+// kç­‰äºæ•°ç»„çš„é•¿åº¦
 void Test2()
 {
     int data[] = {4, 5, 1, 6, 2, 7, 3, 8};
@@ -140,7 +132,7 @@ void Test2()
     Test("Test2", data, sizeof(data) / sizeof(int), expected, sizeof(expected) / sizeof(int));
 }
 
-// k´óÓÚÊı×éµÄ³¤¶È
+// kå¤§äºæ•°ç»„çš„é•¿åº¦
 void Test3()
 {
     int data[] = {4, 5, 1, 6, 2, 7, 3, 8};
@@ -148,7 +140,7 @@ void Test3()
     Test("Test3", data, sizeof(data) / sizeof(int), expected, 10);
 }
 
-// kµÈÓÚ1
+// kç­‰äº1
 void Test4()
 {
     int data[] = {4, 5, 1, 6, 2, 7, 3, 8};
@@ -156,7 +148,7 @@ void Test4()
     Test("Test4", data, sizeof(data) / sizeof(int), expected, sizeof(expected) / sizeof(int));
 }
 
-// kµÈÓÚ0
+// kç­‰äº0
 void Test5()
 {
     int data[] = {4, 5, 1, 6, 2, 7, 3, 8};
@@ -164,7 +156,7 @@ void Test5()
     Test("Test5", data, sizeof(data) / sizeof(int), expected, 0);
 }
 
-// Êı×éÖĞÓĞÏàÍ¬µÄÊı×Ö
+// æ•°ç»„ä¸­æœ‰ç›¸åŒçš„æ•°å­—
 void Test6()
 {
     int data[] = {4, 5, 1, 6, 2, 7, 2, 8};
@@ -172,7 +164,7 @@ void Test6()
     Test("Test6", data, sizeof(data) / sizeof(int), expected, sizeof(expected) / sizeof(int));
 }
 
-// ÊäÈë¿ÕÖ¸Õë
+// è¾“å…¥ç©ºæŒ‡é’ˆ
 void Test7()
 {
     int* expected = nullptr;
@@ -191,4 +183,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

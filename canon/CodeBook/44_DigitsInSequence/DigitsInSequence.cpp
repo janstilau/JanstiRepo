@@ -7,16 +7,6 @@ Distributed under the BSD license.
 https://github.com/zhedahht/CodingInterviewChinese2/blob/master/LICENSE.txt)
 *******************************************************************/
 
-//==================================================================
-// 《剑指Offer——名企面试官精讲典型编程题》代码
-// 作者：何海涛
-//==================================================================
-
-// 面试题44：数字序列中某一位的数字
-// 题目：数字以0123456789101112131415…的格式序列化到一个字符序列中。在这
-// 个序列中，第5位（从0开始计数）是5，第13位是1，第19位是4，等等。请写一
-// 个函数求任意位对应的数字。
-
 #include <iostream>
 #include <algorithm>
 
@@ -71,7 +61,7 @@ int beginNumber(int digits)
 	return (int) std::pow(10, digits - 1);
 }
 
-// ====================测试代码====================
+// ====================???????====================
 void test(const char* testName, int inputIndex, int expectedOutput)
 {
 	if(digitAtIndex(inputIndex) == expectedOutput)
@@ -87,10 +77,10 @@ int main()
 	test("Test2", 1, 1);
 	test("Test3", 9, 9);
 	test("Test4", 10, 1);
-	test("Test5", 189, 9);  // 数字99的最后一位，9
-	test("Test6", 190, 1);  // 数字100的第一位，1
-	test("Test7", 1000, 3); // 数字370的第一位，3
-	test("Test8", 1001, 7); // 数字370的第二位，7
-	test("Test9", 1002, 0); // 数字370的第三位，0
+	test("Test5", 189, 9);  // ????99??????λ??9
+	test("Test6", 190, 1);  // ????100????λ??1
+	test("Test7", 1000, 3); // ????370????λ??3
+	test("Test8", 1001, 7); // ????370????λ??7
+	test("Test9", 1002, 0); // ????370?????λ??0
 	return 0;
 }
