@@ -1,30 +1,3 @@
-/** NSEnumerator abstrace class for GNUStep
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Date: March 1995
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-
-   <title>NSEnumerator class reference</title>
-   $Date$ $Revision$
-*/
-
 #import "common.h"
 #import "Foundation/NSArray.h"
 #import "Foundation/NSEnumerator.h"
@@ -51,6 +24,9 @@
   SEL			asel;
   IMP			aimp;
 
+    /*
+     这里, GNU 在写 mutableArray 的时候, 也会写个默认的 capacity.
+     */
   array = [NSMutableArray arrayWithCapacity: 10];
 
   nsel = @selector(nextObject);
@@ -58,6 +34,9 @@
   asel = @selector(addObject:);
   aimp = [array methodForSelector: asel];
 
+    /*
+     面向抽象编程, 只要实现了 nextObject 这个接口, 那么其他的方法, 也就自然就可以实现了.
+     */
   while ((obj = (*nimp)(self, nsel)) != nil)
     {
       (*aimp)(array, asel, obj);
