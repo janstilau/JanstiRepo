@@ -1,33 +1,3 @@
-/*
- *
- * Copyright (c) 1994
- * Hewlett-Packard Company
- *
- * Permission to use, copy, modify, distribute and sell this software
- * and its documentation for any purpose is hereby granted without fee,
- * provided that the above copyright notice appear in all copies and
- * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Company makes no
- * representations about the suitability of this software for any
- * purpose.  It is provided "as is" without express or implied warranty.
- *
- *
- * Copyright (c) 1996-1998
- * Silicon Graphics Computer Systems, Inc.
- *
- * Permission to use, copy, modify, distribute and sell this software
- * and its documentation for any purpose is hereby granted without fee,
- * provided that the above copyright notice appear in all copies and
- * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Silicon Graphics makes no
- * representations about the suitability of this software for any
- * purpose.  It is provided "as is" without express or implied warranty.
- */
-
-/* NOTE: This is an internal header file, included by other STL headers.
- *   You should not attempt to use it directly.
- */
-
 #ifndef __SGI_STL_INTERNAL_ITERATOR_BASE_H
 #define __SGI_STL_INTERNAL_ITERATOR_BASE_H
 
@@ -39,16 +9,14 @@
 
 __STL_BEGIN_NAMESPACE
 
+/*
+ 这些类型, 实际上是没有意义的, 他们只是编译的时候, 进行连接使用.
+ */
 struct input_iterator_tag {};
 struct output_iterator_tag {};
 struct forward_iterator_tag : public input_iterator_tag {};
 struct bidirectional_iterator_tag : public forward_iterator_tag {};
 struct random_access_iterator_tag : public bidirectional_iterator_tag {};
-
-// The base classes input_iterator, output_iterator, forward_iterator,
-// bidirectional_iterator, and random_access_iterator are not part of
-// the C++ standard.  (They have been replaced by struct iterator.)
-// They are included for backward compatibility with the HP STL.
 
 template <class _Tp, class _Distance> struct input_iterator {
   typedef input_iterator_tag iterator_category;
@@ -66,6 +34,7 @@ struct output_iterator {
   typedef void                reference;
 };
 
+// 单向
 template <class _Tp, class _Distance> struct forward_iterator {
   typedef forward_iterator_tag iterator_category;
   typedef _Tp                  value_type;
@@ -74,7 +43,7 @@ template <class _Tp, class _Distance> struct forward_iterator {
   typedef _Tp&                 reference;
 };
 
-
+// 双向
 template <class _Tp, class _Distance> struct bidirectional_iterator {
   typedef bidirectional_iterator_tag iterator_category;
   typedef _Tp                        value_type;
@@ -83,6 +52,7 @@ template <class _Tp, class _Distance> struct bidirectional_iterator {
   typedef _Tp&                       reference;
 };
 
+// 随机
 template <class _Tp, class _Distance> struct random_access_iterator {
   typedef random_access_iterator_tag iterator_category;
   typedef _Tp                        value_type;
@@ -139,6 +109,12 @@ struct iterator_traits<const _Tp*> {
 
 // We introduce internal names for these functions.
 
+/*
+ 当, 通过 iterator_traits 查找 当前的 Iter Category 的时候, 其实是拿到当前传递的对象里面的 typedef, 然后生成一个临时对象出去.
+ 在外界使用的时候, 会根据这个临时对象, 分发到不同的函数中去.
+ 一般我们不会这样写, 会根据一个 type 值, 调用不同的函数.
+但是作为一个系统 API, 只能用这种写法, 才能够兼容后续不断增加的扩展.
+ */
 template <class _Iter>
 inline typename iterator_traits<_Iter>::iterator_category
 __iterator_category(const _Iter&)
@@ -264,6 +240,9 @@ inline ptrdiff_t* distance_type(const _Tp*) { return (ptrdiff_t*)(0); }
 
 #endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
+/*
+ 这两个写法, 把 n 当做了传出参数进行了处理.
+ */
 template <class _InputIterator, class _Distance>
 inline void __distance(_InputIterator __first, _InputIterator __last,
                        _Distance& __n, input_iterator_tag)
@@ -285,11 +264,16 @@ inline void distance(_InputIterator __first,
                      _InputIterator __last, _Distance& __n)
 {
   __STL_REQUIRES(_InputIterator, _InputIterator);
+    /*
+     传入了 两个迭代器, 然后根据迭代器的特质, 来分发到不同的函数中去.
+     */
   __distance(__first, __last, __n, iterator_category(__first));
 }
 
 #ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
 
+// 如果, iterator_category 判断出, 迭代器, 是一个普通的迭代器, 只能进行从前像后的迭代.
+// 那么 distance, 就是一个 o(n) 的遍历操作.
 template <class _InputIterator>
 inline typename iterator_traits<_InputIterator>::difference_type
 __distance(_InputIterator __first, _InputIterator __last, input_iterator_tag)
@@ -301,6 +285,8 @@ __distance(_InputIterator __first, _InputIterator __last, input_iterator_tag)
   return __n;
 }
 
+// 如果迭代器可以进行随机访问, 那么直接进行相减, 就可以得到距离值.
+// 迭代器的相减, 由迭代器进行处理, 比如 deque 的迭代器, 就是要考虑 buffer 的转移操作.
 template <class _RandomAccessIterator>
 inline typename iterator_traits<_RandomAccessIterator>::difference_type
 __distance(_RandomAccessIterator __first, _RandomAccessIterator __last,

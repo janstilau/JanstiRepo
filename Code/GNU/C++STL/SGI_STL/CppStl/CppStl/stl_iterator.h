@@ -275,6 +275,9 @@ class reverse_iterator
 protected:
   _Iterator current;
 public:
+    /*
+     所有的, iterator 该有的定义, 都是按照保存的 current 的定义进行的.
+     */
   typedef typename iterator_traits<_Iterator>::iterator_category
           iterator_category;
   typedef typename iterator_traits<_Iterator>::value_type
@@ -301,6 +304,9 @@ public:
 #endif /* __STL_MEMBER_TEMPLATES */
     
   iterator_type base() const { return current; }
+    /*
+     因为, end iterator, 其实是最后一个元素的下一个位置, 所以, 这里要先后退, 然后取值才可以.
+     */
   reference operator*() const {
     _Iterator __tmp = current;
     return *--__tmp;
@@ -309,6 +315,9 @@ public:
   pointer operator->() const { return &(operator*()); }
 #endif /* __SGI_STL_NO_ARROW_OPERATOR */
 
+    /*
+     所有的操作, 都是取反进行处理的.
+     */
   _Self& operator++() {
     --current;
     return *this;

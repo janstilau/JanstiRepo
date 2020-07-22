@@ -86,6 +86,9 @@ inline void iter_swap(_ForwardIter1 __a, _ForwardIter2 __b) {
   __iter_swap(__a, __b, __VALUE_TYPE(__a));
 }
 
+/*
+ 最为简单, 经典的写法.
+ */
 template <class _Tp>
 inline void swap(_Tp& __a, _Tp& __b) {
   __STL_REQUIRES(_Tp, _Assignable);

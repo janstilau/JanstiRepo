@@ -3,6 +3,223 @@
 
 #include <concept_checks.h>
 
+/*
+ Defined in header <list>
+ template<
+     class T,
+     class Allocator = std::allocator<T>
+ > class list;
+ (1)
+ namespace pmr {
+     template <class T>
+     using list = std::list<T, std::pmr::polymorphic_allocator<T>>;
+ }
+ (2)    (since C++17)
+ std::list is a container that supports constant time insertion and removal of elements from anywhere in the container. Fast random access is not supported. It is usually implemented as a doubly-linked list. Compared to std::forward_list this container provides bidirectional iteration capability while being less space efficient.
+ Adding, removing and moving the elements within the list or across several lists does not invalidate the iterators or references. An iterator is invalidated only when the corresponding element is deleted.
+ std::list meets the requirements of Container, AllocatorAwareContainer, SequenceContainer and ReversibleContainer.
+ Template parameters
+ T    -    The type of the elements.
+ T must meet the requirements of CopyAssignable and CopyConstructible.    (until C++11)
+ The requirements that are imposed on the elements depend on the actual operations performed on the container. Generally, it is required that element type is a complete type and meets the requirements of Erasable, but many member functions impose stricter requirements.    (since C++11)
+ (until C++17)
+ The requirements that are imposed on the elements depend on the actual operations performed on the container. Generally, it is required that element type meets the requirements of Erasable, but many member functions impose stricter requirements. This container (but not its members) can be instantiated with an incomplete element type if the allocator satisfies the allocator completeness requirements.    (since C++17)
+ Allocator    -    An allocator that is used to acquire/release memory and to construct/destroy the elements in that memory. The type must meet the requirements of Allocator. The behavior is undefined if Allocator::value_type is not the same as T.
+ Member types
+ Member type    Definition
+ value_type    T
+ allocator_type    Allocator
+ size_type    Unsigned integer type (usually std::size_t)
+ difference_type    Signed integer type (usually std::ptrdiff_t)
+ reference     Allocator::reference    (until C++11)    value_type&    (since C++11)
+ const_reference     Allocator::const_reference    (until C++11)    const value_type&    (since C++11)
+ pointer     Allocator::pointer    (until C++11)    std::allocator_traits<Allocator>::pointer    (since C++11)
+ const_pointer     Allocator::const_pointer    (until C++11)    std::allocator_traits<Allocator>::const_pointer    (since C++11)
+ iterator    LegacyBidirectionalIterator
+ const_iterator    Constant LegacyBidirectionalIterator
+ reverse_iterator    std::reverse_iterator<iterator>
+ const_reverse_iterator    std::reverse_iterator<const_iterator>
+ Member functions
+ (constructor)
+  
+ constructs the list
+ (public member function)
+ (destructor)
+  
+ destructs the list
+ (public member function)
+ operator=
+  
+ assigns values to the container
+ (public member function)
+ assign
+  
+ assigns values to the container
+ (public member function)
+ get_allocator
+  
+ returns the associated allocator
+ (public member function)
+ Element access
+ front
+  
+ access the first element
+ (public member function)
+ back
+  
+ access the last element
+ (public member function)
+ Iterators
+ begin
+ cbegin
+   
+  
+ returns an iterator to the beginning
+ (public member function)
+ end
+ cend
+   
+  
+ returns an iterator to the end
+ (public member function)
+ rbegin
+ crbegin
+   
+  
+ returns a reverse iterator to the beginning
+ (public member function)
+ rend
+ crend
+   
+  
+ returns a reverse iterator to the end
+ (public member function)
+ Capacity
+ empty
+  
+ checks whether the container is empty
+ (public member function)
+ size
+  
+ returns the number of elements
+ (public member function)
+ max_size
+  
+ returns the maximum possible number of elements
+ (public member function)
+ Modifiers
+ clear
+  
+ clears the contents
+ (public member function)
+ insert
+  
+ inserts elements
+ (public member function)
+ emplace
+   
+ (C++11)
+  
+ constructs element in-place
+ (public member function)
+ erase
+  
+ erases elements
+ (public member function)
+ push_back
+  
+ adds an element to the end
+ (public member function)
+ emplace_back
+   
+ (C++11)
+  
+ constructs an element in-place at the end
+ (public member function)
+ pop_back
+  
+ removes the last element
+ (public member function)
+ push_front
+  
+ inserts an element to the beginning
+ (public member function)
+ emplace_front
+   
+ (C++11)
+  
+ constructs an element in-place at the beginning
+ (public member function)
+ pop_front
+  
+ removes the first element
+ (public member function)
+ resize
+  
+ changes the number of elements stored
+ (public member function)
+ swap
+  
+ swaps the contents
+ (public member function)
+ Operations
+ merge
+  
+ merges two sorted lists
+ (public member function)
+ splice
+  
+ moves elements from another list
+ (public member function)
+ remove
+ remove_if
+  
+ removes elements satisfying specific criteria
+ (public member function)
+ reverse
+  
+ reverses the order of the elements
+ (public member function)
+ unique
+  
+ removes consecutive duplicate elements
+ (public member function)
+ sort
+  
+ sorts the elements
+ (public member function)
+ Non-member functions
+ operator==
+ operator!=
+ operator<
+ operator<=
+ operator>
+ operator>=
+ operator<=>
+   
+ (removed in C++20)
+ (removed in C++20)
+ (removed in C++20)
+ (removed in C++20)
+ (removed in C++20)
+ (C++20)
+  
+ lexicographically compares the values in the list
+ (function template)
+ std::swap(std::list)
+  
+ specializes the std::swap algorithm
+ (function template)
+ erase(std::list)
+ erase_if(std::list)
+   
+ (C++20)
+  
+ Erases all elements satisfying specific criteria
+ (function template)
+
+ */
+
 __STL_BEGIN_NAMESPACE
 
 #if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
@@ -140,9 +357,13 @@ public:
     allocator_type;
     allocator_type get_allocator() const { return _Node_allocator; }
     
+    // 在这里, 进行了 分配器的赋值的工作.
     _List_alloc_base(const allocator_type& __a) : _Node_allocator(__a) {}
     
 protected:
+    /*
+     这里, 分配一个新的节点, 回收一个新的节点, 都是通过分配器进行的管理.
+     */
     _List_node<_Tp>* _M_get_node()
     { return _Node_allocator.allocate(1); }
     void _M_put_node(_List_node<_Tp>* __p)
@@ -150,8 +371,8 @@ protected:
     
 protected:
     typename _Alloc_traits<_List_node<_Tp>, _Allocator>::allocator_type
-    _Node_allocator;
-    _List_node<_Tp>* _M_node;
+    _Node_allocator; // List 内部, 也会进行分配器的管理
+    _List_node<_Tp>* _M_node; // 真正的列表, 管理的成员变量, 就这一个指针而已.
 };
 
 // Specialization for instanceless allocators.
@@ -210,6 +431,10 @@ public:
     
     _List_base(const allocator_type&) {
         _M_node = _M_get_node();
+        /*
+         在刚创建的时候, next 指向了自身.
+         _M_node 其实就是一个哨兵节点.
+         */
         _M_node->_M_next = _M_node;
         _M_node->_M_prev = _M_node;
     }
@@ -245,6 +470,10 @@ _List_base<_Tp,_Alloc>::clear()
     _M_node->_M_next = _M_node;
     _M_node->_M_prev = _M_node;
 }
+
+/*
+ Std: List 的定义开始.
+ */
 
 template <class _Tp, class _Alloc = __STL_DEFAULT_ALLOCATOR(_Tp) >
 class list : protected _List_base<_Tp, _Alloc> {
@@ -316,12 +545,19 @@ protected:
 public:
     explicit list(const allocator_type& __a = allocator_type()) : _Base(__a) {}
     
+    // 返回值都一样, 由编译前限制, 接受方如何结构, 接受后, 如何使用.
     iterator begin()             { return (_Node*)(_M_node->_M_next); }
     const_iterator begin() const { return (_Node*)(_M_node->_M_next); }
     
+    
+    // M_node, 算作是 sentinel Node, 居然是 end, 而 sentinode 的 begin, 才会是 begin. 所以, 可以想象的是, 刚开始的 Mnode->next, 一定是指向自身的.
     iterator end()             { return _M_node; }
     const_iterator end() const { return _M_node; }
     
+    /*
+     这里, 是构建出了一个新的对象出来了. 这里, 传入的是 end.
+     reverse_iterator 可以看作是原有 iterator 的适配器.
+     */
     reverse_iterator rbegin()
     { return reverse_iterator(end()); }
     const_reverse_iterator rbegin() const
@@ -332,7 +568,13 @@ public:
     const_reverse_iterator rend() const
     { return const_reverse_iterator(begin()); }
     
+    /*
+     是不是空, 就是判断哨兵节点的 next, 是不是自己.
+     */
     bool empty() const { return _M_node->_M_next == _M_node; }
+    /*
+     这里, 利用了全局的 distance 方法. 在里面, 会根据 iterator 的 category, 进行不同的 distance 计算方法的调用.
+     */
     size_type size() const {
         size_type __result = 0;
         distance(begin(), end(), __result);
@@ -340,13 +582,22 @@ public:
     }
     size_type max_size() const { return size_type(-1); }
     
+    /*
+     利用已有的方法.
+     */
     reference front() { return *begin(); }
     const_reference front() const { return *begin(); }
     reference back() { return *(--end()); }
     const_reference back() const { return *(--end()); }
     
+    /*
+     直接交换两个 sentinel Node 的值就可以了.
+     */
     void swap(list<_Tp, _Alloc>& __x) { __STD::swap(_M_node, __x._M_node); }
     
+    /*
+     一个简单的链表插入的动作, 不过因为这里指针是 迭代器, 所以需要进行迭代器中数据的维护操作.
+     */
     iterator insert(iterator __position, const _Tp& __x) {
         _Node* __tmp = _M_create_node(__x);
         __tmp->_M_next = __position._M_node;
@@ -385,11 +636,20 @@ public:
     { _M_fill_insert(__pos, __n, __x); }
     void _M_fill_insert(iterator __pos, size_type __n, const _Tp& __x);
     
+    /*
+     从头部插入
+     */
     void push_front(const _Tp& __x) { insert(begin(), __x); }
     void push_front() {insert(begin());}
+    /*
+     从尾部插入.
+     */
     void push_back(const _Tp& __x) { insert(end(), __x); }
     void push_back() {insert(end());}
     
+    /*
+     拿到指针的前后, 进行内存的回收, 进行节点的回收, 到分配器中, 然后返回一下节点.
+     */
     iterator erase(iterator __position) {
         _List_node_base* __next_node = __position._M_node->_M_next;
         _List_node_base* __prev_node = __position._M_node->_M_prev;
@@ -521,6 +781,9 @@ public:
 #endif /* __STL_MEMBER_TEMPLATES */
 };
 
+/*
+ 链表的相等, 是一个 O(n) 时间复杂度的事情.
+ */
 template <class _Tp, class _Alloc>
 inline bool 
 operator==(const list<_Tp,_Alloc>& __x, const list<_Tp,_Alloc>& __y)
@@ -542,6 +805,9 @@ template <class _Tp, class _Alloc>
 inline bool operator<(const list<_Tp,_Alloc>& __x,
                       const list<_Tp,_Alloc>& __y)
 {
+    /*
+     在这个方法的内部, 会进行逐个的比较.
+     */
     return lexicographical_compare(__x.begin(), __x.end(),
                                    __y.begin(), __y.end());
 }
