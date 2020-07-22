@@ -1,0 +1,475 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		069FFE6C24C858BB0014F9EA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 069FFE6B24C858BB0014F9EA /* main.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		069FFE6624C858BB0014F9EA /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		069FFE6824C858BB0014F9EA /* 2.9Ana */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 2.9Ana; sourceTree = BUILT_PRODUCTS_DIR; };
+		069FFE6B24C858BB0014F9EA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		069FFE7224C858C70014F9EA /* stl_vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_vector.h; path = ../../stl_vector.h; sourceTree = "<group>"; };
+		069FFE7324C858C70014F9EA /* hash_set.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = hash_set.h; path = ../../hash_set.h; sourceTree = "<group>"; };
+		069FFE7424C858C70014F9EA /* stack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stack.h; path = ../../stack.h; sourceTree = "<group>"; };
+		069FFE7524C858C70014F9EA /* stl_set.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_set.h; path = ../../stl_set.h; sourceTree = "<group>"; };
+		069FFE7624C858C70014F9EA /* ostream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ostream.h; path = ../../ostream.h; sourceTree = "<group>"; };
+		069FFE7724C858C70014F9EA /* stl_pair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_pair.h; path = ../../stl_pair.h; sourceTree = "<group>"; };
+		069FFE7824C858C70014F9EA /* stl_hash_fun.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_hash_fun.h; path = ../../stl_hash_fun.h; sourceTree = "<group>"; };
+		069FFE7924C858C70014F9EA /* libio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = libio.h; path = ../../libio.h; sourceTree = "<group>"; };
+		069FFE7A24C858C70014F9EA /* SFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SFile.h; path = ../../SFile.h; sourceTree = "<group>"; };
+		069FFE7B24C858C70014F9EA /* stl_numeric.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_numeric.h; path = ../../stl_numeric.h; sourceTree = "<group>"; };
+		069FFE7C24C858C70014F9EA /* stl_stack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_stack.h; path = ../../stl_stack.h; sourceTree = "<group>"; };
+		069FFE7D24C858C70014F9EA /* map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = map.h; path = ../../map.h; sourceTree = "<group>"; };
+		069FFE7E24C858C70014F9EA /* heap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = heap.h; path = ../../heap.h; sourceTree = "<group>"; };
+		069FFE7F24C858C70014F9EA /* stl_rope.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_rope.h; path = ../../stl_rope.h; sourceTree = "<group>"; };
+		069FFE8024C858C70014F9EA /* floatio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = floatio.h; path = ../../floatio.h; sourceTree = "<group>"; };
+		069FFE8124C858C70014F9EA /* procbuf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = procbuf.h; path = ../../procbuf.h; sourceTree = "<group>"; };
+		069FFE8224C858C70014F9EA /* tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = tree.h; path = ../../tree.h; sourceTree = "<group>"; };
+		069FFE8324C858C70014F9EA /* stl_multiset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_multiset.h; path = ../../stl_multiset.h; sourceTree = "<group>"; };
+		069FFE8424C858C70014F9EA /* stl_alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_alloc.h; path = ../../stl_alloc.h; sourceTree = "<group>"; };
+		069FFE8524C858C70014F9EA /* iolibio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = iolibio.h; path = ../../iolibio.h; sourceTree = "<group>"; };
+		069FFE8724C858C70014F9EA /* fcomplex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fcomplex.h; sourceTree = "<group>"; };
+		069FFE8824C858C70014F9EA /* bastring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bastring.h; sourceTree = "<group>"; };
+		069FFE8924C858C70014F9EA /* complext.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = complext.cc; sourceTree = "<group>"; };
+		069FFE8A24C858C70014F9EA /* ldcomplex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ldcomplex.h; sourceTree = "<group>"; };
+		069FFE8B24C858C70014F9EA /* straits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = straits.h; sourceTree = "<group>"; };
+		069FFE8C24C858C70014F9EA /* bastring.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = bastring.cc; sourceTree = "<group>"; };
+		069FFE8D24C858C70014F9EA /* dcomplex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dcomplex.h; sourceTree = "<group>"; };
+		069FFE8E24C858C70014F9EA /* complext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = complext.h; sourceTree = "<group>"; };
+		069FFE8F24C858C70014F9EA /* stl_hash_map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_hash_map.h; path = ../../stl_hash_map.h; sourceTree = "<group>"; };
+		069FFE9024C858C70014F9EA /* algobase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = algobase.h; path = ../../algobase.h; sourceTree = "<group>"; };
+		069FFE9124C858C70014F9EA /* stdiostream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stdiostream.h; path = ../../stdiostream.h; sourceTree = "<group>"; };
+		069FFE9224C858C70014F9EA /* stl_hash_set.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_hash_set.h; path = ../../stl_hash_set.h; sourceTree = "<group>"; };
+		069FFE9324C858C70014F9EA /* complex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = complex.h; path = ../../complex.h; sourceTree = "<group>"; };
+		069FFE9424C858C80014F9EA /* ropeimpl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ropeimpl.h; path = ../../ropeimpl.h; sourceTree = "<group>"; };
+		069FFE9524C858C80014F9EA /* parsestream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = parsestream.h; path = ../../parsestream.h; sourceTree = "<group>"; };
+		069FFE9624C858C80014F9EA /* PlotFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PlotFile.h; path = ../../PlotFile.h; sourceTree = "<group>"; };
+		069FFE9724C858C80014F9EA /* bvector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = bvector.h; path = ../../bvector.h; sourceTree = "<group>"; };
+		069FFE9824C858C80014F9EA /* indstream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = indstream.h; path = ../../indstream.h; sourceTree = "<group>"; };
+		069FFE9924C858C80014F9EA /* multimap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = multimap.h; path = ../../multimap.h; sourceTree = "<group>"; };
+		069FFE9A24C858C80014F9EA /* istream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = istream.h; path = ../../istream.h; sourceTree = "<group>"; };
+		069FFE9B24C858C80014F9EA /* stl_deque.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_deque.h; path = ../../stl_deque.h; sourceTree = "<group>"; };
+		069FFE9C24C858C80014F9EA /* stl_slist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_slist.h; path = ../../stl_slist.h; sourceTree = "<group>"; };
+		069FFE9D24C858C80014F9EA /* multiset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = multiset.h; path = ../../multiset.h; sourceTree = "<group>"; };
+		069FFE9E24C858C80014F9EA /* stl_map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_map.h; path = ../../stl_map.h; sourceTree = "<group>"; };
+		069FFE9F24C858C80014F9EA /* iostream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = iostream.h; path = ../../iostream.h; sourceTree = "<group>"; };
+		069FFEA024C858C80014F9EA /* iterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = iterator.h; path = ../../iterator.h; sourceTree = "<group>"; };
+		069FFEA124C858C80014F9EA /* pfstream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pfstream.h; path = ../../pfstream.h; sourceTree = "<group>"; };
+		069FFEA224C858C80014F9EA /* pthread_alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pthread_alloc.h; path = ../../pthread_alloc.h; sourceTree = "<group>"; };
+		069FFEA324C858C90014F9EA /* stl_tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_tree.h; path = ../../stl_tree.h; sourceTree = "<group>"; };
+		069FFEA424C858C90014F9EA /* type_traits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = type_traits.h; path = ../../type_traits.h; sourceTree = "<group>"; };
+		069FFEA524C858C90014F9EA /* stl_list.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_list.h; path = ../../stl_list.h; sourceTree = "<group>"; };
+		069FFEA624C858C90014F9EA /* stl_algobase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_algobase.h; path = ../../stl_algobase.h; sourceTree = "<group>"; };
+		069FFEA724C858C90014F9EA /* builtinbuf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = builtinbuf.h; path = ../../builtinbuf.h; sourceTree = "<group>"; };
+		069FFEA824C858C90014F9EA /* stl_uninitialized.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_uninitialized.h; path = ../../stl_uninitialized.h; sourceTree = "<group>"; };
+		069FFEA924C858C90014F9EA /* libioP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = libioP.h; path = ../../libioP.h; sourceTree = "<group>"; };
+		069FFEAA24C858C90014F9EA /* iostreamP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = iostreamP.h; path = ../../iostreamP.h; sourceTree = "<group>"; };
+		069FFEAB24C858C90014F9EA /* stl_iterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_iterator.h; path = ../../stl_iterator.h; sourceTree = "<group>"; };
+		069FFEAC24C858C90014F9EA /* stl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl.h; path = ../../stl.h; sourceTree = "<group>"; };
+		069FFEAD24C858C90014F9EA /* stl_construct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_construct.h; path = ../../stl_construct.h; sourceTree = "<group>"; };
+		069FFEAE24C858C90014F9EA /* stl_relops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_relops.h; path = ../../stl_relops.h; sourceTree = "<group>"; };
+		069FFEAF24C858C90014F9EA /* stl_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_config.h; path = ../../stl_config.h; sourceTree = "<group>"; };
+		069FFEB024C858C90014F9EA /* streambuf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = streambuf.h; path = ../../streambuf.h; sourceTree = "<group>"; };
+		069FFEB124C858C90014F9EA /* set.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = set.h; path = ../../set.h; sourceTree = "<group>"; };
+		069FFEB224C858C90014F9EA /* iomanip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = iomanip.h; path = ../../iomanip.h; sourceTree = "<group>"; };
+		069FFEB324C858C90014F9EA /* hash_map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = hash_map.h; path = ../../hash_map.h; sourceTree = "<group>"; };
+		069FFEB424C858CA0014F9EA /* editbuf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = editbuf.h; path = ../../editbuf.h; sourceTree = "<group>"; };
+		069FFEB524C858CA0014F9EA /* function.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = function.h; path = ../../function.h; sourceTree = "<group>"; };
+		069FFEB624C858CA0014F9EA /* defalloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = defalloc.h; path = ../../defalloc.h; sourceTree = "<group>"; };
+		069FFEB724C858CA0014F9EA /* pair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pair.h; path = ../../pair.h; sourceTree = "<group>"; };
+		069FFEB824C858CA0014F9EA /* stl_tempbuf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_tempbuf.h; path = ../../stl_tempbuf.h; sourceTree = "<group>"; };
+		069FFEB924C858CA0014F9EA /* stl_multimap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_multimap.h; path = ../../stl_multimap.h; sourceTree = "<group>"; };
+		069FFEBA24C858CA0014F9EA /* strstream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = strstream.h; path = ../../strstream.h; sourceTree = "<group>"; };
+		069FFEBB24C858CA0014F9EA /* stream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stream.h; path = ../../stream.h; sourceTree = "<group>"; };
+		069FFEBC24C858CA0014F9EA /* algo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = algo.h; path = ../../algo.h; sourceTree = "<group>"; };
+		069FFEBD24C858CA0014F9EA /* stl_hashtable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_hashtable.h; path = ../../stl_hashtable.h; sourceTree = "<group>"; };
+		069FFEBE24C858CA0014F9EA /* stl_raw_storage_iter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_raw_storage_iter.h; path = ../../stl_raw_storage_iter.h; sourceTree = "<group>"; };
+		069FFEBF24C858CA0014F9EA /* hashtable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = hashtable.h; path = ../../hashtable.h; sourceTree = "<group>"; };
+		069FFEC024C858CA0014F9EA /* rope.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = rope.h; path = ../../rope.h; sourceTree = "<group>"; };
+		069FFEC124C858CA0014F9EA /* slist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = slist.h; path = ../../slist.h; sourceTree = "<group>"; };
+		069FFEC224C858CA0014F9EA /* deque.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = deque.h; path = ../../deque.h; sourceTree = "<group>"; };
+		069FFEC324C858CA0014F9EA /* stl_queue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_queue.h; path = ../../stl_queue.h; sourceTree = "<group>"; };
+		069FFEC424C858CA0014F9EA /* stl_bvector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_bvector.h; path = ../../stl_bvector.h; sourceTree = "<group>"; };
+		069FFEC524C858CB0014F9EA /* stl_algo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_algo.h; path = ../../stl_algo.h; sourceTree = "<group>"; };
+		069FFEC624C858CB0014F9EA /* fstream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = fstream.h; path = ../../fstream.h; sourceTree = "<group>"; };
+		069FFEC724C858CB0014F9EA /* list.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = list.h; path = ../../list.h; sourceTree = "<group>"; };
+		069FFEC824C858CB0014F9EA /* stl_heap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_heap.h; path = ../../stl_heap.h; sourceTree = "<group>"; };
+		069FFEC924C858CB0014F9EA /* tempbuf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = tempbuf.h; path = ../../tempbuf.h; sourceTree = "<group>"; };
+		069FFECA24C858CB0014F9EA /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = alloc.h; path = ../../alloc.h; sourceTree = "<group>"; };
+		069FFECB24C858CD0014F9EA /* stl_function.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stl_function.h; path = ../../stl_function.h; sourceTree = "<group>"; };
+		069FFECC24C858CD0014F9EA /* strfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = strfile.h; path = ../../strfile.h; sourceTree = "<group>"; };
+		069FFECD24C858CD0014F9EA /* vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = vector.h; path = ../../vector.h; sourceTree = "<group>"; };
+		069FFECE24C858CD0014F9EA /* iostdio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = iostdio.h; path = ../../iostdio.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		069FFE6524C858BB0014F9EA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		069FFE5F24C858BB0014F9EA = {
+			isa = PBXGroup;
+			children = (
+				069FFE6A24C858BB0014F9EA /* 2.9Ana */,
+				069FFE6924C858BB0014F9EA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		069FFE6924C858BB0014F9EA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				069FFE6824C858BB0014F9EA /* 2.9Ana */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		069FFE6A24C858BB0014F9EA /* 2.9Ana */ = {
+			isa = PBXGroup;
+			children = (
+				069FFEBC24C858CA0014F9EA /* algo.h */,
+				069FFE9024C858C70014F9EA /* algobase.h */,
+				069FFECA24C858CB0014F9EA /* alloc.h */,
+				069FFEA724C858C90014F9EA /* builtinbuf.h */,
+				069FFE9724C858C80014F9EA /* bvector.h */,
+				069FFE9324C858C70014F9EA /* complex.h */,
+				069FFEB624C858CA0014F9EA /* defalloc.h */,
+				069FFEC224C858CA0014F9EA /* deque.h */,
+				069FFEB424C858CA0014F9EA /* editbuf.h */,
+				069FFE8024C858C70014F9EA /* floatio.h */,
+				069FFEC624C858CB0014F9EA /* fstream.h */,
+				069FFEB524C858CA0014F9EA /* function.h */,
+				069FFEB324C858C90014F9EA /* hash_map.h */,
+				069FFE7324C858C70014F9EA /* hash_set.h */,
+				069FFEBF24C858CA0014F9EA /* hashtable.h */,
+				069FFE7E24C858C70014F9EA /* heap.h */,
+				069FFE9824C858C80014F9EA /* indstream.h */,
+				069FFE8524C858C70014F9EA /* iolibio.h */,
+				069FFEB224C858C90014F9EA /* iomanip.h */,
+				069FFECE24C858CD0014F9EA /* iostdio.h */,
+				069FFE9F24C858C80014F9EA /* iostream.h */,
+				069FFEAA24C858C90014F9EA /* iostreamP.h */,
+				069FFE9A24C858C80014F9EA /* istream.h */,
+				069FFEA024C858C80014F9EA /* iterator.h */,
+				069FFE7924C858C70014F9EA /* libio.h */,
+				069FFEA924C858C90014F9EA /* libioP.h */,
+				069FFEC724C858CB0014F9EA /* list.h */,
+				069FFE6B24C858BB0014F9EA /* main.cpp */,
+				069FFE7D24C858C70014F9EA /* map.h */,
+				069FFE9924C858C80014F9EA /* multimap.h */,
+				069FFE9D24C858C80014F9EA /* multiset.h */,
+				069FFE7624C858C70014F9EA /* ostream.h */,
+				069FFEB724C858CA0014F9EA /* pair.h */,
+				069FFE9524C858C80014F9EA /* parsestream.h */,
+				069FFEA124C858C80014F9EA /* pfstream.h */,
+				069FFE9624C858C80014F9EA /* PlotFile.h */,
+				069FFE8124C858C70014F9EA /* procbuf.h */,
+				069FFEA224C858C80014F9EA /* pthread_alloc.h */,
+				069FFEC024C858CA0014F9EA /* rope.h */,
+				069FFE9424C858C80014F9EA /* ropeimpl.h */,
+				069FFEB124C858C90014F9EA /* set.h */,
+				069FFE7A24C858C70014F9EA /* SFile.h */,
+				069FFEC124C858CA0014F9EA /* slist.h */,
+				069FFE7424C858C70014F9EA /* stack.h */,
+				069FFE8624C858C70014F9EA /* std */,
+				069FFE9124C858C70014F9EA /* stdiostream.h */,
+				069FFEC524C858CB0014F9EA /* stl_algo.h */,
+				069FFEA624C858C90014F9EA /* stl_algobase.h */,
+				069FFE8424C858C70014F9EA /* stl_alloc.h */,
+				069FFEC424C858CA0014F9EA /* stl_bvector.h */,
+				069FFEAF24C858C90014F9EA /* stl_config.h */,
+				069FFEAD24C858C90014F9EA /* stl_construct.h */,
+				069FFE9B24C858C80014F9EA /* stl_deque.h */,
+				069FFECB24C858CD0014F9EA /* stl_function.h */,
+				069FFE7824C858C70014F9EA /* stl_hash_fun.h */,
+				069FFE8F24C858C70014F9EA /* stl_hash_map.h */,
+				069FFE9224C858C70014F9EA /* stl_hash_set.h */,
+				069FFEBD24C858CA0014F9EA /* stl_hashtable.h */,
+				069FFEC824C858CB0014F9EA /* stl_heap.h */,
+				069FFEAB24C858C90014F9EA /* stl_iterator.h */,
+				069FFEA524C858C90014F9EA /* stl_list.h */,
+				069FFE9E24C858C80014F9EA /* stl_map.h */,
+				069FFEB924C858CA0014F9EA /* stl_multimap.h */,
+				069FFE8324C858C70014F9EA /* stl_multiset.h */,
+				069FFE7B24C858C70014F9EA /* stl_numeric.h */,
+				069FFE7724C858C70014F9EA /* stl_pair.h */,
+				069FFEC324C858CA0014F9EA /* stl_queue.h */,
+				069FFEBE24C858CA0014F9EA /* stl_raw_storage_iter.h */,
+				069FFEAE24C858C90014F9EA /* stl_relops.h */,
+				069FFE7F24C858C70014F9EA /* stl_rope.h */,
+				069FFE7524C858C70014F9EA /* stl_set.h */,
+				069FFE9C24C858C80014F9EA /* stl_slist.h */,
+				069FFE7C24C858C70014F9EA /* stl_stack.h */,
+				069FFEB824C858CA0014F9EA /* stl_tempbuf.h */,
+				069FFEA324C858C90014F9EA /* stl_tree.h */,
+				069FFEA824C858C90014F9EA /* stl_uninitialized.h */,
+				069FFE7224C858C70014F9EA /* stl_vector.h */,
+				069FFEAC24C858C90014F9EA /* stl.h */,
+				069FFEBB24C858CA0014F9EA /* stream.h */,
+				069FFEB024C858C90014F9EA /* streambuf.h */,
+				069FFECC24C858CD0014F9EA /* strfile.h */,
+				069FFEBA24C858CA0014F9EA /* strstream.h */,
+				069FFEC924C858CB0014F9EA /* tempbuf.h */,
+				069FFE8224C858C70014F9EA /* tree.h */,
+				069FFEA424C858C90014F9EA /* type_traits.h */,
+				069FFECD24C858CD0014F9EA /* vector.h */,
+			);
+			path = 2.9Ana;
+			sourceTree = "<group>";
+		};
+		069FFE8624C858C70014F9EA /* std */ = {
+			isa = PBXGroup;
+			children = (
+				069FFE8724C858C70014F9EA /* fcomplex.h */,
+				069FFE8824C858C70014F9EA /* bastring.h */,
+				069FFE8924C858C70014F9EA /* complext.cc */,
+				069FFE8A24C858C70014F9EA /* ldcomplex.h */,
+				069FFE8B24C858C70014F9EA /* straits.h */,
+				069FFE8C24C858C70014F9EA /* bastring.cc */,
+				069FFE8D24C858C70014F9EA /* dcomplex.h */,
+				069FFE8E24C858C70014F9EA /* complext.h */,
+			);
+			name = std;
+			path = ../../std;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		069FFE6724C858BB0014F9EA /* 2.9Ana */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 069FFE6F24C858BB0014F9EA /* Build configuration list for PBXNativeTarget "2.9Ana" */;
+			buildPhases = (
+				069FFE6424C858BB0014F9EA /* Sources */,
+				069FFE6524C858BB0014F9EA /* Frameworks */,
+				069FFE6624C858BB0014F9EA /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = 2.9Ana;
+			productName = 2.9Ana;
+			productReference = 069FFE6824C858BB0014F9EA /* 2.9Ana */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		069FFE6024C858BB0014F9EA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1160;
+				ORGANIZATIONNAME = JustinLau;
+				TargetAttributes = {
+					069FFE6724C858BB0014F9EA = {
+						CreatedOnToolsVersion = 11.6;
+					};
+				};
+			};
+			buildConfigurationList = 069FFE6324C858BB0014F9EA /* Build configuration list for PBXProject "2.9Ana" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 069FFE5F24C858BB0014F9EA;
+			productRefGroup = 069FFE6924C858BB0014F9EA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				069FFE6724C858BB0014F9EA /* 2.9Ana */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		069FFE6424C858BB0014F9EA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				069FFE6C24C858BB0014F9EA /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		069FFE6D24C858BB0014F9EA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		069FFE6E24C858BB0014F9EA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		069FFE7024C858BB0014F9EA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		069FFE7124C858BB0014F9EA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RF2LPG6C4X;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		069FFE6324C858BB0014F9EA /* Build configuration list for PBXProject "2.9Ana" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				069FFE6D24C858BB0014F9EA /* Debug */,
+				069FFE6E24C858BB0014F9EA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		069FFE6F24C858BB0014F9EA /* Build configuration list for PBXNativeTarget "2.9Ana" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				069FFE7024C858BB0014F9EA /* Debug */,
+				069FFE7124C858BB0014F9EA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 069FFE6024C858BB0014F9EA /* Project object */;
+}
