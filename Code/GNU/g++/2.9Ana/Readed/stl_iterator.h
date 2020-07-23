@@ -1,37 +1,16 @@
-/*
- *
- * Copyright (c) 1994
- * Hewlett-Packard Company
- *
- * Permission to use, copy, modify, distribute and sell this software
- * and its documentation for any purpose is hereby granted without fee,
- * provided that the above copyright notice appear in all copies and
- * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Hewlett-Packard Company makes no
- * representations about the suitability of this software for any
- * purpose.  It is provided "as is" without express or implied warranty.
- *
- *
- * Copyright (c) 1996,1997
- * Silicon Graphics Computer Systems, Inc.
- *
- * Permission to use, copy, modify, distribute and sell this software
- * and its documentation for any purpose is hereby granted without fee,
- * provided that the above copyright notice appear in all copies and
- * that both that copyright notice and this permission notice appear
- * in supporting documentation.  Silicon Graphics makes no
- * representations about the suitability of this software for any
- * purpose.  It is provided "as is" without express or implied warranty.
- */
-
-/* NOTE: This is an internal header file, included by other STL headers.
- *   You should not attempt to use it directly.
- */
-
 #ifndef __SGI_STL_INTERNAL_ITERATOR_H
 #define __SGI_STL_INTERNAL_ITERATOR_H
 
 __STL_BEGIN_NAMESPACE
+
+/*
+ iterator_category 并不是需要使用的类型, 不同的 iterator 定了了不同的 iterator_category. 在算法里面, 根据 iterator_category 生成不同类型的对象, 这个对象仅仅是用于方法的分发. 根据对象的类型的不同, 分发到不同的函数中.
+ Iterator 里面, 定义好正确的 iterator_category, 就能进行正确的函数的执行.
+ */
+
+/*
+ iterator 的适配器, 一般来说会保存原有的适配器, 然后进行根据适配器的功能, 进行相应的操作修改.
+ */
 
 struct input_iterator_tag {};
 struct output_iterator_tag {};
@@ -94,7 +73,6 @@ struct iterator {
 
 #ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
 
-
 // 如果, 传递过来的类型是类型的话, 就是使用 类型里面定义的 iterator_category 作为 iterator_category
 template <class Iterator>
 struct iterator_traits {
@@ -127,7 +105,10 @@ struct iterator_traits<const T*> {
 template <class Iterator>
 inline typename iterator_traits<Iterator>::iterator_category
 iterator_category(const Iterator&) {
-    // 直接使用 iterator_traits 里面的 iterator_category 作为 category. 利用这个类型, 生成一个临时变量, 然后这个临时变量, 在后续的算法里面, 起到了分发的作用.
+    /*
+     iterator_traits 会根据 iterator 是对象, 还是指针, 分发出不同的 iterator_category 的定义.
+     然后根据这个 iterator_category 类型, 生成一个临时对象, 这个临时对象, 仅仅用于编译时期方法的分发操作.
+     */
   typedef typename iterator_traits<Iterator>::iterator_category category;
   return category();
 }
@@ -230,8 +211,24 @@ inline ptrdiff_t* distance_type(const T*) { return (ptrdiff_t*)(0); }
 
 #endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
+/*
+ 以上的, 萃取的过程复杂, 主要看下面对于各个功能的实现.
+ */
+
 // 用输出参数, 传递距离.
 // 一般的迭代器, 想要确定出距离来, 只能通过迭代的方式.
+/*
+ 这个方法的调用者, 在使用 distance 的时候, 会用 iterator_category 方法, 萃取出 category 的临时变量, 然后调用__distance方法.
+ __distance 会调用合适的版本的实现.
+ distance 方法的调用者, 只会传入 iterator 对象. 而萃取的过程, 分发的过程, 是在标准库里面已经实现的了.
+ */
+
+// 总体的分发过程, 结果在传出参数中体现.
+template <class InputIterator, class Distance>
+inline void distance(InputIterator first, InputIterator last, Distance& n) {
+  __distance(first, last, n, iterator_category(first));
+}
+
 template <class InputIterator, class Distance>
 inline void __distance(InputIterator first, InputIterator last, Distance& n, 
                        input_iterator_tag) {
@@ -245,15 +242,17 @@ inline void __distance(RandomAccessIterator first, RandomAccessIterator last,
   n += last - first;
 }
 
-// 在这里, 通过 iterator_category 函数, 分发到上面两个函数中.
-template <class InputIterator, class Distance>
-inline void distance(InputIterator first, InputIterator last, Distance& n) {
-  __distance(first, last, n, iterator_category(first));
-}
-
 #ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
 
-// 用返回值传递距离.
+// 过程, 和上面的一样, 不过是用返回值进行结果的体现.
+
+template <class InputIterator>
+inline iterator_traits<InputIterator>::difference_type
+distance(InputIterator first, InputIterator last) {
+  typedef typename iterator_traits<InputIterator>::iterator_category category;
+  return __distance(first, last, category());
+}
+
 template <class InputIterator>
 inline iterator_traits<InputIterator>::difference_type
 __distance(InputIterator first, InputIterator last, input_iterator_tag) {
@@ -271,13 +270,6 @@ __distance(RandomAccessIterator first, RandomAccessIterator last,
   return last - first;
 }
 
-template <class InputIterator>
-inline iterator_traits<InputIterator>::difference_type
-distance(InputIterator first, InputIterator last) {
-  typedef typename iterator_traits<InputIterator>::iterator_category category;
-  return __distance(first, last, category());
-}
-
 #endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
 // 一般的迭代器, 只能向后迭代, 一个个迭代.
@@ -290,7 +282,15 @@ inline void __advance(InputIterator& i, Distance n, input_iterator_tag) {
 #pragma set woff 1183
 #endif
 
+// advance 通过 iterator 里面的类型, 分发到上面两个函数中.
+template <class InputIterator, class Distance>
+inline void advance(InputIterator& i, Distance n) {
+  __advance(i, n, iterator_category(i));
+}
+
 // 双向的迭代器, 可以向前进行迭代. 一个个迭代.
+// 注意, C++ 里面都是静态编译的, 所以打包的时候有问题就直接编译不过了.
+// Swift 里面用协议的方式, 进行了更加显示的控制.
 template <class BidirectionalIterator, class Distance>
 inline void __advance(BidirectionalIterator& i, Distance n, 
                       bidirectional_iterator_tag) {
@@ -311,12 +311,9 @@ inline void __advance(RandomAccessIterator& i, Distance n,
   i += n;
 }
 
-// advance 通过 iterator 里面的类型, 分发到上面两个函数中.
-template <class InputIterator, class Distance>
-inline void advance(InputIterator& i, Distance n) {
-  __advance(i, n, iterator_category(i));
-}
-
+/*
+ 这个迭代器干什么用的??
+ */
 template <class Container>
 class back_insert_iterator {
 protected:
@@ -462,9 +459,7 @@ public:
     BidirectionalIterator tmp = current;
     return *--tmp;
   }
-#ifndef __SGI_STL_NO_ARROW_OPERATOR
   pointer operator->() const { return &(operator*()); }
-#endif /* __SGI_STL_NO_ARROW_OPERATOR */
   self& operator++() {
     --current;
     return *this;
@@ -530,6 +525,7 @@ inline bool operator==(
 /*
  reverse_iterator 是 Iterator 的适配器.
  各种操作, 都是操作传入的 srcIterator.
+ 不太清楚上面的那些适配器到底有什么用.
  */
 template <class Iterator>
 class reverse_iterator 
@@ -676,6 +672,9 @@ public:
     ++current;
     return *this;
   }
+    /*
+     这里, 增加了一些对于 random 的处理.
+     */
   self operator--(int) {
     self tmp = *this;
     ++current;
