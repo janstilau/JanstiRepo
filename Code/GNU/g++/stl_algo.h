@@ -692,6 +692,7 @@ void random_shuffle(RandomAccessIterator first, RandomAccessIterator last,
  不稳定.
  分区.
  Iterator to the first element of the second group.
+ 快排, 会用到这里的算法, 不过, 快排的选择 pivot 的算法其实有多种.
  */
 
 template <class BidirectionalIterator, class Predicate>
@@ -722,8 +723,6 @@ BidirectionalIterator partition(BidirectionalIterator first,
     }
 }
 
-
-// MCTODO:
 template <class ForwardIterator, class Predicate, class Distance>
 ForwardIterator __inplace_stable_partition(ForwardIterator first,
                                            ForwardIterator last,
@@ -808,6 +807,9 @@ inline ForwardIterator stable_partition(ForwardIterator first,
                                       value_type(first), distance_type(first));
 }
 
+/*
+ 数组相关的分区的函数.
+ */
 template <class RandomAccessIterator, class T>
 RandomAccessIterator __unguarded_partition(RandomAccessIterator first,
                                            RandomAccessIterator last,
@@ -838,7 +840,10 @@ RandomAccessIterator __unguarded_partition(RandomAccessIterator first,
 
 const int __stl_threshold = 16;
 
-
+/*
+ 数组线性插入函数.
+ 从末尾搬移, 直到发现了应该插入的点.
+ */
 template <class RandomAccessIterator, class T>
 void __unguarded_linear_insert(RandomAccessIterator last, T value) {
     RandomAccessIterator next = last;
@@ -851,6 +856,9 @@ void __unguarded_linear_insert(RandomAccessIterator last, T value) {
     *last = value;
 }
 
+/*
+ 数组线性插入函数, 可配置的闭包表达式.
+ */
 template <class RandomAccessIterator, class T, class Compare>
 void __unguarded_linear_insert(RandomAccessIterator last, T value,
                                Compare comp) {
@@ -888,6 +896,9 @@ inline void __linear_insert(RandomAccessIterator first,
         __unguarded_linear_insert(last, value, comp);
 }
 
+/*
+ 插入排序的过程就是, 从后往前进行判断, 搬移. 在合适的位置进行插入.
+ */
 template <class RandomAccessIterator>
 void __insertion_sort(RandomAccessIterator first, RandomAccessIterator last) {
     if (first == last) return;
@@ -953,6 +964,7 @@ void __final_insertion_sort(RandomAccessIterator first,
         __insertion_sort(first, last, comp);
 }
 
+// log 方法.
 template <class Size>
 inline Size __lg(Size n) {
     Size k;
@@ -978,6 +990,10 @@ void __introsort_loop(RandomAccessIterator first,
     }
 }
 
+/*
+ depth_limit 避免递归嵌套过深.
+ STL的sort算法，数据量大，采用Quick Sort，分段递归排序。一旦分段后的数据量小于某个门槛，为避免Quick Sort的递归调用带来过大的额外负荷，就改用Insertion Sort。如果递归层次过深，还会改用Heap Sort。 Introsort，混合式排序算法。其行为在大部分情况下几乎与Quick sort 相同，但当分割行为有恶化为二次行为的倾向时，改用Heap Sort, 使效率维持在O(N log N)，又比一开始就使用heap sort 效果好。
+ */
 template <class RandomAccessIterator, class T, class Size, class Compare>
 void __introsort_loop(RandomAccessIterator first,
                       RandomAccessIterator last, T*,
@@ -1028,16 +1044,22 @@ void __inplace_stable_sort(RandomAccessIterator first,
     __merge_without_buffer(first, middle, last, middle - first, last - middle);
 }
 
+/*
+ 
+ */
 template <class RandomAccessIterator, class Compare>
 void __inplace_stable_sort(RandomAccessIterator first,
                            RandomAccessIterator last, Compare comp) {
     if (last - first < 15) {
+        // 在数量比较小的时候, 插入排序.
         __insertion_sort(first, last, comp);
         return;
     }
+    // 不断地进行分割.
     RandomAccessIterator middle = first + (last - first) / 2;
     __inplace_stable_sort(first, middle, comp);
     __inplace_stable_sort(middle, last, comp);
+    // 进行合并. 这里自己简单的想了一下, 和两条有序链表合并差不多, 源码的有些复杂.
     __merge_without_buffer(first, middle, last, middle - first,
                            last - middle, comp);
 }
@@ -1753,6 +1775,7 @@ void __merge_without_buffer(BidirectionalIterator first,
                             Distance len1, Distance len2) {
     if (len1 == 0 || len2 == 0) return;
     if (len1 + len2 == 2) {
+        // 提前判断, 交换退出, 提高了效率
         if (*middle < *first) iter_swap(first, middle);
         return;
     }
@@ -1765,8 +1788,7 @@ void __merge_without_buffer(BidirectionalIterator first,
         advance(first_cut, len11);
         second_cut = lower_bound(middle, last, *first_cut);
         distance(middle, second_cut, len22);
-    }
-    else {
+    } else {
         len22 = len2 / 2;
         advance(second_cut, len22);
         first_cut = upper_bound(first, middle, *second_cut);
