@@ -117,6 +117,7 @@
 		069FFF2924C8A4D90014F9EA /* stl_vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_vector.h; path = ../../stl_vector.h; sourceTree = "<group>"; };
 		069FFF2A24C8A4D90014F9EA /* stl_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_iterator.h; sourceTree = "<group>"; };
 		069FFF2B24C8A4D90014F9EA /* stl_multimap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_multimap.h; path = ../../stl_multimap.h; sourceTree = "<group>"; };
+		069FFF3024C940BD0014F9EA /* algoAna.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = algoAna.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -266,6 +267,7 @@
 			isa = PBXGroup;
 			children = (
 				069FFF2A24C8A4D90014F9EA /* stl_iterator.h */,
+				069FFF3024C940BD0014F9EA /* algoAna.h */,
 			);
 			path = Readed;
 			sourceTree = SOURCE_ROOT;
