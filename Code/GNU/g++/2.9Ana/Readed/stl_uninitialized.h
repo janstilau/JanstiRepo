@@ -1,7 +1,3 @@
-/* NOTE: This is an internal header file, included by other STL headers.
- *   You should not attempt to use it directly.
- */
-
 #ifndef __SGI_STL_INTERNAL_UNINITIALIZED_H
 #define __SGI_STL_INTERNAL_UNINITIALIZED_H
 
@@ -14,7 +10,7 @@ inline ForwardIterator
 __uninitialized_copy_aux(InputIterator first, InputIterator last,
                          ForwardIterator result,
                          __true_type) {
-  return copy(first, last, result);
+    return copy(first, last, result);
 }
 
 template <class InputIterator, class ForwardIterator>
@@ -22,13 +18,13 @@ ForwardIterator
 __uninitialized_copy_aux(InputIterator first, InputIterator last,
                          ForwardIterator result,
                          __false_type) {
-  ForwardIterator cur = result;
-  __STL_TRY {
-    for ( ; first != last; ++first, ++cur)
-      construct(&*cur, *first);
-    return cur;
-  }
-  __STL_UNWIND(destroy(result, cur));
+    ForwardIterator cur = result;
+    __STL_TRY {
+        for ( ; first != last; ++first, ++cur)
+            construct(&*cur, *first);
+        return cur;
+    }
+    __STL_UNWIND(destroy(result, cur));
 }
 
 
@@ -36,27 +32,31 @@ template <class InputIterator, class ForwardIterator, class T>
 inline ForwardIterator
 __uninitialized_copy(InputIterator first, InputIterator last,
                      ForwardIterator result, T*) {
-  typedef typename __type_traits<T>::is_POD_type is_POD;
-  return __uninitialized_copy_aux(first, last, result, is_POD());
+    typedef typename __type_traits<T>::is_POD_type is_POD;
+    return __uninitialized_copy_aux(first, last, result, is_POD());
 }
+
+/*
+ Copies elements from the range [first, last) to an uninitialized memory area beginning at d_first as if by
+ */
 
 template <class InputIterator, class ForwardIterator>
 inline ForwardIterator
-  uninitialized_copy(InputIterator first, InputIterator last,
-                     ForwardIterator result) {
-  return __uninitialized_copy(first, last, result, value_type(result));
+uninitialized_copy(InputIterator first, InputIterator last,
+                   ForwardIterator result) {
+    return __uninitialized_copy(first, last, result, value_type(result));
 }
 
 inline char* uninitialized_copy(const char* first, const char* last,
                                 char* result) {
-  memmove(result, first, last - first);
-  return result + (last - first);
+    memmove(result, first, last - first);
+    return result + (last - first);
 }
 
 inline wchar_t* uninitialized_copy(const wchar_t* first, const wchar_t* last,
                                    wchar_t* result) {
-  memmove(result, first, sizeof(wchar_t) * (last - first));
-  return result + (last - first);
+    memmove(result, first, sizeof(wchar_t) * (last - first));
+    return result + (last - first);
 }
 
 template <class InputIterator, class Size, class ForwardIterator>
@@ -64,13 +64,13 @@ pair<InputIterator, ForwardIterator>
 __uninitialized_copy_n(InputIterator first, Size count,
                        ForwardIterator result,
                        input_iterator_tag) {
-  ForwardIterator cur = result;
-  __STL_TRY {
-    for ( ; count > 0 ; --count, ++first, ++cur) 
-      construct(&*cur, *first);
-    return pair<InputIterator, ForwardIterator>(first, cur);
-  }
-  __STL_UNWIND(destroy(result, cur));
+    ForwardIterator cur = result;
+    __STL_TRY {
+        for ( ; count > 0 ; --count, ++first, ++cur)
+            construct(&*cur, *first);
+        return pair<InputIterator, ForwardIterator>(first, cur);
+    }
+    __STL_UNWIND(destroy(result, cur));
 }
 
 template <class RandomAccessIterator, class Size, class ForwardIterator>
@@ -78,16 +78,33 @@ inline pair<RandomAccessIterator, ForwardIterator>
 __uninitialized_copy_n(RandomAccessIterator first, Size count,
                        ForwardIterator result,
                        random_access_iterator_tag) {
-  RandomAccessIterator last = first + count;
-  return make_pair(last, uninitialized_copy(first, last, result));
+    RandomAccessIterator last = first + count;
+    return make_pair(last, uninitialized_copy(first, last, result));
 }
 
 template <class InputIterator, class Size, class ForwardIterator>
 inline pair<InputIterator, ForwardIterator>
 uninitialized_copy_n(InputIterator first, Size count,
                      ForwardIterator result) {
-  return __uninitialized_copy_n(first, count, result,
-                                iterator_category(first));
+    return __uninitialized_copy_n(first, count, result,
+                                  iterator_category(first));
+}
+
+/*
+ Copies the given value to an uninitialized memory area, defined by the range [first, last) as if by
+ */
+template <class ForwardIterator, class T>
+inline void uninitialized_fill(ForwardIterator first, ForwardIterator last,
+                               const T& x) {
+    __uninitialized_fill(first, last, x, value_type(first));
+}
+
+template <class ForwardIterator, class T, class T1>
+inline void __uninitialized_fill(ForwardIterator first, ForwardIterator last,
+                                 const T& x, T1*) {
+    typedef typename __type_traits<T1>::is_POD_type is_POD;
+    __uninitialized_fill_aux(first, last, x, is_POD());
+    
 }
 
 // Valid if copy construction is equivalent to assignment, and if the
@@ -97,7 +114,7 @@ inline void
 __uninitialized_fill_aux(ForwardIterator first, ForwardIterator last, 
                          const T& x, __true_type)
 {
-  fill(first, last, x);
+    fill(first, last, x);
 }
 
 template <class ForwardIterator, class T>
@@ -105,26 +122,12 @@ void
 __uninitialized_fill_aux(ForwardIterator first, ForwardIterator last, 
                          const T& x, __false_type)
 {
-  ForwardIterator cur = first;
-  __STL_TRY {
-    for ( ; cur != last; ++cur)
-      construct(&*cur, x);
-  }
-  __STL_UNWIND(destroy(first, cur));
-}
-
-template <class ForwardIterator, class T, class T1>
-inline void __uninitialized_fill(ForwardIterator first, ForwardIterator last, 
-                                 const T& x, T1*) {
-  typedef typename __type_traits<T1>::is_POD_type is_POD;
-  __uninitialized_fill_aux(first, last, x, is_POD());
-                   
-}
-
-template <class ForwardIterator, class T>
-inline void uninitialized_fill(ForwardIterator first, ForwardIterator last, 
-                               const T& x) {
-  __uninitialized_fill(first, last, x, value_type(first));
+    ForwardIterator cur = first;
+    __STL_TRY {
+        for ( ; cur != last; ++cur)
+            construct(&*cur, x);
+    }
+    __STL_UNWIND(destroy(first, cur));
 }
 
 // Valid if copy construction is equivalent to assignment, and if the
@@ -133,34 +136,34 @@ template <class ForwardIterator, class Size, class T>
 inline ForwardIterator
 __uninitialized_fill_n_aux(ForwardIterator first, Size n,
                            const T& x, __true_type) {
-  return fill_n(first, n, x);
+    return fill_n(first, n, x);
 }
 
 template <class ForwardIterator, class Size, class T>
 ForwardIterator
 __uninitialized_fill_n_aux(ForwardIterator first, Size n,
                            const T& x, __false_type) {
-  ForwardIterator cur = first;
-  __STL_TRY {
-    for ( ; n > 0; --n, ++cur)
-      construct(&*cur, x);
-    return cur;
-  }
-  __STL_UNWIND(destroy(first, cur));
+    ForwardIterator cur = first;
+    __STL_TRY {
+        for ( ; n > 0; --n, ++cur)
+            construct(&*cur, x);
+        return cur;
+    }
+    __STL_UNWIND(destroy(first, cur));
 }
 
 template <class ForwardIterator, class Size, class T, class T1>
 inline ForwardIterator __uninitialized_fill_n(ForwardIterator first, Size n,
                                               const T& x, T1*) {
-  typedef typename __type_traits<T1>::is_POD_type is_POD;
-  return __uninitialized_fill_n_aux(first, n, x, is_POD());
-                                    
+    typedef typename __type_traits<T1>::is_POD_type is_POD;
+    return __uninitialized_fill_n_aux(first, n, x, is_POD());
+    
 }
 
 template <class ForwardIterator, class Size, class T>
 inline ForwardIterator uninitialized_fill_n(ForwardIterator first, Size n,
                                             const T& x) {
-  return __uninitialized_fill_n(first, n, x, value_type(first));
+    return __uninitialized_fill_n(first, n, x, value_type(first));
 }
 
 // Copies [first1, last1) into [result, result + (last1 - first1)), and
@@ -172,11 +175,11 @@ inline ForwardIterator
 __uninitialized_copy_copy(InputIterator1 first1, InputIterator1 last1,
                           InputIterator2 first2, InputIterator2 last2,
                           ForwardIterator result) {
-  ForwardIterator mid = uninitialized_copy(first1, last1, result);
-  __STL_TRY {
-    return uninitialized_copy(first2, last2, mid);
-  }
-  __STL_UNWIND(destroy(result, mid));
+    ForwardIterator mid = uninitialized_copy(first1, last1, result);
+    __STL_TRY {
+        return uninitialized_copy(first2, last2, mid);
+    }
+    __STL_UNWIND(destroy(result, mid));
 }
 
 // Fills [result, mid) with x, and copies [first, last) into
@@ -186,11 +189,11 @@ inline ForwardIterator
 __uninitialized_fill_copy(ForwardIterator result, ForwardIterator mid,
                           const T& x,
                           InputIterator first, InputIterator last) {
-  uninitialized_fill(result, mid, x);
-  __STL_TRY {
-    return uninitialized_copy(first, last, mid);
-  }
-  __STL_UNWIND(destroy(result, mid));
+    uninitialized_fill(result, mid, x);
+    __STL_TRY {
+        return uninitialized_copy(first, last, mid);
+    }
+    __STL_UNWIND(destroy(result, mid));
 }
 
 // Copies [first1, last1) into [first2, first2 + (last1 - first1)), and
@@ -200,11 +203,11 @@ inline void
 __uninitialized_copy_fill(InputIterator first1, InputIterator last1,
                           ForwardIterator first2, ForwardIterator last2,
                           const T& x) {
-  ForwardIterator mid2 = uninitialized_copy(first1, last1, first2);
-  __STL_TRY {
-    uninitialized_fill(mid2, last2, x);
-  }
-  __STL_UNWIND(destroy(first2, mid2));
+    ForwardIterator mid2 = uninitialized_copy(first1, last1, first2);
+    __STL_TRY {
+        uninitialized_fill(mid2, last2, x);
+    }
+    __STL_UNWIND(destroy(first2, mid2));
 }
 
 __STL_END_NAMESPACE

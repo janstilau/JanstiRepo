@@ -3,9 +3,12 @@
 
 
 __STL_BEGIN_NAMESPACE
-
+/*
+ Allocates uninitialized contiguous storage, which should be sufficient to store up to count adjacent objects of type T.
+ The request is non-binding and the implementation may allocate less or more than necessary to store count adjacent objects.
+ */
 template <class T>
-pair<T*, ptrdiff_t> get_temporary_buffer(ptrdiff_t len, T*) {
+pair<T*, ptrdiff_t> get_temporary_buffer(ptrdiff_t len, T) {
     if (len > ptrdiff_t(INT_MAX / sizeof(T)))
         len = INT_MAX / sizeof(T);
     
@@ -19,23 +22,24 @@ pair<T*, ptrdiff_t> get_temporary_buffer(ptrdiff_t len, T*) {
     return pair<T*, ptrdiff_t>((T*)0, 0);
 }
 
+/*
+ 虽然, 里面仅仅是一个 free 操作, 但是 get_temporary_buffer, 和 return_temporary_buffer 是一对操作, 明显的写出来, 让代码更加的有可读性.
+ */
 template <class T>
 void return_temporary_buffer(T* p) {
     free(p);
 }
 
-template <class ForwardIterator,
-class T
-#ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
-= iterator_traits<ForwardIterator>::value_type
-#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
->
+template <class ForwardIterator, class T>
 class temporary_buffer {
 private:
     ptrdiff_t original_len;
     ptrdiff_t len;
     T* buffer;
     
+    /*
+     这里进行内存空间的开辟工作.
+     */
     void allocate_buffer() {
         original_len = len;
         buffer = 0;
@@ -75,6 +79,9 @@ public:
     }
     
     ~temporary_buffer() {
+        /*
+         destroy 里面, 应该是调用析构函数吧.
+         */
         destroy(buffer, buffer + len);
         free(buffer);
     }

@@ -7,6 +7,11 @@
 
 __STL_BEGIN_NAMESPACE
 
+/*
+ Pair 是一个纯数据类. 里面没有太多的方法.
+ 从关联式容器我们得知, 其实真正存储的是一个 pair. 在算法里面, 根据 pair 的 first, 也就是 key 进行查找的工作. 根据 pair 的 second, 也就是 second, 进行判断相等的工作.
+ */
+
 template <class T1, class T2>
 struct pair {
     typedef T1 first_type;

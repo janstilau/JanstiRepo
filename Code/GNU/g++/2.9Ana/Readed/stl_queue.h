@@ -37,6 +37,10 @@ public:
 };
 
 // C++ 里面, 通过编译器, 来进行类型参数的限制. 代码定义的时候, 标明这是同样的类型, 在实现的时候, 也必须是同样的类型.
+
+/*
+ 所有的操作, 直接交付给 Sequence c 来进行处理. Sequence c 必须完成相应的操作符重载, 这样
+ */
 template <class T, class Sequence>
 bool operator==(const queue<T, Sequence>& x, const queue<T, Sequence>& y) {
     return x.c == y.c;
@@ -68,21 +72,24 @@ protected:
 public:
     priority_queue() : c() {}
     explicit priority_queue(const Compare& x) :  c(), comp(x) {}
-    
 #ifdef __STL_MEMBER_TEMPLATES
     template <class InputIterator>
     priority_queue(InputIterator first, InputIterator last, const Compare& x)
     : c(first, last), comp(x) { make_heap(c.begin(), c.end(), comp); }
+    
     template <class InputIterator>
     priority_queue(InputIterator first, InputIterator last)
     : c(first, last) { make_heap(c.begin(), c.end(), comp); }
+    
 #else /* __STL_MEMBER_TEMPLATES */
     priority_queue(const value_type* first, const value_type* last,
                    const Compare& x) : c(first, last), comp(x) {
         make_heap(c.begin(), c.end(), comp);
     }
+    
     priority_queue(const value_type* first, const value_type* last)
     : c(first, last) { make_heap(c.begin(), c.end(), comp); }
+    
 #endif /* __STL_MEMBER_TEMPLATES */
     
     bool empty() const { return c.empty(); }
@@ -91,12 +98,20 @@ public:
     void push(const value_type& x) {
         __STL_TRY {
             c.push_back(x);
+            /*
+             push_heap 里面, 仅仅是做序列的堆化的调整工作. 数据还是 Sequence 来进行同步.
+             先加入数据, 然后进行堆化的处理.
+             */
             push_heap(c.begin(), c.end(), comp);
         }
         __STL_UNWIND(c.clear());
     }
     void pop() {
         __STL_TRY {
+            /*
+             pop_heap 里面, 仅仅是做序列的堆化的调整工作. 数据还是 Sequence 来进行同步.
+             先堆里面取出, 后进行数据删除.
+             */
             pop_heap(c.begin(), c.end(), comp);
             c.pop_back();
         }
