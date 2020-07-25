@@ -18,6 +18,9 @@ struct __list_node {
     T data;
 };
 
+/*
+ 链表的迭代器.
+ */
 template<class T, class Ref, class Ptr>
 struct __list_iterator {
     typedef __list_iterator<T, T&, T*>             iterator;
@@ -35,9 +38,7 @@ struct __list_iterator {
     /*
      对于链表来说, 它的资源就是一个节点. 因为链表的数据, 是分散的, 都是根据一个节点寻找下一个节点的.
      */
-    
     link_type node;
-    
     __list_iterator(link_type x) : node(x) {}
     __list_iterator() {}
     __list_iterator(const iterator& x) : node(x.node) {}
@@ -48,16 +49,15 @@ struct __list_iterator {
     bool operator==(const self& x) const { return node == x.node; }
     bool operator!=(const self& x) const { return node != x.node; }
     reference operator*() const { return (*node).data; }
-    
     pointer operator->() const { return &(operator*()); }
-    
+    /*
+     在标准库中, tmp 也是经常出现的.
+     对于算法来说, i, j, idx 等常用的简单变量, 有的时候也是很好理解的. 相对于还要专门去构思一个有意义的名称, 用这种通用变量名, 有的时候, 也是很有效的.
+     */
     self& operator++() {
         node = (link_type)((*node).next);
         return *this;
     }
-    /*
-     在标准库中, tmp 也是经常出现的.
-     */
     self operator++(int) {
         self tmp = *this;
         ++*this;
@@ -128,34 +128,52 @@ public:
     reverse_iterator;
 #endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
     
+    /*
+     construct 在对应的指针上, 调用构造函数.
+     destroy 在对应的指针上, 调用析构函数.
+     之所以用到这两个方法, 是因为在容器内的内存, 是被分配器管理的.
+     如果是 new, delete, 会自动进行构造函数, 析构函数的调用. 但是分配器管理, 就需要容器里面, 进行相应的方法调用了.
+     */
+    
 protected:
+    /*
+     GetNode, putNode 并不是对于 list 来说, 而是对于分配器来说的. 因为分配器管理者内存资源, 所以 list 里面, 各个节点都是要通过这两个函数进行资源的管理工作.
+     */
     link_type get_node() { return list_node_allocator::allocate(); }
     void put_node(link_type p) { list_node_allocator::deallocate(p); }
     
     link_type create_node(const T& x) {
         link_type p = get_node();
         __STL_TRY {
+            /*
+             Constructs an object of type T in allocated uninitialized storage pointed to by p, using placement-new
+             Calls new((void *)p) T(val)
+             所以, 这个函数就是调用 T 的拷贝构造函数, 只不过不开辟内存空间了, 直接在 p->data 的内存空间上进行.
+             */
             construct(&p->data, x);
         }
         __STL_UNWIND(put_node(p));
         return p;
     }
     void destroy_node(link_type p) {
+        /*
+         Calls the destructor of the object pointed to by p
+         */
         destroy(&p->data);
         put_node(p);
     }
     
 protected:
+    /*
+     在初始化的时候, 哨兵节点的 next, 和 prev 都是指向了原来的哨兵节点.
+    */
     void empty_initialize() {
-        /*
-         在初始化的时候, 哨兵节点的 next, 和 prev 都是指向了原来的哨兵节点.
-         */
         node = get_node();
         node->next = node;
         node->prev = node;
     }
     
-    // 重复掺入链表.
+    // 头插法, 不断地插入 value.
     void fill_initialize(size_type n, const T& value) {
         empty_initialize();
         __STL_TRY {
@@ -198,10 +216,11 @@ protected:
 public:
     list() { empty_initialize(); }
     
-    // begin, 是哨兵节点的下一个节点, 而不是哨兵节点.
+    /*
+     由于哨兵节点的存在, begin, end 的实现, 都很简单了.
+     */
     iterator begin() { return (link_type)((*node).next); }
     const_iterator begin() const { return (link_type)((*node).next); }
-    // end, 是哨兵节点,
     iterator end() { return node; }
     const_iterator end() const { return node; }
     
@@ -219,22 +238,22 @@ public:
      */
     bool empty() const { return node->next == node; }
     /*
-     distance 是泛型算法, 会根据 iterator 进行分发.
+     该算法, 在 list 内部, 是 O(n) 复杂度.
      */
     size_type size() const {
         size_type result = 0;
         distance(begin(), end(), result);
         return result;
     }
-    size_type max_size() const { return size_type(-1); }
-    // 返回时是不是 const, 是调用者决定的. 类的设计者, 返回的是同样的数据.
     reference front() { return *begin(); }
     const_reference front() const { return *begin(); }
-    reference back() { return *(--end()); }
+    reference back() { return *(--end()); } // end 是最后一个元素的下一个元素.
     const_reference back() const { return *(--end()); }
     void swap(list<T, Alloc>& x) { __STD::swap(node, x.node); }
     
-    // 简单的链表的操作, 只不过要维护 iterator 里面的信息.
+    /*
+     primitive method. 其他的插入操作, 都是建立在该函数的基础上的.
+     */
     iterator insert(iterator position, const T& x) {
         link_type tmp = create_node(x);
         tmp->next = position.node;
@@ -244,6 +263,9 @@ public:
         return tmp;
     }
     iterator insert(iterator position) { return insert(position, T()); }
+    /*
+     以下的 insert, 都是利用上面的 insert, 进行的范围性的操作.
+     */
     template <class InputIterator>
     void insert(iterator position, InputIterator first, InputIterator last);
     void insert(iterator position, const T* first, const T* last);
@@ -257,11 +279,15 @@ public:
         insert(pos, (size_type)n, x);
     }
     
+    /*
+     头插, 尾插, 不过是 insert 的特殊位置而已.
+     */
     void push_front(const T& x) { insert(begin(), x); }
     void push_back(const T& x) { insert(end(), x); }
     
     /*
      链表的删除操作, 不过要进行节点的数据维护.
+     各个容器都有着 erase 的操作, 各个容器, 都应该维护自己数据的有效性在该函数里.
      */
     iterator erase(iterator position) {
         link_type next_node = link_type(position.node->next);
@@ -272,6 +298,7 @@ public:
         return iterator(next_node);
     }
     iterator erase(iterator first, iterator last);
+    
     void resize(size_type new_size, const T& x);
     void resize(size_type new_size) { resize(new_size, T()); }
     void clear();
@@ -281,6 +308,7 @@ public:
         iterator tmp = end();
         erase(--tmp);
     }
+    
     list(size_type n, const T& value) { fill_initialize(n, value); }
     list(int n, const T& value) { fill_initialize(n, value); }
     list(long n, const T& value) { fill_initialize(n, value); }
@@ -302,8 +330,8 @@ public:
         range_initialize(x.begin(), x.end());
     }
     ~list() {
-        clear();
-        put_node(node);
+        clear(); // 清空
+        put_node(node); // 回收哨兵节点.
     }
     list<T, Alloc>& operator=(const list<T, Alloc>& x);
     
@@ -397,7 +425,7 @@ void list<T, Alloc>::insert(iterator position,
 #else /* __STL_MEMBER_TEMPLATES */
 
 /*
- 这里, 是直接用了数组的特定, ++一个指针,
+ 范围性的插入
  */
 template <class T, class Alloc>
 void list<T, Alloc>::insert(iterator position, const T* first, const T* last) {
@@ -406,7 +434,7 @@ void list<T, Alloc>::insert(iterator position, const T* first, const T* last) {
 }
 
 /*
- 这里, 就是把迭代器当做指针进行了看待, 直接使用迭代器的 ++ 进行操作.
+ 范围性的插入
  */
 template <class T, class Alloc>
 void list<T, Alloc>::insert(iterator position,
@@ -418,7 +446,7 @@ void list<T, Alloc>::insert(iterator position,
 #endif /* __STL_MEMBER_TEMPLATES */
 
 /*
- 重复插入某个数值的数据, 就是循环, 不断地调用 insert 操作.
+  范围性的插入
  */
 template <class T, class Alloc>
 void list<T, Alloc>::insert(iterator position, size_type n, const T& x) {
@@ -427,7 +455,7 @@ void list<T, Alloc>::insert(iterator position, size_type n, const T& x) {
 }
 
 /*
- 删除某个范围的数据, 直接调用 rease 的操作. 利用迭代器类似指针的特性.
+ 范围性的删除.
  */
 template <class T, class Alloc>
 list<T,Alloc>::iterator list<T, Alloc>::erase(iterator first, iterator last) {
@@ -440,26 +468,29 @@ void list<T, Alloc>::resize(size_type new_size, const T& x)
 {
     iterator i = begin();
     size_type len = 0;
-    for ( ; i != end() && len < new_size; ++i, ++len)
-        ;
+    for ( ; i != end() && len < new_size; ++i, ++len) {;}
     /*
      如果, 原有的列表过大, 就删除后面的数据.
      */
-    if (len == new_size)
+    if (len == new_size){
         erase(i, end());
+    }
     /*
      否则, 就插入新的数据, 用 x 当做默认值.
+     这里, 由于链表是没有 capacity 的概念的, 所以, resize 之后, 容器有多大, list 既有多大. 里面的值, 都应该是有效值.
      */
-    else                          // i == end()
+    else  {
         insert(end(), new_size - len, x);
+    }
 }
 
+/*
+不断地删除节点, 不断地调用 destroy_node 进行内存的处理工作.
+ O(n) 复杂度.
+ */
 template <class T, class Alloc> 
 void list<T, Alloc>::clear()
 {
-    /*
-    不断地删除节点, 不断地调用 destroy_node 进行内存的处理工作.
-     */
     link_type cur = (link_type) node->next;
     while (cur != node) {
         link_type tmp = cur;
@@ -554,6 +585,9 @@ void list<T, Alloc>::reverse() {
     }
 }    
 
+/*
+ 太复杂没看.
+ */
 template <class T, class Alloc>
 void list<T, Alloc>::sort() {
     if (node->next == node || link_type(node->next)->next == node) return;
@@ -581,6 +615,10 @@ template <class T, class Alloc> template <class Predicate>
 void list<T, Alloc>::remove_if(Predicate pred) {
     iterator first = begin();
     iterator last = end();
+    /*
+     删除, 还是用的 erase. 这样, 这个函数里面的逻辑, 就变得只是 遍历, remove 了.
+     所有的删除操作, 还是在 erase 里面.
+     */
     while (first != last) {
         iterator next = first;
         ++next;
