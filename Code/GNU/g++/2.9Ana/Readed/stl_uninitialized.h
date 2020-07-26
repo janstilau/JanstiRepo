@@ -3,38 +3,6 @@
 
 __STL_BEGIN_NAMESPACE
 
-// Valid if copy construction is equivalent to assignment, and if the
-//  destructor is trivial.
-template <class InputIterator, class ForwardIterator>
-inline ForwardIterator 
-__uninitialized_copy_aux(InputIterator first, InputIterator last,
-                         ForwardIterator result,
-                         __true_type) {
-    return copy(first, last, result);
-}
-
-template <class InputIterator, class ForwardIterator>
-ForwardIterator 
-__uninitialized_copy_aux(InputIterator first, InputIterator last,
-                         ForwardIterator result,
-                         __false_type) {
-    ForwardIterator cur = result;
-    __STL_TRY {
-        for ( ; first != last; ++first, ++cur)
-            construct(&*cur, *first);
-        return cur;
-    }
-    __STL_UNWIND(destroy(result, cur));
-}
-
-
-template <class InputIterator, class ForwardIterator, class T>
-inline ForwardIterator
-__uninitialized_copy(InputIterator first, InputIterator last,
-                     ForwardIterator result, T*) {
-    typedef typename __type_traits<T>::is_POD_type is_POD;
-    return __uninitialized_copy_aux(first, last, result, is_POD());
-}
 
 /*
  Copies elements from the range [first, last) to an uninitialized memory area beginning at d_first as if by
@@ -47,6 +15,46 @@ uninitialized_copy(InputIterator first, InputIterator last,
     return __uninitialized_copy(first, last, result, value_type(result));
 }
 
+template <class InputIterator, class ForwardIterator, class T>
+inline ForwardIterator
+__uninitialized_copy(InputIterator first, InputIterator last,
+                     ForwardIterator result, T*) {
+    typedef typename __type_traits<T>::is_POD_type is_POD;
+    return __uninitialized_copy_aux(first, last, result, is_POD());
+}
+
+// Valid if copy construction is equivalent to assignment, and if the
+//  destructor is trivial.
+template <class InputIterator, class ForwardIterator>
+inline ForwardIterator
+__uninitialized_copy_aux(InputIterator first, InputIterator last,
+                         ForwardIterator result,
+                         __true_type) {
+    return copy(first, last, result);
+}
+
+/*
+ POD，是Plain Old Data的缩写，普通旧数据类型，是C++中的一种数据类型概念
+ 如果不是普通的数据类型, 那么就是迭代器的拷贝工作, construct 就在 &*cur 的位置, 调用对应数据类型的拷贝构造函数, 使用 *first 的值.
+ */
+
+template <class InputIterator, class ForwardIterator>
+ForwardIterator
+__uninitialized_copy_aux(InputIterator first, InputIterator last,
+                         ForwardIterator result,
+                         __false_type) {
+    ForwardIterator cur = result;
+    __STL_TRY {
+        for ( ; first != last; ++first, ++cur)
+            construct(&*cur, *first);
+        return cur;
+    }
+    __STL_UNWIND(destroy(result, cur));
+}
+
+/*
+ 如果是标量类型, 直接进行内存搬运就可以了.
+ */
 inline char* uninitialized_copy(const char* first, const char* last,
                                 char* result) {
     memmove(result, first, last - first);
@@ -57,6 +65,18 @@ inline wchar_t* uninitialized_copy(const wchar_t* first, const wchar_t* last,
                                    wchar_t* result) {
     memmove(result, first, sizeof(wchar_t) * (last - first));
     return result + (last - first);
+}
+
+/*
+ 不从 first, last 中确定范围了, 这次使用的是 size.
+ */
+
+template <class InputIterator, class Size, class ForwardIterator>
+inline pair<InputIterator, ForwardIterator>
+uninitialized_copy_n(InputIterator first, Size count,
+                     ForwardIterator result) {
+    return __uninitialized_copy_n(first, count, result,
+                                  iterator_category(first));
 }
 
 template <class InputIterator, class Size, class ForwardIterator>
@@ -82,16 +102,10 @@ __uninitialized_copy_n(RandomAccessIterator first, Size count,
     return make_pair(last, uninitialized_copy(first, last, result));
 }
 
-template <class InputIterator, class Size, class ForwardIterator>
-inline pair<InputIterator, ForwardIterator>
-uninitialized_copy_n(InputIterator first, Size count,
-                     ForwardIterator result) {
-    return __uninitialized_copy_n(first, count, result,
-                                  iterator_category(first));
-}
-
 /*
  Copies the given value to an uninitialized memory area, defined by the range [first, last) as if by
+ 用重复的元素, 填充某个序列.
+ 基本思路还是, 对于可以直接进行内存搬运的, 内存搬运, 对于不能的, 迭代器循环.
  */
 template <class ForwardIterator, class T>
 inline void uninitialized_fill(ForwardIterator first, ForwardIterator last,
