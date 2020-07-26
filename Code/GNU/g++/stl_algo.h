@@ -357,6 +357,9 @@ OutputIterator transform(InputIterator1 first1, InputIterator1 last1,
     return result;
 }
 
+/*
+ 遍历整个序列, 如果值 == old_value 的话, 那么这个值, 就被 new_value 代替.
+ */
 template <class ForwardIterator, class T>
 void replace(ForwardIterator first, ForwardIterator last, const T& old_value,
              const T& new_value) {
@@ -364,6 +367,9 @@ void replace(ForwardIterator first, ForwardIterator last, const T& old_value,
         if (*first == old_value) *first = new_value;
 }
 
+/*
+ 遍历整个序列, 如果值传入 Predicate 返回 true 的话, 就用 new_value 替换.
+ */
 template <class ForwardIterator, class Predicate, class T>
 void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred,
                 const T& new_value) {
@@ -371,6 +377,9 @@ void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred,
         if (pred(*first)) *first = new_value;
 }
 
+/*
+ 遍历整个序列, 如果值等于 old_value, 就用 new_value, 插入到 result 序列中, 否则, 就把原序列的值, 插入到 result 序列里面.
+ */
 template <class InputIterator, class OutputIterator, class T>
 OutputIterator replace_copy(InputIterator first, InputIterator last,
                             OutputIterator result, const T& old_value,
@@ -1377,6 +1386,18 @@ inline void nth_element(RandomAccessIterator first, RandomAccessIterator nth,
     __nth_element(first, nth, last, value_type(first), comp);
 }
 
+/*
+ 10, 10, 10, 20, 20, 20, 30
+ 如果查找 20 的 lowerBound 的话, 那么就是 3
+ 如果查找 20 的 upperBound 的话, 那么就是 6
+ */
+template <class ForwardIterator, class T>
+inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
+                                   const T& value) {
+    return __lower_bound(first, last, value, distance_type(first),
+                         iterator_category(first));
+}
+
 template <class ForwardIterator, class T, class Distance>
 ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
                               const T& value, Distance*,
@@ -1386,6 +1407,9 @@ ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
     Distance half;
     ForwardIterator middle;
     
+    /*
+     这里算法有点不好理解, 用极客时间的算法更好.
+     */
     while (len > 0) {
         half = len >> 1;
         middle = first;
@@ -1401,6 +1425,9 @@ ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
     return first;
 }
 
+/*
+ 可随机访问的, 那么直接可以获得目标迭代器.
+ */
 template <class RandomAccessIterator, class T, class Distance>
 RandomAccessIterator __lower_bound(RandomAccessIterator first,
                                    RandomAccessIterator last, const T& value,
@@ -1409,6 +1436,9 @@ RandomAccessIterator __lower_bound(RandomAccessIterator first,
     Distance half;
     RandomAccessIterator middle;
     
+    /*
+     用极客时间的算法更好.
+     */
     while (len > 0) {
         half = len >> 1;
         middle = first + half;
@@ -1420,13 +1450,6 @@ RandomAccessIterator __lower_bound(RandomAccessIterator first,
             len = half;
     }
     return first;
-}
-
-template <class ForwardIterator, class T>
-inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
-                                   const T& value) {
-    return __lower_bound(first, last, value, distance_type(first),
-                         iterator_category(first));
 }
 
 template <class ForwardIterator, class T, class Compare, class Distance>

@@ -122,6 +122,10 @@ public:
     iterator find(const key_type& key) { return rep.find(key); }
     const_iterator find(const key_type& key) const { return rep.find(key); }
     
+    /*
+     所以, operator[] 其实并不分什么 set, get. 它是确保有值, 然后 set 其实是覆盖整个值.
+     这就是为什么[]会有副作用的原因了.
+     */
     T& operator[](const key_type& key) {
         return rep.find_or_insert(value_type(key, T())).second;
     }

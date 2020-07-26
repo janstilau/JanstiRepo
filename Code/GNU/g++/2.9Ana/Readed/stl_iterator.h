@@ -12,9 +12,65 @@ __STL_BEGIN_NAMESPACE
  */
 
 /*
+ 算法看不到容器, 对容器是一无所知的, 所以, 它所需要的任何信息, 都必须从迭代器中获取.
+ 而迭代器, 必须能够回到算法的所有提问, 才能够满足算法的所有的操作.
+ */
+
+/*
  iterator 的适配器, 一般来说会保存原有的适配器, 然后进行根据适配器的功能, 进行相应的操作修改.
  */
 
+/*
+ 从这个实例中, 我们可以看到, 各个函数重载,就是根据参数的类型, 调用了最准确的方法.
+ 迭代器并不直接继承自 category, 迭代器内部, 提供了自己所属的 category 的信息. 从这个意义上来看, typedef, 可以算作是这个迭代器的元信息. 
+ 迭代器的 category 的类型意义就是函数的分发操作.
+ */
+namespace jj33
+{
+void _display_category(random_access_iterator_tag)
+{   cout << "random_access_iterator" << endl; }
+void _display_category(bidirectional_iterator_tag)
+{   cout << "bidirectional_iterator" << endl; }
+void _display_category(forward_iterator_tag)
+{   cout << "forward_iterator" << endl;  }
+void _display_category(output_iterator_tag)
+{   cout << "output_iterator" << endl;   }
+void _display_category(input_iterator_tag)
+{   cout << "input_iterator" << endl;    }
+
+template<typename I>
+void display_category(I itr)
+{
+   typename iterator_traits<I>::iterator_category cagy;
+   _display_category(cagy);
+   cout << "typeid(itr).name()= " << typeid(itr).name() << endl << endl;
+}
+    
+void test_iterator_category()
+{
+    cout << "\ntest_iterator_category().......... \n";
+      
+      display_category(array<int,10>::iterator());
+      display_category(vector<int>::iterator());
+      display_category(list<int>::iterator());
+      display_category(forward_list<int>::iterator());
+      display_category(deque<int>::iterator());
+
+      display_category(set<int>::iterator());
+      display_category(map<int,int>::iterator());
+      display_category(multiset<int>::iterator());
+      display_category(multimap<int,int>::iterator());
+      display_category(unordered_set<int>::iterator());
+      display_category(unordered_map<int,int>::iterator());
+      display_category(unordered_multiset<int>::iterator());
+      display_category(unordered_multimap<int,int>::iterator());
+            
+      display_category(istream_iterator<int>());
+      display_category(ostream_iterator<int>(cout,""));
+}
+}
+
+// 五种 category, 不是根据 type 值来进行区分, 而是通过类型.
 struct input_iterator_tag {};
 struct output_iterator_tag {};
 struct forward_iterator_tag : public input_iterator_tag {};
@@ -553,7 +609,7 @@ protected:
     T value;
     bool end_marker;
     void read() {
-        end_marker = (*stream) ? true : false;
+        end_marker = (*stream) __? true : false;
         if (end_marker) *stream >> value;
         end_marker = (*stream) ? true : false;
     }
@@ -620,12 +676,15 @@ public:
     
     ostream_iterator(ostream& s) : stream(&s), string(0) {}
     ostream_iterator(ostream& s, const char* c) : stream(&s), string(c)  {}
+    /*
+     向 ostream_iterator 赋值, 就是向 cout 中, 传递数据.
+     */
     ostream_iterator<T>& operator=(const T& value) {
         *stream << value;
         if (string) *stream << string;
         return *this;
     }
-    ostream_iterator<T>& operator*() { return *this; }
+    ostream_iterator<T>& operator*() { return *this; } // 代表着, 无作用,
     ostream_iterator<T>& operator++() { return *this; }
     ostream_iterator<T>& operator++(int) { return *this; }
 };
@@ -647,6 +706,42 @@ __STL_END_NAMESPACE
 /*
  下面的这几个迭代器, 不太明白到底想干什么.
  */
+
+
+template <class Container>
+class insert_iterator {
+protected:
+    /*
+     要存储原有的容器, 以及原有容器的迭代器.
+     */
+    Container* container;
+    typename Container::iterator iter;
+public:
+    typedef output_iterator_tag iterator_category;
+    typedef void                value_type;
+    typedef void                difference_type;
+    typedef void                pointer;
+    typedef void                reference;
+    
+    insert_iterator(Container& x, typename Container::iterator i)
+    : container(&x), iter(i) {}
+    
+    // insert 函数, 会调用 container 的 insert 方法, 而在 continaer 中, 会做相关的扩容的处理. 然后迭代器 ++.
+    // 重载操作符, 把对于 insert_iterator 的赋值行为, 变为插入行为. 然后让迭代器进行 ++ 操作.
+    // 操作符重载, 对于 c++ 来说, 真的是非常重要的事情.
+    /*
+     在 algo 中, 各种算法已经写完了. 通过重载操作符, 或者成为, 抽象函数的调用, 可以将新的类型适配到各个已有的算法中去.
+     */
+    insert_iterator<Container>&
+    operator=(const typename Container::value_type& value) {
+        iter = container->insert(iter, value);
+        ++iter;
+        return *this;
+    }
+    insert_iterator<Container>& operator*() { return *this; }
+    insert_iterator<Container>& operator++() { return *this; }
+    insert_iterator<Container>& operator++(int) { return *this; }
+};
 
 template <class Container>
 class back_insert_iterator {
@@ -724,31 +819,6 @@ inline front_insert_iterator<Container> front_inserter(Container& x) {
     return front_insert_iterator<Container>(x);
 }
 
-template <class Container>
-class insert_iterator {
-protected:
-    Container* container;
-    typename Container::iterator iter;
-public:
-    typedef output_iterator_tag iterator_category;
-    typedef void                value_type;
-    typedef void                difference_type;
-    typedef void                pointer;
-    typedef void                reference;
-    
-    insert_iterator(Container& x, typename Container::iterator i)
-    : container(&x), iter(i) {}
-    insert_iterator<Container>&
-    operator=(const typename Container::value_type& value) {
-        iter = container->insert(iter, value);
-        ++iter;
-        return *this;
-    }
-    insert_iterator<Container>& operator*() { return *this; }
-    insert_iterator<Container>& operator++() { return *this; }
-    insert_iterator<Container>& operator++(int) { return *this; }
-};
-
 #ifndef __STL_CLASS_PARTIAL_SPECIALIZATION
 
 template <class Container>
@@ -760,6 +830,9 @@ iterator_category(const insert_iterator<Container>&)
 
 #endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
+/*
+ 一个辅助函数, 生成合适的 insert_iterator 对象.
+ */
 template <class Container, class Iterator>
 inline insert_iterator<Container> inserter(Container& x, Iterator i) {
     typedef typename Container::iterator iter;

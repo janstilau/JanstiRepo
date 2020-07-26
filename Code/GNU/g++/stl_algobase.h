@@ -73,6 +73,9 @@ inline const T& max(const T& a, const T& b, Compare comp) {
     return comp(a, b) ? b : a;
 }
 
+/*
+ 一般的迭代器, 就是遍历赋值操作.
+ */
 template <class InputIterator, class OutputIterator>
 inline OutputIterator __copy(InputIterator first, InputIterator last,
                              OutputIterator result, input_iterator_tag)
@@ -80,6 +83,17 @@ inline OutputIterator __copy(InputIterator first, InputIterator last,
     for ( ; first != last; ++result, ++first)
         *result = *first;
     return result;
+}
+
+/*
+ 随机访问的迭代器, 可以根据距离值进行操作.
+ */
+template <class RandomAccessIterator, class OutputIterator>
+inline OutputIterator
+__copy(RandomAccessIterator first, RandomAccessIterator last,
+       OutputIterator result, random_access_iterator_tag)
+{
+    return __copy_d(first, last, result, distance_type(first));
 }
 
 template <class RandomAccessIterator, class OutputIterator, class Distance>
@@ -92,14 +106,9 @@ __copy_d(RandomAccessIterator first, RandomAccessIterator last,
     return result;
 }
 
-template <class RandomAccessIterator, class OutputIterator>
-inline OutputIterator 
-__copy(RandomAccessIterator first, RandomAccessIterator last,
-       OutputIterator result, random_access_iterator_tag)
-{
-    return __copy_d(first, last, result, distance_type(first));
-}
-
+/*
+ copy 的 first, last 是一个迭代器, 就利用 category 进行分化.
+ */
 template <class InputIterator, class OutputIterator>
 struct __copy_dispatch
 {
@@ -146,9 +155,13 @@ template <class InputIterator, class OutputIterator>
 inline OutputIterator copy(InputIterator first, InputIterator last,
                            OutputIterator result)
 {
+    // __copy_dispatch 是一个函数对象, 生成这个函数对象之后, 调用这个闭包.
     return __copy_dispatch<InputIterator,OutputIterator>()(first, last, result);
 }
 
+/*
+ 如果, 迭代器是指针, 就直接内存拷贝就是了
+ */
 inline char* copy(const char* first, const char* last, char* result) {
     memmove(result, first, last - first);
     return result + (last - first);
