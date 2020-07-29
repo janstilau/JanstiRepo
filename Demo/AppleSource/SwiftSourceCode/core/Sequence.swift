@@ -1,13 +1,15 @@
 /// A type that supplies the values of a sequence one at a time.
+/// 序列, 一次拿一个.
 ///
 /// The `IteratorProtocol` protocol is tightly linked with the `Sequence`
 /// protocol. Sequences provide access to their elements by creating an
 /// iterator, which keeps track of its iteration process and returns one
 /// element at a time as it advances through the sequence.
 ///
-/// Sequence 创建一个迭代器, 然后根据迭代器, 进行元素的访问. 迭代器的内部, 要记录 迭代的过程, 控制迭代按照顺序进行.
+/// Sequence 创建一个迭代器, 然后根据迭代器, 进行元素的访问.
+/// 迭代器的内部, 要记录 迭代的过程, 控制迭代按照顺序进行.
 /// 传统的迭代器, 会记录一下它所迭代容器, 以及当前迭代的位置.
-/// 但是如何记录状态, 比如 Array 只记录索引,  Dict 记录 Node 值, 是不一样的, Swift 的迭代, 变成了只提供 NextObject 这个能力的抽象.
+/// 但是迭代器里面记录什么状态, 比如 Array 只记录索引,  Dict 记录 Node 值, 是不一样的, Swift 的迭代, 变成了只提供 NextObject 这个能力的抽象.
 ///
 /// Whenever you use a `for`-`in` loop with an array, set, or any other
 /// collection or sequence, you're using that type's iterator. Swift uses a
@@ -33,6 +35,7 @@
 /// the contents of the array.
 ///
 ///     For in 循环, 就是 while 循环, 和迭代器的综合使用的结果.
+///     next 就是 * 操作符, ++ 操作符的结合体.
 ///     语言就是大号的语法糖的工厂.
 ///     var animalIterator = animals.makeIterator()
 ///     while let animal = animalIterator.next() {
@@ -119,9 +122,9 @@
 
 
 
-// 不要赋值迭代器, 赋值迭代器本身是安全的, 但是一个迭代器的 next, 可能会改变 Sequence 的状态. 导致其他迭代器执行的时候, 得到的是另外一个值.
+// 不要传递迭代器, 传递迭代器本身是安全的, 但是一个迭代器的 next, 可能会改变 Sequence 的状态. 导致其他迭代器执行的时候, 得到的是另外一个值.
 // 这会出现在, 佛波那契队列的 sequence 里面. 所以, 除非你特别清楚这个队列的底层实现, 不要假设, 这个队列是稳定的.
-// 不过, 从以往的使用来说, 赋值迭代器这件事基本没做过.
+// 不过, 从以往的使用来说, 传递迭代器这件事基本没做过.
 /// Obtain each separate iterator from separate calls to the sequence's
 /// `makeIterator()` method rather than by copying. Copying an iterator is
 /// safe, but advancing one copy of an iterator by calling its `next()` method
@@ -143,9 +146,8 @@
 /// by the `Sequence` protocol.
 ///
 /// 每个  Sequence 所能够获取的 Iterator, 都是和这个 Sequence 相关的. 可以说, 就是它的内部类.
-/// 在这里, Sequence 并不是一个容器, 它的迭代器, 反而是保存了每个迭代返回的数字. 在这里, 应该把可迭代, 和容器的概念分开.
-/// 对于一个容器来说, 比如 next 是从容器内部产生的值. 而对于可迭代来说, next 的值的产生, 是 iterator 的责任.
-/// Iterator 可以从容器中取值, 也可以按照某个算法创造值. 所以, Iterator 才是 next 的返回值的创造者.
+///  序列, 更多的是一个可遍历的概念, 而容器, 则是进行存储的状态的场所.
+///  获取当前值, 是迭代器的功能, 这个功能可以是从容器中获取值, 也可以是迭代器算出来的.
 ///
 ///     struct Countdown: Sequence {
 ///         let start: Int
@@ -171,7 +173,7 @@
 ///
 ///         mutating func next() -> Int? {
 ///             let nextNumber = countdown.start - times
-///             guard nextNumber > 0
+///             guard nextNumber > 0 // 大量大量地去使用 guard 函数, 在 swift 中.
 ///                 else { return nil }
 ///
 ///             times += 1
@@ -195,7 +197,9 @@
 ///     // Prints "2..."
 ///     // Prints "1..."
 
-
+/*
+ associatedtype, 其实就是协议里面的泛型而已.
+ */
 public protocol IteratorProtocol {
     /// The type of element traversed by the iterator.
     associatedtype Element
@@ -249,6 +253,7 @@ public protocol IteratorProtocol {
 ///
 /// 这里说的很清楚了, 这就是一个 primitiveMethod.
 /// 很多的方法, 都是建立在这个基本方法之上的.
+///
 /// 这些方法, 提供了通用的逻辑, 然后提供了可以变化的参数, 一般来说是一个 Block.
 ///  通过这个 Block, 可以做业务上的变化.
 ///  Protocol 这种设计的方式, 将方法, 操作的能力, 抽象到了一个类中. 其他的类, 通过实现这个类的基本方法, 自动的继承了那些高级能力. 这个过程是自适应的.
@@ -286,7 +291,7 @@ public protocol IteratorProtocol {
 ///
 ///
 ///
-/// Repeated Access
+/// Repeated Access 不保证.
 /// ===============
 ///
 /// The `Sequence` protocol makes no requirement on conforming types regarding
@@ -341,7 +346,7 @@ public protocol IteratorProtocol {
 ///             if count == 0 {
 ///                 return nil
 ///             } else {
-///                 defer { count -= 1 }
+///                 defer { count -= 1 } // 这里使用了 defer 这种语法, 用对象控制资源来解释.
 ///                 return count
 ///             }
 ///         }
@@ -370,12 +375,6 @@ public protocol Sequence {
     /// encapsulates its iteration state.
     /// encapsulates its iteration state 这个就表明了, iterator 是要进行状态的保存的.
     associatedtype Iterator: IteratorProtocol where Iterator.Element == Element
-    
-    /// A type that represents a subsequence of some of the sequence's elements.
-    // associatedtype SubSequence: Sequence = AnySequence<Element>
-    //   where Element == SubSequence.Element,
-    //         SubSequence.SubSequence == SubSequence
-    // typealias SubSequence = AnySequence<Element>
     
     /// Returns an iterator over the elements of this sequence.
     func makeIterator() -> Iterator
@@ -430,6 +429,7 @@ extension Sequence where Self: IteratorProtocol {
 
 /// A default makeIterator() function for `IteratorProtocol` instances that
 /// are declared to conform to `Sequence`
+/// 在泛型函数的书写时, 任何限制, 都是建立在类型的基础上, 而不是对象保存的值的基础上.
 extension Sequence where Self.Iterator == Self {
     /// Returns an iterator over the elements of this sequence.
     @inlinable
@@ -443,14 +443,14 @@ extension Sequence where Self.Iterator == Self {
 ///
 /// The underlying iterator's sequence may be infinite.
 /*
- 这个类型的定义在这里, 虽然他就是为了实现 Sequence 里面, 但是, 它的定义式里面, 还是不会出现对于 Sequence 的适配, 而是在它的 extension 里面做的这件事情.
+ 一个 sequence 的适配器.
  */
 @frozen
 public struct DropFirstSequence<Base: Sequence> {
     @usableFromInline
-    internal let _base: Base
+    internal let _base: Base // 适配器, 保存原始的对象.
     @usableFromInline
-    internal let _limit: Int
+    internal let _limit: Int // 适配器中, 自己业务逻辑需要存储的值.
     
     @inlinable
     public init(_ base: Base, dropping limit: Int) {
@@ -462,10 +462,9 @@ public struct DropFirstSequence<Base: Sequence> {
 }
 
 /*
- 
  并不是, 这些包装类进行了延迟计算的功能, 本身迭代就是一个延迟计算的东西.
  就算是容器取值, 他也是在需要时才进行取值, 而不是生成迭代器, 就把所有的值都取了出来.
- 
+ 如果, base 是一个数组, 当然可以直接 +n. 但是, 作为 sequence 来说, 他并不能确认自己能够 randomAccess, 所以这里就是循环进行.
  */
 extension DropFirstSequence: Sequence {
     public typealias Element = Base.Element
@@ -496,7 +495,7 @@ extension DropFirstSequence: Sequence {
 ///
 /// The underlying iterator's sequence may be infinite.
 /*
- 这里, 只是这个类的定义. 它实现的功能, 再试要在 extension 里面.
+ 这里, 只是这个类的定义. 它实现的功能, 要在 extension 里面.
  */
 @frozen
 public struct PrefixSequence<Base: Sequence> {
@@ -516,6 +515,7 @@ public struct PrefixSequence<Base: Sequence> {
  它的 Iterator, 也仅仅是做值的拷贝工作.
  这应该算是 baseIterator 的代理类.
  和他相关的类型的定义, 也没有方法最原始的定义区域里面, 而是放到了 extension 里面.
+ _maxLength 的值, 是存在 prefixSequence 里面的, 但是过程值, 是存在各个 Iterator 的 _remaining 里面的.
  */
 extension PrefixSequence {
     @frozen
@@ -541,9 +541,6 @@ extension PrefixSequence.Iterator: IteratorProtocol {
     public typealias Element = Base.Element
     
     @inlinable
-    /*
-     next 方法的内部, 会不断的更新 remain 的值. 然后就是代理给 baseIterator 的 next 方法了. 如果 remain 没有了, 就是到头了.
-     */
     public mutating func next() -> Element? {
         if _remaining != 0 {
             _remaining &-= 1

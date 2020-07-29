@@ -3,6 +3,11 @@
 
 __STL_BEGIN_NAMESPACE
 
+
+/*
+ 可以看到, C++ 暴露出去了一个简单的函数, 给用户使用, 而这个函数的内部, 一般是生成一个特定类型的对象, 将闭包, 以及想要绑定的值, 进行存储, 在执行的时候, 才真正的去调用闭包的内容.
+ */
+
 /*
  公共类型定义
  */
@@ -22,7 +27,8 @@ struct binary_function {
 /*
  下面这些类型, 用于生产临时对象.
  可以理解成为, 为了生成一个 Block, 是 Block 的工厂类.
- 他们仅仅是写出了逻辑的混合, 大量利用了操作符重载, 也就是重用了算法, 具体的操作, 还是各个类型, 要适配到算法中的操作符中去.
+ 他们仅仅是写出了逻辑的混合, 大量利用了操作符重载, 也就是重用了算法.
+ 具体的操作, 还是各个类型, 要适配到算法中的操作符中去.
  */
 template <class T>
 struct plus : public binary_function<T, T, T> {
@@ -44,10 +50,6 @@ struct divides : public binary_function<T, T, T> {
     T operator()(const T& x, const T& y) const { return x / y; }
 };
 
-template <class T> inline T identity_element(plus<T>) { return T(0); }
-
-template <class T> inline T identity_element(multiplies<T>) { return T(1); }
-
 template <class T>
 struct modulus : public binary_function<T, T, T> {
     T operator()(const T& x, const T& y) const { return x % y; }
@@ -58,6 +60,7 @@ struct negate : public unary_function<T, T> {
     T operator()(const T& x) const { return -x; }
 };
 
+// 因为操作符重载的大量使用, C++ 的代码, 看起来很简练.
 template <class T>
 struct equal_to : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x == y; }
@@ -88,6 +91,9 @@ struct less_equal : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x <= y; }
 };
 
+/*
+ Logical_and
+ */
 template <class T>
 struct logical_and : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x && y; }
@@ -102,8 +108,10 @@ template <class T>
 struct logical_not : public unary_function<T, bool> {
     bool operator()(const T& x) const { return !x; }
 };
+
 /*
- C++ 没有办法规定, Predicate 必须是一个 unary_function, 只能是通过名称给与暗示. 然后编译的时候, 报错.
+ argument_type
+ 通过这些父类的 typedef 的定义, 可以确保在变异的时候, 如果传递过来的不是正确的类型, 那么编译是不会通过的.
  */
 template <class Predicate>
 class unary_negate
@@ -117,6 +125,7 @@ public:
     }
 };
 
+// 真正暴露给用户的, 不会是上面的那个仿函数的定义. 而是一个简单的函数. 这个函数的内部, 做包装的动作.
 template <class Predicate>
 inline unary_negate<Predicate> not1(const Predicate& pred) {
     return unary_negate<Predicate>(pred);
@@ -137,6 +146,7 @@ public:
     }
 };
 
+// 暴露出去给用户的, 是一个简单的函数.
 template <class Predicate>
 inline binary_negate<Predicate> not2(const Predicate& pred) {
     return binary_negate<Predicate>(pred);
@@ -147,8 +157,8 @@ class binder1st
 : public unary_function<typename Operation::second_argument_type,
 typename Operation::result_type> {
 protected:
-    Operation op;
-    typename Operation::first_argument_type value;
+    Operation op; // 存函数闭包
+    typename Operation::first_argument_type value; // 存需要绑定的值.
 public:
     binder1st(const Operation& x,
               const typename Operation::first_argument_type& y)
@@ -162,6 +172,7 @@ public:
     }
 };
 
+// 暴露给外界使用的, 是一个简单函数.
 template <class Operation, class T>
 inline binder1st<Operation> bind1st(const Operation& op, const T& x) {
     typedef typename Operation::first_argument_type arg1_type;
@@ -185,6 +196,7 @@ public:
     }
 };
 
+// 暴露给外界使用的, 是一个简单的函数.
 template <class Operation, class T>
 inline binder2nd<Operation> bind2nd(const Operation& op, const T& x) {
     typedef typename Operation::second_argument_type arg2_type;
@@ -205,6 +217,7 @@ public:
     }
 };
 
+// 暴露出一个简单的函数, 这个函数内部, 生成对应的对象.
 template <class Operation1, class Operation2>
 inline unary_compose<Operation1, Operation2> compose1(const Operation1& op1, 
                                                       const Operation2& op2) {

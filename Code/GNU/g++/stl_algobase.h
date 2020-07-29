@@ -237,6 +237,9 @@ inline BidirectionalIterator2 copy_backward(BidirectionalIterator1 first,
                               result);
 }
 
+/*
+ 用 N 来决定 forloop 的次数, 要比迭代器的判断要快一点.
+ */
 template <class InputIterator, class Size, class OutputIterator>
 pair<InputIterator, OutputIterator> __copy_n(InputIterator first, Size count,
                                              OutputIterator result,

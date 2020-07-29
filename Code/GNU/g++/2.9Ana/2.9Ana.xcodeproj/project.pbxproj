@@ -27,6 +27,7 @@
 /* Begin PBXFileReference section */
 		0613582424CD5E500018DA0A /* sample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sample.cpp; sourceTree = "<group>"; };
 		0613589624CD662B0018DA0A /* stl_construct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stl_construct.h; sourceTree = "<group>"; };
+		0613589824CE968A0018DA0A /* copy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = copy.h; sourceTree = "<group>"; };
 		069FFE6824C858BB0014F9EA /* 2.9Ana */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 2.9Ana; sourceTree = BUILT_PRODUCTS_DIR; };
 		069FFECF24C8A4D60014F9EA /* stl_slist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_slist.h; sourceTree = "<group>"; };
 		069FFED024C8A4D60014F9EA /* libio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libio.h; sourceTree = "<group>"; };
@@ -43,13 +44,13 @@
 		069FFEE124C8A4D60014F9EA /* stl_deque.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_deque.h; sourceTree = "<group>"; };
 		069FFEE224C8A4D60014F9EA /* stl_tempbuf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_tempbuf.h; sourceTree = "<group>"; };
 		069FFEE324C8A4D70014F9EA /* rope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rope.h; sourceTree = "<group>"; };
-		069FFEE624C8A4D70014F9EA /* stl_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_alloc.h; path = ../../stl_alloc.h; sourceTree = "<group>"; };
+		069FFEE624C8A4D70014F9EA /* stl_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_alloc.h; sourceTree = "<group>"; };
 		069FFEE724C8A4D70014F9EA /* stl_hash_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_hash_set.h; sourceTree = "<group>"; };
 		069FFEE824C8A4D70014F9EA /* stl_hashtable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_hashtable.h; sourceTree = "<group>"; };
 		069FFEE924C8A4D70014F9EA /* iomanip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iomanip.h; sourceTree = "<group>"; };
 		069FFEEA24C8A4D70014F9EA /* stl_stack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_stack.h; sourceTree = "<group>"; };
 		069FFEEB24C8A4D70014F9EA /* hash_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hash_map.h; sourceTree = "<group>"; };
-		069FFEEC24C8A4D70014F9EA /* stl_heap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_heap.h; path = ../../stl_heap.h; sourceTree = "<group>"; };
+		069FFEEC24C8A4D70014F9EA /* stl_heap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_heap.h; sourceTree = "<group>"; };
 		069FFEED24C8A4D70014F9EA /* function.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = function.h; sourceTree = "<group>"; };
 		069FFEEE24C8A4D70014F9EA /* pair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pair.h; sourceTree = "<group>"; };
 		069FFEEF24C8A4D70014F9EA /* iostdio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iostdio.h; sourceTree = "<group>"; };
@@ -120,6 +121,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0613589724CE96810018DA0A /* Algo */ = {
+			isa = PBXGroup;
+			children = (
+				0613589824CE968A0018DA0A /* copy.h */,
+			);
+			path = Algo;
+			sourceTree = SOURCE_ROOT;
+		};
 		069FFE5F24C858BB0014F9EA = {
 			isa = PBXGroup;
 			children = (
@@ -139,13 +148,12 @@
 		069FFE6A24C858BB0014F9EA /* 2.9Ana */ = {
 			isa = PBXGroup;
 			children = (
+				0613589724CE96810018DA0A /* Algo */,
 				069FFF2E24C931EC0014F9EA /* NotSTL */,
 				069FFF2024C8A4D90014F9EA /* std */,
 				069FFF2F24C940320014F9EA /* Readed */,
 				069FFF1424C8A4D80014F9EA /* stl_algo.h */,
 				069FFF0724C8A4D80014F9EA /* stl_algobase.h */,
-				069FFEE624C8A4D70014F9EA /* stl_alloc.h */,
-				069FFEEC24C8A4D70014F9EA /* stl_heap.h */,
 				069FFEF924C8A4D70014F9EA /* stl_set.h */,
 				069FFEE024C8A4D60014F9EA /* stl_map.h */,
 				069FFF2B24C8A4D90014F9EA /* stl_multimap.h */,
@@ -245,6 +253,8 @@
 				069FFEE824C8A4D70014F9EA /* stl_hashtable.h */,
 				069FFEE724C8A4D70014F9EA /* stl_hash_set.h */,
 				069FFEFC24C8A4D70014F9EA /* stl_hash_map.h */,
+				069FFEEC24C8A4D70014F9EA /* stl_heap.h */,
+				069FFEE624C8A4D70014F9EA /* stl_alloc.h */,
 			);
 			path = Readed;
 			sourceTree = SOURCE_ROOT;
