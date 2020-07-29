@@ -2,6 +2,8 @@
 
 /*
  一个专门的, 定义 Sequence 算法的 extension 的集合.
+ 他更像是泛型算法的集合.
+ 所有的操作, 都是建立在 可迭代的这个基础上的.
  */
 extension Sequence {
     /// Returns a sequence of pairs (*n*, *x*), where *n* represents a
@@ -54,6 +56,7 @@ extension Sequence {
     /// - Complexity: O(1)
     /*
      EnumeratedSequence 是一个特殊的结构体, 他也是 Sequence 协议类型的. 只不过, 它的 iterator 返回的是 (idx, ele) 的一个元组数据.
+     他并没有复制原始的 sequence, 而是在原始的 sequence 的遍历过程中, 增加了一些记录 index 的逻辑.
      */
     @inlinable // protocol-only
     public func enumerated() -> EnumeratedSequence<Self> {
@@ -99,7 +102,7 @@ extension Sequence {
     ///
     /// - Complexity: O(*n*), where *n* is the length of the sequence.
     /*
-     这里, 函数的内部实现, 和我们平时写的没有任何的区别. 只不过, 这是定义在了 Sequence 协议上面.
+     这个定义在了 sequence 层面上, 以后的任何人, 都不用在重新写一遍遍历的逻辑了, 只要定义 areInIncreasingOrder 的逻辑就可以了.
      */
     @inlinable // protocol-only
     @warn_unqualified_access
@@ -160,7 +163,7 @@ extension Sequence {
 }
 
 /*
- 对于, max, min 来说, 提供一个默认实现, 方便程序员进行使用.
+ 一般来说, C++ 里面的方法, 都是提供了默认操作符闭包的, 还有就是使用传递过来的闭包的.
  */
 extension Sequence where Element: Comparable {
     /// Returns the minimum element in the sequence.
@@ -230,6 +233,9 @@ extension Sequence  {
     ///
     /// - Complexity: O(*m*), where *m* is the lesser of the length of the
     ///   sequence and the length of `possiblePrefix`.
+    /*
+     其实这个就是同步比较而已.
+     */
     @inlinable
     public func starts<PossiblePrefix: Sequence>(
         with possiblePrefix: PossiblePrefix,
@@ -241,8 +247,7 @@ extension Sequence  {
                 if try !areEquivalent(e0, e1) {
                     return false
                 }
-            }
-            else {
+            } else {
                 return true
             }
         }
@@ -322,6 +327,7 @@ extension Sequence {
         var iter2 = other.makeIterator()
         while true {
             switch (iter1.next(), iter2.next()) {
+                // 如果都有值, 就调用比较. 注意, 系统的 API 很少进行强制解包的操作.
             case let (e1?, e2?):
                 if try !areEquivalent(e1, e2) {
                     return false
@@ -401,6 +407,9 @@ extension Sequence {
     ///
     /// - Complexity: O(*m*), where *m* is the lesser of the length of the
     ///   sequence and the length of `other`.
+    /*
+     词典上比较, 就是比较第一个元素.
+     */
     @inlinable
     public func lexicographicallyPrecedes<OtherSequence: Sequence>(
         _ other: OtherSequence,
@@ -534,6 +543,9 @@ extension Sequence {
     ///   `predicate`; otherwise, `false`.
     ///
     /// - Complexity: O(*n*), where *n* is the length of the sequence.
+    /*
+     没有不满足条件的, 就是 allSatisfy.
+     */
     @inlinable
     public func allSatisfy(
         _ predicate: (Element) throws -> Bool

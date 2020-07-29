@@ -1,19 +1,3 @@
-//===--- CollectionOfOne.swift - A Collection with one element ------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
-
-/*
- 不太明白这个类设计出来干啥用的.
- */
 /// A collection containing a single element.
 ///
 /// You can use a `CollectionOfOne` instance when you need to efficiently
@@ -25,14 +9,11 @@
 ///     let toAdd = 100
 ///     let b = a + CollectionOfOne(toAdd)
 ///     // b == [1, 2, 3, 4, 100]
+
 @frozen // trivial-implementation
 public struct CollectionOfOne<Element> {
   @usableFromInline // trivial-implementation
-  internal var _element: Element
-
-  /// Creates an instance containing just the given element.
-  ///
-  /// - Parameter element: The element to store in the collection.
+  internal var _element: Element // 首先, 自然还是要把 ele 存储一下.
   @inlinable // trivial-implementation
   public init(_ element: Element) {
     self._element = element
@@ -58,6 +39,10 @@ extension CollectionOfOne {
   }
 }
 
+/*
+ 这里就是关键, 只进行一次取值, 然后 next 就是 nil 了.
+ 这样, 一个数据, 就变成了序列了.
+ */
 extension CollectionOfOne.Iterator: IteratorProtocol {
   /// Advances to the next element and returns it, or `nil` if no next element
   /// exists.

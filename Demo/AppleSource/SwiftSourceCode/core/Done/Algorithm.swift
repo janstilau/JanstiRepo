@@ -1,14 +1,6 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
+/*
+ 这个类里面, 提供的算法其实很少.
+ */
 
 /// Returns the lesser of two comparable values.
 ///
@@ -16,7 +8,7 @@
 ///   - x: A value to compare.
 ///   - y: Another value to compare.
 /// - Returns: The lesser of `x` and `y`. If `x` is equal to `y`, returns `x`.
-@inlinable // protocol-only
+@inlinable // protocol-only, swift 里面, 也有 inline 的提示.
 public func min<T: Comparable>(_ x: T, _ y: T) -> T {
   // In case `x == y` we pick `x`.
   // This preserves any pre-existing order in case `T` has identity,
@@ -34,6 +26,7 @@ public func min<T: Comparable>(_ x: T, _ y: T) -> T {
 ///   - rest: Zero or more additional values.
 /// - Returns: The least of all the arguments. If there are multiple equal
 ///   least arguments, the result is the first one.
+/// 提供了一个, 可以有着任意参数的 min 算法.
 @inlinable // protocol-only
 public func min<T: Comparable>(_ x: T, _ y: T, _ z: T, _ rest: T...) -> T {
   var minValue = min(min(x, y), z)
@@ -95,13 +88,15 @@ public func max<T: Comparable>(_ x: T, _ y: T, _ z: T, _ rest: T...) -> T {
 /*
  这个类, 就是 Sequence 类的一层包装, 把每个返回来的数据, 增加了 index 值.
  所以, 这个类仅仅是在实现 next 的时候, 返回的值带有 index 了而已.
- 不过, 这体现了面向接口编程的极大好处. Base 到底是什么, 不用关心, EnumeratedSequence 仅仅会依靠协议暴露出的能力进行编程, 然后自己提供一层, 自己业务的封装而已.
+
+ 为什么, 会有专门的函数来创建包装对象呢. 这是因为包装对象, 其实是抽象的实现.
+ 使用这个函数的人, 并不关心返回值的具体类型, 而是拿到返回值, 按照抽象限制的协议功能, 进行后续的处理逻辑.
  */
 
 @frozen
 public struct EnumeratedSequence<Base: Sequence> {
   @usableFromInline
-  internal var _base: Base
+  internal var _base: Base // 原始的 sequence 尽心进行了存储.
 
   /// Construct from a `Base` sequence.
   @inlinable
@@ -130,7 +125,7 @@ extension EnumeratedSequence {
     @usableFromInline
     internal var _base: Base.Iterator
     @usableFromInline
-    internal var _count: Int
+    internal var _count: Int // 这就是为什么会有 index 的原因, interator 里面, 把迭代的过程记录了下来.
 
     /// Construct from a `Base` iterator.
     @inlinable
@@ -143,6 +138,7 @@ extension EnumeratedSequence {
 
 extension EnumeratedSequence.Iterator: IteratorProtocol, Sequence {
   /// The type of element returned by `next()`.
+    /// 一个新的类型, 一个元组类型. EnumeratedSequence 的 element 就是这个元组类型.
   public typealias Element = (offset: Int, element: Base.Element)
 
   /// Advances to the next element and returns it, or `nil` if no next element
@@ -165,3 +161,7 @@ extension EnumeratedSequence: Sequence {
     return Iterator(_base: _base.makeIterator())
   }
 }
+
+/*
+ 总体上代码没有多少行, 但是还是分为了四个扩展写的.
+ */

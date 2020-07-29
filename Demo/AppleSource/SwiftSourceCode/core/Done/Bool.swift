@@ -1,20 +1,9 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2018 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-// Bool Datatype and Supporting Operators
-//===----------------------------------------------------------------------===//
+
 /*
  相比于, 内存不为 0x0000 就为 TRUE, 专门的创建一个类型, 表示判断, 意义要明显的多.
  可能对于习惯于上面内存表示判断的人, 这样的写法比较啰嗦, 但是不忘忘记当初自己习惯上面的写法, 花费了多少精力.
  */
+
 /// A value type whose instances are either `true` or `false`.
 ///
 /// `Bool` represents Boolean values in Swift. Create instances of `Bool` by
@@ -37,6 +26,8 @@
 /// accidental programming errors and to help maintain the clarity of each
 /// control statement. Unlike in other programming languages, in Swift, integers
 /// and strings cannot be used where a Boolean value is required.
+///
+/// 编译的时候, 会有类型检查, 现在只有 Bool 类型的数据, 才能出现在条件表达式里面.
 ///
 /// For example, the following code sample does not compile, because it
 /// attempts to use the integer `i` in a logical context:
@@ -63,6 +54,7 @@
 /// bridged into Swift as `Bool`. The single `Bool` type in Swift guarantees
 /// that functions, methods, and properties imported from C and Objective-C
 /// have a consistent type interface.
+
 @frozen
 public struct Bool {
   @usableFromInline
@@ -147,6 +139,7 @@ public struct Bool {
     /*
      作为类的设计者, 应该提供一个最简便的方法, 给外界的使用者.
      应该提供一个最通用的方法, 给外界需要自定义的人.
+     所以, 利用上面的全的方法, 这里提供一个简便的方法.
      */
   @inlinable
   public static func random() -> Bool {
@@ -201,6 +194,7 @@ extension Bool: _ExpressibleByBuiltinBooleanLiteral, ExpressibleByBooleanLiteral
          }
      }
      let cPerson:Person = true
+     上面是一个例子, 可以编译通过并使用.
 
      如果, 一个自定义的类, 想要直接通过 Bool 值进行初始化, 那么需要显式地申明自己想要这份能力. 也就是 ExpressibleByBooleanLiteral 接口的实现.
      在这个接口里面, init(booleanLiteral boolValue: Bool) 需要被实现, 这个方法, 名字特殊, 有着 parameter label 进行限制.
@@ -212,6 +206,9 @@ extension Bool: _ExpressibleByBuiltinBooleanLiteral, ExpressibleByBooleanLiteral
   }
 }
 
+/*
+ 字符串化.
+ */
 extension Bool: CustomStringConvertible {
   /// A textual representation of the Boolean value.
   @inlinable

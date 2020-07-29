@@ -1,15 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
 /// A type that can be compared using the relational operators `<`, `<=`, `>=`,
 /// and `>`.
 /// 如果, 你想要实现一个有序的概念, 那么就应该让里面的元素, 实现 compareable 协议.
@@ -66,6 +54,7 @@
  因为, > 的实现, 可以根据 ==, < 的实现推导出来, 所以这个协议的 primitive method 没有包含 > 的声明.
  这也就是 protocol 的设计原则, 能够使用已有方法的, 就用已有的方法. 给实现类的约束越小越好.
  */
+
 /// To add `Comparable` conformance to your custom types, define the `<` and
 /// `==` operators as static methods of your types. The `==` operator is a
 /// requirement of the `Equatable` protocol, which `Comparable` extends---see
@@ -110,7 +99,7 @@
 ///             return lhs.year == rhs.year && lhs.month == rhs.month
 ///                 && lhs.day == rhs.day
 ///         }
-///     }
+///     }s
 ///
 /// Two `Date` instances are equal if each of their corresponding properties is
 /// equal.

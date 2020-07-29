@@ -465,6 +465,8 @@ public struct DropFirstSequence<Base: Sequence> {
  并不是, 这些包装类进行了延迟计算的功能, 本身迭代就是一个延迟计算的东西.
  就算是容器取值, 他也是在需要时才进行取值, 而不是生成迭代器, 就把所有的值都取了出来.
  如果, base 是一个数组, 当然可以直接 +n. 但是, 作为 sequence 来说, 他并不能确认自己能够 randomAccess, 所以这里就是循环进行.
+ 
+ DropFirst 不要前面几个数据, 直接从后面开始. 这种操作, 比复制能够节省大量的资源.
  */
 extension DropFirstSequence: Sequence {
     public typealias Element = Base.Element
@@ -671,6 +673,7 @@ extension Sequence {
     ///     let letterCounts = cast.map { $0.count }
     ///     // 'letterCounts' == [6, 6, 3, 4]
     ///
+    /// 这种流式的写法, 进行了很多次的遍历操作, 但是, 每个操作都很独立, 在提供了这种写法之后, 复用性得到了大大的加强.
     /// - Parameter transform: A mapping closure. `transform` accepts an
     ///   element of this sequence as its parameter and returns a transformed
     ///   value of the same or of a different type.
@@ -703,6 +706,7 @@ extension Sequence {
         }
         /*
          其实, map 的操作, 很简单, 但是主要是, 方法提供了这一层抽象, 它就能进行下一层的操作. 比如链式编程.
+         在 Array 里面, 根据 ContiguousArray 进行初始化, 一定有着简化的操作. 例如, 直接拿里面的指针, 当做 Array 的数据.
          */
         return Array(result)
     }
@@ -731,6 +735,9 @@ extension Sequence {
         return try _filter(isIncluded)
     }
     
+    /*
+     这里面的代码都很简单, 但是, 如果每次写业务的时候, 这些代码又会大量的占用空间.
+     */
     @_transparent
     public func _filter(
         _ isIncluded: (Element) throws -> Bool
@@ -794,13 +801,14 @@ extension Sequence {
     ///
     /// 1. You cannot use a `break` or `continue` statement to exit the current
     ///    call of the `body` closure or skip subsequent calls.
+    ///    因为 forEach 传过去的是一个闭包啊, 在闭包里面, 不认 break 和 continue 啊.
     /// 2. Using the `return` statement in the `body` closure will exit only from
     ///    the current call to `body`, not from any outer scope, and won't skip
     ///    subsequent calls.
     ///
     /// - Parameter body: A closure that takes an element of the sequence as a
     ///   parameter.
-    /// for Each 使用的很少, 相比 forin, 他没有停止的刹车机制.
+    /// 相比如 forin, 他没有及时刹车的机制. 在简洁性上, 和 forin 也差不多.
     @inlinable
     public func forEach(
         _ body: (Element) throws -> Void
@@ -836,6 +844,7 @@ extension Sequence {
         where predicate: (Element) throws -> Bool
     ) rethrows -> Element? {
         for element in self {
+            // 任何有 throws 的地方, 都要加 try. 而传递闭包的人, 是不用加 try 的.
             if try predicate(element) {
                 return element
             }
@@ -900,6 +909,7 @@ extension Sequence {
      因为 Sequence 是没有 count 的, 所以还不能在遍历的过程中, 到达了某个点再去记录, 就要记录所有的值, 然后调整顺序.
      使用通用算法, 会带来性能的损失.
      这里方法, 在 Collection 里面, 进行了重写. 用了更加有效率的 Index 进行的整体替换.
+     这也是 swift 协议相比较 C++ 泛型算法的好处. 使用者不用去记, 哪个类有着特殊的设计, 比如 sort 只能用到 randomAccess 的容器里面, 链表, 红黑树, 都有自己的 sort, 使用泛型算法会报错.
      */
     
     /// Returns a sequence containing all but the given number of initial
@@ -923,7 +933,7 @@ extension Sequence {
     ///   where *k* is the number of elements to drop from the beginning of
     ///   the sequence.
     /*
-     这里, 返回了一个包装对象.
+     返回一个适配器对象.
      */
     @inlinable
     public __consuming func dropFirst(_ k: Int = 1) -> DropFirstSequence<Self> {
@@ -1049,6 +1059,10 @@ extension Sequence {
     ///   satisfy `predicate`.
     ///
     /// - Complexity: O(*k*), where *k* is the length of the result.
+    /*
+     这些函数, 都是为了得到自己的一些目的, 算法都很简单, 写出来, 主要是为了复用.
+     所以, 我们自己有什么功能, 也是可以直接添加到系统类库中的, 或者系统协议中.
+     */
     @inlinable
     public __consuming func prefix(
         while predicate: (Element) throws -> Bool

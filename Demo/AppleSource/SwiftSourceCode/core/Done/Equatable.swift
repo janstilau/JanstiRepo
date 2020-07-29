@@ -1,19 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
-//===----------------------------------------------------------------------===//
-// Equatable
-//===----------------------------------------------------------------------===//
-
 /*
  因为 == 这个操作, 是整个系统运转的核心, 所以, 专门要为它定义一个协议. 这个协议的 primitive Method 就是 == 操作符的实现.
  */
@@ -24,6 +8,7 @@
 /// operator (`!=`). Most basic types in the Swift standard library conform to
 /// `Equatable`.
 ///
+/// 很多函数, 是不应该传入闭包的, 如果还是指定函数的运营过程, 就没有那么通用了.
 /// Some sequence and collection operations can be used more simply when the
 /// elements conform to `Equatable`. For example, to check whether an array
 /// contains a particular value, you can pass the value itself to the
@@ -48,6 +33,7 @@
 /// Adding `Equatable` conformance to your custom types means that you can use
 /// more convenient APIs when searching for particular instances in a
 /// collection.
+///  相等性判断, 在哈希表里面是很重要的.
 /// 在 Collection 中, 应该是 Sequence 里面有很多扩展方法, 要求 Element 里面, 需要是 Equatable.
 /// `Equatable` is also the base protocol for the `Hashable` and
 /// `Comparable` protocols, which allow more uses of your custom type, such as
@@ -57,6 +43,7 @@
 /// requirements for a custom type when you declare `Equatable` conformance in
 /// the type's original declaration and your type meets these criteria:
 /// 当符合下面的条件的时候, Struct 和 Enum 会自动符合 Equatable
+///  其实, 很简单, 就是可以一个个的比较, 判断出符合对象是否相等就可以.
 /// - For a `struct`, all its stored properties must conform to `Equatable`.
 /// - For an `enum`, all its associated values must conform to `Equatable`. (An
 ///   `enum` without associated values has `Equatable` conformance even
@@ -169,45 +156,53 @@
 ///     let c = a
 ///     print(c === a, c === b, separator: ", ")
 ///     // Prints "true, false"
+
+/*
+ 上面的叙述很多, 不过都是计算机的基本知识.
+ */
+
 /*
  因为这是操作符的重载, 所以要用 static 修饰.
  相比于, C++ 在类内部函数操作符重载, 默认操作符左边是 Self. Swift static, 两个操作参数的形式更加明确.
  */
 public protocol Equatable {
-  /// Returns a Boolean value indicating whether two values are equal.
-  ///
-  /// Equality is the inverse of inequality. For any values `a` and `b`,
-  /// `a == b` implies that `a != b` is `false`.
-  ///
-  /// - Parameters:
-  ///   - lhs: A value to compare.
-  ///   - rhs: Another value to compare.
-  static func == (lhs: Self, rhs: Self) -> Bool
+    /// Returns a Boolean value indicating whether two values are equal.
+    ///
+    /// Equality is the inverse of inequality. For any values `a` and `b`,
+    /// `a == b` implies that `a != b` is `false`.
+    ///
+    /// - Parameters:
+    ///   - lhs: A value to compare.
+    ///   - rhs: Another value to compare.
+    static func == (lhs: Self, rhs: Self) -> Bool
 }
 
 /*
- != 要利用 == 完成, 因为这是 extension 和 primitive 的关系.
+ 用 primitive 来完成后续工作, 能够保持逻辑的统一.
  */
 extension Equatable {
-  /// Returns a Boolean value indicating whether two values are not equal.
-  ///
-  /// Inequality is the inverse of equality. For any values `a` and `b`, `a != b`
-  /// implies that `a == b` is `false`.
-  ///
-  /// This is the default implementation of the not-equal-to operator (`!=`)
-  /// for any type that conforms to `Equatable`.
-  ///
-  /// - Parameters:
-  ///   - lhs: A value to compare.
-  ///   - rhs: Another value to compare.
-  // transparent because sometimes types that use this generate compile-time
-  // warnings, e.g. that an expression always evaluates to true
-  @_transparent
-  public static func != (lhs: Self, rhs: Self) -> Bool {
-    return !(lhs == rhs)
-  }
+    /// Returns a Boolean value indicating whether two values are not equal.
+    ///
+    /// Inequality is the inverse of equality. For any values `a` and `b`, `a != b`
+    /// implies that `a == b` is `false`.
+    ///
+    /// This is the default implementation of the not-equal-to operator (`!=`)
+    /// for any type that conforms to `Equatable`.
+    ///
+    /// - Parameters:
+    ///   - lhs: A value to compare.
+    ///   - rhs: Another value to compare.
+    // transparent because sometimes types that use this generate compile-time
+    // warnings, e.g. that an expression always evaluates to true
+    @_transparent
+    public static func != (lhs: Self, rhs: Self) -> Bool {
+        return !(lhs == rhs)
+    }
 }
 
+/*
+ 同一性比较.
+ */
 //===----------------------------------------------------------------------===//
 // Reference comparison
 //===----------------------------------------------------------------------===//
@@ -259,19 +254,21 @@ extension Equatable {
 ///   - lhs: A reference to compare.
 ///   - rhs: Another reference to compare.
 
+
 /*
  虽然, 引用相等不是 Equatable 协议里面的, 但是应该放到这个文件里面, 文件管理按照功能来划分代码.
+ 这里, 包括了可选值的比较.
  */
 @inlinable // trivial-implementation
 public func === (lhs: AnyObject?, rhs: AnyObject?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return ObjectIdentifier(l) == ObjectIdentifier(r)
-  case (nil, nil):
-    return true
-  default:
-    return false
-  }
+    switch (lhs, rhs) {
+    case let (l?, r?):
+        return ObjectIdentifier(l) == ObjectIdentifier(r)
+    case (nil, nil):
+        return true
+    default:
+        return false
+    }
 }
 
 /// Returns a Boolean value indicating whether two references point to
@@ -286,7 +283,7 @@ public func === (lhs: AnyObject?, rhs: AnyObject?) -> Bool {
 ///   - rhs: Another reference to compare.
 @inlinable // trivial-implementation
 public func !== (lhs: AnyObject?, rhs: AnyObject?) -> Bool {
-  return !(lhs === rhs)
+    return !(lhs === rhs)
 }
 
 
