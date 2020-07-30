@@ -1,10 +1,11 @@
 /// A type that can be compared using the relational operators `<`, `<=`, `>=`,
 /// and `>`.
 /// 如果, 你想要实现一个有序的概念, 那么就应该让里面的元素, 实现 compareable 协议.
+
 /// The `Comparable` protocol is used for types that have an inherent order,
 /// such as numbers and strings. Many types in the standard library already
-/// conform to the `Comparable` protocol. Add `Comparable` conformance to your
-/// own custom types when you want to be able to compare instances using
+/// conform to the `Comparable` protocol.
+/// Add `Comparable` conformance to your own custom types when you want to be able to compare instances using
 /// relational operators or use standard library methods that are designed for
 /// `Comparable` types.
 ///
@@ -22,6 +23,7 @@
 ///     }
 ///     // Prints "Seems like picnic weather!"
 ///
+/// 算法是固定的行为, 如果能够保证操作的对象, 符合某种抽象了, 算法就能正常的运转. 限制元素符合协议, 就是保证元素符合某种抽象.
 /// You can use special versions of some sequence and collection operations
 /// when working with a `Comparable` type. For example, if your array's
 /// elements conform to `Comparable`, you can call the `sort()` method without
@@ -55,6 +57,7 @@
  这也就是 protocol 的设计原则, 能够使用已有方法的, 就用已有的方法. 给实现类的约束越小越好.
  */
 
+/// 和 C++ 不同, swift 中的操作符重载, 只有一种方式, 就是 static 方法, 两个参数.
 /// To add `Comparable` conformance to your custom types, define the `<` and
 /// `==` operators as static methods of your types. The `==` operator is a
 /// requirement of the `Equatable` protocol, which `Comparable` extends---see
@@ -64,6 +67,7 @@
 /// `!=`, `>`, `<=`, and `>=` with instances of your type without any further
 /// code.
 ///
+///
 /// As an example, here's an implementation of a `Date` structure that stores
 /// the year, month, and day of a date:
 ///
@@ -72,6 +76,7 @@
 ///         let month: Int
 ///         let day: Int
 ///     }
+///
 ///
 /// To add `Comparable` conformance to `Date`, first declare conformance to
 /// `Comparable` and implement the `<` operator function.
@@ -128,6 +133,7 @@
 ///   (`FloatingPoint.nan`) compares as neither less than, greater than, nor
 ///   equal to any normal floating-point value. Exceptional values need not
 ///   take part in the strict total order.
+
 public protocol Comparable: Equatable {
   /// Returns a Boolean value indicating whether the value of the first
   /// argument is less than that of the second argument.

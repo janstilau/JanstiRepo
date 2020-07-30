@@ -1,15 +1,3 @@
-//===--- Map.swift - Lazily map over a Sequence ---------------*- swift -*-===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
 /// A `Sequence` whose elements consist of those in a `Base`
 /// `Sequence` passed through a transform function returning `Element`.
 /// These elements are computed lazily, each time they're read, by
@@ -196,12 +184,12 @@ extension LazySequenceProtocol {
   /// Returns a `LazyMapSequence` over this `Sequence`.  The elements of
   /// the result are computed lazily, each time they are read, by
   /// calling `transform` function on a base element.
-  @inlinable
-  public func map<U>(
+  @inlinable  public func map<U>(
     _ transform: @escaping (Element) -> U
   ) -> LazyMapSequence<Elements, U> {
     return LazyMapSequence(_base: elements, transform: transform)
   }
+
 }
 
 extension LazyMapSequence {

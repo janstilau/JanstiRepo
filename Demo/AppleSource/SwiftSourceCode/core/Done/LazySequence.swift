@@ -1,15 +1,3 @@
-//===--- LazySequence.swift -----------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
 /// A sequence on which normally-eager operations such as `map` and
 /// `filter` are implemented lazily.
 ///
@@ -23,13 +11,15 @@
 /// of the lazy sequence is accessed, an element of the underlying
 /// array is accessed and transformed by the closure.
 ///
+/// Lazy, 将操作, 和原始数据存储了起来.
 /// Sequence operations taking closure arguments, such as `map` and
 /// `filter`, are normally eager: they use the closure immediately and
 /// return a new array.  Using the `lazy` property gives the standard
 /// library explicit permission to store the closure and the sequence
 /// in the result, and defer computation until it is needed.
-///  这里讲的很明白, 作为 lazy sequence, 只有当访问到它的数据的时候,  才会进行相应数据的生成操作.
 ///
+///
+/// 以下说的是, lazy 怎么扩展功能. 以 scan 功能为例子.
 /// To add new lazy sequence operations, extend this protocol with
 /// methods that return lazy wrappers that are themselves
 /// `LazySequenceProtocol`s.  For example, given an eager `scan`
@@ -46,6 +36,7 @@
 ///       ///     (1..<6).scan(0, +) // [0, 1, 3, 6, 10, 15]
 ///       ///
 ///       /// - Complexity: O(n)
+///       目前这样写, scan 就是非 lazy 的.
 ///       func scan<ResultElement>(
 ///         _ initial: ResultElement,
 ///         _ nextPartialResult: (ResultElement, Element) -> ResultElement
@@ -61,28 +52,24 @@
 /// we can build a sequence that lazily computes the elements in the
 /// result of `scan`:
 ///
-/// 作为一个 Lazy Iterator, 它存储了原有的Sequence 的 iterator. 存储了原有的值, 存储了原有值和新值操作的 block.
+///
+///     Iterator 是真正返回数据的地方. 所以, 需要存储原始的 iterator, 作为原始数据的获取方式, 需要存储闭包, 作为原始数据的处理过程.
+///     Sequence 将闭包和原始的 Iterator 传入, Sequence 里面的数据不会轻易改变, 改变的仅仅是 iterator, 在迭代的过程中, 不断的进行数据的改变
 ///     struct LazyScanIterator<Base: IteratorProtocol, ResultElement>
 ///       : IteratorProtocol {
-///
-///       var nextElement: ResultElement? // The next result of next().
-///       var base: Base                  // The underlying iterator.
-///       let nextPartialResult: (ResultElement, Base.Element) -> ResultElement
-///
+///       // 在迭代的过程中, 提前算出下一个数据的值.
 ///       mutating func next() -> ResultElement? {
-///         return nextElement.map { result in // 这里的 result, 是 nextElement 的 wrappedValue
-///           nextElement = base.next().map { nextPartialResult(result, $0) } // 这里的 $0 是 base.next() 的 wrappedValue
+///         return nextElement.map { result in
+///           nextElement = base.next().map { nextPartialResult(result, $0) }
 ///           return result
 ///         }
 ///       }
+///       var nextElement: ResultElement? // The next result of next().
+///       var base: Base                  // The underlying iterator.
+///       let nextPartialResult: (ResultElement, Base.Element) -> ResultElement
 ///     }
 ///
-///
-/*
- 对于一个 LazyScanSequence 来说, 生成它的对象的时候, 仅仅是对于原始 sequence, iterator, 还有 transform 闭包的一份记录而已.
- 它的值在 access 的过程中, 才会动态的生成. 利用的就是它之前记录的那几个值.
- Lazy 可以避免在创建的过程中进行计算.
-*/
+///     // Sequence 记录下 init 值, base Sequence 的值, 以及闭包值. 然后每次迭代的时候, 将这些生成一个新的 iterator.
 ///     struct LazyScanSequence<Base: Sequence, ResultElement>
 ///       : LazySequenceProtocol // Chained operations on self are lazy, too
 ///     {
@@ -97,6 +84,7 @@
 ///         (ResultElement, Base.Element) -> ResultElement
 ///     }
 ///
+/// // 然后, 在 LazySequenceProtocol 中定义 scan 方法, 在这个方法内部, 是将 Sequence 本身传递到 LazyScanSequence 中去.
 /// and finally, we can give all lazy sequences a lazy `scan` method:
 ///     
 ///     extension LazySequenceProtocol {
@@ -139,11 +127,7 @@
 ///   creates and discards an array. `sum` would be better implemented
 ///   using `reduce`].
 
-/*
- LazySequenceProtocol : Sequence
- 标明, LazySequenceProtocol 的使用方式要完全和 Sequence 相同的.
- 它的 primitiveMethod 里面, 没有任何对于能力的要求.
- */
+
 public protocol LazySequenceProtocol: Sequence {
   /// A `Sequence` that can contain the same elements as this one,
   /// possibly with a simpler type.
@@ -192,11 +176,7 @@ extension LazySequenceProtocol where Elements: LazySequenceProtocol {
 /// on which some operations such as `map` and `filter` are
 /// implemented lazily.
 ///
-///
 /// - See also: `LazySequenceProtocol`
-/*
- Lazy, 首先要记录原来的 sequence.
- */
 @frozen // lazy-performance
 public struct LazySequence<Base: Sequence> {
   @usableFromInline
@@ -256,18 +236,23 @@ extension Sequence {
   /// A sequence containing the same elements as this sequence,
   /// but on which some operations, such as `map` and `filter`, are
   /// implemented lazily.
-  @inlinable // protocol-only
-  public var lazy: LazySequence<Self> {
+    @inlinable // protocol-only
+    public var lazy: LazySequence<Self> {
     return LazySequence(_base: self)
   }
 }
 
 /*
- 整个文件里面, 没有说明 lazy 的具体的实现思路是什么.
- Lazy 到底怎么变得 lazy, 是各个开发人员, 根据自己的业务需求, 自己实现的.
- 注释中, 有一个 lazy Scan 的实现方式.
- 基本的实现思路是, 在 lazySequence 的 iterator 立马, next 除了访问baseIterator的 next 的返回结果以外, 还要对于返回结果进行一次操作.
- 而这个操作, 是迭代的过程中才生产出来的.
- 也就是说, 生产一个 lazySequence, 附带相应的 block 操作, 不会立马进行 block 的调用.
- 这个各个 drop, Suffix sequence 的操作是一样的. 都是通过 baseiterator 进行取值, 只是在这个取值的过程中, 进行了自定义.
+ 通过 lazy 函数, 简历了一个适配器. 在该适配器里面, 存储了原有的 sequence, 所有的操作, 都代理给了原有的 sequence 函数. 这样, 对于 lazySequence 的任何操作, 其实就是操作 原有的 sequence.
+ 如果想要完成某个 lazy 操作, 比如例子中的 scan, 就要自定义 LazyScanSequence, 定义 LazyScanSequenceIterator .
+ 在其中, Sequence -> LazySequence -> LazyScanSequence, 他们都是 Sequence.
+ LazyScanSequenceIterator 会取 base, 也就是 LazySequence 的数据, LazySequence 转过来又去取 Sequence 的数据, 然后 LazyScanSequenceIterator 中, 会运用传递过来的闭包, 对数据进行操作.
+ LazyScanSequence 本身也是一个 LazySequence, 所以可以在它后面在进行 map 操作. 在 LazyMapSequence 中, 取值就会进行上面的操作.
+ 所以, lazy 函数, 本身就是一个创建适配器的过程. 这个适配器, 是 lazySequence 的.
+ 在 LazySequenceProtocol 中定义的各个方法, 都不是免费的. 都要定义相关的 Sequence, 进行各个方法的包装.
+ 
+ 这是一个装饰者模式的典型例子.
+ 各个方法, 作为简便的方法, 生成了一个新的 LazySequenceProtocol 的实例类. 在生成过程中, 将自己传入. 作为 base 存储到新的实例对象中.
+ 在最后取值的过程中, 先从实例对象取值, 然后自己操作, 但是自己本身也会被当做 base 存储.
+ 最后, 生成的数据的过程, 就是链式的不断调用 block 的过程.
  */
