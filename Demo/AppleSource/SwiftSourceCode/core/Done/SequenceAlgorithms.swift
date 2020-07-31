@@ -327,7 +327,7 @@ extension Sequence {
         var iter2 = other.makeIterator()
         while true {
             switch (iter1.next(), iter2.next()) {
-                // 如果都有值, 就调用比较. 注意, 系统的 API 很少进行强制解包的操作.
+            // 如果都有值, 就调用比较. 注意, 系统的 API 很少进行强制解包的操作.
             case let (e1?, e2?):
                 if try !areEquivalent(e1, e2) {
                     return false

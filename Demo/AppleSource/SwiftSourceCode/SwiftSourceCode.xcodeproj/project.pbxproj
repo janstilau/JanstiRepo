@@ -299,11 +299,9 @@
 				06E1B336247D6BEE00CD9D60 /* DictionaryStorage.swift */,
 				06E1B3C2247D6BEE00CD9D60 /* DictionaryVariant.swift */,
 				06E1B333247D6BEE00CD9D60 /* Diffing.swift */,
-				06E1B3C0247D6BEE00CD9D60 /* DropWhile.swift */,
 				06E1B360247D6BEE00CD9D60 /* Dump.swift */,
 				06E1B338247D6BEE00CD9D60 /* EmptyCollection.swift */,
 				06E1B3AF247D6BEE00CD9D60 /* ExistentialCollection.swift.gyb */,
-				06E1B3A6247D6BEE00CD9D60 /* Filter.swift */,
 				06E1B3B0247D6BEE00CD9D60 /* FixedArray.swift */,
 				06E1B36B247D6BEE00CD9D60 /* FlatMap.swift */,
 				06E1B3A1247D6BEE00CD9D60 /* Flatten.swift */,
@@ -345,7 +343,6 @@
 				06E1B376247D6BEE00CD9D60 /* PlaygroundDisplay.swift */,
 				06E1B33F247D6BEE00CD9D60 /* Pointer.swift */,
 				06E1B35B247D6BEE00CD9D60 /* Policy.swift */,
-				06E1B330247D6BEE00CD9D60 /* PrefixWhile.swift */,
 				06E1B320247D6BEE00CD9D60 /* Print.swift */,
 				06E1B32B247D6BEE00CD9D60 /* Random.swift */,
 				06E1B32A247D6BEE00CD9D60 /* RandomAccessCollection.swift */,
@@ -438,6 +435,7 @@
 		06E1B3DD247D7C7B00CD9D60 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				06E1B3CB247D6BEE00CD9D60 /* Optional.swift */,
 				06E1B375247D6BEE00CD9D60 /* Sequence.swift */,
 				06E1B37E247D6BEE00CD9D60 /* Algorithm.swift */,
 				06E1B39F247D6BEE00CD9D60 /* SequenceAlgorithms.swift */,
@@ -447,11 +445,13 @@
 				06E1B34A247D6BEE00CD9D60 /* Comparable.swift */,
 				06E1B3B3247D6BEE00CD9D60 /* LazySequence.swift */,
 				06E1B3C1247D6BEE00CD9D60 /* Map.swift */,
+				06E1B330247D6BEE00CD9D60 /* PrefixWhile.swift */,
+				06E1B3C0247D6BEE00CD9D60 /* DropWhile.swift */,
+				06E1B3A6247D6BEE00CD9D60 /* Filter.swift */,
 				06E1B382247D6BEE00CD9D60 /* Indices.swift */,
 				06E1B3A0247D6BEE00CD9D60 /* Slice.swift */,
 				06E1B36C247D6BEE00CD9D60 /* Result.swift */,
 				06E1B3A8247D6BEE00CD9D60 /* ErrorType.swift */,
-				06E1B3CB247D6BEE00CD9D60 /* Optional.swift */,
 			);
 			path = Done;
 			sourceTree = "<group>";

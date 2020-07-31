@@ -1,18 +1,10 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2018 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
 /// A value that represents either a success or a failure, including an
 /// associated value in each case.
 
+/*
+ 要么成功, 要么失败.
+ 每一种, 都有着关联对象.
+ */
 @frozen
 public enum Result<Success, Failure: Error> {
   /// A success, storing a `Success` value.

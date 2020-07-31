@@ -1,28 +1,20 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-/// The absence of a value. 对于 无 这种状态的表示. 非常重要的一个概念.
+/// The absence of a value.
+/// 对于 无 这种状态的表示. 非常重要的一个概念.
 /// A type that represents either a wrapped value or `nil`, the absence of a
 /// value.
 ///
 /// You use the `Optional` type whenever you use optional values, even if you
 /// never type the word `Optional`. Swift's type system usually shows the
 /// wrapped type's name with a trailing question mark (`?`) instead of showing
-/// the full type name. For example, if a variable has the type `Int?`, that's
+/// the full type name.
+/// For example, if a variable has the type `Int?`, that's
 /// just another way of writing `Optional<Int>`. The shortened form is
 /// preferred for ease of reading and writing code.
 ///
 /// The types of `shortForm` and `longForm` in the following code sample are
 /// the same:
 ///
+///     Int? 就是 Optional<Int> 的简写形式.
 ///     let shortForm: Int? = Int("42")
 ///     let longForm: Optional<Int> = Int("42")
 ///
@@ -54,6 +46,7 @@
 /// Optional Binding
 /// ----------------
 ///
+/// if let 是取出 optinal 的关联值, 到特定的变量上, 这是值拷贝的过程. 所以, 绑定后的值修改, 不会影响到关联值的内容.
 /// To conditionally bind the wrapped value of an `Optional` instance to a new
 /// variable, use one of the optional binding control structures, including
 /// `if let`, `guard let`, and `switch`.
@@ -73,6 +66,7 @@
 /// optional chaining to access the `hasSuffix(_:)` method on a `String?`
 /// instance.
 ///
+///     这里, == 左边是一个 Optional, 右边是一个 bool. 根本不能进行比较, 编译器会把右边变为一个 Optional(true)
 ///     if imagePaths["star"]?.hasSuffix(".png") == true {
 ///         print("The star image is in PNG format")
 ///     }
@@ -136,6 +130,7 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
     case some(Wrapped)
     
     /// Creates an instance that stores the given value.
+    /// 一般不会这么写,  这种调用, 只会是编译器调用.
     @_transparent
     public init(_ some: Wrapped) { self = .some(some) }
     
@@ -162,6 +157,7 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
     ///   returns `nil`.
     /*
      方法的好处, 就是能够节省大量的重复代码, 如果想要使用 Swift 这门语言, 那么对于这门语言预定义的一些方法, 一定要熟悉这些东西到底是什么创作含义.
+     如果传递进来的闭包, 是可能 throws 的, 那么在使用的时候, 一定要加上 try.
      */
     @inlinable
     public func map<U>(
@@ -220,7 +216,6 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
     /// initializer behind the scenes.
     /*
      这个方法是没有办法调用的, 这是编译器做的事情.
-     虽然我们知道 Void 其实也是一个数据类型, 但是, 能够写出传递 Void 的方法调用来吗.
      */
     @_transparent
     public init(nilLiteral: ()) {
@@ -324,6 +319,8 @@ extension Optional: Equatable where Wrapped: Equatable {
     ///     }
     ///     // Prints "The two groups start the same."
     ///
+    ///
+    /// 这里也就说明了, 对于一个普通值, 如果和要 Optional 进行比较的话, 会对普通值进行一次包装操作.
     /// You can also use this operator to compare a non-optional value to an
     /// optional that wraps the same type. The non-optional value is wrapped as an
     /// optional before the comparison is made. In the following example, the
@@ -357,11 +354,11 @@ extension Optional: Equatable where Wrapped: Equatable {
     @inlinable
     public static func ==(lhs: Wrapped?, rhs: Wrapped?) -> Bool {
         switch (lhs, rhs) {
-        case let (l?, r?):
+        case let (l?, r?): // 如果都有值, 那么就是比较值
             return l == r
-        case (nil, nil):
+        case (nil, nil): // 如果都是空, 那么就是显得更.
             return true
-        default:
+        default: // 如果一个为空, 另一个不为空, 就是不相等.
             return false
         }
     }
@@ -669,9 +666,7 @@ public func ?? <T>(optional: T?, defaultValue: @autoclosure () throws -> T?)
         }
 }
 
-//===----------------------------------------------------------------------===//
 // Bridging
-//===----------------------------------------------------------------------===//
 
 #if _runtime(_ObjC)
 extension Optional: _ObjectiveCBridgeable {

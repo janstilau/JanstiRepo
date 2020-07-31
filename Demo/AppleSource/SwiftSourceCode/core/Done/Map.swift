@@ -2,6 +2,15 @@
 /// `Sequence` passed through a transform function returning `Element`.
 /// These elements are computed lazily, each time they're read, by
 /// calling the transform function on a base element.
+
+
+/*
+ 可以看到, 类的数据定义放到一个单元里面, 类的对于接口的支持, 放到另外的一个单元里面.
+ */
+
+/*
+ 对于, LazyMapSequence 找个结构体来说, 他做的事情, 就是存储 base sequence 以及 transform 闭包.
+ */
 @frozen
 public struct LazyMapSequence<Base: Sequence, Element> {
 
@@ -21,6 +30,10 @@ public struct LazyMapSequence<Base: Sequence, Element> {
   }
 }
 
+/*
+ 一定要记住, Sequence 并不提供迭代的过程. 迭代的过程是交给 iterator 进行的. Sequence 要想 iterator 提供, 如果取得值的接口.
+ 对于 lazyMap 的 Iterator, 结构体内, 仅仅是存储. 真正的迭代的过程, 是在 nextObject 中进行的.
+ */
 extension LazyMapSequence {
   @frozen
   public struct Iterator {
@@ -43,6 +56,10 @@ extension LazyMapSequence {
   }
 }
 
+/*
+ Map 的 iterator, 迭代的过程. 首先交给自己的 bese Iterator, 获取数据, 然后在数据的基础上, 执行存储的 transform 闭包过程.
+ 需要注意的是, 这里, bese Iterator 的实际类型是未知的. 他很有可能就是一个 lazySequence Iterator.
+ */
 extension LazyMapSequence.Iterator: IteratorProtocol, Sequence {
   /// Advances to the next element and returns it, or `nil` if no next element
   /// exists.
@@ -57,6 +74,10 @@ extension LazyMapSequence.Iterator: IteratorProtocol, Sequence {
   }
 }
 
+/*
+ 在 lazySequence 里面, 所有的操作, 都是转交给了 base sequence 里面, 包括 makeIterator.
+ 而在 LazyMapSequence 这种, 实际自定义了操作了的 LazySequence 里面, 要按照需要, 复写某些方法, 比如, makeIterator.
+ */
 extension LazyMapSequence: LazySequenceProtocol {
   /// Returns an iterator over the elements of this sequence.
   ///
@@ -79,6 +100,37 @@ extension LazyMapSequence: LazySequenceProtocol {
     return _base.underestimatedCount
   }
 }
+
+/*
+ 和 C++ 一样, 特定的数据结构, 完成操作, 但是给外界使用的时候, 应该提供一个简便的方法.
+ Map 方法, 是建立在 LazySequenceProtocol 协议上的, 这也是为什么要进行 lazy() 调用的原因.
+ 普通的 Sequence, 调用 lazy 成为了 LazySequenceProtocol 的实现类, 才能够调用 lazy, 变为一个 LazyMapSequence. 而这个 LazyMapSequence, 还能够再次组装, 成为下一个 LazySequence 里面的 baseSequence.
+ */
+extension LazySequenceProtocol {
+  /// Returns a `LazyMapSequence` over this `Sequence`.  The elements of
+  /// the result are computed lazily, each time they are read, by
+  /// calling `transform` function on a base element.
+  @inlinable  public func map<U>(
+    _ transform: @escaping (Element) -> U
+  ) -> LazyMapSequence<Elements, U> {
+    return LazyMapSequence(_base: elements, transform: transform)
+  }
+}
+
+extension LazyMapSequence {
+  @inlinable
+  @available(swift, introduced: 5)
+  public func map<ElementOfResult>(
+    _ transform: @escaping (Element) -> ElementOfResult
+  ) -> LazyMapSequence<Base, ElementOfResult> {
+    return LazyMapSequence<Base, ElementOfResult>(
+      _base: _base,
+      transform: { transform(self._transform($0)) })
+  }
+}
+
+
+// Collection 的相关内容, 在 Collection 后在进行
 
 /// A `Collection` whose elements consist of those in a `Base`
 /// `Collection` passed through a transform function returning `Element`.
@@ -179,30 +231,6 @@ extension LazyMapCollection: RandomAccessCollection
   where Base: RandomAccessCollection { }
 
 //===--- Support for s.lazy -----------------------------------------------===//
-
-extension LazySequenceProtocol {
-  /// Returns a `LazyMapSequence` over this `Sequence`.  The elements of
-  /// the result are computed lazily, each time they are read, by
-  /// calling `transform` function on a base element.
-  @inlinable  public func map<U>(
-    _ transform: @escaping (Element) -> U
-  ) -> LazyMapSequence<Elements, U> {
-    return LazyMapSequence(_base: elements, transform: transform)
-  }
-
-}
-
-extension LazyMapSequence {
-  @inlinable
-  @available(swift, introduced: 5)
-  public func map<ElementOfResult>(
-    _ transform: @escaping (Element) -> ElementOfResult
-  ) -> LazyMapSequence<Base, ElementOfResult> {
-    return LazyMapSequence<Base, ElementOfResult>(
-      _base: _base,
-      transform: { transform(self._transform($0)) })
-  }
-}
 
 extension LazyMapCollection {
   @inlinable
