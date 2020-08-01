@@ -69,38 +69,6 @@ extension Sequence {
 //===----------------------------------------------------------------------===//
 
 extension Sequence {
-    /// Returns the minimum element in the sequence, using the given predicate as
-    /// the comparison between elements.
-    ///
-    /// The predicate must be a *strict weak ordering* over the elements. That
-    /// is, for any elements `a`, `b`, and `c`, the following conditions must
-    /// hold:
-    ///
-    /// - `areInIncreasingOrder(a, a)` is always `false`. (Irreflexivity)
-    /// - If `areInIncreasingOrder(a, b)` and `areInIncreasingOrder(b, c)` are
-    ///   both `true`, then `areInIncreasingOrder(a, c)` is also
-    ///   `true`. (Transitive comparability)
-    /// - Two elements are *incomparable* if neither is ordered before the other
-    ///   according to the predicate. If `a` and `b` are incomparable, and `b`
-    ///   and `c` are incomparable, then `a` and `c` are also incomparable.
-    ///   (Transitive incomparability)
-    ///
-    /// This example shows how to use the `min(by:)` method on a
-    /// dictionary to find the key-value pair with the lowest value.
-    ///
-    ///     let hues = ["Heliotrope": 296, "Coral": 16, "Aquamarine": 156]
-    ///     let leastHue = hues.min { a, b in a.value < b.value }
-    ///     print(leastHue)
-    ///     // Prints "Optional(("Coral", 16))"
-    ///
-    /// - Parameter areInIncreasingOrder: A predicate that returns `true`
-    ///   if its first argument should be ordered before its second
-    ///   argument; otherwise, `false`.
-    /// - Returns: The sequence's minimum element, according to
-    ///   `areInIncreasingOrder`. If the sequence has no elements, returns
-    ///   `nil`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
     /*
      这个定义在了 sequence 层面上, 以后的任何人, 都不用在重新写一遍遍历的逻辑了, 只要定义 areInIncreasingOrder 的逻辑就可以了.
      */
@@ -117,37 +85,6 @@ extension Sequence {
         return result
     }
     
-    /// Returns the maximum element in the sequence, using the given predicate
-    /// as the comparison between elements.
-    ///
-    /// The predicate must be a *strict weak ordering* over the elements. That
-    /// is, for any elements `a`, `b`, and `c`, the following conditions must
-    /// hold:
-    ///
-    /// - `areInIncreasingOrder(a, a)` is always `false`. (Irreflexivity)
-    /// - If `areInIncreasingOrder(a, b)` and `areInIncreasingOrder(b, c)` are
-    ///   both `true`, then `areInIncreasingOrder(a, c)` is also
-    ///   `true`. (Transitive comparability)
-    /// - Two elements are *incomparable* if neither is ordered before the other
-    ///   according to the predicate. If `a` and `b` are incomparable, and `b`
-    ///   and `c` are incomparable, then `a` and `c` are also incomparable.
-    ///   (Transitive incomparability)
-    ///
-    /// This example shows how to use the `max(by:)` method on a
-    /// dictionary to find the key-value pair with the highest value.
-    ///
-    ///     let hues = ["Heliotrope": 296, "Coral": 16, "Aquamarine": 156]
-    ///     let greatestHue = hues.max { a, b in a.value < b.value }
-    ///     print(greatestHue)
-    ///     // Prints "Optional(("Heliotrope", 296))"
-    ///
-    /// - Parameter areInIncreasingOrder:  A predicate that returns `true` if its
-    ///   first argument should be ordered before its second argument;
-    ///   otherwise, `false`.
-    /// - Returns: The sequence's maximum element if the sequence is not empty;
-    ///   otherwise, `nil`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
     @inlinable // protocol-only
     @warn_unqualified_access
     public func max(
@@ -185,19 +122,6 @@ extension Sequence where Element: Comparable {
         return self.min(by: <)
     }
     
-    /// Returns the maximum element in the sequence.
-    ///
-    /// This example finds the largest value in an array of height measurements.
-    ///
-    ///     let heights = [67.5, 65.7, 64.3, 61.1, 58.5, 60.3, 64.9]
-    ///     let greatestHeight = heights.max()
-    ///     print(greatestHeight)
-    ///     // Prints "Optional(67.5)"
-    ///
-    /// - Returns: The sequence's maximum element. If the sequence has no
-    ///   elements, returns `nil`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
     @inlinable
     @warn_unqualified_access
     public func max() -> Element? {
@@ -294,30 +218,10 @@ extension Sequence where Element: Equatable {
 //===----------------------------------------------------------------------===//
 
 extension Sequence {
-    /// Returns a Boolean value indicating whether this sequence and another
-    /// sequence contain equivalent elements in the same order, using the given
-    /// predicate as the equivalence test.
-    ///
-    /// At least one of the sequences must be finite.
-    ///
-    /// The predicate must be a *equivalence relation* over the elements. That
-    /// is, for any elements `a`, `b`, and `c`, the following conditions must
-    /// hold:
-    ///
-    /// - `areEquivalent(a, a)` is always `true`. (Reflexivity)
-    /// - `areEquivalent(a, b)` implies `areEquivalent(b, a)`. (Symmetry)
-    /// - If `areEquivalent(a, b)` and `areEquivalent(b, c)` are both `true`, then
-    ///   `areEquivalent(a, c)` is also `true`. (Transitivity)
-    ///
-    /// - Parameters:
-    ///   - other: A sequence to compare to this sequence.
-    ///   - areEquivalent: A predicate that returns `true` if its two arguments
-    ///     are equivalent; otherwise, `false`.
-    /// - Returns: `true` if this sequence and `other` contain equivalent items,
-    ///   using `areEquivalent` as the equivalence test; otherwise, `false.`
-    ///
-    /// - Complexity: O(*m*), where *m* is the lesser of the length of the
-    ///   sequence and the length of `other`.
+   
+    /*
+     这个函数, 就是迭代判断相等性而已.
+     */
     @inlinable
     public func elementsEqual<OtherSequence: Sequence>(
         _ other: OtherSequence,
@@ -340,28 +244,6 @@ extension Sequence {
 }
 
 extension Sequence where Element: Equatable {
-    /// Returns a Boolean value indicating whether this sequence and another
-    /// sequence contain the same elements in the same order.
-    ///
-    /// At least one of the sequences must be finite.
-    ///
-    /// This example tests whether one countable range shares the same elements
-    /// as another countable range and an array.
-    ///
-    ///     let a = 1...3
-    ///     let b = 1...10
-    ///
-    ///     print(a.elementsEqual(b))
-    ///     // Prints "false"
-    ///     print(a.elementsEqual([1, 2, 3]))
-    ///     // Prints "true"
-    ///
-    /// - Parameter other: A sequence to compare to this sequence.
-    /// - Returns: `true` if this sequence and `other` contain the same elements
-    ///   in the same order.
-    ///
-    /// - Complexity: O(*m*), where *m* is the lesser of the length of the
-    ///   sequence and the length of `other`.
     @inlinable
     public func elementsEqual<OtherSequence: Sequence>(
         _ other: OtherSequence
@@ -526,25 +408,9 @@ extension Sequence {
         return false
     }
     
-    /// Returns a Boolean value indicating whether every element of a sequence
-    /// satisfies a given predicate.
-    ///
-    /// The following code uses this method to test whether all the names in an
-    /// array have at least five characters:
-    ///
-    ///     let names = ["Sofia", "Camilla", "Martina", "Mateo", "Nicolás"]
-    ///     let allHaveAtLeastFive = names.allSatisfy({ $0.count >= 5 })
-    ///     // allHaveAtLeastFive == true
-    ///
-    /// - Parameter predicate: A closure that takes an element of the sequence
-    ///   as its argument and returns a Boolean value that indicates whether
-    ///   the passed element satisfies a condition.
-    /// - Returns: `true` if the sequence contains only elements that satisfy
-    ///   `predicate`; otherwise, `false`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
     /*
      没有不满足条件的, 就是 allSatisfy.
+     注意, 这里有两个 try, 第一个是 predicate 的调用, 第二个是 contains 调用.
      */
     @inlinable
     public func allSatisfy(
@@ -582,54 +448,10 @@ extension Sequence where Element: Equatable {
     }
 }
 
-//===----------------------------------------------------------------------===//
-// reduce()
-//===----------------------------------------------------------------------===//
-
+/*
+ reduce, 将序列里面的值, 归并到一个值.
+ */
 extension Sequence {
-    /// Returns the result of combining the elements of the sequence using the
-    /// given closure.
-    ///
-    /// Use the `reduce(_:_:)` method to produce a single value from the elements
-    /// of an entire sequence. For example, you can use this method on an array
-    /// of numbers to find their sum or product.
-    ///
-    /// The `nextPartialResult` closure is called sequentially with an
-    /// accumulating value initialized to `initialResult` and each element of
-    /// the sequence. This example shows how to find the sum of an array of
-    /// numbers.
-    ///
-    ///     let numbers = [1, 2, 3, 4]
-    ///     let numberSum = numbers.reduce(0, { x, y in
-    ///         x + y
-    ///     })
-    ///     // numberSum == 10
-    ///
-    /// When `numbers.reduce(_:_:)` is called, the following steps occur:
-    ///
-    /// 1. The `nextPartialResult` closure is called with `initialResult`---`0`
-    ///    in this case---and the first element of `numbers`, returning the sum:
-    ///    `1`.
-    /// 2. The closure is called again repeatedly with the previous call's return
-    ///    value and each element of the sequence.
-    /// 3. When the sequence is exhausted, the last value returned from the
-    ///    closure is returned to the caller.
-    ///
-    /// If the sequence has no elements, `nextPartialResult` is never executed
-    /// and `initialResult` is the result of the call to `reduce(_:_:)`.
-    ///
-    /// - Parameters:
-    ///   - initialResult: The value to use as the initial accumulating value.
-    ///     `initialResult` is passed to `nextPartialResult` the first time the
-    ///     closure is executed.
-    ///   - nextPartialResult: A closure that combines an accumulating value and
-    ///     an element of the sequence into a new accumulating value, to be used
-    ///     in the next call of the `nextPartialResult` closure or returned to
-    ///     the caller.
-    /// - Returns: The final accumulated value. If the sequence has no elements,
-    ///   the result is `initialResult`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
     @inlinable
     public func reduce<Result>(
         _ initialResult: Result,
@@ -643,50 +465,11 @@ extension Sequence {
         return accumulator
     }
     
-    /// Returns the result of combining the elements of the sequence using the
-    /// given closure.
-    ///
-    /// Use the `reduce(into:_:)` method to produce a single value from the
-    /// elements of an entire sequence. For example, you can use this method on an
-    /// array of integers to filter adjacent equal entries or count frequencies.
-    ///
     /// This method is preferred over `reduce(_:_:)` for efficiency when the
     /// result is a copy-on-write type, for example an Array or a Dictionary.
-    ///
-    /// The `updateAccumulatingResult` closure is called sequentially with a
-    /// mutable accumulating value initialized to `initialResult` and each element
-    /// of the sequence. This example shows how to build a dictionary of letter
-    /// frequencies of a string.
-    ///
-    ///     let letters = "abracadabra"
-    ///     let letterCount = letters.reduce(into: [:]) { counts, letter in
-    ///         counts[letter, default: 0] += 1
-    ///     }
-    ///     // letterCount == ["a": 5, "b": 2, "r": 2, "c": 1, "d": 1]
-    ///
-    /// When `letters.reduce(into:_:)` is called, the following steps occur:
-    ///
-    /// 1. The `updateAccumulatingResult` closure is called with the initial
-    ///    accumulating value---`[:]` in this case---and the first character of
-    ///    `letters`, modifying the accumulating value by setting `1` for the key
-    ///    `"a"`.
-    /// 2. The closure is called again repeatedly with the updated accumulating
-    ///    value and each element of the sequence.
-    /// 3. When the sequence is exhausted, the accumulating value is returned to
-    ///    the caller.
-    ///
-    /// If the sequence has no elements, `updateAccumulatingResult` is never
-    /// executed and `initialResult` is the result of the call to
-    /// `reduce(into:_:)`.
-    ///
-    /// - Parameters:
-    ///   - initialResult: The value to use as the initial accumulating value.
-    ///   - updateAccumulatingResult: A closure that updates the accumulating
-    ///     value with an element of the sequence.
-    /// - Returns: The final accumulated value. If the sequence has no elements,
-    ///   the result is `initialResult`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
+    /*
+     之前的理解有点问题, 这种 inout 版本的, 更多的是为了减少 copyOnWrite, 而不是说为了使用传出参数这种方式.
+     */
     @inlinable
     public func reduce<Result>(
         into initialResult: __owned Result,

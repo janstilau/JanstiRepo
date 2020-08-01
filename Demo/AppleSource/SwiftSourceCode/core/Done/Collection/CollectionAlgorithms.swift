@@ -17,26 +17,6 @@ extension BidirectionalCollection {
 }
 
 extension Collection where Element: Equatable {
-    /// Returns the first index where the specified value appears in the
-    /// collection.
-    ///
-    /// After using `firstIndex(of:)` to find the position of a particular element
-    /// in a collection, you can use it to access the element by subscripting.
-    /// This example shows how you can modify one of the names in an array of
-    /// students.
-    ///
-    ///     var students = ["Ben", "Ivy", "Jordell", "Maxime"]
-    ///     if let i = students.firstIndex(of: "Maxime") {
-    ///         students[i] = "Max"
-    ///     }
-    ///     print(students)
-    ///     // Prints "["Ben", "Ivy", "Jordell", "Max"]"
-    ///
-    /// - Parameter element: An element to search for in the collection.
-    /// - Returns: The first index where `element` is found. If `element` is not
-    ///   found in the collection, returns `nil`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the collection.
     /*
      firstIndex 这种, 没有太好的办法, 就是按个找, 不过 Diction, 应该有更好的办法.
      */
@@ -61,28 +41,6 @@ extension Collection where Element: Equatable {
  FirstIndexOf 的变形, 用一个闭包, 代替了 == 的判断.
  */
 extension Collection {
-    /// Returns the first index in which an element of the collection satisfies
-    /// the given predicate.
-    ///
-    /// You can use the predicate to find an element of a type that doesn't
-    /// conform to the `Equatable` protocol or to find an element that matches
-    /// particular criteria. Here's an example that finds a student name that
-    /// begins with the letter "A":
-    ///
-    ///     let students = ["Kofi", "Abena", "Peter", "Kweku", "Akosua"]
-    ///     if let i = students.firstIndex(where: { $0.hasPrefix("A") }) {
-    ///         print("\(students[i]) starts with 'A'!")
-    ///     }
-    ///     // Prints "Abena starts with 'A'!"
-    ///
-    /// - Parameter predicate: A closure that takes an element as its argument
-    ///   and returns a Boolean value that indicates whether the passed element
-    ///   represents a match.
-    /// - Returns: The index of the first element for which `predicate` returns
-    ///   `true`. If no elements in the collection satisfy the given predicate,
-    ///   returns `nil`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the collection.
     @inlinable
     public func firstIndex(
         where predicate: (Element) throws -> Bool

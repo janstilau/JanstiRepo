@@ -1420,26 +1420,9 @@ extension Collection {
         return self[start..<endIndex]
     }
     
-    /// Returns a subsequence, up to the specified maximum length, containing
-    /// the initial elements of the collection.
-    ///
-    /// If the maximum length exceeds the number of elements in the collection,
-    /// the result contains all the elements in the collection.
-    ///
-    ///     let numbers = [1, 2, 3, 4, 5]
-    ///     print(numbers.prefix(2))
-    ///     // Prints "[1, 2]"
-    ///     print(numbers.prefix(10))
-    ///     // Prints "[1, 2, 3, 4, 5]"
-    ///
-    /// - Parameter maxLength: The maximum number of elements to return.
-    ///   `maxLength` must be greater than or equal to zero.
-    /// - Returns: A subsequence starting at the beginning of this collection
-    ///   with at most `maxLength` elements.
-    ///
-    /// - Complexity: O(1) if the collection conforms to
-    ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the number of
-    ///   elements to select from the beginning of the collection.
+    /*
+     返回 集合的前多少个的子序列.
+     */
     @inlinable
     public __consuming func prefix(_ maxLength: Int) -> SubSequence {
         _precondition(
@@ -1450,15 +1433,9 @@ extension Collection {
         return self[startIndex..<end]
     }
     
-    /// Returns a subsequence containing the initial elements until `predicate`
-    /// returns `false` and skipping the remaining elements.
-    ///
-    /// - Parameter predicate: A closure that takes an element of the
-    ///   sequence as its argument and returns `true` if the element should
-    ///   be included or `false` if it should be excluded. Once the predicate
-    ///   returns `false` it will not be called again.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the collection.
+    /*
+     返回集合前多少个子序列, 直到某个元素不符合条件了.
+     */
     @inlinable
     public __consuming func prefix(
         while predicate: (Element) throws -> Bool
@@ -1502,40 +1479,9 @@ extension Collection {
         return self[start..<endIndex]
     }
     
-    /// Returns a subsequence from the start of the collection up to, but not
-    /// including, the specified position.
-    ///
-    /// The resulting subsequence *does not include* the element at the position
-    /// `end`. The following example searches for the index of the number `40`
-    /// in an array of integers, and then prints the prefix of the array up to,
-    /// but not including, that index:
-    ///
-    ///     let numbers = [10, 20, 30, 40, 50, 60]
-    ///     if let i = numbers.firstIndex(of: 40) {
-    ///         print(numbers.prefix(upTo: i))
-    ///     }
-    ///     // Prints "[10, 20, 30]"
-    ///
-    /// Passing the collection's starting index as the `end` parameter results in
-    /// an empty subsequence.
-    ///
-    ///     print(numbers.prefix(upTo: numbers.startIndex))
-    ///     // Prints "[]"
-    ///
-    /// Using the `prefix(upTo:)` method is equivalent to using a partial
-    /// half-open range as the collection's subscript. The subscript notation is
-    /// preferred over `prefix(upTo:)`.
-    ///
-    ///     if let i = numbers.firstIndex(of: 40) {
-    ///         print(numbers[..<i])
-    ///     }
-    ///     // Prints "[10, 20, 30]"
-    ///
-    /// - Parameter end: The "past the end" index of the resulting subsequence.
-    ///   `end` must be a valid index of the collection.
-    /// - Returns: A subsequence up to, but not including, the `end` position.
-    ///
-    /// - Complexity: O(1)
+    /*
+     返回集合到 end Index 的子序列.
+     */
     @inlinable
     public __consuming func prefix(upTo end: Index) -> SubSequence {
         return self[startIndex..<end]
@@ -1579,35 +1525,10 @@ extension Collection {
         return self[start..<endIndex]
     }
     
-    /// Returns a subsequence from the start of the collection through the
-    /// specified position.
-    ///
-    /// The resulting subsequence *includes* the element at the position `end`.
-    /// The following example searches for the index of the number `40` in an
-    /// array of integers, and then prints the prefix of the array up to, and
-    /// including, that index:
-    ///
-    ///     let numbers = [10, 20, 30, 40, 50, 60]
-    ///     if let i = numbers.firstIndex(of: 40) {
-    ///         print(numbers.prefix(through: i))
-    ///     }
-    ///     // Prints "[10, 20, 30, 40]"
-    ///
-    /// Using the `prefix(through:)` method is equivalent to using a partial
-    /// closed range as the collection's subscript. The subscript notation is
-    /// preferred over `prefix(through:)`.
-    ///
-    ///     if let i = numbers.firstIndex(of: 40) {
-    ///         print(numbers[...i])
-    ///     }
-    ///     // Prints "[10, 20, 30, 40]"
-    ///
-    /// - Parameter end: The index of the last element to include in the
-    ///   resulting subsequence. `end` must be a valid index of the collection
-    ///   that is not equal to the `endIndex` property.
-    /// - Returns: A subsequence up to, and including, the `end` position.
-    ///
-    /// - Complexity: O(1)
+    
+    /*
+     返回集合直到 position 的子序列, 包括了 position.
+     */
     @inlinable
     public __consuming func prefix(through position: Index) -> SubSequence {
         return prefix(upTo: index(after: position))

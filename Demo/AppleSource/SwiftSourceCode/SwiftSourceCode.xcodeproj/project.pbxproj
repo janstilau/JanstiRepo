@@ -306,7 +306,6 @@
 				06E1B3CC247D6BEE00CD9D60 /* Builtin.swift */,
 				06E1B364247D6BEE00CD9D60 /* Character.swift */,
 				06E1B3BD247D6BEE00CD9D60 /* CharacterProperties.swift */,
-				06E1B397247D6BEE00CD9D60 /* ClosedRange.swift */,
 				06E1B33B247D6BEE00CD9D60 /* CMakeLists.txt */,
 				06E1B3DC247D6BEE00CD9D60 /* Codable.swift.gyb */,
 				06E1B34B247D6BEE00CD9D60 /* CommandLine.swift */,
@@ -328,6 +327,9 @@
 				06E1B3A1247D6BEE00CD9D60 /* Flatten.swift */,
 				06E1B3DD247D7C7B00CD9D60 /* Done */,
 				06E1B386247D6BEE00CD9D60 /* FloatingPoint.swift */,
+				06E1B397247D6BEE00CD9D60 /* ClosedRange.swift */,
+				06E1B37A247D6BEE00CD9D60 /* Range.swift */,
+				06E1B394247D6BEE00CD9D60 /* Sort.swift */,
 				06E1B3A5247D6BEE00CD9D60 /* FloatingPointParsing.swift.gyb */,
 				06E1B325247D6BEE00CD9D60 /* FloatingPointTypes.swift.gyb */,
 				06E1B368247D6BEE00CD9D60 /* GroupInfo.json */,
@@ -364,7 +366,6 @@
 				06E1B35B247D6BEE00CD9D60 /* Policy.swift */,
 				06E1B320247D6BEE00CD9D60 /* Print.swift */,
 				06E1B32B247D6BEE00CD9D60 /* Random.swift */,
-				06E1B37A247D6BEE00CD9D60 /* Range.swift */,
 				06E1B374247D6BEE00CD9D60 /* ReflectionMirror.swift */,
 				06E1B384247D6BEE00CD9D60 /* Repeat.swift */,
 				06E1B396247D6BEE00CD9D60 /* REPL.swift */,
@@ -386,7 +387,6 @@
 				06E1B3C7247D6BEE00CD9D60 /* SipHash.swift */,
 				06E1B354247D6BEE00CD9D60 /* SliceBuffer.swift */,
 				06E1B385247D6BEE00CD9D60 /* SmallString.swift */,
-				06E1B394247D6BEE00CD9D60 /* Sort.swift */,
 				06E1B357247D6BEE00CD9D60 /* StaticString.swift */,
 				06E1B3A7247D6BEE00CD9D60 /* String.swift */,
 				06E1B341247D6BEE00CD9D60 /* StringBreadcrumbs.swift */,
@@ -441,7 +441,6 @@
 				06E1B3CA247D6BEE00CD9D60 /* ValidUTF8Buffer.swift */,
 				06E1B35A247D6BEE00CD9D60 /* VarArgs.swift */,
 				06E1B37C247D6BEE00CD9D60 /* WriteBackMutableSlice.swift */,
-				06E1B3B5247D6BEE00CD9D60 /* Zip.swift */,
 			);
 			path = core;
 			sourceTree = SOURCE_ROOT;
@@ -468,6 +467,7 @@
 				06E1B36C247D6BEE00CD9D60 /* Result.swift */,
 				06E1B3A8247D6BEE00CD9D60 /* ErrorType.swift */,
 				06E1B39E247D6BEE00CD9D60 /* CollectionOfOne.swift */,
+				06E1B3B5247D6BEE00CD9D60 /* Zip.swift */,
 			);
 			path = Done;
 			sourceTree = "<group>";

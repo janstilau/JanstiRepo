@@ -711,23 +711,6 @@ extension Sequence {
         return Array(result)
     }
     
-    /// Returns an array containing, in order, the elements of the sequence
-    /// that satisfy the given predicate.
-    ///
-    /// In this example, `filter(_:)` is used to include only names shorter than
-    /// five characters.
-    ///
-    ///     let cast = ["Vivien", "Marlon", "Kim", "Karl"]
-    ///     let shortNames = cast.filter { $0.count < 5 }
-    ///     print(shortNames)
-    ///     // Prints "["Kim", "Karl"]"
-    ///
-    /// - Parameter isIncluded: A closure that takes an element of the
-    ///   sequence as its argument and returns a Boolean value indicating
-    ///   whether the element should be included in the returned array.
-    /// - Returns: An array of the elements that `isIncluded` allowed.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
     @inlinable
     public __consuming func filter(
         _ isIncluded: (Element) throws -> Bool
@@ -737,6 +720,7 @@ extension Sequence {
     
     /*
      这里面的代码都很简单, 但是, 如果每次写业务的时候, 这些代码又会大量的占用空间.
+     ContiguousArray 是 Array 的实际内存表示. 里面会有这各种对于内存的考虑, 例如写时复制, 动态扩容等等.
      */
     @_transparent
     public func _filter(
@@ -778,37 +762,6 @@ extension Sequence {
         return nil
     }
     
-    /// Calls the given closure on each element in the sequence in the same order
-    /// as a `for`-`in` loop.
-    ///
-    /// The two loops in the following example produce the same output:
-    ///
-    ///     let numberWords = ["one", "two", "three"]
-    ///     for word in numberWords {
-    ///         print(word)
-    ///     }
-    ///     // Prints "one"
-    ///     // Prints "two"
-    ///     // Prints "three"
-    ///
-    ///     numberWords.forEach { word in
-    ///         print(word)
-    ///     }
-    ///     // Same as above
-    ///
-    /// Using the `forEach` method is distinct from a `for`-`in` loop in two
-    /// important ways:
-    ///
-    /// 1. You cannot use a `break` or `continue` statement to exit the current
-    ///    call of the `body` closure or skip subsequent calls.
-    ///    因为 forEach 传过去的是一个闭包啊, 在闭包里面, 不认 break 和 continue 啊.
-    /// 2. Using the `return` statement in the `body` closure will exit only from
-    ///    the current call to `body`, not from any outer scope, and won't skip
-    ///    subsequent calls.
-    ///
-    /// - Parameter body: A closure that takes an element of the sequence as a
-    ///   parameter.
-    /// 相比如 forin, 他没有及时刹车的机制. 在简洁性上, 和 forin 也差不多.
     @inlinable
     public func forEach(
         _ body: (Element) throws -> Void
@@ -820,25 +773,10 @@ extension Sequence {
 }
 
 extension Sequence {
-    /// Returns the first element of the sequence that satisfies the given
-    /// predicate.
-    ///
-    /// The following example uses the `first(where:)` method to find the first
-    /// negative number in an array of integers:
-    ///
-    ///     let numbers = [3, 7, 4, -2, 9, -6, 10, 1]
-    ///     if let firstNegative = numbers.first(where: { $0 < 0 }) {
-    ///         print("The first negative number is \(firstNegative).")
-    ///     }
-    ///     // Prints "The first negative number is -2."
-    ///
-    /// - Parameter predicate: A closure that takes an element of the sequence as
-    ///   its argument and returns a Boolean value indicating whether the
-    ///   element is a match.
-    /// - Returns: The first element of the sequence that satisfies `predicate`,
-    ///   or `nil` if there is no element that satisfies `predicate`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
+    
+    /*
+     就是一个遍历的过程.
+     */
     @inlinable
     public func first(
         where predicate: (Element) throws -> Bool
@@ -1014,51 +952,11 @@ extension Sequence {
         return try DropWhileSequence(self, predicate: predicate)
     }
     
-    /// Returns a sequence, up to the specified maximum length, containing the
-    /// initial elements of the sequence.
-    ///
-    /// If the maximum length exceeds the number of elements in the sequence,
-    /// the result contains all the elements in the sequence.
-    ///
-    ///     let numbers = [1, 2, 3, 4, 5]
-    ///     print(numbers.prefix(2))
-    ///     // Prints "[1, 2]"
-    ///     print(numbers.prefix(10))
-    ///     // Prints "[1, 2, 3, 4, 5]"
-    ///
-    /// - Parameter maxLength: The maximum number of elements to return. The
-    ///   value of `maxLength` must be greater than or equal to zero.
-    /// - Returns: A sequence starting at the beginning of this sequence
-    ///   with at most `maxLength` elements.
-    ///
-    /// - Complexity: O(1)
     @inlinable
     public __consuming func prefix(_ maxLength: Int) -> PrefixSequence<Self> {
         return PrefixSequence(self, maxLength: maxLength)
     }
     
-    /// Returns a sequence containing the initial, consecutive elements that
-    /// satisfy the given predicate.
-    ///
-    /// The following example uses the `prefix(while:)` method to find the
-    /// positive numbers at the beginning of the `numbers` array. Every element
-    /// of `numbers` up to, but not including, the first negative value is
-    /// included in the result.
-    ///
-    ///     let numbers = [3, 7, 4, -2, 9, -6, 10, 1]
-    ///     let positivePrefix = numbers.prefix(while: { $0 > 0 })
-    ///     // positivePrefix == [3, 7, 4]
-    ///
-    /// If `predicate` matches every element in the sequence, the resulting
-    /// sequence contains every element of the sequence.
-    ///
-    /// - Parameter predicate: A closure that takes an element of the sequence as
-    ///   its argument and returns a Boolean value indicating whether the
-    ///   element should be included in the result.
-    /// - Returns: A sequence of the initial, consecutive elements that
-    ///   satisfy `predicate`.
-    ///
-    /// - Complexity: O(*k*), where *k* is the length of the result.
     /*
      这些函数, 都是为了得到自己的一些目的, 算法都很简单, 写出来, 主要是为了复用.
      所以, 我们自己有什么功能, 也是可以直接添加到系统类库中的, 或者系统协议中.
