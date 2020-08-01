@@ -1,15 +1,6 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
+/*
+ 所谓的 Mutable, 是指可以根据 索引, 进行值的替换的集合.
+ */
 /// A collection that supports subscript assignment.
 ///
 /// Collections that conform to `MutableCollection` gain the ability to
@@ -22,7 +13,7 @@
 ///     }
 ///     print(students)
 ///     // Prints "["Ben", "Ivy", "Jordell", "Max"]"
-///
+/// 之所以可以这样做, 是因为 sort 里面, 就是根据索引进行了值的替换.
 /// In addition to changing the value of an individual element, you can also
 /// change the values of a slice of elements in a mutable collection. For
 /// example, you can sort *part* of a mutable collection by calling the
@@ -34,6 +25,8 @@
 ///     print(numbers)
 ///     // Prints "[10, 15, 30, 40, 60, 25, 5, 100]"
 ///
+///
+/// Mutable 指的是, 可以进行值的替换, 但是不可以插入或者删除.
 /// The `MutableCollection` protocol allows changing the values of a
 /// collection's elements but not the length of the collection itself. For
 /// operations that require adding or removing elements, see the
@@ -57,6 +50,7 @@
 ///     // Must be equivalent to:
 ///     a[i] = x
 ///     let y = x
+
 public protocol MutableCollection: Collection
 where SubSequence: MutableCollection
 {
@@ -74,7 +68,7 @@ where SubSequence: MutableCollection
   ///     streets[1] = "Butler"
   ///     print(streets[1])
   ///     // Prints "Butler"
-  ///
+  /// 几乎每一个出现了 Index 的地方, 都要提醒一次, EndIndex 不能直接访问.
   /// You can subscript a collection with any valid index other than the
   /// collection's end index. The end index refers to the position one
   /// past the last element of a collection, so it doesn't correspond with an
@@ -88,6 +82,7 @@ where SubSequence: MutableCollection
   @_borrowed
   override subscript(position: Index) -> Element { get set }
 
+   /// 需要注意的是, 这里说明很清楚, contiguous, 所以这里不能是离散值的组合. 也无法想象, 离散值的替换
   /// Accesses a contiguous subrange of the collection's elements.
   ///
   /// The accessed slice uses the same indices for the same elements as the
@@ -117,7 +112,7 @@ where SubSequence: MutableCollection
   /// Reorders the elements of the collection such that all the elements
   /// that match the given predicate are after all the elements that don't
   /// match.
-  ///
+  /// 这里的描述, 使用了快速排序.
   /// After partitioning a collection, there is a pivot index `p` where
   /// no element before `p` satisfies the `belongsInSecondPartition`
   /// predicate and every element at or after `p` satisfies
@@ -154,6 +149,7 @@ where SubSequence: MutableCollection
     by belongsInSecondPartition: (Element) throws -> Bool
   ) rethrows -> Index
 
+    /// 交换两个 index 的值, 这应该是一个基本方法.
   /// Exchanges the values at the specified indices of the collection.
   ///
   /// Both parameters must be valid indices of the collection and not
@@ -278,6 +274,9 @@ extension MutableCollection {
 /// - Parameters:
 ///   - a: The first value to swap.
 ///   - b: The second value to swap.
+/*
+ 对于, 两个 inout 的值的交换工作, 还是是用了指针.
+ */
 @inlinable
 public func swap<T>(_ a: inout T, _ b: inout T) {
   // Semantically equivalent to (a, b) = (b, a).

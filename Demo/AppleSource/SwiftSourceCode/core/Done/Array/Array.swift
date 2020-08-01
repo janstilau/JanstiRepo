@@ -1,122 +1,305 @@
-//===--- ArraySlice.swift -------------------------------------*- swift -*-===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2018 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-//
-//  - `ArraySlice<Element>` presents an arbitrary subsequence of some
-//    contiguous sequence of `Element`s.
-//
-//===----------------------------------------------------------------------===//
-
-/// A slice of an `Array`, `ContiguousArray`, or `ArraySlice` instance.
+/// An ordered, random-access collection.
 ///
-/// The `ArraySlice` type makes it fast and efficient for you to perform
-/// operations on sections of a larger array. Instead of copying over the
-/// elements of a slice to new storage, an `ArraySlice` instance presents a
-/// view onto the storage of a larger array. And because `ArraySlice`
-/// presents the same interface as `Array`, you can generally perform the
-/// same operations on a slice as you could on the original array.
+/// Array 的随机访问, 是建立在地址可计算的基础上的, 因为 OC 里面, Array 里面存储的都是一个指针, 所以这一点不太重要.
+/// 但是, 作为Swfit 里面, 各种数据不是仅仅作为对象存在的, 所以, 保证每个数据的宽度相等, 是非常非常重要的.
 ///
-/// For more information about using arrays, see `Array` and `ContiguousArray`,
-/// with which `ArraySlice` shares most properties and methods.
+/// Arrays are one of the most commonly used data types in an app. You use
+/// arrays to organize your app's data. Specifically, you use the `Array` type
+/// to hold elements of a single type, the array's `Element` type. An array
+/// can store any kind of elements---from integers to strings to classes.
 ///
-/// Slices Are Views onto Arrays
+/// single type 是 数组非常关键的一点, 它是随机访问的基础.
+///
+/// Swift makes it easy to create arrays in your code using an array literal:
+/// simply surround a comma-separated list of values with square brackets.
+/// Without any other information, Swift creates an array that includes the
+/// specified values, automatically inferring the array's `Element` type. For
+/// example:
+///
+///     // An array of 'Int' elements
+///     let oddNumbers = [1, 3, 5, 7, 9, 11, 13, 15]
+///
+///     // An array of 'String' elements
+///     let streets = ["Albemarle", "Brandywine", "Chesapeake"]
+///
+/// You can create an empty array by specifying the `Element` type of your
+/// array in the declaration. For example:
+///
+///     // Shortened forms are preferred
+///     var emptyDoubles: [Double] = []
+///
+///     // The full type name is also allowed
+///     var emptyFloats: Array<Float> = Array()
+///
+/// If you need an array that is preinitialized with a fixed number of default
+/// values, use the `Array(repeating:count:)` initializer.
+///
+///     var digitCounts = Array(repeating: 0, count: 10)
+///     print(digitCounts)
+///     // Prints "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]"
+///
+/// Accessing Array Values
+/// ======================
+///
+/// forin 这个概念, 是迭代器相关的. 因为 array 是 Collection, 而 Collection 又是一个 sequence. 所以, Swfit 里面, 各种小概念的组合, 很重要.
+/// When you need to perform an operation on all of an array's elements, use a
+/// `for`-`in` loop to iterate through the array's contents.
+///
+///     for street in streets {
+///         print("I don't live on \(street).")
+///     }
+///     // Prints "I don't live on Albemarle."
+///     // Prints "I don't live on Brandywine."
+///     // Prints "I don't live on Chesapeake."
+///
+/// Use the `isEmpty` property to check quickly whether an array has any
+/// elements, or use the `count` property to find the number of elements in
+/// the array.
+///
+///     if oddNumbers.isEmpty {
+///         print("I don't know any odd numbers.")
+///     } else {
+///         print("I know \(oddNumbers.count) odd numbers.")
+///     }
+///     // Prints "I know 8 odd numbers."
+///
+/// Use the `first` and `last` properties for safe access to the value of the
+/// array's first and last elements. If the array is empty, these properties
+/// are `nil`.
+///
+///     if let firstElement = oddNumbers.first, let lastElement = oddNumbers.last {
+///         print(firstElement, lastElement, separator: ", ")
+///     }
+///     // Prints "1, 15"
+///
+///     print(emptyDoubles.first, emptyDoubles.last, separator: ", ")
+///     // Prints "nil, nil"
+///
+/// You can access individual array elements through a subscript. The first
+/// element of a nonempty array is always at index zero. You can subscript an
+/// array with any integer from zero up to, but not including, the count of
+/// the array. Using a negative number or an index equal to or greater than
+/// `count` triggers a runtime error. For example:
+///
+///     print(oddNumbers[0], oddNumbers[3], separator: ", ")
+///     // Prints "1, 7"
+///
+///     print(emptyDoubles[0])
+///     // Triggers runtime error: Index out of range
+///
+/// Adding and Removing Elements
 /// ============================
 ///
-/// For example, suppose you have an array holding the number of absences
-/// from each class during a session.
+/// Suppose you need to store a list of the names of students that are signed
+/// up for a class you're teaching. During the registration period, you need
+/// to add and remove names as students add and drop the class.
 ///
-///     let absences = [0, 2, 0, 4, 0, 3, 1, 0]
+///     var students = ["Ben", "Ivy", "Jordell"]
 ///
-/// You want to compare the absences in the first half of the session with
-/// those in the second half. To do so, start by creating two slices of the
-/// `absences` array.
+/// To add single elements to the end of an array, use the `append(_:)` method.
+/// Add multiple elements at the same time by passing another array or a
+/// sequence of any kind to the `append(contentsOf:)` method.
 ///
-///     let midpoint = absences.count / 2
+///     students.append("Maxime")
+///     students.append(contentsOf: ["Shakia", "William"])
+///     // ["Ben", "Ivy", "Jordell", "Maxime", "Shakia", "William"]
 ///
-///     let firstHalf = absences[..<midpoint]
-///     let secondHalf = absences[midpoint...]
+/// You can add new elements in the middle of an array by using the
+/// `insert(_:at:)` method for single elements and by using
+/// `insert(contentsOf:at:)` to insert multiple elements from another
+/// collection or array literal. The elements at that index and later indices
+/// are shifted back to make room.
 ///
-/// Neither the `firstHalf` nor `secondHalf` slices allocate any new storage
-/// of their own. Instead, each presents a view onto the storage of the
-/// `absences` array.
+///     students.insert("Liam", at: 3)
+///     // ["Ben", "Ivy", "Jordell", "Liam", "Maxime", "Shakia", "William"]
 ///
-/// You can call any method on the slices that you might have called on the
-/// `absences` array. To learn which half had more absences, use the
-/// `reduce(_:_:)` method to calculate each sum.
+/// To remove elements from an array, use the `remove(at:)`,
+/// `removeSubrange(_:)`, and `removeLast()` methods.
 ///
-///     let firstHalfSum = firstHalf.reduce(0, +)
-///     let secondHalfSum = secondHalf.reduce(0, +)
+///     // Ben's family is moving to another state
+///     students.remove(at: 0)
+///     // ["Ivy", "Jordell", "Liam", "Maxime", "Shakia", "William"]
 ///
-///     if firstHalfSum > secondHalfSum {
-///         print("More absences in the first half.")
-///     } else {
-///         print("More absences in the second half.")
+///     // William is signing up for a different class
+///     students.removeLast()
+///     // ["Ivy", "Jordell", "Liam", "Maxime", "Shakia"]
+///
+/// You can replace an existing element with a new value by assigning the new
+/// value to the subscript.
+///
+///     if let i = students.firstIndex(of: "Maxime") {
+///         students[i] = "Max"
 ///     }
-///     // Prints "More absences in the first half."
+///     // ["Ivy", "Jordell", "Liam", "Max", "Shakia"]
 ///
-/// - Important: Long-term storage of `ArraySlice` instances is discouraged. A
-///   slice holds a reference to the entire storage of a larger array, not
-///   just to the portion it presents, even after the original array's lifetime
-///   ends. Long-term storage of a slice may therefore prolong the lifetime of
-///   elements that are no longer otherwise accessible, which can appear to be
-///   memory and object leakage.
+/// Growing the Size of an Array
+/// ----------------------------
 ///
-/// Slices Maintain Indices
-/// =======================
 ///
-/// Unlike `Array` and `ContiguousArray`, the starting index for an
-/// `ArraySlice` instance isn't always zero. Slices maintain the same
-/// indices of the larger array for the same elements, so the starting
-/// index of a slice depends on how it was created, letting you perform
-/// index-based operations on either a full array or a slice.
+///  这里讲的是内存的动态扩容的问题.
+/// Every array reserves a specific amount of memory to hold its contents. When
+/// you add elements to an array and that array begins to exceed its reserved
+/// capacity, the array allocates a larger region of memory and copies its
+/// elements into the new storage. The new storage is a multiple of the old
+/// storage's size. This exponential growth strategy means that appending an
+/// element happens in constant time, averaging the performance of many append
+/// operations. Append operations that trigger reallocation have a performance
+/// cost, but they occur less and less often as the array grows larger.
 ///
-/// Sharing indices between collections and their subsequences is an important
-/// part of the design of Swift's collection algorithms. Suppose you are
-/// tasked with finding the first two days with absences in the session. To
-/// find the indices of the two days in question, follow these steps:
+/// If you know approximately how many elements you will need to store, use the
+/// `reserveCapacity(_:)` method before appending to the array to avoid
+/// intermediate reallocations. Use the `capacity` and `count` properties to
+/// determine how many more elements the array can store without allocating
+/// larger storage.
 ///
-/// 1) Call `firstIndex(where:)` to find the index of the first element in the
-///    `absences` array that is greater than zero.
-/// 2) Create a slice of the `absences` array starting after the index found in
-///    step 1.
-/// 3) Call `firstIndex(where:)` again, this time on the slice created in step
-///    2. Where in some languages you might pass a starting index into an
-///    `indexOf` method to find the second day, in Swift you perform the same
-///    operation on a slice of the original array.
-/// 4) Print the results using the indices found in steps 1 and 3 on the
-///    original `absences` array.
+/// For arrays of most `Element` types, this storage is a contiguous block of
+/// memory. For arrays with an `Element` type that is a class or `@objc`
+/// protocol type, this storage can be a contiguous block of memory or an
+/// instance of `NSArray`. Because any arbitrary subclass of `NSArray` can
+/// become an `Array`, there are no guarantees about representation or
+/// efficiency in this case.
 ///
-/// Here's an implementation of those steps:
 ///
-///     if let i = absences.firstIndex(where: { $0 > 0 }) {                 // 1
-///         let absencesAfterFirst = absences[(i + 1)...]                   // 2
-///         if let j = absencesAfterFirst.firstIndex(where: { $0 > 0 }) {   // 3
-///             print("The first day with absences had \(absences[i]).")    // 4
-///             print("The second day with absences had \(absences[j]).")
-///         }
+/// Modifying Copies of Arrays
+/// 这里讲的是, 写时复制的问题.
+/// ==========================
+///
+/// Each array has an independent value that includes the values of all of its
+/// elements. For simple types such as integers and other structures, this
+/// means that when you change a value in one array, the value of that element
+/// does not change in any copies of the array. For example:
+///
+///     var numbers = [1, 2, 3, 4, 5]
+///     var numbersCopy = numbers
+///     numbers[0] = 100
+///     print(numbers)
+///     // Prints "[100, 2, 3, 4, 5]"
+///     print(numbersCopy)
+///     // Prints "[1, 2, 3, 4, 5]"
+///
+/// If the elements in an array are instances of a class, the semantics are the
+/// same, though they might appear different at first. In this case, the
+/// values stored in the array are references to objects that live outside the
+/// array. If you change a reference to an object in one array, only that
+/// array has a reference to the new object. However, if two arrays contain
+/// references to the same object, you can observe changes to that object's
+/// properties from both arrays. For example:
+/// 这里是老生常谈的值语义和引用语义的差别的问题.
+///     // An integer type with reference semantics
+///     class IntegerReference {
+///         var value = 10
 ///     }
-///     // Prints "The first day with absences had 2."
-///     // Prints "The second day with absences had 4."
+///     var firstIntegers = [IntegerReference(), IntegerReference()]
+///     var secondIntegers = firstIntegers
 ///
-/// In particular, note that `j`, the index of the second day with absences,
-/// was found in a slice of the original array and then used to access a value
-/// in the original `absences` array itself.
+///     // Modifications to an instance are visible from either array
+///     firstIntegers[0].value = 100
+///     print(secondIntegers[0].value)
+///     // Prints "100"
 ///
-/// - Note: To safely reference the starting and ending indices of a slice,
-///   always use the `startIndex` and `endIndex` properties instead of
-///   specific values.
+///     // Replacements, additions, and removals are still visible
+///     // only in the modified array
+///     firstIntegers[0] = IntegerReference()
+///     print(firstIntegers[0].value)
+///     // Prints "10"
+///     print(secondIntegers[0].value)
+///     // Prints "100"
+///
+/// Arrays, like all variable-size collections in the standard library, use
+/// copy-on-write optimization. Multiple copies of an array share the same
+/// storage until you modify one of the copies. When that happens, the array
+/// being modified replaces its storage with a uniquely owned copy of itself,
+/// which is then modified in place. Optimizations are sometimes applied that
+/// can reduce the amount of copying.
+///
+/// This means that if an array is sharing storage with other copies, the first
+/// mutating operation on that array incurs the cost of copying the array. An
+/// array that is the sole owner of its storage can perform mutating
+/// operations in place.
+/// 如果只有一个引用者, 那么其实就不会发生写时复制的工作.
+///
+/// In the example below, a `numbers` array is created along with two copies
+/// that share the same storage. When the original `numbers` array is
+/// modified, it makes a unique copy of its storage before making the
+/// modification. Further modifications to `numbers` are made in place, while
+/// the two copies continue to share the original storage.
+///
+///     var numbers = [1, 2, 3, 4, 5]
+///     var firstCopy = numbers
+///     var secondCopy = numbers
+///
+///     // The storage for 'numbers' is copied here
+///     numbers[0] = 100
+///     numbers[1] = 200
+///     numbers[2] = 300
+///     // 'numbers' is [100, 200, 300, 4, 5]
+///     // 'firstCopy' and 'secondCopy' are [1, 2, 3, 4, 5]
+///
+/// Bridging Between Array and NSArray
+/// ==================================
+///
+/// When you need to access APIs that require data in an `NSArray` instance
+/// instead of `Array`, use the type-cast operator (`as`) to bridge your
+/// instance. For bridging to be possible, the `Element` type of your array
+/// must be a class, an `@objc` protocol (a protocol imported from Objective-C
+/// or marked with the `@objc` attribute), or a type that bridges to a
+/// Foundation type.
+///
+/// The following example shows how you can bridge an `Array` instance to
+/// `NSArray` to use the `write(to:atomically:)` method. In this example, the
+/// `colors` array can be bridged to `NSArray` because the `colors` array's
+/// `String` elements bridge to `NSString`. The compiler prevents bridging the
+/// `moreColors` array, on the other hand, because its `Element` type is
+/// `Optional<String>`, which does *not* bridge to a Foundation type.
+///
+///     let colors = ["periwinkle", "rose", "moss"]
+///     let moreColors: [String?] = ["ochre", "pine"]
+///
+///     let url = NSURL(fileURLWithPath: "names.plist")
+///     (colors as NSArray).write(to: url, atomically: true)
+///     // true
+///
+///     (moreColors as NSArray).write(to: url, atomically: true)
+///     // error: cannot convert value of type '[String?]' to type 'NSArray'
+///
+/// Bridging from `Array` to `NSArray` takes O(1) time and O(1) space if the
+/// array's elements are already instances of a class or an `@objc` protocol;
+/// otherwise, it takes O(*n*) time and space.
+///
+/// When the destination array's element type is a class or an `@objc`
+/// protocol, bridging from `NSArray` to `Array` first calls the `copy(with:)`
+/// (`- copyWithZone:` in Objective-C) method on the array to get an immutable
+/// copy and then performs additional Swift bookkeeping work that takes O(1)
+/// time. For instances of `NSArray` that are already immutable, `copy(with:)`
+/// usually returns the same array in O(1) time; otherwise, the copying
+/// performance is unspecified. If `copy(with:)` returns the same array, the
+/// instances of `NSArray` and `Array` share storage using the same
+/// copy-on-write optimization that is used when two instances of `Array`
+/// share storage.
+///
+/// When the destination array's element type is a nonclass type that bridges
+/// to a Foundation type, bridging from `NSArray` to `Array` performs a
+/// bridging copy of the elements to contiguous storage in O(*n*) time. For
+/// example, bridging from `NSArray` to `Array<Int>` performs such a copy. No
+/// further bridging is required when accessing elements of the `Array`
+/// instance.
+///
+/// - Note: The `ContiguousArray` and `ArraySlice` types are not bridged;
+///   instances of those types always have a contiguous block of memory as
+///   their storage.
+
+/*
+ Swfit 里面, 真实的存储空间, 建立在 _ContiguousArrayBuffer 这个类中.
+ */
 @frozen
-public struct ArraySlice<Element>: _DestructorSafeContainer {
+public struct Array<Element>: _DestructorSafeContainer {
+  #if _runtime(_ObjC)
   @usableFromInline
-  internal typealias _Buffer = _SliceBuffer<Element>
+  internal typealias _Buffer = _ArrayBuffer<Element>
+  #else
+  @usableFromInline
+  internal typealias _Buffer = _ContiguousArrayBuffer<Element>
+  #endif
 
   @usableFromInline
   internal var _buffer: _Buffer
@@ -127,17 +310,13 @@ public struct ArraySlice<Element>: _DestructorSafeContainer {
   internal init(_buffer: _Buffer) {
     self._buffer = _buffer
   }
-
-  /// Initialization from an existing buffer does not have "array.init"
-  /// semantics because the caller may retain an alias to buffer.
-  @inlinable
-  internal init(_buffer buffer: _ContiguousArrayBuffer<Element>) {
-    self.init(_buffer: _Buffer(_buffer: buffer, shiftedToStartIndex: 0))
-  }
 }
 
 //===--- private helpers---------------------------------------------------===//
-extension ArraySlice {
+/*
+ 以下, 对于 Array 的操作, 都转移到了 Buffer 里面.
+ */
+extension Array {
   /// Returns `true` if the array is native and does not need a deferred
   /// type check.  May be hoisted by the optimizer, which means its
   /// results may be stale by the time they are used if there is an
@@ -161,6 +340,9 @@ extension ArraySlice {
     return _buffer.capacity
   }
 
+    /*
+     在任何 modify 方法之前, 都会调用该方法. 这里, 判断 buffer 是不是唯一的引用, 不是的话, 就进行拷贝的工作.
+     */
   @inlinable
   @_semantics("array.make_mutable")
   internal mutating func _makeMutableAndUnique() {
@@ -174,7 +356,7 @@ extension ArraySlice {
   @inlinable
   @inline(__always)
   internal func _checkSubscript_native(_ index: Int) {
-    _buffer._checkValidSubscript(index)
+    _ = _checkSubscript(index, wasNativeTypeChecked: true)
   }
 
   /// Check that the given `index` is valid for subscripting, i.e.
@@ -186,7 +368,8 @@ extension ArraySlice {
     _ index: Int, wasNativeTypeChecked: Bool
   ) -> _DependenceToken {
 #if _runtime(_ObjC)
-    _buffer._checkValidSubscript(index)
+    _buffer._checkInoutAndNativeTypeCheckedBounds(
+      index, wasNativeTypeChecked: wasNativeTypeChecked)
 #else
     _buffer._checkValidSubscript(index)
 #endif
@@ -194,13 +377,20 @@ extension ArraySlice {
   }
 
   /// Check that the specified `index` is valid, i.e. `0 ≤ index ≤ count`.
+    /*
+     容器类的安全操作, 如果越界, 就抛出异常了.
+     这就是容器类, 为什么会越界崩溃的原因.
+     */
   @inlinable
   @_semantics("array.check_index")
   internal func _checkIndex(_ index: Int) {
-    _precondition(index <= endIndex, "ArraySlice index is out of range")
-    _precondition(index >= startIndex, "ArraySlice index is out of range (before startIndex)")
+    _precondition(index <= endIndex, "Array index is out of range")
+    _precondition(index >= startIndex, "Negative Array index is out of range")
   }
 
+    /*
+     这里, 不太明白这些参数的作用.
+     */
   @_semantics("array.get_element")
   @inlinable // FIXME(inline-always)
   @inline(__always)
@@ -210,13 +400,17 @@ extension ArraySlice {
     wasNativeTypeChecked: Bool,
     matchingSubscriptCheck: _DependenceToken
   ) -> Element {
-#if false
+#if _runtime(_ObjC)
     return _buffer.getElement(index, wasNativeTypeChecked: wasNativeTypeChecked)
 #else
     return _buffer.getElement(index)
 #endif
   }
 
+    /*
+     _buffer.subscriptBaseAddress 的返回值类型是 UnsafeMutablePointer<Element>,
+     所以, + Index, 返回的新的 pointer, 是会考虑 element 的长度的.
+     */
   @inlinable
   @_semantics("array.get_element_address")
   internal func _getElementAddress(_ index: Int) -> UnsafeMutablePointer<Element> {
@@ -224,7 +418,7 @@ extension ArraySlice {
   }
 }
 
-extension ArraySlice: _ArrayProtocol {
+extension Array: _ArrayProtocol {
   /// The total number of elements that the array can contain without
   /// allocating new storage.
   ///
@@ -250,6 +444,9 @@ extension ArraySlice: _ArrayProtocol {
   ///     numbers.append(contentsOf: stride(from: 60, through: 100, by: 10))
   ///     // numbers.count == 10
   ///     // numbers.capacity == 12
+    /*
+     这里, 增加了一层抽象, _getCapacity 会根据 buffer 的 特性, 进行不同的访问.
+     */
   @inlinable
   public var capacity: Int {
     return _getCapacity()
@@ -259,7 +456,11 @@ extension ArraySlice: _ArrayProtocol {
   @inlinable
   public // @testable
   var _owner: AnyObject? {
-    return _buffer.owner
+    @inlinable // FIXME(inline-always)
+    @inline(__always)
+    get {
+      return _buffer.owner      
+    }
   }
 
   /// If the elements are stored contiguously, a pointer to the first
@@ -269,19 +470,13 @@ extension ArraySlice: _ArrayProtocol {
     @inline(__always) // FIXME(TODO: JIRA): Hack around test failure
     get { return _buffer.firstElementAddressIfContiguous }
   }
-
-  @inlinable
-  internal var _baseAddress: UnsafeMutablePointer<Element> {
-    return _buffer.firstElementAddress
-  }
 }
 
-extension ArraySlice: RandomAccessCollection, MutableCollection {
+/*
+ 对于随机访问, 值可变的支持.
+ */
+extension Array: RandomAccessCollection, MutableCollection {
   /// The index type for arrays, `Int`.
-  ///
-  /// `ArraySlice` instances are not always indexed from zero. Use `startIndex`
-  /// and `endIndex` as the bounds for any element access, instead of `0` and
-  /// `count`.
   public typealias Index = Int
 
   /// The type that represents the indices that are valid for subscripting an
@@ -289,18 +484,15 @@ extension ArraySlice: RandomAccessCollection, MutableCollection {
   public typealias Indices = Range<Int>
 
   /// The type that allows iteration over an array's elements.
-  public typealias Iterator = IndexingIterator<ArraySlice>
+  public typealias Iterator = IndexingIterator<Array>
 
   /// The position of the first element in a nonempty array.
   ///
-  /// `ArraySlice` instances are not always indexed from zero. Use `startIndex`
-  /// and `endIndex` as the bounds for any element access, instead of `0` and
-  /// `count`.
-  ///
-  /// If the array is empty, `startIndex` is equal to `endIndex`.
+  /// For an instance of `Array`, `startIndex` is always zero. If the array
+  /// is empty, `startIndex` is equal to `endIndex`.
   @inlinable
   public var startIndex: Int {
-    return _buffer.startIndex
+    return 0
   }
 
   /// The array's "past the end" position---that is, the position one greater
@@ -320,7 +512,10 @@ extension ArraySlice: RandomAccessCollection, MutableCollection {
   /// If the array is empty, `endIndex` is equal to `startIndex`.
   @inlinable
   public var endIndex: Int {
-    return _buffer.endIndex
+    @inlinable
+    get {
+      return _getCount()
+    }
   }
 
   /// Returns the position immediately after the given index.
@@ -582,7 +777,7 @@ extension ArraySlice: RandomAccessCollection, MutableCollection {
       }
     }
   }
-
+  
   /// The number of elements in the array.
   @inlinable
   public var count: Int {
@@ -590,28 +785,28 @@ extension ArraySlice: RandomAccessCollection, MutableCollection {
   }
 }
 
-extension ArraySlice: ExpressibleByArrayLiteral {
+extension Array: ExpressibleByArrayLiteral {
+  // Optimized implementation for Array
   /// Creates an array from the given array literal.
   ///
-  /// Do not call this initializer directly. It is used by the compiler when
-  /// you use an array literal. Instead, create a new array by using an array
-  /// literal as its value. To do this, enclose a comma-separated list of
+  /// Do not call this initializer directly. It is used by the compiler
+  /// when you use an array literal. Instead, create a new array by using an
+  /// array literal as its value. To do this, enclose a comma-separated list of
   /// values in square brackets.
   ///
-  /// Here, an array of strings is created from an array literal holding only
-  /// strings:
+  /// Here, an array of strings is created from an array literal holding
+  /// only strings.
   ///
-  ///     let ingredients: ArraySlice =
-  ///           ["cocoa beans", "sugar", "cocoa butter", "salt"]
+  ///     let ingredients = ["cocoa beans", "sugar", "cocoa butter", "salt"]
   ///
   /// - Parameter elements: A variadic list of elements of the new array.
   @inlinable
   public init(arrayLiteral elements: Element...) {
-    self.init(_buffer: ContiguousArray(elements)._buffer)
+    self = elements
   }
 }
 
-extension ArraySlice: RangeReplaceableCollection {
+extension Array: RangeReplaceableCollection {
   /// Creates a new, empty array.
   ///
   /// This is equivalent to initializing with an empty array literal.
@@ -625,7 +820,7 @@ extension ArraySlice: RangeReplaceableCollection {
   ///     print(emptyArray.isEmpty)
   ///     // Prints "true"
   @inlinable
-  @_semantics("array.init")
+  @_semantics("array.init.empty")
   public init() {
     _buffer = _Buffer()
   }
@@ -665,10 +860,11 @@ extension ArraySlice: RangeReplaceableCollection {
   ///
   /// - Parameter s: The sequence of elements to turn into an array.
   @inlinable
-  public init<S: Sequence>(_ s: S)
-    where S.Element == Element {
-
-    self.init(_buffer: s._copyToContiguousArray()._buffer)
+  public init<S: Sequence>(_ s: S) where S.Element == Element {
+    self = Array(
+      _buffer: _Buffer(
+        _buffer: s._copyToContiguousArray()._buffer,
+        shiftedToStartIndex: 0))
   }
 
   /// Creates a new array containing the specified number of a single, repeated
@@ -689,7 +885,7 @@ extension ArraySlice: RangeReplaceableCollection {
   @_semantics("array.init")
   public init(repeating repeatedValue: Element, count: Int) {
     var p: UnsafeMutablePointer<Element>
-    (self, p) = ArraySlice._allocateUninitialized(count)
+    (self, p) = Array._allocateUninitialized(count)
     for _ in 0..<count {
       p.initialize(to: repeatedValue)
       p += 1
@@ -706,10 +902,10 @@ extension ArraySlice: RangeReplaceableCollection {
     return _Buffer(_buffer: newBuffer, shiftedToStartIndex: 0)
   }
 
-  /// Construct a ArraySlice of `count` uninitialized elements.
+  /// Construct an Array of `count` uninitialized elements.
   @inlinable
   internal init(_uninitializedCount count: Int) {
-    _precondition(count >= 0, "Can't construct ArraySlice with count < 0")
+    _precondition(count >= 0, "Can't construct Array with count < 0")
     // Note: Sinking this constructor into an else branch below causes an extra
     // Retain/Release.
     _buffer = _Buffer()
@@ -717,7 +913,7 @@ extension ArraySlice: RangeReplaceableCollection {
       // Creating a buffer instead of calling reserveCapacity saves doing an
       // unnecessary uniqueness check. We disable inlining here to curb code
       // growth.
-      _buffer = ArraySlice._allocateBufferUninitialized(minimumCapacity: count)
+      _buffer = Array._allocateBufferUninitialized(minimumCapacity: count)
       _buffer.count = count
     }
     // Can't store count here because the buffer might be pointing to the
@@ -725,17 +921,49 @@ extension ArraySlice: RangeReplaceableCollection {
   }
 
   /// Entry point for `Array` literal construction; builds and returns
-  /// a ArraySlice of `count` uninitialized elements.
+  /// an Array of `count` uninitialized elements.
   @inlinable
   @_semantics("array.uninitialized")
   internal static func _allocateUninitialized(
     _ count: Int
-  ) -> (ArraySlice, UnsafeMutablePointer<Element>) {
-    let result = ArraySlice(_uninitializedCount: count)
+  ) -> (Array, UnsafeMutablePointer<Element>) {
+    let result = Array(_uninitializedCount: count)
     return (result, result._buffer.firstElementAddress)
   }
 
+
+  /// Returns an Array of `count` uninitialized elements using the
+  /// given `storage`, and a pointer to uninitialized memory for the
+  /// first element.
+  ///
+  /// - Precondition: `storage is _ContiguousArrayStorage`.
+  @inlinable
+  @_semantics("array.uninitialized")
+  internal static func _adoptStorage(
+    _ storage: __owned _ContiguousArrayStorage<Element>, count: Int
+  ) -> (Array, UnsafeMutablePointer<Element>) {
+
+    let innerBuffer = _ContiguousArrayBuffer<Element>(
+      count: count,
+      storage: storage)
+
+    return (
+      Array(
+        _buffer: _Buffer(_buffer: innerBuffer, shiftedToStartIndex: 0)),
+        innerBuffer.firstElementAddress)
+  }
+
+  /// Entry point for aborting literal construction: deallocates
+  /// an Array containing only uninitialized elements.
+  @inlinable
+  internal mutating func _deallocateUninitialized() {
+    // Set the count to zero and just release as normal.
+    // Somewhat of a hack.
+    _buffer.count = 0
+  }
+
   //===--- basic mutations ------------------------------------------------===//
+
 
   /// Reserves enough space to store the specified number of elements.
   ///
@@ -831,10 +1059,12 @@ extension ArraySlice: RangeReplaceableCollection {
     let newCount = oldCount + 1
     var newBuffer = _buffer._forceCreateUniqueMutableBuffer(
       countForNewBuffer: oldCount, minNewCapacity: newCount)
-    _buffer._arrayOutOfPlaceUpdate(
-      &newBuffer, oldCount, 0)
+    _buffer._arrayOutOfPlaceUpdate(&newBuffer, oldCount, 0)
   }
 
+    /*
+     * 这里, 就是判断是不是唯一索引, 然后进行 copy 操作.
+     */
   @inlinable
   @_semantics("array.make_mutable")
   internal mutating func _makeUniqueAndReserveCapacityIfNotUnique() {
@@ -953,7 +1183,10 @@ extension ArraySlice: RangeReplaceableCollection {
       "newElements.underestimatedCount was an overestimate")
     // can't check for overflow as sequences can underestimate
 
-    _buffer.count += writtenCount
+    // This check prevents a data race writting to _swiftEmptyArrayStorage
+    if writtenCount > 0 {
+      _buffer.count += writtenCount
+    }
 
     if writtenUpTo == buf.endIndex {
       // there may be elements that didn't fit in the existing buffer,
@@ -979,20 +1212,15 @@ extension ArraySlice: RangeReplaceableCollection {
 
   @inlinable
   public mutating func _customRemoveLast() -> Element? {
-    _precondition(count > 0, "Can't removeLast from an empty ArraySlice")
-    // FIXME(performance): if `self` is uniquely referenced, we should remove
-    // the element as shown below (this will deallocate the element and
-    // decrease memory use).  If `self` is not uniquely referenced, the code
-    // below will make a copy of the storage, which is wasteful.  Instead, we
-    // should just shrink the view without allocating new storage.
-    let i = endIndex
-    // We don't check for overflow in `i - 1` because `i` is known to be
-    // positive.
-    let result = self[i &- 1]
-    self.replaceSubrange((i &- 1)..<i, with: EmptyCollection())
-    return result
+    let newCount = _getCount() - 1
+    _precondition(newCount >= 0, "Can't removeLast from an empty Array")
+    _makeUniqueAndReserveCapacityIfNotUnique()
+    let pointer = (_buffer.firstElementAddress + newCount)
+    let element = pointer.move()
+    _buffer.count = newCount
+    return element
   }
-  
+
   /// Removes and returns the element at the specified position.
   ///
   /// All the elements following the specified position are moved up to
@@ -1011,11 +1239,16 @@ extension ArraySlice: RangeReplaceableCollection {
   @inlinable
   @discardableResult
   public mutating func remove(at index: Int) -> Element {
-    let result = self[index]
-    self.replaceSubrange(index..<(index + 1), with: EmptyCollection())
+    _precondition(index < endIndex, "Index out of range")
+    _precondition(index >= startIndex, "Index out of range")
+    _makeUniqueAndReserveCapacityIfNotUnique()
+    let newCount = _getCount() - 1
+    let pointer = (_buffer.firstElementAddress + index)
+    let result = pointer.move()
+    pointer.moveInitialize(from: pointer + 1, count: newCount - index)
+    _buffer.count = newCount
     return result
   }
-
 
   /// Inserts a new element at the specified position.
   ///
@@ -1101,7 +1334,26 @@ extension ArraySlice: RangeReplaceableCollection {
   }
 }
 
-extension ArraySlice: CustomReflectable {
+// Implementations of + and += for same-type arrays. This combined
+// with the operator declarations for these operators designating this
+// type as a place to prefer this operator help the expression type
+// checker speed up cases where there is a large number of uses of the
+// operator in the same expression.
+extension Array {
+  @inlinable
+  public static func + (lhs: Array, rhs: Array) -> Array {
+    var lhs = lhs
+    lhs.append(contentsOf: rhs)
+    return lhs
+  }
+
+  @inlinable
+  public static func += (lhs: inout Array, rhs: Array) {
+    lhs.append(contentsOf: rhs)
+  }
+}
+
+extension Array: CustomReflectable {
   /// A mirror that reflects the array.
   public var customMirror: Mirror {
     return Mirror(
@@ -1111,7 +1363,7 @@ extension ArraySlice: CustomReflectable {
   }
 }
 
-extension ArraySlice: CustomStringConvertible, CustomDebugStringConvertible {
+extension Array: CustomStringConvertible, CustomDebugStringConvertible {
   /// A textual representation of the array and its elements.
   public var description: String {
     return _makeCollectionDescription()
@@ -1120,11 +1372,12 @@ extension ArraySlice: CustomStringConvertible, CustomDebugStringConvertible {
   /// A textual representation of the array and its elements, suitable for
   /// debugging.
   public var debugDescription: String {
-    return _makeCollectionDescription(withTypeName: "ArraySlice")
+    // Always show sugared representation for Arrays.
+    return _makeCollectionDescription()
   }
 }
 
-extension ArraySlice {
+extension Array {
   @usableFromInline @_transparent
   internal func _cPointerArgs() -> (AnyObject?, UnsafeRawPointer?) {
     let p = _baseAddressIfContiguous
@@ -1136,7 +1389,75 @@ extension ArraySlice {
   }
 }
 
-extension ArraySlice {
+extension Array {
+  /// Implementation for Array(unsafeUninitializedCapacity:initializingWith:)
+  /// and ContiguousArray(unsafeUninitializedCapacity:initializingWith:)
+  @inlinable
+  internal init(
+    _unsafeUninitializedCapacity: Int,
+    initializingWith initializer: (
+      _ buffer: inout UnsafeMutableBufferPointer<Element>,
+      _ initializedCount: inout Int) throws -> Void
+  ) rethrows {
+    var firstElementAddress: UnsafeMutablePointer<Element>
+    (self, firstElementAddress) =
+      Array._allocateUninitialized(_unsafeUninitializedCapacity)
+
+    var initializedCount = 0
+    var buffer = UnsafeMutableBufferPointer<Element>(
+      start: firstElementAddress, count: _unsafeUninitializedCapacity)
+    defer {
+      // Update self.count even if initializer throws an error.
+      _precondition(
+        initializedCount <= _unsafeUninitializedCapacity,
+        "Initialized count set to greater than specified capacity."
+      )
+      _precondition(
+        buffer.baseAddress == firstElementAddress,
+        "Can't reassign buffer in Array(unsafeUninitializedCapacity:initializingWith:)"
+      )
+      self._buffer.count = initializedCount
+    }
+    try initializer(&buffer, &initializedCount)
+  }
+
+  /// Creates an array with the specified capacity, then calls the given
+  /// closure with a buffer covering the array's uninitialized memory.
+  ///
+  /// Inside the closure, set the `initializedCount` parameter to the number of
+  /// elements that are initialized by the closure. The memory in the range
+  /// `buffer[0..<initializedCount]` must be initialized at the end of the
+  /// closure's execution, and the memory in the range
+  /// `buffer[initializedCount...]` must be uninitialized. This postcondition
+  /// must hold even if the `initializer` closure throws an error.
+  ///
+  /// - Note: While the resulting array may have a capacity larger than the
+  ///   requested amount, the buffer passed to the closure will cover exactly
+  ///   the requested number of elements.
+  ///
+  /// - Parameters:
+  ///   - unsafeUninitializedCapacity: The number of elements to allocate
+  ///     space for in the new array.
+  ///   - initializer: A closure that initializes elements and sets the count
+  ///     of the new array.
+  ///     - Parameters:
+  ///       - buffer: A buffer covering uninitialized memory with room for the
+  ///         specified number of of elements.
+  ///       - initializedCount: The count of initialized elements in the array,
+  ///         which begins as zero. Set `initializedCount` to the number of
+  ///         elements you initialize.
+  @_alwaysEmitIntoClient @inlinable
+  public init(
+    unsafeUninitializedCapacity: Int,
+    initializingWith initializer: (
+      _ buffer: inout UnsafeMutableBufferPointer<Element>,
+      _ initializedCount: inout Int) throws -> Void
+  ) rethrows {
+    self = try Array(
+      _unsafeUninitializedCapacity: unsafeUninitializedCapacity,
+      initializingWith: initializer)
+  }
+
   /// Calls a closure with a pointer to the array's contiguous storage.
   ///
   /// Often, the optimizer can eliminate bounds checks within an array
@@ -1161,7 +1482,7 @@ extension ArraySlice {
   /// pointer for later use.
   ///
   /// - Parameter body: A closure with an `UnsafeBufferPointer` parameter that
-  ///   points to the contiguous storage for the array.  If
+  ///   points to the contiguous storage for the array.  If no such storage exists, it is created. If
   ///   `body` has a return value, that value is also used as the return value
   ///   for the `withUnsafeBufferPointer(_:)` method. The pointer argument is
   ///   valid only for the duration of the method's execution.
@@ -1204,7 +1525,7 @@ extension ArraySlice {
   ///
   /// - Parameter body: A closure with an `UnsafeMutableBufferPointer`
   ///   parameter that points to the contiguous storage for the array.
-  ///    If `body` has a return value, that value is also
+  ///    If no such storage exists, it is created. If `body` has a return value, that value is also
   ///   used as the return value for the `withUnsafeMutableBufferPointer(_:)`
   ///   method. The pointer argument is valid only for the duration of the
   ///   method's execution.
@@ -1231,7 +1552,7 @@ extension ArraySlice {
     // escape via the address of self in the closure will therefore escape the
     // empty array.
 
-    var work = ArraySlice()
+    var work = Array()
     (work, self) = (self, work)
 
     // Create an UnsafeBufferPointer over work that we can pass to body
@@ -1244,7 +1565,7 @@ extension ArraySlice {
       _precondition(
         inoutBufferPointer.baseAddress == pointer &&
         inoutBufferPointer.count == count,
-        "ArraySlice withUnsafeMutableBufferPointer: replacing the buffer is not allowed")
+        "Array withUnsafeMutableBufferPointer: replacing the buffer is not allowed")
 
       (work, self) = (self, work)
     }
@@ -1285,7 +1606,7 @@ extension ArraySlice {
   }
 }
 
-extension ArraySlice {
+extension Array {
   /// Replaces a range of elements with the elements in the specified
   /// collection.
   ///
@@ -1326,11 +1647,11 @@ extension ArraySlice {
     _ subrange: Range<Int>,
     with newElements: __owned C
   ) where C: Collection, C.Element == Element {
-    _precondition(subrange.lowerBound >= _buffer.startIndex,
-      "ArraySlice replace: subrange start is before the startIndex")
+    _precondition(subrange.lowerBound >= self._buffer.startIndex,
+      "Array replace: subrange start is negative")
 
     _precondition(subrange.upperBound <= _buffer.endIndex,
-      "ArraySlice replace: subrange extends past the end")
+      "Array replace: subrange extends past the end")
 
     let oldCount = _buffer.count
     let eraseCount = subrange.count
@@ -1348,7 +1669,7 @@ extension ArraySlice {
   }
 }
 
-extension ArraySlice: Equatable where Element: Equatable {
+extension Array: Equatable where Element: Equatable {
   /// Returns a Boolean value indicating whether two arrays contain the same
   /// elements in the same order.
   ///
@@ -1359,7 +1680,7 @@ extension ArraySlice: Equatable where Element: Equatable {
   ///   - lhs: An array to compare.
   ///   - rhs: Another array to compare.
   @inlinable
-  public static func ==(lhs: ArraySlice<Element>, rhs: ArraySlice<Element>) -> Bool {
+  public static func ==(lhs: Array<Element>, rhs: Array<Element>) -> Bool {
     let lhsCount = lhs.count
     if lhsCount != rhs.count {
       return false
@@ -1371,24 +1692,21 @@ extension ArraySlice: Equatable where Element: Equatable {
     }
 
 
-    var streamLHS = lhs.makeIterator()
-    var streamRHS = rhs.makeIterator()
+    _internalInvariant(lhs.startIndex == 0 && rhs.startIndex == 0)
+    _internalInvariant(lhs.endIndex == lhsCount && rhs.endIndex == lhsCount)
 
-    var nextLHS = streamLHS.next()
-    while nextLHS != nil {
-      let nextRHS = streamRHS.next()
-      if nextLHS != nextRHS {
+    // We know that lhs.count == rhs.count, compare element wise.
+    for idx in 0..<lhsCount {
+      if lhs[idx] != rhs[idx] {
         return false
       }
-      nextLHS = streamLHS.next()
     }
-
 
     return true
   }
 }
 
-extension ArraySlice: Hashable where Element: Hashable {
+extension Array: Hashable where Element: Hashable {
   /// Hashes the essential components of this value by feeding them into the
   /// given hasher.
   ///
@@ -1403,7 +1721,7 @@ extension ArraySlice: Hashable where Element: Hashable {
   }
 }
 
-extension ArraySlice {
+extension Array {
   /// Calls the given closure with a pointer to the underlying bytes of the
   /// array's mutable contiguous storage.
   ///
@@ -1486,13 +1804,123 @@ extension ArraySlice {
   }
 }
 
-extension ArraySlice {
+#if _runtime(_ObjC)
+// We isolate the bridging of the Cocoa Array -> Swift Array here so that
+// in the future, we can eagerly bridge the Cocoa array. We need this function
+// to do the bridging in an ABI safe way. Even though this looks useless,
+// DO NOT DELETE!
+@usableFromInline internal
+func _bridgeCocoaArray<T>(_ _immutableCocoaArray: AnyObject) -> Array<T> {
+  return Array(_buffer: _ArrayBuffer(nsArray: _immutableCocoaArray))
+}
+
+extension Array {
   @inlinable
-  public // @testable
-  init(_startIndex: Int) {
-    self.init(
-      _buffer: _Buffer(
-        _buffer: ContiguousArray()._buffer,
-        shiftedToStartIndex: _startIndex))
+  public // @SPI(Foundation)
+  func _bridgeToObjectiveCImpl() -> AnyObject {
+    return _buffer._asCocoaArray()
+  }
+
+  /// Tries to downcast the source `NSArray` as our native buffer type.
+  /// If it succeeds, creates a new `Array` around it and returns that.
+  /// Returns `nil` otherwise.
+  // Note: this function exists here so that Foundation doesn't have
+  // to know Array's implementation details.
+  @inlinable
+  public static func _bridgeFromObjectiveCAdoptingNativeStorageOf(
+    _ source: AnyObject
+  ) -> Array? {
+    // If source is deferred, we indirect to get its native storage
+    let maybeNative = (source as? __SwiftDeferredNSArray)?._nativeStorage ?? source
+
+    return (maybeNative as? _ContiguousArrayStorage<Element>).map {
+      Array(_ContiguousArrayBuffer($0))
+    }
+  }
+
+  /// Private initializer used for bridging.
+  ///
+  /// Only use this initializer when both conditions are true:
+  ///
+  /// * it is statically known that the given `NSArray` is immutable;
+  /// * `Element` is bridged verbatim to Objective-C (i.e.,
+  ///   is a reference type).
+  @inlinable
+  public init(_immutableCocoaArray: AnyObject) {
+    self = _bridgeCocoaArray(_immutableCocoaArray)
+  }
+}
+#endif
+
+extension Array: _HasCustomAnyHashableRepresentation
+  where Element: Hashable {
+  public __consuming func _toCustomAnyHashable() -> AnyHashable? {
+    return AnyHashable(_box: _ArrayAnyHashableBox(self))
+  }
+}
+
+internal protocol _ArrayAnyHashableProtocol: _AnyHashableBox {
+  var count: Int { get }
+  subscript(index: Int) -> AnyHashable { get }
+}
+
+internal struct _ArrayAnyHashableBox<Element: Hashable>
+  : _ArrayAnyHashableProtocol {
+  internal let _value: [Element]
+
+  internal init(_ value: [Element]) {
+    self._value = value
+  }
+
+  internal var _base: Any {
+    return _value
+  }
+
+  internal var count: Int {
+    return _value.count
+  }
+
+  internal subscript(index: Int) -> AnyHashable {
+    return _value[index] as AnyHashable
+  }
+
+  func _isEqual(to other: _AnyHashableBox) -> Bool? {
+    guard let other = other as? _ArrayAnyHashableProtocol else { return nil }
+    guard _value.count == other.count else { return false }
+    for i in 0 ..< _value.count {
+      if self[i] != other[i] { return false }
+    }
+    return true
+  }
+
+  var _hashValue: Int {
+    var hasher = Hasher()
+    _hash(into: &hasher)
+    return hasher.finalize()
+  }
+
+  func _hash(into hasher: inout Hasher) {
+    hasher.combine(_value.count) // discriminator
+    for i in 0 ..< _value.count {
+      hasher.combine(self[i])
+    }
+  }
+
+  func _rawHashValue(_seed: Int) -> Int {
+    var hasher = Hasher(_seed: _seed)
+    self._hash(into: &hasher)
+    return hasher._finalize()
+  }
+
+  internal func _unbox<T: Hashable>() -> T? {
+    return _value as? T
+  }
+
+  internal func _downCastConditional<T>(
+    into result: UnsafeMutablePointer<T>
+  ) -> Bool {
+    guard let value = _value as? T else { return false }
+    result.initialize(to: value)
+    return true
   }
 }

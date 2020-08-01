@@ -1,19 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2018 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-//
-// Defines the Hasher struct, representing Swift's standard hash function.
-//
-//===----------------------------------------------------------------------===//
-
 import SwiftShims
 
 @inline(__always)
@@ -58,8 +42,6 @@ extension Hasher {
     /// trailing bytes, while the most significant 8 bits hold the count of bytes
     /// appended so far, modulo 256. The count of bytes currently stored in the
     /// buffer is in the lower three bits of the byte count.)
-    // FIXME: Remove @usableFromInline and @frozen once Hasher is resilient.
-    // rdar://problem/38549901
     @usableFromInline @frozen
     internal struct _TailBuffer {
         // msb                                                             lsb
@@ -135,8 +117,7 @@ extension Hasher {
 }
 
 extension Hasher {
-    // FIXME: Remove @usableFromInline and @frozen once Hasher is resilient.
-    // rdar://problem/38549901
+    
     @usableFromInline @frozen
     internal struct _Core {
         private var _buffer: _TailBuffer

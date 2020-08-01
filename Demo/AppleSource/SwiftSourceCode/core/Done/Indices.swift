@@ -1,4 +1,7 @@
 /// A collection of indices for an arbitrary collection
+/*
+ 把 Collection, start, end 统统记一下.
+ */
 @frozen
 public struct DefaultIndices<Elements: Collection> {
     @usableFromInline
@@ -21,7 +24,6 @@ public struct DefaultIndices<Elements: Collection> {
 }
 
 extension DefaultIndices: Collection {
-    
     public typealias Index = Elements.Index
     public typealias Element = Elements.Index
     public typealias Indices = DefaultIndices<Elements>
@@ -40,7 +42,6 @@ extension DefaultIndices: Collection {
     
     @inlinable
     public subscript(i: Index) -> Elements.Index {
-        // FIXME: swift-3-indexing-model: range check.
         return i
     }
     

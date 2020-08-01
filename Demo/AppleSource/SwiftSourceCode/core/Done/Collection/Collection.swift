@@ -1,5 +1,7 @@
 /// A type that iterates over a collection using its indices.
 ///
+///
+/// IndexingIterator  之所以能够通用, 是因为它使用了 Collection 提供的取值, 更新下个 index 的方法. 所以各个 Collection 是有义务提供这些方法的.
 /// The `IndexingIterator` type is the default iterator for any collection that
 /// doesn't declare its own. It acts as an iterator by using a collection's
 /// indices to step over each value in the collection. Most collections in the
@@ -17,7 +19,7 @@
 /// EndIndex
 /// Subscript
 ///
-/// StartIndex 和 EndIndex 可以确定 colleciton 的数量
+/// StartIndex 和 EndIndex 可以确定 colleciton 的起始.
 /// 而 Subscript 则可以进行取值操作.
 ///
 /// With those elements defined, the inherited `makeIterator()`
@@ -81,7 +83,7 @@ public struct IndexingIterator<Elements: Collection> {
     public /// @testable
     init(_elements: Elements) {
         self._elements = _elements
-        self._position = _elements.startIndex
+        self._position = _elements.startIndex // 默认是 collection 的 start.
     }
     
     @inlinable
@@ -125,7 +127,8 @@ extension IndexingIterator: IteratorProtocol, Sequence {
     ///   exists; otherwise, `nil`.
     /*
      不同容器的迭代器, next 的方式是不一样的. 比如, 数组是 index++, Map 是 bucket 和 node 的共同作用, 链表是 nextNode 的判断.
-     这里, 可以看到, 迭代器的取值操作, 进行了统一, 也就是不同的容器, 要重新定义下自己的 indexAfter, subscript 方法, 使得迭代器这里的算法, 可以通用.
+     在这个迭代器中, 通过 Colelction 提供的抽象, 通过 index 进行取值, 然后更新下一位置的 postion 值.
+     不同的 Collection, 实现不同的下标取值, formIndex 更新的操作.
      */
     @inlinable
     @inline(__always)
@@ -171,6 +174,7 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 /// =============================
 ///
 /// 这里可以先用数组的下标进行思考, 其他的非线性的数据结构, 应该专门定制了.
+///  Swift 迭代器和Index的概念分开了. 迭代器, 代表着序列取值, 当这个序列是 Collection 的时候, 迭代器通过下标取值, 否则, 取值的工作, 是迭代器完成的.
 /// You can access an element of a collection through its subscript by using
 /// any valid index except the collection's `endIndex` property. This property
 /// is a "past the end" index that does not correspond with any element of the
@@ -192,7 +196,7 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 ///     print(text.first)
 ///     // Prints "Optional("B")"
 ///
-/// 集合的使用, Index 是一个需要语言获取的值, 如果传入一些非法值, 集合内部会有未知结果.
+/// 集合的使用, Index 是一个需要程序员确保正确的值, 如果传入一些非法值, 集合内部会有未知结果.
 /// You can pass only valid indices to collection operations. You can find a
 /// complete set of a collection's valid indices by starting with the
 /// collection's `startIndex` property and finding every successor up to, and
@@ -227,12 +231,11 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 ///         print(text[..<firstSpace]
 ///         // Prints "Buffalo"
 ///     }
-/// 所以, 这里就可以想象一下, prefix 的实现, 是不是就是寻找 index, 然后根据 index 进行的范围获取操作.
 /// The retrieved slice of `text` is equivalent in each of these cases.
 ///
 /// Slices Share Indices
 /// --------------------
-///
+/// 在切片上进行操作的时候, index 应该保持原有集合的 indices, 而不是从切片上重新计算.
 /// A collection and its slices share the same indices. An element of a
 /// collection is located under the same index in a slice as in the base
 /// collection, as long as neither the collection nor the slice has been
@@ -260,7 +263,7 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 ///     if let i = secondHalf.indices.max(by: { secondHalf[$0] < secondHalf[$1] }) {
 ///         print("Highest second-half absences: \(absences[i])")
 ///     }
-///     // Prints "Highest second-half absences: 3"
+///     // Prints "Highest second-half absences: 3" 这里 3, 是原有的数组的下标值.
 ///
 /// Slices Inherit Collection Semantics
 /// -----------------------------------
@@ -327,6 +330,8 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 /// - The `startIndex` and `endIndex` properties
 /// - A subscript that provides at least read-only access to your type's
 ///   elements
+///   因为, 迭代器是用 indexAfter 寻找下一个有效位置的.
+///     相比较, C++ 里面需要迭代器完整的知道容器的实现细节,  Swift 把这些移到了 Collection 中.
 /// - The `index(after:)` method for advancing an index into your collection
 ///
 /// Expected Performance
@@ -358,6 +363,9 @@ public protocol Collection: Sequence {
     /// Valid indices consist of the position of every element and a
     /// "past the end" position that's not valid for use as a subscript
     /// argument.
+    /*
+     这里, Comparable 代表着可以比较, 比如哈希表的, 通过bucket 的位置, 可以比较, 一个 bucket 上, 通过链表的前后, 可以比较.
+     */
     associatedtype Index: Comparable
     
     /// The position of the first element in a nonempty collection.
@@ -404,6 +412,7 @@ public protocol Collection: Sequence {
     /// This associated type appears as a requirement in the `Sequence`
     /// protocol, but it is restated here with stricter constraints. In a
     /// collection, the subsequence should also conform to `Collection`.
+    /// 这里, 默认 SubSequence 就是 Slice<Self>
     associatedtype SubSequence: Collection = Slice<Self>
         where SubSequence.Index == Index,
         Element == SubSequence.Element,
@@ -446,10 +455,12 @@ public protocol Collection: Sequence {
     /// original collection. This example searches `streetsSlice` for one of the
     /// strings in the slice, and then uses that index in the original array.
     ///
+    /// 这里可以看到, 最后的 index, 是原始 Collection 的 index.
     ///     let index = streetsSlice.firstIndex(of: "Evarts")!    // 4
     ///     print(streets[index])
     ///     // "Evarts"
     ///
+    /// 切片, 应该保证, 不访问自己控制的范围之外的数据.
     /// Always use the slice's `startIndex` property instead of assuming that its
     /// indices start at a particular value. Attempting to access an element by
     /// using an index outside the bounds of the slice may result in a runtime
@@ -476,6 +487,9 @@ public protocol Collection: Sequence {
         Indices.Index == Index,
         Indices.SubSequence == Indices
     
+    /*
+     这是一个集合, 包含所有当前集合的索引值.
+     */
     /// The indices that are valid for subscripting the collection, in ascending
     /// order.
     ///
@@ -495,6 +509,10 @@ public protocol Collection: Sequence {
     ///     // c == MyFancyCollection([2, 4, 6, 8, 10])
     var indices: Indices { get }
     
+    /*
+     这里其实有点过, 对于链表来说, 他也应该是存储 count 值, 为什么还要遍历一遍呢.
+     Swfit 里面, Collection, 不天然进行 count 的存储吗.
+     */
     /// A Boolean value indicating whether the collection is empty.
     ///
     /// When you need to check whether your collection is empty, use the
@@ -623,6 +641,9 @@ public protocol Collection: Sequence {
         _ i: Index, offsetBy distance: Int, limitedBy limit: Index
     ) -> Index?
     
+    /*
+     这里面的好多函数, 都有着 random 和 normal 之分. 这个概念 c++ 是建立在 iterator 的基础上的, 在这里, 变为了 colleciton 的基础上.
+     */
     /// Returns the distance between two indices.
     ///
     /// Unless the collection conforms to the `BidirectionalCollection` protocol,
@@ -704,6 +725,7 @@ public protocol Collection: Sequence {
     ///   `endIndex`.
     /*
      这个就是调用上面的 index 实现的.
+     就是返回值变为了传出参数表示.
      */
     func formIndex(after i: inout Index)
 }
@@ -722,7 +744,9 @@ extension Collection {
     public func formIndex(after i: inout Index) {
         i = index(after: i)
     }
-    
+    /*
+     里面就是简单的通过 range 的范围比较
+     */
     @inlinable
     public func _failEarlyRangeCheck(_ index: Index, bounds: Range<Index>) {
         // FIXME: swift-3-indexing-model: tests.
@@ -733,7 +757,9 @@ extension Collection {
             index < bounds.upperBound,
             "Out of bounds: index >= endIndex")
     }
-    
+    /*
+     里面就是简单的通过 range 的范围比较
+     */
     @inlinable
     public func _failEarlyRangeCheck(_ index: Index, bounds: ClosedRange<Index>) {
         // FIXME: swift-3-indexing-model: tests.
@@ -857,6 +883,7 @@ extension Collection {
     /// - Complexity: O(1) if the collection conforms to
     ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the absolute
     ///   value of `distance`.
+    /// form 开头的函数, 仅仅是把返回值变为了传出参数了.
     @inlinable
     public func formIndex(_ i: inout Index, offsetBy distance: Int) {
         i = index(i, offsetBy: distance)
@@ -915,7 +942,8 @@ extension Collection {
     ///   resulting distance.
     
     /*
-     这里, 如果是 Array 的话, 会将这个实现进行重新的覆盖. 直接用 end - start 就可以了, 但是作为 Dictonary 来说, 非线性的类型, 只能是通过一个个遍历的方式, 来进行 distance 的获取操作.
+     各个容器, 在完成自己对于 Collection 的适配的时候, 如果可以进行 randomAccess, 会重写该方法, 进行更加高效的操作.
+     不然的话, 就是 O(n) 的遍历算法.
      */
     @inlinable
     public func distance(from start: Index, to end: Index) -> Int {
@@ -936,6 +964,9 @@ extension Collection {
         return count
     }
     
+    /*
+     random 的设计, 感觉没有什么意义.
+     */
     /// Returns a random element of the collection, using the given generator as
     /// a source for randomness.
     ///
@@ -998,6 +1029,9 @@ extension Collection {
     @inlinable
     @inline(__always)
     internal func _advanceForward(_ i: Index, by n: Int) -> Index {
+        /*
+         这里, 进行了检查, 但是在 BidirectionalCollections 里面, 一定要进行重写.
+         */
         _precondition(n >= 0,
                       "Only BidirectionalCollections can be advanced by a negative amount")
         
@@ -1019,7 +1053,9 @@ extension Collection {
     ) -> Index? {
         _precondition(n >= 0,
                       "Only BidirectionalCollections can be advanced by a negative amount")
-        
+        /*
+         如果到达了位置, 直接 return nil. 否则, 继续更改 i.
+         */
         var i = i
         for _ in stride(from: 0, to: n, by: 1) {
             if i == limit {
@@ -1034,6 +1070,9 @@ extension Collection {
 /// Supply the default `makeIterator()` method for `Collection` models
 /// that accept the default associated `Iterator`,
 /// `IndexingIterator<Self>`.
+/*
+ Collection 有着一个默认的 IndexingIterator, 可以满足所有 iterator 需要的功能.
+ */
 extension Collection where Iterator == IndexingIterator<Self> {
     /// Returns an iterator over the elements of the collection.
     @inlinable // trivial-implementation
@@ -1048,7 +1087,7 @@ extension Collection where Iterator == IndexingIterator<Self> {
 extension Collection where SubSequence == Slice<Self> {
     /// Accesses a contiguous subrange of the collection's elements.
     ///
-    /// The accessed slice uses the same indices for the same elements as the
+    /// The accessed  slice uses the same indices for the same elements as the
     /// original collection. Always use the slice's `startIndex` property
     /// instead of assuming that its indices start at a particular value.
     ///
@@ -1065,10 +1104,13 @@ extension Collection where SubSequence == Slice<Self> {
     ///     print(streets[index!])
     ///     // Prints "Evarts"
     ///
-    /// - Parameter bounds: A range of the collection's indices. The bounds of
+    /// - Parameter bounds: A range of the collection's indices. Thebounds of
     ///   the range must be valid indices of the collection.
     ///
     /// - Complexity: O(1)
+    /*
+     简单的生成一个 Slice 的对象而已.
+    */
     @inlinable
     public subscript(bounds: Range<Index>) -> Slice<Self> {
         _failEarlyRangeCheck(bounds, bounds: startIndex..<endIndex)
@@ -1076,6 +1118,7 @@ extension Collection where SubSequence == Slice<Self> {
     }
 }
 
+// 如果, SubSequence 是自己的话
 extension Collection where SubSequence == Self {
     /// Removes and returns the first element of the collection.
     ///
@@ -1112,6 +1155,9 @@ extension Collection {
     ///     // Prints "Hi ho, Silver!")
     ///
     /// - Complexity: O(1)
+    /*
+     start 和 end 相等的话, 就是 empty
+     */
     @inlinable
     public var isEmpty: Bool {
         return startIndex == endIndex
@@ -1126,6 +1172,10 @@ extension Collection {
     ///         print(firstNumber)
     ///     }
     ///     // Prints "10"
+    /*
+     为了让, 所有的容器, 都符合一种操作, 这里, 将容器的操作, 通过索引进行了统一.
+     容器要提供通过索引进行值的获取的方法, 而 Colleciton, 则通过索引这种方式, 将函数的算法固定了下来.
+     */
     @inlinable
     public var first: Element? {
         let start = startIndex
@@ -1199,6 +1249,9 @@ extension Collection {
 // Default implementations for Collection
 //===----------------------------------------------------------------------===//
 
+/*
+ 
+ */
 extension Collection {
     /// Returns an array containing the results of mapping the given closure
     /// over the sequence's elements.
@@ -1220,6 +1273,40 @@ extension Collection {
     @inlinable
     /*
      Colelciton 协议, 对于 map 进行了重写, 因为 count 可以确认最终的输出数组的大小. 所以, 这里直接进行了空间的扩展.
+     以下, 是 Sequence 里面, 对于 map 的定义.
+     @inlinable
+     public func map<T>(
+         _ transform: (Element) throws -> T
+     ) rethrows -> [T] {
+         // 这里, 及时利用了 underestimatedCount, 进行了一个效率的提升.
+         let initialCapacity = underestimatedCount
+         var result = ContiguousArray<T>()
+         result.reserveCapacity(initialCapacity) // 扩容.
+         /*
+          通过 primitiveMethod, 获取数据, 然后进行业务处理.
+          这里, underestimatedCount 以下的, 直接进行添加, 这里不用考虑数组扩容.
+          超过了之后, 如果还没有遍历结束, 尝试进行添加.
+          所以, underestimatedCount 一定要返回一个有意义的值.
+          */
+         var iterator = self.makeIterator()
+         // Add elements up to the initial capacity without checking for regrowth.
+         for _ in 0..<initialCapacity {
+             result.append(try transform(iterator.next()!))
+         }
+         // Add remaining elements, if any.
+         while let element = iterator.next() {
+             result.append(try transform(element))
+         }
+         /*
+          其实, map 的操作, 很简单, 但是主要是, 方法提供了这一层抽象, 它就能进行下一层的操作. 比如链式编程.
+          在 Array 里面, 根据 ContiguousArray 进行初始化, 一定有着简化的操作. 例如, 直接拿里面的指针, 当做 Array 的数据.
+          */
+         return Array(result)
+     }
+     
+     可以看到, Sequence 里面的 map, 是通过迭代器控制的范围, 而 Collection 中, 则是通过 count.
+     map 本身不是 Sequence 里面的函数, 也不是 colleciton 里面的函数.
+     在调用的时候, swift 会自动调用最符合定义的函数.
      */
     public func map<T>(
         _ transform: (Element) throws -> T
@@ -1265,7 +1352,9 @@ extension Collection {
     ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the number of
     ///   elements to drop from the beginning of the collection.
     /*
-     这里, 直接进行的 range 的操作.
+     dropFirst 的 Colelction 的实现.
+     这里, 直接返回了 SubSequence 里面的值.
+     在 Sequence 里面, 是生成了一个 Drop 版本的适配Sequence对象, 这里则是使用了 Collection 的 subSequence.
      */
     @inlinable
     public __consuming func dropFirst(_ k: Int = 1) -> SubSequence {
@@ -1294,6 +1383,9 @@ extension Collection {
     /// - Complexity: O(1) if the collection conforms to
     ///   `RandomAccessCollection`; otherwise, O(*n*), where *n* is the length of
     ///   the collection.
+    /*
+     dropLast 在 Sequence 版本里面, 是一个 O(n) 的算法, 在这个版本里面, 就是直接 Collection 的操作了.
+     */
     @inlinable
     public __consuming func dropLast(_ k: Int = 1) -> SubSequence {
         _precondition(
@@ -1315,6 +1407,7 @@ extension Collection {
     /// - Complexity: O(*n*), where *n* is the length of the collection.
     /*
      省略开头的一些值. 可以看到, 这里还是操作的 range
+     
      */
     @inlinable
     public __consuming func drop(
@@ -1397,9 +1490,7 @@ extension Collection {
     /// - Complexity: O(1) if the collection conforms to
     ///   `RandomAccessCollection`; otherwise, O(*n*), where *n* is the length of
     ///   the collection.
-    /*
-     这里, 解决了之前 sequence 的一个问题, 就是效率不高. 在 Collection 里面, 有了更加高效的处理方式.
-     */
+     
     @inlinable
     public __consuming func suffix(_ maxLength: Int) -> SubSequence {
         _precondition(

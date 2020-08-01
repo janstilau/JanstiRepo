@@ -1,15 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2018 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
 // Implementation notes
 // ====================
 //
@@ -387,181 +375,184 @@
 /// buffer.
 @frozen
 public struct Dictionary<Key: Hashable, Value> {
-  /// The element type of a dictionary: a tuple containing an individual
-  /// key-value pair.
-  public typealias Element = (key: Key, value: Value)
-
-  @usableFromInline
-  internal var _variant: _Variant
-
-  @inlinable
-  internal init(_native: __owned _NativeDictionary<Key, Value>) {
-    _variant = _Variant(native: _native)
-  }
-
-#if _runtime(_ObjC)
-  @inlinable
-  internal init(_cocoa: __owned __CocoaDictionary) {
-    _variant = _Variant(cocoa: _cocoa)
-  }
-
-  /// Private initializer used for bridging.
-  ///
-  /// Only use this initializer when both conditions are true:
-  ///
-  /// * it is statically known that the given `NSDictionary` is immutable;
-  /// * `Key` and `Value` are bridged verbatim to Objective-C (i.e.,
-  ///   are reference types).
-  @inlinable
-  public // SPI(Foundation)
-  init(_immutableCocoaDictionary: __owned AnyObject) {
-    _internalInvariant(
-      _isBridgedVerbatimToObjectiveC(Key.self) &&
-      _isBridgedVerbatimToObjectiveC(Value.self),
-      """
+    /// The element type of a dictionary: a tuple containing an individual
+    /// key-value pair.
+    public typealias Element = (key: Key, value: Value)
+    
+    /*
+     Dict 里面, 真正的存储, 也是交给了别人.
+     */
+    @usableFromInline
+    internal var _variant: _Variant
+    
+    @inlinable
+    internal init(_native: __owned _NativeDictionary<Key, Value>) {
+        _variant = _Variant(native: _native)
+    }
+    
+    #if _runtime(_ObjC)
+    @inlinable
+    internal init(_cocoa: __owned __CocoaDictionary) {
+        _variant = _Variant(cocoa: _cocoa)
+    }
+    
+    /// Private initializer used for bridging.
+    ///
+    /// Only use this initializer when both conditions are true:
+    ///
+    /// * it is statically known that the given `NSDictionary` is immutable;
+    /// * `Key` and `Value` are bridged verbatim to Objective-C (i.e.,
+    ///   are reference types).
+    @inlinable
+    public // SPI(Foundation)
+    init(_immutableCocoaDictionary: __owned AnyObject) {
+        _internalInvariant(
+            _isBridgedVerbatimToObjectiveC(Key.self) &&
+                _isBridgedVerbatimToObjectiveC(Value.self),
+            """
       Dictionary can be backed by NSDictionary buffer only when both Key \
       and Value are bridged verbatim to Objective-C
       """)
-    self.init(_cocoa: __CocoaDictionary(_immutableCocoaDictionary))
-  }
-#endif
-
-  /// Creates an empty dictionary.
-  @inlinable
-  public init() {
-    self.init(_native: _NativeDictionary())
-  }
-
-  /// Creates an empty dictionary with preallocated space for at least the
-  /// specified number of elements.
-  ///
-  /// Use this initializer to avoid intermediate reallocations of a dictionary's
-  /// storage buffer when you know how many key-value pairs you are adding to a
-  /// dictionary after creation.
-  ///
-  /// - Parameter minimumCapacity: The minimum number of key-value pairs that
-  ///   the newly created dictionary should be able to store without
-  ///   reallocating its storage buffer.
-  public // FIXME(reserveCapacity): Should be inlinable
-  init(minimumCapacity: Int) {
-    _variant = _Variant(native: _NativeDictionary(capacity: minimumCapacity))
-  }
-
-  /// Creates a new dictionary from the key-value pairs in the given sequence.
-  ///
-  /// You use this initializer to create a dictionary when you have a sequence
-  /// of key-value tuples with unique keys. Passing a sequence with duplicate
-  /// keys to this initializer results in a runtime error. If your
-  /// sequence might have duplicate keys, use the
-  /// `Dictionary(_:uniquingKeysWith:)` initializer instead.
-  ///
-  /// The following example creates a new dictionary using an array of strings
-  /// as the keys and the integers in a countable range as the values:
-  ///
-  ///     let digitWords = ["one", "two", "three", "four", "five"]
-  ///     let wordToValue = Dictionary(uniqueKeysWithValues: zip(digitWords, 1...5))
-  ///     print(wordToValue["three"]!)
-  ///     // Prints "3"
-  ///     print(wordToValue)
-  ///     // Prints "["three": 3, "four": 4, "five": 5, "one": 1, "two": 2]"
-  ///
-  /// - Parameter keysAndValues: A sequence of key-value pairs to use for
-  ///   the new dictionary. Every key in `keysAndValues` must be unique.
-  /// - Returns: A new dictionary initialized with the elements of
-  ///   `keysAndValues`.
-  /// - Precondition: The sequence must not have duplicate keys.
-  @inlinable
-  public init<S: Sequence>(
-    uniqueKeysWithValues keysAndValues: __owned S
-  ) where S.Element == (Key, Value) {
-    if let d = keysAndValues as? Dictionary<Key, Value> {
-      self = d
-      return
+        self.init(_cocoa: __CocoaDictionary(_immutableCocoaDictionary))
     }
-    var native = _NativeDictionary<Key, Value>(
-      capacity: keysAndValues.underestimatedCount)
-    // '_MergeError.keyCollision' is caught and handled with an appropriate
-    // error message one level down, inside native.merge(_:...). We throw an
-    // error instead of calling fatalError() directly because we want the
-    // message to include the duplicate key, and the closure only has access to
-    // the conflicting values.
-    try! native.merge(
-      keysAndValues,
-      isUnique: true,
-      uniquingKeysWith: { _, _ in throw _MergeError.keyCollision })
-    self.init(_native: native)
-  }
-
-  /// Creates a new dictionary from the key-value pairs in the given sequence,
-  /// using a combining closure to determine the value for any duplicate keys.
-  ///
-  /// You use this initializer to create a dictionary when you have a sequence
-  /// of key-value tuples that might have duplicate keys. As the dictionary is
-  /// built, the initializer calls the `combine` closure with the current and
-  /// new values for any duplicate keys. Pass a closure as `combine` that
-  /// returns the value to use in the resulting dictionary: The closure can
-  /// choose between the two values, combine them to produce a new value, or
-  /// even throw an error.
-  ///
-  /// The following example shows how to choose the first and last values for
-  /// any duplicate keys:
-  ///
-  ///     let pairsWithDuplicateKeys = [("a", 1), ("b", 2), ("a", 3), ("b", 4)]
-  ///
-  ///     let firstValues = Dictionary(pairsWithDuplicateKeys,
-  ///                                  uniquingKeysWith: { (first, _) in first })
-  ///     // ["b": 2, "a": 1]
-  ///
-  ///     let lastValues = Dictionary(pairsWithDuplicateKeys,
-  ///                                 uniquingKeysWith: { (_, last) in last })
-  ///     // ["b": 4, "a": 3]
-  ///
-  /// - Parameters:
-  ///   - keysAndValues: A sequence of key-value pairs to use for the new
-  ///     dictionary.
-  ///   - combine: A closure that is called with the values for any duplicate
-  ///     keys that are encountered. The closure returns the desired value for
-  ///     the final dictionary.
-  @inlinable
-  public init<S: Sequence>(
-    _ keysAndValues: __owned S,
-    uniquingKeysWith combine: (Value, Value) throws -> Value
-  ) rethrows where S.Element == (Key, Value) {
-    var native = _NativeDictionary<Key, Value>(
-      capacity: keysAndValues.underestimatedCount)
-    try native.merge(keysAndValues, isUnique: true, uniquingKeysWith: combine)
-    self.init(_native: native)
-  }
-
-  /// Creates a new dictionary whose keys are the groupings returned by the
-  /// given closure and whose values are arrays of the elements that returned
-  /// each key.
-  ///
-  /// The arrays in the "values" position of the new dictionary each contain at
-  /// least one element, with the elements in the same order as the source
-  /// sequence.
-  ///
-  /// The following example declares an array of names, and then creates a
-  /// dictionary from that array by grouping the names by first letter:
-  ///
-  ///     let students = ["Kofi", "Abena", "Efua", "Kweku", "Akosua"]
-  ///     let studentsByLetter = Dictionary(grouping: students, by: { $0.first! })
-  ///     // ["E": ["Efua"], "K": ["Kofi", "Kweku"], "A": ["Abena", "Akosua"]]
-  ///
-  /// The new `studentsByLetter` dictionary has three entries, with students'
-  /// names grouped by the keys `"E"`, `"K"`, and `"A"`.
-  ///
-  /// - Parameters:
-  ///   - values: A sequence of values to group into a dictionary.
-  ///   - keyForValue: A closure that returns a key for each element in
-  ///     `values`.
-  @inlinable
-  public init<S: Sequence>(
-    grouping values: __owned S,
-    by keyForValue: (S.Element) throws -> Key
-  ) rethrows where Value == [S.Element] {
-    try self.init(_native: _NativeDictionary(grouping: values, by: keyForValue))
-  }
+    #endif
+    
+    /// Creates an empty dictionary.
+    @inlinable
+    public init() {
+        self.init(_native: _NativeDictionary())
+    }
+    
+    /// Creates an empty dictionary with preallocated space for at least the
+    /// specified number of elements.
+    ///
+    /// Use this initializer to avoid intermediate reallocations of a dictionary's
+    /// storage buffer when you know how many key-value pairs you are adding to a
+    /// dictionary after creation.
+    ///
+    /// - Parameter minimumCapacity: The minimum number of key-value pairs that
+    ///   the newly created dictionary should be able to store without
+    ///   reallocating its storage buffer.
+    public // FIXME(reserveCapacity): Should be inlinable
+    init(minimumCapacity: Int) {
+        _variant = _Variant(native: _NativeDictionary(capacity: minimumCapacity))
+    }
+    
+    /// Creates a new dictionary from the key-value pairs in the given sequence.
+    ///
+    /// You use this initializer to create a dictionary when you have a sequence
+    /// of key-value tuples with unique keys. Passing a sequence with duplicate
+    /// keys to this initializer results in a runtime error. If your
+    /// sequence might have duplicate keys, use the
+    /// `Dictionary(_:uniquingKeysWith:)` initializer instead.
+    ///
+    /// The following example creates a new dictionary using an array of strings
+    /// as the keys and the integers in a countable range as the values:
+    ///
+    ///     let digitWords = ["one", "two", "three", "four", "five"]
+    ///     let wordToValue = Dictionary(uniqueKeysWithValues: zip(digitWords, 1...5))
+    ///     print(wordToValue["three"]!)
+    ///     // Prints "3"
+    ///     print(wordToValue)
+    ///     // Prints "["three": 3, "four": 4, "five": 5, "one": 1, "two": 2]"
+    ///
+    /// - Parameter keysAndValues: A sequence of key-value pairs to use for
+    ///   the new dictionary. Every key in `keysAndValues` must be unique.
+    /// - Returns: A new dictionary initialized with the elements of
+    ///   `keysAndValues`.
+    /// - Precondition: The sequence must not have duplicate keys.
+    @inlinable
+    public init<S: Sequence>(
+        uniqueKeysWithValues keysAndValues: __owned S
+    ) where S.Element == (Key, Value) {
+        if let d = keysAndValues as? Dictionary<Key, Value> {
+            self = d
+            return
+        }
+        var native = _NativeDictionary<Key, Value>(
+            capacity: keysAndValues.underestimatedCount)
+        // '_MergeError.keyCollision' is caught and handled with an appropriate
+        // error message one level down, inside native.merge(_:...). We throw an
+        // error instead of calling fatalError() directly because we want the
+        // message to include the duplicate key, and the closure only has access to
+        // the conflicting values.
+        try! native.merge(
+            keysAndValues,
+            isUnique: true,
+            uniquingKeysWith: { _, _ in throw _MergeError.keyCollision })
+        self.init(_native: native)
+    }
+    
+    /// Creates a new dictionary from the key-value pairs in the given sequence,
+    /// using a combining closure to determine the value for any duplicate keys.
+    ///
+    /// You use this initializer to create a dictionary when you have a sequence
+    /// of key-value tuples that might have duplicate keys. As the dictionary is
+    /// built, the initializer calls the `combine` closure with the current and
+    /// new values for any duplicate keys. Pass a closure as `combine` that
+    /// returns the value to use in the resulting dictionary: The closure can
+    /// choose between the two values, combine them to produce a new value, or
+    /// even throw an error.
+    ///
+    /// The following example shows how to choose the first and last values for
+    /// any duplicate keys:
+    ///
+    ///     let pairsWithDuplicateKeys = [("a", 1), ("b", 2), ("a", 3), ("b", 4)]
+    ///
+    ///     let firstValues = Dictionary(pairsWithDuplicateKeys,
+    ///                                  uniquingKeysWith: { (first, _) in first })
+    ///     // ["b": 2, "a": 1]
+    ///
+    ///     let lastValues = Dictionary(pairsWithDuplicateKeys,
+    ///                                 uniquingKeysWith: { (_, last) in last })
+    ///     // ["b": 4, "a": 3]
+    ///
+    /// - Parameters:
+    ///   - keysAndValues: A sequence of key-value pairs to use for the new
+    ///     dictionary.
+    ///   - combine: A closure that is called with the values for any duplicate
+    ///     keys that are encountered. The closure returns the desired value for
+    ///     the final dictionary.
+    @inlinable
+    public init<S: Sequence>(
+        _ keysAndValues: __owned S,
+        uniquingKeysWith combine: (Value, Value) throws -> Value
+    ) rethrows where S.Element == (Key, Value) {
+        var native = _NativeDictionary<Key, Value>(
+            capacity: keysAndValues.underestimatedCount)
+        try native.merge(keysAndValues, isUnique: true, uniquingKeysWith: combine)
+        self.init(_native: native)
+    }
+    
+    /// Creates a new dictionary whose keys are the groupings returned by the
+    /// given closure and whose values are arrays of the elements that returned
+    /// each key.
+    ///
+    /// The arrays in the "values" position of the new dictionary each contain at
+    /// least one element, with the elements in the same order as the source
+    /// sequence.
+    ///
+    /// The following example declares an array of names, and then creates a
+    /// dictionary from that array by grouping the names by first letter:
+    ///
+    ///     let students = ["Kofi", "Abena", "Efua", "Kweku", "Akosua"]
+    ///     let studentsByLetter = Dictionary(grouping: students, by: { $0.first! })
+    ///     // ["E": ["Efua"], "K": ["Kofi", "Kweku"], "A": ["Abena", "Akosua"]]
+    ///
+    /// The new `studentsByLetter` dictionary has three entries, with students'
+    /// names grouped by the keys `"E"`, `"K"`, and `"A"`.
+    ///
+    /// - Parameters:
+    ///   - values: A sequence of values to group into a dictionary.
+    ///   - keyForValue: A closure that returns a key for each element in
+    ///     `values`.
+    @inlinable
+    public init<S: Sequence>(
+        grouping values: __owned S,
+        by keyForValue: (S.Element) throws -> Key
+    ) rethrows where Value == [S.Element] {
+        try self.init(_native: _NativeDictionary(grouping: values, by: keyForValue))
+    }
 }
 
 //
@@ -570,1532 +561,1431 @@ public struct Dictionary<Key: Hashable, Value> {
 //
 
 extension Dictionary: Sequence {
-  /// Returns an iterator over the dictionary's key-value pairs.
-  ///
-  /// Iterating over a dictionary yields the key-value pairs as two-element
-  /// tuples. You can decompose the tuple in a `for`-`in` loop, which calls
-  /// `makeIterator()` behind the scenes, or when calling the iterator's
-  /// `next()` method directly.
-  ///
-  ///     let hues = ["Heliotrope": 296, "Coral": 16, "Aquamarine": 156]
-  ///     for (name, hueValue) in hues {
-  ///         print("The hue of \(name) is \(hueValue).")
-  ///     }
-  ///     // Prints "The hue of Heliotrope is 296."
-  ///     // Prints "The hue of Coral is 16."
-  ///     // Prints "The hue of Aquamarine is 156."
-  ///
-  /// - Returns: An iterator over the dictionary with elements of type
-  ///   `(key: Key, value: Value)`.
-  @inlinable
-  @inline(__always)
-  public __consuming func makeIterator() -> Iterator {
-    return _variant.makeIterator()
-  }
+    /// - Returns: An iterator over the dictionary with elements of type
+    ///   `(key: Key, value: Value)`.
+    @inlinable
+    @inline(__always)
+    public __consuming func makeIterator() -> Iterator {
+        return _variant.makeIterator()
+    }
 }
 
 // This is not quite Sequence.filter, because that returns [Element], not Self
 extension Dictionary {
-  /// Returns a new dictionary containing the key-value pairs of the dictionary
-  /// that satisfy the given predicate.
-  ///
-  /// - Parameter isIncluded: A closure that takes a key-value pair as its
-  ///   argument and returns a Boolean value indicating whether the pair
-  ///   should be included in the returned dictionary.
-  /// - Returns: A dictionary of the key-value pairs that `isIncluded` allows.
-  @inlinable
-  @available(swift, introduced: 4.0)
-  public __consuming func filter(
-    _ isIncluded: (Element) throws -> Bool
-  ) rethrows -> [Key: Value] {
-    // FIXME(performance): Try building a bitset of elements to keep, so that we
-    // eliminate rehashings during insertion.
-    var result = _NativeDictionary<Key, Value>()
-    for element in self {
-      if try isIncluded(element) {
-        result.insertNew(key: element.key, value: element.value)
-      }
-    }
-    return Dictionary(_native: result)
-  }
-}
-
-extension Dictionary: Collection {
-  public typealias SubSequence = Slice<Dictionary>
-  
-  /// The position of the first element in a nonempty dictionary.
-  ///
-  /// If the collection is empty, `startIndex` is equal to `endIndex`.
-  ///
-  /// - Complexity: Amortized O(1) if the dictionary does not wrap a bridged
-  ///   `NSDictionary`. If the dictionary wraps a bridged `NSDictionary`, the
-  ///   performance is unspecified.
-  @inlinable
-  public var startIndex: Index {
-    return _variant.startIndex
-  }
-
-  /// The dictionary's "past the end" position---that is, the position one
-  /// greater than the last valid subscript argument.
-  ///
-  /// If the collection is empty, `endIndex` is equal to `startIndex`.
-  ///
-  /// - Complexity: Amortized O(1) if the dictionary does not wrap a bridged
-  ///   `NSDictionary`; otherwise, the performance is unspecified.
-  @inlinable
-  public var endIndex: Index {
-    return _variant.endIndex
-  }
-
-  @inlinable
-  public func index(after i: Index) -> Index {
-    return _variant.index(after: i)
-  }
-
-  @inlinable
-  public func formIndex(after i: inout Index) {
-    _variant.formIndex(after: &i)
-  }
-
-  /// Returns the index for the given key.
-  ///
-  /// If the given key is found in the dictionary, this method returns an index
-  /// into the dictionary that corresponds with the key-value pair.
-  ///
-  ///     let countryCodes = ["BR": "Brazil", "GH": "Ghana", "JP": "Japan"]
-  ///     let index = countryCodes.index(forKey: "JP")
-  ///
-  ///     print("Country code for \(countryCodes[index!].value): '\(countryCodes[index!].key)'.")
-  ///     // Prints "Country code for Japan: 'JP'."
-  ///
-  /// - Parameter key: The key to find in the dictionary.
-  /// - Returns: The index for `key` and its associated value if `key` is in
-  ///   the dictionary; otherwise, `nil`.
-  @inlinable
-  @inline(__always)
-  public func index(forKey key: Key) -> Index? {
-    // Complexity: amortized O(1) for native dictionary, O(*n*) when wrapping an
-    // NSDictionary.
-    return _variant.index(forKey: key)
-  }
-
-  /// Accesses the key-value pair at the specified position.
-  ///
-  /// This subscript takes an index into the dictionary, instead of a key, and
-  /// returns the corresponding key-value pair as a tuple. When performing
-  /// collection-based operations that return an index into a dictionary, use
-  /// this subscript with the resulting value.
-  ///
-  /// For example, to find the key for a particular value in a dictionary, use
-  /// the `firstIndex(where:)` method.
-  ///
-  ///     let countryCodes = ["BR": "Brazil", "GH": "Ghana", "JP": "Japan"]
-  ///     if let index = countryCodes.firstIndex(where: { $0.value == "Japan" }) {
-  ///         print(countryCodes[index])
-  ///         print("Japan's country code is '\(countryCodes[index].key)'.")
-  ///     } else {
-  ///         print("Didn't find 'Japan' as a value in the dictionary.")
-  ///     }
-  ///     // Prints "("JP", "Japan")"
-  ///     // Prints "Japan's country code is 'JP'."
-  ///
-  /// - Parameter position: The position of the key-value pair to access.
-  ///   `position` must be a valid index of the dictionary and not equal to
-  ///   `endIndex`.
-  /// - Returns: A two-element tuple with the key and value corresponding to
-  ///   `position`.
-  @inlinable
-  public subscript(position: Index) -> Element {
-    return _variant.lookup(position)
-  }
-
-  /// The number of key-value pairs in the dictionary.
-  ///
-  /// - Complexity: O(1).
-  @inlinable
-  public var count: Int {
-    return _variant.count
-  }
-
-  //
-  // `Sequence` conformance
-  //
-
-  /// A Boolean value that indicates whether the dictionary is empty.
-  ///
-  /// Dictionaries are empty when created with an initializer or an empty
-  /// dictionary literal.
-  ///
-  ///     var frequencies: [String: Int] = [:]
-  ///     print(frequencies.isEmpty)
-  ///     // Prints "true"
-  @inlinable
-  public var isEmpty: Bool {
-    return count == 0
-  }
-}
-
-extension Dictionary {
-  /// Accesses the value associated with the given key for reading and writing.
-  ///
-  /// This *key-based* subscript returns the value for the given key if the key
-  /// is found in the dictionary, or `nil` if the key is not found.
-  ///
-  /// The following example creates a new dictionary and prints the value of a
-  /// key found in the dictionary (`"Coral"`) and a key not found in the
-  /// dictionary (`"Cerise"`).
-  ///
-  ///     var hues = ["Heliotrope": 296, "Coral": 16, "Aquamarine": 156]
-  ///     print(hues["Coral"])
-  ///     // Prints "Optional(16)"
-  ///     print(hues["Cerise"])
-  ///     // Prints "nil"
-  ///
-  /// When you assign a value for a key and that key already exists, the
-  /// dictionary overwrites the existing value. If the dictionary doesn't
-  /// contain the key, the key and value are added as a new key-value pair.
-  ///
-  /// Here, the value for the key `"Coral"` is updated from `16` to `18` and a
-  /// new key-value pair is added for the key `"Cerise"`.
-  ///
-  ///     hues["Coral"] = 18
-  ///     print(hues["Coral"])
-  ///     // Prints "Optional(18)"
-  ///
-  ///     hues["Cerise"] = 330
-  ///     print(hues["Cerise"])
-  ///     // Prints "Optional(330)"
-  ///
-  /// If you assign `nil` as the value for the given key, the dictionary
-  /// removes that key and its associated value.
-  ///
-  /// In the following example, the key-value pair for the key `"Aquamarine"`
-  /// is removed from the dictionary by assigning `nil` to the key-based
-  /// subscript.
-  ///
-  ///     hues["Aquamarine"] = nil
-  ///     print(hues)
-  ///     // Prints "["Coral": 18, "Heliotrope": 296, "Cerise": 330]"
-  ///
-  /// - Parameter key: The key to find in the dictionary.
-  /// - Returns: The value associated with `key` if `key` is in the dictionary;
-  ///   otherwise, `nil`.
-  @inlinable
-  public subscript(key: Key) -> Value? {
-    get {
-      return _variant.lookup(key)
-    }
-    set(newValue) {
-      if let x = newValue {
-        _variant.setValue(x, forKey: key)
-      } else {
-        removeValue(forKey: key)
-      }
-    }
-    _modify {
-      defer { _fixLifetime(self) }
-      yield &_variant[key]
-    }
-  }
-}
-
-extension Dictionary: ExpressibleByDictionaryLiteral {
-  /// Creates a dictionary initialized with a dictionary literal.
-  ///
-  /// Do not call this initializer directly. It is called by the compiler to
-  /// handle dictionary literals. To use a dictionary literal as the initial
-  /// value of a dictionary, enclose a comma-separated list of key-value pairs
-  /// in square brackets.
-  ///
-  /// For example, the code sample below creates a dictionary with string keys
-  /// and values.
-  ///
-  ///     let countryCodes = ["BR": "Brazil", "GH": "Ghana", "JP": "Japan"]
-  ///     print(countryCodes)
-  ///     // Prints "["BR": "Brazil", "JP": "Japan", "GH": "Ghana"]"
-  ///
-  /// - Parameter elements: The key-value pairs that will make up the new
-  ///   dictionary. Each key in `elements` must be unique.
-  @inlinable
-  @_effects(readonly)
-  @_semantics("optimize.sil.specialize.generic.size.never")
-  public init(dictionaryLiteral elements: (Key, Value)...) {
-    let native = _NativeDictionary<Key, Value>(capacity: elements.count)
-    for (key, value) in elements {
-      let (bucket, found) = native.find(key)
-      _precondition(!found, "Dictionary literal contains duplicate keys")
-      native._insert(at: bucket, key: key, value: value)
-    }
-    self.init(_native: native)
-  }
-}
-
-extension Dictionary {
-  /// Accesses the value with the given key. If the dictionary doesn't contain
-  /// the given key, accesses the provided default value as if the key and
-  /// default value existed in the dictionary.
-  ///
-  /// Use this subscript when you want either the value for a particular key
-  /// or, when that key is not present in the dictionary, a default value. This
-  /// example uses the subscript with a message to use in case an HTTP response
-  /// code isn't recognized:
-  ///
-  ///     var responseMessages = [200: "OK",
-  ///                             403: "Access forbidden",
-  ///                             404: "File not found",
-  ///                             500: "Internal server error"]
-  ///
-  ///     let httpResponseCodes = [200, 403, 301]
-  ///     for code in httpResponseCodes {
-  ///         let message = responseMessages[code, default: "Unknown response"]
-  ///         print("Response \(code): \(message)")
-  ///     }
-  ///     // Prints "Response 200: OK"
-  ///     // Prints "Response 403: Access Forbidden"
-  ///     // Prints "Response 301: Unknown response"
-  ///
-  /// When a dictionary's `Value` type has value semantics, you can use this
-  /// subscript to perform in-place operations on values in the dictionary.
-  /// The following example uses this subscript while counting the occurrences
-  /// of each letter in a string:
-  ///
-  ///     let message = "Hello, Elle!"
-  ///     var letterCounts: [Character: Int] = [:]
-  ///     for letter in message {
-  ///         letterCounts[letter, defaultValue: 0] += 1
-  ///     }
-  ///     // letterCounts == ["H": 1, "e": 2, "l": 4, "o": 1, ...]
-  ///
-  /// When `letterCounts[letter, defaultValue: 0] += 1` is executed with a
-  /// value of `letter` that isn't already a key in `letterCounts`, the
-  /// specified default value (`0`) is returned from the subscript,
-  /// incremented, and then added to the dictionary under that key.
-  ///
-  /// - Note: Do not use this subscript to modify dictionary values if the
-  ///   dictionary's `Value` type is a class. In that case, the default value
-  ///   and key are not written back to the dictionary after an operation.
-  ///
-  /// - Parameters:
-  ///   - key: The key the look up in the dictionary.
-  ///   - defaultValue: The default value to use if `key` doesn't exist in the
-  ///     dictionary.
-  /// - Returns: The value associated with `key` in the dictionary`; otherwise,
-  ///   `defaultValue`.
-  @inlinable
-  public subscript(
-    key: Key, default defaultValue: @autoclosure () -> Value
-  ) -> Value {
-    @inline(__always)
-    get {
-      return _variant.lookup(key) ?? defaultValue()
-    }
-    @inline(__always)
-    _modify {
-      let (bucket, found) = _variant.mutatingFind(key)
-      let native = _variant.asNative
-      if !found {
-        let value = defaultValue()
-        native._insert(at: bucket, key: key, value: value)
-      }
-      let address = native._values + bucket.offset
-      defer { _fixLifetime(self) }
-      yield &address.pointee
-    }
-  }
-
-  /// Returns a new dictionary containing the keys of this dictionary with the
-  /// values transformed by the given closure.
-  ///
-  /// - Parameter transform: A closure that transforms a value. `transform`
-  ///   accepts each value of the dictionary as its parameter and returns a
-  ///   transformed value of the same or of a different type.
-  /// - Returns: A dictionary containing the keys and transformed values of
-  ///   this dictionary.
-  ///
-  /// - Complexity: O(*n*), where *n* is the length of the dictionary.
-  @inlinable
-  public func mapValues<T>(
-    _ transform: (Value) throws -> T
-  ) rethrows -> Dictionary<Key, T> {
-    return try Dictionary<Key, T>(_native: _variant.mapValues(transform))
-  }
-
-  /// Returns a new dictionary containing only the key-value pairs that have
-  /// non-`nil` values as the result of transformation by the given closure.
-  ///
-  /// Use this method to receive a dictionary with non-optional values when
-  /// your transformation produces optional values.
-  ///
-  /// In this example, note the difference in the result of using `mapValues`
-  /// and `compactMapValues` with a transformation that returns an optional
-  /// `Int` value.
-  ///
-  ///     let data = ["a": "1", "b": "three", "c": "///4///"]
-  ///
-  ///     let m: [String: Int?] = data.mapValues { str in Int(str) }
-  ///     // ["a": 1, "b": nil, "c": nil]
-  ///
-  ///     let c: [String: Int] = data.compactMapValues { str in Int(str) }
-  ///     // ["a": 1]
-  ///
-  /// - Parameter transform: A closure that transforms a value. `transform`
-  ///   accepts each value of the dictionary as its parameter and returns an
-  ///   optional transformed value of the same or of a different type.
-  /// - Returns: A dictionary containing the keys and non-`nil` transformed
-  ///   values of this dictionary.
-  ///
-  /// - Complexity: O(*m* + *n*), where *n* is the length of the original
-  ///   dictionary and *m* is the length of the resulting dictionary.
-  @inlinable
-  public func compactMapValues<T>(
-    _ transform: (Value) throws -> T?
-  ) rethrows -> Dictionary<Key, T> {
-    let result: _NativeDictionary<Key, T> =
-      try self.reduce(into: _NativeDictionary<Key, T>()) { (result, element) in
-      if let value = try transform(element.value) {
-        result.insertNew(key: element.key, value: value)
-      }
-    }
-    return Dictionary<Key, T>(_native: result)
-  }
-
-  /// Updates the value stored in the dictionary for the given key, or adds a
-  /// new key-value pair if the key does not exist.
-  ///
-  /// Use this method instead of key-based subscripting when you need to know
-  /// whether the new value supplants the value of an existing key. If the
-  /// value of an existing key is updated, `updateValue(_:forKey:)` returns
-  /// the original value.
-  ///
-  ///     var hues = ["Heliotrope": 296, "Coral": 16, "Aquamarine": 156]
-  ///
-  ///     if let oldValue = hues.updateValue(18, forKey: "Coral") {
-  ///         print("The old value of \(oldValue) was replaced with a new one.")
-  ///     }
-  ///     // Prints "The old value of 16 was replaced with a new one."
-  ///
-  /// If the given key is not present in the dictionary, this method adds the
-  /// key-value pair and returns `nil`.
-  ///
-  ///     if let oldValue = hues.updateValue(330, forKey: "Cerise") {
-  ///         print("The old value of \(oldValue) was replaced with a new one.")
-  ///     } else {
-  ///         print("No value was found in the dictionary for that key.")
-  ///     }
-  ///     // Prints "No value was found in the dictionary for that key."
-  ///
-  /// - Parameters:
-  ///   - value: The new value to add to the dictionary.
-  ///   - key: The key to associate with `value`. If `key` already exists in
-  ///     the dictionary, `value` replaces the existing associated value. If
-  ///     `key` isn't already a key of the dictionary, the `(key, value)` pair
-  ///     is added.
-  /// - Returns: The value that was replaced, or `nil` if a new key-value pair
-  ///   was added.
-  @inlinable
-  @discardableResult
-  public mutating func updateValue(
-    _ value: __owned Value,
-    forKey key: Key
-  ) -> Value? {
-    return _variant.updateValue(value, forKey: key)
-  }
-
-  /// Merges the key-value pairs in the given sequence into the dictionary,
-  /// using a combining closure to determine the value for any duplicate keys.
-  ///
-  /// Use the `combine` closure to select a value to use in the updated
-  /// dictionary, or to combine existing and new values. As the key-value
-  /// pairs are merged with the dictionary, the `combine` closure is called
-  /// with the current and new values for any duplicate keys that are
-  /// encountered.
-  ///
-  /// This example shows how to choose the current or new values for any
-  /// duplicate keys:
-  ///
-  ///     var dictionary = ["a": 1, "b": 2]
-  ///
-  ///     // Keeping existing value for key "a":
-  ///     dictionary.merge(zip(["a", "c"], [3, 4])) { (current, _) in current }
-  ///     // ["b": 2, "a": 1, "c": 4]
-  ///
-  ///     // Taking the new value for key "a":
-  ///     dictionary.merge(zip(["a", "d"], [5, 6])) { (_, new) in new }
-  ///     // ["b": 2, "a": 5, "c": 4, "d": 6]
-  ///
-  /// - Parameters:
-  ///   - other:  A sequence of key-value pairs.
-  ///   - combine: A closure that takes the current and new values for any
-  ///     duplicate keys. The closure returns the desired value for the final
-  ///     dictionary.
-  @inlinable
-  public mutating func merge<S: Sequence>(
-    _ other: __owned S,
-    uniquingKeysWith combine: (Value, Value) throws -> Value
-  ) rethrows where S.Element == (Key, Value) {
-    try _variant.merge(other, uniquingKeysWith: combine)
-  }
-
-  /// Merges the given dictionary into this dictionary, using a combining
-  /// closure to determine the value for any duplicate keys.
-  ///
-  /// Use the `combine` closure to select a value to use in the updated
-  /// dictionary, or to combine existing and new values. As the key-values
-  /// pairs in `other` are merged with this dictionary, the `combine` closure
-  /// is called with the current and new values for any duplicate keys that
-  /// are encountered.
-  ///
-  /// This example shows how to choose the current or new values for any
-  /// duplicate keys:
-  ///
-  ///     var dictionary = ["a": 1, "b": 2]
-  ///
-  ///     // Keeping existing value for key "a":
-  ///     dictionary.merge(["a": 3, "c": 4]) { (current, _) in current }
-  ///     // ["b": 2, "a": 1, "c": 4]
-  ///
-  ///     // Taking the new value for key "a":
-  ///     dictionary.merge(["a": 5, "d": 6]) { (_, new) in new }
-  ///     // ["b": 2, "a": 5, "c": 4, "d": 6]
-  ///
-  /// - Parameters:
-  ///   - other:  A dictionary to merge.
-  ///   - combine: A closure that takes the current and new values for any
-  ///     duplicate keys. The closure returns the desired value for the final
-  ///     dictionary.
-  @inlinable
-  public mutating func merge(
-    _ other: __owned [Key: Value],
-    uniquingKeysWith combine: (Value, Value) throws -> Value
-  ) rethrows {
-    try _variant.merge(
-      other.lazy.map { ($0, $1) }, uniquingKeysWith: combine)
-  }
-
-  /// Creates a dictionary by merging key-value pairs in a sequence into the
-  /// dictionary, using a combining closure to determine the value for
-  /// duplicate keys.
-  ///
-  /// Use the `combine` closure to select a value to use in the returned
-  /// dictionary, or to combine existing and new values. As the key-value
-  /// pairs are merged with the dictionary, the `combine` closure is called
-  /// with the current and new values for any duplicate keys that are
-  /// encountered.
-  ///
-  /// This example shows how to choose the current or new values for any
-  /// duplicate keys:
-  ///
-  ///     let dictionary = ["a": 1, "b": 2]
-  ///     let newKeyValues = zip(["a", "b"], [3, 4])
-  ///
-  ///     let keepingCurrent = dictionary.merging(newKeyValues) { (current, _) in current }
-  ///     // ["b": 2, "a": 1]
-  ///     let replacingCurrent = dictionary.merging(newKeyValues) { (_, new) in new }
-  ///     // ["b": 4, "a": 3]
-  ///
-  /// - Parameters:
-  ///   - other:  A sequence of key-value pairs.
-  ///   - combine: A closure that takes the current and new values for any
-  ///     duplicate keys. The closure returns the desired value for the final
-  ///     dictionary.
-  /// - Returns: A new dictionary with the combined keys and values of this
-  ///   dictionary and `other`.
-  @inlinable
-  public __consuming func merging<S: Sequence>(
-    _ other: __owned S,
-    uniquingKeysWith combine: (Value, Value) throws -> Value
-  ) rethrows -> [Key: Value] where S.Element == (Key, Value) {
-    var result = self
-    try result._variant.merge(other, uniquingKeysWith: combine)
-    return result
-  }
-
-  /// Creates a dictionary by merging the given dictionary into this
-  /// dictionary, using a combining closure to determine the value for
-  /// duplicate keys.
-  ///
-  /// Use the `combine` closure to select a value to use in the returned
-  /// dictionary, or to combine existing and new values. As the key-value
-  /// pairs in `other` are merged with this dictionary, the `combine` closure
-  /// is called with the current and new values for any duplicate keys that
-  /// are encountered.
-  ///
-  /// This example shows how to choose the current or new values for any
-  /// duplicate keys:
-  ///
-  ///     let dictionary = ["a": 1, "b": 2]
-  ///     let otherDictionary = ["a": 3, "b": 4]
-  ///
-  ///     let keepingCurrent = dictionary.merging(otherDictionary)
-  ///           { (current, _) in current }
-  ///     // ["b": 2, "a": 1]
-  ///     let replacingCurrent = dictionary.merging(otherDictionary)
-  ///           { (_, new) in new }
-  ///     // ["b": 4, "a": 3]
-  ///
-  /// - Parameters:
-  ///   - other:  A dictionary to merge.
-  ///   - combine: A closure that takes the current and new values for any
-  ///     duplicate keys. The closure returns the desired value for the final
-  ///     dictionary.
-  /// - Returns: A new dictionary with the combined keys and values of this
-  ///   dictionary and `other`.
-  @inlinable
-  public __consuming func merging(
-    _ other: __owned [Key: Value],
-    uniquingKeysWith combine: (Value, Value) throws -> Value
-  ) rethrows -> [Key: Value] {
-    var result = self
-    try result.merge(other, uniquingKeysWith: combine)
-    return result
-  }
-
-  /// Removes and returns the key-value pair at the specified index.
-  ///
-  /// Calling this method invalidates any existing indices for use with this
-  /// dictionary.
-  ///
-  /// - Parameter index: The position of the key-value pair to remove. `index`
-  ///   must be a valid index of the dictionary, and must not equal the
-  ///   dictionary's end index.
-  /// - Returns: The key-value pair that correspond to `index`.
-  ///
-  /// - Complexity: O(*n*), where *n* is the number of key-value pairs in the
-  ///   dictionary.
-  @inlinable
-  @discardableResult
-  public mutating func remove(at index: Index) -> Element {
-    return _variant.remove(at: index)
-  }
-
-  /// Removes the given key and its associated value from the dictionary.
-  ///
-  /// If the key is found in the dictionary, this method returns the key's
-  /// associated value. On removal, this method invalidates all indices with
-  /// respect to the dictionary.
-  ///
-  ///     var hues = ["Heliotrope": 296, "Coral": 16, "Aquamarine": 156]
-  ///     if let value = hues.removeValue(forKey: "Coral") {
-  ///         print("The value \(value) was removed.")
-  ///     }
-  ///     // Prints "The value 16 was removed."
-  ///
-  /// If the key isn't found in the dictionary, `removeValue(forKey:)` returns
-  /// `nil`.
-  ///
-  ///     if let value = hues.removeValueForKey("Cerise") {
-  ///         print("The value \(value) was removed.")
-  ///     } else {
-  ///         print("No value found for that key.")
-  ///     }
-  ///     // Prints "No value found for that key.""
-  ///
-  /// - Parameter key: The key to remove along with its associated value.
-  /// - Returns: The value that was removed, or `nil` if the key was not
-  ///   present in the dictionary.
-  ///
-  /// - Complexity: O(*n*), where *n* is the number of key-value pairs in the
-  ///   dictionary.
-  @inlinable
-  @discardableResult
-  public mutating func removeValue(forKey key: Key) -> Value? {
-    return _variant.removeValue(forKey: key)
-  }
-
-  /// Removes all key-value pairs from the dictionary.
-  ///
-  /// Calling this method invalidates all indices with respect to the
-  /// dictionary.
-  ///
-  /// - Parameter keepCapacity: Whether the dictionary should keep its
-  ///   underlying buffer. If you pass `true`, the operation preserves the
-  ///   buffer capacity that the collection has, otherwise the underlying
-  ///   buffer is released.  The default is `false`.
-  ///
-  /// - Complexity: O(*n*), where *n* is the number of key-value pairs in the
-  ///   dictionary.
-  @inlinable
-  public mutating func removeAll(keepingCapacity keepCapacity: Bool = false) {
-    // The 'will not decrease' part in the documentation comment is worded very
-    // carefully.  The capacity can increase if we replace Cocoa dictionary with
-    // native dictionary.
-    _variant.removeAll(keepingCapacity: keepCapacity)
-  }
-}
-
-extension Dictionary {
-  /// A collection containing just the keys of the dictionary.
-  ///
-  /// When iterated over, keys appear in this collection in the same order as
-  /// they occur in the dictionary's key-value pairs. Each key in the keys
-  /// collection has a unique value.
-  ///
-  ///     let countryCodes = ["BR": "Brazil", "GH": "Ghana", "JP": "Japan"]
-  ///     print(countryCodes)
-  ///     // Prints "["BR": "Brazil", "JP": "Japan", "GH": "Ghana"]"
-  ///
-  ///     for k in countryCodes.keys {
-  ///         print(k)
-  ///     }
-  ///     // Prints "BR"
-  ///     // Prints "JP"
-  ///     // Prints "GH"
-  @inlinable
-  @available(swift, introduced: 4.0)
-  public var keys: Keys {
-    // FIXME(accessors): Provide a _read
-    get {
-      return Keys(_dictionary: self)
-    }
-  }
-
-  /// A collection containing just the values of the dictionary.
-  ///
-  /// When iterated over, values appear in this collection in the same order as
-  /// they occur in the dictionary's key-value pairs.
-  ///
-  ///     let countryCodes = ["BR": "Brazil", "GH": "Ghana", "JP": "Japan"]
-  ///     print(countryCodes)
-  ///     // Prints "["BR": "Brazil", "JP": "Japan", "GH": "Ghana"]"
-  ///
-  ///     for v in countryCodes.values {
-  ///         print(v)
-  ///     }
-  ///     // Prints "Brazil"
-  ///     // Prints "Japan"
-  ///     // Prints "Ghana"
-  @inlinable
-  @available(swift, introduced: 4.0)
-  public var values: Values {
-    // FIXME(accessors): Provide a _read
-    get {
-      return Values(_dictionary: self)
-    }
-    _modify {
-      var values = Values(_variant: _Variant(dummy: ()))
-      swap(&values._variant, &_variant)
-      defer { self._variant = values._variant }
-      yield &values
-    }
-  }
-
-  /// A view of a dictionary's keys.
-  @frozen
-  public struct Keys
-    : Collection, Equatable,
-      CustomStringConvertible, CustomDebugStringConvertible {
-    public typealias Element = Key
-    public typealias SubSequence = Slice<Dictionary.Keys>
-
-    @usableFromInline
-    internal var _variant: Dictionary<Key, Value>._Variant
-
-    @inlinable
-    internal init(_dictionary: __owned Dictionary) {
-      self._variant = _dictionary._variant
-    }
-
-    // Collection Conformance
-    // ----------------------
-
-    @inlinable
-    public var startIndex: Index {
-      return _variant.startIndex
-    }
-
-    @inlinable
-    public var endIndex: Index {
-      return _variant.endIndex
-    }
-
-    @inlinable
-    public func index(after i: Index) -> Index {
-      return _variant.index(after: i)
-    }
-
-    @inlinable
-    public func formIndex(after i: inout Index) {
-      _variant.formIndex(after: &i)
-    }
-
-    @inlinable
-    public subscript(position: Index) -> Element {
-      return _variant.key(at: position)
-    }
-
-    // Customization
-    // -------------
-
-    /// The number of keys in the dictionary.
+    /// Returns a new dictionary containing the key-value pairs of the dictionary
+    /// that satisfy the given predicate.
     ///
-    /// - Complexity: O(1).
+    /// - Parameter isIncluded: A closure that takes a key-value pair as its
+    ///   argument and returns a Boolean value indicating whether the pair
+    ///   should be included in the returned dictionary.
+    /// - Returns: A dictionary of the key-value pairs that `isIncluded` allows.
     @inlinable
-    public var count: Int {
-      return _variant.count
-    }
-
-    @inlinable
-    public var isEmpty: Bool {
-      return count == 0
-    }
-
-    @inlinable
-    @inline(__always)
-    public func _customContainsEquatableElement(_ element: Element) -> Bool? {
-      return _variant.contains(element)
-    }
-
-    @inlinable
-    @inline(__always)
-    public func _customIndexOfEquatableElement(_ element: Element) -> Index?? {
-      return Optional(_variant.index(forKey: element))
-    }
-
-    @inlinable
-    @inline(__always)
-    public func _customLastIndexOfEquatableElement(_ element: Element) -> Index?? {
-      // The first and last elements are the same because each element is unique.
-      return _customIndexOfEquatableElement(element)
-    }
-
-    @inlinable
-    public static func ==(lhs: Keys, rhs: Keys) -> Bool {
-      // Equal if the two dictionaries share storage.
-#if _runtime(_ObjC)
-      if
-        lhs._variant.isNative,
-        rhs._variant.isNative,
-        lhs._variant.asNative._storage === rhs._variant.asNative._storage
-      {
-        return true
-      }
-      if
-        !lhs._variant.isNative,
-        !rhs._variant.isNative,
-        lhs._variant.asCocoa.object === rhs._variant.asCocoa.object
-      {
-        return true
-      }
-#else
-      if lhs._variant.asNative._storage === rhs._variant.asNative._storage {
-        return true
-      }
-#endif
-
-      // Not equal if the dictionaries are different sizes.
-      if lhs.count != rhs.count {
-        return false
-      }
-
-      // Perform unordered comparison of keys.
-      for key in lhs {
-        if !rhs.contains(key) {
-          return false
+    @available(swift, introduced: 4.0)
+    public __consuming func filter(
+        _ isIncluded: (Element) throws -> Bool
+    ) rethrows -> [Key: Value] {
+        // FIXME(performance): Try building a bitset of elements to keep, so that we
+        // eliminate rehashings during insertion.
+        var result = _NativeDictionary<Key, Value>()
+        for element in self {
+            if try isIncluded(element) {
+                result.insertNew(key: element.key, value: element.value)
+            }
         }
-      }
-
-      return true
+        return Dictionary(_native: result)
     }
+}
 
-    public var description: String {
-      return _makeCollectionDescription()
-    }
-
-    public var debugDescription: String {
-      return _makeCollectionDescription(withTypeName: "Dictionary.Keys")
-    }
-  }
-
-  /// A view of a dictionary's values.
-  @frozen
-  public struct Values
-    : MutableCollection, CustomStringConvertible, CustomDebugStringConvertible {
-    public typealias Element = Value
-
-    @usableFromInline
-    internal var _variant: Dictionary<Key, Value>._Variant
-
-    @inlinable
-    internal init(_variant: __owned Dictionary<Key, Value>._Variant) {
-      self._variant = _variant
-    }
-
-    @inlinable
-    internal init(_dictionary: __owned Dictionary) {
-      self._variant = _dictionary._variant
-    }
-
-    // Collection Conformance
-    // ----------------------
-
+/*
+ Dict 对于 Collection 的适配工作.
+ */
+extension Dictionary: Collection {
+    public typealias SubSequence = Slice<Dictionary>
+    
+    /*
+     所有的一切, 都交给了 _variant.
+     */
     @inlinable
     public var startIndex: Index {
-      return _variant.startIndex
+        return _variant.startIndex
     }
-
+    
     @inlinable
     public var endIndex: Index {
-      return _variant.endIndex
+        return _variant.endIndex
     }
-
+    
     @inlinable
     public func index(after i: Index) -> Index {
-      return _variant.index(after: i)
+        return _variant.index(after: i)
     }
-
+    
     @inlinable
     public func formIndex(after i: inout Index) {
-      _variant.formIndex(after: &i)
+        _variant.formIndex(after: &i)
     }
-
+    
+    @inlinable
+    @inline(__always)
+    public func index(forKey key: Key) -> Index? {
+        // Complexity: amortized O(1) for native dictionary, O(*n*) when wrapping an
+        // NSDictionary.
+        return _variant.index(forKey: key)
+    }
+    
+    /*
+     只要传入一个 index, 就一定要找到这个值, 不然认为是调用者操作有问题.
+     */
     @inlinable
     public subscript(position: Index) -> Element {
-      // FIXME(accessors): Provide a _read
-      get {
-        return _variant.value(at: position)
-      }
-      _modify {
-        let native = _variant.ensureUniqueNative()
-        let bucket = native.validatedBucket(for: position)
-        let address = native._values + bucket.offset
-        defer { _fixLifetime(self) }
-        yield &address.pointee
-      }
+        return _variant.lookup(position)
     }
-
-    // Customization
-    // -------------
-
-    /// The number of values in the dictionary.
-    ///
-    /// - Complexity: O(1).
+    
     @inlinable
     public var count: Int {
-      return _variant.count
+        return _variant.count
     }
-
+    
+    //
+    // `Sequence` conformance
+    //
+    /// 这里进行了修改.
     @inlinable
     public var isEmpty: Bool {
-      return count == 0
+        return count == 0
     }
+}
 
-    public var description: String {
-      return _makeCollectionDescription()
-    }
-
-    public var debugDescription: String {
-      return _makeCollectionDescription(withTypeName: "Dictionary.Values")
-    }
-
+extension Dictionary {
+    /// Accesses the value associated with the given key for reading and writing.
+    ///
+    /// This *key-based* subscript returns the value for the given key if the key
+    /// is found in the dictionary, or `nil` if the key is not found.
+    ///
+    /// The following example creates a new dictionary and prints the value of a
+    /// key found in the dictionary (`"Coral"`) and a key not found in the
+    /// dictionary (`"Cerise"`).
+    ///
+    ///     var hues = ["Heliotrope": 296, "Coral": 16, "Aquamarine": 156]
+    ///     print(hues["Coral"])
+    ///     // Prints "Optional(16)"
+    ///     print(hues["Cerise"])
+    ///     // Prints "nil"
+    ///
+    /// When you assign a value for a key and that key already exists, the
+    /// dictionary overwrites the existing value. If the dictionary doesn't
+    /// contain the key, the key and value are added as a new key-value pair.
+    ///
+    /// Here, the value for the key `"Coral"` is updated from `16` to `18` and a
+    /// new key-value pair is added for the key `"Cerise"`.
+    ///
+    ///     hues["Coral"] = 18
+    ///     print(hues["Coral"])
+    ///     // Prints "Optional(18)"
+    ///
+    ///     hues["Cerise"] = 330
+    ///     print(hues["Cerise"])
+    ///     // Prints "Optional(330)"
+    ///
+    /// If you assign `nil` as the value for the given key, the dictionary
+    /// removes that key and its associated value.
+    ///
+    /// In the following example, the key-value pair for the key `"Aquamarine"`
+    /// is removed from the dictionary by assigning `nil` to the key-based
+    /// subscript.
+    ///
+    ///     hues["Aquamarine"] = nil
+    ///     print(hues)
+    ///     // Prints "["Coral": 18, "Heliotrope": 296, "Cerise": 330]"
+    ///
+    /// - Parameter key: The key to find in the dictionary.
+    /// - Returns: The value associated with `key` if `key` is in the dictionary;
+    ///   otherwise, `nil`.
     @inlinable
-    public mutating func swapAt(_ i: Index, _ j: Index) {
-      guard i != j else { return }
-#if _runtime(_ObjC)
-      if !_variant.isNative {
-        _variant = .init(native: _NativeDictionary(_variant.asCocoa))
-      }
-#endif
-      let isUnique = _variant.isUniquelyReferenced()
-      let native = _variant.asNative
-      let a = native.validatedBucket(for: i)
-      let b = native.validatedBucket(for: j)
-      _variant.asNative.swapValuesAt(a, b, isUnique: isUnique)
+    public subscript(key: Key) -> Value? {
+        get {
+            return _variant.lookup(key)
+        }
+        set(newValue) {
+            if let x = newValue {
+                _variant.setValue(x, forKey: key)
+            } else {
+                removeValue(forKey: key)
+            }
+        }
+        _modify {
+            defer { _fixLifetime(self) }
+            yield &_variant[key]
+        }
     }
-  }
+}
+
+extension Dictionary {
+    /// Accesses the value with the given key. If the dictionary doesn't contain
+    /// the given key, accesses the provided default value as if the key and
+    /// default value existed in the dictionary.
+    ///
+    /// Use this subscript when you want either the value for a particular key
+    /// or, when that key is not present in the dictionary, a default value. This
+    /// example uses the subscript with a message to use in case an HTTP response
+    /// code isn't recognized:
+    ///
+    ///     var responseMessages = [200: "OK",
+    ///                             403: "Access forbidden",
+    ///                             404: "File not found",
+    ///                             500: "Internal server error"]
+    ///
+    ///     let httpResponseCodes = [200, 403, 301]
+    ///     for code in httpResponseCodes {
+    ///         let message = responseMessages[code, default: "Unknown response"]
+    ///         print("Response \(code): \(message)")
+    ///     }
+    ///     // Prints "Response 200: OK"
+    ///     // Prints "Response 403: Access Forbidden"
+    ///     // Prints "Response 301: Unknown response"
+    ///
+    /// When a dictionary's `Value` type has value semantics, you can use this
+    /// subscript to perform in-place operations on values in the dictionary.
+    /// The following example uses this subscript while counting the occurrences
+    /// of each letter in a string:
+    ///
+    ///     let message = "Hello, Elle!"
+    ///     var letterCounts: [Character: Int] = [:]
+    ///     for letter in message {
+    ///         letterCounts[letter, defaultValue: 0] += 1
+    ///     }
+    ///     // letterCounts == ["H": 1, "e": 2, "l": 4, "o": 1, ...]
+    ///
+    /// When `letterCounts[letter, defaultValue: 0] += 1` is executed with a
+    /// value of `letter` that isn't already a key in `letterCounts`, the
+    /// specified default value (`0`) is returned from the subscript,
+    /// incremented, and then added to the dictionary under that key.
+    ///
+    /// - Note: Do not use this subscript to modify dictionary values if the
+    ///   dictionary's `Value` type is a class. In that case, the default value
+    ///   and key are not written back to the dictionary after an operation.
+    ///
+    /// - Parameters:
+    ///   - key: The key the look up in the dictionary.
+    ///   - defaultValue: The default value to use if `key` doesn't exist in the
+    ///     dictionary.
+    /// - Returns: The value associated with `key` in the dictionary`; otherwise,
+    ///   `defaultValue`.
+    @inlinable
+    public subscript(
+        key: Key, default defaultValue: @autoclosure () -> Value
+    ) -> Value {
+        @inline(__always)
+        get {
+            return _variant.lookup(key) ?? defaultValue()
+        }
+        @inline(__always)
+        _modify {
+            let (bucket, found) = _variant.mutatingFind(key)
+            let native = _variant.asNative
+            if !found {
+                let value = defaultValue()
+                native._insert(at: bucket, key: key, value: value)
+            }
+            let address = native._values + bucket.offset
+            defer { _fixLifetime(self) }
+            yield &address.pointee
+        }
+    }
+    
+    /// Returns a new dictionary containing the keys of this dictionary with the
+    /// values transformed by the given closure.
+    ///
+    /// - Parameter transform: A closure that transforms a value. `transform`
+    ///   accepts each value of the dictionary as its parameter and returns a
+    ///   transformed value of the same or of a different type.
+    /// - Returns: A dictionary containing the keys and transformed values of
+    ///   this dictionary.
+    ///
+    /// - Complexity: O(*n*), where *n* is the length of the dictionary.
+    @inlinable
+    public func mapValues<T>(
+        _ transform: (Value) throws -> T
+    ) rethrows -> Dictionary<Key, T> {
+        return try Dictionary<Key, T>(_native: _variant.mapValues(transform))
+    }
+    
+    /// Returns a new dictionary containing only the key-value pairs that have
+    /// non-`nil` values as the result of transformation by the given closure.
+    ///
+    /// Use this method to receive a dictionary with non-optional values when
+    /// your transformation produces optional values.
+    ///
+    /// In this example, note the difference in the result of using `mapValues`
+    /// and `compactMapValues` with a transformation that returns an optional
+    /// `Int` value.
+    ///
+    ///     let data = ["a": "1", "b": "three", "c": "///4///"]
+    ///
+    ///     let m: [String: Int?] = data.mapValues { str in Int(str) }
+    ///     // ["a": 1, "b": nil, "c": nil]
+    ///
+    ///     let c: [String: Int] = data.compactMapValues { str in Int(str) }
+    ///     // ["a": 1]
+    ///
+    /// - Parameter transform: A closure that transforms a value. `transform`
+    ///   accepts each value of the dictionary as its parameter and returns an
+    ///   optional transformed value of the same or of a different type.
+    /// - Returns: A dictionary containing the keys and non-`nil` transformed
+    ///   values of this dictionary.
+    ///
+    /// - Complexity: O(*m* + *n*), where *n* is the length of the original
+    ///   dictionary and *m* is the length of the resulting dictionary.
+    @inlinable
+    public func compactMapValues<T>(
+        _ transform: (Value) throws -> T?
+    ) rethrows -> Dictionary<Key, T> {
+        let result: _NativeDictionary<Key, T> =
+            try self.reduce(into: _NativeDictionary<Key, T>()) { (result, element) in
+                if let value = try transform(element.value) {
+                    result.insertNew(key: element.key, value: value)
+                }
+        }
+        return Dictionary<Key, T>(_native: result)
+    }
+    
+    /// Updates the value stored in the dictionary for the given key, or adds a
+    /// new key-value pair if the key does not exist.
+    ///
+    /// Use this method instead of key-based subscripting when you need to know
+    /// whether the new value supplants the value of an existing key. If the
+    /// value of an existing key is updated, `updateValue(_:forKey:)` returns
+    /// the original value.
+    ///
+    ///     var hues = ["Heliotrope": 296, "Coral": 16, "Aquamarine": 156]
+    ///
+    ///     if let oldValue = hues.updateValue(18, forKey: "Coral") {
+    ///         print("The old value of \(oldValue) was replaced with a new one.")
+    ///     }
+    ///     // Prints "The old value of 16 was replaced with a new one."
+    ///
+    /// If the given key is not present in the dictionary, this method adds the
+    /// key-value pair and returns `nil`.
+    ///
+    ///     if let oldValue = hues.updateValue(330, forKey: "Cerise") {
+    ///         print("The old value of \(oldValue) was replaced with a new one.")
+    ///     } else {
+    ///         print("No value was found in the dictionary for that key.")
+    ///     }
+    ///     // Prints "No value was found in the dictionary for that key."
+    ///
+    /// - Parameters:
+    ///   - value: The new value to add to the dictionary.
+    ///   - key: The key to associate with `value`. If `key` already exists in
+    ///     the dictionary, `value` replaces the existing associated value. If
+    ///     `key` isn't already a key of the dictionary, the `(key, value)` pair
+    ///     is added.
+    /// - Returns: The value that was replaced, or `nil` if a new key-value pair
+    ///   was added.
+    @inlinable
+    @discardableResult
+    public mutating func updateValue(
+        _ value: __owned Value,
+        forKey key: Key
+    ) -> Value? {
+        return _variant.updateValue(value, forKey: key)
+    }
+    
+    /// Merges the key-value pairs in the given sequence into the dictionary,
+    /// using a combining closure to determine the value for any duplicate keys.
+    ///
+    /// Use the `combine` closure to select a value to use in the updated
+    /// dictionary, or to combine existing and new values. As the key-value
+    /// pairs are merged with the dictionary, the `combine` closure is called
+    /// with the current and new values for any duplicate keys that are
+    /// encountered.
+    ///
+    /// This example shows how to choose the current or new values for any
+    /// duplicate keys:
+    ///
+    ///     var dictionary = ["a": 1, "b": 2]
+    ///
+    ///     // Keeping existing value for key "a":
+    ///     dictionary.merge(zip(["a", "c"], [3, 4])) { (current, _) in current }
+    ///     // ["b": 2, "a": 1, "c": 4]
+    ///
+    ///     // Taking the new value for key "a":
+    ///     dictionary.merge(zip(["a", "d"], [5, 6])) { (_, new) in new }
+    ///     // ["b": 2, "a": 5, "c": 4, "d": 6]
+    ///
+    /// - Parameters:
+    ///   - other:  A sequence of key-value pairs.
+    ///   - combine: A closure that takes the current and new values for any
+    ///     duplicate keys. The closure returns the desired value for the final
+    ///     dictionary.
+    @inlinable
+    public mutating func merge<S: Sequence>(
+        _ other: __owned S,
+        uniquingKeysWith combine: (Value, Value) throws -> Value
+    ) rethrows where S.Element == (Key, Value) {
+        try _variant.merge(other, uniquingKeysWith: combine)
+    }
+    
+    /// Merges the given dictionary into this dictionary, using a combining
+    /// closure to determine the value for any duplicate keys.
+    ///
+    /// Use the `combine` closure to select a value to use in the updated
+    /// dictionary, or to combine existing and new values. As the key-values
+    /// pairs in `other` are merged with this dictionary, the `combine` closure
+    /// is called with the current and new values for any duplicate keys that
+    /// are encountered.
+    ///
+    /// This example shows how to choose the current or new values for any
+    /// duplicate keys:
+    ///
+    ///     var dictionary = ["a": 1, "b": 2]
+    ///
+    ///     // Keeping existing value for key "a":
+    ///     dictionary.merge(["a": 3, "c": 4]) { (current, _) in current }
+    ///     // ["b": 2, "a": 1, "c": 4]
+    ///
+    ///     // Taking the new value for key "a":
+    ///     dictionary.merge(["a": 5, "d": 6]) { (_, new) in new }
+    ///     // ["b": 2, "a": 5, "c": 4, "d": 6]
+    ///
+    /// - Parameters:
+    ///   - other:  A dictionary to merge.
+    ///   - combine: A closure that takes the current and new values for any
+    ///     duplicate keys. The closure returns the desired value for the final
+    ///     dictionary.
+    @inlinable
+    public mutating func merge(
+        _ other: __owned [Key: Value],
+        uniquingKeysWith combine: (Value, Value) throws -> Value
+    ) rethrows {
+        try _variant.merge(
+            other.lazy.map { ($0, $1) }, uniquingKeysWith: combine)
+    }
+    
+    /// Creates a dictionary by merging key-value pairs in a sequence into the
+    /// dictionary, using a combining closure to determine the value for
+    /// duplicate keys.
+    ///
+    /// Use the `combine` closure to select a value to use in the returned
+    /// dictionary, or to combine existing and new values. As the key-value
+    /// pairs are merged with the dictionary, the `combine` closure is called
+    /// with the current and new values for any duplicate keys that are
+    /// encountered.
+    ///
+    /// This example shows how to choose the current or new values for any
+    /// duplicate keys:
+    ///
+    ///     let dictionary = ["a": 1, "b": 2]
+    ///     let newKeyValues = zip(["a", "b"], [3, 4])
+    ///
+    ///     let keepingCurrent = dictionary.merging(newKeyValues) { (current, _) in current }
+    ///     // ["b": 2, "a": 1]
+    ///     let replacingCurrent = dictionary.merging(newKeyValues) { (_, new) in new }
+    ///     // ["b": 4, "a": 3]
+    ///
+    /// - Parameters:
+    ///   - other:  A sequence of key-value pairs.
+    ///   - combine: A closure that takes the current and new values for any
+    ///     duplicate keys. The closure returns the desired value for the final
+    ///     dictionary.
+    /// - Returns: A new dictionary with the combined keys and values of this
+    ///   dictionary and `other`.
+    @inlinable
+    public __consuming func merging<S: Sequence>(
+        _ other: __owned S,
+        uniquingKeysWith combine: (Value, Value) throws -> Value
+    ) rethrows -> [Key: Value] where S.Element == (Key, Value) {
+        var result = self
+        try result._variant.merge(other, uniquingKeysWith: combine)
+        return result
+    }
+    
+    /// Creates a dictionary by merging the given dictionary into this
+    /// dictionary, using a combining closure to determine the value for
+    /// duplicate keys.
+    ///
+    /// Use the `combine` closure to select a value to use in the returned
+    /// dictionary, or to combine existing and new values. As the key-value
+    /// pairs in `other` are merged with this dictionary, the `combine` closure
+    /// is called with the current and new values for any duplicate keys that
+    /// are encountered.
+    ///
+    /// This example shows how to choose the current or new values for any
+    /// duplicate keys:
+    ///
+    ///     let dictionary = ["a": 1, "b": 2]
+    ///     let otherDictionary = ["a": 3, "b": 4]
+    ///
+    ///     let keepingCurrent = dictionary.merging(otherDictionary)
+    ///           { (current, _) in current }
+    ///     // ["b": 2, "a": 1]
+    ///     let replacingCurrent = dictionary.merging(otherDictionary)
+    ///           { (_, new) in new }
+    ///     // ["b": 4, "a": 3]
+    ///
+    /// - Parameters:
+    ///   - other:  A dictionary to merge.
+    ///   - combine: A closure that takes the current and new values for any
+    ///     duplicate keys. The closure returns the desired value for the final
+    ///     dictionary.
+    /// - Returns: A new dictionary with the combined keys and values of this
+    ///   dictionary and `other`.
+    @inlinable
+    public __consuming func merging(
+        _ other: __owned [Key: Value],
+        uniquingKeysWith combine: (Value, Value) throws -> Value
+    ) rethrows -> [Key: Value] {
+        var result = self
+        try result.merge(other, uniquingKeysWith: combine)
+        return result
+    }
+    
+    /// Removes and returns the key-value pair at the specified index.
+    ///
+    /// Calling this method invalidates any existing indices for use with this
+    /// dictionary.
+    ///
+    /// - Parameter index: The position of the key-value pair to remove. `index`
+    ///   must be a valid index of the dictionary, and must not equal the
+    ///   dictionary's end index.
+    /// - Returns: The key-value pair that correspond to `index`.
+    ///
+    /// - Complexity: O(*n*), where *n* is the number of key-value pairs in the
+    ///   dictionary.
+    @inlinable
+    @discardableResult
+    public mutating func remove(at index: Index) -> Element {
+        return _variant.remove(at: index)
+    }
+    
+    /// Removes the given key and its associated value from the dictionary.
+    ///
+    /// If the key is found in the dictionary, this method returns the key's
+    /// associated value. On removal, this method invalidates all indices with
+    /// respect to the dictionary.
+    ///
+    ///     var hues = ["Heliotrope": 296, "Coral": 16, "Aquamarine": 156]
+    ///     if let value = hues.removeValue(forKey: "Coral") {
+    ///         print("The value \(value) was removed.")
+    ///     }
+    ///     // Prints "The value 16 was removed."
+    ///
+    /// If the key isn't found in the dictionary, `removeValue(forKey:)` returns
+    /// `nil`.
+    ///
+    ///     if let value = hues.removeValueForKey("Cerise") {
+    ///         print("The value \(value) was removed.")
+    ///     } else {
+    ///         print("No value found for that key.")
+    ///     }
+    ///     // Prints "No value found for that key.""
+    ///
+    /// - Parameter key: The key to remove along with its associated value.
+    /// - Returns: The value that was removed, or `nil` if the key was not
+    ///   present in the dictionary.
+    ///
+    /// - Complexity: O(*n*), where *n* is the number of key-value pairs in the
+    ///   dictionary.
+    @inlinable
+    @discardableResult
+    public mutating func removeValue(forKey key: Key) -> Value? {
+        return _variant.removeValue(forKey: key)
+    }
+    
+    /// Removes all key-value pairs from the dictionary.
+    ///
+    /// Calling this method invalidates all indices with respect to the
+    /// dictionary.
+    ///
+    /// - Parameter keepCapacity: Whether the dictionary should keep its
+    ///   underlying buffer. If you pass `true`, the operation preserves the
+    ///   buffer capacity that the collection has, otherwise the underlying
+    ///   buffer is released.  The default is `false`.
+    ///
+    /// - Complexity: O(*n*), where *n* is the number of key-value pairs in the
+    ///   dictionary.
+    @inlinable
+    public mutating func removeAll(keepingCapacity keepCapacity: Bool = false) {
+        // The 'will not decrease' part in the documentation comment is worded very
+        // carefully.  The capacity can increase if we replace Cocoa dictionary with
+        // native dictionary.
+        _variant.removeAll(keepingCapacity: keepCapacity)
+    }
+}
+
+extension Dictionary {
+    /// A collection containing just the keys of the dictionary.
+    ///
+    /// When iterated over, keys appear in this collection in the same order as
+    /// they occur in the dictionary's key-value pairs. Each key in the keys
+    /// collection has a unique value.
+    ///
+    ///     let countryCodes = ["BR": "Brazil", "GH": "Ghana", "JP": "Japan"]
+    ///     print(countryCodes)
+    ///     // Prints "["BR": "Brazil", "JP": "Japan", "GH": "Ghana"]"
+    ///
+    ///     for k in countryCodes.keys {
+    ///         print(k)
+    ///     }
+    ///     // Prints "BR"
+    ///     // Prints "JP"
+    ///     // Prints "GH"
+    @inlinable
+    @available(swift, introduced: 4.0)
+    public var keys: Keys {
+        // FIXME(accessors): Provide a _read
+        get {
+            return Keys(_dictionary: self)
+        }
+    }
+    
+    /// A collection containing just the values of the dictionary.
+    ///
+    /// When iterated over, values appear in this collection in the same order as
+    /// they occur in the dictionary's key-value pairs.
+    ///
+    ///     let countryCodes = ["BR": "Brazil", "GH": "Ghana", "JP": "Japan"]
+    ///     print(countryCodes)
+    ///     // Prints "["BR": "Brazil", "JP": "Japan", "GH": "Ghana"]"
+    ///
+    ///     for v in countryCodes.values {
+    ///         print(v)
+    ///     }
+    ///     // Prints "Brazil"
+    ///     // Prints "Japan"
+    ///     // Prints "Ghana"
+    @inlinable
+    @available(swift, introduced: 4.0)
+    public var values: Values {
+        // FIXME(accessors): Provide a _read
+        get {
+            return Values(_dictionary: self)
+        }
+        _modify {
+            var values = Values(_variant: _Variant(dummy: ()))
+            swap(&values._variant, &_variant)
+            defer { self._variant = values._variant }
+            yield &values
+        }
+    }
+    
+    /// A view of a dictionary's keys.
+    @frozen
+    public struct Keys
+        : Collection, Equatable,
+    CustomStringConvertible, CustomDebugStringConvertible {
+        public typealias Element = Key
+        public typealias SubSequence = Slice<Dictionary.Keys>
+        
+        @usableFromInline
+        internal var _variant: Dictionary<Key, Value>._Variant
+        
+        @inlinable
+        internal init(_dictionary: __owned Dictionary) {
+            self._variant = _dictionary._variant
+        }
+        
+        // Collection Conformance
+        // ----------------------
+        
+        @inlinable
+        public var startIndex: Index {
+            return _variant.startIndex
+        }
+        
+        @inlinable
+        public var endIndex: Index {
+            return _variant.endIndex
+        }
+        
+        @inlinable
+        public func index(after i: Index) -> Index {
+            return _variant.index(after: i)
+        }
+        
+        @inlinable
+        public func formIndex(after i: inout Index) {
+            _variant.formIndex(after: &i)
+        }
+        
+        @inlinable
+        public subscript(position: Index) -> Element {
+            return _variant.key(at: position)
+        }
+        
+        // Customization
+        // -------------
+        
+        /// The number of keys in the dictionary.
+        ///
+        /// - Complexity: O(1).
+        @inlinable
+        public var count: Int {
+            return _variant.count
+        }
+        
+        @inlinable
+        public var isEmpty: Bool {
+            return count == 0
+        }
+        
+        @inlinable
+        @inline(__always)
+        public func _customContainsEquatableElement(_ element: Element) -> Bool? {
+            return _variant.contains(element)
+        }
+        
+        @inlinable
+        @inline(__always)
+        public func _customIndexOfEquatableElement(_ element: Element) -> Index?? {
+            return Optional(_variant.index(forKey: element))
+        }
+        
+        @inlinable
+        @inline(__always)
+        public func _customLastIndexOfEquatableElement(_ element: Element) -> Index?? {
+            // The first and last elements are the same because each element is unique.
+            return _customIndexOfEquatableElement(element)
+        }
+        
+        @inlinable
+        public static func ==(lhs: Keys, rhs: Keys) -> Bool {
+            // Equal if the two dictionaries share storage.
+            #if _runtime(_ObjC)
+            if
+                lhs._variant.isNative,
+                rhs._variant.isNative,
+                lhs._variant.asNative._storage === rhs._variant.asNative._storage
+            {
+                return true
+            }
+            if
+                !lhs._variant.isNative,
+                !rhs._variant.isNative,
+                lhs._variant.asCocoa.object === rhs._variant.asCocoa.object
+            {
+                return true
+            }
+            #else
+            if lhs._variant.asNative._storage === rhs._variant.asNative._storage {
+                return true
+            }
+            #endif
+            
+            // Not equal if the dictionaries are different sizes.
+            if lhs.count != rhs.count {
+                return false
+            }
+            
+            // Perform unordered comparison of keys.
+            for key in lhs {
+                if !rhs.contains(key) {
+                    return false
+                }
+            }
+            
+            return true
+        }
+        
+        public var description: String {
+            return _makeCollectionDescription()
+        }
+        
+        public var debugDescription: String {
+            return _makeCollectionDescription(withTypeName: "Dictionary.Keys")
+        }
+    }
+    
+    /// A view of a dictionary's values.
+    @frozen
+    public struct Values
+    : MutableCollection, CustomStringConvertible, CustomDebugStringConvertible {
+        public typealias Element = Value
+        
+        @usableFromInline
+        internal var _variant: Dictionary<Key, Value>._Variant
+        
+        @inlinable
+        internal init(_variant: __owned Dictionary<Key, Value>._Variant) {
+            self._variant = _variant
+        }
+        
+        @inlinable
+        internal init(_dictionary: __owned Dictionary) {
+            self._variant = _dictionary._variant
+        }
+        
+        // Collection Conformance
+        // ----------------------
+        
+        @inlinable
+        public var startIndex: Index {
+            return _variant.startIndex
+        }
+        
+        @inlinable
+        public var endIndex: Index {
+            return _variant.endIndex
+        }
+        
+        @inlinable
+        public func index(after i: Index) -> Index {
+            return _variant.index(after: i)
+        }
+        
+        @inlinable
+        public func formIndex(after i: inout Index) {
+            _variant.formIndex(after: &i)
+        }
+        
+        @inlinable
+        public subscript(position: Index) -> Element {
+            // FIXME(accessors): Provide a _read
+            get {
+                return _variant.value(at: position)
+            }
+            _modify {
+                let native = _variant.ensureUniqueNative()
+                let bucket = native.validatedBucket(for: position)
+                let address = native._values + bucket.offset
+                defer { _fixLifetime(self) }
+                yield &address.pointee
+            }
+        }
+        
+        // Customization
+        // -------------
+        
+        /// The number of values in the dictionary.
+        ///
+        /// - Complexity: O(1).
+        @inlinable
+        public var count: Int {
+            return _variant.count
+        }
+        
+        @inlinable
+        public var isEmpty: Bool {
+            return count == 0
+        }
+        
+        public var description: String {
+            return _makeCollectionDescription()
+        }
+        
+        public var debugDescription: String {
+            return _makeCollectionDescription(withTypeName: "Dictionary.Values")
+        }
+        
+        @inlinable
+        public mutating func swapAt(_ i: Index, _ j: Index) {
+            guard i != j else { return }
+            #if _runtime(_ObjC)
+            if !_variant.isNative {
+                _variant = .init(native: _NativeDictionary(_variant.asCocoa))
+            }
+            #endif
+            let isUnique = _variant.isUniquelyReferenced()
+            let native = _variant.asNative
+            let a = native.validatedBucket(for: i)
+            let b = native.validatedBucket(for: j)
+            _variant.asNative.swapValuesAt(a, b, isUnique: isUnique)
+        }
+    }
 }
 
 extension Dictionary.Keys {
-  @frozen
-  public struct Iterator: IteratorProtocol {
-    @usableFromInline
-    internal var _base: Dictionary<Key, Value>.Iterator
-
+    @frozen
+    public struct Iterator: IteratorProtocol {
+        @usableFromInline
+        internal var _base: Dictionary<Key, Value>.Iterator
+        
+        @inlinable
+        @inline(__always)
+        internal init(_ base: Dictionary<Key, Value>.Iterator) {
+            self._base = base
+        }
+        
+        @inlinable
+        @inline(__always)
+        public mutating func next() -> Key? {
+            #if _runtime(_ObjC)
+            if case .cocoa(let cocoa) = _base._variant {
+                _base._cocoaPath()
+                guard let cocoaKey = cocoa.nextKey() else { return nil }
+                return _forceBridgeFromObjectiveC(cocoaKey, Key.self)
+            }
+            #endif
+            return _base._asNative.nextKey()
+        }
+    }
+    
     @inlinable
     @inline(__always)
-    internal init(_ base: Dictionary<Key, Value>.Iterator) {
-      self._base = base
+    public __consuming func makeIterator() -> Iterator {
+        return Iterator(_variant.makeIterator())
     }
-
-    @inlinable
-    @inline(__always)
-    public mutating func next() -> Key? {
-#if _runtime(_ObjC)
-      if case .cocoa(let cocoa) = _base._variant {
-        _base._cocoaPath()
-        guard let cocoaKey = cocoa.nextKey() else { return nil }
-        return _forceBridgeFromObjectiveC(cocoaKey, Key.self)
-      }
-#endif
-      return _base._asNative.nextKey()
-    }
-  }
-
-  @inlinable
-  @inline(__always)
-  public __consuming func makeIterator() -> Iterator {
-    return Iterator(_variant.makeIterator())
-  }
 }
 
 extension Dictionary.Values {
-  @frozen
-  public struct Iterator: IteratorProtocol {
-    @usableFromInline
-    internal var _base: Dictionary<Key, Value>.Iterator
-
+    @frozen
+    public struct Iterator: IteratorProtocol {
+        @usableFromInline
+        internal var _base: Dictionary<Key, Value>.Iterator
+        
+        @inlinable
+        @inline(__always)
+        internal init(_ base: Dictionary<Key, Value>.Iterator) {
+            self._base = base
+        }
+        
+        @inlinable
+        @inline(__always)
+        public mutating func next() -> Value? {
+            #if _runtime(_ObjC)
+            if case .cocoa(let cocoa) = _base._variant {
+                _base._cocoaPath()
+                guard let (_, cocoaValue) = cocoa.next() else { return nil }
+                return _forceBridgeFromObjectiveC(cocoaValue, Value.self)
+            }
+            #endif
+            return _base._asNative.nextValue()
+        }
+    }
+    
     @inlinable
     @inline(__always)
-    internal init(_ base: Dictionary<Key, Value>.Iterator) {
-      self._base = base
+    public __consuming func makeIterator() -> Iterator {
+        return Iterator(_variant.makeIterator())
     }
-
-    @inlinable
-    @inline(__always)
-    public mutating func next() -> Value? {
-#if _runtime(_ObjC)
-      if case .cocoa(let cocoa) = _base._variant {
-        _base._cocoaPath()
-        guard let (_, cocoaValue) = cocoa.next() else { return nil }
-        return _forceBridgeFromObjectiveC(cocoaValue, Value.self)
-      }
-#endif
-      return _base._asNative.nextValue()
-    }
-  }
-
-  @inlinable
-  @inline(__always)
-  public __consuming func makeIterator() -> Iterator {
-    return Iterator(_variant.makeIterator())
-  }
 }
 
 extension Dictionary: Equatable where Value: Equatable {
-  @inlinable
-  public static func == (lhs: [Key: Value], rhs: [Key: Value]) -> Bool {
-#if _runtime(_ObjC)
-    switch (lhs._variant.isNative, rhs._variant.isNative) {
-    case (true, true):
-      return lhs._variant.asNative.isEqual(to: rhs._variant.asNative)
-    case (false, false):
-      return lhs._variant.asCocoa.isEqual(to: rhs._variant.asCocoa)
-    case (true, false):
-      return lhs._variant.asNative.isEqual(to: rhs._variant.asCocoa)
-    case (false, true):
-      return rhs._variant.asNative.isEqual(to: lhs._variant.asCocoa)
+    @inlinable
+    public static func == (lhs: [Key: Value], rhs: [Key: Value]) -> Bool {
+        #if _runtime(_ObjC)
+        switch (lhs._variant.isNative, rhs._variant.isNative) {
+        case (true, true):
+            return lhs._variant.asNative.isEqual(to: rhs._variant.asNative)
+        case (false, false):
+            return lhs._variant.asCocoa.isEqual(to: rhs._variant.asCocoa)
+        case (true, false):
+            return lhs._variant.asNative.isEqual(to: rhs._variant.asCocoa)
+        case (false, true):
+            return rhs._variant.asNative.isEqual(to: lhs._variant.asCocoa)
+        }
+        #else
+        return lhs._variant.asNative.isEqual(to: rhs._variant.asNative)
+        #endif
     }
-#else
-    return lhs._variant.asNative.isEqual(to: rhs._variant.asNative)
-#endif
-  }
 }
 
 extension Dictionary: Hashable where Value: Hashable {
-  /// Hashes the essential components of this value by feeding them into the
-  /// given hasher.
-  ///
-  /// - Parameter hasher: The hasher to use when combining the components
-  ///   of this instance.
-  @inlinable
-  public func hash(into hasher: inout Hasher) {
-    var commutativeHash = 0
-    for (k, v) in self {
-      // Note that we use a copy of our own hasher here. This makes hash values
-      // dependent on its state, eliminating static collision patterns.
-      var elementHasher = hasher
-      elementHasher.combine(k)
-      elementHasher.combine(v)
-      commutativeHash ^= elementHasher._finalize()
+    /// Hashes the essential components of this value by feeding them into the
+    /// given hasher.
+    ///
+    /// - Parameter hasher: The hasher to use when combining the components
+    ///   of this instance.
+    @inlinable
+    public func hash(into hasher: inout Hasher) {
+        var commutativeHash = 0
+        for (k, v) in self {
+            // Note that we use a copy of our own hasher here. This makes hash values
+            // dependent on its state, eliminating static collision patterns.
+            var elementHasher = hasher
+            elementHasher.combine(k)
+            elementHasher.combine(v)
+            commutativeHash ^= elementHasher._finalize()
+        }
+        hasher.combine(commutativeHash)
     }
-    hasher.combine(commutativeHash)
-  }
 }
 
 extension Dictionary: _HasCustomAnyHashableRepresentation
 where Value: Hashable {
-  public __consuming func _toCustomAnyHashable() -> AnyHashable? {
-    return AnyHashable(_box: _DictionaryAnyHashableBox(self))
-  }
+    public __consuming func _toCustomAnyHashable() -> AnyHashable? {
+        return AnyHashable(_box: _DictionaryAnyHashableBox(self))
+    }
 }
 
 internal struct _DictionaryAnyHashableBox<Key: Hashable, Value: Hashable>
-  : _AnyHashableBox {
-  internal let _value: Dictionary<Key, Value>
-  internal let _canonical: Dictionary<AnyHashable, AnyHashable>
-
-  internal init(_ value: __owned Dictionary<Key, Value>) {
-    self._value = value
-    self._canonical = value as Dictionary<AnyHashable, AnyHashable>
-  }
-
-  internal var _base: Any {
-    return _value
-  }
-
-  internal var _canonicalBox: _AnyHashableBox {
-    return _DictionaryAnyHashableBox<AnyHashable, AnyHashable>(_canonical)
-  }
-
-  internal func _isEqual(to other: _AnyHashableBox) -> Bool? {
-    guard
-      let other = other as? _DictionaryAnyHashableBox<AnyHashable, AnyHashable>
-    else {
-      return nil
+: _AnyHashableBox {
+    internal let _value: Dictionary<Key, Value>
+    internal let _canonical: Dictionary<AnyHashable, AnyHashable>
+    
+    internal init(_ value: __owned Dictionary<Key, Value>) {
+        self._value = value
+        self._canonical = value as Dictionary<AnyHashable, AnyHashable>
     }
-    return _canonical == other._value
-  }
-
-  internal var _hashValue: Int {
-    return _canonical.hashValue
-  }
-
-  internal func _hash(into hasher: inout Hasher) {
-    _canonical.hash(into: &hasher)
-  }
-
-  internal func _rawHashValue(_seed: Int) -> Int {
-    return _canonical._rawHashValue(seed: _seed)
-  }
-
-  internal func _unbox<T: Hashable>() -> T? {
-    return _value as? T
-  }
-
-  internal func _downCastConditional<T>(
-    into result: UnsafeMutablePointer<T>
-  ) -> Bool {
-    guard let value = _value as? T else { return false }
-    result.initialize(to: value)
-    return true
-  }
+    
+    internal var _base: Any {
+        return _value
+    }
+    
+    internal var _canonicalBox: _AnyHashableBox {
+        return _DictionaryAnyHashableBox<AnyHashable, AnyHashable>(_canonical)
+    }
+    
+    internal func _isEqual(to other: _AnyHashableBox) -> Bool? {
+        guard
+            let other = other as? _DictionaryAnyHashableBox<AnyHashable, AnyHashable>
+            else {
+                return nil
+        }
+        return _canonical == other._value
+    }
+    
+    internal var _hashValue: Int {
+        return _canonical.hashValue
+    }
+    
+    internal func _hash(into hasher: inout Hasher) {
+        _canonical.hash(into: &hasher)
+    }
+    
+    internal func _rawHashValue(_seed: Int) -> Int {
+        return _canonical._rawHashValue(seed: _seed)
+    }
+    
+    internal func _unbox<T: Hashable>() -> T? {
+        return _value as? T
+    }
+    
+    internal func _downCastConditional<T>(
+        into result: UnsafeMutablePointer<T>
+    ) -> Bool {
+        guard let value = _value as? T else { return false }
+        result.initialize(to: value)
+        return true
+    }
 }
 
 extension Collection {
-  // Utility method for KV collections that wish to implement
-  // CustomStringConvertible and CustomDebugStringConvertible using a bracketed
-  // list of elements.
-  // FIXME: Doesn't use the withTypeName argument yet
-  internal func _makeKeyValuePairDescription<K, V>(
-    withTypeName type: String? = nil
-  ) -> String where Element == (key: K, value: V) {
-    if self.isEmpty {
-      return "[:]"
+    // Utility method for KV collections that wish to implement
+    // CustomStringConvertible and CustomDebugStringConvertible using a bracketed
+    // list of elements.
+    // FIXME: Doesn't use the withTypeName argument yet
+    internal func _makeKeyValuePairDescription<K, V>(
+        withTypeName type: String? = nil
+    ) -> String where Element == (key: K, value: V) {
+        if self.isEmpty {
+            return "[:]"
+        }
+        
+        var result = "["
+        var first = true
+        for (k, v) in self {
+            if first {
+                first = false
+            } else {
+                result += ", "
+            }
+            debugPrint(k, terminator: "", to: &result)
+            result += ": "
+            debugPrint(v, terminator: "", to: &result)
+        }
+        result += "]"
+        return result
     }
-    
-    var result = "["
-    var first = true
-    for (k, v) in self {
-      if first {
-        first = false
-      } else {
-        result += ", "
-      }
-      debugPrint(k, terminator: "", to: &result)
-      result += ": "
-      debugPrint(v, terminator: "", to: &result)
-    }
-    result += "]"
-    return result
-  }
 }
 
 extension Dictionary: CustomStringConvertible, CustomDebugStringConvertible {
-  /// A string that represents the contents of the dictionary.
-  public var description: String {
-    return _makeKeyValuePairDescription()
-  }
-
-  /// A string that represents the contents of the dictionary, suitable for
-  /// debugging.
-  public var debugDescription: String {
-    return _makeKeyValuePairDescription()
-  }
+    /// A string that represents the contents of the dictionary.
+    public var description: String {
+        return _makeKeyValuePairDescription()
+    }
+    
+    /// A string that represents the contents of the dictionary, suitable for
+    /// debugging.
+    public var debugDescription: String {
+        return _makeKeyValuePairDescription()
+    }
 }
 
 @usableFromInline
 @frozen
 internal enum _MergeError: Error {
-  case keyCollision
+    case keyCollision
 }
 
 extension Dictionary {
-  /// The position of a key-value pair in a dictionary.
-  ///
-  /// Dictionary has two subscripting interfaces:
-  ///
-  /// 1. Subscripting with a key, yielding an optional value:
-  ///
-  ///        v = d[k]!
-  ///
-  /// 2. Subscripting with an index, yielding a key-value pair:
-  ///
-  ///        (k, v) = d[i]
-  @frozen
-  public struct Index {
-    // Index for native dictionary is efficient.  Index for bridged NSDictionary
-    // is not, because neither NSEnumerator nor fast enumeration support moving
-    // backwards.  Even if they did, there is another issue: NSEnumerator does
-    // not support NSCopying, and fast enumeration does not document that it is
-    // safe to copy the state.  So, we cannot implement Index that is a value
-    // type for bridged NSDictionary in terms of Cocoa enumeration facilities.
-
+    /// The position of a key-value pair in a dictionary.
+    ///
+    /// Dictionary has two subscripting interfaces:
+    ///
+    /// 1. Subscripting with a key, yielding an optional value:
+    ///
+    ///        v = d[k]!
+    ///
+    /// 2. Subscripting with an index, yielding a key-value pair:
+    ///
+    ///        (k, v) = d[i]
     @frozen
-    @usableFromInline
-    internal enum _Variant {
-      case native(_HashTable.Index)
-#if _runtime(_ObjC)
-      case cocoa(__CocoaDictionary.Index)
-#endif
+    public struct Index {
+        // Index for native dictionary is efficient.  Index for bridged NSDictionary
+        // is not, because neither NSEnumerator nor fast enumeration support moving
+        // backwards.  Even if they did, there is another issue: NSEnumerator does
+        // not support NSCopying, and fast enumeration does not document that it is
+        // safe to copy the state.  So, we cannot implement Index that is a value
+        // type for bridged NSDictionary in terms of Cocoa enumeration facilities.
+        
+        @frozen
+        @usableFromInline
+        internal enum _Variant {
+            case native(_HashTable.Index)
+            #if _runtime(_ObjC)
+            case cocoa(__CocoaDictionary.Index)
+            #endif
+        }
+        
+        @usableFromInline
+        internal var _variant: _Variant
+        
+        @inlinable
+        @inline(__always)
+        internal init(_variant: __owned _Variant) {
+            self._variant = _variant
+        }
+        
+        @inlinable
+        @inline(__always)
+        internal init(_native index: _HashTable.Index) {
+            self.init(_variant: .native(index))
+        }
+        
+        #if _runtime(_ObjC)
+        @inlinable
+        @inline(__always)
+        internal init(_cocoa index: __owned __CocoaDictionary.Index) {
+            self.init(_variant: .cocoa(index))
+        }
+        #endif
     }
-
-    @usableFromInline
-    internal var _variant: _Variant
-
-    @inlinable
-    @inline(__always)
-    internal init(_variant: __owned _Variant) {
-      self._variant = _variant
-    }
-
-    @inlinable
-    @inline(__always)
-    internal init(_native index: _HashTable.Index) {
-      self.init(_variant: .native(index))
-    }
-
-#if _runtime(_ObjC)
-    @inlinable
-    @inline(__always)
-    internal init(_cocoa index: __owned __CocoaDictionary.Index) {
-      self.init(_variant: .cocoa(index))
-    }
-#endif
-  }
 }
 
 extension Dictionary.Index {
-#if _runtime(_ObjC)
-  @usableFromInline @_transparent
-  internal var _guaranteedNative: Bool {
-    return _canBeClass(Key.self) == 0 || _canBeClass(Value.self) == 0
-  }
-
-  // Allow the optimizer to consider the surrounding code unreachable if Element
-  // is guaranteed to be native.
-  @usableFromInline @_transparent
-  internal func _cocoaPath() {
-    if _guaranteedNative {
-      _conditionallyUnreachable()
+    #if _runtime(_ObjC)
+    @usableFromInline @_transparent
+    internal var _guaranteedNative: Bool {
+        return _canBeClass(Key.self) == 0 || _canBeClass(Value.self) == 0
     }
-  }
-
-  @inlinable
-  @inline(__always)
-  internal mutating func _isUniquelyReferenced() -> Bool {
-    defer { _fixLifetime(self) }
-    var handle = _asCocoa.handleBitPattern
-    return handle == 0 || _isUnique_native(&handle)
-  }
-
-  @usableFromInline @_transparent
-  internal var _isNative: Bool {
-    switch _variant {
-    case .native:
-      return true
-    case .cocoa:
-      _cocoaPath()
-      return false
+    
+    // Allow the optimizer to consider the surrounding code unreachable if Element
+    // is guaranteed to be native.
+    @usableFromInline @_transparent
+    internal func _cocoaPath() {
+        if _guaranteedNative {
+            _conditionallyUnreachable()
+        }
     }
-  }
-#endif
-
-  @usableFromInline @_transparent
-  internal var _asNative: _HashTable.Index {
-    switch _variant {
-    case .native(let nativeIndex):
-      return nativeIndex
-#if _runtime(_ObjC)
-    case .cocoa:
-      _preconditionFailure(
+    
+    @inlinable
+    @inline(__always)
+    internal mutating func _isUniquelyReferenced() -> Bool {
+        defer { _fixLifetime(self) }
+        var handle = _asCocoa.handleBitPattern
+        return handle == 0 || _isUnique_native(&handle)
+    }
+    
+    @usableFromInline @_transparent
+    internal var _isNative: Bool {
+        switch _variant {
+        case .native:
+        return true
+        case .cocoa:
+        _cocoaPath()
+        return false
+        }
+    }
+    #endif
+    
+    @usableFromInline @_transparent
+    internal var _asNative: _HashTable.Index {
+        switch _variant {
+        case .native(let nativeIndex):
+            return nativeIndex
+            #if _runtime(_ObjC)
+        case .cocoa:
+            _preconditionFailure(
+                "Attempting to access Dictionary elements using an invalid index")
+            #endif
+        }
+    }
+    
+    #if _runtime(_ObjC)
+    @usableFromInline
+    internal var _asCocoa: __CocoaDictionary.Index {
+        @_transparent
+        get {
+        switch _variant {
+        case .native:
+        _preconditionFailure(
         "Attempting to access Dictionary elements using an invalid index")
-#endif
-    }
-  }
-
-#if _runtime(_ObjC)
-  @usableFromInline
-  internal var _asCocoa: __CocoaDictionary.Index {
-    @_transparent
-    get {
-      switch _variant {
-      case .native:
-        _preconditionFailure(
-          "Attempting to access Dictionary elements using an invalid index")
-      case .cocoa(let cocoaIndex):
+        case .cocoa(let cocoaIndex):
         return cocoaIndex
-      }
-    }
-    _modify {
-      guard case .cocoa(var cocoa) = _variant else {
+        }
+        }
+        _modify {
+        guard case .cocoa(var cocoa) = _variant else {
         _preconditionFailure(
-          "Attempting to access Dictionary elements using an invalid index")
-      }
-      let dummy = _HashTable.Index(bucket: _HashTable.Bucket(offset: 0), age: 0)
-      _variant = .native(dummy)
-      defer { _variant = .cocoa(cocoa) }
-      yield &cocoa
+        "Attempting to access Dictionary elements using an invalid index")
+        }
+        let dummy = _HashTable.Index(bucket: _HashTable.Bucket(offset: 0), age: 0)
+        _variant = .native(dummy)
+        defer { _variant = .cocoa(cocoa) }
+        yield &cocoa
+        }
     }
-  }
-#endif
+    #endif
 }
 
 extension Dictionary.Index: Equatable {
-  @inlinable
-  public static func == (
-    lhs: Dictionary<Key, Value>.Index,
-    rhs: Dictionary<Key, Value>.Index
-  ) -> Bool {
-    switch (lhs._variant, rhs._variant) {
-    case (.native(let lhsNative), .native(let rhsNative)):
-      return lhsNative == rhsNative
-  #if _runtime(_ObjC)
-    case (.cocoa(let lhsCocoa), .cocoa(let rhsCocoa)):
-      lhs._cocoaPath()
-      return lhsCocoa == rhsCocoa
-    default:
-      _preconditionFailure("Comparing indexes from different dictionaries")
-  #endif
+    @inlinable
+    public static func == (
+        lhs: Dictionary<Key, Value>.Index,
+        rhs: Dictionary<Key, Value>.Index
+    ) -> Bool {
+        switch (lhs._variant, rhs._variant) {
+        case (.native(let lhsNative), .native(let rhsNative)):
+            return lhsNative == rhsNative
+            #if _runtime(_ObjC)
+        case (.cocoa(let lhsCocoa), .cocoa(let rhsCocoa)):
+            lhs._cocoaPath()
+            return lhsCocoa == rhsCocoa
+        default:
+            _preconditionFailure("Comparing indexes from different dictionaries")
+            #endif
+        }
     }
-  }
 }
 
 extension Dictionary.Index: Comparable {
-  @inlinable
-  public static func < (
-    lhs: Dictionary<Key, Value>.Index,
-    rhs: Dictionary<Key, Value>.Index
-  ) -> Bool {
-    switch (lhs._variant, rhs._variant) {
-    case (.native(let lhsNative), .native(let rhsNative)):
-      return lhsNative < rhsNative
-  #if _runtime(_ObjC)
-    case (.cocoa(let lhsCocoa), .cocoa(let rhsCocoa)):
-      lhs._cocoaPath()
-      return lhsCocoa < rhsCocoa
-    default:
-      _preconditionFailure("Comparing indexes from different dictionaries")
-  #endif
+    @inlinable
+    public static func < (
+        lhs: Dictionary<Key, Value>.Index,
+        rhs: Dictionary<Key, Value>.Index
+    ) -> Bool {
+        switch (lhs._variant, rhs._variant) {
+        case (.native(let lhsNative), .native(let rhsNative)):
+            return lhsNative < rhsNative
+            #if _runtime(_ObjC)
+        case (.cocoa(let lhsCocoa), .cocoa(let rhsCocoa)):
+            lhs._cocoaPath()
+            return lhsCocoa < rhsCocoa
+        default:
+            _preconditionFailure("Comparing indexes from different dictionaries")
+            #endif
+        }
     }
-  }
 }
 
 extension Dictionary.Index: Hashable {
-  public // FIXME(cocoa-index): Make inlinable
-  func hash(into hasher: inout Hasher) {
-#if _runtime(_ObjC)
-    guard _isNative else {
-      hasher.combine(1 as UInt8)
-      hasher.combine(_asCocoa._offset)
-      return
+    public // FIXME(cocoa-index): Make inlinable
+    func hash(into hasher: inout Hasher) {
+        #if _runtime(_ObjC)
+        guard _isNative else {
+            hasher.combine(1 as UInt8)
+            hasher.combine(_asCocoa._offset)
+            return
+        }
+        hasher.combine(0 as UInt8)
+        hasher.combine(_asNative.bucket.offset)
+        #else
+        hasher.combine(_asNative.bucket.offset)
+        #endif
     }
-    hasher.combine(0 as UInt8)
-    hasher.combine(_asNative.bucket.offset)
-#else
-    hasher.combine(_asNative.bucket.offset)
-#endif
-  }
 }
 
 extension Dictionary {
-  /// An iterator over the members of a `Dictionary<Key, Value>`.
-  @frozen
-  public struct Iterator {
-    // Dictionary has a separate IteratorProtocol and Index because of
-    // efficiency and implementability reasons.
-    //
-    // Native dictionaries have efficient indices.
-    // Bridged NSDictionary instances don't.
-    //
-    // Even though fast enumeration is not suitable for implementing
-    // Index, which is multi-pass, it is suitable for implementing a
-    // IteratorProtocol, which is being consumed as iteration proceeds.
-
-    @usableFromInline
+    /// An iterator over the members of a `Dictionary<Key, Value>`.
     @frozen
-    internal enum _Variant {
-      case native(_NativeDictionary<Key, Value>.Iterator)
-#if _runtime(_ObjC)
-      case cocoa(__CocoaDictionary.Iterator)
-#endif
+    public struct Iterator {
+        // Dictionary has a separate IteratorProtocol and Index because of
+        // efficiency and implementability reasons.
+        //
+        // Native dictionaries have efficient indices.
+        // Bridged NSDictionary instances don't.
+        //
+        // Even though fast enumeration is not suitable for implementing
+        // Index, which is multi-pass, it is suitable for implementing a
+        // IteratorProtocol, which is being consumed as iteration proceeds.
+        
+        @usableFromInline
+        @frozen
+        internal enum _Variant {
+            case native(_NativeDictionary<Key, Value>.Iterator)
+            #if _runtime(_ObjC)
+            case cocoa(__CocoaDictionary.Iterator)
+            #endif
+        }
+        
+        @usableFromInline
+        internal var _variant: _Variant
+        
+        @inlinable
+        internal init(_variant: __owned _Variant) {
+            self._variant = _variant
+        }
+        
+        @inlinable
+        internal init(_native: __owned _NativeDictionary<Key, Value>.Iterator) {
+            self.init(_variant: .native(_native))
+        }
+        
+        #if _runtime(_ObjC)
+        @inlinable
+        internal init(_cocoa: __owned __CocoaDictionary.Iterator) {
+            self.init(_variant: .cocoa(_cocoa))
+        }
+        #endif
     }
-
-    @usableFromInline
-    internal var _variant: _Variant
-
-    @inlinable
-    internal init(_variant: __owned _Variant) {
-      self._variant = _variant
-    }
-
-    @inlinable
-    internal init(_native: __owned _NativeDictionary<Key, Value>.Iterator) {
-      self.init(_variant: .native(_native))
-    }
-
-#if _runtime(_ObjC)
-    @inlinable
-    internal init(_cocoa: __owned __CocoaDictionary.Iterator) {
-      self.init(_variant: .cocoa(_cocoa))
-    }
-#endif
-  }
 }
 
 extension Dictionary.Iterator {
-#if _runtime(_ObjC)
-  @usableFromInline @_transparent
-  internal var _guaranteedNative: Bool {
-    return _canBeClass(Key.self) == 0 || _canBeClass(Value.self) == 0
-  }
-
-  /// Allow the optimizer to consider the surrounding code unreachable if
-  /// Dictionary<Key, Value> is guaranteed to be native.
-  @usableFromInline @_transparent
-  internal func _cocoaPath() {
-    if _guaranteedNative {
-      _conditionallyUnreachable()
+    #if _runtime(_ObjC)
+    @usableFromInline @_transparent
+    internal var _guaranteedNative: Bool {
+        return _canBeClass(Key.self) == 0 || _canBeClass(Value.self) == 0
     }
-  }
-
-  @usableFromInline @_transparent
-  internal var _isNative: Bool {
-    switch _variant {
-    case .native:
-      return true
-    case .cocoa:
-      _cocoaPath()
-      return false
+    
+    /// Allow the optimizer to consider the surrounding code unreachable if
+    /// Dictionary<Key, Value> is guaranteed to be native.
+    @usableFromInline @_transparent
+    internal func _cocoaPath() {
+        if _guaranteedNative {
+            _conditionallyUnreachable()
+        }
     }
-  }
-#endif
-
-  @usableFromInline @_transparent
-  internal var _asNative: _NativeDictionary<Key, Value>.Iterator {
-    get {
-      switch _variant {
-      case .native(let nativeIterator):
-        return nativeIterator
-#if _runtime(_ObjC)
-      case .cocoa:
-        _internalInvariantFailure("internal error: does not contain a native index")
-#endif
-      }
+    
+    @usableFromInline @_transparent
+    internal var _isNative: Bool {
+        switch _variant {
+        case .native:
+        return true
+        case .cocoa:
+        _cocoaPath()
+        return false
+        }
     }
-    set {
-      self._variant = .native(newValue)
+    #endif
+    
+    @usableFromInline @_transparent
+    internal var _asNative: _NativeDictionary<Key, Value>.Iterator {
+        get {
+            switch _variant {
+            case .native(let nativeIterator):
+                return nativeIterator
+                #if _runtime(_ObjC)
+            case .cocoa:
+                _internalInvariantFailure("internal error: does not contain a native index")
+                #endif
+            }
+        }
+        set {
+            self._variant = .native(newValue)
+        }
     }
-  }
-
-#if _runtime(_ObjC)
-  @usableFromInline @_transparent
-  internal var _asCocoa: __CocoaDictionary.Iterator {
-    get {
-      switch _variant {
-      case .native:
+    
+    #if _runtime(_ObjC)
+    @usableFromInline @_transparent
+    internal var _asCocoa: __CocoaDictionary.Iterator {
+        get {
+        switch _variant {
+        case .native:
         _internalInvariantFailure("internal error: does not contain a Cocoa index")
-      case .cocoa(let cocoa):
+        case .cocoa(let cocoa):
         return cocoa
-      }
+        }
+        }
     }
-  }
-#endif
-
+    #endif
+    
 }
 
 extension Dictionary.Iterator: IteratorProtocol {
-  /// Advances to the next element and returns it, or `nil` if no next element
-  /// exists.
-  ///
-  /// Once `nil` has been returned, all subsequent calls return `nil`.
-  @inlinable
-  @inline(__always)
-  public mutating func next() -> (key: Key, value: Value)? {
-#if _runtime(_ObjC)
-    guard _isNative else {
-      if let (cocoaKey, cocoaValue) = _asCocoa.next() {
-        let nativeKey = _forceBridgeFromObjectiveC(cocoaKey, Key.self)
-        let nativeValue = _forceBridgeFromObjectiveC(cocoaValue, Value.self)
-        return (nativeKey, nativeValue)
-      }
-      return nil
+    /// Advances to the next element and returns it, or `nil` if no next element
+    /// exists.
+    ///
+    /// Once `nil` has been returned, all subsequent calls return `nil`.
+    @inlinable
+    @inline(__always)
+    public mutating func next() -> (key: Key, value: Value)? {
+        #if _runtime(_ObjC)
+        guard _isNative else {
+            if let (cocoaKey, cocoaValue) = _asCocoa.next() {
+                let nativeKey = _forceBridgeFromObjectiveC(cocoaKey, Key.self)
+                let nativeValue = _forceBridgeFromObjectiveC(cocoaValue, Value.self)
+                return (nativeKey, nativeValue)
+            }
+            return nil
+        }
+        #endif
+        return _asNative.next()
     }
-#endif
-    return _asNative.next()
-  }
 }
 
 extension Dictionary.Iterator: CustomReflectable {
-  /// A mirror that reflects the iterator.
-  public var customMirror: Mirror {
-    return Mirror(
-      self,
-      children: EmptyCollection<(label: String?, value: Any)>())
-  }
+    /// A mirror that reflects the iterator.
+    public var customMirror: Mirror {
+        return Mirror(
+            self,
+            children: EmptyCollection<(label: String?, value: Any)>())
+    }
 }
 
 extension Dictionary: CustomReflectable {
-  /// A mirror that reflects the dictionary.
-  public var customMirror: Mirror {
-    let style = Mirror.DisplayStyle.dictionary
-    return Mirror(self, unlabeledChildren: self, displayStyle: style)
-  }
+    /// A mirror that reflects the dictionary.
+    public var customMirror: Mirror {
+        let style = Mirror.DisplayStyle.dictionary
+        return Mirror(self, unlabeledChildren: self, displayStyle: style)
+    }
 }
 
 extension Dictionary {
-  /// Removes and returns the first key-value pair of the dictionary if the
-  /// dictionary isn't empty.
-  ///
-  /// The first element of the dictionary is not necessarily the first element
-  /// added. Don't expect any particular ordering of key-value pairs.
-  ///
-  /// - Returns: The first key-value pair of the dictionary if the dictionary
-  ///   is not empty; otherwise, `nil`.
-  ///
-  /// - Complexity: Averages to O(1) over many calls to `popFirst()`.
-  @inlinable
-  public mutating func popFirst() -> Element? {
-    guard !isEmpty else { return nil }
-    return remove(at: startIndex)
-  }
-
-  /// The total number of key-value pairs that the dictionary can contain without
-  /// allocating new storage.
-  @inlinable
-  public var capacity: Int {
-    return _variant.capacity
-  }
-
-  /// Reserves enough space to store the specified number of key-value pairs.
-  ///
-  /// If you are adding a known number of key-value pairs to a dictionary, use this
-  /// method to avoid multiple reallocations. This method ensures that the
-  /// dictionary has unique, mutable, contiguous storage, with space allocated
-  /// for at least the requested number of key-value pairs.
-  ///
-  /// Calling the `reserveCapacity(_:)` method on a dictionary with bridged
-  /// storage triggers a copy to contiguous storage even if the existing
-  /// storage has room to store `minimumCapacity` key-value pairs.
-  ///
-  /// - Parameter minimumCapacity: The requested number of key-value pairs to
-  ///   store.
-  public // FIXME(reserveCapacity): Should be inlinable
-  mutating func reserveCapacity(_ minimumCapacity: Int) {
-    _variant.reserveCapacity(minimumCapacity)
-    _internalInvariant(self.capacity >= minimumCapacity)
-  }
+    /// Removes and returns the first key-value pair of the dictionary if the
+    /// dictionary isn't empty.
+    ///
+    /// The first element of the dictionary is not necessarily the first element
+    /// added. Don't expect any particular ordering of key-value pairs.
+    ///
+    /// - Returns: The first key-value pair of the dictionary if the dictionary
+    ///   is not empty; otherwise, `nil`.
+    ///
+    /// - Complexity: Averages to O(1) over many calls to `popFirst()`.
+    @inlinable
+    public mutating func popFirst() -> Element? {
+        guard !isEmpty else { return nil }
+        return remove(at: startIndex)
+    }
+    
+    /// The total number of key-value pairs that the dictionary can contain without
+    /// allocating new storage.
+    @inlinable
+    public var capacity: Int {
+        return _variant.capacity
+    }
+    
+    /// Reserves enough space to store the specified number of key-value pairs.
+    ///
+    /// If you are adding a known number of key-value pairs to a dictionary, use this
+    /// method to avoid multiple reallocations. This method ensures that the
+    /// dictionary has unique, mutable, contiguous storage, with space allocated
+    /// for at least the requested number of key-value pairs.
+    ///
+    /// Calling the `reserveCapacity(_:)` method on a dictionary with bridged
+    /// storage triggers a copy to contiguous storage even if the existing
+    /// storage has room to store `minimumCapacity` key-value pairs.
+    ///
+    /// - Parameter minimumCapacity: The requested number of key-value pairs to
+    ///   store.
+    public // FIXME(reserveCapacity): Should be inlinable
+    mutating func reserveCapacity(_ minimumCapacity: Int) {
+        _variant.reserveCapacity(minimumCapacity)
+        _internalInvariant(self.capacity >= minimumCapacity)
+    }
 }
 
 public typealias DictionaryIndex<Key: Hashable, Value> =
-  Dictionary<Key, Value>.Index
+    Dictionary<Key, Value>.Index
 public typealias DictionaryIterator<Key: Hashable, Value> =
-  Dictionary<Key, Value>.Iterator
+    Dictionary<Key, Value>.Iterator

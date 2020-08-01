@@ -1,26 +1,14 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
 /// A view into a subsequence of elements of another collection.
 ///
 ///
-/// Slice 仅仅做引用的 copy 操作.
+///   切片, 会存储原始的 Collection, 以及切片的起始位置, 结束为止.
 /// A slice stores a base collection and the start and end indices of the view.
 /// It does not copy the elements from the collection into separate storage.
 /// Thus, creating a slice has O(1) complexity.
 ///
 /// Slices Share Indices
 /// --------------------
-///
+/// 切片里面, 还是使用 Collection 的 index, 但是使用者要确保, 不能超出切片的范围.
 /// Indices of a slice can be used interchangeably with indices of the base
 /// collection. An element of a slice is located under the same index in the
 /// slice and in the base collection, as long as neither the collection nor
@@ -44,6 +32,7 @@
 ///
 /// Here's an implementation of those steps:
 ///
+///  这里, 可以看到, 3 是原始的 sequence 的索引, 而不是 slice 的索引.
 ///     let secondHalf = absences.suffix(absences.count / 2)
 ///     if let i = secondHalf.indices.max(by: { secondHalf[$0] < secondHalf[$1] }) {
 ///         print("Highest second-half absences: \(absences[i])")
@@ -53,6 +42,7 @@
 /// Slices Inherit Semantics
 /// ------------------------
 ///
+/// 切片的值语义.
 /// A slice inherits the value or reference semantics of its base collection.
 /// That is, if a `Slice` instance is wrapped around a mutable collection that
 /// has value semantics, such as an array, mutating the original collection
@@ -68,6 +58,7 @@
 ///     print(secondHalf)
 ///     // Prints "[0, 3, 1, 0]"
 ///
+/// 切片最好还是临时使用, 不要当做存储来进行.
 /// Use slices only for transient computation. A slice may hold a reference to
 /// the entire storage of a larger collection, not just to the portion it
 /// presents, even after the base collection's lifetime ends. Long-term
@@ -82,6 +73,8 @@
 ///   define your own subsequence type that takes your index invalidation
 ///   requirements into account.
 
+
+/// 最重要的三个值, 组成了切片的意义
 @frozen // generic-performance
 public struct Slice<Base: Collection> {
     public var _startIndex: Base.Index
@@ -141,7 +134,7 @@ public struct Slice<Base: Collection> {
 }
 
 /*
- 当 Slice 去满足 Collection 里面的要求的时候, StartIndex, endIndex, 都是自己存储的上限下限的那些值.
+ Slice 里面的 startIndex 和 endIndex, 都是自己的, 而不是 base 的.
  */
 extension Slice: Collection {
     public typealias Index = Base.Index
@@ -161,8 +154,7 @@ extension Slice: Collection {
     }
     
     /*
-     需要注意的是, 这里, index 的值, 是根据原始 colleciton 的 index 来的. 也就是说, slice 的第一个位置, 是它记录的 startIndex, 而不是 0
-     _failEarlyRangeCheck 的检测的范围是, slice 自己的 startIndex, endIndex. 所以说, slice 之后, range 就固定为自己掌管的范围了.
+     这里, 判断范围的时候, 是使用的自己记录的 start, end 的范围.
      */
     @inlinable // generic-performance
     public subscript(index: Index) -> Base.Element {
@@ -182,12 +174,16 @@ extension Slice: Collection {
     
     /*
      所有的, 关于 index 的操作, 都是交给了 base. Slice 仅仅是提供一个切割的概念而已.
+     这里, 返回的 indices, 是 _base.indices 里面, slice 的 start, end 圈住的那一部分.
      */
     
     public var indices: Indices {
         return _base.indices[_startIndex..<_endIndex]
     }
     
+    /*
+     剩下的所有的一切, 都转交给 base 进行处理.
+     */
     @inlinable // generic-performance
     public func index(after i: Index) -> Index {
         // FIXME: swift-3-indexing-model: range check.
@@ -231,6 +227,9 @@ extension Slice: Collection {
     }
 }
 
+/*
+ 增加对于 BidirectionalCollection 的适配.
+ */
 extension Slice: BidirectionalCollection where Base: BidirectionalCollection {
     @inlinable // generic-performance
     public func index(before i: Index) -> Index {

@@ -1,14 +1,6 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
+/*
+ 和 Colleciton 相比, 没有太大的区别, 仅仅是提供了向前遍历的方式.
+ */
 
 /// A collection that supports backward as well as forward traversal.
 ///

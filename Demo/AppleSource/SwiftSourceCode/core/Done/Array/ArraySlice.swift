@@ -1,34 +1,110 @@
-//===----------------------------------------------------------------------===//
-//
-//  Three generic, mutable array-like types with value semantics.
-//
-//  - `ContiguousArray<Element>` is a fast, contiguous array of `Element` with
-//    a known backing store.
+//  - `ArraySlice<Element>` presents an arbitrary subsequence of some
+//    contiguous sequence of `Element`s.
 //
 //===----------------------------------------------------------------------===//
 
-/// A contiguously stored array.
+/// A slice of an `Array`, `ContiguousArray`, or `ArraySlice` instance.
 ///
-/// The `ContiguousArray` type is a specialized array that always stores its
-/// elements in a contiguous region of memory. This contrasts with `Array`,
-/// which can store its elements in either a contiguous region of memory or an
-/// `NSArray` instance if its `Element` type is a class or `@objc` protocol.
+/// The `ArraySlice` type makes it fast and efficient for you to perform
+/// operations on sections of a larger array. Instead of copying over the
+/// elements of a slice to new storage, an `ArraySlice` instance presents a
+/// view onto the storage of a larger array. And because `ArraySlice`
+/// presents the same interface as `Array`, you can generally perform the
+/// same operations on a slice as you could on the original array.
 ///
-/// Array 可能是通过 ContiguousArray 进行的存储, 也可能是经过 NSArray 进行的存储.
+/// For more information about using arrays, see `Array` and `ContiguousArray`,
+/// with which `ArraySlice` shares most properties and methods.
 ///
-/// If your array's `Element` type is a class or `@objc` protocol and you do
-/// not need to bridge the array to `NSArray` or pass the array to Objective-C
-/// APIs, using `ContiguousArray` may be more efficient and have more
-/// predictable performance than `Array`. If the array's `Element` type is a
-/// struct or enumeration, `Array` and `ContiguousArray` should have similar
-/// efficiency.
+/// Slices Are Views onto Arrays
+/// ============================
 ///
-/// For more information about using arrays, see `Array` and `ArraySlice`, with
-/// which `ContiguousArray` shares most properties and methods.
+/// For example, suppose you have an array holding the number of absences
+/// from each class during a session.
+///
+///     let absences = [0, 2, 0, 4, 0, 3, 1, 0]
+///
+/// You want to compare the absences in the first half of the session with
+/// those in the second half. To do so, start by creating two slices of the
+/// `absences` array.
+///
+///     let midpoint = absences.count / 2
+///
+///     let firstHalf = absences[..<midpoint]
+///     let secondHalf = absences[midpoint...]
+///
+/// Neither the `firstHalf` nor `secondHalf` slices allocate any new storage
+/// of their own. Instead, each presents a view onto the storage of the
+/// `absences` array.
+///
+/// You can call any method on the slices that you might have called on the
+/// `absences` array. To learn which half had more absences, use the
+/// `reduce(_:_:)` method to calculate each sum.
+///
+///     let firstHalfSum = firstHalf.reduce(0, +)
+///     let secondHalfSum = secondHalf.reduce(0, +)
+///
+///     if firstHalfSum > secondHalfSum {
+///         print("More absences in the first half.")
+///     } else {
+///         print("More absences in the second half.")
+///     }
+///     // Prints "More absences in the first half."
+///
+/// - Important: Long-term storage of `ArraySlice` instances is discouraged. A
+///   slice holds a reference to the entire storage of a larger array, not
+///   just to the portion it presents, even after the original array's lifetime
+///   ends. Long-term storage of a slice may therefore prolong the lifetime of
+///   elements that are no longer otherwise accessible, which can appear to be
+///   memory and object leakage.
+///
+/// Slices Maintain Indices
+/// =======================
+///
+/// Unlike `Array` and `ContiguousArray`, the starting index for an
+/// `ArraySlice` instance isn't always zero. Slices maintain the same
+/// indices of the larger array for the same elements, so the starting
+/// index of a slice depends on how it was created, letting you perform
+/// index-based operations on either a full array or a slice.
+///
+/// Sharing indices between collections and their subsequences is an important
+/// part of the design of Swift's collection algorithms. Suppose you are
+/// tasked with finding the first two days with absences in the session. To
+/// find the indices of the two days in question, follow these steps:
+///
+/// 1) Call `firstIndex(where:)` to find the index of the first element in the
+///    `absences` array that is greater than zero.
+/// 2) Create a slice of the `absences` array starting after the index found in
+///    step 1.
+/// 3) Call `firstIndex(where:)` again, this time on the slice created in step
+///    2. Where in some languages you might pass a starting index into an
+///    `indexOf` method to find the second day, in Swift you perform the same
+///    operation on a slice of the original array.
+/// 4) Print the results using the indices found in steps 1 and 3 on the
+///    original `absences` array.
+///
+/// Here's an implementation of those steps:
+///
+///     if let i = absences.firstIndex(where: { $0 > 0 }) {                 // 1
+///         let absencesAfterFirst = absences[(i + 1)...]                   // 2
+///         if let j = absencesAfterFirst.firstIndex(where: { $0 > 0 }) {   // 3
+///             print("The first day with absences had \(absences[i]).")    // 4
+///             print("The second day with absences had \(absences[j]).")
+///         }
+///     }
+///     // Prints "The first day with absences had 2."
+///     // Prints "The second day with absences had 4."
+///
+/// In particular, note that `j`, the index of the second day with absences,
+/// was found in a slice of the original array and then used to access a value
+/// in the original `absences` array itself.
+///
+/// - Note: To safely reference the starting and ending indices of a slice,
+///   always use the `startIndex` and `endIndex` properties instead of
+///   specific values.
 @frozen
-public struct ContiguousArray<Element>: _DestructorSafeContainer {
+public struct ArraySlice<Element>: _DestructorSafeContainer {
   @usableFromInline
-  internal typealias _Buffer = _ContiguousArrayBuffer<Element>
+  internal typealias _Buffer = _SliceBuffer<Element>
 
   @usableFromInline
   internal var _buffer: _Buffer
@@ -39,10 +115,28 @@ public struct ContiguousArray<Element>: _DestructorSafeContainer {
   internal init(_buffer: _Buffer) {
     self._buffer = _buffer
   }
+
+  /// Initialization from an existing buffer does not have "array.init"
+  /// semantics because the caller may retain an alias to buffer.
+  @inlinable
+  internal init(_buffer buffer: _ContiguousArrayBuffer<Element>) {
+    self.init(_buffer: _Buffer(_buffer: buffer, shiftedToStartIndex: 0))
+  }
 }
 
 //===--- private helpers---------------------------------------------------===//
-extension ContiguousArray {
+extension ArraySlice {
+  /// Returns `true` if the array is native and does not need a deferred
+  /// type check.  May be hoisted by the optimizer, which means its
+  /// results may be stale by the time they are used if there is an
+  /// inout violation in user code.
+  @inlinable
+  @_semantics("array.props.isNativeTypeChecked")
+  public // @testable
+  func _hoistableIsNativeTypeChecked() -> Bool {
+   return _buffer.arrayPropertyIsNativeTypeChecked
+  }
+
   @inlinable
   @_semantics("array.get_count")
   internal func _getCount() -> Int {
@@ -71,12 +165,44 @@ extension ContiguousArray {
     _buffer._checkValidSubscript(index)
   }
 
+  /// Check that the given `index` is valid for subscripting, i.e.
+  /// `0 ≤ index < count`.
+  @inlinable
+  @_semantics("array.check_subscript")
+  public // @testable
+  func _checkSubscript(
+    _ index: Int, wasNativeTypeChecked: Bool
+  ) -> _DependenceToken {
+#if _runtime(_ObjC)
+    _buffer._checkValidSubscript(index)
+#else
+    _buffer._checkValidSubscript(index)
+#endif
+    return _DependenceToken()
+  }
+
   /// Check that the specified `index` is valid, i.e. `0 ≤ index ≤ count`.
   @inlinable
   @_semantics("array.check_index")
   internal func _checkIndex(_ index: Int) {
-    _precondition(index <= endIndex, "ContiguousArray index is out of range")
-    _precondition(index >= startIndex, "Negative ContiguousArray index is out of range")
+    _precondition(index <= endIndex, "ArraySlice index is out of range")
+    _precondition(index >= startIndex, "ArraySlice index is out of range (before startIndex)")
+  }
+
+  @_semantics("array.get_element")
+  @inlinable // FIXME(inline-always)
+  @inline(__always)
+  public // @testable
+  func _getElement(
+    _ index: Int,
+    wasNativeTypeChecked: Bool,
+    matchingSubscriptCheck: _DependenceToken
+  ) -> Element {
+#if false
+    return _buffer.getElement(index, wasNativeTypeChecked: wasNativeTypeChecked)
+#else
+    return _buffer.getElement(index)
+#endif
   }
 
   @inlinable
@@ -86,7 +212,7 @@ extension ContiguousArray {
   }
 }
 
-extension ContiguousArray: _ArrayProtocol {
+extension ArraySlice: _ArrayProtocol {
   /// The total number of elements that the array can contain without
   /// allocating new storage.
   ///
@@ -138,8 +264,12 @@ extension ContiguousArray: _ArrayProtocol {
   }
 }
 
-extension ContiguousArray: RandomAccessCollection, MutableCollection {
+extension ArraySlice: RandomAccessCollection, MutableCollection {
   /// The index type for arrays, `Int`.
+  ///
+  /// `ArraySlice` instances are not always indexed from zero. Use `startIndex`
+  /// and `endIndex` as the bounds for any element access, instead of `0` and
+  /// `count`.
   public typealias Index = Int
 
   /// The type that represents the indices that are valid for subscripting an
@@ -147,15 +277,18 @@ extension ContiguousArray: RandomAccessCollection, MutableCollection {
   public typealias Indices = Range<Int>
 
   /// The type that allows iteration over an array's elements.
-  public typealias Iterator = IndexingIterator<ContiguousArray>
+  public typealias Iterator = IndexingIterator<ArraySlice>
 
   /// The position of the first element in a nonempty array.
   ///
-  /// For an instance of `ContiguousArray`, `startIndex` is always zero. If the array
-  /// is empty, `startIndex` is equal to `endIndex`.
+  /// `ArraySlice` instances are not always indexed from zero. Use `startIndex`
+  /// and `endIndex` as the bounds for any element access, instead of `0` and
+  /// `count`.
+  ///
+  /// If the array is empty, `startIndex` is equal to `endIndex`.
   @inlinable
   public var startIndex: Int {
-    return 0
+    return _buffer.startIndex
   }
 
   /// The array's "past the end" position---that is, the position one greater
@@ -173,11 +306,9 @@ extension ContiguousArray: RandomAccessCollection, MutableCollection {
   ///     // Prints "[30, 40, 50]"
   ///
   /// If the array is empty, `endIndex` is equal to `startIndex`.
+  @inlinable
   public var endIndex: Int {
-    @inlinable
-    get {
-      return _getCount()
-    }
+    return _buffer.endIndex
   }
 
   /// Returns the position immediately after the given index.
@@ -369,16 +500,28 @@ extension ContiguousArray: RandomAccessCollection, MutableCollection {
   ///   greater than or equal to `startIndex` and less than `endIndex`.
   ///
   /// - Complexity: Reading an element from an array is O(1). Writing is O(1)
-  ///   unless the array's storage is shared with another array, in which case
-  ///   writing is O(*n*), where *n* is the length of the array.
+  ///   unless the array's storage is shared with another array or uses a
+  ///   bridged `NSArray` instance as its storage, in which case writing is
+  ///   O(*n*), where *n* is the length of the array.
   @inlinable
   public subscript(index: Int) -> Element {
     get {
-      _checkSubscript_native(index)
-      return _buffer.getElement(index)
+      // This call may be hoisted or eliminated by the optimizer.  If
+      // there is an inout violation, this value may be stale so needs to be
+      // checked again below.
+      let wasNativeTypeChecked = _hoistableIsNativeTypeChecked()
+
+      // Make sure the index is in range and wasNativeTypeChecked is
+      // still valid.
+      let token = _checkSubscript(
+        index, wasNativeTypeChecked: wasNativeTypeChecked)
+
+      return _getElement(
+        index, wasNativeTypeChecked: wasNativeTypeChecked,
+        matchingSubscriptCheck: token)
     }
     _modify {
-      _makeMutableAndUnique()
+      _makeMutableAndUnique() // makes the array native, too
       _checkSubscript_native(index)
       let address = _buffer.subscriptBaseAddress + index
       yield &address.pointee
@@ -435,7 +578,7 @@ extension ContiguousArray: RandomAccessCollection, MutableCollection {
   }
 }
 
-extension ContiguousArray: ExpressibleByArrayLiteral {
+extension ArraySlice: ExpressibleByArrayLiteral {
   /// Creates an array from the given array literal.
   ///
   /// Do not call this initializer directly. It is used by the compiler when
@@ -446,7 +589,7 @@ extension ContiguousArray: ExpressibleByArrayLiteral {
   /// Here, an array of strings is created from an array literal holding only
   /// strings:
   ///
-  ///     let ingredients: ContiguousArray =
+  ///     let ingredients: ArraySlice =
   ///           ["cocoa beans", "sugar", "cocoa butter", "salt"]
   ///
   /// - Parameter elements: A variadic list of elements of the new array.
@@ -456,8 +599,7 @@ extension ContiguousArray: ExpressibleByArrayLiteral {
   }
 }
 
-
-extension ContiguousArray: RangeReplaceableCollection {
+extension ArraySlice: RangeReplaceableCollection {
   /// Creates a new, empty array.
   ///
   /// This is equivalent to initializing with an empty array literal.
@@ -511,7 +653,9 @@ extension ContiguousArray: RangeReplaceableCollection {
   ///
   /// - Parameter s: The sequence of elements to turn into an array.
   @inlinable
-  public init<S: Sequence>(_ s: S) where S.Element == Element {
+  public init<S: Sequence>(_ s: S)
+    where S.Element == Element {
+
     self.init(_buffer: s._copyToContiguousArray()._buffer)
   }
 
@@ -533,7 +677,7 @@ extension ContiguousArray: RangeReplaceableCollection {
   @_semantics("array.init")
   public init(repeating repeatedValue: Element, count: Int) {
     var p: UnsafeMutablePointer<Element>
-    (self, p) = ContiguousArray._allocateUninitialized(count)
+    (self, p) = ArraySlice._allocateUninitialized(count)
     for _ in 0..<count {
       p.initialize(to: repeatedValue)
       p += 1
@@ -550,10 +694,10 @@ extension ContiguousArray: RangeReplaceableCollection {
     return _Buffer(_buffer: newBuffer, shiftedToStartIndex: 0)
   }
 
-  /// Construct a ContiguousArray of `count` uninitialized elements.
+  /// Construct a ArraySlice of `count` uninitialized elements.
   @inlinable
   internal init(_uninitializedCount count: Int) {
-    _precondition(count >= 0, "Can't construct ContiguousArray with count < 0")
+    _precondition(count >= 0, "Can't construct ArraySlice with count < 0")
     // Note: Sinking this constructor into an else branch below causes an extra
     // Retain/Release.
     _buffer = _Buffer()
@@ -561,7 +705,7 @@ extension ContiguousArray: RangeReplaceableCollection {
       // Creating a buffer instead of calling reserveCapacity saves doing an
       // unnecessary uniqueness check. We disable inlining here to curb code
       // growth.
-      _buffer = ContiguousArray._allocateBufferUninitialized(minimumCapacity: count)
+      _buffer = ArraySlice._allocateBufferUninitialized(minimumCapacity: count)
       _buffer.count = count
     }
     // Can't store count here because the buffer might be pointing to the
@@ -569,13 +713,13 @@ extension ContiguousArray: RangeReplaceableCollection {
   }
 
   /// Entry point for `Array` literal construction; builds and returns
-  /// a ContiguousArray of `count` uninitialized elements.
+  /// a ArraySlice of `count` uninitialized elements.
   @inlinable
   @_semantics("array.uninitialized")
   internal static func _allocateUninitialized(
     _ count: Int
-  ) -> (ContiguousArray, UnsafeMutablePointer<Element>) {
-    let result = ContiguousArray(_uninitializedCount: count)
+  ) -> (ArraySlice, UnsafeMutablePointer<Element>) {
+    let result = ArraySlice(_uninitializedCount: count)
     return (result, result._buffer.firstElementAddress)
   }
 
@@ -587,6 +731,10 @@ extension ContiguousArray: RangeReplaceableCollection {
   /// to avoid multiple reallocations. This method ensures that the array has
   /// unique, mutable, contiguous storage, with space allocated for at least
   /// the requested number of elements.
+  ///
+  /// Calling the `reserveCapacity(_:)` method on an array with bridged storage
+  /// triggers a copy to contiguous storage even if the existing storage
+  /// has room to store `minimumCapacity` elements.
   ///
   /// For performance reasons, the size of the newly allocated storage might be
   /// greater than the requested capacity. Use the array's `capacity` property
@@ -819,15 +967,20 @@ extension ContiguousArray: RangeReplaceableCollection {
 
   @inlinable
   public mutating func _customRemoveLast() -> Element? {
-    let newCount = _getCount() - 1
-    _precondition(newCount >= 0, "Can't removeLast from an empty ContiguousArray")
-    _makeUniqueAndReserveCapacityIfNotUnique()
-    let pointer = (_buffer.firstElementAddress + newCount)
-    let element = pointer.move()
-    _buffer.count = newCount
-    return element
+    _precondition(count > 0, "Can't removeLast from an empty ArraySlice")
+    // FIXME(performance): if `self` is uniquely referenced, we should remove
+    // the element as shown below (this will deallocate the element and
+    // decrease memory use).  If `self` is not uniquely referenced, the code
+    // below will make a copy of the storage, which is wasteful.  Instead, we
+    // should just shrink the view without allocating new storage.
+    let i = endIndex
+    // We don't check for overflow in `i - 1` because `i` is known to be
+    // positive.
+    let result = self[i &- 1]
+    self.replaceSubrange((i &- 1)..<i, with: EmptyCollection())
+    return result
   }
-
+  
   /// Removes and returns the element at the specified position.
   ///
   /// All the elements following the specified position are moved up to
@@ -846,16 +999,11 @@ extension ContiguousArray: RangeReplaceableCollection {
   @inlinable
   @discardableResult
   public mutating func remove(at index: Int) -> Element {
-    _precondition(index < endIndex, "Index out of range")
-    _precondition(index >= startIndex, "Index out of range")
-    _makeUniqueAndReserveCapacityIfNotUnique()
-    let newCount = _getCount() - 1
-    let pointer = (_buffer.firstElementAddress + index)
-    let result = pointer.move()
-    pointer.moveInitialize(from: pointer + 1, count: newCount - index)
-    _buffer.count = newCount
+    let result = self[index]
+    self.replaceSubrange(index..<(index + 1), with: EmptyCollection())
     return result
   }
+
 
   /// Inserts a new element at the specified position.
   ///
@@ -921,7 +1069,7 @@ extension ContiguousArray: RangeReplaceableCollection {
       return try body(&bufferPointer)
     }
   }
-  
+
   @inlinable
   public func withContiguousStorageIfAvailable<R>(
     _ body: (UnsafeBufferPointer<Element>) throws -> R
@@ -941,7 +1089,7 @@ extension ContiguousArray: RangeReplaceableCollection {
   }
 }
 
-extension ContiguousArray: CustomReflectable {
+extension ArraySlice: CustomReflectable {
   /// A mirror that reflects the array.
   public var customMirror: Mirror {
     return Mirror(
@@ -951,7 +1099,7 @@ extension ContiguousArray: CustomReflectable {
   }
 }
 
-extension ContiguousArray: CustomStringConvertible, CustomDebugStringConvertible {
+extension ArraySlice: CustomStringConvertible, CustomDebugStringConvertible {
   /// A textual representation of the array and its elements.
   public var description: String {
     return _makeCollectionDescription()
@@ -960,11 +1108,11 @@ extension ContiguousArray: CustomStringConvertible, CustomDebugStringConvertible
   /// A textual representation of the array and its elements, suitable for
   /// debugging.
   public var debugDescription: String {
-    return _makeCollectionDescription(withTypeName: "ContiguousArray")
+    return _makeCollectionDescription(withTypeName: "ArraySlice")
   }
 }
 
-extension ContiguousArray {
+extension ArraySlice {
   @usableFromInline @_transparent
   internal func _cPointerArgs() -> (AnyObject?, UnsafeRawPointer?) {
     let p = _baseAddressIfContiguous
@@ -976,44 +1124,7 @@ extension ContiguousArray {
   }
 }
 
-extension ContiguousArray {
-  /// Creates an array with the specified capacity, then calls the given
-  /// closure with a buffer covering the array's uninitialized memory.
-  ///
-  /// Inside the closure, set the `initializedCount` parameter to the number of
-  /// elements that are initialized by the closure. The memory in the range
-  /// `buffer[0..<initializedCount]` must be initialized at the end of the
-  /// closure's execution, and the memory in the range
-  /// `buffer[initializedCount...]` must be uninitialized. This postcondition
-  /// must hold even if the `initializer` closure throws an error.
-  ///
-  /// - Note: While the resulting array may have a capacity larger than the
-  ///   requested amount, the buffer passed to the closure will cover exactly
-  ///   the requested number of elements.
-  ///
-  /// - Parameters:
-  ///   - unsafeUninitializedCapacity: The number of elements to allocate
-  ///     space for in the new array.
-  ///   - initializer: A closure that initializes elements and sets the count
-  ///     of the new array.
-  ///     - Parameters:
-  ///       - buffer: A buffer covering uninitialized memory with room for the
-  ///         specified number of of elements.
-  ///       - initializedCount: The count of initialized elements in the array,
-  ///         which begins as zero. Set `initializedCount` to the number of
-  ///         elements you initialize.
-  @_alwaysEmitIntoClient @inlinable
-  public init(
-    unsafeUninitializedCapacity: Int,
-    initializingWith initializer: (
-      _ buffer: inout UnsafeMutableBufferPointer<Element>,
-      _ initializedCount: inout Int) throws -> Void
-  ) rethrows {
-    self = try ContiguousArray(Array(
-      _unsafeUninitializedCapacity: unsafeUninitializedCapacity,
-      initializingWith: initializer))
-  }
-
+extension ArraySlice {
   /// Calls a closure with a pointer to the array's contiguous storage.
   ///
   /// Often, the optimizer can eliminate bounds checks within an array
@@ -1108,7 +1219,7 @@ extension ContiguousArray {
     // escape via the address of self in the closure will therefore escape the
     // empty array.
 
-    var work = ContiguousArray()
+    var work = ArraySlice()
     (work, self) = (self, work)
 
     // Create an UnsafeBufferPointer over work that we can pass to body
@@ -1121,7 +1232,7 @@ extension ContiguousArray {
       _precondition(
         inoutBufferPointer.baseAddress == pointer &&
         inoutBufferPointer.count == count,
-        "ContiguousArray withUnsafeMutableBufferPointer: replacing the buffer is not allowed")
+        "ArraySlice withUnsafeMutableBufferPointer: replacing the buffer is not allowed")
 
       (work, self) = (self, work)
     }
@@ -1162,8 +1273,7 @@ extension ContiguousArray {
   }
 }
 
-
-extension ContiguousArray {
+extension ArraySlice {
   /// Replaces a range of elements with the elements in the specified
   /// collection.
   ///
@@ -1204,11 +1314,11 @@ extension ContiguousArray {
     _ subrange: Range<Int>,
     with newElements: __owned C
   ) where C: Collection, C.Element == Element {
-    _precondition(subrange.lowerBound >= self._buffer.startIndex,
-      "ContiguousArray replace: subrange start is negative")
+    _precondition(subrange.lowerBound >= _buffer.startIndex,
+      "ArraySlice replace: subrange start is before the startIndex")
 
     _precondition(subrange.upperBound <= _buffer.endIndex,
-      "ContiguousArray replace: subrange extends past the end")
+      "ArraySlice replace: subrange extends past the end")
 
     let oldCount = _buffer.count
     let eraseCount = subrange.count
@@ -1226,7 +1336,7 @@ extension ContiguousArray {
   }
 }
 
-extension ContiguousArray: Equatable where Element: Equatable {
+extension ArraySlice: Equatable where Element: Equatable {
   /// Returns a Boolean value indicating whether two arrays contain the same
   /// elements in the same order.
   ///
@@ -1237,7 +1347,7 @@ extension ContiguousArray: Equatable where Element: Equatable {
   ///   - lhs: An array to compare.
   ///   - rhs: Another array to compare.
   @inlinable
-  public static func ==(lhs: ContiguousArray<Element>, rhs: ContiguousArray<Element>) -> Bool {
+  public static func ==(lhs: ArraySlice<Element>, rhs: ArraySlice<Element>) -> Bool {
     let lhsCount = lhs.count
     if lhsCount != rhs.count {
       return false
@@ -1249,21 +1359,24 @@ extension ContiguousArray: Equatable where Element: Equatable {
     }
 
 
-    _internalInvariant(lhs.startIndex == 0 && rhs.startIndex == 0)
-    _internalInvariant(lhs.endIndex == lhsCount && rhs.endIndex == lhsCount)
+    var streamLHS = lhs.makeIterator()
+    var streamRHS = rhs.makeIterator()
 
-    // We know that lhs.count == rhs.count, compare element wise.
-    for idx in 0..<lhsCount {
-      if lhs[idx] != rhs[idx] {
+    var nextLHS = streamLHS.next()
+    while nextLHS != nil {
+      let nextRHS = streamRHS.next()
+      if nextLHS != nextRHS {
         return false
       }
+      nextLHS = streamLHS.next()
     }
+
 
     return true
   }
 }
 
-extension ContiguousArray: Hashable where Element: Hashable {
+extension ArraySlice: Hashable where Element: Hashable {
   /// Hashes the essential components of this value by feeding them into the
   /// given hasher.
   ///
@@ -1278,7 +1391,7 @@ extension ContiguousArray: Hashable where Element: Hashable {
   }
 }
 
-extension ContiguousArray {
+extension ArraySlice {
   /// Calls the given closure with a pointer to the underlying bytes of the
   /// array's mutable contiguous storage.
   ///
@@ -1358,5 +1471,16 @@ extension ContiguousArray {
     return try self.withUnsafeBufferPointer {
       try body(UnsafeRawBufferPointer($0))
     }
+  }
+}
+
+extension ArraySlice {
+  @inlinable
+  public // @testable
+  init(_startIndex: Int) {
+    self.init(
+      _buffer: _Buffer(
+        _buffer: ContiguousArray()._buffer,
+        shiftedToStartIndex: _startIndex))
   }
 }

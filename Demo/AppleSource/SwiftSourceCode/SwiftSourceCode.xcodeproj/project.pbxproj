@@ -121,7 +121,7 @@
 		06E1B37D247D6BEE00CD9D60 /* DictionaryBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryBuilder.swift; sourceTree = "<group>"; };
 		06E1B37E247D6BEE00CD9D60 /* Algorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Algorithm.swift; sourceTree = "<group>"; };
 		06E1B37F247D6BEE00CD9D60 /* ArrayBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayBuffer.swift; sourceTree = "<group>"; };
-		06E1B380247D6BEE00CD9D60 /* ArrayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayType.swift; sourceTree = "<group>"; };
+		06E1B380247D6BEE00CD9D60 /* ArrayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ArrayType.swift; path = ../../ArrayType.swift; sourceTree = "<group>"; };
 		06E1B381247D6BEE00CD9D60 /* ArrayBufferProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayBufferProtocol.swift; sourceTree = "<group>"; };
 		06E1B382247D6BEE00CD9D60 /* Indices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Indices.swift; sourceTree = "<group>"; };
 		06E1B383247D6BEE00CD9D60 /* Reverse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reverse.swift; sourceTree = "<group>"; };
@@ -227,6 +227,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0651545B24D556F00060603F /* Collection */ = {
+			isa = PBXGroup;
+			children = (
+				06E1B343247D6BEE00CD9D60 /* Collection.swift */,
+				06E1B3A0247D6BEE00CD9D60 /* Slice.swift */,
+				06E1B329247D6BEE00CD9D60 /* MutableCollection.swift */,
+				06E1B3C6247D6BEE00CD9D60 /* BidirectionalCollection.swift */,
+				06E1B334247D6BEE00CD9D60 /* CollectionDifference.swift */,
+				06E1B352247D6BEE00CD9D60 /* CollectionAlgorithms.swift */,
+				06E1B338247D6BEE00CD9D60 /* EmptyCollection.swift */,
+				06E1B3DB247D6BEE00CD9D60 /* LazyCollection.swift */,
+				06E1B32A247D6BEE00CD9D60 /* RandomAccessCollection.swift */,
+				06E1B3D3247D6BEE00CD9D60 /* RangeReplaceableCollection.swift */,
+				06E1B36F247D6BEE00CD9D60 /* StringRangeReplaceableCollection.swift */,
+			);
+			path = Collection;
+			sourceTree = "<group>";
+		};
+		0651545C24D568750060603F /* Array */ = {
+			isa = PBXGroup;
+			children = (
+				06E1B33A247D6BEE00CD9D60 /* Array.swift */,
+				06E1B3BC247D6BEE00CD9D60 /* ArrayBody.swift */,
+				06E1B37F247D6BEE00CD9D60 /* ArrayBuffer.swift */,
+				06E1B381247D6BEE00CD9D60 /* ArrayBufferProtocol.swift */,
+				06E1B361247D6BEE00CD9D60 /* ArrayCast.swift */,
+				06E1B346247D6BEE00CD9D60 /* ArrayShared.swift */,
+				06E1B350247D6BEE00CD9D60 /* ArraySlice.swift */,
+				06E1B380247D6BEE00CD9D60 /* ArrayType.swift */,
+				06E1B3D2247D6BEE00CD9D60 /* CocoaArray.swift */,
+				06E1B3D0247D6BEE00CD9D60 /* ContiguousArray.swift */,
+				06E1B3D9247D6BEE00CD9D60 /* ContiguousArrayBuffer.swift */,
+				06E1B3B0247D6BEE00CD9D60 /* FixedArray.swift */,
+				06E1B353247D6BEE00CD9D60 /* SwiftNativeNSArray.swift */,
+			);
+			path = Array;
+			sourceTree = "<group>";
+		};
 		06E1B30A247D6BD800CD9D60 = {
 			isa = PBXGroup;
 			children = (
@@ -256,20 +294,11 @@
 			isa = PBXGroup;
 			children = (
 				06E1B367247D6BEE00CD9D60 /* AnyHashable.swift */,
-				06E1B33A247D6BEE00CD9D60 /* Array.swift */,
-				06E1B3BC247D6BEE00CD9D60 /* ArrayBody.swift */,
-				06E1B37F247D6BEE00CD9D60 /* ArrayBuffer.swift */,
-				06E1B381247D6BEE00CD9D60 /* ArrayBufferProtocol.swift */,
-				06E1B361247D6BEE00CD9D60 /* ArrayCast.swift */,
-				06E1B346247D6BEE00CD9D60 /* ArrayShared.swift */,
-				06E1B350247D6BEE00CD9D60 /* ArraySlice.swift */,
-				06E1B380247D6BEE00CD9D60 /* ArrayType.swift */,
 				06E1B32F247D6BEE00CD9D60 /* ASCII.swift */,
 				06E1B345247D6BEE00CD9D60 /* Assert.swift */,
 				06E1B3A4247D6BEE00CD9D60 /* AssertCommon.swift */,
 				06E1B39D247D6BEE00CD9D60 /* AtomicInt.swift.gyb */,
 				06E1B379247D6BEE00CD9D60 /* Availability.swift */,
-				06E1B3C6247D6BEE00CD9D60 /* BidirectionalCollection.swift */,
 				06E1B3B6247D6BEE00CD9D60 /* Bitset.swift */,
 				06E1B32E247D6BEE00CD9D60 /* BridgeObjectiveC.swift */,
 				06E1B373247D6BEE00CD9D60 /* BridgeStorage.swift */,
@@ -279,15 +308,9 @@
 				06E1B3BD247D6BEE00CD9D60 /* CharacterProperties.swift */,
 				06E1B397247D6BEE00CD9D60 /* ClosedRange.swift */,
 				06E1B33B247D6BEE00CD9D60 /* CMakeLists.txt */,
-				06E1B3D2247D6BEE00CD9D60 /* CocoaArray.swift */,
 				06E1B3DC247D6BEE00CD9D60 /* Codable.swift.gyb */,
-				06E1B343247D6BEE00CD9D60 /* Collection.swift */,
-				06E1B352247D6BEE00CD9D60 /* CollectionAlgorithms.swift */,
-				06E1B334247D6BEE00CD9D60 /* CollectionDifference.swift */,
 				06E1B34B247D6BEE00CD9D60 /* CommandLine.swift */,
 				06E1B392247D6BEE00CD9D60 /* CompilerProtocols.swift */,
-				06E1B3D0247D6BEE00CD9D60 /* ContiguousArray.swift */,
-				06E1B3D9247D6BEE00CD9D60 /* ContiguousArrayBuffer.swift */,
 				06E1B35C247D6BEE00CD9D60 /* ContiguouslyStored.swift */,
 				06E1B348247D6BEE00CD9D60 /* CString.swift */,
 				06E1B3BE247D6BEE00CD9D60 /* CTypes.swift */,
@@ -300,9 +323,7 @@
 				06E1B3C2247D6BEE00CD9D60 /* DictionaryVariant.swift */,
 				06E1B333247D6BEE00CD9D60 /* Diffing.swift */,
 				06E1B360247D6BEE00CD9D60 /* Dump.swift */,
-				06E1B338247D6BEE00CD9D60 /* EmptyCollection.swift */,
 				06E1B3AF247D6BEE00CD9D60 /* ExistentialCollection.swift.gyb */,
-				06E1B3B0247D6BEE00CD9D60 /* FixedArray.swift */,
 				06E1B36B247D6BEE00CD9D60 /* FlatMap.swift */,
 				06E1B3A1247D6BEE00CD9D60 /* Flatten.swift */,
 				06E1B3DD247D7C7B00CD9D60 /* Done */,
@@ -323,7 +344,6 @@
 				06E1B349247D6BEE00CD9D60 /* Join.swift */,
 				06E1B3AE247D6BEE00CD9D60 /* KeyPath.swift */,
 				06E1B355247D6BEE00CD9D60 /* KeyValuePairs.swift */,
-				06E1B3DB247D6BEE00CD9D60 /* LazyCollection.swift */,
 				06E1B356247D6BEE00CD9D60 /* LegacyABI.swift */,
 				06E1B32D247D6BEE00CD9D60 /* LifetimeManager.swift */,
 				06E1B34C247D6BEE00CD9D60 /* ManagedBuffer.swift */,
@@ -333,7 +353,6 @@
 				06E1B3A2247D6BEE00CD9D60 /* Mirror.swift */,
 				06E1B38B247D6BEE00CD9D60 /* Mirrors.swift.gyb */,
 				06E1B378247D6BEE00CD9D60 /* Misc.swift */,
-				06E1B329247D6BEE00CD9D60 /* MutableCollection.swift */,
 				06E1B335247D6BEE00CD9D60 /* NativeDictionary.swift */,
 				06E1B398247D6BEE00CD9D60 /* NativeSet.swift */,
 				06E1B3D1247D6BEE00CD9D60 /* NewtypeWrapper.swift */,
@@ -345,9 +364,7 @@
 				06E1B35B247D6BEE00CD9D60 /* Policy.swift */,
 				06E1B320247D6BEE00CD9D60 /* Print.swift */,
 				06E1B32B247D6BEE00CD9D60 /* Random.swift */,
-				06E1B32A247D6BEE00CD9D60 /* RandomAccessCollection.swift */,
 				06E1B37A247D6BEE00CD9D60 /* Range.swift */,
-				06E1B3D3247D6BEE00CD9D60 /* RangeReplaceableCollection.swift */,
 				06E1B374247D6BEE00CD9D60 /* ReflectionMirror.swift */,
 				06E1B384247D6BEE00CD9D60 /* Repeat.swift */,
 				06E1B396247D6BEE00CD9D60 /* REPL.swift */,
@@ -371,7 +388,6 @@
 				06E1B385247D6BEE00CD9D60 /* SmallString.swift */,
 				06E1B394247D6BEE00CD9D60 /* Sort.swift */,
 				06E1B357247D6BEE00CD9D60 /* StaticString.swift */,
-				06E1B3D6247D6BEE00CD9D60 /* Stride.swift */,
 				06E1B3A7247D6BEE00CD9D60 /* String.swift */,
 				06E1B341247D6BEE00CD9D60 /* StringBreadcrumbs.swift */,
 				06E1B34E247D6BEE00CD9D60 /* StringBridge.swift */,
@@ -392,7 +408,6 @@
 				06E1B36A247D6BEE00CD9D60 /* StringNormalization.swift */,
 				06E1B3D8247D6BEE00CD9D60 /* StringObject.swift */,
 				06E1B3BB247D6BEE00CD9D60 /* StringProtocol.swift */,
-				06E1B36F247D6BEE00CD9D60 /* StringRangeReplaceableCollection.swift */,
 				06E1B3DA247D6BEE00CD9D60 /* StringStorage.swift */,
 				06E1B3AA247D6BEE00CD9D60 /* StringSwitch.swift */,
 				06E1B35F247D6BEE00CD9D60 /* StringTesting.swift */,
@@ -401,7 +416,6 @@
 				06E1B35E247D6BEE00CD9D60 /* StringUTF8View.swift */,
 				06E1B39C247D6BEE00CD9D60 /* StringUTF16View.swift */,
 				06E1B37B247D6BEE00CD9D60 /* Substring.swift */,
-				06E1B353247D6BEE00CD9D60 /* SwiftNativeNSArray.swift */,
 				06E1B323247D6BEE00CD9D60 /* ThreadLocalStorage.swift */,
 				06E1B36D247D6BEE00CD9D60 /* Tuple.swift.gyb */,
 				06E1B327247D6BEE00CD9D60 /* UIntBuffer.swift */,
@@ -435,23 +449,25 @@
 		06E1B3DD247D7C7B00CD9D60 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				0651545C24D568750060603F /* Array */,
+				0651545B24D556F00060603F /* Collection */,
 				06E1B3CB247D6BEE00CD9D60 /* Optional.swift */,
 				06E1B375247D6BEE00CD9D60 /* Sequence.swift */,
 				06E1B37E247D6BEE00CD9D60 /* Algorithm.swift */,
 				06E1B39F247D6BEE00CD9D60 /* SequenceAlgorithms.swift */,
-				06E1B39E247D6BEE00CD9D60 /* CollectionOfOne.swift */,
 				06E1B390247D6BEE00CD9D60 /* Equatable.swift */,
 				06E1B3C4247D6BEE00CD9D60 /* Bool.swift */,
 				06E1B34A247D6BEE00CD9D60 /* Comparable.swift */,
 				06E1B3B3247D6BEE00CD9D60 /* LazySequence.swift */,
 				06E1B3C1247D6BEE00CD9D60 /* Map.swift */,
+				06E1B3D6247D6BEE00CD9D60 /* Stride.swift */,
 				06E1B330247D6BEE00CD9D60 /* PrefixWhile.swift */,
 				06E1B3C0247D6BEE00CD9D60 /* DropWhile.swift */,
 				06E1B3A6247D6BEE00CD9D60 /* Filter.swift */,
 				06E1B382247D6BEE00CD9D60 /* Indices.swift */,
-				06E1B3A0247D6BEE00CD9D60 /* Slice.swift */,
 				06E1B36C247D6BEE00CD9D60 /* Result.swift */,
 				06E1B3A8247D6BEE00CD9D60 /* ErrorType.swift */,
+				06E1B39E247D6BEE00CD9D60 /* CollectionOfOne.swift */,
 			);
 			path = Done;
 			sourceTree = "<group>";

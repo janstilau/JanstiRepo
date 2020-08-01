@@ -1,15 +1,3 @@
-//===--- Range.swift ------------------------------------------*- swift -*-===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
 /// A type that can be used to slice a collection.
 ///
 /// A type that conforms to `RangeExpression` can convert itself to a
@@ -90,9 +78,9 @@ extension RangeExpression {
   }  
 }
 
+/// 前闭后开
 /// A half-open interval from a lower bound up to, but not including, an upper
 /// bound.
-///  最原始的 Range, 是不包含 upper bound 的值的.
 ///
 /// You create a `Range` instance by using the half-open range operator
 /// (`..<`).
@@ -137,6 +125,10 @@ extension RangeExpression {
 /// you need to iterate over consecutive floating-point values, see the
 /// `stride(from:to:by:)` function.
 
+
+/*
+ Range 里面, 就是存储一下最小值, 最大值.
+ */
 @frozen
 public struct Range<Bound: Comparable> {
   /// The range's lower bound.
@@ -175,8 +167,10 @@ public struct Range<Bound: Comparable> {
   /// - Returns: `true` if `element` is contained in the range; otherwise,
   ///   `false`.
   @inlinable
+    
     /*
      左闭右开, 左边 <=, 右边 <
+     contains 的操作, 就是比较操作.
      */
   public func contains(_ element: Bound) -> Bool {
     return lowerBound <= element && element < upperBound
