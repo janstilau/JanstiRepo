@@ -1,62 +1,14 @@
-
-
 /*
  一个专门的, 定义 Sequence 算法的 extension 的集合.
  他更像是泛型算法的集合.
  所有的操作, 都是建立在 可迭代的这个基础上的.
  */
 extension Sequence {
-    /// Returns a sequence of pairs (*n*, *x*), where *n* represents a
-    /// consecutive integer starting at zero and *x* represents an element of
-    /// the sequence.
-    ///
-    /// This example enumerates the characters of the string "Swift" and prints
-    /// each character along with its place in the string.
-    ///
-    ///     for (n, c) in "Swift".enumerated() {
-    ///         print("\(n): '\(c)'")
-    ///     }
-    ///     // Prints "0: 'S'"
-    ///     // Prints "1: 'w'"
-    ///     // Prints "2: 'i'"
-    ///     // Prints "3: 'f'"
-    ///     // Prints "4: 't'"
-    ///
-    /// When you enumerate a collection, the integer part of each pair is a counter
-    /// for the enumeration, but is not necessarily the index of the paired value.
-    /// These counters can be used as indices only in instances of zero-based,
-    /// integer-indexed collections, such as `Array` and `ContiguousArray`. For
-    /// other collections the counters may be out of range or of the wrong type
-    /// to use as an index. To iterate over the elements of a collection with its
-    /// indices, use the `zip(_:_:)` function.
-    ///
-    /// This example iterates over the indices and elements of a set, building a
-    /// list consisting of indices of names with five or fewer letters.
-    ///
-    ///     let names: Set = ["Sofia", "Camilla", "Martina", "Mateo", "Nicolás"]
-    ///     var shorterIndices: [Set<String>.Index] = []
-    ///     for (i, name) in zip(names.indices, names) {
-    ///         if name.count <= 5 {
-    ///             shorterIndices.append(i)
-    ///         }
-    ///     }
-    ///
-    /// Now that the `shorterIndices` array holds the indices of the shorter
-    /// names in the `names` set, you can use those indices to access elements in
-    /// the set.
-    ///
-    ///     for i in shorterIndices {
-    ///         print(names[i])
-    ///     }
-    ///     // Prints "Sofia"
-    ///     // Prints "Mateo"
-    ///
-    /// - Returns: A sequence of pairs enumerating the sequence.
-    ///
-    /// - Complexity: O(1)
     /*
      EnumeratedSequence 是一个特殊的结构体, 他也是 Sequence 协议类型的. 只不过, 它的 iterator 返回的是 (idx, ele) 的一个元组数据.
      他并没有复制原始的 sequence, 而是在原始的 sequence 的遍历过程中, 增加了一些记录 index 的逻辑.
+     enumerated() 隐藏了 EnumeratedSequence 的存在, 在使用者眼里, 好像是调用这个方法, 就能改变遍历时返回值的类型.
+     Swift 里面, 经常有着这种中间适配器类型的存在, 这种适配器类型, 和原始类型是一个抽象, 所以, 能够很好地安插到原始类型出现的位置.
      */
     @inlinable // protocol-only
     public func enumerated() -> EnumeratedSequence<Self> {
@@ -70,6 +22,7 @@ extension Sequence {
 
 extension Sequence {
     /*
+     Min, Max 的逻辑, 和我们平时写的代码, 没有任何的区别.
      这个定义在了 sequence 层面上, 以后的任何人, 都不用在重新写一遍遍历的逻辑了, 只要定义 areInIncreasingOrder 的逻辑就可以了.
      */
     @inlinable // protocol-only
@@ -103,19 +56,6 @@ extension Sequence {
  一般来说, C++ 里面的方法, 都是提供了默认操作符闭包的, 还有就是使用传递过来的闭包的.
  */
 extension Sequence where Element: Comparable {
-    /// Returns the minimum element in the sequence.
-    ///
-    /// This example finds the smallest value in an array of height measurements.
-    ///
-    ///     let heights = [67.5, 65.7, 64.3, 61.1, 58.5, 60.3, 64.9]
-    ///     let lowestHeight = heights.min()
-    ///     print(lowestHeight)
-    ///     // Prints "Optional(58.5)"
-    ///
-    /// - Returns: The sequence's minimum element. If the sequence has no
-    ///   elements, returns `nil`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
     @inlinable
     @warn_unqualified_access
     public func min() -> Element? {
@@ -134,31 +74,8 @@ extension Sequence where Element: Comparable {
 //===----------------------------------------------------------------------===//
 
 extension Sequence  {
-    /// Returns a Boolean value indicating whether the initial elements of the
-    /// sequence are equivalent to the elements in another sequence, using
-    /// the given predicate as the equivalence test.
-    ///
-    /// The predicate must be a *equivalence relation* over the elements. That
-    /// is, for any elements `a`, `b`, and `c`, the following conditions must
-    /// hold:
-    ///
-    /// - `areEquivalent(a, a)` is always `true`. (Reflexivity)
-    /// - `areEquivalent(a, b)` implies `areEquivalent(b, a)`. (Symmetry)
-    /// - If `areEquivalent(a, b)` and `areEquivalent(b, c)` are both `true`, then
-    ///   `areEquivalent(a, c)` is also `true`. (Transitivity)
-    ///
-    /// - Parameters:
-    ///   - possiblePrefix: A sequence to compare to this sequence.
-    ///   - areEquivalent: A predicate that returns `true` if its two arguments
-    ///     are equivalent; otherwise, `false`.
-    /// - Returns: `true` if the initial elements of the sequence are equivalent
-    ///   to the elements of `possiblePrefix`; otherwise, `false`. If
-    ///   `possiblePrefix` has no elements, the return value is `true`.
-    ///
-    /// - Complexity: O(*m*), where *m* is the lesser of the length of the
-    ///   sequence and the length of `possiblePrefix`.
     /*
-     其实这个就是同步比较而已.
+     一个序列的前半部分, 是否是另一个序列. 就是不断的迭代, 判断相同位置的值是否相等.
      */
     @inlinable
     public func starts<PossiblePrefix: Sequence>(
@@ -180,31 +97,6 @@ extension Sequence  {
 }
 
 extension Sequence where Element: Equatable {
-    /// Returns a Boolean value indicating whether the initial elements of the
-    /// sequence are the same as the elements in another sequence.
-    ///
-    /// This example tests whether one countable range begins with the elements
-    /// of another countable range.
-    ///
-    ///     let a = 1...3
-    ///     let b = 1...10
-    ///
-    ///     print(b.starts(with: a))
-    ///     // Prints "true"
-    ///
-    /// Passing a sequence with no elements or an empty collection as
-    /// `possiblePrefix` always results in `true`.
-    ///
-    ///     print(b.starts(with: []))
-    ///     // Prints "true"
-    ///
-    /// - Parameter possiblePrefix: A sequence to compare to this sequence.
-    /// - Returns: `true` if the initial elements of the sequence are the same as
-    ///   the elements of `possiblePrefix`; otherwise, `false`. If
-    ///   `possiblePrefix` has no elements, the return value is `true`.
-    ///
-    /// - Complexity: O(*m*), where *m* is the lesser of the length of the
-    ///   sequence and the length of `possiblePrefix`.
     @inlinable
     public func starts<PossiblePrefix: Sequence>(
         with possiblePrefix: PossiblePrefix
@@ -218,9 +110,8 @@ extension Sequence where Element: Equatable {
 //===----------------------------------------------------------------------===//
 
 extension Sequence {
-   
     /*
-     这个函数, 就是迭代判断相等性而已.
+     elementsEqual, 就是不断的进行迭代, 比较相同位置的元素是否都一样.
      */
     @inlinable
     public func elementsEqual<OtherSequence: Sequence>(
@@ -257,40 +148,8 @@ extension Sequence where Element: Equatable {
 //===----------------------------------------------------------------------===//
 
 extension Sequence {
-    /// Returns a Boolean value indicating whether the sequence precedes another
-    /// sequence in a lexicographical (dictionary) ordering, using the given
-    /// predicate to compare elements.
-    ///
-    /// The predicate must be a *strict weak ordering* over the elements. That
-    /// is, for any elements `a`, `b`, and `c`, the following conditions must
-    /// hold:
-    ///
-    /// - `areInIncreasingOrder(a, a)` is always `false`. (Irreflexivity)
-    /// - If `areInIncreasingOrder(a, b)` and `areInIncreasingOrder(b, c)` are
-    ///   both `true`, then `areInIncreasingOrder(a, c)` is also
-    ///   `true`. (Transitive comparability)
-    /// - Two elements are *incomparable* if neither is ordered before the other
-    ///   according to the predicate. If `a` and `b` are incomparable, and `b`
-    ///   and `c` are incomparable, then `a` and `c` are also incomparable.
-    ///   (Transitive incomparability)
-    ///
-    /// - Parameters:
-    ///   - other: A sequence to compare to this sequence.
-    ///   - areInIncreasingOrder:  A predicate that returns `true` if its first
-    ///     argument should be ordered before its second argument; otherwise,
-    ///     `false`.
-    /// - Returns: `true` if this sequence precedes `other` in a dictionary
-    ///   ordering as ordered by `areInIncreasingOrder`; otherwise, `false`.
-    ///
-    /// - Note: This method implements the mathematical notion of lexicographical
-    ///   ordering, which has no connection to Unicode.  If you are sorting
-    ///   strings to present to the end user, use `String` APIs that perform
-    ///   localized comparison instead.
-    ///
-    /// - Complexity: O(*m*), where *m* is the lesser of the length of the
-    ///   sequence and the length of `other`.
     /*
-     词典上比较, 就是比较第一个元素.
+     所谓的 lexicographically 的顺序, 就是比较前面几个元素, 如果前面几个元素可以比较出结果, 就不管后面的了.
      */
     @inlinable
     public func lexicographicallyPrecedes<OtherSequence: Sequence>(
@@ -320,32 +179,6 @@ extension Sequence {
 }
 
 extension Sequence where Element: Comparable {
-    /// Returns a Boolean value indicating whether the sequence precedes another
-    /// sequence in a lexicographical (dictionary) ordering, using the
-    /// less-than operator (`<`) to compare elements.
-    ///
-    /// This example uses the `lexicographicallyPrecedes` method to test which
-    /// array of integers comes first in a lexicographical ordering.
-    ///
-    ///     let a = [1, 2, 2, 2]
-    ///     let b = [1, 2, 3, 4]
-    ///
-    ///     print(a.lexicographicallyPrecedes(b))
-    ///     // Prints "true"
-    ///     print(b.lexicographicallyPrecedes(b))
-    ///     // Prints "false"
-    ///
-    /// - Parameter other: A sequence to compare to this sequence.
-    /// - Returns: `true` if this sequence precedes `other` in a dictionary
-    ///   ordering; otherwise, `false`.
-    ///
-    /// - Note: This method implements the mathematical notion of lexicographical
-    ///   ordering, which has no connection to Unicode.  If you are sorting
-    ///   strings to present to the end user, use `String` APIs that
-    ///   perform localized comparison.
-    ///
-    /// - Complexity: O(*m*), where *m* is the lesser of the length of the
-    ///   sequence and the length of `other`.
     @inlinable
     public func lexicographicallyPrecedes<OtherSequence: Sequence>(
         _ other: OtherSequence
@@ -359,43 +192,10 @@ extension Sequence where Element: Comparable {
 //===----------------------------------------------------------------------===//
 
 extension Sequence {
-    /// Returns a Boolean value indicating whether the sequence contains an
-    /// element that satisfies the given predicate.
-    ///
-    /// You can use the predicate to check for an element of a type that
-    /// doesn't conform to the `Equatable` protocol, such as the
-    /// `HTTPResponse` enumeration in this example.
-    ///
-    ///     enum HTTPResponse {
-    ///         case ok
-    ///         case error(Int)
-    ///     }
-    ///
-    ///     let lastThreeResponses: [HTTPResponse] = [.ok, .ok, .error(404)]
-    ///     let hadError = lastThreeResponses.contains { element in
-    ///         if case .error = element {
-    ///             return true
-    ///         } else {
-    ///             return false
-    ///         }
-    ///     }
-    ///     // 'hadError' == true
-    ///
-    /// Alternatively, a predicate can be satisfied by a range of `Equatable`
-    /// elements or a general condition. This example shows how you can check an
-    /// array for an expense greater than $100.
-    ///
-    ///     let expenses = [21.37, 55.21, 9.32, 10.18, 388.77, 11.41]
-    ///     let hasBigPurchase = expenses.contains { $0 > 100 }
-    ///     // 'hasBigPurchase' == true
-    ///
-    /// - Parameter predicate: A closure that takes an element of the sequence
-    ///   as its argument and returns a Boolean value that indicates whether
-    ///   the passed element represents a match.
-    /// - Returns: `true` if the sequence contains an element that satisfies
-    ///   `predicate`; otherwise, `false`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
+    /*
+     迭代, 每次迭代的时候, 判断是否符合标准, 迭代结束时还没有发现, 就是 false.
+     这是很常见的代码, 标准库固定下来, 开发者只关心 predicate 的编写.
+     */
     @inlinable
     public func contains(
         where predicate: (Element) throws -> Bool
@@ -421,25 +221,11 @@ extension Sequence {
 }
 
 extension Sequence where Element: Equatable {
-    /// Returns a Boolean value indicating whether the sequence contains the
-    /// given element.
-    ///
-    /// This example checks to see whether a favorite actor is in an array
-    /// storing a movie's cast.
-    ///
-    ///     let cast = ["Vivien", "Marlon", "Kim", "Karl"]
-    ///     print(cast.contains("Marlon"))
-    ///     // Prints "true"
-    ///     print(cast.contains("James"))
-    ///     // Prints "false"
-    ///
-    /// - Parameter element: The element to find in the sequence.
-    /// - Returns: `true` if the element was found in the sequence; otherwise,
-    ///   `false`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
     @inlinable
     public func contains(_ element: Element) -> Bool {
+        /*
+         不太明白这个 _customContainsEquatableElement 到底是想要做什么.
+         */
         if let result = _customContainsEquatableElement(element) {
             return result
         } else {
@@ -489,20 +275,12 @@ extension Sequence {
 //===----------------------------------------------------------------------===//
 
 extension Sequence {
-    /// Returns an array containing the elements of this sequence in reverse
-    /// order.
-    ///
-    /// The sequence must be finite.
-    ///
-    /// - Returns: An array containing the elements of this sequence in
-    ///   reverse order.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
     @inlinable
     public __consuming func reversed() -> [Element] {
-        // FIXME(performance): optimize to 1 pass?  But Array(self) can be
-        // optimized to a memcpy() sometimes.  Those cases are usually collections,
-        // though.
+        /*
+         首先, 根据 sequence 建立一个数组, 然后在数组上进行操作.
+         因为数组是一个 randomAccess Colleciton, 直接可以通过下标进行操作.
+         */
         var result = Array(self)
         let count = result.count
         for i in 0..<count/2 {
@@ -517,32 +295,9 @@ extension Sequence {
 //===----------------------------------------------------------------------===//
 
 extension Sequence {
-    /// Returns an array containing the concatenated results of calling the
-    /// given transformation with each element of this sequence.
-    ///
-    /// Use this method to receive a single-level collection when your
-    /// transformation produces a sequence or collection for each element.
-    ///
-    /// In this example, note the difference in the result of using `map` and
-    /// `flatMap` with a transformation that returns an array.
-    ///
-    ///     let numbers = [1, 2, 3, 4]
-    ///
-    ///     let mapped = numbers.map { Array(repeating: $0, count: $0) }
-    ///     // [[1], [2, 2], [3, 3, 3], [4, 4, 4, 4]]
-    ///
-    ///     let flatMapped = numbers.flatMap { Array(repeating: $0, count: $0) }
-    ///     // [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]
-    ///
-    /// In fact, `s.flatMap(transform)`  is equivalent to
-    /// `Array(s.map(transform).joined())`.
-    ///
-    /// - Parameter transform: A closure that accepts an element of this
-    ///   sequence as its argument and returns a sequence or collection.
-    /// - Returns: The resulting flattened array.
-    ///
-    /// - Complexity: O(*m* + *n*), where *n* is the length of this sequence
-    ///   and *m* is the length of the result.
+    /*
+     如果, 闭包的返回值还是一个 sequence, flatMap 会对里面的值, 进行一次抽取的工作.
+     */
     @inlinable
     public func flatMap<SegmentOfResult: Sequence>(
         _ transform: (Element) throws -> SegmentOfResult
@@ -556,30 +311,6 @@ extension Sequence {
 }
 
 extension Sequence {
-    /// Returns an array containing the non-`nil` results of calling the given
-    /// transformation with each element of this sequence.
-    ///
-    /// Use this method to receive an array of non-optional values when your
-    /// transformation produces an optional value.
-    ///
-    /// In this example, note the difference in the result of using `map` and
-    /// `compactMap` with a transformation that returns an optional `Int` value.
-    ///
-    ///     let possibleNumbers = ["1", "2", "three", "///4///", "5"]
-    ///
-    ///     let mapped: [Int?] = possibleNumbers.map { str in Int(str) }
-    ///     // [1, 2, nil, nil, 5]
-    ///
-    ///     let compactMapped: [Int] = possibleNumbers.compactMap { str in Int(str) }
-    ///     // [1, 2, 5]
-    ///
-    /// - Parameter transform: A closure that accepts an element of this
-    ///   sequence as its argument and returns an optional value.
-    /// - Returns: An array of the non-`nil` results of calling `transform`
-    ///   with each element of the sequence.
-    ///
-    /// - Complexity: O(*m* + *n*), where *n* is the length of this sequence
-    ///   and *m* is the length of the result.
     @inlinable // protocol-only
     public func compactMap<ElementOfResult>(
         _ transform: (Element) throws -> ElementOfResult?
@@ -587,9 +318,9 @@ extension Sequence {
         return try _compactMap(transform)
     }
     
-    // The implementation of flatMap accepting a closure with an optional result.
-    // Factored out into a separate functions in order to be used in multiple
-    // overloads.
+    /*
+     如果, transform 的结果非空的话, 才会加到结果里面.
+     */
     @inlinable // protocol-only
     @inline(__always)
     public func _compactMap<ElementOfResult>(
