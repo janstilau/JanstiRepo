@@ -131,16 +131,7 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
      如果传递进来的闭包, 是可能 throws 的, 那么在使用的时候, 一定要加上 try.
      */
     @inlinable
-    public func map<U>(
-        _ transform: (Wrapped) throws -> U
-    ) rethrows -> U? {
-        switch self {
-        case .some(let y):
-            return .some(try transform(y))
-        case .none:
-            return .none
-        }
-    }
+    publi
     /*
      这个方法的逻辑, 和上个方法的逻辑是完全一致的, 不过这里返回的类型, 变成了一个 Optional.
      */

@@ -1,15 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
 import SwiftShims
 
 // Implementation Note: this file intentionally uses very LOW-LEVEL
@@ -19,32 +7,28 @@ import SwiftShims
 // FIXME: We could go farther with this simplification, e.g. avoiding
 // UnsafeMutablePointer
 
+// The values for the assert_configuration call are:
+// 0: Debug
+// 1: Release
+// 2: Fast
+/*
+ 这其实也说明了, 哪有什么 Debug, Release 模式, 都是程序内部进行的控制.
+ 程序在一个地方, 存了一个标志位, 然后程序很多时候, 根据这个标志位进行不同的分支处理.
+ */
 @_transparent
 public // @testable
 func _isDebugAssertConfiguration() -> Bool {
-  // The values for the assert_configuration call are:
-  // 0: Debug
-  // 1: Release
-  // 2: Fast
   return Int32(Builtin.assert_configuration()) == 0
 }
 
 @usableFromInline @_transparent
 internal func _isReleaseAssertConfiguration() -> Bool {
-  // The values for the assert_configuration call are:
-  // 0: Debug
-  // 1: Release
-  // 2: Fast
   return Int32(Builtin.assert_configuration()) == 1
 }
 
 @_transparent
 public // @testable
 func _isFastAssertConfiguration() -> Bool {
-  // The values for the assert_configuration call are:
-  // 0: Debug
-  // 1: Release
-  // 2: Fast
   return Int32(Builtin.assert_configuration()) == 2
 }
 

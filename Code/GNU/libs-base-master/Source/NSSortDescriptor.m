@@ -36,16 +36,13 @@ static BOOL     initialized = NO;
     if ([algorithm isEqual: @"QuickSort"])
     {
         [GSQuickSortPlaceHolder setUnstable];
-    }
-    else if ([algorithm isEqual: @"ShellSort"])
+    } else if ([algorithm isEqual: @"ShellSort"])
     {
         [GSShellSortPlaceHolder setUnstable];
-    }
-    else if ([algorithm isEqual: @"TimSort"])
+    } else if ([algorithm isEqual: @"TimSort"])
     {
         [GSTimSortPlaceHolder setUnstable];
-    }
-    else
+    } else
     {
         [GSTimSortPlaceHolder setUnstable];
         if (nil != algorithm)
@@ -88,16 +85,21 @@ static BOOL     initialized = NO;
     id comparedKey1 = [object1 valueForKeyPath: _key];
     id comparedKey2 = [object2 valueForKeyPath: _key];
     
-    if (_comparator == NULL)
-    {
+    /*
+     如果指定了比较的 Sel 信息, 就用 Sel 信息进行比较.
+     */
+    if (_comparator == NULL) {
         result = (NSComparisonResult) [comparedKey1 performSelector: _selector
                                                          withObject: comparedKey2];
-    }
-    else
-    {
+    } else {
+        /*
+         否则, 就用比较的闭包表达式进行比较.
+         */
         result = CALL_BLOCK(((NSComparator)_comparator), comparedKey1, comparedKey2);
     }
-    
+    /*
+     然后根据配置的 _ascending, 变换 result 的值.
+     */
     if (_ascending == NO)
     {
         if (result == NSOrderedAscending)
@@ -113,6 +115,9 @@ static BOOL     initialized = NO;
     return result;
 }
 
+/*
+ OC 里面的 hash 还是比较简单的.
+ */
 - (NSUInteger) hash
 {
     const char	*sel = sel_getName(_selector);
@@ -190,6 +195,10 @@ static BOOL     initialized = NO;
     }
 }
 
+/*
+ isEqual 是固定的比较套路, 其他类照个一个思路来进行.
+ */
+
 - (BOOL) isEqual: (id)other
 {
     if (other == self)
@@ -233,7 +242,7 @@ static BOOL     initialized = NO;
 @end
 
 /*
-   _GSSortUnstable = _GSQuickSort;
+ _GSSortUnstable = _GSQuickSort;
  */
 /* Symbols for the sorting functions, the actual algorithms fill these. */
 void
@@ -241,7 +250,7 @@ void
                    id comparisonEntity, GSComparisonType cmprType, void *context) = NULL;
 
 /*
-     _GSSortStable = _GSTimSort;
+ _GSSortStable = _GSTimSort;
  */
 void
 (*_GSSortStable)(id* buffer, NSRange range,
@@ -256,6 +265,10 @@ void
                            id comparisonEntity, GSComparisonType cmprType, void *context) = NULL;
 
 
+/*
+ 算法, 都是固定下来的. 而类, 则是对于这些底层算法的包装.
+ 算法, 铁定是操作内存的, 但是内存不应该暴露给使用者. 所以, 各个类都在自己的方法里面, 暴露出内存, 传递给算法里面.
+ */
 // Sorting functions that select the adequate algorithms
 void
 GSSortUnstable(id* buffer, NSRange range, id descriptorOrComparator,

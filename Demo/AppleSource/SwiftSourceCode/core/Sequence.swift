@@ -397,6 +397,9 @@ public protocol Sequence {
     
     /// Create a native array buffer containing the elements of `self`,
     /// in the same order.
+    /*
+     ContiguousArray 可以认为是 Swift 版本的数组的主要版本. 基本上, Sequence 作为一个序列的概念, 变换为数组, 是很常见的事情.
+     */
     __consuming func _copyToContiguousArray() -> ContiguousArray<Element>
     
     /// Copy `self` into an unsafe buffer, returning a partially-consumed

@@ -1,14 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
 
 /// Evaluates a closure while ensuring that the given instance is not destroyed
 /// before the closure returns.
@@ -21,10 +10,10 @@
 /// - Returns: The return value, if any, of the `body` closure parameter.
 @inlinable
 public func withExtendedLifetime<T, Result>(
-  _ x: T, _ body: () throws -> Result
+    _ x: T, _ body: () throws -> Result
 ) rethrows -> Result {
-  defer { _fixLifetime(x) }
-  return try body()
+    defer { _fixLifetime(x) }
+    return try body()
 }
 
 /// Evaluates a closure while ensuring that the given instance is not destroyed
@@ -38,17 +27,17 @@ public func withExtendedLifetime<T, Result>(
 /// - Returns: The return value, if any, of the `body` closure parameter.
 @inlinable
 public func withExtendedLifetime<T, Result>(
-  _ x: T, _ body: (T) throws -> Result
+    _ x: T, _ body: (T) throws -> Result
 ) rethrows -> Result {
-  defer { _fixLifetime(x) }
-  return try body(x)
+    defer { _fixLifetime(x) }
+    return try body(x)
 }
 
 // Fix the lifetime of the given instruction so that the ARC optimizer does not
 // shorten the lifetime of x to be before this point.
 @_transparent
 public func _fixLifetime<T>(_ x: T) {
-  Builtin.fixLifetime(x)
+    Builtin.fixLifetime(x)
 }
 
 /// Calls the given closure with a mutable pointer to the given argument.
@@ -75,11 +64,11 @@ public func _fixLifetime<T>(_ x: T) {
 /// - Returns: The return value, if any, of the `body` closure.
 @inlinable
 public func withUnsafeMutablePointer<T, Result>(
-  to value: inout T,
-  _ body: (UnsafeMutablePointer<T>) throws -> Result
+    to value: inout T,
+    _ body: (UnsafeMutablePointer<T>) throws -> Result
 ) rethrows -> Result
 {
-  return try body(UnsafeMutablePointer<T>(Builtin.addressof(&value)))
+    return try body(UnsafeMutablePointer<T>(Builtin.addressof(&value)))
 }
 
 /// Invokes the given closure with a pointer to the given argument.
@@ -104,11 +93,11 @@ public func withUnsafeMutablePointer<T, Result>(
 /// - Returns: The return value, if any, of the `body` closure.
 @inlinable
 public func withUnsafePointer<T, Result>(
-  to value: T,
-  _ body: (UnsafePointer<T>) throws -> Result
+    to value: T,
+    _ body: (UnsafePointer<T>) throws -> Result
 ) rethrows -> Result
 {
-  return try body(UnsafePointer<T>(Builtin.addressOfBorrow(value)))
+    return try body(UnsafePointer<T>(Builtin.addressOfBorrow(value)))
 }
 
 /// Invokes the given closure with a pointer to the given argument.
@@ -137,33 +126,33 @@ public func withUnsafePointer<T, Result>(
 /// - Returns: The return value, if any, of the `body` closure.
 @inlinable
 public func withUnsafePointer<T, Result>(
-  to value: inout T,
-  _ body: (UnsafePointer<T>) throws -> Result
+    to value: inout T,
+    _ body: (UnsafePointer<T>) throws -> Result
 ) rethrows -> Result
 {
-  return try body(UnsafePointer<T>(Builtin.addressof(&value)))
+    return try body(UnsafePointer<T>(Builtin.addressof(&value)))
 }
 
 extension String {
-  /// Calls the given closure with a pointer to the contents of the string,
-  /// represented as a null-terminated sequence of UTF-8 code units.
-  ///
-  /// The pointer passed as an argument to `body` is valid only during the
-  /// execution of `withCString(_:)`. Do not store or return the pointer for
-  /// later use.
-  ///
-  /// - Parameter body: A closure with a pointer parameter that points to a
-  ///   null-terminated sequence of UTF-8 code units. If `body` has a return
-  ///   value, that value is also used as the return value for the
-  ///   `withCString(_:)` method. The pointer argument is valid only for the
-  ///   duration of the method's execution.
-  /// - Returns: The return value, if any, of the `body` closure parameter.
-  @inlinable // fast-path: already C-string compatible
-  public func withCString<Result>(
-    _ body: (UnsafePointer<Int8>) throws -> Result
-  ) rethrows -> Result {
-    return try _guts.withCString(body)
-  }
+    /// Calls the given closure with a pointer to the contents of the string,
+    /// represented as a null-terminated sequence of UTF-8 code units.
+    ///
+    /// The pointer passed as an argument to `body` is valid only during the
+    /// execution of `withCString(_:)`. Do not store or return the pointer for
+    /// later use.
+    ///
+    /// - Parameter body: A closure with a pointer parameter that points to a
+    ///   null-terminated sequence of UTF-8 code units. If `body` has a return
+    ///   value, that value is also used as the return value for the
+    ///   `withCString(_:)` method. The pointer argument is valid only for the
+    ///   duration of the method's execution.
+    /// - Returns: The return value, if any, of the `body` closure parameter.
+    @inlinable // fast-path: already C-string compatible
+    public func withCString<Result>(
+        _ body: (UnsafePointer<Int8>) throws -> Result
+    ) rethrows -> Result {
+        return try _guts.withCString(body)
+    }
 }
 
 

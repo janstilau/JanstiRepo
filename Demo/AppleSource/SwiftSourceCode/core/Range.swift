@@ -394,6 +394,9 @@ extension PartialRangeUpTo: RangeExpression {
             return collection.startIndex..<self.upperBound
     }
     
+    /*
+     Partial 在比较的时候, 就是比较一边
+     */
     @_transparent
     public func contains(_ element: Bound) -> Bool {
         return element < upperBound
