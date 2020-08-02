@@ -40,7 +40,7 @@
 		069FFEDC24C8A4D60014F9EA /* fstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fstream.h; sourceTree = "<group>"; };
 		069FFEDD24C8A4D60014F9EA /* slist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = slist.h; sourceTree = "<group>"; };
 		069FFEDF24C8A4D60014F9EA /* map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = map.h; sourceTree = "<group>"; };
-		069FFEE024C8A4D60014F9EA /* stl_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_map.h; path = ../../stl_map.h; sourceTree = "<group>"; };
+		069FFEE024C8A4D60014F9EA /* stl_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_map.h; sourceTree = "<group>"; };
 		069FFEE124C8A4D60014F9EA /* stl_deque.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_deque.h; sourceTree = "<group>"; };
 		069FFEE224C8A4D60014F9EA /* stl_tempbuf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_tempbuf.h; sourceTree = "<group>"; };
 		069FFEE324C8A4D70014F9EA /* rope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rope.h; sourceTree = "<group>"; };
@@ -62,9 +62,9 @@
 		069FFEF624C8A4D70014F9EA /* floatio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = floatio.h; sourceTree = "<group>"; };
 		069FFEF724C8A4D70014F9EA /* stl_hash_fun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_hash_fun.h; sourceTree = "<group>"; };
 		069FFEF824C8A4D70014F9EA /* istream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = istream.h; sourceTree = "<group>"; };
-		069FFEF924C8A4D70014F9EA /* stl_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_set.h; path = ../../stl_set.h; sourceTree = "<group>"; };
+		069FFEF924C8A4D70014F9EA /* stl_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_set.h; sourceTree = "<group>"; };
 		069FFEFA24C8A4D70014F9EA /* stl_queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_queue.h; sourceTree = "<group>"; };
-		069FFEFB24C8A4D70014F9EA /* stl_multiset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_multiset.h; path = ../../stl_multiset.h; sourceTree = "<group>"; };
+		069FFEFB24C8A4D70014F9EA /* stl_multiset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_multiset.h; sourceTree = "<group>"; };
 		069FFEFC24C8A4D70014F9EA /* stl_hash_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_hash_map.h; sourceTree = "<group>"; };
 		069FFEFD24C8A4D70014F9EA /* SFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFile.h; sourceTree = "<group>"; };
 		069FFEFE24C8A4D70014F9EA /* bvector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bvector.h; sourceTree = "<group>"; };
@@ -75,7 +75,7 @@
 		069FFF0424C8A4D80014F9EA /* iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iterator.h; sourceTree = "<group>"; };
 		069FFF0524C8A4D80014F9EA /* algo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = algo.h; sourceTree = "<group>"; };
 		069FFF0624C8A4D80014F9EA /* ostream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ostream.h; sourceTree = "<group>"; };
-		069FFF0724C8A4D80014F9EA /* stl_algobase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_algobase.h; path = ../../stl_algobase.h; sourceTree = "<group>"; };
+		069FFF0724C8A4D80014F9EA /* stl_algobase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_algobase.h; sourceTree = "<group>"; };
 		069FFF0824C8A4D80014F9EA /* pfstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pfstream.h; sourceTree = "<group>"; };
 		069FFF0924C8A4D80014F9EA /* stl_function.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_function.h; sourceTree = "<group>"; };
 		069FFF0A24C8A4D80014F9EA /* stl_numeric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_numeric.h; sourceTree = "<group>"; };
@@ -106,7 +106,7 @@
 		069FFF2824C8A4D90014F9EA /* complext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = complext.h; sourceTree = "<group>"; };
 		069FFF2924C8A4D90014F9EA /* stl_vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_vector.h; sourceTree = "<group>"; };
 		069FFF2A24C8A4D90014F9EA /* stl_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_iterator.h; sourceTree = "<group>"; };
-		069FFF2B24C8A4D90014F9EA /* stl_multimap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_multimap.h; path = ../../stl_multimap.h; sourceTree = "<group>"; };
+		069FFF2B24C8A4D90014F9EA /* stl_multimap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_multimap.h; sourceTree = "<group>"; };
 		069FFF3024C940BD0014F9EA /* algoAna.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = algoAna.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -153,11 +153,6 @@
 				069FFF2024C8A4D90014F9EA /* std */,
 				069FFF2F24C940320014F9EA /* Readed */,
 				069FFF1424C8A4D80014F9EA /* stl_algo.h */,
-				069FFF0724C8A4D80014F9EA /* stl_algobase.h */,
-				069FFEF924C8A4D70014F9EA /* stl_set.h */,
-				069FFEE024C8A4D60014F9EA /* stl_map.h */,
-				069FFF2B24C8A4D90014F9EA /* stl_multimap.h */,
-				069FFEFB24C8A4D70014F9EA /* stl_multiset.h */,
 				069FFED124C8A4D60014F9EA /* stl_tree.h */,
 				069FFED424C8A4D60014F9EA /* stl_rope.h */,
 				0613582424CD5E500018DA0A /* sample.cpp */,
@@ -170,10 +165,10 @@
 			children = (
 				069FFF2124C8A4D90014F9EA /* fcomplex.h */,
 				069FFF2224C8A4D90014F9EA /* bastring.h */,
+				069FFF2624C8A4D90014F9EA /* bastring.cc */,
 				069FFF2324C8A4D90014F9EA /* complext.cc */,
 				069FFF2424C8A4D90014F9EA /* ldcomplex.h */,
 				069FFF2524C8A4D90014F9EA /* straits.h */,
-				069FFF2624C8A4D90014F9EA /* bastring.cc */,
 				069FFF2724C8A4D90014F9EA /* dcomplex.h */,
 				069FFF2824C8A4D90014F9EA /* complext.h */,
 			);
@@ -234,27 +229,32 @@
 		069FFF2F24C940320014F9EA /* Readed */ = {
 			isa = PBXGroup;
 			children = (
-				0613589624CD662B0018DA0A /* stl_construct.h */,
 				069FFF3024C940BD0014F9EA /* algoAna.h */,
-				069FFEFA24C8A4D70014F9EA /* stl_queue.h */,
-				069FFEF524C8A4D70014F9EA /* stl_pair.h */,
+				069FFF0724C8A4D80014F9EA /* stl_algobase.h */,
+				069FFEE624C8A4D70014F9EA /* stl_alloc.h */,
+				0613589624CD662B0018DA0A /* stl_construct.h */,
+				069FFEE124C8A4D60014F9EA /* stl_deque.h */,
+				069FFF0924C8A4D80014F9EA /* stl_function.h */,
+				069FFEF724C8A4D70014F9EA /* stl_hash_fun.h */,
+				069FFEFC24C8A4D70014F9EA /* stl_hash_map.h */,
+				069FFEE724C8A4D70014F9EA /* stl_hash_set.h */,
+				069FFEE824C8A4D70014F9EA /* stl_hashtable.h */,
+				069FFEEC24C8A4D70014F9EA /* stl_heap.h */,
 				069FFF2A24C8A4D90014F9EA /* stl_iterator.h */,
-				069FFEEA24C8A4D70014F9EA /* stl_stack.h */,
-				069FFECF24C8A4D60014F9EA /* stl_slist.h */,
 				069FFF1624C8A4D80014F9EA /* stl_list.h */,
+				069FFEE024C8A4D60014F9EA /* stl_map.h */,
+				069FFF2B24C8A4D90014F9EA /* stl_multimap.h */,
+				069FFEFB24C8A4D70014F9EA /* stl_multiset.h */,
 				069FFF0A24C8A4D80014F9EA /* stl_numeric.h */,
+				069FFEF524C8A4D70014F9EA /* stl_pair.h */,
+				069FFEFA24C8A4D70014F9EA /* stl_queue.h */,
 				069FFF1524C8A4D80014F9EA /* stl_relops.h */,
+				069FFEF924C8A4D70014F9EA /* stl_set.h */,
+				069FFECF24C8A4D60014F9EA /* stl_slist.h */,
+				069FFEEA24C8A4D70014F9EA /* stl_stack.h */,
 				069FFEE224C8A4D60014F9EA /* stl_tempbuf.h */,
 				069FFF1E24C8A4D90014F9EA /* stl_uninitialized.h */,
 				069FFF2924C8A4D90014F9EA /* stl_vector.h */,
-				069FFEF724C8A4D70014F9EA /* stl_hash_fun.h */,
-				069FFF0924C8A4D80014F9EA /* stl_function.h */,
-				069FFEE124C8A4D60014F9EA /* stl_deque.h */,
-				069FFEE824C8A4D70014F9EA /* stl_hashtable.h */,
-				069FFEE724C8A4D70014F9EA /* stl_hash_set.h */,
-				069FFEFC24C8A4D70014F9EA /* stl_hash_map.h */,
-				069FFEEC24C8A4D70014F9EA /* stl_heap.h */,
-				069FFEE624C8A4D70014F9EA /* stl_alloc.h */,
 			);
 			path = Readed;
 			sourceTree = SOURCE_ROOT;

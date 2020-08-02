@@ -1,32 +1,10 @@
-#ifndef __SGI_STL_INTERNAL_ALGOBASE_H
-#define __SGI_STL_INTERNAL_ALGOBASE_H
-
-#ifndef __STL_CONFIG_H
-#include <stl_config.h>
-#endif
-#ifndef __SGI_STL_INTERNAL_RELOPS
-#include <stl_relops.h>
-#endif
-#ifndef __SGI_STL_INTERNAL_PAIR_H
-#include <stl_pair.h>
-#endif
-#ifndef __TYPE_TRAITS_H_
-#include <type_traits.h>
-#endif
-
-#include <string.h>
-#include <limits.h>
-#include <stdlib.h>
-#include <stddef.h>
-#include <new.h>
-#include <iostream.h>
-
-#ifndef __SGI_STL_INTERNAL_ITERATOR_H
-#include <stl_iterator.h>
-#endif
-
 __STL_BEGIN_NAMESPACE
 
+/*
+ 迭代器的交换.
+ 因为迭代器其实就是指针, 所以, 直接就和指针交换一样了.
+ 迭代器要负起最终的 * 的取值操作, 要返回相对应的引用.
+ */
 template <class ForwardIterator1, class ForwardIterator2, class T>
 inline void __iter_swap(ForwardIterator1 a, ForwardIterator2 b, T*) {
     T tmp = *a;
@@ -34,6 +12,9 @@ inline void __iter_swap(ForwardIterator1 a, ForwardIterator2 b, T*) {
     *b = tmp;
 }
 
+/*
+ 暴露给用户的, 是不带 __ 的操作. 用 __ 表示私有的函数, 是各种语言通用的做法.
+ */
 template <class ForwardIterator1, class ForwardIterator2>
 inline void iter_swap(ForwardIterator1 a, ForwardIterator2 b) {
     __iter_swap(a, b, value_type(a));
@@ -51,6 +32,10 @@ inline void swap(T& a, T& b) {
 #undef min
 #undef max
 
+
+/*
+ 这都是最简单的算法, 但是是泛型的.
+ */
 template <class T>
 inline const T& min(const T& a, const T& b) {
     return b < a ? b : a;
@@ -63,6 +48,20 @@ inline const T& max(const T& a, const T& b) {
 
 #endif /* __BORLANDC__ */
 
+
+
+
+
+
+
+//Copy
+
+
+
+
+/*
+ 增加了比较函数版本的方法.
+ */
 template <class T, class Compare>
 inline const T& min(const T& a, const T& b, Compare comp) {
     return comp(b, a) ? b : a;
@@ -96,6 +95,9 @@ __copy(RandomAccessIterator first, RandomAccessIterator last,
     return __copy_d(first, last, result, distance_type(first));
 }
 
+/*
+ 用次数的方式, 效率要比 first != last 高一点, 因为迭代器的比较, 也是一个方法调用.
+ */
 template <class RandomAccessIterator, class OutputIterator, class Distance>
 inline OutputIterator
 __copy_d(RandomAccessIterator first, RandomAccessIterator last,
@@ -120,12 +122,18 @@ struct __copy_dispatch
 
 #ifdef __STL_CLASS_PARTIAL_SPECIALIZATION 
 
+/*
+ 如果, has_trivial_assignment_operator 为 true, 也就是拷贝赋值操作没有特殊设计, 那就直接内存拷贝就可以了.
+ */
 template <class T>
 inline T* __copy_t(const T* first, const T* last, T* result, __true_type) {
     memmove(result, first, sizeof(T) * (last - first));
     return result + (last - first);
 }
 
+/*
+ 如果, has_trivial_assignment_operator 为 false, 也就是拷贝赋值操作有着特殊设计, 那么就调用迭代器的赋值操作, 会调用到对应类型的拷贝赋值操作.
+ */
 template <class T>
 inline T* __copy_t(const T* first, const T* last, T* result, __false_type) {
     return __copy_d(first, last, result, (ptrdiff_t*) 0);
@@ -135,6 +143,9 @@ template <class T>
 struct __copy_dispatch<T*, T*>
 {
     T* operator()(T* first, T* last, T* result) {
+        /*
+         typeTraits 在这里起了作用.
+         */
         typedef typename __type_traits<T>::has_trivial_assignment_operator t;
         return __copy_t(first, last, result, t());
     }
@@ -160,13 +171,17 @@ inline OutputIterator copy(InputIterator first, InputIterator last,
 }
 
 /*
- 如果, 迭代器是指针, 就直接内存拷贝就是了
+ 如果迭代器是指针类型的, 就直接内存的拷贝.
+ 算是做类型的偏特化
  */
 inline char* copy(const char* first, const char* last, char* result) {
     memmove(result, first, last - first);
     return result + (last - first);
 }
-
+/*
+如果迭代器是指针类型的, 就直接内存的拷贝.
+算是做类型的偏特化
+*/
 inline wchar_t* copy(const wchar_t* first, const wchar_t* last,
                      wchar_t* result) {
     memmove(result, first, sizeof(wchar_t) * (last - first));
@@ -194,6 +209,10 @@ struct __copy_backward_dispatch
 
 #ifdef __STL_CLASS_PARTIAL_SPECIALIZATION 
 
+/*
+如果迭代器是指针类型的, 就直接内存的拷贝.
+算是做类型的偏特化
+*/
 template <class T>
 inline T* __copy_backward_t(const T* first, const T* last, T* result,
                             __true_type) {
@@ -201,7 +220,10 @@ inline T* __copy_backward_t(const T* first, const T* last, T* result,
     memmove(result - N, first, sizeof(T) * N);
     return result - N;
 }
-
+/*
+如果迭代器是指针类型的, 就直接内存的拷贝.
+算是做类型的偏特化
+*/
 template <class T>
 inline T* __copy_backward_t(const T* first, const T* last, T* result,
                             __false_type) {
@@ -266,12 +288,25 @@ copy_n(InputIterator first, Size count,
     return __copy_n(first, count, result, iterator_category(first));
 }
 
+
+
+
+//Fill
+
+
+
+/*
+ 从 First 到 last, 都进行 value 的覆盖工作.
+ */
 template <class ForwardIterator, class T>
 void fill(ForwardIterator first, ForwardIterator last, const T& value) {
     for ( ; first != last; ++first)
         *first = value;
 }
 
+/*
+ 从 first 开始, 后面的 n 的位置, 都进行 value 的覆盖工作.
+ */
 template <class OutputIterator, class Size, class T>
 OutputIterator fill_n(OutputIterator first, Size n, const T& value) {
     for ( ; n > 0; --n, ++first)
@@ -279,6 +314,17 @@ OutputIterator fill_n(OutputIterator first, Size n, const T& value) {
     return first;
 }
 
+
+
+// MisMatch
+
+
+
+/*
+ Returns the first mismatching pair of elements from two ranges: one defined by [first1, last1) and another defined by [first2,last2). If last2 is not provided (overloads (1-4)), it denotes first2 + (last1 - first1).
+
+ */
+// 返回第一个不相等的两个序列的迭代器.
 template <class InputIterator1, class InputIterator2>
 pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1,
                                               InputIterator1 last1,
@@ -289,7 +335,7 @@ pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1,
     }
     return pair<InputIterator1, InputIterator2>(first1, first2);
 }
-
+// 增加了比较的函数闭包.
 template <class InputIterator1, class InputIterator2, class BinaryPredicate>
 pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1,
                                               InputIterator1 last1,
@@ -302,6 +348,7 @@ pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1,
     return pair<InputIterator1, InputIterator2>(first1, first2);
 }
 
+// 比较两个序列
 template <class InputIterator1, class InputIterator2>
 inline bool equal(InputIterator1 first1, InputIterator1 last1,
                   InputIterator2 first2) {
@@ -310,7 +357,7 @@ inline bool equal(InputIterator1 first1, InputIterator1 last1,
             return false;
     return true;
 }
-
+// 比较两个序列, 增加了比较的闭包.
 template <class InputIterator1, class InputIterator2, class BinaryPredicate>
 inline bool equal(InputIterator1 first1, InputIterator1 last1,
                   InputIterator2 first2, BinaryPredicate binary_pred) {
@@ -319,7 +366,7 @@ inline bool equal(InputIterator1 first1, InputIterator1 last1,
             return false;
     return true;
 }
-
+// lexicographical 这个概念, 就是不同的元素, 从前往后比, 前面的能判断大小, 后面的就不比了.
 template <class InputIterator1, class InputIterator2>
 bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
                              InputIterator2 first2, InputIterator2 last2) {
@@ -331,7 +378,7 @@ bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
     }
     return first1 == last1 && first2 != last2;
 }
-
+// 增加了比较闭包的自定义.
 template <class InputIterator1, class InputIterator2, class Compare>
 bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
                              InputIterator2 first2, InputIterator2 last2,
@@ -345,6 +392,10 @@ bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
     return first1 == last1 && first2 != last2;
 }
 
+
+/*
+ 这种纯内存的, 反而简单了.
+ */
 inline bool 
 lexicographical_compare(const unsigned char* first1,
                         const unsigned char* last1,
@@ -360,17 +411,10 @@ lexicographical_compare(const unsigned char* first1,
 inline bool lexicographical_compare(const char* first1, const char* last1,
                                     const char* first2, const char* last2)
 {
-#if CHAR_MAX == SCHAR_MAX
     return lexicographical_compare((const signed char*) first1,
                                    (const signed char*) last1,
                                    (const signed char*) first2,
                                    (const signed char*) last2);
-#else
-    return lexicographical_compare((const unsigned char*) first1,
-                                   (const unsigned char*) last1,
-                                   (const unsigned char*) first2,
-                                   (const unsigned char*) last2);
-#endif
 }
 
 template <class InputIterator1, class InputIterator2>
