@@ -87,7 +87,7 @@
 		069FFF1124C8A4D80014F9EA /* libioP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libioP.h; sourceTree = "<group>"; };
 		069FFF1224C8A4D80014F9EA /* deque.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = deque.h; sourceTree = "<group>"; };
 		069FFF1324C8A4D80014F9EA /* parsestream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parsestream.h; sourceTree = "<group>"; };
-		069FFF1424C8A4D80014F9EA /* stl_algo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_algo.h; path = ../../stl_algo.h; sourceTree = "<group>"; };
+		069FFF1424C8A4D80014F9EA /* stl_algo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_algo.h; sourceTree = "<group>"; };
 		069FFF1524C8A4D80014F9EA /* stl_relops.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_relops.h; sourceTree = "<group>"; };
 		069FFF1624C8A4D80014F9EA /* stl_list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_list.h; sourceTree = "<group>"; };
 		069FFF1824C8A4D90014F9EA /* iostream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iostream.h; sourceTree = "<group>"; };
@@ -107,7 +107,6 @@
 		069FFF2924C8A4D90014F9EA /* stl_vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_vector.h; sourceTree = "<group>"; };
 		069FFF2A24C8A4D90014F9EA /* stl_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_iterator.h; sourceTree = "<group>"; };
 		069FFF2B24C8A4D90014F9EA /* stl_multimap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_multimap.h; sourceTree = "<group>"; };
-		069FFF3024C940BD0014F9EA /* algoAna.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = algoAna.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,7 +151,6 @@
 				069FFF2E24C931EC0014F9EA /* NotSTL */,
 				069FFF2024C8A4D90014F9EA /* std */,
 				069FFF2F24C940320014F9EA /* Readed */,
-				069FFF1424C8A4D80014F9EA /* stl_algo.h */,
 				069FFED124C8A4D60014F9EA /* stl_tree.h */,
 				069FFED424C8A4D60014F9EA /* stl_rope.h */,
 				0613582424CD5E500018DA0A /* sample.cpp */,
@@ -229,8 +227,8 @@
 		069FFF2F24C940320014F9EA /* Readed */ = {
 			isa = PBXGroup;
 			children = (
-				069FFF3024C940BD0014F9EA /* algoAna.h */,
 				069FFF0724C8A4D80014F9EA /* stl_algobase.h */,
+				069FFF1424C8A4D80014F9EA /* stl_algo.h */,
 				069FFEE624C8A4D70014F9EA /* stl_alloc.h */,
 				0613589624CD662B0018DA0A /* stl_construct.h */,
 				069FFEE124C8A4D60014F9EA /* stl_deque.h */,

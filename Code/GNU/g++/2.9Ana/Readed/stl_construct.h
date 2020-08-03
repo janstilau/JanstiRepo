@@ -10,12 +10,12 @@ inline void destroy(ForwardIterator first, ForwardIterator last) {
     __destroy(first, last, value_type(first));
 }
 
-/*
- __type_traits<T>::has_trivial_destructor , 这一系列的操作, 是在询问, 析构函数是否需要进行调用.
- */
 template <class ForwardIterator, class T>
 inline void __destroy(ForwardIterator first, ForwardIterator last, T*) {
     typedef typename __type_traits<T>::has_trivial_destructor trivial_destructor;
+    /*
+     trivial_destructor 判断, 析构函数是否需要调用.
+     */
     __destroy_aux(first, last, trivial_destructor());
 }
 
@@ -42,7 +42,7 @@ inline void destroy(char*, char*) {}
 inline void destroy(wchar_t*, wchar_t*) {}
 
 /*
- 需要进行析构函数的调用.
+ 如果 T 需要调用析构函数, 那么就会到达该方法. 这里, 会调用 T 的析构函数.
  */
 template <class T>
 inline void destroy(T* pointer) {

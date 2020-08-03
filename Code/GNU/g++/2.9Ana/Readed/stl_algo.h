@@ -72,6 +72,7 @@ InputIterator find(InputIterator first, InputIterator last, const T& value) {
 
 /*
  通过闭包的方式, 改变了默认的行为.
+ C++ 中, 泛型算法增加 if 的命名方式, 一般就代表着, 最终要增加一个闭包表达式.
  */
 template <class InputIterator, class Predicate>
 InputIterator find_if(InputIterator first, InputIterator last,
@@ -81,7 +82,7 @@ InputIterator find_if(InputIterator first, InputIterator last,
 }
 
 /*
- 传出参数N
+ 传出参数并不是一个多危险的事情. 他可以避免复制行为. 在 Swift 里面, 写时复制, 如果没有传出参数的话, 性能会有很大的损失.
  */
 template <class InputIterator, class T, class Size>
 void count(InputIterator first, InputIterator last, const T& value,
@@ -92,7 +93,7 @@ void count(InputIterator first, InputIterator last, const T& value,
 }
 
 /*
- 闭包实现.
+ if 结尾, 增加了闭包的参数.
  */
 template <class InputIterator, class Predicate, class Size>
 void count_if(InputIterator first, InputIterator last, Predicate pred,
@@ -107,6 +108,9 @@ void count_if(InputIterator first, InputIterator last, Predicate pred,
 template <class InputIterator, class T>
 typename iterator_traits<InputIterator>::difference_type
 
+/*
+ Count 函数, 默认就是 value 值的相等判断.
+ */
 count(InputIterator first, InputIterator last, const T& value) {
     typename iterator_traits<InputIterator>::difference_type n = 0;
     for ( ; first != last; ++first)
@@ -115,6 +119,9 @@ count(InputIterator first, InputIterator last, const T& value) {
     return n;
 }
 
+/*
+ if, 增加了闭包的传入. 注意, 这里返回值是 InputIterator::difference_type 类型的.
+ */
 template <class InputIterator, class Predicate>
 typename iterator_traits<InputIterator>::difference_type
 count_if(InputIterator first, InputIterator last, Predicate pred) {
@@ -126,9 +133,20 @@ count_if(InputIterator first, InputIterator last, Predicate pred) {
 }
 
 
-#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
+/*
+ 判断相等, 增加了闭包的自定义化.
+ */
+template <class ForwardIterator1, class ForwardIterator2,
+class BinaryPredicate>
+inline ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1,
+                               ForwardIterator2 first2, ForwardIterator2 last2,
+                               BinaryPredicate binary_pred) {
+    return __search(first1, last1, first2, last2, binary_pred,
+                    distance_type(first1), distance_type(first2));
+}
 
 /*
+ 这是指针类型的 iterator, 函数里面直接是指针操作.
  就是判断, 在 1 中, 能不能找到完全和 2 相同的序列. 然后返回在 1 中的位置.
  */
 
@@ -180,6 +198,9 @@ inline ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1,
                     distance_type(first2));
 }
 
+/*
+ 这是迭代器版本的, 里面的逻辑, 基本差不多, 只不过指针相关的操作, 变成了迭代器.
+ */
 template <class ForwardIterator1, class ForwardIterator2,
 class BinaryPredicate, class Distance1, class Distance2>
 ForwardIterator1 __search(ForwardIterator1 first1, ForwardIterator1 last1,
@@ -213,18 +234,6 @@ ForwardIterator1 __search(ForwardIterator1 first1, ForwardIterator1 last1,
 }
 
 /*
- 判断相等, 增加了闭包的自定义化.
- */
-template <class ForwardIterator1, class ForwardIterator2,
-class BinaryPredicate>
-inline ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1,
-                               ForwardIterator2 first2, ForwardIterator2 last2,
-                               BinaryPredicate binary_pred) {
-    return __search(first1, last1, first2, last2, binary_pred,
-                    distance_type(first1), distance_type(first2));
-}
-
-/*
  Searches the range [first, last) for the first sequence of count identical elements, each equal to the given value value.
  要连续相等才可以.
  */
@@ -234,6 +243,9 @@ ForwardIterator search_n(ForwardIterator first, ForwardIterator last,
     if (count <= 0) { return first; }
     
     first = find(first, last, value);
+    /*
+     先找第一个 value 的值的位置, 然后判断后续的 n 个值是不是都是 value 值, 如果没有达到 n 的条件, 重复寻找.
+     */
     while (first != last) {
         Integer n = count - 1;
         ForwardIterator i = first;
@@ -248,7 +260,7 @@ ForwardIterator search_n(ForwardIterator first, ForwardIterator last,
         if (n == 0)
             return first;
         else
-            first = find(i, last, value);
+            first = find(i, last, value); // 注意, 这里的 first 的值变成了 i.
     }
     return last;
 }
@@ -267,6 +279,9 @@ ForwardIterator search_n(ForwardIterator first, ForwardIterator last,
             if (binary_pred(*first, value)) break;
             ++first;
         }
+        /*
+         这里, 没有了 find 函数, 按照最原始的遍历, 寻找第一个符合条件的 iterator 的位置.
+         */
         while (first != last) {
             Integer n = count - 1;
             ForwardIterator i = first;
@@ -299,6 +314,7 @@ ForwardIterator search_n(ForwardIterator first, ForwardIterator last,
  *b = tmp;
  }
  iter_swap 的实现如上, 就是最基本的操作. 迭代器
+ 最朴素的, 原始的 swap range 的写法, 就是一个个的交换.
  */
 template <class ForwardIterator1, class ForwardIterator2>
 ForwardIterator2 swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1,
@@ -311,6 +327,7 @@ ForwardIterator2 swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1,
 /*
  std::transform applies the given function to a range and stores the result in another range, beginning at d_first.
  将范围内的内容, 进行转化, 然后放到 result 里面.
+ 这其实就是其他语言的 map 函数, 不过是, 其他 result OutputIterator 在这里, 是需要提前创造出来.
  */
 template <class InputIterator, class OutputIterator, class UnaryOperation>
 OutputIterator transform(InputIterator first, InputIterator last,
@@ -341,7 +358,7 @@ void replace(ForwardIterator first, ForwardIterator last, const T& old_value,
 }
 
 /*
- 遍历整个序列, 如果值传入 Predicate 返回 true 的话, 就用 new_value 替换.
+ if 的函数, 惯例传入闭包进行判断.
  */
 template <class ForwardIterator, class Predicate, class T>
 void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred,
@@ -352,6 +369,7 @@ void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred,
 
 /*
  遍历整个序列, 如果值等于 old_value, 就用 new_value, 插入到 result 序列中, 否则, 就把原序列的值, 插入到 result 序列里面.
+ 这个函数真正会有很多人使用吗???
  */
 template <class InputIterator, class OutputIterator, class T>
 OutputIterator replace_copy(InputIterator first, InputIterator last,
@@ -362,6 +380,9 @@ OutputIterator replace_copy(InputIterator first, InputIterator last,
     return result;
 }
 
+/*
+ if, 传入了闭包, 进行条件判断, 不符合的话, 就用原值.
+ */
 template <class Iterator, class OutputIterator, class Predicate, class T>
 OutputIterator replace_copy_if(Iterator first, Iterator last,
                                OutputIterator result, Predicate pred,
@@ -371,12 +392,18 @@ OutputIterator replace_copy_if(Iterator first, Iterator last,
     return result;
 }
 
+/*
+ 范围用 gen() 代替原始值.
+ */
 template <class ForwardIterator, class Generator>
 void generate(ForwardIterator first, ForwardIterator last, Generator gen) {
     for ( ; first != last; ++first)
         *first = gen();
 }
 
+/*
+ 范围用 gen() 代替 n 个值.
+ */
 template <class OutputIterator, class Size, class Generator>
 OutputIterator generate_n(OutputIterator first, Size n, Generator gen) {
     for ( ; n > 0; --n, ++first)
@@ -384,6 +411,9 @@ OutputIterator generate_n(OutputIterator first, Size n, Generator gen) {
     return first;
 }
 
+/*
+ 其实就是 fitler.
+ */
 template <class InputIterator, class OutputIterator, class T>
 OutputIterator remove_copy(InputIterator first, InputIterator last,
                            OutputIterator result, const T& value) {
@@ -395,6 +425,9 @@ OutputIterator remove_copy(InputIterator first, InputIterator last,
     return result;
 }
 
+/*
+ filter 的闭包判断实现.
+ */
 template <class InputIterator, class OutputIterator, class Predicate>
 OutputIterator remove_copy_if(InputIterator first, InputIterator last,
                               OutputIterator result, Predicate pred) {
@@ -406,6 +439,11 @@ OutputIterator remove_copy_if(InputIterator first, InputIterator last,
     return result;
 }
 
+/*
+ 只会删除第一个 value node.
+ 并且其实也不是删除, 要注意, 函数到底应不应该改变原始的值.
+ 这里, 是略过了第一个 value 值的 node, 拷贝了后面的 序列.
+ */
 template <class ForwardIterator, class T>
 ForwardIterator remove(ForwardIterator first, ForwardIterator last,
                        const T& value) {
@@ -424,7 +462,6 @@ ForwardIterator remove_if(ForwardIterator first, ForwardIterator last,
 
 /*
  翻转.
- 不太明白, BidirectionalIterator, RandomAccessIterator 有什么区别, 都是利用的 ++, -- 操作符
  */
 template <class BidirectionalIterator>
 inline void reverse(BidirectionalIterator first, BidirectionalIterator last) {
@@ -435,10 +472,8 @@ template <class BidirectionalIterator>
 void __reverse(BidirectionalIterator first, BidirectionalIterator last, 
                bidirectional_iterator_tag) {
     while (true)
-        if (first == last || first == --last)
-            return;
-        else
-            iter_swap(first++, last);
+        if (first == last || first == --last) { return; }
+        iter_swap(first++, last);
 }
 
 template <class RandomAccessIterator>
@@ -447,6 +482,9 @@ void __reverse(RandomAccessIterator first, RandomAccessIterator last,
     while (first < last) iter_swap(first++, --last);
 }
 
+/*
+ reverse_copy 就是从后向前进行复制就可以了.
+ */
 template <class BidirectionalIterator, class OutputIterator>
 OutputIterator reverse_copy(BidirectionalIterator first,
                             BidirectionalIterator last,
@@ -468,13 +506,19 @@ template <class ForwardIterator>
 inline void rotate(ForwardIterator first, ForwardIterator middle,
                    ForwardIterator last) {
     if (first == middle || middle == last) return;
-    __rotate(first, middle, last, distance_type(first),
+    __rotate(first, middle, last,
+             distance_type(first),
              iterator_category(first));
 }
 
+/*
+ 这个算法没有细想.
+ */
 template <class ForwardIterator, class Distance>
 void __rotate(ForwardIterator first, ForwardIterator middle,
-              ForwardIterator last, Distance*, forward_iterator_tag) {
+              ForwardIterator last,
+              Distance*,
+              forward_iterator_tag) {
     for (ForwardIterator i = middle; ;) {
         iter_swap(first, i);
         ++first;
@@ -498,50 +542,6 @@ void __rotate(BidirectionalIterator first, BidirectionalIterator middle,
     reverse(first, middle);
     reverse(middle, last);
     reverse(first, last);
-}
-
-template <class EuclideanRingElement>
-EuclideanRingElement __gcd(EuclideanRingElement m, EuclideanRingElement n)
-{
-    while (n != 0) {
-        EuclideanRingElement t = m % n;
-        m = n;
-        n = t;
-    }
-    return m;
-}
-
-template <class RandomAccessIterator, class Distance, class T>
-void __rotate_cycle(RandomAccessIterator first, RandomAccessIterator last,
-                    RandomAccessIterator initial, Distance shift, T*) {
-    T value = *initial;
-    RandomAccessIterator ptr1 = initial;
-    RandomAccessIterator ptr2 = ptr1 + shift;
-    while (ptr2 != initial) {
-        *ptr1 = *ptr2;
-        ptr1 = ptr2;
-        if (last - ptr2 > shift)
-            ptr2 += shift;
-        else
-            ptr2 = first + (shift - (last - ptr2));
-    }
-    *ptr1 = value;
-}
-
-template <class RandomAccessIterator, class Distance>
-void __rotate(RandomAccessIterator first, RandomAccessIterator middle,
-              RandomAccessIterator last, Distance*,
-              random_access_iterator_tag) {
-    Distance n = __gcd(last - first, middle - first);
-    while (n--)
-        __rotate_cycle(first, last, first + n, middle - first,
-                       value_type(first));
-}
-
-template <class ForwardIterator, class OutputIterator>
-OutputIterator rotate_copy(ForwardIterator first, ForwardIterator middle,
-                           ForwardIterator last, OutputIterator result) {
-    return copy(first, middle, copy(middle, last, result));
 }
 
 template <class RandomAccessIterator, class Distance>
@@ -573,6 +573,10 @@ void random_shuffle(RandomAccessIterator first, RandomAccessIterator last,
  分区.
  Iterator to the first element of the second group.
  快排, 会用到这里的算法, 不过, 快排的选择 pivot 的算法其实有多种.
+ */
+
+/*
+ 一下没有看.
  */
 
 template <class BidirectionalIterator, class Predicate>

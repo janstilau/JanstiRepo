@@ -1,109 +1,13 @@
 #ifndef __SGI_STL_INTERNAL_ALLOC_H
 #define __SGI_STL_INTERNAL_ALLOC_H
 
-#ifdef __SUNPRO_CC
-#  define __PRIVATE public
-// Extra access restrictions prevent us from really making some things
-// private.
-#else
-#  define __PRIVATE private
-#endif
-
-#ifdef __STL_STATIC_TEMPLATE_MEMBER_BUG
-#  define __USE_MALLOC
-#endif
-
-#if 0
-#   include <new>
-#   define __THROW_BAD_ALLOC throw bad_alloc
-#   include <iostream.h>
-#   define __THROW_BAD_ALLOC cerr << "out of memory" << endl; exit(1)
-#endif
-
-#ifndef __ALLOC
-#   define __ALLOC alloc
-#endif
-#ifdef __STL_WIN32THREADS
-#   include <windows.h>
-#endif
-
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-#ifndef __RESTRICT
-#  define __RESTRICT
-#endif
-
-#if !defined(__STL_PTHREADS) && !defined(_NOTHREADS) \
-&& !defined(__STL_SGI_THREADS) && !defined(__STL_WIN32THREADS)
-#   define _NOTHREADS
-#endif
-
-# ifdef __STL_PTHREADS
-// POSIX Threads
-// This is dubious, since this is likely to be a high contention
-// lock.   Performance may not be adequate.
-#   include <pthread.h>
-#   define __NODE_ALLOCATOR_LOCK \
-if (threads) pthread_mutex_lock(&__node_allocator_lock)
-#   define __NODE_ALLOCATOR_UNLOCK \
-if (threads) pthread_mutex_unlock(&__node_allocator_lock)
-#   define __NODE_ALLOCATOR_THREADS true
-#   define __VOLATILE volatile  // Needed at -O3 on SGI
-# endif
-# ifdef __STL_WIN32THREADS
-// The lock needs to be initialized by constructing an allocator
-// objects of the right type.  We do that here explicitly for alloc.
-#   define __NODE_ALLOCATOR_LOCK \
-EnterCriticalSection(&__node_allocator_lock)
-#   define __NODE_ALLOCATOR_UNLOCK \
-LeaveCriticalSection(&__node_allocator_lock)
-#   define __NODE_ALLOCATOR_THREADS true
-#   define __VOLATILE volatile  // may not be needed
-# endif /* WIN32THREADS */
-# ifdef __STL_SGI_THREADS
-// This should work without threads, with sproc threads, or with
-// pthreads.  It is suboptimal in all cases.
-// It is unlikely to even compile on nonSGI machines.
-
 extern "C" {
 extern int __us_rsthread_malloc;
 }
-// The above is copied from malloc.h.  Including <malloc.h>
-// would be cleaner but fails with certain levels of standard
-// conformance.
-#   define __NODE_ALLOCATOR_LOCK if (threads && __us_rsthread_malloc) \
-{ __lock(&__node_allocator_lock); }
-#   define __NODE_ALLOCATOR_UNLOCK if (threads && __us_rsthread_malloc) \
-{ __unlock(&__node_allocator_lock); }
-#   define __NODE_ALLOCATOR_THREADS true
-#   define __VOLATILE volatile  // Needed at -O3 on SGI
-# endif
-# ifdef _NOTHREADS
-//  Thread-unsafe
-#   define __NODE_ALLOCATOR_LOCK
-#   define __NODE_ALLOCATOR_UNLOCK
-#   define __NODE_ALLOCATOR_THREADS false
-#   define __VOLATILE
-# endif
 
 __STL_BEGIN_NAMESPACE
-
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma set woff 1174
-#endif
-
-// Malloc-based allocator.  Typically slower than default alloc below.
-// Typically thread-safe and more storage efficient.
-#ifdef __STL_STATIC_TEMPLATE_MEMBER_BUG
-# ifdef __DECLARE_GLOBALS_HERE
 void (* __malloc_alloc_oom_handler)() = 0;
-// g++ 2.7.2 does not handle static template data members.
-# else
 extern void (* __malloc_alloc_oom_handler)();
-# endif
-#endif
 
 template <int inst>
 class __malloc_alloc_template {
@@ -667,6 +571,3 @@ __STL_END_NAMESPACE
 
 #endif /* __SGI_STL_INTERNAL_ALLOC_H */
 
-// Local Variables:
-// mode:C++
-// End:

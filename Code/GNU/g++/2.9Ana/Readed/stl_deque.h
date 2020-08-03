@@ -1,18 +1,16 @@
 #ifndef __SGI_STL_INTERNAL_DEQUE_H
 #define __SGI_STL_INTERNAL_DEQUE_H
 
-__STL_BEGIN_NAMESPACE 
+__STL_BEGIN_NAMESPACE
+/*
+ __STL_BEGIN_NAMESPACE
+ __STL_END_NAMESPACE
+ 将常用的, 不能函数化的代码, 用宏代替, 其实是一种比较好的方法.
+ */
 
 #if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
 #pragma set woff 1174
 #endif
-
-// Note: this function is simply a kludge to work around several compilers'
-//  bugs in handling constant expressions.
-inline size_t __deque_buf_size(size_t n, size_t sz)
-{
-    return n != 0 ? n : (sz < 512 ? size_t(512 / sz) : size_t(1));
-}
 
 /*
  __deque_iterator 将 deque 的复杂底层数据进行了包装.
@@ -1245,7 +1243,7 @@ void deque<T, Alloc, BufSize>::reallocate_map(size_type nodes_to_add,
     map_pointer new_nstart;
     if (map_size > 2 * new_num_nodes) {
         /*
-          在这种情况下, 不需要重新分配内存, 仅仅是在控制中心里面, 做一次 Node 指针的搬移操作.
+         在这种情况下, 不需要重新分配内存, 仅仅是在控制中心里面, 做一次 Node 指针的搬移操作.
          */
         new_nstart = map + (map_size - new_num_nodes) / 2
         + (add_at_front ? nodes_to_add : 0);
@@ -1308,7 +1306,3 @@ inline void swap(deque<T, Alloc, BufSiz>& x, deque<T, Alloc, BufSiz>& y) {
 __STL_END_NAMESPACE
 
 #endif /* __SGI_STL_INTERNAL_DEQUE_H */
-
-// Local Variables:
-// mode:C++
-// End:
