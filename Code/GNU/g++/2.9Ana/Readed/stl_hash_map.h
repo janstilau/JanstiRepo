@@ -16,6 +16,7 @@ class Alloc = alloc>
 template <class Key, class T, class HashFcn, class EqualKey, 
 class Alloc = alloc>
 #endif
+
 class hash_map
 {
 private:
@@ -50,7 +51,9 @@ public:
     hash_map(size_type n, const hasher& hf) : rep(n, hf, key_equal()) {}
     hash_map(size_type n, const hasher& hf, const key_equal& eql)
     : rep(n, hf, eql) {}
-    
+/*
+ Hash_map 的构造函数, 里面进行相关的初始化操作.
+ */
 #ifdef __STL_MEMBER_TEMPLATES
     template <class InputIterator>
     hash_map(InputIterator f, InputIterator l)
@@ -66,7 +69,6 @@ public:
     hash_map(InputIterator f, InputIterator l, size_type n,
              const hasher& hf, const key_equal& eql)
     : rep(n, hf, eql) { rep.insert_unique(f, l); }
-    
 #else
     hash_map(const value_type* f, const value_type* l)
     : rep(100, hasher(), key_equal()) { rep.insert_unique(f, l); }
@@ -92,10 +94,15 @@ public:
 #endif /*__STL_MEMBER_TEMPLATES */
     
 public:
+    /*
+     所有的操作, 都转交给了 rep 进行处理.
+     */
     size_type size() const { return rep.size(); }
+    // 不太明白, 各个容器提供的 max_size 到底有什么用.
     size_type max_size() const { return rep.max_size(); }
     bool empty() const { return rep.empty(); }
     void swap(hash_map& hs) { rep.swap(hs.rep); }
+    
     friend bool
     operator== __STL_NULL_TMPL_ARGS (const hash_map&, const hash_map&);
     
@@ -104,6 +111,9 @@ public:
     const_iterator begin() const { return rep.begin(); }
     const_iterator end() const { return rep.end(); }
     
+    /*
+     因为这个类不是 multi 开头, 所以, 一切的操作都是调用的 insert_unique. 在
+     */
 public:
     pair<iterator, bool> insert(const value_type& obj)
     { return rep.insert_unique(obj); }
@@ -150,6 +160,10 @@ public:
     { return rep.elems_in_bucket(n); }
 };
 
+/*
+ 相等的处理, 交给了哈希表进行.
+ 哈希表里面, 是进行的值的相等性判断. 也就是一个个的比较.
+ */
 template <class Key, class T, class HashFcn, class EqualKey, class Alloc>
 inline bool operator==(const hash_map<Key, T, HashFcn, EqualKey, Alloc>& hm1,
                        const hash_map<Key, T, HashFcn, EqualKey, Alloc>& hm2)
@@ -265,6 +279,9 @@ public:
     const_iterator end() const { return rep.end(); }
     
 public:
+    /*
+     因为是 multiMap. 所以, 这里的 insert 操作, 是调用的 insert_equal 的函数.
+     */
     iterator insert(const value_type& obj) { return rep.insert_equal(obj); }
 #ifdef __STL_MEMBER_TEMPLATES
     template <class InputIterator>

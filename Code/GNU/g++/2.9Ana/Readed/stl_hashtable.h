@@ -1,8 +1,9 @@
 #ifndef __SGI_STL_INTERNAL_HASHTABLE_H
 #define __SGI_STL_INTERNAL_HASHTABLE_H
 
-// Hashtable class, used to implement the hashed associative containers
-// hash_set, hash_map, hash_multiset, and hash_multimap.
+/*
+ 该类是哈希 map, set, mutli哈希 map, set 能够正常运转的基础.
+ */
 
 #include <stl_algobase.h>
 #include <stl_alloc.h>
@@ -23,6 +24,7 @@ template <class Value>
 struct __hashtable_node
 {
     __hashtable_node* next;
+    // 需要注意的是, 这里的 Value, 是节点, 也就是 key, value 的组合, 当然, 对于 set 来说, key 就是 value. 但是对于 map 来说, key+value 才是 node.
     Value val;
 };  
 
@@ -61,11 +63,20 @@ struct __hashtable_iterator {
     typedef Value& reference;
     typedef Value* pointer;
     
+    /*
+     Node 是链表里面的 Node, 根据 Node 可以找到下一个节点的位置.
+     */
     node* cur;
+    /*
+     Ht 表示的是哈希表的数组, 这里, 没有表示当前数组位置的地方, 是因为可以通过 bucket 计算公式算出来.
+     */
     hashtable* ht;
     
     __hashtable_iterator(node* n, hashtable* tab) : cur(n), ht(tab) {}
     __hashtable_iterator() {}
+    /*
+     cur 能够结局大部分问题, 但是对于迭代器的移动, 需要用到 hashTable 的东西.
+     */
     reference operator*() const { return cur->val; }
     pointer operator->() const { return &(operator*()); }
     iterator& operator++();
@@ -104,8 +115,6 @@ struct __hashtable_const_iterator {
     __hashtable_const_iterator(const iterator& it) : cur(it.cur), ht(it.ht) {}
     reference operator*() const { return cur->val; }
     pointer operator->() const { return &(operator*()); }
-    /*
-     */
     const_iterator& operator++();
     const_iterator operator++(int);
     bool operator==(const const_iterator& it) const { return cur == it.cur; }
@@ -120,14 +129,16 @@ __hashtable_iterator<V, K, HF, ExK, EqK, A>&
 __hashtable_iterator<V, K, HF, ExK, EqK, A>::operator++()
 {
     /*
-     显示在当前的 bucket 所在的链表里面找. 如果当前链表没有了, 就从哈希表中查找. 这里, 没有 iterator 里面, 没有存储哈希表的当前 bucket 位置, 而是根据 hashCode 找到的.
+     显示在当前的 bucket 所在的链表里面找. 如果当前链表没有了, 就从哈希表中查找.
+     在 iterator 内部, 没有存储哈希表的当前 bucket 位置, 而是根据 hashCode 找到的.
      */
     const node* old = cur;
     cur = cur->next;
     if (!cur) {
+        // 从当前的 node, 查找到 bucket 的位置, 然后不断迭代判断下一个拥有 node 链表的 bucket 在哪里.
         size_type bucket = ht->bkt_num(old->val);
-        while (!cur && ++bucket < ht->buckets.size())
-            cur = ht->buckets[bucket];
+        while (!cur && ++bucket < ht->bucketsVector.size())
+            cur = ht->bucketsVector[bucket];
     }
     return *this;
 }
@@ -152,8 +163,8 @@ __hashtable_const_iterator<V, K, HF, ExK, EqK, A>::operator++()
     cur = cur->next;
     if (!cur) {
         size_type bucket = ht->bkt_num(old->val);
-        while (!cur && ++bucket < ht->buckets.size())
-            cur = ht->buckets[bucket];
+        while (!cur && ++bucket < ht->bucketsVector.size())
+            cur = ht->bucketsVector[bucket];
     }
     return *this;
 }
@@ -171,6 +182,8 @@ __hashtable_const_iterator<V, K, HF, ExK, EqK, A>::operator++(int)
 // Note: assumes long is at least 32 bits.
 /*
  哈希表的大小, 是固定的, 每次进行扩容的时候, 都是表中最接近2倍当前值的地方.
+ 这个表是经验所得, 相比较数组的两倍增长, 哈希表的大小有了固定的设置.
+ 原因在于, 这种素数长度的 bucket 数组, 产生冲突的几率要小于其他的数值.
  */
 static const int __stl_num_primes = 28;
 static const unsigned long __stl_prime_list[__stl_num_primes] =
@@ -219,15 +232,15 @@ public:
     key_equal key_eq() const { return equals; }
     
 private:
-    hasher hash; // 哈希算法, 是保存在哈希表里面的.
-    key_equal equals; // key 的相等判断算法, 是保存在哈希表里面的.
-    ExtractKey get_key; // 如何从 value 中, 找到 key , 是保存在哈希表里面的.
+    hasher hash; // 哈希算法, 是保存在哈希表里面的. 这是一个函数对象.
+    key_equal equals; // key 的相等判断算法, 是保存在哈希表里面的. 这是一个函数对象.
+    ExtractKey get_key; // 如何从 value 中, 找到 key , 是保存在哈希表里面的. 这是一个函数对象.
     
     typedef __hashtable_node<Value> node;
     typedef simple_alloc<node, Alloc> node_allocator;
     
-    vector<node*,Alloc> buckets; // bucket 数组.
-    size_type num_elements; // 当前个数
+    vector<node*,Alloc> bucketsVector; // bucket 数组.
+    size_type num_elements; // 当前个数, 一般来说, 作为容器, 它是有责任记录当前容器的数量的.
     
 public:
     typedef __hashtable_iterator<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc> iterator;
@@ -265,7 +278,9 @@ public:
     hashtable& operator= (const hashtable& ht)
     {
         /*
-         先清空, 然后完全复制.
+         先清空.
+         然后记录各个闭包信息.
+         然后完全复制.
          */
         if (&ht != this) {
             clear();
@@ -287,11 +302,12 @@ public:
     {
         /*
          swap, 仅仅是成员变量的值的交换.
+         bucketsVector 的 swap 也是很快的, 里面仅仅做几个指针的交换而已
          */
         __STD::swap(hash, ht.hash);
         __STD::swap(equals, ht.equals);
         __STD::swap(get_key, ht.get_key);
-        buckets.swap(ht.buckets);
+        bucketsVector.swap(ht.bucketsVector);
         __STD::swap(num_elements, ht.num_elements);
     }
     
@@ -300,16 +316,17 @@ public:
      */
     iterator begin()
     {
-        for (size_type n = 0; n < buckets.size(); ++n) {
-            if (buckets[n]) {
-                return iterator(buckets[n], this);
+        for (size_type n = 0; n < bucketsVector.size(); ++n) {
+            if (bucketsVector[n]) {
+                // bucketsVector[n] 里面, 就是链表的头结点.
+                return iterator(bucketsVector[n], this);
             }
         }
         return end();
     }
     
     /*
-     end, 就是 node 为 nil. 因为 iterator 进行 ++ 的话, 最后也是找不到值.
+     因为iterator 迭代到最后, 也就是 cur 为 nil 的状态.
      */
     iterator end() { return iterator(0, this); }
     
@@ -318,9 +335,9 @@ public:
      */
     const_iterator begin() const
     {
-        for (size_type n = 0; n < buckets.size(); ++n)
-            if (buckets[n])
-                return const_iterator(buckets[n], this);
+        for (size_type n = 0; n < bucketsVector.size(); ++n)
+            if (bucketsVector[n])
+                return const_iterator(bucketsVector[n], this);
         return end();
     }
     
@@ -331,7 +348,7 @@ public:
     
 public:
     
-    size_type bucket_count() const { return buckets.size(); }
+    size_type bucket_count() const { return bucketsVector.size(); }
     
     size_type max_bucket_count() const
     { return __stl_prime_list[__stl_num_primes - 1]; }
@@ -339,7 +356,7 @@ public:
     size_type elems_in_bucket(size_type bucket) const
     {
         size_type result = 0;
-        for (node* cur = buckets[bucket]; cur; cur = cur->next)
+        for (node* cur = bucketsVector[bucket]; cur; cur = cur->next)
             result += 1;
         return result;
     }
@@ -373,6 +390,11 @@ public:
         insert_equal(f, l, iterator_category(f));
     }
     
+    /*
+     插入一个序列, 也就是不但的在序列上进行取值, 插入的过程.
+     注意, 这里并没有很好地高效的办法. 因为哈希表在每次插入过程中, 是要做 bucket 位置查找, 链表的维护, 扩容处理的.
+     如果用简单的内存搬移, 哈希表里面的状态就会变得混乱了.
+     */
     template <class InputIterator>
     void insert_unique(InputIterator f, InputIterator l,
                        input_iterator_tag)
@@ -412,6 +434,10 @@ public:
     }
     
 #else /* __STL_MEMBER_TEMPLATES */
+    /*
+     iterator 为指针的情况下的插入序列的实现.
+     可以看到, 能够确定 size 的情况下, 优先使用 size 判断. 相比迭代器的比较, 这样的操作要快一点.
+     */
     void insert_unique(const value_type* f, const value_type* l)
     {
         size_type n = l - f;
@@ -451,23 +477,25 @@ public:
     
     /*
      对于 hashTable 来说, find 就是 key 的相等性判断.
+     equals, get_key 都是哈希表里面应该存储的功能.
+     可以看到, 其实这种, 存储相关闭包的做法, 已经在 C++ 时代, 就十分普遍了.
      */
     iterator find(const key_type& key)
     {
         size_type n = bkt_num_key(key);
         node* first;
-        for ( first = buckets[n];
+        for ( first = bucketsVector[n];
              first && !equals(get_key(first->val), key);
              first = first->next)
         {}
         return iterator(first, this);
     }
-    
+    // const , 仅仅是返回的迭代器的类型不同.
     const_iterator find(const key_type& key) const
     {
         size_type n = bkt_num_key(key);
         const node* first;
-        for ( first = buckets[n];
+        for ( first = bucketsVector[n];
              first && !equals(get_key(first->val), key);
              first = first->next)
         {}
@@ -482,9 +510,10 @@ public:
         const size_type n = bkt_num_key(key);
         size_type result = 0;
         
-        for (const node* cur = buckets[n]; cur; cur = cur->next)
-            if (equals(get_key(cur->val), key))
+        for (const node* cur = bucketsVector[n]; cur; cur = cur->next)
+            if (equals(get_key(cur->val), key)) {
                 ++result;
+            }
         return result;
     }
     
@@ -510,16 +539,22 @@ private:
     void initialize_buckets(size_type n)
     {
         const size_type n_buckets = next_size(n);
-        buckets.reserve(n_buckets);
-        buckets.insert(buckets.end(), n_buckets, (node*) 0);
+        bucketsVector.reserve(n_buckets);
+        /*
+         Vector 进行一次初始化的操作. 全部进行置空处理.
+         */
+        bucketsVector.insert(bucketsVector.end(), n_buckets, (node*) 0);
         num_elements = 0;
     }
     
     size_type bkt_num_key(const key_type& key) const
     {
-        return bkt_num_key(key, buckets.size());
+        return bkt_num_key(key, bucketsVector.size());
     }
     
+    /*
+     从 obj 中, 通过 get_key 获取到 key 值, 然后根据 hash 获取到 hash 值, 然后进行取余操作, 获取到 bucket 所在的位置.
+     */
     size_type bkt_num(const value_type& obj) const
     {
         return bkt_num_key(get_key(obj));
@@ -536,6 +571,9 @@ private:
         return bkt_num_key(get_key(obj), n);
     }
     
+    /*
+     Construct 就是, 在相应的位置, 进行拷贝构造函数的初始化.
+     */
     node* new_node(const value_type& obj)
     {
         node* n = node_allocator::allocate();
@@ -547,6 +585,9 @@ private:
         __STL_UNWIND(node_allocator::deallocate(n));
     }
     
+    /*
+     destroy 就是调用对应类型的析构函数.
+     */
     void delete_node(node* n)
     {
         destroy(&n->val);
@@ -605,18 +646,20 @@ distance_type(const __hashtable_const_iterator<V, K, HF, ExK, EqK, All>&)
 #endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
 /*
- 全相等性判断.
+ 可以看到, 对于哈希表的相等判断, 就是一个个的判断.
+ 1. size 不相等, 直接不相等.
+ 2. 每个值进行相等性判断.
  */
 template <class V, class K, class HF, class Ex, class Eq, class A>
 bool operator==(const hashtable<V, K, HF, Ex, Eq, A>& ht1,
                 const hashtable<V, K, HF, Ex, Eq, A>& ht2)
 {
     typedef typename hashtable<V, K, HF, Ex, Eq, A>::node node;
-    if (ht1.buckets.size() != ht2.buckets.size())
+    if (ht1.bucketsVector.size() != ht2.bucketsVector.size())
         return false;
-    for (int n = 0; n < ht1.buckets.size(); ++n) {
-        node* cur1 = ht1.buckets[n];
-        node* cur2 = ht2.buckets[n];
+    for (int n = 0; n < ht1.bucketsVector.size(); ++n) {
+        node* cur1 = ht1.bucketsVector[n];
+        node* cur2 = ht2.bucketsVector[n];
         for ( ; cur1 && cur2 && cur1->val == cur2->val;
              cur1 = cur1->next, cur2 = cur2->next)
         {}
@@ -627,7 +670,9 @@ bool operator==(const hashtable<V, K, HF, Ex, Eq, A>& ht1,
 }  
 
 #ifdef __STL_FUNCTION_TMPL_PARTIAL_ORDER
-
+/*
+ 一个简便的函数, 里面其实就是调用了 哈希表的 swap 方法.
+ */
 template <class Val, class Key, class HF, class Extract, class EqKey, class A>
 inline void swap(hashtable<Val, Key, HF, Extract, EqKey, A>& ht1,
                  hashtable<Val, Key, HF, Extract, EqKey, A>& ht2) {
@@ -636,16 +681,23 @@ inline void swap(hashtable<Val, Key, HF, Extract, EqKey, A>& ht1,
 
 #endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
 
-
+/*
+ 哈希表里面, 如果需要扩容, 都会在一个专门的函数中处理.
+ 所以, 在进行实际的 insert 的时候, 都不需要考虑内存扩容的问题了.
+ 这里, 方法明确的标明了, noresize.
+ */
 template <class V, class K, class HF, class Ex, class Eq, class A>
 pair<typename hashtable<V, K, HF, Ex, Eq, A>::iterator, bool> 
-hashtable<V, K, HF, Ex, Eq, A>::insert_unique_noresize(const value_type& obj)
-{
-    const size_type n = bkt_num(obj);
-    node* first = buckets[n];
-    
+hashtable<V, K, HF, Ex, Eq, A>::insert_unique_noresize(const value_type& obj) {
     /*
-     首先寻找一下, bucket 里面的链表, 有没有该值了. 如果有, 直接返回.
+     直接找到 bucket, 取出里面存储的链表.
+     */
+    const size_type n = bkt_num(obj);
+    node* first = bucketsVector[n];
+    /*
+     在链表里面查找, 是否已经存在了该值.
+     这里, 判断是否存在的条件是, 根据 get_key 获取到 key 值, 然后判断 key 值是否相等.
+     虽然, 我们认为, 哈希表里面, 用来存储 value 值. 但是在哈希表的内部, key 值其实是最重要的.
      */
     for (node* cur = first; cur; cur = cur->next) {
         if (equals(get_key(cur->val), get_key(obj))) {
@@ -654,11 +706,11 @@ hashtable<V, K, HF, Ex, Eq, A>::insert_unique_noresize(const value_type& obj)
     }
     
     /*
-     前插法, 掺入到 bucket 所拥有的链表.
+     如果没有, 就把 obj 前插到 bucket 的链表中.
      */
     node* tmp = new_node(obj);
     tmp->next = first;
-    buckets[n] = tmp;
+    bucketsVector[n] = tmp;
     ++num_elements;
     return pair<iterator, bool>(iterator(tmp, this), true);
 }
@@ -668,10 +720,13 @@ typename hashtable<V, K, HF, Ex, Eq, A>::iterator
 hashtable<V, K, HF, Ex, Eq, A>::insert_equal_noresize(const value_type& obj)
 {
     const size_type n = bkt_num(obj);
-    node* first = buckets[n];
+    node* first = bucketsVector[n];
     
     /*
      在 bucket 所在链表中寻找, 如果找到了, 放到临近的位置上.
+     所以, 这其实就是 insert_equal 和 insert_unique 的区别.
+     insert_equal 会在已经存在的基础上, 插入到相应的位置.
+     在哈希表中, 相同的元素, 会在临近的位置上.
      */
     for (node* cur = first; cur; cur = cur->next)
         if (equals(get_key(cur->val), get_key(obj))) {
@@ -687,7 +742,7 @@ hashtable<V, K, HF, Ex, Eq, A>::insert_equal_noresize(const value_type& obj)
      */
     node* tmp = new_node(obj);
     tmp->next = first;
-    buckets[n] = tmp;
+    bucketsVector[n] = tmp;
     ++num_elements;
     return iterator(tmp, this);
 }
@@ -702,7 +757,7 @@ hashtable<V, K, HF, Ex, Eq, A>::find_or_insert(const value_type& obj)
     resize(num_elements + 1);
     
     size_type n = bkt_num(obj);
-    node* first = buckets[n];
+    node* first = bucketsVector[n];
     
     for (node* cur = first; cur; cur = cur->next)
         if (equals(get_key(cur->val), get_key(obj)))
@@ -710,7 +765,7 @@ hashtable<V, K, HF, Ex, Eq, A>::find_or_insert(const value_type& obj)
     
     node* tmp = new_node(obj);
     tmp->next = first;
-    buckets[n] = tmp;
+    bucketsVector[n] = tmp;
     ++num_elements;
     return tmp->val;
 }
@@ -723,15 +778,15 @@ hashtable<V, K, HF, Ex, Eq, A>::equal_range(const key_type& key)
     typedef pair<iterator, iterator> pii;
     const size_type n = bkt_num_key(key);
     
-    for (node* first = buckets[n]; first; first = first->next) {
+    for (node* first = bucketsVector[n]; first; first = first->next) {
         if (equals(get_key(first->val), key)) {
             for (node* cur = first->next; cur; cur = cur->next)
                 if (!equals(get_key(cur->val), key))
                     return pii(iterator(first, this), iterator(cur, this));
-            for (size_type m = n + 1; m < buckets.size(); ++m)
-                if (buckets[m])
+            for (size_type m = n + 1; m < bucketsVector.size(); ++m)
+                if (bucketsVector[m])
                     return pii(iterator(first, this),
-                               iterator(buckets[m], this));
+                               iterator(bucketsVector[m], this));
             return pii(iterator(first, this), end());
         }
     }
@@ -746,16 +801,16 @@ hashtable<V, K, HF, Ex, Eq, A>::equal_range(const key_type& key) const
     typedef pair<const_iterator, const_iterator> pii;
     const size_type n = bkt_num_key(key);
     
-    for (const node* first = buckets[n] ; first; first = first->next) {
+    for (const node* first = bucketsVector[n] ; first; first = first->next) {
         if (equals(get_key(first->val), key)) {
             for (const node* cur = first->next; cur; cur = cur->next)
                 if (!equals(get_key(cur->val), key))
                     return pii(const_iterator(first, this),
                                const_iterator(cur, this));
-            for (size_type m = n + 1; m < buckets.size(); ++m)
-                if (buckets[m])
+            for (size_type m = n + 1; m < bucketsVector.size(); ++m)
+                if (bucketsVector[m])
                     return pii(const_iterator(first, this),
-                               const_iterator(buckets[m], this));
+                               const_iterator(bucketsVector[m], this));
             return pii(const_iterator(first, this), end());
         }
     }
@@ -763,14 +818,15 @@ hashtable<V, K, HF, Ex, Eq, A>::equal_range(const key_type& key) const
 }
 
 /*
- erase 的操作, 也就是找到节点, 然后在链表中删除了. 注意这是一个单链表.
+ erase 的操作, 也就是找到节点, 然后在链表中删除了.
+ 注意, 这里是将所有的 key 节点都进行删除.
  */
 template <class V, class K, class HF, class Ex, class Eq, class A>
 typename hashtable<V, K, HF, Ex, Eq, A>::size_type 
 hashtable<V, K, HF, Ex, Eq, A>::erase(const key_type& key)
 {
     const size_type n = bkt_num_key(key);
-    node* first = buckets[n];
+    node* first = bucketsVector[n];
     size_type erased = 0;
     
     if (first) {
@@ -790,7 +846,7 @@ hashtable<V, K, HF, Ex, Eq, A>::erase(const key_type& key)
             }
         }
         if (equals(get_key(first->val), key)) {
-            buckets[n] = first->next;
+            bucketsVector[n] = first->next;
             delete_node(first);
             ++erased;
             --num_elements;
@@ -799,15 +855,18 @@ hashtable<V, K, HF, Ex, Eq, A>::erase(const key_type& key)
     return erased;
 }
 
+/*
+ 这里就是单链表的坏处, 要想进行删除, 要从头到尾遍历一遍.
+ */
 template <class V, class K, class HF, class Ex, class Eq, class A>
 void hashtable<V, K, HF, Ex, Eq, A>::erase(const iterator& it)
 {
     if (node* const p = it.cur) {
         const size_type n = bkt_num(p->val);
-        node* cur = buckets[n];
+        node* cur = bucketsVector[n];
         
         if (cur == p) {
-            buckets[n] = cur->next;
+            bucketsVector[n] = cur->next;
             delete_node(cur);
             --num_elements;
         }
@@ -835,8 +894,8 @@ void hashtable<V, K, HF, Ex, Eq, A>::erase(const iterator& it)
 template <class V, class K, class HF, class Ex, class Eq, class A>
 void hashtable<V, K, HF, Ex, Eq, A>::erase(iterator first, iterator last)
 {
-    size_type f_bucket = first.cur ? bkt_num(first.cur->val) : buckets.size();
-    size_type l_bucket = last.cur ? bkt_num(last.cur->val) : buckets.size();
+    size_type f_bucket = first.cur ? bkt_num(first.cur->val) : bucketsVector.size();
+    size_type l_bucket = last.cur ? bkt_num(last.cur->val) : bucketsVector.size();
     
     if (first.cur == last.cur)
         return;
@@ -849,7 +908,7 @@ void hashtable<V, K, HF, Ex, Eq, A>::erase(iterator first, iterator last)
         erase_bucket(f_bucket, first.cur, 0);
         for (size_type n = f_bucket + 1; n < l_bucket; ++n)
             erase_bucket(n, 0);
-        if (l_bucket != buckets.size())
+        if (l_bucket != bucketsVector.size())
             erase_bucket(l_bucket, last.cur);
     }
 }
@@ -877,40 +936,28 @@ template <class V, class K, class HF, class Ex, class Eq, class A>
 void hashtable<V, K, HF, Ex, Eq, A>::resize(size_type num_elements_hint)
 {
     /*
-     如果, resize 之后的值, 大于了 buckets 数组的长度, 就新分配一个新的 bucket 数组.
+     如果, resize 之后的值, 大于了 bucketsVector 数组的长度, 就新分配一个新的 bucket 数组.
      然后一个个的插入到这个新的数组中.
      注意, 这里利用了 vector 的特性. vector 的成员变量, 仅仅是堆中指针.
      */
-    const size_type old_n = buckets.size();
+    const size_type old_n = bucketsVector.size();
     if (num_elements_hint > old_n) {
         const size_type n = next_size(num_elements_hint);
         if (n > old_n) {
             vector<node*, A> tmp(n, (node*) 0);
             __STL_TRY {
                 for (size_type bucket = 0; bucket < old_n; ++bucket) {
-                    node* first = buckets[bucket];
+                    node* first = bucketsVector[bucket];
                     while (first) {
                         size_type new_bucket = bkt_num(first->val, n);
-                        buckets[bucket] = first->next;
+                        bucketsVector[bucket] = first->next;
                         first->next = tmp[new_bucket];
                         tmp[new_bucket] = first;
-                        first = buckets[bucket];
+                        first = bucketsVector[bucket];
                     }
                 }
-                buckets.swap(tmp);
+                bucketsVector.swap(tmp);
             }
-#         ifdef __STL_USE_EXCEPTIONS
-            catch(...) {
-                for (size_type bucket = 0; bucket < tmp.size(); ++bucket) {
-                    while (tmp[bucket]) {
-                        node* next = tmp[bucket]->next;
-                        delete_node(tmp[bucket]);
-                        tmp[bucket] = next;
-                    }
-                }
-                throw;
-            }
-#         endif /* __STL_USE_EXCEPTIONS */
         }
     }
 }
@@ -919,7 +966,7 @@ template <class V, class K, class HF, class Ex, class Eq, class A>
 void hashtable<V, K, HF, Ex, Eq, A>::erase_bucket(const size_type n, 
                                                   node* first, node* last)
 {
-    node* cur = buckets[n];
+    node* cur = bucketsVector[n];
     if (cur == first)
         erase_bucket(n, last);
     else {
@@ -939,30 +986,30 @@ template <class V, class K, class HF, class Ex, class Eq, class A>
 void 
 hashtable<V, K, HF, Ex, Eq, A>::erase_bucket(const size_type n, node* last)
 {
-    node* cur = buckets[n];
+    node* cur = bucketsVector[n];
     while (cur != last) {
         node* next = cur->next;
         delete_node(cur);
         cur = next;
-        buckets[n] = cur;
+        bucketsVector[n] = cur;
         --num_elements;
     }
 }
 
 /*
- 递归 buckets, 删除链表中所有元素.
+ 递归 bucketsVector, 删除链表中所有元素.
  */
 template <class V, class K, class HF, class Ex, class Eq, class A>
 void hashtable<V, K, HF, Ex, Eq, A>::clear()
 {
-    for (size_type i = 0; i < buckets.size(); ++i) {
-        node* cur = buckets[i];
+    for (size_type i = 0; i < bucketsVector.size(); ++i) {
+        node* cur = bucketsVector[i];
         while (cur != 0) {
             node* next = cur->next;
             delete_node(cur);
             cur = next;
         }
-        buckets[i] = 0;
+        bucketsVector[i] = 0;
     }
     num_elements = 0;
 }
@@ -973,14 +1020,14 @@ void hashtable<V, K, HF, Ex, Eq, A>::clear()
 template <class V, class K, class HF, class Ex, class Eq, class A>
 void hashtable<V, K, HF, Ex, Eq, A>::copy_from(const hashtable& ht)
 {
-    buckets.clear();
-    buckets.reserve(ht.buckets.size());
-    buckets.insert(buckets.end(), ht.buckets.size(), (node*) 0);
+    bucketsVector.clear();
+    bucketsVector.reserve(ht.bucketsVector.size());
+    bucketsVector.insert(bucketsVector.end(), ht.bucketsVector.size(), (node*) 0);
     __STL_TRY {
-        for (size_type i = 0; i < ht.buckets.size(); ++i) {
-            if (const node* cur = ht.buckets[i]) {
+        for (size_type i = 0; i < ht.bucketsVector.size(); ++i) {
+            if (const node* cur = ht.bucketsVector[i]) {
                 node* copy = new_node(cur->val);
-                buckets[i] = copy;
+                bucketsVector[i] = copy;
                 
                 for (node* next = cur->next; next; cur = next, next = cur->next) {
                     copy->next = new_node(next->val);
