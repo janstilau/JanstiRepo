@@ -23,6 +23,7 @@ struct __deque_iterator {
     typedef __deque_iterator<T, const T&, const T*, BufSiz> const_iterator;
     static size_t buffer_size() {return __deque_buf_size(BufSiz, sizeof(T)); }
 #else /* __STL_NON_TYPE_TMPL_PARAM_BUG */
+    
     template <class T, class Ref, class Ptr>
     struct __deque_iterator {
         typedef __deque_iterator<T, T&, T*>             iterator;
@@ -30,7 +31,7 @@ struct __deque_iterator {
         static size_t buffer_size() {return __deque_buf_size(0, sizeof(T)); }
 #endif
         // 为了实现, random 的效果, deque 的 iterator 的逻辑复杂度超过了其他的迭代器.
-        typedef random_access_iterator_tag iterator_category;
+        typedef random_access_iterator_tag iterator_category; // random 的 iterator
         typedef T value_type;
         typedef Ptr pointer;
         typedef Ref reference;
@@ -46,7 +47,7 @@ struct __deque_iterator {
         map_pointer node; // 控制中心所在的位置.
         
         /*
-         buffer_size 控制缓存区的大小. 从函数中进行获取, 代表着这是一个定制.
+         *y 就是缓存区的头, *y + buffer_size() 就是缓存区的尾巴.
          */
         __deque_iterator(T* x, map_pointer y)
         : cur(x), first(*y), last(*y + buffer_size()), node(y) {}
@@ -59,12 +60,13 @@ struct __deque_iterator {
          */
         reference operator*() const { return *cur; }
         pointer operator->() const { return &(operator*()); }
-        
+        /*
+         距离, 由三部分组成
+         缓存区之间的间距.
+         当前缓存区 cur 到 头的距离
+         对方缓存区 last 到 对方 cur 的距离.
+        */
         difference_type operator-(const self& x) const {
-            /*
-             首先计算, 缓存区之间的差距, buffsize 为单位.
-             然后是各自和边界的差值.
-             */
             return
             buffer_size() * (node - x.node - 1)
             + (cur - first)
@@ -77,7 +79,7 @@ struct __deque_iterator {
         self& operator++() {
             ++cur;
             /*
-             如果到达了边界, 切换 node 的指向.
+             如果到达了边界, 切换 node 的指向. cur 变为新的缓存区的 first 节点.
              */
             if (cur == last) {
                 set_node(node + 1);
@@ -98,6 +100,7 @@ struct __deque_iterator {
         self& operator--() {
             /*
              如果到达了边界, 切换 node 的指向.
+             将 cur 变为 last, 注意, 在 setNode 里面, 其实 first, last 的值已经变化了, 所以已经变为了新的缓存区的有效值了.
              */
             if (cur == first) {
                 set_node(node - 1);
@@ -112,10 +115,12 @@ struct __deque_iterator {
             return tmp;
         }
         
+        /*
+         这其中, 需要考虑缓存区的切换.
+         */
         self& operator+=(difference_type n) {
             difference_type offset = n + (cur - first);
             if (offset >= 0 && offset < difference_type(buffer_size())) {
-                // 如果, + n 后还在一个缓存区里面.
                 cur += n;
             } else {
                 // 不在一个缓存区里面, 先进行切换.
@@ -142,6 +147,8 @@ struct __deque_iterator {
         
         /*
          *(*this + n) []的含义, 从c 指针上说, 就是这样的, 既然 *, + 等操作符的含义已经正确, 直接用原始指针的操作就可以了.
+         这里, 非常明显了暗示了, 迭代器, 就是泛化的指针的特点.
+         *this + n, 就是找到对应位置的迭代器, 然后 * 操作符, 取出相应位置的值.
          */
         reference operator[](difference_type n) const { return *(*this + n); }
         
@@ -153,6 +160,7 @@ struct __deque_iterator {
         
         /*
          迭代器切换 node.
+         这里, 已经更新了 first 和 last 的值了.
          */
         void set_node(map_pointer new_node) {
             node = new_node;
@@ -243,6 +251,9 @@ protected:                      // Internal typedefs
     static size_type buffer_size() {
         return __deque_buf_size(BufSiz, sizeof(value_type));
     }
+    /*
+     初始化的时候, 控制中心的大小.
+     */
     static size_type initial_map_size() { return 8; }
     
 protected:                      // Data members
@@ -252,10 +263,13 @@ protected:                      // Data members
     iterator start;
     iterator finish;
     
-    map_pointer map; // 的起始位置.
+    map_pointer map; // 起始位置.
     size_type map_size; // 控制中心的大小.
     
 public:                         // Basic accessors
+    /*
+     为了保持 o(1) 的复杂度, 要么就是有一个有效的算法, 这个数据结构是建立在这个算法之上的, 要么就是要提前存起来这个值.
+     */
     iterator begin() { return start; }
     iterator end() { return finish; }
     const_iterator begin() const { return start; }
@@ -273,14 +287,20 @@ public:                         // Basic accessors
         return const_reverse_iterator(start);
     }
     
-    // 直接使用了 start 迭代器的[]擦偶走符重载.
+    /*
+     因为, deque 要模拟自己是一个数组, 所以, start 就成为了数组的起始的位置.
+     虽然了解 deque 的内部结构, 知道 start 并不是起点, 还可以向前添加, 但是, 对于外界来说, 要模拟出 start 是起点的效果.
+     所以, 这里位置的计算, 都是从 start 开始的.
+     */
     reference operator[](size_type n) { return start[difference_type(n)]; }
     const_reference operator[](size_type n) const {
         return start[difference_type(n)];
     }
     
+    /*
+     这两种, 也是非常常见的写法.
+     */
     reference front() { return *start; }
-    // finish 作为 end 进行了使用. 下面的写法, 是常规的写法.
     reference back() {
         iterator tmp = finish;
         --tmp;
@@ -295,7 +315,6 @@ public:                         // Basic accessors
     
     // - 号会自动进行 node 之间的距离的计算.
     size_type size() const { return finish - start; }
-    size_type max_size() const { return size_type(-1); }
     bool empty() const { return finish == start; }
     
 public:                         // Constructor, destructor.
@@ -391,6 +410,9 @@ public:                         // Constructor, destructor.
         return *this;
     }
     
+    /*
+     dequeu 实际管理的空间, 都在堆里面, 这里仅仅做指针的交换就可以了.
+     */
     void swap(deque& x) {
         __STD::swap(start, x.start);
         __STD::swap(finish, x.finish);
@@ -425,28 +447,26 @@ public:                         // push_* and pop_*
         if (finish.cur != finish.first) {
             --finish.cur;
             destroy(finish.cur);
-        }
-        else
+        } else {
             pop_back_aux();
+        }
     }
     
     void pop_front() {
         if (start.cur != start.last - 1) {
             destroy(start.cur);
             ++start.cur;
-        }
-        else
+        } else {
             pop_front_aux();
+        }
     }
-    
     /*
      前面的 push, pop 都可以利用 start 和 finish 进行操作. insert 涉及到搬移操作, 更加的复杂.
      */
-public:                         // Insert
-    
+public:
     iterator insert(iterator position, const value_type& x) {
         /*
-         前插, 后插比较简单, 直接利用之前的函数定义就可以了.
+         前插, 后插比较简单, 不用考虑数据的搬移工作.
          */
         if (position.cur == start.cur) {
             push_front(x);
