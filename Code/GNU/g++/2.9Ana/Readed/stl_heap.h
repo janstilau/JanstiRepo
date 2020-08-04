@@ -8,7 +8,7 @@ __STL_BEGIN_NAMESPACE
 #endif
 
 /*
- 向 fisrt, last 中, 添加元素, 然后堆化.
+ 没有专门的 Heap 这个数据结构, 本身, heap 就是一个概念, 只要是可以随机访问的空间, 能够满足 heap 的操作要求就可以.
  */
 template <class RandomAccessIterator>
 inline void push_heap(RandomAccessIterator first, RandomAccessIterator last) {

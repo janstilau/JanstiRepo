@@ -5,7 +5,9 @@ __STL_BEGIN_NAMESPACE
 
 
 /*
- 可以看到, C++ 暴露出去了一个简单的函数, 给用户使用, 而这个函数的内部, 一般是生成一个特定类型的对象, 将闭包, 以及想要绑定的值, 进行存储, 在执行的时候, 才真正的去调用闭包的内容.
+ 可以看到, C++ 暴露出去了一个简单的函数, 给用户使用.
+ 而这个函数的内部, 一般是生成一个特定类型的对象, 将闭包, 以及想要绑定的值, 进行存储, 在执行的时候, 才真正的去调用闭包的内容.
+ 在 Swift 里面, 很多函数, 也仅仅是返回一个特定数据类型的对象而已, 在这个对象里面, 才会封装这函数名所代表的含义.
  */
 
 /*
@@ -26,9 +28,17 @@ struct binary_function {
 
 /*
  下面这些类型, 用于生产临时对象.
- 可以理解成为, 为了生成一个 Block, 是 Block 的工厂类.
- 他们仅仅是写出了逻辑的混合, 大量利用了操作符重载, 也就是重用了算法.
+ 可以理解成为, 是 Block 的工厂类, 目的就是生成特定类型的 block. 这些特定类型, 是和方法名, 绑定在一起的.
+ 函数对象的内部仅仅写出了逻辑的混合, 大量利用了操作符重载, 操作符重载作为一个稳定的接口名, 在 C++ 里面, 承担了大量的工作.
  具体的操作, 还是各个类型, 要适配到算法中的操作符中去.
+ */
+/*
+ +, 就是相加运算符, T 里面, 要进行 + 运算符的重载工作, 注意, 第一个参数, 第二个参数, 返回值的类型, 都是要相等的.
+ plus 要继承自 binary_function, binary_function 里面仅仅有一些 typedef 的定义, 但是在适配器函数, 比如 not 里面, 会去询问该类型.
+ 所以, 如果自己的类型, 想要适配到整个模板库系统里面, 要有继承系统提供的这几个类型.
+ */
+/*
+ 要注意, 里面大量的, 都是进行的 const& 的传递.
  */
 template <class T>
 struct plus : public binary_function<T, T, T> {
@@ -55,6 +65,9 @@ struct modulus : public binary_function<T, T, T> {
     T operator()(const T& x, const T& y) const { return x % y; }
 };
 
+/*
+ C++ 里面, 操作符重载做的很不好, 这点在 Swift 里面, 进行了修正.
+ */
 template <class T>
 struct negate : public unary_function<T, T> {
     T operator()(const T& x) const { return -x; }
@@ -125,7 +138,13 @@ public:
     }
 };
 
-// 真正暴露给用户的, 不会是上面的那个仿函数的定义. 而是一个简单的函数. 这个函数的内部, 做包装的动作.
+/*
+ 真正暴露给用户的, 不会是上面的那个仿函数的定义. 而是一个简单的函数. 这个函数的内部, 做包装的动作.
+ not1 是一个很简单的函数, 但是, 想要理解它究竟做了什么, 一定要理解, 闭包, 函数对象这些东西.
+ 可以用命令模式来理解, 就是将操作封装成为对象.
+ 我们只能传递的内存里面的值, 只不过命令模式, 可以将值转化为实际的函数调用.
+ 所以, not1 这种, 就是在函数内部生成一个新的对象, 这个对象包含原来传过来的闭包, 并对这个闭包, 进行了函数相关的逻辑处理.
+ */
 template <class Predicate>
 inline unary_negate<Predicate> not1(const Predicate& pred) {
     return unary_negate<Predicate>(pred);
@@ -152,6 +171,7 @@ inline binary_negate<Predicate> not2(const Predicate& pred) {
     return binary_negate<Predicate>(pred);
 }
 
+
 template <class Operation> 
 class binder1st
 : public unary_function<typename Operation::second_argument_type,
@@ -165,7 +185,8 @@ public:
     : op(x), value(y) {}
     typename Operation::result_type
     /*
-     将某个参数, 通过成员变量进行固定, 存储传递过来的原有函数. 然后调用自己, 就是调用原有函数, 将自己存储的参数传递到原有函数.
+     把要绑定的参数, 以及 block, 存储起来, 然后调用的时候, block, 并传入存储起来的参数, 这就是绑定这个事的意义.
+     把函数, 当做值来进行存储, 是函数式编程, 和各种难以理解的操作, 能够正常运转的非常基本的一个思想.
      */
     operator()(const typename Operation::second_argument_type& x) const {
         return op(value, x);
@@ -179,6 +200,9 @@ inline binder1st<Operation> bind1st(const Operation& op, const T& x) {
     return binder1st<Operation>(op, arg1_type(x));
 }
 
+/*
+ binder2nd 和 binder1st 几乎没有区别, 不过是调用逻辑上, 变为了第二个值的绑定.
+ */
 template <class Operation> 
 class binder2nd
 : public unary_function<typename Operation::first_argument_type,
@@ -203,6 +227,9 @@ inline binder2nd<Operation> bind2nd(const Operation& op, const T& x) {
     return binder2nd<Operation>(op, arg2_type(x));
 }
 
+/*
+ 这个函数, 基本没有用到过.
+ */
 template <class Operation1, class Operation2>
 class unary_compose : public unary_function<typename Operation2::argument_type,
 typename Operation1::result_type> {
@@ -217,7 +244,7 @@ public:
     }
 };
 
-// 暴露出一个简单的函数, 这个函数内部, 生成对应的对象.
+// 同样的, 内部的处理数据结构, 不会暴露出去, 一个简便的方法, 封装了里面的特定类型的数据结构的建立.
 template <class Operation1, class Operation2>
 inline unary_compose<Operation1, Operation2> compose1(const Operation1& op1, 
                                                       const Operation2& op2) {
@@ -247,42 +274,20 @@ compose2(const Operation1& op1, const Operation2& op2, const Operation3& op3) {
     return binary_compose<Operation1, Operation2, Operation3>(op1, op2, op3);
 }
 
-template <class Arg, class Result>
-class pointer_to_unary_function : public unary_function<Arg, Result> {
-protected:
-    Result (*ptr)(Arg);
-public:
-    pointer_to_unary_function() {}
-    explicit pointer_to_unary_function(Result (*x)(Arg)) : ptr(x) {}
-    Result operator()(Arg x) const { return ptr(x); }
-};
-
-template <class Arg, class Result>
-inline pointer_to_unary_function<Arg, Result> ptr_fun(Result (*x)(Arg)) {
-    return pointer_to_unary_function<Arg, Result>(x);
-}
-
-template <class Arg1, class Arg2, class Result>
-class pointer_to_binary_function : public binary_function<Arg1, Arg2, Result> {
-protected:
-    Result (*ptr)(Arg1, Arg2);
-public:
-    pointer_to_binary_function() {}
-    explicit pointer_to_binary_function(Result (*x)(Arg1, Arg2)) : ptr(x) {}
-    Result operator()(Arg1 x, Arg2 y) const { return ptr(x, y); }
-};
-
-template <class Arg1, class Arg2, class Result>
-inline pointer_to_binary_function<Arg1, Arg2, Result> 
-ptr_fun(Result (*x)(Arg1, Arg2)) {
-    return pointer_to_binary_function<Arg1, Arg2, Result>(x);
-}
-
+/*
+ identity, 直接返回元素本身.
+ */
 template <class T>
 struct identity : public unary_function<T, T> {
     const T& operator()(const T& x) const { return x; }
 };
 
+/*
+ select1st, 返回 first.
+ C++ 里面什么会有 First 呢, Pair. 但是这里的 Pair 是 泛型类型, 不一定传递过来的就是 Pair.
+ C++ 是, 如果你传递一个类型过来, 这个类型里面, 可以调用到 first, 那么编译就能够成功.
+ 所以 C++ 中的泛型中的类型参数, 仅仅是一个暗示, 提示. 是靠编译进行的检查.
+ */
 template <class Pair>
 struct select1st : public unary_function<Pair, typename Pair::first_type> {
     const typename Pair::first_type& operator()(const Pair& x) const
@@ -299,6 +304,9 @@ struct select2nd : public unary_function<Pair, typename Pair::second_type> {
     }
 };
 
+/*
+ 下面的函数, 感觉用户都不大, 没有细看.
+ */
 template <class Arg1, class Arg2>
 struct project1st : public binary_function<Arg1, Arg2, Arg1> {
     Arg1 operator()(const Arg1& x, const Arg2&) const { return x; }

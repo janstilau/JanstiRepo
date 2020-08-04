@@ -116,17 +116,8 @@ public:
     typedef __list_iterator<T, T&, T*>             iterator;
     typedef __list_iterator<T, const T&, const T*> const_iterator;
     
-#ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
     typedef reverse_iterator<const_iterator> const_reverse_iterator;
     typedef reverse_iterator<iterator> reverse_iterator;
-#else /* __STL_CLASS_PARTIAL_SPECIALIZATION */
-    typedef reverse_bidirectional_iterator<const_iterator, value_type,
-    const_reference, difference_type>
-    const_reverse_iterator;
-    typedef reverse_bidirectional_iterator<iterator, value_type, reference,
-    difference_type>
-    reverse_iterator;
-#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
     
     /*
      construct 在对应的指针上, 调用构造函数.
@@ -137,7 +128,14 @@ public:
     
 protected:
     /*
-     GetNode, putNode 并不是对于 list 来说, 而是对于分配器来说的. 因为分配器管理者内存资源, 所以 list 里面, 各个节点都是要通过这两个函数进行资源的管理工作.
+     真正的数据, 作为 sentinal Node 存在.
+     */
+    link_type node;
+    
+protected:
+    /*
+     GetNode, putNode 并不是对于 list 来说, 而是对于分配器来说的.
+     因为分配器管理者内存资源, 所以 list 里面, 各个节点都是要通过这两个函数进行资源的管理工作.
      */
     link_type get_node() { return list_node_allocator::allocate(); }
     void put_node(link_type p) { list_node_allocator::deallocate(p); }
@@ -207,11 +205,6 @@ protected:
     }
 #endif /* __STL_MEMBER_TEMPLATES */
     
-protected:
-    /*
-     真正的数据, 作为 sentinal Node 存在.
-     */
-    link_type node;
     
 public:
     list() { empty_initialize(); }

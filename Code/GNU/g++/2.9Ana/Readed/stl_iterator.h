@@ -22,7 +22,7 @@ __STL_BEGIN_NAMESPACE
 
 /*
  从这个实例中, 我们可以看到, 各个函数重载,就是根据参数的类型, 调用了最准确的方法.
- 迭代器并不直接继承自 category, 迭代器内部, 提供了自己所属的 category 的信息. 从这个意义上来看, typedef, 可以算作是这个迭代器的元信息. 
+ 迭代器并不直接继承自 category, 迭代器内部, 提供了自己所属的 category 的信息. 从这个意义上来看, typedef, 可以算作是这个迭代器的元信息.
  迭代器的 category 的类型意义就是函数的分发操作.
  */
 namespace jj33
@@ -41,32 +41,32 @@ void _display_category(input_iterator_tag)
 template<typename I>
 void display_category(I itr)
 {
-   typename iterator_traits<I>::iterator_category cagy;
-   _display_category(cagy);
-   cout << "typeid(itr).name()= " << typeid(itr).name() << endl << endl;
+    typename iterator_traits<I>::iterator_category cagy;
+    _display_category(cagy);
+    cout << "typeid(itr).name()= " << typeid(itr).name() << endl << endl;
 }
-    
+
 void test_iterator_category()
 {
     cout << "\ntest_iterator_category().......... \n";
-      
-      display_category(array<int,10>::iterator());
-      display_category(vector<int>::iterator());
-      display_category(list<int>::iterator());
-      display_category(forward_list<int>::iterator());
-      display_category(deque<int>::iterator());
-
-      display_category(set<int>::iterator());
-      display_category(map<int,int>::iterator());
-      display_category(multiset<int>::iterator());
-      display_category(multimap<int,int>::iterator());
-      display_category(unordered_set<int>::iterator());
-      display_category(unordered_map<int,int>::iterator());
-      display_category(unordered_multiset<int>::iterator());
-      display_category(unordered_multimap<int,int>::iterator());
-            
-      display_category(istream_iterator<int>());
-      display_category(ostream_iterator<int>(cout,""));
+    
+    display_category(array<int,10>::iterator());
+    display_category(vector<int>::iterator());
+    display_category(list<int>::iterator());
+    display_category(forward_list<int>::iterator());
+    display_category(deque<int>::iterator());
+    
+    display_category(set<int>::iterator());
+    display_category(map<int,int>::iterator());
+    display_category(multiset<int>::iterator());
+    display_category(multimap<int,int>::iterator());
+    display_category(unordered_set<int>::iterator());
+    display_category(unordered_map<int,int>::iterator());
+    display_category(unordered_multiset<int>::iterator());
+    display_category(unordered_multimap<int,int>::iterator());
+    
+    display_category(istream_iterator<int>());
+    display_category(ostream_iterator<int>(cout,""));
 }
 }
 
@@ -282,7 +282,11 @@ inline ptrdiff_t* distance_type(const T*) { return (ptrdiff_t*)(0); }
  distance 方法的调用者, 只会传入 iterator 对象. 而萃取的过程, 分发的过程, 是在标准库里面已经实现的了.
  */
 
-// 总体的分发过程, 结果在传出参数中体现.
+/*
+ 总体的分发过程, 结果在传出参数中体现.
+ 必须保证, fist, last 是同种类型的, 当然, 代码里面没有强制的进行限制.
+*/
+
 template <class InputIterator, class Distance>
 inline void distance(InputIterator first, InputIterator last, Distance& n) {
     __distance(first, last, n, iterator_category(first));
@@ -302,6 +306,10 @@ inline void __distance(InputIterator first, InputIterator last, Distance& n,
 template <class RandomAccessIterator, class Distance>
 inline void __distance(RandomAccessIterator first, RandomAccessIterator last, 
                        Distance& n, random_access_iterator_tag) {
+    /*
+     RandomAccessIterator, 必须重载 +, - 运算符, 这是它是 RandomAccessIterator 这种类型的责任.
+     如果在 C++ 里面, 没有实现, 编译的时候会抛出错误.
+     */
     n += last - first;
 }
 
@@ -310,7 +318,6 @@ inline void __distance(RandomAccessIterator first, RandomAccessIterator last,
 /*
  在源码里面, 经常出现实现逻辑相同的函数, 猜测应该是为了适配不同的数据类型.
  */
-
 template <class InputIterator>
 inline iterator_traits<InputIterator>::difference_type
 distance(InputIterator first, InputIterator last) {
@@ -337,7 +344,10 @@ __distance(RandomAccessIterator first, RandomAccessIterator last,
 
 #endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
-// advance 通过 iterator 里面的类型, 分发到上面两个函数中.
+/*
+ advance 是将迭代器进行移动, 直接改变了迭代器的值.
+ */
+
 template <class InputIterator, class Distance>
 inline void advance(InputIterator& i, Distance n) {
     __advance(i, n, iterator_category(i));
@@ -372,10 +382,11 @@ inline void __advance(RandomAccessIterator& i, Distance n,
     i += n;
 }
 
+
 /*
  reverse_iterator 是 Iterator 的适配器.
  各种操作, 都是操作传入的 srcIterator.
- 不太清楚上面的那些适配器到底有什么用.
+ 这种操作, 最能体现, 适配器到底是干什么用的.
  */
 template <class Iterator>
 class reverse_iterator 
@@ -408,7 +419,9 @@ public:
 #endif /* __STL_MEMBER_TEMPLATES */
     
     iterator_type base() const { return current; } // 返回原始值.
-    // 传入的是 end, 所以, 要找到有效的值, 必须要进行 --.
+    /*
+     这里, 也就限制了, base iterator, 必须是双向的, 才能进行 -- 操作.
+     */
     reference operator*() const {
         Iterator tmp = current;
         return *--tmp;
@@ -416,6 +429,7 @@ public:
     pointer operator->() const { return &(operator*()); }
     
     // reverse 的++ , 就是 current 的--. 如果 current 本身就是 reverse, 那就是双重否定
+    // base 本身展示出来的, 就是一个 iterator, 本身也可能是一个 reverse_iterator. 虽然在逻辑上, 双重否定还是肯定, 但是调用的时候, 相关的代码还是运转了, 只不过是因为没有副作用而已.
     self& operator++() {
         --current;
         return *this;
@@ -452,6 +466,10 @@ public:
     reference operator[](difference_type n) const { return *(*this + n); }
 }; 
 
+/*
+ reverse 仅仅是适配器, 真正的数据来源还是 base.
+ 类型的比较, 就是比较的数据, 所以这里直接是 base 的比较.
+ */
 template <class Iterator>
 inline bool operator==(const reverse_iterator<Iterator>& x, 
                        const reverse_iterator<Iterator>& y) {
@@ -478,126 +496,7 @@ operator+(reverse_iterator<Iterator>::difference_type n,
     return reverse_iterator<Iterator>(x.base() - n);
 }
 
-#else /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
-// This is the old version of reverse_iterator, as found in the original
-//  HP STL.  It does not use partial specialization.
-
-#ifndef __STL_LIMITED_DEFAULT_TEMPLATES
-template <class RandomAccessIterator, class T, class Reference = T&,
-class Distance = ptrdiff_t>
-#else
-template <class RandomAccessIterator, class T, class Reference,
-class Distance>
-#endif
-class reverse_iterator {
-    typedef reverse_iterator<RandomAccessIterator, T, Reference, Distance>
-    self;
-protected:
-    RandomAccessIterator current;
-public:
-    typedef random_access_iterator_tag iterator_category;
-    typedef T                          value_type;
-    typedef Distance                   difference_type;
-    typedef T*                         pointer;
-    typedef Reference                  reference;
-    
-    reverse_iterator() {}
-    explicit reverse_iterator(RandomAccessIterator x) : current(x) {}
-    RandomAccessIterator base() const { return current; }
-    Reference operator*() const { return *(current - 1); }
-#ifndef __SGI_STL_NO_ARROW_OPERATOR
-    pointer operator->() const { return &(operator*()); }
-#endif /* __SGI_STL_NO_ARROW_OPERATOR */
-    self& operator++() {
-        --current;
-        return *this;
-    }
-    self operator++(int) {
-        self tmp = *this;
-        --current;
-        return tmp;
-    }
-    self& operator--() {
-        ++current;
-        return *this;
-    }
-    /*
-     这里, 增加了一些对于 random 的处理.
-     */
-    self operator--(int) {
-        self tmp = *this;
-        ++current;
-        return tmp;
-    }
-    self operator+(Distance n) const {
-        return self(current - n);
-    }
-    self& operator+=(Distance n) {
-        current -= n;
-        return *this;
-    }
-    self operator-(Distance n) const {
-        return self(current + n);
-    }
-    self& operator-=(Distance n) {
-        current += n;
-        return *this;
-    }
-    Reference operator[](Distance n) const { return *(*this + n); }
-};
-
-template <class RandomAccessIterator, class T, class Reference, class Distance>
-inline random_access_iterator_tag
-iterator_category(const reverse_iterator<RandomAccessIterator, T,
-                  Reference, Distance>&) {
-    return random_access_iterator_tag();
-}
-
-template <class RandomAccessIterator, class T, class Reference, class Distance>
-inline T* value_type(const reverse_iterator<RandomAccessIterator, T,
-                     Reference, Distance>&) {
-    return (T*) 0;
-}
-
-template <class RandomAccessIterator, class T, class Reference, class Distance>
-inline Distance* distance_type(const reverse_iterator<RandomAccessIterator, T,
-                               Reference, Distance>&) {
-    return (Distance*) 0;
-}
-
-
-template <class RandomAccessIterator, class T, class Reference, class Distance>
-inline bool operator==(const reverse_iterator<RandomAccessIterator, T,
-                       Reference, Distance>& x,
-                       const reverse_iterator<RandomAccessIterator, T,
-                       Reference, Distance>& y) {
-    return x.base() == y.base();
-}
-
-template <class RandomAccessIterator, class T, class Reference, class Distance>
-inline bool operator<(const reverse_iterator<RandomAccessIterator, T,
-                      Reference, Distance>& x,
-                      const reverse_iterator<RandomAccessIterator, T,
-                      Reference, Distance>& y) {
-    return y.base() < x.base();
-}
-
-template <class RandomAccessIterator, class T, class Reference, class Distance>
-inline Distance operator-(const reverse_iterator<RandomAccessIterator, T,
-                          Reference, Distance>& x,
-                          const reverse_iterator<RandomAccessIterator, T,
-                          Reference, Distance>& y) {
-    return y.base() - x.base();
-}
-
-template <class RandomAccessIter, class T, class Ref, class Dist>
-inline reverse_iterator<RandomAccessIter, T, Ref, Dist> 
-operator+(Dist n, const reverse_iterator<RandomAccessIter, T, Ref, Dist>& x) {
-    return reverse_iterator<RandomAccessIter, T, Ref, Dist>(x.base() - n);
-}
-
-#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
 template <class T, class Distance = ptrdiff_t> 
 class istream_iterator {
@@ -702,11 +601,6 @@ iterator_category(const ostream_iterator<T>&) {
 __STL_END_NAMESPACE
 
 #endif /* __SGI_STL_INTERNAL_ITERATOR_H */
-
-/*
- 下面的这几个迭代器, 不太明白到底想干什么.
- */
-
 
 template <class Container>
 class insert_iterator {
