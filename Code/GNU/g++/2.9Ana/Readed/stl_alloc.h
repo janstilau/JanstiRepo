@@ -1,13 +1,118 @@
 #ifndef __SGI_STL_INTERNAL_ALLOC_H
 #define __SGI_STL_INTERNAL_ALLOC_H
 
+#ifdef __SUNPRO_CC
+#  define __PRIVATE public
+// Extra access restrictions prevent us from really making some things
+// private.
+#else
+#  define __PRIVATE private
+#endif
+
+#ifdef __STL_STATIC_TEMPLATE_MEMBER_BUG
+#  define __USE_MALLOC
+#endif
+
+
+// This implements some standard node allocators.  These are
+// NOT the same as the allocators in the C++ draft standard or in
+// in the original STL.  They do not encapsulate different pointer
+// types; indeed we assume that there is only one pointer type.
+// The allocation primitives are intended to allocate individual objects,
+// not larger arenas as with the original STL allocators.
+
+#if 0
+#   include <new>
+#   define __THROW_BAD_ALLOC throw bad_alloc
+#elif !defined(__THROW_BAD_ALLOC)
+#   include <iostream.h>
+#   define __THROW_BAD_ALLOC cerr << "out of memory" << endl; exit(1)
+#endif
+
+#ifndef __ALLOC
+#   define __ALLOC alloc
+#endif
+#ifdef __STL_WIN32THREADS
+#   include <windows.h>
+#endif
+
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+#ifndef __RESTRICT
+#  define __RESTRICT
+#endif
+
+#if !defined(__STL_PTHREADS) && !defined(_NOTHREADS) \
+&& !defined(__STL_SGI_THREADS) && !defined(__STL_WIN32THREADS)
+#   define _NOTHREADS
+#endif
+
+# ifdef __STL_PTHREADS
+// POSIX Threads
+// This is dubious, since this is likely to be a high contention
+// lock.   Performance may not be adequate.
+#   include <pthread.h>
+#   define __NODE_ALLOCATOR_LOCK \
+if (threads) pthread_mutex_lock(&__node_allocator_lock)
+#   define __NODE_ALLOCATOR_UNLOCK \
+if (threads) pthread_mutex_unlock(&__node_allocator_lock)
+#   define __NODE_ALLOCATOR_THREADS true
+#   define __VOLATILE volatile  // Needed at -O3 on SGI
+# endif
+# ifdef __STL_WIN32THREADS
+// The lock needs to be initialized by constructing an allocator
+// objects of the right type.  We do that here explicitly for alloc.
+#   define __NODE_ALLOCATOR_LOCK \
+EnterCriticalSection(&__node_allocator_lock)
+#   define __NODE_ALLOCATOR_UNLOCK \
+LeaveCriticalSection(&__node_allocator_lock)
+#   define __NODE_ALLOCATOR_THREADS true
+#   define __VOLATILE volatile  // may not be needed
+# endif /* WIN32THREADS */
+# ifdef __STL_SGI_THREADS
+// This should work without threads, with sproc threads, or with
+// pthreads.  It is suboptimal in all cases.
+// It is unlikely to even compile on nonSGI machines.
+
 extern "C" {
 extern int __us_rsthread_malloc;
 }
+// The above is copied from malloc.h.  Including <malloc.h>
+// would be cleaner but fails with certain levels of standard
+// conformance.
+#   define __NODE_ALLOCATOR_LOCK if (threads && __us_rsthread_malloc) \
+{ __lock(&__node_allocator_lock); }
+#   define __NODE_ALLOCATOR_UNLOCK if (threads && __us_rsthread_malloc) \
+{ __unlock(&__node_allocator_lock); }
+#   define __NODE_ALLOCATOR_THREADS true
+#   define __VOLATILE volatile  // Needed at -O3 on SGI
+# endif
+# ifdef _NOTHREADS
+//  Thread-unsafe
+#   define __NODE_ALLOCATOR_LOCK
+#   define __NODE_ALLOCATOR_UNLOCK
+#   define __NODE_ALLOCATOR_THREADS false
+#   define __VOLATILE
+# endif
 
 __STL_BEGIN_NAMESPACE
+
+#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
+#pragma set woff 1174
+#endif
+
+// Malloc-based allocator.  Typically slower than default alloc below.
+// Typically thread-safe and more storage efficient.
+#ifdef __STL_STATIC_TEMPLATE_MEMBER_BUG
+# ifdef __DECLARE_GLOBALS_HERE
 void (* __malloc_alloc_oom_handler)() = 0;
+// g++ 2.7.2 does not handle static template data members.
+# else
 extern void (* __malloc_alloc_oom_handler)();
+# endif
+#endif
 
 template <int inst>
 class __malloc_alloc_template {
@@ -91,6 +196,11 @@ void * __malloc_alloc_template<inst>::oom_realloc(void *p, size_t n)
 
 typedef __malloc_alloc_template<0> malloc_alloc;
 
+/*
+ 这个分配器, 是容器里面用到的, 起始仅仅是简单的做了一个sizeof处理, 将类型的内从宽度提取了出来.
+ 在各个容器里面, 也是用的这个类做的分配器.
+ 由于各个分配器里面, 元素的 size 是固定的, 所以, 分配器能够按照固定的长度, 进行内容的申请操作.
+ */
 template<class T, class Alloc>
 class simple_alloc {
     
@@ -144,8 +254,6 @@ public:
         *(size_t *)result = new_sz;
         return result + extra;
     }
-    
-    
 };
 
 
@@ -162,7 +270,7 @@ typedef malloc_alloc single_client_alloc;
 // original STL class-specific allocators, but with less fragmentation.
 // Default_alloc_template parameters are experimental and MAY
 // DISAPPEAR in the future.  Clients should just use alloc for now.
-//
+
 // Important implementation properties:
 // 1. If the client request an object of size > __MAX_BYTES, the resulting
 //    object will be obtained directly from malloc.
@@ -182,7 +290,11 @@ typedef malloc_alloc single_client_alloc;
 // Node that containers built on different allocator instances have
 // different types, limiting the utility of this approach.
 #ifdef __SUNPRO_CC
-// breaks if we make these template class members:
+
+/*
+ 这里不太明白, 为什么用 enum 作为这些常量值的表示.
+ */
+
 enum {__ALIGN = 8};
 enum {__MAX_BYTES = 128};
 enum {__NFREELISTS = __MAX_BYTES/__ALIGN};
@@ -192,6 +304,9 @@ template <bool threads, int inst>
 class __default_alloc_template {
     
 private:
+    /*
+     这里也说了, 应该用 static int 来作为常量值的定义. 不过, 这里这样做, 主要是为了编译器的优化.
+     */
     // Really we should use static const int x = N
     // instead of enum { x = N }, but few compilers accept the former.
 # ifndef __SUNPRO_CC
@@ -203,17 +318,21 @@ private:
         return (((bytes) + __ALIGN-1) & ~(__ALIGN - 1));
     }
 __PRIVATE:
+    /*
+     共用体, embedded pointer
+     */
     union obj {
         union obj * free_list_link;
         char client_data[1];    /* The client sees this.        */
     };
 private:
-# ifdef __SUNPRO_CC
-    static obj * __VOLATILE free_list[];
-    // Specifying a size results in duplicate def for 4.1
-# else
+    /*
+     free_list 就是那 16 个链表的控制中心, 每个节点上是一个链表. 每个链表, 控制着固定大小的块.
+     */
     static obj * __VOLATILE free_list[__NFREELISTS];
-# endif
+    /*
+     计算出, bytes 大小的空间, 应该在哪个链表上.
+     */
     static  size_t FREELIST_INDEX(size_t bytes) {
         return (((bytes) + __ALIGN-1)/__ALIGN - 1);
     }
@@ -224,9 +343,14 @@ private:
     // if it is inconvenient to allocate the requested number.
     static char *chunk_alloc(size_t size, int &nobjs);
     
-    // Chunk allocation state.
+    /*
+     战备池的开始和结束
+     */
     static char *start_free;
     static char *end_free;
+    /*
+     已经分配的内存的空间大小, 在 chunk_alloc 中, 如果需要申请新的内存, 会按照已分配的内存空间, 申请相同比例的额外空间, 用来减少后续 malloc 的次数.
+     */
     static size_t heap_size;
     
 # ifdef __STL_SGI_THREADS
@@ -264,28 +388,35 @@ private:
     
 public:
     
-    /* n must be > 0      */
+    /*
+     分配的具体过程.
+     */
     static void * allocate(size_t n)
     {
         obj * __VOLATILE * my_free_list;
         obj * __RESTRICT result;
-        
+        /*
+         如果, N > 128 了, 直接 malloc 进行分配了.
+         */
         if (n > (size_t) __MAX_BYTES) {
             return(malloc_alloc::allocate(n));
         }
+        /*
+         首先寻找目标链表.
+         */
         my_free_list = free_list + FREELIST_INDEX(n);
-        // Acquire the lock here with a constructor call.
-        // This ensures that it is released in exit or during stack
-        // unwinding.
-#       ifndef _NOTHREADS
-        /*REFERENCED*/
-        lock lock_instance;
-#       endif
         result = *my_free_list;
         if (result == 0) {
+            /*
+             此时, 目标链表上没有空余空间了.
+             */
             void *r = refill(ROUND_UP(n));
             return r;
         }
+        /*
+         此时, 目标链表有空余块, 那就拿出一个来.
+         同时更新目标链表的起始位置.
+         */
         *my_free_list = result -> free_list_link;
         return (result);
     };
@@ -296,14 +427,21 @@ public:
         obj *q = (obj *)p;
         obj * __VOLATILE * my_free_list;
         
+        /*
+         如果, 回收的大于了 128 , 直接 free 掉.
+         */
         if (n > (size_t) __MAX_BYTES) {
             malloc_alloc::deallocate(p, n);
             return;
         }
+        /*
+         否则, 将回收的数据, 塞到对应的目标链表中.
+         */
+        // 先计算目标链表的位置.
         my_free_list = free_list + FREELIST_INDEX(n);
         // acquire lock
 #       ifndef _NOTHREADS
-        /*REFERENCED*/
+        // 这是 static 的, 也就是全局的资源, 进行了相应的加锁减锁的操作.
         lock lock_instance;
 #       endif /* _NOTHREADS */
         q -> free_list_link = *my_free_list;
@@ -333,27 +471,40 @@ __default_alloc_template<threads, inst>::chunk_alloc(size_t size, int& nobjs)
     size_t bytes_left = end_free - start_free;
     
     if (bytes_left >= total_bytes) {
+        /*
+         如果, 战备池里面, 还有那么多的20*n个空间, 直接从战备池里面拿这么多空间出去.
+         */
         result = start_free;
-        start_free += total_bytes;
+        start_free += total_bytes; // 战备池更新区间.
         return(result);
     } else if (bytes_left >= size) {
+        /*
+         不过战备池里面, 够一个以上, 20 个以下的, 那么尽可能多分配, 然后调整传出参数, 战备池的开始指针.
+         */
         nobjs = bytes_left/size;
         total_bytes = size * nobjs;
         result = start_free;
         start_free += total_bytes;
         return(result);
     } else {
+        // bytes_to_get 为新的要开辟的内存空间大小.
         size_t bytes_to_get = 2 * total_bytes + ROUND_UP(heap_size >> 4);
         // Try to make use of the left-over piece.
         if (bytes_left > 0) {
-            obj * __VOLATILE * my_free_list =
-            free_list + FREELIST_INDEX(bytes_left);
-            
+            /*
+             这里, 利用头插法, 将战备池剩余的空间, 安插到合适的目标链表中.
+             此时战备池为空, 准备记录新生成的空间.
+             */
+            obj * __VOLATILE * my_free_list = free_list + FREELIST_INDEX(bytes_left);
             ((obj *)start_free) -> free_list_link = *my_free_list;
             *my_free_list = (obj *)start_free;
         }
         start_free = (char *)malloc(bytes_to_get);
         if (0 == start_free) {
+            /*
+             如果, 不能申请到新的空间了.
+             那就遍历后面的目标链表, 看有没有空余的块, 先满足当前的申请需求.
+             */
             int i;
             obj * __VOLATILE * my_free_list, *p;
             // Try to make do with what we have.  That can't
@@ -363,6 +514,8 @@ __default_alloc_template<threads, inst>::chunk_alloc(size_t size, int& nobjs)
                 my_free_list = free_list + FREELIST_INDEX(i);
                 p = *my_free_list;
                 if (0 != p) {
+                    // 目标链表的指向变为下一个块, 把当前块当做战备池.
+                    // 递归调用, 由于战备池发生了变化, 这里递归调用, 不会有死递归的危险.
                     *my_free_list = p -> free_list_link;
                     start_free = (char *)p;
                     end_free = start_free + i;
@@ -377,30 +530,36 @@ __default_alloc_template<threads, inst>::chunk_alloc(size_t size, int& nobjs)
             // exception or remedy the situation.  Thus we assume it
             // succeeded.
         }
+        /*
+         分配成功了, 递归调用, 此时战备池有足够的空间了.
+         由于战备池发生了变化, 这里递归调用, 不会有死递归的危险.
+         */
         heap_size += bytes_to_get;
         end_free = start_free + bytes_to_get;
         return(chunk_alloc(size, nobjs));
     }
 }
 
-
-/* Returns an object of size n, and optionally adds to size n free list.*/
-/* We assume that n is properly aligned.                                */
-/* We hold the allocation lock.                                         */
+/*
+ 当目标链表上没有剩余空间的时候, 会走到该方法.
+ */
 template <bool threads, int inst>
 void* __default_alloc_template<threads, inst>::refill(size_t n)
 {
     int nobjs = 20;
+    /*
+     通过 chunk_alloc 得到目标链表上, 可以操作的新的块.
+     */
     char * chunk = chunk_alloc(n, nobjs);
     obj * __VOLATILE * my_free_list;
     obj * result;
     obj * current_obj, * next_obj;
     int i;
-    
     if (1 == nobjs) return(chunk);
+    
     my_free_list = free_list + FREELIST_INDEX(n);
     
-    /* Build free list in chunk */
+    // 新生成的链表目前还没有穿起来, 这里将链表穿起来. 第一个元素被返回, 当做容器所需要的位置了.
     result = (obj *)chunk;
     *my_free_list = next_obj = (obj *)(chunk + n);
     for (i = 1; ; i++) {
@@ -571,3 +730,6 @@ __STL_END_NAMESPACE
 
 #endif /* __SGI_STL_INTERNAL_ALLOC_H */
 
+// Local Variables:
+// mode:C++
+// End:
