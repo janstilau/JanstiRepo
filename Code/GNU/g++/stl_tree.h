@@ -60,6 +60,9 @@ struct __rb_tree_node_base
     }
 };
 
+/*
+ 其实这两个可以加起来, 就是 left, right, parent, 以及 value.
+ */
 template <class Value>
 struct __rb_tree_node : public __rb_tree_node_base
 {
@@ -81,8 +84,7 @@ struct __rb_tree_base_iterator
             node = node->right;
             while (node->left != 0)
                 node = node->left;
-        }
-        else {
+        } else {
             base_ptr y = node->parent;
             while (node == y->right) {
                 node = y;
