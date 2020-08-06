@@ -346,7 +346,6 @@
 				06E1B3AE247D6BEE00CD9D60 /* KeyPath.swift */,
 				06E1B355247D6BEE00CD9D60 /* KeyValuePairs.swift */,
 				06E1B356247D6BEE00CD9D60 /* LegacyABI.swift */,
-				06E1B32D247D6BEE00CD9D60 /* LifetimeManager.swift */,
 				06E1B34C247D6BEE00CD9D60 /* ManagedBuffer.swift */,
 				06E1B3A3247D6BEE00CD9D60 /* MathFunctions.swift.gyb */,
 				06E1B33C247D6BEE00CD9D60 /* MemoryLayout.swift */,
@@ -428,9 +427,7 @@
 				06E1B359247D6BEE00CD9D60 /* UnmanagedOpaqueString.swift */,
 				06E1B3D4247D6BEE00CD9D60 /* UnmanagedString.swift */,
 				06E1B351247D6BEE00CD9D60 /* UnsafeBufferPointer.swift.gyb */,
-				06E1B3CE247D6BEE00CD9D60 /* UnsafePointer.swift */,
 				06E1B38C247D6BEE00CD9D60 /* UnsafeRawBufferPointer.swift.gyb */,
-				06E1B322247D6BEE00CD9D60 /* UnsafeRawPointer.swift */,
 				06E1B3AC247D6BEE00CD9D60 /* UTF8.swift */,
 				06E1B38F247D6BEE00CD9D60 /* UTF16.swift */,
 				06E1B38D247D6BEE00CD9D60 /* UTF32.swift */,
@@ -445,6 +442,7 @@
 		06E1B3DD247D7C7B00CD9D60 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				06FCBA6824DC51B500E5565B /* Unsafe */,
 				0651545C24D568750060603F /* Array */,
 				0651545B24D556F00060603F /* Collection */,
 				06E1B3CB247D6BEE00CD9D60 /* Optional.swift */,
@@ -470,6 +468,16 @@
 				06E1B384247D6BEE00CD9D60 /* Repeat.swift */,
 			);
 			path = Done;
+			sourceTree = "<group>";
+		};
+		06FCBA6824DC51B500E5565B /* Unsafe */ = {
+			isa = PBXGroup;
+			children = (
+				06E1B3CE247D6BEE00CD9D60 /* UnsafePointer.swift */,
+				06E1B322247D6BEE00CD9D60 /* UnsafeRawPointer.swift */,
+				06E1B32D247D6BEE00CD9D60 /* LifetimeManager.swift */,
+			);
+			path = Unsafe;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
