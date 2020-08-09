@@ -1,12 +1,10 @@
 /*
-    Swift 的通用数据类型, 是建立在各个小的概念上的. 也就是面向抽象编程.
-    这种抽象组合, 会让整个系统类库很复杂.
-    但是, 由于大量的 Api, 是建立在抽象类型上, 一旦你自己的类, 符合了这种抽象, 他就可以复用大量的抽象数据类型所带有的方法.
- 
-    之前的 for 循环的问题, 可以通过 stride 函数, 创造出符合自己实际情况的迭代过程. 
+ Swift 的通用数据类型, 是建立在各个小的概念上的. 也就是面向抽象编程.
+ 这种抽象组合, 会让整个系统类库很复杂.
+ 但是, 由于大量的 Api, 是建立在抽象类型上, 一旦你自己的类, 符合了这种抽象, 他就可以复用大量的抽象数据类型所带有的方法.
+ 之前的 for 循环的问题, 可以通过 stride 函数, 创造出符合自己实际情况的迭代过程.
  */
-
-
+  
 /*
  Strideable, 可比较的, 可以测算距离的, 可以根据距离, 进行前进后退的.
  Int, Float 都是 Strideable 的
@@ -14,134 +12,28 @@
  */
 /// A type representing continuous, one-dimensional values that can be offset
 /// and measured.
+/// 相对于 comparable, Strideable 非常关键的一点是, 必须是可以测算出偏移值的.
+/// 字符串是可比较的, apple, banane 比较的话,  apple 一定大, 但是, 他们是没有办法测算出一个偏移值来的.
 ///
-/// You can use a type that conforms to the `Strideable` protocol with the
-/// `stride(from:to:by:)` and `stride(from:through:by:)` functions. For
-/// example, you can use `stride(from:to:by:)` to iterate over an
-/// interval of floating-point values:
-///
-///     for radians in stride(from: 0.0, to: .pi * 2, by: .pi / 2) {
-///         let degrees = Int(radians * 180 / .pi)
-///         print("Degrees: \(degrees), radians: \(radians)")
-///     }
-///     // Degrees: 0, radians: 0.0
-///     // Degrees: 90, radians: 1.5707963267949
-///     // Degrees: 180, radians: 3.14159265358979
-///     // Degrees: 270, radians: 4.71238898038469
-///
+/// Stride, 其实就是偏移量. 可以这样理解, 可以完成 += 操作的数据类型, 才可以算作是 Strideable.
 /// The last parameter of these functions is of the associated `Stride`
 /// type---the type that represents the distance between any two instances of
 /// the `Strideable` type.
-///
-/// Types that have an integer `Stride` can be used as the boundaries of a
-/// countable range or as the lower bound of an iterable one-sided range. For
-/// example, you can iterate over a range of `Int` and use sequence and
-/// collection methods.
-///
-///     var sum = 0
-///     for x in 1...100 {
-///         sum += x
-///     }
-///     // sum == 5050
-///
-///     let digits = (0..<10).map(String.init)
-///     // ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-///
-/// Conforming to the Strideable Protocol
-/// =====================================
-///
-/// To add `Strideable` conformance to a custom type, choose a `Stride` type
-/// that can represent the distance between two instances and implement the
-/// `advanced(by:)` and `distance(to:)` methods. For example, this
-/// hypothetical `Date` type stores its value as the number of days before or
-/// after January 1, 2000:
-///
-///     struct Date: Equatable, CustomStringConvertible {
-///         var daysAfterY2K: Int
-///
-///         var description: String {
-///             // ...
-///         }
-///     }
-///
-/// The `Stride` type for `Date` is `Int`, inferred from the parameter and
-/// return types of `advanced(by:)` and `distance(to:)`:
-///
-///     extension Date: Strideable {
-///         func advanced(by n: Int) -> Date {
-///             var result = self
-///             result.daysAfterY2K += n
-///             return result
-///         }
-///
-///         func distance(to other: Date) -> Int {
-///             return other.daysAfterY2K - self.daysAfterY2K
-///         }
-///     }
-///
-/// The `Date` type can now be used with the `stride(from:to:by:)` and
-/// `stride(from:through:by:)` functions and as the bounds of an iterable
-/// range.
-///
-///     let startDate = Date(daysAfterY2K: 0)   // January 1, 2000
-///     let endDate = Date(daysAfterY2K: 15)    // January 16, 2000
-///
-///     for date in stride(from: startDate, to: endDate, by: 7) {
-///         print(date)
-///     }
-///     // January 1, 2000
-///     // January 8, 2000
-///     // January 15, 2000
 ///
 /// - Important: The `Strideable` protocol provides default implementations for
 ///   the equal-to (`==`) and less-than (`<`) operators that depend on the
 ///   `Stride` type's implementations. If a type conforming to `Strideable` is
 ///   its own `Stride` type, it must provide concrete implementations of the
 ///   two operators to avoid infinite recursion.
+
+/*
+ 对于 Strideable 要确保几个概念. 1. 间距是什么类型. 2. 当前值可以通过间距获取到那个位置的值.
+ */
 public protocol Strideable: Comparable {
     /// A type that represents the distance between two values.
     associatedtype Stride: SignedNumeric, Comparable
     
-    /// Returns the distance from this value to the given value, expressed as a
-    /// stride.
-    ///
-    /// If this type's `Stride` type conforms to `BinaryInteger`, then for two
-    /// values `x` and `y`, and a distance `n = x.distance(to: y)`,
-    /// `x.advanced(by: n) == y`. Using this method with types that have a
-    /// noninteger `Stride` may result in an approximation.
-    ///
-    /// - Parameter other: The value to calculate the distance to.
-    /// - Returns: The distance from this value to `other`.
-    ///
-    /// - Complexity: O(1)
     func distance(to other: Self) -> Stride
-    
-    /// Returns a value that is offset the specified distance from this value.
-    ///
-    /// Use the `advanced(by:)` method in generic code to offset a value by a
-    /// specified distance. If you're working directly with numeric values, use
-    /// the addition operator (`+`) instead of this method.
-    ///
-    ///     func addOne<T: Strideable>(to x: T) -> T
-    ///         where T.Stride: ExpressibleByIntegerLiteral
-    ///     {
-    ///         return x.advanced(by: 1)
-    ///     }
-    ///
-    ///     let x = addOne(to: 5)
-    ///     // x == 6
-    ///     let y = addOne(to: 3.5)
-    ///     // y = 4.5
-    ///
-    /// If this type's `Stride` type conforms to `BinaryInteger`, then for a
-    /// value `x`, a distance `n`, and a value `y = x.advanced(by: n)`,
-    /// `x.distance(to: y) == n`. Using this method with types that have a
-    /// noninteger `Stride` may result in an approximation.
-    ///
-    /// - Parameter n: The distance to advance this value.
-    /// - Returns: A value that is offset from this value by `n`.
-    ///
-    /// - Complexity: O(1)
     func advanced(by n: Stride) -> Self
     
     /// `_step` is an implementation detail of Strideable; do not use it directly.
@@ -152,13 +44,10 @@ public protocol Strideable: Comparable {
 }
 
 extension Strideable {
-    /// 如果, x, y 之间有正间距, 那么就是 x < y
     @inlinable
     public static func < (x: Self, y: Self) -> Bool {
         return x.distance(to: y) > 0
     }
-    
-    /// 如果, xy 之间没有间距, 那么就是相等.
     @inlinable
     public static func == (x: Self, y: Self) -> Bool {
         return x.distance(to: y) == 0
@@ -281,16 +170,10 @@ public struct StrideTo<Element: Strideable> {
  一个简单的序列,  它的作用, 主要是引出 StrideToIterator.
  */
 extension StrideTo: Sequence {
-    /// Returns an iterator over the elements of this sequence.
-    ///
-    /// - Complexity: O(1).
     @inlinable
     public __consuming func makeIterator() -> StrideToIterator<Element> {
         return StrideToIterator(_start: _start, end: _end, stride: _stride)
     }
-    
-    // FIXME(conditional-conformances): this is O(N) instead of O(1), leaving it
-    // here until a proper Collection conformance is possible
     @inlinable
     public var underestimatedCount: Int {
         var it = self.makeIterator()
@@ -318,51 +201,9 @@ extension StrideTo: CustomReflectable {
     }
 }
 
-/// Returns a sequence from a starting value to, but not including, an end
-/// value, stepping by the specified amount.
-///
-/// You can use this function to stride over values of any type that conforms
-/// to the `Strideable` protocol, such as integers or floating-point types.
-/// Starting with `start`, each successive value of the sequence adds `stride`
-/// until the next value would be equal to or beyond `end`.
-///
-///     for radians in stride(from: 0.0, to: .pi * 2, by: .pi / 2) {
-///         let degrees = Int(radians * 180 / .pi)
-///         print("Degrees: \(degrees), radians: \(radians)")
-///     }
-///     // Degrees: 0, radians: 0.0
-///     // Degrees: 90, radians: 1.5707963267949
-///     // Degrees: 180, radians: 3.14159265358979
-///     // Degrees: 270, radians: 4.71238898038469
-///
-/// You can use `stride(from:to:by:)` to create a sequence that strides upward
-/// or downward. Pass a negative value as `stride` to create a sequence from a
-/// higher start to a lower end:
-///
-///     for countdown in stride(from: 3, to: 0, by: -1) {
-///         print("\(countdown)...")
-///     }
-///     // 3...
-///     // 2...
-///     // 1...
-///
-/// If you pass a value as `stride` that moves away from `end`, the sequence
-/// contains no values.
-///
-///     for x in stride(from: 0, to: 10, by: -1) {
-///         print(x)
-///     }
-///     // Nothing is printed.
-///
-/// - Parameters:
-///   - start: The starting value to use for the sequence. If the sequence
-///     contains any values, the first one is `start`.
-///   - end: An end value to limit the sequence. `end` is never an element of
-///     the resulting sequence.
-///   - stride: The amount to step by with each iteration. A positive `stride`
-///     iterates upward; a negative `stride` iterates downward.
-/// - Returns: A sequence from `start` toward, but not including, `end`. Each
-///   value in the sequence steps by `stride`.
+/*
+ StrideTo, 该函数的作用, 就是封装 StrideTo. StrideTo 是一个序列, 正是因为有它的存在, for in 的有半部分, 才可以安放, stride 函数.
+ */
 @inlinable
 public func stride<T>(
     from start: T, to end: T, by stride: T.Stride
@@ -406,9 +247,6 @@ extension StrideThroughIterator: IteratorProtocol {
     public mutating func next() -> Element? {
         let result = _current.value
         if _stride > 0 ? result >= _end : result <= _end {
-            // This check is needed because if we just changed the above operators
-            // to > and <, respectively, we might advance current past the end
-            // and throw it out of bounds (e.g. above Int.max) unnecessarily.
             if result == _end && !_didReturnEnd {
                 _didReturnEnd = true
                 return result
@@ -420,14 +258,6 @@ extension StrideThroughIterator: IteratorProtocol {
     }
 }
 
-/*
- Stride, 本身就是一个简便函数, 在里面创建除了一个新的序列, 这个序列, 才能符合 forin 循环.
- 
- */
-/// A sequence of values formed by striding over a closed interval.
-///
-/// Use the `stride(from:through:by:)` function to create `StrideThrough` 
-/// instances.
 @frozen
 public struct StrideThrough<Element: Strideable> {
     @usableFromInline
@@ -485,64 +315,9 @@ extension StrideThrough: CustomReflectable {
     }
 }
 
-/// Returns a sequence from a starting value toward, and possibly including, an end
-/// value, stepping by the specified amount.
-///
-/// You can use this function to stride over values of any type that conforms
-/// to the `Strideable` protocol, such as integers or floating-point types.
-/// Starting with `start`, each successive value of the sequence adds `stride`
-/// until the next value would be beyond `end`.
-///
-///     for radians in stride(from: 0.0, through: .pi * 2, by: .pi / 2) {
-///         let degrees = Int(radians * 180 / .pi)
-///         print("Degrees: \(degrees), radians: \(radians)")
-///     }
-///     // Degrees: 0, radians: 0.0
-///     // Degrees: 90, radians: 1.5707963267949
-///     // Degrees: 180, radians: 3.14159265358979
-///     // Degrees: 270, radians: 4.71238898038469
-///     // Degrees: 360, radians: 6.28318530717959
-///
-/// You can use `stride(from:through:by:)` to create a sequence that strides 
-/// upward or downward. Pass a negative value as `stride` to create a sequence 
-/// from a higher start to a lower end:
-///
-///     for countdown in stride(from: 3, through: 1, by: -1) {
-///         print("\(countdown)...")
-///     }
-///     // 3...
-///     // 2...
-///     // 1...
-///
-/// The value you pass as `end` is not guaranteed to be included in the 
-/// sequence. If stepping from `start` by `stride` does not produce `end`, 
-/// the last value in the sequence will be one step before going beyond `end`.
-///
-///     for multipleOfThree in stride(from: 3, through: 10, by: 3) {
-///         print(multipleOfThree)
-///     }
-///     // 3
-///     // 6
-///     // 9
-///
-/// If you pass a value as `stride` that moves away from `end`, the sequence 
-/// contains no values.
-///
-///     for x in stride(from: 0, through: 10, by: -1) {
-///         print(x)
-///     }
-///     // Nothing is printed.
-///
-/// - Parameters:
-///   - start: The starting value to use for the sequence. If the sequence
-///     contains any values, the first one is `start`.
-///   - end: An end value to limit the sequence. `end` is an element of
-///     the resulting sequence if and only if it can be produced from `start` 
-///     using steps of `stride`.
-///   - stride: The amount to step by with each iteration. A positive `stride`
-///     iterates upward; a negative `stride` iterates downward.
-/// - Returns: A sequence from `start` toward, and possibly including, `end`. 
-///   Each value in the sequence is separated by `stride`.
+/*
+ StrideThrough 和上面的唯一区别, 就是在 end 的判断上. 一个认为到达则是 nil, 一个认为越过了才是 nil.
+ */
 @inlinable
 public func stride<T>(
     from start: T, through end: T, by stride: T.Stride

@@ -1,69 +1,8 @@
-// FIXME: swift-3-indexing-model: Generalize all tests to check both
-// [Closed]Range.
-
-/// An interval from a lower bound up to, and including, an upper bound.
-///
-/// You create a `ClosedRange` instance by using the closed range
-/// operator (`...`).
-///
-///     let throughFive = 0...5
-///
-/// A `ClosedRange` instance contains both its lower bound and its
-/// upper bound.
-///
-///     throughFive.contains(3)
-///     // true
-///     throughFive.contains(10)
-///     // false
-///     throughFive.contains(5)
-///     // true
-///
-/// Because a closed range includes its upper bound, a closed range whose lower
-/// bound is equal to the upper bound contains that value. Therefore, a
-/// `ClosedRange` instance cannot represent an empty range.
-///
-///     let zeroInclusive = 0...0
-///     zeroInclusive.contains(0)
-///     // true
-///     zeroInclusive.isEmpty
-///     // false
-///
-/// Using a Closed Range as a Collection of Consecutive Values
-/// ----------------------------------------------------------
-///
-/// When a closed range uses integers as its lower and upper bounds, or any
-/// other type that conforms to the `Strideable` protocol with an integer
-/// stride, you can use that range in a `for`-`in` loop or with any sequence or
-/// collection method. The elements of the range are the consecutive values
-/// from its lower bound up to, and including, its upper bound.
-///
-///     for n in 3...5 {
-///         print(n)
-///     }
-///     // Prints "3"
-///     // Prints "4"
-///     // Prints "5"
-///
-/// Because floating-point types such as `Float` and `Double` are their own
-/// `Stride` types, they cannot be used as the bounds of a countable range. If
-/// you need to iterate over consecutive floating-point values, see the
-/// `stride(from:through:by:)` function.
 @frozen
 public struct ClosedRange<Bound: Comparable> {
-  /// The range's lower bound.
   public let lowerBound: Bound
-
-  /// The range's upper bound.
   public let upperBound: Bound
 
-  /// Creates an instance with the given bounds.
-  ///
-  /// Because this initializer does not perform any checks, it should be used
-  /// as an optimization only when you are absolutely certain that `lower` is
-  /// less than or equal to `upper`. Using the closed range operator (`...`)
-  /// to form `ClosedRange` instances is preferred.
-  ///
-  /// - Parameter bounds: A tuple of the lower and upper bounds of the range.
   @inlinable
   public init(uncheckedBounds bounds: (lower: Bound, upper: Bound)) {
     self.lowerBound = bounds.lower
@@ -73,10 +12,6 @@ public struct ClosedRange<Bound: Comparable> {
 
 // define isEmpty, which is available even on an uncountable ClosedRange
 extension ClosedRange {
-  /// A Boolean value indicating whether the range contains no elements.
-  ///
-  /// Because a closed range cannot represent an empty range, this property is
-  /// always `false`.
   @inlinable
   public var isEmpty: Bool {
     return false
@@ -92,16 +27,6 @@ extension ClosedRange: RangeExpression {
         lower: lowerBound, upper: collection.index(after: self.upperBound)))
   }
 
-  /// Returns a Boolean value indicating whether the given element is contained
-  /// within the range.
-  ///
-  /// A `ClosedRange` instance contains both its lower and upper bound.
-  /// `element` is contained in the range if it is between the two bounds or
-  /// equal to either bound.
-  ///
-  /// - Parameter element: The element to check for containment.
-  /// - Returns: `true` if `element` is contained in the range; otherwise,
-  ///   `false`.
   @inlinable
   public func contains(_ element: Bound) -> Bool {
     return element >= self.lowerBound && element <= self.upperBound

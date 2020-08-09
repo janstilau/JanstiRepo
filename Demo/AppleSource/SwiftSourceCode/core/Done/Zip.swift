@@ -1,4 +1,6 @@
 
+
+/// Zip 在这里是拉链的意思.
 /// Creates a sequence of pairs built out of two underlying sequences.
 ///
 /// In the `Zip2Sequence` instance returned by this function, the elements of
@@ -6,6 +8,7 @@
 /// following example uses the `zip(_:_:)` function to iterate over an array
 /// of strings and a countable range at the same time:
 ///
+///     这里, 是把 numbers 这个 range, 当做一个 sequence 了.
 ///     let words = ["one", "two", "three", "four"]
 ///     let numbers = 1...4
 ///
@@ -21,6 +24,7 @@
 /// resulting sequence is the same length as the shorter sequence. In this
 /// example, the resulting array is the same length as `words`:
 ///
+///     通过一个 sequence, 生成一个 array, 其实内部, 就是一个迭代的过程.
 ///     let naturalNumbers = 1...Int.max
 ///     let zipped = Array(zip(words, naturalNumbers))
 ///     // zipped == [("one", 1), ("two", 2), ("three", 3), ("four", 4)]
@@ -33,8 +37,8 @@
 
 /*
  这个方法, 会产生一个新的序列, 这个序列的内部, 每一个元素, 都是由相应位置的原始序列抽取出来的数据的pair.
+ 在简单的方法里面, 这么命名没有做, 1, 2, 不过, 还是 lhs, rhs 更加通用一点.
  */
-
 @inlinable // generic-performance
 public func zip<Sequence1, Sequence2>(
     _ sequence1: Sequence1, _ sequence2: Sequence2
@@ -51,11 +55,11 @@ public struct Zip2Sequence<Sequence1: Sequence, Sequence2: Sequence> {
     internal let _sequence1: Sequence1
     @usableFromInline // generic-performance
     internal let _sequence2: Sequence2
-    
-    /// Creates an instance that makes pairs of elements from `sequence1` and
-    /// `sequence2`.
     @inlinable // generic-performance
     internal init(_ sequence1: Sequence1, _ sequence2: Sequence2) {
+        /*
+         通过元组这种方式赋值, 在这个类基本不会有修改的时候, 是很优雅的做法.
+         */
         (_sequence1, _sequence2) = (sequence1, sequence2)
     }
 }
@@ -74,8 +78,6 @@ extension Zip2Sequence {
         internal var _baseStream2: Sequence2.Iterator
         @usableFromInline // generic-performance
         internal var _reachedEnd: Bool = false
-        
-        /// Creates an instance around a pair of underlying iterators.
         @inlinable // generic-performance
         internal init(
             _ iterator1: Sequence1.Iterator,

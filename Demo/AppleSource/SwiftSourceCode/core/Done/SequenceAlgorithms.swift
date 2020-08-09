@@ -1,6 +1,5 @@
 /*
  一个专门的, 定义 Sequence 算法的 extension 的集合.
- 他更像是泛型算法的集合.
  所有的操作, 都是建立在 可迭代的这个基础上的.
  */
 extension Sequence {
@@ -16,17 +15,61 @@ extension Sequence {
     }
 }
 
+/*
+ 这个类, 就是 Sequence 类的一层包装, 把每个返回来的数据, 增加了 index 值.
+ EnumeratedSequence 里面记录 baseSequence 的信息, 但是 index 是 iterator 记录的.
+ */
+
+@frozen
+public struct EnumeratedSequence<Base: Sequence> {
+  @usableFromInline
+  internal var _base: Base
+  @inlinable
+  internal init(_base: Base) {
+    self._base = _base
+  }
+}
+
+extension EnumeratedSequence {
+  @frozen
+  public struct Iterator {
+    @usableFromInline
+    internal var _base: Base.Iterator
+    @usableFromInline
+    internal var _count: Int // 这就是为什么会有 index 的原因, interator 里面, 把迭代的过程记录了下来.
+    @inlinable
+    internal init(_base: Base.Iterator) {
+      self._base = _base
+      self._count = 0
+    }
+  }
+}
+
+extension EnumeratedSequence.Iterator: IteratorProtocol, Sequence {
+  public typealias Element = (offset: Int, element: Base.Element)
+  @inlinable
+  public mutating func next() -> Element? {
+    guard let b = _base.next() else { return nil }
+    let result = (offset: _count, element: b)
+    _count += 1
+    return result
+  }
+}
+
+extension EnumeratedSequence: Sequence {
+  @inlinable
+  public __consuming func makeIterator() -> Iterator {
+    return Iterator(_base: _base.makeIterator())
+  }
+}
+
+
 //===----------------------------------------------------------------------===//
 // min(), max()
 //===----------------------------------------------------------------------===//
 
 extension Sequence {
-    /*
-     Min, Max 的逻辑, 和我们平时写的代码, 没有任何的区别.
-     这个定义在了 sequence 层面上, 以后的任何人, 都不用在重新写一遍遍历的逻辑了, 只要定义 areInIncreasingOrder 的逻辑就可以了.
-     */
     @inlinable // protocol-only
-    @warn_unqualified_access
     public func min(
         by areInIncreasingOrder: (Element, Element) throws -> Bool
     ) rethrows -> Element? {
@@ -53,7 +96,8 @@ extension Sequence {
 }
 
 /*
- 一般来说, C++ 里面的方法, 都是提供了默认操作符闭包的, 还有就是使用传递过来的闭包的.
+ 如果 Element: Comparable, 就可以直接使用操作符当做闭包传入了.
+ C++ 里面, 是编译的时候, 而 Swfit 里面, 则是通过协议进行的限制.
  */
 extension Sequence where Element: Comparable {
     @inlinable
@@ -72,11 +116,12 @@ extension Sequence where Element: Comparable {
 //===----------------------------------------------------------------------===//
 // starts(with:)
 //===----------------------------------------------------------------------===//
-
+/*
+ 一个序列的前半部分, 是否是另一个序列. 就是不断的迭代, 判断相同位置的值是否相等.
+ C++ 的泛型算法里面, 也有完全类似的功能.
+ 可见, Swift 的面向协议编程, 只是将原来的通用功能, 用一种更好的方式, 进行了组织.
+*/
 extension Sequence  {
-    /*
-     一个序列的前半部分, 是否是另一个序列. 就是不断的迭代, 判断相同位置的值是否相等.
-     */
     @inlinable
     public func starts<PossiblePrefix: Sequence>(
         with possiblePrefix: PossiblePrefix,
@@ -108,11 +153,11 @@ extension Sequence where Element: Equatable {
 //===----------------------------------------------------------------------===//
 // elementsEqual()
 //===----------------------------------------------------------------------===//
-
+/*
+ elementsEqual, 就是不断的进行迭代, 比较相同位置的元素是否都一样.
+*/
 extension Sequence {
-    /*
-     elementsEqual, 就是不断的进行迭代, 比较相同位置的元素是否都一样.
-     */
+    
     @inlinable
     public func elementsEqual<OtherSequence: Sequence>(
         _ other: OtherSequence,
@@ -222,10 +267,12 @@ extension Sequence {
 
 extension Sequence where Element: Equatable {
     @inlinable
+    /*
+     _customContainsEquatableElement
+     如果你的类有更好的设计, 可以快速的判断出 contians 来, 那么就用你的设计.
+     否则, 就使用 contains 来判断, contains 使用迭代的方式, 来判断.
+     */
     public func contains(_ element: Element) -> Bool {
-        /*
-         不太明白这个 _customContainsEquatableElement 到底是想要做什么.
-         */
         if let result = _customContainsEquatableElement(element) {
             return result
         } else {

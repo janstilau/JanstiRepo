@@ -11,40 +11,9 @@
 /// 传统的迭代器, 会记录一下它所迭代容器, 以及当前迭代的位置.
 /// 但是迭代器里面记录什么状态, 比如 Array 只记录索引,  Dict 记录 Node 值, 是不一样的, Swift 的迭代, 变成了只提供 NextObject 这个能力的抽象.
 ///
-/// Whenever you use a `for`-`in` loop with an array, set, or any other
-/// collection or sequence, you're using that type's iterator. Swift uses a
-/// sequence's or collection's iterator internally to enable the `for`-`in`
-/// loop language construct.
-///
-/// Using a sequence's iterator directly gives you access to the same elements
-/// in the same order as iterating over that sequence using a `for`-`in` loop.
-/// For example, you might typically use a `for`-`in` loop to print each of
-/// the elements in an array.
-///
-///     let animals = ["Antelope", "Butterfly", "Camel", "Dolphin"]
-///     for animal in animals {
-///         print(animal)
-///     }
-///     // Prints "Antelope"
-///     // Prints "Butterfly"
-///     // Prints "Camel"
-///     // Prints "Dolphin"
-///
-///
-/// Behind the scenes, Swift uses the `animals` array's iterator to loop over
-/// the contents of the array.
-///
 ///     For in 循环, 就是 while 循环, 和迭代器的综合使用的结果.
 ///     next 就是 * 操作符, ++ 操作符的结合体.
 ///     语言就是大号的语法糖的工厂.
-///     var animalIterator = animals.makeIterator()
-///     while let animal = animalIterator.next() {
-///         print(animal)
-///     }
-///     // Prints "Antelope"
-///     // Prints "Butterfly"
-///     // Prints "Camel"
-///     // Prints "Dolphin"
 ///
 /// The call to `animals.makeIterator()` returns an instance of the array's
 /// iterator. Next, the `while` loop calls the iterator's `next()` method
@@ -68,53 +37,13 @@
 /// 函数式编程里面, 提供了很多的特殊函数. 这些特殊函数, 就是对于迭代过程的封装. 由于 forin 里面, 直接控制了迭代过程, 所以用 forin 无法自定义迭代的控制.
 /// 在这些函数里面, 是直接使用了迭代器. 这些函数起到的作用, 和 forin 是一样的, 就是控制逻辑的固化. 然后提供了一个可以自定义的业务点, 这个业务点, 是用闭包的形式, 给与了使用者一个新的扩展点.
 ///
-/// One example is the `reduce1(_:)` method. Similar to the `reduce(_:_:)`
-/// method defined in the standard library, which takes an initial value and a
-/// combining closure, `reduce1(_:)` uses the first element of the sequence as
-/// the initial value.
-///
-/// Here's an implementation of the `reduce1(_:)` method. The sequence's
-/// iterator is used directly to retrieve the initial value before looping
-/// over the rest of the sequence.
-///
-///     extension Sequence {
-///         func reduce1(
-///             _ nextPartialResult: (Element, Element) -> Element
-///         ) -> Element?
-///         {
-///         // 在 Swift 里面, 多多的使用 guard 函数.
-///             var i = makeIterator()
-///             guard var accumulated = i.next() else {
-///                 return nil
-///             }
-///
-///             while let element = i.next() {
-///                 accumulated = nextPartialResult(accumulated, element)
-///             }
-///             return accumulated
-///         }
-///     }
-///
-/// The `reduce1(_:)` method makes certain kinds of sequence operations
-/// simpler. Here's how to find the longest string in a sequence, using the
-/// `animals` array introduced earlier as an example:
-///     let longestAnimal = animals.reduce1 { current, element in
-///         if current.count > element.count {
-///             return current
-///         } else {
-///             return element
-///         }
-///     }
-///     print(longestAnimal)
-///     // Prints "Butterfly"
-
 
 
 /// Using Multiple Iterators
 /// ========================
 
 /// Sequence 不保证, 是可以多次迭代的. 如果你要多次使用, 自己把握.
-/// 如果你知道是可以多次迭代的, 或者有把控是 Collection , 因为 Collection 协议保证了是多次可迭代的.
+/// 如果你知道是可以多次迭代的, 或者可以确定操作的对象是 Collection , 因为 Collection 协议保证了是多次可迭代的.
 /// Whenever you use multiple iterators (or `for`-`in` loops) over a single
 /// sequence, be sure you know that the specific sequence supports repeated
 /// iteration, either because you know its concrete type or because the
@@ -123,8 +52,8 @@
 
 
 // 不要传递迭代器, 传递迭代器本身是安全的, 但是一个迭代器的 next, 可能会改变 Sequence 的状态. 导致其他迭代器执行的时候, 得到的是另外一个值.
-// 这会出现在, 佛波那契队列的 sequence 里面. 所以, 除非你特别清楚这个队列的底层实现, 不要假设, 这个队列是稳定的.
 // 不过, 从以往的使用来说, 传递迭代器这件事基本没做过.
+
 /// Obtain each separate iterator from separate calls to the sequence's
 /// `makeIterator()` method rather than by copying. Copying an iterator is
 /// safe, but advancing one copy of an iterator by calling its `next()` method
@@ -133,69 +62,14 @@
 ///
 /// Adding IteratorProtocol Conformance to Your Type
 /// ================================================
-///
+/// 基本上来说, 如果你要提供一个特殊的序列, 那么就要提供一下与之相配对的迭代器. 然后, 把取值的逻辑, 放到这个迭代器类中.
+///  每个  Sequence 所能够获取的 Iterator, 都是和这个 Sequence 相关的. 可以说, 就是它的内部类.
+///  序列, 更多的是一个可遍历的概念, 而容器, 则是进行存储的状态的场所.
+///  获取当前值, 是迭代器的功能, 这个功能可以是从容器中获取值, 也可以是迭代器算出来的.
 /// Implementing an iterator that conforms to `IteratorProtocol` is simple.
 /// Declare a `next()` method that advances one step in the related sequence
 /// and returns the current element. When the sequence has been exhausted, the
 /// `next()` method returns `nil`.
-///
-/// For example, consider a custom `Countdown` sequence. You can initialize the
-/// `Countdown` sequence with a starting integer and then iterate over the
-/// count down to zero. The `Countdown` structure's definition is short: It
-/// contains only the starting count and the `makeIterator()` method required
-/// by the `Sequence` protocol.
-///
-/// 每个  Sequence 所能够获取的 Iterator, 都是和这个 Sequence 相关的. 可以说, 就是它的内部类.
-///  序列, 更多的是一个可遍历的概念, 而容器, 则是进行存储的状态的场所.
-///  获取当前值, 是迭代器的功能, 这个功能可以是从容器中获取值, 也可以是迭代器算出来的.
-///
-///     struct Countdown: Sequence {
-///         let start: Int
-///
-///
-///         func makeIterator() -> CountdownIterator {
-///             return CountdownIterator(self)
-///         }
-///     }
-///
-/// The `makeIterator()` method returns another custom type, an iterator named
-/// `CountdownIterator`. The `CountdownIterator` type keeps track of both the
-/// `Countdown` sequence that it's iterating and the number of times it has
-/// returned a value.
-///
-///     struct CountdownIterator: IteratorProtocol {
-///         let countdown: Countdown
-///         var times = 0
-///
-///         init(_ countdown: Countdown) {
-///             self.countdown = countdown
-///         }
-///
-///         mutating func next() -> Int? {
-///             let nextNumber = countdown.start - times
-///             guard nextNumber > 0 // 大量大量地去使用 guard 函数, 在 swift 中.
-///                 else { return nil }
-///
-///             times += 1
-///             return nextNumber
-///         }
-///     }
-///
-/// Each time the `next()` method is called on a `CountdownIterator` instance,
-/// it calculates the new next value, checks to see whether it has reached
-/// zero, and then returns either the number, or `nil` if the iterator is
-/// finished returning elements of the sequence.
-///
-/// Creating and iterating over a `Countdown` sequence uses a
-/// `CountdownIterator` to handle the iteration.
-///
-///     let threeTwoOne = Countdown(start: 3)
-///     for count in threeTwoOne {
-///         print("\(count)...")
-///     }
-///     // Prints "3..."
-///     // Prints "2..."
-///     // Prints "1..."
 
 /*
  associatedtype, 其实就是协议里面的泛型而已.
@@ -204,77 +78,21 @@ public protocol IteratorProtocol {
     /// The type of element traversed by the iterator.
     associatedtype Element
     
-    /// Advances to the next element and returns it, or `nil` if no next element
-    /// exists.
-    ///
-    /// Repeatedly calling this method returns, in order, all the elements of the
-    /// underlying sequence. As soon as the sequence has run out of elements, all
-    /// subsequent calls return `nil`.
-    ///
-    /// You must not call this method if any other copy of this iterator has been
-    /// advanced with a call to its `next()` method.
-    /// 这里是怕,  copied iterator 的 next, 将序列的状态进行了消耗.
-    ///
-    /// The following example shows how an iterator can be used explicitly to
-    /// emulate a `for`-`in` loop. First, retrieve a sequence's iterator, and
-    /// then call the iterator's `next()` method until it returns `nil`.
-    ///
-    ///     let numbers = [2, 3, 5, 7]
-    ///     var numbersIterator = numbers.makeIterator()
-    ///
-    ///     while let num = numbersIterator.next() {
-    ///         print(num)
-    ///     }
-    ///     // Prints "2"
-    ///     // Prints "3"
-    ///     // Prints "5"
-    ///     // Prints "7"
-    ///
-    /// - Returns: The next element in the underlying sequence, if a next element
-    ///   exists; otherwise, `nil`.
-    ///
-    /// 这里标注 mutating, 是因为, 对于大部分的迭代器来说, 还是要在内部存储一下迭代的状态的.
+    /// mutating, 是因为, 对于大部分的迭代器来说, 还是要在内部存储一下迭代的状态的
+    /// 这个方法, 是可以重复使用的, 只不过在 exhaust 之后, 一直返回 nil 了就. 所以, iterator 内部, 一定要记录好, 是不是已经到头了.
     mutating func next() -> Element?
 }
 
-/// A type that provides sequential, iterated access to its elements.
-///
-/// A sequence is a list of values that you can step through one at a time. The
-/// most common way to iterate over the elements of a sequence is to use a
-/// `for`-`in` loop:
-///
-///     let oneTwoThree = 1...3
-///     for number in oneTwoThree {
-///         print(number)
-///     }
-///     // Prints "1"
-///     // Prints "2"
-///     // Prints "3"
+/// Squence 的概念很简单, 就是可以迭代取值的一个抽象对象. 这个值, 如何得到, 是在容器里面, 还是动态生成的, 他不管.
 ///
 /// 这里说的很清楚了, 这就是一个 primitiveMethod.
 /// 很多的方法, 都是建立在这个基本方法之上的.
 ///
-/// 这些方法, 提供了通用的逻辑, 然后提供了可以变化的参数, 一般来说是一个 Block.
+///  这些方法, 提供了通用的逻辑, 然后提供了可以变化的参数, 一般来说是一个 Block.
 ///  通过这个 Block, 可以做业务上的变化.
-///  Protocol 这种设计的方式, 将方法, 操作的能力, 抽象到了一个类中. 其他的类, 通过实现这个类的基本方法, 自动的继承了那些高级能力. 这个过程是自适应的.
-///
-/// While seemingly simple, this capability gives you access to a large number
-/// of operations that you can perform on any sequence. As an example, to
-/// check whether a sequence includes a particular value, you can test each
-/// value sequentially until you've found a match or reached the end of the
-/// sequence. This example checks to see whether a particular insect is in an
-/// array.
-///
-///     let bugs = ["Aphid", "Bumblebee", "Cicada", "Damselfly", "Earwig"]
-///     var hasMosquito = false
-///     for bug in bugs {
-///         if bug == "Mosquito" {
-///             hasMosquito = true
-///             break
-///         }
-///     }
-///     print("'bugs' has a mosquito: \(hasMosquito)")
-///     // Prints "'bugs' has a mosquito: false"
+///  Protocol 这种设计的方式, 将方法, 操作的能力, 抽象到了一个类中.
+///  其他的类, 通过实现这个类的基本方法, 自动的继承了那些高级能力. 这个过程是自适应的.
+///  这是一种非常高级的, 可以做到代码复用的能力. 不过, 会让整个系统类库变得很复杂.
 ///
 /// The `Sequence` protocol provides default implementations for many common
 /// operations that depend on sequential access to a sequence's values. For
@@ -290,48 +108,11 @@ public protocol IteratorProtocol {
 ///     // Prints "Whew, no mosquitos!"
 ///
 ///
-///
-/// Repeated Access 不保证.
+/// Repeated Access 不保证. 不过, 平时使用的还是容器, 对于容器 Collection 来说, 可重复遍历是标配.
 /// ===============
 ///
-/// The `Sequence` protocol makes no requirement on conforming types regarding
-/// whether they will be destructively consumed by iteration. As a
-/// consequence, don't assume that multiple `for`-`in` loops on a sequence
-/// will either resume iteration or restart from the beginning:
-///
-///     for element in sequence {
-///         if ... some condition { break }
-///     }
-///
-///     for element in sequence {
-///         // No defined behavior
-///     }
-///
-/// In this case, you cannot assume either that
-/// a sequence will be consumable and will resume iteration, or that
-/// a sequence is a collection and will restart iteration from the first element
-///  A conforming sequence that is
-/// not a collection is allowed to produce an arbitrary sequence of elements
-/// in the second `for`-`in` loop.
-///
-/// To establish that a type you've created supports nondestructive iteration,
-/// add conformance to the `Collection` protocol.
-///
-///
-///
-///
-/// Conforming to the Sequence Protocol
+/// Conforming to the Sequence Protocol 对于一个序列来说, 一定要实现对应的 iterator. 真正的取值, 是放在 iterator 里面的. Iterator, 通过序列提供的方法, 进行取值操作, 然后将值进行进一步的处理.
 /// ===================================
-///
-/// Making your own custom types conform to `Sequence` enables many useful
-/// operations, like `for`-`in` looping and the `contains` method, without
-/// much effort. To add `Sequence` conformance to your own custom type, add a
-/// `makeIterator()` method that returns an iterator.
-///
-/// Alternatively, if your type can act as its own iterator, implementing the
-/// requirements of the `IteratorProtocol` protocol and declaring conformance
-/// to both `Sequence` and `IteratorProtocol` are sufficient.
-///
 ///
 /// 只要某个类, next() 方法实现了, 那么它就可以迭代自己. 默认的 makeIterator 的实现, 就是返回自己.
 ///
@@ -360,50 +141,40 @@ public protocol IteratorProtocol {
 ///     // Prints "2"
 ///     // Prints "1"
 ///
-/// Expected Performance
-/// ====================
-///
-/// A sequence should provide its iterator in O(1). The `Sequence` protocol
-/// makes no other requirements about element access, so routines that
-/// traverse a sequence should be considered O(*n*) unless documented
-/// otherwise.
 public protocol Sequence {
-    /// A type representing the sequence's elements.
     associatedtype Element
-    
-    /// A type that provides the sequence's iteration interface and
-    /// encapsulates its iteration state.
-    /// encapsulates its iteration state 这个就表明了, iterator 是要进行状态的保存的.
+    /// 迭代器类型的 Element 要和 Sequence 的一致, 也就是在泛型里面, 增加了限制.
     associatedtype Iterator: IteratorProtocol where Iterator.Element == Element
     
-    /// Returns an iterator over the elements of this sequence.
+    /// 最重要的方法, 返回一个迭代器, 在迭代器中, 进行取值操作和状态管理.
     func makeIterator() -> Iterator
     
-    /// A value less than or equal to the number of elements in the sequence,
-    /// calculated nondestructively.
-    ///
-    /// The default implementation returns 0. If you provide your own
-    /// implementation, make sure to compute the value nondestructively.
-    ///
     /// - Complexity: O(1), except if the sequence also conforms to `Collection`.
     ///   In this case, see the documentation of `Collection.underestimatedCount`.
     ///
-    /// 这个值, 做了一个提升效率的值, 来进行容器的初始化操作.
+    /// 这个值, 目前只用在了容器的初始化操作里了. 容器要存放 sequence 里面的值, 可能会有扩容的处理. 提前进行 bucket 的分配, 可以大大减少搬移数据的次数.
     var underestimatedCount: Int { get }
     
+    /*
+     这个也是为了提升效率的. Contains 的逻辑, 是从头到尾遍历然后判断相等.
+     但是如果实现类, 有着快速的版本判断, 就重写该方法. 比如, set, dict, range, 都是能在 O(1) 中实现判断的.
+     contains 首先判断该函数, 如果不能确定结果, 在会去走 contains 的默认实现.
+     contains 可以算作是, 模板方法, 该函数, 就是模板方法的切口.
+     */
     func _customContainsEquatableElement(
         _ element: Element
     ) -> Bool?
     
-    /// Create a native array buffer containing the elements of `self`,
-    /// in the same order.
     /*
-     ContiguousArray 可以认为是 Swift 版本的数组的主要版本. 基本上, Sequence 作为一个序列的概念, 变换为数组, 是很常见的事情.
+     ContiguousArray 可以认为是 Swift 版本的数组的主要版本.
+     基本上, Sequence 作为一个序列的概念, 变换为数组, 是很常见的事情.
      */
     __consuming func _copyToContiguousArray() -> ContiguousArray<Element>
     
-    /// Copy `self` into an unsafe buffer, returning a partially-consumed
-    /// iterator with any elements that didn't fit remaining.
+    /*
+     这个函数, 是一个比较底层的函数, 一般系统类库才会使用.
+     首先要提前分配出一块物理空间来, 然后将 Sequence 里面的值, 搬到该空间上.
+     */
     __consuming func _copyContents(
         initializing ptr: UnsafeMutableBufferPointer<Element>
     ) -> (Iterator,UnsafeMutableBufferPointer<Element>.Index)
@@ -423,16 +194,15 @@ public protocol Sequence {
     ) rethrows -> R?
 }
 
-// Provides a default associated type witness for Iterator when the
-// Self type is both a Sequence and an Iterator.
 extension Sequence where Self: IteratorProtocol {
-    // @_implements(Sequence, Iterator)
     public typealias _Default_Iterator = Self
 }
 
-/// A default makeIterator() function for `IteratorProtocol` instances that
-/// are declared to conform to `Sequence`
-/// 在泛型函数的书写时, 任何限制, 都是建立在类型的基础上, 而不是对象保存的值的基础上.
+/*
+ 如果, Seuqnce 的内部, 实现了 next 方法, 那么自己就可以充当迭代器.
+ 不建议这样, 因为迭代的状态, 是需要管理的, 如果 sequence 自己管理, 多次迭代之间, 把这个值重置下.
+ 还是单独一个对象, 进行单次迭代的管理, 比较好操作.
+ */
 extension Sequence where Self.Iterator == Self {
     /// Returns an iterator over the elements of this sequence.
     @inlinable
@@ -441,10 +211,6 @@ extension Sequence where Self.Iterator == Self {
     }
 }
 
-/// A sequence that lazily consumes and drops `n` elements from an underlying
-/// `Base` iterator before possibly returning the first available element.
-///
-/// The underlying iterator's sequence may be infinite.
 /*
  一个 sequence 的适配器.
  */
@@ -454,7 +220,6 @@ public struct DropFirstSequence<Base: Sequence> {
     internal let _base: Base // 适配器, 保存原始的对象.
     @usableFromInline
     internal let _limit: Int // 适配器中, 自己业务逻辑需要存储的值.
-    
     @inlinable
     public init(_ base: Base, dropping limit: Int) {
         _precondition(limit >= 0,
@@ -465,17 +230,25 @@ public struct DropFirstSequence<Base: Sequence> {
 }
 
 /*
+ 一个类, 它的自己的定义, 放在一个区块里面.
+ 它对于协议的适配, 放到另外一个区块里面, 让代码清晰了不少.
+ 配置 Swift 的访问权限控制, 让代码更好维护.
+ */
+
+/*
  并不是, 这些包装类进行了延迟计算的功能, 本身迭代就是一个延迟计算的东西.
  就算是容器取值, 他也是在需要时才进行取值, 而不是生成迭代器, 就把所有的值都取了出来.
  如果, base 是一个数组, 当然可以直接 +n. 但是, 作为 sequence 来说, 他并不能确认自己能够 randomAccess, 所以这里就是循环进行.
- 
- DropFirst 不要前面几个数据, 直接从后面开始. 这种操作, 比复制能够节省大量的资源.
  */
 extension DropFirstSequence: Sequence {
     public typealias Element = Base.Element
     public typealias Iterator = Base.Iterator
     public typealias SubSequence = AnySequence<Element>
     
+    /*
+     为什么不把这个过程, 放到 iterator 内部呢.
+     当然, 这个类没有专门定义一个 DropFirstIterater. 不过, 其他的几个实现过程, 都是这样做的, 统一下其实比较好.
+     */
     @inlinable
     public __consuming func makeIterator() -> Iterator {
         var it = _base.makeIterator()
@@ -484,31 +257,25 @@ extension DropFirstSequence: Sequence {
         return it
     }
     
+    /*
+     如果, 一个 dropSequence 还想继续 drop, 仅仅是一个值的相加而已. 没有任何的数据的搬移工作.
+     */
     @inlinable
     public __consuming func dropFirst(_ k: Int) -> DropFirstSequence<Base> {
-        // If this is already a _DropFirstSequence, we need to fold in
-        // the current drop count and drop limit so no data is lost.
-        //
-        // i.e. [1,2,3,4].dropFirst(1).dropFirst(1) should be equivalent to
-        // [1,2,3,4].dropFirst(2).
         return DropFirstSequence(_base, dropping: _limit + k)
     }
 }
 
-/// A sequence that only consumes up to `n` elements from an underlying
-/// `Base` iterator.
-///
-/// The underlying iterator's sequence may be infinite.
 /*
- 这里, 只是这个类的定义. 它实现的功能, 要在 extension 里面.
- */
+Sequence 仅仅做的是, 相关值的记录, 然后把相关的值, 传递到自己的 Iterator 里面.
+迭代过程的数值, 都记录在 Iterator 的内部. 这样, 多次迭代, 也就没有问题了.
+*/
 @frozen
 public struct PrefixSequence<Base: Sequence> {
     @usableFromInline
     internal var _base: Base
     @usableFromInline
     internal let _maxLength: Int
-    
     @inlinable
     public init(_ base: Base, maxLength: Int) {
         _base = base
@@ -517,10 +284,7 @@ public struct PrefixSequence<Base: Sequence> {
 }
 
 /*
- 它的 Iterator, 也仅仅是做值的拷贝工作.
- 这应该算是 baseIterator 的代理类.
- 和他相关的类型的定义, 也没有方法最原始的定义区域里面, 而是放到了 extension 里面.
- _maxLength 的值, 是存在 prefixSequence 里面的, 但是过程值, 是存在各个 Iterator 的 _remaining 里面的.
+ PrefixSequence 的内部类 Iterator 的定义, 和对于 IteratorProtocol 的实现, 都是分开的. 是不是有点太过于繁琐了.
  */
 extension PrefixSequence {
     @frozen
@@ -529,7 +293,6 @@ extension PrefixSequence {
         internal var _base: Base.Iterator
         @usableFromInline
         internal var _remaining: Int
-        
         @inlinable
         internal init(_ base: Base.Iterator, maxLength: Int) {
             _base = base
@@ -537,14 +300,9 @@ extension PrefixSequence {
         }
     }
 }
-/*
- PrefixSequence.Iterator 的定义, 和他实现 IteratorProtocol 的方法实现, 分开了.
- 这里, 只要是类型, 符合一个协议, 在 Swift 里面, 都是用的扩展的方式完成的.
- 虽然 Iterator 仅仅有一个协议, 这个协议只有一个方法, 但是还是进行了分离.
- */
+
 extension PrefixSequence.Iterator: IteratorProtocol {
     public typealias Element = Base.Element
-    
     @inlinable
     public mutating func next() -> Element? {
         if _remaining != 0 {
@@ -556,16 +314,14 @@ extension PrefixSequence.Iterator: IteratorProtocol {
     }
 }
 
+/*
+ PrefixSequence 对于 Sequence 的实现
+ */
 extension PrefixSequence: Sequence {
     @inlinable
-    
     public __consuming func makeIterator() -> Iterator {
         return Iterator(_base.makeIterator(), maxLength: _maxLength)
     }
-    
-    /*
-     这里, 在自己的基础上, 返回了个 PrefixSequence, 就是将 base 和 新生成的 length 传入进入.
-    */
     @inlinable
     public __consuming func prefix(_ maxLength: Int) -> PrefixSequence<Base> {
         let length = Swift.min(maxLength, self._maxLength)
@@ -573,14 +329,14 @@ extension PrefixSequence: Sequence {
     }
 }
 
-/*
- 既然, 知道了实现原理, 就可以通过对于这些原理的利用, 做出自己想要的东西. 所以, 知其所以然来说, 还是很重要的.
- */
 
-/// A sequence that lazily consumes and drops `n` elements from an underlying
-/// `Base` iterator before possibly returning the first available element.
-///
-/// The underlying iterator's sequence may be infinite.
+
+
+
+/*
+ Returns a sequence by skipping the initial, consecutive elements that satisfy the given predicate.
+ 既然这个类, 都已经有了自己的 iterator 了, 感觉还是应该把前期过滤的事情, 放到自己的 iterator 的 next 方法里面.
+ */
 @frozen
 public struct DropWhileSequence<Base: Sequence> {
     public typealias Element = Base.Element
@@ -590,14 +346,11 @@ public struct DropWhileSequence<Base: Sequence> {
     @usableFromInline
     internal var _nextElement: Element?
     
-    /*
-     在初始化方法里面, 就对 Sequence 里面的值, 进行一次过滤的操作, 直到最终到达一个符合 predicate 的点.
-     */
     @inlinable
     internal init(iterator: Base.Iterator, predicate: (Element) throws -> Bool) rethrows {
         _iterator = iterator
         _nextElement = _iterator.next()
-        
+        // predicate 是 throws 的, 那么调用的时候, 就要增加上 try.
         while let x = _nextElement, try predicate(x) {
             _nextElement = _iterator.next()
         }
@@ -651,39 +404,24 @@ extension DropWhileSequence: Sequence {
     }
 }
 
-//===----------------------------------------------------------------------===//
-// Default implementations for Sequence
-//===----------------------------------------------------------------------===//
+/*
+ Sequence 的一些工具方法. 在平常, 要大量使用这些工具方法.
+ 一定要多多使用这些方法. 因为
+ 1. 这种写法, 是现在非常流行的写法
+ 2. 代码更加整洁
+ 3. 减少了出错的可能, 在熟知各个方法的内部逻辑后, 基本上, 不用在考虑那些胶水函数了.
+ */
 
 /*
  下面, 所有的 Sequence 的 extension, 都是根据 Sequence 提供的可迭代的能力, 封装了相关功能的通用逻辑, 提出了业务变化点.
  使用这些方法的时候, 一定要是在这些方法对应的场景下.
- 
- 比如, 使用 map, 其实也能够达到 forEach 的功能. 但是, map 的实际效果, 是返回一个包含所有变化闭包结果的数组, 而不是仅仅是做某些操作.
  熟知每个方法的内部实现, 使用对应名称的方法, 能够使得代码更加的觉有自解释性.
  尽量使用, 符合业务功能含义的方法. 而不是能够实现功能, 使用了错误的方法.
  */
 extension Sequence {
-    /// Returns an array containing the results of mapping the given closure
-    /// over the sequence's elements.
-    ///
-    /// In this example, `map` is used first to convert the names in the array
-    /// to lowercase strings and then to count their characters.
-    ///
-    ///     let cast = ["Vivien", "Marlon", "Kim", "Karl"]
-    ///     let lowercaseNames = cast.map { $0.lowercased() }
-    ///     // 'lowercaseNames' == ["vivien", "marlon", "kim", "karl"]
-    ///     let letterCounts = cast.map { $0.count }
-    ///     // 'letterCounts' == [6, 6, 3, 4]
-    ///
-    /// 这种流式的写法, 进行了很多次的遍历操作, 但是, 每个操作都很独立, 在提供了这种写法之后, 复用性得到了大大的加强.
-    /// - Parameter transform: A mapping closure. `transform` accepts an
-    ///   element of this sequence as its parameter and returns a transformed
-    ///   value of the same or of a different type.
-    /// - Returns: An array containing the transformed elements of this
-    ///   sequence.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
+    /*
+     返回一个数组, 将各个元组通过 transform 处理之后, 添加到这个数组内部.
+     */
     @inlinable
     public func map<T>(
         _ transform: (Element) throws -> T
@@ -692,12 +430,6 @@ extension Sequence {
         let initialCapacity = underestimatedCount
         var result = ContiguousArray<T>()
         result.reserveCapacity(initialCapacity) // 扩容.
-        /*
-         通过 primitiveMethod, 获取数据, 然后进行业务处理.
-         这里, underestimatedCount 以下的, 直接进行添加, 这里不用考虑数组扩容.
-         超过了之后, 如果还没有遍历结束, 尝试进行添加.
-         所以, underestimatedCount 一定要返回一个有意义的值.
-         */
         var iterator = self.makeIterator()
         // Add elements up to the initial capacity without checking for regrowth.
         for _ in 0..<initialCapacity {
@@ -708,8 +440,7 @@ extension Sequence {
             result.append(try transform(element))
         }
         /*
-         其实, map 的操作, 很简单, 但是主要是, 方法提供了这一层抽象, 它就能进行下一层的操作. 比如链式编程.
-         在 Array 里面, 根据 ContiguousArray 进行初始化, 一定有着简化的操作. 例如, 直接拿里面的指针, 当做 Array 的数据.
+         Array 通过 ContiguousArray 进行初始化非常快, 因为 Array 内部的存储, 就是利用的 ContiguousArray.
          */
         return Array(result)
     }
@@ -722,41 +453,35 @@ extension Sequence {
     }
     
     /*
-     这里面的代码都很简单, 但是, 如果每次写业务的时候, 这些代码又会大量的占用空间.
-     ContiguousArray 是 Array 的实际内存表示. 里面会有这各种对于内存的考虑, 例如写时复制, 动态扩容等等.
+     只返回符合 isIncluded 的 element.
+     注意, 这里返回去的, 如果 element 是值语义的, 是会有值的拷贝的.
      */
     @_transparent
     public func _filter(
         _ isIncluded: (Element) throws -> Bool
     ) rethrows -> [Element] {
-        
         var result = ContiguousArray<Element>()
-        
         var iterator = self.makeIterator()
-        
         while let element = iterator.next() {
             if try isIncluded(element) {
                 result.append(element)
             }
         }
-        
         return Array(result)
     }
     
-    /// A value less than or equal to the number of elements in the sequence,
-    /// calculated nondestructively.
-    /// 这里写的很明确了, 必须是等于或者小于自己的个数, 所以上面直接 transform(iterator.next()!) 使用了. 如果返回值超过了自己的个数, 那是实现者的责任. 没有按照接口定义的含义来实现.
-    /// The default implementation returns 0. If you provide your own
-    /// implementation, make sure to compute the value nondestructively.
-    ///
-    ///  这是一个帮助提升效率的值, 所以, 应该是 O1
-    /// - Complexity: O(1), except if the sequence also conforms to `Collection`.
-    ///   In this case, see the documentation of `Collection.underestimatedCount`.
+    /*
+     这个值, 用于提升效率, 容器一般都知道自己的容量, 普通的 sequence, 返回 0.
+     */
     @inlinable
     public var underestimatedCount: Int {
         return 0
     }
     
+    /*
+     如果, 实现类有着更加快速的 contains 寻找方式, 比如哈希表, 排序数组, 那么就重载这个方法.
+     否则, sequence 的 contains, 是迭代判断相等进行查找的.
+     */
     @inlinable
     @inline(__always)
     public func _customContainsEquatableElement(
@@ -765,6 +490,10 @@ extension Sequence {
         return nil
     }
     
+    /*
+     迭代, 每个进行 body 的调用.
+     这个方法, 使用的频率比较低, 因为没有办法停下来. 使用 forin 是同样的效果, 还有更多的操作空间.
+     */
     @inlinable
     public func forEach(
         _ body: (Element) throws -> Void
@@ -776,16 +505,14 @@ extension Sequence {
 }
 
 extension Sequence {
-    
-    /*
-     就是一个遍历的过程.
-     */
     @inlinable
+    /*
+     返回第一个满足条件的 element, 因为可能不存在, 返回值是 optional
+     */
     public func first(
         where predicate: (Element) throws -> Bool
     ) rethrows -> Element? {
         for element in self {
-            // 任何有 throws 的地方, 都要加 try. 而传递闭包的人, 是不用加 try 的.
             if try predicate(element) {
                 return element
             }
@@ -796,34 +523,32 @@ extension Sequence {
 
 extension Sequence {
     
-    /// Returns a subsequence, up to the given maximum length, containing the
-    /// final elements of the sequence.
-    ///
-    /// The sequence must be finite. If the maximum length exceeds the number of
-    /// elements in the sequence, the result contains all the elements in the
-    /// sequence.
-    ///
-    ///     let numbers = [1, 2, 3, 4, 5]
-    ///     print(numbers.suffix(2))
-    ///     // Prints "[4, 5]"
-    ///     print(numbers.suffix(10))
-    ///     // Prints "[1, 2, 3, 4, 5]"
-    ///
-    /// - Parameter maxLength: The maximum number of elements to return. The
-    ///   value of `maxLength` must be greater than or equal to zero.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
+    /*
+     返回序列的后面几个值, 装到数组中.
+     下面试 Collection 的定义. Collection 会利用自己的 subscript, 进行更快速的实现.
+     @inlinable
+     public __consuming func suffix(_ maxLength: Int) -> SubSequence {
+         _precondition(
+             maxLength >= 0,
+             "Can't take a suffix of negative length from a collection")
+         let amount = Swift.max(0, count - maxLength)
+         let start = index(startIndex,
+                           offsetBy: amount, limitedBy: endIndex) ?? endIndex
+         return self[start..<endIndex]
+     }
+     */
     @inlinable
     public __consuming func suffix(_ maxLength: Int) -> [Element] {
-        _precondition(maxLength >= 0, "Can't take a suffix of negative length from a sequence")
         guard maxLength != 0 else { return [] }
-        
+        // 生成容器
         var ringBuffer = ContiguousArray<Element>()
         ringBuffer.reserveCapacity(Swift.min(maxLength, underestimatedCount))
-        
         var i = 0
         
-        // 这里, 是全部都装了一次, 满了就进行替换工作.
+        /*
+         由于 Sequence 没有办法随机访问, 这里会有一个轮替的算法.
+         和链表的最后几个元素一样, 可以使用那个算法.
+         */
         for element in self {
             if ringBuffer.count < maxLength {
                 ringBuffer.append(element)
@@ -832,7 +557,6 @@ extension Sequence {
                 i = (i + 1) % maxLength
             }
         }
-        // 到最后, ringBuffer 里面的, 一定是要留下来的数据, 只不过可能 i 在中间位置. 要做一次前后两个片段的顺序调整的工作.
         if i != ringBuffer.startIndex {
             var rotated = ContiguousArray<Element>()
             rotated.reserveCapacity(ringBuffer.count)
@@ -844,71 +568,24 @@ extension Sequence {
         }
     }
     
-    /*
-     上面的 suffix 其实就暴露出, 通过 primitive 来实现所有功能的性能损失.
-     如果是数组, 那么可以直接通过下标取得后面的数据, 时间复杂度为 0(1), 而用通用的基本方法, 只能是全部获取之后, 再去获取最后的数据.
-     因为 Sequence 是没有 count 的, 所以还不能在遍历的过程中, 到达了某个点再去记录, 就要记录所有的值, 然后调整顺序.
-     使用通用算法, 会带来性能的损失.
-     这里方法, 在 Collection 里面, 进行了重写. 用了更加有效率的 Index 进行的整体替换.
-     这也是 swift 协议相比较 C++ 泛型算法的好处. 使用者不用去记, 哪个类有着特殊的设计, 比如 sort 只能用到 randomAccess 的容器里面, 链表, 红黑树, 都有自己的 sort, 使用泛型算法会报错.
-     */
     
-    /// Returns a sequence containing all but the given number of initial
-    /// elements.
-    ///
-    /// If the number of elements to drop exceeds the number of elements in
-    /// the sequence, the result is an empty sequence.
-    ///
-    ///     let numbers = [1, 2, 3, 4, 5]
-    ///     print(numbers.dropFirst(2))
-    ///     // Prints "[3, 4, 5]"
-    ///     print(numbers.dropFirst(10))
-    ///     // Prints "[]"
-    ///
-    /// - Parameter k: The number of elements to drop from the beginning of
-    ///   the sequence. `k` must be greater than or equal to zero.
-    /// - Returns: A sequence starting after the specified number of
-    ///   elements.
-    ///
-    /// - Complexity: O(1), with O(*k*) deferred to each iteration of the result,
-    ///   where *k* is the number of elements to drop from the beginning of
-    ///   the sequence.
+    
     /*
-     返回一个适配器对象.
+     返回一个适配器对象. 丢弃前面几个值.
      */
     @inlinable
     public __consuming func dropFirst(_ k: Int = 1) -> DropFirstSequence<Self> {
         return DropFirstSequence(self, dropping: k)
     }
     
-    /// Returns a sequence containing all but the given number of final
-    /// elements.
-    ///
-    /// The sequence must be finite. If the number of elements to drop exceeds
-    /// the number of elements in the sequence, the result is an empty
-    /// sequence.
-    ///
-    ///     let numbers = [1, 2, 3, 4, 5]
-    ///     print(numbers.dropLast(2))
-    ///     // Prints "[1, 2, 3]"
-    ///     print(numbers.dropLast(10))
-    ///     // Prints "[]"
-    ///
-    /// - Parameter n: The number of elements to drop off the end of the
-    ///   sequence. `n` must be greater than or equal to zero.
-    /// - Returns: A sequence leaving off the specified number of elements.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the sequence.
+    /*
+     返回一个数组, 丢弃后面几个值.
+     之所以, 这里返回数组, 而 dropFirst 返回适配器是因为, 只有遍历一次, 才知道最后几个值从哪里开始.
+     */
     @inlinable
     public __consuming func dropLast(_ k: Int = 1) -> [Element] {
         guard k != 0 else { return Array(self) }
         
-        // FIXME: <rdar://problem/21885650> Create reusable RingBuffer<T>
-        // Put incoming elements from this sequence in a holding tank, a ring buffer
-        // of size <= k. If more elements keep coming in, pull them out of the
-        // holding tank into the result, an `Array`. This saves
-        // `k` * sizeof(Element) of memory, because slices keep the entire
-        // memory of an `Array` alive.
         var result = ContiguousArray<Element>()
         var ringBuffer = ContiguousArray<Element>()
         var i = ringBuffer.startIndex
@@ -925,29 +602,9 @@ extension Sequence {
         return Array(result)
     }
     
-    /// Returns a sequence by skipping the initial, consecutive elements that
-    /// satisfy the given predicate.
-    ///
-    /// The following example uses the `drop(while:)` method to skip over the
-    /// positive numbers at the beginning of the `numbers` array. The result
-    /// begins with the first element of `numbers` that does not satisfy
-    /// `predicate`.
-    ///
-    ///     let numbers = [3, 7, 4, -2, 9, -6, 10, 1]
-    ///     let startingWithNegative = numbers.drop(while: { $0 > 0 })
-    ///     // startingWithNegative == [-2, 9, -6, 10, 1]
-    ///
-    /// If `predicate` matches every element in the sequence, the result is an
-    /// empty sequence.
-    ///
-    /// - Parameter predicate: A closure that takes an element of the sequence as
-    ///   its argument and returns a Boolean value indicating whether the
-    ///   element should be included in the result.
-    /// - Returns: A sequence starting after the initial, consecutive elements
-    ///   that satisfy `predicate`.
-    ///
-    /// - Complexity: O(*k*), where *k* is the number of elements to drop from
-    ///   the beginning of the sequence.
+    /*
+     提供一个简便方法, 来使用 DropWhile 的功能.
+     */
     @inlinable
     public __consuming func drop(
         while predicate: (Element) throws -> Bool
@@ -955,21 +612,22 @@ extension Sequence {
         return try DropWhileSequence(self, predicate: predicate)
     }
     
+    /*
+     提供一个简便方法, 来使用 prefix 的功能.
+     */
     @inlinable
     public __consuming func prefix(_ maxLength: Int) -> PrefixSequence<Self> {
         return PrefixSequence(self, maxLength: maxLength)
     }
     
     /*
-     这些函数, 都是为了得到自己的一些目的, 算法都很简单, 写出来, 主要是为了复用.
-     所以, 我们自己有什么功能, 也是可以直接添加到系统类库中的, 或者系统协议中.
+     返回头部符合 predicate 的元素, 直到出现一个不适合的.
      */
     @inlinable
     public __consuming func prefix(
         while predicate: (Element) throws -> Bool
     ) rethrows -> [Element] {
         var result = ContiguousArray<Element>()
-        
         for element in self {
             guard try predicate(element) else {
                 break
@@ -981,13 +639,9 @@ extension Sequence {
 }
 
 extension Sequence {
-    /// Copies `self` into the supplied buffer.
-    ///
-    /// - Precondition: The memory in `self` is uninitialized. The buffer must
-    ///   contain sufficient uninitialized memory to accommodate `source.underestimatedCount`.
-    ///
-    /// - Postcondition: The `Pointee`s at `buffer[startIndex..<returned index]` are
-    ///   initialized.
+    /*
+     将一个 Sequence, 装到一个内存地址的过程. 这里用到了 UnsafeMutableBufferPointer 提供的功能.
+     */
     @inlinable
     public __consuming func _copyContents(
         initializing buffer: UnsafeMutableBufferPointer<Element>
@@ -998,8 +652,8 @@ extension Sequence {
             guard let x = it.next() else {
                 return (it, idx)
             }
-            ptr.initialize(to: x)
-            ptr += 1
+            ptr.initialize(to: x) // 相关内存值的赋值工作.
+            ptr += 1 // 指针的偏移, 偏移量是 Element 相关的.
         }
         return (it,buffer.endIndex)
     }
@@ -1012,21 +666,10 @@ extension Sequence {
     }
 }
 
-// FIXME(ABI)#182
-// Pending <rdar://problem/14011860> and <rdar://problem/14396120>,
-// pass an IteratorProtocol through IteratorSequence to give it "Sequence-ness"
-/// A sequence built around an iterator of type `Base`.
-///
-/// Useful mostly to recover the ability to use `for`...`in`,
-/// given just an iterator `i`:
-///
-///     for x in IteratorSequence(i) { ... }
 @frozen
 public struct IteratorSequence<Base: IteratorProtocol> {
     @usableFromInline
     internal var _base: Base
-    
-    /// Creates an instance whose iterator is a copy of `base`.
     @inlinable
     public init(_ base: Base) {
         _base = base
@@ -1034,25 +677,11 @@ public struct IteratorSequence<Base: IteratorProtocol> {
 }
 
 extension IteratorSequence: IteratorProtocol, Sequence {
-    /// Advances to the next element and returns it, or `nil` if no next element
-    /// exists.
-    ///
-    /// Once `nil` has been returned, all subsequent calls return `nil`.
-    ///
-    /// - Precondition: `next()` has not been applied to a copy of `self`
-    ///   since the copy was made.
     @inlinable
     public mutating func next() -> Base.Element? {
         return _base.next()
     }
 }
-
-/* FIXME: ideally for compatability we would declare
- extension Sequence {
- @available(swift, deprecated: 5, message: "")
- public typealias SubSequence = AnySequence<Element>
- }
- */
 
 
 
