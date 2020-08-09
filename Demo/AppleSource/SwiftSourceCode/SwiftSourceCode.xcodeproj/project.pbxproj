@@ -226,6 +226,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0611584B24E0481A0074B29B /* Lazy */ = {
+			isa = PBXGroup;
+			children = (
+				06E1B3B3247D6BEE00CD9D60 /* LazySequence.swift */,
+				06E1B3C1247D6BEE00CD9D60 /* Map.swift */,
+				06E1B36B247D6BEE00CD9D60 /* FlatMap.swift */,
+				06E1B3A1247D6BEE00CD9D60 /* Flatten.swift */,
+				06E1B3A6247D6BEE00CD9D60 /* Filter.swift */,
+				06E1B330247D6BEE00CD9D60 /* PrefixWhile.swift */,
+				06E1B3C0247D6BEE00CD9D60 /* DropWhile.swift */,
+				06E1B363247D6BEE00CD9D60 /* MigrationSupport.swift */,
+			);
+			path = Lazy;
+			sourceTree = "<group>";
+		};
 		0651545B24D556F00060603F /* Collection */ = {
 			isa = PBXGroup;
 			children = (
@@ -320,8 +335,6 @@
 				06E1B3C2247D6BEE00CD9D60 /* DictionaryVariant.swift */,
 				06E1B333247D6BEE00CD9D60 /* Diffing.swift */,
 				06E1B3AF247D6BEE00CD9D60 /* ExistentialCollection.swift.gyb */,
-				06E1B36B247D6BEE00CD9D60 /* FlatMap.swift */,
-				06E1B3A1247D6BEE00CD9D60 /* Flatten.swift */,
 				06E1B3DD247D7C7B00CD9D60 /* Done */,
 				06E1B386247D6BEE00CD9D60 /* FloatingPoint.swift */,
 				06E1B394247D6BEE00CD9D60 /* Sort.swift */,
@@ -344,7 +357,6 @@
 				06E1B34C247D6BEE00CD9D60 /* ManagedBuffer.swift */,
 				06E1B3A3247D6BEE00CD9D60 /* MathFunctions.swift.gyb */,
 				06E1B33C247D6BEE00CD9D60 /* MemoryLayout.swift */,
-				06E1B363247D6BEE00CD9D60 /* MigrationSupport.swift */,
 				06E1B3A2247D6BEE00CD9D60 /* Mirror.swift */,
 				06E1B38B247D6BEE00CD9D60 /* Mirrors.swift.gyb */,
 				06E1B378247D6BEE00CD9D60 /* Misc.swift */,
@@ -442,6 +454,7 @@
 				06E1B3D6247D6BEE00CD9D60 /* Stride.swift */,
 				06E1B375247D6BEE00CD9D60 /* Sequence.swift */,
 				06E1B39F247D6BEE00CD9D60 /* SequenceAlgorithms.swift */,
+				0611584B24E0481A0074B29B /* Lazy */,
 				06FCBA6824DC51B500E5565B /* Unsafe */,
 				0651545C24D568750060603F /* Array */,
 				0651545B24D556F00060603F /* Collection */,
@@ -452,11 +465,6 @@
 				06E1B390247D6BEE00CD9D60 /* Equatable.swift */,
 				06E1B3C4247D6BEE00CD9D60 /* Bool.swift */,
 				06E1B34A247D6BEE00CD9D60 /* Comparable.swift */,
-				06E1B3B3247D6BEE00CD9D60 /* LazySequence.swift */,
-				06E1B3C1247D6BEE00CD9D60 /* Map.swift */,
-				06E1B330247D6BEE00CD9D60 /* PrefixWhile.swift */,
-				06E1B3C0247D6BEE00CD9D60 /* DropWhile.swift */,
-				06E1B3A6247D6BEE00CD9D60 /* Filter.swift */,
 				06E1B382247D6BEE00CD9D60 /* Indices.swift */,
 				06E1B36C247D6BEE00CD9D60 /* Result.swift */,
 				06E1B3A8247D6BEE00CD9D60 /* ErrorType.swift */,

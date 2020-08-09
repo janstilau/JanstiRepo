@@ -1,13 +1,7 @@
-
-
-/// A sequence whose elements consist of the elements that follow the initial
-/// consecutive elements of some base sequence that satisfy a given predicate.
 @frozen // lazy-performance
 public struct LazyDropWhileSequence<Base: Sequence> {
     public typealias Element = Base.Element
     
-    /// Create an instance with elements `transform(x)` for each element
-    /// `x` of base.
     @inlinable // lazy-performance
     internal init(_base: Base, predicate: @escaping (Element) -> Bool) {
         self._base = _base
@@ -21,12 +15,6 @@ public struct LazyDropWhileSequence<Base: Sequence> {
 }
 
 extension LazyDropWhileSequence {
-    /// An iterator over the elements traversed by a base iterator that follow the
-    /// initial consecutive elements that satisfy a given predicate.
-    ///
-    /// This is the associated iterator for the `LazyDropWhileSequence`,
-    /// `LazyDropWhileCollection`, and `LazyDropWhileBidirectionalCollection`
-    /// types.
     @frozen // lazy-performance
     public struct Iterator {
         public typealias Element = Base.Element
@@ -47,7 +35,8 @@ extension LazyDropWhileSequence {
 }
 
 /*
- 这里的意思是, 先取 baseSequence 里面的值, 然后和_predicate进行检测, 如果符合条件, 那么就取下一个值, 直到不符合条件的值出现才返回. 所以, drop 的意思, 不是从 sequence 里面删除, 而是在取值的时候, 不进行返回.
+ 这里的意思是, 先取 baseSequence 里面的值, 然后和_predicate进行检测, 如果符合条件, 那么就取下一个值, 直到不符合条件的值出现才返回.
+ 所以, drop 的意思, 不是从 sequence 里面删除, 而是在取值的时候, 不进行返回.
  */
 extension LazyDropWhileSequence.Iterator: IteratorProtocol {
     @inlinable // lazy-performance

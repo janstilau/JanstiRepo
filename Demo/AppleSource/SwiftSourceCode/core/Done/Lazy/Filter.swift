@@ -1,20 +1,14 @@
-/// A sequence whose elements consist of the elements of some base
-/// sequence that also satisfy a given predicate.
-///
-/// - Note: `s.lazy.filter { ... }`, for an arbitrary sequence `s`,
-///   is a `LazyFilterSequence`.
+
+/*
+ 提供了过滤功能的 LazyFilterSequence
+ */
 @frozen // lazy-performance
 public struct LazyFilterSequence<Base: Sequence> {
     @usableFromInline // lazy-performance
     internal var _base: Base
-    
-    /// The predicate used to determine which elements produced by
-    /// `base` are also produced by `self`.
     @usableFromInline // lazy-performance
     internal let _predicate: (Base.Element) -> Bool
     
-    /// Creates an instance consisting of the elements `x` of `base` for
-    /// which `isIncluded(x) == true`.
     @inlinable // lazy-performance
     public // @testable
     init(_base base: Base, _ isIncluded: @escaping (Base.Element) -> Bool) {
@@ -31,16 +25,13 @@ extension LazyFilterSequence {
     /// and `LazyFilterCollection`.
     @frozen // lazy-performance
     public struct Iterator {
-        /// The underlying iterator whose elements are being filtered.
         public var base: Base.Iterator { return _base }
-        
         @usableFromInline // lazy-performance
         internal var _base: Base.Iterator
+        
         @usableFromInline // lazy-performance
         internal let _predicate: (Base.Element) -> Bool
         
-        /// Creates an instance that produces the elements `x` of `base`
-        /// for which `isIncluded(x) == true`.
         @inlinable // lazy-performance
         internal init(_base: Base.Iterator, _ isIncluded: @escaping (Base.Element) -> Bool) {
             self._base = _base
@@ -49,19 +40,12 @@ extension LazyFilterSequence {
     }
 }
 
-/*
- 所有的 lazySequence 其实结构都类似, 从 base 里面取值, 然后进行操作, 然后返回. 不过有的操作是, 转化 base 里面的值, 有的操作是, 略去 base 里面的值. filter, 就是略去.
- */
 extension LazyFilterSequence.Iterator: IteratorProtocol, Sequence {
     public typealias Element = Base.Element
     
-    /// Advances to the next element and returns it, or `nil` if no next element
-    /// exists.
-    ///
-    /// Once `nil` has been returned, all subsequent calls return `nil`.
-    ///
-    /// - Precondition: `next()` has not been applied to a copy of `self`
-    ///   since the copy was made.
+    /*
+     如果, 当前 element 不符合条件的话, 就取下一个值, 用这种方式, 来达到 filter 的效果
+     */
     @inlinable // lazy-performance
     public mutating func next() -> Element? {
         while let n = _base.next() {
@@ -75,14 +59,15 @@ extension LazyFilterSequence.Iterator: IteratorProtocol, Sequence {
 
 extension LazyFilterSequence: Sequence {
     public typealias Element = Base.Element
-    /// Returns an iterator over the elements of this sequence.
-    ///
-    /// - Complexity: O(1).
+    
     @inlinable // lazy-performance
     public __consuming func makeIterator() -> Iterator {
         return Iterator(_base: _base.makeIterator(), _predicate)
     }
     
+    /*
+     如果, _predicate 没有通过的话, 直接就 false, 然后才是调用 base 的检测函数.
+     */
     @inlinable
     public func _customContainsEquatableElement(_ element: Element) -> Bool? {
         // optimization to check the element first matches the predicate
@@ -91,13 +76,12 @@ extension LazyFilterSequence: Sequence {
     }
 }
 
+/*
+ 暴露给外界的简便方法.
+ 这里, 这个方法是 LazySequenceProtocol 的. 也就是只有 LazySequenceProtocol 的实现类才能用.
+ 这就是 sequence 必须调用 lazy, 生成一个 LazySequenceProtocol 类型的代理对象的原因.
+ */
 extension LazySequenceProtocol {
-    /// Returns the elements of `self` that satisfy `isIncluded`.
-    ///
-    /// - Note: The elements of the result are computed on-demand, as
-    ///   the result is used. No buffering storage is allocated and each
-    ///   traversal step invokes `predicate` on one or more underlying
-    ///   elements.
     @inlinable // lazy-performance
     public __consuming func filter(
         _ isIncluded: @escaping (Elements.Element) -> Bool
@@ -108,7 +92,6 @@ extension LazySequenceProtocol {
 
 // 这个东西是 LazyFilterSequence 的扩展, 所以 self._predicate 已经是有值的了.
 extension LazyFilterSequence {
-    @available(swift, introduced: 5)
     public __consuming func filter(
         _ isIncluded: @escaping (Element) -> Bool
     ) -> LazyFilterSequence<Base> {

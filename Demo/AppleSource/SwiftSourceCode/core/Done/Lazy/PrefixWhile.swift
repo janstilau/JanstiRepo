@@ -1,5 +1,3 @@
-/// A sequence whose elements consist of the initial consecutive elements of
-/// some base sequence that satisfy a given predicate.
 @frozen // lazy-performance
 public struct LazyPrefixWhileSequence<Base: Sequence> {
     public typealias Element = Base.Element
@@ -18,12 +16,6 @@ public struct LazyPrefixWhileSequence<Base: Sequence> {
 
 
 extension LazyPrefixWhileSequence {
-    /// An iterator over the initial elements traversed by a base iterator that
-    /// satisfy a given predicate.
-    ///
-    /// This is the associated iterator for the `LazyPrefixWhileSequence`,
-    /// `LazyPrefixWhileCollection`, and `LazyPrefixWhileBidirectionalCollection`
-    /// types.
     @frozen // lazy-performance
     public struct Iterator {
         public typealias Element = Base.Element
@@ -44,9 +36,8 @@ extension LazyPrefixWhileSequence {
 }
 
 /*
- 如果, base sequence 里面取得的数据, 可以经过 _predicate 的检测, 那么就返回该数据, 如果不可以, 那么久终止条件.
+ 如果, base sequence 里面取得的数据, 可以经过 _predicate 的检测, 那么就返回该数据, 如果不可以, 那么就终止条件.
  Sequence 里面的 prefix, 是有着固定的长度的, 而这里的, 则是通过闭包检测的.
-
  */
 extension LazyPrefixWhileSequence.Iterator: IteratorProtocol, Sequence {
     @inlinable // lazy-performance
@@ -74,14 +65,10 @@ extension LazyPrefixWhileSequence: LazySequenceProtocol {
     public typealias Elements = LazyPrefixWhileSequence
 }
 
+/*
+ 暴露给外界使用的简便方法, 在方法的内部, 生成 LazyPrefixWhileSequence 对象.
+ */
 extension LazySequenceProtocol {
-    /// Returns a lazy sequence of the initial consecutive elements that satisfy
-    /// `predicate`.
-    ///
-    /// - Parameter predicate: A closure that takes an element of the sequence as
-    ///   its argument and returns `true` if the element should be included or
-    ///   `false` otherwise. Once `predicate` returns `false` it will not be
-    ///   called again.
     @inlinable // lazy-performance
     public __consuming func prefix(
         while predicate: @escaping (Elements.Element) -> Bool
