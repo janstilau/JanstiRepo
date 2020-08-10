@@ -1,4 +1,3 @@
-/// A collection of indices for an arbitrary collection
 /*
  把 Collection, start, end 统统记一下.
  */
