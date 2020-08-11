@@ -14,11 +14,8 @@ public struct Repeated<Element> {
  */
 extension Repeated: RandomAccessCollection {
     public typealias Indices = Range<Int>
-    
     public typealias Index = Int
     
-    /// Creates an instance that contains `count` elements having the
-    /// value `repeatedValue`.
     @inlinable // trivial-implementation
     internal init(_repeating repeatedValue: Element, count: Int) {
         _precondition(count >= 0, "Repetition count should be non-negative")
@@ -26,6 +23,9 @@ extension Repeated: RandomAccessCollection {
         self.repeatedValue = repeatedValue
     }
     
+    /*
+     这本来就是一个抽象的概念, 所以从 0 开始, 是固定的.
+     */
     @inlinable // trivial-implementation
     public var startIndex: Index {
         return 0
@@ -52,7 +52,6 @@ extension Repeated: RandomAccessCollection {
  当然, 这个函数的内部, 生产出Repeated这个结构体来, 是暴露出去了.
  不过, 一般的这种函数, 返回的是一个接口对象, 而不是实际对象.
  为什么需要一个Repeated结构体. 因为里面的都是重复数据啊, 没有必要存储这么多重复数据, 存储数据, 以及次数就可以.
- 
  泛型函数里面, 提供了类型信息, 生成对应的泛型结构.
  */
 @inlinable // trivial-implementation

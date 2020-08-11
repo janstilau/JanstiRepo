@@ -244,16 +244,16 @@
 		0651545B24D556F00060603F /* Collection */ = {
 			isa = PBXGroup;
 			children = (
-				06E1B343247D6BEE00CD9D60 /* Collection.swift */,
-				06E1B3A0247D6BEE00CD9D60 /* Slice.swift */,
-				06E1B329247D6BEE00CD9D60 /* MutableCollection.swift */,
 				06E1B3C6247D6BEE00CD9D60 /* BidirectionalCollection.swift */,
-				06E1B334247D6BEE00CD9D60 /* CollectionDifference.swift */,
+				06E1B343247D6BEE00CD9D60 /* Collection.swift */,
 				06E1B352247D6BEE00CD9D60 /* CollectionAlgorithms.swift */,
+				06E1B334247D6BEE00CD9D60 /* CollectionDifference.swift */,
 				06E1B338247D6BEE00CD9D60 /* EmptyCollection.swift */,
 				06E1B3DB247D6BEE00CD9D60 /* LazyCollection.swift */,
+				06E1B329247D6BEE00CD9D60 /* MutableCollection.swift */,
 				06E1B32A247D6BEE00CD9D60 /* RandomAccessCollection.swift */,
 				06E1B3D3247D6BEE00CD9D60 /* RangeReplaceableCollection.swift */,
+				06E1B3A0247D6BEE00CD9D60 /* Slice.swift */,
 				06E1B36F247D6BEE00CD9D60 /* StringRangeReplaceableCollection.swift */,
 			);
 			path = Collection;
@@ -460,6 +460,7 @@
 				06E1B34A247D6BEE00CD9D60 /* Comparable.swift */,
 				06E1B3C4247D6BEE00CD9D60 /* Bool.swift */,
 				06E1B36C247D6BEE00CD9D60 /* Result.swift */,
+				06E1B384247D6BEE00CD9D60 /* Repeat.swift */,
 				0611584B24E0481A0074B29B /* Lazy */,
 				06FCBA6824DC51B500E5565B /* Unsafe */,
 				0651545C24D568750060603F /* Array */,
@@ -471,7 +472,6 @@
 				06E1B39E247D6BEE00CD9D60 /* CollectionOfOne.swift */,
 				06E1B383247D6BEE00CD9D60 /* Reverse.swift */,
 				06E1B349247D6BEE00CD9D60 /* Join.swift */,
-				06E1B384247D6BEE00CD9D60 /* Repeat.swift */,
 			);
 			path = Done;
 			sourceTree = "<group>";

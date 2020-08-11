@@ -82,7 +82,7 @@ where SubSequence: MutableCollection
   @_borrowed
   override subscript(position: Index) -> Element { get set }
 
-   /// 需要注意的是, 这里说明很清楚, contiguous, 所以这里不能是离散值的组合. 也无法想象, 离散值的替换
+
   /// Accesses a contiguous subrange of the collection's elements.
   ///
   /// The accessed slice uses the same indices for the same elements as the
