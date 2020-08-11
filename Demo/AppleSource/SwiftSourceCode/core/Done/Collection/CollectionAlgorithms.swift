@@ -1,15 +1,7 @@
 extension BidirectionalCollection {
-    /// The last element of the collection.
-    ///
-    /// If the collection is empty, the value of this property is `nil`.
-    ///
-    ///     let numbers = [10, 20, 30, 40, 50]
-    ///     if let lastNumber = numbers.last {
-    ///         print(lastNumber)
-    ///     }
-    ///     // Prints "50"
-    ///
-    /// - Complexity: O(1)
+    /*
+     只有 BidirectionalCollection 才能进行 last, 因为要找到 end, 然后做一次--操作才可以.
+     */
     @inlinable
     public var last: Element? {
         return isEmpty ? nil : self[index(before: endIndex)]
@@ -19,6 +11,8 @@ extension BidirectionalCollection {
 extension Collection where Element: Equatable {
     /*
      firstIndex 这种, 没有太好的办法, 就是按个找, 不过 Diction, 应该有更好的办法.
+     这其实就是 _customIndexOfEquatableElement 这个方法的作用. 如果你的类, 有着更好的办法, 不要重写 firstIndex, 因为这个方法是 Collection 的 extension, 你重写的话也不会调用的.
+     但是 _customIndexOfEquatableElement 是 Collection 的 primitive, 重写的话, 在 firstIndex 里面, 还是可以调用的到的.
      */
     @inlinable
     public func firstIndex(of element: Element) -> Index? {
@@ -28,6 +22,9 @@ extension Collection where Element: Equatable {
         
         var i = self.startIndex
         while i != self.endIndex {
+            /*
+             这里, 直接用的 ==, 因为 Element: Equatable 这里已经添加了限制.
+             */
             if self[i] == element {
                 return i
             }
@@ -37,9 +34,6 @@ extension Collection where Element: Equatable {
     }
 }
 
-/*
- FirstIndexOf 的变形, 用一个闭包, 代替了 == 的判断.
- */
 extension Collection {
     @inlinable
     public func firstIndex(
@@ -47,7 +41,7 @@ extension Collection {
     ) rethrows -> Index? {
         var i = self.startIndex
         while i != self.endIndex {
-            if try predicate(self[i]) {
+            if try predicate(self[i]) { // 增加了闭包的变形.
                 return i
             }
             self.formIndex(after: &i)
@@ -60,25 +54,9 @@ extension Collection {
  双向的集合, 才能使用 last 方法, 这里是 last 的变形, criteria 代替了 == 判断.
  */
 extension BidirectionalCollection {
-    /// Returns the last element of the sequence that satisfies the given
-    /// predicate.
-    ///
-    /// This example uses the `last(where:)` method to find the last
-    /// negative number in an array of integers:
-    ///
-    ///     let numbers = [3, 7, 4, -2, 9, -6, 10, 1]
-    ///     if let lastNegative = numbers.last(where: { $0 < 0 }) {
-    ///         print("The last negative number is \(lastNegative).")
-    ///     }
-    ///     // Prints "The last negative number is -6."
-    ///
-    /// - Parameter predicate: A closure that takes an element of the sequence as
-    ///   its argument and returns a Boolean value indicating whether the
-    ///   element is a match.
-    /// - Returns: The last element of the sequence that satisfies `predicate`,
-    ///   or `nil` if there is no element that satisfies `predicate`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the collection.
+    /*
+     使用了 lastIndex 的结果, 作为后续操作的基础.
+     */
     @inlinable
     public func last(
         where predicate: (Element) throws -> Bool
@@ -86,27 +64,6 @@ extension BidirectionalCollection {
         return try lastIndex(where: predicate).map { self[$0] }
     }
     
-    /// Returns the index of the last element in the collection that matches the
-    /// given predicate.
-    ///
-    /// You can use the predicate to find an element of a type that doesn't
-    /// conform to the `Equatable` protocol or to find an element that matches
-    /// particular criteria. This example finds the index of the last name that
-    /// begins with the letter *A:*
-    ///
-    ///     let students = ["Kofi", "Abena", "Peter", "Kweku", "Akosua"]
-    ///     if let i = students.lastIndex(where: { $0.hasPrefix("A") }) {
-    ///         print("\(students[i]) starts with 'A'!")
-    ///     }
-    ///     // Prints "Akosua starts with 'A'!"
-    ///
-    /// - Parameter predicate: A closure that takes an element as its argument
-    ///   and returns a Boolean value that indicates whether the passed element
-    ///   represents a match.
-    /// - Returns: The index of the last element in the collection that matches
-    ///   `predicate`, or `nil` if no elements match.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the collection.
     @inlinable
     public func lastIndex(
         where predicate: (Element) throws -> Bool
@@ -123,26 +80,6 @@ extension BidirectionalCollection {
 }
 
 extension BidirectionalCollection where Element: Equatable {
-    /// Returns the last index where the specified value appears in the
-    /// collection.
-    ///
-    /// After using `lastIndex(of:)` to find the position of the last instance of
-    /// a particular element in a collection, you can use it to access the
-    /// element by subscripting. This example shows how you can modify one of
-    /// the names in an array of students.
-    ///
-    ///     var students = ["Ben", "Ivy", "Jordell", "Ben", "Maxime"]
-    ///     if let i = students.lastIndex(of: "Ben") {
-    ///         students[i] = "Benjamin"
-    ///     }
-    ///     print(students)
-    ///     // Prints "["Ben", "Ivy", "Jordell", "Benjamin", "Max"]"
-    ///
-    /// - Parameter element: An element to search for in the collection.
-    /// - Returns: The last index where `element` is found. If `element` is not
-    ///   found in the collection, this method returns `nil`.
-    ///
-    /// - Complexity: O(*n*), where *n* is the length of the collection.
     @inlinable
     public func lastIndex(of element: Element) -> Index? {
         if let result = _customLastIndexOfEquatableElement(element) {

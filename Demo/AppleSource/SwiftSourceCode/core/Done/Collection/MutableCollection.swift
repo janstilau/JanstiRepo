@@ -1,166 +1,31 @@
 /*
  所谓的 Mutable, 是指可以根据 索引, 进行值的替换的集合.
  */
-/// A collection that supports subscript assignment.
-///
-/// Collections that conform to `MutableCollection` gain the ability to
-/// change the value of their elements. This example shows how you can
-/// modify one of the names in an array of students.
-///
-///     var students = ["Ben", "Ivy", "Jordell", "Maxime"]
-///     if let i = students.firstIndex(of: "Maxime") {
-///         students[i] = "Max"
-///     }
-///     print(students)
-///     // Prints "["Ben", "Ivy", "Jordell", "Max"]"
-/// 之所以可以这样做, 是因为 sort 里面, 就是根据索引进行了值的替换.
-/// In addition to changing the value of an individual element, you can also
-/// change the values of a slice of elements in a mutable collection. For
-/// example, you can sort *part* of a mutable collection by calling the
-/// mutable `sort()` method on a subscripted subsequence. Here's an
-/// example that sorts the first half of an array of integers:
-///
-///     var numbers = [15, 40, 10, 30, 60, 25, 5, 100]
-///     numbers[0..<4].sort()
-///     print(numbers)
-///     // Prints "[10, 15, 30, 40, 60, 25, 5, 100]"
-///
-///
-/// Mutable 指的是, 可以进行值的替换, 但是不可以插入或者删除.
-/// The `MutableCollection` protocol allows changing the values of a
-/// collection's elements but not the length of the collection itself. For
-/// operations that require adding or removing elements, see the
-/// `RangeReplaceableCollection` protocol instead.
+
 ///
 /// Conforming to the MutableCollection Protocol
 /// ============================================
-///
+/// 在下标操作符里面, 进行 get set 的同时适配就可以了.
 /// To add conformance to the `MutableCollection` protocol to your own
 /// custom collection, upgrade your type's subscript to support both read
 /// and write access.
 /// 
-/// A value stored into a subscript of a `MutableCollection` instance must
-/// subsequently be accessible at that same position. That is, for a mutable
-/// collection instance `a`, index `i`, and value `x`, the two sets of
-/// assignments in the following code sample must be equivalent:
-///
-///     a[i] = x
-///     let y = a[i]
-///     
-///     // Must be equivalent to:
-///     a[i] = x
-///     let y = x
 
 public protocol MutableCollection: Collection
 where SubSequence: MutableCollection
 {
-  // FIXME: Associated type inference requires these.
   override associatedtype Element
   override associatedtype Index
   override associatedtype SubSequence
 
-  /// Accesses the element at the specified position.
-  ///
-  /// For example, you can replace an element of an array by using its
-  /// subscript.
-  ///
-  ///     var streets = ["Adams", "Bryant", "Channing", "Douglas", "Evarts"]
-  ///     streets[1] = "Butler"
-  ///     print(streets[1])
-  ///     // Prints "Butler"
-  /// 几乎每一个出现了 Index 的地方, 都要提醒一次, EndIndex 不能直接访问.
-  /// You can subscript a collection with any valid index other than the
-  /// collection's end index. The end index refers to the position one
-  /// past the last element of a collection, so it doesn't correspond with an
-  /// element.
-  ///
-  /// - Parameter position: The position of the element to access. `position`
-  ///   must be a valid index of the collection that is not equal to the
-  ///   `endIndex` property.
-  ///
-  /// - Complexity: O(1)
   @_borrowed
   override subscript(position: Index) -> Element { get set }
-
-
-  /// Accesses a contiguous subrange of the collection's elements.
-  ///
-  /// The accessed slice uses the same indices for the same elements as the
-  /// original collection. Always use the slice's `startIndex` property
-  /// instead of assuming that its indices start at a particular value.
-  ///
-  /// This example demonstrates getting a slice of an array of strings, finding
-  /// the index of one of the strings in the slice, and then using that index
-  /// in the original array.
-  ///
-  ///     let streets = ["Adams", "Bryant", "Channing", "Douglas", "Evarts"]
-  ///     let streetsSlice = streets[2 ..< streets.endIndex]
-  ///     print(streetsSlice)
-  ///     // Prints "["Channing", "Douglas", "Evarts"]"
-  ///
-  ///     let index = streetsSlice.firstIndex(of: "Evarts")    // 4
-  ///     streets[index!] = "Eustace"
-  ///     print(streets[index!])
-  ///     // Prints "Eustace"
-  ///
-  /// - Parameter bounds: A range of the collection's indices. The bounds of
-  ///   the range must be valid indices of the collection.
-  ///
-  /// - Complexity: O(1)
   override subscript(bounds: Range<Index>) -> SubSequence { get set }
 
-  /// Reorders the elements of the collection such that all the elements
-  /// that match the given predicate are after all the elements that don't
-  /// match.
-  /// 这里的描述, 使用了快速排序.
-  /// After partitioning a collection, there is a pivot index `p` where
-  /// no element before `p` satisfies the `belongsInSecondPartition`
-  /// predicate and every element at or after `p` satisfies
-  /// `belongsInSecondPartition`.
-  ///
-  /// In the following example, an array of numbers is partitioned by a
-  /// predicate that matches elements greater than 30.
-  ///
-  ///     var numbers = [30, 40, 20, 30, 30, 60, 10]
-  ///     let p = numbers.partition(by: { $0 > 30 })
-  ///     // p == 5
-  ///     // numbers == [30, 10, 20, 30, 30, 60, 40]
-  ///
-  /// The `numbers` array is now arranged in two partitions. The first
-  /// partition, `numbers[..<p]`, is made up of the elements that
-  /// are not greater than 30. The second partition, `numbers[p...]`,
-  /// is made up of the elements that *are* greater than 30.
-  ///
-  ///     let first = numbers[..<p]
-  ///     // first == [30, 10, 20, 30, 30]
-  ///     let second = numbers[p...]
-  ///     // second == [60, 40]
-  ///
-  /// - Parameter belongsInSecondPartition: A predicate used to partition
-  ///   the collection. All elements satisfying this predicate are ordered
-  ///   after all elements not satisfying it.
-  /// - Returns: The index of the first element in the reordered collection
-  ///   that matches `belongsInSecondPartition`. If no elements in the
-  ///   collection match `belongsInSecondPartition`, the returned index is
-  ///   equal to the collection's `endIndex`.
-  ///
-  /// - Complexity: O(*n*), where *n* is the length of the collection.
   mutating func partition(
     by belongsInSecondPartition: (Element) throws -> Bool
   ) rethrows -> Index
 
-    /// 交换两个 index 的值, 这应该是一个基本方法.
-  /// Exchanges the values at the specified indices of the collection.
-  ///
-  /// Both parameters must be valid indices of the collection and not
-  /// equal to `endIndex`. Passing the same index as both `i` and `j` has no
-  /// effect.
-  ///
-  /// - Parameters:
-  ///   - i: The index of the first value to swap.
-  ///   - j: The index of the second value to swap.
-  ///
-  /// - Complexity: O(1)
   mutating func swapAt(_ i: Index, _ j: Index)
   
   /// Call `body(p)`, where `p` is a pointer to the collection's
@@ -192,7 +57,6 @@ where SubSequence: MutableCollection
   ) rethrows -> R?
 }
 
-// TODO: swift-3-indexing-model - review the following
 extension MutableCollection {
   @inlinable
   public mutating func _withUnsafeMutableBufferPointerIfSupported<R>(
@@ -208,30 +72,6 @@ extension MutableCollection {
     return nil
   }
 
-  /// Accesses a contiguous subrange of the collection's elements.
-  ///
-  /// The accessed slice uses the same indices for the same elements as the
-  /// original collection. Always use the slice's `startIndex` property
-  /// instead of assuming that its indices start at a particular value.
-  ///
-  /// This example demonstrates getting a slice of an array of strings, finding
-  /// the index of one of the strings in the slice, and then using that index
-  /// in the original array.
-  ///
-  ///     let streets = ["Adams", "Bryant", "Channing", "Douglas", "Evarts"]
-  ///     let streetsSlice = streets[2 ..< streets.endIndex]
-  ///     print(streetsSlice)
-  ///     // Prints "["Channing", "Douglas", "Evarts"]"
-  ///
-  ///     let index = streetsSlice.firstIndex(of: "Evarts")    // 4
-  ///     streets[index!] = "Eustace"
-  ///     print(streets[index!])
-  ///     // Prints "Eustace"
-  ///
-  /// - Parameter bounds: A range of the collection's indices. The bounds of
-  ///   the range must be valid indices of the collection.
-  ///
-  /// - Complexity: O(1)
   @inlinable
   public subscript(bounds: Range<Index>) -> Slice<Self> {
     get {
@@ -243,17 +83,6 @@ extension MutableCollection {
     }
   }
 
-  /// Exchanges the values at the specified indices of the collection.
-  ///
-  /// Both parameters must be valid indices of the collection that are not
-  /// equal to `endIndex`. Calling `swapAt(_:_:)` with the same index as both
-  /// `i` and `j` has no effect.
-  ///
-  /// - Parameters:
-  ///   - i: The index of the first value to swap.
-  ///   - j: The index of the second value to swap.
-  ///
-  /// - Complexity: O(1)
   @inlinable
   public mutating func swapAt(_ i: Index, _ j: Index) {
     guard i != j else { return }
@@ -263,24 +92,11 @@ extension MutableCollection {
   }
 }
 
-// the legacy swap free function
-//
-/// Exchanges the values of the two arguments.
-///
-/// The two arguments must not alias each other. To swap two elements of a
-/// mutable collection, use the `swapAt(_:_:)` method of that collection
-/// instead of this function.
-///
-/// - Parameters:
-///   - a: The first value to swap.
-///   - b: The second value to swap.
 /*
  对于, 两个 inout 的值的交换工作, 还是是用了指针.
  */
 @inlinable
 public func swap<T>(_ a: inout T, _ b: inout T) {
-  // Semantically equivalent to (a, b) = (b, a).
-  // Microoptimized to avoid retain/release traffic.
   let p1 = Builtin.addressof(&a)
   let p2 = Builtin.addressof(&b)
   _debugPrecondition(

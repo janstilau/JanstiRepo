@@ -131,6 +131,9 @@ public protocol Collection: Sequence {
     associatedtype Iterator = IndexingIterator<Self>
     override __consuming func makeIterator() -> Iterator
     
+    /*
+     Collection 的 SubSequence 就是 Slice
+     */
     associatedtype SubSequence: Collection = Slice<Self>
         where SubSequence.Index == Index,
         Element == SubSequence.Element,
@@ -185,6 +188,7 @@ public protocol Collection: Sequence {
     /*
      这个就是调用上面的 index 实现的.
      就是返回值变为了传出参数表示.
+     在实现的时候, 大量的使用了 formIndex, 但是, 其实最重要的还是 index(after i: Index).
      */
     func formIndex(after i: inout Index)
 }
@@ -224,6 +228,9 @@ extension Collection {
             "Out of bounds: index > endIndex")
     }
     
+    /*
+     必须相交
+    */
     @inlinable
     public func _failEarlyRangeCheck(_ range: Range<Index>, bounds: Range<Index>) {
         _precondition(
@@ -269,23 +276,6 @@ extension Collection {
         return false
     }
     
-    /// Returns the distance between two indices.
-    ///
-    /// Unless the collection conforms to the `BidirectionalCollection` protocol,
-    /// `start` must be less than or equal to `end`.
-    ///
-    /// - Parameters:
-    ///   - start: A valid index of the collection.
-    ///   - end: Another valid index of the collection. If `end` is equal to
-    ///     `start`, the result is zero.
-    /// - Returns: The distance between `start` and `end`. The result can be
-    ///   negative only if the collection conforms to the
-    ///   `BidirectionalCollection` protocol.
-    ///
-    /// - Complexity: O(1) if the collection conforms to
-    ///   `RandomAccessCollection`; otherwise, O(*k*), where *k* is the
-    ///   resulting distance.
-    
     /*
      各个容器, 在完成自己对于 Collection 的适配的时候, 如果可以进行 randomAccess, 会重写该方法, 进行更加高效的操作.
      不然的话, 就是 O(n) 的遍历算法.
@@ -296,6 +286,7 @@ extension Collection {
                       "Only BidirectionalCollections can have end come before start")
         /*
          这里, 之所以用遍历的方式, 是因为如果可以随机访问的 collection, 距离的确认, 都是一件很难得事情. 例如链表.
+         在随机访问的 Collection 里面, 一定是进行了重写.
          */
         var start = start
         var count = 0
@@ -380,34 +371,9 @@ extension Collection where Iterator == IndexingIterator<Self> {
     }
 }
 
-/// Supply the default "slicing" `subscript` for `Collection` models
-/// that accept the default associated `SubSequence`, `Slice<Self>`.
 extension Collection where SubSequence == Slice<Self> {
-    /// Accesses a contiguous subrange of the collection's elements.
-    ///
-    /// The accessed  slice uses the same indices for the same elements as the
-    /// original collection. Always use the slice's `startIndex` property
-    /// instead of assuming that its indices start at a particular value.
-    ///
-    /// This example demonstrates getting a slice of an array of strings, finding
-    /// the index of one of the strings in the slice, and then using that index
-    /// in the original array.
-    ///
-    ///     let streets = ["Adams", "Bryant", "Channing", "Douglas", "Evarts"]
-    ///     let streetsSlice = streets[2 ..< streets.endIndex]
-    ///     print(streetsSlice)
-    ///     // Prints "["Channing", "Douglas", "Evarts"]"
-    ///
-    ///     let index = streetsSlice.firstIndex(of: "Evarts")    // 4
-    ///     print(streets[index!])
-    ///     // Prints "Evarts"
-    ///
-    /// - Parameter bounds: A range of the collection's indices. Thebounds of
-    ///   the range must be valid indices of the collection.
-    ///
-    /// - Complexity: O(1)
     /*
-     简单的生成一个 Slice 的对象而已.
+     对于 Collection 来说, 通过范围取值, 仅仅是生成一个 Slice 对象而已.
      */
     @inlinable
     public subscript(bounds: Range<Index>) -> Slice<Self> {
@@ -422,6 +388,9 @@ extension Collection where SubSequence == Self {
         // TODO: swift-3-indexing-model - review the following
         guard !isEmpty else { return nil }
         let element = first!
+        /*
+         SubSequence == Self, 在这种情况下, 才可以做这样的赋值, swift 有着类型限制的.
+         */
         self = self[index(after: startIndex)..<endIndex]
         return element
     }
@@ -440,33 +409,23 @@ extension Collection {
         else { return nil }
     }
     
-    /// A value less than or equal to the number of elements in the collection.
-    ///
-    /// - Complexity: O(1) if the collection conforms to
-    ///   `RandomAccessCollection`; otherwise, O(*n*), where *n* is the length
-    ///   of the collection.
     @inlinable
     public var underestimatedCount: Int {
-        // TODO: swift-3-indexing-model - review the following
         return count
     }
     
+    /*
+     默认的实现, 就是遍历获取, 各个容器, 如果自己记录了 Count, 直接返回就可以了.
+     */
     @inlinable
     public var count: Int {
         return distance(from: startIndex, to: endIndex)
     }
     
-    // TODO: swift-3-indexing-model - rename the following to _customIndexOfEquatable(element)?
-    /// Customization point for `Collection.firstIndex(of:)`.
-    ///
-    /// Define this method if the collection can find an element in less than
-    /// O(*n*) by exploiting collection-specific knowledge.
-    ///
-    /// - Returns: `nil` if a linear search should be attempted instead,
-    ///   `Optional(nil)` if the element was not found, or
-    ///   `Optional(Optional(index))` if an element was found.
-    ///
-    /// - Complexity: Hopefully less than O(`count`).
+    /*
+     这个几个算法, 都是为了可以加快其他算法效率的 功能性方法.
+     在 Set,Dict 里面, 重写了这个方法, 因为哈希原理非常快就能找到. 在 range 里面, 重写了, range 就是连续空间.
+     */
     @inlinable
     @inline(__always)
     public // dispatching
@@ -474,16 +433,6 @@ extension Collection {
         return nil
     }
     
-    /// Customization point for `Collection.lastIndex(of:)`.
-    ///
-    /// Define this method if the collection can find an element in less than
-    /// O(*n*) by exploiting collection-specific knowledge.
-    ///
-    /// - Returns: `nil` if a linear search should be attempted instead,
-    ///   `Optional(nil)` if the element was not found, or
-    ///   `Optional(Optional(index))` if an element was found.
-    ///
-    /// - Complexity: Hopefully less than O(`count`).
     @inlinable
     @inline(__always)
     public // dispatching
@@ -492,6 +441,9 @@ extension Collection {
     }
 }
 
+/*
+ 同 Sequence 不同的是, Collection 的各种操作, 都是操作的 Index, 然后根据 index 生成对应的 range, 然后通过 range, 获取对应的 Slice.
+ */
 extension Collection {
     @inlinable
     /*
@@ -606,6 +558,7 @@ extension Collection {
     
     /*
      返回集合前多少个子序列, 直到某个元素不符合条件了.
+     这里, 用到了根据 index 取值的操作了.
      */
     @inlinable
     public __consuming func prefix(

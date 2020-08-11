@@ -74,59 +74,29 @@
 ///   requirements into account.
 
 
-/// 最重要的三个值, 组成了切片的意义
+/*
+ Slice 真正的, 仅仅是记录三个值
+ slice 的 startIndex
+ slice 的 endIndex
+ slice 的 originalBaseCollection
+ */
 @frozen // generic-performance
 public struct Slice<Base: Collection> {
     public var _startIndex: Base.Index
     public var _endIndex: Base.Index
-    
     @usableFromInline // generic-performance
     internal var _base: Base
     
-    /// Creates a view into the given collection that allows access to elements
-    /// within the specified range.
-    ///
-    /// It is unusual to need to call this method directly. Instead, create a
-    /// slice of a collection by using the collection's range-based subscript or
-    /// by using methods that return a subsequence.
-    ///
-    ///     let singleDigits = 0...9
-    ///     let subSequence = singleDigits.dropFirst(5)
-    ///     print(Array(subSequence))
-    ///     // Prints "[5, 6, 7, 8, 9]"
-    ///
-    /// In this example, the expression `singleDigits.dropFirst(5))` is
-    /// equivalent to calling this initializer with `singleDigits` and a
-    /// range covering the last five items of `singleDigits.indices`.
-    ///
-    /// - Parameters:
-    ///   - base: The collection to create a view into.
-    ///   - bounds: The range of indices to allow access to in the new slice.
-    @inlinable // generic-performance
+    /*
+     对于 Collection 来说, 通过范围取值, 就是生成一个 Slice 对象
+     */
+    @inlinable
     public init(base: Base, bounds: Range<Base.Index>) {
         self._base = base
         self._startIndex = bounds.lowerBound
         self._endIndex = bounds.upperBound
     }
     
-    /// The underlying collection of the slice.
-    ///
-    /// You can use a slice's `base` property to access its base collection. The
-    /// following example declares `singleDigits`, a range of single digit
-    /// integers, and then drops the first element to create a slice of that
-    /// range, `singleNonZeroDigits`. The `base` property of the slice is equal
-    /// to `singleDigits`.
-    ///
-    ///     let singleDigits = 0..<10
-    ///     let singleNonZeroDigits = singleDigits.dropFirst()
-    ///     // singleNonZeroDigits is a Slice<Range<Int>>
-    ///
-    ///     print(singleNonZeroDigits.count)
-    ///     // Prints "9"
-    ///     prints(singleNonZeroDigits.base.count)
-    ///     // Prints "10"
-    ///     print(singleDigits == singleNonZeroDigits.base)
-    ///     // Prints "true"
     @inlinable // generic-performance
     public var base: Base {
         return _base
@@ -152,9 +122,9 @@ extension Slice: Collection {
     public var endIndex: Index {
         return _endIndex
     }
-    
     /*
      这里, 判断范围的时候, 是使用的自己记录的 start, end 的范围.
+     如果, 传递过来的 Index 不在 _startIndex, _endIndex 里面, 直接报错.
      */
     @inlinable // generic-performance
     public subscript(index: Index) -> Base.Element {
@@ -173,7 +143,8 @@ extension Slice: Collection {
     }
     
     /*
-     所有的, 关于 index 的操作, 都是交给了 base. Slice 仅仅是提供一个切割的概念而已.
+     所有的, 关于 index 的操作, 都是交给了 base.
+     Slice 仅仅是提供一个切割的概念而已.
      这里, 返回的 indices, 是 _base.indices 里面, slice 的 start, end 圈住的那一部分.
      */
     
@@ -248,7 +219,6 @@ extension Slice: BidirectionalCollection where Base: BidirectionalCollection {
  所有的关于 mutable 的操作, 都是交给了 base. Slice 仅仅是做了一层范围的检查而已.
  注意, MutableCollection 指的是, 可以改变集合里面的信息, 而添加删除元素, 则是 Replaceable 的能力.
  */
-
 extension Slice: MutableCollection where Base: MutableCollection {
     @inlinable // generic-performance
     public subscript(index: Index) -> Base.Element {

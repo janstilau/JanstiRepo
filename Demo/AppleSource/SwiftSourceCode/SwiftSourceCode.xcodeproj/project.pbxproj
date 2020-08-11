@@ -244,16 +244,16 @@
 		0651545B24D556F00060603F /* Collection */ = {
 			isa = PBXGroup;
 			children = (
-				06E1B3C6247D6BEE00CD9D60 /* BidirectionalCollection.swift */,
 				06E1B343247D6BEE00CD9D60 /* Collection.swift */,
-				06E1B352247D6BEE00CD9D60 /* CollectionAlgorithms.swift */,
-				06E1B334247D6BEE00CD9D60 /* CollectionDifference.swift */,
-				06E1B338247D6BEE00CD9D60 /* EmptyCollection.swift */,
-				06E1B3DB247D6BEE00CD9D60 /* LazyCollection.swift */,
+				06E1B3C6247D6BEE00CD9D60 /* BidirectionalCollection.swift */,
 				06E1B329247D6BEE00CD9D60 /* MutableCollection.swift */,
 				06E1B32A247D6BEE00CD9D60 /* RandomAccessCollection.swift */,
 				06E1B3D3247D6BEE00CD9D60 /* RangeReplaceableCollection.swift */,
+				06E1B352247D6BEE00CD9D60 /* CollectionAlgorithms.swift */,
+				06E1B334247D6BEE00CD9D60 /* CollectionDifference.swift */,
 				06E1B3A0247D6BEE00CD9D60 /* Slice.swift */,
+				06E1B338247D6BEE00CD9D60 /* EmptyCollection.swift */,
+				06E1B3DB247D6BEE00CD9D60 /* LazyCollection.swift */,
 				06E1B36F247D6BEE00CD9D60 /* StringRangeReplaceableCollection.swift */,
 			);
 			path = Collection;
