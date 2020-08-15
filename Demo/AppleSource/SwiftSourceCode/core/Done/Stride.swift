@@ -9,34 +9,25 @@
  Strideable, 可比较的, 可以测算距离的, 可以根据距离, 进行前进后退的.
  Int, Float 都是 Strideable 的
  Stride 表示的是, 两个 Strideable 之间的距离.
+ 相对于 comparable, Strideable 非常关键的一点是, 必须是可以测算出偏移值的.
+ 字符串是可比较的, apple, banane 比较的话,  apple 一定大, 但是, 他们是没有办法测算出一个偏移值来的.
+ 
+ 最形象的理解就是, strideable 的对象, 就是坐标轴上的坐标. 有刻度表示, 有方向表示.
  */
-/// A type representing continuous, one-dimensional values that can be offset
-/// and measured.
-/// 相对于 comparable, Strideable 非常关键的一点是, 必须是可以测算出偏移值的.
-/// 字符串是可比较的, apple, banane 比较的话,  apple 一定大, 但是, 他们是没有办法测算出一个偏移值来的.
-///
-/// Stride, 其实就是偏移量. 可以这样理解, 可以完成 += 操作的数据类型, 才可以算作是 Strideable.
-/// The last parameter of these functions is of the associated `Stride`
-/// type---the type that represents the distance between any two instances of
-/// the `Strideable` type.
-///
-/// - Important: The `Strideable` protocol provides default implementations for
-///   the equal-to (`==`) and less-than (`<`) operators that depend on the
-///   `Stride` type's implementations. If a type conforming to `Strideable` is
-///   its own `Stride` type, it must provide concrete implementations of the
-///   two operators to avoid infinite recursion.
 
 /*
- 对于 Strideable 要确保几个概念. 1. 间距是什么类型. 2. 当前值可以通过间距获取到那个位置的值.
+ 对于 Strideable 要确保几个概念.
+ 1. 间距是什么类型. 2. 当前值可以通过间距获取到那个位置的值.
  */
 public protocol Strideable: Comparable {
-    /// A type that represents the distance between two values.
+    /// 表示间距的类型, 必须可比较大小, 而是可以用数字测量, 有着正负的概念.
     associatedtype Stride: SignedNumeric, Comparable
     
+    /// 必须可以测算出, 与另一个 Strideable 之间的距离有多少.
     func distance(to other: Self) -> Stride
+    /// 必须可以根据距离, 得到另外一个 Strideable 的值.
     func advanced(by n: Stride) -> Self
     
-    /// `_step` is an implementation detail of Strideable; do not use it directly.
     static func _step(
         after current: (index: Int?, value: Self),
         from start: Self, by distance: Self.Stride
@@ -44,18 +35,22 @@ public protocol Strideable: Comparable {
 }
 
 extension Strideable {
-    @inlinable
+    /*
+     如果, A 比 B 大, 就是在刻度尺上, A 在比的后面.
+     */
     public static func < (x: Self, y: Self) -> Bool {
         return x.distance(to: y) > 0
     }
-    @inlinable
+    /*
+     如果, AB 相等, 就是在刻度尺上, A,B 在同一个位置.
+     */
     public static func == (x: Self, y: Self) -> Bool {
         return x.distance(to: y) == 0
     }
 }
 
 /*
- 默认的实现, 是不会包含 index 信息的, 但是会给出相应位置的 striable 值.
+ 默认的实现, 是不会包含 index 信息的, 只计算出 striable 的值出来.
  */
 extension Strideable {
     @inlinable // protocol-only
@@ -98,18 +93,17 @@ extension Strideable where Self: FloatingPoint, Self == Stride {
     }
 }
 
-/// An iterator for a `StrideTo` instance.
+
+/// 以下是 Stride 这个函数相关的实现.
+/// StrideTo 表示, 不包含结束位置. StrideThrough 会包含结束位置.
 @frozen
 public struct StrideToIterator<Element: Strideable> {
     @usableFromInline
     internal let _start: Element
-    
     @usableFromInline
     internal let _end: Element
-    
     @usableFromInline
     internal let _stride: Element.Stride
-    
     @usableFromInline
     internal var _current: (index: Int?, value: Element)
     
@@ -122,14 +116,7 @@ public struct StrideToIterator<Element: Strideable> {
     }
 }
 
-/*
- StrideToIterator 表示, 不包含目标位置.
- */
 extension StrideToIterator: IteratorProtocol {
-    /// Advances to the next element and returns it, or `nil` if no next element
-    /// exists.
-    ///
-    /// Once `nil` has been returned, all subsequent calls return `nil`.
     @inlinable
     public mutating func next() -> Element? {
         let result = _current.value
@@ -141,9 +128,7 @@ extension StrideToIterator: IteratorProtocol {
     }
 }
 
-/// A sequence of values formed by striding over a half-open interval.
-///
-/// Use the `stride(from:to:by:)` function to create `StrideTo` instances.
+/// 这个序列里面, 仅仅是存储了一下起始位置, 终点位置, 步长的信息.
 @frozen
 public struct StrideTo<Element: Strideable> {
     @usableFromInline
@@ -157,9 +142,6 @@ public struct StrideTo<Element: Strideable> {
     
     @inlinable
     internal init(_start: Element, end: Element, stride: Element.Stride) {
-        _precondition(stride != 0, "Stride size must not be zero")
-        // At start, striding away from end is allowed; it just makes for an
-        // already-empty Sequence.
         self._start = _start
         self._end = end
         self._stride = stride
@@ -167,13 +149,16 @@ public struct StrideTo<Element: Strideable> {
 }
 
 /*
- 一个简单的序列,  它的作用, 主要是引出 StrideToIterator.
+ StrideTo 对于 Sequence 的实现, 就是返回相应的 iterator.
  */
 extension StrideTo: Sequence {
     @inlinable
     public __consuming func makeIterator() -> StrideToIterator<Element> {
         return StrideToIterator(_start: _start, end: _end, stride: _stride)
     }
+    /*
+     这里, underestimatedCount 也是迭代出来的. 但是因为 Stride 可以根据步长来计算, 有可能很快.
+     */
     @inlinable
     public var underestimatedCount: Int {
         var it = self.makeIterator()
@@ -202,7 +187,8 @@ extension StrideTo: CustomReflectable {
 }
 
 /*
- StrideTo, 该函数的作用, 就是封装 StrideTo. StrideTo 是一个序列, 正是因为有它的存在, for in 的有半部分, 才可以安放, stride 函数.
+ stride 这个函数, 就是一个简便方法, 生成对应的结构体, 而这个结构体, 再去完成迭代的具体工作.
+ 面向对象的好处就是, 封装具体的业务逻辑, 只提供稳定方便的接口.
  */
 @inlinable
 public func stride<T>(
@@ -211,21 +197,19 @@ public func stride<T>(
     return StrideTo(_start: start, end: end, stride: stride)
 }
 
-/// An iterator for a `StrideThrough` instance.
+/*
+ StrideThrough 的相关实现. StrideThrough 是, 截止点也算范围的一部分.
+ */
 @frozen
 public struct StrideThroughIterator<Element: Strideable> {
     @usableFromInline
     internal let _start: Element
-    
     @usableFromInline
     internal let _end: Element
-    
     @usableFromInline
     internal let _stride: Element.Stride
-    
     @usableFromInline
     internal var _current: (index: Int?, value: Element)
-    
     @usableFromInline
     internal var _didReturnEnd: Bool = false
     
@@ -239,10 +223,6 @@ public struct StrideThroughIterator<Element: Strideable> {
 }
 
 extension StrideThroughIterator: IteratorProtocol {
-    /// Advances to the next element and returns it, or `nil` if no next element
-    /// exists.
-    ///
-    /// Once `nil` has been returned, all subsequent calls return `nil`.
     @inlinable
     public mutating func next() -> Element? {
         let result = _current.value
@@ -266,10 +246,8 @@ public struct StrideThrough<Element: Strideable> {
     internal let _end: Element
     @usableFromInline
     internal let _stride: Element.Stride
-    
     @inlinable
     internal init(_start: Element, end: Element, stride: Element.Stride) {
-        _precondition(stride != 0, "Stride size must not be zero")
         self._start = _start
         self._end = end
         self._stride = stride
@@ -277,16 +255,11 @@ public struct StrideThrough<Element: Strideable> {
 }
 
 extension StrideThrough: Sequence {
-    /// Returns an iterator over the elements of this sequence.
-    ///
-    /// - Complexity: O(1).
     @inlinable
     public __consuming func makeIterator() -> StrideThroughIterator<Element> {
         return StrideThroughIterator(_start: _start, end: _end, stride: _stride)
     }
     
-    // FIXME(conditional-conformances): this is O(N) instead of O(1), leaving it
-    // here until a proper Collection conformance is possible
     @inlinable
     public var underestimatedCount: Int {
         var it = self.makeIterator()
@@ -316,7 +289,7 @@ extension StrideThrough: CustomReflectable {
 }
 
 /*
- StrideThrough 和上面的唯一区别, 就是在 end 的判断上. 一个认为到达则是 nil, 一个认为越过了才是 nil.
+ 简便方法, 返回对应的结构体, 完成实际的工作.
  */
 @inlinable
 public func stride<T>(

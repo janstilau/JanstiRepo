@@ -2794,7 +2794,7 @@ extension FixedWidthInteger {
     ///
     /// If `source` is outside the bounds of this type after rounding toward
     /// zero, a runtime error may occur.
-    ///
+    
     ///     let z = UInt(-21.5)
     ///     // Error: ...outside the representable range
     ///

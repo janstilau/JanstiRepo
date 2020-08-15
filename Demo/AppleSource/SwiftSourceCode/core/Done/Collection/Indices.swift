@@ -22,6 +22,9 @@ public struct DefaultIndices<Elements: Collection> {
     }
 }
 
+/*
+ DefaultIndices 的 Collection, Index 是值, Index 也是元素.
+ */
 extension DefaultIndices: Collection {
     public typealias Index = Elements.Index
     public typealias Element = Elements.Index
@@ -39,6 +42,9 @@ extension DefaultIndices: Collection {
         return _endIndex
     }
     
+    /*
+     通过索引, 获得就是索引本身.
+     */
     @inlinable
     public subscript(i: Index) -> Elements.Index {
         return i
@@ -46,7 +52,6 @@ extension DefaultIndices: Collection {
     
     @inlinable
     public subscript(bounds: Range<Index>) -> DefaultIndices<Elements> {
-        // FIXME: swift-3-indexing-model: range check.
         return DefaultIndices(
             _elements: _elements,
             startIndex: bounds.lowerBound,
@@ -55,13 +60,11 @@ extension DefaultIndices: Collection {
     
     @inlinable
     public func index(after i: Index) -> Index {
-        // FIXME: swift-3-indexing-model: range check.
         return _elements.index(after: i)
     }
     
     @inlinable
     public func formIndex(after i: inout Index) {
-        // FIXME: swift-3-indexing-model: range check.
         _elements.formIndex(after: &i)
     }
     
@@ -75,7 +78,6 @@ extension DefaultIndices: BidirectionalCollection
 where Elements: BidirectionalCollection {
     @inlinable
     public func index(before i: Index) -> Index {
-        // FIXME: swift-3-indexing-model: range check.
         return _elements.index(before: i)
     }
     

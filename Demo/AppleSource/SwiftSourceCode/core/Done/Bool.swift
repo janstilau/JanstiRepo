@@ -1,15 +1,8 @@
 /*
+ 专门有一个类型代表 BOOL 值, 而不再是, 00000000 表示 false, 其他表示 true.\
  相比于, 内存不为 0x0000 就为 TRUE, 专门的创建一个类型, 表示判断, 意义要明显的多.
- 可能对于习惯于上面内存表示判断的人, 这样的写法比较啰嗦, 但是这种非 0 即为 true 的判断, 实际徒增复杂度.
+ 可能对于习惯于上面内存表示判断的人, 这样的写法比较啰嗦, 但是这种非 0 即为 true 的判断, 实际徒增复杂度
  */
-
-/// A value type whose instances are either `true` or `false`.
-///
-/// `Bool` represents Boolean values in Swift. Create instances of `Bool` by
-/// using one of the Boolean literals `true` or `false`, or by assigning the
-/// result of a Boolean method or operation to a variable or constant.
-///
-/// 编译的时候, 会有类型检查, 现在只有 Bool 类型的数据, 才能出现在条件表达式里面. Bool 只会有两个值, true, false.
 
 @frozen
 public struct Bool {
@@ -122,25 +115,6 @@ extension Bool: Hashable {
     @inlinable
     public func hash(into hasher: inout Hasher) {
         hasher.combine((self ? 1 : 0) as UInt8)
-    }
-}
-
-extension Bool: LosslessStringConvertible {
-    /// Creates a new Boolean value from the given string.
-    ///
-    /// If the `description` value is any string other than `"true"` or
-    /// `"false"`, the result is `nil`. This initializer is case sensitive.
-    ///
-    /// - Parameter description: A string representation of the Boolean value.
-    @inlinable
-    public init?(_ description: String) {
-        if description == "true" {
-            self = true
-        } else if description == "false" {
-            self = false
-        } else {
-            return nil
-        }
     }
 }
 

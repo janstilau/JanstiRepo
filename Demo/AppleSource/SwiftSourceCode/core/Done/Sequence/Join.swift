@@ -10,10 +10,6 @@ public struct JoinedSequence<Base: Sequence> where Base.Element: Sequence {
     @usableFromInline // lazy-performance
     internal var _separator: ContiguousArray<Element>
     
-    /// Creates an iterator that presents the elements of the sequences
-    /// traversed by `base`, concatenated using `separator`.
-    ///
-    /// - Complexity: O(`separator.count`).
     @inlinable // lazy-performance
     public init<Separator: Sequence>(base: Base, separator: Separator)
         where Separator.Element == Element {

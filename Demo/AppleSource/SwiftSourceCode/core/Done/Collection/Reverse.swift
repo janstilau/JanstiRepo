@@ -1,7 +1,7 @@
+/*
+ 如果是可变的, 那么就可以直接在自身上进行操作.
+ */
 extension MutableCollection where Self: BidirectionalCollection {
-    /*
-     这个写法, 符合常规的定义.
-     */
     @inlinable // protocol-only
     public mutating func reverse() {
         if isEmpty { return }
@@ -16,12 +16,11 @@ extension MutableCollection where Self: BidirectionalCollection {
 }
 
 /*
- 各种适配器, 都要把原始对象传入进去, 这样, 才能进行操作.
+  想要 reverse, 那么这个 base, 一定要是 Bidirectional
  */
 @frozen
 public struct ReversedCollection<Base: BidirectionalCollection> {
     public let _base: Base
-    
     @inlinable
     internal init(_base: Base) {
         self._base = _base
@@ -39,8 +38,7 @@ extension ReversedCollection {
         
         @inlinable
         @inline(__always)
-        /// Creates an iterator over the given collection.
-        public /// @testable
+        public
         init(_base: Base) {
             self._base = _base
             self._position = _base.endIndex
@@ -49,7 +47,7 @@ extension ReversedCollection {
 }
 
 /*
- 这个写法, 和 C++ 的 reverseIterator 是一模一样的.
+ 这个写法, 和 C++ 的 reverseIterator 是一模一样的. 进行向前的迭代工作.
  */
 extension ReversedCollection.Iterator: IteratorProtocol, Sequence {
     public typealias Element = Base.Element
@@ -65,7 +63,6 @@ extension ReversedCollection.Iterator: IteratorProtocol, Sequence {
 
 extension ReversedCollection: Sequence {
     public typealias Element = Base.Element
-    
     @inlinable
     @inline(__always)
     public __consuming func makeIterator() -> Iterator {

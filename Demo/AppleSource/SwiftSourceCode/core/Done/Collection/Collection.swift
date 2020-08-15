@@ -6,23 +6,16 @@
  formIndex, 也就是原来的 iterator 的++, --, 操作, 把原有的 Iterator 的能力, 转移到了 collection 里面.
  */
 
-/// A type that iterates over a collection using its indices.
-///
-/// By default, any custom collection type you create will inherit a
-/// `makeIterator()` method that returns an `IndexingIterator` instance,
-/// making it unnecessary to declare your own.
-
-/// When creating a custom
-/// collection type, add the minimal requirements of the `Collection`
-/// protocol:
-/// starting and ending indices and a subscript for accessing
-/// elements.
-///
-/// StartIndex
-/// EndIndex
-/// Subscript
-///
-
+/*
+ Collection, 要实现 Sequence, 要提供一个迭代器. 那么这个迭代器如何取值呢.
+ 对于容器来说, 取值过程各不一样. Array, 链表, 哈希表, map 都有着不同的取值过程.
+ Colleciton 提供了几个概念, 通过 Index 取值.
+ IndexingIterator 通过记录 Collection 的原始值, 通过 Index 从原始值中取值, 通过 Collection 进行 Index 的更改操作.
+ IndexingIterator 提出后, 各个容器其实就不用考虑 Sequence 的事情了, 因为 IndexingIterator 的实现, 可以囊括任何类型的 Collection.
+ 而 Collection 提供了几个抽象方法, Subscript(Index), formIndex, 这些抽象方法, 是 Collection 的实现类必须要实现的.
+ Collection 的实现类, 实现的是 Collection 提供的抽象, 他们并不用关心 Sequence 的细节, 因为 Sequence 的细节, 在 Colleciton 中, 已经实现了.
+ 从这个意义上来说, Collection 这个接口, 就是 Sequence 接口的具体实现类.
+ */
 /*
  IndexingIterator 的构造, 仅仅是记录一下原始的 Collection, 以及起始迭代的位置.
  */
@@ -31,7 +24,7 @@ public struct IndexingIterator<Elements: Collection> {
     @usableFromInline
     internal let _elements: Elements // 存储一下, 迭代器对应的集合原始信息
     @usableFromInline
-    internal var _position: Elements.Index // 存储一下, 迭代器的开始信息
+    internal var _position: Elements.Index // 存储一下,  当前的迭代位置.
     
     @inlinable
     @inline(__always)
@@ -51,10 +44,9 @@ public struct IndexingIterator<Elements: Collection> {
 }
 
 /*
-不同容器的迭代器, next 的方式是不一样的. 比如, 数组是 index++, Map 是 bucket 和 node 的共同作用, 链表是 nextNode 的判断.
-在这个迭代器中, 通过 Colelction 提供的抽象方法, 通过 index 进行取值, 然后更新下一位置的 postion 值.
-不同的 Collection, 实现不同的下标取值, formIndex 更新的操作.
-*/
+ IndexingIterator 通过 next, 获取值的办法.
+ 可以看到, IndexingIterator 是通过 Colleciton 的抽象, 完成的各个功能.
+ */
 extension IndexingIterator: IteratorProtocol, Sequence {
     public typealias Element = Elements.Element
     public typealias Iterator = IndexingIterator<Elements>
@@ -72,7 +64,8 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 /*
  一个需求, 可以多次遍历, 每次遍历不会破坏状态, 可以通过下标进行访问.
  */
-/// 在 Swift 里面, 容器就是可以多次迭代的序列. 所以, Collection 可以使用 Sequence 里面定义的各个方法.
+/// 在 Swift 里面, 容器就是可以多次迭代的序列.
+/// Collection 本身就是 Sequence, 所以它可以使用各种 Sequence 的方法.
 ///
 /// Accessing Individual Elements
 /// =============================
@@ -80,15 +73,19 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 ///
 /// Accessing Slices of a Collection
 /// ================================
+/// 通过 Range, 获取到 Colelction 的切片.
 ///
 /// Slices Share Indices
 /// --------------------
+/// 切片, 和原始的 Collection, 是共享 Index 的数值和范围的.
 ///
 /// Slices Inherit Collection Semantics
 /// -----------------------------------
+/// 切片, 也是有着 Collection 的含义的, 可以在切片上, 做Collection 的操作.
 ///
 /// Traversing a Collection
 /// =======================
+///  可以遍历 Collection, 这其实是 Sequence 的能力.
 ///
 /// Conforming to the Collection Protocol
 /// =====================================
@@ -109,11 +106,13 @@ extension IndexingIterator: IteratorProtocol, Sequence {
 
 
 public protocol Collection: Sequence {
+    
     typealias IndexDistance = Int
     
     override associatedtype Element
     /*
      这里, Comparable 代表着可以比较, 比如哈希表的, 通过bucket 的位置, 可以比较, 一个 bucket 上, 通过链表的前后, 可以比较.
+     这里, Index 并不是 Stridable 的, 因为这是 RandomColleciton 才会有的功能.
      */
     associatedtype Index: Comparable
     /*
@@ -126,7 +125,8 @@ public protocol Collection: Sequence {
     var endIndex: Index { get }
     
     /*
-     IndexingIterator 中, next 是完全建立在 colleciton 的基础上, 进行的取值, 以及 index 更新的操作.
+     默认的 Colleciton 的 Iterator, 是 IndexingIterator. 这是一个非常好的类, 所有的功能实现, 都是建立在 Colection 提供的抽象上.
+     只要 Collection, 实现了对应的方法, 那么自己实现的容器类, 就自动的完成了 Sequence 的适配.
      */
     associatedtype Iterator = IndexingIterator<Self>
     override __consuming func makeIterator() -> Iterator
@@ -163,49 +163,50 @@ public protocol Collection: Sequence {
     var indices: Indices { get }
     
     var isEmpty: Bool { get }
+    /*
+     count 是一个 primitive method
+     但是有默认实现. 默认实现, 可以根据 Index 进行最终数量的确定.
+     然而, 更多的容器, 是会在修改的过程中, 专门维护一个 count 值的, 所以, 在那些容器里面, 直接进行 count 值的返回就可以了.
+     */
     var count: Int { get }
     
     func _customIndexOfEquatableElement(_ element: Element) -> Index??
     func _customLastIndexOfEquatableElement(_ element: Element) -> Index??
-    func index(_ i: Index, offsetBy distance: Int) -> Index
     
-    func index(
-        _ i: Index, offsetBy distance: Int, limitedBy limit: Index
-    ) -> Index?
-    
-    /*
-     这里面的好多函数, 都有着 random 和 normal 之分. 这个概念 c++ 是建立在 iterator 的基础上的, 在这里, 变为了 colleciton 的基础上.
-     */
-    func distance(from start: Index, to end: Index) -> Int
     func _failEarlyRangeCheck(_ index: Index, bounds: Range<Index>)
     func _failEarlyRangeCheck(_ index: Index, bounds: ClosedRange<Index>)
     func _failEarlyRangeCheck(_ range: Range<Index>, bounds: Range<Index>)
     
     /*
-     这个方法, 要交给每个 collection 自己去完成.
+     最为重要的方法, 如何通过一个 Index, 得到后面的 Index
      */
     func index(after i: Index) -> Index
     /*
-     这个就是调用上面的 index 实现的.
-     就是返回值变为了传出参数表示.
-     在实现的时候, 大量的使用了 formIndex, 但是, 其实最重要的还是 index(after i: Index).
+     传出参数形式的获取到后面的 Index.
      */
     func formIndex(after i: inout Index)
+    
+    func index(_ i: Index, offsetBy distance: Int) -> Index
+    func index(
+        _ i: Index, offsetBy distance: Int, limitedBy limit: Index
+    ) -> Index?
+    
+    /*
+     计算两个 Index 之间的距离.
+     */
+    func distance(from start: Index, to end: Index) -> Int
 }
 
 /// Default implementation for forward collections.
 extension Collection {
     /*
-     传出参数, 都要使用返回值版本的实现.
+     传出参数版本的 indexAfter 的默认实现, 是根据 IndexAfter 进行的.
      */
     @inlinable // protocol-only
     @inline(__always)
     public func formIndex(after i: inout Index) {
         i = index(after: i)
     }
-    /*
-     里面就是简单的通过 range 的范围比较. 前开后闭.
-     */
     @inlinable
     public func _failEarlyRangeCheck(_ index: Index, bounds: Range<Index>) {
         _precondition(
@@ -215,9 +216,6 @@ extension Collection {
             index < bounds.upperBound,
             "Out of bounds: index >= endIndex")
     }
-    /*
-     里面就是简单的通过 range 的范围比较. 前闭后闭.
-     */
     @inlinable
     public func _failEarlyRangeCheck(_ index: Index, bounds: ClosedRange<Index>) {
         _precondition(
@@ -228,9 +226,6 @@ extension Collection {
             "Out of bounds: index > endIndex")
     }
     
-    /*
-     必须相交
-    */
     @inlinable
     public func _failEarlyRangeCheck(_ range: Range<Index>, bounds: Range<Index>) {
         _precondition(
@@ -277,17 +272,16 @@ extension Collection {
     }
     
     /*
-     各个容器, 在完成自己对于 Collection 的适配的时候, 如果可以进行 randomAccess, 会重写该方法, 进行更加高效的操作.
-     不然的话, 就是 O(n) 的遍历算法.
+     如同 C++ 一样, Distance 的实现, 默认是线性迭代的结果.
+     首先, Index 是 Comparable 的, 所以它其实可以判等的.
+     不断的, 进行迭代, 记录迭代的次数, 直到相等. 最后返回迭代的次数就好了.
+     在 Random 里面, 由于 Index 可以计算出 distance, 直接通过 Index 就可以得出.
+     注意, 在 Random 里面, 这个方法不是 override 的, 因为这算作 Collection 的扩展方法, 而不是 primitive method
      */
     @inlinable
     public func distance(from start: Index, to end: Index) -> Int {
         _precondition(start <= end,
                       "Only BidirectionalCollections can have end come before start")
-        /*
-         这里, 之所以用遍历的方式, 是因为如果可以随机访问的 collection, 距离的确认, 都是一件很难得事情. 例如链表.
-         在随机访问的 Collection 里面, 一定是进行了重写.
-         */
         var start = start
         var count = 0
         while start != end {
@@ -323,7 +317,7 @@ extension Collection {
     @inline(__always)
     internal func _advanceForward(_ i: Index, by n: Int) -> Index {
         /*
-         这里, 进行了检查, 但是在 BidirectionalCollections 里面, 一定要进行重写.
+         _advanceForward 的方法, 必须是要 > 0 的, 因为向前进行迭代, 是 Bidirection 的功能.
          */
         _precondition(n >= 0,
                       "Only BidirectionalCollections can be advanced by a negative amount")
@@ -340,7 +334,7 @@ extension Collection {
     
     /*
      在_advanceForward的基础上, 增加了对于边界值的判断
-    */
+     */
     @inlinable
     @inline(__always)
     internal func _advanceForward(
@@ -350,6 +344,10 @@ extension Collection {
                       "Only BidirectionalCollections can be advanced by a negative amount")
         var i = i
         for _ in stride(from: 0, to: n, by: 1) {
+            /*
+             如果, 到达了边界, 那么就返回 NIL
+             这里使用的是 to, 因为一般来说, Collection 的 endIndex, 就是非法索引了, 仅仅是一个标识, 不能用来取值的.
+             */
             if i == limit {
                 return nil
             }
@@ -359,11 +357,7 @@ extension Collection {
     }
 }
 
-/*
- Collection 有着一个默认的 IndexingIterator, 可以满足所有 iterator 需要的功能.
- */
 extension Collection where Iterator == IndexingIterator<Self> {
-    /// Returns an iterator over the elements of the collection.
     @inlinable // trivial-implementation
     @inline(__always)
     public __consuming func makeIterator() -> IndexingIterator<Self> {
@@ -371,10 +365,11 @@ extension Collection where Iterator == IndexingIterator<Self> {
     }
 }
 
+/*
+ 这里就是, Collection 为什么可以直接通过范围操作符, 得到一个新的值的原因.
+ Slice 本身, 就是 Collection 协议的实现者. 所以, 可以直接通过 Slice 进行后续的操作.
+ */
 extension Collection where SubSequence == Slice<Self> {
-    /*
-     对于 Collection 来说, 通过范围取值, 仅仅是生成一个 Slice 对象而已.
-     */
     @inlinable
     public subscript(bounds: Range<Index>) -> Slice<Self> {
         _failEarlyRangeCheck(bounds, bounds: startIndex..<endIndex)
@@ -382,15 +377,16 @@ extension Collection where SubSequence == Slice<Self> {
     }
 }
 
+/*
+ SubSequence == Self
+ 这里有点不理解.
+ */
 extension Collection where SubSequence == Self {
     @inlinable
     public mutating func popFirst() -> Element? {
         // TODO: swift-3-indexing-model - review the following
         guard !isEmpty else { return nil }
         let element = first!
-        /*
-         SubSequence == Self, 在这种情况下, 才可以做这样的赋值, swift 有着类型限制的.
-         */
         self = self[index(after: startIndex)..<endIndex]
         return element
     }
@@ -415,7 +411,8 @@ extension Collection {
     }
     
     /*
-     默认的实现, 就是遍历获取, 各个容器, 如果自己记录了 Count, 直接返回就可以了.
+     默认的实现, 就是遍历获取.
+     如果自己记录了 Count, 直接返回就可以了.
      */
     @inlinable
     public var count: Int {
@@ -423,8 +420,11 @@ extension Collection {
     }
     
     /*
+     根据某个 Element, 获取它的 Index 的值.
+     
      这个几个算法, 都是为了可以加快其他算法效率的 功能性方法.
-     在 Set,Dict 里面, 重写了这个方法, 因为哈希原理非常快就能找到. 在 range 里面, 重写了, range 就是连续空间.
+     在 Set,Dict 里面, 重写了这个方法, 因为哈希原理非常快就能找到.
+     在 range 里面, 重写了, range 就是连续空间.
      */
     @inlinable
     @inline(__always)
@@ -433,6 +433,9 @@ extension Collection {
         return nil
     }
     
+    /*
+     根据某个 Element, 获取它的最后一个 Index 的值.
+     */
     @inlinable
     @inline(__always)
     public // dispatching
@@ -442,56 +445,54 @@ extension Collection {
 }
 
 /*
- 同 Sequence 不同的是, Collection 的各种操作, 都是操作的 Index, 然后根据 index 生成对应的 range, 然后通过 range, 获取对应的 Slice.
+ 同 Sequence 不同的是, Collection 的各种操作, 都是操作的 Index.
+ 然后根据 index 生成对应的 range, 然后通过 range, 获取对应的 Slice.
  */
 extension Collection {
     @inlinable
     /*
-     Colelciton 协议, 对于 map 进行了重写, 因为 count 可以确认最终的输出数组的大小. 所以, 这里直接进行了空间的扩展.
+     Colelciton 协议, 对于 map 进行了重写, 因为 count 可以确认最终的输出数组的大小.
      以下, 是 Sequence 里面, 对于 map 的定义.
      @inlinable
      public func map<T>(
      _ transform: (Element) throws -> T
      ) rethrows -> [T] {
      // 这里, 及时利用了 underestimatedCount, 进行了一个效率的提升.
-        let initialCapacity = underestimatedCount
-        var result = ContiguousArray<T>()
-        result.reserveCapacity(initialCapacity) // 扩容.
+     let initialCapacity = underestimatedCount
+     var result = ContiguousArray<T>()
+     result.reserveCapacity(initialCapacity) // 扩容.
      /*
      通过 primitiveMethod, 获取数据, 然后进行业务处理.
      这里, underestimatedCount 以下的, 直接进行添加, 这里不用考虑数组扩容.
      超过了之后, 如果还没有遍历结束, 尝试进行添加.
      所以, underestimatedCount 一定要返回一个有意义的值.
      */
-        var iterator = self.makeIterator()
+     var iterator = self.makeIterator()
      // Add elements up to the initial capacity without checking for regrowth.
-        for _ in 0..<initialCapacity {
-            result.append(try transform(iterator.next()!))
-        }
+     for _ in 0..<initialCapacity {
+     result.append(try transform(iterator.next()!))
+     }
      // Add remaining elements, if any.
-        while let element = iterator.next() {
-            result.append(try transform(element))
-        }
+     while let element = iterator.next() {
+     result.append(try transform(element))
+     }
      /*
      其实, map 的操作, 很简单, 但是主要是, 方法提供了这一层抽象, 它就能进行下一层的操作. 比如链式编程.
      在 Array 里面, 根据 ContiguousArray 进行初始化, 一定有着简化的操作. 例如, 直接拿里面的指针, 当做 Array 的数据.
      */
      return Array(result)
      }
-     
-     可以看到, Sequence 里面的 map, 是通过迭代器控制的范围, 而 Collection 中, 则是通过 count.
-     map 本身不是 Sequence 里面的函数, 也不是 colleciton 里面的函数.
-     在调用的时候, swift 会自动调用最符合定义的函数.
      */
     public func map<T>(
         _ transform: (Element) throws -> T
     ) rethrows -> [T] {
-        // TODO: swift-3-indexing-model - review the following
+        /*
+         直接通过 count, 获取到最终想要生成的 Array 的大小, 提前进行扩容处理.
+         */
         let n = self.count
         if n == 0 {
             return []
         }
-        
         var result = ContiguousArray<T>()
         result.reserveCapacity(n)
         
@@ -500,14 +501,13 @@ extension Collection {
             result.append(try transform(self[i]))
             formIndex(after: &i)
         }
-        _expectEnd(of: self, is: i)
         return Array(result)
     }
     
     /*
-     dropFirst 的 Colelction 的实现.
-     这里, 直接返回了 SubSequence 里面的值.
      在 Sequence 里面, 是生成了一个 Drop 版本的适配Sequence对象, 这里则是使用了 Collection 的 subSequence.
+     在 Collection 里面, 全部变成了通过 Index 进行操作.
+     通过 Index, 生成对应的 range, 然后生成对应的 SubSequence 数据.
      */
     @inlinable
     public __consuming func dropFirst(_ k: Int = 1) -> SubSequence {
@@ -533,18 +533,19 @@ extension Collection {
     public __consuming func drop(
         while predicate: (Element) throws -> Bool
     ) rethrows -> SubSequence {
+        /*
+         首先, 根据 predicate, 找到对应的 startIndex, 然后将 startIndex, 和 endIndex 生成的 range, 交给 Collection.
+         */
         var start = startIndex
         while try start != endIndex && predicate(self[start]) {
             formIndex(after: &start)
         }
-        /*
-         这里, 直接是操作的 index 这个值.
-         */
         return self[start..<endIndex]
     }
     
     /*
      返回 集合的前多少个的子序列.
+     操作的是 range.
      */
     @inlinable
     public __consuming func prefix(_ maxLength: Int) -> SubSequence {
@@ -557,8 +558,7 @@ extension Collection {
     }
     
     /*
-     返回集合前多少个子序列, 直到某个元素不符合条件了.
-     这里, 用到了根据 index 取值的操作了.
+     通过 predicate, 得到最终的 range, 交给 Collection
      */
     @inlinable
     public __consuming func prefix(
@@ -571,6 +571,10 @@ extension Collection {
         return self[startIndex..<end]
     }
     
+    /*
+     Sequence 里面, 有着该方法的实现.
+     在 Collecton 里面, 会更加的高效.
+     */
     @inlinable
     public __consuming func suffix(_ maxLength: Int) -> SubSequence {
         _precondition(

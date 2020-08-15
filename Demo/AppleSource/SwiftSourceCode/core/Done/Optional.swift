@@ -1,8 +1,10 @@
 /*
- 其实, 就是一个特殊的标记为. 我猜测, JS 里面的 Null, 也是一个特殊的标记位.
- Null, 代表一种类型, 无. 将无单独算作一种类型, 可以让含义更加的清晰.
- 具体可以看 Swift 进阶里面, 对于 Optional 的讲解.
+    其实, 就是一个特殊的标记为. 我猜测, JS 里面的 Null, 也是一个特殊的标记位.
+    Null, 代表一种类型, 无.
+    将无单独算作一种类型, 可以让含义更加的清晰.
+    具体可以看 Swift 进阶里面, 对于 Optional 的讲解.
  */
+
 ///
 ///     Int? 就是 Optional<Int> 的简写形式.
 ///     let shortForm: Int? = Int("42")
@@ -12,40 +14,18 @@
 ///
 /// Optional Binding
 /// ----------------
-///
-/// if let 是取出 optinal 的关联值, 到特定的变量上, 这是值拷贝的过程. 所以, 绑定后的值修改, 不会影响到关联值的内容.
-/// To conditionally bind the wrapped value of an `Optional` instance to a new
-/// variable, use one of the optional binding control structures, including
-/// `if let`, `guard let`, and `switch`.
-///
-///     if let starPath = imagePaths["star"] {
-///         print("The star image is at '\(starPath)'")
-///     } else {
-///         print("Couldn't find the star image")
-///     }
-///     // Prints "The star image is at '/glyphs/star.png'"
+/// 值绑定, 是值的拷贝行为.
 ///
 /// Optional Chaining
 /// -----------------
 ///
-/// To safely access the properties and methods of a wrapped instance, use the
-/// postfix optional chaining operator (postfix `?`). The following example uses
-/// optional chaining to access the `hasSuffix(_:)` method on a `String?`
-/// instance.
-///
-///     这里, == 左边是一个 Optional, 右边是一个 bool. 不同的类型, 之间是不能进行比较的
-///     编译器会把右边变为一个 Optional(true), 这样就是 Optional 之间的比较了. 关于 Optional 的比较, 有着 == 操作符的重载.
-///     if imagePaths["star"]?.hasSuffix(".png") == true {
-///         print("The star image is in PNG format")
-///     }
-///     // Prints "The star image is in PNG format"
-///
 
 @frozen
 public enum Optional<Wrapped>: ExpressibleByNilLiteral {
-    
     /*
-     Optional 就只有这两个值, 表示空的 none, 以及some, some 有着关联值, 也就可以在里面存放各种数据.
+     Optional 就只有这两个值, 表示空的 none, 以及some.
+     Some 有着关联值, 也就可以在里面存放各种数据.
+     None 没有关联值, 就是表示空的概念.
      */
     case none
     case some(Wrapped)
@@ -55,6 +35,17 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
     @_transparent
     public init(nilLiteral: ()) { self = .none }
     
+    
+    public func map<U>(
+        _ transform: (Wrapped) throws -> U
+    ) rethrows -> U {
+        switch self {
+        case .some(let y):
+            return try transform(y)
+        case .none:
+            return .none
+        }
+    }
     
     @inlinable
     public func flatMap<U>(
@@ -69,6 +60,7 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
     }
   
     
+    // 这应该就是强制解包的实现.
     @inlinable
     public var unsafelyUnwrapped: Wrapped {
         @inline(__always)
@@ -77,32 +69,6 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
                 return x
             }
             _debugPreconditionFailure("unsafelyUnwrapped of nil optional")
-        }
-    }
-    
-    @inlinable
-    internal var _unsafelyUnwrappedUnchecked: Wrapped {
-        @inline(__always)
-        get {
-            if let x = self {
-                return x
-            }
-            _internalInvariantFailure("_unsafelyUnwrappedUnchecked of nil optional")
-        }
-    }
-}
-
-extension Optional: CustomDebugStringConvertible {
-    /// A textual representation of this instance, suitable for debugging.
-    public var debugDescription: String {
-        switch self {
-        case .some(let value):
-            var result = "Optional("
-            debugPrint(value, terminator: "", to: &result)
-            result += ")"
-            return result
-        case .none:
-            return "nil"
         }
     }
 }
@@ -151,16 +117,9 @@ extension Optional: Hashable where Wrapped: Hashable {
     }
 }
 
-// Enable pattern matching against the nil literal, even if the element type
-// isn't equatable.
-@frozen
-public struct _OptionalNilComparisonType: ExpressibleByNilLiteral {
-    /// Create an instance initialized with `nil`.
-    @_transparent
-    public init(nilLiteral: ()) {
-    }
-}
-
+/*
+ 
+ */
 extension Optional {
     /// Returns a Boolean value indicating whether an argument matches `nil`.
     ///
@@ -205,7 +164,6 @@ extension Optional {
     /*
      Optional 之所以可以和 nil 进行比较, 就是因为重载了这个 == 操作符方法.
      */
-    @_transparent
     public static func ==(lhs: Wrapped?, rhs: _OptionalNilComparisonType) -> Bool {
         switch lhs {
         case .some:
@@ -215,7 +173,6 @@ extension Optional {
         }
     }
     
-    @_transparent
     public static func !=(lhs: Wrapped?, rhs: _OptionalNilComparisonType) -> Bool {
         switch lhs {
         case .some:
@@ -228,7 +185,6 @@ extension Optional {
     /*
      因为, 参数的位置原因, 这里要写同样的逻辑
      */
-    @_transparent
     public static func ==(lhs: _OptionalNilComparisonType, rhs: Wrapped?) -> Bool {
         switch rhs {
         case .some:
@@ -238,7 +194,6 @@ extension Optional {
         }
     }
     
-    @_transparent
     public static func !=(lhs: _OptionalNilComparisonType, rhs: Wrapped?) -> Bool {
         switch rhs {
         case .some:
@@ -250,7 +205,9 @@ extension Optional {
 }
 
 /*
- 这里写的很清楚, 传过来的是一个自动闭包
+ 这里写的很清楚, 传过来的是一个自动闭包.
+ 如果有值, 那么返回里面的孩子.
+ 如果没有值, 自动闭包才会调用, 然后返回闭包的返回值.
  */
 @_transparent
 public func ?? <T>(optional: T?, defaultValue: @autoclosure () throws -> T)

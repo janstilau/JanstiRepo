@@ -227,7 +227,7 @@ extension RawRepresentable where RawValue: Hashable, Self: Hashable {
 ///     enum CompassDirection: CaseIterable {
 ///         case north, south, east, west
 ///     }
-///
+/// 
 ///     print("There are \(CompassDirection.allCases.count) directions.")
 ///     // Prints "There are 4 directions."
 ///     let caseList = CompassDirection.allCases

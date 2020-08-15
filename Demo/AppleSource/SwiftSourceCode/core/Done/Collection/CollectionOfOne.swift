@@ -1,15 +1,6 @@
-/// A collection containing a single element.
-///
-/// You can use a `CollectionOfOne` instance when you need to efficiently
-/// represent a single value as a collection. For example, you can add a
-/// single element to an array by using a `CollectionOfOne` instance with the
-/// concatenation operator (`+`):
-///
-///     let a = [1, 2, 3, 4]
-///     let toAdd = 100
-///     let b = a + CollectionOfOne(toAdd)
-///     // b == [1, 2, 3, 4, 100]
-
+/*
+ 当, 想要表达一个集合的时候, 但又只有一个数据, 那么这个类就可以使用了.
+ */
 @frozen // trivial-implementation
 public struct CollectionOfOne<Element> {
   @usableFromInline // trivial-implementation
@@ -21,16 +12,10 @@ public struct CollectionOfOne<Element> {
 }
 
 extension CollectionOfOne {
-  /// An iterator that produces one or zero instances of an element.
-  ///
-  /// `IteratorOverOne` is the iterator for the `CollectionOfOne` type.
   @frozen // trivial-implementation
   public struct Iterator {
     @usableFromInline // trivial-implementation
     internal var _elements: Element?
-
-    /// Construct an instance that generates `_element!`, or an empty
-    /// sequence if `_element == nil`.
     @inlinable // trivial-implementation
     public // @testable
     init(_elements: Element?) {
@@ -41,16 +26,9 @@ extension CollectionOfOne {
 
 /*
  这里就是关键, 只进行一次取值, 然后 next 就是 nil 了.
- 这样, 一个数据, 就变成了序列了.
+ 这里, 是 CollecitonOfOne 对于 Sequence 的适配.
  */
 extension CollectionOfOne.Iterator: IteratorProtocol {
-  /// Advances to the next element and returns it, or `nil` if no next element
-  /// exists.
-  ///
-  /// Once `nil` has been returned, all subsequent calls return `nil`.
-  ///
-  /// - Returns: The next element in the underlying sequence, if a next element
-  ///   exists; otherwise, `nil`.
   @inlinable // trivial-implementation
   public mutating func next() -> Element? {
     let result = _elements
@@ -65,46 +43,28 @@ extension CollectionOfOne: RandomAccessCollection, MutableCollection {
   public typealias Indices = Range<Int>
   public typealias SubSequence = Slice<CollectionOfOne<Element>>
 
-  /// The position of the first element.
-  ///
-  /// In a `CollectionOfOne` instance, `startIndex` is always `0`.
   @inlinable // trivial-implementation
   public var startIndex: Index {
     return 0
   }
 
-  /// The "past the end" position---that is, the position one greater than the
-  /// last valid subscript argument.
-  ///
-  /// In a `CollectionOfOne` instance, `endIndex` is always `1`.
   @inlinable // trivial-implementation
   public var endIndex: Index {
     return 1
   }
   
-  /// Returns the position immediately after the given index.
-  ///
-  /// - Parameter i: A valid index of the collection. `i` must be `0`.
-  /// - Returns: The index value immediately after `i`.
   @inlinable // trivial-implementation
   public func index(after i: Index) -> Index {
     _precondition(i == startIndex)
     return 1
   }
 
-  /// Returns the position immediately before the given index.
-  ///
-  /// - Parameter i: A valid index of the collection. `i` must be `1`.
-  /// - Returns: The index value immediately before `i`.
   @inlinable // trivial-implementation
   public func index(before i: Index) -> Index {
     _precondition(i == endIndex)
     return 0
   }
 
-  /// Returns an iterator over the elements of this collection.
-  ///
-  /// - Complexity: O(1)
   @inlinable // trivial-implementation
   public __consuming func makeIterator() -> Iterator {
     return Iterator(_elements: _element)
@@ -140,7 +100,6 @@ extension CollectionOfOne: RandomAccessCollection, MutableCollection {
     }
   }
 
-  /// The number of elements in the collection, which is always one.
   @inlinable // trivial-implementation
   public var count: Int {
     return 1

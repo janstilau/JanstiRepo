@@ -1,75 +1,19 @@
-/// A type that supplies the values of a sequence one at a time.
 /// 序列, 一次拿一个.
-///
-/// The `IteratorProtocol` protocol is tightly linked with the `Sequence`
-/// protocol. Sequences provide access to their elements by creating an
-/// iterator, which keeps track of its iteration process and returns one
-/// element at a time as it advances through the sequence.
-///
 /// Sequence 创建一个迭代器, 然后根据迭代器, 进行元素的访问.
 /// 迭代器的内部, 要记录 迭代的过程, 控制迭代按照顺序进行.
 /// 传统的迭代器, 会记录一下它所迭代容器, 以及当前迭代的位置.
 /// 但是迭代器里面记录什么状态, 比如 Array 只记录索引,  Dict 记录 Node 值, 是不一样的, Swift 的迭代, 变成了只提供 NextObject 这个能力的抽象.
-///
-///     For in 循环, 就是 while 循环, 和迭代器的综合使用的结果.
-///     next 就是 * 操作符, ++ 操作符的结合体.
-///     语言就是大号的语法糖的工厂.
-///
-/// The call to `animals.makeIterator()` returns an instance of the array's
-/// iterator. Next, the `while` loop calls the iterator's `next()` method
-/// repeatedly, binding each element that is returned to `animal` and exiting
-/// when the `next()` method returns `nil`.
-
-
-
-/// Using Iterators Directly
-/// ========================
-///
-/// idiom 习惯用语, 成语
-/// idiomatic 惯用的, 符合语言习惯的.
-///
-/// You rarely need to use iterators directly, because a `for`-`in` loop is the
-/// more idiomatic approach to traversing a sequence in Swift. Some
-/// algorithms, however, may call for direct iterator use.
-///
-/// for in 循环, 就是语言给你进行迭代用的.
-/// 语言提供了很多语法糖, for in 循环, 减少了建立迭代器, 获取数据, 迭代器++ 的过程. 所以, 有 for in, 就不要使用迭代器了, 使用迭代器, 和之前的 for 三段式写法没有太大区别
-/// 函数式编程里面, 提供了很多的特殊函数. 这些特殊函数, 就是对于迭代过程的封装. 由于 forin 里面, 直接控制了迭代过程, 所以用 forin 无法自定义迭代的控制.
-/// 在这些函数里面, 是直接使用了迭代器. 这些函数起到的作用, 和 forin 是一样的, 就是控制逻辑的固化. 然后提供了一个可以自定义的业务点, 这个业务点, 是用闭包的形式, 给与了使用者一个新的扩展点.
-///
-
-
-/// Using Multiple Iterators
-/// ========================
-
-/// Sequence 不保证, 是可以多次迭代的. 如果你要多次使用, 自己把握.
-/// 如果你知道是可以多次迭代的, 或者可以确定操作的对象是 Collection , 因为 Collection 协议保证了是多次可迭代的.
-/// Whenever you use multiple iterators (or `for`-`in` loops) over a single
-/// sequence, be sure you know that the specific sequence supports repeated
-/// iteration, either because you know its concrete type or because the
-/// sequence is also constrained to the `Collection` protocol.
-
 
 
 // 不要传递迭代器, 传递迭代器本身是安全的, 但是一个迭代器的 next, 可能会改变 Sequence 的状态. 导致其他迭代器执行的时候, 得到的是另外一个值.
 // 不过, 从以往的使用来说, 传递迭代器这件事基本没做过.
 
-/// Obtain each separate iterator from separate calls to the sequence's
-/// `makeIterator()` method rather than by copying. Copying an iterator is
-/// safe, but advancing one copy of an iterator by calling its `next()` method
-/// may invalidate other copies of that iterator. `for`-`in` loops are safe in
-/// this regard.
-///
 /// Adding IteratorProtocol Conformance to Your Type
 /// ================================================
 /// 基本上来说, 如果你要提供一个特殊的序列, 那么就要提供一下与之相配对的迭代器. 然后, 把取值的逻辑, 放到这个迭代器类中.
 ///  每个  Sequence 所能够获取的 Iterator, 都是和这个 Sequence 相关的. 可以说, 就是它的内部类.
 ///  序列, 更多的是一个可遍历的概念, 而容器, 则是进行存储的状态的场所.
 ///  获取当前值, 是迭代器的功能, 这个功能可以是从容器中获取值, 也可以是迭代器算出来的.
-/// Implementing an iterator that conforms to `IteratorProtocol` is simple.
-/// Declare a `next()` method that advances one step in the related sequence
-/// and returns the current element. When the sequence has been exhausted, the
-/// `next()` method returns `nil`.
 
 /*
  associatedtype, 其实就是协议里面的泛型而已.
@@ -83,64 +27,19 @@ public protocol IteratorProtocol {
     mutating func next() -> Element?
 }
 
-/// Squence 的概念很简单, 就是可以迭代取值的一个抽象对象. 这个值, 如何得到, 是在容器里面, 还是动态生成的, 他不管.
+///  Squence 的概念很简单, 就是可以迭代取值的一个抽象对象. 这个值, 如何得到, 是在容器里面, 还是动态生成的, 他不管.
 ///
-/// 这里说的很清楚了, 这就是一个 primitiveMethod.
-/// 很多的方法, 都是建立在这个基本方法之上的.
-///
-///  这些方法, 提供了通用的逻辑, 然后提供了可以变化的参数, 一般来说是一个 Block.
-///  通过这个 Block, 可以做业务上的变化.
-///  Protocol 这种设计的方式, 将方法, 操作的能力, 抽象到了一个类中.
-///  其他的类, 通过实现这个类的基本方法, 自动的继承了那些高级能力. 这个过程是自适应的.
-///  这是一种非常高级的, 可以做到代码复用的能力. 不过, 会让整个系统类库变得很复杂.
-///
-/// The `Sequence` protocol provides default implementations for many common
-/// operations that depend on sequential access to a sequence's values. For
-/// clearer, more concise code, the example above could use the array's
-/// `contains(_:)` method, which every sequence inherits from `Sequence`,
-/// instead of iterating manually:
-///
-///     if bugs.contains("Mosquito") {
-///         print("Break out the bug spray.")
-///     } else {
-///         print("Whew, no mosquitos!")
-///     }
-///     // Prints "Whew, no mosquitos!"
-///
+///  这里说的很清楚了, 这就是一个 primitiveMethod.
+///  很多的方法, 都是建立在这个基本方法之上的.
+///  同时由于这些方法, 都是扩展自 Protocol 的, swift 在最终会选择最匹配的方法.
+///  例如 contians 这个方法, sequence 里面有 contains, collection 里面有 contains, 那么最终会调用到 collection 里面的, 这里面没有多态的寻找过程.
 ///
 /// Repeated Access 不保证. 不过, 平时使用的还是容器, 对于容器 Collection 来说, 可重复遍历是标配.
 /// ===============
 ///
 /// Conforming to the Sequence Protocol 对于一个序列来说, 一定要实现对应的 iterator. 真正的取值, 是放在 iterator 里面的. Iterator, 通过序列提供的方法, 进行取值操作, 然后将值进行进一步的处理.
-/// ===================================
 ///
-/// 只要某个类, next() 方法实现了, 那么它就可以迭代自己. 默认的 makeIterator 的实现, 就是返回自己.
-///
-/// Here's a definition of a `Countdown` sequence that serves as its own
-/// iterator. The `makeIterator()` method is provided as a default
-/// implementation.
-///
-///     struct Countdown: Sequence, IteratorProtocol {
-///         var count: Int
-///
-///         mutating func next() -> Int? {
-///             if count == 0 {
-///                 return nil
-///             } else {
-///                 defer { count -= 1 } // 这里使用了 defer 这种语法, 用对象控制资源来解释.
-///                 return count
-///             }
-///         }
-///     }
-///
-///     let threeToGo = Countdown(count: 3)
-///     for i in threeToGo {
-///         print(i)
-///     }
-///     // Prints "3"
-///     // Prints "2"
-///     // Prints "1"
-///
+
 public protocol Sequence {
     associatedtype Element
     /// 迭代器类型的 Element 要和 Sequence 的一致, 也就是在泛型里面, 增加了限制.
@@ -149,10 +48,9 @@ public protocol Sequence {
     /// 最重要的方法, 返回一个迭代器, 在迭代器中, 进行取值操作和状态管理.
     func makeIterator() -> Iterator
     
-    /// - Complexity: O(1), except if the sequence also conforms to `Collection`.
-    ///   In this case, see the documentation of `Collection.underestimatedCount`.
-    ///
-    /// 这个值, 目前只用在了容器的初始化操作里了. 容器要存放 sequence 里面的值, 可能会有扩容的处理. 提前进行 bucket 的分配, 可以大大减少搬移数据的次数.
+    /// 这个值, 目前只用在了容器的初始化操作里了.
+    /// 容器要存放 sequence 里面的值, 可能会有扩容的处理.
+    /// 提前进行 bucket 的分配, 可以大大减少搬移数据的次数.
     var underestimatedCount: Int { get }
     
     /*
@@ -200,11 +98,11 @@ extension Sequence where Self: IteratorProtocol {
 
 /*
  如果, Seuqnce 的内部, 实现了 next 方法, 那么自己就可以充当迭代器.
- 不建议这样, 因为迭代的状态, 是需要管理的, 如果 sequence 自己管理, 多次迭代之间, 把这个值重置下.
- 还是单独一个对象, 进行单次迭代的管理, 比较好操作.
+ 不建议这样, 因为迭代的状态, 是需要管理的, 如果 sequence 自己管理, 那么迭代的过程, 修改了这个值.
+ 如果状态值已经改变了, 那么在别的地方重新迭代的时候, 就会从错误的地方开始.
+ 还是单独一个对象, 进行单次迭代的管理, 每次迭代, 都新创建这个对象, 由这个特定的对象, 存储当前的迭代状态.
  */
 extension Sequence where Self.Iterator == Self {
-    /// Returns an iterator over the elements of this sequence.
     @inlinable
     public __consuming func makeIterator() -> Self {
         return self
@@ -212,8 +110,10 @@ extension Sequence where Self.Iterator == Self {
 }
 
 /*
- 一个 sequence 的适配器.
- */
+ 一个类, 它的自己的定义, 放在一个区块里面.
+ 它对于协议的适配, 放到另外一个区块里面, 让代码清晰了不少.
+ 配置 Swift 的访问权限控制, 让代码更好维护.
+*/
 @frozen
 public struct DropFirstSequence<Base: Sequence> {
     @usableFromInline
@@ -222,18 +122,10 @@ public struct DropFirstSequence<Base: Sequence> {
     internal let _limit: Int // 适配器中, 自己业务逻辑需要存储的值.
     @inlinable
     public init(_ base: Base, dropping limit: Int) {
-        _precondition(limit >= 0,
-                      "Can't drop a negative number of elements from a sequence")
         _base = base
         _limit = limit
     }
 }
-
-/*
- 一个类, 它的自己的定义, 放在一个区块里面.
- 它对于协议的适配, 放到另外一个区块里面, 让代码清晰了不少.
- 配置 Swift 的访问权限控制, 让代码更好维护.
- */
 
 /*
  并不是, 这些包装类进行了延迟计算的功能, 本身迭代就是一个延迟计算的东西.
@@ -244,7 +136,6 @@ extension DropFirstSequence: Sequence {
     public typealias Element = Base.Element
     public typealias Iterator = Base.Iterator
     public typealias SubSequence = AnySequence<Element>
-    
     /*
      为什么不把这个过程, 放到 iterator 内部呢.
      当然, 这个类没有专门定义一个 DropFirstIterater. 不过, 其他的几个实现过程, 都是这样做的, 统一下其实比较好.
@@ -256,7 +147,6 @@ extension DropFirstSequence: Sequence {
         while dropped < _limit, it.next() != nil { dropped &+= 1 }
         return it
     }
-    
     /*
      如果, 一个 dropSequence 还想继续 drop, 仅仅是一个值的相加而已. 没有任何的数据的搬移工作.
      */
@@ -313,6 +203,8 @@ extension PrefixSequence.Iterator: IteratorProtocol {
         }
     }
 }
+
+
 
 /*
  PrefixSequence 对于 Sequence 的实现

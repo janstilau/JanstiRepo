@@ -119,6 +119,9 @@ extension Hasher {
 extension Hasher {
     
     @usableFromInline @frozen
+    /*
+     Core 里面, _buffer 用作值的存储, _state 用作最终值的计算逻辑的载体.
+     */
     internal struct _Core {
         private var _buffer: _TailBuffer
         private var _state: Hasher._State
@@ -230,51 +233,40 @@ extension Hasher {
     }
 }
 
-/// The universal hash function used by `Set` and `Dictionary`.
-///
-/// `Hasher` can be used to map an arbitrary sequence of bytes to an integer
-/// hash value. You can feed data to the hasher using a series of calls to
-/// mutating `combine` methods. When you've finished feeding the hasher, the
-/// hash value can be retrieved by calling `finalize()`:
-///
-///     var hasher = Hasher()
-///     hasher.combine(23)
-///     hasher.combine("Hello")
-///     let hashValue = hasher.finalize()
-///
-/// Within the execution of a Swift program, `Hasher` guarantees that finalizing
-/// it will always produce the same hash value as long as it is fed the exact
-/// same sequence of bytes. However, the underlying hash algorithm is designed
-/// to exhibit avalanche effects: slight changes to the seed or the input byte
-/// sequence will typically produce drastic changes in the generated hash value.
-///
-/// - Note: Do not save or otherwise reuse hash values across executions of your
-///   program. `Hasher` is usually randomly seeded, which means it will return
-///   different values on every new execution of your program. The hash
-///   algorithm implemented by `Hasher` may itself change between any two
-///   versions of the standard library.
+
+/*
+ 具体的 Core 和 Buffer 原理没有细看.
+ 可以简单的认为, Core 是做逻辑运算的, Buffer 是做值的存储的.
+ */
+
+/*
+ Hasher 可以不断的用 Combine 进行值的填入, 然后最后调用 finalize 得到想要的值.
+ 一般来说, 我们自己的对象, 想要进行 hash, 只会把 id 相关的值, 进行填入.
+ id 作为整个 app 中, 逻辑唯一性的表示. 在数据库中可以保证唯一性.
+ 
+ swift 的 hasher 可以保证, 如果值发生了改变, 或者传入的次序发生了改变, 那么最后的 hash 值会发生大改变.
+ 这就避免了, 简单的 hash 算法, 例如成员变量 hash 值相加导致最终结果一样的后果.
+ 可以说, 系统提供了这个类, 简便了用户自己设计 hash 算法的必要了.
+ 不过, 这个 hash 值是不稳定了, 每次重新运用, 相同的数据, 会产生不同的结果. 所以, 这个值不应该进行存储.
+ 如果要进行存储, 还是用通用的 MD5, sha 算法得到的值.
+ hash 值, 本身是 hash 表用作检索用的. 而 hash 表, 本身就是一个内存里面才有的概念. 所以, 每次运用, 重新 hash 生成该表就可以了.
+ */
+
 @frozen // FIXME: Should be resilient (rdar://problem/38549901)
 public struct Hasher {
-    internal var _core: _Core
+    internal var _core: _Core // Core
     
-    /// Creates a new hasher.
-    ///
-    /// The hasher uses a per-execution seed value that is set during process
-    /// startup, usually from a high-quality random source.
     @_effects(releasenone)
     public init() {
         self._core = _Core()
     }
     
-    /// Initialize a new hasher using the specified seed value.
-    /// The provided seed is mixed in with the global execution seed.
     @usableFromInline
     @_effects(releasenone)
     internal init(_seed: Int) {
         self._core = _Core(seed: _seed)
     }
     
-    /// Initialize a new hasher using the specified seed value.
     @usableFromInline // @testable
     @_effects(releasenone)
     internal init(_rawSeed: (UInt64, UInt64)) {
@@ -311,16 +303,19 @@ public struct Hasher {
         }
     }
     
-    /// Adds the given value to this hasher, mixing its essential parts into the
-    /// hasher state.
-    ///
-    /// - Parameter value: A value to add to the hasher.
+    /*
+     Hash 一个对象, 其实就是这个对象调用 hash 方法, 然后把 hasher 传入进去.
+     程序员只会看到 hash 方法, 是因为, 整个生成 hash 值的过程, 是一个固定的流程, 程序员仅仅是改写其中一个方法而已.
+     */
     @inlinable
     @inline(__always)
     public mutating func combine<H: Hashable>(_ value: H) {
         value.hash(into: &self)
     }
     
+    /*
+     各种不同的 int 值做 hash.
+     */
     @_effects(releasenone)
     @usableFromInline
     internal mutating func _combine(_ value: UInt) {
@@ -357,34 +352,20 @@ public struct Hasher {
         _core.combine(bytes: value, count: count)
     }
     
-    /// Adds the contents of the given buffer to this hasher, mixing it into the
-    /// hasher state.
-    ///
-    /// - Parameter bytes: A raw memory buffer.
     @_effects(releasenone)
     public mutating func combine(bytes: UnsafeRawBufferPointer) {
         _core.combine(bytes: bytes)
     }
     
-    /// Finalize the hasher state and return the hash value.
-    /// Finalizing invalidates the hasher; additional bits cannot be combined
-    /// into it, and it cannot be finalized again.
+    /*
+     这是一个破坏性的调用. finalize 之后, 不能再次调用了.
+     */
     @_effects(releasenone)
     @usableFromInline
     internal mutating func _finalize() -> Int {
         return Int(truncatingIfNeeded: _core.finalize())
     }
     
-    /// Finalizes the hasher state and returns the hash value.
-    ///
-    /// Finalizing consumes the hasher: it is illegal to finalize a hasher you
-    /// don't own, or to perform operations on a finalized hasher. (These may
-    /// become compile-time errors in the future.)
-    ///
-    /// Hash values are not guaranteed to be equal across different executions of
-    /// your program. Do not save hash values to use during a future execution.
-    ///
-    /// - Returns: The hash value calculated by the hasher.
     @_effects(releasenone)
     public __consuming func finalize() -> Int {
         var core = _core

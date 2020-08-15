@@ -11,7 +11,8 @@ extension BidirectionalCollection {
 extension Collection where Element: Equatable {
     /*
      firstIndex 这种, 没有太好的办法, 就是按个找, 不过 Diction, 应该有更好的办法.
-     这其实就是 _customIndexOfEquatableElement 这个方法的作用. 如果你的类, 有着更好的办法, 不要重写 firstIndex, 因为这个方法是 Collection 的 extension, 你重写的话也不会调用的.
+     这其实就是 _customIndexOfEquatableElement 这个方法的作用.
+     如果你的类, 有着更好的办法, 不要重写 firstIndex, 因为这个方法是 Collection 的 extension, 你重写的话也不会调用的.
      但是 _customIndexOfEquatableElement 是 Collection 的 primitive, 重写的话, 在 firstIndex 里面, 还是可以调用的到的.
      */
     @inlinable
@@ -19,7 +20,6 @@ extension Collection where Element: Equatable {
         if let result = _customIndexOfEquatableElement(element) {
             return result
         }
-        
         var i = self.startIndex
         while i != self.endIndex {
             /*

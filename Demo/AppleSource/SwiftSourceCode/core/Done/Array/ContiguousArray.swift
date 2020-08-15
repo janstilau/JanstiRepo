@@ -1,21 +1,6 @@
-/// A contiguously stored array.
-///
-/// The `ContiguousArray` type is a specialized array that always stores its
-/// elements in a contiguous region of memory. This contrasts with `Array`,
-/// which can store its elements in either a contiguous region of memory or an
-/// `NSArray` instance if its `Element` type is a class or `@objc` protocol.
-///
 /// Array 可能是通过 ContiguousArray 进行的存储, 也可能是经过 NSArray 进行的存储.
-///
-/// If your array's `Element` type is a class or `@objc` protocol and you do
-/// not need to bridge the array to `NSArray` or pass the array to Objective-C
-/// APIs, using `ContiguousArray` may be more efficient and have more
-/// predictable performance than `Array`. If the array's `Element` type is a
-/// struct or enumeration, `Array` and `ContiguousArray` should have similar
-/// efficiency.
-///
-/// For more information about using arrays, see `Array` and `ArraySlice`, with
-/// which `ContiguousArray` shares most properties and methods.
+/// ContiguousArray 则是连续的存储空间.
+
 @frozen
 public struct ContiguousArray<Element>: _DestructorSafeContainer {
     /*
@@ -27,8 +12,6 @@ public struct ContiguousArray<Element>: _DestructorSafeContainer {
     @usableFromInline
     internal var _buffer: _Buffer
     
-    /// Initialization from an existing buffer does not have "array.init"
-    /// semantics because the caller may retain an alias to buffer.
     @inlinable
     internal init(_buffer: _Buffer) {
         self._buffer = _buffer

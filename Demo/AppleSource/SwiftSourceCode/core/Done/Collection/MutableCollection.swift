@@ -6,10 +6,6 @@
 /// Conforming to the MutableCollection Protocol
 /// ============================================
 /// 在下标操作符里面, 进行 get set 的同时适配就可以了.
-/// To add conformance to the `MutableCollection` protocol to your own
-/// custom collection, upgrade your type's subscript to support both read
-/// and write access.
-/// 
 
 public protocol MutableCollection: Collection
 where SubSequence: MutableCollection
@@ -18,6 +14,10 @@ where SubSequence: MutableCollection
   override associatedtype Index
   override associatedtype SubSequence
 
+    /*
+     通过 Index, 进行取值赋值.
+     通过 Index 的 range, 进行取值赋值.
+     */
   @_borrowed
   override subscript(position: Index) -> Element { get set }
   override subscript(bounds: Range<Index>) -> SubSequence { get set }

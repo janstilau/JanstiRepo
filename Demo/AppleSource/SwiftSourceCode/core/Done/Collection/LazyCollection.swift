@@ -1,17 +1,17 @@
 public protocol LazyCollectionProtocol: Collection, LazySequenceProtocol 
-where Elements: Collection {	}
+where Elements: Collection {
+    
+}
 
 extension LazyCollectionProtocol {		
-   // Lazy things are already lazy		
-   @inlinable // protocol-only		
+   @inlinable // protocol-only
    public var lazy: LazyCollection<Elements> {		
      return elements.lazy		
    }		
  }		
 		
  extension LazyCollectionProtocol where Elements: LazyCollectionProtocol {		
-   // Lazy things are already lazy		
-   @inlinable // protocol-only		
+   @inlinable // protocol-only
    public var lazy: Elements {		
      return elements		
    }		
@@ -25,74 +25,39 @@ extension LazyCollectionProtocol {
 public typealias LazyCollection<T: Collection> = LazySequence<T>
 
 extension LazyCollection: Collection {
-  /// A type that represents a valid position in the collection.
-  ///
-  /// Valid indices consist of the position of every element and a
-  /// "past the end" position that's not valid for use as a subscript.
   public typealias Index = Base.Index
   public typealias Indices = Base.Indices
   public typealias SubSequence = Slice<LazySequence>
 
-  /// The position of the first element in a non-empty collection.
-  ///
-  /// In an empty collection, `startIndex == endIndex`.
   @inlinable
   public var startIndex: Index { return _base.startIndex }
 
-  /// The collection's "past the end" position---that is, the position one
-  /// greater than the last valid subscript argument.
-  ///
-  /// `endIndex` is always reachable from `startIndex` by zero or more
-  /// applications of `index(after:)`.
   @inlinable
   public var endIndex: Index { return _base.endIndex }
 
   @inlinable
   public var indices: Indices { return _base.indices }
 
-  // TODO: swift-3-indexing-model - add docs
   @inlinable
   public func index(after i: Index) -> Index {
     return _base.index(after: i)
   }
 
-  /// Accesses the element at `position`.
-  ///
-  /// - Precondition: `position` is a valid position in `self` and
-  ///   `position != endIndex`.
   @inlinable
   public subscript(position: Index) -> Element {
     return _base[position]
   }
 
-  /// A Boolean value indicating whether the collection is empty.
   @inlinable
   public var isEmpty: Bool {
     return _base.isEmpty
   }
 
-  /// Returns the number of elements.
-  ///
-  /// To check whether a collection is empty, use its `isEmpty` property
-  /// instead of comparing `count` to zero. Unless the collection guarantees
-  /// random-access performance, calculating `count` can be an O(*n*)
-  /// operation.
-  ///
-  /// - Complexity: O(1) if `Self` conforms to `RandomAccessCollection`;
-  ///   O(*n*) otherwise.
   @inlinable
   public var count: Int {
     return _base.count
   }
-
-  // The following requirement enables dispatching for firstIndex(of:) and
-  // lastIndex(of:) when the element type is Equatable.
-
-  /// Returns `Optional(Optional(index))` if an element was found;
-  /// `Optional(nil)` if the element doesn't exist in the collection;
-  /// `nil` if a search was not performed.
-  ///
-  /// - Complexity: Better than O(*n*)
+    
   @inlinable
   public func _customIndexOfEquatableElement(
     _ element: Element
@@ -100,11 +65,6 @@ extension LazyCollection: Collection {
     return _base._customIndexOfEquatableElement(element)
   }
 
-  /// Returns `Optional(Optional(index))` if an element was found;
-  /// `Optional(nil)` if the element doesn't exist in the collection;
-  /// `nil` if a search was not performed.
-  ///
-  /// - Complexity: Better than O(*n*)
   @inlinable
   public func _customLastIndexOfEquatableElement(
     _ element: Element

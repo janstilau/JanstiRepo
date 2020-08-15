@@ -3,6 +3,7 @@
  每一种, 都有着关联对象.
  因为有些时候, 确实是两中情况都要关联数据. 不过, Result 的使用, 还是不如 Optional 的.
  */
+
 @frozen
 public enum Result<Success, Failure: Error> {
   case success(Success)
