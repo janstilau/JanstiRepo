@@ -1,293 +1,3 @@
-/// An ordered, random-access collection.
-///
-/// Array 的随机访问, 是建立在地址可计算的基础上的, 因为 OC 里面, Array 里面存储的都是一个指针, 所以这一点不太重要.
-/// 但是, 作为Swfit 里面, 各种数据不是仅仅作为对象存在的, 所以, 保证每个数据的宽度相等, 是非常非常重要的.
-///
-/// Arrays are one of the most commonly used data types in an app. You use
-/// arrays to organize your app's data. Specifically, you use the `Array` type
-/// to hold elements of a single type, the array's `Element` type. An array
-/// can store any kind of elements---from integers to strings to classes.
-///
-/// single type 是 数组非常关键的一点, 它是随机访问的基础.
-///
-/// Swift makes it easy to create arrays in your code using an array literal:
-/// simply surround a comma-separated list of values with square brackets.
-/// Without any other information, Swift creates an array that includes the
-/// specified values, automatically inferring the array's `Element` type. For
-/// example:
-///
-///     // An array of 'Int' elements
-///     let oddNumbers = [1, 3, 5, 7, 9, 11, 13, 15]
-///
-///     // An array of 'String' elements
-///     let streets = ["Albemarle", "Brandywine", "Chesapeake"]
-///
-/// You can create an empty array by specifying the `Element` type of your
-/// array in the declaration. For example:
-///
-///     // Shortened forms are preferred
-///     var emptyDoubles: [Double] = []
-///
-///     // The full type name is also allowed
-///     var emptyFloats: Array<Float> = Array()
-///
-/// If you need an array that is preinitialized with a fixed number of default
-/// values, use the `Array(repeating:count:)` initializer.
-///
-///     var digitCounts = Array(repeating: 0, count: 10)
-///     print(digitCounts)
-///     // Prints "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]"
-///
-/// Accessing Array Values
-/// ======================
-///
-/// forin 这个概念, 是迭代器相关的. 因为 array 是 Collection, 而 Collection 又是一个 sequence. 所以, Swfit 里面, 各种小概念的组合, 很重要.
-/// When you need to perform an operation on all of an array's elements, use a
-/// `for`-`in` loop to iterate through the array's contents.
-///
-///     for street in streets {
-///         print("I don't live on \(street).")
-///     }
-///     // Prints "I don't live on Albemarle."
-///     // Prints "I don't live on Brandywine."
-///     // Prints "I don't live on Chesapeake."
-///
-/// Use the `isEmpty` property to check quickly whether an array has any
-/// elements, or use the `count` property to find the number of elements in
-/// the array.
-///
-///     if oddNumbers.isEmpty {
-///         print("I don't know any odd numbers.")
-///     } else {
-///         print("I know \(oddNumbers.count) odd numbers.")
-///     }
-///     // Prints "I know 8 odd numbers."
-///
-/// Use the `first` and `last` properties for safe access to the value of the
-/// array's first and last elements. If the array is empty, these properties
-/// are `nil`.
-///
-///     if let firstElement = oddNumbers.first, let lastElement = oddNumbers.last {
-///         print(firstElement, lastElement, separator: ", ")
-///     }
-///     // Prints "1, 15"
-///
-///     print(emptyDoubles.first, emptyDoubles.last, separator: ", ")
-///     // Prints "nil, nil"
-///
-/// You can access individual array elements through a subscript. The first
-/// element of a nonempty array is always at index zero. You can subscript an
-/// array with any integer from zero up to, but not including, the count of
-/// the array. Using a negative number or an index equal to or greater than
-/// `count` triggers a runtime error. For example:
-///
-///     print(oddNumbers[0], oddNumbers[3], separator: ", ")
-///     // Prints "1, 7"
-///
-///     print(emptyDoubles[0])
-///     // Triggers runtime error: Index out of range
-///
-/// Adding and Removing Elements
-/// ============================
-///
-/// Suppose you need to store a list of the names of students that are signed
-/// up for a class you're teaching. During the registration period, you need
-/// to add and remove names as students add and drop the class.
-///
-///     var students = ["Ben", "Ivy", "Jordell"]
-///
-/// To add single elements to the end of an array, use the `append(_:)` method.
-/// Add multiple elements at the same time by passing another array or a
-/// sequence of any kind to the `append(contentsOf:)` method.
-///
-///     students.append("Maxime")
-///     students.append(contentsOf: ["Shakia", "William"])
-///     // ["Ben", "Ivy", "Jordell", "Maxime", "Shakia", "William"]
-///
-/// You can add new elements in the middle of an array by using the
-/// `insert(_:at:)` method for single elements and by using
-/// `insert(contentsOf:at:)` to insert multiple elements from another
-/// collection or array literal. The elements at that index and later indices
-/// are shifted back to make room.
-///
-///     students.insert("Liam", at: 3)
-///     // ["Ben", "Ivy", "Jordell", "Liam", "Maxime", "Shakia", "William"]
-///
-/// To remove elements from an array, use the `remove(at:)`,
-/// `removeSubrange(_:)`, and `removeLast()` methods.
-///
-///     // Ben's family is moving to another state
-///     students.remove(at: 0)
-///     // ["Ivy", "Jordell", "Liam", "Maxime", "Shakia", "William"]
-///
-///     // William is signing up for a different class
-///     students.removeLast()
-///     // ["Ivy", "Jordell", "Liam", "Maxime", "Shakia"]
-///
-/// You can replace an existing element with a new value by assigning the new
-/// value to the subscript.
-///
-///     if let i = students.firstIndex(of: "Maxime") {
-///         students[i] = "Max"
-///     }
-///     // ["Ivy", "Jordell", "Liam", "Max", "Shakia"]
-///
-/// Growing the Size of an Array
-/// ----------------------------
-///
-///
-///  这里讲的是内存的动态扩容的问题.
-/// Every array reserves a specific amount of memory to hold its contents. When
-/// you add elements to an array and that array begins to exceed its reserved
-/// capacity, the array allocates a larger region of memory and copies its
-/// elements into the new storage. The new storage is a multiple of the old
-/// storage's size. This exponential growth strategy means that appending an
-/// element happens in constant time, averaging the performance of many append
-/// operations. Append operations that trigger reallocation have a performance
-/// cost, but they occur less and less often as the array grows larger.
-///
-/// If you know approximately how many elements you will need to store, use the
-/// `reserveCapacity(_:)` method before appending to the array to avoid
-/// intermediate reallocations. Use the `capacity` and `count` properties to
-/// determine how many more elements the array can store without allocating
-/// larger storage.
-///
-/// For arrays of most `Element` types, this storage is a contiguous block of
-/// memory. For arrays with an `Element` type that is a class or `@objc`
-/// protocol type, this storage can be a contiguous block of memory or an
-/// instance of `NSArray`. Because any arbitrary subclass of `NSArray` can
-/// become an `Array`, there are no guarantees about representation or
-/// efficiency in this case.
-///
-///
-/// Modifying Copies of Arrays
-/// 这里讲的是, 写时复制的问题.
-/// ==========================
-///
-/// Each array has an independent value that includes the values of all of its
-/// elements. For simple types such as integers and other structures, this
-/// means that when you change a value in one array, the value of that element
-/// does not change in any copies of the array. For example:
-///
-///     var numbers = [1, 2, 3, 4, 5]
-///     var numbersCopy = numbers
-///     numbers[0] = 100
-///     print(numbers)
-///     // Prints "[100, 2, 3, 4, 5]"
-///     print(numbersCopy)
-///     // Prints "[1, 2, 3, 4, 5]"
-///
-/// If the elements in an array are instances of a class, the semantics are the
-/// same, though they might appear different at first. In this case, the
-/// values stored in the array are references to objects that live outside the
-/// array. If you change a reference to an object in one array, only that
-/// array has a reference to the new object. However, if two arrays contain
-/// references to the same object, you can observe changes to that object's
-/// properties from both arrays. For example:
-/// 这里是老生常谈的值语义和引用语义的差别的问题.
-///     // An integer type with reference semantics
-///     class IntegerReference {
-///         var value = 10
-///     }
-///     var firstIntegers = [IntegerReference(), IntegerReference()]
-///     var secondIntegers = firstIntegers
-///
-///     // Modifications to an instance are visible from either array
-///     firstIntegers[0].value = 100
-///     print(secondIntegers[0].value)
-///     // Prints "100"
-///
-///     // Replacements, additions, and removals are still visible
-///     // only in the modified array
-///     firstIntegers[0] = IntegerReference()
-///     print(firstIntegers[0].value)
-///     // Prints "10"
-///     print(secondIntegers[0].value)
-///     // Prints "100"
-///
-/// Arrays, like all variable-size collections in the standard library, use
-/// copy-on-write optimization. Multiple copies of an array share the same
-/// storage until you modify one of the copies. When that happens, the array
-/// being modified replaces its storage with a uniquely owned copy of itself,
-/// which is then modified in place. Optimizations are sometimes applied that
-/// can reduce the amount of copying.
-///
-/// This means that if an array is sharing storage with other copies, the first
-/// mutating operation on that array incurs the cost of copying the array. An
-/// array that is the sole owner of its storage can perform mutating
-/// operations in place.
-/// 如果只有一个引用者, 那么其实就不会发生写时复制的工作.
-///
-/// In the example below, a `numbers` array is created along with two copies
-/// that share the same storage. When the original `numbers` array is
-/// modified, it makes a unique copy of its storage before making the
-/// modification. Further modifications to `numbers` are made in place, while
-/// the two copies continue to share the original storage.
-///
-///     var numbers = [1, 2, 3, 4, 5]
-///     var firstCopy = numbers
-///     var secondCopy = numbers
-///
-///     // The storage for 'numbers' is copied here
-///     numbers[0] = 100
-///     numbers[1] = 200
-///     numbers[2] = 300
-///     // 'numbers' is [100, 200, 300, 4, 5]
-///     // 'firstCopy' and 'secondCopy' are [1, 2, 3, 4, 5]
-///
-/// Bridging Between Array and NSArray
-/// ==================================
-///
-/// When you need to access APIs that require data in an `NSArray` instance
-/// instead of `Array`, use the type-cast operator (`as`) to bridge your
-/// instance. For bridging to be possible, the `Element` type of your array
-/// must be a class, an `@objc` protocol (a protocol imported from Objective-C
-/// or marked with the `@objc` attribute), or a type that bridges to a
-/// Foundation type.
-///
-/// The following example shows how you can bridge an `Array` instance to
-/// `NSArray` to use the `write(to:atomically:)` method. In this example, the
-/// `colors` array can be bridged to `NSArray` because the `colors` array's
-/// `String` elements bridge to `NSString`. The compiler prevents bridging the
-/// `moreColors` array, on the other hand, because its `Element` type is
-/// `Optional<String>`, which does *not* bridge to a Foundation type.
-///
-///     let colors = ["periwinkle", "rose", "moss"]
-///     let moreColors: [String?] = ["ochre", "pine"]
-///
-///     let url = NSURL(fileURLWithPath: "names.plist")
-///     (colors as NSArray).write(to: url, atomically: true)
-///     // true
-///
-///     (moreColors as NSArray).write(to: url, atomically: true)
-///     // error: cannot convert value of type '[String?]' to type 'NSArray'
-///
-/// Bridging from `Array` to `NSArray` takes O(1) time and O(1) space if the
-/// array's elements are already instances of a class or an `@objc` protocol;
-/// otherwise, it takes O(*n*) time and space.
-///
-/// When the destination array's element type is a class or an `@objc`
-/// protocol, bridging from `NSArray` to `Array` first calls the `copy(with:)`
-/// (`- copyWithZone:` in Objective-C) method on the array to get an immutable
-/// copy and then performs additional Swift bookkeeping work that takes O(1)
-/// time. For instances of `NSArray` that are already immutable, `copy(with:)`
-/// usually returns the same array in O(1) time; otherwise, the copying
-/// performance is unspecified. If `copy(with:)` returns the same array, the
-/// instances of `NSArray` and `Array` share storage using the same
-/// copy-on-write optimization that is used when two instances of `Array`
-/// share storage.
-///
-/// When the destination array's element type is a nonclass type that bridges
-/// to a Foundation type, bridging from `NSArray` to `Array` performs a
-/// bridging copy of the elements to contiguous storage in O(*n*) time. For
-/// example, bridging from `NSArray` to `Array<Int>` performs such a copy. No
-/// further bridging is required when accessing elements of the `Array`
-/// instance.
-///
-/// - Note: The `ContiguousArray` and `ArraySlice` types are not bridged;
-///   instances of those types always have a contiguous block of memory as
-///   their storage.
-
 /*
  Swfit 里面, 真实的存储空间, 建立在 _ContiguousArrayBuffer 这个类中.
  */
@@ -302,10 +12,8 @@ public struct Array<Element>: _DestructorSafeContainer {
     #endif
     
     @usableFromInline
-    internal var _buffer: _Buffer
+    internal var _buffer: _Buffer // Array 里面, 实际上存储的, 仅仅只有这样一个值.
     
-    /// Initialization from an existing buffer does not have "array.init"
-    /// semantics because the caller may retain an alias to buffer.
     @inlinable
     internal init(_buffer: _Buffer) {
         self._buffer = _buffer
@@ -341,7 +49,8 @@ extension Array {
     }
     
     /*
-     在任何 modify 方法之前, 都会调用该方法. 这里, 判断 buffer 是不是唯一的引用, 不是的话, 就进行拷贝的工作.
+     如果, Buffer 不是唯一的引用的话, 就会进行自身 Buffer 的复制工作.
+     在修改方法里面, 需要调用这个方法.
      */
     @inlinable
     @_semantics("array.make_mutable")
@@ -351,8 +60,6 @@ extension Array {
         }
     }
     
-    /// Check that the given `index` is valid for subscripting, i.e.
-    /// `0 ≤ index < count`.
     @inlinable
     @inline(__always)
     internal func _checkSubscript_native(_ index: Int) {
@@ -379,7 +86,7 @@ extension Array {
     /// Check that the specified `index` is valid, i.e. `0 ≤ index ≤ count`.
     /*
      容器类的安全操作, 如果越界, 就抛出异常了.
-     这就是容器类, 为什么会越界崩溃的原因.
+     异常不会被捕捉, 直接引起崩溃.
      */
     @inlinable
     @_semantics("array.check_index")
@@ -388,9 +95,6 @@ extension Array {
         _precondition(index >= startIndex, "Negative Array index is out of range")
     }
     
-    /*
-     这里, 不太明白这些参数的作用.
-     */
     @_semantics("array.get_element")
     @inlinable // FIXME(inline-always)
     @inline(__always)
@@ -473,43 +177,23 @@ extension Array: _ArrayProtocol {
 }
 
 /*
- 对于随机访问, 值可变的支持.
+ 数组, 对于 Colleciton 的支持.
  */
 extension Array: RandomAccessCollection, MutableCollection {
-    /// The index type for arrays, `Int`.
     public typealias Index = Int
     
-    /// The type that represents the indices that are valid for subscripting an
-    /// array, in ascending order.
     public typealias Indices = Range<Int>
     
-    /// The type that allows iteration over an array's elements.
+    /*
+     IndexingIterator, 直接利用 Colleciton 的 api, 做 sequence 的适配.
+     */
     public typealias Iterator = IndexingIterator<Array>
     
-    /// The position of the first element in a nonempty array.
-    ///
-    /// For an instance of `Array`, `startIndex` is always zero. If the array
-    /// is empty, `startIndex` is equal to `endIndex`.
     @inlinable
     public var startIndex: Int {
         return 0
     }
     
-    /// The array's "past the end" position---that is, the position one greater
-    /// than the last valid subscript argument.
-    ///
-    /// When you need a range that includes the last element of an array, use the
-    /// half-open range operator (`..<`) with `endIndex`. The `..<` operator
-    /// creates a range that doesn't include the upper bound, so it's always
-    /// safe to use with `endIndex`. For example:
-    ///
-    ///     let numbers = [10, 20, 30, 40, 50]
-    ///     if let i = numbers.firstIndex(of: 30) {
-    ///         print(numbers[i ..< numbers.endIndex])
-    ///     }
-    ///     // Prints "[30, 40, 50]"
-    ///
-    /// If the array is empty, `endIndex` is equal to `startIndex`.
     @inlinable
     public var endIndex: Int {
         @inlinable
@@ -518,167 +202,50 @@ extension Array: RandomAccessCollection, MutableCollection {
         }
     }
     
-    /// Returns the position immediately after the given index.
-    ///
-    /// - Parameter i: A valid index of the collection. `i` must be less than
-    ///   `endIndex`.
-    /// - Returns: The index immediately after `i`.
+    /*
+     index(after i: Index) -> Index 是非常重要的方法, 几乎每个容器类, 都要去专门设计一下这个方法.
+     */
     @inlinable
     public func index(after i: Int) -> Int {
-        // NOTE: this is a manual specialization of index movement for a Strideable
-        // index that is required for Array performance.  The optimizer is not
-        // capable of creating partial specializations yet.
-        // NOTE: Range checks are not performed here, because it is done later by
-        // the subscript function.
         return i + 1
     }
     
-    /// Replaces the given index with its successor.
-    ///
-    /// - Parameter i: A valid index of the collection. `i` must be less than
-    ///   `endIndex`.
     @inlinable
     public func formIndex(after i: inout Int) {
-        // NOTE: this is a manual specialization of index movement for a Strideable
-        // index that is required for Array performance.  The optimizer is not
-        // capable of creating partial specializations yet.
-        // NOTE: Range checks are not performed here, because it is done later by
-        // the subscript function.
         i += 1
     }
     
-    /// Returns the position immediately before the given index.
-    ///
-    /// - Parameter i: A valid index of the collection. `i` must be greater than
-    ///   `startIndex`.
-    /// - Returns: The index immediately before `i`.
     @inlinable
     public func index(before i: Int) -> Int {
-        // NOTE: this is a manual specialization of index movement for a Strideable
-        // index that is required for Array performance.  The optimizer is not
-        // capable of creating partial specializations yet.
-        // NOTE: Range checks are not performed here, because it is done later by
-        // the subscript function.
         return i - 1
     }
     
-    /// Replaces the given index with its predecessor.
-    ///
-    /// - Parameter i: A valid index of the collection. `i` must be greater than
-    ///   `startIndex`.
     @inlinable
     public func formIndex(before i: inout Int) {
-        // NOTE: this is a manual specialization of index movement for a Strideable
-        // index that is required for Array performance.  The optimizer is not
-        // capable of creating partial specializations yet.
-        // NOTE: Range checks are not performed here, because it is done later by
-        // the subscript function.
         i -= 1
     }
     
-    /// Returns an index that is the specified distance from the given index.
-    ///
-    /// The following example obtains an index advanced four positions from an
-    /// array's starting index and then prints the element at that position.
-    ///
-    ///     let numbers = [10, 20, 30, 40, 50]
-    ///     let i = numbers.index(numbers.startIndex, offsetBy: 4)
-    ///     print(numbers[i])
-    ///     // Prints "50"
-    ///
-    /// The value passed as `distance` must not offset `i` beyond the bounds of
-    /// the collection.
-    ///
-    /// - Parameters:
-    ///   - i: A valid index of the array.
-    ///   - distance: The distance to offset `i`.
-    /// - Returns: An index offset by `distance` from the index `i`. If
-    ///   `distance` is positive, this is the same value as the result of
-    ///   `distance` calls to `index(after:)`. If `distance` is negative, this
-    ///   is the same value as the result of `abs(distance)` calls to
-    ///   `index(before:)`.
     @inlinable
     public func index(_ i: Int, offsetBy distance: Int) -> Int {
-        // NOTE: this is a manual specialization of index movement for a Strideable
-        // index that is required for Array performance.  The optimizer is not
-        // capable of creating partial specializations yet.
-        // NOTE: Range checks are not performed here, because it is done later by
-        // the subscript function.
         return i + distance
     }
     
-    /// Returns an index that is the specified distance from the given index,
-    /// unless that distance is beyond a given limiting index.
-    ///
-    /// The following example obtains an index advanced four positions from an
-    /// array's starting index and then prints the element at that position. The
-    /// operation doesn't require going beyond the limiting `numbers.endIndex`
-    /// value, so it succeeds.
-    ///
-    ///     let numbers = [10, 20, 30, 40, 50]
-    ///     if let i = numbers.index(numbers.startIndex,
-    ///                              offsetBy: 4,
-    ///                              limitedBy: numbers.endIndex) {
-    ///         print(numbers[i])
-    ///     }
-    ///     // Prints "50"
-    ///
-    /// The next example attempts to retrieve an index ten positions from
-    /// `numbers.startIndex`, but fails, because that distance is beyond the
-    /// index passed as `limit`.
-    ///
-    ///     let j = numbers.index(numbers.startIndex,
-    ///                           offsetBy: 10,
-    ///                           limitedBy: numbers.endIndex)
-    ///     print(j)
-    ///     // Prints "nil"
-    ///
-    /// The value passed as `distance` must not offset `i` beyond the bounds of
-    /// the collection, unless the index passed as `limit` prevents offsetting
-    /// beyond those bounds.
-    ///
-    /// - Parameters:
-    ///   - i: A valid index of the array.
-    ///   - distance: The distance to offset `i`.
-    ///   - limit: A valid index of the collection to use as a limit. If
-    ///     `distance > 0`, `limit` has no effect if it is less than `i`.
-    ///     Likewise, if `distance < 0`, `limit` has no effect if it is greater
-    ///     than `i`.
-    /// - Returns: An index offset by `distance` from the index `i`, unless that
-    ///   index would be beyond `limit` in the direction of movement. In that
-    ///   case, the method returns `nil`.
-    ///
-    /// - Complexity: O(1)
     @inlinable
     public func index(
-        _ i: Int, offsetBy distance: Int, limitedBy limit: Int
+        _ i: Int,
+        offsetBy distance: Int,
+        limitedBy limit: Int
     ) -> Int? {
-        // NOTE: this is a manual specialization of index movement for a Strideable
-        // index that is required for Array performance.  The optimizer is not
-        // capable of creating partial specializations yet.
-        // NOTE: Range checks are not performed here, because it is done later by
-        // the subscript function.
         let l = limit - i
-        if distance > 0 ? l >= 0 && l < distance : l <= 0 && distance < l {
+        if distance > 0 ? l >= 0 && l < distance :
+            l <= 0 && distance < l {
             return nil
         }
         return i + distance
     }
     
-    /// Returns the distance between two indices.
-    ///
-    /// - Parameters:
-    ///   - start: A valid index of the collection.
-    ///   - end: Another valid index of the collection. If `end` is equal to
-    ///     `start`, the result is zero.
-    /// - Returns: The distance between `start` and `end`.
     @inlinable
     public func distance(from start: Int, to end: Int) -> Int {
-        // NOTE: this is a manual specialization of index movement for a Strideable
-        // index that is required for Array performance.  The optimizer is not
-        // capable of creating partial specializations yet.
-        // NOTE: Range checks are not performed here, because it is done later by
-        // the subscript function.
         return end - start
     }
     
@@ -692,24 +259,6 @@ extension Array: RandomAccessCollection, MutableCollection {
         // NOTE: This method is a no-op for performance reasons.
     }
     
-    /// Accesses the element at the specified position.
-    ///
-    /// The following example uses indexed subscripting to update an array's
-    /// second element. After assigning the new value (`"Butler"`) at a specific
-    /// position, that value is immediately available at that same position.
-    ///
-    ///     var streets = ["Adams", "Bryant", "Channing", "Douglas", "Evarts"]
-    ///     streets[1] = "Butler"
-    ///     print(streets[1])
-    ///     // Prints "Butler"
-    ///
-    /// - Parameter index: The position of the element to access. `index` must be
-    ///   greater than or equal to `startIndex` and less than `endIndex`.
-    ///
-    /// - Complexity: Reading an element from an array is O(1). Writing is O(1)
-    ///   unless the array's storage is shared with another array or uses a
-    ///   bridged `NSArray` instance as its storage, in which case writing is
-    ///   O(*n*), where *n* is the length of the array.
     @inlinable
     public subscript(index: Int) -> Element {
         get {
@@ -735,30 +284,6 @@ extension Array: RandomAccessCollection, MutableCollection {
         }
     }
     
-    /// Accesses a contiguous subrange of the array's elements.
-    ///
-    /// The returned `ArraySlice` instance uses the same indices for the same
-    /// elements as the original array. In particular, that slice, unlike an
-    /// array, may have a nonzero `startIndex` and an `endIndex` that is not
-    /// equal to `count`. Always use the slice's `startIndex` and `endIndex`
-    /// properties instead of assuming that its indices start or end at a
-    /// particular value.
-    ///
-    /// This example demonstrates getting a slice of an array of strings, finding
-    /// the index of one of the strings in the slice, and then using that index
-    /// in the original array.
-    ///
-    ///     let streets = ["Adams", "Bryant", "Channing", "Douglas", "Evarts"]
-    ///     let streetsSlice = streets[2 ..< streets.endIndex]
-    ///     print(streetsSlice)
-    ///     // Prints "["Channing", "Douglas", "Evarts"]"
-    ///
-    ///     let i = streetsSlice.firstIndex(of: "Evarts")    // 4
-    ///     print(streets[i!])
-    ///     // Prints "Evarts"
-    ///
-    /// - Parameter bounds: A range of integers. The bounds of the range must be
-    ///   valid indices of the array.
     @inlinable
     public subscript(bounds: Range<Int>) -> ArraySlice<Element> {
         get {
@@ -782,27 +307,6 @@ extension Array: RandomAccessCollection, MutableCollection {
     @inlinable
     public var count: Int {
         return _getCount()
-    }
-}
-
-extension Array: ExpressibleByArrayLiteral {
-    // Optimized implementation for Array
-    /// Creates an array from the given array literal.
-    ///
-    /// Do not call this initializer directly. It is used by the compiler
-    /// when you use an array literal. Instead, create a new array by using an
-    /// array literal as its value. To do this, enclose a comma-separated list of
-    /// values in square brackets.
-    ///
-    /// Here, an array of strings is created from an array literal holding
-    /// only strings.
-    ///
-    ///     let ingredients = ["cocoa beans", "sugar", "cocoa butter", "salt"]
-    ///
-    /// - Parameter elements: A variadic list of elements of the new array.
-    @inlinable
-    public init(arrayLiteral elements: Element...) {
-        self = elements
     }
 }
 
@@ -884,8 +388,13 @@ extension Array: RangeReplaceableCollection {
     @inlinable
     @_semantics("array.init")
     public init(repeating repeatedValue: Element, count: Int) {
+        
+        /*
+         当, count 的值已经固定的时候, _allocateUninitialized 会先生成相应大小的内存的值. 然后通过指针直接对相应的位置进行设值的操作.
+         */
         var p: UnsafeMutablePointer<Element>
         (self, p) = Array._allocateUninitialized(count)
+        
         for _ in 0..<count {
             p.initialize(to: repeatedValue)
             p += 1
@@ -1350,16 +859,6 @@ extension Array {
     @inlinable
     public static func += (lhs: inout Array, rhs: Array) {
         lhs.append(contentsOf: rhs)
-    }
-}
-
-extension Array: CustomReflectable {
-    /// A mirror that reflects the array.
-    public var customMirror: Mirror {
-        return Mirror(
-            self,
-            unlabeledChildren: self,
-            displayStyle: .collection)
     }
 }
 
