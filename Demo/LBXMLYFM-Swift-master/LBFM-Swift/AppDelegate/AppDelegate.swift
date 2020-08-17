@@ -11,19 +11,37 @@ import ESTabBarController_swift
 import SwiftMessages
 
 @UIApplicationMain
+
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    
+    /*
+     UIApplication.LaunchOptionsKey 是 UIApplication 的内部类型,
+     
+     public protocol RawRepresentable {
+         associatedtype RawValue
+         public init?(rawValue: Self.RawValue)
+         public var rawValue: Self.RawValue { get }
+     }
+     标识这个类型, 可以通过一个值, 创建该值, 并且可以获取该值.
+     */
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+        /*
+         很少使用 self. 直接调用.
+         因为大部分情况下, 其实类里面调用的函数就是自身的函数.
+         全局函数, 相对来说还是要少很多的.
+         */
         setupRootViewController()
+        /*
+         作为类型相关的常量, 用类的静态属性, 达到统一管理的目的.
+         */
         window?.backgroundColor = UIColor.white
         window?.makeKeyAndVisible()
         
         return true
     }
-
+    
     func setupRootViewController() {
         let rootVC = ESTabBarController()
         rootVC.title = "Irregularity"

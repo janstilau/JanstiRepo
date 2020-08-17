@@ -1,28 +1,6 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-// Intrinsic protocols shared with the compiler
-//===----------------------------------------------------------------------===//
-
 /// A type that can be converted to and from an associated raw value.
-///
-/// With a `RawRepresentable` type, you can switch back and forth between a
-/// custom type and an associated `RawValue` type without losing the value of
-/// the original `RawRepresentable` type. Using the raw value of a conforming
-/// type streamlines interoperation with Objective-C and legacy APIs and
-/// simplifies conformance to other protocols, such as `Equatable`,
-/// `Comparable`, and `Hashable`.
-///
-/// The `RawRepresentable` protocol is seen mainly in two categories of types:
-/// enumerations with raw value types and option sets.
+
+/// 实现了该协议, 也就代表着, 类型可以从当前值, 和原始值之间进行切换.
 ///
 /// Enumerations with Raw Values
 /// ============================
@@ -125,63 +103,31 @@ public protocol RawRepresentable {
   /// - Parameter rawValue: The raw value to use for the new instance.
   init?(rawValue: RawValue)
 
-  /// The corresponding value of the raw type.
-  ///
-  /// A new instance initialized with `rawValue` will be equivalent to this
-  /// instance. For example:
-  ///
-  ///     enum PaperSize: String {
-  ///         case A4, A5, Letter, Legal
-  ///     }
-  ///
-  ///     let selectedSize = PaperSize.Letter
-  ///     print(selectedSize.rawValue)
-  ///     // Prints "Letter"
-  ///
-  ///     print(selectedSize == PaperSize(rawValue: selectedSize.rawValue)!)
-  ///     // Prints "true"
+  /*
+     一个计算属性
+     实现类内部可以存储这个值, 也可以只是方法.
+     */
   var rawValue: RawValue { get }
 }
 
-/// Returns a Boolean value indicating whether the two arguments are equal.
-///
-/// - Parameters:
-///   - lhs: A raw-representable instance.
-///   - rhs: A second raw-representable instance.
+/// RawRepresentable 的数据判断相等, 可以直接根据 rawVlaue 进行
 @inlinable // trivial-implementation
 public func == <T: RawRepresentable>(lhs: T, rhs: T) -> Bool
   where T.RawValue: Equatable {
   return lhs.rawValue == rhs.rawValue
 }
 
-/// Returns a Boolean value indicating whether the two arguments are not equal.
-///
-/// - Parameters:
-///   - lhs: A raw-representable instance.
-///   - rhs: A second raw-representable instance.
 @inlinable // trivial-implementation
 public func != <T: RawRepresentable>(lhs: T, rhs: T) -> Bool
   where T.RawValue: Equatable {
   return lhs.rawValue != rhs.rawValue
 }
 
-// This overload is needed for ambiguity resolution against the
-// implementation of != for T: Equatable
-/// Returns a Boolean value indicating whether the two arguments are not equal.
-///
-/// - Parameters:
-///   - lhs: A raw-representable instance.
-///   - rhs: A second raw-representable instance.
-@inlinable // trivial-implementation
 public func != <T: Equatable>(lhs: T, rhs: T) -> Bool
   where T: RawRepresentable, T.RawValue: Equatable {
   return lhs.rawValue != rhs.rawValue
 }
 
-// Ensure that any RawRepresentable types that conform to Hashable without
-// providing explicit implementations get hashing that's consistent with the ==
-// definition above. (Compiler-synthesized hashing is based on stored properties
-// rather than rawValue; the difference is subtle, but it can be fatal.)
 extension RawRepresentable where RawValue: Hashable, Self: Hashable {
   @inlinable // trivial
   public var hashValue: Int {
@@ -195,18 +141,6 @@ extension RawRepresentable where RawValue: Hashable, Self: Hashable {
 
   @inlinable // trivial
   public func _rawHashValue(seed: Int) -> Int {
-    // In 5.0, this used to return rawValue._rawHashValue(seed: seed).  This was
-    // slightly faster, but it interfered with conforming types' ability to
-    // customize their hashing. The current definition is equivalent to the
-    // default implementation; however, we need to keep the definition to remain
-    // ABI compatible with code compiled on 5.0.
-    //
-    // Note that unless a type provides a custom hash(into:) implementation,
-    // this new version returns the same values as the original 5.0 definition,
-    // so code that used to work in 5.0 remains working whether or not the
-    // original definition was inlined.
-    //
-    // See https://bugs.swift.org/browse/SR-10734
     var hasher = Hasher(_seed: seed)
     self.hash(into: &hasher)
     return hasher._finalize()

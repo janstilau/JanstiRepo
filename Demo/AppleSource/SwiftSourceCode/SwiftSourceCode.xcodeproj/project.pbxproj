@@ -259,6 +259,7 @@
 				06E1B39E247D6BEE00CD9D60 /* CollectionOfOne.swift */,
 				06E1B37C247D6BEE00CD9D60 /* WriteBackMutableSlice.swift */,
 				06E1B383247D6BEE00CD9D60 /* Reverse.swift */,
+				06E1B355247D6BEE00CD9D60 /* KeyValuePairs.swift */,
 			);
 			path = Collection;
 			sourceTree = "<group>";
@@ -362,7 +363,6 @@
 				06E1B32C247D6BEE00CD9D60 /* Integers.swift */,
 				06E1B33E247D6BEE00CD9D60 /* IntegerTypes.swift.gyb */,
 				06E1B3AE247D6BEE00CD9D60 /* KeyPath.swift */,
-				06E1B355247D6BEE00CD9D60 /* KeyValuePairs.swift */,
 				06E1B356247D6BEE00CD9D60 /* LegacyABI.swift */,
 				06E1B34C247D6BEE00CD9D60 /* ManagedBuffer.swift */,
 				06E1B3A3247D6BEE00CD9D60 /* MathFunctions.swift.gyb */,

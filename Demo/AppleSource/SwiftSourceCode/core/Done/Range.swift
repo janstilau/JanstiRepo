@@ -2,12 +2,14 @@ public protocol RangeExpression {
     associatedtype Bound: Comparable
     /*
      这个方法, 其实可以解释 array[..<4] 为什么可以运转.
-     首先, 根据这个方法, 可以得到一个 range, range 里面是各个 index.
-     然后就可以直接根据 index, 从 collection 里面取值了.
+     首先, 根据这个方法, 可以得到一个 range, range 是 Index 组合而成的范围.
+     但是这个范围, 有可能是半开的, 有可能是和 Collection 的 indices 不匹配的.
+     所以, 这个函数的作用, 就是做一次相交, 用 Collection 的范围, 做一次过滤操作.
      */
     func relative<C: Collection>(
         to collection: C
     ) -> Range<Bound> where C.Index == Bound
+    
     func contains(_ element: Bound) -> Bool
 }
 
@@ -25,7 +27,9 @@ extension RangeExpression {
 
 /*
  前闭后开
- 对于 range 的实际类型来说, 他仅仅是存储了边界的一些信息而已.
+ Comparable 和 Strideable 还是有着挺大的区别的.
+ Comparable 是可比较, 例如, 字符串的比较. 字符串的字典比较法, 可以判断出前后顺序来. 但是, 两个相隔的元素, 到底会有多少距离, 是没有办法固定出来的.
+ Strideable, 则是坐标轴的概念. 可以准确的判断出, 坐标上的两个点, 之间有多少距离.
  */
 @frozen
 public struct Range<Bound: Comparable> {
@@ -38,12 +42,11 @@ public struct Range<Bound: Comparable> {
     }
     
     /*
-     左闭右开, 左边 <=, 右边 <
-     contains 的操作, 就是比较操作.
-     contains 有着很多实现方式, 如果是关联式, 直接关联查找.
-     如果是线性容器, 遍历查找.
-     如果是排序后的线性容器, 二分查找.
-     如果是范围, 直接边界值判断.
+     Contains 的不同的实现方式.
+     1. 线性的, 逐个比较.
+     2. 排序过的, 二分查找.
+     3. 有着特定算法的, 算法寻找. 比如哈希, 可以快速定位元素的位置.
+     4. range 这种, 可以通过简单判断得出结论. 之前编辑器的 id 生成器就是用的这个策略.
     */
     @inlinable
     public func contains(_ element: Bound) -> Bool {
@@ -57,7 +60,9 @@ public struct Range<Bound: Comparable> {
 }
 
 /*
- 如果, range 的边界, 是可以算出偏移量的, 那么 range 本身就可以当做 sequence 来看待.
+ Range 可以当做 Sequence, 是因为它使用了 IndexingIterator 作为自己的迭代器.
+ 而 IndexingIterator 之所以可以使用, 是因为 range 实现了 Colleciton
+ IndexingIterator 是完全使用 Collection 的功能, 进行的迭代.
  */
 extension Range: Sequence
 where Bound: Strideable, Bound.Stride: SignedInteger {
@@ -66,12 +71,11 @@ where Bound: Strideable, Bound.Stride: SignedInteger {
 }
 
 /*
- 如果, range 的边界, 是可以计算出偏移量的, 那么 range 也可以当做容器来看待.
+ 如果, Bound 是 strideable 的.
  */
 extension Range: Collection, BidirectionalCollection, RandomAccessCollection
     where Bound: Strideable, Bound.Stride: SignedInteger
 {
-    /// A type that represents a position in the range.
     public typealias Index = Bound
     public typealias Indices = Range<Bound>
     public typealias SubSequence = Range<Bound>
@@ -85,7 +89,7 @@ extension Range: Collection, BidirectionalCollection, RandomAccessCollection
     public var endIndex: Index { return upperBound }
     
     /*
-     如何进行 index 的变化. 是各个容器自己进行的.
+     index 的变化, 是利用了 Index 的 Strideable 的能力.
      */
     @inlinable
     public func index(after i: Index) -> Index {
@@ -98,12 +102,16 @@ extension Range: Collection, BidirectionalCollection, RandomAccessCollection
     public func index(before i: Index) -> Index {
         /*
          每个方法, 都会有着提前的判断.
+         作为一个功能类, 要自己在内部, 做数据的校验工作.
          */
         _precondition(i > lowerBound)
         _precondition(i <= upperBound)
         return i.advanced(by: -1)
     }
     
+    /*
+     index 的变化, 是利用了 Index 的 Strideable 的能力.
+    */
     @inlinable
     public func index(_ i: Index, offsetBy n: Int) -> Index {
         let r = i.advanced(by: numericCast(n))
@@ -112,33 +120,47 @@ extension Range: Collection, BidirectionalCollection, RandomAccessCollection
         return r
     }
     
+    /*
+     index 的变化, 是利用了 Index 的 Strideable 的能力.
+    */
     @inlinable
     public func distance(from start: Index, to end: Index) -> Int {
         // distance 是  Strideable 提供的方法.
         return numericCast(start.distance(to: end))
     }
     
-    /// Accesses the subsequence bounded by the given range.
-    ///
-    /// - Parameter bounds: A range of the range's indices. The upper and lower
-    ///   bounds of the `bounds` range must be valid indices of the collection.
+    /*
+     Colleciton, 给外界的观点就是关联式容器.
+     Index 为 key, 对应的值为 value.
+     对于 range 来说, Index 为 key, 对应的值也是 Index.
+     */
     @inlinable
     public subscript(bounds: Range<Index>) -> Range<Bound> {
         return bounds
     }
     
-    /// The indices that are valid for subscripting the range, in ascending
-    /// order.
     @inlinable
     public var indices: Indices {
         return self
     }
     
+    /*
+     这个是 sequence 的能力. 算作是 contains 这个方法里面的一个切口.
+     _customContainsEquatableElement 是 primitive 方法, 所以子类如果有着更好的设计, 可以通过该方法, 快速判断是否 contains.
+     例如, Dictionay 里面, 就是重新了这个方法, 进行了 哈希表的快速判断.
+     如果没有实现该方法, 就是遍历操作.
+     */
     @inlinable
     public func _customContainsEquatableElement(_ element: Element) -> Bool? {
         return lowerBound <= element && element < upperBound
     }
     
+    /*
+     这个是 Collection 的能力, 算作是 firt, lastIndex 方法里面的一个切口.
+     这是一个 primitive 方法, 所以子类如果有着更好的设计, 可以通过该方法, 快速得到对应的 Index.
+     例如, Dictionary 里面, 就是重新了和这个方法, 进行了 哈希表的快速判断.
+     如果没有实现该方法, 就是遍历操作.
+     */
     @inlinable
     public func _customIndexOfEquatableElement(_ element: Bound) -> Index?? {
         return lowerBound <= element && element < upperBound ? element : nil
@@ -152,6 +174,9 @@ extension Range: Collection, BidirectionalCollection, RandomAccessCollection
     
     /*
      这个方法, 和每个容器的实现相关, 所以, 不会有默认的实现.
+     这个函数, 是最最重要的方法了.
+     可以说, Colleciton 作为容器获取值, 就是通过这个方法.
+     对于 Range 来说, key 就是 value, 所以传过来什么传出去什么.
      */
     @inlinable
     public subscript(position: Index) -> Element {
@@ -160,7 +185,7 @@ extension Range: Collection, BidirectionalCollection, RandomAccessCollection
 }
 
 /*
- 对于一个 range 来说, 它是前闭后开的, 所以, 要在 closeRange 后 + 1
+ 对于一个 range 来说, 它是前闭后开的, 所以, 传过来一个 ClosedRange, 需要在 ClosedRange 后进行 +1 操作.
  */
 extension Range where Bound: Strideable, Bound.Stride: SignedInteger {
     public init(_ other: ClosedRange<Bound>) {
@@ -194,22 +219,6 @@ extension Range {
     }
 }
 
-extension Range: CustomStringConvertible {
-    /// A textual representation of the range.
-    @inlinable // trivial-implementation
-    public var description: String {
-        return "\(lowerBound)..<\(upperBound)"
-    }
-}
-
-extension Range: CustomDebugStringConvertible {
-    /// A textual representation of the range, suitable for debugging.
-    public var debugDescription: String {
-        return "Range(\(String(reflecting: lowerBound))"
-            + "..<\(String(reflecting: upperBound)))"
-    }
-}
-
 extension Range: CustomReflectable {
     public var customMirror: Mirror {
         return Mirror(
@@ -217,6 +226,9 @@ extension Range: CustomReflectable {
     }
 }
 
+/*
+ 相等判断, 是各个类进行的. 一般来说, 就是重要的成员变量的相等性判断.
+ */
 extension Range: Equatable {
     @inlinable
     public static func == (lhs: Range<Bound>, rhs: Range<Bound>) -> Bool {
@@ -258,19 +270,23 @@ extension Range: Encodable where Bound: Encodable {
 }
 
 /*
- 只有上边界的 Range.
+ one-sided range
+ 2...
+ ...2
+ ..<2
+ 所以, 虽然有着各种各样的 one side range, 但是在实际的内存表示上, 还是只会有一个值, 然后将单侧区间这个事情, 用一个特殊的类表示相关的逻辑.
  */
 @frozen
 public struct PartialRangeUpTo<Bound: Comparable> {
-    public let upperBound: Bound
+    public let upperBound: Bound // 真正存储的, 也就这一个值.
     
-    @inlinable // trivial-implementation
+    @inlinable
     public init(_ upperBound: Bound) { self.upperBound = upperBound }
 }
 
 extension PartialRangeUpTo: RangeExpression {
     /*
-     PartialRangeUpTo 放到 colleciton 中, 用 colleciton 的 startIndex 和自己的 upperBound
+     通过, collection 的 start, 以及 end, 配合 range, 确定最终的范围大小.
      */
     public func relative<C: Collection>(to collection: C) -> Range<Bound>
         where C.Index == Bound {
@@ -278,7 +294,7 @@ extension PartialRangeUpTo: RangeExpression {
     }
     
     /*
-     只比较一边.
+     判断是否包含的时候, 只通过一边进行判断.
      */
     @_transparent
     public func contains(_ element: Bound) -> Bool {
@@ -300,9 +316,6 @@ extension PartialRangeUpTo: Encodable where Bound: Encodable {
     }
 }
 
-/*
- 只有上边界的 Range, 后闭
- */
 @frozen
 public struct PartialRangeThrough<Bound: Comparable> {  
     public let upperBound: Bound
@@ -335,9 +348,7 @@ extension PartialRangeThrough: Encodable where Bound: Encodable {
         try container.encode(self.upperBound)
     }
 }
-/*
- 只有下边界的 range.
- */
+
 @frozen
 public struct PartialRangeFrom<Bound: Comparable> {
     public let lowerBound: Bound
@@ -404,7 +415,7 @@ extension PartialRangeFrom: Encodable where Bound: Encodable {
 }
 
 /*
- 这就是, 为什么 ..<, ... 能够使用的原因, 他们被操作符重载了.
+ 这些特殊的运算符, 结果就是生成特殊类型的数据.
  */
 extension Comparable {
     // 双元运算符
@@ -534,6 +545,7 @@ extension Collection {
 
 /*
  这就是, range 为什么可以用在 colleciton 里面的原因.
+ Collection, 首先会做自己的计算, 把范围控制在一个合理的范围.
  */
 extension MutableCollection {
     @inlinable
