@@ -3,15 +3,16 @@
  slice 的 startIndex
  slice 的 endIndex
  slice 的 originalBaseCollection
- 所以, 切片其实是连续的.
+ 
  切片最好还是临时使用, 不要当做存储来进行. 因为切片其实会有着原始 Collection 的强引用的, 导致原始的 Collection 不会被释放.
- 就好像迭代器一样, 这些都是临时使用的概念, 不应在类, 或者方法之外, 进行存储.
+ 就好像迭代器一样, 这些都是临时使用的概念, 都应该是临时使用的, 不应该在当前逻辑单元外进行使用.
  */
-@frozen // generic-performance
+
+@frozen
 public struct Slice<Base: Collection> {
     public var _startIndex: Base.Index
     public var _endIndex: Base.Index
-    @usableFromInline // generic-performance
+    @usableFromInline
     internal var _base: Base
     
     @inlinable
@@ -20,7 +21,6 @@ public struct Slice<Base: Collection> {
         self._startIndex = bounds.lowerBound
         self._endIndex = bounds.upperBound
     }
-    
     @inlinable // generic-performance
     public var base: Base {
         return _base
@@ -29,6 +29,7 @@ public struct Slice<Base: Collection> {
 
 /*
  Slice 里面的 startIndex 和 endIndex, 都是自己的, 而不是 base 的.
+ 所以, Slice 仅仅是对于原始的 base 做了一层范围上的限制而已.
  */
 extension Slice: Collection {
     public typealias Index = Base.Index
@@ -46,7 +47,7 @@ extension Slice: Collection {
     }
     /*
      endIndex 没有用 base 的 endIndex, 而是使用的自己的
-    */
+     */
     @inlinable // generic-performance
     public var endIndex: Index {
         return _endIndex
@@ -81,6 +82,7 @@ extension Slice: Collection {
     
     /*
      剩下的所有的一切, 都转交给 base 进行处理.
+     因为 Slice 本身是不知道自己的 Index 是如何进行改变的. 所以, 存储 base 是一个必要的事情.
      */
     @inlinable // generic-performance
     public func index(after i: Index) -> Index {

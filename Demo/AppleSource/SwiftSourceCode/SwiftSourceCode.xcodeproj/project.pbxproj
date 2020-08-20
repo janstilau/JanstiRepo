@@ -282,6 +282,42 @@
 			path = Array;
 			sourceTree = "<group>";
 		};
+		065D085224EE26BC00B21EA5 /* String */ = {
+			isa = PBXGroup;
+			children = (
+				06E1B385247D6BEE00CD9D60 /* SmallString.swift */,
+				06E1B357247D6BEE00CD9D60 /* StaticString.swift */,
+				06E1B3A7247D6BEE00CD9D60 /* String.swift */,
+				06E1B341247D6BEE00CD9D60 /* StringBreadcrumbs.swift */,
+				06E1B34E247D6BEE00CD9D60 /* StringBridge.swift */,
+				06E1B3AB247D6BEE00CD9D60 /* StringCharacterView.swift */,
+				06E1B340247D6BEE00CD9D60 /* StringComparable.swift */,
+				06E1B372247D6BEE00CD9D60 /* StringComparison.swift */,
+				06E1B3C5247D6BEE00CD9D60 /* StringCreate.swift */,
+				06E1B3D5247D6BEE00CD9D60 /* StringGraphemeBreaking.swift */,
+				06E1B366247D6BEE00CD9D60 /* StringGuts.swift */,
+				06E1B387247D6BEE00CD9D60 /* StringGutsRangeReplaceable.swift */,
+				06E1B326247D6BEE00CD9D60 /* StringGutsSlice.swift */,
+				06E1B399247D6BEE00CD9D60 /* StringGutsVisitor.swift */,
+				06E1B3BA247D6BEE00CD9D60 /* StringHashable.swift */,
+				06E1B3BF247D6BEE00CD9D60 /* StringIndex.swift */,
+				06E1B337247D6BEE00CD9D60 /* StringIndexConversions.swift */,
+				06E1B371247D6BEE00CD9D60 /* StringInterpolation.swift */,
+				06E1B377247D6BEE00CD9D60 /* StringLegacy.swift */,
+				06E1B36A247D6BEE00CD9D60 /* StringNormalization.swift */,
+				06E1B3D8247D6BEE00CD9D60 /* StringObject.swift */,
+				06E1B3BB247D6BEE00CD9D60 /* StringProtocol.swift */,
+				06E1B3DA247D6BEE00CD9D60 /* StringStorage.swift */,
+				06E1B3AA247D6BEE00CD9D60 /* StringSwitch.swift */,
+				06E1B35F247D6BEE00CD9D60 /* StringTesting.swift */,
+				06E1B36E247D6BEE00CD9D60 /* StringUnicodeScalarView.swift */,
+				06E1B324247D6BEE00CD9D60 /* StringUTF8Validation.swift */,
+				06E1B35E247D6BEE00CD9D60 /* StringUTF8View.swift */,
+				06E1B39C247D6BEE00CD9D60 /* StringUTF16View.swift */,
+			);
+			path = String;
+			sourceTree = "<group>";
+		};
 		06C2127524E7B20C00413B61 /* Sequence */ = {
 			isa = PBXGroup;
 			children = (
@@ -320,6 +356,7 @@
 		06E1B31F247D6BEE00CD9D60 /* core */ = {
 			isa = PBXGroup;
 			children = (
+				065D085224EE26BC00B21EA5 /* String */,
 				06E1B367247D6BEE00CD9D60 /* AnyHashable.swift */,
 				06E1B32F247D6BEE00CD9D60 /* ASCII.swift */,
 				06E1B345247D6BEE00CD9D60 /* Assert.swift */,
@@ -393,35 +430,6 @@
 				06E1B347247D6BEE00CD9D60 /* SIMDVector.swift */,
 				06E1B3CD247D6BEE00CD9D60 /* SIMDVectorTypes.swift.gyb */,
 				06E1B354247D6BEE00CD9D60 /* SliceBuffer.swift */,
-				06E1B385247D6BEE00CD9D60 /* SmallString.swift */,
-				06E1B357247D6BEE00CD9D60 /* StaticString.swift */,
-				06E1B3A7247D6BEE00CD9D60 /* String.swift */,
-				06E1B341247D6BEE00CD9D60 /* StringBreadcrumbs.swift */,
-				06E1B34E247D6BEE00CD9D60 /* StringBridge.swift */,
-				06E1B3AB247D6BEE00CD9D60 /* StringCharacterView.swift */,
-				06E1B340247D6BEE00CD9D60 /* StringComparable.swift */,
-				06E1B372247D6BEE00CD9D60 /* StringComparison.swift */,
-				06E1B3C5247D6BEE00CD9D60 /* StringCreate.swift */,
-				06E1B3D5247D6BEE00CD9D60 /* StringGraphemeBreaking.swift */,
-				06E1B366247D6BEE00CD9D60 /* StringGuts.swift */,
-				06E1B387247D6BEE00CD9D60 /* StringGutsRangeReplaceable.swift */,
-				06E1B326247D6BEE00CD9D60 /* StringGutsSlice.swift */,
-				06E1B399247D6BEE00CD9D60 /* StringGutsVisitor.swift */,
-				06E1B3BA247D6BEE00CD9D60 /* StringHashable.swift */,
-				06E1B3BF247D6BEE00CD9D60 /* StringIndex.swift */,
-				06E1B337247D6BEE00CD9D60 /* StringIndexConversions.swift */,
-				06E1B371247D6BEE00CD9D60 /* StringInterpolation.swift */,
-				06E1B377247D6BEE00CD9D60 /* StringLegacy.swift */,
-				06E1B36A247D6BEE00CD9D60 /* StringNormalization.swift */,
-				06E1B3D8247D6BEE00CD9D60 /* StringObject.swift */,
-				06E1B3BB247D6BEE00CD9D60 /* StringProtocol.swift */,
-				06E1B3DA247D6BEE00CD9D60 /* StringStorage.swift */,
-				06E1B3AA247D6BEE00CD9D60 /* StringSwitch.swift */,
-				06E1B35F247D6BEE00CD9D60 /* StringTesting.swift */,
-				06E1B36E247D6BEE00CD9D60 /* StringUnicodeScalarView.swift */,
-				06E1B324247D6BEE00CD9D60 /* StringUTF8Validation.swift */,
-				06E1B35E247D6BEE00CD9D60 /* StringUTF8View.swift */,
-				06E1B39C247D6BEE00CD9D60 /* StringUTF16View.swift */,
 				06E1B37B247D6BEE00CD9D60 /* Substring.swift */,
 				06E1B323247D6BEE00CD9D60 /* ThreadLocalStorage.swift */,
 				06E1B36D247D6BEE00CD9D60 /* Tuple.swift.gyb */,

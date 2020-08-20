@@ -4,6 +4,7 @@ __STL_BEGIN_NAMESPACE
  迭代器的交换.
  因为迭代器其实就是指针, 所以, 直接就和指针交换一样了.
  迭代器要负起最终的 * 的取值操作, 要返回相对应的引用.
+ 这里要引起注意, 这里会有拷贝构造函数, 以及赋值构造函数的调用.
  */
 template <class ForwardIterator1, class ForwardIterator2, class T>
 inline void __iter_swap(ForwardIterator1 a, ForwardIterator2 b, T*) {
@@ -14,6 +15,7 @@ inline void __iter_swap(ForwardIterator1 a, ForwardIterator2 b, T*) {
 
 /*
  暴露给用户的, 是不带 __ 的操作. 用 __ 表示私有的函数, 是各种语言通用的做法.
+ 这个方法, 也是主要用于分发操作. 最后的 value_type, 就是分发的标志位.
  */
 template <class ForwardIterator1, class ForwardIterator2>
 inline void iter_swap(ForwardIterator1 a, ForwardIterator2 b) {
@@ -35,6 +37,7 @@ inline void swap(T& a, T& b) {
 
 /*
  这都是最简单的算法, 但是是泛型的.
+ C++ 的操作符, 和 Swift 的 protocol 相比. 缺少类型限制.
  */
 template <class T>
 inline const T& min(const T& a, const T& b) {
@@ -48,16 +51,7 @@ inline const T& max(const T& a, const T& b) {
 
 #endif /* __BORLANDC__ */
 
-
-
-
-
-
-
 //Copy
-
-
-
 
 /*
  增加了比较函数版本的方法.
@@ -74,6 +68,9 @@ inline const T& max(const T& a, const T& b, Compare comp) {
 
 /*
  一般的迭代器, 就是遍历赋值操作.
+ 这里, OutputIterator result 是需要调用者保证有效性的.
+ 这其实是一个不太好的设计. 这个函数, 应该返回被被复制的位置, 将开辟空间, 已经填充数据的事情, 在函数内部完成.
+ 还需要在外界进行操作, 这对函数的使用者来说, 有了太多的负担.
  */
 template <class InputIterator, class OutputIterator>
 inline OutputIterator __copy(InputIterator first, InputIterator last,
@@ -85,7 +82,7 @@ inline OutputIterator __copy(InputIterator first, InputIterator last,
 }
 
 /*
- 随机访问的迭代器, 可以根据距离值进行操作.
+ 随机访问的迭代器, 可以根据距离的类型进行操作.
  */
 template <class RandomAccessIterator, class OutputIterator>
 inline OutputIterator
@@ -96,12 +93,15 @@ __copy(RandomAccessIterator first, RandomAccessIterator last,
 }
 
 /*
- 用次数的方式, 效率要比 first != last 高一点, 因为迭代器的比较, 也是一个方法调用.
+ 对于指针这种距离类型, 可以直接算出次数来.
+ 次数这种方式, 要比迭代器的判断要快一点.
  */
 template <class RandomAccessIterator, class OutputIterator, class Distance>
 inline OutputIterator
-__copy_d(RandomAccessIterator first, RandomAccessIterator last,
-         OutputIterator result, Distance*)
+__copy_d(RandomAccessIterator first,
+         RandomAccessIterator last,
+         OutputIterator result,
+         Distance*)
 {
     for (Distance n = last - first; n > 0; --n, ++result, ++first)
         *result = *first;
@@ -132,7 +132,8 @@ inline T* __copy_t(const T* first, const T* last, T* result, __true_type) {
 }
 
 /*
- 如果, has_trivial_assignment_operator 为 false, 也就是拷贝赋值操作有着特殊设计, 那么就调用迭代器的赋值操作, 会调用到对应类型的拷贝赋值操作.
+ 如果, has_trivial_assignment_operator 为 false, 也就是拷贝赋值操作有着特殊设计,
+ 那么就调用迭代器的赋值操作, 会调用到对应类型的拷贝赋值操作.
  */
 template <class T>
 inline T* __copy_t(const T* first, const T* last, T* result, __false_type) {
@@ -179,9 +180,9 @@ inline char* copy(const char* first, const char* last, char* result) {
     return result + (last - first);
 }
 /*
-如果迭代器是指针类型的, 就直接内存的拷贝.
-算是做类型的偏特化
-*/
+ 如果迭代器是指针类型的, 就直接内存的拷贝.
+ 算是做类型的偏特化
+ */
 inline wchar_t* copy(const wchar_t* first, const wchar_t* last,
                      wchar_t* result) {
     memmove(result, first, sizeof(wchar_t) * (last - first));
@@ -208,11 +209,10 @@ struct __copy_backward_dispatch
 };
 
 #ifdef __STL_CLASS_PARTIAL_SPECIALIZATION 
-
 /*
-如果迭代器是指针类型的, 就直接内存的拷贝.
-算是做类型的偏特化
-*/
+ 如果迭代器是指针类型的, 就直接内存的拷贝.
+ 算是做类型的偏特化
+ */
 template <class T>
 inline T* __copy_backward_t(const T* first, const T* last, T* result,
                             __true_type) {
@@ -221,9 +221,9 @@ inline T* __copy_backward_t(const T* first, const T* last, T* result,
     return result - N;
 }
 /*
-如果迭代器是指针类型的, 就直接内存的拷贝.
-算是做类型的偏特化
-*/
+ 如果迭代器是指针类型的, 就直接内存的拷贝.
+ 算是做类型的偏特化
+ */
 template <class T>
 inline T* __copy_backward_t(const T* first, const T* last, T* result,
                             __false_type) {
@@ -288,13 +288,7 @@ copy_n(InputIterator first, Size count,
     return __copy_n(first, count, result, iterator_category(first));
 }
 
-
-
-
 //Fill
-
-
-
 /*
  从 First 到 last, 都进行 value 的覆盖工作.
  */
@@ -314,15 +308,11 @@ OutputIterator fill_n(OutputIterator first, Size n, const T& value) {
     return first;
 }
 
-
-
 // MisMatch
-
-
 
 /*
  Returns the first mismatching pair of elements from two ranges: one defined by [first1, last1) and another defined by [first2,last2). If last2 is not provided (overloads (1-4)), it denotes first2 + (last1 - first1).
-
+ 
  */
 // 返回第一个不相等的两个序列的迭代器.
 template <class InputIterator1, class InputIterator2>

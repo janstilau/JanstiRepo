@@ -227,6 +227,7 @@
 		069FFF2F24C940320014F9EA /* Readed */ = {
 			isa = PBXGroup;
 			children = (
+				069FFEF524C8A4D70014F9EA /* stl_pair.h */,
 				069FFF0724C8A4D80014F9EA /* stl_algobase.h */,
 				069FFF1424C8A4D80014F9EA /* stl_algo.h */,
 				069FFEE624C8A4D70014F9EA /* stl_alloc.h */,
@@ -239,7 +240,6 @@
 				069FFEE824C8A4D70014F9EA /* stl_hashtable.h */,
 				069FFEEC24C8A4D70014F9EA /* stl_heap.h */,
 				069FFF2A24C8A4D90014F9EA /* stl_iterator.h */,
-				069FFEF524C8A4D70014F9EA /* stl_pair.h */,
 				069FFF1624C8A4D80014F9EA /* stl_list.h */,
 				069FFEE024C8A4D60014F9EA /* stl_map.h */,
 				069FFF2B24C8A4D90014F9EA /* stl_multimap.h */,

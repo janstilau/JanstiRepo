@@ -33,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
          全局函数, 相对来说还是要少很多的.
          */
         setupRootViewController()
+        
         /*
          作为类型相关的常量, 用类的静态属性, 达到统一管理的目的.
          */
@@ -61,7 +62,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         rootVC.didHijackHandler = {
             tabbarController, viewController, index in
-            
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 let warning = MessageView.viewFromNib(layout: .cardView)
                 warning.configureTheme(.warning)

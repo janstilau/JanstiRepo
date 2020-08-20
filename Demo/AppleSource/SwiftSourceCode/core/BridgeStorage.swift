@@ -1,23 +1,3 @@
-//===--- BridgeStorage.swift - Discriminated storage for bridged types ----===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-//
-//  Types that are bridged to Objective-C need to manage an object
-//  that may be either some native class or the @objc Cocoa
-//  equivalent.  _BridgeStorage discriminates between these two
-//  possibilities and stores a single extra bit when the stored type is
-//  native.  It is assumed that the @objc class instance may in fact
-//  be a tagged pointer, and thus no extra bits may be available.
-//
-//===----------------------------------------------------------------------===//
 import SwiftShims
 
 @frozen

@@ -201,7 +201,6 @@ extension Array: RandomAccessCollection, MutableCollection {
             return _getCount()
         }
     }
-    
     /*
      index(after i: Index) -> Index 是非常重要的方法, 几乎每个容器类, 都要去专门设计一下这个方法.
      */
@@ -287,8 +286,6 @@ extension Array: RandomAccessCollection, MutableCollection {
     @inlinable
     public subscript(bounds: Range<Int>) -> ArraySlice<Element> {
         get {
-            _checkIndex(bounds.lowerBound)
-            _checkIndex(bounds.upperBound)
             return ArraySlice(_buffer: _buffer[bounds])
         }
         set(rhs) {
@@ -311,18 +308,6 @@ extension Array: RandomAccessCollection, MutableCollection {
 }
 
 extension Array: RangeReplaceableCollection {
-    /// Creates a new, empty array.
-    ///
-    /// This is equivalent to initializing with an empty array literal.
-    /// For example:
-    ///
-    ///     var emptyArray = Array<Int>()
-    ///     print(emptyArray.isEmpty)
-    ///     // Prints "true"
-    ///
-    ///     emptyArray = []
-    ///     print(emptyArray.isEmpty)
-    ///     // Prints "true"
     @inlinable
     @_semantics("array.init.empty")
     public init() {

@@ -1,5 +1,5 @@
 /*
- 把 Collection, start, end 统统记一下.
+ 存储了原始的 colleciton elements, startIndex, endIndex
  */
 @frozen
 public struct DefaultIndices<Elements: Collection> {
@@ -9,13 +9,11 @@ public struct DefaultIndices<Elements: Collection> {
     internal var _startIndex: Elements.Index // Begin
     @usableFromInline
     internal var _endIndex: Elements.Index // End
-    
     @inlinable
     internal init(
         _elements: Elements,
         startIndex: Elements.Index,
-        endIndex: Elements.Index
-    ) {
+        endIndex: Elements.Index) {
         self._elements = _elements
         self._startIndex = startIndex
         self._endIndex = endIndex
@@ -23,9 +21,10 @@ public struct DefaultIndices<Elements: Collection> {
 }
 
 /*
- DefaultIndices 的 Collection, Index 是值, Index 也是元素.
+ DefaultIndices 所代表的 Collection 里面, index 是 elements.Index, value 也是 elements.Index.
  */
 extension DefaultIndices: Collection {
+    
     public typealias Index = Elements.Index
     public typealias Element = Elements.Index
     public typealias Indices = DefaultIndices<Elements>
@@ -43,7 +42,8 @@ extension DefaultIndices: Collection {
     }
     
     /*
-     通过索引, 获得就是索引本身.
+     Value 是 Elements.Index
+     Index 是 Elements.Index
      */
     @inlinable
     public subscript(i: Index) -> Elements.Index {
@@ -58,6 +58,9 @@ extension DefaultIndices: Collection {
             endIndex: bounds.upperBound)
     }
     
+    /*
+     所有的操作, 都是转交给了 elements 进行操作.
+     */
     @inlinable
     public func index(after i: Index) -> Index {
         return _elements.index(after: i)
@@ -74,6 +77,9 @@ extension DefaultIndices: Collection {
     }
 }
 
+/*
+  index(before 方法的调用, 是限制在 BidirectionalCollection 这个协议的基础上的.
+ */
 extension DefaultIndices: BidirectionalCollection
 where Elements: BidirectionalCollection {
     @inlinable
