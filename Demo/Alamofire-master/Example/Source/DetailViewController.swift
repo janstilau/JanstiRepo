@@ -46,9 +46,6 @@ class DetailViewController: UITableViewController {
      */
     override func awakeFromNib() {
         super.awakeFromNib()
-        /*
-         Swift 里面, 尊崇了重构里面, 类型系统的定义. 原本简单的枚举值, 现在被类型管理, 通过静态方法, 获取到合适的值.
-         */
         refreshControl?.addTarget(self, action: #selector(DetailViewController.refresh), for: .valueChanged)
     }
 
@@ -60,6 +57,9 @@ class DetailViewController: UITableViewController {
     // MARK: IBActions
 
     @IBAction func refresh() {
+        /*
+         guard 的使用, 在 Swift 里面非常广泛, 防卫式的写法.
+         */
         guard let request = request else {
             return
         }
@@ -92,7 +92,10 @@ class DetailViewController: UITableViewController {
             self.tableView.reloadData()
             self.refreshControl?.endRefreshing()
         }
-
+        
+        /*
+         Optional 的概念, 不应该影响到命名. 所以, let request = request 这样的书写方式, 是可以接受的.
+         */
         if let request = request as? DataRequest {
             request.responseString { response in
                 requestComplete(response.response, response.result)

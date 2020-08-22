@@ -3,43 +3,27 @@ import Foundation
 /// A dictionary of parameters to apply to a `URLRequest`.
 public typealias Parameters = [String: Any]
 
-/// A type used to define how a set of parameters are applied to a `URLRequest`.
+/*
+ 这个类的主要作用, 就是将 params 序列化到 request 里面去.
+ */
 public protocol ParameterEncoding {
-    /// Creates a `URLRequest` by encoding parameters and applying them on the passed request.
-    ///
-    /// - Parameters:
-    ///   - urlRequest: `URLRequestConvertible` value onto which parameters will be encoded.
-    ///   - parameters: `Parameters` to encode onto the request.
-    ///
-    /// - Returns:      The encoded `URLRequest`.
-    /// - Throws:       Any `Error` produced during parameter encoding.
     func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest
 }
 
 // MARK: -
 
-/// Creates a url-encoded query string to be set as or appended to any existing URL query string or set as the HTTP
-/// body of the URL request. Whether the query string is set or appended to any existing URL query string or set as
-/// the HTTP body depends on the destination of the encoding.
-///
-/// The `Content-Type` HTTP header field of an encoded request with HTTP body is set to
-/// `application/x-www-form-urlencoded; charset=utf-8`.
-///
-/// There is no published specification for how to encode collection types. By default the convention of appending
-/// `[]` to the key for array values (`foo[]=1&foo[]=2`), and appending the key surrounded by square brackets for
-/// nested dictionary values (`foo[bar]=baz`) is used. Optionally, `ArrayEncoding` can be used to omit the
-/// square brackets appended to array keys.
-///
-/// `BoolEncoding` can be used to configure how boolean values are encoded. The default behavior is to encode
-/// `true` as 1 and `false` as 0.
+/*
+ 最常见的一种, 序列化器
+ */
 public struct URLEncoding: ParameterEncoding {
     // MARK: Helper Types
     
     /// Defines whether the url-encoded query string is applied to the existing query string or HTTP body of the
     /// resulting URL request.
     public enum Destination {
-        /// Applies encoded query string result to existing query string for `GET`, `HEAD` and `DELETE` requests and
-        /// sets as the HTTP body for requests with any other HTTP method.
+        /*
+         通过 request 的 http method 进行判断. 感觉这是最合理的方式啊.
+         */
         case methodDependent
         /// Sets or appends encoded query string result to existing query string.
         case queryString
@@ -100,25 +84,22 @@ public struct URLEncoding: ParameterEncoding {
     /// Returns a `URLEncoding` instance with an `.httpBody` destination.
     public static var httpBody: URLEncoding { URLEncoding(destination: .httpBody) }
     
-    /// The destination defining where the encoded query string is to be applied to the URL request.
+    /*
+     参数值, 应该到添加到 request 的哪个部分
+     */
     public let destination: Destination
-    
-    /// The encoding to use for `Array` parameters.
+    /*
+     如何进行 array 的序列化.
+     */
     public let arrayEncoding: ArrayEncoding
-    
-    /// The encoding to use for `Bool` parameters.
+    /*
+     如何进行 Bool 的序列化.
+     */
     public let boolEncoding: BoolEncoding
     
     // MARK: Initialization
     
-    /// Creates an instance using the specified parameters.
-    ///
-    /// - Parameters:
-    ///   - destination:   `Destination` defining where the encoded query string will be applied. `.methodDependent` by
-    ///                    default.
-    ///   - arrayEncoding: `ArrayEncoding` to use. `.brackets` by default.
-    ///   - boolEncoding:  `BoolEncoding` to use. `.numeric` by default.
-    public init(destination: Destination = .methodDependent,
+    public init(destination: Destination = .methodDependent, // 默认, 也是通过 HttpMethod 分辨, 进行 params 的位置的确定.
                 arrayEncoding: ArrayEncoding = .brackets,
                 boolEncoding: BoolEncoding = .numeric) {
         self.destination = destination
@@ -128,16 +109,24 @@ public struct URLEncoding: ParameterEncoding {
     
     // MARK: Encoding
     
-    public func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
+    public func encode(_ urlRequest: URLRequestConvertible,
+                       with parameters: Parameters?) throws -> URLRequest {
         var urlRequest = try urlRequest.asURLRequest()
         
         guard let parameters = parameters else { return urlRequest }
         
-        if let method = urlRequest.method, destination.encodesParametersInURL(for: method) {
+        /*
+         如果, 是要在 URL 里面, 添加 parameters 的话,
+         */
+        if let method = urlRequest.method,
+            destination.encodesParametersInURL(for: method) {
             guard let url = urlRequest.url else {
                 throw AFError.parameterEncodingFailed(reason: .missingURL)
             }
             
+            /*
+             URLComponents 就是一个专门做 url 处理的一个类.
+             */
             if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false), !parameters.isEmpty {
                 let percentEncodedQuery = (urlComponents.percentEncodedQuery.map { $0 + "&" } ?? "") + query(parameters)
                 urlComponents.percentEncodedQuery = percentEncodedQuery
@@ -161,6 +150,9 @@ public struct URLEncoding: ParameterEncoding {
     ///   - value: Value of the query component.
     ///
     /// - Returns: The percent-escaped, URL encoded query string components.
+    /*
+     这个序列化的过程, 已经是非常常见了.
+     */
     public func queryComponents(fromKey key: String, value: Any) -> [(String, String)] {
         var components: [(String, String)] = []
         switch value {
@@ -244,7 +236,9 @@ public struct JSONEncoding: ParameterEncoding {
             if urlRequest.headers["Content-Type"] == nil {
                 urlRequest.headers.update(.contentType("application/json"))
             }
-            
+            /*
+             对于 JSON 的 encoder 来说 ,他生成的, 一定就是放到了 body 里面
+             */
             urlRequest.httpBody = data
         } catch {
             throw AFError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))

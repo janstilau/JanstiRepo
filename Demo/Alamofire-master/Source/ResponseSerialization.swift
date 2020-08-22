@@ -1,27 +1,3 @@
-//
-//  ResponseSerialization.swift
-//
-//  Copyright (c) 2014-2018 Alamofire Software Foundation (http://alamofire.org/)
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//
-
 import Foundation
 
 // MARK: Protocols
@@ -30,7 +6,7 @@ import Foundation
 public protocol DataResponseSerializerProtocol {
     /// The type of serialized object to be created.
     associatedtype SerializedObject
-
+    
     /// Serialize the response `Data` into the provided type..
     ///
     /// - Parameters:
@@ -48,7 +24,7 @@ public protocol DataResponseSerializerProtocol {
 public protocol DownloadResponseSerializerProtocol {
     /// The type of serialized object to be created.
     associatedtype SerializedObject
-
+    
     /// Serialize the downloaded response `Data` from disk into the provided type..
     ///
     /// - Parameters:
@@ -82,14 +58,14 @@ public protocol DataPreprocessor {
 /// `DataPreprocessor` that returns passed `Data` without any transform.
 public struct PassthroughPreprocessor: DataPreprocessor {
     public init() {}
-
+    
     public func preprocess(_ data: Data) throws -> Data { data }
 }
 
 /// `DataPreprocessor` that trims Google's typical `)]}',\n` XSSI JSON header.
 public struct GoogleXSSIPreprocessor: DataPreprocessor {
     public init() {}
-
+    
     public func preprocess(_ data: Data) throws -> Data {
         (data.prefix(6) == Data(")]}',\n".utf8)) ? data.dropFirst(6) : data
     }
@@ -102,11 +78,11 @@ extension ResponseSerializer {
     public static var defaultEmptyRequestMethods: Set<HTTPMethod> { [.head] }
     /// HTTP response codes for which empty response bodies are considered appropriate. `[204, 205]` by default.
     public static var defaultEmptyResponseCodes: Set<Int> { [204, 205] }
-
+    
     public var dataPreprocessor: DataPreprocessor { Self.defaultDataPreprocessor }
     public var emptyRequestMethods: Set<HTTPMethod> { Self.defaultEmptyRequestMethods }
     public var emptyResponseCodes: Set<Int> { Self.defaultEmptyResponseCodes }
-
+    
     /// Determines whether the `request` allows empty response bodies, if `request` exists.
     ///
     /// - Parameter request: `URLRequest` to evaluate.
@@ -117,7 +93,7 @@ extension ResponseSerializer {
             .flatMap(HTTPMethod.init)
             .map { emptyRequestMethods.contains($0) }
     }
-
+    
     /// Determines whether the `response` allows empty response bodies, if `response` exists`.
     ///
     /// - Parameter response: `HTTPURLResponse` to evaluate.
@@ -127,7 +103,7 @@ extension ResponseSerializer {
         response.flatMap { $0.statusCode }
             .map { emptyResponseCodes.contains($0) }
     }
-
+    
     /// Determines whether `request` and `response` allow empty response bodies.
     ///
     /// - Parameters:
@@ -145,18 +121,18 @@ extension ResponseSerializer {
 public extension DownloadResponseSerializerProtocol where Self: DataResponseSerializerProtocol {
     func serializeDownload(request: URLRequest?, response: HTTPURLResponse?, fileURL: URL?, error: Error?) throws -> Self.SerializedObject {
         guard error == nil else { throw error! }
-
+        
         guard let fileURL = fileURL else {
             throw AFError.responseSerializationFailed(reason: .inputFileNil)
         }
-
+        
         let data: Data
         do {
             data = try Data(contentsOf: fileURL)
         } catch {
             throw AFError.responseSerializationFailed(reason: .inputFileReadFailed(at: fileURL))
         }
-
+        
         do {
             return try serialize(request: request, response: response, data: data, error: error)
         } catch {
@@ -181,7 +157,7 @@ extension DataRequest {
             // Start work that should be on the serialization queue.
             let result = AFResult<Data?>(value: self.data, error: self.error)
             // End work that should be on the serialization queue.
-
+            
             self.underlyingQueue.async {
                 let response = DataResponse(request: self.request,
                                             response: self.response,
@@ -189,16 +165,16 @@ extension DataRequest {
                                             metrics: self.metrics,
                                             serializationDuration: 0,
                                             result: result)
-
+                
                 self.eventMonitor?.request(self, didParseResponse: response)
-
+                
                 self.responseSerializerDidComplete { queue.async { completionHandler(response) } }
             }
         }
-
+        
         return self
     }
-
+    
     /// Adds a handler to be called once the request has finished.
     ///
     /// - Parameters:
@@ -212,69 +188,69 @@ extension DataRequest {
                                                                      responseSerializer: Serializer,
                                                                      completionHandler: @escaping (AFDataResponse<Serializer.SerializedObject>) -> Void)
         -> Self {
-        appendResponseSerializer {
-            // Start work that should be on the serialization queue.
-            let start = ProcessInfo.processInfo.systemUptime
-            let result: AFResult<Serializer.SerializedObject> = Result {
-                try responseSerializer.serialize(request: self.request,
-                                                 response: self.response,
-                                                 data: self.data,
-                                                 error: self.error)
-            }.mapError { error in
-                error.asAFError(or: .responseSerializationFailed(reason: .customSerializationFailed(error: error)))
-            }
-
-            let end = ProcessInfo.processInfo.systemUptime
-            // End work that should be on the serialization queue.
-
-            self.underlyingQueue.async {
-                let response = DataResponse(request: self.request,
-                                            response: self.response,
-                                            data: self.data,
-                                            metrics: self.metrics,
-                                            serializationDuration: end - start,
-                                            result: result)
-
-                self.eventMonitor?.request(self, didParseResponse: response)
-
-                guard let serializerError = result.failure, let delegate = self.delegate else {
-                    self.responseSerializerDidComplete { queue.async { completionHandler(response) } }
-                    return
+            appendResponseSerializer {
+                // Start work that should be on the serialization queue.
+                let start = ProcessInfo.processInfo.systemUptime
+                let result: AFResult<Serializer.SerializedObject> = Result {
+                    try responseSerializer.serialize(request: self.request,
+                                                     response: self.response,
+                                                     data: self.data,
+                                                     error: self.error)
+                }.mapError { error in
+                    error.asAFError(or: .responseSerializationFailed(reason: .customSerializationFailed(error: error)))
                 }
-
-                delegate.retryResult(for: self, dueTo: serializerError) { retryResult in
-                    var didComplete: (() -> Void)?
-
-                    defer {
-                        if let didComplete = didComplete {
-                            self.responseSerializerDidComplete { queue.async { didComplete() } }
+                
+                let end = ProcessInfo.processInfo.systemUptime
+                // End work that should be on the serialization queue.
+                
+                self.underlyingQueue.async {
+                    let response = DataResponse(request: self.request,
+                                                response: self.response,
+                                                data: self.data,
+                                                metrics: self.metrics,
+                                                serializationDuration: end - start,
+                                                result: result)
+                    
+                    self.eventMonitor?.request(self, didParseResponse: response)
+                    
+                    guard let serializerError = result.failure, let delegate = self.delegate else {
+                        self.responseSerializerDidComplete { queue.async { completionHandler(response) } }
+                        return
+                    }
+                    
+                    delegate.retryResult(for: self, dueTo: serializerError) { retryResult in
+                        var didComplete: (() -> Void)?
+                        
+                        defer {
+                            if let didComplete = didComplete {
+                                self.responseSerializerDidComplete { queue.async { didComplete() } }
+                            }
+                        }
+                        
+                        switch retryResult {
+                        case .doNotRetry:
+                            didComplete = { completionHandler(response) }
+                            
+                        case let .doNotRetryWithError(retryError):
+                            let result: AFResult<Serializer.SerializedObject> = .failure(retryError.asAFError(orFailWith: "Received retryError was not already AFError"))
+                            
+                            let response = DataResponse(request: self.request,
+                                                        response: self.response,
+                                                        data: self.data,
+                                                        metrics: self.metrics,
+                                                        serializationDuration: end - start,
+                                                        result: result)
+                            
+                            didComplete = { completionHandler(response) }
+                            
+                        case .retry, .retryWithDelay:
+                            delegate.retryRequest(self, withDelay: retryResult.delay)
                         }
                     }
-
-                    switch retryResult {
-                    case .doNotRetry:
-                        didComplete = { completionHandler(response) }
-
-                    case let .doNotRetryWithError(retryError):
-                        let result: AFResult<Serializer.SerializedObject> = .failure(retryError.asAFError(orFailWith: "Received retryError was not already AFError"))
-
-                        let response = DataResponse(request: self.request,
-                                                    response: self.response,
-                                                    data: self.data,
-                                                    metrics: self.metrics,
-                                                    serializationDuration: end - start,
-                                                    result: result)
-
-                        didComplete = { completionHandler(response) }
-
-                    case .retry, .retryWithDelay:
-                        delegate.retryRequest(self, withDelay: retryResult.delay)
-                    }
                 }
             }
-        }
-
-        return self
+            
+            return self
     }
 }
 
@@ -290,29 +266,29 @@ extension DownloadRequest {
     public func response(queue: DispatchQueue = .main,
                          completionHandler: @escaping (AFDownloadResponse<URL?>) -> Void)
         -> Self {
-        appendResponseSerializer {
-            // Start work that should be on the serialization queue.
-            let result = AFResult<URL?>(value: self.fileURL, error: self.error)
-            // End work that should be on the serialization queue.
-
-            self.underlyingQueue.async {
-                let response = DownloadResponse(request: self.request,
-                                                response: self.response,
-                                                fileURL: self.fileURL,
-                                                resumeData: self.resumeData,
-                                                metrics: self.metrics,
-                                                serializationDuration: 0,
-                                                result: result)
-
-                self.eventMonitor?.request(self, didParseResponse: response)
-
-                self.responseSerializerDidComplete { queue.async { completionHandler(response) } }
+            appendResponseSerializer {
+                // Start work that should be on the serialization queue.
+                let result = AFResult<URL?>(value: self.fileURL, error: self.error)
+                // End work that should be on the serialization queue.
+                
+                self.underlyingQueue.async {
+                    let response = DownloadResponse(request: self.request,
+                                                    response: self.response,
+                                                    fileURL: self.fileURL,
+                                                    resumeData: self.resumeData,
+                                                    metrics: self.metrics,
+                                                    serializationDuration: 0,
+                                                    result: result)
+                    
+                    self.eventMonitor?.request(self, didParseResponse: response)
+                    
+                    self.responseSerializerDidComplete { queue.async { completionHandler(response) } }
+                }
             }
-        }
-
-        return self
+            
+            return self
     }
-
+    
     /// Adds a handler to be called once the request has finished.
     ///
     /// - Parameters:
@@ -327,70 +303,70 @@ extension DownloadRequest {
                                                                          responseSerializer: Serializer,
                                                                          completionHandler: @escaping (AFDownloadResponse<Serializer.SerializedObject>) -> Void)
         -> Self {
-        appendResponseSerializer {
-            // Start work that should be on the serialization queue.
-            let start = ProcessInfo.processInfo.systemUptime
-            let result: AFResult<Serializer.SerializedObject> = Result {
-                try responseSerializer.serializeDownload(request: self.request,
-                                                         response: self.response,
-                                                         fileURL: self.fileURL,
-                                                         error: self.error)
-            }.mapError { error in
-                error.asAFError(or: .responseSerializationFailed(reason: .customSerializationFailed(error: error)))
-            }
-            let end = ProcessInfo.processInfo.systemUptime
-            // End work that should be on the serialization queue.
-
-            self.underlyingQueue.async {
-                let response = DownloadResponse(request: self.request,
-                                                response: self.response,
-                                                fileURL: self.fileURL,
-                                                resumeData: self.resumeData,
-                                                metrics: self.metrics,
-                                                serializationDuration: end - start,
-                                                result: result)
-
-                self.eventMonitor?.request(self, didParseResponse: response)
-
-                guard let serializerError = result.failure, let delegate = self.delegate else {
-                    self.responseSerializerDidComplete { queue.async { completionHandler(response) } }
-                    return
+            appendResponseSerializer {
+                // Start work that should be on the serialization queue.
+                let start = ProcessInfo.processInfo.systemUptime
+                let result: AFResult<Serializer.SerializedObject> = Result {
+                    try responseSerializer.serializeDownload(request: self.request,
+                                                             response: self.response,
+                                                             fileURL: self.fileURL,
+                                                             error: self.error)
+                }.mapError { error in
+                    error.asAFError(or: .responseSerializationFailed(reason: .customSerializationFailed(error: error)))
                 }
-
-                delegate.retryResult(for: self, dueTo: serializerError) { retryResult in
-                    var didComplete: (() -> Void)?
-
-                    defer {
-                        if let didComplete = didComplete {
-                            self.responseSerializerDidComplete { queue.async { didComplete() } }
+                let end = ProcessInfo.processInfo.systemUptime
+                // End work that should be on the serialization queue.
+                
+                self.underlyingQueue.async {
+                    let response = DownloadResponse(request: self.request,
+                                                    response: self.response,
+                                                    fileURL: self.fileURL,
+                                                    resumeData: self.resumeData,
+                                                    metrics: self.metrics,
+                                                    serializationDuration: end - start,
+                                                    result: result)
+                    
+                    self.eventMonitor?.request(self, didParseResponse: response)
+                    
+                    guard let serializerError = result.failure, let delegate = self.delegate else {
+                        self.responseSerializerDidComplete { queue.async { completionHandler(response) } }
+                        return
+                    }
+                    
+                    delegate.retryResult(for: self, dueTo: serializerError) { retryResult in
+                        var didComplete: (() -> Void)?
+                        
+                        defer {
+                            if let didComplete = didComplete {
+                                self.responseSerializerDidComplete { queue.async { didComplete() } }
+                            }
+                        }
+                        
+                        switch retryResult {
+                        case .doNotRetry:
+                            didComplete = { completionHandler(response) }
+                            
+                        case let .doNotRetryWithError(retryError):
+                            let result: AFResult<Serializer.SerializedObject> = .failure(retryError.asAFError(orFailWith: "Received retryError was not already AFError"))
+                            
+                            let response = DownloadResponse(request: self.request,
+                                                            response: self.response,
+                                                            fileURL: self.fileURL,
+                                                            resumeData: self.resumeData,
+                                                            metrics: self.metrics,
+                                                            serializationDuration: end - start,
+                                                            result: result)
+                            
+                            didComplete = { completionHandler(response) }
+                            
+                        case .retry, .retryWithDelay:
+                            delegate.retryRequest(self, withDelay: retryResult.delay)
                         }
                     }
-
-                    switch retryResult {
-                    case .doNotRetry:
-                        didComplete = { completionHandler(response) }
-
-                    case let .doNotRetryWithError(retryError):
-                        let result: AFResult<Serializer.SerializedObject> = .failure(retryError.asAFError(orFailWith: "Received retryError was not already AFError"))
-
-                        let response = DownloadResponse(request: self.request,
-                                                        response: self.response,
-                                                        fileURL: self.fileURL,
-                                                        resumeData: self.resumeData,
-                                                        metrics: self.metrics,
-                                                        serializationDuration: end - start,
-                                                        result: result)
-
-                        didComplete = { completionHandler(response) }
-
-                    case .retry, .retryWithDelay:
-                        delegate.retryRequest(self, withDelay: retryResult.delay)
-                    }
                 }
             }
-        }
-
-        return self
+            
+            return self
     }
 }
 
@@ -403,7 +379,7 @@ public final class DataResponseSerializer: ResponseSerializer {
     public let dataPreprocessor: DataPreprocessor
     public let emptyResponseCodes: Set<Int>
     public let emptyRequestMethods: Set<HTTPMethod>
-
+    
     /// Creates an instance using the provided values.
     ///
     /// - Parameters:
@@ -417,20 +393,20 @@ public final class DataResponseSerializer: ResponseSerializer {
         self.emptyResponseCodes = emptyResponseCodes
         self.emptyRequestMethods = emptyRequestMethods
     }
-
+    
     public func serialize(request: URLRequest?, response: HTTPURLResponse?, data: Data?, error: Error?) throws -> Data {
         guard error == nil else { throw error! }
-
+        
         guard var data = data, !data.isEmpty else {
             guard emptyResponseAllowed(forRequest: request, response: response) else {
                 throw AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
             }
-
+            
             return Data()
         }
-
+        
         data = try dataPreprocessor.preprocess(data)
-
+        
         return data
     }
 }
@@ -498,7 +474,7 @@ public final class StringResponseSerializer: ResponseSerializer {
     public let encoding: String.Encoding?
     public let emptyResponseCodes: Set<Int>
     public let emptyRequestMethods: Set<HTTPMethod>
-
+    
     /// Creates an instance with the provided values.
     ///
     /// - Parameters:
@@ -516,32 +492,32 @@ public final class StringResponseSerializer: ResponseSerializer {
         self.emptyResponseCodes = emptyResponseCodes
         self.emptyRequestMethods = emptyRequestMethods
     }
-
+    
     public func serialize(request: URLRequest?, response: HTTPURLResponse?, data: Data?, error: Error?) throws -> String {
         guard error == nil else { throw error! }
-
+        
         guard var data = data, !data.isEmpty else {
             guard emptyResponseAllowed(forRequest: request, response: response) else {
                 throw AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
             }
-
+            
             return ""
         }
-
+        
         data = try dataPreprocessor.preprocess(data)
-
+        
         var convertedEncoding = encoding
-
+        
         if let encodingName = response?.textEncodingName, convertedEncoding == nil {
             convertedEncoding = String.Encoding(ianaCharsetName: encodingName)
         }
-
+        
         let actualEncoding = convertedEncoding ?? .isoLatin1
-
+        
         guard let string = String(data: data, encoding: actualEncoding) else {
             throw AFError.responseSerializationFailed(reason: .stringSerializationFailed(encoding: actualEncoding))
         }
-
+        
         return string
     }
 }
@@ -617,7 +593,7 @@ public final class JSONResponseSerializer: ResponseSerializer {
     public let emptyRequestMethods: Set<HTTPMethod>
     /// `JSONSerialization.ReadingOptions` used when serializing a response.
     public let options: JSONSerialization.ReadingOptions
-
+    
     /// Creates an instance with the provided values.
     ///
     /// - Parameters:
@@ -634,20 +610,20 @@ public final class JSONResponseSerializer: ResponseSerializer {
         self.emptyRequestMethods = emptyRequestMethods
         self.options = options
     }
-
+    
     public func serialize(request: URLRequest?, response: HTTPURLResponse?, data: Data?, error: Error?) throws -> Any {
         guard error == nil else { throw error! }
-
+        
         guard var data = data, !data.isEmpty else {
             guard emptyResponseAllowed(forRequest: request, response: response) else {
                 throw AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
             }
-
+            
             return NSNull()
         }
-
+        
         data = try dataPreprocessor.preprocess(data)
-
+        
         do {
             return try JSONSerialization.jsonObject(with: data, options: options)
         } catch {
@@ -776,7 +752,7 @@ public final class DecodableResponseSerializer<T: Decodable>: ResponseSerializer
     public let decoder: DataDecoder
     public let emptyResponseCodes: Set<Int>
     public let emptyRequestMethods: Set<HTTPMethod>
-
+    
     /// Creates an instance using the values provided.
     ///
     /// - Parameters:
@@ -793,24 +769,24 @@ public final class DecodableResponseSerializer<T: Decodable>: ResponseSerializer
         self.emptyResponseCodes = emptyResponseCodes
         self.emptyRequestMethods = emptyRequestMethods
     }
-
+    
     public func serialize(request: URLRequest?, response: HTTPURLResponse?, data: Data?, error: Error?) throws -> T {
         guard error == nil else { throw error! }
-
+        
         guard var data = data, !data.isEmpty else {
             guard emptyResponseAllowed(forRequest: request, response: response) else {
                 throw AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
             }
-
+            
             guard let emptyResponseType = T.self as? EmptyResponse.Type, let emptyValue = emptyResponseType.emptyValue() as? T else {
                 throw AFError.responseSerializationFailed(reason: .invalidEmptyResponse(type: "\(T.self)"))
             }
-
+            
             return emptyValue
         }
-
+        
         data = try dataPreprocessor.preprocess(data)
-
+        
         do {
             return try decoder.decode(T.self, from: data)
         } catch {
@@ -895,7 +871,7 @@ extension DownloadRequest {
 public protocol DataStreamSerializer {
     /// Type produced from the serialized `Data`.
     associatedtype SerializedObject
-
+    
     /// Serializes incoming `Data` into a `SerializedObject` value.
     ///
     /// - Parameter data: `Data` to be serialized.
@@ -910,7 +886,7 @@ public struct DecodableStreamSerializer<T: Decodable>: DataStreamSerializer {
     public let decoder: DataDecoder
     /// `DataPreprocessor` incoming `Data` is passed through before being passed to the `DataDecoder`.
     public let dataPreprocessor: DataPreprocessor
-
+    
     /// Creates an instance with the provided `DataDecoder` and `DataPreprocessor`.
     /// - Parameters:
     ///   - decoder: `        DataDecoder` used to decode incoming `Data`.
@@ -919,7 +895,7 @@ public struct DecodableStreamSerializer<T: Decodable>: DataStreamSerializer {
         self.decoder = decoder
         self.dataPreprocessor = dataPreprocessor
     }
-
+    
     public func serialize(_ data: Data) throws -> T {
         let processedData = try dataPreprocessor.preprocess(data)
         do {
@@ -957,17 +933,17 @@ extension DataStreamRequest {
                 self.capturingError {
                     try stream(.init(event: .stream(.success(data)), token: .init(self)))
                 }
-
+                
                 self.updateAndCompleteIfPossible()
             }
         }
-
+        
         $streamMutableState.write { $0.streams.append(parser) }
         appendStreamCompletion(on: queue, stream: stream)
-
+        
         return self
     }
-
+    
     /// Adds a `StreamHandler` which uses the provided `DataStreamSerializer` to process incoming `Data`.
     ///
     /// - Parameters:
@@ -988,28 +964,28 @@ extension DataStreamRequest {
                 // End work on serialization queue.
                 self.underlyingQueue.async {
                     self.eventMonitor?.request(self, didParseStream: result)
-
+                    
                     if result.isFailure, self.automaticallyCancelOnStreamError {
                         self.cancel()
                     }
-
+                    
                     queue.async {
                         self.capturingError {
                             try stream(.init(event: .stream(result), token: .init(self)))
                         }
-
+                        
                         self.updateAndCompleteIfPossible()
                     }
                 }
             }
         }
-
+        
         $streamMutableState.write { $0.streams.append(parser) }
         appendStreamCompletion(on: queue, stream: stream)
-
+        
         return self
     }
-
+    
     /// Adds a `StreamHandler` which parses incoming `Data` as a UTF8 `String`.
     ///
     /// - Parameters:
@@ -1027,36 +1003,36 @@ extension DataStreamRequest {
                 // End work on serialization queue.
                 self.underlyingQueue.async {
                     self.eventMonitor?.request(self, didParseStream: .success(string))
-
+                    
                     queue.async {
                         self.capturingError {
                             try stream(.init(event: .stream(.success(string)), token: .init(self)))
                         }
-
+                        
                         self.updateAndCompleteIfPossible()
                     }
                 }
             }
         }
-
+        
         $streamMutableState.write { $0.streams.append(parser) }
         appendStreamCompletion(on: queue, stream: stream)
-
+        
         return self
     }
-
+    
     private func updateAndCompleteIfPossible() {
         $streamMutableState.write { state in
             state.numberOfExecutingStreams -= 1
-
+            
             guard state.numberOfExecutingStreams == 0, !state.enqueuedCompletionEvents.isEmpty else { return }
-
+            
             let completionEvents = state.enqueuedCompletionEvents
             self.underlyingQueue.async { completionEvents.forEach { $0() } }
             state.enqueuedCompletionEvents.removeAll()
         }
     }
-
+    
     /// Adds a `StreamHandler` which parses incoming `Data` using the provided `DataDecoder`.
     ///
     /// - Parameters:

@@ -1,18 +1,17 @@
 import Foundation
 
-/// `Session` creates and manages Alamofire's `Request` types during their lifetimes. It also provides common
-/// functionality for all `Request`s, including queuing, interception, trust management, redirect handling, and response
-/// cache handling.
+/*
+ Sesstion 这个类, 作用和 AFN 的 SessionManager 的作用应该差不多.
+ */
 open class Session {
-    /// Shared singleton instance used by all `AF.request` APIs. Cannot be modified.
+    /*
+     一个单例, 简单的网络请求使用, 里面使用默认的数据作为配置.
+     */
     public static let `default` = Session()
     
-    /// Underlying `URLSession` used to create `URLSessionTasks` for this instance, and for which this instance's
-    /// `delegate` handles `URLSessionDelegate` callbacks.
-    ///
-    /// - Note: This instance should **NOT** be used to interact with the underlying `URLSessionTask`s. Doing so will
-    ///         break internal Alamofire logic that tracks those tasks.
-    ///
+    /*
+     Session 这个类, 作为网络请求的管理者, 里面做了 Alamofire 的逻辑处理. 真正的网络请求, 还是要调用系统的 URLSession 进行处理.
+     */
     public let session: URLSession
     /// Instance's `SessionDelegate`, which handles the `URLSessionDelegate` methods and `Request` interaction.
     public let delegate: SessionDelegate
@@ -198,11 +197,21 @@ open class Session {
         }
     }
     
+    
+    
+    
+    
     // MARK: - DataRequest
     
-    /// Closure which provides a `URLRequest` for mutation.
+    /*
+     RequestModifier 仅仅是一个 block 类型, 但是通过 typealias 的定义, 让他的逻辑含义, 更加的突出.
+     */
     public typealias RequestModifier = (inout URLRequest) throws -> Void
     
+    /*
+     RequestConvertible 就是一个 实现了 URLRequestConvertible 的盒子.
+     这个盒子, 存储了所有构件 Request 的信息, 然后生成对应的 request.
+     */
     struct RequestConvertible: URLRequestConvertible {
         let url: URLConvertible
         let method: HTTPMethod
@@ -212,6 +221,10 @@ open class Session {
         let requestModifier: RequestModifier?
         
         func asURLRequest() throws -> URLRequest {
+            /*
+             显示简单的构造了 request, 然后调用 encoding 的序列化方法.
+             从这个意义上来说, encoding 这个类, 类似于 AFHTTPRequestSerializer.
+             */
             var request = try URLRequest(url: url, method: method, headers: headers)
             try requestModifier?(&request)
             
@@ -222,18 +235,22 @@ open class Session {
     /// Creates a `DataRequest` from a `URLRequest` created using the passed components and a `RequestInterceptor`.
     ///
     /// - Parameters:
-    ///   - convertible:     `URLConvertible` value to be used as the `URLRequest`'s `URL`.
-    ///   - method:          `HTTPMethod` for the `URLRequest`. `.get` by default.
+    ///   - convertible:     `URLConvertible` value to be used as the `URLRequest`'s `URL`.  实际的 URL 地址
+    ///   - method:          `HTTPMethod` for the `URLRequest`. `.get` by default. 实际的 HTTP 方法.
     ///   - parameters:      `Parameters` (a.k.a. `[String: Any]`) value to be encoded into the `URLRequest`. `nil` by
-    ///                      default.
+    ///                      default. 各种参数信息
     ///   - encoding:        `ParameterEncoding` to be used to encode the `parameters` value into the `URLRequest`.
-    ///                      `URLEncoding.default` by default.
-    ///   - headers:         `HTTPHeaders` value to be added to the `URLRequest`. `nil` by default.
+    ///                      `URLEncoding.default` by default. 各种参数, 如何序列化到 Request 的功能
+    ///   - headers:         `HTTPHeaders` value to be added to the `URLRequest`. `nil` by default. 各种 header 信息.
     ///   - interceptor:     `RequestInterceptor` value to be used by the returned `DataRequest`. `nil` by default.
     ///   - requestModifier: `RequestModifier` which will be applied to the `URLRequest` created from the provided
-    ///                      parameters. `nil` by default.
+    ///                      parameters. `nil` by default. 一个闭包, 用于对于 request 进行个性化定制.
     ///
     /// - Returns:       The created `DataRequest`.
+    /*
+     各种参数, 都有着默认的构造函数.
+     Requeest 的构建, 在 AFN 里面, 是 AFHTTPRequestSerializer 的责任, 在这里, 通过 request 的构造函数进行.
+     */
     open func request(_ convertible: URLConvertible,
                       method: HTTPMethod = .get,
                       parameters: Parameters? = nil,

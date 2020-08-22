@@ -1,73 +1,20 @@
-* [Introduction](#introduction)
-    - [Aside: The `AF` Namespace](#aside-the-af-namespace-and-reference)
-* [Making Requests](#making-requests)
-  + [HTTP Methods](#http-methods)
-  + [Request Parameters and Parameter Encoders](#request-parameters-and-parameter-encoders)
-    - [`URLEncodedFormParameterEncoder`](#urlencodedformparameterencoder)
-      * [GET Request With URL-Encoded Parameters](#get-request-with-url-encoded-parameters)
-      * [POST Request With URL-Encoded Parameters](#post-request-with-url-encoded-parameters)
-      * [Configuring the Sorting of Encoded Parameters](#configuring-the-sorting-of-encoded-parameters)
-      * [Configuring the Encoding of `Array` Parameters](#configuring-the-encoding-of-array-parameters)
-      * [Configuring the Encoding of `Bool` Parameters](#configuring-the-encoding-of-bool-parameters)
-      * [Configuring the Encoding of `Data` Parameters](#configuring-the-encoding-of-data-parameters)
-      * [Configuring the Encoding of `Date` Parameters](#configuring-the-encoding-of-date-parameters)
-      * [Configuring the Encoding of Coding Keys](#configuring-the-encoding-of-coding-keys)
-      * [Configuring the Encoding of Spaces](#configuring-the-encoding-of-spaces)
-    - [`JSONParameterEncoder`](#jsonparameterencoder)
-      * [POST Request with JSON-Encoded Parameters](#post-request-with-json-encoded-parameters)
-      * [Configuring a Custom `JSONEncoder`](#configuring-a-custom-jsonencoder)
-      * [Manual Parameter Encoding of a `URLRequest`](#manual-parameter-encoding-of-a-urlrequest)
-  + [HTTP Headers](#http-headers)
-  + [Response Validation](#response-validation)
-    - [Automatic Validation](#automatic-validation)
-    - [Manual Validation](#manual-validation)
-  + [Response Handling](#response-handling)
-    - [Response Handler](#response-handler)
-    - [Response Data Handler](#response-data-handler)
-    - [Response String Handler](#response-string-handler)
-    - [Response JSON Handler](#response-json-handler)
-    - [Response `Decodable` Handler](#response-decodable-handler)
-    - [Chained Response Handlers](#chained-response-handlers)
-    - [Response Handler Queue](#response-handler-queue)
-  + [Response Caching](#response-caching)
-  + [Authentication](#authentication)
-    - [HTTP Basic Authentication](#http-basic-authentication)
-    - [Authentication with `URLCredential`](#authentication-with-urlcredential)
-    - [Manual Authentication](#manual-authentication)
-  + [Downloading Data to a File](#downloading-data-to-a-file)
-    - [Download File Destination](#download-file-destination)
-    - [Download Progress](#download-progress)
-    - [Canceling and Resuming a Download](#canceling-and-resuming-a-download)
-  + [Uploading Data to a Server](#uploading-data-to-a-server)
-    - [Uploading Data](#uploading-data)
-    - [Uploading a File](#uploading-a-file)
-    - [Uploading Multipart Form Data](#uploading-multipart-form-data)
-    - [Upload Progress](#upload-progress)
-  + [Streaming Data from a Server](#streaming-data-from-a-server)
-    - [Streaming `Data`](#streaming-data)
-    - [Streaming `String`s](#streaming-strings)
-    - [Streaming `Decodable` Values](#streaming-decodable-values)
-    - [Producing an `InputStream`](#producing-an-inputstream)
-  + [Statistical Metrics](#statistical-metrics)
-    - [`URLSessionTaskMetrics`](#urlsessiontaskmetrics)
-  + [cURL Command Output](#curl-command-output)
-
-# Using Alamofire
-
 ## Introduction
-Alamofire provides an elegant and composable interface to HTTP network requests. It does not implement its own HTTP networking functionality. Instead it builds on top of Apple's [URL Loading System](https://developer.apple.com/documentation/foundation/url_loading_system/) provided by the Foundation framework. At the core of the system is [`URLSession`](https://developer.apple.com/documentation/foundation/urlsession) and the [`URLSessionTask`](https://developer.apple.com/documentation/foundation/urlsessiontask) subclasses. Alamofire wraps these APIs, and many others, in an easier to use interface and provides a variety of functionality necessary for modern application development using HTTP networking. However, it's important to know where many of Alamofire's core behaviors come from, so familiarity with the URL Loading System is important. Ultimately, the networking features of Alamofire are limited by the capabilities of that system, and the behaviors and best practices should always be remembered and observed.
+Alamofire provides an elegant and composable interface to HTTP network requests.
+It does not implement its own HTTP networking functionality. Instead it builds on top of Apple's [URL Loading System](https://developer.apple.com/documentation/foundation/url_loading_system/) provided by the Foundation framework. 
+At the core of the system is [`URLSession`](https://developer.apple.com/documentation/foundation/urlsession) and the [`URLSessionTask`](https://developer.apple.com/documentation/foundation/urlsessiontask) subclasses. 
+这里表明了, Alamofire, 没有亲自去管理网络层的交互问题.
+
+Alamofire wraps these APIs, and many others, in an easier to use interface and provides a variety of functionality necessary for modern application development using HTTP networking. However, it's important to know where many of Alamofire's core behaviors come from, so familiarity with the URL Loading System is important. Ultimately, the networking features of Alamofire are limited by the capabilities of that system, and the behaviors and best practices should always be remembered and observed.
 
 Additionally, networking in Alamofire (and the URL Loading System in general) is done _asynchronously_. Asynchronous programming may be a source of frustration to programmers unfamiliar with the concept, but there are [very good reasons](https://developer.apple.com/library/ios/qa/qa1693/_index.html) for doing it this way.
-
-#### Aside: The `AF` Namespace and Reference
-Previous versions of Alamofire's documentation used examples like `Alamofire.request()`. This API, while it appeared to require the `Alamofire` prefix, in fact worked fine without it. The `request` method and other functions were available globally in any file with `import Alamofire`. Starting in Alamofire 5, this functionality has been removed and instead the `AF` global is a reference to `Session.default`. This allows Alamofire to offer the same convenience functionality while not having to pollute the global namespace every time Alamofire is used and not having to duplicate the `Session` API globally. Similarly, types extended by Alamofire will use an `af` property extension to separate the functionality Alamofire adds from other extensions.
 
 ## Making Requests
 Alamofire provides a variety of convenience methods for making HTTP requests. At the simplest, just provide a `String` that can be converted into a `URL`:
 
+和 AFN 的用法基本一致, 构建对应的 request, 然后传入一个闭包, 处理最后的 response.
 ```swift
 AF.request("https://httpbin.org/get").response { response in
-    debugPrint(response)
+debugPrint(response)
 }
 ```
 
@@ -75,13 +22,17 @@ AF.request("https://httpbin.org/get").response { response in
 
 This is actually one form of the two top-level APIs on Alamofire's `Session` type for making requests. Its full definition looks like this:
 
+URLConvertible 的引入, 有点过于想要面向协议编程了. 用字符串表示 NSURL, 是一个非常通用的概念. 一定要传递一个抽象对象过来.
+所引起的变化就是, 是在类型的定义时, 增加对于协议的适配. 还是在 Alamofire 的使用的时候, 调用一些对于 NSURL 的构建. 
+这里体现的是面向抽象的概念, 不过对于用户的帮助, 没有那么大, 因为大部分情况下, 还是 String 作为 URL 的表达.
+
 ```swift
 open func request<Parameters: Encodable>(_ convertible: URLConvertible,
-                                         method: HTTPMethod = .get,
-                                         parameters: Parameters? = nil,
-                                         encoder: ParameterEncoder = URLEncodedFormParameterEncoder.default,
-                                         headers: HTTPHeaders? = nil,
-                                         interceptor: RequestInterceptor? = nil) -> DataRequest
+method: HTTPMethod = .get,
+parameters: Parameters? = nil,
+encoder: ParameterEncoder = URLEncodedFormParameterEncoder.default,
+headers: HTTPHeaders? = nil,
+interceptor: RequestInterceptor? = nil) -> DataRequest
 ```
 This method creates a `DataRequest` while allowing the composition of requests from individual components, such as the `method` and `headers`, while also allowing per-request `RequestInterceptor`s and `Encodable` parameters.
 
@@ -91,7 +42,7 @@ The second version of this API is much simpler:
 
 ```swift
 open func request(_ urlRequest: URLRequestConvertible, 
-                  interceptor: RequestInterceptor? = nil) -> DataRequest
+interceptor: RequestInterceptor? = nil) -> DataRequest
 ```
 
 This method creates a `DataRequest` for any type conforming to Alamofire's `URLRequestConvertible` protocol. All of the different parameters from the previous version are encapsulated in that value, which can give rise to very powerful abstractions. This is discussed in our [Advanced Usage](https://github.com/Alamofire/Alamofire/blob/master/Documentation/AdvancedUsage.md) documentation.
@@ -102,21 +53,21 @@ The `HTTPMethod` type lists the HTTP methods defined in [RFC 7231 §4.3](https:/
 
 ```swift
 public struct HTTPMethod: RawRepresentable, Equatable, Hashable {
-    public static let connect = HTTPMethod(rawValue: "CONNECT")
-    public static let delete = HTTPMethod(rawValue: "DELETE")
-    public static let get = HTTPMethod(rawValue: "GET")
-    public static let head = HTTPMethod(rawValue: "HEAD")
-    public static let options = HTTPMethod(rawValue: "OPTIONS")
-    public static let patch = HTTPMethod(rawValue: "PATCH")
-    public static let post = HTTPMethod(rawValue: "POST")
-    public static let put = HTTPMethod(rawValue: "PUT")
-    public static let trace = HTTPMethod(rawValue: "TRACE")
+public static let connect = HTTPMethod(rawValue: "CONNECT")
+public static let delete = HTTPMethod(rawValue: "DELETE")
+public static let get = HTTPMethod(rawValue: "GET")
+public static let head = HTTPMethod(rawValue: "HEAD")
+public static let options = HTTPMethod(rawValue: "OPTIONS")
+public static let patch = HTTPMethod(rawValue: "PATCH")
+public static let post = HTTPMethod(rawValue: "POST")
+public static let put = HTTPMethod(rawValue: "PUT")
+public static let trace = HTTPMethod(rawValue: "TRACE")
 
-    public let rawValue: String
+public let rawValue: String
 
-    public init(rawValue: String) {
-        self.rawValue = rawValue
-    }
+public init(rawValue: String) {
+self.rawValue = rawValue
+}
 }
 ```
 
@@ -135,11 +86,11 @@ Alamofire also offers an extension on `URLRequest` to bridge the `httpMethod` pr
 
 ```swift
 public extension URLRequest {
-    /// Returns the `httpMethod` as Alamofire's `HTTPMethod` type.
-    var method: HTTPMethod? {
-        get { return httpMethod.flatMap(HTTPMethod.init) }
-        set { httpMethod = newValue?.rawValue }
-    }
+/// Returns the `httpMethod` as Alamofire's `HTTPMethod` type.
+var method: HTTPMethod? {
+get { return httpMethod.flatMap(HTTPMethod.init) }
+set { httpMethod = newValue?.rawValue }
+}
 }
 ```
 
@@ -147,7 +98,7 @@ If you need to use an HTTP method that Alamofire's `HTTPMethod` type doesn't sup
 
 ```swift
 extension HTTPMethod {
-    static let custom = HTTPMethod(rawValue: "CUSTOM")
+static let custom = HTTPMethod(rawValue: "CUSTOM")
 }
 ```
 
@@ -163,8 +114,8 @@ AF.request("https://httpbin.org/get", requestModifier: { $0.timeoutInterval = 5 
 
 ```swift
 AF.request("https://httpbin.org/get") { urlRequest in
-    urlRequest.timeoutInterval = 5
-    urlRequest.allowsConstrainedNetworkAccess = false
+urlRequest.timeoutInterval = 5
+urlRequest.allowsConstrainedNetworkAccess = false
 }
 .response(...)
 ```
@@ -177,17 +128,17 @@ Alamofire supports passing any `Encodable` type as the parameters of a request. 
 
 ```swift
 struct Login: Encodable {
-    let email: String
-    let password: String
+let email: String
+let password: String
 }
 
 let login = Login(email: "test@test.test", password: "testPassword")
 
 AF.request("https://httpbin.org/post",
-           method: .post,
-           parameters: login,
-           encoder: JSONParameterEncoder.default).response { response in
-    debugPrint(response)
+method: .post,
+parameters: login,
+encoder: JSONParameterEncoder.default).response { response in
+debugPrint(response)
 }
 ```
 
@@ -220,9 +171,9 @@ AF.request("https://httpbin.org/get", parameters: parameters, encoder: URLEncode
 
 ```swift
 let parameters: [String: [String]] = [
-    "foo": ["bar"],
-    "baz": ["a", "b"],
-    "qux": ["x", "y", "z"]
+"foo": ["bar"],
+"baz": ["a", "b"],
+"qux": ["x", "y", "z"]
 ]
 
 // All three of these calls are equivalent
@@ -347,9 +298,9 @@ let encoder = URLEncodedFormParameterEncoder(encoder: URLEncodedFormEncoder(spac
 
 ```swift
 let parameters: [String: [String]] = [
-    "foo": ["bar"],
-    "baz": ["a", "b"],
-    "qux": ["x", "y", "z"]
+"foo": ["bar"],
+"baz": ["a", "b"],
+"qux": ["x", "y", "z"]
 ]
 
 AF.request("https://httpbin.org/post", method: .post, parameters: parameters, encoder: JSONParameterEncoder.default)
@@ -380,7 +331,7 @@ var urlRequest = URLRequest(url: url)
 
 let parameters = ["foo": "bar"]
 let encodedURLRequest = try URLEncodedFormParameterEncoder.default.encode(parameters, 
-                                                                          into: urlRequest)
+into: urlRequest)
 ```
 
 ### HTTP Headers
@@ -391,12 +342,12 @@ Adding custom `HTTPHeaders` to a `Request` is as simple as passing a value to on
 
 ```swift
 let headers: HTTPHeaders = [
-    "Authorization": "Basic VXNlcm5hbWU6UGFzc3dvcmQ=",
-    "Accept": "application/json"
+"Authorization": "Basic VXNlcm5hbWU6UGFzc3dvcmQ=",
+"Accept": "application/json"
 ]
 
 AF.request("https://httpbin.org/headers", headers: headers).responseJSON { response in
-    debugPrint(response)
+debugPrint(response)
 }
 ```
 
@@ -404,12 +355,12 @@ AF.request("https://httpbin.org/headers", headers: headers).responseJSON { respo
 
 ```swift
 let headers: HTTPHeaders = [
-    .authorization(username: "Username", password: "Password"),
-    .accept("application/json")
+.authorization(username: "Username", password: "Password"),
+.accept("application/json")
 ]
 
 AF.request("https://httpbin.org/headers", headers: headers).responseJSON { response in
-    debugPrint(response)
+debugPrint(response)
 }
 ```
 
@@ -433,7 +384,7 @@ The `validate()` API automatically validates that status codes are within the `2
 
 ```swift
 AF.request("https://httpbin.org/get").validate().responseJSON { response in
-    debugPrint(response)
+debugPrint(response)
 }
 ```
 
@@ -441,16 +392,16 @@ AF.request("https://httpbin.org/get").validate().responseJSON { response in
 
 ```swift
 AF.request("https://httpbin.org/get")
-    .validate(statusCode: 200..<300)
-    .validate(contentType: ["application/json"])
-    .responseData { response in
-        switch response.result {
-        case .success:
-            print("Validation Successful")
-        case let .failure(error):
-            print(error)
-        }
-    }
+.validate(statusCode: 200..<300)
+.validate(contentType: ["application/json"])
+.responseData { response in
+switch response.result {
+case .success:
+print("Validation Successful")
+case let .failure(error):
+print(error)
+}
+}
 ```
 
 ### Response Handling
@@ -461,7 +412,7 @@ Handling the `DataResponse` of a `DataRequest` or `UploadRequest` made in Alamof
 
 ```swift
 AF.request("https://httpbin.org/get").responseJSON { response in
-    debugPrint(response)
+debugPrint(response)
 }
 ```
 
@@ -476,44 +427,44 @@ Alamofire contains six different data response handlers by default, including:
 ```swift
 // Response Handler - Unserialized Response
 func response(queue: DispatchQueue = .main, 
-              completionHandler: @escaping (AFDataResponse<Data?>) -> Void) -> Self
+completionHandler: @escaping (AFDataResponse<Data?>) -> Void) -> Self
 
 // Response Serializer Handler - Serialize using the passed Serializer
 func response<Serializer: DataResponseSerializerProtocol>(queue: DispatchQueue = .main,
-                                                          responseSerializer: Serializer,
-                                                          completionHandler: @escaping (AFDataResponse<Serializer.SerializedObject>) -> Void) -> Self
+responseSerializer: Serializer,
+completionHandler: @escaping (AFDataResponse<Serializer.SerializedObject>) -> Void) -> Self
 
 // Response Data Handler - Serialized into Data
 func responseData(queue: DispatchQueue = .main,
-                  dataPreprocessor: DataPreprocessor = DataResponseSerializer.defaultDataPreprocessor,
-                  emptyResponseCodes: Set<Int> = DataResponseSerializer.defaultEmptyResponseCodes,
-                  emptyRequestMethods: Set<HTTPMethod> = DataResponseSerializer.defaultEmptyRequestMethods,
-                  completionHandler: @escaping (AFDataResponse<Data>) -> Void) -> Self
+dataPreprocessor: DataPreprocessor = DataResponseSerializer.defaultDataPreprocessor,
+emptyResponseCodes: Set<Int> = DataResponseSerializer.defaultEmptyResponseCodes,
+emptyRequestMethods: Set<HTTPMethod> = DataResponseSerializer.defaultEmptyRequestMethods,
+completionHandler: @escaping (AFDataResponse<Data>) -> Void) -> Self
 
 // Response String Handler - Serialized into String
 func responseString(queue: DispatchQueue = .main,
-                    dataPreprocessor: DataPreprocessor = StringResponseSerializer.defaultDataPreprocessor,
-                    encoding: String.Encoding? = nil,
-                    emptyResponseCodes: Set<Int> = StringResponseSerializer.defaultEmptyResponseCodes,
-                    emptyRequestMethods: Set<HTTPMethod> = StringResponseSerializer.defaultEmptyRequestMethods,
-                    completionHandler: @escaping (AFDataResponse<String>) -> Void) -> Self
+dataPreprocessor: DataPreprocessor = StringResponseSerializer.defaultDataPreprocessor,
+encoding: String.Encoding? = nil,
+emptyResponseCodes: Set<Int> = StringResponseSerializer.defaultEmptyResponseCodes,
+emptyRequestMethods: Set<HTTPMethod> = StringResponseSerializer.defaultEmptyRequestMethods,
+completionHandler: @escaping (AFDataResponse<String>) -> Void) -> Self
 
 // Response JSON Handler - Serialized into Any Using JSONSerialization
 func responseJSON(queue: DispatchQueue = .main,
-                  dataPreprocessor: DataPreprocessor = JSONResponseSerializer.defaultDataPreprocessor,
-                  emptyResponseCodes: Set<Int> = JSONResponseSerializer.defaultEmptyResponseCodes,
-                  emptyRequestMethods: Set<HTTPMethod> = JSONResponseSerializer.defaultEmptyRequestMethods,
-                  options: JSONSerialization.ReadingOptions = .allowFragments,
-                  completionHandler: @escaping (AFDataResponse<Any>) -> Void) -> Self
+dataPreprocessor: DataPreprocessor = JSONResponseSerializer.defaultDataPreprocessor,
+emptyResponseCodes: Set<Int> = JSONResponseSerializer.defaultEmptyResponseCodes,
+emptyRequestMethods: Set<HTTPMethod> = JSONResponseSerializer.defaultEmptyRequestMethods,
+options: JSONSerialization.ReadingOptions = .allowFragments,
+completionHandler: @escaping (AFDataResponse<Any>) -> Void) -> Self
 
 // Response Decodable Handler - Serialized into Decodable Type
 func responseDecodable<T: Decodable>(of type: T.Type = T.self,
-                                     queue: DispatchQueue = .main,
-                                     dataPreprocessor: DataPreprocessor = DecodableResponseSerializer<T>.defaultDataPreprocessor,
-                                     decoder: DataDecoder = JSONDecoder(),
-                                     emptyResponseCodes: Set<Int> = DecodableResponseSerializer<T>.defaultEmptyResponseCodes,
-                                     emptyRequestMethods: Set<HTTPMethod> = DecodableResponseSerializer<T>.defaultEmptyRequestMethods,
-                                     completionHandler: @escaping (AFDataResponse<T>) -> Void) -> Self
+queue: DispatchQueue = .main,
+dataPreprocessor: DataPreprocessor = DecodableResponseSerializer<T>.defaultDataPreprocessor,
+decoder: DataDecoder = JSONDecoder(),
+emptyResponseCodes: Set<Int> = DecodableResponseSerializer<T>.defaultEmptyResponseCodes,
+emptyRequestMethods: Set<HTTPMethod> = DecodableResponseSerializer<T>.defaultEmptyRequestMethods,
+completionHandler: @escaping (AFDataResponse<T>) -> Void) -> Self
 ```
 
 None of the response handlers perform any validation of the `HTTPURLResponse` it gets back from the server.
@@ -526,7 +477,7 @@ The `response` handler does NOT evaluate any of the response data. It merely for
 
 ```swift
 AF.request("https://httpbin.org/get").response { response in
-    debugPrint("Response: \(response)")
+debugPrint("Response: \(response)")
 }
 ```
 
@@ -538,7 +489,7 @@ The `responseData` handler uses a `DataResponseSerializer` to extract and valida
 
 ```swift
 AF.request("https://httpbin.org/get").responseData { response in
-    debugPrint("Response: \(response)")
+debugPrint("Response: \(response)")
 }
 ```
 
@@ -548,7 +499,7 @@ The `responseString` handler uses a `StringResponseSerializer` to convert the `D
 
 ```swift
 AF.request("https://httpbin.org/get").responseString { response in
-    debugPrint("Response: \(response)")
+debugPrint("Response: \(response)")
 }
 ```
 
@@ -560,7 +511,7 @@ The `responseJSON` handler uses a `JSONResponseSerializer` to convert the `Data`
 
 ```swift
 AF.request("https://httpbin.org/get").responseJSON { response in
-    debugPrint("Response: \(response)")
+debugPrint("Response: \(response)")
 }
 ```
 
@@ -574,7 +525,7 @@ The `responseDecodable` handler uses a `DecodableResponseSerializer` to convert 
 struct HTTPBinResponse: Decodable { let url: String }
 
 AF.request("https://httpbin.org/get").responseDecodable(of: HTTPBinResponse.self) { response in
-    debugPrint("Response: \(response)")
+debugPrint("Response: \(response)")
 }
 ```
 
@@ -584,12 +535,12 @@ Response handlers can also be chained:
 
 ```swift
 Alamofire.request("https://httpbin.org/get")
-    .responseString { response in
-        print("Response String: \(response.value)")
-    }
-    .responseJSON { response in
-        print("Response JSON: \(response.value)")
-    }
+.responseString { response in
+print("Response String: \(response.value)")
+}
+.responseJSON { response in
+print("Response JSON: \(response.value)")
+}
 ```
 
 > It is important to note that using multiple response handlers on the same `Request` requires the server data to be serialized multiple times, once for each response handler. Using multiple response handlers on the same `Request` should generally be avoided as best practice, especially in production environments. They should only be used for debugging or in circumstances where there is no better option.
@@ -602,8 +553,8 @@ Closures passed to response handlers are executed on the `.main` queue by defaul
 let utilityQueue = DispatchQueue.global(qos: .utility)
 
 AF.request("https://httpbin.org/get").responseJSON(queue: utilityQueue) { response in
-    print("Executed on utility queue.")
-    debugPrint(response)
+print("Executed on utility queue.")
+debugPrint(response)
 }
 ```
 
@@ -635,10 +586,10 @@ let user = "user"
 let password = "password"
 
 AF.request("https://httpbin.org/basic-auth/\(user)/\(password)")
-    .authenticate(username: user, password: password)
-    .responseJSON { response in
-        debugPrint(response)
-    }
+.authenticate(username: user, password: password)
+.responseJSON { response in
+debugPrint(response)
+}
 ```
 
 #### Authentication with `URLCredential`
@@ -650,10 +601,10 @@ let password = "password"
 let credential = URLCredential(user: user, password: password, persistence: .forSession)
 
 AF.request("https://httpbin.org/basic-auth/\(user)/\(password)")
-    .authenticate(with: credential)
-    .responseJSON { response in
-        debugPrint(response)
-    }
+.authenticate(with: credential)
+.responseJSON { response in
+debugPrint(response)
+}
 ```
 
 > It is important to note that when using a `URLCredential` for authentication, the underlying `URLSession` will actually end up making two requests if a challenge is issued by the server. The first request will not include the credential which "may" trigger a challenge from the server. The challenge is then received by Alamofire, the credential is appended and the request is retried by the underlying `URLSession`.
@@ -669,9 +620,9 @@ let password = "password"
 let headers: HTTPHeaders = [.authorization(username: user, password: password)]
 
 AF.request("https://httpbin.org/basic-auth/user/password", headers: headers)
-    .responseJSON { response in
-        debugPrint(response)
-    }
+.responseJSON { response in
+debugPrint(response)
+}
 ```
 
 However, headers that must be part of all requests are often better handled as part of a custom [`URLSessionConfiguration`](AdvancedUsage.md#session-manager), or by using a [`RequestAdapter`](AdvancedUsage.md#request-adapter).
@@ -682,9 +633,9 @@ In addition to fetching data into memory, Alamofire also provides the `Session.d
 
 ```swift
 AF.download("https://httpbin.org/image/png").responseData { response in
-    if let data = response.value {
-        let image = UIImage(data: data)
-    }
+if let data = response.value {
+let image = UIImage(data: data)
+}
 }
 ```
 
@@ -701,18 +652,18 @@ You can provide a `Destination` closure to move the file from the temporary dire
 
 ```swift
 let destination: DownloadRequest.Destination = { _, _ in
-    let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    let fileURL = documentsURL.appendingPathComponent("image.png")
+let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+let fileURL = documentsURL.appendingPathComponent("image.png")
 
-    return (fileURL, [.removePreviousFile, .createIntermediateDirectories])
+return (fileURL, [.removePreviousFile, .createIntermediateDirectories])
 }
 
 AF.download("https://httpbin.org/image/png", to: destination).response { response in
-    debugPrint(response)
+debugPrint(response)
 
-    if response.error == nil, let imagePath = response.fileURL?.path {
-        let image = UIImage(contentsOfFile: imagePath)
-    }
+if response.error == nil, let imagePath = response.fileURL?.path {
+let image = UIImage(contentsOfFile: imagePath)
+}
 }
 ```
 
@@ -730,14 +681,14 @@ Many times it can be helpful to report download progress to the user. Any `Downl
 
 ```swift
 AF.download("https://httpbin.org/image/png")
-    .downloadProgress { progress in
-        print("Download Progress: \(progress.fractionCompleted)")
-    }
-    .responseData { response in
-        if let data = response.value {
-            let image = UIImage(data: data)
-        }
-    }
+.downloadProgress { progress in
+print("Download Progress: \(progress.fractionCompleted)")
+}
+.responseData { response in
+if let data = response.value {
+let image = UIImage(data: data)
+}
+}
 ```
 
 > The progress reporting APIs for `URLSession`, and therefore Alamofire, only work if the server properly returns a `Content-Length` header that can be used to calculate the progress. Without that header, progress will stay at `0.0` until the download completes, at which point the progress will jump to `1.0`.
@@ -748,14 +699,14 @@ The `downloadProgress` API can also take a `queue` parameter which defines which
 let progressQueue = DispatchQueue(label: "com.alamofire.progressQueue", qos: .utility)
 
 AF.download("https://httpbin.org/image/png")
-    .downloadProgress(queue: progressQueue) { progress in
-        print("Download Progress: \(progress.fractionCompleted)")
-    }
-    .responseData { response in
-        if let data = response.value {
-            let image = UIImage(data: data)
-        }
-    }
+.downloadProgress(queue: progressQueue) { progress in
+print("Download Progress: \(progress.fractionCompleted)")
+}
+.responseData { response in
+if let data = response.value {
+let image = UIImage(data: data)
+}
+}
 ```
 
 #### Canceling and Resuming a Download
@@ -770,20 +721,20 @@ If a `DownloadRequest` is canceled or interrupted, the underlying `URLSessionDow
 var resumeData: Data!
 
 let download = AF.download("https://httpbin.org/image/png").responseData { response in
-    if let data = response.value {
-        let image = UIImage(data: data)
-    }
+if let data = response.value {
+let image = UIImage(data: data)
+}
 }
 
 // download.cancel(producingResumeData: true) // Makes resumeData available in response only.
 download.cancel { data in
-    resumeData = data
+resumeData = data
 }
 
 AF.download(resumingWith: resumeData).responseData { response in
-    if let data = response.value {
-        let image = UIImage(data: data)
-    }
+if let data = response.value {
+let image = UIImage(data: data)
+}
 }
 ```
 
@@ -797,7 +748,7 @@ When sending relatively small amounts of data to a server using JSON or URL enco
 let data = Data("data".utf8)
 
 AF.upload(data, to: "https://httpbin.org/post").responseDecodable(of: HTTPBinResponse.self) { response in
-    debugPrint(response)
+debugPrint(response)
 }
 ```
 
@@ -807,7 +758,7 @@ AF.upload(data, to: "https://httpbin.org/post").responseDecodable(of: HTTPBinRes
 let fileURL = Bundle.main.url(forResource: "video", withExtension: "mov")
 
 AF.upload(fileURL, to: "https://httpbin.org/post").responseDecodable(of: HTTPBinResponse.self) { response in
-    debugPrint(response)
+debugPrint(response)
 }
 ```
 
@@ -815,12 +766,12 @@ AF.upload(fileURL, to: "https://httpbin.org/post").responseDecodable(of: HTTPBin
 
 ```swift
 AF.upload(multipartFormData: { multipartFormData in
-    multipartFormData.append(Data("one".utf8), withName: "one")
-    multipartFormData.append(Data("two".utf8), withName: "two")
+multipartFormData.append(Data("one".utf8), withName: "one")
+multipartFormData.append(Data("two".utf8), withName: "two")
 }, to: "https://httpbin.org/post")
-    .responseDecodable(of: HTTPBinResponse.self) { response in
-        debugPrint(response)
-    }
+.responseDecodable(of: HTTPBinResponse.self) { response in
+debugPrint(response)
+}
 ```
 
 #### Upload Progress
@@ -831,15 +782,15 @@ While your user is waiting for their upload to complete, sometimes it can be han
 let fileURL = Bundle.main.url(forResource: "video", withExtension: "mov")
 
 AF.upload(fileURL, to: "https://httpbin.org/post")
-    .uploadProgress { progress in
-        print("Upload Progress: \(progress.fractionCompleted)")
-    }
-    .downloadProgress { progress in
-        print("Download Progress: \(progress.fractionCompleted)")
-    }
-    .responseDecodable(of: HTTPBinResponse.self) { response in
-        debugPrint(response)
-    }
+.uploadProgress { progress in
+print("Upload Progress: \(progress.fractionCompleted)")
+}
+.downloadProgress { progress in
+print("Download Progress: \(progress.fractionCompleted)")
+}
+.responseDecodable(of: HTTPBinResponse.self) { response in
+debugPrint(response)
+}
 ```
 
 ### Streaming Data from a Server
@@ -850,14 +801,14 @@ Every `Handler` closure captures a `Stream` value, which contains both the `Even
 
 ```swift
 public struct Stream<Success, Failure: Error> {
-    /// Latest `Event` from the stream.
-    public let event: Event<Success, Failure>
-    /// Token used to cancel the stream.
-    public let token: CancellationToken
-    /// Cancel the ongoing stream by canceling the underlying `DataStreamRequest`.
-    public func cancel() {
-        token.cancel()
-    }
+/// Latest `Event` from the stream.
+public let event: Event<Success, Failure>
+/// Token used to cancel the stream.
+public let token: CancellationToken
+/// Cancel the ongoing stream by canceling the underlying `DataStreamRequest`.
+public func cancel() {
+token.cancel()
+}
 }
 ```
 
@@ -865,12 +816,12 @@ An `Event` is an `enum` representing two possible stream states.
 
 ```swift
 public enum Event<Success, Failure: Error> {
-    /// Output produced every time the instance receives additional `Data`. The associated value contains the
-    /// `Result` of processing the incoming `Data`.
-    case stream(Result<Success, Failure>)
-    /// Output produced when the instance has completed, whether due to stream end, cancellation, or an error.
-    /// Associated `Completion` value contains the final state.
-    case complete(Completion)
+/// Output produced every time the instance receives additional `Data`. The associated value contains the
+/// `Result` of processing the incoming `Data`.
+case stream(Result<Success, Failure>)
+/// Output produced when the instance has completed, whether due to stream end, cancellation, or an error.
+/// Associated `Completion` value contains the final state.
+case complete(Completion)
 }
 ```
 
@@ -878,14 +829,14 @@ When complete, the `Completion` value will contain the state of the `DataStreamR
 
 ```swift
 public struct Completion {
-    /// Last `URLRequest` issued by the instance.
-    public let request: URLRequest?
-    /// Last `HTTPURLResponse` received by the instance.
-    public let response: HTTPURLResponse?
-    /// Last `URLSessionTaskMetrics` produced for the instance.
-    public let metrics: URLSessionTaskMetrics?
-    /// `AFError` produced for the instance, if any.
-    public let error: AFError?
+/// Last `URLRequest` issued by the instance.
+public let request: URLRequest?
+/// Last `HTTPURLResponse` received by the instance.
+public let response: HTTPURLResponse?
+/// Last `URLSessionTaskMetrics` produced for the instance.
+public let metrics: URLSessionTaskMetrics?
+/// `AFError` produced for the instance, if any.
+public let error: AFError?
 }
 ```
 
@@ -901,15 +852,15 @@ The provided `queue` is where the `Handler` closure will be called.
 
 ```swift
 AF.streamRequest(...).responseStream { stream in
-    switch stream.event {
-    case let .stream(result):
-        switch result {
-        case let .success(data):
-            print(data)
-        }
-    case let .complete(completion):
-        print(completion)
-    }
+switch stream.event {
+case let .stream(result):
+switch result {
+case let .success(data):
+print(data)
+}
+case let .complete(completion):
+print(completion)
+}
 }
 ```
 
@@ -921,22 +872,22 @@ Like `Data` streaming, `String`s can be streamed by adding a `Handler`.
 
 ```swift
 func responseStreamString(on queue: DispatchQueue = .main,
-                          stream: @escaping StreamHandler<String, Never>) -> Self
+stream: @escaping StreamHandler<String, Never>) -> Self
 ```
 
 `String` values are decoded as `UTF8` and the decoding cannot fail.
 
 ```swift
 AF.streamRequest(...).responseStreamString { stream in
-    switch stream.event {
-    case let .stream(result):
-        switch result {
-        case let .success(string):
-            print(string)
-        }
-    case let .complete(completion):
-        print(completion)
-    }
+switch stream.event {
+case let .stream(result):
+switch result {
+case let .success(string):
+print(string)
+}
+case let .complete(completion):
+print(completion)
+}
 }
 ```
 
@@ -946,27 +897,27 @@ Incoming stream `Data` values can be turned into any `Decodable` value using `re
 
 ```swift
 func responseStreamDecodable<T: Decodable>(of type: T.Type = T.self,
-                                           on queue: DispatchQueue = .main,
-                                           using decoder: DataDecoder = JSONDecoder(),
-                                           preprocessor: DataPreprocessor = PassthroughPreprocessor(),
-                                           stream: @escaping Handler<T, AFError>) -> Self
+on queue: DispatchQueue = .main,
+using decoder: DataDecoder = JSONDecoder(),
+preprocessor: DataPreprocessor = PassthroughPreprocessor(),
+stream: @escaping Handler<T, AFError>) -> Self
 ```
 
 Decoding failures do not end the stream, but instead produce an `AFError` in the `Result` of the `Output`.
 
 ```swift
 AF.streamRequest(...).responseStreamDecodable(of: SomeType.self) { stream in
-    switch stream.event {
-    case let .stream(result):
-        switch result {
-        case let .success(value):
-            print(value)
-        case let .failure(error):
-            print(error)
-        }
-    case let .complete(completion):
-        print(completion)
-    }
+switch stream.event {
+case let .stream(result):
+switch result {
+case let .success(value):
+print(value)
+case let .failure(error):
+print(error)
+}
+case let .complete(completion):
+print(completion)
+}
 }
 ```
 
@@ -982,10 +933,10 @@ func asInputStream(bufferSize: Int = 1024) -> InputStream
 
 ```swift
 let inputStream = AF.streamRequest(...)
-    .responseStream { output in
-        ...
-    }
-    .asInputStream()
+.responseStream { output in
+...
+}
+.asInputStream()
 ```
 
 #### Cancellation
@@ -1008,8 +959,8 @@ Third, `DataStreamRequest`s will be cancelled if an error is thrown out of the `
 
 ```swift
 AF.streamRequest(...).responseStream { stream in
-    // Process stream.
-    throw SomeError() // Cancels request.
+// Process stream.
+throw SomeError() // Cancels request.
 }
 ```
 
@@ -1017,8 +968,8 @@ Finally, `DataStreamRequest`s can be cancelled by using the `Stream` value's `ca
 
 ```swift
 AF.streamRequest(...).responseStream { stream in 
-    // Decide to cancel request.
-    stream.cancel()
+// Decide to cancel request.
+stream.cancel()
 }
 ```
 
@@ -1030,7 +981,7 @@ Alamofire gathers `URLSessionTaskMetrics` for every `Request`. `URLSessionTaskMe
 
 ```swift
 AF.request("https://httpbin.org/get").responseJSON { response in
-    print(response.metrics)
+print(response.metrics)
 }
 ```
 
@@ -1042,12 +993,12 @@ Debugging platform issues can be frustrating. Thankfully, Alamofire's `Request` 
 
 ```swift
 AF.request("https://httpbin.org/get")
-    .cURLDescription { description in
-        print(description)
-    }
-    .responseJSON { response in
-        debugPrint(response.metrics)
-    }
+.cURLDescription { description in
+print(description)
+}
+.responseJSON { response in
+debugPrint(response.metrics)
+}
 ```
 
 This should produce:

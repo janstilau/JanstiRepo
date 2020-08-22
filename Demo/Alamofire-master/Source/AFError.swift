@@ -1,10 +1,12 @@
 
 import Foundation
 
-/// `AFError` is the error type returned by Alamofire. It encompasses a few different types of errors, each with
-/// their own associated reasons.
+/*
+ 统一将所有 Alamofire 里面的错误, 进行定义.
+ */
+
 public enum AFError: Error {
-    /// The underlying reason the `.multipartEncodingFailed` error occurred.
+    
     public enum MultipartEncodingFailureReason {
         /// The `fileURL` provided for reading an encodable body part isn't a file `URL`.
         case bodyPartURLInvalid(url: URL)
@@ -153,6 +155,14 @@ public enum AFError: Error {
         case bodyDataInGETRequest(Data)
     }
     
+    
+    /*
+     真正的数据, 只是下面的部分, 上面个各种定义, 是各种 case 里面的关联值而已.
+     其中, 某些关联值, 还是 enum 类型的.
+     如果没有关联值这种技术, 只能通过 NSDictionary 进行值的传递.
+     某个 case 下, 要不要传递, 传递什么数据, 都是动态的, 没有办法保证.
+     有关联值的 case, 生成的时候就必须带着该值, 所以语言强制 case 的正确使用. 并且, 代码里面能明确出怎么使用各个 case, 这比文档里面在标明, 哪个 error 下要有 userInfo, userInfo 里面要有什么值要清晰的多的多.
+     */
     ///  `UploadableConvertible` threw an error in `createUploadable()`.
     case createUploadableFailed(error: Error)
     ///  `URLRequestConvertible` threw an error in `asURLRequest()`.
@@ -196,7 +206,9 @@ extension Error {
     }
     
     /// Returns the instance cast as an `AFError`. If casting fails, a `fatalError` with the specified `message` is thrown.
-    public func asAFError(orFailWith message: @autoclosure () -> String, file: StaticString = #file, line: UInt = #line) -> AFError {
+    public func asAFError(orFailWith message: @autoclosure () -> String,
+                          file: StaticString = #file,
+                          line: UInt = #line) -> AFError {
         guard let afError = self as? AFError else {
             fatalError(message(), file: file, line: line)
         }
@@ -209,8 +221,11 @@ extension Error {
     }
 }
 
-// MARK: - Error Booleans
-
+/*
+ 各种 is 方法判断.
+ 虽然可以通过 case 相等判断, 但是这种, 显示提供了 get 方法, 会让代码更加好用.
+ 自己也经常使用这个技术.
+ */
 extension AFError {
     /// Returns whether the instance is `.sessionDeinitialized`.
     public var isSessionDeinitializedError: Bool {

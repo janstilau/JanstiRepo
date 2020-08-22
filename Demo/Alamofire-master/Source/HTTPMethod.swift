@@ -2,6 +2,13 @@
 /// `HTTPMethod.get != HTTPMethod(rawValue: "get")`.
 ///
 /// See https://tools.ietf.org/html/rfc7231#section-4.3
+/*
+ AFN 里面, 直接使用了 Get, Post 这些基本的字符串值, 实际上, HTTPRequest 里面, 也是 String 类型的值.
+ 但是, 作为数据一定固定的类型值, API 的设计者应该提供一个类, 通过类的方式去获取某个固定值.
+ RawRepresentable 的提出, 使得该值和原始值的转换, 有了一个统一的接口, 也就是对于使用者非常简便.
+ 所以, 之后这种固定数据的值, 应该由专门的类进行包装, 而不是让使用者, 再去输入 GET, POST 这些原始数据了.
+ 这些原始数据, 1. 用户很容易写错, 因为没有 IDE 的支持. 2. 大小写怎么处理, 有空格怎么处理, 这都给 API 的设计者提供了难题, 而提供一个稳定的数据获取的 API, 能够略去大部分的烦恼问题.
+ */
 public struct HTTPMethod: RawRepresentable, Equatable, Hashable {
     /// `CONNECT` method.
     public static let connect = HTTPMethod(rawValue: "CONNECT")

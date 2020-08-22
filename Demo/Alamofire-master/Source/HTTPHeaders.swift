@@ -1,103 +1,88 @@
 import Foundation
 
-/// An order-preserving and case-insensitive representation of HTTP headers.
+/*
+ 之前用 NSDictionary <NSString *, NSString *> 表示 header, 现在, 专门有一个类, 来做相应逻辑的处理.
+ 之前的 header, 仅仅是在创建 HTTPRequest 的时候.
+ for (NSString *headerField in headers.keyEnumerator) {
+     [request addValue:headers[headerField] forHTTPHeaderField:headerField];
+ }
+ 进行一次遍历, 将传入的 header, 添加到了 HTTPRequest 的 httpField 里面去了.
+ 
+ 在 AFN 里面, 没有对于 HttpHeader 的特殊处理. 所以的一切, 都是程序员, 通过 NSDictionary, 手动进行的处理.
+ */
+
 public struct HTTPHeaders {
+    /*
+     基本的数据, 就是一个数组, 这个数组里面, 是 key: value 的 pair.
+     */
     private var headers: [HTTPHeader] = []
     
-    /// Creates an empty instance.
     public init() {}
     
-    /// Creates an instance from an array of `HTTPHeader`s. Duplicate case-insensitive names are collapsed into the last
-    /// name and value encountered.
+    /*
+     通过已有量, 来构建一个新的对象, 其实, 就是一个个提取插入的过程.
+     update 作为最基本的方法, 各个方法内部尽量将对于数据改变的逻辑, 归总到这个方法的内部.
+     */
     public init(_ headers: [HTTPHeader]) {
         self.init()
-        
         headers.forEach { update($0) }
     }
     
-    /// Creates an instance from a `[String: String]`. Duplicate case-insensitive names are collapsed into the last name
-    /// and value encountered.
     public init(_ dictionary: [String: String]) {
         self.init()
-        
         dictionary.forEach { update(HTTPHeader(name: $0.key, value: $0.value)) }
     }
     
-    /// Case-insensitively updates or appends an `HTTPHeader` into the instance using the provided `name` and `value`.
-    ///
-    /// - Parameters:
-    ///   - name:  The `HTTPHeader` name.
-    ///   - value: The `HTTPHeader value.
+    // 归总到 Update
     public mutating func add(name: String, value: String) {
         update(HTTPHeader(name: name, value: value))
     }
     
-    /// Case-insensitively updates or appends the provided `HTTPHeader` into the instance.
-    ///
-    /// - Parameter header: The `HTTPHeader` to update or append.
+    // 归总到 Update
     public mutating func add(_ header: HTTPHeader) {
         update(header)
     }
     
-    /// Case-insensitively updates or appends an `HTTPHeader` into the instance using the provided `name` and `value`.
-    ///
-    /// - Parameters:
-    ///   - name:  The `HTTPHeader` name.
-    ///   - value: The `HTTPHeader value.
+    // 归总到 Update
     public mutating func update(name: String, value: String) {
         update(HTTPHeader(name: name, value: value))
     }
     
-    /// Case-insensitively updates or appends the provided `HTTPHeader` into the instance.
-    ///
-    /// - Parameter header: The `HTTPHeader` to update or append.
+    // 如果没有, 就进行加入, 如果有, 就替换.
     public mutating func update(_ header: HTTPHeader) {
         guard let index = headers.index(of: header.name) else {
             headers.append(header)
             return
         }
-        
         headers.replaceSubrange(index...index, with: [header])
     }
     
-    /// Case-insensitively removes an `HTTPHeader`, if it exists, from the instance.
-    ///
-    /// - Parameter name: The name of the `HTTPHeader` to remove.
     public mutating func remove(name: String) {
         guard let index = headers.index(of: name) else { return }
-        
         headers.remove(at: index)
     }
     
-    /// Sort the current instance by header name, case insensitively.
     public mutating func sort() {
         headers.sort { $0.name.lowercased() < $1.name.lowercased() }
     }
     
-    /// Returns an instance sorted by header name.
-    ///
-    /// - Returns: A copy of the current instance sorted by name.
+    /*
+     将逻辑归并到一个函数内部.
+     */
     public func sorted() -> HTTPHeaders {
         var headers = self
         headers.sort()
-        
         return headers
     }
     
-    /// Case-insensitively find a header's value by name.
-    ///
-    /// - Parameter name: The name of the header to search for, case-insensitively.
-    ///
-    /// - Returns:        The value of header, if it exists.
     public func value(for name: String) -> String? {
         guard let index = headers.index(of: name) else { return nil }
-        
         return headers[index].value
     }
     
-    /// Case-insensitively access the header with the given name.
-    ///
-    /// - Parameter name: The name of the header.
+    /*
+     传入的值为 nil, 进行删除, 是一个非常非常通用的做法.
+     */
     public subscript(_ name: String) -> String? {
         get { value(for: name) }
         set {
@@ -109,9 +94,6 @@ public struct HTTPHeaders {
         }
     }
     
-    /// The dictionary representation of all headers.
-    ///
-    /// This representation does not preserve the current order of the instance.
     public var dictionary: [String: String] {
         let namesAndValues = headers.map { ($0.name, $0.value) }
         
@@ -122,7 +104,6 @@ public struct HTTPHeaders {
 extension HTTPHeaders: ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (String, String)...) {
         self.init()
-        
         elements.forEach { update(name: $0.0, value: $0.1) }
     }
 }
@@ -165,20 +146,17 @@ extension HTTPHeaders: CustomStringConvertible {
 }
 
 // MARK: - HTTPHeader
+/*
+ 本身, HttpHeader, 就是一个 pair 的概念.
+ 值语义, 所有的存储, 在一个代码块里, 所有的对于 protocol 的适配, 在另外一个代码块里.
+ */
 
-/// A representation of a single HTTP header's name / value pair.
 public struct HTTPHeader: Hashable {
-    /// Name of the header.
     public let name: String
-    
-    /// Value of the header.
     public let value: String
-    
-    /// Creates an instance from the given `name` and `value`.
-    ///
-    /// - Parameters:
-    ///   - name:  The name of the header.
-    ///   - value: The value of the header.
+    /*
+     只能通过初始化方法, 来确定里面的值
+     */
     public init(name: String, value: String) {
         self.name = name
         self.value = value
@@ -191,115 +169,58 @@ extension HTTPHeader: CustomStringConvertible {
     }
 }
 
+/*
+ HTTPHeader 封装了常用的 HttpHeader 的 name 调用.
+ AFN 中, HttpHeader 都是需要用户自己通过 NSDiction 自己去构建的.
+ 类的设计者, 主动提供相应的 API, 让数据更加安全.
+ */
 extension HTTPHeader {
-    /// Returns an `Accept` header.
-    ///
-    /// - Parameter value: The `Accept` value.
-    /// - Returns:         The header.
     public static func accept(_ value: String) -> HTTPHeader {
         HTTPHeader(name: "Accept", value: value)
     }
     
-    /// Returns an `Accept-Charset` header.
-    ///
-    /// - Parameter value: The `Accept-Charset` value.
-    /// - Returns:         The header.
     public static func acceptCharset(_ value: String) -> HTTPHeader {
         HTTPHeader(name: "Accept-Charset", value: value)
     }
     
-    /// Returns an `Accept-Language` header.
-    ///
-    /// Alamofire offers a default Accept-Language header that accumulates and encodes the system's preferred languages.
-    /// Use `HTTPHeader.defaultAcceptLanguage`.
-    ///
-    /// - Parameter value: The `Accept-Language` value.
-    ///
-    /// - Returns:         The header.
     public static func acceptLanguage(_ value: String) -> HTTPHeader {
         HTTPHeader(name: "Accept-Language", value: value)
     }
     
-    /// Returns an `Accept-Encoding` header.
-    ///
-    /// Alamofire offers a default accept encoding value that provides the most common values. Use
-    /// `HTTPHeader.defaultAcceptEncoding`.
-    ///
-    /// - Parameter value: The `Accept-Encoding` value.
-    ///
-    /// - Returns:         The header
     public static func acceptEncoding(_ value: String) -> HTTPHeader {
         HTTPHeader(name: "Accept-Encoding", value: value)
     }
     
-    /// Returns a `Basic` `Authorization` header using the `username` and `password` provided.
-    ///
-    /// - Parameters:
-    ///   - username: The username of the header.
-    ///   - password: The password of the header.
-    ///
-    /// - Returns:    The header.
+    // 用户名密码就是 basic, 但是使用者不应该知道这些.
     public static func authorization(username: String, password: String) -> HTTPHeader {
         let credential = Data("\(username):\(password)".utf8).base64EncodedString()
         
         return authorization("Basic \(credential)")
     }
     
-    /// Returns a `Bearer` `Authorization` header using the `bearerToken` provided
-    ///
-    /// - Parameter bearerToken: The bearer token.
-    ///
-    /// - Returns:               The header.
     public static func authorization(bearerToken: String) -> HTTPHeader {
         authorization("Bearer \(bearerToken)")
     }
     
-    /// Returns an `Authorization` header.
-    ///
-    /// Alamofire provides built-in methods to produce `Authorization` headers. For a Basic `Authorization` header use
-    /// `HTTPHeader.authorization(username:password:)`. For a Bearer `Authorization` header, use
-    /// `HTTPHeader.authorization(bearerToken:)`.
-    ///
-    /// - Parameter value: The `Authorization` value.
-    ///
-    /// - Returns:         The header.
+    
     public static func authorization(_ value: String) -> HTTPHeader {
         HTTPHeader(name: "Authorization", value: value)
     }
     
-    /// Returns a `Content-Disposition` header.
-    ///
-    /// - Parameter value: The `Content-Disposition` value.
-    ///
-    /// - Returns:         The header.
     public static func contentDisposition(_ value: String) -> HTTPHeader {
         HTTPHeader(name: "Content-Disposition", value: value)
     }
     
-    /// Returns a `Content-Type` header.
-    ///
-    /// All Alamofire `ParameterEncoding`s and `ParameterEncoder`s set the `Content-Type` of the request, so it may not be necessary to manually
-    /// set this value.
-    ///
-    /// - Parameter value: The `Content-Type` value.
-    ///
-    /// - Returns:         The header.
     public static func contentType(_ value: String) -> HTTPHeader {
         HTTPHeader(name: "Content-Type", value: value)
     }
     
-    /// Returns a `User-Agent` header.
-    ///
-    /// - Parameter value: The `User-Agent` value.
-    ///
-    /// - Returns:         The header.
     public static func userAgent(_ value: String) -> HTTPHeader {
         HTTPHeader(name: "User-Agent", value: value)
     }
 }
 
 extension Array where Element == HTTPHeader {
-    /// Case-insensitively finds the index of an `HTTPHeader` with the provided name, if it exists.
     func index(of name: String) -> Int? {
         let lowercasedName = name.lowercased()
         return firstIndex { $0.name.lowercased() == lowercasedName }
@@ -309,18 +230,15 @@ extension Array where Element == HTTPHeader {
 // MARK: - Defaults
 
 public extension HTTPHeaders {
-    /// The default set of `HTTPHeaders` used by Alamofire. Includes `Accept-Encoding`, `Accept-Language`, and
-    /// `User-Agent`.
     static let `default`: HTTPHeaders = [.defaultAcceptEncoding,
                                          .defaultAcceptLanguage,
                                          .defaultUserAgent]
 }
 
+/*
+ 一些默认的 HttpHeader, 他们都是 static let 的, 都是会进行懒加载.
+ */
 extension HTTPHeader {
-    /// Returns Alamofire's default `Accept-Encoding` header, appropriate for the encodings supported by particular OS
-    /// versions.
-    ///
-    /// See the [Accept-Encoding HTTP header documentation](https://tools.ietf.org/html/rfc7230#section-4.2.3) .
     public static let defaultAcceptEncoding: HTTPHeader = {
         let encodings: [String]
         if #available(iOS 11.0, macOS 10.13, tvOS 11.0, watchOS 4.0, *) {
@@ -328,23 +246,14 @@ extension HTTPHeader {
         } else {
             encodings = ["gzip", "deflate"]
         }
-        
+        // 在 static 方法里面, 通过 .调用 ???
         return .acceptEncoding(encodings.qualityEncoded())
     }()
     
-    /// Returns Alamofire's default `Accept-Language` header, generated by querying `Locale` for the user's
-    /// `preferredLanguages`.
-    ///
-    /// See the [Accept-Language HTTP header documentation](https://tools.ietf.org/html/rfc7231#section-5.3.5).
     public static let defaultAcceptLanguage: HTTPHeader = {
         .acceptLanguage(Locale.preferredLanguages.prefix(6).qualityEncoded())
     }()
     
-    /// Returns Alamofire's default `User-Agent` header.
-    ///
-    /// See the [User-Agent header documentation](https://tools.ietf.org/html/rfc7231#section-5.5.3).
-    ///
-    /// Example: `iOS Example/1.0 (org.alamofire.iOS-Example; build:1; iOS 13.0.0) Alamofire/5.0.0`
     public static let defaultUserAgent: HTTPHeader = {
         let info = Bundle.main.infoDictionary
         let executable = (info?[kCFBundleExecutableKey as String] as? String) ??
@@ -354,6 +263,9 @@ extension HTTPHeader {
         let appVersion = info?["CFBundleShortVersionString"] as? String ?? "Unknown"
         let appBuild = info?[kCFBundleVersionKey as String] as? String ?? "Unknown"
         
+        /*
+         这种, 闭包调用的写法, 将某些值的构建过程, 从其他区域进行了切割, 让代码更加的明确.
+         */
         let osNameVersion: String = {
             let version = ProcessInfo.processInfo.operatingSystemVersion
             let versionString = "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
@@ -383,13 +295,14 @@ extension HTTPHeader {
         }()
         
         let alamofireVersion = "Alamofire/\(version)"
-        
         let userAgent = "\(executable)/\(appVersion) (\(bundle); build:\(appBuild); \(osNameVersion)) \(alamofireVersion)"
-        
         return .userAgent(userAgent)
     }()
 }
 
+/*
+ 使用 Swift, 一定要熟悉以下的函数式写法, 虽然, 内部会有多次的迭代过程, 但是每个方法有着自己明确的任务, 让代码更加简练.
+ */
 extension Collection where Element == String {
     func qualityEncoded() -> String {
         enumerated().map { index, encoding in
@@ -399,16 +312,29 @@ extension Collection where Element == String {
     }
 }
 
+
 // MARK: - System Type Extensions
+
+/*
+ URLRequest 对于 HTTPHeaders 的适配.
+ */
 
 extension URLRequest {
     /// Returns `allHTTPHeaderFields` as `HTTPHeaders`.
     public var headers: HTTPHeaders {
+        /*
+         从这里我们可以看出来, init 方法, 不会在传入 self. 这和 oc 的 alloc, init 两步走的方案不同了.
+         而且, 有着多种 init 方法, 在这里也可以正常的被识别出来. 这也是因为 swift 的强类型的优势.
+         */
         get { allHTTPHeaderFields.map(HTTPHeaders.init) ?? HTTPHeaders() }
         set { allHTTPHeaderFields = newValue.dictionary }
     }
 }
 
+/*
+ HTTPURLResponse 对于 HTTPHeaders 的适配.
+ allHeaderFields 的返回值类型是  [AnyHashable : Any]  所以, 这里有个转换的过程.
+*/
 extension HTTPURLResponse {
     /// Returns `allHeaderFields` as `HTTPHeaders`.
     public var headers: HTTPHeaders {
@@ -416,6 +342,11 @@ extension HTTPURLResponse {
     }
 }
 
+/*
+ This property specifies additional headers that are added to all tasks within sessions based on this configuration. For example, you might set the User-Agent header so that it is automatically included in every request your app makes through sessions based on this configuration.
+ 从上面的描述, 我们也可以看出, URLSessionConfiguration 这个类的作用就是, 将通用的配置数据, 放到这个类里面.
+ 在网络请求过程中的各个 request 中, 通过 URLSessionConfiguration 中的配置, 进行 request 的配置.
+ */
 public extension URLSessionConfiguration {
     /// Returns `httpAdditionalHeaders` as `HTTPHeaders`.
     var headers: HTTPHeaders {

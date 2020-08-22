@@ -1,27 +1,3 @@
-//
-//  NetworkReachabilityManager.swift
-//
-//  Copyright (c) 2014-2018 Alamofire Software Foundation (http://alamofire.org/)
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//
-
 #if !(os(watchOS) || os(Linux))
 
 import Foundation
@@ -42,17 +18,17 @@ open class NetworkReachabilityManager {
         case notReachable
         /// The network is reachable on the associated `ConnectionType`.
         case reachable(ConnectionType)
-
+        
         init(_ flags: SCNetworkReachabilityFlags) {
             guard flags.isActuallyReachable else { self = .notReachable; return }
-
+            
             var networkStatus: NetworkReachabilityStatus = .reachable(.ethernetOrWiFi)
-
+            
             if flags.isCellular { networkStatus = .reachable(.cellular) }
-
+            
             self = networkStatus
         }
-
+        
         /// Defines the various connection types detected by reachability flags.
         public enum ConnectionType {
             /// The connection type is either over Ethernet or WiFi.
@@ -61,44 +37,44 @@ open class NetworkReachabilityManager {
             case cellular
         }
     }
-
+    
     /// A closure executed when the network reachability status changes. The closure takes a single argument: the
     /// network reachability status.
     public typealias Listener = (NetworkReachabilityStatus) -> Void
-
+    
     /// Default `NetworkReachabilityManager` for the zero address and a `listenerQueue` of `.main`.
     public static let `default` = NetworkReachabilityManager()
-
+    
     // MARK: - Properties
-
+    
     /// Whether the network is currently reachable.
     open var isReachable: Bool { isReachableOnCellular || isReachableOnEthernetOrWiFi }
-
+    
     /// Whether the network is currently reachable over the cellular interface.
     ///
     /// - Note: Using this property to decide whether to make a high or low bandwidth request is not recommended.
     ///         Instead, set the `allowsCellularAccess` on any `URLRequest`s being issued.
     ///
     open var isReachableOnCellular: Bool { status == .reachable(.cellular) }
-
+    
     /// Whether the network is currently reachable over Ethernet or WiFi interface.
     open var isReachableOnEthernetOrWiFi: Bool { status == .reachable(.ethernetOrWiFi) }
-
+    
     /// `DispatchQueue` on which reachability will update.
     public let reachabilityQueue = DispatchQueue(label: "org.alamofire.reachabilityQueue")
-
+    
     /// Flags of the current reachability type, if any.
     open var flags: SCNetworkReachabilityFlags? {
         var flags = SCNetworkReachabilityFlags()
-
+        
         return (SCNetworkReachabilityGetFlags(reachability, &flags)) ? flags : nil
     }
-
+    
     /// The current network reachability status.
     open var status: NetworkReachabilityStatus {
         flags.map(NetworkReachabilityStatus.init) ?? .unknown
     }
-
+    
     /// Mutable state storage.
     struct MutableState {
         /// A closure executed when the network reachability status changes.
@@ -108,16 +84,16 @@ open class NetworkReachabilityManager {
         /// Previously calculated status.
         var previousStatus: NetworkReachabilityStatus?
     }
-
+    
     /// `SCNetworkReachability` instance providing notifications.
     private let reachability: SCNetworkReachability
-
+    
     /// Protected storage for mutable state.
     @Protected
     private var mutableState = MutableState()
-
+    
     // MARK: - Initialization
-
+    
     /// Creates an instance with the specified host.
     ///
     /// - Note: The `host` value must *not* contain a scheme, just the hostname.
@@ -126,10 +102,10 @@ open class NetworkReachabilityManager {
     ///   - host:          Host used to evaluate network reachability. Must *not* include the scheme (e.g. `https`).
     public convenience init?(host: String) {
         guard let reachability = SCNetworkReachabilityCreateWithName(nil, host) else { return nil }
-
+        
         self.init(reachability: reachability)
     }
-
+    
     /// Creates an instance that monitors the address 0.0.0.0.
     ///
     /// Reachability treats the 0.0.0.0 address as a special token that causes it to monitor the general routing
@@ -138,22 +114,22 @@ open class NetworkReachabilityManager {
         var zero = sockaddr()
         zero.sa_len = UInt8(MemoryLayout<sockaddr>.size)
         zero.sa_family = sa_family_t(AF_INET)
-
+        
         guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zero) else { return nil }
-
+        
         self.init(reachability: reachability)
     }
-
+    
     private init(reachability: SCNetworkReachability) {
         self.reachability = reachability
     }
-
+    
     deinit {
         stopListening()
     }
-
+    
     // MARK: - Listening
-
+    
     /// Starts listening for changes in network reachability status.
     ///
     /// - Note: Stops and removes any existing listener.
@@ -167,12 +143,12 @@ open class NetworkReachabilityManager {
     open func startListening(onQueue queue: DispatchQueue = .main,
                              onUpdatePerforming listener: @escaping Listener) -> Bool {
         stopListening()
-
+        
         $mutableState.write { state in
             state.listenerQueue = queue
             state.listener = listener
         }
-
+        
         var context = SCNetworkReachabilityContext(version: 0,
                                                    info: Unmanaged.passUnretained(self).toOpaque(),
                                                    retain: nil,
@@ -180,24 +156,24 @@ open class NetworkReachabilityManager {
                                                    copyDescription: nil)
         let callback: SCNetworkReachabilityCallBack = { _, flags, info in
             guard let info = info else { return }
-
+            
             let instance = Unmanaged<NetworkReachabilityManager>.fromOpaque(info).takeUnretainedValue()
             instance.notifyListener(flags)
         }
-
+        
         let queueAdded = SCNetworkReachabilitySetDispatchQueue(reachability, reachabilityQueue)
         let callbackAdded = SCNetworkReachabilitySetCallback(reachability, callback, &context)
-
+        
         // Manually call listener to give initial state, since the framework may not.
         if let currentFlags = flags {
             reachabilityQueue.async {
                 self.notifyListener(currentFlags)
             }
         }
-
+        
         return callbackAdded && queueAdded
     }
-
+    
     /// Stops listening for changes in network reachability status.
     open func stopListening() {
         SCNetworkReachabilitySetCallback(reachability, nil, nil)
@@ -208,9 +184,9 @@ open class NetworkReachabilityManager {
             state.previousStatus = nil
         }
     }
-
+    
     // MARK: - Internal - Listener Notification
-
+    
     /// Calls the `listener` closure of the `listenerQueue` if the computed status hasn't changed.
     ///
     /// - Note: Should only be called from the `reachabilityQueue`.
@@ -218,12 +194,12 @@ open class NetworkReachabilityManager {
     /// - Parameter flags: `SCNetworkReachabilityFlags` to use to calculate the status.
     func notifyListener(_ flags: SCNetworkReachabilityFlags) {
         let newStatus = NetworkReachabilityStatus(flags)
-
+        
         $mutableState.write { state in
             guard state.previousStatus != newStatus else { return }
-
+            
             state.previousStatus = newStatus
-
+            
             let listener = state.listener
             state.listenerQueue?.async { listener?(newStatus) }
         }
@@ -247,7 +223,7 @@ extension SCNetworkReachabilityFlags {
         return false
         #endif
     }
-
+    
     /// Human readable `String` for all states, to help with debugging.
     var readableDescription: String {
         let W = isCellular ? "W" : "-"
@@ -260,7 +236,7 @@ extension SCNetworkReachabilityFlags {
         let l = contains(.isLocalAddress) ? "l" : "-"
         let d = contains(.isDirect) ? "d" : "-"
         let a = contains(.connectionAutomatic) ? "a" : "-"
-
+        
         return "\(W)\(R) \(c)\(t)\(i)\(C)\(D)\(l)\(d)\(a)"
     }
 }

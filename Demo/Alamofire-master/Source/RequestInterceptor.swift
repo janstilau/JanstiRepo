@@ -1,27 +1,3 @@
-//
-//  RequestInterceptor.swift
-//
-//  Copyright (c) 2019 Alamofire Software Foundation (http://alamofire.org/)
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//
-
 import Foundation
 
 /// A type that can inspect and optionally adapt a `URLRequest` in some manner if necessary.
@@ -56,14 +32,14 @@ extension RetryResult {
         default: return false
         }
     }
-
+    
     var delay: TimeInterval? {
         switch self {
         case let .retryWithDelay(delay): return delay
         default: return nil
         }
     }
-
+    
     var error: Error? {
         guard case let .doNotRetryWithError(error) = self else { return nil }
         return error
@@ -96,7 +72,7 @@ extension RequestInterceptor {
     public func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         completion(.success(urlRequest))
     }
-
+    
     public func retry(_ request: Request,
                       for session: Session,
                       dueTo error: Error,
@@ -115,14 +91,14 @@ public typealias RetryHandler = (Request, Session, Error, _ completion: @escapin
 /// Closure-based `RequestAdapter`.
 open class Adapter: RequestInterceptor {
     private let adaptHandler: AdaptHandler
-
+    
     /// Creates an instance using the provided closure.
     ///
     /// - Parameter adaptHandler: `AdaptHandler` closure to be executed when handling request adaptation.
     public init(_ adaptHandler: @escaping AdaptHandler) {
         self.adaptHandler = adaptHandler
     }
-
+    
     open func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         adaptHandler(urlRequest, session, completion)
     }
@@ -133,14 +109,14 @@ open class Adapter: RequestInterceptor {
 /// Closure-based `RequestRetrier`.
 open class Retrier: RequestInterceptor {
     private let retryHandler: RetryHandler
-
+    
     /// Creates an instance using the provided closure.
     ///
     /// - Parameter retryHandler: `RetryHandler` closure to be executed when handling request retry.
     public init(_ retryHandler: @escaping RetryHandler) {
         self.retryHandler = retryHandler
     }
-
+    
     open func retry(_ request: Request,
                     for session: Session,
                     dueTo error: Error,
@@ -157,7 +133,7 @@ open class Interceptor: RequestInterceptor {
     public let adapters: [RequestAdapter]
     /// All `RequestRetrier`s associated with the instance. These retriers will be run one at a time until one triggers retry.
     public let retriers: [RequestRetrier]
-
+    
     /// Creates an instance from `AdaptHandler` and `RetryHandler` closures.
     ///
     /// - Parameters:
@@ -167,7 +143,7 @@ open class Interceptor: RequestInterceptor {
         adapters = [Adapter(adaptHandler)]
         retriers = [Retrier(retryHandler)]
     }
-
+    
     /// Creates an instance from `RequestAdapter` and `RequestRetrier` values.
     ///
     /// - Parameters:
@@ -177,7 +153,7 @@ open class Interceptor: RequestInterceptor {
         adapters = [adapter]
         retriers = [retrier]
     }
-
+    
     /// Creates an instance from the arrays of `RequestAdapter` and `RequestRetrier` values.
     ///
     /// - Parameters:
@@ -188,21 +164,21 @@ open class Interceptor: RequestInterceptor {
         self.adapters = adapters + interceptors
         self.retriers = retriers + interceptors
     }
-
+    
     open func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         adapt(urlRequest, for: session, using: adapters, completion: completion)
     }
-
+    
     private func adapt(_ urlRequest: URLRequest,
                        for session: Session,
                        using adapters: [RequestAdapter],
                        completion: @escaping (Result<URLRequest, Error>) -> Void) {
         var pendingAdapters = adapters
-
+        
         guard !pendingAdapters.isEmpty else { completion(.success(urlRequest)); return }
-
+        
         let adapter = pendingAdapters.removeFirst()
-
+        
         adapter.adapt(urlRequest, for: session) { result in
             switch result {
             case let .success(urlRequest):
@@ -212,25 +188,25 @@ open class Interceptor: RequestInterceptor {
             }
         }
     }
-
+    
     open func retry(_ request: Request,
                     for session: Session,
                     dueTo error: Error,
                     completion: @escaping (RetryResult) -> Void) {
         retry(request, for: session, dueTo: error, using: retriers, completion: completion)
     }
-
+    
     private func retry(_ request: Request,
                        for session: Session,
                        dueTo error: Error,
                        using retriers: [RequestRetrier],
                        completion: @escaping (RetryResult) -> Void) {
         var pendingRetriers = retriers
-
+        
         guard !pendingRetriers.isEmpty else { completion(.doNotRetry); return }
-
+        
         let retrier = pendingRetriers.removeFirst()
-
+        
         retrier.retry(request, for: session, dueTo: error) { result in
             switch result {
             case .retry, .retryWithDelay, .doNotRetryWithError:

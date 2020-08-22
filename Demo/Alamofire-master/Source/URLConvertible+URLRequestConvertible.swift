@@ -1,23 +1,19 @@
 import Foundation
 
-/// Types adopting the `URLConvertible` protocol can be used to construct `URL`s, which can then be used to construct
-/// `URLRequests`.
+/*
+ AFN 里面, url 都是通过 Stirng 进行传递的.
+ 但是, 实际上使用的是 URL 类.
+ 框架并不关心, 到底怎么得到 URL, 只要传递过来的对象, 可以生产出一个 URL 就可以了.
+ 注意, 这个方法是 throws, 在使用的时候, 都要增加 try 处理.
+ */
 public protocol URLConvertible {
-    /// Returns a `URL` from the conforming instance or throws.
-    ///
-    /// - Returns: The `URL` created from the instance.
-    /// - Throws:  Any error thrown while creating the `URL`.
     func asURL() throws -> URL
 }
 
 extension String: URLConvertible {
-    /// Returns a `URL` if `self` can be used to initialize a `URL` instance, otherwise throws.
-    ///
-    /// - Returns: The `URL` initialized with `self`.
-    /// - Throws:  An `AFError.invalidURL` instance.
+    // 通过自身, 进行 URL 的生成,  如果失败, 抛出错误.
     public func asURL() throws -> URL {
         guard let url = URL(string: self) else { throw AFError.invalidURL(url: self) }
-        
         return url
     }
 }
@@ -34,19 +30,16 @@ extension URLComponents: URLConvertible {
     /// - Throws:  An `AFError.invalidURL` instance.
     public func asURL() throws -> URL {
         guard let url = url else { throw AFError.invalidURL(url: self) }
-        
         return url
     }
 }
 
 // MARK: -
 
-/// Types adopting the `URLRequestConvertible` protocol can be used to safely construct `URLRequest`s.
+/*
+ 可以转化为 URLRequest 的协议
+ */
 public protocol URLRequestConvertible {
-    /// Returns a `URLRequest` or throws if an `Error` was encountered.
-    ///
-    /// - Returns: A `URLRequest`.
-    /// - Throws:  Any error thrown while constructing the `URLRequest`.
     func asURLRequest() throws -> URLRequest
 }
 
@@ -56,20 +49,15 @@ extension URLRequestConvertible {
 }
 
 extension URLRequest: URLRequestConvertible {
-    /// Returns `self`.
     public func asURLRequest() throws -> URLRequest { self }
 }
 
 // MARK: -
 
+/*
+ extension 里面定义的, 一定是 convenience init 方法. 需要调用其他的 init 方法, 来进行最终的初始化操作.
+ */
 extension URLRequest {
-    /// Creates an instance with the specified `url`, `method`, and `headers`.
-    ///
-    /// - Parameters:
-    ///   - url:     The `URLConvertible` value.
-    ///   - method:  The `HTTPMethod`.
-    ///   - headers: The `HTTPHeaders`, `nil` by default.
-    /// - Throws:    Any error thrown while converting the `URLConvertible` to a `URL`.
     public init(url: URLConvertible, method: HTTPMethod, headers: HTTPHeaders? = nil) throws {
         let url = try url.asURL()
         
