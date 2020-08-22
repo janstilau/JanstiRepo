@@ -129,3 +129,30 @@ class IsPalindrome {
         return true
     }
 }
+
+class kthSmallestSolution {
+    func kthSmallest(_ root: TreeNode?, _ k: Int) -> Int {
+        
+        guard root != nil else {
+            return -1
+        }
+        
+        var stack = [TreeNode]()
+        var current = root
+        var times = 0
+        while current != nil || !stack.isEmpty {
+            if current != nil {
+                stack.append(current!)
+                current = current?.left
+                continue
+            }
+            
+            let topNode = stack.last!
+            times += 1
+            if times == k { return topNode.val }
+            current = topNode.right
+        }
+        
+        return -1
+    }
+}

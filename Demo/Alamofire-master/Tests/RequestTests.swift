@@ -490,7 +490,7 @@ final class RequestResponseTestCase: BaseTestCase {
         // When
         let request = session.request(URLRequest.makeHTTPBinRequest())
         // Cancellation stops task creation, so don't cancel the request until the task has been created.
-        eventMonitor.requestDidCreateTask = { _, _ in
+        eventMonitor.requestDidCreateTask = { [unowned request] _, _ in
             for _ in 0..<100 {
                 request.cancel()
             }
@@ -521,7 +521,7 @@ final class RequestResponseTestCase: BaseTestCase {
         // When
         let request = session.request(URLRequest.makeHTTPBinRequest())
         // Cancellation stops task creation, so don't cancel the request until the task has been created.
-        eventMonitor.requestDidCreateTask = { _, _ in
+        eventMonitor.requestDidCreateTask = { [unowned request] _, _ in
             for _ in 0..<100 {
                 request.cancel()
             }
@@ -552,7 +552,7 @@ final class RequestResponseTestCase: BaseTestCase {
         // When
         let request = session.request(URLRequest.makeHTTPBinRequest(path: "delay/5")).response { _ in expect.fulfill() }
         // Cancellation stops task creation, so don't cancel the request until the task has been created.
-        eventMonitor.requestDidCreateTask = { _, _ in
+        eventMonitor.requestDidCreateTask = { [unowned request] _, _ in
             DispatchQueue.concurrentPerform(iterations: 100) { i in
                 request.cancel()
 
@@ -650,7 +650,7 @@ final class RequestResponseTestCase: BaseTestCase {
             responseHandler.fulfill()
         }
 
-        eventMonitor.requestDidResumeTask = { _, _ in
+        eventMonitor.requestDidResumeTask = { [unowned request] _, _ in
             request.cancel()
             didResumeTask.fulfill()
         }
@@ -894,14 +894,6 @@ final class RequestCURLDescriptionTestCase: BaseTestCase {
 
         // When
         let request = manager.request(urlString)
-        request.cURLDescription {
-            components = self.cURLCommandComponents(from: $0)
-            request.cURLDescription {
-                secondComponents = self.cURLCommandComponents(from: $0)
-                expectation.fulfill()
-            }
-        }
-        // Trigger the overwrite behavior.
         request.cURLDescription {
             components = self.cURLCommandComponents(from: $0)
             request.cURLDescription {

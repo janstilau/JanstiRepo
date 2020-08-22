@@ -39,7 +39,7 @@ inline void __push_heap_aux(RandomAccessIterator first,
 }
 
 /*
- 插入元素后的堆化. 可以看到, 是通过同父节点的比较, 从叶子节点开始堆化的.
+ append 元素之后, 从叶子节点开始进行堆化.
  */
 template <class RandomAccessIterator, class Distance, class T>
 void __push_heap(RandomAccessIterator first, Distance holeIndex,
@@ -69,7 +69,6 @@ void __push_heap(RandomAccessIterator first, Distance holeIndex,
 /*
  移除堆中头结点.
  */
-
 template <class RandomAccessIterator>
 inline void pop_heap(RandomAccessIterator first, RandomAccessIterator last) {
     __pop_heap_aux(first, last, value_type(first));

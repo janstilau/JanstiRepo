@@ -23,12 +23,7 @@
 //
 
 /// Reference to `Session.default` for quick bootstrapping and examples.
-/*
- 通过这种方式, 来获取 Session.default.
- 实际上, 就是一个全局变量. 这个全局变量在使用的时候, 才会进行初始化. Swfit 保证, 不会在编译器进行动态数据的初始化, 而是在使用之前在进行初始化.
- 所以, 在 Swift 这门语言里面, 不用专门在 load, initilize 方法里面, 专门做一些值的设置的操作.
- */
 public let AF = Session.default
 
 /// Current Alamofire version. Necessary since SPM doesn't use dynamic libraries. Plus this will be more accurate.
-let version = "5.1.0"
+let version = "5.2.2"

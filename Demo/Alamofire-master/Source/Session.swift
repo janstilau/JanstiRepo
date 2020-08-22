@@ -1,15 +1,34 @@
+//
+//  Session.swift
+//
+//  Copyright (c) 2014-2018 Alamofire Software Foundation (http://alamofire.org/)
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
 
 import Foundation
 
 /// `Session` creates and manages Alamofire's `Request` types during their lifetimes. It also provides common
 /// functionality for all `Request`s, including queuing, interception, trust management, redirect handling, and response
 /// cache handling.
-
 open class Session {
     /// Shared singleton instance used by all `AF.request` APIs. Cannot be modified.
-    /* 这里 `default` 的命名是因为, default 是关键字. 这也是第一看到, `name` 这种特殊的命名方式.
-     Swfit 保证, 类的 static 只会进行一次初始化操作. 实际上, 底层是调用了 DiapatchOnce.
-    */
     public static let `default` = Session()
 
     /// Underlying `URLSession` used to create `URLSessionTasks` for this instance, and for which this instance's
@@ -208,27 +227,18 @@ open class Session {
     /// Closure which provides a `URLRequest` for mutation.
     public typealias RequestModifier = (inout URLRequest) throws -> Void
 
-    /*
-     NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:method URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:&serializationError];
-     这个东西, 其实就是一个数据类, 将生成 Request 的过程, 封装到了这个类的内部.
-     上面是 OC 的实现, 和 OC 的实现相比, 过程没有太大的区别. 主要是, 整个数据都建立在协议的基础上, 而不再是具体的业务类了.
-     */
-    struct RequestConvertible: URLRequestConvertible, Sequence {
+    struct RequestConvertible: URLRequestConvertible {
         let url: URLConvertible
         let method: HTTPMethod
         let parameters: Parameters?
         let encoding: ParameterEncoding
         let headers: HTTPHeaders?
         let requestModifier: RequestModifier?
-        
-        // 对于 URLRequestConvertible 的实现.
+
         func asURLRequest() throws -> URLRequest {
-            // 首先, 生成一个相应的 URLRequest. 然后调用闭包进行自定义.
-            // 下面的生成方法, 是写到了 URLRequest 的扩展里面的了.
             var request = try URLRequest(url: url, method: method, headers: headers)
             try requestModifier?(&request)
-            
-            // 然后调用 encoding 的序列化的方法, 序列化 request, 将参数拼接到 reqeust 的相应的位置.
+
             return try encoding.encode(request, with: parameters)
         }
     }
@@ -248,29 +258,13 @@ open class Session {
     ///                      parameters. `nil` by default.
     ///
     /// - Returns:       The created `DataRequest`.
-    
-    /*
-     public typealias RequestModifier = (inout URLRequest) throws -> Void
-     RequestModifier 就是一个闭包, 是将上面的 URLRequest 生成之后, 一个自定义 URLRequest 的一个机会.
-     
-     public typealias Parameters = [String: Any]
-     Parameters 就是一个键值对应的别名, 就是 NSDictary [Stirng:id]
-     
-     ParameterEncoding 这个东西, 主要的功能就是将参数, 填充到对应的 Request 里面去. 
-     
-     */
     open func request(_ convertible: URLConvertible,
                       method: HTTPMethod = .get,
                       parameters: Parameters? = nil,
-                      encoding: ParameterEncoding = URLEncoding.default, //
+                      encoding: ParameterEncoding = URLEncoding.default,
                       headers: HTTPHeaders? = nil,
                       interceptor: RequestInterceptor? = nil,
                       requestModifier: RequestModifier? = nil) -> DataRequest {
-        /*
-         这一步, 就是在构建 Request 的过程. 只不过从构建一个 Request 对象, 变成了构建一个 RequestConvertible 对象.
-         但是代码的业务先后逻辑都是一样的.
-         URLEncoding.default, 他所做的工作, 就是 AFN 里面的 AFURLRequestSerialization 所做的工作, 都是讲一个 URLRequest, 通过 parameters 进行填充.
-         */
         let convertible = RequestConvertible(url: convertible,
                                              method: method,
                                              parameters: parameters,

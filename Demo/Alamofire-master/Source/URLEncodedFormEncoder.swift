@@ -966,15 +966,11 @@ public extension CharacterSet {
     /// In RFC 3986 - Section 3.4, it states that the "?" and "/" characters should not be escaped to allow
     /// query strings to include a URL. Therefore, all "reserved" characters with the exception of "?" and "/"
     /// should be percent-escaped in the query string.
-    /*
-     这个代码, 和 AFN 里面的是一样的.
-     不同的是, 这个代码, 被放到了 CharacterSet 的一份分类里面.
-     个人觉得, 这样不是太好. 因为 afURLQueryAllowed 这个业务本身就是 Network 使用的啊, 为什么要暴露出来.
-     */
     static let afURLQueryAllowed: CharacterSet = {
         let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
         let subDelimitersToEncode = "!$&'()*+,;="
         let encodableDelimiters = CharacterSet(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
+
         return CharacterSet.urlQueryAllowed.subtracting(encodableDelimiters)
     }()
 }
