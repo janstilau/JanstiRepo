@@ -1,116 +1,28 @@
 /// A type that can be converted to and from an associated raw value.
 
 /// 实现了该协议, 也就代表着, 类型可以从当前值, 和原始值之间进行切换.
+/// 其实这是一个非常常见的事情, 比例, NSDate, 仅仅是一个普普通通的时间戳的封装而已.
+/// 实现了这个协议, 就是告诉外界, 自己的核心数据类型, 仅仅是一些简单的值, 但是自己提供了很多的方法, 让这个类型, 表示了一层类名代表的含义.
 ///
 /// Enumerations with Raw Values
 /// ============================
 ///
-/// For any enumeration with a string, integer, or floating-point raw type, the
-/// Swift compiler automatically adds `RawRepresentable` conformance. When
-/// defining your own custom enumeration, you give it a raw type by specifying
-/// the raw type as the first item in the enumeration's type inheritance list.
-/// You can also use literals to specify values for one or more cases.
-///
-/// For example, the `Counter` enumeration defined here has an `Int` raw value
-/// type and gives the first case a raw value of `1`:
-///
-///     enum Counter: Int {
-///         case one = 1, two, three, four, five
-///     }
-///
-/// You can create a `Counter` instance from an integer value between 1 and 5
-/// by using the `init?(rawValue:)` initializer declared in the
-/// `RawRepresentable` protocol. This initializer is failable because although
-/// every case of the `Counter` type has a corresponding `Int` value, there
-/// are many `Int` values that *don't* correspond to a case of `Counter`.
-///
-///     for i in 3...6 {
-///         print(Counter(rawValue: i))
-///     }
-///     // Prints "Optional(Counter.three)"
-///     // Prints "Optional(Counter.four)"
-///     // Prints "Optional(Counter.five)"
-///     // Prints "nil"
-///
 /// Option Sets
+/// Option Sets 来做这种 或 的操作, 而 Enum, 每一个值, 都是确定的, 都是和一个 rawValue 进行绑定的.
+///
 /// ===========
-///
-/// Option sets all conform to `RawRepresentable` by inheritance using the
-/// `OptionSet` protocol. Whether using an option set or creating your own,
-/// you use the raw value of an option set instance to store the instance's
-/// bitfield. The raw value must therefore be of a type that conforms to the
-/// `FixedWidthInteger` protocol, such as `UInt8` or `Int`. For example, the
-/// `Direction` type defines an option set for the four directions you can
-/// move in a game.
-///
-///     struct Directions: OptionSet {
-///         let rawValue: UInt8
-///
-///         static let up    = Directions(rawValue: 1 << 0)
-///         static let down  = Directions(rawValue: 1 << 1)
-///         static let left  = Directions(rawValue: 1 << 2)
-///         static let right = Directions(rawValue: 1 << 3)
-///     }
-///
-/// Unlike enumerations, option sets provide a nonfailable `init(rawValue:)`
-/// initializer to convert from a raw value, because option sets don't have an
-/// enumerated list of all possible cases. Option set values have
-/// a one-to-one correspondence with their associated raw values.
-///
-/// In the case of the `Directions` option set, an instance can contain zero,
-/// one, or more of the four defined directions. This example declares a
-/// constant with three currently allowed moves. The raw value of the
-/// `allowedMoves` instance is the result of the bitwise OR of its three
-/// members' raw values:
-///
-///     let allowedMoves: Directions = [.up, .down, .left]
-///     print(allowedMoves.rawValue)
-///     // Prints "7"
-///
-/// Option sets use bitwise operations on their associated raw values to
-/// implement their mathematical set operations. For example, the `contains()`
-/// method on `allowedMoves` performs a bitwise AND operation to check whether
-/// the option set contains an element.
-///
-///     print(allowedMoves.contains(.right))
-///     // Prints "false"
-///     print(allowedMoves.rawValue & Directions.right.rawValue)
-///     // Prints "0"
 public protocol RawRepresentable {
-  /// The raw type that can be used to represent all values of the conforming
-  /// type.
-  ///
-  /// Every distinct value of the conforming type has a corresponding unique
-  /// value of the `RawValue` type, but there may be values of the `RawValue`
-  /// type that don't have a corresponding value of the conforming type.
+  
   associatedtype RawValue
-
-  /// Creates a new instance with the specified raw value.
-  ///
-  /// If there is no value of the type that corresponds with the specified raw
-  /// value, this initializer returns `nil`. For example:
-  ///
-  ///     enum PaperSize: String {
-  ///         case A4, A5, Letter, Legal
-  ///     }
-  ///
-  ///     print(PaperSize(rawValue: "Legal"))
-  ///     // Prints "Optional("PaperSize.Legal")"
-  ///
-  ///     print(PaperSize(rawValue: "Tabloid"))
-  ///     // Prints "nil"
-  ///
-  /// - Parameter rawValue: The raw value to use for the new instance.
   init?(rawValue: RawValue)
-
   /*
      一个计算属性
      实现类内部可以存储这个值, 也可以只是方法.
+     对于 NSDate 这种, 根据不同的 rawValue 值, 进行值的表示的类型来说, rawValue 就是核心数据, 一定是存储起来的.
      */
   var rawValue: RawValue { get }
 }
 
-/// RawRepresentable 的数据判断相等, 可以直接根据 rawVlaue 进行
 @inlinable // trivial-implementation
 public func == <T: RawRepresentable>(lhs: T, rhs: T) -> Bool
   where T.RawValue: Equatable {
@@ -146,6 +58,11 @@ extension RawRepresentable where RawValue: Hashable, Self: Hashable {
     return hasher._finalize()
   }
 }
+
+
+
+
+
 
 /// A type that provides a collection of all of its values.
 ///
