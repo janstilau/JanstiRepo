@@ -1,27 +1,3 @@
-//
-//  Response.swift
-//
-//  Copyright (c) 2014-2018 Alamofire Software Foundation (http://alamofire.org/)
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//
-
 import Foundation
 
 /// Default type of `DataResponse` returned by Alamofire, with an `AFError` `Failure` type.
@@ -33,31 +9,31 @@ public typealias AFDownloadResponse<Success> = DownloadResponse<Success, AFError
 public struct DataResponse<Success, Failure: Error> {
     /// The URL request sent to the server.
     public let request: URLRequest?
-
+    
     /// The server's response to the URL request.
     public let response: HTTPURLResponse?
-
+    
     /// The data returned by the server.
     public let data: Data?
-
+    
     /// The final metrics of the response.
     ///
     /// - Note: Due to `FB7624529`, collection of `URLSessionTaskMetrics` on watchOS is currently disabled.`
     ///
     public let metrics: URLSessionTaskMetrics?
-
+    
     /// The time taken to serialize the response.
     public let serializationDuration: TimeInterval
-
+    
     /// The result of response serialization.
     public let result: Result<Success, Failure>
-
+    
     /// Returns the associated value of the result if it is a success, `nil` otherwise.
     public var value: Success? { result.success }
-
+    
     /// Returns the associated error value if the result if it is a failure, `nil` otherwise.
     public var error: Failure? { result.failure }
-
+    
     /// Creates a `DataResponse` instance with the specified parameters derived from the response serialization.
     ///
     /// - Parameters:
@@ -90,27 +66,27 @@ extension DataResponse: CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String {
         "\(result)"
     }
-
+    
     /// The debug textual representation used when written to an output stream, which includes (if available) a summary
     /// of the `URLRequest`, the request's headers and body (if decodable as a `String` below 100KB); the
     /// `HTTPURLResponse`'s status code, headers, and body; the duration of the network and serialization actions; and
     /// the `Result` of serialization.
     public var debugDescription: String {
         guard let urlRequest = request else { return "[Request]: None\n[Result]: \(result)" }
-
+        
         let requestDescription = DebugDescription.description(of: urlRequest)
-
+        
         let responseDescription = response.map { response in
             let responseBodyDescription = DebugDescription.description(for: data, headers: response.headers)
-
+            
             return """
             \(DebugDescription.description(of: response))
-                \(responseBodyDescription.indentingNewlines())
+            \(responseBodyDescription.indentingNewlines())
             """
-        } ?? "[Response]: None"
-
+            } ?? "[Response]: None"
+        
         let networkDuration = metrics.map { "\($0.taskInterval.duration)s" } ?? "None"
-
+        
         return """
         \(requestDescription)
         \(responseDescription)
@@ -144,7 +120,7 @@ extension DataResponse {
                                           serializationDuration: serializationDuration,
                                           result: result.map(transform))
     }
-
+    
     /// Evaluates the given closure when the result of this `DataResponse` is a success, passing the unwrapped result
     /// value as a parameter.
     ///
@@ -167,7 +143,7 @@ extension DataResponse {
                                         serializationDuration: serializationDuration,
                                         result: result.tryMap(transform))
     }
-
+    
     /// Evaluates the specified closure when the `DataResponse` is a failure, passing the unwrapped error as a parameter.
     ///
     /// Use the `mapError` function with a closure that does not throw. For example:
@@ -186,7 +162,7 @@ extension DataResponse {
                                           serializationDuration: serializationDuration,
                                           result: result.mapError(transform))
     }
-
+    
     /// Evaluates the specified closure when the `DataResponse` is a failure, passing the unwrapped error as a parameter.
     ///
     /// Use the `tryMapError` function with a closure that may throw an error. For example:
@@ -215,34 +191,34 @@ extension DataResponse {
 public struct DownloadResponse<Success, Failure: Error> {
     /// The URL request sent to the server.
     public let request: URLRequest?
-
+    
     /// The server's response to the URL request.
     public let response: HTTPURLResponse?
-
+    
     /// The final destination URL of the data returned from the server after it is moved.
     public let fileURL: URL?
-
+    
     /// The resume data generated if the request was cancelled.
     public let resumeData: Data?
-
+    
     /// The final metrics of the response.
     ///
     /// - Note: Due to `FB7624529`, collection of `URLSessionTaskMetrics` on watchOS is currently disabled.`
     ///
     public let metrics: URLSessionTaskMetrics?
-
+    
     /// The time taken to serialize the response.
     public let serializationDuration: TimeInterval
-
+    
     /// The result of response serialization.
     public let result: Result<Success, Failure>
-
+    
     /// Returns the associated value of the result if it is a success, `nil` otherwise.
     public var value: Success? { result.success }
-
+    
     /// Returns the associated error value if the result if it is a failure, `nil` otherwise.
     public var error: Failure? { result.failure }
-
+    
     /// Creates a `DownloadResponse` instance with the specified parameters derived from response serialization.
     ///
     /// - Parameters:
@@ -279,18 +255,18 @@ extension DownloadResponse: CustomStringConvertible, CustomDebugStringConvertibl
     public var description: String {
         "\(result)"
     }
-
+    
     /// The debug textual representation used when written to an output stream, which includes the URL request, the URL
     /// response, the temporary and destination URLs, the resume data, the durations of the network and serialization
     /// actions, and the response serialization result.
     public var debugDescription: String {
         guard let urlRequest = request else { return "[Request]: None\n[Result]: \(result)" }
-
+        
         let requestDescription = DebugDescription.description(of: urlRequest)
         let responseDescription = response.map(DebugDescription.description(of:)) ?? "[Response]: None"
         let networkDuration = metrics.map { "\($0.taskInterval.duration)s" } ?? "None"
         let resumeDataDescription = resumeData.map { "\($0)" } ?? "None"
-
+        
         return """
         \(requestDescription)
         \(responseDescription)
@@ -327,7 +303,7 @@ extension DownloadResponse {
                                               serializationDuration: serializationDuration,
                                               result: result.map(transform))
     }
-
+    
     /// Evaluates the given closure when the result of this `DownloadResponse` is a success, passing the unwrapped
     /// result value as a parameter.
     ///
@@ -351,7 +327,7 @@ extension DownloadResponse {
                                             serializationDuration: serializationDuration,
                                             result: result.tryMap(transform))
     }
-
+    
     /// Evaluates the specified closure when the `DownloadResponse` is a failure, passing the unwrapped error as a parameter.
     ///
     /// Use the `mapError` function with a closure that does not throw. For example:
@@ -371,7 +347,7 @@ extension DownloadResponse {
                                               serializationDuration: serializationDuration,
                                               result: result.mapError(transform))
     }
-
+    
     /// Evaluates the specified closure when the `DownloadResponse` is a failure, passing the unwrapped error as a parameter.
     ///
     /// Use the `tryMapError` function with a closure that may throw an error. For example:
@@ -400,48 +376,48 @@ private enum DebugDescription {
         let requestSummary = "\(request.httpMethod!) \(request)"
         let requestHeadersDescription = DebugDescription.description(for: request.headers)
         let requestBodyDescription = DebugDescription.description(for: request.httpBody, headers: request.headers)
-
+        
         return """
         [Request]: \(requestSummary)
-            \(requestHeadersDescription.indentingNewlines())
-            \(requestBodyDescription.indentingNewlines())
+        \(requestHeadersDescription.indentingNewlines())
+        \(requestBodyDescription.indentingNewlines())
         """
     }
-
+    
     static func description(of response: HTTPURLResponse) -> String {
         """
         [Response]:
-            [Status Code]: \(response.statusCode)
-            \(DebugDescription.description(for: response.headers).indentingNewlines())
+        [Status Code]: \(response.statusCode)
+        \(DebugDescription.description(for: response.headers).indentingNewlines())
         """
     }
-
+    
     static func description(for headers: HTTPHeaders) -> String {
         guard !headers.isEmpty else { return "[Headers]: None" }
-
+        
         let headerDescription = "\(headers.sorted())".indentingNewlines()
         return """
         [Headers]:
-            \(headerDescription)
+        \(headerDescription)
         """
     }
-
+    
     static func description(for data: Data?,
                             headers: HTTPHeaders,
                             allowingPrintableTypes printableTypes: [String] = ["json", "xml", "text"],
                             maximumLength: Int = 100_000) -> String {
         guard let data = data, !data.isEmpty else { return "[Body]: None" }
-
+        
         guard
             data.count <= maximumLength,
             printableTypes.compactMap({ headers["Content-Type"]?.contains($0) }).contains(true)
-        else { return "[Body]: \(data.count) bytes" }
-
+            else { return "[Body]: \(data.count) bytes" }
+        
         return """
         [Body]:
-            \(String(decoding: data, as: UTF8.self)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .indentingNewlines())
+        \(String(decoding: data, as: UTF8.self)
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+        .indentingNewlines())
         """
     }
 }
