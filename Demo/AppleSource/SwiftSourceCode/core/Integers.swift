@@ -1,24 +1,3 @@
-//===----------------------------------------------------------------------===//
-//===--- AdditiveArithmetic -----------------------------------------------===//
-//===----------------------------------------------------------------------===//
-
-/// A type with values that support addition and subtraction.
-///
-/// The `AdditiveArithmetic` protocol provides a suitable basis for additive
-/// arithmetic on scalar values, such as integers and floating-point numbers,
-/// or vectors. You can write generic methods that operate on any numeric type
-/// in the standard library by using the `AdditiveArithmetic` protocol as a
-/// generic constraint.
-///
-/// The following code declares a method that calculates the total of any
-/// sequence with `AdditiveArithmetic` elements.
-///
-///     extension Sequence where Element: AdditiveArithmetic {
-///         func sum() -> Element {
-///             return reduce(.zero, +)
-///         }
-///     }
-
 /*
  在 C++ 中, 大量的使用了操作符重载, == 操作符是最常见的一种.
  + 操作符, 也是一种常见的操作符, 所以, 应该有一种来代表一类操作, 就是 AdditiveArithmetic
@@ -65,21 +44,7 @@ public extension AdditiveArithmetic where Self: ExpressibleByIntegerLiteral {
 //===--- Numeric ----------------------------------------------------------===//
 //===----------------------------------------------------------------------===//
 
-/// A type with values that support multiplication. 可以乘
-///
-/// The `Numeric` protocol provides a suitable basis for arithmetic on
-/// scalar values, such as integers and floating-point numbers. You can write
-/// generic methods that operate on any numeric type in the standard library
-/// by using the `Numeric` protocol as a generic constraint.
-///
-/// The following example extends `Sequence` with a method that returns an
-/// array with the sequence's values multiplied by two.
-///
-///     extension Sequence where Element: Numeric {
-///         func doublingAll() -> [Element] {
-///             return map { $0 * 2 }
-///         }
-///     }
+// 可以乘
 public protocol Numeric: AdditiveArithmetic, ExpressibleByIntegerLiteral {
     /// Creates a new instance from the given integer, if it can be represented
     /// exactly.
@@ -109,6 +74,9 @@ public protocol Numeric: AdditiveArithmetic, ExpressibleByIntegerLiteral {
     static func *=(lhs: inout Self, rhs: Self)
 }
 
+/*
+ 有着正负的概念
+ */
 public protocol SignedNumeric: Numeric {
     static prefix func - (_ operand: Self) -> Self
     
@@ -164,62 +132,14 @@ extension AdditiveArithmetic {
 
 /// An integer type with a binary representation.
 ///
-/// The `BinaryInteger` protocol is the basis for all the integer types
-/// provided by the standard library. All of the standard library's integer
-/// types, such as `Int` and `UInt32`, conform to `BinaryInteger`.
-///
 /// Converting Between Numeric Types
-/// ================================
-///
-/// You can create new instances of a type that conforms to the `BinaryInteger`
-/// protocol from a floating-point number or another binary integer of any
-/// type. The `BinaryInteger` protocol provides initializers for four
-/// different kinds of conversion.
 ///
 /// Range-Checked Conversion
 /// ------------------------
-///
-/// You use the default `init(_:)` initializer to create a new instance when
-/// you're sure that the value passed is representable in the new type. For
-/// example, an instance of `Int16` can represent the value `500`, so the
-/// first conversion in the code sample below succeeds. That same value is too
-/// large to represent as an `Int8` instance, so the second conversion fails,
-/// triggering a runtime error.
-///
-///     let x: Int = 500
-///     let y = Int16(x)
-///     // y == 500
-///
-///     let z = Int8(x)
-///     // Error: Not enough bits to represent...
-///
-/// When you create a binary integer from a floating-point value using the
-/// default initializer, the value is rounded toward zero before the range is
-/// checked. In the following example, the value `127.75` is rounded to `127`,
-/// which is representable by the `Int8` type.  `128.25` is rounded to `128`,
-/// which is not representable as an `Int8` instance, triggering a runtime
-/// error.
-///
-///     let e = Int8(127.75)
-///     // e == 127
-///
-///     let f = Int8(128.25)
-///     // Error: Double value cannot be converted...
-///
+/// 传统的 Int16(3000), 这种初始化方法, 会有 range 的核查, 如果越界了, 直接会触发 runtimeError.
 ///
 /// Exact Conversion
 /// ----------------
-///
-/// Use the `init?(exactly:)` initializer to create a new instance after
-/// checking whether the passed value is representable. Instead of trapping on
-/// out-of-range values, using the failable `init?(exactly:)`
-/// initializer results in `nil`.
-///
-///     let x = Int16(exactly: 500)
-///     // x == Optional(500)
-///
-///     let y = Int8(exactly: 500)
-///     // y == nil
 ///
 /// When converting floating-point values, the `init?(exactly:)` initializer
 /// checks both that the passed value has no fractional part and that the
@@ -990,7 +910,6 @@ public protocol BinaryInteger :
 }
 
 extension BinaryInteger {
-    /// Creates a new value equal to zero.
     @_transparent
     public init() {
         self = 0
