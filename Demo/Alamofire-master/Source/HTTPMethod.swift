@@ -7,7 +7,12 @@
  但是, 作为数据一定固定的类型值, API 的设计者应该提供一个类, 通过类的方式去获取某个固定值.
  RawRepresentable 的提出, 使得该值和原始值的转换, 有了一个统一的接口, 也就是对于使用者非常简便.
  所以, 之后这种固定数据的值, 应该由专门的类进行包装, 而不是让使用者, 再去输入 GET, POST 这些原始数据了.
- 这些原始数据, 1. 用户很容易写错, 因为没有 IDE 的支持. 2. 大小写怎么处理, 有空格怎么处理, 这都给 API 的设计者提供了难题, 而提供一个稳定的数据获取的 API, 能够略去大部分的烦恼问题.
+ 直接使用原始数据的后果:
+ 1. 用户很容易写错, 因为没有 IDE 的支持.
+ 2. 大小写怎么处理, 有空格怎么处理, 这都给 API 的设计者提供了难题, 而提供一个稳定的数据获取的 API, 能够略去大部分的烦恼问题.
+ 
+ 在最终, 变换成为 HTTPRequest 的属性的时候, 还是用的 HTTPRequest 里面规定的数据类型, 也就是 String.
+ 这里, 直接使用 HTTPMethod RawValue 方法就可以了. RawRepresentable 提供了稳定的抽象.
  */
 public struct HTTPMethod: RawRepresentable, Equatable, Hashable {
     /// `CONNECT` method.

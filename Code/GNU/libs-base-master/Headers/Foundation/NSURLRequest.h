@@ -1,27 +1,3 @@
-/* Interface for NSURLRequest for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <frm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-   */ 
-
 #ifndef __NSURLRequest_h_GNUSTEP_BASE_INCLUDE
 #define __NSURLRequest_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -29,10 +5,6 @@
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_2,GS_API_LATEST) && GS_API_VERSION( 11300,GS_API_LATEST)
 
 #import	<Foundation/NSObject.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 @class NSData;
 @class NSDate;
@@ -43,42 +15,17 @@ extern "C" {
 
 enum {
     NSURLRequestUseProtocolCachePolicy = 0,
-
+    
     NSURLRequestReloadIgnoringLocalCacheData = 1,
     NSURLRequestReloadIgnoringLocalAndRemoteCacheData = 4,
     NSURLRequestReloadIgnoringCacheData = NSURLRequestReloadIgnoringLocalCacheData,
-
+    
     NSURLRequestReturnCacheDataElseLoad = 2,
     NSURLRequestReturnCacheDataDontLoad = 3,
-
+    
     NSURLRequestReloadRevalidatingCacheData = 5
 };
-/**
- * <deflist>
- *   <term>NSURLRequestUseProtocolCachePolicy</term>
- *   <desc>
- *     Says that any protocol specific cache policy should be
- *     used ... this is the default.
- *   </desc>
- *   <term>NSURLRequestReloadIgnoringCacheData</term>
- *   <desc>
- *     Says the data should be re-loaded from source rather
- *     than any cached data being used, irrespective of any
- *     protocol standard.
- *   </desc>
- *   <term>NSURLRequestReturnCacheDataElseLoad</term>
- *   <desc>
- *     Says to use cached data if any is available, but to
- *     load from source if the cache is empty.  Ignores any
- *     protocol specific logic (like cache aging).
- *   </desc>
- *   <term>NSURLRequestReturnCacheDataDontLoad</term>
- *   <desc>
- *     Says to use cached data if any is available, but to
- *     return nil without loading if the cache is empty.
- *   </desc>
- * </deflist>
- */
+
 typedef NSUInteger NSURLRequestCachePolicy;
 
 
@@ -89,9 +36,18 @@ typedef NSUInteger NSURLRequestCachePolicy;
  */
 @interface NSURLRequest : NSObject <NSCoding, NSCopying, NSMutableCopying>
 {
-#if	GS_EXPOSE(NSURLRequest)
-  void *_NSURLRequestInternal;
-#endif
+public
+NSData            *body;
+NSInputStream            *bodyStream;
+NSString            *method;
+NSMutableDictionary        *headers;
+BOOL                shouldHandleCookies;
+BOOL                          debug;
+NSURL                *URL;
+NSURL                *mainDocumentURL;
+NSURLRequestCachePolicy    cachePolicy;
+NSTimeInterval        timeoutInterval;
+NSMutableDictionary        *properties;
 }
 
 /*
@@ -106,7 +62,7 @@ typedef NSUInteger NSURLRequestCachePolicy;
  * cachePolicy, and timeoutInterval.
  */
 + (id) requestWithURL: (NSURL *)URL
-	  cachePolicy: (NSURLRequestCachePolicy)cachePolicy
+          cachePolicy: (NSURLRequestCachePolicy)cachePolicy
       timeoutInterval: (NSTimeInterval)timeoutInterval;
 
 /**
@@ -283,9 +239,6 @@ typedef NSUInteger NSURLRequestCachePolicy;
 
 @end
 
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

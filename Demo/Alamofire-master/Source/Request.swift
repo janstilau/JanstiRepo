@@ -1,5 +1,22 @@
 import Foundation
 
+/*
+ open class DataRequest: Request {
+     // Contains stream (not to be confused with StreamRequest) and download progress methods.
+ }
+
+ open class DownloadRequest: Request {
+     // Contains download destination and options, resume data and download progress methods.
+ }
+
+ open class UploadRequest: DataRequest {
+     // Inherits all DataRequest APIs and also contains upload progress methods.
+ }
+
+ open class StreamRequest: Request {
+     // Only inherits Request APIs, there are no other custom APIs at this time.
+ }
+ */
 /// `Request` is the common superclass of all Alamofire request types and provides common state, delegate, and callback
 /// handling.
 public class Request {
@@ -41,6 +58,9 @@ public class Request {
     
     // MARK: - Initial State
     
+    /*
+     这些都是不可变的数据, 需要在 init 方法里面指定.
+     */
     /// `UUID` providing a unique identifier for the `Request`, used in the `Hashable` and `Equatable` conformances.
     public let id: UUID
     /// The serial queue for all internal async actions.
@@ -55,7 +75,9 @@ public class Request {
     public private(set) weak var delegate: RequestDelegate?
     
     // MARK: - Mutable State
-    
+    /*
+     所有的可变数据, 放到一个结构体里面.
+     */
     /// Type encapsulating all mutable state that may need to be accessed from anything other than the `underlyingQueue`.
     struct MutableState {
         /// State of the `Request`.
@@ -98,6 +120,10 @@ public class Request {
     @Protected
     fileprivate var mutableState = MutableState()
     
+    /*
+     虽然有 state 作为状态的标识.
+     但是, 这种标识状态的 get 方法, 可以让使用者更加的方便.
+     */
     /// `State` of the `Request`.
     public var state: State { mutableState.state }
     /// Returns whether `state` is `.initialized`.
@@ -111,46 +137,36 @@ public class Request {
     /// Returns whether `state` is `.finished`.
     public var isFinished: Bool { state == .finished }
     
+    /*
+     MutableState 里面存放的数据, 应该提供简便的方法, 让外界进行 get, set. 不过, 在类内部, 要转接到 MutableState 进行管理.
+     */
+    
     // MARK: Progress
     
-    /// Closure type executed when monitoring the upload or download progress of a request.
     public typealias ProgressHandler = (Progress) -> Void
-    
-    /// `Progress` of the upload of the body of the executed `URLRequest`. Reset to `0` if the `Request` is retried.
     public let uploadProgress = Progress(totalUnitCount: 0)
-    /// `Progress` of the download of any response data. Reset to `0` if the `Request` is retried.
     public let downloadProgress = Progress(totalUnitCount: 0)
-    /// `ProgressHandler` called when `uploadProgress` is updated, on the provided `DispatchQueue`.
+    
     fileprivate var uploadProgressHandler: (handler: ProgressHandler, queue: DispatchQueue)? {
         get { mutableState.uploadProgressHandler }
         set { mutableState.uploadProgressHandler = newValue }
     }
     
-    /// `ProgressHandler` called when `downloadProgress` is updated, on the provided `DispatchQueue`.
     fileprivate var downloadProgressHandler: (handler: ProgressHandler, queue: DispatchQueue)? {
         get { mutableState.downloadProgressHandler }
         set { mutableState.downloadProgressHandler = newValue }
     }
     
-    // MARK: Redirect Handling
-    
-    /// `RedirectHandler` set on the instance.
     public private(set) var redirectHandler: RedirectHandler? {
         get { mutableState.redirectHandler }
         set { mutableState.redirectHandler = newValue }
     }
     
-    // MARK: Cached Response Handling
-    
-    /// `CachedResponseHandler` set on the instance.
     public private(set) var cachedResponseHandler: CachedResponseHandler? {
         get { mutableState.cachedResponseHandler }
         set { mutableState.cachedResponseHandler = newValue }
     }
     
-    // MARK: URLCredential
-    
-    /// `URLCredential` used for authentication challenges. Created by calling one of the `authenticate` methods.
     public private(set) var credential: URLCredential? {
         get { mutableState.credential }
         set { mutableState.credential = newValue }
@@ -218,6 +234,12 @@ public class Request {
         set { mutableState.error = newValue }
     }
     
+/*
+     属性放上面, 方法放下面
+     Swift 的属性, 有着伴随着太多的方法.
+     所以, 使得属性部分也有很多代码. 不过, 总体上, 还是属性, 方法 上下放置的状态.
+*/
+    
     /// Default initializer for the `Request` superclass.
     ///
     /// - Parameters:
@@ -242,6 +264,10 @@ public class Request {
         self.delegate = delegate
     }
     
+    
+    /*
+     Request 类, 提供了各种 API 供外界使用, 改变自身的状态.
+     */
     // MARK: - Internal Event API
     
     // All API must be called from underlyingQueue.
@@ -633,7 +659,8 @@ public class Request {
             
             underlyingQueue.async { self.didCancel() }
             
-            guard let task = mutableState.tasks.last, task.state != .completed else {
+            guard let task = mutableState.tasks.last,
+                task.state != .completed else {
                 underlyingQueue.async { self.finish() }
                 return
             }
@@ -952,6 +979,24 @@ public protocol RequestDelegate: AnyObject {
 // MARK: - Subclasses
 
 // MARK: - DataRequest
+
+/*
+ 在 AFN 里面, 是根据下面的这个用于处理 Http 过程的交互.
+ @interface AFURLSessionManagerTaskDelegate : NSObject
+ - (instancetype)initWithTask:(NSURLSessionTask *)task;
+ @property (nonatomic, weak) AFURLSessionManager *manager;
+ @property (nonatomic, strong) NSMutableData *mutableData;
+ @property (nonatomic, strong) NSProgress *uploadProgress;
+ @property (nonatomic, strong) NSProgress *downloadProgress;
+ @property (nonatomic, copy) NSURL *downloadFileURL;
+ #if AF_CAN_INCLUDE_SESSION_TASK_METRICS
+ @property (nonatomic, strong) NSURLSessionTaskMetrics *sessionTaskMetrics;
+ #endif
+ @property (nonatomic, copy) AFURLSessionDownloadTaskDidFinishDownloadingBlock downloadTaskDidFinishDownloading;
+ @property (nonatomic, copy) AFURLSessionTaskProgressBlock uploadProgressBlock;
+ @property (nonatomic, copy) AFURLSessionTaskProgressBlock downloadProgressBlock;
+ @property (nonatomic, copy) AFURLSessionTaskCompletionHandler completionHandler;
+ */
 
 /// `Request` subclass which handles in-memory `Data` download using `URLSessionDataTask`.
 public class DataRequest: Request {

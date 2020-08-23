@@ -16,6 +16,7 @@ open class Session {
     /// Instance's `SessionDelegate`, which handles the `URLSessionDelegate` methods and `Request` interaction.
     public let delegate: SessionDelegate
     /// Root `DispatchQueue` for all internal callbacks and state update. **MUST** be a serial queue.
+    /// rootQueue 都是调用的 async
     public let rootQueue: DispatchQueue
     /// Value determining whether this instance automatically calls `resume()` on all created `Request`s.
     public let startRequestsImmediately: Bool
@@ -44,6 +45,10 @@ open class Session {
     /// Internal map between `Request`s and any `URLSessionTasks` that may be in flight for them.
     var requestTaskMap = RequestTaskMap()
     /// `Set` of currently active `Request`s.
+    /*
+     记录了当前正在请求的 request, 在 cancelAllRequests 函数中, 里面的每个 request 会调用 cancel 方法.
+     在 RequestDelegate 协议中, request cleanup 中, 会进行相应 request 的删除操作.
+     */
     var activeRequests: Set<Request> = []
     /// Completion events awaiting `URLSessionTaskMetrics`.
     var waitingCompletions: [URLSessionTask: () -> Void] = [:]
@@ -80,6 +85,9 @@ open class Session {
     ///                               `nil` by default.
     ///   - eventMonitors:            Additional `EventMonitor`s used by the instance. Alamofire always adds a
     ///                               `AlamofireNotifications` `EventMonitor` to the array passed here. `[]` by default.
+    /*
+     参数名和成员变量名相同是很常见的事情, 调用 self.name = name 这种写法, 是很常见的事情.
+     */
     public init(session: URLSession,
                 delegate: SessionDelegate,
                 rootQueue: DispatchQueue,
@@ -190,7 +198,8 @@ open class Session {
     /// - Parameters:
     ///   - queue:      `DispatchQueue` on which the completion handler is run. `.main` by default.
     ///   - completion: Closure to be called when all `Request`s have been cancelled.
-    public func cancelAllRequests(completingOnQueue queue: DispatchQueue = .main, completion: (() -> Void)? = nil) {
+    public func cancelAllRequests(completingOnQueue queue: DispatchQueue = .main,
+                                  completion: (() -> Void)? = nil) {
         rootQueue.async {
             self.activeRequests.forEach { $0.cancel() }
             queue.async { completion?() }
@@ -321,7 +330,8 @@ open class Session {
     ///   - interceptor: `RequestInterceptor` value to be used by the returned `DataRequest`. `nil` by default.
     ///
     /// - Returns:       The created `DataRequest`.
-    open func request(_ convertible: URLRequestConvertible, interceptor: RequestInterceptor? = nil) -> DataRequest {
+    open func request(_ convertible: URLRequestConvertible,
+                      interceptor: RequestInterceptor? = nil) -> DataRequest {
         let request = DataRequest(convertible: convertible,
                                   underlyingQueue: rootQueue,
                                   serializationQueue: serializationQueue,
@@ -330,7 +340,6 @@ open class Session {
                                   delegate: self)
         
         perform(request)
-        
         return request
     }
     
@@ -972,7 +981,10 @@ open class Session {
             self.requestQueue.async {
                 // Leaf types must come first, otherwise they will cast as their superclass.
                 switch request {
-                case let r as UploadRequest: self.performUploadRequest(r) // UploadRequest must come before DataRequest due to subtype relationship.
+                    /*
+                     因为 UploadRequest 是 DataRequest 的子类, 所以要在 DataRequest 之前进行判断.
+                     */
+                case let r as UploadRequest: self.performUploadRequest(r)
                 case let r as DataRequest: self.performDataRequest(r)
                 case let r as DownloadRequest: self.performDownloadRequest(r)
                 case let r as DataStreamRequest: self.performDataStreamRequest(r)
@@ -983,6 +995,9 @@ open class Session {
     }
     
     func performDataRequest(_ request: DataRequest) {
+        /*
+         dispatchPrecondition 的功能暂且搁置.
+         */
         dispatchPrecondition(condition: .onQueue(requestQueue))
         
         performSetupOperations(for: request, convertible: request.convertible)
@@ -1018,11 +1033,15 @@ open class Session {
         }
     }
     
-    func performSetupOperations(for request: Request, convertible: URLRequestConvertible) {
+    func performSetupOperations(for request: Request,
+                                convertible: URLRequestConvertible) {
         dispatchPrecondition(condition: .onQueue(requestQueue))
         
         let initialRequest: URLRequest
         
+        /*
+         如果, request 本身有问题的化, 那么是不会进行后续的 request 的真正请求的.
+         */
         do {
             initialRequest = try convertible.asURLRequest()
             try initialRequest.validate()

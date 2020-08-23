@@ -1,14 +1,15 @@
 import Foundation
 
 /*
- 之前用 NSDictionary <NSString *, NSString *> 表示 header, 现在, 专门有一个类, 来做相应逻辑的处理.
+ 之前用 NSDictionary <NSString *, NSString *> 表示 header, 在 Alamofire 里面, 专门有一个类, 来做相应逻辑的处理.
  之前的 header, 仅仅是在创建 HTTPRequest 的时候.
  for (NSString *headerField in headers.keyEnumerator) {
      [request addValue:headers[headerField] forHTTPHeaderField:headerField];
  }
  进行一次遍历, 将传入的 header, 添加到了 HTTPRequest 的 httpField 里面去了.
+ 对个各种特殊的 Header 里面的字段, 没有方法进行获取, 都是程序员手动获取该值然后输入到代码中.
  
- 在 AFN 里面, 没有对于 HttpHeader 的特殊处理. 所以的一切, 都是程序员, 通过 NSDictionary, 手动进行的处理.
+ Alamofire 的下面两个类, 有着专门的相关逻辑函数.
  */
 
 public struct HTTPHeaders {
@@ -67,7 +68,10 @@ public struct HTTPHeaders {
     }
     
     /*
-     将逻辑归并到一个函数内部.
+     基本上, 返回一个新值的函数, 都可以遵从一个逻辑.
+     self 的复制操作.
+     复制后的对象, 调用 mutating 方法, 改变自身的值.
+     返回这个已经进行了改变的复制后的对象.
      */
     public func sorted() -> HTTPHeaders {
         var headers = self
@@ -96,7 +100,6 @@ public struct HTTPHeaders {
     
     public var dictionary: [String: String] {
         let namesAndValues = headers.map { ($0.name, $0.value) }
-        
         return Dictionary(namesAndValues, uniquingKeysWith: { _, last in last })
     }
 }
@@ -148,9 +151,11 @@ extension HTTPHeaders: CustomStringConvertible {
 // MARK: - HTTPHeader
 /*
  本身, HttpHeader, 就是一个 pair 的概念.
- 值语义, 所有的存储, 在一个代码块里, 所有的对于 protocol 的适配, 在另外一个代码块里.
  */
-
+/*
+ 数据部分, designated Init 方法, 在一个代码区块里面.
+ 其他对于协议的适配部分, 放在了另外的区块里面.
+ */
 public struct HTTPHeader: Hashable {
     public let name: String
     public let value: String
@@ -164,6 +169,7 @@ public struct HTTPHeader: Hashable {
 }
 
 extension HTTPHeader: CustomStringConvertible {
+    // String 的插值技术, 让代码少了占位符的配置. 不过, 如何进行格式化输出是个问题.
     public var description: String {
         "\(name): \(value)"
     }
@@ -171,7 +177,6 @@ extension HTTPHeader: CustomStringConvertible {
 
 /*
  HTTPHeader 封装了常用的 HttpHeader 的 name 调用.
- AFN 中, HttpHeader 都是需要用户自己通过 NSDiction 自己去构建的.
  类的设计者, 主动提供相应的 API, 让数据更加安全.
  */
 extension HTTPHeader {
@@ -191,10 +196,9 @@ extension HTTPHeader {
         HTTPHeader(name: "Accept-Encoding", value: value)
     }
     
-    // 用户名密码就是 basic, 但是使用者不应该知道这些.
+    // 用户名密码就是 basic, 但是使用者不应该知道这些. 专门的方法, 隐藏这些细节.
     public static func authorization(username: String, password: String) -> HTTPHeader {
         let credential = Data("\(username):\(password)".utf8).base64EncodedString()
-        
         return authorization("Basic \(credential)")
     }
     
@@ -220,6 +224,9 @@ extension HTTPHeader {
     }
 }
 
+/*
+ 参数是外来值, 不能控制规格是否正确. 需要在程序内部, 进行 lowercased 的处理. 这些值都只存在函数内部, 不会影响到原始值.
+ */
 extension Array where Element == HTTPHeader {
     func index(of name: String) -> Int? {
         let lowercasedName = name.lowercased()
@@ -230,14 +237,14 @@ extension Array where Element == HTTPHeader {
 // MARK: - Defaults
 
 public extension HTTPHeaders {
+    /*
+     这里没有任何的方法调用, 都是获取的属性, 因为有着明确的类型, HTTPHeader 被省略, 直接.defaultAcceptEncoding 进行的值的获取.
+     */
     static let `default`: HTTPHeaders = [.defaultAcceptEncoding,
                                          .defaultAcceptLanguage,
                                          .defaultUserAgent]
 }
 
-/*
- 一些默认的 HttpHeader, 他们都是 static let 的, 都是会进行懒加载.
- */
 extension HTTPHeader {
     public static let defaultAcceptEncoding: HTTPHeader = {
         let encodings: [String]
@@ -246,7 +253,6 @@ extension HTTPHeader {
         } else {
             encodings = ["gzip", "deflate"]
         }
-        // 在 static 方法里面, 通过 .调用 ???
         return .acceptEncoding(encodings.qualityEncoded())
     }()
     
@@ -301,7 +307,7 @@ extension HTTPHeader {
 }
 
 /*
- 使用 Swift, 一定要熟悉以下的函数式写法, 虽然, 内部会有多次的迭代过程, 但是每个方法有着自己明确的任务, 让代码更加简练.
+ 一定要熟悉以下的函数式写法, 虽然, 内部会有多次的迭代过程, 但是每个方法有着自己明确的任务, 让代码更加简练.
  */
 extension Collection where Element == String {
     func qualityEncoded() -> String {
@@ -320,11 +326,12 @@ extension Collection where Element == String {
  */
 
 extension URLRequest {
-    /// Returns `allHTTPHeaderFields` as `HTTPHeaders`.
     public var headers: HTTPHeaders {
         /*
-         从这里我们可以看出来, init 方法, 不会在传入 self. 这和 oc 的 alloc, init 两步走的方案不同了.
-         而且, 有着多种 init 方法, 在这里也可以正常的被识别出来. 这也是因为 swift 的强类型的优势.
+         有着多种 init 方法, 在这里也可以正常的被识别出来. 这也是因为 swift 的强类型的优势.
+         这里这个 map, 不是 collection 的 map, 而是 Optional 的 map.
+         如果有值, 抽取值进行 HTTPHeaders 的初始化处理.
+         如果没有, 返回默认的数据.
          */
         get { allHTTPHeaderFields.map(HTTPHeaders.init) ?? HTTPHeaders() }
         set { allHTTPHeaderFields = newValue.dictionary }

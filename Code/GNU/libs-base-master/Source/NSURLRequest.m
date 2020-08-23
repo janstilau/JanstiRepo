@@ -1,27 +1,3 @@
-/* Implementation for NSURLRequest for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-   */ 
-
 #import "common.h"
 
 #define	EXPOSE_NSURLRequest_IVARS	1
@@ -31,267 +7,188 @@
 #import "Foundation/NSCoder.h"
 
 
-// Internal data storage
-typedef struct {
-  NSData			*body;
-  NSInputStream			*bodyStream;
-  NSString			*method;
-  NSMutableDictionary		*headers;
-  BOOL				shouldHandleCookies;
-  BOOL                          debug;
-  NSURL				*URL;
-  NSURL				*mainDocumentURL;
-  NSURLRequestCachePolicy	cachePolicy;
-  NSTimeInterval		timeoutInterval;
-  NSMutableDictionary		*properties;
-} Internal;
- 
-/* Defines to get easy access to internals from mutable/immutable
- * versions of the class and from categories.
- */
-#define	this	((Internal*)(self->_NSURLRequestInternal))
-#define	inst	((Internal*)(((NSURLRequest*)o)->_NSURLRequestInternal))
-
 @interface	_GSMutableInsensitiveDictionary : NSMutableDictionary
 @end
 
 @implementation	NSURLRequest
 
-+ (id) allocWithZone: (NSZone*)z
++ (id) requestWithURL: (NSURL *)URL
 {
-  NSURLRequest	*o = [super allocWithZone: z];
-
-  if (o != nil)
-    {
-      o->_NSURLRequestInternal = NSZoneCalloc(z, 1, sizeof(Internal));
-    }
-  return o;
+    return [self requestWithURL: URL
+                    cachePolicy: NSURLRequestUseProtocolCachePolicy
+                timeoutInterval: 60.0];
 }
 
 + (id) requestWithURL: (NSURL *)URL
-{
-  return [self requestWithURL: URL
-		  cachePolicy: NSURLRequestUseProtocolCachePolicy
-	      timeoutInterval: 60.0];
-}
-
-+ (id) requestWithURL: (NSURL *)URL
-	  cachePolicy: (NSURLRequestCachePolicy)cachePolicy
+          cachePolicy: (NSURLRequestCachePolicy)cachePolicy
       timeoutInterval: (NSTimeInterval)timeoutInterval
 {
-  NSURLRequest	*o = [[self class] allocWithZone: NSDefaultMallocZone()];
-
-  o = [o initWithURL: URL
-	 cachePolicy: cachePolicy
-     timeoutInterval: timeoutInterval];
-  return AUTORELEASE(o);
+    NSURLRequest	*o = [[self class] allocWithZone: NSDefaultMallocZone()];
+    
+    o = [o initWithURL: URL
+           cachePolicy: cachePolicy
+       timeoutInterval: timeoutInterval];
+    return AUTORELEASE(o);
 }
 
 - (NSURLRequestCachePolicy) cachePolicy
 {
-  return this->cachePolicy;
-}
-
-- (id) copyWithZone: (NSZone*)z
-{
-  NSURLRequest	*o;
-
-  if (NSShouldRetainWithZone(self, z) == YES
-    && [self isKindOfClass: [NSMutableURLRequest class]] == NO)
-    {
-      o = RETAIN(self);
-    }
-  else
-    {
-      o = [[self class] allocWithZone: z];
-      o = [o initWithURL: [self URL]
-	     cachePolicy: [self cachePolicy]
-	 timeoutInterval: [self timeoutInterval]];
-      if (o != nil)
-        {
-	  inst->properties = [this->properties mutableCopy];
-	  ASSIGN(inst->mainDocumentURL, this->mainDocumentURL);
-	  ASSIGN(inst->body, this->body);
-	  ASSIGN(inst->bodyStream, this->bodyStream);
-	  ASSIGN(inst->method, this->method);
-	  inst->shouldHandleCookies = this->shouldHandleCookies;
-	  inst->debug = this->debug;
-          inst->headers = [this->headers mutableCopy];
-	}
-    }
-  return o;
+    return self->cachePolicy;
 }
 
 - (void) dealloc
 {
-  if (this != 0)
+    if (self != 0)
     {
-      RELEASE(this->body);
-      RELEASE(this->bodyStream);
-      RELEASE(this->method);
-      RELEASE(this->URL);
-      RELEASE(this->mainDocumentURL);
-      RELEASE(this->properties);
-      RELEASE(this->headers);
-      NSZoneFree([self zone], this);
+        RELEASE(self->body);
+        RELEASE(self->bodyStream);
+        RELEASE(self->method);
+        RELEASE(self->URL);
+        RELEASE(self->mainDocumentURL);
+        RELEASE(self->properties);
+        RELEASE(self->headers);
+        NSZoneFree([self zone], self);
     }
-  [super dealloc];
+    [super dealloc];
 }
 
 - (NSString*) description
 {
-  return [NSString stringWithFormat: @"<%@ %@>",
-    NSStringFromClass([self class]), [[self URL] absoluteString]];
-}
-
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-// FIXME
-  if ([aCoder allowsKeyedCoding])
-    {
-    }
-  else
-    {
-    }
-}
-
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-// FIXME
-  if ([aCoder allowsKeyedCoding])
-    {
-    }
-  else
-    {
-    }
-  return self;
+    return [NSString stringWithFormat: @"<%@ %@>",
+            NSStringFromClass([self class]), [[self URL] absoluteString]];
 }
 
 - (NSUInteger) hash
 {
-  return [this->URL hash];
+    return [self->URL hash];
 }
 
 - (id) init
 {
-  return [self initWithURL: nil];
+    return [self initWithURL: nil];
 }
 
+/*
+ 简化版本的 init 方法, 就是提供了默认值, 然后调用 designatedInit 方法.
+ */
 - (id) initWithURL: (NSURL *)URL
 {
-  return [self initWithURL: URL
-	       cachePolicy: NSURLRequestUseProtocolCachePolicy
-	   timeoutInterval: 60.0];
+    return [self initWithURL: URL
+                 cachePolicy: NSURLRequestUseProtocolCachePolicy
+             timeoutInterval: 60.0];
 }
 
 - (id) initWithURL: (NSURL *)URL
        cachePolicy: (NSURLRequestCachePolicy)cachePolicy
    timeoutInterval: (NSTimeInterval)timeoutInterval
 {
-  if ([URL isKindOfClass: [NSURL class]] == NO)
+    if ([URL isKindOfClass: [NSURL class]] == NO)
     {
-      URL = nil;
+        URL = nil;
     }
-  if ((self = [super init]) != nil)
+    if ((self = [super init]) != nil)
     {
-      this->URL = RETAIN(URL);
-      this->cachePolicy = cachePolicy;
-      this->timeoutInterval = timeoutInterval;
-      this->mainDocumentURL = nil;
-      this->method = @"GET";
-      this->shouldHandleCookies = YES;
+        self->URL = RETAIN(URL);
+        self->cachePolicy = cachePolicy;
+        self->timeoutInterval = timeoutInterval;
+        self->mainDocumentURL = nil;
+        self->method = @"GET";
+        self->shouldHandleCookies = YES;
     }
-  return self;
+    return self;
 }
 
-- (BOOL) isEqual: (id)o
+/*
+ isEqual 就是一个个的比较而已.
+ */
+- (BOOL) isEqual: (NSURLRequest *)o
 {
-  if ([o isKindOfClass: [NSURLRequest class]] == NO)
+    if ([o isKindOfClass: [NSURLRequest class]] == NO)
     {
-      return NO;
+        return NO;
     }
-  if (this->URL != inst->URL
-    && [this->URL isEqual: inst->URL] == NO)
+    if (self->URL != o->URL
+        && [self->URL isEqual: o->URL] == NO)
     {
-      return NO;
+        return NO;
     }
-  if (this->mainDocumentURL != inst->mainDocumentURL
-    && [this->mainDocumentURL isEqual: inst->mainDocumentURL] == NO)
+    if (self->mainDocumentURL != o->mainDocumentURL
+        && [self->mainDocumentURL isEqual: o->mainDocumentURL] == NO)
     {
-      return NO;
+        return NO;
     }
-  if (this->method != inst->method
-    && [this->method isEqual: inst->method] == NO)
+    if (self->method != o->method
+        && [self->method isEqual: o->method] == NO)
     {
-      return NO;
+        return NO;
     }
-  if (this->body != inst->body
-    && [this->body isEqual: inst->body] == NO)
+    if (self->body != o->body
+        && [self->body isEqual: o->body] == NO)
     {
-      return NO;
+        return NO;
     }
-  if (this->bodyStream != inst->bodyStream
-    && [this->bodyStream isEqual: inst->bodyStream] == NO)
+    if (self->bodyStream != o->bodyStream
+        && [self->bodyStream isEqual: o->bodyStream] == NO)
     {
-      return NO;
+        return NO;
     }
-  if (this->properties != inst->properties
-    && [this->properties isEqual: inst->properties] == NO)
+    if (self->properties != o->properties
+        && [self->properties isEqual: o->properties] == NO)
     {
-      return NO;
+        return NO;
     }
-  if (this->headers != inst->headers
-    && [this->headers isEqual: inst->headers] == NO)
+    if (self->headers != o->headers
+        && [self->headers isEqual: o->headers] == NO)
     {
-      return NO;
+        return NO;
     }
-  return YES;
+    return YES;
 }
 
 - (NSURL *) mainDocumentURL
 {
-  return this->mainDocumentURL;
+    return self->mainDocumentURL;
 }
 
 - (id) mutableCopyWithZone: (NSZone*)z
 {
-  NSMutableURLRequest	*o;
-
-  o = [NSMutableURLRequest allocWithZone: z];
-  o = [o initWithURL: [self URL]
-	 cachePolicy: [self cachePolicy]
-     timeoutInterval: [self timeoutInterval]];
-  if (o != nil)
+    NSMutableURLRequest	*o;
+    
+    o = [NSMutableURLRequest allocWithZone: z];
+    o = [o initWithURL: [self URL]
+           cachePolicy: [self cachePolicy]
+       timeoutInterval: [self timeoutInterval]];
+    if (o != nil)
     {
-      [o setMainDocumentURL: this->mainDocumentURL];
-      inst->properties = [this->properties mutableCopy];
-      ASSIGN(inst->mainDocumentURL, this->mainDocumentURL);
-      ASSIGN(inst->body, this->body);
-      ASSIGN(inst->bodyStream, this->bodyStream);
-      ASSIGN(inst->method, this->method);
-      inst->shouldHandleCookies = this->shouldHandleCookies;
-      inst->debug = this->debug;
-      inst->headers = [this->headers mutableCopy];
+        [o setMainDocumentURL: self->mainDocumentURL];
+        o->properties = [self->properties mutableCopy];
+        ASSIGN(o->mainDocumentURL, self->mainDocumentURL);
+        ASSIGN(o->body, self->body);
+        ASSIGN(o->bodyStream, self->bodyStream);
+        ASSIGN(o->method, self->method);
+        o->shouldHandleCookies = self->shouldHandleCookies;
+        o->debug = self->debug;
+        o->headers = [self->headers mutableCopy];
     }
-  return o;
+    return o;
 }
 
 - (int) setDebug: (int)flag
 {
-  int   old = this->debug;
-
-  this->debug = flag ? YES : NO;
-  return old;
+    int   old = self->debug;
+    
+    self->debug = flag ? YES : NO;
+    return old;
 }
 
 - (NSTimeInterval) timeoutInterval
 {
-  return this->timeoutInterval;
+    return self->timeoutInterval;
 }
 
 - (NSURL *) URL
 {
-  return this->URL;
+    return self->URL;
 }
 
 @end
@@ -301,66 +198,70 @@ typedef struct {
 
 - (void) setCachePolicy: (NSURLRequestCachePolicy)cachePolicy
 {
-  this->cachePolicy = cachePolicy;
+    self->cachePolicy = cachePolicy;
 }
 
 - (void) setMainDocumentURL: (NSURL *)URL
 {
-  ASSIGN(this->mainDocumentURL, URL);
+    ASSIGN(self->mainDocumentURL, URL);
 }
 
 - (void) setTimeoutInterval: (NSTimeInterval)seconds
 {
-  this->timeoutInterval = seconds;
+    self->timeoutInterval = seconds;
 }
 
 - (void) setURL: (NSURL *)URL
 {
-  ASSIGN(this->URL, URL);
+    ASSIGN(self->URL, URL);
 }
 
 @end
 
 @implementation NSURLRequest (NSHTTPURLRequest)
 
+/*
+ 没有把原始的数据, 直接暴露出去, 而是进行了一次 copy 操作.
+ */
 - (NSDictionary *) allHTTPHeaderFields
 {
-  NSDictionary	*fields;
-
-  if (this->headers == nil)
+    NSDictionary	*fields;
+    
+    if (self->headers == nil)
     {
-      fields = [NSDictionary dictionary];
+        fields = [NSDictionary dictionary];
     }
-  else
+    else
     {
-      fields = [NSDictionary dictionaryWithDictionary: this->headers];
+        fields = [NSDictionary dictionaryWithDictionary: self->headers];
     }
-  return fields;
+    return fields;
 }
+
 
 - (NSData *) HTTPBody
 {
-  return this->body;
+    return self->body;
 }
 
 - (NSInputStream *) HTTPBodyStream
 {
-  return this->bodyStream;
+    return self->bodyStream;
 }
 
 - (NSString *) HTTPMethod
 {
-  return this->method;
+    return self->method;
 }
 
 - (BOOL) HTTPShouldHandleCookies
 {
-  return this->shouldHandleCookies;
+    return self->shouldHandleCookies;
 }
 
 - (NSString *) valueForHTTPHeaderField: (NSString *)field
 {
-  return [this->headers objectForKey: field];
+    return [self->headers objectForKey: field];
 }
 
 @end
@@ -371,68 +272,68 @@ typedef struct {
 
 - (void) addValue: (NSString *)value forHTTPHeaderField: (NSString *)field
 {
-  NSString	*old = [self valueForHTTPHeaderField: field];
-
-  if (old != nil)
+    NSString	*old = [self valueForHTTPHeaderField: field];
+    
+    if (old != nil)
     {
-      value = [old stringByAppendingFormat: @",%@", value];
+        value = [old stringByAppendingFormat: @",%@", value];
     }
-  [self setValue: value forHTTPHeaderField: field];
+    [self setValue: value forHTTPHeaderField: field];
 }
 
 - (void) setAllHTTPHeaderFields: (NSDictionary *)headerFields
 {
-  NSEnumerator	*enumerator = [headerFields keyEnumerator];
-  NSString	*field;
-
-  while ((field = [enumerator nextObject]) != nil)
+    NSEnumerator	*enumerator = [headerFields keyEnumerator];
+    NSString	*field;
+    
+    while ((field = [enumerator nextObject]) != nil)
     {
-      id	value = [headerFields objectForKey: field];
-
-      if ([value isKindOfClass: [NSString class]] == YES)
+        id	value = [headerFields objectForKey: field];
+        
+        if ([value isKindOfClass: [NSString class]] == YES)
         {
-	  [self setValue: (NSString*)value forHTTPHeaderField: field];
-	}
+            [self setValue: (NSString*)value forHTTPHeaderField: field];
+        }
     }
 }
 
 - (void) setHTTPBodyStream: (NSInputStream *)inputStream
 {
-  DESTROY(this->body);
-  ASSIGN(this->bodyStream, inputStream);
+    DESTROY(self->body);
+    ASSIGN(self->bodyStream, inputStream);
 }
 
 - (void) setHTTPBody: (NSData *)data
 {
-  DESTROY(this->bodyStream);
-  ASSIGNCOPY(this->body, data);
+    DESTROY(self->bodyStream);
+    ASSIGNCOPY(self->body, data);
 }
 
 - (void) setHTTPMethod: (NSString *)method
 {
-/* NB. I checked MacOS-X 4.2, and this method actually lets you set any
- * copyable value (including non-string classes), but setting nil is
- * equivalent to resetting to the default value of 'GET'
- */
-  if (method == nil)
+    /* NB. I checked MacOS-X 4.2, and self method actually lets you set any
+     * copyable value (including non-string classes), but setting nil is
+     * equivalent to resetting to the default value of 'GET'
+     */
+    if (method == nil)
     {
-      method = @"GET";
+        method = @"GET";
     }
-  ASSIGNCOPY(this->method, method);
+    ASSIGNCOPY(self->method, method);
 }
 
 - (void) setHTTPShouldHandleCookies: (BOOL)should
 {
-  this->shouldHandleCookies = should;
+    self->shouldHandleCookies = should;
 }
 
 - (void) setValue: (NSString *)value forHTTPHeaderField: (NSString *)field
 {
-  if (this->headers == nil)
+    if (self->headers == nil)
     {
-      this->headers = [_GSMutableInsensitiveDictionary new];
+        self->headers = [_GSMutableInsensitiveDictionary new];
     }
-  [this->headers setObject: value forKey: field];
+    [self->headers setObject: value forKey: field];
 }
 
 @end
@@ -441,20 +342,20 @@ typedef struct {
 
 - (BOOL) _debug
 {
-  return this->debug;
+    return self->debug;
 }
 
 - (id) _propertyForKey: (NSString*)key
 {
-  return [this->properties objectForKey: key];
+    return [self->properties objectForKey: key];
 }
 
 - (void) _setProperty: (id)value forKey: (NSString*)key
 {
-  if (this->properties == nil)
+    if (self->properties == nil)
     {
-      this->properties = [NSMutableDictionary new];
-      [this->properties setObject: value forKey: key];
+        self->properties = [NSMutableDictionary new];
+        [self->properties setObject: value forKey: key];
     }
 }
 @end

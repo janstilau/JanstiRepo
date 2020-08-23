@@ -8,7 +8,8 @@ public extension URLRequest {
     }
     
     func validate() throws {
-        if method == .get, let bodyData = httpBody {
+        if method == .get,
+            let bodyData = httpBody {
             throw AFError.urlRequestValidationFailed(reason: .bodyDataInGETRequest(bodyData))
         }
     }

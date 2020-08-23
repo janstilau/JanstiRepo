@@ -4,7 +4,7 @@ import Foundation
 public typealias Parameters = [String: Any]
 
 /*
- 这个类的主要作用, 就是将 params 序列化到 request 里面去.
+ 外界, 只能调用 encode 函数.
  */
 public protocol ParameterEncoding {
     func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest
@@ -13,23 +13,23 @@ public protocol ParameterEncoding {
 // MARK: -
 
 /*
- 最常见的一种, 序列化器
+ 最常见的一种, 将 Parameters 附加到 HTTP 的 body 或者 URL 中.
  */
 public struct URLEncoding: ParameterEncoding {
     // MARK: Helper Types
     
-    /// Defines whether the url-encoded query string is applied to the existing query string or HTTP body of the
-    /// resulting URL request.
     public enum Destination {
         /*
-         通过 request 的 http method 进行判断. 感觉这是最合理的方式啊.
+         通过 request 的 http method 进行判断. 这是默认的方式.
          */
         case methodDependent
         /// Sets or appends encoded query string result to existing query string.
         case queryString
         /// Sets encoded query string result as the HTTP body of the URL request.
         case httpBody
-        
+        /*
+         URL 中拼接 params 的判断, 放到 Enum 里面.
+         */
         func encodesParametersInURL(for method: HTTPMethod) -> Bool {
             switch self {
             case .methodDependent: return [.get, .head, .delete].contains(method)
@@ -39,13 +39,11 @@ public struct URLEncoding: ParameterEncoding {
         }
     }
     
-    /// Configures how `Array` parameters are encoded.
     public enum ArrayEncoding {
         /// An empty set of square brackets is appended to the key for every value. This is the default behavior.
         case brackets
         /// No brackets are appended. The key is encoded as is.
         case noBrackets
-        
         func encode(key: String) -> String {
             switch self {
             case .brackets:
@@ -75,13 +73,11 @@ public struct URLEncoding: ParameterEncoding {
     
     // MARK: Properties
     
-    /// Returns a default `URLEncoding` instance with a `.methodDependent` destination.
+    /*
+     三种不同的 encoding 方式. 通过类方法直接进行获取.
+     */
     public static var `default`: URLEncoding { URLEncoding() }
-    
-    /// Returns a `URLEncoding` instance with a `.queryString` destination.
     public static var queryString: URLEncoding { URLEncoding(destination: .queryString) }
-    
-    /// Returns a `URLEncoding` instance with an `.httpBody` destination.
     public static var httpBody: URLEncoding { URLEncoding(destination: .httpBody) }
     
     /*
@@ -99,9 +95,10 @@ public struct URLEncoding: ParameterEncoding {
     
     // MARK: Initialization
     
-    public init(destination: Destination = .methodDependent, // 默认, 也是通过 HttpMethod 分辨, 进行 params 的位置的确定.
-                arrayEncoding: ArrayEncoding = .brackets,
-                boolEncoding: BoolEncoding = .numeric) {
+    //
+    public init(destination: Destination = .methodDependent,
+        arrayEncoding: ArrayEncoding = .brackets,
+        boolEncoding: BoolEncoding = .numeric) {
         self.destination = destination
         self.arrayEncoding = arrayEncoding
         self.boolEncoding = boolEncoding
@@ -109,6 +106,9 @@ public struct URLEncoding: ParameterEncoding {
     
     // MARK: Encoding
     
+    /*
+     对于协议的实现.
+     */
     public func encode(_ urlRequest: URLRequestConvertible,
                        with parameters: Parameters?) throws -> URLRequest {
         var urlRequest = try urlRequest.asURLRequest()

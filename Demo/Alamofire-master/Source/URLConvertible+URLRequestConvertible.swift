@@ -56,13 +56,24 @@ extension URLRequest: URLRequestConvertible {
 
 /*
  extension 里面定义的, 一定是 convenience init 方法. 需要调用其他的 init 方法, 来进行最终的初始化操作.
+ 
+ URLConvertible 的真正使用, 也是在这里, 只有这里调用了 .asURL()
+ HTTPHeaders 的真正使用, 也是在这里, 只有这里调用了 .dictionary
+ HTTPMethod 的真正使用, 也是在这里, 只有这里调用了 .rawValue
+ 
+ 以上三种, 体现了三种不同的, 让代码更加稳健的途径.
+ URLConvertible, 面向抽象编程, 只要传递过来的对象, 符合协议蓝本就可以.
+ HTTPHeaders, 一个特殊的类, 将对于 httpHeader 的操作, 都封装到这个类里面, 提供一个 get 函数, 方便最后真正使用.
+ HTTPMethod, 使用类的静态方法, 进行值的获取, 避免用户输入行为. HTTPMethod 本身也是 RawRepresentable 抽象的实现.
+ 
  */
 extension URLRequest {
-    public init(url: URLConvertible, method: HTTPMethod, headers: HTTPHeaders? = nil) throws {
+    public init(url: URLConvertible,
+                method: HTTPMethod,
+                headers: HTTPHeaders? = nil) throws {
         let url = try url.asURL()
         
         self.init(url: url)
-        
         httpMethod = method.rawValue
         allHTTPHeaderFields = headers?.dictionary
     }

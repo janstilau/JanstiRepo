@@ -11,8 +11,13 @@ extension Lock {
     /// - Parameter closure: The closure to run.
     ///
     /// - Returns:           The value the closure generated.
+    /*
+     Defer 的用处在这里体现了.
+     用生命周期来进行资源的管理.
+     */
     func around<T>(_ closure: () -> T) -> T {
-        lock(); defer { unlock() }
+        lock();
+        defer { unlock() }
         return closure()
     }
     
@@ -20,7 +25,8 @@ extension Lock {
     ///
     /// - Parameter closure: The closure to run.
     func around(_ closure: () -> Void) {
-        lock(); defer { unlock() }
+        lock();
+        defer { unlock() }
         closure()
     }
 }
