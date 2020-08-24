@@ -15,6 +15,9 @@ inline void push_heap(RandomAccessIterator first, RandomAccessIterator last) {
     __push_heap_aux(first, last, distance_type(first), value_type(first));
 }
 
+/*
+ compare 可以用于配置是否是最大堆, 最小堆.
+ */
 template <class RandomAccessIterator, class Compare>
 inline void push_heap(RandomAccessIterator first, RandomAccessIterator last,
                       Compare comp) {
@@ -23,7 +26,9 @@ inline void push_heap(RandomAccessIterator first, RandomAccessIterator last,
 
 template <class RandomAccessIterator, class Distance, class T>
 inline void __push_heap_aux(RandomAccessIterator first,
-                            RandomAccessIterator last, Distance*, T*) {
+                            RandomAccessIterator last,
+                            Distance*,
+                            T*) {
     __push_heap(first, Distance((last - first) - 1), Distance(0),
                 T(*(last - 1)));
 }
@@ -32,8 +37,11 @@ template <class RandomAccessIterator, class Compare, class Distance, class T>
 inline void __push_heap_aux(RandomAccessIterator first,
                             RandomAccessIterator last,
                             Compare comp, // 自定义比较函数
-                            Distance*, T*) {
-    __push_heap(first, Distance((last - first) - 1), Distance(0),
+                            Distance*,
+                            T*) {
+    __push_heap(first,
+                Distance((last - first) - 1),
+                Distance(0),
                 T(*(last - 1)),
                 comp);
 }
@@ -42,8 +50,11 @@ inline void __push_heap_aux(RandomAccessIterator first,
  append 元素之后, 从叶子节点开始进行堆化.
  */
 template <class RandomAccessIterator, class Distance, class T>
-void __push_heap(RandomAccessIterator first, Distance holeIndex,
-                 Distance topIndex, T value) {
+void __push_heap(RandomAccessIterator first,
+                 Distance holeIndex,
+                 Distance topIndex,
+                 T value) {
+    
     Distance parent = (holeIndex - 1) / 2;
     while (holeIndex > topIndex && *(first + parent) < value) {
         *(first + holeIndex) = *(first + parent);
@@ -73,7 +84,6 @@ template <class RandomAccessIterator>
 inline void pop_heap(RandomAccessIterator first, RandomAccessIterator last) {
     __pop_heap_aux(first, last, value_type(first));
 }
-
 
 template <class RandomAccessIterator, class Compare>
 inline void pop_heap(RandomAccessIterator first, RandomAccessIterator last,
