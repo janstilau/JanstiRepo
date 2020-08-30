@@ -11,6 +11,9 @@
 /*
  整体的框架, 还是这样的, 而下面的各种, 按照不同的条件进行搜索, 主要还是在各个位置, 安插合适的判断条件.
  在合适的位置安插判断条件, 而不更改主流程, 让代码更加的清晰.
+ 
+ 二分查找, 最终一定会变为 left == right. 二分查找的范围就是 left, right, 前闭后闭.
+ 二分查找最后, 一定是 left 就是应该插入的位置.
  */
 int binarySearch(int datas[], int n, int value) {
     if (!datas) { return -1;}
@@ -35,7 +38,7 @@ int binarySearchRecuriveImp(int datas[], int left, int right, int value) {
     if (left < right) { return -1; }
     int mid = left + (right-left)/2;
     /*
-     这里, 不应该用 guard 处理. 到处使用 guard 处理逻辑, 反而打乱了清晰的处理流程.
+     达到的效果, 和非递归的版本是一样的, 就是缩减搜查的范围.
     */
     if (datas[mid] == value) {
         return mid;
@@ -68,6 +71,7 @@ int binarySearchFirst(int datas[], int n, int value) {
             left = mid + 1;
         } else {
             /*
+             如果, 已经是第一个元素了, 那么一定是第一个元素.
              查找第一个元素, 那么如果 mid 左侧的元素, 还是 value 的值的话, 第一个元素的位置一定在 mid 的左侧.
              */
             if (mid == 0 || datas[mid-1] != value) { return mid;}
@@ -92,7 +96,8 @@ int binarySearchLast(int datas[], int n, int value) {
             left = mid + 1;
         } else {
             /*
-            查找第一个元素, 那么如果 mid 右侧的元素, 还是 value 的值的话, 第一个元素的位置一定在 mid 的右侧.
+             
+             查找第一个元素, 那么如果 mid 右侧的元素, 还是 value 的值的话, 第一个元素的位置一定在 mid 的右侧.
             */
             if (mid == n-1 || datas[mid+1] != value) { return mid;}
             left = mid+1;

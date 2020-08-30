@@ -19,6 +19,11 @@ struct MyStr {
 
 bool strAssign(MyStr &str, char *ch) {
     if (!ch) { return false; }
+    /*
+     有着外部存储的类, 要在赋值操作的时候, 将自身的资源进行释放.
+     这里需要判断, 如果外部资源, 就是内部资源, 那么直接 return.
+     */
+    if (str.ch == ch) { return true; }
     if (str.ch) {
         free(str.ch);
         str.ch = nullptr;

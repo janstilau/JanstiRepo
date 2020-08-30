@@ -99,8 +99,12 @@ void merge(int data[], int begin, int middle, int end, int mergeData[]) {
     }
     memcpy(data+begin, mergeData+begin, (end-begin+1) * sizeof(int));
     // 这里是个大坑, Both objects are reinterpreted as arrays of unsigned char. 所以这里要写清楚 size 是多少
+    // 这里, 实际开发过程中, 直接写 int 的 for 循环就好了, memcpy 需要记忆的东西太多了.
 }
 
+/*
+ 归并排序, 数据的改变是在 merge 阶段完成的.
+ */
 void mergeSortImp(int data[], int begin, int end, int mergeData[]) {
     if (begin >= end) { return; }
     int middle = (begin+end) / 2;
@@ -117,16 +121,20 @@ void mergeSort(int data[], int n, int mergeData[]) {
     mergeSortImp(data, 0, n, mergeData);
 }
 
-int partion(int data[], int begin, int end) {
+/*
+ 这里, 选择 pivot 的程序, 可以采取下面的 leetcode 的写法, 随机选择, 然后交换到 left 的位置.
+ 之后的处理过程, 按照下面的写法, 先右后左, 这已经是脑中的记忆了.
+ */
+int partition(int data[], int begin, int end) {
     if (begin >= end) { return end; }
     int left = begin + 1;
     int right = end;
-    int middle = data[begin];
+    int pivotValue = data[begin];
     while (left < right) {
-        while (data[right] > middle && left < right) {
+        while (data[right] > pivotValue && left < right) {
             --right;
         }
-        while (data[left] <= middle && left < right) {
+        while (data[left] <= pivotValue && left < right) {
             ++left;
         }
         int temp = data[left];
@@ -142,19 +150,19 @@ int partion(int data[], int begin, int end) {
 
 void quickSortImp(int data[], int begin, int end) {
     if (begin>=end){return;}
-    int flag = partion(data, begin, end);
+    int pivotIndex = partition(data, begin, end);
     for (int i = 0; i < 20; ++i) {
         std::cout << data[i] << " " ;
     }
     std::cout << '\n';
-    quickSortImp(data, begin, flag-1);
-    quickSortImp(data, flag+1, end);
+    quickSortImp(data, begin, pivotIndex-1);
+    quickSortImp(data, pivotIndex+1, end);
 }
 
 void quickSort(int data[], int n) {
     if (!data) { return; }
     if (n < 2) { return; }
-    int flag = partion(data, 0, n-1);
+    int flag = partition(data, 0, n-1);
     quickSortImp(data, 0, flag-1);
     quickSortImp(data, flag+1, n-1);
 }
@@ -173,3 +181,46 @@ int main(int argc, const char * argv[]) {
     }
     return 0;
 }
+
+
+/*
+ Leetcode 中的快排.
+ */
+class partitionSolution {
+    int partition(vector<int>& nums, int left, int right) {
+        int pivot = nums[r];
+        int i = left - 1;
+        for (int j = left; j <= right - 1; ++j) {
+            if (nums[j] <= pivot) {
+                i = i + 1;
+                swap(nums[i], nums[j]);
+            }
+        }
+        swap(nums[i + 1], nums[r]);
+        return i + 1;
+    }
+    /*
+     这里, 随意取了一个数作为 pivot, 然后进行了交换, 让这个数, 变为边界值.
+     */
+    int randomized_partition(vector<int>& nums, int l, int r) {
+        int i = rand() % (r - l + 1) + l; // 随机选一个作为我们的主元
+        swap(nums[r], nums[i]);
+        return partition(nums, l, r);
+    }
+    
+    void randomized_quicksort(vector<int>& nums, int l, int r) {
+        if (l < r){
+            int pos = randomized_partition(nums, l, r);
+            randomized_quicksort(nums, l, pos - 1);
+            randomized_quicksort(nums, pos + 1, r);
+        }
+    }
+    
+public:
+    vector<int> sortArray(vector<int>& nums) {
+        srand((unsigned)time(NULL));
+        randomized_quicksort(nums, 0, (int)nums.size() - 1);
+        return nums;
+    }
+};
+
