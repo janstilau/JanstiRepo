@@ -287,11 +287,12 @@ BOOL protocol_conformsToProtocol(Protocol *p1, Protocol *p2)
 {
 	if (NULL == p1 || NULL == p2) { return NO; }
 
-	// A protocol trivially conforms to itself
+	// 所以, 其实就是名字的比较而已
 	if (strcmp(p1->name, p2->name) == 0) { return YES; }
 
-	for (struct objc_protocol_list *list = p1->protocol_list ;
-		list != NULL ; list = list->next)
+	for (struct objc_protocol_list *list = p1->protocol_list;
+         list != NULL ;
+         list = list->next)
 	{
 		for (int i=0 ; i<list->count ; i++)
 		{
@@ -314,7 +315,8 @@ BOOL class_conformsToProtocol(Class cls, Protocol *protocol)
 	for ( ; Nil != cls ; cls = class_getSuperclass(cls))
 	{
 		for (struct objc_protocol_list *protocols = cls->protocols;
-			protocols != NULL ; protocols = protocols->next)
+             protocols != NULL ;
+             protocols = protocols->next)
 		{
 			for (int i=0 ; i<protocols->count ; i++)
 			{

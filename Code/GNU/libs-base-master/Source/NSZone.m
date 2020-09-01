@@ -1798,9 +1798,10 @@ NSRecycleZone (NSZone *zone)
 void
 NSZoneFree (NSZone *zone, void *ptr)
 {
-  if (!zone)
-    zone = NSDefaultMallocZone();
-  (zone->free)(zone, ptr);
+    if (!zone){
+        zone = NSDefaultMallocZone();
+    }
+    (zone->free)(zone, ptr);
 }
 
 BOOL

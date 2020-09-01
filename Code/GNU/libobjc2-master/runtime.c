@@ -806,7 +806,8 @@ Class object_getClass(id obj)
 {
     CHECK_ARG(obj);
     Class isa = classForObject(obj);
-    while ((Nil != isa) && objc_test_class_flag(isa, objc_class_flag_hidden_class))
+    while ((Nil != isa) &&
+           objc_test_class_flag(isa, objc_class_flag_hidden_class))
     {
         isa = isa->super_class;
     }

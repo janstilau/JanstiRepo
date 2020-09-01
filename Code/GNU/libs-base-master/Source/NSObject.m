@@ -91,6 +91,7 @@ GS_ROOT_CLASS @interface	NSZombie
 {
     Class	isa;
 }
+
 - (Class) class;
 - (void) forwardInvocation: (NSInvocation*)anInvocation;
 - (NSMethodSignature*) methodSignatureForSelector: (SEL)aSelector;
@@ -108,6 +109,9 @@ GS_ROOT_CLASS @interface	NSZombie
  */
 static pthread_mutex_t  allocationLock = PTHREAD_MUTEX_INITIALIZER;
 
+/*
+ 僵尸对象相关的设置.
+ */
 BOOL	NSZombieEnabled = NO;
 BOOL	NSDeallocateZombies = NO;
 
@@ -115,7 +119,10 @@ BOOL	NSDeallocateZombies = NO;
 static Class		zombieClass = Nil;
 static NSMapTable	*zombieMap = 0;
 
-#ifndef OBJC_CAP_ARC
+/*
+ 将每一个释放了的对象, 都放到僵尸 map 里面. 所以, 实际上还是没有被释放.
+ 这就是僵尸开了之后, 性能会有极大损失的原因.
+ */
 static void GSMakeZombie(NSObject *o, Class c)
 {
     object_setClass(o, zombieClass);
@@ -129,7 +136,6 @@ static void GSMakeZombie(NSObject *o, Class c)
         pthread_mutex_unlock(&allocationLock);
     }
 }
-#endif
 
 static void GSLogZombie(id o, SEL sel)
 {
@@ -434,6 +440,9 @@ typedef struct obj_layout_unpadded {
  *	Now do the REAL version - using the other version to determine
  *	what padding (if any) is required to get the alignment of the
  *	structure correct.
+ */
+/*
+ 在每一个 OBJ 上面, 藏一块空间, 做引用计数, 和其他信息的存储工作.
  */
 struct obj_layout {
     char	padding[__BIGGEST_ALIGNMENT__ - ((UNP % __BIGGEST_ALIGNMENT__)
@@ -741,40 +750,35 @@ callCXXConstructors(Class aClass, id anObject)
 #endif
 
 
-/*
- *	Now do conditional compilation of memory allocation functions
- *	depending on what information (if any) we are storing before
- *	the start of each object.
- */
-
-// FIXME rewrite object allocation to use class_createInstance when we
-// are using libobjc2.
 inline id
 NSAllocateObject(Class aClass, NSUInteger extraBytes, NSZone *zone)
 {
-    id	new;
-    
-#ifdef OBJC_CAP_ARC
-    if ((new = class_createInstance(aClass, extraBytes)) != nil)
-    {
-        AADD(aClass, new);
-    }
-#else
+    id	result;
     int	size;
     
-    NSCAssert((!class_isMetaClass(aClass)), @"Bad class for new object");
+    /*
+     class_getInstanceSize 这个函数, 直接是访问的类对象里面存储的值.
+     */
     size = class_getInstanceSize(aClass) + extraBytes + sizeof(struct obj_layout);
     if (zone == 0)
     {
         zone = NSDefaultMallocZone();
     }
-    new = NSZoneMalloc(zone, size);
-    if (new != nil)
+    /*
+     分配内存资源
+     */
+    result = NSZoneMalloc(zone, size);
+    if (result != nil)
     {
-        memset (new, 0, size);
-        new = (id)&((obj)new)[1];
-        object_setClass(new, aClass);
-        AADD(aClass, new);
+        /*
+         内存的清零处理.
+         */
+        memset (result, 0, size);
+        result = (id)&((obj)result)[1];
+        /*
+         进行 isa 的指定, 其实就是 isa 的简单的内存赋值操作.
+         */
+        object_setClass(result, aClass);
     }
     
     /* Don't bother doing this in a thread-safe way, because the cost of locking
@@ -788,10 +792,9 @@ NSAllocateObject(Class aClass, NSUInteger extraBytes, NSZone *zone)
         cxx_construct = sel_registerName(".cxx_construct");
         cxx_destruct = sel_registerName(".cxx_destruct");
     }
-    callCXXConstructors(aClass, new);
-#endif
+    callCXXConstructors(aClass, result);
     
-    return new;
+    return result;
 }
 
 inline void
@@ -813,40 +816,12 @@ NSDeallocateObject(id anObject)
         AREM(aClass, (id)anObject);
         if (NSZombieEnabled == YES)
         {
-#ifdef OBJC_CAP_ARC
-            if (0 != zombieMap)
-            {
-                pthread_mutex_lock(&allocationLock);
-                if (0 != zombieMap)
-                {
-                    NSMapInsert(zombieMap, (void*)anObject, (void*)aClass);
-                }
-                pthread_mutex_unlock(&allocationLock);
-            }
-            if (NSDeallocateZombies == YES)
-            {
-                object_dispose(anObject);
-            }
-            else
-            {
-                object_setClass(anObject, zombieClass);
-            }
-#else
             GSMakeZombie(anObject, aClass);
-            if (NSDeallocateZombies == YES)
-            {
-                NSZoneFree(z, o);
-            }
-#endif
         }
         else
         {
-#ifdef OBJC_CAP_ARC
-            object_dispose(anObject);
-#else
             object_setClass((id)anObject, (Class)(void*)0xdeadface);
             NSZoneFree(z, o);
-#endif
         }
     }
     return;
@@ -861,76 +836,10 @@ NSShouldRetainWithZone (NSObject *anObject, NSZone *requestedZone)
 
 
 
-/**
- * <p>
- *   <code>NSObject</code> is the root class (a root class is
- *   a class with no superclass) of the GNUstep base library
- *   class hierarchy, so all classes normally inherit from
- *   <code>NSObject</code>.  There is an exception though:
- *   <code>NSProxy</code> (which is used for remote messaging)
- *   does not inherit from <code>NSObject</code>.
- * </p>
- * <p>
- *   Unless you are really sure of what you are doing, all
- *   your own classes should inherit (directly or indirectly)
- *   from <code>NSObject</code> (or in special cases from
- *   <code>NSProxy</code>).  <code>NSObject</code> provides
- *   the basic common functionality shared by all GNUstep
- *   classes and objects.
- * </p>
- * <p>
- *   The essential methods which must be implemented by all
- *   classes for their instances to be usable within GNUstep
- *   are declared in a separate protocol, which is the
- *   <code>NSObject</code> protocol.  Both
- *   <code>NSObject</code> and <code>NSProxy</code> conform to
- *   this protocol, which means all objects in a GNUstep
- *   application will conform to this protocol (btw, if you
- *   don't find a method of <code>NSObject</code> you are
- *   looking for in this documentation, make sure you also
- *   look into the documentation for the <code>NSObject</code>
- *   protocol).
- * </p>
- * <p>
- *   Theoretically, in special cases you might need to
- *   implement a new root class.  If you do, you need to make
- *   sure that your root class conforms (at least) to the
- *   <code>NSObject</code> protocol, otherwise it will not
- *   interact correctly with the GNUstep framework.  Said
- *   that, I must note that I have never seen a case in which
- *   a new root class is needed.
- * </p>
- * <p>
- *   <code>NSObject</code> is a root class, which implies that
- *   instance methods of <code>NSObject</code> are treated in
- *   a special way by the Objective-C runtime.  This is an
- *   exception to the normal way messaging works with class
- *   and instance methods: if the Objective-C runtime can't
- *   find a class method for a class object, as a last resort
- *   it looks for an instance method of the root class with
- *   the same name, and executes it if it finds it.  This
- *   means that instance methods of the root class (such as
- *   <code>NSObject</code>) can be performed by class objects
- *   which inherit from that root class !  This can only
- *   happen if the class doesn't have a class method with the
- *   same name, otherwise that method - of course - takes the
- *   precedence.  Because of this exception,
- *   <code>NSObject</code>'s instance methods are written in
- *   such a way that they work both on <code>NSObject</code>'s
- *   instances and on class objects.
- * </p>
- */
 @implementation NSObject
-#if  defined(GS_ARC_COMPATIBLE)
-- (void)_ARCCompliantRetainRelease {}
-#endif
 
-/**
- * Semi-private function in libobjc2 that initialises the classes used for
- * blocks.
- */
-extern BOOL
-objc_create_block_classes_as_subclasses_of(Class super);
+- (void)_ARCCompliantRetainRelease {}
+
 
 #ifdef OBJC_CAP_ARC
 static id gs_weak_load(id obj)
@@ -941,100 +850,12 @@ static id gs_weak_load(id obj)
 
 + (void) load
 {
-#ifdef OBJC_CAP_ARC
-    _objc_weak_load = gs_weak_load;
-#endif
-    objc_create_block_classes_as_subclasses_of(self);
 }
 
 + (void) initialize
 {
     if (self == [NSObject class])
     {
-#ifdef _WIN32
-        {
-            // See libgnustep-base-entry.m
-            extern void gnustep_base_socket_init(void);
-            gnustep_base_socket_init();
-        }
-#else /* _WIN32 */
-        
-#ifdef	SIGPIPE
-        /*
-         * If SIGPIPE is not handled or ignored, we will abort on any attempt
-         * to write to a pipe/socket that has been closed by the other end!
-         * We therefore need to ignore the signal if nothing else is already
-         * handling it.
-         */
-#ifdef	HAVE_SIGACTION
-        {
-            struct sigaction	act;
-            
-            if (sigaction(SIGPIPE, 0, &act) == 0)
-            {
-                if (act.sa_handler == SIG_DFL)
-                {
-                    // Not ignored or handled ... so we ignore it.
-                    act.sa_handler = SIG_IGN;
-                    if (sigaction(SIGPIPE, &act, 0) != 0)
-                    {
-                        fprintf(stderr, "Unable to ignore SIGPIPE\n");
-                    }
-                }
-            }
-            else
-            {
-                fprintf(stderr, "Unable to retrieve information about SIGPIPE\n");
-            }
-        }
-#else /* HAVE_SIGACTION */
-        {
-            void	(*handler)(NSInteger);
-            
-            handler = signal(SIGPIPE, SIG_IGN);
-            if (handler != SIG_DFL)
-            {
-                signal(SIGPIPE, handler);
-            }
-        }
-#endif /* HAVE_SIGACTION */
-#endif /* SIGPIPE */
-#endif /* _WIN32 */
-        
-        finalize_sel = @selector(finalize);
-        finalize_imp = class_getMethodImplementation(self, finalize_sel);
-        
-#if defined(__FreeBSD__) && defined(__i386__)
-        // Manipulate the FPU to add the exception mask. (Fixes SIGFPE
-        // problems on *BSD)
-        // Note this only works on x86
-#  if defined(FE_INVALID)
-        fedisableexcept(FE_INVALID);
-#  else
-        {
-            volatile short cw;
-            
-            __asm__ volatile ("fstcw (%0)" : : "g" (&cw));
-            cw |= 1; /* Mask 'invalid' exception */
-            __asm__ volatile ("fldcw (%0)" : : "g" (&cw));
-        }
-#  endif
-#endif
-        
-        /* Initialize the locks for allocation when atomic
-         * operations are not available.
-         */
-#if !defined(GSATOMICREAD)
-        {
-            NSUInteger	i;
-            
-            for (i = 0; i < LOCKCOUNT; i++)
-            {
-                pthread_mutex_init(&allocationLocks[i], NULL);
-            }
-        }
-#endif
-        
         /* Create the global lock.
          * NB. Ths is one of the first things we do ... setting up a new lock
          * must not call any other Objective-C classes and must not involve
@@ -1099,247 +920,53 @@ static id gs_weak_load(id obj)
     pthread_mutex_unlock(&allocationLock);
 }
 
-/**
- * Allocates a new instance of the receiver from the default
- * zone, by invoking +allocWithZone: with
- * <code>NSDefaultMallocZone()</code> as the zone argument.<br />
- * Returns the created instance.
- */
 + (id) alloc
 {
     return [self allocWithZone: NSDefaultMallocZone()];
 }
 
-/**
- * This is the basic method to create a new instance.  It
- * allocates a new instance of the receiver from the specified
- * memory zone.
- * <p>
- *   Memory for an instance of the receiver is allocated; a
- *   pointer to this newly created instance is returned.  All
- *   instance variables are set to 0.  No initialization of the
- *   instance is performed apart from setup to be an instance of
- *   the correct class: it is your responsibility to initialize the
- *   instance by calling an appropriate <code>init</code>
- *   method.  If you are not using the garbage collector, it is
- *   also your responsibility to make sure the returned
- *   instance is destroyed when you finish using it, by calling
- *   the <code>release</code> method to destroy the instance
- *   directly, or by using <code>autorelease</code> and
- *   autorelease pools.
- * </p>
- * <p>
- *  You do not normally need to override this method in
- *  subclasses, unless you are implementing a class which for
- *  some reasons silently allocates instances of another class
- *  (this is typically needed to implement class clusters and
- *  similar design schemes).
- * </p>
- * <p>
- *   If you have turned on debugging of object allocation (by
- *   calling the <code>GSDebugAllocationActive</code>
- *   function), this method will also update the various
- *   debugging counts and monitors of allocated objects, which
- *   you can access using the <code>GSDebugAllocation...</code>
- *   functions.
- * </p>
+/*
+ 有很多的私有方法, 都是全局函数.
+ 因为这些全局函数, 没有一个类是可以去包含他们的.
+ 比如, NSAllocateObject, 还有全局的 sort 方法.
+ 但是外界不会看到这些函数, 因为这些函数, 都是在类里面使用的.
  */
 + (id) allocWithZone: (NSZone*)z
 {
     return NSAllocateObject(self, 0, z);
 }
 
-/**
- * Returns the receiver.
- */
 + (id) copyWithZone: (NSZone*)z
 {
     return self;
 }
 
-/**
- * <p>
- *   This method is a short-hand for alloc followed by init, that is,
- * </p>
- * <p><code>
- *    NSObject *object = [NSObject new];
- * </code></p>
- * is exactly the same as
- * <p><code>
- *    NSObject *object = [[NSObject alloc] init];
- * </code></p>
- * <p>
- *   This is a general convention: all <code>new...</code>
- *   methods are supposed to return a newly allocated and
- *   initialized instance, as would be generated by an
- *   <code>alloc</code> method followed by a corresponding
- *   <code>init...</code> method.  Please note that if you are
- *   not using a garbage collector, this means that instances
- *   generated by the <code>new...</code> methods are not
- *   autoreleased, that is, you are responsible for releasing
- *   (autoreleasing) the instances yourself.  So when you use
- *   <code>new</code> you typically do something like:
- * </p>
- * <p>
- *   <code>
- *      NSMutableArray *array = AUTORELEASE ([NSMutableArray new]);
- *   </code>
- * </p>
- * <p>
- *   You do not normally need to override <code>new</code> in
- *   subclasses, because if you override <code>init</code> (and
- *   optionally <code>allocWithZone:</code> if you really
- *   need), <code>new</code> will automatically use your
- *   subclass methods.
- * </p>
- * <p>
- *   You might need instead to define new <code>new...</code>
- *   methods specific to your subclass to match any
- *   <code>init...</code> specific to your subclass.  For
- *   example, if your subclass defines an instance method
- * </p>
- * <p>
- *   <code>initWithName:</code>
- * </p>
- * <p>
- *   it might be handy for you to have a class method
- * </p>
- * <p>
- *    <code>newWithName:</code>
- * </p>
- * <p>
- *   which combines <code>alloc</code> and
- *   <code>initWithName:</code>.  You would implement it as follows:
- * </p>
- * <p>
- *   <code>
- *     + (id) newWithName: (NSString *)aName
- *     {
- *       return [[self alloc] initWithName: aName];
- *     }
- *   </code>
- * </p>
- */
 + (id) new
 {
     return [[self alloc] init];
 }
 
-/**
- * Returns the class of which the receiver is an instance.<br />
- * The default implementation returns the actual class that the
- * receiver is an instance of.<br />
- * NB.  When NSZombie is enabled (see NSDebug.h) this is changed
- * to be the NSZombie class upon object deallocation.
- */
 - (Class) class
 {
+    /*
+     object_getClass 直接就是返回它的 isa 指向, 也就是类对象.
+     */
     return object_getClass(self);
 }
 
-/**
- * Returns the name of the class of the receiving object by using
- * the NSStringFromClass() function.<br />
- * This is a MacOS-X addition for apple scripting, which is also
- * generally useful.
- */
 - (NSString*) className
 {
     return NSStringFromClass([self class]);
 }
 
-/**
- * Creates and returns a copy of the receiver by calling -copyWithZone:
- * passing NSDefaultMallocZone()
+/*
+ copy 仅仅是调用了 copyWithZone, 所以我们要重写 copyWithZone 这个方法.
  */
 - (id) copy
 {
     return [(id)self copyWithZone: NSDefaultMallocZone()];
 }
 
-/**
- * Deallocates the receiver by calling NSDeallocateObject() with self
- * as the argument.<br />
- * <p>
- *   You should normally call the superclass implementation of this method
- *   when you override it in a subclass, or the memory occupied by your
- *   object will not be released.
- * </p>
- * <p>
- *   <code>NSObject</code>'s implementation of this method
- *   destroys the receiver, by returning the memory allocated
- *   to the receiver to the system.  After this method has been
- *   called on an instance, you must not refer the instance in
- *   any way, because it does not exist any longer.  If you do,
- *   it is a bug and your program might even crash with a
- *   segmentation fault.
- * </p>
- * <p>
- *   If you have turned on the debugging facilities for
- *   instance allocation, <code>NSObject</code>'s
- *   implementation of this method will also update the various
- *   counts and monitors of allocated instances (see the
- *   <code>GSDebugAllocation...</code> functions for more
- *   info).
- * </p>
- * <p>
- *   Normally you are supposed to manage the memory taken by
- *   objects by using the high level interface provided by the
- *   <code>retain</code>, <code>release</code> and
- *   <code>autorelease</code> methods (or better by the
- *   corresponding macros <code>RETAIN</code>,
- *   <code>RELEASE</code> and <code>AUTORELEASE</code>), and by
- *   autorelease pools and such; whenever the
- *   release/autorelease mechanism determines that an object is
- *   no longer needed (which happens when its retain count
- *   reaches 0), it will call the <code>dealloc</code> method
- *   to actually deallocate the object.  This means that normally,
- *   you should not need to call <code>dealloc</code> directly as
- *   the gnustep base library automatically calls it for you when
- *   the retain count of an object reaches 0.
- * </p>
- * <p>
- *   Because the <code>dealloc</code> method will be called
- *   when an instance is being destroyed, if instances of your
- *   subclass use objects or resources (as it happens for most
- *   useful classes), you must override <code>dealloc</code> in
- *   subclasses to release all objects and resources which are
- *   used by the instance, otherwise these objects and
- *   resources would be leaked.  In the subclass
- *   implementation, you should first release all your subclass
- *   specific objects and resources, and then invoke super's
- *   implementation (which will do the same, and so on up in
- *   the class hierarchy to <code>NSObject</code>'s
- *   implementation, which finally destroys the object).  Here
- *   is an example of the implementation of
- *   <code>dealloc</code> for a subclass whose instances have a
- *   single instance variable <code>name</code> which needs to
- *   be released when an instance is deallocated:
- * </p>
- * <p>
- *   <code>
- *   - (void) dealloc
- *   {
- *     RELEASE (name);
- *     [super dealloc];
- *   }
- *   </code>
- *  </p>
- *  <p>
- *    <code>dealloc</code> might contain code to release not
- *    only objects, but also other resources, such as open
- *    files, network connections, raw memory allocated in other
- *    ways, etc.
- *  </p>
- * <p>
- *   If you have allocated the memory using a non-standard mechanism, you
- *   will not call the superclass (NSObject) implementation of the method
- *   as you will need to handle the deallocation specially.<br />
- *   In some circumstances, an object may wish to prevent itself from
- *   being deallocated, it can do this simply be refraining from calling
- *   the superclass implementation.
- * </p>
- */
 - (void) dealloc
 {
     NSDeallocateObject(self);
@@ -1405,68 +1032,36 @@ static id gs_weak_load(id obj)
 #endif
 }
 
-/**
- *  This method is an anachronism.  Do not use it.
- */
-- (id) free
-{
-    [NSException raise: NSGenericException
-                format: @"Use `dealloc' instead of `free' for %@.", self];
-    return nil;
-}
-
-/**
- * Initialises the receiver ... the NSObject implementation simply returns self.
+/*
+ NSObject 的 init 不做任何的处理, 但是 alloc 里面有着 memset 0 的操作. 所以, 也算是所有的值有初值了.
  */
 - (id) init
 {
     return self;
 }
 
-/**
- * Creates and returns a mutable copy of the receiver by calling
- * -mutableCopyWithZone: passing NSDefaultMallocZone().
- */
 - (id) mutableCopy
 {
     return [(id)self mutableCopyWithZone: NSDefaultMallocZone()];
 }
 
-/**
- * Returns the super class from which the receiver was derived.
+/*
+ class_getSuperclass 这个函数, 也无非就是 isa->superclass 的获取而已.
  */
 + (Class) superclass
 {
     return class_getSuperclass(self);
 }
 
-/**
- * Returns the super class from which the receivers class was derived.
- */
 - (Class) superclass
 {
     return class_getSuperclass(object_getClass(self));
 }
 
-/**
- * Returns a flag to say if instances of the receiver class will
- * respond to the specified selector.  This ignores situations
- * where a subclass implements -forwardInvocation: to respond to
- * selectors not normally handled ... in these cases the subclass
- * may override this method to handle it.
- * <br />If given a null selector, raises NSInvalidArgumentException when
- * in MacOS-X compatibility more, or returns NO otherwise.
- */
 + (BOOL) instancesRespondToSelector: (SEL)aSelector
 {
     if (aSelector == 0)
     {
-        if (GSPrivateDefaultsFlag(GSMacOSXCompatible))
-        {
-            [NSException raise: NSInvalidArgumentException
-                        format: @"%@ null selector given",
-             NSStringFromSelector(_cmd)];
-        }
         return NO;
     }
     
@@ -1477,8 +1072,6 @@ static id gs_weak_load(id obj)
     
     if (class_isMetaClass(self))
     {
-        /* It seems convoluted to attempt to access the class from the 
-         metaclass just to call +resolveClassMethod: in this rare case. */
         return NO;
     }
     else
@@ -1492,26 +1085,7 @@ static id gs_weak_load(id obj)
  */
 + (BOOL) conformsToProtocol: (Protocol*)aProtocol
 {
-#ifdef __GNU_LIBOBJC__
-    Class c;
-    
-    /* Iterate over the current class and all the superclasses.  */
-    for (c = self; c != Nil; c = class_getSuperclass (c))
-    {
-        if (class_conformsToProtocol(c, aProtocol))
-        {
-            return YES;
-        }
-    }
-    
-    return NO;
-#else
-    /* libobjc2 and ObjectiveC2/ have an implementation of
-     class_conformsToProtocol() which automatically looks up the
-     protocol in superclasses (unlike the Apple and GNU Objective-C
-     runtime ones).  */
     return class_conformsToProtocol(self, aProtocol);
-#endif
 }
 
 /**
@@ -1523,29 +1097,11 @@ static id gs_weak_load(id obj)
     return [[self class] conformsToProtocol: aProtocol];
 }
 
-/**
- * Returns a pointer to the C function implementing the method used
- * to respond to messages with aSelector by instances of the receiving
- * class.
- * <br />Raises NSInvalidArgumentException if given a null selector.
- */
 + (IMP) instanceMethodForSelector: (SEL)aSelector
 {
-    if (aSelector == 0)
-        [NSException raise: NSInvalidArgumentException
-                    format: @"%@ null selector given", NSStringFromSelector(_cmd)];
-    /*
-     * Since 'self' is an class, class_getMethodImplementation() will get
-     * the instance method.
-     */
     return class_getMethodImplementation((Class)self, aSelector);
 }
 
-/**
- * Returns a pointer to the C function implementing the method used
- * to respond to messages with aSelector.
- * <br />Raises NSInvalidArgumentException if given a null selector.
- */
 - (IMP) methodForSelector: (SEL)aSelector
 {
     if (aSelector == 0)
@@ -1673,38 +1229,21 @@ static id gs_weak_load(id obj)
     return [NSMethodSignature signatureWithObjCTypes: types];
 }
 
-/**
- * Returns a string describing the receiver.  The default implementation
- * gives the class and memory location of the receiver.
- */
 - (NSString*) description
 {
     return [NSString stringWithFormat: @"<%s: %p>",
             class_getName([self class]), self];
 }
 
-/**
- * Returns a string describing the receiving class.  The default implementation
- * gives the name of the class by calling NSStringFromClass().
- */
 + (NSString*) description
 {
     return NSStringFromClass(self);
 }
 
-/**
- * Sets up the ObjC runtime so that the receiver is used wherever code
- * calls for aClassObject to be used.
- */
-+ (void) poseAsClass: (Class)aClassObject
-{
-    [NSException raise: NSInternalInconsistencyException
-                format: @"Class posing is not supported"];
-}
 
-/**
- * Raises an invalid argument exception providing information about
- * the receivers inability to handle aSelector.
+/*
+ 这个会在消息转发最后调用, 默认是警告.
+ 可以重写这个方法, 让程序不崩溃.
  */
 - (void) doesNotRecognizeSelector: (SEL)aSelector
 {
@@ -1715,13 +1254,14 @@ static id gs_weak_load(id obj)
      aSelector ? sel_getName(aSelector) : "(null)"];
 }
 
-/**
- * This method is called automatically to handle a message sent to
- * the receiver for which the receivers class has no method.<br />
- * The default implementation calls -doesNotRecognizeSelector:
+/*
+ 消息转发的最后一步.
  */
 - (void) forwardInvocation: (NSInvocation*)anInvocation
 {
+    /*
+     这里, anInvocation 会受到 forwardingTargetForSelector 的影响.
+     */
     id target = [self forwardingTargetForSelector: [anInvocation selector]];
     
     if (nil != target)
@@ -1743,11 +1283,6 @@ static id gs_weak_load(id obj)
     return self;
 }
 
-// FIXME - should this be added (as in OS X) now that we have NSKeyedArchiver?
-// - (Class) classForKeyedArchiver
-// {
-//     return [self classForArchiver];
-// }
 
 /**
  * Override to substitute class when an instance is being archived by an
@@ -1797,29 +1332,17 @@ static id gs_weak_load(id obj)
 
 /* NSObject protocol */
 
-/**
- * Adds the receiver to the current autorelease pool, so that it will be
- * sent a -release message when the pool is destroyed.<br />
- * Returns the receiver.<br />
- * In GNUstep, the [NSObject+enableDoubleReleaseCheck:] method may be used
- * to turn on checking for retain/release errors in this method.
- */
+
 - (id) autorelease
 {
-    if (double_release_check_enabled)
-    {
-        NSUInteger release_count;
-        NSUInteger retain_count = [self retainCount];
-        release_count = [autorelease_class autoreleaseCountForObject:self];
-        if (release_count > retain_count)
-            [NSException
-             raise: NSGenericException
-             format: @"Autorelease would release object too many times.\n"
-             @"%"PRIuPTR" release(s) versus %"PRIuPTR" retain(s)",
-             release_count, retain_count];
-    }
     
     (*autorelease_imp)(autorelease_class, autorelease_sel, self);
+    
+    /*
+     上面其实就是
+     [NSAutoreleasePool addObject:self]
+     至于当前的 NSAutoreleasePool 是哪个对象, 由 NSAutoreleasePool 这个类自己管理.
+     */
     return self;
 }
 
@@ -1862,20 +1385,16 @@ static id gs_weak_load(id obj)
     return (NSUInteger)((uintptr_t)self >> shift);
 }
 
-/**
- * Tests anObject and the receiver for equality.  The default implementation
- * considers two objects to be equal only if they are the same object
- * (ie occupy the same memory location).<br />
- * If a subclass overrides this method, it should also override the -hash
- * method so that if two objects are equal they both have the same hash.
+/*
+ 默认的相等判断, 是比较指针
  */
 - (BOOL) isEqual: (id)anObject
 {
     return (self == anObject);
 }
 
-/**
- * Returns YES if aClass is the NSObject class
+/*
+ Returns YES if aClass is the NSObject class
  */
 + (BOOL) isKindOfClass: (Class)aClass
 {
@@ -1884,9 +1403,8 @@ static id gs_weak_load(id obj)
     return NO;
 }
 
-/**
- * Returns YES if the class of the receiver is either the same as aClass
- * or is derived from (a subclass of) aClass.
+/*
+ 不断向上寻找的过程
  */
 - (BOOL) isKindOfClass: (Class)aClass
 {
@@ -1895,17 +1413,11 @@ static id gs_weak_load(id obj)
     return GSObjCIsKindOf(class, aClass);
 }
 
-/**
- * Returns YES if aClass is the same as the receiving class.
- */
 + (BOOL) isMemberOfClass: (Class)aClass
 {
     return (self == aClass) ? YES : NO;
 }
 
-/**
- * Returns YES if the class of the receiver is aClass
- */
 - (BOOL) isMemberOfClass: (Class)aClass
 {
     return ([self class] == aClass) ? YES : NO;
@@ -2033,27 +1545,11 @@ static id gs_weak_load(id obj)
     return (*msg)(self, aSelector, object1, object2);
 }
 
-/**
- * Decrements the retain count for the receiver if greater than zero,
- * otherwise calls the dealloc method instead.<br />
- * The default implementation calls the NSDecrementExtraRefCountWasZero()
- * function to test the extra reference count for the receiver (and
- * decrement it if non-zero) - if the extra reference count is zero then
- * the retain count is one, and the dealloc method is called.<br />
- * In GNUstep, the [NSObject+enableDoubleReleaseCheck:] method may be used
- * to turn on checking for ratain/release errors in this method.
- */
 - (oneway void) release
 {
     release_fast(self);
 }
 
-/**
- * The class implementation of the release method is a dummy method
- * having no effect.  It is present so that class objects can be stored
- * in containers (such as NSArray) which will send them retain and
- * release messages.
- */
 + (oneway void) release
 {
     return;
@@ -2074,12 +1570,6 @@ static id gs_weak_load(id obj)
     
     if (aSelector == 0)
     {
-        if (GSPrivateDefaultsFlag(GSMacOSXCompatible))
-        {
-            [NSException raise: NSInvalidArgumentException
-                        format: @"%@ null selector given",
-             NSStringFromSelector(_cmd)];
-        }
         return NO;
     }
     
@@ -2118,13 +1608,8 @@ static id gs_weak_load(id obj)
     return self;
 }
 
-/**
- * Returns the reference count for the receiver.  Each instance has an
- * implicit reference count of 1, and has an 'extra reference count'
- * returned by the NSExtraRefCount() function, so the value returned by
- * this method is always greater than zero.<br />
- * By convention, objects which should (or can) never be deallocated
- * return the maximum unsigned integer value.
+/*
+ 返回引用计数, GnuFoundation 里面, 引用计数是藏在了头指针里面
  */
 - (NSUInteger) retainCount
 {
@@ -2463,12 +1948,16 @@ static id gs_weak_load(id obj)
 @end
 
 
-
+/*
+ 僵尸类, 其实就是一个特殊的类.
+ */
 @implementation	NSZombie
+
 - (Class) class
 {
     return object_getClass(self);
 }
+
 - (Class) originalClass
 {
     Class c = Nil;
@@ -2484,6 +1973,10 @@ static id gs_weak_load(id obj)
     }
     return c;
 }
+
+/*
+ 在这里, 用到了动态派发机制.
+ */
 - (void) forwardInvocation: (NSInvocation*)anInvocation
 {
     NSUInteger	size = [[anInvocation methodSignature] methodReturnLength];

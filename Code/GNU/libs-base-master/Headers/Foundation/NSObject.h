@@ -24,233 +24,72 @@
 @class NSInvocation;
 @class Protocol;
 
-/**
- * The NSObject protocol describes a minimal set of methods that all
- * objects are expected to support.  You should be able to send any
- * of the messages listed in this protocol to an object, and be safe
- * in assuming that the receiver can handle it.
+/*
+ 一个, 所有的对象都应该遵守的协议.
  */
 @protocol NSObject
-/**
- * Returns the class of the receiver.  If the receiver is a proxy, then this
- * may return the class of the proxy target.  Use -isProxy to determine whether
- * the receiver is a proxy.  If you wish to find the real class of the
- * receiver, ignoring proxies, then use object_getClass().
- */
+
 - (Class) class;
-/**
- * Returns the superclass of receiver's class.  If the receiver is a proxy,
- * then this may return the class of the proxy target.  Use -isProxy to
- * determine whether the receiver is a proxy.  If you wish to find the real
- * superclass of the receiver's class, ignoring proxies, then use
- * class_getSuperclass(object_getClass()).
- */
+
 - (Class) superclass;
-/**
- * Returns whether the receiver is equal to the argument.  Defining equality is
- * complex, so be careful when implementing this method.  Collections such as
- * NSSet depend on the behaviour of this method.  In particular, this method
- * must be commutative, so for any objects a and b:
- *
- * [a isEqual: b] == [b isEqual: a]
- *
- * This means that you must be very careful when returning YES if the argument
- * is of another class.  For example, if you define a number class that returns
- * YES if the argument is a string representation of the number, then this will
- * break because the string will not recognise your object as being equal to
- * itself.
- *
- * If two objects are equal, then they must have the same hash value, however
- * equal hash values do not imply equality.
- */
+
 - (BOOL) isEqual: (id)anObject;
-/**
- * Returns YES if the receiver is an instance of the class, an instance of the
- * subclass, or (in the case of proxies), an instance of something that can be
- * treated as an instance of the class.
- */
+
 - (BOOL) isKindOfClass: (Class)aClass;
-/**
- * Returns YES if the receiver is an instance of the class or (in the case of
- * proxies), an instance of something that can be treated as an instance of the
- * class.
- *
- * Calling this method is rarely the correct thing to do.  In most cases, a
- * subclass can be substituted for a superclass, so you should never need to
- * check that an object is really an instance of a specific class and not a
- * subclass.
- */
+
 - (BOOL) isMemberOfClass: (Class)aClass;
-/**
- * Returns YES if the receiver is a proxy, NO otherwise.  The default
- * implementation of this method in NSObject returns NO, while the
- * implementation in NSProxy returns YES.
- */
+
 - (BOOL) isProxy;
-/**
- * Returns a hash value for the object.  All objects that are equal *MUST*
- * return the same hash value.  For efficient storage in sets, or as keys in
- * dictionaries, different objects should return hashes spread evenly over the
- * range of an integer.
- *
- * An object may not return different values from this method after being
- * stored in a collection.  This typically means that ether the hash value must
- * be constant after the object's creation, or that the object may not be
- * modified while stored in an unordered collection.
- */
+
 - (NSUInteger) hash;
-/**
- * Returns the receiver.  In a proxy, this may (but is not required to) return
- * the proxied object.
- */
+
 - (id) self;
-/**
- * Performs the specified selector.  The selector must correspond to a method
- * that takes no arguments.
- */
+
 - (id) performSelector: (SEL)aSelector;
-/**
- * Performs the specified selector, with the object as the argument.  This
- * method does not perform any automatic unboxing, so the selector must
- * correspond to a method that takes one object argument.
- */
+
 - (id) performSelector: (SEL)aSelector
             withObject: (id)anObject;
-/**
- * Performs the specified selector, with the objects as the arguments.  This
- * method does not perform any automatic unboxing, so the selector must
- * correspond to a method that takes two object arguments.
- */
 - (id) performSelector: (SEL)aSelector
             withObject: (id)object1
             withObject: (id)object2;
-/**
- * Returns YES if the object can respond to messages with the specified
- * selector.  The default implementation in NSObject returns YES if the
- * receiver has a method corresponding to the method, but other classes may
- * return YES if they can respond to a selector using one of the various
- * forwarding mechanisms.
- */
+
 - (BOOL) respondsToSelector: (SEL)aSelector;
-/**
- * Returns YES if the receiver conforms to the specified protocol.
- */
+
 - (BOOL) conformsToProtocol: (Protocol*)aProtocol;
-/**
- * Increments the reference count of the object and returns the receiver.  In
- * garbage collected mode, this method does nothing.  In automated reference
- * counting mode, you may neither implement this method nor call it directly.
- */
+
 - (id) retain NS_AUTOMATED_REFCOUNT_UNAVAILABLE;
-/**
- * Decrements the reference count of the object and destroys if it there are no
- * remaining references.  In garbage collected mode, this method does nothing.
- * In automated reference counting mode, you may neither implement this method
- * nor call it directly.
- */
+
 - (oneway void) release NS_AUTOMATED_REFCOUNT_UNAVAILABLE;
-/**
- * Performs a deferred -release operation.  The object's reference count is
- * decremented at the end of the scope of the current autorelease pool,
- * identified either by a -drain message sent to the current NSAutoreleasePool
- * instance, or in more recent versions of Objective-C by the end of an
- * @autorelease_pool scope.
- *
- * In garbage collected mode, this method does nothing.  In automated reference
- * counting mode, you may neither implement this method nor call it directly.
- */
+
 - (id) autorelease NS_AUTOMATED_REFCOUNT_UNAVAILABLE;
-/**
- * Returns the current retain count of an object.  This does not include the
- * result of any pending autorelease operations.
- *
- * Code that relies on this method returning a sane value is broken.  For
- * singletons, it may return NSUIntegerMax.  Even when it is tracking a retain
- * count, it will not include on-stack pointers in manual retain/release mode,
- * pointers marked as __unsafe_unretain or __weak in ARC mode, or pending
- * autorelease operations.  Its value is therefore largely meaningless.  It can
- * occasionally be useful for debugging.
- */
+
 - (NSUInteger) retainCount NS_AUTOMATED_REFCOUNT_UNAVAILABLE;
-/**
- * Returns the description of the object.  This is used by the %@ format
- * specifier in strings.
- */
+
 - (NSString*) description;
-/**
- * Returns the zone of the object.
- */
+
 - (NSZone*) zone NS_AUTOMATED_REFCOUNT_UNAVAILABLE;
 @end
 
-/**
- * This protocol must be adopted by any class wishing to support copying -
- * ie where instances of the class should be able to create new instances
- * which are copies of the original and, where a class has mutable and
- * immutable versions, where the copies are immutable.
- */
+
 @protocol NSCopying
-/**
- * Called by [NSObject-copy] passing NSDefaultMallocZone() as zone.<br />
- * This method returns a copy of the receiver and, where the receiver is a
- * mutable variant of a class which has an immutable partner class, the
- * object returned is an instance of that immutable class.<br />
- * The new object is <em>not</em> autoreleased, and is considered to be
- * 'owned' by the calling code ... which is therefore responsible for
- * releasing it.<br />
- * In the case where the receiver is an instance of a container class,
- * it is undefined whether contained objects are merely retained in the
- * new copy, or are themselves copied, or whether some other mechanism
- * entirely is used.
- */
+
 - (id) copyWithZone: (NSZone*)zone;
+
 @end
 
-/**
- * This protocol must be adopted by any class wishing to support
- * mutable copying - ie where instances of the class should be able
- * to create mutable copies of themselves.
- */
 @protocol NSMutableCopying
-/**
- * Called by [NSObject-mutableCopy] passing NSDefaultMallocZone() as zone.<br />
- * This method returns a copy of the receiver and, where the receiver is an
- * immutable variant of a class which has a mutable partner class, the
- * object returned is an instance of that mutable class.
- * The new object is <em>not</em> autoreleased, and is considered to be
- * 'owned' by the calling code ... which is therefore responsible for
- * releasing it.<br />
- * In the case where the receiver is an instance of a container class,
- * it is undefined whether contained objects are merely retained in the
- * new copy, or are themselves copied, or whether some other mechanism
- * entirely is used.
- */
+
 - (id) mutableCopyWithZone: (NSZone*)zone;
+
 @end
 
-/**
- * This protocol must be adopted by any class wishing to support
- * saving and restoring instances to an archive, or copying them
- * to remote processes via the Distributed Objects mechanism.
- */
+
 @protocol NSCoding
 
-/**
- * Called when it is time for receiver to be serialized for writing to an
- * archive or network connection.  Receiver should record all of its instance
- * variables using methods on aCoder.  See documentation for [NSCoder],
- * [NSArchiver], [NSKeyedArchiver], and/or [NSPortCoder] for more information.
- */
 - (void) encodeWithCoder: (NSCoder*)aCoder;
 
-/**
- * Called on a freshly allocated receiver when it is time to reconstitute from
- * serialized bytes in an archive or from a network connection.  Receiver
- * should load all of its instance variables using methods on aCoder.  See
- * documentation for [NSCoder], [NSUnarchiver], [NSKeyedUnarchiver], and/or
- * [NSPortCoder] for more information.
- */
 - (id) initWithCoder: (NSCoder*)aDecoder;
+
 @end
 
 @protocol NSSecureCoding <NSCoding>
@@ -260,10 +99,8 @@
 
 GS_ROOT_CLASS @interface NSObject <NSObject>
 {
-    /**
-     * Points to instance's class.  Used by runtime to access method
-     * implementations, etc..  Set in +alloc, Unlike other instance variables,
-     * which are cleared there.
+    /*
+      isa 指针是 runtime 的基础. 这个指针的值, 是在 alloc 期间限定的.
      */
     Class isa;
 }
@@ -304,6 +141,11 @@ GS_ROOT_CLASS @interface NSObject <NSObject>
  * initialisation for the base library.<br />
  * If you implement +load for a class, don't call [super load] in your
  * implementation.
+ */
+/*
+ OC 系统提供的, 一个进行初始化操作的方法.
+ 当这个类被加载到 runtime 的时候, 自动调用这个方法.
+ 当一个分类被加载进来的时候, 也会调用该方法.
  */
 + (void) load;
 
@@ -400,11 +242,6 @@ GS_ROOT_CLASS @interface NSObject <NSObject>
  * default implementation of this returns nil, but care should be taken when
  * subclassing NSObject subclasses and overriding this method that
  * the superclass implementation is called if returning nil.
- *
- * Note: This method is only reliable when using the GNUstep runtime and code
- * compiled with clang.  If you require compatibility with GCC and the GCC
- * runtime, you must also implement -forwardInvocation: with equivalent
- * semantics.  This will be considerably slower, but more portable.
  */
 - (id) forwardingTargetForSelector: (SEL)aSelector;
 

@@ -99,7 +99,7 @@ struct objc_protocol
 	/**
 	 * Protocols that this protocol conforms to.
 	 */
-	struct objc_protocol_list           *protocol_list;
+	struct objc_protocol_list           *protocol_list; // 自己标明自己遵循的其他 protocol
 	/**
 	 * Required instance methods that classes conforming to this protocol must
 	 * implement.

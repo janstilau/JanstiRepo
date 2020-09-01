@@ -1524,6 +1524,7 @@
 		06C049A024FE99450088AD57 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906EA31610BF3C0003C892 /* NSObject.h */,
 				18906E6C1610BF3C0003C892 /* NSArray.h */,
 			);
 			name = Done;
@@ -2080,7 +2081,6 @@
 				18906EA01610BF3C0003C892 /* NSNull.h */,
 				18906EA11610BF3C0003C892 /* NSNumberFormatter.h */,
 				18906EA21610BF3C0003C892 /* NSObjCRuntime.h */,
-				18906EA31610BF3C0003C892 /* NSObject.h */,
 				18906EA41610BF3C0003C892 /* NSOperation.h */,
 				18906EA51610BF3C0003C892 /* NSPathUtilities.h */,
 				18906EA61610BF3C0003C892 /* NSPointerArray.h */,

@@ -118,16 +118,16 @@ NSClassFromString(NSString *aClassName)
   return (Class)0;
 }
 
-/**
- * Returns an [NSString] object containing the class name for
- * aClass.  If aClass is 0, returns nil.
- */
 NSString *
 NSStringFromClass(Class aClass)
 {
-  if (aClass != (Class)0)
-    return [NSString stringWithUTF8String: (char*)class_getName(aClass)];
-  return nil;
+    /*
+     class_getName 直接就是找到 isa, 取出里面的 name 属性. 这是一个 C 字符串, 所以需要包装成为一个 NSString.
+     */
+    if (aClass != (Class)0) {
+        return [NSString stringWithUTF8String: (char*)class_getName(aClass)];
+    }
+    return nil;
 }
 
 /**
