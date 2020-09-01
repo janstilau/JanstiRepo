@@ -9,35 +9,27 @@
 @class NSThread;
 
 
-/**
- * Each thread has its own copy of these variables.
- <example>
- {
- NSAutoreleasePool *current_pool; // current pool for thread
- unsigned total_objects_count;    // total #/autoreleased objects over thread's lifetime
- id *pool_cache;                  // cache of previously-allocated pools,
- int pool_cache_size;             //  used internally for recycling
- int pool_cache_count;
- }
- </example>
+/*
+ typedef struct autorelease_thread_vars 这个值, 每个线程都有一份.
  */
 typedef struct autorelease_thread_vars
 {
-    /* The current, default NSAutoreleasePool for the calling thread;
-     the one that will hold objects that are arguments to
-     [NSAutoreleasePool +addObject:]. */
+    /*
+     [NSAutoreleasePool +addObject:] 调用的时候, 会从当前线程的 current_pool 寻找到栈顶的 pool 对象, 将 obj 加到这个 pool 里面.
+     */
     __unsafe_unretained NSAutoreleasePool *current_pool;
     
-    /* The total number of objects autoreleased since the thread was
-     started, or since -resetTotalAutoreleasedObjects was called
-     in this thread. (if compiled in) */
+    /*
+     当前线程的, 所有 autorelease 的对象的个数.
+     */
     unsigned total_objects_count;
     
-    /* A cache of NSAutoreleasePool's already alloc'ed.  Caching old pools
-     instead of deallocating and re-allocating them will save time. */
+    /*
+     NSAutoreleasePool 对象的缓存系统, 是一个数组.
+     */
     __unsafe_unretained id *pool_cache;
-    int pool_cache_size;
-    int pool_cache_count;
+    int pool_cache_size; // 数组的 capacity
+    int pool_cache_count; // 数组的 length
 } thread_vars_struct;
 
 /* Initialize an autorelease_thread_vars structure for a new thread.
@@ -70,91 +62,9 @@ typedef struct autorelease_array_list
 
 
 
-/**
- * <p>
- *   The standard OpenStep system of memory management employs retain counts.
- *   When an object is created, it has a retain count of 1.  When an object
- *   is retained, the retain count is incremented.  When it is released the
- *   retain count is decremented, and when the retain count goes to zero the
- *   object gets deallocated.
- * </p>
- * <p>
- *   A simple retain/release mechanism has problems with passing objects
- *   from one scope to another,
- *   so it's augmented with autorelease pools.  You can use the
- *   AUTORELEASE() macro to call the [NSObject-autorelease]
- *   method, which adds an object to the current autorelease pool by
- *   calling [NSAutoreleasePool+addObject:].<br />
- *   An autorelease pool simply maintains a reference to each object
- *   added to it, and for each addition, the autorelease pool will
- *   call the [NSObject-release] method of the object when the pool
- *   is released.  So doing an AUTORELEASE() is just the same as
- *   doing a RELEASE(), but deferred until the current autorelease
- *   pool is deallocated.
- * </p>
- * <p>
- *   The NSAutoreleasePool class maintains a separate stack of
- *   autorelease pools objects in each thread.
- * </p>
- * <p>
- *   When an autorelease pool is created, it is automatically
- *   added to the stack of pools in the thread.
- * </p>
- * <p>
- *   When a pool is destroyed, it (and any pool later in
- *   the stack) is removed from the stack.
- * </p>
- * <p>
- *   This mechanism provides a simple but controllable and reasonably
- *   efficient way of managing temporary objects.  An object can be
- *   autoreleased and then passed around and used until the topmost
- *   pool in the stack is destroyed.
- * </p>
- * <p>
- *   Most methods return objects which are either owned by autorelease
- *   pools or by the receiver of the method, so the lifetime of the
- *   returned object can be assumed to be the shorter of the lifetime
- *   of the current autorelease pool, or that of the receiver on which
- *   the method was called.<br />
- *   The exceptions to this are those object returned by -
- * </p>
- * <deflist>
- *   <term>[NSObject+alloc], [NSObject+allocWithZone:]</term>
- *   <desc>
- *     Methods whose names begin with alloc return an uninitialised
- *     object, owned by the caller.
- *   </desc>
- *   <term>[NSObject-init]</term>
- *   <desc>
- *     Methods whose names begin with init return an initialised
- *     version of the receiving object, owned by the caller.<br />
- *     NB. The returned object may not actually be the same as the
- *     receiver ... sometimes an init method releases the original
- *     receiver and returns an alternative.
- *   </desc>
- *   <term>[NSObject+new]</term>
- *   <desc>
- *     Methods whose names begin with new combine the effects of
- *     allocation and initialisation.
- *   </desc>
- *   <term>[NSObject-copy], [(NSCopying)-copyWithZone:]</term>
- *   <desc>
- *     Methods whose names begin with copy create a copy of the receiver
- *     which is owned by the caller.
- *   </desc>
- *   <term>
- *     [NSObject-mutableCopy], [(NSMutableCopying)-mutableCopyWithZone:]
- *   </term>
- *   <desc>
- *     Methods whose names begin with mutableCopy create a copy of the receiver
- *     which is owned by the caller.
- *   </desc>
- * </deflist>
- */
 NS_AUTOMATED_REFCOUNT_UNAVAILABLE
 @interface NSAutoreleasePool : NSObject 
 {
-#if	GS_EXPOSE(NSAutoreleasePool) && !__has_feature(objc_arc)
     /* For re-setting the current pool when we are dealloc'ed. */
     NSAutoreleasePool *_parent;
     /* This pointer to our child pool is  necessary for co-existing
@@ -167,16 +77,6 @@ NS_AUTOMATED_REFCOUNT_UNAVAILABLE
     unsigned _released_count;
     /* The method to add an object to this pool */
     void 	(*_addImp)(id, SEL, id);
-#endif
-#if     GS_NONFRAGILE
-#else
-    /* Pointer to private additional data used to avoid breaking ABI
-     * when we don't have the non-fragile ABI available.
-     * Use this mechanism rather than changing the instance variable
-     * layout (see Source/GSInternal.h for details).
-     */
-@private id _internal GS_UNUSED_IVAR;
-#endif
 }
 
 /**

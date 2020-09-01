@@ -1526,6 +1526,7 @@
 			children = (
 				18906EA31610BF3C0003C892 /* NSObject.h */,
 				18906E6C1610BF3C0003C892 /* NSArray.h */,
+				18906E6E1610BF3C0003C892 /* NSAutoreleasePool.h */,
 			);
 			name = Done;
 			sourceTree = "<group>";
@@ -2028,7 +2029,6 @@
 				18906E6A1610BF3C0003C892 /* NSAffineTransform.h */,
 				18906E6B1610BF3C0003C892 /* NSArchiver.h */,
 				18906E6D1610BF3C0003C892 /* NSAttributedString.h */,
-				18906E6E1610BF3C0003C892 /* NSAutoreleasePool.h */,
 				18906E6F1610BF3C0003C892 /* NSBundle.h */,
 				18906E701610BF3C0003C892 /* NSByteOrder.h */,
 				18906E711610BF3C0003C892 /* NSCache.h */,
