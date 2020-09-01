@@ -125,22 +125,33 @@ void mergeSort(int data[], int n, int mergeData[]) {
  这里, 选择 pivot 的程序, 可以采取下面的 leetcode 的写法, 随机选择, 然后交换到 left 的位置.
  之后的处理过程, 按照下面的写法, 先右后左, 这已经是脑中的记忆了.
  */
+
+void swap(int data[], int lhs, int rhs) {
+    int temp = data[lhs];
+    data[lhs] = data[rhs];
+    data[rhs] = temp;
+}
+
 int partition(int data[], int begin, int end) {
     if (begin >= end) { return end; }
     int left = begin + 1;
     int right = end;
     int pivotValue = data[begin];
-    while (left < right) {
-        while (data[right] > pivotValue && left < right) {
-            --right;
+    while (left <= right) {
+        while (data[right] >= pivotValue && left <= right) {
+            right--;
         }
-        while (data[left] <= pivotValue && left < right) {
-            ++left;
+        while (data[left] <= pivotValue && left <= right) {
+            left++;
+        }
+        if (left > right) {
+            break;
         }
         int temp = data[left];
         data[left] = data[right];
         data[right] = temp;
-        // 在这个交换的过程中, 能够消除大量的逆序对.
+        right--;
+        left++;
     }
     int temp = data[begin];
     data[begin] = data[right];
@@ -151,7 +162,7 @@ int partition(int data[], int begin, int end) {
 void quickSortImp(int data[], int begin, int end) {
     if (begin>=end){return;}
     int pivotIndex = partition(data, begin, end);
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 30; ++i) {
         std::cout << data[i] << " " ;
     }
     std::cout << '\n';
@@ -167,16 +178,13 @@ void quickSort(int data[], int n) {
     quickSortImp(data, flag+1, n-1);
 }
 
-
-
-
 int main(int argc, const char * argv[]) {
     // insert code here...
-    int datas[20] = {20, 11, 12, 15, 1, 2, 5, 4, 3, 19, 17, 18, 13, 14 ,16, 6, 8, 7, 9, 10};
+    int datas[30] = {20, 11, 12, 15, 1, 2, 5, 4, 3, 19, 17, 18, 13, 14 ,16, 6, 8, 7, 9, 10, 21, 23, 22, 25, 27, 24, 26, 29, 28, 30};
     int mergeData[20];
 //    mergeSort(datas, 19, mergeData);
-       quickSort(datas, 20);
-    for (int i = 0; i < 20; ++i) {
+       quickSort(datas, 30);
+    for (int i = 0; i < 30; ++i) {
         std::cout << datas[i] << " ";
     }
     return 0;
@@ -185,7 +193,7 @@ int main(int argc, const char * argv[]) {
 
 /*
  Leetcode 中的快排.
- */
+
 class partitionSolution {
     int partition(vector<int>& nums, int left, int right) {
         int pivot = nums[r];
@@ -199,9 +207,6 @@ class partitionSolution {
         swap(nums[i + 1], nums[r]);
         return i + 1;
     }
-    /*
-     这里, 随意取了一个数作为 pivot, 然后进行了交换, 让这个数, 变为边界值.
-     */
     int randomized_partition(vector<int>& nums, int l, int r) {
         int i = rand() % (r - l + 1) + l; // 随机选一个作为我们的主元
         swap(nums[r], nums[i]);
@@ -224,3 +229,4 @@ public:
     }
 };
 
+ */

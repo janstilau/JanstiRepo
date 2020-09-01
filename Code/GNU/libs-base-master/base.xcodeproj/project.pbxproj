@@ -358,6 +358,8 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.S";
 			fileType = pattern.proxy;
+			inputFiles = (
+			);
 			isEditable = 1;
 			outputFiles = (
 				"${OBJECT_FILE_DIR}/${INPUT_FILE_NAME}.o",
@@ -1519,6 +1521,14 @@
 			name = Network;
 			sourceTree = "<group>";
 		};
+		06C049A024FE99450088AD57 /* Done */ = {
+			isa = PBXGroup;
+			children = (
+				18906E6C1610BF3C0003C892 /* NSArray.h */,
+			);
+			name = Done;
+			sourceTree = "<group>";
+		};
 		1837D9C51652D0FF00197E53 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
@@ -2008,6 +2018,7 @@
 		18906E671610BF3C0003C892 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				06C049A024FE99450088AD57 /* Done */,
 				AD197C0C189A4E98000F6CF9 /* NSInvocationOperation.h */,
 				AD197C0D189A4E98000F6CF9 /* NSMetadata.h */,
 				18394B031610D85D00335E85 /* Additions */,
@@ -2015,7 +2026,6 @@
 				18906E691610BF3C0003C892 /* FoundationErrors.h */,
 				18906E6A1610BF3C0003C892 /* NSAffineTransform.h */,
 				18906E6B1610BF3C0003C892 /* NSArchiver.h */,
-				18906E6C1610BF3C0003C892 /* NSArray.h */,
 				18906E6D1610BF3C0003C892 /* NSAttributedString.h */,
 				18906E6E1610BF3C0003C892 /* NSAutoreleasePool.h */,
 				18906E6F1610BF3C0003C892 /* NSBundle.h */,

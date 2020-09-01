@@ -75,3 +75,58 @@ bool deleteElem(Slist &l, int index, int &value) {
 int main(int argc, const char * argv[]) {
     return 0;
 }
+
+void* memcpy(void* dest, const void* src, std::size_t count) {
+    if (!src) { return nullptr; }
+    if (!dest) { return nullptr; }
+    if (count <=0 ) { return dest; }
+    char *charDest = (char *)dest;
+    char *charSrc = (char *)src;
+    for (int i = 0; i < count; i++) {
+        charDest[i] = charSrc[i];
+    }
+    return dest;
+}
+
+class Object {
+    
+};
+
+class SharePointer {
+public:
+    SharePointer() {
+        countPtr = new int();
+        *countPtr = 0;
+        objPtr = nullptr;
+    }
+    
+    SharePointer(const SharePointer&rhs) {
+        *(rhs.countPtr) = *(rhs.countPtr) + 1;
+        countPtr = rhs.countPtr;
+        objPtr = rhs.objPtr;
+    }
+    
+    SharePointer& operator=(const SharePointer&rhs) {
+        *(rhs.countPtr) = *(rhs.countPtr) + 1;
+        (*countPtr) = (*countPtr) - 1;
+        if ((*countPtr) == 0) {
+            delete objPtr;
+            delete countPtr;
+        }
+        countPtr = rhs.countPtr;
+        objPtr = rhs.objPtr;
+        return *this;
+    }
+    
+    ~SharePointer() {
+        *countPtr = *countPtr - 1;
+        if (*countPtr == 0) {
+            delete objPtr;
+            delete countPtr;
+        }
+    }
+private:
+    int *countPtr;
+    Object *objPtr;
+};
+
