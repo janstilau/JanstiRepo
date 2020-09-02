@@ -1,38 +1,9 @@
 #ifndef __GSRunLoopCtxt_h_GNUSTEP_BASE_INCLUDE
 #define __GSRunLoopCtxt_h_GNUSTEP_BASE_INCLUDE
-/** 
-   Copyright (C) 2008-2009 Free Software Foundation, Inc.
-
-   By: Richard Frith-Macdonald <richard@brainstorm.co.uk>
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-
-   $Date$ $Revision$
-*/
-
 #import "common.h"
 #import "Foundation/NSException.h"
 #import "Foundation/NSMapTable.h"
 #import "Foundation/NSRunLoop.h"
-
-/*
- *      Setup for inline operation of arrays.
- */
 
 #define GSI_ARRAY_TYPES       GSUNION_OBJ
 
@@ -51,14 +22,23 @@ typedef struct{
 @class NSString;
 @class GSRunLoopWatcher;
 
+/*
+ 这是 runloop Mode 相关的一个类.
+ */
+
 @interface	GSRunLoopCtxt : NSObject
 {
 @public
   void		*extra;		/** Copy of the RunLoop ivar.		*/
   NSString	*mode;		/** The mode for this context.		*/
-  GSIArray	performers;	/** The actions to perform regularly.	*/
+    /*
+     performers 里面会有两种数据.
+     一种是 NSRunloopPerformer, 是当前线程中添加的, 用于方法的异步调用.
+     一种是 NSRunloopPerformHolder, 是在别的线程添加的, 用于方法的不同线程间的异步调用, 如果需要线程同步, 内部会有同步机制, 使用的 ConditionLock.
+     */
+  GSIArray	performers;
   unsigned	maxPerformers;
-  GSIArray	timers;		/** The timers set for the runloop mode */
+  GSIArray	timers;		/* Mode 相关的 NSTimer 的集合. */
   unsigned	maxTimers;
   GSIArray	watchers;	/** The inputs set for the runloop mode */
   unsigned	maxWatchers;

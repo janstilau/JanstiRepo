@@ -1,30 +1,5 @@
 #ifndef __GSRunLoopWatcher_h_GNUSTEP_BASE_INCLUDE
 #define __GSRunLoopWatcher_h_GNUSTEP_BASE_INCLUDE
-/** 
-   Copyright (C) 2008-2009 Free Software Foundation, Inc.
-
-   By: Richard Frith-Macdonald <richard@brainstorm.co.uk>
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-
-   $Date$ $Revision$
-*/
-
 /*
  *	The 'GSRunLoopWatcher' class was written to permit the (relatively)
  *	easy addition of new events to be watched for in the runloop.
@@ -62,16 +37,16 @@
 @interface GSRunLoopWatcher: NSObject
 {
 @public
-  BOOL			_invalidated;
-  BOOL			checkBlocking;
-  void			*data;
-  id			receiver;
-  RunLoopEventType	type;
-  unsigned 		count;
+    BOOL			_invalidated;
+    BOOL			checkBlocking;
+    void			*data;
+    id			receiver;
+    RunLoopEventType	type;
+    unsigned 		count;
 }
 - (id) initWithType: (RunLoopEventType)type
-	   receiver: (id)anObj
-	       data: (void*)data;
+           receiver: (id)anObj
+               data: (void*)data;
 /**
  * Returns a boolean indicating whether the receiver needs the loop to
  * block to wait for input, or whether the loop can run through at once.
