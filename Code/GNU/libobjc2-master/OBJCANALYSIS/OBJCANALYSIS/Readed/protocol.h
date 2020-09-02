@@ -136,57 +136,6 @@ struct objc_protocol
 	struct objc_property_list           *optional_class_properties;
 };
 
-struct objc_protocol_gcc
-{
-	/** Class pointer. */
-	id                                   isa;
-	/**
-	 * The name of this protocol.  Two protocols are regarded as identical if
-	 * they have the same name.
-	 */
-	char                                *name;
-	/**
-	 * The list of protocols that this protocol conforms to.
-	 */
-	struct objc_protocol_list           *protocol_list;
-	/**
-	 * List of instance methods required by this protocol.
-	 */
-	struct objc_protocol_method_description_list_gcc *instance_methods;
-	/**
-	 * List of class methods required by this protocol.
-	 */
-	struct objc_protocol_method_description_list_gcc *class_methods;
-};
-
-struct objc_protocol_gsv1
-{
-	/**
-	 * The first five ivars are shared with `objc_protocol_gcc`.
-	 */
-	id                                   isa;
-	char                                *name;
-	struct objc_protocol_list           *protocol_list;
-	struct objc_protocol_method_description_list_gcc *instance_methods;
-	struct objc_protocol_method_description_list_gcc *class_methods;
-	/**
-	 * Instance methods that are declared as optional for this protocol.
-	 */
-	struct objc_protocol_method_description_list_gcc *optional_instance_methods;
-	/**
-	 * Class methods that are declared as optional for this protocol.
-	 */
-	struct objc_protocol_method_description_list_gcc *optional_class_methods;
-	/**
-	 * Properties that are required by this protocol.
-	 */
-	struct objc_property_list_gsv1      *properties;
-	/**
-	 * Optional properties.
-	 */
-	struct objc_property_list_gsv1      *optional_properties;
-};
-
 #ifdef __OBJC__
 @interface Object { id isa; } @end
 /**

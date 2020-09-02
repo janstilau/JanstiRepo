@@ -1,38 +1,8 @@
-/**Interface for NSOperation for GNUStep
-   Copyright (C) 2009,2010 Free Software Foundation, Inc.
-
-   Written by:  Gregory Casamento <greg.casamento@gmail.com>
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: 2009,2010
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-
-   */
-
 #ifndef __NSOperation_h_GNUSTEP_BASE_INCLUDE
 #define __NSOperation_h_GNUSTEP_BASE_INCLUDE
 
 #import <Foundation/NSObject.h>
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 #import <GNUstepBase/GSBlocks.h>
@@ -43,11 +13,11 @@ DEFINE_BLOCK_TYPE_NO_ARGS(GSBlockOperationBlock, void);
 @class NSMutableArray;
 
 enum {
-  NSOperationQueuePriorityVeryLow = -8,
-  NSOperationQueuePriorityLow = -4,
-  NSOperationQueuePriorityNormal = 0,
-  NSOperationQueuePriorityHigh = 4,
-  NSOperationQueuePriorityVeryHigh = 8
+    NSOperationQueuePriorityVeryLow = -8,
+    NSOperationQueuePriorityLow = -4,
+    NSOperationQueuePriorityNormal = 0,
+    NSOperationQueuePriorityHigh = 4,
+    NSOperationQueuePriorityVeryHigh = 8
 };
 
 typedef NSInteger NSOperationQueuePriority;
@@ -202,7 +172,7 @@ typedef NSInteger NSOperationQueuePriority;
 
 @interface NSBlockOperation : NSOperation
 {
-  @private
+@private
     NSMutableArray *_executionBlocks;
     void *_reserved;
 }
@@ -220,7 +190,7 @@ typedef NSInteger NSOperationQueuePriority;
 
 // Enumerated type for default operation count.
 enum {
-   NSOperationQueueDefaultMaxConcurrentOperationCount = -1
+    NSOperationQueueDefaultMaxConcurrentOperationCount = -1
 };
 
 @interface NSOperationQueue : NSObject
@@ -255,7 +225,7 @@ enum {
  */
 - (void) addOperations: (NSArray *)ops
      waitUntilFinished: (BOOL)shouldWait;
-  
+
 /** This method wraps a block in an operation and adds it to the queue.
  */
 - (void) addOperationWithBlock: (GSBlockOperationBlock)block;
@@ -312,12 +282,6 @@ enum {
  */
 - (void) waitUntilAllOperationsAreFinished;
 @end
-
-
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

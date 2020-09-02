@@ -41,56 +41,6 @@ enum PropertyAttributeKind
 	OBJC_PR_setter    = (1<<7)
 };
 
-/**
- * Flags in the second attributes field in declared properties.
- * Note: This field replaces the old 'is synthesized' field and so these values
- * are shifted left one from their values in clang.
- */
-enum PropertyAttributeKind2
-{
-	/**
-	 * No extended attributes.
-	 */
-	OBJC_PR_noextattr         = 0,
-	/**
-	 * The property is synthesized.  This has no meaning in properties on
-	 * protocols.
-	 */
-	OBJC_PR_synthesized       = (1<<0),
-	/**
-	 * The property is dynamic (i.e. the implementation is inherited or
-	 * provided at run time).
-	 */
-	OBJC_PR_dynamic           = (1<<1),
-	/**
-	 * This property belongs to a protocol.
-	 */
-	OBJC_PR_protocol          = OBJC_PR_synthesized | OBJC_PR_dynamic,
-	/**
-	 * The property is atomic.
-	 */
-	OBJC_PR_atomic            = (1<<2),
-	/**
-	 * The property value is a zeroing weak reference.
-	 */
-	OBJC_PR_weak              = (1<<3),
-	/**
-	 * The property value is strong (retained).  Currently, this is equivalent
-	 * to the strong attribute.
-	 */
-	OBJC_PR_strong            = (1<<4),
-	/**
-	 * The property value is just copied.
-	 */
-	OBJC_PR_unsafe_unretained = (1<<5),
-};
-
-/**
- * Structure used for property enumeration.  Note that property enumeration is
- * currently quite broken on OS X, so achieving full compatibility there is
- * impossible.  Instead, we strive to achieve compatibility with the
- * documentation.
- */
 // begin: objc_property
 /*
  1.property_attribute为T@”NSString”,&,N,V_exprice时：
@@ -147,9 +97,6 @@ struct objc_property
 	 * Name of this property.
 	 */
 	const char *name;
-	/**
-	 * The type encoding of the property.
-	 */
     /*
      一串, 关于 property 的描述信息. 例如.
      property_attr:T@"NSString",&,N,V_name,
@@ -170,73 +117,8 @@ struct objc_property
 };
 // end: objc_property
 
-/**
- * GNUstep v1 ABI version of `struct objc_property`
- */
-struct objc_property_gsv1
-{
-	/**
-	 * Name of this property.
-	 */
-	const char *name;
-	/**
-	 * Attributes for this property.  Made by ORing together
-	 * PropertyAttributeKinds.
-	 */
-	char attributes;
-	/**
-	 * Flag set if the property is synthesized.
-	 */
-	char attributes2;
-	/**
-	 * Padding field.  These were implicit in the structure field alignment
-	 * (four more on 64-bit platforms), but we'll make them explicit now for
-	 * future use.
-	 */
-	char unused1;
-	/**
-	 * More padding.
-	 */
-	char unused2;
-	/**
-	 * Name of the getter for this property.
-	 */
-	const char *getter_name;
-	/**
-	 * Type encoding for the get method for this property.
-	 */
-	const char *getter_types;
-	/**
-	 * Name of the set method for this property.
-	 */
-	const char *setter_name;
-	/**
-	 * Type encoding of the setter for this property.
-	 */
-	const char *setter_types;
-};
-
-/**
- * List of property introspection data.
- */
-struct objc_property_list_gsv1
-{
-	/**
-	 * Number of properties in this array.
-	 */
-	int count;
-	/* 
-	 * The next property in a linked list.
-	 */
-	struct objc_property_list *next; 
-	/**
-	 * List of properties.
-	 */
-	struct objc_property_gsv1 properties[];
-};
-
-/**
- * List of property introspection data.
+/*
+ objc_property_list, 存储 分类里面, 或者类里面 关于属性的集合信息.
  */
 // begin: objc_property_list
 struct objc_property_list

@@ -131,11 +131,11 @@ static void setReference(struct reference_list *list,
         default: return;
         case OBJC_ASSOCIATION_COPY_NONATOMIC:
         case OBJC_ASSOCIATION_COPY:
-//            obj = [(id)obj copy];
+            //            obj = [(id)obj copy];
             break;
         case OBJC_ASSOCIATION_RETAIN_NONATOMIC:
         case OBJC_ASSOCIATION_RETAIN:
-//            obj = objc_retain(obj);
+            //            obj = objc_retain(obj);
         case OBJC_ASSOCIATION_ASSIGN:
             break;
     }

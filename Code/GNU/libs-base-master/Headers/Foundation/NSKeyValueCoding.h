@@ -1,28 +1,3 @@
-
-/* Interface for NSKeyValueCoding for GNUStep
-   Copyright (C) 2000 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date:	2000
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-   */ 
-
 #ifndef __NSKeyValueCoding_h_GNUSTEP_BASE_INCLUDE
 #define __NSKeyValueCoding_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -30,10 +5,6 @@
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 
 #import	<Foundation/NSObject.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 @class NSArray;
 @class NSMutableArray;
@@ -46,17 +17,6 @@ extern "C" {
 /** An exception for an unknown key in [NSObject(NSKeyValueCoding)]. */
 GS_EXPORT NSString* const NSUndefinedKeyException;
 
-/**
- * <p>This describes an informal protocol for <em>key-value coding</em>, a
- * mechanism whereby the fields of an object may be accessed and set using
- * generic methods in conjunction with string keys rather than field-specific
- * methods.  Key-based access loses compile-time validity checking, but can be
- * convenient in certain kinds of situations.</p>
- *
- * <p>The basic methods are implemented as a category of the [NSObject] class,
- * but other classes override those default implementations to perform more
- * specific operations.</p>
- */
 @interface NSObject (NSKeyValueCoding)
 
 /**
@@ -95,10 +55,10 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
 /**
  * Returns a mutable array value for a given key. This method:
  * <list>
- *  <item>Searches the receiver for methods matching the patterns 
+ *  <item>Searches the receiver for methods matching the patterns
  *   insertObject:in&lt;Key&gt;AtIndex: and
  *   removeObjectFrom&lt;Key&gt;AtIndex:. If both
- *   methods are found, each message sent to the proxy array will result in the 
+ *   methods are found, each message sent to the proxy array will result in the
  *   invocation of one or more of these methods. If
  *   replaceObjectIn&lt;Key&gt;AtIndex:withObject:
  *   is also found in the receiver it
@@ -107,11 +67,11 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  *   method set&lt;Key&gt;:. Each message sent to the proxy array will result in
  *   the invocation of set&lt;Key&gt;:</item>
  *  <item>If the previous do not match, and accessInstanceVariablesDirectly
- *   returns YES, searches for an instance variable matching _&lt;key&gt; or 
+ *   returns YES, searches for an instance variable matching _&lt;key&gt; or
  *   &lt;key&gt; (in that order). If the instance variable is found,
  *   messages sent
  *   to the proxy object will be forwarded to the instance variable.</item>
- *  <item>If none of the previous are found, raises an NSUndefinedKeyException 
+ *  <item>If none of the previous are found, raises an NSUndefinedKeyException
  *  </item>
  * </list>
  */
@@ -125,7 +85,7 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
 /**
  * Returns a mutable set value for a given key. This method:
  * <list>
- *  <item>Searches the receiver for methods matching the patterns 
+ *  <item>Searches the receiver for methods matching the patterns
  *   add&lt;Key&gt;Object:, remove&lt;Key&gt;Object:,
  *   add&lt;Key&gt;:, and remove&lt;Key&gt;:, which
  *   correspond to the NSMutableSet methods addObject:, removeObject:,
@@ -139,11 +99,11 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  *   method set&lt;Key&gt;:. Each message sent to the proxy set will result in
  *   the invocation of set&lt;Key&gt;:</item>
  *  <item>If the previous do not match, and accessInstanceVariablesDirectly
- *   returns YES, searches for an instance variable matching _&lt;key&gt; or 
+ *   returns YES, searches for an instance variable matching _&lt;key&gt; or
  *   &lt;key&gt; (in that order). If the instance variable is found,
  *   messages sent
  *   to the proxy object will be forwarded to the instance variable.</item>
- *  <item>If none of the previous are found, raises an NSUndefinedKeyException 
+ *  <item>If none of the previous are found, raises an NSUndefinedKeyException
  *  </item>
  * </list>
  */
@@ -180,7 +140,7 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  * and raises NSInvalidArgumentException if the accessor method doesn't take
  * exactly one argument or the type is unsupported (e.g. structs).
  * If the receiver expects a scalar value and the value supplied
- * is the NSNull instance or nil, this method invokes 
+ * is the NSNull instance or nil, this method invokes
  * -setNilValueForKey: .
  */
 - (void) setValue: (id)anObject forKey: (NSString*)aKey;
@@ -268,7 +228,7 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  * and raises NSInvalidArgumentException if the accessor method doesn't take
  * exactly one argument or the type is unsupported (e.g. structs).
  * If the receiver expects a scalar value and the value supplied
- * is the NSNull instance or nil, this method invokes 
+ * is the NSNull instance or nil, this method invokes
  * -unableToSetNilForKey: .
  */
 - (void) takeStoredValue: (id)anObject forKey: (NSString*)aKey;
@@ -300,7 +260,7 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  * and raises NSInvalidArgumentException if the accessor method doesn't take
  * exactly one argument or the type is unsupported (e.g. structs).
  * If the receiver expects a scalar value and the value supplied
- * is the NSNull instance or nil, this method invokes 
+ * is the NSNull instance or nil, this method invokes
  * -unableToSetNilForKey: .<br />
  * Deprecated ... use -setValue:forKey: instead.
  */
@@ -341,8 +301,8 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  * method, otherwise it simply returns YES.
  */
 - (BOOL) validateValue: (id*)aValue
-		forKey: (NSString*)aKey
-		 error: (out NSError**)anError;
+                forKey: (NSString*)aKey
+                 error: (out NSError**)anError;
 
 /**
  * Returns the result of calling -validateValue:forKey:error: on the receiver
@@ -350,8 +310,8 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
  * -valueForKeyPath: method.
  */
 - (BOOL) validateValue: (id*)aValue
-	    forKeyPath: (NSString*)aKey
-		 error: (out NSError**)anError;
+            forKeyPath: (NSString*)aKey
+                 error: (out NSError**)anError;
 
 /**
  * Returns the value associated with the supplied key as an object.
@@ -409,10 +369,6 @@ GS_EXPORT NSString* const NSUndefinedKeyException;
 - (NSDictionary*) valuesForKeys: (NSArray*)keys;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif	/* GS_API_MACOSX */
 

@@ -1,28 +1,3 @@
-/** Implementation for NSIndexPath for GNUStep
-   Copyright (C) 2006 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Created: Feb 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-
-   */ 
-
 #import "common.h"
 #define	EXPOSE_NSIndexPath_IVARS	1
 #import	"Foundation/NSByteOrder.h"
@@ -44,177 +19,177 @@ static	NSIndexPath	*dummy = nil;
 
 + (id) allocWithZone: (NSZone*)aZone
 {
-  if (self == myClass)
+    if (self == myClass)
     {
-      return empty;
+        return empty;
     }
-  return [super allocWithZone: aZone];
+    return [super allocWithZone: aZone];
 }
 
 + (id) indexPathWithIndex: (NSUInteger)anIndex
 {
-  return [self indexPathWithIndexes: &anIndex length: 1];
+    return [self indexPathWithIndexes: &anIndex length: 1];
 }
 
 + (id) indexPathWithIndexes: (NSUInteger*)indexes length: (NSUInteger)length
 {
-  id	o = [self allocWithZone: NSDefaultMallocZone()];
-
-  o = [o initWithIndexes: indexes length: length];
-  return AUTORELEASE(o);
+    id	o = [self allocWithZone: NSDefaultMallocZone()];
+    
+    o = [o initWithIndexes: indexes length: length];
+    return AUTORELEASE(o);
 }
 
 + (void) initialize
 {
-  if (empty == nil)
+    if (empty == nil)
     {
-      myClass = self;
-      empty = (NSIndexPath*)NSAllocateObject(self, 0, NSDefaultMallocZone());
-      [[NSObject leakAt: &empty] release];
-      dummy = (NSIndexPath*)NSAllocateObject(self, 0, NSDefaultMallocZone());
-      [[NSObject leakAt: &dummy] release];
-      shared = NSCreateHashTable(NSNonRetainedObjectHashCallBacks, 1024);
-      [[NSObject leakAt: &shared] release];
-      NSHashInsert(shared, empty);
-      lock = [NSRecursiveLock new];
-      [[NSObject leakAt: &lock] release];
+        myClass = self;
+        empty = (NSIndexPath*)NSAllocateObject(self, 0, NSDefaultMallocZone());
+        [[NSObject leakAt: &empty] release];
+        dummy = (NSIndexPath*)NSAllocateObject(self, 0, NSDefaultMallocZone());
+        [[NSObject leakAt: &dummy] release];
+        shared = NSCreateHashTable(NSNonRetainedObjectHashCallBacks, 1024);
+        [[NSObject leakAt: &shared] release];
+        NSHashInsert(shared, empty);
+        lock = [NSRecursiveLock new];
+        [[NSObject leakAt: &lock] release];
     }
 }
 
 - (NSComparisonResult) compare: (NSIndexPath*)other
 {
-  if (other != self)
+    if (other != self)
     {
-      NSUInteger	olength = other->_length;
-      NSUInteger	*oindexes = other->_indexes;
-      NSUInteger	end = (_length > olength) ? _length : olength;
-      NSUInteger	pos;
-
-      for (pos = 0; pos < end; pos++)
-	{
-	  if (pos >= _length)
-	    {
-	      return NSOrderedDescending;
-	    }
-	  else if (pos >= olength)
-	    {
-	      return NSOrderedAscending;
-	    }
-	  if (oindexes[pos] < _indexes[pos])
-	    {
-	      return NSOrderedDescending;
-	    }
-	  if (oindexes[pos] > _indexes[pos])
-	    {
-	      return NSOrderedAscending;
-	    }
-	}
-      /*
-       * Should never get here.
-       */
-      NSLog(@"Argh ... two identical index paths exist!");
+        NSUInteger	olength = other->_length;
+        NSUInteger	*oindexes = other->_indexes;
+        NSUInteger	end = (_length > olength) ? _length : olength;
+        NSUInteger	pos;
+        
+        for (pos = 0; pos < end; pos++)
+        {
+            if (pos >= _length)
+            {
+                return NSOrderedDescending;
+            }
+            else if (pos >= olength)
+            {
+                return NSOrderedAscending;
+            }
+            if (oindexes[pos] < _indexes[pos])
+            {
+                return NSOrderedDescending;
+            }
+            if (oindexes[pos] > _indexes[pos])
+            {
+                return NSOrderedAscending;
+            }
+        }
+        /*
+         * Should never get here.
+         */
+        NSLog(@"Argh ... two identical index paths exist!");
     }
-  return NSOrderedSame;
+    return NSOrderedSame;
 }
 
 - (id) copyWithZone: (NSZone*)aZone
 {
-  return RETAIN(self);
+    return RETAIN(self);
 }
 
 - (void) dealloc
 {
-  if (self != empty)
+    if (self != empty)
     {
-      [lock lock];
-      if (shared != nil)
+        [lock lock];
+        if (shared != nil)
         {
-          NSHashRemove(shared, self);
+            NSHashRemove(shared, self);
         }
-      [lock unlock];
-      if (_indexes != 0)
+        [lock unlock];
+        if (_indexes != 0)
         {
-          NSZoneFree(NSDefaultMallocZone(), _indexes);
+            NSZoneFree(NSDefaultMallocZone(), _indexes);
         }
-      [super dealloc];
+        [super dealloc];
     }
-  GSNOSUPERDEALLOC;
+    GSNOSUPERDEALLOC;
 }
 
 - (NSString*) description
 {
-  NSMutableString	*m = [[super description] mutableCopy];
-  NSUInteger		i;
-
-  [m appendFormat: @"%"PRIuPTR" indexes [", _length];
-  for (i = 0; i < _length; i++)
+    NSMutableString	*m = [[super description] mutableCopy];
+    NSUInteger		i;
+    
+    [m appendFormat: @"%"PRIuPTR" indexes [", _length];
+    for (i = 0; i < _length; i++)
     {
-      if (i > 0)
-	{
-	  [m appendString: @", "];
-	}
-      [m appendFormat: @"%"PRIuPTR, _indexes[i]];
+        if (i > 0)
+        {
+            [m appendString: @", "];
+        }
+        [m appendFormat: @"%"PRIuPTR, _indexes[i]];
     }
-  [m appendString: @"]"];
-  return AUTORELEASE(m);
+    [m appendString: @"]"];
+    return AUTORELEASE(m);
 }
 
 - (void) encodeWithCoder: (NSCoder*)aCoder
 {
-  if ([aCoder allowsKeyedCoding] == YES)
+    if ([aCoder allowsKeyedCoding] == YES)
     {
-      [aCoder encodeInt: (NSInteger)_length forKey: @"NSIndexPathLength"];
-      if (_length == 1)
-	{
-	  [aCoder encodeInt: (NSInteger)_indexes[0]
-                     forKey: @"NSIndexPathValue"];
-	}
-      else if (_length > 1)
-	{
-	  NSMutableData	*m;
-	  NSUInteger	*buf;
-	  NSUInteger	i;
-
-	  m = [NSMutableData new];
-	  [m setLength: _length * sizeof(NSUInteger)];
-	  buf = [m mutableBytes];
-	  for (i = 0; i < _length; i++)
-	    {
-	      buf[i] = NSSwapHostIntToBig(_indexes[i]);
-	    }
-	  [aCoder encodeObject: m forKey: @"NSIndexPathData"];
-	  RELEASE(m);
-	}
+        [aCoder encodeInt: (NSInteger)_length forKey: @"NSIndexPathLength"];
+        if (_length == 1)
+        {
+            [aCoder encodeInt: (NSInteger)_indexes[0]
+                       forKey: @"NSIndexPathValue"];
+        }
+        else if (_length > 1)
+        {
+            NSMutableData	*m;
+            NSUInteger	*buf;
+            NSUInteger	i;
+            
+            m = [NSMutableData new];
+            [m setLength: _length * sizeof(NSUInteger)];
+            buf = [m mutableBytes];
+            for (i = 0; i < _length; i++)
+            {
+                buf[i] = NSSwapHostIntToBig(_indexes[i]);
+            }
+            [aCoder encodeObject: m forKey: @"NSIndexPathData"];
+            RELEASE(m);
+        }
     }
-  else
+    else
     {
-      [aCoder encodeValueOfObjCType: @encode(NSUInteger) at: &_length];
-      if (_length > 0)
-	{
-	  [aCoder encodeArrayOfObjCType: @encode(NSUInteger)
-				  count: _length
-				     at: _indexes];
-	}
+        [aCoder encodeValueOfObjCType: @encode(NSUInteger) at: &_length];
+        if (_length > 0)
+        {
+            [aCoder encodeArrayOfObjCType: @encode(NSUInteger)
+                                    count: _length
+                                       at: _indexes];
+        }
     }
 }
 
 - (void) getIndexes: (NSUInteger*)aBuffer
 {
-  memcpy(aBuffer, _indexes, _length * sizeof(NSUInteger));
+    memcpy(aBuffer, _indexes, _length * sizeof(NSUInteger));
 }
 
 - (NSUInteger) hash
 {
-  return _hash;
+    return _hash;
 }
 
 - (NSUInteger) indexAtPosition: (NSUInteger)position
 {
-  if (position >= _length)
+    if (position >= _length)
     {
-      return NSNotFound;
+        return NSNotFound;
     }
-  return _indexes[position];
+    return _indexes[position];
 }
 
 /**
@@ -222,136 +197,136 @@ static	NSIndexPath	*dummy = nil;
  */
 - (NSIndexPath *) indexPathByAddingIndex: (NSUInteger)anIndex
 {
-  NSUInteger	buffer[_length + 1];
-
-  [self getIndexes: buffer];
-  buffer[_length] = anIndex;
-  return [[self class] indexPathWithIndexes: buffer length: _length + 1];
+    NSUInteger	buffer[_length + 1];
+    
+    [self getIndexes: buffer];
+    buffer[_length] = anIndex;
+    return [[self class] indexPathWithIndexes: buffer length: _length + 1];
 }
 
 - (NSIndexPath *) indexPathByRemovingLastIndex
 {
-  if (_length <= 1)
+    if (_length <= 1)
     {
-      return empty;
+        return empty;
     }
-  else
+    else
     {
-      return [[self class] indexPathWithIndexes: _indexes length: _length - 1];
+        return [[self class] indexPathWithIndexes: _indexes length: _length - 1];
     }
 }
- 
+
 - (id) initWithCoder: (NSCoder*)aCoder
 {
-  if ([aCoder allowsKeyedCoding] == YES)
+    if ([aCoder allowsKeyedCoding] == YES)
     {
-      NSUInteger	length;
-      NSUInteger	index;
-
-      length = [aCoder decodeIntegerForKey: @"NSIndexPathLength"];
-      if (length == 1)
-	{
-	  index = [aCoder decodeIntegerForKey: @"NSIndexPathValue"];
-	  self = [self initWithIndex: index];
-	}
-      else if (length > 1)
-	{
-	  // FIXME ... not MacOS-X
-	  NSMutableData	*d = [aCoder decodeObjectForKey: @"NSIndexPathData"];
-	  NSUInteger	l = [d length];
-	  NSUInteger	s = l / length;
-	  NSUInteger	i;
-          void          *src = [d mutableBytes];
-          NSUInteger    *dst;
-
-	  if (s == sizeof(NSUInteger))
-	    {
-              dst = (NSUInteger*)src;
-            }
-	  else
-	    {
-	      dst = (NSUInteger*)NSZoneMalloc(NSDefaultMallocZone(),
-		length * sizeof(NSUInteger));
-            }
-
-          if (s == sizeof(long))
+        NSUInteger	length;
+        NSUInteger	index;
+        
+        length = [aCoder decodeIntegerForKey: @"NSIndexPathLength"];
+        if (length == 1)
+        {
+            index = [aCoder decodeIntegerForKey: @"NSIndexPathValue"];
+            self = [self initWithIndex: index];
+        }
+        else if (length > 1)
+        {
+            // FIXME ... not MacOS-X
+            NSMutableData	*d = [aCoder decodeObjectForKey: @"NSIndexPathData"];
+            NSUInteger	l = [d length];
+            NSUInteger	s = l / length;
+            NSUInteger	i;
+            void          *src = [d mutableBytes];
+            NSUInteger    *dst;
+            
+            if (s == sizeof(NSUInteger))
             {
-              long	*ptr = (long*)src;
-
-              for (i = 0; i < _length; i++)
+                dst = (NSUInteger*)src;
+            }
+            else
+            {
+                dst = (NSUInteger*)NSZoneMalloc(NSDefaultMallocZone(),
+                                                length * sizeof(NSUInteger));
+            }
+            
+            if (s == sizeof(long))
+            {
+                long	*ptr = (long*)src;
+                
+                for (i = 0; i < _length; i++)
                 {
-                  dst[i] = (NSUInteger)NSSwapBigLongToHost(ptr[i]);
+                    dst[i] = (NSUInteger)NSSwapBigLongToHost(ptr[i]);
                 }
             }
-          else if (s == sizeof(short))
+            else if (s == sizeof(short))
             {
-              short	*ptr = (short*)src;
-
-              for (i = 0; i < _length; i++)
+                short	*ptr = (short*)src;
+                
+                for (i = 0; i < _length; i++)
                 {
-                  dst[i] = (NSUInteger)NSSwapBigShortToHost(ptr[i]);
+                    dst[i] = (NSUInteger)NSSwapBigShortToHost(ptr[i]);
                 }
             }
-          else if (s == sizeof(long long))
+            else if (s == sizeof(long long))
             {
-              long long	*ptr = (long long*)src;
-
-              for (i = 0; i < _length; i++)
+                long long	*ptr = (long long*)src;
+                
+                for (i = 0; i < _length; i++)
                 {
-                  dst[i] = (NSUInteger)NSSwapBigLongLongToHost(ptr[i]);
+                    dst[i] = (NSUInteger)NSSwapBigLongLongToHost(ptr[i]);
                 }
             }
-          else
+            else
             {
-              if ((void*)dst != src)
+                if ((void*)dst != src)
                 {
-                  NSZoneFree(NSDefaultMallocZone(), dst);
+                    NSZoneFree(NSDefaultMallocZone(), dst);
                 }
-              [NSException raise: NSGenericException format:
-                @"Unable to decode unsigned integers of size %"PRIuPTR, s];
+                [NSException raise: NSGenericException format:
+                 @"Unable to decode unsigned integers of size %"PRIuPTR, s];
             }
-          self = [self initWithIndexes: dst length: length];
-          if ((void*)dst != src)
+            self = [self initWithIndexes: dst length: length];
+            if ((void*)dst != src)
             {
-	      NSZoneFree(NSDefaultMallocZone(), dst);
-	    }
-	}
+                NSZoneFree(NSDefaultMallocZone(), dst);
+            }
+        }
     }
-  else
+    else
     {
-      NSUInteger	length;
-
-      [aCoder decodeValueOfObjCType: @encode(NSUInteger) at: &length];
-      if (length == 0)
-	{
-	  ASSIGN(self, empty);
-	}
-      else
-	{
-	  NSUInteger	buf[16];
-	  NSUInteger	*indexes = buf;
-
-	  if (length > 16)
-	    {
-	      indexes = NSZoneMalloc(NSDefaultMallocZone(),
-		length * sizeof(NSUInteger));
-	    }
-	  [aCoder decodeArrayOfObjCType: @encode(NSUInteger)
-				  count: length
-				     at: indexes];
-	  self = [self initWithIndexes: indexes length: length];
-	  if (indexes != buf)
-	    {
-	      NSZoneFree(NSDefaultMallocZone(), indexes);
-	    }
-	}
+        NSUInteger	length;
+        
+        [aCoder decodeValueOfObjCType: @encode(NSUInteger) at: &length];
+        if (length == 0)
+        {
+            ASSIGN(self, empty);
+        }
+        else
+        {
+            NSUInteger	buf[16];
+            NSUInteger	*indexes = buf;
+            
+            if (length > 16)
+            {
+                indexes = NSZoneMalloc(NSDefaultMallocZone(),
+                                       length * sizeof(NSUInteger));
+            }
+            [aCoder decodeArrayOfObjCType: @encode(NSUInteger)
+                                    count: length
+                                       at: indexes];
+            self = [self initWithIndexes: indexes length: length];
+            if (indexes != buf)
+            {
+                NSZoneFree(NSDefaultMallocZone(), indexes);
+            }
+        }
     }
-  return self;
+    return self;
 }
 
 - (id) initWithIndex: (NSUInteger)anIndex
 {
-  return [self initWithIndexes: &anIndex length: 1];
+    return [self initWithIndexes: &anIndex length: 1];
 }
 
 /** <init />
@@ -360,102 +335,102 @@ static	NSIndexPath	*dummy = nil;
  */
 - (id) initWithIndexes: (NSUInteger*)indexes length: (NSUInteger)length
 {
-  NSIndexPath	*found;
-  NSUInteger	h = 0;
-  NSUInteger	i;
-
-  if (_length != 0)
+    NSIndexPath	*found;
+    NSUInteger	h = 0;
+    NSUInteger	i;
+    
+    if (_length != 0)
     {
-      [NSException raise: NSGenericException
-		  format: @"Attempt to re-initialize NSIndexPath"];
+        [NSException raise: NSGenericException
+                    format: @"Attempt to re-initialize NSIndexPath"];
     }
-  // FIXME ... need better hash function?
-  for (i = 0; i < length; i++)
+    // FIXME ... need better hash function?
+    for (i = 0; i < length; i++)
     {
-      h = (h << 5) ^ indexes[i];
+        h = (h << 5) ^ indexes[i];
     }
-
-  [lock lock];
-  dummy->_hash = h;
-  dummy->_length = length;
-  dummy->_indexes = indexes;
-  found = NSHashGet(shared, dummy);
-  if (found == nil)
+    
+    [lock lock];
+    dummy->_hash = h;
+    dummy->_length = length;
+    dummy->_indexes = indexes;
+    found = NSHashGet(shared, dummy);
+    if (found == nil)
     {
-      if (self == empty)
-	{
-          RELEASE(self);
-	  self = (NSIndexPath*)NSAllocateObject([self class],
-	    0, NSDefaultMallocZone());
-	}
-      _hash = dummy->_hash;
-      _length = dummy->_length;
-      _indexes = NSZoneMalloc(NSDefaultMallocZone(),
-	_length * sizeof(NSUInteger));
-      memcpy(_indexes, dummy->_indexes, _length * sizeof(NSUInteger));
-      NSHashInsert(shared, self);
+        if (self == empty)
+        {
+            RELEASE(self);
+            self = (NSIndexPath*)NSAllocateObject([self class],
+                                                  0, NSDefaultMallocZone());
+        }
+        _hash = dummy->_hash;
+        _length = dummy->_length;
+        _indexes = NSZoneMalloc(NSDefaultMallocZone(),
+                                _length * sizeof(NSUInteger));
+        memcpy(_indexes, dummy->_indexes, _length * sizeof(NSUInteger));
+        NSHashInsert(shared, self);
     }
-  else
+    else
     {
-      ASSIGN(self, found);
+        ASSIGN(self, found);
     }
-  dummy->_indexes = 0;  // Don't want static indexes deallocated atExit
-  [lock unlock];
-  return self;
+    dummy->_indexes = 0;  // Don't want static indexes deallocated atExit
+    [lock unlock];
+    return self;
 }
 
 - (BOOL) isEqual: (id)other
 {
-  if (other == self)
+    if (other == self)
     {
-      return YES;
+        return YES;
     }
-  if (other == nil || GSObjCIsKindOf(object_getClass(other), myClass) == NO)
+    if (other == nil || GSObjCIsKindOf(object_getClass(other), myClass) == NO)
     {
-      return NO;
+        return NO;
     }
-  if (((NSIndexPath*)other)->_length != _length)
+    if (((NSIndexPath*)other)->_length != _length)
     {
-      return NO;
+        return NO;
     }
-  else
+    else
     {
-      NSUInteger	*oindexes = ((NSIndexPath*)other)->_indexes;
-      NSUInteger	pos = _length;
-
-      while (pos-- > 0)
-	{
-	  if (_indexes[pos] != oindexes[pos])
-	    {
-	      return NO;
-	    }
-	}
+        NSUInteger	*oindexes = ((NSIndexPath*)other)->_indexes;
+        NSUInteger	pos = _length;
+        
+        while (pos-- > 0)
+        {
+            if (_indexes[pos] != oindexes[pos])
+            {
+                return NO;
+            }
+        }
     }
-  return YES;
+    return YES;
 }
 
 - (NSUInteger) length
 {
-  return _length;
+    return _length;
 }
 
 - (oneway void) release
 {
-  if (self != empty)
+    if (self != empty)
     {
-      /* We lock the table while checking, to prevent
-       * another thread from grabbing this object while we are
-       * checking it.
-       * If we are going to deallocate the object, we first remove
-       * it from the table so that no other thread will find it
-       * and try to use it while it is being deallocated.
-       */
-      [lock lock];
-      if (NSDecrementExtraRefCountWasZero(self))
-	{
-	  [self dealloc];
-	}
-      [lock unlock];
+        /* We lock the table while checking, to prevent
+         * another thread from grabbing this object while we are
+         * checking it.
+         * If we are going to deallocate the object, we first remove
+         * it from the table so that no other thread will find it
+         * and try to use it while it is being deallocated.
+         */
+        [lock lock];
+        if (NSDecrementExtraRefCountWasZero(self))
+        {
+            [self dealloc];
+        }
+        [lock unlock];
     }
 }
 

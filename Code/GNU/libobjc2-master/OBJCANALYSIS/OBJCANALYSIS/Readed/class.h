@@ -37,30 +37,14 @@ static inline BOOL objc_bitfield_test(uintptr_t bitfield, uint64_t field)
 	return (bf->values[byte] & bit) == bit;
 }
 
-// begin: objc_class
+/*
+ 类对象的定义.
+ */
 struct objc_class
 {
-	/**
-	 * Pointer to the metaclass for this class.  The metaclass defines the
-	 * methods use when a message is sent to the class, rather than an
-	 * instance.
-	 */
-	Class                      isa;
-	/**
-	 * Pointer to the superclass.  The compiler will set this to the name of
-	 * the superclass, the runtime will initialize it to point to the real
-	 * class.
-	 */
-	Class                      super_class;
-	/**
-	 * The name of this class.  Set to the same value for both the class and
-	 * its associated metaclass.
-	 */
-	const char                *name;
-	/**
-	 * The version of this class.  This is not used by the language, but may be
-	 * set explicitly at class load time.
-	 */
+	Class                      isa; // 原类的指针, 元类上存储了类对象的方法, 也就是类方法.
+	Class                      super_class; // 父类的类对象的指针.
+	const char                *name; // 类名, 父类和元类都要进行设置.
 	long                       version;
 	/**
 	 * A bitfield containing various flags.  See the objc_class_flags
@@ -70,26 +54,17 @@ struct objc_class
      就是一个值的保存. 里面存储了各种 enum 相关的值, 根据位的与运算, 分别取出各个值. 和 isa 指针的获取一样.
      */
 	unsigned long              info;
-	/**
-	 * The size of this class.  For classes using the non-fragile ABI, the
-	 * compiler will set this to a negative value The absolute value will be
-	 * the size of the instance variables defined on just this class.  When
-	 * using the fragile ABI, the instance size is the size of instances of
-	 * this class, including any instance variables defined on superclasses.
-	 *
-	 * In both cases, this will be set to the size of an instance of the class
-	 * after the class is registered with the runtime.
-	 */
-	long                       instance_size;
-	/**
-	 * Metadata describing the instance variables in this class.
-	 */
-	struct objc_ivar_list     *ivars;
-	/**
-	 * Metadata for for defining the mappings from selectors to IMPs.  Linked
-	 * list of method list structures, one per class and one per category.
-	 */
-	struct objc_method_list   *methods;
+	
+	long                       instance_size; // 对象的大小. alloc 的时候, 就是拿到这个大小去开辟内存空间.
+
+	struct objc_ivar_list     *ivars; // 成员列表的元信息.
+	
+	struct objc_method_list   *methods; // 方法列表的元信息.
+    
+    struct objc_protocol_list *protocols; // 协议列表的元信息
+    
+    struct objc_property_list *properties; // 属性列表的元信息
+    
 	/**
 	 * The dispatch table for this class.  Intialized and maintained by the
 	 * runtime.
@@ -119,11 +94,6 @@ struct objc_class
 	Class                      sibling_class;
 
 	/**
-	 * Metadata describing the protocols adopted by this class.  Not used by
-	 * the runtime.
-	 */
-	struct objc_protocol_list *protocols;
-	/**
 	 * Linked list of extra data attached to this class.
 	 */
 	struct reference_list     *extra_data;
@@ -132,10 +102,7 @@ struct objc_class
 	* ABI classes.
 	*/
 	long                       abi_version;
-	/**
-	* List of declared properties on this class (NULL if none).
-	*/
-	struct objc_property_list *properties;
+	
 };
 // end: objc_class
 

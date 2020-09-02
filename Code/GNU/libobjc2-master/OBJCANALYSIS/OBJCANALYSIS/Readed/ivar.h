@@ -26,8 +26,10 @@ struct objc_ivar
 	 * The size of this ivar.  Note that the current ABI limits ivars to 4GB.
 	 */
 	uint32_t    size;
-	/**
-	 * Flags for this instance variable.
+	/*
+     
+     Flags 通过 位运算, 存储了关于内存操作的信息.
+	 
 	 */
 	uint32_t    flags;
 };
@@ -121,28 +123,6 @@ static inline objc_ivar_ownership ivarGetOwnership(Ivar ivar)
 {
 	return (objc_ivar_ownership)(ivar->flags & ivar_ownership_mask);
 }
-
-/**
- * Legacy ivar structure, inherited from the GCC ABI.
- */
-struct objc_ivar_gcc
-{
-	/**
-	 * Name of this instance variable.
-	 */
-	const char *name;
-	/**
-	 * Type encoding for this instance variable.
-	 */
-	const char *type;
-	/**
-	 * The offset from the start of the object.  When using the non-fragile
-	 * ABI, this is initialized by the compiler to the offset from the start of
-	 * the ivars declared by this class.  It is then set by the runtime to the
-	 * offset from the object pointer.
-	 */
-	int         offset;
-};
 
 
 /**

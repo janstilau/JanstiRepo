@@ -1156,5 +1156,3 @@ int objc_set_apple_compatible_objcxx_exceptions(int newValue) OBJC_NONPORTABLE;
 #define _C_ONEWAY   'V'
 
 #include "runtime-deprecated.h"
-
-#endif // __LIBOBJC_RUNTIME_H_INCLUDED__

@@ -74,14 +74,14 @@ PRIVATE void call_cxx_construct(id obj)
     call_cxx_construct_for_class(classForObject(obj), obj);
 }
 
-/**
- * Looks up the instance method in a specific class, without recursing into
- * superclasses.
+/*
+ 拿到 aClass 的 method_list, 然后一个个寻找里面是不是有对应的 SEL
  */
 static Method class_getInstanceMethodNonrecursive(Class aClass, SEL aSelector)
 {
     for (struct objc_method_list *methods = aClass->methods;
-         methods != NULL ; methods = methods->next)
+         methods != NULL ;
+         methods = methods->next)
     {
         for (int i=0 ; i<methods->count ; i++)
         {
@@ -95,22 +95,21 @@ static Method class_getInstanceMethodNonrecursive(Class aClass, SEL aSelector)
     return NULL;
 }
 
-BOOL class_addIvar(Class cls, const char *name, size_t size, uint8_t alignment,
+BOOL class_addIvar(Class cls,
+                   const char *name,
+                   size_t size, uint8_t alignment,
                    const char *types)
 {
-    CHECK_ARG(cls);
-    CHECK_ARG(name);
-    CHECK_ARG(types);
     // You can't add ivars to initialized classes.  Note: We can't use the
     // resolved flag here because class_getInstanceVariable() sets it.
     if (objc_test_class_flag(cls, objc_class_flag_initialized))
     {
-        return NO;
+        return false;
     }
     
     if (class_getInstanceVariable(cls, name) != NULL)
     {
-        return NO;
+        return false;
     }
     
     struct objc_ivar_list *ivarlist = cls->ivars;
@@ -125,9 +124,11 @@ BOOL class_addIvar(Class cls, const char *name, size_t size, uint8_t alignment,
     {
         ivarlist->count++;
         // objc_ivar_list contains one ivar.  Others follow it.
-        cls->ivars = realloc(ivarlist, sizeof(struct objc_ivar_list) +
+        cls->ivars = realloc(ivarlist,
+                             sizeof(struct objc_ivar_list) +
                              (ivarlist->count) * sizeof(struct objc_ivar));
     }
+    //Ivar 是一个指针, 所以这里的修改, 就是改变了 CLASS 里面的内容.
     Ivar ivar = ivar_at_index(cls->ivars, cls->ivars->count - 1);
     ivar->name = strdup(name);
     ivar->type = strdup(types);
@@ -146,20 +147,22 @@ BOOL class_addIvar(Class cls, const char *name, size_t size, uint8_t alignment,
     }
     
     ivar->offset = (int*)(uintptr_t)offset;
-    // Increase the instance size to make space for this.
+    // 每次增加了之后, 要修改对应的 class 的 instanceSize 的大小.
     cls->instance_size = offset + size;
     return YES;
 }
 
 BOOL class_addMethod(Class cls, SEL name, IMP imp, const char *types)
 {
-    CHECK_ARG(cls);
-    CHECK_ARG(name);
-    CHECK_ARG(imp);
-    CHECK_ARG(types);
     const char *methodName = sel_getName(name);
     struct objc_method_list *methods;
-    for (methods=cls->methods; methods!=NULL ; methods=methods->next)
+    
+    /*
+     首先, 去自己的方法列表里面寻找, 是不是已经注册过了.
+     */
+    for (methods=cls->methods;
+         methods!=NULL ;
+         methods=methods->next)
     {
         for (int i=0 ; i<methods->count ; i++)
         {
@@ -192,8 +195,9 @@ BOOL class_addMethod(Class cls, SEL name, IMP imp, const char *types)
 
 BOOL class_addProtocol(Class cls, Protocol *protocol)
 {
-    CHECK_ARG(cls);
-    CHECK_ARG(protocol);
+    /*
+     class_conformsToProtocol 内部, 其实就是找到 protocol list 进行验证的过程.
+     */
     if (class_conformsToProtocol(cls, protocol)) { return NO; }
     struct objc_protocol_list *protocols =
     malloc(sizeof(struct objc_protocol_list) + sizeof(Protocol*));
@@ -205,6 +209,10 @@ BOOL class_addProtocol(Class cls, Protocol *protocol)
     
     return YES;
 }
+
+/*
+ 这几个 copy 方法, 其实把双层数据格式, 统一称为了单层数据格式.
+ */
 
 Ivar * class_copyIvarList(Class cls, unsigned int *outCount)
 {
@@ -231,6 +239,9 @@ Ivar * class_copyIvarList(Class cls, unsigned int *outCount)
         return NULL;
     }
     
+    /*
+     List 是 malloc 出来的, 需要在外界进行 free.
+     */
     list = malloc((count + 1) * sizeof(struct objc_ivar *));
     list[count] = NULL;
     count = 0;
@@ -316,6 +327,9 @@ Protocol*__unsafe_unretained* class_copyProtocolList(Class cls, unsigned int *ou
     return protocols;
 }
 
+/*
+ 通过 class 创建相应的实例对象. 就是通过 class->instanceSize 创建相应大小的堆空间对象, 然后将 isa 指针赋值.
+ */
 id class_createInstance(Class cls, size_t extraBytes)
 {
     CHECK_ARG(cls);
@@ -348,6 +362,9 @@ id class_createInstance(Class cls, size_t extraBytes)
     return obj;
 }
 
+/*
+ copy, 最原始的意义, 就是 bit 位拷贝.
+ */
 id object_copy(id obj, size_t size)
 {
     Class cls = object_getClass(obj);
@@ -365,32 +382,20 @@ id object_dispose(id obj)
 
 Method class_getInstanceMethod(Class aClass, SEL aSelector)
 {
-    CHECK_ARG(aClass);
-    CHECK_ARG(aSelector);
-    // If the class has a dtable installed, then we can use the fast path
-    if (classHasInstalledDtable(aClass))
-    {
-        // Do a dtable lookup to find out which class the method comes from.
-        struct objc_slot2 *slot = objc_get_slot2(aClass, aSelector, NULL);
-        if (NULL == slot)
-        {
-            slot = objc_get_slot2(aClass, sel_registerName(sel_getName(aSelector)), NULL);
-            if (NULL == slot)
-            {
-                return NULL;
-            }
-        }
-        // Slots are the same as methods.
-        return (struct objc_method*)slot;
-    }
     Method m = class_getInstanceMethodNonrecursive(aClass, aSelector);
     if (NULL != m)
     {
         return m;
     }
+    /*
+     如果当前类, 没有找到该方法, 就递归调用到父类上.
+     */
     return class_getInstanceMethod(class_getSuperclass(aClass), aSelector);
 }
 
+/*
+ 直接调用 class_getInstanceMethod, 传过去 类对象就可以了.
+ */
 Method class_getClassMethod(Class aClass, SEL aSelector)
 {
     return class_getInstanceMethod(object_getClass((id)aClass), aSelector);
@@ -402,12 +407,18 @@ Ivar class_getClassVariable(Class cls, const char* name)
     return class_getInstanceVariable(object_getClass((id)cls), name);
 }
 
+/*
+ 直接回传 instance_size 就可以了.
+ */
 size_t class_getInstanceSize(Class cls)
 {
     if (Nil == cls) { return 0; }
     return cls->instance_size;
 }
 
+/*
+ 就是拿到 Ivar list 一个个的寻找而已.
+ */
 Ivar class_getInstanceVariable(Class cls, const char *name)
 {
     if (name != NULL)
@@ -468,11 +479,15 @@ BOOL class_isMetaClass(Class cls)
     return objc_test_class_flag(cls, objc_class_flag_meta);
 }
 
+/*
+ 所谓的 replace, 其实就是找到对应的 IMP, 然后把 imp 的值替换掉就可以了.
+ */
 IMP class_replaceMethod(Class cls, SEL name, IMP imp, const char *types)
 {
     if (Nil == cls) { return (IMP)0; }
     SEL sel = sel_registerTypedName_np(sel_getName(name), types);
     Method method = class_getInstanceMethodNonrecursive(cls, sel);
+    
     if (method == NULL)
     {
         class_addMethod(cls, sel, imp, types);
@@ -494,7 +509,6 @@ void class_setIvarLayout(Class cls, const char *layout)
     memcpy(cls->ivars, list, listsize);
 }
 
-__attribute__((deprecated))
 Class class_setSuperclass(Class cls, Class newSuper)
 {
     CHECK_ARG(cls);
@@ -554,36 +568,27 @@ Class class_setSuperclass(Class cls, Class newSuper)
     return oldSuper;
 }
 
-void class_setVersion(Class theClass, int version)
-{
-    if (Nil == theClass) { return; }
-    theClass->version = version;
-}
 
-void class_setWeakIvarLayout(Class cls, const char *layout)
-{
-    assert(0 && "Not implemented");
-}
+/*
+ Ivar 到底是什么样子的, 是内部数据结构, 需要一个方法进行提取.
+ */
 
 const char * ivar_getName(Ivar ivar)
 {
-    CHECK_ARG(ivar);
     return ivar->name;
 }
 
 ptrdiff_t ivar_getOffset(Ivar ivar)
 {
-    CHECK_ARG(ivar);
     return *ivar->offset;
 }
 
 const char * ivar_getTypeEncoding(Ivar ivar)
 {
-    CHECK_ARG(ivar);
     return ivar->type;
 }
 
-
+// 直接最最简单的, 两个 IMP 交换就可以了
 void method_exchangeImplementations(Method m1, Method m2)
 {
     if (NULL == m1 || NULL == m2) { return; }
@@ -603,7 +608,6 @@ SEL method_getName(Method method)
     if (NULL == method) { return (SEL)NULL; }
     return (SEL)method->selector;
 }
-
 
 IMP method_setImplementation(Method method, IMP imp)
 {

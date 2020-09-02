@@ -16,15 +16,13 @@ int main()
 	Class a, b, c, d, e;
 
     /*
-     在 objc_allocateClassPair 之后, 就应该调用 registerClassPair 的操作.
+    模拟一个如何进行类的动态创建的过程.
      */
-	assert(class_getInstanceSize(objc_allocateClassPair(Nil, "Empty", 0)) == sizeof(Class));
 	a = objc_allocateClassPair([Test class], "A", 0);
 	objc_registerClassPair(a);
 
 	b = objc_allocateClassPair(a, "B", 0);
 	class_addMethod(object_getClass(b), @selector(load), (IMP)load, "@:");
-
 	class_addIvar(b, "anIvar", 4, 2, "i");
 	objc_registerClassPair(b);
 

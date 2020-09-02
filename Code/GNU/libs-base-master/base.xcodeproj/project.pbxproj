@@ -1533,6 +1533,9 @@
 				18906E711610BF3C0003C892 /* NSCache.h */,
 				18906E741610BF3C0003C892 /* NSCharacterSet.h */,
 				18906E931610BF3C0003C892 /* NSIndexSet.h */,
+				18906E841610BF3C0003C892 /* NSEnumerator.h */,
+				18906E9E1610BF3C0003C892 /* NSNotification.h */,
+				18906EB11610BF3C0003C892 /* NSRange.h */,
 			);
 			name = Done;
 			sourceTree = "<group>";
@@ -2054,7 +2057,6 @@
 				18906E811610BF3C0003C892 /* NSDistantObject.h */,
 				18906E821610BF3C0003C892 /* NSDistributedLock.h */,
 				18906E831610BF3C0003C892 /* NSDistributedNotificationCenter.h */,
-				18906E841610BF3C0003C892 /* NSEnumerator.h */,
 				18906E851610BF3C0003C892 /* NSError.h */,
 				18906E861610BF3C0003C892 /* NSErrorRecoveryAttempting.h */,
 				18906E871610BF3C0003C892 /* NSException.h */,
@@ -2079,7 +2081,6 @@
 				18906E9B1610BF3C0003C892 /* NSMapTable.h */,
 				18906E9C1610BF3C0003C892 /* NSMethodSignature.h */,
 				18906E9D1610BF3C0003C892 /* NSNetServices.h */,
-				18906E9E1610BF3C0003C892 /* NSNotification.h */,
 				18906E9F1610BF3C0003C892 /* NSNotificationQueue.h */,
 				18906EA11610BF3C0003C892 /* NSNumberFormatter.h */,
 				18906EA21610BF3C0003C892 /* NSObjCRuntime.h */,
@@ -2096,7 +2097,6 @@
 				18906EAE1610BF3C0003C892 /* NSPropertyList.h */,
 				18906EAF1610BF3C0003C892 /* NSProtocolChecker.h */,
 				18906EB01610BF3C0003C892 /* NSProxy.h */,
-				18906EB11610BF3C0003C892 /* NSRange.h */,
 				18906EB21610BF3C0003C892 /* NSRegularExpression.h */,
 				18906EB31610BF3C0003C892 /* NSRunLoop.h */,
 				18906EB41610BF3C0003C892 /* NSScanner.h */,

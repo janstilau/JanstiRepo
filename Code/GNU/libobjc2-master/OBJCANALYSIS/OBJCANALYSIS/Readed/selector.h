@@ -5,7 +5,7 @@
  * test to see whether a selector is polymorphic and allows enumeration of all
  * type encodings for a given selector.
  *
- * This is the same size as an objc_selector, so we can allocate them from the
+ * This is the same size as an objc_selector  so we can allocate them from the
  * objc_selector pool.
  *
  * Note: For ABI v10, we can probably do something a bit more sensible here and
@@ -39,9 +39,6 @@ struct objc_selector
          */
 		uintptr_t index;
 	};
-	/**
-	 * The Objective-C type encoding of the message identified by this selector.
-	 */
 	const char * types;
 };
 // end: objc_selector

@@ -6,18 +6,9 @@
 // begin: objc_method
 struct objc_method
 {
-	/**
-	 * A pointer to the function implementing this method.
-	 */
-	IMP         imp;
-	/**
-	 * Selector used to send messages to this method.
-	 */
-	SEL         selector;
-	/**
-	 * The extended type encoding for this method.
-	 */
-	const char *types;
+	IMP         imp; // 实际的函数指针
+	SEL         selector; // SEL 数据, key 值
+	const char *types; // 函数的签名符号
 };
 // end: objc_method
 
@@ -40,32 +31,24 @@ struct objc_method_gcc
 	IMP         imp;
 };
 
-/**
- * Method list.  Each class or category defines a new one of these and they are
- * all chained together in a linked list, with new ones inserted at the head.
- * When constructing the dispatch table, methods in the start of the list are
- * used in preference to ones at the end.
+/*
+ methods 的单向链表, 分类, 类的原始信息里面, 关于方法, 是存储的这个对象, 在各个对象的里面, 按序存储着每个 method.
  */
-// begin: objc_method_list
 struct objc_method_list
 {
-	/**
-	 * The next group of methods in the list.
+	/*
+	  下一个 objc_method_list 的地址.
 	 */
 	struct objc_method_list  *next;
-	/**
+	/*
 	 * The number of methods in this list.
 	 */
 	int                       count;
-	/**
-	 * Sze of `struct objc_method`.  This allows runtimes downgrading newer
-	 * versions of this structure.
-	 */
 	size_t                    size;
-	/**
-	 * An array of methods.  Note that the actual size of this is count.
+	/*
+	 真正方法存储的地方, 是用数组进行的存储. 因为是数组, 所以需要 count 这个值来标明范围.
 	 */
-	struct objc_method        methods[];
+	struct objc_method        *methods;
 };
 // end: objc_method_list
 
@@ -83,21 +66,3 @@ static inline struct objc_method *method_at_index(struct objc_method_list *l, in
 	return (struct objc_method*)(((char*)l->methods) + (i * l->size));
 }
 
-/**
- * Legacy version of the method list.
- */
-struct objc_method_list_gcc
-{
-	/**
-	 * The next group of methods in the list.
-	 */
-	struct objc_method_list_gcc *next;
-	/**
-	 * The number of methods in this list.
-	 */
-	int                       count;
-	/**
-	 * An array of methods.  Note that the actual size of this is count.
-	 */
-	struct objc_method_gcc methods[];
-};
