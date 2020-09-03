@@ -38,8 +38,13 @@ typedef struct{
      */
   GSIArray	performers;
   unsigned	maxPerformers;
-  GSIArray	timers;		/* Mode 相关的 NSTimer 的集合. */
+    
+    /*
+     Mode 相关的 NSTimer 的集合, 所有的定时器, 都会在这个数组里面
+     */
+  GSIArray	timers;
   unsigned	maxTimers;
+    
   GSIArray	watchers;	/** The inputs set for the runloop mode */
   unsigned	maxWatchers;
 @private
@@ -70,6 +75,9 @@ typedef struct{
               for: (GSRunLoopWatcher*)watcher;
 - (void) endPoll;
 - (id) initWithMode: (NSString*)theMode extra: (void*)e;
+/*
+ receiver receivedEvent 都是在 pollUntil 中调用的, 而 pollUntil 则是在 acceptInputForMode 中调用的.
+ */
 - (BOOL) pollUntil: (int)milliseconds within: (NSArray*)contexts;
 @end
 

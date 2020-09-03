@@ -1,6 +1,7 @@
 #ifndef __NSRunLoop_h_GNUSTEP_BASE_INCLUDE
 #define __NSRunLoop_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
+#import "GSRunLoopPerformer.h"
 
 #import	<Foundation/NSMapTable.h>
 

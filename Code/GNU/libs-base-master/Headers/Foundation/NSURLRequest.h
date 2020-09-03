@@ -36,18 +36,18 @@ typedef NSUInteger NSURLRequestCachePolicy;
  */
 @interface NSURLRequest : NSObject <NSCoding, NSCopying, NSMutableCopying>
 {
-public
-NSData            *body;
-NSInputStream            *bodyStream;
-NSString            *method;
-NSMutableDictionary        *headers;
-BOOL                shouldHandleCookies;
-BOOL                          debug;
-NSURL                *URL;
-NSURL                *mainDocumentURL;
-NSURLRequestCachePolicy    cachePolicy;
-NSTimeInterval        timeoutInterval;
-NSMutableDictionary        *properties;
+    public
+    NSData            *body;
+    NSInputStream            *bodyStream;
+    NSString            *method;
+    NSMutableDictionary        *headers;
+    BOOL                shouldHandleCookies;
+    BOOL                          debug;
+    NSURL                *URL;
+    NSURL                *mainDocumentURL;
+    NSURLRequestCachePolicy    cachePolicy;
+    NSTimeInterval        timeoutInterval;
+    NSMutableDictionary        *properties;
 }
 
 /*

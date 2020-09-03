@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06DFF3E92501197F0009D33D /* GSRunLoopPerformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 06DFF3E72501197F0009D33D /* GSRunLoopPerformer.h */; };
+		06DFF3EA2501197F0009D33D /* GSRunLoopPerformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 06DFF3E82501197F0009D33D /* GSRunLoopPerformer.m */; };
 		180878891618537A006EBD74 /* objc-load.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890700B1610BF3C0003C892 /* objc-load.m */; };
 		1837DA141652D18400197E53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18394B1C1610D8E300335E85 /* Foundation.framework */; };
 		18394B341610D95600335E85 /* Foundation-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 18394B321610D95600335E85 /* Foundation-Prefix.pch */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -391,6 +393,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		06DFF3E72501197F0009D33D /* GSRunLoopPerformer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSRunLoopPerformer.h; sourceTree = "<group>"; };
+		06DFF3E82501197F0009D33D /* GSRunLoopPerformer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSRunLoopPerformer.m; sourceTree = "<group>"; };
 		1837D9C61652D0FF00197E53 /* .cvsignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
 		1837D9C71652D0FF00197E53 /* AGSHtml.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AGSHtml.h; sourceTree = "<group>"; };
 		1837D9C81652D0FF00197E53 /* AGSHtml.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AGSHtml.m; sourceTree = "<group>"; };
@@ -1540,6 +1544,16 @@
 			name = Done;
 			sourceTree = "<group>";
 		};
+		06DFF3E6250119560009D33D /* Runloop */ = {
+			isa = PBXGroup;
+			children = (
+				18906EB31610BF3C0003C892 /* NSRunLoop.h */,
+				06DFF3E72501197F0009D33D /* GSRunLoopPerformer.h */,
+				06DFF3E82501197F0009D33D /* GSRunLoopPerformer.m */,
+			);
+			name = Runloop;
+			sourceTree = "<group>";
+		};
 		1837D9C51652D0FF00197E53 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
@@ -2029,6 +2043,7 @@
 		18906E671610BF3C0003C892 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				06DFF3E6250119560009D33D /* Runloop */,
 				06C049A024FE99450088AD57 /* Done */,
 				AD197C0C189A4E98000F6CF9 /* NSInvocationOperation.h */,
 				AD197C0D189A4E98000F6CF9 /* NSMetadata.h */,
@@ -2098,7 +2113,6 @@
 				18906EAF1610BF3C0003C892 /* NSProtocolChecker.h */,
 				18906EB01610BF3C0003C892 /* NSProxy.h */,
 				18906EB21610BF3C0003C892 /* NSRegularExpression.h */,
-				18906EB31610BF3C0003C892 /* NSRunLoop.h */,
 				18906EB41610BF3C0003C892 /* NSScanner.h */,
 				18906EB51610BF3C0003C892 /* NSScriptWhoseTests.h */,
 				18906EB61610BF3C0003C892 /* NSSerialization.h */,
@@ -3694,6 +3708,7 @@
 				18394BAF1610D9ED00335E85 /* NSLock+GNUstepBase.h in Headers */,
 				18394BB01610D9ED00335E85 /* NSMutableString+GNUstepBase.h in Headers */,
 				18394BB11610D9ED00335E85 /* NSNetServices+GNUstepBase.h in Headers */,
+				06DFF3E92501197F0009D33D /* GSRunLoopPerformer.h in Headers */,
 				18394BB21610D9ED00335E85 /* NSNumber+GNUstepBase.h in Headers */,
 				18394BB31610D9ED00335E85 /* NSObject+GNUstepBase.h in Headers */,
 				18394BB41610D9ED00335E85 /* NSProcessInfo+GNUstepBase.h in Headers */,
@@ -3840,6 +3855,7 @@
 				18641D201678AD39003C6E11 /* GSSocks5Parser.m in Sources */,
 				18528957161396130016729B /* GCArray.m in Sources */,
 				18528958161396160016729B /* GCDictionary.m in Sources */,
+				06DFF3EA2501197F0009D33D /* GSRunLoopPerformer.m in Sources */,
 				185289591613961A0016729B /* GCObject.m in Sources */,
 				1852895A161396200016729B /* GSFunctions.m in Sources */,
 				1852895B161396240016729B /* GSInsensitiveDictionary.m in Sources */,
