@@ -14,20 +14,6 @@
 #include "callframe.h"
 #endif
 
-#if     defined(HAVE_SYS_MMAN_H)
-#include <sys/mman.h>
-#endif
-
-#if     defined(HAVE_MMAP)
-#  if   !defined(MAP_ANONYMOUS)
-#    if defined(MAP_ANON)
-#      define MAP_ANONYMOUS   MAP_ANON
-#    else
-#      undef  HAVE_MMAP
-#    endif
-#  endif
-#endif
-
 @implementation GSCodeBuffer
 
 + (GSCodeBuffer*) memoryWithSize: (NSUInteger)_size
@@ -292,13 +278,6 @@ _arg_addr(NSInvocation *inv, int index)
     }
 }
 
-/**
- * Returns an invocation instance which can be used to send messages to
- * a target object using the described signature.<br />
- * You must set the target and selector (using -setTarget: and -setSelector:)
- * before you attempt to use the invocation.<br />
- * Raises an NSInvalidArgumentException if the signature is nil.
- */
 + (NSInvocation*) invocationWithMethodSignature: (NSMethodSignature*)_signature
 {
     return AUTORELEASE([[NSInvocation_concrete_class alloc]
@@ -659,98 +638,6 @@ _arg_addr(NSInvocation *inv, int index)
 - (NSMethodSignature*) methodSignature
 {
     return _sig;
-}
-
-- (NSString*) description
-{
-    /*
-     *	Don't use -[NSString stringWithFormat:] method because it can cause
-     *	infinite recursion.
-     */
-    char buffer[1024];
-    
-    snprintf (buffer, 1024, "<%s %p selector: %s target: %s>", \
-              GSClassNameFromObject(self), \
-              self, \
-              _selector ? sel_getName(_selector) : "nil", \
-              _target ? class_getName([_target class]) : "nil" \
-              );
-    
-    return [NSString stringWithUTF8String: buffer];
-}
-
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-    const char	*types = [_sig methodType];
-    unsigned int	i;
-    
-    [aCoder encodeValueOfObjCType: @encode(char*)
-                               at: &types];
-    
-    [aCoder encodeObject: _target];
-    
-    [aCoder encodeValueOfObjCType: _inf[2].type
-                               at: &_selector];
-    
-    for (i = 3; i <= _numArgs; i++)
-    {
-        const char	*type = _inf[i].type;
-        void		*datum;
-        
-        datum = _arg_addr(self, i-1);
-        
-        if (*type == _C_ID)
-        {
-            [aCoder encodeObject: *(id*)datum];
-        }
-        else
-        {
-            [aCoder encodeValueOfObjCType: type at: datum];
-        }
-    }
-    if (*_inf[0].type != _C_VOID)
-    {
-        [aCoder encodeValueOfObjCType: @encode(BOOL) at: &_validReturn];
-        if (_validReturn)
-        {
-            [aCoder encodeValueOfObjCType: _inf[0].type at: _retval];
-        }
-    }
-}
-
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-    NSMethodSignature	*newSig;
-    const char		*types;
-    void			*datum;
-    unsigned int		i;
-    
-    [aCoder decodeValueOfObjCType: @encode(char*) at: &types];
-    newSig = [NSMethodSignature signatureWithObjCTypes: types];
-    NSZoneFree(NSDefaultMallocZone(), (void*)types);
-    
-    DESTROY(self);
-    self = RETAIN([NSInvocation invocationWithMethodSignature: newSig]);
-    
-    [aCoder decodeValueOfObjCType: @encode(id) at: &_target];
-    
-    [aCoder decodeValueOfObjCType: @encode(SEL) at: &_selector];
-    
-    for (i = 3; i <= _numArgs; i++)
-    {
-        datum = _arg_addr(self, i-1);
-        [aCoder decodeValueOfObjCType: _inf[i].type at: datum];
-    }
-    _argsRetained = YES;
-    if (*_inf[0].type != _C_VOID)
-    {
-        [aCoder decodeValueOfObjCType: @encode(BOOL) at: &_validReturn];
-        if (_validReturn)
-        {
-            [aCoder decodeValueOfObjCType: _inf[0].type at: _retval];
-        }
-    }
-    return self;
 }
 
 @end
