@@ -612,6 +612,7 @@ PRIVATE void registerProtocol(Protocol *proto)
 		protocol_table_insert(proto);
 	}
 }
+
 void protocol_addMethodDescription(Protocol *aProtocol,
                                    SEL name,
                                    const char *types,

@@ -1,39 +1,18 @@
 #include <assert.h>
 
-/**
- * Metadata structure for an instance variable.
- *
- */
 // begin: objc_ivar
 struct objc_ivar
 {
-	/**
-	 * Name of this instance variable.
-	 */
-	const char *name;
-	/**
-	 * Type encoding for this instance variable.
-	 */
-	const char *type;
-	/**
-	 * The offset from the start of the object.  When using the non-fragile
-	 * ABI, this is initialized by the compiler to the offset from the start of
-	 * the ivars declared by this class.  It is then set by the runtime to the
-	 * offset from the object pointer.
-	 */
-	int        *offset;
-	/**
-	 * The size of this ivar.  Note that the current ABI limits ivars to 4GB.
-	 */
-	uint32_t    size;
-	/*
-     
-     Flags 通过 位运算, 存储了关于内存操作的信息.
-	 
-	 */
-	uint32_t    flags;
+	const char *name; // 变量名
+	
+	const char *type; // 变量类型
+	
+	int        *offset; // 变量的偏移量
+    
+	uint32_t    size; // 变量的长度
+    
+	uint32_t    flags; // 内存管理相关的信息.
 };
-// end: objc_ivar
 
 /**
  * Instance variable ownership.
@@ -59,7 +38,6 @@ typedef enum {
 	 */
 	ownership_unsafe  = 3
 } objc_ivar_ownership;
-// end: objc_ivar_ownership
 
 /**
  * Shift for instance variable alignment. */
@@ -165,20 +143,4 @@ static inline struct objc_ivar *ivar_at_index(struct objc_ivar_list *l, int i)
 	assert(l->size >= sizeof(struct objc_ivar));
 	return (struct objc_ivar*)(((char*)l->ivar_list) + (i * l->size));
 }
-
-/**
- * Legacy version of the ivar list
- */
-struct objc_ivar_list_gcc
-{
-	/**
-	 * The number of instance variables in this list.
-	 */
-	int              count;
-	/**
-	 * An array of instance variable metadata structures.  Note that this array
-	 * has count elements.
-	 */
-	struct objc_ivar_gcc ivar_list[];
-};
 

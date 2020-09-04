@@ -64,7 +64,6 @@ static void init_runtime(void)
     /*
         非常好的书写的方式, init 表示初始化, 各个目录, 都有自己的结构.
      */
-    
     // Create the various tables that the runtime needs.
     init_selector_tables();
     init_protocol_table();
@@ -143,20 +142,26 @@ struct nsstr
 struct objc_init
 {
     uint64_t version;
+    
     SEL sel_begin;
     SEL sel_end;
+    
     Class *cls_begin;
     Class *cls_end;
     Class *cls_ref_begin;
     Class *cls_ref_end;
+    
     struct objc_category *cat_begin;
     struct objc_category *cat_end;
+    
     struct objc_protocol *proto_begin;
     struct objc_protocol *proto_end;
     struct objc_protocol **proto_ref_begin;
     struct objc_protocol **proto_ref_end;
+    
     struct objc_alias *alias_begin;
     struct objc_alias *alias_end;
+    
     struct nsstr *strings_begin;
     struct nsstr *strings_end;
 };
@@ -174,37 +179,17 @@ static enum {
 
 void registerProtocol(Protocol *proto);
 
+/*
+ 这里, 应该就是 runtime 系统的初始化工作了
+ */
 OBJC_PUBLIC void __objc_load(struct objc_init *init)
 {
     /*
      非常好的命名, init, 开头的定义, 就很好的表明了这个类的作用. 使用者, 一定应该将这个方法在开始的时候调用. 因为这是 clean code.
      */
     init_runtime();
-    LOCK_RUNTIME_FOR_SCOPE();
-    BOOL isFirstLoad = NO;
-    switch (CurrentABI)
-    {
-        case LegacyABI:
-            fprintf(stderr, "Version 2 Objective-C ABI may not be mixed with earlier versions.\n");
-            abort();
-        case UnknownABI:
-            isFirstLoad = YES;
-            CurrentABI = NewABI;
-            break;
-        case NewABI:
-            break;
-    }
     
-    // If we've already loaded this module, don't load it again.
-    if (init->version == ULONG_MAX)
-    {
-        return;
-    }
     
-    assert(init->version == 0);
-    assert((((uintptr_t)init->sel_end-(uintptr_t)init->sel_begin) % sizeof(*init->sel_begin)) == 0);
-    assert((((uintptr_t)init->cls_end-(uintptr_t)init->cls_begin) % sizeof(*init->cls_begin)) == 0);
-    assert((((uintptr_t)init->cat_end-(uintptr_t)init->cat_begin) % sizeof(*init->cat_begin)) == 0);
     for (SEL sel = init->sel_begin ; sel < init->sel_end ; sel++)
     {
         if (sel->name == 0)
@@ -213,6 +198,7 @@ OBJC_PUBLIC void __objc_load(struct objc_init *init)
         }
         objc_register_selector(sel);
     }
+    
     for (struct objc_protocol *proto = init->proto_begin ; proto < init->proto_end ;
          proto++)
     {
@@ -222,6 +208,7 @@ OBJC_PUBLIC void __objc_load(struct objc_init *init)
         }
         registerProtocol((struct objc_protocol*)proto);
     }
+    
     for (struct objc_protocol **proto = init->proto_ref_begin ; proto < init->proto_ref_end ;
          proto++)
     {
@@ -233,6 +220,7 @@ OBJC_PUBLIC void __objc_load(struct objc_init *init)
         assert(p);
         *proto = p;
     }
+    
     for (Class *cls = init->cls_begin ; cls < init->cls_end ; cls++)
     {
         if (*cls == NULL)
@@ -250,6 +238,7 @@ OBJC_PUBLIC void __objc_load(struct objc_init *init)
         objc_load_class(*cls);
     }
 #if 0
+    
     // We currently don't do anything with these pointers.  They exist to
     // provide a level of indirection that will permit us to completely change
     // the `objc_class` struct without breaking the ABI (again)
@@ -283,6 +272,7 @@ OBJC_PUBLIC void __objc_load(struct objc_init *init)
             objc_send_load_message(class);
         }
     }
+    
     // Register aliases
     for (struct objc_alias *alias = init->alias_begin ; alias < init->alias_end ;
          alias++)
@@ -293,6 +283,7 @@ OBJC_PUBLIC void __objc_load(struct objc_init *init)
         }
     }
 #if 0
+    
     // If future versions of the ABI need to do anything with constant strings,
     // they may do so here.
     for (struct nsstr *string = init->strings_begin ; string < init->strings_end ;
@@ -303,6 +294,7 @@ OBJC_PUBLIC void __objc_load(struct objc_init *init)
         }
     }
 #endif
+    
     init->version = ULONG_MAX;
 }
 

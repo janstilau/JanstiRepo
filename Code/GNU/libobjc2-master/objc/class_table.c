@@ -45,7 +45,10 @@ PRIVATE void objc_init_load_messages_table(void)
 PRIVATE void objc_send_load_message(Class class)
 {
     Class meta = class->isa;
-    for (struct objc_method_list *l=meta->methods ; NULL!=l ; l=l->next)
+    // 要去元类里面, 去找 load 方法.
+    for (struct objc_method_list *l=meta->methods;
+         NULL!=l;
+         l=l->next)
     {
         for (int i=0 ; i<l->count ; i++)
         {
@@ -54,6 +57,9 @@ PRIVATE void objc_send_load_message(Class class)
             {
                 if (load_messages_table_get(load_table, m->imp) == 0)
                 {
+                    /*
+                     这里, 直接调用, 不走消息寻找的流程.
+                     */
                     m->imp((id)class, loadSel);
                     load_messages_insert(load_table, m->imp);
                 }
@@ -65,6 +71,10 @@ PRIVATE void objc_send_load_message(Class class)
 // Get the functions for string hashing
 #include "string_hash.h"
 
+/*
+ 类比较, 其实就是类名比较.
+ 因为 OC 里面没有命名空间, 所以其实类和类名都是唯一的.
+ */
 static int class_compare(const char *name, const Class class)
 {
     return string_compare(name, class->name);
@@ -73,6 +83,7 @@ static int class_hash(const Class class)
 {
     return string_hash(class->name);
 }
+
 #define MAP_TABLE_NAME class_table_internal
 #define MAP_TABLE_COMPARE_FUNCTION class_compare
 #define MAP_TABLE_HASH_KEY string_hash
@@ -96,17 +107,15 @@ static Class unresolved_class_list;
 
 static enum objc_developer_mode_np mode;
 
-void objc_setDeveloperMode_np(enum objc_developer_mode_np newMode)
-{
-    mode = newMode;
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 // Class table manipulation
 ////////////////////////////////////////////////////////////////////////////////
 
 PRIVATE Class zombie_class;
 
+/*
+ 专门有一个链表, 维护着还没有初始化的类.
+ */
 PRIVATE void class_table_insert(Class class)
 {
     if (!objc_test_class_flag(class, objc_class_flag_resolved))
@@ -149,7 +158,9 @@ PRIVATE void init_class_tables(void)
 
 PRIVATE BOOL objc_resolve_class(Class cls)
 {
-    // Skip this if the class is already resolved.
+    /*
+     如果, 类已经初始化过了, 直接返回.
+     */
     if (objc_test_class_flag(cls, objc_class_flag_resolved)) { return YES; }
     
     // We can only resolve the class if its superclass is resolved.
@@ -253,10 +264,6 @@ PRIVATE BOOL objc_resolve_class(Class cls)
         oldCls->isa->super_class = cls->isa->super_class;
     }
 #endif
-    
-    /*
-     前面的, 都是对于信息的操作. Resolve 里面, 真正有用的, 其实是 objc_send_load_message 的调用.
-     */
     
     // Send the +load message, if required
     if (!objc_test_class_flag(cls, objc_class_flag_user_created))
@@ -411,20 +418,6 @@ PRIVATE void objc_load_class(struct objc_class *class)
         reload_class(class, existingClass);
         return;
     }
-    
-#ifdef _WIN32
-    // On Windows, the super_class pointer may point to the local __imp_
-    // symbol, rather than to the external symbol.  The runtime must remove the
-    // extra indirection.
-    if (class->super_class)
-    {
-        Class superMeta = class->super_class->isa;
-        if (!class_isMetaClass(superMeta))
-        {
-            class->super_class = superMeta;
-        }
-    }
-#endif
     
     // Work around a bug in some versions of GCC that don't initialize the
     // class structure correctly.

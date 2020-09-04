@@ -12,25 +12,6 @@ struct objc_method
 };
 // end: objc_method
 
-struct objc_method_gcc
-{
-	/**
-	 * Selector used to send messages to this method.  The type encoding of
-	 * this method should match the types field.
-	 */
-	SEL         selector;
-	/**
-	 * The type encoding for this selector.  Used only for introspection, and
-	 * only required because of the stupid selector handling in the old GNU
-	 * runtime.  In future, this field may be reused for something else.
-	 */
-	const char *types;
-	/**
-	 * A pointer to the function implementing this method.
-	 */
-	IMP         imp;
-};
-
 /*
  methods 的单向链表, 分类, 类的原始信息里面, 关于方法, 是存储的这个对象, 在各个对象的里面, 按序存储着每个 method.
  */
