@@ -3,10 +3,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- Type encoding's type.
- 不同的类型, 用不同的 mask, mask 写在开头.
- 这里, 是或的关系, 也就是说,  用了一个枚举值, 记录了所有的信息. 类型, 限制符, 内存修饰符.
+/*
+ 不同的类型, 用不同的 mask, mask 写在开头. 在取值的时候, 使用不同的 mask 进行获取.
  */
 typedef NS_OPTIONS(NSUInteger, YYEncodingType) {
     YYEncodingTypeMask       = 0xFF, ///< mask of type value
@@ -54,46 +52,51 @@ typedef NS_OPTIONS(NSUInteger, YYEncodingType) {
     YYEncodingTypePropertyDynamic      = 1 << 23, ///< @dynamic
 };
 
-/**
- Get the type from a Type-Encoding string.
- 
- @discussion See also:
- https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
- https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtPropertyIntrospection.html
- 
- @param typeEncoding  A Type-Encoding string.
- @return The encoding type.
- */
+
 YYEncodingType YYEncodingGetType(const char *typeEncoding);
 
 
-/**
-  这就是 IVar 的一个数据类, 在 initWithIvar 中,  获得所有需要的信息, 然后存到属性中.
-  将所需要的信息, 都进行显示的存储, 可以在上层使用的时候, 快速的得到这些信息.
-  如果在上层使用的时候, 再去进行objc_方法的信息的获取, 太过于复杂. 提前将信息的获取工作, 封装到一个数据类中, 可以更好地分离逻辑.
+/*
+ 这就是 IVar 的一个数据类, 在 initWithIvar 中,  获得所有需要的信息, 然后存到属性中.
+ 将所需要的信息, 都进行显示的存储, 可以在上层使用的时候, 快速的得到这些信息.
+ 
+ 实际上, Ivar 可以提供下面所有的信息, 但是 Ivar 作为一个不透明的类型, 所有的信息其实都要根据 runtime 的函数才能拿到手.
+ YYClassIvarInfo 作为一个可以提供给上层操作的数据类,  要提供更加便利的接口.
+ 
+ struct objc_ivar
+ {
+     const char *name; // 变量名
+     const char *type; // 变量类型
+     int        *offset; // 变量的偏移量
+     uint32_t    size; // 变量的长度
+     uint32_t    flags; // 内存管理相关的信息.
+ };
  */
 @interface YYClassIvarInfo : NSObject
+
 @property (nonatomic, assign, readonly) Ivar ivar;              ///< ivar opaque struct
 @property (nonatomic, strong, readonly) NSString *name;         ///< Ivar's name
 @property (nonatomic, assign, readonly) ptrdiff_t offset;       ///< Ivar's offset
 @property (nonatomic, strong, readonly) NSString *typeEncoding; ///< Ivar's type encoding
 @property (nonatomic, assign, readonly) YYEncodingType type;    ///< Ivar's type
 
-/**
- Creates and returns an ivar info object.
- 
- @param ivar ivar opaque struct
- @return A new object, or nil if an error occurs.
- */
 - (instancetype)initWithIvar:(Ivar)ivar;
+
 @end
 
 
-/**
-  Method 的数据类, 在初始化的过程中, 会获取所需要的各种信息.
+/*
+ 相对应的 method 的数据类.
+ 
+ struct objc_method
+ {
+     IMP         imp; // 实际的函数指针
+     SEL         selector; // SEL 数据, key 值
+     const char *types; // 函数的签名符号
+ };
  */
 @interface YYClassMethodInfo : NSObject
-@property (nonatomic, assign, readonly) Method method;                  ///< method opaque struct, 下面各种数据的来源, 是一个不公开的数据机构.
+@property (nonatomic, assign, readonly) Method method;                  ///< method opaque struct,
 @property (nonatomic, strong, readonly) NSString *name;                 ///< method name, 方法名称
 @property (nonatomic, assign, readonly) SEL sel;                        ///< method's selector, 方法名对应的 SEL
 @property (nonatomic, assign, readonly) IMP imp;                        ///< method's implementation, 方法实现
@@ -101,21 +104,24 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
 @property (nonatomic, strong, readonly) NSString *returnTypeEncoding;   ///< return value's type, 方法的返回值类型
 @property (nullable, nonatomic, strong, readonly) NSArray<NSString *> *argumentTypeEncodings; ///< array of arguments' type, 方法的各个参数的类型.
 
-/**
- Creates and returns a method info object.
- 
- @param method method opaque struct
- @return A new object, or nil if an error occurs.
- */
 - (instancetype)initWithMethod:(Method)method;
+
 @end
 
 
-/**
- 属性相关信息的数据类.
+/*
+ struct objc_property
+ {
+     const char *name;
+     const char *attributes;
+     const char *type;
+     SEL getter;
+     SEL setter;
+ };
  */
+
 @interface YYClassPropertyInfo : NSObject
- 
+
 @property (nonatomic, assign, readonly) objc_property_t property; ///< property's opaque struct, 下面各个数据的来源
 @property (nonatomic, strong, readonly) NSString *name;           ///< property's name, 名称
 @property (nonatomic, assign, readonly) YYEncodingType type;      ///< property's type, 类型
@@ -126,26 +132,22 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
 @property (nonatomic, assign, readonly) SEL getter;               ///< getter (nonnull)
 @property (nonatomic, assign, readonly) SEL setter;               ///< setter (nonnull)
 
-/**
- Creates and returns a property info object.
- 
- @param property property opaque struct
- @return A new object, or nil if an error occurs.
- */
 - (instancetype)initWithProperty:(objc_property_t)property;
+
 @end
 
 
-/**
- Class information for a class.
+/*
  类的 info 类中, 包含了上面的成员变量, 方法, 属性 info 的各种信息, 并且添加了类相关的各种信息.
  */
 @interface YYClassInfo : NSObject
+
 @property (nonatomic, assign, readonly) Class cls; ///< class object
 @property (nullable, nonatomic, assign, readonly) Class superCls; ///< super class object
 @property (nullable, nonatomic, assign, readonly) Class metaCls;  ///< class's meta class object
 @property (nonatomic, readonly) BOOL isMeta; ///< whether this class is meta class
 @property (nonatomic, strong, readonly) NSString *name; ///< class name
+
 @property (nullable, nonatomic, strong, readonly) YYClassInfo *superClassInfo; ///< super class's class info
 @property (nullable, nonatomic, strong, readonly) NSDictionary<NSString *, YYClassIvarInfo *> *ivarInfos; ///< ivars
 @property (nullable, nonatomic, strong, readonly) NSDictionary<NSString *, YYClassMethodInfo *> *methodInfos; ///< methods

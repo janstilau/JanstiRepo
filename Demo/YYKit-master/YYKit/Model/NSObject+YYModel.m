@@ -97,8 +97,8 @@ static force_inline NSNumber *YYNSNumberCreateFromID(__unsafe_unretained id valu
     });
     
     if (!value || value == (id)kCFNull) return nil;
-    if ([value isKindOfClass:[NSNumber class]]) return value;
-    if ([value isKindOfClass:[NSString class]]) {
+    if ([value isKindOfClass:[NSNumber class]]) return value; // Json 本身就是 number 类型
+    if ([value isKindOfClass:[NSString class]]) { // Json 使用的 String 表示数字
         NSNumber *num = dic[value];
         if (num != nil) {
             if (num == (id)kCFNull) return nil;
@@ -311,7 +311,7 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     YYEncodingType _type;        ///< property's type
     YYEncodingNSType _nsType;    ///< property's Foundation type
     BOOL _isCNumber;             ///< is c number type
-    Class _cls;                  ///< property's class, or nil
+    Class _cls;                  ///< property 所在的 class 的信息.
     Class _genericCls;           ///< container's generic class, or nil if threr's no generic class
     SEL _getter;                 ///< getter, or nil if the instances cannot respond
     SEL _setter;                 ///< setter, or nil if the instances cannot respond
@@ -333,18 +333,10 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
 @end
 
 @implementation _YYModelPropertyMeta
-+ (instancetype)metaWithClassInfo:(YYClassInfo *)classInfo propertyInfo:(YYClassPropertyInfo *)propertyInfo generic:(Class)generic {
-    
-    // support pseudo generic class with protocol name
-    if (!generic && propertyInfo.protocols) {
-        for (NSString *protocol in propertyInfo.protocols) {
-            Class cls = objc_getClass(protocol.UTF8String);
-            if (cls) {
-                generic = cls;
-                break;
-            }
-        }
-    }
+
++ (instancetype)metaWithClassInfo:(YYClassInfo *)classInfo
+                     propertyInfo:(YYClassPropertyInfo *)propertyInfo
+                          generic:(Class)generic {
     
     _YYModelPropertyMeta *meta = [self new];
     meta->_name = propertyInfo.name;
@@ -463,17 +455,31 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
 @end
 
 @implementation _YYModelMeta
+
 - (instancetype)initWithClass:(Class)cls {
-    YYClassInfo *classInfo = [YYClassInfo classInfoWithClass:cls]; // classInfo 里面是类的所有的元信息.
+    /*
+     首先, 是获取 class 本身的信息, 就是 ivar, method, property 的那些信息.
+     */
+    YYClassInfo *classInfo = [YYClassInfo classInfoWithClass:cls];
     if (!classInfo) return nil;
+    
     self = [super init];
+    /*
+     YYModel 暴露出去了很多方法, 这些方法, 会控制着整个 model 的解析过程.
+     但是, 如果在解析过程里面, 还是去调用这些方法, 那么代码就太繁琐了.
+     直接在开始的地方, 将这些数据进行收集, 然后解析过程直接读取数据进行解析就可以了.
+     */
     
-    // 所有暴露出去的切口, 最终还是要转换成为数据, 有了数据就可以存储, 就可以然后处理切口的逻辑.
-    // 不然, 只能在转换的过程中, 去判断有没有实现这个切口, 现场获取数据进行逻辑的分支. 这样会让转化函数过于复杂, 提前通过数据进行存储, 转化函数, 仅仅判断数据有无就可以正确的进行后续的逻辑了.
+    /*
+     YYModle, 默认是转化所有的名称相同的数据到对应的数据类型的.
+     黑名单的, 相当于是略去某些数据不转化.
+     白名单的, 相当于是只转化某些数据.
+     nameMap, 是为了属性和 dict 里面 key 不一样做的转化.
+     */
     
-    // Get black list
-    // All the properties in blacklist will be ignored in model transform process.
-    // 一个暴露出去的切口, 方面自定义转换过程.
+    /*
+     黑名单里面的属性, 不会被转化.
+     */
     NSSet *blacklist = nil;
     if ([cls respondsToSelector:@selector(modelPropertyBlacklist)]) {
         NSArray *properties = [(id<YYModel>)cls modelPropertyBlacklist];
@@ -482,8 +488,9 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
         }
     }
     
-    // Get white list
-    // If a property is not in the whitelist, it will be ignored in model transform process.
+    /*
+     只有在白名单里面的属性, 才会被转化.
+     */
     NSSet *whitelist = nil;
     if ([cls respondsToSelector:@selector(modelPropertyWhitelist)]) {
         NSArray *properties = [(id<YYModel>)cls modelPropertyWhitelist];
@@ -496,13 +503,21 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     NSDictionary *genericMapper = nil;
     if ([cls respondsToSelector:@selector(modelContainerPropertyGenericClass)]) {
         genericMapper = [(id<YYModel>)cls modelContainerPropertyGenericClass];
+        /*
+         genericMapper 现在是类似于. 这样的数据.
+         @{
+            @"indices" : [NSNumber class]
+         }
+         */
         if (genericMapper) {
             NSMutableDictionary *genericResult = [NSMutableDictionary new];
             [genericMapper enumerateKeysAndObjectsUsingBlock:^(id key, id classValue, BOOL *stop) {
                 if (![key isKindOfClass:[NSString class]]) return;
                 Class metaClz = object_getClass(classValue);
                 if (!metaClz) return;
-                // 这里就是判断, value 值是一个类对象.
+                /*
+                 确保, classValue 就是一个 class 对象, 万一对方传入的是字符串就做一层转化工作.
+                 */
                 if (class_isMetaClass(metaClz)) {
                     genericResult[key] = classValue;
                 } else if ([classValue isKindOfClass:[NSString class]]) {
@@ -516,7 +531,6 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
         }
     }
     
-    // 遍历到 NSOBject, 不包含, 然后得到所有的属性的信息.
     NSMutableDictionary *allPropertyMetas = [NSMutableDictionary new];
     YYClassInfo *curClassInfo = classInfo;
     while (curClassInfo && curClassInfo.superCls != nil) { // recursive parse super class, but ignore root class (NSObject/NSProxy)
@@ -538,6 +552,9 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     }
     if (allPropertyMetas.count) _allPropertyMetas = allPropertyMetas.allValues.copy;
     
+    
+    
+    
     // create mapper
     NSMutableDictionary *mapper = [NSMutableDictionary new];
     NSMutableArray *keyPathPropertyMetas = [NSMutableArray new];
@@ -545,9 +562,11 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     
     if ([cls respondsToSelector:@selector(modelCustomPropertyMapper)]) {
         NSDictionary *customMapper = [(id <YYModel>)cls modelCustomPropertyMapper];
-        [customMapper enumerateKeysAndObjectsUsingBlock:^(NSString *propertyName, NSString *mappedToKey, BOOL *stop) {
+        [customMapper enumerateKeysAndObjectsUsingBlock:^(NSString *propertyName,
+                                                          NSString *mappedToKey, BOOL *stop) {
             _YYModelPropertyMeta *propertyMeta = allPropertyMetas[propertyName];
             if (!propertyMeta) return;
+            
             [allPropertyMetas removeObjectForKey:propertyName];
             
             if ([mappedToKey isKindOfClass:[NSString class]]) {
@@ -621,19 +640,25 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     return self;
 }
 
-/// Returns the cached model class meta
+/*
+ _YYModelMeta 不会独自进行 alloc, init, 只会通过这个方法来进行.
+ 这个方法, 是外界使用的唯一入口, 所以在这个方法里面, 进行了缓存操作.
+ 感觉应该把缓存的东西, 提高到类的级别才合适.
+*/
 + (instancetype)metaWithClass:(Class)cls {
     if (!cls) return nil;
     static CFMutableDictionaryRef cache;
     static dispatch_once_t onceToken;
-    static dispatch_semaphore_t lock;
+    static dispatch_semaphore_t lock; // lock 必须是全局的, 这样才能在不同线程里面起到同步的作用.
     dispatch_once(&onceToken, ^{
         cache = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
         lock = dispatch_semaphore_create(1);
     });
+    
     dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
     _YYModelMeta *meta = CFDictionaryGetValue(cache, (__bridge const void *)(cls));
     dispatch_semaphore_signal(lock);
+    
     if (!meta || meta->_classInfo.needUpdate) {
         meta = [[_YYModelMeta alloc] initWithClass:cls];
         if (meta) {
@@ -711,6 +736,9 @@ static force_inline NSNumber *ModelCreateNumberFromProperty(__unsafe_unretained 
  @param num   Can be nil.
  @param meta  Should not be nil, meta.isCNumber should be YES, meta.setter should not be nil.
  */
+/*
+ 根据, meta 所表示 key 的类型, 将 number 进行提取.
+ */
 static force_inline void ModelSetNumberToProperty(__unsafe_unretained id model,
                                                   __unsafe_unretained NSNumber *num,
                                                   __unsafe_unretained _YYModelPropertyMeta *meta) {
@@ -778,10 +806,10 @@ static force_inline void ModelSetNumberToProperty(__unsafe_unretained id model,
  @param value Should not be nil, but can be NSNull.
  @param meta  Should not be nil, and meta->_setter should not be nil.
  */
-static void ModelSetValueForProperty(__unsafe_unretained id model,
-                                     __unsafe_unretained id value,
-                                     __unsafe_unretained _YYModelPropertyMeta *meta) {
-    if (meta->_isCNumber) {
+static void ModelSetValueForProperty(__unsafe_unretained id model, // self
+                                     __unsafe_unretained id value, // raw value
+                                     __unsafe_unretained _YYModelPropertyMeta *meta) { // 对应的 key 的信息.
+    if (meta->_isCNumber) { // 如果是数字
         NSNumber *num = YYNSNumberCreateFromID(value);
         ModelSetNumberToProperty(model, num, meta);
         if (num != nil) [num class]; // hold the number
@@ -789,9 +817,13 @@ static void ModelSetValueForProperty(__unsafe_unretained id model,
         if (value == (id)kCFNull) {
             ((void (*)(id, SEL, id))(void *) objc_msgSend)((id)model, meta->_setter, (id)nil);
         } else {
+            /*
+            根据 key 对应的类型, 将 value 转化成为相应的类型.
+            */
             switch (meta->_nsType) {
                 case YYEncodingTypeNSString:
                 case YYEncodingTypeNSMutableString: {
+                    
                     if ([value isKindOfClass:[NSString class]]) {
                         if (meta->_nsType == YYEncodingTypeNSString) {
                             ((void (*)(id, SEL, id))(void *) objc_msgSend)((id)model, meta->_setter, value);
@@ -1004,6 +1036,9 @@ static void ModelSetValueForProperty(__unsafe_unretained id model,
         BOOL isNull = (value == (id)kCFNull);
         switch (meta->_type & YYEncodingTypeMask) {
             case YYEncodingTypeObject: {
+                /*
+                 如果是自定义类型, 那么 这里, 会根据 value 对应的数据, 创建出对应的类型的对象来, 然后才进行赋值操作.
+                 */
                 Class cls = meta->_genericCls ?: meta->_cls;
                 if (isNull) {
                     ((void (*)(id, SEL, id))(void *) objc_msgSend)((id)model, meta->_setter, (id)nil);
@@ -1428,6 +1463,9 @@ static NSString *ModelDescription(NSObject *model) {
 
 @implementation NSObject (YYModel)
 
+/*
+ 将 rawData 转化成为一个 NSDictionary.
+ */
 + (NSDictionary *)yy_dictFromRawData:(id)json {
     if (!json || json == (id)kCFNull) return nil;
     NSDictionary *dic = nil;
@@ -1451,6 +1489,7 @@ static NSString *ModelDescription(NSObject *model) {
     return [self modelWithDictionary:dic];
 }
 
+
 + (instancetype)modelWithDictionary:(NSDictionary *)dictionary {
     if (!dictionary || dictionary == (id)kCFNull) return nil;
     if (![dictionary isKindOfClass:[NSDictionary class]]) return nil;
@@ -1458,7 +1497,7 @@ static NSString *ModelDescription(NSObject *model) {
     Class cls = [self class]; // 生成的类首先是自己的类,
     _YYModelMeta *modelMeta = [_YYModelMeta metaWithClass:cls];
     if (modelMeta->_hasCustomClassFromDictionary) {
-        cls = [cls modelCustomClassForDictionary:dictionary] ?: cls; // 如果自己类中, 根据 dic 返回了其他的类对象, 那么就生成相应的类的对象. 因为 YYModel 中, 有着 meta 这个东西, 所以这个转化操作插入的没有什么额外操作.
+        cls = [cls modelCustomClassForDictionary:dictionary] ?: cls;
     }
     
     NSObject *result = [cls new];
@@ -1471,6 +1510,9 @@ static NSString *ModelDescription(NSObject *model) {
     return [self modelSetWithDictionary:dic];
 }
 
+/*
+ 这个函数的命名有点问题, 明明是 setModelWithDict.
+ */
 - (BOOL)modelSetWithDictionary:(NSDictionary *)dic {
     if (!dic || dic == (id)kCFNull) return NO;
     if (![dic isKindOfClass:[NSDictionary class]]) return NO;
@@ -1478,6 +1520,10 @@ static NSString *ModelDescription(NSObject *model) {
     _YYModelMeta *modelMeta = [_YYModelMeta metaWithClass:object_getClass(self)];
     if (modelMeta->_keyMappedCount == 0) return NO;
     
+    /*
+     这个就是给用户一个权力, 更改一下 dict 里面的值.
+     可以用这个切口, 去做一下 mock 操作.
+     */
     if (modelMeta->_hasCustomWillTransformFromDictionary) {
         dic = [((id<YYModel>)self) modelCustomWillTransformFromDictionary:dic];
         if (![dic isKindOfClass:[NSDictionary class]]) return NO;
@@ -1488,6 +1534,9 @@ static NSString *ModelDescription(NSObject *model) {
     context.model = (__bridge void *)(self);
     context.dictionary = (__bridge void *)(dic);
     
+    /*
+     然后就是具体的转化过程了.
+     */
     if (modelMeta->_keyMappedCount >= CFDictionaryGetCount((CFDictionaryRef)dic)) {
         CFDictionaryApplyFunction((CFDictionaryRef)dic, ModelSetWithDictionaryFunction, &context);
         if (modelMeta->_keyPathPropertyMetas) {
@@ -1510,6 +1559,9 @@ static NSString *ModelDescription(NSObject *model) {
     }
     
     if (modelMeta->_hasCustomTransformFromDictionary) {
+        /*
+         modelCustomTransformFromDictionary 提供了一个切口, 可以做自定义的 model 的转化操作.
+         */
         return [((id<YYModel>)self) modelCustomTransformFromDictionary:dic];
     }
     return YES;

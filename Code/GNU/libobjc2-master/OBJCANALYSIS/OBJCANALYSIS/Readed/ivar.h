@@ -4,13 +4,9 @@
 struct objc_ivar
 {
 	const char *name; // 变量名
-	
 	const char *type; // 变量类型
-	
 	int        *offset; // 变量的偏移量
-    
 	uint32_t    size; // 变量的长度
-    
 	uint32_t    flags; // 内存管理相关的信息.
 };
 

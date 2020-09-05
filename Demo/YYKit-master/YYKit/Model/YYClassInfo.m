@@ -81,16 +81,21 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
 
 @implementation YYClassIvarInfo
 
-// 在这里, 进行了 ivar 信息的提取工作.
-// Ivar 本身是一个指针, typedef struct objc_ivar *Ivar, 具体的 objc_ivar 的信息, 苹果没有暴露出来.
+/* 在这里, 进行了 ivar 信息的提取工作.
+ Ivar 本身是一个指针, typedef struct objc_ivar *Ivar
+ */
 - (instancetype)initWithIvar:(Ivar)ivar {
     if (!ivar) return nil;
     self = [super init];
+    
+    // 存储最原始的数据, 如果外界需要, 那么直接过去.
     _ivar = ivar;
-    const char *name = ivar_getName(ivar); // 获取名称, 这里, 获取的不是属性的名称, 而是成员变量的名称, 也就是如果是属性, 前面会加_下划线开头.
+    // 获取成员变量的名字, 注意, 如果是属性生成的, 一定是 _ 开头的成员变量名.
+    const char *name = ivar_getName(ivar);
     if (name) {
         _name = [NSString stringWithUTF8String:name];
     }
+    // 获取成员变量具体的偏移量
     _offset = ivar_getOffset(ivar);
     const char *typeEncoding = ivar_getTypeEncoding(ivar);
     if (typeEncoding) {
@@ -106,29 +111,34 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
 
 /*
  typedef struct objc_method *Method;
- objc_method 应该是对于 OC 方法的一个包装. SEL 作为 key 值, IMP 作为 value 值. 所以, 对于 METHOD, 类的方法的概念, 他应该有着名称和实现至少两个数据. 还会有函数签名的信息.
  */
 
 - (instancetype)initWithMethod:(Method)method {
     if (!method) return nil;
     self = [super init];
+    // 原始的 method_t 数据
     _method = method;
-    _sel = method_getName(method); //这里, SEL 叫做 getName, 所以在 OC 看来, SEL 就是函数名. 只不过数据结构没暴露出来.
-    _imp = method_getImplementation(method); // 获取函数指针.
+    // method_t 对应的 SEL 信息
+    _sel = method_getName(method);
+    // method 的 函数指针信息.
+    _imp = method_getImplementation(method);
+    // method_t 对应的函数名.
     const char *name = sel_getName(_sel);
     if (name) {
-        _name = [NSString stringWithUTF8String:name]; // 获取 方法名
+        _name = [NSString stringWithUTF8String:name];
     }
+    // 对应函数的函数签名
     const char *typeEncoding = method_getTypeEncoding(method);
-    // @16@0:8, 方法的 typeEncoding. 表示返回值的类型, 参数的类型, 以及返回值和参数的大小.
     if (typeEncoding) {
-        _typeEncoding = [NSString stringWithUTF8String:typeEncoding]; // 获取函数签名
+        _typeEncoding = [NSString stringWithUTF8String:typeEncoding];
     }
+    // 返回值类型签名.
     char *returnType = method_copyReturnType(method);
     if (returnType) {
         _returnTypeEncoding = [NSString stringWithUTF8String:returnType]; // 获取返回值类型.
         free(returnType);
     }
+    // 参数列表类型签名.
     unsigned int argumentCount = method_getNumberOfArguments(method);
     if (argumentCount > 0) {
         NSMutableArray *argumentTypes = [NSMutableArray new];
@@ -149,7 +159,6 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
 
 
 /*
- // @property (nonatomic, strong, readonly) NSString *name;           ///< property's name, 名称
  nonatomic, strong, readonly, NSString, name
  以上 5 个信息, 都是属性的 attribute, 都有着不同的名字, value 也各不相同.
  */
@@ -269,9 +278,14 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
     if (!_isMeta) {
         _metaCls = objc_getMetaClass(class_getName(cls));
     }
+    
     _name = NSStringFromClass(cls);
     [self _update];
     
+    /*
+     注意, 这里是递归调用的, 也就是说, 所有的数据类的信息这里都会在这个方法里面收集完成.
+     又因为 classInfoWithClass 里面会有缓存处理, 所以它的效率还挺高的.
+     */
     _superClassInfo = [self.class classInfoWithClass:_superCls];
     return self;
 }
@@ -281,6 +295,9 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
     _methodInfos = nil;
     _propertyInfos = nil;
     
+    /*
+     填充 method_t 的信息.
+     */
     Class cls = self.cls;
     unsigned int methodCount = 0;
     Method *methods = class_copyMethodList(cls, &methodCount);
@@ -293,6 +310,10 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
         }
         free(methods);
     }
+    
+    /*
+     填充 property 的信息.
+     */
     unsigned int propertyCount = 0;
     objc_property_t *properties = class_copyPropertyList(cls, &propertyCount);
     if (properties) {
@@ -305,6 +326,9 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
         free(properties);
     }
     
+    /*
+     填充 ivar 的信息
+     */
     unsigned int ivarCount = 0;
     Ivar *ivars = class_copyIvarList(cls, &ivarCount);
     if (ivars) {
@@ -332,7 +356,9 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
     return _needUpdate;
 }
 
-// 这里, 简单做了一个缓存的处理, 之所以用 CFDictionary, 是因为更加灵活, 可以用各种内存管理的策略.
+/*
+ 这里, 简单做了一个缓存的处理, 之所以用 CFDictionary, 是因为更加灵活, 可以用各种内存管理的策略.
+ */
 + (instancetype)classInfoWithClass:(Class)cls {
     if (!cls) return nil;
     static CFMutableDictionaryRef classCache;
@@ -344,12 +370,14 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
         metaCache = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
         lock = dispatch_semaphore_create(1);
     });
+    
     dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
     YYClassInfo *info = CFDictionaryGetValue(class_isMetaClass(cls) ? metaCache : classCache, (__bridge const void *)(cls));
     if (info && info->_needUpdate) {
         [info _update];
     }
     dispatch_semaphore_signal(lock);
+    
     if (!info) {
         info = [[YYClassInfo alloc] initWithClass:cls];
         if (info) {

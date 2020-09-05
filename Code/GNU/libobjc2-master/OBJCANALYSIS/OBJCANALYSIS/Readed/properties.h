@@ -93,9 +93,6 @@ enum PropertyAttributeKind
  */
 struct objc_property
 {
-	/**
-	 * Name of this property.
-	 */
 	const char *name;
     /*
      一串, 关于 property 的描述信息. 例如.
