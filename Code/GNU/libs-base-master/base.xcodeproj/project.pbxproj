@@ -91,7 +91,6 @@
 		18394B7F1610D9D000335E85 /* NSRegularExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EB21610BF3C0003C892 /* NSRegularExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B801610D9D000335E85 /* NSRunLoop.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EB31610BF3C0003C892 /* NSRunLoop.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B811610D9D000335E85 /* NSScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EB41610BF3C0003C892 /* NSScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		18394B821610D9D000335E85 /* NSScriptWhoseTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EB51610BF3C0003C892 /* NSScriptWhoseTests.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B831610D9D000335E85 /* NSSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EB61610BF3C0003C892 /* NSSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B841610D9D000335E85 /* NSSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EB71610BF3C0003C892 /* NSSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18394B851610D9D000335E85 /* NSSortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 18906EB81610BF3C0003C892 /* NSSortDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -653,7 +652,6 @@
 		18906EB21610BF3C0003C892 /* NSRegularExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSRegularExpression.h; sourceTree = "<group>"; };
 		18906EB31610BF3C0003C892 /* NSRunLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSRunLoop.h; sourceTree = "<group>"; };
 		18906EB41610BF3C0003C892 /* NSScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSScanner.h; sourceTree = "<group>"; };
-		18906EB51610BF3C0003C892 /* NSScriptWhoseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSScriptWhoseTests.h; sourceTree = "<group>"; };
 		18906EB61610BF3C0003C892 /* NSSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSerialization.h; sourceTree = "<group>"; };
 		18906EB71610BF3C0003C892 /* NSSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSet.h; sourceTree = "<group>"; };
 		18906EB81610BF3C0003C892 /* NSSortDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSortDescriptor.h; sourceTree = "<group>"; };
@@ -2075,11 +2073,11 @@
 				06670F38250634330006A339 /* Network */,
 				06DFF3E6250119560009D33D /* Runloop */,
 				06C049A024FE99450088AD57 /* Done */,
-				AD197C0C189A4E98000F6CF9 /* NSInvocationOperation.h */,
-				AD197C0D189A4E98000F6CF9 /* NSMetadata.h */,
 				18394B031610D85D00335E85 /* Additions */,
 				18906E9E1610BF3C0003C892 /* NSNotification.h */,
 				18906EC81610BF3C0003C892 /* NSURLError.h */,
+				AD197C0C189A4E98000F6CF9 /* NSInvocationOperation.h */,
+				AD197C0D189A4E98000F6CF9 /* NSMetadata.h */,
 				18906E691610BF3C0003C892 /* FoundationErrors.h */,
 				18906E6A1610BF3C0003C892 /* NSAffineTransform.h */,
 				18906E6B1610BF3C0003C892 /* NSArchiver.h */,
@@ -2140,7 +2138,6 @@
 				18906EB01610BF3C0003C892 /* NSProxy.h */,
 				18906EB21610BF3C0003C892 /* NSRegularExpression.h */,
 				18906EB41610BF3C0003C892 /* NSScanner.h */,
-				18906EB51610BF3C0003C892 /* NSScriptWhoseTests.h */,
 				18906EB61610BF3C0003C892 /* NSSerialization.h */,
 				18906EB71610BF3C0003C892 /* NSSet.h */,
 				18906EB81610BF3C0003C892 /* NSSortDescriptor.h */,
@@ -3673,7 +3670,6 @@
 				18394B7F1610D9D000335E85 /* NSRegularExpression.h in Headers */,
 				18394B801610D9D000335E85 /* NSRunLoop.h in Headers */,
 				18394B811610D9D000335E85 /* NSScanner.h in Headers */,
-				18394B821610D9D000335E85 /* NSScriptWhoseTests.h in Headers */,
 				18394B831610D9D000335E85 /* NSSerialization.h in Headers */,
 				18394B841610D9D000335E85 /* NSSet.h in Headers */,
 				18394B851610D9D000335E85 /* NSSortDescriptor.h in Headers */,
