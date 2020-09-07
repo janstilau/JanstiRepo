@@ -11,6 +11,7 @@
 #include "nsobject.h"
 #include "gc_ops.h"
 #include "lock.h"
+#include <os/lock.h>
 
 PRIVATE int spinlocks[spinlock_count];
 

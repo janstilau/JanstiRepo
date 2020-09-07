@@ -51,6 +51,9 @@ static inline void setupCompat()
 
 #endif
 
+/*
+ 最最重要的, 就是 SetValueForKey, ValueForKey 这两个方法了.
+ */
 static void
 SetValueForKey(NSObject *self, id anObject, const char *key, unsigned size)
 {

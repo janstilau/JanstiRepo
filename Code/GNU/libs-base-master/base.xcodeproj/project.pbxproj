@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06670F3525061D860006A339 /* CacheObj.h in Headers */ = {isa = PBXBuildFile; fileRef = 06670F3325061D860006A339 /* CacheObj.h */; };
+		06670F3625061D860006A339 /* CacheObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 06670F3425061D860006A339 /* CacheObj.m */; };
 		06DFF3E92501197F0009D33D /* GSRunLoopPerformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 06DFF3E72501197F0009D33D /* GSRunLoopPerformer.h */; };
 		06DFF3EA2501197F0009D33D /* GSRunLoopPerformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 06DFF3E82501197F0009D33D /* GSRunLoopPerformer.m */; };
 		180878891618537A006EBD74 /* objc-load.m in Sources */ = {isa = PBXBuildFile; fileRef = 1890700B1610BF3C0003C892 /* objc-load.m */; };
@@ -393,6 +395,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		06670F3325061D860006A339 /* CacheObj.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CacheObj.h; path = Headers/Foundation/CacheObj.h; sourceTree = SOURCE_ROOT; };
+		06670F3425061D860006A339 /* CacheObj.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CacheObj.m; path = Headers/Foundation/CacheObj.m; sourceTree = SOURCE_ROOT; };
 		06DFF3E72501197F0009D33D /* GSRunLoopPerformer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GSRunLoopPerformer.h; sourceTree = "<group>"; };
 		06DFF3E82501197F0009D33D /* GSRunLoopPerformer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GSRunLoopPerformer.m; sourceTree = "<group>"; };
 		1837D9C61652D0FF00197E53 /* .cvsignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cvsignore; sourceTree = "<group>"; };
@@ -1528,6 +1532,7 @@
 		06C049A024FE99450088AD57 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906E961610BF3C0003C892 /* NSKeyValueCoding.h */,
 				18906E941610BF3C0003C892 /* NSInvocation.h */,
 				18906EC01610BF3C0003C892 /* NSTimer.h */,
 				18906EA01610BF3C0003C892 /* NSNull.h */,
@@ -2088,7 +2093,6 @@
 				18906E911610BF3C0003C892 /* NSHost.h */,
 				18906E921610BF3C0003C892 /* NSIndexPath.h */,
 				18906E951610BF3C0003C892 /* NSJSONSerialization.h */,
-				18906E961610BF3C0003C892 /* NSKeyValueCoding.h */,
 				18906E971610BF3C0003C892 /* NSKeyValueObserving.h */,
 				18906E981610BF3C0003C892 /* NSKeyedArchiver.h */,
 				18906E991610BF3C0003C892 /* NSLocale.h */,
@@ -2358,6 +2362,8 @@
 			isa = PBXGroup;
 			children = (
 				AD197C01189A4D5F000F6CF9 /* NSKeyValueObserving.m */,
+				06670F3325061D860006A339 /* CacheObj.h */,
+				06670F3425061D860006A339 /* CacheObj.m */,
 			);
 			path = KVO;
 			sourceTree = "<group>";
@@ -3702,6 +3708,7 @@
 				18394BA91610D9ED00335E85 /* NSAttributedString+GNUstepBase.h in Headers */,
 				18394BAA1610D9ED00335E85 /* NSBundle+GNUstepBase.h in Headers */,
 				18394BAB1610D9ED00335E85 /* NSCalendarDate+GNUstepBase.h in Headers */,
+				06670F3525061D860006A339 /* CacheObj.h in Headers */,
 				18394BAC1610D9ED00335E85 /* NSData+GNUstepBase.h in Headers */,
 				18394BAD1610D9ED00335E85 /* NSDebug+GNUstepBase.h in Headers */,
 				18394BAE1610D9ED00335E85 /* NSFileHandle+GNUstepBase.h in Headers */,
@@ -3997,6 +4004,7 @@
 				18394C6E1610EB8000335E85 /* NSURLProtocol.m in Sources */,
 				18394C6F1610EB8000335E85 /* NSURLRequest.m in Sources */,
 				18394C701610EB8000335E85 /* NSURLResponse.m in Sources */,
+				06670F3625061D860006A339 /* CacheObj.m in Sources */,
 				1852895216138A7D0016729B /* NSUnarchiver.m in Sources */,
 				18394C721610EB8000335E85 /* NSUndoManager.m in Sources */,
 				18394C731610EB8000335E85 /* NSUserDefaults.m in Sources */,
