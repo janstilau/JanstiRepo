@@ -1,27 +1,3 @@
-/* Interface for NSHTTPCookie for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <frm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-   */ 
-
 #ifndef __NSHTTPCookie_h_GNUSTEP_BASE_INCLUDE
 #define __NSHTTPCookie_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -29,10 +5,6 @@
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_2,GS_API_LATEST) && GS_API_VERSION( 11300,GS_API_LATEST)
 
 #import	<Foundation/NSObject.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 @class NSArray;
 @class NSDate;
@@ -67,7 +39,7 @@ extern NSString * const NSHTTPCookieVersion; /** Obtain cookie version */
 {
 #if	GS_EXPOSE(NSHTTPCookie)
 @private
-  void	*_NSHTTPCookieInternal;
+    void	*_NSHTTPCookieInternal;
 #endif
 }
 
@@ -85,7 +57,7 @@ extern NSString * const NSHTTPCookieVersion; /** Obtain cookie version */
  * relevant to cookie setting ... other headers are ignored.
  */
 + (NSArray *) cookiesWithResponseHeaderFields: (NSDictionary *)headerFields
-				       forURL: (NSURL *)URL;
+                                       forURL: (NSURL *)URL;
 
 /**
  * Returns a dictionary of header fields that can be used to add the
@@ -265,9 +237,6 @@ extern NSString * const NSHTTPCookieVersion; /** Obtain cookie version */
 
 @end
 
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif	/* 100200 */
 

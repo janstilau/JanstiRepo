@@ -1,112 +1,68 @@
-/* Implementation for NSURLDownload for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-   */ 
-
 #import "common.h"
 
 #define	EXPOSE_NSURLDownload_IVARS	1
 #import "GSURLPrivate.h"
 
+/*
+ GSURLDownload 还是用到了 NSURLProtocol 作为底层的实际的网络请求的支持.
+ */
 @interface	GSURLDownload : NSObject <NSURLProtocolClient>
 {
 @public
-  NSURLDownload		*_parent;	// Not retained
-  NSURLRequest		*_request;
-  NSURLProtocol		*_protocol;
-  NSData		*_resumeData;
-  NSString		*_path;
-  id			_delegate;
-  BOOL			_deletesFileUponFailure;
-  BOOL			_allowOverwrite;
+    NSURLDownload        *_parent;    // Not retained
+    NSURLRequest        *_request;
+    NSURLProtocol        *_protocol;
+    NSData        *_resumeData;
+    NSString        *_path;
+    id            _delegate;
+    BOOL            _deletesFileUponFailure;
+    BOOL            _allowOverwrite;
 }
 @end
  
-#define	this	((GSURLDownload*)(self->_NSURLDownloadInternal))
-#define	inst	((GSURLDownload*)(o->_NSURLDownloadInternal))
-
 @implementation	NSURLDownload
-
-+ (id) allocWithZone: (NSZone*)z
-{
-  NSURLDownload	*o = [super allocWithZone: z];
-
-  if (o != nil)
-    {
-      o->_NSURLDownloadInternal
-        = NSAllocateObject([GSURLDownload class], 0, z);
-      inst->_parent = o;
-    }
-  return o;
-}
 
 + (BOOL) canResumeDownloadDecodedWithEncodingMIMEType: (NSString *)MIMEType
 {
   return NO;	// FIXME
 }
 
-- (void) dealloc
-{
-  RELEASE(this);
-  [super dealloc];
-}
-
 - (void) cancel
 {
-  [this->_protocol stopLoading];
-  DESTROY(this->_protocol);
-  // FIXME
+  [self->_protocol stopLoading];
 }
 
 - (BOOL) deletesFileUponFailure
 {
-  return this->_deletesFileUponFailure;
+  return self->_deletesFileUponFailure;
 }
 
 - (id) initWithRequest: (NSURLRequest *)request delegate: (id)delegate
 {
   NSData	*resumeData = nil;
 
-// FIXME ... build resume data from request.
   return [self initWithResumeData: resumeData delegate: delegate path: nil];
 }
 
+/*
+ 这个类, 其实太重要的事没有做.
+ */
 - (id) initWithResumeData: (NSData *)resumeData
 		 delegate: (id)delegate
 		     path: (NSString *)path
 {
   if ((self = [super init]) != nil)
     {
-      this->_resumeData = [resumeData copy];
-      this->_delegate = [delegate retain];
-      this->_path = [path copy];
-      // FIXME ... start connection
+      self->_resumeData = [resumeData copy];
+      self->_delegate = [delegate retain];
+      self->_path = [path copy];
     }
   return self;
 }
 
 - (NSURLRequest *) request
 {
-  return this->_request;
+  return self->_request;
 }
 
 - (NSData *) resumeData
@@ -116,13 +72,13 @@
 
 - (void) setDeletesFileUponFailure: (BOOL)deletesFileUponFailure
 {
-  this->_deletesFileUponFailure = deletesFileUponFailure;
+  self->_deletesFileUponFailure = deletesFileUponFailure;
 }
 
 - (void) setDestination: (NSString *)path allowOverwrite: (BOOL)allowOverwrite
 {
-  ASSIGN(this->_path, path);
-  this->_allowOverwrite = allowOverwrite;
+  ASSIGN(self->_path, path);
+  self->_allowOverwrite = allowOverwrite;
 }
 
 @end
@@ -204,16 +160,6 @@
 
 
 @implementation	GSURLDownload
-
-- (void) dealloc
-{
-  RELEASE(_protocol);
-  RELEASE(_resumeData);
-  RELEASE(_request);
-  RELEASE(_delegate);
-  RELEASE(_path);
-  [super dealloc];
-}
 
 - (void) URLProtocol: (NSURLProtocol *)protocol
   cachedResponseIsValid: (NSCachedURLResponse *)cachedResponse

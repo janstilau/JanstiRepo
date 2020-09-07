@@ -6,10 +6,6 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 
 @class NSDictionary;
 @class NSString;
@@ -17,14 +13,19 @@ extern "C" {
 
 #define NSURLResponseUnknownLength ((long long)-1)
 
-/**
- * The response to an NSURLRequest
+/*
+ 这个类, 仅仅是存储一下 响应头信息而已, 响应的 data 信息可能非常大, 服务器端不断的传递到客户端, 而响应头会很小, 可以短时间内, 交给客户端进行处理.
+ 客户端根据响应头的数据, 做相应的处理, 比如, 将网络交互, 变为 download task 等等.
  */
 @interface NSURLResponse :  NSObject <NSCoding, NSCopying>
 {
-#if	GS_EXPOSE(NSURLResponse)
-    void *_NSURLResponseInternal;
-#endif
+    long long        expectedContentLength;
+    NSURL            *URL;
+    NSString        *MIMEType;
+    NSString        *textEncodingName;
+    NSString        *statusText;
+    NSMutableDictionary    *headers; /* _GSMutableInsensitiveDictionary */
+    int            statusCode;
 }
 
 /**
@@ -108,10 +109,6 @@ expectedContentLength: (NSInteger)length
 - (NSInteger) statusCode;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

@@ -29,10 +29,8 @@ enum {
 typedef NSUInteger NSURLRequestCachePolicy;
 
 
-/**
- * This class encapsulates information about a request to load a
- * URL, how to cache the results, and when to deal with a slow/hung
- * load process by timing out.
+/*
+ 这个类, 仅仅是一个数据类而已.
  */
 @interface NSURLRequest : NSObject <NSCoding, NSCopying, NSMutableCopying>
 {

@@ -7,6 +7,9 @@
 #import "Foundation/NSMapTable.h"
 #import "Foundation/NSEnumerator.h"
 
+
+
+
 /*
  在类的内部, 专门设置一个数据结构, 这个数据结构, 可以当做是 NSCache 的控制数据类.
  */

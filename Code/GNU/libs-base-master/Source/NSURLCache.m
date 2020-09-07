@@ -1,215 +1,196 @@
-/* Implementation for NSURLCache for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-   */ 
-
 #import "common.h"
 
 #define	EXPOSE_NSURLCache_IVARS	1
 #import "GSURLPrivate.h"
 
-// FIXME ... locking and disk storage needed
-typedef struct {
-  unsigned		diskCapacity;
-  unsigned		memoryCapacity;
-  unsigned		diskUsage;
-  unsigned		memoryUsage;
-  NSString		*path;
-  NSMutableDictionary	*memory;
-} Internal;
- 
-#define	this	((Internal*)(self->_NSURLCacheInternal))
-#define	inst	((Internal*)(o->_NSURLCacheInternal))
+
+@implementation NSCachedURLResponse
+
+- (NSData *) data {
+    return self->data;
+}
+
+- (id) initWithResponse: (NSURLResponse *)response data: (NSData *)data {
+    return [self initWithResponse: response
+                             data: data
+                         userInfo: nil
+                    storagePolicy: NSURLCacheStorageAllowed];
+}
+
+- (id) initWithResponse: (NSURLResponse *)response
+                   data: (NSData *)data
+               userInfo: (NSDictionary *)userInfo
+          storagePolicy: (NSURLCacheStoragePolicy)storagePolicy;
+{
+    if ((self = [super init]) != nil)
+    {
+        ASSIGNCOPY(self->data, data);
+        ASSIGNCOPY(self->response, response);
+        ASSIGNCOPY(self->userInfo, userInfo);
+        self->storagePolicy = storagePolicy;
+    }
+    return self;
+}
+
+- (NSURLResponse *) response
+{
+    return self->response;
+}
+
+- (NSURLCacheStoragePolicy) storagePolicy
+{
+    return self->storagePolicy;
+}
+
+- (NSDictionary *) userInfo
+{
+    return self->userInfo;
+}
+
+@end
 
 
 static NSURLCache	*shared = nil;
 
 @implementation	NSURLCache
 
-+ (id) allocWithZone: (NSZone*)z
-{
-  NSURLCache	*o = [super allocWithZone: z];
+/*
+ 这个类, 并没有提供太多的实现层面上的东西. 很多应该实现的东西没有实现.
+*/
 
-  if (o != nil)
-    {
-      o->_NSURLCacheInternal = NSZoneCalloc(z, 1, sizeof(Internal));
-    }
-  return o;
-}
-
+/*
+ 因为这里有一个 change 的操作, 所以单例变成了静态变量.
+ */
 + (void) setSharedURLCache: (NSURLCache *)cache
 {
-  [gnustep_global_lock lock];
-  ASSIGN(shared, cache);
-  [gnustep_global_lock unlock];
-}
-
-- (void) dealloc
-{
-  if (this != 0)
-    {
-      RELEASE(this->memory);
-      RELEASE(this->path);
-      NSZoneFree([self zone], this);
-    }
-  [super dealloc];
+    [gnustep_global_lock lock];
+    ASSIGN(shared, cache);
+    [gnustep_global_lock unlock];
 }
 
 + (NSURLCache *) sharedURLCache
 {
-  NSURLCache	*c;
-
-  [gnustep_global_lock lock];
-  if (shared == nil)
+    NSURLCache	*c;
+    
+    [gnustep_global_lock lock];
+    if (shared == nil)
     {
-      NSString	*path = nil;
-
-// FIXME user-library-path/Caches/current-app-name
-
-      shared = [[self alloc] initWithMemoryCapacity: 4 * 1024 * 1024
-				       diskCapacity: 20 * 1024 * 1024
-					   diskPath: path];
-      
+        NSString	*path = nil;
+        /*
+         initWithMemoryCapacity 真正有价值的地方, 通过 init 方法, 读取原始的资源.
+         这里相应的地方, 都有加锁处理.
+         */
+        shared = [[self alloc] initWithMemoryCapacity: 4 * 1024 * 1024
+                                         diskCapacity: 20 * 1024 * 1024
+                                             diskPath: path];
     }
-  c = RETAIN(shared);
-  [gnustep_global_lock unlock];
-  return AUTORELEASE(c);
+    c = RETAIN(shared);
+    [gnustep_global_lock unlock];
+    return AUTORELEASE(c);
 }
 
+/*
+ 直接返回内存里面的存储值.
+ */
 - (NSCachedURLResponse *) cachedResponseForRequest: (NSURLRequest *)request
 {
-  // FIXME ... handle disk cache
-  return [this->memory objectForKey: request];
+    return [self->memory objectForKey: request];
 }
 
 - (NSUInteger) currentDiskUsage
 {
-  return this->diskUsage;
+    return self->diskUsage;
 }
 
 - (NSUInteger) currentMemoryUsage
 {
-  return this->memoryUsage;
+    return self->memoryUsage;
 }
 
 - (NSUInteger) diskCapacity
 {
-  return this->diskCapacity;
+    return self->diskCapacity;
 }
 
 - (id) initWithMemoryCapacity: (NSUInteger)memoryCapacity
-		 diskCapacity: (NSUInteger)diskCapacity
-		     diskPath: (NSString *)path
+                 diskCapacity: (NSUInteger)diskCapacity
+                     diskPath: (NSString *)path
 {
-  if ((self = [super init]) != nil)
+    if ((self = [super init]) != nil)
     {
-      this->diskUsage = 0;
-      this->diskCapacity = diskCapacity;
-      this->memoryUsage = 0;
-      this->memoryCapacity = memoryCapacity;
-      this->path = [path copy];
-      this->memory = [NSMutableDictionary new];
+        self->diskUsage = 0;
+        self->diskCapacity = diskCapacity;
+        self->memoryUsage = 0;
+        self->memoryCapacity = memoryCapacity;
+        self->path = [path copy];
+        self->memory = [NSMutableDictionary new];
     }
-  return self;
+    return self;
 }
 
 - (NSUInteger) memoryCapacity
 {
-  return this->memoryCapacity;
+    return self->memoryCapacity;
 }
 
 - (void) removeAllCachedResponses
 {
-  // FIXME ... disk storage
-  [this->memory removeAllObjects];
-  this->diskUsage = 0;
-  this->memoryUsage = 0;
+    [self->memory removeAllObjects];
+    self->diskUsage = 0;
+    self->memoryUsage = 0;
 }
 
 - (void) removeCachedResponseForRequest: (NSURLRequest *)request
 {
-  NSCachedURLResponse	*item = [self cachedResponseForRequest: request];
-
-  if (item != nil)
+    NSCachedURLResponse	*item = [self cachedResponseForRequest: request];
+    
+    if (item != nil)
     {
-      // FIXME ... disk storage
-      this->memoryUsage -= [[item data] length];
-      [this->memory removeObjectForKey: request];
+        self->memoryUsage -= [[item data] length];
+        [self->memory removeObjectForKey: request];
     }
 }
 
-- (void) setDiskCapacity: (NSUInteger)diskCapacity
-{
-  [self notImplemented: _cmd];
-  // FIXME
-}
-
-- (void) setMemoryCapacity: (NSUInteger)memoryCapacity
-{
-  [self notImplemented: _cmd];
-  // FIXME
-}
-
 - (void) storeCachedResponse: (NSCachedURLResponse *)cachedResponse
-		  forRequest: (NSURLRequest *)request
+                  forRequest: (NSURLRequest *)request
 {
-  switch ([cachedResponse storagePolicy])
+    switch ([cachedResponse storagePolicy])
     {
-      case NSURLCacheStorageAllowed:
-// FIXME ... maybe on disk?
-
-      case NSURLCacheStorageAllowedInMemoryOnly:
+        case NSURLCacheStorageAllowed:
+            
+        case NSURLCacheStorageAllowedInMemoryOnly:
         {
-	  unsigned		size = [[cachedResponse data] length];
-
-	  if (size < this->memoryCapacity)
-	    {
-	      NSCachedURLResponse	*old;
-
-	      old = [this->memory objectForKey: request];
-	      if (old != nil)
-		{
-		  this->memoryUsage -= [[old data] length];
-		  [this->memory removeObjectForKey: request];
-		}
-	      while (this->memoryUsage + size > this->memoryCapacity)
-	        {
-// FIXME ... should delete least recently used.
-		  [self removeCachedResponseForRequest:
-		    [[this->memory allKeys] lastObject]];
-		}
-	      [this->memory setObject: cachedResponse forKey: request];
-	      this->memoryUsage += size;
-	    }
-	  }
-        break;
-
-      case NSURLCacheStorageNotAllowed:
-        break;
-
-      default:
-        [NSException raise: NSInternalInconsistencyException
-		    format: @"storing cached response with bad policy (%d)",
-		    [cachedResponse storagePolicy]];
+            unsigned		size = [[cachedResponse data] length];
+            
+            if (size < self->memoryCapacity)
+            {
+                NSCachedURLResponse	*old;
+                
+                old = [self->memory objectForKey: request];
+                if (old != nil)
+                {
+                    self->memoryUsage -= [[old data] length];
+                    [self->memory removeObjectForKey: request];
+                }
+                while (self->memoryUsage + size > self->memoryCapacity)
+                {
+                    // FIXME ... should delete least recently used.
+                    [self removeCachedResponseForRequest:
+                     [[self->memory allKeys] lastObject]];
+                }
+                [self->memory setObject: cachedResponse forKey: request];
+                self->memoryUsage += size;
+            }
+        }
+            break;
+            
+        case NSURLCacheStorageNotAllowed:
+            break;
+            
+        default:
+            [NSException raise: NSInternalInconsistencyException
+                        format: @"storing cached response with bad policy (%d)",
+             [cachedResponse storagePolicy]];
     }
 }
 

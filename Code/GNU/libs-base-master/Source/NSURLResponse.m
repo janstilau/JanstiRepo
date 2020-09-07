@@ -10,22 +10,6 @@
 #import "NSCallBacks.h"
 #import "GNUstepBase/GSMime.h"
 
-
-// Internal data storage
-typedef struct {
-    long long		expectedContentLength;
-    NSURL			*URL;
-    NSString		*MIMEType;
-    NSString		*textEncodingName;
-    NSString		*statusText;
-    NSMutableDictionary	*headers; /* _GSMutableInsensitiveDictionary */
-    int			statusCode;
-} Internal;
-
-#define	this	((Internal*)(self->_NSURLResponseInternal))
-#define	inst	((Internal*)(o->_NSURLResponseInternal))
-
-
 @interface	_GSMutableInsensitiveDictionary : NSMutableDictionary
 @end
 
@@ -33,17 +17,17 @@ typedef struct {
 
 - (void) _checkHeaders
 {
-    if (NSURLResponseUnknownLength == this->expectedContentLength)
+    if (NSURLResponseUnknownLength == self->expectedContentLength)
     {
         NSString	*s= [self _valueForHTTPHeaderField: @"content-length"];
         
         if ([s length] > 0)
         {
-            this->expectedContentLength = [s intValue];
+            self->expectedContentLength = [s intValue];
         }
     }
     
-    if (nil == this->MIMEType)
+    if (nil == self->MIMEType)
     {
         GSMimeHeader	*c;
         GSMimeParser	*p;
@@ -64,9 +48,9 @@ typedef struct {
          */
         (void)[p scanHeaderBody: s into: c];
         RELEASE(p);
-        ASSIGNCOPY(this->MIMEType, [c value]);
+        ASSIGNCOPY(self->MIMEType, [c value]);
         v = [c parameterForKey: @"charset"];
-        ASSIGNCOPY(this->textEncodingName, v);
+        ASSIGNCOPY(self->textEncodingName, v);
     }
 }
 
@@ -97,7 +81,7 @@ typedef struct {
         {
             NSString	*n = [h namePreservingCase: YES];
             
-            [this->headers removeObjectForKey: n];
+            [self->headers removeObjectForKey: n];
         }
         /* Set new headers, joining values where we have multiple headers
          * with the same name.
@@ -106,7 +90,7 @@ typedef struct {
         while ((h = [e nextObject]) != nil)
         {
             NSString	*n = [h namePreservingCase: YES];
-            NSString	*o = [this->headers objectForKey: n];
+            NSString	*o = [self->headers objectForKey: n];
             NSString	*v = [h fullValue];
             
             if (nil != o)
@@ -120,109 +104,29 @@ typedef struct {
 }
 - (void) _setStatusCode: (NSInteger)code text: (NSString*)text
 {
-    this->statusCode = code;
-    ASSIGNCOPY(this->statusText, text);
+    self->statusCode = code;
+    ASSIGNCOPY(self->statusText, text);
 }
 - (void) _setValue: (NSString *)value forHTTPHeaderField: (NSString *)field
 {
-    if (this->headers == 0)
+    if (self->headers == 0)
     {
-        this->headers = [_GSMutableInsensitiveDictionary new];
+        self->headers = [_GSMutableInsensitiveDictionary new];
     }
-    [this->headers setObject: value forKey: field];
+    [self->headers setObject: value forKey: field];
 }
 - (NSString *) _valueForHTTPHeaderField: (NSString *)field
 {
-    return [this->headers objectForKey: field];
+    return [self->headers objectForKey: field];
 }
 @end
 
 
 @implementation	NSURLResponse
 
-+ (id) allocWithZone: (NSZone*)z
-{
-    NSURLResponse	*o = [super allocWithZone: z];
-    
-    if (o != nil)
-    {
-        o->_NSURLResponseInternal = NSZoneCalloc(z, 1, sizeof(Internal));
-    }
-    return o;
-}
-
-- (id) copyWithZone: (NSZone*)z
-{
-    NSURLResponse	*o;
-    
-    if (NSShouldRetainWithZone(self, z) == YES)
-    {
-        o = RETAIN(self);
-    }
-    else
-    {
-        o = [[self class] allocWithZone: z];
-        o = [o initWithURL: [self URL]
-                  MIMEType: [self MIMEType]
-     expectedContentLength: [self expectedContentLength]
-          textEncodingName: [self textEncodingName]];
-        if (o != nil)
-        {
-            ASSIGN(inst->statusText, this->statusText);
-            inst->statusCode = this->statusCode;
-            if (this->headers == 0)
-            {
-                inst->headers = 0;
-            }
-            else
-            {
-                inst->headers = [this->headers mutableCopy];
-            }
-        }
-    }
-    return o;
-}
-
-- (void) dealloc
-{
-    if (this != 0)
-    {
-        RELEASE(this->URL);
-        RELEASE(this->MIMEType);
-        RELEASE(this->textEncodingName);
-        RELEASE(this->statusText);
-        RELEASE(this->headers);
-        NSZoneFree([self zone], this);
-    }
-    [super dealloc];
-}
-
-- (void) encodeWithCoder: (NSCoder*)aCoder
-{
-    // FIXME
-    if ([aCoder allowsKeyedCoding])
-    {
-    }
-    else
-    {
-    }
-}
-
 - (long long) expectedContentLength
 {
-    return this->expectedContentLength;
-}
-
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-    // FIXME
-    if ([aCoder allowsKeyedCoding])
-    {
-    }
-    else
-    {
-    }
-    return self;
+    return self->expectedContentLength;
 }
 
 /**
@@ -236,10 +140,10 @@ expectedContentLength: (NSInteger)length
 {
     if ((self = [super init]) != nil)
     {
-        ASSIGN(this->URL, URL);
-        ASSIGNCOPY(this->MIMEType, MIMEType);
-        ASSIGNCOPY(this->textEncodingName, name);
-        this->expectedContentLength = length;
+        ASSIGN(self->URL, URL);
+        ASSIGNCOPY(self->MIMEType, MIMEType);
+        ASSIGNCOPY(self->textEncodingName, name);
+        self->expectedContentLength = length;
     }
     return self;
 }
@@ -255,8 +159,8 @@ expectedContentLength: (NSInteger)length
             textEncodingName: nil];
     if (nil != self)
     {
-        this->statusCode = statusCode;
-        this->headers = [headerFields copy];
+        self->statusCode = statusCode;
+        self->headers = [headerFields copy];
         [self _checkHeaders];
     }
     return self;
@@ -264,7 +168,7 @@ expectedContentLength: (NSInteger)length
 
 - (NSString *) MIMEType
 {
-    return this->MIMEType;
+    return self->MIMEType;
 }
 
 /**
@@ -323,12 +227,12 @@ expectedContentLength: (NSInteger)length
 
 - (NSString *) textEncodingName
 {
-    return this->textEncodingName;
+    return self->textEncodingName;
 }
 
 - (NSURL *) URL
 {
-    return this->URL;
+    return self->URL;
 }
 
 @end
@@ -344,12 +248,13 @@ expectedContentLength: (NSInteger)length
 
 - (NSDictionary *) allHeaderFields
 {
-    return AUTORELEASE([this->headers copy]);
+    return AUTORELEASE([self->headers copy]);
 }
 
 - (NSInteger) statusCode
 {
-    return this->statusCode;
+    return self->statusCode;
 }
+
 @end
 

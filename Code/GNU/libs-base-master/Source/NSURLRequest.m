@@ -36,22 +36,6 @@
     return self->cachePolicy;
 }
 
-- (void) dealloc
-{
-    if (self != 0)
-    {
-        RELEASE(self->body);
-        RELEASE(self->bodyStream);
-        RELEASE(self->method);
-        RELEASE(self->URL);
-        RELEASE(self->mainDocumentURL);
-        RELEASE(self->properties);
-        RELEASE(self->headers);
-        NSZoneFree([self zone], self);
-    }
-    [super dealloc];
-}
-
 - (NSString*) description
 {
     return [NSString stringWithFormat: @"<%@ %@>",
@@ -122,11 +106,6 @@
     {
         return NO;
     }
-    if (self->body != o->body
-        && [self->body isEqual: o->body] == NO)
-    {
-        return NO;
-    }
     if (self->bodyStream != o->bodyStream
         && [self->bodyStream isEqual: o->bodyStream] == NO)
     {
@@ -148,29 +127,6 @@
 - (NSURL *) mainDocumentURL
 {
     return self->mainDocumentURL;
-}
-
-- (id) mutableCopyWithZone: (NSZone*)z
-{
-    NSMutableURLRequest	*o;
-    
-    o = [NSMutableURLRequest allocWithZone: z];
-    o = [o initWithURL: [self URL]
-           cachePolicy: [self cachePolicy]
-       timeoutInterval: [self timeoutInterval]];
-    if (o != nil)
-    {
-        [o setMainDocumentURL: self->mainDocumentURL];
-        o->properties = [self->properties mutableCopy];
-        ASSIGN(o->mainDocumentURL, self->mainDocumentURL);
-        ASSIGN(o->body, self->body);
-        ASSIGN(o->bodyStream, self->bodyStream);
-        ASSIGN(o->method, self->method);
-        o->shouldHandleCookies = self->shouldHandleCookies;
-        o->debug = self->debug;
-        o->headers = [self->headers mutableCopy];
-    }
-    return o;
 }
 
 - (int) setDebug: (int)flag

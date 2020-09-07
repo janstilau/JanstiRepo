@@ -1,27 +1,3 @@
-/* Interface for NSURLDownload for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <frm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-   */ 
-
 #ifndef __NSURLDownload_h_GNUSTEP_BASE_INCLUDE
 #define __NSURLDownload_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -30,10 +6,6 @@
 
 #import	<Foundation/NSObject.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 @class NSData;
 @class NSError;
 @class NSString;
@@ -41,14 +13,22 @@ extern "C" {
 @class NSURLRequest;
 @class NSURLResponse;
 
-/**
- * Handles download to file.
+/*
+ An object that downloads a resource asynchronously and saves the data to a file.
+ 
+ The interface for NSURLDownload provides methods to initialize a download,
+ set the destination path and cancel loading the request.
  */
 @interface NSURLDownload : NSObject
 {
-#if	GS_EXPOSE(NSURLDownload)
-  void *_NSURLDownloadInternal;
-#endif
+    NSURLDownload        *_parent;    // Not retained
+    NSURLRequest        *_request;
+    NSURLProtocol        *_protocol;
+    NSData        *_resumeData;
+    NSString        *_path;
+    id            _delegate;
+    BOOL            _deletesFileUponFailure;
+    BOOL            _allowOverwrite;
 }
 
 /**
@@ -78,8 +58,8 @@ extern "C" {
  * download and resumes (or restarts) the downloading process.
  */
 - (id) initWithResumeData: (NSData *)resumeData
-		 delegate: (id)delegate
-		     path: (NSString *)path;
+                 delegate: (id)delegate
+                     path: (NSString *)path;
 
 /**
  * Returns the receiver's request.
@@ -122,15 +102,6 @@ extern "C" {
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_7, GS_API_LATEST)
 @protocol NSURLDownloadDelegate <NSObject>
-#if GS_PROTOCOLS_HAVE_OPTIONAL
-@optional
-#else
-@end
-@interface NSObject (NSURLDownloadDelegate)
-#endif
-#else
-@interface NSObject (NSURLDownloadDelegate)
-#endif
 
 /**
  * Called immediately once the download has started.
@@ -149,19 +120,19 @@ extern "C" {
  * filename to be used.
  */
 - (void) download: (NSURLDownload *)download
- decideDestinationWithSuggestedFilename: (NSString *)filename;
+decideDestinationWithSuggestedFilename: (NSString *)filename;
 
 /**
  * Called when authentication of a request is cancelled.
  */
 - (void) download: (NSURLDownload *)download
-  didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
+didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 
 /**
  * Called when the download has created the downloaded file.
  */
 - (void) download: (NSURLDownload *)download
-  didCreateDestination: (NSString *)path;
+didCreateDestination: (NSString *)path;
 
 /**
  * Called when the download fails.
@@ -175,13 +146,13 @@ extern "C" {
  * the connection sender when done.
  */
 - (void) download: (NSURLDownload *)download
-  didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
+didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 
 /**
  * Called when some data has been received.
  */
 - (void) download: (NSURLDownload *)download
-  didReceiveDataOfLength: (NSUInteger)length;
+didReceiveDataOfLength: (NSUInteger)length;
 
 /**
  * Called when a response is received.<br />
@@ -189,14 +160,14 @@ extern "C" {
  * and the delegate should be prepared to treat each separately.
  */
 - (void) download: (NSURLDownload *)download
-  didReceiveResponse: (NSURLResponse *)response;
+didReceiveResponse: (NSURLResponse *)response;
 
 /**
  * Called if the download file is encoded ... the delegate should return
  * YES if the downloaded data is to be decoded, NO otherwise.
  */
 - (BOOL) download: (NSURLDownload *)download
-  shouldDecodeSourceDataOfMIMEType: (NSString *)encodingType;
+shouldDecodeSourceDataOfMIMEType: (NSString *)encodingType;
 
 /**
  * Called when a download is resuming from previously stored data and
@@ -206,8 +177,8 @@ extern "C" {
  * must be redone.
  */
 - (void) download: (NSURLDownload *)download
-  willResumeWithResponse: (NSURLResponse *)response
-  fromByte: (long long)startingByte;
+willResumeWithResponse: (NSURLResponse *)response
+         fromByte: (long long)startingByte;
 
 /**
  * Called if a new request has to be sent due to redirection.<br />
@@ -215,14 +186,10 @@ extern "C" {
  * to have the process continue.
  */
 - (NSURLRequest *) download: (NSURLDownload *)download
-	    willSendRequest: (NSURLRequest *)request
-	   redirectResponse: (NSURLResponse *)redirectResponse;
+            willSendRequest: (NSURLRequest *)request
+           redirectResponse: (NSURLResponse *)redirectResponse;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif
 

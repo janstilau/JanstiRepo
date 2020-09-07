@@ -1,37 +1,9 @@
-/* NSURL.h - Class NSURL
-   Copyright (C) 1999 Free Software Foundation, Inc.
-   
-   Written by: 	Manuel Guesdon <mguesdon@sbuilders.com>
-   Date:	Jan 1999
-   
-   This file is part of the GNUstep Library.
-   
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-*/
-
 #ifndef __NSURL_h_GNUSTEP_BASE_INCLUDE
 #define __NSURL_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
 #import	<Foundation/NSURLHandle.h>
 #import <Foundation/NSRange.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 #if	OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 
@@ -51,10 +23,10 @@ GS_EXPORT NSString* const NSURLFileScheme;
 typedef NSUInteger NSURLBookmarkResolutionOptions;
 enum
 {
-  NSURLBookmarkResolutionWithoutUI = (1 << 8),
-  NSURLBookmarkResolutionWithoutMounting = (1 << 9),
+    NSURLBookmarkResolutionWithoutUI = (1 << 8),
+    NSURLBookmarkResolutionWithoutMounting = (1 << 9),
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_7, GS_API_LATEST)
-  NSURLBookmarkResolutionWithSecurityScope = (1 << 10)
+    NSURLBookmarkResolutionWithSecurityScope = (1 << 10)
 #endif
 };
 #endif
@@ -72,13 +44,13 @@ enum
 {
 #if	GS_EXPOSE(NSURL)
 @private
-  NSString	*_urlString;
-  NSURL		*_baseURL;
-  void		*_clients;
-  void		*_data;
+    NSString	*_urlString;
+    NSURL		*_baseURL;
+    void		*_clients;
+    void		*_data;
 #endif
 }
- 
+
 /**
  * Create and return a file URL with the supplied path.<br />
  * The value of aPath must be a valid filesystem path.<br />
@@ -254,7 +226,7 @@ enum
  * </p>
  */
 - (void) loadResourceDataNotifyingClient: (id)client
-			      usingCache: (BOOL)shouldUseCache;
+                              usingCache: (BOOL)shouldUseCache;
 
 /**
  * Returns the parameter portion of the receiver or nil if there is no
@@ -360,7 +332,7 @@ enum
  * Calls [NSURLHandle-writeProperty:forKey:] to set the named property.
  */
 - (BOOL) setProperty: (id)property
-	      forKey: (NSString*)propertyKey;
+              forKey: (NSString*)propertyKey;
 
 /**
  * Calls [NSURLHandle-writeData:] to write the specified data object
@@ -413,7 +385,7 @@ enum
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 - (BOOL) getResourceValue: (id*)value 
-                   forKey: (NSString *)key 
+                   forKey: (NSString *)key
                     error: (NSError**)error;
 #endif
 /**
@@ -443,7 +415,7 @@ enum
  * has become available, only that a chunk of data has arrived.
  */
 - (void) URL: (NSURL*)sender
-  resourceDataDidBecomeAvailable: (NSData*)newBytes;
+resourceDataDidBecomeAvailable: (NSData*)newBytes;
 
 /** <override-dummy />
  * Loading of resource data is complete.
@@ -460,7 +432,7 @@ enum
  * Loading of resource data has failed, for given human-readable reason.
  */
 - (void) URL: (NSURL*)sender
-  resourceDidFailLoadingWithReason: (NSString*)reason;
+resourceDidFailLoadingWithReason: (NSString*)reason;
 @end
 
 /** URL Resource Value Constants **/
@@ -601,15 +573,15 @@ GS_EXPORT NSString* const NSURLUbiquitousItemDownloadingStatusCurrent;
 #if     GS_NONFRAGILE
 #  if	defined(GS_NSURLQueryItem_IVARS)
 @public
-GS_NSURLQueryItem_IVARS;
+    GS_NSURLQueryItem_IVARS;
 #  endif
 #else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
+    /* Pointer to private additional data used to avoid breaking ABI
+     * when we don't have the non-fragile ABI available.
+     * Use this mechanism rather than changing the instance variable
+     * layout (see Source/GSInternal.h for details).
+     */
+@private id _internal GS_UNUSED_IVAR;
 #endif
 }
 
@@ -627,7 +599,7 @@ GS_NSURLQueryItem_IVARS;
 #endif // OS_API_VERSION
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_9, GS_API_LATEST)
-  
+
 @interface NSURLComponents : NSObject <NSCopying>
 {
 #if	GS_EXPOSE(NSURLComponents)
@@ -635,18 +607,18 @@ GS_NSURLQueryItem_IVARS;
 #if     GS_NONFRAGILE
 #  if	defined(GS_NSURLComponents_IVARS)
 @public
-GS_NSURLComponents_IVARS;
+    GS_NSURLComponents_IVARS;
 #  endif
 #else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
+    /* Pointer to private additional data used to avoid breaking ABI
+     * when we don't have the non-fragile ABI available.
+     * Use this mechanism rather than changing the instance variable
+     * layout (see Source/GSInternal.h for details).
+     */
+@private id _internal GS_UNUSED_IVAR;
 #endif
 }
-  // Creating URL components...
+// Creating URL components...
 + (instancetype) componentsWithString:(NSString *)URLString;
 + (instancetype) componentsWithURL:(NSURL *)url 
            resolvingAgainstBaseURL:(BOOL)resolve;
@@ -712,12 +684,8 @@ GS_NSURLComponents_IVARS;
 - (NSRange) rangeOfQuery;
 - (NSRange) rangeOfScheme;
 - (NSRange) rangeOfUser;
-  
-@end
 
-#if defined(__cplusplus)
-}
-#endif
+@end
 
 #endif	/* GS_API_MACOSX */
 
