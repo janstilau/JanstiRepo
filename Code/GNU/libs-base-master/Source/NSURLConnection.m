@@ -94,10 +94,10 @@
 
 @end
 
-typedef struct
-{
-    
-} Internal;
+
+
+
+
 
 @implementation	NSURLConnection
 
@@ -113,34 +113,6 @@ typedef struct
     
     o = [o initWithRequest: request delegate: delegate];
     return AUTORELEASE(o);
-}
-
-- (void) cancel
-{
-    [self->_protocol stopLoading];
-    DESTROY(self->_protocol);
-    DESTROY(self->_delegate);
-}
-
-- (void) dealloc
-{
-    if (this != 0)
-    {
-        [self cancel];
-        DESTROY(self->_request);
-        DESTROY(self->_delegate);
-        NSZoneFree([self zone], this);
-        _NSURLConnectionInternal = 0;
-    }
-    [super dealloc];
-}
-
-- (void) finalize
-{
-    if (this != 0)
-    {
-        [self cancel];
-    }
 }
 
 - (id) initWithRequest: (NSURLRequest *)request delegate: (id)delegate
@@ -288,6 +260,9 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge
             loop = [NSRunLoop currentRunLoop];
             limit = [[NSDate alloc] initWithTimeIntervalSinceNow:
                      [request timeoutInterval]];
+            /*
+             timeoutInterval, 这里其实证明了, protocol 本身并不处理超时的问题, 是 protocl 的上层类, 做超时的判断.
+             */
             
             while ([collector done] == NO && [limit timeIntervalSinceNow] > 0.0)
             {

@@ -17,7 +17,6 @@
 @class NSURLRequest;
 @class NSURLResponse;
 
-
 /**
  * Defines the API for NSURLProtocol loading
  */

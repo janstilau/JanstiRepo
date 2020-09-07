@@ -1,61 +1,5 @@
 #ifndef	INCLUDED_GSSTREAM_H
 #define	INCLUDED_GSSTREAM_H
-
-/** Implementation for GSStream for GNUStep
-   Copyright (C) 2006 Free Software Foundation, Inc.
-
-   Written by:  Derek Zhou <derekzhou@gmail.com>
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: 2006
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-
-   NSInputStream and NSOutputStream are clusters rather than concrete classes
-   The inherance graph is:
-   NSStream 
-   |-- GSStream
-   |   `--GSSocketStream
-   |-- NSInputStream
-   |   `--GSInputStream
-   |      |-- GSDataInputStream
-   |      |-- GSFileInputStream
-   |      |-- GSPipeInputStream (mswindows only)
-   |      `-- GSSocketInputStream
-   |          |-- GSInetInputStream
-   |          |-- GSLocalInputStream
-   |          `-- GSInet6InputStream
-   |-- NSOutputStream
-   |   `--GSOutputStream
-   |      |-- GSBufferOutputStream
-   |      |-- GSDataOutputStream
-   |      |-- GSFileOutputStream
-   |      |-- GSPipeOutputStream (mswindows only)
-   |      `-- GSSocketOutputStream
-   |          |-- GSInetOutputStream
-   |          |-- GSLocalOutputStream
-   |          `-- GSInet6InputStream
-   `-- GSServerStream
-       `-- GSAbstractServerStream
-           |-- GSLocalServerStream (mswindows)
-           `-- GSSocketServerStream
-               |-- GSInetServerStream
-               |-- GSInet6ServerStream
-               `-- GSLocalServerStream (gnu/linux)
-*/
-
 #import "Foundation/NSStream.h"
 #import "Foundation/NSRunLoop.h"
 #import "Foundation/NSMapTable.h"
@@ -73,14 +17,14 @@
 
 #define	IVARS \
 { \
-  id		         _delegate;	/* Delegate controls operation.	*/\
-  NSMutableDictionary	*_properties;	/* storage for properties	*/\
-  BOOL                  _delegateValid; /* whether the delegate responds*/\
-  NSError               *_lastError;    /* last error occured           */\
-  NSStreamStatus         _currentStatus;/* current status               */\
-  NSMapTable		*_loops;	/* Run loops and their modes.	*/\
-  void                  *_loopID;	/* file descriptor etc.		*/\
-  int			_events;	/* Signalled events.		*/\
+id		         _delegate;	/* Delegate controls operation.	*/\
+NSMutableDictionary	*_properties;	/* storage for properties	*/\
+BOOL                  _delegateValid; /* whether the delegate responds*/\
+NSError               *_lastError;    /* last error occured           */\
+NSStreamStatus         _currentStatus;/* current status               */\
+NSMapTable		*_loops;	/* Run loops and their modes.	*/\
+void                  *_loopID;	/* file descriptor etc.		*/\
+int			_events;	/* Signalled events.		*/\
 }
 
 /**
@@ -181,13 +125,13 @@ IVARS
 @end
 
 /**
- * The concrete subclass of NSInputStream that reads from the memory 
+ * The concrete subclass of NSInputStream that reads from the memory
  */
 @interface GSDataInputStream : GSInputStream
 {
 @private
-  NSData *_data;
-  unsigned long _pointer;
+    NSData *_data;
+    unsigned long _pointer;
 }
 @end
 
@@ -197,9 +141,9 @@ IVARS
 @interface GSBufferOutputStream : GSOutputStream
 {
 @private
-  uint8_t	*_buffer;
-  unsigned	_capacity;
-  unsigned long _pointer;
+    uint8_t	*_buffer;
+    unsigned	_capacity;
+    unsigned long _pointer;
 }
 @end
 
@@ -209,8 +153,8 @@ IVARS
 @interface GSDataOutputStream : GSOutputStream
 {
 @private
-  NSMutableData *_data;
-  unsigned long _pointer;
+    NSMutableData *_data;
+    unsigned long _pointer;
 }
 @end
 

@@ -216,5 +216,3 @@ didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 @end
 
 #endif
-
-#endif

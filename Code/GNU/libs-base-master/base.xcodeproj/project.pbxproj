@@ -819,7 +819,7 @@
 		18906F621610BF3C0003C892 /* GSSocketStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSSocketStream.h; path = Source/GSSocketStream.h; sourceTree = "<group>"; };
 		18906F631610BF3C0003C892 /* GSSocketStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSocketStream.m; sourceTree = "<group>"; };
 		18906F641610BF3C0003C892 /* GSSorting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSSorting.h; path = Source/GSSorting.h; sourceTree = "<group>"; };
-		18906F651610BF3C0003C892 /* GSStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSStream.h; path = Source/GSStream.h; sourceTree = "<group>"; };
+		18906F651610BF3C0003C892 /* GSStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSStream.h; path = ../../Source/GSStream.h; sourceTree = "<group>"; };
 		18906F661610BF3C0003C892 /* GSStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSStream.m; sourceTree = "<group>"; };
 		18906F671610BF3C0003C892 /* GSString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSString.m; sourceTree = "<group>"; };
 		18906F681610BF3C0003C892 /* GSTLS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GSTLS.h; path = Source/GSTLS.h; sourceTree = "<group>"; };
@@ -1553,6 +1553,9 @@
 		06C049A024FE99450088AD57 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906E681610BF3C0003C892 /* Foundation.h */,
+				18906EBA1610BF3C0003C892 /* NSStream.h */,
+				18906F651610BF3C0003C892 /* GSStream.h */,
 				18906E971610BF3C0003C892 /* NSKeyValueObserving.h */,
 				18906E961610BF3C0003C892 /* NSKeyValueCoding.h */,
 				18906E941610BF3C0003C892 /* NSInvocation.h */,
@@ -1566,7 +1569,6 @@
 				18906E741610BF3C0003C892 /* NSCharacterSet.h */,
 				18906E931610BF3C0003C892 /* NSIndexSet.h */,
 				18906E841610BF3C0003C892 /* NSEnumerator.h */,
-				18906E9E1610BF3C0003C892 /* NSNotification.h */,
 				18906EB11610BF3C0003C892 /* NSRange.h */,
 			);
 			name = Done;
@@ -1772,7 +1774,6 @@
 				18906F5E1610BF3C0003C892 /* GSRunLoopWatcher.h */,
 				18906F621610BF3C0003C892 /* GSSocketStream.h */,
 				18906F641610BF3C0003C892 /* GSSorting.h */,
-				18906F651610BF3C0003C892 /* GSStream.h */,
 				18906F681610BF3C0003C892 /* GSTLS.h */,
 				18906F6B1610BF3C0003C892 /* GSURLPrivate.h */,
 				18906F6D1610BF3C0003C892 /* GSeq.h */,
@@ -2077,7 +2078,7 @@
 				AD197C0C189A4E98000F6CF9 /* NSInvocationOperation.h */,
 				AD197C0D189A4E98000F6CF9 /* NSMetadata.h */,
 				18394B031610D85D00335E85 /* Additions */,
-				18906E681610BF3C0003C892 /* Foundation.h */,
+				18906E9E1610BF3C0003C892 /* NSNotification.h */,
 				18906EC81610BF3C0003C892 /* NSURLError.h */,
 				18906E691610BF3C0003C892 /* FoundationErrors.h */,
 				18906E6A1610BF3C0003C892 /* NSAffineTransform.h */,
@@ -2144,7 +2145,6 @@
 				18906EB71610BF3C0003C892 /* NSSet.h */,
 				18906EB81610BF3C0003C892 /* NSSortDescriptor.h */,
 				18906EB91610BF3C0003C892 /* NSSpellServer.h */,
-				18906EBA1610BF3C0003C892 /* NSStream.h */,
 				18906EBB1610BF3C0003C892 /* NSString.h */,
 				18906EBC1610BF3C0003C892 /* NSTask.h */,
 				18906EBD1610BF3C0003C892 /* NSTextCheckingResult.h */,
