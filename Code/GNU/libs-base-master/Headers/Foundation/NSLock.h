@@ -5,10 +5,6 @@
 
 #import  <Foundation/NSObject.h>
 
-#if  defined(__cplusplus)
-extern "C" {
-#endif
-
 /**
  * Protocol defining lock and unlock operations.
  */
@@ -26,33 +22,16 @@ extern "C" {
 
 @end
 
-/**
- * <p>Simplest lock for protecting critical sections of code.
- * </p>
- * <p>An <code>NSLock</code> is used in multi-threaded applications to protect
- * critical pieces of code. While one thread holds a lock within a piece of
- * code, another thread cannot execute that code until the first thread has
- * given up its hold on the lock. The limitation of <code>NSLock</code> is
- * that you can only lock an <code>NSLock</code> once and it must be unlocked
- * before it can be acquired again.<br /> Other lock classes, notably
- * [NSRecursiveLock], have different restrictions.
- * </p>
+/*
+ 仅仅是对于 pthreadlock 的封装而已.
  */
 @interface NSLock : NSObject <NSLocking>
 {
-#if	GS_EXPOSE(NSLock)
-@protected
     gs_mutex_t	_mutex;
     NSString	*_name;
-#endif
 }
 
-#if !NO_GNUSTEP
-/** Report whether this lock is held by the current thread.<br />
- * Raises an exception if this is not supported by the system lock mechanism.
- */
 - (BOOL) isLockedByCurrentThread;
-#endif
 
 /**
  *  Try to acquire lock and return before limit, YES if succeeded, NO if not.
@@ -74,7 +53,6 @@ extern "C" {
  */
 - (void) unlock;
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST) 
 /** Return the name of the receiver or nil of none has been set.
  */
 - (NSString*) name;
@@ -82,7 +60,6 @@ extern "C" {
 /** Sets the name of the receiver (for use in debugging).
  */
 - (void) setName: (NSString*)name;
-#endif
 
 @end
 
@@ -321,10 +298,6 @@ GS_EXPORT NSLock_error_handler  *_NSLock_error_handler;
  */
 + (NSRecursiveLock*) tracedRecursiveLock;
 @end
-#endif
-
-#if  defined(__cplusplus)
-}
 #endif
 
 #if     !NO_GNUSTEP && !defined(GNUSTEP_BASE_INTERNAL)
