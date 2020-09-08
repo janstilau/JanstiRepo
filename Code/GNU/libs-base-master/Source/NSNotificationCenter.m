@@ -73,18 +73,6 @@ static Class concrete = 0;
 @end
 
 
-/*
- * Garbage collection considerations -
- * The notification center is not supposed to retain any notification
- * observers or notification objects.  To achieve this when using garbage
- * collection, we must hide all references to observers and objects.
- * Within an Observation structure, this is not a problem, we simply
- * allocate the structure using 'atomic' allocation to tell the gc
- * system to ignore pointers inside it.
- * Elsewhere, we store the pointers with a bit added, to hide them from
- * the garbage collector.
- */
-
 struct	NCTbl;		/* Notification Center Table structure	*/
 
 /*
@@ -221,18 +209,10 @@ typedef struct NCTbl {
 #define	LOCKCOUNT	(TABLE->lockCount)
 
 static Observation *
-obsNew(NCTable *t, SEL s, id o)
+createNewObservation(NCTable *t, SEL s, id o)
 {
-    Observation	*obs;
+    Observation	*result;
     
-    /* Generally, observations are cached and we create a 'new' observation
-     * by retrieving from the cache or by allocating a block of observations
-     * in one go.  This works nicely to both hide observations from the
-     * garbage collector (when using gcc for GC) and to provide high
-     * performance for situations where apps add/remove lots of observers
-     * very frequently (poor design, but something which happens in the
-     * real world unfortunately).
-     */
     if (t->freeList == 0)
     {
         Observation	*block;
@@ -257,19 +237,19 @@ obsNew(NCTable *t, SEL s, id o)
         t->chunkIndex++;
         t->freeList->link = 0;
     }
-    obs = t->freeList;
-    t->freeList = (Observation*)obs->link;
-    obs->link = (void*)t;
-    obs->retained = 0;
-    obs->next = 0;
+    result = t->freeList;
+    t->freeList = (Observation*)result->link;
+    result->link = (void*)t;
+    result->retained = 0;
+    result->next = 0;
     
-    obs->selector = s;
-    obs->observer = o;
+    result->selector = s;
+    result->observer = o;
     
-    return obs;
+    return result;
 }
 
-static GSIMapTable	mapNew(NCTable *t)
+static GSIMapTable	createNewMap(NCTable *t)
 {
     if (t->cacheIndex > 0)
     {
@@ -553,6 +533,9 @@ purgeMapNode(GSIMapTable map, GSIMapNode node, id observer)
 
 @end
 
+/*
+ 一个简单的包装, 使得 Block 这种可以直接添加到 NotificationCenter 里面
+ */
 @interface GSNotificationObserver : NSObject
 {
     NSOperationQueue *_queue;
@@ -599,65 +582,24 @@ purgeMapNode(GSIMapTable map, GSIMapNode node, id observer)
 
 @end
 
-
-/**
- * <p>GNUstep provides a framework for sending messages between objects within
- * a process called <em>notifications</em>.  Objects register with an
- * <code>NSNotificationCenter</code> to be informed whenever other objects
- * post [NSNotification]s to it matching certain criteria. The notification
- * center processes notifications synchronously -- that is, control is only
- * returned to the notification poster once every recipient of the
- * notification has received it and processed it.  Asynchronous processing is
- * possible using an [NSNotificationQueue].</p>
- *
- * <p>Obtain an instance using the +defaultCenter method.</p>
- *
- * <p>In a multithreaded process, notifications are always sent on the thread
- * that they are posted from.</p>
- *
- * <p>Use the [NSDistributedNotificationCenter] for interprocess
- * communications on the same machine.</p>
+/*
+ 这个类, 数据结构层面设计的太复杂.
+ 直接使用已有的数据结构进行缓存会好太多.
  */
+
 @implementation NSNotificationCenter
 
-/* The default instance, most often the only one created.
- It is accessed by the class methods at the end of this file.
- There is no need to mutex locking of this variable. */
-
 static NSNotificationCenter *default_center = nil;
-
-+ (void) atExit
-{
-    id	tmp = default_center;
-    
-    default_center = nil;
-    [tmp release];
-}
 
 + (void) initialize
 {
     if (self == [NSNotificationCenter class])
     {
-        _zone = NSDefaultMallocZone();
-        if (concrete == 0)
-        {
-            concrete = [GSNotification class];
-        }
-        /*
-         * Do alloc and init separately so the default center can refer to
-         * the 'default_center' variable during initialisation.
-         */
         default_center = [self alloc];
         [default_center init];
-        [self registerAtExit];
     }
 }
 
-/**
- * Returns the default notification center being used for this task (process).
- * This is used for all notifications posted by the Base library unless
- * otherwise noted.
- */
 + (NSNotificationCenter*) defaultCenter
 {
     return default_center;
@@ -677,60 +619,23 @@ static NSNotificationCenter *default_center = nil;
 
 - (void) dealloc
 {
-    [self finalize];
-    
     [super dealloc];
 }
 
-- (void) finalize
-{
-    if (self == default_center)
-    {
-        [NSException raise: NSInternalInconsistencyException
-                    format: @"Attempt to destroy the default center"];
-    }
-    /*
-     * Release all memory used to store Observations etc.
-     */
-    endNCTable(TABLE);
-}
-
 
-/* Adding new observers. */
-
-/**
- * <p>Registers observer to receive notifications with the name
- * notificationName and/or containing object (one or both of these two must be
- * non-nil; nil acts like a wildcard).  When a notification of name name
- * containing object is posted, observer receives a selector message with this
- * notification as the argument.  The notification center waits for the
- * observer to finish processing the message, then informs the next registree
- * matching the notification, and after all of this is done, control returns
- * to the poster of the notification.  Therefore the processing in the
- * selector implementation should be short.</p>
- *
- * <p>The notification center does not retain observer or object. Therefore,
- * you should always send removeObserver: or removeObserver:name:object: to
- * the notification center before releasing these objects.<br />
- * As a convenience, when built with garbage collection, you do not need to
- * remove any garbage collected observer as the system will do it implicitly.
- * </p>
- *
- * <p>NB. For MacOS-X compatibility, adding an observer multiple times will
- * register it to receive multiple copies of any matching notification, however
- * removing an observer will remove <em>all</em> of the multiple registrations.
- * </p>
- */
 - (void) addObserver: (id)observer
             selector: (SEL)selector
                 name: (NSString*)name
               object: (id)object
 {
     Observation	*list;
-    Observation	*o;
+    Observation	*observation;
     GSIMapTable	m;
     GSIMapNode	n;
     
+    /*
+     首先, 应该做防卫式判断.
+     */
     if (observer == nil)
         [NSException raise: NSInvalidArgumentException
                     format: @"Nil observer passed to addObserver ..."];
@@ -749,15 +654,7 @@ static NSNotificationCenter *default_center = nil;
     
     lockNCTable(TABLE);
     
-    o = obsNew(TABLE, selector, observer);
-    
-    /*
-     * Record the Observation in one of the linked lists.
-     *
-     * NB. It is possible to register an observer for a notification more than
-     * once - in which case, the observer will receive multiple messages when
-     * the notification is posted... odd, but the MacOS-X docs specify this.
-     */
+    observation = createNewObservation(TABLE, selector, observer);
     
     if (name)
     {
@@ -767,7 +664,7 @@ static NSNotificationCenter *default_center = nil;
         n = GSIMapNodeForKey(NAMED, (GSIMapKey)(id)name);
         if (n == 0)
         {
-            m = mapNew(TABLE);
+            m = createNewMap(TABLE);
             /*
              * As this is the first observation for the given name, we take a
              * copy of the name so it cannot be mutated while in the map.
@@ -787,14 +684,14 @@ static NSNotificationCenter *default_center = nil;
         n = GSIMapNodeForSimpleKey(m, (GSIMapKey)object);
         if (n == 0)
         {
-            o->next = ENDOBS;
-            GSIMapAddPair(m, (GSIMapKey)object, (GSIMapVal)o);
+            observation->next = ENDOBS;
+            GSIMapAddPair(m, (GSIMapKey)object, (GSIMapVal)observation);
         }
         else
         {
             list = (Observation*)n->value.ptr;
-            o->next = list->next;
-            list->next = o;
+            observation->next = list->next;
+            list->next = observation;
         }
     }
     else if (object)
@@ -802,26 +699,26 @@ static NSNotificationCenter *default_center = nil;
         n = GSIMapNodeForSimpleKey(NAMELESS, (GSIMapKey)object);
         if (n == 0)
         {
-            o->next = ENDOBS;
-            GSIMapAddPair(NAMELESS, (GSIMapKey)object, (GSIMapVal)o);
+            observation->next = ENDOBS;
+            GSIMapAddPair(NAMELESS, (GSIMapKey)object, (GSIMapVal)observation);
         }
         else
         {
             list = (Observation*)n->value.ptr;
-            o->next = list->next;
-            list->next = o;
+            observation->next = list->next;
+            list->next = observation;
         }
     }
     else
     {
-        o->next = WILDCARD;
-        WILDCARD = o;
+        observation->next = WILDCARD;
+        WILDCARD = observation;
     }
     
     unlockNCTable(TABLE);
 }
 
-/**
+/*
  * <p>Returns a new observer added to the notification center, in order to
  * observe the given notification name posted by an object or any object (if
  * the object argument is nil).</p>
@@ -842,6 +739,10 @@ static NSNotificationCenter *default_center = nil;
     GSNotificationObserver *observer =
     [[GSNotificationObserver alloc] initWithQueue: queue block: block];
     
+    /*
+     Notification 的这种 target action 的方式, 已经是确定的了.
+     为了让 BLOCK 也可以符合这种方式, 创建一个中间层进行适配.
+     */
     [self addObserver: observer
              selector: @selector(didReceiveNotification:)
                  name: name

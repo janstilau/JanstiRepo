@@ -1,27 +1,3 @@
-/* Interface for NSData for GNUStep
-   Copyright (C) 1995 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Date: 1995
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-   */
-
 #ifndef __NSData_h_GNUSTEP_BASE_INCLUDE
 #define __NSData_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -31,10 +7,6 @@
 #import	<Foundation/NSSerialization.h>
 #import <GNUstepBase/GSBlocks.h>
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 @class	NSError;
 @class	NSURL;
@@ -42,27 +14,27 @@ extern "C" {
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_9,GS_API_LATEST)
 enum {
-  NSDataBase64DecodingIgnoreUnknownCharacters = (1UL << 0)
+    NSDataBase64DecodingIgnoreUnknownCharacters = (1UL << 0)
 };
 typedef NSUInteger NSDataBase64DecodingOptions;
 
 enum {
-  NSDataBase64Encoding64CharacterLineLength = (1UL << 0),
-  NSDataBase64Encoding76CharacterLineLength = (1UL << 1),
-  NSDataBase64EncodingEndLineWithCarriageReturn = (1UL << 4),
-  NSDataBase64EncodingEndLineWithLineFeed = (1UL << 5),
+    NSDataBase64Encoding64CharacterLineLength = (1UL << 0),
+    NSDataBase64Encoding76CharacterLineLength = (1UL << 1),
+    NSDataBase64EncodingEndLineWithCarriageReturn = (1UL << 4),
+    NSDataBase64EncodingEndLineWithLineFeed = (1UL << 5),
 };
 typedef NSUInteger NSDataBase64EncodingOptions;
 #endif
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST)
 enum {
-  NSMappedRead = 1,
-  NSUncachedRead = 2
+    NSMappedRead = 1,
+    NSUncachedRead = 2
 };
 
 enum {
-  NSDataWritingAtomic = 1
+    NSDataWritingAtomic = 1
 };
 /* The original name for this was NSAtomicWrite ... need for backward comapat
  */
@@ -79,13 +51,13 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 
 + (id) data;
 + (id) dataWithBytes: (const void*)bytes
-	      length: (NSUInteger)length;
+              length: (NSUInteger)length;
 + (id) dataWithBytesNoCopy: (void*)bytes
-		    length: (NSUInteger)length;
+                    length: (NSUInteger)length;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 + (id) dataWithBytesNoCopy: (void*)aBuffer
-		    length: (NSUInteger)bufferSize
-	      freeWhenDone: (BOOL)shouldFree;
+                    length: (NSUInteger)bufferSize
+              freeWhenDone: (BOOL)shouldFree;
 #endif
 + (id) dataWithContentsOfFile: (NSString*)path;
 + (id) dataWithContentsOfMappedFile: (NSString*)path;
@@ -103,20 +75,20 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
  * Initialize the receiver to hold memory pointed to by bytes without copying.
  * When the receiver is deallocated, the memory will be freed using the user
  * supplied deallocBlock. Note that passing a block that (either directly or
- * indirectly) holds a strong reference the receiver will cause a retain cycle. 
+ * indirectly) holds a strong reference the receiver will cause a retain cycle.
  */
 - (instancetype) initWithBytesNoCopy: (void*)bytes
                               length: (NSUInteger)length
                          deallocator: (GSDataDeallocatorBlock)deallocBlock;
 #endif
 - (id) initWithBytes: (const void*)aBuffer
-	      length: (NSUInteger)bufferSize;
+              length: (NSUInteger)bufferSize;
 - (id) initWithBytesNoCopy: (void*)aBuffer
-		    length: (NSUInteger)bufferSize;
+                    length: (NSUInteger)bufferSize;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (id) initWithBytesNoCopy: (void*)aBuffer
-		    length: (NSUInteger)bufferSize
-	      freeWhenDone: (BOOL)shouldFree;
+                    length: (NSUInteger)bufferSize
+              freeWhenDone: (BOOL)shouldFree;
 #endif
 - (id) initWithContentsOfFile: (NSString*)path;
 - (id) initWithContentsOfMappedFile: (NSString*)path;
@@ -131,9 +103,9 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 - (NSString*) description;
 - (void) getBytes: (void*)buffer;
 - (void) getBytes: (void*)buffer
-	   length: (NSUInteger)length;
+           length: (NSUInteger)length;
 - (void) getBytes: (void*)buffer
-	    range: (NSRange)aRange;
+            range: (NSRange)aRange;
 - (NSData*) subdataWithRange: (NSRange)aRange;
 
 // base64
@@ -158,7 +130,7 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
  * </p>
  */
 - (BOOL) writeToFile: (NSString*)path
-	  atomically: (BOOL)useAuxiliaryFile;
+          atomically: (BOOL)useAuxiliaryFile;
 
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 /**
@@ -171,20 +143,20 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 
 - (unsigned int) deserializeAlignedBytesLengthAtCursor: (unsigned int*)cursor;
 - (void) deserializeBytes: (void*)buffer
-		   length: (unsigned int)bytes
-		 atCursor: (unsigned int*)cursor;
+                   length: (unsigned int)bytes
+                 atCursor: (unsigned int*)cursor;
 - (void) deserializeDataAt: (void*)data
-		ofObjCType: (const char*)type
-		  atCursor: (unsigned int*)cursor
-		   context: (id <NSObjCTypeSerializationCallBack>)callback;
+                ofObjCType: (const char*)type
+                  atCursor: (unsigned int*)cursor
+                   context: (id <NSObjCTypeSerializationCallBack>)callback;
 - (int) deserializeIntAtCursor: (unsigned int*)cursor;
 - (int) deserializeIntAtIndex: (unsigned int)index;
 - (void) deserializeInts: (int*)intBuffer
-		   count: (unsigned int)numInts
-		atCursor: (unsigned int*)cursor;
+                   count: (unsigned int)numInts
+                atCursor: (unsigned int*)cursor;
 - (void) deserializeInts: (int*)intBuffer
-		   count: (unsigned int)numInts
-		 atIndex: (unsigned int)index;
+                   count: (unsigned int)numInts
+                 atIndex: (unsigned int)index;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_4,GS_API_LATEST)
 /**
@@ -293,8 +265,8 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
  *	NSUnarchiver maximum possible performance.
  */
 - (void) deserializeTypeTag: (unsigned char*)tag
-		andCrossRef: (unsigned int*)ref
-		   atCursor: (unsigned int*)cursor;
+                andCrossRef: (unsigned int*)ref
+                   atCursor: (unsigned int*)cursor;
 @end
 #endif
 
@@ -314,17 +286,17 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 // Appending Data
 
 - (void) appendBytes: (const void*)aBuffer
-	      length: (NSUInteger)bufferSize;
+              length: (NSUInteger)bufferSize;
 - (void) appendData: (NSData*)other;
 
 // Modifying Data
 
 - (void) replaceBytesInRange: (NSRange)aRange
-		   withBytes: (const void*)bytes;
+                   withBytes: (const void*)bytes;
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 - (void) replaceBytesInRange: (NSRange)aRange
-		   withBytes: (const void*)bytes
-		      length: (NSUInteger)length;
+                   withBytes: (const void*)bytes
+                      length: (NSUInteger)length;
 #endif
 - (void) resetBytesInRange: (NSRange)aRange;
 - (void) setData: (NSData*)data;
@@ -333,16 +305,16 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
 
 - (void) serializeAlignedBytesLength: (unsigned int)length;
 - (void) serializeDataAt: (const void*)data
-	      ofObjCType: (const char*)type
-		 context: (id <NSObjCTypeSerializationCallBack>)callback;
+              ofObjCType: (const char*)type
+                 context: (id <NSObjCTypeSerializationCallBack>)callback;
 - (void) serializeInt: (int)value;
 - (void) serializeInt: (int)value
-	      atIndex: (unsigned int)index;
+              atIndex: (unsigned int)index;
 - (void) serializeInts: (int*)intBuffer
-		 count: (unsigned int)numInts;
+                 count: (unsigned int)numInts;
 - (void) serializeInts: (int*)intBuffer
-		 count: (unsigned int)numInts
-	       atIndex: (unsigned int)index;
+                 count: (unsigned int)numInts
+               atIndex: (unsigned int)index;
 
 @end
 
@@ -366,13 +338,9 @@ DEFINE_BLOCK_TYPE(GSDataDeallocatorBlock, void, void*, NSUInteger);
  */
 - (void) serializeTypeTag: (unsigned char)tag;
 - (void) serializeTypeTag: (unsigned char)tag
-	      andCrossRef: (unsigned int)xref;
+              andCrossRef: (unsigned int)xref;
 
 @end
-#endif
-
-#if	defined(__cplusplus)
-}
 #endif
 
 #if     !NO_GNUSTEP && !defined(GNUSTEP_BASE_INTERNAL)

@@ -7,26 +7,12 @@
 
 enum
 {
-  /**
-   * Collection classes created from reading a JSON stream will be mutable.
-   */
   NSJSONReadingMutableContainers = (1UL << 0),
-  /**
-   * Strings in a JSON tree will be mutable.
-   */
   NSJSONReadingMutableLeaves     = (1UL << 1),
-  /**
-   * The parser will read a single value, not just a 
-   */
   NSJSONReadingAllowFragments    = (1UL << 2)
 };
 enum
 {
-  /**
-   * When writing JSON, produce indented output intended for humans to read.
-   * If this is not set, then the writer will not generate any superfluous
-   * whitespace, producing space-efficient but not very human-friendly JSON.
-   */
   NSJSONWritingPrettyPrinted = (1UL << 0)
 };
 /**

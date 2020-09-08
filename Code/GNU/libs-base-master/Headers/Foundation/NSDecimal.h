@@ -1,28 +1,3 @@
-/* NSDecimal types and functions
-   Copyright (C) 1998 Free Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   Created: November 1998
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-
-   */
-
 #ifndef __NSDecimal_h_GNUSTEP_BASE_INCLUDE
 #define __NSDecimal_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -51,10 +26,10 @@ extern "C" {
  *  [(NSDecimalNumberBehaviors)] protocol.
  */
 enum {
-  NSRoundPlain,		/* Round .5 up		*/
-  NSRoundDown,
-  NSRoundUp,
-  NSRoundBankers	/* Make last digit even	*/
+    NSRoundPlain,		/* Round .5 up		*/
+    NSRoundDown,
+    NSRoundUp,
+    NSRoundBankers	/* Make last digit even	*/
 };
 typedef NSUInteger NSRoundingMode;
 
@@ -75,11 +50,11 @@ typedef NSUInteger NSRoundingMode;
  *  </deflist>
  */
 enum {
-  NSCalculationNoError = 0,
-  NSCalculationLossOfPrecision,
-  NSCalculationUnderflow,	/* result became zero */
-  NSCalculationOverflow,
-  NSCalculationDivideByZero
+    NSCalculationNoError = 0,
+    NSCalculationLossOfPrecision,
+    NSCalculationUnderflow,	/* result became zero */
+    NSCalculationOverflow,
+    NSCalculationDivideByZero
 };
 typedef NSUInteger  NSCalculationError;
 
@@ -95,37 +70,37 @@ typedef NSUInteger  NSCalculationError;
 /**
  *  <p>Structure providing equivalent functionality, in conjunction with a set
  *  of functions, to the [NSDecimalNumber] class.</p>
-<example>
-typedef struct {
-  signed char	exponent;   // Signed exponent - -128 to 127
-  BOOL	isNegative;         // Is this negative?
-  BOOL	validNumber;        // Is this a valid number?
-  unsigned char	length;	    // digits in mantissa.
-  unsigned char  cMantissa[2*NSDecimalMaxDigit];
-} NSDecimal;
-</example>
-* <p>Instances can be initialized using the NSDecimalFromString(NSString *)
-* function.</p>
+ <example>
+ typedef struct {
+ signed char	exponent;   // Signed exponent - -128 to 127
+ BOOL	isNegative;         // Is this negative?
+ BOOL	validNumber;        // Is this a valid number?
+ unsigned char	length;	    // digits in mantissa.
+ unsigned char  cMantissa[2*NSDecimalMaxDigit];
+ } NSDecimal;
+ </example>
+ * <p>Instances can be initialized using the NSDecimalFromString(NSString *)
+ * function.</p>
  */
 typedef struct {
-  signed char	exponent;	/* Signed exponent - -128 to 127	*/
-  BOOL	isNegative;	/* Is this negative?			*/
-  BOOL	validNumber;	/* Is this a valid number?		*/
+    signed char	exponent;	/* Signed exponent - -128 to 127	*/
+    BOOL	isNegative;	/* Is this negative?			*/
+    BOOL	validNumber;	/* Is this a valid number?		*/
 #if	USE_GMP
-  mp_size_t size;
-  mp_limb_t lMantissa[NSDecimalMaxSize];
+    mp_size_t size;
+    mp_limb_t lMantissa[NSDecimalMaxSize];
 #else
-  unsigned char	length;		/* digits in mantissa.			*/
-  unsigned char cMantissa[NSDecimalMaxDigit];
+    unsigned char	length;		/* digits in mantissa.			*/
+    unsigned char cMantissa[NSDecimalMaxDigit];
 #endif
 } NSDecimal;
 
 /** Returns whether decimal represents an invalid number (i.e., an "NaN" as
-    might result from an overflow or a division by zero). */
+ might result from an overflow or a division by zero). */
 static inline BOOL
 NSDecimalIsNotANumber(const NSDecimal *decimal)
 {
-  return (decimal->validNumber == NO);
+    return (decimal->validNumber == NO);
 }
 
 /** Copies value of decimal number to preallocated destination. */
@@ -152,7 +127,7 @@ NSDecimalCompare(const NSDecimal *leftOperand, const NSDecimal *rightOperand);
  */
 GS_EXPORT void
 NSDecimalRound(NSDecimal *result, const NSDecimal *number, NSInteger scale,
-  NSRoundingMode mode);
+               NSRoundingMode mode);
 
 /**
  *  Sets the exponents of n1 and n2 equal to one another, adjusting mantissas
@@ -196,7 +171,7 @@ NSDecimalMultiply(NSDecimal *result, const NSDecimal *l, const NSDecimal *r, NSR
  */
 GS_EXPORT NSCalculationError
 NSDecimalDivide(NSDecimal *result, const NSDecimal *l, const NSDecimal *rr, NSRoundingMode mode);
-    
+
 /**
  *  Raises n to power and returns result to 38-digit precision.  See the
  *  [(NSDecimalNumberBehaviors)] protocol for a description of mode and the
@@ -205,7 +180,7 @@ NSDecimalDivide(NSDecimal *result, const NSDecimal *l, const NSDecimal *rr, NSRo
  */
 GS_EXPORT NSCalculationError
 NSDecimalPower(NSDecimal *result, const NSDecimal *n, NSUInteger power,
-  NSRoundingMode mode);
+               NSRoundingMode mode);
 
 /**
  *  Multiplies n by 10^power and returns result to 38-digit precision.  See the
@@ -245,7 +220,7 @@ NSDecimalDouble(NSDecimal *number);
  */
 GS_EXPORT void
 NSDecimalFromComponents(NSDecimal *result, unsigned long long mantissa, 
-		      short exponent, BOOL negative);
+                        short exponent, BOOL negative);
 
 /**
  *  Create a NSDecimal from a string using the locale, in (preallocated)
@@ -253,7 +228,7 @@ NSDecimalFromComponents(NSDecimal *result, unsigned long long mantissa,
  */
 GS_EXPORT void
 NSDecimalFromString(NSDecimal *result, NSString *numberValue, 
-		    NSDictionary *locale);
+                    NSDictionary *locale);
 
 #if	defined(__cplusplus)
 }

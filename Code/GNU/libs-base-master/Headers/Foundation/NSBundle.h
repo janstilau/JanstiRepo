@@ -1,30 +1,3 @@
-/** Interface for NSBundle for GNUStep   -*-objc-*-
-   Copyright (C) 1995, 1997, 1999, 2001, 2002 Free Software Foundation, Inc.
-
-   Written by:  Adam Fedor <fedor@boulder.colorado.edu>
-   Date: 1995
-
-   Updates by various authors.
-   Documentation by Nicola Pero <n.pero@mi.flashnet.it>
-  
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-  
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-  
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-  */
-
 #ifndef __NSBundle_h_GNUSTEP_BASE_INCLUDE
 #define __NSBundle_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -48,10 +21,10 @@ extern "C" {
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5,GS_API_LATEST) 
 enum {
-  NSBundleExecutableArchitectureI386      = 0x00000007,
-  NSBundleExecutableArchitecturePPC       = 0x00000012,
-  NSBundleExecutableArchitecturePPC64     = 0x01000012,
-  NSBundleExecutableArchitectureX86_64    = 0x01000007
+    NSBundleExecutableArchitectureI386      = 0x00000007,
+    NSBundleExecutableArchitecturePPC       = 0x00000012,
+    NSBundleExecutableArchitecturePPC64     = 0x01000012,
+    NSBundleExecutableArchitectureX86_64    = 0x01000007
 };
 #endif
 
@@ -82,55 +55,55 @@ GS_EXPORT NSString* const NSShowNonLocalizedStrings;
 GS_EXPORT NSString* const NSLoadedClasses;
 
 /**
-   <p>
-   NSBundle provides methods for locating and handling application (and tool)
-   resources at runtime. Resources includes any time of file that the
-   application might need, such as images, nib (gorm or gmodel) files,
-   localization files, and any other type of file that an application
-   might need to use to function. Resources also include executable
-   code, which can be dynamically linked into the application at
-   runtime. These files and executable code are commonly put together
-   into a directory called a bundle.
-   </p>
-   <p>
-   NSBundle knows how these bundles are organized and can search for
-   files inside a bundle. NSBundle also handles locating the
-   executable code, linking this in and initializing any classes that
-   are located in the code. NSBundle also handles Frameworks, which are
-   basically a bundle that contains a library archive. The
-   organization of a framework is a little difference, but in most
-   respects there is no difference between a bundle and a framework.
-   </p>
-   <p>
-   There is one special bundle, called the mainBundle, which is
-   basically the application itself. The mainBundle is always loaded
-   (of course), but you can still perform other operations on the
-   mainBundle, such as searching for files, just as with any other
-   bundle.
-   </p>
-*/
+ <p>
+ NSBundle provides methods for locating and handling application (and tool)
+ resources at runtime. Resources includes any time of file that the
+ application might need, such as images, nib (gorm or gmodel) files,
+ localization files, and any other type of file that an application
+ might need to use to function. Resources also include executable
+ code, which can be dynamically linked into the application at
+ runtime. These files and executable code are commonly put together
+ into a directory called a bundle.
+ </p>
+ <p>
+ NSBundle knows how these bundles are organized and can search for
+ files inside a bundle. NSBundle also handles locating the
+ executable code, linking this in and initializing any classes that
+ are located in the code. NSBundle also handles Frameworks, which are
+ basically a bundle that contains a library archive. The
+ organization of a framework is a little difference, but in most
+ respects there is no difference between a bundle and a framework.
+ </p>
+ <p>
+ There is one special bundle, called the mainBundle, which is
+ basically the application itself. The mainBundle is always loaded
+ (of course), but you can still perform other operations on the
+ mainBundle, such as searching for files, just as with any other
+ bundle.
+ </p>
+ */
 @interface NSBundle : NSObject
 {
 #if	GS_EXPOSE(NSBundle)
 @public
-  NSString		*_path;
-  NSMutableArray	*_bundleClasses;
-  Class			_principalClass;
-  NSDictionary		*_infoDict;
-  NSMutableDictionary	*_localizations;
-  unsigned		_bundleType;
-  BOOL			_codeLoaded;
-  unsigned		_version;
-  NSString      	*_frameworkVersion;
+    NSString		*_path;
+    NSMutableArray	*_bundleClasses;
+    Class			_principalClass;
+    NSDictionary		*_infoDict;
+    NSMutableDictionary	*_localizations;
+    unsigned		_bundleType;
+    BOOL			_codeLoaded;
+    unsigned		_version;
+    NSString      	*_frameworkVersion;
 #endif
 #if     GS_NONFRAGILE
 #else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
+    /* Pointer to private additional data used to avoid breaking ABI
+     * when we don't have the non-fragile ABI available.
+     * Use this mechanism rather than changing the instance variable
+     * layout (see Source/GSInternal.h for details).
+     */
+@private id _internal GS_UNUSED_IVAR;
 #endif
 }
 
@@ -193,23 +166,23 @@ GS_EXPORT NSString* const NSLoadedClasses;
 #endif
 
 /**
-  Returns an absolute path for a resource name with the extension
-  in the specified bundlePath.  See also
-  -pathForResource:ofType:inDirectory: for more information on
-  searching a bundle.  
+ Returns an absolute path for a resource name with the extension
+ in the specified bundlePath.  See also
+ -pathForResource:ofType:inDirectory: for more information on
+ searching a bundle.  
  */
 + (NSString*) pathForResource: (NSString*)name
-		       ofType: (NSString*)extension
-		  inDirectory: (NSString*)bundlePath;
+                       ofType: (NSString*)extension
+                  inDirectory: (NSString*)bundlePath;
 
 /**
-  This method has been deprecated. Version numbers were never implemented
-  so this method behaves exactly like +pathForResource:ofType:inDirectory:.
+ This method has been deprecated. Version numbers were never implemented
+ so this method behaves exactly like +pathForResource:ofType:inDirectory:.
  */
 + (NSString*) pathForResource: (NSString*)name
-		       ofType: (NSString*)extension
-		  inDirectory: (NSString*)bundlePath
-		  withVersion: (int)version;
+                       ofType: (NSString*)extension
+                  inDirectory: (NSString*)bundlePath
+                  withVersion: (int)version;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST) 
 + (NSURL*) URLForResource: (NSString*)name
@@ -252,74 +225,74 @@ GS_EXPORT NSString* const NSLoadedClasses;
 #endif
 
 /** Returns the class in the bundle with the given name. If no class
-    of this name exists in the bundle, then Nil is returned.
+ of this name exists in the bundle, then Nil is returned.
  */
 - (Class) classNamed: (NSString*)className;
 
 /** Returns the principal class of the bundle. This is the class
-    specified by the NSPrincipalClass key in the Info-gnustep property
-    list contained in the bundle. If this key or the specified class
-    is not found, the class returned is arbitrary, although it is 
-    typically the first class compiled into the archive.
+ specified by the NSPrincipalClass key in the Info-gnustep property
+ list contained in the bundle. If this key or the specified class
+ is not found, the class returned is arbitrary, although it is 
+ typically the first class compiled into the archive.
  */
 - (Class) principalClass;
 
 /**
-  <p> Returns an array of paths for all resources with the specified
-   extension and residing in the bundlePath directory. bundlePath can
-   be any type of directory structure, but typically it is used to
-   search for resources in a application or framework. For example,
-   one could search for tiff files in the MyApp.app application using [NSBundle
-   pathsForResourcesOfType: @"tiff" inDirectory: @"MyApp.app"].  It
-   will search in any Resources subdirectory inside bundlePath as well
-   as the main directory for resource files. If extension is nil or
-   empty, all resources are returned.  </p>
+ <p> Returns an array of paths for all resources with the specified
+ extension and residing in the bundlePath directory. bundlePath can
+ be any type of directory structure, but typically it is used to
+ search for resources in a application or framework. For example,
+ one could search for tiff files in the MyApp.app application using [NSBundle
+ pathsForResourcesOfType: @"tiff" inDirectory: @"MyApp.app"].  It
+ will search in any Resources subdirectory inside bundlePath as well
+ as the main directory for resource files. If extension is nil or
+ empty, all resources are returned.  </p>
  */
 + (NSArray*) pathsForResourcesOfType: (NSString*)extension
-			 inDirectory: (NSString*)bundlePath;
+                         inDirectory: (NSString*)bundlePath;
 
 /**
-  <p>
-   Returns an array of paths for all resources with the specified
-   extension and residing in the bundlePath directory. If extension is
-   nil or empty, all bundle resources are returned.
-   </p>
+ <p>
+ Returns an array of paths for all resources with the specified
+ extension and residing in the bundlePath directory. If extension is
+ nil or empty, all bundle resources are returned.
+ </p>
  */
 - (NSArray*) pathsForResourcesOfType: (NSString*)extension
-			 inDirectory: (NSString*)subPath;
+                         inDirectory: (NSString*)subPath;
 
 /**
-  <p>
-   Returns an absolute path for a resource name with the extension
-   in the specified bundlePath. Directories in the bundle are searched
-   in the following order:
-   </p>
-   <example>
-     root path/Resources/subPath
-     root path/Resources/subPath/"language.lproj"
-     root path/subPath
-     root path/subPath/"language.lproj"
-   </example>
-   <p>
-   where language.lproj can be any localized language directory inside
-   the bundle.
-   </p>
-   <p>
-   If extension is nil or empty, then the first file exactly matching name
-   (ie with no extension) is returned.
-   </p>
-*/
-- (NSString*) pathForResource: (NSString*)name
-		       ofType: (NSString*)extension
-		  inDirectory: (NSString*)subPath;
-
-/**
-   Returns an absolute path for a resource name with the extension
-   in the receivers bundle path. 
-   See -pathForResource:ofType:inDirectory:.
+ <p>
+ Returns an absolute path for a resource name with the extension
+ in the specified bundlePath. Directories in the bundle are searched
+ in the following order:
+ </p>
+ <example>
+ root path/Resources/subPath
+ root path/Resources/subPath/"language.lproj"
+ root path/subPath
+ root path/subPath/"language.lproj"
+ </example>
+ <p>
+ where language.lproj can be any localized language directory inside
+ the bundle.
+ </p>
+ <p>
+ If extension is nil or empty, then the first file exactly matching name
+ (ie with no extension) is returned.
+ </p>
  */
 - (NSString*) pathForResource: (NSString*)name
-		       ofType: (NSString*)extension;
+                       ofType: (NSString*)extension
+                  inDirectory: (NSString*)subPath;
+
+/**
+ Returns an absolute path for a resource name with the extension
+ in the receivers bundle path. 
+ See -pathForResource:ofType:inDirectory:.
+ */
+- (NSString*) pathForResource: (NSString*)name
+                       ofType: (NSString*)extension;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST) 
 - (NSURL*) URLForResource: (NSString*)name
@@ -343,8 +316,8 @@ GS_EXPORT NSString* const NSLoadedClasses;
  * where a given string in the UI is "coming from".</p>
  */
 - (NSString*) localizedStringForKey: (NSString*)key
-			      value: (NSString*)value
-			      table: (NSString*)tableName;
+                              value: (NSString*)value
+                              table: (NSString*)tableName;
 
 /** Returns the absolute path to the resources directory of the bundle.  */
 - (NSString*) resourcePath;
@@ -374,7 +347,7 @@ GS_EXPORT NSString* const NSLoadedClasses;
 
 
 /** Returns the bundle identifier, as defined by the CFBundleIdentifier
-    key in the infoDictionary */
+ key in the infoDictionary */
 - (NSString *) bundleIdentifier;
 
 /** Returns the bundle version. */
@@ -396,7 +369,7 @@ GS_EXPORT NSString* const NSLoadedClasses;
  *  are used instead of looking up the preferences of the current user).
  */
 + (NSArray *) preferredLocalizationsFromArray: (NSArray *)localizationsArray 
-			       forPreferences: (NSArray *)preferencesArray;
+                               forPreferences: (NSArray *)preferencesArray;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_2,GS_API_LATEST) 
 /**
@@ -414,17 +387,17 @@ GS_EXPORT NSString* const NSLoadedClasses;
  * before any non-localised resources.
  */
 - (NSArray*) pathsForResourcesOfType: (NSString*)extension
-			 inDirectory: (NSString*)subPath
-		     forLocalization: (NSString*)localizationName;
+                         inDirectory: (NSString*)subPath
+                     forLocalization: (NSString*)localizationName;
 /**
  * This is like -pathForResource:ofType:inDirectory: but returns only
  * resources matching localizationName (preferentially), or non-localized
  * resources.
  */
 - (NSString*) pathForResource: (NSString*)name
-		       ofType: (NSString*)extension
-		  inDirectory: (NSString*)subPath
-	      forLocalization: (NSString*)localizationName;
+                       ofType: (NSString*)extension
+                  inDirectory: (NSString*)subPath
+              forLocalization: (NSString*)localizationName;
 
 /** Returns the info property list associated with the bundle. */
 - (NSDictionary*) infoDictionary;
@@ -455,9 +428,9 @@ GS_EXPORT NSString* const NSLoadedClasses;
 - (NSArray*) preferredLocalizations;
 
 /** Loads any executable code contained in the bundle into the
-    application. Load will be called implicitly if any information
-    about the bundle classes is requested, such as -principalClass or
-    -classNamed:. 
+ application. Load will be called implicitly if any information
+ about the bundle classes is requested, such as -principalClass or
+ -classNamed:. 
  */
 - (BOOL) load;
 
@@ -541,8 +514,8 @@ GS_EXPORT NSString* const NSLoadedClasses;
 
 /** Find a resource in the "Library" directory. */
 + (NSString*) pathForLibraryResource: (NSString*)name
-			      ofType: (NSString*)extension
-			 inDirectory: (NSString*)bundlePath;
+                              ofType: (NSString*)extension
+                         inDirectory: (NSString*)bundlePath;
 
 /** Cleans up the path cache for the bundle. */
 - (void) cleanPathCache;
@@ -648,7 +621,7 @@ GS_EXPORT NSString* const NSLoadedClasses;
  * </p>
  */
 #define NSLocalizedString(key, comment) \
-  [[NSBundle mainBundle] localizedStringForKey: (key) value: @"" table: nil]
+[[NSBundle mainBundle] localizedStringForKey: (key) value: @"" table: nil]
 
 /**
  * This function (macro) does the same as
@@ -666,7 +639,7 @@ GS_EXPORT NSString* const NSLoadedClasses;
  * different table.
  */
 #define NSLocalizedStringFromTable(key, tbl, comment) \
-  [[NSBundle mainBundle] localizedStringForKey: (key) value: @"" table: (tbl)]
+[[NSBundle mainBundle] localizedStringForKey: (key) value: @"" table: (tbl)]
 
 /**
  * This function is the full-blown localization function (it
@@ -682,7 +655,7 @@ GS_EXPORT NSString* const NSLoadedClasses;
  * use when translating the string.
  */
 #define NSLocalizedStringFromTableInBundle(key, tbl, bundle, comment) \
-  [bundle localizedStringForKey: (key) value: @"" table: (tbl)]
+[bundle localizedStringForKey: (key) value: @"" table: (tbl)]
 
 
 #if	defined(__cplusplus)

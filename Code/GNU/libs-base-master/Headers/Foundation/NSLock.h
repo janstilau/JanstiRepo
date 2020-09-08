@@ -1,34 +1,3 @@
-/* 
-   NSLock.h
-
-   Definitions for locking protocol and classes
-
-   Copyright (C) 1996 Free Software Foundation, Inc.
-
-   Author:  Scott Christley <scottc@net-community.com>
-   Date: 1996
-   
-   This file is part of the GNUstep Objective-C Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   If you are interested in a warranty or support for this source code,
-   contact Scott Christley <scottc@net-community.com> for more information.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-*/ 
-
 #ifndef __NSLock_h_GNUSTEP_BASE_INCLUDE
 #define __NSLock_h_GNUSTEP_BASE_INCLUDE
 #import  <GNUstepBase/GSVersionMacros.h>
@@ -73,8 +42,8 @@ extern "C" {
 {
 #if	GS_EXPOSE(NSLock)
 @protected
-  gs_mutex_t	_mutex;
-  NSString	*_name;
+    gs_mutex_t	_mutex;
+    NSString	*_name;
 #endif
 }
 
@@ -124,9 +93,9 @@ extern "C" {
 {
 #if	GS_EXPOSE(NSCondition)
 @protected
-  gs_cond_t	_condition;
-  gs_mutex_t	_mutex;
-  NSString	*_name;
+    gs_cond_t	_condition;
+    gs_mutex_t	_mutex;
+    NSString	*_name;
 #endif
 }
 /**
@@ -174,9 +143,9 @@ extern "C" {
 {
 #if	GS_EXPOSE(NSConditionLock)
 @protected
-  NSCondition *_condition;
-  int   _condition_value;
-  NSString      *_name;
+    NSCondition *_condition;
+    int   _condition_value;
+    NSString      *_name;
 #endif
 }
 
@@ -266,16 +235,16 @@ extern "C" {
 /**
  * Allows the lock to be recursively acquired by the same thread.
  *
- * If the same thread locks the mutex (n) times then that same 
- * thread must also unlock it (n) times before another thread 
+ * If the same thread locks the mutex (n) times then that same
+ * thread must also unlock it (n) times before another thread
  * can acquire the lock.
  */
 @interface NSRecursiveLock : NSObject <NSLocking>
 {
 #if	GS_EXPOSE(NSRecursiveLock)
 @protected
-  gs_mutex_t	_mutex;
-  NSString      *_name;
+    gs_mutex_t	_mutex;
+    NSString      *_name;
 #endif
 }
 

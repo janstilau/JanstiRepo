@@ -176,9 +176,6 @@
 #import	<Foundation/NSDictionary.h>
 #import	<Foundation/NSEnumerator.h>
 #import <Foundation/NSPathUtilities.h>
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 @class NSNumber;
 @class NSString;
@@ -778,10 +775,6 @@ GS_EXPORT NSString* const NSFileSystemFreeNodes;
         removingItemAtURL: (NSURL *)URL;
 @end
 
-#endif
-
-#if	defined(__cplusplus)
-}
 #endif
 
 #endif

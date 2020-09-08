@@ -1551,6 +1551,7 @@
 		06C049A024FE99450088AD57 /* Done */ = {
 			isa = PBXGroup;
 			children = (
+				18906E9E1610BF3C0003C892 /* NSNotification.h */,
 				18906E681610BF3C0003C892 /* Foundation.h */,
 				18906EBA1610BF3C0003C892 /* NSStream.h */,
 				18906F651610BF3C0003C892 /* GSStream.h */,
@@ -1568,6 +1569,8 @@
 				18906E931610BF3C0003C892 /* NSIndexSet.h */,
 				18906E841610BF3C0003C892 /* NSEnumerator.h */,
 				18906EB11610BF3C0003C892 /* NSRange.h */,
+				18906E821610BF3C0003C892 /* NSDistributedLock.h */,
+				18906E851610BF3C0003C892 /* NSError.h */,
 			);
 			name = Done;
 			sourceTree = "<group>";
@@ -2074,7 +2077,6 @@
 				06DFF3E6250119560009D33D /* Runloop */,
 				06C049A024FE99450088AD57 /* Done */,
 				18394B031610D85D00335E85 /* Additions */,
-				18906E9E1610BF3C0003C892 /* NSNotification.h */,
 				18906EC81610BF3C0003C892 /* NSURLError.h */,
 				AD197C0C189A4E98000F6CF9 /* NSInvocationOperation.h */,
 				AD197C0D189A4E98000F6CF9 /* NSMetadata.h */,
@@ -2099,9 +2101,7 @@
 				18906E7F1610BF3C0003C892 /* NSDecimalNumber.h */,
 				18906E801610BF3C0003C892 /* NSDictionary.h */,
 				18906E811610BF3C0003C892 /* NSDistantObject.h */,
-				18906E821610BF3C0003C892 /* NSDistributedLock.h */,
 				18906E831610BF3C0003C892 /* NSDistributedNotificationCenter.h */,
-				18906E851610BF3C0003C892 /* NSError.h */,
 				18906E861610BF3C0003C892 /* NSErrorRecoveryAttempting.h */,
 				18906E871610BF3C0003C892 /* NSException.h */,
 				18906E881610BF3C0003C892 /* NSExpression.h */,

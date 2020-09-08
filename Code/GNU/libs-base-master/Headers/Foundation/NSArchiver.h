@@ -1,40 +1,8 @@
-/** Interface for NSArchiver for GNUStep
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
-
-   Written by:  Andrew Kachites McCallum <mccallum@gnu.ai.mit.edu>
-   Rewrite by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: March 1995
-   
-   This file is part of the GNUstep Base Library.
-   
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-
-   AutogsdocSource:NSUnarchiver.m
-   AutogsdocSource:NSArchiver.m
-*/ 
-
 #ifndef __NSArchiver_h_GNUSTEP_BASE_INCLUDE
 #define __NSArchiver_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
 #import	<Foundation/NSCoder.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 @class NSMutableArray, NSMutableDictionary, NSMutableData, NSData, NSString;
 
@@ -44,40 +12,40 @@ extern "C" {
 {
 #if	GS_EXPOSE(NSArchiver)
 @private
-  NSMutableData	*_data;		/* Data to write into.		*/
-  id		_dst;		/* Serialization destination.	*/
-  IMP		_serImp;	/* Method to serialize with.	*/
-  IMP		_tagImp;	/* Serialize a type tag.	*/
-  IMP		_xRefImp;	/* Serialize a crossref.	*/
-  IMP		_eObjImp;	/* Method to encode an id.	*/
-  IMP		_eValImp;	/* Method to encode others.	*/
+    NSMutableData	*_data;		/* Data to write into.		*/
+    id		_dst;		/* Serialization destination.	*/
+    IMP		_serImp;	/* Method to serialize with.	*/
+    IMP		_tagImp;	/* Serialize a type tag.	*/
+    IMP		_xRefImp;	/* Serialize a crossref.	*/
+    IMP		_eObjImp;	/* Method to encode an id.	*/
+    IMP		_eValImp;	/* Method to encode others.	*/
 #ifndef	_IN_NSARCHIVER_M
 #define	GSIMapTable	void*
 #endif
-  GSIMapTable	_clsMap;	/* Class cross references.	*/
-  GSIMapTable	_cIdMap;	/* Conditionally coded.		*/
-  GSIMapTable	_uIdMap;	/* Unconditionally coded.	*/
-  GSIMapTable	_ptrMap;	/* Constant pointers.		*/
-  GSIMapTable	_namMap;	/* Mappings for class names.	*/
-  GSIMapTable	_repMap;	/* Mappings for objects.	*/
+    GSIMapTable	_clsMap;	/* Class cross references.	*/
+    GSIMapTable	_cIdMap;	/* Conditionally coded.		*/
+    GSIMapTable	_uIdMap;	/* Unconditionally coded.	*/
+    GSIMapTable	_ptrMap;	/* Constant pointers.		*/
+    GSIMapTable	_namMap;	/* Mappings for class names.	*/
+    GSIMapTable	_repMap;	/* Mappings for objects.	*/
 #ifndef	_IN_NSARCHIVER_M
 #undef	GSIMapTable
 #endif
-  unsigned	_xRefC;		/* Counter for cross-reference.	*/
-  unsigned	_xRefO;		/* Counter for cross-reference.	*/
-  unsigned	_xRefP;		/* Counter for cross-reference.	*/
-  unsigned	_startPos;	/* Where in data we started.	*/
-  BOOL		_encodingRoot;
-  BOOL		_initialPass;
+    unsigned	_xRefC;		/* Counter for cross-reference.	*/
+    unsigned	_xRefO;		/* Counter for cross-reference.	*/
+    unsigned	_xRefP;		/* Counter for cross-reference.	*/
+    unsigned	_startPos;	/* Where in data we started.	*/
+    BOOL		_encodingRoot;
+    BOOL		_initialPass;
 #endif
 #if     GS_NONFRAGILE
 #else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
+    /* Pointer to private additional data used to avoid breaking ABI
+     * when we don't have the non-fragile ABI available.
+     * Use this mechanism rather than changing the instance variable
+     * layout (see Source/GSInternal.h for details).
+     */
+@private id _internal GS_UNUSED_IVAR;
 #endif
 }
 
@@ -99,7 +67,7 @@ extern "C" {
 #if	OS_API_VERSION(GS_API_MACOSX,GS_API_LATEST)
 /* Substituting Objects */
 - (void) replaceObject: (id)object
-	    withObject: (id)newObject;
+            withObject: (id)newObject;
 #endif
 @end
 
@@ -150,10 +118,10 @@ extern "C" {
  */
 - (BOOL) directDataAccess;
 - (void) serializeHeaderAt: (unsigned)positionInData
-		   version: (unsigned)systemVersion
-		   classes: (unsigned)classCount
-		   objects: (unsigned)objectCount
-		  pointers: (unsigned)pointerCount;
+                   version: (unsigned)systemVersion
+                   classes: (unsigned)classCount
+                   objects: (unsigned)objectCount
+                  pointers: (unsigned)pointerCount;
 @end
 #endif
 
@@ -163,35 +131,35 @@ extern "C" {
 {
 #if	GS_EXPOSE(NSUnarchiver)
 @private
-  NSData		*data;		/* Data to write into.		*/
-  Class			dataClass;	/* What sort of data is it?	*/
-  id			src;		/* Deserialization source.	*/
-  IMP			desImp;		/* Method to deserialize with.	*/
-  void			(*tagImp)(id, SEL, unsigned char*, unsigned*,unsigned*);
-  IMP			dValImp;	/* Method to decode data with.	*/
+    NSData		*data;		/* Data to write into.		*/
+    Class			dataClass;	/* What sort of data is it?	*/
+    id			src;		/* Deserialization source.	*/
+    IMP			desImp;		/* Method to deserialize with.	*/
+    void			(*tagImp)(id, SEL, unsigned char*, unsigned*,unsigned*);
+    IMP			dValImp;	/* Method to decode data with.	*/
 #ifndef	_IN_NSUNARCHIVER_M
 #define	GSIArray	void*
 #endif
-  GSIArray		clsMap;		/* Class crossreference map.	*/
-  GSIArray		objMap;		/* Object crossreference map.	*/
-  GSIArray		ptrMap;		/* Pointer crossreference map.	*/
+    GSIArray		clsMap;		/* Class crossreference map.	*/
+    GSIArray		objMap;		/* Object crossreference map.	*/
+    GSIArray		ptrMap;		/* Pointer crossreference map.	*/
 #ifndef	_IN_NSUNARCHIVER_M
 #undef	GSIArray
 #endif
-  unsigned		cursor;		/* Position in data buffer.	*/
-  unsigned		version;	/* Version of archiver used.	*/
-  NSZone		*zone;		/* Zone for allocating objs.	*/
-  NSMutableDictionary	*objDict;	/* Class information store.	*/
-  NSMutableArray	*objSave;
+    unsigned		cursor;		/* Position in data buffer.	*/
+    unsigned		version;	/* Version of archiver used.	*/
+    NSZone		*zone;		/* Zone for allocating objs.	*/
+    NSMutableDictionary	*objDict;	/* Class information store.	*/
+    NSMutableArray	*objSave;
 #endif
 #if     GS_NONFRAGILE
 #else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
+    /* Pointer to private additional data used to avoid breaking ABI
+     * when we don't have the non-fragile ABI available.
+     * Use this mechanism rather than changing the instance variable
+     * layout (see Source/GSInternal.h for details).
+     */
+@private id _internal GS_UNUSED_IVAR;
 #endif
 }
 
@@ -211,10 +179,10 @@ extern "C" {
 /* Substituting Classes */
 + (NSString*) classNameDecodedForArchiveClassName: (NSString*)nameInArchive;
 + (void) decodeClassName: (NSString*)nameInArchive
-	     asClassName: (NSString*)trueName;
+             asClassName: (NSString*)trueName;
 - (NSString*) classNameDecodedForArchiveClassName: (NSString*)nameInArchive;
 - (void) decodeClassName: (NSString*)nameInArchive 
-	     asClassName: (NSString*)trueName;
+             asClassName: (NSString*)trueName;
 
 #if	OS_API_VERSION(GS_API_MACOSX,GS_API_LATEST)
 /* Substituting objects */
@@ -227,14 +195,14 @@ extern "C" {
 
 - (unsigned) cursor;
 - (void) resetUnarchiverWithData: (NSData*)anObject
-			 atIndex: (unsigned)pos;
+                         atIndex: (unsigned)pos;
 
 - (BOOL) directDataAccess;
 - (void) deserializeHeaderAt: (unsigned*)pos
-		     version: (unsigned*)v
-		     classes: (unsigned*)c
-		     objects: (unsigned*)o
-		    pointers: (unsigned*)p;
+                     version: (unsigned*)v
+                     classes: (unsigned*)c
+                     objects: (unsigned*)o
+                    pointers: (unsigned*)p;
 @end
 #endif
 
@@ -249,9 +217,5 @@ extern "C" {
 GS_EXPORT NSString * const NSInconsistentArchiveException;
 
 #endif	/* OS_API_VERSION */
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif	/* __NSArchiver_h_GNUSTEP_BASE_INCLUDE */
