@@ -4,13 +4,15 @@
 
 @implementation UIResponder
 
-// 默认是返回 nil, 各个子类要根据自己的实现, 返回不同的数据. UIView 返回自己的 superView 或者 UIViewController.
 - (UIResponder *)nextResponder
 {
     return nil;
 }
 
-// _firstResponder 这个概念是和 Window 联系在一起的. 所以, 要首先找到相应的 window 对象.
+/*
+ isFirstResponder 是和 windown 绑定在一起的.
+ 在 NSWindown 下, 有着 firstResponder 的概念, 不过 iOS 里面没有了.
+ */
 - (UIWindow *)_responderWindow
 {
     if ([self isKindOfClass:[UIView class]]) {
@@ -20,18 +22,26 @@
     }
 }
 
-// 判断 window 对象保存的是不是自己.
+/*
+ 直接通过 windown 保存的 _firstResponder 进行的判断.
+ */
 - (BOOL)isFirstResponder
 {
     return ([[self _responderWindow] _firstResponder] == self);
 }
 
-// 默认返回 NO, 这个会在下面的 becomeFirstResponder 中调用.
+/*
+ canBecomeFirstResponder 控制的是, becomeFirstResponder 中的流程.
+ */
 - (BOOL)canBecomeFirstResponder
 {
     return NO;
 }
 
+/*
+ 简单来说, 就是将自身, 变为 window 的 _firstResponder.
+ 还会成为键盘操作的响应者.
+ */
 - (BOOL)becomeFirstResponder
 {
     if ([self isFirstResponder]) {
@@ -53,7 +63,6 @@
         // 只有在当前响应者放弃了响应者权利之后, 才能进行下面的逻辑.
         if (didResign) {
             [window _setFirstResponder:self]; // 一个简单的赋值操作.
-            
             if ([self conformsToProtocol:@protocol(UIKeyInput)]) {
                 // 这里应该是为了可以让键盘弹出的操作.
                 UIInputController *controller = [UIInputController sharedInputController];
@@ -70,11 +79,36 @@
     return NO;
 }
 
+/*
+
+ UITextView 的代理方法里面, 有着对于 canResignFirstResponder 的描述.
+ 
+ Asks the delegate if editing should stop in the specified text view.
+ Declaration
+
+ - (BOOL)textViewShouldEndEditing:(UITextView *)textView;
+ Discussion
+
+ This method is called when the text view is asked to resign the first responder status. This might occur when the user tries to change the editing focus to another control. Before the focus actually changes, however, the text view calls this method to give your delegate a chance to decide whether it should.
+ Normally, you would return YES from this method to allow the text view to resign the first responder status. You might return NO, however, in cases where your delegate wants to validate the contents of the text view. By returning NO, you could prevent the user from switching to another control until the text view contained a valid value.
+ Be aware that this method provides only a recommendation about whether editing should end. Even if you return NO from this method, it is possible that editing might still end. For example, this might happen when the text view is forced to resign the first responder status by being removed from its parent view or window.
+ Implementation of this method by the delegate is optional. If it is not present, the first responder status is resigned as if this method had returned YES.
+ Parameters
+
+ textView
+ The text view for which editing is about to end.
+ Returns
+
+ YES if editing should stop; otherwise, NO if the editing session should continue
+ */
 - (BOOL)canResignFirstResponder
 {
     return YES;
 }
 
+/*
+ 将 window 的 firstResponder 设置为 nil.
+ */
 - (BOOL)resignFirstResponder
 {
     if ([self isFirstResponder]) {
@@ -115,8 +149,9 @@
 }
 
 /*
- 这里, 说明了为什么调用链会一直向上传.
- 这里, 还是没有说清, 到底为了什么, Gesture 的相应的方法, 可以
+ 各种 touch 方法, 默认实现就是向上传递.
+ 当, 某个 responder 想要中断这个传递过程的时候, 不调用 super 就可以了.
+ 比如, UIControl 是完全结果了 touch 的过程, 所以它就不会将 touch 的处理逻辑, 再往上进行传递了.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {

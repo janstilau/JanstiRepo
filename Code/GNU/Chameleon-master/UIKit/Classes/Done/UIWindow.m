@@ -101,6 +101,9 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
     return self;
 }
 
+/*
+ Window 的 nextResponder, 就是 Application
+ */
 - (UIResponder *)nextResponder
 {
     return [UIApplication sharedApplication];
@@ -347,8 +350,10 @@ NSString *const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
     return self.layer.zPosition;
 }
 
-/**
-The UIApplication object calls this method to dispatch events to the window. Window objects dispatch touch events to the view in which the touch occurred, and dispatch other types of events to the most appropriate target object. You can call this method as needed in your app to dispatch custom events that you create. For example, you might call this method to dispatch a custom event to the window’s responder chain.
+/*
+The UIApplication object calls this method to dispatch events to the window.
+Window objects dispatch touch events to the view in which the touch occurred, and dispatch other types of events to the most appropriate target object.
+ You can call this method as needed in your app to dispatch custom events that you create. For example, you might call this method to dispatch a custom event to the window’s responder chain.
  */
 - (void)sendEvent:(UIEvent *)event
 {
@@ -358,7 +363,10 @@ The UIApplication object calls this method to dispatch events to the window. Win
 }
 
 
-// 最重要的方法, 事件分发.
+/*
+ 在这个时候, UITouchEvent 的 touch 中的 View 已经固定了下来了, UIView 的 hitTest 方法, 是在 sendEvent 之前就会被调用的.
+ 在 sendEvent 里面, 直接就是调用 event 中存储的 View, 调用相应的 touch 方法了.
+ */
 - (void)_processTouchEvent:(UITouchEvent *)event
 {
     UIView *view = event.touch.view;
@@ -412,8 +420,9 @@ The UIApplication object calls this method to dispatch events to the window. Win
     }
     
     if (event.isDiscreteGesture) {
-        // this should prevent delivery of the "touches" down the responder chain in roughly the same way a normal non-
-        // discrete gesture would based on the settings of the in-play gesture recognizers.
+        /*
+         如果 event 不是触摸事件的话.
+         */
         if (!gestureRecognized || (gestureRecognized && !cancelsTouches && !delaysTouchesBegan)) {
             if (event.touchEventGesture == UITouchEventGestureRightClick) {
                 [view rightClick:event.touch withEvent:event];
@@ -430,7 +439,6 @@ The UIApplication object calls this method to dispatch events to the window. Win
     } else {
         
         // 调用 touch 所在 view 的各个 touch 方法.
-        
         if (event.touch.phase == UITouchPhaseBegan) {
             if ((!gestureRecognized && !possibleGestures) || !delaysTouchesBegan) {
                 [view touchesBegan:event.allTouches withEvent:event];

@@ -51,8 +51,9 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     [_view _setViewController:nil];
 }
 
+
 /*
- View 如果有着 _viewController 的话, 就会将自己的 nextResponder 设置为这个 VC, 所以, VC 的 nextResponder, 应该将控制权力返回给 superView.
+ VC 的 nextResponder, 就是 view 的 superView
  */
 - (UIResponder *)nextResponder
 {

@@ -31,6 +31,12 @@
     _translation = translation;
 }
 
+/*
+ 这就是, 为什么要把 _translation 设置为 0 的原因.
+ 程序里面, 一般是根据 gesture 的偏移, 一点点的做效果.
+ 但是 gesture 里面记录的是, 从 gesture 一开始的偏移量.
+ 程序里面, 显式把这个值进行归零, 使得下一次得到这个值, 是很小的一个值, 这样才能保持程序的正确性.
+ */
 - (BOOL)_translate:(CGPoint)delta withEvent:(UIEvent *)event
 {
     const NSTimeInterval timeDiff = event.timestamp - _lastMovementTime;
@@ -59,6 +65,10 @@
     return _velocity;
 }
 
+
+/*
+ Gesture 的内部逻辑, 也是通过几个 touch 函数, 进行状态的改变.
+ */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (self.state == UIGestureRecognizerStatePossible) {

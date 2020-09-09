@@ -7,6 +7,10 @@ extern NSString *const UIScreenModeDidChangeNotification;
 
 @class UIKitView, UIScreenMode, UIWindow;
 
+/*
+ An object that defines the properties associated with a hardware-based display.
+ */
+
 @interface UIScreen : NSObject // 原来 UIScreen 不是 UIView 的子类.
 + (UIScreen *)mainScreen;
 + (NSArray *)screens;

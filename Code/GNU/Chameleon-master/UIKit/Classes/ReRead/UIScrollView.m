@@ -35,7 +35,12 @@ const float UIScrollViewDecelerationRateFast = 0.99;
         unsigned scrollViewDidEndScrollingAnimation : 1;
         unsigned scrollViewWillBeginDecelerating : 1;
         unsigned scrollViewDidEndDecelerating : 1;
-    } _delegateCan; // _delegateCan 是根据 delegate 的能力保存的, 也就是不用每次调用 respond 方法, 相当于对于 delegate 进行了缓存.
+    } _delegateCan;
+    /*
+     _delegateCan 是根据 delegate 的能力保存的, 也就是不用每次调用 respond 方法, 相当于对于 delegate 进行了缓存.
+     这个处理方法, 在 YYTextView 里面, 也进行了使用.
+     */
+     
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -61,9 +66,16 @@ const float UIScrollViewDecelerationRateFast = 0.99;
         _bounces = YES;
         _decelerationRate = UIScrollViewDecelerationRateNormal;
         
-        _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_gestureDidChange:)];
+        /*
+         控制 ScrollView 的 PanGesture
+         */
+        _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureDidChanged:)];
         [self addGestureRecognizer:_panGestureRecognizer];
         
+        
+        /*
+         生成对应的两个进度条.
+         */
         _verticalScroller = [[UIScroller alloc] init];
         _verticalScroller.delegate = self;
         [self addSubview:_verticalScroller];
@@ -77,11 +89,11 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     return self;
 }
 
+/*
+ 这里, 还是对于 Delegate 进行了功能的记录操作.
+*/
 - (void)setDelegate:(id)newDelegate
 {
-    /*
-     这里, 还是对于 Delegate 进行了功能的记录操作.
-     */
     _delegate = newDelegate;
     _delegateCan.scrollViewDidScroll = [_delegate respondsToSelector:@selector(scrollViewDidScroll:)];
     _delegateCan.scrollViewWillBeginDragging = [_delegate respondsToSelector:@selector(scrollViewWillBeginDragging:)];
@@ -96,26 +108,32 @@ const float UIScrollViewDecelerationRateFast = 0.99;
 }
 
 /*
-    放大缩小 View, 这个放大缩小 View, 就是 Delegate 进行获取的. 这里, 没有通过内省的那套机制, 而是直接用自己的标记位, 获取到对应的 view.
+ 放大缩小 View, 这个放大缩小 View, 就是 Delegate 进行获取的. 这里, 没有通过内省的那套机制, 而是直接用自己的标记位, 获取到对应的 view.
  */
 - (UIView *)_zoomingView
 {
     return (_delegateCan.viewForZoomingInScrollView)? [_delegate viewForZoomingInScrollView:self] : nil;
 }
 
-// 属性验证, 范围验证.
+/*
+ 属性验证 + 范围验证.
+ */
 - (BOOL)_canScrollHorizontal
 {
     return self.scrollEnabled && (_contentSize.width > self.bounds.size.width);
 }
 
-// 属性验证, 范围验证.
+/*
+ 属性验证 + 范围验证.
+ */
 - (BOOL)_canScrollVertical
 {
     return self.scrollEnabled && (_contentSize.height > self.bounds.size.height);
 }
 
-// 更新滚动条的范围和具体的 offset 位置.
+/*
+ 刷新滚动条的显示.
+ */
 - (void)_updateScrollers
 {
     _verticalScroller.contentSize = _contentSize.height;
@@ -161,8 +179,9 @@ const float UIScrollViewDecelerationRateFast = 0.99;
 }
 
 
-// 这里, 应该是根据 当前的 animation 的值, 进行 scrollView 的 contentOffset 的更改
-// animate 中会有 scrollView 的变化, 这里作者的 API 取名有点问题.
+/*
+ 
+ */
 - (void)_updateScrollAnimation
 {
     if ([_scrollAnimation animate]) {
@@ -185,7 +204,9 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     }
 }
 
-// 限制, offset 的范围, 在自己的可滚动的范围之内.
+/*
+ 这个函数, 就是限制 Offset 到自己的可滚动范围之内的.
+ */
 - (CGPoint)_confinedContentOffset:(CGPoint)targetOffset
 {
     const CGRect scrollerBounds = UIEdgeInsetsInsetRect(self.bounds, _contentInset);
@@ -253,7 +274,10 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     [self _confineContent];
 }
 
-// 每次进行子 View 的管理, 都要把滚动条往上提.
+/*
+ 每次进行子 View 的管理, 都要把滚动条往上提.
+ 这里, 也就说明了, 如果想要让某个 view, 一直处在某个位置, 只能是去重新 subview 相关的各个方法, 进行相关 view 的位置调整.
+ */
 - (void)_bringScrollersToFront
 {
     [super bringSubviewToFront:_horizontalScroller];
@@ -283,6 +307,9 @@ const float UIScrollViewDecelerationRateFast = 0.99;
  */
 - (void)_updateBounds
 {
+    /*
+     根据 contentsOffset 计算出最终的 bounds.
+     */
     CGRect bounds = self.bounds;
     bounds.origin.x = _contentOffset.x - _contentInset.left;
     bounds.origin.y = _contentOffset.y - _contentInset.top;
@@ -347,19 +374,6 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     }
 }
 
-// 滚动条其实是占据了下方, 右方的所有区域, 只不过, 根据 contentOffset 更新小黑块的位置, 这在 WM的 progressView 中进行了体现.
-- (void)flashScrollIndicators
-{
-    [_horizontalScroller flash];
-    [_verticalScroller flash];
-}
-
-- (void)_quickFlashScrollIndicators
-{
-    [_horizontalScroller quickFlash];
-    [_verticalScroller quickFlash];
-}
-
 - (BOOL)isTracking
 {
     return NO;
@@ -422,7 +436,6 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     }
 }
 
-// _dragging 这个状态, 是根据 panGesture 的手势不同阶段, 进行值的改变.
 - (void)_beginDragging
 {
     if (!_dragging) {
@@ -430,6 +443,7 @@ const float UIScrollViewDecelerationRateFast = 0.99;
         _horizontalScroller.alwaysVisible = YES;
         _verticalScroller.alwaysVisible = YES;
         [self _cancelScrollAnimation];
+        // 触发代理方法.
         if (_delegateCan.scrollViewWillBeginDragging) {
             [_delegate scrollViewWillBeginDragging:self];
         }
@@ -467,39 +481,44 @@ const float UIScrollViewDecelerationRateFast = 0.99;
 
 - (void)_dragBy:(CGPoint)delta
 {
-    if (_dragging) {
-        _horizontalScroller.alwaysVisible = YES;
-        _verticalScroller.alwaysVisible = YES;
+    if (!_dragging) { return; }
         
-        const CGPoint originalOffset = self.contentOffset;
+    _horizontalScroller.alwaysVisible = YES;
+    _verticalScroller.alwaysVisible = YES;
+    
+    const CGPoint originalOffset = self.contentOffset;
+    
+    CGPoint proposedOffset = originalOffset;
+    proposedOffset.x += delta.x;
+    proposedOffset.y += delta.y;
+    
+    const CGPoint confinedOffset = [self _confinedContentOffset:proposedOffset];
+    
+    if (self.bounces) {
+        BOOL shouldHorizontalBounce = (fabs(proposedOffset.x - confinedOffset.x) > 0);
+        BOOL shouldVerticalBounce = (fabs(proposedOffset.y - confinedOffset.y) > 0);
         
-        CGPoint proposedOffset = originalOffset;
-        proposedOffset.x += delta.x;
-        proposedOffset.y += delta.y;
-        
-        const CGPoint confinedOffset = [self _confinedContentOffset:proposedOffset];
-        
-        if (self.bounces) {
-            BOOL shouldHorizontalBounce = (fabs(proposedOffset.x - confinedOffset.x) > 0);
-            BOOL shouldVerticalBounce = (fabs(proposedOffset.y - confinedOffset.y) > 0);
-            
-            if (shouldHorizontalBounce) {
-                proposedOffset.x = originalOffset.x + (0.055 * delta.x);
-            }
-            
-            if (shouldVerticalBounce) {
-                proposedOffset.y = originalOffset.y + (0.055 * delta.y);
-            }
-            
-            [self _setRestrainedContentOffset:proposedOffset];
-        } else {
-            // 如果没有弹性, 那么直接设置 offset.
-            [self setContentOffset:confinedOffset];
+        if (shouldHorizontalBounce) {
+            proposedOffset.x = originalOffset.x + (0.055 * delta.x);
         }
+        
+        if (shouldVerticalBounce) {
+            proposedOffset.y = originalOffset.y + (0.055 * delta.y);
+        }
+        
+        [self _setRestrainedContentOffset:proposedOffset];
+    } else {
+        // 如果没有弹性, 那么直接设置 offset.
+        [self setContentOffset:confinedOffset];
     }
 }
 
-- (void)_gestureDidChange:(UIGestureRecognizer *)gesture
+
+
+/*
+ 手势的代理方法
+ */
+- (void)panGestureDidChanged:(UIGestureRecognizer *)gesture
 {
     if (_panGestureRecognizer.state == UIGestureRecognizerStateBegan) {
         [self _beginDragging];
@@ -511,7 +530,9 @@ const float UIScrollViewDecelerationRateFast = 0.99;
     }
 }
 
-// 滚动条的代理方法.
+/*
+ 滚动条的代理方法.
+ */
 - (void)_UIScrollerDidBeginDragging:(UIScroller *)scroller withEvent:(UIEvent *)event
 {
     [self _beginDragging];

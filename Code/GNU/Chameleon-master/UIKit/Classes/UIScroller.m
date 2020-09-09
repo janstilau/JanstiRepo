@@ -195,7 +195,9 @@ static const CGFloat _UIScrollerMinimumAlpha = 0;
     _holdTimer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(autoPageContent) userInfo:nil repeats:YES];
 }
 
-// 滑动条如何显示, 不是在里面有一个子 view, 而是画出来的.
+/*
+ 根据 contentSize 以及 offset 的关系, 计算出 knob 的显示位置, 然后在这个显示位置, 画一个滑块出来.
+ */
 - (void)drawRect:(CGRect)rect
 {
     CGRect knobRect = [self knobRect];

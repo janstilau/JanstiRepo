@@ -91,7 +91,9 @@ static BOOL _animationsEnabled = YES;
     return _superview.window;
 }
 
-// 返回下一个响应者. 这里是, 为什么 View 如果是 VC 的 view, 它的下一个响应者是 VC 的关键.
+/*
+ View 的 nextResponder, 如果有 viewController 的话, 就是 viewController, 如果没有的话, 就是自己的 superview
+ */
 - (UIResponder *)nextResponder
 {
     return (UIResponder *)[self _viewController] ?: (UIResponder *)_superview;

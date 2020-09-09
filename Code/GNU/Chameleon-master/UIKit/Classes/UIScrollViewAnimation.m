@@ -32,7 +32,7 @@ CGFloat UIQuadraticEaseOut(CGFloat t, CGFloat start, CGFloat end)
     }
     return self;
 }
-    
+
 - (BOOL)animate
 {
     return YES;

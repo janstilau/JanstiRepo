@@ -395,7 +395,6 @@ static UIApplication *_theApplication = nil;
     return [windows sortedArrayUsingDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"windowLevel" ascending:YES]]];
 }
 
-// 所谓的 keyWindow 是 makeKeyAndVisible 调用设定的, 之所有有 keyWindow 这个概念, 是因为在桌面端, 可能会有 window.
 - (UIWindow *)keyWindow
 {
     for (UIWindow *window in self.windows) {
@@ -403,11 +402,13 @@ static UIApplication *_theApplication = nil;
             return window;
         }
     }
-    
     return nil;
 }
 
-
+/*
+ Target Action, event 的处理机制.
+ 没有 Target, 就按照响应者链条, 一点点向上寻找.
+ */
 - (BOOL)sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)event
 {
     if (!target) { // 如果没有 target , 就从发送者开始找, 而这个发送者, 一般来说, 就是第一响应者.
@@ -459,6 +460,10 @@ static UIApplication *_theApplication = nil;
 {
     return (url? [[NSWorkspace sharedWorkspace] URLForApplicationToOpenURL:url] : nil) != nil;
 }
+
+/*
+ 以下就是 Application 通知 delegate 的全部过程而已.
+ */
 
 - (void)_applicationWillFinishLaunching:(NSNotification *)note
 {
@@ -546,25 +551,32 @@ static UIApplication *_theApplication = nil;
 
 @end
 
+/*
+ Creates the application object and the application delegate and sets up the event cycle.
+ */
 int UIApplicationMain(int argc, char *argv[], NSString *principalClassName, NSString *delegateClassName)
 {
     @autoreleasepool {
+        /*
+         生成 Application 对象, 以及对应的 delegate 对象.
+         */
         UIApplication *app = principalClassName? [NSClassFromString(principalClassName) sharedApplication] : [UIApplication sharedApplication];
         id<UIApplicationDelegate> delegate = delegateClassName? [NSClassFromString(delegateClassName) new] : nil;
-        
         [app setDelegate:delegate];
         
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         NSString *mainNibName = [infoDictionary objectForKey:@"NSMainNibFile"];
         NSArray *topLevelObjects = nil;
         NSNib *mainNib = [[NSNib alloc] initWithNibNamed:mainNibName bundle:[NSBundle mainBundle]];
-        
         [mainNib instantiateWithOwner:app topLevelObjects:&topLevelObjects];
         
         id<NSApplicationDelegate> backgroundTaskCatchingDelegate = [UINSApplicationDelegate new];
         [[NSApplication sharedApplication] setDelegate:backgroundTaskCatchingDelegate];
         /*
-         在 Run 这个方法里面, 开启了运行循环操作.
+         The loop continues until a stop: or terminate: message is received.
+         Upon each iteration through the loop, the next available event from the window server is stored and then dispatched by sending it to NSApp using sendEvent:.
+         After creating the NSApplication object, the main function should load your app’s main nib file and then start the event loop by sending the NSApplication object a run message.
+         If you create an Cocoa app project in Xcode, this main function is implemented for you.
          */
         [[NSApplication sharedApplication] run];
         

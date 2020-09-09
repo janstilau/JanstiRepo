@@ -29,6 +29,7 @@ typedef NS_ENUM(NSInteger, UIEventSubtype) {
  */
 
 @interface UIEvent : NSObject
+
 - (NSSet *)allTouches;
 - (NSSet *)touchesForView:(UIView *)view;
 - (NSSet *)touchesForWindow:(UIWindow *)window;

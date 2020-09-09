@@ -25,6 +25,7 @@ const CGFloat _UITableViewDefaultRowHeight = 43;
     NSMutableSet *_reusableCells;
     
     NSMutableArray<UITableViewSectionRecord*> *_sections;
+    
     // 这个库的作者, 将 delegate 的各个能力进行了存储, 减少了 respond 的调用.
     struct {
         unsigned heightForRowAtIndexPath : 1;

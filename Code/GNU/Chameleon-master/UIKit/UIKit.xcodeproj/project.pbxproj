@@ -83,8 +83,6 @@
 		1489858D12EE2CFF003D4751 /* UIDataDetectors.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489850712EE2CFE003D4751 /* UIDataDetectors.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1489859012EE2CFF003D4751 /* UIEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489850A12EE2CFE003D4751 /* UIEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1489859112EE2CFF003D4751 /* UIEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489850B12EE2CFE003D4751 /* UIEvent.m */; };
-		1489859212EE2CFF003D4751 /* UIFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489850C12EE2CFE003D4751 /* UIFont.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1489859312EE2CFF003D4751 /* UIFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489850D12EE2CFE003D4751 /* UIFont.m */; };
 		1489859412EE2CFF003D4751 /* UIFontAppKitIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489850E12EE2CFE003D4751 /* UIFontAppKitIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1489859512EE2CFF003D4751 /* UIGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489850F12EE2CFE003D4751 /* UIGeometry.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1489859612EE2CFF003D4751 /* UIGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489851012EE2CFE003D4751 /* UIGeometry.m */; };
@@ -136,8 +134,6 @@
 		148985CE12EE2CFF003D4751 /* UISplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489854812EE2CFE003D4751 /* UISplitViewController.m */; };
 		148985CF12EE2CFF003D4751 /* UIStringDrawing.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489854912EE2CFE003D4751 /* UIStringDrawing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985D012EE2CFF003D4751 /* UIStringDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489854A12EE2CFE003D4751 /* UIStringDrawing.m */; };
-		148985D312EE2CFF003D4751 /* UITabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489854D12EE2CFE003D4751 /* UITabBarController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		148985D412EE2CFF003D4751 /* UITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489854E12EE2CFE003D4751 /* UITabBarController.m */; };
 		148985D512EE2CFF003D4751 /* UITableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489854F12EE2CFE003D4751 /* UITableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		148985D612EE2CFF003D4751 /* UITableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1489855012EE2CFE003D4751 /* UITableView.m */; };
 		148985D712EE2CFF003D4751 /* UITableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 1489855112EE2CFE003D4751 /* UITableViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -339,8 +335,6 @@
 		1489850712EE2CFE003D4751 /* UIDataDetectors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIDataDetectors.h; sourceTree = "<group>"; };
 		1489850A12EE2CFE003D4751 /* UIEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIEvent.h; sourceTree = "<group>"; };
 		1489850B12EE2CFE003D4751 /* UIEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIEvent.m; sourceTree = "<group>"; };
-		1489850C12EE2CFE003D4751 /* UIFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIFont.h; path = ../ReRead/UIFont.h; sourceTree = "<group>"; };
-		1489850D12EE2CFE003D4751 /* UIFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIFont.m; path = ../ReRead/UIFont.m; sourceTree = "<group>"; };
 		1489850E12EE2CFE003D4751 /* UIFontAppKitIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIFontAppKitIntegration.h; sourceTree = "<group>"; };
 		1489850F12EE2CFE003D4751 /* UIGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGeometry.h; sourceTree = "<group>"; };
 		1489851012EE2CFE003D4751 /* UIGeometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIGeometry.m; sourceTree = "<group>"; };
@@ -392,8 +386,6 @@
 		1489854812EE2CFE003D4751 /* UISplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UISplitViewController.m; sourceTree = "<group>"; };
 		1489854912EE2CFE003D4751 /* UIStringDrawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIStringDrawing.h; sourceTree = "<group>"; };
 		1489854A12EE2CFE003D4751 /* UIStringDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIStringDrawing.m; sourceTree = "<group>"; };
-		1489854D12EE2CFE003D4751 /* UITabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UITabBarController.h; path = ../ReRead/UITabBarController.h; sourceTree = "<group>"; };
-		1489854E12EE2CFE003D4751 /* UITabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UITabBarController.m; path = ../ReRead/UITabBarController.m; sourceTree = "<group>"; };
 		1489854F12EE2CFE003D4751 /* UITableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UITableView.h; path = ../ReRead/UITableView.h; sourceTree = "<group>"; };
 		1489855012EE2CFE003D4751 /* UITableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UITableView.m; path = ../ReRead/UITableView.m; sourceTree = "<group>"; };
 		1489855112EE2CFE003D4751 /* UITableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UITableViewCell.h; path = ../ReRead/UITableViewCell.h; sourceTree = "<group>"; };
@@ -547,40 +539,40 @@
 			children = (
 				1489855E12EE2CFE003D4751 /* UITouch.h */,
 				1489855F12EE2CFE003D4751 /* UITouch.m */,
+				1489850A12EE2CFE003D4751 /* UIEvent.h */,
+				1489850B12EE2CFE003D4751 /* UIEvent.m */,
+				148984F612EE2CFE003D4751 /* UIApplication.h */,
+				148984F712EE2CFE003D4751 /* UIApplication.m */,
+				1489856812EE2CFE003D4751 /* UIWindow.h */,
+				1489856912EE2CFE003D4751 /* UIWindow.m */,
 				1489853B12EE2CFE003D4751 /* UIResponder.h */,
 				1489853C12EE2CFE003D4751 /* UIResponder.m */,
 				1489850512EE2CFE003D4751 /* UIControl.h */,
 				1489850612EE2CFE003D4751 /* UIControl.m */,
 				1489850012EE2CFE003D4751 /* UIButton.h */,
 				1489850112EE2CFE003D4751 /* UIButton.m */,
-				148984E412EE2CFE003D4751 /* AppKitIntegration.h */,
-				148984F212EE2CFE003D4751 /* UIActivityIndicatorView.h */,
-				148984F312EE2CFE003D4751 /* UIActivityIndicatorView.m */,
-				1489850C12EE2CFE003D4751 /* UIFont.h */,
-				1489850D12EE2CFE003D4751 /* UIFont.m */,
+				1489854512EE2CFE003D4751 /* UIScrollView.h */,
+				1489854612EE2CFE003D4751 /* UIScrollView.m */,
+				1489854F12EE2CFE003D4751 /* UITableView.h */,
+				1489855012EE2CFE003D4751 /* UITableView.m */,
+				1489855112EE2CFE003D4751 /* UITableViewCell.h */,
+				1489855212EE2CFE003D4751 /* UITableViewCell.m */,
 				1489851A12EE2CFE003D4751 /* UIImageView.h */,
 				1489851B12EE2CFE003D4751 /* UIImageView.m */,
 				1489852112EE2CFE003D4751 /* UILabel.h */,
 				1489852212EE2CFE003D4751 /* UILabel.m */,
+				148984E412EE2CFE003D4751 /* AppKitIntegration.h */,
+				148984F212EE2CFE003D4751 /* UIActivityIndicatorView.h */,
+				148984F312EE2CFE003D4751 /* UIActivityIndicatorView.m */,
 				1489852512EE2CFE003D4751 /* UIMenuController.h */,
 				1489852612EE2CFE003D4751 /* UIMenuController.m */,
 				1489852712EE2CFE003D4751 /* UIMenuItem.h */,
 				1489852812EE2CFE003D4751 /* UIMenuItem.m */,
 				1489852A12EE2CFE003D4751 /* UINavigationBar.m */,
-				1489854512EE2CFE003D4751 /* UIScrollView.h */,
-				1489854612EE2CFE003D4751 /* UIScrollView.m */,
-				1489854D12EE2CFE003D4751 /* UITabBarController.h */,
-				1489854E12EE2CFE003D4751 /* UITabBarController.m */,
-				1489854F12EE2CFE003D4751 /* UITableView.h */,
-				1489855012EE2CFE003D4751 /* UITableView.m */,
-				1489855112EE2CFE003D4751 /* UITableViewCell.h */,
-				1489855212EE2CFE003D4751 /* UITableViewCell.m */,
 				1489855C12EE2CFE003D4751 /* UIToolbar.h */,
 				1489855D12EE2CFE003D4751 /* UIToolbar.m */,
 				1489856412EE2CFE003D4751 /* UIViewController.h */,
 				1489856512EE2CFE003D4751 /* UIViewController.m */,
-				148984F612EE2CFE003D4751 /* UIApplication.h */,
-				148984F712EE2CFE003D4751 /* UIApplication.m */,
 				06055A28236863F400EE2744 /* Gesture */,
 				1489852912EE2CFE003D4751 /* UINavigationBar.h */,
 				1489852B12EE2CFE003D4751 /* UINavigationController.h */,
@@ -605,8 +597,6 @@
 		06055A28236863F400EE2744 /* Gesture */ = {
 			isa = PBXGroup;
 			children = (
-				1489850A12EE2CFE003D4751 /* UIEvent.h */,
-				1489850B12EE2CFE003D4751 /* UIEvent.m */,
 				1489851112EE2CFE003D4751 /* UIGestureRecognizer.h */,
 				1489851212EE2CFE003D4751 /* UIGestureRecognizer.m */,
 				149148BA12EE45ED00F7C34E /* UIGestureRecognizerSubclass.h */,
@@ -626,8 +616,6 @@
 				1489855612EE2CFE003D4751 /* UITapGestureRecognizer.m */,
 				14BA42F017554D0200891B6D /* UITouchEvent.h */,
 				14BA42F117554D0200891B6D /* UITouchEvent.m */,
-				1489856812EE2CFE003D4751 /* UIWindow.h */,
-				1489856912EE2CFE003D4751 /* UIWindow.m */,
 			);
 			path = Gesture;
 			sourceTree = "<group>";
@@ -906,7 +894,6 @@
 				1489858B12EE2CFF003D4751 /* UIControl.h in Headers */,
 				1489858D12EE2CFF003D4751 /* UIDataDetectors.h in Headers */,
 				1489859012EE2CFF003D4751 /* UIEvent.h in Headers */,
-				1489859212EE2CFF003D4751 /* UIFont.h in Headers */,
 				1489859412EE2CFF003D4751 /* UIFontAppKitIntegration.h in Headers */,
 				1489859512EE2CFF003D4751 /* UIGeometry.h in Headers */,
 				1489859712EE2CFF003D4751 /* UIGestureRecognizer.h in Headers */,
@@ -961,7 +948,6 @@
 				148985CB12EE2CFF003D4751 /* UIScrollView.h in Headers */,
 				148985CD12EE2CFF003D4751 /* UISplitViewController.h in Headers */,
 				148985CF12EE2CFF003D4751 /* UIStringDrawing.h in Headers */,
-				148985D312EE2CFF003D4751 /* UITabBarController.h in Headers */,
 				148985D512EE2CFF003D4751 /* UITableView.h in Headers */,
 				148985D712EE2CFF003D4751 /* UITableViewCell.h in Headers */,
 				148985DB12EE2CFF003D4751 /* UITapGestureRecognizer.h in Headers */,
@@ -1128,7 +1114,6 @@
 				1489858912EE2CFF003D4751 /* UIColor.m in Sources */,
 				1489858C12EE2CFF003D4751 /* UIControl.m in Sources */,
 				1489859112EE2CFF003D4751 /* UIEvent.m in Sources */,
-				1489859312EE2CFF003D4751 /* UIFont.m in Sources */,
 				1489859612EE2CFF003D4751 /* UIGeometry.m in Sources */,
 				1489859812EE2CFF003D4751 /* UIGestureRecognizer.m in Sources */,
 				1489859A12EE2CFF003D4751 /* UIGraphics.m in Sources */,
@@ -1153,7 +1138,6 @@
 				148985CC12EE2CFF003D4751 /* UIScrollView.m in Sources */,
 				148985CE12EE2CFF003D4751 /* UISplitViewController.m in Sources */,
 				148985D012EE2CFF003D4751 /* UIStringDrawing.m in Sources */,
-				148985D412EE2CFF003D4751 /* UITabBarController.m in Sources */,
 				148985D612EE2CFF003D4751 /* UITableView.m in Sources */,
 				148985D812EE2CFF003D4751 /* UITableViewCell.m in Sources */,
 				148985DC12EE2CFF003D4751 /* UITapGestureRecognizer.m in Sources */,
