@@ -1,33 +1,3 @@
-/** Implementation for NSNotificationQueue for GNUStep
- Copyright (C) 1995-1999 Free Software Foundation, Inc.
- 
- Author: Mircea Oancea <mircea@jupiter.elcom.pub.ro>
- Date: 1995
- Modified by:  Richard Frith-Macdonald <richard@brainstorm.co.uk>
- Date: 1997
- Rewritten: 1999
- 
- This file is part of the GNUstep Base Library.
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free
- Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110 USA.
- 
- <title>NSNotificationQueue class reference</title>
- $Date$ $Revision$
- */
-
 #import "common.h"
 #define	EXPOSE_NSNotificationQueue_IVARS	1
 #import "Foundation/NSRunLoop.h"
@@ -38,11 +8,6 @@
 #import "Foundation/NSThread.h"
 
 #import "GSPrivate.h"
-/* NotificationQueueList by Richard Frith-Macdonald
- These objects are used to maintain lists of NSNotificationQueue objects.
- There is one list per NSThread, with the first object in the list stored
- in the thread dictionary and accessed using the key below.
- */
 
 static	NSString*	lkey = @"NotificationQueueListThreadKey";
 static	NSString*	qkey = @"NotificationQueueThreadKey";
@@ -52,29 +17,16 @@ static	NSString*	qkey = @"NotificationQueueThreadKey";
 {
 @public
     NotificationQueueList	*next;
-    NSNotificationQueue	*queue;
+    NSNotificationQueue	*data;
 }
 + (void) registerQueue: (NSNotificationQueue*)q;
 + (void) unregisterQueue: (NSNotificationQueue*)q;
 @end
 
-static NotificationQueueList*
-currentList(void)
-{
-    NotificationQueueList	*list;
-    NSMutableDictionary	*d;
-    
-    d = GSCurrentThreadDictionary();
-    list = (NotificationQueueList*)[d objectForKey: lkey];
-    if (list == nil)
-    {
-        list = [NotificationQueueList new];
-        [d setObject: list forKey: lkey];
-        RELEASE(list);	/* retained in dictionary.	*/
-    }
-    return list;
-}
 
+/*
+ 这个就是一个最最原始的链表, 有着指针域和数据域.
+ */
 @implementation	NotificationQueueList
 
 - (void) dealloc
@@ -96,24 +48,24 @@ currentList(void)
     
     list = currentList();	/* List of queues for thread.	*/
     
-    if (list->queue == nil)
+    if (list->data == nil)
     {
-        list->queue = q;		/* Make this the default.	*/
+        list->data = q;		/* Make this the default.	*/
     }
     
-    while (list->queue != q && list->next != nil)
+    while (list->data != q && list->next != nil)
     {
         list = list->next;
     }
     
-    if (list->queue == q)
+    if (list->data == q)
     {
         return;			/* Queue already registered.	*/
     }
     
     elem = (NotificationQueueList*)NSAllocateObject(self, 0,
                                                     NSDefaultMallocZone());
-    elem->queue = q;
+    elem->data = q;
     list->next = elem;
 }
 
@@ -123,7 +75,7 @@ currentList(void)
     
     list = currentList();
     
-    if (list->queue == q)
+    if (list->data == q)
     {
         NSMutableDictionary	*d = GSCurrentThreadDictionary();
         NotificationQueueList	*tmp = list->next;
@@ -142,7 +94,7 @@ currentList(void)
     {
         while (list->next != nil)
         {
-            if (list->next->queue == q)
+            if (list->next->data == q)
             {
                 NotificationQueueList	*tmp = list->next;
                 
@@ -152,6 +104,26 @@ currentList(void)
             }
         }
     }
+}
+
+/*
+ 通过 threadInfo, 获取到当前的 queueList 对象.
+ */
+static NotificationQueueList*
+currentList(void)
+{
+    NotificationQueueList    *list;
+    NSMutableDictionary    *d;
+    
+    d = GSCurrentThreadDictionary();
+    list = (NotificationQueueList*)[d objectForKey: lkey];
+    if (list == nil)
+    {
+        list = [NotificationQueueList new];
+        [d setObject: list forKey: lkey];
+        RELEASE(list);    /* retained in dictionary.    */
+    }
+    return list;
 }
 
 @end
@@ -229,11 +201,6 @@ add_to_queue(NSNotificationQueueList *queue, NSNotification *notification,
     NSNotificationQueueRegistration	*item;
     
     item = NSZoneCalloc(_zone, 1, sizeof(NSNotificationQueueRegistration));
-    if (item == 0)
-    {
-        [NSException raise: NSMallocException
-                    format: @"Unable to add to notification queue"];
-    }
     
     item->notification = RETAIN(notification);
     item->name = [notification name];
@@ -284,11 +251,13 @@ static NSArray	*defaultMode = nil;
     }
 }
 
-/**
+/*
  * Returns the default notification queue for use in this thread.  It will
  * always post notifications to the default notification center (for the
  * entire task, which may have multiple threads and therefore multiple
  * notification queues).
+ 
+ 因为, 每一个 Thread 都会有一个 NSNotificationQueue, 所以这里注册到了 threadInfo 的内部.
  */
 + (NSNotificationQueue*) defaultQueue
 {
@@ -296,7 +265,7 @@ static NSArray	*defaultMode = nil;
     NSNotificationQueue	*item;
     
     list = currentList();
-    item = list->queue;
+    item = list->data;
     if (item == nil)
     {
         item = (NSNotificationQueue*)NSAllocateObject(self,
@@ -329,7 +298,6 @@ static NSArray	*defaultMode = nil;
 {
     _zone = [self zone];
     
-    // init queue
     _center = RETAIN(notificationCenter);
     _asapQueue = NSZoneCalloc(_zone, 1, sizeof(NSNotificationQueueList));
     _idleQueue = NSZoneCalloc(_zone, 1, sizeof(NSNotificationQueueList));
@@ -378,7 +346,7 @@ static NSArray	*defaultMode = nil;
 
 /* Inserting and Removing Notifications From a Queue */
 
-/**
+/*
  * Immediately remove all notifications from queue matching notification on
  * name and/or object as specified by coalesce mask, which is an OR
  * ('<code>|</code>') of the options
@@ -394,8 +362,8 @@ static NSArray	*defaultMode = nil;
 {
     NSNotificationQueueRegistration	*item;
     NSNotificationQueueRegistration	*prev;
-    id					name   = [notification name];
-    id					object = [notification object];
+    id	name   = [notification name];
+    id	object = [notification object];
     
     if ((coalesceMask & NSNotificationCoalescingOnName)
         && (coalesceMask & NSNotificationCoalescingOnSender))
@@ -406,7 +374,6 @@ static NSArray	*defaultMode = nil;
         for (item = _asapQueue->tail; item; item = prev)
         {
             prev = item->prev;
-            //PENDING: should object comparison be '==' instead of isEqual?!
             if ((object == item->object) && [name isEqual: item->name])
             {
                 remove_from_queue(_asapQueue, item, _zone);
@@ -492,15 +459,17 @@ static NSArray	*defaultMode = nil;
                      forModes: nil];
 }
 
-/**
+/*
  *  Sets notification to be posted to notification center at time dependent on
  *  postingStyle, which may be either <code>NSPostNow</code> (synchronous
  *  post), <code>NSPostASAP</code> (post soon), or <code>NSPostWhenIdle</code>
- *  (post when runloop is idle).  coalesceMask determines whether this
- *  notification should be considered same as other ones already on the queue,
+ *  (post when runloop is idle).
+ 
+ *  coalesceMask determines whether this notification should be considered same as other ones already on the queue,
  *  in which case they are removed through a call to
- *  -dequeueNotificationsMatching:coalesceMask: .  The modes argument
- *  determines which [NSRunLoop] mode notification may be posted in (nil means
+ *  -dequeueNotificationsMatching:coalesceMask:.
+ 
+ * The modes argument determines which [NSRunLoop] mode notification may be posted in (nil means
  *  NSDefaultRunLoopMode).
  */
 - (void) enqueueNotification: (NSNotification*)notification
@@ -512,11 +481,16 @@ static NSArray	*defaultMode = nil;
     {
         modes = defaultMode;
     }
+    
+    /*
+     在 dequeueNotificationsMatching 中, 会进行 notification 的删除, 因为下面马上就会进行添加了.
+     */
     if (coalesceMask != NSNotificationNoCoalescing)
     {
         [self dequeueNotificationsMatching: notification
                               coalesceMask: coalesceMask];
     }
+    
     switch (postingStyle)
     {
         case NSPostNow:
@@ -647,12 +621,12 @@ GSPrivateNotifyASAP(NSString *mode)
     
     for (item = currentList(); item; item = item->next)
     {
-        if (item->queue)
+        if (item->data)
         {
-            notify(item->queue->_center,
-                   item->queue->_asapQueue,
+            notify(item->data->_center,
+                   item->data->_asapQueue,
                    mode,
-                   item->queue->_zone);
+                   item->data->_zone);
         }
     }
 }
@@ -664,12 +638,12 @@ GSPrivateNotifyIdle(NSString *mode)
     
     for (item = currentList(); item; item = item->next)
     {
-        if (item->queue)
+        if (item->data)
         {
-            notify(item->queue->_center,
-                   item->queue->_idleQueue,
+            notify(item->data->_center,
+                   item->data->_idleQueue,
                    mode,
-                   item->queue->_zone);
+                   item->data->_zone);
         }
     }
 }
@@ -681,11 +655,11 @@ GSPrivateNotifyMore(NSString *mode)
     
     for (item = currentList(); item; item = item->next)
     {
-        if (item->queue != nil)
+        if (item->data != nil)
         {
             NSNotificationQueueRegistration	*r;
             
-            r = item->queue->_idleQueue->head;
+            r = item->data->_idleQueue->head;
             while (r != 0)
             {
                 if (mode == nil || [r->modes indexOfObject: mode] != NSNotFound)

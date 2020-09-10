@@ -2,13 +2,16 @@
 #define __NSThread_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
-#if	defined(GNUSTEP_BASE_INTERNAL)
-#import	"Foundation/NSAutoreleasePool.h" // for struct autorelease_thread_vars
-#import	"Foundation/NSException.h"	// for NSHandler
-#else
-#import	<Foundation/NSAutoreleasePool.h>
-#import	<Foundation/NSException.h>
-#endif
+/*
+ Use this class when you want to have an Objective-C method run in its own thread of execution. Threads are especially useful when you need to perform a lengthy task, but don’t want it to block the execution of the rest of the application. In particular, you can use threads to avoid blocking the main thread of the application, which handles user interface and event-related actions. Threads can also be used to divide a large job into several smaller jobs, which can lead to performance increases on multi-core computers.
+
+ The NSThread class supports semantics similar to those of NSOperation for monitoring the runtime condition of a thread. You can use these semantics to cancel the execution of a thread or determine if the thread is still executing or has finished its task. Canceling a thread requires support from your thread code; see the description for cancel for more information.
+
+ Subclassing Notes
+
+ You can subclass NSThread and override the main method to implement your thread’s main entry point. If you override main, you do not need to invoke the inherited behavior by calling super.
+ */
+
 
 @class  NSArray;
 @class	NSDate;
@@ -34,27 +37,22 @@
     SEL			_selector;
     NSString              *_name;
     NSUInteger            _stackSize;
+    /*
+     这几个值, 和 NSOperation 很像.
+     */
     BOOL			_cancelled;
     BOOL			_active;
     BOOL			_finished;
+    
     NSHandler		*_exception_handler;    // Not retained.
     NSMutableDictionary	*_thread_dictionary;
     struct autorelease_thread_vars _autorelease_vars;
     id			_gcontext;
     void                  *_runLoopInfo;  // Per-thread runloop related info.
 #endif
-#if     GS_NONFRAGILE
-#  if defined(GS_NSThread_IVARS)
-@public GS_NSThread_IVARS;
-#  endif
-#else
-    /* Pointer to private additional data used to avoid breaking ABI
-     * when we don't have the non-fragile ABI available.
-     * Use this mechanism rather than changing the instance variable
-     * layout (see Source/GSInternal.h for details).
-     */
-@private id _internal GS_UNUSED_IVAR;
-#endif
+    pthread_t             _pthreadID;
+    NSUInteger            _threadID;
+    GSLockInfo            _lockInf;
 }
 
 /**

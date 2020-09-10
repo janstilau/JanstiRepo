@@ -557,10 +557,10 @@ MUNLOCK
 
 - (void) lockWhenCondition: (NSInteger)value
 {
-    [_condition lock];
+    [_condition lock]; // 首先, 使用 mutex 进行加锁, 如果条件不允许, 就进行等待操作.
     while (value != _condition_value)
     {
-        [_condition wait];
+        [_condition wait]; // 这里, 其他的线程进行了 wake 操作之后, 会加锁, 然后判断 value 值如果和自己的 _condition_value 不等, 又会进行 wait 操作.
     }
 }
 
@@ -576,7 +576,9 @@ MUNLOCK
         return YES;       // Keeping the lock
     }
     while ([_condition waitUntilDate: limitDate])
-    {
+    { // 这个时候, 已经获取到 mutex 了,
+        // 然后需要判断, _condition_value 是否和 condition_to_meet 相等.
+        // 如果不等, 那么重新进入循环, [_condition waitUntilDate: limitDate] 中调用 wait 方法, 又会释放锁.
         if (condition_to_meet == _condition_value)
         {
             return YES;   // Keeping the lock

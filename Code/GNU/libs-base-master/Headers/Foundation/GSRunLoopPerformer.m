@@ -298,19 +298,18 @@
                   sel_getName(selector));
         }
     }
-    NS_ENDHANDLER
+    NS_ENDHANDLER;
+    
     DESTROY(receiver);
     DESTROY(argument);
     DESTROY(modes);
     if (lock != nil)
     {
         /*
-         做线程同步的操作.
+         如果, lock 不为空, 证明原来提交 runloopPerformer 的地方, 正在进行 wait 操作, 这里 unlock 就是为了唤醒其他线程. 
          */
-        NSConditionLock    *l = lock;
         [lock lock];
-        lock = nil;
-        [l unlockWithCondition: 1];
+        [lock unlockWithCondition: 1];
     }
 }
 
@@ -445,7 +444,9 @@
         if (conditionLock != nil)
         {
             /*
-             如果有条件锁, 代表需要进行同步控制.
+             如果条件锁不为空, 代表着需要进行等待, 那么 lockWhenCondition 会导致, 当前线程停止, thread_yield, 然后等待其他线程执行完毕之后唤醒.
+             由于这里唤醒其实又会加锁, 所以后面才有 unlock 的操作.
+             一般来说, 这种 waitUntil 的操作, 用 conditionLock 都可以实现.
              */
             [conditionLock lockWhenCondition: 1];
             [conditionLock unlock];

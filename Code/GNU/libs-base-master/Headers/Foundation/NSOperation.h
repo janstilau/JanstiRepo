@@ -13,6 +13,11 @@ enum {
 
 typedef NSInteger NSOperationQueuePriority;
 
+/*
+ An abstract class that represents the code and data associated with a single task.
+ The base implementation of NSOperation does include significant logic to coordinate the safe execution of your task.
+ */
+
 @interface NSOperation : NSObject
 {
     NSRecursiveLock *lock;
@@ -191,11 +196,11 @@ enum {
 
 @interface NSOperationQueue : NSObject
 {
-    NSRecursiveLock    *lock;
-    NSConditionLock    *cond;
-    NSMutableArray    *operations;
-    NSMutableArray    *waiting;
-    NSMutableArray    *starting;
+    NSRecursiveLock    *queueLock;
+    NSConditionLock    *queueCondition;
+    NSMutableArray    *operations; // 添加到当前 queue 里面的
+    NSMutableArray    *waiting; // 还未执行的
+    NSMutableArray    *starting; // 即将运行的任务.
     NSString        *name;
     BOOL            suspended;
     NSInteger        executing;
