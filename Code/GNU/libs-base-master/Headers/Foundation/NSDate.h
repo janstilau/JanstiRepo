@@ -1,33 +1,8 @@
-/* Interface for NSDate for GNUStep
-   Copyright (C) 1994, 1996, 1999 Free Software Foundation, Inc.
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-  */
-
 #ifndef __NSDate_h_GNUSTEP_BASE_INCLUDE
 #define __NSDate_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
 #import	<Foundation/NSObjCRuntime.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 GS_EXPORT NSString * const NSSystemClockDidChangeNotification;
 
@@ -189,7 +164,7 @@ GS_EXPORT const NSTimeInterval NSTimeIntervalSince1970;
  * the formatString and timeZone specified.
  */
 - (NSCalendarDate*) dateWithCalendarFormat: (NSString*)formatString
-				  timeZone: (NSTimeZone*)timeZone;
+                                  timeZone: (NSTimeZone*)timeZone;
 
 /** Returns a string representation of the receiver formatted according
  * to the default format string, time zone, and locale.
@@ -200,8 +175,8 @@ GS_EXPORT const NSTimeInterval NSTimeIntervalSince1970;
  * to the specified format string, time zone, and locale.
  */
 - (NSString*) descriptionWithCalendarFormat: (NSString*)format
-				   timeZone: (NSTimeZone*)aTimeZone
-				     locale: (NSDictionary*)l;
+                                   timeZone: (NSTimeZone*)aTimeZone
+                                     locale: (NSDictionary*)l;
 
 /** Returns a string representation of the receiver formatted according
  * to the default format string and time zone, but using the given locale.
@@ -293,9 +268,5 @@ GS_EXPORT const NSTimeInterval NSTimeIntervalSince1970;
 - (NSTimeInterval) timeIntervalSinceReferenceDate;
 
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif  /* __NSDate_h_GNUSTEP_BASE_INCLUDE*/

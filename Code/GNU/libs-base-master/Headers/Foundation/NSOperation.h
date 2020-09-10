@@ -1,15 +1,6 @@
 #ifndef __NSOperation_h_GNUSTEP_BASE_INCLUDE
 #define __NSOperation_h_GNUSTEP_BASE_INCLUDE
 
-#import <Foundation/NSObject.h>
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
-
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
-#import <GNUstepBase/GSBlocks.h>
-DEFINE_BLOCK_TYPE_NO_ARGS(GSOperationCompletionBlock, void);
-DEFINE_BLOCK_TYPE_NO_ARGS(GSBlockOperationBlock, void);
-#endif  
-
 @class NSMutableArray;
 
 enum {
@@ -24,13 +15,18 @@ typedef NSInteger NSOperationQueuePriority;
 
 @interface NSOperation : NSObject
 {
-#if	GS_NONFRAGILE
-#  if	defined(GS_NSOperation_IVARS)
-@public GS_NSOperation_IVARS
-#  endif
-#else
-@private id _internal;
-#endif
+    NSRecursiveLock *lock;
+    NSConditionLock *cond;
+    NSOperationQueuePriority priority;
+    double threadPriority;
+    BOOL cancelled;
+    BOOL concurrent;
+    BOOL executing;
+    BOOL finished;
+    BOOL blocked;
+    BOOL ready;
+    NSMutableArray *dependencies;
+    GSOperationCompletionBlock completionBlock;
 }
 
 /** Adds a dependency to the receiver.<br />
@@ -195,13 +191,16 @@ enum {
 
 @interface NSOperationQueue : NSObject
 {
-#if	GS_NONFRAGILE
-#  if	defined(GS_NSOperationQueue_IVARS)
-@public GS_NSOperationQueue_IVARS
-#  endif
-#else
-@private id _internal;
-#endif
+    NSRecursiveLock    *lock;
+    NSConditionLock    *cond;
+    NSMutableArray    *operations;
+    NSMutableArray    *waiting;
+    NSMutableArray    *starting;
+    NSString        *name;
+    BOOL            suspended;
+    NSInteger        executing;
+    NSInteger        threadCount;
+    NSInteger        count;
 }
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
 /** If called from within the -main method of an operation which is

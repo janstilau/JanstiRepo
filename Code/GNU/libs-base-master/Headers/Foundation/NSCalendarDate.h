@@ -1,33 +1,8 @@
-/* Interface for NSCalendarDate for GNUStep
-   Copyright (C) 1994, 1996, 1999 Free Software Foundation, Inc.
-
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-  */
-
 #ifndef __NSCalendarDate_h_GNUSTEP_BASE_INCLUDE
 #define __NSCalendarDate_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
 #import	<Foundation/NSDate.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 @class	NSTimeZone;
 @class	NSTimeZoneDetail;
@@ -35,9 +10,9 @@ extern "C" {
 @interface NSCalendarDate : NSDate
 {
 #if	GS_EXPOSE(NSCalendarDate)
-  NSTimeInterval	_seconds_since_ref;
-  NSString		*_calendar_format;
-  NSTimeZone		*_time_zone;
+    NSTimeInterval	_seconds_since_ref;
+    NSString		*_calendar_format;
+    NSTimeZone		*_time_zone;
 #endif
 }
 
@@ -47,14 +22,14 @@ extern "C" {
        calendarFormat: (NSString*)format;
 + (id) dateWithString: (NSString*)description
        calendarFormat: (NSString*)format
-	       locale: (NSDictionary*)dictionary;
+               locale: (NSDictionary*)dictionary;
 + (id) dateWithYear: (NSInteger)year
-	      month: (NSUInteger)month
-	        day: (NSUInteger)day
-	       hour: (NSUInteger)hour
-	     minute: (NSUInteger)minute
-	     second: (NSUInteger)second
-	   timeZone: (NSTimeZone*)aTimeZone;
+              month: (NSUInteger)month
+                day: (NSUInteger)day
+               hour: (NSUInteger)hour
+             minute: (NSUInteger)minute
+             second: (NSUInteger)second
+           timeZone: (NSTimeZone*)aTimeZone;
 
 // Initializing an NSCalendar Date
 - (id) initWithString: (NSString*)description;
@@ -62,14 +37,14 @@ extern "C" {
        calendarFormat: (NSString*)format;
 - (id) initWithString: (NSString*)description
        calendarFormat: (NSString*)fmt
-	       locale: (NSDictionary*)locale;
+               locale: (NSDictionary*)locale;
 - (id) initWithYear: (NSInteger)year
-	      month: (NSUInteger)month
-	        day: (NSUInteger)day
-	       hour: (NSUInteger)hour
-	     minute: (NSUInteger)minute
-	     second: (NSUInteger)second
-	   timeZone: (NSTimeZone*)aTimeZone;
+              month: (NSUInteger)month
+                day: (NSUInteger)day
+               hour: (NSUInteger)hour
+             minute: (NSUInteger)minute
+             second: (NSUInteger)second
+           timeZone: (NSTimeZone*)aTimeZone;
 
 // Retrieving Date Elements
 - (NSInteger) dayOfCommonEra;
@@ -95,17 +70,17 @@ extern "C" {
  * </p>
  */
 - (NSCalendarDate*) addYear: (NSInteger)year
-		      month: (NSInteger)month
-			day: (NSInteger)day
-		       hour: (NSInteger)hour
-		     minute: (NSInteger)minute
-		     second: (NSInteger)second;
+                      month: (NSInteger)month
+                        day: (NSInteger)day
+                       hour: (NSInteger)hour
+                     minute: (NSInteger)minute
+                     second: (NSInteger)second;
 
 // Getting String Descriptions of Dates
 - (NSString*) description;
 - (NSString*) descriptionWithCalendarFormat: (NSString*)format;
 - (NSString*) descriptionWithCalendarFormat: (NSString*)format
-				     locale: (NSDictionary*)locale;
+                                     locale: (NSDictionary*)locale;
 - (NSString*) descriptionWithLocale: (id)locale;
 
 // Getting and Setting Calendar Formats
@@ -129,12 +104,12 @@ extern "C" {
 
 - (NSInteger) lastDayOfGregorianMonth: (NSInteger)month year: (NSInteger)year;
 - (NSInteger) absoluteGregorianDay: (NSInteger)day
-			     month: (NSInteger)month
-			      year: (NSInteger)year;
+                             month: (NSInteger)month
+                              year: (NSInteger)year;
 - (void) gregorianDateFromAbsolute: (NSInteger)d
-			       day: (NSInteger*)day
-			     month: (NSInteger*)month
-			      year: (NSInteger*)year;
+                               day: (NSInteger*)day
+                             month: (NSInteger*)month
+                              year: (NSInteger*)year;
 
 @end
 
@@ -144,14 +119,14 @@ extern "C" {
 @interface NSCalendarDate (OPENSTEP)
 
 - (NSCalendarDate*) dateByAddingYears: (NSInteger)years
-			       months: (NSInteger)months
-				 days: (NSInteger)days
-				hours: (NSInteger)hours
-			      minutes: (NSInteger)minutes
-			      seconds: (NSInteger)seconds;
+                               months: (NSInteger)months
+                                 days: (NSInteger)days
+                                hours: (NSInteger)hours
+                              minutes: (NSInteger)minutes
+                              seconds: (NSInteger)seconds;
 
 - (void) years: (NSInteger*)years
-	months: (NSInteger*)months
+        months: (NSInteger*)months
           days: (NSInteger*)days
          hours: (NSInteger*)hours
        minutes: (NSInteger*)minutes
@@ -162,10 +137,6 @@ extern "C" {
 
 #if     !NO_GNUSTEP && !defined(GNUSTEP_BASE_INTERNAL)
 #import <GNUstepBase/NSCalendarDate+GNUstepBase.h>
-#endif
-
-#if	defined(__cplusplus)
-}
 #endif
 
 #endif  /* __NSCalendarDate_h_GNUSTEP_BASE_INCLUDE*/

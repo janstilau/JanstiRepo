@@ -1,57 +1,6 @@
-/* 
-   NSAttributedString.h
-
-   String class with attributes
-
-   Copyright (C) 1997,1999 Free Software Foundation, Inc.
-
-   Written by: ANOQ of the sun <anoq@vip.cybercity.dk>
-   Date: November 1997
-   Rewrite by: Richard Frith-Macdonald <richard@brainstorm.co.uk>
-   Date: April 1999
-   
-   This file is part of GNUStep-base
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   If you are interested in a warranty or support for this source code,
-   contact Scott Christley <scottc@net-community.com> for more information.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-*/
-
-/* Warning -	[-initWithString:attributes:] is the designated initialiser,
- *		but it doesn't provide any way to perform the function of the
- *		[-initWithAttributedString:] initialiser.
- *		In order to work youd this, the string argument of the
- *		designated initialiser has been overloaded such that it
- *		is expected to accept an NSAttributedString here instead of
- *		a string.  If you create an NSAttributedString subclass, you
- *		must make sure that your implementation of the initialiser
- *		copes with either an NSString or an NSAttributedString.
- *		If it receives an NSAttributedString, it should ignore the
- *		attributes argument and use the values from the string.
- */
-
-
 #ifndef __NSAttributedString_h_GNUSTEP_BASE_INCLUDE
 #define __NSAttributedString_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
-
-#if	defined(__cplusplus)
-extern "C" {
-#endif
 
 #import	<Foundation/NSObject.h>
 
@@ -60,6 +9,53 @@ extern "C" {
 #import	<Foundation/NSDictionary.h>
 #import	<Foundation/NSArray.h>
 #import	<Foundation/NSCoder.h>
+
+/*
+ 非常重要的一个类, YYLabel, YYTextView 都是以这个类为基础进行的构建.
+ 
+ A string that has associated attributes (such as visual style, hyperlinks, or accessibility data) for portions of its text.
+ 
+ */
+
+/*
+ m 文件中的实现太过于复杂, 不过简单来首, m 文件中, 会做好 attribute 数组的复制和链接的工作.
+ 
+ NSMutableAttributedString *textM = [[NSMutableAttributedString alloc] initWithString:@"123456789"];
+ [textM setAttribute:NSForegroundColorAttributeName value:[UIColor redColor]];
+ NSLog(@"%@", textM);
+ 
+ [textM setAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:12] range:NSMakeRange(5, 3)];
+ NSLog(@"%@", textM);
+ 
+ [textM removeAttribute:NSFontAttributeName range:NSMakeRange(6, 1)];
+ NSLog(@"%@", textM);
+ 
+ 
+ 2020-09-10 13:08:16.862124+0800 MCMoego[80326:3052706] 123456789    {
+     NSColor = UIExtendedSRGBColorSpace 1 0 0 1,
+ }
+ 2020-09-10 13:08:16.862288+0800 MCMoego[80326:3052706] 12345    {
+     NSColor = UIExtendedSRGBColorSpace 1 0 0 1,
+ }678    {
+     NSFont = <UICTFont: 0x7f9cfdd22d50> font-family: ".SFUI-Regular"; font-weight: normal; font-style: normal; font-size: 12.00pt,
+     NSColor = UIExtendedSRGBColorSpace 1 0 0 1,
+ }9    {
+     NSColor = UIExtendedSRGBColorSpace 1 0 0 1,
+ }
+ 2020-09-10 13:08:16.862407+0800 MCMoego[80326:3052706] 12345    {
+     NSColor = UIExtendedSRGBColorSpace 1 0 0 1,
+ }6    {
+     NSFont = <UICTFont: 0x7f9cfdd22d50> font-family: ".SFUI-Regular"; font-weight: normal; font-style: normal; font-size: 12.00pt,
+     NSColor = UIExtendedSRGBColorSpace 1 0 0 1,
+ }7    {
+     NSColor = UIExtendedSRGBColorSpace 1 0 0 1,
+ }8    {
+     NSFont = <UICTFont: 0x7f9cfdd22d50> font-family: ".SFUI-Regular"; font-weight: normal; font-style: normal; font-size: 12.00pt,
+     NSColor = UIExtendedSRGBColorSpace 1 0 0 1,
+ }9    {
+     NSColor = UIExtendedSRGBColorSpace 1 0 0 1,
+ }
+ */
 
 @interface NSAttributedString : NSObject <NSCoding, NSCopying, NSMutableCopying>
 {
@@ -81,15 +77,15 @@ extern "C" {
 
 //Retrieving attribute information
 - (NSDictionary*) attributesAtIndex: (NSUInteger)index
-		     effectiveRange: (NSRange*)aRange;	//Primitive method!
+                     effectiveRange: (NSRange*)aRange;	//Primitive method!
 - (NSDictionary*) attributesAtIndex: (NSUInteger)index
-	      longestEffectiveRange: (NSRange*)aRange
-			    inRange: (NSRange)rangeLimit;
+              longestEffectiveRange: (NSRange*)aRange
+                            inRange: (NSRange)rangeLimit;
 - (id) attribute: (NSString*)attributeName
-	 atIndex: (NSUInteger)index
+         atIndex: (NSUInteger)index
   effectiveRange: (NSRange*)aRange;
 - (id) attribute: (NSString*)attributeName atIndex: (NSUInteger)index
-  longestEffectiveRange: (NSRange*)aRange inRange: (NSRange)rangeLimit;
+longestEffectiveRange: (NSRange*)aRange inRange: (NSRange)rangeLimit;
 
 //Comparing attributed strings
 - (BOOL) isEqualToAttributedString: (NSAttributedString*)otherString;
@@ -112,7 +108,7 @@ extern "C" {
 
 //Changing attributes
 - (void) setAttributes: (NSDictionary*)attributes
-		 range: (NSRange)aRange;		//Primitive method!
+                 range: (NSRange)aRange;		//Primitive method!
 - (void) addAttribute: (NSString*)name value: (id)value range: (NSRange)aRange;
 - (void) addAttributes: (NSDictionary*)attributes range: (NSRange)aRange;
 - (void) removeAttribute: (NSString*)name range: (NSRange)aRange;
@@ -120,11 +116,11 @@ extern "C" {
 //Changing characters and attributes
 - (void) appendAttributedString: (NSAttributedString*)attributedString;
 - (void) insertAttributedString: (NSAttributedString*)attributedString
-			atIndex: (NSUInteger)index;
+                        atIndex: (NSUInteger)index;
 - (void) replaceCharactersInRange: (NSRange)aRange
-	     withAttributedString: (NSAttributedString*)attributedString;
+             withAttributedString: (NSAttributedString*)attributedString;
 - (void) replaceCharactersInRange: (NSRange)aRange
-		       withString: (NSString*)aString;	//Primitive method!
+                       withString: (NSString*)aString;	//Primitive method!
 - (void) setAttributedString: (NSAttributedString*)attributedString;
 
 //Grouping changes
@@ -134,10 +130,6 @@ extern "C" {
 @end //NSMutableAttributedString
 
 #endif /* GS_API_MACOSX */
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #if     !NO_GNUSTEP && !defined(GNUSTEP_BASE_INTERNAL)
 #import <GNUstepBase/NSAttributedString+GNUstepBase.h>
