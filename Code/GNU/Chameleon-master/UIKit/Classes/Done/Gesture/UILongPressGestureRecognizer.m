@@ -71,7 +71,10 @@ static CGFloat DistanceBetweenTwoPoints(CGPoint A, CGPoint B)
 {
     UITouch *touch = [touches anyObject];
     const CGFloat distance = DistanceBetweenTwoPoints([touch locationInView:self.view], _beginLocation);
-
+    
+    /*
+     在识别出长按之后, UIGestureRecognizerStateBegan, 如果移动了手指, 就会被认为是 cancel 了.
+     */
     if (self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged) {
         if (distance <= self.allowableMovement) {
             self.state = UIGestureRecognizerStateChanged;

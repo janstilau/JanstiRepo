@@ -386,8 +386,21 @@ Window objects dispatch touch events to the view in which the touch occurred, an
     BOOL delaysTouchesEnded = NO;
     BOOL cancelsTouches = NO;
 
-    // then allow all tracking gesture recognizers to have their way with the touches in this event before
-    // anything else is done.
+    /*
+     这里非常重要, gesture 和 view 都在这里进行了处理.
+     
+     A gesture recognizer operates on touches hit-tested to a specific view and all of that view’s subviews. It thus must be associated with that view. To make that association you must call the UIView method addGestureRecognizer:. A gesture recognizer doesn’t participate in the view’s responder chain.
+     
+     这里, 猜测, 如果一个 View 增加了 gesture, 那么 event.touch.view 是它的子 View, 这个父 View 的 gesture 也会添加到 touch.gestureRecognizers 中去.
+     
+     cancelsTouchesInView 如果 gesture 识别了手势, 那么 view 就会收到 cancel 的方法调用, 并且之后也不会接收到 touch 方法调用了.
+     delaysTouchesBegan 在 gesture 开始识别阶段, 如果 gesture 还没有识别出来, view 不会接收到 touch 调用, 如果识别出来了, view 就不会接收到调用, 如果 gesture 识别失败了, 才会接收到 touch 调用
+     delaysTouchesEnded 和上面一样, 如果 gesture 还没有识别出来, touchedn 的调用, view 就先不收到. 如果 gesture 识别出了, view 接受到的就是 cancel 调用, 否则才会是 end 调用.
+     
+     为什么 UIControl 上面添加一个 gesture, 就经常性的不能触发回调.
+     默认 delaysTouchesBegan 0, delaysTouchesEnded 1, cancelsTouchesInView 1, 当后面的两个为 1 的时候, 手势识别出来, view 就会接收到 cancel 的调用.
+     但是 UIControl 里面, 很多事件是要在 touchEnd 里面触发的, 所以, UIControl 里面, 失去了 touchEnd 函数被调用的机会, 所以就不能正常的触发回调了.
+     */
     for (UIGestureRecognizer *gesture in event.touch.gestureRecognizers) {
         [gesture _continueTrackingWithEvent:event]; // 手势的处理过程.
         

@@ -30,8 +30,17 @@ typedef NS_ENUM(NSInteger, UIGestureRecognizerState) {
 
 
 /*
- UIGestureRecognizer 内部会有状态值, 在状态值改变之后, 根据状态值的量, 以及前后改变的有效性, 调用 TargetAction 的方法.
- 在各个子类的 TouchBegin, Move, End 相关的方法里面, 实现了各自的 state 改变的算法. 用来实现自定义化.
+ 
+ 如果, 我们自己想要实现 pan, tap 等效果, 其实在 View 里面监听 touchBegin, move 等方法就可以了.
+ 但是, 如果每个 view 里面都把相关的逻辑写一遍, 会造成大量的代码冗余. 因为实际上, 判断 pan, tap, doubleClick 的逻辑是非常相似的, 仅仅是判断出来的回调不一样.
+ UIGestureRecognizer 做的就是把相关的逻辑进行提取的工作.
+ view 上面关联了 gesture, 在 UIWindow 进行 sendEvent 的时候, 会先把相关的 event 分发到相关的 view 关联的 gesture 上. 这也就是为什么各个 gesture 会有 delay 的原因.
+ gesture 中, 有着 touch begin, end, move 等函数, 在这些函数的内部, 可以追踪值, 进行 gesture 的状态的变化.
+ 当确定是该 gesture 后, 会触发 gesture 的回调.
+ 
+ A gesture-recognizer object—or, simply, a gesture recognizer—decouples the logic for recognizing a sequence of touches (or other input) and acting on that recognition.
+ When one of these objects recognizes a common gesture or, in some cases, a change in the gesture, it sends an action message to each designated target object.
+ 
  */
 
 @interface UIGestureRecognizer : NSObject

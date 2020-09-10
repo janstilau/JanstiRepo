@@ -115,7 +115,8 @@
 }
 
 /*
- 在下面的 Touch 方法里面, 会不断的进行 state 的更改操作. 在更改操作完成后, 会到该方法内部, 然后该方法, 就不断的触发 target action 的回调.
+ 在下面的 Touch 方法里面, 会不断的进行 state 的更改操作.
+ 在更改操作完成后, 会到该方法内部, 然后该方法, 就不断的触发 target action 的回调.
  */
 - (void)setState:(UIGestureRecognizerState)newState
 {
@@ -167,12 +168,6 @@
 
 - (void)reset
 {
-    // note - this is also supposed to ignore any currently tracked touches
-    // the touches themselves may not have gone away, so we don't just remove them from tracking, I think,
-    // but instead just mark them as ignored by this gesture until the touches eventually end themselves.
-    // in any case, this isn't implemented right now because we only have a single touch and so far I
-    // haven't needed it.
-    
     _state = UIGestureRecognizerStatePossible;
 }
 
@@ -207,6 +202,9 @@
 {
 }
 
+/*
+ 这个函数, 应该在 _continueTrackingWithEvent 中被调用.
+ */
 - (void)_beginTrackingTouch:(UITouch *)touch withEvent:(UITouchEvent *)event
 {
     if (!self.enabled) { return; }
@@ -217,12 +215,16 @@
     }
 }
 
+/*
+ 这个方法, 是 UIWindow 分发过来的, 用来触发各个 touch 范发给.
+ */
 - (void)_continueTrackingWithEvent:(UITouchEvent *)event
 {
     NSMutableSet *began = [NSMutableSet new];
     NSMutableSet *moved = [NSMutableSet new];
     NSMutableSet *ended = [NSMutableSet new];
     NSMutableSet *cancelled = [NSMutableSet new];
+    
     BOOL multitouchSequenceIsEnded = YES;
     
     // 根据 touch 的状态的不同, 判断 gesture 的阶段.
