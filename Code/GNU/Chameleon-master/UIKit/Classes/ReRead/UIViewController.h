@@ -21,6 +21,18 @@ typedef NS_ENUM(NSInteger, UIModalTransitionStyle) {
 
 @class UINavigationItem, UINavigationController, UIBarButtonItem, UISplitViewController;
 
+/*
+ A view controller’s main responsibilities include the following:
+
+ Updating the contents of the views, usually in response to changes to the underlying data.
+
+ Responding to user interactions with views.
+
+ Resizing views and managing the layout of the overall interface.
+
+ Coordinating with other objects—including other view controllers—in your app.
+ */
+
 @interface UIViewController : UIResponder
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle;	// won't load a nib no matter what you do!
 

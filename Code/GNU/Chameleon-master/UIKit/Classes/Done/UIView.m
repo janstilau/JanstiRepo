@@ -41,6 +41,9 @@ static BOOL _animationsEnabled = YES;
     return [CALayer class];
 }
 
+/*
+ 这里的意思是, 当前的 View 有了自定义的 drawRect 方法.
+ */
 + (BOOL)_instanceImplementsDrawRect
 {
     return [UIView instanceMethodForSelector:@selector(drawRect:)] != [self instanceMethodForSelector:@selector(drawRect:)];
@@ -57,10 +60,14 @@ static BOOL _animationsEnabled = YES;
         _implementsDrawRect = [[self class] _instanceImplementsDrawRect];
         _clearsContextBeforeDrawing = YES;
         _autoresizesSubviews = YES;
+        
         _userInteractionEnabled = YES;
         _subviews = [[NSMutableSet alloc] init];
         _gestureRecognizers = [[NSMutableSet alloc] init];
 
+        /*
+         这里, 创建了一个 layer, 并且将 view 当做 layer 的 delegate.
+         */
         _layer = [[[[self class] layerClass] alloc] init];
         _layer.delegate = self;
         _layer.layoutManager = [UIViewLayoutManager layoutManager];
@@ -75,7 +82,9 @@ static BOOL _animationsEnabled = YES;
     return self;
 }
 
-// 记录了自己所属的 viewController, ???, 苹果的源码, 真的会记录这个吗.
+/*
+ 如果是 viewController 的 rootView, 才会有这个值.
+ */
 - (void)_setViewController:(UIViewController *)theViewController
 {
     _viewController = theViewController;
@@ -99,7 +108,6 @@ static BOOL _animationsEnabled = YES;
     return (UIResponder *)[self _viewController] ?: (UIResponder *)_superview;
 }
 
-// 这里, 没有返回真正的自己的容器对象, 而是新组建了一个容器返回了.
 /*
  也就是说, 真正有序的, 是 Layer, 通过 Layer 的顺序, 来返回有序数的.
  */
@@ -121,8 +129,6 @@ static BOOL _animationsEnabled = YES;
  在这两个方法的内部, 会触发 willMoveToWindow, beginAppearanceTransition 这些方法.
  WillMoveToWindow 里面, 可以写一些 View 显示, 消失的相关回调代码.
  beginAppearanceTransition 则是通知自己的 VC 的 viewWillAppear, ViewWillDidAppear 之类的代码.
-
- 这就是流程的好处. 当在关键的节点, 插入了流程代码, 以后所有的一些, 都会自动管理.
  */
 - (void)_willMoveFromWindow:(UIWindow *)fromWindow toWindow:(UIWindow *)toWindow
 {
@@ -138,16 +144,12 @@ static BOOL _animationsEnabled = YES;
             [subview _willMoveFromWindow:fromWindow toWindow:toWindow];
         }
         
+        /*
+         在这里, 会通知 vc 的 ViewWillAppear 和 ViewDidAppear.
+         viewController 怎么会知道 view 的变化呢, 还是需要主动地调用.
+         */
         [[self _viewController] beginAppearanceTransition:(toWindow != nil) animated:NO];
-        // 在这里, 会通知 vc 的 ViewWillAppear 和 ViewDidAppear.
-    }
-}
-
-- (void)_didMoveToScreen
-{
-    [self setNeedsDisplay];
-    for (UIView *subview in self.subviews) {
-        [subview _didMoveToScreen];
+        
     }
 }
 
@@ -168,7 +170,6 @@ static BOOL _animationsEnabled = YES;
 
                 [[self class] _setAnimationCompletionBlock:^(BOOL finished) {
                     [controller endAppearanceTransition];
-                    
                     if (completionBlock) {
                         completionBlock(finished);
                     }
@@ -180,29 +181,49 @@ static BOOL _animationsEnabled = YES;
     }
 }
 
+/*
+ 引起重绘
+ */
+- (void)_didMoveToScreen
+{
+    [self setNeedsDisplay];
+    for (UIView *subview in self.subviews) {
+        [subview _didMoveToScreen];
+    }
+}
+
 - (void)addSubview:(UIView *)subview
 {
     if (subview && subview.superview != self) {
+        
+        /*
+         view hierarchy 改变前的附加逻辑.
+         调用 view 的 willMoveToWindown 方法.
+         调用 viewController 的 viewWillAppear 方法
+         调用 view 的 willMoveToSuperview 方法
+         */
         UIWindow *oldWindow = subview.window;
         UIWindow *newWindow = self.window;
-        
         [subview _willMoveFromWindow:oldWindow toWindow:newWindow];
         [subview willMoveToSuperview:self]; // 暴露给程序员自定义的接口.
 
-        if (subview.superview) { // 清除原来的 superView 相关逻辑.
+        /*
+         这里是实际的显示更改的代码, 就是 subviews, 和 _layer 的数据变化.
+         */
+        if (subview.superview) {
             [subview.layer removeFromSuperlayer];
             [subview.superview->_subviews removeObject:subview];
         }
-        
-        /*
-         这里, 做指针的更改, 并且将 layer 装上去.
-         */
         [subview willChangeValueForKey:@"superview"];
         [_subviews addObject:subview];
         subview->_superview = self;
         [_layer addSublayer:subview.layer];
         [subview didChangeValueForKey:@"superview"];
-
+        
+        
+        /*
+         view hierarchy 改变后的附加逻辑.
+         */
         if (oldWindow.screen != newWindow.screen) {
             [subview _didMoveToScreen];
         }
@@ -211,11 +232,14 @@ static BOOL _animationsEnabled = YES;
         [subview didMoveToSuperview];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:UIViewDidMoveToSuperviewNotification object:subview];
-
         [self didAddSubview:subview];
     }
 }
 
+/*
+ 所有的逻辑, 都在 addSubview 体现.
+ 显示上的调整, 交给 layer 进行.
+ */
 - (void)insertSubview:(UIView *)subview atIndex:(NSInteger)index
 {
     [self addSubview:subview];
@@ -286,17 +310,20 @@ static BOOL _animationsEnabled = YES;
 }
 
 /*
- 这些都是类的设计者, 给使用者暴露出来的接口. 他们什么时候被调用, 是在真正进行状态管理的私有方法里面决定的.
+ 这些方法, 本身是没有什么意义的, 是专门留给子类做业务处理的.
+ 在 View 的 hierarchy 变化的时候, 会自动调用这些方法.
  */
+
+- (void)willRemoveSubview:(UIView *)subview
+{
+}
+
+
 - (void)didAddSubview:(UIView *)subview
 {
 }
 
 - (void)didMoveToSuperview
-{
-}
-
-- (void)didMoveToWindow
 {
 }
 
@@ -308,12 +335,16 @@ static BOOL _animationsEnabled = YES;
 {
 }
 
-- (void)willRemoveSubview:(UIView *)subview
+- (void)didMoveToWindow
 {
 }
 
 
-// 简简单单的递归调用.
+
+
+/*
+ View 的 convert 操作, 仅仅是递归调用而已.
+ */
 - (CGPoint)convertPoint:(CGPoint)toConvert fromView:(UIView *)fromView
 {
     // NOTE: this is a lot more complex than it needs to be - I just noticed the docs say this method requires fromView and self to
@@ -384,6 +415,9 @@ static BOOL _animationsEnabled = YES;
     self.frame = frame;
 }
 
+/*
+ 子类可以根据自身内容, 返回符合自己内容大小的 size.
+ */
 - (CGSize)sizeThatFits:(CGSize)size
 {
     return size;
@@ -424,7 +458,6 @@ static BOOL _animationsEnabled = YES;
     return NO;
 }
 
-// 简简单单的通知 layer 需要进行更新了.
 - (void)setNeedsDisplay
 {
     [_layer setNeedsDisplay];
@@ -437,16 +470,6 @@ static BOOL _animationsEnabled = YES;
 
 - (void)drawRect:(CGRect)rect
 {
-}
-
-- (BOOL)respondsToSelector:(SEL)aSelector
-{
-    // For notes about why this is done, see displayLayer: above.
-    if (aSelector == @selector(displayLayer:)) {
-        return !_implementsDrawRect;
-    } else {
-        return [super respondsToSelector:aSelector];
-    }
 }
 
 #pragma mark - CALayerDelegate
@@ -465,11 +488,6 @@ static BOOL _animationsEnabled = YES;
 
 - (void)displayLayer:(CALayer *)theLayer
 {
-    // Okay, this is some crazy stuff right here. Basically, the real UIKit avoids creating any contents for its layer if there's no drawRect:
-    // specified in the UIView's subview. This nicely prevents a ton of useless memory usage and likley improves performance a lot on iPhone.
-    // It took great pains to discover this trick and I think I'm doing this right. By having this method empty here, it means that it overrides
-    // the layer's normal display method and instead does nothing which results in the layer not making a backing store and wasting memory.
-    
     // Here's how CALayer appears to work:
     // 1- something call's the layer's -display method.
     // 2- arrive in CALayer's display: method.
@@ -521,15 +539,22 @@ static BOOL _animationsEnabled = YES;
     UIGraphicsPopContext();
 }
 
+/*
+ 这里就是 _autoresizingMask 如何起作用的具体实现了.
+ */
+#define hasAutoresizingFor(x) ((_autoresizingMask & (x)) == (x))
 - (void)_superviewSizeDidChangeFrom:(CGSize)oldSize to:(CGSize)newSize
 {
+    /*
+     如果是 UIViewAutoresizingNone, 就是不调整.
+     */
     if (_autoresizingMask != UIViewAutoresizingNone) {
         CGRect frame = self.frame;
         const CGSize delta = CGSizeMake(newSize.width-oldSize.width, newSize.height-oldSize.height);
         
-#define hasAutoresizingFor(x) ((_autoresizingMask & (x)) == (x))
-
-        if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin)) {
+        if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin |
+                               UIViewAutoresizingFlexibleHeight |
+                               UIViewAutoresizingFlexibleBottomMargin)) {
             frame.origin.y = floorf(frame.origin.y + (frame.origin.y / oldSize.height * delta.height));
             frame.size.height = floorf(frame.size.height + (frame.size.height / oldSize.height * delta.height));
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleHeight)) {
@@ -541,8 +566,10 @@ static BOOL _animationsEnabled = YES;
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin)) {
             frame.origin.y = floorf(frame.origin.y + (delta.height / 2.f));
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleHeight)) {
+            // 如果只有高度, 就是 subView 的高度, 随着 superView 的高度变化幅度变化.
             frame.size.height = floorf(frame.size.height + delta.height);
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleTopMargin)) {
+            // 如果只有 top, 就是 top 值, 随着 superView 的高度变化幅度变化
             frame.origin.y = floorf(frame.origin.y + delta.height);
         } else if (hasAutoresizingFor(UIViewAutoresizingFlexibleBottomMargin)) {
             frame.origin.y = floorf(frame.origin.y);
@@ -570,6 +597,9 @@ static BOOL _animationsEnabled = YES;
     }
 }
 
+/*
+ 当 superView 的 size 改变之后, 各个子 view, 会根据 superView 的新的 size, 更改自己的 frame.
+ */
 - (void)_boundsDidChangeFrom:(CGRect)oldBounds to:(CGRect)newBounds
 {
     if (!CGRectEqualToRect(oldBounds, newBounds)) {
@@ -589,7 +619,9 @@ static BOOL _animationsEnabled = YES;
     return [NSSet setWithObject:@"center"];
 }
 
-// 下面是关于 frame 的变化的一些设置的回调. 可以看到, 大部分其实还是在操作 layer.
+/*
+ 各种显示相关的属性get,set 都是直接交给了 layer 进行
+ */
 
 - (CGRect)frame
 {
@@ -734,74 +766,6 @@ static BOOL _animationsEnabled = YES;
     return _layer.hidden;
 }
 
-/**
- You can call this method to indicate that the layout of a layer’s sublayers has changed and must be updated. The system typically calls this method automatically when the layer’s bounds change or when sublayers are added or removed. In macOS, if your layer’s layoutManager property contains an object that implements the invalidateLayoutOfLayer: method, that method is called too.
-
- During the next update cycle, the system calls the layoutSublayers method of any layers requiring layout updates.
- */
-
-- (void)setNeedsLayout
-{
-    [_layer setNeedsLayout];
-}
-
-- (void)layoutIfNeeded
-{
-    [_layer layoutIfNeeded];
-}
-
-- (void)layoutSubviews
-{
-}
-
-- (void)_layoutSubviews
-{
-    // 内部方法, 做了一些对于其他地方的通知操作, 然后调用 layoutSubviews
-    const BOOL wereEnabled = [UIView areAnimationsEnabled];
-    [UIView setAnimationsEnabled:NO]; // 在 UIView 的 layout 里面, 会关闭和打开 animation 的值, 这个值是全局的一个值, 表示是否动画.
-    [self _UIAppearanceUpdateIfNeeded];
-    [[self _viewController] viewWillLayoutSubviews]; // 通知 VC, 注入切口
-    [self layoutSubviews]; // 自己的 layout 的切口
-    [[self _viewController] viewDidLayoutSubviews]; // 通知 VC, 注入切口
-    [UIView setAnimationsEnabled:wereEnabled]; // 打开动画控制.
-}
-
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
-{
-    return CGRectContainsPoint(self.bounds, point);
-}
-
-- (BOOL)_isAnimatedUserInteractionEnabled
-{
-    for (UIViewAnimationGroup *group in _animationGroupStack) {
-        if (!group.allowUserInteraction) {
-            for (UIView *animatingView in group.allAnimatingViews) {
-                if ([self isDescendantOfView:animatingView]) {
-                    return NO;
-                }
-            }
-        }
-    }
-    
-    return YES;
-}
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
-    if (self.hidden || !self.userInteractionEnabled || self.alpha < 0.01 || ![self pointInside:point withEvent:event] || ![self _isAnimatedUserInteractionEnabled]) {
-        return nil;
-    } else {
-        for (UIView *subview in [self.subviews reverseObjectEnumerator]) {
-            UIView *hitView = [subview hitTest:[subview convertPoint:point fromView:self] withEvent:event];
-            if (hitView) {
-                return hitView;
-            }
-        }
-        return self;
-    }
-}
-
-// UIViewContentMode 的更改, 仅仅是改变 Layer 的contentsGravity属性的取值
 - (void)setContentMode:(UIViewContentMode)mode
 {
     if (mode != _contentMode) {
@@ -875,9 +839,79 @@ static BOOL _animationsEnabled = YES;
     }
 }
 
+/*
+ You can call this method to indicate that the layout of a layer’s sublayers has changed and must be updated. The system typically calls this method automatically when the layer’s bounds change or when sublayers are added or removed. In macOS, if your layer’s layoutManager property contains an object that implements the invalidateLayoutOfLayer: method, that method is called too.
+
+ During the next update cycle, the system calls the layoutSublayers method of any layers requiring layout updates.
+ */
+
+- (void)setNeedsLayout
+{
+    [_layer setNeedsLayout];
+}
+
+- (void)layoutIfNeeded
+{
+    [_layer layoutIfNeeded];
+}
+
+- (void)layoutSubviews
+{
+}
+
+- (void)_layoutSubviews
+{
+    // 内部方法, 做了一些对于其他地方的通知操作, 然后调用 layoutSubviews
+    const BOOL wereEnabled = [UIView areAnimationsEnabled];
+    [UIView setAnimationsEnabled:NO]; // 在 UIView 的 layout 里面, 会关闭和打开 animation 的值, 这个值是全局的一个值, 表示是否动画.
+    [self _UIAppearanceUpdateIfNeeded];
+    [[self _viewController] viewWillLayoutSubviews]; // 通知 VC, 注入切口
+    [self layoutSubviews]; // 自己的 layout 的切口
+    [[self _viewController] viewDidLayoutSubviews]; // 通知 VC, 注入切口
+    [UIView setAnimationsEnabled:wereEnabled]; // 打开动画控制.
+}
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
+{
+    return CGRectContainsPoint(self.bounds, point);
+}
+
+- (BOOL)_isAnimatedUserInteractionEnabled
+{
+    for (UIViewAnimationGroup *group in _animationGroupStack) {
+        if (!group.allowUserInteraction) {
+            for (UIView *animatingView in group.allAnimatingViews) {
+                if ([self isDescendantOfView:animatingView]) {
+                    return NO;
+                }
+            }
+        }
+    }
+    
+    return YES;
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    if (self.hidden || !self.userInteractionEnabled || self.alpha < 0.01 || ![self pointInside:point withEvent:event] || ![self _isAnimatedUserInteractionEnabled]) {
+        return nil;
+    } else {
+        for (UIView *subview in [self.subviews reverseObjectEnumerator]) {
+            UIView *hitView = [subview hitTest:[subview convertPoint:point fromView:self] withEvent:event];
+            if (hitView) {
+                return hitView;
+            }
+        }
+        return self;
+    }
+}
+
 - (void)addGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
 {
     if (![_gestureRecognizers containsObject:gestureRecognizer]) {
+        /*
+         原有 view 消除对于 gest 的绑定.
+         */
         [gestureRecognizer.view removeGestureRecognizer:gestureRecognizer];
         [_gestureRecognizers addObject:gestureRecognizer];
         [gestureRecognizer _setView:self];
@@ -904,7 +938,7 @@ static BOOL _animationsEnabled = YES;
 }
 
 /*
- 这里, 其实没有说明, _gestureRecognizers 到底是 如何 和 View 的 touched 进行操作的.
+ view 的 gesture 会在 UIWindow 的 sendEvent 方法里面, 提前进行 gesture 的调用.
  */
 - (NSArray *)gestureRecognizers
 {

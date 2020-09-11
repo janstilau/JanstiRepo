@@ -45,7 +45,6 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
                  [[UIMenuItem alloc] initWithTitle:@"Select All" action:@selector(selectAll:)],
                  nil];
     }
-
     return items;
 }
 
@@ -56,11 +55,6 @@ NSString *const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControl
         _enabledMenuItems = [[NSMutableArray alloc] init];
     }
     return self;
-}
-
-- (void)dealloc
-{
-    [_menu cancelTracking];		// this should never really happen since the controller is pretty much always a singleton, but... whatever.
 }
 
 - (BOOL)isMenuVisible

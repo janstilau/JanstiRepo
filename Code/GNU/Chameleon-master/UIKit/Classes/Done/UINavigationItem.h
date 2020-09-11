@@ -3,6 +3,7 @@
 @class UIBarButtonItem, UIView;
 
 @interface UINavigationItem : NSObject
+
 - (id)initWithTitle:(NSString *)title;
 - (void)setLeftBarButtonItem:(UIBarButtonItem *)item animated:(BOOL)animated;
 - (void)setRightBarButtonItem:(UIBarButtonItem *)item animated:(BOOL)animated;

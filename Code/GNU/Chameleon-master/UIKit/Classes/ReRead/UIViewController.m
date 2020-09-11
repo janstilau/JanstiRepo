@@ -20,7 +20,7 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 @implementation UIViewController {
     UIView *_view;
     UINavigationItem *_navigationItem; // 和 navigationBar 配套使用的数据.
-    NSMutableArray *_childViewControllers;
+    NSMutableArray *_childViewControllers; // VC 作为 container 的时候, 记录子 VC
     __unsafe_unretained UIViewController *_parentViewController;
     
     NSUInteger _appearanceTransitionStack;
@@ -58,16 +58,6 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 - (UIResponder *)nextResponder
 {
     return _view.superview;
-}
-
-- (UIViewController *)defaultResponderChildViewController
-{
-    return nil;
-}
-
-- (UIResponder *)defaultResponder
-{
-    return nil;
 }
 
 - (BOOL)isViewLoaded
@@ -169,16 +159,6 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
 - (void)setToolbarItems:(NSArray *)theToolbarItems
 {
     [self setToolbarItems:theToolbarItems animated:NO];
-}
-
-- (void)setEditing:(BOOL)editing animated:(BOOL)animated
-{
-    _editing = editing;
-}
-
-- (void)setEditing:(BOOL)editing
-{
-    [self setEditing:editing animated:NO];
 }
 
 - (UIBarButtonItem *)editButtonItem
@@ -388,8 +368,8 @@ typedef NS_ENUM(NSInteger, _UIViewControllerParentageTransition) {
     return YES;
 }
 
-// 这是一个 ContainerVC 的事情, 如果它要更改 subView 的显示, 就要用调用这个方法. 不过我们经常不调用这个方法, 而是直接 removeFromSuperView, addSubView 了. 在这个方法的内部, 会有着 beginAppearance, endAppearance 的调用, 管理着 View 的添加的删除. 伴随着一个转场动画.
 /*
+ 这是一个 ContainerVC 的事情, 如果它要更改 subView 的显示, 就要用调用这个方法. 不过我们经常不调用这个方法, 而是直接 removeFromSuperView, addSubView 了. 在这个方法的内部, 会有着 beginAppearance, endAppearance 的调用, 管理着 View 的添加的删除. 伴随着一个转场动画.
  */
 - (void)transitionFromViewController:(UIViewController *)fromViewController
                     toViewController:(UIViewController *)toViewController
