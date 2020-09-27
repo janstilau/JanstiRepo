@@ -30,6 +30,9 @@ static id<SDImageLoader> _defaultImageLoader;
 
 @property (strong, nonatomic, readwrite, nonnull) SDImageCache *imageCache;
 @property (strong, nonatomic, readwrite, nonnull) id<SDImageLoader> imageLoader;
+/*
+ 对于这两个公用资源, 使用信号量, 进行了加锁解锁.
+ */
 @property (strong, nonatomic, nonnull) NSMutableSet<NSURL *> *failedURLs;
 @property (strong, nonatomic, nonnull) dispatch_semaphore_t failedURLsLock; // a lock to keep the access to `failedURLs` thread-safe
 @property (strong, nonatomic, nonnull) NSMutableSet<SDWebImageCombinedOperation *> *runningOperations;
@@ -70,6 +73,9 @@ static id<SDImageLoader> _defaultImageLoader;
     return instance;
 }
 
+/*
+ 在之前, 还是直接就用 cacheManager, 现在都换成了 id<protocol> 的形式了.
+ */
 - (nonnull instancetype)init {
     id<SDImageCache> cache = [[self class] defaultImageCache];
     if (!cache) {
@@ -82,12 +88,17 @@ static id<SDImageLoader> _defaultImageLoader;
     return [self initWithCache:cache loader:loader];
 }
 
+/*
+ manager 也是将责任进行了分化, 变为了 _imageCache 进行缓存处理, _imageLoader 进行网络请求处理.
+ */
 - (nonnull instancetype)initWithCache:(nonnull id<SDImageCache>)cache loader:(nonnull id<SDImageLoader>)loader {
     if ((self = [super init])) {
         _imageCache = cache;
         _imageLoader = loader;
+        
         _failedURLs = [NSMutableSet new];
         _failedURLsLock = dispatch_semaphore_create(1);
+        
         _runningOperations = [NSMutableSet new];
         _runningOperationsLock = dispatch_semaphore_create(1);
     }
@@ -164,16 +175,25 @@ static id<SDImageLoader> _defaultImageLoader;
     return [self loadImageWithURL:url options:options context:nil progress:progressBlock completed:completedBlock];
 }
 
+
+/*
+ 最最核心的一个方法, 各个 View 的分类中, 最终是通过这个方法, 进行 image 的下载, 缓存读取操作.
+ 如果 View 设置了 progressCallBack, 那么在下载的过程中, 会在网络回调中, 调用 view 层面的 progressCallBack.
+ 在下载完成, 或者读取缓存成功之后, 会进行 image 的合成操作, 最终调用到 completedBlock
+ */
 - (SDWebImageCombinedOperation *)loadImageWithURL:(nullable NSURL *)url
                                           options:(SDWebImageOptions)options
                                           context:(nullable SDWebImageContext *)context
                                          progress:(nullable SDImageLoaderProgressBlock)progressBlock
                                         completed:(nonnull SDInternalCompletionBlock)completedBlock {
-    // Invoking this method without a completedBlock is pointless
+    /*
+     显示防卫式处理, completedBlock 是必须的.
+     */
     NSAssert(completedBlock != nil, @"If you mean to prefetch the image, use -[SDWebImagePrefetcher prefetchURLs] instead");
 
     // Very common mistake is to send the URL using NSString object instead of NSURL. For some strange reason, Xcode won't
     // throw any warning for this type mismatch. Here we failsafe this error by allowing URLs to be passed as NSString.
+    // 可以看到, 对于类方法, OC 也慢慢向 Swift 的 static 类方法进行靠拢了, 而不是古怪的 [] 发送消息语法了.
     if ([url isKindOfClass:NSString.class]) {
         url = [NSURL URLWithString:(NSString *)url];
     }
@@ -183,23 +203,39 @@ static id<SDImageLoader> _defaultImageLoader;
         url = nil;
     }
 
+    /*
+     将, 下载, 加载的操作, 全部转交给了 SDWebImageCombinedOperation 的内部.
+     虽然这是一个 operation, 但是它并不是一个 NSOperation 的子类.
+     */
     SDWebImageCombinedOperation *operation = [SDWebImageCombinedOperation new];
     operation.manager = self;
 
     BOOL isFailedUrl = NO;
     if (url) {
+        /*
+         加锁处理.
+         */
         SD_LOCK(self.failedURLsLock);
         isFailedUrl = [self.failedURLs containsObject:url];
         SD_UNLOCK(self.failedURLsLock);
     }
 
+    /*
+     如果, url 有问题, 那么直接就调用 completionBlock.
+     */
     if (url.absoluteString.length == 0 || (!(options & SDWebImageRetryFailed) && isFailedUrl)) {
         NSString *description = isFailedUrl ? @"Image url is blacklisted" : @"Image url is nil";
         NSInteger code = isFailedUrl ? SDWebImageErrorBlackListed : SDWebImageErrorInvalidURL;
-        [self callCompletionBlockForOperation:operation completion:completedBlock error:[NSError errorWithDomain:SDWebImageErrorDomain code:code userInfo:@{NSLocalizedDescriptionKey : description}] url:url];
+        [self callCompletionBlockForOperation:operation
+                                   completion:completedBlock
+                                        error:[NSError errorWithDomain:SDWebImageErrorDomain code:code userInfo:@{NSLocalizedDescriptionKey : description}] url:url];
         return operation;
     }
 
+    /*
+     加锁处理. 将当前的 operation 增加到 running 里面.
+     类里面, 进行队列的缓存控制, 是一个非常普遍的行为.
+    */
     SD_LOCK(self.runningOperationsLock);
     [self.runningOperations addObject:operation];
     SD_UNLOCK(self.runningOperationsLock);
@@ -208,7 +244,12 @@ static id<SDImageLoader> _defaultImageLoader;
     SDWebImageOptionsResult *result = [self processedResultForURL:url options:options context:context];
     
     // Start the entry to load image from cache
-    [self callCacheProcessForOperation:operation url:url options:result.options context:result.context progress:progressBlock completed:completedBlock];
+    [self callCacheProcessForOperation:operation
+                                   url:url
+                               options:result.options
+                               context:result.context
+                              progress:progressBlock
+                             completed:completedBlock];
 
     return operation;
 }
@@ -245,7 +286,13 @@ static id<SDImageLoader> _defaultImageLoader;
 
 #pragma mark - Private
 
-// Query normal cache process
+/*
+ 真正的进行下载, 缓存的函数, 可以看到, SDWebImageCombinedOperation 内部并没有进行实际的操作, 而是将 下载任务, 和缓存任务, 分别交给了自己的
+ @property (strong, nonatomic, nullable, readonly) id<SDWebImageOperation> cacheOperation;
+ @property (strong, nonatomic, nullable, readonly) id<SDWebImageOperation> loaderOperation;
+ 所以, 这个函数里面, 除了之前的所有的参数外, 还增加了 SDWebImageCombinedOperation.
+ 因为对外的 operation 还是 SDWebImageCombinedOperation, 需要 cancel 的话, 还是 SDWebImageCombinedOperation 进行 cancel.
+ */
 - (void)callCacheProcessForOperation:(nonnull SDWebImageCombinedOperation *)operation
                                  url:(nonnull NSURL *)url
                              options:(SDWebImageOptions)options
@@ -637,7 +684,9 @@ static id<SDImageLoader> _defaultImageLoader;
     return shouldBlockFailedURL;
 }
 
-- (SDWebImageOptionsResult *)processedResultForURL:(NSURL *)url options:(SDWebImageOptions)options context:(SDWebImageContext *)context {
+- (SDWebImageOptionsResult *)processedResultForURL:(NSURL *)url
+                                           options:(SDWebImageOptions)options
+                                           context:(SDWebImageContext *)context {
     SDWebImageOptionsResult *result;
     SDWebImageMutableContext *mutableContext = [SDWebImageMutableContext dictionary];
     

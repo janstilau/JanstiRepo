@@ -36,7 +36,8 @@ typedef SDWebImageOptionsResult * _Nullable(^SDWebImageOptionsProcessorBlock)(NS
  @param context context
  @return The options result contains both options and context.
  */
-- (nonnull instancetype)initWithOptions:(SDWebImageOptions)options context:(nullable SDWebImageContext *)context;
+- (nonnull instancetype)initWithOptions:(SDWebImageOptions)options
+                                context:(nullable SDWebImageContext *)context;
 
 @end
 

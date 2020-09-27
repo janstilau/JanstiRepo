@@ -117,7 +117,9 @@ inline UIImage * _Nullable SDScaledImageForScaleFactor(CGFloat scale, UIImage * 
 }
 
 #pragma mark - Context option
-
+/*
+ 个人感觉这个设计不好, 让代码很混乱.
+ */
 SDWebImageContextOption const SDWebImageContextSetImageOperationKey = @"setImageOperationKey";
 SDWebImageContextOption const SDWebImageContextCustomManager = @"customManager";
 SDWebImageContextOption const SDWebImageContextImageCache = @"imageCache";
