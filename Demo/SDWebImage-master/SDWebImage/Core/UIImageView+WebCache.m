@@ -45,6 +45,9 @@
     [self sd_setImageWithURL:url placeholderImage:placeholder options:options context:nil progress:progressBlock completed:completedBlock];
 }
 
+/*
+ 所有的归结到 sd_internalSetImageWithURL, 这是 UIView 的一个方法.
+ */
 - (void)sd_setImageWithURL:(nullable NSURL *)url
           placeholderImage:(nullable UIImage *)placeholder
                    options:(SDWebImageOptions)options

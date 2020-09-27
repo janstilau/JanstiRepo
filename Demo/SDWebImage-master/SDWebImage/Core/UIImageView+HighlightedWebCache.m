@@ -42,6 +42,9 @@ static NSString * const SDHighlightedImageOperationKey = @"UIImageViewImageOpera
     [self sd_setHighlightedImageWithURL:url options:options context:nil progress:progressBlock completed:completedBlock];
 }
 
+/*
+ setImageBlock 的作用, 在这里体现了.
+ */
 - (void)sd_setHighlightedImageWithURL:(nullable NSURL *)url
                               options:(SDWebImageOptions)options
                               context:(nullable SDWebImageContext *)context

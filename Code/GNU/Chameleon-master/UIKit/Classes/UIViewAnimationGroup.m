@@ -9,10 +9,14 @@ static NSMutableSet *runningAnimationGroupSet = nil;
 static inline CAMediaTimingFunction *CAMediaTimingFunctionFromUIViewAnimationCurve(UIViewAnimationCurve curve)
 {
     switch (curve) {
-        case UIViewAnimationCurveEaseInOut:	return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-        case UIViewAnimationCurveEaseIn:	return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-        case UIViewAnimationCurveEaseOut:	return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        case UIViewAnimationCurveLinear:	return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+        case UIViewAnimationCurveEaseInOut:
+            return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        case UIViewAnimationCurveEaseIn:
+            return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+        case UIViewAnimationCurveEaseOut:
+            return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        case UIViewAnimationCurveLinear:
+            return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     }
     return nil;
 }
@@ -67,7 +71,8 @@ static inline UIViewAnimationOptions UIViewAnimationOptionTransition(UIViewAnima
         
         self.duration = 0.2;
         
-        // 在这里, 根据 options, 去除对应的属性值来.
+        // 在这里, 根据 options, 获取到对应的数据来.
+        // 将所有的数据, 存储起来, 然后在最终的逻辑接口里面, 进行判断来决定不同的分支走向.
         self.repeatCount = UIViewAnimationOptionIsSet(options, UIViewAnimationOptionRepeat)? FLT_MAX : 0;
         self.allowUserInteraction = UIViewAnimationOptionIsSet(options, UIViewAnimationOptionAllowUserInteraction);
         self.repeatAutoreverses = UIViewAnimationOptionIsSet(options, UIViewAnimationOptionAutoreverse);
@@ -197,7 +202,7 @@ static inline UIViewAnimationOptions UIViewAnimationOptionTransition(UIViewAnima
     // 转场动画, 就是一个 layer 的动画, 它和提交转场动画的时候, animaiton block 里面的动画是分开的.
     if (_transitionView &&
         self.transition != UIViewAnimationGroupTransitionNone) {
-        // 如果有转场动画.
+        // 生成一个转场动画, 根据当前存储的数据, 设置转场动画的属性.
         CATransition *trans = [CATransition animation];
         switch (self.transition) {
             case UIViewAnimationGroupTransitionFlipFromLeft:

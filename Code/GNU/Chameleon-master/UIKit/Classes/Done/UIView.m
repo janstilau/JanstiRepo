@@ -125,7 +125,7 @@ static BOOL _animationsEnabled = YES;
 }
 
 /*
- 在 AddSubView 的时候, 和 RemoveFromSuperView 的时候, 调用者两个方法.
+ 在 AddSubView 的时候, 和 RemoveFromSuperView 的时候, 调用这两个方法.
  在这两个方法的内部, 会触发 willMoveToWindow, beginAppearanceTransition 这些方法.
  WillMoveToWindow 里面, 可以写一些 View 显示, 消失的相关回调代码.
  beginAppearanceTransition 则是通知自己的 VC 的 viewWillAppear, ViewWillDidAppear 之类的代码.
@@ -149,7 +149,6 @@ static BOOL _animationsEnabled = YES;
          viewController 怎么会知道 view 的变化呢, 还是需要主动地调用.
          */
         [[self _viewController] beginAppearanceTransition:(toWindow != nil) animated:NO];
-        
     }
 }
 
@@ -227,7 +226,6 @@ static BOOL _animationsEnabled = YES;
         if (oldWindow.screen != newWindow.screen) {
             [subview _didMoveToScreen];
         }
-        
         [subview _didMoveFromWindow:oldWindow toWindow:newWindow];
         [subview didMoveToSuperview];
         
@@ -1075,12 +1073,15 @@ static BOOL _animationsEnabled = YES;
 // 类方法, 会创建出一个数据对象来, 进行参数的收集工作, 然后这个数据对象, 会运用 CAAnimation 创建各种动画提交给动画系统. 所以, 类方法本质上还是没有脱离原始的动画系统.
 // 这里复杂的是, animation block 里面还可能提交新的动画, 所以, 这是一个栈的结构.
 
-+ (void)animateWithDuration:(NSTimeInterval)duration
++ (void)animateWithDuration:(NSTimeInterval)duratiosdn
                       delay:(NSTimeInterval)delay
                     options:(UIViewAnimationOptions)options
                  animations:(void (^)(void))animations
                  completion:(void (^)(BOOL finished))completion
 {
+    /*
+     所有的这些, 都是在操作栈顶元素的数据, 这就是 类方法 管理全局数据的方式.
+     */
     [self _beginAnimationsWithOptions:options | UIViewAnimationOptionTransitionNone];
     [self setAnimationDuration:duration];
     [self setAnimationDelay:delay];

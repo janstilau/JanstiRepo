@@ -36,6 +36,9 @@ static NSInteger UIActivityIndicatorViewStyleLarge = 101;
 
 @end
 
+/*
+ ActivityIndicator 的实现很简单, 就是 UIActivityIndicatorView 开始转, 停止转.
+ */
 @implementation SDWebImageActivityIndicator
 
 - (instancetype)init {
@@ -54,16 +57,6 @@ static NSInteger UIActivityIndicatorViewStyleLarge = 101;
     self.indicatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
 }
 #pragma clang diagnostic pop
-#endif
-
-#if SD_MAC
-- (void)commonInit {
-    self.indicatorView = [[NSProgressIndicator alloc] initWithFrame:NSZeroRect];
-    self.indicatorView.style = NSProgressIndicatorStyleSpinning;
-    self.indicatorView.controlSize = NSControlSizeSmall;
-    [self.indicatorView sizeToFit];
-    self.indicatorView.autoresizingMask = NSViewMaxXMargin | NSViewMinXMargin | NSViewMaxYMargin | NSViewMinYMargin;
-}
 #endif
 
 - (void)startAnimatingIndicator {
@@ -87,6 +80,10 @@ static NSInteger UIActivityIndicatorViewStyleLarge = 101;
 @end
 
 @implementation SDWebImageActivityIndicator (Conveniences)
+
+/*
+ 各种工厂方法, 无非就是修改 indicatorView 的属性配置.
+ */
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"

@@ -15,24 +15,45 @@
 typedef UIViewAnimationOptions SDWebImageAnimationOptions;
 #else
 typedef NS_OPTIONS(NSUInteger, SDWebImageAnimationOptions) {
-    SDWebImageAnimationOptionAllowsImplicitAnimation = 1 << 0, // specify `allowsImplicitAnimation` for the `NSAnimationContext`
+    SDWebImageAnimationOptionAllowsImplicitAnimation   = 1 << 0, // specify `allowsImplicitAnimation` for the `NSAnimationContext`
+    
+    SDWebImageAnimationOptionCurveEaseInOut            = 0 << 16, // default
+    SDWebImageAnimationOptionCurveEaseIn               = 1 << 16,
+    SDWebImageAnimationOptionCurveEaseOut              = 2 << 16,
+    SDWebImageAnimationOptionCurveLinear               = 3 << 16,
+    
+    SDWebImageAnimationOptionTransitionNone            = 0 << 20, // default
+    SDWebImageAnimationOptionTransitionFlipFromLeft    = 1 << 20,
+    SDWebImageAnimationOptionTransitionFlipFromRight   = 2 << 20,
+    SDWebImageAnimationOptionTransitionCurlUp          = 3 << 20,
+    SDWebImageAnimationOptionTransitionCurlDown        = 4 << 20,
+    SDWebImageAnimationOptionTransitionCrossDissolve   = 5 << 20,
+    SDWebImageAnimationOptionTransitionFlipFromTop     = 6 << 20,
+    SDWebImageAnimationOptionTransitionFlipFromBottom  = 7 << 20,
 };
 #endif
 
-typedef void (^SDWebImageTransitionPreparesBlock)(__kindof UIView * _Nonnull view, UIImage * _Nullable image, NSData * _Nullable imageData, SDImageCacheType cacheType, NSURL * _Nullable imageURL);
-typedef void (^SDWebImageTransitionAnimationsBlock)(__kindof UIView * _Nonnull view, UIImage * _Nullable image);
+typedef void (^SDWebImageTransitionPreparesBlock)(__kindof UIView * _Nonnull view,
+                                                  UIImage * _Nullable image,
+                                                  NSData * _Nullable imageData,
+                                                  SDImageCacheType cacheType,
+                                                  NSURL * _Nullable imageURL);
+typedef void (^SDWebImageTransitionAnimationsBlock)(__kindof UIView * _Nonnull view,
+                                                    UIImage * _Nullable image);
 typedef void (^SDWebImageTransitionCompletionBlock)(BOOL finished);
 
-/**
+/*
  This class is used to provide a transition animation after the view category load image finished. Use this on `sd_imageTransition` in UIView+WebCache.h
  for UIKit(iOS & tvOS), we use `+[UIView transitionWithView:duration:options:animations:completion]` for transition animation.
- for AppKit(macOS), we use `+[NSAnimationContext runAnimationGroup:completionHandler:]` for transition animation. You can call `+[NSAnimationContext currentContext]` to grab the context during animations block.
  @note These transition are provided for basic usage. If you need complicated animation, consider to directly use Core Animation or use `SDWebImageAvoidAutoSetImage` and implement your own after image load finished.
+ 
+ 这个类, 主要是对于转场动画一些信息的包装.
+ 可以看到, 类的内容不大, 但是对于 获取到 Image 之后, 进行转场设置的操作, 是一个独立的单元. 所以专门在文件中, 进行相关逻辑的分离操作.
  */
 @interface SDWebImageTransition : NSObject
 
 /**
- By default, we set the image to the view at the beginning of the animtions. You can disable this and provide custom set image process
+ By default, we set the image to the view at the beginning of the animations. You can disable this and provide custom set image process
  */
 @property (nonatomic, assign) BOOL avoidAutoSetImage;
 /**
@@ -42,7 +63,7 @@ typedef void (^SDWebImageTransitionCompletionBlock)(BOOL finished);
 /**
  The timing function used for all animations within this transition animation (macOS).
  */
-@property (nonatomic, strong, nullable) CAMediaTimingFunction *timingFunction API_UNAVAILABLE(ios, tvos, watchos);
+@property (nonatomic, strong, nullable) CAMediaTimingFunction *timingFunction API_UNAVAILABLE(ios, tvos, watchos) API_DEPRECATED("Use SDWebImageAnimationOptions instead, or grab NSAnimationContext.currentContext and modify the timingFunction", macos(10.10, 10.10));
 /**
  A mask of options indicating how you want to perform the animations.
  */
@@ -69,8 +90,12 @@ typedef void (^SDWebImageTransitionCompletionBlock)(BOOL finished);
  */
 @interface SDWebImageTransition (Conveniences)
 
-/// Fade transition.
-@property (nonatomic, class, nonnull, readonly) SDWebImageTransition *fadeTransition;
+/*
+ 这应该是 19 年增加的新特性, 可以增加类属性了.
+ 对应的方法也就是 setFadeTransition 和 fadeTransition
+ */
+/// Fade-in transition.
+@property (nonatomic, class, nonnull) SDWebImageTransition *fadeTransition;
 /// Flip from left transition.
 @property (nonatomic, class, nonnull, readonly) SDWebImageTransition *flipFromLeftTransition;
 /// Flip from right transition.
@@ -83,6 +108,38 @@ typedef void (^SDWebImageTransitionCompletionBlock)(BOOL finished);
 @property (nonatomic, class, nonnull, readonly) SDWebImageTransition *curlUpTransition;
 /// Curl down transition.
 @property (nonatomic, class, nonnull, readonly) SDWebImageTransition *curlDownTransition;
+
+
+/*
+ 各种工厂方法, 快速地进行相关的对象的创建工作.
+ */
+/// Fade-in transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)fadeTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(fade(duration:));
+
+/// Flip from left  transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)flipFromLeftTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(flipFromLeft(duration:));
+
+/// Flip from right transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)flipFromRightTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(flipFromRight(duration:));
+
+/// Flip from top transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)flipFromTopTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(flipFromTop(duration:));
+
+/// Flip from bottom transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)flipFromBottomTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(flipFromBottom(duration:));
+
+///  Curl up transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)curlUpTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(curlUp(duration:));
+
+/// Curl down transition with duration.
+/// @param duration transition duration, use ease-in-out
++ (nonnull instancetype)curlDownTransitionWithDuration:(NSTimeInterval)duration NS_SWIFT_NAME(curlDown(duration:));
 
 @end
 
