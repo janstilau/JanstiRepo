@@ -22,12 +22,19 @@ static id<SDImageLoader> _defaultImageLoader;
 @property (assign, nonatomic, getter = isCancelled) BOOL cancelled;
 @property (strong, nonatomic, readwrite, nullable) id<SDWebImageOperation> loaderOperation;
 @property (strong, nonatomic, readwrite, nullable) id<SDWebImageOperation> cacheOperation;
+/*
+ 之所以, operation 需要引用一下 manager, 只是为了及时更新一下 manager 里面的数据而已.
+ [self.manager safelyRemoveOperationFromRunning:self];
+ */
 @property (weak, nonatomic, nullable) SDWebImageManager *manager;
 
 @end
 
 @interface SDWebImageManager ()
 
+/*
+ 这个类的代码量不多, 是因为将具体的下载和缓存的功能, 分发到了两个成员进行具体的操作. manager 类里面, 主要用作调度.
+ */
 @property (strong, nonatomic, readwrite, nonnull) SDImageCache *imageCache;
 @property (strong, nonatomic, readwrite, nonnull) id<SDImageLoader> imageLoader;
 /*
@@ -35,6 +42,7 @@ static id<SDImageLoader> _defaultImageLoader;
  */
 @property (strong, nonatomic, nonnull) NSMutableSet<NSURL *> *failedURLs;
 @property (strong, nonatomic, nonnull) dispatch_semaphore_t failedURLsLock; // a lock to keep the access to `failedURLs` thread-safe
+
 @property (strong, nonatomic, nonnull) NSMutableSet<SDWebImageCombinedOperation *> *runningOperations;
 @property (strong, nonatomic, nonnull) dispatch_semaphore_t runningOperationsLock; // a lock to keep the access to `runningOperations` thread-safe
 
@@ -42,6 +50,10 @@ static id<SDImageLoader> _defaultImageLoader;
 
 @implementation SDWebImageManager
 
+/*
+ defaultImageCache, defaultImageLoader 默认是没有的.
+ 也就是说, 如果不显式地设置一下, 最终还是使用的 sharedImageCache, sharedDownloader
+ */
 + (id<SDImageCache>)defaultImageCache {
     return _defaultImageCache;
 }
@@ -75,7 +87,12 @@ static id<SDImageLoader> _defaultImageLoader;
 
 /*
  在之前, 还是直接就用 cacheManager, 现在都换成了 id<protocol> 的形式了.
+ 在 Init 方法里面, 进行默认的 cache, loader 的设置工作.
+ 如果需要自定义的话, 在使用 initWithCache:loader: 做自定义对象的创建和传入.
  */
+/*
+ manager 也是将责任进行了分化, 变为了 _imageCache 进行缓存处理, _imageLoader 进行网络请求处理.
+*/
 - (nonnull instancetype)init {
     id<SDImageCache> cache = [[self class] defaultImageCache];
     if (!cache) {
@@ -88,9 +105,6 @@ static id<SDImageLoader> _defaultImageLoader;
     return [self initWithCache:cache loader:loader];
 }
 
-/*
- manager 也是将责任进行了分化, 变为了 _imageCache 进行缓存处理, _imageLoader 进行网络请求处理.
- */
 - (nonnull instancetype)initWithCache:(nonnull id<SDImageCache>)cache loader:(nonnull id<SDImageLoader>)loader {
     if ((self = [super init])) {
         _imageCache = cache;
@@ -112,6 +126,10 @@ static id<SDImageLoader> _defaultImageLoader;
     
     NSString *key;
     // Cache Key Filter
+    /*
+     self.cacheKeyFilter 暴露出一个, 生成 url 对应的 cachedKey 的接口.
+     之前的做法, 都是读取到 url 的 md5, 然后作为 url 的 cacheKey. 目前变为了 manager 的可配置属性.
+     */
     id<SDWebImageCacheKeyFilter> cacheKeyFilter = self.cacheKeyFilter;
     if (cacheKeyFilter) {
         key = [cacheKeyFilter cacheKeyForURL:url];
@@ -122,6 +140,9 @@ static id<SDImageLoader> _defaultImageLoader;
     return key;
 }
 
+/*
+ SDWebImageContext 是一个非常让人不爽的设计, 通过 NSDict 使得各个属性不明确.
+ */
 - (nullable NSString *)cacheKeyForURL:(nullable NSURL *)url context:(nullable SDWebImageContext *)context {
     if (!url) {
         return @"";
@@ -172,7 +193,11 @@ static id<SDImageLoader> _defaultImageLoader;
 }
 
 - (SDWebImageCombinedOperation *)loadImageWithURL:(NSURL *)url options:(SDWebImageOptions)options progress:(SDImageLoaderProgressBlock)progressBlock completed:(SDInternalCompletionBlock)completedBlock {
-    return [self loadImageWithURL:url options:options context:nil progress:progressBlock completed:completedBlock];
+    return [self loadImageWithURL:url
+                          options:options
+                          context:nil
+                         progress:progressBlock
+                        completed:completedBlock];
 }
 
 
@@ -313,7 +338,7 @@ static id<SDImageLoader> _defaultImageLoader;
         queryCacheType = [context[SDWebImageContextQueryCacheType] integerValue];
     }
     
-    // Check whether we should query cache
+    // shouldQueryCache 控制着, 是否可以从缓存里面读取数据. 如果不是的话, 直接从网络进行数据的下载.
     BOOL shouldQueryCache = !SD_OPTIONS_CONTAINS(options, SDWebImageFromLoaderOnly);
     if (shouldQueryCache) {
         NSString *key = [self cacheKeyForURL:url context:context];
@@ -331,7 +356,6 @@ static id<SDImageLoader> _defaultImageLoader;
                 return;
             }
             
-            // Continue download process
             [self callDownloadProcessForOperation:operation url:url options:options context:context cachedImage:cachedImage cachedData:cachedData cacheType:cacheType progress:progressBlock completed:completedBlock];
         }];
     } else {
@@ -444,6 +468,7 @@ static id<SDImageLoader> _defaultImageLoader;
         
         @weakify(operation);
         operation.loaderOperation = [imageLoader requestImageWithURL:url options:options context:context progress:progressBlock completed:^(UIImage *downloadedImage, NSData *downloadedData, NSError *error, BOOL finished) {
+            
             @strongify(operation);
             if (!operation || operation.isCancelled) {
                 // Image combined operation cancelled by user
@@ -463,6 +488,7 @@ static id<SDImageLoader> _defaultImageLoader;
                     SD_UNLOCK(self.failedURLsLock);
                 }
             } else {
+                // 只有达到了这里, 才是真正的下载到了图片. 新下载到的图片, 会进行缓存的处理.
                 if ((options & SDWebImageRetryFailed)) {
                     SD_LOCK(self.failedURLsLock);
                     [self.failedURLs removeObject:url];
@@ -612,6 +638,9 @@ static id<SDImageLoader> _defaultImageLoader;
     SD_UNLOCK(self.runningOperationsLock);
 }
 
+/*
+ 图片存储的工作, 直接交给了 imageCache 进行处理就好了.
+ */
 - (void)storeImage:(nullable UIImage *)image
          imageData:(nullable NSData *)data
             forKey:(nullable NSString *)key
@@ -656,6 +685,9 @@ static id<SDImageLoader> _defaultImageLoader;
                               cacheType:(SDImageCacheType)cacheType
                                finished:(BOOL)finished
                                     url:(nullable NSURL *)url {
+    /*
+     这里, 虽然传递过来的参数很多, 但是其实都只是传递一下而已. 在主线程, 调用一下 completionBlock, 将各个参数传递到该 block 内.
+     */
     dispatch_main_async_safe(^{
         if (completionBlock) {
             completionBlock(image, data, error, cacheType, finished, url);
@@ -684,6 +716,9 @@ static id<SDImageLoader> _defaultImageLoader;
     return shouldBlockFailedURL;
 }
 
+/*
+ 具体的细节没细看, 这个函数, 就是一个信息抽离的工作.
+ */
 - (SDWebImageOptionsResult *)processedResultForURL:(NSURL *)url
                                            options:(SDWebImageOptions)options
                                            context:(SDWebImageContext *)context {

@@ -17,6 +17,10 @@
 
 @end
 
+/*
+ manager 的内部, 有着 id<SDImageCache> 的数组. 它的作用是, 按照当前的策略, 使用数组里面的不同值进行缓存读取的工作.
+ */
+
 @implementation SDImageCachesManager
 {
     NSMutableArray<id<SDImageCache>> *_imageCaches;
@@ -84,11 +88,22 @@
 
 #pragma mark - SDImageCache
 
+/*
+ 最最重要的方法.
+ */
 - (id<SDWebImageOperation>)queryImageForKey:(NSString *)key options:(SDWebImageOptions)options context:(SDWebImageContext *)context completion:(SDImageCacheQueryCompletionBlock)completionBlock {
-    return [self queryImageForKey:key options:options context:context cacheType:SDImageCacheTypeAll completion:completionBlock];
+    return [self queryImageForKey:key
+                          options:options
+                          context:context
+                        cacheType:SDImageCacheTypeAll
+                       completion:completionBlock];
 }
 
-- (id<SDWebImageOperation>)queryImageForKey:(NSString *)key options:(SDWebImageOptions)options context:(SDWebImageContext *)context cacheType:(SDImageCacheType)cacheType completion:(SDImageCacheQueryCompletionBlock)completionBlock {
+- (id<SDWebImageOperation>)queryImageForKey:(NSString *)key
+                                    options:(SDWebImageOptions)options
+                                    context:(SDWebImageContext *)context
+                                  cacheType:(SDImageCacheType)cacheType
+                                 completion:(SDImageCacheQueryCompletionBlock)completionBlock {
     if (!key) {
         return nil;
     }
@@ -99,6 +114,7 @@
     } else if (count == 1) {
         return [caches.firstObject queryImageForKey:key options:options context:context cacheType:cacheType completion:completionBlock];
     }
+    
     switch (self.queryOperationPolicy) {
         case SDImageCachesManagerOperationPolicyHighestOnly: {
             id<SDImageCache> cache = caches.lastObject;

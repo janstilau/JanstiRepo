@@ -40,6 +40,9 @@
     return self;
 }
 
+/*
+ Get 函数的多线程访问的标准写法, 临时变量存储.
+ */
 - (NSArray<id<SDImageLoader>> *)loaders {
     SD_LOCK(self.loadersLock);
     NSArray<id<SDImageLoader>>* loaders = [_imageLoaders copy];
@@ -78,6 +81,11 @@
 
 #pragma mark - SDImageLoader
 
+/*
+ 这里, SDImageLoadersManager 也实现了 SDImageLoader 协议. 在 SDImageCacheManager 里面, 保存的 id<SDImageLoader> 其实是, SDImageLoader.
+ SDImageLoadersManager, SDImageCachesManager 其实都是将任务分发到了各自的 loader 或者 cacher. 但是, 这两个 manager 里面都存储了多个对象, 可以根据策略的不同, 调度这些对象, 进行实际的任务执行.
+ */
+
 - (BOOL)canRequestImageForURL:(nullable NSURL *)url {
     NSArray<id<SDImageLoader>> *loaders = self.loaders;
     for (id<SDImageLoader> loader in loaders.reverseObjectEnumerator) {
@@ -88,7 +96,11 @@
     return NO;
 }
 
-- (id<SDWebImageOperation>)requestImageWithURL:(NSURL *)url options:(SDWebImageOptions)options context:(SDWebImageContext *)context progress:(SDImageLoaderProgressBlock)progressBlock completed:(SDImageLoaderCompletedBlock)completedBlock {
+- (id<SDWebImageOperation>)requestImageWithURL:(NSURL *)url
+                                       options:(SDWebImageOptions)options
+                                       context:(SDWebImageContext *)context
+                                      progress:(SDImageLoaderProgressBlock)progressBlock
+                                     completed:(SDImageLoaderCompletedBlock)completedBlock {
     if (!url) {
         return nil;
     }

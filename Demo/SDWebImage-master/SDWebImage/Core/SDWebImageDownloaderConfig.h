@@ -22,13 +22,16 @@ typedef NS_ENUM(NSInteger, SDWebImageDownloaderExecutionOrder) {
     SDWebImageDownloaderLIFOExecutionOrder
 };
 
-/**
+/*
  The class contains all the config for image downloader
  @note This class conform to NSCopying, make sure to add the property in `copyWithZone:` as well.
+ 
+ 各个地方的 Config 类, 其实就是一堆值的聚集而已.
+ 如果将这些值, 放到使用者的内部, 那么使用者就有太多的成员变量了.
  */
 @interface SDWebImageDownloaderConfig : NSObject <NSCopying>
 
-/**
+/*
  Gets the default downloader config used for shared instance or initialization when it does not provide any downloader config. Such as `SDWebImageDownloader.sharedDownloader`.
  @note You can modify the property on default downloader config, which can be used for later created downloader instance. The already created downloader instance does not get affected.
  */

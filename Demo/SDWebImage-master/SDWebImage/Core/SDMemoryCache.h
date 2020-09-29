@@ -8,8 +8,12 @@
 
 #import "SDWebImageCompat.h"
 
+/*
+ 一个明显可以使用 NSMutableDict 的类, 也被抽象成为了一个协议.
+ */
+
 @class SDImageCacheConfig;
-/**
+/*
  A protocol to allow custom memory cache used in SDImageCache.
  */
 @protocol SDMemoryCache <NSObject>

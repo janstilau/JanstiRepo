@@ -24,6 +24,9 @@ static void * SDMemoryCacheContext = &SDMemoryCacheContext;
 
 @implementation SDMemoryCache
 
+/*
+ 这里, 增加了对于内存警告的处理.
+ */
 - (void)dealloc {
     [_config removeObserver:self forKeyPath:NSStringFromSelector(@selector(maxMemoryCost)) context:SDMemoryCacheContext];
     [_config removeObserver:self forKeyPath:NSStringFromSelector(@selector(maxMemoryCount)) context:SDMemoryCacheContext];
@@ -53,9 +56,13 @@ static void * SDMemoryCacheContext = &SDMemoryCacheContext;
 
 - (void)commonInit {
     SDImageCacheConfig *config = self.config;
+    
     self.totalCostLimit = config.maxMemoryCost;
     self.countLimit = config.maxMemoryCount;
 
+    /*
+     监听这两项, 是因为 config 的变化, 应该影响到当前的容器.
+     */
     [config addObserver:self forKeyPath:NSStringFromSelector(@selector(maxMemoryCost)) options:0 context:SDMemoryCacheContext];
     [config addObserver:self forKeyPath:NSStringFromSelector(@selector(maxMemoryCount)) options:0 context:SDMemoryCacheContext];
 
@@ -101,6 +108,7 @@ static void * SDMemoryCacheContext = &SDMemoryCacheContext;
         SD_LOCK(self.weakCacheLock);
         obj = [self.weakCache objectForKey:key];
         SD_UNLOCK(self.weakCacheLock);
+        
         if (obj) {
             // Sync cache
             NSUInteger cost = 0;

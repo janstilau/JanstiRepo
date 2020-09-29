@@ -24,6 +24,10 @@ static NSString *const kCompletedCallbackKey = @"completed";
 
 typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 
+/*
+ 
+ */
+
 @interface SDWebImageDownloaderOperation ()
 
 @property (strong, nonatomic, nonnull) NSMutableArray<SDCallbacksDictionary *> *callbackBlocks;
@@ -33,8 +37,10 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 
 @property (assign, nonatomic, getter = isExecuting) BOOL executing;
 @property (assign, nonatomic, getter = isFinished) BOOL finished;
+
 @property (strong, nonatomic, nullable) NSMutableData *imageData;
 @property (copy, nonatomic, nullable) NSData *cachedData; // for `SDWebImageDownloaderIgnoreCachedResponse`
+
 @property (assign, nonatomic) NSUInteger expectedSize; // may be 0
 @property (assign, nonatomic) NSUInteger receivedSize;
 @property (strong, nonatomic, nullable, readwrite) NSURLResponse *response;
@@ -98,6 +104,10 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
     return self;
 }
 
+/*
+ 在 Operation 的内部, 使用一个数组, 来记录 progressBlock, 和 completeBlock.
+ 之所以是这样, 是因为, 如果提交了一个相同的 url 的话, Operation 不会再次被创建, 只是将新的 ProgressBlock 和 CompleteBlock 添加到之前已经创建的 Operation 的内部而已.
+ */
 - (nullable id)addHandlersForProgress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
                             completed:(nullable SDWebImageDownloaderCompletedBlock)completedBlock {
     SDCallbacksDictionary *callbacks = [NSMutableDictionary new];
@@ -302,6 +312,9 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
     return YES;
 }
 
+/*
+ 这里, 完全接管了网络请求的过程.
+ */
 #pragma mark NSURLSessionDataDelegate
 
 - (void)URLSession:(NSURLSession *)session

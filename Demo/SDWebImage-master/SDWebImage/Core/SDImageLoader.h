@@ -55,15 +55,24 @@ FOUNDATION_EXPORT UIImage * _Nullable SDImageLoaderDecodeProgressiveImageData(NS
 
 #pragma mark - SDImageLoader
 
-/**
+/*
  This is the protocol to specify custom image load process. You can create your own class to conform this protocol and use as a image loader to load image from network or any available remote resources defined by yourself.
- If you want to implement custom loader for image download from network or local file, you just need to concentrate on image data download only. After the download finish, call `SDImageLoaderDecodeImageData` or `SDImageLoaderDecodeProgressiveImageData` to use the built-in decoding process and produce image (Remember to call in the global queue). And finally callback the completion block.
+ If you want to implement custom loader for image download from network or local file, you just need to concentrate on image data download only.
+ After the download finish, call `SDImageLoaderDecodeImageData` or `SDImageLoaderDecodeProgressiveImageData` to use the built-in decoding process and produce image (Remember to call in the global queue).
+ And finally callback the completion block.
  If you directly get the image instance using some third-party SDKs, such as image directly from Photos framework. You can process the image data and image instance by yourself without that built-in decoding process. And finally callback the completion block.
  @note It's your responsibility to load the image in the desired global queue(to avoid block main queue). We do not dispatch these method call in a global queue but just from the call queue (For `SDWebImageManager`, it typically call from the main queue).
 */
+
+/*
+ 虽然, 现在只有 SDWebImageDownloader 进行最终的图片下载的操作. 但是 SDImageManager 内部还是使用了 id<SDImageLoader> 这样的形式.
+ 因为, 实际上, SDImageManager 里面使用的也就是几个固定的接口.
+ 如果 SDImageManager 内部直接使用 SDWebImageDownloader, 如果有更好的 Loader 的策略的话, 那么就无法替换了. 这里, 使用了面向接口编程的思想.
+ */
+
 @protocol SDImageLoader <NSObject>
 
-/**
+/*
  Whether current image loader supports to load the provide image URL.
  This will be checked every time a new image request come for loader. If this return NO, we will mark this image load as failed. If return YES, we will start to call `requestImageWithURL:options:context:progress:completed:`.
 
@@ -72,7 +81,7 @@ FOUNDATION_EXPORT UIImage * _Nullable SDImageLoaderDecodeProgressiveImageData(NS
  */
 - (BOOL)canRequestImageForURL:(nullable NSURL *)url;
 
-/**
+/*
  Load the image and image data with the given URL and return the image data. You're responsible for producing the image instance.
 
  @param url The URL represent the image. Note this may not be a HTTP URL
@@ -90,7 +99,7 @@ FOUNDATION_EXPORT UIImage * _Nullable SDImageLoaderDecodeProgressiveImageData(NS
                                               completed:(nullable SDImageLoaderCompletedBlock)completedBlock;
 
 
-/**
+/*
  Whether the error from image loader should be marked indeed un-recoverable or not.
  If this return YES, failed URL which does not using `SDWebImageRetryFailed` will be blocked into black list. Else not.
 

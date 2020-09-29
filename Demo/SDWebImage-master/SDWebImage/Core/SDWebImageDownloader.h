@@ -103,7 +103,7 @@ FOUNDATION_EXPORT NSNotificationName _Nonnull const SDWebImageDownloadFinishNoti
 typedef SDImageLoaderProgressBlock SDWebImageDownloaderProgressBlock;
 typedef SDImageLoaderCompletedBlock SDWebImageDownloaderCompletedBlock;
 
-/**
+/*
  *  A token associated with each download. Can be used to cancel a download
  */
 @interface SDWebImageDownloadToken : NSObject <SDWebImageOperation>

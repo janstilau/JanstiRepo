@@ -13,6 +13,10 @@
 
 static NSString * const SDDiskCacheExtendedAttributeName = @"com.hackemist.SDDiskCache";
 
+/*
+ 整个 SDDiskCache 的实现思路还是比较简单的, 就是使用 NSFileManager 进行文件的管理.
+ */
+
 @interface SDDiskCache ()
 
 @property (nonatomic, copy) NSString *diskCachePath;
@@ -140,6 +144,9 @@ static NSString * const SDDiskCacheExtendedAttributeName = @"com.hackemist.SDDis
 - (void)removeExpiredData {
     NSURL *diskCacheURL = [NSURL fileURLWithPath:self.diskCachePath isDirectory:YES];
     
+    /*
+     这里, 根据文件的不同时间, 来判断应该删除哪些文件.
+     */
     // Compute content date key to be used for tests
     NSURLResourceKey cacheContentDateKey = NSURLContentModificationDateKey;
     switch (self.config.diskCacheExpireType) {
@@ -175,6 +182,9 @@ static NSString * const SDDiskCacheExtendedAttributeName = @"com.hackemist.SDDis
     //
     //  1. Removing files that are older than the expiration date.
     //  2. Storing file attributes for the size-based cleanup pass.
+    /*
+     将所有应该删除的文件, 全部添加到容器内.
+     */
     NSMutableArray<NSURL *> *urlsToDelete = [[NSMutableArray alloc] init];
     for (NSURL *fileURL in fileEnumerator) {
         NSError *error;
@@ -198,6 +208,7 @@ static NSString * const SDDiskCacheExtendedAttributeName = @"com.hackemist.SDDis
         cacheFiles[fileURL] = resourceValues;
     }
     
+    // 具体的删除操作.
     for (NSURL *fileURL in urlsToDelete) {
         [self.fileManager removeItemAtURL:fileURL error:nil];
     }
@@ -299,6 +310,9 @@ static NSString * const SDDiskCacheExtendedAttributeName = @"com.hackemist.SDDis
 
 #pragma mark - Hash
 
+/*
+ 这个加密方式, 很像是 MD5 的实现. 不过, 这里库没有引入 MD5 的加密库, 而是只是把相关的代码搬到了这里. 并且用 SD 开头进行了函数的命名, 防止函数名污染.
+ */
 #define SD_MAX_FILE_EXTENSION_LENGTH (NAME_MAX - CC_MD5_DIGEST_LENGTH * 2 - 1)
 
 #pragma clang diagnostic push

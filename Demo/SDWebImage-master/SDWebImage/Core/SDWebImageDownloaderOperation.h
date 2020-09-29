@@ -10,12 +10,17 @@
 #import "SDWebImageDownloader.h"
 #import "SDWebImageOperation.h"
 
-/**
+/*
+ 这个类, 就是 SD 中对于下载这个事情的实现, 最开始的时候, 是简单的使用了 AFN 进行的实现.
+ */
+
+/*
  Describes a downloader operation. If one wants to use a custom downloader op, it needs to inherit from `NSOperation` and conform to this protocol
  For the description about these methods, see `SDWebImageDownloaderOperation`
  @note If your custom operation class does not use `NSURLSession` at all, do not implement the optional methods and session delegate methods.
  */
 @protocol SDWebImageDownloaderOperation <NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
+
 @required
 - (nonnull instancetype)initWithRequest:(nullable NSURLRequest *)request
                               inSession:(nullable NSURLSession *)session

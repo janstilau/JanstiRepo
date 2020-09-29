@@ -17,13 +17,19 @@
 
 static NSString * _defaultDiskCacheDirectory;
 
+/*
+ 这个 Cache 的实现思路, 应该和 YYCache 的很像.
+ */
+
 @interface SDImageCache ()
 
 #pragma mark - Properties
 @property (nonatomic, strong, readwrite, nonnull) id<SDMemoryCache> memoryCache;
 @property (nonatomic, strong, readwrite, nonnull) id<SDDiskCache> diskCache;
+
 @property (nonatomic, copy, readwrite, nonnull) SDImageCacheConfig *config;
 @property (nonatomic, copy, readwrite, nonnull) NSString *diskCachePath;
+
 @property (nonatomic, strong, nullable) dispatch_queue_t ioQueue;
 
 @end
@@ -72,6 +78,9 @@ static NSString * _defaultDiskCacheDirectory;
     if ((self = [super init])) {
         NSAssert(ns, @"Cache namespace should not be nil");
         
+        /*
+         这是一个串行队列.
+         */
         // Create IO serial queue
         _ioQueue = dispatch_queue_create("com.hackemist.SDImageCache", DISPATCH_QUEUE_SERIAL);
         
@@ -188,7 +197,10 @@ static NSString * _defaultDiskCacheDirectory;
         }
         return;
     }
-    // if memory cache is enabled
+    
+    /*
+     首先, 考虑的是, 将图片存放到内存中.
+     */
     if (toMemory && self.config.shouldCacheImagesInMemory) {
         NSUInteger cost = image.sd_memoryCost;
         [self.memoryCache setObject:image forKey:key cost:cost];
@@ -348,6 +360,9 @@ static NSString * _defaultDiskCacheDirectory;
     return imageData;
 }
 
+/*
+ 使用 self.memoryCache 来缓存对应的图片.
+ */
 - (nullable UIImage *)imageFromMemoryCacheForKey:(nullable NSString *)key {
     return [self.memoryCache objectForKey:key];
 }
@@ -383,6 +398,9 @@ static NSString * _defaultDiskCacheDirectory;
     return image;
 }
 
+/*
+ 这里, 磁盘上的图片读取的逻辑, 是将相关的读取操作, 转移到了 self.diskCache 上.
+ */
 - (nullable NSData *)diskImageDataBySearchingAllPathsForKey:(nullable NSString *)key {
     if (!key) {
         return nil;
@@ -460,7 +478,10 @@ static NSString * _defaultDiskCacheDirectory;
     return [self queryCacheOperationForKey:key options:options context:context cacheType:SDImageCacheTypeAll done:doneBlock];
 }
 
-- (nullable NSOperation *)queryCacheOperationForKey:(nullable NSString *)key options:(SDImageCacheOptions)options context:(nullable SDWebImageContext *)context cacheType:(SDImageCacheType)queryCacheType done:(nullable SDImageCacheQueryCompletionBlock)doneBlock {
+- (nullable NSOperation *)queryCacheOperationForKey:(nullable NSString *)key
+                                            options:(SDImageCacheOptions)options
+                                            context:(nullable SDWebImageContext *)context cacheType:(SDImageCacheType)queryCacheType
+                                               done:(nullable SDImageCacheQueryCompletionBlock)doneBlock {
     if (!key) {
         if (doneBlock) {
             doneBlock(nil, nil, SDImageCacheTypeNone);
@@ -481,16 +502,17 @@ static NSString * _defaultDiskCacheDirectory;
         image = [self imageFromMemoryCacheForKey:key];
     }
     
+    /*
+     在此时, 如果 image 有值, 那么是从内存里面读取到的.
+     */
     if (image) {
+        /*
+         SDImageCacheDecodeFirstFrameOnly 控制着, 如果是动图, 仅仅返回动图的第一帧的图.
+         */
         if (options & SDImageCacheDecodeFirstFrameOnly) {
-            // Ensure static image
             Class animatedImageClass = image.class;
             if (image.sd_isAnimated || ([animatedImageClass isSubclassOfClass:[UIImage class]] && [animatedImageClass conformsToProtocol:@protocol(SDAnimatedImage)])) {
-#if SD_MAC
-                image = [[NSImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:kCGImagePropertyOrientationUp];
-#else
                 image = [[UIImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:image.imageOrientation];
-#endif
             }
         } else if (options & SDImageCacheMatchAnimatedImageClass) {
             // Check image class matching
@@ -502,6 +524,9 @@ static NSString * _defaultDiskCacheDirectory;
         }
     }
 
+    /*
+     如果, 只进行内存值的读取, 那么就应该直接调用 doneBlock 回调处理了.
+     */
     BOOL shouldQueryMemoryOnly = (queryCacheType == SDImageCacheTypeMemory) || (image && !(options & SDImageCacheQueryMemoryData));
     if (shouldQueryMemoryOnly) {
         if (doneBlock) {
@@ -510,7 +535,9 @@ static NSString * _defaultDiskCacheDirectory;
         return nil;
     }
     
-    // Second check the disk cache...
+    /*
+     从下面开始, 就是磁盘上的图片的读取工作了.
+     */
     NSOperation *operation = [NSOperation new];
     // Check whether we need to synchronously query disk
     // 1. in-memory cache hit & memoryDataSync
@@ -518,6 +545,10 @@ static NSString * _defaultDiskCacheDirectory;
     BOOL shouldQueryDiskSync = ((image && options & SDImageCacheQueryMemoryDataSync) ||
                                 (!image && options & SDImageCacheQueryDiskDataSync));
     void(^queryDiskBlock)(void) =  ^{
+        /*
+         这里使用了一个取巧的办法, NSOperation 也是有着 cancel 的. 但是, NSOperation 明显不是 id<SDWebImageOperation>.
+         如果, Block 执行的时候, 已经 cancel 了, 那么 Block 的后续操作也就不执行了.
+         */
         if (operation.isCancelled) {
             if (doneBlock) {
                 doneBlock(nil, nil, SDImageCacheTypeNone);
@@ -534,6 +565,9 @@ static NSString * _defaultDiskCacheDirectory;
             } else if (diskData) {
                 // decode image data only if in-memory cache missed
                 diskImage = [self diskImageForKey:key data:diskData options:options context:context];
+                /*
+                 这里, 做的是 dick 数据到 memory 数据的同步操作.
+                 */
                 if (diskImage && self.config.shouldCacheImagesInMemory) {
                     NSUInteger cost = diskImage.sd_memoryCost;
                     [self.memoryCache setObject:diskImage forKey:key cost:cost];
@@ -734,7 +768,11 @@ static NSString * _defaultDiskCacheDirectory;
 #pragma mark - SDImageCache
 
 - (id<SDWebImageOperation>)queryImageForKey:(NSString *)key options:(SDWebImageOptions)options context:(nullable SDWebImageContext *)context completion:(nullable SDImageCacheQueryCompletionBlock)completionBlock {
-    return [self queryImageForKey:key options:options context:context cacheType:SDImageCacheTypeAll completion:completionBlock];
+    return [self queryImageForKey:key
+                          options:options
+                          context:context
+                        cacheType:SDImageCacheTypeAll
+                       completion:completionBlock];
 }
 
 - (id<SDWebImageOperation>)queryImageForKey:(NSString *)key options:(SDWebImageOptions)options context:(nullable SDWebImageContext *)context cacheType:(SDImageCacheType)cacheType completion:(nullable SDImageCacheQueryCompletionBlock)completionBlock {

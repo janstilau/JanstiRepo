@@ -17,6 +17,9 @@
 
 static void * SDImageLoaderProgressiveCoderKey = &SDImageLoaderProgressiveCoderKey;
 
+/*
+ 从 ImageData 中, 加载出 UIImage.
+ */
 UIImage * _Nullable SDImageLoaderDecodeImageData(NSData * _Nonnull imageData, NSURL * _Nonnull imageURL, SDWebImageOptions options, SDWebImageContext * _Nullable context) {
     NSCParameterAssert(imageData);
     NSCParameterAssert(imageURL);
@@ -99,6 +102,9 @@ UIImage * _Nullable SDImageLoaderDecodeImageData(NSData * _Nonnull imageData, NS
     return image;
 }
 
+/*
+ 可以创建出未完全加载完成的图片来.
+ */
 UIImage * _Nullable SDImageLoaderDecodeProgressiveImageData(NSData * _Nonnull imageData, NSURL * _Nonnull imageURL, BOOL finished,  id<SDWebImageOperation> _Nonnull operation, SDWebImageOptions options, SDWebImageContext * _Nullable context) {
     NSCParameterAssert(imageData);
     NSCParameterAssert(imageURL);
