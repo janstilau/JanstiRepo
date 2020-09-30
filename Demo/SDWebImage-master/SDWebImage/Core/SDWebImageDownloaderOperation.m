@@ -440,6 +440,9 @@ didReceiveResponse:(NSURLResponse *)response
 
 #pragma mark NSURLSessionTaskDelegate
 
+/*
+ 下载完成之后的回调, 在这里会进行最终的 image 的合成操作.
+ */
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     // If we already cancel the operation or anything mark the operation finished, don't callback twice
     if (self.isFinished) return;
@@ -485,6 +488,7 @@ didReceiveResponse:(NSURLResponse *)response
                     [self.coderQueue cancelAllOperations];
                     [self.coderQueue addOperationWithBlock:^{
                         UIImage *image = SDImageLoaderDecodeImageData(imageData, self.request.URL, [[self class] imageOptionsFromDownloaderOptions:self.options], self.context);
+                        
                         CGSize imageSize = image.size;
                         if (imageSize.width == 0 || imageSize.height == 0) {
                             NSString *description = image == nil ? @"Downloaded image decode failed" : @"Downloaded image has 0 pixels";

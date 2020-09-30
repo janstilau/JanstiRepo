@@ -177,6 +177,10 @@
 }
 
 #pragma mark - Animation Control
+/*
+ startPlaying 也就是定时器开始启动了.
+ SDImageView 的播放其实就是定时器动画, 不断的判断是否应该进行下一帧的显示, 如果应该显示的话, 就调用 ImageView 的刷新操作.
+ */
 - (void)startPlaying {
     [self.displayLink start];
     // Setup frame

@@ -23,6 +23,10 @@
  Encode(Software): macOS 10.13
  Encode(Hardware): !Simulator && ((iOS 11 && A10FusionChip) || (macOS 10.13 && 6thGenerationIntelCPU))
  */
+
+/*
+ SDImageIOCoder 最原始的 IMAGE Coder.
+ */
 @interface SDImageIOCoder : NSObject <SDProgressiveImageCoder>
 
 @property (nonatomic, class, readonly, nonnull) SDImageIOCoder *sharedCoder;

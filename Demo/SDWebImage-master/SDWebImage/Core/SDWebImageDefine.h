@@ -174,6 +174,9 @@ typedef NS_OPTIONS(NSUInteger, SDWebImageOptions) {
     /**
      * By default, we decode the animated image. This flag can force decode the first frame only and produce the static image.
      */
+    /*
+     这个 option 控制着, 将动图解析成为静态图.
+     */
     SDWebImageDecodeFirstFrameOnly = 1 << 19,
     
     /**

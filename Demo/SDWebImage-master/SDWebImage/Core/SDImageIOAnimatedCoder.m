@@ -187,6 +187,9 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
     return frameDuration;
 }
 
+/*
+ 从 CGImageSourceRef 获取到第几帧的图片. 具体的实现的逻辑, 没有去细看.
+ */
 + (UIImage *)createFrameAtIndex:(NSUInteger)index source:(CGImageSourceRef)source scale:(CGFloat)scale preserveAspectRatio:(BOOL)preserveAspectRatio thumbnailSize:(CGSize)thumbnailSize options:(NSDictionary *)options {
     // Some options need to pass to `CGImageSourceCopyPropertiesAtIndex` before `CGImageSourceCreateImageAtIndex`, or ImageIO will ignore them because they parse once :)
     // Parse the image properties
@@ -323,6 +326,7 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
     if (!source) {
         return nil;
     }
+    // 通过 CGImageSourceGetCount 这个函数, 可以获取到图片的数量.
     size_t count = CGImageSourceGetCount(source);
     UIImage *animatedImage;
     
@@ -333,11 +337,18 @@ static NSString * kSDCGImageDestinationRequestedFileSize = @"kCGImageDestination
         NSMutableArray<SDImageFrame *> *frames = [NSMutableArray array];
         
         for (size_t i = 0; i < count; i++) {
+            /*
+             self.class 这里有着自己编码的时候, 经常遇到的一个问题.
+             同样的解决方案, 就是用 self.class 去调用类方法, 去访问类相关的函数.
+             */
             UIImage *image = [self.class createFrameAtIndex:i source:source scale:scale preserveAspectRatio:preserveAspectRatio thumbnailSize:thumbnailSize options:nil];
             if (!image) {
                 continue;
             }
             
+            /*
+             图片是拥有元信息的, Gif 图也是, 保存了图片的起始时间和时长. 这里就是通过这些找到各种元信息.
+             */
             NSTimeInterval duration = [self.class frameDurationAtIndex:i source:source];
             
             SDImageFrame *frame = [SDImageFrame frameWithImage:image duration:duration];

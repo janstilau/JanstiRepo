@@ -118,7 +118,7 @@
     
     // Check Progressive rendering
     [self updateIsProgressiveWithImage:image];
-    
+    // 如果不是 isProgressive, 就认为是静态图??
     if (!self.isProgressive) {
         // Stop animating
         self.player = nil;
@@ -165,6 +165,11 @@
         self.player.playbackRate = self.playbackRate;
         
         // Setup handler
+        /*
+         player 是一个 NSObject, 但是它控制着里面的播放更新的逻辑, 所以是 player 的含义.
+         在它的 animationFrameHandler 回调里面, 更新了 currentFrame, 调用了 setNeedsDisplay 方法, displayLayer 里面, 显示出最新的 currentFrame image 出来.
+         这就是动图显示的逻辑.
+         */
         @weakify(self);
         self.player.animationFrameHandler = ^(NSUInteger index, UIImage * frame) {
             @strongify(self);
@@ -450,10 +455,16 @@
     }
 }
 
+/*
+ 事先将 animatedCoder 放到了数据的层面, 然后在 View 层面, 获取到这个值然后进行使用.
+ */
 // Check if image can represent a `Progressive Animated Image` during loading
 - (id<SDAnimatedImageCoder, SDProgressiveImageCoder>)progressiveAnimatedCoderForImage:(UIImage *)image
 {
-    if ([image.class conformsToProtocol:@protocol(SDAnimatedImage)] && image.sd_isIncremental && [image respondsToSelector:@selector(animatedCoder)]) {
+    if ([image.class conformsToProtocol:@protocol(SDAnimatedImage)] &&
+        image.sd_isIncremental &&
+        [image respondsToSelector:@selector(animatedCoder)]) {
+        
         id<SDAnimatedImageCoder> animatedCoder = [(id<SDAnimatedImage>)image animatedCoder];
         if ([animatedCoder conformsToProtocol:@protocol(SDProgressiveImageCoder)]) {
             return (id<SDAnimatedImageCoder, SDProgressiveImageCoder>)animatedCoder;
@@ -466,6 +477,9 @@
 #pragma mark Providing the Layer's Content
 #pragma mark - CALayerDelegate
 
+/*
+ 在这里, 进行实际的 View 的内容的控制.
+ */
 - (void)displayLayer:(CALayer *)layer
 {
     UIImage *currentFrame = self.currentFrame;

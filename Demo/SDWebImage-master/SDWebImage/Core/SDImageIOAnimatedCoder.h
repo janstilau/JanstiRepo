@@ -15,6 +15,9 @@
  All of the properties need the subclass to implement and works as expected.
  For Image/IO, See Apple's documentation: https://developer.apple.com/documentation/imageio
  */
+/*
+ 这个才是 GIF 真正的解析器.
+ */
 @interface SDImageIOAnimatedCoder : NSObject <SDProgressiveImageCoder, SDAnimatedImageCoder>
 
 #pragma mark - Subclass Override

@@ -17,6 +17,11 @@ static inline NSArray<NSNumber *> * _Nonnull SDImageScaleFactors() {
     return @[@2, @3];
 }
 
+/*
+ 获取图片的 scale, 这里是增加了 对于 @2x, @3x 的处理.
+ 如果不是以这个结尾的, 那么就是 1.
+ 之所以要这样处理, 是因为 SD 增加了对于包内图的处理.
+ */
 inline CGFloat SDImageScaleFactorForKey(NSString * _Nullable key) {
     CGFloat scale = 1;
     if (!key) {

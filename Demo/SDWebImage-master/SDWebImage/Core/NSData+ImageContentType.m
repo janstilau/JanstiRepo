@@ -19,6 +19,9 @@
 
 @implementation NSData (ImageContentType)
 
+/*
+ image data 的前几个字节, 就是记录着 image 数据的元信息.
+ */
 + (SDImageFormat)sd_imageFormatForImageData:(nullable NSData *)data {
     if (!data) {
         return SDImageFormatUndefined;

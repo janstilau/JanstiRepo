@@ -21,8 +21,6 @@ static void * SDImageLoaderProgressiveCoderKey = &SDImageLoaderProgressiveCoderK
  从 ImageData 中, 加载出 UIImage.
  */
 UIImage * _Nullable SDImageLoaderDecodeImageData(NSData * _Nonnull imageData, NSURL * _Nonnull imageURL, SDWebImageOptions options, SDWebImageContext * _Nullable context) {
-    NSCParameterAssert(imageData);
-    NSCParameterAssert(imageURL);
     
     UIImage *image;
     id<SDWebImageCacheKeyFilter> cacheKeyFilter = context[SDWebImageContextCacheKeyFilter];
@@ -47,6 +45,10 @@ UIImage * _Nullable SDImageLoaderDecodeImageData(NSData * _Nonnull imageData, NS
         thumbnailSizeValue = context[SDWebImageContextImageThumbnailPixelSize];
     }
     
+    /*
+     在配置的过程中, 用一个 mutbale 对象进行配置, 然后显式地用一个不可变对象进行后续的处理.
+     这是一个更加 Clean 的处理方案.
+     */
     SDImageCoderMutableOptions *mutableCoderOptions = [NSMutableDictionary dictionaryWithCapacity:2];
     mutableCoderOptions[SDImageCoderDecodeFirstFrameOnly] = @(decodeFirstFrame);
     mutableCoderOptions[SDImageCoderDecodeScaleFactor] = @(scale);

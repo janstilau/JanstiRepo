@@ -111,6 +111,10 @@ FOUNDATION_EXPORT SDImageCoderOption _Nonnull const SDImageCoderWebImageContext 
  @param data The image data so we can look at it
  @return YES if this coder can decode the data, NO otherwise
  */
+
+/*
+ 大部分的判断, 起始还是抽取 data 的 imageFormat, 看一下是否和当前的 coder 对应的 type 一致.
+ */
 - (BOOL)canDecodeFromData:(nullable NSData *)data;
 
 /**

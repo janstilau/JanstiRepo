@@ -156,8 +156,6 @@
 				818F0BA41E18C0AA00679925 /* AppDelegate.m */,
 				818F0BAC1E18C0AA00679925 /* Assets.xcassets */,
 				818F0BB11E18C0AA00679925 /* Info.plist */,
-				815612EF2022E42D00C4F5CD /* JsEchoApi.h */,
-				815612F02022E42D00C4F5CD /* JsEchoApi.m */,
 				818F0BCB1E18DE7100679925 /* JsApiTest.h */,
 				818F0BC81E18DD3600679925 /* JsApiTest.m */,
 				818F0BAE1E18C0AA00679925 /* LaunchScreen.storyboard */,
@@ -166,6 +164,8 @@
 				818F0BA61E18C0AA00679925 /* ViewController.h */,
 				818F0BA71E18C0AA00679925 /* ViewController.m */,
 				818F0BCF1E1A820B00679925 /* test.html */,
+				815612EF2022E42D00C4F5CD /* JsEchoApi.h */,
+				815612F02022E42D00C4F5CD /* JsEchoApi.m */,
 				8142EA1C214212E600BEE5C0 /* dsbridgedemo-Bridging-Header.h */,
 			);
 			path = dsbridgedemo;
@@ -239,7 +239,7 @@
 					};
 					818F0B9D1E18C0AA00679925 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = RF2LPG6C4X;
+						DevelopmentTeam = XTLLEQZMD7;
 						LastSwiftMigration = 0940;
 						ProvisioningStyle = Automatic;
 					};
@@ -456,7 +456,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = RF2LPG6C4X;
+				DEVELOPMENT_TEAM = XTLLEQZMD7;
 				INFOPLIST_FILE = dsbridgedemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = wendu.dsbridgedemo.xx;
@@ -474,7 +474,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = RF2LPG6C4X;
+				DEVELOPMENT_TEAM = XTLLEQZMD7;
 				INFOPLIST_FILE = dsbridgedemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = wendu.dsbridgedemo.xx;

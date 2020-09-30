@@ -119,6 +119,11 @@
 
 #endif
 
+/*
+ CFStringRef uttype = CGImageGetUTType(self.CGImage);
+ imageFormat = [NSData sd_imageFormatFromUTType:uttype];
+ 原来有着直接方法, 可以获取到图片的类型.
+ */
 - (SDImageFormat)sd_imageFormat {
     SDImageFormat imageFormat = SDImageFormatUndefined;
     NSNumber *value = objc_getAssociatedObject(self, @selector(sd_imageFormat));

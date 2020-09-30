@@ -20,20 +20,16 @@
         border-radius: 4px;
         box-shadow: 4px 2px 10px #999;
     }
+
     .btn:active {
         opacity: .7;
         box-shadow: 4px 2px 10px #555;
     }
+
+
+
 </style>
-
-
-
 <body>
-<!--
-
-
-
--->
 <div class="btn" onclick="callSyn()">Synchronous call</div>
 <div class="btn" onclick="callAsyn()">Asynchronous call</div>
 <div class="btn" onclick="callSynSwift()">Syn call (swift)</div>
@@ -73,98 +69,98 @@ function callAsynSwift() {
                   })
 }
 
-function callAsyn_() {
-    for (var i = 0; i < 2000; i++) {
-        dsBridge.call("testAsyn",  "js+" + i, function (v) {
-            if (v == "js+1999 [ asyn call]") {
-                alert("All tasks completed!")
-            }
+    function callAsyn_() {
+        for (var i = 0; i < 2000; i++) {
+            dsBridge.call("testAsyn",  "js+" + i, function (v) {
+                if (v == "js+1999 [ asyn call]") {
+                    alert("All tasks completed!")
+                }
+            })
+        }
+    }
+
+    function callNoArgSyn() {
+        alert(dsBridge.call("testNoArgSyn"));
+    }
+
+    function callNoArgAsyn() {
+        dsBridge.call("testNoArgAsyn", function (v) {
+            alert(v)
+        });
+    }
+
+    function callNever() {
+        alert(dsBridge.call("testNever", {msg: "testSyn"}))
+    }
+
+    function echoSyn() {
+        // call function with namespace
+        var ret=dsBridge.call("echo.syn",{msg:" I am echoSyn call", tag:1});
+        alert(JSON.stringify(ret))
+    }
+
+    function echoAsyn() {
+        // call function with namespace
+        dsBridge.call("echo.asyn",{msg:" I am echoAsyn call",tag:2},function (ret) {
+            alert(JSON.stringify(ret));
         })
     }
-}
 
-function callNoArgSyn() {
-    alert(dsBridge.call("testNoArgSyn"));
-}
+    function callProgress() {
+        dsBridge.call("callProgress", function (value) {
+            if(value==0) value="";
+            document.getElementById("progress").innerText = value
+        })
+    }
 
-function callNoArgAsyn() {
-    dsBridge.call("testNoArgAsyn", function (v) {
-        alert(v)
-    });
-}
+    function hasNativeMethod(name) {
+        alert(dsBridge.hasNativeMethod(name))
+    }
 
-function callNever() {
-    alert(dsBridge.call("testNever", {msg: "testSyn"}))
-}
 
-function echoSyn() {
-    // call function with namespace
-    var ret=dsBridge.call("echo.syn",{msg:" I am echoSyn call", tag:1});
-    alert(JSON.stringify(ret))
-}
-
-function echoAsyn() {
-    // call function with namespace
-    dsBridge.call("echo.asyn",{msg:" I am echoAsyn call",tag:2},function (ret) {
-        alert(JSON.stringify(ret));
+    dsBridge.register('addValue', function (r, l) {
+        return r + l;
     })
-}
 
-function callProgress() {
-    dsBridge.call("callProgress", function (value) {
-        if(value==0) value="";
-        document.getElementById("progress").innerText = value
+    dsBridge.registerAsyn('append', function (arg1, arg2, arg3, responseCallback) {
+        responseCallback(arg1 + " " + arg2 + " " + arg3);
     })
-}
 
-function hasNativeMethod(name) {
-    alert(dsBridge.hasNativeMethod(name))
-}
+    dsBridge.registerAsyn('startTimer', function (responseCallback) {
+        var t = 0;
+        var timer = setInterval(function () {
+            if (t == 5) {
+                responseCallback(t)
+                clearInterval(timer)
+            } else {
+                // if the 2nd argument is false,  the java callback handler will be not removed!
+                responseCallback(t++, false)
+            }
+        }, 1000)
 
+    })
 
-dsBridge.register('addValue', function (r, l) {
-    return r + l;
-})
-
-dsBridge.registerAsyn('append', function (arg1, arg2, arg3, responseCallback) {
-    responseCallback(arg1 + " " + arg2 + " " + arg3);
-})
-
-dsBridge.registerAsyn('startTimer', function (responseCallback) {
-    var t = 0;
-    var timer = setInterval(function () {
-        if (t == 5) {
-            responseCallback(t)
-            clearInterval(timer)
-        } else {
-            // if the 2nd argument is false,  the java callback handler will be not removed!
-            responseCallback(t++, false)
+    // namespace test for syn functions
+    dsBridge.register("syn", {
+        tag: "syn",
+        addValue:function (r,l) {
+            return r+l;
+        },
+        getInfo: function () {
+            return {tag: this.tag, value:8}
         }
-    }, 1000)
+    })
 
-})
-
-// namespace test for syn functions
-dsBridge.register("syn", {
-    tag: "syn",
-    addValue:function (r,l) {
-        return r+l;
-    },
-    getInfo: function () {
-        return {tag: this.tag, value:8}
-    }
-})
-
-// namespace test for asyn functions
-dsBridge.registerAsyn("asyn", {
-    tag: "asyn",
-    addValue:function (r,l, responseCallback) {
-        responseCallback(r+l);
-    },
-    getInfo: function (responseCallback) {
-        responseCallback({tag: this.tag, value:8})
-    }
-})
+    // namespace test for asyn functions
+    dsBridge.registerAsyn("asyn", {
+        tag: "asyn",
+        addValue:function (r,l, responseCallback) {
+            responseCallback(r+l);
+        },
+        getInfo: function (responseCallback) {
+            responseCallback({tag: this.tag, value:8})
+        }
+    })
 
 </script>
 </body>

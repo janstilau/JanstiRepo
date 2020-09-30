@@ -29,6 +29,9 @@
  Those methods are called on each coder in the array (using the priority order) until one of them returns YES.
  That means that coder can decode that data / encode to that format
  */
+/*
+ SD 的框架里面, manager 更多的是功能对象的管理者, 同时
+ */
 @interface SDImageCodersManager : NSObject <SDImageCoder>
 
 /**

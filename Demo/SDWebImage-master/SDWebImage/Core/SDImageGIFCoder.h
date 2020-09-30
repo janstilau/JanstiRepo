@@ -17,6 +17,9 @@
  */
 @interface SDImageGIFCoder : SDImageIOAnimatedCoder <SDProgressiveImageCoder, SDAnimatedImageCoder>
 
+/*
+ class 这个关键字的引入, 让单例对象, 更加的符合, 是属于类的一个特殊的属性的含义了.
+ */
 @property (nonatomic, class, readonly, nonnull) SDImageGIFCoder *sharedCoder;
 
 @end
