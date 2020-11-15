@@ -1273,15 +1273,6 @@ void QNetworkAccessManagerPrivate::_q_replyFinished()
     // 由 NetworkMnager 发送信号.
     if (reply)
         emit q->finished(reply);
-
-#ifndef QT_NO_BEARERMANAGEMENT
-    // If there are no active requests, release our reference to the network session.
-    // It will not be destroyed immediately, but rather when the connection cache is flushed
-    // after 2 minutes.
-    activeReplyCount--;
-    if (networkSessionStrongRef && activeReplyCount == 0)
-        networkSessionStrongRef.clear();
-#endif
 }
 
 void QNetworkAccessManagerPrivate::_q_replyEncrypted()
@@ -1318,11 +1309,11 @@ void QNetworkAccessManagerPrivate::_q_replyPreSharedKeyAuthenticationRequired(QS
 #endif
 }
 
+// 在这里, 将 reply 的 finish 信号, 和 _q_replyFinished 信号进行了关联. 本质上, 还是 reply 发送了信号.
 QNetworkReply *QNetworkAccessManagerPrivate::postProcess(QNetworkReply *reply)
 {
     Q_Q(QNetworkAccessManager);
     QNetworkReplyPrivate::setManager(reply, q);
-    // 在这里, 将 reply 的 finish 信号, 和 _q_replyFinished 信号进行了关联. 本质上, 还是 reply 发送了信号.
     q->connect(reply, SIGNAL(finished()), SLOT(_q_replyFinished()));
     q->connect(reply, SIGNAL(encrypted()), SLOT(_q_replyEncrypted()));
     q->connect(reply, SIGNAL(sslErrors(QList<QSslError>)), SLOT(_q_replySslErrors(QList<QSslError>)));

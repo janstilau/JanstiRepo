@@ -789,16 +789,17 @@ void QNetworkReplyHttpImplPrivate::postRequest(const QNetworkRequest &newHttpReq
     if (request.attribute(QNetworkRequest::EmitAllUploadProgressSignalsAttribute).toBool())
         emitAllUploadProgressSignals = true;
 
+    // 以上, 是各种原始数据赋值的部分.
 
+
+
+    // 真正的网络请求, 交给了 QHttpThreadDelegate 来进行, 将各种数据赋值给他. 并且监听它的信号.
     // Create the HTTP thread delegate
     QHttpThreadDelegate *delegate = new QHttpThreadDelegate;
     // Propagate Http/2 settings if any
     const QVariant blob(manager->property(Http2::http2ParametersPropertyName));
     if (blob.isValid() && blob.canConvert<Http2::ProtocolParameters>())
         delegate->http2Parameters = blob.value<Http2::ProtocolParameters>();
-#ifndef QT_NO_BEARERMANAGEMENT
-    delegate->networkSession = managerPrivate->getNetworkSession();
-#endif
 
     // For the synchronous HTTP, this is the normal way the delegate gets deleted
     // For the asynchronous HTTP this is a safety measure, the delegate deletes itself when HTTP is finished
@@ -806,10 +807,8 @@ void QNetworkReplyHttpImplPrivate::postRequest(const QNetworkRequest &newHttpReq
 
     // Set the properties it needs
     delegate->httpRequest = httpRequest;
-#ifndef QT_NO_NETWORKPROXY
     delegate->cacheProxy = cacheProxy;
     delegate->transparentProxy = transparentProxy;
-#endif
     delegate->ssl = ssl;
 #ifndef QT_NO_SSL
     if (ssl)
@@ -1104,6 +1103,8 @@ void QNetworkReplyHttpImplPrivate::replyDownloadData(QByteArray d)
     emit q->readyRead();
     // emit readyRead before downloadProgress incase this will cause events to be
     // processed and we get into a recursive call (as in QProgressDialog).
+
+    // 在这里, 发射了 reply 的信号.
     if (downloadProgressSignalChoke.elapsed() >= progressSignalInterval) {
         downloadProgressSignalChoke.restart();
         emit q->downloadProgress(bytesDownloaded,

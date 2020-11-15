@@ -222,14 +222,18 @@ public:
 
     enum ReplyState {
         NothingDoneState,
+
         ReadingStatusState,
         ReadingHeaderState,
         ReadingDataState,
+
         AllDoneState,
+
         SPDYSYNSent,
         SPDYUploading,
         SPDYHalfClosed,
         SPDYClosed,
+
         Aborted
     } state;
 
