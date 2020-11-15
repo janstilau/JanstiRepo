@@ -2,43 +2,20 @@
 #define __NSThread_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
 
-/*
- Use this class when you want to have an Objective-C method run in its own thread of execution. Threads are especially useful when you need to perform a lengthy task, but don’t want it to block the execution of the rest of the application. In particular, you can use threads to avoid blocking the main thread of the application, which handles user interface and event-related actions. Threads can also be used to divide a large job into several smaller jobs, which can lead to performance increases on multi-core computers.
-
- The NSThread class supports semantics similar to those of NSOperation for monitoring the runtime condition of a thread. You can use these semantics to cancel the execution of a thread or determine if the thread is still executing or has finished its task. Canceling a thread requires support from your thread code; see the description for cancel for more information.
-
- Subclassing Notes
-
- You can subclass NSThread and override the main method to implement your thread’s main entry point. If you override main, you do not need to invoke the inherited behavior by calling super.
- */
-
-
 @class  NSArray;
 @class	NSDate;
 @class	NSMutableDictionary;
 
-/**
- * This class encapsulates OpenStep threading.  See [NSLock] and its
- * subclasses for handling synchronisation between threads.<br />
- * Each process begins with a main thread and additional threads can
- * be created using NSThread.  The GNUstep implementation of OpenStep
- * has been carefully designed so that the internals of the base
- * library do not use threading (except for methods which explicitly
- * deal with threads of course) so that you can write applications
- * without threading.  Non-threaded applications are more efficient
- * (no locking is required) and are easier to debug during development.
- */
 @interface NSThread : NSObject
 {
-#if	GS_EXPOSE(NSThread)
 @public
-    id			_target;
-    id			_arg;
-    SEL			_selector;
+    id			_target; // retain
+    id			_arg;   // retain
+    SEL			_selector; // retain
     NSString              *_name;
     NSUInteger            _stackSize;
     /*
-     这几个值, 和 NSOperation 很像.
+     表示状态的几个值.
      */
     BOOL			_cancelled;
     BOOL			_active;
@@ -49,42 +26,17 @@
     struct autorelease_thread_vars _autorelease_vars;
     id			_gcontext;
     void                  *_runLoopInfo;  // Per-thread runloop related info.
-#endif
     pthread_t             _pthreadID;
     NSUInteger            _threadID;
     GSLockInfo            _lockInf;
 }
 
-/**
- * <p>
- *   Returns the NSThread object corresponding to the current thread.
- * </p>
- * <p>
- *   NB. In GNUstep the library internals use the GSCurrentThread()
- *   function as a more efficient mechanism for doing this job - so
- *   you cannot use a category to override this method and expect
- *   the library internals to use your implementation.
- * </p>
- */
 + (NSThread*) currentThread;
 
-/**
- * <p>Create a new thread - use this method rather than alloc-init.  The new
- * thread will begin executing the message given by aSelector, aTarget, and
- * anArgument.  This should have no return value, and must set up an
- * autorelease pool if retain/release memory management is used.  It should
- * free this pool before it finishes execution.</p>
- */
 + (void) detachNewThreadSelector: (SEL)aSelector
                         toTarget: (id)aTarget
                       withObject: (id)anArgument;
 
-/**
- * Terminates the current thread.<br />
- * Normally you don't need to call this method explicitly,
- * since exiting the method with which the thread was detached
- * causes this method to be called automatically.
- */
 + (void) exit;
 
 /**

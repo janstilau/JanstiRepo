@@ -1015,6 +1015,10 @@ unregisterActiveThread(NSThread *thread)
             [super description], _name, threadID];
 }
 
+
+
+
+
 - (id) init
 {
     GS_CREATE_INTERNAL(NSThread);
@@ -1058,6 +1062,7 @@ unregisterActiveThread(NSThread *thread)
     return (self == defaultThread ? YES : NO);
 }
 
+// main 方法内部, 调动传递的 target, action
 - (void) main
 {
     if (_active == NO)
@@ -1107,17 +1112,13 @@ unregisterActiveThread(NSThread *thread)
     return _stackSize;
 }
 
-/**
- * Trampoline function called to launch the thread
+/*
+    NSThread 仅仅是一个对象, 它本身和线程没有关系. 但是通过和 pthread 的关联, 他和线程 11 对应. 也就可以使用这个对象来代表线程了.
  */
 static void *
 nsthreadLauncher(void *thread)
 {
     NSThread *t = (NSThread*)thread;
-    
-    /*
-     该函数, 将 PCB 和 NSThread 进行了关联.
-     */
     setThreadForCurrentThread(t);
     
     /*
@@ -1134,9 +1135,7 @@ nsthreadLauncher(void *thread)
     [t _setName: [t name]];
     
     /*
-     Main 方法, 特别像是 NSOperation 的 main.
-     nsthreadLauncher 是一个模板方法, main 方法就是其中可以自定义的方法.
-     默认的 main 方法, 就是 target action 的调用.
+     在线程的启动函数里面, 进行 main 的调用.
      */
     [t main];
     
@@ -1152,6 +1151,7 @@ nsthreadLauncher(void *thread)
 {
     pthread_attr_t	attr;
     
+    // 首先, 是一系列的防卫判断.
     if (_active == YES)
     {
         [NSException raise: NSInternalInconsistencyException
@@ -1168,9 +1168,6 @@ nsthreadLauncher(void *thread)
          NSStringFromSelector(_cmd)];
     }
     
-    /*
-     _finished 之后 , 就不应该再在这个 thread 上面提交任务了.
-     */
     if (_finished == YES)
     {
         [NSException raise: NSInternalInconsistencyException
@@ -1187,8 +1184,6 @@ nsthreadLauncher(void *thread)
     /* Mark the thread as active while it's running.
      */
     _active = YES;
-    
-    
     
     /*
      下面是真正的线程开启的过程. 可以看到, 和 NSThread 并不是完全相关的, NSThread 应该是关联到 pthread 上.
