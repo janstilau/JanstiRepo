@@ -40,17 +40,6 @@
 #ifndef QHTTPMULTIPART_P_H
 #define QHTTPMULTIPART_P_H
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists for the convenience
-// of the Network Access API.  This header file may change from
-// version to version without notice, or even be removed.
-//
-// We mean it.
-//
-
 #include <QtNetwork/private/qtnetworkglobal_p.h>
 #include "QtCore/qshareddata.h"
 #include "qnetworkrequest_p.h" // for deriving QHttpPartPrivate from QNetworkHeadersPrivate
@@ -101,8 +90,8 @@ public:
     qint64 size() const;
     bool reset();
 
-    QByteArray body;
-    QIODevice *bodyDevice;
+    QByteArray body; // 这里会有 copy
+    QIODevice *bodyDevice; // 这里读的时候太会进行访问
 
 private:
     void checkHeaderCreated() const;
@@ -158,7 +147,7 @@ public:
 };
 
 
-
+// QHttpMultiPartPrivate 作为一个容器, 自己的内容其实很少, 大部分还是根据 QHttpPart 来.
 class QHttpMultiPartPrivate: public QObjectPrivate
 {
 public:
@@ -174,7 +163,6 @@ public:
     QByteArray boundary;
     QHttpMultiPart::ContentType contentType;
     QHttpMultiPartIODevice *device;
-
 };
 
 QT_END_NAMESPACE

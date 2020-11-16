@@ -101,12 +101,6 @@ public:
     QNetworkReply *sendCustomRequest(const QNetworkRequest &request, const QByteArray &verb, QIODevice *data = nullptr);
     QNetworkReply *sendCustomRequest(const QNetworkRequest &request, const QByteArray &verb, const QByteArray &data);
 
-#if QT_CONFIG(http)
-    QNetworkReply *post(const QNetworkRequest &request, QHttpMultiPart *multiPart);
-    QNetworkReply *put(const QNetworkRequest &request, QHttpMultiPart *multiPart);
-    QNetworkReply *sendCustomRequest(const QNetworkRequest &request, const QByteArray &verb, QHttpMultiPart *multiPart);
-#endif
-
 #ifndef QT_NO_BEARERMANAGEMENT
     void setConfiguration(const QNetworkConfiguration &config);
     QNetworkConfiguration configuration() const;

@@ -537,48 +537,19 @@ QNetworkReply *QNetworkAccessManager::head(const QNetworkRequest &request)
     return d_func()->postProcess(createRequest(QNetworkAccessManager::HeadOperation, request));
 }
 
-/*!
-    Posts a request to obtain the contents of the target \a request
-    and returns a new QNetworkReply object opened for reading which emits the
-    \l{QIODevice::readyRead()}{readyRead()} signal whenever new data
-    arrives.
-
-    The contents as well as associated headers will be downloaded.
-
-    \sa post(), put(), deleteResource(), sendCustomRequest()
-*/
 QNetworkReply *QNetworkAccessManager::get(const QNetworkRequest &request)
 {
     return d_func()->postProcess(createRequest(QNetworkAccessManager::GetOperation, request));
 }
 
-/*!
-    Sends an HTTP POST request to the destination specified by \a request
-    and returns a new QNetworkReply object opened for reading that will
-    contain the reply sent by the server. The contents of  the \a data
-    device will be uploaded to the server.
-
-    \a data must be open for reading and must remain valid until the
-    finished() signal is emitted for this reply.
-
-    \note Sending a POST request on protocols other than HTTP and
-    HTTPS is undefined and will probably fail.
-
-    \sa get(), put(), deleteResource(), sendCustomRequest()
-*/
 QNetworkReply *QNetworkAccessManager::post(const QNetworkRequest &request, QIODevice *data)
 {
     return d_func()->postProcess(createRequest(QNetworkAccessManager::PostOperation, request, data));
 }
 
-/*!
-    \overload
-
-    Sends the contents of the \a data byte array to the destination
-    specified by \a request.
-*/
 QNetworkReply *QNetworkAccessManager::post(const QNetworkRequest &request, const QByteArray &data)
 {
+    // 通过 byteArray 传递过来的, 包装了一层, 还是走到了统一的 Post 方法内部.
     QBuffer *buffer = new QBuffer;
     buffer->setData(data);
     buffer->open(QIODevice::ReadOnly);
@@ -588,19 +559,6 @@ QNetworkReply *QNetworkAccessManager::post(const QNetworkRequest &request, const
     return reply;
 }
 
-#if QT_CONFIG(http)
-/*!
-    \since 4.8
-
-    \overload
-
-    Sends the contents of the \a multiPart message to the destination
-    specified by \a request.
-
-    This can be used for sending MIME multipart messages over HTTP.
-
-    \sa QHttpMultiPart, QHttpPart, put()
-*/
 QNetworkReply *QNetworkAccessManager::post(const QNetworkRequest &request, QHttpMultiPart *multiPart)
 {
     QNetworkRequest newRequest = d_func()->prepareMultipart(request, multiPart);
@@ -609,18 +567,6 @@ QNetworkReply *QNetworkAccessManager::post(const QNetworkRequest &request, QHttp
     return reply;
 }
 
-/*!
-    \since 4.8
-
-    \overload
-
-    Sends the contents of the \a multiPart message to the destination
-    specified by \a request.
-
-    This can be used for sending MIME multipart messages over HTTP.
-
-    \sa QHttpMultiPart, QHttpPart, post()
-*/
 QNetworkReply *QNetworkAccessManager::put(const QNetworkRequest &request, QHttpMultiPart *multiPart)
 {
     QNetworkRequest newRequest = d_func()->prepareMultipart(request, multiPart);
@@ -628,7 +574,6 @@ QNetworkReply *QNetworkAccessManager::put(const QNetworkRequest &request, QHttpM
     QNetworkReply *reply = put(newRequest, device);
     return reply;
 }
-#endif // QT_CONFIG(http)
 
 /*!
     Uploads the contents of \a data to the destination \a request and
@@ -1021,6 +966,7 @@ QNetworkReply *QNetworkAccessManager::sendCustomRequest(const QNetworkRequest &r
 }
 #endif // QT_CONFIG(http)
 
+// 真正的, 进行网络交互的过程.
 QNetworkReply *QNetworkAccessManager::createRequest(QNetworkAccessManager::Operation op,
                                                     const QNetworkRequest &originalReq,
                                                     QIODevice *outgoingData)
@@ -1036,7 +982,6 @@ QNetworkReply *QNetworkAccessManager::createRequest(QNetworkAccessManager::Opera
 
     bool isLocalFile = req.url().isLocalFile();
     QString scheme = req.url().scheme();
-
 
     // fast path for GET on file:// URLs
     // The QNetworkAccessFileBackend will right now only be used for PUT
@@ -1073,6 +1018,7 @@ QNetworkReply *QNetworkAccessManager::createRequest(QNetworkAccessManager::Opera
 
     // Return a disabled network reply if network access is disabled.
     // Except if the scheme is empty or file:// or if the host resolves to a loopback address.
+    // 如果, 没有网, 直接返回一个特殊的 reply\.
     if (d->networkAccessible == NotAccessible && !isLocalFile) {
         QHostAddress dest;
         QString host = req.url().host().toLower();
@@ -1099,6 +1045,7 @@ QNetworkReply *QNetworkAccessManager::createRequest(QNetworkAccessManager::Opera
     }
 #endif
 
+    // 在这, 设置 ContentLength 的属性.
     QNetworkRequest request = req;
     if (!request.header(QNetworkRequest::ContentLengthHeader).isValid() &&
         outgoingData && !outgoingData->isSequential()) {
@@ -1107,6 +1054,7 @@ QNetworkReply *QNetworkAccessManager::createRequest(QNetworkAccessManager::Opera
         request.setHeader(QNetworkRequest::ContentLengthHeader, outgoingData->size());
     }
 
+    // 在这, 设置 Cookie 的属性.
     if (static_cast<QNetworkRequest::LoadControl>
         (request.attribute(QNetworkRequest::CookieLoadControlAttribute,
                            QNetworkRequest::Automatic).toInt()) == QNetworkRequest::Automatic) {
@@ -1142,11 +1090,8 @@ QNetworkReply *QNetworkAccessManager::createRequest(QNetworkAccessManager::Opera
             request.setUrl(stsUrl);
         }
 #endif
+        // 生成一个 HttpReply
         QNetworkReplyHttpImpl *reply = new QNetworkReplyHttpImpl(this, request, op, outgoingData);
-#ifndef QT_NO_BEARERMANAGEMENT
-        connect(this, SIGNAL(networkSessionConnected()),
-                reply, SLOT(_q_networkSessionConnected()));
-#endif
         return reply;
     }
 #endif // QT_CONFIG(http)
@@ -1309,15 +1254,15 @@ void QNetworkAccessManagerPrivate::_q_replyPreSharedKeyAuthenticationRequired(QS
 #endif
 }
 
-// 在这里, 将 reply 的 finish 信号, 和 _q_replyFinished 信号进行了关联. 本质上, 还是 reply 发送了信号.
+// 这里仅仅是做了一些信号的连接,  这个时候的 reply, 已经在网络交互的过程之中了.
 QNetworkReply *QNetworkAccessManagerPrivate::postProcess(QNetworkReply *reply)
 {
     Q_Q(QNetworkAccessManager);
     QNetworkReplyPrivate::setManager(reply, q);
+
     q->connect(reply, SIGNAL(finished()), SLOT(_q_replyFinished()));
     q->connect(reply, SIGNAL(encrypted()), SLOT(_q_replyEncrypted()));
     q->connect(reply, SIGNAL(sslErrors(QList<QSslError>)), SLOT(_q_replySslErrors(QList<QSslError>)));
-    q->connect(reply, SIGNAL(preSharedKeyAuthenticationRequired(QSslPreSharedKeyAuthenticator*)), SLOT(_q_replyPreSharedKeyAuthenticationRequired(QSslPreSharedKeyAuthenticator*)));
     activeReplyCount++;
     return reply;
 }
@@ -1684,8 +1629,8 @@ void QNetworkAccessManagerPrivate::_q_networkSessionFailed(QNetworkSession::Sess
 
 #endif // QT_NO_BEARERMANAGEMENT
 
-#if QT_CONFIG(http)
-QNetworkRequest QNetworkAccessManagerPrivate::prepareMultipart(const QNetworkRequest &request, QHttpMultiPart *multiPart)
+QNetworkRequest QNetworkAccessManagerPrivate::prepareMultipart(
+        const QNetworkRequest &request, QHttpMultiPart *multiPart)
 {
     // copy the request, we probably need to add some headers
     QNetworkRequest newRequest(request);
@@ -1720,6 +1665,7 @@ QNetworkRequest QNetworkAccessManagerPrivate::prepareMultipart(const QNetworkReq
     if (!request.hasRawHeader(mimeHeader))
         newRequest.setRawHeader(mimeHeader, QByteArray("1.0"));
 
+    // 在这里, 做了一层校验. 会保底打开 device.
     QIODevice *device = multiPart->d_func()->device;
     if (!device->isReadable()) {
         if (!device->isOpen()) {
@@ -1732,9 +1678,6 @@ QNetworkRequest QNetworkAccessManagerPrivate::prepareMultipart(const QNetworkReq
 
     return newRequest;
 }
-
-
-#endif // QT_CONFIG(http)
 
 QT_END_NAMESPACE
 

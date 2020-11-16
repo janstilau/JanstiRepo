@@ -1116,7 +1116,7 @@ bool QNetworkReplyImplPrivate::migrateBackend()
     return true;
 }
 
-#ifndef QT_NO_BEARERMANAGEMENT
+// 一个特殊的Reply, 代表这个没有网络, 会重新一些方法, 并将一些值设置为特殊值.
 QDisabledNetworkReply::QDisabledNetworkReply(QObject *parent,
                                              const QNetworkRequest &req,
                                              QNetworkAccessManager::Operation op)
@@ -1133,6 +1133,7 @@ QDisabledNetworkReply::QDisabledNetworkReply(QObject *parent,
                                               "Network access is disabled.");
     setError(UnknownNetworkError, msg);
 
+    // 这里, 通过了 QMetaObject::invokeMethod 进行触发.
     QMetaObject::invokeMethod(this, "error", Qt::QueuedConnection,
         Q_ARG(QNetworkReply::NetworkError, UnknownNetworkError));
     QMetaObject::invokeMethod(this, "finished", Qt::QueuedConnection);
@@ -1141,7 +1142,6 @@ QDisabledNetworkReply::QDisabledNetworkReply(QObject *parent,
 QDisabledNetworkReply::~QDisabledNetworkReply()
 {
 }
-#endif
 
 QT_END_NAMESPACE
 

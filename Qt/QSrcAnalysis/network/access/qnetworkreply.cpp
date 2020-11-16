@@ -277,7 +277,7 @@ void QNetworkReply::setOperation(QNetworkAccessManager::Operation operation)
 void QNetworkReply::setRequest(const QNetworkRequest &request)
 {
     Q_D(QNetworkReply);
-    d->originalRequest = request;
+    d->originalRequest = request; // 这里, 传过来的是对象, 所以会拷贝一份.
 }
 
 void QNetworkReply::setError(NetworkError errorCode, const QString &errorString)

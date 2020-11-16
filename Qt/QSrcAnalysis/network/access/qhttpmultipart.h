@@ -50,6 +50,9 @@ QT_REQUIRE_CONFIG(http);
 
 QT_BEGIN_NAMESPACE
 
+// 这两个用于 post 请求的时候, 用 Multi-Part 格式传递内容.
+// 具体 MimeType 为 multipart/form-data 的详细解释, 可以看下面的文档.
+// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Basics_of_HTTP/MIME_types
 
 class QHttpPartPrivate;
 class QHttpMultiPart;
@@ -60,9 +63,7 @@ public:
     QHttpPart();
     QHttpPart(const QHttpPart &other);
     ~QHttpPart();
-#ifdef Q_COMPILER_RVALUE_REFS
-    QHttpPart &operator=(QHttpPart &&other) Q_DECL_NOTHROW { swap(other); return *this; }
-#endif
+
     QHttpPart &operator=(const QHttpPart &other);
 
     void swap(QHttpPart &other) Q_DECL_NOTHROW { qSwap(d, other.d); }
