@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtWidgets module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qlayout.h"
 
 #include "qapplication.h"
@@ -244,36 +205,10 @@ void QLayoutItem::setAlignment(Qt::Alignment alignment)
     i.e. whether it contains any widgets.
 */
 
-/*!
-    \fn QSpacerItem::QSpacerItem(int w, int h, QSizePolicy::Policy hPolicy, QSizePolicy::Policy vPolicy)
 
-    Constructs a spacer item with preferred width \a w, preferred
-    height \a h, horizontal size policy \a hPolicy and vertical size
-    policy \a vPolicy.
-
-    The default values provide a gap that is able to stretch if
-    nothing else wants the space.
-*/
-
-/*!
-    Destructor.
-*/
 QSpacerItem::~QSpacerItem() {}
 
-/*!
-    Changes this spacer item to have preferred width \a w, preferred
-    height \a h, horizontal size policy \a hPolicy and vertical size
-    policy \a vPolicy.
 
-    The default values provide a gap that is able to stretch if
-    nothing else wants the space.
-
-    Note that if changeSize() is called after the spacer item has been added
-    to a layout, it is necessary to invalidate the layout in order for the
-    spacer item's new size to take effect.
-
-    \sa QSpacerItem::invalidate()
-*/
 void QSpacerItem::changeSize(int w, int h, QSizePolicy::Policy hPolicy,
                              QSizePolicy::Policy vPolicy)
 {
@@ -282,20 +217,9 @@ void QSpacerItem::changeSize(int w, int h, QSizePolicy::Policy hPolicy,
     sizeP = QSizePolicy(hPolicy, vPolicy);
 }
 
-/*!
-    \fn QWidgetItem::QWidgetItem(QWidget *widget)
 
-    Creates an item containing the given \a widget.
-*/
-
-/*!
-    Destructor.
-*/
 QWidgetItem::~QWidgetItem() {}
 
-/*!
-    Destroys the QLayoutItem.
-*/
 QLayoutItem::~QLayoutItem()
 {
 }
@@ -337,20 +261,11 @@ QLayout * QLayout::layout()
     return this;
 }
 
-/*!
-    Returns a pointer to this object.
-*/
+
 QSpacerItem * QSpacerItem::spacerItem()
 {
     return this;
 }
-
-/*!
-    \fn QSizePolicy QSpacerItem::sizePolicy() const
-    \since 5.5
-
-    Returns the size policy of this item.
-*/
 
 /*!
     If this item manages a QWidget, returns that widget. Otherwise,
@@ -367,9 +282,7 @@ QWidget * QLayoutItem::widget()
     return 0;
 }
 
-/*!
-    Returns the widget managed by this item.
-*/
+
 QWidget *QWidgetItem::widget()
 {
     return wid;
@@ -437,9 +350,6 @@ QSizePolicy::ControlTypes QLayoutItem::controlTypes() const
     return QSizePolicy::DefaultType;
 }
 
-/*!
-    \reimp
-*/
 void QSpacerItem::setGeometry(const QRect &r)
 {
     rect = r;
@@ -505,17 +415,12 @@ void QWidgetItem::setGeometry(const QRect &rect)
     wid->setGeometry(x, y, s.width(), s.height());
 }
 
-/*!
-    \reimp
-*/
 QRect QSpacerItem::geometry() const
 {
     return rect;
 }
 
-/*!
-    \reimp
-*/
+
 QRect QWidgetItem::geometry() const
 {
     return !wid->testAttribute(Qt::WA_LayoutUsesWidgetRect)
@@ -524,14 +429,11 @@ QRect QWidgetItem::geometry() const
 }
 
 
-/*!
-    \reimp
-*/
 bool QWidgetItem::hasHeightForWidth() const
 {
     if (isEmpty())
         return false;
-    return wid->hasHeightForWidth();
+    return wid->hasHeightForWidth(); // 各个不同的 widget, 是否widthheight 保持比例是不同的.
 }
 
 /*!
@@ -546,24 +448,25 @@ int QWidgetItem::heightForWidth(int w) const
       ? fromLayoutItemSize(wid->d_func(), QSize(w, 0)).width()
       : w;
 
-    int hfw;
+    int heightForWidth;
     if (wid->layout())
-        hfw = wid->layout()->totalHeightForWidth(w);
+        heightForWidth = wid->layout()->totalHeightForWidth(w);
     else
-        hfw = wid->heightForWidth(w);
+        heightForWidth = wid->heightForWidth(w);
+    // 如果, widget 有 layout, layout 说了算, 否则自己的定义.
 
-    if (hfw > wid->maximumHeight())
-        hfw = wid->maximumHeight();
-    if (hfw < wid->minimumHeight())
-        hfw = wid->minimumHeight();
+    if (heightForWidth > wid->maximumHeight())
+        heightForWidth = wid->maximumHeight();
+    if (heightForWidth < wid->minimumHeight())
+        heightForWidth = wid->minimumHeight();
 
-    hfw = !wid->testAttribute(Qt::WA_LayoutUsesWidgetRect)
-        ? toLayoutItemSize(wid->d_func(), QSize(0, hfw)).height()
-        : hfw;
+    heightForWidth = !wid->testAttribute(Qt::WA_LayoutUsesWidgetRect)
+        ? toLayoutItemSize(wid->d_func(), QSize(0, heightForWidth)).height()
+        : heightForWidth;
 
-    if (hfw < 0)
-        hfw = 0;
-    return hfw;
+    if (heightForWidth < 0)
+        heightForWidth = 0;
+    return heightForWidth;
 }
 
 /*!
@@ -603,9 +506,7 @@ Qt::Orientations QWidgetItem::expandingDirections() const
     return e;
 }
 
-/*!
-    \reimp
-*/
+// 示弱就挨打.
 QSize QSpacerItem::minimumSize() const
 {
     return QSize(sizeP.horizontalPolicy() & QSizePolicy::ShrinkFlag ? 0 : width,
@@ -624,9 +525,6 @@ QSize QWidgetItem::minimumSize() const
            : qSmartMinSize(this);
 }
 
-/*!
-    \reimp
-*/
 QSize QSpacerItem::maximumSize() const
 {
     return QSize(sizeP.horizontalPolicy() & QSizePolicy::GrowFlag ? QLAYOUTSIZE_MAX : width,
@@ -648,7 +546,7 @@ QSize QWidgetItem::maximumSize() const
 }
 
 /*!
-    \reimp
+    // 这里, 就返回明确的值了.
 */
 QSize QSpacerItem::sizeHint() const
 {
@@ -685,22 +583,14 @@ bool QSpacerItem::isEmpty() const
     return true;
 }
 
-/*!
-    Returns \c true if the widget is hidden; otherwise returns \c false.
+// 这就是为什么 Widget hidden 了之后, 就会坍塌的原因所在了. 所以也可以 retainSizeWhenHidden 让某个 widget 不坍塌.
+// 不过, 知道了 widget hidden 之后, 可以自动布局了
 
-    \sa QWidget::isHidden()
-*/
 bool QWidgetItem::isEmpty() const
 {
     return (wid->isHidden() && !wid->sizePolicy().retainSizeWhenHidden()) || wid->isWindow();
 }
 
-/*!
-    Returns the control type associated with the widget for which
-    this size policy applies.
-
-    \sa QSizePolicy::controlType()
- */
 QSizePolicy::ControlTypes QWidgetItem::controlTypes() const
 {
     return wid->sizePolicy().controlType();

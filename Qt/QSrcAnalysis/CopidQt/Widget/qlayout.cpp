@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtWidgets module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qlayout.h"
 
 #include "qapplication.h"
@@ -55,9 +16,6 @@
 #include "qvariant.h"
 #include "qwidget_p.h"
 #include "qlayout_p.h"
-#if QT_CONFIG(formlayout)
-#include "qformlayout.h"
-#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -549,9 +507,6 @@ QRect QLayout::geometry() const
     return d->rect;
 }
 
-/*!
-    \reimp
-*/
 void QLayout::invalidate()
 {
     Q_D(QLayout);
@@ -818,30 +773,20 @@ static bool layoutDebug()
 void QLayoutPrivate::reparentChildWidgets(QWidget *mw)
 {
     Q_Q(QLayout);
-    int n =  q->count();
+    int n =  q->count(); // 返回 layout 管理的个数.
 
-#if QT_CONFIG(menubar)
-    if (menubar && menubar->parentWidget() != mw) {
-        menubar->setParent(mw);
-    }
-#endif
     bool mwVisible = mw && mw->isVisible();
     for (int i = 0; i < n; ++i) {
         QLayoutItem *item = q->itemAt(i);
         if (QWidget *w = item->widget()) {
             QWidget *pw = w->parentWidget();
-#ifdef QT_DEBUG
-            if (Q_UNLIKELY(pw && pw != mw && layoutDebug())) {
-                qWarning("QLayout::addChildLayout: widget %s \"%ls\" in wrong parent; moved to correct parent",
-                         w->metaObject()->className(), qUtf16Printable(w->objectName()));
-            }
-#endif
             bool needShow = mwVisible && !(w->isHidden() && w->testAttribute(Qt::WA_WState_ExplicitShowHide));
             if (pw != mw)
-                w->setParent(mw);
+                w->setParent(mw); // 改变 parent. 可见, 还是 view 之前的父子关系. layout 没有参与其中.
             if (needShow)
                 QMetaObject::invokeMethod(w, "_q_showIfNotHidden", Qt::QueuedConnection); //show later
         } else if (QLayout *l = item->layout()) {
+            // 如果是子布局, 那么递归调用.
             l->d_func()->reparentChildWidgets(mw);
         }
     }
@@ -1022,10 +967,6 @@ void QLayout::activateRecursiveHelper(QLayoutItem *item)
 }
 
 /*!
-  Updates the layout for parentWidget().
-
-  You should generally not need to call this because it is
-  automatically called at the most appropriate times.
 
   \sa activate(), invalidate()
 */
@@ -1036,7 +977,6 @@ void QLayout::update()
     while (layout && layout->d_func()->activated) {
         layout->d_func()->activated = false;
         if (layout->d_func()->topLevel) {
-            Q_ASSERT(layout->parent()->isWidgetType());
             QWidget *mw = static_cast<QWidget*>(layout->parent());
             QApplication::postEvent(mw, new QEvent(QEvent::LayoutRequest));
             break;

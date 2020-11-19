@@ -9467,38 +9467,9 @@ QLayout *QWidget::layout() const
     return d_func()->layout;
 }
 
-
-/*!
-    \fn void QWidget::setLayout(QLayout *layout)
-
-    Sets the layout manager for this widget to \a layout.
-
-    If there already is a layout manager installed on this widget,
-    QWidget won't let you install another. You must first delete the
-    existing layout manager (returned by layout()) before you can
-    call setLayout() with the new layout.
-
-    If \a layout is the layout manager on a different widget, setLayout()
-    will reparent the layout and make it the layout manager for this widget.
-
-    Example:
-
-    \snippet layouts/layouts.cpp 24
-
-    An alternative to calling this function is to pass this widget to
-    the layout's constructor.
-
-    The QWidget will take ownership of \a layout.
-
-    \sa layout(), {Layout Management}
-*/
-
 void QWidget::setLayout(QLayout *l)
 {
-    if (Q_UNLIKELY(!l)) {
-        qWarning("QWidget::setLayout: Cannot set layout to 0");
-        return;
-    }
+    // 如果已经有了一个 layoutmanager, 这里不进行替换.
     if (layout()) {
         if (Q_UNLIKELY(layout() != l))
             qWarning("QWidget::setLayout: Attempting to set QLayout \"%s\" on %s \"%s\", which already has a"
@@ -9510,25 +9481,21 @@ void QWidget::setLayout(QLayout *l)
     QObject *oldParent = l->parent();
     if (oldParent && oldParent != this) {
         if (oldParent->isWidgetType()) {
-            // Steal the layout off a widget parent. Takes effect when
-            // morphing laid-out container widgets in Designer.
+            // 以 take 开头的函数, 会将这个值, 删除后返回.
             QWidget *oldParentWidget = static_cast<QWidget *>(oldParent);
             oldParentWidget->takeLayout();
         } else {
-            qWarning("QWidget::setLayout: Attempting to set QLayout \"%s\" on %s \"%s\", when the QLayout already has a parent",
-                     l->objectName().toLocal8Bit().data(), metaObject()->className(),
-                     objectName().toLocal8Bit().data());
             return;
         }
     }
 
     Q_D(QWidget);
-    l->d_func()->topLevel = true;
+    l->d_func()->topLevel = true; // 变为了顶级 layout 了
     d->layout = l;
     if (oldParent != this) {
         l->setParent(this);
         l->d_func()->reparentChildWidgets(this);
-        l->invalidate();
+        l->invalidate(); // 表明, layout 需要重新计算.
     }
 
     if (isWindow() && d->maybeTopData())

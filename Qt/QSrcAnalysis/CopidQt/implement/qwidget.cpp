@@ -10186,15 +10186,7 @@ QRegion QWidget::mask() const
     return d->extra ? d->extra->mask : QRegion();
 }
 
-/*!
-    Returns the layout manager that is installed on this widget, or 0
-    if no layout manager is installed.
 
-    The layout manager sets the geometry of the widget's children
-    that have been added to the layout.
-
-    \sa setLayout(), sizePolicy(), {Layout Management}
-*/
 QLayout *QWidget::layout() const
 {
     return d_func()->layout;

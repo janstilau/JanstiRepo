@@ -86,6 +86,7 @@ public:
     static QSpacerItemFactoryMethod spacerItemFactoryMethod;
 
     int insideSpacing;
+    // 上下左右四个 margin
     int userLeftMargin;
     int userTopMargin;
     int userRightMargin;
