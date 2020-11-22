@@ -4820,15 +4820,6 @@ void QWidgetPrivate::drawWidget(QPaintDevice *pdev, const QRegion &rgn, const QP
             if (paintEngine) {
                 setRedirected(pdev, -offset);
 
-#if 0 // Used to be included in Qt4 for Q_WS_MAC
-                // (Alien support) Special case for Mac when redirecting: If the paint device
-                // is of the Widget type we need to set WA_WState_InPaintEvent since painting
-                // outside the paint event is not supported on QWidgets. The attributeis
-                // restored further down.
-                if (pdev->devType() == QInternal::Widget)
-                    static_cast<QWidget *>(pdev)->setAttribute(Qt::WA_WState_InPaintEvent);
-
-#endif
                 if (sharedPainter)
                     setSystemClip(pdev->paintEngine(), pdev->devicePixelRatioF(), toBePainted);
                 else
@@ -4864,12 +4855,6 @@ void QWidgetPrivate::drawWidget(QPaintDevice *pdev, const QRegion &rgn, const QP
                 }
             }
 
-#if 0
-            qDebug() << "painting" << q << "opaque ==" << isOpaque();
-            qDebug() << "clipping to" << toBePainted << "location == " << offset
-                     << "geometry ==" << QRect(q->mapTo(q->window(), QPoint(0, 0)), q->size());
-#endif
-
             bool skipPaintEvent = false;
 #ifndef QT_NO_OPENGL
             if (renderToTexture) {
@@ -4901,6 +4886,7 @@ void QWidgetPrivate::drawWidget(QPaintDevice *pdev, const QRegion &rgn, const QP
 
             if (!skipPaintEvent) {
                 //actually send the paint event
+                //在这里, 发送了 paint event.
                 sendPaintEvent(toBePainted);
             }
 
@@ -8049,26 +8035,7 @@ QSize QWidget::sizeHint() const
         return d->layout->totalSizeHint();
     return QSize(-1, -1);
 }
-
-/*!
-    \property QWidget::minimumSizeHint
-    \brief the recommended minimum size for the widget
-
-    If the value of this property is an invalid size, no minimum size
-    is recommended.
-
-    The default implementation of minimumSizeHint() returns an invalid
-    size if there is no layout for this widget, and returns the
-    layout's minimum size otherwise. Most built-in widgets reimplement
-    minimumSizeHint().
-
-    \l QLayout will never resize a widget to a size smaller than the
-    minimum size hint unless minimumSize() is set or the size policy is
-    set to QSizePolicy::Ignore. If minimumSize() is set, the minimum
-    size hint will be ignored.
-
-    \sa QSize::isValid(), resize(), setMinimumSize(), sizePolicy()
-*/
+//除非设置了minimumSize属性或大小策略为 QSziePolicy::Ignore，否则布局管理器不会把部件的大小调整为比最小大小提示还要小的大小。
 QSize QWidget::minimumSizeHint() const
 {
     Q_D(const QWidget);
@@ -9435,6 +9402,7 @@ void QWidget::ensurePolished() const
 
     // polish children after 'this'
     QList<QObject*> children = d->children;
+    // 这里, Qt 里面没有 subviews 的概念. 如果想要找到子 view, 要通过以下的方式确认.
     for (int i = 0; i < children.size(); ++i) {
         QObject *o = children.at(i);
         if(!o->isWidgetType())

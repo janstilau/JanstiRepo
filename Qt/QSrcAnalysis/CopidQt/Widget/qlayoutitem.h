@@ -18,6 +18,7 @@ class QSpacerItem;
 class QWidget;
 class QSize;
 
+//! 这个类, 提供了这么多的方法, 都是为了重载的. 它本身, 仅仅保存了 alignment 这一个值.
 class Q_WIDGETS_EXPORT QLayoutItem
 {
 public:
@@ -50,10 +51,11 @@ protected:
 inline QLayoutItem::QLayoutItem(Qt::Alignment aalignment)
     : align(aalignment) { }
 
-// 这个 Item 就是明确的表示, 要一块 width, height 这么大的空间.
+//! 特殊的 layoutitem 的子类, 表示一块空间. 这块空间可以被拉伸.
 class Q_WIDGETS_EXPORT QSpacerItem : public QLayoutItem
 {
 public:
+    // 默认清空下, sizeHint 是最小的值.
     QSpacerItem(int w, int h,
                  QSizePolicy::Policy hData = QSizePolicy::Minimum,
                  QSizePolicy::Policy vData = QSizePolicy::Minimum)
@@ -74,6 +76,7 @@ public:
     QSizePolicy sizePolicy() const { return sizeP; }
 
 private:
+    // 存放 sapce 的数据.
     int width;
     int height;
     QSizePolicy sizeP;
@@ -101,7 +104,7 @@ public:
     int heightForWidth(int) const override;
     QSizePolicy::ControlTypes controlTypes() const override;
 protected:
-    QWidget *wid;
+    QWidget *wid; // 存放 widget 的数据
 };
 
 class Q_WIDGETS_EXPORT QWidgetItemV2 : public QWidgetItem

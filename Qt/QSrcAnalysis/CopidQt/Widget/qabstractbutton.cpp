@@ -375,6 +375,7 @@ void QAbstractButtonPrivate::refresh()
     q->update();
 }
 
+// 点击相关的逻辑实现.
 void QAbstractButtonPrivate::click()
 {
     Q_Q(QAbstractButton);
@@ -401,6 +402,7 @@ void QAbstractButtonPrivate::click()
     blockRefresh = false;
     refresh();
     q->repaint();
+    // 发送相关的信号.
     if (guard)
         emitReleased();
     if (guard)
@@ -664,12 +666,9 @@ bool QAbstractButton::isChecked() const
 }
 
 /*!
-  \property QAbstractButton::down
-  \brief whether the button is pressed down
-
-  If this property is \c true, the button is pressed down. The signals
-  pressed() and clicked() are not emitted if you set this property
-  to true. The default is false.
+  改变状态.
+  刷新 UI.
+  开启自动重复的定时器.
 */
 
 void QAbstractButton::setDown(bool down)
@@ -691,20 +690,7 @@ bool QAbstractButton::isDown() const
     return d->down;
 }
 
-/*!
-\property QAbstractButton::autoRepeat
-\brief whether autoRepeat is enabled
-
-If autoRepeat is enabled, then the pressed(), released(), and clicked() signals are emitted at
-regular intervals when the button is down. autoRepeat is off by default.
-The initial delay and the repetition interval are defined in milliseconds by \l
-autoRepeatDelay and \l autoRepeatInterval.
-
-Note: If a button is pressed down by a shortcut key, then auto-repeat is enabled and timed by the
-system and not by this class. The pressed(), released(), and clicked() signals will be emitted
-like in the normal case.
-*/
-
+// 按钮也有自动重复的功能.
 void QAbstractButton::setAutoRepeat(bool autoRepeat)
 {
     Q_D(QAbstractButton);
@@ -770,24 +756,6 @@ int QAbstractButton::autoRepeatInterval() const
 }
 
 
-
-/*!
-\property QAbstractButton::autoExclusive
-\brief whether auto-exclusivity is enabled
-
-If auto-exclusivity is enabled, checkable buttons that belong to the
-same parent widget behave as if they were part of the same
-exclusive button group. In an exclusive button group, only one button
-can be checked at any time; checking another button automatically
-unchecks the previously checked one.
-
-The property has no effect on buttons that belong to a button
-group.
-
-autoExclusive is off by default, except for radio buttons.
-
-\sa QRadioButton
-*/
 void QAbstractButton::setAutoExclusive(bool autoExclusive)
 {
     Q_D(QAbstractButton);
@@ -817,17 +785,7 @@ QButtonGroup *QAbstractButton::group() const
 #endif // QT_CONFIG(buttongroup)
 
 /*!
-Performs an animated click: the button is pressed immediately, and
-released \a msec milliseconds later (the default is 100 ms).
-
-Calling this function again before the button is released resets
-the release timer.
-
-All signals associated with a click are emitted as appropriate.
-
-This function does nothing if the button is \l{setEnabled()}{disabled.}
-
-\sa click()
+animateTimer 指的是, 在一段时间之后, 自动取消 pressed 状态, 然后发送 clicked 信号.
 */
 void QAbstractButton::animateClick(int msec)
 {
@@ -909,23 +867,18 @@ void QAbstractButton::nextCheckState()
 }
 
 /*!
-Returns \c true if \a pos is inside the clickable button rectangle;
-otherwise returns \c false.
 
-By default, the clickable area is the entire widget. Subclasses
-may reimplement this function to provide support for clickable
-areas of different shapes and sizes.
+    这个函数类似于 hitTest
+    子类可以重写, 来控制点击区域, 例如 radio 就是只能点击左边的部分.
 */
 bool QAbstractButton::hitButton(const QPoint &pos) const
 {
     return rect().contains(pos);
 }
 
-/*! \reimp */
 bool QAbstractButton::event(QEvent *e)
 {
-    // as opposed to other widgets, disabled buttons accept mouse
-    // events. This avoids surprising click-through scenarios
+    // 如果, unAbleed, 还是接受事件, 但是就不做处理了.
     if (!isEnabled()) {
         switch(e->type()) {
         case QEvent::TabletPress:
@@ -939,16 +892,13 @@ bool QAbstractButton::event(QEvent *e)
         case QEvent::HoverEnter:
         case QEvent::HoverLeave:
         case QEvent::ContextMenu:
-#if QT_CONFIG(wheelevent)
         case QEvent::Wheel:
-#endif
             return true;
         default:
             break;
         }
     }
 
-#ifndef QT_NO_SHORTCUT
     if (e->type() == QEvent::Shortcut) {
         Q_D(QAbstractButton);
         QShortcutEvent *se = static_cast<QShortcutEvent *>(e);
@@ -964,18 +914,18 @@ bool QAbstractButton::event(QEvent *e)
         }
         return true;
     }
-#endif
     return QWidget::event(e);
 }
 
-/*! \reimp */
 void QAbstractButton::mousePressEvent(QMouseEvent *e)
 {
     Q_D(QAbstractButton);
+    // 如果, 不是左鼠标, 不做处理.
     if (e->button() != Qt::LeftButton) {
         e->ignore();
         return;
     }
+    // 从 hitbutton 的实现可以看出, MouseEvent 里面的坐标, 已经变味了 Button 坐标系的了.
     if (hitButton(e->pos())) {
         setDown(true);
         d->pressed = true;
@@ -999,6 +949,7 @@ void QAbstractButton::mouseReleaseEvent(QMouseEvent *e)
 
     d->pressed = false;
 
+    // 如果, 之前已经在 down 状态了, 然后又 release 了, 就触发 click 的逻辑.
     if (!d->down) {
         // refresh is required by QMacStyle to resume the default button animation
         d->refresh();
@@ -1131,8 +1082,7 @@ void QAbstractButton::keyReleaseEvent(QKeyEvent *e)
     }
 }
 
-/*!\reimp
- */
+//!
 void QAbstractButton::timerEvent(QTimerEvent *e)
 {
     Q_D(QAbstractButton);
@@ -1141,6 +1091,7 @@ void QAbstractButton::timerEvent(QTimerEvent *e)
         if (d->down) {
             QPointer<QAbstractButton> guard(this);
             nextCheckState();
+            // 重复点击, 就是不断地发送下面的三个信号.
             if (guard)
                 d->emitReleased();
             if (guard)
@@ -1149,6 +1100,7 @@ void QAbstractButton::timerEvent(QTimerEvent *e)
                 d->emitPressed();
         }
     } else if (e->timerId() == d->animateTimer.timerId()) {
+        // 如果是延迟释放的功能, 就自动触发 click.
         d->animateTimer.stop();
         d->click();
     }

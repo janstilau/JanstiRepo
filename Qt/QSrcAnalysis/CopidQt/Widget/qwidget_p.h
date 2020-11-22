@@ -241,7 +241,7 @@ struct QWExtra {
 #ifndef QT_NO_CURSOR
     QCursor *curs;
 #endif
-    QPointer<QStyle> style;
+    QPointer<QStyle> style; // Style .
     QPointer<QWidget> focus_proxy;
 
     // Implicit pointers (shared_empty/shared_null).
@@ -249,10 +249,12 @@ struct QWExtra {
     QString styleSheet;
 
     // Other variables.
+    // 最大最小值. 专门进行了存储.
     qint32 minw;
     qint32 minh; // minimum size
     qint32 maxw;
     qint32 maxh; // maximum size
+
     quint16 customDpiX;
     quint16 customDpiY;
     QSize staticContentsSize;
@@ -693,12 +695,15 @@ public:
     static void setWidgetParentHelper(QObject *widgetAsObject, QObject *newParent);
 
     // Variables.
-    // Regular pointers (keep them together to avoid gaps on 64 bit architectures).
+    // 真正的存储的数据成员
     QWExtra *extra;
+    // 可以看到, View 里面存储了 focus 相关的东西
     QWidget *focus_next;
     QWidget *focus_prev;
     QWidget *focus_child;
+    // 布局相关
     QLayout *layout;
+    // 绘制相关.
     QRegion *needsFlush;
     QPaintDevice *redirectDev;
     QWidgetItemV2 *widgetItem;
@@ -743,10 +748,12 @@ public:
     short topmargin;
     short rightmargin;
     short bottommargin;
+
     signed char leftLayoutItemMargin;
     signed char topLayoutItemMargin;
     signed char rightLayoutItemMargin;
     signed char bottomLayoutItemMargin;
+
     static int instanceCounter; // Current number of widget instances
     static int maxInstances; // Maximum number of widget instances
     Qt::HANDLE hd;

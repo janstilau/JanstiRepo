@@ -1902,7 +1902,8 @@ QVariant& QVariant::operator=(const QVariant &variant)
     if (this == &variant)
         return *this;
 
-    clear();
+    clear(); // 首先, 把当前值进行一次清理工作.
+
     if (variant.d.is_shared) {
         variant.d.data.shared->ref.ref();
         d = variant.d;
@@ -1967,6 +1968,7 @@ const char *QVariant::typeName() const
 */
 void QVariant::clear()
 {
+    // 这里, 专门有一个存储, 来进行清理工作. 这样, 清理工作的逻辑, 就可以分开到各个类型里面, 然后单独进行配置了.
     if ((d.is_shared && !d.data.shared->ref.deref()) || (!d.is_shared && d.type > Char))
         handlerManager[d.type]->clear(&d);
     d.type = Invalid;

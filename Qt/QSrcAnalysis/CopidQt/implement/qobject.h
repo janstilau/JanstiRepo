@@ -156,6 +156,7 @@ public:
     QString objectName() const;
     void setObjectName(const QString &name);
 
+    // 直接在成员变量里面, 存储了两个 bool 值, 这就是它快的原因所在.
     inline bool isWidgetType() const { return d_ptr->isWidget; }
     inline bool isWindowType() const { return d_ptr->isWindow; }
 

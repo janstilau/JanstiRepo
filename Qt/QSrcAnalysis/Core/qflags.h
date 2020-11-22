@@ -1,46 +1,5 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include <QtCore/qglobal.h>
 
-#ifndef QFLAGS_H
-#define QFLAGS_H
 
 #ifdef Q_COMPILER_INITIALIZER_LISTS
 #include <initializer_list>
@@ -52,24 +11,10 @@ class QDataStream;
 
 class QFlag
 {
-    int i;
+    int i; // 存储的值
 public:
     Q_DECL_CONSTEXPR inline QFlag(int value) Q_DECL_NOTHROW : i(value) {}
     Q_DECL_CONSTEXPR inline operator int() const Q_DECL_NOTHROW { return i; }
-
-#if !defined(Q_CC_MSVC)
-    // Microsoft Visual Studio has buggy behavior when it comes to
-    // unsigned enums: even if the enum is unsigned, the enum tags are
-    // always signed
-#  if !defined(__LP64__) && !defined(Q_CLANG_QDOC)
-    Q_DECL_CONSTEXPR inline QFlag(long value) Q_DECL_NOTHROW : i(int(value)) {}
-    Q_DECL_CONSTEXPR inline QFlag(ulong value) Q_DECL_NOTHROW : i(int(long(value))) {}
-#  endif
-    Q_DECL_CONSTEXPR inline QFlag(uint value) Q_DECL_NOTHROW : i(int(value)) {}
-    Q_DECL_CONSTEXPR inline QFlag(short value) Q_DECL_NOTHROW : i(int(value)) {}
-    Q_DECL_CONSTEXPR inline QFlag(ushort value) Q_DECL_NOTHROW : i(int(uint(value))) {}
-    Q_DECL_CONSTEXPR inline operator uint() const Q_DECL_NOTHROW { return uint(i); }
-#endif
 };
 Q_DECLARE_TYPEINFO(QFlag, Q_PRIMITIVE_TYPE);
 
@@ -90,11 +35,6 @@ Q_DECL_CONSTEXPR inline QIncompatibleFlag::QIncompatibleFlag(int value) Q_DECL_N
 template<typename Enum>
 class QFlags
 {
-    Q_STATIC_ASSERT_X((sizeof(Enum) <= sizeof(int)),
-                      "QFlags uses an int as storage, so an enum with underlying "
-                      "long long will overflow.");
-    Q_STATIC_ASSERT_X((std::is_enum<Enum>::value), "QFlags is only usable on enumeration types.");
-
     struct Private;
     typedef int (Private::*Zero);
     template <typename E> friend QDataStream &operator>>(QDataStream &, QFlags<E> &);
@@ -195,4 +135,3 @@ typedef uint Flags;
 
 QT_END_NAMESPACE
 
-#endif // QFLAGS_H

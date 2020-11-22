@@ -37,173 +37,11 @@ inline static QSize toLayoutItemSize(QWidgetPrivate *priv, const QSize &size)
     return toLayoutItemRect(priv, QRect(QPoint(0, 0), size)).size();
 }
 
-/*!
-    \class QLayoutItem
-    \brief The QLayoutItem class provides an abstract item that a
-    QLayout manipulates.
 
-    \ingroup geomanagement
-    \inmodule QtWidgets
-
-    This is used by custom layouts.
-
-    Pure virtual functions are provided to return information about
-    the layout, including, sizeHint(), minimumSize(), maximumSize()
-    and expanding().
-
-    The layout's geometry can be set and retrieved with setGeometry()
-    and geometry(), and its alignment with setAlignment() and
-    alignment().
-
-    isEmpty() returns whether the layout item is empty. If the
-    concrete item is a QWidget, it can be retrieved using widget().
-    Similarly for layout() and spacerItem().
-
-    Some layouts have width and height interdependencies. These can
-    be expressed using hasHeightForWidth(), heightForWidth(), and
-    minimumHeightForWidth(). For more explanation see the \e{Qt
-    Quarterly} article
-    \l{http://doc.qt.io/archives/qq/qq04-height-for-width.html}{Trading
-    Height for Width}.
-
-    \sa QLayout
-*/
-
-/*!
-    \class QSpacerItem
-    \ingroup geomanagement
-    \brief The QSpacerItem class provides blank space in a layout.
-
-    \inmodule QtWidgets
-
-    Normally, you don't need to use this class directly. Qt's
-    built-in layout managers provide the following functions for
-    manipulating empty space in layouts:
-
-    \table
-    \header \li Class
-            \li Functions
-    \row    \li QHBoxLayout
-            \li \l{QBoxLayout::addSpacing()}{addSpacing()},
-               \l{QBoxLayout::addStretch()}{addStretch()},
-               \l{QBoxLayout::insertSpacing()}{insertSpacing()},
-               \l{QBoxLayout::insertStretch()}{insertStretch()}
-    \row    \li QGridLayout
-            \li \l{QGridLayout::setRowMinimumHeight()}{setRowMinimumHeight()},
-               \l{QGridLayout::setRowStretch()}{setRowStretch()},
-               \l{QGridLayout::setColumnMinimumWidth()}{setColumnMinimumWidth()},
-               \l{QGridLayout::setColumnStretch()}{setColumnStretch()}
-    \endtable
-
-    \sa QLayout, QWidgetItem, QLayoutItem::spacerItem()
-*/
-
-/*!
-    \class QWidgetItem
-    \ingroup geomanagement
-    \brief The QWidgetItem class is a layout item that represents a widget.
-
-    \inmodule QtWidgets
-
-    Normally, you don't need to use this class directly. Qt's
-    built-in layout managers provide the following functions for
-    manipulating widgets in layouts:
-
-    \table
-    \header \li Class
-            \li Functions
-    \row    \li QBoxLayout
-            \li \l{QBoxLayout::addWidget()}{addWidget()},
-               \l{QBoxLayout::insertWidget()}{insertWidget()},
-               \l{QBoxLayout::setStretchFactor()}{setStretchFactor()}
-    \row    \li QGridLayout
-            \li \l{QGridLayout::addWidget()}{addWidget()}
-    \row    \li QStackedLayout
-            \li \l{QStackedLayout::addWidget()}{addWidget()},
-               \l{QStackedLayout::insertWidget()}{insertWidget()},
-               \l{QStackedLayout::currentWidget()}{currentWidget()},
-               \l{QStackedLayout::setCurrentWidget()}{setCurrentWidget()},
-               \l{QStackedLayout::widget()}{widget()}
-    \endtable
-
-    \sa QLayout, QSpacerItem, QLayoutItem::widget()
-*/
-
-/*!
-    \fn QLayoutItem::QLayoutItem(Qt::Alignment alignment)
-
-    Constructs a layout item with an \a alignment.
-    Not all subclasses support alignment.
-*/
-
-/*!
-    \fn Qt::Alignment QLayoutItem::alignment() const
-
-    Returns the alignment of this item.
-*/
-
-/*!
-    Sets the alignment of this item to \a alignment.
-
-    \b{Note:} Item alignment is only supported by QLayoutItem subclasses
-    where it would have a visual effect. Except for QSpacerItem, which provides
-    blank space for layouts, all public Qt classes that inherit QLayoutItem
-    support item alignment.
-*/
 void QLayoutItem::setAlignment(Qt::Alignment alignment)
 {
     align = alignment;
 }
-
-/*!
-    \fn QSize QLayoutItem::maximumSize() const
-
-    Implemented in subclasses to return the maximum size of this item.
-*/
-
-/*!
-    \fn QSize QLayoutItem::minimumSize() const
-
-    Implemented in subclasses to return the minimum size of this item.
-*/
-
-/*!
-    \fn QSize QLayoutItem::sizeHint() const
-
-    Implemented in subclasses to return the preferred size of this item.
-*/
-
-/*!
-    \fn Qt::Orientations QLayoutItem::expandingDirections() const
-
-    Returns whether this layout item can make use of more space than
-    sizeHint(). A value of Qt::Vertical or Qt::Horizontal means that
-    it wants to grow in only one dimension, whereas Qt::Vertical |
-    Qt::Horizontal means that it wants to grow in both dimensions.
-*/
-
-/*!
-    \fn void QLayoutItem::setGeometry(const QRect &r)
-
-    Implemented in subclasses to set this item's geometry to \a r.
-
-    \sa geometry()
-*/
-
-/*!
-    \fn QRect QLayoutItem::geometry() const
-
-    Returns the rectangle covered by this layout item.
-
-    \sa setGeometry()
-*/
-
-/*!
-    \fn virtual bool QLayoutItem::isEmpty() const
-
-    Implemented in subclasses to return whether this item is empty,
-    i.e. whether it contains any widgets.
-*/
 
 
 QSpacerItem::~QSpacerItem() {}
@@ -224,38 +62,21 @@ QLayoutItem::~QLayoutItem()
 {
 }
 
-/*!
-    Invalidates any cached information in this layout item.
-*/
 void QLayoutItem::invalidate()
 {
 }
 
-/*!
-    If this item is a QLayout, it is returned as a QLayout; otherwise
-    0 is returned. This function provides type-safe casting.
 
-    \sa spacerItem(), widget()
-*/
 QLayout * QLayoutItem::layout()
 {
     return 0;
 }
 
-/*!
-    If this item is a QSpacerItem, it is returned as a QSpacerItem;
-    otherwise 0 is returned. This function provides type-safe casting.
-
-    \sa layout(), widget()
-*/
 QSpacerItem * QLayoutItem::spacerItem()
 {
     return 0;
 }
 
-/*!
-    \reimp
-*/
 QLayout * QLayout::layout()
 {
     return this;
@@ -267,16 +88,6 @@ QSpacerItem * QSpacerItem::spacerItem()
     return this;
 }
 
-/*!
-    If this item manages a QWidget, returns that widget. Otherwise,
-    \c nullptr is returned.
-
-    \note While the functions layout() and spacerItem() perform casts, this
-    function returns another object: QLayout and QSpacerItem inherit QLayoutItem,
-    while QWidget does not.
-
-    \sa layout(), spacerItem()
-*/
 QWidget * QLayoutItem::widget()
 {
     return 0;
@@ -288,63 +99,22 @@ QWidget *QWidgetItem::widget()
     return wid;
 }
 
-/*!
-    Returns \c true if this layout's preferred height depends on its
-    width; otherwise returns \c false. The default implementation returns
-    false.
 
-    Reimplement this function in layout managers that support height
-    for width.
-
-    \sa heightForWidth(), QWidget::heightForWidth()
-*/
 bool QLayoutItem::hasHeightForWidth() const
 {
     return false;
 }
 
-/*!
-    Returns the minimum height this widget needs for the given width,
-    \a w. The default implementation simply returns heightForWidth(\a
-    w).
-*/
 int QLayoutItem::minimumHeightForWidth(int w) const
 {
     return heightForWidth(w);
 }
 
-
-/*!
-    Returns the preferred height for this layout item, given the
-    width, which is not used in this default implementation.
-
-    The default implementation returns -1, indicating that the
-    preferred height is independent of the width of the item. Using
-    the function hasHeightForWidth() will typically be much faster
-    than calling this function and testing for -1.
-
-    Reimplement this function in layout managers that support height
-    for width. A typical implementation will look like this:
-    \snippet code/src_gui_kernel_qlayoutitem.cpp 0
-
-    Caching is strongly recommended; without it layout will take
-    exponential time.
-
-    \sa hasHeightForWidth()
-*/
 int QLayoutItem::heightForWidth(int /* w */) const
 {
     return -1;
 }
 
-/*!
-    Returns the control type(s) for the layout item. For a
-    QWidgetItem, the control type comes from the widget's size
-    policy; for a QLayoutItem, the control types is derived from the
-    layout's contents.
-
-    \sa QSizePolicy::controlType()
-*/
 QSizePolicy::ControlTypes QLayoutItem::controlTypes() const
 {
     return QSizePolicy::DefaultType;
@@ -355,9 +125,7 @@ void QSpacerItem::setGeometry(const QRect &r)
     rect = r;
 }
 
-/*!
-    \reimp
-*/
+// QWidgeItem 在设置坐标的时候, 会考虑对齐方式, 然后最后计算出坐标出来.
 void QWidgetItem::setGeometry(const QRect &rect)
 {
     if (isEmpty())

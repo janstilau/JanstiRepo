@@ -724,6 +724,9 @@ inline bool QWidget::isTopLevel() const
 inline bool QWidget::isWindow() const
 { return (windowType() & Qt::Window); }
 
+// 各种状态, 是用了一个 枚举值进行的存储的. 这样节省空间.
+// 读取的时候, 专门有一个 testAttribute setAttribute 方法
+// 一般只会系统的框架这样使用, 自己的类使用, 会增加逻辑复杂度.
 inline bool QWidget::isEnabled() const
 { return !testAttribute(Qt::WA_Disabled); }
 

@@ -1206,39 +1206,6 @@ int QLayout::indexOf(QLayoutItem *layoutItem) const
     return -1;
 }
 
-/*!
-    \enum QLayout::SizeConstraint
-
-    The possible values are:
-
-    \value SetDefaultConstraint The main widget's minimum size is set
-                    to minimumSize(), unless the widget already has
-                    a minimum size.
-
-    \value SetFixedSize The main widget's size is set to sizeHint(); it
-                    cannot be resized at all.
-    \value SetMinimumSize  The main widget's minimum size is set to
-                    minimumSize(); it cannot be smaller.
-
-    \value SetMaximumSize  The main widget's maximum size is set to
-                    maximumSize(); it cannot be larger.
-
-    \value SetMinAndMaxSize  The main widget's minimum size is set to
-                    minimumSize() and its maximum size is set to
-                    maximumSize().
-
-    \value SetNoConstraint  The widget is not constrained.
-
-    \sa setSizeConstraint()
-*/
-
-/*!
-    \property QLayout::sizeConstraint
-    \brief the resize mode of the layout
-
-    The default mode is \l {QLayout::SetDefaultConstraint}
-    {SetDefaultConstraint}.
-*/
 void QLayout::setSizeConstraint(SizeConstraint constraint)
 {
     Q_D(QLayout);

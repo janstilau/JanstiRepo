@@ -401,10 +401,10 @@ class Q_CORE_EXPORT QVariant
             QObject *o;
             void *ptr;
             PrivateShared *shared;
-        } data;
-        uint type : 30;
-        uint is_shared : 1;
-        uint is_null : 1;
+        } data; // 真正存储的部分
+        uint type : 30; // type 值
+        uint is_shared : 1; // 记录是不是共享
+        uint is_null : 1; // 记录是不是非法值.
     };
  public:
     typedef void (*f_construct)(Private *, const void *);
@@ -460,7 +460,7 @@ protected:
 #else
 public:
 #endif
-    Private d;
+    Private d; // 真正的存储, 就只有在这里.
     void create(int type, const void *copy);
     bool cmp(const QVariant &other) const;
     int compare(const QVariant &other) const;
