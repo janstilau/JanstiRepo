@@ -112,6 +112,76 @@ SOURCES += \
     CopidQt/gui/kernel/qtouchdevice.cpp \
     CopidQt/gui/kernel/qwindow.cpp \
     CopidQt/gui/kernel/qwindowsysteminterface.cpp \
+    io/forkfd_qt.cpp \
+    io/qabstractfileengine.cpp \
+    io/qbuffer.cpp \
+    io/qdatastream.cpp \
+    io/qdataurl.cpp \
+    io/qdebug.cpp \
+    io/qdir.cpp \
+    io/qdiriterator.cpp \
+    io/qfile.cpp \
+    io/qfiledevice.cpp \
+    io/qfileinfo.cpp \
+    io/qfileselector.cpp \
+    io/qfilesystemengine.cpp \
+    io/qfilesystemengine_unix.cpp \
+    io/qfilesystemengine_win.cpp \
+    io/qfilesystementry.cpp \
+    io/qfilesystemiterator_unix.cpp \
+    io/qfilesystemiterator_win.cpp \
+    io/qfilesystemwatcher.cpp \
+    io/qfilesystemwatcher_fsevents.mm \
+    io/qfilesystemwatcher_inotify.cpp \
+    io/qfilesystemwatcher_kqueue.cpp \
+    io/qfilesystemwatcher_polling.cpp \
+    io/qfilesystemwatcher_win.cpp \
+    io/qfsfileengine.cpp \
+    io/qfsfileengine_iterator.cpp \
+    io/qfsfileengine_unix.cpp \
+    io/qfsfileengine_win.cpp \
+    io/qiodevice.cpp \
+    io/qipaddress.cpp \
+    io/qlockfile.cpp \
+    io/qlockfile_unix.cpp \
+    io/qlockfile_win.cpp \
+    io/qloggingcategory.cpp \
+    io/qloggingregistry.cpp \
+    io/qnoncontiguousbytedevice.cpp \
+    io/qprocess.cpp \
+    io/qprocess_darwin.mm \
+    io/qprocess_unix.cpp \
+    io/qprocess_win.cpp \
+    io/qresource.cpp \
+    io/qresource_iterator.cpp \
+    io/qsavefile.cpp \
+    io/qsettings.cpp \
+    io/qsettings_mac.cpp \
+    io/qsettings_win.cpp \
+    io/qsettings_winrt.cpp \
+    io/qstandardpaths.cpp \
+    io/qstandardpaths_android.cpp \
+    io/qstandardpaths_haiku.cpp \
+    io/qstandardpaths_mac.mm \
+    io/qstandardpaths_unix.cpp \
+    io/qstandardpaths_win.cpp \
+    io/qstandardpaths_winrt.cpp \
+    io/qstorageinfo.cpp \
+    io/qstorageinfo_mac.cpp \
+    io/qstorageinfo_stub.cpp \
+    io/qstorageinfo_unix.cpp \
+    io/qstorageinfo_win.cpp \
+    io/qtemporarydir.cpp \
+    io/qtemporaryfile.cpp \
+    io/qtextstream.cpp \
+    io/qtldurl.cpp \
+    io/qurl.cpp \
+    io/qurlidna.cpp \
+    io/qurlquery.cpp \
+    io/qurlrecode.cpp \
+    io/qwindowspipereader.cpp \
+    io/qwindowspipewriter.cpp \
+    io/qwinoverlappedionotifier.cpp \
         main.cpp \
         mainwindow.cpp \
     ../../Work/CopidQt/qcoreapplication.cpp \
@@ -769,6 +839,70 @@ HEADERS += \
     Core/qwaitcondition.h \
     Core/qwineventnotifier.h \
     Core/qxmlstream.h \
+    io/qabstractfileengine_p.h \
+    io/qbuffer.h \
+    io/qdatastream.h \
+    io/qdatastream_p.h \
+    io/qdataurl_p.h \
+    io/qdebug.h \
+    io/qdebug_p.h \
+    io/qdir.h \
+    io/qdir_p.h \
+    io/qdiriterator.h \
+    io/qfile.h \
+    io/qfile_p.h \
+    io/qfiledevice.h \
+    io/qfiledevice_p.h \
+    io/qfileinfo.h \
+    io/qfileinfo_p.h \
+    io/qfileselector.h \
+    io/qfileselector_p.h \
+    io/qfilesystemengine_p.h \
+    io/qfilesystementry_p.h \
+    io/qfilesystemiterator_p.h \
+    io/qfilesystemmetadata_p.h \
+    io/qfilesystemwatcher.h \
+    io/qfilesystemwatcher_fsevents_p.h \
+    io/qfilesystemwatcher_inotify_p.h \
+    io/qfilesystemwatcher_kqueue_p.h \
+    io/qfilesystemwatcher_p.h \
+    io/qfilesystemwatcher_polling_p.h \
+    io/qfilesystemwatcher_win_p.h \
+    io/qfsfileengine_iterator_p.h \
+    io/qfsfileengine_p.h \
+    io/qiodevice.h \
+    io/qiodevice_p.h \
+    io/qipaddress_p.h \
+    io/qlockfile.h \
+    io/qlockfile_p.h \
+    io/qloggingcategory.h \
+    io/qloggingregistry_p.h \
+    io/qnoncontiguousbytedevice_p.h \
+    io/qprocess.h \
+    io/qprocess_p.h \
+    io/qresource.h \
+    io/qresource_iterator_p.h \
+    io/qresource_p.h \
+    io/qsavefile.h \
+    io/qsavefile_p.h \
+    io/qsettings.h \
+    io/qsettings_p.h \
+    io/qstandardpaths.h \
+    io/qstorageinfo.h \
+    io/qstorageinfo_p.h \
+    io/qtemporarydir.h \
+    io/qtemporaryfile.h \
+    io/qtemporaryfile_p.h \
+    io/qtextstream.h \
+    io/qtextstream_p.h \
+    io/qtldurl_p.h \
+    io/qurl.h \
+    io/qurl_p.h \
+    io/qurlquery.h \
+    io/qurltlds_p.h \
+    io/qwindowspipereader_p.h \
+    io/qwindowspipewriter_p.h \
+    io/qwinoverlappedionotifier_p.h \
         mainwindow.h \
     mainwindow.h \
     CopidQt/header/qobject.h \
@@ -1098,6 +1232,11 @@ FORMS += \
 
 DISTFILES += \
     CopidQt/gui/kernel/kernel.pri \
+    io/PSL-LICENSE.txt \
+    io/QTEMPORARYFILE_LICENSE.txt \
+    io/io.pri \
+    io/qt_attribution.json \
+    io/qurltlds_p.h.INFO \
     network/access/access.pri \
     network/access/http2/http2.pri \
     network/bearer/bearer.pri \

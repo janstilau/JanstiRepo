@@ -1,0 +1,479 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA61C460256E67D80082FF78 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AA61C45F256E67D80082FF78 /* main.m */; };
+		AA61C4A4256E68070082FF78 /* parens.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C468256E68050082FF78 /* parens.c */; };
+		AA61C4A5256E68070082FF78 /* display.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C46B256E68050082FF78 /* display.c */; };
+		AA61C4A6256E68070082FF78 /* tilde.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C46C256E68050082FF78 /* tilde.c */; };
+		AA61C4A7256E68070082FF78 /* macro.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C46D256E68050082FF78 /* macro.c */; };
+		AA61C4A8256E68070082FF78 /* callback.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C46F256E68050082FF78 /* callback.c */; };
+		AA61C4A9256E68070082FF78 /* history.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C471256E68060082FF78 /* history.c */; };
+		AA61C4AA256E68070082FF78 /* bind.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C472256E68060082FF78 /* bind.c */; };
+		AA61C4AB256E68070082FF78 /* histsearch.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C473256E68060082FF78 /* histsearch.c */; };
+		AA61C4AC256E68070082FF78 /* vi_mode.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C474256E68060082FF78 /* vi_mode.c */; };
+		AA61C4AD256E68070082FF78 /* shell.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C476256E68060082FF78 /* shell.c */; };
+		AA61C4AE256E68070082FF78 /* readline.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C479256E68060082FF78 /* readline.c */; };
+		AA61C4AF256E68070082FF78 /* signals.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C47D256E68060082FF78 /* signals.c */; };
+		AA61C4B0256E68070082FF78 /* vi_keymap.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C47E256E68060082FF78 /* vi_keymap.c */; };
+		AA61C4B1256E68070082FF78 /* misc.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C47F256E68060082FF78 /* misc.c */; };
+		AA61C4B2256E68070082FF78 /* mbutil.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C480256E68060082FF78 /* mbutil.c */; };
+		AA61C4B3256E68070082FF78 /* compat.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C481256E68060082FF78 /* compat.c */; };
+		AA61C4B4256E68070082FF78 /* complete.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C482256E68060082FF78 /* complete.c */; };
+		AA61C4B5256E68070082FF78 /* input.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C483256E68060082FF78 /* input.c */; };
+		AA61C4B6256E68070082FF78 /* rltty.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C484256E68060082FF78 /* rltty.c */; };
+		AA61C4B7256E68070082FF78 /* emacs_keymap.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C485256E68060082FF78 /* emacs_keymap.c */; };
+		AA61C4B8256E68070082FF78 /* search.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C486256E68060082FF78 /* search.c */; };
+		AA61C4B9256E68070082FF78 /* funmap.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C487256E68060082FF78 /* funmap.c */; };
+		AA61C4BA256E68070082FF78 /* kill.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C48B256E68060082FF78 /* kill.c */; };
+		AA61C4BB256E68070082FF78 /* nls.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C48C256E68060082FF78 /* nls.c */; };
+		AA61C4BC256E68070082FF78 /* colors.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C48D256E68060082FF78 /* colors.c */; };
+		AA61C4BD256E68070082FF78 /* histexpand.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C48E256E68060082FF78 /* histexpand.c */; };
+		AA61C4BE256E68070082FF78 /* terminal.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C48F256E68060082FF78 /* terminal.c */; };
+		AA61C4BF256E68070082FF78 /* parse-colors.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C490256E68060082FF78 /* parse-colors.c */; };
+		AA61C4C0256E68070082FF78 /* savestring.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C492256E68060082FF78 /* savestring.c */; };
+		AA61C4C1256E68070082FF78 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C493256E68060082FF78 /* util.c */; };
+		AA61C4C2256E68070082FF78 /* text.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C495256E68060082FF78 /* text.c */; };
+		AA61C4C3256E68070082FF78 /* xfree.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C497256E68060082FF78 /* xfree.c */; };
+		AA61C4C4256E68070082FF78 /* keymaps.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C49C256E68070082FF78 /* keymaps.c */; };
+		AA61C4C5256E68070082FF78 /* isearch.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C49D256E68070082FF78 /* isearch.c */; };
+		AA61C4C6256E68070082FF78 /* histfile.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C4A1256E68070082FF78 /* histfile.c */; };
+		AA61C4C7256E68070082FF78 /* undo.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C4A2256E68070082FF78 /* undo.c */; };
+		AA61C4C8256E68070082FF78 /* xmalloc.c in Sources */ = {isa = PBXBuildFile; fileRef = AA61C4A3256E68070082FF78 /* xmalloc.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AA61C45A256E67D80082FF78 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		AA61C45C256E67D80082FF78 /* bash_analysis */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = bash_analysis; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA61C45F256E67D80082FF78 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		AA61C467256E68050082FF78 /* histlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = histlib.h; path = "readline-7.0-rc2/histlib.h"; sourceTree = "<group>"; };
+		AA61C468256E68050082FF78 /* parens.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = parens.c; path = "readline-7.0-rc2/parens.c"; sourceTree = "<group>"; };
+		AA61C469256E68050082FF78 /* rlconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rlconf.h; path = "readline-7.0-rc2/rlconf.h"; sourceTree = "<group>"; };
+		AA61C46A256E68050082FF78 /* ansi_stdlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ansi_stdlib.h; path = "readline-7.0-rc2/ansi_stdlib.h"; sourceTree = "<group>"; };
+		AA61C46B256E68050082FF78 /* display.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = display.c; path = "readline-7.0-rc2/display.c"; sourceTree = "<group>"; };
+		AA61C46C256E68050082FF78 /* tilde.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tilde.c; path = "readline-7.0-rc2/tilde.c"; sourceTree = "<group>"; };
+		AA61C46D256E68050082FF78 /* macro.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = macro.c; path = "readline-7.0-rc2/macro.c"; sourceTree = "<group>"; };
+		AA61C46E256E68050082FF78 /* keymaps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keymaps.h; path = "readline-7.0-rc2/keymaps.h"; sourceTree = "<group>"; };
+		AA61C46F256E68050082FF78 /* callback.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = callback.c; path = "readline-7.0-rc2/callback.c"; sourceTree = "<group>"; };
+		AA61C470256E68060082FF78 /* parse-colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "parse-colors.h"; path = "readline-7.0-rc2/parse-colors.h"; sourceTree = "<group>"; };
+		AA61C471256E68060082FF78 /* history.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = history.c; path = "readline-7.0-rc2/history.c"; sourceTree = "<group>"; };
+		AA61C472256E68060082FF78 /* bind.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bind.c; path = "readline-7.0-rc2/bind.c"; sourceTree = "<group>"; };
+		AA61C473256E68060082FF78 /* histsearch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = histsearch.c; path = "readline-7.0-rc2/histsearch.c"; sourceTree = "<group>"; };
+		AA61C474256E68060082FF78 /* vi_mode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vi_mode.c; path = "readline-7.0-rc2/vi_mode.c"; sourceTree = "<group>"; };
+		AA61C475256E68060082FF78 /* history.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = history.h; path = "readline-7.0-rc2/history.h"; sourceTree = "<group>"; };
+		AA61C476256E68060082FF78 /* shell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shell.c; path = "readline-7.0-rc2/shell.c"; sourceTree = "<group>"; };
+		AA61C477256E68060082FF78 /* posixstat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = posixstat.h; path = "readline-7.0-rc2/posixstat.h"; sourceTree = "<group>"; };
+		AA61C478256E68060082FF78 /* rldefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rldefs.h; path = "readline-7.0-rc2/rldefs.h"; sourceTree = "<group>"; };
+		AA61C479256E68060082FF78 /* readline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = readline.c; path = "readline-7.0-rc2/readline.c"; sourceTree = "<group>"; };
+		AA61C47A256E68060082FF78 /* tilde.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tilde.h; path = "readline-7.0-rc2/tilde.h"; sourceTree = "<group>"; };
+		AA61C47B256E68060082FF78 /* xmalloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xmalloc.h; path = "readline-7.0-rc2/xmalloc.h"; sourceTree = "<group>"; };
+		AA61C47C256E68060082FF78 /* rltypedefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rltypedefs.h; path = "readline-7.0-rc2/rltypedefs.h"; sourceTree = "<group>"; };
+		AA61C47D256E68060082FF78 /* signals.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = signals.c; path = "readline-7.0-rc2/signals.c"; sourceTree = "<group>"; };
+		AA61C47E256E68060082FF78 /* vi_keymap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vi_keymap.c; path = "readline-7.0-rc2/vi_keymap.c"; sourceTree = "<group>"; };
+		AA61C47F256E68060082FF78 /* misc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = misc.c; path = "readline-7.0-rc2/misc.c"; sourceTree = "<group>"; };
+		AA61C480256E68060082FF78 /* mbutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mbutil.c; path = "readline-7.0-rc2/mbutil.c"; sourceTree = "<group>"; };
+		AA61C481256E68060082FF78 /* compat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = compat.c; path = "readline-7.0-rc2/compat.c"; sourceTree = "<group>"; };
+		AA61C482256E68060082FF78 /* complete.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = complete.c; path = "readline-7.0-rc2/complete.c"; sourceTree = "<group>"; };
+		AA61C483256E68060082FF78 /* input.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = input.c; path = "readline-7.0-rc2/input.c"; sourceTree = "<group>"; };
+		AA61C484256E68060082FF78 /* rltty.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = rltty.c; path = "readline-7.0-rc2/rltty.c"; sourceTree = "<group>"; };
+		AA61C485256E68060082FF78 /* emacs_keymap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = emacs_keymap.c; path = "readline-7.0-rc2/emacs_keymap.c"; sourceTree = "<group>"; };
+		AA61C486256E68060082FF78 /* search.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = search.c; path = "readline-7.0-rc2/search.c"; sourceTree = "<group>"; };
+		AA61C487256E68060082FF78 /* funmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = funmap.c; path = "readline-7.0-rc2/funmap.c"; sourceTree = "<group>"; };
+		AA61C488256E68060082FF78 /* tcap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tcap.h; path = "readline-7.0-rc2/tcap.h"; sourceTree = "<group>"; };
+		AA61C489256E68060082FF78 /* chardefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chardefs.h; path = "readline-7.0-rc2/chardefs.h"; sourceTree = "<group>"; };
+		AA61C48A256E68060082FF78 /* rlshell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rlshell.h; path = "readline-7.0-rc2/rlshell.h"; sourceTree = "<group>"; };
+		AA61C48B256E68060082FF78 /* kill.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = kill.c; path = "readline-7.0-rc2/kill.c"; sourceTree = "<group>"; };
+		AA61C48C256E68060082FF78 /* nls.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = nls.c; path = "readline-7.0-rc2/nls.c"; sourceTree = "<group>"; };
+		AA61C48D256E68060082FF78 /* colors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = colors.c; path = "readline-7.0-rc2/colors.c"; sourceTree = "<group>"; };
+		AA61C48E256E68060082FF78 /* histexpand.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = histexpand.c; path = "readline-7.0-rc2/histexpand.c"; sourceTree = "<group>"; };
+		AA61C48F256E68060082FF78 /* terminal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = terminal.c; path = "readline-7.0-rc2/terminal.c"; sourceTree = "<group>"; };
+		AA61C490256E68060082FF78 /* parse-colors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "parse-colors.c"; path = "readline-7.0-rc2/parse-colors.c"; sourceTree = "<group>"; };
+		AA61C491256E68060082FF78 /* rlstdc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rlstdc.h; path = "readline-7.0-rc2/rlstdc.h"; sourceTree = "<group>"; };
+		AA61C492256E68060082FF78 /* savestring.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = savestring.c; path = "readline-7.0-rc2/savestring.c"; sourceTree = "<group>"; };
+		AA61C493256E68060082FF78 /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = util.c; path = "readline-7.0-rc2/util.c"; sourceTree = "<group>"; };
+		AA61C494256E68060082FF78 /* rlwinsize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rlwinsize.h; path = "readline-7.0-rc2/rlwinsize.h"; sourceTree = "<group>"; };
+		AA61C495256E68060082FF78 /* text.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = text.c; path = "readline-7.0-rc2/text.c"; sourceTree = "<group>"; };
+		AA61C496256E68060082FF78 /* posixjmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = posixjmp.h; path = "readline-7.0-rc2/posixjmp.h"; sourceTree = "<group>"; };
+		AA61C497256E68060082FF78 /* xfree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = xfree.c; path = "readline-7.0-rc2/xfree.c"; sourceTree = "<group>"; };
+		AA61C498256E68060082FF78 /* colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = colors.h; path = "readline-7.0-rc2/colors.h"; sourceTree = "<group>"; };
+		AA61C499256E68070082FF78 /* rlmbutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rlmbutil.h; path = "readline-7.0-rc2/rlmbutil.h"; sourceTree = "<group>"; };
+		AA61C49A256E68070082FF78 /* posixdir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = posixdir.h; path = "readline-7.0-rc2/posixdir.h"; sourceTree = "<group>"; };
+		AA61C49B256E68070082FF78 /* rltty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rltty.h; path = "readline-7.0-rc2/rltty.h"; sourceTree = "<group>"; };
+		AA61C49C256E68070082FF78 /* keymaps.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = keymaps.c; path = "readline-7.0-rc2/keymaps.c"; sourceTree = "<group>"; };
+		AA61C49D256E68070082FF78 /* isearch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = isearch.c; path = "readline-7.0-rc2/isearch.c"; sourceTree = "<group>"; };
+		AA61C49E256E68070082FF78 /* rlprivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rlprivate.h; path = "readline-7.0-rc2/rlprivate.h"; sourceTree = "<group>"; };
+		AA61C49F256E68070082FF78 /* posixselect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = posixselect.h; path = "readline-7.0-rc2/posixselect.h"; sourceTree = "<group>"; };
+		AA61C4A0256E68070082FF78 /* readline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = readline.h; path = "readline-7.0-rc2/readline.h"; sourceTree = "<group>"; };
+		AA61C4A1256E68070082FF78 /* histfile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = histfile.c; path = "readline-7.0-rc2/histfile.c"; sourceTree = "<group>"; };
+		AA61C4A2256E68070082FF78 /* undo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = undo.c; path = "readline-7.0-rc2/undo.c"; sourceTree = "<group>"; };
+		AA61C4A3256E68070082FF78 /* xmalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = xmalloc.c; path = "readline-7.0-rc2/xmalloc.c"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA61C459256E67D80082FF78 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA61C453256E67D80082FF78 = {
+			isa = PBXGroup;
+			children = (
+				AA61C45E256E67D80082FF78 /* bash_analysis */,
+				AA61C45D256E67D80082FF78 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AA61C45D256E67D80082FF78 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA61C45C256E67D80082FF78 /* bash_analysis */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AA61C45E256E67D80082FF78 /* bash_analysis */ = {
+			isa = PBXGroup;
+			children = (
+				AA61C46A256E68050082FF78 /* ansi_stdlib.h */,
+				AA61C472256E68060082FF78 /* bind.c */,
+				AA61C46F256E68050082FF78 /* callback.c */,
+				AA61C489256E68060082FF78 /* chardefs.h */,
+				AA61C48D256E68060082FF78 /* colors.c */,
+				AA61C498256E68060082FF78 /* colors.h */,
+				AA61C481256E68060082FF78 /* compat.c */,
+				AA61C482256E68060082FF78 /* complete.c */,
+				AA61C46B256E68050082FF78 /* display.c */,
+				AA61C485256E68060082FF78 /* emacs_keymap.c */,
+				AA61C487256E68060082FF78 /* funmap.c */,
+				AA61C48E256E68060082FF78 /* histexpand.c */,
+				AA61C4A1256E68070082FF78 /* histfile.c */,
+				AA61C467256E68050082FF78 /* histlib.h */,
+				AA61C471256E68060082FF78 /* history.c */,
+				AA61C475256E68060082FF78 /* history.h */,
+				AA61C473256E68060082FF78 /* histsearch.c */,
+				AA61C483256E68060082FF78 /* input.c */,
+				AA61C49D256E68070082FF78 /* isearch.c */,
+				AA61C49C256E68070082FF78 /* keymaps.c */,
+				AA61C46E256E68050082FF78 /* keymaps.h */,
+				AA61C48B256E68060082FF78 /* kill.c */,
+				AA61C46D256E68050082FF78 /* macro.c */,
+				AA61C45F256E67D80082FF78 /* main.m */,
+				AA61C480256E68060082FF78 /* mbutil.c */,
+				AA61C47F256E68060082FF78 /* misc.c */,
+				AA61C48C256E68060082FF78 /* nls.c */,
+				AA61C468256E68050082FF78 /* parens.c */,
+				AA61C490256E68060082FF78 /* parse-colors.c */,
+				AA61C470256E68060082FF78 /* parse-colors.h */,
+				AA61C49A256E68070082FF78 /* posixdir.h */,
+				AA61C496256E68060082FF78 /* posixjmp.h */,
+				AA61C49F256E68070082FF78 /* posixselect.h */,
+				AA61C477256E68060082FF78 /* posixstat.h */,
+				AA61C479256E68060082FF78 /* readline.c */,
+				AA61C4A0256E68070082FF78 /* readline.h */,
+				AA61C469256E68050082FF78 /* rlconf.h */,
+				AA61C478256E68060082FF78 /* rldefs.h */,
+				AA61C499256E68070082FF78 /* rlmbutil.h */,
+				AA61C49E256E68070082FF78 /* rlprivate.h */,
+				AA61C48A256E68060082FF78 /* rlshell.h */,
+				AA61C491256E68060082FF78 /* rlstdc.h */,
+				AA61C484256E68060082FF78 /* rltty.c */,
+				AA61C49B256E68070082FF78 /* rltty.h */,
+				AA61C47C256E68060082FF78 /* rltypedefs.h */,
+				AA61C494256E68060082FF78 /* rlwinsize.h */,
+				AA61C492256E68060082FF78 /* savestring.c */,
+				AA61C486256E68060082FF78 /* search.c */,
+				AA61C476256E68060082FF78 /* shell.c */,
+				AA61C47D256E68060082FF78 /* signals.c */,
+				AA61C488256E68060082FF78 /* tcap.h */,
+				AA61C48F256E68060082FF78 /* terminal.c */,
+				AA61C495256E68060082FF78 /* text.c */,
+				AA61C46C256E68050082FF78 /* tilde.c */,
+				AA61C47A256E68060082FF78 /* tilde.h */,
+				AA61C4A2256E68070082FF78 /* undo.c */,
+				AA61C493256E68060082FF78 /* util.c */,
+				AA61C47E256E68060082FF78 /* vi_keymap.c */,
+				AA61C474256E68060082FF78 /* vi_mode.c */,
+				AA61C497256E68060082FF78 /* xfree.c */,
+				AA61C4A3256E68070082FF78 /* xmalloc.c */,
+				AA61C47B256E68060082FF78 /* xmalloc.h */,
+			);
+			path = bash_analysis;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA61C45B256E67D80082FF78 /* bash_analysis */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA61C463256E67D80082FF78 /* Build configuration list for PBXNativeTarget "bash_analysis" */;
+			buildPhases = (
+				AA61C458256E67D80082FF78 /* Sources */,
+				AA61C459256E67D80082FF78 /* Frameworks */,
+				AA61C45A256E67D80082FF78 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = bash_analysis;
+			productName = bash_analysis;
+			productReference = AA61C45C256E67D80082FF78 /* bash_analysis */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA61C454256E67D80082FF78 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1210;
+				TargetAttributes = {
+					AA61C45B256E67D80082FF78 = {
+						CreatedOnToolsVersion = 12.1;
+					};
+				};
+			};
+			buildConfigurationList = AA61C457256E67D80082FF78 /* Build configuration list for PBXProject "bash_analysis" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA61C453256E67D80082FF78;
+			productRefGroup = AA61C45D256E67D80082FF78 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA61C45B256E67D80082FF78 /* bash_analysis */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA61C458256E67D80082FF78 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA61C4B1256E68070082FF78 /* misc.c in Sources */,
+				AA61C4AF256E68070082FF78 /* signals.c in Sources */,
+				AA61C4A4256E68070082FF78 /* parens.c in Sources */,
+				AA61C4BA256E68070082FF78 /* kill.c in Sources */,
+				AA61C4AC256E68070082FF78 /* vi_mode.c in Sources */,
+				AA61C4BB256E68070082FF78 /* nls.c in Sources */,
+				AA61C4B4256E68070082FF78 /* complete.c in Sources */,
+				AA61C4C6256E68070082FF78 /* histfile.c in Sources */,
+				AA61C4B8256E68070082FF78 /* search.c in Sources */,
+				AA61C4C4256E68070082FF78 /* keymaps.c in Sources */,
+				AA61C4B0256E68070082FF78 /* vi_keymap.c in Sources */,
+				AA61C4AD256E68070082FF78 /* shell.c in Sources */,
+				AA61C4C8256E68070082FF78 /* xmalloc.c in Sources */,
+				AA61C4B2256E68070082FF78 /* mbutil.c in Sources */,
+				AA61C4A5256E68070082FF78 /* display.c in Sources */,
+				AA61C4A6256E68070082FF78 /* tilde.c in Sources */,
+				AA61C4B5256E68070082FF78 /* input.c in Sources */,
+				AA61C4B3256E68070082FF78 /* compat.c in Sources */,
+				AA61C4C3256E68070082FF78 /* xfree.c in Sources */,
+				AA61C4B9256E68070082FF78 /* funmap.c in Sources */,
+				AA61C4C5256E68070082FF78 /* isearch.c in Sources */,
+				AA61C4A9256E68070082FF78 /* history.c in Sources */,
+				AA61C4AA256E68070082FF78 /* bind.c in Sources */,
+				AA61C460256E67D80082FF78 /* main.m in Sources */,
+				AA61C4B7256E68070082FF78 /* emacs_keymap.c in Sources */,
+				AA61C4BD256E68070082FF78 /* histexpand.c in Sources */,
+				AA61C4C0256E68070082FF78 /* savestring.c in Sources */,
+				AA61C4A8256E68070082FF78 /* callback.c in Sources */,
+				AA61C4AB256E68070082FF78 /* histsearch.c in Sources */,
+				AA61C4A7256E68070082FF78 /* macro.c in Sources */,
+				AA61C4BC256E68070082FF78 /* colors.c in Sources */,
+				AA61C4AE256E68070082FF78 /* readline.c in Sources */,
+				AA61C4B6256E68070082FF78 /* rltty.c in Sources */,
+				AA61C4C2256E68070082FF78 /* text.c in Sources */,
+				AA61C4C1256E68070082FF78 /* util.c in Sources */,
+				AA61C4BF256E68070082FF78 /* parse-colors.c in Sources */,
+				AA61C4C7256E68070082FF78 /* undo.c in Sources */,
+				AA61C4BE256E68070082FF78 /* terminal.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AA61C461256E67D80082FF78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		AA61C462256E67D80082FF78 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		AA61C464256E67D80082FF78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TSQ8MZ6PMZ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		AA61C465256E67D80082FF78 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TSQ8MZ6PMZ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA61C457256E67D80082FF78 /* Build configuration list for PBXProject "bash_analysis" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA61C461256E67D80082FF78 /* Debug */,
+				AA61C462256E67D80082FF78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA61C463256E67D80082FF78 /* Build configuration list for PBXNativeTarget "bash_analysis" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA61C464256E67D80082FF78 /* Debug */,
+				AA61C465256E67D80082FF78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AA61C454256E67D80082FF78 /* Project object */;
+}
