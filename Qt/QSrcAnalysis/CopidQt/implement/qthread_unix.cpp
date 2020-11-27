@@ -1,64 +1,7 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Copyright (C) 2016 Intel Corporation.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qthread.h"
-
 #include "qplatformdefs.h"
-
-#include <private/qcoreapplication_p.h>
-#include <private/qcore_unix_p.h>
-
-#if defined(Q_OS_DARWIN)
-#  include <private/qeventdispatcher_cf_p.h>
-#else
-#  if !defined(QT_NO_GLIB)
-#    include "../kernel/qeventdispatcher_glib_p.h"
-#  endif
-#endif
-
-#include <private/qeventdispatcher_unix_p.h>
-
 #include "qthreadstorage.h"
-
 #include "qthread_p.h"
-
 #include "qdebug.h"
 
 #ifdef __GLIBCXX__
@@ -68,39 +11,6 @@
 #include <sched.h>
 #include <errno.h>
 
-#ifdef Q_OS_BSD4
-#include <sys/sysctl.h>
-#endif
-#ifdef Q_OS_VXWORKS
-#  if (_WRS_VXWORKS_MAJOR > 6) || ((_WRS_VXWORKS_MAJOR == 6) && (_WRS_VXWORKS_MINOR >= 6))
-#    include <vxCpuLib.h>
-#    include <cpuset.h>
-#    define QT_VXWORKS_HAS_CPUSET
-#  endif
-#endif
-
-#ifdef Q_OS_HPUX
-#include <sys/pstat.h>
-#endif
-
-#if defined(Q_OS_LINUX) && !defined(QT_LINUXBASE)
-#include <sys/prctl.h>
-#endif
-
-#if defined(Q_OS_LINUX) && !defined(SCHED_IDLE)
-// from linux/sched.h
-# define SCHED_IDLE    5
-#endif
-
-#if defined(Q_OS_DARWIN) || !defined(Q_OS_ANDROID) && !defined(Q_OS_OPENBSD) && defined(_POSIX_THREAD_PRIORITY_SCHEDULING) && (_POSIX_THREAD_PRIORITY_SCHEDULING-0 >= 0)
-#define QT_HAS_THREAD_PRIORITY_SCHEDULING
-#endif
-
-#if defined(Q_OS_QNX)
-#include <sys/neutrino.h>
-#endif
-
-
 QT_BEGIN_NAMESPACE
 
 
@@ -108,30 +18,14 @@ Q_STATIC_ASSERT(sizeof(pthread_t) <= sizeof(Qt::HANDLE));
 
 enum { ThreadPriorityResetFlag = 0x80000000 };
 
-#if defined(Q_OS_LINUX) && defined(__GLIBC__) && (defined(Q_CC_GNU) || defined(Q_CC_INTEL)) && !defined(QT_LINUXBASE)
-/* LSB doesn't have __thread, https://lsbbugs.linuxfoundation.org/show_bug.cgi?id=993 */
-#define HAVE_TLS
-#endif
-#if defined(Q_CC_XLC) || defined (Q_CC_SUN)
-#define HAVE_TLS
-#endif
-
-#ifdef HAVE_TLS
-static __thread QThreadData *currentThreadData = 0;
-#endif
-
 static pthread_once_t current_thread_data_once = PTHREAD_ONCE_INIT;
 static pthread_key_t current_thread_data_key;
 
+// 线程消亡的时候的清理函数, 在这里, 调用了 finish 方法.
+// 这种回调的设置, 使得 QThread 类的内部, 不用关心什么时候调用 finish.
+// 这其实就是编程的逻辑, 设计一套算法, 然后安插数据. 只要算法里面有相关的实现, 提供了数据控制逻辑的切口所在, 那么就可以起到分离复杂度的目的.
 static void destroy_current_thread_data(void *p)
 {
-#if defined(Q_OS_VXWORKS)
-    // Calling setspecific(..., 0) sets the value to 0 for ALL threads.
-    // The 'set to 1' workaround adds a bit of an overhead though,
-    // since this function is called twice now.
-    if (p == (void *)1)
-        return;
-#endif
     // POSIX says the value in our key is set to zero before calling
     // this destructor function, so we need to set it back to the
     // right value...
@@ -142,7 +36,7 @@ static void destroy_current_thread_data(void *p)
         Q_ASSERT(thread);
         QThreadPrivate *thread_p = static_cast<QThreadPrivate *>(QObjectPrivate::get(thread));
         Q_ASSERT(!thread_p->finished);
-        thread_p->finish(thread);
+        thread_p->finish(thread); // 在这里, 调用了 finish 函数.
     }
     data->deref();
 
@@ -159,6 +53,7 @@ static void destroy_current_thread_data(void *p)
 
 static void create_current_thread_data_key()
 {
+    // 在这里, 注册了一个清理函数, 会在线程消亡的时候被调用.
     pthread_key_create(&current_thread_data_key, destroy_current_thread_data);
 }
 
@@ -176,23 +71,15 @@ static void destroy_current_thread_data_key()
 Q_DESTRUCTOR_FUNCTION(destroy_current_thread_data_key)
 
 
-// 和 GUN Foundation 的思路一样, 都是调用 pthread 的 API 而已
-// 通过 pthread_getspecific, pthread_setspecific 将 QThreadData 的指针, 和线程绑定在一起.
+//! 通过 pthread_getspecific, pthread_setspecific, 将一个 QThreadData 数据对象, 和真正的线程绑定在一起.
 static QThreadData *get_thread_data()
 {
-#ifdef HAVE_TLS
-    return currentThreadData;
-#else
     pthread_once(&current_thread_data_once, create_current_thread_data_key);
     return reinterpret_cast<QThreadData *>(pthread_getspecific(current_thread_data_key));
-#endif
 }
 
 static void set_thread_data(QThreadData *data)
 {
-#ifdef HAVE_TLS
-    currentThreadData = data;
-#endif
     pthread_once(&current_thread_data_once, create_current_thread_data_key);
     pthread_setspecific(create_current_thread_data_key, data);
 }
@@ -237,6 +124,7 @@ void QThreadData::clearCurrentThreadData()
 QThreadData *QThreadData::current(bool createIfNecessary)
 {
     QThreadData *data = get_thread_data();
+    // 类似于一个懒加载的实现.
     if (!data && createIfNecessary) {
         data = new QThreadData;
         QT_TRY {
@@ -262,106 +150,54 @@ void QAdoptedThread::init()
 {
 }
 
-/*
-   QThreadPrivate
-*/
-
-extern "C" {
-typedef void*(*QtThreadCallback)(void*);
-}
-
-#endif // QT_CONFIG(thread)
-
 QAbstractEventDispatcher *QThreadPrivate::createEventDispatcher(QThreadData *data)
 {
-    Q_UNUSED(data);
-#if defined(Q_OS_DARWIN)
     bool ok = false;
     int value = qEnvironmentVariableIntValue("QT_EVENT_DISPATCHER_CORE_FOUNDATION", &ok);
     if (ok && value > 0)
         return new QEventDispatcherCoreFoundation;
     else
         return new QEventDispatcherUNIX;
-#elif !defined(QT_NO_GLIB)
-    const bool isQtMainThread = data->thread == QCoreApplicationPrivate::mainThread();
-    if (qEnvironmentVariableIsEmpty("QT_NO_GLIB")
-        && (isQtMainThread || qEnvironmentVariableIsEmpty("QT_NO_THREADED_GLIB"))
-        && QEventDispatcherGlib::versionSupported())
-        return new QEventDispatcherGlib;
-    else
-        return new QEventDispatcherUNIX;
-#else
-    return new QEventDispatcherUNIX;
-#endif
 }
 
 
-#if (defined(Q_OS_LINUX) || defined(Q_OS_MAC) || defined(Q_OS_QNX))
-static void setCurrentThreadName(const char *name)
-{
-#  if defined(Q_OS_LINUX) && !defined(QT_LINUXBASE)
-    prctl(PR_SET_NAME, (unsigned long)name, 0, 0, 0);
-#  elif defined(Q_OS_MAC)
-    pthread_setname_np(name);
-#  elif defined(Q_OS_QNX)
-    pthread_setname_np(pthread_self(), name);
-#  endif
-}
-#endif
-
+//! 真正的函数, 用来开启一个线程.C++ 可以通过 类名::函数名的方式, 来定位到对应的函数.
 void *QThreadPrivate::start(void *arg)
 {
+    // 新创建的线程, 不能被其他线程, 随便 cancel.
     pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
     pthread_cleanup_push(QThreadPrivate::finish, arg);
     {
         QThread *thr = reinterpret_cast<QThread *>(arg);
+        // 这种, 定义一个变量, 然后 {} 内处理这个变量相关的逻辑, 在 Qt 源码里面, 也会使用.
         QThreadData *data = QThreadData::get2(thr);
-
         {
+            // 这个时候, 已经在子线程里面了, 所以, 对于线程对象数据的任何修改, 都要加锁.
             QMutexLocker locker(&thr->d_func()->mutex);
 
-            // do we need to reset the thread priority?
             if (int(thr->d_func()->priority) & ThreadPriorityResetFlag) {
                 thr->d_func()->setPriority(QThread::Priority(thr->d_func()->priority & ~ThreadPriorityResetFlag));
             }
 
             data->threadId.store(to_HANDLE(pthread_self()));
             set_thread_data(data);
-
             data->ref();
             data->quitNow = thr->d_func()->exited;
         }
 
-        data->ensureEventDispatcher();
-
-
         emit thr->started(QThread::QPrivateSignal());
         pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
         pthread_testcancel();
-        thr->run(); // 在这里, 调用了 QThread 的 run 方法.
-    }
-#ifndef QT_NO_EXCEPTIONS
-#ifdef __GLIBCXX__
-    // POSIX thread cancellation under glibc is implemented by throwing an exception
-    // of this type. Do what libstdc++ is doing and handle it specially in order not to
-    // abort the application if user's code calls a cancellation function.
-    catch (const abi::__forced_unwind &) {
-        throw;
-    }
-#endif // __GLIBCXX__
-    catch (...) {
-        qTerminate();
-    }
-#endif // QT_NO_EXCEPTIONS
 
-    // This pop runs finish() below. It's outside the try/catch (and has its
-    // own try/catch) to prevent finish() to be run in case an exception is
-    // thrown.
+        // 以上, 都是对于线程对象内部数据的控制, 只有这里, 才是真正的使用了用户定义的函数开始线程.
+        thr->run();
+    }
     pthread_cleanup_pop(1);
 
     return 0;
 }
 
+// 线程的销毁, 大部分逻辑, 都是在做状态值的更改.
 void QThreadPrivate::finish(void *arg)
 {
 #ifndef QT_NO_EXCEPTIONS
@@ -399,26 +235,11 @@ void QThreadPrivate::finish(void *arg)
         d->thread_done.wakeAll();
     }
 #ifndef QT_NO_EXCEPTIONS
-#ifdef __GLIBCXX__
-    // POSIX thread cancellation under glibc is implemented by throwing an exception
-    // of this type. Do what libstdc++ is doing and handle it specially in order not to
-    // abort the application if user's code calls a cancellation function.
-    catch (const abi::__forced_unwind &) {
-        throw;
-    }
-#endif // __GLIBCXX__
     catch (...) {
         qTerminate();
     }
 #endif // QT_NO_EXCEPTIONS
 }
-
-
-
-
-/**************************************************************************
- ** QThread
- *************************************************************************/
 
 Qt::HANDLE QThread::currentThreadId() Q_DECL_NOTHROW
 {
@@ -436,13 +257,6 @@ int QThread::idealThreadCount() Q_DECL_NOTHROW
     int cores = 1;
 
 #if defined(Q_OS_HPUX)
-    // HP-UX
-    struct pst_dynamic psd;
-    if (pstat_getdynamic(&psd, sizeof(psd), 1, 0) == -1) {
-        perror("pstat_getdynamic");
-    } else {
-        cores = (int)psd.psd_proc_cnt;
-    }
 #elif defined(Q_OS_BSD4)
     // FreeBSD, OpenBSD, NetBSD, BSD/OS, OS X, iOS
     size_t len = sizeof(cores);
@@ -453,37 +267,6 @@ int QThread::idealThreadCount() Q_DECL_NOTHROW
         perror("sysctl");
     }
 #elif defined(Q_OS_INTEGRITY)
-#if (__INTEGRITY_MAJOR_VERSION >= 10)
-    // Integrity V10+ does support multicore CPUs
-    Value processorCount;
-    if (GetProcessorCount(CurrentTask(), &processorCount) == 0)
-        cores = processorCount;
-    else
-#endif
-    // as of aug 2008 Integrity only supports one single core CPU
-    cores = 1;
-#elif defined(Q_OS_VXWORKS)
-    // VxWorks
-#  if defined(QT_VXWORKS_HAS_CPUSET)
-    cpuset_t cpus = vxCpuEnabledGet();
-    cores = 0;
-
-    // 128 cores should be enough for everyone ;)
-    for (int i = 0; i < 128 && !CPUSET_ISZERO(cpus); ++i) {
-        if (CPUSET_ISSET(cpus, i)) {
-            CPUSET_CLR(cpus, i);
-            cores++;
-        }
-    }
-#  else
-    // as of aug 2008 VxWorks < 6.6 only supports one single core CPU
-    cores = 1;
-#  endif
-#else
-    // the rest: Linux, Solaris, AIX, Tru64
-    cores = (int)sysconf(_SC_NPROCESSORS_ONLN);
-    if (cores == -1)
-        return 1;
 #endif
     return cores;
 }
@@ -519,100 +302,9 @@ void QThread::usleep(unsigned long usecs)
 
 
 #ifdef QT_HAS_THREAD_PRIORITY_SCHEDULING
-#if defined(Q_OS_QNX)
-static bool calculateUnixPriority(int priority, int *sched_policy, int *sched_priority)
-{
-    // On QNX, NormalPriority is mapped to 10.  A QNX system could use a value different
-    // than 10 for the "normal" priority but it's difficult to achieve this so we'll
-    // assume that no one has ever created such a system.  This makes the mapping from
-    // Qt priorities to QNX priorities lopsided.   There's usually more space available
-    // to map into above the "normal" priority than below it.  QNX also has a privileged
-    // priority range (for threads that assist the kernel).  We'll assume that no Qt
-    // thread needs to use priorities in that range.
-    int priority_norm = 10;
-    // _sched_info::priority_priv isn't documented.  You'd think that it's the start of the
-    // privileged priority range but it's actually the end of the unpriviledged range.
-    struct _sched_info info;
-    if (SchedInfo_r(0, *sched_policy, &info) != EOK)
-        return false;
-
-    if (priority == QThread::IdlePriority) {
-        *sched_priority = info.priority_min;
-        return true;
-    }
-
-    if (priority_norm < info.priority_min)
-        priority_norm = info.priority_min;
-    if (priority_norm > info.priority_priv)
-        priority_norm = info.priority_priv;
-
-    int to_min, to_max;
-    int from_min, from_max;
-    int prio;
-    if (priority < QThread::NormalPriority) {
-        to_min = info.priority_min;
-        to_max = priority_norm;
-        from_min = QThread::LowestPriority;
-        from_max = QThread::NormalPriority;
-    } else {
-        to_min = priority_norm;
-        to_max = info.priority_priv;
-        from_min = QThread::NormalPriority;
-        from_max = QThread::TimeCriticalPriority;
-    }
-
-    prio = ((priority - from_min) * (to_max - to_min)) / (from_max - from_min) + to_min;
-    prio = qBound(to_min, prio, to_max);
-
-    *sched_priority = prio;
-    return true;
-}
-#else
-// Does some magic and calculate the Unix scheduler priorities
-// sched_policy is IN/OUT: it must be set to a valid policy before calling this function
-// sched_priority is OUT only
-static bool calculateUnixPriority(int priority, int *sched_policy, int *sched_priority)
-{
-#ifdef SCHED_IDLE
-    if (priority == QThread::IdlePriority) {
-        *sched_policy = SCHED_IDLE;
-        *sched_priority = 0;
-        return true;
-    }
-    const int lowestPriority = QThread::LowestPriority;
-#else
-    const int lowestPriority = QThread::IdlePriority;
-#endif
-    const int highestPriority = QThread::TimeCriticalPriority;
-
-    int prio_min;
-    int prio_max;
-#if defined(Q_OS_VXWORKS) && defined(VXWORKS_DKM)
-    // for other scheduling policies than SCHED_RR or SCHED_FIFO
-    prio_min = SCHED_FIFO_LOW_PRI;
-    prio_max = SCHED_FIFO_HIGH_PRI;
-
-    if ((*sched_policy == SCHED_RR) || (*sched_policy == SCHED_FIFO))
-#endif
-    {
-    prio_min = sched_get_priority_min(*sched_policy);
-    prio_max = sched_get_priority_max(*sched_policy);
-    }
-
-    if (prio_min == -1 || prio_max == -1)
-        return false;
-
-    int prio;
-    // crudely scale our priority enum values to the prio_min/prio_max
-    prio = ((priority - lowestPriority) * (prio_max - prio_min) / highestPriority) + prio_min;
-    prio = qMax(prio_min, qMin(prio_max, prio));
-
-    *sched_priority = prio;
-    return true;
-}
-#endif
 #endif
 
+//! Qt 里面的各个类, 实现文件有可能分为好几份. start 函数是和操作系统息息相关的, 所以在 Unix 的目录下.
 void QThread::start(Priority priority)
 {
     Q_D(QThread);
@@ -620,103 +312,45 @@ void QThread::start(Priority priority)
 
     if (d->isInFinish)
         d->thread_done.wait(locker.mutex());
-
     if (d->running)
         return;
 
+    // 首先是一些状态值的改变, 这些状态值, 和真正的线程状态之间, 要在算法里面保持同步.
     d->running = true;
     d->finished = false;
     d->returnCode = 0;
     d->exited = false;
     d->interruptionRequested = false;
 
+    // 真正的线程属性的设置. 这里, 线程被设置为分离态, 也就是运营完之后就销毁 PCB 了.
     pthread_attr_t attr;
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 
     d->priority = priority;
-#if defined(QT_HAS_THREAD_PRIORITY_SCHEDULING)
-    switch (priority) {
-    case InheritPriority:
-        {
-            pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED);
-            break;
-        }
-
-    default:
-        {
-            int sched_policy;
-            if (pthread_attr_getschedpolicy(&attr, &sched_policy) != 0) {
-                // failed to get the scheduling policy, don't bother
-                // setting the priority
-                qWarning("QThread::start: Cannot determine default scheduler policy");
-                break;
-            }
-
-            int prio;
-            if (!calculateUnixPriority(priority, &sched_policy, &prio)) {
-                // failed to get the scheduling parameters, don't
-                // bother setting the priority
-                qWarning("QThread::start: Cannot determine scheduler priority range");
-                break;
-            }
-
-            sched_param sp;
-            sp.sched_priority = prio;
-
-            if (pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED) != 0
-                || pthread_attr_setschedpolicy(&attr, sched_policy) != 0
-                || pthread_attr_setschedparam(&attr, &sp) != 0) {
-                // could not set scheduling hints, fallback to inheriting them
-                // we'll try again from inside the thread
-                pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED);
-                d->priority = Priority(priority | ThreadPriorityResetFlag);
-            }
-            break;
-        }
-    }
-#endif // QT_HAS_THREAD_PRIORITY_SCHEDULING
-
 
     if (d->stackSize > 0) {
-#if defined(_POSIX_THREAD_ATTR_STACKSIZE) && (_POSIX_THREAD_ATTR_STACKSIZE-0 > 0)
         int code = pthread_attr_setstacksize(&attr, d->stackSize);
-#else
-        int code = ENOSYS; // stack size not supported, automatically fail
-#endif // _POSIX_THREAD_ATTR_STACKSIZE
-
         if (code) {
-            qWarning("QThread::start: Thread stack size error: %s",
-                     qPrintable(qt_error_string(code)));
-
-            // we failed to set the stacksize, and as the documentation states,
-            // the thread will fail to run...
             d->running = false;
             d->finished = false;
             return;
         }
     }
-    // 以上, 都是根据 QThread 的各个属性, 对于即将开启的线程的完成各种属性的设置.
-    // 这里, pthread_create 才是真正的开启线程的方法. 启动方法是 QThreadPrivate::start, 参数是 this.
+
+    // 使用线程原语
     pthread_t threadId;
     int code = pthread_create(&threadId, &attr, QThreadPrivate::start, this);
 
     // 在 pthread_create 之后, 下面的还会在原来的线程执行.
     if (code == EPERM) {
-        // caller does not have permission to set the scheduling
-        // parameters/policy
-#if defined(QT_HAS_THREAD_PRIORITY_SCHEDULING)
-        pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED);
-#endif
         code = pthread_create(&threadId, &attr, QThreadPrivate::start, this);
     }
     d->data->threadId.store(to_HANDLE(threadId));
-
     pthread_attr_destroy(&attr);
 
     if (code) {
         qWarning("QThread::start: Thread creation error: %s", qPrintable(qt_error_string(code)));
-
         d->running = false;
         d->finished = false;
         d->data->threadId.store(nullptr);
@@ -725,7 +359,6 @@ void QThread::start(Priority priority)
 
 void QThread::terminate()
 {
-#if !defined(Q_OS_ANDROID)
     Q_D(QThread);
     QMutexLocker locker(&d->mutex);
 
@@ -738,7 +371,6 @@ void QThread::terminate()
         qWarning("QThread::start: Thread termination error: %s",
                  qPrintable(qt_error_string((code))));
     }
-#endif
 }
 
 bool QThread::wait(unsigned long time)
@@ -755,6 +387,7 @@ bool QThread::wait(unsigned long time)
         return true;
 
     while (d->running) {
+        // 这里, 是使用了里面的 condition 完成的
         if (!d->thread_done.wait(locker.mutex(), time))
             return false;
     }
@@ -781,9 +414,6 @@ void QThread::setTerminationEnabled(bool enabled)
 void QThreadPrivate::setPriority(QThread::Priority threadPriority)
 {
     priority = threadPriority;
-
-    // copied from start() with a few modifications:
-
 #ifdef QT_HAS_THREAD_PRIORITY_SCHEDULING
     int sched_policy;
     sched_param param;

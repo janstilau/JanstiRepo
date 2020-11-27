@@ -1,43 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Copyright (C) 2016 Intel Corporation.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QTHREAD_P_H
 #define QTHREAD_P_H
 
@@ -56,7 +16,8 @@ QT_BEGIN_NAMESPACE
 class QAbstractEventDispatcher;
 class QEventLoop;
 
-// 对于每一个 postEvent, 在内部会直接记录下 receiver 和 对应的 event. 这样, 在可以执行的时候, 流程可以直接找到 receiver 调用对应的 event 方法
+//! 对于每一个 postEvent, 在内部会直接记录下 receiver 和 对应的 event. 这样, 在可以执行的时候, 流程可以直接找到 receiver 调用对应的 event 方法
+//! 这个类, 是定义在 Thread 的相关文件里面的, 类的使用如果有关联, 相关的文件应该聚合在一起.
 class QPostEvent
 {
 public:
@@ -74,6 +35,7 @@ public:
 };
 Q_DECLARE_TYPEINFO(QPostEvent, Q_MOVABLE_TYPE);
 
+//! C++ 的特性, 大量的操作符重载用来满足泛型算法.
 inline bool operator<(const QPostEvent &first, const QPostEvent &second)
 {
     return first.priority > second.priority;
@@ -134,30 +96,14 @@ public:
 
     void setPriority(QThread::Priority prio);
 
-    mutable QMutex mutex;
-    QAtomicInt quitLockRef;
-
-    bool running;
-    bool finished;
-    bool isInFinish; //when in QThreadPrivate::finish
-    bool interruptionRequested;
-
-    bool exited;
-    int returnCode;
-
-    uint stackSize;
-    QThread::Priority priority;
-
     static QThread *threadForId(int id);
 
 #ifdef Q_OS_UNIX
-    QWaitCondition thread_done;
 
     static void *start(void *arg);
     static void finish(void *);
 
 #endif // Q_OS_UNIX
-    QThreadData *data; // QThread 里面, 专门把一部分数据放到了 QThreadData 里面, 而每个 QObject 里面, 存储这个 QThreadData 数据.
 
     static void createEventDispatcher(QThreadData *data);
 
@@ -172,6 +118,25 @@ public:
             QCoreApplication::instance()->postEvent(q_ptr, new QEvent(QEvent::Quit));
         }
     }
+
+
+    mutable QMutex mutex;
+    QAtomicInt quitLockRef;
+
+    bool running;
+    bool finished;
+    bool isInFinish; //when in QThreadPrivate::finish
+    bool interruptionRequested;
+
+    bool exited;
+    int returnCode;
+
+    uint stackSize;
+    QThread::Priority priority;
+    QWaitCondition thread_done;
+
+    //! 以上的部分, 是经典的 Thread 概念, 都会保留的部分, QThreadData 则是 Qt 的环境下, Thread 应该处理的部分.
+    QThreadData *data;
 };
 
 #endif // QT_NO_THREAD
@@ -227,7 +192,7 @@ public:
     int scopeLevel;
 
     QStack<QEventLoop *> eventLoops; // 一个线程里面, 可以有很多 eventLoop
-    QPostEventList postEventList;
+    QPostEventList postEventList; // 每一个线程, 都会保存一下 postEvent 的列表, 这些事件, 将会在下一个事件循环处理.
     QAtomicPointer<QThread> thread;
     QAtomicPointer<void> threadId;
     QAtomicPointer<QAbstractEventDispatcher> eventDispatcher;

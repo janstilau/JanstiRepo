@@ -1,43 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Copyright (C) 2016 Intel Corporation.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qthread.h"
 #include "qthreadstorage.h"
 #include "qmutex.h"
@@ -51,10 +11,6 @@
 
 QT_BEGIN_NAMESPACE
 
-/*
-  QThreadData
-*/
-
 QThreadData::QThreadData(int initialRefCount)
     : _ref(initialRefCount), loopLevel(0), scopeLevel(0),
       eventDispatcher(0),
@@ -63,7 +19,6 @@ QThreadData::QThreadData(int initialRefCount)
       isAdopted(false),
       requiresCoreApplication(true)
 {
-    // fprintf(stderr, "QThreadData %p created\n", this);
 }
 
 QThreadData::~QThreadData()
@@ -78,6 +33,7 @@ QThreadData::~QThreadData()
     thread = 0;
     delete t;
 
+    // 当一个线程退出时, 如果还有没有处理的 PostEvent, 这里要进行一些清理工作.
     for (int i = 0; i < postEventList.size(); ++i) {
         const QPostEvent &pe = postEventList.at(i);
         if (pe.event) {
@@ -86,8 +42,6 @@ QThreadData::~QThreadData()
             delete pe.event;
         }
     }
-
-    // fprintf(stderr, "QThreadData %p destroyed\n", this);
 }
 
 void QThreadData::ref()
@@ -122,24 +76,6 @@ QThreadPrivate::QThreadPrivate(QThreadData *d)
       priority(QThread::InheritPriority),
       data(d)
 {
-
-// INTEGRITY doesn't support self-extending stack. The default stack size for
-// a pthread on INTEGRITY is too small so we have to increase the default size
-// to 128K.
-#ifdef Q_OS_INTEGRITY
-    stackSize = 128 * 1024;
-#endif
-
-#if defined (Q_OS_WIN)
-    handle = 0;
-#  ifndef Q_OS_WINRT
-    id = 0;
-#  endif
-    waiters = 0;
-    terminationEnabled = true;
-    terminatePending = false;
-#endif
-
     if (!data)
         data = new QThreadData;
 }
@@ -149,24 +85,15 @@ QThreadPrivate::~QThreadPrivate()
     data->deref();
 }
 
-/*!
-    Returns a pointer to a QThread which manages the currently
-    executing thread.
-*/
+//! QThreadData::current 的实现, 类似于 NSThread 的实现, 通过 getSpecific 获取到和线程绑定的值.
+//! 和线程绑定的值, 在 Qt 环境下, 是 QThreadData.
 QThread *QThread::currentThread()
 {
     QThreadData *data = QThreadData::current();
-    Q_ASSERT(data != 0);
     return data->thread;
 }
 
-/*!
-    Constructs a new QThread to manage a new thread. The \a parent
-    takes ownership of the QThread. The thread does not begin
-    executing until start() is called.
-
-    \sa start()
-*/
+//! 各个类库的线程类, 只是为了方便管理线程而创建出来的对象. 线程的概念还是操作系统的概念. 线程类对象的周期和线程的生命周期一定要区分开.
 QThread::QThread(QObject *parent)
     : QObject(*(new QThreadPrivate), parent)
 {
@@ -175,21 +102,13 @@ QThread::QThread(QObject *parent)
     d->data->thread = this;
 }
 
-/*!
-    \internal
- */
 QThread::QThread(QThreadPrivate &dd, QObject *parent)
     : QObject(dd, parent)
 {
     Q_D(QThread);
-    // fprintf(stderr, "QThreadData %p taken from private data for thread %p\n", d->data, this);
     d->data->thread = this;
 }
 
-/*!
-    这里就和 NSThread 一样, QThread 的对象的生命周期, 和线程的声明周期是不一致的.
-    QThread 仅仅是一个方便管理 pThread 的对象而已.
-*/
 QThread::~QThread()
 {
     Q_D(QThread);
@@ -207,7 +126,7 @@ QThread::~QThread()
     }
 }
 
-
+// 调用这个方法的, 一定是创建线程对象的线程, 而线程对象状态的改变, 会是在线程对象管理的线程中, 所以一定要加锁.
 bool QThread::isFinished() const
 {
     Q_D(const QThread);
@@ -250,6 +169,8 @@ int QThread::exec()
     locker.unlock();
 
     // 在这里, 开启了一个新的运行循环.
+    // 所以, 使用 QThread 不重写它的 run 方法, 开启的线程是不会结束的.
+    // 通过 QThread::terminate 是使用了线程的原语强制结束的线程. 线程自己运转是不会走向终点的
     QEventLoop eventLoop;
     int returnCode = eventLoop.exec();
 
@@ -267,6 +188,8 @@ void QThread::exit(int returnCode)
     d->returnCode = returnCode;
     d->data->quitNow = true;
     // 这里把线程相关的全部循环关闭了
+    // 转移, 这里是在另外的一个线程, 调用的该方法.
+    // 在另外的线程, 改变了线程内的数据, 这样在 exec 里面一直运行的死循环, 就能够跳出了.
     for (int i = 0; i < d->data->eventLoops.size(); ++i) {
         QEventLoop *eventLoop = d->data->eventLoops.at(i);
         eventLoop->exit(returnCode);
@@ -276,6 +199,7 @@ void QThread::exit(int returnCode)
 void QThread::quit()
 { exit(); }
 
+// 默认 run 是有实现的, 就是 exec 内部开启运行循环.
 void QThread::run()
 {
     (void) exec();
