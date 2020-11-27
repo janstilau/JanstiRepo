@@ -2156,6 +2156,7 @@ void QMetaObject::activate(QObject *sender, int signalOffset, int local_signal_i
     else
         list = &connectionLists->allsignals;
 
+    // currentThreadId 的获取, 是通过 QThread::currentThreadId 获取的, 也就是说, 发送信号的时候, 其实并不在乎 sender 的线程 Affinity, 只是在乎触发信号的操作是在哪个线程调用的. 如果和 receiver 的线程一样, 就可以直接被调用.
     Qt::HANDLE currentThreadId = QThread::currentThreadId();
 
     /*
@@ -2171,7 +2172,6 @@ void QMetaObject::activate(QObject *sender, int signalOffset, int local_signal_i
         do {
             if (!c->receiver)
                 continue;
-
             QObject * const receiver = c->receiver;
             const bool receiverInSameThread = currentThreadId == receiver->d_func()->threadData->threadId.load();
 

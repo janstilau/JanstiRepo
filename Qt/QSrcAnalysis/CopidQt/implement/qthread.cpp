@@ -9,6 +9,48 @@
 #include "qthread_p.h"
 #include "private/qcoreapplication_p.h"
 
+//! 这段代码, 其实有着可以考虑的事情.
+//! 首先, Qt 里面, Object 的 affinity, 是建立在信号槽的基础上的. 比如下面的 Worker 类, 如果直接调用 doWork 方法, 那么在哪个线程调用的, 就是在哪个线程执行. 只有  connect(this, &Controller::operate, worker, &Worker::doWork); 通过 Controller 的 operate 信号触发的时候, 才会到 Worker 所关联的线程, 执行 doWork 方法.
+//! QThread 的生命周期和真正的线程的生命周期是不同步的. start 方法调用后, 真正的线程才会执行, ~Thread 方法调用的时候, 如果对应的线程还在运行, 那么会引起程序的崩溃的.
+
+class Worker : public QObject
+{
+    Q_OBJECT
+
+public slots:
+    void doWork(const QString &parameter) {
+        QString result;
+        /* ... here is the expensive or blocking operation ... */
+        emit resultReady(result);
+    }
+
+signals:
+    void resultReady(const QString &result);
+};
+
+class Controller : public QObject
+{
+    Q_OBJECT
+    QThread workerThread;
+public:
+    Controller() {
+        Worker *worker = new Worker;
+        worker->moveToThread(&workerThread);
+        connect(&workerThread, &QThread::finished, worker, &QObject::deleteLater);
+        connect(this, &Controller::operate, worker, &Worker::doWork);
+        connect(worker, &Worker::resultReady, this, &Controller::handleResults);
+        workerThread.start();
+    }
+    ~Controller() {
+        workerThread.quit();
+        workerThread.wait();
+    }
+public slots:
+    void handleResults(const QString &);
+signals:
+    void operate(const QString &);
+};
+
 QT_BEGIN_NAMESPACE
 
 QThreadData::QThreadData(int initialRefCount)
@@ -318,18 +360,6 @@ bool QThread::event(QEvent *event)
     }
 }
 
-/*!
-    \since 5.2
-
-    Request the interruption of the thread.
-    That request is advisory and it is up to code running on the thread to decide
-    if and how it should act upon such request.
-    This function does not stop any event loop running on the thread and
-    does not terminate it in any way.
-
-    \sa isInterruptionRequested()
-*/
-
 void QThread::requestInterruption()
 {
     Q_D(QThread);
@@ -343,29 +373,6 @@ void QThread::requestInterruption()
     d->interruptionRequested = true;
 }
 
-/*!
-    \since 5.2
-
-    Return true if the task running on this thread should be stopped.
-    An interruption can be requested by requestInterruption().
-
-    This function can be used to make long running tasks cleanly interruptible.
-    Never checking or acting on the value returned by this function is safe,
-    however it is advisable do so regularly in long running functions.
-    Take care not to call it too often, to keep the overhead low.
-
-    \code
-    void long_task() {
-         forever {
-            if ( QThread::currentThread()->isInterruptionRequested() ) {
-                return;
-            }
-        }
-    }
-    \endcode
-
-    \sa currentThread() requestInterruption()
-*/
 bool QThread::isInterruptionRequested() const
 {
     Q_D(const QThread);
