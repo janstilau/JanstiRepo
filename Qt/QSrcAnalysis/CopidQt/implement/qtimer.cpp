@@ -119,7 +119,7 @@ int QTimer::remainingTime() const
     return -1;
 }
 
-
+//! 一个很特殊的类, 专门应对单次事件的调用. 和 dispatch_after 的作用是一样的.
 class QSingleShotTimer : public QObject
 {
     Q_OBJECT
@@ -140,7 +140,7 @@ protected:
 
 
 // 基本思路是, 在构造方法里面, 创建一个定时器, 然后将 timeout 信号和 receiver 进行关联.
-// 这里有个疑问, QSingleShotTimer 的声明周期是如何进行的管理.
+// 这里有个疑问, QSingleShotTimer 对象自己的生命周期是如何进行的管理.
 QSingleShotTimer::QSingleShotTimer(int msec, Qt::TimerType timerType, const QObject *r, const char *member)
     : QObject(QAbstractEventDispatcher::instance()), hasValidReceiver(true), slotObj(0)
 {
@@ -154,6 +154,7 @@ QSingleShotTimer::QSingleShotTimer(int msec, Qt::TimerType timerType, const QObj
     timerId = startTimer(msec, timerType);
     if (r && thread() != r->thread()) {
         // Avoid leaking the QSingleShotTimer instance in case the application exits before the timer fires
+        // 这里, 在 Application 的 aboutToQuit 信号发出来的时候, 会做一次清理工作.
         connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &QObject::deleteLater);
         setParent(0);
         moveToThread(r->thread());
@@ -168,7 +169,8 @@ QSingleShotTimer::~QSingleShotTimer()
         slotObj->destroyIfLastRef();
 }
 
-// 在 timerEvent 发生之后, 立马进行 killTimer. 如果注册了回调对象, 就调用相应的函数, 如果没有, 就发出一个信号.
+// 在 timerEvent 发生之后, 立马进行 killTimer.
+// 如果注册了回调对象, 就调用相应的函数, 如果没有, 就发出一个信号.
 void QSingleShotTimer::timerEvent(QTimerEvent *)
 {
     // need to kill the timer _before_ we emit timeout() in case the

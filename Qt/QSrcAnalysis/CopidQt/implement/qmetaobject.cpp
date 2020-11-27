@@ -1141,7 +1141,6 @@ bool QMetaObject::invokeMethod(QObject *obj,
     sig.append('\0');
 
     // 首先, 根据参数, 生成要调用方法的签名出来.
-
     const QMetaObject *meta = obj->metaObject();
     int idx = meta->indexOfMethod(sig.constData());
     if (idx < 0) {

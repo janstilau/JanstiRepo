@@ -524,7 +524,28 @@ SOURCES += \
     network/ssl/qsslsocket_opensslpre11.cpp \
     network/ssl/qsslsocket_winrt.cpp \
     network/ssl/qwindowscarootfetcher.cpp \
-    CopidQt/implement/qthread_unix.cpp
+    CopidQt/implement/qthread_unix.cpp \
+    thread/qatomic.cpp \
+    thread/qexception.cpp \
+    thread/qfutureinterface.cpp \
+    thread/qfuturewatcher.cpp \
+    thread/qmutex.cpp \
+    thread/qmutex_linux.cpp \
+    thread/qmutex_mac.cpp \
+    thread/qmutex_unix.cpp \
+    thread/qmutex_win.cpp \
+    thread/qmutexpool.cpp \
+    thread/qreadwritelock.cpp \
+    thread/qresultstore.cpp \
+    thread/qrunnable.cpp \
+    thread/qsemaphore.cpp \
+    thread/qthread.cpp \
+    thread/qthread_unix.cpp \
+    thread/qthread_win.cpp \
+    thread/qthreadpool.cpp \
+    thread/qthreadstorage.cpp \
+    thread/qwaitcondition_unix.cpp \
+    thread/qwaitcondition_win.cpp
 
 HEADERS += \
     CopidQt/Widget/qaction.h \
@@ -1225,7 +1246,32 @@ HEADERS += \
     network/ssl/qsslsocket_p.h \
     network/ssl/qsslsocket_winrt_p.h \
     network/ssl/qwindowscarootfetcher_p.h \
-    CopidQt/implement/qthread_p.h
+    CopidQt/implement/qthread_p.h \
+    thread/qatomic.h \
+    thread/qbasicatomic.h \
+    thread/qexception.h \
+    thread/qfuture.h \
+    thread/qfutureinterface.h \
+    thread/qfutureinterface_p.h \
+    thread/qfuturesynchronizer.h \
+    thread/qfuturewatcher.h \
+    thread/qfuturewatcher_p.h \
+    thread/qgenericatomic.h \
+    thread/qmutex.h \
+    thread/qmutex_p.h \
+    thread/qmutexpool_p.h \
+    thread/qorderedmutexlocker_p.h \
+    thread/qreadwritelock.h \
+    thread/qreadwritelock_p.h \
+    thread/qresultstore.h \
+    thread/qrunnable.h \
+    thread/qsemaphore.h \
+    thread/qthread.h \
+    thread/qthread_p.h \
+    thread/qthreadpool.h \
+    thread/qthreadpool_p.h \
+    thread/qthreadstorage.h \
+    thread/qwaitcondition.h
 
 FORMS += \
         mainwindow.ui
@@ -1255,7 +1301,11 @@ DISTFILES += \
     network/doc/src/ssl.qdoc \
     network/kernel/kernel.pri \
     network/socket/socket.pri \
-    network/ssl/ssl.pri
+    network/ssl/ssl.pri \
+    thread/thread.pri \
+    thread/qfuture.qdoc \
+    thread/qfuturesynchronizer.qdoc \
+    thread/qwaitcondition.qdoc
 
 SUBDIRS += \
     network/doc/snippets/code/doc_src_qtnetwork.pro \
