@@ -445,9 +445,9 @@
         {
             /*
              基本上, GNUFoundation 里面, 同步的 wait 操作, 都可以通过 NSConditionLock 来实现.
-             向子线程传递数据的时候, 把一个 conditionLock 传递过去, 然后, 在原始线程进行 wait 操作, 这个操作, 被NSConditionLock 包装成为了 lockWhenCondition.
-             进入到它的定义, 发现就是循环判断, 当值不是自己想要的值得时候, 就重新进入 wait 状态.
-             然后在子线程, 在完成了自己任务之后, 要主动调用一次 unlockWithCondition, 将值变为主线程正在等待的值.
+             conditionLock 内部的 condition 值默认是 0, 这里的调用, 会阻塞当前的线程.
+             在 performHolder 的任务执行完之后, 会调用 unlockWithCondition: 1, 这个调用, 可以唤起当前阻塞的线程.
+             如果, 项目之后想要达到阻塞当前线程的目的, 可以考虑使用这个类.
              */
             [conditionLock lockWhenCondition: 1];
             [conditionLock unlock];

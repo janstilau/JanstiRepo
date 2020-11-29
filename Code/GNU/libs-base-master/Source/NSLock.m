@@ -19,6 +19,46 @@
 
 #import "GSPThread.h"
 
+/*
+ 信号量的用户, 用不是为了互斥, 它更多的是一种唤醒机制.
+ 当然, 互斥可以看做是一种特殊的信号量.
+ PV 操作, 都是原子操作, 在 PV 本质上说, 是 test and modefy 操作. 通过关中断开中断, 使得在进行原子操作的时候, 操作系统不可以进行线程切换.
+ P 操作, 首先将资源值--, 然后判断资源值 <=0, 如果 < 0, 就把当前线程记录到待唤醒队列中, 阻塞该线程, 退出原语操作.
+ V 操作, 首先将资源值++, 然后判断资源值是否 <= 0, 如果是 <=0, 就证明有着需要被唤醒的线程, 唤醒第一个被阻塞的线程.
+ 
+ 所以信号量最重要的, 是阻塞唤醒的机制.
+ 
+ 当信号量值为 1 的时候, 只会有一个线程进入临界区, 这就形成了互斥的目的. 在退出临界区之后, 进行 V 操作, 进行被阻塞线程的唤醒.
+ 可以认为, lock, unlock, 就是特殊的 PV 操作.
+ 
+ 但是, 同步操作要复杂一些. 同步操作要 触发代码执行 V 操作, 执行代码执行 P 操作. 并且把信号量设置为 0.
+ 如果执行代码先执行, 那么 P 操作之后, 执行代码就会被阻塞. 然后触发代码执行, V 操作可以唤醒执行代码. 这样就达到了有序的目的, 先触发, 后执行.
+ 如果触发代码先执行, 那么 V 操作之后, 执行代码执行 P 操作, 发现信号量没有小于 0, 就可以正常的运行不会被阻塞. 也达成了先触发, 后执行的目的.
+ 
+ 其他比较复杂的流程, 都是要找准触发代码和执行代码的关系. 可以这样说, 想要达成同步的目的, PV 操作要分别在有序的执行, 要分散到不同的代码块.
+ 
+ 但是这种同步, 仅仅是早就有序的目的, 对于共享资源的访问, 还是需要互斥来保证.
+ 
+ consition 可以认为是, 内部含有一个初始值为 0 的信号量. 先加锁, 因为加锁了, 所以可以使用共享的资源进行判断, 当发现条件不允许的情况下, 就进行 wait.
+ wait 操作, 首先将 P 操作, 将当前线程加入到待唤醒线程中, 然后放开锁.
+ 这样, 其他的线程就可以获取到锁, 进行共享资源的操作, 然后进行 signal 操作, 也就是 P 操作. 之前阻塞的线程被唤醒, 首先会立马再次加锁, 保证对于共享资源的互斥访问, 然后再次进行判断, 如果不合适, 再次进行 wiat, P 操作, 并放开互斥锁.
+ 而 broadcast 会将所有等待的线程都唤醒, 相当于是进行了多次的 V 操作, 被唤醒的线程, 首先会尝试加锁, 然后判断条件, 如果不允许的话, 还会进行 wait, 相当于进行 P 操作并释放锁.
+ 
+ 这个逻辑, 被 NSConditionLock 封装到了自己的内部.
+ 
+ NSConditionLock 的提出, 使得线程同步问题, 可以有一个比较好的解决办法.
+ 
+ 
+ 
+ 除了以上的办法, 我个人觉得, 维护一个队列和调度算法, 是比较通用的办法. 每次任务完成之后, 要重新调用一下这个调度算法, 只要保证调度算法在一个线程, 或者对于调度算法的调用, 前后加锁, 那么也可以达到并发执行的目的.
+ 如果任务之间有依赖, 可以参考 NSOperationQueue 的实现.
+ 
+ dispatch_barrier_async, 和 gcd 的 groupnotify 机制, 我觉得都可以用队列加调度算法的机制模拟.
+ 
+ 如果不用上面的机制, 那就用 conditionLock 方式. 设置相关的信号量, 等到条件允许的时候, 进行 P 操作, 当然条件的更改, 要互斥保护. 这样, 需要依赖才能执行的任务上来就在子线程执行 P 操作, 但是需要其他线程完成完任务之后改变资源 V 操作唤醒. 这样其实变复杂了, 远远不如调度算法清晰可扩展.
+ 
+ */
+
 #define class_createInstance(C,E) NSAllocateObject(C,E,NSDefaultMallocZone())
 
 static Class    baseConditionClass = Nil;
@@ -76,16 +116,8 @@ static BOOL     traceLocks = NO;
 #define CHKT(T,X) 
 #define CHK(X)
 
-/*
- * Methods shared between NSLock, NSRecursiveLock, and NSCondition
- *
- * Note: These methods currently throw exceptions when locks are incorrectly
- * acquired.  This is compatible with earlier GNUstep behaviour.  In OS X 10.5
- * and later, these will just NSLog a warning instead.  Throwing an exception
- * is probably better behaviour, because it encourages developer to fix their
- * code.
- */
-
+// 当, 大部分代码都一样的时候, 使用宏可以大大减少代码行的长度. 当然, 在编译器看来, 没有什么变化. 但是人工阅读起来, 代码行数少的文件, 更加容易理解.
+// dealloc, 增加了一个方法的调用, finalize,
 #define	MDEALLOC \
 - (void) dealloc\
 {\
@@ -151,12 +183,14 @@ return NO;\
 
 #endif
 
+// 大部分情况下, finalize 就是销毁成员变量 _mutex.
 #define MFINALIZE \
 - (void) finalize\
 {\
 pthread_mutex_destroy(&_mutex);\
 }
 
+// lock 就是调用 pthread_mutex_lock
 #define	MLOCK \
 - (void) lock\
 {\
@@ -171,6 +205,7 @@ else if (err != 0)\
 }\
 }
 
+// lockBeforeDate 就是一个死循环, 在里面不断地进行 tryLock, 如果 lock 是信号量实现的, 那就是不断地去询问当前的资源值的大小. 当不能加锁的时候, 就主动的 yield 让出 CPU 资源.
 #define	MLOCKBEFOREDATE \
 - (BOOL) lockBeforeDate: (NSDate*)limit\
 {\
@@ -401,50 +436,18 @@ MUNLOCK
     [NSLock class];	// Ensure mutex attributes are set up.
 }
 
-- (void) broadcast
-{
-    pthread_cond_broadcast(&_condition);
-}
-
-MDEALLOC
-MDESCRIPTION
-
-- (void) finalize
-{
-    pthread_cond_destroy(&_condition);
-    pthread_mutex_destroy(&_mutex);
-}
-
-- (id) init
-{
-    if (nil != (self = [super init]))
-    {
-        if (0 != pthread_cond_init(&_condition, NULL))
-        {
-            DESTROY(self);
-        }
-        else if (0 != pthread_mutex_init(&_mutex, &attr_reporting))
-        {
-            pthread_cond_destroy(&_condition);
-            DESTROY(self);
-        }
-    }
-    return self;
-}
-
-MISLOCKED
-MLOCK
-MLOCKBEFOREDATE
-MNAME
-
+// 这里, 会唤醒一个当前被阻塞的线程. 如果内部是 信号量实现的, 那就是 V 操作一次.
+// Signals the condition, waking up one thread waiting on it.
 - (void) signal
 {
     pthread_cond_signal(&_condition);
 }
 
-MSTACK
-MTRYLOCK
-MUNLOCK
+// Signals the condition, waking up all threads waiting on it.
+- (void) broadcast
+{
+    pthread_cond_broadcast(&_condition);
+}
 
 - (void) wait
 {
@@ -482,6 +485,41 @@ MUNLOCK
     }
     return NO;
 }
+
+MDEALLOC
+MDESCRIPTION
+
+- (void) finalize
+{
+    pthread_cond_destroy(&_condition);
+    pthread_mutex_destroy(&_mutex);
+}
+
+- (id) init
+{
+    if (nil != (self = [super init]))
+    {
+        if (0 != pthread_cond_init(&_condition, NULL))
+        {
+            DESTROY(self);
+        }
+        else if (0 != pthread_mutex_init(&_mutex, &attr_reporting))
+        {
+            pthread_cond_destroy(&_condition);
+            DESTROY(self);
+        }
+    }
+    return self;
+}
+
+MISLOCKED
+MLOCK
+MLOCKBEFOREDATE
+MNAME
+
+MSTACK
+MTRYLOCK
+MUNLOCK
 
 @end
 
@@ -551,6 +589,11 @@ MUNLOCK
     return [_condition lockBeforeDate: limit];
 }
 
+/*
+ 其实, NSCondition 里面的文档, 也是这样的示例代码. 在 mutex 进行 lock 之后, 要在一个循环里面, 不断地判断条件, 如果不满足的话, 就直接进行 wait.
+ 这里, NSConditionLock 相当于把这个条件封装到了自己的内部.
+ value 作为函数的参数, 是保存到了每个线程自己的空间的. 每个线程自己的参数变量, 和共享的 _condition_value 比较, 当不符合的时候, 就进行 wait. 这是一个死循环, wait 又是一个阻塞函数. 所以, lockWhenCondition 可以起到如果条件不允许, 就一直进行阻塞的效果.
+ */
 - (void) lockWhenCondition: (NSInteger)value
 {
     [_condition lock]; // 首先, 使用 mutex 进行加锁, 如果条件不允许, 就进行等待操作.
