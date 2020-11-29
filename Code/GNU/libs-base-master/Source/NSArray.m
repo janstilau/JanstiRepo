@@ -1645,6 +1645,7 @@ compare(id elem1, id elem2, void* context)
     {
         enumerator = [self reverseObjectEnumerator];
     }
+    // 如果需要支持多线程环境, 要建立互斥锁.
     if (opts & NSEnumerationConcurrent)
     {
         setLock = [NSLock new];

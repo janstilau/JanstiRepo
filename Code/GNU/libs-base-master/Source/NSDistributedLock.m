@@ -16,15 +16,14 @@
 
 /*
  分布式锁的原理, 就是文件的写入.
+ NSFileManager 里面, 一定做了多进程同时访问一个文件资源的管理.
+ 所以, 使用文件的创建时间, 当做加锁时间, 在进行 unlock 的时候, 进行对应的文件的删除操作.
+ 多进程之间, 通过文件系统, 完成了加锁解锁的目的;
  */
 
 static NSFileManager	*mgr = nil;
 
-/*
- *  This class does not adopt the [(NSLocking)] protocol but supports locking
- *  across processes, including processes on different machines, as long as
- *  they can access a common filesystem.
- */
+// 这个锁, 是为了多进程之间做互斥操作的. 依赖的是可以共同访问的文件.
 @implementation NSDistributedLock
 
 + (void) initialize
@@ -35,10 +34,6 @@ static NSFileManager	*mgr = nil;
     }
 }
 
-/*
- * Return a distributed lock for aPath.
- * See -initWithPath: for details.
- */
 + (NSDistributedLock*) lockWithPath: (NSString*)aPath
 {
     return AUTORELEASE([[self alloc] initWithPath: aPath]);
@@ -99,7 +94,7 @@ static NSFileManager	*mgr = nil;
     [super dealloc];
 }
 
-/**
+/*
  * Initialises the receiver with the specified filesystem path.<br />
  * The location in the filesystem must be accessible for this
  * to be usable.  That is, the processes using the lock must be able
@@ -109,6 +104,7 @@ static NSFileManager	*mgr = nil;
  */
 - (id) initWithPath: (NSString*)aPath
 {
+    // init 方法, 首先做一顿的逻辑判断. 但是这个方法, 主要还是记录一下 path.
     NSString	*lockDir;
     BOOL		isDirectory;
     
@@ -173,7 +169,7 @@ static NSFileManager	*mgr = nil;
         NSMutableDictionary	*attributesToSet;
         NSDictionary		*attributes;
         
-        if (nil != _lockTime)
+        if (nil != _lockTime) // 如果, _lockTime 已经有值了, 代表现在是获取到锁的状态.
         {
             [NSException raise: NSGenericException
                         format: @"Attempt to re-lock distributed lock %@",
@@ -182,6 +178,7 @@ static NSFileManager	*mgr = nil;
         attributesToSet = [NSMutableDictionary dictionaryWithCapacity: 1];
         [attributesToSet setObject: [NSNumber numberWithUnsignedInt: 0755]
                             forKey: NSFilePosixPermissions];
+        // -rwxr-xr-x (755)    拥有者有读、写、执行权限；而属组用户和其他用户只有读、执行权限。
         
         /* Here we depend on the fact that directory creation will fail if
          * the directory already exists.
@@ -212,9 +209,7 @@ static NSFileManager	*mgr = nil;
                           _lockPath, [NSError _last]);
                 }
             }
-        }
-        
-        if (YES == locked)
+        } else if (YES == locked)
         {
             attributes = [mgr fileAttributesAtPath: _lockPath
                                       traverseLink: YES];
@@ -227,7 +222,7 @@ static NSFileManager	*mgr = nil;
             /*
              将文件的创建时间, 当做是锁上的时间.
              */
-            ASSIGN(_lockTime, [attributes fileModificationDate]);
+            _lockTime = [attributes fileModificationDate];
             if (nil == _lockTime)
             {
                 [NSException raise: NSGenericException

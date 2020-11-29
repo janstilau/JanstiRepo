@@ -63,8 +63,8 @@
 
 @end
 
-/**
- * NSCondition provides an interface to POSIX condition variables.
+/*
+ 这个类很少用, 大部分情况, 都是使用的 NSConditionLock
  */
 @interface NSCondition : NSObject <NSLocking>
 {
