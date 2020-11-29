@@ -34,126 +34,34 @@ typedef NSInteger NSOperationQueuePriority;
     GSOperationCompletionBlock completionBlock;
 }
 
-/** Adds a dependency to the receiver.<br />
- * The receiver is not considered ready to execute until all of its
- * dependencies have finished executing.<br />
- * You must not add a particular object to the receiver more than once.<br />
- * You must not create loops of dependencies (this would cause deadlock).<br />
- */
 - (void) addDependency: (NSOperation *)op;
 
-/** Marks the operation as cancelled (causes subsequent calls to the
- * -isCancelled method to return YES).<br />
- * This does not directly cause the receiver to stop executing ... it is the
- * responsibility of the receiver to call -isCancelled while executing and
- * act accordingly.<br />
- * If an operation in a queue is cancelled before it starts executing, it
- * will be removed from the queue (though not necessarily immediately).<br />
- * Calling this method on an object which has already finished executing
- * has no effect.
- */
 - (void) cancel;
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
-/**
- * Returns the block that will be executed after the operation finishes.
- */
 - (GSOperationCompletionBlock) completionBlock;
-#endif
 
-/** Returns all the dependencies of the receiver in the order in which they
- * were added.
- */
 - (NSArray *)dependencies;
 
-/** This method should return YES if the -cancel method has been called.<br />
- * NB. a cancelled operation may still be executing.
- */
 - (BOOL) isCancelled;
 
-/** This method returns YES if the receiver handles its own environment or
- * threading rather than expecting to run in an evironment set up elsewhere
- * (eg, by an [NSOperationQueue] instance).<br />
- * The default implementation returns NO.
- */
 - (BOOL) isConcurrent;
 
-/** This method should return YES if the receiver is currently executing its
- * -main method (even if -cancel has been called).
- */
 - (BOOL) isExecuting;
 
-/** This method should return YES if the receiver has finished executing its
- * -main method (irrespective of whether the execution completed due to
- * cancellation, failure, or success).
- */
 - (BOOL) isFinished;
 
-/** This method should return YES when the receiver is ready to begin
- * executing.  That is, the receiver must have no dependencies which
- * have not finished executing.<br />
- * Also returns YES if the operation has been cancelled (even if there
- * are unfinished dependencies).<br />
- * An executing or finished operation is also considered to be ready.
- */
 - (BOOL) isReady;
 
-/** <override-subclass/>
- * This is the method which actually performs the operation ...
- * the default implementation does nothing.<br />
- * You MUST ensure that your implemention of -main does not raise any
- * exception or call [NSThread-exit] as either of these will terminate
- * the operation prematurely resulting in the operation never reaching
- * the -isFinished state.<br />
- * If you are writing a concurrent subclass, you should override -start
- * instead of (or as well as) the -main method.
- */
 - (void) main;
 
-/** Returns the priority set using the -setQueuePriority method, or
- * NSOperationQueuePriorityNormal if no priority has been set.
- */
 - (NSOperationQueuePriority) queuePriority;
-
-/** Removes a dependency from the receiver.
- */
 - (void) removeDependency: (NSOperation *)op;
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
-/**
- * Sets the block that will be executed when the operation has finished.
- */
 - (void) setCompletionBlock: (GSOperationCompletionBlock)aBlock;
-#endif
-
-/** Sets the priority for the receiver.  If the value supplied is not one of
- * the predefined queue priorities, it is converted into the next available
- * defined value moving towards NSOperationQueuePriorityNormal.
- */
 - (void) setQueuePriority: (NSOperationQueuePriority)priority;
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
-/** Sets the thread priority to be used while executing then -main method.
- * The priority change is implemented in the -start method, so if you are
- * replacing -start you are responsible for managing this.<br />
- * The valid range is 0.0 to 1.0
- */
 - (void) setThreadPriority: (double)prio;
-#endif
 
-/** This method is called to start execution of the receiver.<br />
- * <p>For concurrent operations, the subclass must override this method
- * to set up the environment for the operation to execute, must execute the
- * -main method, must ensure that -isExecuting and -isFinished return the
- * correct values, and must manually call key-value-observing methods to
- * notify observers of the state of those two properties.<br />
- * The subclass implementation must NOT call the superclass implementation.
- * </p>
- * <p>For non-concurrent operations, the default implementation of this method
- * performs all the work of setting up environment etc, and the subclass only
- * needs to override the -main method.
- * </p>
- */
 - (void) start;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)
@@ -196,11 +104,11 @@ enum {
 
 @interface NSOperationQueue : NSObject
 {
-    NSRecursiveLock    *queueLock;
-    NSConditionLock    *queueCondition;
+    NSRecursiveLock    *queueLock; // 这个所, 提供了除了 starting 其他属性的互斥保护.
+    NSConditionLock    *startingQueueCondition; // 这个锁, 是控制 starting 队列的, 同时带有唤醒作用.
     NSMutableArray    *operations; // 添加到当前 queue 里面的
-    NSMutableArray    *waiting; // 还未执行的
-    NSMutableArray    *starting; // 即将运行的任务.
+    NSMutableArray    *waiting; // 还未执行的, 已经处于 Ready 的任务
+    NSMutableArray    *starting; // 即将运行的任务, 正在等待线程完成当下任务调用自己. 
     NSString        *name;
     BOOL            suspended;
     NSInteger        executing;
