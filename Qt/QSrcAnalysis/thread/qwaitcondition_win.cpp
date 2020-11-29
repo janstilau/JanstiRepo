@@ -178,7 +178,7 @@ bool QWaitCondition::wait(QMutex *mutex, unsigned long time)
 
     bool returnValue = d->wait(wce, time);
 
-    mutex->lock();
+    mutex->lock(); // 在这里, 重新上锁.
     d->post(wce, returnValue);
 
     return returnValue;

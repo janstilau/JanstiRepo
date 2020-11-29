@@ -417,6 +417,8 @@ bool QBasicMutex::lockInternal(int timeout) QT_MUTEX_LOCK_NOEXCEPT
             continue;
         }
 
+        // mutext 这个类, 在 QT 版本实现的很复杂. 但是, 最终 wait 函数里面, 调用了 pthread, 或者信号量, 或者 windows 下的实现.
+        // 还是要使用那些原语, 来进行操作.
         if (d->wait(timeout)) {
             // reset the possiblyUnlocked flag if needed (and deref its corresponding reference)
             if (d->possiblyUnlocked.load() && d->possiblyUnlocked.testAndSetRelaxed(true, false))

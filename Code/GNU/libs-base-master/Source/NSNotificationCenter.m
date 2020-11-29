@@ -17,7 +17,7 @@ static NSZone	*_zone = 0;
 {
 @public
     NSString	*_name;
-    id		_object;
+    id		_poster; 
     NSDictionary	*_info;
 }
 @end
@@ -42,7 +42,7 @@ static Class concrete = 0;
     
     n = (GSNotification*)NSAllocateObject(self, 0, NSDefaultMallocZone());
     n->_name = [name copyWithZone: [self zone]];
-    n->_object = TEST_RETAIN(object);
+    n->_poster = TEST_RETAIN(object);
     n->_info = TEST_RETAIN(info);
     return AUTORELEASE(n);
 }
@@ -50,7 +50,7 @@ static Class concrete = 0;
 - (void) dealloc
 {
     RELEASE(_name);
-    TEST_RELEASE(_object);
+    TEST_RELEASE(_poster);
     TEST_RELEASE(_info);
     [super dealloc];
 }
@@ -62,7 +62,7 @@ static Class concrete = 0;
 
 - (id) object
 {
-    return _object;
+    return _poster;
 }
 
 - (NSDictionary*) userInfo
@@ -90,10 +90,10 @@ struct	NCTbl;		/* Notification Center Table structure	*/
  * trivial class instead ... and gets managed by the garbage collector.
  */
 
-typedef	struct	Obs {
+typedef	struct	Observer {
     id		observer;	/* Object to receive message.	*/
     SEL		selector;	/* Method selector.		*/
-    struct Obs	*next;		/* Next item in linked list.	*/
+    struct Observer	*next;		/* Next item in linked list.	*/
     int		retained;	/* Retain count for structure.	*/
     struct NCTbl	*link;		/* Pointer back to chunk table	*/
 } Observation;
@@ -630,27 +630,12 @@ static NSNotificationCenter *default_center = nil;
 {
     Observation	*list;
     Observation	*observation;
-    GSIMapTable	m;
-    GSIMapNode	n;
+    GSIMapTable	nameConterpartMap;
+    GSIMapNode	objCounterpartMap;
     
     /*
-     首先, 应该做防卫式判断.
+     首先, 应该做防卫式判断. 全部删了.
      */
-    if (observer == nil)
-        [NSException raise: NSInvalidArgumentException
-                    format: @"Nil observer passed to addObserver ..."];
-    
-    if (selector == 0)
-        [NSException raise: NSInvalidArgumentException
-                    format: @"Null selector passed to addObserver ..."];
-    
-    if ([observer respondsToSelector: selector] == NO)
-    {
-        [NSException raise: NSInvalidArgumentException
-                    format: @"[%@-%@] Observer '%@' does not respond to selector '%@'",
-         NSStringFromClass([self class]), NSStringFromSelector(_cmd),
-         observer, NSStringFromSelector(selector)];
-    }
     
     lockNCTable(TABLE);
     
@@ -659,52 +644,52 @@ static NSNotificationCenter *default_center = nil;
     if (name)
     {
         /*
-         * Locate the map table for this name - create it if not present.
+          首先, 根据名称, 找到对应通知名的存储结构.
          */
-        n = GSIMapNodeForKey(NAMED, (GSIMapKey)(id)name);
-        if (n == 0)
+        objCounterpartMap = GSIMapNodeForKey(NAMED, (GSIMapKey)(id)name);
+        if (objCounterpartMap == 0)
         {
-            m = createNewMap(TABLE);
+            nameConterpartMap = createNewMap(TABLE);
             /*
              * As this is the first observation for the given name, we take a
              * copy of the name so it cannot be mutated while in the map.
              */
             name = [name copyWithZone: NSDefaultMallocZone()];
-            GSIMapAddPair(NAMED, (GSIMapKey)(id)name, (GSIMapVal)(void*)m);
+            GSIMapAddPair(NAMED, (GSIMapKey)(id)name, (GSIMapVal)(void*)nameConterpartMap);
             GS_CONSUMED(name)
         }
         else
         {
-            m = (GSIMapTable)n->value.ptr;
+            nameConterpartMap = (GSIMapTable)objCounterpartMap->value.ptr;
         }
         
         /*
          * Add the observation to the list for the correct object.
          */
-        n = GSIMapNodeForSimpleKey(m, (GSIMapKey)object);
-        if (n == 0)
+        objCounterpartMap = GSIMapNodeForSimpleKey(nameConterpartMap, (GSIMapKey)object);
+        if (objCounterpartMap == 0)
         {
             observation->next = ENDOBS;
-            GSIMapAddPair(m, (GSIMapKey)object, (GSIMapVal)observation);
+            GSIMapAddPair(nameConterpartMap, (GSIMapKey)object, (GSIMapVal)observation);
         }
         else
         {
-            list = (Observation*)n->value.ptr;
+            list = (Observation*)objCounterpartMap->value.ptr;
             observation->next = list->next;
             list->next = observation;
         }
     }
     else if (object)
     {
-        n = GSIMapNodeForSimpleKey(NAMELESS, (GSIMapKey)object);
-        if (n == 0)
+        objCounterpartMap = GSIMapNodeForSimpleKey(NAMELESS, (GSIMapKey)object);
+        if (objCounterpartMap == 0)
         {
             observation->next = ENDOBS;
             GSIMapAddPair(NAMELESS, (GSIMapKey)object, (GSIMapVal)observation);
         }
         else
         {
-            list = (Observation*)n->value.ptr;
+            list = (Observation*)objCounterpartMap->value.ptr;
             observation->next = list->next;
             list->next = observation;
         }
@@ -1108,7 +1093,7 @@ static NSNotificationCenter *default_center = nil;
     
     notification = (id)NSAllocateObject(concrete, 0, NSDefaultMallocZone());
     notification->_name = [name copyWithZone: [self zone]];
-    notification->_object = [object retain];
+    notification->_poster = [object retain];
     notification->_info = [info retain];
     [self _postAndRelease: notification];
 }

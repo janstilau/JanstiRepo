@@ -379,7 +379,7 @@
 - (void) performSelector: (SEL)aSelector
                 onThread: (NSThread*)aThread
               withObject: (id)anObject
-           waitUntilDone: (BOOL)aFlag
+           waitUntilDone: (BOOL)shouldWait
                    modes: (NSArray*)anArray
 {
     GSRunLoopThreadInfo   *runloopThreadInfo;
@@ -431,7 +431,7 @@
          */
         GSPerformHolder   *performHolder;
         NSConditionLock    *conditionLock = nil;
-        if (aFlag == YES)
+        if (shouldWait == YES)
         {
             conditionLock = [[NSConditionLock alloc] init];
         }
@@ -444,9 +444,10 @@
         if (conditionLock != nil)
         {
             /*
-             如果条件锁不为空, 代表着需要进行等待, 那么 lockWhenCondition 会导致, 当前线程停止, thread_yield, 然后等待其他线程执行完毕之后唤醒.
-             由于这里唤醒其实又会加锁, 所以后面才有 unlock 的操作.
-             一般来说, 这种 waitUntil 的操作, 用 conditionLock 都可以实现.
+             基本上, GNUFoundation 里面, 同步的 wait 操作, 都可以通过 NSConditionLock 来实现.
+             向子线程传递数据的时候, 把一个 conditionLock 传递过去, 然后, 在原始线程进行 wait 操作, 这个操作, 被NSConditionLock 包装成为了 lockWhenCondition.
+             进入到它的定义, 发现就是循环判断, 当值不是自己想要的值得时候, 就重新进入 wait 状态.
+             然后在子线程, 在完成了自己任务之后, 要主动调用一次 unlockWithCondition, 将值变为主线程正在等待的值.
              */
             [conditionLock lockWhenCondition: 1];
             [conditionLock unlock];

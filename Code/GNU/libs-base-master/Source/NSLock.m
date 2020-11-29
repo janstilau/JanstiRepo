@@ -171,11 +171,6 @@ else if (err != 0)\
 }\
 }
 
-
-/*
- The exact behavior of this function depends on the implementation, in particular on the mechanics of the OS scheduler in use and the state of the system.
- For example, a first-in-first-out realtime scheduler (SCHED_FIFO in Linux) would suspend the current thread and put it on the back of the queue of the same-priority threads that are ready to run (and if there are no other threads at the same priority, yield has no effect).
- */
 #define	MLOCKBEFOREDATE \
 - (BOOL) lockBeforeDate: (NSDate*)limit\
 {\
@@ -257,6 +252,7 @@ NSString *NSLockException = @"NSLockException";
     return class_createInstance(self, 0);
 }
 
+// 在这里, 做一次全局资源的初始化操作.
 + (void) initialize
 {
     static BOOL	hasInitilized = NO;

@@ -208,8 +208,8 @@ static NSArray	*empty = nil;
         self->lock = [NSRecursiveLock new];
         [self->lock setName:
          [NSString stringWithFormat: @"lock-for-opqueue-%p", self]];
-        self->cond = [[NSConditionLock alloc] initWithCondition: 0];
-        [self->cond setName:
+        self->operationConditionLock = [[NSConditionLock alloc] initWithCondition: 0];
+        [self->operationConditionLock setName:
          [NSString stringWithFormat: @"cond-for-opqueue-%p", self]];
         /*
          自己监听自己的 isFinished 的状态.
@@ -361,8 +361,8 @@ static NSArray	*empty = nil;
         /*
          当前自己的任务完成了, self->cond unlockWithCondition 可以唤醒, 当前的 Operation 在其他线程执行的 wait 操作.
          */
-        [self->cond lock];
-        [self->cond unlockWithCondition: 1];
+        [self->operationConditionLock lock];
+        [self->operationConditionLock unlockWithCondition: 1];
         [self->lock unlock];
         return;
     }
@@ -485,8 +485,8 @@ static NSArray	*empty = nil;
 
 - (void) waitUntilFinished
 {
-    [self->cond lockWhenCondition: 1];	// Wait for finish
-    [self->cond unlockWithCondition: 1];	// Signal any other watchers
+    [self->operationConditionLock lockWhenCondition: 1];	// Wait for finish
+    [self->operationConditionLock unlockWithCondition: 1];	// Signal any other watchers
 }
 
 @end

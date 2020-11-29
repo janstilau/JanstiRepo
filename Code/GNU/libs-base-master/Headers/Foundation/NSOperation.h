@@ -21,7 +21,7 @@ typedef NSInteger NSOperationQueuePriority;
 @interface NSOperation : NSObject
 {
     NSRecursiveLock *lock;
-    NSConditionLock *cond;
+    NSConditionLock *operationConditionLock;
     NSOperationQueuePriority priority;
     double threadPriority;
     BOOL cancelled;

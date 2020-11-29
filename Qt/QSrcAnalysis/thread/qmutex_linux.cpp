@@ -189,11 +189,6 @@ bool QBasicMutex::lockInternal(int timeout) Q_DECL_NOTHROW
 void QBasicMutex::unlockInternal() Q_DECL_NOTHROW
 {
     QMutexData *d = d_ptr.load();
-    Q_ASSERT(d); //we must be locked
-    Q_ASSERT(d != dummyLocked()); // testAndSetRelease(dummyLocked(), 0) failed
-    Q_UNUSED(d);
-    Q_ASSERT(!isRecursive());
-
     d_ptr.storeRelease(0);
     _q_futex(&d_ptr, FUTEX_WAKE, 1, 0);
 }
