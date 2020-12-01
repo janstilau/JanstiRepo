@@ -334,7 +334,8 @@ double JKQTMathText::MTtextNode::draw(QPainter& painter, double x, double y, JKQ
     //qDebug()<<"MTtextNode: text="<<text<<" font="<<f;
 
     QPen p=painter.pen();
-    p.setColor(currentEv.color);
+//    p.setColor(currentEv.color);
+    p.setColor(Qt::red);
     painter.setPen(p);
     double dx=0;
     QFontMetricsF fm(f, painter.device());
@@ -2929,7 +2930,8 @@ double JKQTMathText::MTsymbolNode::draw(QPainter& painter, double x, double y, J
     //std::cout<<"symbol '"<<symbolName.toStdString()<<"' = "<<std::hex<<symbol.at(0).digitValue()<<" in font '"<<f.family().toStdString()<<"' ("<<QFontInfo(f).family().toStdString()<<"): "<<fm.inFont(symbol.at(0))<<std::endl;
 
     QPen p=painter.pen();
-    p.setColor(currentEv.color);
+//    p.setColor(currentEv.color);
+    p.setColor(Qt::green);
     p.setWidthF(fm.lineWidth());
     p.setStyle(Qt::SolidLine);
     painter.setPen(p);
@@ -3497,13 +3499,16 @@ bool JKQTMathText::useXITS(bool mathModeOnly)
 {
     QFontDatabase fdb;
     if (!fdb.families().contains("XITS")) {
-        if (QFile::exists(":/JKQTMathText/fonts/xits-bold.otf")) { QFontDatabase::addApplicationFont(":/JKQTMathText/fonts/xits-bold.otf"); }
-        if (QFile::exists(":/JKQTMathText/fonts/xits-bolditalic.otf")) { QFontDatabase::addApplicationFont(":/JKQTMathText/fonts/xits-bolditalic.otf"); }
+        if (QFile::exists(":/JKQTMathText/fonts/xits-bold.otf")) {
+            QFontDatabase::addApplicationFont(":/JKQTMathText/fonts/xits-bold.otf"); }
+        if (QFile::exists(":/JKQTMathText/fonts/xits-bolditalic.otf")) {
+            QFontDatabase::addApplicationFont(":/JKQTMathText/fonts/xits-bolditalic.otf"); }
         if (QFile::exists(":/JKQTMathText/fonts/xits-italic.otf")) { QFontDatabase::addApplicationFont(":/JKQTMathText/fonts/xits-italic.otf"); }
         if (QFile::exists(":/JKQTMathText/fonts/xits-math.otf")) { QFontDatabase::addApplicationFont(":/JKQTMathText/fonts/xits-math.otf"); }
         if (QFile::exists(":/JKQTMathText/fonts/xits-mathbold.otf")) { QFontDatabase::addApplicationFont(":/JKQTMathText/fonts/xits-mathbold.otf"); }
         if (QFile::exists(":/JKQTMathText/fonts/xits-regular.otf")) { QFontDatabase::addApplicationFont(":/JKQTMathText/fonts/xits-regular.otf"); }
     }
+    // 首先把字体加到了库中.
 
 
     static QString textFamily;
@@ -3528,6 +3533,7 @@ bool JKQTMathText::useXITS(bool mathModeOnly)
 
     bool res=false;
 
+    // 然后设置默认用该字体渲染 greek 和 symbol 的值.
     if (!mathModeOnly && !textFamily.isEmpty()) {
         setFontRoman(textFamily, MTFEunicode);
         setSymbolfontSymbol(textFamily, MTFEunicode);
