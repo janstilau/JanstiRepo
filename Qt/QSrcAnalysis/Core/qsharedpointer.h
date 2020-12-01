@@ -9,7 +9,7 @@
 
 QT_BEGIN_NAMESPACE
 
-// These classes are here to fool qdoc into generating a better documentation
+//! 这个文档, 仅仅是一些声明, 没有任何的实现代码.
 
 template <class T>
 class QSharedPointer
@@ -78,7 +78,7 @@ public:
     QWeakPointer<T> &operator=(const QWeakPointer<T> &other);
     QWeakPointer<T> &operator=(const QSharedPointer<T> &other);
 
-    QWeakPointer(const QObject *other);
+    QWeakPointer(const QObject *other); // 这里有着大问题. 在暴露出去的 API 里面, QWeakPointer 是不能直接通过一个裸指针构建的, 只能是通过 StrongPointer 或者 WeakPointer 才可以.
     QWeakPointer<T> &operator=(const QObject *other);
 
     void swap(QWeakPointer<T> &other);

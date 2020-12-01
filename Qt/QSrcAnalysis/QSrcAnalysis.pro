@@ -545,7 +545,75 @@ SOURCES += \
     thread/qthreadpool.cpp \
     thread/qthreadstorage.cpp \
     thread/qwaitcondition_unix.cpp \
-    thread/qwaitcondition_win.cpp
+    thread/qwaitcondition_win.cpp \
+    tools/qarraydata.cpp \
+    tools/qbitarray.cpp \
+    tools/qbytearray.cpp \
+    tools/qbytearraylist.cpp \
+    tools/qbytearraymatcher.cpp \
+    tools/qchar.cpp \
+    tools/qcollator.cpp \
+    tools/qcollator_icu.cpp \
+    tools/qcollator_macx.cpp \
+    tools/qcollator_posix.cpp \
+    tools/qcollator_win.cpp \
+    tools/qcommandlineoption.cpp \
+    tools/qcommandlineparser.cpp \
+    tools/qcontiguouscache.cpp \
+    tools/qcryptographichash.cpp \
+    tools/qdatetime.cpp \
+    tools/qdatetimeparser.cpp \
+    tools/qeasingcurve.cpp \
+    tools/qfreelist.cpp \
+    tools/qharfbuzz.cpp \
+    tools/qhash.cpp \
+    tools/qline.cpp \
+    tools/qlinkedlist.cpp \
+    tools/qlist.cpp \
+    tools/qlocale.cpp \
+    tools/qlocale_icu.cpp \
+    tools/qlocale_mac.mm \
+    tools/qlocale_tools.cpp \
+    tools/qlocale_unix.cpp \
+    tools/qlocale_win.cpp \
+    tools/qmap.cpp \
+    tools/qmargins.cpp \
+    tools/qmessageauthenticationcode.cpp \
+    tools/qpoint.cpp \
+    tools/qqueue.cpp \
+    tools/qrect.cpp \
+    tools/qrefcount.cpp \
+    tools/qregexp.cpp \
+    tools/qregularexpression.cpp \
+    tools/qringbuffer.cpp \
+    tools/qscopedpointer.cpp \
+    tools/qscopedvaluerollback.cpp \
+    tools/qshareddata.cpp \
+    tools/qsharedpointer.cpp \
+    tools/qsimd.cpp \
+    tools/qsimd_x86.cpp \
+    tools/qsize.cpp \
+    tools/qstack.cpp \
+    tools/qstring.cpp \
+    tools/qstring_compat.cpp \
+    tools/qstringbuilder.cpp \
+    tools/qstringlist.cpp \
+    tools/qstringmatcher.cpp \
+    tools/qstringview.cpp \
+    tools/qtextboundaryfinder.cpp \
+    tools/qtimeline.cpp \
+    tools/qtimezone.cpp \
+    tools/qtimezoneprivate.cpp \
+    tools/qtimezoneprivate_android.cpp \
+    tools/qtimezoneprivate_icu.cpp \
+    tools/qtimezoneprivate_mac.mm \
+    tools/qtimezoneprivate_tz.cpp \
+    tools/qtimezoneprivate_win.cpp \
+    tools/qunicodetables.cpp \
+    tools/qunicodetools.cpp \
+    tools/qvector_msvc.cpp \
+    tools/qversionnumber.cpp \
+    tools/qvsnprintf.cpp
 
 HEADERS += \
     CopidQt/Widget/qaction.h \
@@ -1271,7 +1339,88 @@ HEADERS += \
     thread/qthreadpool.h \
     thread/qthreadpool_p.h \
     thread/qthreadstorage.h \
-    thread/qwaitcondition.h
+    thread/qwaitcondition.h \
+    tools/qalgorithms.h \
+    tools/qarraydata.h \
+    tools/qarraydataops.h \
+    tools/qarraydatapointer.h \
+    tools/qbitarray.h \
+    tools/qbytearray.h \
+    tools/qbytearray_p.h \
+    tools/qbytearraylist.h \
+    tools/qbytearraymatcher.h \
+    tools/qbytedata_p.h \
+    tools/qcache.h \
+    tools/qchar.h \
+    tools/qcollator.h \
+    tools/qcollator_p.h \
+    tools/qcommandlineoption.h \
+    tools/qcommandlineparser.h \
+    tools/qcontainerfwd.h \
+    tools/qcontiguouscache.h \
+    tools/qcryptographichash.h \
+    tools/qdatetime.h \
+    tools/qdatetime_p.h \
+    tools/qdatetimeparser_p.h \
+    tools/qdoublescanprint_p.h \
+    tools/qeasingcurve.h \
+    tools/qfreelist_p.h \
+    tools/qharfbuzz_p.h \
+    tools/qhash.h \
+    tools/qhashfunctions.h \
+    tools/qiterator.h \
+    tools/qline.h \
+    tools/qlinkedlist.h \
+    tools/qlist.h \
+    tools/qlocale.h \
+    tools/qlocale_data_p.h \
+    tools/qlocale_p.h \
+    tools/qlocale_tools_p.h \
+    tools/qmakearray_p.h \
+    tools/qmap.h \
+    tools/qmargins.h \
+    tools/qmessageauthenticationcode.h \
+    tools/qpair.h \
+    tools/qpoint.h \
+    tools/qqueue.h \
+    tools/qrect.h \
+    tools/qrefcount.h \
+    tools/qregexp.h \
+    tools/qregularexpression.h \
+    tools/qringbuffer_p.h \
+    tools/qscopedpointer.h \
+    tools/qscopedpointer_p.h \
+    tools/qscopedvaluerollback.h \
+    tools/qscopeguard.h \
+    tools/qset.h \
+    tools/qshareddata.h \
+    tools/qsharedpointer.h \
+    tools/qsharedpointer_impl.h \
+    tools/qsimd_p.h \
+    tools/qsimd_x86_p.h \
+    tools/qsize.h \
+    tools/qstack.h \
+    tools/qstring.h \
+    tools/qstring_mips_dsp_asm.S \
+    tools/qstringalgorithms.h \
+    tools/qstringalgorithms_p.h \
+    tools/qstringbuilder.h \
+    tools/qstringiterator_p.h \
+    tools/qstringlist.h \
+    tools/qstringliteral.h \
+    tools/qstringmatcher.h \
+    tools/qstringview.h \
+    tools/qtextboundaryfinder.h \
+    tools/qtimeline.h \
+    tools/qtimezone.h \
+    tools/qtimezoneprivate_data_p.h \
+    tools/qtimezoneprivate_p.h \
+    tools/qtools_p.h \
+    tools/qunicodetables_p.h \
+    tools/qunicodetools_p.h \
+    tools/qvarlengtharray.h \
+    tools/qvector.h \
+    tools/qversionnumber.h
 
 FORMS += \
         mainwindow.ui
@@ -1305,7 +1454,20 @@ DISTFILES += \
     thread/thread.pri \
     thread/qfuture.qdoc \
     thread/qfuturesynchronizer.qdoc \
-    thread/qwaitcondition.qdoc
+    thread/qwaitcondition.qdoc \
+    tools/UNICODE_LICENSE.txt \
+    tools/qalgorithms.qdoc \
+    tools/qcache.qdoc \
+    tools/qiterator.qdoc \
+    tools/qlocale.qdoc \
+    tools/qpair.qdoc \
+    tools/qscopeguard.qdoc \
+    tools/qset.qdoc \
+    tools/qstringiterator.qdoc \
+    tools/qt_attribution.json \
+    tools/qvarlengtharray.qdoc \
+    tools/qvector.qdoc \
+    tools/tools.pri
 
 SUBDIRS += \
     network/doc/snippets/code/doc_src_qtnetwork.pro \

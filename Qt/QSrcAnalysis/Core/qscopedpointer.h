@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QSCOPEDPOINTER_H
 #define QSCOPEDPOINTER_H
 
@@ -45,6 +6,12 @@
 #include <stdlib.h>
 
 QT_BEGIN_NAMESPACE
+
+//! C++ 的模板技术, 传递一个类名过去, 其实并不知道这个类会被怎么使用.
+//! 有可能, 会生成这个类的对象, 然后使用这个类的对象在模板算法里面参与逻辑
+//! 也有可能, 会使用这个模板的静态方法, 直接参与逻辑.
+//! 不管怎么说, 模板技术, 都有着类似于多态的效果.
+//! 以下的几个 Deleter, 都是仅仅有一个要求, 那就是, cleanup 静态方法. 如果想要实现自己的删除器, 那这个删除器实现该方法也就可以了.
 
 template <typename T>
 struct QScopedPointerDeleter
@@ -92,6 +59,8 @@ class QObject;
 typedef QScopedPointerObjectDeleteLater<QObject> QScopedPointerDeleteLater;
 #endif
 
+// 默认, 使用 QScopedPointerDeleter 作为删除器. 模板的类参数, 也可以指定默认参数.
+// 该类对标 std::unique_ptr, 但是 std::unique_ptr 的源代码太过于难以理解.
 template <typename T, typename Cleanup = QScopedPointerDeleter<T> >
 class QScopedPointer
 {
@@ -101,6 +70,7 @@ public:
     {
     }
 
+    // 在它的析构方法里面, 直接调用删除器的 cleanup 方法, 传入自己管理的指针.
     inline ~QScopedPointer()
     {
         T *oldD = this->d;
@@ -123,17 +93,15 @@ public:
         return !d;
     }
 
-#if defined(Q_QDOC)
     inline operator bool() const
     {
         return isNull() ? nullptr : &QScopedPointer::d;
     }
-#else
+
     operator RestrictedBool() const Q_DECL_NOTHROW
     {
         return isNull() ? nullptr : &QScopedPointer::d;
     }
-#endif
 
     T *data() const Q_DECL_NOTHROW
     {
@@ -152,6 +120,7 @@ public:
 
     void reset(T *other = nullptr) Q_DECL_NOEXCEPT_EXPR(noexcept(Cleanup::cleanup(std::declval<T *>())))
     {
+        // 如果 d == other, 那么不直接 return, 后续的 cleanup, 会让资源的状态危险.
         if (d == other)
             return;
         T *oldD = d;
@@ -159,6 +128,7 @@ public:
         Cleanup::cleanup(oldD);
     }
 
+    // take 什么都没干, 就是返回原有值, 但是 d 被置空了, 也就无法在析构的时候, 进行释放操作了.
     T *take() Q_DECL_NOTHROW
     {
         T *oldD = d;
@@ -177,9 +147,10 @@ protected:
     T *d;
 
 private:
-    Q_DISABLE_COPY(QScopedPointer)
+    Q_DISABLE_COPY(QScopedPointer) // 一个简单地宏, 其实就是 copy ctor, assign ctor == delete
 };
 
+// 所有的模板函数, 都要写清楚类型参数.
 template <class T, class Cleanup>
 inline bool operator==(const QScopedPointer<T, Cleanup> &lhs, const QScopedPointer<T, Cleanup> &rhs) Q_DECL_NOTHROW
 {
@@ -192,6 +163,8 @@ inline bool operator!=(const QScopedPointer<T, Cleanup> &lhs, const QScopedPoint
     return lhs.data() != rhs.data();
 }
 
+// 同 null 的判断, 也要明确的写出来才可以.
+// typedef decltype(nullptr) nullptr_t; C++ 是通过类型进行函数重载的, 所以 nullptr, 其实是有着自己专门的类型的.
 template <class T, class Cleanup>
 inline bool operator==(const QScopedPointer<T, Cleanup> &lhs, std::nullptr_t) Q_DECL_NOTHROW
 {
@@ -220,6 +193,7 @@ template <class T, class Cleanup>
 inline void swap(QScopedPointer<T, Cleanup> &p1, QScopedPointer<T, Cleanup> &p2) Q_DECL_NOTHROW
 { p1.swap(p2); }
 
+// QScopedArrayPointer 仅仅是增加了一些数组相关的方法.
 template <typename T, typename Cleanup = QScopedPointerArrayDeleter<T> >
 class QScopedArrayPointer : public QScopedPointer<T, Cleanup>
 {
