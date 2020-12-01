@@ -8,6 +8,12 @@
 #import <Foundation/Foundation.h>
 #import <Foundation/NSFileManager.h>
 
+int test(int count) {
+    int sd = 20;
+    char valus[sd];
+    return 1;
+}
+
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         
