@@ -334,8 +334,8 @@ double JKQTMathText::MTtextNode::draw(QPainter& painter, double x, double y, JKQ
     //qDebug()<<"MTtextNode: text="<<text<<" font="<<f;
 
     QPen p=painter.pen();
-//    p.setColor(currentEv.color);
-    p.setColor(Qt::red);
+    p.setColor(currentEv.color);
+//    p.setColor(Qt::red);
     painter.setPen(p);
     double dx=0;
     QFontMetricsF fm(f, painter.device());
@@ -2930,8 +2930,8 @@ double JKQTMathText::MTsymbolNode::draw(QPainter& painter, double x, double y, J
     //std::cout<<"symbol '"<<symbolName.toStdString()<<"' = "<<std::hex<<symbol.at(0).digitValue()<<" in font '"<<f.family().toStdString()<<"' ("<<QFontInfo(f).family().toStdString()<<"): "<<fm.inFont(symbol.at(0))<<std::endl;
 
     QPen p=painter.pen();
-//    p.setColor(currentEv.color);
-    p.setColor(Qt::green);
+    p.setColor(currentEv.color);
+//    p.setColor(Qt::green);
     p.setWidthF(fm.lineWidth());
     p.setStyle(Qt::SolidLine);
     painter.setPen(p);

@@ -236,12 +236,12 @@ TestForm::~TestForm()
 
 double TestForm::draw(QPainter& painter, double X, double YY, JKQTMathText& mathRender, QString name, double& durationSizingMS, double&durationTimingMS) {
 
-    double Y=YY;
+    double topLine=YY;
     painter.save(); // 当前绘画状态入栈.
 
     timer.start();
-    QSizeF s=mathRender.getSize(painter);
-    Y=Y+mathRender.getAscent(painter);
+    QSizeF size=mathRender.getSize(painter);
+    topLine=topLine+mathRender.getAscent(painter);
     durationSizingMS=timer.getTime()/1000.0;
     qDebug()<<"    sizing in "<<durationSizingMS<<" ms\n";
 
@@ -251,21 +251,21 @@ double TestForm::draw(QPainter& painter, double X, double YY, JKQTMathText& math
     p.setStyle(Qt::DashLine);
     p.setWidth(2);
     painter.setPen(p);
-    QRectF r(X, Y-mathRender.getAscent(painter),s.width(), s.height());
+    QRectF r(X, topLine-mathRender.getAscent(painter),size.width(), size.height());
     painter.drawRect(r);
 
     // 画 baseline
     p.setColor("lightblue");
     painter.setPen(p);
-    painter.drawLine(X, Y, X+s.width(), Y);
+    painter.drawLine(X, topLine, X+size.width(), topLine);
 
     // 真正的画 latex 文本的内容.
     timer.start();
     p.setStyle(Qt::SolidLine);
     p.setWidth(1);
-    p.setColor("red");
+    p.setColor("green");
     painter.setPen(p);
-    mathRender.draw(painter, X, Y, ui->chkBoxes->isChecked());
+    mathRender.draw(painter, X, topLine, ui->chkBoxes->isChecked());
     durationTimingMS=timer.getTime()/1000.0;
     qDebug()<<"   drawing in "<<durationTimingMS<<" ms";
     p.setColor("blue");
@@ -277,9 +277,9 @@ double TestForm::draw(QPainter& painter, double X, double YY, JKQTMathText& math
     f.setUnderline(true);
     f.setPointSize(10);
     painter.setFont(f);
-    painter.drawText(X, Y-mathRender.getAscent(painter)-6, name+":");
+    painter.drawText(X, topLine-mathRender.getAscent(painter)-6, name+":");
     painter.restore(); // 绘画状态出栈.
-    qDebug()<<name<<":  width="<<s.width()<<"  height="<<s.height()<<"  ascent="<<mathRender.getAscent(painter)<<"  descent="<<mathRender.getDescent(painter);
+    qDebug()<<name<<":  width="<<size.width()<<"  height="<<size.height()<<"  ascent="<<mathRender.getAscent(painter)<<"  descent="<<mathRender.getDescent(painter);
     return mathRender.getDescent(painter)+mathRender.getAscent(painter)+40;
 }
 
@@ -445,6 +445,7 @@ void TestForm::updateMath()
         if (!ok) size=10+i*5;
 
         mathRender.setFontSize(size); // 这里可以改变字体的大小.
+        mathRender.setFontColor(Qt::gray);
         qDebug() << "renderSize:" << size;
         double durationSizingMS=0, durationTimingMS=0;
         topline += draw(painter, X1, topline, mathRender,
