@@ -11,6 +11,9 @@ __STL_BEGIN_NAMESPACE
 
 template <class Key> struct hash { };
 
+// 这是一个模板方法, 在 set 里面, 会把该方法传递进去当做哈希算法.
+// 各个类型如果要实现自己的哈希算法, 就应该对该算法进行偏特化.
+
 /*
  哈希算法函数对象的实现.
  */

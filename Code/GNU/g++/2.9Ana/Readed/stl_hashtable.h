@@ -252,6 +252,7 @@ public:
     __hashtable_const_iterator<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc>;
     
 public:
+    // 当年要创建一个哈希表的时候, 其实是要传递一个 hash 方法进去的, 用来计算 hash 值. 但是, 不会用户去使用 hash 表, set 会使用, 在那里, 会把默认的 hash 函数传递过来.
     hashtable(size_type n,
               const HashFcn&    hf,
               const EqualKey&   eql,

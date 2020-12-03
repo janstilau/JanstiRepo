@@ -9,7 +9,7 @@ TestForm::TestForm(QWidget *parent) :
 {
     ui->setupUi(this);
     // addItem, 添加一项标题, 以及随之附赠的 userData. 这里, userData 自然就是 latext 语句了.
-    ui->cmbTestset->addItem("fonts", "rm: \\textrm{ABCabc123}, sf: \\textsf{ABCabc123}, tt: \\texttt{ABCabc123}, cal: \\textcal{ABCabc123}, scr: \\textscr{ABCabc123}, bb: \\textbb{ABCabc123}, frak: \\textfrak{ABCabc123}, ");
+    ui->cmbTestset->addItem("fonts", "rm: \\textrm{这里有中文字符ABCabc123}, sf: \\textsf{ABCabc123}, tt: \\texttt{ABCabc123}, cal: \\textcal{ABCabc123}, scr: \\textscr{ABCabc123}, bb: \\textbb{ABCabc123}, frak: \\textfrak{ABCabc123}, ");
     ui->cmbTestset->addItem("math-fonts", "rm: $\\mathrm{ABCabc123}$, sf: $\\mathsf{ABCabc123}$, tt: $\\mathtt{ABCabc123}$, cal: $\\mathcal{ABCabc123}$, scr: $\\mathscr{ABCabc123}$, bb: $\\mathbb{ABCabc123}$, frak: $\\mathfrak{ABCabc123}$, ");
     ui->cmbTestset->addItem("simple relations", "$a{\\leq}b$, $a{\\geq}b$, $a{\\equiv}b$, $a=b$, $a{\\neq}b$, $a<b$, $a>b$");
     ui->cmbTestset->addItem("simple relations in different modes", "math: $a{\\leq}b$, math/no braces: $a\\leq b$, no math: a{\\leq}b, no math/no braces: a\\leq b");
@@ -385,7 +385,7 @@ void TestForm::updateMath()
         mathTest=ui->cmbTestset->itemData(ui->cmbTestset->currentIndex()).toString();
         ui->textBrowserSource->setPlainText(mathTest);
         ui->textBrowserSource->setReadOnly(true);
-        ui->btnRender->setEnabled(false);
+        ui->btnRender->setEnabled(true);
     }
 
     ui->scrollArea->setBackgroundRole(QPalette::Dark);
@@ -404,6 +404,7 @@ void TestForm::updateMath()
     timer.start();
 
     JKQTMathText mathRender(this);
+    qDebug() << ui->cmbUnicodeSerif->currentFont().family() << "Roman for selected";
     mathRender.setFontRoman(ui->cmbUnicodeSerif->currentFont().family(), static_cast<JKQTMathText::MTfontEncoding>(ui->cmbEncodingSerif->currentIndex()));
     mathRender.setFontSans(ui->cmbUnicodeSans->currentFont().family(), static_cast<JKQTMathText::MTfontEncoding>(ui->cmbEncodingSans->currentIndex()));
     mathRender.setFontMathRoman(ui->cmbUnicodeSerifMath->currentFont().family(), static_cast<JKQTMathText::MTfontEncoding>(ui->cmbEncodingSerifMath->currentIndex()));
@@ -461,7 +462,7 @@ void TestForm::updateMath()
         }
         ui->labRenderTimes->setText(ui->labRenderTimes->text()+QString("     %1pt: %2ms/%3ms").arg(size).arg(durationSizingMS, 0, 'F', 1).arg(durationTimingMS, 0, 'F', 1));
         ui->textBrowser->textCursor().insertHtml("<hr>"+mathRender.toHtml(&okh)+"<hr><br><br>");
-        qDebug()<<"HTML: ---------------------------------------------\n"<<mathRender.toHtml(&okh)<<"\nHTML: --------------------------------------------- ok="<<okh;
+//        qDebug()<<"HTML: ---------------------------------------------\n"<<mathRender.toHtml(&okh)<<"\nHTML: --------------------------------------------- ok="<<okh;
         if (mathRender.getErrorList().size()>0) {
             qDebug()<<mathRender.getErrorList().join("\n")<<"\n";
         }

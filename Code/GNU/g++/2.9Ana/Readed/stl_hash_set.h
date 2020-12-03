@@ -12,6 +12,7 @@ __STL_BEGIN_NAMESPACE
 #endif
 
 #ifndef __STL_LIMITED_DEFAULT_TEMPLATES
+// 默认, 就会把 hash 模板函数传递过来, 当做哈希算法.
 template <class Value, class HashFcn = hash<Value>,
           class EqualKey = equal_to<Value>,
           class Alloc = alloc>
@@ -27,7 +28,7 @@ class hash_set
 private:
   typedef hashtable<Value, Value, HashFcn, identity<Value>, 
                     EqualKey, Alloc> ht;
-  ht rep;
+  ht rep; // 真正的, 数据存储的地方.
 
 public:
   typedef typename ht::key_type key_type;

@@ -6,5 +6,15 @@
         <file alias="xits-math.otf">xits/XITSMath-Regular.otf</file>
         <file alias="xits-mathbold.otf">xits/XITSMath-Bold.otf</file>
         <file alias="xits-regular.otf">xits/XITS-Regular.otf</file>
+        <file>pen/_H_HelveticaNeue.ttc</file>
+        <file>pen/Adobe.otf</file>
+        <file>pen/GeorgiaItalic.ttf</file>
+        <file>pen/HelveticaNeue.ttc</file>
+        <file>pen/HYQiHei-55S.ttf</file>
+        <file>pen/HYQiHei-70S.otf</file>
+        <file>pen/NotoSansJP-Medium.otf</file>
+        <file>pen/NotoSansJP-Regular.otf</file>
+        <file>pen/NotoSansKR-Medium.otf</file>
+        <file>pen/NotoSansKR-Regular.otf</file>
     </qresource>
 </RCC>

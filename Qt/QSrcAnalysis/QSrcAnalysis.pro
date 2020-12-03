@@ -525,6 +525,43 @@ SOURCES += \
     network/ssl/qsslsocket_winrt.cpp \
     network/ssl/qwindowscarootfetcher.cpp \
     CopidQt/implement/qthread_unix.cpp \
+    text/qabstracttextdocumentlayout.cpp \
+    text/qcssparser.cpp \
+    text/qcssscanner.cpp \
+    text/qdistancefield.cpp \
+    text/qfont.cpp \
+    text/qfontdatabase.cpp \
+    text/qfontengine.cpp \
+    text/qfontengine_qpf2.cpp \
+    text/qfontengineglyphcache.cpp \
+    text/qfontmetrics.cpp \
+    text/qfontsubset.cpp \
+    text/qfontsubset_agl.cpp \
+    text/qfragmentmap.cpp \
+    text/qglyphrun.cpp \
+    text/qharfbuzzng.cpp \
+    text/qinputcontrol.cpp \
+    text/qplatformfontdatabase.cpp \
+    text/qrawfont.cpp \
+    text/qstatictext.cpp \
+    text/qsyntaxhighlighter.cpp \
+    text/qtextcursor.cpp \
+    text/qtextdocument.cpp \
+    text/qtextdocument_p.cpp \
+    text/qtextdocumentfragment.cpp \
+    text/qtextdocumentlayout.cpp \
+    text/qtextdocumentwriter.cpp \
+    text/qtextengine.cpp \
+    text/qtextformat.cpp \
+    text/qtexthtmlparser.cpp \
+    text/qtextimagehandler.cpp \
+    text/qtextlayout.cpp \
+    text/qtextlist.cpp \
+    text/qtextobject.cpp \
+    text/qtextodfwriter.cpp \
+    text/qtextoption.cpp \
+    text/qtexttable.cpp \
+    text/qzip.cpp \
     thread/qatomic.cpp \
     thread/qexception.cpp \
     thread/qfutureinterface.cpp \
@@ -1315,6 +1352,53 @@ HEADERS += \
     network/ssl/qsslsocket_winrt_p.h \
     network/ssl/qwindowscarootfetcher_p.h \
     CopidQt/implement/qthread_p.h \
+    text/qabstracttextdocumentlayout.h \
+    text/qabstracttextdocumentlayout_p.h \
+    text/qcssparser_p.h \
+    text/qdistancefield_p.h \
+    text/qfont.h \
+    text/qfont_p.h \
+    text/qfontdatabase.h \
+    text/qfontengine_p.h \
+    text/qfontengine_qpf2_p.h \
+    text/qfontengineglyphcache_p.h \
+    text/qfontinfo.h \
+    text/qfontmetrics.h \
+    text/qfontsubset_p.h \
+    text/qfragmentmap_p.h \
+    text/qglyphrun.h \
+    text/qglyphrun_p.h \
+    text/qharfbuzzng_p.h \
+    text/qinputcontrol_p.h \
+    text/qplatformfontdatabase.h \
+    text/qrawfont.h \
+    text/qrawfont_p.h \
+    text/qstatictext.h \
+    text/qstatictext_p.h \
+    text/qsyntaxhighlighter.h \
+    text/qtextcursor.h \
+    text/qtextcursor_p.h \
+    text/qtextdocument.h \
+    text/qtextdocument_p.h \
+    text/qtextdocumentfragment.h \
+    text/qtextdocumentfragment_p.h \
+    text/qtextdocumentlayout_p.h \
+    text/qtextdocumentwriter.h \
+    text/qtextengine_p.h \
+    text/qtextformat.h \
+    text/qtextformat_p.h \
+    text/qtexthtmlparser_p.h \
+    text/qtextimagehandler_p.h \
+    text/qtextlayout.h \
+    text/qtextlist.h \
+    text/qtextobject.h \
+    text/qtextobject_p.h \
+    text/qtextodfwriter_p.h \
+    text/qtextoption.h \
+    text/qtexttable.h \
+    text/qtexttable_p.h \
+    text/qzipreader_p.h \
+    text/qzipwriter_p.h \
     thread/qatomic.h \
     thread/qbasicatomic.h \
     thread/qexception.h \
@@ -1451,6 +1535,9 @@ DISTFILES += \
     network/kernel/kernel.pri \
     network/socket/socket.pri \
     network/ssl/ssl.pri \
+    text/AGLFN_LICENSE.txt \
+    text/qt_attribution.json \
+    text/text.pri \
     thread/thread.pri \
     thread/qfuture.qdoc \
     thread/qfuturesynchronizer.qdoc \

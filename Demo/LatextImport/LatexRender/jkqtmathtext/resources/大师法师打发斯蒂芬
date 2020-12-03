@@ -1,0 +1,60 @@
+大师法师打发斯蒂芬
+
+https://oapi.dingtalk.com/robot/send?access_token=92e7bac882a85a0bccfb986c97c29fab226dccbb25bf80e5f0879d336bb67fd2
+
+MTsymbolNode(;) MTinstruction1Node(textcolor) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTwhitespaceNode( ) MTtextNode(1+1 ) MTtextNode(等于几? ) 
+MTsymbolNode(;) MTwhitespaceNode( ) MTinstruction1Node(textcolor) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTwhitespaceNode( ) MTtextNode(同学们这道题很难, ) MTtextNode(它的解析是: ) 
+MTsymbolNode(;) MTwhitespaceNode( ) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTwhitespaceNode( ) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(equation) MTsymbolNode( ) MTsymbolNode( ) MTsymbolNode( ) MTsymbolNode( ) MTsymbolNode( ) MTinstruction1Node(equation) MTsymbolNode( ) MTsymbolNode( ) MTsymbolNode( ) MTsymbolNode( ) MTsymbolNode( ) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(textcolor) MTinstruction1Node(textcolor) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTtextNode(大家明白了吗) 
+
+MTsymbolNode(;) MTinstruction1Node(textcolor) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTwhitespaceNode( ) MTtextNode(1+1 ) MTtextNode(等于几? ) 
+MTsymbolNode(;) MTwhitespaceNode( ) MTinstruction1Node(textcolor) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTwhitespaceNode( ) MTtextNode(同学们这道题很难, ) MTtextNode(它的解析是: ) 
+MTsymbolNode(;) MTwhitespaceNode( ) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTwhitespaceNode( ) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(equation) MTsymbolNode( ) MTsymbolNode( ) MTsymbolNode( ) MTsymbolNode( ) MTsymbolNode( ) MTinstruction1Node(equation) MTsymbolNode( ) MTsymbolNode( ) MTsymbolNode( ) MTsymbolNode( ) MTsymbolNode( ) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(textcolor) MTinstruction1Node(textcolor) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTinstruction1Node(equation) MTwhitespaceNode( ) 
+MTsymbolNode(;) MTtextNode(大家明白了吗) 
+
+
+####  QFont HYQiHei,26,-1,5,75,1,0,0,0,0 ####  QFontMetricsF 来解析文字: M 得到了 rect 0.000000, 0.000000, 0.000000, 0.000000####  文字:,  解析高度 = 26279831.600000
+
+
+
+// 词典笔
+####  QFont XITS,16.38,-1,5,75,1,0,0,0,0
+####  QFontMetricsF 各个属性 ascent 25165824.000000, descent 8388608.000000, lineWidth 1677721.593750,
+rect for x: -1.000000 -18958255.000000 2.000000 19394463.000000
+####  QFontMetricsF 来解析文字: M 得到了 rect -1.000000, -25803359.000000, 2.000000, 26206013.000000
+
+
+####  QFont HYQiHei,26,-1,5,50,1,0,0,0,0
+####  QFontMetricsF 各个属性 ascent 30735860.000000, descent 10099885.000000, lineWidth 1677721.593750,
+rect for x: 0.000000 0.000000 0.000000 0.000000####  QFontMetricsF 来解析文字: M 得到了 rect 0.000000, 0.000000, 0.000000, 0.000000
+####  文字:x  解析高度 = 20300431.800000
+
+// MacOS
+####  QFont XITS,16.38,-1,5,50,0,0,0,0,0
+####  QFontMetricsF 各个属性 ascent 12.000000, descent 4.000000, lineWidth 0.796875,
+rect for x: 0.265625 -7.187500 7.390625 7.187500
+####  QFontMetricsF 来解析文字: μ 得到了 rect 0.875000, -7.203125, 7.375000, 10.671875
+
+####  QFont HYQiHei,26,-1,5,50,0,0,0,0,0
+####  QFontMetricsF 各个属性 ascent 23.812500, descent 7.812500, lineWidth 1.296875
+rect for x: 0.171875 -13.078125 12.984375 14.031250

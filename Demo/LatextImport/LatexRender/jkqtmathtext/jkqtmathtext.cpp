@@ -341,7 +341,7 @@ double JKQTMathText::MTtextNode::draw(QPainter& painter, double x, double y, JKQ
     QFontMetricsF fm(f, painter.device());
     /*if (txt.size()>1 && txt[txt.size()-1].isSpace()) {
         QFontMetricsF fm(f, painter.device());
-        //if ((fm.width("a ")==fm.width("a"))) dx=fm.boundingRect("I").width();
+        //if ((fm.width("a ")==fm.width("a"))) dx=fm.boundingRect("I").width();发的说法
     }*/
 
     if (!hasDigits || !f.italic()) {
@@ -350,6 +350,7 @@ double JKQTMathText::MTtextNode::draw(QPainter& painter, double x, double y, JKQ
             path.addText(QPointF(x+dx, y), f, txt);
             painter.drawPath(path);
         } else {
+            qDebug()<<"MTtextNode: text="<<text<<" font="<<f;
             painter.drawText(QPointF(x+dx, y), txt);//.simplified());
         }
     } else {
@@ -3507,7 +3508,15 @@ bool JKQTMathText::useXITS(bool mathModeOnly)
         if (QFile::exists(":/JKQTMathText/fonts/xits-math.otf")) { QFontDatabase::addApplicationFont(":/JKQTMathText/fonts/xits-math.otf"); }
         if (QFile::exists(":/JKQTMathText/fonts/xits-mathbold.otf")) { QFontDatabase::addApplicationFont(":/JKQTMathText/fonts/xits-mathbold.otf"); }
         if (QFile::exists(":/JKQTMathText/fonts/xits-regular.otf")) { QFontDatabase::addApplicationFont(":/JKQTMathText/fonts/xits-regular.otf"); }
+
+        if (QFile::exists(":/JKQTMathText/fonts/pen/HYQiHei-55S.ttf")) {
+            QFontDatabase::addApplicationFont("JKQTMathText/fonts/pen/HYQiHei-55S.ttf");
+            qDebug() << "find and install HYQHei-70S";
+        } else {
+            qDebug() << "can not find HYQHei-70S";
+        }
     }
+
     // 首先把字体加到了库中.
 
 
