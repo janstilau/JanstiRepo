@@ -9,7 +9,8 @@ __STL_BEGIN_NAMESPACE
 
 /*
  Pair 是一个纯数据类. 里面没有太多的方法.
- 从关联式容器我们得知, 其实真正存储的是一个 pair. 在算法里面, 根据 pair 的 first, 也就是 key 进行查找的工作. 根据 pair 的 second, 也就是 second, 进行判断相等的工作.
+ 在关联式容器里面, 也就是 hash, rbtree 里面, 用的非常多.
+ 关联式容器的思想, 就是用一个容易查找的值, 来代替复杂的对象的查找工作. 所以, 关联式容器里面的数据, 一般是一个 key 值, 一个 value 值. key 值做容器层面的快速查找, value 值用来做业务逻辑.
  */
 
 template <class T1, class T2>
@@ -24,6 +25,8 @@ struct pair {
     pair(const T1& a, const T2& b) : first(a), second(b) {}
 };
 
+
+// 定义一些常见操作符, 给 Pair. 这些操作符, 会在通用算法里面大量的使用.
 template <class T1, class T2>
 inline bool operator==(const pair<T1, T2>& x, const pair<T1, T2>& y) { 
     return x.first == y.first && x.second == y.second;

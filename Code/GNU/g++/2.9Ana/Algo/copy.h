@@ -1,11 +1,3 @@
-//
-//  copy.h
-//  2.9Ana
-//
-//  Created by JustinLau on 2020/7/27.
-//  Copyright © 2020 JustinLau. All rights reserved.
-//
-
 #ifndef copy_h
 #define copy_h
 

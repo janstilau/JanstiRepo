@@ -187,10 +187,12 @@ public:
         insert(pos, (size_type) n, x);
     }
     
+    // 这里, 之前都没有考虑, 这里会调用对应类型的析构函数的啊.
     void pop_back() {
         --finish;
         destroy(finish);
     }
+    
     iterator erase(iterator position) {
         /*
          直接调用的 copy. 段式的内存拷贝工作. 这就是数组的好处, 直接操作内存资源.
