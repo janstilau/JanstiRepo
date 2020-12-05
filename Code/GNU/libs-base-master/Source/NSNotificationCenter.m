@@ -10,7 +10,7 @@
 
 static NSZone	*_zone = 0;
 
-// 
+// 这里,  Qt 版本需要增加一个线程的概念. 因为 Qt 里面线程是一个很麻烦的概念.
 @interface	GSNotification : NSNotification
 {
 @public
@@ -24,14 +24,6 @@ static NSZone	*_zone = 0;
 
 static Class concrete = 0;
 
-+ (void) initialize
-{
-    if (concrete == 0)
-    {
-        concrete = [GSNotification class];
-    }
-}
-
 + (NSNotification*) notificationWithName: (NSString*)name
                                   object: (id)object
                                 userInfo: (NSDictionary*)info
@@ -43,29 +35,6 @@ static Class concrete = 0;
     n->_poster = TEST_RETAIN(object);
     n->_info = TEST_RETAIN(info);
     return AUTORELEASE(n);
-}
-
-- (void) dealloc
-{
-    RELEASE(_name);
-    TEST_RELEASE(_poster);
-    TEST_RELEASE(_info);
-    [super dealloc];
-}
-
-- (NSString*) name
-{
-    return _name;
-}
-
-- (id) object
-{
-    return _poster;
-}
-
-- (NSDictionary*) userInfo
-{
-    return _info;
 }
 
 @end
@@ -207,42 +176,43 @@ typedef struct NCTbl {
 #define	LOCKCOUNT	(TABLE->lockCount)
 
 static Observation *
-createNewObservation(NCTable *t, SEL s, id o)
+createNewObservation(NCTable *table, SEL selector, id receiver)
 {
     Observation	*result;
     
-    if (t->freeList == 0)
+    if (table->freeList == 0)
     {
         Observation	*block;
         
-        if (t->chunkIndex == CHUNKSIZE)
+        if (table->chunkIndex == CHUNKSIZE)
         {
             unsigned	size;
             
-            t->numChunks++;
+            table->numChunks++;
             
-            size = t->numChunks * sizeof(Observation*);
-            t->chunks = (Observation**)NSReallocateCollectable(
-                                                               t->chunks, size, NSScannedOption);
+            size = table->numChunks * sizeof(Observation*);
+            table->chunks = (Observation**)NSReallocateCollectable(
+                                                               table->chunks, size, NSScannedOption);
             
             size = CHUNKSIZE * sizeof(Observation);
-            t->chunks[t->numChunks - 1]
+            table->chunks[table->numChunks - 1]
             = (Observation*)NSAllocateCollectable(size, 0);
-            t->chunkIndex = 0;
+            table->chunkIndex = 0;
         }
-        block = t->chunks[t->numChunks - 1];
-        t->freeList = &block[t->chunkIndex];
-        t->chunkIndex++;
-        t->freeList->link = 0;
+        block = table->chunks[table->numChunks - 1];
+        table->freeList = &block[table->chunkIndex];
+        table->chunkIndex++;
+        table->freeList->link = 0;
     }
-    result = t->freeList;
-    t->freeList = (Observation*)result->link;
-    result->link = (void*)t;
+    
+    result = table->freeList;
+    table->freeList = (Observation*)result->link;
+    result->link = (void*)table;
     result->retained = 0;
     result->next = 0;
     
-    result->selector = s;
-    result->observer = o;
+    result->selector = selector;
+    result->observer = receiver;
     
     return result;
 }

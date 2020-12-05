@@ -369,10 +369,7 @@ QThreadPrivate::~QThreadPrivate()
            thread. This is the default.
 */
 
-/*!
-    Returns a pointer to a QThread which manages the currently
-    executing thread.
-*/
+
 QThread *QThread::currentThread()
 {
     QThreadData *data = QThreadData::current();
