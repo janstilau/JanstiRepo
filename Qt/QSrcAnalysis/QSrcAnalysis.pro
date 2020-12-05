@@ -525,6 +525,25 @@ SOURCES += \
     network/ssl/qsslsocket_winrt.cpp \
     network/ssl/qwindowscarootfetcher.cpp \
     CopidQt/implement/qthread_unix.cpp \
+    styles/qandroidstyle.cpp \
+    styles/qcommonstyle.cpp \
+    styles/qdrawutil.cpp \
+    styles/qfusionstyle.cpp \
+    styles/qmacstyle_mac.mm \
+    styles/qpixmapstyle.cpp \
+    styles/qproxystyle.cpp \
+    styles/qstyle.cpp \
+    styles/qstyleanimation.cpp \
+    styles/qstylefactory.cpp \
+    styles/qstylehelper.cpp \
+    styles/qstyleoption.cpp \
+    styles/qstylepainter.cpp \
+    styles/qstyleplugin.cpp \
+    styles/qstylesheetstyle.cpp \
+    styles/qstylesheetstyle_default.cpp \
+    styles/qwindowsstyle.cpp \
+    styles/qwindowsvistastyle.cpp \
+    styles/qwindowsxpstyle.cpp \
     text/qabstracttextdocumentlayout.cpp \
     text/qcssparser.cpp \
     text/qcssscanner.cpp \
@@ -1352,6 +1371,34 @@ HEADERS += \
     network/ssl/qsslsocket_winrt_p.h \
     network/ssl/qwindowscarootfetcher_p.h \
     CopidQt/implement/qthread_p.h \
+    styles/qandroidstyle_p.h \
+    styles/qcommonstyle.h \
+    styles/qcommonstyle_p.h \
+    styles/qcommonstylepixmaps_p.h \
+    styles/qdrawutil.h \
+    styles/qfusionstyle_p.h \
+    styles/qfusionstyle_p_p.h \
+    styles/qmacstyle_mac_p.h \
+    styles/qmacstyle_mac_p_p.h \
+    styles/qpixmapstyle_p.h \
+    styles/qpixmapstyle_p_p.h \
+    styles/qproxystyle.h \
+    styles/qproxystyle_p.h \
+    styles/qstyle.h \
+    styles/qstyle_p.h \
+    styles/qstyleanimation_p.h \
+    styles/qstylefactory.h \
+    styles/qstylehelper_p.h \
+    styles/qstyleoption.h \
+    styles/qstylepainter.h \
+    styles/qstyleplugin.h \
+    styles/qstylesheetstyle_p.h \
+    styles/qwindowsstyle_p.h \
+    styles/qwindowsstyle_p_p.h \
+    styles/qwindowsvistastyle_p.h \
+    styles/qwindowsvistastyle_p_p.h \
+    styles/qwindowsxpstyle_p.h \
+    styles/qwindowsxpstyle_p_p.h \
     text/qabstracttextdocumentlayout.h \
     text/qabstracttextdocumentlayout_p.h \
     text/qcssparser_p.h \
@@ -1535,6 +1582,143 @@ DISTFILES += \
     network/kernel/kernel.pri \
     network/socket/socket.pri \
     network/ssl/ssl.pri \
+    styles/images/cdr-128.png \
+    styles/images/cdr-16.png \
+    styles/images/cdr-32.png \
+    styles/images/cleartext-16.png \
+    styles/images/cleartext-32.png \
+    styles/images/closedock-16.png \
+    styles/images/closedock-down-16.png \
+    styles/images/computer-16.png \
+    styles/images/computer-32.png \
+    styles/images/desktop-16.png \
+    styles/images/desktop-32.png \
+    styles/images/dirclosed-128.png \
+    styles/images/dirclosed-16.png \
+    styles/images/dirclosed-32.png \
+    styles/images/dirlink-128.png \
+    styles/images/dirlink-16.png \
+    styles/images/dirlink-32.png \
+    styles/images/diropen-128.png \
+    styles/images/diropen-16.png \
+    styles/images/diropen-32.png \
+    styles/images/dockdock-16.png \
+    styles/images/dockdock-down-16.png \
+    styles/images/down-128.png \
+    styles/images/down-16.png \
+    styles/images/down-32.png \
+    styles/images/dvd-128.png \
+    styles/images/dvd-16.png \
+    styles/images/dvd-32.png \
+    styles/images/file-128.png \
+    styles/images/file-16.png \
+    styles/images/file-32.png \
+    styles/images/filecontents-128.png \
+    styles/images/filecontents-16.png \
+    styles/images/filecontents-32.png \
+    styles/images/fileinfo-128.png \
+    styles/images/fileinfo-16.png \
+    styles/images/fileinfo-32.png \
+    styles/images/filelink-128.png \
+    styles/images/filelink-16.png \
+    styles/images/filelink-32.png \
+    styles/images/floppy-128.png \
+    styles/images/floppy-16.png \
+    styles/images/floppy-32.png \
+    styles/images/fontbitmap-16.png \
+    styles/images/fonttruetype-16.png \
+    styles/images/fusion_arrow.png \
+    styles/images/fusion_groupbox.png \
+    styles/images/harddrive-128.png \
+    styles/images/harddrive-16.png \
+    styles/images/harddrive-32.png \
+    styles/images/left-128.png \
+    styles/images/left-16.png \
+    styles/images/left-32.png \
+    styles/images/media-pause-16.png \
+    styles/images/media-pause-32.png \
+    styles/images/media-play-16.png \
+    styles/images/media-play-32.png \
+    styles/images/media-seek-backward-16.png \
+    styles/images/media-seek-backward-32.png \
+    styles/images/media-seek-forward-16.png \
+    styles/images/media-seek-forward-32.png \
+    styles/images/media-skip-backward-16.png \
+    styles/images/media-skip-backward-32.png \
+    styles/images/media-skip-forward-16.png \
+    styles/images/media-skip-forward-32.png \
+    styles/images/media-stop-16.png \
+    styles/images/media-stop-32.png \
+    styles/images/media-volume-16.png \
+    styles/images/media-volume-muted-16.png \
+    styles/images/networkdrive-128.png \
+    styles/images/networkdrive-16.png \
+    styles/images/networkdrive-32.png \
+    styles/images/newdirectory-128.png \
+    styles/images/newdirectory-16.png \
+    styles/images/newdirectory-32.png \
+    styles/images/parentdir-128.png \
+    styles/images/parentdir-16.png \
+    styles/images/parentdir-32.png \
+    styles/images/refresh-24.png \
+    styles/images/refresh-32.png \
+    styles/images/right-128.png \
+    styles/images/right-16.png \
+    styles/images/right-32.png \
+    styles/images/standardbutton-apply-128.png \
+    styles/images/standardbutton-apply-16.png \
+    styles/images/standardbutton-apply-32.png \
+    styles/images/standardbutton-cancel-128.png \
+    styles/images/standardbutton-cancel-16.png \
+    styles/images/standardbutton-cancel-32.png \
+    styles/images/standardbutton-clear-128.png \
+    styles/images/standardbutton-clear-16.png \
+    styles/images/standardbutton-clear-32.png \
+    styles/images/standardbutton-close-128.png \
+    styles/images/standardbutton-close-16.png \
+    styles/images/standardbutton-close-32.png \
+    styles/images/standardbutton-closetab-16.png \
+    styles/images/standardbutton-closetab-down-16.png \
+    styles/images/standardbutton-closetab-hover-16.png \
+    styles/images/standardbutton-delete-128.png \
+    styles/images/standardbutton-delete-16.png \
+    styles/images/standardbutton-delete-32.png \
+    styles/images/standardbutton-help-128.png \
+    styles/images/standardbutton-help-16.png \
+    styles/images/standardbutton-help-32.png \
+    styles/images/standardbutton-no-128.png \
+    styles/images/standardbutton-no-16.png \
+    styles/images/standardbutton-no-32.png \
+    styles/images/standardbutton-ok-128.png \
+    styles/images/standardbutton-ok-16.png \
+    styles/images/standardbutton-ok-32.png \
+    styles/images/standardbutton-open-128.png \
+    styles/images/standardbutton-open-16.png \
+    styles/images/standardbutton-open-32.png \
+    styles/images/standardbutton-save-128.png \
+    styles/images/standardbutton-save-16.png \
+    styles/images/standardbutton-save-32.png \
+    styles/images/standardbutton-yes-128.png \
+    styles/images/standardbutton-yes-16.png \
+    styles/images/standardbutton-yes-32.png \
+    styles/images/stop-24.png \
+    styles/images/stop-32.png \
+    styles/images/toolbar-ext.png \
+    styles/images/toolbar-ext@2x.png \
+    styles/images/trash-128.png \
+    styles/images/trash-16.png \
+    styles/images/trash-32.png \
+    styles/images/up-128.png \
+    styles/images/up-16.png \
+    styles/images/up-32.png \
+    styles/images/viewdetailed-128.png \
+    styles/images/viewdetailed-16.png \
+    styles/images/viewdetailed-32.png \
+    styles/images/viewlist-128.png \
+    styles/images/viewlist-16.png \
+    styles/images/viewlist-32.png \
+    styles/qmacstyle.qdoc \
+    styles/styles.pri \
     text/AGLFN_LICENSE.txt \
     text/qt_attribution.json \
     text/text.pri \
@@ -1559,3 +1743,6 @@ DISTFILES += \
 SUBDIRS += \
     network/doc/snippets/code/doc_src_qtnetwork.pro \
     network/network.pro
+
+RESOURCES += \
+    styles/qstyle.qrc

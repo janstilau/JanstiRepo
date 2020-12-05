@@ -48,9 +48,10 @@ inline const T& __median(const T& a, const T& b, const T& c, Compare comp) {
 }
 
 /*
- forEach 并不是一个, 多么新的概念.
- C++ 在很早的时候, 就通过迭代器, 进行了相关函数的设置.
- 只不过, 这些功能, 又慢慢的重新归到了容器的概念里面.
+ forEach 这个函数居然有返回值.
+ 之前不太理解, 为什么 algorithm 里面, 传入仿函数, 传入 lambda 表达式, 传入函数指针, 都可以奏效.
+ 模板里面, 只要编译能通过就可以. 所以, 不论传入的到底是什么东西, 只要能够调用到 () 操作符就可以了.
+ 模板, 本身就是一个半成品, 根据你传入的参数的类型不同, 会生成实际的函数.
  */
 template <class InputIterator, class Function>
 Function for_each(InputIterator first, InputIterator last, Function f) {

@@ -1092,6 +1092,7 @@ void QLabel::paintEvent(QPaintEvent *)
         opt.initFrom(this);
         if (!isEnabled())
             pix = style->generatedIconPixmap(QIcon::Disabled, pix, &opt);
+        // 最终就是画上去.
         style->drawItemPixmap(&painter, cr, align, pix);
     }
 }
@@ -1363,7 +1364,7 @@ void QLabel::setTextFormat(Qt::TextFormat format)
         QString t = d->text;
         if (!t.isNull()) {
             d->text.clear();
-            setText(t);
+            setText(t); // 重新调用一下 setText.
         }
     }
 }

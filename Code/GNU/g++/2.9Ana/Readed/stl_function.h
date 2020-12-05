@@ -3,15 +3,11 @@
 
 __STL_BEGIN_NAMESPACE
 
-
 /*
- 可以看到, C++ 暴露出去了一个简单的函数, 给用户使用.
- 而这个函数的内部, 一般是生成一个特定类型的对象, 将闭包, 以及想要绑定的值, 进行存储, 在执行的时候, 才真正的去调用闭包的内容.
- 在 Swift 里面, 很多函数, 也仅仅是返回一个特定数据类型的对象而已, 在这个对象里面, 才会封装这函数名所代表的含义.
- */
-
-/*
- 公共类型定义
+ 公共类型定义.
+ 在某些时候, 可能会使用 result_type, argument_type,first_argument_type, second_argument_type 来定义变量.
+ 这是时候, 如果你传递过去的仿函数类, 没有继承 unary_function, 或者 binary_function, 就取不到上面的信息.
+ 所以, 继承这两个类, 最大的意义, 是将自己定义的类, 纳入到 STL 的体系中.
  */
 template <class Arg, class Result>
 struct unary_function {
@@ -28,17 +24,21 @@ struct binary_function {
 
 /*
  下面这些类型, 用于生产临时对象.
- 可以理解成为, 是 Block 的工厂类, 目的就是生成特定类型的 block. 这些特定类型, 是和方法名, 绑定在一起的.
- 函数对象的内部仅仅写出了逻辑的混合, 大量利用了操作符重载, 操作符重载作为一个稳定的接口名, 在 C++ 里面, 承担了大量的工作.
- 具体的操作, 还是各个类型, 要适配到算法中的操作符中去.
+ 可以理解成为, 是 Block 的工厂类, 目的就是生成特定类型的 block. 既然是 Block, 就是没有名称的对象. 所以, 仿函数一般也是用在传递参数的过程中, 或者在模板里面充当类型参数, 让模板内部生成对应的 block 对象.
+ 
+ 函数对象的内部仅仅写出了逻辑的混合, 大量利用了操作符重载.
+ 可以把操作符, 理解为, 具有通用性的一组特殊接口.
+ 类型的设计者, 要去自己实现这组接口.
  */
 /*
  +, 就是相加运算符, T 里面, 要进行 + 运算符的重载工作, 注意, 第一个参数, 第二个参数, 返回值的类型, 都是要相等的.
- plus 要继承自 binary_function, binary_function 里面仅仅有一些 typedef 的定义, 但是在适配器函数, 比如 not 里面, 会去询问该类型.
- 所以, 如果自己的类型, 想要适配到整个模板库系统里面, 要有继承系统提供的这几个类型.
+ 最底层的模板, 可能很复杂, 需要配置很多类型参数. 而使用他们的类, 或许是子类化, 例如 plus, 或许是使用模板对象, 例如 set 使用 hash_table.
+ 这种暴露给用户的类, 会承担将底层的模板的类型参数明确化的功能.
  */
 /*
  要注意, 里面大量的, 都是进行的 const& 的传递.
+ 因为操作符重载的大量使用, C++ 的代码, 看起来很简练.
+ 具体, 这些操作符到底应该有什么实现, 这个要交给类型的设计者来实现.
  */
 template <class T>
 struct plus : public binary_function<T, T, T> {
@@ -65,15 +65,11 @@ struct modulus : public binary_function<T, T, T> {
     T operator()(const T& x, const T& y) const { return x % y; }
 };
 
-/*
- C++ 里面, 操作符重载做的很不好, 这点在 Swift 里面, 进行了修正.
- */
 template <class T>
 struct negate : public unary_function<T, T> {
     T operator()(const T& x) const { return -x; }
 };
 
-// 因为操作符重载的大量使用, C++ 的代码, 看起来很简练.
 template <class T>
 struct equal_to : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x == y; }
@@ -104,9 +100,9 @@ struct less_equal : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x <= y; }
 };
 
-/*
- Logical_and
- */
+// 注意, 这里, X, y 没有指定, 到底是什么类型. 只要是它有对应的操作符就可以, &&, ||, !
+// 因为 C++ 是有着操作符重载了, 所以, 如果一个类型, 有了这些操作符的定义, 只要返回结果是一个 bool, 就可以使用下面的这些仿函数了.
+
 template <class T>
 struct logical_and : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x && y; }
@@ -122,17 +118,16 @@ struct logical_not : public unary_function<T, bool> {
     bool operator()(const T& x) const { return !x; }
 };
 
-/*
- argument_type
- 通过这些父类的 typedef 的定义, 可以确保在变异的时候, 如果传递过来的不是正确的类型, 那么编译是不会通过的.
- */
+
+// 这里进行了偏特化, 明确出了, result_type 是一个 bool.
 template <class Predicate>
 class unary_negate
 : public unary_function<typename Predicate::argument_type, bool> {
 protected:
-    Predicate pred;
+    Predicate pred; // 传入一个闭包, 存储起来. 真正调用的时候, 就是调用这个闭包, 然后取反.
 public:
     explicit unary_negate(const Predicate& x) : pred(x) {}
+    
     bool operator()(const typename Predicate::argument_type& x) const {
         return !pred(x);
     }
@@ -142,9 +137,11 @@ public:
  真正暴露给用户的, 不会是上面的那个仿函数的定义. 而是一个简单的函数. 这个函数的内部, 做包装的动作.
  not1 是一个很简单的函数, 但是, 想要理解它究竟做了什么, 一定要理解, 闭包, 函数对象这些东西.
  可以用命令模式来理解, 就是将操作封装成为对象.
- 我们只能传递的内存里面的值, 只不过命令模式, 可以将值转化为实际的函数调用.
  所以, not1 这种, 就是在函数内部生成一个新的对象, 这个对象包含原来传过来的闭包, 并对这个闭包, 进行了函数相关的逻辑处理.
+ 
+ 还有 swift lazy 函数, 也是产生一个新的对象, 对于原始值进行包装. 只不过新的对象, 还符合 sequence 协议, 所以还可以当做 sequence 进行使用.
  */
+// unary_negate<Predicate> 是返回值类型, not1 是函数名.
 template <class Predicate>
 inline unary_negate<Predicate> not1(const Predicate& pred) {
     return unary_negate<Predicate>(pred);
@@ -171,11 +168,12 @@ inline binary_negate<Predicate> not2(const Predicate& pred) {
     return binary_negate<Predicate>(pred);
 }
 
-
+// 在这里, Operation::second_argument_type, 这些其实是限制, 如果 Operation 不是 binary_function 的子类, 编译就通过不了.
+// binder1st 这个函数, 是存储一个闭包, 和这个闭包的某个参数值, 然后生成一个新的闭包. 这样, 新的闭包就可以只传入一个参数了.
+// 但是实际上, 是将一个函数调用, 变为了两个函数调用了.
 template <class Operation> 
 class binder1st
-: public unary_function<typename Operation::second_argument_type,
-typename Operation::result_type> {
+: public unary_function<typename Operation::second_argument_type, typename Operation::result_type> {
 protected:
     Operation op; // 存函数闭包
     typename Operation::first_argument_type value; // 存需要绑定的值.
@@ -183,17 +181,15 @@ public:
     binder1st(const Operation& x,
               const typename Operation::first_argument_type& y)
     : op(x), value(y) {}
+    
     typename Operation::result_type
-    /*
-     把要绑定的参数, 以及 block, 存储起来, 然后调用的时候, block, 并传入存储起来的参数, 这就是绑定这个事的意义.
-     把函数, 当做值来进行存储, 是函数式编程, 和各种难以理解的操作, 能够正常运转的非常基本的一个思想.
-     */
     operator()(const typename Operation::second_argument_type& x) const {
         return op(value, x);
     }
 };
 
 // 暴露给外界使用的, 是一个简单函数.
+// binder1st<Operation>  是返回值类型, bind1st 是函数名.
 template <class Operation, class T>
 inline binder1st<Operation> bind1st(const Operation& op, const T& x) {
     typedef typename Operation::first_argument_type arg1_type;
