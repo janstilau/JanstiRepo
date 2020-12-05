@@ -10,15 +10,13 @@
 
 static NSZone	*_zone = 0;
 
-/**
- * Concrete class implementing NSNotification.
- */
+// 
 @interface	GSNotification : NSNotification
 {
 @public
-    NSString	*_name;
-    id		_poster; 
-    NSDictionary	*_info;
+    NSString	*_name; // 名称
+    id		_poster; // 发送者
+    NSDictionary	*_info; // 数据
 }
 @end
 
@@ -644,7 +642,7 @@ static NSNotificationCenter *default_center = nil;
     if (name)
     {
         /*
-          首先, 根据名称, 找到对应通知名的存储结构.
+         首先, 根据名称, 找到对应通知名的存储结构.
          */
         objCounterpartMap = GSIMapNodeForKey(NAMED, (GSIMapKey)(id)name);
         if (objCounterpartMap == 0)

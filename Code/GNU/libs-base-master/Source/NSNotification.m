@@ -12,28 +12,6 @@
 
 static Class	abstractClass = 0;
 static Class	concreteClass = 0;
-
-+ (id) allocWithZone: (NSZone*)z
-{
-    if (self == abstractClass)
-    {
-        return (id)NSAllocateObject(concreteClass, 0, z);
-    }
-    return (id)NSAllocateObject(self, 0, z);
-}
-
-+ (void) initialize
-{
-    if (concreteClass == 0)
-    {
-        abstractClass = [NSNotification class];
-        concreteClass = [GSNotification class];
-    }
-}
-
-/**
- * Create a new autoreleased notification.
- */
 + (NSNotification*) notificationWithName: (NSString*)name
                                   object: (id)object
                                 userInfo: (NSDictionary*)info
@@ -43,35 +21,12 @@ static Class	concreteClass = 0;
                                       userInfo: info];
 }
 
-/**
- * Create a new autoreleased notification by calling
- * +notificationWithName:object:userInfo: with a nil user info argument.
- */
 + (NSNotification*) notificationWithName: (NSString*)name
                                   object: (id)object
 {
     return [concreteClass notificationWithName: name
                                         object: object
                                       userInfo: nil];
-}
-
-/**
- * The abstract class implements a copy as a simple retain ...
- * subclasses override to perform more intelligent copy operations.
- */
-- (id) copyWithZone: (NSZone*)zone
-{
-    return [self retain];
-}
-
-/**
- * Return a description of the parts of the notification.
- */
-- (NSString*) description
-{
-    return [[super description] stringByAppendingFormat:
-            @" Name: %@ Object: %@ Info: %@",
-            [self name], [self object], [self userInfo]];
 }
 
 - (NSUInteger) hash

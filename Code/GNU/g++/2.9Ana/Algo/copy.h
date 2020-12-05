@@ -4,6 +4,7 @@
 /*
  Searches the range [first, last) for two consecutive identical elements.
  找到第一个相等等值的元素.
+ 坦率来说, 这个函数会有多大的使用几率呢. 感觉平时的业务开发里面, 没有用到.
  */
 template <class ForwardIterator>
 ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last) {
@@ -16,7 +17,6 @@ ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last) {
     return last;
 }
 
-// 判断相等的闭包版本.
 template <class ForwardIterator, class BinaryPredicate>
 ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last,
                               BinaryPredicate binary_pred) {

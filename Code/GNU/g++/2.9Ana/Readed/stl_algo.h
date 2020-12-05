@@ -61,7 +61,7 @@ Function for_each(InputIterator first, InputIterator last, Function f) {
 }
 
 /*
- 线性查找. 一般来说, 查找就是线性的.
+ 线性查找. 一般来说, 查找就是线性的. 不过, 这里并不是说, 传过来的迭代器就是线性表结构. 因为关联式容器, 他也会有迭代器.
  关联式容器, 是通过特殊的数据结构, 例如查找树, hash 函数来快速查找.
  排序的数据, 如果可以随机访问, 可以通过二分查找来进行查找.
  */
@@ -326,9 +326,10 @@ ForwardIterator2 swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1,
 }
 
 /*
- std::transform applies the given function to a range and stores the result in another range, beginning at d_first.
  将范围内的内容, 进行转化, 然后放到 result 里面.
  这其实就是其他语言的 map 函数, 不过是, 其他 result OutputIterator 在这里, 是需要提前创造出来.
+ 
+ C++ 的模板的简洁性, 是建立在使用者去适配的基础上的.
  */
 template <class InputIterator, class OutputIterator, class UnaryOperation>
 OutputIterator transform(InputIterator first, InputIterator last,
@@ -1273,6 +1274,9 @@ inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
     return __lower_bound(first, last, value, distance_type(first),
                          iterator_category(first));
 }
+
+// 不同版本的 __lower_bound, 根据迭代器进行分发. 其实, 和我们经过一个数字进行分发, 没有太大的区别.
+// 但是, 使用类型, 当添加类型的时候, 好扩展, 类型名, 又是很好的注释.
 
 template <class ForwardIterator, class T, class Distance>
 ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
