@@ -70,8 +70,8 @@
 {
 #if	GS_EXPOSE(NSCondition)
 @protected
-    gs_cond_t	_condition;
-    gs_mutex_t	_mutex;
+    gs_cond_t	_condition; // 一个条件变量, 用来做同步处理.
+    gs_mutex_t	_mutex; // 一个互斥锁, 用来做互斥保护
     NSString	*_name;
 #endif
 }

@@ -10,8 +10,8 @@
 #include "private/qcoreapplication_p.h"
 
 //! 这段代码, 其实有着可以考虑的事情.
-//! 首先, Qt 里面, Object 的 affinity, 是建立在信号槽的基础上的. 比如下面的 Worker 类, 如果直接调用 doWork 方法, 那么在哪个线程调用的, 就是在哪个线程执行. 只有  connect(this, &Controller::operate, worker, &Worker::doWork); 通过 Controller 的 operate 信号触发的时候, 才会到 Worker 所关联的线程, 执行 doWork 方法.
-//! QThread 的生命周期和真正的线程的生命周期是不同步的. start 方法调用后, 真正的线程才会执行, ~Thread 方法调用的时候, 如果对应的线程还在运行, 那么会引起程序的崩溃的.
+//! 首先, Qt 里面, Object 的 affinity, 是 Qt 方法元信息调用的一个关键考虑点.
+//!  比如下面的 Worker 类, 如果直接调用 doWork 方法, 那么在哪个线程调用的, 就是在哪个线程执行. 只有  connect(this, &Controller::operate, worker, &Worker::doWork); 通过 Controller 的 operate 信号触发的时候, 才会到 Worker 所关联的线程, 执行 doWork 方法.
 
 class Worker : public QObject
 {
@@ -67,10 +67,6 @@ QThreadData::~QThreadData()
 {
     Q_ASSERT(_ref.load() == 0);
 
-    if (this->thread == QCoreApplicationPrivate::theMainThread) {
-       QCoreApplicationPrivate::theMainThread = 0;
-       QThreadData::clearCurrentThreadData();
-    }
     QThread *t = thread;
     thread = 0;
     delete t;

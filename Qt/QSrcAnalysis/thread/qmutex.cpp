@@ -8,10 +8,6 @@
 #include "qthread.h"
 #include "qmutex_p.h"
 
-#ifndef QT_LINUX_FUTEX
-#include "private/qfreelist_p.h"
-#endif
-
 QT_BEGIN_NAMESPACE
 
 static inline bool isRecursive(QMutexData *d)
@@ -63,7 +59,7 @@ QMutex::~QMutex()
     }
 }
 
-void QMutex::lock() QT_MUTEX_LOCK_NOEXCEPT
+void QMutex::lock()
 {
     QMutexData *current;
     if (fastTryLock(current))

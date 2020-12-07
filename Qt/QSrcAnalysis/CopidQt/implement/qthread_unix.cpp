@@ -414,7 +414,6 @@ void QThread::setTerminationEnabled(bool enabled)
 void QThreadPrivate::setPriority(QThread::Priority threadPriority)
 {
     priority = threadPriority;
-#ifdef QT_HAS_THREAD_PRIORITY_SCHEDULING
     int sched_policy;
     sched_param param;
 
@@ -447,7 +446,6 @@ void QThreadPrivate::setPriority(QThread::Priority threadPriority)
 # else
     Q_UNUSED(status);
 # endif // SCHED_IDLE
-#endif
 }
 
 

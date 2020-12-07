@@ -43,18 +43,11 @@ static Class concrete = 0;
 struct	NCTbl;		/* Notification Center Table structure	*/
 
 /*
- * Observation structure - One of these objects is created for
- * each -addObserver... request.  It holds the requested selector,
- * name and object.  Each struct is placed in one LinkedList,
+ * Each struct is placed in one LinkedList,
  * as keyed by the NAME/OBJECT parameters.
  * If 'next' is 0 then the observation is unused (ie it has been
  * removed from, or not yet added to  any list).  The end of a
  * list is marked by 'next' being set to 'ENDOBS'.
- *
- * This is normally a structure which handles memory management using a fast
- * reference count mechanism, but when built with clang for GC, a structure
- * can't hold a zeroing weak pointer to an observer so it's implemented as a
- * trivial class instead ... and gets managed by the garbage collector.
  */
 
 typedef	struct	Observer {
@@ -599,7 +592,7 @@ static NSNotificationCenter *default_center = nil;
     Observation	*list;
     Observation	*observation;
     GSIMapTable	nameConterpartMap;
-    GSIMapNode	objCounterpartMap;
+    GSIMapNode	namedNotiObjectsMap;
     
     /*
      首先, 应该做防卫式判断. 全部删了.
@@ -614,8 +607,8 @@ static NSNotificationCenter *default_center = nil;
         /*
          首先, 根据名称, 找到对应通知名的存储结构.
          */
-        objCounterpartMap = GSIMapNodeForKey(NAMED, (GSIMapKey)(id)name);
-        if (objCounterpartMap == 0)
+        namedNotiObjectsMap = GSIMapNodeForKey(NAMED, (GSIMapKey)(id)name);
+        if (namedNotiObjectsMap == 0)
         {
             nameConterpartMap = createNewMap(TABLE);
             /*
@@ -628,36 +621,36 @@ static NSNotificationCenter *default_center = nil;
         }
         else
         {
-            nameConterpartMap = (GSIMapTable)objCounterpartMap->value.ptr;
+            nameConterpartMap = (GSIMapTable)namedNotiObjectsMap->value.ptr;
         }
         
         /*
          * Add the observation to the list for the correct object.
          */
-        objCounterpartMap = GSIMapNodeForSimpleKey(nameConterpartMap, (GSIMapKey)object);
-        if (objCounterpartMap == 0)
+        namedNotiObjectsMap = GSIMapNodeForSimpleKey(nameConterpartMap, (GSIMapKey)object);
+        if (namedNotiObjectsMap == 0)
         {
             observation->next = ENDOBS;
             GSIMapAddPair(nameConterpartMap, (GSIMapKey)object, (GSIMapVal)observation);
         }
         else
         {
-            list = (Observation*)objCounterpartMap->value.ptr;
+            list = (Observation*)namedNotiObjectsMap->value.ptr;
             observation->next = list->next;
             list->next = observation;
         }
     }
     else if (object)
     {
-        objCounterpartMap = GSIMapNodeForSimpleKey(NAMELESS, (GSIMapKey)object);
-        if (objCounterpartMap == 0)
+        namedNotiObjectsMap = GSIMapNodeForSimpleKey(NAMELESS, (GSIMapKey)object);
+        if (namedNotiObjectsMap == 0)
         {
             observation->next = ENDOBS;
             GSIMapAddPair(NAMELESS, (GSIMapKey)object, (GSIMapVal)observation);
         }
         else
         {
-            list = (Observation*)objCounterpartMap->value.ptr;
+            list = (Observation*)namedNotiObjectsMap->value.ptr;
             observation->next = list->next;
             list->next = observation;
         }
