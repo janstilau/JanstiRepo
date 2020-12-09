@@ -104,6 +104,9 @@ enum {
 
 @interface NSOperationQueue : NSObject
 {
+    
+    /*
+     */
     NSRecursiveLock    *queueLock; // 这个所, 提供了除了 starting 其他属性的互斥保护.
     NSConditionLock    *startingQueueCondition; // 这个锁, 是控制 starting 队列的, 同时带有唤醒作用.
     NSMutableArray    *operations; // 添加到当前 queue 里面的
@@ -111,7 +114,7 @@ enum {
     NSMutableArray    *starting; // 即将运行的任务, 正在等待线程完成当下任务调用自己. 
     NSString        *name;
     BOOL            suspended;
-    NSInteger        executing;
+    NSInteger        executingCount;
     NSInteger        threadCount;
     NSInteger        count;
 }

@@ -893,7 +893,7 @@ static NSOperationQueue *mainQueue = nil;
     if (context == isFinishedCtxt)
     {
         [self->queueLock lock];
-        self->executing--;
+        self->executingCount--;
         [object removeObserver: self forKeyPath: @"isFinished"];
         [self->queueLock unlock];
         [self willChangeValueForKey: @"operations"];
@@ -932,6 +932,13 @@ static NSOperationQueue *mainQueue = nil;
     [self _execute];
 }
 
+
+/*
+ 总体理一遍线程 Launcher 的逻辑.
+ 
+ startingQueueCondition lockWhenCondition
+ 如果当前的条件变量为 1, 那么这个 lock 其实锁不住的.
+ */
 - (void) queueThreadLauncher
 {
     ENTER_POOL
@@ -950,7 +957,7 @@ static NSOperationQueue *mainQueue = nil;
          可能开启了很多的线程, 每次线程完成一个 Operation 之后, 重新进入循环, 然后阻塞自己, 等待新的任务的分配.
          
          如果自己想要管理线程的话, 可以使用这个办法. GCD 这种方式, 使得已经习惯了 dispatch_async 了. 其实可以通过这种方式, 来管理线程的个数.
-         线程的主方法, 就是不断地从任务队列里面取值, 然后做任务, 死循环不断去. 如果没有任务了, 就退出.
+         线程的主方法, 就是不断地从任务队列里面取值, 然后做任务, 死循环不间断. 如果没有任务了, 就退出.
          这里, 为了让线程多存货一段时间, 使用了 PV 操作, 这样线程就可以多存活一段时间, 等待任务的来临. 同时, 如果确实没有任务的话, 就理所当然的退出了.
          */
         NSDate *when = [[NSDate alloc] initWithTimeIntervalSinceNow: 5.0];
@@ -959,6 +966,8 @@ static NSOperationQueue *mainQueue = nil;
         {
             break;	// Idle for 5 seconds ... exit thread.
         }
+        
+        // 在这里, 能够到这里来, 其实是 startingQueueCondition 已经 Lock 上了. 所以下面的都是在上锁的状态.
         
         NSOperation    *currentOperation;
         if ([self->starting count] > 0)
@@ -969,6 +978,8 @@ static NSOperationQueue *mainQueue = nil;
             currentOperation = nil;
         }
         
+        // 不是在任务完成了之后, 再去进行唤醒, 而是在任务分配完了之后, 就去进行唤醒.
+        // 当没有任务了, 就 unlock 0.
         if ([self->starting count] > 0)
         {
             // 唤醒其他的线程, 继续做任务.
@@ -976,6 +987,8 @@ static NSOperationQueue *mainQueue = nil;
         } else {
             [self->startingQueueCondition unlockWithCondition: 0];
         }
+        
+        // 到这里, startingQueueCondition 的那把锁已经放开了.
         
         if (nil != currentOperation)
         {
@@ -1041,7 +1054,7 @@ static NSOperationQueue *mainQueue = nil;
      如果, 没有暂停, 还有余量, 还有等在执行的队列, 那么就可以开启新的任务.
      */
     while (NO == [self isSuspended]
-           && max > self->executing
+           && max > self->executingCount
            && [self->waiting count] > 0)
     {
         NSOperation	*op;
@@ -1060,7 +1073,7 @@ static NSOperationQueue *mainQueue = nil;
              forKeyPath: @"isFinished"
                 options: NSKeyValueObservingOptionNew
                 context: isFinishedCtxt];
-        self->executing++; // 增加正在执行的个数.
+        self->executingCount++; // 增加正在执行的个数.
         /*
          NSOperation isConcurrent == YES, 代表着这个 NSOperation 内部会进行线程的开辟.
          默认的都是 NO.
@@ -1084,8 +1097,8 @@ static NSOperationQueue *mainQueue = nil;
             /*
              在这里, 进行了新的线程的分配工作. 如果可以新开启一个线程的话.
              */
-            if (0 == self->threadCount
-                || (pendingCount > 0 && self->threadCount < POOL))
+            if (0 == self->threadCount // 如果, 没有线程正在执行任务
+                || (pendingCount > 0 && self->threadCount < POOL)) // 或者, 可以开启一个线程来执行任务.
             {
                 self->threadCount++;
                 NS_DURING
