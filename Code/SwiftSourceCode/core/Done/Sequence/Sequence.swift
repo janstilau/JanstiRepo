@@ -1,48 +1,24 @@
-/// 序列, 一次拿一个.
-/// Sequence 创建一个迭代器, 然后根据迭代器, 进行元素的访问.
-/// 迭代器的内部, 要记录 迭代的过程, 控制迭代按照顺序进行.
-/// 传统的迭代器, 会记录一下它所迭代容器, 以及当前迭代的位置.
-/// 但是迭代器里面记录什么状态, 比如 Array 只记录索引,  Dict 记录 Node 值, 是不一样的, Swift 的迭代, 变成了只提供 NextObject 这个能力的抽象.
-
-
-// 不要传递迭代器, 传递迭代器本身是安全的, 但是一个迭代器的 next, 可能会改变 Sequence 的状态. 导致其他迭代器执行的时候, 得到的是另外一个值.
-// 不过, 从以往的使用来说, 传递迭代器这件事基本没做过.
-
-/// Adding IteratorProtocol Conformance to Your Type
-/// ================================================
-/// 基本上来说, 如果你要提供一个特殊的序列, 那么就要提供一下与之相配对的迭代器. 然后, 把取值的逻辑, 放到这个迭代器类中.
-///  每个  Sequence 所能够获取的 Iterator, 都是和这个 Sequence 相关的. 可以说, 就是它的内部类.
-///  序列, 更多的是一个可遍历的概念, 而容器, 则是进行存储的状态的场所.
-///  获取当前值, 是迭代器的功能, 这个功能可以是从容器中获取值, 也可以是迭代器算出来的.
 
 /*
- associatedtype, 其实就是协议里面的泛型而已.
+ C++ 的迭代器, 模拟的是指针, ==, !=, ++, --, *, ->, 以上是应该进行重载的操作符.
+ 对于链表来说, 这种 forwardIterator, 其实只有 判等, ++, 取值操作.
+ 这几个操作, 其实一个 next 函数就可以表示.
+ Swift 里面, 迭代是最原始的概念. 就是取下一个值.
  */
+
 public protocol IteratorProtocol {
-    /// The type of element traversed by the iterator.
     associatedtype Element
-    
-    /// mutating, 是因为, 对于大部分的迭代器来说, 还是要在内部存储一下迭代的状态的
-    /// 这个方法, 是可以重复使用的, 只不过在 exhaust 之后, 一直返回 nil 了就. 所以, iterator 内部, 一定要记录好, 是不是已经到头了.
     mutating func next() -> Element?
 }
 
 ///  Squence 的概念很简单, 就是可以迭代取值的一个抽象对象. 这个值, 如何得到, 是在容器里面, 还是动态生成的, 他不管.
-///
-///  这里说的很清楚了, 这就是一个 primitiveMethod.
-///  很多的方法, 都是建立在这个基本方法之上的.
-///  同时由于这些方法, 都是扩展自 Protocol 的, swift 在最终会选择最匹配的方法.
-///  例如 contians 这个方法, sequence 里面有 contains, collection 里面有 contains, 那么最终会调用到 collection 里面的, 这里面没有多态的寻找过程.
-///
-/// Repeated Access 不保证. 不过, 平时使用的还是容器, 对于容器 Collection 来说, 可重复遍历是标配.
-/// ===============
-///
-/// Conforming to the Sequence Protocol 对于一个序列来说, 一定要实现对应的 iterator. 真正的取值, 是放在 iterator 里面的. Iterator, 通过序列提供的方法, 进行取值操作, 然后将值进行进一步的处理.
-///
+///  想一下, NSArray, NSDict, NSSet 的各自的遍历, 如果使用各自的取值函数, 通过 key, 下标来取值, 那么代码不统一.
+/// 如果想要统一, 那么就是各自的类型里面, 实现相同的接口, 编写不同的遍历逻辑.
+/// 但是遍历这个事情, 是一个统一的逻辑, 如果迭代器本身就已经做好了这层抽象了,  那么直接在迭代器上进行编程, 将重复的事情, 写到一个方法里面就好了. 所以, 产生了 C++ 的泛型算法. 而这些泛型算法, 都是建立在迭代这一个概念上, 如果能够统一到一起, 那么更符合面向对象的特征, 也能够引入类型约束. Swift 就是做的这个事情.
 
 public protocol Sequence {
     associatedtype Element
-    /// 迭代器类型的 Element 要和 Sequence 的一致, 也就是在泛型里面, 增加了限制.
+    // 迭代器类型的 Element 要和 Sequence 的一致, 所以在这里要进行限制.
     associatedtype Iterator: IteratorProtocol where Iterator.Element == Element
     
     /// 最重要的方法, 返回一个迭代器, 在迭代器中, 进行取值操作和状态管理.
@@ -57,7 +33,8 @@ public protocol Sequence {
      这个也是为了提升效率的. Contains 的逻辑, 是从头到尾遍历然后判断相等.
      但是如果实现类, 有着快速的版本判断, 就重写该方法. 比如, set, dict, range, 都是能在 O(1) 中实现判断的.
      contains 首先判断该函数, 如果不能确定结果, 在会去走 contains 的默认实现.
-     contains 可以算作是, 模板方法, 该函数, 就是模板方法的切口.
+     contains 可以算作是, 模板方法, 该函数, 就是模板方法的子步骤.
+     这里, 实现的也有点怪. nil 表示的是, 没有实现该方法. 也就是把方法是否实现的判断, 通过返回值的类型来判断了.
      */
     func _customContainsEquatableElement(
         _ element: Element

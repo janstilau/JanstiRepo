@@ -102,11 +102,6 @@ __uninitialized_copy_n(RandomAccessIterator first, Size count,
     return make_pair(last, uninitialized_copy(first, last, result));
 }
 
-/*
- Copies the given value to an uninitialized memory area, defined by the range [first, last) as if by
- 用重复的元素, 填充某个序列.
- 基本思路还是, 对于可以直接进行内存搬运的, 内存搬运, 对于不能的, 迭代器循环.
- */
 template <class ForwardIterator, class T>
 inline void uninitialized_fill(ForwardIterator first, ForwardIterator last,
                                const T& x) {
@@ -167,15 +162,17 @@ __uninitialized_fill_n_aux(ForwardIterator first, Size n,
 }
 
 template <class ForwardIterator, class Size, class T, class T1>
-inline ForwardIterator __uninitialized_fill_n(ForwardIterator first, Size n,
-                                              const T& x, T1*) {
+inline ForwardIterator __uninitialized_fill_n(ForwardIterator first,
+                                              Size n,
+                                              const T& x,
+                                              T1*) {
     typedef typename __type_traits<T1>::is_POD_type is_POD;
     return __uninitialized_fill_n_aux(first, n, x, is_POD());
-    
 }
 
 template <class ForwardIterator, class Size, class T>
-inline ForwardIterator uninitialized_fill_n(ForwardIterator first, Size n,
+inline ForwardIterator uninitialized_fill_n(ForwardIterator first,
+                                            Size n,
                                             const T& x) {
     return __uninitialized_fill_n(first, n, x, value_type(first));
 }

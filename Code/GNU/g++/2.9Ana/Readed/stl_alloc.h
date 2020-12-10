@@ -197,9 +197,11 @@ void * __malloc_alloc_template<inst>::oom_realloc(void *p, size_t n)
 typedef __malloc_alloc_template<0> malloc_alloc;
 
 /*
- 这个分配器, 是容器里面用到的, 起始仅仅是简单的做了一个sizeof处理, 将类型的内从宽度提取了出来.
- 在各个容器里面, 也是用的这个类做的分配器.
- 由于各个分配器里面, 元素的 size 是固定的, 所以, 分配器能够按照固定的长度, 进行内容的申请操作.
+ 模板传入的类型, 到底会如何使用.
+ 这个例子里面, T 仅仅是在 sizeof 操作符里面使用了, 而 Alloc 类型使用, 直接调用的 alloc 类方法.
+ 两个类型参数, 都没有用来生成对象.
+ 从这点来说, C++ 的模板有点像宏.
+ 一个半成品, 怎么写都行, 只有到使用的时候, 才会编译报错.
  */
 template<class T, class Alloc>
 class simple_alloc {
@@ -207,10 +209,13 @@ class simple_alloc {
 public:
     static T *allocate(size_t n)
     { return 0 == n? 0 : (T*) Alloc::allocate(n * sizeof (T)); }
+    
     static T *allocate(void)
     { return (T*) Alloc::allocate(sizeof (T)); }
+    
     static void deallocate(T *p, size_t n)
     { if (0 != n) Alloc::deallocate(p, n * sizeof (T)); }
+    
     static void deallocate(T *p)
     { Alloc::deallocate(p, sizeof (T)); }
 };

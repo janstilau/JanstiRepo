@@ -11,12 +11,18 @@ template <class T, class Alloc = alloc>
 class vector {
 public:
     typedef T value_type;
+    
+    // 对于 Vector 来说, 直接使用的指针, 当做迭代器,
+    // 迭代器, 就是漂亮的 pointer, 模拟的就是指针的功能. 最原始的指针, 当然会有着指针的功能了.
     typedef value_type* pointer;
     typedef const value_type* const_pointer;
+    
     typedef value_type* iterator;
     typedef const value_type* const_iterator;
+    
     typedef value_type& reference;
     typedef const value_type& const_reference;
+    
     typedef size_t size_type;
     typedef ptrdiff_t difference_type;
     
@@ -30,16 +36,17 @@ public:
     reverse_iterator;
 #endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 protected:
+    //
+    
     typedef simple_alloc<value_type, Alloc> data_allocator;
     /*
-     起点, 终点, 容器的终点.
-     iterator 就是 valueType 的指针.
+     数据就只有这里.
      */
     iterator start;
     iterator finish;
     iterator end_of_storage;
+    
     void deallocate() {
-        // 利用了分配器的类方法, 进行了资源的回收操作.
         if (start) data_allocator::deallocate(start, end_of_storage - start);
     }
     
@@ -51,7 +58,13 @@ protected:
         finish = start + n;
         end_of_storage = finish;
     }
+    
 public:
+    /*
+     const 是语言, 或者语言和编译器一起合作进行的操作限定. 从内存的角度来说, 没有什么是不能改的. 但是从语法的角度, 用 const 修饰的变量, 就是不应该有写操作.
+     就好像, OC 里面, 不可变对象, 没有暴露可变接口一样.
+     所以, 实际上, 底层的数据是同一份, 但是表明的类型修饰不一样, 能够达成的操作也就不一样的了.
+     */
     iterator begin() { return start; }
     const_iterator begin() const { return start; }
     
@@ -60,6 +73,8 @@ public:
     
     /*
      直接返回一个迭代器的适配器.
+     迭代器, 是一个具有固定接口的数据类型了. 如果一个类, 仅仅使用这些固定接口来实现自己的逻辑, 那么就可以将相关的逻辑移到这个类中.
+     适配器就是这样的一个类. 使用存储的原始数据类型, 达成自己的接口目的.
      */
     reverse_iterator rbegin() { return reverse_iterator(end()); }
     const_reverse_iterator rbegin() const {
@@ -69,19 +84,23 @@ public:
     const_reverse_iterator rend() const {
         return const_reverse_iterator(begin());
     }
+    
     /*
-        vector 就是数组的封装而已, 各种操作, 都是建立在指针的基础上的.
+     vector 就是数组的封装而已, 各种操作, 都是建立在指针的基础上的.
+     其中增加了对于自动扩容的处理而已.
      */
     size_type size() const { return size_type(end() - begin()); }
     size_type capacity() const { return size_type(end_of_storage - begin()); }
     bool empty() const { return begin() == end(); }
     
+    /*
+     ref 的好处就在于, 传值和转引用, 写法是一致的. 函数的设计者, 可以选择参数是值, 或者是引用, 来避免赋值, 或者来避免修改.
+     函数的接受者, 也可以选择用引用接, 或者用值接.
+     所有的这种选择, 代码的写法都一样, 这就是漂亮的 pointer 的体现.
+     */
     reference operator[](size_type n) { return *(begin() + n); }
     const_reference operator[](size_type n) const { return *(begin() + n); }
     
-    /*
-     fill_initialize 里面, 都是用 value 填充 n 个数据.
-     */
     vector() : start(0), finish(0), end_of_storage(0) {}
     vector(size_type n, const T& value) { fill_initialize(n, value); }
     vector(int n, const T& value) { fill_initialize(n, value); }
@@ -226,10 +245,10 @@ public:
     
 protected:
     iterator allocate_and_fill(size_type n, const T& x) {
-        // 先分配
+        // 分配数据, 是分配器的工作.
         iterator result = data_allocator::allocate(n);
         __STL_TRY {
-            // 然后填充
+            // 填充数据, 这是泛型算法的工作.
             uninitialized_fill_n(result, n, x);
             return result;
         }
