@@ -8,8 +8,9 @@
 #import <GNUstepBase/GSBlocks.h>
 DEFINE_BLOCK_TYPE_NO_ARGS(GSOperationCompletionBlock, void);
 DEFINE_BLOCK_TYPE_NO_ARGS(GSBlockOperationBlock, void);
-#endif  
+#endif
 
+@class NSConditionLock;
 @class NSMutableArray;
 
 enum {
@@ -24,8 +25,8 @@ typedef NSInteger NSOperationQueuePriority;
 
 @interface NSOperation : NSObject
 {
-    NSRecursiveLock *lock; \
-    NSConditionLock *cond; \
+    NSRecursiveLock *operationLock; \
+    NSConditionLock *operationCondition; \
     NSOperationQueuePriority priority; \
     double threadPriority; \
     BOOL cancelled; \
@@ -36,7 +37,6 @@ typedef NSInteger NSOperationQueuePriority;
     BOOL ready; \
     NSMutableArray *dependencies; \
     GSOperationCompletionBlock completionBlock;
-
 }
 
 /** Adds a dependency to the receiver.<br />
@@ -201,15 +201,15 @@ enum {
 
 @interface NSOperationQueue : NSObject
 {
-    NSRecursiveLock    *lock; \
-    NSConditionLock    *cond; \
-    NSMutableArray    *operations; \
-    NSMutableArray    *waiting; \
-    NSMutableArray    *starting; \
-    NSString        *name; \
-    BOOL            suspended; \
-    NSInteger        executing; \
-    NSInteger        threadCount; \
+    NSRecursiveLock    *queueLock; // 全局锁, 任何对于成员变量的修改, 都要进行上锁
+    NSConditionLock    *pendingQueueLock; // 运行锁, 只有在调度时, 和子线程里面, 才进行加锁. 提交线程, 和子线程的交互, 用这个锁进行控制.
+    NSMutableArray    *allOperations;
+    NSMutableArray    *waiting;
+    NSMutableArray    *starting;
+    NSString        *name;
+    BOOL            suspended;
+    NSInteger        executingCount; 
+    NSInteger        threadCount;
     NSInteger        maxRunningCount;
 }
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6, GS_API_LATEST)

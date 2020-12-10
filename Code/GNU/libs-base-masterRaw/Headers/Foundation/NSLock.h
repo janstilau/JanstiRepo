@@ -122,12 +122,9 @@ extern "C" {
  */
 @interface NSCondition : NSObject <NSLocking>
 {
-#if	GS_EXPOSE(NSCondition)
-@protected
   gs_cond_t	_condition;
   gs_mutex_t	_mutex;
   NSString	*_name;
-#endif
 }
 /**
  * Blocks and atomically unlocks the receiver.
