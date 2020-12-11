@@ -10,6 +10,30 @@
 
 QT_BEGIN_NAMESPACE
 
+/*
+
+  Qt 版本的实现非常复杂, 简单地用 std 的来进行理解
+
+
+最后说一下**计数器增减**的规则：
+
+初始化及增加的情形：
+
+- 当创建一个新的shared_ptr时，内部对象计数器和自身的计数器均置1.
+
+- 当将另外一个shared_ptr赋值给新的shared_ptr时，内部对象计数器+1,自身计数器不变。
+
+- 当将另外一个shared_ptr赋值给新的weak_ptr时,内部对象计数器不变,自身计数器+1。
+
+- 当从weak_ptr获取一个shared_ptr时，内部对象计数器+1,自身计数器不变。
+
+减少的情形：
+
+- 当一个shared_ptr析构时，内部对象计数器-1。当内部对象计数器减为0时，则释放内部对象，并将自身计数器-1。
+
+- 当一个weak_ptr析构时，自身计数器-1。当自身计数器减为0时，则释放自身_Ref_count*对象。
+
+*/
 template <class T> class QWeakPointer;
 template <class T> class QSharedPointer;
 template <class T> class QEnableSharedFromThis;
@@ -29,10 +53,8 @@ QSharedPointer<X> qSharedPointerObjectCast(const QSharedPointer<T> &ptr);
 #endif
 
 // 这是 namespace, 并不是 class 定义
-
 namespace QtSharedPointer {
     template <class T> class ExternalRefCount;
-
     template <class X, class Y> QSharedPointer<X> copyAndSetPointer(X * ptr, const QSharedPointer<Y> &src);
 
     // used in debug mode to verify the reuse of pointers
@@ -72,7 +94,7 @@ namespace QtSharedPointer {
         inline ExternalRefCountData(Qt::Initialization) { }
         ~ExternalRefCountData() { Q_ASSERT(!weakref.load()); Q_ASSERT(strongref.load() <= 0); }
 
-        void destroy() { destroyer(this); } // destroy 这个函数, 更多地是摧毁自己管理的资源, 而不是自己, 摧毁自己, 应该是 delete.
+        void destroy() { destroyer(this); }
 
 #ifndef QT_NO_QOBJECT
         Q_CORE_EXPORT static ExternalRefCountData *getAndRef(const QObject *);
@@ -215,7 +237,6 @@ template <class T> class QSharedPointer
     typedef T *QSharedPointer:: *RestrictedBool;
     typedef QtSharedPointer::ExternalRefCountData Data;
 
-
 // 实际管理的资源
     Data *counter;
     T *value;
@@ -224,26 +245,25 @@ public:
     typedef T Type;
     typedef T element_type;
     typedef T value_type;
+
     typedef value_type *pointer;
     typedef const value_type *const_pointer;
     typedef value_type &reference;
     typedef const value_type &const_reference;
     typedef qptrdiff difference_type;
 
-    T *data() const Q_DECL_NOTHROW { return value; }
-    T *get() const Q_DECL_NOTHROW { return value; }
+    // 获取原始值.
+    T *data() const  { return value; }
+    T *get() const { return value; }
 
-    bool isNull() const Q_DECL_NOTHROW { return !data(); }
-    operator RestrictedBool() const Q_DECL_NOTHROW { return isNull() ? nullptr : &QSharedPointer::value; }
-    bool operator !() const Q_DECL_NOTHROW { return isNull(); }
+    bool isNull() const  { return !data(); }
+    operator RestrictedBool() const  { return isNull() ? nullptr : &QSharedPointer::value; }
+    bool operator !() const  { return isNull(); }
 
     T &operator*() const { return *data(); } // 返回记录的指针
-    T *operator->() const Q_DECL_NOTHROW { return data(); } // 返回记录的指针
+    T *operator->() const { return data(); } // 返回记录的指针
 
-    Q_DECL_CONSTEXPR QSharedPointer() Q_DECL_NOTHROW : value(nullptr), counter(nullptr) { }
     ~QSharedPointer() { deref(); }
-
-    Q_DECL_CONSTEXPR QSharedPointer(std::nullptr_t) Q_DECL_NOTHROW : value(nullptr), counter(nullptr) { }
 
     template <class X>
     inline explicit QSharedPointer(X *ptr) : value(ptr) // noexcept
@@ -384,13 +404,14 @@ private:
     void deref() Q_DECL_NOTHROW
     { deref(counter); }
 
-    static void deref(Data *dd) Q_DECL_NOTHROW
+    // 强指针下的 deref 处理逻辑.
+    static void deref(Data *dd)
     {
         if (!dd) return;
         if (!dd->strongref.deref()) { // 如果, 强引用计数为 0 了, 应该摧毁计数器管理的资源
             dd->destroy();
         }
-        if (!dd->weakref.deref()) // 如果, 弱应用计数为 0 了, 应该摧毁计数器
+        if (!dd->weakref.deref()) // 如果, 弱引用计数为 0 了, 应该摧毁计数器. 这里和 Std 的有点差别, 为什么还要进行弱引用计数的管理.
             delete dd;
     }
 
@@ -402,6 +423,7 @@ private:
 
     inline void enableSharedFromThis(...) {}
 
+    // 强指针的创建操作.
     template <typename X, typename Deleter>
     inline void internalConstruct(X *ptr, Deleter deleter)
     {
