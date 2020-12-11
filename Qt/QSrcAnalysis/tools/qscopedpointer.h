@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QSCOPEDPOINTER_H
 #define QSCOPEDPOINTER_H
 
@@ -92,6 +53,10 @@ class QObject;
 typedef QScopedPointerObjectDeleteLater<QObject> QScopedPointerDeleteLater;
 #endif
 
+
+
+// 所有的上面的删除器, 都是 static inline void cleanup 这个静态方法的包装而已.
+
 template <typename T, typename Cleanup = QScopedPointerDeleter<T> >
 class QScopedPointer
 {
@@ -101,6 +66,7 @@ public:
     {
     }
 
+    // 析构, 就是调用删除器的方法而已. 这里不需要管理删除器的内存, 因为, 这里仅仅是一个方法调用.
     inline ~QScopedPointer()
     {
         T *oldD = this->d;
@@ -150,6 +116,7 @@ public:
         return !d;
     }
 
+    // 原来的, 进行删除处理. 掌管新的值的生命周期. 还是要判等
     void reset(T *other = nullptr) Q_DECL_NOEXCEPT_EXPR(noexcept(Cleanup::cleanup(std::declval<T *>())))
     {
         if (d == other)
@@ -220,6 +187,7 @@ template <class T, class Cleanup>
 inline void swap(QScopedPointer<T, Cleanup> &p1, QScopedPointer<T, Cleanup> &p2) Q_DECL_NOTHROW
 { p1.swap(p2); }
 
+// 仅仅是删除器不同, 并且提供了 [] 下标操作符的实现.
 template <typename T, typename Cleanup = QScopedPointerArrayDeleter<T> >
 class QScopedArrayPointer : public QScopedPointer<T, Cleanup>
 {
@@ -233,6 +201,7 @@ public:
         : QScopedPointer<T, Cleanup>(p)
     {
     }
+
 
     inline T &operator[](int i)
     {

@@ -38,12 +38,16 @@ static NSArray	*empty = nil;
     empty = [NSArray new];
 }
 
+/*
+ 这个类里面, 大量的使用了 KVO, 这种响应式编程的思想, 可以大大减少编码的复杂度.
+ */
+
 - (void) addDependency: (NSOperation *)op
 {
     /*
      首先是一些防卫式的检测. 判断 op 的类型之类的.
      */
-    
+    // 这里, 是懒加载的策略. 懒加载比较可以理解, 因为, 添加依赖的任务, 还是比较少的任务. 更多的任务, 就是为了异步任务提交.
     if (self->dependencies == nil)
     {
         self->dependencies = [[NSMutableArray alloc] initWithCapacity: 5];
@@ -53,31 +57,25 @@ static NSArray	*empty = nil;
     /*
      任何对于自身值的修改的地方, 都增加了 lock.
      因为执行自己 main 的地方, 不一定在创建线程, 所以, 加锁是必备的.
-     addDependency 应该是创建的时候进行的, 在 addDependency 之后, 才会进行真正 main 的调用, 不过这里也加锁也没有问题, 安全.
      */
     NS_DURING
     {
-        // 文档里面没有明说重复添加的后果.
+        // 文档里面没有明说重复添加的后果. 这里是可以重复添加.
         if (NSNotFound == [self->dependencies indexOfObjectIdenticalTo: op])
         {
-            // 类内部, 没有对于 dependencies 的监听. 所以, 这里仅仅是实现 dependencies 的 KVO.
             [self willChangeValueForKey: @"dependencies"];
             [self->dependencies addObject: op];
-            if (NO == [op isFinished]
-                && NO == [self isCancelled]
+            if (NO == [op isFinished] // 前面是判断依赖的 Task 的 Finish 状态会不会变化.
+                && NO == [self isCancelled] // 后面是判断, 自己还有没有启动的机会.
                 && NO == [self isExecuting]
                 && NO == [self isFinished])
             {
-                /*
-                 当前的 Operation, 要监听依赖的 Operation 的 finished 状态, 以便修改自己的 ready 状态.
-                 */
                 [op addObserver: self
                      forKeyPath: @"isFinished"
                         options: NSKeyValueObservingOptionNew
                         context: isFinishedCtxt];
-                if (self->ready == YES)
+                if (self->ready == YES) // 如果自己已经 ready 了, 有了新的依赖, 要改变自己的状态.
                 {
-                    // 新添加的依赖, 导致自己的 ready 状态变化了, KVO 通知.
                     [self willChangeValueForKey: @"isReady"];
                     self->ready = NO;
                     [self didChangeValueForKey: @"isReady"];
@@ -88,6 +86,7 @@ static NSArray	*empty = nil;
     }
     NS_HANDLER
     {
+        // 多个解锁的退出点, OC 里面, 没有 Locker 的概念. OC 对于 RAII 不支持.
         [self->lock unlock];
         NSLog(@"Problem adding dependency: %@", localException);
         return;
@@ -96,8 +95,10 @@ static NSArray	*empty = nil;
     [self->lock unlock];
 }
 
+// Advises the operation object that it should stop executing its task.
 /*
- Advises the operation object that it should stop executing its task.
+ 如果, operation 已经 start 了, 那么只有是在运行的过程中, 不断地检查是否取消了, 如果取消了, 及时推出.
+ 如果, operation 还没有 start, 那么直接调用 finish 方法.
  */
 - (void) cancel
 {
@@ -109,9 +110,6 @@ static NSArray	*empty = nil;
         {
             NS_DURING
             {
-                /*
-                 Cancel 也会导致 ready 的值的变化.
-                 */
                 [self willChangeValueForKey: @"isCancelled"];
                 self->cancelled = YES;
                 if (NO == self->ready)
@@ -134,50 +132,24 @@ static NSArray	*empty = nil;
     }
 }
 
-/*
- The completion block takes no parameters and has no return value.
-
- The exact execution context for your completion block is not guaranteed but is typically a secondary thread.
- Therefore, you should not use this block to do any work that requires a very specific execution context.
-
- The completion block you provide is executed when the value in the finished property changes to YES.
- Because the completion block executes after the operation indicates it has finished its task, you must not use a completion block to queue additional work considered to be part of that task.
- An operation object whose finished property contains the value YES must be done with all of its task-related work by definition.
- The completion block should be used to notify interested objects that the work is complete or perform other tasks that might be related to, but not part of, the operation’s actual task.
-
- A finished operation may finish either because it was cancelled or because it successfully completed its task.
- You should take that fact into account when writing your block code.
- Similarly, you should not make any assumptions about the successful completion of dependent operations, which may themselves have been cancelled.
- 
- completionBlock 就是在 Operation 执行完自己的任务之后的收尾工作.
- 需要注意的是, cancel 的也算作是执行完自己的任务了.
- 因为, cancel 本质上来说, 仅仅是一个状态量, main 里面根据这个状态量提前进行了退出, 也算作是 main 执行完毕了.
- main 执行完毕了, 就可以认为是 NSOperation 执行完毕了.
- */
-
 - (void*) completionBlock
 {
     return self->completionBlock;
 }
 
-/*
- Get 函数加锁.
- */
 - (NSArray *) dependencies
 {
-    NSArray	*a;
+    NSArray	*result;
     
     if (self->dependencies == nil)
     {
-        a = empty;	// OSX return an empty array
-    }
-    else
-    {
+        result = empty;	// OSX return an empty array
+    } else {
         [self->lock lock];
-        a = [NSArray arrayWithArray: self->dependencies];
+        result = [NSArray arrayWithArray: self->dependencies];
         [self->lock unlock];
     }
-    return a;
+    return result;
 }
 
 - (id) init
@@ -204,36 +176,36 @@ static NSArray	*empty = nil;
     return self;
 }
 
+// 如果, 任务已经开始执行, 就在 main 方法里面, 不断地判断 cancel 的提前退出.
+// 如果, 还没有开始执行, 就不调用 main 方法, 直接跳入 finish 流程.
 - (BOOL) isCancelled
 {
     return self->cancelled;
 }
 
+// 任务有没有在执行.
 - (BOOL) isExecuting
 {
     return self->executing;
 }
-
+// 任务有没有结束.
 - (BOOL) isFinished
 {
     return self->finished;
 }
+// 任务, 一定会有从开始到结束的过程的, 只不过 cancel 了的任务, 不会进入 main 方法. 但是, 对于外界来说, 这个任务也是已经执行过了.
+// 而依赖, 则是根据 isFinished 状态, 去更改自己的 ready 状态的. 所以, 任务, 一定要走一遍 start 到 finish 的流程.
 
 - (BOOL) isConcurrent
 {
     return self->concurrent;
 }
 
+// 代表着, 任务是否可以进入就绪态. 如果所有的依赖, 都进入了 finish 态, 他就可以进入就绪态. 类似于线程调度.
 - (BOOL) isReady
 {
     return self->ready;
 }
-
-/*
- Start 是 Operation 的入口.
- NSOpertaion 中有着一些状态, 在运行前后要进行校验, 之后符合 NSOpertation 逻辑之后, 才会调用 main 方法.
- main 方法, 作为命令模式的主要承担着, 存储着所有的业务代码, 但是, 各个状态, 还是要符合 NSOperation 的管理的.
- */
 
 - (void)start{
     
@@ -246,33 +218,31 @@ static NSArray	*empty = nil;
     
     /*
      在真正执行之前, 要进行一些状态的检查操作.
+     如果是由 OperationQueue 去管理, 那么一般不会出现状态不合适就进去 start 的状态.
+     但是 start 可以由手动进行触发, 所以里面的各个检查, 都是有必要的.
      */
     [self->lock lock];
     NS_DURING
     {
-        /*
-         如果是由 OperationQueue 去管理, 那么一般不会出现状态不合适就进去 start 的状态.
-         但是 start 可以由手动进行触发, 所以里面的各个检查, 都是有必要的.
-         */
-        if (YES == [self isExecuting])
+        if (YES == [self isExecuting]) // 已经启动过了, 异常
         {
             [NSException raise: NSInvalidArgumentException
                         format: @"[%@-%@] called on executing operation",
              NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
         }
-        if (YES == [self isFinished])
+        if (YES == [self isFinished]) // 已经完成了, 异常
         {
             [NSException raise: NSInvalidArgumentException
                         format: @"[%@-%@] called on finished operation",
              NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
         }
-        if (NO == [self isReady])
+        if (NO == [self isReady]) // 还没有准备好, 也就是依赖任务还没有完成, 异常
         {
             [NSException raise: NSInvalidArgumentException
                         format: @"[%@-%@] called on operation which is not ready",
              NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
         }
-        if (NO == self->executing)
+        if (NO == self->executing) // 更改自己的状态.
         {
             [self willChangeValueForKey: @"isExecuting"];
             self->executing = YES;
@@ -289,11 +259,10 @@ static NSArray	*empty = nil;
     
     NS_DURING
     {
+        // 如果, 没有被取消, 就执行 main 方法. 否则, 直接进入 finish 方法.
+        // 调度类根本不关心 operation 有没有提前被 cancel, 这是 operation 自己内部的事情.
         if (NO == [self isCancelled])
         {
-            /*
-             NSOperation 里面的 threadPriority, 直接是影响到了当前的 NSThread 的 priority 的值.
-             */
             [NSThread setThreadPriority: self->threadPriority];
             [self main];
         }
@@ -312,9 +281,6 @@ static NSArray	*empty = nil;
 
 - (void) _finish
 {
-    /*
-     _finish 可以被调用, 就是 operation 的任务执行完了, 在这里, 进行一些状态值的改变.
-     */
     RETAIN(self);
     [self->lock lock];
     if (NO == self->finished)
@@ -351,9 +317,8 @@ static NSArray	*empty = nil;
  */
 - (void) main;
 {
-    return;	// OSX default implementation does nothing
+    return;
 }
-
 
 /*
  NSOperation, 是通过监听 isFinished 来改变自己的 READY 状态的.
@@ -364,9 +329,8 @@ static NSArray	*empty = nil;
                         context: (void *)context
 {
     [self->lock lock];
-    
     /*
-     NSOperation, 仅仅是监听 isFinished, 所以监听到了之后就取消注册了.
+     Self 只监听一次对应 OBJ 的状态, 所以这里监听到了就取消注册.
      */
     [object removeObserver: self forKeyPath: @"isFinished"];
     
@@ -379,19 +343,15 @@ static NSArray	*empty = nil;
         return;
     }
     
-    /*
-     这里, 遍历一遍自己的依赖项, 修改自己的 ready 状态.
-     */
+    // 遍历一遍自己的依赖项, 修改自己的 ready 状态.
     if (NO == self->ready)
     {
         NSEnumerator	*en;
         NSOperation	*op;
-        
         en = [self->dependencies objectEnumerator];
         while ((op = [en nextObject]) != nil)
         {
-            if (NO == [op isFinished])
-                break;
+            if (NO == [op isFinished]) break;
         }
         if (op == nil)
         {
@@ -420,9 +380,7 @@ static NSArray	*empty = nil;
             [self->dependencies removeObject: op];
             if (NO == self->ready)
             {
-                /*
-                 主动调用一些 observeValueForKeyPath 方法, 在里面, 修改 self 的 ready 状态
-                 */
+                // 主动调用一些 observeValueForKeyPath 方法, 在里面, 修改 self 的 ready 状态
                 [self observeValueForKeyPath: @"isFinished"
                                     ofObject: op
                                       change: nil
@@ -490,6 +448,7 @@ static NSArray	*empty = nil;
     return self->threadPriority;
 }
 
+// 外界调用该方法, 来阻塞调用时的线程.
 - (void) waitUntilFinished
 {
     [self->operationConditionLock lockWhenCondition: 1];	// Wait for finish
@@ -620,9 +579,7 @@ static NSOperationQueue *mainQueue = nil;
     if (NSNotFound == [self->operations indexOfObjectIdenticalTo: op]
         && NO == [op isFinished])
     {
-        /*
-         OperationQueue 观测每个 Operation 的 isReady, 来进行队列的调度处理.
-         */
+        // OperationQueue 观测每个 Operation 的 isReady, 来进行队列的调度处理.
         [op addObserver: self
              forKeyPath: @"isReady"
                 options: NSKeyValueObservingOptionNew
@@ -632,9 +589,7 @@ static NSOperationQueue *mainQueue = nil;
         [self->operations addObject: op];
         [self didChangeValueForKey: @"operationCount"];
         [self didChangeValueForKey: @"operations"];
-        /*
-         这里, 如果 op 已经是 ready 了, 显示的调用 observeValueForKeyPath, 主要是为了可以进行队列的调度.
-         */
+        // 这里, 如果 op 已经是 ready 了, 显示的调用 observeValueForKeyPath, 主要是为了可以进行队列的调度.
         if (YES == [op isReady])
         {
             [self observeValueForKeyPath: @"isReady"
@@ -740,6 +695,7 @@ static NSOperationQueue *mainQueue = nil;
     }
 }
 
+// 所有的 task, 标志一下自己的 cancel 位.
 - (void) cancelAllOperations
 {
     [[self operations] makeObjectsPerformSelector: @selector(cancel)];
@@ -752,7 +708,7 @@ static NSOperationQueue *mainQueue = nil;
         self->suspended = NO;
         self->count = NSOperationQueueDefaultMaxConcurrentOperationCount;
         self->operations = [NSMutableArray new];
-        self->starting = [NSMutableArray new];
+        self->pending = [NSMutableArray new];
         self->waiting = [NSMutableArray new];
         self->queueLock = [NSRecursiveLock new];
         [self->queueLock setName:
@@ -887,11 +843,9 @@ static NSOperationQueue *mainQueue = nil;
                          change: (NSDictionary *)change
                         context: (void *)context
 {
-    /*
-     如果, 一个任务执行完毕了, 就立马将监听剔除了.
-     */
     if (context == isFinishedCtxt)
     {
+        // 如果, 一个任务已经完成了, 那就更改 正执行数和队列.
         [self->queueLock lock];
         self->executingCount--;
         [object removeObserver: self forKeyPath: @"isFinished"];
@@ -918,7 +872,7 @@ static NSOperationQueue *mainQueue = nil;
                         options: NSKeyValueObservingOptionNew
                         context: queuePriorityCtxt];
         }
-        // 这里, 根据 operation 的优先级, 进行了排队.
+        // 如果, ready 的状态改变了, 那么就把该任务, 安放到 waiting 队列里面.
         pos = [self->waiting insertionPosition: object
                                  usingFunction: sortFunc
                                        context: 0];
@@ -970,17 +924,17 @@ static NSOperationQueue *mainQueue = nil;
         // 在这里, 能够到这里来, 其实是 startingQueueCondition 已经 Lock 上了. 所以下面的都是在上锁的状态.
         
         NSOperation    *currentOperation;
-        if ([self->starting count] > 0)
+        if ([self->pending count] > 0)
         {
-            currentOperation = RETAIN([self->starting objectAtIndex: 0]);
-            [self->starting removeObjectAtIndex: 0];
+            currentOperation = RETAIN([self->pending objectAtIndex: 0]);
+            [self->pending removeObjectAtIndex: 0];
         } else {
             currentOperation = nil;
         }
         
         // 不是在任务完成了之后, 再去进行唤醒, 而是在任务分配完了之后, 就去进行唤醒.
         // 当没有任务了, 就 unlock 0.
-        if ([self->starting count] > 0)
+        if ([self->pending count] > 0)
         {
             // 唤醒其他的线程, 继续做任务.
             [self->startingQueueCondition unlockWithCondition: 1];
@@ -1092,8 +1046,8 @@ static NSOperationQueue *mainQueue = nil;
              这些值, 都是在 self->queueCondition 的管理下进行的取值赋值.
              */
             [self->startingQueueCondition lock];
-            pendingCount = [self->starting count];
-            [self->starting addObject: op];
+            pendingCount = [self->pending count];
+            [self->pending addObject: op];
             /*
              在这里, 进行了新的线程的分配工作. 如果可以新开启一个线程的话.
              */

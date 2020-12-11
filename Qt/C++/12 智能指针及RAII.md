@@ -31,6 +31,8 @@ lst = list()
 
 #### C++的解决办法：RAII
 
+Resource acquisition is initialization.
+
 在传统 C++ 里我们只好使用 `new` 和 `delete` 去『记得』对资源进行释放。而 C++11 引入了智能指针的概念，使用了引用计数的想法，让程序员不再需要关心手动释放内存。
 
 #### 解决思路：

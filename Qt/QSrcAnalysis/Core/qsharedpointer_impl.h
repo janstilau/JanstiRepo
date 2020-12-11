@@ -28,6 +28,8 @@ template <class X, class T>
 QSharedPointer<X> qSharedPointerObjectCast(const QSharedPointer<T> &ptr);
 #endif
 
+// 这是 namespace, 并不是 class 定义
+
 namespace QtSharedPointer {
     template <class T> class ExternalRefCount;
 
@@ -55,9 +57,9 @@ namespace QtSharedPointer {
     {
         typedef void (*DestroyerFn)(ExternalRefCountData *);
 
-        QBasicAtomicInt weakref;
-        QBasicAtomicInt strongref;
-        DestroyerFn destroyer;
+        QBasicAtomicInt weakref; // 弱引用计数量
+        QBasicAtomicInt strongref; // 强引用计数量
+        DestroyerFn destroyer; // 资源管理函数, 进行资源的管理.
 
         inline ExternalRefCountData(DestroyerFn d)
             : destroyer(d)
@@ -66,6 +68,7 @@ namespace QtSharedPointer {
             strongref.store(1);
             weakref.store(1);
         }
+
         inline ExternalRefCountData(Qt::Initialization) { }
         ~ExternalRefCountData() { Q_ASSERT(!weakref.load()); Q_ASSERT(strongref.load() <= 0); }
 
@@ -82,7 +85,6 @@ namespace QtSharedPointer {
         inline void operator delete(void *ptr) { ::operator delete(ptr); }
         inline void operator delete(void *, void *) { }
     };
-    // sizeof(ExternalRefCountData) = 12 (32-bit) / 16 (64-bit)
 
     template <class T, typename Deleter>
     struct CustomDeleter
@@ -207,11 +209,17 @@ namespace QtSharedPointer {
 
 
 
-
+// 实际的 sharedpointer 的定义.
 template <class T> class QSharedPointer
 {
     typedef T *QSharedPointer:: *RestrictedBool;
     typedef QtSharedPointer::ExternalRefCountData Data;
+
+
+// 实际管理的资源
+    Data *counter;
+    T *value;
+
 public:
     typedef T Type;
     typedef T element_type;
@@ -224,11 +232,13 @@ public:
 
     T *data() const Q_DECL_NOTHROW { return value; }
     T *get() const Q_DECL_NOTHROW { return value; }
+
     bool isNull() const Q_DECL_NOTHROW { return !data(); }
     operator RestrictedBool() const Q_DECL_NOTHROW { return isNull() ? nullptr : &QSharedPointer::value; }
     bool operator !() const Q_DECL_NOTHROW { return isNull(); }
-    T &operator*() const { return *data(); }
-    T *operator->() const Q_DECL_NOTHROW { return data(); }
+
+    T &operator*() const { return *data(); } // 返回记录的指针
+    T *operator->() const Q_DECL_NOTHROW { return data(); } // 返回记录的指针
 
     Q_DECL_CONSTEXPR QSharedPointer() Q_DECL_NOTHROW : value(nullptr), counter(nullptr) { }
     ~QSharedPointer() { deref(); }
@@ -377,10 +387,10 @@ private:
     static void deref(Data *dd) Q_DECL_NOTHROW
     {
         if (!dd) return;
-        if (!dd->strongref.deref()) { // 如果, 强引用计数为 0 了, 应该摧毁自己管理的资源
+        if (!dd->strongref.deref()) { // 如果, 强引用计数为 0 了, 应该摧毁计数器管理的资源
             dd->destroy();
         }
-        if (!dd->weakref.deref()) // 如果, 弱应用计数为 0 了, 应该摧毁自己.
+        if (!dd->weakref.deref()) // 如果, 弱应用计数为 0 了, 应该摧毁计数器
             delete dd;
     }
 
@@ -593,9 +603,6 @@ public:
         counter = o;
         value = actual;
     }
-
-    Data *counter;
-    T *value;
 };
 
 template <class T>

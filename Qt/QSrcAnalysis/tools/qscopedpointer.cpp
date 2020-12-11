@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qscopedpointer.h"
 
 QT_BEGIN_NAMESPACE
@@ -55,6 +16,8 @@ QT_BEGIN_NAMESPACE
     assigning stack-based memory ownership to heap allocations, more generally
     called resource acquisition is initialization(RAII).
 
+    这个东西, 是 uniquepointer 的包装.
+
     QScopedPointer guarantees that the object pointed to will get deleted when
     the current scope disappears.
 
@@ -62,6 +25,7 @@ QT_BEGIN_NAMESPACE
 
     \snippet code/src_corelib_tools_qscopedpointer.cpp 0
 
+    // encumber 阻碍
     It's encumbered by the manual delete calls. With QScopedPointer, the code
     can be simplified to:
 
@@ -73,6 +37,8 @@ QT_BEGIN_NAMESPACE
     such as QSharedPointer). QScopedPointer intentionally has no copy
     constructor or assignment operator, such that ownership and lifetime is
     clearly communicated.
+
+    把拷贝复制和赋值操作删了. 更加清晰.
 
     The const qualification on a regular C++ pointer can also be expressed with
     a QScopedPointer:
@@ -87,6 +53,8 @@ QT_BEGIN_NAMESPACE
 
     The following custom cleanup handlers exist:
 
+    // 删除器, 可以自定义 scopePointer 析构的时候的删除操作.
+    // 这些删除器, 仅仅是一些简单操作的包装而已.
     \list
     \li QScopedPointerDeleter - the default, deletes the pointer using \c delete
     \li QScopedPointerArrayDeleter - deletes the pointer using \c{delete []}. Use
@@ -98,6 +66,7 @@ QT_BEGIN_NAMESPACE
        participating in a QEventLoop.
     \endlist
 
+    // 你自己实现的删除器, 必须实现某个方法, 也就是, 必须是某个接口的实现.
     You can pass your own classes as handlers, provided that they have a public
     static function \c{void cleanup(T *pointer)}.
 

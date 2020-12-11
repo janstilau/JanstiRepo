@@ -33,7 +33,6 @@ class QPointer
     };
     typedef typename TypeSelector<T>::Type QObjectType;
 
-    // 真正的存储, 就是一个 pointer. 这里不太理解, 没有强指针, weakPointer 怎么判断自己是不是 null 啊.
     QWeakPointer<QObjectType> wp;
 public:
     inline QPointer() { }
