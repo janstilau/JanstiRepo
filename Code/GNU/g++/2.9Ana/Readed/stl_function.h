@@ -170,8 +170,8 @@ inline binary_negate<Predicate> not2(const Predicate& pred) {
 
 // 在这里, Operation::second_argument_type, 这些其实是限制, 如果 Operation 不是 binary_function 的子类, 编译就通过不了.
 // binder1st 这个函数, 是存储一个闭包, 和这个闭包的某个参数值, 然后生成一个新的闭包. 这样, 新的闭包就可以只传入一个参数了.
-// 但是实际上, 是将一个函数调用, 变为了两个函数调用了.
-template <class Operation> 
+// 把最原始的一个函数的调用, 经过了一层包装, 变为了两个函数的调用. 
+template <class Operation>
 class binder1st
 : public unary_function<typename Operation::second_argument_type, typename Operation::result_type> {
 protected:

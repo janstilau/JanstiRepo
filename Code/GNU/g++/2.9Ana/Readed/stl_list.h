@@ -3,10 +3,6 @@
 
 __STL_BEGIN_NAMESPACE
 
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma set woff 1174
-#endif
-
 /*
  一个双向链表的 Node, 在向分配器申请资源的时候, 除了 T 的大小, 还要增加两个指针的大小.
  */
@@ -18,46 +14,43 @@ struct __list_node {
     T data;
 };
 
-/*
- 链表的迭代器.
- */
 template<class T, class Ref, class Ptr>
 struct __list_iterator {
     typedef __list_iterator<T, T&, T*>             iterator;
     typedef __list_iterator<T, const T&, const T*> const_iterator;
     typedef __list_iterator<T, Ref, Ptr>           self;
     
-    typedef bidirectional_iterator_tag iterator_category;
+    typedef bidirectional_iterator_tag iterator_category; // 对于迭代概念的适配.
     typedef T value_type;
     typedef c pointer;
     typedef Ref reference;
-    typedef __list_node<T>* link_type;
     typedef size_t size_type;
     typedef ptrdiff_t difference_type;
     
-    /*
-     对于链表来说, 它的资源就是一个节点. 因为链表的数据, 是分散的, 都是根据一个节点寻找下一个节点的.
-     */
+    typedef __list_node<T>* link_type;
+    
+    // 迭代器里面, 真正的数据.
+    // list 里面, 仅仅有一个节点的指针, 迭代器里面, 也仅仅有一个节点的指针.
+    // 容器虽然可以代表很多的数据, 但是都是堆空间里面的数据, 所以, 一个容器他自己本身, 占用的空间不会很大.
     link_type node;
+    
+    // 初始化操作, 初始化 node
     __list_iterator(link_type x) : node(x) {}
     __list_iterator() {}
     __list_iterator(const iterator& x) : node(x.node) {}
     
-    /*
-     所有的操作, 都是建立在对于这个 node 节点的基础之上.
-     */
+    // 所有的操作, 都是建立在对于这个 node 节点的基础之上.
     bool operator==(const self& x) const { return node == x.node; }
     bool operator!=(const self& x) const { return node != x.node; }
     reference operator*() const { return (*node).data; }
     pointer operator->() const { return &(operator*()); }
-    /*
-     在标准库中, tmp 也是经常出现的.
-     对于算法来说, i, j, idx 等常用的简单变量, 有的时候也是很好理解的. 相对于还要专门去构思一个有意义的名称, 用这种通用变量名, 有的时候, 也是很有效的.
-     */
+    
+    // 前++
     self& operator++() {
         node = (link_type)((*node).next);
         return *this;
     }
+    // 后++
     self operator++(int) {
         self tmp = *this;
         ++*this;
@@ -76,6 +69,7 @@ struct __list_iterator {
 
 #ifndef __STL_CLASS_PARTIAL_SPECIALIZATION
 
+// 以下是一些模板方法, __list_iterator 对它们的特化实现.
 template <class T, class Ref, class Ptr>
 inline bidirectional_iterator_tag
 iterator_category(const __list_iterator<T, Ref, Ptr>&) {
@@ -123,9 +117,8 @@ public:
      construct 在对应的指针上, 调用构造函数.
      destroy 在对应的指针上, 调用析构函数.
      之所以用到这两个方法, 是因为在容器内的内存, 是被分配器管理的.
-     如果是 new, delete, 会自动进行构造函数, 析构函数的调用. 但是分配器管理, 就需要容器里面, 进行相应的方法调用了.
+     通过分配器, 可以做除了 new, delete 之外的事情, 例如内存缓存管理.
      */
-    
 protected:
     /*
      真正的数据, 作为 sentinal Node 存在.
@@ -136,10 +129,20 @@ protected:
     /*
      GetNode, putNode 并不是对于 list 来说, 而是对于分配器来说的.
      因为分配器管理者内存资源, 所以 list 里面, 各个节点都是要通过这两个函数进行资源的管理工作.
+     这里, 是使用了 static 类方法进行 allocate 和 deallocate. 没有分配器对象这个东西存在.
+     也就是说, 分配器的设计者, 定义这两个 static 方法的实现的时候, 就应该清楚, 这是一个全局资源管理的事情.
      */
     link_type get_node() { return list_node_allocator::allocate(); }
     void put_node(link_type p) { list_node_allocator::deallocate(p); }
     
+    
+    /*
+     construct(address, value)
+     destroy(address)
+     这两个方法, 是在对应的地址上, 是在对应的地址上, 调用构造函数和析构函数.
+     但是, 地址的获取, 是通过 get_node 得到的, 地址的释放, 是 put_node 归还的. 这两个函数, 都经过了分配器.
+     我们自己管理的话, 使用 new, delete, 这块空间是直接和 C runtime 打交道, 而到了容器内, 空间如何管理, 经过了一层抽象, 也就是分配器.
+     */
     link_type create_node(const T& x) {
         link_type p = get_node();
         __STL_TRY {
@@ -150,13 +153,10 @@ protected:
              */
             construct(&p->data, x);
         }
-        __STL_UNWIND(put_node(p));
+        __STL_UNWIND(put_node(p)); // 如果失败了, 就把资源放回到分配器管理的空间.
         return p;
     }
     void destroy_node(link_type p) {
-        /*
-         Calls the destructor of the object pointed to by p
-         */
         destroy(&p->data);
         put_node(p);
     }
@@ -212,16 +212,17 @@ public:
     /*
      由于哨兵节点的存在, begin, end 的实现, 都很简单了.
      */
-    iterator begin() { return (link_type)((*node).next); }
+    iterator begin() { return (link_type)((*node).next); } // 哨兵节点的下一个节点, 空的时候, 就是哨兵节点.
     const_iterator begin() const { return (link_type)((*node).next); }
-    iterator end() { return node; }
+    
+    iterator end() { return node; } // 哨兵节点, 作为 end 节点.
     const_iterator end() const { return node; }
     
-    reverse_iterator rbegin() { return reverse_iterator(end()); }
+    reverse_iterator rbegin() { return reverse_iterator(end()); } // 通过 adapter, 包装自己的 end 节点.
     const_reverse_iterator rbegin() const {
         return const_reverse_iterator(end());
     }
-    reverse_iterator rend() { return reverse_iterator(begin()); }
+    reverse_iterator rend() { return reverse_iterator(begin()); } // 通过 adapter, 包装自己的 begin 节点.
     const_reverse_iterator rend() const {
         return const_reverse_iterator(begin());
     }
@@ -235,11 +236,14 @@ public:
      */
     size_type size() const {
         size_type result = 0;
+        // 这个函数的定义, 在 iterator.h 里面, 因为 begin 是普通的迭代器, 所以是从头到尾遍历的方式获取到 length.
         distance(begin(), end(), result);
         return result;
     }
+    
     reference front() { return *begin(); }
     const_reference front() const { return *begin(); }
+    
     reference back() { return *(--end()); } // end 是最后一个元素的下一个元素.
     const_reference back() const { return *(--end()); }
     void swap(list<T, Alloc>& x) { __STD::swap(node, x.node); }
@@ -248,7 +252,9 @@ public:
      primitive method. 其他的插入操作, 都是建立在该函数的基础上的.
      */
     iterator insert(iterator position, const T& x) {
+        // 创建一个临时节点.
         link_type tmp = create_node(x);
+        // 然后就是链表的插入操作, 由于是双向链表, 所以是四个操作.
         tmp->next = position.node;
         tmp->prev = position.node->prev;
         (link_type(position.node->prev))->next = tmp;
@@ -280,7 +286,7 @@ public:
     
     /*
      链表的删除操作, 不过要进行节点的数据维护.
-     各个容器都有着 erase 的操作, 各个容器, 都应该维护自己数据的有效性在该函数里.
+     各个容器都有着 erase 的操作, 各个容器, 都应该维护自己数据的有效性
      */
     iterator erase(iterator position) {
         link_type next_node = link_type(position.node->next);
@@ -404,6 +410,8 @@ inline void swap(list<T, Alloc>& x, list<T, Alloc>& y) {
 #endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
 
 #ifdef __STL_MEMBER_TEMPLATES
+
+// 设计好的 primitive method, 非常重要. 如果不是 randomIterator, 所有的操作, 其实就是一次次的调用 primitive method.
 
 /*
  范围性的插入, 就是 begin 到 end 的迭代, 不断地进行 insert 的操作.
@@ -675,11 +683,7 @@ void list<T, Alloc>::sort(StrictWeakOrdering comp) {
 
 #endif /* __STL_MEMBER_TEMPLATES */
 
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma reset woff 1174
-#endif
-
-__STL_END_NAMESPACE 
+__STL_END_NAMESPACE
 
 #endif /* __SGI_STL_INTERNAL_LIST_H */
 

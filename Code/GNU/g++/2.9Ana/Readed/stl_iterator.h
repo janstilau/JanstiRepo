@@ -4,20 +4,16 @@
 __STL_BEGIN_NAMESPACE
 
 /*
- iterator_category 并不是需要使用的类型, 不同的 iterator 定了了不同的 iterator_category.
- 在算法里面, 首选根据 iteratorTraits 对象, 获取到 iterator_category 的类型, 根据 iterator_category 生成不同类型的对象.
+ iterator_category 并不是实际业务使用的类型. 它最大的作用, 是通过不同的迭代器, 分发算法的调用.
+ 不同的 iterator 定义了不同的 iterator_category.
+ 在算法里面, 首先是获取到 iterator_category 的类型, 整个逻辑, 是放到了 iterator_traits 里面.
+ 根据 iterator_category 生成不同类型的对象.
  这个对象, 会作为函数的参数, 不同的函数, 根据这个参数的类型进行分发. 这就是 c++ 里面, 进行萃取的机制.
- 有一些类型, 本身并没有自己的用途, 仅仅是作为萃取分发使用.
- Iterator 里面, 定义好正确的 iterator_category, 就能进行正确的函数的执行.
  */
 
 /*
  算法看不到容器, 对容器是一无所知的, 所以, 它所需要的任何信息, 都必须从迭代器中获取.
  而迭代器, 必须能够回到算法的所有提问, 才能够满足算法的所有的操作.
- */
-
-/*
- iterator 的适配器, 一般来说会保存原有的适配器, 然后进行根据适配器的功能, 进行相应的操作修改.
  */
 
 /*
@@ -41,6 +37,8 @@ void _display_category(input_iterator_tag)
 template<typename I>
 void display_category(I itr)
 {
+    // 这里, 是通过 iterator_traits<I>::iterator_category 生成一个对象出来, 然后这个对象, 传入到函数中.
+    // 通过这个对象的不同, 进行不同的方法的调用.
     typename iterator_traits<I>::iterator_category cagy;
     _display_category(cagy);
     cout << "typeid(itr).name()= " << typeid(itr).name() << endl << endl;
@@ -78,12 +76,15 @@ struct bidirectional_iterator_tag : public forward_iterator_tag {};
 struct random_access_iterator_tag : public bidirectional_iterator_tag {};
 
 template <class T, class Distance> struct input_iterator {
-    typedef input_iterator_tag iterator_category;
-    typedef T                  value_type;
-    typedef Distance           difference_type;
-    typedef T*                 pointer;
-    typedef T&                 reference;
+    typedef input_iterator_tag iterator_category; // 迭代器的类型
+    typedef T                  value_type; // 迭代器里面的 value_type
+    typedef Distance           difference_type; // 迭代器的距离
+    typedef T*                 pointer; // 迭代器里面的 pointer
+    typedef T&                 reference; // 迭代器里面的 ref.
 };
+
+// 不同的迭代器, 它的 typedef 的不同, 剧烈地影响算法的实现. 而不同的算法调用的选择, 是通过 typedef 生成临时对象分化的.
+// C++ 里面的算法, 都是迭代器作为基本的参数. 所以, 这些不同的 tag 的定义, 是影响到整个标准库的.
 
 struct output_iterator {
     typedef output_iterator_tag iterator_category;
@@ -103,7 +104,7 @@ template <class T, class Distance> struct forward_iterator {
 
 
 template <class T, class Distance> struct bidirectional_iterator {
-    typedef bidirectional_iterator_tag iterator_category;
+    typedef bidirectional_iterator_tag iterator_category; // 双向的
     typedef T                          value_type;
     typedef Distance                   difference_type;
     typedef T*                         pointer;
@@ -111,12 +112,14 @@ template <class T, class Distance> struct bidirectional_iterator {
 };
 
 template <class T, class Distance> struct random_access_iterator {
-    typedef random_access_iterator_tag iterator_category;
+    typedef random_access_iterator_tag iterator_category; // 可以随机存储的.
     typedef T                          value_type;
     typedef Distance                   difference_type;
     typedef T*                         pointer;
     typedef T&                         reference;
 };
+
+
 
 #ifdef __STL_USE_NAMESPACES
 template <class Category, class T, class Distance = ptrdiff_t,
@@ -131,7 +134,7 @@ struct iterator {
 #endif /* __STL_USE_NAMESPACES */
 
 #ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
-
+// iterator_traits 类的定义.
 // 如果, 传递过来的类型是类型的话, 就是使用 类型里面定义的 iterator_category 作为 iterator_category
 template <class Iterator>
 struct iterator_traits {
@@ -161,13 +164,13 @@ struct iterator_traits<const T*> {
     typedef const T&                   reference;
 };
 
+// std::iterator_category 的定义, 就是根据 iterator_traits 这个类, 来进行萃取.
+// 为什么要有这个方法呢. iterator, 定义了五种 typedef, 对于 difference_type, 和 value_type, 都是可以在函数里面直接使用的. 但是, category 的不同, 代表着可以进行的操作不同, 也就函数的实现不同, 需要在函数调用之前, 就得到 category 然后利用它调用不同的函数.
+// 调用不同的函数, 就是使用函数重载中的参数类型不同实现的.
+// 所以, 必须要有一个机制, 能够获取到, iterator 中各种定义的东西, 那么这个机制, 就是 iterator_traits
 template <class Iterator>
 inline typename iterator_traits<Iterator>::iterator_category
 iterator_category(const Iterator&) {
-    /*
-     iterator_traits 会根据 iterator 是对象, 还是指针, 分发出不同的 iterator_category 的定义.
-     然后根据这个 iterator_category 类型, 生成一个临时对象, 这个临时对象, 仅仅用于编译时期方法的分发操作.
-     */
     typedef typename iterator_traits<Iterator>::iterator_category category;
     return category();
 }
