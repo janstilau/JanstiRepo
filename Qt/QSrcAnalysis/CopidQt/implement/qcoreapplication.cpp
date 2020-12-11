@@ -849,8 +849,9 @@ void QCoreApplication::exit(int returnCode)
         eventLoop->exit(returnCode);
     }
 }
-
-// 所谓的 postEvent, 其实就是将这些 event, 添加到 receiver 的 postEventList 里面, 这样, 当 receiver 的 thread 开始下一个运行循环的时候, 就可以处理这些 event 了.
+// Adds the event event, with the object receiver as the receiver of the event, to an event queue and returns immediately.
+// 所谓的 postEvent, 其实就是将这些 event, 添加到 receiver 所在的线程的 postEventList 里面.
+// 这样, 当 receiver 的 thread 开始下一个运行循环的时候, 就可以处理这些 event 了.
 void QCoreApplication::postEvent(QObject *receiver, QEvent *event, int priority)
 {
     if (receiver == 0) {
@@ -869,6 +870,7 @@ void QCoreApplication::postEvent(QObject *receiver, QEvent *event, int priority)
     data->postEventList.mutex.lock();
 
     // if object has moved to another thread, follow it
+    // 系统的类库, 考虑的比较充分. post 的过程中, 如果 recevier 发生了线程变化, 也考虑在内了.
     while (data != *pdata) {
         data->postEventList.mutex.unlock();
 
@@ -884,13 +886,14 @@ void QCoreApplication::postEvent(QObject *receiver, QEvent *event, int priority)
     QMutexUnlocker locker(&data->postEventList.mutex);
 
     // if this is one of the compressible events, do compression
-    if (receiver->d_func()->postedEvents
-        && self && self->compressEvent(event, receiver, &data->postEventList)) {
+    if (receiver->d_func()->postedEvents &&
+            self && // 对于 postEvent, 会有 compress 之说.
+            self->compressEvent(event, receiver, &data->postEventList)) {
         return;
     }
 
+    // 这里没太明白.
     if (event->type() == QEvent::DeferredDelete && data == QThreadData::current()) {
-
         int loopLevel = data->loopLevel;
         int scopeLevel = data->scopeLevel;
         if (scopeLevel == 0 && loopLevel != 0)
@@ -901,7 +904,7 @@ void QCoreApplication::postEvent(QObject *receiver, QEvent *event, int priority)
     // delete the event on exceptions to protect against memory leaks till the event is
     // properly owned in the postEventList
     QScopedPointer<QEvent> eventDeleter(event);
-    // 对于 PostEvent, 会记录一下 receiver 是哪一个.
+    // 然后, 就是把这个事件, 放到线程的队列里面了.
     data->postEventList.addEvent(QPostEvent(receiver, event, priority));
     eventDeleter.take();
     event->posted = true;
@@ -910,8 +913,8 @@ void QCoreApplication::postEvent(QObject *receiver, QEvent *event, int priority)
     locker.unlock();
 
     QAbstractEventDispatcher* dispatcher = data->eventDispatcher.loadAcquire();
-    if (dispatcher)
-        dispatcher->wakeUp();
+    if (dispatcher) { dispatcher->wakeUp(); }
+
 }
 
 

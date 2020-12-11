@@ -1,43 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Copyright (C) 2013 Olivier Goffart <ogoffart@woboq.com>
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QOBJECT_H
 #define QOBJECT_H
 
@@ -47,17 +7,10 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qbytearray.h>
 #include <QtCore/qlist.h>
-#ifdef QT_INCLUDE_COMPAT
-#include <QtCore/qcoreevent.h>
-#endif
 #include <QtCore/qscopedpointer.h>
 #include <QtCore/qmetatype.h>
-
 #include <QtCore/qobject_impl.h>
-
-#if QT_HAS_INCLUDE(<chrono>)
 #  include <chrono>
-#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -92,12 +45,13 @@ Q_CORE_EXPORT void qt_qFindChildren_helper(const QObject *parent, const QRegular
                                            const QMetaObject &mo, QList<void *> *list, Qt::FindChildOptions options);
 Q_CORE_EXPORT QObject *qt_qFindChild_helper(const QObject *parent, const QString &name, const QMetaObject &mo, Qt::FindChildOptions options);
 
+// 这个数据类, 仅仅是一些公开的部分, 各个类都有自己的 privateData, 都是继承自这个类, 添加自己的数据信息.
 class Q_CORE_EXPORT QObjectData {
 public:
     virtual ~QObjectData() = 0;
     QObject *q_ptr;
-    QObject *parent;
-    QObjectList children;
+    QObject *parent; // 这里, 数据是双向绑定的, 所以相关的方法, 要正确维护.
+    QObjectList children; // 这里, 数据是双向绑定的, 所以相关的方法, 要正确维护.
 
     uint isWidget : 1;
     uint blockSig : 1;
@@ -138,21 +92,6 @@ public:
     virtual bool event(QEvent *event);
     virtual bool eventFilter(QObject *watched, QEvent *event);
 
-#ifdef Q_QDOC
-    static QString tr(const char *sourceText, const char *comment = Q_NULLPTR, int n = -1);
-    static QString trUtf8(const char *sourceText, const char *comment = Q_NULLPTR, int n = -1);
-    virtual const QMetaObject *metaObject() const;
-    static const QMetaObject staticMetaObject;
-#endif
-#ifdef QT_NO_TRANSLATION
-    static QString tr(const char *sourceText, const char * = Q_NULLPTR, int = -1)
-        { return QString::fromUtf8(sourceText); }
-#if QT_DEPRECATED_SINCE(5, 0)
-    QT_DEPRECATED static QString trUtf8(const char *sourceText, const char * = Q_NULLPTR, int = -1)
-        { return QString::fromUtf8(sourceText); }
-#endif
-#endif //QT_NO_TRANSLATION
-
     QString objectName() const;
     void setObjectName(const QString &name);
 
@@ -167,13 +106,10 @@ public:
     void moveToThread(QThread *thread);
 
     int startTimer(int interval, Qt::TimerType timerType = Qt::CoarseTimer);
-#if QT_HAS_INCLUDE(<chrono>) || defined(Q_QDOC)
-    Q_ALWAYS_INLINE
     int startTimer(std::chrono::milliseconds time, Qt::TimerType timerType = Qt::CoarseTimer)
     {
         return startTimer(int(time.count()), timerType);
     }
-#endif
     void killTimer(int id);
 
     template<typename T>

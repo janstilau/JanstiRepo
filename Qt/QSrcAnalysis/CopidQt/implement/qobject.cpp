@@ -17,10 +17,6 @@
 #include <qset.h>
 #include <qsemaphore.h>
 #include <qsharedpointer.h>
-
-#include <private/qorderedmutexlocker_p.h>
-#include <private/qhooks_p.h>
-
 #include <new>
 
 #include <ctype.h>
@@ -109,6 +105,7 @@ struct QConnectionSenderSwitcher {
     QObject *receiver;
     QObjectPrivate::Sender *previousSender;
     QObjectPrivate::Sender currentSender;
+
     bool switched;
 
     inline QConnectionSenderSwitcher() : switched(false) {}
@@ -380,8 +377,9 @@ void QObjectPrivate::cleanConnectionLists()
 }
 
 /*!
-
-  QMetaCallEvent 是 使用队列连接调用插槽时的插槽调用的事件
+  QMetaCallEvent 这个事件, 是信号触发的时候, 发现 receiver 的线程, 和触发线程不是一个线程的时候, 生成的事件.
+  其实, 就是通过事件这种方式, 将调用关系进行了一次包装. 这里面, 这么多的数据, 都是为了回调可以正常的调用.
+  这个事件, 会存到接受者所在的线程的 postedEventList 里面, 然后接受者所在的线程运行的时候, 会将这些事件读取并调用.
  */
 QMetaCallEvent::QMetaCallEvent(ushort method_offset, ushort method_relative, QObjectPrivate::StaticMetaCallFunction callFunction,
                                const QObject *sender, int signalId,
@@ -426,7 +424,7 @@ QMetaCallEvent::~QMetaCallEvent()
 }
 
 /*!
-    \internal
+    这里就是, 直接调用方法了,
  */
 void QMetaCallEvent::placeMetaCall(QObject *object)
 {
@@ -482,16 +480,11 @@ QObject::~QObject()
 {
     Q_D(QObject);
     d->wasDeleted = true;
-    d->blockSig = 0; // unblock signals so we always emit destroyed()
+    d->blockSig = 0; // 在这里, 信号的关闭标志重置回去了.
 
+    // sharedRefcount 是一个, 和 QPointer 的实现息息相关的设计. 在 QPointer 那有比较完整的描述.
     QtSharedPointer::ExternalRefCountData *sharedRefcount = d->sharedRefcount.load();
     if (sharedRefcount) {
-        if (sharedRefcount->strongref.load() > 0) {
-            qWarning("QObject: shared QObject was deleted directly. The program is malformed and may crash.");
-            // but continue deleting, it's too late to stop anyway
-        }
-
-        // indicate to all QWeakPointers that this QObject has now been deleted
         sharedRefcount->strongref.store(0);
         if (!sharedRefcount->weakref.deref())
             delete sharedRefcount;
@@ -500,22 +493,12 @@ QObject::~QObject()
     // 主动发送信号通知外界.
     emit destroyed(this);
 
-    if (d->declarativeData) {
-        if (static_cast<QAbstractDeclarativeDataImpl*>(d->declarativeData)->ownedByQml1) {
-            if (QAbstractDeclarativeData::destroyed_qml1)
-                QAbstractDeclarativeData::destroyed_qml1(d->declarativeData, this);
-        } else {
-            if (QAbstractDeclarativeData::destroyed)
-                QAbstractDeclarativeData::destroyed(d->declarativeData, this);
-        }
-    }
-
     // set ref to zero to indicate that this object has been deleted
     if (d->currentSender != 0)
         d->currentSender->ref = 0;
     d->currentSender = 0;
 
-    // 在这里, 做了 connection 的清理工作.
+    // 在这里, 做了 connection 的清理工作. 没有细看里面的逻辑.
     if (d->connectionLists || d->senders) {
         QMutex *signalSlotMutex = signalSlotLock(this);
         QMutexLocker locker(signalSlotMutex);
@@ -546,6 +529,7 @@ QObject::~QObject()
                     if (needToUnlock)
                         m->unlock();
 
+                    // 删除了一项, 修改迭代的位置.
                     connectionList.first = c->nextConnectionList;
 
                     // The destroy operation must happen outside the lock
@@ -612,6 +596,7 @@ QObject::~QObject()
     // 对 ChildRen 做清理工作, 因为 QObject 的 parent 主要就是用来控制声明周期的.
     if (!d->children.isEmpty())
         d->deleteChildren();
+
     if (d->parent)        // remove it from parent object
         d->setParent_helper(0);
 }
@@ -626,6 +611,7 @@ QString QObject::objectName() const
 void QObject::setObjectName(const QString &name)
 {
     Q_D(QObject);
+    // 写惯了 if () { 生成 } 这种逻辑的代码, 就会发现, Swift 里面, 将懒加载在语言层面表达出来了, 是多么优雅的事情.
     if (!d->extraData)
         d->extraData = new QObjectPrivate::ExtraData;
 
@@ -650,16 +636,23 @@ bool QObject::event(QEvent *e)
         childEvent((QChildEvent*)e);
         break;
 
+        /*
+        deleteLater 会生成一个特殊的事件, postEvent 会把这个事件, 放到运行循环中, 等到下一次处理.
+        QCoreApplication::postEvent(this, new QDeferredDeleteEvent());
+        PostEvent 一般都会带 receiver 的信息, 所以能直接找到 receiver 是谁.
+        Obj 接收到了这个事件, 然后自己处理.
+         */
     case QEvent::DeferredDelete:
-        qDeleteInEventHandler(this); // deleteLater, 最终会变为这样的一个事件. 在事件里面, 会存放着对应的 receiver
+        qDeleteInEventHandler(this);
         break;
 
     case QEvent::MetaCall:
         {
             QMetaCallEvent *mce = static_cast<QMetaCallEvent*>(e);
-
-            QConnectionSenderSwitcher sw(this, const_cast<QObject*>(mce->sender()), mce->signalId());
-
+            QConnectionSenderSwitcher sw(this,
+                                         const_cast<QObject*>(mce->sender()),
+                                         mce->signalId());
+            // 这个 sw 根本就没有用到啊.
             mce->placeMetaCall(this);
             break;
         }
@@ -682,7 +675,7 @@ bool QObject::event(QEvent *e)
 
     default:
         if (e->type() >= QEvent::User) {
-            customEvent(e);
+            customEvent(e); // 如果, 想要实现一些自定义事件.例如, Latex 的 updateLater 事件.
             break;
         }
         return false;
@@ -705,13 +698,12 @@ void QObject::customEvent(QEvent * /* event */)
 {
 }
 
-// 这个函数, 不会在这个类里面使用, 它是在 Application sendEvent 的时候使用.
 bool QObject::eventFilter(QObject * /* watched */, QEvent * /* event */)
 {
     return false;
 }
 
-bool QObject::blockSignals(bool block) Q_DECL_NOTHROW
+bool QObject::blockSignals(bool block)
 {
     Q_D(QObject);
     bool previous = d->blockSig;
@@ -731,11 +723,11 @@ void QObject::moveToThread(QThread *targetThread)
 {
     Q_D(QObject);
 
-    if (d->threadData->thread == targetThread) {
+    if (d->threadData->thread == targetThread) { // 对象相等.
         return;
     }
 
-    if (d->parent != 0) {
+    if (d->parent != 0) { // 如果有父对象, 不可以转移.
         return;
     }
     if (d->isWidget) { // 如果是 Widget, 只能在主线程.
@@ -744,12 +736,6 @@ void QObject::moveToThread(QThread *targetThread)
 
     QThreadData *currentData = QThreadData::current();
     QThreadData *targetData = targetThread ? QThreadData::get2(targetThread) : Q_NULLPTR;
-    if (d->threadData->thread == 0 && currentData == targetData) {
-        // one exception to the rule: we allow moving objects with no thread affinity to the current thread
-        currentData = d->threadData;
-    } else if (d->threadData != currentData) {
-        return;
-    }
 
     // prepare to move
     d->moveToThread_helper();
@@ -839,20 +825,13 @@ void QObjectPrivate::_q_reregisterTimers(void *pointer)
 
 int QObject::startTimer(int interval, Qt::TimerType timerType)
 {
-    Q_D(QObject);
-
-    if (Q_UNLIKELY(interval < 0)) {
-        return 0;
-    }
-    if (Q_UNLIKELY(!d->threadData->eventDispatcher.load())) {
-        return 0;
-    }
-    if (Q_UNLIKELY(thread() != QThread::currentThread())) {
-        return 0;
-    }
-    // 首先是防卫判断一下, 最终, 还是要到 thread 中, 进行 timer 的注册.
-    // 注意, 这里 this 是函数的调用者. 也就是, 如果是 QTimer.start, 就是 QTimer.
-    int timerId = d->threadData->eventDispatcher.load()->registerTimer(interval, timerType, this);
+    // 注册的 timer, 到了时间片后, 会转化为一个事件发生.
+    // OC 里面也是同样的思路, 不过因为 OC 的动态性, 可以直接调用回调.
+    // QTimer 通过自己的信号槽方式, 进行了分发的过程.
+    // 一般的对象, 还是应该到 event 函数里面, 处理定时器事件.
+    int timerId = d->threadData->eventDispatcher.load()->registerTimer(interval,
+                                                                       timerType,
+                                                                       this);
     if (!d->extraData)
         d->extraData = new QObjectPrivate::ExtraData;
     d->extraData->runningTimers.append(timerId);
@@ -981,8 +960,7 @@ void QObject::setParent(QObject *parent)
 
 void QObjectPrivate::deleteChildren()
 {
-    Q_ASSERT_X(!isDeletingChildren, "QObjectPrivate::deleteChildren()", "isDeletingChildren already set, did this function recurse?");
-    isDeletingChildren = true;
+    isDeletingChildren = true; // 专门在类里面, 设置这样的状态成员变量, 不会让代码显得乱吗.
     // delete children objects
     // don't use qDeleteAll as the destructor of the child might
     // delete siblings
@@ -1072,6 +1050,7 @@ void QObject::removeEventFilter(QObject *obj)
 }
 
 // deletaLater, 生成一个 QDeferredDeleteEvent 事件, 注册到 this 的数据上.
+// 既然是事件, 就一定是要和运行循环相关了. 如果对象所在的线程, 没有运行循环, 那么会在这个线程析构的时候, 执行 delete.
 void QObject::deleteLater()
 {
     QCoreApplication::postEvent(this, new QDeferredDeleteEvent());
@@ -1107,8 +1086,11 @@ static const char * extract_location(const char *member)
     return 0;
 }
 
-static bool check_signal_macro(const QObject *sender, const char *signal,
-                                const char *func, const char *op)
+// 检查 signal 字符串, 是否是信号信息. 这里不应该传这么多的参数进来,
+static bool check_signal_macro(const QObject *sender,
+                               const char *signal,
+                               const char *func,
+                               const char *op)
 {
     int sigcode = extract_code(signal);
     if (sigcode != QSIGNAL_CODE) {
@@ -1322,39 +1304,40 @@ static inline void check_and_warn_compat(const QMetaObject *sender, const QMetaM
 #endif
 
 /*
-#  define METHOD(a)   qFlagLocation("0"#a QLOCATION)
+# define METHOD(a)   qFlagLocation("0"#a QLOCATION)
 # define SLOT(a)     qFlagLocation("1"#a QLOCATION)
 # define SIGNAL(a)   qFlagLocation("2"#a QLOCATION)
 这几个宏, 只不过在字符串上面, 增加了特定的标识而已. 然后, 在 connect 函数里面, 会根据这个标识进行逻辑判断.
  */
-
-QMetaObject::Connection QObject::connect(const QObject *sender, const char *signal,
-                                     const QObject *receiver, const char *method,
-                                     Qt::ConnectionType type)
+// 最原始的信号槽的实现, 通过字符串的方式.
+QMetaObject::Connection QObject::connect(const QObject *sender,
+                                         const char *signal,
+                                         const QObject *receiver,
+                                         const char *method,
+                                         Qt::ConnectionType type)
 {
     // 首先, 是防卫判断
     if (sender == 0 || receiver == 0 || signal == 0 || method == 0) {
-        qWarning("QObject::connect: Cannot connect %s::%s to %s::%s",
-                 sender ? sender->metaObject()->className() : "(null)",
-                 (signal && *signal) ? signal+1 : "(null)",
-                 receiver ? receiver->metaObject()->className() : "(null)",
-                 (method && *method) ? method+1 : "(null)");
         return QMetaObject::Connection(0);
     }
 
     QByteArray tmp_signal_name;
-    // 如果, signal, method 不是通过 SLOT, SIGNAL 包装的,  check_macro 就会报错.
     if (!check_signal_macro(sender, signal, "connect", "bind"))
         return QMetaObject::Connection(0);
 
     // 拿到了 sender 的元信息.
     const QMetaObject *smeta = sender->metaObject();
-    const char *signal_arg = signal;
+
     ++signal; //skip code
     QArgumentTypeArray signalTypes;
     QByteArray signalName = QMetaObjectPrivate::decodeMethodSignature(signal, signalTypes);
-    int signal_index = QMetaObjectPrivate::indexOfSignalRelative(
-            &smeta, signalName, signalTypes.size(), signalTypes.constData());
+    // 通过, 方法名, 和方法类型, 找到对应的方法在元信息的 index 值.
+    int signal_index =
+            QMetaObjectPrivate::indexOfSignalRelative(
+                &smeta,
+                signalName,
+                signalTypes.size(),
+                signalTypes.constData());
     if (signal_index < 0) {
         // check for normalized signatures
         tmp_signal_name = QMetaObject::normalizedSignature(signal - 1);
@@ -1366,9 +1349,9 @@ QMetaObject::Connection QObject::connect(const QObject *sender, const char *sign
         signal_index = QMetaObjectPrivate::indexOfSignalRelative(
                 &smeta, signalName, signalTypes.size(), signalTypes.constData());
     }
+
+    // 到这里, 信号函数的 idx 的值, 就应该的到了.
     if (signal_index < 0) {
-        err_method_notfound(sender, signal_arg, "connect");
-        err_info_about_objects("connect", sender, receiver);
         return QMetaObject::Connection(0);
     }
     signal_index = QMetaObjectPrivate::originalClone(smeta, signal_index);
@@ -1378,7 +1361,6 @@ QMetaObject::Connection QObject::connect(const QObject *sender, const char *sign
     // 然后就是对于 slot 的处理.
     QByteArray tmp_method_name;
     int membcode = extract_code(method);
-
     if (!check_method_code(membcode, receiver, method, "connect"))
         return QMetaObject::Connection(0);
     const char *method_arg = method;
@@ -1398,8 +1380,7 @@ QMetaObject::Connection QObject::connect(const QObject *sender, const char *sign
                 &rmeta, methodName, methodTypes.size(), methodTypes.constData());
         break;
     }
-    if (method_index_relative < 0) { // 这里, 就是说没有在元信息里面, 也就是没有用 slots: 修饰过得成员函数. 这里不太明白, 他怎么得到的最终结果.
-        // check for normalized methods
+    if (method_index_relative < 0) {
         tmp_method_name = QMetaObject::normalizedSignature(method);
         method = tmp_method_name.constData();
 
@@ -1419,40 +1400,36 @@ QMetaObject::Connection QObject::connect(const QObject *sender, const char *sign
         }
     }
 
+    // 到这里, 就应该得到了槽函数的 idx 值了.
     if (method_index_relative < 0) {
-        err_method_notfound(receiver, method_arg, "connect");
-        err_info_about_objects("connect", sender, receiver);
         return QMetaObject::Connection(0);
     }
-    // 这里就是在检测, SIGNAL, SLOT 的参数个数了.
+    // 这里就是在检测, SIGNAL, SLOT 的参数个数了. 需要槽函数的个数, 少于信号函数, 并且类型相匹配.
     if (!QMetaObjectPrivate::checkConnectArgs(signalTypes.size(), signalTypes.constData(),
                                               methodTypes.size(), methodTypes.constData())) {
-        qWarning("QObject::connect: Incompatible sender/receiver arguments"
-                 "\n        %s::%s --> %s::%s",
-                 sender->metaObject()->className(), signal,
-                 receiver->metaObject()->className(), method);
         return QMetaObject::Connection(0);
     }
 
+    // 对于队列式的连接, 需要特殊的判断, 因为需要拷贝参数填充到事件内.
+    // 这里, 也看出来 oc 把所有的对象, 都变为堆空间对象, 对于值语义的放弃, 多么省事
     int *types = 0;
     if ((type == Qt::QueuedConnection)
             && !(types = queuedConnectionTypes(signalTypes.constData(), signalTypes.size()))) {
         return QMetaObject::Connection(0);
     }
 
-#ifndef QT_NO_DEBUG
-    QMetaMethod smethod = QMetaObjectPrivate::signal(smeta, signal_index);
-    QMetaMethod rmethod = rmeta->method(method_index_relative + rmeta->methodOffset());
-    check_and_warn_compat(smeta, smethod, rmeta, rmethod);
-#endif
+
     // 以上, 已经拿到了所有的元信息了, 真正的关联一定在 QMetaObjectPrivate::connect 函数里.
     // QMetaObjectPrivate::connect 里面, 就是根据传入的值, 生成一个 Connection 对象, 然后把这个值, 存到了 sender
     // 的 connectionLists 里面, 所以, 信号槽这个东西, 本质上, 还是要在 sender 里面, 存储各种连接关系.
-    QMetaObject::Connection handle = QMetaObject::Connection(QMetaObjectPrivate::connect(
-        sender, signal_index, smeta, receiver, method_index_relative, rmeta ,type, types));
+    QMetaObject::Connection handle = QMetaObject::Connection(
+                QMetaObjectPrivate::connect( sender, signal_index, smeta,
+                                             receiver, method_index_relative, rmeta,
+                                             type, types));
     return handle;
 }
 
+// 这里, 逻辑就少了很多, 因为直接把方法的元信息传递过来了.
 QMetaObject::Connection QObject::connect(const QObject *sender, const QMetaMethod &signal,
                                      const QObject *receiver, const QMetaMethod &method,
                                      Qt::ConnectionType type)
@@ -1516,7 +1493,6 @@ bool QObject::disconnect(const QObject *sender, const char *signal,
                          const QObject *receiver, const char *method)
 {
     if (sender == 0 || (receiver == 0 && method != 0)) {
-        qWarning("QObject::disconnect: Unexpected null parameter");
         return false;
     }
 
@@ -2540,6 +2516,7 @@ QObjectUserData* QObject::userData(uint id) const
 
 #endif // QT_NO_USERDATA
 
+// 非常简单地实现, 就是删除自己.
 void qDeleteInEventHandler(QObject *o)
 {
     delete o;

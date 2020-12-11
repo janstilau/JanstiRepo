@@ -421,6 +421,7 @@ static void argumentTypesFromString(const char *str, const char *end,
 
 // Given a method \a signature (e.g. "foo(int,double)"), this function
 // populates the argument \a types array and returns the method name.
+// 解析方法, 写的很简单. 因为这是内部实现的部分, 就不应该写那么多通用判断. 如果不符合规定的格式, 就是错误.
 QByteArray QMetaObjectPrivate::decodeMethodSignature(
         const char *signature, QArgumentTypeArray &types)
 {
@@ -471,7 +472,6 @@ int QMetaObjectPrivate::indexOfSignalRelative(const QMetaObject **baseObject,
                                               const QArgumentType *types)
 {
     int i = indexOfMethodRelative<MethodSignal>(baseObject, name, argc, types);
-#ifndef QT_NO_DEBUG
     const QMetaObject *m = *baseObject;
     if (i >= 0 && m && m->d.superdata) {
         int conflict = indexOfMethod(m->d.superdata, name, argc, types);
@@ -479,7 +479,6 @@ int QMetaObjectPrivate::indexOfSignalRelative(const QMetaObject **baseObject,
             QMetaMethod conflictMethod = m->d.superdata->method(conflict);
         }
      }
- #endif
      return i;
 }
 
@@ -1626,7 +1625,8 @@ bool QMetaMethod::invoke(QObject *object,
             }
         }
         // 然后直接交给了 PostEvent 函数. 而传递的 event, 是一个特殊类型的 event.
-        QCoreApplication::postEvent(object, new QMetaCallEvent(idx_offset, idx_relative, callFunction,
+        QCoreApplication::postEvent(object,
+                                    new QMetaCallEvent(idx_offset, idx_relative, callFunction,
                                                         0, -1, nargs, types, args));
     } else { // blocking queued connection
 #ifndef QT_NO_THREAD
