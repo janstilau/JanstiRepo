@@ -1290,7 +1290,8 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
        *  used the user should consider using std::list.
        */
       iterator
-      insert(const_iterator __position, value_type&& __x)
+      insert(const_iterator __position,
+             value_type&& __x)
       { return _M_insert_rval(__position, std::move(__x)); }
 
       /**
@@ -1376,7 +1377,8 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
       template<typename _InputIterator,
 	       typename = std::_RequireInputIter<_InputIterator>>
 	iterator
-	insert(const_iterator __position, _InputIterator __first,
+	insert(const_iterator __position,
+           _InputIterator __first,
 	       _InputIterator __last)
 	{
 	  difference_type __offset = __position - cbegin();

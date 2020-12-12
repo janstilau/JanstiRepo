@@ -17,6 +17,7 @@ ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last) {
     return last;
 }
 
+// 增加了 predicate 版本.
 template <class ForwardIterator, class BinaryPredicate>
 ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last,
                               BinaryPredicate binary_pred) {

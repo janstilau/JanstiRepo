@@ -29,7 +29,6 @@
 		0613589624CD662B0018DA0A /* stl_construct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stl_construct.h; sourceTree = "<group>"; };
 		0613589824CE968A0018DA0A /* copy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = copy.h; sourceTree = "<group>"; };
 		069FFE6824C858BB0014F9EA /* 2.9Ana */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = 2.9Ana; sourceTree = BUILT_PRODUCTS_DIR; };
-		069FFECF24C8A4D60014F9EA /* stl_slist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_slist.h; sourceTree = "<group>"; };
 		069FFED124C8A4D60014F9EA /* stl_tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_tree.h; path = ../../stl_tree.h; sourceTree = "<group>"; };
 		069FFED424C8A4D60014F9EA /* stl_rope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_rope.h; path = ../../stl_rope.h; sourceTree = "<group>"; };
 		069FFEE024C8A4D60014F9EA /* stl_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_map.h; sourceTree = "<group>"; };
@@ -38,20 +37,15 @@
 		069FFEE624C8A4D70014F9EA /* stl_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_alloc.h; sourceTree = "<group>"; };
 		069FFEE724C8A4D70014F9EA /* stl_hash_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_hash_set.h; sourceTree = "<group>"; };
 		069FFEE824C8A4D70014F9EA /* stl_hashtable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_hashtable.h; sourceTree = "<group>"; };
-		069FFEEA24C8A4D70014F9EA /* stl_stack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_stack.h; sourceTree = "<group>"; };
 		069FFEEC24C8A4D70014F9EA /* stl_heap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_heap.h; sourceTree = "<group>"; };
-		069FFEF524C8A4D70014F9EA /* stl_pair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_pair.h; sourceTree = "<group>"; };
 		069FFEF724C8A4D70014F9EA /* stl_hash_fun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_hash_fun.h; sourceTree = "<group>"; };
 		069FFEF924C8A4D70014F9EA /* stl_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_set.h; sourceTree = "<group>"; };
-		069FFEFA24C8A4D70014F9EA /* stl_queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_queue.h; sourceTree = "<group>"; };
 		069FFEFB24C8A4D70014F9EA /* stl_multiset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_multiset.h; sourceTree = "<group>"; };
 		069FFEFC24C8A4D70014F9EA /* stl_hash_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_hash_map.h; sourceTree = "<group>"; };
 		069FFF0724C8A4D80014F9EA /* stl_algobase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_algobase.h; sourceTree = "<group>"; };
 		069FFF0924C8A4D80014F9EA /* stl_function.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_function.h; sourceTree = "<group>"; };
 		069FFF0A24C8A4D80014F9EA /* stl_numeric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_numeric.h; sourceTree = "<group>"; };
 		069FFF1424C8A4D80014F9EA /* stl_algo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_algo.h; sourceTree = "<group>"; };
-		069FFF1524C8A4D80014F9EA /* stl_relops.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_relops.h; sourceTree = "<group>"; };
-		069FFF1624C8A4D80014F9EA /* stl_list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_list.h; sourceTree = "<group>"; };
 		069FFF1E24C8A4D90014F9EA /* stl_uninitialized.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_uninitialized.h; sourceTree = "<group>"; };
 		069FFF2124C8A4D90014F9EA /* fcomplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fcomplex.h; sourceTree = "<group>"; };
 		069FFF2224C8A4D90014F9EA /* bastring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bastring.h; sourceTree = "<group>"; };
@@ -61,9 +55,8 @@
 		069FFF2624C8A4D90014F9EA /* bastring.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bastring.cc; sourceTree = "<group>"; };
 		069FFF2724C8A4D90014F9EA /* dcomplex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dcomplex.h; sourceTree = "<group>"; };
 		069FFF2824C8A4D90014F9EA /* complext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = complext.h; sourceTree = "<group>"; };
-		069FFF2924C8A4D90014F9EA /* stl_vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_vector.h; sourceTree = "<group>"; };
-		069FFF2A24C8A4D90014F9EA /* stl_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_iterator.h; sourceTree = "<group>"; };
 		069FFF2B24C8A4D90014F9EA /* stl_multimap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_multimap.h; sourceTree = "<group>"; };
+		AAD8A9462584C31A007DEA60 /* Container */ = {isa = PBXFileReference; lastKnownFileType = text; path = Container; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,7 +73,9 @@
 		0613589724CE96810018DA0A /* Algo */ = {
 			isa = PBXGroup;
 			children = (
-				0613589824CE968A0018DA0A /* copy.h */,
+				0613589624CD662B0018DA0A /* stl_construct.h */,
+				069FFF1E24C8A4D90014F9EA /* stl_uninitialized.h */,
+				069FFEF724C8A4D70014F9EA /* stl_hash_fun.h */,
 			);
 			path = Algo;
 			sourceTree = SOURCE_ROOT;
@@ -104,6 +99,7 @@
 		069FFE6A24C858BB0014F9EA /* 2.9Ana */ = {
 			isa = PBXGroup;
 			children = (
+				AAD8A9462584C31A007DEA60 /* Container */,
 				0613589724CE96810018DA0A /* Algo */,
 				069FFF2024C8A4D90014F9EA /* std */,
 				069FFF2F24C940320014F9EA /* Readed */,
@@ -133,32 +129,22 @@
 		069FFF2F24C940320014F9EA /* Readed */ = {
 			isa = PBXGroup;
 			children = (
-				069FFEF524C8A4D70014F9EA /* stl_pair.h */,
+				0613589824CE968A0018DA0A /* copy.h */,
 				069FFF0724C8A4D80014F9EA /* stl_algobase.h */,
 				069FFF1424C8A4D80014F9EA /* stl_algo.h */,
 				069FFEE624C8A4D70014F9EA /* stl_alloc.h */,
-				0613589624CD662B0018DA0A /* stl_construct.h */,
 				069FFEE124C8A4D60014F9EA /* stl_deque.h */,
 				069FFF0924C8A4D80014F9EA /* stl_function.h */,
-				069FFEF724C8A4D70014F9EA /* stl_hash_fun.h */,
 				069FFEFC24C8A4D70014F9EA /* stl_hash_map.h */,
 				069FFEE724C8A4D70014F9EA /* stl_hash_set.h */,
 				069FFEE824C8A4D70014F9EA /* stl_hashtable.h */,
 				069FFEEC24C8A4D70014F9EA /* stl_heap.h */,
-				069FFF2A24C8A4D90014F9EA /* stl_iterator.h */,
-				069FFF1624C8A4D80014F9EA /* stl_list.h */,
 				069FFEE024C8A4D60014F9EA /* stl_map.h */,
 				069FFF2B24C8A4D90014F9EA /* stl_multimap.h */,
 				069FFEFB24C8A4D70014F9EA /* stl_multiset.h */,
 				069FFF0A24C8A4D80014F9EA /* stl_numeric.h */,
-				069FFEFA24C8A4D70014F9EA /* stl_queue.h */,
-				069FFF1524C8A4D80014F9EA /* stl_relops.h */,
 				069FFEF924C8A4D70014F9EA /* stl_set.h */,
-				069FFECF24C8A4D60014F9EA /* stl_slist.h */,
-				069FFEEA24C8A4D70014F9EA /* stl_stack.h */,
 				069FFEE224C8A4D60014F9EA /* stl_tempbuf.h */,
-				069FFF1E24C8A4D90014F9EA /* stl_uninitialized.h */,
-				069FFF2924C8A4D90014F9EA /* stl_vector.h */,
 			);
 			path = Readed;
 			sourceTree = SOURCE_ROOT;

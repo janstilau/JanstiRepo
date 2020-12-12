@@ -719,8 +719,10 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
     template<typename _ForwardIterator>
       void
       vector<_Tp, _Alloc>::
-      _M_range_insert(iterator __position, _ForwardIterator __first,
-		      _ForwardIterator __last, std::forward_iterator_tag)
+      _M_range_insert(iterator __position,
+      _ForwardIterator __first,
+		      _ForwardIterator __last,
+               std::forward_iterator_tag)
       {
 	if (__first != __last)
 	  {

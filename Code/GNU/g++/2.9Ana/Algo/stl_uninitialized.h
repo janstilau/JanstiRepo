@@ -6,6 +6,10 @@ __STL_BEGIN_NAMESPACE
 
 
 // uninitialized_fill, 从 first 指定的空间开始, 将 x 的值填充到迭代器指向的地方.
+// 这个只会在 vector, 和 deque 里面使用, 因为别的容器, 都是一个个的进行安插. 链表, 红黑树, 哈希表, 没有都需要一个个进行. 因为那是节点的概念, 没有办法提前获取到 first, end.
+// 需要注意的是, 数组的搬移操作, 是不会调用这个函数的. 因为这个函数, 还要考虑构造函数的调用, 而搬移操作, 不应该调用构造函数.
+// 这里, 为什么不能是值的直接 bit copy, 非要进行拷贝构造函数和析构呢. 这其实也是后面 move sematic 出现的原因.
+// 在 4.9 的版本里面, 应该就是使用了 move sematic 的拷贝构造函数了.
 
 // 分发函数, 总的入口.
 template <class ForwardIterator, class T>
@@ -22,11 +26,12 @@ inline void __uninitialized_fill(ForwardIterator first,
                                  const T& x,
                                  T1*) {
     typedef typename __type_traits<T1>::is_POD_type is_POD;
+    // __type_traits 来判断, 是否应该调用构造函数.
     __uninitialized_fill_aux(first, last, x, is_POD());
     
 }
 
-// 不需要构造函数的值, 直接进行 assignment 就可以.
+// 不需要构造函数的值, fill 函数的内部, 就是简单地 *left = *right 的实现.
 template <class ForwardIterator, class T>
 inline void
 __uninitialized_fill_aux(ForwardIterator first,
@@ -39,6 +44,7 @@ __uninitialized_fill_aux(ForwardIterator first,
 
 // 类型值, 必须经过构造函数. 调用 construct 函数.
 // 为什么 vector 的扩容会调用构造函数的原因就在这里, 会根据类型, 进行不同的搬移策略.
+// 如果, 没有实现 move ctor 的类来说, 还是会到拷贝构造函数. 但是只要这个类, 没有管理额外的资源, 和bits copy 也没有太大的区别.
 template <class ForwardIterator, class T>
 void
 __uninitialized_fill_aux(ForwardIterator first,
@@ -75,6 +81,7 @@ inline ForwardIterator __uninitialized_fill_n(ForwardIterator first,
 
 
 // 不需要构造函数的值, 直接 assignment 填充.
+// fill_n 的实现, 就是简单地 *left = *right 而已.
 template <class ForwardIterator, class Size, class T>
 inline ForwardIterator
 __uninitialized_fill_n_aux(ForwardIterator first, Size n,
@@ -111,29 +118,15 @@ __uninitialized_fill_n_aux(ForwardIterator first, Size n,
 
 
 
-// Copies [first1, last1) into [result, result + (last1 - first1)), and
-//  copies [first2, last2) into
-//  [result, result + (last1 - first1) + (last2 - first2)).
-
-template <class InputIterator1, class InputIterator2, class ForwardIterator>
-inline ForwardIterator
-__uninitialized_copy_copy(InputIterator1 first1, InputIterator1 last1,
-                          InputIterator2 first2, InputIterator2 last2,
-                          ForwardIterator result) {
-    ForwardIterator mid = uninitialized_copy(first1, last1, result);
-    __STL_TRY {
-        return uninitialized_copy(first2, last2, mid);
-    }
-    __STL_UNWIND(destroy(result, mid));
-}
-
 // Fills [result, mid) with x, and copies [first, last) into
 //  [mid, mid + (last - first)).
 template <class ForwardIterator, class T, class InputIterator>
 inline ForwardIterator 
-__uninitialized_fill_copy(ForwardIterator result, ForwardIterator mid,
+__uninitialized_fill_copy(ForwardIterator result,
+                          ForwardIterator mid,
                           const T& x,
-                          InputIterator first, InputIterator last) {
+                          InputIterator first,
+                          InputIterator last) {
     uninitialized_fill(result, mid, x);
     __STL_TRY {
         return uninitialized_copy(first, last, mid);
@@ -154,6 +147,7 @@ __uninitialized_copy_fill(InputIterator first1, InputIterator last1,
     }
     __STL_UNWIND(destroy(first2, mid2));
 }
+
 
 
 // 分发函数. 拷贝 first, 到 last 的内容, 到 result 中去.
