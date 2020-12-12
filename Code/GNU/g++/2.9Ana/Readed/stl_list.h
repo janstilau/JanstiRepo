@@ -295,10 +295,12 @@ public:
      各个容器都有着 erase 的操作, 各个容器, 都应该维护自己数据的有效性
      */
     iterator erase(iterator position) {
+        // 先是维护链表, 把 position 位置的节点, 剔除到链表外
         link_type next_node = link_type(position.node->next);
         link_type prev_node = link_type(position.node->prev);
         prev_node->next = next_node;
         next_node->prev = prev_node;
+        // 然后处理节点, 也就是回收空间, + data 的析构.
         destroy_node(position.node);
         return iterator(next_node);
     }
@@ -354,9 +356,12 @@ protected:
     }
     
 public:
+    // 捻接
     void splice(iterator position, list& x) {
         if (!x.empty())
+        {
             transfer(position, x.begin(), x.end());
+        }
     }
     void splice(iterator position, list&, iterator i) {
         iterator j = i;
@@ -394,10 +399,13 @@ inline bool operator==(const list<T,Alloc>& x, const list<T,Alloc>& y) {
     link_type e2 = y.node;
     link_type n1 = (link_type) e1->next;
     link_type n2 = (link_type) e2->next;
-    for ( ; n1 != e1 && n2 != e2 ;
-         n1 = (link_type) n1->next, n2 = (link_type) n2->next)
-        if (n1->data != n2->data)
+    for ( ;
+         n1 != e1 && n2 != e2 ;
+         n1 = n1->next, n2 = n2->next) {
+        if (n1->data != n2->data) {
             return false;
+        }
+    }
     return n1 == e1 && n2 == e2;
 }
 
@@ -415,12 +423,14 @@ inline void swap(list<T, Alloc>& x, list<T, Alloc>& y) {
 
 #endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
 
+// 同样的都是插入动作, 但是因为插入的参数的类型不同, 定义式都要写出来.
 /*
  范围性的插入, 就是 begin 到 end 的迭代, 不断地进行 insert 的操作.
  */
 template <class T, class Alloc> template <class InputIterator>
 void list<T, Alloc>::insert(iterator position,
-                            InputIterator first, InputIterator last) {
+                            InputIterator first,
+                            InputIterator last) {
     for ( ; first != last; ++first)
         insert(position, *first);
 }
@@ -428,16 +438,18 @@ void list<T, Alloc>::insert(iterator position,
 #else /* __STL_MEMBER_TEMPLATES */
 
 /*
- 范围性的插入
+ 范围性的插入. 插入的是原始数据.
  */
 template <class T, class Alloc>
-void list<T, Alloc>::insert(iterator position, const T* first, const T* last) {
+void list<T, Alloc>::insert(iterator position,
+                            const T* first,
+                            const T* last) {
     for ( ; first != last; ++first)
         insert(position, *first);
 }
 
 /*
- 范围性的插入
+ 范围性的插入. 插入的是 cosnt 迭代器.
  */
 template <class T, class Alloc>
 void list<T, Alloc>::insert(iterator position,
@@ -449,7 +461,7 @@ void list<T, Alloc>::insert(iterator position,
 #endif /* __STL_MEMBER_TEMPLATES */
 
 /*
-  范围性的插入
+  范围性的插入, n
  */
 template <class T, class Alloc>
 void list<T, Alloc>::insert(iterator position, size_type n, const T& x) {
@@ -471,25 +483,19 @@ void list<T, Alloc>::resize(size_type new_size, const T& x)
 {
     iterator i = begin();
     size_type len = 0;
+    // 这里, 把现有的链表走一遍. 走到头, 或者走到了 new_size 步.
     for ( ; i != end() && len < new_size; ++i, ++len) {;}
-    /*
-     如果, 原有的列表过大, 就删除后面的数据.
-     */
+    
     if (len == new_size){
         erase(i, end());
-    }
-    /*
-     否则, 就插入新的数据, 用 x 当做默认值.
-     这里, 由于链表是没有 capacity 的概念的, 所以, resize 之后, 容器有多大, list 既有多大. 里面的值, 都应该是有效值.
-     */
-    else  {
+    } else  {
+        // new size 比现有的大, 就新插入进行扩充.
         insert(end(), new_size - len, x);
     }
 }
 
 /*
-不断地删除节点, 不断地调用 destroy_node 进行内存的处理工作.
- O(n) 复杂度.
+ clear 这个函数, 在任何容器上, 都应该是 o(N) 的复杂度, 因为析构函数, 都是一个个进行的.
  */
 template <class T, class Alloc> 
 void list<T, Alloc>::clear()
@@ -587,30 +593,6 @@ void list<T, Alloc>::reverse() {
         transfer(begin(), old, first);
     }
 }    
-
-/*
- 太复杂没看.
- */
-template <class T, class Alloc>
-void list<T, Alloc>::sort() {
-    if (node->next == node || link_type(node->next)->next == node) return;
-    list<T, Alloc> carry;
-    list<T, Alloc> counter[64];
-    int fill = 0;
-    while (!empty()) {
-        carry.splice(carry.begin(), *this, begin());
-        int i = 0;
-        while(i < fill && !counter[i].empty()) {
-            counter[i].merge(carry);
-            carry.swap(counter[i++]);
-        }
-        carry.swap(counter[i]);
-        if (i == fill) ++fill;
-    }
-    
-    for (int i = 1; i < fill; ++i) counter[i].merge(counter[i-1]);
-    swap(counter[fill-1]);
-}
 
 #ifdef __STL_MEMBER_TEMPLATES
 

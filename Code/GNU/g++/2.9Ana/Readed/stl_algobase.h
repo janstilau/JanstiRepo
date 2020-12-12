@@ -51,8 +51,6 @@ inline const T& max(const T& a, const T& b) {
 
 #endif /* __BORLANDC__ */
 
-//Copy
-
 /*
  增加了比较函数版本的方法.
  */
@@ -66,45 +64,37 @@ inline const T& max(const T& a, const T& b, Compare comp) {
     return comp(a, b) ? b : a;
 }
 
-/*
- 一般的迭代器, 就是遍历赋值操作.
- 这里, OutputIterator result 是需要调用者保证有效性的.
- 这其实是一个不太好的设计. 这个函数, 应该返回被被复制的位置, 将开辟空间, 已经填充数据的事情, 在函数内部完成.
- 还需要在外界进行操作, 这对函数的使用者来说, 有了太多的负担.
- */
+
+
+
+
+
+#ifdef __STL_CLASS_PARTIAL_SPECIALIZATION 
+
+// 如果, copy 是迭代器类型, 做萃取和分发的过程.
 template <class InputIterator, class OutputIterator>
-inline OutputIterator __copy(InputIterator first, InputIterator last,
-                             OutputIterator result, input_iterator_tag)
+inline OutputIterator copy(InputIterator first, InputIterator last,
+                           OutputIterator result)
 {
-    for ( ; first != last; ++result, ++first)
-        *result = *first;
-    return result;
+    return __copy_dispatch<InputIterator,OutputIterator>()(first, last, result);
 }
 
-/*
- 随机访问的迭代器, 可以根据距离的类型进行操作.
- */
-template <class RandomAccessIterator, class OutputIterator>
-inline OutputIterator
-__copy(RandomAccessIterator first, RandomAccessIterator last,
-       OutputIterator result, random_access_iterator_tag)
-{
-    return __copy_d(first, last, result, distance_type(first));
+// 如果, copy 是指针类型的, 直接内存搬移就可以了.
+inline char* copy(const char* first, const char* last, char* result) {
+    memmove(result, first, last - first);
+    return result + (last - first);
+}
+inline wchar_t* copy(const wchar_t* first, const wchar_t* last,
+                     wchar_t* result) {
+    memmove(result, first, sizeof(wchar_t) * (last - first));
+    return result + (last - first);
 }
 
-/*
- 对于指针这种距离类型, 可以直接算出次数来.
- 次数这种方式, 要比迭代器的判断要快一点.
- */
-template <class RandomAccessIterator, class OutputIterator, class Distance>
-inline OutputIterator
-__copy_d(RandomAccessIterator first,
-         RandomAccessIterator last,
-         OutputIterator result,
-         Distance*)
-{
-    for (Distance n = last - first; n > 0; --n, ++result, ++first)
-        *result = *first;
+template <class BidirectionalIterator1, class BidirectionalIterator2>
+inline BidirectionalIterator2 __copy_backward(BidirectionalIterator1 first, 
+                                              BidirectionalIterator1 last,
+                                              BidirectionalIterator2 result) {
+    while (first != last) *--result = *--last;
     return result;
 }
 
@@ -120,80 +110,40 @@ struct __copy_dispatch
     }
 };
 
-#ifdef __STL_CLASS_PARTIAL_SPECIALIZATION 
-
 /*
- 如果, has_trivial_assignment_operator 为 true, 也就是拷贝赋值操作没有特殊设计, 那就直接内存拷贝就可以了.
+ 如果是一般的迭代器, 那么就是一个个的拷贝的过程.
  */
-template <class T>
-inline T* __copy_t(const T* first, const T* last, T* result, __true_type) {
-    memmove(result, first, sizeof(T) * (last - first));
-    return result + (last - first);
-}
-
-/*
- 如果, has_trivial_assignment_operator 为 false, 也就是拷贝赋值操作有着特殊设计,
- 那么就调用迭代器的赋值操作, 会调用到对应类型的拷贝赋值操作.
- */
-template <class T>
-inline T* __copy_t(const T* first, const T* last, T* result, __false_type) {
-    return __copy_d(first, last, result, (ptrdiff_t*) 0);
-}
-
-template <class T>
-struct __copy_dispatch<T*, T*>
-{
-    T* operator()(T* first, T* last, T* result) {
-        /*
-         typeTraits 在这里起了作用.
-         */
-        typedef typename __type_traits<T>::has_trivial_assignment_operator t;
-        return __copy_t(first, last, result, t());
-    }
-};
-
-template <class T>
-struct __copy_dispatch<const T*, T*>
-{
-    T* operator()(const T* first, const T* last, T* result) {
-        typedef typename __type_traits<T>::has_trivial_assignment_operator t;
-        return __copy_t(first, last, result, t());
-    }
-};
-
-#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
-
 template <class InputIterator, class OutputIterator>
-inline OutputIterator copy(InputIterator first, InputIterator last,
-                           OutputIterator result)
+inline OutputIterator __copy(InputIterator first, InputIterator last,
+                             OutputIterator result,
+                             input_iterator_tag)
 {
-    // __copy_dispatch 是一个函数对象, 生成这个函数对象之后, 调用这个闭包.
-    return __copy_dispatch<InputIterator,OutputIterator>()(first, last, result);
+    for ( ; first != last; ++result, ++first)
+        *result = *first;
+    return result;
 }
 
 /*
- 如果迭代器是指针类型的, 就直接内存的拷贝.
- 算是做类型的偏特化
+ 随机访问的迭代器, 就调用 __copy_d. __copy_d 其实也是一个个的拷贝, 只不过, 是根据 距离做的控制.
  */
-inline char* copy(const char* first, const char* last, char* result) {
-    memmove(result, first, last - first);
-    return result + (last - first);
-}
-/*
- 如果迭代器是指针类型的, 就直接内存的拷贝.
- 算是做类型的偏特化
- */
-inline wchar_t* copy(const wchar_t* first, const wchar_t* last,
-                     wchar_t* result) {
-    memmove(result, first, sizeof(wchar_t) * (last - first));
-    return result + (last - first);
+template <class RandomAccessIterator, class OutputIterator>
+inline OutputIterator
+__copy(RandomAccessIterator first, RandomAccessIterator last,
+       OutputIterator result,
+       random_access_iterator_tag)
+{
+    return __copy_d(first, last, result, distance_type(first));
 }
 
-template <class BidirectionalIterator1, class BidirectionalIterator2>
-inline BidirectionalIterator2 __copy_backward(BidirectionalIterator1 first, 
-                                              BidirectionalIterator1 last,
-                                              BidirectionalIterator2 result) {
-    while (first != last) *--result = *--last;
+template <class RandomAccessIterator, class OutputIterator, class Distance>
+inline OutputIterator
+__copy_d(RandomAccessIterator first,
+         RandomAccessIterator last,
+         OutputIterator result,
+         Distance*)
+{
+    for (Distance n = last - first; n > 0; --n, ++result, ++first)
+        *result = *first;
     return result;
 }
 
@@ -290,7 +240,8 @@ copy_n(InputIterator first, Size count,
 
 //Fill
 /*
- 从 First 到 last, 都进行 value 的覆盖工作.
+ Fill assignMent.
+ 通过 = 操作符, 进行填充工作.
  */
 template <class ForwardIterator, class T>
 void fill(ForwardIterator first, ForwardIterator last, const T& value) {

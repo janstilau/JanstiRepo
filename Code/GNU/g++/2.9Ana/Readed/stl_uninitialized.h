@@ -4,132 +4,47 @@
 __STL_BEGIN_NAMESPACE
 
 
-/*
- Copies elements from the range [first, last) to an uninitialized memory area beginning at d_first as if by
- */
 
-template <class InputIterator, class ForwardIterator>
-inline ForwardIterator
-uninitialized_copy(InputIterator first, InputIterator last,
-                   ForwardIterator result) {
-    return __uninitialized_copy(first, last, result, value_type(result));
-}
+// uninitialized_fill, 从 first 指定的空间开始, 将 x 的值填充到迭代器指向的地方.
 
-template <class InputIterator, class ForwardIterator, class T>
-inline ForwardIterator
-__uninitialized_copy(InputIterator first, InputIterator last,
-                     ForwardIterator result, T*) {
-    typedef typename __type_traits<T>::is_POD_type is_POD;
-    return __uninitialized_copy_aux(first, last, result, is_POD());
-}
-
-// Valid if copy construction is equivalent to assignment, and if the
-//  destructor is trivial.
-template <class InputIterator, class ForwardIterator>
-inline ForwardIterator
-__uninitialized_copy_aux(InputIterator first, InputIterator last,
-                         ForwardIterator result,
-                         __true_type) {
-    return copy(first, last, result);
-}
-
-/*
- POD，是Plain Old Data的缩写，普通旧数据类型，是C++中的一种数据类型概念
- 如果不是普通的数据类型, 那么就是迭代器的拷贝工作, construct 就在 &*cur 的位置, 调用对应数据类型的拷贝构造函数, 使用 *first 的值.
- */
-
-template <class InputIterator, class ForwardIterator>
-ForwardIterator
-__uninitialized_copy_aux(InputIterator first, InputIterator last,
-                         ForwardIterator result,
-                         __false_type) {
-    ForwardIterator cur = result;
-    __STL_TRY {
-        for ( ; first != last; ++first, ++cur)
-            construct(&*cur, *first);
-        return cur;
-    }
-    __STL_UNWIND(destroy(result, cur));
-}
-
-/*
- 如果是标量类型, 直接进行内存搬运就可以了.
- */
-inline char* uninitialized_copy(const char* first, const char* last,
-                                char* result) {
-    memmove(result, first, last - first);
-    return result + (last - first);
-}
-
-inline wchar_t* uninitialized_copy(const wchar_t* first, const wchar_t* last,
-                                   wchar_t* result) {
-    memmove(result, first, sizeof(wchar_t) * (last - first));
-    return result + (last - first);
-}
-
-/*
- 不从 first, last 中确定范围了, 这次使用的是 size.
- */
-
-template <class InputIterator, class Size, class ForwardIterator>
-inline pair<InputIterator, ForwardIterator>
-uninitialized_copy_n(InputIterator first, Size count,
-                     ForwardIterator result) {
-    return __uninitialized_copy_n(first, count, result,
-                                  iterator_category(first));
-}
-
-template <class InputIterator, class Size, class ForwardIterator>
-pair<InputIterator, ForwardIterator>
-__uninitialized_copy_n(InputIterator first, Size count,
-                       ForwardIterator result,
-                       input_iterator_tag) {
-    ForwardIterator cur = result;
-    __STL_TRY {
-        for ( ; count > 0 ; --count, ++first, ++cur)
-            construct(&*cur, *first);
-        return pair<InputIterator, ForwardIterator>(first, cur);
-    }
-    __STL_UNWIND(destroy(result, cur));
-}
-
-template <class RandomAccessIterator, class Size, class ForwardIterator>
-inline pair<RandomAccessIterator, ForwardIterator>
-__uninitialized_copy_n(RandomAccessIterator first, Size count,
-                       ForwardIterator result,
-                       random_access_iterator_tag) {
-    RandomAccessIterator last = first + count;
-    return make_pair(last, uninitialized_copy(first, last, result));
-}
-
+// 分发函数, 总的入口.
 template <class ForwardIterator, class T>
-inline void uninitialized_fill(ForwardIterator first, ForwardIterator last,
+inline void uninitialized_fill(ForwardIterator first,
+                               ForwardIterator last,
                                const T& x) {
     __uninitialized_fill(first, last, x, value_type(first));
 }
 
+// 萃取过程.
 template <class ForwardIterator, class T, class T1>
-inline void __uninitialized_fill(ForwardIterator first, ForwardIterator last,
-                                 const T& x, T1*) {
+inline void __uninitialized_fill(ForwardIterator first,
+                                 ForwardIterator last,
+                                 const T& x,
+                                 T1*) {
     typedef typename __type_traits<T1>::is_POD_type is_POD;
     __uninitialized_fill_aux(first, last, x, is_POD());
     
 }
 
-// Valid if copy construction is equivalent to assignment, and if the
-//  destructor is trivial.
+// 不需要构造函数的值, 直接进行 assignment 就可以.
 template <class ForwardIterator, class T>
 inline void
-__uninitialized_fill_aux(ForwardIterator first, ForwardIterator last, 
-                         const T& x, __true_type)
+__uninitialized_fill_aux(ForwardIterator first,
+                         ForwardIterator last,
+                         const T& x,
+                         __true_type)
 {
     fill(first, last, x);
 }
 
+// 类型值, 必须经过构造函数. 调用 construct 函数.
+// 为什么 vector 的扩容会调用构造函数的原因就在这里, 会根据类型, 进行不同的搬移策略.
 template <class ForwardIterator, class T>
 void
-__uninitialized_fill_aux(ForwardIterator first, ForwardIterator last, 
-                         const T& x, __false_type)
+__uninitialized_fill_aux(ForwardIterator first,
+                         ForwardIterator last,
+                         const T& x,
+                         __false_type)
 {
     ForwardIterator cur = first;
     __STL_TRY {
@@ -139,15 +54,36 @@ __uninitialized_fill_aux(ForwardIterator first, ForwardIterator last,
     __STL_UNWIND(destroy(first, cur));
 }
 
-// Valid if copy construction is equivalent to assignment, and if the
-//  destructor is trivial.
+
+// 分发函数.
+template <class ForwardIterator, class Size, class T>
+inline ForwardIterator uninitialized_fill_n(ForwardIterator first,
+                                            Size n,
+                                            const T& x) {
+    return __uninitialized_fill_n(first, n, x, value_type(first));
+}
+
+// 萃取过程.
+template <class ForwardIterator, class Size, class T, class T1>
+inline ForwardIterator __uninitialized_fill_n(ForwardIterator first,
+                                              Size n,
+                                              const T& x,
+                                              T1*) {
+    typedef typename __type_traits<T1>::is_POD_type is_POD;
+    return __uninitialized_fill_n_aux(first, n, x, is_POD());
+}
+
+
+// 不需要构造函数的值, 直接 assignment 填充.
 template <class ForwardIterator, class Size, class T>
 inline ForwardIterator
 __uninitialized_fill_n_aux(ForwardIterator first, Size n,
-                           const T& x, __true_type) {
+                           const T& x,
+                           __true_type) {
     return fill_n(first, n, x);
 }
 
+// 类型值, 必须调用构造函数填充.
 template <class ForwardIterator, class Size, class T>
 ForwardIterator
 __uninitialized_fill_n_aux(ForwardIterator first, Size n,
@@ -161,21 +97,19 @@ __uninitialized_fill_n_aux(ForwardIterator first, Size n,
     __STL_UNWIND(destroy(first, cur));
 }
 
-template <class ForwardIterator, class Size, class T, class T1>
-inline ForwardIterator __uninitialized_fill_n(ForwardIterator first,
-                                              Size n,
-                                              const T& x,
-                                              T1*) {
-    typedef typename __type_traits<T1>::is_POD_type is_POD;
-    return __uninitialized_fill_n_aux(first, n, x, is_POD());
-}
 
-template <class ForwardIterator, class Size, class T>
-inline ForwardIterator uninitialized_fill_n(ForwardIterator first,
-                                            Size n,
-                                            const T& x) {
-    return __uninitialized_fill_n(first, n, x, value_type(first));
-}
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Copies [first1, last1) into [result, result + (last1 - first1)), and
 //  copies [first2, last2) into
@@ -221,10 +155,97 @@ __uninitialized_copy_fill(InputIterator first1, InputIterator last1,
     __STL_UNWIND(destroy(first2, mid2));
 }
 
+
+// 分发函数. 拷贝 first, 到 last 的内容, 到 result 中去.
+template <class InputIterator, class ForwardIterator>
+inline ForwardIterator
+uninitialized_copy(InputIterator first, InputIterator last,
+                   ForwardIterator result) {
+    return __uninitialized_copy(first, last, result, value_type(result));
+}
+
+// 萃取过程.
+template <class InputIterator, class ForwardIterator, class T>
+inline ForwardIterator
+__uninitialized_copy(InputIterator first, InputIterator last,
+                     ForwardIterator result, T*) {
+    typedef typename __type_traits<T>::is_POD_type is_POD;
+    return __uninitialized_copy_aux(first, last, result, is_POD());
+}
+
+// 不需要构造函数的类型, 直接调用 copy. 在 copy 函数里面, 又会判断迭代器的类型: 指针, forward, 还是 random.
+template <class InputIterator, class ForwardIterator>
+inline ForwardIterator
+__uninitialized_copy_aux(InputIterator first, InputIterator last,
+                         ForwardIterator result,
+                         __true_type) {
+    return copy(first, last, result);
+}
+
+// 如果需要构造函数, 则在指定的位置, 一个个的调用构造函数
+// 这是非常重要的一个点. 复制的时候, 那块资源应不应该调用构造函数, 这不是容器决定的, 而是类型决定的.
+template <class InputIterator, class ForwardIterator>
+ForwardIterator
+__uninitialized_copy_aux(InputIterator first, InputIterator last,
+                         ForwardIterator result,
+                         __false_type) {
+    ForwardIterator cur = result;
+    __STL_TRY {
+        for ( ; first != last; ++first, ++cur)
+            construct(&*cur, *first);
+        return cur;
+    }
+    __STL_UNWIND(destroy(result, cur));
+}
+
+// 指针类型的迭代器, 直接内存操作
+inline char* uninitialized_copy(const char* first, const char* last,
+                                char* result) {
+    memmove(result, first, last - first);
+    return result + (last - first);
+}
+
+// 指针类型的迭代器, 直接内存操作
+inline wchar_t* uninitialized_copy(const wchar_t* first, const wchar_t* last,
+                                   wchar_t* result) {
+    memmove(result, first, sizeof(wchar_t) * (last - first));
+    return result + (last - first);
+}
+
+template <class InputIterator, class Size, class ForwardIterator>
+inline pair<InputIterator, ForwardIterator>
+uninitialized_copy_n(InputIterator first, Size count,
+                     ForwardIterator result) {
+    return __uninitialized_copy_n(first, count, result,
+                                  iterator_category(first));
+}
+
+template <class InputIterator, class Size, class ForwardIterator>
+pair<InputIterator, ForwardIterator>
+__uninitialized_copy_n(InputIterator first, Size count,
+                       ForwardIterator result,
+                       input_iterator_tag) {
+    ForwardIterator cur = result;
+    __STL_TRY {
+        for ( ; count > 0 ; --count, ++first, ++cur)
+            construct(&*cur, *first);
+        return pair<InputIterator, ForwardIterator>(first, cur);
+    }
+    __STL_UNWIND(destroy(result, cur));
+}
+
+template <class RandomAccessIterator, class Size, class ForwardIterator>
+inline pair<RandomAccessIterator, ForwardIterator>
+__uninitialized_copy_n(RandomAccessIterator first, Size count,
+                       ForwardIterator result,
+                       random_access_iterator_tag) {
+    RandomAccessIterator last = first + count;
+    return make_pair(last, uninitialized_copy(first, last, result));
+}
+
+
+
+
 __STL_END_NAMESPACE
 
 #endif /* __SGI_STL_INTERNAL_UNINITIALIZED_H */
-
-// Local Variables:
-// mode:C++
-// End:
