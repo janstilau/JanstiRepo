@@ -30,16 +30,6 @@ struct binary_function {
  可以把操作符, 理解为, 具有通用性的一组特殊接口.
  类型的设计者, 要去自己实现这组接口.
  */
-/*
- +, 就是相加运算符, T 里面, 要进行 + 运算符的重载工作, 注意, 第一个参数, 第二个参数, 返回值的类型, 都是要相等的.
- 最底层的模板, 可能很复杂, 需要配置很多类型参数. 而使用他们的类, 或许是子类化, 例如 plus, 或许是使用模板对象, 例如 set 使用 hash_table.
- 这种暴露给用户的类, 会承担将底层的模板的类型参数明确化的功能.
- */
-/*
- 要注意, 里面大量的, 都是进行的 const& 的传递.
- 因为操作符重载的大量使用, C++ 的代码, 看起来很简练.
- 具体, 这些操作符到底应该有什么实现, 这个要交给类型的设计者来实现.
- */
 template <class T>
 struct plus : public binary_function<T, T, T> {
     T operator()(const T& x, const T& y) const { return x + y; }
@@ -99,9 +89,6 @@ template <class T>
 struct less_equal : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x <= y; }
 };
-
-// 注意, 这里, X, y 没有指定, 到底是什么类型. 只要是它有对应的操作符就可以, &&, ||, !
-// 因为 C++ 是有着操作符重载了, 所以, 如果一个类型, 有了这些操作符的定义, 只要返回结果是一个 bool, 就可以使用下面的这些仿函数了.
 
 template <class T>
 struct logical_and : public binary_function<T, T, bool> {
@@ -278,12 +265,6 @@ struct identity : public unary_function<T, T> {
     const T& operator()(const T& x) const { return x; }
 };
 
-/*
- select1st, 返回 first.
- C++ 里面什么会有 First 呢, Pair. 但是这里的 Pair 是 泛型类型, 不一定传递过来的就是 Pair.
- C++ 是, 如果你传递一个类型过来, 这个类型里面, 可以调用到 first, 那么编译就能够成功.
- 所以 C++ 中的泛型中的类型参数, 仅仅是一个暗示, 提示. 是靠编译进行的检查.
- */
 template <class Pair>
 struct select1st : public unary_function<Pair, typename Pair::first_type> {
     const typename Pair::first_type& operator()(const Pair& x) const

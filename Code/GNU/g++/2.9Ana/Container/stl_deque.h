@@ -153,7 +153,9 @@ inline ptrdiff_t* distance_type(const __deque_iterator<T, Ref, Ptr>&) {
     return 0;
 }
 
-
+// Deque 的实现逻辑, 大量的使用了 algorithm 里面的东西.
+// 只要, deque 把迭代器里面的逻辑写清楚, 那么这些算法, 就能正常的运行了. deque 的实现逻辑很复杂, 但是都是和他的实现模型相关的东西, 这些都通过了 iterator 进行了封装.
+// 容器的复杂性, 算法不用知道, 只要容器的迭代器设计的好, 就能实现算法的通用性.
 
 template <class T, class Alloc = alloc, size_t BufSiz = 0>
 class deque {
@@ -1146,20 +1148,6 @@ bool operator<(const deque<T, Alloc, BufSiz>& x,
 }
 
 #endif /* __STL_NON_TYPE_TMPL_PARAM_BUG */
-
-#if defined(__STL_FUNCTION_TMPL_PARTIAL_ORDER) && \
-!defined(__STL_NON_TYPE_TMPL_PARAM_BUG)
-
-template <class T, class Alloc, size_t BufSiz>
-inline void swap(deque<T, Alloc, BufSiz>& x, deque<T, Alloc, BufSiz>& y) {
-    x.swap(y);
-}
-
-#endif
-
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma reset woff 1174
-#endif
 
 __STL_END_NAMESPACE
 

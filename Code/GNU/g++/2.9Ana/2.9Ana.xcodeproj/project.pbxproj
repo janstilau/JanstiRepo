@@ -72,6 +72,7 @@
 		0613589724CE96810018DA0A /* Algo */ = {
 			isa = PBXGroup;
 			children = (
+				069FFF0924C8A4D80014F9EA /* stl_function.h */,
 				0613589624CD662B0018DA0A /* stl_construct.h */,
 				069FFF1E24C8A4D90014F9EA /* stl_uninitialized.h */,
 				069FFEF724C8A4D70014F9EA /* stl_hash_fun.h */,
@@ -132,7 +133,6 @@
 				069FFF0724C8A4D80014F9EA /* stl_algobase.h */,
 				069FFF1424C8A4D80014F9EA /* stl_algo.h */,
 				069FFEE624C8A4D70014F9EA /* stl_alloc.h */,
-				069FFF0924C8A4D80014F9EA /* stl_function.h */,
 				069FFEFC24C8A4D70014F9EA /* stl_hash_map.h */,
 				069FFEE724C8A4D70014F9EA /* stl_hash_set.h */,
 				069FFEE824C8A4D70014F9EA /* stl_hashtable.h */,
