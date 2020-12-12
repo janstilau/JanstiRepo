@@ -4,22 +4,21 @@
 __STL_BEGIN_NAMESPACE
 
 /*
- iterator_category 并不是实际业务使用的类型. 它最大的作用, 是通过不同的迭代器, 分发算法的调用.
- 不同的 iterator 定义了不同的 iterator_category.
- 在算法里面, 首先是获取到 iterator_category 的类型, 整个逻辑, 是放到了 iterator_traits 里面.
- 根据 iterator_category 生成不同类型的对象.
- 这个对象, 会作为函数的参数, 不同的函数, 根据这个参数的类型进行分发. 这就是 c++ 里面, 进行萃取的机制.
+ iterator_category 并不是实际业务使用的类型. 它最大的作用, 用来表示迭代器的类型, 然后分发算法.
+ 例如, 对于 distance(begin, end) 这个函数来说, 如果是 random 迭代器, 那么能够瞬间得到答案, 但是 forward 的只能是遍历.
+ C++ 是通过 typedef 来为每个迭代器, 标识出自己的 category 的.
+ 所以, 分发算法里面, 可以通过 iterator_category 获取到类型, 然后生成一个临时遍历, 用作分发的参数来使用.
+ 
+ 但是, 对于指针这种原始的迭代器来说, 它是没有各种 typedef 的. 所以, 就增加了一个中间层, 这个中间层, 就是 iterator_traits.
+ 在 iterator_traits 中, 发现如果是T是指针, 就走特化版本, 表明 iterator_category 是 random 这种类型.
+ 如果不是指针, 就直接返回 iterator 里面定义的各种 typedef.
+ 这就是 迭代器萃取的机制.
  */
 
 /*
- 算法看不到容器, 对容器是一无所知的, 所以, 它所需要的任何信息, 都必须从迭代器中获取.
- 而迭代器, 必须能够回到算法的所有提问, 才能够满足算法的所有的操作.
- */
-
-/*
- 从这个实例中, 我们可以看到, 各个函数重载,就是根据参数的类型, 调用了最准确的方法.
- 迭代器并不直接继承自 category, 迭代器内部, 提供了自己所属的 category 的信息. 从这个意义上来看, typedef, 可以算作是这个迭代器的元信息.
- 迭代器的 category 的类型意义就是函数的分发操作.
+ 从这个实例中, 我们可以看到, 各个函数重载,就是根据参数的类型, 调用了最准确的方法. 这个参数, 不会直接暴露给使用者, 使用者定义好合适的 typedef 之后, 就能使用和这个机制.
+ 迭代器内部, 提供了自己所属的 category 的信息. 从这个意义上来看, typedef, 可以算作是这个迭代器的元信息.
+ typedef, 可以算作是这个迭代器的元信息. 非常重要的认识.
  */
 namespace jj33
 {
@@ -37,8 +36,8 @@ void _display_category(input_iterator_tag)
 template<typename I>
 void display_category(I itr)
 {
-    // 这里, 是通过 iterator_traits<I>::iterator_category 生成一个对象出来, 然后这个对象, 传入到函数中.
-    // 通过这个对象的不同, 进行不同的方法的调用.
+    // 通过 iterator_traits 萃取出不同的类型, 产生临时对象. 这个临时对象, 来控制同名函数的调用.
+    // 各个函数其实, 仅仅是一个分发函数. 真正的函数实现, 要根据迭代器 iterator_category 的不同,采取不同的算法.
     typename iterator_traits<I>::iterator_category cagy;
     _display_category(cagy);
     cout << "typeid(itr).name()= " << typeid(itr).name() << endl << endl;
@@ -79,12 +78,12 @@ template <class T, class Distance> struct input_iterator {
     typedef input_iterator_tag iterator_category; // 迭代器的类型
     typedef T                  value_type; // 迭代器里面的 value_type
     typedef Distance           difference_type; // 迭代器的距离
+    
+    
+    // 下面这两种, 标准库根本没有用到, 但是还是要写出来.
     typedef T*                 pointer; // 迭代器里面的 pointer
     typedef T&                 reference; // 迭代器里面的 ref.
 };
-
-// 不同的迭代器, 它的 typedef 的不同, 剧烈地影响算法的实现. 而不同的算法调用的选择, 是通过 typedef 生成临时对象分化的.
-// C++ 里面的算法, 都是迭代器作为基本的参数. 所以, 这些不同的 tag 的定义, 是影响到整个标准库的.
 
 struct output_iterator {
     typedef output_iterator_tag iterator_category;
@@ -122,8 +121,10 @@ template <class T, class Distance> struct random_access_iterator {
 
 
 #ifdef __STL_USE_NAMESPACES
-template <class Category, class T, class Distance = ptrdiff_t,
-class Pointer = T*, class Reference = T&>
+template <class Category, class T,
+class Distance = ptrdiff_t,
+class Pointer = T*,
+class Reference = T&>
 struct iterator {
     typedef Category  iterator_category;
     typedef T         value_type;
@@ -135,7 +136,12 @@ struct iterator {
 
 #ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
 // iterator_traits 类的定义.
-// 如果, 传递过来的类型是类型的话, 就是使用 类型里面定义的 iterator_category 作为 iterator_category
+// 这个类很怪, 我们平时写的类, 都是生成对象, 然后调用函数. 或者, 已经比较怪的就是, 直接调用类的方法.
+// 以上两种形式, 都是固定调用某个函数名, 只要模板最终生成的类, 有对应的方法就可以了. 可谓是, 模板是面向接口编程.
+// 但是, iterator_traits 是, 直接操作的类中的 typedef. 这连函数都不是.
+// 从这里也就可以看出, 模板的使用方法有很多. 模板仅仅是一个半成品, 这个半成品, 有的时候可以理解为宏定义.
+
+// 如果, 传递过来的类型是类型的话, 那么就使用 Iterator 中的定义.
 template <class Iterator>
 struct iterator_traits {
     typedef typename Iterator::iterator_category iterator_category;
@@ -145,7 +151,7 @@ struct iterator_traits {
     typedef typename Iterator::reference         reference;
 };
 
-// 如果, 传过来的类型是指针的话, 就是使用 random_access_iterator_tag 作为 iterator_category;
+// 如果, 传过来的类型是指针的话, 那么就特化, 显式地表明各种 typedef.
 template <class T>
 struct iterator_traits<T*> {
     typedef random_access_iterator_tag iterator_category;
@@ -164,10 +170,7 @@ struct iterator_traits<const T*> {
     typedef const T&                   reference;
 };
 
-// std::iterator_category 的定义, 就是根据 iterator_traits 这个类, 来进行萃取.
-// 为什么要有这个方法呢. iterator, 定义了五种 typedef, 对于 difference_type, 和 value_type, 都是可以在函数里面直接使用的. 但是, category 的不同, 代表着可以进行的操作不同, 也就函数的实现不同, 需要在函数调用之前, 就得到 category 然后利用它调用不同的函数.
-// 调用不同的函数, 就是使用函数重载中的参数类型不同实现的.
-// 所以, 必须要有一个机制, 能够获取到, iterator 中各种定义的东西, 那么这个机制, 就是 iterator_traits
+// 全局方法, 通过萃取机, 获取 iterator_category 的信息.
 template <class Iterator>
 inline typename iterator_traits<Iterator>::iterator_category
 iterator_category(const Iterator&) {
@@ -175,13 +178,14 @@ iterator_category(const Iterator&) {
     return category();
 }
 
-// 直接用 iterator_traits 里面的 difference_type 作为类型.
+// 全局方法, 通过萃取机, 获取距离类型的指针.
 template <class Iterator>
 inline typename iterator_traits<Iterator>::difference_type*
 distance_type(const Iterator&) {
     return static_cast<typename iterator_traits<Iterator>::difference_type*>(0);
 }
 
+// 全局方法, 通过萃取机, 获取值类型的指针.
 template <class Iterator>
 inline typename iterator_traits<Iterator>::value_type*
 value_type(const Iterator&) {
@@ -190,122 +194,22 @@ value_type(const Iterator&) {
 
 #else /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
-template <class T, class Distance> 
-inline input_iterator_tag 
-iterator_category(const input_iterator<T, Distance>&) {
-    return input_iterator_tag();
-}
-
-inline output_iterator_tag iterator_category(const output_iterator&) {
-    return output_iterator_tag();
-}
-
-template <class T, class Distance> 
-inline forward_iterator_tag
-iterator_category(const forward_iterator<T, Distance>&) {
-    return forward_iterator_tag();
-}
-
-template <class T, class Distance> 
-inline bidirectional_iterator_tag
-iterator_category(const bidirectional_iterator<T, Distance>&) {
-    return bidirectional_iterator_tag();
-}
-
-template <class T, class Distance> 
-inline random_access_iterator_tag
-iterator_category(const random_access_iterator<T, Distance>&) {
-    return random_access_iterator_tag();
-}
-
-template <class T>
-inline random_access_iterator_tag iterator_category(const T*) {
-    return random_access_iterator_tag();
-}
-
-template <class T, class Distance> 
-inline T* value_type(const input_iterator<T, Distance>&) {
-    return (T*)(0);
-}
-
-template <class T, class Distance> 
-inline T* value_type(const forward_iterator<T, Distance>&) {
-    return (T*)(0);
-}
-
-template <class T, class Distance> 
-inline T* value_type(const bidirectional_iterator<T, Distance>&) {
-    return (T*)(0);
-}
-
-template <class T, class Distance> 
-inline T* value_type(const random_access_iterator<T, Distance>&) {
-    return (T*)(0);
-}
-
-template <class T>
-inline T* value_type(const T*) { return (T*)(0); }
-
-template <class T, class Distance> 
-inline Distance* distance_type(const input_iterator<T, Distance>&) {
-    return (Distance*)(0);
-}
-
-template <class T, class Distance> 
-inline Distance* distance_type(const forward_iterator<T, Distance>&) {
-    return (Distance*)(0);
-}
-
-template <class T, class Distance> 
-inline Distance* 
-distance_type(const bidirectional_iterator<T, Distance>&) {
-    return (Distance*)(0);
-}
-
-template <class T, class Distance> 
-inline Distance* 
-distance_type(const random_access_iterator<T, Distance>&) {
-    return (Distance*)(0);
-}
-
-template <class T>
-inline ptrdiff_t* distance_type(const T*) { return (ptrdiff_t*)(0); }
-
 #endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
-/*
- 以上的, 萃取的过程复杂, 主要看下面对于各个功能的实现.
- */
-
-// 用输出参数, 传递距离.
-// 一般的迭代器, 想要确定出距离来, 只能通过迭代的方式.
-/*
- 这个方法的调用者, 在使用 distance 的时候, 会用 iterator_category 方法, 萃取出 category 的临时变量, 然后调用__distance方法.
- __distance 会调用合适的版本的实现.
- distance 方法的调用者, 只会传入 iterator 对象. 而萃取的过程, 分发的过程, 是在标准库里面已经实现的了.
- */
-
-/*
- 总体的分发过程, 结果在传出参数中体现.
- 必须保证, fist, last 是同种类型的, 当然, 代码里面没有强制的进行限制.
-*/
-
+// distance 仅仅是一个分发函数, 真正的实现, 要经过 iterator_category 进行分发.
 template <class InputIterator, class Distance>
 inline void distance(InputIterator first, InputIterator last, Distance& n) {
     __distance(first, last, n, iterator_category(first));
 }
 
-/*
- 对于普通的迭代器, 只能是通过遍历的方式, 才能获得序列的长度信息
- */
+// distance 特化, 如果是普通的迭代器, 只能是一个个数出来.
 template <class InputIterator, class Distance>
 inline void __distance(InputIterator first, InputIterator last, Distance& n, 
                        input_iterator_tag) {
     while (first != last) { ++first; ++n; }
 }
-/*
- 对于随机访问的迭代器, 计算距离, 可以直接通过迭代器相减. 迭代器内部, 要进行相减工作的处理.
- */
+
+// distance 特化, 如果是随机迭代器, 可以直接使用相减获取距离.
 template <class RandomAccessIterator, class Distance>
 inline void __distance(RandomAccessIterator first, RandomAccessIterator last, 
                        Distance& n, random_access_iterator_tag) {
@@ -317,54 +221,22 @@ inline void __distance(RandomAccessIterator first, RandomAccessIterator last,
 }
 
 #ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
-
-/*
- 在源码里面, 经常出现实现逻辑相同的函数, 猜测应该是为了适配不同的数据类型.
- */
-template <class InputIterator>
-inline iterator_traits<InputIterator>::difference_type
-distance(InputIterator first, InputIterator last) {
-    typedef typename iterator_traits<InputIterator>::iterator_category category;
-    return __distance(first, last, category());
-}
-
-template <class InputIterator>
-inline iterator_traits<InputIterator>::difference_type
-__distance(InputIterator first, InputIterator last, input_iterator_tag) {
-    iterator_traits<InputIterator>::difference_type n = 0;
-    while (first != last) {
-        ++first; ++n;
-    }
-    return n;
-}
-
-template <class RandomAccessIterator>
-inline iterator_traits<RandomAccessIterator>::difference_type
-__distance(RandomAccessIterator first, RandomAccessIterator last,
-           random_access_iterator_tag) {
-    return last - first;
-}
-
 #endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
-/*
- advance 是将迭代器进行移动, 直接改变了迭代器的值.
- */
 
+// advance, 移动迭代器 n 个距离, 迭代器是引用语义, 传出作用.
 template <class InputIterator, class Distance>
 inline void advance(InputIterator& i, Distance n) {
     __advance(i, n, iterator_category(i));
 }
 
-// 一般的迭代器, 只能向后迭代, 一个个迭代.
+// advance 特化, 一般的的迭代器, 一步步的改变 iterator 的值.
 template <class InputIterator, class Distance>
 inline void __advance(InputIterator& i, Distance n, input_iterator_tag) {
     while (n--) ++i;
 }
 
-// 双向的迭代器, 可以向前进行迭代. 一个个迭代.
-// 注意, C++ 里面都是静态编译的, 所以打包的时候有问题就直接编译不过了.
-// Swift 里面用协议的方式, 进行了更加显示的控制.
+// advance 特化, 双向的迭代器, 可以--. 如果, 编译的时候, 不是双向的迭代器, -- 操作编译器直接报错.
 template <class BidirectionalIterator, class Distance>
 inline void __advance(BidirectionalIterator& i, Distance n, 
                       bidirectional_iterator_tag) {
@@ -374,11 +246,7 @@ inline void __advance(BidirectionalIterator& i, Distance n,
         while (n++) --i;
 }
 
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma reset woff 1183
-#endif
-
-// 可以随机访问的迭代器, 直接进行迭代器的 += 操作.
+// advance 特化, random 迭代器, 直接跨越 N 的变化.
 template <class RandomAccessIterator, class Distance>
 inline void __advance(RandomAccessIterator& i, Distance n, 
                       random_access_iterator_tag) {
@@ -388,8 +256,7 @@ inline void __advance(RandomAccessIterator& i, Distance n,
 
 /*
  reverse_iterator 是 Iterator 的适配器.
- 各种操作, 都是操作传入的 srcIterator.
- 这种操作, 最能体现, 适配器到底是干什么用的.
+ 首先要保存原始的迭代器, 然后, 在各个适配方法里面, 通过操作原始的迭代器, 来实现自己的逻辑.
  */
 template <class Iterator>
 class reverse_iterator 
@@ -397,6 +264,7 @@ class reverse_iterator
 protected:
     Iterator current;
 public:
+    // 必须经过 iterator_traits 来获取各种 typedef 的定义, 因为有可能是指针这种迭代器.
     typedef typename iterator_traits<Iterator>::iterator_category
     iterator_category;
     typedef typename iterator_traits<Iterator>::value_type
@@ -412,27 +280,23 @@ public:
     typedef reverse_iterator<Iterator> self;
     
 public:
-    reverse_iterator() {}
+    // 必须保存原始的迭代器.
     explicit reverse_iterator(iterator_type x) : current(x) {}
     
     reverse_iterator(const self& x) : current(x.current) {}
-#ifdef __STL_MEMBER_TEMPLATES
-    template <class Iter>
-    reverse_iterator(const reverse_iterator<Iter>& x) : current(x.current) {}
-#endif /* __STL_MEMBER_TEMPLATES */
     
-    iterator_type base() const { return current; } // 返回原始值.
-    /*
-     这里, 也就限制了, base iterator, 必须是双向的, 才能进行 -- 操作.
-     */
+    iterator_type base() const { return current; } // 任何包装器, 应该给外界的使用者一个权力, 拿到原始值.
+        
+    // 这里不太明白, 为什么不直接操作 current.
     reference operator*() const {
         Iterator tmp = current;
         return *--tmp;
     }
     pointer operator->() const { return &(operator*()); }
     
-    // reverse 的++ , 就是 current 的--. 如果 current 本身就是 reverse, 那就是双重否定
-    // base 本身展示出来的, 就是一个 iterator, 本身也可能是一个 reverse_iterator. 虽然在逻辑上, 双重否定还是肯定, 但是调用的时候, 相关的代码还是运转了, 只不过是因为没有副作用而已.
+    // 这里需要多思考一下. 如果 current 就是一个 reverse_iterator 怎么办.
+    // 代码里面, 直接这样写是没有问题的. 但是, 如果保存的 current 本身也是一个适配器, 那么最终就是函数套函数, 数个函数一起触发.
+    // 抽象的意义就在于, 不用考虑这么深. 装饰者模式, 会实现原来的接口, 让使用者在只考虑一层调用.
     self& operator++() {
         --current;
         return *this;
@@ -469,10 +333,7 @@ public:
     reference operator[](difference_type n) const { return *(*this + n); }
 }; 
 
-/*
- reverse 仅仅是适配器, 真正的数据来源还是 base.
- 类型的比较, 就是比较的数据, 所以这里直接是 base 的比较.
- */
+ // reverse 仅仅是适配器, 真正的数据来源还是 base. 类型的比较, 就是比较的数据, 所以这里直接是 base 的比较.
 template <class Iterator>
 inline bool operator==(const reverse_iterator<Iterator>& x, 
                        const reverse_iterator<Iterator>& y) {
@@ -500,6 +361,10 @@ operator+(reverse_iterator<Iterator>::difference_type n,
 }
 
 
+
+
+
+// 下面的暂时先不考虑.
 
 template <class T, class Distance = ptrdiff_t> 
 class istream_iterator {

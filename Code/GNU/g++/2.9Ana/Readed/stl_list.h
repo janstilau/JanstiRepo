@@ -8,9 +8,8 @@ __STL_BEGIN_NAMESPACE
  */
 template <class T>
 struct __list_node {
-    typedef void* void_pointer;
-    void_pointer next;
-    void_pointer prev;
+    void* next;
+    void* prev;
     T data;
 };
 
@@ -20,37 +19,37 @@ struct __list_iterator {
     typedef __list_iterator<T, const T&, const T*> const_iterator;
     typedef __list_iterator<T, Ref, Ptr>           self;
     
-    typedef bidirectional_iterator_tag iterator_category; // 对于迭代概念的适配.
+    // 迭代器的元信息的适配工作.
+    typedef bidirectional_iterator_tag iterator_category;
+    typedef ptrdiff_t difference_type;
     typedef T value_type;
     typedef c pointer;
     typedef Ref reference;
     typedef size_t size_type;
-    typedef ptrdiff_t difference_type;
     
     typedef __list_node<T>* link_type;
     
     // 迭代器里面, 真正的数据.
     // list 里面, 仅仅有一个节点的指针, 迭代器里面, 也仅仅有一个节点的指针.
-    // 容器虽然可以代表很多的数据, 但是都是堆空间里面的数据, 所以, 一个容器他自己本身, 占用的空间不会很大.
     link_type node;
     
     // 初始化操作, 初始化 node
     __list_iterator(link_type x) : node(x) {}
-    __list_iterator() {}
     __list_iterator(const iterator& x) : node(x.node) {}
     
     // 所有的操作, 都是建立在对于这个 node 节点的基础之上.
+    // 所有的这些操作, 都是让迭代器, 看起来像是一个 pointer.
     bool operator==(const self& x) const { return node == x.node; }
     bool operator!=(const self& x) const { return node != x.node; }
     reference operator*() const { return (*node).data; }
     pointer operator->() const { return &(operator*()); }
     
-    // 前++
+    // 前++, node 先指向后一个节点, 然后返回自身.
     self& operator++() {
         node = (link_type)((*node).next);
         return *this;
     }
-    // 后++
+    // 后++, 先记录自身现在的状态, node 再指向后一个节点, 然后返回记录
     self operator++(int) {
         self tmp = *this;
         ++*this;
@@ -90,12 +89,17 @@ distance_type(const __list_iterator<T, Ref, Ptr>&) {
 
 #endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
+
+
+
+
 template <class T, class Alloc = alloc>
 class list {
 protected:
     typedef void* void_pointer;
     typedef __list_node<T> list_node;
     typedef simple_alloc<list_node, Alloc> list_node_allocator;
+    
 public:      
     typedef T value_type;
     typedef value_type* pointer;
@@ -116,8 +120,8 @@ public:
     /*
      construct 在对应的指针上, 调用构造函数.
      destroy 在对应的指针上, 调用析构函数.
-     之所以用到这两个方法, 是因为在容器内的内存, 是被分配器管理的.
-     通过分配器, 可以做除了 new, delete 之外的事情, 例如内存缓存管理.
+     之所以用到这两个方法, 是因为在容器内的内存, 是被分配器管理的. 所以, 调用到这两个方法的时候, 地址已经获取到了.
+     new 是分配空间 + 构造函数调用. 分配器接管了分配空间的职责.
      */
 protected:
     /*
@@ -141,29 +145,44 @@ protected:
      destroy(address)
      这两个方法, 是在对应的地址上, 是在对应的地址上, 调用构造函数和析构函数.
      但是, 地址的获取, 是通过 get_node 得到的, 地址的释放, 是 put_node 归还的. 这两个函数, 都经过了分配器.
-     我们自己管理的话, 使用 new, delete, 这块空间是直接和 C runtime 打交道, 而到了容器内, 空间如何管理, 经过了一层抽象, 也就是分配器.
      */
     link_type create_node(const T& x) {
-        link_type p = get_node();
+        link_type p = get_node(); // 通过分配器获取空间.
         __STL_TRY {
             /*
              Constructs an object of type T in allocated uninitialized storage pointed to by p, using placement-new
              Calls new((void *)p) T(val)
-             所以, 这个函数就是调用 T 的拷贝构造函数, 只不过不开辟内存空间了, 直接在 p->data 的内存空间上进行.
              */
-            construct(&p->data, x);
+            construct(&p->data, x); // 调用构造函数.
         }
         __STL_UNWIND(put_node(p)); // 如果失败了, 就把资源放回到分配器管理的空间.
         return p;
     }
     void destroy_node(link_type p) {
-        destroy(&p->data);
-        put_node(p);
+        destroy(&p->data); // 调用析构函数.
+        put_node(p); // 通过分配器归还空间.
     }
     
-protected:
+private:
     /*
-     在初始化的时候, 哨兵节点的 next, 和 prev 都是指向了原来的哨兵节点.
+     primitive method. 最最最重要的一个方法. 就是链表的插入操作.
+     */
+    iterator insert(iterator position, const T& x) {
+        // 创建一个临时节点.
+        link_type tmp = create_node(x);
+        // 然后就是链表的插入操作, 由于是双向链表, 所以是四个操作.
+        tmp->next = position.node;
+        tmp->prev = position.node->prev;
+        (link_type(position.node->prev))->next = tmp;
+        position.node->prev = tmp;
+        return tmp;
+    }
+    
+    
+protected:
+    
+    /*
+     这个哨兵节点, 不应该看做是头节点, 应该是看做尾节点.
     */
     void empty_initialize() {
         node = get_node();
@@ -248,19 +267,6 @@ public:
     const_reference back() const { return *(--end()); }
     void swap(list<T, Alloc>& x) { __STD::swap(node, x.node); }
     
-    /*
-     primitive method. 其他的插入操作, 都是建立在该函数的基础上的.
-     */
-    iterator insert(iterator position, const T& x) {
-        // 创建一个临时节点.
-        link_type tmp = create_node(x);
-        // 然后就是链表的插入操作, 由于是双向链表, 所以是四个操作.
-        tmp->next = position.node;
-        tmp->prev = position.node->prev;
-        (link_type(position.node->prev))->next = tmp;
-        position.node->prev = tmp;
-        return tmp;
-    }
     iterator insert(iterator position) { return insert(position, T()); }
     /*
      以下的 insert, 都是利用上面的 insert, 进行的范围性的操作.
@@ -408,10 +414,6 @@ inline void swap(list<T, Alloc>& x, list<T, Alloc>& y) {
 }
 
 #endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
-
-#ifdef __STL_MEMBER_TEMPLATES
-
-// 设计好的 primitive method, 非常重要. 如果不是 randomIterator, 所有的操作, 其实就是一次次的调用 primitive method.
 
 /*
  范围性的插入, 就是 begin 到 end 的迭代, 不断地进行 insert 的操作.
