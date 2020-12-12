@@ -2,176 +2,125 @@
 #define __SGI_STL_INTERNAL_DEQUE_H
 
 __STL_BEGIN_NAMESPACE
-/*
- __STL_BEGIN_NAMESPACE
- __STL_END_NAMESPACE
- 将常用的, 不能函数化的代码, 用宏代替, 其实是一种比较好的方法.
- */
-
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma set woff 1174
-#endif
 
 /*
  __deque_iterator 将 deque 的复杂底层数据进行了包装.
  */
 
-#ifndef __STL_NON_TYPE_TMPL_PARAM_BUG
 template <class T, class Ref, class Ptr, size_t BufSiz>
 struct __deque_iterator {
     typedef __deque_iterator<T, T&, T*, BufSiz>             iterator;
     typedef __deque_iterator<T, const T&, const T*, BufSiz> const_iterator;
     static size_t buffer_size() {return __deque_buf_size(BufSiz, sizeof(T)); }
-#else /* __STL_NON_TYPE_TMPL_PARAM_BUG */
     
-    template <class T, class Ref, class Ptr>
-    struct __deque_iterator {
-        typedef __deque_iterator<T, T&, T*>             iterator;
-        typedef __deque_iterator<T, const T&, const T*> const_iterator;
-        static size_t buffer_size() {return __deque_buf_size(0, sizeof(T)); }
-#endif
-        // 为了实现, random 的效果, deque 的 iterator 的逻辑复杂度超过了其他的迭代器.
-        typedef random_access_iterator_tag iterator_category; // random 的 iterator
-        typedef T value_type;
-        typedef Ptr pointer;
-        typedef Ref reference;
-        typedef size_t size_type;
-        typedef ptrdiff_t difference_type;
-        typedef T** map_pointer;
-        
-        typedef __deque_iterator self;
-        
-        T* cur; // 当前缓存区的位置
-        T* first; // 当前缓存区的头
-        T* last; // 当前缓存区的最后一个元素下一个元素
-        map_pointer node; // 控制中心所在的位置.
-        
-        /*
-         *y 就是缓存区的头, *y + buffer_size() 就是缓存区的尾巴.
-         */
-        __deque_iterator(T* x, map_pointer y)
-        : cur(x), first(*y), last(*y + buffer_size()), node(y) {}
-        __deque_iterator() : cur(0), first(0), last(0), node(0) {}
-        __deque_iterator(const iterator& x)
-        : cur(x.cur), first(x.first), last(x.last), node(x.node) {}
-        
-        /*
-         current 指向了真正的数据.
-         */
-        reference operator*() const { return *cur; }
-        pointer operator->() const { return &(operator*()); }
-        /*
-         距离, 由三部分组成
-         缓存区之间的间距.
-         当前缓存区 cur 到 头的距离
-         对方缓存区 last 到 对方 cur 的距离.
-        */
-        difference_type operator-(const self& x) const {
-            return
-            buffer_size() * (node - x.node - 1)
-            + (cur - first)
-            + (x.last - x.cur);
+    // deque 对于迭代器的适配.
+    typedef random_access_iterator_tag iterator_category; // random 的 iterator
+    typedef T value_type;
+    typedef Ptr pointer;
+    typedef Ref reference;
+    typedef size_t size_type;
+    typedef ptrdiff_t difference_type;
+    typedef T** map_pointer;
+    
+    typedef __deque_iterator self;
+    
+    T* cur; // 当前缓存区的位置
+    T* first; // 当前缓存区的头
+    T* last; // 当前缓存区的最后一个元素下一个元素
+    map_pointer node; // 控制中心所在的位置.
+    
+    __deque_iterator(T* x, map_pointer y): cur(x), first(*y), last(*y + buffer_size()), node(y) {}
+    __deque_iterator() : cur(0), first(0), last(0), node(0) {}
+    __deque_iterator(const iterator& x) : cur(x.cur), first(x.first), last(x.last), node(x.node) {}
+    
+    reference operator*() const { return *cur; }
+    pointer operator->() const { return &(operator*()); }
+    
+    difference_type operator-(const self& x) const {
+        return
+        buffer_size() * (node - x.node - 1) // 控制中心节点之间的距离 * 缓存区大小.
+        + (cur - first) // 当前缓存区内,  current 和 fist 之间的距离
+        + (x.last - x.cur); // 目标缓存区内, end 和 目标 current 之间的距离.
+    }
+    
+    // ++ 操作符, 有着自动更换节点的功能.
+    self& operator++() {
+        ++cur;
+        if (cur == last) {
+            set_node(node + 1);
+            cur = first;
         }
-        
-        /*
-         需要注意的是, 迭代器前进后退的时候, 是没有安全监测的, 那应该是调用迭代器前后操作的代码的责任.
-         */
-        self& operator++() {
-            ++cur;
-            /*
-             如果到达了边界, 切换 node 的指向. cur 变为新的缓存区的 first 节点.
-             */
-            if (cur == last) {
-                set_node(node + 1);
-                cur = first;
-            }
-            return *this;
+        return *this;
+    }
+    
+    // 将逻辑集中到一处, 其他地方, 是那一处逻辑的加工.
+    self operator++(int)  {
+        self tmp = *this;
+        ++*this;
+        return tmp;
+    }
+    self& operator--() {
+        if (cur == first) {
+            set_node(node - 1);
+            cur = last;
         }
-        
-        self operator++(int)  {
-            self tmp = *this;
-            /*
-             后++, 直接调用前 ++ 的实现.
-             */
-            ++*this;
-            return tmp;
+        --cur;
+        return *this;
+    }
+    self operator--(int) {
+        self tmp = *this;
+        --*this;
+        return tmp;
+    }
+    
+    
+    self& operator+=(difference_type n) {
+        difference_type offset = n + (cur - first);
+        if (offset >= 0 && offset < difference_type(buffer_size())) {
+            // 这里, 就是还在 current 所在的那个缓存区里面.
+            cur += n;
+        } else {
+            // 不在一个缓存区里面, 计算出对应的缓存区节点, 以及缓存区内的位置.
+            difference_type node_offset =
+            offset > 0 ? offset / difference_type(buffer_size())
+            : -difference_type((-offset - 1) / buffer_size()) - 1;
+            set_node(node + node_offset);
+            cur = first + (offset - node_offset * difference_type(buffer_size()));
         }
-        
-        self& operator--() {
-            /*
-             如果到达了边界, 切换 node 的指向.
-             将 cur 变为 last, 注意, 在 setNode 里面, 其实 first, last 的值已经变化了, 所以已经变为了新的缓存区的有效值了.
-             */
-            if (cur == first) {
-                set_node(node - 1);
-                cur = last;
-            }
-            --cur;
-            return *this;
-        }
-        self operator--(int) {
-            self tmp = *this;
-            --*this;
-            return tmp;
-        }
-        
-        /*
-         这其中, 需要考虑缓存区的切换.
-         */
-        self& operator+=(difference_type n) {
-            difference_type offset = n + (cur - first);
-            if (offset >= 0 && offset < difference_type(buffer_size())) {
-                cur += n;
-            } else {
-                // 不在一个缓存区里面, 先进行切换.
-                difference_type node_offset =
-                offset > 0 ? offset / difference_type(buffer_size())
-                : -difference_type((-offset - 1) / buffer_size()) - 1;
-                set_node(node + node_offset);
-                cur = first + (offset - node_offset * difference_type(buffer_size()));
-            }
-            return *this;
-        }
-        
-        self operator+(difference_type n) const {
-            self tmp = *this;
-            return tmp += n;
-        }
-        
-        self& operator-=(difference_type n) { return *this += -n; }
-        
-        self operator-(difference_type n) const {
-            self tmp = *this;
-            return tmp -= n;
-        }
-        
-        /*
-         *(*this + n) []的含义, 从c 指针上说, 就是这样的, 既然 *, + 等操作符的含义已经正确, 直接用原始指针的操作就可以了.
-         这里, 非常明显了暗示了, 迭代器, 就是泛化的指针的特点.
-         *this + n, 就是找到对应位置的迭代器, 然后 * 操作符, 取出相应位置的值.
-         */
-        reference operator[](difference_type n) const { return *(*this + n); }
-        
-        bool operator==(const self& x) const { return cur == x.cur; }
-        bool operator!=(const self& x) const { return !(*this == x); }
-        bool operator<(const self& x) const {
-            return (node == x.node) ? (cur < x.cur) : (node < x.node);
-        }
-        
-        /*
-         迭代器切换 node.
-         这里, 已经更新了 first 和 last 的值了.
-         */
-        void set_node(map_pointer new_node) {
-            node = new_node;
-            first = *new_node;
-            last = first + difference_type(buffer_size());
-        }
-    };
+        return *this;
+    }
+    // 利用前面的逻辑, 代码集中到一起.
+    self operator+(difference_type n) const {
+        self tmp = *this;
+        return tmp += n;
+    }
+    // 向前走的逻辑, 直接利用 + 的逻辑.
+    self& operator-=(difference_type n) { return *this += -n; }
+    self operator-(difference_type n) const {
+        self tmp = *this;
+        return tmp -= n;
+    }
+    
+    /*
+     *(*this + n) , 这不就是指针的定义式.
+     因为, 其他的操作符已经完成了, iterator 已经能够模拟出指针的效果了. 所以这里, 直接使用那些操作符就可以了.
+     */
+    reference operator[](difference_type n) const { return *(*this + n); }
+    
+    bool operator==(const self& x) const { return cur == x.cur; }
+    bool operator!=(const self& x) const { return !(*this == x); }
+    bool operator<(const self& x) const {
+        return (node == x.node) ? (cur < x.cur) : (node < x.node);
+    }
+    
+    void set_node(map_pointer new_node) {
+        node = new_node;
+        first = *new_node;
+        last = first + difference_type(buffer_size());
+    }
+};
 }
-#ifndef __STL_CLASS_PARTIAL_SPECIALIZATION
 
-#ifndef __STL_NON_TYPE_TMPL_PARAM_BUG
 
 template <class T, class Ref, class Ptr, size_t BufSiz>
 inline random_access_iterator_tag
@@ -189,8 +138,7 @@ inline ptrdiff_t* distance_type(const __deque_iterator<T, Ref, Ptr, BufSiz>&) {
     return 0;
 }
 
-#else /* __STL_NON_TYPE_TMPL_PARAM_BUG */
-
+// Deuque 对于迭代器萃取全局方法的适配.
 template <class T, class Ref, class Ptr>
 inline random_access_iterator_tag
 iterator_category(const __deque_iterator<T, Ref, Ptr>&) {
@@ -205,12 +153,16 @@ inline ptrdiff_t* distance_type(const __deque_iterator<T, Ref, Ptr>&) {
     return 0;
 }
 
-#endif /* __STL_NON_TYPE_TMPL_PARAM_BUG */
 
-#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
 template <class T, class Alloc = alloc, size_t BufSiz = 0>
 class deque {
+public:
+    static size_type buffer_size() {
+        return __deque_buf_size(BufSiz, sizeof(value_type));
+    }
+    static size_type initial_map_size() { return 8; }
+    
 public:                         // Basic types
     typedef T value_type;
     typedef value_type* pointer;
@@ -221,63 +173,30 @@ public:                         // Basic types
     typedef ptrdiff_t difference_type;
     
 public:                         // Iterators
-#ifndef __STL_NON_TYPE_TMPL_PARAM_BUG
-    typedef __deque_iterator<T, T&, T*, BufSiz>              iterator;
-    typedef __deque_iterator<T, const T&, const T&, BufSiz>  const_iterator;
-#else /* __STL_NON_TYPE_TMPL_PARAM_BUG */
     typedef __deque_iterator<T, T&, T*>                      iterator;
     typedef __deque_iterator<T, const T&, const T*>          const_iterator;
-#endif /* __STL_NON_TYPE_TMPL_PARAM_BUG */
     
-#ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
     typedef reverse_iterator<const_iterator> const_reverse_iterator;
     typedef reverse_iterator<iterator> reverse_iterator;
-#else /* __STL_CLASS_PARTIAL_SPECIALIZATION */
-    typedef reverse_iterator<const_iterator, value_type, const_reference,
-    difference_type>
-    const_reverse_iterator;
-    typedef reverse_iterator<iterator, value_type, reference, difference_type>
-    reverse_iterator;
-#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
     
 protected:                      // Internal typedefs
     typedef pointer* map_pointer;
     typedef simple_alloc<value_type, Alloc> data_allocator;
     typedef simple_alloc<pointer, Alloc> map_allocator;
-    
-    /*
-     缓存区的大小, 可以认为是一个定值.
-     */
-    static size_type buffer_size() {
-        return __deque_buf_size(BufSiz, sizeof(value_type));
-    }
-    /*
-     初始化的时候, 控制中心的大小.
-     */
-    static size_type initial_map_size() { return 8; }
+
     
 protected:                      // Data members
-    /*
-     每个容器的 start, finish 都是一个存储起来的值. 保证 O(1) 时间复杂度可以找到.
-     */
-    iterator start;
-    iterator finish;
-    
-    map_pointer map; // 起始位置.
+    iterator start; // 起始位置迭代器
+    iterator finish; // 结束位置迭代器
+    map_pointer map; // 控制中心数组的起始位置.
     size_type map_size; // 控制中心的大小.
     
-public:                         // Basic accessors
-    /*
-     为了保持 o(1) 的复杂度, 要么就是有一个有效的算法, 这个数据结构是建立在这个算法之上的, 要么就是要提前存起来这个值.
-     */
+public:
     iterator begin() { return start; }
     iterator end() { return finish; }
     const_iterator begin() const { return start; }
     const_iterator end() const { return finish; }
     
-    /*
-     reverse_iterator 是适配器, 仅仅是做控制逻辑的变化, 真正的数据访问, 还是依靠原始的 iterator 的功能.
-     */
     reverse_iterator rbegin() { return reverse_iterator(finish); }
     reverse_iterator rend() { return reverse_iterator(start); }
     const_reverse_iterator rbegin() const {
@@ -289,19 +208,15 @@ public:                         // Basic accessors
     
     /*
      因为, deque 要模拟自己是一个数组, 所以, start 就成为了数组的起始的位置.
-     虽然了解 deque 的内部结构, 知道 start 并不是起点, 还可以向前添加, 但是, 对于外界来说, 要模拟出 start 是起点的效果.
-     所以, 这里位置的计算, 都是从 start 开始的.
+     直接利用 iterator 模拟指针的效果. 直接使用了类似于数组的操作.
      */
     reference operator[](size_type n) { return start[difference_type(n)]; }
     const_reference operator[](size_type n) const {
         return start[difference_type(n)];
     }
     
-    /*
-     这两种, 也是非常常见的写法.
-     */
     reference front() { return *start; }
-    reference back() {
+    reference back() { // 因为, finish 是指向了最后一个数据的后面一个位置, 所以要进行--操作.
         iterator tmp = finish;
         --tmp;
         return *tmp;
@@ -313,7 +228,8 @@ public:                         // Basic accessors
         return *tmp;
     }
     
-    // - 号会自动进行 node 之间的距离的计算.
+    // 直接利用迭代器.
+    // deque 模拟的是连续的空间, iterator 模拟的是指针, 所以, deque 里面, 很多操作, 就如同数组里面的指针操作.
     size_type size() const { return finish - start; }
     bool empty() const { return finish == start; }
     
@@ -329,6 +245,7 @@ public:                         // Constructor, destructor.
     {
         create_map_and_nodes(x.size());
         __STL_TRY {
+            // 使用全局算法进行 copy, 相关逻辑在 stl_uninitialize.h 中.
             uninitialized_copy(x.begin(), x.end(), start);
         }
         __STL_UNWIND(destroy_map_and_nodes());
@@ -339,26 +256,11 @@ public:                         // Constructor, destructor.
     {
         fill_initialize(n, value);
     }
-    
-    deque(int n, const value_type& value)
-    : start(), finish(), map(0), map_size(0)
-    {
-        fill_initialize(n, value);
-    }
-    
-    deque(long n, const value_type& value)
-    : start(), finish(), map(0), map_size(0)
-    {
-        fill_initialize(n, value);
-    }
-    
     explicit deque(size_type n)
     : start(), finish(), map(0), map_size(0)
     {
         fill_initialize(n, value_type());
     }
-    
-#ifdef __STL_MEMBER_TEMPLATES
     
     template <class InputIterator>
     deque(InputIterator first, InputIterator last)
@@ -366,8 +268,6 @@ public:                         // Constructor, destructor.
     {
         range_initialize(first, last, iterator_category(first));
     }
-    
-#else /* __STL_MEMBER_TEMPLATES */
     
     deque(const value_type* first, const value_type* last)
     : start(), finish(), map(0), map_size(0)
@@ -389,8 +289,6 @@ public:                         // Constructor, destructor.
         __STL_UNWIND(destroy_map_and_nodes());
     }
     
-#endif /* __STL_MEMBER_TEMPLATES */
-    
     ~deque() {
         destroy(start, finish);
         destroy_map_and_nodes();
@@ -410,9 +308,7 @@ public:                         // Constructor, destructor.
         return *this;
     }
     
-    /*
-     dequeu 实际管理的空间, 都在堆里面, 这里仅仅做指针的交换就可以了.
-     */
+    // 指针交换, 非常非常快.
     void swap(deque& x) {
         __STD::swap(start, x.start);
         __STD::swap(finish, x.finish);
@@ -420,13 +316,10 @@ public:                         // Constructor, destructor.
         __STD::swap(map_size, x.map_size);
     }
     
-public:                         // push_* and pop_*
-    
+public:
     void push_back(const value_type& t) {
-        /*
-         如果, 还没有到达缓存区的边缘, 进在缓存区里面存储值, 然后更新 finish 的指针
-         */
         if (finish.cur != finish.last - 1) {
+            // 直接在缓存区操作.
             construct(finish.cur, t);
             ++finish.cur;
         } else {
@@ -436,6 +329,7 @@ public:                         // push_* and pop_*
     
     void push_front(const value_type& t) {
         if (start.cur != start.first) {
+            // 直接在缓存区操作.
             construct(start.cur - 1, t);
             --start.cur;
         }
@@ -460,14 +354,9 @@ public:                         // push_* and pop_*
             pop_front_aux();
         }
     }
-    /*
-     前面的 push, pop 都可以利用 start 和 finish 进行操作. insert 涉及到搬移操作, 更加的复杂.
-     */
+    
 public:
     iterator insert(iterator position, const value_type& x) {
-        /*
-         前插, 后插比较简单, 不用考虑数据的搬移工作.
-         */
         if (position.cur == start.cur) {
             push_front(x);
             return start;
@@ -481,50 +370,38 @@ public:
         }
     }
     
-    iterator insert(iterator position) { return insert(position, value_type()); }
-    
     void insert(iterator pos, size_type n, const value_type& x);
-    
-    void insert(iterator pos, int n, const value_type& x) {
-        insert(pos, (size_type) n, x);
-    }
-    void insert(iterator pos, long n, const value_type& x) {
-        insert(pos, (size_type) n, x);
-    }
-    
-#ifdef __STL_MEMBER_TEMPLATES  
     
     template <class InputIterator>
     void insert(iterator pos, InputIterator first, InputIterator last) {
         insert(pos, first, last, iterator_category(first));
     }
-    
-#else /* __STL_MEMBER_TEMPLATES */
-    
     void insert(iterator pos, const value_type* first, const value_type* last);
     void insert(iterator pos, const_iterator first, const_iterator last);
-    
-#endif /* __STL_MEMBER_TEMPLATES */
     
     void resize(size_type new_size, const value_type& x) {
         const size_type len = size();
         if (new_size < len)
+            // 缩小, 删除后面的内容.
             erase(start + new_size, finish);
         else
+            // 扩张, 向后面插入新的值.
             insert(finish, new_size - len, x);
     }
     
     void resize(size_type new_size) { resize(new_size, value_type()); }
     
-public:                         // Erase
+public:
     iterator erase(iterator pos) {
         iterator next = pos;
         ++next;
         difference_type index = pos - start;
         if (index < (size() >> 1)) {
+            // 搬移前面
             copy_backward(start, pos, next);
             pop_front();
         } else {
+            // 搬移后面.
             copy(next, finish, pos);
             pop_back();
         }
@@ -559,47 +436,15 @@ protected:                        // Internal push_* and pop_*
     void pop_back_aux();
     void pop_front_aux();
     
-protected:                        // Internal insert functions
+protected:
     
-#ifdef __STL_MEMBER_TEMPLATES  
-    
-    template <class InputIterator>
-    void insert(iterator pos, InputIterator first, InputIterator last,
-                input_iterator_tag);
-    
-    template <class ForwardIterator>
-    void insert(iterator pos, ForwardIterator first, ForwardIterator last,
-                forward_iterator_tag);
-    
-#endif /* __STL_MEMBER_TEMPLATES */
-    
-    iterator insert_aux(iterator pos, const value_type& x);
-    void insert_aux(iterator pos, size_type n, const value_type& x);
-    
-#ifdef __STL_MEMBER_TEMPLATES  
-    
-    template <class ForwardIterator>
-    void insert_aux(iterator pos, ForwardIterator first, ForwardIterator last,
-                    size_type n);
-    
-#else /* __STL_MEMBER_TEMPLATES */
-    
-    void insert_aux(iterator pos,
-                    const value_type* first, const value_type* last,
-                    size_type n);
-    
-    void insert_aux(iterator pos, const_iterator first, const_iterator last,
-                    size_type n);
-    
-#endif /* __STL_MEMBER_TEMPLATES */
-    
+    // 先判断, 缓存区里面有没有足够内容. 没有的话, 向控制中心申请. 有可能会有控制中心的扩容处理.
     iterator reserve_elements_at_front(size_type n) {
         size_type vacancies = start.cur - start.first;
         if (n > vacancies)
             new_elements_at_front(n - vacancies);
         return start - difference_type(n);
     }
-    
     iterator reserve_elements_at_back(size_type n) {
         size_type vacancies = (finish.last - finish.cur) - 1;
         if (n > vacancies)
@@ -615,13 +460,7 @@ protected:                        // Internal insert functions
     
 protected:                      // Allocation of map and nodes
     
-    // Makes sure the map has space for new nodes.  Does not actually
-    //  add the nodes.  Can invalidate map pointers.  (And consequently,
-    //  deque iterators.)
-    
-    /*
-     如果, 没有控制中心没有新的缓存区节点了, 那么就要进行新的分配操作.
-     */
+    // 控制中心需要扩容了.
     void reserve_map_at_back (size_type nodes_to_add = 1) {
         if (nodes_to_add + 1 > map_size - (finish.node - map))
             reallocate_map(nodes_to_add, false);
@@ -634,17 +473,14 @@ protected:                      // Allocation of map and nodes
     
     void reallocate_map(size_type nodes_to_add, bool add_at_front);
     
-    /*
-     生产一个缓存区来.
-     */
+    // 通过分配器, 分配一个缓存区的空间
     pointer allocate_node() { return data_allocator::allocate(buffer_size()); }
-    void deallocate_node(pointer n) {
-        data_allocator::deallocate(n, buffer_size());
-    }
+    // 通过分配器, 回收一个缓存区的空间
+    void deallocate_node(pointer n) { data_allocator::deallocate(n, buffer_size()); }
     
-#ifdef __STL_NON_TYPE_TMPL_PARAM_BUG
 public:
     bool operator==(const deque<T, Alloc, 0>& x) const {
+        // equal, 全局方法, 比较两个序列.
         return size() == x.size() && equal(begin(), end(), x.begin());
     }
     bool operator!=(const deque<T, Alloc, 0>& x) const {
@@ -653,19 +489,19 @@ public:
     bool operator<(const deque<T, Alloc, 0>& x) const {
         return lexicographical_compare(begin(), end(), x.begin(), x.end());
     }
-#endif /* __STL_NON_TYPE_TMPL_PARAM_BUG */
 };
-
-// Non-inline member functions
 
 template <class T, class Alloc, size_t BufSize>
 void deque<T, Alloc, BufSize>::insert(iterator pos,
-                                      size_type n, const value_type& x) {
+                                      size_type n,
+                                      const value_type& x) {
     if (pos.cur == start.cur) {
+        // 如果, 在头上插入
         iterator new_start = reserve_elements_at_front(n);
         uninitialized_fill(new_start, start, x);
         start = new_start;
     } else if (pos.cur == finish.cur) {
+        // 如果, 在尾巴插入.
         iterator new_finish = reserve_elements_at_back(n);
         uninitialized_fill(finish, new_finish, x);
         finish = new_finish;
@@ -676,6 +512,7 @@ void deque<T, Alloc, BufSize>::insert(iterator pos,
 
 #ifndef __STL_MEMBER_TEMPLATES  
 
+// 插入指针类型范围内的数据.
 template <class T, class Alloc, size_t BufSize>
 void deque<T, Alloc, BufSize>::insert(iterator pos,
                                       const value_type* first,
@@ -737,6 +574,7 @@ deque<T, Alloc, BufSize>::erase(iterator first, iterator last) {
         return finish;
     }
     else {
+        // 这里,  会判断, 是应该前面坍塌, 还是后面迁移.
         difference_type n = last - first;
         difference_type elems_before = first - start;
         if (elems_before < (size() - n) / 2) {
@@ -744,7 +582,7 @@ deque<T, Alloc, BufSize>::erase(iterator first, iterator last) {
             iterator new_start = start + n;
             destroy(start, new_start);
             for (map_pointer cur = start.node; cur < new_start.node; ++cur)
-                data_allocator::deallocate(*cur, buffer_size());
+            data_allocator::deallocate(*cur, buffer_size());
             start = new_start;
         }
         else {
@@ -752,13 +590,14 @@ deque<T, Alloc, BufSize>::erase(iterator first, iterator last) {
             iterator new_finish = finish - n;
             destroy(new_finish, finish);
             for (map_pointer cur = new_finish.node + 1; cur <= finish.node; ++cur)
-                data_allocator::deallocate(*cur, buffer_size());
+            data_allocator::deallocate(*cur, buffer_size());
             finish = new_finish;
         }
         return start + elems_before;
     }
 }
 
+// 这些复杂的操作, 都是建立在已有的操作的基础上. 所以, 复杂的类, 是通过一点点小的, 可以复用的方法建立起来的.
 template <class T, class Alloc, size_t BufSize>
 void deque<T, Alloc, BufSize>::clear() {
     for (map_pointer node = start.node + 1; node < finish.node; ++node) {
@@ -777,23 +616,22 @@ void deque<T, Alloc, BufSize>::clear() {
     finish = start;
 }
 
+// 通过, num_elements 分配控制中心和对应的缓存区的空间. 这里只有分配, 还没有进行值的填充.
 template <class T, class Alloc, size_t BufSize>
 void deque<T, Alloc, BufSize>::create_map_and_nodes(size_type num_elements) {
+    
     size_type num_nodes = num_elements / buffer_size() + 1;
-    
     map_size = max(initial_map_size(), num_nodes + 2);
+    // 这里, 是通过分配器获取的资源.
     map = map_allocator::allocate(map_size);
-    
-    /*
-     在这里, 把起始操作的 node 的位置, 放到了控制中心的中间部位.
-     */
+    // 把起始的 node, 放到了中间位置.
     map_pointer nstart = map + (map_size - num_nodes) / 2;
     map_pointer nfinish = nstart + num_nodes - 1;
     
     map_pointer cur;
     __STL_TRY {
         for (cur = nstart; cur <= nfinish; ++cur)
-            *cur = allocate_node();
+        *cur = allocate_node();
     }
     
     start.set_node(nstart);
@@ -806,7 +644,7 @@ void deque<T, Alloc, BufSize>::create_map_and_nodes(size_type num_elements) {
 template <class T, class Alloc, size_t BufSize>
 void deque<T, Alloc, BufSize>::destroy_map_and_nodes() {
     for (map_pointer cur = start.node; cur <= finish.node; ++cur)
-        deallocate_node(*cur);
+    deallocate_node(*cur);
     map_allocator::deallocate(map, map_size);
 }
 
@@ -818,13 +656,13 @@ void deque<T, Alloc, BufSize>::fill_initialize(size_type n,
     map_pointer cur;
     __STL_TRY {
         for (cur = start.node; cur < finish.node; ++cur)
-            uninitialized_fill(*cur, *cur + buffer_size(), value);
+        uninitialized_fill(*cur, *cur + buffer_size(), value);
         uninitialized_fill(finish.first, finish.cur, value);
     }
 #       ifdef __STL_USE_EXCEPTIONS
     catch(...) {
         for (map_pointer n = start.node; n < cur; ++n)
-            destroy(*n, *n + buffer_size());
+        destroy(*n, *n + buffer_size());
         destroy_map_and_nodes();
         throw;
     }
@@ -840,7 +678,7 @@ void deque<T, Alloc, BufSize>::range_initialize(InputIterator first,
                                                 input_iterator_tag) {
     create_map_and_nodes(0);
     for ( ; first != last; ++first)
-        push_back(*first);
+    push_back(*first);
 }
 
 template <class T, class Alloc, size_t BufSize>
@@ -1213,12 +1051,12 @@ void deque<T, Alloc, BufSize>::new_elements_at_front(size_type new_elements) {
     size_type i;
     __STL_TRY {
         for (i = 1; i <= new_nodes; ++i)
-            *(start.node - i) = allocate_node();
+        *(start.node - i) = allocate_node();
     }
 #       ifdef __STL_USE_EXCEPTIONS
     catch(...) {
         for (size_type j = 1; j < i; ++j)
-            deallocate_node(*(start.node - j));
+        deallocate_node(*(start.node - j));
         throw;
     }
 #       endif /* __STL_USE_EXCEPTIONS */
@@ -1231,12 +1069,12 @@ void deque<T, Alloc, BufSize>::new_elements_at_back(size_type new_elements) {
     size_type i;
     __STL_TRY {
         for (i = 1; i <= new_nodes; ++i)
-            *(finish.node + i) = allocate_node();
+        *(finish.node + i) = allocate_node();
     }
 #       ifdef __STL_USE_EXCEPTIONS
     catch(...) {
         for (size_type j = 1; j < i; ++j)
-            deallocate_node(*(finish.node + j));
+        deallocate_node(*(finish.node + j));
         throw;
     }
 #       endif /* __STL_USE_EXCEPTIONS */
@@ -1245,13 +1083,13 @@ void deque<T, Alloc, BufSize>::new_elements_at_back(size_type new_elements) {
 template <class T, class Alloc, size_t BufSize>
 void deque<T, Alloc, BufSize>::destroy_nodes_at_front(iterator before_start) {
     for (map_pointer n = before_start.node; n < start.node; ++n)
-        deallocate_node(*n);
+    deallocate_node(*n);
 }
 
 template <class T, class Alloc, size_t BufSize>
 void deque<T, Alloc, BufSize>::destroy_nodes_at_back(iterator after_finish) {
     for (map_pointer n = after_finish.node; n > finish.node; --n)
-        deallocate_node(*n);
+    deallocate_node(*n);
 }
 
 template <class T, class Alloc, size_t BufSize>

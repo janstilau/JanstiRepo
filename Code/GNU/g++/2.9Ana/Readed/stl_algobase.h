@@ -1,11 +1,7 @@
 __STL_BEGIN_NAMESPACE
 
-/*
- 迭代器的交换.
- 因为迭代器其实就是指针, 所以, 直接就和指针交换一样了.
- 迭代器要负起最终的 * 的取值操作, 要返回相对应的引用.
- 这里要引起注意, 这里会有拷贝构造函数, 以及赋值构造函数的调用.
- */
+#prgma mark - Swap
+
 template <class ForwardIterator1, class ForwardIterator2, class T>
 inline void __iter_swap(ForwardIterator1 a, ForwardIterator2 b, T*) {
     T tmp = *a;
@@ -29,12 +25,6 @@ inline void swap(T& a, T& b) {
     b = tmp;
 }
 
-#ifndef __BORLANDC__
-
-#undef min
-#undef max
-
-
 /*
  这都是最简单的算法, 但是是泛型的.
  C++ 的操作符, 和 Swift 的 protocol 相比. 缺少类型限制.
@@ -48,8 +38,6 @@ template <class T>
 inline const T& max(const T& a, const T& b) {
     return  a < b ? b : a;
 }
-
-#endif /* __BORLANDC__ */
 
 /*
  增加了比较函数版本的方法.
@@ -66,12 +54,10 @@ inline const T& max(const T& a, const T& b, Compare comp) {
 
 
 
+#prgma mark -  Copy
 
 
-
-#ifdef __STL_CLASS_PARTIAL_SPECIALIZATION 
-
-// 如果, copy 是迭代器类型, 做萃取和分发的过程.
+// copy 入口函数.
 template <class InputIterator, class OutputIterator>
 inline OutputIterator copy(InputIterator first, InputIterator last,
                            OutputIterator result)
@@ -79,28 +65,19 @@ inline OutputIterator copy(InputIterator first, InputIterator last,
     return __copy_dispatch<InputIterator,OutputIterator>()(first, last, result);
 }
 
-// 如果, copy 是指针类型的, 直接内存搬移就可以了.
+// 如果是指针类型, 直接内存搬移.
 inline char* copy(const char* first, const char* last, char* result) {
     memmove(result, first, last - first);
     return result + (last - first);
 }
+// 如果是指针类型, 直接内存搬移
 inline wchar_t* copy(const wchar_t* first, const wchar_t* last,
                      wchar_t* result) {
     memmove(result, first, sizeof(wchar_t) * (last - first));
     return result + (last - first);
 }
 
-template <class BidirectionalIterator1, class BidirectionalIterator2>
-inline BidirectionalIterator2 __copy_backward(BidirectionalIterator1 first, 
-                                              BidirectionalIterator1 last,
-                                              BidirectionalIterator2 result) {
-    while (first != last) *--result = *--last;
-    return result;
-}
-
-/*
- copy 的 first, last 是一个迭代器, 就利用 category 进行分化.
- */
+// copy 函数的分发器
 template <class InputIterator, class OutputIterator>
 struct __copy_dispatch
 {
@@ -110,9 +87,7 @@ struct __copy_dispatch
     }
 };
 
-/*
- 如果是一般的迭代器, 那么就是一个个的拷贝的过程.
- */
+// 如果是迭代器, 通过迭代器的 * 取值, = 赋值, 一个个的进行 copy.
 template <class InputIterator, class OutputIterator>
 inline OutputIterator __copy(InputIterator first, InputIterator last,
                              OutputIterator result,
@@ -123,9 +98,7 @@ inline OutputIterator __copy(InputIterator first, InputIterator last,
     return result;
 }
 
-/*
- 随机访问的迭代器, 就调用 __copy_d. __copy_d 其实也是一个个的拷贝, 只不过, 是根据 距离做的控制.
- */
+// 如果是 random 迭代器, 可以通过 distance 事先拿到次数.
 template <class RandomAccessIterator, class OutputIterator>
 inline OutputIterator
 __copy(RandomAccessIterator first, RandomAccessIterator last,
@@ -148,6 +121,54 @@ __copy_d(RandomAccessIterator first,
 }
 
 
+#prama mark - CopyBackward
+
+// copy_backward 入口函数
+template <class BidirectionalIterator1, class BidirectionalIterator2>
+inline BidirectionalIterator2 copy_backward(BidirectionalIterator1 first, 
+                                            BidirectionalIterator1 last,
+                                            BidirectionalIterator2 result) {
+    return __copy_backward_dispatch<BidirectionalIterator1, BidirectionalIterator2>()(first,
+                                                                                       last,
+                                                                                       result);
+}
+
+// copy_backward 的分发器, 指针类型
+template <class T>
+struct __copy_backward_dispatch<T*, T*>
+{
+    T* operator()(T* first, T* last, T* result) {
+        typedef typename __type_traits<T>::has_trivial_assignment_operator t;
+        return __copy_backward_t(first, last, result, t());
+    }
+};
+
+// copy_backward 的分发器, 指针类型
+template <class T>
+struct __copy_backward_dispatch<const T*, T*>
+{
+    T* operator()(const T* first, const T* last, T* result) {
+        typedef typename __type_traits<T>::has_trivial_assignment_operator t;
+        return __copy_backward_t(first, last, result, t());
+    }
+};
+
+// 可以直接内存拷贝.
+template <class T>
+inline T* __copy_backward_t(const T* first, const T* last, T* result,
+                            __true_type) {
+    const ptrdiff_t N = last - first;
+    memmove(result - N, first, sizeof(T) * N);
+    return result - N;
+}
+// 不可以直接内存拷贝.
+template <class T>
+inline T* __copy_backward_t(const T* first, const T* last, T* result,
+                            __false_type) {
+    return __copy_backward(first, last, result);
+}
+
+// copy_backward 的分发器
 template <class BidirectionalIterator1, class BidirectionalIterator2>
 struct __copy_backward_dispatch
 {
@@ -158,79 +179,20 @@ struct __copy_backward_dispatch
     }
 };
 
-#ifdef __STL_CLASS_PARTIAL_SPECIALIZATION 
-/*
- 如果迭代器是指针类型的, 就直接内存的拷贝.
- 算是做类型的偏特化
- */
-template <class T>
-inline T* __copy_backward_t(const T* first, const T* last, T* result,
-                            __true_type) {
-    const ptrdiff_t N = last - first;
-    memmove(result - N, first, sizeof(T) * N);
-    return result - N;
-}
-/*
- 如果迭代器是指针类型的, 就直接内存的拷贝.
- 算是做类型的偏特化
- */
-template <class T>
-inline T* __copy_backward_t(const T* first, const T* last, T* result,
-                            __false_type) {
-    return __copy_backward(first, last, result);
-}
-
-template <class T>
-struct __copy_backward_dispatch<T*, T*>
-{
-    T* operator()(T* first, T* last, T* result) {
-        typedef typename __type_traits<T>::has_trivial_assignment_operator t;
-        return __copy_backward_t(first, last, result, t());
-    }
-};
-
-template <class T>
-struct __copy_backward_dispatch<const T*, T*>
-{
-    T* operator()(const T* first, const T* last, T* result) {
-        typedef typename __type_traits<T>::has_trivial_assignment_operator t;
-        return __copy_backward_t(first, last, result, t());
-    }
-};
-
-#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
-
+// 通过迭代器的 * 运算符取值, 然后进行赋值操作.
 template <class BidirectionalIterator1, class BidirectionalIterator2>
-inline BidirectionalIterator2 copy_backward(BidirectionalIterator1 first, 
-                                            BidirectionalIterator1 last,
-                                            BidirectionalIterator2 result) {
-    return __copy_backward_dispatch<BidirectionalIterator1,
-    BidirectionalIterator2>()(first, last,
-                              result);
+inline BidirectionalIterator2 __copy_backward(BidirectionalIterator1 first,
+                                              BidirectionalIterator1 last,
+                                              BidirectionalIterator2 result) {
+    while (first != last) *--result = *--last;
+    return result;
 }
 
-/*
- 用 N 来决定 forloop 的次数, 要比迭代器的判断要快一点.
- */
-template <class InputIterator, class Size, class OutputIterator>
-pair<InputIterator, OutputIterator> __copy_n(InputIterator first, Size count,
-                                             OutputIterator result,
-                                             input_iterator_tag) {
-    for ( ; count > 0; --count, ++first, ++result)
-        *result = *first;
-    return pair<InputIterator, OutputIterator>(first, result);
-}
 
-template <class RandomAccessIterator, class Size, class OutputIterator>
-inline pair<RandomAccessIterator, OutputIterator>
-__copy_n(RandomAccessIterator first, Size count,
-         OutputIterator result,
-         random_access_iterator_tag) {
-    RandomAccessIterator last = first + count;
-    return pair<RandomAccessIterator, OutputIterator>(last,
-                                                      copy(first, last, result));
-}
 
+#prama mark - CopyN
+
+// CopyN 函数的入口, 分发.
 template <class InputIterator, class Size, class OutputIterator>
 inline pair<InputIterator, OutputIterator>
 copy_n(InputIterator first, Size count,
@@ -238,20 +200,39 @@ copy_n(InputIterator first, Size count,
     return __copy_n(first, count, result, iterator_category(first));
 }
 
-//Fill
-/*
- Fill assignMent.
- 通过 = 操作符, 进行填充工作.
- */
+// 普通
+template <class InputIterator, class Size, class OutputIterator>
+pair<InputIterator, OutputIterator> __copy_n(InputIterator first,
+                                             Size count,
+                                             OutputIterator result,
+                                             input_iterator_tag) {
+    for ( ; count > 0; --count, ++first, ++result)
+        *result = *first;
+    return pair<InputIterator, OutputIterator>(first, result);
+}
+
+// random
+template <class RandomAccessIterator, class Size, class OutputIterator>
+inline pair<RandomAccessIterator, OutputIterator>
+__copy_n(RandomAccessIterator first,
+         Size count,
+         OutputIterator result,
+         random_access_iterator_tag) {
+    RandomAccessIterator last = first + count;
+    return pair<RandomAccessIterator, OutputIterator>(last,
+                                                      copy(first, last, result));
+}
+
+
+
+#prgma mark - Fill
+
 template <class ForwardIterator, class T>
 void fill(ForwardIterator first, ForwardIterator last, const T& value) {
     for ( ; first != last; ++first)
         *first = value;
 }
 
-/*
- 从 first 开始, 后面的 n 的位置, 都进行 value 的覆盖工作.
- */
 template <class OutputIterator, class Size, class T>
 OutputIterator fill_n(OutputIterator first, Size n, const T& value) {
     for ( ; n > 0; --n, ++first)
@@ -298,7 +279,7 @@ inline bool equal(InputIterator1 first1, InputIterator1 last1,
             return false;
     return true;
 }
-// 比较两个序列, 增加了比较的闭包.
+
 template <class InputIterator1, class InputIterator2, class BinaryPredicate>
 inline bool equal(InputIterator1 first1, InputIterator1 last1,
                   InputIterator2 first2, BinaryPredicate binary_pred) {

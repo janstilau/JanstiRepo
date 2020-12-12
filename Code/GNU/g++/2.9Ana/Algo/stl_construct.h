@@ -1,6 +1,6 @@
 #ifndef __SGI_STL_INTERNAL_CONSTRUCT_H
 #define __SGI_STL_INTERNAL_CONSTRUCT_H
-
+ 
 #include <new.h>
 
 __STL_BEGIN_NAMESPACE
@@ -38,12 +38,6 @@ template <class T>
 inline void destroy(T* pointer) {
     pointer->~T();
 }
-
-
-
-
-
-
 
 
 // construct 函数, 就是在指定的位置, 调用构造函数而已.

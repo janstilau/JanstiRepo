@@ -332,13 +332,10 @@ vector<T, Alloc>& vector<T, Alloc>::operator=(const vector<T, Alloc>& x) {
 template <class T, class Alloc>
 void vector<T, Alloc>::insert_aux(iterator position, const T& x) {
     if (finish != end_of_storage) {
-        /*
-         如果还有空间进行插入操作, 就先挪动, 然后在指定的位置, 进行值的替换.
-         */
         construct(finish, *(finish - 1));
         ++finish;
         T x_copy = x;
-        copy_backward(position, finish - 2, finish - 1);
+        copy_backward(position, finish - 2, finish - 1); // 这里没有构造函数的调用.
         *position = x_copy;
     } else {
         /*
@@ -383,8 +380,7 @@ void vector<T, Alloc>::insert(iterator position, size_type n, const T& x) {
                 finish += elems_after;
                 fill(position, old_finish, x_copy);
             }
-        }
-        else {
+        } else {
             const size_type old_size = size();
             const size_type len = old_size + max(old_size, n);
             iterator new_start = data_allocator::allocate(len);

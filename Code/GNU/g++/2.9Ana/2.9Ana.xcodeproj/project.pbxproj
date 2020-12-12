@@ -32,7 +32,6 @@
 		069FFED124C8A4D60014F9EA /* stl_tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_tree.h; path = ../../stl_tree.h; sourceTree = "<group>"; };
 		069FFED424C8A4D60014F9EA /* stl_rope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stl_rope.h; path = ../../stl_rope.h; sourceTree = "<group>"; };
 		069FFEE024C8A4D60014F9EA /* stl_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_map.h; sourceTree = "<group>"; };
-		069FFEE124C8A4D60014F9EA /* stl_deque.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_deque.h; sourceTree = "<group>"; };
 		069FFEE224C8A4D60014F9EA /* stl_tempbuf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_tempbuf.h; sourceTree = "<group>"; };
 		069FFEE624C8A4D70014F9EA /* stl_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_alloc.h; sourceTree = "<group>"; };
 		069FFEE724C8A4D70014F9EA /* stl_hash_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl_hash_set.h; sourceTree = "<group>"; };
@@ -133,7 +132,6 @@
 				069FFF0724C8A4D80014F9EA /* stl_algobase.h */,
 				069FFF1424C8A4D80014F9EA /* stl_algo.h */,
 				069FFEE624C8A4D70014F9EA /* stl_alloc.h */,
-				069FFEE124C8A4D60014F9EA /* stl_deque.h */,
 				069FFF0924C8A4D80014F9EA /* stl_function.h */,
 				069FFEFC24C8A4D70014F9EA /* stl_hash_map.h */,
 				069FFEE724C8A4D70014F9EA /* stl_hash_set.h */,

@@ -3,11 +3,12 @@
 
 __STL_BEGIN_NAMESPACE
 
-
+#pragma mark - UninitializedFill
 
 // uninitialized_fill, 从 first 指定的空间开始, 将 x 的值填充到迭代器指向的地方.
 // 这个只会在 vector, 和 deque 里面使用, 因为别的容器, 都是一个个的进行安插. 链表, 红黑树, 哈希表, 没有都需要一个个进行. 因为那是节点的概念, 没有办法提前获取到 first, end.
 // 需要注意的是, 数组的搬移操作, 是不会调用这个函数的. 因为这个函数, 还要考虑构造函数的调用, 而搬移操作, 不应该调用构造函数.
+
 // 这里, 为什么不能是值的直接 bit copy, 非要进行拷贝构造函数和析构呢. 这其实也是后面 move sematic 出现的原因.
 // 在 4.9 的版本里面, 应该就是使用了 move sematic 的拷贝构造函数了.
 
@@ -110,44 +111,7 @@ __uninitialized_fill_n_aux(ForwardIterator first, Size n,
 
 
 
-
-
-
-
-
-
-
-
-// Fills [result, mid) with x, and copies [first, last) into
-//  [mid, mid + (last - first)).
-template <class ForwardIterator, class T, class InputIterator>
-inline ForwardIterator 
-__uninitialized_fill_copy(ForwardIterator result,
-                          ForwardIterator mid,
-                          const T& x,
-                          InputIterator first,
-                          InputIterator last) {
-    uninitialized_fill(result, mid, x);
-    __STL_TRY {
-        return uninitialized_copy(first, last, mid);
-    }
-    __STL_UNWIND(destroy(result, mid));
-}
-
-// Copies [first1, last1) into [first2, first2 + (last1 - first1)), and
-//  fills [first2 + (last1 - first1), last2) with x.
-template <class InputIterator, class ForwardIterator, class T>
-inline void
-__uninitialized_copy_fill(InputIterator first1, InputIterator last1,
-                          ForwardIterator first2, ForwardIterator last2,
-                          const T& x) {
-    ForwardIterator mid2 = uninitialized_copy(first1, last1, first2);
-    __STL_TRY {
-        uninitialized_fill(mid2, last2, x);
-    }
-    __STL_UNWIND(destroy(first2, mid2));
-}
-
+#pragma mark - UninitializedCopy
 
 
 // 分发函数. 拷贝 first, 到 last 的内容, 到 result 中去.
@@ -206,6 +170,7 @@ inline wchar_t* uninitialized_copy(const wchar_t* first, const wchar_t* last,
     return result + (last - first);
 }
 
+// uninitialized_copy_n 分发函数, 萃取.
 template <class InputIterator, class Size, class ForwardIterator>
 inline pair<InputIterator, ForwardIterator>
 uninitialized_copy_n(InputIterator first, Size count,
@@ -236,6 +201,39 @@ __uninitialized_copy_n(RandomAccessIterator first, Size count,
     RandomAccessIterator last = first + count;
     return make_pair(last, uninitialized_copy(first, last, result));
 }
+
+
+
+// Fills [result, mid) with x, and copies [first, last) into
+//  [mid, mid + (last - first)).
+template <class ForwardIterator, class T, class InputIterator>
+inline ForwardIterator
+__uninitialized_fill_copy(ForwardIterator result,
+                          ForwardIterator mid,
+                          const T& x,
+                          InputIterator first,
+                          InputIterator last) {
+    uninitialized_fill(result, mid, x);
+    __STL_TRY {
+        return uninitialized_copy(first, last, mid);
+    }
+    __STL_UNWIND(destroy(result, mid));
+}
+
+// Copies [first1, last1) into [first2, first2 + (last1 - first1)), and
+//  fills [first2 + (last1 - first1), last2) with x.
+template <class InputIterator, class ForwardIterator, class T>
+inline void
+__uninitialized_copy_fill(InputIterator first1, InputIterator last1,
+                          ForwardIterator first2, ForwardIterator last2,
+                          const T& x) {
+    ForwardIterator mid2 = uninitialized_copy(first1, last1, first2);
+    __STL_TRY {
+        uninitialized_fill(mid2, last2, x);
+    }
+    __STL_UNWIND(destroy(first2, mid2));
+}
+
 
 
 
