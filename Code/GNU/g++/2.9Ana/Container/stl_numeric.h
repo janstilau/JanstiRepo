@@ -3,14 +3,8 @@
 
 __STL_BEGIN_NAMESPACE
 
-/*
- 这个文件里面, 存放的是通用算法, 这些通用的算法, 都是泛型定义的.
- */
 
-/*
- 在其他语言里面, reduce, 传入一个 init 值, 然后进行迭代累加的工作.
- */
-
+ // 在其他语言里面, reduce, 传入一个 init 值, 然后进行迭代累加的工作.
 template <class InputIterator, class T>
 T accumulate(InputIterator first, InputIterator last, T init) {
     for ( ; first != last; ++first)
@@ -18,9 +12,9 @@ T accumulate(InputIterator first, InputIterator last, T init) {
     return init;
 }
 
-/*
- 累加的工作, 由 + 操作符, 变为闭包, 增加了可配性.
- */
+// 增加了闭包传入, 增加了扩展性.
+// 注意, 这里可以不是闭包, 可以是一个 lambda, 可以是一个 c func, 可以是一个仿函数.
+// 只要, 编译的时候, 发现可以进行 () 的调用, 那么就是正确的.
 template <class InputIterator, class T, class BinaryOperation>
 T accumulate(InputIterator first, InputIterator last, T init,
              BinaryOperation binary_op) {
@@ -29,9 +23,7 @@ T accumulate(InputIterator first, InputIterator last, T init,
     return init;
 }
 
-/*
- product 有着乘积的意思.
- */
+// product 有着乘积的意思. 这个函数的意思, 就是两个序列, 相同位置乘积的和. 这里, 两个序列, 只给了一个序列的头尾, 第二个序列的长度, 需要调用者保证.
 template <class InputIterator1, class InputIterator2, class T>
 T inner_product(InputIterator1 first1, InputIterator1 last1,
                 InputIterator2 first2, T init) {
@@ -40,9 +32,7 @@ T inner_product(InputIterator1 first1, InputIterator1 last1,
     return init;
 }
 
-/*
- 增加了闭包, 作为配置项.
- */
+// inner_product 的可配置版本
 template <class InputIterator1, class InputIterator2, class T,
 class BinaryOperation1, class BinaryOperation2>
 T inner_product(InputIterator1 first1, InputIterator1 last1,
@@ -53,6 +43,27 @@ T inner_product(InputIterator1 first1, InputIterator1 last1,
     return init;
 }
 
+
+
+// partial_sum 的入口函数. partial_sum 是累加的意思.
+template <class InputIterator, class OutputIterator>
+OutputIterator partial_sum(InputIterator first, InputIterator last,
+                           OutputIterator result) {
+    if (first == last) return result;
+    *result = *first;
+    return __partial_sum(first, last, result, value_type(first));
+}
+
+// partial_sum 的可配置版本入口函数
+template <class InputIterator, class OutputIterator, class BinaryOperation>
+OutputIterator partial_sum(InputIterator first, InputIterator last,
+                           OutputIterator result, BinaryOperation binary_op) {
+    if (first == last) return result;
+    *result = *first;
+    return __partial_sum(first, last, result, value_type(first), binary_op);
+}
+
+
 template <class InputIterator, class OutputIterator, class T>
 OutputIterator __partial_sum(InputIterator first, InputIterator last,
                              OutputIterator result, T*) {
@@ -62,14 +73,6 @@ OutputIterator __partial_sum(InputIterator first, InputIterator last,
         *++result = value;
     }
     return ++result;
-}
-
-template <class InputIterator, class OutputIterator>
-OutputIterator partial_sum(InputIterator first, InputIterator last,
-                           OutputIterator result) {
-    if (first == last) return result;
-    *result = *first;
-    return __partial_sum(first, last, result, value_type(first));
 }
 
 template <class InputIterator, class OutputIterator, class T,
@@ -85,16 +88,11 @@ OutputIterator __partial_sum(InputIterator first, InputIterator last,
     return ++result;
 }
 
-/*
- 累加, 把中间结果, 记录到 result 的序列里面.
- */
-template <class InputIterator, class OutputIterator, class BinaryOperation>
-OutputIterator partial_sum(InputIterator first, InputIterator last,
-                           OutputIterator result, BinaryOperation binary_op) {
-    if (first == last) return result;
-    *result = *first;
-    return __partial_sum(first, last, result, value_type(first), binary_op);
-}
+
+
+
+
+
 
 /*
  序列里面, 相邻元素的差值.

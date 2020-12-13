@@ -1,15 +1,8 @@
-/* NOTE: This is an internal header file, included by other STL headers.
- *   You should not attempt to use it directly.
- */
-
 #ifndef __SGI_STL_INTERNAL_HASH_SET_H
 #define __SGI_STL_INTERNAL_HASH_SET_H
 
 __STL_BEGIN_NAMESPACE
 
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma set woff 1174
-#endif
 
 #ifndef __STL_LIMITED_DEFAULT_TEMPLATES
 // 默认, 就会把 hash 模板函数传递过来, 当做哈希算法.
@@ -306,14 +299,6 @@ inline void swap(hash_multiset<Val, HashFcn, EqualKey, Alloc>& hs1,
 {
   hs1.swap(hs2);
 }
-
-#endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
-
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma reset woff 1174
-#endif
-
-__STL_END_NAMESPACE
 
 #endif /* __SGI_STL_INTERNAL_HASH_SET_H */
 

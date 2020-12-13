@@ -5,53 +5,9 @@
 
 __STL_BEGIN_NAMESPACE
 
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma set woff 1209
-#endif
-
-template <class T>
-inline const T& __median(const T& a, const T& b, const T& c) {
-    if (a < b)
-        if (b < c)
-            return b;
-        else if (a < c)
-            return c;
-        else
-            return a;
-        else if (a < c)
-            return a;
-        else if (b < c)
-            return c;
-        else
-            return b;
-}
-
-/*
- 函数式编程, 通过一个闭包, 有了变化.
- */
-
-template <class T, class Compare>
-inline const T& __median(const T& a, const T& b, const T& c, Compare comp) {
-    if (comp(a, b))
-        if (comp(b, c))
-            return b;
-        else if (comp(a, c))
-            return c;
-        else
-            return a;
-        else if (comp(a, c))
-            return a;
-        else if (comp(b, c))
-            return c;
-        else
-            return b;
-}
 
 /*
  forEach 这个函数居然有返回值.
- 之前不太理解, 为什么 algorithm 里面, 传入仿函数, 传入 lambda 表达式, 传入函数指针, 都可以奏效.
- 模板里面, 只要编译能通过就可以. 所以, 不论传入的到底是什么东西, 只要能够调用到 () 操作符就可以了.
- 模板, 本身就是一个半成品, 根据你传入的参数的类型不同, 会生成实际的函数.
  */
 template <class InputIterator, class Function>
 Function for_each(InputIterator first, InputIterator last, Function f) {
@@ -60,21 +16,14 @@ Function for_each(InputIterator first, InputIterator last, Function f) {
     return f;
 }
 
-/*
- 线性查找. 一般来说, 查找就是线性的. 不过, 这里并不是说, 传过来的迭代器就是线性表结构. 因为关联式容器, 他也会有迭代器.
- 关联式容器, 是通过特殊的数据结构, 例如查找树, hash 函数来快速查找.
- 排序的数据, 如果可以随机访问, 可以通过二分查找来进行查找.
- */
+// find 协议簇
+// 线性查找的函数, 如果, 容器有着自己的 find, 就是利用自己的特性进行查找, 例如 hashTable.
 template <class InputIterator, class T>
 InputIterator find(InputIterator first, InputIterator last, const T& value) {
     while (first != last && *first != value) ++first;
     return first;
 }
 
-/*
- 通过闭包的方式, 改变了默认的行为.
- C++ 中, 泛型算法增加 if 的命名方式, 一般就代表着, 最终要增加一个闭包表达式.
- */
 template <class InputIterator, class Predicate>
 InputIterator find_if(InputIterator first, InputIterator last,
                       Predicate pred) {
@@ -82,9 +31,8 @@ InputIterator find_if(InputIterator first, InputIterator last,
     return first;
 }
 
-/*
- 传出参数并不是一个多危险的事情. 他可以避免复制行为. 在 Swift 里面, 写时复制, 如果没有传出参数的话, 性能会有很大的损失.
- */
+
+// count 函数簇, 分为返回值版本, 和传出参数版本,
 template <class InputIterator, class T, class Size>
 void count(InputIterator first, InputIterator last, const T& value,
            Size& n) {
@@ -93,9 +41,6 @@ void count(InputIterator first, InputIterator last, const T& value,
             ++n;
 }
 
-/*
- if 结尾, 增加了闭包的参数.
- */
 template <class InputIterator, class Predicate, class Size>
 void count_if(InputIterator first, InputIterator last, Predicate pred,
               Size& n) {
@@ -104,14 +49,8 @@ void count_if(InputIterator first, InputIterator last, Predicate pred,
             ++n;
 }
 
-#ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
-
 template <class InputIterator, class T>
 typename iterator_traits<InputIterator>::difference_type
-
-/*
- Count 函数, 默认就是 value 值的相等判断.
- */
 count(InputIterator first, InputIterator last, const T& value) {
     typename iterator_traits<InputIterator>::difference_type n = 0;
     for ( ; first != last; ++first)
@@ -120,9 +59,6 @@ count(InputIterator first, InputIterator last, const T& value) {
     return n;
 }
 
-/*
- if, 增加了闭包的传入. 注意, 这里返回值是 InputIterator::difference_type 类型的.
- */
 template <class InputIterator, class Predicate>
 typename iterator_traits<InputIterator>::difference_type
 count_if(InputIterator first, InputIterator last, Predicate pred) {
@@ -325,12 +261,6 @@ ForwardIterator2 swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1,
     return first2;
 }
 
-/*
- 将范围内的内容, 进行转化, 然后放到 result 里面.
- 这其实就是其他语言的 map 函数, 不过是, 其他 result OutputIterator 在这里, 是需要提前创造出来.
- 
- C++ 的模板的简洁性, 是建立在使用者去适配的基础上的.
- */
 template <class InputIterator, class OutputIterator, class UnaryOperation>
 OutputIterator transform(InputIterator first, InputIterator last,
                          OutputIterator result, UnaryOperation op) {
@@ -349,9 +279,8 @@ OutputIterator transform(InputIterator1 first1, InputIterator1 last1,
     return result;
 }
 
-/*
- 遍历整个序列, 如果值 == old_value 的话, 那么这个值, 就被 new_value 代替.
- */
+
+// replace 函数簇
 template <class ForwardIterator, class T>
 void replace(ForwardIterator first, ForwardIterator last, const T& old_value,
              const T& new_value) {
@@ -359,9 +288,6 @@ void replace(ForwardIterator first, ForwardIterator last, const T& old_value,
         if (*first == old_value) *first = new_value;
 }
 
-/*
- if 的函数, 惯例传入闭包进行判断.
- */
 template <class ForwardIterator, class Predicate, class T>
 void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred,
                 const T& new_value) {
@@ -369,10 +295,6 @@ void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred,
         if (pred(*first)) *first = new_value;
 }
 
-/*
- 遍历整个序列, 如果值等于 old_value, 就用 new_value, 插入到 result 序列中, 否则, 就把原序列的值, 插入到 result 序列里面.
- 这个函数真正会有很多人使用吗???
- */
 template <class InputIterator, class OutputIterator, class T>
 OutputIterator replace_copy(InputIterator first, InputIterator last,
                             OutputIterator result, const T& old_value,
@@ -382,9 +304,6 @@ OutputIterator replace_copy(InputIterator first, InputIterator last,
     return result;
 }
 
-/*
- if, 传入了闭包, 进行条件判断, 不符合的话, 就用原值.
- */
 template <class Iterator, class OutputIterator, class Predicate, class T>
 OutputIterator replace_copy_if(Iterator first, Iterator last,
                                OutputIterator result, Predicate pred,
@@ -499,11 +418,8 @@ OutputIterator reverse_copy(BidirectionalIterator first,
     return result;
 }
 
-/*
- Specifically, std::rotate swaps the elements in the range [first, last) in such a way that the element n_first becomes the first element of the new range and n_first - 1 becomes the last element.
- 把 middle 当做第一个元素. 原来的第一个元素, 顺然到末尾.
- */
 
+// rotate 函数簇
 template <class ForwardIterator>
 inline void rotate(ForwardIterator first, ForwardIterator middle,
                    ForwardIterator last) {
@@ -513,9 +429,6 @@ inline void rotate(ForwardIterator first, ForwardIterator middle,
              iterator_category(first));
 }
 
-/*
- 这个算法没有细想.
- */
 template <class ForwardIterator, class Distance>
 void __rotate(ForwardIterator first, ForwardIterator middle,
               ForwardIterator last,
@@ -569,705 +482,14 @@ void random_shuffle(RandomAccessIterator first, RandomAccessIterator last,
         iter_swap(i, first + rand((i - first) + 1));
 }
 
-/*
- Reorders the elements in the range [first, last) in such a way that all elements for which the predicate p returns true precede the elements for which predicate p returns false. Relative order of the elements is not preserved.
- 不稳定.
- 分区.
- Iterator to the first element of the second group.
- 快排, 会用到这里的算法, 不过, 快排的选择 pivot 的算法其实有多种.
- */
-
-/*
- 一下没有看.
- */
-
-template <class BidirectionalIterator, class Predicate>
-BidirectionalIterator partition(BidirectionalIterator first,
-                                BidirectionalIterator last, Predicate pred) {
-    while (true) {
-        while (true) {
-            // 该函数返回第二区域的第一位置, 所以每次指针移动, 都进行检查
-            if (first == last)
-                return first;
-            else if (pred(*first)) // 排在前面
-                ++first;
-            else
-                break; // 这个时候, first 已经指向了不排在前面的位置了.
-        }
-        --last; // 因为 last 是非法区域, 所以这里要进行 --,
-        while (true) {
-            // 该函数返回第二区域的第一位置, 所以每次指针移动, 都进行检查
-            if (first == last)
-                return first;
-            else if (!pred(*last)) // 排在后面
-                --last;
-            else
-                break; // 这个时候, last 已经指向了不排在后面的位置了.
-        }
-        iter_swap(first, last); // 置换非法的区域.
-        ++first;
-    }
-}
-
-template <class ForwardIterator, class Predicate, class Distance>
-ForwardIterator __inplace_stable_partition(ForwardIterator first,
-                                           ForwardIterator last,
-                                           Predicate pred, Distance len) {
-    if (len == 1) return pred(*first) ? last : first;
-    ForwardIterator middle = first;
-    advance(middle, len / 2);
-    ForwardIterator
-    first_cut = __inplace_stable_partition(first, middle, pred, len / 2);
-    ForwardIterator
-    second_cut = __inplace_stable_partition(middle, last, pred,
-                                            len - len / 2);
-    rotate(first_cut, middle, second_cut);
-    len = 0;
-    distance(middle, second_cut, len);
-    advance(first_cut, len);
-    return first_cut;
-}
-
-template <class ForwardIterator, class Pointer, class Predicate,
-class Distance>
-ForwardIterator __stable_partition_adaptive(ForwardIterator first,
-                                            ForwardIterator last,
-                                            Predicate pred, Distance len,
-                                            Pointer buffer,
-                                            Distance buffer_size) {
-    if (len <= buffer_size) {
-        ForwardIterator result1 = first;
-        Pointer result2 = buffer;
-        for ( ; first != last ; ++first)
-            if (pred(*first)) {
-                *result1 = *first;
-                ++result1;
-            }
-            else {
-                *result2 = *first;
-                ++result2;
-            }
-        copy(buffer, result2, result1);
-        return result1;
-    }
-    else {
-        ForwardIterator middle = first;
-        advance(middle, len / 2);
-        ForwardIterator first_cut =
-        __stable_partition_adaptive(first, middle, pred, len / 2,
-                                    buffer, buffer_size);
-        ForwardIterator second_cut =
-        __stable_partition_adaptive(middle, last, pred, len - len / 2,
-                                    buffer, buffer_size);
-        
-        rotate(first_cut, middle, second_cut);
-        len = 0;
-        distance(middle, second_cut, len);
-        advance(first_cut, len);
-        return first_cut;
-    }
-}
-
-template <class ForwardIterator, class Predicate, class T, class Distance>
-inline ForwardIterator __stable_partition_aux(ForwardIterator first,
-                                              ForwardIterator last,
-                                              Predicate pred, T*, Distance*) {
-    temporary_buffer<ForwardIterator, T> buf(first, last);
-    if (buf.size() > 0)
-        return __stable_partition_adaptive(first, last, pred,
-                                           Distance(buf.requested_size()),
-                                           buf.begin(), buf.size());
-    else
-        return __inplace_stable_partition(first, last, pred,
-                                          Distance(buf.requested_size()));
-}
-
-template <class ForwardIterator, class Predicate>
-inline ForwardIterator stable_partition(ForwardIterator first,
-                                        ForwardIterator last,
-                                        Predicate pred) {
-    if (first == last)
-        return first;
-    else
-        return __stable_partition_aux(first, last, pred,
-                                      value_type(first), distance_type(first));
-}
-
-/*
- 数组相关的分区的函数.
- */
-template <class RandomAccessIterator, class T>
-RandomAccessIterator __unguarded_partition(RandomAccessIterator first,
-                                           RandomAccessIterator last,
-                                           T pivot) {
-    while (true) {
-        while (*first < pivot) ++first;
-        --last;
-        while (pivot < *last) --last;
-        if (!(first < last)) return first;
-        iter_swap(first, last);
-        ++first;
-    }
-}
-
-template <class RandomAccessIterator, class T, class Compare>
-RandomAccessIterator __unguarded_partition(RandomAccessIterator first,
-                                           RandomAccessIterator last,
-                                           T pivot, Compare comp) {
-    while (1) {
-        while (comp(*first, pivot)) ++first;
-        --last;
-        while (comp(pivot, *last)) --last;
-        if (!(first < last)) return first;
-        iter_swap(first, last);
-        ++first;
-    }
-}
-
-const int __stl_threshold = 16;
-
-/*
- 数组线性插入函数.
- 从末尾搬移, 直到发现了应该插入的点.
- */
-template <class RandomAccessIterator, class T>
-void __unguarded_linear_insert(RandomAccessIterator last, T value) {
-    RandomAccessIterator next = last;
-    --next;
-    while (value < *next) {
-        *last = *next;
-        last = next;
-        --next;
-    }
-    *last = value;
-}
-
-/*
- 数组线性插入函数, 可配置的闭包表达式.
- */
-template <class RandomAccessIterator, class T, class Compare>
-void __unguarded_linear_insert(RandomAccessIterator last, T value,
-                               Compare comp) {
-    RandomAccessIterator next = last;
-    --next;
-    while (comp(value , *next)) {
-        *last = *next;
-        last = next;
-        --next;
-    }
-    *last = value;
-}
-
-template <class RandomAccessIterator, class T>
-inline void __linear_insert(RandomAccessIterator first,
-                            RandomAccessIterator last, T*) {
-    T value = *last;
-    if (value < *first) {
-        copy_backward(first, last, last + 1);
-        *first = value;
-    }
-    else
-        __unguarded_linear_insert(last, value);
-}
-
-template <class RandomAccessIterator, class T, class Compare>
-inline void __linear_insert(RandomAccessIterator first,
-                            RandomAccessIterator last, T*, Compare comp) {
-    T value = *last;
-    if (comp(value, *first)) {
-        copy_backward(first, last, last + 1);
-        *first = value;
-    }
-    else
-        __unguarded_linear_insert(last, value, comp);
-}
-
-/*
- 插入排序的过程就是, 从后往前进行判断, 搬移. 在合适的位置进行插入.
- */
-template <class RandomAccessIterator>
-void __insertion_sort(RandomAccessIterator first, RandomAccessIterator last) {
-    if (first == last) return;
-    for (RandomAccessIterator i = first + 1; i != last; ++i)
-        __linear_insert(first, i, value_type(first));
-}
-
-template <class RandomAccessIterator, class Compare>
-void __insertion_sort(RandomAccessIterator first,
-                      RandomAccessIterator last, Compare comp) {
-    if (first == last) return;
-    for (RandomAccessIterator i = first + 1; i != last; ++i)
-        __linear_insert(first, i, value_type(first), comp);
-}
-
-template <class RandomAccessIterator, class T>
-void __unguarded_insertion_sort_aux(RandomAccessIterator first,
-                                    RandomAccessIterator last, T*) {
-    for (RandomAccessIterator i = first; i != last; ++i)
-        __unguarded_linear_insert(i, T(*i));
-}
-
-template <class RandomAccessIterator>
-inline void __unguarded_insertion_sort(RandomAccessIterator first,
-                                       RandomAccessIterator last) {
-    __unguarded_insertion_sort_aux(first, last, value_type(first));
-}
-
-template <class RandomAccessIterator, class T, class Compare>
-void __unguarded_insertion_sort_aux(RandomAccessIterator first,
-                                    RandomAccessIterator last,
-                                    T*, Compare comp) {
-    for (RandomAccessIterator i = first; i != last; ++i)
-        __unguarded_linear_insert(i, T(*i), comp);
-}
-
-template <class RandomAccessIterator, class Compare>
-inline void __unguarded_insertion_sort(RandomAccessIterator first,
-                                       RandomAccessIterator last,
-                                       Compare comp) {
-    __unguarded_insertion_sort_aux(first, last, value_type(first), comp);
-}
-
-template <class RandomAccessIterator>
-void __final_insertion_sort(RandomAccessIterator first,
-                            RandomAccessIterator last) {
-    if (last - first > __stl_threshold) {
-        __insertion_sort(first, first + __stl_threshold);
-        __unguarded_insertion_sort(first + __stl_threshold, last);
-    }
-    else
-        __insertion_sort(first, last);
-}
-
-template <class RandomAccessIterator, class Compare>
-void __final_insertion_sort(RandomAccessIterator first,
-                            RandomAccessIterator last, Compare comp) {
-    if (last - first > __stl_threshold) {
-        __insertion_sort(first, first + __stl_threshold, comp);
-        __unguarded_insertion_sort(first + __stl_threshold, last, comp);
-    }
-    else
-        __insertion_sort(first, last, comp);
-}
-
-// log 方法.
-template <class Size>
-inline Size __lg(Size n) {
-    Size k;
-    for (k = 0; n > 1; n >>= 1) ++k;
-    return k;
-}
-
-template <class RandomAccessIterator, class T, class Size>
-void __introsort_loop(RandomAccessIterator first,
-                      RandomAccessIterator last, T*,
-                      Size depth_limit) {
-    while (last - first > __stl_threshold) {
-        if (depth_limit == 0) {
-            partial_sort(first, last, last);
-            return;
-        }
-        --depth_limit;
-        RandomAccessIterator cut = __unguarded_partition
-        (first, last, T(__median(*first, *(first + (last - first)/2),
-                                 *(last - 1))));
-        __introsort_loop(cut, last, value_type(first), depth_limit);
-        last = cut;
-    }
-}
-
-/*
- depth_limit 避免递归嵌套过深.
- STL的sort算法，数据量大，采用Quick Sort，分段递归排序。一旦分段后的数据量小于某个门槛，为避免Quick Sort的递归调用带来过大的额外负荷，就改用Insertion Sort。如果递归层次过深，还会改用Heap Sort。 Introsort，混合式排序算法。其行为在大部分情况下几乎与Quick sort 相同，但当分割行为有恶化为二次行为的倾向时，改用Heap Sort, 使效率维持在O(N log N)，又比一开始就使用heap sort 效果好。
- */
-template <class RandomAccessIterator, class T, class Size, class Compare>
-void __introsort_loop(RandomAccessIterator first,
-                      RandomAccessIterator last, T*,
-                      Size depth_limit, Compare comp) {
-    while (last - first > __stl_threshold) {
-        if (depth_limit == 0) {
-            partial_sort(first, last, last, comp);
-            return;
-        }
-        --depth_limit;
-        RandomAccessIterator cut = __unguarded_partition
-        (first, last, T(__median(*first, *(first + (last - first)/2),
-                                 *(last - 1), comp)), comp);
-        __introsort_loop(cut, last, value_type(first), depth_limit, comp);
-        last = cut;
-    }
-}
-
-template <class RandomAccessIterator>
-inline void sort(RandomAccessIterator first, RandomAccessIterator last) {
-    if (first != last) {
-        __introsort_loop(first, last, value_type(first), __lg(last - first) * 2);
-        __final_insertion_sort(first, last);
-    }
-}
-
-template <class RandomAccessIterator, class Compare>
-inline void sort(RandomAccessIterator first, RandomAccessIterator last,
-                 Compare comp) {
-    if (first != last) {
-        __introsort_loop(first, last, value_type(first), __lg(last - first) * 2,
-                         comp);
-        __final_insertion_sort(first, last, comp);
-    }
-}
-
-
-template <class RandomAccessIterator>
-void __inplace_stable_sort(RandomAccessIterator first,
-                           RandomAccessIterator last) {
-    if (last - first < 15) {
-        __insertion_sort(first, last);
-        return;
-    }
-    RandomAccessIterator middle = first + (last - first) / 2;
-    __inplace_stable_sort(first, middle);
-    __inplace_stable_sort(middle, last);
-    __merge_without_buffer(first, middle, last, middle - first, last - middle);
-}
-
-/*
- 
- */
-template <class RandomAccessIterator, class Compare>
-void __inplace_stable_sort(RandomAccessIterator first,
-                           RandomAccessIterator last, Compare comp) {
-    if (last - first < 15) {
-        // 在数量比较小的时候, 插入排序.
-        __insertion_sort(first, last, comp);
-        return;
-    }
-    // 不断地进行分割.
-    RandomAccessIterator middle = first + (last - first) / 2;
-    __inplace_stable_sort(first, middle, comp);
-    __inplace_stable_sort(middle, last, comp);
-    // 进行合并. 这里自己简单的想了一下, 和两条有序链表合并差不多, 源码的有些复杂.
-    __merge_without_buffer(first, middle, last, middle - first,
-                           last - middle, comp);
-}
-
-template <class RandomAccessIterator1, class RandomAccessIterator2,
-class Distance>
-void __merge_sort_loop(RandomAccessIterator1 first,
-                       RandomAccessIterator1 last,
-                       RandomAccessIterator2 result, Distance step_size) {
-    Distance two_step = 2 * step_size;
-    
-    while (last - first >= two_step) {
-        result = merge(first, first + step_size,
-                       first + step_size, first + two_step, result);
-        first += two_step;
-    }
-    
-    step_size = min(Distance(last - first), step_size);
-    merge(first, first + step_size, first + step_size, last, result);
-}
-
-template <class RandomAccessIterator1, class RandomAccessIterator2,
-class Distance, class Compare>
-void __merge_sort_loop(RandomAccessIterator1 first,
-                       RandomAccessIterator1 last,
-                       RandomAccessIterator2 result, Distance step_size,
-                       Compare comp) {
-    Distance two_step = 2 * step_size;
-    
-    while (last - first >= two_step) {
-        result = merge(first, first + step_size,
-                       first + step_size, first + two_step, result, comp);
-        first += two_step;
-    }
-    step_size = min(Distance(last - first), step_size);
-    
-    merge(first, first + step_size, first + step_size, last, result, comp);
-}
-
-const int __stl_chunk_size = 7;
-
-template <class RandomAccessIterator, class Distance>
-void __chunk_insertion_sort(RandomAccessIterator first,
-                            RandomAccessIterator last, Distance chunk_size) {
-    while (last - first >= chunk_size) {
-        __insertion_sort(first, first + chunk_size);
-        first += chunk_size;
-    }
-    __insertion_sort(first, last);
-}
-
-template <class RandomAccessIterator, class Distance, class Compare>
-void __chunk_insertion_sort(RandomAccessIterator first,
-                            RandomAccessIterator last,
-                            Distance chunk_size, Compare comp) {
-    while (last - first >= chunk_size) {
-        __insertion_sort(first, first + chunk_size, comp);
-        first += chunk_size;
-    }
-    __insertion_sort(first, last, comp);
-}
-
-template <class RandomAccessIterator, class Pointer, class Distance>
-void __merge_sort_with_buffer(RandomAccessIterator first,
-                              RandomAccessIterator last,
-                              Pointer buffer, Distance*) {
-    Distance len = last - first;
-    Pointer buffer_last = buffer + len;
-    
-    Distance step_size = __stl_chunk_size;
-    __chunk_insertion_sort(first, last, step_size);
-    
-    while (step_size < len) {
-        __merge_sort_loop(first, last, buffer, step_size);
-        step_size *= 2;
-        __merge_sort_loop(buffer, buffer_last, first, step_size);
-        step_size *= 2;
-    }
-}
-
-template <class RandomAccessIterator, class Pointer, class Distance,
-class Compare>
-void __merge_sort_with_buffer(RandomAccessIterator first,
-                              RandomAccessIterator last, Pointer buffer,
-                              Distance*, Compare comp) {
-    Distance len = last - first;
-    Pointer buffer_last = buffer + len;
-    
-    Distance step_size = __stl_chunk_size;
-    __chunk_insertion_sort(first, last, step_size, comp);
-    
-    while (step_size < len) {
-        __merge_sort_loop(first, last, buffer, step_size, comp);
-        step_size *= 2;
-        __merge_sort_loop(buffer, buffer_last, first, step_size, comp);
-        step_size *= 2;
-    }
-}
-
-template <class RandomAccessIterator, class Pointer, class Distance>
-void __stable_sort_adaptive(RandomAccessIterator first,
-                            RandomAccessIterator last, Pointer buffer,
-                            Distance buffer_size) {
-    Distance len = (last - first + 1) / 2;
-    RandomAccessIterator middle = first + len;
-    if (len > buffer_size) {
-        __stable_sort_adaptive(first, middle, buffer, buffer_size);
-        __stable_sort_adaptive(middle, last, buffer, buffer_size);
-    } else {
-        __merge_sort_with_buffer(first, middle, buffer, (Distance*)0);
-        __merge_sort_with_buffer(middle, last, buffer, (Distance*)0);
-    }
-    __merge_adaptive(first, middle, last, Distance(middle - first),
-                     Distance(last - middle), buffer, buffer_size);
-}
-
-template <class RandomAccessIterator, class Pointer, class Distance,
-class Compare>
-void __stable_sort_adaptive(RandomAccessIterator first,
-                            RandomAccessIterator last, Pointer buffer,
-                            Distance buffer_size, Compare comp) {
-    Distance len = (last - first + 1) / 2;
-    RandomAccessIterator middle = first + len;
-    if (len > buffer_size) {
-        __stable_sort_adaptive(first, middle, buffer, buffer_size,
-                               comp);
-        __stable_sort_adaptive(middle, last, buffer, buffer_size,
-                               comp);
-    } else {
-        __merge_sort_with_buffer(first, middle, buffer, (Distance*)0, comp);
-        __merge_sort_with_buffer(middle, last, buffer, (Distance*)0, comp);
-    }
-    __merge_adaptive(first, middle, last, Distance(middle - first),
-                     Distance(last - middle), buffer, buffer_size,
-                     comp);
-}
-
-template <class RandomAccessIterator, class T, class Distance>
-inline void __stable_sort_aux(RandomAccessIterator first,
-                              RandomAccessIterator last, T*, Distance*) {
-    temporary_buffer<RandomAccessIterator, T> buf(first, last);
-    if (buf.begin() == 0)
-        __inplace_stable_sort(first, last);
-    else
-        __stable_sort_adaptive(first, last, buf.begin(), Distance(buf.size()));
-}
-
-template <class RandomAccessIterator, class T, class Distance, class Compare>
-inline void __stable_sort_aux(RandomAccessIterator first,
-                              RandomAccessIterator last, T*, Distance*,
-                              Compare comp) {
-    temporary_buffer<RandomAccessIterator, T> buf(first, last);
-    if (buf.begin() == 0)
-        __inplace_stable_sort(first, last, comp);
-    else
-        __stable_sort_adaptive(first, last, buf.begin(), Distance(buf.size()),
-                               comp);
-}
-
-template <class RandomAccessIterator>
-inline void stable_sort(RandomAccessIterator first,
-                        RandomAccessIterator last) {
-    __stable_sort_aux(first, last, value_type(first), distance_type(first));
-}
-
-template <class RandomAccessIterator, class Compare>
-inline void stable_sort(RandomAccessIterator first,
-                        RandomAccessIterator last, Compare comp) {
-    __stable_sort_aux(first, last, value_type(first), distance_type(first),
-                      comp);
-}
-
-template <class RandomAccessIterator, class T>
-void __partial_sort(RandomAccessIterator first, RandomAccessIterator middle,
-                    RandomAccessIterator last, T*) {
-    make_heap(first, middle);
-    for (RandomAccessIterator i = middle; i < last; ++i)
-        if (*i < *first)
-            __pop_heap(first, middle, i, T(*i), distance_type(first));
-    sort_heap(first, middle);
-}
-
-template <class RandomAccessIterator>
-inline void partial_sort(RandomAccessIterator first,
-                         RandomAccessIterator middle,
-                         RandomAccessIterator last) {
-    __partial_sort(first, middle, last, value_type(first));
-}
-
-template <class RandomAccessIterator, class T, class Compare>
-void __partial_sort(RandomAccessIterator first, RandomAccessIterator middle,
-                    RandomAccessIterator last, T*, Compare comp) {
-    make_heap(first, middle, comp);
-    for (RandomAccessIterator i = middle; i < last; ++i)
-        if (comp(*i, *first))
-            __pop_heap(first, middle, i, T(*i), comp, distance_type(first));
-    sort_heap(first, middle, comp);
-}
-
-template <class RandomAccessIterator, class Compare>
-inline void partial_sort(RandomAccessIterator first,
-                         RandomAccessIterator middle,
-                         RandomAccessIterator last, Compare comp) {
-    __partial_sort(first, middle, last, value_type(first), comp);
-}
-
-template <class InputIterator, class RandomAccessIterator, class Distance,
-class T>
-RandomAccessIterator __partial_sort_copy(InputIterator first,
-                                         InputIterator last,
-                                         RandomAccessIterator result_first,
-                                         RandomAccessIterator result_last,
-                                         Distance*, T*) {
-    if (result_first == result_last) return result_last;
-    RandomAccessIterator result_real_last = result_first;
-    while(first != last && result_real_last != result_last) {
-        *result_real_last = *first;
-        ++result_real_last;
-        ++first;
-    }
-    make_heap(result_first, result_real_last);
-    while (first != last) {
-        if (*first < *result_first)
-            __adjust_heap(result_first, Distance(0),
-                          Distance(result_real_last - result_first), T(*first));
-        ++first;
-    }
-    sort_heap(result_first, result_real_last);
-    return result_real_last;
-}
-
-template <class InputIterator, class RandomAccessIterator>
-inline RandomAccessIterator
-partial_sort_copy(InputIterator first, InputIterator last,
-                  RandomAccessIterator result_first,
-                  RandomAccessIterator result_last) {
-    return __partial_sort_copy(first, last, result_first, result_last,
-                               distance_type(result_first), value_type(first));
-}
-
-template <class InputIterator, class RandomAccessIterator, class Compare,
-class Distance, class T>
-RandomAccessIterator __partial_sort_copy(InputIterator first,
-                                         InputIterator last,
-                                         RandomAccessIterator result_first,
-                                         RandomAccessIterator result_last,
-                                         Compare comp, Distance*, T*) {
-    if (result_first == result_last) return result_last;
-    RandomAccessIterator result_real_last = result_first;
-    while(first != last && result_real_last != result_last) {
-        *result_real_last = *first;
-        ++result_real_last;
-        ++first;
-    }
-    make_heap(result_first, result_real_last, comp);
-    while (first != last) {
-        if (comp(*first, *result_first))
-            __adjust_heap(result_first, Distance(0),
-                          Distance(result_real_last - result_first), T(*first),
-                          comp);
-        ++first;
-    }
-    sort_heap(result_first, result_real_last, comp);
-    return result_real_last;
-}
-
-template <class InputIterator, class RandomAccessIterator, class Compare>
-inline RandomAccessIterator
-partial_sort_copy(InputIterator first, InputIterator last,
-                  RandomAccessIterator result_first,
-                  RandomAccessIterator result_last, Compare comp) {
-    return __partial_sort_copy(first, last, result_first, result_last, comp,
-                               distance_type(result_first), value_type(first));
-}
-
-template <class RandomAccessIterator, class T>
-void __nth_element(RandomAccessIterator first, RandomAccessIterator nth,
-                   RandomAccessIterator last, T*) {
-    while (last - first > 3) {
-        RandomAccessIterator cut = __unguarded_partition
-        (first, last, T(__median(*first, *(first + (last - first)/2),
-                                 *(last - 1))));
-        if (cut <= nth)
-            first = cut;
-        else
-            last = cut;
-    }
-    __insertion_sort(first, last);
-}
-
-template <class RandomAccessIterator>
-inline void nth_element(RandomAccessIterator first, RandomAccessIterator nth,
-                        RandomAccessIterator last) {
-    __nth_element(first, nth, last, value_type(first));
-}
-
-template <class RandomAccessIterator, class T, class Compare>
-void __nth_element(RandomAccessIterator first, RandomAccessIterator nth,
-                   RandomAccessIterator last, T*, Compare comp) {
-    while (last - first > 3) {
-        RandomAccessIterator cut = __unguarded_partition
-        (first, last, T(__median(*first, *(first + (last - first)/2),
-                                 *(last - 1), comp)), comp);
-        if (cut <= nth)
-            first = cut;
-        else
-            last = cut;
-    }
-    __insertion_sort(first, last, comp);
-}
-
-template <class RandomAccessIterator, class Compare>
-inline void nth_element(RandomAccessIterator first, RandomAccessIterator nth,
-                        RandomAccessIterator last, Compare comp) {
-    __nth_element(first, nth, last, value_type(first), comp);
-}
 
 /*
  10, 10, 10, 20, 20, 20, 30
  如果查找 20 的 lowerBound 的话, 那么就是 3
  如果查找 20 的 upperBound 的话, 那么就是 6
  */
+
+// lowerbound 函数簇.
 template <class ForwardIterator, class T>
 inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
                                    const T& value) {
@@ -1275,109 +497,7 @@ inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
                          iterator_category(first));
 }
 
-// 不同版本的 __lower_bound, 根据迭代器进行分发. 其实, 和我们经过一个数字进行分发, 没有太大的区别.
-// 但是, 使用类型, 当添加类型的时候, 好扩展, 类型名, 又是很好的注释.
-
-template <class ForwardIterator, class T, class Distance>
-ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
-                              const T& value, Distance*,
-                              forward_iterator_tag) {
-    Distance len = 0;
-    distance(first, last, len);
-    Distance half;
-    ForwardIterator middle;
-    
-    /*
-     这里算法有点不好理解, 用极客时间的算法更好.
-     */
-    while (len > 0) {
-        half = len >> 1;
-        middle = first;
-        advance(middle, half);
-        if (*middle < value) {
-            first = middle;
-            ++first;
-            len = len - half - 1;
-        }
-        else
-            len = half;
-    }
-    return first;
-}
-
-/*
- 可随机访问的, 那么直接可以获得目标迭代器.
- */
-template <class RandomAccessIterator, class T, class Distance>
-RandomAccessIterator __lower_bound(RandomAccessIterator first,
-                                   RandomAccessIterator last, const T& value,
-                                   Distance*, random_access_iterator_tag) {
-    Distance len = last - first;
-    Distance half;
-    RandomAccessIterator middle;
-    
-    /*
-     用极客时间的算法更好.
-     */
-    while (len > 0) {
-        half = len >> 1;
-        middle = first + half;
-        if (*middle < value) {
-            first = middle + 1;
-            len = len - half - 1;
-        }
-        else
-            len = half;
-    }
-    return first;
-}
-
-template <class ForwardIterator, class T, class Compare, class Distance>
-ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
-                              const T& value, Compare comp, Distance*,
-                              forward_iterator_tag) {
-    Distance len = 0;
-    distance(first, last, len);
-    Distance half;
-    ForwardIterator middle;
-    
-    while (len > 0) {
-        half = len >> 1;
-        middle = first;
-        advance(middle, half);
-        if (comp(*middle, value)) {
-            first = middle;
-            ++first;
-            len = len - half - 1;
-        }
-        else
-            len = half;
-    }
-    return first;
-}
-
-template <class RandomAccessIterator, class T, class Compare, class Distance>
-RandomAccessIterator __lower_bound(RandomAccessIterator first,
-                                   RandomAccessIterator last,
-                                   const T& value, Compare comp, Distance*,
-                                   random_access_iterator_tag) {
-    Distance len = last - first;
-    Distance half;
-    RandomAccessIterator middle;
-    
-    while (len > 0) {
-        half = len >> 1;
-        middle = first + half;
-        if (comp(*middle, value)) {
-            first = middle + 1;
-            len = len - half - 1;
-        }
-        else
-            len = half;
-    }
-    return first;
-}
-
+// 可配置闭包版本的 lowerbound
 template <class ForwardIterator, class T, class Compare>
 inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
                                    const T& value, Compare comp) {
@@ -1386,6 +506,116 @@ inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
 }
 
 template <class ForwardIterator, class T, class Distance>
+ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
+                              const T& value, Distance*,
+                              forward_iterator_tag) {
+    Distance len = 0;
+    distance(first, last, len); // 必须通过 distance 获取长度.
+    Distance half;
+    ForwardIterator middle;
+    
+    while (len > 0) {
+        half = len >> 1;
+        middle = first;
+        advance(middle, half); // 必须通过 advance 进行指针的改变.
+        if (*middle < value) {
+            first = middle;
+            ++first;
+            len = len - half - 1;
+        }
+        else
+            len = half;
+    }
+    return first;
+}
+
+// random 的版本, 直接用操作符就可以获取到长度, 改变指针.
+template <class RandomAccessIterator, class T, class Distance>
+RandomAccessIterator __lower_bound(RandomAccessIterator first,
+                                   RandomAccessIterator last, const T& value,
+                                   Distance*, random_access_iterator_tag) {
+    Distance len = last - first;
+    Distance half;
+    RandomAccessIterator middle;
+    
+    while (len > 0) {
+        half = len >> 1;
+        middle = first + half;
+        if (*middle < value) {
+            first = middle + 1;
+            len = len - half - 1;
+        }
+        else
+            len = half;
+    }
+    return first;
+}
+
+// 带有闭包版本的 lowerbound 实现.
+template <class ForwardIterator, class T, class Compare, class Distance>
+ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
+                              const T& value, Compare comp, Distance*,
+                              forward_iterator_tag) {
+    Distance len = 0;
+    distance(first, last, len);
+    Distance half;
+    ForwardIterator middle;
+    
+    while (len > 0) {
+        half = len >> 1;
+        middle = first;
+        advance(middle, half);
+        if (comp(*middle, value)) {
+            first = middle;
+            ++first;
+            len = len - half - 1;
+        }
+        else
+            len = half;
+    }
+    return first;
+}
+
+template <class RandomAccessIterator, class T, class Compare, class Distance>
+RandomAccessIterator __lower_bound(RandomAccessIterator first,
+                                   RandomAccessIterator last,
+                                   const T& value, Compare comp, Distance*,
+                                   random_access_iterator_tag) {
+    Distance len = last - first;
+    Distance half;
+    RandomAccessIterator middle;
+    
+    while (len > 0) {
+        half = len >> 1;
+        middle = first + half;
+        if (comp(*middle, value)) {
+            first = middle + 1;
+            len = len - half - 1;
+        }
+        else
+            len = half;
+    }
+    return first;
+}
+
+
+// upper_bound 函数簇.
+// 和 lower_bound 同样的思考就可以了
+template <class ForwardIterator, class T>
+inline ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last,
+                                   const T& value) {
+    return __upper_bound(first, last, value, distance_type(first),
+                         iterator_category(first));
+}
+
+template <class ForwardIterator, class T, class Compare>
+inline ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last,
+                                   const T& value, Compare comp) {
+    return __upper_bound(first, last, value, comp, distance_type(first),
+                         iterator_category(first));
+}
+
+template <class ForwardIterator, class T, class Distance>
 ForwardIterator __upper_bound(ForwardIterator first, ForwardIterator last,
                               const T& value, Distance*,
                               forward_iterator_tag) {
@@ -1428,13 +658,6 @@ RandomAccessIterator __upper_bound(RandomAccessIterator first,
         }
     }
     return first;
-}
-
-template <class ForwardIterator, class T>
-inline ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last,
-                                   const T& value) {
-    return __upper_bound(first, last, value, distance_type(first),
-                         iterator_category(first));
 }
 
 template <class ForwardIterator, class T, class Compare, class Distance>
@@ -1483,12 +706,11 @@ RandomAccessIterator __upper_bound(RandomAccessIterator first,
     return first;
 }
 
-template <class ForwardIterator, class T, class Compare>
-inline ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last,
-                                   const T& value, Compare comp) {
-    return __upper_bound(first, last, value, comp, distance_type(first),
-                         iterator_category(first));
-}
+
+
+
+
+
 
 template <class ForwardIterator, class T, class Distance>
 pair<ForwardIterator, ForwardIterator>
@@ -2537,15 +1759,3 @@ bool is_sorted(ForwardIterator first, ForwardIterator last,
     
     return true;
 }
-
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma reset woff 1209
-#endif
-
-__STL_END_NAMESPACE
-
-#endif /* __SGI_STL_INTERNAL_ALGO_H */
-
-// Local Variables:
-// mode:C++
-// End:

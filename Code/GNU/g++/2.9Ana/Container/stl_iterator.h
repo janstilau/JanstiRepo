@@ -192,11 +192,9 @@ value_type(const Iterator&) {
     return static_cast<typename iterator_traits<Iterator>::value_type*>(0);
 }
 
-#else /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
-#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
-// distance 仅仅是一个分发函数, 真正的实现, 要经过 iterator_category 进行分发.
+// distance 入口函数
 template <class InputIterator, class Distance>
 inline void distance(InputIterator first, InputIterator last, Distance& n) {
     __distance(first, last, n, iterator_category(first));
@@ -220,11 +218,8 @@ inline void __distance(RandomAccessIterator first, RandomAccessIterator last,
     n += last - first;
 }
 
-#ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
-#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
-
-// advance, 移动迭代器 n 个距离, 迭代器是引用语义, 传出作用.
+// advance 入口函数
 template <class InputIterator, class Distance>
 inline void advance(InputIterator& i, Distance n) {
     __advance(i, n, iterator_category(i));

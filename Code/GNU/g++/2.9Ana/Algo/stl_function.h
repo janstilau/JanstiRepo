@@ -4,10 +4,9 @@
 __STL_BEGIN_NAMESPACE
 
 /*
- 公共类型定义.
- 在某些时候, 可能会使用 result_type, argument_type,first_argument_type, second_argument_type 来定义变量.
- 这是时候, 如果你传递过去的仿函数类, 没有继承 unary_function, 或者 binary_function, 就取不到上面的信息.
- 所以, 继承这两个类, 最大的意义, 是将自己定义的类, 纳入到 STL 的体系中.
+ 如果, 自己写的仿函数, 没有继承下面的定义, 那么就没有能力回答 argument_type, result_type 的类型.
+ 可以正常的传入到算法中使用, 因为算法仅仅要求可以 func call, 也就是 operator () 调用就行.
+ 但是, 如果想让 binder1st 进行修饰, 因为没有办法回答这些类要求的 result_type, argument_type 是什么, 就不能和 STL 对于仿函数的设计融合到一起.
  */
 template <class Arg, class Result>
 struct unary_function {
@@ -23,9 +22,6 @@ struct binary_function {
 };      
 
 /*
- 下面这些类型, 用于生产临时对象.
- 可以理解成为, 是 Block 的工厂类, 目的就是生成特定类型的 block. 既然是 Block, 就是没有名称的对象. 所以, 仿函数一般也是用在传递参数的过程中, 或者在模板里面充当类型参数, 让模板内部生成对应的 block 对象.
- 
  函数对象的内部仅仅写出了逻辑的混合, 大量利用了操作符重载.
  可以把操作符, 理解为, 具有通用性的一组特殊接口.
  类型的设计者, 要去自己实现这组接口.
@@ -105,8 +101,7 @@ struct logical_not : public unary_function<T, bool> {
     bool operator()(const T& x) const { return !x; }
 };
 
-
-// 这里进行了偏特化, 明确出了, result_type 是一个 bool.
+// unary_function 需要两个类型参数, 但是偏特化绑定了一个,
 template <class Predicate>
 class unary_negate
 : public unary_function<typename Predicate::argument_type, bool> {
@@ -120,15 +115,6 @@ public:
     }
 };
 
-/*
- 真正暴露给用户的, 不会是上面的那个仿函数的定义. 而是一个简单的函数. 这个函数的内部, 做包装的动作.
- not1 是一个很简单的函数, 但是, 想要理解它究竟做了什么, 一定要理解, 闭包, 函数对象这些东西.
- 可以用命令模式来理解, 就是将操作封装成为对象.
- 所以, not1 这种, 就是在函数内部生成一个新的对象, 这个对象包含原来传过来的闭包, 并对这个闭包, 进行了函数相关的逻辑处理.
- 
- 还有 swift lazy 函数, 也是产生一个新的对象, 对于原始值进行包装. 只不过新的对象, 还符合 sequence 协议, 所以还可以当做 sequence 进行使用.
- */
-// unary_negate<Predicate> 是返回值类型, not1 是函数名.
 template <class Predicate>
 inline unary_negate<Predicate> not1(const Predicate& pred) {
     return unary_negate<Predicate>(pred);
@@ -157,7 +143,7 @@ inline binary_negate<Predicate> not2(const Predicate& pred) {
 
 // 在这里, Operation::second_argument_type, 这些其实是限制, 如果 Operation 不是 binary_function 的子类, 编译就通过不了.
 // binder1st 这个函数, 是存储一个闭包, 和这个闭包的某个参数值, 然后生成一个新的闭包. 这样, 新的闭包就可以只传入一个参数了.
-// 把最原始的一个函数的调用, 经过了一层包装, 变为了两个函数的调用. 
+// Operation 必须是一个二元的仿函数, 经过了 binder1st 的包装, 变成了一元的仿函数.
 template <class Operation>
 class binder1st
 : public unary_function<typename Operation::second_argument_type, typename Operation::result_type> {
@@ -179,14 +165,11 @@ public:
 // binder1st<Operation>  是返回值类型, bind1st 是函数名.
 template <class Operation, class T>
 inline binder1st<Operation> bind1st(const Operation& op, const T& x) {
-    typedef typename Operation::first_argument_type arg1_type;
+    typedef typename Operation::first_argument_type arg1_type; // 这里, 使用 type 强包了一层.
     return binder1st<Operation>(op, arg1_type(x));
 }
 
-/*
- binder2nd 和 binder1st 几乎没有区别, 不过是调用逻辑上, 变为了第二个值的绑定.
- */
-template <class Operation> 
+template <class Operation>
 class binder2nd
 : public unary_function<typename Operation::first_argument_type,
 typename Operation::result_type> {

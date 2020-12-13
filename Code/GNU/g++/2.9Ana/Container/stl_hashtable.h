@@ -17,45 +17,24 @@
 
 __STL_BEGIN_NAMESPACE
 
-/*
- 一个简单的链表节点.
- */
+// 哈希表的 seperator-chain 的节点. 后续指针和 data 部分, data 部分包含了 key 和 value .
 template <class Value>
 struct __hashtable_node
 {
     __hashtable_node* next;
-    // 需要注意的是, 这里的 Value, 是节点, 也就是 key, value 的组合, 当然, 对于 set 来说, key 就是 value. 但是对于 map 来说, key+value 才是 node.
     Value val;
 };  
 
 template <class Value, class Key, class HashFcn,
-class ExtractKey, class EqualKey, class Alloc = alloc>
-class hashtable;
-
-template <class Value, class Key, class HashFcn,
-class ExtractKey, class EqualKey, class Alloc>
-struct __hashtable_iterator;
-
-template <class Value, class Key, class HashFcn,
-class ExtractKey, class EqualKey, class Alloc>
-struct __hashtable_const_iterator;
-
-template <class Value, class Key, class HashFcn,
 class ExtractKey, class EqualKey, class Alloc>
 struct __hashtable_iterator {
-    typedef hashtable<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc>
-    hashtable;
-    typedef __hashtable_iterator<Value, Key, HashFcn,
-    ExtractKey, EqualKey, Alloc>
-    iterator;
-    typedef __hashtable_const_iterator<Value, Key, HashFcn,
-    ExtractKey, EqualKey, Alloc>
-    const_iterator;
+    typedef hashtable<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc> hashtable;
+    typedef __hashtable_iterator<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc> iterator;
+    typedef __hashtable_const_iterator<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc> const_iterator;
     typedef __hashtable_node<Value> node;
-    
-    /*
-     hash 表的迭代器, 不能回走.
-     */
+
+    // 哈希表的迭代器, 对于 iterator::traits 的适配.
+    // 哈希表的迭代器, 是无法回走的. 没有必要, 查值也是从头到尾走一遍的事情.
     typedef forward_iterator_tag iterator_category;
     typedef Value value_type;
     typedef ptrdiff_t difference_type;
@@ -63,26 +42,21 @@ struct __hashtable_iterator {
     typedef Value& reference;
     typedef Value* pointer;
     
-    /*
-     Node 是链表里面的 Node, 根据 Node 可以找到下一个节点的位置.
-     */
+public:
+    // 数据部分, 当前节点
     node* cur;
-    /*
-     Ht 表示的是哈希表的数组, 这里, 没有表示当前数组位置的地方, 是因为可以通过 bucket 计算公式算出来.
-     */
+    // 哈希表的 buckets. 没有必要记录, 自己在 buckets 的位置, 因为可以根据 data 里面的值算出来.
     hashtable* ht;
     
     __hashtable_iterator(node* n, hashtable* tab) : cur(n), ht(tab) {}
     __hashtable_iterator() {}
-    /*
-     cur 能够结局大部分问题, 但是对于迭代器的移动, 需要用到 hashTable 的东西.
-     */
+    
     reference operator*() const { return cur->val; }
     pointer operator->() const { return &(operator*()); }
-    iterator& operator++();
-    iterator operator++(int);
     bool operator==(const iterator& it) const { return cur == it.cur; }
     bool operator!=(const iterator& it) const { return cur != it.cur; }
+    iterator& operator++();
+    iterator operator++(int);
 };
 
 
@@ -103,6 +77,8 @@ struct __hashtable_const_iterator {
     typedef Value value_type;
     typedef ptrdiff_t difference_type;
     typedef size_t size_type;
+    // 和 __hashtable_iterator 唯一的不同, 就是 reference, 和 pointer 都增加了 const 的修饰.
+    // 就为了这一点不同, 就需要一个新的类.
     typedef const Value& reference;
     typedef const Value* pointer;
     
@@ -121,21 +97,19 @@ struct __hashtable_const_iterator {
     bool operator!=(const const_iterator& it) const { return cur != it.cur; }
 };
 
-/*
- 在类的定义外, 定义函数, 要把所有的东西都写全.
- */
+// 在类的定义外, 定义函数, 要把所有的东西都写全.
 template <class V, class K, class HF, class ExK, class EqK, class A>
 __hashtable_iterator<V, K, HF, ExK, EqK, A>&
 __hashtable_iterator<V, K, HF, ExK, EqK, A>::operator++()
 {
     /*
-     显示在当前的 bucket 所在的链表里面找. 如果当前链表没有了, 就从哈希表中查找.
+     首先是在 seperator-chain 里面后移. 到最后了, 转移 bucket 中寻找.
      在 iterator 内部, 没有存储哈希表的当前 bucket 位置, 而是根据 hashCode 找到的.
      */
     const node* old = cur;
     cur = cur->next;
     if (!cur) {
-        // 从当前的 node, 查找到 bucket 的位置, 然后不断迭代判断下一个拥有 node 链表的 bucket 在哪里.
+        // 根据 ht->bkt_num, 查找到 bucket 的 idx 值, 然后查找后面的有效值.
         size_type bucket = ht->bkt_num(old->val);
         while (!cur && ++bucket < ht->bucketsVector.size())
             cur = ht->bucketsVector[bucket];
@@ -143,9 +117,7 @@ __hashtable_iterator<V, K, HF, ExK, EqK, A>::operator++()
     return *this;
 }
 
-/*
- 后++, 一定是调用前++ 的实现.
- */
+// 后++, 调用前++ 的实现, 逻辑统一在一处.
 template <class V, class K, class HF, class ExK, class EqK, class A>
 inline __hashtable_iterator<V, K, HF, ExK, EqK, A>
 __hashtable_iterator<V, K, HF, ExK, EqK, A>::operator++(int)
@@ -155,31 +127,6 @@ __hashtable_iterator<V, K, HF, ExK, EqK, A>::operator++(int)
     return tmp;
 }
 
-template <class V, class K, class HF, class ExK, class EqK, class A>
-__hashtable_const_iterator<V, K, HF, ExK, EqK, A>&
-__hashtable_const_iterator<V, K, HF, ExK, EqK, A>::operator++()
-{
-    const node* old = cur;
-    cur = cur->next;
-    if (!cur) {
-        size_type bucket = ht->bkt_num(old->val);
-        while (!cur && ++bucket < ht->bucketsVector.size())
-            cur = ht->bucketsVector[bucket];
-    }
-    return *this;
-}
-
-template <class V, class K, class HF, class ExK, class EqK, class A>
-inline __hashtable_const_iterator<V, K, HF, ExK, EqK, A>
-__hashtable_const_iterator<V, K, HF, ExK, EqK, A>::operator++(int)
-{
-    const_iterator tmp = *this;
-    ++*this;
-    return tmp;
-}
-
-
-// Note: assumes long is at least 32 bits.
 /*
  哈希表的大小, 是固定的, 每次进行扩容的时候, 都是表中最接近2倍当前值的地方.
  这个表是经验所得, 相比较数组的两倍增长, 哈希表的大小有了固定的设置.
@@ -196,9 +143,7 @@ static const unsigned long __stl_prime_list[__stl_num_primes] =
     1610612741, 3221225473ul, 4294967291ul
 };
 
-/*
- lower_bound, 二分查找, 当前应该插入的位置. 也就是说, 3080, 应该就是 6151 的位置.
- */
+// 根据当前容量值, 获取下一次应该扩容的量的值. 使用了二分查找发.
 inline unsigned long __stl_next_prime(unsigned long n)
 {
     const unsigned long* first = __stl_prime_list;
@@ -207,13 +152,14 @@ inline unsigned long __stl_next_prime(unsigned long n)
     return pos == last ? *(last - 1) : *pos;
 }
 
-/*
- hashTable 的实现.
- */
-
-template <class Value, class Key, class HashFcn,
-class ExtractKey, class EqualKey,
-class Alloc>
+// HashTable 的实现.
+template <
+class Value, // 值
+class Key, // 索引
+class HashFcn, // 如何根据 key, 获取到 hashCode
+class ExtractKey, // 如果从 KeyValue 的 Node 里面, 获取到 key
+class EqualKey, // 如何进行 key 的相等判断
+class Alloc> // 节点的分配.
 class hashtable {
 public:
     typedef Key key_type;
@@ -231,28 +177,29 @@ public:
     hasher hash_funct() const { return hash; }
     key_equal key_eq() const { return equals; }
     
-private:
-    hasher hash; // 哈希算法, 是保存在哈希表里面的. 这是一个函数对象.
-    key_equal equals; // key 的相等判断算法, 是保存在哈希表里面的. 这是一个函数对象.
-    ExtractKey get_key; // 如何从 value 中, 找到 key , 是保存在哈希表里面的. 这是一个函数对象.
-    
     typedef __hashtable_node<Value> node;
     typedef simple_alloc<node, Alloc> node_allocator;
     
+private:
+    
+    // 数据部分
+    hasher hash; // 模板的类型参数确定
+    key_equal equals; // 模板的类型参数确定
+    ExtractKey get_key; // 模板的类型参数确定
     vector<node*,Alloc> bucketsVector; // bucket 数组.
-    size_type num_elements; // 当前个数, 一般来说, 作为容器, 它是有责任记录当前容器的数量的.
+    size_type num_elements; // 当前个数.
     
 public:
     typedef __hashtable_iterator<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc> iterator;
     typedef __hashtable_const_iterator<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc> const_iterator;
     
+    // 迭代器, 作为友元, 来直接参与到数据的获取移动
     friend struct
     __hashtable_iterator<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc>;
     friend struct
     __hashtable_const_iterator<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc>;
     
 public:
-    // 当年要创建一个哈希表的时候, 其实是要传递一个 hash 方法进去的, 用来计算 hash 值. 但是, 不会用户去使用 hash 表, set 会使用, 在那里, 会把默认的 hash 函数传递过来.
     hashtable(size_type n,
               const HashFcn&    hf,
               const EqualKey&   eql,
@@ -278,11 +225,6 @@ public:
     
     hashtable& operator= (const hashtable& ht)
     {
-        /*
-         先清空.
-         然后记录各个闭包信息.
-         然后完全复制.
-         */
         if (&ht != this) {
             clear();
             hash = ht.hash;
@@ -296,44 +238,33 @@ public:
     ~hashtable() { clear(); }
     
     size_type size() const { return num_elements; }
-    size_type max_size() const { return size_type(-1); }
+    size_type max_size() const { return size_type(-1); } // 传出去一个假的值.
     bool empty() const { return size() == 0; }
     
+    // swap, 仅仅是类内数据的交换, 指针交换, 速度很快.
     void swap(hashtable& ht)
     {
-        /*
-         swap, 仅仅是成员变量的值的交换.
-         bucketsVector 的 swap 也是很快的, 里面仅仅做几个指针的交换而已
-         */
         __STD::swap(hash, ht.hash);
         __STD::swap(equals, ht.equals);
         __STD::swap(get_key, ht.get_key);
-        bucketsVector.swap(ht.bucketsVector);
         __STD::swap(num_elements, ht.num_elements);
+        bucketsVector.swap(ht.bucketsVector);
     }
     
-    /*
-     取第一个 bucket 里面的存储了数据的值.
-     */
+    // 从 bucket 里面遍历, 第一个有值的 node.
     iterator begin()
     {
         for (size_type n = 0; n < bucketsVector.size(); ++n) {
             if (bucketsVector[n]) {
-                // bucketsVector[n] 里面, 就是链表的头结点.
                 return iterator(bucketsVector[n], this);
             }
         }
         return end();
     }
     
-    /*
-     因为iterator 迭代到最后, 也就是 cur 为 nil 的状态.
-     */
+    // 哈希表编译到最后, node 一定指向空.
     iterator end() { return iterator(0, this); }
     
-    /*
-     const 和 非 const 是一样的, 只不过返回值的适配器类型的.
-     */
     const_iterator begin() const
     {
         for (size_type n = 0; n < bucketsVector.size(); ++n)
@@ -341,11 +272,10 @@ public:
                 return const_iterator(bucketsVector[n], this);
         return end();
     }
-    
     const_iterator end() const { return const_iterator(0, this); }
     
     friend bool
-    operator== __STL_NULL_TMPL_ARGS (const hashtable&, const hashtable&);
+    operator== (const hashtable&, const hashtable&);
     
 public:
     
@@ -354,6 +284,7 @@ public:
     size_type max_bucket_count() const
     { return __stl_prime_list[__stl_num_primes - 1]; }
     
+    // 遍历一下 seperator-chain 来获取长度.
     size_type elems_in_bucket(size_type bucket) const
     {
         size_type result = 0;
@@ -362,9 +293,9 @@ public:
         return result;
     }
     
+    // 先进行容量的扩展. insert 函数里面, 就不用考虑这些事了.
     pair<iterator, bool> insert_unique(const value_type& obj)
     {
-        // 先进行容量的扩展. insert 函数里面, 就不用考虑这些事了.
         resize(num_elements + 1);
         return insert_unique_noresize(obj);
     }
@@ -378,63 +309,6 @@ public:
     pair<iterator, bool> insert_unique_noresize(const value_type& obj);
     iterator insert_equal_noresize(const value_type& obj);
     
-#ifdef __STL_MEMBER_TEMPLATES
-    template <class InputIterator>
-    void insert_unique(InputIterator f, InputIterator l)
-    {
-        insert_unique(f, l, iterator_category(f));
-    }
-    
-    template <class InputIterator>
-    void insert_equal(InputIterator f, InputIterator l)
-    {
-        insert_equal(f, l, iterator_category(f));
-    }
-    
-    /*
-     插入一个序列, 也就是不但的在序列上进行取值, 插入的过程.
-     注意, 这里并没有很好地高效的办法. 因为哈希表在每次插入过程中, 是要做 bucket 位置查找, 链表的维护, 扩容处理的.
-     如果用简单的内存搬移, 哈希表里面的状态就会变得混乱了.
-     */
-    template <class InputIterator>
-    void insert_unique(InputIterator f, InputIterator l,
-                       input_iterator_tag)
-    {
-        for ( ; f != l; ++f)
-            insert_unique(*f);
-    }
-    
-    template <class InputIterator>
-    void insert_equal(InputIterator f, InputIterator l,
-                      input_iterator_tag)
-    {
-        for ( ; f != l; ++f)
-            insert_equal(*f);
-    }
-    
-    template <class ForwardIterator>
-    void insert_unique(ForwardIterator f, ForwardIterator l,
-                       forward_iterator_tag)
-    {
-        size_type n = 0;
-        distance(f, l, n);
-        resize(num_elements + n);
-        for ( ; n > 0; --n, ++f)
-            insert_unique_noresize(*f);
-    }
-    
-    template <class ForwardIterator>
-    void insert_equal(ForwardIterator f, ForwardIterator l,
-                      forward_iterator_tag)
-    {
-        size_type n = 0;
-        distance(f, l, n);
-        resize(num_elements + n);
-        for ( ; n > 0; --n, ++f)
-            insert_equal_noresize(*f);
-    }
-    
-#else /* __STL_MEMBER_TEMPLATES */
     /*
      iterator 为指针的情况下的插入序列的实现.
      可以看到, 能够确定 size 的情况下, 优先使用 size 判断. 相比迭代器的比较, 这样的操作要快一点.
@@ -472,15 +346,9 @@ public:
         for ( ; n > 0; --n, ++f)
             insert_equal_noresize(*f);
     }
-#endif /*__STL_MEMBER_TEMPLATES */
     
     reference find_or_insert(const value_type& obj);
     
-    /*
-     对于 hashTable 来说, find 就是 key 的相等性判断.
-     equals, get_key 都是哈希表里面应该存储的功能.
-     可以看到, 其实这种, 存储相关闭包的做法, 已经在 C++ 时代, 就十分普遍了.
-     */
     iterator find(const key_type& key)
     {
         size_type n = bkt_num_key(key);
@@ -491,21 +359,7 @@ public:
         {}
         return iterator(first, this);
     }
-    // const , 仅仅是返回的迭代器的类型不同.
-    const_iterator find(const key_type& key) const
-    {
-        size_type n = bkt_num_key(key);
-        const node* first;
-        for ( first = bucketsVector[n];
-             first && !equals(get_key(first->val), key);
-             first = first->next)
-        {}
-        return const_iterator(first, this);
-    }
     
-    /*
-     因为这里面是会有相等性的元素的, 所以这里找到 bucket 之后, 是一次链表的遍历操作.
-     */
     size_type count(const key_type& key) const
     {
         const size_type n = bkt_num_key(key);
@@ -561,9 +415,9 @@ private:
         return bkt_num_key(get_key(obj));
     }
     
+    // 取余操作.
     size_type bkt_num_key(const key_type& key, size_t n) const
     {
-        // 寻找 bucket, 就是取余操作.
         return hash(key) % n;
     }
     
@@ -601,8 +455,7 @@ private:
     void copy_from(const hashtable& ht);
 };
 
-#ifndef __STL_CLASS_PARTIAL_SPECIALIZATION
-
+// 对于, iterator::traits 的适配.
 template <class V, class K, class HF, class ExK, class EqK, class All>
 inline forward_iterator_tag
 iterator_category(const __hashtable_iterator<V, K, HF, ExK, EqK, All>&)
@@ -644,13 +497,7 @@ distance_type(const __hashtable_const_iterator<V, K, HF, ExK, EqK, All>&)
     return (hashtable<V, K, HF, ExK, EqK, All>::difference_type*) 0;
 }
 
-#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
-
-/*
- 可以看到, 对于哈希表的相等判断, 就是一个个的判断.
- 1. size 不相等, 直接不相等.
- 2. 每个值进行相等性判断.
- */
+// 就是一个个的判断. 和链表的判断基本相同.
 template <class V, class K, class HF, class Ex, class Eq, class A>
 bool operator==(const hashtable<V, K, HF, Ex, Eq, A>& ht1,
                 const hashtable<V, K, HF, Ex, Eq, A>& ht2)
@@ -670,7 +517,6 @@ bool operator==(const hashtable<V, K, HF, Ex, Eq, A>& ht1,
     return true;
 }  
 
-#ifdef __STL_FUNCTION_TMPL_PARTIAL_ORDER
 /*
  一个简便的函数, 里面其实就是调用了 哈希表的 swap 方法.
  */
@@ -680,8 +526,6 @@ inline void swap(hashtable<Val, Key, HF, Extract, EqKey, A>& ht1,
     ht1.swap(ht2);
 }
 
-#endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
-
 /*
  哈希表里面, 如果需要扩容, 都会在一个专门的函数中处理.
  所以, 在进行实际的 insert 的时候, 都不需要考虑内存扩容的问题了.
@@ -690,22 +534,15 @@ inline void swap(hashtable<Val, Key, HF, Extract, EqKey, A>& ht1,
 template <class V, class K, class HF, class Ex, class Eq, class A>
 pair<typename hashtable<V, K, HF, Ex, Eq, A>::iterator, bool> 
 hashtable<V, K, HF, Ex, Eq, A>::insert_unique_noresize(const value_type& obj) {
-    /*
-     直接找到 bucket, 取出里面存储的链表.
-     */
+    // 直接找到 bucket, 取出里面存储的链表.
     const size_type n = bkt_num(obj);
     node* first = bucketsVector[n];
-    /*
-     在链表里面查找, 是否已经存在了该值.
-     这里, 判断是否存在的条件是, 根据 get_key 获取到 key 值, 然后判断 key 值是否相等.
-     虽然, 我们认为, 哈希表里面, 用来存储 value 值. 但是在哈希表的内部, key 值其实是最重要的.
-     */
+    // 如果之前有值, 返回 false.
     for (node* cur = first; cur; cur = cur->next) {
         if (equals(get_key(cur->val), get_key(obj))) {
             return pair<iterator, bool>(iterator(cur, this), false);
         }
     }
-    
     /*
      如果没有, 就把 obj 前插到 bucket 的链表中.
      */
@@ -914,6 +751,7 @@ void hashtable<V, K, HF, Ex, Eq, A>::erase(iterator first, iterator last)
     }
 }
 
+// 利用上面的实现, 类内部调用 const_cast 去除常量性, 很安全.
 template <class V, class K, class HF, class Ex, class Eq, class A>
 inline void
 hashtable<V, K, HF, Ex, Eq, A>::erase(const_iterator first,
@@ -976,7 +814,7 @@ void hashtable<V, K, HF, Ex, Eq, A>::erase_bucket(const size_type n,
             ;
         while (next) {
             cur->next = next->next;
-            delete_node(next);
+            delete_node(next); // 要对 seperator-chain 上的所有节点都要 delete_node, 为了调用节点的析构函数.
             next = cur->next;
             --num_elements;
         }

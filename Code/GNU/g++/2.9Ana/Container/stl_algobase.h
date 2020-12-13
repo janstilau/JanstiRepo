@@ -62,15 +62,16 @@ template <class InputIterator, class OutputIterator>
 inline OutputIterator copy(InputIterator first, InputIterator last,
                            OutputIterator result)
 {
+    // 分发器生成一个对象, 然后 operation ()调用, 何必如此呢.
     return __copy_dispatch<InputIterator,OutputIterator>()(first, last, result);
 }
 
-// 如果是指针类型, 直接内存搬移.
+// 函数重载, 如果是指针, 直接内存操作.
 inline char* copy(const char* first, const char* last, char* result) {
     memmove(result, first, last - first);
     return result + (last - first);
 }
-// 如果是指针类型, 直接内存搬移
+// 函数重载, 如果是指针, 直接内存操作.
 inline wchar_t* copy(const wchar_t* first, const wchar_t* last,
                      wchar_t* result) {
     memmove(result, first, sizeof(wchar_t) * (last - first));
@@ -87,7 +88,7 @@ struct __copy_dispatch
     }
 };
 
-// 如果是迭代器, 通过迭代器的 * 取值, = 赋值, 一个个的进行 copy.
+// 如果是迭代器, 通过迭代器的 * 取值, = 赋值, 通过 == 判断结束条件, 这样比拿到次数判断要慢一点.
 template <class InputIterator, class OutputIterator>
 inline OutputIterator __copy(InputIterator first, InputIterator last,
                              OutputIterator result,
@@ -98,7 +99,7 @@ inline OutputIterator __copy(InputIterator first, InputIterator last,
     return result;
 }
 
-// 如果是 random 迭代器, 可以通过 distance 事先拿到次数.
+// 如果是 random 迭代器, 可以通过 distance 事先拿到次数. 通过次数来做赋值, 这样比较快.
 template <class RandomAccessIterator, class OutputIterator>
 inline OutputIterator
 __copy(RandomAccessIterator first, RandomAccessIterator last,
