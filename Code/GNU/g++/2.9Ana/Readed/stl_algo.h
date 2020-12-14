@@ -6,9 +6,7 @@
 __STL_BEGIN_NAMESPACE
 
 
-/*
- forEach 这个函数居然有返回值.
- */
+// 遍历取值, 执行闭包. 最后返回闭包.
 template <class InputIterator, class Function>
 Function for_each(InputIterator first, InputIterator last, Function f) {
     for ( ; first != last; ++first)
@@ -16,8 +14,8 @@ Function for_each(InputIterator first, InputIterator last, Function f) {
     return f;
 }
 
-// find 协议簇
-// 线性查找的函数, 如果, 容器有着自己的 find, 就是利用自己的特性进行查找, 例如 hashTable.
+// find 函数簇.
+// 使用了 ==, != 操作符进行判等处理.
 template <class InputIterator, class T>
 InputIterator find(InputIterator first, InputIterator last, const T& value) {
     while (first != last && *first != value) ++first;
@@ -34,10 +32,11 @@ InputIterator find_if(InputIterator first, InputIterator last,
 
 // count 函数簇, 分为返回值版本, 和传出参数版本,
 template <class InputIterator, class T, class Size>
-void count(InputIterator first, InputIterator last, const T& value,
+void count(InputIterator first, InputIterator last,
+           const T& value,
            Size& n) {
     for ( ; first != last; ++first)
-        if (*first == value)
+        if (*first == value) // 使用操作符进行判等处理.
             ++n;
 }
 
@@ -45,16 +44,17 @@ template <class InputIterator, class Predicate, class Size>
 void count_if(InputIterator first, InputIterator last, Predicate pred,
               Size& n) {
     for ( ; first != last; ++first)
-        if (pred(*first))
+        if (pred(*first)) // 使用传入闭包进行判等处理.
             ++n;
 }
 
+// 返回值版本, 这里, 返回值的类型, 经过了 iterator_traits 进行了萃取.
 template <class InputIterator, class T>
 typename iterator_traits<InputIterator>::difference_type
 count(InputIterator first, InputIterator last, const T& value) {
     typename iterator_traits<InputIterator>::difference_type n = 0;
     for ( ; first != last; ++first)
-        if (*first == value)
+        if (*first == value) // 使用操作符进行判断.
             ++n;
     return n;
 }
@@ -64,29 +64,70 @@ typename iterator_traits<InputIterator>::difference_type
 count_if(InputIterator first, InputIterator last, Predicate pred) {
     typename iterator_traits<InputIterator>::difference_type n = 0;
     for ( ; first != last; ++first)
-        if (pred(*first))
+        if (pred(*first)) // 使用传入闭包进行了判断.
             ++n;
     return n;
 }
 
 
-/*
- 判断相等, 增加了闭包的自定义化.
- */
+// search 入口函数
+// 这个分发, 莫名其妙.
 template <class ForwardIterator1, class ForwardIterator2,
 class BinaryPredicate>
 inline ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1,
                                ForwardIterator2 first2, ForwardIterator2 last2,
                                BinaryPredicate binary_pred) {
-    return __search(first1, last1, first2, last2, binary_pred,
+    return __search(first1, last1, first2, last2,
+                    binary_pred,
                     distance_type(first1), distance_type(first2));
 }
 
-/*
- 这是指针类型的 iterator, 函数里面直接是指针操作.
- 就是判断, 在 1 中, 能不能找到完全和 2 相同的序列. 然后返回在 1 中的位置.
- */
+template <class ForwardIterator1, class ForwardIterator2,
+class BinaryPredicate, class Distance1, class Distance2>
+ForwardIterator1 __search(ForwardIterator1 first1, ForwardIterator1 last1,
+                          ForwardIterator2 first2, ForwardIterator2 last2,
+                          BinaryPredicate binary_pred,
+                          Distance1*, Distance2*) {
+    // 首先, 获取到了两个序列的长度.
+    Distance1 d1 = 0;
+    distance(first1, last1, d1);
+    Distance2 d2 = 0;
+    distance(first2, last2, d2);
+    // 如果, 目标序列比查询序列还小, 就是找不到.
+    if (d1 < d2) return last1;
+    
+    ForwardIterator1 current1 = first1;
+    ForwardIterator2 current2 = first2;
+    
+    while (current2 != last2){
+        if (binary_pred(*current1, *current2)) {
+            // 如果, 当前值相等, 继续判断下一个.
+            ++current1;
+            ++current2;
+        } else {
+            if (d1 == d2)
+                // 已经 d1 == d2 了还没找到, 以后也找不到了, 不用判断后面的逻辑, 直接返回找不到.
+                return last1;
+            else {
+                // 从头开始缕相等的逻辑.
+                current1 = ++first1;
+                current2 = first2;
+                --d1;
+            }
+        }
+    }
+    return first1;
+}
 
+template <class ForwardIterator1, class ForwardIterator2>
+inline ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1,
+                               ForwardIterator2 first2, ForwardIterator2 last2)
+{
+    return __search(first1, last1, first2, last2, distance_type(first1),
+                    distance_type(first2));
+}
+
+// 逻辑和上面的一样, 只不过是判断相等的方式变为了 == 操作符.
 template <class ForwardIterator1, class ForwardIterator2, class Distance1,
 class Distance2>
 ForwardIterator1 __search(ForwardIterator1 first1, ForwardIterator1 last1,
@@ -102,63 +143,11 @@ ForwardIterator1 __search(ForwardIterator1 first1, ForwardIterator1 last1,
     ForwardIterator1 current1 = first1;
     ForwardIterator2 current2 = first2;
     
-    /*
-     这里, current2 能够动的话一定是 *current1 == *current2, 也就是匹配上了. 也就是说, while 能够退出, 一定是匹配到了最后.
-     */
     while (current2 != last2)
         if (*current1 == *current2) {
             ++current1;
             ++current2;
         } else {
-            /*
-             如果, d1 == d2 了, 头部还是不相等, 那就是找不到了
-             */
-            if (d1 == d2)
-                return last1;
-            else {
-                /*
-                 长序列的头部往后, 短序列的头部重置.
-                 */
-                current1 = ++first1;
-                current2 = first2;
-                --d1;
-            }
-        }
-    return first1;
-}
-
-template <class ForwardIterator1, class ForwardIterator2>
-inline ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1,
-                               ForwardIterator2 first2, ForwardIterator2 last2)
-{
-    return __search(first1, last1, first2, last2, distance_type(first1),
-                    distance_type(first2));
-}
-
-/*
- 这是迭代器版本的, 里面的逻辑, 基本差不多, 只不过指针相关的操作, 变成了迭代器.
- */
-template <class ForwardIterator1, class ForwardIterator2,
-class BinaryPredicate, class Distance1, class Distance2>
-ForwardIterator1 __search(ForwardIterator1 first1, ForwardIterator1 last1,
-                          ForwardIterator2 first2, ForwardIterator2 last2,
-                          BinaryPredicate binary_pred, Distance1*, Distance2*) {
-    Distance1 d1 = 0;
-    distance(first1, last1, d1);
-    Distance2 d2 = 0;
-    distance(first2, last2, d2);
-    
-    if (d1 < d2) return last1;
-    
-    ForwardIterator1 current1 = first1;
-    ForwardIterator2 current2 = first2;
-    
-    while (current2 != last2)
-        if (binary_pred(*current1, *current2)) {
-            ++current1;
-            ++current2;
-        }
-        else {
             if (d1 == d2)
                 return last1;
             else {
@@ -170,19 +159,15 @@ ForwardIterator1 __search(ForwardIterator1 first1, ForwardIterator1 last1,
     return first1;
 }
 
-/*
- Searches the range [first, last) for the first sequence of count identical elements, each equal to the given value value.
- 要连续相等才可以.
- */
+// 找到连续 count 个 value 的起始位置. 这种函数有必要专门写一个出来吗.
 template <class ForwardIterator, class Integer, class T>
 ForwardIterator search_n(ForwardIterator first, ForwardIterator last,
                          Integer count, const T& value) {
     if (count <= 0) { return first; }
     
     first = find(first, last, value);
-    /*
-     先找第一个 value 的值的位置, 然后判断后续的 n 个值是不是都是 value 值, 如果没有达到 n 的条件, 重复寻找.
-     */
+    
+    // 先找第一个 value 的值的位置, 然后判断后续的 n 个值是不是都是 value 值, 如果没有达到 n 的条件, 重复寻找.
     while (first != last) {
         Integer n = count - 1;
         ForwardIterator i = first;
@@ -202,9 +187,7 @@ ForwardIterator search_n(ForwardIterator first, ForwardIterator last,
     return last;
 }
 
-/*
- 增加了闭包的传入.
- */
+// 增加了闭包的解法.
 template <class ForwardIterator, class Integer, class T, class BinaryPredicate>
 ForwardIterator search_n(ForwardIterator first, ForwardIterator last,
                          Integer count, const T& value,
@@ -278,6 +261,7 @@ OutputIterator transform(InputIterator1 first1, InputIterator1 last1,
         *result = binary_op(*first1, *first2);
     return result;
 }
+
 
 
 // replace 函数簇

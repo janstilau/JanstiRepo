@@ -734,7 +734,3 @@ __STL_END_NAMESPACE
 #undef __PRIVATE
 
 #endif /* __SGI_STL_INTERNAL_ALLOC_H */
-
-// Local Variables:
-// mode:C++
-// End:
