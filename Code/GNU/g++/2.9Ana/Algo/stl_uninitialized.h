@@ -3,6 +3,9 @@
 
 __STL_BEGIN_NAMESPACE
 
+// POD, plain old data. 可以理解为标量值, 无需进行构造, 拷贝构造, 赋值操作符, 析构的数据类型.
+// 这个值的获取, 需要经过 type_traits 的逻辑. 这个类目前没有在该工程里.
+
 #pragma mark - UninitializedFill
 
 // uninitialized_fill, 从 first 指定的空间开始, 将 x 的值填充到迭代器指向的地方.
@@ -44,8 +47,8 @@ __uninitialized_fill_aux(ForwardIterator first,
 }
 
 // 类型值, 必须经过构造函数. 调用 construct 函数.
-// 为什么 vector 的扩容会调用构造函数的原因就在这里, 会根据类型, 进行不同的搬移策略.
-// 如果, 没有实现 move ctor 的类来说, 还是会到拷贝构造函数. 但是只要这个类, 没有管理额外的资源, 和bits copy 也没有太大的区别.
+// 为什么 vector 的扩容会调用构造函数的原因就在这里, 这里, construct 调用了拷贝构造.
+// 在 c++ 2.0 之后, move ctor 可以避免拷贝构造, 但还是主动调用了相对应的构造函数.
 template <class ForwardIterator, class T>
 void
 __uninitialized_fill_aux(ForwardIterator first,
@@ -109,7 +112,6 @@ __uninitialized_fill_n_aux(ForwardIterator first, Size n,
 
 
 
-
 #pragma mark - UninitializedCopy
 
 
@@ -156,6 +158,7 @@ __uninitialized_copy_aux(InputIterator first, InputIterator last,
 }
 
 // 指针类型的迭代器, 直接内存操作
+// 这里不是萃取过程, 是函数重载.
 inline char* uninitialized_copy(const char* first, const char* last,
                                 char* result) {
     memmove(result, first, last - first);
@@ -163,6 +166,7 @@ inline char* uninitialized_copy(const char* first, const char* last,
 }
 
 // 指针类型的迭代器, 直接内存操作
+// 这里不是萃取过程, 是函数重载.
 inline wchar_t* uninitialized_copy(const wchar_t* first, const wchar_t* last,
                                    wchar_t* result) {
     memmove(result, first, sizeof(wchar_t) * (last - first));

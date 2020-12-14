@@ -386,11 +386,11 @@ public:
     void clear();
     
 private:
-    /*
-     直接从容量表中取得长度.
-     */
+    
+    // 直接从容量表中取得长度.
     size_type next_size(size_type n) const { return __stl_next_prime(n); }
     
+    // 根据节点个数, 初始化 buckets, 这个操作只会出现在初始化的过程中.
     void initialize_buckets(size_type n)
     {
         const size_type n_buckets = next_size(n);
@@ -426,9 +426,7 @@ private:
         return bkt_num_key(get_key(obj), n);
     }
     
-    /*
-     Construct 就是, 在相应的位置, 进行拷贝构造函数的初始化.
-     */
+    // 首先, 分配器获取内存空间, 然后调用 construct 进行拷贝构造.
     node* new_node(const value_type& obj)
     {
         node* n = node_allocator::allocate();
@@ -440,9 +438,7 @@ private:
         __STL_UNWIND(node_allocator::deallocate(n));
     }
     
-    /*
-     destroy 就是调用对应类型的析构函数.
-     */
+    // 首先调用析构函数, 然后分配器回收内存资源
     void delete_node(node* n)
     {
         destroy(&n->val);
@@ -451,8 +447,6 @@ private:
     
     void erase_bucket(const size_type n, node* first, node* last);
     void erase_bucket(const size_type n, node* last);
-    
-    void copy_from(const hashtable& ht);
 };
 
 // 对于, iterator::traits 的适配.
@@ -656,7 +650,7 @@ hashtable<V, K, HF, Ex, Eq, A>::equal_range(const key_type& key) const
 }
 
 /*
- erase 的操作, 也就是找到节点, 然后在链表中删除了.
+ erase 的操作, 也就是找到节点, 然后在链表中删除了. 注意链表删除的操作.
  注意, 这里是将所有的 key 节点都进行删除.
  */
 template <class V, class K, class HF, class Ex, class Eq, class A>
@@ -774,11 +768,7 @@ hashtable<V, K, HF, Ex, Eq, A>::erase(const const_iterator& it)
 template <class V, class K, class HF, class Ex, class Eq, class A>
 void hashtable<V, K, HF, Ex, Eq, A>::resize(size_type num_elements_hint)
 {
-    /*
-     如果, resize 之后的值, 大于了 bucketsVector 数组的长度, 就新分配一个新的 bucket 数组.
-     然后一个个的插入到这个新的数组中.
-     注意, 这里利用了 vector 的特性. vector 的成员变量, 仅仅是堆中指针.
-     */
+    // 新产生一个 bucket vector, 然后把所有的节点插入进入, 最后交换一下这两个 vector 的内部指针.
     const size_type old_n = bucketsVector.size();
     if (num_elements_hint > old_n) {
         const size_type n = next_size(num_elements_hint);
@@ -787,6 +777,7 @@ void hashtable<V, K, HF, Ex, Eq, A>::resize(size_type num_elements_hint)
             __STL_TRY {
                 for (size_type bucket = 0; bucket < old_n; ++bucket) {
                     node* first = bucketsVector[bucket];
+                    // seperator 上有值,
                     while (first) {
                         size_type new_bucket = bkt_num(first->val, n);
                         bucketsVector[bucket] = first->next;
@@ -803,7 +794,8 @@ void hashtable<V, K, HF, Ex, Eq, A>::resize(size_type num_elements_hint)
 
 template <class V, class K, class HF, class Ex, class Eq, class A>
 void hashtable<V, K, HF, Ex, Eq, A>::erase_bucket(const size_type n, 
-                                                  node* first, node* last)
+                                                  node* first,
+                                                  node* last)
 {
     node* cur = bucketsVector[n];
     if (cur == first)
@@ -814,7 +806,7 @@ void hashtable<V, K, HF, Ex, Eq, A>::erase_bucket(const size_type n,
             ;
         while (next) {
             cur->next = next->next;
-            delete_node(next); // 要对 seperator-chain 上的所有节点都要 delete_node, 为了调用节点的析构函数.
+            delete_node(next);
             next = cur->next;
             --num_elements;
         }
@@ -835,9 +827,7 @@ hashtable<V, K, HF, Ex, Eq, A>::erase_bucket(const size_type n, node* last)
     }
 }
 
-/*
- 递归 bucketsVector, 删除链表中所有元素.
- */
+// 删除每一个 seperator chain 上的节点
 template <class V, class K, class HF, class Ex, class Eq, class A>
 void hashtable<V, K, HF, Ex, Eq, A>::clear()
 {
@@ -853,21 +843,22 @@ void hashtable<V, K, HF, Ex, Eq, A>::clear()
     num_elements = 0;
 }
 
-/*
- 深拷贝. 
- */
+// 哈希表的深拷贝实现, 所有的模板信息, 都要写出来.
 template <class V, class K, class HF, class Ex, class Eq, class A>
 void hashtable<V, K, HF, Ex, Eq, A>::copy_from(const hashtable& ht)
 {
+    // 首先, 原有的数据进行一次清空.
     bucketsVector.clear();
     bucketsVector.reserve(ht.bucketsVector.size());
     bucketsVector.insert(bucketsVector.end(), ht.bucketsVector.size(), (node*) 0);
+    
     __STL_TRY {
         for (size_type i = 0; i < ht.bucketsVector.size(); ++i) {
+            // 寻找 seperator chain 信息.
             if (const node* cur = ht.bucketsVector[i]) {
                 node* copy = new_node(cur->val);
                 bucketsVector[i] = copy;
-                
+                // 复制 seperator chain 信息.
                 for (node* next = cur->next; next; cur = next, next = cur->next) {
                     copy->next = new_node(next->val);
                     copy = copy->next;
@@ -883,6 +874,3 @@ __STL_END_NAMESPACE
 
 #endif /* __SGI_STL_INTERNAL_HASHTABLE_H */
 
-// Local Variables:
-// mode:C++
-// End:

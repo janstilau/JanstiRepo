@@ -6,6 +6,7 @@ __STL_BEGIN_NAMESPACE
 /*
  如果, 自己写的仿函数, 没有继承下面的定义, 那么就没有能力回答 argument_type, result_type 的类型.
  可以正常的传入到算法中使用, 因为算法仅仅要求可以 func call, 也就是 operator () 调用就行.
+ 
  但是, 如果想让 binder1st 进行修饰, 因为没有办法回答这些类要求的 result_type, argument_type 是什么, 就不能和 STL 对于仿函数的设计融合到一起.
  */
 template <class Arg, class Result>
@@ -22,88 +23,111 @@ struct binary_function {
 };      
 
 /*
- 函数对象的内部仅仅写出了逻辑的混合, 大量利用了操作符重载.
+ 里面大量的使用了操作符重载.
  可以把操作符, 理解为, 具有通用性的一组特殊接口.
- 类型的设计者, 要去自己实现这组接口.
+ 模板不管到底这些操作符到底如何实现, 如果没有实现, 编译不通过.
  */
+
+// 所有的函数对象模板, 都继承自了相应的父类, 并且写好了父类相应的模板.
+
+// 传入一个类型参数, 可以确定 first, last, return 三个类型参数.
 template <class T>
 struct plus : public binary_function<T, T, T> {
     T operator()(const T& x, const T& y) const { return x + y; }
 };
 
+// 传入一个类型参数, 可以确定 first, last, return 三个类型参数.
 template <class T>
 struct minus : public binary_function<T, T, T> {
     T operator()(const T& x, const T& y) const { return x - y; }
 };
 
+// 传入一个类型参数, 可以确定 first, last, return 三个类型参数.
 template <class T>
 struct multiplies : public binary_function<T, T, T> {
     T operator()(const T& x, const T& y) const { return x * y; }
 };
 
+// 传入一个类型参数, 可以确定 first, last, return 三个类型参数.
 template <class T>
 struct divides : public binary_function<T, T, T> {
     T operator()(const T& x, const T& y) const { return x / y; }
 };
 
+// 传入一个类型参数, 可以确定 first, last, return 三个类型参数.
 template <class T>
 struct modulus : public binary_function<T, T, T> {
     T operator()(const T& x, const T& y) const { return x % y; }
 };
 
+// 传入一个类型参数, 可以确定 first, last, return 三个类型参数.
 template <class T>
 struct negate : public unary_function<T, T> {
     T operator()(const T& x) const { return -x; }
 };
 
+// 返回 bool 值的类型对象, 在 STL 里面叫做 predicate.
+// 传入一个类型参数, 可以确定 first, last, 两个类型参数, return 的类型固定为 bool.
 template <class T>
 struct equal_to : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x == y; }
 };
 
+// 传入一个类型参数, 可以确定 first, last, 两个类型参数, return 的类型固定为 bool.
 template <class T>
 struct not_equal_to : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x != y; }
 };
 
+// 传入一个类型参数, 可以确定 first, last, 两个类型参数, return 的类型固定为 bool.
 template <class T>
 struct greater : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x > y; }
 };
 
+// 传入一个类型参数, 可以确定 first, last, 两个类型参数, return 的类型固定为 bool.
 template <class T>
 struct less : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x < y; }
 };
 
+// 传入一个类型参数, 可以确定 first, last, 两个类型参数, return 的类型固定为 bool.
 template <class T>
 struct greater_equal : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x >= y; }
 };
 
+// 传入一个类型参数, 可以确定 first, last, 两个类型参数, return 的类型固定为 bool.
 template <class T>
 struct less_equal : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x <= y; }
 };
 
+// 传入一个类型参数, 可以确定 first, last, 两个类型参数, return 的类型固定为 bool.
 template <class T>
 struct logical_and : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x && y; }
 };
 
+// 传入一个类型参数, 可以确定 first, last, 两个类型参数, return 的类型固定为 bool.
 template <class T>
 struct logical_or : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) const { return x || y; }
 };
 
+// 传入一个类型参数, 可以确定 first 的类型参数, return 的类型固定为 bool.
 template <class T>
 struct logical_not : public unary_function<T, bool> {
     bool operator()(const T& x) const { return !x; }
 };
 
-// unary_function 需要两个类型参数, 但是偏特化绑定了一个,
+
+// 这是一个函数对象适配器.
+// 类型名叫做 Predicate, 是提醒, 应该传入一个 return type 为 bool 的函数对象进来.
+// Predicate::argument_type 是对于传入对象的询问操作, 所以, Predicate 必须继承自 unary_function, 不然这个适配器无法工作.
+// Predicate::return_type 其实无法限制, 虽然叫做 Predicate, 但是, 只要是 pred 的返回值可以取反, 这个适配器也算作是正常工作了. 例如, pred 返回一个 int.
 template <class Predicate>
-class unary_negate
+class unary_negate // 直接, 根据 Predicate 的 argument, 确定 unary_function 中的类型.
 : public unary_function<typename Predicate::argument_type, bool> {
 protected:
     Predicate pred; // 传入一个闭包, 存储起来. 真正调用的时候, 就是调用这个闭包, 然后取反.
@@ -115,16 +139,20 @@ public:
     }
 };
 
+// 不要直接使用 unary_negate 这个类. not1 的作用, 更多的是利用编译器的类型推到, 得到 pred 的真实类型.
+// 如果传入的 pred 不是一个 unary_function, 那么编译是通过不了的. 所以, 不能是一个 lambda 表达式.
 template <class Predicate>
 inline unary_negate<Predicate> not1(const Predicate& pred) {
     return unary_negate<Predicate>(pred);
 }
 
+// 和上面的模式基本一样.
 template <class Predicate> 
 class binary_negate 
 : public binary_function<typename Predicate::first_argument_type,
-typename Predicate::second_argument_type,
-bool> {
+                        typename Predicate::second_argument_type,
+                        bool>
+{
 protected:
     Predicate pred;
 public:
@@ -135,15 +163,13 @@ public:
     }
 };
 
-// 暴露出去给用户的, 是一个简单的函数.
+// 通过一个简单地接口, 把类型参数确认的事情, 交给了编译器.
 template <class Predicate>
 inline binary_negate<Predicate> not2(const Predicate& pred) {
     return binary_negate<Predicate>(pred);
 }
 
-// 在这里, Operation::second_argument_type, 这些其实是限制, 如果 Operation 不是 binary_function 的子类, 编译就通过不了.
-// binder1st 这个函数, 是存储一个闭包, 和这个闭包的某个参数值, 然后生成一个新的闭包. 这样, 新的闭包就可以只传入一个参数了.
-// Operation 必须是一个二元的仿函数, 经过了 binder1st 的包装, 变成了一元的仿函数.
+// 传入一个二元函数, 经过 binder1st 的包装, 就变成了一个一元函数.
 template <class Operation>
 class binder1st
 : public unary_function<typename Operation::second_argument_type, typename Operation::result_type> {
@@ -161,8 +187,7 @@ public:
     }
 };
 
-// 暴露给外界使用的, 是一个简单函数.
-// binder1st<Operation>  是返回值类型, bind1st 是函数名.
+// 通过编译器, 来确定二元函数的各个实际类型, 填充到 binder1st 中去.
 template <class Operation, class T>
 inline binder1st<Operation> bind1st(const Operation& op, const T& x) {
     typedef typename Operation::first_argument_type arg1_type; // 这里, 使用 type 强包了一层.
@@ -186,7 +211,6 @@ public:
     }
 };
 
-// 暴露给外界使用的, 是一个简单的函数.
 template <class Operation, class T>
 inline binder2nd<Operation> bind2nd(const Operation& op, const T& x) {
     typedef typename Operation::second_argument_type arg2_type;
@@ -240,9 +264,7 @@ compose2(const Operation1& op1, const Operation2& op2, const Operation3& op3) {
     return binary_compose<Operation1, Operation2, Operation3>(op1, op2, op3);
 }
 
-/*
- identity, 直接返回元素本身.
- */
+// identity, 直接返回元素本身.
 template <class T>
 struct identity : public unary_function<T, T> {
     const T& operator()(const T& x) const { return x; }

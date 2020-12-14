@@ -4,14 +4,10 @@
 __STL_BEGIN_NAMESPACE
 
 
-#ifndef __STL_LIMITED_DEFAULT_TEMPLATES
 // 默认, 就会把 hash 模板函数传递过来, 当做哈希算法.
 template <class Value, class HashFcn = hash<Value>,
           class EqualKey = equal_to<Value>,
           class Alloc = alloc>
-#else
-template <class Value, class HashFcn, class EqualKey, class Alloc = alloc>
-#endif
 /*
  一个 hashTable 的适配器. 所有的操作, 都是到了 hashTable 中.
  hash_set, hash_mutil 都定义在该文件中, 仅仅是最后调用的 insert 不同.
