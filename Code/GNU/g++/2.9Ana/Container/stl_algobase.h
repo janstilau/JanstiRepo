@@ -2,22 +2,6 @@ __STL_BEGIN_NAMESPACE
 
 #prgma mark - Swap
 
-template <class ForwardIterator1, class ForwardIterator2, class T>
-inline void __iter_swap(ForwardIterator1 a, ForwardIterator2 b, T*) {
-    T tmp = *a;
-    *a = *b;
-    *b = tmp;
-}
-
-/*
- 暴露给用户的, 是不带 __ 的操作. 用 __ 表示私有的函数, 是各种语言通用的做法.
- 这个方法, 也是主要用于分发操作. 最后的 value_type, 就是分发的标志位.
- */
-template <class ForwardIterator1, class ForwardIterator2>
-inline void iter_swap(ForwardIterator1 a, ForwardIterator2 b) {
-    __iter_swap(a, b, value_type(a));
-}
-
 template <class T>
 inline void swap(T& a, T& b) {
     T tmp = a;
@@ -25,10 +9,21 @@ inline void swap(T& a, T& b) {
     b = tmp;
 }
 
-/*
- 这都是最简单的算法, 但是是泛型的.
- C++ 的操作符, 和 Swift 的 protocol 相比. 缺少类型限制.
- */
+// 不太明白, 这里为什么会有一个萃取的过程.
+template <class ForwardIterator1, class ForwardIterator2>
+inline void iter_swap(ForwardIterator1 a, ForwardIterator2 b) {
+    __iter_swap(a, b, value_type(a));
+}
+
+// 就算是传递过来的是迭代器, 使用解引用操作符, 也是可以完成下面的效果的. 因为, 迭代器一定会完成 * 操作符的重载.
+template <class ForwardIterator1, class ForwardIterator2, class T>
+inline void __iter_swap(ForwardIterator1 a, ForwardIterator2 b, T*) {
+    T tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+// 在最新的 STL 里面, 已经增加了接受一个 initialist 参数的版本了.
 template <class T>
 inline const T& min(const T& a, const T& b) {
     return b < a ? b : a;
@@ -39,9 +34,6 @@ inline const T& max(const T& a, const T& b) {
     return  a < b ? b : a;
 }
 
-/*
- 增加了比较函数版本的方法.
- */
 template <class T, class Compare>
 inline const T& min(const T& a, const T& b, Compare comp) {
     return comp(b, a) ? b : a;
@@ -53,17 +45,15 @@ inline const T& max(const T& a, const T& b, Compare comp) {
 }
 
 
-
 #prgma mark -  Copy
 
-
 // copy 入口函数.
+// 这里的 copy, 是没有拷贝构造函数的调用的. 拷贝构造函数, 只有在 uninitialize_copy 里面, 主动地调用 construct.
 template <class InputIterator, class OutputIterator>
 inline OutputIterator copy(InputIterator first, InputIterator last,
                            OutputIterator result)
 {
-    // 分发器生成一个对象, 然后 operation ()调用, 何必如此呢.
-    return __copy_dispatch<InputIterator,OutputIterator>()(first, last, result);
+    return __copy(first, last, result, iterator_category(first);
 }
 
 // 函数重载, 如果是指针, 直接内存操作.
@@ -78,28 +68,19 @@ inline wchar_t* copy(const wchar_t* first, const wchar_t* last,
     return result + (last - first);
 }
 
-// copy 函数的分发器
-template <class InputIterator, class OutputIterator>
-struct __copy_dispatch
-{
-    OutputIterator operator()(InputIterator first, InputIterator last,
-                              OutputIterator result) {
-        return __copy(first, last, result, iterator_category(first));
-    }
-};
-
-// 如果是迭代器, 通过迭代器的 * 取值, = 赋值, 通过 == 判断结束条件, 这样比拿到次数判断要慢一点.
+// 如果是迭代器, 通过迭代器的 * 取值, = 赋值,
 template <class InputIterator, class OutputIterator>
 inline OutputIterator __copy(InputIterator first, InputIterator last,
                              OutputIterator result,
                              input_iterator_tag)
 {
+    // 通过 == 操作符来判断, 是否相等
     for ( ; first != last; ++result, ++first)
         *result = *first;
     return result;
 }
 
-// 如果是 random 迭代器, 可以通过 distance 事先拿到次数. 通过次数来做赋值, 这样比较快.
+// 如果是 random 迭代器, 可以通过 distance 事先拿到次数
 template <class RandomAccessIterator, class OutputIterator>
 inline OutputIterator
 __copy(RandomAccessIterator first, RandomAccessIterator last,
@@ -116,6 +97,7 @@ __copy_d(RandomAccessIterator first,
          OutputIterator result,
          Distance*)
 {
+    // 通过次数, 判断是否退出循环.
     for (Distance n = last - first; n > 0; --n, ++result, ++first)
         *result = *first;
     return result;
@@ -134,6 +116,7 @@ inline BidirectionalIterator2 copy_backward(BidirectionalIterator1 first,
                                                                                        result);
 }
 
+// 不一定指针类型就直接内存操作的, 还是要经过 __type_traits 判断, 是否需要调用赋值操作符的函数.
 // copy_backward 的分发器, 指针类型
 template <class T>
 struct __copy_backward_dispatch<T*, T*>
@@ -154,22 +137,7 @@ struct __copy_backward_dispatch<const T*, T*>
     }
 };
 
-// 可以直接内存拷贝.
-template <class T>
-inline T* __copy_backward_t(const T* first, const T* last, T* result,
-                            __true_type) {
-    const ptrdiff_t N = last - first;
-    memmove(result - N, first, sizeof(T) * N);
-    return result - N;
-}
-// 不可以直接内存拷贝.
-template <class T>
-inline T* __copy_backward_t(const T* first, const T* last, T* result,
-                            __false_type) {
-    return __copy_backward(first, last, result);
-}
-
-// copy_backward 的分发器
+// copy_backward 的分发器, 迭代器类型.
 template <class BidirectionalIterator1, class BidirectionalIterator2>
 struct __copy_backward_dispatch
 {
@@ -180,7 +148,26 @@ struct __copy_backward_dispatch
     }
 };
 
-// 通过迭代器的 * 运算符取值, 然后进行赋值操作.
+// 赋值操作符函数不需要调用.
+template <class T>
+inline T* __copy_backward_t(const T* first, const T* last,
+                            T* result,
+                            __true_type) {
+    const ptrdiff_t N = last - first;
+    memmove(result - N, first, sizeof(T) * N);
+    return result - N;
+}
+
+// 需要调用赋值操作函数的
+template <class T>
+inline T* __copy_backward_t(const T* first, const T* last,
+                            T* result,
+                            __false_type) {
+    return __copy_backward(first, last, result);
+}
+
+// 通过迭代器的 * 运算符取值, 然后进行赋值操作, 这里, 会调用到赋值操作符操作.
+// 这是合理的, 因为这是 copy, 目的端可能会有数据的, 需要使用 = 操作符做原有的数据的清理操作.
 template <class BidirectionalIterator1, class BidirectionalIterator2>
 inline BidirectionalIterator2 __copy_backward(BidirectionalIterator1 first,
                                               BidirectionalIterator1 last,
@@ -188,6 +175,9 @@ inline BidirectionalIterator2 __copy_backward(BidirectionalIterator1 first,
     while (first != last) *--result = *--last;
     return result;
 }
+
+// 只要使用了 *iterator = *iterator. 这种形式, 那么 assign 操作符函数如果定义了, 就一定会被触发.
+// memmove 这种方式, 只有在 has_trivial_assignment_operator 为 false 的时候才会发生.
 
 
 
@@ -208,7 +198,7 @@ pair<InputIterator, OutputIterator> __copy_n(InputIterator first,
                                              OutputIterator result,
                                              input_iterator_tag) {
     for ( ; count > 0; --count, ++first, ++result)
-        *result = *first;
+        *result = *first; // 这里会触发 assign operator 函数.
     return pair<InputIterator, OutputIterator>(first, result);
 }
 
@@ -220,6 +210,7 @@ __copy_n(RandomAccessIterator first,
          OutputIterator result,
          random_access_iterator_tag) {
     RandomAccessIterator last = first + count;
+    // 直接计算出 last 的位置, 然后调用 copy 函数
     return pair<RandomAccessIterator, OutputIterator>(last,
                                                       copy(first, last, result));
 }
@@ -241,16 +232,11 @@ OutputIterator fill_n(OutputIterator first, Size n, const T& value) {
     return first;
 }
 
-// MisMatch
+#prgma mark - Compare
 
-/*
- Returns the first mismatching pair of elements from two ranges: one defined by [first1, last1) and another defined by [first2,last2). If last2 is not provided (overloads (1-4)), it denotes first2 + (last1 - first1).
- 
- */
 // 返回第一个不相等的两个序列的迭代器.
 template <class InputIterator1, class InputIterator2>
-pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1,
-                                              InputIterator1 last1,
+pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1, InputIterator1 last1,
                                               InputIterator2 first2) {
     while (first1 != last1 && *first1 == *first2) {
         ++first1;
@@ -271,7 +257,7 @@ pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1,
     return pair<InputIterator1, InputIterator2>(first1, first2);
 }
 
-// 比较两个序列
+// 就是一个个的比较.
 template <class InputIterator1, class InputIterator2>
 inline bool equal(InputIterator1 first1, InputIterator1 last1,
                   InputIterator2 first2) {
@@ -315,11 +301,8 @@ bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
     return first1 == last1 && first2 != last2;
 }
 
-
-/*
- 这种纯内存的, 反而简单了.
- */
-inline bool 
+// 这里是函数重载, 直接内存比较了.
+inline bool
 lexicographical_compare(const unsigned char* first1,
                         const unsigned char* last1,
                         const unsigned char* first2,

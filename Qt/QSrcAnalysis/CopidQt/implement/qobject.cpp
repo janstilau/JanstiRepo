@@ -597,6 +597,7 @@ QObject::~QObject()
     if (!d->children.isEmpty())
         d->deleteChildren();
 
+    // 这里, 自己析构的时候, 会把父对象的 children 列表进行更新. 所以, 提前 delete 是没有问题的.
     if (d->parent)        // remove it from parent object
         d->setParent_helper(0);
 }

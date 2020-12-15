@@ -182,6 +182,25 @@ SOURCES += \
     io/qwindowspipereader.cpp \
     io/qwindowspipewriter.cpp \
     io/qwinoverlappedionotifier.cpp \
+    itemviews/qabstractitemdelegate.cpp \
+    itemviews/qabstractitemview.cpp \
+    itemviews/qbsptree.cpp \
+    itemviews/qcolumnview.cpp \
+    itemviews/qcolumnviewgrip.cpp \
+    itemviews/qdatawidgetmapper.cpp \
+    itemviews/qdirmodel.cpp \
+    itemviews/qfileiconprovider.cpp \
+    itemviews/qheaderview.cpp \
+    itemviews/qitemdelegate.cpp \
+    itemviews/qitemeditorfactory.cpp \
+    itemviews/qlistview.cpp \
+    itemviews/qlistwidget.cpp \
+    itemviews/qstyleditemdelegate.cpp \
+    itemviews/qtableview.cpp \
+    itemviews/qtablewidget.cpp \
+    itemviews/qtreeview.cpp \
+    itemviews/qtreewidget.cpp \
+    itemviews/qtreewidgetitemiterator.cpp \
         main.cpp \
         mainwindow.cpp \
     ../../Work/CopidQt/qcoreapplication.cpp \
@@ -1048,6 +1067,39 @@ HEADERS += \
     io/qwindowspipereader_p.h \
     io/qwindowspipewriter_p.h \
     io/qwinoverlappedionotifier_p.h \
+    itemviews/qabstractitemdelegate.h \
+    itemviews/qabstractitemdelegate_p.h \
+    itemviews/qabstractitemview.h \
+    itemviews/qabstractitemview_p.h \
+    itemviews/qbsptree_p.h \
+    itemviews/qcolumnview.h \
+    itemviews/qcolumnview_p.h \
+    itemviews/qcolumnviewgrip_p.h \
+    itemviews/qdatawidgetmapper.h \
+    itemviews/qdirmodel.h \
+    itemviews/qfileiconprovider.h \
+    itemviews/qfileiconprovider_p.h \
+    itemviews/qheaderview.h \
+    itemviews/qheaderview_p.h \
+    itemviews/qitemdelegate.h \
+    itemviews/qitemeditorfactory.h \
+    itemviews/qitemeditorfactory_p.h \
+    itemviews/qlistview.h \
+    itemviews/qlistview_p.h \
+    itemviews/qlistwidget.h \
+    itemviews/qlistwidget_p.h \
+    itemviews/qstyleditemdelegate.h \
+    itemviews/qtableview.h \
+    itemviews/qtableview_p.h \
+    itemviews/qtablewidget.h \
+    itemviews/qtablewidget_p.h \
+    itemviews/qtreeview.h \
+    itemviews/qtreeview_p.h \
+    itemviews/qtreewidget.h \
+    itemviews/qtreewidget_p.h \
+    itemviews/qtreewidgetitemiterator.h \
+    itemviews/qtreewidgetitemiterator_p.h \
+    itemviews/qwidgetitemdata_p.h \
         mainwindow.h \
     mainwindow.h \
     CopidQt/header/qobject.h \
@@ -1563,6 +1615,7 @@ DISTFILES += \
     io/io.pri \
     io/qt_attribution.json \
     io/qurltlds_p.h.INFO \
+    itemviews/itemviews.pri \
     network/access/access.pri \
     network/access/http2/http2.pri \
     network/bearer/bearer.pri \

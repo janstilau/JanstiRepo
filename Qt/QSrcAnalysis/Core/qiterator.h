@@ -1,48 +1,17 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QITERATOR_H
 #define QITERATOR_H
 
 #include <QtCore/qglobal.h>
 
 QT_BEGIN_NAMESPACE
+
+// Qt 对于 Java 风格的迭代器的实现, 其实也是建立在 STL 的基础上实现的.
+// QListIterator<T>	QMutableListIterator<T>
+// QListIterator<QString> i(list);
+// while (i.hasNext()) {
+//     qDebug() << i.next();
+// }
+// 使用 JAVA 风格的遍历器, 要使用构造函数来生成对应的对象.
 
 #define Q_DECLARE_SEQUENTIAL_ITERATOR(C) \
 \
@@ -71,6 +40,11 @@ public: \
     { while (i != c.constBegin()) if (*(--i) == t) return true; \
       return false;  } \
 };
+
+// 可以看到, 上面的各种操作, 不过是通过容器, 以及迭代器的包装而已.
+// Java 风格的迭代器, 是一个适配器. 因为有着 hasPrevious, toFront 这些操作, 所以, 必须存储一下重启本身.
+// 还有一点需要注意的是, Qt 的容器在复制的时候, 不会有大量的数据复制的过程.
+// 上面的迭代器是 const 的, 所以不可以修改当前指向的内容.
 
 #define Q_DECLARE_MUTABLE_SEQUENTIAL_ITERATOR(C) \
 \
