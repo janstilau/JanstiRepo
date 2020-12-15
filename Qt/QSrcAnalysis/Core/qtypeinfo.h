@@ -11,6 +11,7 @@ QT_BEGIN_NAMESPACE
   The catch-all template.
 */
 
+// Qt 版本的 typeTraits
 template <typename T>
 class QTypeInfo
 {

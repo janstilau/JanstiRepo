@@ -8,7 +8,7 @@ QT_BEGIN_NAMESPACE
 
 struct Q_CORE_EXPORT QArrayData
 {
-    QtPrivate::RefCount ref;
+    QtPrivate::RefCount ref; // 应用技术器.
     int size; // 这个代表的是, 已经占有的空间的大小.
     uint alloc : 31; // 这个代表的是, 容量的大小, 其实就是 capacity
     uint capacityReserved : 1;
@@ -17,15 +17,13 @@ struct Q_CORE_EXPORT QArrayData
 
     void *data()
     {
-        Q_ASSERT(size == 0
-                || offset < 0 || size_t(offset) >= sizeof(QArrayData));
+
         return reinterpret_cast<char *>(this) + offset;
     }
 
     const void *data() const
     {
-        Q_ASSERT(size == 0
-                || offset < 0 || size_t(offset) >= sizeof(QArrayData));
+
         return reinterpret_cast<const char *>(this) + offset;
     }
 
@@ -86,6 +84,7 @@ struct Q_CORE_EXPORT QArrayData
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QArrayData::AllocationOptions)
 
+// QTypedArrayData 就是在 arrayData 的基础上, 增加了 type 的限制. 这样, ++, -- 都会跨越 sizeof(T)大小的字节数.
 template <class T>
 struct QTypedArrayData
     : QArrayData

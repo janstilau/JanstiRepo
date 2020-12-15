@@ -19,11 +19,6 @@
 #include <limits.h>
 #include <string.h>
 
-#ifdef Q_CC_MSVC
-#pragma warning( push )
-#pragma warning( disable : 4127 ) // "conditional expression is constant"
-#endif
-
 QT_BEGIN_NAMESPACE
 
 
@@ -106,7 +101,8 @@ private:
 #endif
     };
 
-    union { QListData p; QListData::Data *d; };
+    union { QListData p;
+            QListData::Data *d; };
 
 public:
     inline QList() Q_DECL_NOTHROW : d(const_cast<QListData::Data *>(&QListData::shared_null)) { }
@@ -504,14 +500,17 @@ template <typename T>
 inline const T &QList<T>::at(int i) const
 { Q_ASSERT_X(i >= 0 && i < p.size(), "QList<T>::at", "index out of range");
  return reinterpret_cast<Node *>(p.at(i))->t(); }
+
 template <typename T>
 inline const T &QList<T>::operator[](int i) const
 { Q_ASSERT_X(i >= 0 && i < p.size(), "QList<T>::operator[]", "index out of range");
  return reinterpret_cast<Node *>(p.at(i))->t(); }
+
 template <typename T>
 inline T &QList<T>::operator[](int i)
 { Q_ASSERT_X(i >= 0 && i < p.size(), "QList<T>::operator[]", "index out of range");
   detach(); return reinterpret_cast<Node *>(p.at(i))->t(); }
+
 template <typename T>
 inline void QList<T>::removeAt(int i)
 { if(i >= 0 && i < p.size()) { detach();

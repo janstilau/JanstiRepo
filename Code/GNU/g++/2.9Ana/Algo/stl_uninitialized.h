@@ -9,7 +9,6 @@ __STL_BEGIN_NAMESPACE
 #pragma mark - UninitializedFill
 
 // uninitialized_fill, 从 first 指定的空间开始, 将 x 的值填充到迭代器指向的地方.
-// 这个只会在 vector, 和 deque 里面使用, 因为别的容器, 都是一个个的进行安插. 链表, 红黑树, 哈希表, 没有都需要一个个进行. 因为那是节点的概念, 没有办法提前获取到 first, end.
 // 需要注意的是, 数组的搬移操作, 是不会调用这个函数的. 因为这个函数, 还要考虑构造函数的调用, 而搬移操作, 不应该调用构造函数.
 
 // 这里, 为什么不能是值的直接 bit copy, 非要进行拷贝构造函数和析构呢. 这其实也是后面 move sematic 出现的原因.
@@ -141,7 +140,7 @@ __uninitialized_copy_aux(InputIterator first, InputIterator last,
     return copy(first, last, result);
 }
 
-// 如果需要构造函数, 则在指定的位置, 一个个的调用构造函数
+// 如果需要调用拷贝构造函数, 则在指定的位置, 一个个的调用拷贝构造函数.
 // 这是非常重要的一个点. 复制的时候, 那块资源应不应该调用构造函数, 这不是容器决定的, 而是类型决定的.
 template <class InputIterator, class ForwardIterator>
 ForwardIterator
