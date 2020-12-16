@@ -66,6 +66,10 @@ struct negate : public unary_function<T, T> {
     T operator()(const T& x) const { return -x; }
 };
 
+
+
+// 这种, 返回值是 bool 的 functor, 叫做 predicate.
+
 // 返回 bool 值的类型对象, 在 STL 里面叫做 predicate.
 // 传入一个类型参数, 可以确定 first, last, 两个类型参数, return 的类型固定为 bool.
 template <class T>
@@ -125,7 +129,7 @@ struct logical_not : public unary_function<T, bool> {
 // 这是一个函数对象适配器.
 // 类型名叫做 Predicate, 是提醒, 应该传入一个 return type 为 bool 的函数对象进来.
 // Predicate::argument_type 是对于传入对象的询问操作, 所以, Predicate 必须继承自 unary_function, 不然这个适配器无法工作.
-// Predicate::return_type 其实无法限制, 虽然叫做 Predicate, 但是, 只要是 pred 的返回值可以取反, 这个适配器也算作是正常工作了. 例如, pred 返回一个 int.
+
 template <class Predicate>
 class unary_negate // 直接, 根据 Predicate 的 argument, 确定 unary_function 中的类型.
 : public unary_function<typename Predicate::argument_type, bool> {
@@ -172,7 +176,10 @@ inline binary_negate<Predicate> not2(const Predicate& pred) {
 // 传入一个二元函数, 经过 binder1st 的包装, 就变成了一个一元函数.
 template <class Operation>
 class binder1st
-: public unary_function<typename Operation::second_argument_type, typename Operation::result_type> {
+: public unary_function<typename Operation::second_argument_type,
+                        typename Operation::result_type> {
+// unary_function 的 type, 应该是从 Operation 中获取. 所以, 这类使用 Operation 里面的值, 写入到类型参数是很重要的.
+// operator() 里面的类型名, 和这里的类型名必须是一样的.   
 protected:
     Operation op; // 存函数闭包
     typename Operation::first_argument_type value; // 存需要绑定的值.
@@ -211,8 +218,10 @@ public:
     }
 };
 
+// 写出一个方法来, 通过编译器的推导, 推导出 op 的类型.
 template <class Operation, class T>
 inline binder2nd<Operation> bind2nd(const Operation& op, const T& x) {
+    // 这里, 如果传递过来的 op, 没有继承相应的父类, 在这里就报错了 second_argument_type.
     typedef typename Operation::second_argument_type arg2_type;
     return binder2nd<Operation>(op, arg2_type(x));
 }
@@ -270,6 +279,8 @@ struct identity : public unary_function<T, T> {
     const T& operator()(const T& x) const { return x; }
 };
 
+// unary_function, 第一个类型参数是 pair, 返回值类型, 是 pair 里面的 first_type.
+// 所以, Pair 必须 typedef first_type 是什么才可以.
 template <class Pair>
 struct select1st : public unary_function<Pair, typename Pair::first_type> {
     const typename Pair::first_type& operator()(const Pair& x) const

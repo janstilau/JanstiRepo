@@ -9,13 +9,16 @@ template <class T, class Sequence = deque<T> >
 template <class T, class Sequence>
 #endif
 class stack {
+    
   friend bool operator== __STL_NULL_TMPL_ARGS (const stack&, const stack&);
   friend bool operator< __STL_NULL_TMPL_ARGS (const stack&, const stack&);
+    
 public:
   typedef typename Sequence::value_type value_type;
   typedef typename Sequence::size_type size_type;
   typedef typename Sequence::reference reference;
   typedef typename Sequence::const_reference const_reference;
+    
 protected:
   Sequence c;
 public:

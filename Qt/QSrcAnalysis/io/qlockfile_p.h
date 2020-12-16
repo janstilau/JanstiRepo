@@ -90,11 +90,7 @@ public:
 #endif
 
     QString fileName;
-#ifdef Q_OS_WIN
-    Qt::HANDLE fileHandle;
-#else
     int fileHandle;
-#endif
     int staleLockTime; // "int milliseconds" is big enough for 24 days
     QLockFile::LockError lockError;
     bool isLocked;

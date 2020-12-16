@@ -68,7 +68,7 @@ inline wchar_t* copy(const wchar_t* first, const wchar_t* last,
     return result + (last - first);
 }
 
-// 如果是迭代器, 通过迭代器的 * 取值, = 赋值,
+// 如果是迭代器, 通过迭代器的 * 取值, = 赋值, 到底会不会有 assign 操作符函数的调用, 要看 T 的类型.
 template <class InputIterator, class OutputIterator>
 inline OutputIterator __copy(InputIterator first, InputIterator last,
                              OutputIterator result,
@@ -177,7 +177,7 @@ inline BidirectionalIterator2 __copy_backward(BidirectionalIterator1 first,
 }
 
 // 只要使用了 *iterator = *iterator. 这种形式, 那么 assign 操作符函数如果定义了, 就一定会被触发.
-// memmove 这种方式, 只有在 has_trivial_assignment_operator 为 false 的时候才会发生.
+// 内存 momorymove 这种方式, 只有在 has_trivial_assignment_operator 为 false 的时候才会发生.
 
 
 

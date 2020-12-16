@@ -282,7 +282,9 @@ public:
     
     iterator_type base() const { return current; } // 任何包装器, 应该给外界的使用者一个权力, 拿到原始值.
         
-    // 这里不太明白, 为什么不直接操作 current.
+    // 以 end 为例, end 指向有效范围的下一个位置, 所以, 要拿到最后一个数据, 应该是--.
+    // 相对应的, 用 -- 这个规则, begin 指向的就是一个非法的位置了.
+    // 这里, current 不应该改变, 因为这里是取值操作, current 是不应该改变的. 所以, 利用一个拷贝来做这个事情.
     reference operator*() const {
         Iterator tmp = current;
         return *--tmp;
@@ -292,6 +294,7 @@ public:
     // 这里需要多思考一下. 如果 current 就是一个 reverse_iterator 怎么办.
     // 代码里面, 直接这样写是没有问题的. 但是, 如果保存的 current 本身也是一个适配器, 那么最终就是函数套函数, 数个函数一起触发.
     // 抽象的意义就在于, 不用考虑这么深. 装饰者模式, 会实现原来的接口, 让使用者在只考虑一层调用.
+    // 因为, 迭代器的++, -- 多次是没有什么影响的. 多个迭代器修饰嵌套的话, 只是让迭代器里面的值不断地改变而已, 只要最后进行取值的时候, 取到正确的位置就可以了.
     self& operator++() {
         --current;
         return *this;
@@ -465,6 +468,7 @@ __STL_END_NAMESPACE
 
 #endif /* __SGI_STL_INTERNAL_ITERATOR_H */
 
+// 插入迭代器.
 template <class Container>
 class insert_iterator {
 protected:
@@ -495,6 +499,7 @@ public:
         ++iter;
         return *this;
     }
+    // 这里, 这三个操作符, 不做任何的改变.
     insert_iterator<Container>& operator*() { return *this; }
     insert_iterator<Container>& operator++() { return *this; }
     insert_iterator<Container>& operator++(int) { return *this; }
@@ -538,6 +543,7 @@ inline back_insert_iterator<Container> back_inserter(Container& x) {
     return back_insert_iterator<Container>(x);
 }
 
+// 从头部插入的 iterator 适配器.
 template <class Container>
 class front_insert_iterator {
 protected:
