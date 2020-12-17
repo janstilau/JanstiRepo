@@ -11,6 +11,11 @@ ApplicationWindow {
     // 中心区域
     TextArea { id: myContent; anchors.fill: parent }
 
+    function onCutted(trigger) {
+        console.log(typeof(trigger))
+    }
+
+    // 提前定义了四个 Action, 然后放在这里. 有没有办法外面定义, 在这里进行使用呢
     Action {
         id: quitAction; text: qsTr("Quit")
         shortcut: "ctrl+q"; iconSource: "images/quit.png"
@@ -19,7 +24,7 @@ ApplicationWindow {
     Action {
         id: cutAction; text: qsTr("Cut")
         shortcut: "ctrl+x"; iconSource: "images/cut.png"
-        onTriggered: myContent.cut()
+        onTriggered: onCutted(source)
     }
     Action {
         id: copyAction; text: qsTr("Copy")
@@ -31,7 +36,9 @@ ApplicationWindow {
         shortcut: "ctrl+v"; iconSource: "images/paste.png"
         onTriggered: myContent.paste()
     }
+
     // 菜单栏
+    // menuitem 使用了外面定义好的 menuBar 进行使用.
     menuBar: MenuBar {
         Menu {
             title: qsTr("&File")
@@ -44,20 +51,28 @@ ApplicationWindow {
             MenuItem { action: pasteAction }
         }
     }
+
     // 工具栏
     toolBar: ToolBar {
         id: mainToolBar
-        width: parent.width
-
+        width: parent.width //这里, 进行了属性绑定.
         Row {
             anchors.fill: parent
             ToolButton { action: cutAction }
             ToolButton { action: copyAction }
             ToolButton { action: pasteAction }
         }
+        Rectangle {
+            color: "red"
+            anchors.fill: parent
+            z:-1
+        }
     }
     // 状态栏
     statusBar: StatusBar {
-        RowLayout { Label { text: "Ready." } Label { text: "welcome." } }
+        RowLayout {
+            Label { text: "Ready." }
+            Label { text: "welcome." }
+        }
     }
 }

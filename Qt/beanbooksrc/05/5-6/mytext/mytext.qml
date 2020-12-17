@@ -6,7 +6,8 @@ Rectangle {
         anchors.centerIn: parent
         text: "Hello World"
         width: 20
-        clip: true
+//        clip: true
+        elide: Text.ElideLeft
     }
 }
 

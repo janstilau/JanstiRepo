@@ -4,9 +4,11 @@ Rectangle {
     property alias text: input.text
     property alias input: input
 
+    // property binding
     width: input.contentWidth < 100? 100 : input.contentWidth + 10;
     height: input.contentHeight + 10
-    color: "#eaeef1"; border.color: "#d3bbbb"
+    color: "#eaeef1";
+    border.color: "#d3bbbb"
 
     TextInput {
         id: input

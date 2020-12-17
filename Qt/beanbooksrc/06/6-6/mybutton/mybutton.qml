@@ -6,9 +6,8 @@ ApplicationWindow {
     Button {
         x: 10; y: 10; width: 140
         text: qsTr("Button with Menu")
-        menu: Menu {
-            MenuItem { text: qsTr("Item1") }
-            MenuItem { text: qsTr("Item2") }
+        onClicked: {
+            console.log()
         }
     }
 }

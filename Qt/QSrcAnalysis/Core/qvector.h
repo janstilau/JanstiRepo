@@ -516,6 +516,7 @@ void QVector<T>::freeData(Data *x)
 }
 
 // 在这个函数里面, 有着拷贝的工作. 也就是扩容后的搬移.
+// 不一定是写时复制, 在空间不够的时候, 也会调用这个函数.
 template <typename T>
 void QVector<T>::reallocData(const int asize, /*现有容量*/
                              const int targetSize/*目标容量*/,
@@ -529,6 +530,7 @@ void QVector<T>::reallocData(const int asize, /*现有容量*/
     if (targetSize != 0) {
         // 如果, 目标容量和自己的不相符, 或者正在共享.
         if (targetSize != int(backingStore->alloc) || isShared) {
+            // 这里, 是扩容处理.
             QT_TRY {
                 // allocate memory
                 createdStore = Data::allocate(targetSize, options);
@@ -538,9 +540,12 @@ void QVector<T>::reallocData(const int asize, /*现有容量*/
                 T *srcEnd = asize > backingStore->size ? backingStore->end() : backingStore->begin() + asize;
                 T *dst = createdStore->begin();
 
+                // 所以, 无论是 Qt, 还是 STL 在扩容的时候, 都是要调用构造函数进行新空间的初始化的.
+                // 这里对应的, 也就是 uninitialized_copy 里面的操作.
                 if (!QTypeInfoQuery<T>::isRelocatable || (isShared && QTypeInfo<T>::isComplex)) {
                     QT_TRY {
                         // 到这里, 就是调用拷贝构造, 或者 move 构造进行新值的初始化了.
+                        // 直接使用了 std::is_nothrow_move_constructible 来进行 type_traits.
                         if (isShared || !std::is_nothrow_move_constructible<T>::value) {
                             // we can not move the data, we need to copy construct it
                             while (srcBegin != srcEnd)
@@ -585,9 +590,7 @@ void QVector<T>::reallocData(const int asize, /*现有容量*/
             }
             createdStore->capacityReserved = backingStore->capacityReserved;
         } else {
-            Q_ASSERT(int(backingStore->alloc) == targetSize); // resize, without changing allocation size
-            Q_ASSERT(isDetached());       // can be done only on detached d
-            Q_ASSERT(createdStore == backingStore);             // in this case we do not need to allocate anything
+            // 这里, 是缩容处理.
             if (asize <= backingStore->size) {
                 destruct(createdStore->begin() + asize, createdStore->end()); // from future end to current end
             } else {
@@ -598,6 +601,9 @@ void QVector<T>::reallocData(const int asize, /*现有容量*/
     } else {
         createdStore = Data::sharedNull();
     }
+
+
+
     if (backingStore != createdStore) {
         if (!backingStore->ref.deref()) { // backingStore 没有引用计数了, 应该释放.
             if (!QTypeInfoQuery<T>::isRelocatable || !targetSize || (isShared && QTypeInfo<T>::isComplex)) {
@@ -680,7 +686,9 @@ void QVector<T>::removeLast()
     }
 }
 
-// insert 会引发搬移操作.
+// 不是 move 语义的插入操作.
+// 带有 move 语义的, 在搬移的时候, 是 move ctor 的调用.
+// 不带 move 语义的, 在搬移的时候, 是 assign operator 的调用
 template <typename T>
 typename QVector<T>::iterator QVector<T>::insert(iterator before, size_type n, const T &t)
 {
@@ -724,17 +732,23 @@ typename QVector<T>::iterator QVector<T>::insert(iterator before, size_type n, c
 template <typename T>
 typename QVector<T>::iterator QVector<T>::insert(iterator before, T &&t)
 {
-    Q_ASSERT_X(isValidIterator(before),  "QVector::insert", "The specified iterator argument 'before' is invalid");
-
     const auto offset = std::distance(backingStore->begin(), before);
-    if (!isDetached() || backingStore->size + 1 > int(backingStore->alloc))
+    // 首先, 没有分离, 或者空间不足, 会重新进行内存空间的分配. 里面会有大量的 cpctor 的调用.
+    if (!isDetached() || backingStore->size + 1 > int(backingStore->alloc)) {
         reallocData(backingStore->size, backingStore->size + 1, QArrayData::Grow);
+    }
+    // 因为, 这里是 move insert, 所以下面的操作, 都增加了 move 操作符.
     if (!QTypeInfoQuery<T>::isRelocatable) {
         T *i = backingStore->end();
         T *j = i + 1;
         T *b = backingStore->begin() + offset;
         // The new end-element needs to be constructed, the rest must be move assigned
         if (i != b) {
+            // 这里, 还是会有 assign 操作符的调用.
+            // 也就是说, 在 insert 操作里面, 如果重新分配了空间, 会有大量的复制操作.
+            // 如果需要搬移, 会有大量的 assign 的搬移工作.
+            // 实在是效率低下.
+            // 设计良好的 move, 可以达到 memmove 的操作, 到底 move ctor, move assign 会做出什么样的效果, 完全看类的设计者.
             new (--j) T(std::move(*--i));
             while (i != b)
                 *--j = std::move(*--i);

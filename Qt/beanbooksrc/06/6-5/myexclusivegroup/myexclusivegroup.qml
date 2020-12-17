@@ -13,7 +13,6 @@ ApplicationWindow {
             ToolButton {
                 id: dabRadioInput; text: "DAB";
                 checkable: true; exclusiveGroup: radioInputGroup
-
             }
             ToolButton {
                 id: fmRadioInput; text: "FM";

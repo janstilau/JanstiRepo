@@ -26,4 +26,10 @@ Rectangle {
         anchors.fill: parent;
         onClicked: window.state = "reanchored"
     }
+
+/*
+  Anchors provide a way to position an item by specifying its relationship with other items.
+
+
+  */
 }

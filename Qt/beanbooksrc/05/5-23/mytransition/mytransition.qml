@@ -9,7 +9,8 @@ Column {
     Rectangle { color: "blue"; width: 50; height: 20 }
 
     move: Transition {
-        NumberAnimation { properties: "x,y"; duration: 1000 }
+        NumberAnimation { properties: "x,y"; duration: 500 }
+        NumberAnimation { properties: "x,y"; duration: 500 }
     }
 
     focus: true

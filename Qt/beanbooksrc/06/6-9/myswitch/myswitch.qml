@@ -4,10 +4,19 @@ import QtQuick.Window 2.1
 
 ApplicationWindow {
     Column {
-        spacing: 8
-
-        Switch { checked: true }
-        Switch { checked: false }
+        Column {
+            CheckBox {
+                checked: true
+                text: qsTr("First")
+            }
+            CheckBox {
+                text: qsTr("Second")
+            }
+            CheckBox {
+                checked: true
+                text: qsTr("Third")
+            }
+        }
     }
 }
 

@@ -329,28 +329,31 @@ vector<T, Alloc>& vector<T, Alloc>::operator=(const vector<T, Alloc>& x) {
     return *this;
 }
 
+/*
+ 从这个函数我们看出, 在 insert 这个动作里面, 如果空间够, 大量的 assign 操作符的调用.
+ 如果, 空间不够, 大量的拷贝构造调用.
+ 但是其实这都是 move 语义的操作, 所以, 如果 T 类型, 可以提供 move 语义的方法, 而 move 语义的语法提供的又是类似于 bits copy 的效果, 这里其实可以节省大量的运算资源.
+ */
 template <class T, class Alloc>
 void vector<T, Alloc>::insert_aux(iterator position, const T& x) {
     if (finish != end_of_storage) {
         construct(finish, *(finish - 1));
         ++finish;
         T x_copy = x;
-        copy_backward(position, finish - 2, finish - 1); // 这里没有构造函数的调用.
+        copy_backward(position, finish - 2, finish - 1); // 这里没有构造函数的调用. 但是会有 assign 操作符的调用.
         *position = x_copy;
     } else {
-        /*
-         否则就新分配一块空间.
-         拷贝前半部分, 插入值, 拷贝后半部分, 然后进行原有空间的释放.
-         然后替换自己的 start, end 为新的空间.
-         需要注意的是, 这里面, 会调用大量的构造函数, 析构函数.
-         */
+        // 空间不足, 先进行空间的分配和复制.
         const size_type old_size = size();
         const size_type len = old_size != 0 ? 2 * old_size : 1; // 计算出新的大小.
-        iterator new_start = data_allocator::allocate(len);
+        iterator new_start = data_allocator::allocate(len); // 新分配空间.
         iterator new_finish = new_start;
+        // 拷贝前面的内容, 会有大量的拷贝构造.
         new_finish = uninitialized_copy(start, position, new_start);
+        // 在插入的位置, 进行拷贝构造
         construct(new_finish, x);
         ++new_finish;
+        // 拷贝后面的内容, 会有大量的拷贝构造.
         new_finish = uninitialized_copy(position, finish, new_finish);
         destroy(begin(), end());
         deallocate();

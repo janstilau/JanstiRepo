@@ -122,6 +122,8 @@ template <class T>
 struct __copy_backward_dispatch<T*, T*>
 {
     T* operator()(T* first, T* last, T* result) {
+        // 指针类型也需要进行萃取, 到底可不可以直接内存操作, 要看 T 的类型, 而不是指针就可以了.
+        // 迭代器就是泛化的指针, 一定要记得这个事情.
         typedef typename __type_traits<T>::has_trivial_assignment_operator t;
         return __copy_backward_t(first, last, result, t());
     }
@@ -167,7 +169,7 @@ inline T* __copy_backward_t(const T* first, const T* last,
 }
 
 // 通过迭代器的 * 运算符取值, 然后进行赋值操作, 这里, 会调用到赋值操作符操作.
-// 这是合理的, 因为这是 copy, 目的端可能会有数据的, 需要使用 = 操作符做原有的数据的清理操作.
+// 由于 assign 操作符里面, 经常是会和 CopyCtor 一样的操作, 这里, 搬移会导致巨量的操作.
 template <class BidirectionalIterator1, class BidirectionalIterator2>
 inline BidirectionalIterator2 __copy_backward(BidirectionalIterator1 first,
                                               BidirectionalIterator1 last,
