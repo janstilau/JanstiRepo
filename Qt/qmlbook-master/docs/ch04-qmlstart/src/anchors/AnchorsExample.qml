@@ -29,13 +29,16 @@
 
 import QtQuick 2.5
 
+// 这个比 autolayout 简单一些, 是 autolayout 的功能子集.
 DarkSquare {
+
     id: root
     width: 400; height: 240
 
     Grid {
+        id: matrixgrid
         anchors.fill: parent
-        anchors.margins: 16
+        anchors.margins: 0
         spacing: 8
         columns: 4
 
@@ -117,4 +120,13 @@ DarkSquare {
         //<<M6
 
     }
+
+    Rectangle {
+        border.width: 1
+        color: "red"
+        anchors.fill: matrixgrid
+        opacity: 0.3
+        z:1
+    }
+
 }

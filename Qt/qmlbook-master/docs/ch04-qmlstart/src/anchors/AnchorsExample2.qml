@@ -38,19 +38,24 @@ DarkSquare {
         x: 24; y: 24
         MouseArea {
             anchors.fill: parent
-            drag.target: parent
+            drag.target: parent // drag 有着搬移的作用.
             // reset position`
             onClicked: parent.x = 24
         }
     }
+
+    // 这里, 为什么 RedSquare 的 height 会跟着改变呢.???
     RedSquare {
         id: red;
         anchors.left: blue.right
         anchors.leftMargin: 8
+
         anchors.right: root.right
         anchors.rightMargin: 8
+
         anchors.top: blue.bottom
         anchors.topMargin: 8
+
         MouseArea {
             anchors.fill: parent
             onClicked: {

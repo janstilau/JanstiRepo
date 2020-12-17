@@ -33,12 +33,13 @@ import QtQuick 2.5
 
 Item {
     // set width based on given background
-    width: bg.width
-    height: bg.height
+    width: 500
+    height: 500
 
     Image { // nice background image
         id: bg
         source: "assets/background.png"
+        anchors.fill: parent
     }
 
     MouseArea {
@@ -85,6 +86,7 @@ Item {
         antialiasing: true
         onClicked: {
             // several transformations
+            // x, y, width, height 都没有改变, 仅仅是绘画系统进行了变化.
             rotation += 15
             scale += 0.05
         }

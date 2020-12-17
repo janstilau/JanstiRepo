@@ -6,6 +6,8 @@ ApplicationWindow {
 
     // ...
 
+    // 可以在 QML 里面写逻辑. 没有问题.
+    // 这两个方法, 是写出去给别人用的.
     function openFileDialog() { fileOpenDialog.open(); }
     function openAboutDialog() { aboutDialog.open(); }
 
@@ -31,7 +33,9 @@ ApplicationWindow {
         title: "Select an image file"
         folder: shortcuts.documents
         nameFilters: [ "Image files (*.png *.jpeg *.jpg)" ]
-        onAccepted: image.source = fileOpenDialog.fileUrl;
+        onAccepted: { // 在回调里面, 进行图片路径的绑定
+            image.source = fileOpenDialog.fileUrl;
+        }
     }
 
     Dialog {

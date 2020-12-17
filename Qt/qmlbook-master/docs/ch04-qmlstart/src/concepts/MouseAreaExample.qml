@@ -39,11 +39,16 @@ Rectangle {
         x: 12; y: 12
         width: 76; height: 96
         color: "lightsteelblue"
+        property int times: 0
         MouseArea {
             id: area
             width: parent.width
             height: parent.height
-            onClicked: rect2.visible = !rect2.visible
+            onClicked: {
+                  rect2.visible = !rect2.visible
+                  rect1.times += 1
+                console.log(rect1.times)
+            }
         }
     }
 

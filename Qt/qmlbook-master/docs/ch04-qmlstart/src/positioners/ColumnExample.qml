@@ -28,7 +28,7 @@
 // M1>>
 // column.qml
 
-import QtQuick 2.5
+import QtQuick 2.12
 
 DarkSquare {
     id: root
@@ -39,9 +39,21 @@ DarkSquare {
         id: row
         anchors.centerIn: parent
         spacing: 8
+        topPadding: 0
+        bottomPadding: 0
+        leftPadding: 0
+        rightPadding: 0
         RedSquare { }
         GreenSquare { width: 96 }
         BlueSquare { }
+    }
+
+    Rectangle {
+        border.width: 1
+        border.color: "red"
+        anchors.fill: row // 这里, 也可以写别的 item, 用来进行覆盖.
+        z:1
+        opacity: 0.3
     }
 }
 

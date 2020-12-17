@@ -38,10 +38,14 @@ DarkSquare {
         x: 8; y: 8
     }
     focus: true
+
+
+    // 当 focus 为 false 的时候, 键盘的事件, 是接受不到的.
     Keys.onLeftPressed: square.x -= 8
     Keys.onRightPressed: square.x += 8
     Keys.onUpPressed: square.y -= 8
     Keys.onDownPressed: square.y += 8
+
     Keys.onPressed: {
         switch(event.key) {
             case Qt.Key_Plus:

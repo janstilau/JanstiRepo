@@ -34,6 +34,7 @@ DarkSquare {
     id: root
     width: 252
     height: 252
+    // 这里使用了 variant, 里面存放一个 JS 变量
     property variant colorArray: ["#00bde3", "#67c111", "#ea7025"]
 
 

@@ -1,12 +1,11 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.4
 
+// 相当于是,  ImageViewerWindow 的子类化的过程.
 ImageViewerWindow {
     
-    // ...
-
     id: window
-    
+
     width: 640
     height: 480
     
@@ -40,6 +39,5 @@ ImageViewerWindow {
         }
     }
 
-    // ...
 
 }

@@ -84,6 +84,7 @@ Rectangle {
         font.pixelSize: 24
 
         // (7) Keys is a attached property
+        // 点击 tab 的下一个 focus 的对象.
         KeyNavigation.tab: thisLabel
         color: focus?"red":"black"
     }

@@ -29,6 +29,7 @@
 
 import QtQuick 2.5
 
+// 子类化,
 Square {
     color: "#67c111"
 }

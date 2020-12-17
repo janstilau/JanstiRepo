@@ -34,22 +34,34 @@ Rectangle {
 
     color: '#333333'
 
-
-
     // M1>>
     Image {
         x: 12; y: 12
         // width: 72
         // height: 72
         source: "assets/triangle_red.png"
+
+        Rectangle {
+            border.width: 1
+            border.color: "red"
+            anchors.fill: parent
+            z:-1
+        }
     }
     Image {
         x: 12+64+12; y: 12
         // width: 72
         height: 72/2
         source: "assets/triangle_red.png"
-        fillMode: Image.PreserveAspectCrop
-        clip: true
+        fillMode: Image.PreserveAspectFit
+//        clip: true
+
+        Rectangle {
+            border.width: 1
+            border.color: "red"
+            anchors.fill: parent
+            z:-1
+        }
     }
     // <<M1
 }

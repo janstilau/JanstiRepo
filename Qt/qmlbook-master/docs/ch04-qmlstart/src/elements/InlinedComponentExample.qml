@@ -34,6 +34,8 @@ Rectangle {
     height: 120
 
     // M1>>
+    // 通过 Rectangle, 自定义了一个 Button 出来. 不过, 耦合严重.
+    // 其实, 这个 button 里面, 应该封装的部分, 就是 text 的设置, 以及点击的信号发出, 其他是 Rect 的自定义的一些东西.
     Rectangle { // our inlined button ui
         id: button
         x: 12; y: 12

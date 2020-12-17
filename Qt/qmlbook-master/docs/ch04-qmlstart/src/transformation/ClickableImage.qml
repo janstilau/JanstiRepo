@@ -33,6 +33,7 @@
 import QtQuick 2.5
 
 Image {
+    // QML 里面, 把根对象, 命名为 root, 是一个习惯.
     id: root
     signal clicked
 

@@ -31,6 +31,7 @@ import QtQuick 2.5
 
 BrightSquare {
     id: root
+
     width: row.childrenRect.width + 2*margins
     height: row.childrenRect.height + 2*margins
     property int margins: 20

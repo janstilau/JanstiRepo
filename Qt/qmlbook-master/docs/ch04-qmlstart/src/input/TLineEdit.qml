@@ -30,16 +30,18 @@
 import QtQuick 2.5
 
 FocusScope {
+
+    // 根据输入的量, 进行高度的控制
     width: 96; height: input.height + 8
+
     Rectangle {
         anchors.fill: parent
         color: "lightsteelblue"
         border.color: "gray"
-
     }
 
     property alias text: input.text
-    property alias input: input
+    property alias input: input // 直接把 TextInput 暴露出去, 这样外界也就更加容易操作.
 
     TextInput {
         id: input

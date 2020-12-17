@@ -49,6 +49,7 @@ Image {
             duration: root.duration
             running: root.running
         }
+
         RotationAnimation on rotation {
             to: 360
             duration: root.duration
@@ -58,7 +59,7 @@ Image {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: root.running = true
+        onClicked: root.running = !root.running
     }
 
 }

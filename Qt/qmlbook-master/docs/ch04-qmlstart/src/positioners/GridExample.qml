@@ -38,10 +38,15 @@ BrightSquare {
     Grid {
         id: grid
         rows: 2
-        columns: 2
         anchors.centerIn: parent
         spacing: 8
         RedSquare { }
+
+
+        RedSquare { }
+        RedSquare { }
+        RedSquare { }
+
         RedSquare { }
         RedSquare { }
         RedSquare { }

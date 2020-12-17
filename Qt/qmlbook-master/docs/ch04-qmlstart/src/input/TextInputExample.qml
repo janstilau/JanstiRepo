@@ -40,6 +40,7 @@ Rectangle {
         x: 8; y: 8
         width: 96; height: 20
         focus: true
+        KeyNavigation.tab: input2
         text: "Text Input 1"
     }
 
@@ -47,6 +48,7 @@ Rectangle {
         id: input2
         x: 8; y: 36
         width: 96; height: 20
+        KeyNavigation.tab: input1
         text: "Text Input 2"
     }
 }

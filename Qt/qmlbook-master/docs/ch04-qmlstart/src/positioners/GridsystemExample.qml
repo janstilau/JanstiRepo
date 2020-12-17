@@ -38,6 +38,8 @@ BrightSquare {
         id: container
         width: 800
         height: 480
+
+        // 这些, 和之前的网格布局没有什么区别.
         property int marginTop: 16
         property int marginRight: 32
         property int marginBottom: marginTop
@@ -45,10 +47,8 @@ BrightSquare {
         property int columns: 12
         property int rows: 8
         property int spacing: 12
-//        property int cellWidth: (width-marginLeft-marginRight-(columns-1)*spacing)/columns
-//        property int cellHeight: (height-marginTop-marginBottom-(rows-1)*spacing)/rows
-        property int cellWidth: 64
-        property int cellHeight: 64
+        property int cellWidth: (width-marginLeft-marginRight-(columns-1)*spacing)/columns
+        property int cellHeight: (height-marginTop-marginBottom-(rows-1)*spacing)/rows
 
         Grid {
             anchors.fill: parent
@@ -58,6 +58,7 @@ BrightSquare {
             anchors.leftMargin: parent.marginLeft
             spacing: parent.spacing
             columns: parent.columns
+
             Repeater {
                 model: container.columns * container.rows
                 RedSquare {
