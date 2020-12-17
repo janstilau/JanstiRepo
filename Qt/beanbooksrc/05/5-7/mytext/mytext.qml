@@ -24,7 +24,7 @@ Column {
     }
     Text {
         width: 200
-        height: 30
+        height: 50
         wrapMode: Text.WordWrap
         elide: Text.ElideRight
         text: "对于可换行的多行文本，如果设置了高度，可以对超出部分从右边进行省略"

@@ -7,7 +7,7 @@ Item {
         anchors.fill: parent
 //        onClicked: console.log(MathFunctions.factorial(10))
         onClicked: {
-            console.log(MathFunctions.factorial(200))
+            console.log(MathFunctions.factorial(20))
         }
     }
 }

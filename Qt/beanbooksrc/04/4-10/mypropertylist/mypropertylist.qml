@@ -9,14 +9,16 @@ Rectangle {
     property list<Rectangle> childRects: [
         Rectangle { color: "red" },
         Rectangle { color: "blue"}
-        // 组件名, 大括号, 里面的属性:value 对应. 这就是在进行对象的创建工作.
     ]
 
     MouseArea {
         anchors.fill:parent
         onClicked: {
             for (var i = 0; i < childRects.length; i++) {
-                console.log("color", i, childRects[i].color)
+                console.log("color", i, childRects[i])
+                // qml: color 0 QQuickRectangle(0x7ff17ecb18d0)
+                // qml: color 1 QQuickRectangle(0x7ff17ecb1b70)
+                // 从上面的打印可以看出, 最终还是变味了 QQuick 中的对象, 进行最终的显示工作.
             }
         }
     }

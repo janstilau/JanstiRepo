@@ -1,6 +1,9 @@
 import QtQuick 2.2
 
 Rectangle {
-    Button { buttonText: "click Me" }
+    Button {
+        buttonText: "click Me"
+        title.color: "white"
+    }
 }
 

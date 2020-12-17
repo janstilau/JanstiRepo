@@ -5,6 +5,7 @@ Item {
     property var theArray: new Array()
     property var theDate: new Date()
 
+    // Component.onCompleted 这个到底怎么回事.
     Component.onCompleted: {
         for (var i = 0; i < 10; i++) {
             theArray.push("Item " + i)

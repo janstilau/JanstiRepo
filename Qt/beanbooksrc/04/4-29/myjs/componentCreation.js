@@ -14,6 +14,7 @@ function finishCreation() {
     if (component.status == Component.Ready) {
         // 然后这里是从 nib 生成对应的对象.
         // 然后这里设置了 父对象, 所以就添加到对应的父对象的 view 上.
+        // 可以直接写 appWindow 吗, 这有关系吗.
         sprite = component.createObject(appWindow, {"x": 100, "y": 100});
         if (sprite == null) {
             // 错误处理

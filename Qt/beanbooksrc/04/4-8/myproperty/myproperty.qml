@@ -3,7 +3,7 @@ import QtQuick 2.2
 Rectangle {
     id: rect
     color: "yellow"
-    // 自定义了一个 property, 自定义的 property 并不会直接参与到业务逻辑里面, 需要使用代码读取该值, 然后覆盖已有的属性才能改变 view 的 UI 效果.
+
     property color nextColor: "blue"
     Component.onCompleted: {
         rect.color = "red"
@@ -11,7 +11,12 @@ Rectangle {
     MouseArea {
         anchors.fill:parent
         onClicked: {
+            // 这里需要注意, color 是一个引用语义的值, 想要拷贝的话, 要抽取基本数据类型然后重新构建.
+            var {r, g, b} = color
+            console.log(r + "" + g + "" + b)
             color = nextColor
+            nextColor = Qt.rgba(r, g, b, 1)
+            console.log("color is :" + color + " " + "nextcolor is :" + nextColor)
         }
 
     }

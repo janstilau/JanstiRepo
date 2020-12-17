@@ -6,8 +6,7 @@ Rectangle {
     width: 100; height: 100
 
     // MouseArea 后面的 {} 内, 其实就是定制化的过程. 这个过程, 变为代码就是生产对象, 属性设置, connect 的过程.
-    // 所以, 把回调写到这里面, 倒也是合理的.
-    // 一定需要注意的是, 这是定制化的过程, 而不是定义的过程.
+    // 一定需要注意的是, 这是生成对象, 设置对象属性的过程.
     MouseArea {
         anchors.fill: parent
         onClicked: {
