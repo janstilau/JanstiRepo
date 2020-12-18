@@ -5,18 +5,19 @@ Item {
 
     ListModel {
         id: myModel
-        ListElement { type: "Dog"; age: 8 }
-        ListElement { type: "Cat"; age: 5 }
+        ListElement { type: "Dog"; age: 8; gender: "男"}
+        ListElement { type: "Cat"; age: 5; gender: "女" }
     }
 
     Component {
         id: myDelegate
-        Text { text: type + ", " + age; font.pointSize: 12 }
+        Text { text: type + ", " + age + gender; font.pointSize: 12 }
     }
 
     ListView {
         anchors.fill: parent
-        model: myModel; delegate: myDelegate
+        model: myModel;
+        delegate: myDelegate
     }
 }
 

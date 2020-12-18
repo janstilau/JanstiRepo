@@ -1,4 +1,4 @@
-﻿#ifndef WIDGET_H
+#ifndef WIDGET_H
 #define WIDGET_H
 
 #include <QWidget>
@@ -12,12 +12,13 @@ class Widget : public QWidget
     Q_OBJECT
 
 public:
-    explicit Widget(QWidget *parent = nullptr);
+    explicit Widget(QWidget *parent = 0);
     ~Widget();
-public:
-    void paintEvent(QPaintEvent *);
+
 private:
     Ui::Widget *ui;
+protected:
+    void paintEvent(QPaintEvent *event);
 };
 
 #endif // WIDGET_H

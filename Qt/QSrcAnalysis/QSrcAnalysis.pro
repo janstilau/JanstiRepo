@@ -182,6 +182,13 @@ SOURCES += \
     io/qwindowspipereader.cpp \
     io/qwindowspipewriter.cpp \
     io/qwinoverlappedionotifier.cpp \
+    itemmodels/qabstractitemmodel.cpp \
+    itemmodels/qabstractproxymodel.cpp \
+    itemmodels/qidentityproxymodel.cpp \
+    itemmodels/qitemselectionmodel.cpp \
+    itemmodels/qsortfilterproxymodel.cpp \
+    itemmodels/qstandarditemmodel.cpp \
+    itemmodels/qstringlistmodel.cpp \
     itemviews/qabstractitemdelegate.cpp \
     itemviews/qabstractitemview.cpp \
     itemviews/qbsptree.cpp \
@@ -1067,6 +1074,17 @@ HEADERS += \
     io/qwindowspipereader_p.h \
     io/qwindowspipewriter_p.h \
     io/qwinoverlappedionotifier_p.h \
+    itemmodels/qabstractitemmodel.h \
+    itemmodels/qabstractitemmodel_p.h \
+    itemmodels/qabstractproxymodel.h \
+    itemmodels/qabstractproxymodel_p.h \
+    itemmodels/qidentityproxymodel.h \
+    itemmodels/qitemselectionmodel.h \
+    itemmodels/qitemselectionmodel_p.h \
+    itemmodels/qsortfilterproxymodel.h \
+    itemmodels/qstandarditemmodel.h \
+    itemmodels/qstandarditemmodel_p.h \
+    itemmodels/qstringlistmodel.h \
     itemviews/qabstractitemdelegate.h \
     itemviews/qabstractitemdelegate_p.h \
     itemviews/qabstractitemview.h \
@@ -1615,6 +1633,7 @@ DISTFILES += \
     io/io.pri \
     io/qt_attribution.json \
     io/qurltlds_p.h.INFO \
+    itemmodels/itemmodels.pri \
     itemviews/itemviews.pri \
     network/access/access.pri \
     network/access/http2/http2.pri \
