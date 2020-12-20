@@ -20,7 +20,7 @@ Rectangle {
     
         PropertyAnimation on width { 
             to: 150; duration: 1000;
-            running: mouseArea.pressed;
+            running: mouseArea.pressed; // 这种绑定的方式, 让代码更加的简洁.
         }
     }
 }

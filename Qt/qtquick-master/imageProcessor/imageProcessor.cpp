@@ -26,6 +26,7 @@ public:
     }
     AlgorithmRunnable *m_runnable;
 
+    // 使用一个静态变量, 记录一下注册的类型.
     static QEvent::Type evType()
     {
         if(s_evType == QEvent::None)
@@ -301,6 +302,7 @@ static AlgorithmFunction g_functions[ImageProcessor::AlgorithmCount] = {
     _soften
 };
 
+// 这个东西, 应该是类似 NSOperation 的一个东西.
 class AlgorithmRunnable : public QRunnable
 {
 public:
@@ -322,6 +324,7 @@ public:
     {
         qDebug() << "algorithm running...";
         g_functions[m_algorithm](m_sourceFilePath, m_destFilePath);
+        // 这里, 如果能够处理完成, 才会触发下面的事件.
         QCoreApplication::postEvent(m_observer, new ExcutedEvent(this));
     }
 
@@ -342,7 +345,6 @@ public:
     }
     ~ImageProcessorPrivate()
     {
-
     }
 
     bool event(QEvent * e)
@@ -354,6 +356,7 @@ public:
             {
                 m_notifiedAlgorithm = ee->m_runnable->m_algorithm;
                 m_notifiedSourceFile = ee->m_runnable->m_sourceFilePath;
+                // 在这里, 明确的发出了信号.
                 emit m_processor->finished(ee->m_runnable->m_destFilePath);
                 m_runnables.removeOne(ee->m_runnable);
             }
@@ -363,11 +366,12 @@ public:
         return QObject::event(e);
     }
 
+    // 处理图片是一个大工程, 这里仅仅是将处理提交成为了任务.
+    // 这里, 使用了 QThreadPool 进行线程的管理. 方式和自己写的, 以及 Gnu foundation 的实现差不多.
     void process(QString sourceFile, ImageProcessor::ImageAlgorithm algorithm)
     {
         QFileInfo fi(sourceFile);
-        QString destFile = QString("%1/%2_%3").arg(m_tempPath)
-                .arg((int)algorithm).arg(fi.fileName());
+        QString destFile = "/Users/liugq01/SelfCodeHub/JanstiRepo/Qt/qtquick-master/imageProcessor/end.PNG";
         AlgorithmRunnable *r = new AlgorithmRunnable(sourceFile,
                                                      destFile,
                                                      algorithm,
@@ -383,6 +387,19 @@ public:
     ImageProcessor::ImageAlgorithm m_notifiedAlgorithm;
     QString m_tempPath;
 };
+
+
+
+
+
+
+
+
+
+
+
+
+// 所有的方法, 成员变量, 都转移到了 m_d 中去.
 
 ImageProcessor::ImageProcessor(QObject *parent)
     : QObject(parent)

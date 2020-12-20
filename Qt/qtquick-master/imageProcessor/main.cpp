@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
+    // 在这里, 把 C++ 的处理类, 注册给了 QML 环境.
     qmlRegisterType<ImageProcessor>("an.qt.ImageProcessor", 1, 0,"ImageProcessor");
 
     QQuickView viewer;

@@ -7,8 +7,9 @@ import QtQuick.Controls.Styles 1.1
 Rectangle {
     width: 640;
     height: 480;
-    color: "#121212";
+    color: "lightgreen";
 
+    // loading
     BusyIndicator {
         id: busy;
         running: false;
@@ -16,6 +17,7 @@ Rectangle {
         z: 2;
     }
 
+    // 提示文本
     Label {
         id: stateLabel;
         visible: false;
@@ -44,9 +46,11 @@ Rectangle {
         }
     }
 
+    // 在这里, 注册了一个图像处理器.
     ImageProcessor {
         id: processor;
         onFinished: {
+            // 在这里, 进行了图像处理的回调.
             imageViewer.source = "file:///" +newFile;
         }
     }
@@ -56,6 +60,7 @@ Rectangle {
         title: "Please choose a file";
         nameFilters: ["Image Files (*.jpg *.png *.gif)"];
         onAccepted: {
+            console.log(this)
             console.log(fileDialog.fileUrl);
             imageViewer.source = fileDialog.fileUrl;
         }
@@ -87,6 +92,15 @@ Rectangle {
         anchors.topMargin: 6;
         onClicked: {
             fileDialog.visible = true;
+            // 只能是通过 QML 的方式生成, 不能通过 new 的方式生成一个 fileDialog
+//            console.log(typeof(FileDialog))
+//            var getFile = new FileDialog
+//            getFile.title = "请获取图片"
+//            getFile.nameFilters = ["Image Files (*.jpg *.png *.gif)"]
+//            getFile.onAccepted = function() {
+//                console.log(fileDialog.fileUrl);
+//                imageViewer.source = fileDialog.fileUrl;
+//            }
         }
         style: btnStyle;
         z: 1;
@@ -106,27 +120,34 @@ Rectangle {
     }
 
     Rectangle {
+        id: topContainer
         anchors.left: parent.left;
         anchors.top: parent.top;
         anchors.bottom: openFile.bottom;
         anchors.bottomMargin: -6;
         anchors.right: quit.right;
         anchors.rightMargin: -6;
-        color: "#404040";
+        color: "gray"
         opacity: 0.7;
     }
+
+
+
     Grid {
         id: op;
         anchors.left: parent.left;
         anchors.leftMargin: 4;
         anchors.bottom: parent.bottom;
         anchors.bottomMargin: 4;
+
         rows: 2;
         columns: 3;
+
         rowSpacing: 4;
         columnSpacing: 4;
         z: 1;
 
+        // 不同的按钮, 绑定不同的事件.
         Button {
             text: "柔化";
             style: btnStyle;
@@ -182,13 +203,15 @@ Rectangle {
     }
 
     Rectangle {
+        id: bottomContainer
         anchors.left: parent.left;
         anchors.top: op.top;
         anchors.topMargin: -4;
         anchors.bottom: parent.bottom;
         anchors.right: op.right;
         anchors.rightMargin: -4;
-        color: "#404040";
+        color: "lightblue";
+
         opacity: 0.7;
     }
 }

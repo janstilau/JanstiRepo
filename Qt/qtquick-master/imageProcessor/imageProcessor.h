@@ -39,7 +39,7 @@ public slots:
     void abortAll();
 
 private:
-    ImageProcessorPrivate *m_d;
+    ImageProcessorPrivate *m_d; // 成员变量, 仅仅有一个指针而已.
 };
 
 #endif // IMAGEPROCESSOR_H

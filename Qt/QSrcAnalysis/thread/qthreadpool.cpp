@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qthreadpool.h"
 #include "qthreadpool_p.h"
 #include "qelapsedtimer.h"
@@ -64,21 +25,10 @@ public:
     QRunnable *runnable;
 };
 
-/*
-    QThreadPool private class.
-*/
-
-
-/*!
-    \internal
-*/
 QThreadPoolThread::QThreadPoolThread(QThreadPoolPrivate *manager)
     :manager(manager), runnable(nullptr)
 { }
 
-/*
-    \internal
-*/
 void QThreadPoolThread::run()
 {
     QMutexLocker locker(&manager->mutex);
@@ -89,25 +39,15 @@ void QThreadPoolThread::run()
         do {
             if (r) {
                 const bool autoDelete = r->autoDelete();
-
-
                 // run the task
                 locker.unlock();
-#ifndef QT_NO_EXCEPTIONS
                 try {
-#endif
                     r->run();
-#ifndef QT_NO_EXCEPTIONS
                 } catch (...) {
-                    qWarning("Qt Concurrent has caught an exception thrown from a worker thread.\n"
-                             "This is not supported, exceptions thrown in worker threads must be\n"
-                             "caught before control returns to Qt Concurrent.");
                     registerThreadInactive();
                     throw;
                 }
-#endif
                 locker.relock();
-
                 if (autoDelete && !--r->ref)
                     delete r;
             }
@@ -141,6 +81,7 @@ void QThreadPoolThread::run()
             manager->waitingThreads.enqueue(this);
             registerThreadInactive();
             // wait for work, exiting after the expiry timeout is reached
+            // 在这里, locker 会自动 unlock.
             runnableReady.wait(locker.mutex(), manager->expiryTimeout);
             ++manager->activeThreads;
             if (manager->waitingThreads.removeOne(this))
@@ -160,10 +101,6 @@ void QThreadPoolThread::registerThreadInactive()
         manager->noActiveThreads.wakeAll();
 }
 
-
-/*
-    \internal
-*/
 QThreadPoolPrivate:: QThreadPoolPrivate()
     : isExiting(false),
       expiryTimeout(30000),
@@ -263,9 +200,6 @@ bool QThreadPoolPrivate::tooManyThreadsActive() const
     return activeThreadCount > maxThreadCount && (activeThreadCount - reservedThreads) > 1;
 }
 
-/*!
-    \internal
-*/
 void QThreadPoolPrivate::startThread(QRunnable *runnable)
 {
     Q_ASSERT(runnable != nullptr);
