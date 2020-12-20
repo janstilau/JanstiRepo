@@ -9,6 +9,7 @@ Window {
     width: 360;
     height: 360;
     visible: true;
+
     Text {
         objectName: "textLabel";
         text: "Hello World";

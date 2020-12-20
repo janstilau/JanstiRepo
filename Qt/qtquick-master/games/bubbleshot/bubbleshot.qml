@@ -71,9 +71,19 @@ Rectangle {
         visible: false;
     }
 
+    // Qml 里面的动画, 是会实际的改变, 元素的属性的.
+    // 这里, 建立了一个炮台的 rotation 的动画,
     NumberAnimation {
+        id: animateTurret;
+        target: turret;
+        property: "rotation";
+        onStopped: {
+            rotateTurret();
+        }
+
         property var rotateAngle: 0;
         
+        // 在这里, 积累 rotate, 如果当前动画没有运行, 进行一次动画.
         function rotate(angle){
             rotateAngle += angle;
             if(running == false){
@@ -81,6 +91,8 @@ Rectangle {
             } 
         }
         
+        // 在这里, 提交动画任务, 提交完之后, 立马清空 rotateAngle
+        // 在这个过程里面, 实际修改了炮台的转向.
         function rotateTurret(){
             if(rotateAngle != 0){
                 from = turret.rotation;
@@ -92,13 +104,6 @@ Rectangle {
                 start();
                 rotateAngle = 0;
             }
-        }
-        
-        id: animateTurret;
-        target: turret;
-        property: "rotation";
-        onStopped: {
-            rotateTurret();
         }
     }
     
@@ -344,6 +349,10 @@ Rectangle {
         source: "res/failed.png";
         z: 3;
         
+
+
+
+
         states: [
             State {
                 name: "show";
