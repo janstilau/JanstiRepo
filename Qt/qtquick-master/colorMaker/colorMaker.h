@@ -7,6 +7,7 @@
 class ColorMaker : public QObject
 {
     Q_OBJECT
+
     // 只有添加到 Q_ENUMS 之后,才能在 QML 中使用.
     Q_ENUMS(GenerateAlgorithm)
 
