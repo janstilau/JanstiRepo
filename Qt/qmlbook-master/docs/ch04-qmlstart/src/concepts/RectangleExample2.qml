@@ -40,6 +40,7 @@ Item {
         width: 76; height: 96
         color: "lightsteelblue"
     }
+
     Rectangle {
         id: rect2
         x: 112; y: 12

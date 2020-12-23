@@ -28,7 +28,7 @@
 // M1>>
 // column.qml
 
-import QtQuick 2.12
+import QtQuick 2.9
 
 DarkSquare {
     id: root
@@ -43,6 +43,7 @@ DarkSquare {
         bottomPadding: 0
         leftPadding: 0
         rightPadding: 0
+
         RedSquare { }
         GreenSquare { width: 96 }
         BlueSquare { }

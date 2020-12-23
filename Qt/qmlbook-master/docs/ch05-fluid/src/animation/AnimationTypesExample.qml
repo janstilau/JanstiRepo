@@ -61,22 +61,42 @@ Item {
     //<<M1
 
     //M2>>
+    /*
+      如果, 每次 UI 改变的时候, 附加动画, 那么就应该使用 Behavior 这种方式.
+      */
     ClickableImageV2 {
         id: blueBox
         x: (root.width-width)/2; y: root.height-height
         source: "assets/box_blue.png"
         text: "behavior on property"
+
         Behavior on y {
-            NumberAnimation { duration: 4000 }
+            NumberAnimation {
+                duration: 1000;
+                easing.type: Easing.OutInQuint;
+            }
+        }
+        Behavior on x {
+            NumberAnimation {
+                duration: 1000;
+                easing.type: Easing.OutInQuint;
+            }
+
         }
 
-        onClicked: y = 40
+//        onClicked: y = 40
         // random y on each click
-//        onClicked: y = 40+Math.random()*(205-40)
+        onClicked:{
+            x = 40+Math.random()*(205-40)
+            y = 40+Math.random()*(205-40)
+        }
     }
     //<<M2
 
     //M3>>
+    /*
+      如果, 想要进行状态的管理, 就应该使用显式地 start 的方式.
+      */
     ClickableImageV2 {
         id: redBox
         x: root.width-width-40; y: root.height-height
@@ -96,4 +116,8 @@ Item {
     }
     //<<M3
 
+    // 在一个对象里面定义 animiation, 相当于是绑定了 target.
+    // on 这种方式, 相当于是绑定了 property
+    // 使用 runing 的绑定, 可以控制动画的进行还是停止.
+    // Color, Number, 等特殊的 animaition, 相当于是绑定了 From, To 的类型, 具体的数值还是需要填入.
 }

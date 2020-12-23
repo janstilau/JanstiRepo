@@ -36,7 +36,6 @@ Rectangle {
     property color red: '#fc3d39'
     property color green: '#53d769'
 
-
     gradient: Gradient {
         GradientStop { position: 0.0; color: "#2ed5fa" }
         GradientStop { position: 1.0; color: "#2467ec" }
@@ -88,6 +87,7 @@ Rectangle {
     // <<M3
 
     // M4>>
+    // Transition 要有 from. to
     transitions: [
         Transition {
             from: "stop"; to: "go"

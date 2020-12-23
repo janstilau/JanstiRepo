@@ -45,16 +45,17 @@ Rectangle {
             border.width: 1
             border.color: "red"
             anchors.fill: parent
-            z:-1
+            opacity: 0.5
+            z:1
         }
     }
+
     Image {
         x: 12+64+12; y: 12
-        // width: 72
         height: 72/2
         source: "assets/triangle_red.png"
         fillMode: Image.PreserveAspectFit
-//        clip: true
+        clip: true
 
         Rectangle {
             border.width: 1

@@ -35,14 +35,16 @@ Item {
     id: root
     width: container.childrenRect.width
     height: container.childrenRect.height
+
     property alias text: label.text
     property alias source: image.source
+
     signal clicked
 
     Column {
         id: container
         Image {
-            id: image
+            id: image // 这里, 没有定义 img 的内容, 这是外界使用者需要指定的.
         }
         Text {
             id: label

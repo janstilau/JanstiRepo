@@ -60,6 +60,7 @@ DarkSquare {
                 source: "curves/" + modelData + ".png"
                 onClicked: {
                     // set the easing type on the animation
+                    // anim 是可以重用的, 每次开始的时候, 改变它的 type 值就可以改变对应的 easingType.
                     anim.easing.type = modelData
                     // restart the animation
                     anim.restart()

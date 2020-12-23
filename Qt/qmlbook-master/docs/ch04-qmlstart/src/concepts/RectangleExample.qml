@@ -12,6 +12,7 @@ Rectangle {
     color: "#4A4A4A"
 
     // Declare a nested element (child of root)
+    // 声明就是定义.
     Image {
         id: triangle
 
@@ -31,6 +32,7 @@ Rectangle {
     // Another child of root
     Text {
         // un-named element, 没有 id, 就是没有命名.
+        id: textId
 
         // reference element by id
         y: triangle.y + triangle.height + 20
@@ -47,7 +49,32 @@ Rectangle {
             border.color: "red"
             anchors.fill: parent
             z:-1
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    parent.destroy()
+                }
+            }
         }
+    }
+
+
+    Component {
+        id: block
+        Rectangle {
+            color: red
+            border.width: 2
+            border.color: "lightgreen"
+            width: 200
+            height: 100
+            y: 100 * index + 20 * (index - 1)
+        }
+    }
+
+    Repeater {
+        anchors.top: textId.anchors.bottom
+        model: 10
+        delegate: block
     }
 }
 // <<M1

@@ -42,6 +42,16 @@ BrightSquare {
         RedSquare { }
         BlueSquare { }
         GreenSquare { }
+        RedSquare { }
+        BlueSquare { }
+        GreenSquare { }
+        RedSquare { }
+        BlueSquare { }
+        GreenSquare { }
+        Repeater {
+            model: 20
+            RedSquare{}
+        }
     }
 }
 

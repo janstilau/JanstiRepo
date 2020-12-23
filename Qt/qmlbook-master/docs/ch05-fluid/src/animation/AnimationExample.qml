@@ -36,7 +36,7 @@ Image {
 
     property int padding: 40
     property int duration: 4000
-    property bool running: false
+    property bool running: true
 
     Image {
         id: box
@@ -44,6 +44,7 @@ Image {
         y: (root.height-height)/2
         source: "assets/box_green.png"
 
+        //
         NumberAnimation on x {
             to: root.width - box.width - root.padding
             duration: root.duration

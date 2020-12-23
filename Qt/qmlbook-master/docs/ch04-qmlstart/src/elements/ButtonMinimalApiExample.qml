@@ -29,8 +29,6 @@
 
 import QtQuick 2.5
 
-// 将父类, 从 Rectangle, 变为了 item, 给外界使用的接口变少了. 这个类更加的可控.
-// 这也就是, 很多 view, 比如之前的登记标签, 应该继承 View, 而不是 Label 的原因.
 Item {
     id: root
     width: 116; height: 26
