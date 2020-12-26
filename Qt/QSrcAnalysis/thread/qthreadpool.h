@@ -10,7 +10,7 @@
 
 QT_BEGIN_NAMESPACE
 
-
+// 这个类, 和 NSOperationQueue, 和自己实现的异步控制队列, 没有太大的区别.
 class QThreadPoolPrivate;
 class Q_CORE_EXPORT QThreadPool : public QObject
 {
@@ -45,11 +45,8 @@ public:
 
     void clear();
 
-#if QT_DEPRECATED_SINCE(5, 9)
-    QT_DEPRECATED_X("use tryTake(), but note the different deletion rules")
+
     void cancel(QRunnable *runnable);
-#endif
-    Q_REQUIRED_RESULT bool tryTake(QRunnable *runnable);
 };
 
 QT_END_NAMESPACE

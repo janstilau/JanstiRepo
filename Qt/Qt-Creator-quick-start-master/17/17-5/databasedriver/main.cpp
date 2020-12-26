@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
     QVariantList names;
     names << "xiaoming" << "xiaoliang" << "xiaogang";
     query2.addBindValue(names);
+    // 这里, 按照值的数量, 相同的一句 query 会执行三次了.
     if(!query2.execBatch()) qDebug() << query2.lastError();
 
     // 更新

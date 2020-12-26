@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QRUNNABLE_H
 #define QRUNNABLE_H
 
@@ -44,6 +5,9 @@
 
 QT_BEGIN_NAMESPACE
 
+// 类似于 NSOperation 的一个类, 添加异步任务的.
+// 没有 NSOperation 复杂.
+// 真正的, 数据就 ref 这个值, 记录着是否应该在执行完删除. 如果是 ARC 环境, 这个类就是一个纯接口类了.
 class Q_CORE_EXPORT QRunnable
 {
     int ref;
@@ -51,14 +15,12 @@ class Q_CORE_EXPORT QRunnable
     friend class QThreadPool;
     friend class QThreadPoolPrivate;
     friend class QThreadPoolThread;
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    Q_DISABLE_COPY(QRunnable)
-#endif
+
 public:
-    virtual void run() = 0;
+    virtual void run() = 0; // 纯虚函数.
 
     QRunnable() : ref(0) { }
-    virtual ~QRunnable();
+    virtual ~QRunnable(); // 有着虚函数的类, 析构一定要是虚函数的. 不然会有内存问题.
 
     bool autoDelete() const { return ref != -1; }
     void setAutoDelete(bool _autoDelete) { ref = _autoDelete ? 0 : -1; }

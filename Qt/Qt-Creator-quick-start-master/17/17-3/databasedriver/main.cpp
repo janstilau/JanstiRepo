@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
     // 使用QSqlQuery查询连接1的整张表，先要使用连接名获取该连接
     QSqlDatabase db1 = QSqlDatabase::database("connection1");
-    QSqlQuery query1(db1);
+    QSqlQuery query1(db1); // 在可执行程序内, 会生成 DB1 的数据库文件.
     qDebug() << "connection1:";
     query1.exec("select * from student");
     while(query1.next())
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
     // 使用QSqlQuery查询连接2的整张表
     QSqlDatabase db2 = QSqlDatabase::database("connection2");
-    QSqlQuery query2(db2);
+    QSqlQuery query2(db2); // 在可执行程序内, 会生成 DB2 的数据库文件.
     qDebug() << "connection2:";
     query2.exec("select * from student");
     while(query2.next())

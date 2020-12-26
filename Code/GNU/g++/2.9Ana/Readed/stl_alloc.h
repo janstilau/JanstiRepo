@@ -1,207 +1,9 @@
 #ifndef __SGI_STL_INTERNAL_ALLOC_H
 #define __SGI_STL_INTERNAL_ALLOC_H
 
-#ifdef __SUNPRO_CC
-#  define __PRIVATE public
-// Extra access restrictions prevent us from really making some things
-// private.
-#else
-#  define __PRIVATE private
-#endif
-
-#ifdef __STL_STATIC_TEMPLATE_MEMBER_BUG
-#  define __USE_MALLOC
-#endif
-
-
-// This implements some standard node allocators.  These are
-// NOT the same as the allocators in the C++ draft standard or in
-// in the original STL.  They do not encapsulate different pointer
-// types; indeed we assume that there is only one pointer type.
-// The allocation primitives are intended to allocate individual objects,
-// not larger arenas as with the original STL allocators.
-
-#if 0
-#   include <new>
-#   define __THROW_BAD_ALLOC throw bad_alloc
-#elif !defined(__THROW_BAD_ALLOC)
-#   include <iostream.h>
-#   define __THROW_BAD_ALLOC cerr << "out of memory" << endl; exit(1)
-#endif
-
-#ifndef __ALLOC
-#   define __ALLOC alloc
-#endif
-#ifdef __STL_WIN32THREADS
-#   include <windows.h>
-#endif
-
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-#ifndef __RESTRICT
-#  define __RESTRICT
-#endif
-
-#if !defined(__STL_PTHREADS) && !defined(_NOTHREADS) \
-&& !defined(__STL_SGI_THREADS) && !defined(__STL_WIN32THREADS)
-#   define _NOTHREADS
-#endif
-
-# ifdef __STL_PTHREADS
-// POSIX Threads
-// This is dubious, since this is likely to be a high contention
-// lock.   Performance may not be adequate.
-#   include <pthread.h>
-#   define __NODE_ALLOCATOR_LOCK \
-if (threads) pthread_mutex_lock(&__node_allocator_lock)
-#   define __NODE_ALLOCATOR_UNLOCK \
-if (threads) pthread_mutex_unlock(&__node_allocator_lock)
-#   define __NODE_ALLOCATOR_THREADS true
-#   define __VOLATILE volatile  // Needed at -O3 on SGI
-# endif
-# ifdef __STL_WIN32THREADS
-// The lock needs to be initialized by constructing an allocator
-// objects of the right type.  We do that here explicitly for alloc.
-#   define __NODE_ALLOCATOR_LOCK \
-EnterCriticalSection(&__node_allocator_lock)
-#   define __NODE_ALLOCATOR_UNLOCK \
-LeaveCriticalSection(&__node_allocator_lock)
-#   define __NODE_ALLOCATOR_THREADS true
-#   define __VOLATILE volatile  // may not be needed
-# endif /* WIN32THREADS */
-# ifdef __STL_SGI_THREADS
-// This should work without threads, with sproc threads, or with
-// pthreads.  It is suboptimal in all cases.
-// It is unlikely to even compile on nonSGI machines.
-
-extern "C" {
-extern int __us_rsthread_malloc;
-}
-// The above is copied from malloc.h.  Including <malloc.h>
-// would be cleaner but fails with certain levels of standard
-// conformance.
-#   define __NODE_ALLOCATOR_LOCK if (threads && __us_rsthread_malloc) \
-{ __lock(&__node_allocator_lock); }
-#   define __NODE_ALLOCATOR_UNLOCK if (threads && __us_rsthread_malloc) \
-{ __unlock(&__node_allocator_lock); }
-#   define __NODE_ALLOCATOR_THREADS true
-#   define __VOLATILE volatile  // Needed at -O3 on SGI
-# endif
-# ifdef _NOTHREADS
-//  Thread-unsafe
-#   define __NODE_ALLOCATOR_LOCK
-#   define __NODE_ALLOCATOR_UNLOCK
-#   define __NODE_ALLOCATOR_THREADS false
-#   define __VOLATILE
-# endif
-
-__STL_BEGIN_NAMESPACE
-
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma set woff 1174
-#endif
-
-// Malloc-based allocator.  Typically slower than default alloc below.
-// Typically thread-safe and more storage efficient.
-#ifdef __STL_STATIC_TEMPLATE_MEMBER_BUG
-# ifdef __DECLARE_GLOBALS_HERE
-void (* __malloc_alloc_oom_handler)() = 0;
-// g++ 2.7.2 does not handle static template data members.
-# else
-extern void (* __malloc_alloc_oom_handler)();
-# endif
-#endif
-
-template <int inst>
-class __malloc_alloc_template {
-    
-private:
-    
-    static void *oom_malloc(size_t);
-    
-    static void *oom_realloc(void *, size_t);
-    
-#ifndef __STL_STATIC_TEMPLATE_MEMBER_BUG
-    static void (* __malloc_alloc_oom_handler)();
-#endif
-    
-public:
-    
-    static void * allocate(size_t n)
-    {
-        void *result = malloc(n);
-        if (0 == result) result = oom_malloc(n);
-        return result;
-    }
-    
-    static void deallocate(void *p, size_t /* n */)
-    {
-        free(p);
-    }
-    
-    static void * reallocate(void *p, size_t /* old_sz */, size_t new_sz)
-    {
-        void * result = realloc(p, new_sz);
-        if (0 == result) result = oom_realloc(p, new_sz);
-        return result;
-    }
-    
-    static void (* set_malloc_handler(void (*f)()))()
-    {
-        void (* old)() = __malloc_alloc_oom_handler;
-        __malloc_alloc_oom_handler = f;
-        return(old);
-    }
-    
-};
-
-// malloc_alloc out-of-memory handling
-
-#ifndef __STL_STATIC_TEMPLATE_MEMBER_BUG
-template <int inst>
-void (* __malloc_alloc_template<inst>::__malloc_alloc_oom_handler)() = 0;
-#endif
-
-template <int inst>
-void * __malloc_alloc_template<inst>::oom_malloc(size_t n)
-{
-    void (* my_malloc_handler)();
-    void *result;
-    
-    for (;;) {
-        my_malloc_handler = __malloc_alloc_oom_handler;
-        if (0 == my_malloc_handler) { __THROW_BAD_ALLOC; }
-        (*my_malloc_handler)();
-        result = malloc(n);
-        if (result) return(result);
-    }
-}
-
-template <int inst>
-void * __malloc_alloc_template<inst>::oom_realloc(void *p, size_t n)
-{
-    void (* my_malloc_handler)();
-    void *result;
-    
-    for (;;) {
-        my_malloc_handler = __malloc_alloc_oom_handler;
-        if (0 == my_malloc_handler) { __THROW_BAD_ALLOC; }
-        (*my_malloc_handler)();
-        result = realloc(p, n);
-        if (result) return(result);
-    }
-}
-
-typedef __malloc_alloc_template<0> malloc_alloc;
-
 /*
- 模板传入的类型, 到底会如何使用.
- 这个例子里面, T 仅仅是在 sizeof 操作符里面使用了, 而 Alloc 类型使用, 直接调用的 alloc 类方法.
- 两个类型参数, 都没有用来生成对象.
- 从这点来说, C++ 的模板有点像宏.
- 一个半成品, 怎么写都行, 只有到使用的时候, 才会编译报错.
+ T 的作用, 仅仅是在 sizeof 中进行使用, 获取到 T 的大小, 然后和 Sizeof 相乘.
+ 真正的 Alloc, 也没有调用构造函数, 而是直接使用了 Alloc 的静态方法.
  */
 template<class T, class Alloc>
 class simple_alloc {
@@ -220,82 +22,6 @@ public:
     { Alloc::deallocate(p, sizeof (T)); }
 };
 
-// Allocator adaptor to check size arguments for debugging.
-// Reports errors using assert.  Checking can be disabled with
-// NDEBUG, but it's far better to just use the underlying allocator
-// instead when no checking is desired.
-// There is some evidence that this can confuse Purify.
-template <class Alloc>
-class debug_alloc {
-    
-private:
-    
-    enum {extra = 8};       // Size of space used to store size.  Note
-    // that this must be large enough to preserve
-    // alignment.
-    
-public:
-    
-    static void * allocate(size_t n)
-    {
-        char *result = (char *)Alloc::allocate(n + extra);
-        *(size_t *)result = n;
-        return result + extra;
-    }
-    
-    static void deallocate(void *p, size_t n)
-    {
-        char * real_p = (char *)p - extra;
-        assert(*(size_t *)real_p == n);
-        Alloc::deallocate(real_p, n + extra);
-    }
-    
-    static void * reallocate(void *p, size_t old_sz, size_t new_sz)
-    {
-        char * real_p = (char *)p - extra;
-        assert(*(size_t *)real_p == old_sz);
-        char * result = (char *)
-        Alloc::reallocate(real_p, old_sz + extra, new_sz + extra);
-        *(size_t *)result = new_sz;
-        return result + extra;
-    }
-};
-
-
-# ifdef __USE_MALLOC
-
-typedef malloc_alloc alloc;
-typedef malloc_alloc single_client_alloc;
-
-# else
-
-
-// Default node allocator.
-// With a reasonable compiler, this should be roughly as fast as the
-// original STL class-specific allocators, but with less fragmentation.
-// Default_alloc_template parameters are experimental and MAY
-// DISAPPEAR in the future.  Clients should just use alloc for now.
-
-// Important implementation properties:
-// 1. If the client request an object of size > __MAX_BYTES, the resulting
-//    object will be obtained directly from malloc.
-// 2. In all other cases, we allocate an object of size exactly
-//    ROUND_UP(requested_size).  Thus the client has enough size
-//    information that we can return the object to the proper free list
-//    without permanently losing part of the object.
-//
-
-// The first template parameter specifies whether more than one thread
-// may use this allocator.  It is safe to allocate an object from
-// one instance of a default_alloc and deallocate it with another
-// one.  This effectively transfers its ownership to the second one.
-// This may have undesirable effects on reference locality.
-// The second parameter is unreferenced and serves only to allow the
-// creation of multiple default_alloc instances.
-// Node that containers built on different allocator instances have
-// different types, limiting the utility of this approach.
-#ifdef __SUNPRO_CC
-
 /*
  这里不太明白, 为什么用 enum 作为这些常量值的表示.
  */
@@ -303,22 +29,12 @@ typedef malloc_alloc single_client_alloc;
 enum {__ALIGN = 8};
 enum {__MAX_BYTES = 128};
 enum {__NFREELISTS = __MAX_BYTES/__ALIGN};
-#endif
 
 template <bool threads, int inst>
 class __default_alloc_template {
     
 private:
-    /*
-     这里也说了, 应该用 static int 来作为常量值的定义. 不过, 这里这样做, 主要是为了编译器的优化.
-     */
-    // Really we should use static const int x = N
-    // instead of enum { x = N }, but few compilers accept the former.
-# ifndef __SUNPRO_CC
-    enum {__ALIGN = 8};
-    enum {__MAX_BYTES = 128};
-    enum {__NFREELISTS = __MAX_BYTES/__ALIGN};
-# endif
+    
     static size_t ROUND_UP(size_t bytes) {
         return (((bytes) + __ALIGN-1) & ~(__ALIGN - 1));
     }
@@ -339,11 +55,10 @@ private:
      计算出, bytes 大小的空间, 应该在哪个链表上.
      */
     static  size_t FREELIST_INDEX(size_t bytes) {
+        // 这种, (value+align-1)/align - 1 的方法, 经常用.
         return (((bytes) + __ALIGN-1)/__ALIGN - 1);
     }
     
-    // Returns an object of size n, and optionally adds to size n free list.
-    static void *refill(size_t n);
     // Allocates a chunk for nobjs of size "size".  nobjs may be reduced
     // if it is inconvenient to allocate the requested number.
     static char *chunk_alloc(size_t size, int &nobjs);
@@ -444,20 +159,16 @@ public:
          */
         // 先计算目标链表的位置.
         my_free_list = free_list + FREELIST_INDEX(n);
-        // acquire lock
-#       ifndef _NOTHREADS
-        // 这是 static 的, 也就是全局的资源, 进行了相应的加锁减锁的操作.
-        lock lock_instance;
-#       endif /* _NOTHREADS */
+        // 把资源放到链表上, 这里应该有加减锁的操作.
         q -> free_list_link = *my_free_list;
         *my_free_list = q;
-        // lock is released here
     }
     
     static void * reallocate(void *p, size_t old_sz, size_t new_sz);
     
 } ;
 
+// 宏定义, alloc 的世纪类型是,  __default_alloc_template
 typedef __default_alloc_template<__NODE_ALLOCATOR_THREADS, 0> alloc;
 typedef __default_alloc_template<false, 0> single_client_alloc;
 
@@ -560,6 +271,7 @@ void* __default_alloc_template<threads, inst>::refill(size_t n)
     obj * result;
     obj * current_obj, * next_obj;
     int i;
+    // nobjs 只有一个, 代表着没有空间了, 是从后面借的空间块.
     if (1 == nobjs) return(chunk);
     
     my_free_list = free_list + FREELIST_INDEX(n);

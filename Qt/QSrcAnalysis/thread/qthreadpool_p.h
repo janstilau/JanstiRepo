@@ -167,14 +167,14 @@ public:
     void deletePageIfFinished(QueuePage *page);
 
     mutable QMutex mutex;
-    QList<QThreadPoolThread *> allThreads;
+    QWaitCondition noActiveThreads; // 这个 condition, 是在线程退出的时候 wake 的.
+    QList<QThreadPoolThread *> allThreads; //没见过删除啊.
     QQueue<QThreadPoolThread *> waitingThreads;
     QQueue<QThreadPoolThread *> expiredThreads;
-    QVector<QueuePage*> queue;
-    QWaitCondition noActiveThreads;
+    QVector<QueuePage*> queue; // taskqueue.
 
     bool isExiting;
-    int expiryTimeout;
+    int expiryTimeout; // wait 时间.
     int maxThreadCount;
     int reservedThreads;
     int activeThreads;
