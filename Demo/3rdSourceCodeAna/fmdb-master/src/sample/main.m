@@ -20,6 +20,7 @@ int main (int argc, const char * argv[]) {
     
     FMDBReportABugFunction();
     
+    // MAC 路径下就有一个 tmp 的已经存在的目录.
     NSString *dbPath = @"/tmp/tmp.db";
     
     // delete the old db.
@@ -28,13 +29,16 @@ int main (int argc, const char * argv[]) {
     
     FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
     
-    NSLog(@"Is SQLite compiled with it's thread safe options turned on? %@!", [FMDatabase isSQLiteThreadSafe] ? @"Yes" : @"No");
+//    NSLog(@"Is SQLite compiled with it's thread safe options turned on? %@!", [FMDatabase isSQLiteThreadSafe] ? @"Yes" : @"No");
     
     {
         // -------------------------------------------------------------------------------
         // Un-opened database check.
+        // 没有打开数据库就操作的错误提示.
+        // The FMDatabase <FMDatabase: 0x10783de10> is not open.
+        // 7: out of memory
         FMDBQuickCheck([db executeQuery:@"select * from table"] == nil);
-        NSLog(@"%d: %@", [db lastErrorCode], [db lastErrorMessage]);
+//        NSLog(@"%d: %@", [db lastErrorCode], [db lastErrorMessage]);
     }
     
     
@@ -48,15 +52,19 @@ int main (int argc, const char * argv[]) {
     [db setShouldCacheStatements:YES];
     
     // create a bad statement, just to test the error code.
+    // 每次执行之后, 不是通过返回值来判断是否成功, 而是在全局量里面, 存放上次执行的 code 值.
     [db executeUpdate:@"blah blah blah"];
     
-    FMDBQuickCheck([db hadError]);
+//    FMDBQuickCheck([db hadError]);
     
+    // hadError 就是查看一下当前数据库, 记录没有记录了 ErrorCode 的值.
     if ([db hadError]) {
+        // Err 1: near "blah": syntax error
         NSLog(@"Err %d: %@", [db lastErrorCode], [db lastErrorMessage]);
     }
     
     NSError *err = 0x00;
+    // 执行操作, 将错误的信息, 记录到输出参数里面.
     FMDBQuickCheck(![db executeUpdate:@"blah blah blah" withErrorAndBindings:&err]);
     FMDBQuickCheck(err != nil);
     FMDBQuickCheck([err code] == SQLITE_ERROR);
@@ -95,6 +103,38 @@ int main (int argc, const char * argv[]) {
     
     [db executeUpdate:@"create table test (a text, b text, c integer, d double, e double)"];
     
+    FMDatabaseQueue *queue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
+    {
+        [queue inDatabase:^(FMDatabase *adb) {
+            
+            NSLog(@"%@", [NSThread currentThread]);
+            
+//            [adb executeUpdate:@"create table qfoo (foo text)"];
+//            [adb executeUpdate:@"insert into qfoo values ('hi')"];
+//            [adb executeUpdate:@"insert into qfoo values ('hello')"];
+//            [adb executeUpdate:@"insert into qfoo values ('not')"];
+//
+//
+//
+//            int count = 0;
+//            FMResultSet *rsl = [adb executeQuery:@"select * from qfoo where foo like 'h%'"];
+//            while ([rsl next]) {
+//                count++;
+//            }
+//
+//            FMDBQuickCheck(count == 2);
+//
+//            count = 0;
+//            rsl = [adb executeQuery:@"select * from qfoo where foo like ?", @"h%"];
+//            while ([rsl next]) {
+//                count++;
+//            }
+//
+//            FMDBQuickCheck(count == 2);
+        }];
+        
+    }
+    
     
     [db beginTransaction];
     int i = 0;
@@ -128,6 +168,7 @@ int main (int argc, const char * argv[]) {
     
     
     FMResultSet *rs = [db executeQuery:@"select rowid,* from test where a = ?", @"hi'"];
+    // rs next 才会真正触发查询的操作. 感觉没有办法得到本次查询, 到底有多少行数据啊.
     while ([rs next]) {
         // just print out what we've got in a number of formats.
         NSLog(@"%d %@ %@ %@ %@ %f %f",
@@ -158,7 +199,6 @@ int main (int argc, const char * argv[]) {
     
     rs = [db executeQuery:@"select rowid, a, b, c from test"];
     while ([rs next]) {
-        
         FMDBQuickCheck([rs[0] isEqual:rs[@"rowid"]]);
         FMDBQuickCheck([rs[1] isEqual:rs[@"a"]]);
         FMDBQuickCheck([rs[2] isEqual:rs[@"b"]]);
@@ -862,7 +902,7 @@ int main (int argc, const char * argv[]) {
     
     
     
-    FMDatabaseQueue *queue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
+    queue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
     
     FMDBQuickCheck(queue);
     

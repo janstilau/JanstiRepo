@@ -37,7 +37,7 @@ typedef NS_ENUM(NSInteger, FMDBTransaction) {
 static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey;
 
 @interface FMDatabaseQueue () {
-    dispatch_queue_t    _queue;
+    dispatch_queue_t    _queue; // 在这里, 有一个 GCD Queue.
     FMDatabase          *_db;
 }
 @end
@@ -46,9 +46,6 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
 
 + (instancetype)databaseQueueWithPath:(NSString *)aPath {
     FMDatabaseQueue *q = [[self alloc] initWithPath:aPath];
-    
-    FMDBAutorelease(q);
-    
     return q;
 }
 
@@ -58,9 +55,6 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
 
 + (instancetype)databaseQueueWithPath:(NSString *)aPath flags:(int)openFlags {
     FMDatabaseQueue *q = [[self alloc] initWithPath:aPath flags:openFlags];
-    
-    FMDBAutorelease(q);
-    
     return q;
 }
 
@@ -76,6 +70,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
     return [self initWithPath:url.path flags:openFlags vfs:vfsName];
 }
 
+// Designated Init.
 - (instancetype)initWithPath:(NSString*)aPath flags:(int)openFlags vfs:(NSString *)vfsName {
     self = [super init];
     
@@ -97,7 +92,9 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
         
         _path = FMDBReturnRetained(aPath);
         
+        // 简历一个同步队列.
         _queue = dispatch_queue_create([[NSString stringWithFormat:@"fmdb.%@", self] UTF8String], NULL);
+        // dispatch_queue_set_specific 这个, 类似 pthread 的 set specific, 就是绑定一个值到对应的 C 结构上.
         dispatch_queue_set_specific(_queue, kDispatchQueueSpecificKey, (__bridge void *)self, NULL);
         _openFlags = openFlags;
         _vfsName = [vfsName copy];
@@ -143,6 +140,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
 
 - (void)close {
     FMDBRetain(self);
+    // 向队列里面, 提交一个关闭任务, 自然, 之前提交的任务, 会继续执行.
     dispatch_sync(_queue, ^() {
         [self->_db close];
         FMDBRelease(_db);
@@ -187,6 +185,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
     
     FMDBRetain(self);
     
+    // 向同步队列里面, 提交一项任务, 执行 block 的操作.
     dispatch_sync(_queue, ^() {
         
         FMDatabase *db = [self database];
@@ -215,6 +214,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
         
         BOOL shouldRollback = NO;
 
+        // 根据 transaction 枚举值的不同, database 执行不同的语句.
         switch (transaction) {
             case FMDBTransactionExclusive:
                 [[self database] beginTransaction];
@@ -229,6 +229,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
         
         block([self database], &shouldRollback);
         
+        // 如果, 需要 rollBack, 那么数据库回滚, 不然, 数据库提交该事务.
         if (shouldRollback) {
             [[self database] rollback];
         }
@@ -240,6 +241,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
     FMDBRelease(self);
 }
 
+// 三个简便的方法.
 - (void)inTransaction:(__attribute__((noescape)) void (^)(FMDatabase *db, BOOL *rollback))block {
     [self beginTransaction:FMDBTransactionExclusive withBlock:block];
 }

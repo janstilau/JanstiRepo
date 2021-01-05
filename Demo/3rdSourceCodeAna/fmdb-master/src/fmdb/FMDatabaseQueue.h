@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** To perform queries and updates on multiple threads, you'll want to use @c FMDatabaseQueue .
 
+ 这里的意思是说, 不要让 FMDatabase 在多线程环境下共享, 每一个线程, 单独使用一个 FMDatabase 独享.
  Using a single instance of @c FMDatabase from multiple threads at once is a bad idea.  It has always been OK to make a @c FMDatabase  object *per thread*.  Just don't share a single instance across threads, and definitely not across multiple threads at the same time.
 
  Instead, use @c FMDatabaseQueue . Here's how to use it:
@@ -42,6 +43,7 @@ FMDatabaseQueue *queue = [FMDatabaseQueue databaseQueueWithPath:aPath];
 
 @code
 [queue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+ // 在这里面, 一定会有开始事务, 最终 commmit 的过程.
     [db executeUpdate:@"INSERT INTO myTable VALUES (?)", [NSNumber numberWithInt:1]];
     [db executeUpdate:@"INSERT INTO myTable VALUES (?)", [NSNumber numberWithInt:2]];
     [db executeUpdate:@"INSERT INTO myTable VALUES (?)", [NSNumber numberWithInt:3]];
@@ -56,6 +58,7 @@ FMDatabaseQueue *queue = [FMDatabaseQueue databaseQueueWithPath:aPath];
 }];
 @endcode
 
+ FMDatabaseQueue 会线性的执行命令, 不管是不是多线程的环境下使用他.
  @c FMDatabaseQueue will run the blocks on a serialized queue (hence the name of the class).  So if you call @c FMDatabaseQueue 's methods from multiple threads at the same time, they will be executed in the order they are received.  This way queries and updates won't step on each other's toes, and every one is happy.
 
  @warning Do not instantiate a single @c FMDatabase  object and use it across multiple threads. Use @c FMDatabaseQueue  instead.

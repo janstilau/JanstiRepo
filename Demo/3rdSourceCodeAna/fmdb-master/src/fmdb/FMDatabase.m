@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FMDatabase () {
     void*               _db;
-    BOOL                _isExecutingStatement;
+    BOOL                _isExecutingStatement; // 这个值, 记录是否当前正在执行 SQL 语句.
     NSTimeInterval      _startBusyRetryTime;
     
     NSMutableSet        *_openResultSets;
@@ -75,6 +75,7 @@ NS_ASSUME_NONNULL_END
     self = [super init];
     
     if (self) {
+        // FMDB 里面的数据部分, 就算是默认是 0 的数据, 在这里都有一份显式地定义.
         _databasePath               = [path copy];
         _openResultSets             = [[NSMutableSet alloc] init];
         _db                         = nil;
@@ -111,6 +112,7 @@ NS_ASSUME_NONNULL_END
     return _databasePath ? [NSURL fileURLWithPath:_databasePath] : nil;
 }
 
+// 作为一个对外的 lib, 应该有这样一个, 让外界可以知道当前版本号的操作.
 + (NSString*)FMDBUserVersion {
     return @"2.7.7";
 }
@@ -178,6 +180,7 @@ NS_ASSUME_NONNULL_END
 #pragma mark Open and close database
 
 - (BOOL)open {
+    // GuardCheck
     if (_isOpen) {
         return YES;
     }
@@ -189,7 +192,8 @@ NS_ASSUME_NONNULL_END
     }
     
     // now open database
-
+    // 最主要的就是这一步, 使用 sqlite3_open 打开数据库.
+    // 在这个函数内部, 应该会有链接数据库的底层操作.
     int err = sqlite3_open([self sqlitePath], (sqlite3**)&_db );
     if(err != SQLITE_OK) {
         NSLog(@"error opening!: %d", err);
@@ -394,15 +398,15 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     [_cachedStatements removeAllObjects];
 }
 
+// 这里, 是直接根据 query 作为 key 进行了检索.
+// 一个 Sql 语句, 在 _cachedStatements 存档一个 NSMutableSet, 里面是 FMStatement 的对象.
 - (FMStatement*)cachedStatementForQuery:(NSString*)query {
     
     NSMutableSet* statements = [_cachedStatements objectForKey:query];
     
     return [[statements objectsPassingTest:^BOOL(FMStatement* statement, BOOL *stop) {
-        
         *stop = ![statement inUse];
         return *stop;
-        
     }] anyObject];
 }
 
@@ -542,17 +546,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     return NO;
 }
 
-- (void)warnInUse {
-    NSLog(@"The FMDatabase %@ is currently in use.", self);
-    
-#ifndef NS_BLOCK_ASSERTIONS
-    if (_crashOnErrors) {
-        NSAssert(false, @"The FMDatabase %@ is currently in use.", self);
-        abort();
-    }
-#endif
-}
-
+// 其实就是判断, 数据库有没有打开, 输出 Log
 - (BOOL)databaseExists {
     
     if (!_isOpen) {
@@ -560,6 +554,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
         NSLog(@"The FMDatabase %@ is not open.", self);
         
 #ifndef NS_BLOCK_ASSERTIONS
+        // _crashOnErrors 默认是 No
         if (_crashOnErrors) {
             NSAssert(false, @"The FMDatabase %@ is not open.", self);
             abort();
@@ -607,7 +602,6 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
 - (sqlite_int64)lastInsertRowId {
     
     if (_isExecutingStatement) {
-        [self warnInUse];
         return NO;
     }
     
@@ -622,7 +616,6 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
 
 - (int)changes {
     if (_isExecutingStatement) {
-        [self warnInUse];
         return 0;
     }
     
@@ -637,75 +630,77 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
 
 #pragma mark SQL manipulation
 
-- (int)bindObject:(id)obj toColumn:(int)idx inStatement:(sqlite3_stmt*)pStmt {
+// 实际的 value binding 的过程.
+- (int)bindObject:(id)valueObj toColumn:(int)idx inStatement:(sqlite3_stmt*)pStmt {
     
-    if ((!obj) || ((NSNull *)obj == [NSNull null])) {
+    // 实际上, 这个 Bind 的过程, 就是根据 valueObj 的类型, 调用不同的 sqlite 的绑定函数.
+    if ((!valueObj) || ((NSNull *)valueObj == [NSNull null])) {
         return sqlite3_bind_null(pStmt, idx);
     }
     
     // FIXME - someday check the return codes on these binds.
-    else if ([obj isKindOfClass:[NSData class]]) {
-        const void *bytes = [obj bytes];
+    else if ([valueObj isKindOfClass:[NSData class]]) {
+        const void *bytes = [valueObj bytes];
         if (!bytes) {
             // it's an empty NSData object, aka [NSData data].
             // Don't pass a NULL pointer, or sqlite will bind a SQL null instead of a blob.
             bytes = "";
         }
-        return sqlite3_bind_blob(pStmt, idx, bytes, (int)[obj length], SQLITE_TRANSIENT);
+        return sqlite3_bind_blob(pStmt, idx, bytes, (int)[valueObj length], SQLITE_TRANSIENT);
     }
-    else if ([obj isKindOfClass:[NSDate class]]) {
-        if (self.hasDateFormatter)
-            return sqlite3_bind_text(pStmt, idx, [[self stringFromDate:obj] UTF8String], -1, SQLITE_TRANSIENT);
+    else if ([valueObj isKindOfClass:[NSDate class]]) {
+        if (self.hasDateFormatter) // 如果, 有日期的格式化器, 就输出为文本, 否则, 直接存储时间戳.
+            return sqlite3_bind_text(pStmt, idx, [[self stringFromDate:valueObj] UTF8String], -1, SQLITE_TRANSIENT);
         else
-            return sqlite3_bind_double(pStmt, idx, [obj timeIntervalSince1970]);
+            return sqlite3_bind_double(pStmt, idx, [valueObj timeIntervalSince1970]);
     }
-    else if ([obj isKindOfClass:[NSNumber class]]) {
-        
-        if (strcmp([obj objCType], @encode(char)) == 0) {
-            return sqlite3_bind_int(pStmt, idx, [obj charValue]);
+    else if ([valueObj isKindOfClass:[NSNumber class]]) {
+        // 按照数字的不同类型, 存储值.
+        if (strcmp([valueObj objCType], @encode(char)) == 0) {
+            return sqlite3_bind_int(pStmt, idx, [valueObj charValue]);
         }
-        else if (strcmp([obj objCType], @encode(unsigned char)) == 0) {
-            return sqlite3_bind_int(pStmt, idx, [obj unsignedCharValue]);
+        else if (strcmp([valueObj objCType], @encode(unsigned char)) == 0) {
+            return sqlite3_bind_int(pStmt, idx, [valueObj unsignedCharValue]);
         }
-        else if (strcmp([obj objCType], @encode(short)) == 0) {
-            return sqlite3_bind_int(pStmt, idx, [obj shortValue]);
+        else if (strcmp([valueObj objCType], @encode(short)) == 0) {
+            return sqlite3_bind_int(pStmt, idx, [valueObj shortValue]);
         }
-        else if (strcmp([obj objCType], @encode(unsigned short)) == 0) {
-            return sqlite3_bind_int(pStmt, idx, [obj unsignedShortValue]);
+        else if (strcmp([valueObj objCType], @encode(unsigned short)) == 0) {
+            return sqlite3_bind_int(pStmt, idx, [valueObj unsignedShortValue]);
         }
-        else if (strcmp([obj objCType], @encode(int)) == 0) {
-            return sqlite3_bind_int(pStmt, idx, [obj intValue]);
+        else if (strcmp([valueObj objCType], @encode(int)) == 0) {
+            return sqlite3_bind_int(pStmt, idx, [valueObj intValue]);
         }
-        else if (strcmp([obj objCType], @encode(unsigned int)) == 0) {
-            return sqlite3_bind_int64(pStmt, idx, (long long)[obj unsignedIntValue]);
+        else if (strcmp([valueObj objCType], @encode(unsigned int)) == 0) {
+            return sqlite3_bind_int64(pStmt, idx, (long long)[valueObj unsignedIntValue]);
         }
-        else if (strcmp([obj objCType], @encode(long)) == 0) {
-            return sqlite3_bind_int64(pStmt, idx, [obj longValue]);
+        else if (strcmp([valueObj objCType], @encode(long)) == 0) {
+            return sqlite3_bind_int64(pStmt, idx, [valueObj longValue]);
         }
-        else if (strcmp([obj objCType], @encode(unsigned long)) == 0) {
-            return sqlite3_bind_int64(pStmt, idx, (long long)[obj unsignedLongValue]);
+        else if (strcmp([valueObj objCType], @encode(unsigned long)) == 0) {
+            return sqlite3_bind_int64(pStmt, idx, (long long)[valueObj unsignedLongValue]);
         }
-        else if (strcmp([obj objCType], @encode(long long)) == 0) {
-            return sqlite3_bind_int64(pStmt, idx, [obj longLongValue]);
+        else if (strcmp([valueObj objCType], @encode(long long)) == 0) {
+            return sqlite3_bind_int64(pStmt, idx, [valueObj longLongValue]);
         }
-        else if (strcmp([obj objCType], @encode(unsigned long long)) == 0) {
-            return sqlite3_bind_int64(pStmt, idx, (long long)[obj unsignedLongLongValue]);
+        else if (strcmp([valueObj objCType], @encode(unsigned long long)) == 0) {
+            return sqlite3_bind_int64(pStmt, idx, (long long)[valueObj unsignedLongLongValue]);
         }
-        else if (strcmp([obj objCType], @encode(float)) == 0) {
-            return sqlite3_bind_double(pStmt, idx, [obj floatValue]);
+        else if (strcmp([valueObj objCType], @encode(float)) == 0) {
+            return sqlite3_bind_double(pStmt, idx, [valueObj floatValue]);
         }
-        else if (strcmp([obj objCType], @encode(double)) == 0) {
-            return sqlite3_bind_double(pStmt, idx, [obj doubleValue]);
+        else if (strcmp([valueObj objCType], @encode(double)) == 0) {
+            return sqlite3_bind_double(pStmt, idx, [valueObj doubleValue]);
         }
-        else if (strcmp([obj objCType], @encode(BOOL)) == 0) {
-            return sqlite3_bind_int(pStmt, idx, ([obj boolValue] ? 1 : 0));
+        else if (strcmp([valueObj objCType], @encode(BOOL)) == 0) {
+            return sqlite3_bind_int(pStmt, idx, ([valueObj boolValue] ? 1 : 0));
         }
         else {
-            return sqlite3_bind_text(pStmt, idx, [[obj description] UTF8String], -1, SQLITE_TRANSIENT);
+            return sqlite3_bind_text(pStmt, idx, [[valueObj description] UTF8String], -1, SQLITE_TRANSIENT);
         }
     }
 
-    return sqlite3_bind_text(pStmt, idx, [[obj description] UTF8String], -1, SQLITE_TRANSIENT);
+    return sqlite3_bind_text(pStmt, idx, [[valueObj description] UTF8String], -1, SQLITE_TRANSIENT);
 }
 
 - (void)extractSQL:(NSString *)sql argumentsList:(va_list)args intoString:(NSMutableString *)cleanedSQL arguments:(NSMutableArray *)arguments {
@@ -834,13 +829,13 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     return [self executeQuery:sql withArgumentsInArray:nil orDictionary:arguments orVAList:nil shouldBind:true];
 }
 
-- (FMResultSet *)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray*)arrayArgs orDictionary:(NSDictionary *)dictionaryArgs orVAList:(va_list)args shouldBind:(BOOL)shouldBind {
+// executeQuery 的终点函数.
+- (FMResultSet *)executeQuery:(NSString *)sqlCmd withArgumentsInArray:(NSArray*)arrayArgs orDictionary:(NSDictionary *)dictionaryArgs orVAList:(va_list)args shouldBind:(BOOL)shouldBind {
     if (![self databaseExists]) {
         return 0x00;
     }
     
     if (_isExecutingStatement) {
-        [self warnInUse];
         return 0x00;
     }
     
@@ -851,23 +846,23 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     FMStatement *statement  = 0x00;
     FMResultSet *rs         = 0x00;
     
-    if (_traceExecution && sql) {
-        NSLog(@"%@ executeQuery: %@", self, sql);
-    }
-    
     if (_shouldCacheStatements) {
-        statement = [self cachedStatementForQuery:sql];
+        statement = [self cachedStatementForQuery:sqlCmd];
         pStmt = statement ? [statement statement] : 0x00;
         [statement reset];
     }
     
+    // 这个时候 pStmt 为空, 就是缓存里面没有该信息.
     if (!pStmt) {
-        rc = sqlite3_prepare_v2(_db, [sql UTF8String], -1, &pStmt, 0);
+        // 第一个参数, db, 第二个参数, SQL char*, 第三个参数 SQL 的长度, 第四个参数, 输出参数, 第五个无用.
+        // 返回值, error code 值.
+        rc = sqlite3_prepare_v2(_db, [sqlCmd UTF8String], -1, &pStmt, 0);
         
         if (SQLITE_OK != rc) {
             if (_logsErrors) {
+                // 打印出错信息.
                 NSLog(@"DB Error: %d \"%@\"", [self lastErrorCode], [self lastErrorMessage]);
-                NSLog(@"DB Query: %@", sql);
+                NSLog(@"DB Query: %@", sqlCmd);
                 NSLog(@"DB Path: %@", _databasePath);
             }
             
@@ -876,6 +871,8 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
                 abort();
             }
             
+            // 提前退出.
+            // sqlite3_finalize函数释放所有的内部资源和sqlite3_stmt数据结构，有效删除prepared语句
             sqlite3_finalize(pStmt);
             pStmt = 0x00;
             _isExecutingStatement = NO;
@@ -884,27 +881,26 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     }
 
     if (shouldBind) {
+        // 这里就是 Sql 里面, 根据 ?, 或者 :key 进行绑定的机制.
         BOOL success = [self bindStatement:pStmt WithArgumentsInArray:arrayArgs orDictionary:dictionaryArgs orVAList:args];
         if (!success) {
             return nil;
         }
     }
 
-    FMDBRetain(statement); // to balance the release below
-    
+    // 下面的这些操作, 真正的数据库查询, 并没有发生. 
     if (!statement) {
         statement = [[FMStatement alloc] init];
         [statement setStatement:pStmt];
-        
-        if (_shouldCacheStatements && sql) {
-            [self setCachedStatement:statement forQuery:sql];
+        if (_shouldCacheStatements && sqlCmd) {
+            [self setCachedStatement:statement forQuery:sqlCmd];
         }
     }
     
     // the statement gets closed in rs's dealloc or [rs close];
     // we should only autoclose if we're binding automatically when the statement is prepared
     rs = [FMResultSet resultSetWithStatement:statement usingParentDatabase:self shouldAutoClose:shouldBind];
-    [rs setQuery:sql];
+    [rs setQuery:sqlCmd];
     
     NSValue *openResultSet = [NSValue valueWithNonretainedObject:rs];
     [_openResultSets addObject:openResultSet];
@@ -918,12 +914,14 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
     return rs;
 }
 
-- (BOOL)bindStatement:(sqlite3_stmt *)pStmt WithArgumentsInArray:(NSArray*)arrayArgs orDictionary:(NSDictionary *)dictionaryArgs orVAList:(va_list)args {
+// arrayArgs, dictionaryArgs, cArgs 是分开使用的.
+- (BOOL)bindStatement:(sqlite3_stmt *)pStmt WithArgumentsInArray:(NSArray*)arrayArgs orDictionary:(NSDictionary *)dictionaryArgs orVAList:(va_list)cArgs {
     id obj;
     int idx = 0;
+    // 这个时候, pStmt 已经包含了 SQLCmd 的格式了, 所以能够知道需要绑定的数量.
     int queryCount = sqlite3_bind_parameter_count(pStmt); // pointed out by Dominic Yu (thanks!)
 
-    // If dictionaryArgs is passed in, that means we are using sqlite's named parameter support
+    // 优先使用 dictionaryArgs, 也就是优先使用命名的绑定方式.
     if (dictionaryArgs) {
 
         for (NSString *dictionaryKey in [dictionaryArgs allKeys]) {
@@ -931,19 +929,15 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
             // Prefix the key with a colon.
             NSString *parameterName = [[NSString alloc] initWithFormat:@":%@", dictionaryKey];
 
-            if (_traceExecution) {
-                NSLog(@"%@ = %@", parameterName, [dictionaryArgs objectForKey:dictionaryKey]);
-            }
-
             // Get the index for the parameter name.
+            // 最终, 还是使用的 idx 进行的绑定, key 主要用作了获取合法 idx 的途径
             int namedIdx = sqlite3_bind_parameter_index(pStmt, [parameterName UTF8String]);
-
-            FMDBRelease(parameterName);
-
+            
             if (namedIdx > 0) {
                 // Standard binding from here.
                 int rc = [self bindObject:[dictionaryArgs objectForKey:dictionaryKey] toColumn:namedIdx inStatement:pStmt];
                 if (rc != SQLITE_OK) {
+                    // 在 binding 的过程中出错了, 提前退出.
                     NSLog(@"Error: unable to bind (%d, %s", rc, sqlite3_errmsg(_db));
                     sqlite3_finalize(pStmt);
                     pStmt = 0x00;
@@ -957,31 +951,24 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
                 NSLog(@"Could not find index for %@", dictionaryKey);
             }
         }
-    }
-    else {
+    } else {
         while (idx < queryCount) {
+            // 如果, 数组有值, 就用数组的
             if (arrayArgs && idx < (int)[arrayArgs count]) {
                 obj = [arrayArgs objectAtIndex:(NSUInteger)idx];
             }
-            else if (args) {
-                obj = va_arg(args, id);
+            // 如果 C 可变数组有值, 就用 C 函数的.
+            else if (cArgs) {
+                obj = va_arg(cArgs, id);
             }
             else {
                 //We ran out of arguments
                 break;
             }
 
-            if (_traceExecution) {
-                if ([obj isKindOfClass:[NSData class]]) {
-                    NSLog(@"data: %ld bytes", (unsigned long)[(NSData*)obj length]);
-                }
-                else {
-                    NSLog(@"obj: %@", obj);
-                }
-            }
-
             idx++;
 
+            // 同样的逻辑, 不过直接按照数组的 idx 当做了 tobind 的 idx
             int rc = [self bindObject:obj toColumn:idx inStatement:pStmt];
             if (rc != SQLITE_OK) {
                 NSLog(@"Error: unable to bind (%d, %s", rc, sqlite3_errmsg(_db));
@@ -1045,6 +1032,7 @@ static int FMDBDatabaseBusyHandler(void *f, int count) {
 
 #pragma mark Execute updates
 
+// 最终的 executeUpdate 的终点函数,.
 - (BOOL)executeUpdate:(NSString*)sql error:(NSError * _Nullable __autoreleasing *)outErr withArgumentsInArray:(NSArray*)arrayArgs orDictionary:(NSDictionary *)dictionaryArgs orVAList:(va_list)args {
     FMResultSet *rs = [self executeQuery:sql withArgumentsInArray:arrayArgs orDictionary:dictionaryArgs orVAList:args shouldBind:true];
     if (!rs) {
@@ -1174,6 +1162,7 @@ int FMDBExecuteBulkSQLCallback(void *theBlockAsVoid, int columns, char **values,
 
 #pragma mark Transactions
 
+// 回滚, 就是执行一下回滚的语句.
 - (BOOL)rollback {
     BOOL b = [self executeUpdate:@"rollback transaction"];
     
@@ -1184,6 +1173,7 @@ int FMDBExecuteBulkSQLCallback(void *theBlockAsVoid, int columns, char **values,
     return b;
 }
 
+// commit 就是执行一下, commit 的语句.
 - (BOOL)commit {
     BOOL b =  [self executeUpdate:@"commit transaction"];
     
@@ -1194,6 +1184,7 @@ int FMDBExecuteBulkSQLCallback(void *theBlockAsVoid, int columns, char **values,
     return b;
 }
 
+// 开始一个事务, 就是执行一下开启事务的语句.
 - (BOOL)beginTransaction {
     
     BOOL b = [self executeUpdate:@"begin exclusive transaction"];
@@ -1363,6 +1354,7 @@ static NSString *FMDBEscapeSavePointName(NSString *savepointName) {
     return _shouldCacheStatements;
 }
 
+// 设置是否要缓存命令.
 - (void)setShouldCacheStatements:(BOOL)value {
     
     _shouldCacheStatements = value;
@@ -1509,7 +1501,6 @@ void FMDBBlockSQLiteCallBackFunction(sqlite3_context *context, int argc, sqlite3
         sqlite3_finalize(_statement);
         _statement = 0x00;
     }
-    
     _inUse = NO;
 }
 
@@ -1517,7 +1508,6 @@ void FMDBBlockSQLiteCallBackFunction(sqlite3_context *context, int argc, sqlite3
     if (_statement) {
         sqlite3_reset(_statement);
     }
-    
     _inUse = NO;
 }
 

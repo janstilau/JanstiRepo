@@ -34,7 +34,6 @@
     [rs setParentDB:aDB];
     [rs setShouldAutoClose:shouldAutoClose];
     
-    NSParameterAssert(![statement inUse]);
     [statement setInUse:YES]; // weak reference
     
     return FMDBReturnAutoreleased(rs);
@@ -73,9 +72,11 @@
 }
 
 - (int)columnCount {
+    // 返回当前执行结果的列数.
     return sqlite3_column_count([_statement statement]);
 }
 
+// 获取, 结果返回值的 idx 值和 name 的 map
 - (NSMutableDictionary *)columnNameToIndexMap {
     if (!_columnNameToIndexMap) {
         int columnCount = sqlite3_column_count([_statement statement]);
@@ -110,8 +111,9 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-implementations"
 
+// 获取当前结果的 key:value 字典.
 - (NSDictionary *)resultDict {
-    
+    // 先获取列数.
     NSUInteger num_cols = (NSUInteger)sqlite3_data_count([_statement statement]);
     
     if (num_cols > 0) {
@@ -123,7 +125,6 @@
             id objectValue = [self objectForColumnName:columnName];
             [dict setObject:objectValue forKey:columnName];
         }
-        
         return FMDBReturnAutoreleased([dict copy]);
     }
     else {
@@ -135,6 +136,7 @@
 
 #pragma clang diagnostic pop
 
+// 和上面的没有任何区别.
 - (NSDictionary*)resultDictionary {
     
     NSUInteger num_cols = (NSUInteger)sqlite3_data_count([_statement statement]);
@@ -167,6 +169,8 @@
 
 - (BOOL)nextWithError:(NSError * _Nullable __autoreleasing *)outErr {
     int rc = [self internalStepWithError:outErr];
+    // #define SQLITE_ROW         100  /* sqlite3_step() has another row ready */
+    // #define SQLITE_DONE        101  /* sqlite3_step() has finished executing */
     return rc == SQLITE_ROW;
 }
 
@@ -180,6 +184,7 @@
 }
 
 - (int)internalStepWithError:(NSError * _Nullable __autoreleasing *)outErr {
+    // sqlite3_step 就是一步步的执行 statement, 每次返回一行的结果.
     int rc = sqlite3_step([_statement statement]);
     
     if (SQLITE_BUSY == rc || SQLITE_LOCKED == rc) {
@@ -190,6 +195,7 @@
         }
     }
     else if (SQLITE_DONE == rc || SQLITE_ROW == rc) {
+        // 这里是正确的执行结果.
         // all is well, let's return.
     }
     else if (SQLITE_ERROR == rc) {
@@ -233,6 +239,7 @@
     return sqlite3_errcode([_parentDB sqliteHandle]) == SQLITE_ROW;
 }
 
+// 根据列名, 找到列所在的 idx.
 - (int)columnIndexForName:(NSString*)columnName {
     columnName = [columnName lowercaseString];
     
@@ -247,6 +254,8 @@
     return -1;
 }
 
+// 以下, 就是将某列的数据, 转化成为特定的格式的过程.
+// name, 仅仅是查找 idx 的方式, 最终还是通过 idx 值, 获取到数据.
 - (int)intForColumn:(NSString*)columnName {
     return [self intForColumnIndex:[self columnIndexForName:columnName]];
 }
@@ -368,7 +377,7 @@
     return data;
 }
 
-
+// 判断对应的位置, 是不是 Null 值.
 - (BOOL)columnIndexIsNull:(int)columnIdx {
     return sqlite3_column_type([_statement statement], columnIdx) == SQLITE_NULL;
 }
@@ -399,10 +408,13 @@
         return nil;
     }
     
+    // 首先, 获得对应的结果的类型值.
     int columnType = sqlite3_column_type([_statement statement], columnIdx);
     
     id returnValue = nil;
     
+    // 然后. 根据类型值, 将每列的结果, 转换到相应的数据类型.
+    // 最终还是要包装成一个对象 id 值.
     if (columnType == SQLITE_INTEGER) {
         returnValue = [NSNumber numberWithLongLong:[self longLongIntForColumnIndex:columnIdx]];
     }

@@ -119,7 +119,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return Integer value of the number of columns.
  */
-
+// 有多少行数, 从这可以查询到这条查询的结果.
 @property (nonatomic, readonly) int columnCount;
 
 /** Column index for column name
