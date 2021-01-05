@@ -1,121 +1,99 @@
-import QtQuick 2.12
+import QtQuick 2.2
 import QtQuick.Controls 1.4
 //[1]
 import an.qt.ColorMaker 1.0
-
 Rectangle {
-    width: 360;
-    height: 360;
 
+    width: 480;
+        height: 320;
+        visible: true;
 
-    Text {
-        id: timeLabel;
-        anchors.left: parent.left;
-        anchors.leftMargin: 4;
-        anchors.top: parent.top;
-        anchors.topMargin: 4;
-        font.pixelSize: 26;
-    }
+        StackView {
+            id: stack;
+            anchors.centerIn: parent;
+            width: 600;
+            height: 300;
+            clip: true;
+            property var home: null;
 
-    // [2]
-    ColorMaker {
-        id: colorMaker;
-        color: Qt.green;
-    }
-
-    Rectangle {
-        id: colorRect;
-        anchors.centerIn: parent;
-        width: 200;
-        height: 200;
-        color: "blue";
-    }
-
-    Button {
-        id: start;
-        text: "start";
-        anchors.left: parent.left;
-        anchors.leftMargin: 4;
-        anchors.bottom: parent.bottom;
-        anchors.bottomMargin: 4;
-
-        onClicked: {
-            colorMaker.start();
+            Text {
+                text: "Click to create first page";
+                font.pointSize: 14;
+                font.bold: true;
+                color: "blue";
+                anchors.centerIn: parent;
+                MouseArea {
+                    anchors.fill: parent;
+                    onClicked: if(stack.depth == 0)stack.push(page);
+                }
+            }
         }
-    }
-    Button {
-        id: stop;
-        text: "stop";
-        anchors.left: start.right;
-        anchors.leftMargin: 4;
-        anchors.bottom: start.bottom;
 
-        onClicked: {
-            colorMaker.stop();
-        }
-    }
+        Component {
+            id: page;
 
-    function changeAlgorithm(button, algorithm){
-        switch(algorithm)
-        {
-        case 0:
-            button.text = "RandomRGB";
-            break;
-        case 1:
-            button.text = "RandomRed";
-            break;
-        case 2:
-            button.text = "RandomGreen";
-            break;
-        case 3:
-            button.text = "RandomBlue";
-            break;
-        case 4:
-            button.text = "LinearIncrease";
-            break;
-        }
-    }
+            Rectangle {
+                color: Qt.rgba(stack.depth*0.1, stack.depth*0.2, stack.depth*0.3);
 
-    Button {
-        id: colorAlgorithm;
-        text: "RandomRGB";
-        anchors.left: stop.right;
-        anchors.leftMargin: 4;
-        anchors.bottom: start.bottom;
-        onClicked: {
-            var algorithm = (colorMaker.algorithm() + 1) % 5;
-            changeAlgorithm(colorAlgorithm, algorithm);
-            colorMaker.setAlgorithm(algorithm);
-        }
-    }
+                Text {
+                    anchors.centerIn: parent;
+                    text: "depth - " + stack.depth;
+                    font.pointSize: 24;
+                    font.bold: true;
+                    color: stack.depth <= 4 ? Qt.lighter(parent.color) : Qt.darker(parent.color);
+                }
 
-    Button {
-        id: quit;
-        text: "quit";
-        anchors.left: colorAlgorithm.right;
-        anchors.leftMargin: 4;
-        anchors.bottom: start.bottom;
-        onClicked: {
-            Qt.quit();
-        }
-    }
+                Button {
+                    id: next;
+                    anchors.right: parent.right;
+                    anchors.bottom: parent.bottom;
+                    anchors.margins: 8;
+                    text: "Next";
+                    width: 70;
+                    height: 30;
+                    onClicked: {
+                        if(stack.depth < 8) stack.push(page, {}, StackView.PopTransition);
+                    }
+                }
 
-    Component.onCompleted: {
-        colorMaker.color = Qt.rgba(0,180,120, 255);
-        //[3]
-        //colorMaker.setAlgorithm(ColorMaker.LinearIncrease);
-        colorMaker.setAlgorithm(colorMaker.RandomRGB);
-        changeAlgorithm(colorAlgorithm, colorMaker.algorithm());
-    }
+                Button {
+                    id: back;
+                    anchors.right: next.left;
+                    anchors.top: next.top;
+                    anchors.rightMargin: 8;
+                    text: "Back";
+                    width: 70;
+                    height: 30;
+                    onClicked: {
+                        if(stack.depth > 0) stack.pop();
+                    }
+                }
 
-    Connections {
-        target: colorMaker;
-        onCurrentTime:{
-            timeLabel.text = strTime;
-            timeLabel.color = colorMaker.timeColor;
+                Button {
+                    id: home;
+                    anchors.right: back.left;
+                    anchors.top: next.top;
+                    anchors.rightMargin: 8;
+                    text: "Home";
+                    width: 70;
+                    height: 30;
+                    onClicked: {
+                        if(stack.depth > 0)stack.pop(stack.initialItem);
+                    }
+                }
+
+                Button {
+                    id: clear;
+                    anchors.right: home.left;
+                    anchors.top: next.top;
+                    anchors.rightMargin: 8;
+                    text: "Clear";
+                    width: 70;
+                    height: 30;
+                    onClicked: {
+                        if(stack.depth > 0)stack.clear();
+                    }
+                }
+            }
         }
-        onColorChanged:{
-            colorRect.color = color;
-        }
-    }
 }
