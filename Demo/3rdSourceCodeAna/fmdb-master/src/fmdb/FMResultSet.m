@@ -188,12 +188,7 @@
     int rc = sqlite3_step([_statement statement]);
     
     if (SQLITE_BUSY == rc || SQLITE_LOCKED == rc) {
-        NSLog(@"%s:%d Database busy (%@)", __FUNCTION__, __LINE__, [_parentDB databasePath]);
-        NSLog(@"Database busy");
-        if (outErr) {
-            *outErr = [_parentDB lastError];
-        }
-    }
+    
     else if (SQLITE_DONE == rc || SQLITE_ROW == rc) {
         // 这里是正确的执行结果.
         // all is well, let's return.
