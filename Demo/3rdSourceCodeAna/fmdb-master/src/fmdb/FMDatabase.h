@@ -93,7 +93,7 @@ typedef NS_ENUM(int, FMDBCheckpointMode) {
 
 /** Whether should trace execution */
 
-@property (atomic, assign) BOOL traceExecution;
+@property (atomic, assign) BOOL traceExecution; // 会在运行过程中, 控制打印
 
 /** Whether checked out or not */
 
@@ -101,15 +101,15 @@ typedef NS_ENUM(int, FMDBCheckpointMode) {
 
 /** Crash on errors */
 
-@property (atomic, assign) BOOL crashOnErrors;
+@property (atomic, assign) BOOL crashOnErrors; // 当发生错误的时候, 直接 abort
 
 /** Logs errors */
 
-@property (atomic, assign) BOOL logsErrors;
+@property (atomic, assign) BOOL logsErrors; // 当发生错误的时候, 进行打印.
 
 /** Dictionary of cached statements */
 
-@property (atomic, retain, nullable) NSMutableDictionary *cachedStatements;
+@property (atomic, retain, nullable) NSMutableDictionary *cachedStatements; // 重用 sqlstmt 引入的机制.
 
 ///---------------------
 /// @name Initialization
@@ -1453,6 +1453,9 @@ myDB.dateFormat = [FMDatabase storeableDateFormat:@"yyyy-MM-dd HH:mm:ss"];
  - [@c sqlite3_stmt ](https://sqlite.org/c3ref/stmt.html)
  */
 
+// 这个类, 主要是为了重用 _statement.
+// sqlite3_prepare_v2, sqlite3_finalize, sqlite3_reset 是一组操作, 其中 sqlite3_prepare_v2 会耗费资源的, sqlite3_finalize 会释放资源.
+// sqlite3_reset 可以将之前 bind 的值清空, 重用资源.
 @interface FMStatement : NSObject {
     void *_statement;
     NSString *_query;

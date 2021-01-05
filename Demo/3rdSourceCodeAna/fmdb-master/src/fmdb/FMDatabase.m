@@ -13,8 +13,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FMDatabase () {
-    void*               _db;
-    BOOL                _isExecutingStatement; // 这个值, 记录是否当前正在执行 SQL 语句.
+    void*               _db; // 数据库指针
+    BOOL                _isExecutingStatement; // 标识是否正在进行查询.
     NSTimeInterval      _startBusyRetryTime;
     
     NSMutableSet        *_openResultSets;
@@ -162,7 +162,7 @@ NS_ASSUME_NONNULL_END
 - (const char*)sqlitePath {
     
     if (!_databasePath) {
-        return ":memory:";
+        return ":memory:"; // 这是数据库的惯例写法.
     }
     
     if ([_databasePath length] == 0) {
@@ -228,6 +228,7 @@ NS_ASSUME_NONNULL_END
     
     // now open database
     
+    // 使用了 sqlite3_open_v2 来应对带参的情况.
     int err = sqlite3_open_v2([self sqlitePath], (sqlite3**)&_db, flags, [vfsName UTF8String]);
     if(err != SQLITE_OK) {
         NSLog(@"error opening!: %d", err);
@@ -1504,6 +1505,7 @@ void FMDBBlockSQLiteCallBackFunction(sqlite3_context *context, int argc, sqlite3
     _inUse = NO;
 }
 
+// reset 会在新的查询开始的时候设置.
 - (void)reset {
     if (_statement) {
         sqlite3_reset(_statement);
