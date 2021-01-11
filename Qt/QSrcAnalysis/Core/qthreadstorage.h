@@ -42,7 +42,7 @@
 
 #include <QtCore/qglobal.h>
 
-#if QT_CONFIG(thread)
+#if 1
 
 QT_BEGIN_NAMESPACE
 
@@ -123,6 +123,7 @@ void qThreadStorage_deleteData(void *d, T *)
 // MOC_SKIP_END
 #endif
 
+// QThreadStorage 是接口类, 真正的实现使用 QThreadStorageData 进行.
 template <class T>
 class QThreadStorage
 {
@@ -143,6 +144,7 @@ public:
 
     inline T& localData()
     { return qThreadStorage_localData(d, reinterpret_cast<T*>(0)); }
+
     inline T localData() const
     { return qThreadStorage_localData_const(d, reinterpret_cast<T*>(0)); }
 
@@ -196,6 +198,8 @@ private:
             qThreadStorage_deleteLocalData(t);
         }
     };
+
+    // QScopedPointer 代表着, 当 data 消亡的时候, 里面的指针自动调用 deleter 指定的方法, 这里, 是专门写一个类.
     QScopedPointer<T, ScopedPointerThreadStorageDeleter> data;
 
 public:
@@ -204,6 +208,7 @@ public:
     QThreadStorage(const QThreadStorage &rhs) = delete;
     QThreadStorage &operator=(const QThreadStorage &rhs) = delete;
 
+    // 使用类的方法, 去包装了不太容易使用的一个全局方法.
     inline bool hasLocalData() const
     {
         return qThreadStorage_hasLocalData(data);

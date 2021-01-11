@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qthreadstorage.h"
 
 #ifndef QT_NO_THREAD
@@ -116,19 +77,12 @@ void **QThreadStorageData::get() const
 {
     QThreadData *data = QThreadData::current();
     if (!data) {
-        qWarning("QThreadStorage::get: QThreadStorage can only be used with threads started with QThread");
         return 0;
     }
     QVector<void *> &tls = data->tls;
     if (tls.size() <= id)
-        tls.resize(id + 1);
+        tls.resize(id + 1); // 既然敢这么写, 里面一定有清零处理了.
     void **v = &tls[id];
-
-    DEBUG_MSG("QThreadStorageData: Returning storage %d, data %p, for thread %p",
-          id,
-          *v,
-          data->thread.load());
-
     return *v ? v : 0;
 }
 
@@ -136,7 +90,6 @@ void **QThreadStorageData::set(void *p)
 {
     QThreadData *data = QThreadData::current();
     if (!data) {
-        qWarning("QThreadStorage::set: QThreadStorage can only be used with threads started with QThread");
         return 0;
     }
     QVector<void *> &tls = data->tls;
@@ -146,11 +99,6 @@ void **QThreadStorageData::set(void *p)
     void *&value = tls[id];
     // delete any previous data
     if (value != 0) {
-        DEBUG_MSG("QThreadStorageData: Deleting previous storage %d, data %p, for thread %p",
-                id,
-                value,
-                data->thread.load());
-
         QMutexLocker locker(&destructorsMutex);
         DestructorMap *destr = destructors();
         void (*destructor)(void *) = destr ? destr->value(id) : 0;
