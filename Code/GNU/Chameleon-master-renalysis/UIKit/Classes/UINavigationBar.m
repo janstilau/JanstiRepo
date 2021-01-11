@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #import "UINavigationBar.h"
 #import "UIGraphics.h"
 #import "UIColor.h"
@@ -52,7 +23,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
 };
 
 @implementation UINavigationBar {
-    NSMutableArray *_navStack;
+    NSMutableArray *_navStack; // 存储, 所有的 Item. 用于 View 的管理.
     
     UIView *_leftView;
     UIView *_centerView;
@@ -63,7 +34,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
         unsigned didPushItem : 1;
         unsigned shouldPopItem : 1;
         unsigned didPopItem : 1;
-    } _delegateHas;
+    } _delegateHas; // 不要用到代码里.
 }
 
 + (void)_setBarButtonSize:(UIView *)view
@@ -88,6 +59,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
     return backButton;
 }
 
+// 这里很清楚, 就是根据 Item, 生成对应的 View.
 + (UIView *)_viewWithBarButtonItem:(UIBarButtonItem *)item
 {
     if (!item) return nil;
@@ -117,8 +89,6 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
         _navStack = [[NSMutableArray alloc] init];
         _barStyle = UIBarStyleDefault;
         _tintColor = [UIColor colorWithRed:21/255.f green:21/255.f blue:25/255.f alpha:1];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_navigationItemDidChange:) name:UINavigationItemDidChange object:nil];
     }
     return self;
 }
@@ -128,6 +98,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+// 提前判断. 解决后续的判断成本.
 - (void)setDelegate:(id)newDelegate
 {
     _delegate = newDelegate;
@@ -152,6 +123,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
     [self popNavigationItemAnimated:YES];
 }
 
+// 动画效果.
 - (void)_setViewsWithTransition:(_UINavigationBarTransition)transition animated:(BOOL)animated
 {
     {
@@ -161,6 +133,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
         if (_centerView) [previousViews addObject:_centerView];
         if (_rightView) [previousViews addObject:_rightView];
 
+        // 原有的 View, 进行移除的工作.
         if (animated) {
             CGFloat moveCenterBy = self.bounds.size.width - ((_centerView)? _centerView.frame.origin.x : 0);
             CGFloat moveLeftBy = self.bounds.size.width * 0.33f;
@@ -170,6 +143,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
                 moveLeftBy *= -1.f;
             }
             
+            // 颜色动画
             [UIView animateWithDuration:kAnimationDuration * 0.8
                                   delay:kAnimationDuration * 0.2
                                 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionNone
@@ -179,7 +153,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
                                  _centerView.alpha = 0;
                              }
                              completion:NULL];
-            
+            // 位置动画.
             [UIView animateWithDuration:kAnimationDuration
                              animations:^(void) {
                                  if (_leftView)     _leftView.frame = CGRectOffset(_leftView.frame, moveLeftBy, 0);
@@ -193,6 +167,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
         }
     }
     
+    // 新的 View, 进行添加动画.
     UINavigationItem *topItem = self.topItem;
     
     if (topItem) {
@@ -226,7 +201,6 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
         }
         
         _centerView = topItem.titleView;
-
         if (!_centerView) {
             UILabel *titleLabel = [[UILabel alloc] init];
             titleLabel.text = topItem.title;
@@ -259,7 +233,8 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
         _centerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _centerView.frame = centerFrame;
         [self insertSubview:_centerView atIndex:0];
-
+        
+        // 进入动画.
         if (animated) {
             CGFloat moveCenterBy = self.bounds.size.width - ((_centerView)? _centerView.frame.origin.x : 0);
             CGFloat moveLeftBy = self.bounds.size.width * 0.33f;
@@ -348,6 +323,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
         BOOL shouldPop = YES;
 
         if (_delegateHas.shouldPopItem) {
+            // 通知 VC 进行变化.
             shouldPop = [_delegate navigationBar:self shouldPopItem:previousItem];
         }
         
@@ -385,6 +361,7 @@ typedef NS_ENUM(NSInteger, _UINavigationBarTransition) {
     // so that it actually doesn "tint" the image instead of define it. That'd probably work better with the bottom line coloring and stuff, too, but
     // for now hardcoding stuff works well enough.
     
+    // 这里, 简单的进行一次填充.
     [self.tintColor setFill];
     UIRectFill(bounds);
 }

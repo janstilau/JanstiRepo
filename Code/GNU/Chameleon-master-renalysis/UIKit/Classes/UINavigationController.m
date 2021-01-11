@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #import "UINavigationController.h"
 #import "UITabBarController.h"
 #import "UINavigationBar.h"
@@ -37,7 +8,7 @@
 @end
 
 @implementation UINavigationController {
-    UIViewController *_visibleViewController;
+    UIViewController *_visibleViewController; // 这个记录最上面的 VC.
     BOOL _needsDeferredUpdate;
     BOOL _isUpdating;
     BOOL _toolbarHidden;
@@ -46,9 +17,11 @@
 - (id)initWithRootViewController:(UIViewController *)rootViewController
 {
     if ((self=[super initWithNibName:nil bundle:nil])) {
+        // 创建了一个 Bar.
         _navigationBar = [UINavigationBar new];
-        _navigationBar.delegate = self;
+        _navigationBar.delegate = self; // 原来 Bar 也有 delegate.
         
+        // 创建了一个 ToolBar
         _toolbar = [UIToolbar new];
         _toolbarHidden = YES;
 
@@ -80,6 +53,7 @@
     _navigationBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     _visibleViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
+    // 然后, 自己的 View, 增加了三个子视图.
     [self.view addSubview:_visibleViewController.view];
     [self.view addSubview:_navigationBar];
     [self.view addSubview:_toolbar];
@@ -96,120 +70,33 @@
     [self.view setNeedsLayout];
 }
 
-- (void)_getNavbarRect:(CGRect *)navbarRect contentRect:(CGRect *)contentRect toolbarRect:(CGRect *)toolbarRect forBounds:(CGRect)bounds
+- (void)_getNavbarRect:(CGRect *)navbarRect
+           contentRect:(CGRect *)contentRect
+           toolbarRect:(CGRect *)toolbarRect
+             forBounds:(CGRect)bounds
 {
-    const CGRect navbar = CGRectMake(CGRectGetMinX(bounds), CGRectGetMinY(bounds), CGRectGetWidth(bounds), _navigationBar.frame.size.height);
-    const CGRect toolbar = CGRectMake(CGRectGetMinX(bounds), CGRectGetMaxY(bounds)-_toolbar.frame.size.height, CGRectGetWidth(bounds), _toolbar.frame.size.height);
-    CGRect content = bounds;
+    const CGRect navbar = CGRectMake(CGRectGetMinX(bounds),
+                                     CGRectGetMinY(bounds),
+                                     CGRectGetWidth(bounds),
+                                     _navigationBar.frame.size.height);
+    const CGRect toolbar = CGRectMake(CGRectGetMinX(bounds),
+                                      CGRectGetMaxY(bounds)-_toolbar.frame.size.height,
+                                      CGRectGetWidth(bounds),
+                                      _toolbar.frame.size.height);
+    CGRect content = bounds; // 内容, 原本是和 View 一样的.
     
     if (!self.navigationBarHidden) {
         content.origin.y += CGRectGetHeight(navbar);
         content.size.height -= CGRectGetHeight(navbar);
-    }
+    } // 因为 NavBar 不隐藏, 内容缩减.
 
     if (!self.toolbarHidden) {
         content.size.height -= CGRectGetHeight(toolbar);
-    }
+    } // 因为 ToolBar 不隐藏, 内容缩减.
     
     if (navbarRect)  *navbarRect = navbar;
     if (toolbarRect) *toolbarRect = toolbar;
     if (contentRect) *contentRect = content;
-}
-
-- (void)_updateVisibleViewController:(BOOL)animated
-{
-    _isUpdating = YES;
-    
-    UIViewController *newVisibleViewController = self.topViewController;
-    UIViewController *oldVisibleViewController = _visibleViewController;
-    
-    const BOOL isPushing = (oldVisibleViewController.parentViewController != nil);
-    const BOOL wasToolbarHidden = self.toolbarHidden;
-    const BOOL wasNavbarHidden = self.navigationBarHidden;
-        
-    [oldVisibleViewController beginAppearanceTransition:NO animated:animated];
-    [newVisibleViewController beginAppearanceTransition:YES animated:animated];
-    
-    [self.delegate navigationController:self willShowViewController:newVisibleViewController animated:animated];
-
-    _visibleViewController = newVisibleViewController;
-
-    const CGRect bounds = self.view.bounds;
-
-    CGRect navbarRect;
-    CGRect contentRect;
-    CGRect toolbarRect;
-    [self _getNavbarRect:&navbarRect contentRect:&contentRect toolbarRect:&toolbarRect forBounds:bounds];
-    
-    _toolbar.transform = CGAffineTransformIdentity;
-    _toolbar.frame = toolbarRect;
-
-    _navigationBar.transform = CGAffineTransformIdentity;
-    _navigationBar.frame = navbarRect;
-
-    newVisibleViewController.view.transform = CGAffineTransformIdentity;
-    newVisibleViewController.view.frame = contentRect;
-    
-    const CGAffineTransform inStartTransform = isPushing? CGAffineTransformMakeTranslation(bounds.size.width, 0) : CGAffineTransformMakeTranslation(-bounds.size.width, 0);
-    const CGAffineTransform outEndTransform = isPushing? CGAffineTransformMakeTranslation(-bounds.size.width, 0) : CGAffineTransformMakeTranslation(bounds.size.width, 0);
-
-    CGAffineTransform toolbarEndTransform = CGAffineTransformIdentity;
-    CGAffineTransform navbarEndTransform = CGAffineTransformIdentity;
-    
-    if (wasToolbarHidden && !_toolbarHidden) {
-        _toolbar.transform = inStartTransform;
-        _toolbar.hidden = NO;
-        _toolbar.items = newVisibleViewController.toolbarItems;
-    } else if (!wasToolbarHidden && _toolbarHidden) {
-        toolbarEndTransform = outEndTransform;
-        _toolbar.transform = CGAffineTransformIdentity;
-        _toolbar.hidden = NO;
-    } else {
-        [_toolbar setItems:newVisibleViewController.toolbarItems animated:animated];
-    }
-    
-    if (wasNavbarHidden && !_navigationBarHidden) {
-        _navigationBar.transform = inStartTransform;
-        _navigationBar.hidden = NO;
-    } else if (!wasNavbarHidden && _navigationBarHidden) {
-        navbarEndTransform = outEndTransform;
-        _navigationBar.transform = CGAffineTransformIdentity;
-        _navigationBar.hidden = NO;
-    }
-
-    newVisibleViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.view insertSubview:newVisibleViewController.view atIndex:0];
-    newVisibleViewController.view.transform = inStartTransform;    
-        
-    [UIView animateWithDuration:animated? 0.33 : 0
-                     animations:^{
-                         oldVisibleViewController.view.transform = outEndTransform;
-                         newVisibleViewController.view.transform = CGAffineTransformIdentity;
-                         _toolbar.transform = toolbarEndTransform;
-                         _navigationBar.transform = navbarEndTransform;
-                     }
-                     completion:^(BOOL finished) {
-                         [oldVisibleViewController.view removeFromSuperview];
-                         
-                         _toolbar.hidden = _toolbarHidden;
-                         _navigationBar.hidden = _navigationBarHidden;
-
-                         [oldVisibleViewController endAppearanceTransition];
-                         [newVisibleViewController endAppearanceTransition];
-                         
-                         // not sure if this is safe or not, really, but the real one must do something along these lines?
-                         // it could perform this check in a variety of ways, though, with subtly different results so I'm
-                         // not sure what's best. this seemed generally safest.
-                         if (oldVisibleViewController && isPushing) {
-                             [oldVisibleViewController didMoveToParentViewController:nil];
-                         } else {
-                             [newVisibleViewController didMoveToParentViewController:self];
-                         }
-                         
-                         [self.delegate navigationController:self didShowViewController:newVisibleViewController animated:animated];
-                     }];
-
-    _isUpdating = NO;
 }
 
 - (void)viewWillLayoutSubviews
@@ -220,6 +107,7 @@
     }
 }
 
+// 这里, copy 一份资源出去, 不让外界有机会破坏内部的值.
 - (NSArray *)viewControllers
 {
     return [self.childViewControllers copy];
@@ -227,8 +115,6 @@
 
 - (void)setViewControllers:(NSArray *)newViewControllers animated:(BOOL)animated
 {
-    assert([newViewControllers count] >= 1);
-
     if (![newViewControllers isEqualToArray:self.viewControllers]) {
         // find the controllers we used to have that we won't be using anymore
         NSMutableArray *removeViewControllers = [self.viewControllers mutableCopy];
@@ -261,12 +147,10 @@
     return [self.childViewControllers lastObject];
 }
 
+// 核心, 就是 push, pop 的实现思路.
+
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    assert(![viewController isKindOfClass:[UITabBarController class]]);
-    assert(![self.viewControllers containsObject:viewController]);
-    assert(viewController.parentViewController == nil || viewController.parentViewController == self);
-
     // this logic matches with the cleverness in setViewControllers which the real UIKit probably doens't do
     // and probably isn't necessary :)
     if (viewController.parentViewController != self) {
@@ -286,6 +170,7 @@
         [self _setNeedsDeferredUpdate];
     }
 
+    // 这里, 主动调用了 bar 的更新方法.
     [_navigationBar pushNavigationItem:viewController.navigationItem animated:animated];
 }
 
@@ -317,6 +202,7 @@
     // but that method is also called when we do an animated pop like this, so this works around the cycle.
     // I don't love it.
     _navigationBar.delegate = nil;
+    // 主动调用 bar 的更新方法.
     [_navigationBar popNavigationItemAnimated:animated];
     _navigationBar.delegate = self;
     
@@ -327,6 +213,107 @@
     }
 
 	return formerTopViewController;
+}
+
+// 核心方法, 维护 View 的逻辑的合理性.
+- (void)_updateVisibleViewController:(BOOL)animated
+{
+    _isUpdating = YES;
+    
+    UIViewController *newVisibleViewController = self.topViewController;
+    UIViewController *oldVisibleViewController = _visibleViewController;
+    
+    const BOOL isPushing = (oldVisibleViewController.parentViewController != nil);
+    const BOOL wasToolbarHidden = self.toolbarHidden;
+    const BOOL wasNavbarHidden = self.navigationBarHidden;
+        
+    // 参与变化的两个 VC, 进行开始方法的触发.
+    [oldVisibleViewController beginAppearanceTransition:NO animated:animated];
+    [newVisibleViewController beginAppearanceTransition:YES animated:animated];
+    
+    [self.delegate navigationController:self willShowViewController:newVisibleViewController animated:animated];
+
+    _visibleViewController = newVisibleViewController;
+
+    const CGRect bounds = self.view.bounds;
+
+    CGRect navbarRect;
+    CGRect contentRect;
+    CGRect toolbarRect;
+    [self _getNavbarRect:&navbarRect contentRect:&contentRect toolbarRect:&toolbarRect forBounds:bounds];
+    
+    _toolbar.transform = CGAffineTransformIdentity;
+    _toolbar.frame = toolbarRect;
+
+    _navigationBar.transform = CGAffineTransformIdentity;
+    _navigationBar.frame = navbarRect;
+
+    newVisibleViewController.view.transform = CGAffineTransformIdentity;
+    newVisibleViewController.view.frame = contentRect;
+    
+    const CGAffineTransform inStartTransform = isPushing? CGAffineTransformMakeTranslation(bounds.size.width, 0) : CGAffineTransformMakeTranslation(-bounds.size.width, 0);
+    const CGAffineTransform outEndTransform = isPushing? CGAffineTransformMakeTranslation(-bounds.size.width, 0) : CGAffineTransformMakeTranslation(bounds.size.width, 0);
+
+    CGAffineTransform toolbarEndTransform = CGAffineTransformIdentity;
+    CGAffineTransform navbarEndTransform = CGAffineTransformIdentity;
+    
+    // 修改 ToolBar 的数据.
+    if (wasToolbarHidden && !_toolbarHidden) {
+        _toolbar.transform = inStartTransform;
+        _toolbar.hidden = NO;
+        _toolbar.items = newVisibleViewController.toolbarItems;
+    } else if (!wasToolbarHidden && _toolbarHidden) {
+        toolbarEndTransform = outEndTransform;
+        _toolbar.transform = CGAffineTransformIdentity;
+        _toolbar.hidden = NO;
+    } else {
+        [_toolbar setItems:newVisibleViewController.toolbarItems animated:animated];
+    }
+    
+    if (wasNavbarHidden && !_navigationBarHidden) {
+        _navigationBar.transform = inStartTransform;
+        _navigationBar.hidden = NO;
+    } else if (!wasNavbarHidden && _navigationBarHidden) {
+        navbarEndTransform = outEndTransform;
+        _navigationBar.transform = CGAffineTransformIdentity;
+        _navigationBar.hidden = NO;
+    }
+
+    newVisibleViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.view insertSubview:newVisibleViewController.view atIndex:0];
+    newVisibleViewController.view.transform = inStartTransform;
+        
+    // 做动画, Nav 的变化效果.
+    [UIView animateWithDuration:animated? 0.33 : 0
+                     animations:^{
+                         oldVisibleViewController.view.transform = outEndTransform;
+                         newVisibleViewController.view.transform = CGAffineTransformIdentity;
+                         _toolbar.transform = toolbarEndTransform;
+                         _navigationBar.transform = navbarEndTransform;
+                     }
+                     completion:^(BOOL finished) {
+                         [oldVisibleViewController.view removeFromSuperview];
+                         
+                         _toolbar.hidden = _toolbarHidden;
+                         _navigationBar.hidden = _navigationBarHidden;
+
+                    // 参与变化的两个 VC, 进行结束方法的触发.
+                         [oldVisibleViewController endAppearanceTransition];
+                         [newVisibleViewController endAppearanceTransition];
+                         
+                         // not sure if this is safe or not, really, but the real one must do something along these lines?
+                         // it could perform this check in a variety of ways, though, with subtly different results so I'm
+                         // not sure what's best. this seemed generally safest.
+                         if (oldVisibleViewController && isPushing) {
+                             [oldVisibleViewController didMoveToParentViewController:nil];
+                         } else {
+                             [newVisibleViewController didMoveToParentViewController:self];
+                         }
+                         
+                         [self.delegate navigationController:self didShowViewController:newVisibleViewController animated:animated];
+                     }];
+
+    _isUpdating = NO;
 }
 
 - (NSArray *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated
@@ -344,6 +331,7 @@
         }
     }
     
+    // 返回所有弹出的对象.
     return popped;
 }
 
@@ -360,6 +348,7 @@
     return NO;
 }
 
+// 这里, 和 NavBar 的思路是一样的.
 - (void)setToolbarHidden:(BOOL)hide animated:(BOOL)animated
 {
     if (hide != _toolbarHidden) {
@@ -412,31 +401,32 @@
 
 - (void)setNavigationBarHidden:(BOOL)hide animated:(BOOL)animated;
 {
-    if (hide != _navigationBarHidden) {
-        _navigationBarHidden = hide;
+    if (hide == _navigationBarHidden) { return; }
+    _navigationBarHidden = hide;
+    
+    if (animated && !_isUpdating) {
+        CGAffineTransform startTransform = hide? CGAffineTransformIdentity : CGAffineTransformMakeTranslation(0, -_navigationBar.frame.size.height);
+        CGAffineTransform endTransform = hide? CGAffineTransformMakeTranslation(0, -_navigationBar.frame.size.height) : CGAffineTransformIdentity;
         
-        if (animated && !_isUpdating) {
-            CGAffineTransform startTransform = hide? CGAffineTransformIdentity : CGAffineTransformMakeTranslation(0, -_navigationBar.frame.size.height);
-            CGAffineTransform endTransform = hide? CGAffineTransformMakeTranslation(0, -_navigationBar.frame.size.height) : CGAffineTransformIdentity;
-            
-            CGRect contentRect;
-            [self _getNavbarRect:NULL contentRect:&contentRect toolbarRect:NULL forBounds:self.view.bounds];
-            
-            _navigationBar.transform = startTransform;
-            _navigationBar.hidden = NO;
-            
-            [UIView animateWithDuration:0.15
-                             animations:^{
-                                 _visibleViewController.view.frame = contentRect;
-                                 _navigationBar.transform = endTransform;
-                             }
-                             completion:^(BOOL finished) {
-                                 _navigationBar.transform = CGAffineTransformIdentity;
-                                 _navigationBar.hidden = _navigationBarHidden;
-                             }];
-        } else {
-            _navigationBar.hidden = _navigationBarHidden;
-        }
+        // 这里, 因为 Bar 的可见性变化了, 所以 content 的 Frame 也要发生变化.
+        CGRect contentRect;
+        [self _getNavbarRect:NULL contentRect:&contentRect toolbarRect:NULL forBounds:self.view.bounds];
+        
+        _navigationBar.transform = startTransform;
+        _navigationBar.hidden = NO;
+        
+        // 使用一个简单的动画, 进行 Bar 的隐藏或者显示.
+        [UIView animateWithDuration:0.15
+                         animations:^{
+                             _visibleViewController.view.frame = contentRect;
+                             _navigationBar.transform = endTransform;
+                         }
+                         completion:^(BOOL finished) {
+                             _navigationBar.transform = CGAffineTransformIdentity;
+                             _navigationBar.hidden = _navigationBarHidden;
+                         }];
+    } else {
+        _navigationBar.hidden = _navigationBarHidden;
     }
 }
 
