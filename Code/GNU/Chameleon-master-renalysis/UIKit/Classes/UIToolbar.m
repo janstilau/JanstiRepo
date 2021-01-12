@@ -10,8 +10,8 @@ static const CGFloat kBarHeight = 28;
 
 - (id)initWithBarButtonItem:(UIBarButtonItem *)anItem;
 
-@property (nonatomic, readonly) UIView *view;
-@property (nonatomic, readonly) UIBarButtonItem *item;
+@property (nonatomic, readonly) UIView *view; // View 项
+@property (nonatomic, readonly) UIBarButtonItem *item; // 数据项.
 @property (nonatomic, readonly) CGFloat width;
 
 @end
@@ -27,7 +27,8 @@ static const CGFloat kBarHeight = 28;
         
         if (!_item->_isSystemItem && _item.customView) {
             _view = _item.customView;
-        } else if (!_item->_isSystemItem || (_item->_systemItem != UIBarButtonSystemItemFixedSpace && _item->_systemItem != UIBarButtonSystemItemFlexibleSpace)) {
+        } else if (!_item->_isSystemItem ||
+                   (_item->_systemItem != UIBarButtonSystemItemFixedSpace && _item->_systemItem != UIBarButtonSystemItemFlexibleSpace)) {
             _view = [[UIToolbarButton alloc] initWithBarButtonItem:_item];
         }
     }
@@ -57,6 +58,8 @@ static const CGFloat kBarHeight = 28;
 
 @implementation UIToolbar {
     NSMutableArray *_toolbarItems;
+    NSMutableArray *_itemViews;
+    NSMutableArray *_items;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -82,7 +85,7 @@ static const CGFloat kBarHeight = 28;
     }
 }
 
-/*
+// 最终, 无非就是, 生成一顿 Button, 然后添加到 Bar 上.
 - (void)_updateItemViews
 {
     [_itemViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -109,7 +112,7 @@ static const CGFloat kBarHeight = 28;
             } else if (item->_isSystemItem && item->_systemItem == UIBarButtonSystemItemFixedSpace) {
                 left += item.width;
             } else {
-                view = [[[UIToolbarButton alloc] initWithBarButtonItem:item] autorelease];
+                view = [[UIToolbarButton alloc] initWithBarButtonItem:item] ;
             }
         }
         
@@ -126,7 +129,6 @@ static const CGFloat kBarHeight = 28;
         }
     }
 }
-*/
 
 - (void)layoutSubviews
 {
@@ -232,23 +234,6 @@ static const CGFloat kBarHeight = 28;
     
     [[UIColor blackColor] setFill];
     UIRectFill(CGRectMake(0,0,bounds.size.width,1));
-}
-
-- (NSString *)description
-{
-    NSString *barStyle = @"";
-    switch (self.barStyle) {
-        case UIBarStyleDefault:
-            barStyle = @"Default";
-            break;
-        case UIBarStyleBlack:
-            barStyle = @"Black";
-            break;
-        case UIBarStyleBlackTranslucent:
-            barStyle = @"Black Translucent (Deprecated)";
-            break;
-    }
-    return [NSString stringWithFormat:@"<%@: %p; barStyle = %@; tintColor = %@, isTranslucent = %@>", [self className], self, barStyle, ([self.tintColor description] ?: @"Default"), (self.translucent ? @"YES" : @"NO")];
 }
 
 - (UIImage *)backgroundImageForToolbarPosition:(UIToolbarPosition)topOrBottom barMetrics:(UIBarMetrics)barMetrics

@@ -7,6 +7,9 @@ typedef NS_ENUM(NSInteger, UIToolbarPosition) {
     UIToolbarPositionTop = 2,
 };
 
+// A control that displays one or more buttons along the bottom edge of your interface.
+// 这个东西, 就是放到 Bottom 的.
+
 @interface UIToolbar : UIView
 - (void)setItems:(NSArray *)items animated:(BOOL)animated;
 

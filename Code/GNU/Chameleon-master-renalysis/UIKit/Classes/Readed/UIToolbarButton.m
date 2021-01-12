@@ -4,12 +4,6 @@
 #import "UILabel.h"
 #import "UIFont.h"
 
-// I don't like most of this... the real toolbar button lays things out different than a default button.
-// It also seems to have some padding built into it around the whole thing (even the background)
-// It centers images vertical and horizontal if not bordered, but it appears to be top-aligned if it's bordered
-// If you specify both an image and a title, these buttons stack them vertically which is unlike default UIButton behavior
-// This is all a pain in the ass and wrong, but good enough for now, I guess
-
 static UIEdgeInsets UIToolbarButtonInset = {0,4,0,4};
 
 @implementation UIToolbarButton
@@ -23,16 +17,15 @@ static UIEdgeInsets UIToolbarButtonInset = {0,4,0,4};
         UIImage *image = nil;
         NSString *title = nil;
         
+        // 如果, 是系统的 Item, 那么使用系统提供的默认图.
         if (item->_isSystemItem) {
             switch (item->_systemItem) {
                 case UIBarButtonSystemItemAdd:
                     image = [UIImage _buttonBarSystemItemAdd];
                     break;
-                    
                 case UIBarButtonSystemItemReply:
                     image = [UIImage _buttonBarSystemItemReply];
                     break;
-                    
                 default:
                     break;
             }
@@ -51,6 +44,7 @@ static UIEdgeInsets UIToolbarButtonInset = {0,4,0,4};
             }
         }
         
+        // 这是一个 Button, 最后就是拿到 Item 里面配置的一些信息, 进行信息的设置.
         [self setImage:image forState:UIControlStateNormal];
         [self setTitle:title forState:UIControlStateNormal];
         [self addTarget:item.target action:item.action forControlEvents:UIControlEventTouchUpInside];
