@@ -29,15 +29,13 @@ NSString * const NSBundleDidLoadNotification = @"NSBundleDidLoadNotification";
 NSString * const NSShowNonLocalizedStrings = @"NSShowNonLocalizedStrings";
 NSString * const NSLoadedClasses = @"NSLoadedClasses";
 
-static NSFileManager	*
-manager()
+static NSFileManager *manager()
 {
     static NSFileManager	*mgr = nil;
     
     if (mgr == nil)
     {
         mgr = RETAIN([NSFileManager defaultManager]);
-        [[NSObject leakAt: &mgr] release];
     }
     return mgr;
 }
@@ -149,19 +147,19 @@ typedef enum {
     NSBUNDLE_BUNDLE = 1,
     NSBUNDLE_APPLICATION,
     NSBUNDLE_FRAMEWORK,
-    NSBUNDLE_LIBRARY
+    NSBUNDLE_LIBRARY // 静态库, 应该嵌入到主可执行文件里面了.
 } bundle_t;
 
 /* Class variables - We keep track of all the bundles */
 static NSBundle		*_mainBundle = nil;
 static NSMapTable	*_bundles = NULL;
-static NSMapTable	*_byClass = NULL;
+static NSMapTable	*_byClass = NULL; // key 是 class, value 是 framework, 通过类来查找 Bundle.
 static NSMapTable	*_byIdentifier = NULL;
 
 /* Store the working directory at startup */
 static NSString		*_launchDirectory = nil;
 
-static NSString		*_base_version = "1";
+static NSString		*_base_version = @"1";
 
 /*
  * An empty strings file table for use when localization files can't be found.
@@ -207,11 +205,6 @@ static NSString	*library_combo =
 nil;
 #endif
 
-#ifdef __ANDROID__
-static jobject _jassetManager = NULL;
-static AAssetManager *_assetManager = NULL;
-#endif
-
 
 /*
  * Try to find the absolute path of an executable.
@@ -242,11 +235,7 @@ AbsolutePathOfExecutable(NSString *path, BOOL atLaunch)
         {
             pathlist = [env objectForKey: @"Path"];
         }
-#if defined(_WIN32)
-        patharr = [pathlist componentsSeparatedByString: @";"];
-#else
         patharr = [pathlist componentsSeparatedByString: @":"];
-#endif
         /* Add . if not already in path */
         if ([patharr indexOfObject: @"."] == NSNotFound)
         {
@@ -273,38 +262,6 @@ AbsolutePathOfExecutable(NSString *path, BOOL atLaunch)
                 result = [prefix stringByStandardizingPath];
                 break;
             }
-#if defined(_WIN32)
-            else
-            {
-                NSString	*extension = [path pathExtension];
-                
-                /* Also try adding any executable extensions on windows
-                 */
-                if ([extension length] == 0)
-                {
-                    static NSSet  *executable = nil;
-                    NSString      *wpath;
-                    NSEnumerator  *e;
-                    NSString      *s;
-                    
-                    if (nil == executable)
-                    {
-                        executable = [[NSTask executableExtensions] copy];
-                    }
-                    
-                    e = [executable objectEnumerator];
-                    while (nil != (s = [e nextObject]))
-                    {
-                        wpath = [prefix stringByAppendingPathExtension: s];
-                        if ([mgr isExecutableFileAtPath: wpath])
-                        {
-                            result = [wpath stringByStandardizingPath];
-                            break;
-                        }
-                    }
-                }
-            }
-#endif
         }
         path = result;
     }
@@ -327,24 +284,6 @@ GSPrivateExecutablePath()
         [load_lock lock];
         if (beenHere == NO)
         {
-#if	defined(PROCFS_EXE_LINK)
-            executablePath = [manager()
-                              pathContentOfSymbolicLinkAtPath:
-                              [NSString stringWithUTF8String: PROCFS_EXE_LINK]];
-            
-            /*
-             On some systems, the link is of the form "[device]:inode", which
-             can be used to open the executable, but is useless if you want
-             the path to it. Thus we check that the path is an actual absolute
-             path. (Using '/' here is safe; it isn't the path separator
-             everywhere, but it is on all systems that have PROCFS_EXE_LINK.)
-             */
-            if ([executablePath length] > 0
-                && [executablePath characterAtIndex: 0] != '/')
-            {
-                executablePath = nil;
-            }
-#endif
             if (executablePath == nil || [executablePath length] == 0)
             {
                 executablePath
@@ -363,7 +302,6 @@ GSPrivateExecutablePath()
             beenHere = YES;
         }
         [load_lock unlock];
-        NSCAssert(executablePath != nil, NSInternalInconsistencyException);
     }
     return executablePath;
 }
@@ -455,9 +393,9 @@ addBundlePath(NSMutableArray *inoutList,
     if (nil == contents) { return; }
     if (nil != subdir)
     {
-//        NSString *path = @"tmp/scratch";
-//        NSArray *pathComponents = [path pathComponents];
-//        结果是 tmp, scratch. pathComponents 会按照分隔符, 进行路径分段.
+        //        NSString *path = @"tmp/scratch";
+        //        NSArray *pathComponents = [path pathComponents];
+        //        结果是 tmp, scratch. pathComponents 会按照分隔符, 进行路径分段.
         NSEnumerator      *e = [[subdir pathComponents] objectEnumerator];
         NSString          *subdirComponent;
         
@@ -667,10 +605,7 @@ _find_main_bundle_for_tool(NSString *toolName)
         /* The name of the framework.  */
         NSString *name;
         
-        /* If the bundle for this framework class is already loaded,
-         * simply return it.  The lookup will return an NSNull object
-         * if the framework class has no known bundle.
-         */
+        // 缓存机制, 返回已经注册的 Bundle.
         bundle = (id)NSMapGet(_byClass, frameworkClass);
         if (nil != bundle)
         {
@@ -695,6 +630,7 @@ _find_main_bundle_for_tool(NSString *toolName)
          * really universal way of getting the framework path ... we can
          * locate the framework no matter where it is on disk!
          */
+        // 在这里, 就可以定位到了 Bundle 的路径了.
         bundlePath = GSPrivateSymbolPath(frameworkClass);
         
         if ([bundlePath isEqualToString: GSPrivateExecutablePath()])
@@ -836,6 +772,7 @@ _find_main_bundle_for_tool(NSString *toolName)
          in the framework.  */
         fmClasses = [frameworkClass frameworkClasses];
         
+        // 这里, 将 Bundle 里面的所有的 Class 添加到 Bundle 的 _bundleClasses 数组里面.
         while (*fmClasses != NULL)
         {
             NSValue *value;
@@ -894,7 +831,7 @@ _find_main_bundle_for_tool(NSString *toolName)
     int                   numClasses = 0;
     int                   newNumClasses;
     Class                 *classes = NULL;
-    NSMutableArray        *added = nil;
+    NSMutableArray        *added = [NSMutableArray arrayWithCapacity: 100];
     
     newNumClasses = objc_getClassList(NULL, 0);
     while (numClasses < newNumClasses)
@@ -903,16 +840,13 @@ _find_main_bundle_for_tool(NSString *toolName)
         classes = realloc(classes, sizeof(Class) * numClasses);
         newNumClasses = objc_getClassList(classes, numClasses);
     }
+    
+    // 这里给人的感觉是, 把 classes[i] 当做了 principle class 看待了.
     for (i = 0; i < numClasses; i++)
     {
         NSBundle  *bundle = [self _addFrameworkFromClass: classes[i]];
-        
         if (nil != bundle)
         {
-            if (nil == added)
-            {
-                added = [NSMutableArray arrayWithCapacity: 100];
-            }
             [added addObject: bundle];
         }
     }
@@ -991,29 +925,6 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
 
 
 @implementation NSBundle
-
-+ (void) atExit
-{
-    if ([NSObject shouldCleanUp])
-    {
-        DESTROY(_emptyTable);
-        DESTROY(langAliases);
-        DESTROY(langCanonical);
-        DESTROY(_bundles);
-        DESTROY(_byClass);
-        DESTROY(_byIdentifier);
-        DESTROY(pathCache);
-        DESTROY(pathCacheLock);
-        DESTROY(load_lock);
-        DESTROY(gnustep_target_cpu);
-        DESTROY(gnustep_target_os);
-        DESTROY(gnustep_target_dir);
-        DESTROY(library_combo);
-        DESTROY(_launchDirectory);
-        DESTROY(_gnustep_bundle);
-        DESTROY(_mainBundle);
-    }
-}
 
 + (void) initialize
 {
@@ -1178,27 +1089,17 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
             [d release];
         }
         
-#if 0
-        _loadingBundle = [self mainBundle];
-        handle = objc_open_main_module(stderr);
-        printf("%08x\n", handle);
-#endif
-        [self _addFrameworks];
-#if 0
         
-        objc_close_main_module(handle);
-        _loadingBundle = nil;
-#endif
+        // 前面都是一些全局值的设置. 这里会调用 Frame 的注册工作.
+        // 真正的 Frame, 是加载器完成的, 这里是把 frame 里面的信息抽取出来, 放到 Bundle 的概念模型下.
+        [self _addFrameworks];
         GSPathHandling(mode);
         [pool release];
         [self registerAtExit];
     }
 }
 
-/**
- * Returns an array of all the bundles which do not belong to frameworks.<br />
- * This always contains the main bundle.
- */
+// 在已有值里面, 查找不是 FrameWork 的 bundle 的数据.
 + (NSArray *) allBundles
 {
     NSMutableArray	*array = [NSMutableArray arrayWithCapacity: 2];
@@ -1230,9 +1131,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     return array;
 }
 
-/**
- * Returns an array containing all the known bundles representing frameworks.
- */
+// 在已有值里面, 查找 FrameWork 类型的 bundle.
 + (NSArray *) allFrameworks
 {
     NSMapEnumerator  enumerate;
@@ -1252,6 +1151,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     }
     NSEndMapTableEnumeration(&enumerate);
     [load_lock unlock];
+    
     return array;
 }
 
@@ -1337,49 +1237,6 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
         isNonInstalledTool = YES;
     }
     
-#ifndef __ANDROID__ /* don't check suffix on Android's fake executable path */
-    if (isApplication == YES)
-    {
-        s = [path lastPathComponent];
-        
-        if ([s hasSuffix: @".app"] == NO
-            && [s hasSuffix: @".debug"] == NO
-            && [s hasSuffix: @".profile"] == NO
-            && [s hasSuffix: @".gswa"] == NO    // GNUstep Web
-            && [s hasSuffix: @".woa"] == NO    // GNUstep Web
-            )
-        {
-            NSFileManager    *mgr = manager();
-            BOOL        f;
-            
-            /* Not one of the common extensions, but
-             * might be an app wrapper with another extension...
-             * Look for Info-gnustep.plist or Info.plist in a
-             * Resources subdirectory.
-             */
-            s = [path stringByAppendingPathComponent: @"Resources"];
-            if ([mgr fileExistsAtPath: s isDirectory: &f] == NO || f == NO)
-            {
-                isApplication = NO;
-            }
-            else
-            {
-                NSString    *i;
-                
-                i = [s stringByAppendingPathComponent: @"Info-gnustep.plist"];
-                if ([mgr isReadableFileAtPath: i] == NO)
-                {
-                    i = [s stringByAppendingPathComponent: @"Info.plist"];
-                    if ([mgr isReadableFileAtPath: i] == NO)
-                    {
-                        isApplication = NO;
-                    }
-                }
-            }
-        }
-    }
-#endif /* !__ANDROID__ */
-    
     if (isApplication == NO)
     {
         NSString *maybePath = nil;
@@ -1447,9 +1304,6 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     NSBundle	*bundle;
     NSMapEnumerator enumerate;
     
-    /* This is asked relatively frequently inside gnustep-base itself;
-     * shortcut it.
-     */
     if (aClass == [NSObject class])
     {
         if (nil != _gnustep_bundle)
@@ -1459,15 +1313,16 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     }
     
     [load_lock lock];
-    /* Try lookup ... if not found, make sure that all loaded bundles have
-     * class->bundle map entries set up and check again.
-     */
+   
+    // 首先, 通过 缓存哈希表, 查找一些 Class 对应的 Bundle 对象.
     bundle = (NSBundle *)NSMapGet(_byClass, aClass);
     if ((id)bundle == (id)[NSNull null])
     {
         [load_lock unlock];
         return nil;
     }
+    
+    // 如果缓存里面找不到, 那么这里会有一次重新填充缓存的机会.
     if (nil == bundle)
     {
         enumerate = NSEnumerateMapTable(_bundles);
@@ -1476,8 +1331,8 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
             NSArray           *classes = bundle->_bundleClasses;
             NSUInteger        count = [classes count];
             
-            if (count > 0
-                && 0 == NSMapGet(_byClass, [[classes lastObject] pointerValue]))
+            if (count > 0 &&
+                0 == NSMapGet(_byClass, [[classes lastObject] pointerValue]))
             {
                 while (count-- > 0)
                 {
@@ -1488,6 +1343,8 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
             }
         }
         NSEndMapTableEnumeration(&enumerate);
+        
+        
         bundle = (NSBundle *)NSMapGet(_byClass, aClass);
         if ((id)bundle == (id)[NSNull null])
         {
@@ -1496,6 +1353,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
         }
     }
     
+    // 如果还找不到, 直接通过 GSPrivateSymbolPath 查找一下类定义所在的路径, 然后通过这个路径找到 Bundle.
     if (nil == bundle)
     {
         /* Is it in the main bundle or a library? */
@@ -1914,7 +1772,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     
     if (_codeLoaded == NO)
     {
-        NSString       *object;
+        NSString       *executedFile;
         NSEnumerator   *classEnumerator;
         NSMutableArray *classNames;
         NSValue        *class;
@@ -1922,8 +1780,8 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
         
         /* Get the binary and set up fraework name if it is a framework.
          */
-        object = [self executablePath];
-        if (object == nil || [object length] == 0)
+        executedFile = [self executablePath]; // 首先, 查找可执行文件路径.
+        if (executedFile == nil || [executedFile length] == 0)
         {
             [load_lock unlock];
             return NO;
@@ -1941,9 +1799,8 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
          NSBundle method inside +load (-principalClass). To avoid this we set
          _codeLoaded before loading the bundle. */
         _codeLoaded = YES;
-        // 真正的进行加载 Module 的过程.
-        // 在这个过程中, 会进行 bundle 对应管理的 class 的填充.
-        if (GSPrivateLoadModule(object, stderr, _bundle_load_callback, 0, 0))
+        // _bundle_load_callback 里面, 会做一些填充数据的事情, 所以, 在这之前, 会修改一些全局变量.
+        if (GSPrivateLoadModule(executedFile, stderr, _bundle_load_callback, 0, 0))
         {
             _codeLoaded = NO;
             _loadingBundle = savedLoadingBundle;
@@ -1978,8 +1835,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
         {
             // 这里, 把 Class 和 Bundle 绑定在了一起. 使用了一个外部存储 map.
             NSMapInsert(_byClass, class, self);
-            [classNames addObject:
-             NSStringFromClass((Class)[class pointerValue])];
+            [classNames addObject: NSStringFromClass((Class)[class pointerValue])];
         }
         
         _loadingBundle = savedLoadingBundle;
@@ -2586,6 +2442,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     }
     if (self == _mainBundle)
     {
+        // 如果, 是主 Bundle, 直接找可执行路径
         return GSPrivateExecutablePath();
     }
     if (self->_bundleType == NSBUNDLE_LIBRARY)
@@ -2621,6 +2478,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     {
     }
     NSString *path = _path;
+    // 通过 Info 里面的 executate key 找到可执行文件.
     result = bundle_object_name(path, result);
     return result;
 }
@@ -3098,12 +2956,6 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
                 {
                     [pathCache removeObjectForKey: path];
                 }
-#if defined(_WIN32)
-                else if ('\\' == c)
-                {
-                    [pathCache removeObjectForKey: path];
-                }
-#endif
             }
         }
     }
@@ -3113,99 +2965,6 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     DESTROY(_infoDict);
     DESTROY(_localizations);
 }
-
-#ifdef __ANDROID__
-
-+ (AAssetManager *)assetManager
-{
-    return _assetManager;
-}
-
-+ (void) setJavaAssetManager: (jobject)jassetManager withJNIEnv: (JNIEnv *)env
-{ 
-    /* create global reference to Java asset manager to prevent garbage
-     * collection
-     */
-    _jassetManager = (*env)->NewGlobalRef(env, jassetManager);
-    
-    // get native asset manager (may be shared across multiple threads)
-    _assetManager = AAssetManager_fromJava(env, _jassetManager);
-    
-    // clean main bundle path cache in case it was accessed before
-    [_mainBundle cleanPathCache];
-}
-
-+ (AAsset *) assetForPath: (NSString *)path
-{
-    return [self assetForPath: path withMode: AASSET_MODE_UNKNOWN];
-}
-
-+ (AAsset *) assetForPath: (NSString *)path withMode: (int)mode
-{
-    AAsset *asset = NULL;
-    
-    if (_assetManager && _mainBundle)
-    {
-        NSString *resourcePath = [_mainBundle resourcePath];
-        
-        if ([path hasPrefix: resourcePath]
-            && [path length] > [resourcePath length])
-        {
-            NSString *assetPath;
-            
-            assetPath = [path substringFromIndex: [resourcePath length] + 1];
-            asset = AAssetManager_open(_assetManager,
-                                       [assetPath fileSystemRepresentation], mode);
-        }
-    }
-    
-    return asset;
-}
-
-+ (AAssetDir *) assetDirForPath: (NSString *)path
-{
-    AAssetDir *assetDir = NULL;
-    
-    if (_assetManager && _mainBundle)
-    {
-        NSString *resourcePath = [_mainBundle resourcePath];
-        
-        if ([path hasPrefix: resourcePath])
-        {
-            NSString *assetPath = @"";
-            
-            if ([path length] > [resourcePath length])
-            {
-                assetPath = [path substringFromIndex: [resourcePath length] + 1];
-            }
-            
-            assetDir = AAssetManager_openDir(_assetManager,
-                                             [assetPath fileSystemRepresentation]);
-            
-            if (assetDir)
-            {
-                /* AAssetManager_openDir() always returns an object,
-                 * so we check if the directory exists by ensuring
-                 * it contains a file
-                 */
-                BOOL exists = AAssetDir_getNextFileName(assetDir) != NULL;
-                if (exists)
-                {
-                    AAssetDir_rewind(assetDir);
-                }
-                else
-                {
-                    AAssetDir_close(assetDir);
-                    assetDir = NULL;
-                }
-            }
-        }
-    }
-    
-    return assetDir;
-}
-
-#endif /* __ANDROID__ */
 
 @end
 

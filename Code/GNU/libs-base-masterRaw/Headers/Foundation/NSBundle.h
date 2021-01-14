@@ -9,10 +9,6 @@ extern "C" {
 #import	<Foundation/NSObject.h>
 #import	<Foundation/NSString.h>
 
-#ifdef __ANDROID__
-#include <android/asset_manager_jni.h>
-#endif
-
 @class NSString;
 @class NSArray;
 @class NSDictionary;
@@ -28,13 +24,6 @@ enum {
 };
 #endif
 
-/**
- *  Notification posted when a bundle is loaded.  The notification object is
- *  the [NSBundle] itself.  The notification also contains a <em>userInfo</em>
- *  dictionary, containing the single key '<code>NSLoadedClasses</code>',
- *  mapped to an [NSArray] containing the names of each class and category
- *  loaded (as strings).
- */
 GS_EXPORT NSString* const NSBundleDidLoadNotification;
 
 /**
@@ -54,16 +43,31 @@ GS_EXPORT NSString* const NSShowNonLocalizedStrings;
  */
 GS_EXPORT NSString* const NSLoadedClasses;
 
-/**
+/*
+ This property is set after ensuring that the code containing the definition of the class is dynamically loaded. If the bundle encounters errors in loading or if it can’t find the executable code file in the bundle directory, this property is nil.
+ The principal class typically controls all the other classes in the bundle; it should mediate between those classes and classes external to the bundle. Classes (and categories) are loaded from just one file within the bundle directory. The bundle obtains the name of the code file to load from the dictionary returned from infoDictionary, using “NSExecutable” as the key. The bundle determines its principal class in one of two ways:
+ It first looks in its own information dictionary, which extracts the information encoded in the bundle’s property list (Info.plist). The bundle obtains the principal class from the dictionary using the key NSPrincipalClass. For non-loadable bundles (applications and frameworks), if the principal class is not specified in the property list, this property is nil.
+ If the principal class is not specified in the information dictionary, the bundle identifies the first class loaded as the principal class. When several classes are linked into a dynamically loadable file, the default principal class is the first one listed on the ld command line. In the following example, Reporter would be the principal class:
+ ld -o myBundle -r Reporter.o NotePad.o QueryList.o
+ The order of classes in Xcode’s project browser is the order in which they will be linked. To designate the principal class, control-drag the file containing its implementation to the top of the list.
+ As a side effect of code loading, the receiver posts NSBundleDidLoadNotification after all classes and categories have been loaded; see Notifications for details.
+ The following method obtains a bundle by specifying its path (bundleWithPath:), then loads the bundle with principalClass and uses the principal class object to allocate and initialize an instance of that class:
+ */
+
+/*
  <p>
  NSBundle provides methods for locating and handling application (and tool)
  resources at runtime. Resources includes any time of file that the
- application might need, such as images, nib (gorm or gmodel) files,
+ application might need, such as images, nib files,
  localization files, and any other type of file that an application
  might need to use to function. Resources also include executable
  code, which can be dynamically linked into the application at
  runtime. These files and executable code are commonly put together
  into a directory called a bundle.
+ Bundle 就是一个特殊的文件夹. 主要用来存放资源文件.
+ 如果, 主工程里面有一个 Bundle, 打包的时候, 会到复制到 App 包内. Bundle 里面的文件目录, 会完全保留.
+ 动态库, 也会被当做是一个 Bundle, 动态库里面还会包含二进制文件.
+ 在加载的时候, 这些二进制文件所在的类, 会被记录到 Bundle 对象内. 所以, 可以使用 BundleForClass 这个函数, 来定位 Bundle.
  </p>
  <p>
  NSBundle knows how these bundles are organized and can search for
@@ -73,38 +77,31 @@ GS_EXPORT NSString* const NSLoadedClasses;
  basically a bundle that contains a library archive. The
  organization of a framework is a little difference, but in most
  respects there is no difference between a bundle and a framework.
+ 这里, 其实就是 Bundle 使用固定的搜索策略, 来定位资源.
  </p>
  <p>
  There is one special bundle, called the mainBundle, which is
  basically the application itself. The mainBundle is always loaded
- (of course), but you can still perform other operations on the
+ , but you can still perform other operations on the
  mainBundle, such as searching for files, just as with any other
  bundle.
+ .App 文件, 本身就是一个 Bundle.
  </p>
  */
+
 @interface NSBundle : NSObject
 {
 #if	GS_EXPOSE(NSBundle)
 @public
-    NSString		*_path;
-    NSMutableArray	*_bundleClasses; // 每一个 Bundle 里面, 存储了一下它管理的 Class 类对象.
-    Class			_principalClass;
-    NSDictionary		*_infoDict;
+    NSString		*_path; // Bundle 的物理存放位置
+    NSMutableArray	*_bundleClasses; // 如果这是一个 FrameWork, 那么它的二进制文件在加载的过程中, 会把所有的类的信息, 填充到这个数组内.
+    Class			_principalClass; // 如果有二进制文件被载入, 才会有这个值.
+    NSDictionary		*_infoDict; // InfoPlist 文件, 配置文件.
     NSMutableDictionary	*_localizations;
     unsigned		_bundleType;
     BOOL			_codeLoaded;
     unsigned		_version;
     NSString      	*_frameworkVersion;
-#endif
-#if     GS_NONFRAGILE
-#else
-    /* Pointer to private additional data used to avoid breaking ABI
-     * when we don't have the non-fragile ABI available.
-     * Use this mechanism rather than changing the instance variable
-     * layout (see Source/GSInternal.h for details).
-     */
-@private id _internal GS_UNUSED_IVAR;
-#endif
 }
 
 /** Return an array enumerating all the bundles in the application.  This
@@ -161,10 +158,10 @@ GS_EXPORT NSString* const NSLoadedClasses;
  * not readable, return nil.  If you want the main bundle of an
  * application or a tool, it's better if you use +mainBundle.  */
 + (NSBundle*) bundleWithPath: (NSString*)path;
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST) 
 + (NSBundle*) bundleWithURL: (NSURL*)url;
-#endif
 
+
+// 除了上面几个特殊的 API 外, 整个 Bundle 的 Api 设计, 主要还是为了定位资源文件了.
 /**
  Returns an absolute path for a resource name with the extension
  in the specified bundlePath.  See also
@@ -184,12 +181,10 @@ GS_EXPORT NSString* const NSLoadedClasses;
                   inDirectory: (NSString*)bundlePath
                   withVersion: (int)version;
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST) 
 + (NSURL*) URLForResource: (NSString*)name
             withExtension: (NSString*)extension
              subdirectory: (NSString*)subpath
           inBundleWithURL: (NSURL*)bundleURL;
-#endif
 
 /** <init />
  * Init the bundle for reading resources from path.<br />
@@ -213,16 +208,12 @@ GS_EXPORT NSString* const NSLoadedClasses;
  */
 - (id) initWithPath: (NSString*)path;
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST) 
 - (id) initWithURL: (NSURL*)url;
-#endif
 
 /** Return the path to the bundle - an absolute path.  */
 - (NSString*) bundlePath;
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST) 
 - (NSURL*) bundleURL;
-#endif
 
 /** Returns the class in the bundle with the given name. If no class
  of this name exists in the bundle, then Nil is returned.
@@ -294,7 +285,6 @@ GS_EXPORT NSString* const NSLoadedClasses;
 - (NSString*) pathForResource: (NSString*)name
                        ofType: (NSString*)extension;
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST) 
 - (NSURL*) URLForResource: (NSString*)name
             withExtension: (NSString*)extension;
 - (NSURL*) URLForResource: (NSString*)name
@@ -304,7 +294,6 @@ GS_EXPORT NSString* const NSLoadedClasses;
             withExtension: (NSString*)extension
              subdirectory: (NSString*)subpath
              localization: (NSString*)localizationName;
-#endif
 
 /**
  * <p>Returns the value for the key found in the strings file tableName, or
@@ -322,18 +311,14 @@ GS_EXPORT NSString* const NSLoadedClasses;
 /** Returns the absolute path to the resources directory of the bundle.  */
 - (NSString*) resourcePath;
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST)
 /** Returns the absolute path to the resources directory of the bundle.  */
 - (NSURL *) resourceURL;
-#endif
 
 /** Returns the full path to the plug-in subdirectory of the bundle.  */
 - (NSString *) builtInPlugInsPath;
 
-#if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST) 
 /** Returns the full path to the plug-in subdirectory of the bundle.  */
 - (NSURL *) builtInPlugInsURL;
-#endif
 
 /** Returns the full path to the private frameworks subdirectory of the bundle.  */
 - (NSString *) privateFrameworksPath;
