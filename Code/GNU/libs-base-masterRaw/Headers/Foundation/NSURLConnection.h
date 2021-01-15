@@ -1,27 +1,3 @@
-/* Interface for NSURLConnection for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <frm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-   */ 
-
 #ifndef __NSURLConnection_h_GNUSTEP_BASE_INCLUDE
 #define __NSURLConnection_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -45,9 +21,10 @@ extern "C" {
  */
 @interface NSURLConnection : NSObject
 {
-#if	GS_EXPOSE(NSURLConnection)
-  void *_NSURLConnectionInternal;
-#endif
+    NSMutableURLRequest        *_request;
+    NSURLProtocol            *_protocol;
+    id                _delegate;
+    BOOL                _debug;
 }
 
 /**
@@ -64,7 +41,7 @@ extern "C" {
  * using the -initWithRequest:delegate: method.
  */
 + (NSURLConnection *) connectionWithRequest: (NSURLRequest *)request
-				   delegate: (id)delegate;
+                                   delegate: (id)delegate;
 
 /**
  * Cancel the asynchronous load in progress (if any) for this connection.
@@ -137,7 +114,7 @@ extern "C" {
  *     -connection:didFailWithError: message, but never
  *     both.<br />
  *     Once either of these terminal messages is sent the
- *     delegate will receive no further messages from the 
+ *     delegate will receive no further messages from the
  *     NSURLConnection.
  *   </item>
  * </list>
@@ -161,7 +138,7 @@ extern "C" {
  * been cancelled for the request loading on connection.
  */
 - (void) connection: (NSURLConnection *)connection
-  didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
+didCancelAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 
 /*
  * Called when an NSURLConnection has failed to load successfully.
@@ -181,7 +158,7 @@ extern "C" {
  * -cancelAuthenticationChallenge: to the challenge sender when done.
  */
 - (void) connection: (NSURLConnection *)connection
-  didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
+didReceiveAuthenticationChallenge: (NSURLAuthenticationChallenge *)challenge;
 
 /**
  * Called when content data arrives during a load operations ... this
@@ -204,7 +181,7 @@ extern "C" {
  * If it returns nil, nothing will be stored in the cache.
  */
 - (NSCachedURLResponse *) connection: (NSURLConnection *)connection
-  willCacheResponse: (NSCachedURLResponse *)cachedResponse;
+                   willCacheResponse: (NSCachedURLResponse *)cachedResponse;
 
 /**
  * Informs the delegate that the connection must change the URL of
@@ -221,8 +198,8 @@ extern "C" {
  * due to a response from the server.
  */
 - (NSURLRequest *) connection: (NSURLConnection *)connection
-	      willSendRequest: (NSURLRequest *)request
-	     redirectResponse: (NSURLResponse *)response;
+              willSendRequest: (NSURLRequest *)request
+             redirectResponse: (NSURLResponse *)response;
 @end
 
 /**
@@ -236,8 +213,8 @@ extern "C" {
  * Returns the result of the load or nil if the load failed.
  */
 + (NSData *) sendSynchronousRequest: (NSURLRequest *)request
-		  returningResponse: (NSURLResponse **)response
-			      error: (NSError **)error;
+                  returningResponse: (NSURLResponse **)response
+                              error: (NSError **)error;
 
 @end
 

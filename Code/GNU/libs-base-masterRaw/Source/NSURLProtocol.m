@@ -416,42 +416,6 @@ static NSURLProtocol	*placeholder = nil;
 
 - (void) dealloc
 {
-    if (this != 0)
-    {
-        [self stopLoading];
-        if (this->input != nil)
-        {
-            [this->input setDelegate: nil];
-            [this->output setDelegate: nil];
-            [this->input removeFromRunLoop: [NSRunLoop currentRunLoop]
-                                   forMode: NSDefaultRunLoopMode];
-            [this->output removeFromRunLoop: [NSRunLoop currentRunLoop]
-                                    forMode: NSDefaultRunLoopMode];
-            [this->input close];
-            [this->output close];
-            DESTROY(this->input);
-            DESTROY(this->output);
-            DESTROY(this->in);
-            DESTROY(this->out);
-        }
-        DESTROY(this->cachedResponse);
-        DESTROY(this->request);
-        DESTROY(this->client);
-#if	USE_ZLIB
-        if (this->compressing == YES)
-        {
-            deflateEnd(&this->z);
-        }
-        else if (this->decompressing == YES)
-        {
-            inflateEnd(&this->z);
-        }
-        DESTROY(this->compressed);
-#endif
-        NSZoneFree([self zone], this);
-        _NSURLProtocolInternal = 0;
-    }
-    [super dealloc];
 }
 
 - (id) init
@@ -554,44 +518,12 @@ static NSURLProtocol	*placeholder = nil;
 
 @implementation	NSURLProtocol (Subclassing)
 
-+ (BOOL) canInitWithRequest: (NSURLRequest *)request
-{
-    [self subclassResponsibility: _cmd];
-    return NO;
-}
-
-+ (NSURLRequest *) canonicalRequestForRequest: (NSURLRequest *)request
-{
-    return request;
-}
-
-+ (BOOL) requestIsCacheEquivalent: (NSURLRequest *)a
-                        toRequest: (NSURLRequest *)b
-{
-    a = [self canonicalRequestForRequest: a];
-    b = [self canonicalRequestForRequest: b];
-    return [a isEqual: b];
-}
-
-- (void) startLoading
-{
-    [self subclassResponsibility: _cmd];
-}
-
-- (void) stopLoading
-{
-    [self subclassResponsibility: _cmd];
-}
-
 @end
 
 
 
-
-
-
 @implementation _NSHTTPURLProtocol
-
+// HTTP Protocol 的实现方式, 很复杂. 有着完整的 socket 解析的流程.
 // 只能是 Http 开头的, 才可以.
 + (BOOL) canInitWithRequest: (NSURLRequest*)request
 {
@@ -1822,6 +1754,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
 
 @end
 
+// 以 file 为 schema 的请求, 就是读取相应位置的文件内容然后返回就可以了.
 @implementation _NSFileURLProtocol
 
 + (BOOL) canInitWithRequest: (NSURLRequest*)request
@@ -1836,12 +1769,11 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
 
 - (void) startLoading
 {
-    // check for GET/PUT/DELETE etc so that we can also write to a file
     NSData	*data;
     NSURLResponse	*r;
     
-    data = [NSData dataWithContentsOfFile: [[this->request URL] path]
-            /* options: error: - don't use that because it is based on self */];
+    data = [NSData dataWithContentsOfFile: [[this->request URL] path]];
+    // 如果, 读不到文件内容, 失败
     if (data == nil)
     {
         [this->client URLProtocol: self didFailWithError:
@@ -1852,9 +1784,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
            nil]]];
         return;
     }
-    
-    /* FIXME ... maybe should infer MIME type and encoding from extension or BOM
-     */
+    // 否则模拟网络请求, response, data, end.
     r = [[NSURLResponse alloc] initWithURL: [this->request URL]
                                   MIMEType: @"text/html"
                      expectedContentLength: [data length]
@@ -1873,9 +1803,14 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
 }
 
 @end
-
+/*
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAADqCAIAAABcAgvBAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAP+lSURBVHherP0HgJRF8vgPTw47m5ecBEFRMGHOHqYznHp66pmzqJjzeZ6enuHM2TNgODNmPTFnRcWEICiC5Li7bJ7dyeH9VNUzD8Oi3n1//7cYnu2urq6urq6qrn5m5hlvQcGr4PF4crmc3++nXCwWDVNeXrdgQLUcQ9muPp8PJPypaiv4ItV8Pk8ThUAgYK1UtYvXChAry1+QwYAqV/oaH5qsx7o0QKFQzOcLVBnOaIzMCiaMVZUcCfPWZEjjL9yVYbmE/LVBhFrplVhQJQIBt+zS2BVVu3hwcDZKRbpK86iEAQoQGL0BeDg4FWVosgHuiAAFawJpDMuBVvhQKGcFlHMwoLpu93IwVsaHso1oTUB59xJnrlLwehFbmjA/WyNF9hbAhV4EqhbUJWVbXqNxtWHKVHAxDuh6eROJRDQaNQxcudLd6/W7enMl0aLoE6TxV0pGdMpWBayssgmGq44miw6xcQCUq8C6mF+BgsrnZbqQOtYpGBWRqknsYn6Ro8nkVEpyl+lLwOVsUOKZd/taAWDZWPhQKITKQJYRC1AoaUEwVK2JC57p99NkYgsr8JQxAjV6kceQ0FgTSBVMmowA/Nq2K4T8d6cjnUvT4QqxiadAwS27IOZCL5fMysaHqxWstSQPnKFxyiBRlHWhrHORGTEvYadAE8QUlNglc6asJGvGtSZrLQeaXOVTtY52pUko1qkaGFsK5TIYpQFVQzp1BevlMiRQ2qrRoi9BltMAphCrIqetFEibi8sfVvBT52eUtaYJjSlTmTgDuWAcstlsMBi0UVRbMhBSUC11FFBhhB6MOzQFra7xZ8MARuBCoZDjqmqRJritbXi/CjDkqgwpEKu8zNbrYZ5lU7XxTOmwtj6/DeU064prGLv+GmWZZFK21dIWB6gC4K2dlxXyedOFNHHFjV16Vf0aO7ArXCELBNCXo1zXD7lCAxgHA2sC3CY0Y70MqY3/B9ApOGAj2uSoYi5UbfnhbwVrMkoT1fCAOzoYQ4IBKAvHkuSAlbli2eX4coA53osM5RK6QxhnoBzpEtvV5QwBGKoUuLoMjUC4KN5FUrWyC27rbwMztb42CvLQz8q/yBPllfBr8Qdp+F76KV/lcrwp2MpSKs3UroZ3wbq7YDRGZgVbu/8Ka/NhE/OyBXcmUvFUBh/w5oo5XyFf8ATRQMGb9XqC/lzO4/dJbERi+krIWSNcmayiLN03DIk0IpbiZY3VWwwBCwpEtiweUC4PrUohLGwUrcLPiGwI7AD2fpFdWp0pUSwWzNb57/SAQG2ogMNKXzFrXAIBCvg...
+ />
+*/
+// data 这种协议, 就是为了解析上面的数据的.
 @implementation _NSDataURLProtocol
 
+// 以 data 作为 schema. 和以 http 作为 schema 没有任何的区别. 各个浏览器, 包括 qt 都支持这种解析, 所以这是一个行业标椎.
 + (BOOL) canInitWithRequest: (NSURLRequest*)request
 {
     return [[[request URL] scheme] isEqualToString: @"data"];
@@ -1886,6 +1821,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
     return request;
 }
 
+// Data 这种 schema 就是根据 path 去 loading data, 然后模拟 response, 回传 data.
 - (void) startLoading
 {
     NSURLResponse *r;
@@ -1893,7 +1829,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
     NSString      *encoding = @"US-ASCII";
     NSData        *data;
     NSString      *spec = [[this->request URL] resourceSpecifier];
-    NSRange       comma = [spec rangeOfString:@","];
+    NSRange       comma = [spec rangeOfString:@","]; // data 这种协议, 标准就是, 逗号后面是数据.
     NSEnumerator  *types;
     NSString      *type;
     BOOL          base64 = NO;
@@ -1913,6 +1849,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
         [this->client URLProtocol: self didFailWithError: error];
         return;
     }
+    // types 就是 [data:image/png , base64] 这两项组成的数组
     types = [[[spec substringToIndex: comma.location]
               componentsSeparatedByString: @";"] objectEnumerator];
     while (nil != (type = [types nextObject]))
@@ -1930,6 +1867,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
             mime = type;
         }
     }
+    // 上面, 可以确定, 后面数据的格式.
     spec = [spec substringFromIndex: comma.location + 1];
     if (YES == base64)
     {
@@ -1941,6 +1879,8 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
         data = [[spec stringByReplacingPercentEscapesUsingEncoding:
                  NSUTF8StringEncoding] dataUsingEncoding: NSUTF8StringEncoding];
     }
+    
+    // 然后就是读取数据了.
     r = [[NSURLResponse alloc] initWithURL: [this->request URL]
                                   MIMEType: mime
                      expectedContentLength: [data length]
@@ -1973,6 +1913,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
     return request;
 }
 
+// 对于这种, 可以直接完成的请求, 直接在 start loading 里面做完所有的事情.
 - (void) startLoading
 {
     NSURLResponse	*r;
@@ -1991,6 +1932,7 @@ forAuthenticationChallenge: (NSURLAuthenticationChallenge*)challenge
     RELEASE(r);
 }
 
+// StopLoading, 不是自己主动调用的, 而是使用 protocol 的对象, 在需要的时候停止网络请求才会调用的.
 - (void) stopLoading
 {
     return;
