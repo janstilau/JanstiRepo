@@ -1,27 +1,3 @@
-/* Interface for NSURLRequest for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <frm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-   */ 
-
 #ifndef __NSURLRequest_h_GNUSTEP_BASE_INCLUDE
 #define __NSURLRequest_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -43,14 +19,14 @@ extern "C" {
 
 enum {
     NSURLRequestUseProtocolCachePolicy = 0,
-
+    
     NSURLRequestReloadIgnoringLocalCacheData = 1,
     NSURLRequestReloadIgnoringLocalAndRemoteCacheData = 4,
     NSURLRequestReloadIgnoringCacheData = NSURLRequestReloadIgnoringLocalCacheData,
-
+    
     NSURLRequestReturnCacheDataElseLoad = 2,
     NSURLRequestReturnCacheDataDontLoad = 3,
-
+    
     NSURLRequestReloadRevalidatingCacheData = 5
 };
 /**
@@ -82,16 +58,25 @@ enum {
 typedef NSUInteger NSURLRequestCachePolicy;
 
 
-/**
+/*
  * This class encapsulates information about a request to load a
  * URL, how to cache the results, and when to deal with a slow/hung
  * load process by timing out.
  */
 @interface NSURLRequest : NSObject <NSCoding, NSCopying, NSMutableCopying>
 {
-#if	GS_EXPOSE(NSURLRequest)
-  void *_NSURLRequestInternal;
-#endif
+@public:
+    NSData            *body;
+    NSInputStream            *bodyStream;
+    NSString            *method;
+    NSMutableDictionary        *headers;
+    BOOL                shouldHandleCookies;
+    BOOL                          debug;
+    NSURL                *URL;
+    NSURL                *mainDocumentURL;
+    NSURLRequestCachePolicy    cachePolicy;
+    NSTimeInterval        timeoutInterval;
+    NSMutableDictionary        *properties;
 }
 
 /*
@@ -106,7 +91,7 @@ typedef NSUInteger NSURLRequestCachePolicy;
  * cachePolicy, and timeoutInterval.
  */
 + (id) requestWithURL: (NSURL *)URL
-	  cachePolicy: (NSURLRequestCachePolicy)cachePolicy
+          cachePolicy: (NSURLRequestCachePolicy)cachePolicy
       timeoutInterval: (NSTimeInterval)timeoutInterval;
 
 /**
