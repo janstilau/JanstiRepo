@@ -1,27 +1,3 @@
-/** Implementation for GSSocketStream for GNUStep
- Copyright (C) 2006-2008 Free Software Foundation, Inc.
- 
- Written by:  Derek Zhou <derekzhou@gmail.com>
- Written by:  Richard Frith-Macdonald <rfm@gnu.org>
- Date: 2006
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
- 
- You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free
- Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110 USA.
- 
- */
-
 #import "common.h"
 
 #import "Foundation/NSArray.h"
@@ -248,7 +224,7 @@ GSPrivateSockaddrSetup(NSString *machine, uint16_t port,
     return YES;
 }
 
-/** The GSStreamHandler abstract class defines the methods used to
+/* The GSStreamHandler abstract class defines the methods used to
  * implement a handler object for a pair of streams.
  * The idea is that the handler is installed once the connection is
  * open, and a handshake is initiated.  During the handshake process
@@ -275,9 +251,10 @@ GSPrivateSockaddrSetup(NSString *machine, uint16_t port,
 - (GSSocketInputStream*) istream;
 - (GSSocketOutputStream*) ostream;
 
-- (void) bye;           /* Close down the handled session.   */
+- (void) hello;         /* Start up the session handshake.   */ //  建立链接的过程
+- (void) bye;           /* Close down the handled session.   */ // 释放链接的过程.
 - (BOOL) handshake;     /* A handshake/hello is in progress. */
-- (void) hello;         /* Start up the session handshake.   */
+
 - (NSInteger) read: (uint8_t *)buffer maxLength: (NSUInteger)len;
 - (void) stream: (NSStream*)stream handleEvent: (NSStreamEvent)event;
 - (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len;
@@ -294,22 +271,19 @@ GSPrivateSockaddrSetup(NSString *machine, uint16_t port,
 
 + (void) tryInput: (GSSocketInputStream*)i output: (GSSocketOutputStream*)o
 {
-    [self subclassResponsibility: _cmd];
+}
+
+- (void) hello
+{
 }
 
 - (void) bye
 {
-    [self subclassResponsibility: _cmd];
 }
 
 - (BOOL) handshake
 {
     return handshake;
-}
-
-- (void) hello
-{
-    [self subclassResponsibility: _cmd];
 }
 
 - (id) initWithInput: (GSSocketInputStream*)i
@@ -339,12 +313,10 @@ GSPrivateSockaddrSetup(NSString *machine, uint16_t port,
 
 - (void) stream: (NSStream*)stream handleEvent: (NSStreamEvent)event
 {
-    [self subclassResponsibility: _cmd];
 }
 
 - (NSInteger) write: (const uint8_t *)buffer maxLength: (NSUInteger)len
 {
-    [self subclassResponsibility: _cmd];
     return 0;
 }
 
@@ -439,6 +411,8 @@ GSTLSPush(gnutls_transport_ptr_t handle, const void *buffer, size_t len)
     return result;
 }
 
+
+// 这个类, 专门用来处理握手过程
 @implementation GSTLSHandler
 
 static NSArray  *keys = nil;
@@ -460,7 +434,6 @@ static NSArray  *keys = nil;
                 GSTLSServerName,
                 GSTLSVerify,
                 nil];
-        [[NSObject leakAt: &keys] release];
     }
 }
 
@@ -534,7 +507,6 @@ static NSArray  *keys = nil;
 - (void) dealloc
 {
     [self bye];
-    DESTROY(session);
     [super dealloc];
 }
 
@@ -676,9 +648,6 @@ static NSArray  *keys = nil;
 
 - (void) stream: (NSStream*)stream handleEvent: (NSStreamEvent)event
 {
-    NSDebugMLLog(@"NSStream",
-                 @"GSTLSHandler got %@ on %p", [stream stringFromEvent: event], stream);
-    
     if (handshake == YES)
     {
         switch (event)
@@ -703,9 +672,6 @@ static NSArray  *keys = nil;
         }
         if (NO == handshake)
         {
-            NSDebugMLLog(@"NSStream",
-                         @"GSTLSHandler completed on %p", stream);
-            
             /* Make sure that, if ostream gets released as a result of
              * the event we send to istream, it doesn't get deallocated
              * and cause a crash when we try to send to it.
@@ -1508,11 +1474,7 @@ setNonBlocking(SOCKET fd)
         _sibling = nil;
         _closing = NO;
         _passive = NO;
-#if	defined(_WIN32)
-        _loopID = WSA_INVALID_EVENT;
-#else
         _loopID = (void*)(intptr_t)-1;
-#endif
         _sock = INVALID_SOCKET;
         _handler = nil;
         _address.s.sa_family = AF_UNSPEC;
@@ -1685,9 +1647,6 @@ setNonBlocking(SOCKET fd)
 
 - (void) _setLoopID: (void *)ref
 {
-#if	!defined(_WIN32)
-    _sock = (SOCKET)(intptr_t)ref;        // On gnu/linux _sock is _loopID
-#endif
     _loopID = ref;
 }
 
@@ -1753,6 +1712,7 @@ setNonBlocking(SOCKET fd)
     }
 }
 
+// Socket Stream 的 open 过程.
 - (void) open
 {
     // could be opened because of sibling
@@ -1773,6 +1733,7 @@ setNonBlocking(SOCKET fd)
     }
     else
     {
+        // 这里开始, 就是 socket 的链接过程.
         int result;
         
         if ([self _sock] == INVALID_SOCKET)
@@ -1801,7 +1762,8 @@ setNonBlocking(SOCKET fd)
             [GSTLSHandler tryInput: self output: _sibling];
         }
         
-        result = connect([self _sock], &_address.s,
+        result = connect([self _sock],
+                         &_address.s,
                          GSPrivateSockaddrLength(&_address.s));
         if (socketError(result))
         {
@@ -1851,9 +1813,6 @@ setNonBlocking(SOCKET fd)
     }
     
 open_ok:
-#if	defined(_WIN32)
-    WSAEventSelect(_sock, _loopID, FD_ALL_EVENTS);
-#endif
     [super open];
 }
 
@@ -1879,29 +1838,6 @@ open_ok:
         }
     }
     [_handler bye];
-#if	defined(_WIN32)
-    [super close];
-    if (_sibling && [_sibling streamStatus] != NSStreamStatusClosed)
-    {
-        /*
-         * Windows only permits a single event to be associated with a socket
-         * at any time, but the runloop system only allows an event handle to
-         * be added to the loop once, and we have two streams for each socket.
-         * So we use two events, one for each stream, and when one stream is
-         * closed, we must call WSAEventSelect to ensure that the event handle
-         * of the sibling is used to signal events from now on.
-         */
-        WSAEventSelect(_sock, _loopID, FD_ALL_EVENTS);
-        shutdown(_sock, SHUT_RD);
-        WSAEventSelect(_sock, [_sibling _loopID], FD_ALL_EVENTS);
-    }
-    else
-    {
-        closesocket(_sock);
-    }
-    WSACloseEvent(_loopID);
-    _loopID = WSA_INVALID_EVENT;
-#else
     [super close];
     // read shutdown is ignored, because the other side may shutdown first.
     if (!_sibling || [_sibling streamStatus] == NSStreamStatusClosed)
@@ -1909,7 +1845,6 @@ open_ok:
     else
         shutdown((intptr_t)_loopID, SHUT_RD);
     _loopID = (void*)(intptr_t)-1;
-#endif
     _sock = INVALID_SOCKET;
 }
 
@@ -1948,11 +1883,7 @@ open_ok:
     }
     else
     {
-#if	defined(_WIN32)
-        readLen = recv([self _sock], (char*) buffer, (socklen_t) len, 0);
-#else
         readLen = read([self _sock], buffer, len);
-#endif
     }
     if (socketError(readLen))
     {
@@ -1995,6 +1926,7 @@ open_ok:
     return readLen;
 }
 
+    // 没有办法获取到 Socket 的原始数据.
 - (BOOL) getBuffer: (uint8_t **)buffer length: (NSUInteger *)len
 {
     return NO;
@@ -2002,123 +1934,7 @@ open_ok:
 
 - (void) _dispatch
 {
-#if	defined(_WIN32)
-    AUTORELEASE(RETAIN(self));
-    /*
-     * Windows only permits a single event to be associated with a socket
-     * at any time, but the runloop system only allows an event handle to
-     * be added to the loop once, and we have two streams for each socket.
-     * So we use two events, one for each stream, and the _dispatch method
-     * must handle things for both streams.
-     */
-    if ([self streamStatus] == NSStreamStatusClosed)
-    {
-        /*
-         * It is possible the stream is closed yet recieving event because
-         * of not closed sibling
-         */
-        NSAssert([_sibling streamStatus] != NSStreamStatusClosed,
-                 @"Received event for closed stream");
-        [_sibling _dispatch];
-    }
-    else if ([self streamStatus] == NSStreamStatusError)
-    {
-        [self _sendEvent: NSStreamEventErrorOccurred];
-    }
-    else
-    {
-        WSANETWORKEVENTS events;
-        int error = 0;
-        int getReturn = -1;
-        
-        if (WSAEnumNetworkEvents(_sock, _loopID, &events) == SOCKET_ERROR)
-        {
-            error = WSAGetLastError();
-        }
-        // else NSLog(@"EVENTS 0x%x on %p", events.lNetworkEvents, self);
-        
-        if ([self streamStatus] == NSStreamStatusOpening)
-        {
-            [self _unschedule];
-            if (error == 0)
-            {
-                socklen_t len = sizeof(error);
-                
-                getReturn = getsockopt(_sock, SOL_SOCKET, SO_ERROR,
-                                       (char*)&error, (OPTLEN*)&len);
-            }
-            
-            if (getReturn >= 0 && error == 0
-                && (events.lNetworkEvents & FD_CONNECT))
-            { // finish up the opening
-                _passive = YES;
-                [self open];
-                // notify sibling
-                if (_sibling)
-                {
-                    [_sibling open];
-                    [_sibling _sendEvent: NSStreamEventOpenCompleted];
-                }
-                [self _sendEvent: NSStreamEventOpenCompleted];
-            }
-        }
-        
-        if (error != 0)
-        {
-            errno = error;
-            [self _recordError];
-            [_sibling _recordError];
-            [self _sendEvent: NSStreamEventErrorOccurred];
-            [_sibling _sendEvent: NSStreamEventErrorOccurred];
-        }
-        else
-        {
-            if (events.lNetworkEvents & FD_WRITE)
-            {
-                NSAssert([_sibling _isOpened], NSInternalInconsistencyException);
-                /* Clear NSStreamStatusWriting if it was set */
-                [_sibling _setStatus: NSStreamStatusOpen];
-            }
-            
-            /* On winsock a socket is always writable unless it has had
-             * failure/closure or a write blocked and we have not been
-             * signalled again.
-             */
-            while ([_sibling _unhandledData] == NO
-                   && [_sibling hasSpaceAvailable])
-            {
-                [_sibling _sendEvent: NSStreamEventHasSpaceAvailable];
-            }
-            
-            if (events.lNetworkEvents & FD_READ)
-            {
-                [self _setStatus: NSStreamStatusOpen];
-                while ([self hasBytesAvailable]
-                       && [self _unhandledData] == NO)
-                {
-                    [self _sendEvent: NSStreamEventHasBytesAvailable];
-                }
-            }
-            
-            if (events.lNetworkEvents & FD_CLOSE)
-            {
-                [self _setClosing: YES];
-                [_sibling _setClosing: YES];
-                while ([self hasBytesAvailable]
-                       && [self _unhandledData] == NO)
-                {
-                    [self _sendEvent: NSStreamEventHasBytesAvailable];
-                }
-            }
-            if (events.lNetworkEvents == 0)
-            {
-                [self _sendEvent: NSStreamEventHasBytesAvailable];
-            }
-        }
-    }
-#else
     NSStreamEvent myEvent;
-    
     if ([self streamStatus] == NSStreamStatusOpening)
     {
         int error;
@@ -2163,7 +1979,6 @@ open_ok:
         myEvent = NSStreamEventHasBytesAvailable;
     }
     [self _sendEvent: myEvent];
-#endif
 }
 
 #if	defined(_WIN32)
@@ -2204,11 +2019,7 @@ open_ok:
         return 0;
     }
     
-#if	defined(_WIN32)
-    writeLen = send([self _sock], (char*) buffer, (socklen_t) len, 0);
-#else
     writeLen = write([self _sock], buffer, (socklen_t) len);
-#endif
     
     if (socketError(writeLen))
     {
@@ -2313,9 +2124,6 @@ open_ok:
                 [self _recordError];
                 [_sibling _recordError];
             }
-#if	defined(_WIN32)
-            WSAEventSelect(_sock, _loopID, FD_ALL_EVENTS);
-#endif
             if (NSCountMapTable(_loops) > 0)
             {
                 [self _schedule];
@@ -2347,9 +2155,6 @@ open_ok:
     }
     
 open_ok:
-#if	defined(_WIN32)
-    WSAEventSelect(_sock, _loopID, FD_ALL_EVENTS);
-#endif
     [super open];
 }
 

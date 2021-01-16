@@ -1,39 +1,23 @@
 #ifndef	INCLUDED_GSSTREAM_H
 #define	INCLUDED_GSSTREAM_H
 
-/** Implementation for GSStream for GNUStep
-   Copyright (C) 2006 Free Software Foundation, Inc.
-
-   Written by:  Derek Zhou <derekzhou@gmail.com>
-   Written by:  Richard Frith-Macdonald <rfm@gnu.org>
-   Date: 2006
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-
+/*
    NSInputStream and NSOutputStream are clusters rather than concrete classes
    The inherance graph is:
    NSStream 
    |-- GSStream
    |   `--GSSocketStream
    |-- NSInputStream
+        // 提供了对外输入的抽象, 数据在 InputStream 里面, 通过 read:maxLength 输出到 buffer 中去
+        // 提供工厂方法, 针对不同的参数, 返回不同的子类对象.
+        1. read:maxLength: 最主要的方法, 将数据拷贝到 read 的参数 buffer 里面去
+        2. getBuffer:length: 返回 input 中管理的原始数据, 返回值为 NO 就是得不到原始数据, 比如 FileInput
+        3. hasBytesAvailable 返回是否还有数据未读
    |   `--GSInputStream
-   |      |-- GSDataInputStream
-   |      |-- GSFileInputStream
+   |      |-- GSDataInputStream // 内存提前准备好 Data, 然后 InpuStream 管理偏移量.
+   |      |-- GSFileInputStream // InputStream 管理文件的读取, 然后输出到 Buffer 中去
    |      |-- GSPipeInputStream (mswindows only)
-   |      `-- GSSocketInputStream
+   |      `-- GSSocketInputStream //
    |          |-- GSInetInputStream
    |          |-- GSLocalInputStream
    |          `-- GSInet6InputStream
@@ -199,7 +183,7 @@ IVARS
 @private
   uint8_t	*_buffer;
   unsigned	_capacity;
-  unsigned long _pointer;
+  unsigned long _pointer; // 这个应该叫做 offset.
 }
 @end
 
