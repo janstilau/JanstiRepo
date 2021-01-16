@@ -552,23 +552,10 @@ static NSURLProtocol	*placeholder = nil;
     }
 }
 
-- (void) dealloc
-{
-    [_parser release];			// received headers
-    [_body release];			// for sending the body
-    [_response release];
-    [_credential release];
-    [super dealloc];
-}
-
 // 开始请求, 就是创建 SOCKET 链接.
 - (void) startLoading
 {
     static NSDictionary *methods = nil;
-    
-    _debug = GSDebugSet(@"NSURLProtocol");
-    if (YES == [this->request _debug]) _debug = YES;
-    
     if (methods == nil)
     {
         methods = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -584,7 +571,7 @@ static NSURLProtocol	*placeholder = nil;
     }
     if ([methods objectForKey: [this->request HTTPMethod]] == nil)
     {
-        NSLog(@"Invalid HTTP Method: %@", this->request);
+        // 如果, 是非法的请求, 直接通知外界.
         [self stopLoading];
         [this->client URLProtocol: self didFailWithError:
          [NSError errorWithDomain: @"Invalid HTTP Method"
@@ -609,7 +596,6 @@ static NSURLProtocol	*placeholder = nil;
     {
         NSString		*s = [[this->request URL] absoluteString];
         NSURL		*url;
-        
         if ([s rangeOfString: @"?"].length > 0)
         {
             s = [s stringByReplacingString: @"?" withString: @"/?"];
@@ -625,6 +611,7 @@ static NSURLProtocol	*placeholder = nil;
         url = [NSURL URLWithString: s];
         if (url == nil)
         {
+            // 如果路径确实不对, 直接通知上层报错.
             NSError	*e;
             
             e = [NSError errorWithDomain: @"Invalid redirect request"
@@ -635,15 +622,16 @@ static NSURLProtocol	*placeholder = nil;
                      didFailWithError: e];
         }
         else
-        {
-            NSMutableURLRequest	*request;
-            
-            request = [[this->request mutableCopy] autorelease];
+        {   // 路径修复了, 通知上层 URL Connection 的处理是停止当前 loading, 然后重新开启一个 protocol 进行 loading
+            NSMutableURLRequest    *request = [[this->request mutableCopy] autorelease];
             [request setURL: url];
             [this->client URLProtocol: self
                wasRedirectedToRequest: request
                      redirectResponse: nil];
         }
+        
+        // 如果路径不对, 上层一般会结束任务 StopLoading, 那么 loading 自然是 NO
+        // 如果通知了上层重定位, 上层会做一系列的处理, 如果没有调用 stop, 就是 protocol 还可以处理任务, 才会继续执行.
         if (NO == _isLoading)
         {
             return;	// Loading cancelled
@@ -654,126 +642,117 @@ static NSURLProtocol	*placeholder = nil;
         }
         // Fall through to continue original connect.
     }
+    [self openSocket];
+}
+
+- (void)openSocket
+{
+    NSURL    *url = [this->request URL];
+    NSHost    *host = [NSHost hostWithName: [url host]];
+    int    port = [[url port] intValue];
     
-    if (0 && this->cachedResponse)
+    _parseOffset = 0;
+    
+    if (host == nil)
     {
+        host = [NSHost hostWithAddress: [url host]];    // try dotted notation
     }
-    else
+    if (host == nil)
     {
-        NSURL	*url = [this->request URL];
-        NSHost	*host = [NSHost hostWithName: [url host]];
-        int	port = [[url port] intValue];
+        host = [NSHost hostWithAddress: @"127.0.0.1"];    // final default
+    }
+    if (port == 0)
+    {
+        port = [[url scheme] isEqualToString: @"https"] ? 443 : 80;
+    }
+    // 在这里, 初始化了 接受 socket 和 输出 socket.
+    [NSStream getStreamsToHost: host
+                          port: port
+                   inputStream: &this->input
+                  outputStream: &this->output];
+    // 如果, 开启 socket 失败了, 直接通知上层.
+    // 一般情况下, 是不会失败的. 因为这其实是一个本地的过程, 这个时候 socket 还没有进行连接, 仅仅是填充数据而已.
+    // 下面, 一个根本没有的 url, 报错也是域名有问题, 而不是 socket 创建失败.
+    /*
+     Error Domain=NSURLErrorDomain Code=-1001 "The request timed out." UserInfo={_kCFStreamErrorCodeKey=-2102, NSUnderlyingError=0x60000000c690 {Error Domain=kCFErrorDomainCFNetwork Code=-1001 "(null)" UserInfo={_kCFStreamErrorCodeKey=-2102, _kCFStreamErrorDomainKey=4}}, _NSURLErrorFailingURLSessionTaskErrorKey=LocalDataTask <90A5B3D5-3260-461D-B571-72EC4A35F668>.<1>, _NSURLErrorRelatedURLSessionTaskErrorKey=(
+         "LocalDataTask <90A5B3D5-3260-461D-B571-72EC4A35F668>.<1>"
+     ), NSLocalizedDescription=The request timed out., NSErrorFailingURLStringKey=https://heheda.com/, NSErrorFailingURLKey=https://heheda.com/, _kCFStreamErrorDomainKey=4}
+     */
+    if (!this->input || !this->output)
+    {
+        [self stopLoading];
+        [this->client URLProtocol: self didFailWithError:
+         [NSError errorWithDomain: @"can't connect" code: 0 userInfo:
+          [NSDictionary dictionaryWithObjectsAndKeys:
+           url, @"NSErrorFailingURLKey",
+           host, @"NSErrorFailingURLStringKey",
+           @"can't find host", @"NSLocalizedDescription",
+           nil]]];
+        return;
+    }
+    // 如果是 https, 有特殊的安全配置.
+    //
+    if ([[url scheme] isEqualToString: @"https"] == YES)
+    {
+        static NSArray        *keys;
+        NSUInteger            count;
         
-        _parseOffset = 0;
-        DESTROY(_parser);
-        
-        if (host == nil)
+        [this->input setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
+                          forKey: NSStreamSocketSecurityLevelKey];
+        [this->output setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
+                           forKey: NSStreamSocketSecurityLevelKey];
+        if (nil == keys)
         {
-            host = [NSHost hostWithAddress: [url host]];	// try dotted notation
+            keys = [[NSArray alloc] initWithObjects:
+                    GSTLSCAFile,
+                    GSTLSCertificateFile,
+                    GSTLSCertificateKeyFile,
+                    GSTLSCertificateKeyPassword,
+                    GSTLSDebug,
+                    GSTLSPriority,
+                    GSTLSRemoteHosts,
+                    GSTLSRevokeFile,
+                    GSTLSServerName,
+                    GSTLSVerify,
+                    nil];
         }
-        if (host == nil)
+        count = [keys count];
+        while (count-- > 0)
         {
-            host = [NSHost hostWithAddress: @"127.0.0.1"];	// final default
-        }
-        if (port == 0)
-        {
-            // default if not specified
-            port = [[url scheme] isEqualToString: @"https"] ? 443 : 80;
-        }
-        
-        [NSStream getStreamsToHost: host
-                              port: port
-                       inputStream: &this->input
-                      outputStream: &this->output];
-        if (!this->input || !this->output)
-        {
-            if (_debug == YES)
-            {
-                NSLog(@"%@ did not create streams for %@:%@",
-                      self, host, [url port]);
-            }
-            [self stopLoading];
-            [this->client URLProtocol: self didFailWithError:
-             [NSError errorWithDomain: @"can't connect" code: 0 userInfo:
-              [NSDictionary dictionaryWithObjectsAndKeys:
-               url, @"NSErrorFailingURLKey",
-               host, @"NSErrorFailingURLStringKey",
-               @"can't find host", @"NSLocalizedDescription",
-               nil]]];
-            return;
-        }
-        [this->input retain];
-        [this->output retain];
-        if ([[url scheme] isEqualToString: @"https"] == YES)
-        {
-            static NSArray        *keys;
-            NSUInteger            count;
+            NSString      *key = [keys objectAtIndex: count];
+            NSString      *str = [this->request _propertyForKey: key];
             
-            [this->input setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
-                              forKey: NSStreamSocketSecurityLevelKey];
-            [this->output setProperty: NSStreamSocketSecurityLevelNegotiatedSSL
-                               forKey: NSStreamSocketSecurityLevelKey];
-            if (nil == keys)
+            if (nil != str)
             {
-                keys = [[NSArray alloc] initWithObjects:
-                        GSTLSCAFile,
-                        GSTLSCertificateFile,
-                        GSTLSCertificateKeyFile,
-                        GSTLSCertificateKeyPassword,
-                        GSTLSDebug,
-                        GSTLSPriority,
-                        GSTLSRemoteHosts,
-                        GSTLSRevokeFile,
-                        GSTLSServerName,
-                        GSTLSVerify,
-                        nil];
+                [this->output setProperty: str forKey: key];
             }
-            count = [keys count];
-            while (count-- > 0)
-            {
-                NSString      *key = [keys objectAtIndex: count];
-                NSString      *str = [this->request _propertyForKey: key];
-                
-                if (nil != str)
-                {
-                    [this->output setProperty: str forKey: key];
-                }
-            }
-            /* If there is no value set for the server name, and the host in the
-             * URL is a domain name rather than an address, we use that.
-             */
-            if (nil == [this->output propertyForKey: GSTLSServerName])
-            {
-                NSString  *host = [url host];
-                unichar   c;
-                
-                c = [host length] == 0 ? 0 : [host characterAtIndex: 0];
-                if (c != 0 && c != ':' && !isdigit(c))
-                {
-                    [this->output setProperty: host forKey: GSTLSServerName];
-                }
-            }
-            if (_debug) [this->output setProperty: @"YES" forKey: GSTLSDebug];
         }
-        [this->input setDelegate: self];
-        [this->output setDelegate: self];
-        [this->input scheduleInRunLoop: [NSRunLoop currentRunLoop]
-                               forMode: NSDefaultRunLoopMode];
-        [this->output scheduleInRunLoop: [NSRunLoop currentRunLoop]
-                                forMode: NSDefaultRunLoopMode];
-        [this->input open];
-        [this->output open];
+        /* If there is no value set for the server name, and the host in the
+         * URL is a domain name rather than an address, we use that.
+         */
+        if (nil == [this->output propertyForKey: GSTLSServerName])
+        {
+            NSString  *host = [url host];
+            unichar   c;
+            
+            c = [host length] == 0 ? 0 : [host characterAtIndex: 0];
+        }
     }
+    // socket 设置代理, 添加到 runloop, 然后开始运行.
+    [this->input setDelegate: self];
+    [this->output setDelegate: self];
+    [this->input scheduleInRunLoop: [NSRunLoop currentRunLoop]
+                           forMode: NSDefaultRunLoopMode];
+    [this->output scheduleInRunLoop: [NSRunLoop currentRunLoop]
+                            forMode: NSDefaultRunLoopMode];
+    [this->input open];
+    [this->output open];
 }
 
 - (void) stopLoading
 {
-    if (_debug == YES)
-    {
-        NSLog(@"%@ stopLoading", self);
-    }
     _isLoading = NO;
-    DESTROY(_writeData);
+    // 主要是 Socket 的关闭处理.
     if (this->input != nil)
     {
         [this->input setDelegate: nil];
@@ -784,8 +763,6 @@ static NSURLProtocol	*placeholder = nil;
                                 forMode: NSDefaultRunLoopMode];
         [this->input close];
         [this->output close];
-        DESTROY(this->input);
-        DESTROY(this->output);
     }
 }
 
@@ -794,25 +771,23 @@ static NSURLProtocol	*placeholder = nil;
     [this->client URLProtocol: self didLoadData: d];
 }
 
-- (void) _got: (NSStream*)stream
+// input socket 的接受过程, 其实就是 Response 的解析的过程.
+- (void) inputStreamDidGot: (NSStream*)stream
 {
     unsigned char	buffer[BUFSIZ*64];
     int 		readCount;
     NSError	*e;
-    NSData	*d;
+    NSData	*data;
     BOOL		wasInHeaders = NO;
     
     readCount = [(NSInputStream *)stream read: buffer
                                     maxLength: sizeof(buffer)];
     if (readCount < 0)
     {
+        // 如果, socket 读取发生了问题, 直接报错结束网络交互.
         if ([stream  streamStatus] == NSStreamStatusError)
         {
             e = [stream streamError];
-            if (_debug)
-            {
-                NSLog(@"%@ receive error %@", self, e);
-            }
             [self stopLoading];
             [this->client URLProtocol: self didFailWithError: e];
         }
@@ -825,13 +800,10 @@ static NSURLProtocol	*placeholder = nil;
         [_parser setIsHttp];
     }
     wasInHeaders = [_parser isInHeaders];
-    d = [NSData dataWithBytes: buffer length: readCount];
-    if ([_parser parse: d] == NO && (_complete = [_parser isComplete]) == NO)
+    data = [NSData dataWithBytes: buffer length: readCount];
+    if ([_parser parse: data] == NO && (_complete = [_parser isComplete]) == NO)
     {
-        if (_debug == YES)
-        {
-            NSLog(@"%@ HTTP parse failure - %@", self, _parser);
-        }
+        // 如果, 解析失败了, 直接报错, 停止网络交互
         e = [NSError errorWithDomain: @"parse error"
                                 code: 0
                             userInfo: nil];
@@ -844,8 +816,9 @@ static NSURLProtocol	*placeholder = nil;
         BOOL		isInHeaders = [_parser isInHeaders];
         GSMimeDocument	*document = [_parser mimeDocument];
         unsigned		bodyLength;
-        
         _complete = [_parser isComplete];
+        
+        // 这里, 就是判断出, 头信息接收完了, 可以建立 response 了.
         if (YES == wasInHeaders && NO == isInHeaders)
         {
             GSMimeHeader		*info;
@@ -856,6 +829,7 @@ static NSURLProtocol	*placeholder = nil;
             
             info = [document headerNamed: @"http"];
             
+            // 这里, 就是 http 协议里面, 1.1 之后 Http 可以保持长链接的原因所在. 在这里进行了判断.
             _version = [[info value] floatValue];
             if (_version < 1.1)
             {
@@ -881,16 +855,6 @@ static NSURLProtocol	*placeholder = nil;
             }
             
             s = [info objectForKey: NSHTTPPropertyStatusReasonKey];
-            
-            /* Should use this?
-             NSString		*enc;
-             enc = [[document headerNamed: @"content-transfer-encoding"] value];
-             if (enc == nil)
-             {
-             enc = [[document headerNamed: @"transfer-encoding"] value];
-             }
-             */
-            
             info = [document headerNamed: @"content-type"];
             ct = [document contentType];
             st = [document contentSubtype];
@@ -902,6 +866,7 @@ static NSURLProtocol	*placeholder = nil;
             {
                 ct = nil;
             }
+            // 上面各种值的赋值, 都是确定 Http 相应需要的各种信息.
             _response = [[NSHTTPURLResponse alloc]
                          initWithURL: [this->request URL]
                          MIMEType: ct
@@ -915,19 +880,16 @@ static NSURLProtocol	*placeholder = nil;
             {
                 _complete = YES;	// No body expected.
             }
-            else if (_complete == NO && [d length] == 0)
+            else if (_complete == NO && [data length] == 0)
             {
                 _complete = YES;	// Had EOF ... terminate
             }
             
             if (_statusCode == 401)
             {
-                /* This is an authentication challenge, so we keep reading
-                 * until the challenge is complete, then try to deal with it.
-                 */
             }
             else if (_statusCode >= 300 && _statusCode < 400)
-            {
+            { // 这里进行重定向操作.
                 NSURL	*url;
                 
                 NS_DURING
@@ -950,8 +912,8 @@ static NSURLProtocol	*placeholder = nil;
                 }
                 else
                 {
+                    // 在这里, 抽取出重定向的地址, 交给上层 client 决定. Connection 里面, 是直接结束本次请求, 然后进行重定向的请求.
                     NSMutableURLRequest	*request;
-                    
                     request = [[this->request mutableCopy] autorelease];
                     [request setURL: url];
                     [this->client URLProtocol: self
@@ -962,13 +924,10 @@ static NSURLProtocol	*placeholder = nil;
             else
             {
                 NSURLCacheStoragePolicy policy;
-                
-                /* Get cookies from the response and accept them into
-                 * shared storage if policy permits
-                 */
                 if ([this->request HTTPShouldHandleCookies] == YES
                     && [_response isKindOfClass: [NSHTTPURLResponse class]] == YES)
                 {
+                    // cookie 的存储. 直接存储到了 [NSHTTPCookieStorage sharedHTTPCookieStorage] 中.
                     NSDictionary	*hdrs;
                     NSArray	*cookies;
                     NSURL		*url;
@@ -1005,6 +964,7 @@ static NSURLProtocol	*placeholder = nil;
                         policy = NSURLCacheStorageAllowed;
                     }
                 }
+                // 通知上层, 响应头结束了. 这就是 session 里面 response 代理方法调用的原因.
                 [this->client URLProtocol: self
                        didReceiveResponse: _response
                        cacheStoragePolicy: policy];
@@ -1051,15 +1011,6 @@ static NSURLProtocol	*placeholder = nil;
                                    initWithUser: [url user]
                                    password: [url password]
                                    persistence: NSURLCredentialPersistenceForSession];
-                    if (_credential == nil)
-                    {
-                        /* No credential from the URL, so we try using the
-                         * default credential for the protection space.
-                         */
-                        ASSIGN(_credential,
-                               [[NSURLCredentialStorage sharedCredentialStorage]
-                                defaultCredentialForProtectionSpace: space]);
-                    }
                 }
                 
                 if (_challenge != nil)
@@ -1090,9 +1041,8 @@ static NSURLProtocol	*placeholder = nil;
                               error: nil
                               sender: self];
                 
-                /* Allow the client to control the credential we send
-                 * or whether we actually send at all.
-                 */
+               
+                // 这里, 交给上层处理了 _challenge, 然后拿到上层的处理结果, 继续处理后面的事情.
                 [this->client URLProtocol: self
         didReceiveAuthenticationChallenge: _challenge];
                 
@@ -1211,17 +1161,17 @@ static NSURLProtocol	*placeholder = nil;
              */
             if (_isLoading == YES)
             {
-                d = [_parser data];
-                bodyLength = [d length];
+                data = [_parser data];
+                bodyLength = [data length];
                 if (bodyLength > _parseOffset)
                 {
                     if (_parseOffset > 0)
                     {
-                        d = [d subdataWithRange:
+                        data = [data subdataWithRange:
                              NSMakeRange(_parseOffset, bodyLength - _parseOffset)];
                     }
                     _parseOffset = bodyLength;
-                    [self _didLoad: d];
+                    [self _didLoad: data];
                 }
                 
                 /* Check again in case the client cancelled the load inside
@@ -1236,22 +1186,20 @@ static NSURLProtocol	*placeholder = nil;
         }
         else if (_isLoading == YES && _statusCode != 401)
         {
-            /*
-             * Report partial data if possible.
-             */
+            // 读取数据, 交给上层.
             if ([_parser isInBody])
             {
-                d = [_parser data];
-                bodyLength = [d length];
+                data = [_parser data];
+                bodyLength = [data length];
                 if (bodyLength > _parseOffset)
                 {
                     if (_parseOffset > 0)
                     {
-                        d = [d subdataWithRange:
-                             NSMakeRange(_parseOffset, [d length] - _parseOffset)];
+                        data = [data subdataWithRange:
+                             NSMakeRange(_parseOffset, [data length] - _parseOffset)];
                     }
                     _parseOffset = bodyLength;
-                    [self _didLoad: d];
+                    [self _didLoad: data];
                 }
             }
         }
@@ -1276,33 +1224,19 @@ static NSURLProtocol	*placeholder = nil;
     }
 }
 
+// Socket 的代理方法. 仅仅就这一个而已.
 - (void) stream: (NSStream*) stream handleEvent: (NSStreamEvent) event
 {
-    /* Make sure no action triggered by anything else destroys us prematurely.
-     */
-    IF_NO_GC([[self retain] autorelease];)
-    
-#if 0
-    NSLog(@"stream: %@ handleEvent: %x for: %@ (ip %p, op %p)",
-          stream, event, self, this->input, this->output);
-#endif
-    
     if (stream == this->input)
     {
         switch(event)
         {
             case NSStreamEventHasBytesAvailable:
             case NSStreamEventEndEncountered:
-                [self _got: stream];
+                [self inputStreamDidGot: stream];
                 return;
-                
             case NSStreamEventOpenCompleted:
-                if (_debug == YES)
-                {
-                    NSLog(@"%@ HTTP input stream opened", self);
-                }
                 return;
-                
             default:
                 break;
         }
@@ -1313,12 +1247,12 @@ static NSURLProtocol	*placeholder = nil;
         {
             case NSStreamEventOpenCompleted:
             {
-                NSMutableData	*m;
+                NSMutableData	*outputDataM;
                 NSDictionary	*d;
                 NSEnumerator	*e;
                 NSString		*s;
-                NSURL		*u;
-                int		l;
+                NSURL		*url;
+                int		dataLength;
                 
                 if (_debug == YES)
                 {
@@ -1336,50 +1270,54 @@ static NSURLProtocol	*placeholder = nil;
                              [stream propertyForKey: GSStreamLocalPortKey],
                              [stream propertyForKey: GSStreamRemoteAddressKey],
                              [stream propertyForKey: GSStreamRemotePortKey]];
-                DESTROY(_writeData);
                 _writeOffset = 0;
+                // 如果, 没有 bodryStram, 就是固定长度的 length data, 应该就是内存里面的值.
                 if ([this->request HTTPBodyStream] == nil)
                 {
                     // Not streaming
-                    l = [[this->request HTTPBody] length];
+                    dataLength = [[this->request HTTPBody] length];
                     _version = 1.1;
-                }
-                else
-                {
-                    // Stream and close
-                    l = -1;
+                } else {
+                    dataLength = -1;
                     _version = 1.0;
                     _shouldClose = YES;
                 }
                 
-                m = [[NSMutableData alloc] initWithCapacity: 1024];
+                outputDataM = [[NSMutableData alloc] initWithCapacity: 1024];
                 
                 /* The request line is of the form:
                  * method /path?query HTTP/version
                  * where the query part may be missing
                  */
-                [m appendData: [[this->request HTTPMethod]
+                // 按照 Http 的格式, 输出数据.
+                // 拼接 Method 的信息.
+                [outputDataM appendData: [[this->request HTTPMethod]
                                 dataUsingEncoding: NSASCIIStringEncoding]];
-                [m appendBytes: " " length: 1];
-                u = [this->request URL];
-                s = [[u fullPath] stringByAddingPercentEscapesUsingEncoding:
+                // 固定格式, Method 和 path 之间的空格.
+                [outputDataM appendBytes: " " length: 1];
+                url = [this->request URL];
+                NSString *urlPath = [[url fullPath] stringByAddingPercentEscapesUsingEncoding:
                      NSUTF8StringEncoding];
-                if ([s hasPrefix: @"/"] == NO)
+                if ([urlPath hasPrefix: @"/"] == NO)
                 {
-                    [m appendBytes: "/" length: 1];
+                    [outputDataM appendBytes: "/" length: 1];
                 }
-                [m appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
-                s = [u query];
-                if ([s length] > 0)
+                // 拼接 Path 的信息.
+                [outputDataM appendData: [urlPath dataUsingEncoding: NSASCIIStringEncoding]];
+                NSString *query = [url query];
+                // 拼接 query 的信息.
+                if ([query length] > 0)
                 {
-                    [m appendBytes: "?" length: 1];
-                    [m appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
+                    [outputDataM appendBytes: "?" length: 1];
+                    [outputDataM appendData: [query dataUsingEncoding: NSASCIIStringEncoding]];
                 }
-                s = [NSString stringWithFormat: @" HTTP/%0.1f\r\n", _version];
-                [m appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
+                // 拼接 version 的信息.
+                NSString *version = [NSString stringWithFormat: @" HTTP/%0.1f\r\n", _version];
+                [outputDataM appendData: [version dataUsingEncoding: NSASCIIStringEncoding]];
                 
-                d = [this->request allHTTPHeaderFields];
-                e = [d keyEnumerator];
+                // 拼接 request 的头信息.
+                NSDictionary *headers = [this->request allHTTPHeaderFields];
+                e = [headers keyEnumerator];
                 while ((s = [e nextObject]) != nil)
                 {
                     GSMimeHeader      *h;
@@ -1387,16 +1325,10 @@ static NSURLProtocol	*placeholder = nil;
                     h = [[GSMimeHeader alloc] initWithName: s
                                                      value: [d objectForKey: s]
                                                 parameters: nil];
-                    [m appendData:
+                    [outputDataM appendData:
                      [h rawMimeDataPreservingCase: YES foldedAt: 0]];
-                    RELEASE(h);
                 }
                 
-                /* Use valueForHTTPHeaderField: to check for content-type
-                 * header as that does a case insensitive comparison and
-                 * we therefore won't end up adding a second header by
-                 * accident because the two header names differ in case.
-                 */
                 if ([[this->request HTTPMethod] isEqual: @"POST"]
                     && [this->request valueForHTTPHeaderField:
                         @"Content-Type"] == nil)
@@ -1404,13 +1336,15 @@ static NSURLProtocol	*placeholder = nil;
                     /* On MacOSX, this is automatically added to POST methods */
                     static char   *ct
                     = "Content-Type: application/x-www-form-urlencoded\r\n";
-                    [m appendBytes: ct length: strlen(ct)];
+                    [outputDataM appendBytes: ct length: strlen(ct)];
                 }
+                
+                // 拼接 host 的信息. 补全 Host.
                 if ([this->request valueForHTTPHeaderField: @"Host"] == nil)
                 {
-                    NSString      *s = [u scheme];
-                    id	        p = [u port];
-                    id	        h = [u host];
+                    NSString      *s = [url scheme];
+                    id	        p = [url port];
+                    id	        h = [url host];
                     
                     if (h == nil)
                     {
@@ -1434,35 +1368,40 @@ static NSURLProtocol	*placeholder = nil;
                     {
                         s = [NSString stringWithFormat: @"Host: %@:%@\r\n", h, p];
                     }
-                    [m appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
+                    [outputDataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
                 }
-                if (l >= 0 && [this->request
+                
+                // 拼接 Length 的信息.
+                if (dataLength >= 0 && [this->request
                                valueForHTTPHeaderField: @"Content-Length"] == nil)
                 {
-                    s = [NSString stringWithFormat: @"Content-Length: %d\r\n", l];
-                    [m appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
+                    s = [NSString stringWithFormat: @"Content-Length: %d\r\n", dataLength];
+                    [outputDataM appendData: [s dataUsingEncoding: NSASCIIStringEncoding]];
                 }
-                [m appendBytes: "\r\n" length: 2];	// End of headers
-                _writeData  = m;
-            }			// Fall through to do the write
+                [outputDataM appendBytes: "\r\n" length: 2];	// End of headers
+                
+                // 到这里, 其实是发送 Http 请求的头信息的地方.
+                _writeData  = outputDataM;
+            }			// Fall through to do the write, 构建完之后, 直接进入发送的阶段.
                 
             case NSStreamEventHasSpaceAvailable:
             {
                 int	written;
-                BOOL	sent = NO;
+                BOOL	requestSendDone = NO;
                 
-                // FIXME: should also send out relevant Cookies
+                // writeData 里面, 是 Header 的信息.
+                // 一点点的输出.
                 if (_writeData != nil)
                 {
                     const unsigned char	*bytes = [_writeData bytes];
                     unsigned		len = [_writeData length];
                     
-                    written = [this->output write: bytes + _writeOffset
-                                        maxLength: len - _writeOffset];
+                    // 使用 output socket 输出数据.
+                    written = [this->output write: bytes+_writeOffset maxLength: len-_writeOffset];
                     if (written > 0)
                     {
                         _writeOffset += written;
-                        if (_writeOffset >= len)
+                        if (_writeOffset >= len) // 如果 header 输出完了, 就输出 Body .
                         {
                             DESTROY(_writeData);
                             if (_body == nil)
@@ -1480,7 +1419,7 @@ static NSURLProtocol	*placeholder = nil;
                                     }
                                     else
                                     {
-                                        sent = YES;
+                                        requestSendDone = YES;
                                     }
                                 }
                             }
@@ -1489,19 +1428,15 @@ static NSURLProtocol	*placeholder = nil;
                 }
                 else if (_body != nil)
                 {
+                    // 如果 Body 还有值, 就继续输出.
                     if ([_body hasBytesAvailable])
                     {
                         unsigned char	buffer[BUFSIZ*64];
                         int		len;
-                        
+                        // 先读取 body 信息到 Buffer 里面.
                         len = [_body read: buffer maxLength: sizeof(buffer)];
                         if (len < 0)
-                        {
-                            if (_debug == YES)
-                            {
-                                NSLog(@"%@ error reading from HTTPBody stream %@",
-                                      self, [NSError _last]);
-                            }
+                        {  // 读取失败, 直接报错.
                             [self stopLoading];
                             [this->client URLProtocol: self didFailWithError:
                              [NSError errorWithDomain: @"can't read body"
@@ -1511,6 +1446,7 @@ static NSURLProtocol	*placeholder = nil;
                         }
                         else if (len > 0)
                         {
+                            // Socket 输出.
                             written = [this->output write: buffer maxLength: len];
                             if (written > 0)
                             {
@@ -1533,15 +1469,13 @@ static NSURLProtocol	*placeholder = nil;
                                      */
                                     [_body close];
                                     DESTROY(_body);
-                                    sent = YES;
+                                    requestSendDone = YES;
                                 }
                             }
                             else if ([this->output streamStatus]
                                      == NSStreamStatusWriting)
                             {
-                                /* Couldn't write it all now, save and try
-                                 * again later.
-                                 */
+                                // 这里, 发生了阻塞的情况, 把数据存到缓存区里面.
                                 _writeData = [[NSData alloc] initWithBytes:
                                               buffer length: len];
                                 _writeOffset = 0;
@@ -1551,34 +1485,27 @@ static NSURLProtocol	*placeholder = nil;
                         {
                             [_body close];
                             DESTROY(_body);
-                            sent = YES;
+                            requestSendDone = YES;
                         }
                     }
                     else
                     {
                         [_body close];
                         DESTROY(_body);
-                        sent = YES;
+                        requestSendDone = YES;
                     }
                 }
-                if (sent == YES)
+                // 输出完成了, 如果设置了自动关闭, 那么就关闭 output socket.
+                if (requestSendDone == YES)
                 {
                     if (_shouldClose == YES)
                     {
-                        if (_debug)
-                        {
-                            NSLog(@"%@ request sent ... closing", self);
-                        }
                         [this->output setDelegate: nil];
                         [this->output removeFromRunLoop:
                          [NSRunLoop currentRunLoop]
                                                 forMode: NSDefaultRunLoopMode];
                         [this->output close];
                         DESTROY(this->output);
-                    }
-                    else if (_debug)
-                    {
-                        NSLog(@"%@ request sent", self);
                     }
                 }
                 return;  // done
@@ -1587,23 +1514,13 @@ static NSURLProtocol	*placeholder = nil;
                 break;
         }
     }
-    else
-    {
-        NSLog(@"Unexpected event %"PRIuPTR
-              " occurred on stream %@ not being used by %@",
-              event, stream, self);
-    }
+    // 如果, socket 发生了错误, 直接停止网络, 在 stopLoading 里面, 会停止 socket 的链接.
     if (event == NSStreamEventErrorOccurred)
     {
         NSError	*error = [[[stream streamError] retain] autorelease];
         
         [self stopLoading];
         [this->client URLProtocol: self didFailWithError: error];
-    }
-    else
-    {
-        NSLog(@"Unexpected event %"PRIuPTR" ignored on stream %@ of %@",
-              event, stream, self);
     }
 }
 

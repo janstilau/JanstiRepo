@@ -273,11 +273,6 @@ didReceiveAuthenticationChallenge: challenge];
 wasRedirectedToRequest: (NSURLRequest *)request
     redirectResponse: (NSURLResponse *)redirectResponse
 {
-    if (self->_debug)
-    {
-        NSLog(@"%@ tell delegate %@ about redirect to %@ as a result of %@",
-              self, self->_delegate, request, redirectResponse);
-    }
     request = [self->_delegate connection: self
                           willSendRequest: request
                          redirectResponse: redirectResponse];

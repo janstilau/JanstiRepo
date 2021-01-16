@@ -69,22 +69,11 @@ extern "C" {
 
 @interface      GSMimeHeader : NSObject <NSCopying>
 {
-#if	GS_EXPOSE(GSMimeHeader)
   NSString              *name;
   NSString              *lower;
   NSString              *value;
   NSMutableDictionary   *objects;
   NSMutableDictionary	*params;
-#endif
-#if     GS_NONFRAGILE
-#else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
-#endif
 }
 + (GSMimeHeader*) headerWithName: (NSString*)n
                            value: (NSString*)v
