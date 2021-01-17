@@ -6,11 +6,6 @@
 
 #import "Foundation/NSCoder.h"
 
-
-// Internal data storage
-typedef struct {
-} Internal;
-
 /* Defines to get easy access to internals from mutable/immutable
  * versions of the class and from categories.
  */

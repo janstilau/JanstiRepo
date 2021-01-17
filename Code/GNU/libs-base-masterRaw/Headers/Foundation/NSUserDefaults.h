@@ -1,27 +1,3 @@
-/* Interface for <NSUserDefaults> for GNUStep
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-
-   Written by:   Georg Tuparev, EMBL & Academia Naturalis, 
-                Heidelberg, Germany
-                Tuparev@EMBL-Heidelberg.de
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-   MA 02111 USA.
-*/ 
 
 #ifndef __NSUserDefaults_h_OBJECTS_INCLUDE
 #define __NSUserDefaults_h_OBJECTS_INCLUDE
@@ -151,31 +127,31 @@ GS_EXPORT NSString* const NSHourNameDesignations;
 GS_EXPORT NSString* const NSYearMonthWeekDesignations;
 
 /** Key for locale dictionary: adjectives that modify values in
-    NSYearMonthWeekDesignations, as in "last", "previous", etc.. */
+ NSYearMonthWeekDesignations, as in "last", "previous", etc.. */
 GS_EXPORT NSString* const NSEarlierTimeDesignations;
 
 /** Key for locale dictionary: adjectives that modify values in
-    NSYearMonthWeekDesignations, as in "next", "subsequent", etc.. */
+ NSYearMonthWeekDesignations, as in "next", "subsequent", etc.. */
 GS_EXPORT NSString* const NSLaterTimeDesignations;
 
 /** Key for locale dictionary: one or more strings designating the current
-    day, such as "today". */
+ day, such as "today". */
 GS_EXPORT NSString* const NSThisDayDesignations;
 
 /** Key for locale dictionary: one or more strings designating the next
-    day, such as "tomorrow". */
+ day, such as "tomorrow". */
 GS_EXPORT NSString* const NSNextDayDesignations;
 
 /** Key for locale dictionary: one or more strings designating the next
-    day, such as "day after tomorrow". */
+ day, such as "day after tomorrow". */
 GS_EXPORT NSString* const NSNextNextDayDesignations;
 
 /** Key for locale dictionary: one or more strings designating the previous
-    day, such as "yesterday". */
+ day, such as "yesterday". */
 GS_EXPORT NSString* const NSPriorDayDesignations;
 
 /** Key for locale dictionary: string with 'Y', 'M', 'D', and 'H' designating
-    the default method of writing dates, as in "MDYH" for the U.S.. */
+ the default method of writing dates, as in "MDYH" for the U.S.. */
 GS_EXPORT NSString* const NSDateTimeOrdering;
 
 /** Key for locale dictionary: name of language. */
@@ -193,49 +169,38 @@ GS_EXPORT NSString* const GSLocale;
 #endif
 
 /* General implementation notes: 
-
-   OpenStep spec currently is neither complete nor consistent. Therefore
-   we had to make several implementation decisions which may vary in
-   other OpenStep implementations.
-  
-  - We add two new class methods for getting and setting a list of 
-    user languages (userLanguages and setUserLanguages: ). They are 
-    somehow equivalent to the NS3.x Application's systemLanguages 
-    method.
-
-  - Definition of argument (command line parameters)
-  	(-GSxxxx || --GSxxx) [value]
-	
-  To Do: 
-	- polish & optimize;
-	- when tested, fix NSBundle (the system languages stuff);
-	- write docs : -(
-	*/
+ 
+ OpenStep spec currently is neither complete nor consistent. Therefore
+ we had to make several implementation decisions which may vary in
+ other OpenStep implementations.
+ 
+ - We add two new class methods for getting and setting a list of
+ user languages (userLanguages and setUserLanguages: ). They are
+ somehow equivalent to the NS3.x Application's systemLanguages
+ method.
+ 
+ - Definition of argument (command line parameters)
+ (-GSxxxx || --GSxxx) [value]
+ 
+ To Do:
+ - polish & optimize;
+ - when tested, fix NSBundle (the system languages stuff);
+ - write docs : -(
+ */
 
 @interface NSUserDefaults : NSObject
 {
-#if	GS_EXPOSE(NSUserDefaults)
 @private
-  NSMutableArray	*_searchList;    // Current search list;
-  NSMutableDictionary	*_persDomains;   // Contains persistent defaults info;
-  NSMutableDictionary	*_tempDomains;   // Contains volatile defaults info;
-  NSMutableArray	*_changedDomains; /* ..after first time that persistent 
-					    user defaults are changed */
-  NSDictionary		*_dictionaryRep; // Cached dictionary representation
-  NSString		*_defaultsDatabase;
-  NSDate		*_lastSync;
-  NSRecursiveLock	*_lock;
-  NSDistributedLock	*_fileLock;
-#endif
-#if     GS_NONFRAGILE
-#else
-  /* Pointer to private additional data used to avoid breaking ABI
-   * when we don't have the non-fragile ABI available.
-   * Use this mechanism rather than changing the instance variable
-   * layout (see Source/GSInternal.h for details).
-   */
-  @private id _internal GS_UNUSED_IVAR;
-#endif
+    NSMutableArray	*_searchList;    // Current search list;
+    NSMutableDictionary	*_persDomains;   // Contains persistent defaults info;
+    NSMutableDictionary	*_tempDomains;   // Contains volatile defaults info;
+    NSMutableArray	*_changedDomains; /* ..after first time that persistent
+                                       user defaults are changed */
+    NSDictionary		*_dictionaryRep; // Cached dictionary representation
+    NSString		*_defaultsDatabase;
+    NSDate		*_lastSync;
+    NSRecursiveLock	*_lock;
+    NSDistributedLock	*_fileLock;
 }
 
 /**
@@ -467,7 +432,7 @@ GS_EXPORT NSString* const GSLocale;
  * last -synchronize.
  */
 - (void) setPersistentDomain: (NSDictionary*)domain 
-		     forName: (NSString*)domainName;
+                     forName: (NSString*)domainName;
 
 /**
  * Ensures that the in-memory and on-disk representations of the defaults
@@ -491,7 +456,7 @@ GS_EXPORT NSString* const GSLocale;
  * exists as either a volatile-domain or a persistent-domain.
  */
 - (void) setVolatileDomain: (NSDictionary*)domain 
-		   forName: (NSString*)domainName;
+                   forName: (NSString*)domainName;
 
 /**
  * Returns the volatile domain specified by domainName.

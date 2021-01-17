@@ -1,32 +1,3 @@
-/** NSURLHandle.m - Class NSURLHandle
-   Copyright (C) 1999 Free Software Foundation, Inc.
-
-   Written by: 	Manuel Guesdon <mguesdon@sbuilders.com>
-   Date: 	Jan 1999
-   Rewrite by:	Richard Frith-Macdonald <rfm@gnu.org>
-   Date:	Sep 2000, June 2002
-
-   This file is part of the GNUstep Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-
-   <title>NSURLHandle class reference</title>
-   $Date$ $Revision$
-*/
-
 #import "common.h"
 
 #define	EXPOSE_NSURLHandle_IVARS	1
@@ -46,8 +17,8 @@
 
 @interface	GSFileURLHandle : NSURLHandle
 {
-  NSString		*_path;
-  NSMutableDictionary	*_attributes;
+    NSString		*_path;
+    NSMutableDictionary	*_attributes;
 }
 @end
 
@@ -55,41 +26,41 @@
  * Keys for NSURLHandle
  */
 NSString * const NSHTTPPropertyStatusCodeKey
-  = @"NSHTTPPropertyStatusCodeKey";
+= @"NSHTTPPropertyStatusCodeKey";
 
 NSString * const NSHTTPPropertyStatusReasonKey
-  = @"NSHTTPPropertyStatusReasonKey";
+= @"NSHTTPPropertyStatusReasonKey";
 
 NSString * const NSHTTPPropertyServerHTTPVersionKey
-  = @"NSHTTPPropertyServerHTTPVersionKey";
+= @"NSHTTPPropertyServerHTTPVersionKey";
 
 NSString * const NSHTTPPropertyRedirectionHeadersKey
-  = @"NSHTTPPropertyRedirectionHeadersKey";
+= @"NSHTTPPropertyRedirectionHeadersKey";
 
 NSString * const NSHTTPPropertyErrorPageDataKey
-  = @"NSHTTPPropertyErrorPageDataKey";
+= @"NSHTTPPropertyErrorPageDataKey";
 
 /* These are GNUstep extras */
 NSString * const GSHTTPPropertyMethodKey
-  = @"GSHTTPPropertyMethodKey";
+= @"GSHTTPPropertyMethodKey";
 
 NSString * const GSHTTPPropertyLocalHostKey
-  = @"GSHTTPPropertyLocalHostKey";
+= @"GSHTTPPropertyLocalHostKey";
 
 NSString * const GSHTTPPropertyProxyHostKey
-  = @"GSHTTPPropertyProxyHostKey";
+= @"GSHTTPPropertyProxyHostKey";
 
 NSString * const GSHTTPPropertyProxyPortKey
-  = @"GSHTTPPropertyProxyPortKey";
+= @"GSHTTPPropertyProxyPortKey";
 
 NSString * const GSHTTPPropertyCertificateFileKey
-  = @"GSHTTPPropertyCertificateFileKey";
+= @"GSHTTPPropertyCertificateFileKey";
 
 NSString * const GSHTTPPropertyKeyFileKey
-  = @"GSHTTPPropertyKeyFileKey";
+= @"GSHTTPPropertyKeyFileKey";
 
 NSString * const GSHTTPPropertyPasswordKey
-  = @"GSHTTPPropertyPasswordKey";
+= @"GSHTTPPropertyPasswordKey";
 
 
 /**
@@ -133,27 +104,27 @@ static Class		NSURLHandleClass = 0;
  */
 + (NSURLHandle*) cachedHandleForURL: (NSURL*)url
 {
-  /*
-   * Each subclass is supposed to do its own caching, so we must
-   * find the correct subclass and ask it for its cached handle.
-   */
-  if (self == NSURLHandleClass)
+    /*
+     * Each subclass is supposed to do its own caching, so we must
+     * find the correct subclass and ask it for its cached handle.
+     */
+    if (self == NSURLHandleClass)
     {
-      Class	c = [self URLHandleClassForURL: url];
-
-      if (c == self || c == 0)
-	{
-	  return nil;
-	}
-      else
-	{
-	  return [c cachedHandleForURL: url];
-	}
+        Class	c = [self URLHandleClassForURL: url];
+        
+        if (c == self || c == 0)
+        {
+            return nil;
+        }
+        else
+        {
+            return [c cachedHandleForURL: url];
+        }
     }
-  else
+    else
     {
-      [self subclassResponsibility: _cmd];
-      return nil;
+        [self subclassResponsibility: _cmd];
+        return nil;
     }
 }
 
@@ -164,24 +135,24 @@ static Class		NSURLHandleClass = 0;
  */
 + (BOOL) canInitWithURL: (NSURL*)url
 {
-  /*
-   * The semi-abstract base class can't handle ANY scheme
-   */
-  return NO;
+    /*
+     * The semi-abstract base class can't handle ANY scheme
+     */
+    return NO;
 }
 
 + (void) initialize
 {
-  if (self == [NSURLHandle class])
+    if (self == [NSURLHandle class])
     {
-      NSURLHandleClass = self;
-      registry = [NSMutableArray new];
-      [[NSObject leakAt: &registry] release];
-      registryLock = [NSLock new];
-      [[NSObject leakAt: &registryLock] release];
-      [self registerURLHandleClass: [GSFileURLHandle class]];
-      [self registerURLHandleClass: [GSFTPURLHandle class]];
-      [self registerURLHandleClass: [GSHTTPURLHandle class]];
+        NSURLHandleClass = self;
+        registry = [NSMutableArray new];
+        [[NSObject leakAt: &registry] release];
+        registryLock = [NSLock new];
+        [[NSObject leakAt: &registryLock] release];
+        [self registerURLHandleClass: [GSFileURLHandle class]];
+        [self registerURLHandleClass: [GSFTPURLHandle class]];
+        [self registerURLHandleClass: [GSHTTPURLHandle class]];
     }
 }
 
@@ -190,24 +161,24 @@ static Class		NSURLHandleClass = 0;
  */
 + (void) registerURLHandleClass: (Class)urlHandleSubclass
 {
-  /*
-   * Maintain a registry of classes that handle various schemes
-   * Re-adding a class moves it to the end of the registry - so it will
-   * be used in preference to any class added earlier.
-   */
-  [registryLock lock];
-  NS_DURING
+    /*
+     * Maintain a registry of classes that handle various schemes
+     * Re-adding a class moves it to the end of the registry - so it will
+     * be used in preference to any class added earlier.
+     */
+    [registryLock lock];
+    NS_DURING
     {
-      [registry removeObjectIdenticalTo: urlHandleSubclass];
-      [registry addObject: urlHandleSubclass];
+        [registry removeObjectIdenticalTo: urlHandleSubclass];
+        [registry addObject: urlHandleSubclass];
     }
-  NS_HANDLER
+    NS_HANDLER
     {
-      [registryLock unlock];
-      [localException raise];
+        [registryLock unlock];
+        [localException raise];
     }
-  NS_ENDHANDLER
-  [registryLock unlock];
+    NS_ENDHANDLER
+    [registryLock unlock];
 }
 
 /**
@@ -217,36 +188,36 @@ static Class		NSURLHandleClass = 0;
  */
 + (Class) URLHandleClassForURL: (NSURL*)url
 {
-  unsigned	count;
-  Class		c = 0;
-
-  [registryLock lock];
-  NS_DURING
+    unsigned	count;
+    Class		c = 0;
+    
+    [registryLock lock];
+    NS_DURING
     {
-      count = [registry count];
-
-      /*
-       * Find a class to handle the URL, try most recently registered first.
-       */
-      while (count-- > 0)
-	{
-	  id	found = [registry objectAtIndex: count];
-
-	  if ([found canInitWithURL: url] == YES)
-	    {
-	      c = (Class)found;
-	      break;		// Found it.
-	    }
-	}
+        count = [registry count];
+        
+        /*
+         * Find a class to handle the URL, try most recently registered first.
+         */
+        while (count-- > 0)
+        {
+            id	found = [registry objectAtIndex: count];
+            
+            if ([found canInitWithURL: url] == YES)
+            {
+                c = (Class)found;
+                break;		// Found it.
+            }
+        }
     }
-  NS_HANDLER
+    NS_HANDLER
     {
-      [registryLock unlock];
-      [localException raise];
+        [registryLock unlock];
+        [localException raise];
     }
-  NS_ENDHANDLER
-  [registryLock unlock];
-  return c;
+    NS_ENDHANDLER
+    [registryLock unlock];
+    return c;
 }
 
 /**
@@ -255,12 +226,12 @@ static Class		NSURLHandleClass = 0;
  */
 - (void) addClient: (id <NSURLHandleClient>)client
 {
-  id	o = client;
-
-  IF_NO_GC([o retain];)
-  [_clients removeObjectIdenticalTo: o];
-  [_clients addObject: o];
-  IF_NO_GC([o release];)
+    id	o = client;
+    
+    IF_NO_GC([o retain];)
+    [_clients removeObjectIdenticalTo: o];
+    [_clients addObject: o];
+    IF_NO_GC([o release];)
 }
 
 /**
@@ -270,7 +241,7 @@ static Class		NSURLHandleClass = 0;
  */
 - (NSData*) availableResourceData
 {
-  return AUTORELEASE([_data copy]);
+    return AUTORELEASE([_data copy]);
 }
 
 /**
@@ -281,16 +252,16 @@ static Class		NSURLHandleClass = 0;
  */
 - (void) backgroundLoadDidFailWithReason: (NSString*)reason
 {
-  NSEnumerator			*enumerator = [_clients objectEnumerator];
-  id <NSURLHandleClient>	client;
-
-  _status = NSURLHandleLoadFailed;
-  DESTROY(_data);
-  ASSIGNCOPY(_failure, reason);
-
-  while ((client = [enumerator nextObject]) != nil)
+    NSEnumerator			*enumerator = [_clients objectEnumerator];
+    id <NSURLHandleClient>	client;
+    
+    _status = NSURLHandleLoadFailed;
+    DESTROY(_data);
+    ASSIGNCOPY(_failure, reason);
+    
+    while ((client = [enumerator nextObject]) != nil)
     {
-      [client URLHandle: self resourceDidFailLoadingWithReason: _failure];
+        [client URLHandle: self resourceDidFailLoadingWithReason: _failure];
     }
 }
 
@@ -301,12 +272,12 @@ static Class		NSURLHandleClass = 0;
  */
 - (void) beginLoadInBackground
 {
-  _status = NSURLHandleLoadInProgress;
-  DESTROY(_data);
-  _data = [NSMutableData new];
-  [_clients makeObjectsPerformSelector:
-    @selector(URLHandleResourceDidBeginLoading:)
-    withObject: self];
+    _status = NSURLHandleLoadInProgress;
+    DESTROY(_data);
+    _data = [NSMutableData new];
+    [_clients makeObjectsPerformSelector:
+     @selector(URLHandleResourceDidBeginLoading:)
+                              withObject: self];
 }
 
 /**
@@ -317,20 +288,20 @@ static Class		NSURLHandleClass = 0;
  */
 - (void) cancelLoadInBackground
 {
-  IF_NO_GC([self retain];)
-  [_clients makeObjectsPerformSelector:
-    @selector(URLHandleResourceDidCancelLoading:)
-    withObject: self];
-  [self endLoadInBackground];
-  IF_NO_GC(RELEASE(self);)
+    IF_NO_GC([self retain];)
+    [_clients makeObjectsPerformSelector:
+     @selector(URLHandleResourceDidCancelLoading:)
+                              withObject: self];
+    [self endLoadInBackground];
+    IF_NO_GC(RELEASE(self);)
 }
 
 - (void) dealloc
 {
-  RELEASE(_data);
-  RELEASE(_failure);
-  RELEASE(_clients);
-  [super dealloc];
+    RELEASE(_data);
+    RELEASE(_failure);
+    RELEASE(_clients);
+    [super dealloc];
 }
 
 /**
@@ -339,61 +310,61 @@ static Class		NSURLHandleClass = 0;
  * accumulates separate parts of the data.
  */
 - (void) didLoadBytes: (NSData*)newData
-	 loadComplete: (BOOL)loadComplete
+         loadComplete: (BOOL)loadComplete
 {
-  NSEnumerator			*enumerator;
-  id <NSURLHandleClient>	client;
-
-  /*
-   * Let clients know we are starting loading (unless this has already been
-   * done).
-   */
-  if (_status != NSURLHandleLoadInProgress)
+    NSEnumerator			*enumerator;
+    id <NSURLHandleClient>	client;
+    
+    /*
+     * Let clients know we are starting loading (unless this has already been
+     * done).
+     */
+    if (_status != NSURLHandleLoadInProgress)
     {
-      _status = NSURLHandleLoadInProgress;
-      DESTROY(_data);
-      _data = [NSMutableData new];
-      [_clients makeObjectsPerformSelector:
-	@selector(URLHandleResourceDidBeginLoading:)
-	withObject: self];
+        _status = NSURLHandleLoadInProgress;
+        DESTROY(_data);
+        _data = [NSMutableData new];
+        [_clients makeObjectsPerformSelector:
+         @selector(URLHandleResourceDidBeginLoading:)
+                                  withObject: self];
     }
-
-  /*
-   * If we have been given nil data, there must have been a failure!
-   */
-  if (newData == nil)
+    
+    /*
+     * If we have been given nil data, there must have been a failure!
+     */
+    if (newData == nil)
     {
-      [self backgroundLoadDidFailWithReason: @"nil data"];
-      return;
+        [self backgroundLoadDidFailWithReason: @"nil data"];
+        return;
     }
-
-  /*
-   * Let clients know we have read some data.
-   */
-  enumerator = [_clients objectEnumerator];
-  while ((client = [enumerator nextObject]) != nil)
+    
+    /*
+     * Let clients know we have read some data.
+     */
+    enumerator = [_clients objectEnumerator];
+    while ((client = [enumerator nextObject]) != nil)
     {
-      [client URLHandle: self resourceDataDidBecomeAvailable: newData];
+        [client URLHandle: self resourceDataDidBecomeAvailable: newData];
     }
-
-  /*
-   * Accumulate data in cache.
-   */
-  [_data appendData: newData];
-
-  if (loadComplete == YES)
+    
+    /*
+     * Accumulate data in cache.
+     */
+    [_data appendData: newData];
+    
+    if (loadComplete == YES)
     {
-      id	tmp = _data;
-
-      _data = [tmp copy];
-      RELEASE(tmp);
-      /*
-       * Let clients know we have finished loading.
-       */
-      _status = NSURLHandleLoadSucceeded;
-      [_clients makeObjectsPerformSelector:
-	@selector(URLHandleResourceDidFinishLoading:)
-	withObject: self];
+        id	tmp = _data;
+        
+        _data = [tmp copy];
+        RELEASE(tmp);
+        /*
+         * Let clients know we have finished loading.
+         */
+        _status = NSURLHandleLoadSucceeded;
+        [_clients makeObjectsPerformSelector:
+         @selector(URLHandleResourceDidFinishLoading:)
+                                  withObject: self];
     }
 }
 
@@ -405,8 +376,8 @@ static Class		NSURLHandleClass = 0;
  */
 - (void) endLoadInBackground
 {
-  _status = NSURLHandleNotLoaded;
-  DESTROY(_data);
+    _status = NSURLHandleNotLoaded;
+    DESTROY(_data);
 }
 
 /**
@@ -415,10 +386,10 @@ static Class		NSURLHandleClass = 0;
  */
 - (NSString*) failureReason
 {
-  if (_status == NSURLHandleLoadFailed)
-    return _failure;
-  else
-    return nil;
+    if (_status == NSURLHandleLoadFailed)
+        return _failure;
+    else
+        return nil;
 }
 
 /**
@@ -426,12 +397,12 @@ static Class		NSURLHandleClass = 0;
  */
 - (void) flushCachedData
 {
-  DESTROY(_data);
+    DESTROY(_data);
 }
 
 - (id) init
 {
-  return [self initWithURL: nil cached: NO];
+    return [self initWithURL: nil cached: NO];
 }
 
 /** <init />
@@ -440,11 +411,11 @@ static Class		NSURLHandleClass = 0;
  * and respond to requests from equivalent URLs for the cached data.
  */
 - (id) initWithURL: (NSURL*)url
-	    cached: (BOOL)cached
+            cached: (BOOL)cached
 {
-  _status = NSURLHandleNotLoaded;
-  _clients = [NSMutableArray new];
-  return self;
+    _status = NSURLHandleNotLoaded;
+    _clients = [NSMutableArray new];
+    return self;
 }
 
 /**
@@ -455,17 +426,17 @@ static Class		NSURLHandleClass = 0;
  */
 - (void) loadInBackground
 {
-  NSData	*d;
-
-  [self beginLoadInBackground];
-  d = [self loadInForeground];
-  if (d == nil)
+    NSData	*d;
+    
+    [self beginLoadInBackground];
+    d = [self loadInForeground];
+    if (d == nil)
     {
-      [self backgroundLoadDidFailWithReason: @"foreground load returned nil"];
+        [self backgroundLoadDidFailWithReason: @"foreground load returned nil"];
     }
-  else
+    else
     {
-      [self didLoadBytes: d loadComplete: YES];
+        [self didLoadBytes: d loadComplete: YES];
     }
 }
 
@@ -477,18 +448,18 @@ static Class		NSURLHandleClass = 0;
  */
 - (NSData*) loadInForeground
 {
-  NSRunLoop	*loop = [NSRunLoop currentRunLoop];
-
-  [self loadInBackground];
-  while ([self status] == NSURLHandleLoadInProgress)
+    NSRunLoop	*loop = [NSRunLoop currentRunLoop];
+    
+    [self loadInBackground];
+    while ([self status] == NSURLHandleLoadInProgress)
     {
-      NSDate	*limit;
-
-      limit = [[NSDate alloc] initWithTimeIntervalSinceNow: 1.0];
-      [loop runMode: NSDefaultRunLoopMode beforeDate: limit];
-      RELEASE(limit);
+        NSDate	*limit;
+        
+        limit = [[NSDate alloc] initWithTimeIntervalSinceNow: 1.0];
+        [loop runMode: NSDefaultRunLoopMode beforeDate: limit];
+        RELEASE(limit);
     }
-  return _data;
+    return _data;
 }
 
 /** <override-subclass />
@@ -497,8 +468,8 @@ static Class		NSURLHandleClass = 0;
  */
 - (id) propertyForKey: (NSString*)propertyKey
 {
-  [self subclassResponsibility: _cmd];
-  return nil;
+    [self subclassResponsibility: _cmd];
+    return nil;
 }
 
 /** <override-subclass />
@@ -507,8 +478,8 @@ static Class		NSURLHandleClass = 0;
  */
 - (id) propertyForKeyIfAvailable: (NSString*)propertyKey
 {
-  [self subclassResponsibility: _cmd];
-  return nil;
+    [self subclassResponsibility: _cmd];
+    return nil;
 }
 
 /**
@@ -517,7 +488,7 @@ static Class		NSURLHandleClass = 0;
  */
 - (void) removeClient: (id <NSURLHandleClient>)client
 {
-  [_clients removeObjectIdenticalTo: client];
+    [_clients removeObjectIdenticalTo: client];
 }
 
 /**
@@ -530,30 +501,30 @@ static Class		NSURLHandleClass = 0;
  */
 - (NSData*) resourceData
 {
-  NSData        *d = nil;
-
-  if (NSURLHandleLoadSucceeded == _status)
+    NSData        *d = nil;
+    
+    if (NSURLHandleLoadSucceeded == _status)
     {
-      d = [self availableResourceData];
+        d = [self availableResourceData];
     }
-  if (nil == d
-    && _status != NSURLHandleLoadSucceeded
-    && _status != NSURLHandleLoadFailed)
+    if (nil == d
+        && _status != NSURLHandleLoadSucceeded
+        && _status != NSURLHandleLoadFailed)
     {
-      if (_status == NSURLHandleLoadInProgress)
-	{
-	  return nil;
-	}
-      else
-	{
-	  d = [self loadInForeground];
-	  if (d != nil)
-	    {
-	      ASSIGNCOPY(_data, d);
-	    }
-	}
+        if (_status == NSURLHandleLoadInProgress)
+        {
+            return nil;
+        }
+        else
+        {
+            d = [self loadInForeground];
+            if (d != nil)
+            {
+                ASSIGNCOPY(_data, d);
+            }
+        }
     }
-  return d;
+    return d;
 }
 
 /* Private method ... subclasses override this to enable debug to be
@@ -561,17 +532,17 @@ static Class		NSURLHandleClass = 0;
  */
 - (int) setDebug: (int)aFlag
 {
-  return 0;
+    return 0;
 }
 
 - (void) setReturnAll: (BOOL)flag
 {
-  return;
+    return;
 }
 
 - (void) setURL: (NSURL*)newUrl
 {
-  return;
+    return;
 }
 
 /**
@@ -579,7 +550,7 @@ static Class		NSURLHandleClass = 0;
  */
 - (NSURLHandleStatus) status
 {
-  return _status;
+    return _status;
 }
 
 /**
@@ -605,8 +576,8 @@ static Class		NSURLHandleClass = 0;
  */
 - (BOOL) writeData: (NSData*)data
 {
-  [self subclassResponsibility: _cmd];
-  return NO;
+    [self subclassResponsibility: _cmd];
+    return NO;
 }
 
 /**
@@ -622,10 +593,10 @@ static Class		NSURLHandleClass = 0;
  * </p>
  */
 - (BOOL) writeProperty: (id)propertyValue
-		forKey: (NSString*)propertyKey
+                forKey: (NSString*)propertyKey
 {
-  [self subclassResponsibility: _cmd];
-  return NO;
+    [self subclassResponsibility: _cmd];
+    return NO;
 }
 
 @end
@@ -650,162 +621,162 @@ static NSLock			*fileLock = nil;
 
 + (NSURLHandle*) cachedHandleForURL: (NSURL*)url
 {
-  NSURLHandle	*obj = nil;
-
-  if ([url isFileURL] == YES)
+    NSURLHandle	*obj = nil;
+    
+    if ([url isFileURL] == YES)
     {
-      NSString	*path = [url path];
-
-      path = [path stringByStandardizingPath];
-      [fileLock lock];
-      NS_DURING
-	{
-	  obj = [fileCache objectForKey: path];
-	  IF_NO_GC([[obj retain] autorelease];)
-	}
-      NS_HANDLER
-	{
-	  [fileLock unlock];
-	  [localException raise];
-	}
-      NS_ENDHANDLER
-      [fileLock unlock];
+        NSString	*path = [url path];
+        
+        path = [path stringByStandardizingPath];
+        [fileLock lock];
+        NS_DURING
+        {
+            obj = [fileCache objectForKey: path];
+            IF_NO_GC([[obj retain] autorelease];)
+        }
+        NS_HANDLER
+        {
+            [fileLock unlock];
+            [localException raise];
+        }
+        NS_ENDHANDLER
+        [fileLock unlock];
     }
-  return obj;
+    return obj;
 }
 
 + (BOOL) canInitWithURL: (NSURL*)url
 {
-  if ([url isFileURL] == YES)
+    if ([url isFileURL] == YES)
     {
-      return YES;
+        return YES;
     }
-  return NO;
+    return NO;
 }
 
 + (void) initialize
 {
-  fileCache = [NSMutableDictionary new];
-  [[NSObject leakAt: &fileCache] release];
-  fileLock = [NSLock new];
-  [[NSObject leakAt: &fileLock] release];
+    fileCache = [NSMutableDictionary new];
+    [[NSObject leakAt: &fileCache] release];
+    fileLock = [NSLock new];
+    [[NSObject leakAt: &fileLock] release];
 }
 
 - (NSData*) availableResourceData
 {
-  if (_data != nil)
+    if (_data != nil)
     {
-      NSDictionary	*dict;
-
-      dict = [[NSFileManager defaultManager] fileAttributesAtPath: _path
-						     traverseLink: YES];
-      if (dict == nil)
-	{
-	  // File no longer exists.
-	  DESTROY(_data);
-	  DESTROY(_attributes);
-	}
-      else
-	{
-	  NSDate	*original;
-	  NSDate	*latest;
-
-	  original = [_attributes fileModificationDate];
-	  latest = [dict fileModificationDate];
-	  if ([latest earlierDate: original] != latest)
-	    {
-	      // File has been modified
-	      DESTROY(_data);
-	      DESTROY(_attributes);
-              _status = NSURLHandleNotLoaded;
-	    }
-	}
+        NSDictionary	*dict;
+        
+        dict = [[NSFileManager defaultManager] fileAttributesAtPath: _path
+                                                       traverseLink: YES];
+        if (dict == nil)
+        {
+            // File no longer exists.
+            DESTROY(_data);
+            DESTROY(_attributes);
+        }
+        else
+        {
+            NSDate	*original;
+            NSDate	*latest;
+            
+            original = [_attributes fileModificationDate];
+            latest = [dict fileModificationDate];
+            if ([latest earlierDate: original] != latest)
+            {
+                // File has been modified
+                DESTROY(_data);
+                DESTROY(_attributes);
+                _status = NSURLHandleNotLoaded;
+            }
+        }
     }
-  return [super availableResourceData];
+    return [super availableResourceData];
 }
 
 - (void) dealloc
 {
-  RELEASE(_path);
-  RELEASE(_attributes);
-  [super dealloc];
+    RELEASE(_path);
+    RELEASE(_attributes);
+    [super dealloc];
 }
 
 - (id) initWithURL: (NSURL*)url
-	    cached: (BOOL)cached
+            cached: (BOOL)cached
 {
-  NSString	*path;
-
-  if ([url isFileURL] == NO)
+    NSString	*path;
+    
+    if ([url isFileURL] == NO)
     {
-      NSLog(@"Attempt to init GSFileURLHandle with bad URL");
-      DESTROY(self);
-      return nil;
+        NSLog(@"Attempt to init GSFileURLHandle with bad URL");
+        DESTROY(self);
+        return nil;
     }
-  path = [url path];
-  path = [path stringByStandardizingPath];
-
-  if (cached == YES)
+    path = [url path];
+    path = [path stringByStandardizingPath];
+    
+    if (cached == YES)
     {
-      id	obj;
-
-      [fileLock lock];
-      NS_DURING
-	{
-	  obj = [fileCache objectForKey: path];
-	  if (obj != nil)
-	    {
-	      DESTROY(self);
-	      IF_NO_GC([obj retain];)
-	    }
-	}
-      NS_HANDLER
-	{
-	  obj = nil;
-	  [fileLock unlock];
-	  [localException raise];
-	}
-      NS_ENDHANDLER
-      [fileLock unlock];
-      if (obj != nil)
-	{
-	  return obj;
-	}
+        id	obj;
+        
+        [fileLock lock];
+        NS_DURING
+        {
+            obj = [fileCache objectForKey: path];
+            if (obj != nil)
+            {
+                DESTROY(self);
+                IF_NO_GC([obj retain];)
+            }
+        }
+        NS_HANDLER
+        {
+            obj = nil;
+            [fileLock unlock];
+            [localException raise];
+        }
+        NS_ENDHANDLER
+        [fileLock unlock];
+        if (obj != nil)
+        {
+            return obj;
+        }
     }
-
-  if ((self = [super initWithURL: url cached: cached]) != nil)
+    
+    if ((self = [super initWithURL: url cached: cached]) != nil)
     {
-      _path = [path copy];
-      if (cached == YES)
-	{
-	  [fileLock lock];
-	  NS_DURING
-	    {
-	      [fileCache setObject: self forKey: _path];
-	    }
-	  NS_HANDLER
-	    {
-	      [fileLock unlock];
-	      [localException raise];
-	    }
-	  NS_ENDHANDLER
-	  [fileLock unlock];
-	}
+        _path = [path copy];
+        if (cached == YES)
+        {
+            [fileLock lock];
+            NS_DURING
+            {
+                [fileCache setObject: self forKey: _path];
+            }
+            NS_HANDLER
+            {
+                [fileLock unlock];
+                [localException raise];
+            }
+            NS_ENDHANDLER
+            [fileLock unlock];
+        }
     }
-  return self;
+    return self;
 }
 
 - (NSData*) loadInForeground
 {
-  NSData	*d = [NSData dataWithContentsOfFile: _path];
-  NSDictionary	*dict;
-
-  dict = [[NSFileManager defaultManager] fileAttributesAtPath: _path
-						 traverseLink: YES];
-  RELEASE(_attributes);
-  _attributes = [dict mutableCopy];
-  [self didLoadBytes: d loadComplete: YES];
-  return d;
+    NSData	*d = [NSData dataWithContentsOfFile: _path];
+    NSDictionary	*dict;
+    
+    dict = [[NSFileManager defaultManager] fileAttributesAtPath: _path
+                                                   traverseLink: YES];
+    RELEASE(_attributes);
+    _attributes = [dict mutableCopy];
+    [self didLoadBytes: d loadComplete: YES];
+    return d;
 }
 
 /**
@@ -815,33 +786,33 @@ static NSLock			*fileLock = nil;
  */
 - (id) propertyForKey: (NSString*)propertyKey
 {
-  NSDictionary	*dict;
-
-  dict = [[NSFileManager defaultManager] fileAttributesAtPath: _path
-						 traverseLink: YES];
-  RELEASE(_attributes);
-  _attributes = [dict mutableCopy];
-  return [_attributes objectForKey: propertyKey];
+    NSDictionary	*dict;
+    
+    dict = [[NSFileManager defaultManager] fileAttributesAtPath: _path
+                                                   traverseLink: YES];
+    RELEASE(_attributes);
+    _attributes = [dict mutableCopy];
+    return [_attributes objectForKey: propertyKey];
 }
 
 - (id) propertyForKeyIfAvailable: (NSString*)propertyKey
 {
-  return [_attributes objectForKey: propertyKey];
+    return [_attributes objectForKey: propertyKey];
 }
 
 - (int) setDebug: (int)flag
 {
-  return 0;
+    return 0;
 }
 
 - (void) setReturnAll: (BOOL)flag
 {
-  return;
+    return;
 }
 
 - (void) setURL: (NSURL*)newUrl
 {
-  return;
+    return;
 }
 
 /**
@@ -850,12 +821,12 @@ static NSLock			*fileLock = nil;
  */
 - (BOOL) writeData: (NSData*)data
 {
-  if ([data writeToFile: _path atomically: YES] == YES)
+    if ([data writeToFile: _path atomically: YES] == YES)
     {
-      ASSIGNCOPY(_data, data);
-      return YES;
+        ASSIGNCOPY(_data, data);
+        return YES;
     }
-  return NO;
+    return NO;
 }
 
 /**
@@ -864,15 +835,15 @@ static NSLock			*fileLock = nil;
  * <ref class="NSFileManager">NSFileManger</ref> class.
  */
 - (BOOL) writeProperty: (id)propertyValue
-		forKey: (NSString*)propertyKey
+                forKey: (NSString*)propertyKey
 {
-  if ([self propertyForKey: propertyKey] == nil)
+    if ([self propertyForKey: propertyKey] == nil)
     {
-      return NO;	/* Not a valid file property key.	*/
+        return NO;	/* Not a valid file property key.	*/
     }
-  [_attributes setObject: propertyValue forKey: propertyKey];
-  return [[NSFileManager defaultManager] changeFileAttributes: _attributes
-						       atPath: _path];
+    [_attributes setObject: propertyValue forKey: propertyKey];
+    return [[NSFileManager defaultManager] changeFileAttributes: _attributes
+                                                         atPath: _path];
 }
 
 @end

@@ -1,27 +1,3 @@
-/* Interface for NSURLCache for GNUstep
-   Copyright (C) 2006 Software Foundation, Inc.
-
-   Written by:  Richard Frith-Macdonald <frm@gnu.org>
-   Date: 2006
-   
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-   */ 
-
 #ifndef __NSURLCache_h_GNUSTEP_BASE_INCLUDE
 #define __NSURLCache_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -45,9 +21,9 @@ extern "C" {
  */
 typedef enum
 {
-  NSURLCacheStorageAllowed,	/** Unrestricted caching */
-  NSURLCacheStorageAllowedInMemoryOnly,	/** In memory caching only */
-  NSURLCacheStorageNotAllowed /** No caching allowed */
+    NSURLCacheStorageAllowed,	/** Unrestricted caching */
+    NSURLCacheStorageAllowedInMemoryOnly,	/** In memory caching only */
+    NSURLCacheStorageNotAllowed /** No caching allowed */
 } NSURLCacheStoragePolicy;
 
 
@@ -57,7 +33,7 @@ typedef enum
 @interface NSCachedURLResponse : NSObject <NSCoding, NSCopying>
 {
 #if	GS_EXPOSE(NSCachedURLResponse)
-  void *_NSCachedURLResponseInternal;
+    void *_NSCachedURLResponseInternal;
 #endif
 }
 
@@ -77,9 +53,9 @@ typedef enum
  * Returns the receiver initialized with the provided parameters.
  */
 - (id) initWithResponse: (NSURLResponse *)response
-		   data: (NSData *)data
-	       userInfo: (NSDictionary *)userInfo
-	  storagePolicy: (NSURLCacheStoragePolicy)storagePolicy;
+                   data: (NSData *)data
+               userInfo: (NSDictionary *)userInfo
+          storagePolicy: (NSURLCacheStoragePolicy)storagePolicy;
 
 /**
  * Returns the response with which the receiver was initialised.
@@ -103,7 +79,7 @@ typedef enum
 @interface NSURLCache : NSObject
 {
 #if	GS_EXPOSE(NSURLCache)
-  void *_NSURLCacheInternal;
+    void *_NSURLCacheInternal;
 #endif
 }
 
@@ -158,8 +134,8 @@ typedef enum
  * storage.
  */
 - (id) initWithMemoryCapacity: (NSUInteger)memoryCapacity
-		 diskCapacity: (NSUInteger)diskCapacity
-		     diskPath: (NSString *)path;
+                 diskCapacity: (NSUInteger)diskCapacity
+                     diskPath: (NSString *)path;
 
 /**
  * Returns the memory capacity (in bytes) of the cache.
@@ -192,7 +168,7 @@ typedef enum
  * Replaces any existing response with the same key.
  */
 - (void) storeCachedResponse: (NSCachedURLResponse *)cachedResponse
-		  forRequest: (NSURLRequest *)request;
+                  forRequest: (NSURLRequest *)request;
 
 @end
 

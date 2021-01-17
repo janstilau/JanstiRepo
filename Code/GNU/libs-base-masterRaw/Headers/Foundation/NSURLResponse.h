@@ -20,6 +20,7 @@ extern "C" {
 /**
  * The response to an NSURLRequest
  */
+// Response 里面没有 body 信息, response 仅仅是对响应头的一个封装而已.
 @interface NSURLResponse :  NSObject <NSCoding, NSCopying>
 {
     long long        expectedContentLength;
