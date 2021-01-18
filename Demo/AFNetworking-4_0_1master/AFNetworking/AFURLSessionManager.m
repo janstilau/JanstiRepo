@@ -532,6 +532,11 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     }
 }
 
+// 这里, 是 NSURLAuthenticationChallenge, 和 NSURLAuthenticationChallenge sender 的封装.
+// completionHandler 里面有两个参数, 一个是如何应对这个 challenge, 如果返回 cancle, 就代表了应对失败了
+// 一个是如果使用这个 challenge 应该用哪个credential, 这里, 可以使用一个新的 NSURLCredential 替换传过来的.
+// 或者如果是 Basic 认证的情况下, 新建一个 userName password 的 NSURLCredential 传递进去.
+// completionHandler 一定调用了NSURLAuthenticationChallenge sender 相关的逻辑.
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
