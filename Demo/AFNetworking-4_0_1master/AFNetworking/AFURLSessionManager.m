@@ -497,6 +497,8 @@ didBecomeInvalidWithError:(NSError *)error
     [[NSNotificationCenter defaultCenter] postNotificationName:AFURLSessionDidInvalidateNotification object:session];
 }
 
+// 如果, 这个方法没有实现, 那么就会调用 task 的 didReceiveChallenge 方法
+// 所以, 这是一个总的入口, 如果 session 实现了相关的配置, 就不用每个 task 都这么麻烦了
 - (void)URLSession:(NSURLSession *)session
 didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
  completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler

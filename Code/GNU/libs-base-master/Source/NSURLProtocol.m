@@ -830,9 +830,6 @@ static NSURLProtocol	*placeholder = nil;
         
         if (_statusCode == 401)
         {
-            /* This is an authentication challenge, so we keep reading
-             * until the challenge is complete, then try to deal with it.
-             */
         }
         else if (_statusCode >= 300 && _statusCode < 400) // 重定向信息.
         {
@@ -921,39 +918,25 @@ static NSURLProtocol	*placeholder = nil;
     
     if (_complete == YES)
     {
-        /*
-         401 代表, 需要进行验证.
-         验证的过程, 没有太看明白.
-         */
-        if (_statusCode == 401)
+        if (_statusCode == 401) // 如果是 401, 那么就是服务器端, 要求验证.
         {
             NSURLProtectionSpace    *space;
             NSString            *hdr;
             NSURL            *url;
             int            failures = 0;
             
-            /* This was an authentication challenge.
-             */
             hdr = [[document headerNamed: @"WWW-Authenticate"] value];
             url = [self->request URL];
-            space = [GSHTTPAuthentication
-                     protectionSpaceForAuthentication: hdr requestURL: url];
-            DESTROY(_credential);
+            space = [GSHTTPAuthentication protectionSpaceForAuthentication: hdr requestURL: url];
             if (space != nil)
             {
-                /* Create credential from user and password
-                 * stored in the URL.
-                 * Returns nil if we have no username or password.
-                 */
+                // 这里, 使用了 userpassword 这种最简单的认证方式.
                 _credential = [[NSURLCredential alloc]
                                initWithUser: [url user]
                                password: [url password]
                                persistence: NSURLCredentialPersistenceForSession];
                 if (_credential == nil)
                 {
-                    /* No credential from the URL, so we try using the
-                     * default credential for the protection space.
-                     */
                     ASSIGN(_credential,
                            [[NSURLCredentialStorage sharedCredentialStorage]
                             defaultCredentialForProtectionSpace: space]);
@@ -980,9 +963,8 @@ static NSURLProtocol	*placeholder = nil;
             }
             DESTROY(_challenge);
             
-            /*
-             在这里, 构建验证的信息, 交给外界处理.
-             */
+            // 前面, 生成了 space 信息, 生成了 credential 信息, 通过这些信息, 构建一个 challenge.
+            // 在这里, 一定是已经有 response 了.  因为只有响应头结束之后, 才会到达这里.
             _challenge = [[NSURLAuthenticationChallenge alloc]
                           initWithProtectionSpace: space
                           proposedCredential: _credential
@@ -991,12 +973,22 @@ static NSURLProtocol	*placeholder = nil;
                           error: nil
                           sender: self];
             
-            /* Allow the client to control the credential we send
-             * or whether we actually send at all.
+            // 把 challenge 交给上层处理.
+            /*
+             这里, 上层应该调用 _challenge.sender 的各种方法, 来标明如何处理这个证书.
+            
+             cancelAuthenticationChallenge: 取消认证
+             continueWithoutCredentialForAuthenticationChallenge: 认证通过, 继续请求
+             useCredential:forAuthenticationChallenge: 使用提供的证书继续请求
+             performDefaultHandlingForAuthenticationChallenge: 默认相应
+             rejectProtectionSpaceAndContinueWithChallenge: 拒绝证书
+             
+             这里, _challenge 是 protocol 生成的, protocol 又是这个 _challenge 的 sender. protocol 就应该实现这些方法. 在实现里面, 应该在各个方法记录状态, 在 didReceiveAuthenticationChallenge 方法后面, 根据各个状态去处理应该怎么办.
+             这种使用方式太复杂了, 所以 URLSession 里面, 提供了一个闭包, 来去调用上面的各个 sender 的方法.
              */
             [self->client URLProtocol: self
     didReceiveAuthenticationChallenge: _challenge];
-            
+            // 如果, _challenge == nil, 就是在 _challenge.sender  里面, 拒绝了这个 _challenge, 直接结束请求.
             if (_challenge == nil)
             {
                 NSError    *e;
@@ -1011,10 +1003,10 @@ static NSURLProtocol	*placeholder = nil;
                 [self->client URLProtocol: self
                          didFailWithError: e];
             }
-            else
+            else // 到了这里, 就应该是认证通过了.
             {
                 NSString    *auth = nil;
-                
+                // 首先, 生成通过了的认证的信息.
                 if (_credential != nil)
                 {
                     GSHTTPAuthentication    *authentication;
@@ -1071,14 +1063,9 @@ static NSURLProtocol	*placeholder = nil;
                     /* Fall through to code providing page data.
                      */
                 }
-                else
+                else // 然后, 通过这个认证的信息, 再一次发送网络请求.
                 {
                     NSMutableURLRequest    *request;
-                    
-                    /* To answer the authentication challenge,
-                     * we must retry with a modified request and
-                     * with the cached response cleared.
-                     */
                     request = [self->request mutableCopy];
                     [request setValue: auth
                    forHTTPHeaderField: @"Authorization"];
