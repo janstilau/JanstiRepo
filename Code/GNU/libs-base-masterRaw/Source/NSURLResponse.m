@@ -15,6 +15,8 @@
 
 @implementation	NSURLResponse (Private)
 
+// 这里, 其实就是根据 Header 里面的内容, 抽取相应的内容到属性里面.
+// 之所以抽取这些, 是因为这些属性比较常用. 不常用的, 还是要通过 key 这种方式, 去进行取值设值.
 - (void) _checkHeaders
 {
     if (NSURLResponseUnknownLength == self->expectedContentLength)
@@ -27,6 +29,7 @@
         }
     }
     
+    // 具体的解析的逻辑, 是在 GSMimeHeader, GSMimeParser里面, 这里仅仅是使用而已.
     if (nil == self->MIMEType)
     {
         GSMimeHeader	*c;
@@ -102,11 +105,13 @@
     }
     [self _checkHeaders];
 }
+
 - (void) _setStatusCode: (NSInteger)code text: (NSString*)text
 {
     self->statusCode = code;
     ASSIGNCOPY(self->statusText, text);
 }
+
 - (void) _setValue: (NSString *)value forHTTPHeaderField: (NSString *)field
 {
     if (self->headers == 0)
@@ -115,6 +120,7 @@
     }
     [self->headers setObject: value forKey: field];
 }
+
 - (NSString *) _valueForHTTPHeaderField: (NSString *)field
 {
     return [self->headers objectForKey: field];
@@ -129,22 +135,7 @@
     return self->expectedContentLength;
 }
 
-- (id) initWithCoder: (NSCoder*)aCoder
-{
-    // FIXME
-    if ([aCoder allowsKeyedCoding])
-    {
-    }
-    else
-    {
-    }
-    return self;
-}
-
-/**
- * Initialises the receiver with the URL, MIMEType, expected length and
- * text encoding name provided.
- */
+// 这里, 就是简单的把这些值存起来了.
 - (id) initWithURL: (NSURL *)URL
           MIMEType: (NSString *)MIMEType
 expectedContentLength: (NSInteger)length
@@ -169,6 +160,7 @@ expectedContentLength: (NSInteger)length
                     MIMEType: nil
        expectedContentLength: NSURLResponseUnknownLength
             textEncodingName: nil];
+    
     if (nil != self)
     {
         self->statusCode = statusCode;
