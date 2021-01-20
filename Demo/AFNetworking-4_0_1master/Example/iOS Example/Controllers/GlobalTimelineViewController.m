@@ -37,12 +37,18 @@
 - (void)reload:(__unused id)sender {
     self.navigationItem.rightBarButtonItem.enabled = NO;
 
-    NSURLSessionTask *task = [Post globalTimelinePostsWithBlock:^(NSArray *posts, NSError *error) {
-        if (!error) {
-            self.posts = posts;
-            [self.tableView reloadData];
-        }
-    }];
+    NSURLSessionTask *task =
+    [[AFHTTPSessionManager manager] GET:@"https://zhuanlan.zhihu.com/p/58479085" parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSLog(@"response: %@", responseObject);
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"error: %@", error);
+        }];
+//    NSURLSessionTask *task = [Post globalTimelinePostsWithBlock:^(NSArray *posts, NSError *error) {
+//        if (!error) {
+//            self.posts = posts;
+//            [self.tableView reloadData];
+//        }
+//    }];
 
     [self.refreshControl setRefreshingWithStateOfTask:task];
 }

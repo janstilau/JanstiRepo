@@ -486,7 +486,14 @@
  如果是 Session 自己的代理方法, 在 Manager 中进行处理.
  如果是各个 Task 的方法, 在各个 Delegate 对象中进行处理.
  */
-
+// 这个是 session 在被 invalidate 的时候调用的, 为了统治外界, session 对象已经不可用了.
+// finishTasksAndInvalidate
+// invalidateAndCancel
+// 如果, Session 是通过创建 protocol 去管理每一个连接, 那么上面的函数就是
+// 1 session 不接新的任务了
+// 2 要么等所有的 protocol loading 完
+//   要么停止所有的 protocol loading.
+// 最后, session 会调用到这个方法.
 - (void)URLSession:(NSURLSession *)session
 didBecomeInvalidWithError:(NSError *)error
 {
