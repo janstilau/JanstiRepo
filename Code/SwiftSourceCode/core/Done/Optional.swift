@@ -1,8 +1,17 @@
 /*
-    其实, 就是一个特殊的标记为. 我猜测, JS 里面的 Null, 也是一个特殊的标记位.
-    Null, 代表一种类型, 无.
-    将无单独算作一种类型, 可以让含义更加的清晰.
-    具体可以看 Swift 进阶里面, 对于 Optional 的讲解.
+ 其实, 就是一个特殊的标记为. 我猜测, JS 里面的 Null, 也是一个特殊的标记位.
+ Null, 代表一种类型, 无.
+ 将无单独算作一种类型, 可以让含义更加的清晰.
+ 具体可以看 Swift 进阶里面, 对于 Optional 的讲解.
+ 在原来的各种语言里面, 判断是不是 null, 是不是 -1, 占据了太多的位置. 有没有一种方式确定, 一定会有值.
+ swift 里面, 这种判断不是完全被消灭了. optinal chian 还是在延续这种情况 .
+ 但是, 如果能够确定, 一定会有值, 呢吗直接使用非 optinal 就可以了, 就不用判断了.
+ 
+ 这种方式能够实现, 是因为 optinal 对 == 操作符进行了重载.
+ 操作符, 仅仅是一个特殊名称的函数而已, 这里, 如果调用其他的函数, 必须先进行解包才可以.
+ if imagePaths["star"]?.hasSuffix(".png") == true {
+     print("The star image is in PNG format")
+ }
  */
 
 ///
@@ -15,6 +24,7 @@
 /// Optional Binding
 /// ----------------
 /// 值绑定, 是值的拷贝行为.
+/// 所以, 如果 warpped 类型是值类型的话, 在 first brace 里面改变, 是不会修改实际存储在 optinal 里面的值的
 ///
 /// Optional Chaining
 /// -----------------
@@ -26,19 +36,22 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
      Optional 就只有这两个值, 表示空的 none, 以及some.
      Some 有着关联值, 也就可以在里面存放各种数据.
      None 没有关联值, 就是表示空的概念.
+     Enum 的关联值, 其实就是把一组值存起来了. Enum 并不简单是 几个 bit 位的宽度, 而是所有的关联值宽度加在一起, 在加上可以表示 type 的 bit 位的宽度.
      */
     case none
     case some(Wrapped)
     
+    // 这两个, 都应该是编译器调用, 开发人员仅仅是写赋值操作就可以了.
     @_transparent
     public init(_ some: Wrapped) { self = .some(some) }
     @_transparent
     public init(nilLiteral: ()) { self = .none }
     
-    
+    // 和通过闭包的返回值确定函数的返回值不同,
+    // 这里, 闭包的参数的类型是确定的, 返回值类型是闭包来确认的
     public func map<U>(
         _ transform: (Wrapped) throws -> U
-    ) rethrows -> U {
+    ) rethrows -> U? {
         switch self {
         case .some(let y):
             return try transform(y)
@@ -58,7 +71,7 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
             return .none
         }
     }
-  
+    
     
     // 这应该就是强制解包的实现.
     @inlinable
@@ -211,22 +224,22 @@ extension Optional {
  */
 @_transparent
 public func ?? <T>(optional: T?, defaultValue: @autoclosure () throws -> T)
-    rethrows -> T {
-        switch optional {
-        case .some(let value):
-            return value
-        case .none:
-            return try defaultValue()
-        }
+rethrows -> T {
+    switch optional {
+    case .some(let value):
+        return value
+    case .none:
+        return try defaultValue()
+    }
 }
 
 @_transparent
 public func ?? <T>(optional: T?, defaultValue: @autoclosure () throws -> T?)
-    rethrows -> T? {
-        switch optional {
-        case .some(let value):
-            return value
-        case .none:
-            return try defaultValue()
-        }
+rethrows -> T? {
+    switch optional {
+    case .some(let value):
+        return value
+    case .none:
+        return try defaultValue()
+    }
 }
