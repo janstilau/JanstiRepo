@@ -23,6 +23,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		06FD0BB325BC99FF008E2CE6 /* Zip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Zip.swift; path = ../../../stdlib/public/core/Zip.swift; sourceTree = "<group>"; };
+		06FD0BB625BC9D2F008E2CE6 /* Bool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bool.swift; sourceTree = "<group>"; };
 		AA7FA1302590FA14004CCF9D /* Swift5.3.1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Swift5.3.1; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA7FA1332590FA14004CCF9D /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		AA7FA13B2590FA2D004CCF9D /* core */ = {isa = PBXFileReference; lastKnownFileType = folder; name = core; path = ../../stdlib/public/core; sourceTree = "<group>"; };
@@ -39,6 +41,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06FD0BB225BC99EE008E2CE6 /* Readed */ = {
+			isa = PBXGroup;
+			children = (
+				06FD0BB325BC99FF008E2CE6 /* Zip.swift */,
+				06FD0BB625BC9D2F008E2CE6 /* Bool.swift */,
+			);
+			path = Readed;
+			sourceTree = "<group>";
+		};
 		AA7FA1272590FA14004CCF9D = {
 			isa = PBXGroup;
 			children = (
@@ -58,6 +69,7 @@
 		AA7FA1322590FA14004CCF9D /* Swift5.3.1 */ = {
 			isa = PBXGroup;
 			children = (
+				06FD0BB225BC99EE008E2CE6 /* Readed */,
 				AA7FA13B2590FA2D004CCF9D /* core */,
 				AA7FA1332590FA14004CCF9D /* main.swift */,
 			);
