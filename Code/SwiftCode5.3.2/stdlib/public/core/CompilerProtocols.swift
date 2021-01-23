@@ -1,59 +1,22 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-// Intrinsic protocols shared with the compiler
-//===----------------------------------------------------------------------===//
-
 /// A type that can be converted to and from an associated raw value.
 ///
 /// With a `RawRepresentable` type, you can switch back and forth between a
 /// custom type and an associated `RawValue` type without losing the value of
-/// the original `RawRepresentable` type. Using the raw value of a conforming
-/// type streamlines interoperation with Objective-C and legacy APIs and
-/// simplifies conformance to other protocols, such as `Equatable`,
-/// `Comparable`, and `Hashable`.
-///
+/// the original `RawRepresentable` type.
+
+// 重构里面, 有一个原则, 就是使用自定义类型, 来替代基本数据类型. 有了自定义类型, 类型名本身就是很好的释义. 并且, 在之后可以向里面, 填充需要的代码.
+
 /// The `RawRepresentable` protocol is seen mainly in two categories of types:
 /// enumerations with raw value types and option sets.
 ///
 /// Enumerations with Raw Values
-/// ============================
-///
-/// For any enumeration with a string, integer, or floating-point raw type, the
-/// Swift compiler automatically adds `RawRepresentable` conformance. When
-/// defining your own custom enumeration, you give it a raw type by specifying
-/// the raw type as the first item in the enumeration's type inheritance list.
-/// You can also use literals to specify values for one or more cases.
-///
-/// For example, the `Counter` enumeration defined here has an `Int` raw value
-/// type and gives the first case a raw value of `1`:
-///
-///     enum Counter: Int {
-///         case one = 1, two, three, four, five
-///     }
-///
-/// You can create a `Counter` instance from an integer value between 1 and 5
-/// by using the `init?(rawValue:)` initializer declared in the
-/// `RawRepresentable` protocol. This initializer is failable because although
-/// every case of the `Counter` type has a corresponding `Int` value, there
-/// are many `Int` values that *don't* correspond to a case of `Counter`.
-///
-///     for i in 3...6 {
-///         print(Counter(rawValue: i))
-///     }
-///     // Prints "Optional(Counter.three)"
-///     // Prints "Optional(Counter.four)"
-///     // Prints "Optional(Counter.five)"
-///     // Prints "nil"
-///
+// 枚举和 rawValue 天然是绑定的. 本身枚举, 就是 Int 值的替换. 就算现在枚举也可以是字符串, 但是我们知道, 它的实际还是一个 int 值而已, 只不过方法层面上, 可以返回了不同类型的 rawValue.
+// 但是, 带关联值的枚举, 确不应该和 rawValue 有联系了. 关联值, 那么枚举就是当做存值的容器进行使用了.
+// 在定义的时候, enum 不可以同时带有关联值和原始值. 会报错.
+// Enum with raw type cannot have cases with arguments.
+
+
+
 /// Option Sets
 /// ===========
 ///
@@ -79,6 +42,10 @@
 /// enumerated list of all possible cases. Option set values have
 /// a one-to-one correspondence with their associated raw values.
 ///
+/// OptionSet 生成的对象, 就是它代表的数据, 所以, 完全可能生成一个没有提前在  OptionSet 定义的数据.
+/// 这是合理的, 因为,  0x0000 1110 这就是你想要的结果. 而这个结果, 不太常见, 所以就没有提前定义出来.
+/// OptionSet里面都是用 static 定义的, 所以, 就是一些特殊值而已.
+///
 /// In the case of the `Directions` option set, an instance can contain zero,
 /// one, or more of the four defined directions. This example declares a
 /// constant with three currently allowed moves. The raw value of the
@@ -98,80 +65,29 @@
 ///     // Prints "false"
 ///     print(allowedMoves.rawValue & Directions.right.rawValue)
 ///     // Prints "0"
+
+
+// 这个协议, 很好的表示了一个事情. 就是这个类型, 内在其实就是 RawValue 的. 只是用了一个漂亮的类型进行了包装.
+// 所以, 相等判断, 都应该是使用 rawValue 进行. 如果, 一个类型是 RawRepresentable, 但是还要存储其他的一些值. 那么这个类型, 不应该是 RawRepresentable 的, 这样和这个 protocol 的设计意图是相悖的. 除非其他的那些值, 仅仅是这个 rawValue 值解析出来的.
 public protocol RawRepresentable {
-  /// The raw type that can be used to represent all values of the conforming
-  /// type.
-  ///
-  /// Every distinct value of the conforming type has a corresponding unique
-  /// value of the `RawValue` type, but there may be values of the `RawValue`
-  /// type that don't have a corresponding value of the conforming type.
   associatedtype RawValue
-
-  /// Creates a new instance with the specified raw value.
-  ///
-  /// If there is no value of the type that corresponds with the specified raw
-  /// value, this initializer returns `nil`. For example:
-  ///
-  ///     enum PaperSize: String {
-  ///         case A4, A5, Letter, Legal
-  ///     }
-  ///
-  ///     print(PaperSize(rawValue: "Legal"))
-  ///     // Prints "Optional("PaperSize.Legal")"
-  ///
-  ///     print(PaperSize(rawValue: "Tabloid"))
-  ///     // Prints "nil"
-  ///
-  /// - Parameter rawValue: The raw value to use for the new instance.
   init?(rawValue: RawValue)
-
-  /// The corresponding value of the raw type.
-  ///
-  /// A new instance initialized with `rawValue` will be equivalent to this
-  /// instance. For example:
-  ///
-  ///     enum PaperSize: String {
-  ///         case A4, A5, Letter, Legal
-  ///     }
-  ///
-  ///     let selectedSize = PaperSize.Letter
-  ///     print(selectedSize.rawValue)
-  ///     // Prints "Letter"
-  ///
-  ///     print(selectedSize == PaperSize(rawValue: selectedSize.rawValue)!)
-  ///     // Prints "true"
   var rawValue: RawValue { get }
 }
 
-/// Returns a Boolean value indicating whether the two arguments are equal.
-///
-/// - Parameters:
-///   - lhs: A raw-representable instance.
-///   - rhs: A second raw-representable instance.
-@inlinable // trivial-implementation
+// 这应该是最正确的事情, RawRepresentable 类型, 应该是对于 rawValue 的封装. 所以, 数据层面的操作, 应该交给 rawValue 进行.
+@inlinable
 public func == <T: RawRepresentable>(lhs: T, rhs: T) -> Bool
   where T.RawValue: Equatable {
   return lhs.rawValue == rhs.rawValue
 }
 
-/// Returns a Boolean value indicating whether the two arguments are not equal.
-///
-/// - Parameters:
-///   - lhs: A raw-representable instance.
-///   - rhs: A second raw-representable instance.
 @inlinable // trivial-implementation
 public func != <T: RawRepresentable>(lhs: T, rhs: T) -> Bool
   where T.RawValue: Equatable {
   return lhs.rawValue != rhs.rawValue
 }
 
-// This overload is needed for ambiguity resolution against the
-// implementation of != for T: Equatable
-/// Returns a Boolean value indicating whether the two arguments are not equal.
-///
-/// - Parameters:
-///   - lhs: A raw-representable instance.
-///   - rhs: A second raw-representable instance.
 @inlinable // trivial-implementation
 public func != <T: Equatable>(lhs: T, rhs: T) -> Bool
   where T: RawRepresentable, T.RawValue: Equatable {

@@ -102,66 +102,56 @@
 ///     }
 ///     // Prints "New tap detected at (0, 1).")
 public protocol Hashable: Equatable {
-  /// The hash value.
-  ///
-  /// Hash values are not guaranteed to be equal across different executions of
-  /// your program. Do not save hash values to use during a future execution.
-  ///
-  /// - Important: `hashValue` is deprecated as a `Hashable` requirement. To
-  ///   conform to `Hashable`, implement the `hash(into:)` requirement instead.
-  var hashValue: Int { get }
-
-  /// Hashes the essential components of this value by feeding them into the
-  /// given hasher.
-  ///
-  /// Implement this method to conform to the `Hashable` protocol. The
-  /// components used for hashing must be the same as the components compared
-  /// in your type's `==` operator implementation. Call `hasher.combine(_:)`
-  /// with each of these components.
-  ///
-  /// - Important: Never call `finalize()` on `hasher`. Doing so may become a
-  ///   compile-time error in the future.
-  ///
-  /// - Parameter hasher: The hasher to use when combining the components
-  ///   of this instance.
-  func hash(into hasher: inout Hasher)
-
-  // Raw top-level hashing interface. Some standard library types (mostly
-  // primitives) specialize this to eliminate small resiliency overheads. (This
-  // only matters for tiny keys.)
-  func _rawHashValue(seed: Int) -> Int
+    /// The hash value.
+    ///
+    /// Hash values are not guaranteed to be equal across different executions of
+    /// your program. Do not save hash values to use during a future execution.
+    ///
+    /// - Important: `hashValue` is deprecated as a `Hashable` requirement. To
+    ///   conform to `Hashable`, implement the `hash(into:)` requirement instead.
+    var hashValue: Int { get }
+    
+    // 填充到 hasher 里面的内容, 应该和 equalable 里面判断的内容, 是一模一样的.
+    // 让用户写出一个 hash 算法来, 实在是太难了. 而 hash 算法是可以提前写好的, 然后填入不同数据就可以了.
+    // 侯捷的课程里面, 就有相关的构建一个万能的哈希算法章节. Hasher 这个类, 应该就是对于这个万能哈希算法的封装.
+    func hash(into hasher: inout Hasher)
+    
+    // Raw top-level hashing interface. Some standard library types (mostly
+    // primitives) specialize this to eliminate small resiliency overheads. (This
+    // only matters for tiny keys.)
+    func _rawHashValue(seed: Int) -> Int
 }
 
 extension Hashable {
-  @inlinable
-  @inline(__always)
-  public func _rawHashValue(seed: Int) -> Int {
-    var hasher = Hasher(_seed: seed)
-    hasher.combine(self)
-    return hasher._finalize()
-  }
+    @inlinable
+    @inline(__always)
+    public func _rawHashValue(seed: Int) -> Int {
+        var hasher = Hasher(_seed: seed)
+        hasher.combine(self)
+        return hasher._finalize()
+    }
 }
 
 // Called by synthesized `hashValue` implementations.
 @inlinable
 @inline(__always)
 public func _hashValue<H: Hashable>(for value: H) -> Int {
-  return value._rawHashValue(seed: 0)
+    return value._rawHashValue(seed: 0)
 }
 
 // Called by the SwiftValue implementation.
 @_silgen_name("_swift_stdlib_Hashable_isEqual_indirect")
 internal func Hashable_isEqual_indirect<T: Hashable>(
-  _ lhs: UnsafePointer<T>,
-  _ rhs: UnsafePointer<T>
+    _ lhs: UnsafePointer<T>,
+    _ rhs: UnsafePointer<T>
 ) -> Bool {
-  return lhs.pointee == rhs.pointee
+    return lhs.pointee == rhs.pointee
 }
 
 // Called by the SwiftValue implementation.
 @_silgen_name("_swift_stdlib_Hashable_hashValue_indirect")
 internal func Hashable_hashValue_indirect<T: Hashable>(
-  _ value: UnsafePointer<T>
+    _ value: UnsafePointer<T>
 ) -> Int {
-  return value.pointee.hashValue
+    return value.pointee.hashValue
 }
