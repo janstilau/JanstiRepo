@@ -9,21 +9,11 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
   /// The presence of a value, stored as `Wrapped`.
   case some(Wrapped)
 
-  /// Creates an instance that stores the given value.
+  // 当编译器发现了 self = 12 的时候, 会自动把 12 包装一层, 变为 .some(12)
   @_transparent
   public init(_ some: Wrapped) { self = .some(some) }
 
-  /// Evaluates the given closure when this `Optional` instance is not `nil`,
-  /// passing the unwrapped value as a parameter.
-  ///
-  /// Use the `map` method with a closure that returns a non-optional value.
-  /// This example performs an arithmetic operation on an
-  /// optional integer.
-  /// - Parameter transform: A closure that takes the unwrapped value
-  ///   of the instance.
-  /// - Returns: The result of the given closure. If this instance is `nil`,
-  ///   returns `nil`.
-    // 如果, map 里面传递的闭包, 返回的是一个 ?, 那么最终的返回值类型是 ??
+  
   @inlinable
   public func map<U>(
     _ transform: (Wrapped) throws -> U
@@ -36,32 +26,14 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
     }
   }
 
-  /// Evaluates the given closure when this `Optional` instance is not `nil`,
-  /// passing the unwrapped value as a parameter.
-  ///
-  /// Use the `flatMap` method with a closure that returns an optional value.
-  /// This example performs an arithmetic operation with an optional result on
-  /// an optional integer.
-  ///
-  ///     let possibleNumber: Int? = Int("42")
-  ///     let nonOverflowingSquare = possibleNumber.flatMap { x -> Int? in
-  ///         let (result, overflowed) = x.multipliedReportingOverflow(by: x)
-  ///         return overflowed ? nil : result
-  ///     }
-  ///     print(nonOverflowingSquare)
-  ///     // Prints "Optional(1764)"
-  ///
-  /// - Parameter transform: A closure that takes the unwrapped value
-  ///   of the instance.  
-  /// - Returns: The result of the given closure. If this instance is `nil`,
-  ///   returns `nil`.
+  
   @inlinable
   public func flatMap<U>(
     _ transform: (Wrapped) throws -> U?
   ) rethrows -> U? {
     switch self {
     case .some(let y):
-      return try transform(y)
+      return try transform(y) // 这里就是问题的关键, 这里没有再次装进 some 里面.
     case .none:
       return .none
     }
