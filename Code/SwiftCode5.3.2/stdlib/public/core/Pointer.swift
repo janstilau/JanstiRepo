@@ -1,29 +1,9 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
 
-/// A stdlib-internal protocol modeled by the intrinsic pointer types,
-/// UnsafeMutablePointer, UnsafePointer, UnsafeRawPointer,
-/// UnsafeMutableRawPointer, and AutoreleasingUnsafeMutablePointer.
 public protocol _Pointer
 : Hashable, Strideable, CustomDebugStringConvertible, CustomReflectable {
-    /// A type that represents the distance between two pointers.
     typealias Distance = Int
-    
     associatedtype Pointee
-    
-    /// The underlying raw pointer value.
     var _rawValue: Builtin.RawPointer { get }
-    
-    /// Creates a pointer from a raw value.as
     init(_ _rawValue: Builtin.RawPointer)
 }
 

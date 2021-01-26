@@ -23,6 +23,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0607AA4225C06F7F00F76E61 /* Algorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Algorithm.swift; path = ../../../stdlib/public/core/Algorithm.swift; sourceTree = "<group>"; };
+		0676703825BF278D00B2BC04 /* Stride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Stride.swift; path = ../../../stdlib/public/core/Stride.swift; sourceTree = "<group>"; };
 		06FD0BB325BC99FF008E2CE6 /* Zip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Zip.swift; path = ../../../stdlib/public/core/Zip.swift; sourceTree = "<group>"; };
 		06FD0BB625BC9D2F008E2CE6 /* Bool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bool.swift; sourceTree = "<group>"; };
 		06FD3E7525BF0A4900BFA19C /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Sequence.swift; path = ../../../stdlib/public/core/Sequence.swift; sourceTree = "<group>"; };
@@ -45,9 +47,11 @@
 		06FD0BB225BC99EE008E2CE6 /* Readed */ = {
 			isa = PBXGroup;
 			children = (
+				0676703825BF278D00B2BC04 /* Stride.swift */,
 				06FD3E7525BF0A4900BFA19C /* Sequence.swift */,
 				06FD0BB325BC99FF008E2CE6 /* Zip.swift */,
 				06FD0BB625BC9D2F008E2CE6 /* Bool.swift */,
+				0607AA4225C06F7F00F76E61 /* Algorithm.swift */,
 			);
 			path = Readed;
 			sourceTree = "<group>";

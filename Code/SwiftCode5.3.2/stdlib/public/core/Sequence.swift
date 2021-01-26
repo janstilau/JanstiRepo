@@ -207,6 +207,7 @@ extension Sequence where Self: IteratorProtocol {
 
 /// A default makeIterator() function for `IteratorProtocol` instances that
 /// are declared to conform to `Sequence`
+// 如果, 一个序列,
 extension Sequence where Self.Iterator == Self {
     /// Returns an iterator over the elements of this sequence.
     @inlinable

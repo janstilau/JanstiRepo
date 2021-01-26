@@ -1,15 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
 /// Returns a sequence formed from `first` and repeated lazy applications of
 /// `next`.
 ///
@@ -59,23 +47,12 @@ public func sequence<T>(first: T, next: @escaping (T) -> T?) -> UnfoldFirstSeque
   })
 }
 
-/// Returns a sequence formed from repeated lazy applications of `next` to a
-/// mutable `state`.
-///
-/// The elements of the sequence are obtained by invoking `next` with a mutable
-/// state. The same state is passed to all invocations of `next`, so subsequent
-/// calls will see any mutations made by previous calls. The sequence ends when
-/// `next` returns `nil`. If `next` never returns `nil`, the sequence is
-/// infinite.
-///
-/// This function can be used to replace many instances of `AnyIterator` that
-/// wrap a closure.
 ///
 /// Example:
 ///
 ///     // Interleave two sequences that yield the same element type
 ///     sequence(state: (false, seq1.makeIterator(), seq2.makeIterator()), next: { iters in
-///       iters.0 = !iters.0
+///       iters.0 = !iters.0 // 这里, iters 的修改, 会影响到实际的存储的值.
 ///       return iters.0 ? iters.1.next() : iters.2.next()
 ///     })
 ///
@@ -92,19 +69,15 @@ public func sequence<T, State>(state: State, next: @escaping (inout State) -> T?
 /// The return type of `sequence(first:next:)`.
 public typealias UnfoldFirstSequence<T> = UnfoldSequence<T, (T?, Bool)>
 
-/// A sequence whose elements are produced via repeated applications of a
-/// closure to some mutable state.
-///
-/// The elements of the sequence are computed lazily and the sequence may
-/// potentially be infinite in length.
-///
-/// Instances of `UnfoldSequence` are created with the functions
-/// `sequence(first:next:)` and `sequence(state:next:)`.
-@frozen // generic-performance
+// 一个特殊的数据结果, 就是为了 sequence<T, State> 函数使用的.
+// 当一个新的概念出现的时候, 一定是, 要设计一个特殊的数据结构来配合相关的算法来实现. 但是, 这个数据结构, 最好不要暴露出去.
+// 暴露给外界的, 应该是一个简单的接口.
 public struct UnfoldSequence<Element, State>: Sequence, IteratorProtocol {
+    
   @inlinable // generic-performance
   public mutating func next() -> Element? {
     guard !_done else { return nil }
+    // 因为, next 里面的 state 是 inout 的, 所以每一次调用, 都会修改 _state 的数据.
     if let elt = _next(&_state) {
         return elt
     } else {
@@ -113,16 +86,14 @@ public struct UnfoldSequence<Element, State>: Sequence, IteratorProtocol {
     }
   }
 
-  @inlinable // generic-performance
+  // 从这里的命名来看, 这是一个内部类, 不应该直接暴露给外界使用.
+  // 首先, 需要存一下起始数据, 还要存一下, 根据现有数据进行抽取的过程. 这里, 存储的数据, 和迭代的数据不一定相同, 可以通过闭包进行配置.
   internal init(_state: State, _next: @escaping (inout State) -> Element?) {
     self._state = _state
     self._next = _next
   }
 
-  @usableFromInline // generic-performance
   internal var _state: State
-  @usableFromInline // generic-performance
   internal let _next: (inout State) -> Element?
-  @usableFromInline // generic-performance
   internal var _done = false
 }
