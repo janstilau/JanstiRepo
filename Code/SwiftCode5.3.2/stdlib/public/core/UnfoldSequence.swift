@@ -66,7 +66,7 @@ public func sequence<T, State>(state: State, next: @escaping (inout State) -> T?
   return UnfoldSequence(_state: state, _next: next)
 }
 
-/// The return type of `sequence(first:next:)`.
+// UnfoldFirstSequence 仅仅是一层包装而已.
 public typealias UnfoldFirstSequence<T> = UnfoldSequence<T, (T?, Bool)>
 
 // 一个特殊的数据结果, 就是为了 sequence<T, State> 函数使用的.
