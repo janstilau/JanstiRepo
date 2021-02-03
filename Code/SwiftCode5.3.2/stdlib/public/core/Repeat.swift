@@ -1,5 +1,7 @@
 // A collection whose elements are all identical.
-@frozen
+
+
+// 这个类, 一般不会用到, 它主要是系统 Api, 为了将重复这个概念, 包装成为 Collection 所使用的一个类.
 public struct Repeated<Element> {
     /// The number of elements in this collection.
     public let count: Int
@@ -34,6 +36,7 @@ extension Repeated: RandomAccessCollection {
 
 // 使用一个简便的函数, 返回一个实际的类型, 在这个函数内部, 根据函数的自动类型推到, 识别出泛型类型来. 这种手法很常见.
 // 在使用返回值的时候, 并不是使用实际的类型的接口, 而是使用实际类型所属的协议的接口. 这是 Swift 更加抽象的一层.
+
 @inlinable // trivial-implementation
 public func repeatElement<T>(_ element: T, count n: Int) -> Repeated<T> {
     return Repeated(_repeating: element, count: n)

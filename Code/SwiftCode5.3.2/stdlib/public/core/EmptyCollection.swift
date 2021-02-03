@@ -1,12 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//  Sometimes an operation is best expressed in terms of some other,
-//  larger operation where one of the parameters is an empty
-//  collection.  For example, we can erase elements from an Array by
-//  replacing a subrange with the empty collection.
-//
-//===----------------------------------------------------------------------===//
-
 /// A collection whose element type is `Element` but that is always empty.
 @frozen // trivial-implementation
 public struct EmptyCollection<Element> {
