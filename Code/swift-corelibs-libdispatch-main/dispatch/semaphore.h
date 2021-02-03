@@ -1,23 +1,3 @@
-/*
- * Copyright (c) 2008-2013 Apple Inc. All rights reserved.
- *
- * @APPLE_APACHE_LICENSE_HEADER_START@
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * @APPLE_APACHE_LICENSE_HEADER_END@
- */
-
 #ifndef __DISPATCH_SEMAPHORE__
 #define __DISPATCH_SEMAPHORE__
 
@@ -49,6 +29,7 @@ __BEGIN_DECLS
  * the completion of a particular event. Passing a value greater than zero is
  * useful for managing a finite pool of resources, where the pool size is equal
  * to the value.
+ * 传递 0 来等待完成, 是一个非常通用的做法.
  *
  * @param value
  * The starting value for the semaphore. Passing a value less than zero will
@@ -56,6 +37,7 @@ __BEGIN_DECLS
  *
  * @result
  * The newly created semaphore, or NULL on failure.
+ * NULL, 这里表明了, 信号量其实是一个指针量.
  */
 API_AVAILABLE(macos(10.6), ios(4.0))
 DISPATCH_EXPORT DISPATCH_MALLOC DISPATCH_RETURNS_RETAINED DISPATCH_WARN_RESULT

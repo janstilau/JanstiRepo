@@ -1,23 +1,3 @@
-/*
- * Copyright (c) 2008-2012 Apple Inc. All rights reserved.
- *
- * @APPLE_APACHE_LICENSE_HEADER_START@
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * @APPLE_APACHE_LICENSE_HEADER_END@
- */
-
 #ifndef __DISPATCH_OBJECT__
 #define __DISPATCH_OBJECT__
 
@@ -50,13 +30,6 @@ DISPATCH_ASSUME_NONNULL_BEGIN
  */
 OS_OBJECT_DECL_CLASS(dispatch_object);
 
-#if OS_OBJECT_SWIFT3
-#define DISPATCH_DECL(name) OS_OBJECT_DECL_SUBCLASS_SWIFT(name, dispatch_object)
-#define DISPATCH_DECL_SUBCLASS(name, base) OS_OBJECT_DECL_SUBCLASS_SWIFT(name, base)
-#else // OS_OBJECT_SWIFT3
-#define DISPATCH_DECL(name) OS_OBJECT_DECL_SUBCLASS(name, dispatch_object)
-#define DISPATCH_DECL_SUBCLASS(name, base) OS_OBJECT_DECL_SUBCLASS(name, base)
-
 DISPATCH_INLINE DISPATCH_ALWAYS_INLINE DISPATCH_NONNULL_ALL DISPATCH_NOTHROW
 void
 _dispatch_object_validate(dispatch_object_t object)
@@ -80,6 +53,7 @@ private:
 	dispatch_object_s(const dispatch_object_s &);
 	void operator=(const dispatch_object_s &);
 } *dispatch_object_t;
+
 #define DISPATCH_DECL(name) \
 		typedef struct name##_s : public dispatch_object_s {} *name##_t
 #define DISPATCH_DECL_SUBCLASS(name, base) \

@@ -1,23 +1,3 @@
-/*
- * Copyright (c) 2008-2010 Apple Inc. All rights reserved.
- *
- * @APPLE_APACHE_LICENSE_HEADER_START@
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * @APPLE_APACHE_LICENSE_HEADER_END@
- */
-
 #ifndef __DISPATCH_ONCE__
 #define __DISPATCH_ONCE__
 
@@ -36,6 +16,7 @@ __BEGIN_DECLS
  * @abstract
  * A predicate for use with dispatch_once(). It must be initialized to zero.
  * Note: static and global variables default to zero.
+ *
  */
 DISPATCH_SWIFT3_UNAVAILABLE("Use lazily initialized globals instead")
 typedef intptr_t dispatch_once_t;
@@ -64,6 +45,8 @@ typedef intptr_t dispatch_once_t;
  * @discussion
  * Always call dispatch_once() before using or testing any variables that are
  * initialized by the block.
+ *
+ *  所以, 其实这就是一个全局的 Bool 值, 然后每次都判断一下这个值, 如果没有执行过, 就执行 block 的代码. 和我们平时写的代码没有太大的区别.
  */
 #ifdef __BLOCKS__
 API_AVAILABLE(macos(10.6), ios(4.0))
@@ -71,14 +54,14 @@ DISPATCH_EXPORT DISPATCH_NONNULL_ALL DISPATCH_NOTHROW
 DISPATCH_SWIFT3_UNAVAILABLE("Use lazily initialized globals instead")
 void
 dispatch_once(dispatch_once_t *predicate,
-		DISPATCH_NOESCAPE dispatch_block_t block);
+			  DISPATCH_NOESCAPE dispatch_block_t block);
 
 #if DISPATCH_ONCE_INLINE_FASTPATH
 DISPATCH_INLINE DISPATCH_ALWAYS_INLINE DISPATCH_NONNULL_ALL DISPATCH_NOTHROW
 DISPATCH_SWIFT3_UNAVAILABLE("Use lazily initialized globals instead")
 void
 _dispatch_once(dispatch_once_t *predicate,
-		DISPATCH_NOESCAPE dispatch_block_t block)
+			   DISPATCH_NOESCAPE dispatch_block_t block)
 {
 	if (DISPATCH_EXPECT(*predicate, ~0l) != ~0l) {
 		dispatch_once(predicate, block);
@@ -97,7 +80,7 @@ DISPATCH_EXPORT DISPATCH_NONNULL1 DISPATCH_NONNULL3 DISPATCH_NOTHROW
 DISPATCH_SWIFT3_UNAVAILABLE("Use lazily initialized globals instead")
 void
 dispatch_once_f(dispatch_once_t *predicate, void *_Nullable context,
-		dispatch_function_t function);
+				dispatch_function_t function);
 
 #if DISPATCH_ONCE_INLINE_FASTPATH
 DISPATCH_INLINE DISPATCH_ALWAYS_INLINE DISPATCH_NONNULL1 DISPATCH_NONNULL3
@@ -105,7 +88,7 @@ DISPATCH_NOTHROW
 DISPATCH_SWIFT3_UNAVAILABLE("Use lazily initialized globals instead")
 void
 _dispatch_once_f(dispatch_once_t *predicate, void *_Nullable context,
-		dispatch_function_t function)
+				 dispatch_function_t function)
 {
 	if (DISPATCH_EXPECT(*predicate, ~0l) != ~0l) {
 		dispatch_once_f(predicate, context, function);
