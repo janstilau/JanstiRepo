@@ -252,11 +252,6 @@ extension DropFirstSequence: Sequence {
     
     @inlinable
     public __consuming func dropFirst(_ k: Int) -> DropFirstSequence<Base> {
-        // If this is already a _DropFirstSequence, we need to fold in
-        // the current drop count and drop limit so no data is lost.
-        //
-        // i.e. [1,2,3,4].dropFirst(1).dropFirst(1) should be equivalent to
-        // [1,2,3,4].dropFirst(2).
         return DropFirstSequence(_base, dropping: _limit + k)
     }
 }

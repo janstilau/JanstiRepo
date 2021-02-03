@@ -89,9 +89,8 @@ extension RangeExpression {
 
 // Stride 是天然可以 sequence 的, 因为可以评判差距, 就代表着可以根据 stride 计算出下一个值来, 这样, next 函数就能取到下一个值来.
 // 而 compareAble, 比如单词在字典里面, 单词的 next 是没有一个统一的算法可以计算出来的. 只能判断大小, 无法判断两个单词之间的差距.
-// 所以, range 只能在特定的情况下, 才能 sequence. 这也就是, 为什么 char ... char 不能用在 forin 里面的原因.
-
 // range 可以快速的用来判断, 是否 contains
+// range 只有特定的情况下, 才能是 sequence, 就是 bound 可以 strideable, 并且 strde 的量是 Int 值.
 @frozen
 public struct Range<Bound: Comparable> {
     public let lowerBound: Bound
