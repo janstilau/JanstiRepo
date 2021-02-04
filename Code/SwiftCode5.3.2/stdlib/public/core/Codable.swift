@@ -40,57 +40,6 @@ extension CodingKey {
  */
 // 序列化器
 
-/*
- 这是 NSArray 在 GNUFoundation 的实现, 在里面, 要根据 allowsKeyedCoding 的返回值, 进行不同的实现策略.
- 它有两个子类, NSArchiver 不提供键值编码, NSKeyedArchiver 提供了键值编码, 分别有自己的实现逻辑.
- 而 Encoder 协议, 要求实现者, 要提供三种方式进行编写.
- - (void) encodeWithCoder: (NSCoder*)aCoder
- {
- NSUInteger    count = [self count];
- 
- if ([aCoder allowsKeyedCoding])
- {
- /* HACK ... MacOS-X seems to code differently if the coder is an
- * actual instance of NSKeyedArchiver
- */
- if ([aCoder class] == [NSKeyedArchiver class])
- {
- [(NSKeyedArchiver*)aCoder _encodeArrayOfObjects: self
- forKey: @"NS.objects"];
- }
- else
- {
- NSUInteger    i;
- 
- for (i = 0; i < count; i++)
- {
- NSString    *key;
- 
- key = [NSString stringWithFormat: @"NS.object.%lu", (unsigned long)i];
- [(NSKeyedArchiver*)aCoder encodeObject: [self objectAtIndex: i]
- forKey: key];
- }
- }
- }
- else
- {
- unsigned  items = (unsigned)count;
- 
- [aCoder encodeValueOfObjCType: @encode(unsigned)
- at: &items];
- if (count > 0)
- {
- GS_BEGINIDBUF(a, count);
- 
- [self getObjects: a];
- [aCoder encodeArrayOfObjCType: @encode(id)
- count: count
- at: a];
- GS_ENDIDBUF();
- }
- }
- }
- */
 public protocol Encoder {
     /// The path of coding keys taken to get to this point in encoding.
     var codingPath: [CodingKey] { get }
@@ -102,7 +51,8 @@ public protocol Encoder {
     /// encoding a value through a call to `singleValueContainer()`
     // 对于一个对象来说, 它的顶级数据, 只能有一种序列化容器进行数据的归档操作.
     
-    // → 键容器(KeyedContainer)用于编码键值对。可以把键容器想像为一个特殊的字典，这 是到目前为止，应用最普遍的容器。键容器内部使用的键是强类型的，这为我们提供了类型安全和自动补全的特性。编码器 最终会在写入目标格式 (比如 JSON) 时，将键转换为字符串 (或者数字)，不过这对开发 者来说是隐藏的。修改编码后的键名是最简单的一种自定义编码方式的操作，我们将会 在下面看到一些相关的例子。
+    // → 键容器(KeyedContainer)用于编码键值对。可以把键容器想像为一个特殊的字典，这 是到目前为止，应用最普遍的容器。键容器内部使用的键是强类型的，这为我们提供了类型安全和自动补全的特性。
+    // 编码器 最终会在写入目标格式 (比如 JSON) 时，将键转换为字符串 (或者数字)，不过这对开发 者来说是隐藏的。
     func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key>
     
     // → 无键容器(UnkeyedContainer)用于编码一系列值，但不需要对应的键，可以将它想像 成保存编码结果的数组。因为没有对应的键来确定某个值，所以对无键容器中的值进行 解码的时候，需要遵守和编码时同样的顺序。
@@ -259,167 +209,72 @@ public struct KeyedEncodingContainer<K: CodingKey> :
     ) where Container.Key == Key {
         _box = _KeyedEncodingContainerBox(container)
     }
-        
+    
     // 下面, 所有的功能, 仅仅是一层对于 _box 的转发, 而 _box 里面, 又是转发到了 传递过来的 container
     public var codingPath: [CodingKey] {
         return _box.codingPath
     }
     
-    /// Encodes a null value for the given key.
-    ///
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if a null value is invalid in the
-    ///   current context for this format.
     public mutating func encodeNil(forKey key: Key) throws {
         try _box.encodeNil(forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: Bool, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: String, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: Double, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: Float, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: Int, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: Int8, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: Int16, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: Int32, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: Int64, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: UInt, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: UInt8, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: UInt16, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: UInt32, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode(_ value: UInt64, forKey key: Key) throws {
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encode<T: Encodable>(
         _ value: T,
         forKey key: Key
@@ -427,16 +282,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encode(value, forKey: key)
     }
     
-    /// Encodes a reference to the given object only if it is encoded
-    /// unconditionally elsewhere in the payload (previously, or in the future).
-    ///
-    /// For encoders which don't support this feature, the default implementation
-    /// encodes the given object unconditionally.
-    ///
-    /// - parameter object: The object to encode.
-    /// - parameter key: The key to associate the object with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeConditional<T: AnyObject & Encodable>(
         _ object: T,
         forKey key: Key
@@ -444,12 +289,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeConditional(object, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: Bool?,
         forKey key: Key
@@ -457,12 +296,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: String?,
         forKey key: Key
@@ -470,12 +303,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: Double?,
         forKey key: Key
@@ -483,12 +310,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: Float?,
         forKey key: Key
@@ -496,12 +317,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: Int?,
         forKey key: Key
@@ -509,12 +324,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: Int8?,
         forKey key: Key
@@ -522,12 +331,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: Int16?,
         forKey key: Key
@@ -535,12 +338,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: Int32?,
         forKey key: Key
@@ -548,12 +345,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: Int64?,
         forKey key: Key
@@ -561,12 +352,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: UInt?,
         forKey key: Key
@@ -574,12 +359,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: UInt8?,
         forKey key: Key
@@ -587,12 +366,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: UInt16?,
         forKey key: Key
@@ -600,12 +373,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: UInt32?,
         forKey key: Key
@@ -613,12 +380,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent(
         _ value: UInt64?,
         forKey key: Key
@@ -626,12 +387,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Encodes the given value for the given key if it is not `nil`.
-    ///
-    /// - parameter value: The value to encode.
-    /// - parameter key: The key to associate the value with.
-    /// - throws: `EncodingError.invalidValue` if the given value is invalid in
-    ///   the current context for this format.
     public mutating func encodeIfPresent<T: Encodable>(
         _ value: T?,
         forKey key: Key
@@ -639,11 +394,6 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         try _box.encodeIfPresent(value, forKey: key)
     }
     
-    /// Stores a keyed encoding container for the given key and returns it.
-    ///
-    /// - parameter keyType: The key type to use for the container.
-    /// - parameter key: The key to encode the container for.
-    /// - returns: A new keyed encoding container.
     public mutating func nestedContainer<NestedKey>(
         keyedBy keyType: NestedKey.Type,
         forKey key: Key
@@ -651,42 +401,21 @@ public struct KeyedEncodingContainer<K: CodingKey> :
         return _box.nestedContainer(keyedBy: NestedKey.self, forKey: key)
     }
     
-    /// Stores an unkeyed encoding container for the given key and returns it.
-    ///
-    /// - parameter key: The key to encode the container for.
-    /// - returns: A new unkeyed encoding container.
     public mutating func nestedUnkeyedContainer(
         forKey key: Key
     ) -> UnkeyedEncodingContainer {
         return _box.nestedUnkeyedContainer(forKey: key)
     }
     
-    /// Stores a new nested container for the default `super` key and returns a
-    /// new encoder instance for encoding `super` into that container.
-    ///
-    /// Equivalent to calling `superEncoder(forKey:)` with
-    /// `Key(stringValue: "super", intValue: 0)`.
-    ///
-    /// - returns: A new encoder to pass to `super.encode(to:)`.
     public mutating func superEncoder() -> Encoder {
         return _box.superEncoder()
     }
     
-    /// Stores a new nested container for the given key and returns a new encoder
-    /// instance for encoding `super` into that container.
-    ///
-    /// - parameter key: The key to encode `super` for.
-    /// - returns: A new encoder to pass to `super.encode(to:)`.
     public mutating func superEncoder(forKey key: Key) -> Encoder {
         return _box.superEncoder(forKey: key)
     }
 }
 
-/// A type that provides a view into a decoder's storage and is used to hold
-/// the encoded properties of a decodable type in a keyed manner.
-///
-/// Decoders should provide types conforming to `UnkeyedDecodingContainer` for
-/// their format.
 public protocol KeyedDecodingContainerProtocol {
     associatedtype Key: CodingKey
     
@@ -4229,27 +3958,16 @@ internal final class _KeyedDecodingContainerBox<
     }
 }
 
-//===----------------------------------------------------------------------===//
-// Primitive and RawRepresentable Extensions
-//===----------------------------------------------------------------------===//
+
+
+// 以下是基本数据类型对于 Codeing 的适配工作.
 
 extension Bool: Codable {
-    /// Creates a new instance by decoding from the given decoder.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or
-    /// if the data read is corrupted or otherwise invalid.
-    ///
-    /// - Parameter decoder: The decoder to read data from.
     public init(from decoder: Decoder) throws {
         self = try decoder.singleValueContainer().decode(Bool.self)
     }
     
-    /// Encodes this value into the given encoder.
-    ///
-    /// This function throws an error if any values are invalid for the given
-    /// encoder's format.
-    ///
-    /// - Parameter encoder: The encoder to write data to.
+    // 对于, 这些明确的, 已经不会改动的值, 直接使用 singleValueContainer
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(self)
@@ -4257,27 +3975,14 @@ extension Bool: Codable {
 }
 
 extension RawRepresentable where RawValue == Bool, Self: Encodable {
-    /// Encodes this value into the given encoder, when the type's `RawValue`
-    /// is `Bool`.
-    ///
-    /// This function throws an error if any values are invalid for the given
-    /// encoder's format.
-    ///
-    /// - Parameter encoder: The encoder to write data to.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(self.rawValue)
     }
 }
 
+// Decode 的时候, 一定要加相应的错误处理相关的逻辑.
 extension RawRepresentable where RawValue == Bool, Self: Decodable {
-    /// Creates a new instance by decoding from the given decoder, when the
-    /// type's `RawValue` is `Bool`.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or
-    /// if the data read is corrupted or otherwise invalid.
-    ///
-    /// - Parameter decoder: The decoder to read data from.
     public init(from decoder: Decoder) throws {
         let decoded = try decoder.singleValueContainer().decode(RawValue.self)
         guard let value = Self(rawValue: decoded) else {
@@ -4288,42 +3993,21 @@ extension RawRepresentable where RawValue == Bool, Self: Decodable {
                 )
             )
         }
-        
         self = value
     }
 }
 
 extension String: Codable {
-    /// Creates a new instance by decoding from the given decoder.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or
-    /// if the data read is corrupted or otherwise invalid.
-    ///
-    /// - Parameter decoder: The decoder to read data from.
     public init(from decoder: Decoder) throws {
         self = try decoder.singleValueContainer().decode(String.self)
     }
-    
-    /// Encodes this value into the given encoder.
-    ///
-    /// This function throws an error if any values are invalid for the given
-    /// encoder's format.
-    ///
-    /// - Parameter encoder: The encoder to write data to.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(self)
     }
 }
-
+// Where RawValue: Encodable, Self: Encodable 不可以吗
 extension RawRepresentable where RawValue == String, Self: Encodable {
-    /// Encodes this value into the given encoder, when the type's `RawValue`
-    /// is `String`.
-    ///
-    /// This function throws an error if any values are invalid for the given
-    /// encoder's format.
-    ///
-    /// - Parameter encoder: The encoder to write data to.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(self.rawValue)
@@ -4331,13 +4015,6 @@ extension RawRepresentable where RawValue == String, Self: Encodable {
 }
 
 extension RawRepresentable where RawValue == String, Self: Decodable {
-    /// Creates a new instance by decoding from the given decoder, when the
-    /// type's `RawValue` is `String`.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or
-    /// if the data read is corrupted or otherwise invalid.
-    ///
-    /// - Parameter decoder: The decoder to read data from.
     public init(from decoder: Decoder) throws {
         let decoded = try decoder.singleValueContainer().decode(RawValue.self)
         guard let value = Self(rawValue: decoded) else {
@@ -4354,22 +4031,9 @@ extension RawRepresentable where RawValue == String, Self: Decodable {
 }
 
 extension Double: Codable {
-    /// Creates a new instance by decoding from the given decoder.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or
-    /// if the data read is corrupted or otherwise invalid.
-    ///
-    /// - Parameter decoder: The decoder to read data from.
     public init(from decoder: Decoder) throws {
         self = try decoder.singleValueContainer().decode(Double.self)
     }
-    
-    /// Encodes this value into the given encoder.
-    ///
-    /// This function throws an error if any values are invalid for the given
-    /// encoder's format.
-    ///
-    /// - Parameter encoder: The encoder to write data to.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(self)
@@ -4377,13 +4041,6 @@ extension Double: Codable {
 }
 
 extension RawRepresentable where RawValue == Double, Self: Encodable {
-    /// Encodes this value into the given encoder, when the type's `RawValue`
-    /// is `Double`.
-    ///
-    /// This function throws an error if any values are invalid for the given
-    /// encoder's format.
-    ///
-    /// - Parameter encoder: The encoder to write data to.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(self.rawValue)
@@ -4391,13 +4048,6 @@ extension RawRepresentable where RawValue == Double, Self: Encodable {
 }
 
 extension RawRepresentable where RawValue == Double, Self: Decodable {
-    /// Creates a new instance by decoding from the given decoder, when the
-    /// type's `RawValue` is `Double`.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or
-    /// if the data read is corrupted or otherwise invalid.
-    ///
-    /// - Parameter decoder: The decoder to read data from.
     public init(from decoder: Decoder) throws {
         let decoded = try decoder.singleValueContainer().decode(RawValue.self)
         guard let value = Self(rawValue: decoded) else {
@@ -4408,28 +4058,14 @@ extension RawRepresentable where RawValue == Double, Self: Decodable {
                 )
             )
         }
-        
         self = value
     }
 }
 
 extension Float: Codable {
-    /// Creates a new instance by decoding from the given decoder.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or
-    /// if the data read is corrupted or otherwise invalid.
-    ///
-    /// - Parameter decoder: The decoder to read data from.
     public init(from decoder: Decoder) throws {
         self = try decoder.singleValueContainer().decode(Float.self)
     }
-    
-    /// Encodes this value into the given encoder.
-    ///
-    /// This function throws an error if any values are invalid for the given
-    /// encoder's format.
-    ///
-    /// - Parameter encoder: The encoder to write data to.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(self)
@@ -4437,13 +4073,6 @@ extension Float: Codable {
 }
 
 extension RawRepresentable where RawValue == Float, Self: Encodable {
-    /// Encodes this value into the given encoder, when the type's `RawValue`
-    /// is `Float`.
-    ///
-    /// This function throws an error if any values are invalid for the given
-    /// encoder's format.
-    ///
-    /// - Parameter encoder: The encoder to write data to.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(self.rawValue)
@@ -4451,13 +4080,6 @@ extension RawRepresentable where RawValue == Float, Self: Encodable {
 }
 
 extension RawRepresentable where RawValue == Float, Self: Decodable {
-    /// Creates a new instance by decoding from the given decoder, when the
-    /// type's `RawValue` is `Float`.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or
-    /// if the data read is corrupted or otherwise invalid.
-    ///
-    /// - Parameter decoder: The decoder to read data from.
     public init(from decoder: Decoder) throws {
         let decoded = try decoder.singleValueContainer().decode(RawValue.self)
         guard let value = Self(rawValue: decoded) else {
@@ -5105,17 +4727,10 @@ extension RawRepresentable where RawValue == UInt64, Self: Decodable {
     }
 }
 
-//===----------------------------------------------------------------------===//
-// Optional/Collection Type Conformances
-//===----------------------------------------------------------------------===//
+// 以下是复杂数据类型的 Codable 的适配
 
+// 必须 Wrapped: Encodable, 这是前提.
 extension Optional: Encodable where Wrapped: Encodable {
-    /// Encodes this optional value into the given encoder.
-    ///
-    /// This function throws an error if any values are invalid for the given
-    /// encoder's format.
-    ///
-    /// - Parameter encoder: The encoder to write data to.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
@@ -5126,14 +4741,10 @@ extension Optional: Encodable where Wrapped: Encodable {
 }
 
 extension Optional: Decodable where Wrapped: Decodable {
-    /// Creates a new instance by decoding from the given decoder.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or
-    /// if the data read is corrupted or otherwise invalid.
-    ///
-    /// - Parameter decoder: The decoder to read data from.
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
+        // 如果, 能够 decodeNil, 就代表 Optianl 是 Null, 否则, 就按照 Wrapped 来进行反序列化.
+        // 其实, 使用一个 Type 明显的进行标识更加的友好一点.
         if container.decodeNil() {
             self = .none
         }  else {
@@ -5143,14 +4754,8 @@ extension Optional: Decodable where Wrapped: Decodable {
     }
 }
 
+//Array 就是使用了 unkeyedContainer, 非常符合 Array 的逻辑.
 extension Array: Encodable where Element: Encodable {
-    /// Encodes the elements of this array into the given encoder in an unkeyed
-    /// container.
-    ///
-    /// This function throws an error if any values are invalid for the given
-    /// encoder's format.
-    ///
-    /// - Parameter encoder: The encoder to write data to.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.unkeyedContainer()
         for element in self {
@@ -5160,12 +4765,6 @@ extension Array: Encodable where Element: Encodable {
 }
 
 extension Array: Decodable where Element: Decodable {
-    /// Creates a new array by decoding from the given decoder.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or
-    /// if the data read is corrupted or otherwise invalid.
-    ///
-    /// - Parameter decoder: The decoder to read data from.
     public init(from decoder: Decoder) throws {
         self.init()
         
@@ -5178,13 +4777,6 @@ extension Array: Decodable where Element: Decodable {
 }
 
 extension ContiguousArray: Encodable where Element: Encodable {
-    /// Encodes the elements of this contiguous array into the given encoder
-    /// in an unkeyed container.
-    ///
-    /// This function throws an error if any values are invalid for the given
-    /// encoder's format.
-    ///
-    /// - Parameter encoder: The encoder to write data to.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.unkeyedContainer()
         for element in self {
@@ -5194,15 +4786,8 @@ extension ContiguousArray: Encodable where Element: Encodable {
 }
 
 extension ContiguousArray: Decodable where Element: Decodable {
-    /// Creates a new contiguous array by decoding from the given decoder.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or
-    /// if the data read is corrupted or otherwise invalid.
-    ///
-    /// - Parameter decoder: The decoder to read data from.
     public init(from decoder: Decoder) throws {
         self.init()
-        
         var container = try decoder.unkeyedContainer()
         while !container.isAtEnd {
             let element = try container.decode(Element.self)
@@ -5211,14 +4796,8 @@ extension ContiguousArray: Decodable where Element: Decodable {
     }
 }
 
+// Set, 就是 Array,
 extension Set: Encodable where Element: Encodable {
-    /// Encodes the elements of this set into the given encoder in an unkeyed
-    /// container.
-    ///
-    /// This function throws an error if any values are invalid for the given
-    /// encoder's format.
-    ///
-    /// - Parameter encoder: The encoder to write data to.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.unkeyedContainer()
         for element in self {
@@ -5228,12 +4807,6 @@ extension Set: Encodable where Element: Encodable {
 }
 
 extension Set: Decodable where Element: Decodable {
-    /// Creates a new set by decoding from the given decoder.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or
-    /// if the data read is corrupted or otherwise invalid.
-    ///
-    /// - Parameter decoder: The decoder to read data from.
     public init(from decoder: Decoder) throws {
         self.init()
         
@@ -5245,16 +4818,15 @@ extension Set: Decodable where Element: Decodable {
     }
 }
 
-/// A wrapper for dictionary keys which are Strings or Ints.
+// 字典的序列化反序列化
+
 internal struct _DictionaryCodingKey: CodingKey {
     internal let stringValue: String
     internal let intValue: Int?
-    
     internal init?(stringValue: String) {
         self.stringValue = stringValue
         self.intValue = Int(stringValue)
     }
-    
     internal init?(intValue: Int) {
         self.stringValue = "\(intValue)"
         self.intValue = intValue
@@ -5262,35 +4834,23 @@ internal struct _DictionaryCodingKey: CodingKey {
 }
 
 extension Dictionary: Encodable where Key: Encodable, Value: Encodable {
-    /// Encodes the contents of this dictionary into the given encoder.
-    ///
-    /// If the dictionary uses `String` or `Int` keys, the contents are encoded
-    /// in a keyed container. Otherwise, the contents are encoded as alternating
-    /// key-value pairs in an unkeyed container.
-    ///
-    /// This function throws an error if any values are invalid for the given
-    /// encoder's format.
-    ///
-    /// - Parameter encoder: The encoder to write data to.
+    // 如果, 字典的 key 是 String, 或者 Int, 那么就用 keyed 进行存储,
+    // 否则, 是按照数组进行存储的.
     public func encode(to encoder: Encoder) throws {
         if Key.self == String.self {
-            // Since the keys are already Strings, we can use them as keys directly.
             var container = encoder.container(keyedBy: _DictionaryCodingKey.self)
             for (key, value) in self {
                 let codingKey = _DictionaryCodingKey(stringValue: key as! String)!
                 try container.encode(value, forKey: codingKey)
             }
         } else if Key.self == Int.self {
-            // Since the keys are already Ints, we can use them as keys directly.
             var container = encoder.container(keyedBy: _DictionaryCodingKey.self)
             for (key, value) in self {
                 let codingKey = _DictionaryCodingKey(intValue: key as! Int)!
                 try container.encode(value, forKey: codingKey)
             }
         } else {
-            // Keys are Encodable but not Strings or Ints, so we cannot arbitrarily
-            // convert to keys. We can encode as an array of alternating key-value
-            // pairs, though.
+            // 对于不是 int, 或者 string 为 key 的 dict, 是用数组存取的 key_value pair.
             var container = encoder.unkeyedContainer()
             for (key, value) in self {
                 try container.encode(key)
@@ -5301,24 +4861,16 @@ extension Dictionary: Encodable where Key: Encodable, Value: Encodable {
 }
 
 extension Dictionary: Decodable where Key: Decodable, Value: Decodable {
-    /// Creates a new dictionary by decoding from the given decoder.
-    ///
-    /// This initializer throws an error if reading from the decoder fails, or
-    /// if the data read is corrupted or otherwise invalid.
-    ///
-    /// - Parameter decoder: The decoder to read data from.
     public init(from decoder: Decoder) throws {
         self.init()
         
         if Key.self == String.self {
-            // The keys are Strings, so we should be able to expect a keyed container.
             let container = try decoder.container(keyedBy: _DictionaryCodingKey.self)
             for key in container.allKeys {
                 let value = try container.decode(Value.self, forKey: key)
                 self[key.stringValue as! Key] = value
             }
         } else if Key.self == Int.self {
-            // The keys are Ints, so we should be able to expect a keyed container.
             let container = try decoder.container(keyedBy: _DictionaryCodingKey.self)
             for key in container.allKeys {
                 guard key.intValue != nil else {
@@ -5342,7 +4894,6 @@ extension Dictionary: Decodable where Key: Decodable, Value: Decodable {
                 self[key.intValue! as! Key] = value
             }
         } else {
-            // We should have encoded as an array of alternating key-value pairs.
             var container = try decoder.unkeyedContainer()
             
             // We're expecting to get pairs. If the container has a known count, it
@@ -5391,8 +4942,7 @@ extension KeyedEncodingContainerProtocol {
     }
 }
 
-// Default implementation of encodeIfPresent(_:forKey:) in terms of
-// encode(_:forKey:)
+// 对于 IfPresent 这种, 都是默认如果为 nil, 不序列化该值的解决方案.
 extension KeyedEncodingContainerProtocol {
     public mutating func encodeIfPresent(
         _ value: Bool?,
