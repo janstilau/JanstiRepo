@@ -1,96 +1,73 @@
-/// A value that has a custom representation in `AnyHashable`.
-///
-/// `Self` should also conform to `Hashable`.
+
+// 这是一个模板方法预埋点, 目前没有想到业务上使用的必要.
 public protocol _HasCustomAnyHashableRepresentation {
-  /// Returns a custom representation of `self` as `AnyHashable`.
-  /// If returns nil, the default representation is used.
-  ///
-  /// If your custom representation is a class instance, it
-  /// needs to be boxed into `AnyHashable` using the static
-  /// type that introduces the `Hashable` conformance.
-  ///
-  ///     class Base: Hashable {}
-  ///     class Derived1: Base {}
-  ///     class Derived2: Base, _HasCustomAnyHashableRepresentation {
-  ///       func _toCustomAnyHashable() -> AnyHashable? {
-  ///         // `Derived2` is canonicalized to `Derived1`.
-  ///         let customRepresentation = Derived1()
-  ///
-  ///         // Wrong:
-  ///         // return AnyHashable(customRepresentation)
-  ///
-  ///         // Correct:
-  ///         return AnyHashable(customRepresentation as Base)
-  ///       }
-  __consuming func _toCustomAnyHashable() -> AnyHashable?
+    __consuming func _toCustomAnyHashable() -> AnyHashable?
 }
 
-@usableFromInline
+// 协议本身是私有的, 方法也是私有的. 一切的一切, 就是不应该把值传出去.
 internal protocol _AnyHashableBox {
-  var _canonicalBox: _AnyHashableBox { get }
-
-  /// Determine whether values in the boxes are equivalent.
-  ///
-  /// - Precondition: `self` and `box` are in canonical form.
-  /// - Returns: `nil` to indicate that the boxes store different types, so
-  ///   no comparison is possible. Otherwise, contains the result of `==`.
-  func _isEqual(to box: _AnyHashableBox) -> Bool?
-  var _hashValue: Int { get }
-  func _hash(into hasher: inout Hasher)
-  func _rawHashValue(_seed: Int) -> Int
-
-  var _base: Any { get }
-  func _unbox<T: Hashable>() -> T?
-  func _downCastConditional<T>(into result: UnsafeMutablePointer<T>) -> Bool
+    var _canonicalBox: _AnyHashableBox { get }
+    func _isEqual(to box: _AnyHashableBox) -> Bool?
+    var _hashValue: Int { get }
+    func _hash(into hasher: inout Hasher)
+    func _rawHashValue(_seed: Int) -> Int
+    
+    var _base: Any { get }
+    func _unbox<T: Hashable>() -> T?
+    func _downCastConditional<T>(into result: UnsafeMutablePointer<T>) -> Bool
 }
 
+// 默认返回 self. 当自定义 _AnyHashableBox 可以提供更好的实现.
 extension _AnyHashableBox {
-  var _canonicalBox: _AnyHashableBox {
-    return self
-  }
-}
-
-internal struct _ConcreteHashableBox<Base: Hashable>: _AnyHashableBox {
-  internal var _baseHashable: Base
-
-  internal init(_ base: Base) {
-    self._baseHashable = base
-  }
-
-  internal func _unbox<T: Hashable>() -> T? {
-    return (self as _AnyHashableBox as? _ConcreteHashableBox<T>)?._baseHashable
-  }
-
-  internal func _isEqual(to rhs: _AnyHashableBox) -> Bool? {
-    if let rhs: Base = rhs._unbox() {
-      return _baseHashable == rhs
+    var _canonicalBox: _AnyHashableBox {
+        return self
     }
-    return nil
-  }
-
-  internal var _hashValue: Int {
-    return _baseHashable.hashValue
-  }
-
-  func _hash(into hasher: inout Hasher) {
-    _baseHashable.hash(into: &hasher)
-  }
-
-  func _rawHashValue(_seed: Int) -> Int {
-    return _baseHashable._rawHashValue(seed: _seed)
-  }
-
-  internal var _base: Any {
-    return _baseHashable
-  }
-
-  internal
-  func _downCastConditional<T>(into result: UnsafeMutablePointer<T>) -> Bool {
-    guard let value = _baseHashable as? T else { return false }
-    result.initialize(to: value)
-    return true
-  }
 }
+
+// 默认的对于 _AnyHashableBox 的实现.
+internal struct _ConcreteHashableBox<Base: Hashable>: _AnyHashableBox {
+    internal var _baseHashable: Base
+    
+    internal init(_ base: Base) {
+        self._baseHashable = base
+    }
+    
+    // 这里, as 是如何实现的. _ConcreteHashableBox<T> 里面是带有类型的啊.
+    // 能直接写成 _baseHashable as? T 吗
+    internal func _unbox<T: Hashable>() -> T? {
+        return (self as _AnyHashableBox as? _ConcreteHashableBox<T>)?._baseHashable
+    }
+    
+    internal func _isEqual(to rhs: _AnyHashableBox) -> Bool? {
+        if let rhs: Base = rhs._unbox() {
+            return _baseHashable == rhs
+        }
+        return nil
+    }
+    
+    internal var _hashValue: Int {
+        return _baseHashable.hashValue
+    }
+    
+    func _hash(into hasher: inout Hasher) {
+        _baseHashable.hash(into: &hasher)
+    }
+    
+    func _rawHashValue(_seed: Int) -> Int {
+        return _baseHashable._rawHashValue(seed: _seed)
+    }
+    
+    internal var _base: Any {
+        return _baseHashable
+    }
+    
+    func _downCastConditional<T>(into result: UnsafeMutablePointer<T>) -> Bool {
+        guard let value = _baseHashable as? T else { return false }
+        result.initialize(to: value)
+        return true
+    }
+}
+
 
 /// A type-erased hashable value.
 ///
@@ -122,130 +99,123 @@ internal struct _ConcreteHashableBox<Base: Hashable>: _AnyHashableBox {
 /// encoding of wrapped values. Do not rely on `AnyHashable` generating such
 /// compatible hashes, as the hash encoding that it uses may change between any
 /// two releases of the standard library.
-@frozen
+
+// Swift 经常有这种, struct 包装 class 进行引用传递的类型.
 public struct AnyHashable {
-  internal var _box: _AnyHashableBox
-
-  internal init(_box box: _AnyHashableBox) {
-    self._box = box
-  }
-
-  /// Creates a type-erased hashable value that wraps the given instance.
-  ///
-  /// - Parameter base: A hashable value to wrap.
-  public init<H: Hashable>(_ base: H) {
-    if let custom =
-      (base as? _HasCustomAnyHashableRepresentation)?._toCustomAnyHashable() {
-      self = custom
-      return
+    // 这里, 是一个 协议对象. 因为实际上, 使用的就是协议的功能.
+    // 但是实际上, 仅仅有一个子类. 可能是因为是标准库, 所以就预先进行了扩展点的设计.
+    // 如果是自己的类, 无需这样提前设计.
+    
+    internal var _box: _AnyHashableBox
+    internal init(_box box: _AnyHashableBox) {
+        self._box = box
     }
-
-    self.init(_box: _ConcreteHashableBox(false)) // Dummy value
-    _makeAnyHashableUpcastingToHashableBaseType(
-      base,
-      storingResultInto: &self)
-  }
-
-  internal init<H: Hashable>(_usingDefaultRepresentationOf base: H) {
-    self._box = _ConcreteHashableBox(base)
-  }
-
-  /// The value wrapped by this instance.
-  ///
-  /// The `base` property can be cast back to its original type using one of
-  /// the type casting operators (`as?`, `as!`, or `as`).
-  ///
-  ///     let anyMessage = AnyHashable("Hello world!")
-  ///     if let unwrappedMessage = anyMessage.base as? String {
-  ///         print(unwrappedMessage)
-  ///     }
-  ///     // Prints "Hello world!"
-  public var base: Any {
-    return _box._base
-  }
-
-  /// Perform a downcast directly on the internal boxed representation.
-  ///
-  /// This avoids the intermediate re-boxing we would get if we just did
-  /// a downcast on `base`.
-  internal
-  func _downCastConditional<T>(into result: UnsafeMutablePointer<T>) -> Bool {
-    // Attempt the downcast.
-    if _box._downCastConditional(into: result) { return true }
-
-    #if _runtime(_ObjC)
-    // Bridge to Objective-C and then attempt the cast from there.
-    // FIXME: This should also work without the Objective-C runtime.
-    if let value = _bridgeAnythingToObjectiveC(_box._base) as? T {
-      result.initialize(to: value)
-      return true
+    
+    // 真正外界使用的, 是这个方法.
+    public init<H: Hashable>(_ base: H) {
+        if let custom =
+            // 如果, Hashable 有着自己更好的对于 HashableRepresentation 的表现, 那么使用自定义的表现.
+            (base as? _HasCustomAnyHashableRepresentation)?._toCustomAnyHashable() {
+            self = custom
+            return
+        }
+        
+        self.init(_box: _ConcreteHashableBox(false)) // Dummy value
+        _makeAnyHashableUpcastingToHashableBaseType(
+            base,
+            storingResultInto: &self)
     }
-    #endif
-
-    return false
-  }
+    
+    internal init<H: Hashable>(_usingDefaultRepresentationOf base: H) {
+        self._box = _ConcreteHashableBox(base)
+    }
+    
+    public var base: Any {
+        return _box._base
+    }
+    
+    /// Perform a downcast directly on the internal boxed representation.
+    ///
+    /// This avoids the intermediate re-boxing we would get if we just did
+    /// a downcast on `base`.
+    internal
+    func _downCastConditional<T>(into result: UnsafeMutablePointer<T>) -> Bool {
+        // Attempt the downcast.
+        if _box._downCastConditional(into: result) { return true }
+        
+        #if _runtime(_ObjC)
+        // Bridge to Objective-C and then attempt the cast from there.
+        // FIXME: This should also work without the Objective-C runtime.
+        if let value = _bridgeAnythingToObjectiveC(_box._base) as? T {
+            result.initialize(to: value)
+            return true
+        }
+        #endif
+        
+        return false
+    }
 }
 
 extension AnyHashable: Equatable {
-  /// Returns a Boolean value indicating whether two type-erased hashable
-  /// instances wrap the same value.
-  ///
-  /// `AnyHashable` considers bridged counterparts (such as a `String` and an
-  /// `NSString`) of the same value to be equivalent when type-erased. If those
-  /// compatible types use different definitions for equality, values that were
-  /// originally distinct might compare as equal when they are converted to
-  /// `AnyHashable`:
-  ///
-  ///     let string1 = "café"
-  ///     let string2 = "cafe\u{301}" // U+301 COMBINING ACUTE ACCENT
-  ///     let nsString1 = string1 as NSString
-  ///     let nsString2 = string2 as NSString
-  ///     let typeErased1 = nsString1 as AnyHashable
-  ///     let typeErased2 = nsString2 as AnyHashable
-  ///     print(string1 == string2)         // prints "true"
-  ///     print(nsString1 == nsString2)     // prints "false"
-  ///     print(typeErased1 == typeErased2) // prints "true"
-  ///
-  /// - Parameters:
-  ///   - lhs: A type-erased hashable value.
-  ///   - rhs: Another type-erased hashable value.
-  public static func == (lhs: AnyHashable, rhs: AnyHashable) -> Bool {
-    return lhs._box._canonicalBox._isEqual(to: rhs._box._canonicalBox) ?? false
-  }
+    /// Returns a Boolean value indicating whether two type-erased hashable
+    /// instances wrap the same value.
+    ///
+    /// `AnyHashable` considers bridged counterparts (such as a `String` and an
+    /// `NSString`) of the same value to be equivalent when type-erased. If those
+    /// compatible types use different definitions for equality, values that were
+    /// originally distinct might compare as equal when they are converted to
+    /// `AnyHashable`:
+    ///
+    ///     let string1 = "café"
+    ///     let string2 = "cafe\u{301}" // U+301 COMBINING ACUTE ACCENT
+    ///     let nsString1 = string1 as NSString
+    ///     let nsString2 = string2 as NSString
+    ///     let typeErased1 = nsString1 as AnyHashable
+    ///     let typeErased2 = nsString2 as AnyHashable
+    ///     print(string1 == string2)         // prints "true"
+    ///     print(nsString1 == nsString2)     // prints "false"
+    ///     print(typeErased1 == typeErased2) // prints "true"
+    ///
+    /// - Parameters:
+    ///   - lhs: A type-erased hashable value.
+    ///   - rhs: Another type-erased hashable value.
+    public static func == (lhs: AnyHashable, rhs: AnyHashable) -> Bool {
+        return lhs._box._canonicalBox._isEqual(to: rhs._box._canonicalBox) ?? false
+    }
 }
 
 extension AnyHashable: Hashable {
-  public var hashValue: Int {
-    return _box._canonicalBox._hashValue
-  }
-
-  public func hash(into hasher: inout Hasher) {
-    _box._canonicalBox._hash(into: &hasher)
-  }
-
-  public func _rawHashValue(seed: Int) -> Int {
-    return _box._canonicalBox._rawHashValue(_seed: seed)
-  }
+    public var hashValue: Int {
+        return _box._canonicalBox._hashValue
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        _box._canonicalBox._hash(into: &hasher)
+    }
+    
+    public func _rawHashValue(seed: Int) -> Int {
+        return _box._canonicalBox._rawHashValue(_seed: seed)
+    }
 }
 
 extension AnyHashable: CustomStringConvertible {
-  public var description: String {
-    return String(describing: base)
-  }
+    public var description: String {
+        return String(describing: base)
+    }
 }
 
 extension AnyHashable: CustomDebugStringConvertible {
-  public var debugDescription: String {
-    return "AnyHashable(" + String(reflecting: base) + ")"
-  }
+    public var debugDescription: String {
+        return "AnyHashable(" + String(reflecting: base) + ")"
+    }
 }
 
 extension AnyHashable: CustomReflectable {
-  public var customMirror: Mirror {
-    return Mirror(
-      self,
-      children: ["value": base])
-  }
+    public var customMirror: Mirror {
+        return Mirror(
+            self,
+            children: ["value": base])
+    }
 }
 
 /// Returns a default (non-custom) representation of `self`
@@ -256,39 +226,37 @@ extension AnyHashable: CustomReflectable {
 /// Called by AnyHashableSupport.cpp.
 @_silgen_name("_swift_makeAnyHashableUsingDefaultRepresentation")
 internal func _makeAnyHashableUsingDefaultRepresentation<H: Hashable>(
-  of value: H,
-  storingResultInto result: UnsafeMutablePointer<AnyHashable>
+    of value: H,
+    storingResultInto result: UnsafeMutablePointer<AnyHashable>
 ) {
-  result.pointee = AnyHashable(_usingDefaultRepresentationOf: value)
+    result.pointee = AnyHashable(_usingDefaultRepresentationOf: value)
 }
 
-/// Provided by AnyHashable.cpp.
-@_silgen_name("_swift_makeAnyHashableUpcastingToHashableBaseType")
 internal func _makeAnyHashableUpcastingToHashableBaseType<H: Hashable>(
-  _ value: H,
-  storingResultInto result: UnsafeMutablePointer<AnyHashable>
+    _ value: H,
+    storingResultInto result: UnsafeMutablePointer<AnyHashable>
 )
 
 @inlinable
 public // COMPILER_INTRINSIC
 func _convertToAnyHashable<H: Hashable>(_ value: H) -> AnyHashable {
-  return AnyHashable(value)
+    return AnyHashable(value)
 }
 
 /// Called by the casting machinery.
 @_silgen_name("_swift_convertToAnyHashableIndirect")
 internal func _convertToAnyHashableIndirect<H: Hashable>(
-  _ value: H,
-  _ target: UnsafeMutablePointer<AnyHashable>
+    _ value: H,
+    _ target: UnsafeMutablePointer<AnyHashable>
 ) {
-  target.initialize(to: AnyHashable(value))
+    target.initialize(to: AnyHashable(value))
 }
 
 /// Called by the casting machinery.
 @_silgen_name("_swift_anyHashableDownCastConditionalIndirect")
 internal func _anyHashableDownCastConditionalIndirect<T>(
-  _ value: UnsafePointer<AnyHashable>,
-  _ target: UnsafeMutablePointer<T>
+    _ value: UnsafePointer<AnyHashable>,
+    _ target: UnsafeMutablePointer<T>
 ) -> Bool {
-  return value.pointee._downCastConditional(into: target)
+    return value.pointee._downCastConditional(into: target)
 }

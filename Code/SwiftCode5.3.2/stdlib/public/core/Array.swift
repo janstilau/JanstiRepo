@@ -1754,12 +1754,7 @@ extension Array: Equatable where Element: Equatable {
 }
 
 extension Array: Hashable where Element: Hashable {
-  /// Hashes the essential components of this value by feeding them into the
-  /// given hasher.
-  ///
-  /// - Parameter hasher: The hasher to use when combining the components
-  ///   of this instance.
-  @inlinable
+  // 先 Hash 自己的 count, 然后每个元素进行 hash.
   public func hash(into hasher: inout Hasher) {
     hasher.combine(count) // discriminator
     for element in self {
