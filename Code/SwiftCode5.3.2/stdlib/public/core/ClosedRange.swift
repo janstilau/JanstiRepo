@@ -2,86 +2,39 @@
 // 而前闭后闭, 则专门有一个叫做 ClosedRange 这个类来表示.
 
 
-/// Using a Closed Range as a Collection of Consecutive Values
-/// ----------------------------------------------------------
-///
-/// When a closed range uses integers as its lower and upper bounds, or any
-/// other type that conforms to the `Strideable` protocol with an integer
-/// stride, you can use that range in a `for`-`in` loop or with any sequence or
-/// collection method. The elements of the range are the consecutive values
-/// from its lower bound up to, and including, its upper bound.
-///
-///     for n in 3...5 {
-///         print(n)
-///     }
-///     // Prints "3"
-///     // Prints "4"
-///     // Prints "5"
-///
-/// Because floating-point types such as `Float` and `Double` are their own
-/// `Stride` types, they cannot be used as the bounds of a countable range. If
-/// you need to iterate over consecutive floating-point values, see the
-/// `stride(from:through:by:)` function.
-@frozen
+// Float 作为 Bound, 是不能作为 Sequence 的, 因为 Float 的 stride 无法确定出来.
 public struct ClosedRange<Bound: Comparable> {
-    /// The range's lower bound.
     public let lowerBound: Bound
-    
-    /// The range's upper bound.
     public let upperBound: Bound
     
-    /// Creates an instance with the given bounds.
-    ///
-    /// Because this initializer does not perform any checks, it should be used
-    /// as an optimization only when you are absolutely certain that `lower` is
-    /// less than or equal to `upper`. Using the closed range operator (`...`)
-    /// to form `ClosedRange` instances is preferred.
-    ///
-    /// - Parameter bounds: A tuple of the lower and upper bounds of the range.
-    @inlinable
     public init(uncheckedBounds bounds: (lower: Bound, upper: Bound)) {
         self.lowerBound = bounds.lower
         self.upperBound = bounds.upper
     }
 }
 
-// define isEmpty, which is available even on an uncountable ClosedRange
 extension ClosedRange {
-    /// A Boolean value indicating whether the range contains no elements.
-    ///
-    /// Because a closed range cannot represent an empty range, this property is
-    /// always `false`.
-    @inlinable
+    // 前闭后闭的 range, 不可能空. 一定有一个值.
     public var isEmpty: Bool {
         return false
     }
 }
 
 extension ClosedRange: RangeExpression {
-    @inlinable // trivial-implementation
+    // 和 Collection 的相交处理.
     public func relative<C: Collection>(to collection: C) -> Range<Bound>
     where C.Index == Bound {
         return Range(
             uncheckedBounds: (
                 lower: lowerBound, upper: collection.index(after: self.upperBound)))
     }
-    
-    /// Returns a Boolean value indicating whether the given element is contained
-    /// within the range.
-    ///
-    /// A `ClosedRange` instance contains both its lower and upper bound.
-    /// `element` is contained in the range if it is between the two bounds or
-    /// equal to either bound.
-    ///
-    /// - Parameter element: The element to check for containment.
-    /// - Returns: `true` if `element` is contained in the range; otherwise,
-    ///   `false`.
-    @inlinable
+    // Contains 处理的时候, 增加了相等性的判断.
     public func contains(_ element: Bound) -> Bool {
         return element >= self.lowerBound && element <= self.upperBound
     }
 }
 
+// 同样的, Close 对于 Sequence 的适配,  是建立在 Collection 的基础上的.
 extension ClosedRange: Sequence
 where Bound: Strideable, Bound.Stride: SignedInteger {
     public typealias Element = Bound
@@ -89,15 +42,15 @@ where Bound: Strideable, Bound.Stride: SignedInteger {
 }
 
 extension ClosedRange where Bound: Strideable, Bound.Stride: SignedInteger {
-    @frozen // FIXME(resilience)
+    // public typealias Index = Bound 在 Range 里面, Index 就是 Bound.
     public enum Index {
         case pastEnd
         case inRange(Bound)
     }
 }
 
+// 这里, 其实不太明白, 直接使用 Bound 会有什么问题.
 extension ClosedRange.Index: Comparable {
-    @inlinable
     public static func == (
         lhs: ClosedRange<Bound>.Index,
         rhs: ClosedRange<Bound>.Index
@@ -112,7 +65,6 @@ extension ClosedRange.Index: Comparable {
         }
     }
     
-    @inlinable
     public static func < (
         lhs: ClosedRange<Bound>.Index,
         rhs: ClosedRange<Bound>.Index
@@ -130,12 +82,6 @@ extension ClosedRange.Index: Comparable {
 
 extension ClosedRange.Index: Hashable
 where Bound: Strideable, Bound.Stride: SignedInteger, Bound: Hashable {
-    /// Hashes the essential components of this value by feeding them into the
-    /// given hasher.
-    ///
-    /// - Parameter hasher: The hasher to use when combining the components
-    ///   of this instance.
-    @inlinable
     public func hash(into hasher: inout Hasher) {
         switch self {
         case .inRange(let value):
@@ -147,29 +93,19 @@ where Bound: Strideable, Bound.Stride: SignedInteger, Bound: Hashable {
     }
 }
 
-// FIXME: this should only be conformance to RandomAccessCollection but
-// the compiler balks without all 3
 extension ClosedRange: Collection, BidirectionalCollection, RandomAccessCollection
 where Bound: Strideable, Bound.Stride: SignedInteger
 {
-    // while a ClosedRange can't be empty, a _slice_ of a ClosedRange can,
-    // so ClosedRange can't be its own self-slice unlike Range
     public typealias SubSequence = Slice<ClosedRange<Bound>>
     
-    /// The position of the first element in the range.
-    @inlinable
     public var startIndex: Index {
         return .inRange(lowerBound)
     }
     
-    /// The range's "past the end" position---that is, the position one greater
-    /// than the last valid subscript argument.
-    @inlinable
     public var endIndex: Index {
         return .pastEnd
     }
     
-    @inlinable
     public func index(after i: Index) -> Index {
         switch i {
         case .inRange(let x):
@@ -177,6 +113,8 @@ where Bound: Strideable, Bound.Stride: SignedInteger
                 ? .pastEnd
                 : .inRange(x.advanced(by: 1))
         case .pastEnd:
+            // 应该是这里, .pastEnd 之后, 不能再进行后移的处理了.
+            // 但是 Range 里面就可以啊.
             _preconditionFailure("Incrementing past end index")
         }
     }
@@ -330,22 +268,6 @@ extension ClosedRange: Hashable where Bound: Hashable {
     }
 }
 
-extension ClosedRange: CustomStringConvertible {
-    /// A textual representation of the range.
-    @inlinable // trivial-implementation...
-    public var description: String {
-        return "\(lowerBound)...\(upperBound)"
-    }
-}
-
-extension ClosedRange: CustomDebugStringConvertible {
-    /// A textual representation of the range, suitable for debugging.
-    public var debugDescription: String {
-        return "ClosedRange(\(String(reflecting: lowerBound))"
-            + "...\(String(reflecting: upperBound)))"
-    }
-}
-
 extension ClosedRange: CustomReflectable {
     public var customMirror: Mirror {
         return Mirror(
@@ -354,26 +276,6 @@ extension ClosedRange: CustomReflectable {
 }
 
 extension ClosedRange {
-    /// Returns a copy of this range clamped to the given limiting range.
-    ///
-    /// The bounds of the result are always limited to the bounds of `limits`.
-    /// For example:
-    ///
-    ///     let x: ClosedRange = 0...20
-    ///     print(x.clamped(to: 10...1000))
-    ///     // Prints "10...20"
-    ///
-    /// If the two ranges do not overlap, the result is a single-element range at
-    /// the upper or lower bound of `limits`.
-    ///
-    ///     let y: ClosedRange = 0...5
-    ///     print(y.clamped(to: 10...1000))
-    ///     // Prints "10...10"
-    ///
-    /// - Parameter limits: The range to clamp the bounds of this range.
-    /// - Returns: A new range clamped to the bounds of `limits`.
-    @inlinable // trivial-implementation
-    @inline(__always)
     public func clamped(to limits: ClosedRange) -> ClosedRange {
         let lower =
             limits.lowerBound > self.lowerBound ? limits.lowerBound
@@ -388,16 +290,7 @@ extension ClosedRange {
 }
 
 extension ClosedRange where Bound: Strideable, Bound.Stride: SignedInteger {
-    /// Creates an instance equivalent to the given `Range`.
-    ///
-    /// - Parameter other: A `Range` to convert to a `ClosedRange` instance.
-    ///
-    /// An equivalent range must be representable as a closed range.
-    /// For example, passing an empty range as `other` triggers a runtime error,
-    /// because an empty range cannot be represented by a closed range instance.
-    @inlinable
     public init(_ other: Range<Bound>) {
-        _precondition(!other.isEmpty, "Can't form an empty closed range")
         let upperBound = other.upperBound.advanced(by: -1)
         self.init(uncheckedBounds: (lower: other.lowerBound, upper: upperBound))
     }
@@ -406,9 +299,6 @@ extension ClosedRange where Bound: Strideable, Bound.Stride: SignedInteger {
 extension ClosedRange {
     @inlinable
     public func overlaps(_ other: ClosedRange<Bound>) -> Bool {
-        // Disjoint iff the other range is completely before or after our range.
-        // Unlike a `Range`, a `ClosedRange` can *not* be empty, so no check for
-        // that case is needed here.
         let isDisjoint = other.upperBound < self.lowerBound
             || self.upperBound < other.lowerBound
         return !isDisjoint
@@ -420,8 +310,6 @@ extension ClosedRange {
     }
 }
 
-// Note: this is not for compatibility only, it is considered a useful
-// shorthand. TODO: Add documentation
 public typealias CountableClosedRange<Bound: Strideable> = ClosedRange<Bound>
 where Bound.Stride: SignedInteger
 
