@@ -1,14 +1,10 @@
 // 一维的, 连续的, 可以评判出差距的类型.
-// 一维的, 代表着有前后关系
-// 可比较大小, 不一定是可以评判出差距的, 例如, 单词的字典排序.
+// 一维的, 代表着有前后关系, 其实 Comparable 就可以了, 但是可比较大小, 不一定是可以评判出差距的, 例如, 单词的字典排序.
 
-// Strideable 可以度量出间隔来.
-// 间隔有着正负之分, 并且是可以比较的.
-// 比如. 姚明周琦之间, 差着 10 个易建联. 首先这个是有正负的, 就是姚明一定在周琦上面. 易建联, 也是可以比较的, 比较的标准就是战斗力.
+// Strideable 可以度量出间隔来. 可以根据一个值, 和间隔值, 快速的计算出另外一个值来, 可以根据两个 Index 值, 快速的计算出间距来.
 
-// 可以评判差距的类型.
 public protocol Strideable: Comparable {
-    // 评判的标准, 可读.
+    // offsest 的单位, 有正负关系, 可以比较.
     associatedtype Stride: SignedNumeric, Comparable
     
     // 判断两者之间的差距. 按理来说, 这应该是一个 - 号运算符.
@@ -24,30 +20,26 @@ public protocol Strideable: Comparable {
 }
 
 extension Strideable {
-    @inlinable
     public static func < (x: Self, y: Self) -> Bool {
         return x.distance(to: y) > 0
     }
-    @inlinable
     public static func == (x: Self, y: Self) -> Bool {
         return x.distance(to: y) == 0
     }
 }
 
+// _step 主要是为了特定的算法使用的.
 extension Strideable {
     @inlinable
     public static func _step(
         after current: (index: Int?, value: Self),
         from start: Self, by distance: Self.Stride
     ) -> (index: Int?, value: Self) {
-        // 按理说, current 用 advanced(by 就能够确定出来.
-        // 这里, index 更多的是为了扩展用的.
         return (nil, current.value.advanced(by: distance))
     }
 }
 
 extension Strideable where Stride: FloatingPoint {
-    @inlinable // protocol-only
     public static func _step(
         after current: (index: Int?, value: Self),
         from start: Self, by distance: Self.Stride
@@ -66,32 +58,23 @@ extension Strideable where Self: FloatingPoint, Self == Stride {
         from start: Self, by distance: Self.Stride
     ) -> (index: Int?, value: Self) {
         if let i = current.index {
-            // When both Self and Stride are the same floating-point type, we should
-            // take advantage of fused multiply-add (where supported) to eliminate
-            // intermediate rounding error.
             return (i + 1, start.addingProduct(Stride(i + 1), distance))
         }
         return (nil, current.value.advanced(by: distance))
     }
 }
 
-@frozen
+// StrideToIterator 是为了 StrideTo 能够实现 Sequence 而定义的迭代器, 按照标准库的习惯, 应该到 StrideTo 的命名空间里才算合理.
 public struct StrideToIterator<Element: Strideable> {
-    @usableFromInline
+    // 这三个值, 都是生成 StrideTo 对象的时候, 外界传过来的. 而生成过程, 是有 stride 函数包裹起来的.
+    // 一个简单的方法, 生成特殊的对象, 而使用这个对象的时候, 是按照协议在使用这个对象. 这就是 Swift 面向协议编程的一个体现.
     internal let _start: Element
-    
-    @usableFromInline
     internal let _end: Element
-    
-    @usableFromInline
     internal let _stride: Element.Stride
     
-    // 除了, Start, end, stride 之外, 还有 _current 这样的一个值. 里面除了 currentValue, 还存储 index.
-    @usableFromInline
-    // index 表示, 第几个,  value 表示, 这个位置的值.
+    // Iter 里面, 真正表示状态值的就是 _current 这个元组.
     internal var _current: (index: Int?, value: Element)
     
-    @inlinable
     internal init(_start: Element, end: Element, stride: Element.Stride) {
         self._start = _start
         _end = end
@@ -104,28 +87,19 @@ public struct StrideToIterator<Element: Strideable> {
         if _stride > 0 ? result >= _end : result <= _end {
             return nil
         }
-        //
+        // 这里, 感觉 _step 这个函数, 反而让代码更加的混乱了.
         _current = Element._step(after: _current, from: _start, by: _stride)
         return result
     }
 }
 
-@frozen
+// 实际上, 这个类, 主要功能时提供了 StrideToIterator<Element>, 并且把自己的值, 传递到里面去.
+// Iterator, 里面根据 sequence 里面的值进行初始化, 然后维护根据这些值, 维护一个可以改变的值, 作为迭代过程的控制.
 public struct StrideTo<Element: Strideable> {
-    @usableFromInline
     internal let _start: Element
-    
-    @usableFromInline
     internal let _end: Element
-    
-    @usableFromInline
     internal let _stride: Element.Stride
-    
-    @inlinable
     internal init(_start: Element, end: Element, stride: Element.Stride) {
-        _precondition(stride != 0, "Stride size must not be zero")
-        // At start, striding away from end is allowed; it just makes for an
-        // already-empty Sequence.
         self._start = _start
         self._end = end
         self._stride = stride
@@ -133,17 +107,10 @@ public struct StrideTo<Element: Strideable> {
 }
 
 extension StrideTo: Sequence {
-    /// Returns an iterator over the elements of this sequence.
-    ///
-    /// - Complexity: O(1).
-    @inlinable
     public __consuming func makeIterator() -> StrideToIterator<Element> {
         return StrideToIterator(_start: _start, end: _end, stride: _stride)
     }
-    
-    // FIXME(conditional-conformances): this is O(N) instead of O(1), leaving it
-    // here until a proper Collection conformance is possible
-    @inlinable
+    // 这里是遍历生成的, 不符合 underestimatedCount 的使用的原始意图.
     public var underestimatedCount: Int {
         var it = self.makeIterator()
         var count = 0
@@ -152,8 +119,7 @@ extension StrideTo: Sequence {
         }
         return count
     }
-    
-    @inlinable
+    // 特殊的, 快速的判断 contains 的方法.
     public func _customContainsEquatableElement(
         _ element: Element
     ) -> Bool? {
@@ -170,21 +136,15 @@ extension StrideTo: CustomReflectable {
     }
 }
 
-#if false
 extension StrideTo: RandomAccessCollection
 where Element.Stride: BinaryInteger {
-    // 如果, stride 是 int, 那么可以当做 collection 来用.
+    
     public typealias Index = Int
     public typealias SubSequence = Slice<StrideTo<Element>>
     public typealias Indices = Range<Int>
-    
-    @inlinable
     public var startIndex: Index { return 0 }
-    
-    @inlinable
     public var endIndex: Index { return count }
     
-    @inlinable
     public var count: Int {
         let distance = _start.distance(to: _end)
         guard distance != 0 && (distance < 0) == (_stride < 0) else { return 0 }
@@ -192,56 +152,43 @@ where Element.Stride: BinaryInteger {
     }
     
     public subscript(position: Index) -> Element {
-        _failEarlyRangeCheck(position, bounds: startIndex..<endIndex)
         return _start.advanced(by: Element.Stride(position) * _stride)
     }
     
     public subscript(bounds: Range<Index>) -> Slice<StrideTo<Element>> {
-        _failEarlyRangeCheck(bounds, bounds: startIndex ..< endIndex)
         return Slice(base: self, bounds: bounds)
     }
     
-    @inlinable
     public func index(before i: Index) -> Index {
-        _failEarlyRangeCheck(i, bounds: startIndex + 1...endIndex)
         return i - 1
     }
     
-    @inlinable
     public func index(after i: Index) -> Index {
-        _failEarlyRangeCheck(i, bounds: startIndex - 1..<endIndex)
         return i + 1
     }
 }
-#endif
 
-// stride 方法, 返回一个 StrideTo 的结构体来, 这个结构体, 又是 sequence. 所以, 这个可以用在 forin 里面.
-@inlinable
+// 特殊的方法, 将 StrideTo 对象创建, 而使用它的地方, 一般是在 Forin 里面, 这样, 外界根本就不知道有 StrideTo 这个东西的存在, 因为 Forin 是根据 sequence 的接口进行的逻辑控制.
 public func stride<T>(
     from start: T, to end: T, by stride: T.Stride
 ) -> StrideTo<T> {
     return StrideTo(_start: start, end: end, stride: stride)
 }
 
-/// An iterator for a `StrideThrough` instance.
-@frozen
+
+
+// StrideThrough 和 StrideTo 没有太大的区别, 就是最后一个值取不取的问题.
 public struct StrideThroughIterator<Element: Strideable> {
-    @usableFromInline
     internal let _start: Element
     
-    @usableFromInline
     internal let _end: Element
     
-    @usableFromInline
     internal let _stride: Element.Stride
     
-    @usableFromInline
     internal var _current: (index: Int?, value: Element)
     
-    @usableFromInline
     internal var _didReturnEnd: Bool = false
     
-    @inlinable
     internal init(_start: Element, end: Element, stride: Element.Stride) {
         self._start = _start
         _end = end
@@ -251,11 +198,6 @@ public struct StrideThroughIterator<Element: Strideable> {
 }
 
 extension StrideThroughIterator: IteratorProtocol {
-    /// Advances to the next element and returns it, or `nil` if no next element
-    /// exists.
-    ///
-    /// Once `nil` has been returned, all subsequent calls return `nil`.
-    @inlinable
     public mutating func next() -> Element? {
         let result = _current.value
         if _stride > 0 ? result >= _end : result <= _end {
@@ -273,23 +215,12 @@ extension StrideThroughIterator: IteratorProtocol {
     }
 }
 
-// FIXME: should really be a Collection, as it is multipass
-/// A sequence of values formed by striding over a closed interval.
-///
-/// Use the `stride(from:through:by:)` function to create `StrideThrough` 
-/// instances.
-@frozen
 public struct StrideThrough<Element: Strideable> {
-    @usableFromInline
     internal let _start: Element
-    @usableFromInline
     internal let _end: Element
-    @usableFromInline
     internal let _stride: Element.Stride
     
-    @inlinable
     internal init(_start: Element, end: Element, stride: Element.Stride) {
-        _precondition(stride != 0, "Stride size must not be zero")
         self._start = _start
         self._end = end
         self._stride = stride
@@ -297,17 +228,10 @@ public struct StrideThrough<Element: Strideable> {
 }
 
 extension StrideThrough: Sequence {
-    /// Returns an iterator over the elements of this sequence.
-    ///
-    /// - Complexity: O(1).
-    @inlinable
     public __consuming func makeIterator() -> StrideThroughIterator<Element> {
         return StrideThroughIterator(_start: _start, end: _end, stride: _stride)
     }
     
-    // FIXME(conditional-conformances): this is O(N) instead of O(1), leaving it
-    // here until a proper Collection conformance is possible
-    @inlinable
     public var underestimatedCount: Int {
         var it = self.makeIterator()
         var count = 0
@@ -317,7 +241,6 @@ extension StrideThrough: Sequence {
         return count
     }
     
-    @inlinable
     public func _customContainsEquatableElement(
         _ element: Element
     ) -> Bool? {
@@ -335,8 +258,6 @@ extension StrideThrough: CustomReflectable {
     }
 }
 
-// FIXME(conditional-conformances): This does not yet compile (SR-6474).
-#if false
 extension StrideThrough: RandomAccessCollection
 where Element.Stride: BinaryInteger {
     public typealias Index = ClosedRangeIndex<Int>
@@ -394,9 +315,8 @@ where Element.Stride: BinaryInteger {
         }
     }
 }
-#endif
 
-@inlinable
+// 外界使用的, 简便的方法. 把实际的内部类型的创建进行了封装.
 public func stride<T>(
     from start: T, through end: T, by stride: T.Stride
 ) -> StrideThrough<T> {
