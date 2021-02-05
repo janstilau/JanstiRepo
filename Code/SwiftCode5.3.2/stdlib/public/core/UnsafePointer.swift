@@ -1,15 +1,10 @@
-// 其实, 操作指针, 并不是什么高级的行为, 只是不好用, 所以显得很难.
-// Swift 也暴露出了操作指针的接口来了, 就是 Unsafe 开头的两个 Pointer.
-// Raw Pointer 不带泛型, Pointer 指定了类型
-
 // 指针有很多的状态. 这在 C 代码里面, 也有这么多状态, 但是没有强制指明这回事. Swift 里面, 将操作和状态结合在了一起.
 // 指针指向的数据, 没有初始化. alloc, 分配空间, init, 将这份空间初始化. 没有初始化, 就是没有执行 init 操作.
 
-@frozen // unsafe-performance
 public struct UnsafePointer<Pointee>: _Pointer {
+    // 这几行代码, 就是对于 _Pointer 协议的适配.
     public typealias Distance = Int
     public let _rawValue: Builtin.RawPointer
-    @_transparent
     public init(_ _rawValue: Builtin.RawPointer) {
         self._rawValue = _rawValue
     }
@@ -24,7 +19,6 @@ public struct UnsafePointer<Pointee>: _Pointer {
         Builtin.deallocRaw(_rawValue, (-1)._builtinWordValue, (0)._builtinWordValue)
     }
     
-    @inlinable // unsafe-performance
     public var pointee: Pointee {
         @_transparent unsafeAddress {
             return self
@@ -40,6 +34,8 @@ public struct UnsafePointer<Pointee>: _Pointer {
         Builtin.bindMemory(_rawValue, count._builtinWordValue, T.self)
         // 先把 rawValue 转为 T 的类型, 然后传入 body 里面, 结束的时候, 再转回来.
         // _rawValue 是一个不透明的数据类型, Builtin.bindMemory 这个函数, 一定会改变这个数据类型里面的数据.
+        // body(UnsafePointer<T>(_rawValue)) 的参数, 是根据 rawValue 生成一个新的值对象, 所以, defer 以后在把值转回去, 不会影响到 body 的运行结果了. 仅仅是 rawValue 里面的地址数据是一样的, rawValue 里面的类型数据, 是不相同的
+        // 注意学defer 的使用.
         defer {
             Builtin.bindMemory(_rawValue, count._builtinWordValue, Pointee.self)
         }
@@ -47,15 +43,12 @@ public struct UnsafePointer<Pointee>: _Pointer {
     }
     
     // 延续 C 的风格, [i] 就是 pointer + i
-    @inlinable
     public subscript(i: Int) -> Pointee {
-        @_transparent
         unsafeAddress {
             return self + i
         }
     }
     
-    @inlinable // unsafe-performance
     internal static var _max: UnsafePointer {
         return UnsafePointer(
             bitPattern: 0 as Int &- MemoryLayout<Pointee>.stride
@@ -65,62 +58,53 @@ public struct UnsafePointer<Pointee>: _Pointer {
 
 
 
-
-@frozen // unsafe-performance
+// 具有可变的 Pointer.
 public struct UnsafeMutablePointer<Pointee>: _Pointer {
-    
     public typealias Distance = Int
     public let _rawValue: Builtin.RawPointer
     
-    @_transparent
     public init(_ _rawValue: Builtin.RawPointer) {
         self._rawValue = _rawValue
     }
     
-    @_transparent
     public init(@_nonEphemeral mutating other: UnsafePointer<Pointee>) {
         self._rawValue = other._rawValue
     }
     
-    @_transparent
     public init?(@_nonEphemeral mutating other: UnsafePointer<Pointee>?) {
         guard let unwrapped = other else { return nil }
         self.init(mutating: unwrapped)
     }
     
-    @_transparent
     public init(@_nonEphemeral _ other: UnsafeMutablePointer<Pointee>) {
         self._rawValue = other._rawValue		
     }		
     
-    @_transparent
     public init?(@_nonEphemeral _ other: UnsafeMutablePointer<Pointee>?) {
         guard let unwrapped = other else { return nil }		
         self.init(unwrapped)		
     }		
     
-    
-    @inlinable
     public static func allocate(capacity count: Int)
     -> UnsafeMutablePointer<Pointee> {
+        // 必须使用 memoryLayout 的 stride 作为分配资源的单位
         let size = MemoryLayout<Pointee>.stride * count
         var align = Builtin.alignof(Pointee.self)
         if Int(align) <= _minAllocationAlignment() {
             align = (0)._builtinWordValue
         }
-        // 真正的 分配的操作.
-        // 然后把 rawPtr 通过 bindMemory 改变为相应的数据.
+        // Builtin.allocRaw 应该就是  malloc 函数.
         let rawPtr = Builtin.allocRaw(size._builtinWordValue, align)
+        // rawPtr 是 rawPointer, 是一个不透明的类型, 猜测, bindMemory 会把类型信息, 注册到 rawPointer 的内部.
         Builtin.bindMemory(rawPtr, count._builtinWordValue, Pointee.self)
         return UnsafeMutablePointer(rawPtr) // public init(_ _rawValue: Builtin.RawPointer)
     }
     
-    @inlinable
     public func deallocate() {
+        // Builtin.deallocRaw 应该是 free 函数
         Builtin.deallocRaw(_rawValue, (-1)._builtinWordValue, (0)._builtinWordValue)
     }
     
-    @inlinable // unsafe-performance
     public var pointee: Pointee {
         @_transparent unsafeAddress {
             return UnsafePointer(self)
@@ -130,64 +114,24 @@ public struct UnsafeMutablePointer<Pointee>: _Pointer {
         }
     }
     
-    @inlinable
     public func initialize(repeating repeatedValue: Pointee, count: Int) {
         for offset in 0..<count {
+            // Builtin.initialize, 根据 repeatedValue 来初始化 (self + offset)._rawValue 指向的数据.
             Builtin.initialize(repeatedValue, (self + offset)._rawValue)
         }
     }
     
-    /// Initializes this pointer's memory with a single instance of the given value.
-    ///
-    /// The destination memory must be uninitialized or the pointer's `Pointee`
-    /// must be a trivial type. After a call to `initialize(to:)`, the
-    /// memory referenced by this pointer is initialized. Calling this method is 
-    /// roughly equivalent to calling `initialize(repeating:count:)` with a 
-    /// `count` of 1.
-    ///
-    /// - Parameters:
-    ///   - value: The instance to initialize this pointer's pointee to.
-    @inlinable
     public func initialize(to value: Pointee) {
         Builtin.initialize(value, self._rawValue)
     }
     
-    /// Retrieves and returns the referenced instance, returning the pointer's
-    /// memory to an uninitialized state.
-    ///
-    /// Calling the `move()` method on a pointer `p` that references memory of
-    /// type `T` is equivalent to the following code, aside from any cost and
-    /// incidental side effects of copying and destroying the value:
-    ///
-    ///     let value: T = {
-    ///         defer { p.deinitialize(count: 1) }
-    ///         return p.pointee
-    ///     }()
-    ///
-    /// The memory referenced by this pointer must be initialized. After calling
-    /// `move()`, the memory is uninitialized.
-    ///
-    /// - Returns: The instance referenced by this pointer.
-    @inlinable
+    // 这个命令, 会让 _rawValue 重新回到 uninit 状态.
+    // 所以, rawPointer 里面, 一定有一个值, 来记录自己是否已经经过了初始化
     public func move() -> Pointee {
         return Builtin.take(_rawValue)
     }
     
-    /// Replaces this pointer's memory with the specified number of
-    /// consecutive copies of the given value.
-    ///
-    /// The region of memory starting at this pointer and covering `count`
-    /// instances of the pointer's `Pointee` type must be initialized or
-    /// `Pointee` must be a trivial type. After calling
-    /// `assign(repeating:count:)`, the region is initialized.
-    ///
-    /// - Parameters:
-    ///   - repeatedValue: The instance to assign this pointer's memory to.
-    ///   - count: The number of consecutive copies of `newValue` to assign.
-    ///     `count` must not be negative. 
-    @inlinable
     public func assign(repeating repeatedValue: Pointee, count: Int) {
-        _debugPrecondition(count >= 0, "UnsafeMutablePointer.assign(repeating:count:) with negative count")
         for i in 0..<count {
             self[i] = repeatedValue
         }

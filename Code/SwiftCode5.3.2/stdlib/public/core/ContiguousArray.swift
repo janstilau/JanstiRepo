@@ -1,13 +1,3 @@
-//===--- ContiguousArray.swift --------------------------------*- swift -*-===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2018 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
 //===----------------------------------------------------------------------===//
 //
 //  Three generic, mutable array-like types with value semantics.
@@ -35,10 +25,7 @@
 /// which `ContiguousArray` shares most properties and methods.
 @frozen
 public struct ContiguousArray<Element>: _DestructorSafeContainer {
-    @usableFromInline
     internal typealias _Buffer = _ContiguousArrayBuffer<Element>
-    
-    @usableFromInline
     internal var _buffer: _Buffer
     
     /// Initialization from an existing buffer does not have "array.init"

@@ -30,7 +30,7 @@ extension Slice: Collection {
     public var startIndex: Index {
         return _startIndex
     }
-        
+    
     // EndIndex 不在是 Base 的, 而是 Slice 所记录的
     public var endIndex: Index {
         return _endIndex
