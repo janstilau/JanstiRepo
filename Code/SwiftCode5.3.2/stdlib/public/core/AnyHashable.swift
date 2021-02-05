@@ -4,7 +4,7 @@ public protocol _HasCustomAnyHashableRepresentation {
     __consuming func _toCustomAnyHashable() -> AnyHashable?
 }
 
-// 协议本身是私有的, 方法也是私有的. 一切的一切, 就是不应该把值传出去.
+
 internal protocol _AnyHashableBox {
     var _canonicalBox: _AnyHashableBox { get }
     func _isEqual(to box: _AnyHashableBox) -> Bool?
@@ -24,7 +24,7 @@ extension _AnyHashableBox {
     }
 }
 
-// 默认的对于 _AnyHashableBox 的实现.
+// 这也是一个 struct. 但是, 它里面存储一个 Hashable 值, 作为 base.
 internal struct _ConcreteHashableBox<Base: Hashable>: _AnyHashableBox {
     internal var _baseHashable: Base
     
@@ -32,8 +32,6 @@ internal struct _ConcreteHashableBox<Base: Hashable>: _AnyHashableBox {
         self._baseHashable = base
     }
     
-    // 这里, as 是如何实现的. _ConcreteHashableBox<T> 里面是带有类型的啊.
-    // 能直接写成 _baseHashable as? T 吗
     internal func _unbox<T: Hashable>() -> T? {
         return (self as _AnyHashableBox as? _ConcreteHashableBox<T>)?._baseHashable
     }
@@ -69,11 +67,6 @@ internal struct _ConcreteHashableBox<Base: Hashable>: _AnyHashableBox {
 }
 
 
-/// A type-erased hashable value.
-///
-/// The `AnyHashable` type forwards equality comparisons and hashing operations
-/// to an underlying hashable value, hiding the type of the wrapped value.
-///
 /// Where conversion using `as` or `as?` is possible between two types (such as
 /// `Int` and `NSNumber`), `AnyHashable` uses a canonical representation of the
 /// type-erased value so that instances wrapping the same value of either type
@@ -100,30 +93,12 @@ internal struct _ConcreteHashableBox<Base: Hashable>: _AnyHashableBox {
 /// compatible hashes, as the hash encoding that it uses may change between any
 /// two releases of the standard library.
 
-// Swift 经常有这种, struct 包装 class 进行引用传递的类型.
+// _AnyHashableBox 这层协议, 目前看来有点过度设计.
 public struct AnyHashable {
-    // 这里, 是一个 协议对象. 因为实际上, 使用的就是协议的功能.
-    // 但是实际上, 仅仅有一个子类. 可能是因为是标准库, 所以就预先进行了扩展点的设计.
-    // 如果是自己的类, 无需这样提前设计.
     
     internal var _box: _AnyHashableBox
     internal init(_box box: _AnyHashableBox) {
         self._box = box
-    }
-    
-    // 真正外界使用的, 是这个方法.
-    public init<H: Hashable>(_ base: H) {
-        if let custom =
-            // 如果, Hashable 有着自己更好的对于 HashableRepresentation 的表现, 那么使用自定义的表现.
-            (base as? _HasCustomAnyHashableRepresentation)?._toCustomAnyHashable() {
-            self = custom
-            return
-        }
-        
-        self.init(_box: _ConcreteHashableBox(false)) // Dummy value
-        _makeAnyHashableUpcastingToHashableBaseType(
-            base,
-            storingResultInto: &self)
     }
     
     internal init<H: Hashable>(_usingDefaultRepresentationOf base: H) {
@@ -201,12 +176,6 @@ extension AnyHashable: Hashable {
 extension AnyHashable: CustomStringConvertible {
     public var description: String {
         return String(describing: base)
-    }
-}
-
-extension AnyHashable: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        return "AnyHashable(" + String(reflecting: base) + ")"
     }
 }
 
