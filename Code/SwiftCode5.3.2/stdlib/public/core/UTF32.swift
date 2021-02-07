@@ -1,14 +1,3 @@
-//===--- UTF32.swift ------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
 extension Unicode {
   @frozen
   public enum UTF32 {
@@ -16,6 +5,8 @@ extension Unicode {
   }
 }
 
+// UTF-32 使用四个字节来表示存储代码点：把代码点转换为 32 位二进制，位数不够的左边充 0。
+// 所以, 这个就是 Unicode.Scalar 的存储形式.
 extension Unicode.UTF32: Unicode.Encoding {
   public typealias CodeUnit = UInt32
   public typealias EncodedScalar = CollectionOfOne<UInt32>

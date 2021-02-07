@@ -2,6 +2,7 @@ public protocol RangeReplaceableCollection: Collection
 where SubSequence: RangeReplaceableCollection {
     override associatedtype SubSequence
     init()
+    
     // primitive method, 提供了其他方法的实现的基础.
     // replaceSubrange 作为 primitive 的原因在于, 插入: subrange 为 length 0 就可以, 删除, newElements length 为 0,  subrange length 变化.
     // 也就是说, 根据 range 来表示多对多, 可以应对任何变化.

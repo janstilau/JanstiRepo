@@ -1,68 +1,65 @@
 extension Unicode {
-    @frozen
     public enum UTF8 {
         case _swift3Buffer(Unicode.UTF8.ForwardParser)
     }
 }
 
+/*
+ UTF-8编码方式
+ 
+ 2^16 = 65536, 而现在 unicode 是 10 万多个字母, 所以 17 个字节就足够了. 但是 UTF 8 表示 17 个字节, 要用四个字节. 在转化的时候, 根据 unicode 编码的位置不同, 生成了不同长度的 uft8 编码.
+
+ U+0000~U+007F 一个字节, 利用了 7 个 bit 位置
+ 0????????
+ 
+ U+0080~U+07FF 两个字节, 利用了 11 个 bit 位置
+ 110????? 10??????
+
+ U+0800~U+FFFF 三个字节, 利用了 16 个 bit 位置.
+ 1110???? 10?????? 10??????
+
+ U+10000~U+10FFFF 四个字节, 利用了 21 个 bit 位置.
+ 11110??? 10?????? 10?????? 10??????
+ 
+ 当我们得到Unicode码后，我们先根据上面的这个表判断其所处的范围，然后将Unicode码转换为二进制表示，从后往前截取UTF-8编码中所留为之长度，从前往后依次填入对应位置，所即可得到UTF-8的编码
+ U+0020，这个字符的小于0000 007F，所以只需要用1 Byte来进行编码。U+0020的二进制表示为0000(0)0000(0) 0010(2)0000(0)，那么从后往前截取7位得到010 0000，放入UTF-8编码方式中，得到的结果为00101111，转换为十六进制得到2F。因此存储在内存中的的顺序就是2F。
+ U+A12B，这个字符大于0000 0800，小于0000 FFFF，因此需要用3 Byte来进行编码。U+A12B的二进制表示为1010(A)0001(1) 0010(2)1011(B)。，那么从后往前截取16位得到10100001 00101011（Unicode码本身），放入UTF-8编码中，得到的结果为11101010 10000100 10101011，转换十六进制得到EA84AB。因此，存储在内存中的顺序就是EA 84 AB。
+ */
+
 extension Unicode.UTF8 {
-    /// Returns the number of code units required to encode the given Unicode
-    /// scalar.
-    ///
-    /// Because a Unicode scalar value can require up to 21 bits to store its
-    /// value, some Unicode scalars are represented in UTF-8 by a sequence of up
-    /// to 4 code units. The first code unit is designated a *lead* byte and the
-    /// rest are *continuation* bytes.
-    ///
-    ///     let anA: Unicode.Scalar = "A"
-    ///     print(anA.value)
-    ///     // Prints "65"
-    ///     print(UTF8.width(anA))
-    ///     // Prints "1"
-    ///
-    ///     let anApple: Unicode.Scalar = "🍎"
-    ///     print(anApple.value)
-    ///     // Prints "127822"
-    ///     print(UTF8.width(anApple))
-    ///     // Prints "4"
-    ///
-    /// - Parameter x: A Unicode scalar value.
-    /// - Returns: The width of `x` when encoded in UTF-8, from `1` to `4`.
-    @_alwaysEmitIntoClient
+    // Unicode.Scalar 里面, 存储了一个 U32, 也就是四个字节的值.
+    // 根据, Unicode 编码的大小, 获取需要多少个字节表示该字符. 里面的 magic number, 是 UTF 这套编码规则规定的.
     public static func width(_ x: Unicode.Scalar) -> Int {
         switch x.value {
-        case 0..<0x80: return 1
-        case 0x80..<0x0800: return 2
-        case 0x0800..<0x1_0000: return 3
+        case 0..<0x80: return 1 // 000000 - 00007F
+        case 0x80..<0x0800: return 2 // 000080 - 0007FF
+        case 0x0800..<0x1_0000: return 3 // 010000 - 10FFFF
         default: return 4
         }
     }
 }
 
 extension Unicode.UTF8: _UnicodeEncoding {
+        
+    // UTF 8, 是按照字节为单位的.
     public typealias CodeUnit = UInt8
     public typealias EncodedScalar = _ValidUTF8Buffer
     
-    @inlinable
     public static var encodedReplacementCharacter: EncodedScalar {
         return EncodedScalar.encodedReplacementCharacter
     }
     
-    @inline(__always)
-    @inlinable
+    // 按照 UTF 8 的标准, 最大的就是 7 位数字, 所以和 0b1000_0000 进行与操作, 一定是为 0.
     public static func _isScalar(_ x: CodeUnit) -> Bool {
         return isASCII(x)
     }
-    
-    /// Returns whether the given code unit represents an ASCII scalar
-    @_alwaysEmitIntoClient
-    @inline(__always)
     public static func isASCII(_ x: CodeUnit) -> Bool {
         return x & 0b1000_0000 == 0
     }
     
-    @inline(__always)
-    @inlinable
+    // 如果从 _ValidUTF8Buffer 中, 抽取出有效的 Unicode.Scalar
+    // 这里, 其实就是 从 UTF8 编码, 到 Unicode 编码的反序列化的过程.
+    // 根据长度, 分别取不同字节的数据, 最后进行相加凑走.
     public static func decode(_ source: EncodedScalar) -> Unicode.Scalar {
         switch source.count {
         case 1:
@@ -89,8 +86,7 @@ extension Unicode.UTF8: _UnicodeEncoding {
         }
     }
     
-    @inline(__always)
-    @inlinable
+    // 如果, 把 Unicode, 序列化为 UTF8 的过程.
     public static func encode(
         _ source: Unicode.Scalar
     ) -> EncodedScalar? {
@@ -118,8 +114,7 @@ extension Unicode.UTF8: _UnicodeEncoding {
             _biasedBits: (o | c ) &+ 0b0__1000_0001__1000_0001__1000_0001__1111_0001)
     }
     
-    @inlinable
-    @inline(__always)
+    // 从一种编码方式, 转换到自己的 _ValidUTF8Buffer 形式.
     public static func transcode<FromEncoding: _UnicodeEncoding>(
         _ content: FromEncoding.EncodedScalar, from _: FromEncoding.Type
     ) -> EncodedScalar? {
@@ -150,20 +145,14 @@ extension Unicode.UTF8: _UnicodeEncoding {
         return encode(FromEncoding.decode(content))
     }
     
-    @frozen
     public struct ForwardParser {
         public typealias _Buffer = _UIntBuffer<UInt8>
-        @inline(__always)
-        @inlinable
         public init() { _buffer = _Buffer() }
         public var _buffer: _Buffer
     }
     
-    @frozen
     public struct ReverseParser {
         public typealias _Buffer = _UIntBuffer<UInt8>
-        @inline(__always)
-        @inlinable
         public init() { _buffer = _Buffer() }
         public var _buffer: _Buffer
     }
@@ -171,8 +160,6 @@ extension Unicode.UTF8: _UnicodeEncoding {
 
 extension UTF8.ReverseParser: Unicode.Parser, _UTFParser {
     public typealias Encoding = Unicode.UTF8
-    @inline(__always)
-    @inlinable
     public func _parseMultipleCodeUnits() -> (isValid: Bool, bitCount: UInt8) {
         _internalInvariant(_buffer._storage & 0x80 != 0) // this case handled elsewhere
         if _buffer._storage                & 0b0__1110_0000__1100_0000
@@ -206,8 +193,6 @@ extension UTF8.ReverseParser: Unicode.Parser, _UTFParser {
     
     /// Returns the length of the invalid sequence that ends with the LSB of
     /// buffer.
-    @inline(never)
-    @usableFromInline
     internal func _invalidLength() -> UInt8 {
         if _buffer._storage                 & 0b0__1111_0000__1100_0000
             == 0b0__1110_0000__1000_0000 {

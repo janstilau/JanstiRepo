@@ -306,37 +306,14 @@ public protocol ExpressibleByBooleanLiteral {
   init(booleanLiteral value: BooleanLiteralType)
 }
 
+// 这个协议, 就是可以从一个 Int 32 来初始化一个值
 public protocol _ExpressibleByBuiltinUnicodeScalarLiteral {
   init(_builtinUnicodeScalarLiteral value: Builtin.Int32)
 }
 
-/// A type that can be initialized with a string literal containing a single
-/// Unicode scalar value.
-///
-/// The `String`, `StaticString`, `Character`, and `Unicode.Scalar` types all
-/// conform to the `ExpressibleByUnicodeScalarLiteral` protocol. You can
-/// initialize a variable of any of these types using a string literal that
-/// holds a single Unicode scalar.
-///
-///     let ñ: Unicode.Scalar = "ñ"
-///     print(ñ)
-///     // Prints "ñ"
-///
-/// Conforming to ExpressibleByUnicodeScalarLiteral
-/// ===============================================
-///
-/// To add `ExpressibleByUnicodeScalarLiteral` conformance to your custom type,
-/// implement the required initializer.
+// 可以从, Int32 初始化一个值.
 public protocol ExpressibleByUnicodeScalarLiteral {
-  /// A type that represents a Unicode scalar literal.
-  ///
-  /// Valid types for `UnicodeScalarLiteralType` are `Unicode.Scalar`,
-  /// `Character`, `String`, and `StaticString`.
   associatedtype UnicodeScalarLiteralType: _ExpressibleByBuiltinUnicodeScalarLiteral
-
-  /// Creates an instance initialized to the given value.
-  ///
-  /// - Parameter value: The value of the new instance.
   init(unicodeScalarLiteral value: UnicodeScalarLiteralType)
 }
 

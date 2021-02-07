@@ -61,201 +61,201 @@
 /// and should not copy `self` or capture it in an escaping closure.
 @frozen
 public struct DefaultStringInterpolation: StringInterpolationProtocol {
-  /// The string contents accumulated by this instance.
-  @usableFromInline
-  internal var _storage: String
-  
-  /// Creates a string interpolation with storage pre-sized for a literal
-  /// with the indicated attributes.
-  /// 
-  /// Do not call this initializer directly. It is used by the compiler when
-  /// interpreting string interpolations.
-  @inlinable
-  public init(literalCapacity: Int, interpolationCount: Int) {
-    let capacityPerInterpolation = 2
-    let initialCapacity = literalCapacity +
-      interpolationCount * capacityPerInterpolation
-    _storage = String(_StringGuts(_initialCapacity: initialCapacity))
-  }
-  
-  /// Appends a literal segment of a string interpolation.
-  /// 
-  /// Do not call this method directly. It is used by the compiler when
-  /// interpreting string interpolations.
-  @inlinable
-  public mutating func appendLiteral(_ literal: String) {
-    literal.write(to: &self)
-  }
-  
-  /// Interpolates the given value's textual representation into the
-  /// string literal being created.
-  /// 
-  /// Do not call this method directly. It is used by the compiler when
-  /// interpreting string interpolations. Instead, use string
-  /// interpolation to create a new string by including values, literals,
-  /// variables, or expressions enclosed in parentheses, prefixed by a
-  /// backslash (`\(`...`)`).
-  ///
-  ///     let price = 2
-  ///     let number = 3
-  ///     let message = """
-  ///                   If one cookie costs \(price) dollars, \
-  ///                   \(number) cookies cost \(price * number) dollars.
-  ///                   """
-  ///     print(message)
-  ///     // Prints "If one cookie costs 2 dollars, 3 cookies cost 6 dollars."
-  @inlinable
-  public mutating func appendInterpolation<T>(_ value: T)
+    /// The string contents accumulated by this instance.
+    @usableFromInline
+    internal var _storage: String
+    
+    /// Creates a string interpolation with storage pre-sized for a literal
+    /// with the indicated attributes.
+    /// 
+    /// Do not call this initializer directly. It is used by the compiler when
+    /// interpreting string interpolations.
+    @inlinable
+    public init(literalCapacity: Int, interpolationCount: Int) {
+        let capacityPerInterpolation = 2
+        let initialCapacity = literalCapacity +
+            interpolationCount * capacityPerInterpolation
+        _storage = String(_StringGuts(_initialCapacity: initialCapacity))
+    }
+    
+    /// Appends a literal segment of a string interpolation.
+    /// 
+    /// Do not call this method directly. It is used by the compiler when
+    /// interpreting string interpolations.
+    @inlinable
+    public mutating func appendLiteral(_ literal: String) {
+        literal.write(to: &self)
+    }
+    
+    /// Interpolates the given value's textual representation into the
+    /// string literal being created.
+    /// 
+    /// Do not call this method directly. It is used by the compiler when
+    /// interpreting string interpolations. Instead, use string
+    /// interpolation to create a new string by including values, literals,
+    /// variables, or expressions enclosed in parentheses, prefixed by a
+    /// backslash (`\(`...`)`).
+    ///
+    ///     let price = 2
+    ///     let number = 3
+    ///     let message = """
+    ///                   If one cookie costs \(price) dollars, \
+    ///                   \(number) cookies cost \(price * number) dollars.
+    ///                   """
+    ///     print(message)
+    ///     // Prints "If one cookie costs 2 dollars, 3 cookies cost 6 dollars."
+    @inlinable
+    public mutating func appendInterpolation<T>(_ value: T)
     where T: TextOutputStreamable, T: CustomStringConvertible
-  {
-    value.write(to: &self)
-  }
-  
-  /// Interpolates the given value's textual representation into the
-  /// string literal being created.
-  /// 
-  /// Do not call this method directly. It is used by the compiler when
-  /// interpreting string interpolations. Instead, use string
-  /// interpolation to create a new string by including values, literals,
-  /// variables, or expressions enclosed in parentheses, prefixed by a
-  /// backslash (`\(`...`)`).
-  ///
-  ///     let price = 2
-  ///     let number = 3
-  ///     let message = "If one cookie costs \(price) dollars, " +
-  ///                   "\(number) cookies cost \(price * number) dollars."
-  ///     print(message)
-  ///     // Prints "If one cookie costs 2 dollars, 3 cookies cost 6 dollars."
-  @inlinable
-  public mutating func appendInterpolation<T>(_ value: T)
+    {
+        value.write(to: &self)
+    }
+    
+    /// Interpolates the given value's textual representation into the
+    /// string literal being created.
+    /// 
+    /// Do not call this method directly. It is used by the compiler when
+    /// interpreting string interpolations. Instead, use string
+    /// interpolation to create a new string by including values, literals,
+    /// variables, or expressions enclosed in parentheses, prefixed by a
+    /// backslash (`\(`...`)`).
+    ///
+    ///     let price = 2
+    ///     let number = 3
+    ///     let message = "If one cookie costs \(price) dollars, " +
+    ///                   "\(number) cookies cost \(price * number) dollars."
+    ///     print(message)
+    ///     // Prints "If one cookie costs 2 dollars, 3 cookies cost 6 dollars."
+    @inlinable
+    public mutating func appendInterpolation<T>(_ value: T)
     where T: TextOutputStreamable
-  {
-    value.write(to: &self)
-  }
-  
-  /// Interpolates the given value's textual representation into the
-  /// string literal being created.
-  /// 
-  /// Do not call this method directly. It is used by the compiler when
-  /// interpreting string interpolations. Instead, use string
-  /// interpolation to create a new string by including values, literals,
-  /// variables, or expressions enclosed in parentheses, prefixed by a
-  /// backslash (`\(`...`)`).
-  ///
-  ///     let price = 2
-  ///     let number = 3
-  ///     let message = """
-  ///                   If one cookie costs \(price) dollars, \
-  ///                   \(number) cookies cost \(price * number) dollars.
-  ///                   """
-  ///     print(message)
-  ///     // Prints "If one cookie costs 2 dollars, 3 cookies cost 6 dollars."
-  @inlinable
-  public mutating func appendInterpolation<T>(_ value: T)
+    {
+        value.write(to: &self)
+    }
+    
+    /// Interpolates the given value's textual representation into the
+    /// string literal being created.
+    /// 
+    /// Do not call this method directly. It is used by the compiler when
+    /// interpreting string interpolations. Instead, use string
+    /// interpolation to create a new string by including values, literals,
+    /// variables, or expressions enclosed in parentheses, prefixed by a
+    /// backslash (`\(`...`)`).
+    ///
+    ///     let price = 2
+    ///     let number = 3
+    ///     let message = """
+    ///                   If one cookie costs \(price) dollars, \
+    ///                   \(number) cookies cost \(price * number) dollars.
+    ///                   """
+    ///     print(message)
+    ///     // Prints "If one cookie costs 2 dollars, 3 cookies cost 6 dollars."
+    @inlinable
+    public mutating func appendInterpolation<T>(_ value: T)
     where T: CustomStringConvertible
-  {
-    value.description.write(to: &self)
-  }
-  
-  /// Interpolates the given value's textual representation into the
-  /// string literal being created.
-  /// 
-  /// Do not call this method directly. It is used by the compiler when
-  /// interpreting string interpolations. Instead, use string
-  /// interpolation to create a new string by including values, literals,
-  /// variables, or expressions enclosed in parentheses, prefixed by a
-  /// backslash (`\(`...`)`).
-  ///
-  ///     let price = 2
-  ///     let number = 3
-  ///     let message = """
-  ///                   If one cookie costs \(price) dollars, \
-  ///                   \(number) cookies cost \(price * number) dollars.
-  ///                   """
-  ///     print(message)
-  ///     // Prints "If one cookie costs 2 dollars, 3 cookies cost 6 dollars."
-  @inlinable
-  public mutating func appendInterpolation<T>(_ value: T) {
-    _print_unlocked(value, &self)
-  }
-
-  @_alwaysEmitIntoClient
-  public mutating func appendInterpolation(_ value: Any.Type) {
-    _typeName(value, qualified: false).write(to: &self)
-  }
-
-  /// Creates a string from this instance, consuming the instance in the
-  /// process.
-  @inlinable
-  internal __consuming func make() -> String {
-    return _storage
-  }
+    {
+        value.description.write(to: &self)
+    }
+    
+    /// Interpolates the given value's textual representation into the
+    /// string literal being created.
+    /// 
+    /// Do not call this method directly. It is used by the compiler when
+    /// interpreting string interpolations. Instead, use string
+    /// interpolation to create a new string by including values, literals,
+    /// variables, or expressions enclosed in parentheses, prefixed by a
+    /// backslash (`\(`...`)`).
+    ///
+    ///     let price = 2
+    ///     let number = 3
+    ///     let message = """
+    ///                   If one cookie costs \(price) dollars, \
+    ///                   \(number) cookies cost \(price * number) dollars.
+    ///                   """
+    ///     print(message)
+    ///     // Prints "If one cookie costs 2 dollars, 3 cookies cost 6 dollars."
+    @inlinable
+    public mutating func appendInterpolation<T>(_ value: T) {
+        _print_unlocked(value, &self)
+    }
+    
+    @_alwaysEmitIntoClient
+    public mutating func appendInterpolation(_ value: Any.Type) {
+        _typeName(value, qualified: false).write(to: &self)
+    }
+    
+    /// Creates a string from this instance, consuming the instance in the
+    /// process.
+    @inlinable
+    internal __consuming func make() -> String {
+        return _storage
+    }
 }
 
 extension DefaultStringInterpolation: CustomStringConvertible {
-  @inlinable
-  public var description: String {
-    return _storage
-  }
+    @inlinable
+    public var description: String {
+        return _storage
+    }
 }
 
 extension DefaultStringInterpolation: TextOutputStream {
-  @inlinable
-  public mutating func write(_ string: String) {
-    _storage.append(string)
-  }
-  
-  public mutating func _writeASCII(_ buffer: UnsafeBufferPointer<UInt8>) {
-    _storage._guts.append(_StringGuts(buffer, isASCII: true))
-  }
+    @inlinable
+    public mutating func write(_ string: String) {
+        _storage.append(string)
+    }
+    
+    public mutating func _writeASCII(_ buffer: UnsafeBufferPointer<UInt8>) {
+        _storage._guts.append(_StringGuts(buffer, isASCII: true))
+    }
 }
 
 // While not strictly necessary, declaring these is faster than using the
 // default implementation.
 extension String {
-  /// Creates a new instance from an interpolated string literal.
-  /// 
-  /// Do not call this initializer directly. It is used by the compiler when
-  /// you create a string using string interpolation. Instead, use string
-  /// interpolation to create a new string by including values, literals,
-  /// variables, or expressions enclosed in parentheses, prefixed by a
-  /// backslash (`\(`...`)`).
-  ///
-  ///     let price = 2
-  ///     let number = 3
-  ///     let message = """
-  ///                   If one cookie costs \(price) dollars, \
-  ///                   \(number) cookies cost \(price * number) dollars.
-  ///                   """
-  ///     print(message)
-  ///     // Prints "If one cookie costs 2 dollars, 3 cookies cost 6 dollars."
-  @inlinable
-  @_effects(readonly)
-  public init(stringInterpolation: DefaultStringInterpolation) {
-    self = stringInterpolation.make()
-  }
+    /// Creates a new instance from an interpolated string literal.
+    /// 
+    /// Do not call this initializer directly. It is used by the compiler when
+    /// you create a string using string interpolation. Instead, use string
+    /// interpolation to create a new string by including values, literals,
+    /// variables, or expressions enclosed in parentheses, prefixed by a
+    /// backslash (`\(`...`)`).
+    ///
+    ///     let price = 2
+    ///     let number = 3
+    ///     let message = """
+    ///                   If one cookie costs \(price) dollars, \
+    ///                   \(number) cookies cost \(price * number) dollars.
+    ///                   """
+    ///     print(message)
+    ///     // Prints "If one cookie costs 2 dollars, 3 cookies cost 6 dollars."
+    @inlinable
+    @_effects(readonly)
+    public init(stringInterpolation: DefaultStringInterpolation) {
+        self = stringInterpolation.make()
+    }
 }
 
 extension Substring {
-  /// Creates a new instance from an interpolated string literal.
-  /// 
-  /// Do not call this initializer directly. It is used by the compiler when
-  /// you create a string using string interpolation. Instead, use string
-  /// interpolation to create a new string by including values, literals,
-  /// variables, or expressions enclosed in parentheses, prefixed by a
-  /// backslash (`\(`...`)`).
-  ///
-  ///     let price = 2
-  ///     let number = 3
-  ///     let message = """
-  ///                   If one cookie costs \(price) dollars, \
-  ///                   \(number) cookies cost \(price * number) dollars.
-  ///                   """
-  ///     print(message)
-  ///     // Prints "If one cookie costs 2 dollars, 3 cookies cost 6 dollars."
-  @inlinable
-  @_effects(readonly)
-  public init(stringInterpolation: DefaultStringInterpolation) {
-    self.init(stringInterpolation.make())
-  }
+    /// Creates a new instance from an interpolated string literal.
+    /// 
+    /// Do not call this initializer directly. It is used by the compiler when
+    /// you create a string using string interpolation. Instead, use string
+    /// interpolation to create a new string by including values, literals,
+    /// variables, or expressions enclosed in parentheses, prefixed by a
+    /// backslash (`\(`...`)`).
+    ///
+    ///     let price = 2
+    ///     let number = 3
+    ///     let message = """
+    ///                   If one cookie costs \(price) dollars, \
+    ///                   \(number) cookies cost \(price * number) dollars.
+    ///                   """
+    ///     print(message)
+    ///     // Prints "If one cookie costs 2 dollars, 3 cookies cost 6 dollars."
+    @inlinable
+    @_effects(readonly)
+    public init(stringInterpolation: DefaultStringInterpolation) {
+        self.init(stringInterpolation.make())
+    }
 }
