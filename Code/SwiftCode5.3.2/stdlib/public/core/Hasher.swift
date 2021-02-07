@@ -1,6 +1,5 @@
 import SwiftShims
 
-@inline(__always)
 internal func _loadPartialUnalignedUInt64LE(
     _ p: UnsafeRawPointer,
     byteCount: Int

@@ -1,15 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
 /// A single extended grapheme cluster that approximates a user-perceived
 /// character.
 ///
@@ -61,188 +49,181 @@
 /// [glossary]: http://www.unicode.org/glossary/
 /// [clusters]: http://www.unicode.org/glossary/#extended_grapheme_cluster
 /// [scalars]: http://www.unicode.org/glossary/#unicode_scalar_value
-@frozen
+
+// A single extended grapheme cluster that approximates a user-perceived character.
 public struct Character {
-  @usableFromInline
-  internal var _str: String
-
-  @inlinable @inline(__always)
-  internal init(unchecked str: String) {
-    self._str = str
-    _invariantCheck()
-  }
+    internal var _str: String
+    
+    internal init(unchecked str: String) {
+        self._str = str
+        _invariantCheck()
+    }
 }
 
 extension Character {
-  #if !INTERNAL_CHECKS_ENABLED
-  @inlinable @inline(__always) internal func _invariantCheck() {}
-  #else
-  @usableFromInline @inline(never) @_effects(releasenone)
-  internal func _invariantCheck() {
-    _internalInvariant(_str.count == 1)
-    _internalInvariant(_str._guts.isFastUTF8)
-
-    _internalInvariant(_str._guts._object.isPreferredRepresentation)
-  }
-  #endif // INTERNAL_CHECKS_ENABLED
+    internal func _invariantCheck() {
+        _internalInvariant(_str.count == 1)
+        _internalInvariant(_str._guts.isFastUTF8)
+        _internalInvariant(_str._guts._object.isPreferredRepresentation)
+    }
 }
 
 extension Character {
-  /// A view of a character's contents as a collection of UTF-8 code units. See
-  /// String.UTF8View for more information
-  public typealias UTF8View = String.UTF8View
-
-  /// A UTF-8 encoding of `self`.
-  @inlinable
-  public var utf8: UTF8View { return _str.utf8 }
-
-  /// A view of a character's contents as a collection of UTF-16 code units. See
-  /// String.UTF16View for more information
-  public typealias UTF16View = String.UTF16View
-
-  /// A UTF-16 encoding of `self`.
-  @inlinable
-  public var utf16: UTF16View { return _str.utf16 }
-
-  public typealias UnicodeScalarView = String.UnicodeScalarView
-
-  @inlinable
-  public var unicodeScalars: UnicodeScalarView { return _str.unicodeScalars }
+    /// A view of a character's contents as a collection of UTF-8 code units. See
+    /// String.UTF8View for more information
+    public typealias UTF8View = String.UTF8View
+    
+    /// A UTF-8 encoding of `self`.
+    @inlinable
+    public var utf8: UTF8View { return _str.utf8 }
+    
+    /// A view of a character's contents as a collection of UTF-16 code units. See
+    /// String.UTF16View for more information
+    public typealias UTF16View = String.UTF16View
+    
+    /// A UTF-16 encoding of `self`.
+    @inlinable
+    public var utf16: UTF16View { return _str.utf16 }
+    
+    public typealias UnicodeScalarView = String.UnicodeScalarView
+    
+    @inlinable
+    public var unicodeScalars: UnicodeScalarView { return _str.unicodeScalars }
 }
 
 extension Character :
-  _ExpressibleByBuiltinExtendedGraphemeClusterLiteral,
-  ExpressibleByExtendedGraphemeClusterLiteral
+    _ExpressibleByBuiltinExtendedGraphemeClusterLiteral,
+    ExpressibleByExtendedGraphemeClusterLiteral
 {
-  /// Creates a character containing the given Unicode scalar value.
-  ///
-  /// - Parameter content: The Unicode scalar value to convert into a character.
-  @inlinable @inline(__always)
-  public init(_ content: Unicode.Scalar) {
-    self.init(unchecked: String(content))
-  }
-
-  @inlinable @inline(__always)
-  @_effects(readonly)
-  public init(_builtinUnicodeScalarLiteral value: Builtin.Int32) {
-    self.init(Unicode.Scalar(_builtinUnicodeScalarLiteral: value))
-  }
-
-  // Inlining ensures that the whole constructor can be folded away to a single
-  // integer constant in case of small character literals.
-  @inlinable @inline(__always)
-  @_effects(readonly)
-  public init(
-    _builtinExtendedGraphemeClusterLiteral start: Builtin.RawPointer,
-    utf8CodeUnitCount: Builtin.Word,
-    isASCII: Builtin.Int1
-  ) {
-    self.init(unchecked: String(
-      _builtinExtendedGraphemeClusterLiteral: start,
-      utf8CodeUnitCount: utf8CodeUnitCount,
-      isASCII: isASCII))
-  }
-
-  /// Creates a character with the specified value.
-  ///
-  /// Do not call this initalizer directly. It is used by the compiler when
-  /// you use a string literal to initialize a `Character` instance. For
-  /// example:
-  ///
-  ///     let oBreve: Character = "o\u{306}"
-  ///     print(oBreve)
-  ///     // Prints "ŏ"
-  ///
-  /// The assignment to the `oBreve` constant calls this initializer behind the
-  /// scenes.
-  @inlinable @inline(__always)
-  public init(extendedGraphemeClusterLiteral value: Character) {
-    self.init(unchecked: value._str)
-  }
-
-  /// Creates a character from a single-character string.
-  ///
-  /// The following example creates a new character from the uppercase version
-  /// of a string that only holds one character.
-  ///
-  ///     let a = "a"
-  ///     let capitalA = Character(a.uppercased())
-  ///
-  /// - Parameter s: The single-character string to convert to a `Character`
-  ///   instance. `s` must contain exactly one extended grapheme cluster.
-  @inlinable @inline(__always)
-  public init(_ s: String) {
-    _precondition(!s.isEmpty,
-      "Can't form a Character from an empty String")
-    _debugPrecondition(s.index(after: s.startIndex) == s.endIndex,
-      "Can't form a Character from a String containing more than one extended grapheme cluster")
-
-    if _fastPath(s._guts._object.isPreferredRepresentation) {
-      self.init(unchecked: s)
-      return
+    /// Creates a character containing the given Unicode scalar value.
+    ///
+    /// - Parameter content: The Unicode scalar value to convert into a character.
+    @inlinable @inline(__always)
+    public init(_ content: Unicode.Scalar) {
+        self.init(unchecked: String(content))
     }
-    self.init(unchecked: String._copying(s))
-  }
+    
+    @inlinable @inline(__always)
+    @_effects(readonly)
+    public init(_builtinUnicodeScalarLiteral value: Builtin.Int32) {
+        self.init(Unicode.Scalar(_builtinUnicodeScalarLiteral: value))
+    }
+    
+    // Inlining ensures that the whole constructor can be folded away to a single
+    // integer constant in case of small character literals.
+    @inlinable @inline(__always)
+    @_effects(readonly)
+    public init(
+        _builtinExtendedGraphemeClusterLiteral start: Builtin.RawPointer,
+        utf8CodeUnitCount: Builtin.Word,
+        isASCII: Builtin.Int1
+    ) {
+        self.init(unchecked: String(
+                    _builtinExtendedGraphemeClusterLiteral: start,
+                    utf8CodeUnitCount: utf8CodeUnitCount,
+                    isASCII: isASCII))
+    }
+    
+    /// Creates a character with the specified value.
+    ///
+    /// Do not call this initalizer directly. It is used by the compiler when
+    /// you use a string literal to initialize a `Character` instance. For
+    /// example:
+    ///
+    ///     let oBreve: Character = "o\u{306}"
+    ///     print(oBreve)
+    ///     // Prints "ŏ"
+    ///
+    /// The assignment to the `oBreve` constant calls this initializer behind the
+    /// scenes.
+    @inlinable @inline(__always)
+    public init(extendedGraphemeClusterLiteral value: Character) {
+        self.init(unchecked: value._str)
+    }
+    
+    /// Creates a character from a single-character string.
+    ///
+    /// The following example creates a new character from the uppercase version
+    /// of a string that only holds one character.
+    ///
+    ///     let a = "a"
+    ///     let capitalA = Character(a.uppercased())
+    ///
+    /// - Parameter s: The single-character string to convert to a `Character`
+    ///   instance. `s` must contain exactly one extended grapheme cluster.
+    @inlinable @inline(__always)
+    public init(_ s: String) {
+        _precondition(!s.isEmpty,
+                      "Can't form a Character from an empty String")
+        _debugPrecondition(s.index(after: s.startIndex) == s.endIndex,
+                           "Can't form a Character from a String containing more than one extended grapheme cluster")
+        
+        if _fastPath(s._guts._object.isPreferredRepresentation) {
+            self.init(unchecked: s)
+            return
+        }
+        self.init(unchecked: String._copying(s))
+    }
 }
 
 extension Character: CustomStringConvertible {
- @inlinable
- public var description: String {
-   return _str
- }
+    @inlinable
+    public var description: String {
+        return _str
+    }
 }
 
 extension Character: LosslessStringConvertible { }
 
 extension Character: CustomDebugStringConvertible {
- /// A textual representation of the character, suitable for debugging.
- public var debugDescription: String {
-   return _str.debugDescription
- }
+    /// A textual representation of the character, suitable for debugging.
+    public var debugDescription: String {
+        return _str.debugDescription
+    }
 }
 
 extension String {
-  /// Creates a string containing the given character.
-  ///
-  /// - Parameter c: The character to convert to a string.
-  @inlinable @inline(__always)
-  public init(_ c: Character) {
-    self.init(c._str._guts)
-  }
+    /// Creates a string containing the given character.
+    ///
+    /// - Parameter c: The character to convert to a string.
+    @inlinable @inline(__always)
+    public init(_ c: Character) {
+        self.init(c._str._guts)
+    }
 }
 
 extension Character: Equatable {
-  @inlinable @inline(__always)
-  @_effects(readonly)
-  public static func == (lhs: Character, rhs: Character) -> Bool {
-    return lhs._str == rhs._str
-  }
+    @inlinable @inline(__always)
+    @_effects(readonly)
+    public static func == (lhs: Character, rhs: Character) -> Bool {
+        return lhs._str == rhs._str
+    }
 }
 
 extension Character: Comparable {
-  @inlinable @inline(__always)
-  @_effects(readonly)
-  public static func < (lhs: Character, rhs: Character) -> Bool {
-    return lhs._str < rhs._str
-  }
+    @inlinable @inline(__always)
+    @_effects(readonly)
+    public static func < (lhs: Character, rhs: Character) -> Bool {
+        return lhs._str < rhs._str
+    }
 }
 
 extension Character: Hashable {
-  // not @inlinable (performance)
-  /// Hashes the essential components of this value by feeding them into the
-  /// given hasher.
-  ///
-  /// - Parameter hasher: The hasher to use when combining the components
-  ///   of this instance.
-  @_effects(releasenone)
-  public func hash(into hasher: inout Hasher) {
-    _str.hash(into: &hasher)
-  }
+    // not @inlinable (performance)
+    /// Hashes the essential components of this value by feeding them into the
+    /// given hasher.
+    ///
+    /// - Parameter hasher: The hasher to use when combining the components
+    ///   of this instance.
+    @_effects(releasenone)
+    public func hash(into hasher: inout Hasher) {
+        _str.hash(into: &hasher)
+    }
 }
 
 extension Character {
-  @usableFromInline // @testable
-  internal var _isSmall: Bool {
-    return _str._guts.isSmall
-  }
+    @usableFromInline // @testable
+    internal var _isSmall: Bool {
+        return _str._guts.isSmall
+    }
 }

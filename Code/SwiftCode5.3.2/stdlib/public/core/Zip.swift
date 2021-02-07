@@ -57,7 +57,6 @@ extension Zip2Sequence: Sequence {
             _sequence1.makeIterator(),
             _sequence2.makeIterator())
     }
-    
     public var underestimatedCount: Int {
         return Swift.min(
             _sequence1.underestimatedCount,
