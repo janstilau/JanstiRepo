@@ -1,17 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-// String interop with C
-//===----------------------------------------------------------------------===//
-
 import SwiftShims
 
 extension String {
@@ -186,20 +172,18 @@ extension String {
     }
 }
 
+// 这是一个通用的命名的方式, asType 的意思就是 将自身作为 Type 的 init 参数, 生成对应类型的对象.
+// 一般来说, 应该是新的对象, 这里没有强制要求是不是要进行复制.
 extension UnsafePointer where Pointee == UInt8 {
     @inlinable
     internal var _asCChar: UnsafePointer<CChar> {
-        @inline(__always) get {
-            return UnsafeRawPointer(self).assumingMemoryBound(to: CChar.self)
-        }
+        return UnsafeRawPointer(self).assumingMemoryBound(to: CChar.self)
     }
 }
 extension UnsafePointer where Pointee == CChar {
     @inlinable
     internal var _asUInt8: UnsafePointer<UInt8> {
-        @inline(__always) get {
-            return UnsafeRawPointer(self).assumingMemoryBound(to: UInt8.self)
-        }
+        return UnsafeRawPointer(self).assumingMemoryBound(to: UInt8.self)
     }
 }
 

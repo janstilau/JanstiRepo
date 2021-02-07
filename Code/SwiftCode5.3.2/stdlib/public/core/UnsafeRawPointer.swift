@@ -307,18 +307,7 @@ public struct UnsafeRawPointer: _Pointer {
         return UnsafePointer<T>(_rawValue)
     }
     
-    /// Returns a typed pointer to the memory referenced by this pointer,
-    /// assuming that the memory is already bound to the specified type.
-    ///
-    /// Use this method when you have a raw pointer to memory that has *already*
-    /// been bound to the specified type. The memory starting at this pointer
-    /// must be bound to the type `T`. Accessing memory through the returned
-    /// pointer is undefined if the memory has not been bound to `T`. To bind
-    /// memory to `T`, use `bindMemory(to:capacity:)` instead of this method.
-    ///
-    /// - Parameter to: The type `T` that the memory has already been bound to.
-    /// - Returns: A typed pointer to the same memory as this raw pointer.
-    @_transparent
+    // C++ 经常有这样的做法, 使用函数的参数, 来确定类型, 这是因为, 函数的泛型, 可以根据参数自动的进行类型推导, 但是推导的类型的作用, 是生成泛型类型的对象.
     public func assumingMemoryBound<T>(to: T.Type) -> UnsafePointer<T> {
         return UnsafePointer<T>(_rawValue)
     }

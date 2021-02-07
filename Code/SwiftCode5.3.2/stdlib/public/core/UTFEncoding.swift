@@ -4,12 +4,10 @@ public protocol _UTFParser {
     
     func _parseMultipleCodeUnits() -> (isValid: Bool, bitCount: UInt8)
     func _bufferedScalar(bitCount: UInt8) -> Encoding.EncodedScalar
-    
     var _buffer: _UIntBuffer<Encoding.CodeUnit> { get set }
 }
 
-extension _UTFParser
-where Encoding.EncodedScalar: RangeReplaceableCollection {
+extension _UTFParser where Encoding.EncodedScalar: RangeReplaceableCollection {
     
     @inlinable
     @inline(__always)
