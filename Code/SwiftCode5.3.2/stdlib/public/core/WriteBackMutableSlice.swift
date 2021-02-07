@@ -1,17 +1,18 @@
 // 专门, 为了这个函数, 创建了一个文件进行存储
+// self_, Slice_ 的命名方式, 是遵循什么规律吗 ????
+
+// 这里感觉定义的不好, C: MutableCollection, Slice_: Collection 更加的友好一点.
+// 这里, 传递 Inout 过来, 应该就不会有写时复制了.
+// 专门一个函数, 处理 MutableCollection 的替换工作, 感觉可以写到 MutableCollection 的内部.
 internal func _writeBackMutableSlice<C, Slice_>(
-    _ self_: inout C, bounds: Range<C.Index>, slice: Slice_
+    _ self_: inout C,
+    bounds: Range<C.Index>,
+    slice: Slice_
 ) where
     C: MutableCollection,
     Slice_: Collection,
     C.Element == Slice_.Element,
     C.Index == Slice_.Index {
-    
-    self_._failEarlyRangeCheck(bounds, bounds: self_.startIndex..<self_.endIndex)
-    
-    // FIXME(performance): can we use
-    // _withUnsafeMutableBufferPointerIfSupported?  Would that create inout
-    // aliasing violations if the newValue points to the same buffer?
     
     var selfElementIndex = bounds.lowerBound
     let selfElementsEndIndex = bounds.upperBound
@@ -25,12 +26,5 @@ internal func _writeBackMutableSlice<C, Slice_>(
         self_.formIndex(after: &selfElementIndex)
         slice.formIndex(after: &newElementIndex)
     }
-    
-    _precondition(
-        selfElementIndex == selfElementsEndIndex,
-        "Cannot replace a slice of a MutableCollection with a slice of a smaller size")
-    _precondition(
-        newElementIndex == newElementsEndIndex,
-        "Cannot replace a slice of a MutableCollection with a slice of a larger size")
 }
 

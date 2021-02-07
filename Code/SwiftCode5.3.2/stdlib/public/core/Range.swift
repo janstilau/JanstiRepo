@@ -1,6 +1,8 @@
 
 public protocol RangeExpression {
     // 有一个类型, 作为边界的类型. 因为会有着 partial 的类型, 所以这里仅仅是设立了类型, 但是没有指定成员变量.
+    // 能够完成表示 范围的概念, 就是两个值, 左右边界
+    // partial 概念的, 就一个值, 一边的边界. 然后类型表明取值是边界的左边还是右边.
     associatedtype Bound: Comparable
     
     // 因为 Collection 是大量使用了 Subscript[Range]的操作, 所以, RangeExpression 里面, 专门有着一个对于 Collection 的操作. 其实, 就是获取 Collection 语义下的Index 的范围.
@@ -25,7 +27,6 @@ extension RangeExpression {
 // Stride 是天然可以 sequence 的, 因为可以评判差距, 就代表着可以根据 stride 计算出下一个值来, 这样, next 函数就能取到下一个值来.
 // CompareAble, 比如单词在字典里面, 单词的 next 是没有一个统一的算法可以计算出来的. 只能判断大小, 无法判断两个单词之间的差距.
 // Range 是 Comparable 的, 就如同名字显示的那样, 它表示的抽象, 是范围. 也就是能判断一个值, 是否处于范围内, 是在范围的 left, right. 但是, 并不能判断, 范围内的值之间的范围.
-
 public struct Range<Bound: Comparable> {
     public let lowerBound: Bound
     public let upperBound: Bound
@@ -57,13 +58,13 @@ where Bound: Strideable, Bound.Stride: SignedInteger {
 /*
  Collection 的主要责任, 可以 index 访问值. Index 是各个 Collection 自己进行规定.
  需要实现, startIndex, 也就是 beginIterator, endIndex, 也就是 endIterator
-          formIndex, 也就是 Itertor 的++ 操作.
-          [idx] get, 也就是根据 iterator 的 * 操作.
+ formIndex, 也就是 Itertor 的++ 操作.
+ [idx] get, 也就是根据 iterator 的 * 操作.
  默认的 IndexingIterator, 其实是根据 collection 的上述操作完成的. 将抽象, 从各个 Collection 的 iterator, 转移到了 Colleciton
  
  
  BidirectionalCollection 的主要责任是, 可以实现 iterator -- 的操作, 在 Collection 层面, 就是实现
-        formIndex(before) 操作.
+ formIndex(before) 操作.
  当可以向前遍历的时候, 就可以有了从后开始的一些操作, 例如 suffix, removeLast, popLast 等等
  
  RandomAccessCollection, 主要责任是, 可以快速进行 Index 的计算, 也就是 Index 应该是 Strideable.
@@ -133,16 +134,8 @@ extension Range where Bound: Strideable, Bound.Stride: SignedInteger {
     }
 }
 
+// Range, 对于 RangeExpression 的适配.
 extension Range: RangeExpression {
-    /// Returns the range of indices described by this range expression within
-    /// the given collection.
-    ///
-    /// - Parameter collection: The collection to evaluate this range expression
-    ///   in relation to.
-    /// - Returns: A range suitable for slicing `collection`. The returned range
-    ///   is *not* guaranteed to be inside the bounds of `collection`. Callers
-    ///   should apply the same preconditions to the return value as they would
-    ///   to a range provided directly by the user.
     public func relative<C: Collection>(to collection: C) -> Range<Bound>
     where C.Index == Bound {
         return Range(uncheckedBounds: (lower: lowerBound, upper: upperBound))
