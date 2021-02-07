@@ -308,7 +308,7 @@ QObjectList QObjectPrivate::senderList() const
     return returnValue;
 }
 
-// connect 的时候, 增加 connect 的实现.
+// QtTalk --> QObject 成员变量, 增加连接的物理改变实现.
 void QObjectPrivate::addConnection(int signal, Connection *c)
 {
     Q_ASSERT(c->sender == q_ptr);
@@ -1310,12 +1310,13 @@ static inline void check_and_warn_compat(const QMetaObject *sender, const QMetaM
 # define SIGNAL(a)   qFlagLocation("2"#a QLOCATION)
 这几个宏, 只不过在字符串上面, 增加了特定的标识而已. 然后, 在 connect 函数里面, 会根据这个标识进行逻辑判断.
  */
+// QtTalk -> connect
 // 最原始的信号槽的实现, 通过字符串的方式.
 QMetaObject::Connection QObject::connect(const QObject *sender,
                                          const char *signal,
                                          const QObject *receiver,
                                          const char *method,
-                                         Qt::ConnectionType type)
+                                         Qt::ConnectionType connectType)
 {
     // 首先, 是防卫判断
     if (sender == 0 || receiver == 0 || signal == 0 || method == 0) {
@@ -1369,7 +1370,10 @@ QMetaObject::Connection QObject::connect(const QObject *sender,
 
     QArgumentTypeArray methodTypes;
     QByteArray methodName = QMetaObjectPrivate::decodeMethodSignature(method, methodTypes);
+
+    // 获取到 Receiver 的元信息
     const QMetaObject *rmeta = receiver->metaObject();
+
     int method_index_relative = -1;
     switch (membcode) {
     case QSLOT_CODE: // 如果连接的是 SLOT
@@ -1405,6 +1409,7 @@ QMetaObject::Connection QObject::connect(const QObject *sender,
     if (method_index_relative < 0) {
         return QMetaObject::Connection(0);
     }
+
     // 这里就是在检测, SIGNAL, SLOT 的参数个数了. 需要槽函数的个数, 少于信号函数, 并且类型相匹配.
     if (!QMetaObjectPrivate::checkConnectArgs(signalTypes.size(), signalTypes.constData(),
                                               methodTypes.size(), methodTypes.constData())) {
@@ -1412,21 +1417,20 @@ QMetaObject::Connection QObject::connect(const QObject *sender,
     }
 
     // 对于队列式的连接, 需要特殊的判断, 因为需要拷贝参数填充到事件内.
-    // 这里, 也看出来 oc 把所有的对象, 都变为堆空间对象, 对于值语义的放弃, 多么省事
     int *types = 0;
-    if ((type == Qt::QueuedConnection)
+    if ((connectType == Qt::QueuedConnection)
             && !(types = queuedConnectionTypes(signalTypes.constData(), signalTypes.size()))) {
         return QMetaObject::Connection(0);
     }
 
 
     // 以上, 已经拿到了所有的元信息了, 真正的关联一定在 QMetaObjectPrivate::connect 函数里.
-    // QMetaObjectPrivate::connect 里面, 就是根据传入的值, 生成一个 Connection 对象, 然后把这个值, 存到了 sender
-    // 的 connectionLists 里面, 所以, 信号槽这个东西, 本质上, 还是要在 sender 里面, 存储各种连接关系.
+    // QMetaObjectPrivate::connect 里面, 就是根据传入的值, 生成一个 Connection 对象
+    // 然后把这个值, 存到了 sender 的connectionLists 里面, 所以, 信号槽这个东西, 本质上, 还是要在 sender 里面, 存储各种连接关系.
     QMetaObject::Connection handle = QMetaObject::Connection(
                 QMetaObjectPrivate::connect( sender, signal_index, smeta,
                                              receiver, method_index_relative, rmeta,
-                                             type, types));
+                                             connectType, types));
     return handle;
 }
 
@@ -1706,23 +1710,26 @@ QMetaObject::Connection QMetaObject::connect(const QObject *sender, int signal_i
                                        type, types));
 }
 
-
+// QtTalk --> QMetaObjectPrivate::connect
 QObjectPrivate::Connection *QMetaObjectPrivate::connect(const QObject *sender,
-                                 int signal_index, const QMetaObject *smeta,
+                                                        int signal_index,
+                                                        const QMetaObject *smeta,
 
-                                 const QObject *receiver, int method_index,
-                                 const QMetaObject *rmeta,
+                                                        const QObject *receiver,
+                                                        int method_index,
+                                                        const QMetaObject *rmeta,
+
                                                         int type, int *types)
 {
-    QObject *s = const_cast<QObject *>(sender);
-    QObject *r = const_cast<QObject *>(receiver);
+    QObject *senderObject = const_cast<QObject *>(sender);
+    QObject *receiverObject = const_cast<QObject *>(receiver);
 
     int method_offset = rmeta ? rmeta->methodOffset() : 0;
     QObjectPrivate::StaticMetaCallFunction callFunction =
         rmeta ? rmeta->d.static_metacall : 0;
 
     if (type & Qt::UniqueConnection) {
-        QObjectConnectionListVector *connectionLists = QObjectPrivate::get(s)->connectionLists;
+        QObjectConnectionListVector *connectionLists = QObjectPrivate::get(senderObject)->connectionLists;
         if (connectionLists && connectionLists->count() > signal_index) {
             const QObjectPrivate::Connection *c2 =
                 (*connectionLists)[signal_index].first;
@@ -1738,26 +1745,25 @@ QObjectPrivate::Connection *QMetaObjectPrivate::connect(const QObject *sender,
         type &= Qt::UniqueConnection - 1;
     }
 
-    QScopedPointer<QObjectPrivate::Connection> c(new QObjectPrivate::Connection);
-    c->sender = s;
-    c->signal_index = signal_index;
-    c->receiver = r;
-    c->method_relative = method_index;
-    c->method_offset = method_offset;
-    c->connectionType = type;
-    c->isSlotObject = false;
-    c->argumentTypes.store(types);
-    c->nextConnectionList = 0;
-    c->callFunction = callFunction;
+    QScopedPointer<QObjectPrivate::Connection> createdConnection(new QObjectPrivate::Connection);
+    createdConnection->sender = senderObject;
+    createdConnection->signal_index = signal_index;
+    createdConnection->receiver = receiverObject;
+    createdConnection->method_relative = method_index;
+    createdConnection->method_offset = method_offset;
+    createdConnection->connectionType = type;
+    createdConnection->isSlotObject = false;
+    createdConnection->argumentTypes.store(types);
+    createdConnection->nextConnectionList = 0;
+    createdConnection->callFunction = callFunction;
 
-    QObjectPrivate::get(s)->addConnection(signal_index, c.data());
+    QObjectPrivate::get(senderObject)->addConnection(signal_index, createdConnection.data());
 
     locker.unlock();
     QMetaMethod smethod = QMetaObjectPrivate::signal(smeta, signal_index);
-    if (smethod.isValid())
-        s->connectNotify(smethod);
+    if (smethod.isValid()) senderObject->connectNotify(smethod);
 
-    return c.take();
+    return createdConnection.take();
 }
 
 bool QMetaObject::disconnect(const QObject *sender, int signal_index,
@@ -2059,14 +2065,20 @@ static void queued_activate(QObject *sender, int signal, QObjectPrivate::Connect
 /*!
     emit signal 最终, 会变为 QMetaObject::activate 的调用.
  */
-void QMetaObject::activate(QObject *sender, const QMetaObject *m, int local_signal_index,
+// QtTalk -> Signal 的触发.
+void QMetaObject::activate(QObject *sender,
+                           const QMetaObject *m,
+                           int local_signal_index,
                            void **argv)
 {
     activate(sender, QMetaObjectPrivate::signalOffset(m), local_signal_index, argv);
 }
 
 // emit 的实现方式.
-void QMetaObject::activate(QObject *sender, int signalOffset, int local_signal_index, void **argv)
+void QMetaObject::activate(QObject *sender,
+                           int signalOffset, // sender 的 0 号信号的起始位置
+                           int local_signal_index, // 要触发的信号在 sender 里面的索引
+                           void **argv)
 {
     int signal_index = signalOffset + local_signal_index;
 
@@ -2074,66 +2086,15 @@ void QMetaObject::activate(QObject *sender, int signalOffset, int local_signal_i
     if (sender->d_func()->blockSig)
         return;
 
-    if (sender->d_func()->isDeclarativeSignalConnected(signal_index)
-            && QAbstractDeclarativeData::signalEmitted) {
-        QAbstractDeclarativeData::signalEmitted(sender->d_func()->declarativeData, sender,
-                                                signal_index, argv);
-    }
-
-    if (!sender->d_func()->isSignalConnected(signal_index, /*checkDeclarative =*/ false)
-        && !qt_signal_spy_callback_set.signal_begin_callback
-        && !qt_signal_spy_callback_set.signal_end_callback) {
-        // The possible declarative connection is done, and nothing else is connected, so:
-        return;
-    }
-
-    void *empty_argv[] = { 0 };
-    if (qt_signal_spy_callback_set.signal_begin_callback != 0) {
-        qt_signal_spy_callback_set.signal_begin_callback(sender, signal_index,
-                                                         argv ? argv : empty_argv);
-    }
-
-    {
+    // 中间删除了无用的一些代码.
+    // 加锁, 因为 Qt 的线程管理是靠着 QObject 和线程的 affinity 实现的
     QMutexLocker locker(signalSlotLock(sender));
-    struct ConnectionListsRef {
-        QObjectConnectionListVector *connectionLists;
-        ConnectionListsRef(QObjectConnectionListVector *connectionLists) : connectionLists(connectionLists)
-        {
-            if (connectionLists)
-                ++connectionLists->inUse;
-        }
-        ~ConnectionListsRef()
-        {
-            if (!connectionLists)
-                return;
-
-            --connectionLists->inUse;
-            Q_ASSERT(connectionLists->inUse >= 0);
-            if (connectionLists->orphaned) {
-                if (!connectionLists->inUse)
-                    delete connectionLists;
-            }
-        }
-
-        QObjectConnectionListVector *operator->() const { return connectionLists; }
-    };
-
     ConnectionListsRef connectionLists = sender->d_func()->connectionLists;
-    if (!connectionLists.connectionLists) {
-        locker.unlock();
-        if (qt_signal_spy_callback_set.signal_end_callback != 0)
-            qt_signal_spy_callback_set.signal_end_callback(sender, signal_index);
-        return;
-    }
-
-
     const QObjectPrivate::ConnectionList *list;
     if (signal_index < connectionLists->count())
         list = &connectionLists->at(signal_index);
     else
         list = &connectionLists->allsignals;
-
-    // currentThreadId 的获取, 是通过 QThread::currentThreadId 获取的, 也就是说, 发送信号的时候, 其实并不在乎 sender 的线程 Affinity, 只是在乎触发信号的操作是在哪个线程调用的. 如果和 receiver 的线程一样, 就可以直接被调用.
     Qt::HANDLE currentThreadId = QThread::currentThreadId();
 
     /*
@@ -2147,25 +2108,18 @@ void QMetaObject::activate(QObject *sender, int signalOffset, int local_signal_i
         QObjectPrivate::Connection *last = list->last;
 
         do {
-            if (!c->receiver)
-                continue;
+            if (!c->receiver) continue;
             QObject * const receiver = c->receiver;
             const bool receiverInSameThread = currentThreadId == receiver->d_func()->threadData->threadId.load();
 
-            // 特殊的 connectionType 的处理.
-            // 如果, 不在一个线程里面.
-            if ((c->connectionType == Qt::AutoConnection && !receiverInSameThread)
-                || (c->connectionType == Qt::QueuedConnection)) {
+            // 线程相关的管理.
+            if ((c->connectionType == Qt::AutoConnection &&
+                 !receiverInSameThread) ||
+                 (c->connectionType == Qt::QueuedConnection)) {
                 queued_activate(sender, signal_index, c, argv ? argv : empty_argv, locker);
                 continue;
             } else if (c->connectionType == Qt::BlockingQueuedConnection) {
-                // 如果, 同步调用, 如果 slot 不返回的话这里会祖册.
-                if (receiverInSameThread) {
-                    qWarning("Qt: Dead lock detected while activating a BlockingQueuedConnection: "
-                    "Sender is %s(%p), receiver is %s(%p)",
-                    sender->metaObject()->className(), sender,
-                    receiver->metaObject()->className(), receiver);
-                }
+                // 不同的线程, 直接注册一个事件到 receiver 的线程的 eventLoop 里面
                 QSemaphore semaphore;
                 QMetaCallEvent *ev = c->isSlotObject ?
                     new QMetaCallEvent(c->slotObj, sender, signal_index, 0, 0, argv ? argv : empty_argv, &semaphore) :
@@ -2177,48 +2131,36 @@ void QMetaObject::activate(QObject *sender, int signalOffset, int local_signal_i
                 continue;
             }
 
+            // 直接调用槽
+            // 会有几种不同的形式, 闭包, 函数指针, 字符串信息.
             QConnectionSenderSwitcher sw;
-
-            if (receiverInSameThread) {
-                sw.switchSender(receiver, sender, signal_index);
-            }
             if (c->isSlotObject) {
+                // 闭包的处理.
                 c->slotObj->ref();
-                QScopedPointer<QtPrivate::QSlotObjectBase, QSlotObjectBaseDeleter> obj(c->slotObj);
+                QScopedPointer<QtPrivate::QSlotObjectBase, QSlotObjectBaseDeleter>
+                        obj(c->slotObj);
                 locker.unlock();
-                // 调用信号触发函数
                 obj->call(receiver, argv ? argv : empty_argv);
-
-                // Make sure the slot object gets destroyed before the mutex is locked again, as the
-                // destructor of the slot object might also lock a mutex from the signalSlotLock() mutex pool,
-                // and that would deadlock if the pool happens to return the same mutex.
                 obj.reset();
-
                 locker.relock();
-            } else if (c->callFunction && c->method_offset <= receiver->metaObject()->methodOffset()) {
-                //we compare the vtable to make sure we are not in the destructor of the object.
+            } else if (c->callFunction &&
+                       c->method_offset <= receiver->metaObject()->methodOffset()) {
+                // 函数指针的处理
                 const int methodIndex = c->method();
                 const int method_relative = c->method_relative;
                 const auto callFunction = c->callFunction;
                 locker.unlock();
-                if (qt_signal_spy_callback_set.slot_begin_callback != 0)
-                    qt_signal_spy_callback_set.slot_begin_callback(receiver, methodIndex, argv ? argv : empty_argv);
-                // 调用信号触发函数
-                callFunction(receiver, QMetaObject::InvokeMetaMethod, method_relative, argv ? argv : empty_argv);
+                callFunction(receiver,
+                             QMetaObject::InvokeMetaMethod,
+                             method_relative, argv ? argv : empty_argv);
 
                 if (qt_signal_spy_callback_set.slot_end_callback != 0)
                     qt_signal_spy_callback_set.slot_end_callback(receiver, methodIndex);
                 locker.relock();
             } else {
+                // 字符串信息的处理.
                 const int method = c->method_relative + c->method_offset;
                 locker.unlock();
-
-                if (qt_signal_spy_callback_set.slot_begin_callback != 0) {
-                    qt_signal_spy_callback_set.slot_begin_callback(receiver,
-                                                                method,
-                                                                argv ? argv : empty_argv);
-                }
-
                 metacall(receiver, QMetaObject::InvokeMetaMethod, method, argv ? argv : empty_argv);
 
                 if (qt_signal_spy_callback_set.slot_end_callback != 0)
@@ -2234,7 +2176,6 @@ void QMetaObject::activate(QObject *sender, int signalOffset, int local_signal_i
         if (connectionLists->orphaned)
             break;
     } while (list != &connectionLists->allsignals &&
-        //start over for all signals;
         ((list = &connectionLists->allsignals), true));
     }
 

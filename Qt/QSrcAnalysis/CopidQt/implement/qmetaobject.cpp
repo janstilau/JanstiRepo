@@ -177,7 +177,6 @@ int QMetaObject::metacall(QObject *object, Call cl, int idx, void **argv)
     if (object->d_ptr->metaObject)
         return object->d_ptr->metaObject->metaCall(object, cl, idx, argv);
     else
-        // 这里, 不太明白, 对象级别上的 qt_metacall 的意义在哪里.
         return object->qt_metacall(cl, idx, argv);
 }
 
