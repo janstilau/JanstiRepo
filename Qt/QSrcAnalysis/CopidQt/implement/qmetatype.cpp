@@ -1087,6 +1087,7 @@ int QMetaType::registerNormalizedType(const NS(QByteArray) &normalizedTypeName, 
     \note normalizedTypeName is not checked for conformance with
     Qt's normalized format, so it must already conform.
  */
+// 把, 用户的一个类, 注册到类型系统的最终实现.
 int QMetaType::registerNormalizedType(const NS(QByteArray) &normalizedTypeName,
                             Destructor destructor,
                             Constructor constructor,
@@ -1104,6 +1105,7 @@ int QMetaType::registerNormalizedType(const NS(QByteArray) &normalizedTypeName,
     if (idx == UnknownType) {
         QWriteLocker locker(customTypesLock());
         int posInVector = -1;
+        // 最终, 返回注册的序号.
         idx = qMetaTypeCustomType_unlocked(normalizedTypeName.constData(),
                                            normalizedTypeName.size(),
                                            &posInVector);

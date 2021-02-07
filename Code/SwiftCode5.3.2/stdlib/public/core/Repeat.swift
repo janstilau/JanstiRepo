@@ -1,109 +1,43 @@
-//===--- Repeat.swift - A Collection that repeats a value N times ---------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
+// A collection whose elements are all identical.
 
-/// A collection whose elements are all identical.
-///
-/// You create an instance of the `Repeated` collection by calling the
-/// `repeatElement(_:count:)` function. The following example creates a
-/// collection containing the name "Humperdinck" repeated five times:
-///
-///     let repeatedName = repeatElement("Humperdinck", count: 5)
-///     for name in repeatedName {
-///         print(name)
-///     }
-///     // "Humperdinck"
-///     // "Humperdinck"
-///     // "Humperdinck"
-///     // "Humperdinck"
-///     // "Humperdinck"
-@frozen
+
+// 这个类, 一般不会用到, 它主要是系统 Api, 为了将重复这个概念, 包装成为 Collection 所使用的一个类.
 public struct Repeated<Element> {
-  /// The number of elements in this collection.
-  public let count: Int
-
-  /// The value of every element in this collection.
-  public let repeatedValue: Element
+    /// The number of elements in this collection.
+    public let count: Int
+    
+    /// The value of every element in this collection.
+    public let repeatedValue: Element
 }
 
 extension Repeated: RandomAccessCollection {
-  public typealias Indices = Range<Int>
-
-  /// A type that represents a valid position in the collection.
-  ///
-  /// Valid indices consist of the position of every element and a "past the
-  /// end" position that's not valid for use as a subscript.
-  public typealias Index = Int
-
-  /// Creates an instance that contains `count` elements having the
-  /// value `repeatedValue`.
-  @inlinable // trivial-implementation
-  internal init(_repeating repeatedValue: Element, count: Int) {
-    _precondition(count >= 0, "Repetition count should be non-negative")
-    self.count = count
-    self.repeatedValue = repeatedValue
-  }
-  
-  /// The position of the first element in a nonempty collection.
-  ///
-  /// In a `Repeated` collection, `startIndex` is always equal to zero. If the
-  /// collection is empty, `startIndex` is equal to `endIndex`.
-  @inlinable // trivial-implementation
-  public var startIndex: Index {
-    return 0
-  }
-
-  /// The collection's "past the end" position---that is, the position one
-  /// greater than the last valid subscript argument.
-  ///
-  /// In a `Repeated` collection, `endIndex` is always equal to `count`. If the
-  /// collection is empty, `endIndex` is equal to `startIndex`.
-  @inlinable // trivial-implementation
-  public var endIndex: Index {
-    return count
-  }
-
-  /// Accesses the element at the specified position.
-  ///
-  /// - Parameter position: The position of the element to access. `position`
-  ///   must be a valid index of the collection that is not equal to the
-  ///   `endIndex` property.
-  @inlinable // trivial-implementation
-  public subscript(position: Int) -> Element {
-    _precondition(position >= 0 && position < count, "Index out of range")
-    return repeatedValue
-  }
+    public typealias Indices = Range<Int>
+    public typealias Index = Int
+    
+    internal init(_repeating repeatedValue: Element, count: Int) {
+        self.count = count
+        self.repeatedValue = repeatedValue
+    }
+    
+    public var startIndex: Index {
+        return 0
+    }
+    
+    public var endIndex: Index {
+        return count
+    }
+    
+    // 可见, 根据下标取值这个操作,就是返回存储的 element 的值而已.
+    @inlinable // trivial-implementation
+    public subscript(position: Int) -> Element {
+        return repeatedValue
+    }
 }
 
-/// Creates a collection containing the specified number of the given element.
-///
-/// The following example creates a `Repeated<Int>` collection containing five
-/// zeroes:
-///
-///     let zeroes = repeatElement(0, count: 5)
-///     for x in zeroes {
-///         print(x)
-///     }
-///     // 0
-///     // 0
-///     // 0
-///     // 0
-///     // 0
-///
-/// - Parameters:
-///   - element: The element to repeat.
-///   - count: The number of times to repeat `element`.
-/// - Returns: A collection that contains `count` elements that are all
-///   `element`.
+// 使用一个简便的函数, 返回一个实际的类型, 在这个函数内部, 根据函数的自动类型推到, 识别出泛型类型来. 这种手法很常见.
+// 在使用返回值的时候, 并不是使用实际的类型的接口, 而是使用实际类型所属的协议的接口. 这是 Swift 更加抽象的一层.
+
 @inlinable // trivial-implementation
 public func repeatElement<T>(_ element: T, count n: Int) -> Repeated<T> {
-  return Repeated(_repeating: element, count: n)
+    return Repeated(_repeating: element, count: n)
 }

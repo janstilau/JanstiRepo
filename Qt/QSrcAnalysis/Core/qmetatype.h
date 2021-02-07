@@ -1768,6 +1768,7 @@ int qRegisterMetaType(const char *typeName
     , typename QtPrivate::MetaTypeDefinedHelper<T, QMetaTypeId2<T>::Defined && !QMetaTypeId2<T>::IsBuiltIn>::DefinedType defined = QtPrivate::MetaTypeDefinedHelper<T, QMetaTypeId2<T>::Defined && !QMetaTypeId2<T>::IsBuiltIn>::Defined
 #endif
 )
+
 {
 #ifdef QT_NO_QOBJECT
     QT_PREPEND_NAMESPACE(QByteArray) normalizedTypeName = typeName;
@@ -1934,6 +1935,26 @@ inline int qRegisterMetaTypeStreamOperators()
     /**/
 
 #ifndef Q_MOC_RUN
+
+/*
+    Q_DECLARE_METATYPE(TYPE)
+    这宏, 是一个特化.
+    定义了 QMetaTypeId<YPerson> 这个类, 和其中的  qt_metatype_id 方法, 这个方法中, 会调用 qRegisterMetaType 注册类型进入.
+    template <>
+    struct QMetaTypeId<YPerson>
+    {
+        enum { Defined = 1 };
+        static int qt_metatype_id()
+        {
+            static QBasicAtomicInt metatype_id = Q_BASIC_ATOMIC_INITIALIZER(0);
+            if (const int id = metatype_id.loadAcquire() )   { return id;    }
+            const int newId = qRegisterMetaType<TYPE>(#TYPE,reinterpret_cast<TYPE*>(quintptr(-1)));
+            metatype_id.storeRelease(newId);
+            return newId;
+            }
+    }
+  */
+
 #define Q_DECLARE_METATYPE(TYPE) Q_DECLARE_METATYPE_IMPL(TYPE)
 #define Q_DECLARE_METATYPE_IMPL(TYPE)                                   \
     QT_BEGIN_NAMESPACE                                                  \

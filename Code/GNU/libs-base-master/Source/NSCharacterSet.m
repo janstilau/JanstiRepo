@@ -195,23 +195,23 @@
 }
 
 /*
-- (BOOL) longCharacterIsMember: (UTF32Char)aCharacter
-{
-    unsigned	byte = aCharacter/8;
-    
-    if (aCharacter >= GSUNICODE_MAX)
-    {
-        [NSException raise: NSInvalidArgumentException
-                    format: @"[%@-%@] argument (0x%08x) is too large",
-         NSStringFromClass([self class]), NSStringFromSelector(_cmd),
-         aCharacter];
-    }
-    if (byte < _length && GSISSET(_data[byte], aCharacter % 8))
-    {
-        return YES;
-    }
-    return NO;
-}
+ - (BOOL) longCharacterIsMember: (UTF32Char)aCharacter
+ {
+ unsigned	byte = aCharacter/8;
+ 
+ if (aCharacter >= GSUNICODE_MAX)
+ {
+ [NSException raise: NSInvalidArgumentException
+ format: @"[%@-%@] argument (0x%08x) is too large",
+ NSStringFromClass([self class]), NSStringFromSelector(_cmd),
+ aCharacter];
+ }
+ if (byte < _length && GSISSET(_data[byte], aCharacter % 8))
+ {
+ return YES;
+ }
+ return NO;
+ }
  */
 @end
 
@@ -1392,11 +1392,6 @@ static Class concreteMutableClass = nil;
             [indexes addIndexesInRange: NSMakeRange(letter, 1)];
         }
     }
-}
-
-- (Class) classForCoder
-{
-    return [NSMutableBitmapCharSet class];
 }
 
 - (void) formIntersectionWithCharacterSet: (NSCharacterSet *)otherSet

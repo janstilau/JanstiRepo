@@ -18,35 +18,6 @@ typedef struct {
 
 static NSURLCredentialStorage	*storage = nil;
 
-+ (id) allocWithZone: (NSZone*)z
-{
-    return RETAIN([self sharedCredentialStorage]);
-}
-
-+ (NSURLCredentialStorage *) sharedCredentialStorage
-{
-    if (storage == nil)
-    {
-        [gnustep_global_lock lock];
-        if (storage == nil)
-        {
-            NSURLCredentialStorage	*o;
-            
-            o = (NSURLCredentialStorage*)
-            NSAllocateObject(self, 0, NSDefaultMallocZone());
-            o->_NSURLCredentialStorageInternal = (Internal*)
-            NSZoneCalloc(NSDefaultMallocZone(), 1, sizeof(Internal));
-            ((Internal*)(o->_NSURLCredentialStorageInternal))->credentials
-            = [NSMutableDictionary new];
-            ((Internal*)(o->_NSURLCredentialStorageInternal))->defaults
-            = [NSMutableDictionary new];
-            storage = o;
-        }
-        [gnustep_global_lock unlock];
-    }
-    return storage;
-}
-
 - (NSDictionary *) allCredentials
 {
     NSMutableDictionary	*all;

@@ -16,11 +16,32 @@ typedef enum {
     NSURLCredentialPersistenceForSession,	/** Save for current session */
     NSURLCredentialPersistencePermanent,	/** Save forever (on disk) */
     NSURLCredentialPersistenceSynchronizable
-    
 } NSURLCredentialPersistence;
 
 
-/**
+/*
+ NSURLCredential 这个东西表示一个认证.
+ 有很多种, 在苹果的文档里面, 有
+ The URL Loading System supports
+ password-based user credentials, 账号密码验证
+ certificate-based user credentials, 客户端验证
+ and certificate-based server credentials. 服务端验证
+ 
+ Permanent storage of credentials is only available for password-based credentials.
+ 
+ 这种, GNUFoundation 没有实现.
+ 服务器端验证的方式, 这个时候, 已经拿到了服务器端的证书了.
+ A new URL credential object, containing the accepted server trust.
+ + (NSURLCredential *)credentialForTrust:(SecTrustRef)trust;
+ 
+ 最简单的认证方式, 账号密码已经存储时长.
+ Creates a URL credential instance for internet password authentication with a given user name and password, using a given persistence setting.
+ + (NSURLCredential *)credentialWithUser:(NSString *)user password:(NSString *)password persistence:(NSURLCredentialPersistence)persistence;
+ 
+ 客户端验证. 先不管这种.
+ + (NSURLCredential *)credentialWithIdentity:(SecIdentityRef)identity certificates:(NSArray *)certArray persistence:(NSURLCredentialPersistence)persistence;
+ */
+/*
  * Represents a user/password credential
  */
 @interface NSURLCredential : NSObject <NSCopying>

@@ -486,7 +486,14 @@
  如果是 Session 自己的代理方法, 在 Manager 中进行处理.
  如果是各个 Task 的方法, 在各个 Delegate 对象中进行处理.
  */
-
+// 这个是 session 在被 invalidate 的时候调用的, 为了统治外界, session 对象已经不可用了.
+// finishTasksAndInvalidate
+// invalidateAndCancel
+// 如果, Session 是通过创建 protocol 去管理每一个连接, 那么上面的函数就是
+// 1 session 不接新的任务了
+// 2 要么等所有的 protocol loading 完
+//   要么停止所有的 protocol loading.
+// 最后, session 会调用到这个方法.
 - (void)URLSession:(NSURLSession *)session
 didBecomeInvalidWithError:(NSError *)error
 {
@@ -497,6 +504,8 @@ didBecomeInvalidWithError:(NSError *)error
     [[NSNotificationCenter defaultCenter] postNotificationName:AFURLSessionDidInvalidateNotification object:session];
 }
 
+// 如果, 这个方法没有实现, 那么就会调用 task 的 didReceiveChallenge 方法
+// 所以, 这是一个总的入口, 如果 session 实现了相关的配置, 就不用每个 task 都这么麻烦了
 - (void)URLSession:(NSURLSession *)session
 didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
  completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler
@@ -530,6 +539,11 @@ willPerformHTTPRedirection:(NSHTTPURLResponse *)response
     }
 }
 
+// 这里, 是 NSURLAuthenticationChallenge, 和 NSURLAuthenticationChallenge sender 的封装.
+// completionHandler 里面有两个参数, 一个是如何应对这个 challenge, 如果返回 cancle, 就代表了应对失败了
+// 一个是如果使用这个 challenge 应该用哪个credential, 这里, 可以使用一个新的 NSURLCredential 替换传过来的.
+// 或者如果是 Basic 认证的情况下, 新建一个 userName password 的 NSURLCredential 传递进去.
+// completionHandler 一定调用了NSURLAuthenticationChallenge sender 相关的逻辑.
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge

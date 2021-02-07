@@ -59,6 +59,11 @@ typedef NSUInteger NSURLRequestCachePolicy;
 
 
 /*
+ NSURLRequest encapsulates two essential properties of a load request: the URL to load and the policies used to load it. In addition, for HTTP and HTTPS requests, URLRequest includes the HTTP method (GET, POST, and so on) and the HTTP headers.
+ 所以, 实际上, 一个 request 仅仅需要 policy 和 url 就可以了. 这个类的其他属性, 是因为现在大部分的请求, 是 Http, 所以就把 Http 的东西, 加到了这个类的内部.
+ */
+
+/*
  * This class encapsulates information about a request to load a
  * URL, how to cache the results, and when to deal with a slow/hung
  * load process by timing out.
@@ -66,11 +71,12 @@ typedef NSUInteger NSURLRequestCachePolicy;
 @interface NSURLRequest : NSObject <NSCoding, NSCopying, NSMutableCopying>
 {
 @public:
-    NSData            *body;
-    NSInputStream            *bodyStream;
-    NSString            *method;
-    NSMutableDictionary        *headers;
-    BOOL                shouldHandleCookies;
+    NSData            *body; // 如果有 body, 那么发送的时候, 就是从 body 里面取值.
+    NSInputStream            *bodyStream; // 如果有 stream, 那么发送的时候, 会从 stream 里面取值
+    NSString            *method; // Method. NSURLRequest 应该就是当做 HttpRequest 设计的.
+    NSMutableDictionary        *headers; // 头信息.
+    BOOL                shouldHandleCookies; // 如有, 那么在发送的时候, 会从 shareCookie 里面取值 Url 对应的值塞进去.
+                                            // 在 Protocol 里面, 会把响应的 cookie 的值装到 shareCookie 里面去.
     BOOL                          debug;
     NSURL                *URL;
     NSURL                *mainDocumentURL;
@@ -78,21 +84,6 @@ typedef NSUInteger NSURLRequestCachePolicy;
     NSTimeInterval        timeoutInterval;
     NSMutableDictionary        *properties;
 }
-
-/*
- * Returns an autoreleased instance initialised with the specified URL
- * and with the default cache policy (NSURLRequestUseProtocolCachePolicy)
- * and a sixty second timeout.
- */
-+ (id) requestWithURL: (NSURL *)URL;
-
-/**
- * Returns an autoreleased instance initialised with the specified URL,
- * cachePolicy, and timeoutInterval.
- */
-+ (id) requestWithURL: (NSURL *)URL
-          cachePolicy: (NSURLRequestCachePolicy)cachePolicy
-      timeoutInterval: (NSTimeInterval)timeoutInterval;
 
 /**
  * Returns the cache policy associated with the receiver.
@@ -109,6 +100,7 @@ typedef NSUInteger NSURLRequestCachePolicy;
 /**
  * Initialises the receiver with the specified URL,
  * cachePolicy, and timeoutInterval.
+ *  NSURLRequestUseProtocolCachePolicy, 协议本身就有一套缓存的管理机制.
  */
 - (id) initWithURL: (NSURL *)URL
        cachePolicy: (NSURLRequestCachePolicy)cachePolicy

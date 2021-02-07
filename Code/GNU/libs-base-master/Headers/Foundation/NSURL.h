@@ -42,13 +42,11 @@ enum
  */
 @interface NSURL: NSObject <NSCoding, NSCopying, NSURLHandleClient>
 {
-#if	GS_EXPOSE(NSURL)
 @private
     NSString	*_urlString;
     NSURL		*_baseURL;
     void		*_clients;
     void		*_data;
-#endif
 }
 
 /**

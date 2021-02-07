@@ -17,18 +17,31 @@ extern "C" {
 
 #define NSURLResponseUnknownLength ((long long)-1)
 
-/**
- * The response to an NSURLRequest
+/*
+ The metadata associated with the response to a URL load request, independent of protocol and URL scheme.
+ 文档里面的描述很清楚, 这个类, 不是响应的全部内容, 仅仅是元信息.
+ 
+ URLResponse objects don’t contain the actual bytes representing the content of a URL. Instead, the data is returned either a piece at a time through delegate calls or in its entirety when the request completes, depending on the method and class used to initiate the request.
  */
+// Response 里面没有 body 信息, response 仅仅是对响应头的一个封装而已.
 @interface NSURLResponse :  NSObject <NSCoding, NSCopying>
 {
+    /*
+     Some protocol implementations report the content length as part of the response, but not all protocols guarantee to deliver that amount of data. Your app should be prepared to deal with more or less data.
+     一般来说, Http 请求, 会返回该值, 该值在 Content-Length  中传递.
+     */
     long long        expectedContentLength;
     NSURL            *URL;
+    /*
+     The MIME type of the response.
+     Mime type 是元信息, 客户端根据这个值去处理 data 的内容.
+     */
     NSString        *MIMEType;
+    
     NSString        *textEncodingName;
-    NSString        *statusText;
-    NSMutableDictionary    *headers; /* _GSMutableInsensitiveDictionary */
-    int            statusCode;
+    NSString        *statusText; // Http 的字段
+    NSMutableDictionary    *headers; // Http 的字段
+    int            statusCode; // Http 的字段
 }
 
 /**

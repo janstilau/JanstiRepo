@@ -213,7 +213,7 @@
                 }
             }
         }
-            
+        
         // 实际的网络请求, 是交给了 protocol 进行链接,  数据传输.
         self->_delegate = [delegate retain];
         self->_protocol = [[NSURLProtocol alloc]

@@ -1,22 +1,3 @@
-//===--- EmptyCollection.swift - A collection with no elements ------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-//
-//  Sometimes an operation is best expressed in terms of some other,
-//  larger operation where one of the parameters is an empty
-//  collection.  For example, we can erase elements from an Array by
-//  replacing a subrange with the empty collection.
-//
-//===----------------------------------------------------------------------===//
-
 /// A collection whose element type is `Element` but that is always empty.
 @frozen // trivial-implementation
 public struct EmptyCollection<Element> {
