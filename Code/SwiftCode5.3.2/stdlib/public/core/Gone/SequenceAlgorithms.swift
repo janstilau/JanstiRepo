@@ -1,18 +1,45 @@
+// 简单的一层封装, 让数据和 Idx 变为了 next 的数据.
+// 这一切可以实现的原因, 在于 Sequence 这层抽象的大量使用.
+public struct EnumeratedSequence<Base: Sequence> {
+    internal var _base: Base
+    internal init(_base: Base) {
+        self._base = _base
+    }
+}
+extension EnumeratedSequence {
+    public struct Iterator {
+        internal var _base: Base.Iterator
+        internal var _count: Int
+        internal init(_base: Base.Iterator) {
+            self._base = _base
+            self._count = 0
+        }
+    }
+}
+extension EnumeratedSequence.Iterator: IteratorProtocol, Sequence {
+    public typealias Element = (offset: Int, element: Base.Element)
+    public mutating func next() -> Element? {
+        guard let b = _base.next() else { return nil }
+        let result = (offset: _count, element: b)
+        _count += 1
+        return result
+    }
+}
+extension EnumeratedSequence: Sequence {
+    public __consuming func makeIterator() -> Iterator {
+        return Iterator(_base: _base.makeIterator())
+    }
+}
 extension Sequence {
-
-    // 通过序列取值, 和通过索引取值, 其实是两套思路.
-    @inlinable // protocol-only
     public func enumerated() -> EnumeratedSequence<Self> {
         return EnumeratedSequence(_base: self)
     }
 }
 
-//===----------------------------------------------------------------------===//
-// min(), max()
-//===----------------------------------------------------------------------===//
-
+// 实际上, 和我们平时写的代码, 没有太大的区别.
+// 但是这是定义在 Sequence 层面的逻辑, 这就大大减少了重复代码的可能性.
+// 这种, 超长的 Block 命名在 Swift 里面很常见. 超长的 Block 单独占据一行, 这样代码更加的清晰.
 extension Sequence {
-    @inlinable // protocol-only
     public func min(
         by areInIncreasingOrder: (Element, Element) throws -> Bool
     ) rethrows -> Element? {
@@ -24,8 +51,6 @@ extension Sequence {
         return result
     }
     
-    @inlinable // protocol-only
-    @warn_unqualified_access
     public func max(
         by areInIncreasingOrder: (Element, Element) throws -> Bool
     ) rethrows -> Element? {
@@ -38,24 +63,18 @@ extension Sequence {
     }
 }
 
+// 当, 数据符合某种协议的时候, 调用方有着更加简洁的使用方式
 extension Sequence where Element: Comparable {
-    // 算法应该提供默认的实现, 来帮助使用者更加方便的使用.
-    @inlinable
-    @warn_unqualified_access
     public func min() -> Element? {
         return self.min(by: <)
     }
-    
-    @inlinable
-    @warn_unqualified_access
     public func max() -> Element? {
         return self.max(by: <)
     }
 }
 
-//
+// 逻辑上, 和我们自己写的代码没有太大的区别.
 extension Sequence  {
-    @inlinable
     public func starts<PossiblePrefix: Sequence>(
         with possiblePrefix: PossiblePrefix,
         by areEquivalent: (Element, PossiblePrefix.Element) throws -> Bool
@@ -83,8 +102,8 @@ extension Sequence where Element: Equatable {
     }
 }
 
+// 注意 switch 和写法. 这种清晰的写出各种可能, 比嵌套 switch 要清晰的多.
 extension Sequence {
-    @inlinable
     public func elementsEqual<OtherSequence: Sequence>(
         _ other: OtherSequence,
         by areEquivalent: (Element, OtherSequence.Element) throws -> Bool
@@ -92,7 +111,6 @@ extension Sequence {
         var iter1 = self.makeIterator()
         var iter2 = other.makeIterator()
         while true {
-            // 各种比较操作, 因为 optinal 的引入, 大量的使用了 swift a, b 的模式, 这种模式, 让代码更加的清晰.
             switch (iter1.next(), iter2.next()) {
             case let (e1?, e2?):
                 if try !areEquivalent(e1, e2) {
@@ -155,7 +173,6 @@ extension Sequence where Element: Comparable {
 
 extension Sequence {
     // 序列的 contains 就是从前到尾搂一遍, 如果可以用 predicate 判断为真, 就是含有.
-    @inlinable
     public func contains(
         where predicate: (Element) throws -> Bool
     ) rethrows -> Bool {
@@ -169,7 +186,6 @@ extension Sequence {
     // contains 可能抛出错误, pricicate 可能抛出错误, 都使用了 try.
     // 利用已有的逻辑, 进行逻辑操作, 这样, 所有的代码可以集中到一处.
     // contains 的修改, 可以直接影响到其他的部分.
-    @inlinable
     public func allSatisfy(
         _ predicate: (Element) throws -> Bool
     ) rethrows -> Bool {
