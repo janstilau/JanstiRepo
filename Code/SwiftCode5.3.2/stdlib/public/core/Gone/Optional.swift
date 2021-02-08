@@ -1,20 +1,12 @@
-@frozen
+
+// 其实, 从 Optinal 可以看出来, 枚举的关联值, 就是枚举的成员变量
 public enum Optional<Wrapped>: ExpressibleByNilLiteral {
-    /// The absence of a value.
-    ///
-    /// In code, the absence of a value is typically written using the `nil`
-    /// literal rather than the explicit `.none` enumeration case.
     case none
-    
-    /// The presence of a value, stored as `Wrapped`.
     case some(Wrapped)
     
-    // 当编译器发现了 self = 12 的时候, 会自动把 12 包装一层, 变为 .some(12)
-    @_transparent
+    // 当编译器发现了 self = 12 的时候, 会自动把 12 包装一层, 变为 .some(12). 这是很自然的, 没有编译器优化, 每次都要包装, 太麻烦了.
     public init(_ some: Wrapped) { self = .some(some) }
     
-    
-    @inlinable
     public func map<U>(
         _ transform: (Wrapped) throws -> U
     ) rethrows -> U? {
@@ -26,8 +18,8 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
         }
     }
     
-    
-    @inlinable
+    // 到底, 使用 map, 还是 flatMap, 这是使用者要根据传入的 block 来决定的.
+    // 如果 block 返回一个 Int?, 还使用 map, 那么返回值就是 Int?? 了
     public func flatMap<U>(
         _ transform: (Wrapped) throws -> U?
     ) rethrows -> U? {
@@ -39,35 +31,11 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
         }
     }
     
-    @_transparent
     public init(nilLiteral: ()) {
         self = .none
     }
     
-    /// The wrapped value of this instance, unwrapped without checking whether
-    /// the instance is `nil`.
-    ///
-    /// The `unsafelyUnwrapped` property provides the same value as the forced
-    /// unwrap operator (postfix `!`). However, in optimized builds (`-O`), no
-    /// check is performed to ensure that the current instance actually has a
-    /// value. Accessing this property in the case of a `nil` value is a serious
-    /// programming error and could lead to undefined behavior or a runtime
-    /// error.
-    ///
-    /// In debug builds (`-Onone`), the `unsafelyUnwrapped` property has the same
-    /// behavior as using the postfix `!` operator and triggers a runtime error
-    /// if the instance is `nil`.
-    ///
-    /// The `unsafelyUnwrapped` property is recommended over calling the
-    /// `unsafeBitCast(_:)` function because the property is more restrictive
-    /// and because accessing the property still performs checking in debug
-    /// builds.
-    ///
-    /// - Warning: This property trades safety for performance.  Use
-    ///   `unsafelyUnwrapped` only when you are confident that this instance
-    ///   will never be equal to `nil` and only after you've tried using the
-    ///   postfix `!` operator.
-    @inlinable
+    // 强制解包类似的代码.
     public var unsafelyUnwrapped: Wrapped {
         @inline(__always)
         get {
@@ -79,11 +47,7 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
         }
     }
     
-    /// - Returns: `unsafelyUnwrapped`.
-    ///
-    /// This version is for internal stdlib use; it avoids any checking
-    /// overhead for users, even in Debug builds.
-    @inlinable
+    // 强制解包类似的代码.
     internal var _unsafelyUnwrappedUnchecked: Wrapped {
         @inline(__always)
         get {
@@ -95,108 +59,9 @@ public enum Optional<Wrapped>: ExpressibleByNilLiteral {
     }
 }
 
-// optinal 之所以可以进行打印的原因所在.
-extension Optional: CustomDebugStringConvertible {
-    /// A textual representation of this instance, suitable for debugging.
-    public var debugDescription: String {
-        switch self {
-        case .some(let value):
-            var result = "Optional("
-            debugPrint(value, terminator: "", to: &result)
-            result += ")"
-            return result
-        case .none:
-            return "nil"
-        }
-    }
-}
-
-extension Optional: CustomReflectable {
-    public var customMirror: Mirror {
-        switch self {
-        case .some(let value):
-            return Mirror(
-                self,
-                children: [ "some": value ],
-                displayStyle: .optional)
-        case .none:
-            return Mirror(self, children: [:], displayStyle: .optional)
-        }
-    }
-}
-
-@_transparent
-public // COMPILER_INTRINSIC
-func _diagnoseUnexpectedNilOptional(_filenameStart: Builtin.RawPointer,
-                                    _filenameLength: Builtin.Word,
-                                    _filenameIsASCII: Builtin.Int1,
-                                    _line: Builtin.Word,
-                                    _isImplicitUnwrap: Builtin.Int1) {
-    // Cannot use _preconditionFailure as the file and line info would not be
-    // printed.
-    if Bool(_isImplicitUnwrap) {
-        _preconditionFailure(
-            "Unexpectedly found nil while implicitly unwrapping an Optional value",
-            file: StaticString(_start: _filenameStart,
-                               utf8CodeUnitCount: _filenameLength,
-                               isASCII: _filenameIsASCII),
-            line: UInt(_line))
-    } else {
-        _preconditionFailure(
-            "Unexpectedly found nil while unwrapping an Optional value",
-            file: StaticString(_start: _filenameStart,
-                               utf8CodeUnitCount: _filenameLength,
-                               isASCII: _filenameIsASCII),
-            line: UInt(_line))
-    }
-}
-
+// 首先, 必须自己包裹的数据可以判等.
+// 然后先进行枚举 type 的判断, 如果是有值, 就是关联值的相等判断.
 extension Optional: Equatable where Wrapped: Equatable {
-    /// Returns a Boolean value indicating whether two optional instances are
-    /// equal.
-    ///
-    /// Use this equal-to operator (`==`) to compare any two optional instances of
-    /// a type that conforms to the `Equatable` protocol. The comparison returns
-    /// `true` if both arguments are `nil` or if the two arguments wrap values
-    /// that are equal. Conversely, the comparison returns `false` if only one of
-    /// the arguments is `nil` or if the two arguments wrap values that are not
-    /// equal.
-    ///
-    ///     let group1 = [1, 2, 3, 4, 5]
-    ///     let group2 = [1, 3, 5, 7, 9]
-    ///     if group1.first == group2.first {
-    ///         print("The two groups start the same.")
-    ///     }
-    ///     // Prints "The two groups start the same."
-    ///
-    /// You can also use this operator to compare a non-optional value to an
-    /// optional that wraps the same type. The non-optional value is wrapped as an
-    /// optional before the comparison is made. In the following example, the
-    /// `numberToMatch` constant is wrapped as an optional before comparing to the
-    /// optional `numberFromString`:
-    ///
-    ///     let numberToFind: Int = 23
-    ///     let numberFromString: Int? = Int("23")      // Optional(23)
-    ///     if numberToFind == numberFromString {
-    ///         print("It's a match!")
-    ///     }
-    ///     // Prints "It's a match!"
-    ///
-    /// An instance that is expressed as a literal can also be used with this
-    /// operator. In the next example, an integer literal is compared with the
-    /// optional integer `numberFromString`. The literal `23` is inferred as an
-    /// `Int` instance and then wrapped as an optional before the comparison is
-    /// performed.
-    ///
-    ///     if 23 == numberFromString {
-    ///         print("It's a match!")
-    ///     }
-    ///     // Prints "It's a match!"
-    ///
-    /// - Parameters:
-    ///   - lhs: An optional value to compare.
-    ///   - rhs: Another optional value to compare.
-    @inlinable
     public static func ==(lhs: Wrapped?, rhs: Wrapped?) -> Bool {
         switch (lhs, rhs) {
         case let (l?, r?):
@@ -219,16 +84,6 @@ extension Optional: Hashable where Wrapped: Hashable {
             hasher.combine(1 as UInt8)
             hasher.combine(wrapped)
         }
-    }
-}
-
-// Enable pattern matching against the nil literal, even if the element type
-// isn't equatable.
-@frozen
-public struct _OptionalNilComparisonType: ExpressibleByNilLiteral {
-    /// Create an instance initialized with `nil`.
-    @_transparent
-    public init(nilLiteral: ()) {
     }
 }
 
@@ -263,7 +118,6 @@ extension Optional {
     /// - Parameters:
     ///   - lhs: A `nil` literal.
     ///   - rhs: A value to match against `nil`.
-    @_transparent
     public static func ~=(lhs: _OptionalNilComparisonType, rhs: Wrapped?) -> Bool {
         switch rhs {
         case .some:
@@ -273,31 +127,7 @@ extension Optional {
         }
     }
     
-    // Enable equality comparisons against the nil literal, even if the
-    // element type isn't equatable
-    
-    /// Returns a Boolean value indicating whether the left-hand-side argument is
-    /// `nil`.
-    ///
-    /// You can use this equal-to operator (`==`) to test whether an optional
-    /// instance is `nil` even when the wrapped value's type does not conform to
-    /// the `Equatable` protocol.
-    ///
-    /// The following example declares the `stream` variable as an optional
-    /// instance of a hypothetical `DataStream` type. Although `DataStream` is not
-    /// an `Equatable` type, this operator allows checking whether `stream` is
-    /// `nil`.
-    ///
-    ///     var stream: DataStream? = nil
-    ///     if stream == nil {
-    ///         print("No data stream is configured.")
-    ///     }
-    ///     // Prints "No data stream is configured."
-    ///
-    /// - Parameters:
-    ///   - lhs: A value to compare to `nil`.
-    ///   - rhs: A `nil` literal.
-    @_transparent
+    // 和 Nil 进行相等性判断.
     public static func ==(lhs: Wrapped?, rhs: _OptionalNilComparisonType) -> Bool {
         switch lhs {
         case .some:
@@ -307,28 +137,7 @@ extension Optional {
         }
     }
     
-    /// Returns a Boolean value indicating whether the left-hand-side argument is
-    /// not `nil`.
-    ///
-    /// You can use this not-equal-to operator (`!=`) to test whether an optional
-    /// instance is not `nil` even when the wrapped value's type does not conform
-    /// to the `Equatable` protocol.
-    ///
-    /// The following example declares the `stream` variable as an optional
-    /// instance of a hypothetical `DataStream` type. Although `DataStream` is not
-    /// an `Equatable` type, this operator allows checking whether `stream` wraps
-    /// a value and is therefore not `nil`.
-    ///
-    ///     var stream: DataStream? = fetchDataStream()
-    ///     if stream != nil {
-    ///         print("The data stream has been configured.")
-    ///     }
-    ///     // Prints "The data stream has been configured."
-    ///
-    /// - Parameters:
-    ///   - lhs: A value to compare to `nil`.
-    ///   - rhs: A `nil` literal.
-    @_transparent
+    // 和 nil 进行不等性判断.
     public static func !=(lhs: Wrapped?, rhs: _OptionalNilComparisonType) -> Bool {
         switch lhs {
         case .some:
