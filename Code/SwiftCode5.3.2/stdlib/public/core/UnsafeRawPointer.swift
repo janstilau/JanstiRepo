@@ -957,9 +957,6 @@ public struct UnsafeMutableRawPointer: _Pointer {
     ///   - byteCount: The number of bytes to copy. `byteCount` must not be negative.
     @inlinable
     public func copyMemory(from source: UnsafeRawPointer, byteCount: Int) {
-        _debugPrecondition(
-            byteCount >= 0, "UnsafeMutableRawPointer.copyMemory with negative count")
-        
         _memmove(dest: self, src: source, size: UInt(byteCount))
     }
 }

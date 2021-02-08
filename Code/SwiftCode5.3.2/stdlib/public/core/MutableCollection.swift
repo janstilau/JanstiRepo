@@ -3,6 +3,9 @@
 // MutableCollection 的 primitive method 就是 subscript set 方法.
 // 也就是说, 只要 subscript 增加了 set, 就是可变的了.
 // MutableCollection 是可以改变数据, 但是不能增加或者删除, 增加或者删除相关的逻辑, 在 RangeReplaceableCollection 中
+// A collection that supports subscript assignment.
+// The MutableCollection protocol allows changing the values of a collection’s elements but not the length of the collection itself. For operations that require adding or removing elements, see the RangeReplaceableCollection protocol instead.
+// To add conformance to the MutableCollection protocol to your own custom collection, upgrade your type’s subscript to support both read and write access. 这里是说, 想要成为 MutableCollection, 只要实现 [] 的 set 功能就可以了.
 
 public protocol MutableCollection: Collection
 where SubSequence: MutableCollection
@@ -13,7 +16,7 @@ where SubSequence: MutableCollection
     
     override subscript(position: Index) -> Element { get set }
     
-   // 这里其实没有讲清楚, 这里如果 set 了, 岂不是增加或者删除了原有的长度了.
+    // 这里其实没有讲清楚, 这里如果 set 了, 岂不是增加或者删除了原有的长度了.
     override subscript(bounds: Range<Index>) -> SubSequence { get set }
     
     /// Reorders the elements of the collection such that all the elements
@@ -98,7 +101,6 @@ where SubSequence: MutableCollection
     ) rethrows -> R?
 }
 
-// TODO: swift-3-indexing-model - review the following
 extension MutableCollection {
     @inlinable
     public mutating func _withUnsafeMutableBufferPointerIfSupported<R>(
@@ -160,7 +162,6 @@ extension MutableCollection {
 }
 
 // 这个方法, 其实和 * 操作符做的事情是一样的, 不过是使用了 Swfit 里面的指针操作.
-@inlinable
 public func swap<T>(_ a: inout T, _ b: inout T) {
     // Semantically equivalent to (a, b) = (b, a).
     // Microoptimized to avoid retain/release traffic.

@@ -10,9 +10,6 @@ import SwiftShims
 /// NOTE: older runtimes called this _EmptyArrayStorage. The two must
 /// coexist, so it was renamed. The old name must not be used in the new
 /// runtime.
-@_fixed_layout
-@usableFromInline
-@_objc_non_lazy_realization
 internal final class __EmptyArrayStorage
 : __ContiguousArrayStorageBase {
     
@@ -242,342 +239,343 @@ internal struct _ContiguousArrayBuffer<Element>: _ArrayBufferProtocol {
     /// to zero.
     @inlinabl
     
-        let realMinimumCapacity = Swift.max(uninitializedCount, minimumCapacity)
-        if realMinimumCapacity == 0 {
-            self = _ContiguousArrayBuffer<Element>()
-        }
-        else {
-            _storage = Builtin.allocWithTailElems_1(
-                _ContiguousArrayStorage<Element>.self,
-                realMinimumCapacity._builtinWordValue, Element.self)
-            
-            let storageAddr = UnsafeMutableRawPointer(Builtin.bridgeToRawPointer(_storage))
-            let endAddr = storageAddr + _swift_stdlib_malloc_size(storageAddr)
-            let realCapacity = endAddr.assumingMemoryBound(to: Element.self) - firstElementAddress
-            
-            _initStorageHeader(
-                count: uninitializedCount, capacity: realCapacity)
-        }
-    }
+    let realMinimumCapacity = Swift.max(uninitializedCount, minimumCapacity)
     
-    /// Initialize using the given uninitialized `storage`.
-    /// The storage is assumed to be uninitialized. The returned buffer has the
-    /// body part of the storage initialized, but not the elements.
-    ///
-    /// - Warning: The result has uninitialized elements.
-    ///
-    /// - Warning: storage may have been stack-allocated, so it's
-    ///   crucial not to call, e.g., `malloc_size` on it.
-    @inlinable
-    internal init(count: Int, storage: _ContiguousArrayStorage<Element>) {
-        _storage = storage
-        
-        _initStorageHeader(count: count, capacity: count)
+    if realMinimumCapacity == 0 {
+    self = _ContiguousArrayBuffer<Element>()
     }
+    else {
+    _storage = Builtin.allocWithTailElems_1(
+    _ContiguousArrayStorage<Element>.self,
+    realMinimumCapacity._builtinWordValue, Element.self)
     
-    @inlinable
-    internal init(_ storage: __ContiguousArrayStorageBase) {
-        _storage = storage
+    let storageAddr = UnsafeMutableRawPointer(Builtin.bridgeToRawPointer(_storage))
+    let endAddr = storageAddr + _swift_stdlib_malloc_size(storageAddr)
+    let realCapacity = endAddr.assumingMemoryBound(to: Element.self) - firstElementAddress
+    
+    _initStorageHeader(
+    count: uninitializedCount, capacity: realCapacity)
     }
+}
+
+/// Initialize using the given uninitialized `storage`.
+/// The storage is assumed to be uninitialized. The returned buffer has the
+/// body part of the storage initialized, but not the elements.
+///
+/// - Warning: The result has uninitialized elements.
+///
+/// - Warning: storage may have been stack-allocated, so it's
+///   crucial not to call, e.g., `malloc_size` on it.
+@inlinable
+internal init(count: Int, storage: _ContiguousArrayStorage<Element>) {
+    _storage = storage
     
-    /// Initialize the body part of our storage.
-    ///
-    /// - Warning: does not initialize elements
-    @inlinable
-    internal func _initStorageHeader(count: Int, capacity: Int) {
-        #if _runtime(_ObjC)
-        let verbatim = _isBridgedVerbatimToObjectiveC(Element.self)
-        #else
-        let verbatim = false
-        #endif
-        
-        // We can initialize by assignment because _ArrayBody is a trivial type,
-        // i.e. contains no references.
-        _storage.countAndCapacity = _ArrayBody(
-            count: count,
-            capacity: capacity,
-            elementTypeIsBridgedVerbatim: verbatim)
-    }
-    
-    /// True, if the array is native and does not need a deferred type check.
-    @inlinable
-    internal var arrayPropertyIsNativeTypeChecked: Bool {
-        return true
-    }
-    
-    /// A pointer to the first element.
-    @inlinable
-    internal var firstElementAddress: UnsafeMutablePointer<Element> {
-        return UnsafeMutablePointer(Builtin.projectTailElems(_storage,
-                                                             Element.self))
-    }
-    
-    @inlinable
-    internal var firstElementAddressIfContiguous: UnsafeMutablePointer<Element>? {
-        return firstElementAddress
-    }
-    
-    /// Call `body(p)`, where `p` is an `UnsafeBufferPointer` over the
-    /// underlying contiguous storage.
-    @inlinable
-    internal func withUnsafeBufferPointer<R>(
-        _ body: (UnsafeBufferPointer<Element>) throws -> R
-    ) rethrows -> R {
-        defer { _fixLifetime(self) }
-        return try body(UnsafeBufferPointer(start: firstElementAddress,
-                                            count: count))
-    }
-    
-    /// Call `body(p)`, where `p` is an `UnsafeMutableBufferPointer`
-    /// over the underlying contiguous storage.
-    @inlinable
-    internal mutating func withUnsafeMutableBufferPointer<R>(
-        _ body: (UnsafeMutableBufferPointer<Element>) throws -> R
-    ) rethrows -> R {
-        defer { _fixLifetime(self) }
-        return try body(
-            UnsafeMutableBufferPointer(start: firstElementAddress, count: count))
-    }
-    
-    //===--- _ArrayBufferProtocol conformance -----------------------------------===//
-    /// Create an empty buffer.
-    @inlinable
-    internal init() {
-        _storage = _emptyArrayStorage
-    }
-    
-    @inlinable
-    internal init(_buffer buffer: _ContiguousArrayBuffer, shiftedToStartIndex: Int) {
-        _internalInvariant(shiftedToStartIndex == 0, "shiftedToStartIndex must be 0")
-        self = buffer
-    }
-    
-    @inlinable
-    internal mutating func requestUniqueMutableBackingBuffer(
-        minimumCapacity: Int
-    ) -> _ContiguousArrayBuffer<Element>? {
-        if _fastPath(isUniquelyReferenced() && capacity >= minimumCapacity) {
-            return self
-        }
-        return nil
-    }
-    
-    @inlinable
-    internal mutating func isMutableAndUniquelyReferenced() -> Bool {
-        return isUniquelyReferenced()
-    }
-    
-    /// If this buffer is backed by a `_ContiguousArrayBuffer`
-    /// containing the same number of elements as `self`, return it.
-    /// Otherwise, return `nil`.
-    @inlinable
-    internal func requestNativeBuffer() -> _ContiguousArrayBuffer<Element>? {
-        return self
-    }
-    
-    @inlinable
-    @inline(__always)
-    internal func getElement(_ i: Int) -> Element {
-        _internalInvariant(i >= 0 && i < count, "Array index out of range")
-        return firstElementAddress[i]
-    }
-    
-    /// Get or set the value of the ith element.
-    @inlinable
-    internal subscript(i: Int) -> Element {
-        @inline(__always)
-        get {
-            return getElement(i)
-        }
-        @inline(__always)
-        nonmutating set {
-            _internalInvariant(i >= 0 && i < count, "Array index out of range")
-            
-            // FIXME: Manually swap because it makes the ARC optimizer happy.  See
-            // <rdar://problem/16831852> check retain/release order
-            // firstElementAddress[i] = newValue
-            var nv = newValue
-            let tmp = nv
-            nv = firstElementAddress[i]
-            firstElementAddress[i] = tmp
-        }
-    }
-    
-    /// The number of elements the buffer stores.
-    @inlinable
-    internal var count: Int {
-        get {
-            return _storage.countAndCapacity.count
-        }
-        nonmutating set {
-            _internalInvariant(newValue >= 0)
-            
-            _internalInvariant(
-                newValue <= capacity,
-                "Can't grow an array buffer past its capacity")
-            
-            _storage.countAndCapacity.count = newValue
-        }
-    }
-    
-    /// Traps unless the given `index` is valid for subscripting, i.e.
-    /// `0 ≤ index < count`.
-    @inlinable
-    @inline(__always)
-    internal func _checkValidSubscript(_ index: Int) {
-        _precondition(
-            (index >= 0) && (index < count),
-            "Index out of range"
-        )
-    }
-    
-    /// The number of elements the buffer can store without reallocation.
-    @inlinable
-    internal var capacity: Int {
-        return _storage.countAndCapacity.capacity
-    }
-    
-    /// Copy the elements in `bounds` from this buffer into uninitialized
-    /// memory starting at `target`.  Return a pointer "past the end" of the
-    /// just-initialized memory.
-    @inlinable
-    @discardableResult
-    internal __consuming func _copyContents(
-        subRange bounds: Range<Int>,
-        initializing target: UnsafeMutablePointer<Element>
-    ) -> UnsafeMutablePointer<Element> {
-        _internalInvariant(bounds.lowerBound >= 0)
-        _internalInvariant(bounds.upperBound >= bounds.lowerBound)
-        _internalInvariant(bounds.upperBound <= count)
-        
-        let initializedCount = bounds.upperBound - bounds.lowerBound
-        target.initialize(
-            from: firstElementAddress + bounds.lowerBound, count: initializedCount)
-        _fixLifetime(owner)
-        return target + initializedCount
-    }
-    
-    public __consuming func _copyContents(
-        initializing buffer: UnsafeMutableBufferPointer<Element>
-    ) -> (Iterator,UnsafeMutableBufferPointer<Element>.Index) {
-        // This customization point is not implemented for internal types.
-        // Accidentally calling it would be a catastrophic performance bug.
-        fatalError("unsupported")
-    }
-    
-    /// Returns a `_SliceBuffer` containing the given `bounds` of values
-    /// from this buffer.
-    @inlinable
-    internal subscript(bounds: Range<Int>) -> _SliceBuffer<Element> {
-        get {
-            return _SliceBuffer(
-                owner: _storage,
-                subscriptBaseAddress: subscriptBaseAddress,
-                indices: bounds,
-                hasNativeBuffer: true)
-        }
-        set {
-            fatalError("not implemented")
-        }
-    }
-    
-    /// Returns `true` iff this buffer's storage is uniquely-referenced.
-    ///
-    /// - Note: This does not mean the buffer is mutable.  Other factors
-    ///   may need to be considered, such as whether the buffer could be
-    ///   some immutable Cocoa container.
-    @inlinable
-    internal mutating func isUniquelyReferenced() -> Bool {
-        return _isUnique(&_storage)
-    }
-    
+    _initStorageHeader(count: count, capacity: count)
+}
+
+@inlinable
+internal init(_ storage: __ContiguousArrayStorageBase) {
+    _storage = storage
+}
+
+/// Initialize the body part of our storage.
+///
+/// - Warning: does not initialize elements
+@inlinable
+internal func _initStorageHeader(count: Int, capacity: Int) {
     #if _runtime(_ObjC)
-    
-    /// Convert to an NSArray.
-    ///
-    /// - Precondition: `Element` is bridged to Objective-C.
-    ///
-    /// - Complexity: O(1).
-    @usableFromInline
-    internal __consuming func _asCocoaArray() -> AnyObject {
-        // _asCocoaArray was @inlinable in Swift 5.0 and 5.1, which means that there
-        // are existing apps out there that effectively have the old implementation
-        // Be careful with future changes to this function. Here be dragons!
-        // The old implementation was
-        // if count == 0 {
-        //   return _emptyArrayStorage
-        // }
-        // if _isBridgedVerbatimToObjectiveC(Element.self) {
-        //   return _storage
-        // }
-        // return __SwiftDeferredNSArray(_nativeStorage: _storage)
-        
-        _connectOrphanedFoundationSubclassesIfNeeded()
-        if count == 0 {
-            return _emptyArrayStorage
-        }
-        if _isBridgedVerbatimToObjectiveC(Element.self) {
-            return _storage
-        }
-        return __SwiftDeferredNSArray(_nativeStorage: _storage)
-    }
+    let verbatim = _isBridgedVerbatimToObjectiveC(Element.self)
+    #else
+    let verbatim = false
     #endif
     
-    /// An object that keeps the elements stored in this buffer alive.
-    @inlinable
-    internal var owner: AnyObject {
+    // We can initialize by assignment because _ArrayBody is a trivial type,
+    // i.e. contains no references.
+    _storage.countAndCapacity = _ArrayBody(
+        count: count,
+        capacity: capacity,
+        elementTypeIsBridgedVerbatim: verbatim)
+}
+
+/// True, if the array is native and does not need a deferred type check.
+@inlinable
+internal var arrayPropertyIsNativeTypeChecked: Bool {
+    return true
+}
+
+/// A pointer to the first element.
+@inlinable
+internal var firstElementAddress: UnsafeMutablePointer<Element> {
+    return UnsafeMutablePointer(Builtin.projectTailElems(_storage,
+                                                         Element.self))
+}
+
+@inlinable
+internal var firstElementAddressIfContiguous: UnsafeMutablePointer<Element>? {
+    return firstElementAddress
+}
+
+/// Call `body(p)`, where `p` is an `UnsafeBufferPointer` over the
+/// underlying contiguous storage.
+@inlinable
+internal func withUnsafeBufferPointer<R>(
+    _ body: (UnsafeBufferPointer<Element>) throws -> R
+) rethrows -> R {
+    defer { _fixLifetime(self) }
+    return try body(UnsafeBufferPointer(start: firstElementAddress,
+                                        count: count))
+}
+
+/// Call `body(p)`, where `p` is an `UnsafeMutableBufferPointer`
+/// over the underlying contiguous storage.
+@inlinable
+internal mutating func withUnsafeMutableBufferPointer<R>(
+    _ body: (UnsafeMutableBufferPointer<Element>) throws -> R
+) rethrows -> R {
+    defer { _fixLifetime(self) }
+    return try body(
+        UnsafeMutableBufferPointer(start: firstElementAddress, count: count))
+}
+
+//===--- _ArrayBufferProtocol conformance -----------------------------------===//
+/// Create an empty buffer.
+@inlinable
+internal init() {
+    _storage = _emptyArrayStorage
+}
+
+@inlinable
+internal init(_buffer buffer: _ContiguousArrayBuffer, shiftedToStartIndex: Int) {
+    _internalInvariant(shiftedToStartIndex == 0, "shiftedToStartIndex must be 0")
+    self = buffer
+}
+
+@inlinable
+internal mutating func requestUniqueMutableBackingBuffer(
+    minimumCapacity: Int
+) -> _ContiguousArrayBuffer<Element>? {
+    if _fastPath(isUniquelyReferenced() && capacity >= minimumCapacity) {
+        return self
+    }
+    return nil
+}
+
+@inlinable
+internal mutating func isMutableAndUniquelyReferenced() -> Bool {
+    return isUniquelyReferenced()
+}
+
+/// If this buffer is backed by a `_ContiguousArrayBuffer`
+/// containing the same number of elements as `self`, return it.
+/// Otherwise, return `nil`.
+@inlinable
+internal func requestNativeBuffer() -> _ContiguousArrayBuffer<Element>? {
+    return self
+}
+
+@inlinable
+@inline(__always)
+internal func getElement(_ i: Int) -> Element {
+    _internalInvariant(i >= 0 && i < count, "Array index out of range")
+    return firstElementAddress[i]
+}
+
+/// Get or set the value of the ith element.
+@inlinable
+internal subscript(i: Int) -> Element {
+    @inline(__always)
+    get {
+        return getElement(i)
+    }
+    @inline(__always)
+    nonmutating set {
+        _internalInvariant(i >= 0 && i < count, "Array index out of range")
+        
+        // FIXME: Manually swap because it makes the ARC optimizer happy.  See
+        // <rdar://problem/16831852> check retain/release order
+        // firstElementAddress[i] = newValue
+        var nv = newValue
+        let tmp = nv
+        nv = firstElementAddress[i]
+        firstElementAddress[i] = tmp
+    }
+}
+
+/// The number of elements the buffer stores.
+@inlinable
+internal var count: Int {
+    get {
+        return _storage.countAndCapacity.count
+    }
+    nonmutating set {
+        _internalInvariant(newValue >= 0)
+        
+        _internalInvariant(
+            newValue <= capacity,
+            "Can't grow an array buffer past its capacity")
+        
+        _storage.countAndCapacity.count = newValue
+    }
+}
+
+/// Traps unless the given `index` is valid for subscripting, i.e.
+/// `0 ≤ index < count`.
+@inlinable
+@inline(__always)
+internal func _checkValidSubscript(_ index: Int) {
+    _precondition(
+        (index >= 0) && (index < count),
+        "Index out of range"
+    )
+}
+
+/// The number of elements the buffer can store without reallocation.
+@inlinable
+internal var capacity: Int {
+    return _storage.countAndCapacity.capacity
+}
+
+/// Copy the elements in `bounds` from this buffer into uninitialized
+/// memory starting at `target`.  Return a pointer "past the end" of the
+/// just-initialized memory.
+@inlinable
+@discardableResult
+internal __consuming func _copyContents(
+    subRange bounds: Range<Int>,
+    initializing target: UnsafeMutablePointer<Element>
+) -> UnsafeMutablePointer<Element> {
+    _internalInvariant(bounds.lowerBound >= 0)
+    _internalInvariant(bounds.upperBound >= bounds.lowerBound)
+    _internalInvariant(bounds.upperBound <= count)
+    
+    let initializedCount = bounds.upperBound - bounds.lowerBound
+    target.initialize(
+        from: firstElementAddress + bounds.lowerBound, count: initializedCount)
+    _fixLifetime(owner)
+    return target + initializedCount
+}
+
+public __consuming func _copyContents(
+    initializing buffer: UnsafeMutableBufferPointer<Element>
+) -> (Iterator,UnsafeMutableBufferPointer<Element>.Index) {
+    // This customization point is not implemented for internal types.
+    // Accidentally calling it would be a catastrophic performance bug.
+    fatalError("unsupported")
+}
+
+/// Returns a `_SliceBuffer` containing the given `bounds` of values
+/// from this buffer.
+@inlinable
+internal subscript(bounds: Range<Int>) -> _SliceBuffer<Element> {
+    get {
+        return _SliceBuffer(
+            owner: _storage,
+            subscriptBaseAddress: subscriptBaseAddress,
+            indices: bounds,
+            hasNativeBuffer: true)
+    }
+    set {
+        fatalError("not implemented")
+    }
+}
+
+/// Returns `true` iff this buffer's storage is uniquely-referenced.
+///
+/// - Note: This does not mean the buffer is mutable.  Other factors
+///   may need to be considered, such as whether the buffer could be
+///   some immutable Cocoa container.
+@inlinable
+internal mutating func isUniquelyReferenced() -> Bool {
+    return _isUnique(&_storage)
+}
+
+#if _runtime(_ObjC)
+
+/// Convert to an NSArray.
+///
+/// - Precondition: `Element` is bridged to Objective-C.
+///
+/// - Complexity: O(1).
+@usableFromInline
+internal __consuming func _asCocoaArray() -> AnyObject {
+    // _asCocoaArray was @inlinable in Swift 5.0 and 5.1, which means that there
+    // are existing apps out there that effectively have the old implementation
+    // Be careful with future changes to this function. Here be dragons!
+    // The old implementation was
+    // if count == 0 {
+    //   return _emptyArrayStorage
+    // }
+    // if _isBridgedVerbatimToObjectiveC(Element.self) {
+    //   return _storage
+    // }
+    // return __SwiftDeferredNSArray(_nativeStorage: _storage)
+    
+    _connectOrphanedFoundationSubclassesIfNeeded()
+    if count == 0 {
+        return _emptyArrayStorage
+    }
+    if _isBridgedVerbatimToObjectiveC(Element.self) {
         return _storage
     }
+    return __SwiftDeferredNSArray(_nativeStorage: _storage)
+}
+#endif
+
+/// An object that keeps the elements stored in this buffer alive.
+@inlinable
+internal var owner: AnyObject {
+    return _storage
+}
+
+/// An object that keeps the elements stored in this buffer alive.
+@inlinable
+internal var nativeOwner: AnyObject {
+    return _storage
+}
+
+/// A value that identifies the storage used by the buffer.
+///
+/// Two buffers address the same elements when they have the same
+/// identity and count.
+@inlinable
+internal var identity: UnsafeRawPointer {
+    return UnsafeRawPointer(firstElementAddress)
+}
+
+/// Returns `true` iff we have storage for elements of the given
+/// `proposedElementType`.  If not, we'll be treated as immutable.
+@inlinable
+func canStoreElements(ofDynamicType proposedElementType: Any.Type) -> Bool {
+    return _storage.canStoreElements(ofDynamicType: proposedElementType)
+}
+
+/// Returns `true` if the buffer stores only elements of type `U`.
+///
+/// - Precondition: `U` is a class or `@objc` existential.
+///
+/// - Complexity: O(*n*)
+@inlinable
+internal func storesOnlyElementsOfType<U>(
+    _: U.Type
+) -> Bool {
+    _internalInvariant(_isClassOrObjCExistential(U.self))
     
-    /// An object that keeps the elements stored in this buffer alive.
-    @inlinable
-    internal var nativeOwner: AnyObject {
-        return _storage
-    }
-    
-    /// A value that identifies the storage used by the buffer.
-    ///
-    /// Two buffers address the same elements when they have the same
-    /// identity and count.
-    @inlinable
-    internal var identity: UnsafeRawPointer {
-        return UnsafeRawPointer(firstElementAddress)
-    }
-    
-    /// Returns `true` iff we have storage for elements of the given
-    /// `proposedElementType`.  If not, we'll be treated as immutable.
-    @inlinable
-    func canStoreElements(ofDynamicType proposedElementType: Any.Type) -> Bool {
-        return _storage.canStoreElements(ofDynamicType: proposedElementType)
-    }
-    
-    /// Returns `true` if the buffer stores only elements of type `U`.
-    ///
-    /// - Precondition: `U` is a class or `@objc` existential.
-    ///
-    /// - Complexity: O(*n*)
-    @inlinable
-    internal func storesOnlyElementsOfType<U>(
-        _: U.Type
-    ) -> Bool {
-        _internalInvariant(_isClassOrObjCExistential(U.self))
-        
-        if _fastPath(_storage.staticElementType is U.Type) {
-            // Done in O(1)
-            return true
-        }
-        
-        // Check the elements
-        for x in self {
-            if !(x is U) {
-                return false
-            }
-        }
+    if _fastPath(_storage.staticElementType is U.Type) {
+        // Done in O(1)
         return true
     }
     
-    @usableFromInline
-    internal var _storage: __ContiguousArrayStorageBase
+    // Check the elements
+    for x in self {
+        if !(x is U) {
+            return false
+        }
+    }
+    return true
+}
+
+@usableFromInline
+internal var _storage: __ContiguousArrayStorageBase
 }
 
 /// Append the elements of `rhs` to `lhs`.

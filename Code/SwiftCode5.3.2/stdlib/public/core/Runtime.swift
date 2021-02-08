@@ -593,6 +593,7 @@ internal class __SwiftNativeNSArray {
   @inlinable
   deinit {}
 }
+
 @_fixed_layout
 @usableFromInline
 internal class __SwiftNativeNSDictionary {

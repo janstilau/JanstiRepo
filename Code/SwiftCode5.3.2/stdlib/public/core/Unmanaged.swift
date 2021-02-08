@@ -1,8 +1,6 @@
 
 // OC 的手动内存管理的引入, 目前不太清楚, 什么时候, 会用到这个类.
-@frozen
 public struct Unmanaged<Instance: AnyObject> {
-    @usableFromInline
     // 必须是一个类的对象, 因为这个类, 主要做的是内存控制. 必须是一个引用值.
     /*
      当unowned（safe）引用的对象被dealloc之后，如果再次访问这个对象，将会抛出一个异常来终止程序(访问之前会进行检查，如果所引用的对象已经被release，就抛出个异常，这也行就是safe的意思吧)
@@ -12,15 +10,10 @@ public struct Unmanaged<Instance: AnyObject> {
      3 内存被同类型对象覆盖-->不会crash，到使用的内存模型确实新对象的。
      参考之前的 zombie 的设计, safe 这件事, 会耗费性能.
      */
-    // 这里, 和自己的想法有点差异. 内部使用的存储属性, 就应该使用 _ 开头作为存储.
-    // 然后外界使用的, 使用 计算属性包一层, 或者 不加_ 作为存储属性.
+   
     internal unowned(unsafe) var _value: Instance
-    
-    @usableFromInline @_transparent
     internal init(_private: Instance) { _value = _private }
     
-    // 存一个 void 指针, 转变成为 Instance 的指针. 调用 init(_private) 方法, 生成盒子对象.
-    @_transparent
     public static func fromOpaque(
         @_nonEphemeral _ value: UnsafeRawPointer
     ) -> Unmanaged {
@@ -28,19 +21,14 @@ public struct Unmanaged<Instance: AnyObject> {
     }
     
     // 将自己管理的对象, 转变成为了一个 可变的 void 指针.
-    @_transparent
     public func toOpaque() -> UnsafeMutableRawPointer {
         return unsafeBitCast(_value, to: UnsafeMutableRawPointer.self)
     }
     
-    // retain 一个对象.
-    // 从这里可以看到. Unmanaged 保持值语义的行为.
-    @_transparent
     public static func passRetained(_ value: Instance) -> Unmanaged {
         return Unmanaged(_private: value).retain()
     }
     
-    @_transparent
     public static func passUnretained(_ value: Instance) -> Unmanaged {
         return Unmanaged(_private: value)
     }
@@ -51,14 +39,6 @@ public struct Unmanaged<Instance: AnyObject> {
         return _value
     }
     
-    /// Gets the value of this unmanaged reference as a managed
-    /// reference and consumes an unbalanced retain of it.
-    ///
-    /// This is useful when a function returns an unmanaged reference
-    /// and you know that you're responsible for releasing the result.
-    ///
-    /// - Returns: The object referenced by this `Unmanaged` instance.
-    @_transparent // unsafe-performance
     public func takeRetainedValue() -> Instance {
         let result = _value
         release()

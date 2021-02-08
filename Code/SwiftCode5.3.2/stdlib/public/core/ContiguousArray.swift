@@ -974,7 +974,6 @@ extension ContiguousArray: RangeReplaceableCollection {
         }
     }
     
-    @inlinable
     public mutating func withContiguousMutableStorageIfAvailable<R>(
         _ body: (inout UnsafeMutableBufferPointer<Element>) throws -> R
     ) rethrows -> R? {
@@ -984,7 +983,6 @@ extension ContiguousArray: RangeReplaceableCollection {
         }
     }
     
-    @inlinable
     public func withContiguousStorageIfAvailable<R>(
         _ body: (UnsafeBufferPointer<Element>) throws -> R
     ) rethrows -> R? {
@@ -994,7 +992,6 @@ extension ContiguousArray: RangeReplaceableCollection {
         }
     }
     
-    @inlinable
     public __consuming func _copyToContiguousArray() -> ContiguousArray<Element> {
         if let n = _buffer.requestNativeBuffer() {
             return ContiguousArray(_buffer: n)

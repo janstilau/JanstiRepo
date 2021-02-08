@@ -1,10 +1,6 @@
 // A type that can be hashed into a `Hasher` to produce an integer hash value.
 // 所以, 实际上, hasher 做的事情, 并没有太大的变化. 还是最终生成一个 hash 值.
 
-
-// Swift 对于 hash 值的自动计算, 是建立在 protocol 的基础上的. 对于 Array, 如果想要成为 hashable 的, 那么要求其中的 value 必须也是 hashable 的.
-
-// Struct 和 Enum, 如果他们的存储单元都是 hashable 的, 那么可以自动变为 hashable. 这个应该是编译器的事情, 因为Struct enum 作为基本的数据类型.
 // Hasher 的出现, 让 feed 的顺序也尤其重要了, 普通意义上的  hashvalue 和 equtable 的关系, 也因此有了顺序上的考虑.
 
 public protocol Hashable: Equatable {
