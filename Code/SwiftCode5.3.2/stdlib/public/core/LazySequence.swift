@@ -140,62 +140,52 @@ extension LazySequenceProtocol where Elements: LazySequenceProtocol {
     }
 }
 
-// 首先, 要保存一下原来的 sequence 值.
-@frozen // lazy-performance
+
+
+
+
+
+
+// LazySequence 最最重要的, 他存有原有的 sequence, 也就是数据的源头.
+// 它是 LazySequenceProtocol 的, 也就能够调用 LazySequenceProtocol 上定义的各种方法.
 public struct LazySequence<Base: Sequence> {
-    @usableFromInline
     internal var _base: Base
-    @inlinable // lazy-performance
     internal init(_base: Base) {
         self._base = _base
     }
 }
 
-// 一切, 对于 sequence 的适配, 都是通过 base 进行的.
+// LazySequence 对于 Sequence 的各种实现, 都是转交给 _base 来了.
 extension LazySequence: Sequence {
     public typealias Element = Base.Element
     public typealias Iterator = Base.Iterator
-    
-    @inlinable
     public __consuming func makeIterator() -> Iterator {
         return _base.makeIterator()
     }
-    
-    @inlinable // lazy-performance
     public var underestimatedCount: Int {
         return _base.underestimatedCount
     }
-    
-    @inlinable // lazy-performance
-    @discardableResult
     public __consuming func _copyContents(
         initializing buf: UnsafeMutableBufferPointer<Element>
     ) -> (Iterator, UnsafeMutableBufferPointer<Element>.Index) {
         return _base._copyContents(initializing: buf)
     }
-    
-    @inlinable // lazy-performance
     public func _customContainsEquatableElement(_ element: Element) -> Bool? {
         return _base._customContainsEquatableElement(element)
     }
-    
-    @inlinable // generic-performance
     public __consuming func _copyToContiguousArray() -> ContiguousArray<Element> {
         return _base._copyToContiguousArray()
     }
 }
 
+// LazySequence 实现 LazySequenceProtocol
 extension LazySequence: LazySequenceProtocol {
     public typealias Elements = Base
-    
-    /// The `Base` (presumably non-lazy) sequence from which `self` was created.
-    @inlinable // lazy-performance
     public var elements: Elements { return _base }
 }
 
+
 extension Sequence {
-    // 将自己传入 LazySequence 中返回, LazySequence 作为中介者存在.
-    @inlinable // protocol-only
     public var lazy: LazySequence<Self> {
         return LazySequence(_base: self)
     }

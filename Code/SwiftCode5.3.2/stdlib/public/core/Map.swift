@@ -1,14 +1,7 @@
-@frozen
 public struct LazyMapSequence<Base: Sequence, Element> {
-    
     public typealias Elements = LazyMapSequence
-    
-    @usableFromInline
     internal var _base: Base
-    @usableFromInline
     internal let _transform: (Base.Element) -> Element
-    
-    @inlinable
     internal init(_base: Base, transform: @escaping (Base.Element) -> Element) {
         self._base = _base
         self._transform = transform
@@ -18,15 +11,9 @@ public struct LazyMapSequence<Base: Sequence, Element> {
 extension LazyMapSequence {
     @frozen
     public struct Iterator {
-        @usableFromInline
         internal var _base: Base.Iterator
-        @usableFromInline
         internal let _transform: (Base.Element) -> Element
-        
-        @inlinable
         public var base: Base.Iterator { return _base }
-        
-        @inlinable
         internal init(
             _base: Base.Iterator,
             _transform: @escaping (Base.Element) -> Element
@@ -38,23 +25,15 @@ extension LazyMapSequence {
 }
 
 extension LazyMapSequence.Iterator: IteratorProtocol, Sequence {
-    @inlinable
     public mutating func next() -> Element? {
-        // 这里的 map, 是 optinal 的 map.
         return _base.next().map(_transform)
     }
 }
 
 extension LazyMapSequence: LazySequenceProtocol {
-    /// Returns an iterator over the elements of this sequence.
-    ///
-    /// - Complexity: O(1).
-    @inlinable
     public __consuming func makeIterator() -> Iterator {
         return Iterator(_base: _base.makeIterator(), _transform: _transform)
     }
-    
-    @inlinable
     public var underestimatedCount: Int {
         return _base.underestimatedCount
     }
