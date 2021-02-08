@@ -1,12 +1,11 @@
 // 一维的, 连续的, 可以评判出差距的类型.
-// 一维的, 代表着有前后关系, 其实 Comparable 就可以了, 但是可比较大小, 不一定是可以评判出差距的, 例如, 单词的字典排序.
+// 一维的, 代表着有前后关系, Comparable 的职责, 但是可比较大小, 不一定是可以评判出差距的, 例如, 单词的字典排序. abandon 和 zoo 可以判断出大小来, 但是之间有多少单词, 是完全没有办法确定下来的.
 
-// Strideable 可以度量出间隔来. 可以根据一个值, 和间隔值, 快速的计算出另外一个值来, 可以根据两个 Index 值, 快速的计算出间距来.
+// Strideable 可以度量出间隔来. 可以根据一个值, 和间隔值, 快速的计算出另外一个值来.
 
 public protocol Strideable: Comparable {
     // offsest 的单位, 有正负关系, 可以比较.
     associatedtype Stride: SignedNumeric, Comparable
-    
     // 判断两者之间的差距. 按理来说, 这应该是一个 - 号运算符.
     func distance(to other: Self) -> Stride
     // 通过刻度, 计算出后面的值来
@@ -52,7 +51,6 @@ extension Strideable where Stride: FloatingPoint {
 }
 
 extension Strideable where Self: FloatingPoint, Self == Stride {
-    @inlinable // protocol-only
     public static func _step(
         after current: (index: Int?, value: Self),
         from start: Self, by distance: Self.Stride
@@ -71,7 +69,6 @@ public struct StrideToIterator<Element: Strideable> {
     internal let _start: Element
     internal let _end: Element
     internal let _stride: Element.Stride
-    
     // Iter 里面, 真正表示状态值的就是 _current 这个元组.
     internal var _current: (index: Int?, value: Element)
     
@@ -81,7 +78,6 @@ public struct StrideToIterator<Element: Strideable> {
         _stride = stride
         _current = (0, _start)
     }
-    
     public mutating func next() -> Element? {
         let result = _current.value
         if _stride > 0 ? result >= _end : result <= _end {
