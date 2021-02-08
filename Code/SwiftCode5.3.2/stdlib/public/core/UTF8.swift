@@ -8,16 +8,16 @@ extension Unicode {
  UTF-8编码方式
  
  2^16 = 65536, 而现在 unicode 是 10 万多个字母, 所以 17 个字节就足够了. 但是 UTF 8 表示 17 个字节, 要用四个字节. 在转化的时候, 根据 unicode 编码的位置不同, 生成了不同长度的 uft8 编码.
-
+ 
  U+0000~U+007F 一个字节, 利用了 7 个 bit 位置
  0????????
  
  U+0080~U+07FF 两个字节, 利用了 11 个 bit 位置
  110????? 10??????
-
+ 
  U+0800~U+FFFF 三个字节, 利用了 16 个 bit 位置.
  1110???? 10?????? 10??????
-
+ 
  U+10000~U+10FFFF 四个字节, 利用了 21 个 bit 位置.
  11110??? 10?????? 10?????? 10??????
  
@@ -40,7 +40,7 @@ extension Unicode.UTF8 {
 }
 
 extension Unicode.UTF8: _UnicodeEncoding {
-        
+    
     // UTF 8, 是按照字节为单位的.
     public typealias CodeUnit = UInt8
     public typealias EncodedScalar = _ValidUTF8Buffer

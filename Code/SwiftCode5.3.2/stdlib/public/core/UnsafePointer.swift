@@ -1,6 +1,3 @@
-// 指针有很多的状态. 这在 C 代码里面, 也有这么多状态, 但是没有强制指明这回事. Swift 里面, 将操作和状态结合在了一起.
-// 指针指向的数据, 没有初始化. alloc, 分配空间, init, 将这份空间初始化. 没有初始化, 就是没有执行 init 操作.
-
 public struct UnsafePointer<Pointee>: _Pointer {
     // 这几行代码, 就是对于 _Pointer 协议的适配.
     public typealias Distance = Int
@@ -12,30 +9,22 @@ public struct UnsafePointer<Pointee>: _Pointer {
     // 就是 Swift 版本的 free. 这里面, 应该不会调用相应的析构方法.
     @inlinable
     public func deallocate() {
-        // Passing zero alignment to the runtime forces "aligned
-        // deallocation". Since allocation via `UnsafeMutable[Raw][Buffer]Pointer`
-        // always uses the "aligned allocation" path, this ensures that the
-        // runtime's allocation and deallocation paths are compatible.
         Builtin.deallocRaw(_rawValue, (-1)._builtinWordValue, (0)._builtinWordValue)
     }
     
     public var pointee: Pointee {
-        @_transparent unsafeAddress {
-            return self
-        }
+        return self
     }
     
     // Swift 特别喜欢这种, 最后闭包决定返回值的行为.
-    @inlinable
+    // 先把 rawValue 转为 T 的类型, 然后传入 body 里面, 结束的时候, 再转回来.
+    // _rawValue 是一个不透明的数据类型, Builtin.bindMemory 这个函数, 一定会改变这个数据类型里面的数据.
+    // body(UnsafePointer<T>(_rawValue)) 的参数, 是根据 rawValue 生成一个新的值对象, 所以, defer 以后在把值转回去, 不会影响到 body 的运行结果了. 仅仅是 rawValue 里面的地址数据是一样的, rawValue 里面的类型数据, 是不相同的
     public func withMemoryRebound<T, Result>(to type: T.Type,
                                              capacity count: Int,
                                              _ body: (UnsafePointer<T>) throws -> Result
     ) rethrows -> Result {
         Builtin.bindMemory(_rawValue, count._builtinWordValue, T.self)
-        // 先把 rawValue 转为 T 的类型, 然后传入 body 里面, 结束的时候, 再转回来.
-        // _rawValue 是一个不透明的数据类型, Builtin.bindMemory 这个函数, 一定会改变这个数据类型里面的数据.
-        // body(UnsafePointer<T>(_rawValue)) 的参数, 是根据 rawValue 生成一个新的值对象, 所以, defer 以后在把值转回去, 不会影响到 body 的运行结果了. 仅仅是 rawValue 里面的地址数据是一样的, rawValue 里面的类型数据, 是不相同的
-        // 注意学defer 的使用.
         defer {
             Builtin.bindMemory(_rawValue, count._builtinWordValue, Pointee.self)
         }
@@ -44,15 +33,7 @@ public struct UnsafePointer<Pointee>: _Pointer {
     
     // 延续 C 的风格, [i] 就是 pointer + i
     public subscript(i: Int) -> Pointee {
-        unsafeAddress {
-            return self + i
-        }
-    }
-    
-    internal static var _max: UnsafePointer {
-        return UnsafePointer(
-            bitPattern: 0 as Int &- MemoryLayout<Pointee>.stride
-        )._unsafelyUnwrappedUnchecked
+        return self + i
     }
 }
 
@@ -62,32 +43,28 @@ public struct UnsafePointer<Pointee>: _Pointer {
 public struct UnsafeMutablePointer<Pointee>: _Pointer {
     public typealias Distance = Int
     public let _rawValue: Builtin.RawPointer
-    
+    // 和之前的 NSArray, NSMutableArray 是一样的. 数据部分, 其实可变不可变都一样, 但是可变类有了更多的接口.
     public init(_ _rawValue: Builtin.RawPointer) {
         self._rawValue = _rawValue
     }
-    
     public init(@_nonEphemeral mutating other: UnsafePointer<Pointee>) {
         self._rawValue = other._rawValue
     }
-    
     public init?(@_nonEphemeral mutating other: UnsafePointer<Pointee>?) {
         guard let unwrapped = other else { return nil }
         self.init(mutating: unwrapped)
     }
-    
     public init(@_nonEphemeral _ other: UnsafeMutablePointer<Pointee>) {
         self._rawValue = other._rawValue		
     }		
-    
     public init?(@_nonEphemeral _ other: UnsafeMutablePointer<Pointee>?) {
         guard let unwrapped = other else { return nil }		
         self.init(unwrapped)		
     }		
     
+    // alloc, 必然是 mutable 才会有. 非 mutable 的 pointer, 是根据已有的值进行的初始化.
     public static func allocate(capacity count: Int)
     -> UnsafeMutablePointer<Pointee> {
-        // 必须使用 memoryLayout 的 stride 作为分配资源的单位
         let size = MemoryLayout<Pointee>.stride * count
         var align = Builtin.alignof(Pointee.self)
         if Int(align) <= _minAllocationAlignment() {
@@ -114,9 +91,9 @@ public struct UnsafeMutablePointer<Pointee>: _Pointer {
         }
     }
     
+    // 根据 repeatedValue 初始化数据.
     public func initialize(repeating repeatedValue: Pointee, count: Int) {
         for offset in 0..<count {
-            // Builtin.initialize, 根据 repeatedValue 来初始化 (self + offset)._rawValue 指向的数据.
             Builtin.initialize(repeatedValue, (self + offset)._rawValue)
         }
     }
@@ -155,8 +132,6 @@ public struct UnsafeMutablePointer<Pointee>: _Pointer {
     ///     `source` to this pointer's memory. `count` must not be negative.
     @inlinable
     public func assign(from source: UnsafePointer<Pointee>, count: Int) {
-        _debugPrecondition(
-            count >= 0, "UnsafeMutablePointer.assign with negative count")
         if UnsafePointer(self) < source || UnsafePointer(self) >= source + count {
             // assign forward from a disjoint or following overlapping range.
             Builtin.assignCopyArrayFrontToBack(

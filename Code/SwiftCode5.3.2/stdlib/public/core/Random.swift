@@ -1,15 +1,3 @@
-//===--- Random.swift -----------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2018 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
 import SwiftShims
 
 /// A type that provides uniformly distributed random data.
@@ -52,71 +40,71 @@ import SwiftShims
 /// Types that conform to `RandomNumberGenerator` should specifically document
 /// the thread safety and quality of the generator.
 public protocol RandomNumberGenerator {
-  /// Returns a value from a uniform, independent distribution of binary data.
-  ///
-  /// Use this method when you need random binary data to generate another
-  /// value. If you need an integer value within a specific range, use the
-  /// static `random(in:using:)` method on that integer type instead of this
-  /// method.
-  ///
-  /// - Returns: An unsigned 64-bit random value.
-  mutating func next() -> UInt64
+    /// Returns a value from a uniform, independent distribution of binary data.
+    ///
+    /// Use this method when you need random binary data to generate another
+    /// value. If you need an integer value within a specific range, use the
+    /// static `random(in:using:)` method on that integer type instead of this
+    /// method.
+    ///
+    /// - Returns: An unsigned 64-bit random value.
+    mutating func next() -> UInt64
 }
 
 extension RandomNumberGenerator {
-  /// Returns a value from a uniform, independent distribution of binary data.
-  ///
-  /// Use this method when you need random binary data to generate another
-  /// value. If you need an integer value within a specific range, use the
-  /// static `random(in:using:)` method on that integer type instead of this
-  /// method.
-  ///
-  /// - Returns: A random value of `T`. Bits are randomly distributed so that
-  ///   every value of `T` is equally likely to be returned.
-  @inlinable
-  public mutating func next<T: FixedWidthInteger & UnsignedInteger>() -> T {
-    return T._random(using: &self)
-  }
-
-  /// Returns a random value that is less than the given upper bound.
-  ///
-  /// Use this method when you need random binary data to generate another
-  /// value. If you need an integer value within a specific range, use the
-  /// static `random(in:using:)` method on that integer type instead of this
-  /// method.
-  ///
-  /// - Parameter upperBound: The upper bound for the randomly generated value.
-  ///   Must be non-zero.
-  /// - Returns: A random value of `T` in the range `0..<upperBound`. Every
-  ///   value in the range `0..<upperBound` is equally likely to be returned.
-  @inlinable
-  public mutating func next<T: FixedWidthInteger & UnsignedInteger>(
-    upperBound: T
-  ) -> T {
-    _precondition(upperBound != 0, "upperBound cannot be zero.")
-#if arch(i386) || arch(arm) // TODO(FIXME) SR-10912
-    let tmp = (T.max % upperBound) + 1
-    let range = tmp == upperBound ? 0 : tmp
-    var random: T = 0
-
-    repeat {
-      random = next()
-    } while random < range
-
-    return random % upperBound
-#else
-    var random: T = next()
-    var m = random.multipliedFullWidth(by: upperBound)
-    if m.low < upperBound {
-      let t = (0 &- upperBound) % upperBound
-      while m.low < t {
-        random = next()
-        m = random.multipliedFullWidth(by: upperBound)
-      }
+    /// Returns a value from a uniform, independent distribution of binary data.
+    ///
+    /// Use this method when you need random binary data to generate another
+    /// value. If you need an integer value within a specific range, use the
+    /// static `random(in:using:)` method on that integer type instead of this
+    /// method.
+    ///
+    /// - Returns: A random value of `T`. Bits are randomly distributed so that
+    ///   every value of `T` is equally likely to be returned.
+    @inlinable
+    public mutating func next<T: FixedWidthInteger & UnsignedInteger>() -> T {
+        return T._random(using: &self)
     }
-    return m.high
-#endif
-  }
+    
+    /// Returns a random value that is less than the given upper bound.
+    ///
+    /// Use this method when you need random binary data to generate another
+    /// value. If you need an integer value within a specific range, use the
+    /// static `random(in:using:)` method on that integer type instead of this
+    /// method.
+    ///
+    /// - Parameter upperBound: The upper bound for the randomly generated value.
+    ///   Must be non-zero.
+    /// - Returns: A random value of `T` in the range `0..<upperBound`. Every
+    ///   value in the range `0..<upperBound` is equally likely to be returned.
+    @inlinable
+    public mutating func next<T: FixedWidthInteger & UnsignedInteger>(
+        upperBound: T
+    ) -> T {
+        _precondition(upperBound != 0, "upperBound cannot be zero.")
+        #if arch(i386) || arch(arm) // TODO(FIXME) SR-10912
+        let tmp = (T.max % upperBound) + 1
+        let range = tmp == upperBound ? 0 : tmp
+        var random: T = 0
+        
+        repeat {
+            random = next()
+        } while random < range
+        
+        return random % upperBound
+        #else
+        var random: T = next()
+        var m = random.multipliedFullWidth(by: upperBound)
+        if m.low < upperBound {
+            let t = (0 &- upperBound) % upperBound
+            while m.low < t {
+                random = next()
+                m = random.multipliedFullWidth(by: upperBound)
+            }
+        }
+        return m.high
+        #endif
+    }
 }
 
 /// The system's default source of random data.
@@ -147,17 +135,10 @@ extension RandomNumberGenerator {
 /// - Windows uses `BCryptGenRandom`.
 @frozen
 public struct SystemRandomNumberGenerator: RandomNumberGenerator {
-  /// Creates a new instance of the system's default random number generator.
-  @inlinable
-  public init() { }
-
-  /// Returns a value from a uniform, independent distribution of binary data.
-  ///
-  /// - Returns: An unsigned 64-bit random value.
-  @inlinable
-  public mutating func next() -> UInt64 {
-    var random: UInt64 = 0
-    swift_stdlib_random(&random, MemoryLayout<UInt64>.size)
-    return random
-  }
+    public init() { }
+    public mutating func next() -> UInt64 {
+        var random: UInt64 = 0
+        swift_stdlib_random(&random, MemoryLayout<UInt64>.size)
+        return random
+    }
 }

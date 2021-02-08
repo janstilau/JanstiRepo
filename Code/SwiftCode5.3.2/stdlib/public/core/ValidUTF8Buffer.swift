@@ -1,7 +1,7 @@
 
 // _ValidUTF8Buffer 表示的是, 一个合法的 UTF8 的表示.
-// 在 UTF8.Swift func decode(_ source: EncodedScalar) -> Unicode.Scalar 里面, 是传递一个 _ValidUTF8Buffer 进入, 返回一个 Unicode.Scalar 出来.
-// 因为 UTF8 可能是 1, 2, 3, 4 个字节的, 将这层逻辑, 通过 _ValidUTF8Buffer, typealias _ValidUTF8Buffer = EncodedScalar 进行一层封装而已.
+// 他本身占据了 4 个字节,
+
 public struct _ValidUTF8Buffer {
     public typealias Element = Unicode.UTF8.CodeUnit // UInt8
     // 真正存储的是一个 UInt32, 也就是 4 个 CodeUnit
@@ -10,8 +10,6 @@ public struct _ValidUTF8Buffer {
         self._biasedBits = _biasedBits
     }
     internal init(_containing e: Element) {
-        _internalInvariant(
-            e != 192 && e != 193 && !(245...255).contains(e), "invalid UTF8 byte")
         _biasedBits = UInt32(truncatingIfNeeded: e &+ 1)
     }
 }
