@@ -43,7 +43,6 @@ extension Hasher {
     /// buffer is in the lower three bits of the byte count.)
     // FIXME: Remove @usableFromInline and @frozen once Hasher is resilient.
     // rdar://problem/38549901
-    @usableFromInline @frozen
     internal struct _TailBuffer {
         // msb                                                             lsb
         // +---------+-------+-------+-------+-------+-------+-------+-------+
@@ -51,12 +50,10 @@ extension Hasher {
         // +---------+-------+-------+-------+-------+-------+-------+-------+
         internal var value: UInt64 // 所以实际上, 就一个值.
         
-        @inline(__always)
         internal init() {
             self.value = 0
         }
         
-        @inline(__always)
         internal init(tail: UInt64, byteCount: UInt64) {
             // byteCount can be any value, but we only keep the lower 8 bits.  (The
             // lower three bits specify the count of bytes stored in this buffer.)
@@ -68,22 +65,18 @@ extension Hasher {
             self.value = (byteCount &<< 56 | tail)
         }
         
-        @inline(__always)
         internal init(tail: UInt64, byteCount: Int) {
             self.init(tail: tail, byteCount: UInt64(truncatingIfNeeded: byteCount))
         }
         
         internal var tail: UInt64 {
-            @inline(__always)
             get { return value & ~(0xFF &<< 56) }
         }
         
         internal var byteCount: UInt64 {
-            @inline(__always)
             get { return value &>> 56 }
         }
         
-        @inline(__always)
         internal mutating func append(_ bytes: UInt64) -> UInt64 {
             let c = byteCount & 7
             if c == 0 {
@@ -96,11 +89,7 @@ extension Hasher {
             return chunk
         }
         
-        @inline(__always)
-        internal
         mutating func append(_ bytes: UInt64, count: UInt64) -> UInt64? {
-            _internalInvariant(count >= 0 && count < 8)
-            _internalInvariant(bytes & ~((1 &<< (count &<< 3)) &- 1) == 0)
             let c = byteCount & 7
             let shift = c &<< 3
             if c + count < 8 {
@@ -119,7 +108,6 @@ extension Hasher {
 
 extension Hasher {
     // 内部类型, 用 _Core 进行定义.
-    //
     internal struct _Core {
         private var _buffer: _TailBuffer
         private var _state: Hasher._State // State 是真证的进行 hash 计算的类.
@@ -175,6 +163,7 @@ extension Hasher {
             }
         }
         
+        // 这应该是最最通用的一个方法了, 因为上面的也可以使用指针进行使用.
         internal mutating func combine(bytes: UnsafeRawBufferPointer) {
             var remaining = bytes.count
             guard remaining > 0 else { return }
@@ -192,9 +181,6 @@ extension Hasher {
                     remaining -= c
                 }
             }
-            _internalInvariant(
-                remaining == 0 ||
-                    Int(bitPattern: data) & (MemoryLayout<UInt64>.alignment - 1) == 0)
             
             // Load as many aligned words as there are in the input buffer
             while remaining >= MemoryLayout<UInt64>.size {
@@ -218,7 +204,7 @@ extension Hasher {
 }
 
 /* Hash 本意是将一个复杂的数据类型, 转化为一个 int 值, 这样就可以用到 hash 表里面, 而 hash 是一个小型的数据库, 可以快速的读取. 这个小型的数据库, 需要一个非负整数值.
-    如何获得这个值, 是每个类自己的能力. 所以, hash 方法需要每个类自己的写, 一般来说, 都会挑选一个 id 值作为 key, 进行 hash. 但是 Swift 特别强调值对象, 也就是用数据来代表一个对象, 而不是 id. id 代表对象, 更多的像是引用对象的意味.
+ 如何获得这个值, 是每个类自己的能力. 所以, hash 方法需要每个类自己的写, 一般来说, 都会挑选一个 id 值作为 key, 进行 hash. 但是 Swift 特别强调值对象, 也就是用数据来代表一个对象, 而不是 id. id 代表对象, 更多的像是引用对象的意味.
  同时, 不同的数据类型, 如何 hash, 如果有一个通用的 hash 函数, 可以应对任何的类型的 hash, 那么编写类的人会轻松很多.
  基本数据类型的 hash 方法, 标准库一定会提供的, 但是一个对象, 很很多基本数据类型, 那么如何组织这些成员综合获得的最终值, 其实没有一个通用的解决方法.
  Hasher 就是一个通用的哈希函数的封装.
@@ -227,8 +213,7 @@ extension Hasher {
  Hasher 的 combine, 仅仅有几个 Int 为参数的接口, 一个指针的接口, 一个 Hashable 参数的接口. 其实也是很明白的事情. 任何数据, 都能算作是 Int 数据的集合. 标准库一定会把常见的数据类型, 例如 double, int, string 的 hasher 写好的了, 那么在 Hashable 里面, 直接取调用这些类型的 hash 方法就可以了.
  复杂的类型通过调用简单类型的 hash, 来获取 hash 值.
  基本上, 自定义的类型, 不会复杂到要自己实现, 数据到 Byte 的转化工作.
- 
-*/
+ */
 
 // `Hasher` can be used to map an arbitrary sequence of bytes to an integer hash value
 public struct Hasher {
@@ -306,33 +291,17 @@ public struct Hasher {
         _core.combine(bytes: bytes)
     }
     
-    /// Finalize the hasher state and return the hash value.
-    /// Finalizing invalidates the hasher; additional bits cannot be combined
-    /// into it, and it cannot be finalized again.
-    @_effects(releasenone)
-    @usableFromInline
+    // 显示 Combine, 最后调用 finalize 进行取值.
+    // 在 Core 里面, 发现销毁的时候, 没有调用 finalize, 会有警告. 这是一个很好地设计思路, 防止外界错误使用.
     internal mutating func _finalize() -> Int {
         return Int(truncatingIfNeeded: _core.finalize())
     }
     
-    /// Finalizes the hasher state and returns the hash value.
-    ///
-    /// Finalizing consumes the hasher: it is illegal to finalize a hasher you
-    /// don't own, or to perform operations on a finalized hasher. (These may
-    /// become compile-time errors in the future.)
-    ///
-    /// Hash values are not guaranteed to be equal across different executions of
-    /// your program. Do not save hash values to use during a future execution.
-    ///
-    /// - Returns: The hash value calculated by the hasher.
-    @_effects(releasenone)
     public __consuming func finalize() -> Int {
         var core = _core
         return Int(truncatingIfNeeded: core.finalize())
     }
     
-    @_effects(readnone)
-    @usableFromInline
     internal static func _hash(seed: Int, _ value: UInt64) -> Int {
         var state = _State(seed: seed)
         state.compress(value)
@@ -343,17 +312,8 @@ public struct Hasher {
     @_effects(readnone)
     @usableFromInline
     internal static func _hash(seed: Int, _ value: UInt) -> Int {
-        var state = _State(seed: seed)
-        #if arch(i386) || arch(arm) || arch(wasm32)
-        _internalInvariant(UInt.bitWidth < UInt64.bitWidth)
-        let tbc = _TailBuffer(
-            tail: UInt64(truncatingIfNeeded: value),
-            byteCount: UInt.bitWidth &>> 3)
-        #else
-        _internalInvariant(UInt.bitWidth == UInt64.bitWidth)
         state.compress(UInt64(truncatingIfNeeded: value))
         let tbc = _TailBuffer(tail: 0, byteCount: 8)
-        #endif
         return Int(truncatingIfNeeded: state.finalize(tailAndByteCount: tbc.value))
     }
     

@@ -16,100 +16,35 @@
 //             bytes: count * MemoryLayout<Point>.stride,
 //            alignedTo: MemoryLayout<Point>.alignment)
 
+
+// 这个类, 最主要的方法, 都是对于 builtin 里面方法的封装. 所以实际的实现并不太清楚.
+// 这种, 将类型参数当做参数来使用的方式, 在 C++ 里面特别流行.
+// 应该是, 这种将类型作为函数的的参数的使用方式, 都是这种使用方法.
+// 函数作为 static 存在, 使用 <T> 中的类型作为参数. 那么作为一个函数来说, 除了参数列表传入的参数, 使用环境的 T, 也可以认为是参数的一部分.
 public enum MemoryLayout<T> {
     public static var size: Int {
-        // 实际上, 还是使用了 sizeof.
         return Int(Builtin.sizeof(T.self))
     }
     
-    @_transparent
     public static var stride: Int {
         return Int(Builtin.strideof(T.self))
     }
     
-    @_transparent
     public static var alignment: Int {
         return Int(Builtin.alignof(T.self))
     }
 }
 
+// 最主要的, 还是上面的封装.
+// 但是函数有着类型推导的能力, 很多函数, 例如 dropLast, strde, 都是在函数内部生成一个对应的泛型对象, 泛型对象里面的类型, 都是利用函数推导出来的类型.
+// 这里, MemoryLayout 需要的是类型, 但是 value 本身就是带有类型的. 一个简单地函数, 将 value 的 T 进行推导, 然后将推导出来的 T, 用到  MemoryLayout 中.
 extension MemoryLayout {
-    /// Returns the contiguous memory footprint of the given instance.
-    ///
-    /// The result does not include any dynamically allocated or out of line
-    /// storage. In particular, pointers and class instances all have the same
-    /// contiguous memory footprint, regardless of the size of the referenced
-    /// data.
-    ///
-    /// When you have a type instead of an instance, use the
-    /// `MemoryLayout<T>.size` static property instead.
-    ///
-    ///     let x: Int = 100
-    ///
-    ///     // Finding the size of a value's type
-    ///     let s = MemoryLayout.size(ofValue: x)
-    ///     // s == 8
-    ///
-    ///     // Finding the size of a type directly
-    ///     let t = MemoryLayout<Int>.size
-    ///     // t == 8
-    ///
-    /// - Parameter value: A value representative of the type to describe.
-    /// - Returns: The size, in bytes, of the given value's type.
-    @_transparent
     public static func size(ofValue value: T) -> Int {
-        return MemoryLayout.size
+        return MemoryLayout<T>.size
     }
-    
-    /// Returns the number of bytes from the start of one instance of `T` to the
-    /// start of the next when stored in contiguous memory or in an `Array<T>`.
-    ///
-    /// This is the same as the number of bytes moved when an `UnsafePointer<T>`
-    /// instance is incremented. `T` may have a lower minimal alignment that
-    /// trades runtime performance for space efficiency. The result is always
-    /// positive.
-    ///
-    /// When you have a type instead of an instance, use the
-    /// `MemoryLayout<T>.stride` static property instead.
-    ///
-    ///     let x: Int = 100
-    ///
-    ///     // Finding the stride of a value's type
-    ///     let s = MemoryLayout.stride(ofValue: x)
-    ///     // s == 8
-    ///
-    ///     // Finding the stride of a type directly
-    ///     let t = MemoryLayout<Int>.stride
-    ///     // t == 8
-    ///
-    /// - Parameter value: A value representative of the type to describe.
-    /// - Returns: The stride, in bytes, of the given value's type.
-    @_transparent
     public static func stride(ofValue value: T) -> Int {
         return MemoryLayout.stride
     }
-    
-    /// Returns the default memory alignment of `T`.
-    ///
-    /// Use a type's alignment when allocating memory using an unsafe pointer.
-    ///
-    /// When you have a type instead of an instance, use the
-    /// `MemoryLayout<T>.stride` static property instead.
-    ///
-    ///     let x: Int = 100
-    ///
-    ///     // Finding the alignment of a value's type
-    ///     let s = MemoryLayout.alignment(ofValue: x)
-    ///     // s == 8
-    ///
-    ///     // Finding the alignment of a type directly
-    ///     let t = MemoryLayout<Int>.alignment
-    ///     // t == 8
-    ///
-    /// - Parameter value: A value representative of the type to describe.
-    /// - Returns: The default memory alignment, in bytes, of the given value's
-    ///   type. This value is always positive.
-    @_transparent
     public static func alignment(ofValue value: T) -> Int {
         return MemoryLayout.alignment
     }
@@ -186,7 +121,6 @@ extension MemoryLayout {
     }
 }
 
-// Not-yet-public alignment conveniences
 extension MemoryLayout {
     internal static var _alignmentMask: Int { return alignment - 1 }
     
