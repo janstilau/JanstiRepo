@@ -58,6 +58,13 @@ Rectangle {
         }
     }
 
+    /*
+A Component definition contains a single top level item (which in the above example is a Rectangle) and cannot define any data outside of this item, with the exception of an id (which in the above example is redSquare).
+Component 里面定义一个 Item, 和在文件里面定义一个 Item 没有区别.
+Component 只会有两个元素, id, 这个 id 是指明这个 Component 的, 就像文件里面定义的 Item 是用文件名来指代.
+一个顶层 Item. 这个顶层 Item, 就是这个 Component 里面的数据.
+使用 Component 的时候,使用 id 来引用到这个 Component, 而实际上, 会生成 Component 所定义的顶层 Item.
+      */
 
     Component {
         id: block

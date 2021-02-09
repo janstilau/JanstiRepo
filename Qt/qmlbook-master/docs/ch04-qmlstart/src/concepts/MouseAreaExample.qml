@@ -45,9 +45,9 @@ Rectangle {
             width: parent.width
             height: parent.height
             onClicked: {
-                  rect2.visible = !rect2.visible
-                  rect1.times += 1
-                console.log(rect1.times)
+                    rect2.visible = !rect2.visible
+                    rect1.times += 1
+                    console.log(rect1.times)
             }
         }
     }
