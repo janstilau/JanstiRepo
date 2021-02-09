@@ -5,7 +5,6 @@ where SubSequence: RangeReplaceableCollection {
     
     // primitive method, 提供了其他方法的实现的基础.
     // replaceSubrange 作为 primitive 的原因在于, 插入: subrange 为 length 0 就可以, 删除, newElements length 为 0,  subrange length 变化.
-    // 也就是说, 根据 range 来表示多对多, 可以应对任何变化.
     mutating func replaceSubrange<C>(
         _ subrange: Range<Index>,
         with newElements: C
@@ -56,6 +55,7 @@ where SubSequence: RangeReplaceableCollection {
 // Default implementations for RangeReplaceableCollection
 //===----------------------------------------------------------------------===//
 
+// 各种改变 Collection 长度的方法, 最终必然归结到 replace range 里面.
 extension RangeReplaceableCollection {
     
     public init(repeating repeatedValue: Element, count: Int) {
@@ -222,6 +222,7 @@ where Self: BidirectionalCollection, SubSequence == Self {
 }
 
 // 如果是双向的, 那么有着从后面开始操作的实现.
+// 这种从后面操作, 是依赖着, 可以从后面开始计算, 组装 index 的基础上的.
 extension RangeReplaceableCollection where Self: BidirectionalCollection {
     public mutating func popLast() -> Element? {
         if isEmpty { return nil }

@@ -1,19 +1,14 @@
-
-//
+// 这里, 类型参数是 Collection
+// 这个类, 存储的是, 容器的下标所组成的容器.
+// 并且会存储一下, 原来的容器, 这样, 就可以利用容器的各种下标操作
 public struct DefaultIndices<Elements: Collection> {
-    @usableFromInline
     internal var _elements: Elements
-    @usableFromInline
     internal var _startIndex: Elements.Index
-    @usableFromInline
     internal var _endIndex: Elements.Index
     
-    @inlinable
-    internal init(
-        _elements: Elements,
-        startIndex: Elements.Index,
-        endIndex: Elements.Index
-    ) {
+    init(_elements: Elements,
+         startIndex: Elements.Index,
+         endIndex: Elements.Index ) {
         self._elements = _elements
         self._startIndex = startIndex
         self._endIndex = endIndex
@@ -21,29 +16,25 @@ public struct DefaultIndices<Elements: Collection> {
 }
 
 extension DefaultIndices: Collection {
-    
     public typealias Index = Elements.Index
     public typealias Element = Elements.Index
     public typealias Indices = DefaultIndices<Elements>
     public typealias SubSequence = DefaultIndices<Elements>
     public typealias Iterator = IndexingIterator<DefaultIndices<Elements>>
     
-    @inlinable
     public var startIndex: Index {
         return _startIndex
     }
     
-    @inlinable
     public var endIndex: Index {
         return _endIndex
     }
     
-    @inlinable
+    // 下标容器, 传入什么, 返回什么.
     public subscript(i: Index) -> Elements.Index {
         return i
     }
     
-    @inlinable
     public subscript(bounds: Range<Index>) -> DefaultIndices<Elements> {
         return DefaultIndices(
             _elements: _elements,
@@ -51,33 +42,27 @@ extension DefaultIndices: Collection {
             endIndex: bounds.upperBound)
     }
     
-    @inlinable
+    // 一切都是根据存储的 collection 进行操作.
     public func index(after i: Index) -> Index {
         return _elements.index(after: i)
     }
     
-    @inlinable
     public func formIndex(after i: inout Index) {
         _elements.formIndex(after: &i)
     }
     
-    @inlinable
     public var indices: Indices {
         return self
     }
 }
 
-extension DefaultIndices: BidirectionalCollection
-where Elements: BidirectionalCollection {
-    @inlinable
+// 如果, elements 是双向的, 那么 Indices 就是双向的.
+extension DefaultIndices: BidirectionalCollection where Elements: BidirectionalCollection {
     public func index(before i: Index) -> Index {
-        // FIXME: swift-3-indexing-model: range check.
         return _elements.index(before: i)
     }
     
-    @inlinable
     public func formIndex(before i: inout Index) {
-        // FIXME: swift-3-indexing-model: range check.
         _elements.formIndex(before: &i)
     }
 }
@@ -86,24 +71,6 @@ extension DefaultIndices: RandomAccessCollection
 where Elements: RandomAccessCollection { }
 
 extension Collection where Indices == DefaultIndices<Self> {
-    /// The indices that are valid for subscripting the collection, in ascending
-    /// order.
-    ///
-    /// A collection's `indices` property can hold a strong reference to the
-    /// collection itself, causing the collection to be non-uniquely referenced.
-    /// If you mutate the collection while iterating over its indices, a strong
-    /// reference can cause an unexpected copy of the collection. To avoid the
-    /// unexpected copy, use the `index(after:)` method starting with
-    /// `startIndex` to produce indices instead.
-    ///
-    ///     var c = MyFancyCollection([10, 20, 30, 40, 50])
-    ///     var i = c.startIndex
-    ///     while i != c.endIndex {
-    ///         c[i] /= 5
-    ///         i = c.index(after: i)
-    ///     }
-    ///     // c == MyFancyCollection([2, 4, 6, 8, 10])
-    @inlinable // trivial-implementation
     public var indices: DefaultIndices<Self> {
         return DefaultIndices(
             _elements: self,
