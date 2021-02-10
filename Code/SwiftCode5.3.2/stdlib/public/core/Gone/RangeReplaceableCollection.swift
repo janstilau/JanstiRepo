@@ -61,7 +61,8 @@ extension RangeReplaceableCollection {
     public init(repeating repeatedValue: Element, count: Int) {
         self.init()
         if count != 0 {
-            // Repeated 在这里使用了. 使用了 append(contentsOf 方法, 这就是 Repeated 存在的意义, 完成抽象的适配, 因为 append(contentsOf 是面向抽象完成的一个方法.
+            // 之所以需要这层抽象, 主要是想复用 append(contentsOf 这个方法. 这个方法, 需要的是一个 Colleciton, 同样的数据, 所以专门有一个特殊的 Collection 用来表示.
+            // 其实, 也可以使用 for 循环, 加单个 append.
             let elements = Repeated(_repeating: repeatedValue, count: count)
             append(contentsOf: elements)
         }
@@ -97,7 +98,6 @@ extension RangeReplaceableCollection {
     }
     
     // 插入多个,
-    @inlinable
     public mutating func insert<C: Collection>(
         contentsOf newElements: __owned C, at i: Index
     ) where C.Element == Element {
@@ -106,7 +106,6 @@ extension RangeReplaceableCollection {
     
     // remove, 就是用一个 EmptyCollection, 去替换某个 range 里面的内容.
     public mutating func remove(at position: Index) -> Element {
-        _precondition(!isEmpty, "Can't remove from an empty collection")
         let result: Element = self[position]
         replaceSubrange(position..<index(after: position), with: EmptyCollection())
         return result
@@ -119,7 +118,6 @@ extension RangeReplaceableCollection {
     // 应该要有, 防卫式的代码.
     public mutating func removeFirst(_ k: Int) {
         if k == 0 { return }
-        _precondition(k >= 0, "Number of elements to remove should be non-negative")
         guard let end = index(startIndex, offsetBy: k, limitedBy: endIndex) else {
             _preconditionFailure(
                 "Can't remove more items from a collection than it has")

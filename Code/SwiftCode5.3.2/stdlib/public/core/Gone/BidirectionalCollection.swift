@@ -1,6 +1,7 @@
 // index(before:)
 // BidirectionalCollection 最大的区别, 就是提供了 index(before:) 的实现, 这样就可以从 endIndex 向前寻找 Index
 // 这种, 使得某些操作, 可以更快.
+
 // 在 C++ 里面, bidirection 是通过 迭代器里面的 typedef 完成的, 然后根据 iterator traits 完成算法层面的分化,  而在 Swfit 里面, 则是通过协议. 这样更加的直观.
 
 public protocol BidirectionalCollection: Collection
@@ -26,7 +27,7 @@ where SubSequence: BidirectionalCollection, Indices: BidirectionalCollection {
         _ i: Index, offsetBy distance: Int, limitedBy limit: Index
     ) -> Index?
     
-    @_nonoverride func distance(from start: Index, to end: Index) -> Int
+    func distance(from start: Index, to end: Index) -> Int
     
     override var indices: Indices { get }
     override subscript(bounds: Range<Index>) -> SubSequence { get }

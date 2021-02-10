@@ -1,5 +1,6 @@
-
-//
+// replaceSubrange 是 RangeReplacable 的 primitive method. 这个方法的参数, 是一个 Collection.
+// EmptyCollection 主要用了 Remove 操作. 当需要 Remove 的时候, 传入到 replaceSubrange 的就是一个 zero Collection. 必须是一个 Collection, 因为 replaceSubrange 的抽象层, 还是需要时一个 Collection.
+// 这也就是, 统一的 primitive 方法的问题所在, 为了适配这层抽象, 要做很多适配. 好处在于, 所有的逻辑归结到了一点.
 public struct EmptyCollection<Element> {
     public init() {}
 }
