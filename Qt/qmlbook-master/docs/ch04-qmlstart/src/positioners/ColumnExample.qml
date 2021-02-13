@@ -39,10 +39,11 @@ DarkSquare {
         id: row
         anchors.centerIn: parent
         spacing: 8
-        topPadding: 0
-        bottomPadding: 0
-        leftPadding: 0
-        rightPadding: 0
+
+        topPadding: 20
+        bottomPadding: 100
+        leftPadding: 20
+        rightPadding: 40
 
         RedSquare { }
         GreenSquare { width: 96 }

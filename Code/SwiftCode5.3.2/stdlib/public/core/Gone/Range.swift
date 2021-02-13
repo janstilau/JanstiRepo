@@ -34,7 +34,6 @@ public struct Range<Bound: Comparable> {
         self.lowerBound = bounds.lower
         self.upperBound = bounds.upper
     }
-    
     // Sequence 的 contains, 是遍历 + 相等性判断. 而 Range, 直接用上下标的 比较操作符就可以了.
     // Range 在某些情况下, 可以是 Sequence, 而 Sequence 有埋点, 是否可以快速判断是否 contains. Range 就要实现这个埋点, 用自己的高效的 contains 方法, 来做 contains 的实现
     public func contains(_ element: Bound) -> Bool {

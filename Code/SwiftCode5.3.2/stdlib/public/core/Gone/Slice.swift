@@ -1,5 +1,3 @@
-// 在之前, 如果想要类似的功能, 都是需要复制的. 容器的复制, 是一个无法预计规模的事情, 如果仅仅是为了读取, 使用原来的数据是完全可以的. 这个类, 主要是为了效率原因而存在的.
-
 // 对于 Slice, 他实际上, 就是记录一下 start, end, 还有原始的 collection.
 // 但是, 因为记录了原始的 collection 了, 他就有了非常多的能力, 这些能力, 都是建立在 Collection 能力的基础上的.
 public struct Slice<Base: Collection> {
@@ -47,6 +45,7 @@ extension Slice: Collection {
     // 直接使用 base 来获取所要的数据.
     public subscript(bounds: Range<Index>) -> Slice<Base> {
         get {
+            // 这里, 范围一定是要和当前 slice 记录的 Start,End 进行比较.
             _failEarlyRangeCheck(bounds, bounds: startIndex..<endIndex)
             return Slice(base: _base, bounds: bounds)
         }
@@ -109,41 +108,33 @@ extension Slice: Collection {
     }
 }
 
+// 只要, Base 是双向的, 那么 Slice 就是双向的.
 extension Slice: BidirectionalCollection where Base: BidirectionalCollection {
-    @inlinable // generic-performance
     public func index(before i: Index) -> Index {
-        // FIXME: swift-3-indexing-model: range check.
         return _base.index(before: i)
     }
     
-    @inlinable // generic-performance
     public func formIndex(before i: inout Index) {
-        // FIXME: swift-3-indexing-model: range check.
         _base.formIndex(before: &i)
     }
 }
 
 
+// 只要 Base 是可变的, 那么 Slice 就是可变的.
 extension Slice: MutableCollection where Base: MutableCollection {
     @inlinable // generic-performance
     public subscript(index: Index) -> Base.Element {
         get {
-            _failEarlyRangeCheck(index, bounds: startIndex..<endIndex)
             return _base[index]
         }
+        // 这里, 直接使用的 _Base 的 subscript set. 所以, 只要 Base 实现了写时复制, Slice 自动就能出发.
         set {
-            _failEarlyRangeCheck(index, bounds: startIndex..<endIndex)
             _base[index] = newValue
-            // MutableSlice requires that the underlying collection's subscript
-            // setter does not invalidate indices, so our `startIndex` and `endIndex`
-            // continue to be valid.
         }
     }
     
-    @inlinable // generic-performance
     public subscript(bounds: Range<Index>) -> Slice<Base> {
         get {
-            _failEarlyRangeCheck(bounds, bounds: startIndex..<endIndex)
             return Slice(base: _base, bounds: bounds)
         }
         set {
@@ -151,7 +142,6 @@ extension Slice: MutableCollection where Base: MutableCollection {
         }
     }
     
-    @_alwaysEmitIntoClient @inlinable
     public mutating func withContiguousMutableStorageIfAvailable<R>(
         _ body: (inout UnsafeMutableBufferPointer<Element>) throws -> R
     ) rethrows -> R? {
@@ -163,18 +153,16 @@ extension Slice: MutableCollection where Base: MutableCollection {
         else {
             return nil
         }
+        
         let start = _base.distance(from: _base.startIndex, to: _startIndex)
         let count = _base.distance(from: _startIndex, to: _endIndex)
+        
         return try _base.withContiguousMutableStorageIfAvailable { buffer in
+            // 首先, 拿到 Base, 也就是原有 collection 的指针,
+            // 然后切分为 Slice 当前的范围, 然后传递到 body.
             var slice = UnsafeMutableBufferPointer(
                 rebasing: buffer[start ..< start + count])
             let copy = slice
-            defer {
-                _precondition(
-                    slice.baseAddress == copy.baseAddress &&
-                        slice.count == copy.count,
-                    "Slice.withUnsafeMutableBufferPointer: replacing the buffer is not allowed")
-            }
             return try body(&slice)
         }
     }
@@ -182,24 +170,22 @@ extension Slice: MutableCollection where Base: MutableCollection {
 
 
 extension Slice: RandomAccessCollection where Base: RandomAccessCollection { }
+// Slice 里面, 所有对于 Index 的操作, 都是根据 Base Collection 进行的, 然后有着 Slice 记录的 StartIndex, EndIndex 范围的后续逻辑处理.
 
 extension Slice: RangeReplaceableCollection
 where Base: RangeReplaceableCollection {
-    @inlinable // generic-performance
     public init() {
         self._base = Base()
         self._startIndex = _base.startIndex
         self._endIndex = _base.endIndex
     }
     
-    @inlinable // generic-performance
     public init(repeating repeatedValue: Base.Element, count: Int) {
         self._base = Base(repeating: repeatedValue, count: count)
         self._startIndex = _base.startIndex
         self._endIndex = _base.endIndex
     }
     
-    @inlinable // generic-performance
     public init<S>(_ elements: S) where S: Sequence, S.Element == Base.Element {
         self._base = Base(elements)
         self._startIndex = _base.startIndex
@@ -219,11 +205,11 @@ where Base: RangeReplaceableCollection {
             + _base.distance(from: subRange.upperBound, to: _endIndex)
             + (numericCast(newElements.count) as Int)
         _base.replaceSubrange(subRange, with: newElements)
+        
         _startIndex = _base.index(_base.startIndex, offsetBy: sliceOffset)
         _endIndex = _base.index(_startIndex, offsetBy: newSliceCount)
     }
     
-    @inlinable // generic-performance
     public mutating func insert(_ newElement: Base.Element, at i: Index) {
         // FIXME: swift-3-indexing-model: range check.
         let sliceOffset = _base.distance(from: _base.startIndex, to: _startIndex)
@@ -233,11 +219,8 @@ where Base: RangeReplaceableCollection {
         _endIndex = _base.index(_startIndex, offsetBy: newSliceCount)
     }
     
-    @inlinable // generic-performance
     public mutating func insert<S>(contentsOf newElements: S, at i: Index)
     where S: Collection, S.Element == Base.Element {
-        
-        // FIXME: swift-3-indexing-model: range check.
         let sliceOffset = _base.distance(from: _base.startIndex, to: _startIndex)
         let newSliceCount = count + newElements.count
         _base.insert(contentsOf: newElements, at: i)
@@ -245,7 +228,6 @@ where Base: RangeReplaceableCollection {
         _endIndex = _base.index(_startIndex, offsetBy: newSliceCount)
     }
     
-    @inlinable // generic-performance
     public mutating func remove(at i: Index) -> Base.Element {
         // FIXME: swift-3-indexing-model: range check.
         let sliceOffset = _base.distance(from: _base.startIndex, to: _startIndex)
@@ -256,7 +238,6 @@ where Base: RangeReplaceableCollection {
         return result
     }
     
-    @inlinable // generic-performance
     public mutating func removeSubrange(_ bounds: Range<Index>) {
         // FIXME: swift-3-indexing-model: range check.
         let sliceOffset = _base.distance(from: _base.startIndex, to: _startIndex)
@@ -271,7 +252,6 @@ where Base: RangeReplaceableCollection {
 extension Slice
 where Base: RangeReplaceableCollection, Base: BidirectionalCollection {
     
-    @inlinable // generic-performance
     public mutating func replaceSubrange<C>(
         _ subRange: Range<Index>, with newElements: C
     ) where C: Collection, C.Element == Base.Element {
@@ -298,7 +278,6 @@ where Base: RangeReplaceableCollection, Base: BidirectionalCollection {
         }
     }
     
-    @inlinable // generic-performance
     public mutating func insert(_ newElement: Base.Element, at i: Index) {
         // FIXME: swift-3-indexing-model: range check.
         if i == _base.startIndex {
@@ -318,7 +297,6 @@ where Base: RangeReplaceableCollection, Base: BidirectionalCollection {
         }
     }
     
-    @inlinable // generic-performance
     public mutating func insert<S>(contentsOf newElements: S, at i: Index)
     where S: Collection, S.Element == Base.Element {
         // FIXME: swift-3-indexing-model: range check.
@@ -341,7 +319,6 @@ where Base: RangeReplaceableCollection, Base: BidirectionalCollection {
         }
     }
     
-    @inlinable // generic-performance
     public mutating func remove(at i: Index) -> Base.Element {
         // FIXME: swift-3-indexing-model: range check.
         if i == _base.startIndex {

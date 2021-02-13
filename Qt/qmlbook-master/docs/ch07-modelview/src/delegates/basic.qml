@@ -38,24 +38,19 @@ Rectangle {
     }
 
     ListView {
-        anchors.fill: parent
-        anchors.margins: 20
-
-        clip: true
-
         model: 100
-
+        anchors.fill: parent
+        anchors.margins: 0
+        spacing: 25
+        clip: false
         delegate: numberDelegate
-        spacing: 5
-
-        focus: true
     }
 
     Component {
         id: numberDelegate
 
         Rectangle {
-            width: ListView.view.width
+            width: parent.width
             height: 40
 
             color: ListView.isCurrentItem?"#157efb":"#53d769"
@@ -63,12 +58,9 @@ Rectangle {
 
             Text {
                 anchors.centerIn: parent
-
                 font.pixelSize: 10
-
                 text: index
             }
         }
     }
 }
-// <<M1

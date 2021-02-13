@@ -1,11 +1,7 @@
 // MutableCollection, 就是有了可变性.
-// 对于协议来说, 应该找好 primitive Method, 然后其他的功能, 在这个 primitive method 上进行编写.
 // MutableCollection 的 primitive method 就是 subscript set 方法.
 // 也就是说, 只要 subscript 增加了 set, 就是可变的了.
 // MutableCollection 是可以改变数据, 但是不能增加或者删除, 增加或者删除相关的逻辑, 在 RangeReplaceableCollection 中
-// A collection that supports subscript assignment.
-// The MutableCollection protocol allows changing the values of a collection’s elements but not the length of the collection itself. For operations that require adding or removing elements, see the RangeReplaceableCollection protocol instead.
-// To add conformance to the MutableCollection protocol to your own custom collection, upgrade your type’s subscript to support both read and write access. 这里是说, 想要成为 MutableCollection, 只要实现 [] 的 set 功能就可以了.
 
 public protocol MutableCollection: Collection
 where SubSequence: MutableCollection
@@ -15,8 +11,6 @@ where SubSequence: MutableCollection
     override associatedtype SubSequence
     
     override subscript(position: Index) -> Element { get set }
-    
-    // 这里其实没有讲清楚, 这里如果 set 了, 岂不是增加或者删除了原有的长度了.
     override subscript(bounds: Range<Index>) -> SubSequence { get set }
     
     /// Reorders the elements of the collection such that all the elements
@@ -59,17 +53,6 @@ where SubSequence: MutableCollection
         by belongsInSecondPartition: (Element) throws -> Bool
     ) rethrows -> Index
     
-    /// Exchanges the values at the specified indices of the collection.
-    ///
-    /// Both parameters must be valid indices of the collection and not
-    /// equal to `endIndex`. Passing the same index as both `i` and `j` has no
-    /// effect.
-    ///
-    /// - Parameters:
-    ///   - i: The index of the first value to swap.
-    ///   - j: The index of the second value to swap.
-    ///
-    /// - Complexity: O(1)
     mutating func swapAt(_ i: Index, _ j: Index)
     
     /// Call `body(p)`, where `p` is a pointer to the collection's
@@ -102,14 +85,12 @@ where SubSequence: MutableCollection
 }
 
 extension MutableCollection {
-    @inlinable
     public mutating func _withUnsafeMutableBufferPointerIfSupported<R>(
         _ body: (inout UnsafeMutableBufferPointer<Element>) throws -> R
     ) rethrows -> R? {
         return nil
     }
     
-    @inlinable
     public mutating func withContiguousMutableStorageIfAvailable<R>(
         _ body: (inout UnsafeMutableBufferPointer<Element>) throws -> R
     ) rethrows -> R? {
@@ -151,8 +132,7 @@ extension MutableCollection {
         }
     }
     
-    // 这里的实现, 是一种通用的实现.
-    @inlinable
+    // 只有, 可以修改, 才能进行 swap
     public mutating func swapAt(_ i: Index, _ j: Index) {
         guard i != j else { return }
         let tmp = self[i]

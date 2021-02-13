@@ -5,7 +5,6 @@ import QtQuick 2.5
 
 Rectangle {
     id: root
-    // export button properties
 
     property alias text: label.text // 给了用户自定义的机会.
     signal clicked
@@ -19,6 +18,7 @@ Rectangle {
         anchors.centerIn: parent
         text: "Start"
     }
+
     MouseArea { // 子控件, 外界无法改变.
         anchors.fill: parent
         onClicked: {
@@ -26,5 +26,3 @@ Rectangle {
         }
     }
 }
-
-// <<M1

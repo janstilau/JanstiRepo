@@ -54,5 +54,3 @@ BrightSquare {
         }
     }
 }
-
-// <<M1
