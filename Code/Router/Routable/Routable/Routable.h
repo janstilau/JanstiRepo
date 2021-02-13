@@ -1,28 +1,3 @@
-//
-//  Routable.h
-//  Routable
-//
-//  Created by Clay Allsopp on 4/3/13.
-//  Copyright (c) 2013 TurboProp Inc. All rights reserved.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
@@ -48,10 +23,10 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  
  ```
  UPRouterOptions *options = [UPRouterOptions routerOptionsWithPresentationStyle: UIModalPresentationFormSheet
-                                                                transitionStyle: UIModalTransitionFormSheet
-                                                                  defaultParams: nil
-                                                                         isRoot: NO
-                                                                        isModal: YES];
+ transitionStyle: UIModalTransitionFormSheet
+ defaultParams: nil
+ isRoot: NO
+ isModal: YES];
  ```
  
  Or, for most properties taking the default value:
@@ -199,44 +174,44 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  `UPRouter` is the main class you interact with to map URLs to either opening `UIViewController`s or running anonymous functions.
  
  For example:
-
-     [[Routable sharedRouter] map:@"users/:id" toController:[UserController class]];
-     [[Routable sharedRouter] setNavigationController: aNavigationController];
-     
-     // In UserController.m
-     @implementation UserController
-     
-     // params will be non-nil
-     - (id)initWithRouterParams:(NSDictionary *)params {
-       if ((self = [self initWithNibName:nil bundle:nil])) {
-         self.userId = [params objectForKey:@"id"];
-       }
-       return self;
-     }
+ 
+ [[Routable sharedRouter] map:@"users/:id" toController:[UserController class]];
+ [[Routable sharedRouter] setNavigationController: aNavigationController];
+ 
+ // In UserController.m
+ @implementation UserController
+ 
+ // params will be non-nil
+ - (id)initWithRouterParams:(NSDictionary *)params {
+ if ((self = [self initWithNibName:nil bundle:nil])) {
+ self.userId = [params objectForKey:@"id"];
+ }
+ return self;
+ }
  
  Anonymous methods can also be routed:
-
-     [[Routable sharedRouter] map:@"logout" toCallback:^(NSDictionary *params) {
-       [User logout];
-     }];
-     
-     [[Routable sharedRouter] map:@"invalidate/:id" toCallback:^(NSDictionary *params) {
-       [Cache invalidate: [params objectForKey:@"id"]]];
-     }];
+ 
+ [[Routable sharedRouter] map:@"logout" toCallback:^(NSDictionary *params) {
+ [User logout];
+ }];
+ 
+ [[Routable sharedRouter] map:@"invalidate/:id" toCallback:^(NSDictionary *params) {
+ [Cache invalidate: [params objectForKey:@"id"]]];
+ }];
  
  If you wish to do custom allocation of a controller, you can use controllerWithRouterParams:
  
-     [[Routable sharedRouter] map:@"users/:id" toController:[StoryboardController class]];
+ [[Routable sharedRouter] map:@"users/:id" toController:[StoryboardController class]];
  
-     @implementation StoryboardController
-     
-     + (id)controllerWithRouterParams:(NSDictionary *)params {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
-        StoryboardController *instance = [storyboard instantiateViewControllerWithIdentifier:@"sbController"];
-        instance.userId = [params objectForKey:@"id"];
+ @implementation StoryboardController
  
-        return instance;
-     }
+ + (id)controllerWithRouterParams:(NSDictionary *)params {
+ UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+ StoryboardController *instance = [storyboard instantiateViewControllerWithIdentifier:@"sbController"];
+ instance.userId = [params objectForKey:@"id"];
+ 
+ return instance;
+ }
  
  */
 @interface UPRouter : NSObject
