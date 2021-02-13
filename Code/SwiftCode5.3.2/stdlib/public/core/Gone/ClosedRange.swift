@@ -1,7 +1,5 @@
 // 前闭后开, 其实是通用的表示范围的方式. 所以 Swift 里面的 Range, 表示的就是前闭后开的概念.
 // 而前闭后闭, 则专门有一个叫做 ClosedRange 这个类来表示.
-
-
 // Float 作为 Bound, 是不能作为 Sequence 的, 因为 Float 的 stride 无法确定出来.
 public struct ClosedRange<Bound: Comparable> {
     public let lowerBound: Bound

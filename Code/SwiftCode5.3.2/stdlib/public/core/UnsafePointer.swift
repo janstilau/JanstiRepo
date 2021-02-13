@@ -1,3 +1,5 @@
+// A pointer for accessing data of a specific type.
+//
 public struct UnsafePointer<Pointee>: _Pointer {
     // 这几行代码, 就是对于 _Pointer 协议的适配.
     public typealias Distance = Int
@@ -7,7 +9,6 @@ public struct UnsafePointer<Pointee>: _Pointer {
     }
     
     // 就是 Swift 版本的 free. 这里面, 应该不会调用相应的析构方法.
-    @inlinable
     public func deallocate() {
         Builtin.deallocRaw(_rawValue, (-1)._builtinWordValue, (0)._builtinWordValue)
     }

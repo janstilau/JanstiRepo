@@ -1,20 +1,9 @@
-/// A sequence that presents the elements of a base sequence of sequences
-/// concatenated using a given separator.
-@frozen // lazy-performance
+// 在类的定义阶段, 仅仅是把相应的值, 存起来而已.
 public struct JoinedSequence<Base: Sequence> where Base.Element: Sequence {
-    
     public typealias Element = Base.Element.Element
-    
-    @usableFromInline // lazy-performance
     internal var _base: Base
-    @usableFromInline // lazy-performance
     internal var _separator: ContiguousArray<Element>
     
-    /// Creates an iterator that presents the elements of the sequences
-    /// traversed by `base`, concatenated using `separator`.
-    ///
-    /// - Complexity: O(`separator.count`).
-    @inlinable // lazy-performance
     public init<Separator: Sequence>(base: Base, separator: Separator)
     where Separator.Element == Element {
         self._base = base
@@ -23,35 +12,19 @@ public struct JoinedSequence<Base: Sequence> where Base.Element: Sequence {
 }
 
 extension JoinedSequence {
-    /// An iterator that presents the elements of the sequences traversed
-    /// by a base iterator, concatenated using a given separator.
-    @frozen // lazy-performance
     public struct Iterator {
-        @usableFromInline // lazy-performance
-        internal var _base: Base.Iterator
-        @usableFromInline // lazy-performance
-        internal var _inner: Base.Element.Iterator?
-        @usableFromInline // lazy-performance
+        internal var _base: Base.Iterator // base Sequence 的 iter.
+        internal var _inner: Base.Element.Iterator? // 每个 Ele 是一个 Sequence, Ele 的 iter
         internal var _separatorData: ContiguousArray<Element>
-        @usableFromInline // lazy-performance
         internal var _separator: ContiguousArray<Element>.Iterator?
         
-        @frozen // lazy-performance
-        @usableFromInline // lazy-performance
         internal enum _JoinIteratorState {
             case start
             case generatingElements
             case generatingSeparator
             case end
         }
-        @usableFromInline // lazy-performance
         internal var _state: _JoinIteratorState = .start
-        
-        /// Creates a sequence that presents the elements of `base` sequences
-        /// concatenated using `separator`.
-        ///
-        /// - Complexity: O(`separator.count`).
-        @inlinable // lazy-performance
         public init<Separator: Sequence>(base: Base.Iterator, separator: Separator)
         where Separator.Element == Element {
             self._base = base
@@ -62,12 +35,7 @@ extension JoinedSequence {
 
 extension JoinedSequence.Iterator: IteratorProtocol {
     public typealias Element = Base.Element.Element
-    
-    /// Advances to the next element and returns it, or `nil` if no next element
-    /// exists.
-    ///
-    /// Once `nil` has been returned, all subsequent calls return `nil`.
-    @inlinable // lazy-performance
+    // 根据 state 进行后续的处理.
     public mutating func next() -> Element? {
         while true {
             switch _state {
@@ -110,15 +78,10 @@ extension JoinedSequence.Iterator: IteratorProtocol {
 }
 
 extension JoinedSequence: Sequence {
-    /// Return an iterator over the elements of this sequence.
-    ///
-    /// - Complexity: O(1).
-    @inlinable // lazy-performance
     public __consuming func makeIterator() -> Iterator {
         return Iterator(base: _base.makeIterator(), separator: _separator)
     }
     
-    @inlinable // lazy-performance
     public __consuming func _copyToContiguousArray() -> ContiguousArray<Element> {
         var result = ContiguousArray<Element>()
         let separatorSize = _separator.count
@@ -143,23 +106,10 @@ extension JoinedSequence: Sequence {
     }
 }
 
+// JoinedSequence 实际的类型, 是不会暴露出去的. 暴露出去的, 仅仅是一个外层的函数而已.
+// 这里, Sequence 里面的 element 也必须是 Sequence 才可以.
 extension Sequence where Element: Sequence {
-    /// Returns the concatenated elements of this sequence of sequences,
-    /// inserting the given separator between each element.
-    ///
-    /// This example shows how an array of `[Int]` instances can be joined, using
-    /// another `[Int]` instance as the separator:
-    ///
-    ///     let nestedNumbers = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    ///     let joined = nestedNumbers.joined(separator: [-1, -2])
-    ///     print(Array(joined))
-    ///     // Prints "[1, 2, 3, -1, -2, 4, 5, 6, -1, -2, 7, 8, 9]"
-    ///
-    /// - Parameter separator: A sequence to insert between each of this
-    ///   sequence's elements.
-    /// - Returns: The joined sequence of elements.
-    @inlinable // lazy-performance
-    public __consuming func joined<Separator: Sequence>(
+    public func joined<Separator: Sequence>(
         separator: Separator
     ) -> JoinedSequence<Self>
     where Separator.Element == Element.Element {
