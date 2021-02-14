@@ -14,6 +14,7 @@ FOUNDATION_EXPORT double EGOCacheVersionNumber;
 //! Project version string for EGOCache.
 FOUNDATION_EXPORT const unsigned char EGOCacheVersionString[];
 
+// iOS 里面, 也有着类似于 TF 的判断.
 #if !__has_feature(nullability)
 #	define nullable
 #	define nonnull
