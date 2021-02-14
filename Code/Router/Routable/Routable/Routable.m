@@ -312,10 +312,6 @@
                                      userInfo:nil];
     }
     
-    if ([self.cachedRoutes objectForKey:url] && !extraParams) {
-        return [self.cachedRoutes objectForKey:url];
-    }
-    
     NSArray *givenParts = url.pathComponents;
     NSArray *legacyParts = [url componentsSeparatedByString:@"/"];
     if ([legacyParts count] != [givenParts count]) {
@@ -357,6 +353,8 @@
     return [self routerParamsForUrl:url extraParams: nil];
 }
 
+// 这里, 传递过来的数据是 ["user", ":name", "age"], ["user", "Justin", "23"]
+// 如果, 不是 : 开头的, 那么就是路径判断了, 就是 else if 里面的逻辑. 如果路径不相匹配, 直接 params = nil.
 - (NSDictionary *)paramsForUrlComponents:(NSArray *)givenUrlComponents
                      routerUrlComponents:(NSArray *)routerUrlComponents {
     
