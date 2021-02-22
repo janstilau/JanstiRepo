@@ -83,8 +83,6 @@ public:
     }
 
     void push(QRunnable *runnable) {
-        Q_ASSERT(runnable != nullptr);
-        Q_ASSERT(!isFull());
         m_lastIndex += 1;
         m_entries[m_lastIndex] = runnable;
     }

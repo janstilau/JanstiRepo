@@ -122,8 +122,8 @@ extern "C" {
  */
 @interface NSCondition : NSObject <NSLocking>
 {
-  gs_cond_t	_condition;
-  gs_mutex_t	_mutex;
+  gs_cond_t	_condition; // 一个条件变量
+  gs_mutex_t	_mutex; // 一把锁.
   NSString	*_name;
 }
 /**

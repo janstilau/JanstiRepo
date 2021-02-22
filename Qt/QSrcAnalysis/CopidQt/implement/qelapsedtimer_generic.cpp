@@ -43,60 +43,23 @@
 
 QT_BEGIN_NAMESPACE
 
-/*!
-    Returns the clock type that this QElapsedTimer implementation uses.
-
-    \sa isMonotonic()
-*/
 QElapsedTimer::ClockType QElapsedTimer::clockType() Q_DECL_NOTHROW
 {
     return SystemTime;
 }
 
-/*!
-    Returns \c true if this is a monotonic clock, false otherwise. See the
-    information on the different clock types to understand which ones are
-    monotonic.
-
-    \sa clockType(), QElapsedTimer::ClockType
-*/
 bool QElapsedTimer::isMonotonic() Q_DECL_NOTHROW
 {
     return false;
 }
 
-/*!
-    Starts this timer. Once started, a timer value can be checked with elapsed() or msecsSinceReference().
-
-    Normally, a timer is started just before a lengthy operation, such as:
-    \snippet qelapsedtimer/main.cpp 0
-
-    Also, starting a timer makes it valid again.
-
-    \sa restart(), invalidate(), elapsed()
-*/
+// start 里面, 调用 restart. restart 有着更加强大的功能, 本身有着重置的功能.
+// start 通过调用一个更加强大的功能, 舍弃其中的某些效果, 来实现自己的含义.
 void QElapsedTimer::start() Q_DECL_NOTHROW
 {
     restart();
 }
 
-/*!
-    Restarts the timer and returns the time elapsed since the previous start.
-    This function is equivalent to obtaining the elapsed time with elapsed()
-    and then starting the timer again with start(), but it does so in one
-    single operation, avoiding the need to obtain the clock value twice.
-
-    Calling this function on a QElapsedTimer that is invalid
-    results in undefined behavior.
-
-    The following example illustrates how to use this function to calibrate a
-    parameter to a slow operation (for example, an iteration count) so that
-    this operation takes at least 250 milliseconds:
-
-    \snippet qelapsedtimer/main.cpp 3
-
-    \sa start(), invalidate(), elapsed(), isValid()
-*/
 qint64 QElapsedTimer::restart() Q_DECL_NOTHROW
 {
     qint64 old = t1;
@@ -105,53 +68,18 @@ qint64 QElapsedTimer::restart() Q_DECL_NOTHROW
     return t1 - old;
 }
 
-/*! \since 4.8
-
-    Returns the number of nanoseconds since this QElapsedTimer was last
-    started.
-
-    Calling this function on a QElapsedTimer that is invalid
-    results in undefined behavior.
-
-    On platforms that do not provide nanosecond resolution, the value returned
-    will be the best estimate available.
-
-    \sa start(), restart(), hasExpired(), invalidate()
-*/
 qint64 QElapsedTimer::nsecsElapsed() const Q_DECL_NOTHROW
 {
     return elapsed() * 1000000;
 }
 
-/*!
-    Returns the number of milliseconds since this QElapsedTimer was last
-    started.
-
-    Calling this function on a QElapsedTimer that is invalid
-    results in undefined behavior.
-
-    \sa start(), restart(), hasExpired(), isValid(), invalidate()
-*/
+// 所以, 其实就是当前时间减去记录的开始时间.
 qint64 QElapsedTimer::elapsed() const Q_DECL_NOTHROW
 {
     return QDateTime::currentMSecsSinceEpoch() - t1;
 }
 
-/*!
-    Returns the number of milliseconds between last time this QElapsedTimer
-    object was started and its reference clock's start.
-
-    This number is usually arbitrary for all clocks except the
-    QElapsedTimer::SystemTime clock. For that clock type, this number is the
-    number of milliseconds since January 1st, 1970 at 0:00 UTC (that is, it
-    is the Unix time expressed in milliseconds).
-
-    On Linux, Windows and Apple platforms, this value is usually the time
-    since the system boot, though it usually does not include the time the
-    system has spent in sleep states.
-
-    \sa clockType(), elapsed()
-*/
+// 提供一个接口, 来返回自己记录的起始时间.
 qint64 QElapsedTimer::msecsSinceReference() const Q_DECL_NOTHROW
 {
     return t1;

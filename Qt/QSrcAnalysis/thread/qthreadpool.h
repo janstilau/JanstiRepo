@@ -10,7 +10,6 @@
 
 QT_BEGIN_NAMESPACE
 
-// 这个类, 和 NSOperationQueue, 和自己实现的异步控制队列, 没有太大的区别.
 class QThreadPoolPrivate;
 class Q_CORE_EXPORT QThreadPool : public QObject
 {
