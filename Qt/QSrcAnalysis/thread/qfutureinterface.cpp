@@ -154,6 +154,8 @@ void QFutureInterfaceBase::setThrottled(bool enable)
 }
 
 
+// 虽然, 各个状态就是 bit 位的验证, 但专门的写出对应的方法来, 让代码更加的清晰.
+
 bool QFutureInterfaceBase::isRunning() const
 {
     return queryState(Running);
@@ -311,11 +313,8 @@ bool QFutureInterfaceBase::queryState(State state) const
 
 void QFutureInterfaceBase::waitForResult(int resultIndex)
 {
-    d->m_exceptionStore.throwPossibleException();
-
     QMutexLocker lock(&d->m_mutex);
-    if (!isRunning())
-        return;
+    if (!isRunning()) return;
     lock.unlock();
 
     // To avoid deadlocks and reduce the number of threads used, try to
@@ -324,11 +323,11 @@ void QFutureInterfaceBase::waitForResult(int resultIndex)
 
     lock.relock();
 
+    // 其实, Future 就是把任务记录了下来, 在取值的时候, 发现任务还没有执行, 就在子线程, 或者当前线程调用任务, 然后把任务的结果记录到自己的内部.
+    // 内部还是使用最简单地 waitCondition 来实现同步的操作.
     const int waitIndex = (resultIndex == -1) ? INT_MAX : resultIndex;
     while (isRunning() && !d->internal_isResultReadyAt(waitIndex))
         d->waitCondition.wait(&d->m_mutex);
-
-    d->m_exceptionStore.throwPossibleException();
 }
 
 void QFutureInterfaceBase::waitForFinished()
