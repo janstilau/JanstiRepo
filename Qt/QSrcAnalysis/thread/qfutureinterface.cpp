@@ -341,11 +341,10 @@ void QFutureInterfaceBase::waitForFinished()
 
         lock.relock();
 
+        // 如果, 还正在运行状态, 就一直 wait. 相应的, 子线程自然会有修改状态, 以及 waitCondition 唤醒的机制.
         while (isRunning())
             d->waitCondition.wait(&d->m_mutex);
     }
-
-    d->m_exceptionStore.throwPossibleException();
 }
 
 void QFutureInterfaceBase::reportResultsReady(int beginIndex, int endIndex)
@@ -374,11 +373,14 @@ void QFutureInterfaceBase::reportResultsReady(int beginIndex, int endIndex)
     d->sendCallOut(QFutureCallOutEvent(QFutureCallOutEvent::ResultsReady, beginIndex, endIndex));
 }
 
+// 记录一下任务对象. 实际对象, 可能是一个函数指针的包装, 一个闭包的包装, 一个函数对象的包装.
+// 从源码看, 这个实际的对象, 是模板生成的.
 void QFutureInterfaceBase::setRunnable(QRunnable *runnable)
 {
     d->runnable = runnable;
 }
 
+// 记录一下 ThreadPool. 也就是 runnabel 的调度对象. 默认是 globalInstance.
 void QFutureInterfaceBase::setThreadPool(QThreadPool *pool)
 {
     d->m_pool = pool;

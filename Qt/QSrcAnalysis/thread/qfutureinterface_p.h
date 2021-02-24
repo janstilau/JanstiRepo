@@ -143,6 +143,7 @@ public:
         inline bool ref() { return m_refCount.ref(); }
         inline bool deref() { return m_refCount.deref(); }
         inline int load() const { return m_refCount.load(); }
+
         // Ref counter for type T
         inline bool refT() { return m_refCountT.ref(); }
         inline bool derefT() { return m_refCountT.deref(); }
