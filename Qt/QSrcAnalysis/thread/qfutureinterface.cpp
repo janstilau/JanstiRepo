@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 // qfutureinterface.h included from qfuture.h
 #include "qfuture.h"
 
@@ -269,21 +230,6 @@ void QFutureInterfaceBase::reportCanceled()
     cancel();
 }
 
-#ifndef QT_NO_EXCEPTIONS
-void QFutureInterfaceBase::reportException(const QException &exception)
-{
-    QMutexLocker locker(&d->m_mutex);
-    if (d->state.load() & (Canceled|Finished))
-        return;
-
-    d->m_exceptionStore.setException(exception);
-    switch_on(d->state, Canceled);
-    d->waitCondition.wakeAll();
-    d->pausedWaitCondition.wakeAll();
-    d->sendCallOut(QFutureCallOutEvent(QFutureCallOutEvent::Canceled));
-}
-#endif
-
 void QFutureInterfaceBase::reportFinished()
 {
     QMutexLocker locker(&d->m_mutex);
@@ -347,6 +293,8 @@ void QFutureInterfaceBase::waitForFinished()
     }
 }
 
+// 在 reportResult, 也就是把结果存储到 Future 的数据上之后, 会调用这个方法.
+// 这个方法, 会唤醒 wait 的线程.
 void QFutureInterfaceBase::reportResultsReady(int beginIndex, int endIndex)
 {
     if (beginIndex == endIndex || (d->state.load() & (Canceled|Finished)))
@@ -354,6 +302,7 @@ void QFutureInterfaceBase::reportResultsReady(int beginIndex, int endIndex)
 
     d->waitCondition.wakeAll();
 
+    // 后面的逻辑没有明白.
     if (d->manualProgress == false) {
         if (d->internal_updateProgress(d->m_progressValue + endIndex - beginIndex) == false) {
             d->sendCallOut(QFutureCallOutEvent(QFutureCallOutEvent::ResultsReady,

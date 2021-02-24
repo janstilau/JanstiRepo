@@ -98,6 +98,7 @@ public:
     int index2;
     QString text;
 
+    // 专门有 clone, 作为拷贝作用.
     QFutureCallOutEvent *clone() const
     {
         return new QFutureCallOutEvent(callOutType, index1, index2, text);

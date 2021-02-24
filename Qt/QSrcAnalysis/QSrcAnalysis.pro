@@ -695,7 +695,15 @@ SOURCES += \
     tools/qunicodetools.cpp \
     tools/qvector_msvc.cpp \
     tools/qversionnumber.cpp \
-    tools/qvsnprintf.cpp
+    tools/qvsnprintf.cpp \
+    concurrent/doc/snippets/code/src_concurrent_qtconcurrentfilter.cpp \
+    concurrent/doc/snippets/code/src_concurrent_qtconcurrentmap.cpp \
+    concurrent/doc/snippets/code/src_concurrent_qtconcurrentrun.cpp \
+    concurrent/qtconcurrentfilter.cpp \
+    concurrent/qtconcurrentiteratekernel.cpp \
+    concurrent/qtconcurrentmap.cpp \
+    concurrent/qtconcurrentrun.cpp \
+    concurrent/qtconcurrentthreadengine.cpp
 
 HEADERS += \
     CopidQt/Widget/qaction.h \
@@ -1621,7 +1629,22 @@ HEADERS += \
     tools/qunicodetools_p.h \
     tools/qvarlengtharray.h \
     tools/qvector.h \
-    tools/qversionnumber.h
+    tools/qversionnumber.h \
+    concurrent/qtconcurrent_global.h \
+    concurrent/qtconcurrentcompilertest.h \
+    concurrent/qtconcurrentexception.h \
+    concurrent/qtconcurrentfilter.h \
+    concurrent/qtconcurrentfilterkernel.h \
+    concurrent/qtconcurrentfunctionwrappers.h \
+    concurrent/qtconcurrentiteratekernel.h \
+    concurrent/qtconcurrentmap.h \
+    concurrent/qtconcurrentmapkernel.h \
+    concurrent/qtconcurrentmedian.h \
+    concurrent/qtconcurrentreducekernel.h \
+    concurrent/qtconcurrentrun.h \
+    concurrent/qtconcurrentrunbase.h \
+    concurrent/qtconcurrentstoredfunctioncall.h \
+    concurrent/qtconcurrentthreadengine.h
 
 FORMS += \
         mainwindow.ui
@@ -1810,11 +1833,15 @@ DISTFILES += \
     tools/qt_attribution.json \
     tools/qvarlengtharray.qdoc \
     tools/qvector.qdoc \
-    tools/tools.pri
+    tools/tools.pri \
+    concurrent/doc/qtconcurrent.qdocconf \
+    concurrent/doc/src/qtconcurrent-index.qdoc \
+    concurrent/doc/src/qtconcurrent-module.qdoc
 
 SUBDIRS += \
     network/doc/snippets/code/doc_src_qtnetwork.pro \
-    network/network.pro
+    network/network.pro \
+    concurrent/concurrent.pro
 
 RESOURCES += \
     styles/qstyle.qrc

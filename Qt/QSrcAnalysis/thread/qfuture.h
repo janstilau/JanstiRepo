@@ -72,6 +72,7 @@ public:
         inline const_iterator(const const_iterator &o) : future(o.future), index(o.index)  {}
         inline const_iterator &operator=(const const_iterator &o)
         { future = o.future; index = o.index; return *this; }
+        // 实际取值, 就是取结果.
         inline const T &operator*() const { return future->d.resultReference(index); }
         inline const T *operator->() const { return future->d.resultPointer(index); }
 
