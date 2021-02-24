@@ -1,46 +1,5 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Copyright (C) 2016 Intel Corporation.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include <QtCore/qglobal.h>
 
-#ifndef QATOMIC_H
 #define QATOMIC_H
 
 #include <QtCore/qbasicatomic.h>
@@ -56,21 +15,9 @@ class QAtomicInteger : public QBasicAtomicInteger<T>
 {
 public:
     // Non-atomic API
-#ifdef QT_BASIC_ATOMIC_HAS_CONSTRUCTORS
-    constexpr QAtomicInteger(T value = 0) Q_DECL_NOTHROW : QBasicAtomicInteger<T>(value) {}
-#else
     inline QAtomicInteger(T value = 0) Q_DECL_NOTHROW
     {
         this->_q_value = value;
-    }
-#endif
-
-    inline QAtomicInteger(const QAtomicInteger &other) Q_DECL_NOTHROW
-#ifdef QT_BASIC_ATOMIC_HAS_CONSTRUCTORS
-        : QBasicAtomicInteger<T>()
-#endif
-    {
-        this->storeRelease(other.loadAcquire());
     }
 
     inline QAtomicInteger &operator=(const QAtomicInteger &other) Q_DECL_NOTHROW
@@ -79,13 +26,12 @@ public:
         return *this;
     }
 
-#ifdef Q_QDOC
-    T load() const;
+    T load() const; // 最重要的方法之一, 获取存储的值.
     T loadAcquire() const;
-    void store(T newValue);
+    void store(T newValue); // 最重要的方法之一, 更改存储的值.
     void storeRelease(T newValue);
 
-    operator T() const;
+    operator T() const; // 这个主要是编译器类型转化用的, 比如 T 为 bool, 那么一个 atomic<bool> 对象, 可以当做 bool 来进行使用. 应该就是 load 一下.
     QAtomicInteger &operator=(T);
 
     static Q_DECL_CONSTEXPR bool isReferenceCountingNative();
@@ -147,7 +93,6 @@ public:
     T operator|=(T value);
     T operator&=(T value);
     T operator^=(T value);
-#endif
 };
 
 class QAtomicInt : public QAtomicInteger<int>
@@ -189,7 +134,6 @@ public:
         return *this;
     }
 
-#ifdef Q_QDOC
     T *load() const;
     T *loadAcquire() const;
     void store(T *newValue);

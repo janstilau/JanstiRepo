@@ -40,7 +40,6 @@
 
 #include <QtCore/qglobal.h>
 
-#ifndef QBASICATOMIC_H
 #define QBASICATOMIC_H
 
 #if defined(QT_BOOTSTRAPPED)
@@ -92,14 +91,10 @@ class QBasicAtomicInteger
 public:
     typedef T Type;
     typedef QAtomicOps<T> Ops;
-    // static check that this is a valid integer
-    Q_STATIC_ASSERT_X(QTypeInfo<T>::isIntegral, "template parameter is not an integral type");
-    Q_STATIC_ASSERT_X(QAtomicOpsSupport<sizeof(T)>::IsSupported, "template parameter is an integral of a size not supported on this platform");
-
     typename Ops::Type _q_value;
 
-    // Everything below is either implemented in ../arch/qatomic_XXX.h or (as fallback) in qgenericatomic.h
 
+    // 实际上, Ops 到底怎么实现, 还是不知道. 只是, 把实现转交给了这个中间层.
     T load() const Q_DECL_NOTHROW { return Ops::load(_q_value); }
     void store(T newValue) Q_DECL_NOTHROW { Ops::store(_q_value, newValue); }
 

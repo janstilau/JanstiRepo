@@ -158,7 +158,7 @@ public:
     }
     ~QFutureInterface()
     {
-        if (!derefT())
+        if (!derefT()) // 如果, 弱引用 def 后为 0, 就应该销毁资源
             resultStoreBase().template clear<T>();
     }
 
@@ -186,6 +186,7 @@ public:
     inline QList<T> results();
 };
 
+// 这里, 就是获取到结果, 然后存放到数据 store 里面
 template <typename T>
 inline void QFutureInterface<T>::reportResult(const T *result, int index)
 {

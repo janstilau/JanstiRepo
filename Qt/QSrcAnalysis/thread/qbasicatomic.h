@@ -1,100 +1,12 @@
-/****************************************************************************
-**
-** Copyright (C) 2011 Thiago Macieira <thiago@kde.org>
-** Copyright (C) 2016 Intel Corporation.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include <QtCore/qatomic.h>
 
-#ifndef QBASICATOMIC_H
 #define QBASICATOMIC_H
-
-#if defined(QT_BOOTSTRAPPED)
-#  include <QtCore/qatomic_bootstrap.h>
-
-// If C++11 atomics are supported, use them!
-// Note that constexpr support is sometimes disabled in QNX builds but its
-// library has <atomic>.
-#elif defined(Q_COMPILER_ATOMICS) && (defined(Q_COMPILER_CONSTEXPR) || defined(Q_OS_QNX))
-#  include <QtCore/qatomic_cxx11.h>
-
-// We only support one fallback: MSVC, because even on version 2015, it lacks full constexpr support
-#elif defined(Q_CC_MSVC)
-#  include <QtCore/qatomic_msvc.h>
-
-// No fallback
-#else
-#  error "Qt requires C++11 support"
-#endif
-
-QT_WARNING_PUSH
-QT_WARNING_DISABLE_MSVC(4522)
-
-QT_BEGIN_NAMESPACE
-
-#if 0
-// silence syncqt warnings
-QT_END_NAMESPACE
-#pragma qt_no_master_include
-#pragma qt_sync_stop_processing
-#endif
-
-// New atomics
-
-#if defined(Q_COMPILER_CONSTEXPR) && defined(Q_COMPILER_DEFAULT_MEMBERS) && defined(Q_COMPILER_DELETE_MEMBERS)
-# if defined(Q_CC_CLANG) && Q_CC_CLANG < 303
-   /*
-      Do not define QT_BASIC_ATOMIC_HAS_CONSTRUCTORS for Clang before version 3.3.
-      For details about the bug: see http://llvm.org/bugs/show_bug.cgi?id=12670
-    */
-# else
-#  define QT_BASIC_ATOMIC_HAS_CONSTRUCTORS
-# endif
-#endif
 
 template <typename T>
 class QBasicAtomicInteger
 {
 public:
     typedef QAtomicOps<T> Ops;
-    // static check that this is a valid integer
-    Q_STATIC_ASSERT_X(QTypeInfo<T>::isIntegral, "template parameter is not an integral type");
-    Q_STATIC_ASSERT_X(QAtomicOpsSupport<sizeof(T)>::IsSupported, "template parameter is an integral of a size not supported on this platform");
-
     typename Ops::Type _q_value;
 
     // Everything below is either implemented in ../arch/qatomic_XXX.h or (as fallback) in qgenericatomic.h

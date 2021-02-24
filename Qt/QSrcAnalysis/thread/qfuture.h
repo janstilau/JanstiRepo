@@ -107,7 +107,8 @@ public:
 private:
     friend class QFutureWatcher<T>;
 
-public: // Warning: the d pointer is not documented and is considered private.
+public:
+    // 真正的数据部分.
     mutable QFutureInterface<T> d;
 };
 

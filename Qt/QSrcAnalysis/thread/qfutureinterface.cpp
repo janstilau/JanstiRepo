@@ -311,6 +311,7 @@ bool QFutureInterfaceBase::queryState(State state) const
     return d->state.load() & state;
 }
 
+// 所以, 实际上wait 操作, 就是让记录的 threadPool 去运行 runnable 程序了, 然后, 在没有达到数据准备完善之前, 一直进行 wait 的操作.
 void QFutureInterfaceBase::waitForResult(int resultIndex)
 {
     QMutexLocker lock(&d->m_mutex);
@@ -341,8 +342,9 @@ void QFutureInterfaceBase::waitForFinished()
 
         lock.relock();
 
-        while (isRunning())
+        while (isRunning()) {
             d->waitCondition.wait(&d->m_mutex);
+        }
     }
 
     d->m_exceptionStore.throwPossibleException();

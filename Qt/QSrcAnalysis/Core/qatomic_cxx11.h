@@ -217,6 +217,7 @@ template <> Q_DECL_CONSTEXPR inline bool QAtomicTraits<8>::isLockFree()
 #  endif
 #endif
 
+// 所以实际上, 还是使用了 std 里面的实现
 template <typename X> struct QAtomicOps
 {
     typedef std::atomic<X> Type;
