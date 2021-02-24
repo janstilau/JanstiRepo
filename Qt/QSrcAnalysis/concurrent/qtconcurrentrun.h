@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtConcurrent module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 // Generated code, do not edit! Use generator at tools/qtconcurrent/generaterun/
 #ifndef QTCONCURRENT_RUN_H
 #define QTCONCURRENT_RUN_H
@@ -66,16 +27,31 @@ namespace QtConcurrent {
 
 #else
 
+/*
+QtConcurrent::run(QThreadPool::globalInstance(), function, ...);
+
+Runs function in a separate thread. The thread is taken from the global QThreadPool. Note that function may not run immediately; function will only be run once a thread becomes available.
+
+T is the same type as the return value of function. Non-void return values can be accessed via the QFuture::result() function.
+*/
+
+
+// 对外的接口, 仅仅是一个 run 方法, 这个方法接受一个 invokable 参数, 以及后面的参数. 如果有 return value, 那么就可以通过 future 来进行获取.
+// 而实际上, 有这么多个模板来支持这个功能.
+
+
 namespace QtConcurrent {
 
 template <typename T>
 QFuture<T> run(T (*functionPointer)())
 {
-    return (new StoredFunctorCall0<T, T (*)()>(functionPointer))->start();
+    // 生成一个 StoredFunctorCall0 对象, 调用 start 方法.
+    return (new StoredFunctorCall0<T, T (*)()> (functionPointer))   ->start();
 }
 template <typename T, typename Param1, typename Arg1>
 QFuture<T> run(T (*functionPointer)(Param1), const Arg1 &arg1)
 {
+    // 生成一个 StoredFunctorCall1 对象, 调用 start 方法. StoredFunctorCall1 带参了
     return (new StoredFunctorCall1<T, T (*)(Param1), Arg1>(functionPointer, arg1))->start();
 }
 template <typename T, typename Param1, typename Arg1, typename Param2, typename Arg2>
@@ -98,6 +74,11 @@ QFuture<T> run(T (*functionPointer)(Param1, Param2, Param3, Param4, Param5), con
 {
     return (new StoredFunctorCall5<T, T (*)(Param1, Param2, Param3, Param4, Param5), Arg1, Arg2, Arg3, Arg4, Arg5>(functionPointer, arg1, arg2, arg3, arg4, arg5))->start();
 }
+
+
+
+
+
 
 template <typename Functor>
 auto run(Functor functor) -> typename std::enable_if<!QtPrivate::HasResultType<Functor>::Value, QFuture<decltype(functor())>>::type

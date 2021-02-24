@@ -18,6 +18,8 @@
 
 QT_BEGIN_NAMESPACE
 
+// 这其实是一个不太好的设计, 在一个方法的参数里面, 调用另外一个方法.
+// 这样让代码的流程比较混乱.
 static void report_error(int code, const char *where, const char *what)
 {
     if (code != 0)
@@ -27,9 +29,8 @@ static void report_error(int code, const char *where, const char *what)
 void qt_initialize_pthread_cond(pthread_cond_t *cond, const char *where)
 {
     pthread_condattr_t condattr;
-
     pthread_condattr_init(&condattr);
-    report_error(pthread_cond_init(cond, &condattr), where, "cv init");
+    pthread_cond_init(cond, &condattr);
     pthread_condattr_destroy(&condattr);
 }
 
@@ -51,7 +52,7 @@ void qt_abstime_for_timeout(timespec *ts, int timeout)
 
 class QWaitConditionPrivate {
 public:
-    pthread_mutex_t innerMutex; // 这个互斥锁, 是为了内部数据改变使用的, wait 的时候, 是传过来一个外部 互斥锁, wait 操作, 会解锁那个外部互斥锁, 然后 wiat cond, 在被唤醒之后, 还会加锁那个外部互斥锁. 这个内部互斥锁, 是一些需要操作内部数据的时候, 进行的加锁解锁.
+    pthread_mutex_t innerMutex;
     pthread_cond_t innerCondition;
     int waiters;
     int wakeups;
@@ -94,11 +95,14 @@ public:
     }
 };
 
+// 整个 QWaitCondition, 还是使用的 <pthread> 中的 API 的设计, 由 pthread 库做各个平台的兼容的工作.
+// 不太理解, d->waiters, d->wakeups 到底有什么意义, 还需要专门有一个 innerMutex 做这两个数据的工作.
 
 QWaitCondition::QWaitCondition()
 {
     d = new QWaitConditionPrivate;
-    report_error(pthread_mutex_init(&d->innerMutex, NULL), "QWaitCondition", "mutex init");
+    // 构造函数里面, 初始化 mutex, 初始化 condition.
+    pthread_mutex_init(&d->innerMutex, NULL);
     qt_initialize_pthread_cond(&d->innerCondition, "QWaitCondition");
     d->waiters = d->wakeups = 0;
 }
@@ -106,37 +110,35 @@ QWaitCondition::QWaitCondition()
 
 QWaitCondition::~QWaitCondition()
 {
-    report_error(pthread_cond_destroy(&d->innerCondition), "QWaitCondition", "cv destroy");
-    report_error(pthread_mutex_destroy(&d->innerMutex), "QWaitCondition", "mutex destroy");
+    pthread_cond_destroy(&d->innerCondition);
+    pthread_mutex_destroy(&d->innerMutex);
     delete d;
 }
 
 void QWaitCondition::wakeOne()
 {
-    report_error(pthread_mutex_lock(&d->innerMutex), "Q WaitCondition::wakeOne()", "mutex lock");
+    pthread_mutex_lock(&d->innerMutex);
     d->wakeups = qMin(d->wakeups + 1, d->waiters);
-    report_error(pthread_cond_signal(&d->innerCondition), "QWaitCondition::wakeOne()", "cv signal");
-    report_error(pthread_mutex_unlock(&d->innerMutex), "QWaitCondition::wakeOne()", "mutex unlock");
+    pthread_cond_signal(&d->innerCondition);
+    pthread_mutex_unlock(&d->innerMutex);
 }
 
 void QWaitCondition::wakeAll()
 {
-    report_error(pthread_mutex_lock(&d->innerMutex), "QWaitCondition::wakeAll()", "mutex lock");
+    pthread_mutex_lock(&d->innerMutex);
     d->wakeups = d->waiters;
-    report_error(pthread_cond_broadcast(&d->innerCondition), "QWaitCondition::wakeAll()", "cv broadcast");
-    report_error(pthread_mutex_unlock(&d->innerMutex), "QWaitCondition::wakeAll()", "mutex unlock");
+    pthread_cond_broadcast(&d->innerCondition);
+    pthread_mutex_unlock(&d->innerMutex);
 }
 
 bool QWaitCondition::wait(QMutex *outterMuex, unsigned long time)
 {
-    report_error(pthread_mutex_lock(&d->innerMutex), "QWaitCondition::wait()", "mutex lock");
+    pthread_mutex_lock(&d->innerMutex);
     ++d->waiters;
     outterMuex->unlock(); // 显示外部进行 unlock
-
+    // 在 d->wait 里面, 是使用了 innerLock 和 condition 进行的配合使用. 不太理解为什么.
     bool returnValue = d->wait(time); // wait
-
     outterMuex->lock(); // 外部重新进行 lock
-
     return returnValue;
 }
 

@@ -9,27 +9,6 @@
 
 QT_BEGIN_NAMESPACE
 
-// #define THREADSTORAGE_DEBUG
-#ifdef THREADSTORAGE_DEBUG
-#  define DEBUG_MSG qtsDebug
-
-#  include <stdio.h>
-#  include <stdarg.h>
-void qtsDebug(const char *fmt, ...)
-{
-    va_list va;
-    va_start(va, fmt);
-
-    fprintf(stderr, "QThreadStorage: ");
-    vfprintf(stderr, fmt, va);
-    fprintf(stderr, "\n");
-
-    va_end(va);
-}
-#else
-#  define DEBUG_MSG if(false)qDebug
-#endif
-
 static QBasicMutex destructorsMutex;
 typedef QVector<void (*)(void *)> DestructorMap;
 Q_GLOBAL_STATIC(DestructorMap, destructors)

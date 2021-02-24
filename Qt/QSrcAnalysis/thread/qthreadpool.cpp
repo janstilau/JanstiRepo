@@ -354,12 +354,9 @@ bool QThreadPool::tryTake(QRunnable *runnable)
     return false;
 }
 
-    /*!
-     \internal
-     Searches for \a runnable in the queue, removes it from the queue and
-     runs it if found. This function does not return until the runnable
-     has completed.
-     */
+// 这个函数, 就是找到相应的任务, 立马调用, 将他从调度队列中删除.
+// 在 Future 的 get 函数里面, 有可能到这里来.
+// 也就是, 在需要结果的时候, 优先进行这里的计算.
 void QThreadPoolPrivate::stealAndRunRunnable(QRunnable *runnable)
 {
     Q_Q(QThreadPool);

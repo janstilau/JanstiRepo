@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtConcurrent module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 // Generated code, do not edit! Use generator at tools/qtconcurrent/generaterun/
 #ifndef QTCONCURRENT_STOREDFUNCTIONCALL_H
 #define QTCONCURRENT_STOREDFUNCTIONCALL_H
@@ -51,33 +12,32 @@ QT_BEGIN_NAMESPACE
 
 #ifndef Q_QDOC
 
+// 利用, qtconcurrentrun.h 中定义的函数模板, 生成相应类型的对象.
+// 而这些对象, 都是实现了 RunFunctionTask 的具体实现.
+// 通用的逻辑是, 存储函数模板传递过来的 可调用对象, 各个参数, 然后在 runFunctor()  进行真正的调用.
+
 namespace QtConcurrent {
 template <typename T, typename FunctionPointer>
 struct StoredFunctorCall0: public RunFunctionTask<T>
 {
     inline StoredFunctorCall0(FunctionPointer _function)
       : function(_function) {}
-    // 这种, 就是将 function 的返回值, 记录到了自己的 result 内.
     void runFunctor() override { this->result = function(); }
     FunctionPointer function;
+
 };
 
+
+// 偏特化, 返回值 void, runFunctor() 没有对于 result 赋值的逻辑.
 template <typename FunctionPointer>
 struct StoredFunctorCall0<void, FunctionPointer>: public RunFunctionTask<void>
 {
     inline StoredFunctorCall0(FunctionPointer _function)
       : function(_function) {}
-    // 这种, 就是简单地调用, 没有将结果记录下来.
-    void runFunctor() override { function(); } // 它的 run, 调用 runFunctor, 实际就是调用自己存储的 函数指针.
+    void runFunctor() override { function(); }
     FunctionPointer function;
-};
-// 上面这两种的区别, 在于有没有 T, 也就是说, 在创建 Future 的时候, 有没有填入.
-// 到底生成哪种类型, 由编译器决定. 代码的书写行为, 决定了编译器生成的对象种类的不同.
-// RunFunctionTask 的主逻辑, 会将 result, 进行记录.
-// 在 future get 的时候, 如果发现结果没有, 就会进行 wait 操作, 等待可运行对象的调用.
-// 在 子线程里面, 执行完了 可运行对象之后, 会调用 reportResult 方法. 这个方法, 会使用 waitCondition 进行唤醒操作. 这样, 在其他线程, 调用 future get 被阻塞的线程, 就可以继续后面的逻辑了.
-// 所以, future, 就是使用 waitCondition, 实现的同步机制.
 
+};
 
 template <typename T, typename FunctionPointer>
 struct StoredFunctorPointerCall0: public RunFunctionTask<T>
@@ -1879,6 +1839,7 @@ struct StoredFunctorCall5: public RunFunctionTask<T>
     Arg1 arg1; Arg2 arg2; Arg3 arg3; Arg4 arg4; Arg5 arg5;
 };
 
+// 这里, 是一个特化, 如果 T 是 void, 也就是没有返回值, 那么 void runFunctor()  有特殊的设计, 就是不存储到 result 中.
 template <typename FunctionPointer, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
 struct StoredFunctorCall5<void, FunctionPointer, Arg1, Arg2, Arg3, Arg4, Arg5>: public RunFunctionTask<void>
 {

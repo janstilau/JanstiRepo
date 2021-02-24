@@ -98,6 +98,7 @@ public:
     int index2;
     QString text;
 
+    // 专门有 clone, 作为拷贝作用.
     QFutureCallOutEvent *clone() const
     {
         return new QFutureCallOutEvent(callOutType, index1, index2, text);
@@ -143,6 +144,7 @@ public:
         inline bool ref() { return m_refCount.ref(); }
         inline bool deref() { return m_refCount.deref(); }
         inline int load() const { return m_refCount.load(); }
+
         // Ref counter for type T
         inline bool refT() { return m_refCountT.ref(); }
         inline bool derefT() { return m_refCountT.deref(); }

@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 // qfutureinterface.h included from qfuture.h
 #include "qfuture.h"
 
@@ -269,21 +230,6 @@ void QFutureInterfaceBase::reportCanceled()
     cancel();
 }
 
-#ifndef QT_NO_EXCEPTIONS
-void QFutureInterfaceBase::reportException(const QException &exception)
-{
-    QMutexLocker locker(&d->m_mutex);
-    if (d->state.load() & (Canceled|Finished))
-        return;
-
-    d->m_exceptionStore.setException(exception);
-    switch_on(d->state, Canceled);
-    d->waitCondition.wakeAll();
-    d->pausedWaitCondition.wakeAll();
-    d->sendCallOut(QFutureCallOutEvent(QFutureCallOutEvent::Canceled));
-}
-#endif
-
 void QFutureInterfaceBase::reportFinished()
 {
     QMutexLocker locker(&d->m_mutex);
@@ -311,7 +257,6 @@ bool QFutureInterfaceBase::queryState(State state) const
     return d->state.load() & state;
 }
 
-// 所以, 实际上wait 操作, 就是让记录的 threadPool 去运行 runnable 程序了, 然后, 在没有达到数据准备完善之前, 一直进行 wait 的操作.
 void QFutureInterfaceBase::waitForResult(int resultIndex)
 {
     QMutexLocker lock(&d->m_mutex);
@@ -342,14 +287,14 @@ void QFutureInterfaceBase::waitForFinished()
 
         lock.relock();
 
-        while (isRunning()) {
+        // 如果, 还正在运行状态, 就一直 wait. 相应的, 子线程自然会有修改状态, 以及 waitCondition 唤醒的机制.
+        while (isRunning())
             d->waitCondition.wait(&d->m_mutex);
-        }
     }
-
-    d->m_exceptionStore.throwPossibleException();
 }
 
+// 在 reportResult, 也就是把结果存储到 Future 的数据上之后, 会调用这个方法.
+// 这个方法, 会唤醒 wait 的线程.
 void QFutureInterfaceBase::reportResultsReady(int beginIndex, int endIndex)
 {
     if (beginIndex == endIndex || (d->state.load() & (Canceled|Finished)))
@@ -357,6 +302,7 @@ void QFutureInterfaceBase::reportResultsReady(int beginIndex, int endIndex)
 
     d->waitCondition.wakeAll();
 
+    // 后面的逻辑没有明白.
     if (d->manualProgress == false) {
         if (d->internal_updateProgress(d->m_progressValue + endIndex - beginIndex) == false) {
             d->sendCallOut(QFutureCallOutEvent(QFutureCallOutEvent::ResultsReady,
@@ -376,11 +322,14 @@ void QFutureInterfaceBase::reportResultsReady(int beginIndex, int endIndex)
     d->sendCallOut(QFutureCallOutEvent(QFutureCallOutEvent::ResultsReady, beginIndex, endIndex));
 }
 
+// 记录一下任务对象. 实际对象, 可能是一个函数指针的包装, 一个闭包的包装, 一个函数对象的包装.
+// 从源码看, 这个实际的对象, 是模板生成的.
 void QFutureInterfaceBase::setRunnable(QRunnable *runnable)
 {
     d->runnable = runnable;
 }
 
+// 记录一下 ThreadPool. 也就是 runnabel 的调度对象. 默认是 globalInstance.
 void QFutureInterfaceBase::setThreadPool(QThreadPool *pool)
 {
     d->m_pool = pool;

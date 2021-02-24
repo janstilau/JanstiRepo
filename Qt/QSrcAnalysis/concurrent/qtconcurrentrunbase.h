@@ -34,12 +34,13 @@ template <typename T>
 class RunFunctionTaskBase : public QFutureInterface<T> , public QRunnable
 {
 public:
-    // 所以, 实际上, 就是把自己包装成任务对象, 扔到线程池里面. 重写里面的 runFactor, 去执行自己记录的各个可调用对象.
+    // start, 就是在 某个线程池里面, 调动自己.
     QFuture<T> start()
     {
         return start(QThreadPool::globalInstance());
     }
 
+    // start 返回自己存储的 future 对象.
     QFuture<T> start(QThreadPool *pool)
     {
         this->setThreadPool(pool);
@@ -58,19 +59,33 @@ template <typename T>
 class RunFunctionTask : public RunFunctionTaskBase<T>
 {
 public:
+    // run 方法, 就是调用 runFunctor 方法, 各个具体的程序, 会自定义该函数.
     void run() override
     {
         if (this->isCanceled()) {
             this->reportFinished();
             return;
         }
-        this->runFunctor();
+#ifndef QT_NO_EXCEPTIONS
+        try {
+#endif
+            this->runFunctor();
+#ifndef QT_NO_EXCEPTIONS
+        } catch (QException &e) {
+            QFutureInterface<T>::reportException(e);
+        } catch (...) {
+            QFutureInterface<T>::reportException(QUnhandledException());
+        }
+#endif
+
+        // 然后, 调用 reportResult 方法, 这是 future 里面的方法, 会将 result, 存到 future 的管理的某个位置, 然后唤醒 wait 的线程.
         this->reportResult(result);
         this->reportFinished();
     }
     T result;
 };
 
+// 如果, 没有返回值, 那么就不 report result, 略过这一步.
 template <>
 class RunFunctionTask<void> : public RunFunctionTaskBase<void>
 {
@@ -81,7 +96,17 @@ public:
             this->reportFinished();
             return;
         }
-        this->runFunctor();
+#ifndef QT_NO_EXCEPTIONS
+        try {
+#endif
+            this->runFunctor();
+#ifndef QT_NO_EXCEPTIONS
+        } catch (QException &e) {
+            QFutureInterface<void>::reportException(e);
+        } catch (...) {
+            QFutureInterface<void>::reportException(QUnhandledException());
+        }
+#endif
         this->reportFinished();
     }
 };

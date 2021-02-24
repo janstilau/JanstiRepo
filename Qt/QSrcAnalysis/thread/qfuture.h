@@ -60,6 +60,7 @@ public:
     class const_iterator
     {
     public:
+        // 对于 iterator 的适配, 双向的 iter.
         typedef std::bidirectional_iterator_tag iterator_category;
         typedef qptrdiff difference_type;
         typedef T value_type;
@@ -71,6 +72,7 @@ public:
         inline const_iterator(const const_iterator &o) : future(o.future), index(o.index)  {}
         inline const_iterator &operator=(const const_iterator &o)
         { future = o.future; index = o.index; return *this; }
+        // 实际取值, 就是取结果.
         inline const T &operator*() const { return future->d.resultReference(index); }
         inline const T *operator->() const { return future->d.resultPointer(index); }
 
@@ -96,6 +98,7 @@ public:
         QFuture const * future;
         int index;
     };
+
     friend class const_iterator;
     typedef const_iterator ConstIterator;
 
@@ -115,6 +118,9 @@ public:
 template <typename T>
 inline T QFuture<T>::result() const
 {
+    // waitForResult 内部, 在对应的结果没有获取到的时候, 会使用 condition 进行 wait 处理.
+    // 每次, 对应的 result 获取到之后, 会进行 wake 操作.
+    // 这就是 future 这个类, 能够进行同步的原因. 是用自己的逻辑, 完成了 condition 的封装.
     d.waitForResult(0);
     return d.resultReference(0);
 }
