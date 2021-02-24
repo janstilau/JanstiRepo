@@ -37,7 +37,6 @@ bool QEventLoop::processEvents(ProcessEventsFlags flags)
     return d->threadData->eventDispatcher.load()->processEvents(flags);
 }
 
-
 int QEventLoop::exec(ProcessEventsFlags flags)
 {
     Q_D(QEventLoop);
@@ -122,7 +121,6 @@ void QEventLoop::exit(int returnCode)
     Q_D(QEventLoop);
     if (!d->threadData->eventDispatcher.load())
         return;
-
     d->returnCode.store(returnCode);
     d->exit.storeRelease(true); // 在这里, 改变了值.
     d->threadData->eventDispatcher.load()->interrupt();

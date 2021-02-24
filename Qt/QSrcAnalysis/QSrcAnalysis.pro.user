@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.5.0, 2021-02-23T01:44:28. -->
+<!-- Written by QtCreator 4.5.0, 2021-02-24T18:09:02. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
-  <value type="QByteArray">{22f4116b-6a8b-40a2-ab73-c67c1bf09081}</value>
+  <value type="QByteArray">{51d6cff4-47fb-413d-87f9-65b599d920f7}</value>
  </data>
  <data>
   <variable>ProjectExplorer.Project.ActiveTarget</variable>
@@ -303,8 +303,8 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">QSrcAnalysis</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">QSrcAnalysis2</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/Users/liugq01/SelfCodeHub/JanstiRepo/Qt/QSrcAnalysis/QSrcAnalysis.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/Users/justinlau/JanstiRepo/Qt/QSrcAnalysis/QSrcAnalysis.pro</value>
     <value type="bool" key="QmakeProjectManager.QmakeRunConfiguration.UseLibrarySearchPath">true</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments"></value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">QSrcAnalysis.pro</value>

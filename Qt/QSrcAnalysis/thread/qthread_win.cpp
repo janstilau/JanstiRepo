@@ -120,6 +120,7 @@ void QThreadData::clearCurrentThreadData()
 
 QThreadData *QThreadData::current(bool createIfNecessary)
 {
+    // 这里有个懒加载的机制, 在一个表里面, 存储 QThreadData 的信息.
     qt_create_tls();
     QThreadData *threadData = reinterpret_cast<QThreadData *>(TlsGetValue(qt_current_thread_data_tls_index));
     if (!threadData && createIfNecessary) {
@@ -140,9 +141,8 @@ QThreadData *QThreadData::current(bool createIfNecessary)
         threadData->threadId.store(reinterpret_cast<Qt::HANDLE>(quintptr(GetCurrentThreadId())));
 
         if (!QCoreApplicationPrivate::theMainThread) {
+            // 如果, 没有赋值过这个全局量, 那么就一定是主线程.
             QCoreApplicationPrivate::theMainThread = threadData->thread.load();
-            // TODO: is there a way to reflect the branch's behavior using
-            // WinRT API?
         } else {
             HANDLE realHandle = INVALID_HANDLE_VALUE;
             DuplicateHandle(GetCurrentProcess(),

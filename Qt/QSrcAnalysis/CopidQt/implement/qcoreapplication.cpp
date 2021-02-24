@@ -1012,6 +1012,8 @@ void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type
     };
     CleanUp cleanup(receiver, event_type, data);
 
+    //从  data->postEventList  中取值, 而 data 是 QThreadData
+    //所以, 是线程不断的收集着 event 数据, 然后在这里进行处理. 而在事件循环里面, 会不断的到这里进行处理.
     while (i < data->postEventList.size()) {
         // avoid live-lock
         if (i >= data->postEventList.insertionOffset)
@@ -1084,6 +1086,7 @@ void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type
         QScopedPointer<QEvent> event_deleter(e); // will delete the event (with the mutex unlocked)
 
         // 前面大部分的工作, 还是内部数据的控制. 这里才是最直接的事件处理过程. 可以看到, 还是 sendEvent.
+        // 直接, 把 event 发送到 receiver 里面.
         QCoreApplication::sendEvent(r, e);
 
         // careful when adding anything below this point - the
