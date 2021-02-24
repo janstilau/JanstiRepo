@@ -438,7 +438,6 @@ bool QBasicMutex::lockInternal(int timeout) QT_MUTEX_LOCK_NOEXCEPT
             return false;
         }
     }
-    Q_ASSERT(d_ptr.load() != 0);
     return true;
 }
 

@@ -15,8 +15,6 @@ QT_BEGIN_NAMESPACE
 QMutexPrivate::QMutexPrivate()
 {
     kern_return_t r = semaphore_create(mach_task_self(), &mach_semaphore, SYNC_POLICY_FIFO, 0);
-    if (r != KERN_SUCCESS)
-        qWarning("QMutex: failed to create semaphore, error %d", r);
 }
 
 QMutexPrivate::~QMutexPrivate()
@@ -26,6 +24,7 @@ QMutexPrivate::~QMutexPrivate()
         qWarning("QMutex: failed to destroy semaphore, error %d", r);
 }
 
+// 在 Mac 里面, wait, 和 wakeUp 就是使用的信号量完成的.
 bool QMutexPrivate::wait(int timeout)
 {
     kern_return_t r;
