@@ -131,6 +131,8 @@ void QWaitCondition::wakeAll()
     pthread_mutex_unlock(&d->innerMutex);
 }
 
+// condition wait, 显示 unlock 传递过来的 mutex, 然后wait, 在被唤醒之后, 重新 lock 传递过来的 mutex.
+// 在这里, 是用函数调用实现的, 但是由于还会有一个 inner lock 保证临界区, 所以可以认为是原子操作.
 bool QWaitCondition::wait(QMutex *outterMuex, unsigned long time)
 {
     pthread_mutex_lock(&d->innerMutex);
