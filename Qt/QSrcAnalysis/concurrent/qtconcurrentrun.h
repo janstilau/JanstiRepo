@@ -39,6 +39,14 @@ T is the same type as the return value of function. Non-void return values can b
 // 对外的接口, 仅仅是一个 run 方法, 这个方法接受一个 invokable 参数, 以及后面的参数. 如果有 return value, 那么就可以通过 future 来进行获取.
 // 而实际上, 有这么多个模板来支持这个功能.
 
+/*
+    从这里, 其实也可以窥探一下, Std::thread 的运行.
+    thread 是一个模板, 实际的构造, 应该就是复制了 callable 对象, 以及各个参数.
+    真正执行, 应该就是调用 callable 对象, 并且传递各个参数进去. 所以, 实际上, thread 存储的是构造函数调用时传递的数据, 这个数据, 有可能和 callable 所需要的参数类型不匹配, 调用 callable 的时候, 会发生类型转化.
+    带来的问题可能是, 生命周期不相同. 比如, thread 构造的时候, 传递的是 char*, 真正 callable 调用传递的是 string;
+    string 内部会有数据的复制, 但是 char * 不会有相关操作. 为了避免这种问题, 最好就是 thread 生成时, 传递 callable 对应的数据类型, 没有的话, 就显式地生成一下.
+ */
+
 
 namespace QtConcurrent {
 
@@ -48,6 +56,7 @@ QFuture<T> run(T (*functionPointer)())
     // 生成一个 StoredFunctorCall0 对象, 调用 start 方法.
     return (new StoredFunctorCall0<T, T (*)()> (functionPointer))   ->start();
 }
+
 template <typename T, typename Param1, typename Arg1>
 QFuture<T> run(T (*functionPointer)(Param1), const Arg1 &arg1)
 {
