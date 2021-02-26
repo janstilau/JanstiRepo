@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtConcurrent module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qtconcurrentthreadengine.h"
 
 #if !defined(QT_NO_CONCURRENT) || defined(Q_CLANG_QDOC)
@@ -44,46 +5,6 @@
 QT_BEGIN_NAMESPACE
 
 namespace QtConcurrent {
-
-/*!
-  \class QtConcurrent::ThreadEngineBarrier
-  \inmodule QtConcurrent
-  \internal
-*/
-
-/*!
-  \enum QtConcurrent::ThreadFunctionResult
-  \internal
-*/
-
-/*!
-  \class QtConcurrent::ThreadEngineBase
-  \inmodule QtConcurrent
-  \internal
-*/
-
-/*!
-  \class QtConcurrent::ThreadEngine
-  \inmodule QtConcurrent
-  \internal
-*/
-
-/*!
-  \class QtConcurrent::ThreadEngineStarterBase
-  \inmodule QtConcurrent
-  \internal
-*/
-
-/*!
-  \class QtConcurrent::ThreadEngineStarter
-  \inmodule QtConcurrent
-  \internal
-*/
-
-/*!
-  \fn [qtconcurrentthreadengine-1] template <typename ThreadEngine> ThreadEngineStarter<typename ThreadEngine::ResultType> QtConcurrent::startThreadEngine(ThreadEngine *threadEngine)
-  \internal
-*/
 
 ThreadEngineBarrier::ThreadEngineBarrier()
 :count(0) { }
@@ -296,25 +217,16 @@ void ThreadEngineBase::run() // implements QRunnable.
 
     startThreads();
 
-#ifndef QT_NO_EXCEPTIONS
-    try {
-#endif
-        while (threadFunction() == ThrottleThread) {
-            // threadFunction returning ThrottleThread means it that the user
-            // struct wants to be throttled by making a worker thread exit.
-            // Respect that request unless this is the only worker thread left
-            // running, in which case it has to keep going.
-            if (threadThrottleExit())
-                return;
-        }
-
-#ifndef QT_NO_EXCEPTIONS
-    } catch (QException &e) {
-        handleException(e);
-    } catch (...) {
-        handleException(QUnhandledException());
+    // 这里, 调用了 threadFunction, threadFunction 里面, 有着实际的业务代码
+    while (threadFunction() == ThrottleThread) {
+        // threadFunction returning ThrottleThread means it that the user
+        // struct wants to be throttled by making a worker thread exit.
+        // Respect that request unless this is the only worker thread left
+        // running, in which case it has to keep going.
+        if (threadThrottleExit())
+            return;
     }
-#endif
+
     threadExit();
 }
 

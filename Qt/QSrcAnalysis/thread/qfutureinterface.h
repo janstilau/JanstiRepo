@@ -39,9 +39,6 @@ public:
     void reportStarted();
     void reportFinished();
     void reportCanceled();
-#ifndef QT_NO_EXCEPTIONS
-    void reportException(const QException &e);
-#endif
     void reportResultsReady(int beginIndex, int endIndex);
 
     void setRunnable(QRunnable *runnable);
@@ -93,9 +90,7 @@ protected:
     bool derefT() const;
 public:
 
-#ifndef QFUTURE_TEST
 private:
-#endif
     QFutureInterfaceBasePrivate *d;
 
 private:
