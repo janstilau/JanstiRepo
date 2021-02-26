@@ -42,23 +42,6 @@ QMutex::QMutex(RecursionMode mode)
     d_ptr.store(mode == Recursive ? new QRecursiveMutexPrivate : 0);
 }
 
-QMutex::~QMutex()
-{
-    QMutexData *d = d_ptr.load();
-    if (isRecursive()) {
-        delete static_cast<QRecursiveMutexPrivate *>(d);
-    } else if (d) {
-#ifndef QT_LINUX_FUTEX
-        if (d != dummyLocked() && static_cast<QMutexPrivate *>(d)->possiblyUnlocked.load()
-            && tryLock()) {
-            unlock();
-            return;
-        }
-#endif
-        qWarning("QMutex: destroying locked mutex");
-    }
-}
-
 void QMutex::lock()
 {
     QMutexData *current;
