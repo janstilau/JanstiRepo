@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtConcurrent module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QTCONCURRENT_FUNCTIONWRAPPERS_H
 #define QTCONCURRENT_FUNCTIONWRAPPERS_H
 
@@ -49,6 +10,12 @@ QT_BEGIN_NAMESPACE
 
 namespace QtConcurrent {
 
+// C++ 里面的泛型, 就是可以通过编译就可以. 所以, 可以写通用名称的算法.
+// 但是, 名称是不固定的, 在 C++ 里面, 最通用的算法就是 operator 了.
+// 所以, 各种 warpper, 其实就是包装可调用对象, 在 Operator () 中调用
+// 下面的各个类, 不是直接使用的, 而是通过函数模板, 获得传入可调用对象的类型, 根据 参数个数, 可调用对象的类型, 选择正确的 warpper 类进行创建.
+
+// 包装,  不带参数的函数指针.
 template <typename T>
 class FunctionWrapper0
 {
@@ -57,7 +24,6 @@ public:
     typedef T result_type;
     inline FunctionWrapper0(FunctionPointerType _functionPointer)
     :functionPointer(_functionPointer) { }
-
     inline T operator()()
     {
         return functionPointer();
@@ -66,6 +32,7 @@ private:
     FunctionPointerType functionPointer;
 };
 
+// 包装, 有一个参数的 函数指针
 template <typename T, typename U>
 class FunctionWrapper1
 {
@@ -84,6 +51,7 @@ private:
     FunctionPointerType functionPointer;
 };
 
+// 包装有两个参数的函数指针
 template <typename T, typename U, typename V>
 class FunctionWrapper2
 {
@@ -101,6 +69,7 @@ private:
     FunctionPointerType functionPointer;
 };
 
+// 包装, 类的成员函数, 没有参数. 注意, 调用的时候, 要传入对象引用
 template <typename T, typename C>
 class MemberFunctionWrapper
 {
@@ -118,6 +87,7 @@ private:
     FunctionPointerType functionPointer;
 };
 
+// 带有参数的对象成员函数.
 template <typename T, typename C, typename U>
 class MemberFunctionWrapper1
 {
@@ -138,6 +108,7 @@ private:
     FunctionPointerType functionPointer;
 };
 
+// 带有 const 性质的对象成员函数, 传入的时候, 对象是 const 修饰的引用
 template <typename T, typename C>
 class ConstMemberFunctionWrapper
 {
@@ -159,6 +130,9 @@ private:
 
 namespace QtPrivate {
 
+// 以下, 就是根据可调用对象的类型, 使用函数模板, 生成上面各个类型的对象实例.
+
+// 如果, 传递过来的是一个函数对象, 那么直接返回.
 template <typename T>
 const T& createFunctionWrapper(const T& t)
 {
@@ -189,7 +163,6 @@ QtConcurrent::ConstMemberFunctionWrapper<T, C> createFunctionWrapper(T (C::*func
     return QtConcurrent::ConstMemberFunctionWrapper<T, C>(func);
 }
 
-#if defined(__cpp_noexcept_function_type) && __cpp_noexcept_function_type >= 201510
 template <typename T, typename U>
 QtConcurrent::FunctionWrapper1<T, U> createFunctionWrapper(T (*func)(U) noexcept)
 {
@@ -213,7 +186,13 @@ QtConcurrent::ConstMemberFunctionWrapper<T, C> createFunctionWrapper(T (C::*func
 {
     return QtConcurrent::ConstMemberFunctionWrapper<T, C>(func);
 }
-#endif
+
+
+
+
+
+
+
 
 struct PushBackWrapper
 {
@@ -252,7 +231,6 @@ struct ReduceResultType<T(C::*)(U)>
     typedef C ResultType;
 };
 
-#if defined(__cpp_noexcept_function_type) && __cpp_noexcept_function_type >= 201510
 template <class U, class V>
 struct ReduceResultType<void(*)(U&,V) noexcept>
 {
@@ -264,7 +242,6 @@ struct ReduceResultType<T(C::*)(U) noexcept>
 {
     typedef C ResultType;
 };
-#endif
 
 template <class InputSequence, class MapFunctor>
 struct MapResultType
@@ -284,7 +261,6 @@ struct MapResultType<void, T(C::*)() const>
     typedef T ResultType;
 };
 
-#if defined(__cpp_noexcept_function_type) && __cpp_noexcept_function_type >= 201510
 template <class U, class V>
 struct MapResultType<void, U (*)(V) noexcept>
 {
@@ -296,7 +272,6 @@ struct MapResultType<void, T(C::*)() const noexcept>
 {
     typedef T ResultType;
 };
-#endif
 
 #ifndef QT_NO_TEMPLATE_TEMPLATE_PARAMETERS
 
@@ -317,8 +292,6 @@ struct MapResultType<InputSequence<T>, U(C::*)() const>
 {
     typedef InputSequence<U> ResultType;
 };
-
-#if defined(__cpp_noexcept_function_type) && __cpp_noexcept_function_type >= 201510
 
 template <template <typename> class InputSequence, class T, class U, class V>
 struct MapResultType<InputSequence<T>, U (*)(V) noexcept>
@@ -353,7 +326,6 @@ struct MapResultType<QStringList, U(C::*)() const>
     typedef QList<U> ResultType;
 };
 
-#if defined(__cpp_noexcept_function_type) && __cpp_noexcept_function_type >= 201510
 
 template <class U, class V>
 struct MapResultType<QStringList, U (*)(V) noexcept>

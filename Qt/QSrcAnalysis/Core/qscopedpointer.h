@@ -48,16 +48,17 @@ struct QScopedPointerPodDeleter
     static inline void cleanup(void *pointer) { if (pointer) free(pointer); }
 };
 
-#ifndef QT_NO_QOBJECT
 template <typename T>
 struct QScopedPointerObjectDeleteLater
 {
+    // 这里, 怎么保证, 是 QObject 的子类啊.
     static inline void cleanup(T *pointer) { if (pointer) pointer->deleteLater(); }
 };
 
 class QObject;
 typedef QScopedPointerObjectDeleteLater<QObject> QScopedPointerDeleteLater;
-#endif
+
+
 
 // 默认, 使用 QScopedPointerDeleter 作为删除器. 模板的类参数, 也可以指定默认参数.
 // 该类对标 std::unique_ptr, 但是 std::unique_ptr 的源代码太过于难以理解.
@@ -66,11 +67,11 @@ class QScopedPointer
 {
     typedef T *QScopedPointer:: *RestrictedBool;
 public:
-    explicit QScopedPointer(T *p = nullptr) Q_DECL_NOTHROW : d(p)
+    explicit QScopedPointer(T *p = nullptr) : d(p)
     {
     }
 
-    // 在它的析构方法里面, 直接调用删除器的 cleanup 方法, 传入自己管理的指针.
+    // ScaopedPointer, 就是自己的生命周期内, 管理着传入指针, 自己生命周期结束, 就应该调用对象的清理方法, 清理资源
     inline ~QScopedPointer()
     {
         T *oldD = this->d;
@@ -79,7 +80,6 @@ public:
 
     inline T &operator*() const
     {
-        Q_ASSERT(d);
         return *d;
     }
 
@@ -125,10 +125,11 @@ public:
             return;
         T *oldD = d;
         d = other;
+        // 这里, 主动地调用了 oldPointer 的 cleanup.
         Cleanup::cleanup(oldD);
     }
 
-    // take 什么都没干, 就是返回原有值, 但是 d 被置空了, 也就无法在析构的时候, 进行释放操作了.
+    // task, 取出并且 reset, 这是一个通用的名称.
     T *take() Q_DECL_NOTHROW
     {
         T *oldD = d;
@@ -144,7 +145,7 @@ public:
     typedef T *pointer;
 
 protected:
-    T *d;
+    T *d; // 真正的业务对象指针.
 
 private:
     Q_DISABLE_COPY(QScopedPointer) // 一个简单地宏, 其实就是 copy ctor, assign ctor == delete

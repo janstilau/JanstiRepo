@@ -110,7 +110,6 @@ public:
         inline bool refT() { return m_refCountT.ref(); }
         inline bool derefT() { return m_refCountT.deref(); }
         inline int loadT() const { return m_refCountT.load(); }
-
     private:
         QAtomicInt m_refCount;
         QAtomicInt m_refCountT;
@@ -121,6 +120,7 @@ public:
     RefCount refCount;
     mutable QMutex m_mutex;
     QWaitCondition waitCondition;
+    // 对 future 感兴趣的对象, 实现 QFutureCallOutInterface 接口.
     QList<QFutureCallOutInterface *> outputConnections;
     int m_progressValue; // TQ
     int m_progressMinimum; // TQ

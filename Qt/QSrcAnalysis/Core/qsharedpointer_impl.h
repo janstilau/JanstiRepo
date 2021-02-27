@@ -14,7 +14,6 @@ QT_BEGIN_NAMESPACE
 
   Qt 版本的实现非常复杂, 简单地用 std 的来进行理解
 
-
 最后说一下**计数器增减**的规则：
 
 初始化及增加的情形：
@@ -54,6 +53,7 @@ QSharedPointer<X> qSharedPointerObjectCast(const QSharedPointer<T> &ptr);
 
 // 这是 namespace, 并不是 class 定义
 namespace QtSharedPointer {
+
     template <class T> class ExternalRefCount;
     template <class X, class Y> QSharedPointer<X> copyAndSetPointer(X * ptr, const QSharedPointer<Y> &src);
 

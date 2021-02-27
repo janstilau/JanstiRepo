@@ -212,6 +212,8 @@ public:
         return threadEngine->startAsynchronously();
     }
 
+    // 在这里, 如果要返回一个 QFuture 的时候, 会去调用一个方法.
+    // 让人难以置信的设计.
     operator QFuture<T>()
     {
         return startAsynchronously();
