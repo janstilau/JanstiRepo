@@ -48,6 +48,8 @@ T is the same type as the return value of function. Non-void return values can b
  */
 
 
+// 这些方法, 返回一个 task_package 对象, 是 new 出来的, 也就是说, 是需要内存管理的.
+// 在这个对象内部, 会有 future 对象, 进行线程之间的同步处理.
 namespace QtConcurrent {
 
 template <typename T>

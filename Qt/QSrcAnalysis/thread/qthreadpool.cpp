@@ -369,7 +369,6 @@ void QThreadPoolPrivate::stealAndRunRunnable(QRunnable *runnable)
     if (del) {
         delete runnable;
     }
-
 }
 
 // 在 QThreadPool 的构造方法里面, 进行 QThreadPoolPrivate 的创建

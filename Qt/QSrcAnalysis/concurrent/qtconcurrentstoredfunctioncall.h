@@ -20,11 +20,11 @@ namespace QtConcurrent {
 template <typename T, typename FunctionPointer>
 struct StoredFunctorCall0: public RunFunctionTask<T>
 {
+    // 该类, 存储函数地址, 在 RunFunctor 里面, 调用存储的函数地址.
     inline StoredFunctorCall0(FunctionPointer _function)
       : function(_function) {}
     void runFunctor() override { this->result = function(); }
     FunctionPointer function;
-
 };
 
 

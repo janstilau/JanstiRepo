@@ -116,7 +116,6 @@ void QFutureInterfaceBase::setThrottled(bool enable)
 
 
 // 虽然, 各个状态就是 bit 位的验证, 但专门的写出对应的方法来, 让代码更加的清晰.
-
 bool QFutureInterfaceBase::isRunning() const
 {
     return queryState(Running);
@@ -147,6 +146,7 @@ bool QFutureInterfaceBase::isThrottled() const
     return queryState(Throttled);
 }
 
+// 这个类, 就是做线程间的同步的, 所以一定是线程安全的.
 bool QFutureInterfaceBase::isResultReadyAt(int index) const
 {
     QMutexLocker lock(&d->m_mutex);
@@ -215,6 +215,9 @@ bool QFutureInterfaceBase::isProgressUpdateNeeded() const
     return !d->progressTime.isValid() || (d->progressTime.elapsed() > (1000 / MaxProgressEmitsPerSecond));
 }
 
+// 这里, report 主要是对 Future 的监听者的. 也就是 sendCallOut 相关逻辑.
+// 在这个函数里面, 会改变 state 到 start.
+// start, 和 report 两个动作, 在这个函数里面归到一块去了.
 void QFutureInterfaceBase::reportStarted()
 {
     QMutexLocker locker(&d->m_mutex);
@@ -230,6 +233,7 @@ void QFutureInterfaceBase::reportCanceled()
     cancel();
 }
 
+// 这也是模板方法里面的一环, 是外界主动在异步程序完成之后, 主动调用的.
 void QFutureInterfaceBase::reportFinished()
 {
     QMutexLocker locker(&d->m_mutex);
@@ -263,17 +267,19 @@ void QFutureInterfaceBase::waitForResult(int resultIndex)
     if (!isRunning()) return;
     lock.unlock();
 
-    // To avoid deadlocks and reduce the number of threads used, try to
-    // run the runnable in the current thread.
+    // 这个函数, 其实就是 pool 里面, 启动 d->runnable 对应的可执行任务.
+    // 这个函数, 会使得相应的任务脱离原有的队列, 尽早运行.
+    // pool 里面, 会做数据局的管理, 不会一直重复运行 d->runnable
     d->pool()->d_func()->stealAndRunRunnable(d->runnable);
 
     lock.relock();
 
-    // 其实, Future 就是把任务记录了下来, 在取值的时候, 发现任务还没有执行, 就在子线程, 或者当前线程调用任务, 然后把任务的结果记录到自己的内部.
-    // 内部还是使用最简单地 waitCondition 来实现同步的操作.
+
+    // 所以, future 其实就是, 当发现还没有结果的时候, 进行 wait 而已.
     const int waitIndex = (resultIndex == -1) ? INT_MAX : resultIndex;
-    while (isRunning() && !d->internal_isResultReadyAt(waitIndex))
+    while (isRunning() && !d->internal_isResultReadyAt(waitIndex)) {
         d->waitCondition.wait(&d->m_mutex);
+    }
 }
 
 void QFutureInterfaceBase::waitForFinished()
@@ -287,22 +293,22 @@ void QFutureInterfaceBase::waitForFinished()
 
         lock.relock();
 
-        // 如果, 还正在运行状态, 就一直 wait. 相应的, 子线程自然会有修改状态, 以及 waitCondition 唤醒的机制.
-        while (isRunning())
+        // 和 waitForResult 没有太大的区别, 只不过 wait 的判断条件, 从判断 Index, 变为了对于状态的判断.
+        while (isRunning()) {
             d->waitCondition.wait(&d->m_mutex);
+        }
     }
 }
 
-// 在 reportResult, 也就是把结果存储到 Future 的数据上之后, 会调用这个方法.
-// 这个方法, 会唤醒 wait 的线程.
+// 唤醒工作,
 void QFutureInterfaceBase::reportResultsReady(int beginIndex, int endIndex)
 {
     if (beginIndex == endIndex || (d->state.load() & (Canceled|Finished)))
         return;
-
+    // 其实就是最简单的 wake 操作而已.
     d->waitCondition.wakeAll();
 
-    // 后面的逻辑没有明白.
+    // 后面的逻辑, 是 Future 的 Event监听机制. 不是这个类的核心.
     if (d->manualProgress == false) {
         if (d->internal_updateProgress(d->m_progressValue + endIndex - beginIndex) == false) {
             d->sendCallOut(QFutureCallOutEvent(QFutureCallOutEvent::ResultsReady,
@@ -322,8 +328,6 @@ void QFutureInterfaceBase::reportResultsReady(int beginIndex, int endIndex)
     d->sendCallOut(QFutureCallOutEvent(QFutureCallOutEvent::ResultsReady, beginIndex, endIndex));
 }
 
-// 记录一下任务对象. 实际对象, 可能是一个函数指针的包装, 一个闭包的包装, 一个函数对象的包装.
-// 从源码看, 这个实际的对象, 是模板生成的.
 void QFutureInterfaceBase::setRunnable(QRunnable *runnable)
 {
     d->runnable = runnable;
@@ -425,6 +429,7 @@ int QFutureInterfaceBasePrivate::internal_resultCount() const
     return m_results.count(); // ### subtract canceled results.
 }
 
+// 询问 Index 位置的数据, 是否已经存在, 就是简单的查询下内存区域
 bool QFutureInterfaceBasePrivate::internal_isResultReadyAt(int index) const
 {
     return (m_results.contains(index));
