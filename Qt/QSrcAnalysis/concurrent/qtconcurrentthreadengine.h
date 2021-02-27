@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtConcurrent module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QTCONCURRENT_THREADENGINE_H
 #define QTCONCURRENT_THREADENGINE_H
 
@@ -123,7 +84,14 @@ protected:
     QtPrivate::ExceptionStore exceptionStore;
 };
 
-
+/*
+ *  ThreadEngine 还是使用了 future 相关类的设计.
+ *  startAsynchronously 新建一个 futureInterface, 作为共享数据.
+ *   run 方法里面, 调用 threadFunction, 在里面, 是各个业务类进行业务计算的代码.
+ *   在其中, 会调用 ThreadEngine 的 report result 方法, 而 ThreadEngine 中, 会将数据填充到自己的 futureInterface 中去.
+ * 在业务完成之后, 会调用 reportFinish.
+ *
+ */
 template <typename T>
 class ThreadEngine : public virtual ThreadEngineBase
 {
@@ -157,6 +125,7 @@ public:
     // Does not block, returns a future.
     QFuture<T> startAsynchronously()
     {
+        // 在这里, 新建了一个 Future 的共享数据.
         futureInterface = new QFutureInterface<T>();
 
         // reportStart() must be called before starting threads, otherwise the
@@ -197,6 +166,7 @@ public:
 // from the thread engine.
 // Depending on how the it is used, it will run
 // the engine in either blocking mode or asynchronous mode.
+
 template <typename T>
 class ThreadEngineStarterBase
 {
@@ -212,8 +182,8 @@ public:
         return threadEngine->startAsynchronously();
     }
 
-    // 在这里, 如果要返回一个 QFuture 的时候, 会去调用一个方法.
-    // 让人难以置信的设计.
+    // 在各种函数的返回值里面, 是返回一个 QFuture, 所以, 各种信息包装到最后, 会到这里, 调用 startAsynchronously 方法.
+    // 这种设计, 太让人困惑了.
     operator QFuture<T>()
     {
         return startAsynchronously();

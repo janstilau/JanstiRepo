@@ -187,8 +187,8 @@ bool ThreadEngineBase::startThreadInternal()
 
 void ThreadEngineBase::startThreads()
 {
-    while (shouldStartThread() && startThreadInternal())
-        ;
+    // 这里就是把能够开启的线程都开了.
+    while (shouldStartThread() && startThreadInternal()) {}
 }
 
 void ThreadEngineBase::threadExit()
@@ -217,7 +217,7 @@ void ThreadEngineBase::run() // implements QRunnable.
 
     startThreads();
 
-    // 这里, 调用了 threadFunction, threadFunction 里面, 有着实际的业务代码
+    //  threadFunction 里面, 做各个类专属的业务.
     while (threadFunction() == ThrottleThread) {
         // threadFunction returning ThrottleThread means it that the user
         // struct wants to be throttled by making a worker thread exit.
