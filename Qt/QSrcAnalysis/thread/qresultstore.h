@@ -103,19 +103,20 @@ protected:
     int filteredResults;
 
 public:
-    // 其实, 每次都是将数据复制了一份进行的存储的.
     template <typename T>
     int addResult(int index, const T *result)
     {
         if (result == 0)
             return addResult(index, static_cast<void *>(nullptr));
         else
+            // 这里, 对数据进行了一份拷贝工作. 所以, 不用担心子线程生成的 result 在子线程结束后释放.
             return addResult(index, static_cast<void *>(new T(*result)));
     }
 
     template <typename T>
     int addResults(int index, const QVector<T> *results)
     {
+        // 这里,  QVector<T>(*results), 里面一定有着对于数据的管理. 并且, QVector 本身数据就是在堆里面.
         return addResults(index, new QVector<T>(*results), results->count(), results->count());
     }
 

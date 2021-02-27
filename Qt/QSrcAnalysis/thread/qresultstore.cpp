@@ -7,9 +7,11 @@ QT_BEGIN_NAMESPACE
 namespace QtPrivate {
 
 ResultIteratorBase::ResultIteratorBase()
- : mapIterator(QMap<int, ResultItem>::const_iterator()), m_vectorIndex(0) { }
+ : mapIterator(QMap<int, ResultItem>::const_iterator()), m_vectorIndex(0) {
+}
 ResultIteratorBase::ResultIteratorBase(QMap<int, ResultItem>::const_iterator _mapIterator, int _vectorIndex)
- : mapIterator(_mapIterator), m_vectorIndex(_vectorIndex) { }
+ : mapIterator(_mapIterator), m_vectorIndex(_vectorIndex) {
+}
 
 int ResultIteratorBase::vectorIndex() const { return m_vectorIndex; }
 int ResultIteratorBase::resultIndex() const { return mapIterator.key() + m_vectorIndex; }

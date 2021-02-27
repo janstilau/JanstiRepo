@@ -32,16 +32,14 @@ QFutureInterfaceBase::QFutureInterfaceBase(State initialState)
     : d(new QFutureInterfaceBasePrivate(initialState))
 { }
 
-// 这里, 直接是进行引用计数的控制.
-// Future 的数据部分是 QFutureInterface, 传递的时候会有复制
-// QFutureInterface 的数据部分是 QFutureInterfaceBasePrivate*, 复制的时候, 是引用计数的管理
-// 所以, 最终 Future 管理的, 其实是一份数据.
+// 真正的数据部分, 引用计数增加
 QFutureInterfaceBase::QFutureInterfaceBase(const QFutureInterfaceBase &other)
     : d(other.d)
 {
     d->refCount.ref();
 }
 
+// 真正的数据部分, 引用计数减少, 为 0 则删除.
 QFutureInterfaceBase::~QFutureInterfaceBase()
 {
     if (!d->refCount.deref())
@@ -68,11 +66,30 @@ static inline int switch_from_to(QAtomicInt &a, int from, int to)
     return newValue;
 }
 
+/*
+Cancels the asynchronous computation represented by this future.
+Note that the cancelation is asynchronous. Use waitForFinished() after calling cancel() when you need synchronous cancelation.
+
+Results currently available may still be accessed on a canceled future, but new results will not become available after calling this function. Any QFutureWatcher object that is watching this future will not deliver progress and result ready signals on a canceled future.
+
+Be aware that not all running asynchronous computations can be canceled. For example, the future returned by QtConcurrent::run() cannot be canceled; but the future returned by QtConcurrent::mappedReduced() can.
+  */
+
+// 取消, 一个 Future 所代表的任务.
+// 其实, 就是把自己的状态改了.
+/*
+
+  // 在实际开始任务的时候, 如果已经取消了, 那么连执行都不执行.
+if (this->isCanceled()) {
+    this->reportFinished();
+    return;
+}
+ // 如果, 已经开始执行了, 那么是没有办法取消的. 但是两个 wakeup, 可以让其他等待的线程, 不继续等待了.
+ */
 void QFutureInterfaceBase::cancel()
 {
     QMutexLocker locker(&d->m_mutex);
-    if (d->state.load() & Canceled)
-        return;
+    if (d->state.load() & Canceled) { return; }
 
     switch_from_to(d->state, Paused, Canceled);
     d->waitCondition.wakeAll();
@@ -93,6 +110,7 @@ void QFutureInterfaceBase::setPaused(bool paused)
     }
 }
 
+// 简便的, setPaused 的实现.
 void QFutureInterfaceBase::togglePaused()
 {
     QMutexLocker locker(&d->m_mutex);
@@ -150,6 +168,7 @@ bool QFutureInterfaceBase::isThrottled() const
     return queryState(Throttled);
 }
 
+
 // 这个类, 就是做线程间的同步的, 所以一定是线程安全的.
 bool QFutureInterfaceBase::isResultReadyAt(int index) const
 {
@@ -183,6 +202,7 @@ void QFutureInterfaceBase::waitForResume()
     d->pausedWaitCondition.wait(&d->m_mutex);
 }
 
+// Qt 的自己实现, 进度值的维护
 int QFutureInterfaceBase::progressValue() const
 {
     const QMutexLocker lock(&d->m_mutex);
@@ -420,6 +440,9 @@ bool QFutureInterfaceBase::derefT() const
     return d->refCount.derefT();
 }
 
+
+// Private 的实现部分.
+
 QFutureInterfaceBasePrivate::QFutureInterfaceBasePrivate(QFutureInterfaceBase::State initialState)
     : refCount(1), m_progressValue(0), m_progressMinimum(0), m_progressMaximum(0),
       state(initialState),
@@ -484,6 +507,7 @@ void QFutureInterfaceBasePrivate::internal_setThrottled(bool enable)
     }
 }
 
+// 这就是一个简单的监听者, 将 future 的内部事件, 通知外界.
 void QFutureInterfaceBasePrivate::sendCallOut(const QFutureCallOutEvent &callOutEvent)
 {
     if (outputConnections.isEmpty())

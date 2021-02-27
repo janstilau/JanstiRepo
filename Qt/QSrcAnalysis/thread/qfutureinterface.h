@@ -91,7 +91,7 @@ protected:
 public:
 
 private:
-    QFutureInterfaceBasePrivate *d;
+    QFutureInterfaceBasePrivate *d; // 实际的数据部分, 在 QFutureInterfaceBase copy 的时候, 是对这个指针的直接复制, 并且维护引用计数.
 
 private:
     friend class QFutureWatcherBase;
@@ -152,6 +152,7 @@ template <typename T>
 inline void QFutureInterface<T>::reportResult(const T *result, int index)
 {
     QMutexLocker locker(mutex());
+    // 当完成了任务之后, 如果是 cancel 了, 那么就不进行存储了.
     if (this->queryState(Canceled) || this->queryState(Finished)) {
         return;
     }
