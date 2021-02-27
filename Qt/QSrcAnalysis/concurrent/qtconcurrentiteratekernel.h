@@ -74,6 +74,7 @@ private:
     Q_DISABLE_COPY(BlockSizeManagerV2)
 };
 
+// 在这里里面, 存储着最终的数据
 template <typename T>
 class ResultReporter
 {
@@ -81,7 +82,6 @@ public:
     ResultReporter(ThreadEngine<T> *_threadEngine)
     :threadEngine(_threadEngine)
     {
-
     }
 
     void reserveSpace(int resultCount)
@@ -107,8 +107,8 @@ public:
         return vector.data();
     }
 
-    int currentResultCount;
     ThreadEngine<T> *threadEngine;
+    int currentResultCount;
     QVector<T> vector; // 在这里, 会有一个数组, 作为真正的数据的存储.
 };
 
@@ -122,6 +122,7 @@ public:
     inline void * getPointer() { return nullptr; }
 };
 
+// iterator_traits.
 inline bool selectIteration(std::bidirectional_iterator_tag)
 {
     return false; // while
@@ -132,11 +133,14 @@ inline bool selectIteration(std::forward_iterator_tag)
     return false; // while
 }
 
+// 只有, random 才可以多线程同时操作一个队列.
 inline bool selectIteration(std::random_access_iterator_tag)
 {
     return true; // for
 }
 
+
+// IteratorKernel, 提供便利功能.
 template <typename Iterator, typename T>
 class IterateKernel : public ThreadEngine<T>
 {
@@ -182,6 +186,7 @@ public:
 
     ThreadFunctionResult forThreadFunction()
     {
+        //  BlockSizeManagerV2 来确定, 一次进行多少跨度的工作量.
         BlockSizeManagerV2 blockSizeManager(iterationCount);
         ResultReporter<T> resultReporter(this);
 
@@ -213,6 +218,7 @@ public:
 
             // Call user code with the current iteration range.
             blockSizeManager.timeBeforeUser();
+            // 在这里, 会将数据填充到 resultReporter 上.
             const bool resultsAvailable = this->runIterations(begin, beginIndex, endIndex, resultReporter.getPointer());
             blockSizeManager.timeAfterUser();
 
@@ -238,7 +244,7 @@ public:
             return ThreadFinished;
 
         ResultReporter<T> resultReporter(this);
-        resultReporter.reserveSpace(1);
+        resultReporter.reserveSpace(1); // 因为没有办法多线程, 所以只会有一个位置存放结果.
 
         while (current != end) {
             // The following two lines breaks support for input iterators according to
@@ -254,6 +260,7 @@ public:
             if (shouldStartThread())
                 this->startThread();
 
+            // runIteration 会被各个业务 kernel 重新.
             const bool resultAavailable = this->runIteration(prev, index, resultReporter.getPointer());
             if (resultAavailable)
                 resultReporter.reportResults(index);

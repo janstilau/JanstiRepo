@@ -91,7 +91,7 @@ protected:
 public:
 
 private:
-    QFutureInterfaceBasePrivate *d;
+    QFutureInterfaceBasePrivate *d; // 实际的数据部分, 在 QFutureInterfaceBase copy 的时候, 是对这个指针的直接复制, 并且维护引用计数.
 
 private:
     friend class QFutureWatcherBase;
@@ -134,6 +134,9 @@ public:
 
     inline QFuture<T> future(); // implemented in qfuture.h
 
+    // reportResult 是 Template 方法的一环, 是给 Future 的使用者调用的.
+    // 在子线程里面, 进行大量的计算工作, 然后将结果使用 reportResult 存放到 Future 的内部.
+    // 本质上, 这是一个存值的过程, 在这个存值之后, 会调用 reportResultsReady 方法, 而这个方法, 会进行线程之间的唤醒工作.
     inline void reportResult(const T *result, int index = -1);
     inline void reportResult(const T &result, int index = -1);
     inline void reportResults(const QVector<T> &results, int beginIndex = -1, int count = -1);
@@ -144,18 +147,18 @@ public:
     inline QList<T> results();
 };
 
-// reportResult 最终, 是存储的一个指针而已.
 // 把数据, 存到一个位置上. 因为存的是指针, 也就没有了 拷贝构造的调用.
 template <typename T>
 inline void QFutureInterface<T>::reportResult(const T *result, int index)
 {
     QMutexLocker locker(mutex());
+    // 当完成了任务之后, 如果是 cancel 了, 那么就不进行存储了.
     if (this->queryState(Canceled) || this->queryState(Finished)) {
         return;
     }
 
+    // 将传递过来的 Result, 存储到一个区域里面. 然后进行线程间的唤醒工作.
     QtPrivate::ResultStoreBase &store = resultStoreBase();
-
     if (store.filterMode()) {
         const int resultCountBefore = store.count();
         store.addResult<T>(index, result);
@@ -235,6 +238,7 @@ inline QList<T> QFutureInterface<T>::results()
     return res;
 }
 
+// 当, 返回值是 Void 这种类型时, 有特殊的偏特化处理.
 template <>
 class QFutureInterface<void> : public QFutureInterfaceBase
 {
@@ -244,8 +248,9 @@ public:
     { }
 
     static QFutureInterface<void> canceledResult()
-    { return QFutureInterface(State(Started | Finished | Canceled)); }
-
+    { return QFutureInterface(
+                    State(Started | Finished | Canceled));
+    }
 
     inline QFuture<void> future(); // implemented in qfuture.h
 

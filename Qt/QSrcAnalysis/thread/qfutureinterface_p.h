@@ -1,55 +1,6 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QFUTUREINTERFACE_P_H
 #define QFUTUREINTERFACE_P_H
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
 
 #include <QtCore/private/qglobal_p.h>
 #include <QtCore/qelapsedtimer.h>
@@ -140,12 +91,20 @@ public:
     public:
         inline RefCount(int r = 0, int rt = 0)
             : m_refCount(r), m_refCountT(rt) {}
+
         // Default ref counter for QFIBP
+        // 在 QFutureInterfaceBase 的构造函数, 析构函数, operator = 里面, 调用 ref(), deref()
+        // 当 deref() == 0 的时候, 进行 delete QFutureInterfaceBasePrivate 的操作.
+        // QFutureInterfaceBase 里面, 管理者 QFutureInterfaceBasePrivate 的指针, 所以这里的意思是,
+        // QFutureInterfaceBase 充当 QFutureInterfaceBasePrivate 的引用计数管理器, 当引用计数没了, 也就是没有 QFutureInterfaceBase 了, 这个时候, 删除 QFutureInterfaceBasePrivate 的数据
         inline bool ref() { return m_refCount.ref(); }
         inline bool deref() { return m_refCount.deref(); }
         inline int load() const { return m_refCount.load(); }
 
         // Ref counter for type T
+        // 这个会在 QFutureInterface 的构造函数, 析构函数, operator = 里面, 调用 refT(), derefT()
+        // 当 derefT()  == 0 的时候, 会调用 ResultStoreBase.clear, 也就是清理 result 的值
+        // 因为, QFutureInterface 才是外界使用的类, 所以在外界不需要 result 的数据结果的时候, 清理 ResultStoreBase 的内容.
         inline bool refT() { return m_refCountT.ref(); }
         inline bool derefT() { return m_refCountT.deref(); }
         inline int loadT() const { return m_refCountT.load(); }
@@ -157,21 +116,31 @@ public:
     // T: accessed from executing thread
     // Q: accessed from the waiting/querying thread
     RefCount refCount;
+
+    // 状态值.
+    QAtomicInt state; // reads and writes can happen unprotected, both must be atomic
+    // 这两个, 基本的线程之间同步的功能的实现者.
     mutable QMutex m_mutex;
     QWaitCondition waitCondition;
+    // 这个是当主动调用任务暂停的时候, 控制任务暂停的.
+    QWaitCondition pausedWaitCondition;
+
     // 对 future 感兴趣的对象, 实现 QFutureCallOutInterface 接口.
     QList<QFutureCallOutInterface *> outputConnections;
+    // 进度, Qt 里面, 对于 Future 自己独特的实现.
     int m_progressValue; // TQ
     int m_progressMinimum; // TQ
     int m_progressMaximum; // TQ
-    QAtomicInt state; // reads and writes can happen unprotected, both must be atomic
-    QElapsedTimer progressTime;
-    QWaitCondition pausedWaitCondition;
-    QtPrivate::ResultStoreBase m_results;
     bool manualProgress; // only accessed from executing thread
-    int m_expectedResultCount;
-    QtPrivate::ExceptionStore m_exceptionStore;
     QString m_progressText;
+    QElapsedTimer progressTime;
+
+    // Result 数据的存储.
+    // ResultStoreBase 的各种对于 result 的插入工作, 都有着对于参数的复制, 所以不同担心引用到非法地址.
+    QtPrivate::ResultStoreBase m_results;
+    QtPrivate::ExceptionStore m_exceptionStore;
+    int m_expectedResultCount;
+
     QRunnable *runnable;
     QThreadPool *m_pool;
 

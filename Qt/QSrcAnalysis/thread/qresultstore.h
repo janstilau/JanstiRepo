@@ -10,19 +10,12 @@
 
 QT_BEGIN_NAMESPACE
 
-
-/*
-    ResultStore stores indexed results. Results can be added and retrieved
-    either individually batched in a QVector. Retriveing results and checking
-    which indexes are in the store can be done either by iterating or by random
-    accees. In addition results kan be removed from the front of the store,
-    either individually or in batches.
-*/
-
 #ifndef Q_QDOC
 
 namespace QtPrivate {
 
+// 实际上, Future 里面存储的值, 仅仅是指针而已.
+// 这里, 通过 0 来表示是不是 Vector, 来体现一个 bool 的目的, 其实有点不太清楚.
 class ResultItem
 {
 public:
@@ -38,6 +31,8 @@ public:
     const void *result; // if count is 0 it's a result, otherwise it's a vector.
 };
 
+
+// 没有太明白里面的细节, 不过这个类, 就是按照 Int 值存储一个指针而已.
 class Q_CORE_EXPORT ResultIteratorBase
 {
 public:
@@ -53,6 +48,7 @@ public:
     bool operator!=(const ResultIteratorBase &other) const;
     bool isVector() const;
     bool canIncrementVectorIndex() const;
+
 protected:
     QMap<int, ResultItem>::const_iterator mapIterator;
     int m_vectorIndex;
@@ -74,6 +70,7 @@ public:
 };
 
 // Future 里面, 存储数据的地方.
+// 根据 Index, 存储 Item, 而 Item 里面, 存储的还是指针.
 class Q_CORE_EXPORT ResultStoreBase
 {
 public:
@@ -98,7 +95,7 @@ protected:
     int updateInsertIndex(int index, int _count);
 
     QMap<int, ResultItem> m_results;
-    int insertIndex;     // The index where the next results(s) will be inserted.
+    int toInsertIndex;     // The index where the next results(s) will be inserted.
     int resultCount;     // The number of consecutive results stored, starting at index 0.
 
     bool m_filterMode;
@@ -112,12 +109,14 @@ public:
         if (result == 0)
             return addResult(index, static_cast<void *>(nullptr));
         else
+            // 这里, 对数据进行了一份拷贝工作. 所以, 不用担心子线程生成的 result 在子线程结束后释放.
             return addResult(index, static_cast<void *>(new T(*result)));
     }
 
     template <typename T>
     int addResults(int index, const QVector<T> *results)
     {
+        // 这里,  QVector<T>(*results), 里面一定有着对于数据的管理. 并且, QVector 本身数据就是在堆里面.
         return addResults(index, new QVector<T>(*results), results->count(), results->count());
     }
 
@@ -142,6 +141,7 @@ public:
         return addResults(index, &empty, _count);
     }
 
+    // 在这里, 有着对保存的数据的删除的工作.
     template <typename T>
     void clear()
     {

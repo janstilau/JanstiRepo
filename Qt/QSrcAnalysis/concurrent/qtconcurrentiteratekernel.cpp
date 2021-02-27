@@ -148,11 +148,9 @@ void BlockSizeManager::timeAfterUser()
     if (controlPartElapsed.median() * TargetRatio < userPartElapsed.median())
         return;
 
+    // m_blockSize 在这里, 会确定下一个任务的工作量
     m_blockSize = qMin(m_blockSize * 2,  maxBlockSize);
 
-#ifdef QTCONCURRENT_FOR_DEBUG
-    qDebug() << QThread::currentThread() << "adjusting block size" << controlPartElapsed.median() << userPartElapsed.median() << m_blockSize;
-#endif
 
     // Reset the medians after adjusting the block size so we get
     // new measurements with the new block size.

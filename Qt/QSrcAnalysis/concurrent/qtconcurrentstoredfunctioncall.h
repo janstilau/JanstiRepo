@@ -17,18 +17,20 @@ QT_BEGIN_NAMESPACE
 // 通用的逻辑是, 存储函数模板传递过来的 可调用对象, 各个参数, 然后在 runFunctor()  进行真正的调用.
 
 namespace QtConcurrent {
+
+// 没有参数的函数指针的 wrapper.
 template <typename T, typename FunctionPointer>
 struct StoredFunctorCall0: public RunFunctionTask<T>
 {
     inline StoredFunctorCall0(FunctionPointer _function)
       : function(_function) {}
+    // 这个 result 是 RunFunctionTask 里面定义的成员变量. 所以, 这里集成关系是, 模板类继承了模板类.
     void runFunctor() override { this->result = function(); }
     FunctionPointer function;
-
 };
 
 
-// 偏特化, 返回值 void, runFunctor() 没有对于 result 赋值的逻辑.
+// 上面类型偏特化, 返回值 void, runFunctor() 里面, 去除对于 result 的赋值工作.
 template <typename FunctionPointer>
 struct StoredFunctorCall0<void, FunctionPointer>: public RunFunctionTask<void>
 {
@@ -66,6 +68,7 @@ struct SelectStoredFunctorPointerCall0
         Type<StoredFunctorPointerCall0    <T, FunctionPointer>,
              VoidStoredFunctorPointerCall0<T, FunctionPointer> >::type type;
 };
+
 template <typename T, typename Class>
 class StoredMemberFunctionCall0 : public RunFunctionTask<T>
 {
@@ -75,11 +78,11 @@ public:
 
     void runFunctor() override
     {
-        this->result = (object.*fn)();
+        this->result = (object.*fn)(); // 在复制品上调用成员函数.
     }
 private:
-    T (Class::*fn)();
-    Class object;
+    T (Class::*fn)(); // 存储, 类的函数指针
+    Class object; // 存储类的对象. 这里可见, 这个传递过来的一定是一个 copyable 的对象, 因为实际上调用的时候, 是在这个复制品上调用成员函数.
 
 };
 template <typename T, typename Class>
@@ -105,6 +108,8 @@ struct SelectStoredMemberFunctionCall0
         Type<StoredMemberFunctionCall0    <T, Class>,
              VoidStoredMemberFunctionCall0<T, Class> >::type type;
 };
+
+// Const 版本的成员函数.
 template <typename T, typename Class>
 class StoredConstMemberFunctionCall0 : public RunFunctionTask<T>
 {
@@ -222,7 +227,8 @@ struct SelectStoredConstMemberFunctionPointerCall0
         Type<StoredConstMemberFunctionPointerCall0    <T, Class>,
              VoidStoredConstMemberFunctionPointerCall0<T, Class> >::type type;
 };
-#if defined(__cpp_noexcept_function_type) && __cpp_noexcept_function_type >= 201510
+
+// 无异常版本.
 template <typename T, typename Class>
 class StoredNoExceptMemberFunctionCall0 : public RunFunctionTask<T>
 {
@@ -294,6 +300,8 @@ private:
     const Class object;
 
 };
+
+// 无异常版本, const 版本组合.
 template <typename T, typename Class>
 struct SelectStoredConstNoExceptMemberFunctionCall0
 {
@@ -379,8 +387,10 @@ struct SelectStoredConstNoExceptMemberFunctionPointerCall0
         Type<StoredConstNoExceptMemberFunctionPointerCall0    <T, Class>,
              VoidStoredConstNoExceptMemberFunctionPointerCall0<T, Class> >::type type;
 };
-#endif
 
+// 有一个参数的函数指针, 有一个传入的参数. 传入的参数, 和函数的参数可能类型不一致.
+// 在 StoredFunctorCall1 内部, 是对于传入的参数进行了复制, 然后传递到了函数指针里面.
+// 这里没有进行类型转化, 类型转化的工作, 是 functioncall 的时候, 自动调用的.
 template <typename T, typename FunctionPointer, typename Arg1>
 struct StoredFunctorCall1: public RunFunctionTask<T>
 {
@@ -391,6 +401,7 @@ struct StoredFunctorCall1: public RunFunctionTask<T>
     Arg1 arg1;
 };
 
+// 上面类型的偏特化, 函数没有返回值.
 template <typename FunctionPointer, typename Arg1>
 struct StoredFunctorCall1<void, FunctionPointer, Arg1>: public RunFunctionTask<void>
 {
@@ -743,6 +754,7 @@ struct SelectStoredConstNoExceptMemberFunctionPointerCall1
 };
 #endif
 
+// 两个参数版本 warpper 的实现.
 template <typename T, typename FunctionPointer, typename Arg1, typename Arg2>
 struct StoredFunctorCall2: public RunFunctionTask<T>
 {

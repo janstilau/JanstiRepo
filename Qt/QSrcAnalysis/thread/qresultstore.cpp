@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qresultstore.h"
 
 #ifndef QT_NO_QFUTURE
@@ -46,9 +7,11 @@ QT_BEGIN_NAMESPACE
 namespace QtPrivate {
 
 ResultIteratorBase::ResultIteratorBase()
- : mapIterator(QMap<int, ResultItem>::const_iterator()), m_vectorIndex(0) { }
+ : mapIterator(QMap<int, ResultItem>::const_iterator()), m_vectorIndex(0) {
+}
 ResultIteratorBase::ResultIteratorBase(QMap<int, ResultItem>::const_iterator _mapIterator, int _vectorIndex)
- : mapIterator(_mapIterator), m_vectorIndex(_vectorIndex) { }
+ : mapIterator(_mapIterator), m_vectorIndex(_vectorIndex) {
+}
 
 int ResultIteratorBase::vectorIndex() const { return m_vectorIndex; }
 int ResultIteratorBase::resultIndex() const { return mapIterator.key() + m_vectorIndex; }
@@ -96,7 +59,7 @@ bool ResultIteratorBase::canIncrementVectorIndex() const
 }
 
 ResultStoreBase::ResultStoreBase()
-    : insertIndex(0), resultCount(0), m_filterMode(false), filteredResults(0) { }
+    : toInsertIndex(0), resultCount(0), m_filterMode(false), filteredResults(0) { }
 
 ResultStoreBase::~ResultStoreBase()
 {
@@ -133,10 +96,11 @@ void ResultStoreBase::insertResultItemIfValid(int index, ResultItem &resultItem)
     }
 }
 
+// Primitive Method
 int ResultStoreBase::insertResultItem(int index, ResultItem &resultItem)
 {
     int storeIndex;
-    if (m_filterMode && index != -1 && index > insertIndex) {
+    if (m_filterMode && index != -1 && index > toInsertIndex) {
         pendingResults[index] = resultItem;
         storeIndex = index;
     } else {
@@ -201,8 +165,8 @@ bool ResultStoreBase::hasNextResult() const
 
 ResultIteratorBase ResultStoreBase::resultAt(int index) const
 {
-    if (m_results.isEmpty())
-        return ResultIteratorBase(m_results.end());
+    if (m_results.isEmpty())  { return ResultIteratorBase(m_results.end()); }
+
     QMap<int, ResultItem>::const_iterator it = m_results.lowerBound(index);
 
     // lowerBound returns either an iterator to the result or an iterator
@@ -245,10 +209,11 @@ int ResultStoreBase::count() const
 int ResultStoreBase::updateInsertIndex(int index, int _count)
 {
     if (index == -1) {
-        index = insertIndex;
-        insertIndex += _count;
+        // 如果没有指定插入的位置, 那么就是 append.
+        index = toInsertIndex;
+        toInsertIndex += _count;
     } else {
-        insertIndex = qMax(index + _count, insertIndex);
+        toInsertIndex = qMax(index + _count, toInsertIndex);
     }
     return index;
 }

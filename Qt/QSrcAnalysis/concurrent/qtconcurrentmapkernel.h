@@ -13,6 +13,7 @@ QT_BEGIN_NAMESPACE
 
 namespace QtConcurrent {
 
+// 对于 IterateKernel 的特化, 完成 runIteration, runIterations 的实现.
 template <typename Iterator, typename MapFunctor>
 class MapKernel : public IterateKernel<Iterator, void>
 {
@@ -23,6 +24,7 @@ public:
         : IterateKernel<Iterator, void>(begin, end), map(_map)
     { }
 
+    // 传递过来 it, 使用 map 操作里面的数据.
     bool runIteration(Iterator it, int, void *) override
     {
         map(*it);
@@ -31,6 +33,7 @@ public:
 
     bool runIterations(Iterator sequenceBeginIterator, int beginIndex, int endIndex, void *) override
     {
+        // 因为是多线程同时 map, 所以这里指定了 begin, end.
         Iterator it = sequenceBeginIterator;
         std::advance(it, beginIndex);
         for (int i = beginIndex; i < endIndex; ++i) {

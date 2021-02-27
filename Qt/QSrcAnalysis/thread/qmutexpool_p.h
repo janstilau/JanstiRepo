@@ -1,55 +1,6 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QMUTEXPOOL_P_H
 #define QMUTEXPOOL_P_H
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API. It exists purely as an
-// implementation detail. This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
 
 #include <QtCore/private/qglobal_p.h>
 #include "QtCore/qatomic.h"
@@ -60,12 +11,25 @@
 
 QT_BEGIN_NAMESPACE
 
+/*
+    Typical use of a QMutexPool is in situations where it is not
+    possible or feasible to use one QMutex for every protected object.
+    The mutex pool will return a mutex based on the address of the
+    object that needs protection.
+
+    如果, 一个对象, 本身不是线程安全的, 又是在多线程的环境下使用, 那么就应该有一把锁和这个对象绑定, 在每次使用这个对象的方法的时候, lock, unlock.
+    QMutexPool 就是提供的这样一个映射. 自然, 应该使用 globalInstanceGet, 不同的 pool 对象, get 返回不同的锁, 根本起不到互斥的目的.
+    Pool 的设计很简单, 就是一个简单的数组和内存地址的映射转变.
+    Pool 这个对象没有必要设计为线程安全的, 是通过这个对象获取到 mutex, mutex 保证临界区互斥.
+  */
+
 class Q_CORE_EXPORT QMutexPool
 {
 public:
     explicit QMutexPool(QMutex::RecursionMode recursionMode = QMutex::NonRecursive, int size = 131);
     ~QMutexPool();
 
+    // 一个简单的 Hash 算法, 会有冲突, 但是获取的是锁这个东西, 几个相同的 Obj, 使用同一个 mutex 也没有问题.
     inline QMutex *get(const void *address) {
         int index = uint(quintptr(address)) % mutexes.count();
         QMutex *m = mutexes[index].load();
@@ -79,8 +43,9 @@ public:
 
 private:
     QMutex *createMutex(int index);
+    // QVarLengthArray 应该就是 Qt 版本的 Array, 里面存放的是, AtomicPointer.
     QVarLengthArray<QAtomicPointer<QMutex>, 131> mutexes;
-    QMutex::RecursionMode recursionMode;
+    QMutex::RecursionMode recursionMode; // 存放, 生成的 Mutex 的模式.
 };
 
 QT_END_NAMESPACE
