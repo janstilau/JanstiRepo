@@ -13,8 +13,10 @@ template<class T>
 class HasResultType {
     typedef char Yes;
     typedef void *No;
+
     template<typename U> static Yes test(int, const typename U::result_type * = nullptr);
     template<typename U> static No test(double);
+
 public:
     enum { Value = (sizeof(test<T>(0)) == sizeof(Yes)) };
 };

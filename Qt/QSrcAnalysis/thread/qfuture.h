@@ -27,6 +27,7 @@ public:
         : d(*p)
     { }
 
+    // Future 仅仅是一个 wrapper 类, 各种操作, 都是被包装的数据的处理.
     bool operator==(const QFuture &other) const { return (d == other.d); }
     bool operator!=(const QFuture &other) const { return (d != other.d); }
 
@@ -57,6 +58,9 @@ public:
     operator T() const { return result(); }
     QList<T> results() const { return d.results(); }
 
+    // Future 的各个函数, 都是对于 包装的数据的封装而已.
+
+    // Qt 版本里面, Future 不仅仅是存值那么简单, 可以存一系列的值, 所有需要有迭代器.
     class const_iterator
     {
     public:
@@ -72,6 +76,7 @@ public:
         inline const_iterator(const const_iterator &o) : future(o.future), index(o.index)  {}
         inline const_iterator &operator=(const const_iterator &o)
         { future = o.future; index = o.index; return *this; }
+
         // 实际取值, 就是取结果.
         inline const T &operator*() const { return future->d.resultReference(index); }
         inline const T *operator->() const { return future->d.resultPointer(index); }
@@ -118,9 +123,8 @@ public:
 template <typename T>
 inline T QFuture<T>::result() const
 {
-    // waitForResult 内部, 在对应的结果没有获取到的时候, 会使用 condition 进行 wait 处理.
-    // 每次, 对应的 result 获取到之后, 会进行 wake 操作.
-    // 这就是 future 这个类, 能够进行同步的原因. 是用自己的逻辑, 完成了 condition 的封装.
+    // Future 里面, 会有着线程同步的处理. 这就是为什么使用这个类, 可以获取到子线程执行结果的原因.
+    // 本质上, 内部其实还是使用了 wait, wakeup 那一套逻辑.
     d.waitForResult(0);
     return d.resultReference(0);
 }
@@ -132,6 +136,10 @@ inline T QFuture<T>::resultAt(int index) const
     return d.resultReference(index);
 }
 
+// QFutureInterface 返回一个 future 对象.
+// 真正的数据实现, 返回一个包装类.
+// Future 是给外界用的. 所以多生成几份, 是没有关系的.
+// 真正的数据部分, 只有一份.
 template <typename T>
 inline QFuture<T> QFutureInterface<T>::future()
 {

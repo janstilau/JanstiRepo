@@ -237,6 +237,7 @@ inline QList<T> QFutureInterface<T>::results()
     return res;
 }
 
+// 当, 返回值是 Void 这种类型时, 有特殊的偏特化处理.
 template <>
 class QFutureInterface<void> : public QFutureInterfaceBase
 {
@@ -246,8 +247,9 @@ public:
     { }
 
     static QFutureInterface<void> canceledResult()
-    { return QFutureInterface(State(Started | Finished | Canceled)); }
-
+    { return QFutureInterface(
+                    State(Started | Finished | Canceled));
+    }
 
     inline QFuture<void> future(); // implemented in qfuture.h
 

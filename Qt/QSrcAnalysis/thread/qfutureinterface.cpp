@@ -32,6 +32,10 @@ QFutureInterfaceBase::QFutureInterfaceBase(State initialState)
     : d(new QFutureInterfaceBasePrivate(initialState))
 { }
 
+// 这里, 直接是进行引用计数的控制.
+// Future 的数据部分是 QFutureInterface, 传递的时候会有复制
+// QFutureInterface 的数据部分是 QFutureInterfaceBasePrivate*, 复制的时候, 是引用计数的管理
+// 所以, 最终 Future 管理的, 其实是一份数据.
 QFutureInterfaceBase::QFutureInterfaceBase(const QFutureInterfaceBase &other)
     : d(other.d)
 {

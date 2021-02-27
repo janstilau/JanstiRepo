@@ -11,75 +11,80 @@
 
 QT_BEGIN_NAMESPACE
 
-#ifdef Q_CLANG_QDOC
-
-typedef int Function;
-
-namespace QtConcurrent {
-
-    template <typename T>
-    QFuture<T> run(Function function, ...);
-
-    template <typename T>
-    QFuture<T> run(QThreadPool *pool, Function function, ...);
-
-} // namespace QtConcurrent
-
-#else
 
 /*
 QtConcurrent::run(QThreadPool::globalInstance(), function, ...);
 
-Runs function in a separate thread. The thread is taken from the global QThreadPool. Note that function may not run immediately; function will only be run once a thread becomes available.
+Runs function in a separate thread. The thread is taken from the global QThreadPool.
+Note that function may not run immediately; function will only be run once a thread becomes available
 
 T is the same type as the return value of function. Non-void return values can be accessed via the QFuture::result() function.
+
+这个模板, 基本就是 std::async 的 Qt 版本的实现, 可以用这里的实现, 去理解 std 的实现.
+
+后面的代码过于繁琐, 主要是类成员函数, 异常, 无异常, const, 非 const, 等等细节太多.
+不过总之就是生成了各种 taskWrapper, 这一层的 taskWrapper 的主要工作是, 存储可调用对象, 以及可调用对象的传入参数.
+已经重写 void runFunctor() override 方法, 在这个方法的内部, 调用操作, 并根据操作是否有返回值, 进行 result 的设值.
+而 runFunctor 什么时候调用, result 被设值之后如何使用, 是 RunFunctionTask 这一层的事情.
+qtconcurrentrun.h, qtconcurrentstoredfunctioncall.h
+这两文件里面, run 模板函数的设计, 以及背后的各个模板类的设计, 就是为了提供一个简单使用的 run 接口而已, 将各种可调用对象:
+函数指针, 闭包, 类成员函数及各种修饰版本, 成为 RunFunctionTask 这一层抽象.
+这里也能标明, 模板函数能够接受可调用对象, 这一个抽象的概念, 其实在背后要做的努力.
+到了代码指令的层面, 各种同一抽象的实现体, 一定是各不相同的. 高层使用 RunFunctionTask 进行编程, 那么一定有一层, 去处理这些复杂的实现细节.
 */
 
 
 // 对外的接口, 仅仅是一个 run 方法, 这个方法接受一个 invokable 参数, 以及后面的参数. 如果有 return value, 那么就可以通过 future 来进行获取.
 // 而实际上, 有这么多个模板来支持这个功能.
 
-/*
-    从这里, 其实也可以窥探一下, Std::thread 的运行.
-    thread 是一个模板, 实际的构造, 应该就是复制了 callable 对象, 以及各个参数.
-    真正执行, 应该就是调用 callable 对象, 并且传递各个参数进去. 所以, 实际上, thread 存储的是构造函数调用时传递的数据, 这个数据, 有可能和 callable 所需要的参数类型不匹配, 调用 callable 的时候, 会发生类型转化.
-    带来的问题可能是, 生命周期不相同. 比如, thread 构造的时候, 传递的是 char*, 真正 callable 调用传递的是 string;
-    string 内部会有数据的复制, 但是 char * 不会有相关操作. 为了避免这种问题, 最好就是 thread 生成时, 传递 callable 对应的数据类型, 没有的话, 就显式地生成一下.
- */
-
 
 // 这些方法, 返回一个 task_package 对象, 是 new 出来的, 也就是说, 是需要内存管理的.
 // 在这个对象内部, 会有 future 对象, 进行线程之间的同步处理.
+
 namespace QtConcurrent {
 
-template <typename T>
+// 当 可调用对象是一个无参, 返回值为 T 的函数指针时.
+template <typename T> // T 有可能是 Void
 QFuture<T> run(T (*functionPointer)())
 {
     // 生成一个 StoredFunctorCall0 对象, 调用 start 方法.
     return (new StoredFunctorCall0<T, T (*)()> (functionPointer))   ->start();
 }
 
+// 当 可调用对象, 是一个参数为Param1, 返回值是 T 的函数指针时, 传递的参数是 Arg1 类型的.
+// 这里可以看出, 传递的参数, 有可能和可调用参数是不一致的. 所以, 实际 StoredFunctorCall1 内部调用的时候, 应该会有类型转化.
 template <typename T, typename Param1, typename Arg1>
 QFuture<T> run(T (*functionPointer)(Param1), const Arg1 &arg1)
 {
     // 生成一个 StoredFunctorCall1 对象, 调用 start 方法. StoredFunctorCall1 带参了
     return (new StoredFunctorCall1<T, T (*)(Param1), Arg1>(functionPointer, arg1))->start();
 }
+
+// 当可调用对象, 有两个参数, 一个 Param1, 一个Param2, 传入两个参数, Arg1, Arg2
+// 处理的过程和, StoredFunctorCall1 类似.
+// 所以这就是模板的作用.提供的是一个统一的接口, 但是实际上, 生成不同类型的对象, 去完成同样的工作.
+// 这个过程, 是必须实现的, 因为存储相应数据, 如何调用可调用对象都是不同的. 但是接口层, 用户看不到这些.
 template <typename T, typename Param1, typename Arg1, typename Param2, typename Arg2>
 QFuture<T> run(T (*functionPointer)(Param1, Param2), const Arg1 &arg1, const Arg2 &arg2)
 {
     return (new StoredFunctorCall2<T, T (*)(Param1, Param2), Arg1, Arg2>(functionPointer, arg1, arg2))->start();
 }
+
+// 三个参数版本的实现, 处理的逻辑类似, 但是这个过程不可缺少, 因为, 模板, 就是要处理各种复杂的实现细节.
 template <typename T, typename Param1, typename Arg1, typename Param2, typename Arg2, typename Param3, typename Arg3>
 QFuture<T> run(T (*functionPointer)(Param1, Param2, Param3), const Arg1 &arg1, const Arg2 &arg2, const Arg3 &arg3)
 {
     return (new StoredFunctorCall3<T, T (*)(Param1, Param2, Param3), Arg1, Arg2, Arg3>(functionPointer, arg1, arg2, arg3))->start();
 }
+
+// 四个参数版本的实现.
 template <typename T, typename Param1, typename Arg1, typename Param2, typename Arg2, typename Param3, typename Arg3, typename Param4, typename Arg4>
 QFuture<T> run(T (*functionPointer)(Param1, Param2, Param3, Param4), const Arg1 &arg1, const Arg2 &arg2, const Arg3 &arg3, const Arg4 &arg4)
 {
     return (new StoredFunctorCall4<T, T (*)(Param1, Param2, Param3, Param4), Arg1, Arg2, Arg3, Arg4>(functionPointer, arg1, arg2, arg3, arg4))->start();
 }
+
+// 五个参数版本的实现.
 template <typename T, typename Param1, typename Arg1, typename Param2, typename Arg2, typename Param3, typename Arg3, typename Param4, typename Arg4, typename Param5, typename Arg5>
 QFuture<T> run(T (*functionPointer)(Param1, Param2, Param3, Param4, Param5), const Arg1 &arg1, const Arg2 &arg2, const Arg3 &arg3, const Arg4 &arg4, const Arg5 &arg5)
 {
@@ -90,14 +95,23 @@ QFuture<T> run(T (*functionPointer)(Param1, Param2, Param3, Param4, Param5), con
 
 
 
-
+// template <bool, class _Tp = void> struct enable_if {};
+// template <class _Tp> struct enable_if<true, _Tp> {typedef _Tp type;};
+/*
+ * 这里的处理逻辑是, 使用 Functor, QtPrivate::HasResultType 来构造一个 enable_if struct, 这个 struct 里面, 仅仅有一个 typedef.
+ * 如果, !QtPrivate::HasResultType<Functor>::Value 为 Yes, 就使用 QFuture<decltype(functor())> 的::type 作为返回值
+ * 如果, !QtPrivate::HasResultType<Functor>::Value 为 No, 编译就不通过.
+ */
+// 这里实现细节不做专门要求, 有点难. 总之, 这里就是包装的可调用对象.
+// 包装可调用对象的实际类型, StoredFunctorCall0, 和函数指针是一样的, 因为都是调用 operator() 操作符.
 template <typename Functor>
-auto run(Functor functor) -> typename std::enable_if<!QtPrivate::HasResultType<Functor>::Value, QFuture<decltype(functor())>>::type
+auto run(Functor functor) -> typename std::enable_if<!QtPrivate::HasResultType<Functor>::Value, QFuture<decltype(functor())> >::type
 {
     typedef decltype(functor()) result_type;
     return (new StoredFunctorCall0<result_type, Functor>(functor))->start();
 }
 
+// 包装了, 有一个参数的可调用对象.
 template <typename Functor, typename Arg1>
 auto run(Functor functor, const Arg1 &arg1)
     -> typename std::enable_if<!QtPrivate::HasResultType<Functor>::Value, QFuture<decltype(functor(arg1))>>::type
@@ -106,6 +120,7 @@ auto run(Functor functor, const Arg1 &arg1)
     return (new StoredFunctorCall1<result_type, Functor, Arg1>(functor, arg1))->start();
 }
 
+// 两个参数的可调用对象.
 template <typename Functor, typename Arg1, typename Arg2>
 auto run(Functor functor, const Arg1 &arg1, const Arg2 &arg2)
     -> typename std::enable_if<!QtPrivate::HasResultType<Functor>::Value, QFuture<decltype(functor(arg1, arg2))>>::type
@@ -114,6 +129,7 @@ auto run(Functor functor, const Arg1 &arg1, const Arg2 &arg2)
     return (new StoredFunctorCall2<result_type, Functor, Arg1, Arg2>(functor, arg1, arg2))->start();
 }
 
+// 3 个
 template <typename Functor, typename Arg1, typename Arg2, typename Arg3>
 auto run(Functor functor, const Arg1 &arg1, const Arg2 &arg2, const Arg3 &arg3)
     -> typename std::enable_if<!QtPrivate::HasResultType<Functor>::Value, QFuture<decltype(functor(arg1, arg2, arg3))>>::type
@@ -138,6 +154,7 @@ auto run(Functor functor, const Arg1 &arg1, const Arg2 &arg2, const Arg3 &arg3, 
     return (new StoredFunctorCall5<result_type, Functor, Arg1, Arg2, Arg3, Arg4, Arg5>(functor, arg1, arg2, arg3, arg4, arg5))->start();
 }
 
+// 又是新的信息, 如果这个类型, 里面有这 FunctionObject::result_type 的定义.                                                                                                                                   // 同样是 StoredFunctorCall0 进行包装
 template <typename FunctionObject>
 QFuture<typename FunctionObject::result_type> run(FunctionObject functionObject)
 {
@@ -200,6 +217,8 @@ QFuture<typename FunctionObject::result_type> run(FunctionObject *functionObject
     return (new typename SelectStoredFunctorPointerCall5<typename FunctionObject::result_type, FunctionObject, Arg1, Arg2, Arg3, Arg4, Arg5>::type(functionObject, arg1, arg2, arg3, arg4, arg5))->start();
 }
 
+
+// 类成员函数的适配, 最终包装对象是 StoredMemberFunctionCall0 类型.的
 template <typename T, typename Class>
 QFuture<T> run(const Class &object, T (Class::*fn)())
 {
@@ -231,6 +250,8 @@ QFuture<T> run(const Class &object, T (Class::*fn)(Param1, Param2, Param3, Param
     return (new typename SelectStoredMemberFunctionCall5<T, Class, Param1, Arg1, Param2, Arg2, Param3, Arg3, Param4, Arg4, Param5, Arg5>::type(fn, object, arg1, arg2, arg3, arg4, arg5))->start();
 }
 
+
+// Const 版本, Const 版本的函数, 和普通的成员函数是不一样的.
 template <typename T, typename Class>
 QFuture<T> run(const Class &object, T (Class::*fn)() const)
 {
@@ -907,7 +928,5 @@ QFuture<T> run(QThreadPool *pool, const Class *object, T (Class::*fn)(Param1, Pa
 #endif // Q_CLANG_QDOC
 
 QT_END_NAMESPACE
-
-#endif // QT_NO_CONCURRENT
 
 #endif
