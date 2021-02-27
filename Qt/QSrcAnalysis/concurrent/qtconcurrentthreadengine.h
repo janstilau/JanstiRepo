@@ -86,11 +86,10 @@ protected:
 
 /*
  *  ThreadEngine 还是使用了 future 相关类的设计.
- *  startAsynchronously 新建一个 futureInterface, 作为共享数据.
+ *   startAsynchronously 新建一个 futureInterface, 作为共享数据.
  *   run 方法里面, 调用 threadFunction, 在里面, 是各个业务类进行业务计算的代码.
  *   在其中, 会调用 ThreadEngine 的 report result 方法, 而 ThreadEngine 中, 会将数据填充到自己的 futureInterface 中去.
  * 在业务完成之后, 会调用 reportFinish.
- *
  */
 template <typename T>
 class ThreadEngine : public virtual ThreadEngineBase
@@ -127,7 +126,6 @@ public:
     {
         // 在这里, 新建了一个 Future 的共享数据.
         futureInterface = new QFutureInterface<T>();
-
         // reportStart() must be called before starting threads, otherwise the
         // user algorithm might finish while reportStart() is running, which
         // is very bad.
@@ -149,6 +147,7 @@ public:
     }
 
 
+    // report Result 其实就是存储到 future 的共享存储里面.
     void reportResult(const T *_result, int index = -1)
     {
         if (futureInterface)
@@ -162,11 +161,8 @@ public:
     }
 };
 
-// The ThreadEngineStarter class ecapsulates the return type
-// from the thread engine.
-// Depending on how the it is used, it will run
-// the engine in either blocking mode or asynchronous mode.
 
+// 这个类, 叫做 start 的作用就是, 可以自动调用锁存储的 engine 的 start 方法.
 template <typename T>
 class ThreadEngineStarterBase
 {
@@ -215,6 +211,10 @@ public:
 };
 
 // Full template specialization where T is void.
+// 偏特化, 不仅仅是提供更加具体的实现.
+// 方法的签名, 都能改变.
+// 细想一下, 就是因为, 真正的类, 其实是 ThreadEngineStarter_void_xjij23123 这样的一个类.
+// 就是有自己独特的类型,
 template <>
 class ThreadEngineStarter<void> : public ThreadEngineStarterBase<void>
 {
@@ -229,7 +229,11 @@ public:
     }
 };
 
-//! [qtconcurrentthreadengine-1]
+// 一个方法, 方法的主要作用是返回一个对象.
+// 这个对象, 符合某种抽象, 可以在方法的返回值所在的位置继续充当角色.
+// 例如, swift 的 for...in
+// 也例如这里, startThreadEngine 的返回值, 要成为 future.
+// 而 ThreadEngineStarter 提供了到 future 的转化
 template <typename ThreadEngine>
 inline ThreadEngineStarter<typename ThreadEngine::ResultType> startThreadEngine(ThreadEngine *threadEngine)
 {
