@@ -7,7 +7,6 @@
 #include <QtCore/qrefcount.h>
 #include <QtCore/qarraydata.h>
 #include <QtCore/qhashfunctions.h>
-
 #include <iterator>
 #include <vector>
 #include <stdlib.h>
@@ -29,28 +28,38 @@ class QVector
     Data *backingStore;
 
 public:
+    // Data::sharedNull, 默认, 使用一个特殊值, 代表着空数据.
     inline QVector() : backingStore(Data::sharedNull()) { }
     explicit QVector(int size);
     QVector(int size, const T &t);
     inline QVector(const QVector<T> &v);
-    inline ~QVector() { if (!backingStore->ref.deref()) freeData(backingStore); }
+    inline ~QVector() {
+        // 引用计数的管理, 如果为 0, 就进行资源的释放.
+        if (!backingStore->ref.deref()) freeData(backingStore);
+    }
     QVector<T> &operator=(const QVector<T> &v);
+    // move cpor, 就是, 1. 数据转移. 2. clean 原有
     QVector(QVector<T> &&other) Q_DECL_NOTHROW : backingStore(other.backingStore) { other.backingStore = Data::sharedNull(); }
+    // move assign, 生临时对象, swap, 为什么不直接操作 backingStore, 不更加好一些.
     QVector<T> &operator=(QVector<T> &&other) Q_DECL_NOTHROW
     { QVector moved(std::move(other)); swap(moved); return *this; }
-    void swap(QVector<T> &other) Q_DECL_NOTHROW { qSwap(backingStore, other.backingStore); }
+    void swap(QVector<T> &other) Q_DECL_NOTHROW {
+        // 这里, 其实就是两个指针的交换.
+        qSwap(backingStore, other.backingStore);
+    }
     inline QVector(std::initializer_list<T> args);
     bool operator==(const QVector<T> &v) const;
+    // 使用 primitive 来组件复杂的操作.
     inline bool operator!=(const QVector<T> &v) const { return !(*this == v); }
 
     inline int size() const { return backingStore->size; }
-
     inline bool isEmpty() const { return backingStore->size == 0; }
-
-    void resize(int size);
-
     inline int capacity() const { return int(backingStore->alloc); }
     void reserve(int size);
+    void resize(int size);
+
+    // 压缩, 就是把底层存储的空间, 压缩到现有的空间.
+    // reallocData 是一个通用的数据操作的方法.
     inline void squeeze()
     {
         reallocData(backingStore->size, backingStore->size);
@@ -63,24 +72,6 @@ public:
 
     inline void detach();
     inline bool isDetached() const { return !backingStore->ref.isShared(); }
-#if !defined(QT_NO_UNSHARABLE_CONTAINERS)
-    inline void setSharable(bool sharable)
-    {
-        if (sharable == backingStore->ref.isSharable())
-            return;
-        if (!sharable)
-            detach();
-
-        if (backingStore == Data::unsharableEmpty()) {
-            if (sharable)
-                backingStore = Data::sharedNull();
-        } else {
-            backingStore->ref.setSharable(sharable);
-        }
-        Q_ASSERT(backingStore->ref.isSharable() == sharable);
-    }
-#endif
-
     inline bool isSharedWith(const QVector<T> &other) const { return backingStore == other.backingStore; }
 
     // 如果是可变 vector 调用, 到这里, 触发深拷贝.
@@ -109,6 +100,8 @@ public:
     void remove(int i, int n);
     inline void removeFirst() { Q_ASSERT(!isEmpty()); erase(backingStore->begin()); }
     inline void removeLast();
+
+    // 这里, 之所以可以使用 move ctor, 是因为后面马上就是 remove 这个数据了.
     T takeFirst() { Q_ASSERT(!isEmpty()); T r = std::move(first()); removeFirst(); return r; }
     T takeLast()  { Q_ASSERT(!isEmpty()); T r = std::move(last()); removeLast(); return r; }
 
@@ -163,7 +156,6 @@ public:
     typedef typename Data::const_iterator const_iterator;
     typedef std::reverse_iterator<iterator> reverse_iterator;
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
-#if !defined(QT_STRICT_ITERATORS) || defined(Q_CLANG_QDOC)
     inline iterator begin() { detach(); return backingStore->begin(); }
     inline const_iterator begin() const Q_DECL_NOTHROW { return backingStore->constBegin(); }
     inline const_iterator cbegin() const Q_DECL_NOTHROW { return backingStore->constBegin(); }
@@ -172,16 +164,6 @@ public:
     inline const_iterator end() const Q_DECL_NOTHROW { return backingStore->constEnd(); }
     inline const_iterator cend() const Q_DECL_NOTHROW { return backingStore->constEnd(); }
     inline const_iterator constEnd() const Q_DECL_NOTHROW { return backingStore->constEnd(); }
-#else
-    inline iterator begin(iterator = iterator()) { detach(); return d->begin(); }
-    inline const_iterator begin(const_iterator = const_iterator()) const Q_DECL_NOTHROW { return d->constBegin(); }
-    inline const_iterator cbegin(const_iterator = const_iterator()) const Q_DECL_NOTHROW { return d->constBegin(); }
-    inline const_iterator constBegin(const_iterator = const_iterator()) const Q_DECL_NOTHROW { return d->constBegin(); }
-    inline iterator end(iterator = iterator()) { detach(); return d->end(); }
-    inline const_iterator end(const_iterator = const_iterator()) const Q_DECL_NOTHROW { return d->constEnd(); }
-    inline const_iterator cend(const_iterator = const_iterator()) const Q_DECL_NOTHROW { return d->constEnd(); }
-    inline const_iterator constEnd(const_iterator = const_iterator()) const Q_DECL_NOTHROW { return d->constEnd(); }
-#endif
     reverse_iterator rbegin() { return reverse_iterator(end()); }
     reverse_iterator rend() { return reverse_iterator(begin()); }
     const_reverse_iterator rbegin() const Q_DECL_NOTHROW { return const_reverse_iterator(end()); }
@@ -220,11 +202,6 @@ public:
     typedef const_iterator ConstIterator;
     typedef int size_type;
     inline void push_back(const T &t) { append(t); }
-#if defined(Q_COMPILER_RVALUE_REFS) || defined(Q_CLANG_QDOC)
-    // 虽然, 参数是 move 语义的, 但是调用方法的时候, 如果不添加 std::move, append, prepend 又会把这个值进行 copy. 这里应该可以使用 std::forward.
-    void push_back(T &&t) { append(std::move(t)); }
-    void push_front(T &&t) { prepend(std::move(t)); }
-#endif
     inline void push_front(const T &t) { prepend(t); }
     void pop_back() { removeLast(); }
     void pop_front() { removeFirst(); }
@@ -287,23 +264,27 @@ template <typename T>
 void QVector<T>::defaultConstruct(T *from, T *to)
 {
     if (QTypeInfo<T>::isComplex) {
-        // 如果, 需要调用构造函数, 就调用默认的构造函数.
-        // 这也就是, 为什么很多对象, 放不进到容器的原因, 没有默认构造函数可以调用
+        // 如果是对象类型, 直接调用默认构造函数
+        // 默认构造函数的重要性就在这里, 很多时候, 它是被系统 API 自动调用的. 如果不设计出来, 会有问题.
         while (from != to) {
             new (from++) T();
         }
     } else {
+        // 基本数据类型, 进行 memset 0 的处理.
         ::memset(static_cast<void *>(from), 0, (to - from) * sizeof(T));
     }
 }
 
-// 非常奇怪的是, Qt 里面, 不在使用那些泛型算法了, 而是在自己类里面写实现.
+// Vector 的拷贝构造函数.
+// Qt 对于这些, 没有使用通用算法, 而是使用了自己的实现.
 template <typename T>
 void QVector<T>::copyConstruct(const T *srcFrom, const T *srcTo, T *dstFrom)
 {
     if (QTypeInfo<T>::isComplex) {
-        while (srcFrom != srcTo)
+        // 复杂类型, 还是使用 placeHolder new 进行初始化.
+        while (srcFrom != srcTo) {
             new (dstFrom++) T(*srcFrom++);
+        }
     } else {
         ::memcpy(static_cast<void *>(dstFrom), static_cast<const void *>(srcFrom), (srcTo - srcFrom) * sizeof(T));
     }
@@ -327,9 +308,11 @@ inline QVector<T>::QVector(const QVector<T> &v)
 {
     if (v.backingStore->ref.ref()) {
         // 增加了引用计数, 仅仅拷贝底层指针.
+        // 使用共享内存, 那么相应的 copy, assign, 是对共享内存的引用计数的修改.
         backingStore = v.backingStore;
     } else {
-        // v.backingStore->ref.ref() 为 0 到底代表什么??? 既然不能共享内存, 那么就需要深拷贝了.
+        // 这里, 就代表数据是 static 的. 总之就是不可共享.
+        // 那么就要深拷贝.
         if (v.backingStore->capacityReserved) {
             backingStore = Data::allocate(v.backingStore->alloc);
             Q_CHECK_PTR(backingStore);
@@ -368,12 +351,10 @@ void QVector<T>::reserve(int asize)
 {
     if (asize > int(backingStore->alloc))
         reallocData(backingStore->size, asize);
-    if (isDetached()
-#if !defined(QT_NO_UNSHARABLE_CONTAINERS)
-            && backingStore != Data::unsharableEmpty()
-#endif
-            )
+
+    if (isDetached()) {
         backingStore->capacityReserved = 1;
+    }
     Q_ASSERT(capacity() >= asize);
 }
 
@@ -399,8 +380,9 @@ inline void QVector<T>::clear()
 // 不会改变内部存储, 直接返回 backingStore 里面的数据,
 template <typename T>
 inline const T &QVector<T>::at(int i) const
-{ Q_ASSERT_X(i >= 0 && i < backingStore->size, "QVector<T>::at", "index out of range");
-  return backingStore->begin()[i]; }
+{
+    return backingStore->begin()[i];
+}
 
 // const Vector 会调用到这个版本, 不会改变存储, 直接返回 backingStore 里面的数据.
 template <typename T>
@@ -448,6 +430,10 @@ inline void QVector<T>::replace(int i, const T &t)
     data()[i] = copy;
 }
 
+// 这里利用了 assign swap 的技术.
+// 如果参数不是自己, 就进行 swap.
+// 这里, 因为传递的值是 const, 所以是生成了一个临时对象进行 swap, 又因为, Qt 里面是引用计数在管理真正的资源, 代价不大
+// 最后 tmp 析构的时候, 会进行原有 this 的引用计数 -- .
 template <typename T>
 QVector<T> &QVector<T>::operator=(const QVector<T> &v)
 {
@@ -461,26 +447,28 @@ QVector<T> &QVector<T>::operator=(const QVector<T> &v)
 template <typename T>
 QVector<T>::QVector(int asize)
 {
+    // 直接, Q_ASSERT_X 进行非法数据的拦截.
     Q_ASSERT_X(asize >= 0, "QVector::QVector", "Size must be greater than or equal to 0.");
     if (Q_LIKELY(asize > 0)) {
+        // 存储空间的分配
         backingStore = Data::allocate(asize);
-        Q_CHECK_PTR(backingStore);
         backingStore->size = asize;
+        // 调用默认的构造函数.
         defaultConstruct(backingStore->begin(), backingStore->end());
     } else {
         backingStore = Data::sharedNull();
     }
 }
 
-// 这里指定了初值, 所以统一变成了拷贝构造函数.
 template <typename T>
 QVector<T>::QVector(int asize, const T &t)
 {
     if (asize > 0) {
+        // 先使用 asize, 分配对应的空间出来.
         backingStore = Data::allocate(asize);
         backingStore->size = asize;
         T* i = backingStore->end();
-        // 先分配空间, 然后在指定的空间, 进行拷贝构造函数的调用.
+        // 然后, 进行 placeHolder 的拷贝构造的调用.
         while (i != backingStore->begin())
             new (--i) T(t);
     } else {
@@ -488,13 +476,9 @@ QVector<T>::QVector(int asize, const T &t)
     }
 }
 
-#ifdef Q_COMPILER_INITIALIZER_LISTS
-# if defined(Q_CC_MSVC)
-QT_WARNING_PUSH
-QT_WARNING_DISABLE_MSVC(4127) // conditional expression is constant
-# endif // Q_CC_MSVC
-
 // 各个容器类, 都增加了对于 std::initializer_list 的适配.
+// std::initializer_list 本质上, 就是一个临时数组.
+// 所以, 通过 std::initializer_list 初始化的逻辑, 和 通过 QVector 初始化没有太大的区别.
 template <typename T>
 QVector<T>::QVector(std::initializer_list<T> args)
 {
@@ -506,11 +490,8 @@ QVector<T>::QVector(std::initializer_list<T> args)
         backingStore = Data::sharedNull();
     }
 }
-# if defined(Q_CC_MSVC)
-QT_WARNING_POP
-# endif // Q_CC_MSVC
-#endif // Q_COMPILER_INITALIZER_LISTS
 
+// 先调用析构函数, 然后进行内存空间的释放.
 template <typename T>
 void QVector<T>::freeData(Data *x)
 {
@@ -827,9 +808,11 @@ bool QVector<T>::operator==(const QVector<T> &v) const
         return true;
     if (backingStore->size != v.backingStore->size) // 底层存储的数量不一样
         return false;
+
     const T *vb = v.backingStore->begin();
     const T *b  = backingStore->begin();
     const T *e  = backingStore->end();
+    // 最终, 还是一个个的取判断, 每一个 Item 是否 equal.
     return std::equal(b, e, QT_MAKE_CHECKED_ARRAY_ITERATOR(vb, v.backingStore->size));
 }
 
