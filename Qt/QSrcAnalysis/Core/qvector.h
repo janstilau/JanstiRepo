@@ -308,6 +308,8 @@ void QVector<T>::copyConstruct(const T *srcFrom, const T *srcTo, T *dstFrom)
     }
 }
 
+// QVector 的 destruct 方法, 就是一个个的进行对应数据的析构函数.
+// 这本应该是 alloctor 的责任, 但是 QVector 并没有 alloctor, 而是使用的 ByteArray, 这个类就是原始数据的封装而已, 所以在 QVector 里面, 主动承担了对应的数据的析构的调用.
 template <typename T>
 void QVector<T>::destruct(T *from, T *to)
 {

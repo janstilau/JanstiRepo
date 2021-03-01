@@ -33,6 +33,7 @@ protected:
 template <> struct QListSpecialMethods<QByteArray>;
 template <> struct QListSpecialMethods<QString>;
 
+// QList 的实际存储.
 struct Q_CORE_EXPORT QListData {
     // tags for tag-dispatching of QList implementations,
     // based on QList's three different memory layouts:
@@ -47,6 +48,7 @@ struct Q_CORE_EXPORT QListData {
         int alloc, begin, end;
         void *array[1];
     };
+
     enum { DataHeaderSize = sizeof(Data) - sizeof(void *) };
 
     Data *detach(int alloc);
@@ -56,7 +58,6 @@ struct Q_CORE_EXPORT QListData {
     inline void dispose() { dispose(d); }
     static void dispose(Data *d);
     static const Data shared_null;
-    Data *d;
     void **erase(void **xi);
     void **append(int n);
     void **append();
@@ -71,6 +72,8 @@ struct Q_CORE_EXPORT QListData {
     inline void **at(int i) const Q_DECL_NOTHROW { return d->array + d->begin + i; }
     inline void **begin() const Q_DECL_NOTHROW { return d->array + d->begin; }
     inline void **end() const Q_DECL_NOTHROW { return d->array + d->end; }
+// 实际的数据部分.
+    Data *d;
 };
 
 template <typename T>

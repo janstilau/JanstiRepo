@@ -6,24 +6,31 @@
 
 QT_BEGIN_NAMESPACE
 
+// 这个类是 QVector 里面的底层存储.
+// 在 QVector 里面, 使用的是 QArrayData*, 也就是引用值.
+// 这个类设计出来, 就应该使用 引用的语义.
+// Qt 的容器里面, 没有使用 alloctor 的设计, 这个类作为容器的底层存储, 没有相关的内存的管理工作.
 struct Q_CORE_EXPORT QArrayData
 {
-    QtPrivate::RefCount ref; // 应用技术器.
+    QtPrivate::RefCount ref; //
     int size; // 这个代表的是, 已经占有的空间的大小.
     uint alloc : 31; // 这个代表的是, 容量的大小, 其实就是 capacity
     uint capacityReserved : 1;
 
-    qptrdiff offset; // in bytes from beginning of header
+    // offset 这个值, 只会在 QArrayData::allocate 中赋值.
+    // 他代表着, 从 offset 位置开始, 就是真正的数据部分了.
+    // 而之前的, 是上面的元数据部分. 这里, RefCount 和实际的数据部分放到了同样的一个对象里面.
+    // RefCount 这个其实要比 share_ptr 里面的 refCount 使用的广, 因为大部分情况下, 没有弱引用的使用机会.
+    qptrdiff offset;
 
+    // 简单的转义, reinterpret_cast 使用在这种, 带有明显设计意图的方法里面, 是非常安全的.
+    // 元信息加数据的这种设计, 是 QArrayData 的设计, 应该在返回 data 的时候, 将 offset 记录的, header 的部分跨过去.
     void *data()
     {
-
         return reinterpret_cast<char *>(this) + offset;
     }
-
     const void *data() const
     {
-
         return reinterpret_cast<const char *>(this) + offset;
     }
 
@@ -55,6 +62,7 @@ struct Q_CORE_EXPORT QArrayData
         return newSize;
     }
 
+    // detachFlags, cloneFlags 完全一样, 为什么没有复用.
     AllocationOptions detachFlags() const
     {
         AllocationOptions result;
@@ -71,10 +79,25 @@ struct Q_CORE_EXPORT QArrayData
         return result;
     }
 
+    // #  define Q_REQUIRED_RESULT __attribute__ ((__warn_unused_result__))
+    // 如果使用放, 没有接收这个值, 那么会有警告.
     Q_REQUIRED_RESULT static QArrayData *allocate(size_t objectSize, size_t alignment,
             size_t capacity, AllocationOptions options = Default) Q_DECL_NOTHROW;
+
+    /*
+     *  std::realloc
+     *  Reallocates the given area of memory. It must be previously allocated by std::malloc(), std::calloc() or std::realloc() and not yet freed with std::free(), otherwise, the results are undefined.
+     * 所以, 实际上最原始的 realloc 的作用, 就是开辟新的空间, 并且复制原来的数据, 到新的空间上.
+     *
+     * std::calloc
+     * Allocates memory for an array of num objects of size size and initializes it to all bits zero.
+     * 这个相比 malloc, 增加了一个 memset 0 的操作.
+     *
+     * reallocateUnaligned 的内部, 是使用了 std::realloc 作为底层的实现.
+     */
     Q_REQUIRED_RESULT static QArrayData *reallocateUnaligned(QArrayData *data, size_t objectSize,
             size_t newCapacity, AllocationOptions newOptions = Default) Q_DECL_NOTHROW;
+
     static void deallocate(QArrayData *data, size_t objectSize,
             size_t alignment) Q_DECL_NOTHROW;
 
@@ -89,82 +112,10 @@ template <class T>
 struct QTypedArrayData
     : QArrayData
 {
-#ifdef QT_STRICT_ITERATORS
-    class iterator {
-    public:
-        T *i;
-        typedef std::random_access_iterator_tag  iterator_category;
-        typedef int difference_type;
-        typedef T value_type;
-        typedef T *pointer;
-        typedef T &reference;
-
-        inline iterator() : i(nullptr) {}
-        inline iterator(T *n) : i(n) {}
-        inline iterator(const iterator &o): i(o.i){} // #### Qt 6: remove, the implicit version is fine
-        inline T &operator*() const { return *i; }
-        inline T *operator->() const { return i; }
-        inline T &operator[](int j) const { return *(i + j); }
-        inline bool operator==(const iterator &o) const { return i == o.i; }
-        inline bool operator!=(const iterator &o) const { return i != o.i; }
-        inline bool operator<(const iterator& other) const { return i < other.i; }
-        inline bool operator<=(const iterator& other) const { return i <= other.i; }
-        inline bool operator>(const iterator& other) const { return i > other.i; }
-        inline bool operator>=(const iterator& other) const { return i >= other.i; }
-        inline iterator &operator++() { ++i; return *this; }
-        inline iterator operator++(int) { T *n = i; ++i; return n; }
-        inline iterator &operator--() { i--; return *this; }
-        inline iterator operator--(int) { T *n = i; i--; return n; }
-        inline iterator &operator+=(int j) { i+=j; return *this; }
-        inline iterator &operator-=(int j) { i-=j; return *this; }
-        inline iterator operator+(int j) const { return iterator(i+j); }
-        inline iterator operator-(int j) const { return iterator(i-j); }
-        friend inline iterator operator+(int j, iterator k) { return k + j; }
-        inline int operator-(iterator j) const { return i - j.i; }
-        inline operator T*() const { return i; }
-    };
-    friend class iterator;
-
-    class const_iterator {
-    public:
-        const T *i;
-        typedef std::random_access_iterator_tag  iterator_category;
-        typedef int difference_type;
-        typedef T value_type;
-        typedef const T *pointer;
-        typedef const T &reference;
-
-        inline const_iterator() : i(nullptr) {}
-        inline const_iterator(const T *n) : i(n) {}
-        inline const_iterator(const const_iterator &o): i(o.i) {} // #### Qt 6: remove, the default version is fine
-        inline explicit const_iterator(const iterator &o): i(o.i) {}
-        inline const T &operator*() const { return *i; }
-        inline const T *operator->() const { return i; }
-        inline const T &operator[](int j) const { return *(i + j); }
-        inline bool operator==(const const_iterator &o) const { return i == o.i; }
-        inline bool operator!=(const const_iterator &o) const { return i != o.i; }
-        inline bool operator<(const const_iterator& other) const { return i < other.i; }
-        inline bool operator<=(const const_iterator& other) const { return i <= other.i; }
-        inline bool operator>(const const_iterator& other) const { return i > other.i; }
-        inline bool operator>=(const const_iterator& other) const { return i >= other.i; }
-        inline const_iterator &operator++() { ++i; return *this; }
-        inline const_iterator operator++(int) { const T *n = i; ++i; return n; }
-        inline const_iterator &operator--() { i--; return *this; }
-        inline const_iterator operator--(int) { const T *n = i; i--; return n; }
-        inline const_iterator &operator+=(int j) { i+=j; return *this; }
-        inline const_iterator &operator-=(int j) { i-=j; return *this; }
-        inline const_iterator operator+(int j) const { return const_iterator(i+j); }
-        inline const_iterator operator-(int j) const { return const_iterator(i-j); }
-        friend inline const_iterator operator+(int j, const_iterator k) { return k + j; }
-        inline int operator-(const_iterator j) const { return i - j.i; }
-        inline operator const T*() const { return i; }
-    };
-    friend class const_iterator;
-#else
-    typedef T* iterator;
+    typedef T* iterator; // iterator 就是简答的 T 的指针而已.
     typedef const T* const_iterator;
-#endif
 
+    // 实际上, Typed 并没有做
     T *data() { return static_cast<T *>(QArrayData::data()); }
     const T *data() const { return static_cast<const T *>(QArrayData::data()); }
 
@@ -175,8 +126,13 @@ struct QTypedArrayData
     const_iterator constBegin(const_iterator = const_iterator()) const { return data(); }
     const_iterator constEnd(const_iterator = const_iterator()) const { return data() + size; }
 
-    class AlignmentDummy { QArrayData header; T data; };
+    class AlignmentDummy {
+        QArrayData header;
+        T data;
+    };
 
+    // Typed, 就代表和相关类型的数据, 可以通过 sizeof 这些操作符使用.
+    // 这里再次表明了, 泛型, 不一定是使用类型创建对象, 也可能是使用类型的信息, 无论是静态函数, 还是类型的元信息.
     Q_REQUIRED_RESULT static QTypedArrayData *allocate(size_t capacity,
             AllocationOptions options = Default)
     {

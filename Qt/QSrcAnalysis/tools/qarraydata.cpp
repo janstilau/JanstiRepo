@@ -38,25 +38,23 @@ static inline size_t calculateBlockSize(size_t &capacity, size_t objectSize, siz
 
 static QArrayData *reallocateData(QArrayData *header, size_t allocSize, uint options)
 {
+    // 所以, 实际上, 就是使用了 std 的 realloc 的功能, realloc 里面, 本身就有 copy 的功能.
+    // 作为一个 C 的 API, 一定是最简单的 bit copy.
     header = static_cast<QArrayData *>(::realloc(header, allocSize));
     if (header)
         header->capacityReserved = bool(options & QArrayData::CapacityReserved);
     return header;
 }
 
-QArrayData *QArrayData::allocate(size_t objectSize, size_t alignment,
-        size_t capacity, AllocationOptions options) Q_DECL_NOTHROW
-{
-    // Alignment is a power of two
-    Q_ASSERT(alignment >= Q_ALIGNOF(QArrayData)
-            && !(alignment & (alignment - 1)));
-
+QArrayData *QArrayData::allocate(size_t objectSize, // 对象的大小.
+                                 size_t alignment, // 对齐大小
+                                 size_t capacity, // 对象的多少.
+                                 AllocationOptions options) Q_DECL_NOTHROW
+                         {
     // Don't allocate empty headers
     if (!(options & RawData) && !capacity) {
-#if !defined(QT_NO_UNSHARABLE_CONTAINERS)
-        if (options & Unsharable)
-            return const_cast<QArrayData *>(&qt_array_unsharable_empty);
-#endif
+        // 如果, capacity 是 0, 那么返回一个公用的值代表没有数据.
+        // 这种设计手法可以借鉴. 使用一个公用值代表非法值, 特殊值.
         return const_cast<QArrayData *>(&qt_array_empty);
     }
 
@@ -72,7 +70,8 @@ QArrayData *QArrayData::allocate(size_t objectSize, size_t alignment,
     if (headerSize > size_t(MaxAllocSize))
         return 0;
 
-    // 最终, 还是调用了 malloc
+    // 根据上面的这些配置, 计算出最终需要多少的空间, 然后, 最终还是调用了 malloc 来分配空间.
+    // 在分配成功之后, 进行对应的值的赋值.
     size_t allocSize = calculateBlockSize(capacity, objectSize, headerSize, options);
     QArrayData *header = static_cast<QArrayData *>(::malloc(allocSize));
     if (header) {
@@ -116,13 +115,13 @@ void QArrayData::deallocate(QArrayData *data, size_t objectSize,
             && !(alignment & (alignment - 1)));
     Q_UNUSED(objectSize) Q_UNUSED(alignment)
 
-#if !defined(QT_NO_UNSHARABLE_CONTAINERS)
     if (data == &qt_array_unsharable_empty)
         return;
-#endif
 
+    // 通过 Assert 来防止某些非法的传入
     Q_ASSERT_X(data == 0 || !data->ref.isStatic(), "QArrayData::deallocate",
                "Static data can not be deleted");
+    // 最终, dealloc 还是使用了 free 来释放内存资源.
     ::free(data);
 }
 

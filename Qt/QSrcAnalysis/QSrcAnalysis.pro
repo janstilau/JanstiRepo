@@ -1550,7 +1550,6 @@ HEADERS += \
     thread/qthreadstorage.h \
     thread/qwaitcondition.h \
     tools/qalgorithms.h \
-    tools/qarraydata.h \
     tools/qarraydataops.h \
     tools/qarraydatapointer.h \
     tools/qbitarray.h \
@@ -1593,7 +1592,6 @@ HEADERS += \
     tools/qpoint.h \
     tools/qqueue.h \
     tools/qrect.h \
-    tools/qrefcount.h \
     tools/qregexp.h \
     tools/qregularexpression.h \
     tools/qringbuffer_p.h \
@@ -1628,7 +1626,6 @@ HEADERS += \
     tools/qunicodetables_p.h \
     tools/qunicodetools_p.h \
     tools/qvarlengtharray.h \
-    tools/qvector.h \
     tools/qversionnumber.h \
     concurrent/qtconcurrent_global.h \
     concurrent/qtconcurrentcompilertest.h \
