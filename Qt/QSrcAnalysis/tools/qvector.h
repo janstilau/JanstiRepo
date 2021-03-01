@@ -147,6 +147,10 @@ public:
     void remove(int i, int n);
     inline void removeFirst() { Q_ASSERT(!isEmpty()); erase(d->begin()); }
     inline void removeLast();
+    // 如果, 对应的类型有 move semantic, 那么使用 move ctor, 如果没有就使用 ctor.
+    // std::move, 只是一种暗示, 其实他传递的还是引用.
+    // 接受方, 如果是函数, 应该调用这个类型的 move 构造函数对参数进行处理.
+    // 而这个类型, 如果有 move 构造函数就优先调用 move 构造函数, 如果没有, 就调用 cpor.
     T takeFirst() { Q_ASSERT(!isEmpty()); T r = std::move(first()); removeFirst(); return r; }
     T takeLast()  { Q_ASSERT(!isEmpty()); T r = std::move(last()); removeLast(); return r; }
 

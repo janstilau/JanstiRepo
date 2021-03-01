@@ -221,6 +221,7 @@ public:
     typedef int size_type;
     inline void push_back(const T &t) { append(t); }
 #if defined(Q_COMPILER_RVALUE_REFS) || defined(Q_CLANG_QDOC)
+    // 虽然, 参数是 move 语义的, 但是调用方法的时候, 如果不添加 std::move, append, prepend 又会把这个值进行 copy. 这里应该可以使用 std::forward.
     void push_back(T &&t) { append(std::move(t)); }
     void push_front(T &&t) { prepend(std::move(t)); }
 #endif
@@ -662,6 +663,9 @@ void QVector<T>::append(const T &t)
     ++backingStore->size; // 增加容量.
 }
 
+// 当参数是一个 move 语义的引用的时候, 怎么办, 参数应该释放自己的资源, 但是资源是参数内部的, 没有公开的办法去修改.
+// 其实, 就应该利用 move 构造函数.
+// move 就是要对方接管这部分数据, 所以一定要新建一个对象接管, 而这个新建的过程, 就要调用 move 构造函数.
 template <typename T>
 void QVector<T>::append(T &&t)
 {

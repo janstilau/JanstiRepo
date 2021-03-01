@@ -5,31 +5,19 @@
 #include <QtCore/qatomic.h>
 #include <new>
 
-#if QT_HAS_INCLUDE(<chrono>)
-#endif
-
 class tst_QMutex;
 
 QT_BEGIN_NAMESPACE
 
 
-#if !defined(QT_NO_THREAD) || defined(Q_CLANG_QDOC)
-
-#ifdef Q_OS_LINUX
-# define QT_MUTEX_LOCK_NOEXCEPT Q_DECL_NOTHROW
-#else
-# define QT_MUTEX_LOCK_NOEXCEPT
-#endif
-
 class QMutexData;
 
-class Q_CORE_EXPORT QBasicMutex
+class QBasicMutex
 {
 public:
     // BasicLockable concept
-    inline void lock() QT_MUTEX_LOCK_NOEXCEPT {
-        if (!fastTryLock())
-            lockInternal();
+    inline void lock() {
+        lockInternal();
     }
 
     // BasicLockable concept
@@ -101,13 +89,15 @@ private:
     friend class ::tst_QMutex;
 };
 
+// Qt 版本的
 class Q_CORE_EXPORT QMutexLocker
 {
 public:
+    // RAII 就是, 在构造函数里面就做事情.
+    // 传递过来的指针, 经过了一次处理, 应该是利用了指针的某几位做标记. 如果已经 lock 过了, 那么就将标志位改变.
+    // Mutex 是没有函数, 表明自己是否已经上过锁了, 只能是管理类自己记录.
     inline explicit QMutexLocker(QBasicMutex *m) QT_MUTEX_LOCK_NOEXCEPT
     {
-        Q_ASSERT_X((reinterpret_cast<quintptr>(m) & quintptr(1u)) == quintptr(0),
-                   "QMutexLocker", "QMutex pointer is misaligned");
         val = quintptr(m);
         if (Q_LIKELY(m)) {
             // call QMutex::lock() instead of QBasicMutex::lock()
@@ -115,6 +105,7 @@ public:
             val |= 1;
         }
     }
+    // 在析构函数里面, 做 unlock 的事情.
     inline ~QMutexLocker() { unlock(); }
 
     inline void unlock() Q_DECL_NOTHROW
@@ -141,9 +132,9 @@ public:
     }
 
 private:
-    Q_DISABLE_COPY(QMutexLocker)
+    Q_DISABLE_COPY(QMutexLocker) // 不可以拷贝.
 
-    quintptr val;
+    quintptr val; // 存储, mutex 指针.
 };
 
 #else // QT_NO_THREAD && !Q_CLANG_QDOC

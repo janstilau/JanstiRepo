@@ -162,10 +162,12 @@ public:
         }
     }
 
+    // 函数的参数是 move 语义的, 一定是在函数内部, 使用 move 构造函数生成一个新的对象.
     void append(T &&t) {
         if (s == a)
             realloc(s, s << 1);
         const int idx = s++;
+        // QTypeInfo, Qt 版本的萃取机.
         if (QTypeInfo<T>::isComplex)
             new (ptr + idx) T(std::move(t));
         else
