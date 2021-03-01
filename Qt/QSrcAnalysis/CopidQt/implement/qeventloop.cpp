@@ -11,6 +11,10 @@
 
 QT_BEGIN_NAMESPACE
 
+// Qt 里面的 Runloop, 是把各个事件的处理, 放到了 runLoop 的内部.
+// 但是在这里, QEventLoop 仅仅是起了一个死循环的作用, 真正的对于事件的处理, 在 eventDispatcher 中.
+// 不过, 基本的思想, 还是填充数据, 死循环, 抽取数据.
+
 QEventLoop::QEventLoop(QObject *parent)
     : QObject(*new QEventLoopPrivate, parent)
 {
@@ -50,6 +54,7 @@ int QEventLoop::exec(ProcessEventsFlags flags)
         return -1;
     }
 
+
     // 在函数里面, 定义了一个对象. 利用这个对象的构造析构函数, 管理资源.
     struct LoopReference {
         QEventLoopPrivate *d;
@@ -82,14 +87,15 @@ int QEventLoop::exec(ProcessEventsFlags flags)
             --d->threadData->loopLevel;
         }
     };
-    LoopReference ref(d, locker); // 这个对象, 主要用于管理资源.
+    LoopReference ref(d, locker);
 
     // remove posted quit events when entering a new event loop
     QCoreApplication *app = QCoreApplication::instance();
     if (app && app->thread() == thread())
         QCoreApplication::removePostedEvents(app, QEvent::Quit);
 
-    // 在 exit() 函数里面, 改变了这个值.
+    // 如果, exit 这标记值没有标记退出, 就不断的调用 processEvents 这个函数,
+    // 而 processEvents 这个函数, 将对于积压的事件的处理, 交给了 eventDispatcher
     while (!d->exit.loadAcquire())  // 这里应该是加锁解锁的操作.
         processEvents(flags | WaitForMoreEvents | EventLoopExec); // 这里有一个死循环, 不断地调用 processEvents 函数.
 
@@ -116,6 +122,7 @@ void QEventLoop::processEvents(ProcessEventsFlags flags, int maxTime)
 }
 
 // 这个函数, 会在 thread 的 exit, quit 函数里面调用.
+// 在这里, 修改 event loop 的状态量, 这样, 在 exec 里面, while 循环判断 false, 跳出事件循环.
 void QEventLoop::exit(int returnCode)
 {
     Q_D(QEventLoop);

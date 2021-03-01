@@ -945,6 +945,8 @@ void QCoreApplication::sendPostedEvents(QObject *receiver, int event_type)
 }
 
 // 这里, 才是最终的大部分的事件的处理函数.
+// 对标着 Runloop, 就是处理 source0, source1, 各种提交的 block, 通知 runloop 的 observer 等逻辑.
+// 最终, 还是到 QCoreApplication::sendEvent(r, e); 中去, sendEvent 最终, 是到达 QOBject::event 中去.
 void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type,
                                                QThreadData *data)
 {
@@ -958,6 +960,7 @@ void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type
 
     ++data->postEventList.recursion;
 
+    // 在处理数据的时候, 加锁.
     QMutexLocker locker(&data->postEventList.mutex);
 
     // by default, we assume that the event dispatcher can go to sleep after
@@ -1010,10 +1013,11 @@ void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type
             }
         }
     };
+    // 这种, 使用 RAII 对象进行数据管理, 主要是防止 exception 等情况.
     CleanUp cleanup(receiver, event_type, data);
 
-    //从  data->postEventList  中取值, 而 data 是 QThreadData
-    //所以, 是线程不断的收集着 event 数据, 然后在这里进行处理. 而在事件循环里面, 会不断的到这里进行处理.
+    // 所以, 是线程不断的收集着 event 数据, 然后在这里进行处理. 而在事件循环里面, 会不断的到这里进行处理.
+    // 可以看到, 这里处理的都是 QPostEvent, 而 QPostEvent 是存储了 receiver 的.
     while (i < data->postEventList.size()) {
         // avoid live-lock
         if (i >= data->postEventList.insertionOffset)
@@ -1029,6 +1033,7 @@ void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type
             continue;
         }
 
+        // 如果是 deleteLater 时间.
         if (pe.event->type() == QEvent::DeferredDelete) {
             // DeferredDelete events are sent either
             // 1) when the event loop that posted the event has returned; or

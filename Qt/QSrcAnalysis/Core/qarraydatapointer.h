@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QARRAYDATAPOINTER_H
 #define QARRAYDATAPOINTER_H
 
@@ -44,6 +5,8 @@
 
 QT_BEGIN_NAMESPACE
 
+// 里面管理的不是一个对象指针, 而是一个 QTypedArrayData 的指针.
+// 所以, 在析构的时候, 是调用 QTypedArrayData 上所有数据的析构, 以及最后的内存的回收工作.
 template <class T>
 struct QArrayDataPointer
 {
@@ -82,21 +45,6 @@ public:
         return *this;
     }
 
-#ifdef Q_COMPILER_RVALUE_REFS
-    QArrayDataPointer(QArrayDataPointer &&other) Q_DECL_NOTHROW
-        : d(other.d)
-    {
-        other.d = Data::sharedNull();
-    }
-
-    QArrayDataPointer &operator=(QArrayDataPointer &&other) Q_DECL_NOTHROW
-    {
-        QArrayDataPointer moved(std::move(other));
-        this->swap(moved);
-        return *this;
-    }
-#endif
-
     DataOps &operator*() const
     {
         Q_ASSERT(d);
@@ -111,9 +59,12 @@ public:
 
     ~QArrayDataPointer()
     {
+        // 首先, 还是引用计数的管理.
+        // 然后, 如果引用计数为 0 了, 就每个数据进行 析构, 最后进行内存资源的回收.
         if (!d->ref.deref()) {
-            if (d->isMutable())
+            if (d->isMutable()) {
                 (*this)->destroyAll();
+            }
             Data::deallocate(d);
         }
     }
@@ -133,7 +84,6 @@ public:
         return (!d->isMutable() || d->ref.isShared());
     }
 
-#if !defined(QT_NO_UNSHARABLE_CONTAINERS)
     void setSharable(bool sharable)
     {
         if (needsDetach()) {
@@ -148,7 +98,6 @@ public:
     }
 
     bool isSharable() const { return d->isSharable(); }
-#endif
 
     void swap(QArrayDataPointer &other) Q_DECL_NOTHROW
     {
@@ -188,6 +137,7 @@ private:
         return result;
     }
 
+    // 真正的数据部分, 里面存储的是 QTypedArrayData<T>
     Data *d;
 };
 

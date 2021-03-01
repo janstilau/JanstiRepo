@@ -8,7 +8,6 @@ QT_BEGIN_NAMESPACE
 
 class QEventLoopPrivate;
 
-// 在 Dialog 的 exec 方法里面, 首先会调用 show 方法, 进行 dialog 的显示. 然后, 会在后面明显的生成一个 eventLoop 对象.
 class Q_CORE_EXPORT QEventLoop : public QObject
 {
     Q_OBJECT

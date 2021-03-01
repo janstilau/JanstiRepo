@@ -562,9 +562,8 @@ QList<QAbstractEventDispatcher::TimerInfo> QTimerInfoList::registeredTimers(QObj
     return list;
 }
 
-/*
-    Activate pending timers, returning how many where activated.
-*/
+
+// 这里, 是真正的定时器可以实现的原因所在.
 int QTimerInfoList::activateTimers()
 {
     if (qt_disable_lowpriority_timers || isEmpty())
@@ -574,11 +573,10 @@ int QTimerInfoList::activateTimers()
     firstTimerInfo = 0;
 
     timespec currentTime = updateCurrentTime();
-    // qDebug() << "Thread" << QThread::currentThreadId() << "woken up at" << currentTime;
     repairTimersIfNeeded();
 
 
-    // Find out how many timer have expired
+    // 在这里, 计算除了到底有多少定时器可以进行触发
     for (QTimerInfoList::const_iterator it = constBegin(); it != constEnd(); ++it) {
         if (currentTime < (*it)->timeout)
             break;
@@ -590,6 +588,7 @@ int QTimerInfoList::activateTimers()
         if (isEmpty())
             break;
 
+        // 拿到第一个 timer 的数据
         QTimerInfo *currentTimerInfo = constFirst();
         if (currentTime < currentTimerInfo->timeout)
             break; // no timer has expired
@@ -604,13 +603,14 @@ int QTimerInfoList::activateTimers()
             firstTimerInfo = currentTimerInfo;
         }
 
-        // remove from list
+        // 然后删除第一个 timer 的数据.
         removeFirst();
 
         // determine next timeout time
         calculateNextTimeout(currentTimerInfo, currentTime);
 
-        // reinsert timer
+        // 再把更新完的 timer 重新插入到队列里面.
+        // 所以实际上, 定时器 timerInfo 里面, 本身是记录了自己应该触发的时间戳的.
         timerInsert(currentTimerInfo);
         if (currentTimerInfo->interval > 0)
             n_act++;
@@ -619,8 +619,12 @@ int QTimerInfoList::activateTimers()
             // send event, but don't allow it to recurse
             currentTimerInfo->activateRef = &currentTimerInfo;
 
-            QTimerEvent e(currentTimerInfo->id);
             // 在这里, 直接使用了  QCoreApplication::sendEvent 方法, 将 TimerEvent, 发送到对应的 receiver 上.
+            // 这就是 Qt 里面, 定时器可以使用的原因所在.
+            // 每个线程的 eventDispatcher 里面, 都存储了当前注册的定时器.
+            // 然后不断的检测时间有没有达到, 达到了, 就直接 sendEvent 就可以了.
+            // sendEvent, 会有 application 层的处理. 例如过滤, 拦截, 记录等, 但是最终, 还是到了 receiver->event(event); 也就是直接到达每个类的 event 方法里面.
+            QTimerEvent e(currentTimerInfo->id);
             QCoreApplication::sendEvent(currentTimerInfo->obj, &e);
 
             if (currentTimerInfo)

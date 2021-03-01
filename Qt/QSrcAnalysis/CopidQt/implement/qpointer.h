@@ -25,6 +25,7 @@ class QPointer
     };
     typedef typename TypeSelector<T>::Type QObjectType;
 
+    // 真正的数据部分.
     QWeakPointer<QObjectType> wp;
 public:
     inline QPointer() { }

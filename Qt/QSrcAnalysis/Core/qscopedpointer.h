@@ -13,17 +13,13 @@ QT_BEGIN_NAMESPACE
 //! 不管怎么说, 模板技术, 都有着类似于多态的效果.
 //! 以下的几个 Deleter, 都是仅仅有一个要求, 那就是, cleanup 静态方法. 如果想要实现自己的删除器, 那这个删除器实现该方法也就可以了.
 
+// cleanup 方法, 统一的抽象. 任何想要实现 deleter 抽象语义的人, 都要实现这个方法.
 template <typename T>
 struct QScopedPointerDeleter
 {
     static inline void cleanup(T *pointer)
     {
-        // Enforce a complete type.
-        // If you get a compile error here, read the section on forward declared
-        // classes in the QScopedPointer documentation.
-        typedef char IsIncompleteType[ sizeof(T) ? 1 : -1 ];
-        (void) sizeof(IsIncompleteType);
-
+        // object delete.
         delete pointer;
     }
 };
@@ -33,18 +29,14 @@ struct QScopedPointerArrayDeleter
 {
     static inline void cleanup(T *pointer)
     {
-        // Enforce a complete type.
-        // If you get a compile error here, read the section on forward declared
-        // classes in the QScopedPointer documentation.
-        typedef char IsIncompleteType[ sizeof(T) ? 1 : -1 ];
-        (void) sizeof(IsIncompleteType);
-
+        // array delete.
         delete [] pointer;
     }
 };
 
 struct QScopedPointerPodDeleter
 {
+    // raw pointer delete.
     static inline void cleanup(void *pointer) { if (pointer) free(pointer); }
 };
 
@@ -52,6 +44,7 @@ template <typename T>
 struct QScopedPointerObjectDeleteLater
 {
     // 这里, 怎么保证, 是 QObject 的子类啊.
+    // 无法保证, 如果不是, 那么编译都不能通过.
     static inline void cleanup(T *pointer) { if (pointer) pointer->deleteLater(); }
 };
 
@@ -71,7 +64,9 @@ public:
     {
     }
 
-    // ScaopedPointer, 就是自己的生命周期内, 管理着传入指针, 自己生命周期结束, 就应该调用对象的清理方法, 清理资源
+    // 在析构的时候, 直接调用传递过来的 Cleanup::cleanup 方法, 到底调用哪个, 是调用者指定的.
+    // 可以想象的是, 传入不同的 Cleanup, 也就会生成不同的 QScopedPointer 类的代码.
+    // 模板就是一个半成品, 真正的实现, 还是靠编译.
     inline ~QScopedPointer()
     {
         T *oldD = this->d;
@@ -130,6 +125,7 @@ public:
     }
 
     // task, 取出并且 reset, 这是一个通用的名称.
+    // task 之后, 应该保持该类的 empty && valid 的状态.
     T *take() Q_DECL_NOTHROW
     {
         T *oldD = d;

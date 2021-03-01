@@ -178,6 +178,8 @@ void QEventDispatcherUNIXPrivate::setSocketNotifierPending(QSocketNotifier *noti
     pendingNotifiers << notifier;
 }
 
+// 这里, 是所有定时器事件的触发.
+// 具体的实现在 qtimerinfo_unix.cpp 里面
 int QEventDispatcherUNIXPrivate::activateTimers()
 {
     return timerList.activateTimers();
@@ -353,6 +355,7 @@ void QEventDispatcherUNIX::unregisterSocketNotifier(QSocketNotifier *notifier)
         d->socketNotifiers.erase(i);
 }
 
+// 所以, 实际上, QEventLoop::ProcessEventsFlags 也提供了类似路 RunLoopMode 的效果, 仅仅是处理一部分数据, 而不是所有积累的数据.
 bool QEventDispatcherUNIX::processEvents(QEventLoop::ProcessEventsFlags flags)
 {
     Q_D(QEventDispatcherUNIX);
@@ -360,8 +363,10 @@ bool QEventDispatcherUNIX::processEvents(QEventLoop::ProcessEventsFlags flags)
 
     // we are awake, broadcast it
     emit awake();
+
     // 交给 Applicaiton 来处理大部分的event.
     QCoreApplicationPrivate::sendPostedEvents(0, 0, d->threadData);
+
 
     const bool include_timers = (flags & QEventLoop::X11ExcludeTimers) == 0;
     const bool include_notifiers = (flags & QEventLoop::ExcludeSocketNotifiers) == 0;
