@@ -404,6 +404,7 @@ void TestForm::updateMath()
     timer.start();
 
     JKQTMathText mathRender(this);
+    // 在这里, 可以设置一系列的字体.
     qDebug() << ui->cmbUnicodeSerif->currentFont().family() << "Roman for selected";
     mathRender.setFontRoman(ui->cmbUnicodeSerif->currentFont().family(), static_cast<JKQTMathText::MTfontEncoding>(ui->cmbEncodingSerif->currentIndex()));
     mathRender.setFontSans(ui->cmbUnicodeSans->currentFont().family(), static_cast<JKQTMathText::MTfontEncoding>(ui->cmbEncodingSans->currentIndex()));

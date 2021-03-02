@@ -21,9 +21,9 @@ public:
     void run() Q_DECL_OVERRIDE;
     void registerThreadInactive();
 
-    QWaitCondition runnableReady;
+    QWaitCondition runnableReady; // 线程没有了任务, 等待是线程的责任, 所以这个 waitCondition 应该和线程对象绑定在一起.
     QThreadPoolPrivate *manager; // 直接引用到了管理器. 正因为如此, 管理器需要等待线程退出后自己才去销毁.
-    QRunnable *runnable; // 真正的任务代码对象封装
+    QRunnable *runnable; // 任务.
 };
 
 QThreadPoolThread::QThreadPoolThread(QThreadPoolPrivate *manager)
@@ -66,6 +66,7 @@ void QThreadPoolThread::run()
                         }
 
                         // 获取新的任务, 执行.
+                        // QueuePage 作为任务桶, 可以大大减少插入删除等操作.
                         QueuePage *page = manager->queue.first();
                         r = page->pop();
                         if (page->isFinished()) {
@@ -75,7 +76,7 @@ void QThreadPoolThread::run()
                     } while (true);
 
 
-
+        // 正在执行的任务, 没有办法进行停止.
         if (manager->isExiting) {
             registerThreadInactive();
             break;
@@ -108,10 +109,11 @@ void QThreadPoolThread::run()
     }
 }
 
+// 在线程退出的时候, 调用 waitForAllThreadEixt, 唤醒 QThreadPoolThread 析构时所在线程,
 void QThreadPoolThread::registerThreadInactive()
 {
     if (--manager->activeThreads == 0)
-        manager->noActiveThreads.wakeAll();
+        manager->waitForAllThreadEixt.wakeAll();
 }
 
 
@@ -272,27 +274,23 @@ void QThreadPoolPrivate::reset()
     isExiting = false;
 }
 
-// QThreadPool wait 所有的线程都退出之后在释放, 是非常有必要的.
-// 在自己实现的线程池里面, 因为子线程的有些操作, 是引用到了线程控制对象的. 线程控制对象消亡的时候, 子线程的代码还会继续执行. 所以, 子线程就访问了非法的空间, 导致了内存错误.
+// ThreadPool 等待所有的线程退出在析构是很有必要的.
+// 子线程, 不断的读取 ThreadPool 的数据, 如果 Pool 对象先析构了, 那么子线程在再次调度之后, 就访问了非法的数据了.
 bool QThreadPoolPrivate::waitForDone(int msecs)
 {
     QMutexLocker locker(&mutex);
     if (msecs < 0) {
-        /*
-         * 基本上, 线程同步都可以使用 mutex 加 condition 来完成. NSConditionLock 只不过是在类的内部, 用了一个 int 值代替了 Predicate
-         * Condition wait 被唤醒的时候, 会同时加锁, 这个时候, 可以进行 predicate 的判断, 然后如果为 false, 继续 wait 就好了.
-         */
         while (!(queue.isEmpty() && activeThreads == 0))
-            noActiveThreads.wait(locker.mutex());
+            waitForAllThreadEixt.wait(locker.mutex());
     } else {
         QElapsedTimer timer;
         timer.start();
         int t;
         // 这里是同样的套路,只不过增加了时间, 作为循环推出的条件了.
-        while (
-               !(queue.isEmpty() && activeThreads == 0) &&
-               ((t = msecs - timer.elapsed()) > 0) )
-            noActiveThreads.wait(locker.mutex(), t);
+        while ( !(queue.isEmpty() && activeThreads == 0)  &&
+               (t = msecs - timer.elapsed()) > 0 ) {
+                waitForAllThreadEixt.wait(locker.mutex(), t);
+            };
     }
     // 最后返回当前任务状态, 线程状态.
     return queue.isEmpty() && activeThreads == 0;
@@ -485,12 +483,7 @@ void QThreadPool::releaseThread()
     d->tryToStartMoreThreads();
 }
 
-/*!
-    Waits up to \a msecs milliseconds for all threads to exit and removes all
-    threads from the thread pool. Returns \c true if all threads were removed;
-    otherwise it returns \c false. If \a msecs is -1 (the default), the timeout
-    is ignored (waits for the last thread to exit).
-*/
+// waitForDone 主要就是在线程对象退出的时候调用, 等待所有的线程退出之后, 才完成析构.
 bool QThreadPool::waitForDone(int msecs)
 {
     Q_D(QThreadPool);

@@ -9,7 +9,6 @@ QT_BEGIN_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_GCC("-Wextra")
 
-// High-level atomic integer operations
 template <typename T>
 class QAtomicInteger : public QBasicAtomicInteger<T>
 {

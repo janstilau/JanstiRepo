@@ -24,13 +24,18 @@ T is the same type as the return value of function. Non-void return values can b
 
 后面的代码过于繁琐, 主要是类成员函数, 异常, 无异常, const, 非 const, 等等细节太多.
 不过总之就是生成了各种 taskWrapper, 这一层的 taskWrapper 的主要工作是, 存储可调用对象, 以及可调用对象的传入参数.
-已经重写 void runFunctor() override 方法, 在这个方法的内部, 调用操作, 并根据操作是否有返回值, 进行 result 的设值.
+
+并且重写 void runFunctor() override 方法, runfunctor 是 run 方法的一环, 在这个方法里面, 会将存储的数据, 传入存储的操作中, 进行任务的真正调用.
+
 而 runFunctor 什么时候调用, result 被设值之后如何使用, 是 RunFunctionTask 这一层的事情.
+
 qtconcurrentrun.h, qtconcurrentstoredfunctioncall.h
 这两文件里面, run 模板函数的设计, 以及背后的各个模板类的设计, 就是为了提供一个简单使用的 run 接口而已, 将各种可调用对象:
-函数指针, 闭包, 类成员函数及各种修饰版本, 成为 RunFunctionTask 这一层抽象.
-这里也能标明, 模板函数能够接受可调用对象, 这一个抽象的概念, 其实在背后要做的努力.
-到了代码指令的层面, 各种同一抽象的实现体, 一定是各不相同的. 高层使用 RunFunctionTask 进行编程, 那么一定有一层, 去处理这些复杂的实现细节.
+函数指针, 闭包, 类成员函数都被包装成各自独特的类, 这些类, 都符合 RunFunctionTask 的抽象.
+
+模板这个技术, 提供了非常通用的接口, 而这个接口的上层, 也应该屏蔽各种类型实现的细节, 使用抽象进行任务的管理.
+那么这个通用接口, 就需要去面对这种封装的复杂性.
+函数可以自动推到出类型来, 然后将这些类型, 封装成接口对象. 一般来说, 这是一个通用接口的处理逻辑. 这层抽象, 是通用接口所服务的高层算法所要求的抽象, 属于高层.
 */
 
 
