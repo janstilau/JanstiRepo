@@ -24,6 +24,7 @@ QT_BEGIN_NAMESPACE
 template <typename T>
 class QVector
 {
+    // QTypedArrayData 里面记录了, 引用计数, 容量, 实际占用 size.
     typedef QTypedArrayData<T> Data;
     Data *backingStore;
 
@@ -71,7 +72,10 @@ public:
     }
 
     inline void detach();
-    inline bool isDetached() const { return !backingStore->ref.isShared(); }
+    inline bool isDetached() const {
+        // isShared 有着自己的考虑意图, 但是实际上, 就是引用计数的判断.
+        return !backingStore->ref.isShared();
+    }
     inline bool isSharedWith(const QVector<T> &other) const { return backingStore == other.backingStore; }
 
     // 如果是可变 vector 调用, 到这里, 触发深拷贝.
@@ -252,17 +256,10 @@ private:
     class AlignmentDummy { Data header; T array[1]; };
 };
 
-#ifdef Q_CC_MSVC
-// behavior change: an object of POD type constructed with an initializer of the form ()
-// will be default-initialized
-#   pragma warning ( push )
-#   pragma warning ( disable : 4345 )
-#   pragma warning(disable : 4127) // conditional expression is constant
-#endif
-
 template <typename T>
 void QVector<T>::defaultConstruct(T *from, T *to)
 {
+    // 还是还有 type traits
     if (QTypeInfo<T>::isComplex) {
         // 如果是对象类型, 直接调用默认构造函数
         // 默认构造函数的重要性就在这里, 很多时候, 它是被系统 API 自动调用的. 如果不设计出来, 会有问题.
@@ -277,15 +274,17 @@ void QVector<T>::defaultConstruct(T *from, T *to)
 
 // Vector 的拷贝构造函数.
 // Qt 对于这些, 没有使用通用算法, 而是使用了自己的实现.
+// 调用这个方法, 需要有着来源数据的情况下.
+// 对于 Qt 版本的 QVector 来说, 扩容这件事, 没有调用 copyConstruct
 template <typename T>
 void QVector<T>::copyConstruct(const T *srcFrom, const T *srcTo, T *dstFrom)
 {
     if (QTypeInfo<T>::isComplex) {
-        // 复杂类型, 还是使用 placeHolder new 进行初始化.
         while (srcFrom != srcTo) {
-            new (dstFrom++) T(*srcFrom++);
+            new (dstFrom++) T(*srcFrom++); // placeholder new, 使用目标位置的数据, 进行构造.
         }
     } else {
+        // 在这种地方, 使用 static_cast 是很好的. 是可控的转化.
         ::memcpy(static_cast<void *>(dstFrom), static_cast<const void *>(srcFrom), (srcTo - srcFrom) * sizeof(T));
     }
 }
@@ -311,8 +310,8 @@ inline QVector<T>::QVector(const QVector<T> &v)
         // 使用共享内存, 那么相应的 copy, assign, 是对共享内存的引用计数的修改.
         backingStore = v.backingStore;
     } else {
-        // 这里, 就代表数据是 static 的. 总之就是不可共享.
-        // 那么就要深拷贝.
+        // 这里, 就代表数据是 static 的. 总之就是不可共享. 就要深拷贝
+        // 先进行空间的申请.
         if (v.backingStore->capacityReserved) {
             backingStore = Data::allocate(v.backingStore->alloc);
             Q_CHECK_PTR(backingStore);
@@ -321,7 +320,7 @@ inline QVector<T>::QVector(const QVector<T> &v)
             backingStore = Data::allocate(v.backingStore->size);
             Q_CHECK_PTR(backingStore);
         }
-
+        // 然后每一项, 都调用 cpor
         if (backingStore->alloc) {
             copyConstruct(v.backingStore->begin(), v.backingStore->end(), backingStore->begin());
             backingStore->size = v.backingStore->size;
@@ -329,9 +328,6 @@ inline QVector<T>::QVector(const QVector<T> &v)
     }
 }
 
-#if defined(Q_CC_MSVC)
-#pragma warning( pop )
-#endif
 
 // 如果, 还没有分离过, 就进行分离.
 // 将分离操作, 集中到一点. 使用前调用, 如果已经分离了, 也没什么影响. 好的设计.
@@ -349,13 +345,12 @@ void QVector<T>::detach()
 template <typename T>
 void QVector<T>::reserve(int asize)
 {
-    if (asize > int(backingStore->alloc))
+    if (asize > int(backingStore->alloc)){
         reallocData(backingStore->size, asize);
-
+    }
     if (isDetached()) {
         backingStore->capacityReserved = 1;
     }
-    Q_ASSERT(capacity() >= asize);
 }
 
 template <typename T>
@@ -373,6 +368,7 @@ void QVector<T>::resize(int asize)
     }
     reallocData(asize, newAlloc, opt);
 }
+
 template <typename T>
 inline void QVector<T>::clear()
 { resize(0); }
@@ -390,6 +386,7 @@ inline const T &QVector<T>::operator[](int i) const
 { Q_ASSERT_X(i >= 0 && i < backingStore->size, "QVector<T>::operator[]", "index out of range");
   return backingStore->begin()[i]; }
 
+// 会更改数据, data() 的内部会先 detach, 然后返回重新拷贝后的指针.
 template <typename T>
 inline T &QVector<T>::operator[](int i)
 { Q_ASSERT_X(i >= 0 && i < backingStore->size, "QVector<T>::operator[]", "index out of range");
@@ -403,6 +400,7 @@ template <typename T>
 inline void QVector<T>::insert(int i, int n, const T &t)
 { Q_ASSERT_X(i >= 0 && i <= backingStore->size, "QVector<T>::insert", "index out of range");
   insert(begin() + i, n, t); }
+// move 语义的插入.
 template <typename T>
 inline void QVector<T>::insert(int i, T &&t)
 { Q_ASSERT_X(i >= 0 && i <= backingStore->size, "QVector<T>::insert", "index out of range");
@@ -425,7 +423,7 @@ inline void QVector<T>::prepend(T &&t)
 template <typename T>
 inline void QVector<T>::replace(int i, const T &t)
 {
-    Q_ASSERT_X(i >= 0 && i < backingStore->size, "QVector<T>::replace", "index out of range");
+    // 使用目标值, 进行拷贝构造, 然后调用已经写好的 [] 操作符.
     const T copy(t);
     data()[i] = copy;
 }
@@ -499,29 +497,28 @@ void QVector<T>::freeData(Data *x)
     Data::deallocate(x);
 }
 
-// 在这个函数里面, 有着拷贝的工作. 也就是扩容后的搬移.
-// 不一定是写时复制, 在空间不够的时候, 也会调用这个函数.
+// 非常重要的方法.
+// 重新分配内存并且复制当前的数据.
 template <typename T>
-void QVector<T>::reallocData(const int asize, /*现有容量*/
+void QVector<T>::reallocData(const int nowSize, /*现有容量*/
                              const int targetSize/*目标容量*/,
                              QArrayData::AllocationOptions options)
 {
-    Q_ASSERT(asize >= 0 && asize <= targetSize);
     Data *createdStore = backingStore;
 
     const bool isShared = backingStore->ref.isShared();
 
     if (targetSize != 0) {
-        // 如果, 目标容量和自己的不相符, 或者正在共享.
+        // 如果, 目标容量和自己的capacity不相符, 或者正在共享.
         if (targetSize != int(backingStore->alloc) || isShared) {
             // 这里, 是扩容处理.
             QT_TRY {
                 // allocate memory
                 createdStore = Data::allocate(targetSize, options);
-                createdStore->size = asize;
+                createdStore->size = nowSize; //新创建的 size, 和当前的一样.
 
                 T *srcBegin = backingStore->begin();
-                T *srcEnd = asize > backingStore->size ? backingStore->end() : backingStore->begin() + asize;
+                T *srcEnd = nowSize > backingStore->size ? backingStore->end() : backingStore->begin() + nowSize;
                 T *dst = createdStore->begin();
 
                 // 所以, 无论是 Qt, 还是 STL 在扩容的时候, 都是要调用构造函数进行新空间的初始化的.
@@ -530,6 +527,8 @@ void QVector<T>::reallocData(const int asize, /*现有容量*/
                     QT_TRY {
                         // 到这里, 就是调用拷贝构造, 或者 move 构造进行新值的初始化了.
                         // 直接使用了 std::is_nothrow_move_constructible 来进行 type_traits.
+                        // std 要求, move 必须是 nothrow 的, 所以这里判断一下.
+                        // 如果, 当前的 data 没有被共享, 也就是只有自己操作这个数据, 那么就可以 move.
                         if (isShared || !std::is_nothrow_move_constructible<T>::value) {
                             // we can not move the data, we need to copy construct it
                             while (srcBegin != srcEnd)
@@ -540,6 +539,8 @@ void QVector<T>::reallocData(const int asize, /*现有容量*/
                         }
                     } QT_CATCH (...) {
                         // destruct already copied objects
+                        // 发生了异常, 那么就把 createdStore 的资源释放, 这样 vector 的数据, 保持原样.
+                        // 这是 std 的要求, 发生异常, 原有数据不受影响. 这也是, move 不能 throw 的原因.
                         destruct(createdStore->begin(), dst);
                         QT_RETHROW;
                     }
@@ -549,11 +550,11 @@ void QVector<T>::reallocData(const int asize, /*现有容量*/
                     dst += srcEnd - srcBegin;
 
                     // destruct unused / not moved data
-                    if (asize < backingStore->size)
-                        destruct(backingStore->begin() + asize, backingStore->end());
+                    if (nowSize < backingStore->size)
+                        destruct(backingStore->begin() + nowSize, backingStore->end());
                 }
 
-                if (asize > backingStore->size) {
+                if (nowSize > backingStore->size) {
                     // construct all new objects when growing
                     if (!QTypeInfo<T>::isComplex) {
                         ::memset(static_cast<void *>(dst), 0, (static_cast<T *>(createdStore->end()) - dst) * sizeof(T));
@@ -574,21 +575,21 @@ void QVector<T>::reallocData(const int asize, /*现有容量*/
             }
             createdStore->capacityReserved = backingStore->capacityReserved;
         } else {
-            // 这里, 是缩容处理.
-            if (asize <= backingStore->size) {
-                destruct(createdStore->begin() + asize, createdStore->end()); // from future end to current end
+            if (nowSize <= backingStore->size) {
+                destruct(createdStore->begin() + nowSize, createdStore->end()); // from future end to current end
             } else {
-                defaultConstruct(createdStore->end(), createdStore->begin() + asize); // from current end to future end
+                defaultConstruct(createdStore->end(), createdStore->begin() + nowSize); // from current end to future end
             }
-            createdStore->size = asize;
+            createdStore->size = nowSize;
         }
     } else {
         createdStore = Data::sharedNull();
     }
 
 
-
+    // 开辟了新的空间, 复制完了, 就应该交换指针了.
     if (backingStore != createdStore) {
+        // 首先, 要做的是原有资源的管理
         if (!backingStore->ref.deref()) { // backingStore 没有引用计数了, 应该释放.
             if (!QTypeInfoQuery<T>::isRelocatable || !targetSize || (isShared && QTypeInfo<T>::isComplex)) {
                 // data was copy constructed, we need to call destructors
@@ -626,7 +627,7 @@ void QVector<T>::append(const T &t)
     // tooSmall 代表的是, 容量不够, 需要扩容
     const bool isTooSmall = uint(backingStore->size + 1) > backingStore->alloc;
     if (!isDetached() || isTooSmall) {
-        T copy(t); // 不太明白, 这里拷贝的原因???
+        T copy(t);// 这里拷贝了, 后面就能用 Move 语义了.
         QArrayData::AllocationOptions opt(isTooSmall ? QArrayData::Grow : QArrayData::Default);
         reallocData(backingStore->size, isTooSmall ? backingStore->size + 1 : backingStore->alloc, opt);
 
@@ -870,7 +871,7 @@ int QVector<T>::indexOf(const T &t, int from) const
         T* n = backingStore->begin() + from - 1;
         T* e = backingStore->end();
         while (++n != e)
-            if (*n == t)
+            if (*n == t) // 这里, 使用了等号操作符这一统一的抽象, 进行相等性判断.
                 return n - backingStore->begin();
     }
     return -1;
