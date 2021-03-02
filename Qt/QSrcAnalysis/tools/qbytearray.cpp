@@ -4609,24 +4609,12 @@ QByteArray QByteArray::toHex() const
     return toHex('\0');
 }
 
-/*! \overload
-    \since 5.9
-
-    Returns a hex encoded copy of the byte array. The hex encoding uses the numbers 0-9 and
-    the letters a-f.
-
-    If \a separator is not '\0', the separator character is inserted between the hex bytes.
-
-    Example:
-    \snippet code/src_corelib_tools_qbytearray.cpp 50
-
-    \sa fromHex()
-*/
 QByteArray QByteArray::toHex(char separator) const
 {
     if (!d->size)
         return QByteArray();
 
+    // 所以, 实际上就是扩充空间, 然后 一个字节分两半进行填充而已.
     const int length = separator ? (d->size * 3 - 1) : (d->size * 2);
     QByteArray hex(length, Qt::Uninitialized);
     char *hexData = hex.data();
@@ -4634,7 +4622,6 @@ QByteArray QByteArray::toHex(char separator) const
     for (int i = 0, o = 0; i < d->size; ++i) {
         hexData[o++] = QtMiscUtils::toHexLower(data[i] >> 4);
         hexData[o++] = QtMiscUtils::toHexLower(data[i] & 0xf);
-
         if ((separator) && (o < length))
             hexData[o++] = separator;
     }
@@ -4654,6 +4641,8 @@ static void q_fromPercentEncoding(QByteArray *ba, char percent)
     int outlen = 0;
     int a, b;
     char c;
+
+    // 过程就是, 如果发现了 %, 就取后面的两个值, 组合成为一个 char, 然后拼接.
     while (i < len) {
         c = inputPtr[i];
         if (c == percent && i + 2 < len) {
@@ -4686,22 +4675,7 @@ void q_fromPercentEncoding(QByteArray *ba)
     q_fromPercentEncoding(ba, '%');
 }
 
-/*!
-    \since 4.4
-
-    Returns a decoded copy of the URI/URL-style percent-encoded \a input.
-    The \a percent parameter allows you to replace the '%' character for
-    another (for instance, '_' or '=').
-
-    For example:
-    \snippet code/src_corelib_tools_qbytearray.cpp 51
-
-    \note Given invalid input (such as a string containing the sequence "%G5",
-    which is not a valid hexadecimal number) the output will be invalid as
-    well. As an example: the sequence "%G5" could be decoded to 'W'.
-
-    \sa toPercentEncoding(), QUrl::fromPercentEncoding()
-*/
+// 从百分号转义转回来.
 QByteArray QByteArray::fromPercentEncoding(const QByteArray &input, char percent)
 {
     if (input.isNull())
@@ -4760,6 +4734,7 @@ static void q_toPercentEncoding(QByteArray *ba, const char *dontEncode, const ch
 
     for (int i = 0; i < len; ++i) {
         unsigned char c = *inputData++;
+        // 如果, 是可以接受的字符, 那么就直接填入就可以了
         if (((c >= 0x61 && c <= 0x7A) // ALPHA
              || (c >= 0x41 && c <= 0x5A) // ALPHA
              || (c >= 0x30 && c <= 0x39) // DIGIT
@@ -4773,6 +4748,7 @@ static void q_toPercentEncoding(QByteArray *ba, const char *dontEncode, const ch
                 output[length] = c;
             ++length;
         } else {
+            // 对于所有的, 非法的字符, 进行 % 转义.
             if (!output) {
                 // detach now
                 ba->resize(len*3); // worst case
