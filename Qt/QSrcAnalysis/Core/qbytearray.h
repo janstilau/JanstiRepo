@@ -12,10 +12,6 @@
 #include <string>
 #include <iterator>
 
-#ifdef truncate
-#error qbytearray.h must be included before any header file that defines truncate
-#endif
-
 #if defined(Q_OS_DARWIN) || defined(Q_QDOC)
 Q_FORWARD_DECLARE_CF_TYPE(CFData);
 Q_FORWARD_DECLARE_OBJC_CLASS(NSData);
@@ -113,6 +109,9 @@ struct QByteArrayDataPtr
     }()) \
     /**/
 
+
+// 太过具体的实现细节不用去看, 和 QVector 很像.
+// 总之, 这个类是共享内存引用计数管理的, 所以, 复制不是一个很耗费资源的行为.
 class Q_CORE_EXPORT QByteArray
 {
 private:
@@ -122,7 +121,6 @@ public:
     enum Base64Option {
         Base64Encoding = 0,
         Base64UrlEncoding = 1,
-
         KeepTrailingEquals = 0,
         OmitTrailingEquals = 2
     };
@@ -137,11 +135,6 @@ public:
 
     QByteArray &operator=(const QByteArray &) Q_DECL_NOTHROW;
     QByteArray &operator=(const char *str);
-#ifdef Q_COMPILER_RVALUE_REFS
-    inline QByteArray(QByteArray && other) Q_DECL_NOTHROW : d(other.d) { other.d = Data::sharedNull(); }
-    inline QByteArray &operator=(QByteArray &&other) Q_DECL_NOTHROW
-    { qSwap(d, other.d); return *this; }
-#endif
 
     inline void swap(QByteArray &other) Q_DECL_NOTHROW
     { qSwap(d, other.d); }
@@ -156,10 +149,8 @@ public:
     inline void reserve(int size);
     inline void squeeze();
 
-#ifndef QT_NO_CAST_FROM_BYTEARRAY
     inline operator const char *() const;
     inline operator const void *() const;
-#endif
     inline char *data();
     inline const char *data() const;
     inline const char *constData() const;
@@ -215,40 +206,10 @@ public:
     void truncate(int pos);
     void chop(int n);
 
-#if defined(Q_COMPILER_REF_QUALIFIERS) && !defined(QT_COMPILING_QSTRING_COMPAT_CPP) && !defined(Q_CLANG_QDOC)
-#  if defined(Q_CC_GNU) && !defined(Q_CC_CLANG) && !defined(Q_CC_INTEL) && !QT_HAS_CPP_ATTRIBUTE(nodiscard)
-    // required due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61941
-#    pragma push_macro("Q_REQUIRED_RESULT")
-#    undef Q_REQUIRED_RESULT
-#    define Q_REQUIRED_RESULT
-#    define Q_REQUIRED_RESULT_pushed
-#  endif
-    Q_REQUIRED_RESULT QByteArray toLower() const &
-    { return toLower_helper(*this); }
-    Q_REQUIRED_RESULT QByteArray toLower() &&
-    { return toLower_helper(*this); }
-    Q_REQUIRED_RESULT QByteArray toUpper() const &
-    { return toUpper_helper(*this); }
-    Q_REQUIRED_RESULT QByteArray toUpper() &&
-    { return toUpper_helper(*this); }
-    Q_REQUIRED_RESULT QByteArray trimmed() const &
-    { return trimmed_helper(*this); }
-    Q_REQUIRED_RESULT QByteArray trimmed() &&
-    { return trimmed_helper(*this); }
-    Q_REQUIRED_RESULT QByteArray simplified() const &
-    { return simplified_helper(*this); }
-    Q_REQUIRED_RESULT QByteArray simplified() &&
-    { return simplified_helper(*this); }
-#  ifdef Q_REQUIRED_RESULT_pushed
-#    pragma pop_macro("Q_REQUIRED_RESULT")
-#  endif
-#else
     Q_REQUIRED_RESULT QByteArray toLower() const;
     Q_REQUIRED_RESULT QByteArray toUpper() const;
     Q_REQUIRED_RESULT QByteArray trimmed() const;
     Q_REQUIRED_RESULT QByteArray simplified() const;
-#endif
-
     Q_REQUIRED_RESULT QByteArray leftJustified(int width, char fill = ' ', bool truncate = false) const;
     Q_REQUIRED_RESULT QByteArray rightJustified(int width, char fill = ' ', bool truncate = false) const;
 
@@ -287,7 +248,6 @@ public:
 
     Q_REQUIRED_RESULT QByteArray repeated(int times) const;
 
-#ifndef QT_NO_CAST_TO_ASCII
     QT_ASCII_CAST_WARN QByteArray &append(const QString &s);
     QT_ASCII_CAST_WARN QByteArray &insert(int i, const QString &s);
     QT_ASCII_CAST_WARN QByteArray &replace(const QString &before, const char *after);
@@ -297,15 +257,12 @@ public:
     QT_ASCII_CAST_WARN QByteArray &operator+=(const QString &s);
     QT_ASCII_CAST_WARN int indexOf(const QString &s, int from = 0) const;
     QT_ASCII_CAST_WARN int lastIndexOf(const QString &s, int from = -1) const;
-#endif
-#if !defined(QT_NO_CAST_FROM_ASCII) && !defined(QT_RESTRICTED_CAST_FROM_ASCII)
     inline QT_ASCII_CAST_WARN bool operator==(const QString &s2) const;
     inline QT_ASCII_CAST_WARN bool operator!=(const QString &s2) const;
     inline QT_ASCII_CAST_WARN bool operator<(const QString &s2) const;
     inline QT_ASCII_CAST_WARN bool operator>(const QString &s2) const;
     inline QT_ASCII_CAST_WARN bool operator<=(const QString &s2) const;
     inline QT_ASCII_CAST_WARN bool operator>=(const QString &s2) const;
-#endif
 
     short toShort(bool *ok = nullptr, int base = 10) const;
     ushort toUShort(bool *ok = nullptr, int base = 10) const;
@@ -346,7 +303,6 @@ public:
     Q_REQUIRED_RESULT static QByteArray fromHex(const QByteArray &hexEncoded);
     Q_REQUIRED_RESULT static QByteArray fromPercentEncoding(const QByteArray &pctEncoded, char percent = '%');
 
-#if defined(Q_OS_DARWIN) || defined(Q_QDOC)
     static QByteArray fromCFData(CFDataRef data);
     static QByteArray fromRawCFData(CFDataRef data);
     CFDataRef toCFData() const Q_DECL_CF_RETURNS_RETAINED;
@@ -355,7 +311,6 @@ public:
     static QByteArray fromRawNSData(const NSData *data);
     NSData *toNSData() const Q_DECL_NS_RETURNS_AUTORELEASED;
     NSData *toRawNSData() const Q_DECL_NS_RETURNS_AUTORELEASED;
-#endif
 
     typedef char *iterator;
     typedef const char *const_iterator;
@@ -407,8 +362,11 @@ public:
     }
 
 private:
-    operator QNoImplicitBoolCast() const;
+    // 数据部分. 就是一个 QTypedArrayData<char>*.
+    // 所以, 实际上, QByteArray 这个类是引用语义的, 多个对象, 同时维护的是一个资源.
     Data *d;
+
+    operator QNoImplicitBoolCast() const;
     void reallocData(uint alloc, Data::AllocationOptions options);
     void expand(int i);
     QByteArray nulTerminated() const;
@@ -433,7 +391,10 @@ public:
 Q_DECLARE_OPERATORS_FOR_FLAGS(QByteArray::Base64Options)
 
 inline QByteArray::QByteArray() Q_DECL_NOTHROW : d(Data::sharedNull()) { }
-inline QByteArray::~QByteArray() { if (!d->ref.deref()) Data::deallocate(d); }
+// 析构, 引用计数的修改, 然后释放资源.
+inline QByteArray::~QByteArray() {
+    if (!d->ref.deref()) Data::deallocate(d);
+}
 inline int QByteArray::size() const
 { return d->size; }
 
@@ -462,6 +423,8 @@ inline void QByteArray::detach()
 { if (d->ref.isShared() || (d->offset != sizeof(QByteArrayData))) reallocData(uint(d->size) + 1u, d->detachFlags()); }
 inline bool QByteArray::isDetached() const
 { return !d->ref.isShared(); }
+
+// 拷贝构造, 仅仅是对于引用计数的修改. 共享资源
 inline QByteArray::QByteArray(const QByteArray &a) Q_DECL_NOTHROW : d(a.d)
 { d->ref.ref(); }
 
@@ -497,6 +460,7 @@ class Q_CORE_EXPORT QByteRef {
         : a(array),i(idx) {}
     friend class QByteArray;
 public:
+    //
     inline operator char() const
         { return i < a.d->size ? a.d->data()[i] : char(0); }
     inline QByteRef &operator=(char c)
@@ -505,6 +469,7 @@ public:
     inline QByteRef &operator=(const QByteRef &c)
         { if (i >= a.d->size) a.expand(i); else a.detach();
           a.d->data()[i] = c.a.d->data()[c.i];  return *this; }
+
     inline bool operator==(char c) const
     { return a.d->data()[i] == c; }
     inline bool operator!=(char c) const

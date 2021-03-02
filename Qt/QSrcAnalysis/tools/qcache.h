@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QCACHE_H
 #define QCACHE_H
 
@@ -44,46 +5,60 @@
 
 QT_BEGIN_NAMESPACE
 
-
+// 这个类, 再次证明了, 链表 + Hash 的强大的作用
+// 链表, 进行顺序的管理, Hash 提供强大的快速的查询服务.
 template <class Key, class T>
 class QCache
 {
+    // 这里, keyPtr 没有作用.
+    // 感觉还是应该存一下 KeyPtr, 就像 iOS 里面的 copy 一样.
     struct Node {
         inline Node() : keyPtr(0) {}
         inline Node(T *data, int cost)
-            : keyPtr(0), t(data), c(cost), p(0), n(0) {}
-        const Key *keyPtr; T *t; int c; Node *p,*n;
+            : keyPtr(0), valuePtr(data), cost(cost), previous(0), next(0) {}
+        const Key *keyPtr;
+        T *valuePtr;
+        int cost;
+        Node *previous,*next; // previous, next 的指针, 所以其实还是链表存储.
     };
-    Node *f, *l;
+
+    Node *first, *last; // first, last
     QHash<Key, Node> hash;
-    int mx, total;
+
+    int maxCost, total;
 
     inline void unlink(Node &n) {
-        if (n.p) n.p->n = n.n;
-        if (n.n) n.n->p = n.p;
-        if (l == &n) l = n.p;
-        if (f == &n) f = n.n;
-        total -= n.c;
-        T *obj = n.t;
+        if (n.previous) n.previous->next = n.next;
+        if (n.next) n.next->previous = n.previous;
+        if (last == &n) last = n.previous;
+        if (first == &n) first = n.next;
+        total -= n.cost;
+        T *obj = n.valuePtr;
         hash.remove(*n.keyPtr);
+        // 这里, 提交给 Cache 类的数据, 在从 Cache 类的时候, 被 delete 掉了.
+        // 感觉应该是外界主动进行 delete.
+        // 这也就是 C++ 内存管理的难点. 如何设计都是合理的. Cache 也可以作为, 数据的最终管理者.
         delete obj;
     }
+
+    // 将数据, 从当前的位置, 转移到开始的位置.
+    // 所以 Cache 这个类, 是按照 FIFO 的管理策略, 管理的内存.
     inline T *relink(const Key &key) {
         typename QHash<Key, Node>::iterator i = hash.find(key);
         if (typename QHash<Key, Node>::const_iterator(i) == hash.constEnd())
             return 0;
 
         Node &n = *i;
-        if (f != &n) {
-            if (n.p) n.p->n = n.n;
-            if (n.n) n.n->p = n.p;
-            if (l == &n) l = n.p;
-            n.p = 0;
-            n.n = f;
-            f->p = &n;
-            f = &n;
+        if (first != &n) {
+            if (n.previous) n.previous->next = n.next;
+            if (n.next) n.next->previous = n.previous;
+            if (last == &n) last = n.previous;
+            n.previous = 0;
+            n.next = first;
+            first->previous = &n;
+            first = &n;
         }
-        return n.t;
+        return n.valuePtr;
     }
 
     Q_DISABLE_COPY(QCache)
@@ -92,7 +67,7 @@ public:
     inline explicit QCache(int maxCost = 100) Q_DECL_NOTHROW;
     inline ~QCache() { clear(); }
 
-    inline int maxCost() const { return mx; }
+    inline int maxCost() const { return maxCost; }
     void setMaxCost(int m);
     inline int totalCost() const { return total; }
 
@@ -103,6 +78,7 @@ public:
 
     void clear();
 
+    // 默认是 1, 也就是当 Object 没有提供 cost 的考虑的时候, 可以用数量这件事来考虑.
     bool insert(const Key &key, T *object, int cost = 1);
     T *object(const Key &key) const;
     inline bool contains(const Key &key) const { return hash.contains(key); }
@@ -117,21 +93,23 @@ private:
 
 template <class Key, class T>
 inline QCache<Key, T>::QCache(int amaxCost) Q_DECL_NOTHROW
-    : f(0), l(0), mx(amaxCost), total(0) {}
+    : first(0), last(0), maxCost(amaxCost), total(0) {}
 
 template <class Key, class T>
 inline void QCache<Key,T>::clear()
-{ while (f) { delete f->t; f = f->n; }
- hash.clear(); l = 0; total = 0; }
+{ while (first) { delete first->valuePtr; first = first->next; }
+ hash.clear(); last = 0; total = 0; }
 
 template <class Key, class T>
 inline void QCache<Key,T>::setMaxCost(int m)
-{ mx = m; trim(mx); }
+{ maxCost = m; trim(maxCost); }
 
 template <class Key, class T>
 inline T *QCache<Key,T>::object(const Key &key) const
 { return const_cast<QCache<Key,T>*>(this)->relink(key); }
 
+// operator[] 调用 object(const Key &key), 同样的返回值类型, 所有的逻辑, 集中到了 object(const Key &key) 的内部
+// 之所以, 有 operator[]  的存在, 是因为这是一个统一的, 标准的外界的使用方式.
 template <class Key, class T>
 inline T *QCache<Key,T>::operator[](const Key &key) const
 { return object(key); }
@@ -139,6 +117,7 @@ inline T *QCache<Key,T>::operator[](const Key &key) const
 template <class Key, class T>
 inline bool QCache<Key,T>::remove(const Key &key)
 {
+    // 首先, Hash 查找, 然后链表中删除, hash 表中删除, delete value.
     typename QHash<Key, Node>::iterator i = hash.find(key);
     if (typename QHash<Key, Node>::const_iterator(i) == hash.constEnd()) {
         return false;
@@ -148,6 +127,8 @@ inline bool QCache<Key,T>::remove(const Key &key)
     }
 }
 
+// take, 就是释放 Cache 类对于对应数据的管理, 所以在 Unlick 之前, 进行 valuePtr 的清空.
+// 从这个方法来看, Cache 这个类, 是有着管理资源生命周期的责任的.
 template <class Key, class T>
 inline T *QCache<Key,T>::take(const Key &key)
 {
@@ -156,8 +137,8 @@ inline T *QCache<Key,T>::take(const Key &key)
         return 0;
 
     Node &n = *i;
-    T *t = n.t;
-    n.t = 0;
+    T *t = n.valuePtr;
+    n.valuePtr = 0;
     unlink(n);
     return t;
 }
@@ -165,31 +146,35 @@ inline T *QCache<Key,T>::take(const Key &key)
 template <class Key, class T>
 bool QCache<Key,T>::insert(const Key &akey, T *aobject, int acost)
 {
+    // 先删除原来的.
     remove(akey);
-    if (acost > mx) {
+    if (acost > maxCost) {
         delete aobject;
         return false;
     }
-    trim(mx - acost);
-    Node sn(aobject, acost);
-    typename QHash<Key, Node>::iterator i = hash.insert(akey, sn);
+    trim(maxCost - acost);
+    Node insertedNode(aobject, acost);
+    // 这里, 并没有使用 move, 因为实际上, 对于不用指针代表资源的类来说, 没有意义使用 move.
+    typename QHash<Key, Node>::iterator i = hash.insert(akey, insertedNode);
     total += acost;
     Node *n = &i.value();
     n->keyPtr = &i.key();
-    if (f) f->p = n;
-    n->n = f;
-    f = n;
-    if (!l) l = f;
+    // 从这里来看, 是按照时间顺序, 进行的链表的管理.
+    if (first) first->previous = n;
+    n->next = first;
+    first = n;
+    if (!last) last = first;
     return true;
 }
 
 template <class Key, class T>
 void QCache<Key,T>::trim(int m)
 {
-    Node *n = l;
+    // 按照时间顺序, 从后向前, 清理数据.
+    Node *n = last;
     while (n && total > m) {
         Node *u = n;
-        n = n->p;
+        n = n->previous;
         unlink(*u);
     }
 }

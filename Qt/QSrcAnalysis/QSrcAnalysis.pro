@@ -1574,8 +1574,6 @@ HEADERS += \
     tools/qeasingcurve.h \
     tools/qfreelist_p.h \
     tools/qharfbuzz_p.h \
-    tools/qhash.h \
-    tools/qhashfunctions.h \
     tools/qiterator.h \
     tools/qline.h \
     tools/qlinkedlist.h \

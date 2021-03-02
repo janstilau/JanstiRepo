@@ -1,43 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Copyright (C) 2016 Intel Corporation.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qbytearray.h"
 #include "qbytearraymatcher.h"
 #include "qtools_p.h"
@@ -1273,14 +1233,8 @@ QByteArray qUncompress(const uchar* data, int nbytes)
     Constructs a byte array pointing to the same data as \a dd.
 */
 
-/*! \fn QByteArray::~QByteArray()
-    Destroys the byte array.
-*/
 
-/*!
-    Assigns \a other to this byte array and returns a reference to
-    this byte array.
-*/
+// 统一的引用计数修改的逻辑, rhs +1, lhs -1 判断释放, 最后指针覆盖.
 QByteArray &QByteArray::operator=(const QByteArray & other) Q_DECL_NOTHROW
 {
     other.d->ref.ref();
@@ -1290,15 +1244,9 @@ QByteArray &QByteArray::operator=(const QByteArray & other) Q_DECL_NOTHROW
     return *this;
 }
 
-
-/*!
-    \overload
-
-    Assigns \a str to this byte array.
-*/
-
 QByteArray &QByteArray::operator=(const char *str)
 {
+    // x 作为新的数据 进行操作.
     Data *x;
     if (!str) {
         x = Data::sharedNull();
@@ -1315,6 +1263,7 @@ QByteArray &QByteArray::operator=(const char *str)
         x->size = len;
     }
     x->ref.ref();
+    // 最后, 原有数据省去, 覆盖为新的 x 数据.
     if (!d->ref.deref())
          Data::deallocate(d);
     d = x;
@@ -1752,54 +1701,29 @@ void QByteArray::chop(int n)
     \sa isEmpty()
 */
 
-/*! \fn QByteArray::QByteArray()
-
-    Constructs an empty byte array.
-
-    \sa isEmpty()
-*/
-
-/*!
-    Constructs a byte array containing the first \a size bytes of
-    array \a data.
-
-    If \a data is 0, a null byte array is constructed.
-
-    If \a size is negative, \a data is assumed to point to a nul-terminated
-    string and its length is determined dynamically. The terminating
-    nul-character is not considered part of the byte array.
-
-    QByteArray makes a deep copy of the string data.
-
-    \sa fromRawData()
-*/
-
+// 最最原始的, 构建 QByteArray 的方式.
+// 深拷贝.
 QByteArray::QByteArray(const char *data, int size)
 {
     if (!data) {
         d = Data::sharedNull();
     } else {
         if (size < 0)
+            // 如果, size 是非法值, 那么就用 /0 当做结束的标识, 这是一个统一的做法.
             size = int(strlen(data));
         if (!size) {
             d = Data::allocate(0);
         } else {
             d = Data::allocate(uint(size) + 1u);
-            Q_CHECK_PTR(d);
             d->size = size;
+            // 这里, 直接就是 memcpy 了
             memcpy(d->data(), data, size);
             d->data()[size] = '\0';
         }
     }
 }
 
-/*!
-    Constructs a byte array of size \a size with every byte set to
-    character \a ch.
-
-    \sa fill()
-*/
-
+// 开辟空间, memset. 最后一位, 用 /0 代替.
 QByteArray::QByteArray(int size, char ch)
 {
     if (size <= 0) {
@@ -1813,12 +1737,7 @@ QByteArray::QByteArray(int size, char ch)
     }
 }
 
-/*!
-    \internal
-
-    Constructs a byte array of size \a size with uninitialized contents.
-*/
-
+// 没有对于值的覆盖
 QByteArray::QByteArray(int size, Qt::Initialization)
 {
     d = Data::allocate(uint(size) + 1u);
@@ -1827,18 +1746,6 @@ QByteArray::QByteArray(int size, Qt::Initialization)
     d->data()[size] = '\0';
 }
 
-/*!
-    Sets the size of the byte array to \a size bytes.
-
-    If \a size is greater than the current size, the byte array is
-    extended to make it \a size bytes with the extra bytes added to
-    the end. The new bytes are uninitialized.
-
-    If \a size is less than the current size, bytes are removed from
-    the end.
-
-    \sa size(), truncate()
-*/
 void QByteArray::resize(int size)
 {
     if (size < 0)
@@ -1855,16 +1762,7 @@ void QByteArray::resize(int size)
             Data::deallocate(d);
         d = x;
     } else if (d->size == 0 && d->ref.isStatic()) {
-        //
-        // Optimize the idiom:
-        //    QByteArray a;
-        //    a.resize(sz);
-        //    ...
-        // which is used in place of the Qt 3 idiom:
-        //    QByteArray a(sz);
-        //
         Data *x = Data::allocate(uint(size) + 1u);
-        Q_CHECK_PTR(x);
         x->size = size;
         x->data()[size] = '\0';
         d = x;
@@ -1879,17 +1777,6 @@ void QByteArray::resize(int size)
         }
     }
 }
-
-/*!
-    Sets every byte in the byte array to character \a ch. If \a size
-    is different from -1 (the default), the byte array is resized to
-    size \a size beforehand.
-
-    Example:
-    \snippet code/src_corelib_tools_qbytearray.cpp 14
-
-    \sa resize()
-*/
 
 QByteArray &QByteArray::fill(char ch, int size)
 {

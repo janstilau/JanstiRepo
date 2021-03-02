@@ -1,48 +1,6 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
 
 #ifndef QMATH_H
 #define QMATH_H
-
-#if 0
-#pragma qt_class(QtMath)
-#endif
 
 #include <QtCore/qglobal.h>
 #include <QtCore/qalgorithms.h>
@@ -64,6 +22,8 @@ QT_BEGIN_NAMESPACE
 #define QT_SINE_TABLE_SIZE 256
 
 extern Q_CORE_EXPORT const qreal qt_sine_table[QT_SINE_TABLE_SIZE];
+
+// 各种数学方法, 都是调用的 std 的方法.
 
 inline int qCeil(qreal v)
 {
@@ -151,6 +111,9 @@ inline qreal qPow(qreal x, qreal y)
 
 // TODO: use template variables (e.g. Qt::pi<type>) for these once we have C++14 support:
 
+// 各种数学相关的值, 其实就是一个宏定义.
+// 宏定义用 () 进行包裹, 并且尽量准确.
+
 #ifndef M_E
 #define M_E (2.7182818284590452354)
 #endif
@@ -222,6 +185,8 @@ inline qreal qFastCos(qreal x)
     ci &= QT_SINE_TABLE_SIZE - 1;
     return qt_sine_table[si] - (qt_sine_table[ci] + 0.5 * qt_sine_table[si] * d) * d;
 }
+
+// 各种, 角度相关的转化.
 
 Q_DECL_CONSTEXPR inline float qDegreesToRadians(float degrees)
 {
