@@ -1,25 +1,4 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift.org open source project
-//
-// Copyright (c) 2014 - 2017 Apple Inc. and the Swift project authors
-// Licensed under Apache License v2.0 with Runtime Library Exception
-//
-// See https://swift.org/LICENSE.txt for license information
-// See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
-//
-//===----------------------------------------------------------------------===//
-
-/// Evaluates a closure while ensuring that the given instance is not destroyed
-/// before the closure returns.
-///
-/// - Parameters:
-///   - x: An instance to preserve until the execution of `body` is completed.
-///   - body: A closure to execute that depends on the lifetime of `x` being
-///     extended. If `body` has a return value, that value is also used as the
-///     return value for the `withExtendedLifetime(_:_:)` method.
-/// - Returns: The return value, if any, of the `body` closure parameter.
-@inlinable
+// 在 Body 完成之前, x 不会被洗头.
 public func withExtendedLifetime<T, Result>(
   _ x: T, _ body: () throws -> Result
 ) rethrows -> Result {
@@ -27,16 +6,7 @@ public func withExtendedLifetime<T, Result>(
   return try body()
 }
 
-/// Evaluates a closure while ensuring that the given instance is not destroyed
-/// before the closure returns.
-///
-/// - Parameters:
-///   - x: An instance to preserve until the execution of `body` is completed.
-///   - body: A closure to execute that depends on the lifetime of `x` being
-///     extended. If `body` has a return value, that value is also used as the
-///     return value for the `withExtendedLifetime(_:_:)` method.
-/// - Returns: The return value, if any, of the `body` closure parameter.
-@inlinable
+// 增加了一个Block 的参数
 public func withExtendedLifetime<T, Result>(
   _ x: T, _ body: (T) throws -> Result
 ) rethrows -> Result {

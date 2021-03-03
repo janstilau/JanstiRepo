@@ -664,6 +664,7 @@ static NSOperationQueue *mainQueue = nil;
             }
             [self didChangeValueForKey: @"operationCount"];
             [self didChangeValueForKey: @"operations"];
+            
             for (index = 0; index < total; index++)
             {
                 NSOperation	*op = buf[index];
@@ -838,6 +839,9 @@ static NSOperationQueue *mainQueue = nil;
 
 @implementation	NSOperationQueue (Private)
 
+// Queue 监听 Operation 的属性, 在可以引起队列变化的属性变化时, 重新改变队列的状态. 然后进行下一次的调度.
+// 不过, 这个方法很多时候不是监听调用的, 在这个类里面, 这个方法, 成为了队列变化的终点方法, 很多时候是主动调用的.
+// 所以这个方法, 算是 Queue Resort 方法.
 - (void) observeValueForKeyPath: (NSString *)keyPath
                        ofObject: (id)object
                          change: (NSDictionary *)change
