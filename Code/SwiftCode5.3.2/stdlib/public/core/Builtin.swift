@@ -37,14 +37,6 @@ func _canBeClass<T>(_: T.Type) -> Int8 {
     return Int8(Builtin.canBeClass(T.self))
 }
 
-/// Returns the bits of the given instance, interpreted as having the specified
-/// type.
-///
-/// Use this function only to convert the instance passed as `x` to a
-/// layout-compatible type when conversion through other means is not
-/// possible. Common conversions supported by the Swift standard library
-/// include the following:
-///
 /// - Value conversion from one integer type to another. Use the destination
 ///   type's initializer or the `numericCast(_:)` function.
 /// - Bitwise conversion from one integer type to another. Use the destination
@@ -56,20 +48,19 @@ func _canBeClass<T>(_: T.Type) -> Int8 {
 ///   `as!`, or `as?`) or the `unsafeDowncast(_:to:)` function. Do not use
 ///   `unsafeBitCast(_:to:)` with class or pointer types; doing so may
 ///   introduce undefined behavior.
-///
-/// - Warning: Calling this function breaks the guarantees of the Swift type
+
+// 数据类型, 是编译器的概念. 对于系统来说, 就是一坨数据.
+// 所以, Int 100, 可以是 Int, 也可以是 NSTime. 就看编译器怎么解释他了.
+// 在 C 风格代码里面, 有着强制类型转化这个功能, 在 Swift 里面, 这个功能被封装成为了一个泛型函数.
+// reinterpretCast 不会对数据有任何修改, 仅仅是, 编译器把当做了另外一个类型的数据了而已.
+// Calling this function breaks the guarantees of the Swift type
 ///   system; use with extreme care.
-///
-/// - Parameters:
-///   - x: The instance to cast to `type`.
-///   - type: The type to cast `x` to. `type` and the type of `x` must have the
-///     same size of memory representation and compatible memory layout.
-/// - Returns: A new instance of type `U`, cast from `x`.
 @inlinable // unsafe-performance
-@_transparent
 public func unsafeBitCast<T, U>(_ x: T, to type: U.Type) -> U {
+    // 在转化前, 先判断, 这两个类型的所占内存空间是否相等
     _precondition(MemoryLayout<T>.size == MemoryLayout<U>.size,
                   "Can't unsafeBitCast between types of different sizes")
+    // 内部, 还是使用类似于 c++ 的 reinterpretCast 操作.
     return Builtin.reinterpretCast(x)
 }
 

@@ -63,7 +63,7 @@ public struct UnsafeMutablePointer<Pointee>: _Pointer {
         self.init(unwrapped)		
     }		
     
-    // alloc, 必然是 mutable 才会有. 非 mutable 的 pointer, 是根据已有的值进行的初始化.
+    // alloc 变为了 Poitner 的一部分了, 这也体现了, Swift 将基本数据类型, 归纳到类型管理的强大之处. 所有的代码, 都在自己应该在的地方.
     public static func allocate(capacity count: Int)
     -> UnsafeMutablePointer<Pointee> {
         let size = MemoryLayout<Pointee>.stride * count

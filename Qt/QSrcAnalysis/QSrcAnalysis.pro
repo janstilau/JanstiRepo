@@ -1639,7 +1639,8 @@ HEADERS += \
     concurrent/qtconcurrentrun.h \
     concurrent/qtconcurrentrunbase.h \
     concurrent/qtconcurrentstoredfunctioncall.h \
-    concurrent/qtconcurrentthreadengine.h
+    concurrent/qtconcurrentthreadengine.h \
+    concurrent/javathreadpool.h
 
 FORMS += \
         mainwindow.ui

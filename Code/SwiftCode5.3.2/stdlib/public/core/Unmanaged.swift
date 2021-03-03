@@ -1,44 +1,61 @@
+/// A type for propagating an unmanaged object reference.
+///
+/// When you use this type, you become partially responsible for
+/// keeping the object alive.
 
-// OC 的手动内存管理的引入, 目前不太清楚, 什么时候, 会用到这个类.
+
+// https://nshipster.cn/unmanaged/
+/*
+ API 对于开发者来说不只是把功能点接口暴露出来而已，同时也传达给我们一些其他的信息，比如说接口如何以及为什么要使用某些值。
+ 因为要传达这些信息，给东西起适当的名字这件事才变成了计算机科学中最难的部分之一，而这也成为好的 API 和不好的 API 的重要区别。
+ 命名, 是给使用者的强有力的暗示.
+ Unmanaged 表示对不清晰的内存管理对象的封装，以及用烫手山芋的方式来管理他们。
+ 
+ 目前 iOS 中只有 CoreFoundation 需要手动管理资源.
+ 为了帮助大家理解 C 函数返回对象是否被调用者持有，苹果使用了 Create 规则 和 Get 规则 命名法.
+ 使用命名这种方式, 并不是语言或者编译器做的事情, 这仅仅是一套 API 的设计规范. 但是, 如果不遵守这个规范, 自己给自己找麻烦.
+
+ 
+ 一个 Unmanaged<T> 实例封装有一个 类型 T，它在相应范围内持有对该 T 对象的引用。从一个 Unmanaged 实例中获取一个 Swift 值的方法有两种：
+ takeRetainedValue()：返回该实例中 Swift 管理的引用，并在调用的同时减少一次引用次数，所以可以按照 Create 规则来对待其返回值。
+ takeUnretainedValue()：返回该实例中 Swift 管理的引用而 不减少 引用次数，所以可以按照 Get 规则来对待其返回值。
+ 在实践中最好不要直接操作 Unmanaged 实例，而是用这两个 take 开头的方法从返回值中拿到绑定的对象。
+ 
+ */
 public struct Unmanaged<Instance: AnyObject> {
-    // 必须是一个类的对象, 因为这个类, 主要做的是内存控制. 必须是一个引用值.
-    /*
-     当unowned（safe）引用的对象被dealloc之后，如果再次访问这个对象，将会抛出一个异常来终止程序(访问之前会进行检查，如果所引用的对象已经被release，就抛出个异常，这也行就是safe的意思吧)
-     但unowned（unsafe）不同，当unowned（unsafe）引用的对象被dealloc之后，如果再次访问这个内存，会出现三种情况：（不会检查，直接访问，这也许就是unsafe的意思吧）
-     1 内存没有被改变点-->输出原来的值
-     2 内存被改变掉-->crash
-     3 内存被同类型对象覆盖-->不会crash，到使用的内存模型确实新对象的。
-     参考之前的 zombie 的设计, safe 这件事, 会耗费性能.
-     */
-   
+    
+    // 真正的数据部分, 就是一个引用, 不做引用计数的管理.
     internal unowned(unsafe) var _value: Instance
     internal init(_private: Instance) { _value = _private }
     
-    public static func fromOpaque(
-        @_nonEphemeral _ value: UnsafeRawPointer
-    ) -> Unmanaged {
+    // 将一个裸指针, 强制转化成为 Instance 类型之后, 然后包装到 Unmanaged 里面.
+    // 没有引用计数的操作.
+    public static func fromOpaque(_ value: UnsafeRawPointer) -> Unmanaged {
         return Unmanaged(_private: unsafeBitCast(value, to: Instance.self))
     }
     
-    // 将自己管理的对象, 转变成为了一个 可变的 void 指针.
+    // 将自己保存的指针, 转化成为一个裸指针, 里面没有引用计数的操作.
     public func toOpaque() -> UnsafeMutableRawPointer {
         return unsafeBitCast(_value, to: UnsafeMutableRawPointer.self)
     }
     
+    // 通过一个指针构建 Unmanaged, 并进行一次 retain.
     public static func passRetained(_ value: Instance) -> Unmanaged {
         return Unmanaged(_private: value).retain()
     }
     
+    // 通过一个指针构建 Unmanaged, 没有引用计数的操作.
     public static func passUnretained(_ value: Instance) -> Unmanaged {
         return Unmanaged(_private: value)
     }
     
-    // 返回 void 指针.
-    @_transparent // unsafe-performance
+    // 直接返回.
     public func takeUnretainedValue() -> Instance {
         return _value
     }
     
+    // 在返回之前, 会有一次 release 的操作.
+    // 这个应该是和 passRetained 配合使用的.
     public func takeRetainedValue() -> Instance {
         let result = _value
         release()
@@ -138,35 +155,26 @@ public struct Unmanaged<Instance: AnyObject> {
     ///    }
     ///  }
     @inlinable // unsafe-performance
-    @_transparent
     public func _withUnsafeGuaranteedRef<Result>(
         _ body: (Instance) throws -> Result
     ) rethrows -> Result {
-        var tmp = self
-        // Builtin.convertUnownedUnsafeToGuaranteed expects to have a base value
-        // that the +0 value depends on. In this case, we are assuming that is done
-        // for us opaquely already. So, the builtin will emit a mark_dependence on a
-        // trivial object. The optimizer knows to eliminate that so we do not have
-        // any overhead from this.
-        let fakeBase: Int? = nil
-        return try body(Builtin.convertUnownedUnsafeToGuaranteed(fakeBase,
-                                                                 &tmp._value))
+        let (guaranteedInstance, token) = Builtin.unsafeGuaranteed(_value)
+        let result = try body(guaranteedInstance)
+        Builtin.unsafeGuaranteedEnd(token)
+        return result
     }
     
-    /// Performs an unbalanced retain of the object.
-    @_transparent
+    // 其实就是 NSObject 的 retain. 只不过现在 Swift 里面, 只能使用 Builtin.release 去调用.
     public func retain() -> Unmanaged {
         Builtin.retain(_value)
         return self
     }
     
-    /// Performs an unbalanced release of the object.
-    @_transparent
+    // 其实就是 NSObject 的 release. 只不过现在 Swift 里面, 只能使用 Builtin.release 去调用.
     public func release() {
         Builtin.release(_value)
     }
     
-    @_transparent
     public func autorelease() -> Unmanaged {
         Builtin.autorelease(_value)
         return self
