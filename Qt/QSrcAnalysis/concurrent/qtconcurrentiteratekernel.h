@@ -13,8 +13,6 @@
 
 QT_BEGIN_NAMESPACE
 
-
-
 namespace QtConcurrent {
 
 /*

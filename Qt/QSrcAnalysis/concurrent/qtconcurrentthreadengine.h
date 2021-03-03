@@ -62,7 +62,7 @@ public:
     void acquireBarrierSemaphore();
 
 protected: // The user overrides these:
-    virtual void start() {}
+    virtual void start() {} // 子类的接口, 可以在各个时机, 完成自己的数据操作.
     virtual void finish() {}
     virtual ThreadFunctionResult threadFunction() { return ThreadFinished; }
     virtual bool shouldStartThread() { return futureInterface ? !futureInterface->isPaused() : true; }
@@ -120,11 +120,10 @@ public:
         return result();
     }
 
-    // Runs the user algorithm using multiple threads.
-    // Does not block, returns a future.
     QFuture<T> startAsynchronously()
     {
         // 在这里, 新建了一个 Future 的共享数据.
+        // future 虽然是 ThreadEngine 的成员变量, 但是它所管理的资源, 是引用计数管理的.
         futureInterface = new QFutureInterface<T>();
         // reportStart() must be called before starting threads, otherwise the
         // user algorithm might finish while reportStart() is running, which
@@ -132,9 +131,8 @@ public:
         futureInterface->reportStarted();
         QFuture<T> future = QFuture<T>(futureInterfaceTyped());
         start();
-
         acquireBarrierSemaphore();
-        threadPool->start(this);
+        threadPool->start(this); // 然后, 这里才是异步开始进行主逻辑的调用.
         return future;
     }
 
@@ -142,7 +140,7 @@ public:
     {
         finish();
         futureInterfaceTyped()->reportFinished(result());
-        delete futureInterfaceTyped();
+        delete futureInterfaceTyped(); // 但是, future 的数据, 可能被返回值引用着.
         delete this;
     }
 
@@ -229,11 +227,6 @@ public:
     }
 };
 
-// 一个方法, 方法的主要作用是返回一个对象.
-// 这个对象, 符合某种抽象, 可以在方法的返回值所在的位置继续充当角色.
-// 例如, swift 的 for...in
-// 也例如这里, startThreadEngine 的返回值, 要成为 future.
-// 而 ThreadEngineStarter 提供了到 future 的转化
 template <typename ThreadEngine>
 inline ThreadEngineStarter<typename ThreadEngine::ResultType> startThreadEngine(ThreadEngine *threadEngine)
 {
