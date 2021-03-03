@@ -31,14 +31,6 @@ struct SelectSpecialization<void>
     struct Type { typedef Void type; };
 };
 
-
-// QFutureInterface<T> 是 Future 的真正实现部分, Future 共享 QFutureInterface 来达到多线程, 多个位置共享数据的目的.
-// std::future 应该和 QFuture 对标
-// std::task_packge 应该和 RunFunctionTaskBase 对标, 都是对于可调用对象的封装
-// std::promise 在 Qt 里面没有对应的类, 不过, 它应该是提供了某个机制, 让 future 实际的数据可以发生改变. 所以可以传递给子线程, 来做 future 的 setValue 操作.
-// std::async 函数, 应该就像 Qt::run 函数一样, 利用上面的几个类, 来完成异步任务这个概念的实际实现.
-
-
 // 在 RunFunctionTaskBase 里面, 一直在使用 QFutureInterface 的接口, 来做多线程数据同步的事情.
 // 从这里可以看出, Future 这个类, 其实应该算作是数据类, 算法类, 流程类, 还是在 RunFunctionTaskBase 这里.
 template <typename T>
