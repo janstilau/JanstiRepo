@@ -1,8 +1,51 @@
+/****************************************************************************
+**
+** Copyright (C) 2016 The Qt Company Ltd.
+** Contact: https://www.qt.io/licensing/
+**
+** This file is part of the QtNetwork module of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:LGPL$
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and The Qt Company. For licensing terms
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
+**
+** GNU Lesser General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU Lesser
+** General Public License version 3 as published by the Free Software
+** Foundation and appearing in the file LICENSE.LGPL3 included in the
+** packaging of this file. Please review the following information to
+** ensure the GNU Lesser General Public License version 3 requirements
+** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
+**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 2.0 or (at your option) the GNU General
+** Public license version 3 or any later version approved by the KDE Free
+** Qt Foundation. The licenses are as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
+** included in the packaging of this file. Please review the following
+** information to ensure the GNU General Public License requirements will
+** be met: https://www.gnu.org/licenses/gpl-2.0.html and
+** https://www.gnu.org/licenses/gpl-3.0.html.
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
 #include "qnetworkrequest.h"
 #include "qnetworkrequest_p.h"
 #include "qplatformdefs.h"
 #include "qnetworkcookie.h"
 #include "qsslconfiguration.h"
+#if QT_CONFIG(http) || defined(Q_CLANG_QDOC)
+#include "qhttp2configuration.h"
+#include "private/http2protocol_p.h"
+#endif
 #include "QtCore/qshareddata.h"
 #include "QtCore/qlocale.h"
 #include "QtCore/qdatetime.h"
@@ -234,22 +277,29 @@ QT_BEGIN_NAMESPACE
         Indicates whether the QNetworkAccessManager code is
         allowed to use SPDY with this request. This applies only
         to SSL requests, and depends on the server supporting SPDY.
+        Obsolete, use Http2 instead of Spdy.
 
     \value SpdyWasUsedAttribute
         Replies only, type: QMetaType::Bool
         Indicates whether SPDY was used for receiving
-        this reply.
+        this reply. Obsolete, use Http2 instead of Spdy.
 
-    \value HTTP2AllowedAttribute
+    \value Http2AllowedAttribute
         Requests only, type: QMetaType::Bool (default: false)
         Indicates whether the QNetworkAccessManager code is
         allowed to use HTTP/2 with this request. This applies
         to SSL requests or 'cleartext' HTTP/2.
 
-    \value HTTP2WasUsedAttribute
+    \value Http2WasUsedAttribute
         Replies only, type: QMetaType::Bool (default: false)
         Indicates whether HTTP/2 was used for receiving this reply.
         (This value was introduced in 5.9.)
+
+    \value HTTP2AllowedAttribute
+        Obsolete alias for Http2AllowedAttribute.
+
+    \value HTTP2WasUsedAttribute
+        Obsolete alias for Http2WasUsedAttribute.
 
     \value EmitAllUploadProgressSignalsAttribute
         Requests only, type: QMetaType::Bool (default: false)
@@ -286,11 +336,17 @@ QT_BEGIN_NAMESPACE
         server supports HTTP/2. The attribute works with SSL or 'cleartext'
         HTTP/2. If a server turns out to not support HTTP/2, when HTTP/2 direct
         was specified, QNetworkAccessManager gives up, without attempting to
-        fall back to HTTP/1.1. If both HTTP2AllowedAttribute and
+        fall back to HTTP/1.1. If both Http2AllowedAttribute and
         Http2DirectAttribute are set, Http2DirectAttribute takes priority.
         (This value was introduced in 5.11.)
 
     \omitvalue ResourceTypeAttribute
+
+    \value AutoDeleteReplyOnFinishAttribute
+        Requests only, type: QMetaType::Bool (default: false)
+        If set, this attribute will make QNetworkAccessManager delete
+        the QNetworkReply after having emitted "finished".
+        (This value was introduced in 5.14.)
 
     \value User
         Special type. Additional information can be passed in
@@ -369,6 +425,18 @@ QT_BEGIN_NAMESPACE
                                        based on some app-specific configuration.
 */
 
+/*!
+    \enum QNetworkRequest::TransferTimeoutConstant
+    \since 5.15
+
+    A constant that can be used for enabling transfer
+    timeouts with a preset value.
+
+    \value DefaultTransferTimeoutConstant     The transfer timeout in milliseconds.
+                                              Used if setTimeout() is called
+                                              without an argument.
+ */
+
 class QNetworkRequestPrivate: public QSharedData, public QNetworkHeadersPrivate
 {
 public:
@@ -376,9 +444,10 @@ public:
     inline QNetworkRequestPrivate()
         : priority(QNetworkRequest::NormalPriority)
 #ifndef QT_NO_SSL
-        , sslConfiguration(0)
+        , sslConfiguration(nullptr)
 #endif
         , maxRedirectsAllowed(maxRedirectCount)
+        , transferTimeout(0)
     { qRegisterMetaType<QNetworkRequest>(); }
     ~QNetworkRequestPrivate()
     {
@@ -395,10 +464,15 @@ public:
         priority = other.priority;
         maxRedirectsAllowed = other.maxRedirectsAllowed;
 #ifndef QT_NO_SSL
-        sslConfiguration = 0;
+        sslConfiguration = nullptr;
         if (other.sslConfiguration)
             sslConfiguration = new QSslConfiguration(*other.sslConfiguration);
 #endif
+        peerVerifyName = other.peerVerifyName;
+#if QT_CONFIG(http)
+        h2Configuration = other.h2Configuration;
+#endif
+        transferTimeout = other.transferTimeout;
     }
 
     inline bool operator==(const QNetworkRequestPrivate &other) const
@@ -407,7 +481,13 @@ public:
             priority == other.priority &&
             rawHeaders == other.rawHeaders &&
             attributes == other.attributes &&
-            maxRedirectsAllowed == other.maxRedirectsAllowed;
+            maxRedirectsAllowed == other.maxRedirectsAllowed &&
+            peerVerifyName == other.peerVerifyName
+#if QT_CONFIG(http)
+            && h2Configuration == other.h2Configuration
+#endif
+            && transferTimeout == other.transferTimeout
+            ;
         // don't compare cookedHeaders
     }
 
@@ -417,7 +497,32 @@ public:
     mutable QSslConfiguration *sslConfiguration;
 #endif
     int maxRedirectsAllowed;
+    QString peerVerifyName;
+#if QT_CONFIG(http)
+    QHttp2Configuration h2Configuration;
+#endif
+    int transferTimeout;
 };
+
+/*!
+    Constructs a QNetworkRequest object with no URL to be requested.
+    Use setUrl() to set one.
+
+    \sa url(), setUrl()
+*/
+QNetworkRequest::QNetworkRequest()
+    : d(new QNetworkRequestPrivate)
+{
+#if QT_CONFIG(http)
+    // Initial values proposed by RFC 7540 are quite draconian,
+    // so unless an application will set its own parameters, we
+    // make stream window size larger and increase (via WINDOW_UPDATE)
+    // the session window size. These are our 'defaults':
+    d->h2Configuration.setStreamReceiveWindowSize(Http2::qtDefaultStreamReceiveWindowSize);
+    d->h2Configuration.setSessionReceiveWindowSize(Http2::maxSessionReceiveWindowSize);
+    d->h2Configuration.setServerPushEnabled(false);
+#endif // QT_CONFIG(http)
+}
 
 /*!
     Constructs a QNetworkRequest object with \a url as the URL to be
@@ -426,7 +531,7 @@ public:
     \sa url(), setUrl()
 */
 QNetworkRequest::QNetworkRequest(const QUrl &url)
-    : d(new QNetworkRequestPrivate)
+    : QNetworkRequest()
 {
     d->url = url;
 }
@@ -445,7 +550,7 @@ QNetworkRequest::QNetworkRequest(const QNetworkRequest &other)
 QNetworkRequest::~QNetworkRequest()
 {
     // QSharedDataPointer auto deletes
-    d = 0;
+    d = nullptr;
 }
 
 /*!
@@ -749,6 +854,113 @@ void QNetworkRequest::setMaximumRedirectsAllowed(int maxRedirectsAllowed)
 {
     d->maxRedirectsAllowed = maxRedirectsAllowed;
 }
+
+/*!
+    \since 5.13
+
+    Returns the host name set for the certificate validation, as set by
+    setPeerVerifyName. By default this returns a null string.
+
+    \sa setPeerVerifyName
+*/
+QString QNetworkRequest::peerVerifyName() const
+{
+    return d->peerVerifyName;
+}
+
+/*!
+    \since 5.13
+
+    Sets \a peerName as host name for the certificate validation, instead of the one used for the
+    TCP connection.
+
+    \sa peerVerifyName
+*/
+void QNetworkRequest::setPeerVerifyName(const QString &peerName)
+{
+    d->peerVerifyName = peerName;
+}
+
+#if QT_CONFIG(http) || defined(Q_CLANG_QDOC)
+/*!
+    \since 5.14
+
+    Returns the current parameters that QNetworkAccessManager is
+    using for this request and its underlying HTTP/2 connection.
+    This is either a configuration previously set by an application
+    or a default configuration.
+
+    The default values that QNetworkAccessManager is using are:
+
+    \list
+      \li Window size for connection-level flowcontrol is 2147483647 octets
+      \li Window size for stream-level flowcontrol is 21474836 octets
+      \li Max frame size is 16384
+    \endlist
+
+    By default, server push is disabled, Huffman compression and
+    string indexing are enabled.
+
+    \sa setHttp2Configuration
+*/
+QHttp2Configuration QNetworkRequest::http2Configuration() const
+{
+    return d->h2Configuration;
+}
+
+/*!
+    \since 5.14
+
+    Sets request's HTTP/2 parameters from \a configuration.
+
+    \note The configuration must be set prior to making a request.
+    \note HTTP/2 multiplexes several streams in a single HTTP/2
+    connection. This implies that QNetworkAccessManager will use
+    the configuration found in the first request from  a series
+    of requests sent to the same host.
+
+    \sa http2Configuration, QNetworkAccessManager, QHttp2Configuration
+*/
+void QNetworkRequest::setHttp2Configuration(const QHttp2Configuration &configuration)
+{
+    d->h2Configuration = configuration;
+}
+#endif // QT_CONFIG(http) || defined(Q_CLANG_QDOC)
+#if QT_CONFIG(http) || defined(Q_CLANG_QDOC) || defined (Q_OS_WASM)
+/*!
+    \since 5.15
+
+    Returns the timeout used for transfers, in milliseconds.
+
+    This timeout is zero if setTransferTimeout hasn't been
+    called, which means that the timeout is not used.
+
+    \sa setTransferTimeout
+*/
+int QNetworkRequest::transferTimeout() const
+{
+    return d->transferTimeout;
+}
+
+/*!
+    \since 5.15
+
+    Sets \a timeout as the transfer timeout in milliseconds.
+
+    Transfers are aborted if no bytes are transferred before
+    the timeout expires. Zero means no timer is set. If no
+    argument is provided, the timeout is
+    QNetworkRequest::DefaultTransferTimeoutConstant. If this function
+    is not called, the timeout is disabled and has the
+    value zero.
+
+    \sa transferTimeout
+*/
+void QNetworkRequest::setTransferTimeout(int timeout)
+{
+    d->transferTimeout = timeout;
+}
+#endif // QT_CONFIG(http) || defined(Q_CLANG_QDOC) || defined (Q_OS_WASM)
 
 static QByteArray headerName(QNetworkRequest::KnownHeaders header)
 {
@@ -1270,7 +1482,7 @@ QDateTime QNetworkHeadersPrivate::fromHttpDate(const QByteArray &value)
 
 QByteArray QNetworkHeadersPrivate::toHttpDate(const QDateTime &dt)
 {
-    return QLocale::c().toString(dt, QLatin1String("ddd, dd MMM yyyy hh:mm:ss 'GMT'"))
+    return QLocale::c().toString(dt, u"ddd, dd MMM yyyy hh:mm:ss 'GMT'")
         .toLatin1();
 }
 

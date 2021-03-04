@@ -408,7 +408,7 @@ int QLocalServer::maxPendingConnections() const
     still a good idea to delete the object explicitly when you are done with
     it, to avoid wasting memory.
 
-    0 is returned if this function is called when there are no pending
+    \nullptr is returned if this function is called when there are no pending
     connections.
 
     \sa hasPendingConnections(), newConnection(), incomingConnection()
@@ -417,7 +417,7 @@ QLocalSocket *QLocalServer::nextPendingConnection()
 {
     Q_D(QLocalServer);
     if (d->pendingConnections.isEmpty())
-        return 0;
+        return nullptr;
     QLocalSocket *nextSocket = d->pendingConnections.dequeue();
 #ifndef QT_LOCALSOCKET_TCP
     if (d->pendingConnections.size() <= d->maxPendingConnections)
@@ -506,8 +506,8 @@ void QLocalServer::setMaxPendingConnections(int numConnections)
 /*!
     Waits for at most \a msec milliseconds or until an incoming connection
     is available.  Returns \c true if a connection is available; otherwise
-    returns \c false.  If the operation timed out and \a timedOut is not 0,
-    *timedOut will be set to true.
+    returns \c false.  If the operation timed out and \a timedOut is not
+    \nullptr, *timedOut will be set to true.
 
     This is a blocking function call. Its use is ill-advised in a
     single-threaded GUI application, since the whole application will stop

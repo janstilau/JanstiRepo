@@ -116,6 +116,8 @@ QByteArray QSslKeyPrivate::pemHeader() const
         return QByteArrayLiteral("-----BEGIN DSA PRIVATE KEY-----");
     else if (algorithm == QSsl::Ec)
         return QByteArrayLiteral("-----BEGIN EC PRIVATE KEY-----");
+    else if (algorithm == QSsl::Dh)
+        return QByteArrayLiteral("-----BEGIN PRIVATE KEY-----");
 
     Q_UNREACHABLE();
     return QByteArray();
@@ -141,6 +143,8 @@ QByteArray QSslKeyPrivate::pemFooter() const
         return QByteArrayLiteral("-----END DSA PRIVATE KEY-----");
     else if (algorithm == QSsl::Ec)
         return QByteArrayLiteral("-----END EC PRIVATE KEY-----");
+    else if (algorithm == QSsl::Dh)
+        return QByteArrayLiteral("-----END PRIVATE KEY-----");
 
     Q_UNREACHABLE();
     return QByteArray();
@@ -381,6 +385,24 @@ QSslKey::QSslKey(const QSslKey &other) : d(other.d)
 {
 }
 
+QSslKey::QSslKey(QSslKey &&other) noexcept
+    : d(nullptr)
+{
+    qSwap(d, other.d);
+}
+
+QSslKey &QSslKey::operator=(QSslKey &&other) noexcept
+{
+    if (this == &other)
+        return *this;
+
+    // If no one else is referencing the key data we want to make sure
+    // before we swap the d-ptr that it is not left in memory.
+    d.reset();
+    qSwap(d, other.d);
+    return *this;
+}
+
 /*!
     Destroys the QSslKey object.
 */
@@ -486,8 +508,8 @@ QByteArray QSslKey::toPem(const QByteArray &passPhrase) const
 }
 
 /*!
-    Returns a pointer to the native key handle, if it is available;
-    otherwise a null pointer is returned.
+    Returns a pointer to the native key handle, if there is
+    one, else \nullptr.
 
     You can use this handle together with the native API to access
     extended information about the key.
@@ -535,7 +557,9 @@ QDebug operator<<(QDebug debug, const QSslKey &key)
     debug << "QSslKey("
           << (key.type() == QSsl::PublicKey ? "PublicKey" : "PrivateKey")
           << ", " << (key.algorithm() == QSsl::Opaque ? "OPAQUE" :
-                      (key.algorithm() == QSsl::Rsa ? "RSA" : ((key.algorithm() == QSsl::Dsa) ? "DSA" : "EC")))
+                     (key.algorithm() == QSsl::Rsa ? "RSA" :
+                     (key.algorithm() == QSsl::Dsa ? "DSA" :
+                     (key.algorithm() == QSsl::Dh ? "DH" : "EC"))))
           << ", " << key.length()
           << ')';
     return debug;

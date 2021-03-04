@@ -121,7 +121,7 @@ QTcpServerPrivate::QTcpServerPrivate()
  : port(0)
  , socketType(QAbstractSocket::UnknownSocketType)
  , state(QAbstractSocket::UnconnectedState)
- , socketEngine(0)
+ , socketEngine(nullptr)
  , serverSocketError(QAbstractSocket::UnknownSocketError)
  , maxConnections(30)
 {
@@ -314,7 +314,7 @@ bool QTcpServer::listen(const QHostAddress &address, quint16 port)
         d->serverSocketErrorString = tr("Operation on socket is not supported");
         return false;
     }
-#ifndef QT_NO_BEARERMANAGEMENT
+#ifndef QT_NO_BEARERMANAGEMENT // ### Qt6: Remove section
     //copy network session down to the socket engine (if it has been set)
     d->socketEngine->setProperty("_q_networksession", property("_q_networksession"));
 #endif
@@ -389,7 +389,7 @@ void QTcpServer::close()
             // in out of memory situations, the socketEngine
             // will be deleted in ~QTcpServer (it's a child-object of this)
         }
-        d->socketEngine = 0;
+        d->socketEngine = nullptr;
     }
 
     d->state = QAbstractSocket::UnconnectedState;
@@ -436,7 +436,7 @@ bool QTcpServer::setSocketDescriptor(qintptr socketDescriptor)
         d->serverSocketErrorString = tr("Operation on socket is not supported");
         return false;
     }
-#ifndef QT_NO_BEARERMANAGEMENT
+#ifndef QT_NO_BEARERMANAGEMENT // ### Qt6: Remove section
     //copy network session down to the socket engine (if it has been set)
     d->socketEngine->setProperty("_q_networksession", property("_q_networksession"));
 #endif
@@ -493,7 +493,7 @@ QHostAddress QTcpServer::serverAddress() const
     Waits for at most \a msec milliseconds or until an incoming
     connection is available. Returns \c true if a connection is
     available; otherwise returns \c false. If the operation timed out
-    and \a timedOut is not 0, *\a timedOut will be set to true.
+    and \a timedOut is not \nullptr, *\a timedOut will be set to true.
 
     This is a blocking function call. Its use is disadvised in a
     single-threaded GUI application, since the whole application will
@@ -548,7 +548,7 @@ bool QTcpServer::hasPendingConnections() const
     destroyed. It is still a good idea to delete the object
     explicitly when you are done with it, to avoid wasting memory.
 
-    0 is returned if this function is called when there are no pending
+    \nullptr is returned if this function is called when there are no pending
     connections.
 
     \note The returned QTcpSocket object cannot be used from another
@@ -561,7 +561,7 @@ QTcpSocket *QTcpServer::nextPendingConnection()
 {
     Q_D(QTcpServer);
     if (d->pendingConnections.isEmpty())
-        return 0;
+        return nullptr;
 
     if (!d->socketEngine) {
         qWarning("QTcpServer::nextPendingConnection() called while not listening");

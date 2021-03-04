@@ -521,15 +521,7 @@ void QThreadPool::start(QRunnable *runnable, int priority)
     }
 }
 
-/*!
-    \overload
-    \since 5.15
-
-    Reserves a thread and uses it to run \a functionToRun, unless this thread will
-    make the current thread count exceed maxThreadCount().  In that case,
-    \a functionToRun is added to a run queue instead. The \a priority argument can
-    be used to control the run queue's order of execution.
-*/
+//原有的架构已经很完善了, 这里, 传递过来一个 std::funcation, 仅仅是把它包装成为了一个 QRunnable 对象而已.
 void QThreadPool::start(std::function<void()> functionToRun, int priority)
 {
     if (!functionToRun)

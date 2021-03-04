@@ -24,94 +24,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-    CopidQt/Widget/qaction.cpp \
-    CopidQt/Widget/qactiongroup.cpp \
-    CopidQt/Widget/qapplication.cpp \
-    CopidQt/Widget/qboxlayout.cpp \
-    CopidQt/Widget/qdesktopwidget.cpp \
-    CopidQt/Widget/qformlayout.cpp \
-    CopidQt/Widget/qgesture.cpp \
-    CopidQt/Widget/qgesturemanager.cpp \
-    CopidQt/Widget/qgesturerecognizer.cpp \
-    CopidQt/Widget/qgridlayout.cpp \
-    CopidQt/Widget/qlayout.cpp \
-    CopidQt/Widget/qlayoutengine.cpp \
-    CopidQt/Widget/qlayoutitem.cpp \
-    CopidQt/Widget/qmacgesturerecognizer.cpp \
-    CopidQt/Widget/qopenglwidget.cpp \
-    CopidQt/Widget/qshortcut.cpp \
-    CopidQt/Widget/qsizepolicy.cpp \
-    CopidQt/Widget/qstackedlayout.cpp \
-    CopidQt/Widget/qstandardgestures.cpp \
-    CopidQt/Widget/qtestsupport_widgets.cpp \
-    CopidQt/Widget/qtooltip.cpp \
-    CopidQt/Widget/qwhatsthis.cpp \
-    CopidQt/Widget/qwidget.cpp \
-    CopidQt/Widget/qwidgetaction.cpp \
-    CopidQt/Widget/qwidgetbackingstore.cpp \
-    CopidQt/Widget/qwidgetsvariant.cpp \
-    CopidQt/Widget/qwidgetwindow.cpp \
-    CopidQt/Widget/qwindowcontainer.cpp \
-    CopidQt/gui/kernel/qclipboard.cpp \
-    CopidQt/gui/kernel/qcursor.cpp \
-    CopidQt/gui/kernel/qdnd.cpp \
-    CopidQt/gui/kernel/qdrag.cpp \
-    CopidQt/gui/kernel/qevent.cpp \
-    CopidQt/gui/kernel/qgenericplugin.cpp \
-    CopidQt/gui/kernel/qgenericpluginfactory.cpp \
-    CopidQt/gui/kernel/qguiapplication.cpp \
-    CopidQt/gui/kernel/qguivariant.cpp \
-    CopidQt/gui/kernel/qhighdpiscaling.cpp \
-    CopidQt/gui/kernel/qinputdevicemanager.cpp \
-    CopidQt/gui/kernel/qinputmethod.cpp \
-    CopidQt/gui/kernel/qinternalmimedata.cpp \
-    CopidQt/gui/kernel/qkeymapper.cpp \
-    CopidQt/gui/kernel/qkeysequence.cpp \
-    CopidQt/gui/kernel/qoffscreensurface.cpp \
-    CopidQt/gui/kernel/qopenglcontext.cpp \
-    CopidQt/gui/kernel/qopenglwindow.cpp \
-    CopidQt/gui/kernel/qpaintdevicewindow.cpp \
-    CopidQt/gui/kernel/qpalette.cpp \
-    CopidQt/gui/kernel/qpixelformat.cpp \
-    CopidQt/gui/kernel/qplatformclipboard.cpp \
-    CopidQt/gui/kernel/qplatformcursor.cpp \
-    CopidQt/gui/kernel/qplatformdialoghelper.cpp \
-    CopidQt/gui/kernel/qplatformdrag.cpp \
-    CopidQt/gui/kernel/qplatformgraphicsbuffer.cpp \
-    CopidQt/gui/kernel/qplatformgraphicsbufferhelper.cpp \
-    CopidQt/gui/kernel/qplatforminputcontext.cpp \
-    CopidQt/gui/kernel/qplatforminputcontextfactory.cpp \
-    CopidQt/gui/kernel/qplatforminputcontextplugin.cpp \
-    CopidQt/gui/kernel/qplatformintegration.cpp \
-    CopidQt/gui/kernel/qplatformintegrationfactory.cpp \
-    CopidQt/gui/kernel/qplatformintegrationplugin.cpp \
-    CopidQt/gui/kernel/qplatformmenu.cpp \
-    CopidQt/gui/kernel/qplatformnativeinterface.cpp \
-    CopidQt/gui/kernel/qplatformoffscreensurface.cpp \
-    CopidQt/gui/kernel/qplatformopenglcontext.cpp \
-    CopidQt/gui/kernel/qplatformscreen.cpp \
-    CopidQt/gui/kernel/qplatformservices.cpp \
-    CopidQt/gui/kernel/qplatformsessionmanager.cpp \
-    CopidQt/gui/kernel/qplatformsharedgraphicscache.cpp \
-    CopidQt/gui/kernel/qplatformsurface.cpp \
-    CopidQt/gui/kernel/qplatformsystemtrayicon.cpp \
-    CopidQt/gui/kernel/qplatformtheme.cpp \
-    CopidQt/gui/kernel/qplatformthemefactory.cpp \
-    CopidQt/gui/kernel/qplatformthemeplugin.cpp \
-    CopidQt/gui/kernel/qplatformwindow.cpp \
-    CopidQt/gui/kernel/qrasterwindow.cpp \
-    CopidQt/gui/kernel/qscreen.cpp \
-    CopidQt/gui/kernel/qsessionmanager.cpp \
-    CopidQt/gui/kernel/qshapedpixmapdndwindow.cpp \
-    CopidQt/gui/kernel/qshortcutmap.cpp \
-    CopidQt/gui/kernel/qsimpledrag.cpp \
-    CopidQt/gui/kernel/qstylehints.cpp \
-    CopidQt/gui/kernel/qsurface.cpp \
-    CopidQt/gui/kernel/qsurfaceformat.cpp \
-    CopidQt/gui/kernel/qtestsupport_gui.cpp \
-    CopidQt/gui/kernel/qtouchdevice.cpp \
-    CopidQt/gui/kernel/qwindow.cpp \
-    CopidQt/gui/kernel/qwindowsysteminterface.cpp \
     io/forkfd_qt.cpp \
     io/qabstractfileengine.cpp \
     io/qbuffer.cpp \
@@ -208,189 +120,75 @@ SOURCES += \
     itemviews/qtreeview.cpp \
     itemviews/qtreewidget.cpp \
     itemviews/qtreewidgetitemiterator.cpp \
-        main.cpp \
-        mainwindow.cpp \
-    ../../Work/CopidQt/qcoreapplication.cpp \
-    ../../Work/CopidQt/qmetaobject.cpp \
-    ../../Work/CopidQt/qobject.cpp \
-    ../../Work/CopidQt/qpoint.cpp \
-    ../../Work/CopidQt/qpointer.cpp \
-    ../../Work/CopidQt/qthread.cpp \
-    ../../Work/CopidQt/qvariant.cpp \
-    ../../Work/CopidQt/qwidget.cpp \
-    CopidQt/implement/qcoreapplication.cpp \
-    CopidQt/implement/qmetaobject.cpp \
-    CopidQt/implement/qobject.cpp \
-    CopidQt/implement/qpoint.cpp \
-    CopidQt/implement/qpointer.cpp \
-    CopidQt/implement/qthread.cpp \
-    CopidQt/implement/qvariant.cpp \
-    CopidQt/implement/qwidget.cpp \
+    kernel/qabstracteventdispatcher.cpp \
+    kernel/qabstractnativeeventfilter.cpp \
+    kernel/qbasictimer.cpp \
+    kernel/qcfsocketnotifier.cpp \
+    kernel/qcore_foundation.mm \
+    kernel/qcore_mac.mm \
+    kernel/qcore_unix.cpp \
+    kernel/qcoreapplication.cpp \
+    kernel/qcoreapplication_mac.cpp \
+    kernel/qcoreapplication_win.cpp \
+    kernel/qcoreevent.cpp \
+    kernel/qcoreglobaldata.cpp \
+    kernel/qdeadlinetimer.cpp \
+    kernel/qelapsedtimer.cpp \
+    kernel/qelapsedtimer_generic.cpp \
+    kernel/qelapsedtimer_mac.cpp \
+    kernel/qelapsedtimer_unix.cpp \
+    kernel/qelapsedtimer_win.cpp \
+    kernel/qeventdispatcher_cf.mm \
+    kernel/qeventdispatcher_glib.cpp \
+    kernel/qeventdispatcher_unix.cpp \
+    kernel/qeventdispatcher_win.cpp \
+    kernel/qeventdispatcher_winrt.cpp \
+    kernel/qeventloop.cpp \
+    kernel/qfunctions_nacl.cpp \
+    kernel/qfunctions_vxworks.cpp \
+    kernel/qfunctions_winrt.cpp \
+    kernel/qjni.cpp \
+    kernel/qjnihelpers.cpp \
+    kernel/qjnionload.cpp \
+    kernel/qmath.cpp \
+    kernel/qmetaobject.cpp \
+    kernel/qmetaobjectbuilder.cpp \
+    kernel/qmetatype.cpp \
+    kernel/qmimedata.cpp \
+    kernel/qobject.cpp \
+    kernel/qobjectcleanuphandler.cpp \
+    kernel/qpointer.cpp \
+    kernel/qpoll.cpp \
+    kernel/qppsattribute.cpp \
+    kernel/qppsobject.cpp \
+    kernel/qsharedmemory.cpp \
+    kernel/qsharedmemory_android.cpp \
+    kernel/qsharedmemory_posix.cpp \
+    kernel/qsharedmemory_systemv.cpp \
+    kernel/qsharedmemory_unix.cpp \
+    kernel/qsharedmemory_win.cpp \
+    kernel/qsignalmapper.cpp \
+    kernel/qsocketnotifier.cpp \
+    kernel/qsystemerror.cpp \
+    kernel/qsystemsemaphore.cpp \
+    kernel/qsystemsemaphore_android.cpp \
+    kernel/qsystemsemaphore_posix.cpp \
+    kernel/qsystemsemaphore_systemv.cpp \
+    kernel/qsystemsemaphore_unix.cpp \
+    kernel/qsystemsemaphore_win.cpp \
+    kernel/qtestsupport_core.cpp \
+    kernel/qtimer.cpp \
+    kernel/qtimerinfo_unix.cpp \
+    kernel/qtranslator.cpp \
+    kernel/qvariant.cpp \
+    kernel/qwineventnotifier.cpp \
+    kernel/qwinregistry.cpp \
     main.cpp \
     mainwindow.cpp \
-    CopidQt/implement/qcoreapplication.cpp \
-    CopidQt/implement/qmetaobject.cpp \
-    CopidQt/implement/qobject.cpp \
-    CopidQt/implement/qpoint.cpp \
-    CopidQt/implement/qpointer.cpp \
-    CopidQt/implement/qthread.cpp \
-    CopidQt/implement/qvariant.cpp \
-    CopidQt/implement/qwidget.cpp \
     main.cpp \
     mainwindow.cpp \
-    CopidQt/implement/qtimer.cpp \
-    CopidQt/implement/qabstracteventdispatcher.cpp \
-    CopidQt/implement/qabstractnativeeventfilter.cpp \
-    CopidQt/implement/qbasictimer.cpp \
-    CopidQt/implement/qcfsocketnotifier.cpp \
-    CopidQt/implement/qcore_mac.cpp \
-    CopidQt/implement/qcore_unix.cpp \
-    CopidQt/implement/qcoreapplication.cpp \
-    CopidQt/implement/qcoreapplication_mac.cpp \
-    CopidQt/implement/qcoreapplication_win.cpp \
-    CopidQt/implement/qcoreevent.cpp \
-    CopidQt/implement/qcoreglobaldata.cpp \
-    CopidQt/implement/qdeadlinetimer.cpp \
-    CopidQt/implement/qelapsedtimer.cpp \
-    CopidQt/implement/qelapsedtimer_generic.cpp \
-    CopidQt/implement/qelapsedtimer_mac.cpp \
-    CopidQt/implement/qelapsedtimer_unix.cpp \
-    CopidQt/implement/qelapsedtimer_win.cpp \
-    CopidQt/implement/qeventdispatcher_glib.cpp \
-    CopidQt/implement/qeventdispatcher_unix.cpp \
-    CopidQt/implement/qeventdispatcher_win.cpp \
-    CopidQt/implement/qeventdispatcher_winrt.cpp \
-    CopidQt/implement/qeventloop.cpp \
-    CopidQt/implement/qfunctions_nacl.cpp \
-    CopidQt/implement/qfunctions_vxworks.cpp \
-    CopidQt/implement/qfunctions_winrt.cpp \
-    CopidQt/implement/qjni.cpp \
-    CopidQt/implement/qjnihelpers.cpp \
-    CopidQt/implement/qjnionload.cpp \
-    CopidQt/implement/qmath.cpp \
-    CopidQt/implement/qmetaobject.cpp \
-    CopidQt/implement/qmetaobjectbuilder.cpp \
-    CopidQt/implement/qmetatype.cpp \
-    CopidQt/implement/qmimedata.cpp \
-    CopidQt/implement/qobject.cpp \
-    CopidQt/implement/qobjectcleanuphandler.cpp \
-    CopidQt/implement/qpoint.cpp \
-    CopidQt/implement/qpointer.cpp \
-    CopidQt/implement/qpoll.cpp \
-    CopidQt/implement/qppsattribute.cpp \
-    CopidQt/implement/qppsobject.cpp \
-    CopidQt/implement/qsharedmemory.cpp \
-    CopidQt/implement/qsharedmemory_android.cpp \
-    CopidQt/implement/qsharedmemory_posix.cpp \
-    CopidQt/implement/qsharedmemory_systemv.cpp \
-    CopidQt/implement/qsharedmemory_unix.cpp \
-    CopidQt/implement/qsharedmemory_win.cpp \
-    CopidQt/implement/qsignalmapper.cpp \
-    CopidQt/implement/qsocketnotifier.cpp \
-    CopidQt/implement/qsystemerror.cpp \
-    CopidQt/implement/qsystemsemaphore.cpp \
-    CopidQt/implement/qsystemsemaphore_android.cpp \
-    CopidQt/implement/qsystemsemaphore_posix.cpp \
-    CopidQt/implement/qsystemsemaphore_systemv.cpp \
-    CopidQt/implement/qsystemsemaphore_unix.cpp \
-    CopidQt/implement/qsystemsemaphore_win.cpp \
-    CopidQt/implement/qtcore_eval.cpp \
-    CopidQt/implement/qthread.cpp \
-    CopidQt/implement/qtimer.cpp \
-    CopidQt/implement/qtimerinfo_unix.cpp \
-    CopidQt/implement/qtranslator.cpp \
-    CopidQt/implement/qvariant.cpp \
-    CopidQt/implement/qwidget.cpp \
-    CopidQt/implement/qwineventnotifier.cpp \
     main.cpp \
     mainwindow.cpp \
-    CopidQt/Widget/qabstractbutton.cpp \
-    CopidQt/Widget/qabstractscrollarea.cpp \
-    CopidQt/Widget/qabstractslider.cpp \
-    CopidQt/Widget/qabstractspinbox.cpp \
-    CopidQt/Widget/qaction.cpp \
-    CopidQt/Widget/qactiongroup.cpp \
-    CopidQt/Widget/qapplication.cpp \
-    CopidQt/Widget/qboxlayout.cpp \
-    CopidQt/Widget/qbuttongroup.cpp \
-    CopidQt/Widget/qcalendarwidget.cpp \
-    CopidQt/Widget/qcheckbox.cpp \
-    CopidQt/Widget/qcombobox.cpp \
-    CopidQt/Widget/qcommandlinkbutton.cpp \
-    CopidQt/Widget/qdatetimeedit.cpp \
-    CopidQt/Widget/qdesktopwidget.cpp \
-    CopidQt/Widget/qdial.cpp \
-    CopidQt/Widget/qdialogbuttonbox.cpp \
-    CopidQt/Widget/qdockarealayout.cpp \
-    CopidQt/Widget/qdockwidget.cpp \
-    CopidQt/Widget/qeffects.cpp \
-    CopidQt/Widget/qfocusframe.cpp \
-    CopidQt/Widget/qfontcombobox.cpp \
-    CopidQt/Widget/qformlayout.cpp \
-    CopidQt/Widget/qframe.cpp \
-    CopidQt/Widget/qgesture.cpp \
-    CopidQt/Widget/qgesturemanager.cpp \
-    CopidQt/Widget/qgesturerecognizer.cpp \
-    CopidQt/Widget/qgridlayout.cpp \
-    CopidQt/Widget/qgroupbox.cpp \
-    CopidQt/Widget/qkeysequenceedit.cpp \
-    CopidQt/Widget/qlabel.cpp \
-    CopidQt/Widget/qlayout.cpp \
-    CopidQt/Widget/qlayoutengine.cpp \
-    CopidQt/Widget/qlayoutitem.cpp \
-    CopidQt/Widget/qlcdnumber.cpp \
-    CopidQt/Widget/qlineedit.cpp \
-    CopidQt/Widget/qlineedit_p.cpp \
-    CopidQt/Widget/qmacgesturerecognizer.cpp \
-    CopidQt/Widget/qmainwindow.cpp \
-    CopidQt/Widget/qmainwindowlayout.cpp \
-    CopidQt/Widget/qmdiarea.cpp \
-    CopidQt/Widget/qmdisubwindow.cpp \
-    CopidQt/Widget/qmenu.cpp \
-    CopidQt/Widget/qmenubar.cpp \
-    CopidQt/Widget/qopenglwidget.cpp \
-    CopidQt/Widget/qplaintextedit.cpp \
-    CopidQt/Widget/qprogressbar.cpp \
-    CopidQt/Widget/qpushbutton.cpp \
-    CopidQt/Widget/qradiobutton.cpp \
-    CopidQt/Widget/qrubberband.cpp \
-    CopidQt/Widget/qscrollarea.cpp \
-    CopidQt/Widget/qscrollbar.cpp \
-    CopidQt/Widget/qshortcut.cpp \
-    CopidQt/Widget/qsizegrip.cpp \
-    CopidQt/Widget/qsizepolicy.cpp \
-    CopidQt/Widget/qslider.cpp \
-    CopidQt/Widget/qspinbox.cpp \
-    CopidQt/Widget/qsplashscreen.cpp \
-    CopidQt/Widget/qsplitter.cpp \
-    CopidQt/Widget/qstackedlayout.cpp \
-    CopidQt/Widget/qstackedwidget.cpp \
-    CopidQt/Widget/qstandardgestures.cpp \
-    CopidQt/Widget/qstatusbar.cpp \
-    CopidQt/Widget/qtabbar.cpp \
-    CopidQt/Widget/qtabwidget.cpp \
-    CopidQt/Widget/qtestsupport_widgets.cpp \
-    CopidQt/Widget/qtextbrowser.cpp \
-    CopidQt/Widget/qtextedit.cpp \
-    CopidQt/Widget/qtoolbar.cpp \
-    CopidQt/Widget/qtoolbararealayout.cpp \
-    CopidQt/Widget/qtoolbarextension.cpp \
-    CopidQt/Widget/qtoolbarlayout.cpp \
-    CopidQt/Widget/qtoolbarseparator.cpp \
-    CopidQt/Widget/qtoolbox.cpp \
-    CopidQt/Widget/qtoolbutton.cpp \
-    CopidQt/Widget/qtooltip.cpp \
-    CopidQt/Widget/qwhatsthis.cpp \
-    CopidQt/Widget/qwidget.cpp \
-    CopidQt/Widget/qwidgetaction.cpp \
-    CopidQt/Widget/qwidgetanimator.cpp \
-    CopidQt/Widget/qwidgetbackingstore.cpp \
-    CopidQt/Widget/qwidgetlinecontrol.cpp \
-    CopidQt/Widget/qwidgetresizehandler.cpp \
-    CopidQt/Widget/qwidgetsvariant.cpp \
-    CopidQt/Widget/qwidgettextcontrol.cpp \
-    CopidQt/Widget/qwidgetwindow.cpp \
-    CopidQt/Widget/qwindowcontainer.cpp \
     network/access/http2/bitstreams.cpp \
     network/access/http2/hpack.cpp \
     network/access/http2/hpacktable.cpp \
@@ -404,6 +202,7 @@ SOURCES += \
     network/access/qhsts.cpp \
     network/access/qhstspolicy.cpp \
     network/access/qhstsstore.cpp \
+    network/access/qhttp2configuration.cpp \
     network/access/qhttp2protocolhandler.cpp \
     network/access/qhttpmultipart.cpp \
     network/access/qhttpnetworkconnection.cpp \
@@ -479,6 +278,9 @@ SOURCES += \
     network/kernel/qhostinfo.cpp \
     network/kernel/qhostinfo_unix.cpp \
     network/kernel/qhostinfo_win.cpp \
+    network/kernel/qnetconmonitor_darwin.mm \
+    network/kernel/qnetconmonitor_stub.cpp \
+    network/kernel/qnetconmonitor_win.cpp \
     network/kernel/qnetworkdatagram.cpp \
     network/kernel/qnetworkinterface.cpp \
     network/kernel/qnetworkinterface_linux.cpp \
@@ -486,6 +288,7 @@ SOURCES += \
     network/kernel/qnetworkinterface_win.cpp \
     network/kernel/qnetworkinterface_winrt.cpp \
     network/kernel/qnetworkproxy.cpp \
+    network/kernel/qnetworkproxy_android.cpp \
     network/kernel/qnetworkproxy_generic.cpp \
     network/kernel/qnetworkproxy_libproxy.cpp \
     network/kernel/qnetworkproxy_mac.cpp \
@@ -515,18 +318,18 @@ SOURCES += \
     network/ssl/qasn1element.cpp \
     network/ssl/qdtls.cpp \
     network/ssl/qdtls_openssl.cpp \
+    network/ssl/qocspresponse.cpp \
     network/ssl/qpassworddigestor.cpp \
     network/ssl/qssl.cpp \
     network/ssl/qsslcertificate.cpp \
     network/ssl/qsslcertificate_openssl.cpp \
     network/ssl/qsslcertificate_qt.cpp \
+    network/ssl/qsslcertificate_schannel.cpp \
     network/ssl/qsslcertificate_winrt.cpp \
     network/ssl/qsslcertificateextension.cpp \
     network/ssl/qsslcipher.cpp \
     network/ssl/qsslconfiguration.cpp \
     network/ssl/qsslcontext_openssl.cpp \
-    network/ssl/qsslcontext_openssl11.cpp \
-    network/ssl/qsslcontext_opensslpre11.cpp \
     network/ssl/qssldiffiehellmanparameters.cpp \
     network/ssl/qssldiffiehellmanparameters_dummy.cpp \
     network/ssl/qssldiffiehellmanparameters_openssl.cpp \
@@ -538,19 +341,47 @@ SOURCES += \
     network/ssl/qsslkey_openssl.cpp \
     network/ssl/qsslkey_p.cpp \
     network/ssl/qsslkey_qt.cpp \
+    network/ssl/qsslkey_schannel.cpp \
     network/ssl/qsslkey_winrt.cpp \
     network/ssl/qsslpresharedkeyauthenticator.cpp \
     network/ssl/qsslsocket.cpp \
     network/ssl/qsslsocket_mac.cpp \
     network/ssl/qsslsocket_mac_shared.cpp \
     network/ssl/qsslsocket_openssl.cpp \
-    network/ssl/qsslsocket_openssl11.cpp \
     network/ssl/qsslsocket_openssl_android.cpp \
     network/ssl/qsslsocket_openssl_symbols.cpp \
-    network/ssl/qsslsocket_opensslpre11.cpp \
+    network/ssl/qsslsocket_qt.cpp \
+    network/ssl/qsslsocket_schannel.cpp \
     network/ssl/qsslsocket_winrt.cpp \
     network/ssl/qwindowscarootfetcher.cpp \
-    CopidQt/implement/qthread_unix.cpp \
+    sql/doc/snippets/code/doc_src_qtsql.cpp \
+    sql/doc/snippets/code/doc_src_sql-driver.cpp \
+    sql/doc/snippets/code/doc_src_sql-driver_snippet.cpp \
+    sql/doc/snippets/code/src_sql_kernel_qsqldatabase.cpp \
+    sql/doc/snippets/code/src_sql_kernel_qsqldatabase_snippet.cpp \
+    sql/doc/snippets/code/src_sql_kernel_qsqldriver.cpp \
+    sql/doc/snippets/code/src_sql_kernel_qsqlerror.cpp \
+    sql/doc/snippets/code/src_sql_kernel_qsqlquery.cpp \
+    sql/doc/snippets/code/src_sql_kernel_qsqlquery_snippet.cpp \
+    sql/doc/snippets/code/src_sql_kernel_qsqlresult.cpp \
+    sql/doc/snippets/code/src_sql_kernel_qsqlresult_snippet.cpp \
+    sql/doc/snippets/code/src_sql_models_qsqlquerymodel.cpp \
+    sql/doc/snippets/sqldatabase/sqldatabase.cpp \
+    sql/doc/snippets/sqldatabase/sqldatabase_snippet.cpp \
+    sql/kernel/qsqlcachedresult.cpp \
+    sql/kernel/qsqldatabase.cpp \
+    sql/kernel/qsqldriver.cpp \
+    sql/kernel/qsqldriverplugin.cpp \
+    sql/kernel/qsqlerror.cpp \
+    sql/kernel/qsqlfield.cpp \
+    sql/kernel/qsqlindex.cpp \
+    sql/kernel/qsqlquery.cpp \
+    sql/kernel/qsqlrecord.cpp \
+    sql/kernel/qsqlresult.cpp \
+    sql/models/qsqlquerymodel.cpp \
+    sql/models/qsqlrelationaldelegate.cpp \
+    sql/models/qsqlrelationaltablemodel.cpp \
+    sql/models/qsqltablemodel.cpp \
     styles/qandroidstyle.cpp \
     styles/qcommonstyle.cpp \
     styles/qdrawutil.cpp \
@@ -726,124 +557,6 @@ SOURCES += \
     concurrent/qtconcurrentthreadengine.cpp
 
 HEADERS += \
-    CopidQt/Widget/qaction.h \
-    CopidQt/Widget/qaction_p.h \
-    CopidQt/Widget/qactiongroup.h \
-    CopidQt/Widget/qapplication.h \
-    CopidQt/Widget/qapplication_p.h \
-    CopidQt/Widget/qboxlayout.h \
-    CopidQt/Widget/qdesktopwidget.h \
-    CopidQt/Widget/qdesktopwidget_p.h \
-    CopidQt/Widget/qformlayout.h \
-    CopidQt/Widget/qgesture.h \
-    CopidQt/Widget/qgesture_p.h \
-    CopidQt/Widget/qgesturemanager_p.h \
-    CopidQt/Widget/qgesturerecognizer.h \
-    CopidQt/Widget/qgridlayout.h \
-    CopidQt/Widget/qlayout.h \
-    CopidQt/Widget/qlayout_p.h \
-    CopidQt/Widget/qlayoutengine_p.h \
-    CopidQt/Widget/qlayoutitem.h \
-    CopidQt/Widget/qmacgesturerecognizer_p.h \
-    CopidQt/Widget/qopenglwidget.h \
-    CopidQt/Widget/qshortcut.h \
-    CopidQt/Widget/qsizepolicy.h \
-    CopidQt/Widget/qstackedlayout.h \
-    CopidQt/Widget/qstandardgestures_p.h \
-    CopidQt/Widget/qt_widgets_pch.h \
-    CopidQt/Widget/qtestsupport_widgets.h \
-    CopidQt/Widget/qtooltip.h \
-    CopidQt/Widget/qtwidgetsglobal.h \
-    CopidQt/Widget/qtwidgetsglobal_p.h \
-    CopidQt/Widget/qwhatsthis.h \
-    CopidQt/Widget/qwidget.h \
-    CopidQt/Widget/qwidget_p.h \
-    CopidQt/Widget/qwidgetaction.h \
-    CopidQt/Widget/qwidgetaction_p.h \
-    CopidQt/Widget/qwidgetbackingstore_p.h \
-    CopidQt/Widget/qwidgetwindow_p.h \
-    CopidQt/Widget/qwindowcontainer_p.h \
-    CopidQt/gui/kernel/qclipboard.h \
-    CopidQt/gui/kernel/qcursor.h \
-    CopidQt/gui/kernel/qcursor_p.h \
-    CopidQt/gui/kernel/qdnd_p.h \
-    CopidQt/gui/kernel/qdrag.h \
-    CopidQt/gui/kernel/qevent.h \
-    CopidQt/gui/kernel/qevent_p.h \
-    CopidQt/gui/kernel/qgenericplugin.h \
-    CopidQt/gui/kernel/qgenericpluginfactory.h \
-    CopidQt/gui/kernel/qguiapplication.h \
-    CopidQt/gui/kernel/qguiapplication_p.h \
-    CopidQt/gui/kernel/qhighdpiscaling_p.h \
-    CopidQt/gui/kernel/qinputdevicemanager_p.h \
-    CopidQt/gui/kernel/qinputdevicemanager_p_p.h \
-    CopidQt/gui/kernel/qinputmethod.h \
-    CopidQt/gui/kernel/qinputmethod_p.h \
-    CopidQt/gui/kernel/qinternalmimedata_p.h \
-    CopidQt/gui/kernel/qkeymapper_p.h \
-    CopidQt/gui/kernel/qkeysequence.h \
-    CopidQt/gui/kernel/qkeysequence_p.h \
-    CopidQt/gui/kernel/qoffscreensurface.h \
-    CopidQt/gui/kernel/qopenglcontext.h \
-    CopidQt/gui/kernel/qopenglcontext_p.h \
-    CopidQt/gui/kernel/qopenglwindow.h \
-    CopidQt/gui/kernel/qpaintdevicewindow.h \
-    CopidQt/gui/kernel/qpaintdevicewindow_p.h \
-    CopidQt/gui/kernel/qpalette.h \
-    CopidQt/gui/kernel/qpixelformat.h \
-    CopidQt/gui/kernel/qplatformclipboard.h \
-    CopidQt/gui/kernel/qplatformcursor.h \
-    CopidQt/gui/kernel/qplatformdialoghelper.h \
-    CopidQt/gui/kernel/qplatformdrag.h \
-    CopidQt/gui/kernel/qplatformgraphicsbuffer.h \
-    CopidQt/gui/kernel/qplatformgraphicsbufferhelper.h \
-    CopidQt/gui/kernel/qplatforminputcontext.h \
-    CopidQt/gui/kernel/qplatforminputcontext_p.h \
-    CopidQt/gui/kernel/qplatforminputcontextfactory_p.h \
-    CopidQt/gui/kernel/qplatforminputcontextplugin_p.h \
-    CopidQt/gui/kernel/qplatformintegration.h \
-    CopidQt/gui/kernel/qplatformintegrationfactory_p.h \
-    CopidQt/gui/kernel/qplatformintegrationplugin.h \
-    CopidQt/gui/kernel/qplatformmenu.h \
-    CopidQt/gui/kernel/qplatformnativeinterface.h \
-    CopidQt/gui/kernel/qplatformoffscreensurface.h \
-    CopidQt/gui/kernel/qplatformopenglcontext.h \
-    CopidQt/gui/kernel/qplatformscreen.h \
-    CopidQt/gui/kernel/qplatformscreen_p.h \
-    CopidQt/gui/kernel/qplatformservices.h \
-    CopidQt/gui/kernel/qplatformsessionmanager.h \
-    CopidQt/gui/kernel/qplatformsharedgraphicscache.h \
-    CopidQt/gui/kernel/qplatformsurface.h \
-    CopidQt/gui/kernel/qplatformsystemtrayicon.h \
-    CopidQt/gui/kernel/qplatformtheme.h \
-    CopidQt/gui/kernel/qplatformtheme_p.h \
-    CopidQt/gui/kernel/qplatformthemefactory_p.h \
-    CopidQt/gui/kernel/qplatformthemeplugin.h \
-    CopidQt/gui/kernel/qplatformwindow.h \
-    CopidQt/gui/kernel/qplatformwindow_p.h \
-    CopidQt/gui/kernel/qrasterwindow.h \
-    CopidQt/gui/kernel/qscreen.h \
-    CopidQt/gui/kernel/qscreen_p.h \
-    CopidQt/gui/kernel/qsessionmanager.h \
-    CopidQt/gui/kernel/qsessionmanager_p.h \
-    CopidQt/gui/kernel/qshapedpixmapdndwindow_p.h \
-    CopidQt/gui/kernel/qshortcutmap_p.h \
-    CopidQt/gui/kernel/qsimpledrag_p.h \
-    CopidQt/gui/kernel/qstylehints.h \
-    CopidQt/gui/kernel/qsurface.h \
-    CopidQt/gui/kernel/qsurfaceformat.h \
-    CopidQt/gui/kernel/qt_gui_pch.h \
-    CopidQt/gui/kernel/qtestsupport_gui.h \
-    CopidQt/gui/kernel/qtguiglobal.h \
-    CopidQt/gui/kernel/qtguiglobal_p.h \
-    CopidQt/gui/kernel/qtouchdevice.h \
-    CopidQt/gui/kernel/qtouchdevice_p.h \
-    CopidQt/gui/kernel/qwindow.h \
-    CopidQt/gui/kernel/qwindow_p.h \
-    CopidQt/gui/kernel/qwindowdefs.h \
-    CopidQt/gui/kernel/qwindowdefs_win.h \
-    CopidQt/gui/kernel/qwindowsysteminterface.h \
-    CopidQt/gui/kernel/qwindowsysteminterface_p.h \
     Core/qabstractanimation.h \
     Core/qabstracteventdispatcher.h \
     Core/qabstractitemmodel.h \
@@ -1146,197 +859,74 @@ HEADERS += \
     itemviews/qtreewidgetitemiterator.h \
     itemviews/qtreewidgetitemiterator_p.h \
     itemviews/qwidgetitemdata_p.h \
-        mainwindow.h \
+    kernel/qabstracteventdispatcher.h \
+    kernel/qabstracteventdispatcher_p.h \
+    kernel/qabstractnativeeventfilter.h \
+    kernel/qbasictimer.h \
+    kernel/qcfsocketnotifier_p.h \
+    kernel/qcore_mac_p.h \
+    kernel/qcore_unix_p.h \
+    kernel/qcoreapplication.h \
+    kernel/qcoreapplication_p.h \
+    kernel/qcorecmdlineargs_p.h \
+    kernel/qcoreevent.h \
+    kernel/qcoreglobaldata_p.h \
+    kernel/qdeadlinetimer.h \
+    kernel/qdeadlinetimer_p.h \
+    kernel/qelapsedtimer.h \
+    kernel/qeventdispatcher_cf_p.h \
+    kernel/qeventdispatcher_glib_p.h \
+    kernel/qeventdispatcher_unix_p.h \
+    kernel/qeventdispatcher_win_p.h \
+    kernel/qeventdispatcher_winrt_p.h \
+    kernel/qeventloop.h \
+    kernel/qeventloop_p.h \
+    kernel/qfunctions_fake_env_p.h \
+    kernel/qfunctions_nacl.h \
+    kernel/qfunctions_p.h \
+    kernel/qfunctions_vxworks.h \
+    kernel/qfunctions_winrt.h \
+    kernel/qjni_p.h \
+    kernel/qjnihelpers_p.h \
+    kernel/qmath.h \
+    kernel/qmetaobject.h \
+    kernel/qmetaobject_moc_p.h \
+    kernel/qmetaobject_p.h \
+    kernel/qmetaobjectbuilder_p.h \
+    kernel/qmetatype.h \
+    kernel/qmetatype_p.h \
+    kernel/qmetatypeswitcher_p.h \
+    kernel/qmimedata.h \
+    kernel/qobject.h \
+    kernel/qobject_impl.h \
+    kernel/qobject_p.h \
+    kernel/qobjectcleanuphandler.h \
+    kernel/qobjectdefs.h \
+    kernel/qobjectdefs_impl.h \
+    kernel/qpointer.h \
+    kernel/qpoll_p.h \
+    kernel/qppsattribute_p.h \
+    kernel/qppsattributeprivate_p.h \
+    kernel/qppsobject_p.h \
+    kernel/qppsobjectprivate_p.h \
+    kernel/qsharedmemory.h \
+    kernel/qsharedmemory_p.h \
+    kernel/qsignalmapper.h \
+    kernel/qsocketnotifier.h \
+    kernel/qsystemerror_p.h \
+    kernel/qsystemsemaphore.h \
+    kernel/qsystemsemaphore_p.h \
+    kernel/qtestsupport_core.h \
+    kernel/qtimer.h \
+    kernel/qtimerinfo_unix_p.h \
+    kernel/qtranslator.h \
+    kernel/qtranslator_p.h \
+    kernel/qvariant.h \
+    kernel/qvariant_p.h \
+    kernel/qwineventnotifier.h \
+    kernel/qwineventnotifier_p.h \
+    kernel/qwinregistry_p.h \
     mainwindow.h \
-    CopidQt/header/qobject.h \
-    mainwindow.h \
-    CopidQt/implement/qabstracteventdispatcher.h \
-    CopidQt/implement/qabstracteventdispatcher_p.h \
-    CopidQt/implement/qabstractnativeeventfilter.h \
-    CopidQt/implement/qbasictimer.h \
-    CopidQt/implement/qcfsocketnotifier_p.h \
-    CopidQt/implement/qcore_mac_p.h \
-    CopidQt/implement/qcore_unix_p.h \
-    CopidQt/implement/qcoreapplication.h \
-    CopidQt/implement/qcoreapplication_p.h \
-    CopidQt/implement/qcorecmdlineargs_p.h \
-    CopidQt/implement/qcoreevent.h \
-    CopidQt/implement/qcoreglobaldata_p.h \
-    CopidQt/implement/qdeadlinetimer.h \
-    CopidQt/implement/qdeadlinetimer_p.h \
-    CopidQt/implement/qelapsedtimer.h \
-    CopidQt/implement/qeventdispatcher_cf_p.h \
-    CopidQt/implement/qeventdispatcher_glib_p.h \
-    CopidQt/implement/qeventdispatcher_unix_p.h \
-    CopidQt/implement/qeventdispatcher_win_p.h \
-    CopidQt/implement/qeventdispatcher_winrt_p.h \
-    CopidQt/implement/qeventloop.h \
-    CopidQt/implement/qeventloop_p.h \
-    CopidQt/implement/qfunctions_fake_env_p.h \
-    CopidQt/implement/qfunctions_nacl.h \
-    CopidQt/implement/qfunctions_p.h \
-    CopidQt/implement/qfunctions_vxworks.h \
-    CopidQt/implement/qfunctions_winrt.h \
-    CopidQt/implement/qjni_p.h \
-    CopidQt/implement/qjnihelpers_p.h \
-    CopidQt/implement/qmath.h \
-    CopidQt/implement/qmetaobject.h \
-    CopidQt/implement/qmetaobject_moc_p.h \
-    CopidQt/implement/qmetaobject_p.h \
-    CopidQt/implement/qmetaobjectbuilder_p.h \
-    CopidQt/implement/qmetatype.h \
-    CopidQt/implement/qmetatype_p.h \
-    CopidQt/implement/qmetatypeswitcher_p.h \
-    CopidQt/implement/qmimedata.h \
-    CopidQt/implement/qobject.h \
-    CopidQt/implement/qobject_impl.h \
-    CopidQt/implement/qobject_p.h \
-    CopidQt/implement/qobjectcleanuphandler.h \
-    CopidQt/implement/qobjectdefs.h \
-    CopidQt/implement/qobjectdefs_impl.h \
-    CopidQt/implement/qpointer.h \
-    CopidQt/implement/qpoll_p.h \
-    CopidQt/implement/qppsattribute_p.h \
-    CopidQt/implement/qppsattributeprivate_p.h \
-    CopidQt/implement/qppsobject_p.h \
-    CopidQt/implement/qppsobjectprivate_p.h \
-    CopidQt/implement/qsharedmemory.h \
-    CopidQt/implement/qsharedmemory_p.h \
-    CopidQt/implement/qsignalmapper.h \
-    CopidQt/implement/qsocketnotifier.h \
-    CopidQt/implement/qsystemerror_p.h \
-    CopidQt/implement/qsystemsemaphore.h \
-    CopidQt/implement/qsystemsemaphore_p.h \
-    CopidQt/implement/qtimer.h \
-    CopidQt/implement/qtimerinfo_unix_p.h \
-    CopidQt/implement/qtranslator.h \
-    CopidQt/implement/qtranslator_p.h \
-    CopidQt/implement/qvariant.h \
-    CopidQt/implement/qvariant_p.h \
-    CopidQt/implement/qwineventnotifier.h \
-    mainwindow.h \
-    CopidQt/Widget/qabstractbutton.h \
-    CopidQt/Widget/qabstractbutton_p.h \
-    CopidQt/Widget/qabstractscrollarea.h \
-    CopidQt/Widget/qabstractscrollarea_p.h \
-    CopidQt/Widget/qabstractslider.h \
-    CopidQt/Widget/qabstractslider_p.h \
-    CopidQt/Widget/qabstractspinbox.h \
-    CopidQt/Widget/qabstractspinbox_p.h \
-    CopidQt/Widget/qaction.h \
-    CopidQt/Widget/qaction_p.h \
-    CopidQt/Widget/qactiongroup.h \
-    CopidQt/Widget/qapplication.h \
-    CopidQt/Widget/qapplication_p.h \
-    CopidQt/Widget/qboxlayout.h \
-    CopidQt/Widget/qbuttongroup.h \
-    CopidQt/Widget/qbuttongroup_p.h \
-    CopidQt/Widget/qcalendarwidget.h \
-    CopidQt/Widget/qcheckbox.h \
-    CopidQt/Widget/qcombobox.h \
-    CopidQt/Widget/qcombobox_p.h \
-    CopidQt/Widget/qcommandlinkbutton.h \
-    CopidQt/Widget/qdatetimeedit.h \
-    CopidQt/Widget/qdatetimeedit_p.h \
-    CopidQt/Widget/qdesktopwidget.h \
-    CopidQt/Widget/qdesktopwidget_p.h \
-    CopidQt/Widget/qdial.h \
-    CopidQt/Widget/qdialogbuttonbox.h \
-    CopidQt/Widget/qdockarealayout_p.h \
-    CopidQt/Widget/qdockwidget.h \
-    CopidQt/Widget/qdockwidget_p.h \
-    CopidQt/Widget/qeffects_p.h \
-    CopidQt/Widget/qfocusframe.h \
-    CopidQt/Widget/qfontcombobox.h \
-    CopidQt/Widget/qformlayout.h \
-    CopidQt/Widget/qframe.h \
-    CopidQt/Widget/qframe_p.h \
-    CopidQt/Widget/qgesture.h \
-    CopidQt/Widget/qgesture_p.h \
-    CopidQt/Widget/qgesturemanager_p.h \
-    CopidQt/Widget/qgesturerecognizer.h \
-    CopidQt/Widget/qgridlayout.h \
-    CopidQt/Widget/qgroupbox.h \
-    CopidQt/Widget/qkeysequenceedit.h \
-    CopidQt/Widget/qkeysequenceedit_p.h \
-    CopidQt/Widget/qlabel.h \
-    CopidQt/Widget/qlabel_p.h \
-    CopidQt/Widget/qlayout.h \
-    CopidQt/Widget/qlayout_p.h \
-    CopidQt/Widget/qlayoutengine_p.h \
-    CopidQt/Widget/qlayoutitem.h \
-    CopidQt/Widget/qlcdnumber.h \
-    CopidQt/Widget/qlineedit.h \
-    CopidQt/Widget/qlineedit_p.h \
-    CopidQt/Widget/qmaccocoaviewcontainer_mac.h \
-    CopidQt/Widget/qmacgesturerecognizer_p.h \
-    CopidQt/Widget/qmacnativewidget_mac.h \
-    CopidQt/Widget/qmainwindow.h \
-    CopidQt/Widget/qmainwindowlayout_p.h \
-    CopidQt/Widget/qmdiarea.h \
-    CopidQt/Widget/qmdiarea_p.h \
-    CopidQt/Widget/qmdisubwindow.h \
-    CopidQt/Widget/qmdisubwindow_p.h \
-    CopidQt/Widget/qmenu.h \
-    CopidQt/Widget/qmenu_p.h \
-    CopidQt/Widget/qmenubar.h \
-    CopidQt/Widget/qmenubar_p.h \
-    CopidQt/Widget/qopenglwidget.h \
-    CopidQt/Widget/qplaintextedit.h \
-    CopidQt/Widget/qplaintextedit_p.h \
-    CopidQt/Widget/qprogressbar.h \
-    CopidQt/Widget/qpushbutton.h \
-    CopidQt/Widget/qpushbutton_p.h \
-    CopidQt/Widget/qradiobutton.h \
-    CopidQt/Widget/qrubberband.h \
-    CopidQt/Widget/qscrollarea.h \
-    CopidQt/Widget/qscrollarea_p.h \
-    CopidQt/Widget/qscrollbar.h \
-    CopidQt/Widget/qscrollbar_p.h \
-    CopidQt/Widget/qshortcut.h \
-    CopidQt/Widget/qsizegrip.h \
-    CopidQt/Widget/qsizepolicy.h \
-    CopidQt/Widget/qslider.h \
-    CopidQt/Widget/qspinbox.h \
-    CopidQt/Widget/qsplashscreen.h \
-    CopidQt/Widget/qsplitter.h \
-    CopidQt/Widget/qsplitter_p.h \
-    CopidQt/Widget/qstackedlayout.h \
-    CopidQt/Widget/qstackedwidget.h \
-    CopidQt/Widget/qstandardgestures_p.h \
-    CopidQt/Widget/qstatusbar.h \
-    CopidQt/Widget/qt_widgets_pch.h \
-    CopidQt/Widget/qtabbar.h \
-    CopidQt/Widget/qtabbar_p.h \
-    CopidQt/Widget/qtabwidget.h \
-    CopidQt/Widget/qtestsupport_widgets.h \
-    CopidQt/Widget/qtextbrowser.h \
-    CopidQt/Widget/qtextedit.h \
-    CopidQt/Widget/qtextedit_p.h \
-    CopidQt/Widget/qtoolbar.h \
-    CopidQt/Widget/qtoolbar_p.h \
-    CopidQt/Widget/qtoolbararealayout_p.h \
-    CopidQt/Widget/qtoolbarextension_p.h \
-    CopidQt/Widget/qtoolbarlayout_p.h \
-    CopidQt/Widget/qtoolbarseparator_p.h \
-    CopidQt/Widget/qtoolbox.h \
-    CopidQt/Widget/qtoolbutton.h \
-    CopidQt/Widget/qtooltip.h \
-    CopidQt/Widget/qtwidgetsglobal.h \
-    CopidQt/Widget/qtwidgetsglobal_p.h \
-    CopidQt/Widget/qwhatsthis.h \
-    CopidQt/Widget/qwidget.h \
-    CopidQt/Widget/qwidget_p.h \
-    CopidQt/Widget/qwidgetaction.h \
-    CopidQt/Widget/qwidgetaction_p.h \
-    CopidQt/Widget/qwidgetanimator_p.h \
-    CopidQt/Widget/qwidgetbackingstore_p.h \
-    CopidQt/Widget/qwidgetlinecontrol_p.h \
-    CopidQt/Widget/qwidgetresizehandler_p.h \
-    CopidQt/Widget/qwidgettextcontrol_p.h \
-    CopidQt/Widget/qwidgettextcontrol_p_p.h \
-    CopidQt/Widget/qwidgetwindow_p.h \
-    CopidQt/Widget/qwindowcontainer_p.h \
     network/access/http2/bitstreams_p.h \
     network/access/http2/hpack_p.h \
     network/access/http2/hpacktable_p.h \
@@ -1351,6 +941,7 @@ HEADERS += \
     network/access/qhsts_p.h \
     network/access/qhstspolicy.h \
     network/access/qhstsstore_p.h \
+    network/access/qhttp2configuration.h \
     network/access/qhttp2protocolhandler_p.h \
     network/access/qhttpmultipart.h \
     network/access/qhttpmultipart_p.h \
@@ -1404,6 +995,7 @@ HEADERS += \
     network/kernel/qhostaddress_p.h \
     network/kernel/qhostinfo.h \
     network/kernel/qhostinfo_p.h \
+    network/kernel/qnetconmonitor_p.h \
     network/kernel/qnetworkdatagram.h \
     network/kernel/qnetworkdatagram_p.h \
     network/kernel/qnetworkinterface.h \
@@ -1439,6 +1031,9 @@ HEADERS += \
     network/ssl/qdtls.h \
     network/ssl/qdtls_openssl_p.h \
     network/ssl/qdtls_p.h \
+    network/ssl/qocsp_p.h \
+    network/ssl/qocspresponse.h \
+    network/ssl/qocspresponse_p.h \
     network/ssl/qpassworddigestor.h \
     network/ssl/qssl.h \
     network/ssl/qssl_p.h \
@@ -1461,14 +1056,33 @@ HEADERS += \
     network/ssl/qsslpresharedkeyauthenticator_p.h \
     network/ssl/qsslsocket.h \
     network/ssl/qsslsocket_mac_p.h \
-    network/ssl/qsslsocket_openssl11_symbols_p.h \
     network/ssl/qsslsocket_openssl_p.h \
     network/ssl/qsslsocket_openssl_symbols_p.h \
-    network/ssl/qsslsocket_opensslpre11_symbols_p.h \
     network/ssl/qsslsocket_p.h \
+    network/ssl/qsslsocket_schannel_p.h \
     network/ssl/qsslsocket_winrt_p.h \
     network/ssl/qwindowscarootfetcher_p.h \
-    CopidQt/implement/qthread_p.h \
+    sql/kernel/qsqlcachedresult_p.h \
+    sql/kernel/qsqldatabase.h \
+    sql/kernel/qsqldriver.h \
+    sql/kernel/qsqldriver_p.h \
+    sql/kernel/qsqldriverplugin.h \
+    sql/kernel/qsqlerror.h \
+    sql/kernel/qsqlfield.h \
+    sql/kernel/qsqlindex.h \
+    sql/kernel/qsqlnulldriver_p.h \
+    sql/kernel/qsqlquery.h \
+    sql/kernel/qsqlrecord.h \
+    sql/kernel/qsqlresult.h \
+    sql/kernel/qsqlresult_p.h \
+    sql/kernel/qtsqlglobal.h \
+    sql/kernel/qtsqlglobal_p.h \
+    sql/models/qsqlquerymodel.h \
+    sql/models/qsqlquerymodel_p.h \
+    sql/models/qsqlrelationaldelegate.h \
+    sql/models/qsqlrelationaltablemodel.h \
+    sql/models/qsqltablemodel.h \
+    sql/models/qsqltablemodel_p.h \
     styles/qandroidstyle_p.h \
     styles/qcommonstyle.h \
     styles/qcommonstyle_p.h \
@@ -1696,7 +1310,6 @@ FORMS += \
         mainwindow.ui
 
 DISTFILES += \
-    CopidQt/gui/kernel/kernel.pri \
     io/PSL-LICENSE.txt \
     io/QTEMPORARYFILE_LICENSE.txt \
     io/io.pri \
@@ -1704,8 +1317,13 @@ DISTFILES += \
     io/qurltlds_p.h.INFO \
     itemmodels/itemmodels.pri \
     itemviews/itemviews.pri \
+    kernel/QEVENTDISPATCHER_CF_LICENSE.txt \
+    kernel/kernel.pri \
+    kernel/qmath.qdoc \
+    kernel/qt_attribution.json \
     network/access/access.pri \
     network/access/http2/http2.pri \
+    network/android/jar/src/org/qtproject/qt5/android/network/QtNetwork.java \
     network/bearer/bearer.pri \
     network/configure.json \
     network/configure.pri \
@@ -1714,7 +1332,9 @@ DISTFILES += \
     network/doc/images/tcpstream.png \
     network/doc/images/udppackets.png \
     network/doc/qtnetwork.qdocconf \
+    network/doc/snippets/CMakeLists.txt \
     network/doc/src/bearermanagement.qdoc \
+    network/doc/src/dontdocument.qdoc \
     network/doc/src/examples.qdoc \
     network/doc/src/external-resources.qdoc \
     network/doc/src/network-programming.qdoc \
@@ -1723,6 +1343,22 @@ DISTFILES += \
     network/kernel/kernel.pri \
     network/socket/socket.pri \
     network/ssl/ssl.pri \
+    sql/configure.json \
+    sql/doc/images/foreignkeys.png \
+    sql/doc/images/insertrowinmodelview.png \
+    sql/doc/images/noforeignkeys.png \
+    sql/doc/images/qdatawidgetmapper-simple.png \
+    sql/doc/images/relationaltable.png \
+    sql/doc/qtsql.qdocconf \
+    sql/doc/snippets/code/doc_src_sql-driver.qdoc \
+    sql/doc/src/dontdocument.qdoc \
+    sql/doc/src/qsqldatatype-table.qdoc \
+    sql/doc/src/qtsql.qdoc \
+    sql/doc/src/sql-driver.qdoc \
+    sql/doc/src/sql-programming.qdoc \
+    sql/kernel/kernel.pri \
+    sql/kernel/qsql.qdoc \
+    sql/models/models.pri \
     styles/images/cdr-128.png \
     styles/images/cdr-16.png \
     styles/images/cdr-32.png \
@@ -1889,9 +1525,14 @@ DISTFILES += \
     concurrent/doc/src/qtconcurrent-module.qdoc
 
 SUBDIRS += \
+    network/android/jar/jar.pro \
     network/doc/snippets/code/doc_src_qtnetwork.pro \
+    concurrent/concurrent.pro \
+    network/doc/snippets/snippets.pro \
     network/network.pro \
-    concurrent/concurrent.pro
+    sql/doc/snippets/code/doc_src_qtsql.pro \
+    sql/doc/snippets/snippets.pro \
+    sql/sql.pro
 
 RESOURCES += \
     styles/qstyle.qrc

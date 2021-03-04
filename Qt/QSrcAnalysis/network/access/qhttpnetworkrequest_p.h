@@ -103,6 +103,7 @@ public:
     QByteArray headerField(const QByteArray &name, const QByteArray &defaultValue = QByteArray()) const override;
     void setHeaderField(const QByteArray &name, const QByteArray &data) override;
     void prependHeaderField(const QByteArray &name, const QByteArray &data);
+    void clearHeaders();
 
     Operation operation() const;
     void setOperation(Operation operation);
@@ -147,6 +148,8 @@ public:
     QByteArray methodName() const;
     QByteArray uri(bool throughProxy) const;
 
+    QString peerVerifyName() const;
+    void setPeerVerifyName(const QString &peerName);
 private:
     QSharedDataPointer<QHttpNetworkRequestPrivate> d;
     friend class QHttpNetworkRequestPrivate;
@@ -182,6 +185,7 @@ public:
     bool preConnect;
     int redirectCount;
     QNetworkRequest::RedirectPolicy redirectPolicy;
+    QString peerVerifyName;
 };
 
 

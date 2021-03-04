@@ -44,6 +44,7 @@
 #include <QtNetwork/qtnetworkglobal.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qregexp.h>
+#include <QtCore/qvector.h>
 #ifndef QT_NO_SSL
 #   include <QtNetwork/qtcpsocket.h>
 #   include <QtNetwork/qsslerror.h>
@@ -60,6 +61,7 @@ class QSslCertificate;
 class QSslConfiguration;
 class QSslEllipticCurve;
 class QSslPreSharedKeyAuthenticator;
+class QOcspResponse;
 
 class QSslSocketPrivate;
 class Q_NETWORK_EXPORT QSslSocket : public QTcpSocket
@@ -142,6 +144,7 @@ public:
     QList<QSslCertificate> peerCertificateChain() const;
     QSslCipher sessionCipher() const;
     QSsl::SslProtocol sessionProtocol() const;
+    QVector<QOcspResponse> ocspResponses() const;
 
     // Private keys, for server sockets.
     void setPrivateKey(const QSslKey &key);
@@ -161,18 +164,22 @@ public:
 #endif // QT_DEPRECATED_SINCE(5, 5)
 
     // CA settings.
-    bool addCaCertificates(const QString &path, QSsl::EncodingFormat format = QSsl::Pem,
+#if QT_DEPRECATED_SINCE(5, 15)
+    QT_DEPRECATED_X("Use QSslConfiguration::addCaCertificates()") bool addCaCertificates(const QString &path, QSsl::EncodingFormat format = QSsl::Pem,
                            QRegExp::PatternSyntax syntax = QRegExp::FixedString);
-    void addCaCertificate(const QSslCertificate &certificate);
-    void addCaCertificates(const QList<QSslCertificate> &certificates);
+    QT_DEPRECATED_X("Use QSslConfiguration::addCaCertificate()") void addCaCertificate(const QSslCertificate &certificate);
+    QT_DEPRECATED_X("Use QSslConfiguration::addCaCertificates()") void addCaCertificates(const QList<QSslCertificate> &certificates);
+#endif // QT_DEPRECATED_SINCE(5, 15)
 #if QT_DEPRECATED_SINCE(5, 5)
     QT_DEPRECATED_X("Use QSslConfiguration::setCaCertificates()") void setCaCertificates(const QList<QSslCertificate> &certificates);
     QT_DEPRECATED_X("Use QSslConfiguration::caCertificates()") QList<QSslCertificate> caCertificates() const;
 #endif // QT_DEPRECATED_SINCE(5, 5)
-    static bool addDefaultCaCertificates(const QString &path, QSsl::EncodingFormat format = QSsl::Pem,
+#if QT_DEPRECATED_SINCE(5, 15)
+    QT_DEPRECATED static bool addDefaultCaCertificates(const QString &path, QSsl::EncodingFormat format = QSsl::Pem,
                                          QRegExp::PatternSyntax syntax = QRegExp::FixedString);
-    static void addDefaultCaCertificate(const QSslCertificate &certificate);
-    static void addDefaultCaCertificates(const QList<QSslCertificate> &certificates);
+    QT_DEPRECATED static void addDefaultCaCertificate(const QSslCertificate &certificate);
+    QT_DEPRECATED static void addDefaultCaCertificates(const QList<QSslCertificate> &certificates);
+#endif // QT_DEPRECATED_SINCE(5, 15)
 #if QT_DEPRECATED_SINCE(5, 5)
     QT_DEPRECATED static void setDefaultCaCertificates(const QList<QSslCertificate> &certificates);
     QT_DEPRECATED static QList<QSslCertificate> defaultCaCertificates();
@@ -185,7 +192,10 @@ public:
     bool waitForBytesWritten(int msecs = 30000) override;
     bool waitForDisconnected(int msecs = 30000) override;
 
-    QList<QSslError> sslErrors() const;
+#if QT_DEPRECATED_SINCE(5, 15)
+    QT_DEPRECATED_X("Use sslHandshakeErrors()") QList<QSslError> sslErrors() const;
+#endif // QT_DEPRECATED_SINCE(5, 15)
+    QList<QSslError> sslHandshakeErrors() const;
 
     static bool supportsSsl();
     static long sslLibraryVersionNumber();
@@ -207,6 +217,7 @@ Q_SIGNALS:
     void modeChanged(QSslSocket::SslMode newMode);
     void encryptedBytesWritten(qint64 totalBytes);
     void preSharedKeyAuthenticationRequired(QSslPreSharedKeyAuthenticator *authenticator);
+    void newSessionTicketReceived();
 
 protected:
     qint64 readData(char *data, qint64 maxlen) override;
@@ -228,7 +239,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_flushWriteBuffer())
     Q_PRIVATE_SLOT(d_func(), void _q_flushReadBuffer())
     Q_PRIVATE_SLOT(d_func(), void _q_resumeImplementation())
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINRT)
+#if defined(Q_OS_WIN) && !defined(Q_OS_WINRT) && !QT_CONFIG(schannel)
     Q_PRIVATE_SLOT(d_func(), void _q_caRootLoaded(QSslCertificate,QSslCertificate))
 #endif
     friend class QSslSocketBackendPrivate;
