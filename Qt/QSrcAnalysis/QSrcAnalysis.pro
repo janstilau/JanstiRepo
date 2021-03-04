@@ -628,6 +628,26 @@ SOURCES += \
     thread/qthreadstorage.cpp \
     thread/qwaitcondition_unix.cpp \
     thread/qwaitcondition_win.cpp \
+    thread_15.1/qatomic.cpp \
+    thread_15.1/qexception.cpp \
+    thread_15.1/qfutureinterface.cpp \
+    thread_15.1/qfuturewatcher.cpp \
+    thread_15.1/qmutex.cpp \
+    thread_15.1/qmutex_linux.cpp \
+    thread_15.1/qmutex_mac.cpp \
+    thread_15.1/qmutex_unix.cpp \
+    thread_15.1/qmutex_win.cpp \
+    thread_15.1/qreadwritelock.cpp \
+    thread_15.1/qresultstore.cpp \
+    thread_15.1/qrunnable.cpp \
+    thread_15.1/qsemaphore.cpp \
+    thread_15.1/qthread.cpp \
+    thread_15.1/qthread_unix.cpp \
+    thread_15.1/qthread_win.cpp \
+    thread_15.1/qthreadpool.cpp \
+    thread_15.1/qthreadstorage.cpp \
+    thread_15.1/qwaitcondition_unix.cpp \
+    thread_15.1/qwaitcondition_win.cpp \
     tools/qarraydata.cpp \
     tools/qbitarray.cpp \
     tools/qbytearray.cpp \
@@ -1549,6 +1569,36 @@ HEADERS += \
     thread/qthreadpool_p.h \
     thread/qthreadstorage.h \
     thread/qwaitcondition.h \
+    thread_15.1/qatomic.h \
+    thread_15.1/qatomic_bootstrap.h \
+    thread_15.1/qatomic_cxx11.h \
+    thread_15.1/qatomic_msvc.h \
+    thread_15.1/qbasicatomic.h \
+    thread_15.1/qexception.h \
+    thread_15.1/qfutex_p.h \
+    thread_15.1/qfuture.h \
+    thread_15.1/qfutureinterface.h \
+    thread_15.1/qfutureinterface_p.h \
+    thread_15.1/qfuturesynchronizer.h \
+    thread_15.1/qfuturewatcher.h \
+    thread_15.1/qfuturewatcher_p.h \
+    thread_15.1/qgenericatomic.h \
+    thread_15.1/qlocking_p.h \
+    thread_15.1/qmutex.h \
+    thread_15.1/qmutex_p.h \
+    thread_15.1/qorderedmutexlocker_p.h \
+    thread_15.1/qreadwritelock.h \
+    thread_15.1/qreadwritelock_p.h \
+    thread_15.1/qresultstore.h \
+    thread_15.1/qrunnable.h \
+    thread_15.1/qsemaphore.h \
+    thread_15.1/qthread.h \
+    thread_15.1/qthread_p.h \
+    thread_15.1/qthreadpool.h \
+    thread_15.1/qthreadpool_p.h \
+    thread_15.1/qthreadstorage.h \
+    thread_15.1/qwaitcondition.h \
+    thread_15.1/qwaitcondition_p.h \
     tools/qalgorithms.h \
     tools/qarraydataops.h \
     tools/qarraydatapointer.h \
@@ -1817,6 +1867,10 @@ DISTFILES += \
     thread/qfuture.qdoc \
     thread/qfuturesynchronizer.qdoc \
     thread/qwaitcondition.qdoc \
+    thread_15.1/qfuture.qdoc \
+    thread_15.1/qfuturesynchronizer.qdoc \
+    thread_15.1/qwaitcondition.qdoc \
+    thread_15.1/thread.pri \
     tools/UNICODE_LICENSE.txt \
     tools/qalgorithms.qdoc \
     tools/qcache.qdoc \
