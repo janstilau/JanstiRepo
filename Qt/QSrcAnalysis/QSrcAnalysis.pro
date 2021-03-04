@@ -354,6 +354,11 @@ SOURCES += \
     network/ssl/qsslsocket_schannel.cpp \
     network/ssl/qsslsocket_winrt.cpp \
     network/ssl/qwindowscarootfetcher.cpp \
+    sql/YAsyncDatabase/AsyncQuery.cpp \
+    sql/YAsyncDatabase/AsyncQueryModel.cpp \
+    sql/YAsyncDatabase/AsyncQueryQMLModel.cpp \
+    sql/YAsyncDatabase/AsyncQueryResult.cpp \
+    sql/YAsyncDatabase/ConnectionManager.cpp \
     sql/doc/snippets/code/doc_src_qtsql.cpp \
     sql/doc/snippets/code/doc_src_sql-driver.cpp \
     sql/doc/snippets/code/doc_src_sql-driver_snippet.cpp \
@@ -1062,6 +1067,11 @@ HEADERS += \
     network/ssl/qsslsocket_schannel_p.h \
     network/ssl/qsslsocket_winrt_p.h \
     network/ssl/qwindowscarootfetcher_p.h \
+    sql/YAsyncDatabase/AsyncQuery.h \
+    sql/YAsyncDatabase/AsyncQueryModel.h \
+    sql/YAsyncDatabase/AsyncQueryQMLModel.h \
+    sql/YAsyncDatabase/AsyncQueryResult.h \
+    sql/YAsyncDatabase/ConnectionManager.h \
     sql/kernel/qsqlcachedresult_p.h \
     sql/kernel/qsqldatabase.h \
     sql/kernel/qsqldriver.h \

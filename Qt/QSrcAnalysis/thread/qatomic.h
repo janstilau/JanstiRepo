@@ -170,20 +170,20 @@ QT_WARNING_POP
 #  undef QT_BASIC_ATOMIC_HAS_CONSTRUCTORS
 #endif
 
-/*!
-    This is a helper for the assignment operators of implicitly
-    shared classes. Your assignment operator should look like this:
-
-    \snippet code/src.corelib.thread.qatomic.h 0
-*/
+// 这里, 是专门进行, 引用语义的对象的 copy 动作的.
+// 这里其实也能思考一下, Qt 为什么这么喜欢 private 的设计模式.
+// Qt 里面的对象, 更多的是进行引用计数的管理的. 而 Private 这种设计, 使得复制这件事情, 变成了简单的引用计数+-.
 template <typename T>
 inline void qAtomicAssign(T *&d, T *x)
 {
-    if (d == x)
+    if (d == x) {
         return;
+    }
+
     x->ref.ref();
-    if (!d->ref.deref())
+    if (!d->ref.deref()) {
         delete d;
+    }
     d = x;
 }
 

@@ -116,6 +116,11 @@ protected:
 
     virtual QVariant data(int i) = 0;
     virtual bool isNull(int i) = 0;
+    /*
+    Sets the result to use the SQL statement query for subsequent data retrieval.
+    Derived classes must reimplement this function and apply the query to the database. This function is only called after the result is set to an inactive state and is positioned before the first record of the new result.
+    Derived classes should return true if the query was successful and ready to be used, or false otherwise.
+     */
     virtual bool reset(const QString& sqlquery) = 0;
     virtual bool fetch(int i) = 0;
     virtual bool fetchNext();

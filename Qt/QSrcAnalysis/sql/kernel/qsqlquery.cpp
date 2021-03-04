@@ -347,7 +347,6 @@ bool QSqlQuery::isNull(const QString &name) const
 }
 
 /*!
-
   Executes the SQL in \a query. Returns \c true and sets the query state
   to \l{isActive()}{active} if the query was successful; otherwise
   returns \c false. The \a query string must use syntax appropriate for
@@ -373,10 +372,6 @@ bool QSqlQuery::isNull(const QString &name) const
 
 bool QSqlQuery::exec(const QString& query)
 {
-#ifdef QT_DEBUG_SQL
-    QElapsedTimer t;
-    t.start();
-#endif
     if (d->ref.loadRelaxed() != 1) {
         bool fo = isForwardOnly();
         *this = QSqlQuery(driver()->createResult());
@@ -390,6 +385,7 @@ bool QSqlQuery::exec(const QString& query)
         d->sqlResult->setNumericalPrecisionPolicy(d->sqlResult->numericalPrecisionPolicy());
     }
     d->sqlResult->setQuery(query.trimmed());
+
     if (!driver()->isOpen() || driver()->isOpenError()) {
         qWarning("QSqlQuery::exec: database not open");
         return false;
@@ -400,11 +396,6 @@ bool QSqlQuery::exec(const QString& query)
     }
 
     bool retval = d->sqlResult->reset(query);
-#ifdef QT_DEBUG_SQL
-    qDebug().nospace() << "Executed query (" << t.elapsed() << "ms, " << d->sqlResult->size()
-                       << " results, " << d->sqlResult->numRowsAffected()
-                       << " affected): " << d->sqlResult->lastQuery();
-#endif
     return retval;
 }
 

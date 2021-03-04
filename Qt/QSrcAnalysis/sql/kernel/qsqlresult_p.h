@@ -113,6 +113,8 @@ public:
     QString holderAt(int index) const;
 
     QSqlResult *q_ptr = nullptr;
+    // 所以, 实际上, result 里面, 是存储了 sqldriver 的. 所以, result 能够直接进行数据库的查询
+    // 而 query 里面, 存储了 QSqlResult 的指针.
     QPointer<QSqlDriver> sqldriver;
     QString sql;
     QSqlError error;

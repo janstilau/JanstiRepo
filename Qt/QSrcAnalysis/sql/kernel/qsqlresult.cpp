@@ -672,6 +672,7 @@ bool QSqlResult::exec()
 
     // have to retain the original query with placeholders
     QString orig = lastQuery();
+    // 在这里, 是真正的使用 query 进行数据库的查询工作.
     ret = reset(query);
     d->executedQuery = query;
     setQuery(orig);
