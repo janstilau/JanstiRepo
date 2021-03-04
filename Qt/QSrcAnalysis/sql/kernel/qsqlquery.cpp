@@ -48,7 +48,6 @@
 #include "qsqlresult.h"
 #include "qsqldriver.h"
 #include "qsqldatabase.h"
-#include "private/qsqlnulldriver_p.h"
 #include "qvector.h"
 #include "qmap.h"
 
@@ -59,7 +58,9 @@ class QSqlQueryPrivate
 public:
     QSqlQueryPrivate(QSqlResult* result);
     ~QSqlQueryPrivate();
+
     QAtomicInt ref;
+    // SqlQuery 作为一个过程, 是把所有的数据, 都放到了 Result 里面.
     QSqlResult* sqlResult;
 
     static QSqlQueryPrivate* shared_null();
@@ -300,26 +301,11 @@ QSqlQuery::QSqlQuery(QSqlDatabase db)
     qInit(this, QString(), db);
 }
 
-
-/*!
-    Assigns \a other to this object.
-*/
-
 QSqlQuery& QSqlQuery::operator=(const QSqlQuery& other)
 {
     qAtomicAssign(d, other.d);
     return *this;
 }
-
-/*!
-    Returns \c true if the query is not \l{isActive()}{active},
-    the query is not positioned on a valid record,
-    there is no such \a field, or the \a field is null; otherwise \c false.
-    Note that for some drivers, isNull() will not return accurate
-    information until after an attempt is made to retrieve data.
-
-    \sa isActive(), isValid(), value()
-*/
 
 bool QSqlQuery::isNull(int field) const
 {
@@ -327,15 +313,6 @@ bool QSqlQuery::isNull(int field) const
              || !d->sqlResult->isValid()
              || d->sqlResult->isNull(field);
 }
-
-/*!
-    \overload
-
-    Returns \c true if there is no field with this \a name; otherwise
-    returns isNull(int index) for the corresponding field index.
-
-    This overload is less efficient than \l{QSqlQuery::}{isNull()}
-*/
 
 bool QSqlQuery::isNull(const QString &name) const
 {
@@ -346,44 +323,15 @@ bool QSqlQuery::isNull(const QString &name) const
     return true;
 }
 
-/*!
-  Executes the SQL in \a query. Returns \c true and sets the query state
-  to \l{isActive()}{active} if the query was successful; otherwise
-  returns \c false. The \a query string must use syntax appropriate for
-  the SQL database being queried (for example, standard SQL).
 
-  After the query is executed, the query is positioned on an \e
-  invalid record and must be navigated to a valid record before data
-  values can be retrieved (for example, using next()).
-
-  Note that the last error for this query is reset when exec() is
-  called.
-
-  For SQLite, the query string can contain only one statement at a time.
-  If more than one statement is given, the function returns \c false.
-
-  Example:
-
-  \snippet sqldatabase/sqldatabase.cpp 34
-
-  \sa isActive(), isValid(), next(), previous(), first(), last(),
-  seek()
-*/
-
+// 实际上, 所有的数据, 都藏到了 sqlResult.
+// sqlResult 就是一个盒子, 存放整个过程的所有数据.
 bool QSqlQuery::exec(const QString& query)
 {
-    if (d->ref.loadRelaxed() != 1) {
-        bool fo = isForwardOnly();
-        *this = QSqlQuery(driver()->createResult());
-        d->sqlResult->setNumericalPrecisionPolicy(d->sqlResult->numericalPrecisionPolicy());
-        setForwardOnly(fo);
-    } else {
-        d->sqlResult->clear();
-        d->sqlResult->setActive(false);
-        d->sqlResult->setLastError(QSqlError());
-        d->sqlResult->setAt(QSql::BeforeFirstRow);
-        d->sqlResult->setNumericalPrecisionPolicy(d->sqlResult->numericalPrecisionPolicy());
-    }
+    d->sqlResult->clear();
+    d->sqlResult->setActive(false);
+    d->sqlResult->setAt(QSql::BeforeFirstRow);
+    d->sqlResult->setNumericalPrecisionPolicy(d->sqlResult->numericalPrecisionPolicy());
     d->sqlResult->setQuery(query.trimmed());
 
     if (!driver()->isOpen() || driver()->isOpenError()) {
@@ -395,46 +343,20 @@ bool QSqlQuery::exec(const QString& query)
         return false;
     }
 
+    // 真正的执行是 reset
+    // 因为, 实际上, sqlResult 里面, 是存放了 driver 的. 所以子类的各个数据库种类查询时, 就是使用 driver 进行的查询.
     bool retval = d->sqlResult->reset(query);
     return retval;
 }
-
-/*!
-    Returns the value of field \a index in the current record.
-
-    The fields are numbered from left to right using the text of the
-    \c SELECT statement, e.g. in
-
-    \snippet code/src_sql_kernel_qsqlquery_snippet.cpp 0
-
-    field 0 is \c forename and field 1 is \c
-    surname. Using \c{SELECT *} is not recommended because the order
-    of the fields in the query is undefined.
-
-    An invalid QVariant is returned if field \a index does not
-    exist, if the query is inactive, or if the query is positioned on
-    an invalid record.
-
-    \sa previous(), next(), first(), last(), seek(), isActive(), isValid()
-*/
 
 QVariant QSqlQuery::value(int index) const
 {
     if (isActive() && isValid() && (index > -1))
         return d->sqlResult->data(index);
-    qWarning("QSqlQuery::value: not positioned on a valid record");
     return QVariant();
 }
 
-/*!
-    \overload
-
-    Returns the value of the field called \a name in the current record.
-    If field \a name does not exist an invalid variant is returned.
-
-    This overload is less efficient than \l{QSqlQuery::}{value()}
-*/
-
+// 优先使用 name, 因为会有一次数据的检索工作.
 QVariant QSqlQuery::value(const QString& name) const
 {
     int index = d->sqlResult->record().indexOf(name);
@@ -444,109 +366,26 @@ QVariant QSqlQuery::value(const QString& name) const
     return QVariant();
 }
 
-/*!
-    Returns the current internal position of the query. The first
-    record is at position zero. If the position is invalid, the
-    function returns QSql::BeforeFirstRow or
-    QSql::AfterLastRow, which are special negative values.
-
-    \sa previous(), next(), first(), last(), seek(), isActive(), isValid()
-*/
-
 int QSqlQuery::at() const
 {
     return d->sqlResult->at();
 }
-
-/*!
-    Returns the text of the current query being used, or an empty
-    string if there is no current query text.
-
-    \sa executedQuery()
-*/
 
 QString QSqlQuery::lastQuery() const
 {
     return d->sqlResult->lastQuery();
 }
 
-/*!
-    Returns the database driver associated with the query.
-*/
-
 const QSqlDriver *QSqlQuery::driver() const
 {
     return d->sqlResult->driver();
 }
-
-/*!
-    Returns the result associated with the query.
-*/
 
 const QSqlResult* QSqlQuery::result() const
 {
     return d->sqlResult;
 }
 
-/*!
-  Retrieves the record at position \a index, if available, and
-  positions the query on the retrieved record. The first record is at
-  position 0. Note that the query must be in an \l{isActive()}
-  {active} state and isSelect() must return true before calling this
-  function.
-
-  If \a relative is false (the default), the following rules apply:
-
-  \list
-
-  \li If \a index is negative, the result is positioned before the
-  first record and false is returned.
-
-  \li Otherwise, an attempt is made to move to the record at position
-  \a index. If the record at position \a index could not be retrieved,
-  the result is positioned after the last record and false is
-  returned. If the record is successfully retrieved, true is returned.
-
-  \endlist
-
-  If \a relative is true, the following rules apply:
-
-  \list
-
-  \li If the result is currently positioned before the first record and:
-  \list
-  \li \a index is negative or zero, there is no change, and false is
-  returned.
-  \li \a index is positive, an attempt is made to position the result
-  at absolute position \a index - 1, following the sames rule for non
-  relative seek, above.
-  \endlist
-
-  \li If the result is currently positioned after the last record and:
-  \list
-  \li \a index is positive or zero, there is no change, and false is
-  returned.
-  \li \a index is negative, an attempt is made to position the result
-  at \a index + 1 relative position from last record, following the
-  rule below.
-  \endlist
-
-  \li If the result is currently located somewhere in the middle, and
-  the relative offset \a index moves the result below zero, the result
-  is positioned before the first record and false is returned.
-
-  \li Otherwise, an attempt is made to move to the record \a index
-  records ahead of the current record (or \a index records behind the
-  current record if \a index is negative). If the record at offset \a
-  index could not be retrieved, the result is positioned after the
-  last record if \a index >= 0, (or before the first record if \a
-  index is negative), and false is returned. If the record is
-  successfully retrieved, true is returned.
-
-  \endlist
-
-  \sa next(), previous(), first(), last(), at(), isActive(), isValid()
-*/
 bool QSqlQuery::seek(int index, bool relative)
 {
     if (!isSelect() || !isActive())
@@ -610,35 +449,8 @@ bool QSqlQuery::seek(int index, bool relative)
     return true;
 }
 
-/*!
-
-  Retrieves the next record in the result, if available, and positions
-  the query on the retrieved record. Note that the result must be in
-  the \l{isActive()}{active} state and isSelect() must return true
-  before calling this function or it will do nothing and return false.
-
-  The following rules apply:
-
-  \list
-
-  \li If the result is currently located before the first record,
-  e.g. immediately after a query is executed, an attempt is made to
-  retrieve the first record.
-
-  \li If the result is currently located after the last record, there
-  is no change and false is returned.
-
-  \li If the result is located somewhere in the middle, an attempt is
-  made to retrieve the next record.
-
-  \endlist
-
-  If the record could not be retrieved, the result is positioned after
-  the last record and false is returned. If the record is successfully
-  retrieved, true is returned.
-
-  \sa previous(), first(), last(), seek(), at(), isActive(), isValid()
-*/
+// next 其实有点懒加载的感觉, 之后调用之后, 才会进行真正的数据的读取.
+// 各种 Fetch 操作都没有实现, 是和数据库各个类型相关的操作.
 bool QSqlQuery::next()
 {
     if (!isSelect() || !isActive())
@@ -658,35 +470,6 @@ bool QSqlQuery::next()
     }
 }
 
-/*!
-
-  Retrieves the previous record in the result, if available, and
-  positions the query on the retrieved record. Note that the result
-  must be in the \l{isActive()}{active} state and isSelect() must
-  return true before calling this function or it will do nothing and
-  return false.
-
-  The following rules apply:
-
-  \list
-
-  \li If the result is currently located before the first record, there
-  is no change and false is returned.
-
-  \li If the result is currently located after the last record, an
-  attempt is made to retrieve the last record.
-
-  \li If the result is somewhere in the middle, an attempt is made to
-  retrieve the previous record.
-
-  \endlist
-
-  If the record could not be retrieved, the result is positioned
-  before the first record and false is returned. If the record is
-  successfully retrieved, true is returned.
-
-  \sa next(), first(), last(), seek(), at(), isActive(), isValid()
-*/
 bool QSqlQuery::previous()
 {
     if (!isSelect() || !isActive())
@@ -710,16 +493,6 @@ bool QSqlQuery::previous()
     }
 }
 
-/*!
-  Retrieves the first record in the result, if available, and
-  positions the query on the retrieved record. Note that the result
-  must be in the \l{isActive()}{active} state and isSelect() must
-  return true before calling this function or it will do nothing and
-  return false.  Returns \c true if successful. If unsuccessful the query
-  position is set to an invalid position and false is returned.
-
-  \sa next(), previous(), last(), seek(), at(), isActive(), isValid()
- */
 bool QSqlQuery::first()
 {
     if (!isSelect() || !isActive())
@@ -797,33 +570,11 @@ QSqlError QSqlQuery::lastError() const
     return d->sqlResult->lastError();
 }
 
-/*!
-  Returns \c true if the query is currently positioned on a valid
-  record; otherwise returns \c false.
-*/
-
 bool QSqlQuery::isValid() const
 {
     return d->sqlResult->isValid();
 }
 
-/*!
-
-  Returns \c true if the query is \e{active}. An active QSqlQuery is one
-  that has been \l{QSqlQuery::exec()} {exec()'d} successfully but not
-  yet finished with.  When you are finished with an active query, you
-  can make the query inactive by calling finish() or clear(), or
-  you can delete the QSqlQuery instance.
-
-  \note Of particular interest is an active query that is a \c{SELECT}
-  statement. For some databases that support transactions, an active
-  query that is a \c{SELECT} statement can cause a \l{QSqlDatabase::}
-  {commit()} or a \l{QSqlDatabase::} {rollback()} to fail, so before
-  committing or rolling back, you should make your active \c{SELECT}
-  statement query inactive using one of the ways listed above.
-
-  \sa isSelect()
- */
 bool QSqlQuery::isActive() const
 {
     return d->sqlResult->isActive();
@@ -977,9 +728,6 @@ bool QSqlQuery::prepare(const QString& query)
         qWarning("QSqlQuery::prepare: empty query");
         return false;
     }
-#ifdef QT_DEBUG_SQL
-    qDebug("\n QSqlQuery::prepare: %s", query.toLocal8Bit().constData());
-#endif
     return d->sqlResult->savePrepare(query);
 }
 
@@ -994,21 +742,11 @@ bool QSqlQuery::prepare(const QString& query)
 */
 bool QSqlQuery::exec()
 {
-#ifdef QT_DEBUG_SQL
-    QElapsedTimer t;
-    t.start();
-#endif
     d->sqlResult->resetBindCount();
-
     if (d->sqlResult->lastError().isValid())
         d->sqlResult->setLastError(QSqlError());
 
     bool retval = d->sqlResult->exec();
-#ifdef QT_DEBUG_SQL
-    qDebug().nospace() << "Executed prepared query (" << t.elapsed() << "ms, "
-                       << d->sqlResult->size() << " results, " << d->sqlResult->numRowsAffected()
-                       << " affected): " << d->sqlResult->lastQuery();
-#endif
     return retval;
 }
 

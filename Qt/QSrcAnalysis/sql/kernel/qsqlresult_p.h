@@ -1,55 +1,5 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtSql module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QSQLRESULT_P_H
 #define QSQLRESULT_P_H
-
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists for the convenience
-// of qsql*model.h .  This header file may change from version to version
-// without notice, or even be removed.
-//
-// We mean it.
-//
 
 #include <QtSql/private/qtsqlglobal_p.h>
 #include <QtCore/qpointer.h>
@@ -116,10 +66,12 @@ public:
     // 所以, 实际上, result 里面, 是存储了 sqldriver 的. 所以, result 能够直接进行数据库的查询
     // 而 query 里面, 存储了 QSqlResult 的指针.
     QPointer<QSqlDriver> sqldriver;
-    QString sql;
+    QString sql; // 原本的 sql 语句.
     QSqlError error;
     QSql::NumericalPrecisionPolicy precisionPolicy = QSql::LowPrecisionDouble;
     QSqlResult::BindingSyntax binds = QSqlResult::PositionalBinding;
+
+    // 整个值, 控制的当前取值到了第几行.
     int idx = QSql::BeforeFirstRow;
     int bindCount = 0;
     bool active = false;
@@ -129,6 +81,7 @@ public:
     QString executedQuery;
     QHash<int, QSql::ParamType> types;
     QVector<QVariant> values;
+
     typedef QHash<QString, QVector<int> > IndexMap;
     IndexMap indexes;
 

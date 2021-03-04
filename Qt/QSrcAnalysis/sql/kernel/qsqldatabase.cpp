@@ -7,8 +7,6 @@
 #include "qsqldriver.h"
 #include "qsqldriverplugin.h"
 #include "qsqlindex.h"
-#include "private/qfactoryloader_p.h"
-#include "private/qsqlnulldriver_p.h"
 #include "qmutex.h"
 #include "qhash.h"
 #include "qthread.h"
@@ -59,7 +57,7 @@ public:
     }
     QSqlDatabasePrivate(const QSqlDatabasePrivate &other);
     ~QSqlDatabasePrivate();
-    void init(const QString& type);
+    void initDriver(const QString& type);
     void copy(const QSqlDatabasePrivate *other);
     void disable();
 
@@ -67,6 +65,8 @@ public:
     QAtomicInt ref;
     QSqlDatabase *dbInterface;
     QSqlDriver* driver; // 真正和底层数据库交互的封装.
+
+    // 下面的都是值数据.
     QString dbname; // 数据库名
     QString uname; // 用户名
     QString pword; // 密码
@@ -77,7 +77,7 @@ public:
     QString connName;
     QSql::NumericalPrecisionPolicy precisionPolicy;
 
-    static QSqlDatabasePrivate *shared_null();
+    static QSqlDatabasePrivate *shared_null(); // 一个非法值, 表明这是一个非法的 db
     static QSqlDatabase database(const QString& name, bool open);
     static void addDatabase(const QSqlDatabase &db, const QString & name);
     static void removeDatabase(const QString& name);
@@ -96,8 +96,8 @@ QSqlDatabasePrivate::QSqlDatabasePrivate(const QSqlDatabasePrivate &other) : ref
     drvName = other.drvName;
     port = other.port;
     connOptions = other.connOptions;
-    driver = other.driver;
     precisionPolicy = other.precisionPolicy;
+    driver = other.driver;
     if (driver)
         driver->setNumericalPrecisionPolicy(other.driver->numericalPrecisionPolicy());
 }
@@ -134,6 +134,7 @@ static void cleanDriverDict()
     qDriverDictInit = false;
 }
 
+// driverDict 里面, 存的是不同种类 driver 的工厂类.
 DriverDict &QSqlDatabasePrivate::driverDict()
 {
     static DriverDict dict;
@@ -238,6 +239,7 @@ void QSqlDatabasePrivate::disable()
 {
     if (driver != shared_null()->driver) {
         // 原来的真正和底层数据库交互的 driver 进行 delete. 然后替换为一个非法值.
+        // db 里面, 大部分存的都是值语义的值, 真正可以影响到数据库的, 只有 driver.
         delete driver;
         driver = shared_null()->driver;
     }
@@ -285,6 +287,7 @@ void QSqlDatabase::registerSqlDriver(const QString& name, QSqlDriverCreatorBase 
         QSqlDatabasePrivate::driverDict().insert(name, creator);
 }
 
+// 从这里可以看出, 其实所有的数据库, 都是被 Qt 管理着的.
 bool QSqlDatabase::contains(const QString& connectionName)
 {
     return globalDbDict()->contains_ts(connectionName);
@@ -298,7 +301,7 @@ QStringList QSqlDatabase::connectionNames()
 QSqlDatabase::QSqlDatabase(const QString &type)
 {
     d = new QSqlDatabasePrivate(this);
-    d->init(type);
+    d->initDriver(type);
 }
 
 // 这个其实不太好. 既然, 所有的方法, 都封装到了内部, 就不应将 driver 暴露出去了.
@@ -332,7 +335,7 @@ QSqlDatabase &QSqlDatabase::operator=(const QSqlDatabase &other)
 }
 
 // 这里, 是 database 最最重要的 driver 的构造部分.
-void QSqlDatabasePrivate::init(const QString &type)
+void QSqlDatabasePrivate::initDriver(const QString &type)
 {
     drvName = type;
     // 所以, 实际上, 就是工厂方法创建对象的方式.
@@ -368,6 +371,8 @@ QSqlDatabase::~QSqlDatabase()
 // QSqlDatabase 只是用户使用的壳子而已.
 QSqlQuery QSqlDatabase::exec(const QString & query) const
 {
+    // QSqlQuery 不仅仅代表着查询语句, 他应该代表着查询过程.
+    // 所以, 可以通过一个 QSqlQuery 来获取到结果.
     QSqlQuery queryObj(d->driver->createResult());
     if (!query.isEmpty()) {
         queryObj.exec(query);
@@ -433,42 +438,6 @@ bool QSqlDatabase::rollback()
         return false;
     return d->driver->rollbackTransaction();
 }
-
-/*!
-    Sets the connection's database name to \a name. To have effect,
-    the database name must be set \e{before} the connection is
-    \l{open()} {opened}.  Alternatively, you can close() the
-    connection, set the database name, and call open() again.  \note
-    The \e{database name} is not the \e{connection name}. The
-    connection name must be passed to addDatabase() at connection
-    object create time.
-
-    For the QSQLITE driver, if the database name specified does not
-    exist, then it will create the file for you unless the
-    QSQLITE_OPEN_READONLY option is set.
-
-    Additionally, \a name can be set to \c ":memory:" which will
-    create a temporary database which is only available for the
-    lifetime of the application.
-
-    For the QOCI (Oracle) driver, the database name is the TNS
-    Service Name.
-
-    For the QODBC driver, the \a name can either be a DSN, a DSN
-    filename (in which case the file must have a \c .dsn extension),
-    or a connection string.
-
-    For example, Microsoft Access users can use the following
-    connection string to open an \c .mdb file directly, instead of
-    having to create a DSN entry in the ODBC manager:
-
-    \snippet code/src_sql_kernel_qsqldatabase.cpp 3
-
-    There is no default value.
-
-    \sa databaseName(), setUserName(), setPassword(), setHostName(),
-        setPort(), setConnectOptions(), open()
-*/
 
 void QSqlDatabase::setDatabaseName(const QString& name)
 {
@@ -541,23 +510,11 @@ QSqlError QSqlDatabase::lastError() const
     return d->driver->lastError();
 }
 
-// 返回表名
+// 返回当前的数据库文件里面, 各个表名.
 QStringList QSqlDatabase::tables(QSql::TableType type) const
 {
     return d->driver->tables(type);
 }
-
-/*!
-    Returns the primary index for table \a tablename. If no primary
-    index exists, an empty QSqlIndex is returned.
-
-    \note Some drivers, such as the \l {QPSQL Case Sensitivity}{QPSQL}
-    driver, may may require you to pass \a tablename in lower case if
-    the table was not quoted when created. See the
-    \l{sql-driver.html}{Qt SQL driver} documentation for more information.
-
-    \sa tables(), record()
-*/
 
 QSqlIndex QSqlDatabase::primaryIndex(const QString& tablename) const
 {
