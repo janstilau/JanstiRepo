@@ -40,6 +40,17 @@
 #ifndef QNETWORKREPLY_P_H
 #define QNETWORKREPLY_P_H
 
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the Qt API.  It exists for the convenience
+// of the Network Access API.  This header file may change from
+// version to version without notice, or even be removed.
+//
+// We mean it.
+//
+
 #include <QtNetwork/private/qtnetworkglobal_p.h>
 #include "qnetworkrequest.h"
 #include "qnetworkrequest_p.h"
@@ -64,10 +75,9 @@ public:
     };
 
     QNetworkReplyPrivate();
-
-    QNetworkRequest request; // 当前的 request, 可能被重定向
-    QNetworkRequest originalRequest; // 最原始的 request
-    QUrl url; // 资源路径
+    QNetworkRequest request;
+    QNetworkRequest originalRequest;
+    QUrl url;
     QPointer<QNetworkAccessManager> manager;
     qint64 readBufferMaxSize;
     QElapsedTimer downloadProgressSignalChoke;

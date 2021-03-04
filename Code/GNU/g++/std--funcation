@@ -1,0 +1,93 @@
+#include <functional>
+#include <iostream>
+
+int getOne(int a) {
+    return 1;
+}
+
+struct getTwo {
+    getTwo() {}
+    int operator()(int a) {
+        return 2;
+    }
+};
+
+// 默认特化不实现
+template < typename T >
+class Function;
+
+// 接受, 一个返回值, 只有一个参数
+template < typename Ret, typename Args0 >
+class Function< Ret(Args0) > {
+    //构造虚基类以存储任意可调用对象的指针
+    struct callable_base {
+        virtual Ret operator()(Args0 a0) = 0;
+        virtual struct callable_base *copy() const = 0;
+        virtual ~callable_base(){};
+    };
+    // 实际上, Function 里面存储的是一个指针, Function 的结构很固定, 但是这个指针, 指向的是不同的对象. 
+    // 而 Function 的构造函数里面, 根据传递的参数创建不同的 base 指针.
+    struct callable_base *base;
+
+    // 一个可调用对象的子类.
+    template < typename T >
+    struct callable_derived : public callable_base {
+        T f;
+        callable_derived(T functor) : f(functor) {}
+        Ret operator()(Args0 a0) {
+            return f(a0);
+        }
+        struct callable_base *copy() const {
+            return new callable_derived< T >(f);
+        }
+    };
+
+public:
+    // 如果, 传递过来的是一个可调用对象, 那么实际 base 里面生成的是 callable_derived.
+    // run 的时候, 是调用 base 的 operation()
+    template < typename T >
+    Function(T functor) : base(new callable_derived< T >(functor)) {}
+    Function() : base(nullptr) {}
+    // 实际调用存储的函数
+    Ret operator()(Args0 arg0) {
+        return (*base)(arg0);
+    }
+
+    Function(const Function &f) {
+        std::cout << "copy construct" << std::endl;
+        base = f.base->copy();
+    }
+    Function &operator=(const Function &f) {
+        std::cout << "assign construct" << std::endl;
+        delete base;
+        base = f.base->copy();
+        return *this;
+    }
+
+    ~Function() {
+        std::cout << "delete current base callable object" << std::endl;
+        delete base;
+    }
+};
+
+int main() {
+    // basic function
+    class Function< int(int) > getNumber(getOne);
+    std::cout << getNumber(3) << std::endl;
+
+    // class which override operator()
+    class Function< int(int) > getNumber2(getTwo{});
+    std::cout << getNumber2(2) << std::endl;
+
+    class Function< int(int) > getNumber3 = getNumber2;
+    getNumber3 = getNumber;
+    return 0;
+}
+// 输出如下:
+1
+2
+copy construct
+assign construct
+delete current base callable object
+delete current base callable object
+delete current base callable object

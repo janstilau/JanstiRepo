@@ -55,11 +55,12 @@
     When building a version of Qt linked against OpenSSL, the build system will
     attempt to link with libssl and libcrypt libraries located in the default
     location on the developer's system. This location is configurable:
-    set the \c OPENSSL_LIBDIR command line argument. For example, on Unix/Linux
+    set the \c OPENSSL_LIBS environment variable to contain the linker options
+    required to link Qt against the installed library. For example, on a Unix/Linux
     system:
 
     \code
-        ./configure -openssl-linked OPENSSL_LIBDIR=/usr/local/ssl
+        OPENSSL_LIBS='-L/opt/ssl/lib -lssl -lcrypto' ./configure -openssl-linked
     \endcode
 
     To disable SSL support in a Qt build, configure Qt with the \c{-no-openssl}
@@ -76,11 +77,12 @@
 
     \section1 Import and Export Restrictions
 
-    Due to import and export restrictions in some parts of the world, we
-    are unable to supply the OpenSSL Toolkit with Qt packages. Developers wishing
-    to use SSL communication in their deployed applications should either ensure
-    that their users have the appropriate libraries installed, or they should
-    consult a suitably qualified legal professional to ensure that applications
-    using code from the OpenSSL project are correctly certified for import
-    and export in relevant regions of the world.
+    Qt binary installers include the OpenSSL libraries used by QtNetwork. However,
+    those are not automatically deployed with applications that are built with Qt.
+    Import and export restrictions apply for some types of software, and for
+    some parts of the world. Developers wishing to use SSL communication in their
+    deployed applications should either ensure that their users have the appropriate
+    libraries installed, or they should consult a suitably qualified legal
+    professional to ensure that applications using code from the OpenSSL project
+    are correctly certified for import and export in relevant regions of the world.
 */

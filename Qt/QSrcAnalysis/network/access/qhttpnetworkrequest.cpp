@@ -44,7 +44,7 @@ QT_BEGIN_NAMESPACE
 
 QHttpNetworkRequestPrivate::QHttpNetworkRequestPrivate(QHttpNetworkRequest::Operation op,
         QHttpNetworkRequest::Priority pri, const QUrl &newUrl)
-    : QHttpNetworkHeaderPrivate(newUrl), operation(op), priority(pri), uploadByteDevice(0),
+    : QHttpNetworkHeaderPrivate(newUrl), operation(op), priority(pri), uploadByteDevice(nullptr),
       autoDecompress(false), pipeliningAllowed(false), spdyAllowed(false), http2Allowed(false),
       http2Direct(false), withCredentials(true), preConnect(false), redirectCount(0),
       redirectPolicy(QNetworkRequest::ManualRedirectPolicy)
@@ -66,7 +66,8 @@ QHttpNetworkRequestPrivate::QHttpNetworkRequestPrivate(const QHttpNetworkRequest
       ssl(other.ssl),
       preConnect(other.preConnect),
       redirectCount(other.redirectCount),
-      redirectPolicy(other.redirectPolicy)
+      redirectPolicy(other.redirectPolicy),
+      peerVerifyName(other.peerVerifyName)
 {
 }
 
@@ -90,7 +91,8 @@ bool QHttpNetworkRequestPrivate::operator==(const QHttpNetworkRequestPrivate &ot
         && (withCredentials == other.withCredentials)
         && (ssl == other.ssl)
         && (preConnect == other.preConnect)
-        && (redirectPolicy == other.redirectPolicy);
+        && (redirectPolicy == other.redirectPolicy)
+        && (peerVerifyName == other.peerVerifyName);
 }
 
 QByteArray QHttpNetworkRequest::methodName() const
@@ -286,6 +288,11 @@ void QHttpNetworkRequest::prependHeaderField(const QByteArray &name, const QByte
     d->prependHeaderField(name, data);
 }
 
+void QHttpNetworkRequest::clearHeaders()
+{
+    d->clearHeaders();
+}
+
 QHttpNetworkRequest &QHttpNetworkRequest::operator=(const QHttpNetworkRequest &other)
 {
     d = other.d;
@@ -397,6 +404,15 @@ int QHttpNetworkRequest::minorVersion() const
     return 1;
 }
 
+QString QHttpNetworkRequest::peerVerifyName() const
+{
+    return d->peerVerifyName;
+}
+
+void QHttpNetworkRequest::setPeerVerifyName(const QString &peerName)
+{
+    d->peerVerifyName = peerName;
+}
 
 QT_END_NAMESPACE
 

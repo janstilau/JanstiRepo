@@ -62,11 +62,12 @@ public:
 
     explicit QHostInfo(int lookupId = -1);
     QHostInfo(const QHostInfo &d);
+    QHostInfo(QHostInfo &&other) noexcept : d_ptr(qExchange(other.d_ptr, nullptr)) {}
     QHostInfo &operator=(const QHostInfo &d);
-    QHostInfo &operator=(QHostInfo &&other) Q_DECL_NOTHROW { swap(other); return *this; }
+    QHostInfo &operator=(QHostInfo &&other) noexcept { swap(other); return *this; }
     ~QHostInfo();
 
-    void swap(QHostInfo &other) Q_DECL_NOTHROW { qSwap(d, other.d); }
+    void swap(QHostInfo &other) noexcept { qSwap(d_ptr, other.d_ptr); }
 
     QString hostName() const;
     void setHostName(const QString &name);
@@ -91,13 +92,10 @@ public:
     static QString localDomainName();
 
 #ifdef Q_CLANG_QDOC
-    template<typename PointerToMemberFunction>
-    static int QHostInfo::lookupHost(const QString &name, const QObject *receiver,
-                              PointerToMemberFunction function);
     template<typename Functor>
-    static int QHostInfo::lookupHost(const QString &name, Functor functor);
+    static int lookupHost(const QString &name, Functor functor);
     template<typename Functor>
-    static int QHostInfo::lookupHost(const QString &name, const QObject *context, Functor functor);
+    static int lookupHost(const QString &name, const QObject *context, Functor functor);
 #else
     // lookupHost to a QObject slot
     template <typename Func>
@@ -150,7 +148,8 @@ public:
 #endif // Q_QDOC
 
 private:
-    QScopedPointer<QHostInfoPrivate> d;
+    QHostInfoPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QHostInfo)
 
     static int lookupHostImpl(const QString &name,
                               const QObject *receiver,

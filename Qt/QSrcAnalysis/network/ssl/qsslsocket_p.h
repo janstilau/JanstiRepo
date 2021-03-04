@@ -58,6 +58,7 @@
 #include <private/qtcpsocket_p.h>
 #include "qsslkey.h"
 #include "qsslconfiguration_p.h"
+#include "qocspresponse.h"
 #ifndef QT_NO_OPENSSL
 #include <private/qsslcontext_openssl_p.h>
 #else
@@ -65,7 +66,7 @@ class QSslContext;
 #endif
 
 #include <QtCore/qstringlist.h>
-
+#include <QtCore/qvector.h>
 #include <private/qringbuffer_p.h>
 
 #if defined(Q_OS_MAC)
@@ -73,6 +74,7 @@ class QSslContext;
 #include <CoreFoundation/CFArray.h>
 #elif defined(Q_OS_WIN)
 #include <QtCore/qt_windows.h>
+#include <memory>
 #ifndef Q_OS_WINRT
 #include <wincrypt.h>
 #endif // !Q_OS_WINRT
@@ -89,13 +91,19 @@ QT_BEGIN_NAMESPACE
     typedef OSStatus (*PtrSecTrustCopyAnchorCertificates)(CFArrayRef*);
 #endif
 
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINRT)
-    typedef HCERTSTORE (WINAPI *PtrCertOpenSystemStoreW)(HCRYPTPROV_LEGACY, LPCWSTR);
-    typedef PCCERT_CONTEXT (WINAPI *PtrCertFindCertificateInStore)(HCERTSTORE, DWORD, DWORD, DWORD, const void*, PCCERT_CONTEXT);
-    typedef BOOL (WINAPI *PtrCertCloseStore)(HCERTSTORE, DWORD);
-#endif // Q_OS_WIN && !Q_OS_WINRT
+#if defined(Q_OS_WIN)
 
+// Those are needed by both OpenSSL and SChannel back-ends on Windows:
+struct QHCertStoreDeleter {
+    void operator()(HCERTSTORE store)
+    {
+        CertCloseStore(store, 0);
+    }
+};
 
+using QHCertStorePointer = std::unique_ptr<void, QHCertStoreDeleter>;
+
+#endif // Q_OS_WIN
 
 class QSslSocketPrivate : public QTcpSocketPrivate
 {
@@ -105,6 +113,7 @@ public:
     virtual ~QSslSocketPrivate();
 
     void init();
+    bool verifyProtocolSupported(const char *where);
     bool initialized;
 
     QSslSocket::SslMode mode;
@@ -133,7 +142,6 @@ public:
     static long sslLibraryBuildVersionNumber();
     static QString sslLibraryBuildVersionString();
     static void ensureInitialized();
-    static void deinitialize();
     static QList<QSslCipher> defaultCiphers();
     static QList<QSslCipher> supportedCiphers();
     static void setDefaultCiphers(const QList<QSslCipher> &ciphers);
@@ -154,12 +162,6 @@ public:
     Q_AUTOTEST_EXPORT static bool isMatchingHostname(const QSslCertificate &cert,
                                                      const QString &peerName);
     Q_AUTOTEST_EXPORT static bool isMatchingHostname(const QString &cn, const QString &hostname);
-
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINRT)
-    static PtrCertOpenSystemStoreW ptrCertOpenSystemStoreW;
-    static PtrCertFindCertificateInStore ptrCertFindCertificateInStore;
-    static PtrCertCloseStore ptrCertCloseStore;
-#endif // Q_OS_WIN && !Q_OS_WINRT
 
     // The socket itself, including private slots.
     QTcpSocket *plainSocket;
@@ -184,7 +186,7 @@ public:
     void _q_flushWriteBuffer();
     void _q_flushReadBuffer();
     void _q_resumeImplementation();
-#if defined(Q_OS_WIN) && !defined(Q_OS_WINRT)
+#if defined(Q_OS_WIN) && !defined(Q_OS_WINRT) && !QT_CONFIG(schannel)
     virtual void _q_caRootLoaded(QSslCertificate,QSslCertificate) = 0;
 #endif
 
@@ -221,7 +223,14 @@ protected:
     bool paused;
     bool flushTriggered;
     bool systemOrSslErrorDetected = false;
+    QVector<QOcspResponse> ocspResponses;
+    bool fetchAuthorityInformation = false;
 };
+
+#if QT_CONFIG(securetransport) || QT_CONFIG(schannel)
+// Implemented in qsslsocket_qt.cpp
+QByteArray _q_makePkcs12(const QList<QSslCertificate> &certs, const QSslKey &key, const QString &passPhrase);
+#endif
 
 QT_END_NAMESPACE
 

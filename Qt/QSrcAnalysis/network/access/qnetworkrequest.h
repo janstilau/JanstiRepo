@@ -1,3 +1,42 @@
+/****************************************************************************
+**
+** Copyright (C) 2016 The Qt Company Ltd.
+** Contact: https://www.qt.io/licensing/
+**
+** This file is part of the QtNetwork module of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:LGPL$
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and The Qt Company. For licensing terms
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
+**
+** GNU Lesser General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU Lesser
+** General Public License version 3 as published by the Free Software
+** Foundation and appearing in the file LICENSE.LGPL3 included in the
+** packaging of this file. Please review the following information to
+** ensure the GNU Lesser General Public License version 3 requirements
+** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
+**
+** GNU General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU
+** General Public License version 2.0 or (at your option) the GNU General
+** Public license version 3 or any later version approved by the KDE Free
+** Qt Foundation. The licenses are as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
+** included in the packaging of this file. Please review the following
+** information to ensure the GNU General Public License requirements will
+** be met: https://www.gnu.org/licenses/gpl-2.0.html and
+** https://www.gnu.org/licenses/gpl-3.0.html.
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
 #ifndef QNETWORKREQUEST_H
 #define QNETWORKREQUEST_H
 
@@ -10,6 +49,7 @@
 QT_BEGIN_NAMESPACE
 
 class QSslConfiguration;
+class QHttp2Configuration;
 
 class QNetworkRequestPrivate;
 class Q_NETWORK_EXPORT QNetworkRequest
@@ -49,16 +89,23 @@ public:
         DownloadBufferAttribute, // internal
         SynchronousRequestAttribute, // internal
         BackgroundRequestAttribute,
+#if QT_DEPRECATED_SINCE(5, 15)
         SpdyAllowedAttribute,
         SpdyWasUsedAttribute,
-        EmitAllUploadProgressSignalsAttribute,
+#endif // QT_DEPRECATED_SINCE(5, 15)
+        EmitAllUploadProgressSignalsAttribute = BackgroundRequestAttribute + 3,
         FollowRedirectsAttribute,
-        HTTP2AllowedAttribute,
-        HTTP2WasUsedAttribute,
+        Http2AllowedAttribute,
+        Http2WasUsedAttribute,
+#if QT_DEPRECATED_SINCE(5, 15)
+        HTTP2AllowedAttribute Q_DECL_ENUMERATOR_DEPRECATED_X("Use Http2AllowedAttribute") = Http2AllowedAttribute,
+        HTTP2WasUsedAttribute Q_DECL_ENUMERATOR_DEPRECATED_X("Use Http2WasUsedAttribute"),
+#endif // QT_DEPRECATED_SINCE(5, 15)
         OriginalContentLengthAttribute,
         RedirectPolicyAttribute,
         Http2DirectAttribute,
         ResourceTypeAttribute, // internal
+        AutoDeleteReplyOnFinishAttribute,
 
         User = 1000,
         UserMax = 32767
@@ -87,13 +134,18 @@ public:
         UserVerifiedRedirectPolicy
     };
 
+    enum TransferTimeoutConstant {
+        DefaultTransferTimeoutConstant = 30000
+    };
 
-    explicit QNetworkRequest(const QUrl &url = QUrl());
+    QNetworkRequest();
+    explicit QNetworkRequest(const QUrl &url);
     QNetworkRequest(const QNetworkRequest &other);
     ~QNetworkRequest();
+    QNetworkRequest &operator=(QNetworkRequest &&other) noexcept { swap(other); return *this; }
     QNetworkRequest &operator=(const QNetworkRequest &other);
 
-    void swap(QNetworkRequest &other) Q_DECL_NOTHROW { qSwap(d, other.d); }
+    void swap(QNetworkRequest &other) noexcept { qSwap(d, other.d); }
 
     bool operator==(const QNetworkRequest &other) const;
     inline bool operator!=(const QNetworkRequest &other) const
@@ -131,6 +183,16 @@ public:
     int maximumRedirectsAllowed() const;
     void setMaximumRedirectsAllowed(int maximumRedirectsAllowed);
 
+    QString peerVerifyName() const;
+    void setPeerVerifyName(const QString &peerName);
+#if QT_CONFIG(http) || defined(Q_CLANG_QDOC)
+    QHttp2Configuration http2Configuration() const;
+    void setHttp2Configuration(const QHttp2Configuration &configuration);
+#endif // QT_CONFIG(http) || defined(Q_CLANG_QDOC)
+#if QT_CONFIG(http) || defined(Q_CLANG_QDOC) || defined (Q_OS_WASM)
+    int transferTimeout() const;
+    void setTransferTimeout(int timeout = DefaultTransferTimeoutConstant);
+#endif // QT_CONFIG(http) || defined(Q_CLANG_QDOC) || defined (Q_OS_WASM)
 private:
     QSharedDataPointer<QNetworkRequestPrivate> d;
     friend class QNetworkRequestPrivate;

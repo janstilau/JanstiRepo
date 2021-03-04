@@ -29,7 +29,9 @@ qtConfig(ssl) {
                ssl/qsslsocket.h \
                ssl/qsslsocket_p.h \
                ssl/qsslpresharedkeyauthenticator.h \
-               ssl/qsslpresharedkeyauthenticator_p.h
+               ssl/qsslpresharedkeyauthenticator_p.h \
+               ssl/qocspresponse.h \
+               ssl/qocspresponse_p.h
     SOURCES += ssl/qsslconfiguration.cpp \
                ssl/qsslcipher.cpp \
                ssl/qssldiffiehellmanparameters.cpp \
@@ -37,7 +39,8 @@ qtConfig(ssl) {
                ssl/qsslkey_p.cpp \
                ssl/qsslerror.cpp \
                ssl/qsslsocket.cpp \
-               ssl/qsslpresharedkeyauthenticator.cpp
+               ssl/qsslpresharedkeyauthenticator.cpp \
+               ssl/qocspresponse.cpp
 
     winrt {
         HEADERS += ssl/qsslsocket_winrt_p.h
@@ -49,6 +52,19 @@ qtConfig(ssl) {
                    ssl/qsslellipticcurve_dummy.cpp
     }
 
+    qtConfig(schannel) {
+        HEADERS += ssl/qsslsocket_schannel_p.h
+        SOURCES += ssl/qsslsocket_schannel.cpp \
+                   ssl/qsslcertificate_schannel.cpp \
+                   ssl/qsslkey_schannel.cpp \
+                   ssl/qsslkey_qt.cpp \
+                   ssl/qssldiffiehellmanparameters_dummy.cpp \
+                   ssl/qsslellipticcurve_dummy.cpp \
+                   ssl/qsslsocket_qt.cpp
+
+        LIBS_PRIVATE += "-lSecur32" "-lCrypt32" "-lbcrypt" "-lncrypt"
+    }
+
     qtConfig(securetransport) {
         HEADERS += ssl/qsslsocket_mac_p.h
         SOURCES += ssl/qssldiffiehellmanparameters_dummy.cpp \
@@ -56,6 +72,7 @@ qtConfig(ssl) {
                    ssl/qsslkey_mac.cpp \
                    ssl/qsslsocket_mac_shared.cpp \
                    ssl/qsslsocket_mac.cpp \
+                   ssl/qsslsocket_qt.cpp \
                    ssl/qsslellipticcurve_dummy.cpp
     }
 
@@ -83,17 +100,9 @@ qtConfig(ssl) {
             SOURCES += ssl/qdtls_openssl.cpp
         }
 
-        qtConfig(opensslv11) {
-            HEADERS += ssl/qsslsocket_openssl11_symbols_p.h
-            SOURCES += ssl/qsslsocket_openssl11.cpp \
-                       ssl/qsslcontext_openssl11.cpp
+        qtConfig(ocsp): HEADERS += ssl/qocsp_p.h
 
-            QMAKE_CXXFLAGS += -DOPENSSL_API_COMPAT=0x10100000L
-        } else {
-            HEADERS += ssl/qsslsocket_opensslpre11_symbols_p.h
-            SOURCES += ssl/qsslsocket_opensslpre11.cpp \
-                       ssl/qsslcontext_opensslpre11.cpp
-        }
+        QMAKE_CXXFLAGS += -DOPENSSL_API_COMPAT=0x10100000L
 
         darwin:SOURCES += ssl/qsslsocket_mac_shared.cpp
 
@@ -102,13 +111,15 @@ qtConfig(ssl) {
         # Add optional SSL libs
         # Static linking of OpenSSL with msvc:
         #   - Binaries http://slproweb.com/products/Win32OpenSSL.html
-        #   - also needs -lWs2_32 -lGdi32 -lAdvapi32 -lCrypt32 -lUser32
+        #   - also needs -lUser32 -lAdvapi32 -lGdi32 -lCrypt32
         #   - libs in <OPENSSL_DIR>\lib\VC\static
-        #   - configure: -openssl-linked -openssl-linked OPENSSL_INCDIR="%OPENSSL_DIR%\include" OPENSSL_LIBDIR="%OPENSSL_DIR%\lib\VC\static" OPENSSL_LIBS="-lWs2_32 -lGdi32 -lAdvapi32 -lCrypt32 -lUser32" OPENSSL_LIBS_DEBUG="-llibssl64MDd -llibcrypto64MDd" OPENSSL_LIBS_RELEASE="-llibssl64MD -llibcrypto64MD"
+        #   - configure: -openssl -openssl-linked -I <OPENSSL_DIR>\include -L <OPENSSL_DIR>\lib\VC\static OPENSSL_LIBS="-lUser32 -lAdvapi32 -lGdi32" OPENSSL_LIBS_DEBUG="-lssleay32MDd -llibeay32MDd" OPENSSL_LIBS_RELEASE="-lssleay32MD -llibeay32MD"
 
-        qtConfig(openssl-linked): \
-            QMAKE_USE_FOR_PRIVATE += openssl
-        else: \
+        qtConfig(openssl-linked): {
+            android {
+                build_pass|single_android_abi: LIBS_PRIVATE += -lssl_$${QT_ARCH} -lcrypto_$${QT_ARCH}
+            } else: QMAKE_USE_FOR_PRIVATE += openssl
+        } else: \
             QMAKE_USE_FOR_PRIVATE += openssl/nolink
         win32 {
             LIBS_PRIVATE += -lcrypt32

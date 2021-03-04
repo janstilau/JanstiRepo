@@ -228,7 +228,8 @@ bool QSslConfiguration::operator==(const QSslConfiguration &other) const
         d->nextAllowedProtocols == other.d->nextAllowedProtocols &&
         d->nextNegotiatedProtocol == other.d->nextNegotiatedProtocol &&
         d->nextProtocolNegotiationStatus == other.d->nextProtocolNegotiationStatus &&
-        d->dtlsCookieEnabled == other.d->dtlsCookieEnabled;
+        d->dtlsCookieEnabled == other.d->dtlsCookieEnabled &&
+        d->ocspStaplingEnabled == other.d->ocspStaplingEnabled;
 }
 
 /*!
@@ -272,7 +273,8 @@ bool QSslConfiguration::isNull() const
             d->preSharedKeyIdentityHint.isNull() &&
             d->nextAllowedProtocols.isEmpty() &&
             d->nextNegotiatedProtocol.isNull() &&
-            d->nextProtocolNegotiationStatus == QSslConfiguration::NextProtocolNegotiationNone);
+            d->nextProtocolNegotiationStatus == QSslConfiguration::NextProtocolNegotiationNone &&
+            d->ocspStaplingEnabled == false);
 }
 
 /*!
@@ -585,6 +587,8 @@ void QSslConfiguration::setPrivateKey(const QSslKey &key)
     ciphers. You can revert to using the entire set by calling
     setCiphers() with the list returned by QSslSocket::supportedCiphers().
 
+    \note This is not currently supported in the Schannel backend.
+
     \sa setCiphers(), QSslSocket::supportedCiphers()
 */
 QList<QSslCipher> QSslConfiguration::ciphers() const
@@ -599,6 +603,8 @@ QList<QSslCipher> QSslConfiguration::ciphers() const
 
     Restricting the cipher suite must be done before the handshake
     phase, where the session cipher is chosen.
+
+    \note This is not currently supported in the Schannel backend.
 
     \sa ciphers(), QSslSocket::supportedCiphers()
 */
@@ -625,11 +631,10 @@ QList<QSslCipher> QSslConfiguration::supportedCiphers()
   Returns this connection's CA certificate database. The CA certificate
   database is used by the socket during the handshake phase to
   validate the peer's certificate. It can be modified prior to the
-  handshake with setCaCertificates(), or with \l{QSslSocket}'s
-  \l{QSslSocket::}{addCaCertificate()} and
-  \l{QSslSocket::}{addCaCertificates()}.
+  handshake with setCaCertificates(), or with addCaCertificate() and
+  addCaCertificates().
 
-  \sa setCaCertificates()
+  \sa setCaCertificates(), addCaCertificate(), addCaCertificates()
 */
 QList<QSslCertificate> QSslConfiguration::caCertificates() const
 {
@@ -646,11 +651,79 @@ QList<QSslCertificate> QSslConfiguration::caCertificates() const
   that is not available (as is commonly the case on iOS), the default database
   is empty.
 
-  \sa caCertificates()
+  \sa caCertificates(), addCaCertificates(), addCaCertificate()
 */
 void QSslConfiguration::setCaCertificates(const QList<QSslCertificate> &certificates)
 {
     d->caCertificates = certificates;
+    d->allowRootCertOnDemandLoading = false;
+}
+
+/*!
+  \since 5.15
+
+  Searches all files in the \a path for certificates encoded in the
+  specified \a format and adds them to this socket's CA certificate
+  database. \a path must be a file or a pattern matching one or more
+  files, as specified by \a syntax. Returns \c true if one or more
+  certificates are added to the socket's CA certificate database;
+  otherwise returns \c false.
+
+  The CA certificate database is used by the socket during the
+  handshake phase to validate the peer's certificate.
+
+  For more precise control, use addCaCertificate().
+
+  \sa addCaCertificate(), QSslCertificate::fromPath()
+*/
+bool QSslConfiguration::addCaCertificates(const QString &path, QSsl::EncodingFormat format,
+                                          QSslCertificate::PatternSyntax syntax)
+{
+    QList<QSslCertificate> certs = QSslCertificate::fromPath(path, format, syntax);
+    if (certs.isEmpty())
+        return false;
+
+    d->caCertificates += certs;
+    return true;
+}
+
+/*!
+    \since 5.15
+
+    Adds \a certificate to this configuration's CA certificate database.
+    The certificate database must be set prior to the SSL handshake.
+    The CA certificate database is used by the socket during the
+    handshake phase to validate the peer's certificate.
+
+    \note The default configuration uses the system CA certificate database. If
+    that is not available (as is commonly the case on iOS), the default database
+    is empty.
+
+  \sa caCertificates(), setCaCertificates(), addCaCertificates()
+*/
+void QSslConfiguration::addCaCertificate(const QSslCertificate &certificate)
+{
+    d->caCertificates += certificate;
+    d->allowRootCertOnDemandLoading = false;
+}
+
+/*!
+    \since 5.15
+
+    Adds \a certificates to this configuration's CA certificate database.
+    The certificate database must be set prior to the SSL handshake.
+    The CA certificate database is used by the socket during the
+    handshake phase to validate the peer's certificate.
+
+    \note The default configuration uses the system CA certificate database. If
+    that is not available (as is commonly the case on iOS), the default database
+    is empty.
+
+  \sa caCertificates(), setCaCertificates(), addCaCertificate()
+*/
+void QSslConfiguration::addCaCertificates(const QList<QSslCertificate> &certificates)
+{
+    d->caCertificates += certificates;
     d->allowRootCertOnDemandLoading = false;
 }
 
@@ -662,7 +735,8 @@ void QSslConfiguration::setCaCertificates(const QList<QSslCertificate> &certific
     returned by this function is used to initialize the database
     returned by caCertificates() on the default QSslConfiguration.
 
-    \sa caCertificates(), setCaCertificates(), defaultConfiguration()
+    \sa caCertificates(), setCaCertificates(), defaultConfiguration(),
+    addCaCertificate(), addCaCertificates()
 */
 QList<QSslCertificate> QSslConfiguration::systemCaCertificates()
 {
@@ -708,7 +782,7 @@ bool QSslConfiguration::testSslOption(QSsl::SslOption option) const
   knowledge of the session allows for eavesdropping on data
   encrypted with the session parameters.
 
-  \sa setSessionTicket(), QSsl::SslOptionDisableSessionPersistence, setSslOption()
+  \sa setSessionTicket(), QSsl::SslOptionDisableSessionPersistence, setSslOption(), QSslSocket::newSessionTicketReceived()
  */
 QByteArray QSslConfiguration::sessionTicket() const
 {
@@ -723,7 +797,7 @@ QByteArray QSslConfiguration::sessionTicket() const
   for this to work, and \a sessionTicket must be in ASN.1 format
   as returned by sessionTicket().
 
-  \sa sessionTicket(), QSsl::SslOptionDisableSessionPersistence, setSslOption()
+  \sa sessionTicket(), QSsl::SslOptionDisableSessionPersistence, setSslOption(), QSslSocket::newSessionTicketReceived()
  */
 void QSslConfiguration::setSessionTicket(const QByteArray &sessionTicket)
 {
@@ -741,7 +815,7 @@ void QSslConfiguration::setSessionTicket(const QByteArray &sessionTicket)
   QSsl::SslOptionDisableSessionPersistence was not turned off,
   this function returns -1.
 
-  \sa sessionTicket(), QSsl::SslOptionDisableSessionPersistence, setSslOption()
+  \sa sessionTicket(), QSsl::SslOptionDisableSessionPersistence, setSslOption(), QSslSocket::newSessionTicketReceived()
  */
 int QSslConfiguration::sessionTicketLifeTimeHint() const
 {
@@ -1093,6 +1167,37 @@ void QSslConfiguration::setDefaultDtlsConfiguration(const QSslConfiguration &con
 }
 
 #endif // dtls
+
+/*!
+    \since 5.13
+    If \a enabled is true, client QSslSocket will send a certificate status request
+    to its peer when initiating a handshake. During the handshake QSslSocket will
+    verify the server's response. This value must be set before the handshake
+    starts.
+
+    \sa ocspStaplingEnabled()
+*/
+void QSslConfiguration::setOcspStaplingEnabled(bool enabled)
+{
+#if QT_CONFIG(ocsp)
+    d->ocspStaplingEnabled = enabled;
+#else
+    if (enabled)
+        qCWarning(lcSsl, "Enabling OCSP-stapling requires the feature 'ocsp'");
+#endif // ocsp
+}
+
+/*!
+    \since 5.13
+    Returns true if OCSP stapling was enabled by setOCSPStaplingEnabled(),
+    otherwise false (which is the default value).
+
+    \sa setOcspStaplingEnabled()
+*/
+bool QSslConfiguration::ocspStaplingEnabled() const
+{
+    return d->ocspStaplingEnabled;
+}
 
 /*! \internal
 */
