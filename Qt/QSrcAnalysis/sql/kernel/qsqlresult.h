@@ -129,6 +129,7 @@ protected:
     virtual bool fetchLast() = 0;
     virtual int size() = 0;
     virtual int numRowsAffected() = 0;
+
     virtual QSqlRecord record() const;
     virtual QVariant lastInsertId() const;
 

@@ -31,8 +31,16 @@ struct SelectSpecialization<void>
     struct Type { typedef Void type; };
 };
 
-// 在 RunFunctionTaskBase 里面, 一直在使用 QFutureInterface 的接口, 来做多线程数据同步的事情.
-// 从这里可以看出, Future 这个类, 其实应该算作是数据类, 算法类, 流程类, 还是在 RunFunctionTaskBase 这里.
+
+// QFutureInterface<T> 是 Future 的真正实现部分, Future 共享 QFutureInterface 来达到多线程, 多个位置共享数据的目的.
+// std::future 应该和 QFuture 对标
+// std::task_packge 应该和 RunFunctionTaskBase 对标, 都是对于可调用对象的封装
+// std::promise 在 Qt 里面没有对应的类, 不过, 它应该是提供了某个机制, 让 future 实际的数据可以发生改变. 所以可以传递给子线程, 来做 future 的 setValue 操作.
+// std::async 函数, 应该就像 Qt::run 函数一样, 利用上面的几个类, 来完成异步任务这个概念的实际实现.
+
+
+// RunFunctionTaskBase 的主要责任是, 将自己所表示的异步任务, 添加到异步任务管理器里面.
+// 这里, 使用的是 QThreadPool::globalInstance 作为线程池.
 template <typename T>
 class RunFunctionTaskBase : public QFutureInterface<T> , public QRunnable
 {
@@ -70,6 +78,7 @@ public:
     // 对于 QRunable 的适配工作.
     void run() override
     {
+        // 作为一个异步任务, 应该提供取消这个操作.
         if (this->isCanceled()) {
             this->reportFinished();
             return;
@@ -79,8 +88,10 @@ public:
         try {
             this->runFunctor();
         } catch (QException &e) {
+            // 为什么 QFuture 能够存储异常的原因就在于此, 在 Run 里面, 主动捕获了异常.
             QFutureInterface<T>::reportException(e);
         } catch (...) {
+            // 全捕获, 注意, 在这里, 是没有参数的. 所以这里新建了一个特殊的对象, 存到了 Future 里面.
             QFutureInterface<T>::reportException(QUnhandledException());
         }
 

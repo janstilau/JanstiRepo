@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtSql module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qsqlresult.h"
 
 #include "qvariant.h"
@@ -249,39 +210,19 @@ QSqlResult::~QSqlResult()
     delete d;
 }
 
-/*!
-    Sets the current query for the result to \a query. You must call
-    reset() to execute the query on the database.
-
-    \sa reset(), lastQuery()
-*/
-
 void QSqlResult::setQuery(const QString& query)
 {
     Q_D(QSqlResult);
     d->sql = query;
 }
 
-/*!
-    Returns the current SQL query text, or an empty string if there
-    isn't one.
-
-    \sa setQuery()
-*/
-
+// 就是返回存储的 sql 语句
 QString QSqlResult::lastQuery() const
 {
     Q_D(const QSqlResult);
     return d->sql;
 }
 
-/*!
-    Returns the current (zero-based) row position of the result. May
-    return the special values QSql::BeforeFirstRow or
-    QSql::AfterLastRow.
-
-    \sa setAt(), isValid()
-*/
 int QSqlResult::at() const
 {
     Q_D(const QSqlResult);
@@ -289,31 +230,11 @@ int QSqlResult::at() const
 }
 
 
-/*!
-    Returns \c true if the result is positioned on a valid record (that
-    is, the result is not positioned before the first or after the
-    last record); otherwise returns \c false.
-
-    \sa at()
-*/
-
 bool QSqlResult::isValid() const
 {
     Q_D(const QSqlResult);
     return d->idx != QSql::BeforeFirstRow && d->idx != QSql::AfterLastRow;
 }
-
-/*!
-    \fn bool QSqlResult::isNull(int index)
-
-    Returns \c true if the field at position \a index in the current row
-    is null; otherwise returns \c false.
-*/
-
-/*!
-    Returns \c true if the result has records to be retrieved; otherwise
-    returns \c false.
-*/
 
 bool QSqlResult::isActive() const
 {
@@ -321,28 +242,11 @@ bool QSqlResult::isActive() const
     return d->active;
 }
 
-/*!
-    This function is provided for derived classes to set the
-    internal (zero-based) row position to \a index.
-
-    \sa at()
-*/
-
 void QSqlResult::setAt(int index)
 {
     Q_D(QSqlResult);
     d->idx = index;
 }
-
-
-/*!
-    This function is provided for derived classes to indicate whether
-    or not the current statement is a SQL \c SELECT statement. The \a
-    select parameter should be true if the statement is a \c SELECT
-    statement; otherwise it should be false.
-
-    \sa isSelect()
-*/
 
 void QSqlResult::setSelect(bool select)
 {
@@ -350,37 +254,17 @@ void QSqlResult::setSelect(bool select)
     d->isSel = select;
 }
 
-/*!
-    Returns \c true if the current result is from a \c SELECT statement;
-    otherwise returns \c false.
-
-    \sa setSelect()
-*/
-
 bool QSqlResult::isSelect() const
 {
     Q_D(const QSqlResult);
     return d->isSel;
 }
 
-/*!
-    Returns the driver associated with the result. This is the object
-    that was passed to the constructor.
-*/
-
 const QSqlDriver *QSqlResult::driver() const
 {
     Q_D(const QSqlResult);
     return d->sqldriver;
 }
-
-
-/*!
-    This function is provided for derived classes to set the internal
-    active state to \a active.
-
-    \sa isActive()
-*/
 
 void QSqlResult::setActive(bool active)
 {
@@ -626,17 +510,15 @@ bool QSqlResult::prepare(const QString& query)
     return true; // fake prepares should always succeed
 }
 
-/*!
-    Executes the query, returning true if successful; otherwise returns
-    false.
-
-    \sa prepare()
-*/
+//
 bool QSqlResult::exec()
 {
     Q_D(QSqlResult);
     bool ret;
     // fake preparation - just replace the placeholders..
+    // 所以, 其实就是字符串的替换工作.
+    // 在 exec 之前, 把 bind 的过程中存储的各个值, 替换到最终执行的字符串中.
+    // driver()->formatValue(f) 会根据对应字段的类型, 进行格式化输出.
     QString query = lastQuery();
     if (d->binds == NamedBinding) {
         int i;
@@ -648,7 +530,8 @@ bool QSqlResult::exec()
             QSqlField f(QLatin1String(""), QVariant::Type(val.userType()));
             f.setValue(val);
             query = query.replace(d->holders.at(i).holderPos,
-                                   holder.length(), driver()->formatValue(f));
+                                   holder.length(),
+                                  driver()->formatValue(f));
         }
     } else {
         QString val;
@@ -674,6 +557,7 @@ bool QSqlResult::exec()
     QString orig = lastQuery();
     // 在这里, 是真正的使用 query 进行数据库的查询工作.
     ret = reset(query);
+    // 所以, 实际上有两个值, 一个真正执行 sql, 一个是没有绑定值的 sql.
     d->executedQuery = query;
     setQuery(orig);
     d->resetBindCount();
@@ -700,23 +584,13 @@ void QSqlResult::bindValue(int index, const QVariant& val, QSql::ParamType param
         d->types[index] = paramType;
 }
 
-/*!
-    \overload
-
-    Binds the value \a val of parameter type \a paramType to the \a
-    placeholder name in the current record (row).
-
-    \note Binding an undefined placeholder will result in undefined behavior.
-
-    \sa QSqlQuery::bindValue()
-*/
-void QSqlResult::bindValue(const QString& placeholder, const QVariant& val,
+// 所以, 其实各种 bind, 只是 C++ 类的 bind, 还没有直接 bind 到 sql 上.
+void QSqlResult::bindValue(const QString& placeholder,
+                           const QVariant& val,
                            QSql::ParamType paramType)
 {
     Q_D(QSqlResult);
     d->binds = NamedBinding;
-    // if the index has already been set when doing emulated named
-    // bindings - don't reset it
     const QVector<int> indexes = d->indexes.value(placeholder);
     for (int idx : indexes) {
         if (d->values.count() <= idx)
@@ -727,12 +601,6 @@ void QSqlResult::bindValue(const QString& placeholder, const QVariant& val,
     }
 }
 
-/*!
-    Binds the value \a val of parameter type \a paramType to the next
-    available position in the current record (row).
-
-    \sa bindValue()
-*/
 void QSqlResult::addBindValue(const QVariant& val, QSql::ParamType paramType)
 {
     Q_D(QSqlResult);
@@ -887,14 +755,7 @@ bool QSqlResult::hasOutValues() const
     return false;
 }
 
-/*!
-    Returns the current record if the query is active; otherwise
-    returns an empty QSqlRecord.
 
-    The default implementation always returns an empty QSqlRecord.
-
-    \sa isActive()
-*/
 QSqlRecord QSqlResult::record() const
 {
     return QSqlRecord();
@@ -999,34 +860,6 @@ bool QSqlResult::nextResult()
     return false;
 }
 
-/*!
-    Returns the low-level database handle for this result set
-    wrapped in a QVariant or an invalid QVariant if there is no handle.
-
-    \warning Use this with uttermost care and only if you know what you're doing.
-
-    \warning The handle returned here can become a stale pointer if the result
-    is modified (for example, if you clear it).
-
-    \warning The handle can be NULL if the result was not executed yet.
-
-    \warning PostgreSQL: in forward-only mode, the handle of QSqlResult can change
-    after calling fetch(), fetchFirst(), fetchLast(), fetchNext(), fetchPrevious(),
-    nextResult().
-
-    The handle returned here is database-dependent, you should query the type
-    name of the variant before accessing it.
-
-    This example retrieves the handle for a sqlite result:
-
-    \snippet code/src_sql_kernel_qsqlresult.cpp 1
-
-    This snippet returns the handle for PostgreSQL or MySQL:
-
-    \snippet code/src_sql_kernel_qsqlresult_snippet.cpp 2
-
-    \sa QSqlDriver::handle()
-*/
 QVariant QSqlResult::handle() const
 {
     return QVariant();

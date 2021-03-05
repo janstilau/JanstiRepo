@@ -58,7 +58,6 @@ struct VoidStoredFunctorPointerCall0: public RunFunctionTask<T>
       : function(_function) {}
     void runFunctor() override { (*function)(); }
     FunctionPointer * function;
-
 };
 
 template <typename T, typename FunctionPointer>
