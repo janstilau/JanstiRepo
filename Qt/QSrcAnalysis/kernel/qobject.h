@@ -1,43 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Copyright (C) 2013 Olivier Goffart <ogoffart@woboq.com>
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QOBJECT_H
 #define QOBJECT_H
 
@@ -47,9 +7,6 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qbytearray.h>
 #include <QtCore/qlist.h>
-#ifdef QT_INCLUDE_COMPAT
-#include <QtCore/qcoreevent.h>
-#endif
 #include <QtCore/qscopedpointer.h>
 #include <QtCore/qmetatype.h>
 
@@ -72,18 +29,9 @@ class QObject;
 class QThread;
 class QWidget;
 class QAccessibleWidget;
-#ifndef QT_NO_REGEXP
 class QRegExp;
-#endif
-#if QT_CONFIG(regularexpression)
 class QRegularExpression;
-#endif
-#if !QT_DEPRECATED_SINCE(5, 14) || QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-# define QT_NO_USERDATA
-#endif
-#ifndef QT_NO_USERDATA
 class QObjectUserData;
-#endif
 struct QDynamicMetaObjectData;
 
 typedef QList<QObject*> QObjectList;
@@ -101,6 +49,7 @@ class Q_CORE_EXPORT QObjectData {
 public:
     QObjectData() = default;
     virtual ~QObjectData() = 0;
+
     QObject *q_ptr;
     QObject *parent;
     QObjectList children;
@@ -117,10 +66,6 @@ public:
     int postedEvents;
     QDynamicMetaObjectData *metaObject;
     QMetaObject *dynamicMetaObject() const;
-
-#ifdef QT_DEBUG
-    enum { CheckForParentChildLoopsWarnDepth = 4096 };
-#endif
 };
 
 
@@ -138,15 +83,6 @@ public:
     virtual bool event(QEvent *event);
     virtual bool eventFilter(QObject *watched, QEvent *event);
 
-#if defined(QT_NO_TRANSLATION) || defined(Q_CLANG_QDOC)
-    static QString tr(const char *sourceText, const char * = nullptr, int = -1)
-        { return QString::fromUtf8(sourceText); }
-#if QT_DEPRECATED_SINCE(5, 0)
-    QT_DEPRECATED static QString trUtf8(const char *sourceText, const char * = nullptr, int = -1)
-        { return QString::fromUtf8(sourceText); }
-#endif
-#endif //QT_NO_TRANSLATION
-
     QString objectName() const;
     void setObjectName(const QString &name);
 
@@ -160,13 +96,10 @@ public:
     void moveToThread(QThread *thread);
 
     int startTimer(int interval, Qt::TimerType timerType = Qt::CoarseTimer);
-#if __has_include(<chrono>)
-    Q_ALWAYS_INLINE
     int startTimer(std::chrono::milliseconds time, Qt::TimerType timerType = Qt::CoarseTimer)
     {
         return startTimer(int(time.count()), timerType);
     }
-#endif
     void killTimer(int id);
 
     template<typename T>
@@ -229,14 +162,7 @@ public:
     inline QMetaObject::Connection connect(const QObject *sender, const char *signal,
                         const char *member, Qt::ConnectionType type = Qt::AutoConnection) const;
 
-#ifdef Q_CLANG_QDOC
-    template<typename PointerToMemberFunction>
-    static QMetaObject::Connection connect(const QObject *sender, PointerToMemberFunction signal, const QObject *receiver, PointerToMemberFunction method, Qt::ConnectionType type = Qt::AutoConnection);
-    template<typename PointerToMemberFunction, typename Functor>
-    static QMetaObject::Connection connect(const QObject *sender, PointerToMemberFunction signal, Functor functor);
-    template<typename PointerToMemberFunction, typename Functor>
-    static QMetaObject::Connection connect(const QObject *sender, PointerToMemberFunction signal, const QObject *context, Functor functor, Qt::ConnectionType type = Qt::AutoConnection);
-#else
+
     //Connect a signal to a pointer to qobject member function
     template <typename Func1, typename Func2>
     static inline QMetaObject::Connection connect(const typename QtPrivate::FunctionPointer<Func1>::Object *sender, Func1 signal,
@@ -346,7 +272,6 @@ public:
                                 typename SignalType::ReturnType>(std::move(slot)),
                            type, types, &SignalType::Object::staticMetaObject);
     }
-#endif //Q_CLANG_QDOC
 
     static bool disconnect(const QObject *sender, const char *signal,
                            const QObject *receiver, const char *member);
@@ -359,10 +284,6 @@ public:
         { return disconnect(this, nullptr, receiver, member); }
     static bool disconnect(const QMetaObject::Connection &);
 
-#ifdef Q_CLANG_QDOC
-    template<typename PointerToMemberFunction>
-    static bool disconnect(const QObject *sender, PointerToMemberFunction signal, const QObject *receiver, PointerToMemberFunction method);
-#else
     template <typename Func1, typename Func2>
     static inline bool disconnect(const typename QtPrivate::FunctionPointer<Func1>::Object *sender, Func1 signal,
                                   const typename QtPrivate::FunctionPointer<Func2>::Object *receiver, Func2 slot)
@@ -392,7 +313,6 @@ public:
         return disconnectImpl(sender, reinterpret_cast<void **>(&signal), receiver, zero,
                               &SignalType::Object::staticMetaObject);
     }
-#endif //Q_CLANG_QDOC
 
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -407,15 +327,6 @@ public:
     QVariant property(const char *name) const;
     QList<QByteArray> dynamicPropertyNames() const;
 #endif // QT_NO_PROPERTIES
-
-#ifndef QT_NO_USERDATA
-    QT_DEPRECATED_VERSION_5_14
-    static uint registerUserData();
-    QT_DEPRECATED_VERSION_X_5_14("Use setProperty()")
-    void setUserData(uint id, QObjectUserData* data);
-    QT_DEPRECATED_VERSION_X_5_14("Use property()")
-    QObjectUserData* userData(uint id) const;
-#endif // QT_NO_USERDATA
 
 Q_SIGNALS:
     void destroyed(QObject * = nullptr);
@@ -492,25 +403,6 @@ public:
     QObjectUserData() = default;
     virtual ~QObjectUserData();
 };
-#endif
-
-#if QT_DEPRECATED_SINCE(5, 0)
-template<typename T>
-inline QT_DEPRECATED T qFindChild(const QObject *o, const QString &name = QString())
-{ return o->findChild<T>(name); }
-
-template<typename T>
-inline QT_DEPRECATED QList<T> qFindChildren(const QObject *o, const QString &name = QString())
-{
-    return o->findChildren<T>(name);
-}
-
-#if !defined(QT_NO_REGEXP) || defined(Q_CLANG_QDOC)
-template<typename T>
-inline QT_DEPRECATED QList<T> qFindChildren(const QObject *o, const QRegExp &re)
-{
-    return o->findChildren<T>(re);
-}
 #endif
 
 #endif //QT_DEPRECATED
@@ -634,7 +526,5 @@ namespace QtPrivate {
 #define Q_SET_OBJECT_NAME(obj) QT_PREPEND_NAMESPACE(QtPrivate)::deref_for_methodcall(obj).setObjectName(QLatin1String(#obj))
 
 QT_END_NAMESPACE
-
-#endif
 
 #endif // QOBJECT_H

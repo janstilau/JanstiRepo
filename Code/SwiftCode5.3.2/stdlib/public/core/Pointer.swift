@@ -2,19 +2,17 @@
 // 实际上, _Pointer 就是对于系统原始指针的一层封装. 并且, 里面Pointee规范了指向的类型.
 public protocol _Pointer
 : Hashable, Strideable, CustomDebugStringConvertible, CustomReflectable {
-    // 默认 Int, 其实就是字节, 并且, 计算机的内存是有限的
     typealias Distance = Int
     
     associatedtype Pointee
     
+    // 本质上, 就是对于 void * 的封装.
     var _rawValue: Builtin.RawPointer { get }
-    
     init(_ _rawValue: Builtin.RawPointer)
 }
 
 extension _Pointer {
     public init(_ from: OpaquePointer) {
-        // OpaquePointer 的 rawValue 就是 Builtin.RawPointer
         self.init(from._rawValue)
     }
     
@@ -35,7 +33,7 @@ extension _Pointer {
     }
     
     // copy 构造函数
-    public init(@_nonEphemeral _ other: Self) {
+    public init(_ other: Self) {
         self.init(other._rawValue)
     }
     
@@ -45,14 +43,14 @@ extension _Pointer {
     }
 }
 
-// 指针的比较, 就是地址的比较, 就是虚拟地址的比较.
+// 比较, 就是地址的比较
 extension _Pointer /*: Equatable */ {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         return Bool(Builtin.cmp_eq_RawPointer(lhs._rawValue, rhs._rawValue))
     }
 }
 
-// 指针的比较, 就是地址的比较, 就是虚拟地址的比较.
+// 比较, 就是地址的比较
 extension _Pointer /*: Comparable */ {
     public static func < (lhs: Self, rhs: Self) -> Bool {
         return Bool(Builtin.cmp_ult_RawPointer(lhs._rawValue, rhs._rawValue))
@@ -71,10 +69,10 @@ extension _Pointer /*: Strideable*/ {
     
     // 地址相减然后除以指针代表类型的长度. 和之前 c 是一样的.
     public func distance(to end: Self) -> Int {
-        return
-            Int(Builtin.sub_Word(Builtin.ptrtoint_Word(end._rawValue),
-                                 Builtin.ptrtoint_Word(_rawValue)))
-            / MemoryLayout<Pointee>.stride
+        let ptrDistance = Int(Builtin.sub_Word(Builtin.ptrtoint_Word(end._rawValue),
+                                               Builtin.ptrtoint_Word(_rawValue)))
+        let stride = MemoryLayout<Pointee>.stride
+        return ptrDistance/stride
     }
     
     /// Returns a pointer offset from this pointer by the specified number of
@@ -95,7 +93,9 @@ extension _Pointer /*: Strideable*/ {
     @_transparent
     public func advanced(by n: Int) -> Self {
         return Self(Builtin.gep_Word(
-                        self._rawValue, n._builtinWordValue, Pointee.self))
+                        self._rawValue,
+                        n._builtinWordValue,
+                        Pointee.self))
     }
 }
 
@@ -145,7 +145,10 @@ extension UInt {
     }
 }
 
-// _Pointer 的 +, - 操作符的定义.
+// _Pointer 的 +, - 操作符的定义
+// Strideable 的 protocol, 对于 pointer 的相关操作, 写到了 pointer 的实现文件里面
+// 代码的组织方式, 更加的合理.
+// 用 C++ 考虑, namespace 让 Strideable 的职责, 可以转移到更加合理的地方.
 extension Strideable where Self: _Pointer {
     public static func + (@_nonEphemeral lhs: Self, rhs: Self.Stride) -> Self {
         return lhs.advanced(by: rhs)
@@ -170,75 +173,4 @@ extension Strideable where Self: _Pointer {
     public static func -= (lhs: inout Self, rhs: Self.Stride) {
         lhs = lhs.advanced(by: -rhs)
     }
-}
-
-/// Derive a pointer argument from a convertible pointer type.
-@_transparent
-public // COMPILER_INTRINSIC
-func _convertPointerToPointerArgument<
-    FromPointer: _Pointer,
-    ToPointer: _Pointer
->(_ from: FromPointer) -> ToPointer {
-    return ToPointer(from._rawValue)
-}
-
-/// Derive a pointer argument from the address of an inout parameter.
-@_transparent
-public // COMPILER_INTRINSIC
-func _convertInOutToPointerArgument<
-    ToPointer: _Pointer
->(_ from: Builtin.RawPointer) -> ToPointer {
-    return ToPointer(from)
-}
-
-/// Derive a pointer argument from a value array parameter.
-///
-/// This always produces a non-null pointer, even if the array doesn't have any
-/// storage.
-@_transparent
-public // COMPILER_INTRINSIC
-func _convertConstArrayToPointerArgument<
-    FromElement,
-    ToPointer: _Pointer
->(_ arr: [FromElement]) -> (AnyObject?, ToPointer) {
-    let (owner, opaquePointer) = arr._cPointerArgs()
-    
-    let validPointer: ToPointer
-    if let addr = opaquePointer {
-        validPointer = ToPointer(addr._rawValue)
-    } else {
-        let lastAlignedValue = ~(MemoryLayout<FromElement>.alignment - 1)
-        let lastAlignedPointer = UnsafeRawPointer(bitPattern: lastAlignedValue)!
-        validPointer = ToPointer(lastAlignedPointer._rawValue)
-    }
-    return (owner, validPointer)
-}
-
-/// Derive a pointer argument from an inout array parameter.
-///
-/// This always produces a non-null pointer, even if the array's length is 0.
-@_transparent
-public // COMPILER_INTRINSIC
-func _convertMutableArrayToPointerArgument<
-    FromElement,
-    ToPointer: _Pointer
->(_ a: inout [FromElement]) -> (AnyObject?, ToPointer) {
-    // TODO: Putting a canary at the end of the array in checked builds might
-    // be a good idea
-    
-    // Call reserve to force contiguous storage.
-    a.reserveCapacity(0)
-    _debugPrecondition(a._baseAddressIfContiguous != nil || a.isEmpty)
-    
-    return _convertConstArrayToPointerArgument(a)
-}
-
-/// Derive a UTF-8 pointer argument from a value string parameter.
-@_transparent
-public // COMPILER_INTRINSIC
-func _convertConstStringToUTF8PointerArgument<
-    ToPointer: _Pointer
->(_ str: String) -> (AnyObject?, ToPointer) {
-    let utf8 = Array(str.utf8CString)
-    return _convertConstArrayToPointerArgument(utf8)
 }

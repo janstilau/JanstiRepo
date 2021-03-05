@@ -3611,16 +3611,7 @@ extension SignedInteger where Self: FixedWidthInteger {
   }
 }
 
-/// Returns the given integer as the equivalent value in a different integer
-/// type.
-///
-/// Calling the `numericCast(_:)` function is equivalent to calling an
-/// initializer for the destination type. `numericCast(_:)` traps on overflow 
-/// in `-O` and `-Onone` builds.
-///
-/// - Parameter x: The integer to convert, an instance of type `T`.
-/// - Returns: The value of `x` converted to type `U`.
-@inlinable
+// 可以看到, 就是数值类型的转化, 里面直接调用的构造方法.
 public func numericCast<T: BinaryInteger, U: BinaryInteger>(_ x: T) -> U {
   return U(x)
 }

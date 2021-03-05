@@ -1,11 +1,13 @@
 // A pointer for accessing data of a specific type.
-//
+
 public struct UnsafePointer<Pointee>: _Pointer {
-    // 这几行代码, 就是对于 _Pointer 协议的适配.
     public typealias Distance = Int
     public let _rawValue: Builtin.RawPointer
     public init(_ _rawValue: Builtin.RawPointer) {
         self._rawValue = _rawValue
+    }
+    public var pointee: Pointee {
+        return self
     }
     
     // 就是 Swift 版本的 free. 这里面, 应该不会调用相应的析构方法.
@@ -13,9 +15,6 @@ public struct UnsafePointer<Pointee>: _Pointer {
         Builtin.deallocRaw(_rawValue, (-1)._builtinWordValue, (0)._builtinWordValue)
     }
     
-    public var pointee: Pointee {
-        return self
-    }
     
     // Swift 特别喜欢这种, 最后闭包决定返回值的行为.
     // 先把 rawValue 转为 T 的类型, 然后传入 body 里面, 结束的时候, 再转回来.
@@ -64,6 +63,7 @@ public struct UnsafeMutablePointer<Pointee>: _Pointer {
     }		
     
     // alloc 变为了 Poitner 的一部分了, 这也体现了, Swift 将基本数据类型, 归纳到类型管理的强大之处. 所有的代码, 都在自己应该在的地方.
+    // allocate 放到了 mutable 里面, 因为创建一个不可变的指针, 是没有什么用途的.
     public static func allocate(capacity count: Int)
     -> UnsafeMutablePointer<Pointee> {
         let size = MemoryLayout<Pointee>.stride * count

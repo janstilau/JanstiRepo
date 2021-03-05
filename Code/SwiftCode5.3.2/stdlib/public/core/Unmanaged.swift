@@ -1,5 +1,4 @@
 /// A type for propagating an unmanaged object reference.
-///
 /// When you use this type, you become partially responsible for
 /// keeping the object alive.
 
@@ -20,16 +19,17 @@
  takeRetainedValue()：返回该实例中 Swift 管理的引用，并在调用的同时减少一次引用次数，所以可以按照 Create 规则来对待其返回值。
  takeUnretainedValue()：返回该实例中 Swift 管理的引用而 不减少 引用次数，所以可以按照 Get 规则来对待其返回值。
  在实践中最好不要直接操作 Unmanaged 实例，而是用这两个 take 开头的方法从返回值中拿到绑定的对象。
- 
  */
 public struct Unmanaged<Instance: AnyObject> {
     
     // 真正的数据部分, 就是一个引用, 不做引用计数的管理.
+    // 所以, 这个类, 首先还是存一个值, 这个值就是指针.
     internal unowned(unsafe) var _value: Instance
     internal init(_private: Instance) { _value = _private }
     
     // 将一个裸指针, 强制转化成为 Instance 类型之后, 然后包装到 Unmanaged 里面.
     // 没有引用计数的操作.
+    // Unmanaged 本身是带有 T 类型的, 所以之后的操作, 传进来的 rawPointer, 就是 T 类型的了.
     public static func fromOpaque(_ value: UnsafeRawPointer) -> Unmanaged {
         return Unmanaged(_private: unsafeBitCast(value, to: Instance.self))
     }
@@ -60,6 +60,22 @@ public struct Unmanaged<Instance: AnyObject> {
         let result = _value
         release()
         return result
+    }
+    
+    // 其实就是 NSObject 的 retain. 只不过现在 Swift 里面, 只能使用 Builtin.release 去调用.
+    public func retain() -> Unmanaged {
+        Builtin.retain(_value)
+        return self
+    }
+    
+    // 其实就是 NSObject 的 release. 只不过现在 Swift 里面, 只能使用 Builtin.release 去调用.
+    public func release() {
+        Builtin.release(_value)
+    }
+    
+    public func autorelease() -> Unmanaged {
+        Builtin.autorelease(_value)
+        return self
     }
     
     /// Gets the value of the unmanaged referenced as a managed reference without
@@ -162,21 +178,5 @@ public struct Unmanaged<Instance: AnyObject> {
         let result = try body(guaranteedInstance)
         Builtin.unsafeGuaranteedEnd(token)
         return result
-    }
-    
-    // 其实就是 NSObject 的 retain. 只不过现在 Swift 里面, 只能使用 Builtin.release 去调用.
-    public func retain() -> Unmanaged {
-        Builtin.retain(_value)
-        return self
-    }
-    
-    // 其实就是 NSObject 的 release. 只不过现在 Swift 里面, 只能使用 Builtin.release 去调用.
-    public func release() {
-        Builtin.release(_value)
-    }
-    
-    public func autorelease() -> Unmanaged {
-        Builtin.autorelease(_value)
-        return self
     }
 }

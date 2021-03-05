@@ -19,9 +19,11 @@
 
 // 这个类, 最主要的方法, 都是对于 builtin 里面方法的封装. 所以实际的实现并不太清楚.
 // 这种, 将类型参数当做参数来使用的方式, 在 C++ 里面特别流行.
-// 应该是, 这种将类型作为函数的的参数的使用方式, 都是这种使用方法.
-// 函数作为 static 存在, 使用 <T> 中的类型作为参数. 那么作为一个函数来说, 除了参数列表传入的参数, 使用环境的 T, 也可以认为是参数的一部分.
+// 这是一个 Enum, 而 Swift 的 namespace, 也是一个 Enum 完成的.
+// Enum 作为包装类型, 没有成员变量. 承担了更多的职责.
 public enum MemoryLayout<T> {
+    // A type’s size does not include any dynamically allocated or out of line storage. In particular, MemoryLayout<T>.size, when T is a class type, is the same regardless of how many stored properties T has.
+    // 这里指的是, class 是会有类信息的指针在开头的, size 不包括这些信息, 仅仅包括类的成员变量占用的信息.
     public static var size: Int {
         return Int(Builtin.sizeof(T.self))
     }
