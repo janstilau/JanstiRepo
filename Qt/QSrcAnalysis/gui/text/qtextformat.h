@@ -412,6 +412,7 @@ inline void QTextFormat::setObjectType(int atype)
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QTextFormat::PageBreakFlags)
 
+// 富文本的一些内容.
 class Q_GUI_EXPORT QTextCharFormat : public QTextFormat
 {
 public:

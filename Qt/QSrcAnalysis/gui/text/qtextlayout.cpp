@@ -2504,18 +2504,9 @@ QList<QGlyphRun> QTextLine::glyphRuns(int from, int length) const
 }
 #endif // QT_NO_RAWFONT
 
-/*!
-    \fn void QTextLine::draw(QPainter *painter, const QPointF &position, const QTextLayout::FormatRange *selection) const
-
-    Draws a line on the given \a painter at the specified \a position.
-    The \a selection is reserved for internal use.
-*/
+// 每行, 控制自己改如何进行绘画.
 void QTextLine::draw(QPainter *p, const QPointF &pos, const QTextLayout::FormatRange *selection) const
 {
-#ifndef QT_NO_RAWFONT
-    // Not intended to work with rawfont
-    Q_ASSERT(!eng->useRawFont);
-#endif
     const QScriptLine &line = eng->lines[index];
     QPen pen = p->pen();
 
@@ -2535,7 +2526,7 @@ void QTextLine::draw(QPainter *p, const QPointF &pos, const QTextLayout::FormatR
         return;
     }
 
-
+    // 拿到 CTLine 里面的 CTRun 的迭代器.
     QTextLineItemIterator iterator(eng, index, pos, selection);
     QFixed lineBase = line.base();
     eng->clearDecorations();
@@ -2545,22 +2536,22 @@ void QTextLine::draw(QPainter *p, const QPointF &pos, const QTextLayout::FormatR
 
     bool suppressColors = (eng->option.flags() & QTextOption::SuppressColors);
     while (!iterator.atEnd()) {
-        QScriptItem &si = iterator.next();
+        QScriptItem &drawItem = iterator.next();
 
         if (selection && selection->start >= 0 && iterator.isOutsideSelection())
             continue;
 
-        if (si.analysis.flags == QScriptAnalysis::LineOrParagraphSeparator
+        if (drawItem.analysis.flags == QScriptAnalysis::LineOrParagraphSeparator
             && !(eng->option.flags() & QTextOption::ShowLineAndParagraphSeparators))
             continue;
 
         QFixed itemBaseLine = y;
-        QFont f = eng->font(si);
+        QFont drawFont = eng->font(drawItem);
         QTextCharFormat format;
 
 
         if (eng->hasFormats() || selection) {
-            format = eng->format(&si);
+            format = eng->format(&drawItem);
             if (suppressColors) {
                 format.clearForeground();
                 format.clearBackground();
@@ -2574,7 +2565,7 @@ void QTextLine::draw(QPainter *p, const QPointF &pos, const QTextLayout::FormatR
 
             QTextCharFormat::VerticalAlignment valign = format.verticalAlignment();
             if (valign == QTextCharFormat::AlignSuperScript || valign == QTextCharFormat::AlignSubScript) {
-                QFontEngine *fe = f.d->engineForScript(si.analysis.script);
+                QFontEngine *fe = f.d->engineForScript(drawItem.analysis.script);
                 QFixed height = fe->ascent() + fe->descent();
                 if (valign == QTextCharFormat::AlignSubScript)
                     itemBaseLine += height / 6;
@@ -2583,31 +2574,31 @@ void QTextLine::draw(QPainter *p, const QPointF &pos, const QTextLayout::FormatR
             }
         }
 
-        if (si.analysis.flags >= QScriptAnalysis::TabOrObject) {
+        if (drawItem.analysis.flags >= QScriptAnalysis::TabOrObject) {
 
             if (eng->hasFormats()) {
                 p->save();
-                if (si.analysis.flags == QScriptAnalysis::Object && eng->block.docHandle()) {
-                    QFixed itemY = y - si.ascent;
+                if (drawItem.analysis.flags == QScriptAnalysis::Object && eng->block.docHandle()) {
+                    QFixed itemY = y - drawItem.ascent;
                     switch (format.verticalAlignment()) {
                     case QTextCharFormat::AlignTop:
                         itemY = y - lineBase;
                         break;
                     case QTextCharFormat::AlignMiddle:
-                        itemY = y - lineBase + (line.height() - si.height()) / 2;
+                        itemY = y - lineBase + (line.height() - drawItem.height()) / 2;
                         break;
                     case QTextCharFormat::AlignBottom:
-                        itemY = y - lineBase + line.height() - si.height();
+                        itemY = y - lineBase + line.height() - drawItem.height();
                         break;
                     default:
                         break;
                     }
 
-                    QRectF itemRect(iterator.x.toReal(), itemY.toReal(), iterator.itemWidth.toReal(), si.height().toReal());
+                    QRectF itemRect(iterator.x.toReal(), itemY.toReal(), iterator.itemWidth.toReal(), drawItem.height().toReal());
 
                     eng->docLayout()->drawInlineObject(p, itemRect,
                                                        QTextInlineObject(iterator.item, eng),
-                                                       si.position + eng->block.position(),
+                                                       drawItem.position + eng->block.position(),
                                                        format);
                     if (selection) {
                         QBrush bg = format.brushProperty(ObjectSelectionBrush);
@@ -2618,8 +2609,8 @@ void QTextLine::draw(QPainter *p, const QPointF &pos, const QTextLayout::FormatR
                         }
                     }
                 } else { // si.isTab
-                    QFont f = eng->font(si);
-                    QTextItemInt gf(si, &f, format);
+                    QFont f = eng->font(drawItem);
+                    QTextItemInt gf(drawItem, &f, format);
                     gf.chars = nullptr;
                     gf.num_chars = 0;
                     gf.width = iterator.itemWidth;
@@ -2646,18 +2637,16 @@ void QTextLine::draw(QPainter *p, const QPointF &pos, const QTextLayout::FormatR
             continue;
         }
 
-        unsigned short *logClusters = eng->logClusters(&si);
-        QGlyphLayout glyphs = eng->shapedGlyphs(&si);
+        unsigned short *logClusters = eng->logClusters(&drawItem);
+        QGlyphLayout glyphs = eng->shapedGlyphs(&drawItem);
 
         QTextItemInt gf(glyphs.mid(iterator.glyphsStart, iterator.glyphsEnd - iterator.glyphsStart),
-                        &f, eng->layoutData->string.unicode() + iterator.itemStart,
-                        iterator.itemEnd - iterator.itemStart, eng->fontEngine(si), format);
-        gf.logClusters = logClusters + iterator.itemStart - si.position;
+                        &drawFont, eng->layoutData->string.unicode() + iterator.itemStart,
+                        iterator.itemEnd - iterator.itemStart, eng->fontEngine(drawItem), format);
+        gf.logClusters = logClusters + iterator.itemStart - drawItem.position;
         gf.width = iterator.itemWidth;
         gf.justified = line.justified;
-        gf.initWithScriptItem(si);
-
-        Q_ASSERT(gf.fontEngine);
+        gf.initWithScriptItem(drawItem);
 
         QPointF pos(iterator.x.toReal(), itemBaseLine.toReal());
         if (format.penProperty(QTextFormat::TextOutline).style() != Qt::NoPen) {
@@ -2701,15 +2690,15 @@ void QTextLine::draw(QPainter *p, const QPointF &pos, const QTextLayout::FormatR
             QPainterPrivate::get(p)->drawTextItem(pos, gf, eng);
         }
 
-        if ((si.analysis.flags == QScriptAnalysis::Space
-             || si.analysis.flags == QScriptAnalysis::Nbsp)
+        if ((drawItem.analysis.flags == QScriptAnalysis::Space
+             || drawItem.analysis.flags == QScriptAnalysis::Nbsp)
             && (eng->option.flags() & QTextOption::ShowTabsAndSpaces)) {
             QBrush c = format.foreground();
             if (c.style() != Qt::NoBrush)
                 p->setPen(c.color());
-            QChar visualSpace(si.analysis.flags == QScriptAnalysis::Space ? (ushort)0xb7 : (ushort)0xb0);
+            QChar visualSpace(drawItem.analysis.flags == QScriptAnalysis::Space ? (ushort)0xb7 : (ushort)0xb0);
             QFont oldFont = p->font();
-            p->setFont(eng->font(si));
+            p->setFont(eng->font(drawItem));
             p->drawText(QPointF(iterator.x.toReal(), itemBaseLine.toReal()), visualSpace);
             p->setPen(pen);
             p->setFont(oldFont);

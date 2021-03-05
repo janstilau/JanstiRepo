@@ -2358,17 +2358,8 @@ bool QRectF::intersects(const QRectF &r) const Q_DECL_NOTHROW
     \sa QRectF(), toAlignedRect()
 */
 
-/*!
-    \fn QRect QRectF::toAlignedRect() const
-    \since 4.3
-
-    Returns a QRect based on the values of this rectangle that is the
-    smallest possible integer rectangle that completely contains this
-    rectangle.
-
-    \sa toRect()
-*/
-
+// 这个值, 返回一个最小的, 能够装下自己的一个 Int Rect.
+// Int 有着很好的计算的优势, 算法上, 就是各种 floor, ceil 的操作.
 QRect QRectF::toAlignedRect() const Q_DECL_NOTHROW
 {
     int xmin = int(qFloor(xp));

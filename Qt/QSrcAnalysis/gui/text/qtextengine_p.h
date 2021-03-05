@@ -361,6 +361,7 @@ struct Q_AUTOTEST_EXPORT QScriptLine
         : from(0), trailingSpaces(0), length(0),
         justified(0), gridfitted(0),
         hasTrailingSpaces(0), leadingIncluded(0) {}
+
     QFixed descent;
     QFixed ascent;
     QFixed leading;
@@ -369,6 +370,7 @@ struct Q_AUTOTEST_EXPORT QScriptLine
     QFixed width;
     QFixed textWidth;
     QFixed textAdvance;
+
     int from;
     unsigned short trailingSpaces;
     signed int length : 28;
@@ -406,6 +408,7 @@ public:
         InLayout,
         LayoutFailed
     };
+
     struct Q_GUI_EXPORT LayoutData {
         LayoutData(const QString &str, void **stack_memory, int mem_size);
         LayoutData();
@@ -676,6 +679,8 @@ public:
     LayoutData _layoutData;
     void *_memory[MemSize];
 };
+
+
 Q_DECLARE_TYPEINFO(QTextEngine::ItemDecoration, Q_MOVABLE_TYPE);
 
 struct QTextLineItemIterator

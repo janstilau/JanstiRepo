@@ -1145,11 +1145,6 @@ static bool doNotify(QObject *receiver, QEvent *event)
         qWarning("QCoreApplication::notify: Unexpected null receiver");
         return true;
     }
-
-#ifndef QT_NO_DEBUG
-    QCoreApplicationPrivate::checkReceiverThread(receiver);
-#endif
-
     return receiver->isWidgetType() ? false : QCoreApplicationPrivate::notify_helper(receiver, event);
 }
 
@@ -1221,6 +1216,7 @@ bool QCoreApplicationPrivate::notify_helper(QObject *receiver, QEvent * event)
     }
 
     // deliver the event
+    // 最终, 这个 event, 还是到达了指定的 receiver.
     consumed = receiver->event(event);
     return consumed;
 }
@@ -1451,8 +1447,6 @@ void QCoreApplication::exit(int returnCode)
 */
 bool QCoreApplication::sendEvent(QObject *receiver, QEvent *event)
 {
-    Q_TRACE(QCoreApplication_sendEvent, receiver, event, event->type());
-
     if (event)
         event->spont = false;
     return notifyInternal2(receiver, event);

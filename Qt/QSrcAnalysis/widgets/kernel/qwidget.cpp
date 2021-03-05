@@ -3109,10 +3109,6 @@ void QWidget::addActions(QList<QAction*> actions)
 */
 void QWidget::insertAction(QAction *before, QAction *action)
 {
-    if (Q_UNLIKELY(!action)) {
-        qWarning("QWidget::insertAction: Attempt to insert null action");
-        return;
-    }
 
     Q_D(QWidget);
     if(d->actions.contains(action))
@@ -3125,6 +3121,7 @@ void QWidget::insertAction(QAction *before, QAction *action)
     }
     d->actions.insert(pos, action);
 
+    // 在这里, addAction 的时候, 反向将自己的数据, 加到了 action 的列表里面.
     QActionPrivate *apriv = action->d_func();
     apriv->widgets.append(this);
 

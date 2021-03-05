@@ -1557,30 +1557,6 @@ QFont::Capitalization QFont::capitalization() const
     return static_cast<QFont::Capitalization> (d->capital);
 }
 
-#if QT_DEPRECATED_SINCE(5, 5)
-/*!
-    \fn void QFont::setRawMode(bool enable)
-    \deprecated
-
-    If \a enable is true, turns raw mode on; otherwise turns raw mode
-    off. This function only has an effect under X11.
-
-    If raw mode is enabled, Qt will search for an X font with a
-    complete font name matching the family name, ignoring all other
-    values set for the QFont. If the font name matches several fonts,
-    Qt will use the first font returned by X. QFontInfo \e cannot be
-    used to fetch information about a QFont using raw mode (it will
-    return the values set in the QFont for all parameters, including
-    the family name).
-
-    \warning Enabling raw mode has no effect since Qt 5.0.
-
-    \sa rawMode()
-*/
-void QFont::setRawMode(bool)
-{
-}
-#endif
 
 /*!
     Returns \c true if a window system font exactly matching the settings

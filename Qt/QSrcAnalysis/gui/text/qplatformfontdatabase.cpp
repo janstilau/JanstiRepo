@@ -371,15 +371,7 @@ QFontEngine *QPlatformFontDatabase::fontEngine(const QByteArray &fontData, qreal
     return nullptr;
 }
 
-/*!
-    Adds an application font described by the font contained supplied \a fontData
-    or using the font contained in the file referenced by \a fileName. Returns
-    a list of family names, or an empty list if the font could not be added.
-
-    \note The default implementation of this function does not add an application
-    font. Subclasses should reimplement this function to perform the necessary
-    loading and registration of fonts.
-*/
+// 真正的进行字体添加的操作, 没有暴露出来, 是各个平台相关的.
 QStringList QPlatformFontDatabase::addApplicationFont(const QByteArray &fontData, const QString &fileName)
 {
     Q_UNUSED(fontData);

@@ -5884,10 +5884,6 @@ void QPainter::drawStaticText(const QPointF &topLeftPosition, const QStaticText 
 */
 void QPainter::drawText(const QPointF &p, const QString &str, int tf, int justificationPadding)
 {
-#ifdef QT_DEBUG_DRAW
-    if (qt_show_painter_debug_output)
-        printf("QPainter::drawText(), pos=[%.2f,%.2f], str='%s'\n", p.x(), p.y(), str.toLatin1().constData());
-#endif
 
     Q_D(QPainter);
 
@@ -5963,16 +5959,11 @@ void QPainter::drawText(const QPointF &p, const QString &str, int tf, int justif
     }
 }
 
-void QPainter::drawText(const QRect &r, int flags, const QString &str, QRect *br)
+void QPainter::drawText(const QRect &container, int flags, const QString &str, QRect *br)
 {
-#ifdef QT_DEBUG_DRAW
-    if (qt_show_painter_debug_output)
-        printf("QPainter::drawText(), r=[%d,%d,%d,%d], flags=%d, str='%s'\n",
-           r.x(), r.y(), r.width(), r.height(), flags, str.toLatin1().constData());
-#endif
-
     Q_D(QPainter);
 
+    // 画文字, 不可能是 nopen.
     if (!d->engine || str.length() == 0 || pen().style() == Qt::NoPen)
         return;
 
@@ -5980,7 +5971,7 @@ void QPainter::drawText(const QRect &r, int flags, const QString &str, QRect *br
         d->updateState(d->state);
 
     QRectF bounds;
-    qt_format_text(d->state->font, r, flags, nullptr, str, br ? &bounds : nullptr, 0, nullptr, 0, this);
+    qt_format_text(d->state->font, container, flags, nullptr, str, br ? &bounds : nullptr, 0, nullptr, 0, this);
     if (br)
         *br = bounds.toAlignedRect();
 }
@@ -6620,37 +6611,17 @@ void QPainterPrivate::drawTextItem(const QPointF &p, const QTextItem &_ti, QText
     \sa drawText(), Qt::Alignment, Qt::TextFlag
 */
 
-/*!
-    \fn QRect QPainter::boundingRect(const QRect &rectangle, int flags,
-                                     const QString &text)
 
-    \overload
-
-    Returns the bounding rectangle of the \a text as it will appear
-    when drawn inside the given \a rectangle with the specified \a
-    flags using the currently set font().
-*/
-
-/*!
-    \fn QRect QPainter::boundingRect(int x, int y, int w, int h, int flags,
-                                     const QString &text);
-
-    \overload
-
-    Returns the bounding rectangle of the given \a text as it will
-    appear when drawn inside the rectangle beginning at the point
-    (\a{x}, \a{y}) with width \a w and height \a h.
-*/
+// iOS 里面, 也有类似的逻辑, 所以, 实际上文字的尺寸, 是和绘画绘画系统紧密相关的.
 QRect QPainter::boundingRect(const QRect &rect, int flags, const QString &str)
 {
     if (str.isEmpty())
         return QRect(rect.x(),rect.y(), 0,0);
     QRect brect;
+    // 直接调用了 draw 方法, 来确定最终值.
     drawText(rect, flags | Qt::TextDontPrint, str, &brect);
     return brect;
 }
-
-
 
 QRectF QPainter::boundingRect(const QRectF &rect, int flags, const QString &str)
 {
@@ -7494,39 +7465,42 @@ void qt_format_text(const QFont &fnt, const QRectF &_r,
                     tabstops, ta, tabarraylen,
                     painter);
 }
-void qt_format_text(const QFont &fnt, const QRectF &_r,
-                    int tf, const QTextOption *option, const QString& str, QRectF *brect,
+
+// 最核心的, 将文字, 画到某个区域的代码.
+void qt_format_text(const QFont &font, const QRectF &container,
+                    int drawOption, const QTextOption *option, const QString& toDrawTxt,
+                    QRectF *outputContainer,
                     int tabstops, int *ta, int tabarraylen,
                     QPainter *painter)
 {
 
-    Q_ASSERT( !((tf & ~Qt::TextDontPrint)!=0 && option!=nullptr) ); // we either have an option or flags
-
+    // Label 的各种属性, 会汇聚到一起, 成为 draw 方法里面, 控制绘画的变量.
     if (option) {
-        tf |= option->alignment();
+        drawOption |= option->alignment();
         if (option->wrapMode() != QTextOption::NoWrap)
-            tf |= Qt::TextWordWrap;
+            drawOption |= Qt::TextWordWrap; // 有换行
 
         if (option->flags() & QTextOption::IncludeTrailingSpaces)
-            tf |= Qt::TextIncludeTrailingSpaces;
+            drawOption |= Qt::TextIncludeTrailingSpaces; // 末尾留边???
 
         if (option->tabStopDistance() >= 0 || !option->tabArray().isEmpty())
-            tf |= Qt::TextExpandTabs;
+            drawOption |= Qt::TextExpandTabs;
     }
 
     // we need to copy r here to protect against the case (&r == brect).
-    QRectF r(_r);
+    QRectF theContainer(container);
 
-    bool dontclip  = (tf & Qt::TextDontClip);
-    bool wordwrap  = (tf & Qt::TextWordWrap) || (tf & Qt::TextWrapAnywhere);
-    bool singleline = (tf & Qt::TextSingleLine);
-    bool showmnemonic = (tf & Qt::TextShowMnemonic);
-    bool hidemnmemonic = (tf & Qt::TextHideMnemonic);
+    bool dontclip  = (drawOption & Qt::TextDontClip); // 不切, 应该就是出区域的问题, 也画出来.
+    bool wordwrap  = (drawOption & Qt::TextWordWrap) || (drawOption & Qt::TextWrapAnywhere);
+    bool singleline = (drawOption & Qt::TextSingleLine); // 是否单行.
+    bool showmnemonic = (drawOption & Qt::TextShowMnemonic);
+    bool hidemnmemonic = (drawOption & Qt::TextHideMnemonic);
 
+    // 确定方向.
     Qt::LayoutDirection layout_direction;
-    if (tf & Qt::TextForceLeftToRight)
+    if (drawOption & Qt::TextForceLeftToRight)
         layout_direction = Qt::LeftToRight;
-    else if (tf & Qt::TextForceRightToLeft)
+    else if (drawOption & Qt::TextForceRightToLeft)
         layout_direction = Qt::RightToLeft;
     else if (option)
         layout_direction = option->textDirection();
@@ -7535,29 +7509,32 @@ void qt_format_text(const QFont &fnt, const QRectF &_r,
     else
         layout_direction = Qt::LeftToRight;
 
-    tf = QGuiApplicationPrivate::visualAlignment(layout_direction, QFlag(tf));
-
     bool isRightToLeft = layout_direction == Qt::RightToLeft;
-    bool expandtabs = ((tf & Qt::TextExpandTabs) &&
-                        (((tf & Qt::AlignLeft) && !isRightToLeft) ||
-                          ((tf & Qt::AlignRight) && isRightToLeft)));
+    bool expandtabs = ((drawOption & Qt::TextExpandTabs) &&
+                        (((drawOption & Qt::AlignLeft) && !isRightToLeft) ||
+                          ((drawOption & Qt::AlignRight) && isRightToLeft)));
 
     if (!painter)
-        tf |= Qt::TextDontPrint;
+        drawOption |= Qt::TextDontPrint;
+
+    // 以上, 各种操作, 是绘画这个操作的数据的前期准备
 
     uint maxUnderlines = 0;
 
-    QFontMetricsF fm(fnt);
-    QString text = str;
+    QFontMetricsF fontRuler(font);
+    QString text = toDrawTxt;
     int offset = 0;
+
 start_lengthVariant:
     bool hasMoreLengthVariants = false;
     // compatible behaviour to the old implementation. Replace
     // tabs by spaces
     int old_offset = offset;
+    // 遍历一遍, 对一些特殊字符进行处理.
     for (; offset < text.length(); offset++) {
         QChar chr = text.at(offset);
         if (chr == QLatin1Char('\r') || (singleline && chr == QLatin1Char('\n'))) {
+            // \r\n 的处理
             text[offset] = QLatin1Char(' ');
         } else if (chr == QLatin1Char('\n')) {
             text[offset] = QChar::LineSeparator;
@@ -7567,7 +7544,7 @@ start_lengthVariant:
             if (!expandtabs) {
                 text[offset] = QLatin1Char(' ');
             } else if (!tabarraylen && !tabstops) {
-                tabstops = qRound(fm.horizontalAdvance(QLatin1Char('x'))*8);
+                tabstops = qRound(fontRuler.horizontalAdvance(QLatin1Char('x'))*8);
             }
         } else if (chr == QChar(ushort(0x9c))) {
             // string with multiple length variants
@@ -7590,26 +7567,13 @@ start_lengthVariant:
                 --l;
                 if (!l)
                     break;
-                if (*cin != QLatin1Char('&') && !hidemnmemonic && !(tf & Qt::TextDontPrint)) {
+                if (*cin != QLatin1Char('&') && !hidemnmemonic && !(drawOption & Qt::TextDontPrint)) {
                     QTextLayout::FormatRange range;
                     range.start = cout - cout0;
                     range.length = 1;
                     range.format.setFontUnderline(true);
                     underlineFormats.append(range);
                 }
-#ifdef Q_OS_MAC
-            } else if (hidemnmemonic && *cin == QLatin1Char('(') && l >= 4 &&
-                       cin[1] == QLatin1Char('&') && cin[2] != QLatin1Char('&') &&
-                       cin[3] == QLatin1Char(')')) {
-                int n = 0;
-                while ((cout - n) > cout0 && (cout - n - 1)->isSpace())
-                    ++n;
-                cout -= n;
-                cin += 4;
-                length -= n + 4;
-                l -= 4;
-                continue;
-#endif //Q_OS_MAC
             }
             *cout = *cin;
             ++cout;
@@ -7622,6 +7586,8 @@ start_lengthVariant:
     qreal width = 0;
 
     QString finalText = text.mid(old_offset, length);
+    // finalText 应该就是经过处理之后, 最终要输出的文字了.
+
     QStackTextEngine engine(finalText, fnt);
     if (option) {
         engine.option = *option;
@@ -7649,23 +7615,24 @@ start_lengthVariant:
 
     if (tf & Qt::TextJustificationForced)
         engine.forceJustification = true;
+
     QTextLayout textLayout(&engine);
     textLayout.setCacheEnabled(true);
     textLayout.setFormats(underlineFormats);
 
     if (finalText.isEmpty()) {
-        height = fm.height();
+        height = fontRuler.height();
         width = 0;
-        tf |= Qt::TextDontPrint;
+        drawOption |= Qt::TextDontPrint;
     } else {
         qreal lineWidth = 0x01000000;
-        if (wordwrap || (tf & Qt::TextJustificationForced))
-            lineWidth = qMax<qreal>(0, r.width());
+        if (wordwrap || (drawOption & Qt::TextJustificationForced))
+            lineWidth = qMax<qreal>(0, theContainer.width());
         if(!wordwrap)
-            tf |= Qt::TextIncludeTrailingSpaces;
+            drawOption |= Qt::TextIncludeTrailingSpaces;
         textLayout.beginLayout();
 
-        qreal leading = fm.leading();
+        qreal leading = fontRuler.leading();
         height = -leading;
 
         while (1) {
@@ -7681,7 +7648,7 @@ start_lengthVariant:
             l.setPosition(QPointF(0., height));
             height += textLayout.engine()->lines[l.lineNumber()].height().toReal();
             width = qMax(width, l.naturalTextWidth());
-            if (!dontclip && !brect && height >= r.height())
+            if (!dontclip && !outputContainer && height >= theContainer.height())
                 break;
         }
         textLayout.endLayout();
@@ -7689,33 +7656,34 @@ start_lengthVariant:
 
     qreal yoff = 0;
     qreal xoff = 0;
-    if (tf & Qt::AlignBottom)
-        yoff = r.height() - height;
-    else if (tf & Qt::AlignVCenter)
-        yoff = (r.height() - height)/2;
+    if (drawOption & Qt::AlignBottom)
+        yoff = theContainer.height() - height;
+    else if (drawOption & Qt::AlignVCenter)
+        yoff = (theContainer.height() - height)/2;
 
-    if (tf & Qt::AlignRight)
-        xoff = r.width() - width;
-    else if (tf & Qt::AlignHCenter)
-        xoff = (r.width() - width)/2;
+    if (drawOption & Qt::AlignRight)
+        xoff = theContainer.width() - width;
+    else if (drawOption & Qt::AlignHCenter)
+        xoff = (theContainer.width() - width)/2;
 
-    QRectF bounds = QRectF(r.x() + xoff, r.y() + yoff, width, height);
+    QRectF bounds = QRectF(theContainer.x() + xoff, theContainer.y() + yoff, width, height);
 
-    if (hasMoreLengthVariants && !(tf & Qt::TextLongestVariant) && !r.contains(bounds)) {
+    if (hasMoreLengthVariants && !(drawOption & Qt::TextLongestVariant) && !theContainer.contains(bounds)) {
         offset++;
         goto start_lengthVariant;
     }
-    if (brect)
-        *brect = bounds;
+    if (outputContainer)
+        *outputContainer = bounds;
 
-    if (!(tf & Qt::TextDontPrint)) {
+    if (!(drawOption & Qt::TextDontPrint)) {
         bool restore = false;
-        if (!dontclip && !r.contains(bounds)) {
+        if (!dontclip && !theContainer.contains(bounds)) {
             restore = true;
             painter->save();
-            painter->setClipRect(r, Qt::IntersectClip);
+            painter->setClipRect(theContainer, Qt::IntersectClip);
         }
 
+        // 前面的各种计算, 将文字变为了 CTLine
         for (int i = 0; i < textLayout.lineCount(); i++) {
             QTextLine line = textLayout.lineAt(i);
             QTextEngine *eng = textLayout.engine();
@@ -7723,14 +7691,14 @@ start_lengthVariant:
 
             qreal advance = line.horizontalAdvance();
             xoff = 0;
-            if (tf & Qt::AlignRight) {
+            if (drawOption & Qt::AlignRight) {
                 xoff = r.width() - advance -
                     eng->leadingSpaceWidth(eng->lines[line.lineNumber()]).toReal();
             }
-            else if (tf & Qt::AlignHCenter)
-                xoff = (r.width() - advance) / 2;
+            else if (drawOption & Qt::AlignHCenter)
+                xoff = (theContainer.width() - advance) / 2;
 
-            line.draw(painter, QPointF(r.x() + xoff, r.y() + yoff));
+            line.draw(painter, QPointF(theContainer.x() + xoff, theContainer.y() + yoff));
             eng->drawDecorations(painter);
         }
 

@@ -485,7 +485,7 @@ public:
         QByteArray data;
         QStringList families;
     };
-    QVector<ApplicationFont> applicationFonts;
+    QVector<ApplicationFont> applicationFonts; // 所以的数据, 都保存在这个里面.
     int addAppFont(const QByteArray &fontData, const QString &fileName);
     bool isApplicationFont(const QString &fileName);
 
@@ -684,6 +684,7 @@ static QStringList familyList(const QFontDef &req)
     QStringList family_list;
 
     family_list << req.families;
+
     if (!req.family.isEmpty()) {
         const auto list = req.family.splitRef(QLatin1Char(','));
         const int numFamilies = list.size();
@@ -697,6 +698,7 @@ static QStringList familyList(const QFontDef &req)
                 family_list << str.toString();
         }
     }
+
     // append the substitute list for each family in family_list
     for (int i = 0, size = family_list.size(); i < size; ++i)
         family_list += QFont::substitutes(family_list.at(i));
@@ -891,13 +893,12 @@ QStringList qt_fallbacksForFamily(const QString &family, QFont::Style style, QFo
 
 static void registerFont(QFontDatabasePrivate::ApplicationFont *fnt);
 
+//
 static void initializeDb()
 {
     QFontDatabasePrivate *db = privateDb();
 
-    // init by asking for the platformfontdb for the first time or after invalidation
     if (!db->count) {
-        QGuiApplicationPrivate::platformIntegration()->fontDatabase()->populateFontDatabase();
         for (int i = 0; i < db->applicationFonts.count(); i++) {
             if (!db->applicationFonts.at(i).families.isEmpty())
                 registerFont(&db->applicationFonts[i]);
@@ -1408,16 +1409,13 @@ QString QFontDatabase::styleString(const QFontInfo &fontInfo)
     \sa QFont, QFontInfo, QFontMetrics, {Character Map Example}
 */
 
-/*!
-    Creates a font database object.
-*/
+// QFontDatabase 是一个壳子, 真正的数据, 都指向了同一个 QFontDatabasePrivate.
+// 用这种方式, 可以用值对象的方式, 去使用一个类, 但是其实他是一个单例.
 QFontDatabase::QFontDatabase()
 {
-    if (Q_UNLIKELY(!qApp || !QGuiApplicationPrivate::platformIntegration()))
-        qFatal("QFontDatabase: Must construct a QGuiApplication before accessing QFontDatabase");
-
     QMutexLocker locker(fontDatabaseMutex());
     createDatabase();
+    // 实际上, 所有的 QFontDatabase 操作的是一个数据.
     d = privateDb();
 }
 
@@ -2429,12 +2427,12 @@ int QFontDatabasePrivate::addAppFont(const QByteArray &fontData, const QString &
     font.data = fontData;
     font.fileName = fileName;
 
-    Q_TRACE(QFontDatabasePrivate_addAppFont, fileName);
-
     int i;
-    for (i = 0; i < applicationFonts.count(); ++i)
+    for (i = 0; i < applicationFonts.count(); ++i) {
         if (applicationFonts.at(i).families.isEmpty())
             break;
+    }
+
     if (i >= applicationFonts.count()) {
         applicationFonts.append(ApplicationFont());
         i = applicationFonts.count() - 1;
@@ -2445,16 +2443,13 @@ int QFontDatabasePrivate::addAppFont(const QByteArray &fontData, const QString &
 
     bool wasEmpty = privateDb()->count == 0;
     registerFont(&font);
+    //  registerFont 是真正的调用操作系统的方法, 把 font 添加进去. 如果没有添加进行, 这里也不进行记录.
     if (font.families.isEmpty())
         return -1;
 
     applicationFonts[i] = font;
 
-    // If the cache has not yet been populated, we need to reload the application font later
-    if (wasEmpty)
-        invalidate();
-    else
-        emit qApp->fontDatabaseChanged();
+    emit qApp->fontDatabaseChanged();
     return i;
 }
 
@@ -2466,24 +2461,7 @@ bool QFontDatabasePrivate::isApplicationFont(const QString &fileName)
     return false;
 }
 
-/*!
-    \since 4.2
-
-    Loads the font from the file specified by \a fileName and makes it available to
-    the application. An ID is returned that can be used to remove the font again
-    with removeApplicationFont() or to retrieve the list of family names contained
-    in the font.
-
-    The function returns -1 if the font could not be loaded.
-
-    Currently only TrueType fonts, TrueType font collections, and OpenType fonts are
-    supported.
-
-    \note Adding application fonts on Unix/X11 platforms without fontconfig is
-    currently not supported.
-
-    \sa addApplicationFontFromData(), applicationFontFamilies(), removeApplicationFont()
-*/
+// 先读取数据, 然后调用 data 的 add 方法.
 int QFontDatabase::addApplicationFont(const QString &fileName)
 {
     QByteArray data;
@@ -2491,11 +2469,9 @@ int QFontDatabase::addApplicationFont(const QString &fileName)
         QFile f(fileName);
         if (!f.open(QIODevice::ReadOnly))
             return -1;
-
-        Q_TRACE(QFontDatabase_addApplicationFont, fileName);
-
         data = f.readAll();
     }
+    // 如此看, 是有一个全局数据进行字体的管理工作.
     QMutexLocker locker(fontDatabaseMutex());
     return privateDb()->addAppFont(data, fileName);
 }
@@ -2754,6 +2730,7 @@ QFontEngine *QFontDatabase::findFont(const QFontDef &request, int script)
     return engine;
 }
 
+// 在这里,
 void QFontDatabase::load(const QFontPrivate *d, int script)
 {
     QFontDef req = d->request;

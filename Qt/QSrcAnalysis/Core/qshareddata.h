@@ -1,42 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #ifndef QSHAREDDATA_H
 #define QSHAREDDATA_H
 
@@ -52,10 +13,16 @@ QT_BEGIN_NAMESPACE
 
 template <class T> class QSharedDataPointer;
 
+// 这个类, 是为了给别人子类化的.
+// 当一个类, 想要用引用计数被管理的时候, 需要定义一个 ref, 让别人操作.
+// QShareData 定义了一个 ref. 然后, QSharedDataPointer 里面的操作, 会操作这个 ref
+// QSharedDataPointer 是泛型的, 直接使用 .ref++ 进行了操作, 所以, 他应该要求的是, T 是 QSharedData 的子类. 不过 C++ 不能再泛型里面进行范围的限制.
+
+// QSharedData is designed to be used with QSharedDataPointer or QExplicitlySharedDataPointer to implement custom implicitly shared or explicitly shared classes.
 class Q_CORE_EXPORT QSharedData
 {
 public:
-    mutable QAtomicInt ref;
+    mutable QAtomicInt ref; // Ref 是 atomic 的, 保证了线程之间的安全.
 
     inline QSharedData() : ref(0) { }
     inline QSharedData(const QSharedData &) : ref(0) { }
@@ -65,31 +32,49 @@ private:
     QSharedData &operator=(const QSharedData &);
 };
 
+// 里面, 默认就是使用 T.ref.load 等操作了, 就是默认, T 其实是 QSharedData
 template <class T> class QSharedDataPointer
 {
 public:
     typedef T Type;
     typedef T *pointer;
 
-    inline void detach() { if (d && d->ref.load() != 1) detach_helper(); }
-    inline T &operator*() { detach(); return *d; }
-    inline const T &operator*() const { return *d; }
+    inline void detach() {
+        if (d && d->ref.load() != 1) detach_helper();
+    }
+    // 修改的时候, 提前 detach. 只读的情况, 直接返回数据.
+    // 编译器会判断, 到底应该调用哪个方法.
+    inline T &operator*() {
+        detach(); return *d;
+    }
+    inline const T &operator*() const {
+        return *d;
+    }
     inline T *operator->() { detach(); return d; }
     inline const T *operator->() const { return d; }
+
     inline operator T *() { detach(); return d; }
     inline operator const T *() const { return d; }
+
     inline T *data() { detach(); return d; }
     inline const T *data() const { return d; }
     inline const T *constData() const { return d; }
 
+    // 相等判断, 就是指针的指向判断.
     inline bool operator==(const QSharedDataPointer<T> &other) const { return d == other.d; }
     inline bool operator!=(const QSharedDataPointer<T> &other) const { return d != other.d; }
 
     inline QSharedDataPointer() { d = nullptr; }
+    // 析构的时候, 就是引用计数管理, 必要时候, 删除管理的对象.
     inline ~QSharedDataPointer() { if (d && !d->ref.deref()) delete d; }
 
     explicit QSharedDataPointer(T *data) Q_DECL_NOTHROW;
-    inline QSharedDataPointer(const QSharedDataPointer<T> &o) : d(o.d) { if (d) d->ref.ref(); }
+    // 拷贝构造, 就是引用计数的管理.
+    inline QSharedDataPointer(const QSharedDataPointer<T> &o) : d(o.d) {
+        if (d) d->ref.ref();
+    }
+
+    // 拷贝赋值, 也是引用计数的管理.
     inline QSharedDataPointer<T> & operator=(const QSharedDataPointer<T> &o) {
         if (o.d != d) {
             if (o.d)
@@ -112,7 +97,7 @@ public:
         }
         return *this;
     }
-#ifdef Q_COMPILER_RVALUE_REFS
+
     QSharedDataPointer(QSharedDataPointer &&o) Q_DECL_NOTHROW : d(o.d) { o.d = nullptr; }
     inline QSharedDataPointer<T> &operator=(QSharedDataPointer<T> &&other) Q_DECL_NOTHROW
     {
@@ -120,7 +105,6 @@ public:
         swap(moved);
         return *this;
     }
-#endif
 
     inline bool operator!() const { return !d; }
 
@@ -242,6 +226,7 @@ private:
     T *d;
 };
 
+// 引用计数的管理.
 template <class T>
 Q_INLINE_TEMPLATE QSharedDataPointer<T>::QSharedDataPointer(T *adata) Q_DECL_NOTHROW
     : d(adata)
@@ -250,9 +235,12 @@ Q_INLINE_TEMPLATE QSharedDataPointer<T>::QSharedDataPointer(T *adata) Q_DECL_NOT
 template <class T>
 Q_INLINE_TEMPLATE T *QSharedDataPointer<T>::clone()
 {
+    // 所谓的 clone, 就是使用拷贝构造, 生成一份新的数据.
+    // 所以, ShareData 的子类, 其实不能是 QObject 的子类. 因为 QObject 是没有拷贝构造的.
     return new T(*d);
 }
 
+// detach, 就是使用 clone 的数据.
 template <class T>
 Q_OUTOFLINE_TEMPLATE void QSharedDataPointer<T>::detach_helper()
 {

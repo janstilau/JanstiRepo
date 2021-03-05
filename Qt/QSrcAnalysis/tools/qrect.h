@@ -618,8 +618,8 @@ public:
 #endif
 
 private:
-    qreal xp;
-    qreal yp;
+    qreal xp; // 原点
+    qreal yp; // 原点
     qreal w;
     qreal h;
 };

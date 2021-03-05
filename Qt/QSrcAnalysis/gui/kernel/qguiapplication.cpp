@@ -4230,17 +4230,6 @@ QInputMethod *QGuiApplication::inputMethod()
     return qGuiApp->d_func()->inputMethod;
 }
 
-/*!
-    \fn void QGuiApplication::fontDatabaseChanged()
-
-    This signal is emitted when application fonts are loaded or removed.
-
-    \sa QFontDatabase::addApplicationFont(),
-    QFontDatabase::addApplicationFontFromData(),
-    QFontDatabase::removeAllApplicationFonts(),
-    QFontDatabase::removeApplicationFont()
-*/
-
 QPixmap QGuiApplicationPrivate::getPixmapCursor(Qt::CursorShape cshape)
 {
     Q_UNUSED(cshape);

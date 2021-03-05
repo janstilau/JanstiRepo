@@ -199,11 +199,6 @@ public:
     void setHintingPreference(HintingPreference hintingPreference);
     HintingPreference hintingPreference() const;
 
-#if QT_DEPRECATED_SINCE(5, 5)
-    bool rawMode() const;
-    void setRawMode(bool);
-#endif
-
     // dupicated from QFontInfo
     bool exactMatch() const;
 
@@ -213,18 +208,6 @@ public:
     bool operator<(const QFont &) const;
     operator QVariant() const;
     bool isCopyOf(const QFont &) const;
-#ifdef Q_COMPILER_RVALUE_REFS
-    inline QFont &operator=(QFont &&other) Q_DECL_NOEXCEPT
-    { qSwap(d, other.d); qSwap(resolve_mask, other.resolve_mask);  return *this; }
-#endif
-
-#if QT_DEPRECATED_SINCE(5, 3)
-    // needed for X11
-    QT_DEPRECATED void setRawName(const QString &);
-    QT_DEPRECATED QString rawName() const;
-#endif
-
-    QString key() const;
 
     QString toString() const;
     bool fromString(const QString &);
@@ -235,9 +218,6 @@ public:
     static void insertSubstitution(const QString&, const QString &);
     static void insertSubstitutions(const QString&, const QStringList &);
     static void removeSubstitutions(const QString &);
-#if QT_DEPRECATED_SINCE(5, 0)
-    static QT_DEPRECATED void removeSubstitution(const QString &family) { removeSubstitutions(family); }
-#endif
     static void initialize();
     static void cleanup();
     static void cacheStatistics();
@@ -287,7 +267,7 @@ private:
     friend Q_GUI_EXPORT QDataStream &operator>>(QDataStream &, QFont &);
 #endif
 
-    QExplicitlySharedDataPointer<QFontPrivate> d;
+    QExplicitlySharedDataPointer<QFontPrivate> d; // 多个 Font 复制, 没有性能损失, Font 是引用语义的对象.
     uint resolve_mask;
 };
 

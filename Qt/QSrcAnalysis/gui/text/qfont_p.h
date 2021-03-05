@@ -66,6 +66,8 @@ QT_BEGIN_NAMESPACE
 class QFontCache;
 class QFontEngine;
 
+// 这个类里面, 是字体自己的一些信息. 是一个纯粹的数据类.
+// 这是一个值对象.
 struct QFontDef
 {
     inline QFontDef()
@@ -162,8 +164,7 @@ public:
 
     QAtomicInt ref;
     const int fontCacheId;
-
-    QFontEngine *engines[QChar::ScriptCount];
+    QFontEngine *engines[QChar::ScriptCount]; // 一个简易的 hash 表, 直接使用了 Enum 的最大值, 作为数组的长度.
 
 private:
     Q_DISABLE_COPY_MOVE(QFontEngineData)
@@ -183,9 +184,10 @@ public:
 
     QAtomicInt ref;
     QFontDef request;
-    mutable QFontEngineData *engineData;
-    int dpi;
 
+    mutable QFontEngineData *engineData;
+
+    int dpi;
     uint underline  :  1;
     uint overline   :  1;
     uint strikeOut  :  1;
@@ -193,8 +195,8 @@ public:
     uint capital    :  3;
     bool letterSpacingIsAbsolute : 1;
 
-    QFixed letterSpacing;
-    QFixed wordSpacing;
+    uint letterSpacing;
+    uint wordSpacing;
 
     mutable QFontPrivate *scFont;
     QFont smallCapsFont() const { return QFont(smallCapsFontPrivate()); }
@@ -217,7 +219,6 @@ private:
 class Q_GUI_EXPORT QFontCache : public QObject
 {
 public:
-    // note: these static functions work on a per-thread basis
     static QFontCache *instance();
     static void cleanup();
 

@@ -765,6 +765,7 @@ void QPaintEngine::drawTextItem(const QPointF &p, const QTextItem &textItem)
                                       && !(painter()->font().styleStrategy() & QFont::NoAntialias)));
         for (int i = 0; i < ti.glyphs.numGlyphs; ++i) {
             QImage glyph = ti.fontEngine->bitmapForGlyph(glyphs[i], QFixed(), QTransform());
+            // 最终, 到这里还是画图片.
             painter()->drawImage(positions[i].x.toReal(), positions[i].y.toReal(), glyph);
         }
         painter()->restore();
@@ -773,6 +774,7 @@ void QPaintEngine::drawTextItem(const QPointF &p, const QTextItem &textItem)
 
     QPainterPath path;
     path.setFillRule(Qt::WindingFill);
+    // 在这里, 是按照字体的轮廓, 画外边框.
     ti.fontEngine->addOutlineToPath(0, 0, ti.glyphs, &path, ti.flags);
     if (!path.isEmpty()) {
         painter()->save();

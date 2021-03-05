@@ -2427,11 +2427,11 @@ glyph_metrics_t QTextEngine::tightBoundingBox(int from,  int len) const
     return gm;
 }
 
-QFont QTextEngine::font(const QScriptItem &si) const
+QFont QTextEngine::font(const QScriptItem &ctRun) const
 {
     QFont font = fnt;
     if (hasFormats()) {
-        QTextCharFormat f = format(&si);
+        QTextCharFormat f = format(&ctRun);
         font = f.font();
 
         if (block.docHandle() && block.docHandle()->layout()) {
@@ -2451,7 +2451,7 @@ QFont QTextEngine::font(const QScriptItem &si) const
         }
     }
 
-    if (si.analysis.flags == QScriptAnalysis::SmallCaps)
+    if (ctRun.analysis.flags == QScriptAnalysis::SmallCaps)
         font = font.d->smallCapsFont();
 
     return font;

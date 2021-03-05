@@ -215,14 +215,17 @@ extern QRecursiveMutex *qt_fontdatabase_mutex();
 QFontEngine *QFontPrivate::engineForScript(int script) const
 {
     QMutexLocker locker(qt_fontdatabase_mutex());
+    // 这是一个全局锁.
     if (script <= QChar::Script_Latin)
         script = QChar::Script_Common;
+
     if (engineData && engineData->fontCacheId != QFontCache::instance()->id()) {
         // throw out engineData that came from a different thread
         if (!engineData->ref.deref())
             delete engineData;
         engineData = nullptr;
     }
+
     if (!engineData || !QT_FONT_ENGINE_FROM_DATA(engineData, script))
         QFontDatabase::load(this, script);
     return QT_FONT_ENGINE_FROM_DATA(engineData, script);
@@ -2499,36 +2502,20 @@ QDataStream &operator>>(QDataStream &s, QFont &font)
     \sa QFont, QFontMetrics, QFontDatabase
 */
 
-/*!
-    Constructs a font info object for \a font.
-
-    The font must be screen-compatible, i.e. a font you use when
-    drawing text in \l{QWidget}{widgets} or \l{QPixmap}{pixmaps}, not QPicture or QPrinter.
-
-    The font info object holds the information for the font that is
-    passed in the constructor at the time it is created, and is not
-    updated if the font's attributes are changed later.
-
-    Use QPainter::fontInfo() to get the font info when painting.
-    This will give correct results also when painting on paint device
-    that is not screen-compatible.
-*/
+// 简单的一个指针的拷贝.
+// 这个指针里面, 有着引用计数的自我管理.
 QFontInfo::QFontInfo(const QFont &font)
     : d(font.d)
 {
 }
 
-/*!
-    Constructs a copy of \a fi.
-*/
+
 QFontInfo::QFontInfo(const QFontInfo &fi)
     : d(fi.d)
 {
 }
 
-/*!
-    Destroys the font info object.
-*/
+// 不需要对引用计数进行管理, 因为存的是一个 Pointer 对象, 对象的析构会自动调用.
 QFontInfo::~QFontInfo()
 {
 }
@@ -2542,23 +2529,10 @@ QFontInfo &QFontInfo::operator=(const QFontInfo &fi)
     return *this;
 }
 
-/*!
-    \fn void QFontInfo::swap(QFontInfo &other)
-    \since 5.0
-
-    Swaps this font info instance with \a other. This function is very
-    fast and never fails.
-*/
-
-/*!
-    Returns the family name of the matched window system font.
-
-    \sa QFont::family()
-*/
+// 返回, 真实情况下, 会使用的 Font 的信息.
 QString QFontInfo::family() const
 {
     QFontEngine *engine = d->engineForScript(QChar::Script_Common);
-    Q_ASSERT(engine != nullptr);
     return engine->fontDef.family;
 }
 
