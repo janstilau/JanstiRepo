@@ -75,22 +75,7 @@ extension _Pointer /*: Strideable*/ {
         return ptrDistance/stride
     }
     
-    /// Returns a pointer offset from this pointer by the specified number of
-    /// instances.
-    ///
-    /// With pointer `p` and distance `n`, the result of `p.advanced(by: n)` is
-    /// equivalent to `p + n`.
-    ///
-    /// The resulting pointer must be within the bounds of the same allocation as
-    /// this pointer.
-    ///
-    /// - Parameter n: The number of strides of the pointer's `Pointee` type to
-    ///   offset this pointer. To access the stride, use
-    ///   `MemoryLayout<Pointee>.stride`. `n` may be positive, negative, or
-    ///   zero.
-    /// - Returns: A pointer offset from this pointer by `n` instances of the
-    ///   `Pointee` type.
-    @_transparent
+    // 这就是 C 风格的, ptr + sizeof(T) * n 的操作. 不过是被良好的进行封装了.
     public func advanced(by n: Int) -> Self {
         return Self(Builtin.gep_Word(
                         self._rawValue,
@@ -149,6 +134,7 @@ extension UInt {
 // Strideable 的 protocol, 对于 pointer 的相关操作, 写到了 pointer 的实现文件里面
 // 代码的组织方式, 更加的合理.
 // 用 C++ 考虑, namespace 让 Strideable 的职责, 可以转移到更加合理的地方.
+// 所以, 实际上, Swift 里面, 还是可以使用指针的, 只不过这些, 都在特殊的类型里面, 不是语言的操作符了, 需要专门的记忆一下.
 extension Strideable where Self: _Pointer {
     public static func + (@_nonEphemeral lhs: Self, rhs: Self.Stride) -> Self {
         return lhs.advanced(by: rhs)

@@ -20,7 +20,11 @@
 // 这个类, 最主要的方法, 都是对于 builtin 里面方法的封装. 所以实际的实现并不太清楚.
 // 这种, 将类型参数当做参数来使用的方式, 在 C++ 里面特别流行.
 // 这是一个 Enum, 而 Swift 的 namespace, 也是一个 Enum 完成的.
-// Enum 作为包装类型, 没有成员变量. 承担了更多的职责.
+// Enum 作为包装类型, 没有成员变量. 承担了命名空间的职责.
+
+
+// You can use MemoryLayout as a source of information about a type when allocating or binding memory using raw pointers.
+// 在苹果眼里, 这个类, 主要还是用于内存分配管理的.
 public enum MemoryLayout<T> {
     // A type’s size does not include any dynamically allocated or out of line storage. In particular, MemoryLayout<T>.size, when T is a class type, is the same regardless of how many stored properties T has.
     // 这里指的是, class 是会有类信息的指针在开头的, size 不包括这些信息, 仅仅包括类的成员变量占用的信息.
@@ -51,73 +55,11 @@ extension MemoryLayout {
         return MemoryLayout.alignment
     }
     
-    /// Returns the offset of an inline stored property within a type's in-memory
-    /// representation.
-    ///
-    /// You can use this method to find the distance in bytes that can be added
-    /// to a pointer of type `T` to get a pointer to the property referenced by
-    /// `key`. The offset is available only if the given key refers to inline,
-    /// directly addressable storage within the in-memory representation of `T`.
-    ///
-    /// If the return value of this method is non-`nil`, then accessing the value
-    /// by key path or by an offset pointer are equivalent. For example, for a
-    /// variable `root` of type `T`, a key path `key` of type
-    /// `WritableKeyPath<T, U>`, and a `value` of type `U`:
-    ///
-    ///     // Mutation through the key path
-    ///     root[keyPath: key] = value
-    ///
-    ///     // Mutation through the offset pointer
-    ///     withUnsafeMutableBytes(of: &root) { bytes in
-    ///         let offset = MemoryLayout<T>.offset(of: key)!
-    ///         let rawPointerToValue = bytes.baseAddress! + offset
-    ///         let pointerToValue = rawPointerToValue.assumingMemoryBound(to: U.self)
-    ///         pointerToValue.pointee = value
-    ///     }
-    ///
-    /// A property has inline, directly addressable storage when it is a stored
-    /// property for which no additional work is required to extract or set the
-    /// value. Properties are not directly accessible if they trigger any
-    /// `didSet` or `willSet` accessors, perform any representation changes such
-    /// as bridging or closure reabstraction, or mask the value out of
-    /// overlapping storage as for packed bitfields. In addition, because class
-    /// instance properties are always stored out-of-line, their positions are
-    /// not accessible using `offset(of:)`.
-    ///
-    /// For example, in the `ProductCategory` type defined here, only
-    /// `\.updateCounter`, `\.identifier`, and `\.identifier.name` refer to
-    /// properties with inline, directly addressable storage:
-    ///
-    ///     struct ProductCategory {
-    ///         struct Identifier {
-    ///             var name: String              // addressable
-    ///         }
-    ///
-    ///         var identifier: Identifier        // addressable
-    ///         var updateCounter: Int            // addressable
-    ///         var products: [Product] {         // not addressable: didSet handler
-    ///             didSet { updateCounter += 1 }
-    ///         }
-    ///         var productCount: Int {           // not addressable: computed property
-    ///             return products.count
-    ///         }
-    ///     }
-    ///
-    /// When using `offset(of:)` with a type imported from a library, don't
-    /// assume that future versions of the library will have the same behavior.
-    /// If a property is converted from a stored property to a computed
-    /// property, the result of `offset(of:)` changes to `nil`. That kind of
-    /// conversion is nonbreaking in other contexts, but would trigger a runtime
-    /// error if the result of `offset(of:)` is force-unwrapped.
-    ///
-    /// - Parameter key: A key path referring to storage that can be accessed
-    ///   through a value of type `T`.
-    /// - Returns: The offset in bytes from a pointer to a value of type `T` to a
-    ///   pointer to the storage referenced by `key`, or `nil` if no such offset
-    ///   is available for the storage referenced by `key`. If the value is
-    ///   `nil`, it can be because `key` is computed, has observers, requires
-    ///   reabstraction, or overlaps storage with other properties.
-    @_transparent
+        
+    // 直接, 返回的就是 key 里面存储的值.
+    // 所以, 在 PartialKeyPath<T> 构建的时候, 就应该是存储了这个值
+    // 这个值, 应该是存在类型的元信息里面.
+    // 通过这个值, 就能够达成, C 语言风格的, 指针寻找成员变量地址, 然后直接对成员变量赋值的操作了.
     public static func offset(of key: PartialKeyPath<T>) -> Int? {
         return key._storedInlineOffset
     }
