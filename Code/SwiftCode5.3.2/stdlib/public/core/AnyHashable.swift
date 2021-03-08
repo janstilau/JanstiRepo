@@ -29,7 +29,6 @@ extension _AnyHashableBox {
 // 这也是一个 struct. 但是, 它里面存储一个 Hashable 值, 作为 base.
 internal struct _ConcreteHashableBox<Base: Hashable>: _AnyHashableBox {
     internal var _baseHashable: Base
-    
     internal init(_ base: Base) {
         self._baseHashable = base
     }
@@ -38,6 +37,7 @@ internal struct _ConcreteHashableBox<Base: Hashable>: _AnyHashableBox {
         return (self as _AnyHashableBox as? _ConcreteHashableBox<T>)?._baseHashable
     }
     
+    // 最终, 还是使用了 hashable base 的 == 判断.
     internal func _isEqual(to rhs: _AnyHashableBox) -> Bool? {
         if let rhs: Base = rhs._unbox() {
             return _baseHashable == rhs
@@ -68,40 +68,15 @@ internal struct _ConcreteHashableBox<Base: Hashable>: _AnyHashableBox {
     }
 }
 
-
-/// Where conversion using `as` or `as?` is possible between two types (such as
-/// `Int` and `NSNumber`), `AnyHashable` uses a canonical representation of the
-/// type-erased value so that instances wrapping the same value of either type
-/// compare as equal. For example, `AnyHashable(42)` compares as equal to
-/// `AnyHashable(42 as NSNumber)`.
-///
-/// You can store mixed-type keys in dictionaries and other collections that
-/// require `Hashable` conformance by wrapping mixed-type keys in
-/// `AnyHashable` instances:
-///
-///     let descriptions: [AnyHashable: Any] = [
-///         42: "an Int",
-///         43 as Int8: "an Int8",
-///         ["a", "b"] as Set: "a set of strings"
-///     ]
-///     print(descriptions[42]!)                // prints "an Int"
-///     print(descriptions[42 as Int8]!)        // prints "an Int"
-///     print(descriptions[43 as Int8]!)        // prints "an Int8"
-///     print(descriptions[44])                 // prints "nil"
-///     print(descriptions[["a", "b"] as Set]!) // prints "a set of strings"
-///
-/// Note that `AnyHashable` does not guarantee that it preserves the hash
-/// encoding of wrapped values. Do not rely on `AnyHashable` generating such
-/// compatible hashes, as the hash encoding that it uses may change between any
-/// two releases of the standard library.
-
-// _AnyHashableBox 这层协议, 目前看来有点过度设计.
+// 这本来就是一个 struct, 如果直接将 base 存在 AnyHashable 有什么问题吗 ????
 public struct AnyHashable {
     
     internal var _box: _AnyHashableBox
     internal init(_box box: _AnyHashableBox) {
         self._box = box
     }
+    
+    // 传递一个 hashable 的值来, 在内部创建一个包装的盒子.
     internal init<H: Hashable>(_usingDefaultRepresentationOf base: H) {
         self._box = _ConcreteHashableBox(base)
     }
