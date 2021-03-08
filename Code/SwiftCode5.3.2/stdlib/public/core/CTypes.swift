@@ -90,9 +90,10 @@ public typealias CChar32 = Unicode.Scalar
 /// The C '_Bool' and C++ 'bool' type.
 public typealias CBool = Bool
 
-@frozen
+
+// 这个类, 就是对于 void* 的封装.
 public struct OpaquePointer {
-    @usableFromInline
+    // 里面存了一下, void * 的地址.
     internal var _rawValue: Builtin.RawPointer
     
     internal init(_ v: Builtin.RawPointer) {
@@ -105,48 +106,42 @@ public struct OpaquePointer {
         self._rawValue = Builtin.inttoptr_Word(bitPattern._builtinWordValue)
     }
     
+    // 判断了一下, bitPattern 是否是有效值,
     public init?(bitPattern: UInt) {
         if bitPattern == 0 { return nil }
         self._rawValue = Builtin.inttoptr_Word(bitPattern._builtinWordValue)
     }
     
-    /// Converts a typed `UnsafePointer` to an opaque C pointer.
-    @_transparent
-    public init<T>(@_nonEphemeral _ from: UnsafePointer<T>) {
+    // 几个不同类型 Pointer 的转化, 其实就是直接拿数据.
+    public init<T>( _ from: UnsafePointer<T>) {
         self._rawValue = from._rawValue
     }
     
-    /// Converts a typed `UnsafePointer` to an opaque C pointer.
-    ///
-    /// The result is `nil` if `from` is `nil`.
-    @_transparent
+    // 增加了 optional 的处理.
+    // unwrap 明确的暗示了, optinal 到底是什么
     public init?<T>(@_nonEphemeral _ from: UnsafePointer<T>?) {
         guard let unwrapped = from else { return nil }
         self.init(unwrapped)
     }
     
-    /// Converts a typed `UnsafeMutablePointer` to an opaque C pointer.
-    @_transparent
     public init<T>(@_nonEphemeral _ from: UnsafeMutablePointer<T>) {
         self._rawValue = from._rawValue
     }
     
-    /// Converts a typed `UnsafeMutablePointer` to an opaque C pointer.
-    ///
-    /// The result is `nil` if `from` is `nil`.
-    @_transparent
     public init?<T>(@_nonEphemeral _ from: UnsafeMutablePointer<T>?) {
         guard let unwrapped = from else { return nil }
         self.init(unwrapped)
     }
 }
 
+// 相等性, 就是指针 int 值的比较
 extension OpaquePointer: Equatable {
     public static func == (lhs: OpaquePointer, rhs: OpaquePointer) -> Bool {
         return Bool(Builtin.cmp_eq_RawPointer(lhs._rawValue, rhs._rawValue))
     }
 }
 
+// hash, 就是指针填入到 hash 中.
 extension OpaquePointer: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(Int(Builtin.ptrtoint_Word(_rawValue)))

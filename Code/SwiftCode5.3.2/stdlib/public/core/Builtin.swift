@@ -37,25 +37,12 @@ func _canBeClass<T>(_: T.Type) -> Int8 {
     return Int8(Builtin.canBeClass(T.self))
 }
 
-/// - Value conversion from one integer type to another. Use the destination
-///   type's initializer or the `numericCast(_:)` function.
-/// - Bitwise conversion from one integer type to another. Use the destination
-///   type's `init(truncatingIfNeeded:)` or `init(bitPattern:)` initializer.
-/// - Conversion from a pointer to an integer value with the bit pattern of the
-///   pointer's address in memory, or vice versa. Use the `init(bitPattern:)`
-///   initializer for the destination type.
-/// - Casting an instance of a reference type. Use the casting operators (`as`,
-///   `as!`, or `as?`) or the `unsafeDowncast(_:to:)` function. Do not use
-///   `unsafeBitCast(_:to:)` with class or pointer types; doing so may
-///   introduce undefined behavior.
-
 // 数据类型, 是编译器的概念. 对于系统来说, 就是一坨数据.
-// 所以, Int 100, 可以是 Int, 也可以是 NSTime. 就看编译器怎么解释他了.
+// 所以, Int 100, 可以是 Int, 也可以是 NSDate. 就看编译器怎么解释他了.
 // 在 C 风格代码里面, 有着强制类型转化这个功能, 在 Swift 里面, 这个功能被封装成为了一个泛型函数.
 // reinterpretCast 不会对数据有任何修改, 仅仅是, 编译器把当做了另外一个类型的数据了而已.
-// Calling this function breaks the guarantees of the Swift type
-///   system; use with extreme care.
-@inlinable // unsafe-performance
+
+// 这就是 Swfit 的 reinterpretCast 函数
 public func unsafeBitCast<T, U>(_ x: T, to type: U.Type) -> U {
     // 在转化前, 先判断, 这两个类型的所占内存空间是否相等
     _precondition(MemoryLayout<T>.size == MemoryLayout<U>.size,
@@ -64,13 +51,7 @@ public func unsafeBitCast<T, U>(_ x: T, to type: U.Type) -> U {
     return Builtin.reinterpretCast(x)
 }
 
-/// Returns `x` as its concrete type `U`.
-///
-/// This cast can be useful for dispatching to specializations of generic
-/// functions.
-///
-/// - Requires: `x` has type `U`.
-@_transparent
+// 和 unsafeBitCast 没有太大区别.
 public func _identityCast<T, U>(_ x: T, to expectedType: U.Type) -> U {
     _precondition(T.self == expectedType, "_identityCast to wrong type")
     return Builtin.reinterpretCast(x)
@@ -82,28 +63,26 @@ internal func _reinterpretCastToAnyObject<T>(_ x: T) -> AnyObject {
     return unsafeBitCast(x, to: AnyObject.self)
 }
 
-@usableFromInline @_transparent
 internal func == (
     lhs: Builtin.NativeObject, rhs: Builtin.NativeObject
 ) -> Bool {
     return unsafeBitCast(lhs, to: Int.self) == unsafeBitCast(rhs, to: Int.self)
 }
 
-@usableFromInline @_transparent
 internal func != (
     lhs: Builtin.NativeObject, rhs: Builtin.NativeObject
 ) -> Bool {
     return !(lhs == rhs)
 }
 
-@usableFromInline @_transparent
+// 指针, 为什么可以比较, 就是比较的他们的 Int 值.
+// 这在别的语言, 是天然的事情, 但是在 Swift 里面, 这个操作符要专门的写出来.
 internal func == (
     lhs: Builtin.RawPointer, rhs: Builtin.RawPointer
 ) -> Bool {
     return unsafeBitCast(lhs, to: Int.self) == unsafeBitCast(rhs, to: Int.self)
 }
 
-@usableFromInline @_transparent
 internal func != (lhs: Builtin.RawPointer, rhs: Builtin.RawPointer) -> Bool {
     return !(lhs == rhs)
 }
