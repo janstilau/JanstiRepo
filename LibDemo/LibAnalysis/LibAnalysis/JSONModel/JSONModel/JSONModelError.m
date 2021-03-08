@@ -6,6 +6,7 @@
 #import "JSONModelError.h"
 
 NSString* const JSONModelErrorDomain = @"JSONModelErrorDomain";
+
 NSString* const kJSONModelMissingKeys = @"kJSONModelMissingKeys";
 NSString* const kJSONModelTypeMismatch = @"kJSONModelTypeMismatch";
 NSString* const kJSONModelKeyPath = @"kJSONModelKeyPath";
@@ -59,7 +60,8 @@ NSString* const kJSONModelKeyPath = @"kJSONModelKeyPath";
 {
     return [JSONModelError errorWithDomain:JSONModelErrorDomain
                                       code:kJSONModelErrorNilInput
-                                  userInfo:@{NSLocalizedDescriptionKey:@"Initializing model with nil input object."}];
+                                  userInfo:@{
+                                      NSLocalizedDescriptionKey:@"Initializing model with nil input object."}];
 }
 
 - (instancetype)errorByPrependingKeyPathComponent:(NSString*)component

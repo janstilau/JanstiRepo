@@ -82,12 +82,10 @@ static JSONKeyMapper* globalKeyMapper = nil;
     //if there's a custom key mapper, store it in the associated object
     id mapper = [[self class] keyMapper];
     if ( mapper && !objc_getAssociatedObject(self.class, &kMapperObjectKey) ) {
-        objc_setAssociatedObject(
-                                 self.class,
+        objc_setAssociatedObject(self.class,
                                  &kMapperObjectKey,
                                  mapper,
-                                 OBJC_ASSOCIATION_RETAIN // This is atomic
-                                 );
+                                 OBJC_ASSOCIATION_RETAIN); // This is atomic
     }
 }
 
@@ -95,7 +93,6 @@ static JSONKeyMapper* globalKeyMapper = nil;
 {
     self = [super init];
     if (self) {
-        //do initial class setup
         [self __setup__];
     }
     return self;
@@ -148,6 +145,7 @@ static JSONKeyMapper* globalKeyMapper = nil;
 
 }
 
+// 最终, 还是到达这里, 使用 dict 作为 Model 的初始化工作.
 -(id)initWithDictionary:(NSDictionary*)dict error:(NSError**)err
 {
     //check for nil input

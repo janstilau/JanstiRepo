@@ -42,16 +42,18 @@ extern NSString *const kJSONModelTypeMismatch;
  */
 extern NSString *const kJSONModelKeyPath;
 
-/////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * Custom NSError subclass with shortcut methods for creating
  * the common JSONModel errors
  */
 @interface JSONModelError : NSError
 
+// 数据部分, 仅仅是增加了 response 和 responseData 而已.
+// 这个类, 更主要的部分是体现了作者的设计意图, 在出错的时候, 构建相应数据的 NSError 对象, 交付到外界进行调试.
 @property (strong, nonatomic) NSHTTPURLResponse *httpResponse;
-
 @property (strong, nonatomic) NSData *responseData;
+
+// 类方法, 用良好的命名, 返回特定的错误对象.
 
 /**
  * Creates a JSONModelError instance with code kJSONModelErrorInvalidData = 1
