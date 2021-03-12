@@ -41,20 +41,18 @@ public extension Array where Element: HandyJSON {
 // 所以, 这里 T 的泛型, 仅仅是为了传递类型. JSONDeserializer 是一个工具类的概念.
 public class JSONDeserializer<T: HandyJSON> {
 
-    /// Finds the internal dictionary in `dict` as the `designatedPath` specified, and map it to a Model
-    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer, or nil
     public static func deserializeFrom(dict: NSDictionary?, designatedPath: String? = nil) -> T? {
         return deserializeFrom(dict: dict as? [String: Any], designatedPath: designatedPath)
     }
 
-    /// Finds the internal dictionary in `dict` as the `designatedPath` specified, and map it to a Model
-    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer, or nil
     public static func deserializeFrom(dict: [String: Any]?, designatedPath: String? = nil) -> T? {
+        // 首先是数据的读取过程, 这里不太明白, 为什么一直有一个 path. 难道这个类, 会有一个文件缓存的机制???
         var targetDict = dict
         if let path = designatedPath {
             targetDict = getInnerObject(inside: targetDict, by: path) as? [String: Any]
         }
         if let _dict = targetDict {
+            // 最终, 是调用 transform 方法, 从 dict 数据里面, 抽取数据, 赋值到自己的属性里面.
             return T._transform(dict: _dict) as? T
         }
         return nil

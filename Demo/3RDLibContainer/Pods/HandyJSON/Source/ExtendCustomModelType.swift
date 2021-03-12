@@ -112,6 +112,7 @@ extension NSObject {
     }
 }
 
+// 核心方法, 抽取数据的过程.
 extension _ExtendCustomModelType {
 
     static func _transform(from object: Any) -> Self? {
@@ -125,9 +126,11 @@ extension _ExtendCustomModelType {
     static func _transform(dict: [String: Any]) -> _ExtendCustomModelType? {
 
         var instance: Self
+        // 如果, 是 NSObject 的子类, 那么就使用特殊的方式创建.
         if let _nsType = Self.self as? NSObject.Type {
             instance = _nsType.createInstance() as! Self
         } else {
+            // 这里, 使用了 Init 进行对象的创建工作, 这也是为什么, 使用 Handjson 一定要有这个初始化方法.
             instance = Self.init()
         }
         instance.willStartMapping()
@@ -136,11 +139,13 @@ extension _ExtendCustomModelType {
         return instance
     }
 
+    // 这里, 是真正的, 抽取数据, 赋值到对应对象的过程.
     static func _transform(dict: [String: Any], to instance: inout Self) {
         guard let properties = getProperties(forType: Self.self) else {
             InternalLogger.logDebug("Failed when try to get properties from type: \(type(of: Self.self))")
             return
         }
+        // properties 里面存的是 key, type, offset. 也就是成员变量的一些元数据.
 
         // do user-specified mapping first
         let mapper = HelpingMapper()
