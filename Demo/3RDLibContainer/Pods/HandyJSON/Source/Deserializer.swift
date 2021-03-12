@@ -1,64 +1,44 @@
-/*
- * Copyright 1999-2101 Alibaba Group.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-//  Created by zhouzhuo on 7/7/16.
-//
-
 import Foundation
 
+// 为 HandyJSON 增加 extension, 这样, 所有继承了 HandyJSON 的 model, 都可以调用 deserialize 了.
+// 这几个方法的主要作用是, 将自己的类型, 传递给了 JSONDeserializer
+// 这种写法要熟悉, 相比之前, 传递类对象的方式, 泛型的引入, 使用 typename 传递类型会变得非常普遍.
 public extension HandyJSON {
 
-    /// Finds the internal dictionary in `dict` as the `designatedPath` specified, and converts it to a Model
-    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer
     static func deserialize(from dict: NSDictionary?, designatedPath: String? = nil) -> Self? {
         return deserialize(from: dict as? [String: Any], designatedPath: designatedPath)
     }
 
-    /// Finds the internal dictionary in `dict` as the `designatedPath` specified, and converts it to a Model
-    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer
     static func deserialize(from dict: [String: Any]?, designatedPath: String? = nil) -> Self? {
         return JSONDeserializer<Self>.deserializeFrom(dict: dict, designatedPath: designatedPath)
     }
 
-    /// Finds the internal JSON field in `json` as the `designatedPath` specified, and converts it to a Model
-    /// `designatedPath` is a string like `result.data.orderInfo`, which each element split by `.` represents key of each layer
     static func deserialize(from json: String?, designatedPath: String? = nil) -> Self? {
         return JSONDeserializer<Self>.deserializeFrom(json: json, designatedPath: designatedPath)
     }
 }
 
+
+// Array 的反序列化相关配置.
+// 还是把相关的逻辑, 放到了 JSONDeserializer 里面.
 public extension Array where Element: HandyJSON {
 
-    /// if the JSON field finded by `designatedPath` in `json` is representing a array, such as `[{...}, {...}, {...}]`,
-    /// this method converts it to a Models array
     static func deserialize(from json: String?, designatedPath: String? = nil) -> [Element?]? {
         return JSONDeserializer<Element>.deserializeModelArrayFrom(json: json, designatedPath: designatedPath)
     }
 
-    /// deserialize model array from NSArray
     static func deserialize(from array: NSArray?) -> [Element?]? {
         return JSONDeserializer<Element>.deserializeModelArrayFrom(array: array)
     }
 
-    /// deserialize model array from array
     static func deserialize(from array: [Any]?) -> [Element?]? {
         return JSONDeserializer<Element>.deserializeModelArrayFrom(array: array)
     }
 }
 
+// 这个类, 是真正的 JSON 的反序列化器.
+// 所有的方法, 都是 static 方法, 实际上, 最终还是使用到了 T._transform 来生成最终的数据.
+// 所以, 这里 T 的泛型, 仅仅是为了传递类型. JSONDeserializer 是一个工具类的概念.
 public class JSONDeserializer<T: HandyJSON> {
 
     /// Finds the internal dictionary in `dict` as the `designatedPath` specified, and map it to a Model
