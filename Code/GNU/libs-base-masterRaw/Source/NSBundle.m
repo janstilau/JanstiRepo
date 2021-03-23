@@ -153,7 +153,7 @@ typedef enum {
 /* Class variables - We keep track of all the bundles */
 static NSBundle		*_mainBundle = nil;
 static NSMapTable	*_bundles = NULL;
-static NSMapTable	*_byClass = NULL; // key 是 class, value 是 framework, 通过类来查找 Bundle.
+static NSMapTable	*_classFrameworkMap = NULL; // key 是 class, value 是 framework, 通过类来查找 Bundle.
 static NSMapTable	*_byIdentifier = NULL;
 
 /* Store the working directory at startup */
@@ -606,7 +606,7 @@ _find_main_bundle_for_tool(NSString *toolName)
         NSString *name;
         
         // 缓存机制, 返回已经注册的 Bundle.
-        bundle = (id)NSMapGet(_byClass, frameworkClass);
+        bundle = (id)NSMapGet(_classFrameworkMap, frameworkClass);
         if (nil != bundle)
         {
             if ((id)bundle == (id)[NSNull null])
@@ -749,7 +749,7 @@ _find_main_bundle_for_tool(NSString *toolName)
         [load_lock lock];
         if (bundle == nil)
         {
-            NSMapInsert(_byClass, frameworkClass, [NSNull null]);
+            NSMapInsert(_classFrameworkMap, frameworkClass, [NSNull null]);
             [load_lock unlock];
             NSWarnMLog (@"Could not find framework %@ in any standard location",
                         name);
@@ -758,7 +758,7 @@ _find_main_bundle_for_tool(NSString *toolName)
         else
         {
             bundle->_principalClass = frameworkClass;
-            NSMapInsert(_byClass, frameworkClass, bundle);
+            NSMapInsert(_classFrameworkMap, frameworkClass, bundle);
             [load_lock unlock];
         }
         
@@ -778,7 +778,7 @@ _find_main_bundle_for_tool(NSString *toolName)
             NSValue *value;
             Class    class = NSClassFromString(*fmClasses);
             
-            NSMapInsert(_byClass, class, bundle);
+            NSMapInsert(_classFrameworkMap, class, bundle);
             value = [NSValue valueWithPointer: (void*)class];
             [bundle->_bundleClasses addObject: value];
             
@@ -1004,8 +1004,8 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
          */
         _bundles = NSCreateMapTable(NSObjectMapKeyCallBacks,
                                     NSNonOwnedPointerMapValueCallBacks, 0);
-        _byClass = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
-                                    NSNonOwnedPointerMapValueCallBacks, 0);
+        _classFrameworkMap = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
+                                              NSNonOwnedPointerMapValueCallBacks, 0);
         _byIdentifier = NSCreateMapTable(NSObjectMapKeyCallBacks,
                                          NSNonOwnedPointerMapValueCallBacks, 0);
         
@@ -1293,10 +1293,6 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     return _mainBundle;
 }
 
-/**
- * Returns the bundle whose code contains the specified class.<br />
- * NB: We will not find a class if the bundle has not been loaded yet!
- */
 + (NSBundle *) bundleForClass: (Class)aClass
 {
     if (!aClass) { return nil; }
@@ -1313,9 +1309,9 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     }
     
     [load_lock lock];
-   
+    
     // 首先, 通过 缓存哈希表, 查找一些 Class 对应的 Bundle 对象.
-    bundle = (NSBundle *)NSMapGet(_byClass, aClass);
+    bundle = (NSBundle *)NSMapGet(_classFrameworkMap, aClass);
     if ((id)bundle == (id)[NSNull null])
     {
         [load_lock unlock];
@@ -1332,11 +1328,11 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
             NSUInteger        count = [classes count];
             
             if (count > 0 &&
-                0 == NSMapGet(_byClass, [[classes lastObject] pointerValue]))
+                0 == NSMapGet(_classFrameworkMap, [[classes lastObject] pointerValue]))
             {
                 while (count-- > 0)
                 {
-                    NSMapInsert(_byClass,
+                    NSMapInsert(_classFrameworkMap,
                                 (void*)[[classes objectAtIndex: count] pointerValue],
                                 (void*)bundle);
                 }
@@ -1345,7 +1341,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
         NSEndMapTableEnumeration(&enumerate);
         
         
-        bundle = (NSBundle *)NSMapGet(_byClass, aClass);
+        bundle = (NSBundle *)NSMapGet(_classFrameworkMap, aClass);
         if ((id)bundle == (id)[NSNull null])
         {
             [load_lock unlock];
@@ -1381,7 +1377,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
             bundle = [NSBundle bundleForLibrary: lib];
             if (nil == bundle && [[self _addFrameworks] count] > 0)
             {
-                bundle = (NSBundle *)NSMapGet(_byClass, aClass);
+                bundle = (NSBundle *)NSMapGet(_classFrameworkMap, aClass);
                 if ((id)bundle == (id)[NSNull null])
                 {
                     [load_lock unlock];
@@ -1622,14 +1618,14 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
         }
         if (_principalClass != nil)
         {
-            NSMapRemove(_byClass, _principalClass);
+            NSMapRemove(_classFrameworkMap, _principalClass);
         }
-        if (_byClass != nil)
+        if (_classFrameworkMap != nil)
         {
             count = [_bundleClasses count];
             while (count-- > 0)
             {
-                NSMapRemove(_byClass,
+                NSMapRemove(_classFrameworkMap,
                             [[_bundleClasses objectAtIndex: count] pointerValue]);
             }
         }
@@ -1834,7 +1830,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
         while ((class = [classEnumerator nextObject]) != nil)
         {
             // 这里, 把 Class 和 Bundle 绑定在了一起. 使用了一个外部存储 map.
-            NSMapInsert(_byClass, class, self);
+            NSMapInsert(_classFrameworkMap, class, self);
             [classNames addObject: NSStringFromClass((Class)[class pointerValue])];
         }
         
