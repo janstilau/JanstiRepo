@@ -27,6 +27,12 @@
     [self dynamicFrameWork];
 }
 
+- (IBAction)action:(id)sender {
+    NSLog(@"%@", [NSBundle allBundles]);
+    NSLog(@"%@", [NSBundle allFrameworks]);
+}
+
+
 - (void)staticLib {
     [StaticLib log];
     _imageView.image = [StaticLib getImage];
