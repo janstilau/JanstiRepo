@@ -7,6 +7,7 @@
 
 #import "ViewController.h"
 #import <StaticFramework/StaticFramework.h>
+#import <DynamicFramework/DynamicFramework.h>
 #import "StaticLib.h"
 
 @interface ViewController ()
@@ -23,7 +24,7 @@
 }
 
 - (IBAction)btnDidClicked:(id)sender {
-    [self staticFramework];
+    [self dynamicFrameWork];
 }
 
 - (void)staticLib {
@@ -47,7 +48,13 @@
 }
 
 - (void)dynamicFrameWork {
-    
+    [DynamicFrameworkEntry log];
+    _imageView.image = [DynamicFrameworkEntry getImage];
+    NSLog(@"imageView image is %@", _imageView.image);
+    _imageView.image = [DynamicFrameworkEntry getImageFromAsset];
+    NSLog(@"imageView image is %@", _imageView.image);
+    _imageView.image = [DynamicFrameworkEntry getImageFromBundle];
+    NSLog(@"imageView image is %@", _imageView.image);
 }
 
 

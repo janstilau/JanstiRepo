@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		06700792260A0018009B5498 /* StaticFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0658C88B2609FC2800166591 /* StaticFramework.framework */; };
-		06700793260A0018009B5498 /* StaticFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0658C88B2609FC2800166591 /* StaticFramework.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		067007C2260A0BBF009B5498 /* DynamicFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 067007AF260A0B4B009B5498 /* DynamicFramework.framework */; };
+		067007C3260A0BBF009B5498 /* DynamicFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 067007AF260A0B4B009B5498 /* DynamicFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		067E5C3E2609F48600D72DE5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 067E5C3D2609F48600D72DE5 /* AppDelegate.m */; };
 		067E5C412609F48600D72DE5 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 067E5C402609F48600D72DE5 /* SceneDelegate.m */; };
 		067E5C442609F48600D72DE5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 067E5C432609F48600D72DE5 /* ViewController.m */; };
@@ -34,6 +35,20 @@
 			remoteGlobalIDString = 0658C8542609FAC100166591;
 			remoteInfo = StaticFramework;
 		};
+		067007AE260A0B4B009B5498 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 067007AA260A0B4B009B5498 /* DynamicFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0670079F260A0B4B009B5498;
+			remoteInfo = DynamicFramework;
+		};
+		067007C0260A0BB9009B5498 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 067007AA260A0B4B009B5498 /* DynamicFramework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0670079E260A0B4B009B5498;
+			remoteInfo = DynamicFramework;
+		};
 		067E5C6F2609F5D900D72DE5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 067E5C6B2609F5D800D72DE5 /* StaticLib.xcodeproj */;
@@ -51,13 +66,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		0670077F2609FCB9009B5498 /* Embed Frameworks */ = {
+		067007C4260A0BBF009B5498 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				06700793260A0018009B5498 /* StaticFramework.framework in Embed Frameworks */,
+				067007C3260A0BBF009B5498 /* DynamicFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -66,6 +81,7 @@
 
 /* Begin PBXFileReference section */
 		0658C8602609FAC100166591 /* StaticFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = StaticFramework.xcodeproj; path = ../Libs/StaticFramework/StaticFramework.xcodeproj; sourceTree = "<group>"; };
+		067007AA260A0B4B009B5498 /* DynamicFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DynamicFramework.xcodeproj; path = Libs/DynamicFramework/DynamicFramework.xcodeproj; sourceTree = SOURCE_ROOT; };
 		067E5C392609F48600D72DE5 /* BundleSummary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BundleSummary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		067E5C3C2609F48600D72DE5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		067E5C3D2609F48600D72DE5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -87,6 +103,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				067E5C782609F71C00D72DE5 /* libStaticLib.a in Frameworks */,
+				067007C2260A0BBF009B5498 /* DynamicFramework.framework in Frameworks */,
 				06700792260A0018009B5498 /* StaticFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -98,6 +115,14 @@
 			isa = PBXGroup;
 			children = (
 				0658C88B2609FC2800166591 /* StaticFramework.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		067007AB260A0B4B009B5498 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				067007AF260A0B4B009B5498 /* DynamicFramework.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -122,6 +147,7 @@
 		067E5C3B2609F48600D72DE5 /* BundleSummary */ = {
 			isa = PBXGroup;
 			children = (
+				067007AA260A0B4B009B5498 /* DynamicFramework.xcodeproj */,
 				0658C8602609FAC100166591 /* StaticFramework.xcodeproj */,
 				067E5C6B2609F5D800D72DE5 /* StaticLib.xcodeproj */,
 				067E5C3C2609F48600D72DE5 /* AppDelegate.h */,
@@ -164,11 +190,12 @@
 				067E5C352609F48600D72DE5 /* Sources */,
 				067E5C362609F48600D72DE5 /* Frameworks */,
 				067E5C372609F48600D72DE5 /* Resources */,
-				0670077F2609FCB9009B5498 /* Embed Frameworks */,
+				067007C4260A0BBF009B5498 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				067007C1260A0BB9009B5498 /* PBXTargetDependency */,
 				0670078E2609FF00009B5498 /* PBXTargetDependency */,
 				067E5C762609F6E400D72DE5 /* PBXTargetDependency */,
 			);
@@ -203,6 +230,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 067007AB260A0B4B009B5498 /* Products */;
+					ProjectRef = 067007AA260A0B4B009B5498 /* DynamicFramework.xcodeproj */;
+				},
+				{
 					ProductGroup = 0658C8872609FC2800166591 /* Products */;
 					ProjectRef = 0658C8602609FAC100166591 /* StaticFramework.xcodeproj */;
 				},
@@ -224,6 +255,13 @@
 			fileType = wrapper.framework;
 			path = StaticFramework.framework;
 			remoteRef = 0658C88A2609FC2800166591 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		067007AF260A0B4B009B5498 /* DynamicFramework.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DynamicFramework.framework;
+			remoteRef = 067007AE260A0B4B009B5498 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		067E5C702609F5D900D72DE5 /* libStaticLib.a */ = {
@@ -267,6 +305,11 @@
 			isa = PBXTargetDependency;
 			name = StaticFramework;
 			targetProxy = 0670078D2609FF00009B5498 /* PBXContainerItemProxy */;
+		};
+		067007C1260A0BB9009B5498 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = DynamicFramework;
+			targetProxy = 067007C0260A0BB9009B5498 /* PBXContainerItemProxy */;
 		};
 		067E5C762609F6E400D72DE5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -418,6 +461,7 @@
 					"$(inherited)",
 					"${SRCROOT}/Libs/StaticLib/StaticLib",
 					"${SRCROOT}/Libs/StaticFramework/StaticFramework",
+					"${SRCROOT}/Libs/DynamicFramework/DynamicFramework",
 				);
 				INFOPLIST_FILE = BundleSummary/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -441,6 +485,7 @@
 					"$(inherited)",
 					"${SRCROOT}/Libs/StaticLib/StaticLib",
 					"${SRCROOT}/Libs/StaticFramework/StaticFramework",
+					"${SRCROOT}/Libs/DynamicFramework/DynamicFramework",
 				);
 				INFOPLIST_FILE = BundleSummary/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

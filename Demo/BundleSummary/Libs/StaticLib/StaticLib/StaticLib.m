@@ -36,6 +36,10 @@
 }
 
 + (UIImage *)getImageFromBundle {
+    /*
+     将静态库打包的时候，只能打包代码资源，图片、本地json文件和xib等资源文件无法打包进去，使用.a静态库的时候需要三个组成部分：
+     .a文件+需要暴露的头文件+资源文件；
+     */
     NSBundle *resBundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"StaticLibRes" ofType: @"bundle"]];
     return [UIImage imageWithContentsOfFile:[resBundle pathForResource:@"cover" ofType:@"png"]];
 }
