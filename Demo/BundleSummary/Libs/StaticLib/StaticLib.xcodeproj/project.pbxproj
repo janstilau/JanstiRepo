@@ -25,10 +25,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		067007882609FE3F009B5498 /* StaticLibRes.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = StaticLibRes.bundle; sourceTree = "<group>"; };
+		067007892609FEA0009B5498 /* cover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cover.png; sourceTree = "<group>"; };
 		067E5C5F2609F5D800D72DE5 /* libStaticLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStaticLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		067E5C622609F5D800D72DE5 /* StaticLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StaticLib.h; sourceTree = "<group>"; };
 		067E5C632609F5D800D72DE5 /* StaticLib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StaticLib.m; sourceTree = "<group>"; };
-		067E5C732609F67100D72DE5 /* cover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cover.png; sourceTree = "<group>"; };
 		067E5C802609F8BC00D72DE5 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,10 +63,11 @@
 		067E5C612609F5D800D72DE5 /* StaticLib */ = {
 			isa = PBXGroup;
 			children = (
-				067E5C732609F67100D72DE5 /* cover.png */,
+				067007892609FEA0009B5498 /* cover.png */,
 				067E5C622609F5D800D72DE5 /* StaticLib.h */,
 				067E5C632609F5D800D72DE5 /* StaticLib.m */,
 				067E5C802609F8BC00D72DE5 /* Media.xcassets */,
+				067007882609FE3F009B5498 /* StaticLibRes.bundle */,
 			);
 			path = StaticLib;
 			sourceTree = "<group>";

@@ -6,6 +6,7 @@
 //
 
 #import "ViewController.h"
+#import <StaticFramework/StaticFramework.h>
 #import "StaticLib.h"
 
 @interface ViewController ()
@@ -22,7 +23,7 @@
 }
 
 - (IBAction)btnDidClicked:(id)sender {
-    [self staticLib];
+    [self staticFramework];
 }
 
 - (void)staticLib {
@@ -31,10 +32,18 @@
     NSLog(@"imageView image is %@", _imageView.image);
     _imageView.image = [StaticLib getImageFromAsset];
     NSLog(@"imageView image is %@", _imageView.image);
+    _imageView.image = [StaticLib getImageFromBundle];
+    NSLog(@"imageView image is %@", _imageView.image);
 }
 
 - (void)staticFramework {
-    
+    [StaticFrameworkEntry log];
+    _imageView.image = [StaticFrameworkEntry getImage];
+    NSLog(@"imageView image is %@", _imageView.image);
+    _imageView.image = [StaticFrameworkEntry getImageFromAsset];
+    NSLog(@"imageView image is %@", _imageView.image);
+    _imageView.image = [StaticFrameworkEntry getImageFromBundle];
+    NSLog(@"imageView image is %@", _imageView.image);
 }
 
 - (void)dynamicFrameWork {

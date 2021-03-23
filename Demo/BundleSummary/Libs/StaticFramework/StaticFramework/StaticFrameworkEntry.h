@@ -1,18 +1,22 @@
 //
-//  StaticLib.h
-//  StaticLib
+//  StaticFrameworkEntry.h
+//  StaticFramework
 //
 //  Created by JustinLau on 2021/3/23.
 //
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface StaticLib : NSObject
+NS_ASSUME_NONNULL_BEGIN
+
+@interface StaticFrameworkEntry : NSObject
 
 + (void)log;
 + (UIImage *)getImage;
 + (UIImage *)getImageFromAsset;
 + (UIImage *)getImageFromBundle;
 
+
 @end
+
+NS_ASSUME_NONNULL_END

@@ -35,4 +35,9 @@
     return [UIImage imageNamed:@"btn_red_hl"];
 }
 
++ (UIImage *)getImageFromBundle {
+    NSBundle *resBundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"StaticLibRes" ofType: @"bundle"]];
+    return [UIImage imageWithContentsOfFile:[resBundle pathForResource:@"cover" ofType:@"png"]];
+}
+
 @end
