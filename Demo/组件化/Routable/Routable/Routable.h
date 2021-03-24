@@ -3,10 +3,13 @@
 
 @class UPRouter;
 
-/**
+/*
  `Routable` is a "factory" class which gives a more pleasant syntax for dealing with routers. `Routable` probably has fewer name collisions than `Router`, which is why `UPRouter`s are given a 2-letter prefix.
  */
 
+/*
+ 在词典的项目里, 曾经使用了 Routable 
+ */
 
 typedef void (^RouterOpenCallback)(NSDictionary *params);
 
@@ -39,14 +42,7 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
 
 @interface UPRouterOptions : NSObject
 
-/**
- @return A new instance of `UPRouterOptions` with its properties explicitly set
- @param presentationStyle The `UIModalPresentationStyle` attached to the mapped `UIViewController`
- @param transitionStyle The `UIModalTransitionStyle` attached to the mapped `UIViewController`
- @param defaultParams The default parameters which are passed when opening the URL
- @param isRoot The boolean `shouldOpenAsRootViewController` property is set to
- @param isModal The boolean that sets a modal presentation format
- */
+// 指定初始化方法.
 + (instancetype)routerOptionsWithPresentationStyle: (UIModalPresentationStyle)presentationStyle
                                    transitionStyle: (UIModalTransitionStyle)transitionStyle
                                      defaultParams: (NSDictionary *)defaultParams
@@ -151,26 +147,51 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
  The property determining if the mapped `UIViewController` should be opened modally or pushed in the navigation stack.
  */
 @property (readwrite, nonatomic, getter=isModal) BOOL modal;
-/**
- The property determining the `UIModalPresentationStyle` assigned to the mapped `UIViewController` instance. This is always assigned, regardless of whether or not `modal` is true.
+/*
+ UIModalPresentationStyle.automatic
+ For most view controllers, UIKit maps this style to the UIModalPresentationStyle.pageSheet style, but some system view controllers may map it to a different style.
+ 
+ UIModalPresentationStyle.fullScreen
+ The views belonging to the presenting view controller are removed after the presentation completes.
+ 
+ UIModalPresentationStyle.pageSheet
+ In a horizontally and vertically regular environment, this option adds a dimming layer over the background content and displays the view controller's content with roughly page-sized dimensions, where the height is greater than the width.
+ The actual dimensions vary according to the device's screen size and orientation, but a portion of the underlying content always remains visible.
+ In a vertically regular, but horizontally compact environment, this option displays a sheet interface, where a portion of the underlying content remains visible near the top of the screen.
+ In a vertically compact environment, this option is essentially the same as UIModalPresentationStyle.fullScreen.
+ In cases where the underlying content remains visible, the presenting view controller doesn't receive the viewWillDisappear(_:) and viewDidDisappear(_:) callbacks.
  */
+
 @property (readwrite, nonatomic) UIModalPresentationStyle presentationStyle;
-/**
- The property determining the `UIModalTransitionStyle` assigned to the mapped `UIViewController` instance. This is always assigned, regardless of whether or not `modal` is true.
+/*
+ UIModalTransitionStyle.coverVertical
+ When the view controller is presented, its view slides up from the bottom of the screen. On dismissal, the view slides back down. This is the default transition style.
+ 
+ UIModalTransitionStyle.flipHorizontal
+ When the view controller is presented, the current view initiates a horizontal 3D flip from right-to-left, resulting in the revealing of the new view as if it were on the back of the previous view. On dismissal, the flip occurs from left-to-right, returning to the original view.
+ 
+ UIModalTransitionStyle.crossDissolve
+ When the view controller is presented, the current view fades out while the new view fades in at the same time. On dismissal, a similar type of cross-fade is used to return to the original view.
+ 
+ UIModalTransitionStyle.partialCurl
+ When the view controller is presented, one corner of the current view curls up to reveal the presented view underneath. On dismissal, the curled up page unfurls itself back on top of the presented view. A view controller presented using this transition is itself prevented from presenting any additional view controllers.
+ This transition style is supported only if the parent view controller is presenting a full-screen view and you use the UIModalPresentationStyle.fullScreen modal presentation style. Attempting to use a different form factor for the parent view or a different presentation style triggers an exception.
  */
 @property (readwrite, nonatomic) UIModalTransitionStyle transitionStyle;
-/**
+/*
  Default parameters sent to the `UIViewController`'s initWithRouterParams: method. This is useful if you want to pass some non-`NSString` information. These parameters will be overwritten by any parameters passed in the URL in open:.
  */
 @property (readwrite, nonatomic, strong) NSDictionary *defaultParams;
-/**
+/*
  The property determining if the mapped `UIViewController` instance should be set as the root view controller of the router's `UINavigationController` instance.
  */
 @property (readwrite, nonatomic, assign) BOOL shouldOpenAsRootViewController;
 
 @end
 
-/**
+
+
+/*
  `UPRouter` is the main class you interact with to map URLs to either opening `UIViewController`s or running anonymous functions.
  
  For example:
@@ -330,13 +351,13 @@ typedef void (^RouterOpenCallback)(NSDictionary *params);
 
 @interface Routable : UPRouter
 
-/**
+/*
  A singleton instance of `UPRouter` which can be accessed anywhere in the app.
  @return A singleton instance of `UPRouter`.
  */
 + (instancetype)sharedRouter;
 
-/**
+/*
  A new instance of `UPRouter`, in case you want to use multiple routers in your app.
  @remarks Unnecessary method; can use [[Routable alloc] init] instead
  @return A new instance of `UPRouter`.

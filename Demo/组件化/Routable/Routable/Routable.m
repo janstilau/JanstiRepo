@@ -49,8 +49,14 @@
 }
 @end
 
-// 真正的数据部分, 隐藏起来, 只能够通过 Map 函数进行设置.
 // H 文件里面的, 主要是 UI 表象部分.
+/*
+ 实际上, UPRouterOptions 的核心数据就这两种.
+ 这里, 如果使用 Swift 的 Enum 会是更加好的做法. 前面的各种 UI 的配置, 只会在 openClass 有值的情况下才有效.
+ 从这个意义来说, UPRouterOptions 的 type 只有两种,
+ UI 带有各种配置的关联至.
+ CallBack 没有关联值.
+ */
 @interface UPRouterOptions ()
 
 @property (readwrite, nonatomic, strong) Class openClass;
@@ -60,7 +66,7 @@
 
 @implementation UPRouterOptions
 
-//Explicit construction
+// 这里, 指定初始化方法, 是类方法. 而不是常用的 init 方法.
 // Designated init method.
 + (instancetype)routerOptionsWithPresentationStyle: (UIModalPresentationStyle)presentationStyle
                                    transitionStyle: (UIModalTransitionStyle)transitionStyle
@@ -75,7 +81,9 @@
     options.modal = isModal;
     return options;
 }
-//Default construction; like [NSArray array]
+
+// 以下, 大部分都是对于 Designated init method 的简便写法而已.
+// 个人觉得, 这种大量的方法, 没有必要.
 + (instancetype)routerOptions {
     return [self routerOptionsWithPresentationStyle:UIModalPresentationNone
                                     transitionStyle:UIModalTransitionStyleCoverVertical
@@ -84,7 +92,6 @@
                                             isModal:NO];
 }
 
-//Custom class constructors, with heavier Objective-C accent
 + (instancetype)routerOptionsAsModal {
     return [self routerOptionsWithPresentationStyle:UIModalPresentationNone
                                     transitionStyle:UIModalTransitionStyleCoverVertical
@@ -121,7 +128,6 @@
                                             isModal:NO];
 }
 
-//Exposed methods previously supported
 + (instancetype)modal {
     return [self routerOptionsAsModal];
 }
@@ -165,12 +171,14 @@
 
 @interface UPRouter ()
 
+/*
+ routes 里面存放的是,
+ host 和 UPRouterOptions 的对应关系.
+ 目前 routes 存放两种 UPRouterOptions, 一种是 vc, 一种是闭包 callback.
+ */
 // Map of URL format NSString -> RouterOptions
 // i.e. "users/:id"
 @property (readwrite, nonatomic, strong) NSMutableDictionary *routes;
-// Map of final URL NSStrings -> RouterParams
-// i.e. "users/16"
-@property (readwrite, nonatomic, strong) NSMutableDictionary *cachedRoutes;
 
 @end
 
@@ -179,18 +187,16 @@
 
 
 
-
-
-
 @implementation UPRouter
 
 - (id)init {
     if ((self = [super init])) {
         self.routes = [NSMutableDictionary dictionary];
-        self.cachedRoutes = [NSMutableDictionary dictionary];
     }
     return self;
 }
+
+// 配置 Routable
 
 - (void)map:(NSString *)format toCallback:(RouterOpenCallback)callback {
     [self map:format toCallback:callback withOptions:nil];
@@ -220,6 +226,8 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
 }
 
+// 使用 Routable
+
 - (void)open:(NSString *)url {
     [self open:url animated:YES];
 }
@@ -236,26 +244,26 @@
     RouterParams *params = [self routerParamsForUrl:url extraParams: extraParams];
     UPRouterOptions *options = params.routerOptions;
     
-    // 如果有回调, 那么使用回调. 没有的话, 才会是 VC 的创建.
+    // 如果有回调, 那么使用回调.
     if (options.callback) {
         RouterOpenCallback callback = options.callback;
         callback([params controllerParams]);
         return;
     }
     
+    // 如果是 VC 的弹出, 就走下面的 VC 的创建, 弹出的工作.
     if (!self.navigationController) {
         if (_ignoresExceptions) {
             return;
         }
-        
         @throw [NSException exceptionWithName:@"NavigationControllerNotProvided"
                                        reason:@"Router#navigationController has not been set to a UINavigationController instance"
                                      userInfo:nil];
     }
     
     UIViewController *controller = [self controllerForRouterParams:params];
-    
     if (self.navigationController.presentedViewController) {
+        // 撤回已经 present 出来的 VC.
         [self.navigationController dismissViewControllerAnimated:animated completion:nil];
     }
     
@@ -302,6 +310,13 @@
     [self popViewControllerFromRouterAnimated:animated];
 }
 
+/*
+ [[Routable sharedRouter] map:@"users/:id" toController:[UserController class]];
+ 
+ NSString *aUrl = @"users/4";
+ [[Routable sharedRouter] open:aUrl];
+ */
+// 通过 Url, 获取最终的数据,
 - (RouterParams *)routerParamsForUrl:(NSString *)url extraParams: (NSDictionary *)extraParams {
     if (!url) {
         if (_ignoresExceptions) {
@@ -322,8 +337,9 @@
     __block RouterParams *openParams = nil;
     [self.routes enumerateKeysAndObjectsUsingBlock:
      ^(NSString *routerUrl, UPRouterOptions *routerOptions, BOOL *stop) {
-        
+        // 是注册的时候, 填入的 format, 例如 user/:id/:name 这些.
         NSArray *routerParts = [routerUrl pathComponents];
+        
         if ([routerParts count] == [givenParts count]) {
             NSDictionary *givenParams = [self paramsForUrlComponents:givenParts routerUrlComponents:routerParts];
             if (givenParams) {
@@ -344,8 +360,6 @@
                                        reason:[NSString stringWithFormat:ROUTE_NOT_FOUND_FORMAT, url]
                                      userInfo:nil];
     }
-    // 一般成熟的框架, 都有缓存的机制.
-    [self.cachedRoutes setObject:openParams forKey:url];
     return openParams;
 }
 
@@ -374,7 +388,8 @@
 }
 
 // 最终, 进行 VC 的创造的部分.
-// 还是根据数据部分, 进行创建. 一切机制, 最终归结到数据的配置而已.
+// 还是根据数据部分, 进行创建.
+// 这里, 注册的 VC, 必须实现 allocWithRouterParams, initWithRouterParams 方法才可以.
 - (UIViewController *)controllerForRouterParams:(RouterParams *)params {
     SEL CONTROLLER_CLASS_SELECTOR = sel_registerName("allocWithRouterParams:");
     SEL CONTROLLER_SELECTOR = sel_registerName("initWithRouterParams:");

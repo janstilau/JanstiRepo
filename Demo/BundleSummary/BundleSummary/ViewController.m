@@ -28,8 +28,7 @@
 }
 
 - (IBAction)action:(id)sender {
-    NSLog(@"%@", [NSBundle allBundles]);
-    NSLog(@"%@", [NSBundle allFrameworks]);
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"QQ41C152CF://"] options:nil completionHandler:nil];
 }
 
 
