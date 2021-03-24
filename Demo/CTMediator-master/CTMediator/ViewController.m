@@ -84,13 +84,15 @@ static NSString * const kCellIdentifier = @"kCellIdentifier";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     if (indexPath.row == 0) {
+        // Present 获取到的 DetailVC
         UIViewController *viewController = [[CTMediator sharedInstance] CTMediator_viewControllerForDetail];
-        
-        // 获得view controller之后，在这种场景下，到底push还是present，其实是要由使用者决定的，mediator只要给出view controller的实例就好了
+        // 获得view controller
+        // 在这种场景下，到底push还是present，其实是要由使用者决定的，mediator只要给出view controller的实例就好了
         [self presentViewController:viewController animated:YES completion:nil];
     }
     
     if (indexPath.row == 1) {
+        // Push 获取到的 DetailVC
         UIViewController *viewController = [[CTMediator sharedInstance] CTMediator_viewControllerForDetail];
         [self.navigationController pushViewController:viewController animated:YES];
     }

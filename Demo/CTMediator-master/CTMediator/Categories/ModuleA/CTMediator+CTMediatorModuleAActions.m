@@ -53,6 +53,7 @@ NSString * const kCTMediatorActionConfigCell = @"configCell";
 
 - (void)CTMediator_showAlertWithMessage:(NSString *)message cancelAction:(void(^)(NSDictionary *info))cancelAction confirmAction:(void(^)(NSDictionary *info))confirmAction
 {
+    // 这里, 将闭包, 当做数据, 传递到了 params 里面.
     NSMutableDictionary *paramsToSend = [[NSMutableDictionary alloc] init];
     if (message) {
         paramsToSend[@"message"] = message;

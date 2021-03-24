@@ -13,6 +13,7 @@ typedef void (^CTUrlRouterCallbackBlock)(NSDictionary *info);
 
 @implementation Target_A
 
+// 这里, 其实逻辑很简单, 就是在对应的方法里面, 抽取 params 里面的信息, 当做参数使用了.
 - (UIViewController *)Action_nativeFetchDetailViewController:(NSDictionary *)params
 {
     // 因为action是从属于ModuleA的，所以action直接可以使用ModuleA里的所有声明
