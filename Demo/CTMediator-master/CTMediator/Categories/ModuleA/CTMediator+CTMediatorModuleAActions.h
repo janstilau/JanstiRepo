@@ -9,6 +9,10 @@
 #import "CTMediator.h"
 #import <UIKit/UIKit.h>
 
+/*
+ 这个类, 应该由 Target_A 的维护着提供, 里面是对于调用  Target_A 的各个方法的包装. 
+ */
+
 @interface CTMediator (CTMediatorModuleAActions)
 
 - (UIViewController *)CTMediator_viewControllerForDetail;
