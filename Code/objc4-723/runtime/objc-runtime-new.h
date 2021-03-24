@@ -27,9 +27,9 @@ public:
 
 
 struct cache_t {
-    struct bucket_t *_buckets; // 缓存散列表.
-    mask_t _mask;
-    mask_t _occupied;
+    struct bucket_t *_buckets; // 缓存散列表. 8
+    mask_t _mask; // 4
+    mask_t _occupied; // 4
 
 public:
     struct bucket_t *buckets();
@@ -877,7 +877,7 @@ private:
 
     void setBits(uintptr_t set) 
     {
-        uintptr_t oldBits;
+        oldBits;
         uintptr_t newBits;
         do {
             oldBits = LoadExclusive(&bits);
@@ -1063,11 +1063,11 @@ public:
     }
 };
 
-
+// 类对象
 struct objc_class : objc_object {
     // Class ISA;
     Class superclass;          // 父类对象的指向.
-    cache_t cache;             // formerly cache pointer and vtable. method 的缓存策略
+    cache_t cache;    // 16 字节          // formerly cache pointer and vtable. method 的缓存策略
     class_data_bits_t bits;    // class_rw_t * plus custom rr/alloc flags
 
     class_rw_t *data() { 

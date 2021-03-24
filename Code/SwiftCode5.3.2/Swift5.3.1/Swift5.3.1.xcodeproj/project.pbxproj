@@ -39,14 +39,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		069BF47825CFB71000C64BC1 /* Readed */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Readed;
-			path = ../../stdlib/public/core/Readed;
-			sourceTree = "<group>";
-		};
 		AA7FA1272590FA14004CCF9D = {
 			isa = PBXGroup;
 			children = (
@@ -66,7 +58,6 @@
 		AA7FA1322590FA14004CCF9D /* Swift5.3.1 */ = {
 			isa = PBXGroup;
 			children = (
-				069BF47825CFB71000C64BC1 /* Readed */,
 				AA7FA13B2590FA2D004CCF9D /* core */,
 				AA7FA1332590FA14004CCF9D /* main.swift */,
 			);
