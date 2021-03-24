@@ -342,6 +342,9 @@ public:
     inline void reset() { clear(); }
     inline void reset(T *t)
     { QSharedPointer copy(t); swap(copy); }
+    // member template
+    // Deleter 的类型, 和 T 的类型不同.
+    // 只有在调用的时候, 才能通过函数推导出 Deleter 的具体类型.
     template <typename Deleter>
     inline void reset(T *t, Deleter deleter)
     { QSharedPointer copy(t, deleter); swap(copy); }

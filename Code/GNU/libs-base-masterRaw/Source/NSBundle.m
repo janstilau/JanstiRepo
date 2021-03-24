@@ -139,8 +139,10 @@ static NSLock *pathCacheLock = nil;
 static NSMutableDictionary *pathCache = nil;
 
 @interface NSObject (PrivateFrameworks)
+
 + (NSString*) frameworkVersion;
 + (NSString**) frameworkClasses;
+
 @end
 
 typedef enum {
@@ -152,9 +154,9 @@ typedef enum {
 
 /* Class variables - We keep track of all the bundles */
 static NSBundle		*_mainBundle = nil;
-static NSMapTable	*_bundles = NULL;
-static NSMapTable	*_byClass = NULL; // key 是 class, value 是 framework, 通过类来查找 Bundle.
-static NSMapTable	*_byIdentifier = NULL;
+static NSMapTable	*_pathBundleMap = NULL;
+static NSMapTable	*_classFrameworkMap = NULL; // key 是 class, value 是 framework, 通过类来查找 Bundle.
+static NSMapTable	*_IdentifierBundleMap = NULL;
 
 /* Store the working directory at startup */
 static NSString		*_launchDirectory = nil;
@@ -173,7 +175,7 @@ static NSDictionary	*_emptyTable = nil;
  */
 static NSBundle		*_loadingBundle = nil;
 static NSBundle		*_gnustep_bundle = nil;
-static NSRecursiveLock	*load_lock = nil;
+static NSRecursiveLock	*load_lock = nil; // 在访问全局资源的时候, 使用这个 load_lock
 static BOOL		_strip_after_loading = NO;
 
 /* List of framework linked in the _loadingBundle */
@@ -606,7 +608,7 @@ _find_main_bundle_for_tool(NSString *toolName)
         NSString *name;
         
         // 缓存机制, 返回已经注册的 Bundle.
-        bundle = (id)NSMapGet(_byClass, frameworkClass);
+        bundle = (id)NSMapGet(_classFrameworkMap, frameworkClass);
         if (nil != bundle)
         {
             if ((id)bundle == (id)[NSNull null])
@@ -749,7 +751,7 @@ _find_main_bundle_for_tool(NSString *toolName)
         [load_lock lock];
         if (bundle == nil)
         {
-            NSMapInsert(_byClass, frameworkClass, [NSNull null]);
+            NSMapInsert(_classFrameworkMap, frameworkClass, [NSNull null]);
             [load_lock unlock];
             NSWarnMLog (@"Could not find framework %@ in any standard location",
                         name);
@@ -758,7 +760,7 @@ _find_main_bundle_for_tool(NSString *toolName)
         else
         {
             bundle->_principalClass = frameworkClass;
-            NSMapInsert(_byClass, frameworkClass, bundle);
+            NSMapInsert(_classFrameworkMap, frameworkClass, bundle);
             [load_lock unlock];
         }
         
@@ -778,7 +780,7 @@ _find_main_bundle_for_tool(NSString *toolName)
             NSValue *value;
             Class    class = NSClassFromString(*fmClasses);
             
-            NSMapInsert(_byClass, class, bundle);
+            NSMapInsert(_classFrameworkMap, class, bundle);
             value = [NSValue valueWithPointer: (void*)class];
             [bundle->_bundleClasses addObject: value];
             
@@ -926,6 +928,8 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
 
 @implementation NSBundle
 
+// 初始化一些全局量
+
 + (void) initialize
 {
     if (self == [NSBundle class])
@@ -996,17 +1000,11 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
                          @"zh", @"zho",
                          nil];
         
-        /* Initialise manager here so it's thread-safe.
-         */
-        manager();
-        
-        /* Set up tables for bundle lookups
-         */
-        _bundles = NSCreateMapTable(NSObjectMapKeyCallBacks,
+        _pathBundleMap = NSCreateMapTable(NSObjectMapKeyCallBacks,
                                     NSNonOwnedPointerMapValueCallBacks, 0);
-        _byClass = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
-                                    NSNonOwnedPointerMapValueCallBacks, 0);
-        _byIdentifier = NSCreateMapTable(NSObjectMapKeyCallBacks,
+        _classFrameworkMap = NSCreateMapTable(NSNonOwnedPointerMapKeyCallBacks,
+                                              NSNonOwnedPointerMapValueCallBacks, 0);
+        _IdentifierBundleMap = NSCreateMapTable(NSObjectMapKeyCallBacks,
                                          NSNonOwnedPointerMapValueCallBacks, 0);
         
         pathCacheLock = [NSLock new];
@@ -1019,37 +1017,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
         load_lock = [NSRecursiveLock new];
         [load_lock setName: @"load_lock"];
         env = [[NSProcessInfo processInfo] environment];
-        
-        /* These variables are used when we are running non-flattened.
-         * This means that there are multiple binaries for different
-         * OSes, and we need constantly to choose the right one (eg,
-         * when loading a bundle or a framework).  The choice is based
-         * on these environments variables that are set by GNUstep.sh
-         * (you must source GNUstep.sh when non-flattened).
-         */
-        if ((str = [env objectForKey: @"GNUSTEP_TARGET_CPU"]) != nil)
-            gnustep_target_cpu = RETAIN(str);
-        else if ((str = [env objectForKey: @"GNUSTEP_HOST_CPU"]) != nil)
-            gnustep_target_cpu = RETAIN(str);
-        
-        if ((str = [env objectForKey: @"GNUSTEP_TARGET_OS"]) != nil)
-            gnustep_target_os = RETAIN(str);
-        else if ((str = [env objectForKey: @"GNUSTEP_HOST_OS"]) != nil)
-            gnustep_target_os = RETAIN(str);
-        
-        if ((str = [env objectForKey: @"GNUSTEP_TARGET_DIR"]) != nil)
-            gnustep_target_dir = RETAIN(str);
-        else if ((str = [env objectForKey: @"GNUSTEP_HOST_DIR"]) != nil)
-            gnustep_target_dir = RETAIN(str);
-        else if (gnustep_target_cpu != nil && gnustep_target_os != nil)
-            gnustep_target_dir = [[NSString alloc] initWithFormat: @"%@-%@",
-                                  gnustep_target_cpu, gnustep_target_os];
-        
-        if ((str = [env objectForKey: @"LIBRARY_COMBO"]) != nil)
-            library_combo = RETAIN(str);
-        
         _launchDirectory = RETAIN([manager() currentDirectoryPath]);
-        
         _gnustep_bundle = RETAIN([self bundleForLibrary: @"gnustep-base"
                                                 version: _base_version]);
         
@@ -1099,83 +1067,29 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     }
 }
 
-// 在已有值里面, 查找不是 FrameWork 的 bundle 的数据.
+/*
+ 就是遍历 _pathBundleMap 里面的数据, 将不是 framework 类型的 buncle 提取出来返回.
+ */
 + (NSArray *) allBundles
 {
-    NSMutableArray	*array = [NSMutableArray arrayWithCapacity: 2];
-    NSMapEnumerator	enumerate;
-    void		        *key;
-    NSBundle		*bundle;
-    
-    [load_lock lock];
-    if (!_mainBundle)
-    {
-        [self mainBundle];
-    }
-    
-    enumerate = NSEnumerateMapTable(_bundles);
-    while (NSNextMapEnumeratorPair(&enumerate, &key, (void **)&bundle))
-    {
-        if (bundle->_bundleType == NSBUNDLE_FRAMEWORK)
-        {
-            continue;
-        }
-        if ([array indexOfObjectIdenticalTo: bundle] == NSNotFound)
-        {
-            [array addObject: bundle];
-        }
-    }
-    NSEndMapTableEnumeration(&enumerate);
-    
-    [load_lock unlock];
-    return array;
+    /*
+     就是遍历 _pathBundleMap, 找到所有的类型不是 Framework 的 Bundle
+     */
+    return [NSArray array];
 }
 
-// 在已有值里面, 查找 FrameWork 类型的 bundle.
 + (NSArray *) allFrameworks
 {
-    NSMapEnumerator  enumerate;
-    NSMutableArray  *array = [NSMutableArray arrayWithCapacity: 2];
-    void		  *key;
-    NSBundle	  *bundle;
-    
-    [load_lock lock];
-    enumerate = NSEnumerateMapTable(_bundles);
-    while (NSNextMapEnumeratorPair(&enumerate, &key, (void **)&bundle))
-    {
-        if (bundle->_bundleType == NSBUNDLE_FRAMEWORK
-            && [array indexOfObjectIdenticalTo: bundle] == NSNotFound)
-        {
-            [array addObject: bundle];
-        }
-    }
-    NSEndMapTableEnumeration(&enumerate);
-    [load_lock unlock];
-    
-    return array;
+    /*
+     就是遍历 _pathBundleMap, 找到所有的类型是 Framework 的 Bundle
+     */
+    return [NSArray array];
 }
 
-/**
- * For an application, returns the main bundle of the application.<br />
- * For a tool, returns the main bundle associated with the tool.<br />
- * <br />
- * For an application, the structure is as follows -
- * <p>
- * The executable is Gomoku.app/ix86/linux-gnu/gnu-gnu-gnu/Gomoku
- * and the main bundle directory is Gomoku.app/.
- * </p>
- * For a tool, the structure is as follows -
- * <p>
- * The executable is xxx/Tools/ix86/linux-gnu/gnu-gnu-gnu/Control
- * and the main bundle directory is xxx/Tools/Resources/Control.
- * </p>
- * <p>(when the tool has not yet been installed, it's similar -
- * xxx/obj/ix86/linux-gnu/gnu-gnu-gnu/Control
- * and the main bundle directory is xxx/Resources/Control).
- * </p>
- * <p>(For a flattened structure, the structure is the same without the
- * ix86/linux-gnu/gnu-gnu-gnu directories).
- * </p>
+/*
+ * The NSBundle object corresponding to the bundle directory that contains the current executable. This method may return a valid bundle object even for unbundled apps. It may also return nil if the bundle object could not be created, so always check the return value.
+ * The main bundle lets you access the resources in the same directory as the currently running executable. For a running app, the main bundle offers access to the app’s bundle directory. For code running in a framework, the main bundle offers access to the framework’s bundle directory.
+ * 简单的来说, mainBundle 返回的是, 可执行文件所在目录的 Bundle, 有了这个 Bundle, 就可以访问 App 主要的资源文件了.
  */
 + (NSBundle *) mainBundle
 {
@@ -1184,119 +1098,16 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
         [load_lock unlock];
         return _mainBundle;
     }
-    
-    /* We figure out the main bundle directory by examining the location
-     of the executable on disk.  */
-    NSString *path, *s;
-    
-    /* We don't know at the beginning if it's a tool or an application.  */
-    BOOL isApplication = YES;
-    
-    /* Sometimes we detect that this is a non-installed tool.  That is
-     * special because we want to lookup local resources before installed
-     * ones.  Keep track of this special case in this variable.
-     */
-    BOOL isNonInstalledTool = NO;
-    
-    /* If it's a tool, we will need the tool name.  Since we don't
-     know yet if it's a tool or an application, we always store
-     the executable name here - just in case it turns out it's a
-     tool.  */
-    NSString *toolName = [GSPrivateExecutablePath() lastPathComponent];
-#if defined(_WIN32) || defined(__CYGWIN__)
-    toolName = [toolName stringByDeletingPathExtension];
-#endif
-    
-    /* Strip off the name of the program */
-    path = [GSPrivateExecutablePath() stringByDeletingLastPathComponent];
-    
-    /* We now need to chop off the extra subdirectories, the library
-     combo and the target directory if they exist.  The executable
-     and this library should match so that is why we can use the
-     compiled-in settings. */
-    /* library combo */
-    s = [path lastPathComponent];
-    if ([s isEqual: library_combo])
-    {
-        path = [path stringByDeletingLastPathComponent];
-    }
-    /* target dir */
-    s = [path lastPathComponent];
-    if ([s isEqual: gnustep_target_dir])
-    {
-        path = [path stringByDeletingLastPathComponent];
-    }
-    /* object dir */
-    s = [path lastPathComponent];
-    if ([s hasSuffix: @"obj"])
-    {
-        path = [path stringByDeletingLastPathComponent];
-        /* if it has an object dir it can only be a
-         non-yet-installed tool.  */
-        isApplication = NO;
-        isNonInstalledTool = YES;
-    }
-    
-    if (isApplication == NO)
-    {
-        NSString *maybePath = nil;
-        
-        if (isNonInstalledTool)
-        {
-            /* We're pretty confident about this case.  'path' is
-             * obtained by {tool location on disk} and walking up
-             * until we got out of the obj directory.  So we're
-             * now in GNUSTEP_BUILD_DIR.  Resources will be in
-             * Resources/{toolName}.
-             */
-            path = [path stringByAppendingPathComponent: @"Resources"];
-            maybePath = [path stringByAppendingPathComponent: toolName];
-            
-            /* PS: We could check here if we found the resources,
-             * and if not, keep going with the other attempts at
-             * locating them.  But if we know that this is an
-             * uninstalled tool, really we don't want to use
-             * installed resources - we prefer resource lookup to
-             * fail so the developer will fix whatever issue they
-             * have with their building.
-             */
-        }
-        else
-        {
-            if (maybePath == nil)
-            {
-                /* This is for gnustep-make version 2, where tool resources
-                 * are in GNUSTEP_*_LIBRARY/Tools/Resources/{toolName}.
-                 */
-                maybePath = _find_main_bundle_for_tool (toolName);
-            }
-            
-            /* If that didn't work, maybe the tool was created with
-             * gnustep-make version 1.  So we try {tool location on
-             * disk after walking up the non-flattened
-             * dirs}/Resources/{toolName}, which is where
-             * gnustep-make version 1 would put resources.
-             */
-            if (maybePath == nil)
-            {
-                path = [path stringByAppendingPathComponent: @"Resources"];
-                maybePath = [path stringByAppendingPathComponent: toolName];
-            }
-        }
-        
-        path = maybePath;
-    }
-    
+    // 中间很多的代码, 最终效果就是找到可执行文件所在的路径, 然后生成对应的 Bundle , 存储到一个全局量里面.
+    NSString *path = @"";
     _mainBundle = [self alloc];
     _mainBundle = [_mainBundle initWithPath: path];
     [load_lock unlock];
     return _mainBundle;
 }
 
-/**
- * Returns the bundle whose code contains the specified class.<br />
- * NB: We will not find a class if the bundle has not been loaded yet!
- */
+// 通过 aClass 到 _classFrameworkMap 找到对应的 Bundle.
+// 如果, 没有找到, 那么找到 aClass 对应的路径, 生成对应的 Bundle.
 + (NSBundle *) bundleForClass: (Class)aClass
 {
     if (!aClass) { return nil; }
@@ -1304,53 +1115,14 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     NSBundle	*bundle;
     NSMapEnumerator enumerate;
     
-    if (aClass == [NSObject class])
-    {
-        if (nil != _gnustep_bundle)
-        {
-            return _gnustep_bundle;
-        }
-    }
-    
     [load_lock lock];
-   
+    
     // 首先, 通过 缓存哈希表, 查找一些 Class 对应的 Bundle 对象.
-    bundle = (NSBundle *)NSMapGet(_byClass, aClass);
+    bundle = (NSBundle *)NSMapGet(_classFrameworkMap, aClass);
     if ((id)bundle == (id)[NSNull null])
     {
         [load_lock unlock];
         return nil;
-    }
-    
-    // 如果缓存里面找不到, 那么这里会有一次重新填充缓存的机会.
-    if (nil == bundle)
-    {
-        enumerate = NSEnumerateMapTable(_bundles);
-        while (NSNextMapEnumeratorPair(&enumerate, &key, (void **)&bundle))
-        {
-            NSArray           *classes = bundle->_bundleClasses;
-            NSUInteger        count = [classes count];
-            
-            if (count > 0 &&
-                0 == NSMapGet(_byClass, [[classes lastObject] pointerValue]))
-            {
-                while (count-- > 0)
-                {
-                    NSMapInsert(_byClass,
-                                (void*)[[classes objectAtIndex: count] pointerValue],
-                                (void*)bundle);
-                }
-            }
-        }
-        NSEndMapTableEnumeration(&enumerate);
-        
-        
-        bundle = (NSBundle *)NSMapGet(_byClass, aClass);
-        if ((id)bundle == (id)[NSNull null])
-        {
-            [load_lock unlock];
-            return nil;
-        }
     }
     
     // 如果还找不到, 直接通过 GSPrivateSymbolPath 查找一下类定义所在的路径, 然后通过这个路径找到 Bundle.
@@ -1381,7 +1153,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
             bundle = [NSBundle bundleForLibrary: lib];
             if (nil == bundle && [[self _addFrameworks] count] > 0)
             {
-                bundle = (NSBundle *)NSMapGet(_byClass, aClass);
+                bundle = (NSBundle *)NSMapGet(_classFrameworkMap, aClass);
                 if ((id)bundle == (id)[NSNull null])
                 {
                     [load_lock unlock];
@@ -1412,43 +1184,24 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     return bundle;
 }
 
-+ (NSBundle*) bundleWithPath: (NSString*)path
-{
-    return AUTORELEASE([[self alloc] initWithPath: path]);
-}
-
-+ (NSBundle*) bundleWithURL: (NSURL*)url
-{
-    return AUTORELEASE([[self alloc] initWithURL: url]);
-}
-
+// 其实, 就是按照 identifier 去全局表里面找 Bundle
 + (NSBundle*) bundleWithIdentifier: (NSString*)identifier
 {
     NSBundle	*bundle = nil;
     
     [load_lock lock];
-    if (_byIdentifier)
+    if (_IdentifierBundleMap)
     {
-        bundle = (NSBundle *)NSMapGet(_byIdentifier, identifier);
-        IF_NO_GC(
-                 [bundle retain]; /* retain - look as if we were alloc'ed */
-                 )
+        bundle = (NSBundle *)NSMapGet(_IdentifierBundleMap, identifier);
     }
     [load_lock unlock];
-    // Some OS X apps  try to get the foundation bundle by looking it up by
-    // identifier.  This is expected to be faster than looking it up by class, so
-    // we lazily insert it into the table if it's requested.
-    if (nil == bundle && [@"com.apple.Foundation" isEqualToString: identifier])
-    {
-        NSBundle *foundation = [self bundleForClass: self];
-        [load_lock lock];
-        NSMapInsert(_byIdentifier, @"com.apple.Foundation", foundation);
-        [load_lock unlock];
-        return foundation;
-    }
     return AUTORELEASE(bundle);
 }
 
+/*
+    Bundle 的初始化操作.
+    可以看到, Bundle 是和路径关联的, 这也体现了, Bundle 就是一个目录而已.
+ */
 - (id) initWithPath: (NSString*)path
 {
     NSString	*identifier;
@@ -1469,45 +1222,14 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
      * details like that throughout the code.
      */
     
-    /* 1. make path absolute.
+    /*
+     1. make path absolute.
      */
     if ([path isAbsolutePath] == NO)
     {
-        NSWarnMLog(@"NSBundle -initWithPath: requires absolute path names, "
-                   @"given '%@'", path);
-        
-#if defined(_WIN32)
-        if ([path length] > 0 &&
-            ([path characterAtIndex: 0]=='/' || [path characterAtIndex: 0]=='\\'))
-        {
-            NSString	*root;
-            unsigned	length;
-            
-            /* The path has a leading path separator, so we try assuming
-             * that it's a path on the current filesystem, and append it
-             * to the filesystem root.
-             */
-            root = [manager() currentDirectoryPath];
-            length = [root length];
-            root = [root stringByDeletingLastPathComponent];
-            while ([root length] != length)
-            {
-                length = [root length];
-                root = [root stringByDeletingLastPathComponent];
-            }
-            path = [root stringByAppendingPathComponent: path];
-        }
-        else
-        {
-            /* Try appending to the current working directory.
-             */
-            path = [[manager() currentDirectoryPath]
-                    stringByAppendingPathComponent: path];
-        }
-#else
+        // The path to the program’s current directory.
         path = [[manager() currentDirectoryPath]
                 stringByAppendingPathComponent: path];
-#endif
     }
     
     /* 2. Expand any symbolic links.
@@ -1518,9 +1240,14 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
      */
     path = [path stringByStandardizingPath];
     
-    /* check if we were already initialized for this directory */
+    // 经过上面的操作, path 就是一个绝对路径, 标准化的路径了.
+    
+    // 下面是操作全局资源, 进行加锁处理.
     [load_lock lock];
-    bundle = (NSBundle *)NSMapGet(_bundles, path);
+    
+    // 缓存查询.
+    // 这里, 体现了 OC 的好处. 可以在 构造函数里面, 更改返回的对象.
+    bundle = (NSBundle *)NSMapGet(_pathBundleMap, path);
     if (bundle != nil)
     {
         IF_NO_GC([bundle retain];)
@@ -1532,8 +1259,6 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     
     if (bundle_directory_readable(path) == nil)
     {
-        NSDebugMLLog(@"NSBundle", @"Could not access path %@ for bundle", path);
-        // if this is not the main bundle ... deallocate and return.
         if (self != _mainBundle)
         {
             [self dealloc];
@@ -1547,27 +1272,27 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
      */
     _path = [path copy];
     [load_lock lock];
-    NSMapInsert(_bundles, _path, self);
+    NSMapInsert(_pathBundleMap, _path, self);
     [load_lock unlock];
     
+    // 这里, 是直接根据文件名进行的 type 的决定.
+    // 应该实际的 Apple 代码里, 有更好的策略.
     if ([[[_path lastPathComponent] pathExtension] isEqual: @"framework"] == YES)
     {
         _bundleType = (unsigned int)NSBUNDLE_FRAMEWORK;
-    }
-    else
-    {
+    } else {
         if (self == _mainBundle)
             _bundleType = (unsigned int)NSBUNDLE_APPLICATION;
         else
             _bundleType = (unsigned int)NSBUNDLE_BUNDLE;
     }
-    
+        
+    // 如果, Bundle 的 info plist 文件里面, 设置了 identifier, 那么就缓存下来.
     identifier = [self bundleIdentifier];
-    
     [load_lock lock];
     if (identifier != nil)
     {
-        NSBundle	*bundle = (NSBundle *)NSMapGet(_byIdentifier, identifier);
+        NSBundle	*bundle = (NSBundle *)NSMapGet(_IdentifierBundleMap, identifier);
         
         if (bundle != self)
         {
@@ -1578,79 +1303,12 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
                 [self dealloc];
                 return bundle;
             }
-            NSMapInsert(_byIdentifier, identifier, self);
+            NSMapInsert(_IdentifierBundleMap, identifier, self);
         }
     }
     [load_lock unlock];
     
     return self;
-}
-
-- (id) initWithURL: (NSURL*)url
-{
-    // FIXME
-    return [self initWithPath: [url path]];
-}
-
-- (void) dealloc
-{
-    if ([self isLoaded] == YES && self != _mainBundle
-        && self ->_bundleType != NSBUNDLE_LIBRARY)
-    {
-        /*
-         * Prevent unloading of bundles where code has been loaded ...
-         * the objc runtime does not currently support unloading of
-         * dynamically loaded code, so we want to prevent a bundle
-         * being loaded twice.
-         */
-        IF_NO_GC([self retain];)
-        return;
-    }
-    if (_path != nil)
-    {
-        NSString		*identifier = [self bundleIdentifier];
-        NSUInteger        count;
-        
-        [load_lock lock];
-        if (_bundles != nil)
-        {
-            NSMapRemove(_bundles, _path);
-        }
-        if (identifier != nil)
-        {
-            NSMapRemove(_byIdentifier, identifier);
-        }
-        if (_principalClass != nil)
-        {
-            NSMapRemove(_byClass, _principalClass);
-        }
-        if (_byClass != nil)
-        {
-            count = [_bundleClasses count];
-            while (count-- > 0)
-            {
-                NSMapRemove(_byClass,
-                            [[_bundleClasses objectAtIndex: count] pointerValue]);
-            }
-        }
-        [load_lock unlock];
-        
-        /* Clean up path cache for this bundle.
-         */
-        [self cleanPathCache];
-        RELEASE(_path);
-    }
-    TEST_RELEASE(_frameworkVersion);
-    TEST_RELEASE(_bundleClasses);
-    TEST_RELEASE(_infoDict);
-    TEST_RELEASE(_localizations);
-    [super dealloc];
-}
-
-- (NSString*) description
-{
-    return  [[super description] stringByAppendingFormat:
-             @" <%@>%@", [self bundlePath], [self isLoaded] ? @" (loaded)" : @""];
 }
 
 - (NSString*) bundlePath
@@ -1759,7 +1417,13 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     return _codeLoaded;
 }
 
-- (BOOL) load
+/*
+ Dynamically loads the bundle’s executable code into a running program,
+ if the code has not already been loaded.
+ 真正的动态库的加载, 是在 GSPrivateLoadModule 里面做的.
+ Bundle 里面, 做的更多的是信息记录的事情.
+ */
+- (BOOL)load
 {
     if (self == _mainBundle ||
         self ->_bundleType == NSBUNDLE_LIBRARY)
@@ -1786,6 +1450,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
             [load_lock unlock];
             return NO;
         }
+        
         savedLoadingBundle = _loadingBundle;
         _loadingBundle = self;
         _bundleClasses = [[NSMutableArray alloc] initWithCapacity: 2];
@@ -1799,6 +1464,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
          NSBundle method inside +load (-principalClass). To avoid this we set
          _codeLoaded before loading the bundle. */
         _codeLoaded = YES;
+        
         // _bundle_load_callback 里面, 会做一些填充数据的事情, 所以, 在这之前, 会修改一些全局变量.
         if (GSPrivateLoadModule(executedFile, stderr, _bundle_load_callback, 0, 0))
         {
@@ -1834,7 +1500,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
         while ((class = [classEnumerator nextObject]) != nil)
         {
             // 这里, 把 Class 和 Bundle 绑定在了一起. 使用了一个外部存储 map.
-            NSMapInsert(_byClass, class, self);
+            NSMapInsert(_classFrameworkMap, class, self);
             [classNames addObject: NSStringFromClass((Class)[class pointerValue])];
         }
         
@@ -2449,6 +2115,7 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
     {
         return GSPrivateSymbolPath([self principalClass]);
     }
+    
     result = [[self infoDictionary] objectForKey: @"NSExecutable"];
     if (result == nil || [result length] == 0)
     {
@@ -2616,7 +2283,6 @@ _bundle_load_callback(Class theClass, struct objc_category *theCategory)
 {
     return [NSURL fileURLWithPath: [self privateFrameworksPath]];
 }
-
 
 - (NSString*) bundleIdentifier
 {

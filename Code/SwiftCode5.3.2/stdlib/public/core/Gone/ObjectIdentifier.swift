@@ -1,8 +1,5 @@
-// 引用数据类型, 自然应该是指针比较, 但是 pointer 在 Swift 里面, 是危险的行为.
-// 所以, 专门有一个类, 将引用对象到指针的转化, 进行了封装, 在类的内部, 还是指针操作, 但是外界使用者并不知道.
-// 这个类, 主要就是相等性, hash 的实现.
-
-
+// 因为, Swift 里面将指针的操作隐藏了, 所以, 想要利用指针作为对象的唯一性判断, 要经过 ObjectIdentifier 包装一层.
+// 其实, 在 C++ 里面, 指针可以作为 key, 因为有一个专门的通过指针计算出 hash 值的函数.
 public struct ObjectIdentifier {
     // 里面的值, 就是存放的指针.
     internal let _value: Builtin.RawPointer
@@ -19,15 +16,19 @@ public struct ObjectIdentifier {
 
 // 各种协议的实现, 都是根据 value 里面存储的 rawPointer 进行的.
 extension ObjectIdentifier: Equatable {
-    public static func == (x: ObjectIdentifier, y: ObjectIdentifier) -> Bool {
+    public static func == (x: ObjectIdentifier,
+                           y: ObjectIdentifier) -> Bool {
         return Bool(Builtin.cmp_eq_RawPointer(x._value, y._value))
     }
 }
+// 实际上, 就是指针在内存上位置的比较. 只不过, 需要专门的从 指针 => 到 Uint 的转化工作.
 extension ObjectIdentifier: Comparable {
-    public static func < (lhs: ObjectIdentifier, rhs: ObjectIdentifier) -> Bool {
+    public static func < (lhs: ObjectIdentifier,
+                          rhs: ObjectIdentifier) -> Bool {
         return UInt(bitPattern: lhs) < UInt(bitPattern: rhs)
     }
 }
+// 将指针, 变化成为 Int, 传递到 hasher 里面.
 extension ObjectIdentifier: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(Int(Builtin.ptrtoint_Word(_value)))

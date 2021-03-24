@@ -12,9 +12,9 @@ internal struct _HashTable {
     internal var words: UnsafeMutablePointer<Word>
     internal let bucketMask: Int
     
-    // 实际上, 和传入一个 Int 数组没有太大的区别.
-    internal init(words: UnsafeMutablePointer<Word>,
-                  bucketCount: Int) {
+    // 这里, 使用到了数组指针.
+    // 数组指针是没有长度的, 所以应该传递过来.
+    internal init(words: UnsafeMutablePointer<Word>, bucketCount: Int) {
         self.words = words
         self.bucketMask = bucketCount &- 1
     }
