@@ -87,6 +87,14 @@
 
 @implementation UPAppDelegate
 
+/*
+ 这种, 通过 Url 进行模块之间调动, 需要事先进行注册的过程.
+ 在 A 模块想要调用 B 模块的功能的时候, 需要记忆 B 模块的 host, 已经各个模块的提供的服务所代表的 path 信息.
+ 各个服务应该怎么传值, 也是需要记忆的, 最后拼接到 Url 中.
+ 
+ 好处是, A 模块的代码, 确实是用不到 B 模块里面的功能了, 一切都是通过 URL 的方式进行通信, 但是, 维护这一通信协议, 应该是一件很痛苦的事情.
+ */
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

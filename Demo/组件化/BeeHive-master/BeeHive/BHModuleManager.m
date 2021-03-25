@@ -1,11 +1,3 @@
-/**
- * Created by BeeHive.
- * Copyright (c) 2016, Alibaba, Inc. All rights reserved.
- *
- * This source code is licensed under the GNU GENERAL PUBLIC LICENSE.
- * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
- */
-
 #import "BHModuleManager.h"
 #import "BHModuleProtocol.h"
 #import "BHContext.h"
@@ -136,7 +128,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 
 - (void)registedAllModules
 {
-
+    
     [self.BHModuleInfos sortUsingComparator:^NSComparisonResult(NSDictionary *module1, NSDictionary *module2) {
         NSNumber *module1Level = (NSNumber *)[module1 objectForKey:kModuleInfoLevelKey];
         NSNumber *module2Level =  (NSNumber *)[module2 objectForKey:kModuleInfoLevelKey];
@@ -165,16 +157,16 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
         
     }];
     
-//    [self.BHModules removeAllObjects];
-
+    //    [self.BHModules removeAllObjects];
+    
     [self.BHModules addObjectsFromArray:tmpArray];
     
     [self registerAllSystemEvents];
 }
 
 - (void)registerCustomEvent:(NSInteger)eventType
-   withModuleInstance:(id)moduleInstance
-       andSelectorStr:(NSString *)selectorStr {
+         withModuleInstance:(id)moduleInstance
+             andSelectorStr:(NSString *)selectorStr {
     if (eventType < 1000) {
         return;
     }
@@ -252,7 +244,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
         NSMutableDictionary *moduleInfo = [NSMutableDictionary dictionary];
         
         BOOL responseBasicLevel = [class instancesRespondToSelector:@selector(basicModuleLevel)];
-
+        
         int levelInt = 1;
         
         if (responseBasicLevel) {
@@ -263,7 +255,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
         if (moduleName) {
             [moduleInfo setObject:moduleName forKey:kModuleInfoNameKey];
         }
-
+        
         [self.BHModuleInfos addObject:moduleInfo];
         
         id<BHModuleProtocol> moduleInstance = [[class alloc] init];
@@ -320,8 +312,8 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 }
 
 - (void)registerEvent:(NSInteger)eventType
-         withModuleInstance:(id)moduleInstance
-             andSelectorStr:(NSString *)selectorStr {
+   withModuleInstance:(id)moduleInstance
+       andSelectorStr:(NSString *)selectorStr {
     SEL selector = NSSelectorFromString(selectorStr);
     if (!selector || ![moduleInstance respondsToSelector:selector]) {
         return;
@@ -390,40 +382,40 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 {
     if (!_BHSelectorByEvent) {
         _BHSelectorByEvent = @{
-                               @(BHMSetupEvent):kSetupSelector,
-                               @(BHMInitEvent):kInitSelector,
-                               @(BHMTearDownEvent):kTearDownSelector,
-                               @(BHMSplashEvent):kSplashSeletor,
-                               @(BHMWillResignActiveEvent):kWillResignActiveSelector,
-                               @(BHMDidEnterBackgroundEvent):kDidEnterBackgroundSelector,
-                               @(BHMWillEnterForegroundEvent):kWillEnterForegroundSelector,
-                               @(BHMDidBecomeActiveEvent):kDidBecomeActiveSelector,
-                               @(BHMWillTerminateEvent):kWillTerminateSelector,
-                               @(BHMUnmountEvent):kUnmountEventSelector,
-                               @(BHMOpenURLEvent):kOpenURLSelector,
-                               @(BHMDidReceiveMemoryWarningEvent):kDidReceiveMemoryWarningSelector,
-                               
-                               @(BHMDidReceiveRemoteNotificationEvent):kDidReceiveRemoteNotificationsSelector,
-                               @(BHMWillPresentNotificationEvent):kWillPresentNotificationSelector,
-                               @(BHMDidReceiveNotificationResponseEvent):kDidReceiveNotificationResponseSelector,
-                               
-                               @(BHMDidFailToRegisterForRemoteNotificationsEvent):kFailToRegisterForRemoteNotificationsSelector,
-                               @(BHMDidRegisterForRemoteNotificationsEvent):kDidRegisterForRemoteNotificationsSelector,
-                               
-                               @(BHMDidReceiveLocalNotificationEvent):kDidReceiveLocalNotificationsSelector,
-                               
-                               @(BHMWillContinueUserActivityEvent):kWillContinueUserActivitySelector,
-                               
-                               @(BHMContinueUserActivityEvent):kContinueUserActivitySelector,
-                               
-                               @(BHMDidFailToContinueUserActivityEvent):kFailToContinueUserActivitySelector,
-                               
-                               @(BHMDidUpdateUserActivityEvent):kDidUpdateContinueUserActivitySelector,
-                               
-                               @(BHMQuickActionEvent):kQuickActionSelector,
-                               @(BHMHandleWatchKitExtensionRequestEvent):kHandleWatchKitExtensionRequestSelector,
-                               @(BHMDidCustomEvent):kAppCustomSelector,
-                               }.mutableCopy;
+            @(BHMSetupEvent):kSetupSelector,
+            @(BHMInitEvent):kInitSelector,
+            @(BHMTearDownEvent):kTearDownSelector,
+            @(BHMSplashEvent):kSplashSeletor,
+            @(BHMWillResignActiveEvent):kWillResignActiveSelector,
+            @(BHMDidEnterBackgroundEvent):kDidEnterBackgroundSelector,
+            @(BHMWillEnterForegroundEvent):kWillEnterForegroundSelector,
+            @(BHMDidBecomeActiveEvent):kDidBecomeActiveSelector,
+            @(BHMWillTerminateEvent):kWillTerminateSelector,
+            @(BHMUnmountEvent):kUnmountEventSelector,
+            @(BHMOpenURLEvent):kOpenURLSelector,
+            @(BHMDidReceiveMemoryWarningEvent):kDidReceiveMemoryWarningSelector,
+            
+            @(BHMDidReceiveRemoteNotificationEvent):kDidReceiveRemoteNotificationsSelector,
+            @(BHMWillPresentNotificationEvent):kWillPresentNotificationSelector,
+            @(BHMDidReceiveNotificationResponseEvent):kDidReceiveNotificationResponseSelector,
+            
+            @(BHMDidFailToRegisterForRemoteNotificationsEvent):kFailToRegisterForRemoteNotificationsSelector,
+            @(BHMDidRegisterForRemoteNotificationsEvent):kDidRegisterForRemoteNotificationsSelector,
+            
+            @(BHMDidReceiveLocalNotificationEvent):kDidReceiveLocalNotificationsSelector,
+            
+            @(BHMWillContinueUserActivityEvent):kWillContinueUserActivitySelector,
+            
+            @(BHMContinueUserActivityEvent):kContinueUserActivitySelector,
+            
+            @(BHMDidFailToContinueUserActivityEvent):kFailToContinueUserActivitySelector,
+            
+            @(BHMDidUpdateUserActivityEvent):kDidUpdateContinueUserActivitySelector,
+            
+            @(BHMQuickActionEvent):kQuickActionSelector,
+            @(BHMHandleWatchKitExtensionRequestEvent):kHandleWatchKitExtensionRequestSelector,
+            @(BHMDidCustomEvent):kAppCustomSelector,
+        }.mutableCopy;
     }
     return _BHSelectorByEvent;
 }
@@ -476,7 +468,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
                 }
             }
         };
-
+        
         [[BHTimeProfiler sharedTimeProfiler] recordEventTime:[NSString stringWithFormat:@"%@ --- modInit:", [moduleInstance class]]];
         
         if ([moduleInstance respondsToSelector:@selector(async)]) {
@@ -509,7 +501,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
     } else {
         moduleInstances = [self.BHModulesByEvent objectForKey:@(BHMTearDownEvent)];
     }
-
+    
     //Reverse Order to unload
     for (int i = (int)moduleInstances.count - 1; i >= 0; i--) {
         id<BHModuleProtocol> moduleInstance = [moduleInstances objectAtIndex:i];

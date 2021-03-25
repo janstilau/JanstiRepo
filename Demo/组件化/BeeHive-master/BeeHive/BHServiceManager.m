@@ -5,6 +5,7 @@
  * This source code is licensed under the GNU GENERAL PUBLIC LICENSE.
  * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
  */
+
 #import "BHServiceManager.h"
 #import "BHContext.h"
 #import "BHAnnotation.h"
@@ -81,7 +82,7 @@ static const NSString *kImpl = @"impl";
         [self.allServicesDict addEntriesFromDictionary:@{key:value}];
         [self.lock unlock];
     }
-   
+    
 }
 
 - (id)createService:(Protocol *)service
