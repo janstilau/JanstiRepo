@@ -51,6 +51,12 @@ void MainWindow::on_initBtn_clicked()
 {
     if (_view == nullptr) {
         _view = new QWebEngineView;
+        connect(_view, &QWebEngineView::loadFinished, this, [this](bool ok){
+            if (_data.isEmpty()) { return; }
+            if (ok) {
+                this->printLoadedPage();
+            }
+        });
         _view->resize(1650, 1112);
         _view->setZoomFactor(1.2);
         _view->load(QUrl("https://www.baidu.com/"));
@@ -91,7 +97,7 @@ void MainWindow::on_startBtn_clicked()
         item.srcPath = _toPrintlist[i];
         QFileInfo fileinfo(item.srcPath);
         item.name = fileinfo.baseName();
-        item.destPath =  QString("%1/%2.pdf").arg(_baseUrl).arg(item.name);
+        item.destPath =  QString("%1/%2.pdf").arg(_outputDirPath).arg(item.name);
         // /Users/justinlau/JanstiRepo/Code/SwiftSourceCode/core/Print.swift
         // https://github.com/apple/swift/blob/main/stdlib/public/core/Array.swift
         int relativeSize = item.srcPath.size() - _inputDirPath.size();
@@ -99,6 +105,7 @@ void MainWindow::on_startBtn_clicked()
         item.url = QString("%1%2").arg(_baseUrl).arg(relativeUrl);
         _data.append(item);
     }
+    schedule();
 }
 
 void MainWindow::schedule()
@@ -109,7 +116,16 @@ void MainWindow::schedule()
     }
     PrintItem item = _data[_printIdx];
     _view->load(item.url);
-//    _view->page()->printToPdf(QString("/Users/justinlau/Data/A.pdf"),QPageLayout(QPageSize(QPageSize::A4), QPageLayout::Landscape, QMarginsF()));
+}
+
+void MainWindow::printLoadedPage()
+{
+    PrintItem item = _data[_printIdx];
+    log(QString("id: %1: %2 Load Finished"));
+    _view->page()->printToPdf(item.destPath, QPageLayout(QPageSize(QPageSize::A4), QPageLayout::Landscape, QMarginsF()));
+    _printIdx++;
+    log(QString("Begin To Load %1").arg(_printIdx));
+    schedule();
 }
 
 void MainWindow::log(const QString &msg)

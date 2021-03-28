@@ -21,6 +21,7 @@ private slots:
 
 private:
     void schedule();
+    void printLoadedPage();
     void log(const QString &msg);
 
 private:
