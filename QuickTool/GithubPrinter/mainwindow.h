@@ -20,7 +20,12 @@ private slots:
     void on_initBtn_clicked();
 
 private:
-    void schedule();
+    void prepareForHtml();
+    void prepareForMd();
+
+private:
+    void scheduleForHtml();
+    void scheduleForMd();
     void printLoadedPage();
     void log(const QString &msg);
 
