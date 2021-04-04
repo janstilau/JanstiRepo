@@ -1,29 +1,3 @@
-/* Interface for NSProcessInfo for GNUStep
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
-
-   Written by:  Georg Tuparev, EMBL & Academia Naturalis, 
-                Heidelberg, Germany
-                Tuparev@EMBL-Heidelberg.de
-   Last update: 08-aug-1995
-	 
-   This file is part of the GNUstep Base Library.
-
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-   
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110 USA.
-   */ 
-
 #ifndef __NSProcessInfo_h_GNUSTEP_BASE_INCLUDE
 #define __NSProcessInfo_h_GNUSTEP_BASE_INCLUDE
 #import	<GNUstepBase/GSVersionMacros.h>
@@ -48,17 +22,17 @@ extern "C" {
 typedef uint64_t NSActivityOptions;
 enum
 {
-  NSActivityIdleDisplaySleepDisabled = (1ULL << 40),
-  NSActivityIdleSystemSleepDisabled = (1ULL << 20),
-  NSActivitySuddenTerminationDisabled = (1ULL << 14),
-  NSActivityAutomaticTerminationDisabled = (1ULL << 15),
-
-  NSActivityUserInitiated = (0x00FFFFFFULL | NSActivityIdleSystemSleepDisabled),
-  NSActivityUserInitiatedAllowingIdleSystemSleep = (NSActivityUserInitiated & ~NSActivityIdleSystemSleepDisabled),
-
-  NSActivityBackground = 0x000000FFULL,
-
-  NSActivityLatencyCritical = 0xFF00000000ULL,
+    NSActivityIdleDisplaySleepDisabled = (1ULL << 40),
+    NSActivityIdleSystemSleepDisabled = (1ULL << 20),
+    NSActivitySuddenTerminationDisabled = (1ULL << 14),
+    NSActivityAutomaticTerminationDisabled = (1ULL << 15),
+    
+    NSActivityUserInitiated = (0x00FFFFFFULL | NSActivityIdleSystemSleepDisabled),
+    NSActivityUserInitiatedAllowingIdleSystemSleep = (NSActivityUserInitiated & ~NSActivityIdleSystemSleepDisabled),
+    
+    NSActivityBackground = 0x000000FFULL,
+    
+    NSActivityLatencyCritical = 0xFF00000000ULL,
 };
 #endif
 
@@ -72,27 +46,27 @@ enum
  * backward compatibility.
  */
 enum {
-  NSWindowsNTOperatingSystem = 1,
-  NSWindows95OperatingSystem,
-  NSSolarisOperatingSystem,
-  NSHPUXOperatingSystem,
-  NSMACHOperatingSystem,
-  NSSunOSOperatingSystem,
-  NSOSF1OperatingSystem,
+    NSWindowsNTOperatingSystem = 1,
+    NSWindows95OperatingSystem,
+    NSSolarisOperatingSystem,
+    NSHPUXOperatingSystem,
+    NSMACHOperatingSystem,
+    NSSunOSOperatingSystem,
+    NSOSF1OperatingSystem,
 #if OS_API_VERSION(GS_API_NONE,GS_API_NONE)
-  GSGNULinuxOperatingSystem = 100,
-  GSBSDOperatingSystem,
-  GSBeOperatingSystem,
-  GSCygwinOperatingSystem
-
+    GSGNULinuxOperatingSystem = 100,
+    GSBSDOperatingSystem,
+    GSBeOperatingSystem,
+    GSCygwinOperatingSystem
+    
 #if GS_API_VERSION(0,011500)
-// Defines of deprecated constants for backward compatibility
+    // Defines of deprecated constants for backward compatibility
 #define	NSGNULinuxOperatingSystem	GSGNULinuxOperatingSystem
 #define	NSBSDOperatingSystem		GSBSDOperatingSystem
 #define	NSBeOperatingSystem		GSBeOperatingSystem
 #define	NSCygwinOperatingSystem		GSCygwinOperatingSystem
 #endif	/* GS_API_VERSION(0,011500) */
-
+    
 #endif	/* OS_API_VERSION(GS_API_NONE,GS_API_NONE) */
 };
 #endif	/* OS_API_VERSION(GS_API_MACOSX,GS_API_LATEST) */
@@ -100,9 +74,6 @@ enum {
 
 @interface NSProcessInfo: NSObject
 
-/**
- * Returns the shared NSProcessInfo object for the current process.
- */
 + (NSProcessInfo*) processInfo;
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_6,GS_API_LATEST) 
@@ -241,10 +212,10 @@ DEFINE_BLOCK_TYPE(GSPerformExpiringActivityBlock, void, BOOL);
                          reason: (NSString *)reason;
 - (void) endActivity:(id<NSObject>)activity;
 - (void) performActivityWithOptions:(NSActivityOptions)options
-                            reason: (NSString *)reason
-                        usingBlock: (GSPerformActivityBlock)block;
+                             reason: (NSString *)reason
+                         usingBlock: (GSPerformActivityBlock)block;
 - (void) performExpiringActivityWithReason: (NSString *)reason
-            usingBlock: (GSPerformExpiringActivityBlock)block;
+                                usingBlock: (GSPerformExpiringActivityBlock)block;
 #endif
 @end
 

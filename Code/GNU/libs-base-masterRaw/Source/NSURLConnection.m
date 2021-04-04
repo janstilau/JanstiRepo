@@ -5,6 +5,7 @@
 #import "Foundation/NSURLError.h"
 #import "Foundation/NSRunLoop.h"
 #import "GSURLPrivate.h"
+#import <Foundation/Foundation.h>
 
 @interface _NSURLConnectionDataCollector : NSObject
 {

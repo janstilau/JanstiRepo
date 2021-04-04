@@ -6,12 +6,6 @@
 
 #import "Foundation/NSCoder.h"
 
-/* Defines to get easy access to internals from mutable/immutable
- * versions of the class and from categories.
- */
-#define	self	((Internal*)(self->_NSURLRequestInternal))
-#define	inst	((Internal*)(((NSURLRequest*)o)->_NSURLRequestInternal))
-
 @interface	_GSMutableInsensitiveDictionary : NSMutableDictionary
 @end
 
@@ -53,45 +47,6 @@
 
 - (BOOL) isEqual: (id)o
 {
-    if ([o isKindOfClass: [NSURLRequest class]] == NO)
-    {
-        return NO;
-    }
-    if (self->URL != inst->URL
-        && [self->URL isEqual: inst->URL] == NO)
-    {
-        return NO;
-    }
-    if (self->mainDocumentURL != inst->mainDocumentURL
-        && [self->mainDocumentURL isEqual: inst->mainDocumentURL] == NO)
-    {
-        return NO;
-    }
-    if (self->method != inst->method
-        && [self->method isEqual: inst->method] == NO)
-    {
-        return NO;
-    }
-    if (self->body != inst->body
-        && [self->body isEqual: inst->body] == NO)
-    {
-        return NO;
-    }
-    if (self->bodyStream != inst->bodyStream
-        && [self->bodyStream isEqual: inst->bodyStream] == NO)
-    {
-        return NO;
-    }
-    if (self->properties != inst->properties
-        && [self->properties isEqual: inst->properties] == NO)
-    {
-        return NO;
-    }
-    if (self->headers != inst->headers
-        && [self->headers isEqual: inst->headers] == NO)
-    {
-        return NO;
-    }
     return YES;
 }
 
@@ -156,7 +111,7 @@
 
 - (NSData *) HTTPBody
 {
-    return self->body;
+    return nil;
 }
 
 - (NSInputStream *) HTTPBodyStream
@@ -214,13 +169,11 @@
 
 - (void) setHTTPBodyStream: (NSInputStream *)inputStream
 {
-    DESTROY(self->body);
     ASSIGN(self->bodyStream, inputStream);
 }
 
 - (void) setHTTPBody: (NSData *)data
 {
-    DESTROY(self->bodyStream);
     ASSIGNCOPY(self->body, data);
 }
 

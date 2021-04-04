@@ -598,11 +598,7 @@ bool QThread::wait(unsigned long time)
     locker.mutex()->unlock();
 
     bool ret = false;
-#ifndef Q_OS_WINRT
     switch (WaitForSingleObject(d->handle, time)) {
-#else
-    switch (WaitForSingleObjectEx(d->handle, time, false)) {
-#endif
     case WAIT_OBJECT_0:
         ret = true;
         break;

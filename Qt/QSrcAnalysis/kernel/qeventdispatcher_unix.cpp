@@ -465,6 +465,7 @@ bool QEventDispatcherUNIX::processEvents(QEventLoop::ProcessEventsFlags flags)
     emit awake();
 
     auto threadData = d->threadData.loadRelaxed();
+    // 在这里, 是调用了 Application 的 sendPostedEvents 来去处理, 已经注册好的 postEvent 数据.
     QCoreApplicationPrivate::sendPostedEvents(nullptr, 0, threadData);
 
     const bool include_timers = (flags & QEventLoop::X11ExcludeTimers) == 0;

@@ -1707,6 +1707,7 @@ void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type
     data->postEventList.insertionOffset = data->postEventList.size();
 
     // Exception-safe cleaning up without the need for a try/catch block
+    // 在方法内部, 专门定义一个类, 实现 RAII 的控制.
     struct CleanUp {
         QObject *receiver;
         int event_type;
@@ -1808,6 +1809,7 @@ void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type
         QScopedPointer<QEvent> event_deleter(e); // will delete the event (with the mutex unlocked)
 
         // after all that work, it's time to deliver the event.
+        // 最终, 调用了 sendEvent 来处理这些 postedEvent. 而 QCoreApplication::sendEvent 会在 event 处理前进行一些过滤操作, 最终会调用到 receiver 的 event 函数.
         QCoreApplication::sendEvent(r, e);
 
         // careful when adding anything below this point - the

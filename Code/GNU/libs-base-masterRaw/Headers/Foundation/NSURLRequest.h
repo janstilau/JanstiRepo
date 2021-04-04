@@ -60,7 +60,8 @@ typedef NSUInteger NSURLRequestCachePolicy;
 
 /*
  NSURLRequest encapsulates two essential properties of a load request: the URL to load and the policies used to load it. In addition, for HTTP and HTTPS requests, URLRequest includes the HTTP method (GET, POST, and so on) and the HTTP headers.
- 所以, 实际上, 一个 request 仅仅需要 policy 和 url 就可以了. 这个类的其他属性, 是因为现在大部分的请求, 是 Http, 所以就把 Http 的东西, 加到了这个类的内部.
+ 所以, 实际上, 一个 request 仅仅需要 policy 和 url 就可以了.
+ 这个类的其他属性, 是因为现在大部分的请求, 是 Http, 所以就把 Http 的东西, 加到了这个类的内部.
  */
 
 /*
@@ -76,7 +77,7 @@ typedef NSUInteger NSURLRequestCachePolicy;
     NSString            *method; // Method. NSURLRequest 应该就是当做 HttpRequest 设计的.
     NSMutableDictionary        *headers; // 头信息.
     BOOL                shouldHandleCookies; // 如有, 那么在发送的时候, 会从 shareCookie 里面取值 Url 对应的值塞进去.
-                                            // 在 Protocol 里面, 会把响应的 cookie 的值装到 shareCookie 里面去.
+    // 在 Protocol 里面, 会把响应的 cookie 的值装到 shareCookie 里面去.
     BOOL                          debug;
     NSURL                *URL;
     NSURL                *mainDocumentURL;

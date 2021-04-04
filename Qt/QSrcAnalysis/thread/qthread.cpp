@@ -183,6 +183,8 @@ int QThread::exec()
     }
     locker.unlock();
 
+    //运行循环, 是一个耗时操作. 在之前, 进行 unlock 的操作.
+
     QEventLoop eventLoop;
     int returnCode = eventLoop.exec();
 
