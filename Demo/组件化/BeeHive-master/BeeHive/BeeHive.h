@@ -15,7 +15,7 @@
 
 @interface BeeHive : NSObject
 
-//save application global context
+// context 没有默认使用 单例对象, 所以项目启动的时候, 要专门配置一下.
 @property(nonatomic, strong) BHContext *context;
 
 @property (nonatomic, assign) BOOL enableException;

@@ -19,13 +19,13 @@ typedef enum
     BHEnvironmentProd
 }BHEnvironmentType;
 
-
+// 这个类, 其实就是一个单例数据类. 为各个模块提供共享配置数据的.
 @interface BHContext : NSObject <NSCopying>
 
-//global env
+// 记录了当前的环境
 @property(nonatomic, assign) BHEnvironmentType env;
 
-//global config
+// 记录了当前的用户配置, 里面是一个 NSDictionary, 所以可以自由扩展.
 @property(nonatomic, strong) BHConfig *config;
 
 //application appkey
@@ -33,12 +33,13 @@ typedef enum
 //customEvent>=1000
 @property(nonatomic, assign) NSInteger customEvent;
 
+// 记录 Application 类
 @property(nonatomic, strong) UIApplication *application;
-
+// 记录 启动的参数.
 @property(nonatomic, strong) NSDictionary *launchOptions;
-
+// 记录从哪个配置文件, 来获取 module 的信息
 @property(nonatomic, strong) NSString *moduleConfigName;
-
+// 记录从哪个配置文件, 来获取 service 的信息.
 @property(nonatomic, strong) NSString *serviceConfigName;
 
 //3D-Touch model

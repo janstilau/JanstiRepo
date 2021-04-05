@@ -8,12 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "BHAnnotation.h"
+
 @protocol BHServiceProtocol <NSObject>
 
 @optional
 
+// 是不是支持单例模式, 如果是, 就使用 shareInstance 获取到对应的单例, 作为 Imp 对象进行使用.
 + (BOOL)singleton;
-
 + (id)shareInstance;
 
 @end

@@ -11,13 +11,17 @@
 @class BHContext;
 @class BeeHive;
 
+
+// 这个宏, 就是添加了两个方法.
+// 宏的好处就是, 直接的字符串替换. 虽然没有类型信息, 但是能够绕开编译器的限制.
+
 #define BH_EXPORT_MODULE(isAsync) \
 + (void)load { [BeeHive registerDynamicModule:[self class]]; } \
 -(BOOL)async { return [[NSString stringWithUTF8String:#isAsync] boolValue];}
 
 
+// 这个, 就是各个 Module 监听的事件. 
 @protocol BHModuleProtocol <NSObject>
-
 
 @optional
 
@@ -78,4 +82,5 @@
 - (void)modHandleWatchKitExtensionRequest:(BHContext *)context;
 
 - (void)modDidCustomEvent:(BHContext *)context;
+
 @end

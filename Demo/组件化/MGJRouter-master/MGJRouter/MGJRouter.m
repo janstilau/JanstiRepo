@@ -37,6 +37,8 @@ NSString *const MGJRouterParameterUserInfo = @"MGJRouterParameterUserInfo";
     return instance;
 }
 
+// 数据的添加和取消.
+
 + (void)registerURLPattern:(NSString *)URLPattern toHandler:(MGJRouterHandler)handler
 {
     [[self sharedInstance] addURLPattern:URLPattern andHandler:handler];
@@ -46,6 +48,9 @@ NSString *const MGJRouterParameterUserInfo = @"MGJRouterParameterUserInfo";
 {
     [[self sharedInstance] removeURLPattern:URLPattern];
 }
+
+
+// 对数据的使用.
 
 + (void)openURL:(NSString *)URL
 {
@@ -69,6 +74,7 @@ NSString *const MGJRouterParameterUserInfo = @"MGJRouterParameterUserInfo";
     }];
     
     if (parameters) {
+        // 使用特定的 Key 值, Block 在使用的时候, 从相关的 key 值里面读取数据.
         MGJRouterHandler handler = parameters[@"block"];
         if (completion) {
             parameters[MGJRouterParameterCompletion] = completion;
@@ -177,7 +183,7 @@ NSString *const MGJRouterParameterUserInfo = @"MGJRouterParameterUserInfo";
 - (NSMutableDictionary *)addURLPattern:(NSString *)URLPattern
 {
     NSArray *pathComponents = [self pathComponentsFromURL:URLPattern];
-
+    
     NSMutableDictionary* subRoutes = self.routes;
     
     for (NSString* pathComponent in pathComponents) {
@@ -249,7 +255,7 @@ NSString *const MGJRouterParameterUserInfo = @"MGJRouterParameterUserInfo";
     for (NSURLQueryItem *item in queryItems) {
         parameters[item.name] = item.value;
     }
-
+    
     if (subRoutes[@"_"]) {
         parameters[@"block"] = [subRoutes[@"_"] copy];
     }
@@ -282,9 +288,10 @@ NSString *const MGJRouterParameterUserInfo = @"MGJRouterParameterUserInfo";
     }
 }
 
+// 这里, 就是简单的路径的读取分离工作.
 - (NSArray*)pathComponentsFromURL:(NSString*)URL
 {
-
+    
     NSMutableArray *pathComponents = [NSMutableArray array];
     if ([URL rangeOfString:@"://"].location != NSNotFound) {
         NSArray *pathSegments = [URL componentsSeparatedByString:@"://"];
@@ -297,7 +304,7 @@ NSString *const MGJRouterParameterUserInfo = @"MGJRouterParameterUserInfo";
             [pathComponents addObject:MGJ_ROUTER_WILDCARD_CHARACTER];
         }
     }
-
+    
     for (NSString *pathComponent in [[NSURL URLWithString:URL] pathComponents]) {
         if ([pathComponent isEqualToString:@"/"]) continue;
         if ([[pathComponent substringToIndex:1] isEqualToString:@"?"]) break;

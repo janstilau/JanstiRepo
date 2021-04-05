@@ -37,15 +37,17 @@ static  NSString *kHandleWatchKitExtensionRequestSelector = @"modHandleWatchKitE
 static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 
 
-
 @interface BHModuleManager()
 
 @property(nonatomic, strong) NSMutableArray     *BHModuleDynamicClasses;
 
+// 这里面, 存储的 Module 的 Dict 信息
 @property(nonatomic, strong) NSMutableArray<NSDictionary *>     *BHModuleInfos;
+// 这里面, 是根据 BHModuleInfos 里面的 class, 生成的一个对象, 这个对象, 就是 module 的实体.
 @property(nonatomic, strong) NSMutableArray     *BHModules;
-
+// 这里面, 记录的是, 实现了某个事件的, 所有的 modules 的实例.
 @property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSMutableArray<id<BHModuleProtocol>> *> *BHModulesByEvent;
+// 这里面, 记录了所有的 event 枚举值, 以及对应的 module 应该首先的 SEL.
 @property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSString *> *BHSelectorByEvent;
 
 @end
@@ -66,14 +68,13 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 
 - (void)loadLocalModules
 {
-    
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:[BHContext shareInstance].moduleConfigName ofType:@"plist"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:plistPath]) {
         return;
     }
     
+    // 将, 还未添加到 BHModuleInfos 的 Plist 中的 Module, 添加到 BHModuleInfos 中去.
     NSDictionary *moduleList = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
-    
     NSArray<NSDictionary *> *modulesArray = [moduleList objectForKey:kModuleArrayKey];
     NSMutableDictionary<NSString *, NSNumber *> *moduleInfoByClass = @{}.mutableCopy;
     [self.BHModuleInfos enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -97,6 +98,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
     [self addModuleFromObject:moduleClass shouldTriggerInitEvent:shouldTriggerInitEvent];
 }
 
+// 取消注册, 也就是将成员变量里面的信息, 进行删除.
 - (void)unRegisterDynamicModule:(Class)moduleClass {
     if (!moduleClass) {
         return;
@@ -128,8 +130,10 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 
 - (void)registedAllModules
 {
-    
     [self.BHModuleInfos sortUsingComparator:^NSComparisonResult(NSDictionary *module1, NSDictionary *module2) {
+        // Module Level 分为 BHModuleBasic, BHModuleNormal
+        // Module Priority 是一个数字.
+        // 这里, 通过 level 和 优先级, 对 self.BHModuleInfos 里面的信息, 进行了排序.
         NSNumber *module1Level = (NSNumber *)[module1 objectForKey:kModuleInfoLevelKey];
         NSNumber *module2Level =  (NSNumber *)[module2 objectForKey:kModuleInfoLevelKey];
         if (module1Level.integerValue != module2Level.integerValue) {
@@ -152,9 +156,9 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
         BOOL hasInstantiated = ((NSNumber *)[module objectForKey:kModuleInfoHasInstantiatedKey]).boolValue;
         if (NSStringFromClass(moduleClass) && !hasInstantiated) {
             id<BHModuleProtocol> moduleInstance = [[moduleClass alloc] init];
+            // 在这里, 根据 Module Class, 生成对应的实例, 然后添加到 self.BHModules 里面去.
             [tmpArray addObject:moduleInstance];
         }
-        
     }];
     
     //    [self.BHModules removeAllObjects];
@@ -216,8 +220,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 }
 
 
-- (void)addModuleFromObject:(id)object
-     shouldTriggerInitEvent:(BOOL)shouldTriggerInitEvent
+- (void)addModuleFromObject:(id)object shouldTriggerInitEvent:(BOOL)shouldTriggerInitEvent
 {
     Class class;
     NSString *moduleName = nil;
@@ -314,7 +317,9 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 - (void)registerEvent:(NSInteger)eventType
    withModuleInstance:(id)moduleInstance
        andSelectorStr:(NSString *)selectorStr {
+    
     SEL selector = NSSelectorFromString(selectorStr);
+    // 如果, 对应的 Moduel 没有实现 SEL, 例如 DetailModule 没有实现 init 方法, 就不走下面的逻辑.
     if (!selector || ![moduleInstance respondsToSelector:selector]) {
         return;
     }
@@ -325,7 +330,10 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
     if (!self.BHModulesByEvent[eventTypeNumber]) {
         [self.BHModulesByEvent setObject:@[].mutableCopy forKey:eventTypeNumber];
     }
+    
     NSMutableArray *eventModules = [self.BHModulesByEvent objectForKey:eventTypeNumber];
+    
+    // 这里面, 还是按照了 level, 以及 priority, 进行了队列的重排工作.
     if (![eventModules containsObject:moduleInstance]) {
         [eventModules addObject:moduleInstance];
         [eventModules sortUsingComparator:^NSComparisonResult(id<BHModuleProtocol> moduleInstance1, id<BHModuleProtocol> moduleInstance2) {
@@ -421,6 +429,8 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 }
 
 #pragma mark - module protocol
+
+// 各种事件的处理.
 - (void)handleModuleEvent:(NSInteger)eventType
                 forTarget:(id<BHModuleProtocol>)target
           withCustomParam:(NSDictionary *)customParam
@@ -446,6 +456,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 - (void)handleModulesInitEventForTarget:(id<BHModuleProtocol>)target
                         withCustomParam:(NSDictionary *)customParam
 {
+    // 这里, 不降全局的 context 传递, 而是进行 copy.
     BHContext *context = [BHContext shareInstance].copy;
     context.customParam = customParam;
     context.customEvent = BHMInitEvent;
@@ -457,8 +468,10 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
         moduleInstances = [self.BHModulesByEvent objectForKey:@(BHMInitEvent)];
     }
     
+    // 然后, 将实现了这个事件的所有 module 实例拿出来, 进行对应方法的调用. 这里, 如果有 async 的设置, 会进行 gcd 的调度处理.
     [moduleInstances enumerateObjectsUsingBlock:^(id<BHModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
         __weak typeof(&*self) wself = self;
+        
         void ( ^ bk )(void);
         bk = ^(){
             __strong typeof(&*self) sself = wself;
@@ -473,12 +486,10 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
         
         if ([moduleInstance respondsToSelector:@selector(async)]) {
             BOOL async = [moduleInstance async];
-            
             if (async) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     bk();
                 });
-                
             } else {
                 bk();
             }

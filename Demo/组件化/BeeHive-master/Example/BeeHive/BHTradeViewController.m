@@ -43,10 +43,11 @@
 }
 
 
-
+// 业务代码里面, #import "BHService.h"
+// 这样, 业务代码里面, 就能够取到所需要的 protocol 的定义了. 然后在需要服务的时候, 调用 [BeeHive shareInstance] 来获取到 Protocol Imp 的对象, 然后使用 protocol 中定义的方法来获得服务.
+// 到底, 实现类是什么, 不用暴露在业务类的代码里面.
 -(void)click:(UIButton *)btn
 {
-    
     id<TradeServiceProtocol> obj = [[BeeHive shareInstance] createService:@protocol(TradeServiceProtocol)];
     if ([obj isKindOfClass:[UIViewController class]]) {
         obj.itemId = @"12313231231";

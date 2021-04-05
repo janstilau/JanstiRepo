@@ -1,11 +1,3 @@
-/**
- * Created by BeeHive.
- * Copyright (c) 2016, Alibaba, Inc. All rights reserved.
- *
- * This source code is licensed under the GNU GENERAL PUBLIC LICENSE.
- * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
- */
-
 #import "BHServiceManager.h"
 #import "BHContext.h"
 #import "BHAnnotation.h"
@@ -16,6 +8,7 @@ static const NSString *kImpl = @"impl";
 
 @interface BHServiceManager()
 
+// 这里面, 记录的是, service 的 protocol 名字,
 @property (nonatomic, strong) NSMutableDictionary *allServicesDict;
 @property (nonatomic, strong) NSRecursiveLock *lock;
 
@@ -33,6 +26,8 @@ static const NSString *kImpl = @"impl";
     return sharedManager;
 }
 
+// 注册服务.
+// 从 Plist 文件里面, 找到 service 以及对应的 Imp 的类名, 然后添加到 allServicesDict 内.
 - (void)registerLocalServices
 {
     NSString *serviceConfigName = [BHContext shareInstance].serviceConfigName;
@@ -55,11 +50,14 @@ static const NSString *kImpl = @"impl";
     [self.lock unlock];
 }
 
+// 注册服务.
+
 - (void)registerService:(Protocol *)service implClass:(Class)implClass
 {
     NSParameterAssert(service != nil);
     NSParameterAssert(implClass != nil);
     
+    // 会提前检查一下, 是不是对应的 class 满足 protocol 的功能. 如果不满足, 直接返回.
     if (![implClass conformsToProtocol:service]) {
         if (self.enableException) {
             @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"%@ module does not comply with %@ protocol", NSStringFromClass(implClass), NSStringFromProtocol(service)] userInfo:nil];
@@ -77,6 +75,7 @@ static const NSString *kImpl = @"impl";
     NSString *key = NSStringFromProtocol(service);
     NSString *value = NSStringFromClass(implClass);
     
+    // 将 protocol 和 对应的 imp 的字符串名, 添加到 allServicesDict 的内部.
     if (key.length > 0 && value.length > 0) {
         [self.lock lock];
         [self.allServicesDict addEntriesFromDictionary:@{key:value}];
@@ -107,6 +106,7 @@ static const NSString *kImpl = @"impl";
         
     }
     
+    // 如果有缓存, 那么就在缓存里面, 找一下之前存储过的 Imp.
     NSString *serviceStr = serviceName;
     if (shouldCache) {
         id protocolImpl = [[BHContext shareInstance] getServiceInstanceFromServiceName:serviceStr];
@@ -115,9 +115,12 @@ static const NSString *kImpl = @"impl";
         }
     }
     
+    // 找到了 Imp 的类对象.
     Class implClass = [self serviceImplClass:service];
     if ([[implClass class] respondsToSelector:@selector(singleton)]) {
         if ([[implClass class] singleton]) {
+            // 如果, 支持单例模式.
+            // 那么就使用 shareInstance 获取到单例, 然后返回.
             if ([[implClass class] respondsToSelector:@selector(shareInstance)])
                 implInstance = [[implClass class] shareInstance];
             else
@@ -154,6 +157,7 @@ static const NSString *kImpl = @"impl";
     return nil;
 }
 
+// 这里, 其实就检查, 是不是该 protocol 之前注册过了相关的 service.
 - (BOOL)checkValidService:(Protocol *)service
 {
     NSString *serviceImpl = [[self servicesDict] objectForKey:NSStringFromProtocol(service)];

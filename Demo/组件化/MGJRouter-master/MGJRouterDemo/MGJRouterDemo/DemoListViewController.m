@@ -12,7 +12,9 @@ static NSMutableDictionary *titleWithHandlers;
 static NSMutableArray *titles;
 
 @interface DemoListViewController () <UITableViewDataSource, UITableViewDelegate>
+
 @property (nonatomic) UITableView *tableView;
+
 @end
 
 @implementation DemoListViewController

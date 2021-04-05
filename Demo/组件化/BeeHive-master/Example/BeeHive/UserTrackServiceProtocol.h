@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "BHServiceProtocol.h"
+
 @protocol UserTrackServiceProtocol <NSObject,BHServiceProtocol>
 
 @end

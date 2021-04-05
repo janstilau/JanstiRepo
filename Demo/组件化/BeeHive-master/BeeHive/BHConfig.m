@@ -11,9 +11,16 @@
 
 @interface BHConfig()
 
+// 一个字典, 存储所有的信息.
 @property(nonatomic, strong) NSMutableDictionary *config;
 
 @end
+
+/*
+ 类方法如果要操作数据, 要么是 M 文件定义的 static 数据, 要么是操作单例对象的数据.
+ 这里, 采用的是操作单例的数据的形式.
+ 这个类本身没有什么难度, 各种类型相关的操作, 都是加了一层类型安全的判断而已.
+ */
 
 @implementation BHConfig
 
