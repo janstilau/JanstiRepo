@@ -1230,9 +1230,7 @@ void QCoreApplication::processEvents(QEventLoop::ProcessEventsFlags flags)
 */
 void QCoreApplication::processEvents(QEventLoop::ProcessEventsFlags flags, int ms)
 {
-    // ### Qt 6: consider splitting this method into a public and a private
-    //           one, so that a user-invoked processEvents can be detected
-    //           and handled properly.
+// 这个函数, 和 runloop 带过期时间的函数, 是一个功能.
     QThreadData *data = QThreadData::current();
     if (!data->hasEventDispatcher())
         return;
@@ -1338,6 +1336,9 @@ void QCoreApplicationPrivate::execCleanup()
 
   \sa quit(), exec()
 */
+
+// 这里, 是调用所有的 eventLoop 的 exit 方法. 一个 Thread, 不只是一个 eventLoop 的. 比如, 模态对话框, 就会开启一个新的 Event Loop
+// 从这里看, 这些最终都会被加到 thread 之上, 而一个 Application exit 的时候, 需要让所有的事件循环退出, 所以, 这里会有一次遍历的操作.
 void QCoreApplication::exit(int returnCode)
 {
     if (!self)
