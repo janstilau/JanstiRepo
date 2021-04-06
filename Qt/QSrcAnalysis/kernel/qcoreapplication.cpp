@@ -1,43 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Copyright (C) 2016 Intel Corporation.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the QtCore module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 3 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL3 included in the
-** packaging of this file. Please review the following information to
-** ensure the GNU Lesser General Public License version 3 requirements
-** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 2.0 or (at your option) the GNU General
-** Public license version 3 or any later version approved by the KDE Free
-** Qt Foundation. The licenses are as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-2.0.html and
-** https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "qcoreapplication.h"
 #include "qcoreapplication_p.h"
 
@@ -684,41 +644,6 @@ void QCoreApplicationPrivate::initLocale()
 */
 
 /*!
-    \internal
- */
-QCoreApplication::QCoreApplication(QCoreApplicationPrivate &p)
-#ifdef QT_NO_QOBJECT
-    : d_ptr(&p)
-#else
-    : QObject(p, nullptr)
-#endif
-{
-    d_func()->q_ptr = this;
-    // note: it is the subclasses' job to call
-    // QCoreApplicationPrivate::eventDispatcher->startingUp();
-}
-
-#ifndef QT_NO_QOBJECT
-/*!
-    \deprecated
-    This function is equivalent to calling \c {QCoreApplication::eventDispatcher()->flush()},
-    which also is deprecated, see QAbstractEventDispatcher::flush(). Use sendPostedEvents()
-    and processEvents() for more fine-grained control of the event loop instead.
-
-    Historically this functions was used to flush the platform-specific native event queues.
-
-    \sa sendPostedEvents(), processEvents(), QAbstractEventDispatcher::flush()
-*/
-#if QT_DEPRECATED_SINCE(5, 9)
-void QCoreApplication::flush()
-{
-    if (self && self->d_func()->eventDispatcher)
-        self->d_func()->eventDispatcher->flush();
-}
-#endif
-#endif
-
-/*!
     Constructs a Qt core application. Core applications are applications without
     a graphical user interface. Such applications are used at the console or as
     server processes.
@@ -743,7 +668,7 @@ QCoreApplication::QCoreApplication(int &argc, char **argv
     : QObject(*new QCoreApplicationPrivate(argc, argv, _internal))
 #endif
 {
-    d_func()->q_ptr = this;
+    d_func()->q_ptr = this; // Qt 的 private Ptr, 都会保留到原始值的指针的.
     d_func()->init();
 #ifndef QT_NO_QOBJECT
     QCoreApplicationPrivate::eventDispatcher->startingUp();
@@ -1189,9 +1114,10 @@ bool QCoreApplicationPrivate::sendThroughObjectEventFilters(QObject *receiver, Q
 }
 
 /*!
-  \internal
-
-  Helper function called by QCoreApplicationPrivate::notify() and qapplication.cpp
+    notify 里面, 会触发 QtObject 的 eventFilter 的逻辑. 如果在这里, 被 Filter 进行了过滤, 那么事件也就不会被触发了.
+    最终, 会走到 consumed = receiver->event(event); return consumed;
+    所以实际上, 就是到达了 event 函数.
+    一个类, 会根据自己的 event 的处理逻辑, 在合适的时候, 发出信号, 和其他对象进行处理.
  */
 bool QCoreApplicationPrivate::notify_helper(QObject *receiver, QEvent * event)
 {
@@ -1272,6 +1198,9 @@ bool QCoreApplication::closingDown()
 
     \sa exec(), QTimer, QEventLoop::processEvents(), flush(), sendPostedEvents()
 */
+
+// processEvents 是调用, QThreadData::current() 的 eventDispatcher 去处理任务.
+// 所以, 这个函数其实就去处理, 这个线程里面的 all pending events
 void QCoreApplication::processEvents(QEventLoop::ProcessEventsFlags flags)
 {
     QThreadData *data = QThreadData::current();
@@ -1315,11 +1244,9 @@ void QCoreApplication::processEvents(QEventLoop::ProcessEventsFlags flags, int m
     }
 }
 
-/*****************************************************************************
-  Main event loop wrappers
- *****************************************************************************/
-
 /*!
+    return a.exec(); 因为 main 的最后一句, 一般就是返回 exec 的返回值了. 所以, Application 的 exit 里面, 传什么值, 给操作系统的就是什么值.
+
     Enters the main event loop and waits until exit() is called.  Returns
     the value that was passed to exit() (which is 0 if exit() is called via
     quit()).
@@ -1342,14 +1269,9 @@ void QCoreApplication::processEvents(QEventLoop::ProcessEventsFlags flags, int m
     application will have time to exit its event loop and execute code at
     the end of the \c{main()} function after the exec()
     call.
-
-    \sa quit(), exit(), processEvents(), QApplication::exec()
 */
 int QCoreApplication::exec()
 {
-    if (!QCoreApplicationPrivate::checkInstance("exec"))
-        return -1;
-
     QThreadData *threadData = self->d_func()->threadData;
     if (threadData != QThreadData::current()) {
         qWarning("%s::exec: Must be called from the main thread", self->metaObject()->className());
@@ -1361,9 +1283,11 @@ int QCoreApplication::exec()
     }
 
     threadData->quitNow = false;
+
     QEventLoop eventLoop;
     self->d_func()->in_exec = true;
     self->d_func()->aboutToQuitEmitted = false;
+    // 所以, 其实就是在这里, 开始了 eventLoop 的事件循环而已.
     int returnCode = eventLoop.exec();
     threadData->quitNow = false;
 
@@ -1445,6 +1369,7 @@ void QCoreApplication::exit(int returnCode)
 
     \sa postEvent(), notify()
 */
+// 这个函数, 是同步调动. 在 PostEvent 里面, 也是调用 SendEvent, 来触发最终的 receiver event 的逻辑.
 bool QCoreApplication::sendEvent(QObject *receiver, QEvent *event)
 {
     if (event)
@@ -1498,31 +1423,8 @@ QCoreApplicationPrivate::QPostEventListLocker QCoreApplicationPrivate::lockThrea
     return locker;
 }
 
-/*!
-    \since 4.3
 
-    Adds the event \a event, with the object \a receiver as the
-    receiver of the event, to an event queue and returns immediately.
-
-    The event must be allocated on the heap since the post event queue
-    will take ownership of the event and delete it once it has been
-    posted.  It is \e {not safe} to access the event after
-    it has been posted.
-
-    When control returns to the main event loop, all events that are
-    stored in the queue will be sent using the notify() function.
-
-    Events are sorted in descending \a priority order, i.e. events
-    with a high \a priority are queued before events with a lower \a
-    priority. The \a priority can be any integer value, i.e. between
-    INT_MAX and INT_MIN, inclusive; see Qt::EventPriority for more
-    details. Events with equal \a priority will be processed in the
-    order posted.
-
-    \threadsafe
-
-    \sa sendEvent(), notify(), sendPostedEvents(), Qt::EventPriority
-*/
+// 这个函数, 仅仅是将 event, 添加到了队列里面, 没有真正的去执行任务. event 的真正调用, 是异步操作, 所以速度比较快.
 void QCoreApplication::postEvent(QObject *receiver, QEvent *event, int priority)
 {
     Q_TRACE_SCOPE(QCoreApplication_postEvent, receiver, event, event->type());
@@ -1543,6 +1445,7 @@ void QCoreApplication::postEvent(QObject *receiver, QEvent *event, int priority)
     QThreadData *data = locker.threadData;
 
     // if this is one of the compressible events, do compression
+    // receiver 上, 也有一个队列, 是所有的和他挂钩的 postEvent.
     if (receiver->d_func()->postedEvents
         && self && self->compressEvent(event, receiver, &data->postEventList)) {
         Q_TRACE(QCoreApplication_postEvent_event_compressed, receiver, event);
@@ -1578,6 +1481,7 @@ void QCoreApplication::postEvent(QObject *receiver, QEvent *event, int priority)
     // properly owned in the postEventList
     QScopedPointer<QEvent> eventDeleter(event);
     Q_TRACE(QCoreApplication_postEvent_event_posted, receiver, event, event->type());
+    // 在这里, 做真正的事件的插入工作. QPOSTEvent, 一定是有着 receiver 的, 这样, 调用的时候, 不用去寻找 event 的接受者了.
     data->postEventList.addEvent(QPostEvent(receiver, event, priority));
     eventDeleter.take();
     event->posted = true;
@@ -1643,23 +1547,7 @@ bool QCoreApplication::compressEvent(QEvent *event, QObject *receiver, QPostEven
     return false;
 }
 
-/*!
-  Immediately dispatches all events which have been previously queued
-  with QCoreApplication::postEvent() and which are for the object \a
-  receiver and have the event type \a event_type.
-
-  Events from the window system are \e not dispatched by this
-  function, but by processEvents().
-
-  If \a receiver is \nullptr, the events of \a event_type are sent for
-  all objects. If \a event_type is 0, all the events are sent for
-  \a receiver.
-
-  \note This method must be called from the thread in which its QObject
-  parameter, \a receiver, lives.
-
-  \sa flush(), postEvent()
-*/
+// QCoreApplication::sendPostedEvents 仅仅是获取到当前的线程数据, 然后调用 QCoreApplicationPrivate::sendPostedEvents 进行处理.
 void QCoreApplication::sendPostedEvents(QObject *receiver, int event_type)
 {
     // ### Qt 6: consider splitting this method into a public and a private
@@ -1670,6 +1558,7 @@ void QCoreApplication::sendPostedEvents(QObject *receiver, int event_type)
     QCoreApplicationPrivate::sendPostedEvents(receiver, event_type, data);
 }
 
+// 在这里, 进行已经收集的事件的处理.
 void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type,
                                                QThreadData *data)
 {
@@ -1693,7 +1582,8 @@ void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type
     // events, canWait will be set to false.
     data->canWait = (data->postEventList.size() == 0);
 
-    if (data->postEventList.size() == 0 || (receiver && !receiver->d_func()->postedEvents)) {
+    if (data->postEventList.size() == 0 ||
+        (receiver && !receiver->d_func()->postedEvents)) {
         --data->postEventList.recursion;
         return;
     }
@@ -1741,6 +1631,7 @@ void QCoreApplicationPrivate::sendPostedEvents(QObject *receiver, int event_type
     };
     CleanUp cleanup(receiver, event_type, data);
 
+    // 下面的逻辑, 比较复杂, 但是最终, 就是调用 sendEvent, 直接进行 [receiver event:event] 的调用.
     while (i < data->postEventList.size()) {
         // avoid live-lock
         if (i >= data->postEventList.insertionOffset)

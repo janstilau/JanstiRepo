@@ -456,6 +456,8 @@ void QEventDispatcherUNIX::unregisterSocketNotifier(QSocketNotifier *notifier)
         d->socketNotifiers.erase(i);
 }
 
+// 事件分发器, 对于 pending event 的处理函数.
+//
 bool QEventDispatcherUNIX::processEvents(QEventLoop::ProcessEventsFlags flags)
 {
     Q_D(QEventDispatcherUNIX);
@@ -465,9 +467,13 @@ bool QEventDispatcherUNIX::processEvents(QEventLoop::ProcessEventsFlags flags)
     emit awake();
 
     auto threadData = d->threadData.loadRelaxed();
+
     // 在这里, 是调用了 Application 的 sendPostedEvents 来去处理, 已经注册好的 postEvent 数据.
+    // QCoreApplication::sendPostedEvents(QObject *receiver = nullptr, int event_type = 0), 在 QCoreApplication 给出的接口里面, 是没有 Thread 信息的, 而 QCoreApplicationPrivate 的接口里面, 添加了关于线程的控制.
+    // Events from the window system are not dispatched by this function, but by processEvents().
     QCoreApplicationPrivate::sendPostedEvents(nullptr, 0, threadData);
 
+    // 上面的 sendPostedEvents 处理特定的 PostEvent, 而 timer, socket 这些, 是专门作为某些 event 进行的处理. flags 真正控制的是这些.
     const bool include_timers = (flags & QEventLoop::X11ExcludeTimers) == 0;
     const bool include_notifiers = (flags & QEventLoop::ExcludeSocketNotifiers) == 0;
     const bool wait_for_events = flags & QEventLoop::WaitForMoreEvents;

@@ -744,6 +744,45 @@ SOURCES += \
     styles/qwindowsstyle.cpp \
     styles/qwindowsvistastyle.cpp \
     styles/qwindowsxpstyle.cpp \
+    testlib/doc/snippets/code/doc_src_qsignalspy.cpp \
+    testlib/doc/snippets/code/doc_src_qtestevent.cpp \
+    testlib/doc/snippets/code/doc_src_qtestlib.cpp \
+    testlib/doc/snippets/code/doc_src_qtqskip.cpp \
+    testlib/doc/snippets/code/doc_src_qtqskip_snippet.cpp \
+    testlib/doc/snippets/code/doc_src_qttest.cpp \
+    testlib/doc/snippets/code/src_corelib_kernel_qtestsupport_core.cpp \
+    testlib/doc/snippets/code/src_corelib_kernel_qtestsupport_core_snippet.cpp \
+    testlib/doc/snippets/code/src_qtestlib_qtestcase.cpp \
+    testlib/doc/snippets/code/src_qtestlib_qtestcase_snippet.cpp \
+    testlib/qabstractitemmodeltester.cpp \
+    testlib/qabstracttestlogger.cpp \
+    testlib/qappletestlogger.cpp \
+    testlib/qasciikey.cpp \
+    testlib/qbenchmark.cpp \
+    testlib/qbenchmarkevent.cpp \
+    testlib/qbenchmarkmeasurement.cpp \
+    testlib/qbenchmarkmetric.cpp \
+    testlib/qbenchmarkperfevents.cpp \
+    testlib/qbenchmarkvalgrind.cpp \
+    testlib/qcsvbenchmarklogger.cpp \
+    testlib/qjunittestlogger.cpp \
+    testlib/qplaintestlogger.cpp \
+    testlib/qsignaldumper.cpp \
+    testlib/qtaptestlogger.cpp \
+    testlib/qteamcitylogger.cpp \
+    testlib/qtestblacklist.cpp \
+    testlib/qtestcase.cpp \
+    testlib/qtestdata.cpp \
+    testlib/qtestelement.cpp \
+    testlib/qtestelementattribute.cpp \
+    testlib/qtestjunitstreamer.cpp \
+    testlib/qtestlog.cpp \
+    testlib/qtestmouse.cpp \
+    testlib/qtestresult.cpp \
+    testlib/qtesttable.cpp \
+    testlib/qtestutil_macos.mm \
+    testlib/qxctestlogger.mm \
+    testlib/qxmltestlogger.cpp \
     text/qabstracttextdocumentlayout.cpp \
     text/qcssparser.cpp \
     text/qcssscanner.cpp \
@@ -2081,6 +2120,60 @@ HEADERS += \
     styles/qwindowsvistastyle_p_p.h \
     styles/qwindowsxpstyle_p.h \
     styles/qwindowsxpstyle_p_p.h \
+    testlib/3rdparty/callgrind_p.h \
+    testlib/3rdparty/cycle_p.h \
+    testlib/3rdparty/linux_perf_event_p.h \
+    testlib/3rdparty/valgrind_p.h \
+    testlib/doc/snippets/code/doc_src_qtestevent.h \
+    testlib/qabstractitemmodeltester.h \
+    testlib/qabstracttestlogger_p.h \
+    testlib/qappletestlogger_p.h \
+    testlib/qbenchmark.h \
+    testlib/qbenchmark_p.h \
+    testlib/qbenchmarkevent_p.h \
+    testlib/qbenchmarkmeasurement_p.h \
+    testlib/qbenchmarkmetric.h \
+    testlib/qbenchmarkmetric_p.h \
+    testlib/qbenchmarkperfevents_p.h \
+    testlib/qbenchmarktimemeasurers_p.h \
+    testlib/qbenchmarkvalgrind_p.h \
+    testlib/qcsvbenchmarklogger_p.h \
+    testlib/qemulationdetector_p.h \
+    testlib/qjunittestlogger_p.h \
+    testlib/qplaintestlogger_p.h \
+    testlib/qsignaldumper_p.h \
+    testlib/qsignalspy.h \
+    testlib/qtaptestlogger_p.h \
+    testlib/qteamcitylogger_p.h \
+    testlib/qtest.h \
+    testlib/qtest_gui.h \
+    testlib/qtest_network.h \
+    testlib/qtest_widgets.h \
+    testlib/qtestaccessible.h \
+    testlib/qtestassert.h \
+    testlib/qtestblacklist_p.h \
+    testlib/qtestcase.h \
+    testlib/qtestcoreelement_p.h \
+    testlib/qtestcorelist_p.h \
+    testlib/qtestdata.h \
+    testlib/qtestelement_p.h \
+    testlib/qtestelementattribute_p.h \
+    testlib/qtestevent.h \
+    testlib/qtesteventloop.h \
+    testlib/qtesthelpers_p.h \
+    testlib/qtestjunitstreamer_p.h \
+    testlib/qtestkeyboard.h \
+    testlib/qtestlog_p.h \
+    testlib/qtestmouse.h \
+    testlib/qtestresult_p.h \
+    testlib/qtestspontaneevent.h \
+    testlib/qtestsystem.h \
+    testlib/qtesttable_p.h \
+    testlib/qtesttouch.h \
+    testlib/qtestutil_macos_p.h \
+    testlib/qttestglobal.h \
+    testlib/qxctestlogger_p.h \
+    testlib/qxmltestlogger_p.h \
     text/qabstracttextdocumentlayout.h \
     text/qabstracttextdocumentlayout_p.h \
     text/qcssparser_p.h \
@@ -2780,6 +2873,30 @@ DISTFILES += \
     styles/images/viewlist-32.png \
     styles/qmacstyle.qdoc \
     styles/styles.pri \
+    testlib/3rdparty/CYCLE_LICENSE.txt \
+    testlib/3rdparty/LINUX_LICENSE.txt \
+    testlib/3rdparty/VALGRIND_LICENSE.txt \
+    testlib/3rdparty/qt_attribution.json \
+    testlib/CMakeLists.txt \
+    testlib/configure.cmake \
+    testlib/configure.json \
+    testlib/doc/qttestlib.qdocconf \
+    testlib/doc/snippets/CMakeLists.txt \
+    testlib/doc/snippets/code/CMakeLists.txt \
+    testlib/doc/snippets/code/doc_src_cmakelists.txt \
+    testlib/doc/snippets/code/doc_src_qtestlib.qdoc \
+    testlib/doc/src/dontdocument.qdoc \
+    testlib/doc/src/qt-webpages.qdoc \
+    testlib/doc/src/qt6-changes.qdoc \
+    testlib/doc/src/qttest-best-practices.qdoc \
+    testlib/doc/src/qttest-index.qdoc \
+    testlib/doc/src/qttest.qdoc \
+    testlib/doc/src/qttestlib-manual.qdoc \
+    testlib/qsignalspy.qdoc \
+    testlib/qt_cmdline.cmake \
+    testlib/qtestcase.qdoc \
+    testlib/qtestevent.qdoc \
+    testlib/selfcover.cmake \
     text/AGLFN_LICENSE.txt \
     text/qt_attribution.json \
     text/text.pri \
@@ -3360,6 +3477,8 @@ SUBDIRS += \
     sql/doc/snippets/code/doc_src_qtsql.pro \
     sql/doc/snippets/snippets.pro \
     sql/sql.pro \
+    testlib/doc/snippets/code/code.pro \
+    testlib/doc/snippets/code/doc_src_qtestlib.pro \
     widgets/accessible/widgets.pro \
     widgets/doc/snippets/code/doc_src_qtwidgets.pro \
     widgets/doc/snippets/customstyle/customstyle.pro \
