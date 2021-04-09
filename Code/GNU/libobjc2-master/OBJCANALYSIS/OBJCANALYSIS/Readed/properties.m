@@ -18,12 +18,16 @@ PRIVATE int spinlocks[spinlock_count];
 /**
  * Public function for getting a property.  
  */
+// 因为, Property 里面一定是对象, 所以直接 char * 操作就可以了.
 OBJC_PUBLIC
 id objc_getProperty(id obj, SEL _cmd, ptrdiff_t offset, BOOL isAtomic)
 {
 	if (nil == obj) { return nil; }
 	char *addr = (char*)obj;
 	addr += offset;
+    // 直接, 获取到了属性所在位置物理空间.
+    
+    
 	if (isGCEnabled)
 	{
 		return *(id*)addr;
@@ -31,6 +35,7 @@ id objc_getProperty(id obj, SEL _cmd, ptrdiff_t offset, BOOL isAtomic)
 	id ret;
 	if (isAtomic)
 	{
+        // 原子性, 锁相关
 		volatile int *lock = lock_for_pointer(addr);
 		lock_spinlock(lock);
 		ret = *(id*)addr;
@@ -40,6 +45,7 @@ id objc_getProperty(id obj, SEL _cmd, ptrdiff_t offset, BOOL isAtomic)
 	}
 	else
 	{
+        // 非原子性, 直接挖去对应地址的一个 word 大小的值.
 		ret = *(id*)addr;
 		ret = objc_retainAutoreleaseReturnValue(ret);
 	}
@@ -62,12 +68,15 @@ void objc_setProperty(id obj, SEL _cmd, ptrdiff_t offset, id arg, BOOL isAtomic,
 		*(id*)addr = arg;
 		return;
 	}
+    
 	if (isCopy)
 	{
+        // copy, 调用 copy 方法,
 		arg = [arg copy];
 	}
 	else
 	{
+        // 一般的, 调用 retain
 		arg = objc_retain(arg);
 	}
 	id old;

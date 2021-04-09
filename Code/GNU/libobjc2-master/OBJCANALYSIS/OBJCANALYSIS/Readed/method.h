@@ -10,7 +10,6 @@ struct objc_method
 	SEL         selector; // SEL 数据, key 值
 	const char *types; // 函数的签名符号
 };
-// end: objc_method
 
 /*
  methods 的单向链表, 分类, 类的原始信息里面, 关于方法, 是存储的这个对象, 在各个对象的里面, 按序存储着每个 method.

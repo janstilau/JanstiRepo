@@ -74,6 +74,7 @@ struct objc_class
 	 * A pointer to the first subclass for this class.  Filled in by the
 	 * runtime.
 	 */
+    // 子类的链表. 链表这种结构, 可以方便进行填充. 在子类RunTime load 的过程中, 可以采用头插法, 快速的构建出体系过来.
 	Class                      subclass_list;
 	/**
 	 * Pointer to the .cxx_construct method if one exists.  This method needs
@@ -173,6 +174,7 @@ enum objc_class_flags
 /**
  * Sets the specific class flag.  Note: This is not atomic.
  */
+// 位运算的 set, 就是或的运算
 static inline void objc_set_class_flag(Class aClass,
                                        enum objc_class_flags flag)
 {
@@ -180,6 +182,13 @@ static inline void objc_set_class_flag(Class aClass,
 }
 /**
  * Unsets the specific class flag.  Note: This is not atomic.
+ */
+/*
+ 1000 1001      1000 1001
+ 0000 0101      1111 1010
+                1000 1000
+ 
+ clear, 取反后与运算. 原来为 0 的地方, 该是什么就是什么, 原来为 1 的地方, 一定会变为 0
  */
 static inline void objc_clear_class_flag(Class aClass,
                                          enum objc_class_flags flag)
@@ -189,6 +198,7 @@ static inline void objc_clear_class_flag(Class aClass,
 /**
  * Checks whether a specific class flag is set.
  */
+// Test , 就是与运算之后, 和 flag 进行比较.
 static inline BOOL objc_test_class_flag(Class aClass,
                                         enum objc_class_flags flag)
 {

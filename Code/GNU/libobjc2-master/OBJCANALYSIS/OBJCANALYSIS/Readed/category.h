@@ -17,7 +17,7 @@ struct objc_category
 	struct objc_method_list   *instance_methods; // 分类中的实例方法,
 	struct objc_method_list   *class_methods; // 分类中的类方法
 	struct objc_protocol_list *protocols; // 分类中声明自己实现的协议.
-	struct objc_property_list *properties; // 分类中的属性
-	struct objc_property_list *class_properties; // ???
+	struct objc_property_list *properties; // 分类中的属性类型
+	struct objc_property_list *class_properties; // 现在有类属性这一
 };
 
