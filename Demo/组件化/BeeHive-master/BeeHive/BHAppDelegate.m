@@ -1,11 +1,3 @@
-/**
- * Created by BeeHive.
- * Copyright (c) 2016, Alibaba, Inc. All rights reserved.
- *
- * This source code is licensed under the GNU GENERAL PUBLIC LICENSE.
- * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
- */
-
 #import <UIKit/UIKit.h>
 
 #import "BHAppDelegate.h"
@@ -30,7 +22,8 @@
 
 @synthesize window;
 
-
+// 在 BHAppDelegate 里面, 接受到各种 Application 的事件, 然后, 将这些事件转交给 [BHModuleManager sharedManager].
+// [BHModuleManager sharedManager] 里面, 会将各个事件, 交给所有已经注册的 Module. 然后各个 Module 可以触发和 Application 生命周期相关的函数了.
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[BHModuleManager sharedManager] triggerEvent:BHMSetupEvent];
@@ -52,8 +45,11 @@
     return YES;
 }
 
+/*
+ Application 里面, 将各种事件进行包装, 交给 [BHModuleManager sharedManager] 进行处理.
+ */
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80400 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80400
 
 -(void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler
 {
@@ -100,14 +96,12 @@
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80400
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
 {
-  
     [[BeeHive shareInstance].context.openURLItem setOpenURL:url];
     [[BeeHive shareInstance].context.openURLItem setOptions:options];
     [[BHModuleManager sharedManager] triggerEvent:BHMOpenURLEvent];
     return YES;
 }
 #endif
-
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {

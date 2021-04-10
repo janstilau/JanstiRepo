@@ -32,6 +32,12 @@
     [[BHModuleManager sharedManager] registerDynamicModule:moduleClass];
 }
 
+// 调用 BHServiceManager 进行 Service 的注册工作
+- (void)registerService:(Protocol *)proto service:(Class) serviceClass
+{
+    [[BHServiceManager sharedManager] registerService:proto implClass:serviceClass];
+}
+
 // 调用 BHServiceManager 进行 Service 的生成工作
 // 业务类, 在真的需要和其他模块进行交互的时候, 调用该方法, 调用其他模块的功能.
 - (id)createService:(Protocol *)proto;
@@ -39,18 +45,12 @@
     return [[BHServiceManager sharedManager] createService:proto];
 }
 
-// 调用 BHServiceManager 进行 Service 的注册工作
-- (void)registerService:(Protocol *)proto service:(Class) serviceClass
-{
-    [[BHServiceManager sharedManager] registerService:proto implClass:serviceClass];
-}
-    
+// 这个函数, 是用于业务主动调用的. 所以, 会有 eventType < 1000 的限制.
 + (void)triggerCustomEvent:(NSInteger)eventType
 {
     if(eventType < 1000) {
         return;
     }
-    
     [[BHModuleManager sharedManager] triggerEvent:eventType];
 }
 

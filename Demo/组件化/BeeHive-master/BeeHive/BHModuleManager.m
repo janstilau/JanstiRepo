@@ -43,11 +43,11 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
 
 // 这里面, 存储的 Module 的 Dict 信息
 @property(nonatomic, strong) NSMutableArray<NSDictionary *>     *BHModuleInfos;
-// 这里面, 是根据 BHModuleInfos 里面的 class, 生成的一个对象, 这个对象, 就是 module 的实体.
+// 存储, 各个注册到 Manager 的 Module 对象.
 @property(nonatomic, strong) NSMutableArray     *BHModules;
-// 这里面, 记录的是, 实现了某个事件的, 所有的 modules 的实例.
+// 各个事件, 以及响应这些事件的 Module 对象.
 @property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSMutableArray<id<BHModuleProtocol>> *> *BHModulesByEvent;
-// 这里面, 记录了所有的 event 枚举值, 以及对应的 module 应该首先的 SEL.
+// Event 已经对应的 event 所应该触发的 SEL 的值.
 @property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSString *> *BHSelectorByEvent;
 
 @end
@@ -66,6 +66,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
     return sharedManager;
 }
 
+// 这个函数, 根据 [BHContext shareInstance] 里面的 plist 文件,
 - (void)loadLocalModules
 {
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:[BHContext shareInstance].moduleConfigName ofType:@"plist"];
@@ -98,7 +99,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
     [self addModuleFromObject:moduleClass shouldTriggerInitEvent:shouldTriggerInitEvent];
 }
 
-// 取消注册, 也就是将成员变量里面的信息, 进行删除.
+// 取消 module manager 对于某个 module 的管理, 就是将 Module 的各个信息, 从成员变量的记录中删除.
 - (void)unRegisterDynamicModule:(Class)moduleClass {
     if (!moduleClass) {
         return;
@@ -155,6 +156,8 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
         Class moduleClass = NSClassFromString(classStr);
         BOOL hasInstantiated = ((NSNumber *)[module objectForKey:kModuleInfoHasInstantiatedKey]).boolValue;
         if (NSStringFromClass(moduleClass) && !hasInstantiated) {
+            // 在这里, 进行了 module 的对象生成的工作.
+            // 根据配置文件, 进行管理.
             id<BHModuleProtocol> moduleInstance = [[moduleClass alloc] init];
             // 在这里, 根据 Module Class, 生成对应的实例, 然后添加到 self.BHModules 里面去.
             [tmpArray addObject:moduleInstance];
@@ -168,6 +171,7 @@ static  NSString *kAppCustomSelector = @"modDidCustomEvent:";
     [self registerAllSystemEvents];
 }
 
+// 注册自定义事件, 到 ModuleManager 上面.
 - (void)registerCustomEvent:(NSInteger)eventType
          withModuleInstance:(id)moduleInstance
              andSelectorStr:(NSString *)selectorStr {
