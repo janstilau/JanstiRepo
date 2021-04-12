@@ -10,8 +10,8 @@
 
 @interface BHContext()
 
+// 在全局的 BHContext 里面, 有两个哈希表进行缓存.
 @property(nonatomic, strong) NSMutableDictionary *modulesByName;
-
 @property(nonatomic, strong) NSMutableDictionary *servicesByName;
 
 @end

@@ -41,7 +41,6 @@ typedef NS_ENUM(NSInteger, BHModuleEventType)
     BHMDidUpdateUserActivityEvent,
     BHMHandleWatchKitExtensionRequestEvent,
     BHMDidCustomEvent = 1000
-    
 };
 
 

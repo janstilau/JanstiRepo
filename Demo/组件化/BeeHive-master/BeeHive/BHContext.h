@@ -19,7 +19,9 @@ typedef enum
     BHEnvironmentProd
 }BHEnvironmentType;
 
+
 // 这个类, 其实就是一个单例数据类. 为各个模块提供共享配置数据的.
+
 @interface BHContext : NSObject <NSCopying>
 
 // 记录了当前的环境
@@ -37,6 +39,8 @@ typedef enum
 @property(nonatomic, strong) UIApplication *application;
 // 记录 启动的参数.
 @property(nonatomic, strong) NSDictionary *launchOptions;
+
+// 这两个值, 就是 load plist, 从文件里面, 进行映射注册的数据来源.
 // 记录从哪个配置文件, 来获取 module 的信息
 @property(nonatomic, strong) NSString *moduleConfigName;
 // 记录从哪个配置文件, 来获取 service 的信息.

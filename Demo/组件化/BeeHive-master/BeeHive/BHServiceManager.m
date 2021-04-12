@@ -26,8 +26,7 @@ static const NSString *kImpl = @"impl";
     return sharedManager;
 }
 
-// 注册服务.
-// 从 Plist 文件里面, 找到 service 以及对应的 Imp 的类名, 然后添加到 allServicesDict 内.
+// 从 Plist 文件里面, 读取 Protocol 和 对应的 IMP 的关系, 然后统一添加到 Hash 表里面.
 - (void)registerLocalServices
 {
     NSString *serviceConfigName = [BHContext shareInstance].serviceConfigName;
@@ -43,6 +42,7 @@ static const NSString *kImpl = @"impl";
     for (NSDictionary *dict in serviceList) {
         NSString *protocolKey = [dict objectForKey:@"service"];
         NSString *protocolImplClass = [dict objectForKey:@"impl"];
+        // 这里, 感觉还是应该校验一下, Protocol 和 Imp 类的有效性. 比如是不是合法的 protocol, 是不是合法的 IMP 类.
         if (protocolKey.length > 0 && protocolImplClass.length > 0) {
             [self.allServicesDict addEntriesFromDictionary:@{protocolKey:protocolImplClass}];
         }
@@ -51,7 +51,7 @@ static const NSString *kImpl = @"impl";
 }
 
 // 注册服务.
-
+// 就是把 protocol 和 IMP 的映射, 放到 allServicesDict 中.
 - (void)registerService:(Protocol *)service implClass:(Class)implClass
 {
     NSParameterAssert(service != nil);
@@ -75,13 +75,12 @@ static const NSString *kImpl = @"impl";
     NSString *key = NSStringFromProtocol(service);
     NSString *value = NSStringFromClass(implClass);
     
-    // 将 protocol 和 对应的 imp 的字符串名, 添加到 allServicesDict 的内部.
+    // 真正的注册工作, 就是放到了一个 hash 表里面, protocol 为 key, Imp class 为 value.
     if (key.length > 0 && value.length > 0) {
         [self.lock lock];
         [self.allServicesDict addEntriesFromDictionary:@{key:value}];
         [self.lock unlock];
     }
-    
 }
 
 - (id)createService:(Protocol *)service
@@ -126,6 +125,7 @@ static const NSString *kImpl = @"impl";
             else
                 implInstance = [[implClass alloc] init];
             if (shouldCache) {
+                // 如果, 需要缓存, 那么将结果, 缓存到 [BHContext shareInstance] 的内部.
                 [[BHContext shareInstance] addServiceWithImplInstance:implInstance serviceName:serviceStr];
                 return implInstance;
             } else {
@@ -148,6 +148,8 @@ static const NSString *kImpl = @"impl";
 
 
 #pragma mark - private
+
+// 从 哈希表里面, 取到对应的 IMP 类, 一般后面就是生成它的单例, 或者 init 一个对象了.
 - (Class)serviceImplClass:(Protocol *)service
 {
     NSString *serviceImpl = [[self servicesDict] objectForKey:NSStringFromProtocol(service)];
