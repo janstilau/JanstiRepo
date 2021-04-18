@@ -431,6 +431,7 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
 
 
 /// A class info in object model.
+// 这是一个纯数据类, 它的各项数据, 都是在逻辑类里面使用的.
 @interface _YYModelMeta : NSObject {
     @package
     YYClassInfo *_classInfo; // 存放了类的各种原始信息.
@@ -452,11 +453,13 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     BOOL _hasCustomTransformToDictionary;
     BOOL _hasCustomClassFromDictionary;
 }
+
 @end
 
 @implementation _YYModelMeta
 
 - (instancetype)initWithClass:(Class)cls {
+    
     /*
      首先, 是获取 class 本身的信息, 就是 ivar, method, property 的那些信息.
      */
@@ -464,6 +467,7 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
     if (!classInfo) return nil;
     
     self = [super init];
+    
     /*
      YYModel 暴露出去了很多方法, 这些方法, 会控制着整个 model 的解析过程.
      但是, 如果在解析过程里面, 还是去调用这些方法, 那么代码就太繁琐了.
@@ -506,7 +510,7 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
         /*
          genericMapper 现在是类似于. 这样的数据.
          @{
-            @"indices" : [NSNumber class]
+         @"indices" : [NSNumber class]
          }
          */
         if (genericMapper) {
@@ -540,6 +544,7 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
             if (blacklist && [blacklist containsObject:propertyInfo.name]) continue;
             // 如果有白名单, 那么不在白名单里面的不要.
             if (whitelist && ![whitelist containsObject:propertyInfo.name]) continue;
+            
             _YYModelPropertyMeta *meta = [_YYModelPropertyMeta metaWithClassInfo:classInfo
                                                                     propertyInfo:propertyInfo
                                                                          generic:genericMapper[propertyInfo.name]];
@@ -644,7 +649,7 @@ static force_inline id YYValueForMultiKeys(__unsafe_unretained NSDictionary *dic
  _YYModelMeta 不会独自进行 alloc, init, 只会通过这个方法来进行.
  这个方法, 是外界使用的唯一入口, 所以在这个方法里面, 进行了缓存操作.
  感觉应该把缓存的东西, 提高到类的级别才合适.
-*/
+ */
 + (instancetype)metaWithClass:(Class)cls {
     if (!cls) return nil;
     static CFMutableDictionaryRef cache;
@@ -818,12 +823,11 @@ static void ModelSetValueForProperty(__unsafe_unretained id model, // self
             ((void (*)(id, SEL, id))(void *) objc_msgSend)((id)model, meta->_setter, (id)nil);
         } else {
             /*
-            根据 key 对应的类型, 将 value 转化成为相应的类型.
-            */
+             根据 key 对应的类型, 将 value 转化成为相应的类型.
+             */
             switch (meta->_nsType) {
                 case YYEncodingTypeNSString:
                 case YYEncodingTypeNSMutableString: {
-                    
                     if ([value isKindOfClass:[NSString class]]) {
                         if (meta->_nsType == YYEncodingTypeNSString) {
                             ((void (*)(id, SEL, id))(void *) objc_msgSend)((id)model, meta->_setter, value);
@@ -938,7 +942,7 @@ static void ModelSetValueForProperty(__unsafe_unretained id model, // self
                                         if (!cls) cls = meta->_genericCls; // for xcode code coverage
                                     }
                                     NSObject *newOne = [cls new];
-                                    [newOne modelSetWithDictionary:one];
+                                    [newOne setupModelWithDict:one];
                                     if (newOne) [objectArr addObject:newOne];
                                 }
                             }
@@ -978,7 +982,7 @@ static void ModelSetValueForProperty(__unsafe_unretained id model, // self
                                         if (!cls) cls = meta->_genericCls; // for xcode code coverage
                                     }
                                     NSObject *newOne = [cls new];
-                                    [newOne modelSetWithDictionary:(id)oneValue];
+                                    [newOne setupModelWithDict:(id)oneValue];
                                     if (newOne) dic[oneKey] = newOne;
                                 }
                             }];
@@ -1013,7 +1017,7 @@ static void ModelSetValueForProperty(__unsafe_unretained id model, // self
                                     if (!cls) cls = meta->_genericCls; // for xcode code coverage
                                 }
                                 NSObject *newOne = [cls new];
-                                [newOne modelSetWithDictionary:one];
+                                [newOne setupModelWithDict:one];
                                 if (newOne) [set addObject:newOne];
                             }
                         }
@@ -1050,13 +1054,14 @@ static void ModelSetValueForProperty(__unsafe_unretained id model, // self
                         one = ((id (*)(id, SEL))(void *) objc_msgSend)((id)model, meta->_getter);
                     }
                     if (one) {
-                        [one modelSetWithDictionary:value];
+                        [one setupModelWithDict:value];
                     } else {
+                        // 这里, 递归调用 YYModel 的字典转模型的功能, 然后将新生成的值, 赋值到当前的 key 中来.
                         if (meta->_hasCustomClassFromDictionary) {
                             cls = [cls modelCustomClassForDictionary:value] ?: cls;
                         }
                         one = [cls new];
-                        [one modelSetWithDictionary:value];
+                        [one setupModelWithDict:value];
                         ((void (*)(id, SEL, id))(void *) objc_msgSend)((id)model, meta->_setter, (id)one);
                     }
                 }
@@ -1143,6 +1148,7 @@ typedef struct {
  @param _value   should not be nil.
  @param _context _context.modelMeta and _context.model should not be nil.
  */
+// 这里, 就是从 Dict 里面, 初始化一个 Model 的过程.
 static void ModelSetWithDictionaryFunction(const void *_key, const void *_value, void *_context) {
     ModelSetContext *context = _context;
     __unsafe_unretained _YYModelMeta *meta = (__bridge _YYModelMeta *)(context->modelMeta);
@@ -1150,6 +1156,7 @@ static void ModelSetWithDictionaryFunction(const void *_key, const void *_value,
     __unsafe_unretained id model = (__bridge id)(context->model);
     while (propertyMeta) {
         if (propertyMeta->_setter) {
+            // 如果,
             ModelSetValueForProperty(model, (__bridge __unsafe_unretained id)_value, propertyMeta);
         }
         propertyMeta = propertyMeta->_next;
@@ -1489,31 +1496,33 @@ static NSString *ModelDescription(NSObject *model) {
     return [self modelWithDictionary:dic];
 }
 
-
+// 最最核心的方法, 从一个 Dict 里面, 构建出一个 Self 的对象出来.
 + (instancetype)modelWithDictionary:(NSDictionary *)dictionary {
+    
     if (!dictionary || dictionary == (id)kCFNull) return nil;
     if (![dictionary isKindOfClass:[NSDictionary class]]) return nil;
     
     Class cls = [self class]; // 生成的类首先是自己的类,
-    _YYModelMeta *modelMeta = [_YYModelMeta metaWithClass:cls];
+    _YYModelMeta *modelMeta = [_YYModelMeta metaWithClass:cls]; // 获取当前类的元信息.
     if (modelMeta->_hasCustomClassFromDictionary) {
         cls = [cls modelCustomClassForDictionary:dictionary] ?: cls;
-    }
+    } // 因为提供了, 根据 Dict 返回不同种类的对象的能力, 所以这里判断, 如果有这个需求, 就替换生成的对象.
     
     NSObject *result = [cls new];
-    if ([result modelSetWithDictionary:dictionary]) return result;
+    // 生成一个新的对象, 然后进行 Dictionary 的初始化工作.
+    if ([result setupModelWithDict:dictionary]) return result;
     return nil;
 }
 
 - (BOOL)modelSetWithJSON:(id)json {
     NSDictionary *dic = [NSObject yy_dictFromRawData:json];
-    return [self modelSetWithDictionary:dic];
+    return [self setupModelWithDict:dic];
 }
 
 /*
  这个函数的命名有点问题, 明明是 setModelWithDict.
  */
-- (BOOL)modelSetWithDictionary:(NSDictionary *)dic {
+- (BOOL)setupModelWithDict:(NSDictionary *)dic {
     if (!dic || dic == (id)kCFNull) return NO;
     if (![dic isKindOfClass:[NSDictionary class]]) return NO;
     
@@ -1561,6 +1570,8 @@ static NSString *ModelDescription(NSObject *model) {
     if (modelMeta->_hasCustomTransformFromDictionary) {
         /*
          modelCustomTransformFromDictionary 提供了一个切口, 可以做自定义的 model 的转化操作.
+         可以在这里, 做一些自定义属性的操作.
+         对于那些特殊的值, 比如 萌股的特殊的时间格式, 在这里进行了转化.
          */
         return [((id<YYModel>)self) modelCustomTransformFromDictionary:dic];
     }

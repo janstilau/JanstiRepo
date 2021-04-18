@@ -2,6 +2,7 @@
 #import <objc/runtime.h>
 
 YYEncodingType YYEncodingGetType(const char *typeEncoding) {
+    
     char *type = (char *)typeEncoding;
     if (!type) return YYEncodingTypeUnknown;
     size_t len = strlen(type);
@@ -81,7 +82,8 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
 
 @implementation YYClassIvarInfo
 
-/* 在这里, 进行了 ivar 信息的提取工作.
+/*
+ 在这里, 进行了 ivar 信息的提取工作.
  Ivar 本身是一个指针, typedef struct objc_ivar *Ivar
  */
 - (instancetype)initWithIvar:(Ivar)ivar {
@@ -159,7 +161,11 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
 
 
 /*
- nonatomic, strong, readonly, NSString, name
+ nonatomic
+ strong
+ readonly
+ NSString
+ name
  以上 5 个信息, 都是属性的 attribute, 都有着不同的名字, value 也各不相同.
  */
 - (instancetype)initWithProperty:(objc_property_t)property {
@@ -272,9 +278,11 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding) {
 - (instancetype)initWithClass:(Class)cls {
     if (!cls) return nil;
     self = [super init];
+    
     _cls = cls;
     _superCls = class_getSuperclass(cls);
     _isMeta = class_isMetaClass(cls);
+    
     if (!_isMeta) {
         _metaCls = objc_getMetaClass(class_getName(cls));
     }

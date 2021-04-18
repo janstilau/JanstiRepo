@@ -89,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return Whether succeed.
  */
-- (BOOL)modelSetWithDictionary:(NSDictionary *)dic;
+- (BOOL)setupModelWithDict:(NSDictionary *)dic;
 
 /**
  Generate a json object from the receiver's properties.
@@ -285,7 +285,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @implementation YYAttributes
  + (NSDictionary *)modelContainerPropertyGenericClass {
- return @{@"shadows" : [YYShadow class],
+ return @{
+ @"shadows" : [YYShadow class],
  @"borders" : YYBorder.class,
  @"attachments" : @"YYAttachment" };
  }
@@ -332,7 +333,6 @@ NS_ASSUME_NONNULL_BEGIN
  
  面向抽象编程的实践.
  如果, 数据类里面, 存储的是父类, 或者接口对象, 然后想要返回具体的子类或者实例对象, 就要通过这个函数, 返回不同的 class 才可以.
- 
  */
 + (nullable Class)modelCustomClassForDictionary:(NSDictionary *)dictionary;
 

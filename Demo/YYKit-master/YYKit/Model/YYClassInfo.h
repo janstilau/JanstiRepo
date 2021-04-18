@@ -65,11 +65,11 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
  
  struct objc_ivar
  {
-     const char *name; // 变量名
-     const char *type; // 变量类型
-     int        *offset; // 变量的偏移量
-     uint32_t    size; // 变量的长度
-     uint32_t    flags; // 内存管理相关的信息.
+ const char *name; // 变量名
+ const char *type; // 变量类型
+ int        *offset; // 变量的偏移量
+ uint32_t    size; // 变量的长度
+ uint32_t    flags; // 内存管理相关的信息.
  };
  */
 @interface YYClassIvarInfo : NSObject
@@ -90,9 +90,9 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
  
  struct objc_method
  {
-     IMP         imp; // 实际的函数指针
-     SEL         selector; // SEL 数据, key 值
-     const char *types; // 函数的签名符号
+ IMP         imp; // 实际的函数指针
+ SEL         selector; // SEL 数据, key 值
+ const char *types; // 函数的签名符号
  };
  */
 @interface YYClassMethodInfo : NSObject
@@ -112,11 +112,11 @@ YYEncodingType YYEncodingGetType(const char *typeEncoding);
 /*
  struct objc_property
  {
-     const char *name;
-     const char *attributes;
-     const char *type;
-     SEL getter;
-     SEL setter;
+ const char *name;
+ const char *attributes;
+ const char *type;
+ SEL getter;
+ SEL setter;
  };
  */
 
