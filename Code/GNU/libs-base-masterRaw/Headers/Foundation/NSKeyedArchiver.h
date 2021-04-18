@@ -4,55 +4,54 @@
 
 #if OS_API_VERSION(GS_API_MACOSX, GS_API_LATEST)
 
-#if	defined(__cplusplus)
-extern "C" {
-#endif
-
 #import	<Foundation/NSCoder.h>
 #import	<Foundation/NSMapTable.h>
 #import	<Foundation/NSPropertyList.h>
 
 @class NSMutableDictionary, NSMutableData, NSData, NSString;
 
-/**
- *  Implements <em>keyed</em> archiving of object graphs.  This archiver
- *  should be used instead of [NSArchiver] for new implementations.  Classes
- *  implementing [(NSCoding)] should check the [NSCoder-allowsKeyedCoding]
- *  method and if the response is YES, encode/decode their fields using the
- *  <code>...forKey:</code> [NSCoder] methods, which provide for more robust
- *  forwards and backwards compatibility.
+/*
+ KeyArchiver 里面, 考虑了循环引用的问题.
+ 
+ 在最终的存储中, 是把所有的对象, 放到了一个数组中进行了存储.
+ A.B.C
+ C.A
+ 那么最终, 是有一个数组里面存储了 [A,B,C,D] 对应的 Dict
+ 而 A 中的 Dict, B 对应的是一个 Dict, 里面会有一个 Id 值, 代表着 B 对象在 数组中的位置.
+ 同时 A 中的 Dict, 也会保存类的名字, 以及类的继承关系.
+ 对于基本数据类型, 也就是 number, string, dict, array, 会直接存储到 A 的 Dict 里面. 对于 Obj, 则是用 Obj 的 refDict 进行替换.
+ 
+ 解档的时候, 也是同样的流程,
+ 以 B 为例
+ 首先, A 解档 B 的时候, 首先是找到 B 的 RefDict, 里面读取 B 在 Array 里面的真实信息 BInfoDict.
+ decodeIntForKey, 就是从 BInfoDict 里面查找对应的 value 转化成为 Int.
+ 当解档 C 的时候, 就是从 BInfoDict 里面, 读取 C 的 RefDic, 再去 Array 里面读取出 CInfoDict.
+ 
+ 以上整个过程, 会记录已经归档解档的对象, 如果归档解档的对象, 已经有了对应的 Ref 数据, 则会直接返回, 防止同样的一个 Obj 再次归档, 或者同样的一个 Id 再次解档.
+ */
+
+/*
+ *  NSKeyedArchiver, a concrete subclass of NSCoder, provides a way to encode objects (and scalar values) into an architecture-independent suitable for storage in a file.
+ 这里说的很清楚, archiver 会把类型存储到自己的内部. 
+ * When you archive a set of objects, the archiver writes the class information and instance variables for each object to the archive. The companion class NSKeyedUnarchiver decodes the data in an archive and creates a set of objects equivalent to the original set.
+ A keyed archive differs from a non-keyed archive in that all the objects and values encoded into the archive have names, or keys. When decoding a non-keyed archive, the decoder must decode values in the same order the original encoder used. When decoding a keyed archive, the decoder requests values by name, meaning it can decode values out of sequence or not at all. Keyed archives, therefore, provide better support for forward and backward compatibility.
+ The keys given to encoded values must be unique only within the scope of the currently-encoding object. A keyed archive is hierarchical, so the keys used by object A to encode its instance variables don’t conflict with the keys used by object B. This is true even if A and B are instances of the same class. Within a single object, however, the keys used by a subclass can conflict with keys used in its superclasses.
+ An NSArchiver object can write the archive data to a file or to a mutable-data object (an instance of NSMutableData) that you provide
  */
 @interface NSKeyedArchiver : NSCoder
 {
-#if	GS_EXPOSE(NSKeyedArchiver)
 @private
-    NSMutableData	*_data;		/* Data to write into.		*/
+    NSMutableData	*_destinateData;		/* Data to write into.		*/
     id		_delegate;	/* Delegate controls operation.	*/
     NSMapTable	*_clsMap;	/* Map classes to names.	*/
-#ifndef	_IN_NSKEYEDARCHIVER_M
-#define	GSIMapTable	void*
-#endif
     GSIMapTable	_cIdMap;	/* Conditionally coded.		*/
     GSIMapTable	_uIdMap;	/* Unconditionally coded.	*/
     GSIMapTable	_repMap;	/* Mappings for objects.	*/
-#ifndef	_IN_NSKEYEDARCHIVER_M
-#undef	GSIMapTable
-#endif
     unsigned	_keyNum;	/* Counter for keys in object.	*/
-    NSMutableDictionary	*_enc;	/* Object being encoded.	*/
-    NSMutableArray	*_obj;	/* Array of objects.		*/
+    NSMutableDictionary	*_encodingGraph;	/* Object being encoded.	*/
+    NSMutableArray	*_encodingObjArray;	/* Array of objects.		*/
     NSPropertyListFormat	_format;
     BOOL _requiresSecureCoding;
-#endif
-#if     GS_NONFRAGILE
-#else
-    /* Pointer to private additional data used to avoid breaking ABI
-     * when we don't have the non-fragile ABI available.
-     * Use this mechanism rather than changing the instance variable
-     * layout (see Source/GSInternal.h for details).
-     */
-@private id _internal GS_UNUSED_IVAR;
-#endif
 }
 
 /**
@@ -237,7 +236,7 @@ extern "C" {
 #ifndef	_IN_NSKEYEDUNARCHIVER_M
 #define	GSIArray	void*
 #endif
-    GSIArray		_objMap; /* Decoded objects.		*/
+    GSIArray		_cachedDecodeObjs; /* Decoded objects.		*/
 #ifndef	_IN_NSKEYEDUNARCHIVER_M
 #undef	GSIArray
 #endif
@@ -597,10 +596,6 @@ cannotDecodeObjectOfClassName: (NSString*)aName
  */
 - (NSSize) decodeSizeForKey: (NSString*)aKey;
 @end
-
-#if	defined(__cplusplus)
-}
-#endif
 
 #endif	/* GS_API_MACOSX */
 #endif	/* __NSKeyedArchiver_h_GNUSTEP_BASE_INCLUDE */
