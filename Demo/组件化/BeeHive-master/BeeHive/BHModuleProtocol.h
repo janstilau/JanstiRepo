@@ -20,7 +20,7 @@
 -(BOOL)async { return [[NSString stringWithUTF8String:#isAsync] boolValue];}
 
 
-// 这个, 就是各个 Module 监听的事件. 
+// 这个 Protocol, 是需要各个 Module 去实现的. 这样, Module Manager 就可以将自己接收到了 Application 的各种事件, 通过协议定义的各个方法, 进行响应. 
 @protocol BHModuleProtocol <NSObject>
 
 @optional

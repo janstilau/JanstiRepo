@@ -14,6 +14,7 @@
 @interface ShopModule() <BHModuleProtocol>
 
 @end
+
 @implementation ShopModule
 
 - (id)init{
@@ -21,7 +22,6 @@
     {
         NSLog(@"ShopModule init");
     }
-    
     return self;
 }
 

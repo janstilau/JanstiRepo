@@ -10,35 +10,35 @@ enum PropertyAttributeKind
 	/**
 	 * The property is declared read-only.
 	 */
-	OBJC_PR_readonly  = (1<<0),
+	OBJC_PR_readonly  = (1<<0), 0000 0001
 	/**
 	 * The property has a getter.
 	 */
-	OBJC_PR_getter    = (1<<1),
+	OBJC_PR_getter    = (1<<1), 0000 0010
 	/**
 	 * The property has assign semantics.
 	 */
-	OBJC_PR_assign    = (1<<2),
+	OBJC_PR_assign    = (1<<2), 0000 0100
 	/**
 	 * The property is declared read-write.
 	 */
-	OBJC_PR_readwrite = (1<<3),
+	OBJC_PR_readwrite = (1<<3), 0000 1000
 	/**
 	 * Property has retain semantics.
 	 */
-	OBJC_PR_retain    = (1<<4),
+	OBJC_PR_retain    = (1<<4), 0001 0000
 	/**
 	 * Property has copy semantics.
 	 */
-	OBJC_PR_copy      = (1<<5),
+	OBJC_PR_copy      = (1<<5), 0010 0000
 	/**
 	 * Property is marked as non-atomic.
 	 */
-	OBJC_PR_nonatomic = (1<<6),
+	OBJC_PR_nonatomic = (1<<6), 0100 0000
 	/**
 	 * Property has setter.
 	 */
-	OBJC_PR_setter    = (1<<7)
+	OBJC_PR_setter    = (1<<7) 1000 0000
 };
 
 // begin: objc_property

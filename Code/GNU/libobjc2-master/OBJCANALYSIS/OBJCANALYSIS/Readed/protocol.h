@@ -91,7 +91,7 @@ struct objc_protocol
 	/**
 	 * Class pointer.
 	 */
-	id                                   isa;
+	id                                   isa; 
 	/**
 	 * Protocol name.
 	 */

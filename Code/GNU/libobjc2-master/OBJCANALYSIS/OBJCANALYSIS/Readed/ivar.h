@@ -13,7 +13,8 @@ struct objc_ivar
 /**
  * Instance variable ownership.
  */
-// begin: objc_ivar_ownership
+// 实际上, 一个成员的内存到底应该怎么进行管理, 是用了一个标志位, 进行管理的.
+// 在进行 set 的时候, 首先是拿到这个 Ivar 的 meta 信息, 读取里面的 ownerShip 数据, 然后根据不同的 option, 调用不同的方法.
 typedef enum {
 	/**
 	 * Invalid.  Indicates that this is not an instance variable with ownership
@@ -24,10 +25,12 @@ typedef enum {
 	 * Strong ownership.  Assignments to this instance variable should retain
 	 * the assigned value.
 	 */
+    // Should retain when set
 	ownership_strong  = 1,
 	/**
 	 * Weak ownership.  This ivar is a zeroing weak reference to an object.
 	 */
+    // weak, 不需要 retain, 但是要添加引用计数, 如果有弱引用计数的机制.
 	ownership_weak    = 2,
 	/**
 	 * Object that has `__unsafe_unretained` semantics.
