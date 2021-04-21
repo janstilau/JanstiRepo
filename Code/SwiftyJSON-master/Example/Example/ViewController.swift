@@ -23,6 +23,31 @@
 import UIKit
 import SwiftyJSON
 
+struct Person {
+    var name: String = ""
+    var age: Int = 0
+    
+    mutating func changeAge() {
+        print("ChagenAge")
+        age += 1
+    }
+    func changeName() {
+        print("ChangeName")
+    }
+}
+
+struct Grade {
+    var students = [Person]()
+    subscript (position: Int) -> Person {
+        get {
+            return students[position]
+        }
+        set {
+            students[position] = newValue
+        }
+    }
+}
+
 class ViewController: UITableViewController {
 
     var json: JSON = JSON.null
@@ -30,7 +55,13 @@ class ViewController: UITableViewController {
     // MARK: - Table view data source
 
 	override func viewDidLoad() {
-		title = "SwiftyJSON(\(json.type))"
+        var aGrade = Grade()
+        aGrade.students.append(Person())
+        aGrade[0].changeName()
+        aGrade[0].changeAge()
+        aGrade[0].changeAge()
+        aGrade[0].changeAge()
+        print(aGrade)
 	}
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -1,50 +1,8 @@
 import Foundation
 
-// MARK: - Error
-// swiftlint:disable line_length
-public enum SwiftyJSONError: Int, Swift.Error {
-    case unsupportedType = 999
-    case indexOutOfBounds = 900
-    case elementTooDeep = 902
-    case wrongType = 901
-    case notExist = 500
-    case invalidJSON = 490
-}
-
-extension SwiftyJSONError: CustomNSError {
-
-    /// return the error domain of SwiftyJSONError
-    public static var errorDomain: String { return "com.swiftyjson.SwiftyJSON" }
-
-    /// return the error code of SwiftyJSONError
-    public var errorCode: Int { return self.rawValue }
-
-    /// return the userInfo of SwiftyJSONError
-    public var errorUserInfo: [String: Any] {
-        switch self {
-        case .unsupportedType:
-            return [NSLocalizedDescriptionKey: "It is an unsupported type."]
-        case .indexOutOfBounds:
-            return [NSLocalizedDescriptionKey: "Array Index is out of bounds."]
-        case .wrongType:
-            return [NSLocalizedDescriptionKey: "Couldn't merge, because the JSONs differ in type on top level."]
-        case .notExist:
-            return [NSLocalizedDescriptionKey: "Dictionary key does not exist."]
-        case .invalidJSON:
-            return [NSLocalizedDescriptionKey: "JSON is invalid."]
-        case .elementTooDeep:
-            return [NSLocalizedDescriptionKey: "Element too deep. Increase maxObjectDepth and make sure there is no reference loop."]
-        }
-    }
-}
 
 // MARK: - JSON Type
 
-/**
-JSON's type definitions.
-
-See http://www.json.org
-*/
 public enum Type: Int {
 	case number
 	case string
@@ -59,27 +17,14 @@ public enum Type: Int {
 
 public struct JSON {
 
-	/**
-	 Creates a JSON using the data.
-	
-	 - parameter data: The NSData used to convert to json.Top level object in data is an NSArray or NSDictionary
-	 - parameter opt: The JSON serialization reading options. `[]` by default.
-	
-	 - returns: The created JSON
-	 */
+    // 原始值的适配工作, 使用 JSONSerialization 进行生成对象, 然后交给漏斗函数.
     public init(data: Data, options opt: JSONSerialization.ReadingOptions = []) throws {
         let object: Any = try JSONSerialization.jsonObject(with: data, options: opt)
         self.init(jsonObject: object)
     }
 
-    /**
-	 Creates a JSON object
-	 - note: this does not parse a `String` into JSON, instead use `init(parseJSON: String)`
-	
-	 - parameter object: the object
-
-	 - returns: the created JSON object
-	 */
+    // designated 初始化方法. 如果是 Data, 则做一次反序列化处理.
+    // 然后交给漏斗函数.
     public init(_ object: Any) {
         switch object {
         case let object as Data:
@@ -108,13 +53,7 @@ public struct JSON {
 		}
 	}
 
-	/**
-	 Creates a JSON using the object.
-	
-	 - parameter jsonObject:  The object must have the following properties: All objects are NSString/String, NSNumber/Int/Float/Double/Bool, NSArray/Array, NSDictionary/Dictionary, or NSNull; All dictionary keys are NSStrings/String; NSNumbers are not NaN or infinity.
-	
-	 - returns: The created JSON
-	 */
+	// 漏斗函数, 所有初始化的终点.
     fileprivate init(jsonObject: Any) {
         object = jsonObject
     }
@@ -151,14 +90,38 @@ public struct JSON {
      Private woker function which does the actual merging
      Typecheck is set to true for the first recursion level to prevent total override of the source JSON
  	*/
+    // 如果一个子步骤发生错误, 那么错误会向上抛, 一直到 catch 位置.
+    /*
+     Swift 的下标操作, 如果, get 之后调用了一个 mutating 方法
+     1. get
+     2. get 出来的对象调用 mutating 方法.
+     3. 重新将这个对象 set 到下标中去.
+     
+     如果调用了一个普通方法
+     1. get
+     2. get 出来的对象调用方法.
+     
+     所以这里, self[key] 调用了一个 mutating 方法, merge, 然后这个 merge 之后的对象, 会重新调用 set.
+     而在 set 的时候, rawDict 里面的数据才会发生改变.
+     相比较, 直接内存地址的修改, 这里会有性能损失. 不过, 代码保持了逻辑简洁.
+     */
  	fileprivate mutating func merge(with other: JSON, typecheck: Bool) throws {
         if type == other.type {
             switch type {
             case .dictionary:
+                /*
+                 如果是字典
+                 self[key] 本身会产生一个 JSON 对象, 这个 JSON 对象, 再去 merge.
+                 */
                 for (key, _) in other {
                     try self[key].merge(with: other[key], typecheck: false)
                 }
             case .array:
+                /*
+                 如果是数字, arrayValue + other.arrayValue 可以确保, 是 [JSON] 之间的相加.
+                 然后 [JSON] 数组去初始化一个 JSON 对象. 调用 init(jsonObject) 方法.
+                 最终生成 JSON 的过程, 会对 [JSON] 进行解包, 最后是一个 rawValue 组成的数组.
+                 */
                 self = JSON(arrayValue + other.arrayValue)
             default:
                 self = other
@@ -200,9 +163,12 @@ public struct JSON {
             default:          return rawNull
             }
         }
+        
+        // 这里是很多操作的终点.
         set {
             error = nil
             switch unwrap(newValue) {
+            // 经过了 unwarp 之后, new value 产生的值, 已经没有 JSON 对象在里面了.
             case let number as NSNumber:
                 if number.isBool {
                     type = .bool
@@ -241,16 +207,22 @@ public struct JSON {
 private func unwrap(_ object: Any) -> Any {
     switch object {
     case let json as JSON:
+        // 传过来的 Object, 本身可能是一个 JSON 对象.
+        // 而 JSON 对象里面, 应该保存的是 value 的原始值, 所以, 需要继续的进行 unwarp.
         return unwrap(json.object)
     case let array as [Any]:
+        // 如果本身就是一个数组, 那么对数组里面的每一个进行 unwrap. 这个过程本身又是递归的.
         return array.map(unwrap)
     case let dictionary as [String: Any]:
+        // 如果本身是一个字典, 那么对字典每一个 value 进行 unwrap, 这个过程本身又是递归的.
         var d = dictionary
         dictionary.forEach { pair in
             d[pair.key] = unwrap(pair.value)
         }
         return d
     default:
+        // 如果, 不是 JSON 对象, 或者容器对象, 那么直接返回.
+        // 这是这个函数的终止条件.
         return object
     }
 }
@@ -311,7 +283,7 @@ extension JSON: Swift.Collection {
         }
     }
 
-    // 如果, 是.array, 那么久应该取 rawArray 中的值.
+    // 如果, 是.array, 那么应该取 rawArray 中的值.
     public func index(after i: Index) -> Index {
         switch i {
         case .array(let idx):      return .array(rawArray.index(after: idx))
@@ -339,6 +311,9 @@ public enum JSONKey {
     case key(String)
 }
 
+// 专门的一个协议, 作用 SwiftyJSON 的下标.
+// 然后让 Int, String 符合这个协议.
+// 其实已经专门做了一个数据类型, JSONKey. 但是, 将从 Int, String 到 JSONKey 的过程封装到了 Extension 里面, 使得 JSON 对象的接口更好用.
 public protocol JSONSubscriptType {
     var jsonKey: JSONKey { get }
 }
@@ -355,9 +330,15 @@ extension String: JSONSubscriptType {
     }
 }
 
+// JSON 对象的各种操作, 都是建立在 Type 的判断上的.
+// JSON Null, 不仅仅指代的是 json 数据里面的 null, 也指代, 相关操作在类型不匹配的情况下, 返回的非法数据.
+// 因为是非法数据, 所以之后的各种操作, 也会返回 JSON Null, 或者 nil 值.
+
 extension JSON {
 
     /// If `type` is `.array`, return json whose object is `array[index]`, otherwise return null json with error.
+    // 这个函数, 返回的是 JSON 对象, 只有真的想要取值的时候, 再去调用 Int, double value 这些取值的函数.
+    // JSON 函数是一个盒子, 可以保证链式编程. 可以猜想, optinal chian 也可以是这样实现的, 返回一个 NULL OBJECT, 可以接受任何方法, 属性取用, 返回的还是一个 NULL OBJECT.
     fileprivate subscript(index index: Int) -> JSON {
         get {
             if type != .array {
@@ -376,6 +357,7 @@ extension JSON {
             if type == .array &&
                 rawArray.indices.contains(index) &&
                 newValue.error == nil {
+                // 赋值的时候, 是将 rawValue 进行修改. 在 JSON 对象内部, 是不存储 JSON 对象的.
                 rawArray[index] = newValue.object
             }
         }
