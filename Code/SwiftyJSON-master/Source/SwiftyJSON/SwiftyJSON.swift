@@ -1,4 +1,3 @@
-
 import Foundation
 
 // MARK: - Error
@@ -174,6 +173,8 @@ public struct JSON {
     }
 
     /// Private object
+    // 这里, 感觉内部用一个 enum 进行存储更好.
+    // 当然, 可能 type 要暴露在外面. 但是, 对于 JSON 这个对象而言, 在同一时刻, 只能有一个值是有效的. 所以, enum 最符合这样的场景了
     fileprivate var rawArray: [Any] = []
     fileprivate var rawDictionary: [String: Any] = [:]
     fileprivate var rawString: String = ""
@@ -254,16 +255,26 @@ private func unwrap(_ object: Any) -> Any {
     }
 }
 
+/*
+ Index 主要的职责:
+ 1. 熟悉容器的内部结构, 可以直接用下标找到对应位置的数据. 例如, Dict 使用 Index, 快速的查找到节点位置, 取值.
+ 2. Comparable, 给容器遍历从前到后的机会
+ 3. 哨兵. 提供 end 的判断, 提供 start 作为开始.
+ 
+ 对于 JSON 而言, 单个值, 不应该进行遍历, 这里, 是用 null 进行的表示. 改名为 single.
+ array 可以遍历. array index 中, 数据部分是 Int 值.
+ dict 可以遍历, dict index 中, 数据部分是 DictionaryIndex
+ */
 public enum Index<T: Any>: Comparable {
     case array(Int)
     case dictionary(DictionaryIndex<String, T>)
-    case null
+    case single
 
     static public func == (lhs: Index, rhs: Index) -> Bool {
         switch (lhs, rhs) {
         case (.array(let left), .array(let right)):           return left == right
         case (.dictionary(let left), .dictionary(let right)): return left == right
-        case (.null, .null):                                  return true
+        case (.single, .single):                                  return true
         default:                                              return false
         }
     }
@@ -288,7 +299,7 @@ extension JSON: Swift.Collection {
         switch type {
         case .array:      return .array(rawArray.startIndex)
         case .dictionary: return .dictionary(rawDictionary.startIndex)
-        default:          return .null
+        default:          return .single
         }
     }
 
@@ -296,15 +307,16 @@ extension JSON: Swift.Collection {
         switch type {
         case .array:      return .array(rawArray.endIndex)
         case .dictionary: return .dictionary(rawDictionary.endIndex)
-        default:          return .null
+        default:          return .single
         }
     }
 
+    // 如果, 是.array, 那么久应该取 rawArray 中的值.
     public func index(after i: Index) -> Index {
         switch i {
         case .array(let idx):      return .array(rawArray.index(after: idx))
         case .dictionary(let idx): return .dictionary(rawDictionary.index(after: idx))
-        default:                   return .null
+        default:                   return .single
         }
     }
 
