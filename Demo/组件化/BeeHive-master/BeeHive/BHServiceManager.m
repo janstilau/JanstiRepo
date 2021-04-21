@@ -98,6 +98,7 @@ static const NSString *kImpl = @"impl";
     }
     id implInstance = nil;
     
+    // 这里, 如果对应的 protocol 没有注册实现类的话, 应该怎么处理.
     if (![self checkValidService:service]) {
         if (self.enableException) {
             @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"%@ protocol does not been registed", NSStringFromProtocol(service)] userInfo:nil];
@@ -115,6 +116,7 @@ static const NSString *kImpl = @"impl";
     }
     
     // 找到了 Imp 的类对象.
+    // 其实也有可能没有找到, 如果对应的模块, 没有进行 register 的工作, 就是找不到对应的 protocol 的 Imp 类.
     Class implClass = [self serviceImplClass:service];
     if ([[implClass class] respondsToSelector:@selector(singleton)]) {
         if ([[implClass class] singleton]) {
