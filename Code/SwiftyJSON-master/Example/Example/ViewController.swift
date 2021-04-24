@@ -49,21 +49,26 @@ struct Grade {
 }
 
 class ViewController: UITableViewController {
-
+    
     var json: JSON = JSON.null
-
+    
     // MARK: - Table view data source
-
-	override func viewDidLoad() {
+    
+    override func viewDidLoad() {
         var aGrade = Grade()
         aGrade.students.append(Person())
         aGrade[0].changeName()
         aGrade[0].changeAge()
         aGrade[0].changeAge()
         aGrade[0].changeAge()
+        
+        var age = 1
+        withUnsafePointer(to: &age) { (<#UnsafePointer<T>#>) -> Result in
+            <#code#>
+        }
         print(aGrade)
-	}
-
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.json.type {
         case .array, .dictionary:
@@ -72,12 +77,12 @@ class ViewController: UITableViewController {
             return 1
         }
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "JSONCell", for: indexPath) as UITableViewCell
-
+        
         let row = indexPath.row
-
+        
         switch self.json.type {
         case .array:
             cell.textLabel?.text = "\(row)"
@@ -91,17 +96,17 @@ class ViewController: UITableViewController {
             cell.textLabel?.text = ""
             cell.detailTextLabel?.text = self.json.description
         }
-
+        
         return cell
     }
-
+    
     // MARK: - Navigation
-
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
-
+        
         var nextController: UIViewController?
         nextController = segue.destination
-
+        
         if let indexPath = self.tableView.indexPathForSelectedRow {
             let row = indexPath.row
             var nextJson: JSON = JSON.null
