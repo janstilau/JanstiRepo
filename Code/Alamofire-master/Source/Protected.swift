@@ -5,6 +5,7 @@ private protocol Lock {
     func unlock()
 }
 
+// 模仿系统的 lock.
 extension Lock {
     /// Executes a closure returning a value while acquiring the lock.
     ///
@@ -27,6 +28,8 @@ extension Lock {
 
 #if os(Linux)
 /// A `pthread_mutex_t` wrapper.
+
+// 封装了 Pthread_mutex lock
 final class MutexLock: Lock {
     private var mutex: UnsafeMutablePointer<pthread_mutex_t>
 
@@ -84,6 +87,7 @@ final class UnfairLock: Lock {
 #endif
 
 /// A thread-safe wrapper around a value.
+// 一个原子属性的变量, 所有的数据改变, 都有自己的一把锁.
 @propertyWrapper
 @dynamicMemberLookup
 final class Protected<T> {
@@ -140,7 +144,8 @@ extension Protected where T: RangeReplaceableCollection {
     ///
     /// - Parameter newElement: The `Element` to append.
     func append(_ newElement: T.Element) {
-        write { (ward: inout T) in
+        write {
+            (ward: inout T) in
             ward.append(newElement)
         }
     }
@@ -149,7 +154,8 @@ extension Protected where T: RangeReplaceableCollection {
     ///
     /// - Parameter newElements: The `Sequence` to append.
     func append<S: Sequence>(contentsOf newElements: S) where S.Element == T.Element {
-        write { (ward: inout T) in
+        write {
+            (ward: inout T) in
             ward.append(contentsOf: newElements)
         }
     }
@@ -158,7 +164,8 @@ extension Protected where T: RangeReplaceableCollection {
     ///
     /// - Parameter newElements: The `Collection` to append.
     func append<C: Collection>(contentsOf newElements: C) where C.Element == T.Element {
-        write { (ward: inout T) in
+        write {
+            (ward: inout T) in
             ward.append(contentsOf: newElements)
         }
     }
@@ -169,7 +176,8 @@ extension Protected where T == Data? {
     ///
     /// - Parameter data: The `Data` to be appended.
     func append(_ data: Data) {
-        write { (ward: inout T) in
+        write {
+            (ward: inout T) in
             ward?.append(data)
         }
     }

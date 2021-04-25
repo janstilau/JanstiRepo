@@ -346,7 +346,8 @@ public final class URLEncodedFormEncoder {
             throw Error.invalidRootObject("\(component)")
         }
         
-        let serializer = URLEncodedFormSerializer(alphabetizeKeyValuePairs: alphabetizeKeyValuePairs,
+        let serializer = URLEncodedFormSerializer(alphabetizeKeyValuePairs:
+                                                    alphabetizeKeyValuePairs,
                                                   arrayEncoding: arrayEncoding,
                                                   keyEncoding: keyEncoding,
                                                   spaceEncoding: spaceEncoding,
@@ -356,10 +357,10 @@ public final class URLEncodedFormEncoder {
         return query
     }
     
-    // 将 Value 序列化成为二进制 Data. 
+    // 将 Value 序列化成为二进制 Data.
+    // 实际上, 就是先变为字符串, 然后字符串在 UTF8 编码
     public func encode(_ value: Encodable) throws -> Data {
         let string: String = try encode(value)
-        
         return Data(string.utf8)
     }
 }
@@ -424,6 +425,7 @@ final class URLEncodedFormContext {
 }
 
 enum URLEncodedFormComponent {
+    
     typealias Object = [(key: String, value: URLEncodedFormComponent)]
     
     case string(String)
