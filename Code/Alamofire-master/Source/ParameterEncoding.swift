@@ -1,6 +1,7 @@
 import Foundation
 
 // 这个类, 就是最初始的 NSDict 参数的序列化方案
+// 这类, 被作用建议多多使用, 上面的建立在 Encoder 基础上的实在是太复杂了.
 public typealias Parameters = [String: Any]
 
 /// A type used to define how a set of parameters are applied to a `URLRequest`.

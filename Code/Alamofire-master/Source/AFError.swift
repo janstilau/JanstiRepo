@@ -68,6 +68,9 @@ public enum AFError: Error {
         case encoderFailed(error: Error)
     }
     
+    // Fail Reason 专门让一个类型进行包装.
+    // 而这个类型, 又是别的 Enum 里面的关联值.
+    // 这里又体现了 Enum 的好处, 就是 Type 唯一性, 不会出现值乘积数量的可能性.
     /// The underlying reason the `.responseValidationFailed` error occurred.
     public enum ResponseValidationFailureReason {
         /// The data file containing the server response did not exist.
