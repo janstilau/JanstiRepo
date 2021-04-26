@@ -166,7 +166,8 @@ extension DownloadResponseSerializerProtocol where Self: DataResponseSerializerP
 }
 
 // MARK: - Default
-
+// DateRequest 的方法, response, 添加一个网络请求完成之后的回调.
+// Swift 的命名, 和 OC 有了很大的不同.
 extension DataRequest {
     /// Adds a handler to be called once the request has finished.
     ///

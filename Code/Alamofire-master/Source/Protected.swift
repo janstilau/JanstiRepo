@@ -125,7 +125,7 @@ final class Protected<T> {
 
     /// Synchronously modify the protected value.
     ///
-    /// - Parameter closure: The closure to execute.
+    /// - Parameter  closure: The closure to execute.
     ///
     /// - Returns:           The modified value.
     @discardableResult
