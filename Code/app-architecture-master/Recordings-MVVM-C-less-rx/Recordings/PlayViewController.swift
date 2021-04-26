@@ -38,6 +38,10 @@ class PlayViewController: UIViewController, UITextFieldDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		observations = [
+			/*
+			ViewModel 的职责之一, 通知 View 数据发生了改变
+			ViewModel 的职责之二, View 直接通过 ViewModel 获取应该显示的数据.
+			*/
 			viewModel.bind(\.navigationTitle, to: navigationItem, at: \.title),
 			viewModel.bind(\.hasRecording, to: noRecordingLabel, at: \.isHidden),
 			viewModel.bind(\.noRecording, to: activeItemElements, at: \.isHidden),
