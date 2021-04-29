@@ -126,6 +126,7 @@ public:
     virtual void callOutInterfaceDisconnected() = 0;
 };
 
+// 这个类, 应该充当的是, 共享数据的作用.
 class QFutureInterfaceBasePrivate
 {
 public:
@@ -158,22 +159,60 @@ public:
     // T: accessed from executing thread
     // Q: accessed from the waiting/querying thread
     RefCount refCount;
+
     mutable QMutex m_mutex;
     QWaitCondition waitCondition;
-    QList<QFutureCallOutInterface *> outputConnections;
+    /*
+     * 上面的这两个值, 应该就是线程同步所使用的两个锁和条件变量.
+     */
+
+    QRunnable *runnable;
+    QThreadPool *m_pool;
+    /*
+     * 上面的这两个值, 就是真正的异步操作任务的包装.
+     */
+
+    QAtomicInt state; // reads and writes can happen unprotected, both must be atomic
+    /*
+     * 表示任务的当前状态, 类的内部, 应该正确的维护该值. 各种函数操作, 以 state 值作为操作的起始的判断依据.
+     */
+
     int m_progressValue; // TQ
     int m_progressMinimum; // TQ
     int m_progressMaximum; // TQ
-    QAtomicInt state; // reads and writes can happen unprotected, both must be atomic
+    int m_expectedResultCount;
+    /*
+     * Qt 自己设计的进度管理相关的数据.
+     */
+
+    QtPrivate::ResultStoreBase m_results;
+    /*
+     * 真正的 Result 值存储的位置. 当产生了数据之后, 应该改变里面的内容, 然后进行 report 操作.
+     * 其他线程, 可以 waitForIndex, 这样, 可以逐步的产生数据, 逐步的唤起其他线程.
+     */
+
+    QtPrivate::ExceptionStore m_exceptionStore;
+    /*
+     * 异常存储, 各种 get value 的操作, 首先会进行异常的验证. 如果已经产生了异常, 直接进行 raise 处理.
+     */
+
     QElapsedTimer progressTime;
     QWaitCondition pausedWaitCondition;
-    QtPrivate::ResultStoreBase m_results;
     bool manualProgress; // only accessed from executing thread
-    int m_expectedResultCount;
-    QtPrivate::ExceptionStore m_exceptionStore;
     QString m_progressText;
-    QRunnable *runnable;
-    QThreadPool *m_pool;
+
+
+    QList<QFutureCallOutInterface *> outputConnections;
+
+    /*
+     * 整个 QFutureInterfaceBasePrivate 就是一个大的状态管理设计.
+     * 在这个设计里面, 将异步结果进行存储, 异常结果进行了存储.
+     * 将异步控制的 锁, 条件变量等信息进行了存储.
+     *
+     * 各 Future 类, 仅仅是
+     */
+
+
 
     inline QThreadPool *pool() const
     { return m_pool ? m_pool : QThreadPool::globalInstance(); }

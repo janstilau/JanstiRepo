@@ -358,12 +358,10 @@ bool QThreadPool::tryTake(QRunnable *runnable)
 void QThreadPoolPrivate::stealAndRunRunnable(QRunnable *runnable)
 {
     Q_Q(QThreadPool);
-    if (!q->tryTake(runnable))
-        return;
+    if (!q->tryTake(runnable)) { return; }
+
     const bool del = runnable->autoDelete() && !runnable->ref; // tryTake already deref'ed
-
     runnable->run();
-
     if (del) {
         delete runnable;
     }

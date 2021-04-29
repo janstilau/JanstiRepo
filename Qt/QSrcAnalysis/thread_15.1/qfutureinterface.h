@@ -137,6 +137,7 @@ public:
 #ifndef QFUTURE_TEST
 private:
 #endif
+    // 真正的数据部分, 这个部分是共享给各个 Future 对象的.
     QFutureInterfaceBasePrivate *d;
 
 private:
@@ -242,6 +243,10 @@ inline void QFutureInterface<T>::reportFinished(const T *result)
     QFutureInterfaceBase::reportFinished();
 }
 
+/*
+ * 取结果. 调用该函数, 也就确保了 index 位置应该有已经准备好的 T 的值.
+ * 在此之前, 应该调用 wait 函数.
+ */
 template <typename T>
 inline const T &QFutureInterface<T>::resultReference(int index) const
 {
