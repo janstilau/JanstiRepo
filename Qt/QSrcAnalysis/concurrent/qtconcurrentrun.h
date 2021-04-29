@@ -11,13 +11,6 @@
 
 QT_BEGIN_NAMESPACE
 
-
-// QFutureInterface<T> 是 Future 的真正实现部分, Future 共享 QFutureInterface 来达到多线程, 多个位置共享数据的目的.
-// std::future 应该和 QFuture 对标
-// std::task_packge 应该和 RunFunctionTaskBase 对标, 都是对于可调用对象的封装
-// std::promise 在 Qt 里面没有对应的类, 不过, 它应该是提供了某个机制, 让 future 实际的数据可以发生改变. 所以可以传递给子线程, 来做 future 的 setValue 操作.
-// std::async 函数, 应该就像 Qt::run 函数一样, 利用上面的几个类, 来完成异步任务这个概念的实际实现.
-
 /*
 QtConcurrent::run(QThreadPool::globalInstance(), function, ...);
 
@@ -29,11 +22,13 @@ T is the same type as the return value of function. Non-void return values can b
 这个模板, 基本就是 std::async 的 Qt 版本的实现, 可以用这里的实现, 去理解 std 的实现.
 
 后面的代码过于繁琐, 主要是类成员函数, 异常, 无异常, const, 非 const, 等等细节太多.
-不过总之就是生成了各种 taskWrapper, 这一层的 taskWrapper 的主要工作是, 存储可调用对象, 以及可调用对象的传入参数.
+不过总之就是生成了各种 taskWrapper:
+ 一层的 taskWrapper 的主要工作是, 存储可调用对象, 以及可调用对象的传入参数.
 
 并且重写 void runFunctor() override 方法, runfunctor 是 run 方法的一环, 在这个方法里面, 会将存储的数据, 传入存储的操作中, 进行任务的真正调用.
 
-而 runFunctor 什么时候调用, result 被设值之后如何使用, 是 RunFunctionTask 这一层的事情.
+所有的 warpper, 都继承自 RunFunctionTask 这个类. 在这个类里面, 重载了 run 方法.
+run 方法会进行 Future 状态的更改, 然后将自己提交到 Pool 里面, 在 Run 方法里面, 调用 runFunctor, 并且将 runFunctor 的异常, 或者返回值, 设置到自己的 result 里面.
 
 qtconcurrentrun.h, qtconcurrentstoredfunctioncall.h
 这两文件里面, run 模板函数的设计, 以及背后的各个模板类的设计, 就是为了提供一个简单使用的 run 接口而已, 将各种可调用对象:
@@ -41,13 +36,13 @@ qtconcurrentrun.h, qtconcurrentstoredfunctioncall.h
 
 模板这个技术, 提供了非常通用的接口, 而这个接口的上层, 也应该屏蔽各种类型实现的细节, 使用抽象进行任务的管理.
 那么这个通用接口, 就需要去面对这种封装的复杂性.
-函数可以自动推到出类型来, 然后将这些类型, 封装成接口对象. 一般来说, 这是一个通用接口的处理逻辑. 这层抽象, 是通用接口所服务的高层算法所要求的抽象, 属于高层.
+函数可以自动推到出类型来, 然后将这些类型, 封装成接口对象. 一般来说, 这是一个通用接口的处理逻辑.
 */
 
 
 // 对外的接口, 仅仅是一个 run 方法, 这个方法接受一个 invokable 参数, 以及后面的参数. 如果有 return value, 那么就可以通过 future 来进行获取.
-// 而实际上, 有这么多个模板来支持这个功能.
-
+// 而实际上, 有多少种调用对象, 这里就需要有多少种函数重载.
+// 这些函数重载, 起到了泛型里面, 类型确认的作用.
 
 // 这些方法, 返回一个 task_package 对象, 是 new 出来的, 也就是说, 是需要内存管理的.
 // 在这个对象内部, 会有 future 对象, 进行线程之间的同步处理.

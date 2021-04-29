@@ -13,8 +13,9 @@ QT_BEGIN_NAMESPACE
 #ifndef Q_QDOC
 
 // 利用, qtconcurrentrun.h 中定义的函数模板, 生成相应类型的对象.
-// 而这些对象, 都是实现了 RunFunctionTask 的具体实现.
-// 通用的逻辑是, 存储函数模板传递过来的 可调用对象, 各个参数, 然后在 runFunctor()  进行真正的调用.
+// 而这些对象, 都是 RunFunctionTask 的子类.
+// 通用的逻辑是, 存储可调用对象, 以及各个参数, 然后在 runFunctor()  进行真正的调用.
+// 这也就是为什么, API 里面, 会有引用传递相关 API 的设计了. 因为这里有着值的拷贝相关的操作.
 
 namespace QtConcurrent {
 

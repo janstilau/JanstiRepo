@@ -16966,6 +16966,8 @@ extension Text {
     ///
     /// - Parameter font: The font to use when displaying this text.
     /// - Returns: Text that uses the font you specify.
+    // 如果是作用到 Text 上, 这个值, 应该是直接作用到了 Text 上.
+    // 如果是作用到 View 上, 这个值, 应该是设置到了 Environment 上.
     public func font(_ font: Font?) -> Text
 
     /// Sets the font weight of the text.
@@ -20031,11 +20033,11 @@ extension View {
 
 }
 
+// 将, background 参数, 作为当前 View 的背景.
+// 新创建一个 View 来完成这个事情.
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 extension View {
-
     @inlinable public func background<Background>(_ background: Background, alignment: Alignment = .center) -> some View where Background : View
-
 }
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
@@ -22065,6 +22067,7 @@ extension View {
     /// Use ``SwiftUI/View/frame(width:height:alignment:)`` or
     /// ``SwiftUI/View/frame(minWidth:idealWidth:maxWidth:minHeight:idealHeight:maxHeight:alignment:)``
     /// instead.
+    // 这个 Frame, 是放置位置
     @available(*, deprecated, message: "Please pass one or more parameters.")
     @inlinable public func frame() -> some View
 
