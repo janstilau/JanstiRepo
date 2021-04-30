@@ -48,6 +48,10 @@
 
 #pragma mark - misc
 
+/*
+ 异步函数, 想要单元测试, 就使用 expectation 就好了.
+ 它的原理, 其实就是 runloop 卡住了后面的逻辑继续向后运行, 超时, 或者 expectation fulfill 都是 runloop 结束运行的标志.
+ */
 - (void)testThatOperationInvokesCompletionHandlerWithResponseObjectOnSuccess {
     __block id blockResponseObject = nil;
     __block id blockError = nil;

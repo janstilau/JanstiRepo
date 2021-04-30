@@ -1,5 +1,9 @@
 import Foundation
 
+/*
+ 在 Request 的作用域, 定义 NotificationName. 就如同我们在自己的业务类的文件里面, 定义 String 类型的 Notification Name.
+ 将常量, 封装到特定的作用域范围里面.
+ */
 extension Request {
     /// Posted when a `Request` is resumed. The `Notification` contains the resumed `Request`.
     public static let didResumeNotification = Notification.Name(rawValue: "org.alamofire.notification.name.request.didResume")
@@ -22,6 +26,8 @@ extension Request {
 
 // MARK: -
 
+// 还是利用 Notification 的 userinfo 做文章.
+// userinfo 是可以无类型信息的容器, 这里, 类似于计算属性的概念.
 extension Notification {
     /// The `Request` contained by the instance's `userInfo`, `nil` otherwise.
     public var request: Request? {
@@ -38,6 +44,7 @@ extension Notification {
     }
 }
 
+// 给 Center 添加一个快捷方法, 这个快捷方法, 专门是和自己 Scope 的 Request 进行配合使用
 extension NotificationCenter {
     /// Convenience function for posting notifications with `Request` payloads.
     ///
@@ -50,6 +57,7 @@ extension NotificationCenter {
     }
 }
 
+// 什么时候, 应该用作业务类型的常量, 什么时候, 应该用作 Type 的常量. 这一点还没有搞清楚.
 extension String {
     /// User info dictionary key representing the `Request` associated with the notification.
     fileprivate static let requestKey = "org.alamofire.notification.key.request"

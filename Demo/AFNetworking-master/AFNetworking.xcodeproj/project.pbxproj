@@ -374,15 +374,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		065515F92354C10D0053CA2F /* Done */ = {
-			isa = PBXGroup;
-			children = (
-				299522461BBF125A00859F49 /* AFHTTPSessionManager.h */,
-				299522471BBF125A00859F49 /* AFHTTPSessionManager.m */,
-			);
-			path = Done;
-			sourceTree = "<group>";
-		};
 		298D7C561BC2C88F00FD3B3E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -450,19 +441,19 @@
 		298D7CD11BC2CABE00FD3B3E /* AFNetworking Tests */ = {
 			isa = PBXGroup;
 			children = (
+				29D3413E1C20D46400A7D266 /* AFCompoundResponseSerializerTests.m */,
 				298D7C811BC2C88F00FD3B3E /* AFHTTPRequestSerializationTests.m */,
 				298D7C821BC2C88F00FD3B3E /* AFHTTPResponseSerializationTests.m */,
 				298D7C831BC2C88F00FD3B3E /* AFHTTPSessionManagerTests.m */,
-				298D7C851BC2C88F00FD3B3E /* AFJSONSerializationTests.m */,
-				2D45638F1DB1179D00AE4812 /* AFXMLParserResponseSerializerTests.m */,
-				2D4563931DB11DDB00AE4812 /* AFXMLDocumentResponseSerializerTests.m */,
-				298D7C881BC2C88F00FD3B3E /* AFPropertyListResponseSerializerTests.m */,
-				E91164641DA6A7AE00DFFF56 /* AFPropertyListRequestSerializerTests.m */,
-				29D3413E1C20D46400A7D266 /* AFCompoundResponseSerializerTests.m */,
 				1BF9F95F1C87832B00F1F35A /* AFImageResponseSerializerTests.m */,
+				298D7C851BC2C88F00FD3B3E /* AFJSONSerializationTests.m */,
 				298D7C871BC2C88F00FD3B3E /* AFNetworkReachabilityManagerTests.m */,
+				E91164641DA6A7AE00DFFF56 /* AFPropertyListRequestSerializerTests.m */,
+				298D7C881BC2C88F00FD3B3E /* AFPropertyListResponseSerializerTests.m */,
 				298D7C891BC2C88F00FD3B3E /* AFSecurityPolicyTests.m */,
 				298D7C8F1BC2C88F00FD3B3E /* AFURLSessionManagerTests.m */,
+				2D4563931DB11DDB00AE4812 /* AFXMLDocumentResponseSerializerTests.m */,
+				2D45638F1DB1179D00AE4812 /* AFXMLParserResponseSerializerTests.m */,
 			);
 			name = "AFNetworking Tests";
 			sourceTree = "<group>";
@@ -523,7 +514,6 @@
 		299522451BBF125A00859F49 /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
-				065515F92354C10D0053CA2F /* Done */,
 				1F083A4920364648004D80C7 /* AFCompatibilityMacros.h */,
 				299522491BBF125A00859F49 /* AFNetworkReachabilityManager.h */,
 				2995224A1BBF125A00859F49 /* AFNetworkReachabilityManager.m */,
@@ -535,6 +525,8 @@
 				299522501BBF125A00859F49 /* AFURLResponseSerialization.m */,
 				299522511BBF125A00859F49 /* AFURLSessionManager.h */,
 				299522521BBF125A00859F49 /* AFURLSessionManager.m */,
+				299522461BBF125A00859F49 /* AFHTTPSessionManager.h */,
+				299522471BBF125A00859F49 /* AFHTTPSessionManager.m */,
 			);
 			path = AFNetworking;
 			sourceTree = "<group>";
