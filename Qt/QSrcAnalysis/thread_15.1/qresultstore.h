@@ -91,6 +91,8 @@ protected:
     QMap<int, ResultItem>::const_iterator mapIterator;
     int m_vectorIndex;
 public:
+
+    //
     template <typename T>
     const T &value() const
     {

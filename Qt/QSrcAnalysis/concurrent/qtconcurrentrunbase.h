@@ -32,7 +32,7 @@ struct SelectSpecialization<void>
 };
 
 
-// QFutureInterface<T> 是 Future 的真正实现部分, Future 共享 QFutureInterface 来达到多线程, 多个位置共享数据的目的.
+// QFutureInterface<T> 是 Future 的真正实现部分, Future 共享 QFutureInterface 里面的数据来达到多线程, 多个位置共享数据的目的.
 // std::future 应该和 QFuture 对标
 // std::task_packge 应该和 RunFunctionTaskBase 对标, 都是对于可调用对象的封装
 // std::promise 在 Qt 里面没有对应的类, 不过, 它应该是提供了某个机制, 让 future 实际的数据可以发生改变. 所以可以传递给子线程, 来做 future 的 setValue 操作.
@@ -41,6 +41,7 @@ struct SelectSpecialization<void>
 
 // RunFunctionTaskBase 的主要责任是, 将自己所表示的异步任务, 添加到异步任务管理器里面.
 // 这里, 使用的是 QThreadPool::globalInstance 作为线程池.
+// 这个类, 本身就是 QFutureInterface<T> 的子类, 也就是说, 这个类, 本身就带有共享状态的控制.
 template <typename T>
 class RunFunctionTaskBase : public QFutureInterface<T> , public QRunnable
 {
@@ -51,7 +52,9 @@ public:
         return start(QThreadPool::globalInstance());
     }
 
-    // start 返回自己存储的 future 对象.
+    // 模板方法
+    // 固定的流程, 调用 QFuture 里面的方法.
+    // 然后将自己, 添加到 Pool 里面.
     QFuture<T> start(QThreadPool *pool)
     {
         // 这里, 使用了 QFutureInterface 的方法, 来做线程之间的通信.
@@ -71,6 +74,17 @@ public:
     virtual void runFunctor() = 0;
 };
 
+
+/*
+ * 真正的 Run 过程.
+ * 在这个过程里面, 是对于 Future 状态改变.
+ * 在执行后, 或者捕捉异常后, 进行 Future 的状态的设置.
+ * 里面的可扩展点, 就是 runFunctor(). runFunctor() 里面, 是各业务代码执行自己逻辑的地方.
+ * 例如,
+ * 传入一个 void 可调用对象, 调用这个可调用对象.
+ * 传入有返回值的可调用对象, 调用这个可调用对象, 并且将结果, set 到 future 里面.
+ * 最终进行 future 的 finish 状态的设置.
+ */
 template <typename T>
 class RunFunctionTask : public RunFunctionTaskBase<T>
 {
@@ -79,10 +93,12 @@ public:
     void run() override
     {
         // 作为一个异步任务, 应该提供取消这个操作.
+        // 这里和 Operation 一样, 主动的取消, 也是认为是 Finish 的状态.
         if (this->isCanceled()) {
             this->reportFinished();
             return;
         }
+
         // 在调用 this->runFunctor(); 的周围, 包裹着对于异常的处理.
         // 如果发生了异常, 就把异常存储在 future 的内部. 以便异步获取.
         try {
@@ -120,6 +136,7 @@ public:
         } catch (...) {
             QFutureInterface<void>::reportException(QUnhandledException());
         }
+        // 如果, 调用 Future 的人, 没有传入有返回值的可调用对象, 那么调用者也不改调用 result 相关的函数, 而应该调用 wait 函数.
         this->reportFinished();
     }
 };

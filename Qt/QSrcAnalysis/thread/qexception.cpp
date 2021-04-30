@@ -169,6 +169,12 @@ ExceptionHolder ExceptionStore::exception()
     return exceptionHolder;
 }
 
+/*
+ * 如果, 已经发生了异常. 这个异常一定是在异步线程发生的, 在异步线程里面, 调用真正的方法体, 捕获异常, 然后存储到了共享的数据空间.
+ * throwPossibleException 会在 waitForResult 中调用.
+ * 如果发生了异常, 那么直接抛出异常.
+ * 如果没有, 那么就进行状态的验证, 如果没有 ready, 就进行线程的等待.
+ */
 void ExceptionStore::throwPossibleException()
 {
     if (hasException() ) {

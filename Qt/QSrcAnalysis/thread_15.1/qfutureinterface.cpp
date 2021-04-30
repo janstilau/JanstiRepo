@@ -155,6 +155,10 @@ void QFutureInterfaceBase::setThrottled(bool enable)
 }
 
 
+/*
+ * 给外界提供各种方便的接口, 内部的状态验证仅仅是实现的细节.
+ */
+
 bool QFutureInterfaceBase::isRunning() const
 {
     return queryState(Running);
@@ -314,21 +318,29 @@ void QFutureInterfaceBase::waitForResult(int resultIndex)
 {
     d->m_exceptionStore.throwPossibleException();
 
+    // 锁仅仅锁住需要的部分.
     QMutexLocker lock(&d->m_mutex);
-    if (!isRunning())
-        return;
+    if (!isRunning()) { return; }
     lock.unlock();
 
-    // To avoid deadlocks and reduce the number of threads used, try to
-    // run the runnable in the current thread.
+
+    // stealAndRunRunnable 会将任务提前, 不必在线程池里面排队.
+    // 因为 wait 到了这里, 就代表着有线程想要知道结果, 也就应该将优先级调到最高.
     d->pool()->d_func()->stealAndRunRunnable(d->runnable);
 
     lock.relock();
 
+    /*
+     * wait 仅仅是一次性的停止.
+     * 但是 Qt 里面, 是一组值共用一个 condition, 也就是会出现, 不是自己的结果产生时, 唤醒的操作.
+     * 所以, 这里需要一个 while 循环. 这是 condition_value 使用的经典的场景.
+     * 在其中, 会根据
+     */
     const int waitIndex = (resultIndex == -1) ? INT_MAX : resultIndex;
     while (isRunning() && !d->internal_isResultReadyAt(waitIndex))
         d->waitCondition.wait(&d->m_mutex);
 
+    // 在自己的结果产生了之后, 有可能是捕获到了异常, 有可能是真的有值产生了. 所以这里再次进行异常的尝试抛出.
     d->m_exceptionStore.throwPossibleException();
 }
 
@@ -343,6 +355,7 @@ void QFutureInterfaceBase::waitForFinished()
 
         lock.relock();
 
+        // waitForFinished 的状态验证, 就是如果还在运行, 就继续 wait 下去
         while (isRunning())
             d->waitCondition.wait(&d->m_mutex);
     }
@@ -350,6 +363,9 @@ void QFutureInterfaceBase::waitForFinished()
     d->m_exceptionStore.throwPossibleException();
 }
 
+
+// 在共享状态的值改变之后, 进行相应的唤起操作.
+// 就是调用 condition_value 的 broadcast 方法.
 void QFutureInterfaceBase::reportResultsReady(int beginIndex, int endIndex)
 {
     if (beginIndex == endIndex || (d->state.loadRelaxed() & (Canceled|Finished)))
@@ -449,6 +465,10 @@ const QtPrivate::ResultStoreBase &QFutureInterfaceBase::resultStoreBase() const
     return d->m_results;
 }
 
+/*
+ * 赋值操作符, 仅仅是做指针的拷贝操作. 也就是, 数据是共享的.
+ * 这样才能够做到, result 产生了之后, codition 的唤醒是有效的. 因为各个线程, 访问的是同一个 Condition_value.
+ */
 QFutureInterfaceBase &QFutureInterfaceBase::operator=(const QFutureInterfaceBase &other)
 {
     other.d->refCount.ref();
