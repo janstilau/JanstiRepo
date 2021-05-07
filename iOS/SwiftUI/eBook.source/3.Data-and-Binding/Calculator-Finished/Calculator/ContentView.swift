@@ -14,15 +14,16 @@ let scale = UIScreen.main.bounds.width / 414
 struct ContentView : View {
 
     @EnvironmentObject var model: CalculatorModel
-
     @State private var editingHistory = false
-
+    
     var body: some View {
         VStack(spacing: 12) {
             Spacer()
             Button("操作履历: \(model.history.count)") {
                 self.editingHistory = true
             }.sheet(isPresented: self.$editingHistory) {
+                // 这里, 没有设置 editingHistory = false 的操作.
+                // 当用户使用手势, 关闭 HistoryView 的时候, 会将这个 binding 的值, 设置为 false.
                 HistoryView(model: self.model)
             }
 
@@ -51,6 +52,9 @@ struct ContentView_Previews : PreviewProvider {
     }
 }
 
+/*
+ CalculatorButton
+ */
 struct CalculatorButton : View {
 
     let fontSize: CGFloat = 38
@@ -84,6 +88,9 @@ struct CalculatorButtonRow : View {
                     backgroundColorName: item.backgroundColorName,
                     foregroundColor: item.foregroundColor)
                 {
+                    // 这里是 Button 的 Action.
+                    // 当 Button 被点击之后, 将 Button 的 Item 传递到最终的数据里面进行操作.
+                    // 当, 没有使用 EnvironmentObject 之前, 在创建 CalculatorButtonRow 的时候, 需要将 Model 逐层的传递下来.
                     self.model.apply(item)
                 }
             }
@@ -114,6 +121,7 @@ struct HistoryView: View {
     @ObservedObject var model: CalculatorModel
     var body: some View {
         VStack {
+            // ConditionView 会在这里生成.
             if model.totalCount == 0 {
                 Text("没有履历")
             } else {
@@ -125,6 +133,13 @@ struct HistoryView: View {
                     Text("显示").font(.headline)
                     Text("\(model.brain.output)")
                 }
+                // 这里, 直接通过 $model.slidingIndex, 将 View 层的数据, 和 Model 层的数据, 进行了绑定.
+                /*
+                    Slider
+                    最主要的特点是接受一个 Binding 值来显示当前滑动值
+                    用户通过滑动操作 的设置的新值，也通过 Binding 反过来设定被包装的底层变量。
+                    在这里， $model.slidingIndex 作为 Binding 被绑定到了控件上。用户的滑动操作将直 接设定 slidingIndex，并触发它的 didSet。
+                */
                 Slider(value: $model.slidingIndex, in: 0...Float(model.totalCount), step: 1)
             }
         }.padding()

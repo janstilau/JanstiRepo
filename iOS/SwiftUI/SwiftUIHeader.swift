@@ -11528,6 +11528,12 @@ public protocol NavigationViewStyle {
 
 /// A property wrapper type that subscribes to an observable object and
 /// invalidates a view whenever the observable object changes.
+/*
+这是在 View 里面使用的一个属性包装器, 对应的类型, 应该是 ObservableObject
+ObservableObject 对象, 会在自己的数据发生改变的时候, 发送通知.
+ObservedObject 这个, 则会订阅到这个通知. 
+这样, View 里面, 使用 ObservedObject 构建起来的 View, 就是在 Model 发生改变的时候, 得到通知, 及时的对自己的 View 进行更新操作.
+*/
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 @propertyWrapper @frozen public struct ObservedObject<ObjectType> : DynamicProperty where ObjectType : ObservableObject {
 
@@ -19116,6 +19122,12 @@ extension VerticalAlignment {
     public static let lastTextBaseline: VerticalAlignment
 }
 
+/*
+    SwiftUI 里面的 View, 更像是一个工厂.
+    它的主要作用, 就是提供一个 var body: some View  的属性, 通过这个属性, 来返回一个真正的 视图, 这个视图是和当前工厂的各个属性相关的.
+
+    和 UIKit 不同的是, SwiftUI 里面, View 的实现者每一次都生成一个新的视图对象, 而 UIKit 里面, 各个属性是设置到 self 上, self 进行重绘来应对数据的变化.
+*/
 /// A type that represents part of your app's user interface and provides
 /// modifiers that you use to configure views.
 ///
@@ -19301,7 +19313,6 @@ extension View {
     ///   - onDismiss: The closure to execute when dismissing the sheet.
     ///   - content: A closure that returns the content of the sheet.
     public func sheet<Content>(isPresented: Binding<Bool>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping () -> Content) -> some View where Content : View
-
 }
 
 @available(iOS 14.0, tvOS 14.0, watchOS 7.0, *)
