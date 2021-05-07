@@ -34,6 +34,7 @@ extension Ability {
     }
 }
 
+// 为类型, 添加相对应的 static 方法, 那么在使用到对象的时候, 可以直接使用 .sample 来调用这些静态方法.
 extension PokemonViewModel {
     static var all: [PokemonViewModel] = {
         (1...30).map { id in
