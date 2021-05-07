@@ -10,6 +10,7 @@ import Foundation
 
 enum FileHelper {
 
+    // 根据返回值的类型, 来确定泛型函数里面 T 的具体类型.
     static func loadBundledJSON<T: Decodable>(file: String) -> T {
         guard let url = Bundle.main.url(forResource: file, withExtension: "json") else {
             fatalError("Resource not found: \(file)")
@@ -31,6 +32,7 @@ enum FileHelper {
         return try loadJSON(from: url.appendingPathComponent(fileName))
     }
 
+    
     static func writeJSON<T: Encodable>(_ value: T, to url: URL) throws {
         let data = try appEncoder.encode(value)
         try data.write(to: url)

@@ -8,6 +8,8 @@
 
 import Foundation
 
+// 当, 各种工具小方法完成之后, 剩下的就是将这些小方法进行组装配合, 完成更加面向业务的方法的构建.
+
 #if DEBUG
 
 extension Pokemon {
@@ -26,7 +28,7 @@ extension Ability {
     static func sample(url: URL) -> Ability {
         sample(id: url.extractedID!)
     }
-
+    
     static func sample(id: Int) -> Ability {
         return FileHelper.loadBundledJSON(file: "ability-\(id)")
     }
@@ -40,13 +42,13 @@ extension PokemonViewModel {
             return PokemonViewModel(pokemon: pokemon, species: species)
         }
     }()
-
+    
     static let samples: [PokemonViewModel] = [
         sample(id: 1),
         sample(id: 2),
         sample(id: 3),
     ]
-
+    
     static func sample(id: Int) -> PokemonViewModel {
         let pokemon = Pokemon.sample(id: id)
         let species = PokemonSpecies.sample(url: pokemon.species.url)
@@ -61,4 +63,5 @@ extension AbilityViewModel {
         }
     }
 }
+
 #endif
