@@ -13,6 +13,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    /*
+     可能一开始你会认为 @EnvironmentObject 和 “臭名昭著” 的单例很像:只要我们在 View 的层级上，不论何处都可以访问到这个环境对象。看似这会带来状态管理上的 困难和混乱，但是 Swift 提供了清晰的状态变更和界面刷新的循环，如果我们能选择
+     正确的设计和架构模式，完全可以避免这种风险。使用 @EnvironmentObject 带来 很大的便捷性，也避免了大量不必要的属性传递，这会为之后代码变更带来更多的好处。
+     这种全局环境变量的获取, 使用的时候, 是要经过设计的.
+     */
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -23,7 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             window.rootViewController = UIHostingController(rootView: ContentView()
-                .environmentObject(CalculatorModel()))
+                                                                .environmentObject(CalculatorModel()))
 
             self.window = window
             window.makeKeyAndVisible()

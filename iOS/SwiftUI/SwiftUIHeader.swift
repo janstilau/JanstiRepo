@@ -5774,6 +5774,8 @@ public protocol EnvironmentKey {
     static var defaultValue: Self.Value { get }
 }
 
+
+
 /// A property wrapper type for an observable object supplied by a parent or
 /// ancestor view.
 ///
@@ -24773,7 +24775,6 @@ extension View {
     /// - Parameter object: the object to store and make available to
     ///     the view's subhierarchy.
     @inlinable public func environmentObject<T>(_ object: T) -> some View where T : ObservableObject
-
 }
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
