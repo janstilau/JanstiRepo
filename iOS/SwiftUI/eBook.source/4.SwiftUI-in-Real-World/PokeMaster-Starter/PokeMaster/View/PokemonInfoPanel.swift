@@ -12,6 +12,7 @@ struct PokemonInfoPanel: View {
     
     let model: PokemonViewModel
     
+    // 计算属性. 真正的数据, 就是 PokemonViewModel 而已.
     var abilities: [AbilityViewModel] {
         AbilityViewModel.sample(pokemonID: model.id)
     }
@@ -23,21 +24,36 @@ struct PokemonInfoPanel: View {
             .opacity(0.2)
     }
     
+    var pokemonDescription: some View {
+        Text(model.descriptionText)
+            .font(.callout)
+            .foregroundColor(Color(hex: 0x666666))
+            .fixedSize(horizontal: false, vertical: true)
+    }
+    
     var body: some View {
         VStack(spacing: 20) {
             topIndicator
+            Header(model: model)
+            pokemonDescription
+            Divider()
+            AbilityList(
+                model: model,
+                abilityModels: abilities
+            )
         }
-    }
-}
-
-extension PokemonInfoPanel {
-    // 对于这种嵌套类型, 可以大大减少前缀的使用.
-    // OC 里面, 习惯了定义顶级类型, 并且以超长前缀来命名, 在 Swift 里面, 要杜绝这种写法.
-    struct Header: View {
-        
-        var body: some View {
-            
-        }
+        .padding(
+            //padding 会把 content 往里面进行压缩.
+            EdgeInsets(
+                top: 12,
+                leading: 30,
+                bottom: 30,
+                trailing: 30
+            )
+        )
+        .blurBackground(style: .systemMaterial)
+        .cornerRadius(20)
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
 
