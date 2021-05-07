@@ -9,7 +9,9 @@
 import SwiftUI
 
 struct PokemonInfoRow: View {
-    let model = PokemonViewModel.sample(id: 1)
+    let model: PokemonViewModel
+    @State var expanded: Bool
+    
     var body: some View {
         VStack {
             /*
@@ -33,12 +35,14 @@ struct PokemonInfoRow: View {
                         .font(.subheadline)
                         .foregroundColor(.white)
                 }
-            }.padding(.top, 12)
+            }.padding(.top, 0)
+            
+            Spacer()
             
             /*
              Swift 的标签的方式, 使得很多闭包看起来像是声明式的写法, 但是其实是闭包. 是需要执行的.
              */
-            HStack(spacing: 20) {
+            HStack(spacing: expanded ? CGFloat(20) : CGFloat(-30)) {
                 Spacer()
                 Button(action: { print("Fav") }) {
                     Image(systemName: "star")
@@ -52,9 +56,12 @@ struct PokemonInfoRow: View {
                     Image(systemName: "info.circle")
                         .modifier(ToolButtonModifier())
                 }
-            }.padding(.bottom, 12)
+            }
+            .padding(.bottom, 12)
+            .opacity(expanded ? 1.0: 0.0)
+            .frame(maxHeight: expanded ? .infinity : CGFloat(0))
         }
-        .frame(height: 120)
+        .frame(height: expanded ? CGFloat(120.0) : CGFloat(80.0))
         .padding(.leading, 23)
         .padding(.trailing, 15)
         .background(
@@ -72,6 +79,15 @@ struct PokemonInfoRow: View {
                     )
             }
         )
+        .onTapGesture {
+            withAnimation(
+                .spring(response: 0.55,
+                        dampingFraction:
+                            0.425, blendDuration: 0))
+            {
+                self.expanded.toggle()
+            }
+        }
     }
 }
 
@@ -92,6 +108,10 @@ struct ToolButtonModifier: ViewModifier {
 
 struct PokemonInfoRow_Previews: PreviewProvider {
     static var previews: some View {
-        PokemonInfoRow()
+        VStack {
+            PokemonInfoRow(model: .sample(id: 1), expanded: false)
+            PokemonInfoRow(model: .sample(id: 21), expanded: true)
+            PokemonInfoRow(model: .sample(id: 25), expanded: false)
+        }
     }
 }
