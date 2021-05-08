@@ -13,7 +13,7 @@ struct PokemonSpecies: Codable {
     struct Color: Codable {
         enum Name: String, Codable {
             case black, blue, brown, gray, green, pink, purple, red, white, yellow
-
+            
             var color: SwiftUI.Color {
                 return SwiftUI.Color("pokemon-\(rawValue)")
             }
@@ -44,6 +44,9 @@ struct PokemonSpecies: Codable {
     }
 
     let color: Color
+    /*
+     之所以, 各种属性是一个数组, 是一位 JSON 文件里面, 各种对应的 value 值, 是多语言版本的.
+     */
     let names: [Name]
     let genera: [Genus]
     let flavorTextEntries: [FlavorTextEntry]

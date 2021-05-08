@@ -8,6 +8,10 @@
 
 import SwiftUI
 
+/*
+ ViewModel 是和 View 强绑定在一起的.
+ 所以, 它里面有多少 DataModel, 有多少属性暴露出去, 其实是和业务强相关的.
+ */
 struct PokemonViewModel: Identifiable, Codable {
 
     var id: Int { pokemon.id }
@@ -20,6 +24,9 @@ struct PokemonViewModel: Identifiable, Codable {
         self.species = species
     }
 
+    // 虽然, ViewModel 里面进行数据到展示的转化. 但是, 通用的部分, 还是写到了 Model 里面.
+    // View Model 是从操作最上层的 Model, 将如何进行值的提取工作, 直接用自己的属性体现出来了.
+    // 这样, View 层就不会出现, Model.property.property.property 这种长链的调用了.
     var color: Color { species.color.name.color }
     var height: String { "\(Double(pokemon.height) / 10)m" }
     var weight: String { "\(Double(pokemon.weight) / 10)kg" }
@@ -29,6 +36,8 @@ struct PokemonViewModel: Identifiable, Codable {
     var genusEN: String { species.genera.EN }
 
     var types: [Type] {
+        // self.pokemon.types 中存储的是原始数据.
+        // Type 是 ViewModel 里面的 Type, 里面的数据部分, 可以从这些原始数据中进行提取. 而 Type 存在的意义, 主要是各种 View 层的显示转化.
         self.pokemon.types
             .sorted { $0.slot < $1.slot }
             .map { Type(pokemonType: $0) }
@@ -53,8 +62,11 @@ extension PokemonViewModel: CustomStringConvertible {
 }
 
 extension PokemonViewModel {
+    
+    
     struct `Type`: Identifiable {
 
+        // 对于 Identifiable 的支持.
         var id: String { return name }
 
         let name: String
@@ -65,6 +77,8 @@ extension PokemonViewModel {
             self.color = color
         }
 
+        // 专门定义一个 init 函数用作转化.
+        // 如果是自己去写这个函数, 大部分的逻辑, 还是要写在 init(pokemonType: Pokemon.`Type`) 里面.
         init(pokemonType: Pokemon.`Type`) {
             if let v = TypeInternal(rawValue: pokemonType.type.name)?.value {
                 self = v

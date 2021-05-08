@@ -8,6 +8,9 @@
 
 import Foundation
 
+/*
+ 这里, 是变量名和 JSON Key 值相同了.
+ */
 struct Pokemon: Codable {
 
     struct `Type`: Codable {
@@ -22,6 +25,7 @@ struct Pokemon: Codable {
 
     struct Stat: Codable {
 
+        // 这里, 是用 Case 代替了 String
         enum Case: String, Codable {
             case speed
             case specialDefense = "special-defense"
@@ -33,10 +37,12 @@ struct Pokemon: Codable {
 
         struct Internal: Codable {
             let name: Case
+            // 这里, 没有理会 url 这个 JSON key.
         }
 
-        let baseStat: Int
-        let stat: Internal
+        let baseStat: Int // 数值
+        let stat: Internal // 数据种类. 速度, 攻击, 防御, 血量.
+        // 这里, 没有理会 effort 这个 json key.
     }
 
     struct SpeciesEntry: Codable {
@@ -59,8 +65,8 @@ struct Pokemon: Codable {
     let id: Int
     let types: [Type]
     let abilities: [AbilityEntry]
-    let stats: [Stat]
-    let species: SpeciesEntry
+    let stats: [Stat] // 数据统计
+    let species: SpeciesEntry // 种类.
     let height: Int
     let weight: Int
 }

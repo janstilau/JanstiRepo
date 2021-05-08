@@ -45,6 +45,7 @@ extension String {
     }
 }
 
+// 一个全局的 Coder, 用来做 App 内所有的数据的归档解档的操作.
 let appDecoder: JSONDecoder = {
     let decoder = JSONDecoder()
     decoder.keyDecodingStrategy = .convertFromSnakeCase
