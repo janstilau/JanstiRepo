@@ -12,11 +12,16 @@ import Combine
 let scale = UIScreen.main.bounds.width / 414
 
 struct ContentView : View {
+    
+    @State private var brain: CalculatorBrain = .left("2")
 
     var body: some View {
-        VStack(spacing: 12) {
+        print("Re draw")
+        
+        return
+            VStack(spacing: 12) {
             Spacer()
-            Text("0")
+            Text(brain.output)
                 .font(.system(size: 76))
                 .minimumScaleFactor(0.5)
                 .padding(.trailing, 24 * scale)
@@ -24,9 +29,17 @@ struct ContentView : View {
                     minWidth: 0,
                     maxWidth: .infinity,
                     alignment: .trailing)
-            CalculatorButtonPad()
+            Button("Trigger") {
+                // 必须是对于 State 属性的整体赋值, 才会触发.
+                // 或者是调用到了 mutating 方法.
+                // 不过, 不一定会重新调用到 body 闭包, 如果没有数据改变, 还是没有重绘
+                self.brain.switchState()
+            }
+                CalculatorButtonPad(brain: self.$brain)
                 .padding(.bottom)
         }
+        
+        
     }
 }
 
@@ -62,6 +75,9 @@ struct CalculatorButton : View {
 }
 
 struct CalculatorButtonRow : View {
+    
+    @Binding var brain: CalculatorBrain
+    
     let row: [CalculatorButtonItem]
     var body: some View {
         HStack {
@@ -72,7 +88,8 @@ struct CalculatorButtonRow : View {
                     backgroundColorName: item.backgroundColorName,
                     foregroundColor: item.foregroundColor)
                 {
-                    print("Button: \(item.title)")
+                    // 整体的状态改变, 可以触发 UI 相关的改变.
+                    self.brain = self.brain.apply(item: item)
                 }
             }
         }
@@ -80,6 +97,9 @@ struct CalculatorButtonRow : View {
 }
 
 struct CalculatorButtonPad: View {
+    
+    @Binding var brain: CalculatorBrain
+    
     let pad: [[CalculatorButtonItem]] = [
         [.command(.clear), .command(.flip),
          .command(.percent), .op(.divide)],
@@ -92,7 +112,7 @@ struct CalculatorButtonPad: View {
     var body: some View {
         VStack(spacing: 8) {
             ForEach(pad, id: \.self) { row in
-                CalculatorButtonRow(row: row)
+                CalculatorButtonRow(brain: self.$brain, row: row)
             }
         }
     }
