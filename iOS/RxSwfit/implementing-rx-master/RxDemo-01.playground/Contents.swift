@@ -3,22 +3,20 @@ import Foundation
 // MARK: - Event
 
 enum Event<Element> {
-    case next(Element) // 真实的数据
-    case error(Error) // 产生了错误
-    case completed // 结束的标志.
+    case next(Element) // 一个事件, 带有数据
+    case error(Error) // 出错了, 带有出错信息, publisher 序列结束
+    case completed // 明确的表示完成, publisher 序列结束.
 }
 
 // MARK: - Observer
 
-// 订阅者协议. 该协议的 on 函数, 就是发布数据之后的处理方法.
 protocol ObserverType {
     associatedtype Element
     
-    // 响应事件的发生
-    func on(event: Event<Element>)
+    // 监听事件
+    func on(event: Event<Element>) // 监听以上 enum 代表的三种事件.
 }
 
-// 实际的 ObserverType 接口的实现者. 提供了配置事件发生回调的能力.
 class Observer<Element>: ObserverType {
     
     // 订阅者如何处理事件的闭包
@@ -37,17 +35,18 @@ class Observer<Element>: ObserverType {
 
 // MARK: - Observable
 
-// 发布者协议, 必须提供了注册订阅者的能力
 protocol ObservableType {
     associatedtype Element
     
-    // 订阅操作, 接收一个 ObserverType 接口对象进行处理.
+    // 订阅操作
     func subscribe<O: ObserverType>(observer: O) where O.Element == Element
 }
 
-// 实际的 ObservableType 实现类, 对于 subscribe 的实现, 也是通过自己保存的闭包实现的.
 class Observable<Element>: ObservableType {
-    // _eventGenerator 代表的是事件发生器.
+    // 定义 发布事件 的闭包
+    // 这里面, 存储的是如何操作 Observer.
+    // 所谓的发布事件, 就是操作 Observer 的 on Event 方法.
+    // 监听者模式, 发布者主动调用监听者的接口来发布事件. 但是从思想上, 是发布者发布时间, 监听者异步监听到了.
     private let _eventGenerator: (Observer<Element>) -> Void
     
     init(_ eventGenerator: @escaping (Observer<Element>) -> Void) {
@@ -55,16 +54,14 @@ class Observable<Element>: ObservableType {
     }
     
     // 实现 订阅操作 的协议，内部生成事件
-    // 当有响应者注册进来的时候, 就把事件发生器调用一遍
-    // 这里仅仅是简单的 Observable 的实现
+    // Publisher 的输出, 必须和 Observer 的输入是同样的一种类型.
     func subscribe<O: ObserverType>(observer: O) where O.Element == Element {
         _eventGenerator(observer as! Observer<Element>)
     }
 }
 
-
-
-// 定义一个发布者. 闭包里面, 传递过去的是, 事件发生器.
+// 这里, 定义好了如何发布事件.
+// 在 subscribe 调用的时候, 这个闭包才会真正的执行.
 let observable = Observable<Int> { (observer) in
     print("send 0")
     observer.on(event: .next(0))    // observer.on(event: .next(0).map({ $0 * 2 }))

@@ -44,11 +44,15 @@ protocol ObservableType {
 
 extension ObservableType {
     func map<Result>(_ transform: @escaping (Element) throws -> Result) -> Observable<Result> {
-        return Observable<Result> { (observer) in   // observer 为原始 observer
+        
+        return Observable<Result> {
+            (observer) in   // observer 为原始 observer
             // 此闭包可看成是一个 eventGenerator
             // 向原始 observable 中传入一个中间 map observer，即由中间 map observer 替换原始 observer 监听原始事件
             // 中间 map observer 对原始事件进行转换后，转发给原始 observer
-            return self.subscribe(observer: Observer { (event) in
+            return self.subscribe(observer:
+                                    // MapObserver.
+                                    Observer { (event) in
                 print("Map observer = \(observer)")
                 switch event {
                 case .next(let element):

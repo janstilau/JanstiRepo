@@ -106,9 +106,11 @@ class CompositeDisposable: Disposable {
     }
 }
 
+// 这一层仅仅是将上个例子里面的内容, 抽取到了 Sink 类里面.
 class Sink<O: ObserverType>: Disposable {
-    private var _disposed: Bool = false
-    private let _forward: O
+    
+    private var _disposed: Bool = false // 标志位, 是否已经取消.
+    private let _forward: O // 真正的业务对象.
     private let _eventGenerator: (Observer<O.Element>) -> Disposable
     private let _composite = CompositeDisposable()
     
@@ -120,6 +122,8 @@ class Sink<O: ObserverType>: Disposable {
     func run() {
         // 通过一个中间 Observer 接收原始事件
         // 根据 CompositionDisposable 的状态决定是否传递给原始 Observer
+        // 这里 forward 是一个闭包.
+        // 这里, forward 是带有状态的, 是带有 self 的. 
         let observer = Observer<O.Element>(forward)
         // 执行发布事件
         // 将返回值 Disposable 加入到 CompositeDisposable 中进行管理

@@ -1,17 +1,7 @@
 import Foundation
 
-
-var array = [1, 2, 3]
-for number in array {
-  print(number)
-  array = [4, 5, 6]
-}
-print(array)
-
-
 // MARK: - Event
 
-// 事件有三种. 事件发生产生数据, 产生了错误, 明确的表示结束了.
 enum Event<Element> {
     case next(Element)
     case error(Error)
@@ -22,6 +12,7 @@ enum Event<Element> {
 
 protocol ObserverType {
     associatedtype Element
+    
     // 监听事件
     func on(event: Event<Element>)
 }
@@ -67,7 +58,12 @@ class Observable<Element>: ObservableType {
         // 通过一个中间 Observer 接收原始事件
         // 根据 CompositionDisposable 的状态决定是否传递给原始 Observer
         let disposable = _eventGenerator(
+            
+            // 里面, 生成了一个 Observer.
             Observer { (event) in
+                // 对于这个中间状态的 Observer 来说, 它并不是用来分发的.
+                // 而是做拦截用. 真正分分发, 是它捕获的 observer.on(event: event) 来做下层的业务处理.
+                // 中间状态的 Observer, 主要是逻辑的拦截.
             guard !composite.isDisposed else { return }
             // 事件传递给原始 observer
             observer.on(event: event)
@@ -79,7 +75,6 @@ class Observable<Element>: ObservableType {
                 break
             }
         })
-        
         // 将 _eventGenerator 返回的 AnonymousDisposable 加入至 CompositeDisposable 中进行管理
         composite.add(disposable: disposable)
         return composite
@@ -93,7 +88,6 @@ protocol Disposable {
     func dispose()
 }
 
-// 提供一个闭包, 这个闭包会在 dispose 的时候调用.
 final class AnonymousDisposable: Disposable {
     // AnonymousDisposable 封装了 取消订阅时附带操作 的闭包
     private let _disposeHandler: () -> Void
@@ -107,7 +101,6 @@ final class AnonymousDisposable: Disposable {
     }
 }
 
-// 当, CompositeDisposable 释放的时候, 才会释放他所管理的资源
 class CompositeDisposable: Disposable {
     // 可用于管理一组 Disposable 的 CompositeDisposable
 
@@ -120,7 +113,6 @@ class CompositeDisposable: Disposable {
     
     func add(disposable: Disposable) {
         if isDisposed {
-            // 如果, 容器已经取消了,  那么新加入的对象也要进行取消.
             disposable.dispose()
             return
         }
@@ -152,7 +144,6 @@ let observable = Observable<Int> { (observer) -> Disposable in
         print("send completed")
         observer.on(event: .completed)
     }
-    // 返回一个可取消对象.
     return AnonymousDisposable {
         print("dispose")
     }
