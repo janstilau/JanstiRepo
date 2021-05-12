@@ -63,7 +63,8 @@ public final class DisposeBag: DisposeBase {
         }
     }
 
-    /// This is internal on purpose, take a look at `CompositeDisposable` instead.
+    /// This is internal on purpose, take a look at `CompositeDisposable` instead.\
+    // Bag 的 dispose, 就是每一个 Item 调用 dispose
     private func dispose() {
         let oldDisposables = self._dispose()
 

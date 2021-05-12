@@ -20,6 +20,7 @@ extension ObservableType {
     }
 }
 
+// 不做任何的事件.
 final private class NeverProducer<Element>: Producer<Element> {
     override func subscribe<Observer: ObserverType>(_ observer: Observer) -> Disposable where Observer.Element == Element {
         Disposables.create()

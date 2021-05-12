@@ -7,7 +7,8 @@
 //
 
 class Sink<Observer: ObserverType>: Disposable {
-    fileprivate let observer: Observer
+    
+    fileprivate let observer: Observer // 下游的 observer, 当 sink 完成了数据转化之后, 将转化后的数据, 传递给下游的  observer
     fileprivate let cancel: Cancelable
     private let disposed = AtomicInt(0)
 
@@ -40,7 +41,6 @@ class Sink<Observer: ObserverType>: Disposable {
 
     final var isDisposed: Bool {
         isFlagSet(self.disposed, 1)
-    }
 
     func dispose() {
         fetchOr(self.disposed, 1)

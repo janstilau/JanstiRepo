@@ -18,6 +18,7 @@ struct SubscriptionDisposable<T: SynchronizedUnsubscribeType> : Disposable {
     }
 
     func dispose() {
+        // 这个在 Subject 里面使用, 根据 key 取消注册. 也就是 Publisher 里面, 取消 Observer 的强引用.
         self.owner?.synchronizedUnsubscribe(self.key)
     }
 }

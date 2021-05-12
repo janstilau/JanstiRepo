@@ -36,6 +36,7 @@ extension ObservableType {
     }
 }
 
+
 final private class FilterSink<Observer: ObserverType>: Sink<Observer>, ObserverType {
     typealias Predicate = (Element) throws -> Bool
     typealias Element = Observer.Element
@@ -47,6 +48,8 @@ final private class FilterSink<Observer: ObserverType>: Sink<Observer>, Observer
         super.init(observer: observer, cancel: cancel)
     }
     
+    // 这里, 如果不满足要求, 就不像后传递了
+    // 后面也就拿不到新的数据了. 如此一来, 就达到了 filter 的效果了.
     func on(_ event: Event<Element>) {
         switch event {
         case .next(let value):

@@ -8,6 +8,8 @@
 
 import Foundation
 
+// iOS 平台, 实现 atmic Int. 其实就是加锁处理.
+// 这是一个 NSLock, 所以是一个引用值.
 final class AtomicInt: NSLock {
     fileprivate var value: Int32
     public init(_ value: Int32 = 0) {
@@ -15,6 +17,7 @@ final class AtomicInt: NSLock {
     }
 }
 
+// 各种操作, 都是之前的简单的算术运算, 增加了 lock 的处理.
 @discardableResult
 @inline(__always)
 func add(_ this: AtomicInt, _ value: Int32) -> Int32 {

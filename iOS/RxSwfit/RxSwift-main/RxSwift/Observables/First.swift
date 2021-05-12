@@ -9,6 +9,8 @@
 private final class FirstSink<Element, Observer: ObserverType> : Sink<Observer>, ObserverType where Observer.Element == Element? {
     typealias Parent = First<Element>
 
+    // 只会拿到第一个值交给后面, 然后就是 completed 事件了.
+    // 前面, publisher 发送了 completed 时间, 后面的 observer 应该主动将自己的状态改变, 不再去处理新的事件了.
     func on(_ event: Event<Element>) {
         switch event {
         case .next(let value):
