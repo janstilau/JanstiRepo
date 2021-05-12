@@ -6,6 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+// Publish 进行 create 的过程.
 extension ObservableType {
     // MARK: create
 

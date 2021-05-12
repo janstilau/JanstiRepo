@@ -28,6 +28,10 @@ Single element can be stored multiple times.
 Time and space complexity of insertion and deletion is O(n). 
 
 It is suitable for storing small number of elements.
+ 
+ 不太明白 bag 的设计. 在量少的时候, 使用 array, 量大的时候, 使用 dict.
+ 为了可以重复存储在 array 里面????
+ Bag 是一个存储性的 container.
 */
 struct Bag<T> : CustomDebugStringConvertible {
     /// Type of identifier for inserted elements.
@@ -100,6 +104,7 @@ struct Bag<T> : CustomDebugStringConvertible {
         _key0 = nil
         _value0 = nil
 
+        // 专门有一个参数, 进行 capacity 的控制工作了.
         _pairs.removeAll(keepingCapacity: false)
         _dictionary?.removeAll(keepingCapacity: false)
     }

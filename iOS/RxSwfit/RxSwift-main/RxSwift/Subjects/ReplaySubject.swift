@@ -9,6 +9,9 @@
 /// Represents an object that is both an observable sequence as well as an observer.
 ///
 /// Each notification is broadcasted to all subscribed and future observers, subject to buffer trimming policies.
+// 这是一个类簇模式的类.
+// ReplaySubject 里面, 定义公共的数据和Template方法的实现.
+// 在子类里面, 完成 Primitive Method 的定义.
 public class ReplaySubject<Element>
     : Observable<Element>
     , SubjectType
@@ -68,6 +71,8 @@ public class ReplaySubject<Element>
     ///
     /// - parameter bufferSize: Maximal number of elements to replay to observer after subscription.
     /// - returns: New instance of replay subject.
+    // 工厂方法的实现. 在里面, 完成了不同的子类对象的创建.
+    // Swift 里面, 也可以完成类簇模式的设计. 不过, 需要有一个明确的工厂方法. 来掌管所有的对象的创建.
     public static func create(bufferSize: Int) -> ReplaySubject<Element> {
         if bufferSize == 1 {
             return ReplayOne()
@@ -80,6 +85,7 @@ public class ReplaySubject<Element>
     /// Creates a new instance of `ReplaySubject` that buffers all the elements of a sequence.
     /// To avoid filling up memory, developer needs to make sure that the use case will only ever store a 'reasonable'
     /// number of elements.
+    // 特殊的方法, 返回一个没有限制的 Publisher.
     public static func createUnbounded() -> ReplaySubject<Element> {
         ReplayAll()
     }
@@ -131,6 +137,9 @@ private class ReplayBufferBase<Element>
         
         switch event {
         case .next(let element):
+            // 在缓存了之后, 里面进行 trim.
+            // 逻辑比较统一, 而是否需要 trim, 其实是各个子类都有自己的实现的.
+            // 一个简单的算法.
             self.addValueToBuffer(element)
             self.trim()
             return self.observers
@@ -155,6 +164,7 @@ private class ReplayBufferBase<Element>
      
         let anyObserver = observer.asObserver()
         
+        // replayBuffer 就是将缓存的数据, 在注册的时候, 交给 Observer 进行响应.
         self.replayBuffer(anyObserver)
         if let stoppedEvent = self.stoppedEvent {
             observer.on(stoppedEvent)
@@ -195,6 +205,7 @@ private class ReplayBufferBase<Element>
 }
 
 private final class ReplayOne<Element> : ReplayBufferBase<Element> {
+    // 仅仅存储一个 value.
     private var value: Element?
     
     override init() {
@@ -205,10 +216,12 @@ private final class ReplayOne<Element> : ReplayBufferBase<Element> {
         
     }
     
+    // Primitive Method 缓存, 对于 One 这种子类, 就是替换
     override func addValueToBuffer(_ value: Element) {
         self.value = value
     }
 
+    // Primitive Method 响应缓存, 就是如果有 value, 发送到响应者那里.
     override func replayBuffer<Observer: ObserverType>(_ observer: Observer) where Observer.Element == Element {
         if let value = self.value {
             observer.on(.next(value))
@@ -222,6 +235,7 @@ private final class ReplayOne<Element> : ReplayBufferBase<Element> {
 }
 
 private class ReplayManyBase<Element>: ReplayBufferBase<Element> {
+    // 存储一个队列.
     fileprivate var queue: Queue<Element>
     
     init(queueSize: Int) {

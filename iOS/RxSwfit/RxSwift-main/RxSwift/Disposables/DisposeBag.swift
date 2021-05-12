@@ -6,6 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+// 将自身, 添加到 Bag 中, 在 Bag 消亡的时候, 进行 dispose 的操作.
 extension Disposable {
     /// Adds `self` to `bag`
     ///
@@ -47,6 +48,9 @@ public final class DisposeBag: DisposeBase {
         self._insert(disposable)?.dispose()
     }
     
+    // 如果, 当前 Bag 已经释放了, 那么就直接释放添加的元素.
+    // 否则返回 nil
+    // 这里感觉逻辑复杂了, 还专门返回了一个对象.
     private func _insert(_ disposable: Disposable) -> Disposable? {
         self.lock.performLocked {
             if self.isDisposed {
@@ -68,6 +72,7 @@ public final class DisposeBag: DisposeBase {
         }
     }
 
+    // 私有的方法, 有线程考虑.
     private func _dispose() -> [Disposable] {
         self.lock.performLocked {
             let disposables = self.disposables
@@ -79,6 +84,10 @@ public final class DisposeBag: DisposeBase {
         }
     }
     
+    // 在析构的时候, 调用了 dispose.
+    // 也就是在析构的时候, 调用资源释放的方法.
+    // iOS 里面, 内存资源都让 arc 接管了. 这里, 之所以出现了这样的一个类, 是因为资源的释放, 在 RXSwfit 里面, 是使用了一个特殊的接口进行管理的.
+    // 而这个接口的主动调用, 就需要写一个 RAII 类进行管理了.
     deinit {
         self.dispose()
     }

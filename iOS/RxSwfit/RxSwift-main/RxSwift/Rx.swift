@@ -7,6 +7,8 @@
 //
 
 #if TRACE_RESOURCES
+// 就是一个特殊的类型, 存储现在 Rx 里面相关的对象的数量.
+// 之所以可以计数, 是因为这个框架里面, 每一个对象的 构造析构, 都注入了相关的 in, de 方法的效用.
     private let resourceCount = AtomicInt(0)
 
     /// Resource utilization information

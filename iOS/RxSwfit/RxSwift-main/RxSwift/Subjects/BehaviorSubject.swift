@@ -6,15 +6,20 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+// 当观察者对 BehaviorSubject 进行订阅时，它会将源 Observable 中最新的元素发送出来（如果不存在最新的元素，就发出默认元素）。然后将随后产生的元素发送出来。
+//
+
 /// Represents a value that changes over time.
 ///
 /// Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications.
+
 public final class BehaviorSubject<Element>
     : Observable<Element>
     , SubjectType
     , ObserverType
     , SynchronizedUnsubscribeType
     , Cancelable {
+    
     public typealias SubjectObserverType = BehaviorSubject<Element>
 
     typealias Observers = AnyObserver<Element>.s
@@ -56,8 +61,12 @@ public final class BehaviorSubject<Element>
     /// Gets the current value or throws an error.
     ///
     /// - returns: Latest value.
+    // 把 thros 函数, 当做返回一个 Enum 来看来
+    // Enum.Success(Element)
+    // Enum.Fail(Error)
     public func value() throws -> Element {
         self.lock.lock(); defer { self.lock.unlock() }
+        
         if self.isDisposed {
             throw RxError.disposed(object: self)
         }
@@ -84,10 +93,13 @@ public final class BehaviorSubject<Element>
 
     func synchronized_on(_ event: Event<Element>) -> Observers {
         self.lock.lock(); defer { self.lock.unlock() }
+        
         if self.stoppedEvent != nil || self.isDisposed {
             return Observers()
         }
         
+        // 在接受到信号的时候, 改变了自身的状态.
+        // 自身状态的概念, 使得下一次接收到信号, 接收到订阅的时候, 行为发生了变化.
         switch event {
         case .next(let element):
             self.element = element
@@ -118,6 +130,7 @@ public final class BehaviorSubject<Element>
         }
         
         let key = self.observers.insert(observer.on)
+        // 在这里, 注册的时候, 主动调用类了一下 observer 的 on 方法, 把当前存储的 value 值发射出去.
         observer.on(.next(self.element))
     
         return SubscriptionDisposable(owner: self, key: key)
@@ -155,3 +168,49 @@ public final class BehaviorSubject<Element>
         }
     #endif
 }
+
+/*
+ 
+ let disposeBag = DisposeBag()
+ let subject = BehaviorSubject(value: "🔴")
+
+ subject
+   .subscribe { print("Subscription: 1 Event:", $0) }
+   .disposed(by: disposeBag)
+
+ subject.onNext("🐶")
+ subject.onNext("🐱")
+
+ subject
+   .subscribe { print("Subscription: 2 Event:", $0) }
+   .disposed(by: disposeBag)
+
+ subject.onNext("🅰️")
+ subject.onNext("🅱️")
+
+ subject
+   .subscribe { print("Subscription: 3 Event:", $0) }
+   .disposed(by: disposeBag)
+
+ subject.onNext("🍐")
+ subject.onNext("🍊")
+ 输出结果：
+
+ Subscription: 1 Event: next(🔴)
+ Subscription: 1 Event: next(🐶)
+ Subscription: 1 Event: next(🐱)
+ Subscription: 2 Event: next(🐱)
+ Subscription: 1 Event: next(🅰️)
+ Subscription: 2 Event: next(🅰️)
+ Subscription: 1 Event: next(🅱️)
+ Subscription: 2 Event: next(🅱️)
+ Subscription: 3 Event: next(🅱️)
+ Subscription: 1 Event: next(🍐)
+ Subscription: 2 Event: next(🍐)
+ Subscription: 3 Event: next(🍐)
+ Subscription: 1 Event: next(🍊)
+ Subscription: 2 Event: next(🍊)
+ Subscription: 3 Event: next(🍊)
+ 
+ 
+ */
