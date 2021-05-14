@@ -6,6 +6,8 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+// Sink 这个类, 里面会存储它后面的 observer 的指针
+// 当接受到数据之后, 按照自己的方式对数据进行转化, 然后交给后面的 observer.
 class Sink<Observer: ObserverType>: Disposable {
     
     fileprivate let observer: Observer // 下游的 observer, 当 sink 完成了数据转化之后, 将转化后的数据, 传递给下游的  observer

@@ -18,13 +18,15 @@ extension ObservableType {
      - parameter subscribe: Implementation of the resulting observable sequence's `subscribe` method.
      - returns: The observable sequence with the specified implementation for the `subscribe` method.
      */
-    // subscribe并不是指事件真正的订阅者，而是用来定义当有人订阅Observable中的事件时，应该如何向订阅者发送不同情况的事件，理解这个问题，是使用create的关键。
+    // subscribe并不是指事件真正的订阅者，而是用来定义当有人订阅Observable中的事件时，应该如何向订阅者发送不同情况的事件，
+    // 理解这个问题，是使用create的关键。
     public static func create(_ subscribe: @escaping (AnyObserver<Element>) -> Disposable) -> Observable<Element> {
         AnonymousObservable(subscribe)
     }
 }
 
 final private class AnonymousObservableSink<Observer: ObserverType>: Sink<Observer>, ObserverType {
+    
     typealias Element = Observer.Element 
     typealias Parent = AnonymousObservable<Element>
 
@@ -63,6 +65,8 @@ final private class AnonymousObservableSink<Observer: ObserverType>: Sink<Observ
     }
 }
 
+// 这个类, 仅仅是记录一下, subscribe 这个 block 而已.
+// 实际的, 这个 block 的使用, 会是在 subscribe 调用的时候才会生成 sink 类.
 final private class AnonymousObservable<Element>: Producer<Element> {
     typealias SubscribeHandler = (AnyObserver<Element>) -> Disposable
 

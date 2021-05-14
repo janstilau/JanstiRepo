@@ -18,7 +18,7 @@ protocol ObserverType {
 }
 
 class Observer<Element>: ObserverType {
-    
+     
     // 订阅者如何处理事件的闭包
     private let _handler: (Event<Element>) -> Void
     
@@ -42,11 +42,12 @@ protocol ObservableType {
     func subscribe<O: ObserverType>(observer: O) where O.Element == Element
 }
 
+
 class Observable<Element>: ObservableType {
     // 定义 发布事件 的闭包
     // 这里面, 存储的是如何操作 Observer.
-    // 所谓的发布事件, 就是操作 Observer 的 on Event 方法.
-    // 监听者模式, 发布者主动调用监听者的接口来发布事件. 但是从思想上, 是发布者发布时间, 监听者异步监听到了.
+    // 所谓的发布事件, 其实应该理解为, 存储产生数据的逻辑, 这个逻辑里面, 不断的产生数据, 然后将在适当的时机, 调用 obverver 的 on 方法, 将产生的数据分发出去.
+    // 但是这个过程, 是预先存储的, 只有在 subscibe 的时候, 才会执行.
     private let _eventGenerator: (Observer<Element>) -> Void
     
     init(_ eventGenerator: @escaping (Observer<Element>) -> Void) {
@@ -62,6 +63,7 @@ class Observable<Element>: ObservableType {
 
 // 这里, 定义好了如何发布事件.
 // 在 subscribe 调用的时候, 这个闭包才会真正的执行.
+// 对于 Observable 来说, 最主要的就是存储事件的生成逻辑.
 let observable = Observable<Int> { (observer) in
     print("send 0")
     observer.on(event: .next(0))    // observer.on(event: .next(0).map({ $0 * 2 }))

@@ -88,6 +88,7 @@ protocol Disposable {
     func dispose()
 }
 
+// AnonymousDisposable 封装了一个自定义的闭包.
 final class AnonymousDisposable: Disposable {
     // AnonymousDisposable 封装了 取消订阅时附带操作 的闭包
     private let _disposeHandler: () -> Void
@@ -101,6 +102,7 @@ final class AnonymousDisposable: Disposable {
     }
 }
 
+// DisposeBag.
 class CompositeDisposable: Disposable {
     // 可用于管理一组 Disposable 的 CompositeDisposable
 
