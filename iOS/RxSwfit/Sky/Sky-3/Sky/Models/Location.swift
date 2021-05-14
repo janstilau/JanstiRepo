@@ -21,6 +21,7 @@ struct Location {
     var latitude: Double
     var longitude: Double
     
+    // 一个计算属性, 为外界提供更好的输出结果.
     var location: CLLocation {
         return CLLocation(latitude: latitude, longitude: longitude)
     }

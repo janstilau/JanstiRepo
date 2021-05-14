@@ -14,6 +14,7 @@ enum DataManagerError: Error {
     case unknown
 }
 
+// 一个专门的接口类, 用来做网络数据的拉取工作.
 final class WeatherDataManager {
     internal let baseURL: URL
     internal let urlSession: URLSessionProtocol

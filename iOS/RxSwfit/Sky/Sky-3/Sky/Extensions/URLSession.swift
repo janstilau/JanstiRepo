@@ -8,15 +8,16 @@
 
 import Foundation
 
+// 对于协议的实现.
 extension URLSession: URLSessionProtocol {
     func dataTask(
         with request: URLRequest,
         completionHandler: @escaping DataTaskHandler)
         -> URLSessionDataTaskProtocol {
-        return (dataTask(
+        return (
+            dataTask(
             with: request,
-            completionHandler: completionHandler)
-            as URLSessionDataTask)
-            as URLSessionDataTaskProtocol
+            completionHandler: completionHandler) as URLSessionDataTask)
+                                                  as URLSessionDataTaskProtocol
     }
 }

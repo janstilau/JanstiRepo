@@ -12,7 +12,9 @@ struct WeatherData: Codable {
     let latitude: Double
     let longitude: Double
     let currently: CurrentWeather
-    
+}
+
+extension WeatherData {
     struct CurrentWeather: Codable {
         let time: Date
         let summary: String

@@ -8,6 +8,10 @@
 
 import Foundation
 
+// Session 的作用, 是开启一个请求.
+// DataTask 的作用, 是具体进行一次请求, 并且完成请求过程中的逻辑.
+// 将 Session, DataTask 进行接口化, 使得这里, 进行接口替换成为了可能.
+
 enum DataManagerError: Error {
     case failedRequest
     case invalidResponse
@@ -59,6 +63,9 @@ internal struct Config {
     }()
 }
 
+// 一个网络请求, 是一个业务类.
+// 这个业务类没有复用的必要性, 就是单纯的某个特定业务的封装而已.
+//
 final class WeatherDataManager {
     private let baseURL: URL
     internal let urlSession: URLSessionProtocol
@@ -68,10 +75,14 @@ final class WeatherDataManager {
         self.urlSession = urlSession
     }
     
-    static let shared = WeatherDataManager(baseURL: API.authenticatedURL, urlSession: Config.urlSession)
+    static let shared = WeatherDataManager(baseURL: API.authenticatedURL,
+                                           urlSession: Config.urlSession)
     
     typealias CompletionHandler = (WeatherData?, DataManagerError?) -> Void
     
+    // 专门的一个函数, 这个函数将网络请求的参数, 通过参数传递过来.
+    // 在函数的内部, 进行 request 的参数的拼接工作.
+    // 从这里看, 是将原来的, 参数拼接的过程, 从 VC, 或者 View 里面, 专门的转移到了网络交互类了.
     func weatherDataAt(latitude: Double, longitude: Double, completion: @escaping CompletionHandler) {
         let url = baseURL.appendingPathComponent("\(latitude),\(longitude)")
         var request = URLRequest(url: url)
@@ -79,13 +90,19 @@ final class WeatherDataManager {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "GET"
         
+        // 真正的网络请求的开启的地方.
         self.urlSession.dataTask(with: request, completionHandler: {
             (data, response, error) in
                 self.didFinishGettingWeatherData(data: data, response: response, error: error, completion: completion)
         }).resume()
     }
     
-    func didFinishGettingWeatherData(data: Data?, response: URLResponse?, error: Error?, completion: CompletionHandler) {
+    // 这里是网络请求的解析部分.
+    // 应该写到网络层里面, 作为通用的逻辑来复用.
+    func didFinishGettingWeatherData(data: Data?,
+                                     response: URLResponse?,
+                                     error: Error?,
+                                     completion: CompletionHandler) {
         if let _ = error {
             completion(nil, .failedRequest)
         }
