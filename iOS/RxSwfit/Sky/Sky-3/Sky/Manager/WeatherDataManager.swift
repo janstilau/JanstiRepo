@@ -12,6 +12,15 @@ import Foundation
 // DataTask 的作用, 是具体进行一次请求, 并且完成请求过程中的逻辑.
 // 将 Session, DataTask 进行接口化, 使得这里, 进行接口替换成为了可能.
 
+/*
+ WeathreDataManager
+ Session
+ DataTask
+ 这三者, 各自有着各自的责任.
+ 将网络请求, 从之前 OC 时代都写到了一个方法内部, 拆到了三个部分, 也就有了替换的可能性.
+ 在单元测试里面, 就是这种替换性, 在不改变 DataManager 的同时, 完成了 Mock 的行为.
+ */
+
 enum DataManagerError: Error {
     case failedRequest
     case invalidResponse
@@ -70,6 +79,11 @@ final class WeatherDataManager {
     private let baseURL: URL
     internal let urlSession: URLSessionProtocol
     
+    // UrlSession, 从一个具体的类型, 变为一个接口对象.
+    // 在使用的时候, 依赖于接口进行调用.
+    // 在 init 方法里面, 传入实际创建的接口对象.
+    // 这样, 才能完成单元测试的 mock 功能.
+    // 这也是面向抽象编程的应用, 虽然实际上我们只有一个对象在业务代码里面使用, 但在 mock 的时候, 使用抽象的接口, 使得有了变化的可能性.
     internal init(baseURL: URL, urlSession: URLSessionProtocol) {
         self.baseURL = baseURL
         self.urlSession = urlSession

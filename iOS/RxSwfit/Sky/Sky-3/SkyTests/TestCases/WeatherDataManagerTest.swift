@@ -9,23 +9,27 @@
 import XCTest
 @testable import Sky
 
+// WeathreData 的单元测试类.
 class WeatherDataManagerTest: XCTestCase {
     let url = URL(string: "https://darksky.net")!
     var session: MockURLSession!
     var manager: WeatherDataManager!
     
+    //  这两个方法, 是每次测试用例方法调用前后都会调用的.
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        // manager 里面的 sesstion 是 MockSession/
+        // MockSession 里面, 产生 MockDataTask. MockDataTask, 提供了测试框架里面, 可以进行 test 的能力.
         self.session = MockURLSession()
         self.manager = WeatherDataManager(baseURL: url, urlSession: session)
     }
-    
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
     
+    // 这里验证, weatherDataAt 方法, 确实是开启了一个网络请求.
     func test_weatherDataAt_starts_the_session() {
         let dataTask = MockURLSessionDataTask()
         session.sessionDataTask = dataTask
@@ -38,6 +42,7 @@ class WeatherDataManagerTest: XCTestCase {
         XCTAssert(session.sessionDataTask.isResumeCalled)
     }
     
+    // 这里, 验证, Mock 的数据确实是非法的请求. 响应回调能够正确的解析出错误来.
     func test_weatherData_handle_invalid_request() {
         session.responseError = NSError(
             domain: "Invalid Request", code: 100, userInfo: nil)
@@ -50,6 +55,7 @@ class WeatherDataManagerTest: XCTestCase {
         
         XCTAssertEqual(error, DataManagerError.failedRequest)
     }
+    
     
     func test_weatherData_handle_statuscode_not_equal_to_200() {
         session.responseHeader = HTTPURLResponse(
