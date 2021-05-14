@@ -10,6 +10,8 @@ import UIKit
 import CoreLocation
 import MapKit
 
+// 这个类, 目前的代码, 就是原来的 MVC 架构的代码, 只不过是用 Swift 编写的.
+
 class RootViewController: UIViewController {
     private let segueCurrentWeather = "SegueCurrentWeather"
     private let segueWeekWeather = "SegueWeekWeather"
@@ -26,6 +28,7 @@ class RootViewController: UIViewController {
         }
     }
     
+    // 懒加载. Swfit 的懒加载, 实现了真正的
     private lazy var locationManager: CLLocationManager = {
         let manager = CLLocationManager()
         
@@ -85,11 +88,8 @@ class RootViewController: UIViewController {
         
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
+    // 在进入了前台之后, 立马请求请的数据.
+    // 对于这类表示特定事件发生之后执行的代码，我们都应该避免直接在这里编写细节的逻辑，而是只表达它执行的意图就好
     @objc func applicationDidBecomeActive(notification: Notification) {
         requestLocation()
     }
@@ -98,6 +98,7 @@ class RootViewController: UIViewController {
         
     }
     
+    // 在 ViewDidLoad 里面, 调用了该方法, 该方法会注册广播通知.
     private func setupActiveNotification() {
         let selector = #selector(RootViewController.applicationDidBecomeActive(notification:))
         NotificationCenter.default.addObserver(
@@ -112,8 +113,7 @@ class RootViewController: UIViewController {
         
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
             locationManager.requestLocation()
-        }
-        else {
+        } else {
             locationManager.requestWhenInUseAuthorization()
         }
     }
@@ -142,6 +142,7 @@ class RootViewController: UIViewController {
         let lat = currentLocation.coordinate.latitude
         let lon = currentLocation.coordinate.longitude
         
+        // 调用网络, 返回之后, response 会被直接序列化成为想要的类型的Model.
         WeatherDataManager.shared.weatherDataAt(
             latitude: lat,
             longitude: lon,
@@ -157,6 +158,7 @@ class RootViewController: UIViewController {
     }
 }
 
+// 在 locationManager 的代理方法里面, 进行了 currentLocation 的设置工作.
 extension RootViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
@@ -178,6 +180,7 @@ extension RootViewController: CLLocationManagerDelegate {
     }
 }
 
+// RootVC, 实现了 CurrentWeatherViewControllerDelegate 的方法, 主要是为了 push 新的 VC 到界面上.
 extension RootViewController: CurrentWeatherViewControllerDelegate {
     func locationButtonPressed(controller: CurrentWeatherViewController) {
         print("Open locations.")

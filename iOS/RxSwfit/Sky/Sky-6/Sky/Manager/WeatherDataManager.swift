@@ -94,6 +94,9 @@ final class WeatherDataManager {
                 do {
                     let decoder = JSONDecoder()
                     decoder.dateDecodingStrategy = .secondsSince1970
+                    // 在这里, 将二进制的数据, 转化到了特定的类型.
+                    // 这也是为什么要每一个网络请求, 都单独的一个 NetworkManager 的原因.
+                    // 每一个网络请求的解析, 其实都是单独的. 既然想要将网络请求这件事独立成为一个类, 那么也就将 Model 的解析写到这个类的内部.
                     let weatherData = try decoder.decode(WeatherData.self, from: data)
                     
                     completion(weatherData, nil)

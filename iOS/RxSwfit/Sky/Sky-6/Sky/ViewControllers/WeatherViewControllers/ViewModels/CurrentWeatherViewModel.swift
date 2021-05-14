@@ -9,6 +9,7 @@
 import UIKit
 
 struct CurrentWeatherViewModel {
+    
     var location: Location! {
         didSet {
             if location != nil {

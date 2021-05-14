@@ -8,7 +8,9 @@
 
 import Foundation
 
+// 作为一个 Codable, 可以直接在网络请求返回之后, 解析成为正确类型的数据.
 struct WeatherData: Codable {
+    
     let latitude: Double
     let longitude: Double
     let currently: CurrentWeather
@@ -26,6 +28,10 @@ struct WeatherData: Codable {
         let data: [ForecastData]
     }
 }
+
+/*
+ 下面, 对于 Equatable 的适配, 主要是因为, 在 array 里面, 需要使用这个方法, 确定 index 的位置.
+ */
 
 extension WeatherData.CurrentWeather: Equatable {
     static func ==(

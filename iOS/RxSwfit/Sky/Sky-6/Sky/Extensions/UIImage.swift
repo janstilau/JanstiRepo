@@ -8,7 +8,10 @@
 
 import UIKit
 
+// 直接在 UIImage 里面添加方法.
 extension UIImage {
+    
+    // 将方法, 设置为 UIImage 的方法, 这样外界可以使用 .weatherIcon 的方式调用
     class func weatherIcon(of name: String) -> UIImage? {
         switch name {
         case "clear-day":
@@ -33,4 +36,5 @@ extension UIImage {
             return UIImage(named: "clear-day")
         }
     }
+    
 }
