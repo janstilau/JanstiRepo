@@ -6,11 +6,16 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-// Sink 这个类, 里面会存储它后面的 observer 的指针
-// 当接受到数据之后, 按照自己的方式对数据进行转化, 然后交给后面的 observer.
+/*
+ 如果把Rx中的流当做水，那么Sink就相当于每个水管水龙头的滤网，在出水之前进行最后的加工。
+ Sink 的功能:
+ 1. 状态控制. 在内部一个 atomic Int, 表示当前自己的资源是否已经释放了
+ 2. 记录下一个 observer. 这个在自己完成功能的 transfom 之后, 将自己加工好的值, 传递给下一个节点.
+ 3. Cancelable 的记录, 自己本身是一个 Disposable, 在外界需要取消的时候, 调用记录的 Cancelable, 完成取消的操作. 释放自己管理的资源.
+ */
 class Sink<Observer: ObserverType>: Disposable {
     
-    fileprivate let observer: Observer // 下游的 observer, 当 sink 完成了数据转化之后, 将转化后的数据, 传递给下游的  observer
+    fileprivate let observer: Observer
     fileprivate let cancel: Cancelable
     private let disposed = AtomicInt(0)
 
@@ -26,6 +31,7 @@ class Sink<Observer: ObserverType>: Disposable {
         self.cancel = cancel
     }
 
+    // 这个方法, 是将 Sink 中, 已经转化的事件, 传递到记录的原始的 observer 的过程.
     final func forwardOn(_ event: Event<Observer.Element>) {
         #if DEBUG
             self.synchronizationTracker.register(synchronizationErrorMessage: .default)
@@ -43,6 +49,7 @@ class Sink<Observer: ObserverType>: Disposable {
 
     final var isDisposed: Bool {
         isFlagSet(self.disposed, 1)
+    }
 
     func dispose() {
         fetchOr(self.disposed, 1)
@@ -56,6 +63,7 @@ class Sink<Observer: ObserverType>: Disposable {
     }
 }
 
+// 这个类, 就是 sink 里面存储的原始的 observer, 将原始的 forwarder 暴露出去, 那么 Sink 也就不起作用了.
 final class SinkForward<Observer: ObserverType>: ObserverType {
     typealias Element = Observer.Element 
 

@@ -6,6 +6,16 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+/*
+    
+ 主要用来封装 dispose 操作.
+ 里面内置状态控制.
+ 封装一个 callback 用来 dispose.
+ 状态控制保证, callback 只会释放一次.
+ 
+ */
+
+
 /// Represents an Action-based disposable.
 ///
 /// When dispose method is called, disposal action will be dereferenced.
@@ -41,6 +51,7 @@ private final class AnonymousDisposable : DisposeBase, Cancelable {
         if fetchOr(self.disposed, 1) == 0 {
             if let action = self.disposeAction {
                 self.disposeAction = nil
+                // 释放的操作, 保证了只会执行一次.
                 action()
             }
         }

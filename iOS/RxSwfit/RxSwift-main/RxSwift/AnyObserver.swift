@@ -6,19 +6,10 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-/*
- Type Erase 有着比较统一的实现思路.
- 接受一个接口对象, 这个接口对象存储在成员变量里面.
- 实现这个接口, 实现里面, 是调用这个接口对象的实现.
- 这样, 接口对象的实际类型就被封装起来了, 外界使用起来, 使用的是 AnyProtocol, 仅仅能够依靠 Protocol 进行编程.
- 这是, 是存储的一个闭包, self.observer = eventHandler, 本身会把接口对象存储在闭包的内部, 是一种更加灵活的做法.
- */
-
 /// A type-erased `ObserverType`.
 ///
 /// Forwards operations to an arbitrary underlying observer with the same `Element` type, hiding the specifics of the underlying observer type.
 public struct AnyObserver<Element> : ObserverType {
-    
     /// Anonymous event handler type.
     public typealias EventHandler = (Event<Element>) -> Void
 

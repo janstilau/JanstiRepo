@@ -77,4 +77,5 @@ extension ReactiveCompatible {
 import Foundation
 
 /// Extend NSObject with `rx` proxy.
+// 只要是 NSObject 的子类, 都会有 rx 的属性调用.
 extension NSObject: ReactiveCompatible { }

@@ -6,8 +6,6 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-
-// 对于一个 Subject 来说, 它既可以是 publisher, 又可以是 subscriber. 
 /// Type that can be converted to observable sequence (`Observable<Element>`).
 public protocol ObservableConvertibleType {
     /// Type of elements in sequence.

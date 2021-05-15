@@ -9,11 +9,8 @@
 
 // MARK: forEach
 
-
-// 将, bag 里面存储的, 所有 Observer 进行事件的调用.
 @inline(__always)
-func dispatch<Element>(_ bag: Bag<(Event<Element>) -> Void>,
-                       _ event: Event<Element>) {
+func dispatch<Element>(_ bag: Bag<(Event<Element>) -> Void>, _ event: Event<Element>) {
     bag._value0?(event)
 
     if bag._onlyFastPath {

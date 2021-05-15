@@ -51,8 +51,11 @@ extension Reactive where Base: UIControl {
                     return Disposables.create()
                 }
 
+                // 在 subscribe 的时候, 先把 control 当前的状态, 暴露出去.
                 observer.on(.next(getter(control)))
-
+                
+                // 然后, 建立里一个中间层 ControlTarget, 这个中间层的 Control event 的触发函数, 就是调用 Observer 的 on 方法.
+                // 这就是, UIControl 可以当做 Publisher 的原因所在.
                 let controlTarget = ControlTarget(control: control, controlEvents: editingEvents) { _ in
                     if let control = weakControl {
                         observer.on(.next(getter(control)))
@@ -75,6 +78,7 @@ extension Reactive where Base: UIControl {
         getter: @escaping (Base) -> T,
         setter: @escaping (Base, T) -> Void
         ) -> ControlProperty<T> {
+        // 返回一个 ControlProperty
         return controlProperty(
             editingEvents: editingEvents,
             getter: getter,

@@ -8,8 +8,12 @@
 
 import Foundation
 
-// iOS 平台, 实现 atmic Int. 其实就是加锁处理.
-// 这是一个 NSLock, 所以是一个引用值.
+/*
+ RxSwfit 里面, 对于 atomicValue 的封装.
+ 就是在锁的环境下, 进行 property 的操作行为.
+ Atomic 相关类的意义就在于, 对于这个值来说, 只会有一个线程正在进行访问.
+ */
+
 final class AtomicInt: NSLock {
     fileprivate var value: Int32
     public init(_ value: Int32 = 0) {
@@ -17,7 +21,10 @@ final class AtomicInt: NSLock {
     }
 }
 
-// 各种操作, 都是之前的简单的算术运算, 增加了 lock 的处理.
+/*
+ 所有的这些操作, 都是用的全局函数的方式.
+ */
+
 @discardableResult
 @inline(__always)
 func add(_ this: AtomicInt, _ value: Int32) -> Int32 {

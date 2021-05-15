@@ -6,7 +6,6 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-// Publish 进行 create 的过程.
 extension ObservableType {
     // MARK: create
 
@@ -18,15 +17,16 @@ extension ObservableType {
      - parameter subscribe: Implementation of the resulting observable sequence's `subscribe` method.
      - returns: The observable sequence with the specified implementation for the `subscribe` method.
      */
-    // subscribe并不是指事件真正的订阅者，而是用来定义当有人订阅Observable中的事件时，应该如何向订阅者发送不同情况的事件，
-    // 理解这个问题，是使用create的关键。
+    /*
+     这个 create 里面的闭包, 可以认为是事件的生成过程.
+     每次 subscribe 的时候, 都会把 observer 传递进来.
+     */
     public static func create(_ subscribe: @escaping (AnyObserver<Element>) -> Disposable) -> Observable<Element> {
         AnonymousObservable(subscribe)
     }
 }
 
 final private class AnonymousObservableSink<Observer: ObserverType>: Sink<Observer>, ObserverType {
-    
     typealias Element = Observer.Element 
     typealias Parent = AnonymousObservable<Element>
 
@@ -65,9 +65,9 @@ final private class AnonymousObservableSink<Observer: ObserverType>: Sink<Observ
     }
 }
 
-// 这个类, 仅仅是记录一下, subscribe 这个 block 而已.
-// 实际的, 这个 block 的使用, 会是在 subscribe 调用的时候才会生成 sink 类.
+// AnonymousObservable 仅仅是把序列生成过程 block 进行存储.
 final private class AnonymousObservable<Element>: Producer<Element> {
+    
     typealias SubscribeHandler = (AnyObserver<Element>) -> Disposable
 
     let subscribeHandler: SubscribeHandler
@@ -78,6 +78,7 @@ final private class AnonymousObservable<Element>: Producer<Element> {
 
     override func run<Observer: ObserverType>(_ observer: Observer, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where Observer.Element == Element {
         let sink = AnonymousObservableSink(observer: observer, cancel: cancel)
+        // 这里, 主动调用了 run, 而 run, 则是将之前存储的事件生成 callback 调用一遍了.
         let subscription = sink.run(self)
         return (sink: sink, subscription: subscription)
     }

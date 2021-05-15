@@ -19,7 +19,6 @@ extension ObservableType {
     }
 }
 
-// 直接就是发送一个 complete 事件.
 final private class EmptyProducer<Element>: Producer<Element> {
     override func subscribe<Observer: ObserverType>(_ observer: Observer) -> Disposable where Observer.Element == Element {
         observer.on(.completed)

@@ -9,9 +9,7 @@
 /// A type-erased `ObservableType`. 
 ///
 /// It represents a push style sequence.
-
 public class Observable<Element> : ObservableType {
-    
     init() {
 #if TRACE_RESOURCES
         _ = Resources.incrementTotal()
@@ -22,6 +20,7 @@ public class Observable<Element> : ObservableType {
         rxAbstractMethod()
     }
     
+    // 这个方法存在的意义是子类调用可以方便的类型转化到父类的对象.
     public func asObservable() -> Observable<Element> { self }
     
     deinit {
