@@ -10,7 +10,7 @@ import Foundation
 
 extension ObservableType {
 
-    /**
+    /*
      Prints received events for all observers on standard output.
 
      - seealso: [do operator on reactivex.io](http://reactivex.io/documentation/operators/do.html)
@@ -47,6 +47,7 @@ final private class DebugSink<Source: ObservableType, Observer: ObserverType>: S
         super.init(observer: observer, cancel: cancel)
     }
     
+    // on event 方法, 仅仅是 logevent 的使用, 然后全部将事件, 转交给 event 来处理.
     func on(_ event: Event<Element>) {
         let maxEventTextLength = 40
         let eventText = "\(event)"

@@ -22,6 +22,7 @@ extension ObservableType {
      每次 subscribe 的时候, 都会把 observer 传递进来.
      */
     public static func create(_ subscribe: @escaping (AnyObserver<Element>) -> Disposable) -> Observable<Element> {
+        // AnonymousObservable 是一个 Producer.
         AnonymousObservable(subscribe)
     }
 }
@@ -65,7 +66,9 @@ final private class AnonymousObservableSink<Observer: ObserverType>: Sink<Observ
     }
 }
 
-// AnonymousObservable 仅仅是把序列生成过程 block 进行存储.
+// AnonymousObservable, 作为一个 Producer, 仅仅是把事件生成的逻辑进行了存储.
+// 当, AnonymousObservable.subscribe 的时候, 生成了一个 AnonymousObservableSink,
+// 在 sink.run(self), 将存储的事件生成的逻辑调用了一次.
 final private class AnonymousObservable<Element>: Producer<Element> {
     
     typealias SubscribeHandler = (AnyObserver<Element>) -> Disposable

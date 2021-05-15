@@ -6,7 +6,7 @@
 //  Copyright © 2016 Krunoslav Zaher. All rights reserved.
 //
 
-/**
+/*
  Use `Reactive` proxy as customization point for constrained protocol extensions.
 
  General pattern would be:

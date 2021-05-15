@@ -23,6 +23,7 @@ extension ObservableType {
      - parameter onDispose: Action to invoke after subscription to source observable has been disposed for any reason. It can be either because sequence terminates for some reason or observer subscription being disposed.
      - returns: The source sequence with the side-effecting behavior applied.
      */
+    // Swift 的 argument Label 的好处就在这里体现了优势. 配置 DefaultValue 的使用, 可以让一个很长很复杂的函数, 变得外界可以轻松使用.
     public func `do`(onNext: ((Element) throws -> Void)? = nil, afterNext: ((Element) throws -> Void)? = nil, onError: ((Swift.Error) throws -> Void)? = nil, afterError: ((Swift.Error) throws -> Void)? = nil, onCompleted: (() throws -> Void)? = nil, afterCompleted: (() throws -> Void)? = nil, onSubscribe: (() -> Void)? = nil, onSubscribed: (() -> Void)? = nil, onDispose: (() -> Void)? = nil)
         -> Observable<Element> {
             return Do(source: self.asObservable(), eventHandler: { e in
@@ -61,6 +62,7 @@ final private class DoSink<Observer: ObserverType>: Sink<Observer>, ObserverType
         super.init(observer: observer, cancel: cancel)
     }
     
+    // On 方法, 仅仅是在 forward 的前后, 进行相关的自己业务调用而已.
     func on(_ event: Event<Element>) {
         do {
             try self.eventHandler(event)

@@ -23,8 +23,13 @@ class ImagePickerController: ViewController {
 
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
 
+        /*
+         所有的, 对于 cocoaControl 都有着关于 rx 的处理.
+         tap 连接了所有的事件.
+         */
         cameraButton.rx.tap
-            .flatMapLatest { [weak self] _ in
+            .flatMapLatest {
+                [weak self] _ in
                 return UIImagePickerController.rx.createWithParent(self) { picker in
                     picker.sourceType = .camera
                     picker.allowsEditing = false

@@ -74,6 +74,9 @@ final class ControlTarget: RxTarget {
         }
     }
 
+    // Dispose 就是取消这些成员变量的存储.
+    // 这样, 在按钮点击之后, 什么信号都不会发生.
+    // UIControl 的声明周期是外界控制的. dispose 仅仅控制的是, 作为一个 Publisher, 他没有了产生信号的能力了. 并且, 将产生信号所需的其他资源都释放了.
     override func dispose() {
         super.dispose()
 #if os(iOS) || os(tvOS)

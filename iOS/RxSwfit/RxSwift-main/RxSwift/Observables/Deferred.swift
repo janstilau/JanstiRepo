@@ -7,7 +7,7 @@
 //
 
 extension ObservableType {
-    /**
+    /*
      Returns an observable sequence that invokes the specified factory function whenever a new observer subscribes.
 
      - seealso: [defer operator on reactivex.io](http://reactivex.io/documentation/operators/defer.html)

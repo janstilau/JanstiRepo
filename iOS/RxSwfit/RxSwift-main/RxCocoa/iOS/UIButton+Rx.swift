@@ -11,9 +11,17 @@
 import RxSwift
 import UIKit
 
+/*
+ 通过向 Reactive 上添加行为, 而不是像 UIButton 上添加行为.
+ touchBtn.rx.tap.map{}
+ rx 返回一个特殊的类型 Reactive, 这个类型, 存储了 self.
+ 不断的扩展 Reactive, 通过 where Base, 在不同的类型上, 添加不同的类型自己的扩展.
+ .rx 返回一个特殊类型的方式, 很像是 lazy, 但是通过 Base 按照类型添加方法, Lazy 没有体现. 不过, 这种模式现在很普遍.
+ */
+
 extension Reactive where Base: UIButton {
-    
-    /// Reactive wrapper for `TouchUpInside` control event.
+        
+    // 返回类型, ControlEvent, 是一个 Publisher
     public var tap: ControlEvent<Void> {
         controlEvent(.touchUpInside)
     }

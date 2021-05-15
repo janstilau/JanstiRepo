@@ -15,6 +15,16 @@
  
   Producer, 将 Sink 安插在了 Source 和 Observer 之间, 所以产生了两个需要 dispose 的需求, 这就是 SinkDisposer 存在的意义.
   而每个 Producer 的 run 方法, 则是真正的产生 Sink, 将 Observer 注册给 Sink, 将 Sink subscribe 给 Source 的逻辑所在的地方.
+ 
+ 
+ 
+ let producer = Observer.create{}.map{}.filter{}
+ producer.subscribe{}
+ producer.subscribe{}
+ producer 里面, 仅仅是一些需要延时调用的存储, 真正的事件节点, 是各个 Producer 产生的 Sink.
+ 也就是说, 不到最后的 subscribe 调用的时候, 是不会产生整个事件链条的.
+ 所以上面的调用, 其实是产生了两条事件链.
+ 
  */
 class Producer<Element>: Observable<Element> {
     override init() {

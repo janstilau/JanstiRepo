@@ -6,6 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+// 这是 Publisher 的一个方法, 将自身的实现逻辑, 封装到了特定的调度器里面.
 extension ObservableType {
     /**
      Wraps the source sequence in order to run its subscription and unsubscription logic on the specified

@@ -35,15 +35,17 @@ public protocol ControlEventType : ObservableType {
     **If the `events` observable sequence passed into the initializer doesn’t satisfy all enumerated
      properties, don’t use this trait.**
 */
+//
 public struct ControlEvent<PropertyType> : ControlEventType {
     public typealias Element = PropertyType
 
-    let events: Observable<PropertyType>
+    let events: Observable<PropertyType> // 
 
     /// Initializes control event with a observable sequence that represents events.
     ///
     /// - parameter events: Observable sequence that represents events.
     /// - returns: Control event created with a observable sequence of events.
+    // 在这里, 当 UI 事件生成的时候, 将 events 进行了一次包装, 确保了事件产生是在主线程进行的.
     public init<Ev: ObservableType>(events: Ev) where Ev.Element == Element {
         self.events = events.subscribe(on: ConcurrentMainScheduler.instance)
     }
@@ -52,6 +54,8 @@ public struct ControlEvent<PropertyType> : ControlEventType {
     ///
     /// - parameter observer: Observer to subscribe to events.
     /// - returns: Disposable object that can be used to unsubscribe the observer from receiving control events.
+    //
+    // 然后对于 Publisher 的实现, 就是简单地转交给了 events.
     public func subscribe<Observer: ObserverType>(_ observer: Observer) -> Disposable where Observer.Element == Element {
         self.events.subscribe(observer)
     }

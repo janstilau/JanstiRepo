@@ -6,6 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+// 一个简便的方法, 将一个 Disposable 对象自己, 添加到 DisposeBag 进行管理.
 extension Disposable {
     /// Adds `self` to `bag`
     ///
@@ -47,6 +48,7 @@ public final class DisposeBag: DisposeBase {
         self._insert(disposable)?.dispose()
     }
     
+    // 在线程安全环境下, 进行数据的添加
     private func _insert(_ disposable: Disposable) -> Disposable? {
         self.lock.performLocked {
             if self.isDisposed {
@@ -68,6 +70,7 @@ public final class DisposeBag: DisposeBase {
         }
     }
 
+    // 先线程安全的情况下, 获取数据, 清空成员变量
     private func _dispose() -> [Disposable] {
         self.lock.performLocked {
             let disposables = self.disposables
@@ -79,6 +82,7 @@ public final class DisposeBag: DisposeBase {
         }
     }
     
+    // RAII 的实现.
     deinit {
         self.dispose()
     }
