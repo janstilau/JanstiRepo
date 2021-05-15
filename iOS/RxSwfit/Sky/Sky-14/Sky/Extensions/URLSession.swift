@@ -8,6 +8,7 @@
 
 import Foundation
 
+// 让原始的 URLSession, 成为 URLSessionProtocol 的实现者.
 extension URLSession: URLSessionProtocol {
     func dataTask(
         with request: URLRequest,

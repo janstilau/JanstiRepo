@@ -8,6 +8,7 @@
 
 import UIKit
 
+// UIImage 的快捷方法, 用来进行从字符串转化成为对应的图片. 定义为 UIImage 的方法.
 extension UIImage {
     class func weatherIcon(of name: String) -> UIImage? {
         switch name {

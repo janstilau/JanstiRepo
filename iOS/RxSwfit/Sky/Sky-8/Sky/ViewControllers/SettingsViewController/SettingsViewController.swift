@@ -30,6 +30,9 @@ class SettingsViewController: UITableViewController {
 extension SettingsViewController {
     // MARK: - Table view data source
     
+    // 这里, 是使用 Section 当做 Index 来使用.
+    // 和自己之前, 根据 Index 来设置不同的 TableView 的 Section 是一样的效果.
+    // 但是, 使用 Enum, 让代码更加的清晰了.
     private enum Section: Int {
         case date
         case temperature

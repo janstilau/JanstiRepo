@@ -54,6 +54,9 @@ class LocationsViewController: UITableViewController {
 }
 
 extension LocationsViewController {
+    // 专门用一个 enum, 来表示 TableView 的不同的 Section 的内容.
+    // 这比之前自己在业务类里面, 使用不同的 Int 做区分要好.
+    // Enum 的 case, 自带表意字符串.
     private enum Section: Int {
         case current
         case favourite
@@ -67,6 +70,7 @@ extension LocationsViewController {
             }
         }
         
+        // 专门定义一个特殊的类型属性, 来返回 Section 的总数信息.
         static var count: Int {
             return Section.favourite.rawValue + 1
         }
@@ -93,6 +97,7 @@ extension LocationsViewController {
         }
     }
     
+    // 具体的显示信息, 聚焦在一点. 让所有的和 Section 的概念, 都在 Section 的定义里面可以找到. 避免了之后修改, 要在不同的方法里面进行查找.
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         guard let section = Section(rawValue: section) else {
             fatalError("Unexpected Section")

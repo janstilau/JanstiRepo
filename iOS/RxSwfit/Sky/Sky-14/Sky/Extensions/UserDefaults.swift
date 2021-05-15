@@ -8,6 +8,8 @@
 
 import Foundation
 
+// 一个特殊的类型, 其实就是 Int.
+// 用 Enum 让代码具有更强的表现性.
 enum DateMode: Int {
     case text
     case digit
@@ -23,14 +25,21 @@ enum TemperatureMode: Int {
 }
 
 struct UserDefaultsKeys {
+    // 将所有的, UserDefault 需要使用的 key, 全部用 static let 的方式定义在一个特殊的类型里面
     static let dateMode = "dateMode"
     static let locations = "locations"
     static let temperatureMode = "temperatureMode"
 }
 
+/*
+ 这个类, 其实和自己之前处理小红点的编写的工具类是差不多的.
+ 都是将逻辑封装到了方法内给外界使用.
+ */
+
 extension UserDefaults {
     
     // Date
+    // 在 UserDefaults 上面, 定义特殊的方法, 进行 DateMode 这个特殊类型的存值和取值.
     
     static func dateMode() -> DateMode {
         let value = UserDefaults.standard.integer(forKey: UserDefaultsKeys.dateMode)

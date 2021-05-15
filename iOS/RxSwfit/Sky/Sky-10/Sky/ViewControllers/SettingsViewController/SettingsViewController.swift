@@ -75,6 +75,11 @@ extension SettingsViewController {
             fatalError("Unexpected section index")
         }
         
+        UIScrollViewDelegate
+        
+        // 个人感觉这层抽象没有什么意义.
+        // 各个 Cell 的显示, 其实是不同的, 仅仅是在这个 App 里面, 可以找到统一的抽象而已.
+        // 所以, 在不同的 IndexPath 里面, 取得不同种类的 Cell, 配置不同种类的 Model, 返回是合理的现象, 没有必要在这里进行协议的抽象.
         var vm: SettingsRepresentable?
         
         switch section {
@@ -93,6 +98,7 @@ extension SettingsViewController {
         }
         
         if let vm = vm {
+            // 让cell从view model进行自我设置
             cell.configure(with: vm)
         }
         

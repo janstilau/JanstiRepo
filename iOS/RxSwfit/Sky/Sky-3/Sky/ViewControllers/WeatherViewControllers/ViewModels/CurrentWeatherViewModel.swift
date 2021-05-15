@@ -8,7 +8,10 @@
 
 import UIKit
 
+// CurrentWeatherViewController需要的所有数据，在View Model中都有对应的接口了
 struct CurrentWeatherViewModel {
+    // ViewModel 里面, 到底需要引用多少数据, 是和 View 的展示需求相关的.
+    // View Model 是和业务联系紧密的一个类.
     var location: Location! {
         didSet {
             if location != nil {
@@ -34,6 +37,10 @@ struct CurrentWeatherViewModel {
     var isLocationReady = false
     var isWeatherReady = false
     
+    
+    /*
+     通过计算属性, 来为 View 提供属性.
+     */
     var isUpdateReady: Bool {
         return isLocationReady && isWeatherReady
     }

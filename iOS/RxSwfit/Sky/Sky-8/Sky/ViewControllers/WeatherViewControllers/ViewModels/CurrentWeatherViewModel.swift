@@ -42,6 +42,7 @@ struct CurrentWeatherViewModel {
         return location.name
     }
     
+    // 这里, 是使用了 UserDefaults 作为全局配置使用了.
     var temperature: String {
         let value = weather.currently.temperature
         

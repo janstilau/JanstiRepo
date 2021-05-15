@@ -9,6 +9,7 @@
 import UIKit
 
 struct WeekWeatherViewModel {
+    
     let weatherData: [ForecastData]
     
     var numberOfSections: Int {

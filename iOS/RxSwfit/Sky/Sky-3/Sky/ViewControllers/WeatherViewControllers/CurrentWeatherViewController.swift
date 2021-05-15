@@ -21,6 +21,7 @@ class CurrentWeatherViewController: WeatherViewController {
     @IBOutlet weak var summaryLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     
+    // 使用一个统一的方法, 来进行 View 的更新操作.
     var viewModel: CurrentWeatherViewModel? {
         didSet {
             DispatchQueue.main.async { self.updateView() }
@@ -42,6 +43,7 @@ class CurrentWeatherViewController: WeatherViewController {
         }
     }
     
+    // 把所有的 UI 操作, 集中到一点. 
     func updateWeatherContainer(with model: CurrentWeatherViewModel) {
         weatherContainerView.isHidden = false
         

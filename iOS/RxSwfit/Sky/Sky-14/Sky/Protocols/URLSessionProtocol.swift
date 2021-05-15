@@ -8,6 +8,7 @@
 
 import Foundation
 
+// 这个协议, 本身就是 URLSession 抽取出来的一个类. 
 protocol URLSessionProtocol {
     typealias DataTaskHandler =
         (Data?, URLResponse?, Error?) -> Void

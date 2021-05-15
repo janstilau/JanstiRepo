@@ -29,6 +29,7 @@ class WeekWeatherTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    // cell, 是直接和一个 protocol 进行交互.
     func configure(with vm: WeekWeatherDayRepresentable) {
         week.text = vm.week
         date.text = vm.date

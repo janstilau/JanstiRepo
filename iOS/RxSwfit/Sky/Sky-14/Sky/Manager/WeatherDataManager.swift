@@ -60,6 +60,8 @@ internal struct Config {
     }()
 }
 
+
+// 网络请求的 API 接口实现类.
 final class WeatherDataManager {
     private let baseURL: URL
     internal let urlSession: URLSessionProtocol

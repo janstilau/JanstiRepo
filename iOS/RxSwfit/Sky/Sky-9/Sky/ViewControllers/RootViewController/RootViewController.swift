@@ -152,6 +152,7 @@ class RootViewController: UIViewController {
         let lat = currentLocation.coordinate.latitude
         let lon = currentLocation.coordinate.longitude
         
+        // 在使用的时候, 是直接在后面, 注册一下后续的流程.
         WeatherDataManager.shared.weatherDataAt(latitude: lat, longitude: lon)
             .subscribe(onNext: {
                 self.currentWeatherViewController.weatherVM.accept(CurrentWeatherViewModel(weather: $0))

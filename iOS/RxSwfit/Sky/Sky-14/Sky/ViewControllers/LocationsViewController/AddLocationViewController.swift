@@ -16,6 +16,11 @@ protocol AddLocationViewControllerDelegate {
     func controller(_ controller: AddLocationViewController, didAddLocation location: Location)
 }
 
+/*
+ 在这个类里面, 没有使用 RXSwift 做数据的绑定.
+ ViewModel 里面, 如果数据发生了变化, 通过闭包的形式, 通知外界 UI 的变化.
+ */
+
 class AddLocationViewController: UITableViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     var viewModel: AddLocationViewModel!

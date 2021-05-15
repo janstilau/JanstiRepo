@@ -24,6 +24,7 @@ class RootViewController: UIViewController {
     
     var alert: UIAlertController!
     
+    // 当, Location 改变的时候, 主动调用 位置, 天气 信息的刷新工作.
     private var currentLocation: CLLocation? {
         didSet {
             fetchCity()
@@ -98,11 +99,6 @@ class RootViewController: UIViewController {
         
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     @objc func applicationDidBecomeActive(notification: Notification) {
         print("Sky becomes activate")
         requestLocation()
@@ -164,6 +160,9 @@ class RootViewController: UIViewController {
             .weatherDataAt(latitude: lat, longitude: lon)
             .share(replay: 1, scope: .whileConnected)
         
+        // 在这里, 将网络请求的结果, 通过 Bind 的方法, 转移到了 self.currentWeatherViewController.weatherVM 中.
+        // 从, 原有的指令式的方式, 变为了响应式的.
+        // 数据, 从指令式一步步的转化, 变为了流式的. 
         weather.map { CurrentWeatherViewModel(weather: $0) }
             .bind(to: self.currentWeatherViewController.weatherVM)
             .disposed(by: bag)

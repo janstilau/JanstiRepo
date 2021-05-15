@@ -39,6 +39,7 @@ class WeekWeatherViewController: WeatherViewController {
     }
 }
 
+// UITableView 也使用了 ViewModel 去进行处理.
 extension WeekWeatherViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         guard let viewModel = viewModel else { return 0 }

@@ -8,6 +8,8 @@
 
 import UIKit
 
+// 只有一个 ViewModel 实现了 protocol.
+
 struct WeekWeatherDayViewModel: WeekWeatherDayRepresentable {
     let weatherData: ForecastData
     

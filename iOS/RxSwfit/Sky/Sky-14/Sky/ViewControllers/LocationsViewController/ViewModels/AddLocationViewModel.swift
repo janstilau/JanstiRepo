@@ -9,6 +9,9 @@
 import Foundation
 import CoreLocation
 
+
+// 没有使用 RXSwfit 的 ViewModel.
+// 使用了存储闭包的形式, 通知外界, 数据修改了, 需要更新.
 class AddLocationViewModel {
     
     var queryText: String = "" {

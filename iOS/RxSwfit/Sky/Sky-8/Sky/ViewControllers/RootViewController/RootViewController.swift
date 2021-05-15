@@ -190,6 +190,7 @@ extension RootViewController: CurrentWeatherViewControllerDelegate {
     }
 }
 
+// 当 Setting VC 代理方法调用的时候, 通知 RootVC, 进行 UI 的刷新.
 extension RootViewController: SettingsViewControllerDelegate {
     private func reloadUI() {
         currentWeatherViewController.updateView()

@@ -8,6 +8,7 @@
 
 import UIKit
 
+// 之所以定义这样一个 protocol, 是为了让 cell 不直接对接 ViewModel
 protocol WeekWeatherDayRepresentable {
     var week: String { get }
     var date: String { get }

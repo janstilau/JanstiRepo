@@ -11,6 +11,7 @@ import UIKit
 class WeekWeatherViewController: WeatherViewController {
     @IBOutlet weak var weekWeatherTableView: UITableView!
     
+    // 使用一个统一的方法, 来进行 View 的更新操作.
     var viewModel: WeekWeatherViewModel? {
         didSet {
             DispatchQueue.main.async { self.updateView() }

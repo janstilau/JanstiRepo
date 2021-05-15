@@ -8,4 +8,6 @@
 
 import Foundation
 
+// 让 URLSessionDataTask 成为 URLSessionDataTaskProtocol 的实现者.
+
 extension URLSessionDataTask: URLSessionDataTaskProtocol { }

@@ -87,6 +87,8 @@ final class WeatherDataManager {
             
             return weatherData
         }
+        
+        // 原本, 是用回调的方式, 注册了网络请求的后续处理. 使用 rx, 就不需要了这个过程.
 // ------------ DO NOT NEED THESE CODES ANYMORE --------------
 //        self.urlSession.dataTask(with: request, completionHandler: {
 //            (data, response, error) in

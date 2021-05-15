@@ -8,6 +8,9 @@
 
 import UIKit
 
+// 这个 ViewModel, 是 UITableView 使用的.
+// ViewModel, 也要用作 TableView 的数据源.
+
 struct WeekWeatherViewModel {
     let weatherData: [ForecastData]
     
