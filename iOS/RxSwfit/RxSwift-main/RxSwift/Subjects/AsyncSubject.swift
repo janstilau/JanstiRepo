@@ -8,6 +8,7 @@
 /*
  AsyncSubject 将在源 Observable 产生完成事件后，发出最后一个元素（仅仅只有最后一个元素），如果源 Observable 没有发出任何元素，只有一个完成事件。那 AsyncSubject 也只有一个完成事件。
  它会对随后的观察者发出最终元素。如果源 Observable 因为产生了一个 error 事件而中止， AsyncSubject 就不会发出任何元素，而是将这个 error 事件发送出来。
+ 那么在业务实现上, 就是存储上一个值, 直到最后接收到 Complete 的时候, 才发出存储的值, 然后将自己设置为 Complete.
  */
 /// An AsyncSubject emits the last value (and only the last value) emitted by the source Observable,
 /// and only after that source Observable completes.
@@ -34,14 +35,16 @@ public final class AsyncSubject<Element>
     let lock = RecursiveLock()
 
     // state
+    // 在这里, 专门有一个自己的 Observers 的存储器.
     private var observers = Observers()
     private var isStopped = false
-    // isStopped 状态的修改, 是 stoppedEvent 的更改的时候, 同步修改的
+    // StoppedEvent, 作为结束的标志.
     private var stoppedEvent = nil as Event<Element>? {
         didSet {
             self.isStopped = self.stoppedEvent != nil
         }
     }
+    // 业务类的核心数据存储, 就是不断更新的上一次信号发过来的值.
     private var lastElement: Element?
 
     #if DEBUG
@@ -67,6 +70,7 @@ public final class AsyncSubject<Element>
         switch event {
         case .next:
             // 如果是 next, 证明 synchronized_on 里面处理的是 complete 事件. 那么就发射 element, 然后发射 complete
+            // 主动地调用 complete.
             dispatch(observers, event)
             dispatch(observers, .completed)
         case .completed:
@@ -90,8 +94,7 @@ public final class AsyncSubject<Element>
         switch event {
         case .next(let element):
             // 如果是 next 这种 case, 返回一个空的 Observers.
-            // AsyncSubject 只响应完成态, 发射最后一个 Ele 的逻辑, 是建立在 synchronized_on 的返回值的基础上的.
-            // 虽然代码很巧妙, 但是让人不是太容易理解
+            // 更新 LastElements 里面的值.
             self.lastElement = element
             return (Observers(), .completed)
         case .error:
@@ -101,10 +104,6 @@ public final class AsyncSubject<Element>
             // 释放资源.
             // 当收到 complete, error 事件的时候, 释放资源
             // 这个事情, 是 Observer 的编写者需要注意的事情.
-            
-            // Observer 的声明周期, 是它的前 Publisher 保存的.
-            // 而自己存储的 Observer, 是在自己的 onEvent 方法里面进行释放.
-            // 这里, self.observers.removeAll() 之后, observer 仅仅是在临时数组中存储着了.
             let observers = self.observers
             self.observers.removeAll()
 
@@ -115,6 +114,7 @@ public final class AsyncSubject<Element>
             let observers = self.observers
             self.observers.removeAll()
 
+            // 如果, 之前存储了值了, 那么把这些值, 都分发给存储的 observer, 否则, 否则就是直接的 complete.
             if let lastElement = self.lastElement {
                 self.stoppedEvent = .next(lastElement)
                 return (observers, .next(lastElement))

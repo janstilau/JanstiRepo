@@ -34,6 +34,7 @@ public final class BehaviorSubject<Element>
     
     // state
     private var disposed = false
+    // 在这个类初始化的时候, 必须要提供默认值.
     private var element: Element
     private var observers = Observers()
     private var stoppedEvent: Event<Element>?

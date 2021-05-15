@@ -11,7 +11,6 @@ protocol Lock {
     func unlock()
 }
 
-// https://lists.swift.org/pipermail/swift-dev/Week-of-Mon-20151214/000321.html
 typealias SpinLock = RecursiveLock
 
 // 一个简便的方法, 在很多的类库都见过. 传递闭包来, 在闭包前后进行加锁解锁.
