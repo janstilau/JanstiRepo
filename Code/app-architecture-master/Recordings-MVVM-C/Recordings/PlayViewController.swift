@@ -24,6 +24,10 @@ class PlayViewController: UIViewController, UITextFieldDelegate {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		/*
+		将 ViewModel 里面, 各种 View 层的数据变化, 绑定到了 View 上.
+		*/
 		viewModel.navigationTitle.bind(to: rx.title).disposed(by: disposeBag)
 		viewModel.noRecording.bind(to: activeItemElements.rx.isHidden).disposed(by: disposeBag)
 		viewModel.hasRecording.bind(to: noRecordingLabel.rx.isHidden).disposed(by: disposeBag)

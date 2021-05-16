@@ -10,6 +10,7 @@ class FolderViewModel {
 	
 	init(initialFolder: Folder = Store.shared.rootFolder) {
 		folder = Variable(initialFolder)
+		
 		folderUntilDeleted = folder.asObservable()
 			// Every time the folder changes
 			.flatMapLatest { currentFolder in
