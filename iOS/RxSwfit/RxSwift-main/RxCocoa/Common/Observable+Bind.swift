@@ -16,6 +16,9 @@ extension ObservableType {
      - parameter to: Observers to receives events.
      - returns: Disposable object that can be used to unsubscribe the observers.
      */
+    /*
+     Bind 其实就是, 注册 On 事件到对应的 observer 之上.
+     */
     public func bind<Observer: ObserverType>(to observers: Observer...) -> Disposable where Observer.Element == Element {
         self.subscribe { event in
             observers.forEach { $0.on(event) }

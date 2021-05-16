@@ -17,6 +17,10 @@ extension Reactive where Base: NotificationCenter {
     - parameter object: Optional object used to filter notifications.
     - returns: Observable sequence of posted notifications.
     */
+    /*
+     这里是 NSNotificationCenter 的创建 Observable 的操作.
+     返回的 dispose 仅仅是移除注册, 并没有调用 observer 的 on 方法.
+     */
     public func notification(_ name: Notification.Name?, object: AnyObject? = nil) -> Observable<Notification> {
         return Observable.create { [weak object] observer in
             let nsObserver = self.base.addObserver(forName: name, object: object, queue: nil) { notification in

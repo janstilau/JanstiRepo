@@ -42,7 +42,13 @@ public protocol ControlPropertyType : ObservableType, ObserverType {
 public struct ControlProperty<PropertyType> : ControlPropertyType {
     public typealias Element = PropertyType
 
+    /*
+     存储的 Publisher, 已经和 UIControl 相关联.
+     */
     let values: Observable<PropertyType>
+    /*
+     存储的 Observer, 已经和 UIControl 相关联.
+     */
     let valueSink: AnyObserver<PropertyType>
 
     /// Initializes control property with a observable sequence that represents property values and observer that enables
@@ -109,6 +115,7 @@ public struct ControlProperty<PropertyType> : ControlPropertyType {
 extension ControlPropertyType where Element == String? {
     /// Transforms control property of type `String?` into control property of type `String`.
     public var orEmpty: ControlProperty<String> {
+        
         let original: ControlProperty<String?> = self.asControlProperty()
 
         let values: Observable<String> = original.values.map { $0 ?? "" }

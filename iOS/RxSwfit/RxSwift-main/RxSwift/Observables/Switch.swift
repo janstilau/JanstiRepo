@@ -89,6 +89,9 @@ private class SwitchSink<SourceType, Source: ObservableConvertibleType, Observer
         rxAbstractMethod()
     }
     
+    /*
+     当有了新的 Publisher 之后, self.latest 的 id 值发生变化, 正式因为如此, 原始的 Publisher 才失去的作用.
+     */
     @inline(__always)
     final private func nextElementArrived(element: Element) -> (Int, Observable<Source.Element>)? {
         self.lock.lock(); defer { self.lock.unlock() }
@@ -107,6 +110,9 @@ private class SwitchSink<SourceType, Source: ObservableConvertibleType, Observer
         return nil
     }
     
+    /*
+     当有新的信号到达了之后.
+     */
     func on(_ event: Event<Element>) {
         switch event {
         case .next(let element):
@@ -167,7 +173,9 @@ final private class SwitchSinkIter<SourceType, Source: ObservableConvertibleType
         case .error, .completed:
             self.this.dispose()
         }
-        
+        /*
+         在这里, 如果发现 parent 的 latest 已经发生了变化, 就不在处理新发过来的信号了
+         */
         if self.parent.latest != self.id {
             return
         }

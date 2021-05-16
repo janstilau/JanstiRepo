@@ -25,9 +25,11 @@ class ImagePickerController: ViewController {
 
         /*
          所有的, 对于 cocoaControl 都有着关于 rx 的处理.
-         tap 连接了所有的事件.
          */
         cameraButton.rx.tap
+            /*
+             每一次 rx 被点击, 都会新生成一个 Publisher.
+             */
             .flatMapLatest {
                 [weak self] _ in
                 return UIImagePickerController.rx.createWithParent(self) { picker in

@@ -88,6 +88,7 @@ final class ZipSink2_<E1, E2, Observer: ObserverType> : ZipSink<Observer> {
         ])
     }
 
+    // 在 GetResult 的时候, 消耗了存储在 Queue 里面的内容.
     override func getResult() throws -> Result {
         try self.parent.resultSelector(self.values1.dequeue()!, self.values2.dequeue()!)
     }

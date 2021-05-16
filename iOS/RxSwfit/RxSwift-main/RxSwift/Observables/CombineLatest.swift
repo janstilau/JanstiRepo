@@ -37,6 +37,11 @@ class CombineLatestSink<Observer: ObserverType>
         rxAbstractMethod()
     }
     
+    /*
+     每个 SubObserver On 之后, 通过新的 element 设置了值之后, 然后就会调用这个方法.
+     在这个方法里面, 会将不同 Observer 影响到的值, 合并到一起, 然后传给 CombineLastest 的后续节点.
+     这就是 Combine Sink 的主要逻辑.
+     */
     func next(_ index: Int) {
         if !self.hasValue[index] {
             self.hasValue[index] = true

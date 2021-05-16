@@ -48,6 +48,10 @@ final private class ScanSink<Element, Observer: ObserverType>: Sink<Observer>, O
     typealias Accumulate = Observer.Element 
     typealias Parent = Scan<Element, Accumulate>
 
+    /*
+     在自己的内部, 存储一下上次 accumulator 执行的结果, 然后在下一次的 On 的时候, 拿到最新的值, 再次进行 accumulator 的运算.
+     将运算结果存储, 然后交给下游的节点.
+     */
     private let parent: Parent
     private var accumulate: Accumulate
     
