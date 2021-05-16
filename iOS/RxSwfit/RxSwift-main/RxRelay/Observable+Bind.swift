@@ -40,6 +40,9 @@ extension ObservableType {
      - parameter to: Target publish relays for sequence elements.
      - returns: Disposable object that can be used to unsubscribe the observer.
      */
+    /*
+     Bind 仅仅是增加了一层 subscribe, 就是信号来临的时候, 执行下面的逻辑. 接受相应的值, 设置为自己的内容.
+     */
     private func bind(to relays: [PublishRelay<Element>]) -> Disposable {
         subscribe { e in
             switch e {

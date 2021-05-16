@@ -9,6 +9,7 @@
 class ObserverBase<Element> : Disposable, ObserverType {
     private let isStopped = AtomicInt(0)
 
+    //在接受到信号之后, 
     func on(_ event: Event<Element>) {
         switch event {
         case .next:

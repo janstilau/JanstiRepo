@@ -100,6 +100,7 @@ final private class ObserveOnSink<Observer: ObserverType>: ObserverBase<Observer
         self.cancel = cancel
     }
 
+    // 是把相应的信号, 装到了自己的 queue 里面.
     override func onCore(_ event: Event<Element>) {
         let shouldStart = self.lock.performLocked { () -> Bool in
             self.queue.enqueue(event)
@@ -114,10 +115,12 @@ final private class ObserveOnSink<Observer: ObserverType>: ObserverBase<Observer
         }
 
         if shouldStart {
+            // 在这里, 进行开启了消费队列的逻辑.
             self.scheduleDisposable.disposable = self.scheduler.scheduleRecursive((), action: self.run)
         }
     }
 
+    // run, 不断的消费队列里面的内容.
     func run(_ state: (), _ recurse: (()) -> Void) {
         let (nextEvent, observer) = self.lock.performLocked { () -> (Event<Element>?, Observer) in
             if !self.queue.isEmpty {
