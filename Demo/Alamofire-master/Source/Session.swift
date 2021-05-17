@@ -256,10 +256,6 @@ open class Session {
     ///                      parameters. `nil` by default. 一个闭包, 用于对于 request 进行个性化定制.
     ///
     /// - Returns:       The created `DataRequest`.
-    /*
-     各种参数, 都有着默认的构造函数.
-     Requeest 的构建, 在 AFN 里面, 是 AFHTTPRequestSerializer 的责任, 在这里, 通过 request 的构造函数进行.
-     */
     open func request(_ convertible: URLConvertible,
                       method: HTTPMethod = .get,
                       parameters: Parameters? = nil,
@@ -973,6 +969,7 @@ open class Session {
     ///
     /// - Parameter request: The `Request` to perform.
     func perform(_ request: Request) {
+        
         rootQueue.async {
             guard !request.isCancelled else { return }
             
