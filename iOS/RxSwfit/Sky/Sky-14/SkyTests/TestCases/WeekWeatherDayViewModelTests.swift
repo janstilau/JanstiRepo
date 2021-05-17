@@ -22,7 +22,7 @@ class WeekWeatherDayViewModelTests: XCTestCase {
         
         vm = WeekWeatherDayViewModel(weatherData: weatherData.daily.data[0])
     }
-    
+
     override func tearDown() {
         super.tearDown()
         

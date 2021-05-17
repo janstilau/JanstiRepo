@@ -24,8 +24,15 @@ func dismissViewController(_ viewController: UIViewController, animated: Bool) {
     }
 }
 
+/*
+    一个手动的, 建立一个 Publisher 的例子.
+ */
 extension Reactive where Base: UIImagePickerController {
-    static func createWithParent(_ parent: UIViewController?, animated: Bool = true, configureImagePicker: @escaping (UIImagePickerController) throws -> Void = { x in }) -> Observable<UIImagePickerController> {
+    static func createWithParent(_ parent: UIViewController?,
+                                 animated: Bool = true,
+                                 configureImagePicker: @escaping (UIImagePickerController) throws -> Void = { x in })
+    -> Observable<UIImagePickerController> {
+        
         return Observable.create { [weak parent] observer in
             let imagePicker = UIImagePickerController()
             let dismissDisposable = imagePicker.rx

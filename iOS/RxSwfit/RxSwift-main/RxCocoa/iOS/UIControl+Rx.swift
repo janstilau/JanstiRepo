@@ -57,6 +57,7 @@ extension Reactive where Base: UIControl {
         getter: @escaping (Base) -> T,
         setter: @escaping (Base, T) -> Void
     ) -> ControlProperty<T> {
+        // Source 是一个 Publisher, 每次 Control 的 Event 发生之后, 就会发生信号.
         let source: Observable<T> = Observable.create { [weak weakControl = base] observer in
                 guard let control = weakControl else {
                     observer.on(.completed)

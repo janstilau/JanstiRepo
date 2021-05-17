@@ -15,6 +15,9 @@
  
  By default it binds elements on main scheduler.
  */
+/*
+ Binder 是一个 Observer, 每次接受到信号之后, 都会执行存储的 binding 闭包.
+ */
 public struct Binder<Value>: ObserverType {
     public typealias Element = Value
     

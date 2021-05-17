@@ -47,6 +47,7 @@ class ZipSink<Observer: ObserverType> : Sink<Observer>, ZipSinkProtocol {
             }
         }
         
+        // 只有全部有值了, 才会将结果传递到后面.
         if hasValueAll {
             do {
                 let result = try self.getResult()

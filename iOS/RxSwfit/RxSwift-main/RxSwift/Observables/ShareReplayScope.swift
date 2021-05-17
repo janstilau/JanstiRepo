@@ -302,6 +302,9 @@ final private class ShareReplay1WhileConnected<Element>
     }
 }
 
+/*
+ 这个类, 很像是 Subject.
+ */
 private final class ShareWhileConnectedConnection<Element>
     : ObserverType
     , SynchronizedUnsubscribeType {
@@ -314,6 +317,9 @@ private final class ShareWhileConnectedConnection<Element>
 
     private let lock: RecursiveLock
     private var disposed: Bool = false
+    /*
+     在这里, 记录了所有的 Subscribe
+     */
     fileprivate var observers = Observers()
 
     init(parent: Parent, lock: RecursiveLock) {
@@ -325,6 +331,7 @@ private final class ShareWhileConnectedConnection<Element>
         #endif
     }
 
+    // 取得所有的注册 Observer, 向他们统一的发送消息.
     final func on(_ event: Event<Element>) {
         let observers = self.lock.performLocked { self.synchronized_on(event) }
         dispatch(observers, event)

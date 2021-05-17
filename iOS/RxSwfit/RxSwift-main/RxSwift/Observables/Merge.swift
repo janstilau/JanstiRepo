@@ -464,6 +464,12 @@ private class MergeSink<SourceElement, SourceSequence: ObservableConvertibleType
         }
     }
     
+    /*
+     每次, 当 FlatMap 得到新的值之后, 他并不将 element 进行操作变化, 转交到后面的节点.
+     而是创建一个新的 Publisher.
+     新的 Publisher 发送新的信号的时候, 还是回到了 FlatMap, 因为 FlatMap 里面记录了真正的 subScriber 的位置. 新的 Publisher 的信号, 还是回归到了原始的 Sublisher, 而不是每一个新创建的 Publisher 都会连接到原有的 subScriber 之上.
+     所以, 实际上, FlatMap 还是在整个的事件流转链条里面的.
+     */
     func on(_ event: Event<SourceElement>) {
         switch event {
         case .next(let element):

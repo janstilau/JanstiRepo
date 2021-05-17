@@ -30,6 +30,9 @@ extension ObservableType {
     }
 }
 
+/*
+    将两个 Publisher 合并起来.
+ */
 extension ObservableType where Element == Any {
     /**
     Merges the specified observable sequences into one observable sequence of tuples whenever any of the observable sequences produces an element.
@@ -63,10 +66,18 @@ final class CombineLatestSink2_<E1, E2, Observer: ObserverType> : CombineLatestS
     }
 
     func run() -> Disposable {
+        
         let subscription1 = SingleAssignmentDisposable()
         let subscription2 = SingleAssignmentDisposable()
 
-        let observer1 = CombineLatestObserver(lock: self.lock, parent: self, index: 0, setLatestValue: { (e: E1) -> Void in self.latestElement1 = e }, this: subscription1)
+        /*
+         当 observer1 on 触发之后, setLatestValue 可以将 latestElement1 的值设置为 Observer1 刚刚接受到的值.
+         */
+        let observer1 = CombineLatestObserver(lock: self.lock,
+                                              parent: self,
+                                              index: 0,
+                                              setLatestValue: { (e: E1) -> Void in self.latestElement1 = e },
+                                              this: subscription1)
         let observer2 = CombineLatestObserver(lock: self.lock, parent: self, index: 1, setLatestValue: { (e: E2) -> Void in self.latestElement2 = e }, this: subscription2)
 
          subscription1.setDisposable(self.parent.source1.subscribe(observer1))
@@ -82,6 +93,10 @@ final class CombineLatestSink2_<E1, E2, Observer: ObserverType> : CombineLatestS
         try self.parent.resultSelector(self.latestElement1, self.latestElement2)
     }
 }
+
+/*
+ 专门的一个类, 来应对两个参数的 Combine 的效果.
+ */
 
 final class CombineLatest2<E1, E2, Result> : Producer<Result> {
     typealias ResultSelector = (E1, E2) throws -> Result

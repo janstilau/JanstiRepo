@@ -6,6 +6,9 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+/*
+ 先处理前面的事件, 才会处理后面的事件.
+ */
 extension ObservableType {
 
     /**

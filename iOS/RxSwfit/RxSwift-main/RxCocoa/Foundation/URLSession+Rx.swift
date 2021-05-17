@@ -108,6 +108,13 @@ extension Reactive where Base: URLSession {
     - parameter request: URL request.
     - returns: Observable sequence of URL responses.
     */
+    /*
+     这里可以看做是, 自定义的 Observable 的自定义创建的工作.
+     这里面其实就是 Session 对于请求的封装操作. 在 dataTask 的回调里面, 调用了 observer 的 on 方法.
+     而返回的值, 是一个 dispose, 这个 dispose 可以取消 DataTask 的请求.
+     当, dispose 之后, 其实应该调用 observer 的 on 方法, 通知 error, 或者 complete, 这是 dataTask 的固有的逻辑.
+     我们自己自定义创建一个 Observable 的话, 应该加上这块的逻辑.
+     */
     public func response(request: URLRequest) -> Observable<(response: HTTPURLResponse, data: Data)> {
         return Observable.create { observer in
 
