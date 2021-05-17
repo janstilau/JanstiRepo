@@ -37,7 +37,8 @@ extension ObservableType {
      */
     public func scan<A>(_ seed: A, accumulator: @escaping (A, Element) throws -> A)
         -> Observable<A> {
-        return Scan(source: self.asObservable(), seed: seed) { acc, element in
+        return Scan(source: self.asObservable(), seed: seed) {
+            acc, element in
             let currentAcc = acc
             acc = try accumulator(currentAcc, element)
         }

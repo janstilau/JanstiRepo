@@ -8,14 +8,17 @@
 
 extension ObservableType {
 
-    /**
-     Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
+    /*
+     Projects each element of an observable sequence to an observable sequence
+     and
+     merges the resulting observable sequences into one observable sequence.
 
      - seealso: [flatMap operator on reactivex.io](http://reactivex.io/documentation/operators/flatmap.html)
 
      - parameter selector: A transform function to apply to each element.
      - returns: An observable sequence whose elements are the result of invoking the one-to-many transform function on each element of the input sequence.
      */
+    // selector 是将一个事件数据, 转化成为一个序列.
     public func flatMap<Source: ObservableConvertibleType>(_ selector: @escaping (Element) throws -> Source)
         -> Observable<Source.Element> {
             return FlatMap(source: self.asObservable(), selector: selector)
@@ -338,7 +341,9 @@ private final class MergeBasicSink<Source: ObservableConvertibleType, Observer: 
 
 // MARK: flatMap
 
-private final class FlatMapSink<SourceElement, SourceSequence: ObservableConvertibleType, Observer: ObserverType> : MergeSink<SourceElement, SourceSequence, Observer> where Observer.Element == SourceSequence.Element {
+private final class FlatMapSink<SourceElement,
+                                SourceSequence: ObservableConvertibleType,
+                                Observer: ObserverType> : MergeSink<SourceElement, SourceSequence, Observer> where Observer.Element == SourceSequence.Element {
     typealias Selector = (SourceElement) throws -> SourceSequence
 
     private let selector: Selector
@@ -387,6 +392,7 @@ private final class MergeSinkIter<SourceElement, SourceSequence: ObservableConve
         self.disposeKey = disposeKey
     }
     
+    // MergeSinkIter 的 on 方法, 就是将数据转移到 parent 里面, 也就是 mergeSink 中.
     func on(_ event: Event<Element>) {
         self.parent.lock.performLocked {
             switch event {
@@ -405,9 +411,14 @@ private final class MergeSinkIter<SourceElement, SourceSequence: ObservableConve
 }
 
 
+/*
+ 这个类, 是当父类使用的. 没有直接生成对象使用.
+ Flat Map 的实现, 和这个基本没有差别.
+ */
 private class MergeSink<SourceElement, SourceSequence: ObservableConvertibleType, Observer: ObserverType>
     : Sink<Observer>
     , ObserverType where Observer.Element == SourceSequence.Element {
+    
     typealias ResultType = Observer.Element
     typealias Element = SourceElement
 
@@ -440,6 +451,7 @@ private class MergeSink<SourceElement, SourceSequence: ObservableConvertibleType
             }
 
             do {
+                // 从这里, 将 Element 变为了 Publisher
                 let value = try self.performMap(element)
                 self.activeCount += 1
                 return value
@@ -476,6 +488,7 @@ private class MergeSink<SourceElement, SourceSequence: ObservableConvertibleType
         let iterDisposable = SingleAssignmentDisposable()
         if let disposeKey = self.group.insert(iterDisposable) {
             let iter = MergeSinkIter(parent: self, disposeKey: disposeKey)
+            // 将 MergeSinkIter 作为新生成的队列的下游进行了注册
             let subscription = source.subscribe(iter)
             iterDisposable.setDisposable(subscription)
         }
@@ -506,6 +519,8 @@ private class MergeSink<SourceElement, SourceSequence: ObservableConvertibleType
     func run(_ source: Observable<SourceElement>) -> Disposable {
         _ = self.group.insert(self.sourceSubscription)
 
+        // 还是将自己, 作为了 source 的下游进行了注册.
+        // 将 element 变为 Publisher 的工作, 放在了 on 里面.
         let subscription = source.subscribe(self)
         self.sourceSubscription.setDisposable(subscription)
         
@@ -515,7 +530,8 @@ private class MergeSink<SourceElement, SourceSequence: ObservableConvertibleType
 
 // MARK: Producers
 
-final private class FlatMap<SourceElement, SourceSequence: ObservableConvertibleType>: Producer<SourceSequence.Element> {
+final private class FlatMap<SourceElement,
+                            SourceSequence: ObservableConvertibleType>: Producer<SourceSequence.Element> {
     typealias Selector = (SourceElement) throws -> SourceSequence
 
     private let source: Observable<SourceElement>
@@ -527,6 +543,7 @@ final private class FlatMap<SourceElement, SourceSequence: ObservableConvertible
         self.selector = selector
     }
     
+    // 真正 subscribe 的时候, 是 FlatMapSink 在起作用.
     override func run<Observer: ObserverType>(_ observer: Observer, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where Observer.Element == SourceSequence.Element {
         let sink = FlatMapSink(selector: self.selector, observer: observer, cancel: cancel)
         let subscription = sink.run(self.source)

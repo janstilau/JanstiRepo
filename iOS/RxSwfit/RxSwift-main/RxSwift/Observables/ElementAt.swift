@@ -35,6 +35,9 @@ extension ObservableType {
     }
 }
 
+/*
+ 就是算一下 On 的次数, 如果达到了, 才会向后面传递信号, 并且紧接着 complete 的事件. 然后 dispose
+ */
 final private class ElementAtSink<Observer: ObserverType>: Sink<Observer>, ObserverType {
     typealias SourceType = Observer.Element
     typealias Parent = ElementAt<SourceType>

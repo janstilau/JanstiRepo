@@ -59,6 +59,7 @@ extension ObservableType {
 }
 
 // count version
+// 就是执行多少次, 就当做结束了.
 
 final private class TakeCountSink<Observer: ObserverType>: Sink<Observer>, ObserverType {
     typealias Element = Observer.Element 
@@ -74,6 +75,10 @@ final private class TakeCountSink<Observer: ObserverType>: Sink<Observer>, Obser
         super.init(observer: observer, cancel: cancel)
     }
     
+    /*
+     每个 Sink 的 dispose 在调用的时候, 其实会调用到 subscribe sink 返回的那个 dispose.
+     这样, 才能将 sink 从 Publisher 的 Observer 中进行删除.g
+     */
     func on(_ event: Event<Element>) {
         switch event {
         case .next(let value):

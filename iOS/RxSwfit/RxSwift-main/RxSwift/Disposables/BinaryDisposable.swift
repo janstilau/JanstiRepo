@@ -6,6 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+// 专门的一个类型, 处理两个 dispose 的事件的情况.
 /// Represents two disposable resources that are disposed together.
 private final class BinaryDisposable : DisposeBase, Cancelable {
 

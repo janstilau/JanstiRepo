@@ -16,6 +16,7 @@ extension ObservableType {
      - parameter count: The number of elements to skip before returning the remaining elements.
      - returns: An observable sequence that contains the elements that occur after the specified index in the input sequence.
      */
+    // 跳过固定的次数
     public func skip(_ count: Int)
         -> Observable<Element> {
         SkipCount(source: self.asObservable(), count: count)
@@ -33,6 +34,7 @@ extension ObservableType {
      - parameter scheduler: Scheduler to run the timer on.
      - returns: An observable sequence with the elements skipped during the specified duration from the start of the source sequence.
      */
+    // 跳过固定的事件.
     public func skip(_ duration: RxTimeInterval, scheduler: SchedulerType)
         -> Observable<Element> {
         SkipTime(source: self.asObservable(), duration: duration, scheduler: scheduler)
@@ -41,6 +43,7 @@ extension ObservableType {
 
 // count version
 
+// 这个就是, 在 Sink 内部有一个计数器, 当 on 被触发到合适的次数的时候, 就才 forward 信号
 final private class SkipCountSink<Observer: ObserverType>: Sink<Observer>, ObserverType {
     typealias Element = Observer.Element 
     typealias Parent = SkipCount<Element>
@@ -94,7 +97,7 @@ final private class SkipCount<Element>: Producer<Element> {
 }
 
 // time version
-
+// 这里感觉复杂了, 记录一下时间不可以吗. 在 on 的时候, 比对一下有没有超过 deadline
 final private class SkipTimeSink<Element, Observer: ObserverType>: Sink<Observer>, ObserverType where Observer.Element == Element {
     typealias Parent = SkipTime<Element>
 

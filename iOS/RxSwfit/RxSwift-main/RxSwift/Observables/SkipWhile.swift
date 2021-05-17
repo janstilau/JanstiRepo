@@ -6,6 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+
 extension ObservableType {
     /**
      Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
@@ -32,6 +33,10 @@ extension ObservableType {
         SkipWhile(source: self.asObservable(), predicate: predicate)
     }
 }
+
+/*
+ 这个 Sink 很简单, 就是一个 Bool 的存储, 每次来了新的值, 进行一次 predicate 的判断.
+ */
 
 final private class SkipWhileSink<Observer: ObserverType>: Sink<Observer>, ObserverType {
     typealias Element = Observer.Element 
