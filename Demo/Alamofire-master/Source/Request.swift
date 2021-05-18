@@ -17,11 +17,16 @@ import Foundation
      // Only inherits Request APIs, there are no other custom APIs at this time.
  }
  */
-/// `Request` is the common superclass of all Alamofire request types and provides common state, delegate, and callback
-/// handling.
+// `Request` is the common superclass of all Alamofire request types and provides common state, delegate, and callback handling
+
 public class Request {
     /// State of the `Request`, with managed transitions between states set when calling `resume()`, `suspend()`, or
     /// `cancel()` on the `Request`.
+    /*
+     使用状态, 主要是为了管理过程.
+     而过程, 一般会有以下的几个状态. initialized 状态很重要, 表示过程其实还没有开始. 在这个状态下, 各种属性设置, 一般不会引起后续的逻辑.
+     而在其他的状态下, 修改过程类的属性, 可能会让过程类的实施逻辑, 产生变化.
+     */
     public enum State {
         /// Initial state of the `Request`.
         case initialized
@@ -41,6 +46,7 @@ public class Request {
         
         /// Determines whether `self` can be transitioned to the provided `State`.
         // 判断状态机的变化是否合法.
+        // 这个主要用在了防卫式的写法上面了.
         func canTransitionTo(_ state: State) -> Bool {
             switch (self, state) {
             case (.initialized, _):
@@ -63,10 +69,15 @@ public class Request {
      这些都是不可变的数据, 需要在 init 方法里面指定.
      */
     /// `UUID` providing a unique identifier for the `Request`, used in the `Hashable` and `Equatable` conformances.
+    // 唯一标识这个事情, 各种框架下, 都是使用了 UUID.
+    // 由于 Swfit 默认参数和 ArgumentLabel, 这个值, 基本上可以不管生成逻辑.
     public let id: UUID
     /// The serial queue for all internal async actions.
     public let underlyingQueue: DispatchQueue
-    /// The queue used for all serialization actions. By default it's a serial queue that targets `underlyingQueue`.
+    /// The queue used for all serialization actions. By default it's a serial queue that targets `underlyingQueue`
+    // 序列化, 反序列化的专门的队列.
+    // 可以看到, 由于网络请求是一个异步操作, 所以实际上, 所有的任务, 都是当做 Value 传来传去的.
+    // 各种回调, 都是将值插入到队列之后就不管了. 到底队列如何调度, 都是线程池自己的实现了.
     public let serializationQueue: DispatchQueue
     /// `EventMonitor` used for event callbacks.
     public let eventMonitor: EventMonitor?
@@ -129,7 +140,6 @@ public class Request {
      虽然有 state 作为状态的标识.
      但是, 这种标识状态的 get 方法, 可以让使用者更加的方便.
      */
-    /// `State` of the `Request`.
     public var state: State { mutableState.state }
     /// Returns whether `state` is `.initialized`.
     public var isInitialized: Bool { state == .initialized }
@@ -146,12 +156,17 @@ public class Request {
      MutableState 里面存放的数据, 应该提供简便的方法, 让外界进行 get, set. 不过, 在类内部, 要转接到 MutableState 进行管理.
      */
     
-    // MARK: Progress
     
+    /*
+     相比较, completion 是一个可以添加多个的数组, ProgressHandler 只会有一个值. 存在了 mutableState 里面.
+     */
     public typealias ProgressHandler = (Progress) -> Void
     public let uploadProgress = Progress(totalUnitCount: 0)
     public let downloadProgress = Progress(totalUnitCount: 0)
     
+    /*
+        各种值, 都存在了 mutableState 里面. 对 mutableState 的 get, set, 都会有线程保护.
+     */
     fileprivate var uploadProgressHandler: (handler: ProgressHandler, queue: DispatchQueue)? {
         get { mutableState.uploadProgressHandler }
         set { mutableState.uploadProgressHandler = newValue }
@@ -238,6 +253,14 @@ public class Request {
         get { mutableState.error }
         set { mutableState.error = newValue }
     }
+    
+    
+    
+    
+    
+    
+    
+    
     
 /*
      属性放上面, 方法放下面

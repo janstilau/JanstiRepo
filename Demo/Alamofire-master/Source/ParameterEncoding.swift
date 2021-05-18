@@ -238,6 +238,7 @@ public struct JSONEncoding: ParameterEncoding {
             }
             /*
              对于 JSON 的 encoder 来说 ,他生成的, 一定就是放到了 body 里面
+             所以, JSONEncoder 不能是 Get 请求.
              */
             urlRequest.httpBody = data
         } catch {

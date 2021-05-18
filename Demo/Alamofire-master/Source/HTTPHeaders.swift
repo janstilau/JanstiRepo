@@ -238,7 +238,7 @@ extension Array where Element == HTTPHeader {
 
 public extension HTTPHeaders {
     /*
-     这里没有任何的方法调用, 都是获取的属性, 因为有着明确的类型, HTTPHeader 被省略, 直接.defaultAcceptEncoding 进行的值的获取.
+     之所以, 可以用 [] 这种方式初始化, 是因为 HTTPHeaders 这个类, 有着数组初始化的协议的遵守.
      */
     static let `default`: HTTPHeaders = [.defaultAcceptEncoding,
                                          .defaultAcceptLanguage,
@@ -355,9 +355,17 @@ extension HTTPURLResponse {
  在网络请求过程中的各个 request 中, 通过 URLSessionConfiguration 中的配置, 进行 request 的配置.
  */
 public extension URLSessionConfiguration {
-    /// Returns `httpAdditionalHeaders` as `HTTPHeaders`.
+    
+    /*
+     httpAdditionalHeaders
+     A dictionary of additional headers to send with requests.
+     This property specifies additional headers that are added to all tasks within sessions based on this configuration. For example, you might set the User-Agent header so that it is automatically included in every request your app makes through sessions based on this configuration.
+     这里, 体现出了 URLSessionConfiguration 这个类的意义. 就是一个数据类, 供 Session 在合适的时候, 去一个固定的数据源里面, 读取相应的数据而已.
+     */
     var headers: HTTPHeaders {
-        get { (httpAdditionalHeaders as? [String: String]).map(HTTPHeaders.init) ?? HTTPHeaders() }
+        get {
+            (httpAdditionalHeaders as? [String: String]).map(HTTPHeaders.init) ?? HTTPHeaders()
+        }
         set { httpAdditionalHeaders = newValue.dictionary }
     }
 }

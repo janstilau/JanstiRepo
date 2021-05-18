@@ -1,10 +1,7 @@
 import Foundation
 
 /*
- AFN 里面, url 都是通过 Stirng 进行传递的.
- 但是, 实际上使用的是 URL 类.
- 框架并不关心, 到底怎么得到 URL, 只要传递过来的对象, 可以生产出一个 URL 就可以了.
- 注意, 这个方法是 throws, 在使用的时候, 都要增加 try 处理.
+ 
  */
 public protocol URLConvertible {
     func asURL() throws -> URL

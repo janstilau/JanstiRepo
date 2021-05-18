@@ -24,14 +24,19 @@
 
 import Foundation
 
+// 想要让其他类型, 纳入到 AlamofireExtended 系统, 只需要进行一次声明即可. 因为有着默认的实现.
 extension URLSessionConfiguration: AlamofireExtended {}
+
+// 为 AlamofireExtension 添加相关的属性方法的时候, 是限制 ExtendedType.
 extension AlamofireExtension where ExtendedType: URLSessionConfiguration {
-    /// Alamofire's default configuration. Same as `URLSessionConfiguration.default` but adds Alamofire default
-    /// `Accept-Language`, `Accept-Encoding`, and `User-Agent` headers.
+    // Alamofire's default configuration. Same as `URLSessionConfiguration.default` but adds Alamofire default
+    // `Accept-Language`, `Accept-Encoding`, and `User-Agent` headers.
+    
+    // configuration.headers = .default,
+    // 属性和值, 都是定义在 Alamofire 里的.
     public static var `default`: URLSessionConfiguration {
         let configuration = URLSessionConfiguration.default
         configuration.headers = .default
-
         return configuration
     }
 }

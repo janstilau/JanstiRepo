@@ -225,6 +225,7 @@ public class AuthenticationInterceptor<AuthenticatorType>: RequestInterceptor wh
     // MARK: Adapt
     
     public func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+        
         let adaptResult: AdaptResult = $mutableState.write { mutableState in
             // Queue the adapt operation if a refresh is already in place.
             guard !mutableState.isRefreshing else {

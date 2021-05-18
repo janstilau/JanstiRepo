@@ -5,31 +5,28 @@ private protocol Lock {
     func unlock()
 }
 
+/*
+    两个函数, 具有同样的逻辑.
+    根据传入的参数是否有返回值, 调用不同的函数. 这是编译器完成的.
+ */
 extension Lock {
-    /// Executes a closure returning a value while acquiring the lock.
-    ///
-    /// - Parameter closure: The closure to run.
-    ///
-    /// - Returns:           The value the closure generated.
-    /*
-     Defer 的用处在这里体现了.
-     用生命周期来进行资源的管理.
-     */
     func around<T>(_ closure: () -> T) -> T {
         lock();
         defer { unlock() }
         return closure()
     }
     
-    /// Execute a closure while acquiring the lock.
-    ///
-    /// - Parameter closure: The closure to run.
     func around(_ closure: () -> Void) {
         lock();
         defer { unlock() }
         closure()
     }
 }
+
+
+/*
+    在不同的平台上, 使用不同的锁, 完成 lock 的功能.
+ */
 
 #if os(Linux)
 /// A `pthread_mutex_t` wrapper.
@@ -89,7 +86,9 @@ final class UnfairLock: Lock {
 }
 #endif
 
-/// A thread-safe wrapper around a value.
+
+
+// A thread-safe wrapper around a value.
 @propertyWrapper
 @dynamicMemberLookup
 final class Protected<T> {
@@ -104,12 +103,14 @@ final class Protected<T> {
         self.value = value
     }
     
+    // 最重要的值的 get, set 方法, 会被 lock 锁定, 保证了线程安全.
     /// The contained value. Unsafe for anything more than direct read or write.
     var wrappedValue: T {
         get { lock.around { value } }
         set { lock.around { value = newValue } }
     }
     
+    // projectedValue 把自己暴露出去.
     var projectedValue: Protected<T> { self }
     
     init(wrappedValue: T) {

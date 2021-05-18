@@ -772,12 +772,17 @@ class RequestDescriptionTestCase: BaseTestCase {
 final class RequestCURLDescriptionTestCase: BaseTestCase {
     // MARK: Properties
 
+    /*
+     Swfit 的这种写法, 让代码组织更加的清晰.
+     将一个类, 初始化相关的代码, 完全的包裹在自己的内部使用.
+     如果真的需要公用, 把相关的变量的定义, 提前提出来.
+     */
     let manager: Session = {
         let manager = Session()
-
         return manager
     }()
 
+     
     let managerWithAcceptLanguageHeader: Session = {
         var headers = HTTPHeaders.default
         headers["Accept-Language"] = "en-US"

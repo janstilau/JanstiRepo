@@ -214,6 +214,7 @@ open class Session {
     
     /*
      RequestModifier 仅仅是一个 block 类型, 但是通过 typealias 的定义, 让他的逻辑含义, 更加的突出.
+     RequestModifier 就是给外界一个自定义的机会. 例如, 这个 Request 的 timeout 要长一点, 或者某个特定 URL 的 Request 里面, cotnent-type 要改变.
      */
     public typealias RequestModifier = (inout URLRequest) throws -> Void
     
@@ -269,6 +270,12 @@ open class Session {
                                              encoding: encoding,
                                              headers: headers,
                                              requestModifier: requestModifier)
+        
+        /*
+         Session 有两种 request 方法, 一种是提供各种原始信息. 一种是直接提供一个 URLRequestConvertible
+         可以看到, 提供原始材料的这种, 还是在内部构建了一个 RequestConvertible.
+         所以, 整个 Session 的内部, 其实是建立在 RequestConvertible 的基础上进行的运转.
+         */
         
         return request(convertible, interceptor: interceptor)
     }
@@ -328,6 +335,11 @@ open class Session {
     /// - Returns:       The created `DataRequest`.
     open func request(_ convertible: URLRequestConvertible,
                       interceptor: RequestInterceptor? = nil) -> DataRequest {
+        /*
+         DataRequest 是一个网络请求的容器, 控制类.
+         它的各种属性, 在 Session 中就可以获取.
+         而需要外界提供的, 就是 Request.
+         */
         let request = DataRequest(convertible: convertible,
                                   underlyingQueue: rootQueue,
                                   serializationQueue: serializationQueue,
@@ -1030,15 +1042,21 @@ open class Session {
         }
     }
     
+    /*
+     Request 是网络请求的控制过程类, 而 URLRequestConvertible 则是代表着 NSURLRequest
+     performSetupOperations 里面做的事情, 首先是创建一个 URLRequest, 然后, 将调用 didXXXX 方法, 将创建出来的对象传到这个方法内. 在这个方法内, 进行流程的下一步运转.
+     Session 里面, 有着很多这种 did 方法, 就是流程运转的标志.
+     */
     func performSetupOperations(for request: Request,
                                 convertible: URLRequestConvertible) {
         dispatchPrecondition(condition: .onQueue(requestQueue))
         
-        let initialRequest: URLRequest
+        
         
         /*
-         如果, request 本身有问题的化, 那么是不会进行后续的 request 的真正请求的.
+         首选, 通过 URLRequestConvertible 创建出一个 URLRequest 出来.
          */
+        let initialRequest: URLRequest
         do {
             initialRequest = try convertible.asURLRequest()
             try initialRequest.validate()
@@ -1047,20 +1065,24 @@ open class Session {
             return
         }
         
+        // 通知外界.
         rootQueue.async { request.didCreateInitialURLRequest(initialRequest) }
         
         guard !request.isCancelled else { return }
         
         guard let adapter = adapter(for: request) else {
+            // 如果没有改造器, 就调用 didCreateURLRequest 进入下面的流程.
             rootQueue.async { self.didCreateURLRequest(initialRequest, for: request) }
             return
         }
         
+        // 改造其改造 request,
         adapter.adapt(initialRequest, for: self) { result in
             do {
                 let adaptedRequest = try result.get()
                 try adaptedRequest.validate()
                 
+                // 在改造结束后, 调用 didCreateURLRequest 进入下一个流程.
                 self.rootQueue.async {
                     request.didAdaptInitialRequest(initialRequest, to: adaptedRequest)
                     self.didCreateURLRequest(adaptedRequest, for: request)
@@ -1080,6 +1102,7 @@ open class Session {
         
         guard !request.isCancelled else { return }
         
+        // 使用 Request 的 task 方法, 不同的 Request 创建出不同的 DataTask 出来.
         let task = request.task(for: urlRequest, using: session)
         requestTaskMap[request] = task
         request.didCreateTask(task)
@@ -1125,7 +1148,8 @@ open class Session {
     // MARK: - Adapters and Retriers
     
     func adapter(for request: Request) -> RequestAdapter? {
-        if let requestInterceptor = request.interceptor, let sessionInterceptor = interceptor {
+        if let requestInterceptor = request.interceptor,
+           let sessionInterceptor = interceptor {
             return Interceptor(adapters: [requestInterceptor, sessionInterceptor])
         } else {
             return request.interceptor ?? interceptor
