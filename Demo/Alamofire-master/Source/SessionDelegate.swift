@@ -1,6 +1,6 @@
 import Foundation
 
-/// Class which implements the various `URLSessionDelegate` methods to connect various Alamofire features.
+// Class which implements the various `URLSessionDelegate` methods to connect various Alamofire features.
 open class SessionDelegate: NSObject {
     private let fileManager: FileManager
     

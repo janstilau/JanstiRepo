@@ -68,11 +68,16 @@ public protocol RequestRetrier {
 /// Type that provides both `RequestAdapter` and `RequestRetrier` functionality.
 public protocol RequestInterceptor: RequestAdapter, RequestRetrier {}
 
+/*
+ 默认的, RequestInterceptor 对于 RequestAdapter, RequestRetrier 的实现.
+ */
 extension RequestInterceptor {
+    // adapt , 改造一个 Request, 就是直接把原始的 request 传回去.
     public func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         completion(.success(urlRequest))
     }
     
+    // retry, 再次进行 request 的请求, 就是不请求.
     public func retry(_ request: Request,
                       for session: Session,
                       dueTo error: Error,

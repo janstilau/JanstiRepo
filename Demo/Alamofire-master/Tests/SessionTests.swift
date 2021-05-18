@@ -1,27 +1,3 @@
-//
-//  SessionTests.swift
-//
-//  Copyright (c) 2014-2018 Alamofire Software Foundation (http://alamofire.org/)
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//
-
 @testable import Alamofire
 import Foundation
 import XCTest
@@ -29,7 +5,14 @@ import XCTest
 final class SessionTestCase: BaseTestCase {
     // MARK: Helper Types
 
+    
+    /*
+     HTTPMethodAdapter
+     这个类其实没有什么意义, 但是它提供了一个使用 Adapter 的实现.
+     通过定义两个属性, 可以影响到 Alamofire 在生成 Request 的过程中的实现细节.
+     */
     private class HTTPMethodAdapter: RequestInterceptor {
+        
         let method: HTTPMethod
         let throwsError: Bool
 
@@ -40,9 +23,16 @@ final class SessionTestCase: BaseTestCase {
             self.throwsError = throwsError
         }
 
+        /*
+         由于 HTTPMethodAdapter 有默认实现, 所以可以仅仅实现其中的一个 primitiveMethod
+         */
+        
         func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
             adaptedCount += 1
 
+            /*
+             Result 提供了这样的一个 Init 方法, 传入一个返回 Successs 的闭包, 如果闭包抛出了错误, 就变为 Fail.
+             */
             let result: Result<URLRequest, Error> = Result {
                 guard !throwsError else { throw AFError.invalidURL(url: "") }
 
@@ -51,18 +41,31 @@ final class SessionTestCase: BaseTestCase {
 
                 return urlRequest
             }
-
+                
             completion(result)
         }
     }
-
+    
+    
+    
+    /*
+     这个 Adapter, 提供了已修改 HttpHeader 的办法.
+     任何的 Request, 都会增加上 Adapter 里面定义的 header.
+     
+     这里可以稍微思考一下, RequestInterceptor 这个协议出现的原因.
+     如果, 仅仅是个别的 request, 那么提供一个闭包对这个 Request 做自定义化无可厚非.
+     但是如果业务固化, 是整个 App 的逻辑呢.
+     比如, Url 以什么开头的, 就增加验证, 需要在 Request 里面, 增加一些 Header.
+     这个时候, 写一个具有 App 相关逻辑的 HeaderAdapter, 当做 App 使用的 Session 的 Interceptor, 就很有必要了.
+     */
     private class HeaderAdapter: RequestInterceptor {
         let headers: HTTPHeaders
         let throwsError: Bool
 
         var adaptedCount = 0
 
-        init(headers: HTTPHeaders = ["field": "value"], throwsError: Bool = false) {
+        init(headers: HTTPHeaders = ["field": "value"],
+             throwsError: Bool = false) {
             self.headers = headers
             self.throwsError = throwsError
         }

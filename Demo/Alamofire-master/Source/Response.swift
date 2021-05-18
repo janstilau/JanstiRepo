@@ -7,8 +7,8 @@ public typealias AFDownloadResponse<Success> = DownloadResponse<Success, AFError
 
 // Type used to store all values associated with a serialized response of a `DataRequest` or `UploadRequest`.
 // Response 不在仅仅是URLResponse 表示响应头, 而是一个 Container.
-// 里面装载了网络交互过程中的各个值.
 // 但不管怎么来说, 这都是一个数据类, 真正的交互的逻辑, 没有在这个类里面.
+// 真正的交互控制的类, 是 Request.
 
 public struct DataResponse<Success, Failure: Error> {
     /// The URL request sent to the server.
