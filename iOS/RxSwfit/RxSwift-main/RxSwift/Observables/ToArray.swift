@@ -34,6 +34,7 @@ final private class ToArraySink<SourceType, Observer: ObserverType>: Sink<Observ
         super.init(observer: observer, cancel: cancel)
     }
     
+    // 在接受事件的时候, 不断的存放到自己的缓冲区里面, 只有到 complete 的时候, 才一次性把这些数据发送出去.
     func on(_ event: Event<SourceType>) {
         switch event {
         case .next(let value):

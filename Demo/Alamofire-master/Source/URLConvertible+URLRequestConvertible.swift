@@ -40,6 +40,8 @@ extension URLComponents: URLConvertible {
  可以转化为 URLRequest 的协议
  */
 public protocol URLRequestConvertible {
+    // 实际上, URLSession 里面, 就是仅仅需要一个 request 而已.
+    // request 其实已经包含了网络请求的所有的信息了.
     func asURLRequest() throws -> URLRequest
 }
 

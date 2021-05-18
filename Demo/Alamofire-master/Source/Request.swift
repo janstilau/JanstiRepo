@@ -40,6 +40,7 @@ public class Request {
         case finished
         
         /// Determines whether `self` can be transitioned to the provided `State`.
+        // 判断状态机的变化是否合法.
         func canTransitionTo(_ state: State) -> Bool {
             switch (self, state) {
             case (.initialized, _):
@@ -77,6 +78,10 @@ public class Request {
     // MARK: - Mutable State
     /*
      所有的可变数据, 放到一个结构体里面.
+     */
+    /*
+     相比较 AFN 里面, 专门定义了一个数据类型存放网络交互的过程, Request 是 Alamofire 里面的数据类 Contianer.
+     将所有网络请求相关的信息, 统统放到了里面.
      */
     /// Type encapsulating all mutable state that may need to be accessed from anything other than the `underlyingQueue`.
     struct MutableState {
@@ -495,6 +500,9 @@ public class Request {
     /// Finishes this `Request` and starts the response serializers.
     ///
     /// - Parameter error: The possible `Error` with which the instance will finish.
+    /*
+     当 Finish 被调用的时候, 就是网络请求已经结束了, 下面应该是解析 data, 触发回调了.
+     */
     func finish(error: AFError? = nil) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
         
@@ -505,6 +513,7 @@ public class Request {
         if let error = error { self.error = error }
         
         // Start response handlers
+        // 这里仅仅是开了个头, 开始反序列化 data
         processNextResponseSerializer()
         
         eventMonitor?.requestDidFinish(self)
@@ -527,6 +536,8 @@ public class Request {
                 underlyingQueue.async { self.processNextResponseSerializer() }
             }
             
+            // 在这里, 当添加了 appendResponseSerializer 的时候, 才会真正的调用 resume 的方法.
+            // 也就是, 当添加了网络的响应的时候, 就自动开启了网络请求.
             if mutableState.state.canTransitionTo(.resumed) {
                 underlyingQueue.async { if self.delegate?.startImmediately == true { self.resume() } }
             }
@@ -540,6 +551,8 @@ public class Request {
         var responseSerializer: (() -> Void)?
         
         $mutableState.write { mutableState in
+            // 根据 responseSerializerCompletions 的个数, 来决定 responseSerializers 的 index.
+            // 这两个队列里面的闭包的和, 一定是 response 的 completion 的总和.
             let responseSerializerIndex = mutableState.responseSerializerCompletions.count
             
             if responseSerializerIndex < mutableState.responseSerializers.count {
@@ -552,6 +565,7 @@ public class Request {
     
     /// Processes the next response serializer and calls all completions if response serialization is complete.
     func processNextResponseSerializer() {
+        // 当, 没有 ResponseSerializer 之后, 就是要开启 ResponseCompletion 的处理了.
         guard let responseSerializer = nextResponseSerializer() else {
             // Execute all response serializer completions and clear them
             var completions: [() -> Void] = []
@@ -574,6 +588,7 @@ public class Request {
                 mutableState.isFinishing = false
             }
             
+            // 将, 对于反序列化的 Model 的处理提出来, forEach 进行了处理.
             completions.forEach { $0() }
             
             // Cleanup the request
@@ -582,6 +597,7 @@ public class Request {
             return
         }
         
+        // 这里, 拿到头节点直接调用, 是因为, response 的实现里面, responseSerializerDidComplete 的后面, 又调用了 processNextResponseSerializer
         serializationQueue.async { responseSerializer() }
     }
     
@@ -590,6 +606,7 @@ public class Request {
     /// - Parameter completion: The completion handler provided with the response serializer, called when all serializers
     ///                         are complete.
     func responseSerializerDidComplete(completion: @escaping () -> Void) {
+        // 这里, 是将对于反序列化 Model 的处理, 放到了 responseSerializerCompletions 里面.
         $mutableState.write { $0.responseSerializerCompletions.append(completion) }
         processNextResponseSerializer()
     }
@@ -698,6 +715,7 @@ public class Request {
     /// Resumes the instance.
     ///
     /// - Returns: The instance.
+    // Request 的 resume, 这里, 才会真正的进行 dataTask 的 resume 操作.
     @discardableResult
     public func resume() -> Self {
         $mutableState.write { mutableState in
@@ -754,8 +772,12 @@ public class Request {
     ///   - closure: The closure to be executed periodically as data is read from the server.
     ///
     /// - Returns:   The instance.
+    /*
+     相比较于, Response 可以无限的增加闭包回调, Progress 只会有一个呗使用.
+     */
     @discardableResult
-    public func downloadProgress(queue: DispatchQueue = .main, closure: @escaping ProgressHandler) -> Self {
+    public func downloadProgress(queue: DispatchQueue = .main,
+                                 closure: @escaping ProgressHandler) -> Self {
         mutableState.downloadProgressHandler = (handler: closure, queue: queue)
         
         return self
@@ -1055,6 +1077,7 @@ public class DataRequest: Request {
             $mutableData.write { $0?.append(data) }
         }
         
+        // 在 Session 的 receiveData 的回调里面, 调用的 progress 的回调
         updateDownloadProgress()
     }
     

@@ -6,6 +6,10 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
+/*
+ 一个特殊的类型.
+ subscribte 直接就是发送一个 complete 信号给后面的流.
+ */
 extension ObservableType {
     /**
      Returns an empty observable sequence, using the specified scheduler to send out the single `Completed` message.

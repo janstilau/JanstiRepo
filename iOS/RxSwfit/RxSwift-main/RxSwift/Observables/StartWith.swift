@@ -32,6 +32,8 @@ final private class StartWith<Element>: Producer<Element> {
         super.init()
     }
 
+    // Prepends a sequence of values to an observable sequence
+    // 也就是在 Subscribe 的时候, 先输出一些特殊的数据给注册的 Observer
     override func run<Observer: ObserverType>(_ observer: Observer, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where Observer.Element == Element {
         for e in self.elements {
             observer.on(.next(e))

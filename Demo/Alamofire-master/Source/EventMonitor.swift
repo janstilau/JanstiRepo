@@ -1,7 +1,8 @@
 import Foundation
 
-/// Protocol outlining the lifetime events inside Alamofire. It includes both events received from the various
-/// `URLSession` delegate protocols as well as various events from the lifetime of `Request` and its subclasses.
+// Protocol outlining the lifetime events inside Alamofire. It includes both events received from the various
+// `URLSession` delegate protocols as well as various events from the lifetime of `Request` and its subclasses.
+// 一个特殊的协议, 这个协议, 可以将 URLSession 的各种事件统一的向一个监听者抛出.
 public protocol EventMonitor {
     /// The `DispatchQueue` onto which Alamofire's root `CompositeEventMonitor` will dispatch events. `.main` by default.
     var queue: DispatchQueue { get }

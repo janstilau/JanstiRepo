@@ -36,6 +36,8 @@ extension ObservableType {
     }
 }
 
+// 就是不满足不发
+
 final private class FilterSink<Observer: ObserverType>: Sink<Observer>, ObserverType {
     typealias Predicate = (Element) throws -> Bool
     typealias Element = Observer.Element

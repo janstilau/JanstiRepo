@@ -17,10 +17,19 @@ public protocol DataResponseSerializerProtocol {
     ///
     /// - Returns:    The `SerializedObject`.
     /// - Throws:     Any `Error` produced during serialization.
-    func serialize(request: URLRequest?, response: HTTPURLResponse?, data: Data?, error: Error?) throws -> SerializedObject
+    /*
+     这个协议所做的事情, 就是将 data 还原成为对应的 Model
+     */
+    func serialize(request: URLRequest?,
+                   response: HTTPURLResponse?,
+                   data: Data?,
+                   error: Error?) throws -> SerializedObject
 }
 
 /// The type to which all download response serializers must conform in order to serialize a response.
+/*
+ 从已经归档的数据中, 序列化出 Model 来
+ */
 public protocol DownloadResponseSerializerProtocol {
     /// The type of serialized object to be created.
     associatedtype SerializedObject
@@ -35,7 +44,10 @@ public protocol DownloadResponseSerializerProtocol {
     ///
     /// - Returns:    The `SerializedObject`.
     /// - Throws:     Any `Error` produced during serialization.
-    func serializeDownload(request: URLRequest?, response: HTTPURLResponse?, fileURL: URL?, error: Error?) throws -> SerializedObject
+    func serializeDownload(request: URLRequest?,
+                           response: HTTPURLResponse?,
+                           fileURL: URL?,
+                           error: Error?) throws -> SerializedObject
 }
 
 /// A serializer that can handle both data and download responses.
@@ -48,6 +60,7 @@ public protocol ResponseSerializer: DataResponseSerializerProtocol & DownloadRes
     var emptyResponseCodes: Set<Int> { get }
 }
 
+// 预处理 Data
 /// Type used to preprocess `Data` before it handled by a serializer.
 public protocol DataPreprocessor {
     /// Process           `Data` before it's handled by a serializer.
@@ -55,6 +68,7 @@ public protocol DataPreprocessor {
     func preprocess(_ data: Data) throws -> Data
 }
 
+// 这应该是默认的预处理器, 就是不做处理.
 /// `DataPreprocessor` that returns passed `Data` without any transform.
 public struct PassthroughPreprocessor: DataPreprocessor {
     public init() {}
@@ -72,6 +86,9 @@ public struct GoogleXSSIPreprocessor: DataPreprocessor {
 }
 
 extension ResponseSerializer {
+    /*
+     定义三个特殊的对象, 作为默认值.
+     */
     /// Default `DataPreprocessor`. `PassthroughPreprocessor` by default.
     public static var defaultDataPreprocessor: DataPreprocessor { PassthroughPreprocessor() }
     /// Default `HTTPMethod`s for which empty response bodies are considered appropriate. `[.head]` by default.
@@ -79,6 +96,7 @@ extension ResponseSerializer {
     /// HTTP response codes for which empty response bodies are considered appropriate. `[204, 205]` by default.
     public static var defaultEmptyResponseCodes: Set<Int> { [204, 205] }
     
+    // 提供协议中默认的值. 这样实现协议的时候, 不用专门去实现这几个属性的限制.
     public var dataPreprocessor: DataPreprocessor { Self.defaultDataPreprocessor }
     public var emptyRequestMethods: Set<HTTPMethod> { Self.defaultEmptyRequestMethods }
     public var emptyResponseCodes: Set<Int> { Self.defaultEmptyResponseCodes }
@@ -111,11 +129,16 @@ extension ResponseSerializer {
     ///   - response: `HTTPURLResponse` to evaluate.
     ///
     /// - Returns:    `true` if `request` or `response` allow empty bodies, `false` otherwise.
-    public func emptyResponseAllowed(forRequest request: URLRequest?, response: HTTPURLResponse?) -> Bool {
-        (requestAllowsEmptyResponseData(request) == true) || (responseAllowsEmptyResponseData(response) == true)
+    public func emptyResponseAllowed(forRequest request: URLRequest?,
+                                     response: HTTPURLResponse?) -> Bool {
+        (requestAllowsEmptyResponseData(request) == true) ||
+            (responseAllowsEmptyResponseData(response) == true)
     }
 }
 
+/*
+ 默认, 还是使用 DataResponseSerializerProtocol 来进行反序列化.
+ */
 /// By default, any serializer declared to conform to both types will get file serialization for free, as it just feeds
 /// the data read from disk into the data response serializer.
 public extension DownloadResponseSerializerProtocol where Self: DataResponseSerializerProtocol {
@@ -151,10 +174,25 @@ extension DataRequest {
     ///   - completionHandler: The code to be executed once the request has finished.
     ///
     /// - Returns:             The request.
+    
+    /*
+     各种方法的调用, 其实仅仅是增加一个回调数据而已.
+     但是方法还是叫做 response, 而不是 addResponseHandler
+     completionHandler: @escaping (AFDataResponse<Data?>) -> Void 里面, 其实没有做反序列化的处理.
+     */
     @discardableResult
-    public func response(queue: DispatchQueue = .main, completionHandler: @escaping (AFDataResponse<Data?>) -> Void) -> Self {
+    public func response(queue: DispatchQueue = .main,
+                         completionHandler: @escaping (AFDataResponse<Data?>) -> Void) -> Self {
+        
+        /*
+         appendResponseSerializer 里面, 添加的是 data 如何反序列化到 Model 的过程.
+         这个过程完成之后, responseSerializerDidComplete 中会将 completionHandler 处理 model 的过程, 添加到一个队列里.
+         当 Alamofire 完成了所有的 Data 的反序列化过程之后, 才会去调用队列里面的 completionHandler
+         */
         appendResponseSerializer {
+            // 当, 能够到达这里的时候, 已经是网络请求达到最后阶段的时候. 所以, data, error 的值, 就是网络请求的最终状态.
             // Start work that should be on the serialization queue.
+            // Result<Success, AFError> == AFResult<Data?>
             let result = AFResult<Data?>(value: self.data, error: self.error)
             // End work that should be on the serialization queue.
             
@@ -165,10 +203,13 @@ extension DataRequest {
                                             metrics: self.metrics,
                                             serializationDuration: 0,
                                             result: result)
-                
+                // 这里不太明白, 为什么在这里调用. 因为 Response Handler 可以添加很多个, 岂不是 eventMonitor 会重复调用到很多次.
                 self.eventMonitor?.request(self, didParseResponse: response)
                 
-                self.responseSerializerDidComplete { queue.async { completionHandler(response) } }
+                self.responseSerializerDidComplete {
+                    // 提交的闭包, 会在提交的 queue 里面进行触发.
+                    queue.async { completionHandler(response) }
+                }
             }
         }
         
@@ -183,6 +224,7 @@ extension DataRequest {
     ///   - completionHandler:  The code to be executed once the request has finished.
     ///
     /// - Returns:              The request.
+    // 这里, 提供了一个反序列化器, 所以, 最终 completionHandler 处理的是一个, 已经处理好的 Model
     @discardableResult
     public func response<Serializer: DataResponseSerializerProtocol>(queue: DispatchQueue = .main,
                                                                      responseSerializer: Serializer,
@@ -191,7 +233,10 @@ extension DataRequest {
             appendResponseSerializer {
                 // Start work that should be on the serialization queue.
                 let start = ProcessInfo.processInfo.systemUptime
+                
+                // 这里是利用了 Result 的初始化方法, 可以传入一个 throw 的闭包, 在里面会捕获错误, 将 Result 转化为 error
                 let result: AFResult<Serializer.SerializedObject> = Result {
+                    // 在这里面, 通过 responseSerializer 进行了Model 的生成.
                     try responseSerializer.serialize(request: self.request,
                                                      response: self.response,
                                                      data: self.data,
@@ -204,6 +249,7 @@ extension DataRequest {
                 // End work that should be on the serialization queue.
                 
                 self.underlyingQueue.async {
+                    // 根据当前的值, 构建出 response.
                     let response = DataResponse(request: self.request,
                                                 response: self.response,
                                                 data: self.data,
@@ -213,11 +259,20 @@ extension DataRequest {
                     
                     self.eventMonitor?.request(self, didParseResponse: response)
                     
-                    guard let serializerError = result.failure, let delegate = self.delegate else {
+                    guard let serializerError = result.failure,
+                          let delegate = self.delegate else {
+                        // 如果, 没有发生错误, 就添加到 responseSerializer 的队列里面.
                         self.responseSerializerDidComplete { queue.async { completionHandler(response) } }
                         return
                     }
                     
+                    /*
+                     错误处理.
+                     Delegate 在接收到这个调用之后, 构建 retryResult 通知 Request 如何进行响应.
+                     
+                     这里, 如果不这样设计, 也可以是要求 delegate 返回一个 retryResult 对象.
+                     不过, 这样就逼得 delegate 必须要实现了. 将闭包传出去, 到底调用还是不调用, 就是 delegate 自己来掌握了.
+                     */
                     delegate.retryResult(for: self, dueTo: serializerError) { retryResult in
                         var didComplete: (() -> Void)?
                         
@@ -227,6 +282,7 @@ extension DataRequest {
                             }
                         }
                         
+                        // 如果, delegate 决定了, 不在继续, 那么就添加到 responseSerializer 队列里面.
                         switch retryResult {
                         case .doNotRetry:
                             didComplete = { completionHandler(response) }
@@ -244,6 +300,7 @@ extension DataRequest {
                             didComplete = { completionHandler(response) }
                             
                         case .retry, .retryWithDelay:
+                            // 交给 delegate. 这里没有 responseSerializer 队列的添加, 所以整个网络请求过程, 有可能结束了.
                             delegate.retryRequest(self, withDelay: retryResult.delay)
                         }
                     }
@@ -648,6 +705,9 @@ extension DataRequest {
     ///   - completionHandler:   A closure to be executed once the request has finished.
     ///
     /// - Returns:               The request.
+    /*
+     由于有 argumentLabel, 和 默认参数的存在, Swift 的方法, 在调用的时候, 可以得到大大的简化.
+     */
     @discardableResult
     public func responseJSON(queue: DispatchQueue = .main,
                              dataPreprocessor: DataPreprocessor = JSONResponseSerializer.defaultDataPreprocessor,
@@ -655,6 +715,7 @@ extension DataRequest {
                              emptyRequestMethods: Set<HTTPMethod> = JSONResponseSerializer.defaultEmptyRequestMethods,
                              options: JSONSerialization.ReadingOptions = .allowFragments,
                              completionHandler: @escaping (AFDataResponse<Any>) -> Void) -> Self {
+        // 所谓的 ResponseJSON, 就是用 JSONResponseSerializer 来处理 data
         response(queue: queue,
                  responseSerializer: JSONResponseSerializer(dataPreprocessor: dataPreprocessor,
                                                             emptyResponseCodes: emptyResponseCodes,

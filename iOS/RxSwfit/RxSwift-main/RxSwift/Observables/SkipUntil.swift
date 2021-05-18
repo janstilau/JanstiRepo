@@ -35,6 +35,7 @@ extension ObservableType {
     }
 }
 
+// 这个仅仅是有个标志位, 当监听的 Publisher 有动作之后, 改变标志位.
 final private class SkipUntilSinkOther<Other, Observer: ObserverType>
     : ObserverType
     , LockOwnerType
@@ -106,6 +107,7 @@ final private class SkipUntilSink<Other, Observer: ObserverType>
         self.synchronizedOn(event)
     }
 
+    // 只有标志位为 true 的时候, 数据才能向后流动.
     func synchronized_on(_ event: Event<Element>) {
         switch event {
         case .next:
@@ -124,6 +126,7 @@ final private class SkipUntilSink<Other, Observer: ObserverType>
     }
     
     func run() -> Disposable {
+        // 在这里, 将 source subscribe 了.
         let sourceSubscription = self.parent.source.subscribe(self)
         let otherObserver = SkipUntilSinkOther(parent: self)
         let otherSubscription = self.parent.other.subscribe(otherObserver)
