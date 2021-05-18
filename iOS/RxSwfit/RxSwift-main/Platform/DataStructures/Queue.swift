@@ -6,7 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-/**
+/*
 Data structure that represents queue.
 
 Complexity of `enqueue`, `dequeue` is O(1) when number of operations is
@@ -14,6 +14,10 @@ averaged over N operations.
 
 Complexity of `peek` is O(1).
 */
+
+/*
+ 
+ */
 struct Queue<T>: Sequence {
     /// Type of generator.
     typealias Generator = AnyIterator<T>
@@ -78,6 +82,7 @@ struct Queue<T>: Sequence {
     /// Enqueues `element`.
     ///
     /// - parameter element: Element to enqueue.
+    // 这里的意思是, 这是一个环状的队列.
     mutating func enqueue(_ element: T) {
         if count == storage.count {
             resizeTo(Swift.max(storage.count, 1) * resizeFactor)
@@ -128,6 +133,10 @@ struct Queue<T>: Sequence {
         var i = dequeueIndex
         var innerCount = count
 
+        /*
+         这里, 体现了使用闭包的好处.
+         可以不专门的设置一个 Iterator, 而是每次使用闭包, 存储相关的值. 闭包会存储状态, 在 innerCount 为 0 的时候, 也就是遍历结束了.
+         */
         return AnyIterator {
             if innerCount == 0 {
                 return nil

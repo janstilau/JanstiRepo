@@ -6,7 +6,8 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-/// Sequence that repeats `repeatedValue` infinite number of times.
+// 其实就是不断的重复一个 element;
+// 能够实现, 主要是依靠了 AnyIterator 的闭包.
 struct InfiniteSequence<Element> : Sequence {
     typealias Iterator = AnyIterator<Element>
     

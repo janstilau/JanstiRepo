@@ -9,9 +9,11 @@
 import Foundation
 
 /*
- RxSwfit 里面, 对于 atomicValue 的封装.
- 就是在锁的环境下, 进行 property 的操作行为.
- Atomic 相关类的意义就在于, 对于这个值来说, 只会有一个线程正在进行访问.
+ RxSwfit 里面, 对于 AtomicValue 的封装.
+ 我们习惯于类内一把锁, 进行相关成员变量的锁定. 但是实际上, 应该是相关的成员变量的修改使用一个锁.
+ Atomic Type 就是在修改相关的数据的时候, 会进行 lock 处理. 所以, 这个类型一定是引用类型, 所保护的资源, 一定是在堆空间内.
+ iOS 没有对应的 Atomic 实现, 这里自己实现一版.
+ NSLock 保证了引用类型, 保证了所的实现. 所以, 用 NSLock 作为父类, 然后增加了一个 Int 值做成员变量.
  */
 
 final class AtomicInt: NSLock {
@@ -21,10 +23,10 @@ final class AtomicInt: NSLock {
     }
 }
 
-/*
- 所有的这些操作, 都是用的全局函数的方式.
- */
 
+
+// 定义了各种全局方法, 进行 Atomic Int 的修改.
+// 不太清楚为什么不定义成为成员函数.
 @discardableResult
 @inline(__always)
 func add(_ this: AtomicInt, _ value: Int32) -> Int32 {

@@ -11,105 +11,127 @@ import Swift
 let arrayDictionaryMaxSize = 30
 
 struct BagKey {
-    /**
-    Unique identifier for object added to `Bag`.
+    /*
+     Unique identifier for object added to `Bag`.
      
-    It's underlying type is UInt64. If we assume there in an idealized CPU that works at 4GHz,
+     It's underlying type is UInt64. If we assume there in an idealized CPU that works at 4GHz,
      it would take ~150 years of continuous running time for it to overflow.
-    */
+     */
     fileprivate let rawValue: UInt64
 }
 
-/**
-Data structure that represents a bag of elements typed `T`.
-
-Single element can be stored multiple times.
-
-Time and space complexity of insertion and deletion is O(n). 
-
-It is suitable for storing small number of elements.
-*/
+/*
+ Data structure that represents a bag of elements typed `T`.
+ 
+ Single element can be stored multiple times.
+ 
+ Time and space complexity of insertion and deletion is O(n).
+ 
+ It is suitable for storing small number of elements.
+ */
 struct Bag<T> : CustomDebugStringConvertible {
-    /// Type of identifier for inserted elements.
+    
+    // Type of identifier for inserted elements.
     typealias KeyType = BagKey
     
     typealias Entry = (key: BagKey, value: T)
- 
+    
     private var _nextKey: BagKey = BagKey(rawValue: 0)
-
+    
     // data
-
+    
     // first fill inline variables
     var _key0: BagKey?
     var _value0: T?
-
+    
     // then fill "array dictionary"
     var _pairs = ContiguousArray<Entry>()
-
+    
     // last is sparse dictionary
     var _dictionary: [BagKey: T]?
-
+    
     var _onlyFastPath = true
-
+    
     /// Creates new empty `Bag`.
     init() {
     }
     
-    /**
-    Inserts `value` into bag.
+    /*
+     Inserts `value` into bag.
+     
+     - parameter element: Element to insert.
+     - returns: Key that can be used to remove element from bag.
+     */
     
-    - parameter element: Element to insert.
-    - returns: Key that can be used to remove element from bag.
-    */
+    /*
+     从 Insert 的逻辑, 可以看出, Bag 认为数组这种有序的结构, 优先应该被使用.
+     */
     mutating func insert(_ element: T) -> BagKey {
         let key = _nextKey
-
+        
         _nextKey = BagKey(rawValue: _nextKey.rawValue &+ 1)
-
+        
+        /*
+         如果, 头结点为空, 就赋值头结点.
+         */
         if _key0 == nil {
             _key0 = key
             _value0 = element
             return key
         }
-
+        
         _onlyFastPath = false
-
+        
+        /*
+         如果, 已经用到了 哈希表存储, 就直接存到 哈希表中.
+         */
         if _dictionary != nil {
             _dictionary![key] = element
             return key
         }
-
+        
+        /*
+         如果, 数组还没有太大, 就存到数组中.
+         */
         if _pairs.count < arrayDictionaryMaxSize {
             _pairs.append((key: key, value: element))
             return key
         }
-        
+        /*
+         数组过长了, 才初始化哈希表.
+         */
         _dictionary = [key: element]
         
         return key
     }
     
+    /*
+     上述的奇怪的设定, 也让下面的各种方法, 都要考虑到这三点, 才能有正确的语义.
+     */
+    
     /// - returns: Number of elements in bag.
     var count: Int {
+        // 这里, 头结点, 数组长度, 字典长度加在一块.
+        // 很明显的表明了作者的意图.
         let dictionaryCount: Int = _dictionary?.count ?? 0
         return (_value0 != nil ? 1 : 0) + _pairs.count + dictionaryCount
     }
     
-    /// Removes all elements from bag and clears capacity.
+    // Removes all elements from bag and clears capacity.
     mutating func removeAll() {
         _key0 = nil
         _value0 = nil
-
+        
         _pairs.removeAll(keepingCapacity: false)
         _dictionary?.removeAll(keepingCapacity: false)
     }
     
     /**
-    Removes element with a specific `key` from bag.
-    
-    - parameter key: Key that identifies element to remove from bag.
-    - returns: Element that bag contained, or nil in case element was already removed.
-    */
+     Removes element with a specific `key` from bag.
+     
+     - parameter key: Key that identifies element to remove from bag.
+     - returns: Element that bag contained, or nil in case element was already removed.
+     */
     mutating func removeKey(_ key: BagKey) -> T? {
         if _key0 == key {
             _key0 = nil
@@ -117,23 +139,23 @@ struct Bag<T> : CustomDebugStringConvertible {
             _value0 = nil
             return value
         }
-
+        
         if let existingObject = _dictionary?.removeValue(forKey: key) {
             return existingObject
         }
-
+        
         for i in 0 ..< _pairs.count where _pairs[i].key == key {
             let value = _pairs[i].value
             _pairs.remove(at: i)
             return value
         }
-
+        
         return nil
     }
 }
 
 extension Bag {
-    /// A textual representation of `self`, suitable for debugging.
+    // A textual representation of `self`, suitable for debugging.
     var debugDescription : String {
         "\(self.count) elements in Bag"
     }
@@ -150,18 +172,18 @@ extension Bag {
             }
             return
         }
-
+        
         let value0 = _value0
         let dictionary = _dictionary
-
+        
         if let value0 = value0 {
             action(value0)
         }
-
+        
         for i in 0 ..< _pairs.count {
             action(_pairs[i].value)
         }
-
+        
         if dictionary?.count ?? 0 > 0 {
             for element in dictionary!.values {
                 action(element)

@@ -14,6 +14,7 @@ class ObservableGroupByTest : RxTest {
 }
 
 extension ObservableGroupByTest {
+    
     func testGroupBy_TwoGroup() {
         let scheduler = TestScheduler(initialClock: 0)
         

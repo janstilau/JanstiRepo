@@ -938,6 +938,7 @@
 
 /* Begin PBXFileReference section */
 		033C2EF41D081B2A0050C015 /* UIScrollView+RxTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScrollView+RxTests.swift"; sourceTree = "<group>"; };
+		06133484265286BD00A82E82 /* PlatFormGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatFormGuide.swift; sourceTree = "<group>"; };
 		0BA949661E224B7E0036DD06 /* AsyncSubject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncSubject.swift; sourceTree = "<group>"; };
 		0BA9496B1E224B9C0036DD06 /* AsyncSubjectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncSubjectTests.swift; sourceTree = "<group>"; };
 		1AF67DA11CED420A00C310FA /* PublishSubjectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishSubjectTest.swift; sourceTree = "<group>"; };
@@ -2127,6 +2128,7 @@
 				C85B01721DB2ACF2006043C3 /* Platform.Darwin.swift */,
 				C85B01731DB2ACF2006043C3 /* Platform.Linux.swift */,
 				C8F03F441DBBA61B00AECC4C /* DispatchQueue+Extensions.swift */,
+				06133484265286BD00A82E82 /* PlatFormGuide.swift */,
 			);
 			path = Platform;
 			sourceTree = "<group>";
