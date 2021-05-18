@@ -1,10 +1,11 @@
 import Foundation
 
 // Class which implements the various `URLSessionDelegate` methods to connect various Alamofire features.
+
 open class SessionDelegate: NSObject {
     private let fileManager: FileManager
     
-    weak var stateProvider: SessionStateProvider?
+    weak var stateProvider: SessionStateProvider? // 这个协议, 由 Session 来实现了.
     var eventMonitor: EventMonitor?
     
     /// Creates an instance from the given `FileManager`.
@@ -32,6 +33,7 @@ open class SessionDelegate: NSObject {
 
 /// Type which provides various `Session` state values.
 protocol SessionStateProvider: AnyObject {
+    
     var serverTrustManager: ServerTrustManager? { get }
     var redirectHandler: RedirectHandler? { get }
     var cachedResponseHandler: CachedResponseHandler? { get }
@@ -166,6 +168,7 @@ extension SessionDelegate: URLSessionTaskDelegate {
                          completionHandler: @escaping (URLRequest?) -> Void) {
         eventMonitor?.urlSession(session, task: task, willPerformHTTPRedirection: response, newRequest: request)
         
+        // redirectHandler 仅仅是在这里, 才起到了作用
         if let redirectHandler = stateProvider?.request(for: task)?.redirectHandler ?? stateProvider?.redirectHandler {
             redirectHandler.task(task, willBeRedirectedTo: request, for: response, completion: completionHandler)
         } else {

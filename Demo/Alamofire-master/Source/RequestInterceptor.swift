@@ -1,5 +1,10 @@
 import Foundation
 
+/*
+ 给外界提供了一个机会, 修改 request 的参数生成的 NSURLRequest 对象.
+ 实现者, 在实现的细节里面, 根据 urlRequest 和 session 的信息, 新建, 或者修改 URLRequest 然后将修改完的值, 交给 completion 执行.
+ 默认, 是传回 initUrlRequest.
+ */
 /// A type that can inspect and optionally adapt a `URLRequest` in some manner if necessary.
 public protocol RequestAdapter {
     /// Inspects and adapts the specified `URLRequest` in some manner and calls the completion handler with the Result.
@@ -93,6 +98,10 @@ public typealias RetryHandler = (Request, Session, Error, _ completion: @escapin
 
 // MARK: -
 
+// 专门定义了两个类, 用 Closure 来进行对应协议方法的实现.
+
+// Closure 里面可以存储状态. 如果 Closure 里面, 可以 Hold 住所有的数据信息, 那么用 Closure 来定义新的类型, 是最方便的形式.
+
 /// Closure-based `RequestAdapter`.
 open class Adapter: RequestInterceptor {
     private let adaptHandler: AdaptHandler
@@ -174,6 +183,10 @@ open class Interceptor: RequestInterceptor {
         adapt(urlRequest, for: session, using: adapters, completion: completion)
     }
     
+    /*
+     这里, 就是循环使用数组里面的 adapter 来做 UrlRequest 的修改.
+     不明白, 这样做的意义何在.
+     */
     private func adapt(_ urlRequest: URLRequest,
                        for session: Session,
                        using adapters: [RequestAdapter],

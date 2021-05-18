@@ -18,16 +18,35 @@ open class Session {
     /// Root `DispatchQueue` for all internal callbacks and state update. **MUST** be a serial queue.
     /// rootQueue 都是调用的 async
     public let rootQueue: DispatchQueue
+    
+    /*
+     Session 里面的各个队列, 是为各个 DataRequest 来服务的. 各个 DataRequest, 会保存这些 Queue, 将各自的任务添加到这些 Queue 里面.
+     Session 提供了各个工具的来源, 避免各个 DataRequest 直接面对线程相关的资源, 减少复杂度的同时, 也解决了资源的分配.
+     */
+    
     /// Value determining whether this instance automatically calls `resume()` on all created `Request`s.
+    // 这个值, 控制了当 DataRequest 接收到 response 的 Handler 的时候, 是否立马开启 dataTask
     public let startRequestsImmediately: Bool
     /// `DispatchQueue` on which `URLRequest`s are created asynchronously. By default this queue uses `rootQueue` as its
     /// `target`, but a separate queue can be used if request creation is determined to be a bottleneck. Always profile
     /// and test before introducing an additional queue.
+    // 这个 Queue, 主要是用来, 做 Request 的初始化操作了.
+    // 之所以这样说, 是 Session 里面, 各种数据的准备, 其实都是异步的.
+    // 一项事情做完, 触发后续的任务, 仅仅是将后续任务的调用, 扔到一个 queue 里面.
+    // 有线程池自己调用相关的任务.
+    // 而相关任务被调用, 代表着网络的请求流程, 还在继续.
     public let requestQueue: DispatchQueue
     /// `DispatchQueue` passed to all `Request`s on which they perform their response serialization. By default this
     /// queue uses `rootQueue` as its `target` but a separate queue can be used if response serialization is determined
     /// to be a bottleneck. Always profile and test before introducing an additional queue.
+    // 用于 Response 的反序列化的队列.
     public let serializationQueue: DispatchQueue
+    
+    /*
+     Alamofire 将交互过程中, 各个模块都按照协议, 定义了相关的成员变量.
+     将责任分化到不同的小模块内部了.
+     */
+    
     /// `RequestInterceptor` used for all `Request` created by the instance. `RequestInterceptor`s can also be set on a
     /// per-`Request` basis, in which case the `Request`'s interceptor takes precedence over this value.
     public let interceptor: RequestInterceptor?
@@ -45,13 +64,18 @@ open class Session {
     /// Internal map between `Request`s and any `URLSessionTasks` that may be in flight for them.
     var requestTaskMap = RequestTaskMap()
     /// `Set` of currently active `Request`s.
+    
     /*
      记录了当前正在请求的 request, 在 cancelAllRequests 函数中, 里面的每个 request 会调用 cancel 方法.
      在 RequestDelegate 协议中, request cleanup 中, 会进行相应 request 的删除操作.
      */
     var activeRequests: Set<Request> = []
+    
     /// Completion events awaiting `URLSessionTaskMetrics`.
     var waitingCompletions: [URLSessionTask: () -> Void] = [:]
+    
+    
+    
     
     /// Creates a `Session` from a `URLSession` and other parameters.
     ///
@@ -119,40 +143,9 @@ open class Session {
         delegate.stateProvider = self
     }
     
-    /// Creates a `Session` from a `URLSessionConfiguration`.
-    ///
-    /// - Note: This initializer lets Alamofire handle the creation of the underlying `URLSession` and its
-    ///         `delegateQueue`, and is the recommended initializer for most uses.
-    ///
-    /// - Parameters:
-    ///   - configuration:            `URLSessionConfiguration` to be used to create the underlying `URLSession`. Changes
-    ///                               to this value after being passed to this initializer will have no effect.
-    ///                               `URLSessionConfiguration.af.default` by default.
-    ///   - delegate:                 `SessionDelegate` that handles `session`'s delegate callbacks as well as `Request`
-    ///                               interaction. `SessionDelegate()` by default.
-    ///   - rootQueue:                Root `DispatchQueue` for all internal callbacks and state updates. **MUST** be a
-    ///                               serial queue. `DispatchQueue(label: "org.alamofire.session.rootQueue")` by default.
-    ///   - startRequestsImmediately: Determines whether this instance will automatically start all `Request`s. `true`
-    ///                               by default. If set to `false`, all `Request`s created must have `.resume()` called.
-    ///                               on them for them to start.
-    ///   - requestQueue:             `DispatchQueue` on which to perform `URLRequest` creation. By default this queue
-    ///                               will use the `rootQueue` as its `target`. A separate queue can be used if it's
-    ///                               determined request creation is a bottleneck, but that should only be done after
-    ///                               careful testing and profiling. `nil` by default.
-    ///   - serializationQueue:       `DispatchQueue` on which to perform all response serialization. By default this
-    ///                               queue will use the `rootQueue` as its `target`. A separate queue can be used if
-    ///                               it's determined response serialization is a bottleneck, but that should only be
-    ///                               done after careful testing and profiling. `nil` by default.
-    ///   - interceptor:              `RequestInterceptor` to be used for all `Request`s created by this instance. `nil`
-    ///                               by default.
-    ///   - serverTrustManager:       `ServerTrustManager` to be used for all trust evaluations by this instance. `nil`
-    ///                               by default.
-    ///   - redirectHandler:          `RedirectHandler` to be used by all `Request`s created by this instance. `nil` by
-    ///                               default.
-    ///   - cachedResponseHandler:    `CachedResponseHandler` to be used by all `Request`s created by this instance.
-    ///                               `nil` by default.
-    ///   - eventMonitors:            Additional `EventMonitor`s used by the instance. Alamofire always adds a
-    ///                               `AlamofireNotifications` `EventMonitor` to the array passed here. `[]` by default.
+    /*
+     这是一个快捷初始化方法, 所有所需的成员变量, 都提供了默认值.
+     */
     public convenience init(configuration: URLSessionConfiguration = URLSessionConfiguration.af.default,
                             delegate: SessionDelegate = SessionDelegate(),
                             rootQueue: DispatchQueue = DispatchQueue(label: "org.alamofire.session.rootQueue"),
@@ -166,7 +159,9 @@ open class Session {
                             eventMonitors: [EventMonitor] = []) {
         precondition(configuration.identifier == nil, "Alamofire does not support background URLSessionConfigurations.")
         
-        let delegateQueue = OperationQueue(maxConcurrentOperationCount: 1, underlyingQueue: rootQueue, name: "org.alamofire.session.sessionDelegateQueue")
+        let delegateQueue = OperationQueue(maxConcurrentOperationCount: 1,
+                                           underlyingQueue: rootQueue,
+                                           name: "org.alamofire.session.sessionDelegateQueue")
         let session = URLSession(configuration: configuration, delegate: delegate, delegateQueue: delegateQueue)
         
         self.init(session: session,
@@ -201,13 +196,13 @@ open class Session {
     public func cancelAllRequests(completingOnQueue queue: DispatchQueue = .main,
                                   completion: (() -> Void)? = nil) {
         rootQueue.async {
+            // 队列的调度就是如此.
+            // 添加一个新的任务, 在任务里面, 完成业务逻辑, 然后将新的任务, 添加到目标 queue 里面.
+            // 这个方法, 就要求了 activeRequests 里面的值, 是合法的值.
             self.activeRequests.forEach { $0.cancel() }
             queue.async { completion?() }
         }
     }
-    
-    
-    
     
     
     // MARK: - DataRequest
@@ -221,6 +216,9 @@ open class Session {
     /*
      RequestConvertible 就是一个 实现了 URLRequestConvertible 的盒子.
      这个盒子, 存储了所有构件 Request 的信息, 然后生成对应的 request.
+     
+     关于 Swfit 里面, Throw 相关的资料还是要看一下.
+     Throw, 就代表着这个函数是一个 Result 返回值的函数. 在调用的时候, 语法用强制的方式, 让开发者必须去处理 Fail 的情况.
      */
     struct RequestConvertible: URLRequestConvertible {
         let url: URLConvertible
@@ -276,10 +274,12 @@ open class Session {
          可以看到, 提供原始材料的这种, 还是在内部构建了一个 RequestConvertible.
          所以, 整个 Session 的内部, 其实是建立在 RequestConvertible 的基础上进行的运转.
          */
-        
         return request(convertible, interceptor: interceptor)
     }
     
+    
+    
+    // 除了 AFN 那种提供 Parameter 方式进行网络的反问, Alamofire 提供了对于 Encodable 对象相关网络的访问
     struct RequestEncodableConvertible<Parameters: Encodable>: URLRequestConvertible {
         let url: URLConvertible
         let method: HTTPMethod
@@ -340,6 +340,7 @@ open class Session {
          它的各种属性, 在 Session 中就可以获取.
          而需要外界提供的, 就是 Request.
          */
+        // 在 Session 里面, 创建的 DataRequest, 都是 Session 充当 Request 的 delegate
         let request = DataRequest(convertible: convertible,
                                   underlyingQueue: rootQueue,
                                   serializationQueue: serializationQueue,
@@ -961,6 +962,9 @@ open class Session {
         return upload(uploadable, interceptor: interceptor, fileManager: fileManager)
     }
     
+    
+    
+    
     func upload(_ upload: UploadConvertible, interceptor: RequestInterceptor?, fileManager: FileManager) -> UploadRequest {
         let request = UploadRequest(convertible: upload,
                                     underlyingQueue: rootQueue,
@@ -975,24 +979,18 @@ open class Session {
         return request
     }
     
-    // MARK: Perform
-    
-    /// Starts performing the provided `Request`.
-    ///
-    /// - Parameter request: The `Request` to perform.
+    /*
+        各种 DataRequest, UPLoadRequest, DownloadRequest 最终都是到达 perform 这个函数.
+        这个函数, 会最终生成 DataRequest 对象, 这个对象, 是整个网络交互的控制类.
+     */
     func perform(_ request: Request) {
-        
         rootQueue.async {
             guard !request.isCancelled else { return }
             
             self.activeRequests.insert(request)
-            
             self.requestQueue.async {
                 // Leaf types must come first, otherwise they will cast as their superclass.
                 switch request {
-                    /*
-                     因为 UploadRequest 是 DataRequest 的子类, 所以要在 DataRequest 之前进行判断.
-                     */
                 case let r as UploadRequest: self.performUploadRequest(r)
                 case let r as DataRequest: self.performDataRequest(r)
                 case let r as DownloadRequest: self.performDownloadRequest(r)
@@ -1042,11 +1040,6 @@ open class Session {
         }
     }
     
-    /*
-     Request 是网络请求的控制过程类, 而 URLRequestConvertible 则是代表着 NSURLRequest
-     performSetupOperations 里面做的事情, 首先是创建一个 URLRequest, 然后, 将调用 didXXXX 方法, 将创建出来的对象传到这个方法内. 在这个方法内, 进行流程的下一步运转.
-     Session 里面, 有着很多这种 did 方法, 就是流程运转的标志.
-     */
     func performSetupOperations(for request: Request,
                                 convertible: URLRequestConvertible) {
         dispatchPrecondition(condition: .onQueue(requestQueue))
@@ -1099,14 +1092,13 @@ open class Session {
         dispatchPrecondition(condition: .onQueue(rootQueue))
         
         request.didCreateURLRequest(urlRequest)
-        
         guard !request.isCancelled else { return }
         
         // 使用 Request 的 task 方法, 不同的 Request 创建出不同的 DataTask 出来.
+        // 真正执行网络交互的, 还是系统的 SessionTask 对象.
         let task = request.task(for: urlRequest, using: session)
         requestTaskMap[request] = task
         request.didCreateTask(task)
-        
         updateStatesForTask(task, request: request)
     }
     
@@ -1144,6 +1136,12 @@ open class Session {
             }
         }
     }
+    
+    /*
+        整个过程, 都没有看到, 网络交互相关方法的实现.
+        这说明, Session 并不关心这些业务.
+        真正控制这些的代码, 在 DataRequest 之中.
+     */
     
     // MARK: - Adapters and Retriers
     
@@ -1189,6 +1187,7 @@ extension Session: RequestDelegate {
     }
     
     public func retryResult(for request: Request, dueTo error: AFError, completion: @escaping (RetryResult) -> Void) {
+        // 首先, 查找有没有注册 retrier 来处理重试这种情况.
         guard let retrier = retrier(for: request) else {
             rootQueue.async { completion(.doNotRetry) }
             return
@@ -1196,14 +1195,19 @@ extension Session: RequestDelegate {
         
         retrier.retry(request, for: self, dueTo: error) { retryResult in
             self.rootQueue.async {
-                guard let retryResultError = retryResult.error else { completion(retryResult); return }
-                
+                guard let retryResultError = retryResult.error else {
+                    completion(retryResult);
+                    return
+                }
                 let retryError = AFError.requestRetryFailed(retryError: retryResultError, originalError: error)
                 completion(.doNotRetryWithError(retryError))
             }
         }
     }
     
+    /*
+     session 重启一个 Request, 就是将 Request 提交到 perform 方法里面.
+     */
     public func retryRequest(_ request: Request, withDelay timeDelay: TimeInterval?) {
         rootQueue.async {
             let retry: () -> Void = {

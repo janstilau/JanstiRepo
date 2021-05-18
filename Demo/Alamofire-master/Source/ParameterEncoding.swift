@@ -4,7 +4,7 @@ import Foundation
 public typealias Parameters = [String: Any]
 
 /*
- 外界, 只能调用 encode 函数.
+    这个协议, 就是将一个 URLRequest, 以及参数进行 encoding, 生成最终的 URLRequest 的对象.
  */
 public protocol ParameterEncoding {
     func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest
@@ -18,6 +18,8 @@ public protocol ParameterEncoding {
 public struct URLEncoding: ParameterEncoding {
     // MARK: Helper Types
     
+    
+    // Enum 不仅仅作为分类, 也提供了一个空间, 将类型相关的方法容纳其中.
     public enum Destination {
         /*
          通过 request 的 http method 进行判断. 这是默认的方式.
@@ -106,9 +108,6 @@ public struct URLEncoding: ParameterEncoding {
     
     // MARK: Encoding
     
-    /*
-     对于协议的实现.
-     */
     public func encode(_ urlRequest: URLRequestConvertible,
                        with parameters: Parameters?) throws -> URLRequest {
         var urlRequest = try urlRequest.asURLRequest()
@@ -198,20 +197,32 @@ public struct URLEncoding: ParameterEncoding {
     }
 }
 
-// MARK: -
+
+
+
+
+// MARK: - JSON
+
+/*
+    使用 Json 的方式, 序列化参数的过程.
+    这是一种比较简单的方式, 使用系统原生的 JSON 序列化工具就可以了.
+    序列化完的 data, 作为 HTTPBody 存在.
+ */
 
 /// Uses `JSONSerialization` to create a JSON representation of the parameters object, which is set as the body of the
 /// request. The `Content-Type` HTTP header field of an encoded request is set to `application/json`.
 public struct JSONEncoding: ParameterEncoding {
     // MARK: Properties
     
-    /// Returns a `JSONEncoding` instance with default writing options.
+    /*
+        类方法, 返回的不一定是共享的数据.
+        对于工具类来说, 它的主要工作是提供相应的功能, 它的数据仅仅和功能相关, 在下次使用的时候, 就使用全新的状态了.
+        那这种, 类方法就返回一个全新的值就好了.
+     */
     public static var `default`: JSONEncoding { JSONEncoding() }
-    
-    /// Returns a `JSONEncoding` instance with `.prettyPrinted` writing options.
     public static var prettyPrinted: JSONEncoding { JSONEncoding(options: .prettyPrinted) }
     
-    /// The options for writing the parameters as JSON data.
+    // JSONEncoding 里面唯一的数据, 就是如何序列化的参数而已.
     public let options: JSONSerialization.WritingOptions
     
     // MARK: Initialization
@@ -231,15 +242,11 @@ public struct JSONEncoding: ParameterEncoding {
         guard let parameters = parameters else { return urlRequest }
         
         do {
+            // 使用, 系统原生的 JSONSerialization 做序列化的工作.
             let data = try JSONSerialization.data(withJSONObject: parameters, options: options)
-            
             if urlRequest.headers["Content-Type"] == nil {
                 urlRequest.headers.update(.contentType("application/json"))
             }
-            /*
-             对于 JSON 的 encoder 来说 ,他生成的, 一定就是放到了 body 里面
-             所以, JSONEncoder 不能是 Get 请求.
-             */
             urlRequest.httpBody = data
         } catch {
             throw AFError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))
@@ -263,11 +270,9 @@ public struct JSONEncoding: ParameterEncoding {
         
         do {
             let data = try JSONSerialization.data(withJSONObject: jsonObject, options: options)
-            
             if urlRequest.headers["Content-Type"] == nil {
                 urlRequest.headers.update(.contentType("application/json"))
             }
-            
             urlRequest.httpBody = data
         } catch {
             throw AFError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))

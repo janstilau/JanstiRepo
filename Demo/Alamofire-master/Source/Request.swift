@@ -542,6 +542,7 @@ public class Request {
         eventMonitor?.requestDidFinish(self)
     }
     
+    // 就和 RXSwfit 一样, 各种信号真正触发的时候, 很有可能是 subscribe 被调用的时候.
     /// Appends the response serialization closure to the instance.
     ///
     ///  - Note: This method will also `resume` the instance if `delegate.startImmediately` returns `true`.

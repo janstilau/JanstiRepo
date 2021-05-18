@@ -132,6 +132,10 @@ final class SessionTestCase: BaseTestCase {
             completion(result)
         }
 
+        /*
+         这个就是在网络发生错误之后, 返回一个 RetryResult
+         这个对象里面, 按照 type , 标识了应该执行的步骤.
+         */
         func retry(_ request: Request,
                    for session: Session,
                    dueTo error: Error,
