@@ -138,7 +138,10 @@ open class Session {
         self.serverTrustManager = serverTrustManager
         self.redirectHandler = redirectHandler
         self.cachedResponseHandler = cachedResponseHandler
+        
+        // defaultEventMonitors 就是 Notification Monitor.
         eventMonitor = CompositeEventMonitor(monitors: defaultEventMonitors + eventMonitors)
+        
         delegate.eventMonitor = eventMonitor
         delegate.stateProvider = self
     }
@@ -159,6 +162,10 @@ open class Session {
                             eventMonitors: [EventMonitor] = []) {
         precondition(configuration.identifier == nil, "Alamofire does not support background URLSessionConfigurations.")
         
+        /*
+            在这里, 创建的系统的 URLSession, 将 delegate 设置为了 self.delegate
+            这就是为什么所有的网络交互, 会在 SessionDelegate 处理的原因. SessionDelegate 就是一个大号的分发器. 这个过程, 在 AFN 里面, 是 AFN Manager 承担的.
+         */
         let delegateQueue = OperationQueue(maxConcurrentOperationCount: 1,
                                            underlyingQueue: rootQueue,
                                            name: "org.alamofire.session.sessionDelegateQueue")
@@ -1094,8 +1101,12 @@ open class Session {
         request.didCreateURLRequest(urlRequest)
         guard !request.isCancelled else { return }
         
-        // 使用 Request 的 task 方法, 不同的 Request 创建出不同的 DataTask 出来.
-        // 真正执行网络交互的, 还是系统的 SessionTask 对象.
+        /*
+            当 URLRequest 创建出来之后, 立马就进行了 DataTask 的创建工作.
+            而 Request 和 DataTask 的映射, 是在 Session 里面进行的管理.
+            DataRequest 还是数据类, 存储的是各种动作.
+            DataTask 是控制逻辑类. 不应该将 DataTask 的各种回调在 DataRequest 中触发.
+         */
         let task = request.task(for: urlRequest, using: session)
         requestTaskMap[request] = task
         request.didCreateTask(task)
@@ -1182,6 +1193,9 @@ extension Session: RequestDelegate {
     
     public var startImmediately: Bool { startRequestsImmediately }
     
+    /*
+        所谓的 clean, 就是将映射进行删除.
+     */
     public func cleanup(after request: Request) {
         activeRequests.remove(request)
     }
@@ -1212,7 +1226,6 @@ extension Session: RequestDelegate {
         rootQueue.async {
             let retry: () -> Void = {
                 guard !request.isCancelled else { return }
-                
                 request.prepareForRetry()
                 self.perform(request)
             }

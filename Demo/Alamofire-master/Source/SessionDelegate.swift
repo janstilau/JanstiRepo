@@ -38,6 +38,8 @@ protocol SessionStateProvider: AnyObject {
     var redirectHandler: RedirectHandler? { get }
     var cachedResponseHandler: CachedResponseHandler? { get }
     
+    // 这个方法非常重要, 各种回调, 其实是存储在了 Request 里面了.
+    // DataTask 和 Request 如何映射, 是由 Session 维护的.
     func request(for task: URLSessionTask) -> Request?
     func didGatherMetricsForTask(_ task: URLSessionTask)
     func didCompleteTask(_ task: URLSessionTask, completion: @escaping () -> Void)
@@ -50,13 +52,15 @@ protocol SessionStateProvider: AnyObject {
 extension SessionDelegate: URLSessionDelegate {
     open func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         eventMonitor?.urlSession(session, didBecomeInvalidWithError: error)
-        
         stateProvider?.cancelRequestsForSessionInvalidation(with: error)
     }
 }
 
 // MARK: URLSessionTaskDelegate
 
+/*
+    以下就是, 实际的网络交互过程中, SessionDelegate 如何分发到各个不同的 DataRequest 的.
+ */
 extension SessionDelegate: URLSessionTaskDelegate {
     /// Result of a `URLAuthenticationChallenge` evaluation.
     typealias ChallengeEvaluation = (disposition: URLSession.AuthChallengeDisposition, credential: URLCredential?, error: AFError?)

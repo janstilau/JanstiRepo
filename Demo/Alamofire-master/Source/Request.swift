@@ -112,7 +112,7 @@ public class Request {
         // 上传的回调.
         var uploadProgressHandler: (handler: ProgressHandler, queue: DispatchQueue)?
         /// `ProgressHandler` and `DispatchQueue` provided for download progress callbacks.
-        // 下载的回调.
+        // 下载的回调. 里面存储了一个 Queue, 这是一个元组.
         var downloadProgressHandler: (handler: ProgressHandler, queue: DispatchQueue)?
         /// `RedirectHandler` provided for to handle request redirection.
         // 重定向的回调.
@@ -181,6 +181,8 @@ public class Request {
 
     /*
      暴露出了各种属性, 用于操作 mutableState 里面的内容.
+     
+     各种属性, 在 Data Request 里面存储. 在网络交互的过程中, 会读取这些属性, 然后调用.
      */
     fileprivate var uploadProgressHandler: (handler: ProgressHandler, queue: DispatchQueue)? {
         get { mutableState.uploadProgressHandler }
@@ -219,7 +221,6 @@ public class Request {
     /*
      各种系统的 Request, Response, SessionTask 都在 DataRequest 里面进行了存储.
      */
-    
     /// All `URLRequests` created on behalf of the `Request`, including original and adapted requests.
     public var requests: [URLRequest] { mutableState.requests }
     /// First `URLRequest` created on behalf of the `Request`. May not be the first one actually executed.
@@ -234,6 +235,10 @@ public class Request {
     public var performedRequests: [URLRequest] { $mutableState.read { $0.tasks.compactMap { $0.currentRequest } } }
     
     // MARK: HTTPURLResponse
+    
+    /*
+     从这里可以看出来, 一个 DataRequest 其实可能是多个网络交互. 其实也很正常, 因为有重定向等各种操作.
+     */
     
     /// `HTTPURLResponse` received from the server, if any. If the `Request` was retried, this is the response of the
     /// last `URLSessionTask`.
@@ -317,6 +322,11 @@ public class Request {
     /// the `URLRequest` will be adapted before being issued.
     ///
     /// - Parameter request: The `URLRequest` created.
+    /*
+        DataRequest 提供个外界, 接受 Request 的方法.
+        这个方法, 会在 Session 新建了 URLRequest 之后调用.
+        是网络交互的准备阶段的.
+     */
     func didCreateInitialURLRequest(_ request: URLRequest) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
         
@@ -330,6 +340,10 @@ public class Request {
     /// - Note: Triggers retry.
     ///
     /// - Parameter error: `AFError` thrown from the failed creation.
+    /*
+        当 Session 创建 Request 失败的时候, 就会调用 DataRequest 的方法.
+        改变了 DataRequest 的状态, 主要是记录了 error.
+     */
     func didFailToCreateURLRequest(with error: AFError) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
         
@@ -347,6 +361,10 @@ public class Request {
     /// - Parameters:
     ///   - initialRequest: The `URLRequest` that was adapted.
     ///   - adaptedRequest: The `URLRequest` returned by the `RequestAdapter`.
+    /*
+        当 Session 使用 adaptor 修改了原始的 Request 之后, 会记录下来. 所以其实是, 所有的 URLRequest 都记录了.
+        这里也表明了 URLRequest 其实就是一个数据类, 存储是没有关系的.
+     */
     func didAdaptInitialRequest(_ initialRequest: URLRequest, to adaptedRequest: URLRequest) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
         
@@ -362,6 +380,10 @@ public class Request {
     /// - Parameters:
     ///   - request: The `URLRequest` the adapter was called with.
     ///   - error:   The `AFError` returned by the `RequestAdapter`.
+    /*
+        当改造失败了之后, 也认为是网络请求失败, 然后进行 retry 处理.
+        没有直接使用 initRequest 进行网络请求.
+     */
     func didFailToAdaptURLRequest(_ request: URLRequest, withError error: AFError) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
         
@@ -386,6 +408,9 @@ public class Request {
     }
     
     /// Asynchronously calls any stored `cURLHandler` and then removes it from `mutableState`.
+    /*
+        不太清楚, 各种 CURL 相关的意义, 不过从这里看, 这个属性只会用一次.
+     */
     private func callCURLHandlerIfNecessary() {
         $mutableState.write { mutableState in
             guard let cURLHandler = mutableState.cURLHandler else { return }
@@ -398,6 +423,9 @@ public class Request {
     /// Called when a `URLSessionTask` is created on behalf of the instance.
     ///
     /// - Parameter task: The `URLSessionTask` created.
+    /*
+        将真正进行网络交互的 URLSessionTask 进行了存储.
+     */
     func didCreateTask(_ task: URLSessionTask) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
         
@@ -494,6 +522,9 @@ public class Request {
         
         self.error = self.error ?? error
         
+        /*
+            当网络请求结束之后, 会将所有注册的 Validator 进行一次调用.
+         */
         validators.forEach { $0() }
         
         eventMonitor?.request(self, didCompleteTask: task, with: error)
@@ -516,6 +547,12 @@ public class Request {
     /// call `finish()`.
     ///
     /// - Parameter error: The possible `AFError` which may trigger retry.
+    /*
+        当网络交互失败的情况下, 会尝试重试.
+        这个 delegate, 其实就是 Session.
+        Session 里面不记录状态. 真正记录状态的, 还是 DataRequest.
+        Session 重启 Request, 也是调用 DataRequest 的方法进行重启, 而 DataRequest 里面, 则记录了重试次数这样的状态.
+     */
     func retryOrFinish(error: AFError?) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
         
@@ -657,6 +694,8 @@ public class Request {
         downloadProgress.totalUnitCount = 0
         downloadProgress.completedUnitCount = 0
         
+        // Reset 方法, 会把各种 responseSerializerCompletions 回调去除.
+        // 因为这些 responseSerializerCompletions 里面, 其实是存储了 Model 的.
         $mutableState.write { state in
             state.isFinishing = false
             state.responseSerializerCompletions = []
@@ -752,7 +791,13 @@ public class Request {
     /// Resumes the instance.
     ///
     /// - Returns: The instance.
-    // Request 的 resume, 这里, 才会真正的进行 dataTask 的 resume 操作.
+    
+    /*
+        虽然 DataTask 做真正的网络交互. 但是它的开启, 是 DataRequest 控制的.
+        DataRequest 开启网络, 修改自身的状态. 在最后, 开启 task 的网络请求.
+     
+        目前 ALAMOFIRE 的逻辑是, 如果可以自主开启, 就在接收到 Response 回调后, 自动调用 dataRequest 的 resume.
+     */
     @discardableResult
     public func resume() -> Self {
         $mutableState.write { mutableState in
@@ -767,7 +812,7 @@ public class Request {
             task.resume()
             underlyingQueue.async { self.didResumeTask(task) }
         }
-        
+        // 返回值还是一个 Self. 所以可以在开启网络请求后, 继续增加 respoonse 回调.
         return self
     }
     
@@ -777,12 +822,20 @@ public class Request {
         验证这个事情, 仅仅是将需要验证的信息, 挂钩到数据上.
         在网络交互过程中, 如果真的需要验证, 会读取相应的值, 进行验证.
      */
+    /*
+        Swfit 的函数, 如果是存储后续动作相关的数据, 那么这个函数用该动作命名也是常见的.
+        如果在 OC 里面, 这个就可能是 saveAuthenticate 了
+     */
     @discardableResult
     public func authenticate(username: String, password: String, persistence: URLCredential.Persistence = .forSession) -> Self {
         let credential = URLCredential(user: username, password: password, persistence: persistence)
         
         return authenticate(with: credential)
     }
+    
+    /*
+        各种存储闭包的方法, 都是返回 Self. 链式的进行各种值的装饰.
+     */
     
     @discardableResult
     public func authenticate(with credential: URLCredential) -> Self {
@@ -801,10 +854,10 @@ public class Request {
     ///
     /// - Returns:   The instance.
     /*
-     相比较于, Response 可以无限的增加闭包回调, Progress 只会有一个呗使用.
+     相比较于, Response 可以无限的增加闭包回调, Progress 只会有一个被使用.
      */
     @discardableResult
-    public func downloadProgress(queue: DispatchQueue = .main,
+    public func downloadProgress(queue: DispatchQueue = .main, // 默认 queue 是主进程. 所以使用的时候, 可以不在乎这个值.
                                  closure: @escaping ProgressHandler) -> Self {
         mutableState.downloadProgressHandler = (handler: closure, queue: queue)
         
@@ -1032,24 +1085,28 @@ public protocol RequestDelegate: AnyObject {
 // MARK: - DataRequest
 
 /*
- 在 AFN 里面, 是根据下面的这个用于处理 Http 过程的交互.
- @interface AFURLSessionManagerTaskDelegate : NSObject
- - (instancetype)initWithTask:(NSURLSessionTask *)task;
- @property (nonatomic, weak) AFURLSessionManager *manager;
- @property (nonatomic, strong) NSMutableData *mutableData;
- @property (nonatomic, strong) NSProgress *uploadProgress;
- @property (nonatomic, strong) NSProgress *downloadProgress;
- @property (nonatomic, copy) NSURL *downloadFileURL;
- #if AF_CAN_INCLUDE_SESSION_TASK_METRICS
- @property (nonatomic, strong) NSURLSessionTaskMetrics *sessionTaskMetrics;
- #endif
- @property (nonatomic, copy) AFURLSessionDownloadTaskDidFinishDownloadingBlock downloadTaskDidFinishDownloading;
- @property (nonatomic, copy) AFURLSessionTaskProgressBlock uploadProgressBlock;
- @property (nonatomic, copy) AFURLSessionTaskProgressBlock downloadProgressBlock;
- @property (nonatomic, copy) AFURLSessionTaskCompletionHandler completionHandler;
+    在 AFN 里面, 是根据下面的这个用于处理 Http 过程的交互.
+    一个专门的数据类, 包裹了网络交互过程中的各个动作.
+     @interface AFURLSessionManagerTaskDelegate : NSObject
+     - (instancetype)initWithTask:(NSURLSessionTask *)task;
+     @property (nonatomic, weak) AFURLSessionManager *manager;
+     @property (nonatomic, strong) NSMutableData *mutableData;
+     @property (nonatomic, strong) NSProgress *uploadProgress;
+     @property (nonatomic, strong) NSProgress *downloadProgress;
+     @property (nonatomic, copy) NSURL *downloadFileURL;
+     #if AF_CAN_INCLUDE_SESSION_TASK_METRICS
+     @property (nonatomic, strong) NSURLSessionTaskMetrics *sessionTaskMetrics;
+     #endif
+     @property (nonatomic, copy) AFURLSessionDownloadTaskDidFinishDownloadingBlock downloadTaskDidFinishDownloading;
+     @property (nonatomic, copy) AFURLSessionTaskProgressBlock uploadProgressBlock;
+     @property (nonatomic, copy) AFURLSessionTaskProgressBlock downloadProgressBlock;
+     @property (nonatomic, copy) AFURLSessionTaskCompletionHandler completionHandler;
  */
 
 /// `Request` subclass which handles in-memory `Data` download using `URLSessionDataTask`.
+/*
+    DataRequest 是平时最常见的 Request. 将值存到自己的 内存 Data 里面.
+ */
 public class DataRequest: Request {
     /// `URLRequestConvertible` value used to create `URLRequest`s for this instance.
     public let convertible: URLRequestConvertible
@@ -1062,8 +1119,6 @@ public class DataRequest: Request {
     
     
     /*
-        在 DataRequest 的创建过程中, 会传入一个 EventMonitor. 这个 eventMonitor 是 Session 的 Monitor.
-        默认情况下, 这会是一个 NotificationSender.
         Session 里面, 主要是 DataRequest 的创建的工作.
         真正控制网络交互的, 是 DataRequest, 所以 EventMonitor 要传递过来, 在 DataRequest 监听到网络过程变化的时候, 主动调用 EventMonitor 的各个方法.
      */
@@ -1086,6 +1141,7 @@ public class DataRequest: Request {
          interceptor: RequestInterceptor?,
          // 这个 delegate, 是 Session. 在 DataRequest 里面, 是使用了这层抽象, 和 Session 打交道.
          delegate: RequestDelegate) {
+        
         self.convertible = convertible
         
         super.init(id: id,
@@ -1107,6 +1163,10 @@ public class DataRequest: Request {
     /// - Note: Also calls `updateDownloadProgress`.
     ///
     /// - Parameter data: The `Data` received.
+    /*
+        SessionDataTask 的回调, 触发到对应的 DataRequest 的 didReceive.
+        然后 DataTask 计算出数值之后, 调用自己存储的 downloadProgressHandler 通知外界.
+     */
     func didReceive(data: Data) {
         if self.data == nil {
             mutableData = data
@@ -1130,7 +1190,6 @@ public class DataRequest: Request {
         
         downloadProgress.totalUnitCount = totalBytesExpected
         downloadProgress.completedUnitCount = totalBytesReceived
-        
         downloadProgressHandler?.queue.async { self.downloadProgressHandler?.handler(self.downloadProgress) }
     }
     
@@ -1141,9 +1200,17 @@ public class DataRequest: Request {
     /// - Parameter validation: `Validation` closure used to validate the response.
     ///
     /// - Returns:              The instance.
+    
+    /*
+        这里, 还是存储后续才会用到的闭包.
+        这会在网络请求结束的时候调用.
+        如果, 闭包的 Requets 返回了 failure, 就将相应的 error 存储到 DataRequest 的 error 里面.
+     */
     @discardableResult
     public func validate(_ validation: @escaping Validation) -> Self {
-        let validator: () -> Void = { [unowned self] in
+        
+        let validator: () -> Void = {
+            [unowned self] in
             guard self.error == nil, let response = self.response else { return }
             
             let result = validation(self.request, response, self.data)

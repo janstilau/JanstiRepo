@@ -198,6 +198,10 @@ public protocol EventMonitor {
     func request<Value>(_ request: DownloadRequest, didParseResponse response: DownloadResponse<Value, AFError>)
 }
 
+
+/*
+    EventMonitor 里面的方法实在是太多了. 必须要有默认实现. 没有问会为了实现这个协议, 将所有的方法都执行一遍的.
+ */
 extension EventMonitor {
     /// The default queue on which `CompositeEventMonitor`s will call the `EventMonitor` methods. `.main` by default.
     public var queue: DispatchQueue { .main }
@@ -550,6 +554,10 @@ public final class CompositeEventMonitor: EventMonitor {
 }
 
 /// `EventMonitor` that allows optional closures to be set to receive events.
+
+/*
+    一个非常特殊的 EventMonitor 实现类, 实现的方式就是, 定义了所有的 EventMonitor 对应的闭包. 实现协议就是, 如果有对应的闭包就调用, 如果没有则空操作.
+ */
 open class ClosureEventMonitor: EventMonitor {
     /// Closure called on the `urlSession(_:didBecomeInvalidWithError:)` event.
     open var sessionDidBecomeInvalidWithError: ((URLSession, Error?) -> Void)?
