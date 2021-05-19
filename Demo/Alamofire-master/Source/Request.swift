@@ -19,6 +19,18 @@ import Foundation
  */
 // `Request` is the common superclass of all Alamofire request types and provides common state, delegate, and callback handling
 
+
+/*
+    所有的回调, 都存在了这个类里面了.
+    实际上, 和 Session 打交道的各个过程, 还是没有存储在 DataRequest 里面, 而是在 Session Delegate 里面.
+    在 SessionDelegate 里面, 接收到系统 Session 的各种 Delegate 通知之后, 会找到对应的 DataRequest, 从 DataRequest 里面取值之后, 调用相应的回调.
+    
+    所以, DataRequest 上的各个方法, 传递一个闭包进行, 仅仅是进行相关闭包的存储了. 到底什么时候执行, 还是要系统的 URLSesission 来进行控制.
+ 
+    不过 URLSession 之前, 例如 创建 Request, Adapdat Request, 各种 Response 的反序列化, 反序列化后调用 Completion(Model) 这些, 都是要 DataRequest 自己控制的.
+    系统的 URLSession 的控制, 涉及不到上面描述的过程.
+ */
+
 public class Request {
     /// State of the `Request`, with managed transitions between states set when calling `resume()`, `suspend()`, or
     /// `cancel()` on the `Request`.
@@ -84,12 +96,10 @@ public class Request {
     /// The `Request`'s interceptor.
     public let interceptor: RequestInterceptor?
     /// The `Request`'s delegate.
+    // 一般来说, 这是 Alamofire.Session 对象, 在 Session 创建 DataRequest 的时候, 会把自己抽象为 RequestDelegate 传入到 DataRequest 里面.
     public private(set) weak var delegate: RequestDelegate?
     
     // MARK: - Mutable State
-    /*
-     所有的可变数据, 放到一个结构体里面.
-     */
     /*
      相比较 AFN 里面, 专门定义了一个数据类型存放网络交互的过程, Request 是 Alamofire 里面的数据类 Contianer.
      将所有网络请求相关的信息, 统统放到了里面.
@@ -99,8 +109,10 @@ public class Request {
         /// State of the `Request`.
         var state: State = .initialized
         /// `ProgressHandler` and `DispatchQueue` provided for upload progress callbacks.
+        // 上传的回调.
         var uploadProgressHandler: (handler: ProgressHandler, queue: DispatchQueue)?
         /// `ProgressHandler` and `DispatchQueue` provided for download progress callbacks.
+        // 下载的回调.
         var downloadProgressHandler: (handler: ProgressHandler, queue: DispatchQueue)?
         /// `RedirectHandler` provided for to handle request redirection.
         var redirectHandler: RedirectHandler?
@@ -133,6 +145,7 @@ public class Request {
     }
     
     /// Protected `MutableState` value that provides thread-safe access to state values.
+    // 所有的可变数据, 放到一个结构体里面. 然后被 Protected 所保护.
     @Protected
     fileprivate var mutableState = MutableState()
     
@@ -254,19 +267,7 @@ public class Request {
         set { mutableState.error = newValue }
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-/*
-     属性放上面, 方法放下面
-     Swift 的属性, 有着伴随着太多的方法.
-     所以, 使得属性部分也有很多代码. 不过, 总体上, 还是属性, 方法 上下放置的状态.
-*/
+
     
     /// Default initializer for the `Request` superclass.
     ///
@@ -760,14 +761,10 @@ public class Request {
     
     // MARK: - Closure API
     
-    /// Associates a credential using the provided values with the instance.
-    ///
-    /// - Parameters:
-    ///   - username:    The username.
-    ///   - password:    The password.
-    ///   - persistence: The `URLCredential.Persistence` for the created `URLCredential`. `.forSession` by default.
-    ///
-    /// - Returns:       The instance.
+    /*
+        验证这个事情, 仅仅是将需要验证的信息, 挂钩到数据上.
+        在网络交互过程中, 如果真的需要验证, 会读取相应的值, 进行验证.
+     */
     @discardableResult
     public func authenticate(username: String, password: String, persistence: URLCredential.Persistence = .forSession) -> Self {
         let credential = URLCredential(user: username, password: password, persistence: persistence)
@@ -775,11 +772,6 @@ public class Request {
         return authenticate(with: credential)
     }
     
-    /// Associates the provided credential with the instance.
-    ///
-    /// - Parameter credential: The `URLCredential`.
-    ///
-    /// - Returns:              The instance.
     @discardableResult
     public func authenticate(with credential: URLCredential) -> Self {
         mutableState.credential = credential
@@ -832,6 +824,7 @@ public class Request {
     /// - Parameter handler: The `RedirectHandler`.
     ///
     /// - Returns:           The instance.
+    // 将回调如何处理, 添加到 DataRequest 里面.
     @discardableResult
     public func redirect(using handler: RedirectHandler) -> Self {
         $mutableState.write { mutableState in
@@ -1055,6 +1048,13 @@ public class DataRequest: Request {
     @Protected
     private var mutableData: Data? = nil
     
+    
+    /*
+        在 DataRequest 的创建过程中, 会传入一个 EventMonitor. 这个 eventMonitor 是 Session 的 Monitor.
+        默认情况下, 这会是一个 NotificationSender.
+        Session 里面, 主要是 DataRequest 的创建的工作.
+        真正控制网络交互的, 是 DataRequest, 所以 EventMonitor 要传递过来, 在 DataRequest 监听到网络过程变化的时候, 主动调用 EventMonitor 的各个方法.
+     */
     /// Creates a `DataRequest` using the provided parameters.
     ///
     /// - Parameters:
@@ -1072,6 +1072,7 @@ public class DataRequest: Request {
          serializationQueue: DispatchQueue,
          eventMonitor: EventMonitor?,
          interceptor: RequestInterceptor?,
+         // 这个 delegate, 是 Session. 在 DataRequest 里面, 是使用了这层抽象, 和 Session 打交道.
          delegate: RequestDelegate) {
         self.convertible = convertible
         

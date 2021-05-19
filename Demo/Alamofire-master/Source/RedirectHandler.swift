@@ -24,6 +24,9 @@ public protocol RedirectHandler {
 // MARK: -
 
 /// `Redirector` is a convenience `RedirectHandler` making it easy to follow, not follow, or modify a redirect.
+/*
+    一个默认的处理重定向的类, 里面定义了如何处理重定向操作的一个 Enum. 根据这个 Enum 的值, 执行 重定向的操作.
+ */
 public struct Redirector {
     /// Defines the behavior of the `Redirector` type.
     public enum Behavior {

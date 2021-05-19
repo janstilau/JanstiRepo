@@ -64,6 +64,11 @@ extension String {
 }
 
 /// `EventMonitor` that provides Alamofire's notifications.
+/*
+    AlamofireNotifications: EventMonitor
+    这个类就是在相应的各个方法被调用的时候, 发送相应的通知.
+    各个通知的发送, 就是在特定的时间点, 发送信号到外界而已. 这个含义, 正符合 EventMonitor 这个接口的含义.
+ */
 public final class AlamofireNotifications: EventMonitor {
     public func requestDidResume(_ request: Request) {
         NotificationCenter.default.postNotification(named: Request.didResumeNotification, with: request)

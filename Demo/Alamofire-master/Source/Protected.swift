@@ -89,6 +89,10 @@ final class UnfairLock: Lock {
 
 
 // A thread-safe wrapper around a value.
+
+/*
+    这个属性包装类, 主要的工作, 就是对于自己存储的 value 的任务 get, set, 都在 Lock 的环境下.
+ */
 @propertyWrapper
 @dynamicMemberLookup
 final class Protected<T> {

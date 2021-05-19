@@ -286,7 +286,8 @@ extension EventMonitor {
     public func request<Value>(_ request: DownloadRequest, didParseResponse response: DownloadResponse<Value, AFError>) {}
 }
 
-/// An `EventMonitor` which can contain multiple `EventMonitor`s and calls their methods on their queues.
+// 一个 Composite 节点. 里面存放各个节点的 EventMonitor. 当触发对应的方法的时候, 迭代所有存储的子节点, 调用相应的方法.
+
 public final class CompositeEventMonitor: EventMonitor {
     public let queue = DispatchQueue(label: "org.alamofire.compositeEventMonitor", qos: .utility)
     
@@ -296,6 +297,8 @@ public final class CompositeEventMonitor: EventMonitor {
         self.monitors = monitors
     }
     
+    // 以下所有的对于 protocol 的实现, 都是调用了 performEvent, 闭包里面, 传入的参数是一个 EventMonitor 类型的.
+    // performEvent 会遍历所有存储的 EventMonitor, 调用相关的方法.
     func performEvent(_ event: @escaping (EventMonitor) -> Void) {
         queue.async {
             for monitor in self.monitors {
