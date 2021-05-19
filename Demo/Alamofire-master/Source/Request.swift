@@ -101,8 +101,8 @@ public class Request {
     
     // MARK: - Mutable State
     /*
-     相比较 AFN 里面, 专门定义了一个数据类型存放网络交互的过程, Request 是 Alamofire 里面的数据类 Contianer.
-     将所有网络请求相关的信息, 统统放到了里面.
+        这里面, 是各种 DataRequest 生成之后, 可以后续变化的数据.
+        会被 PropertyMapper 进行包裹, 在线程安全的情况下运行.
      */
     /// Type encapsulating all mutable state that may need to be accessed from anything other than the `underlyingQueue`.
     struct MutableState {
@@ -115,6 +115,7 @@ public class Request {
         // 下载的回调.
         var downloadProgressHandler: (handler: ProgressHandler, queue: DispatchQueue)?
         /// `RedirectHandler` provided for to handle request redirection.
+        // 重定向的回调.
         var redirectHandler: RedirectHandler?
         /// `CachedResponseHandler` provided to handle response caching.
         var cachedResponseHandler: CachedResponseHandler?
@@ -177,8 +178,9 @@ public class Request {
     public let uploadProgress = Progress(totalUnitCount: 0)
     public let downloadProgress = Progress(totalUnitCount: 0)
     
+
     /*
-        各种值, 都存在了 mutableState 里面. 对 mutableState 的 get, set, 都会有线程保护.
+     暴露出了各种属性, 用于操作 mutableState 里面的内容.
      */
     fileprivate var uploadProgressHandler: (handler: ProgressHandler, queue: DispatchQueue)? {
         get { mutableState.uploadProgressHandler }
@@ -212,6 +214,11 @@ public class Request {
     fileprivate var validators: [() -> Void] = []
     
     // MARK: URLRequests
+    
+    
+    /*
+     各种系统的 Request, Response, SessionTask 都在 DataRequest 里面进行了存储.
+     */
     
     /// All `URLRequests` created on behalf of the `Request`, including original and adapted requests.
     public var requests: [URLRequest] { mutableState.requests }
@@ -267,6 +274,11 @@ public class Request {
         set { mutableState.error = newValue }
     }
     
+    
+    
+    /*
+        属性定义结束, 以下是方法部分.
+     */
 
     
     /// Default initializer for the `Request` superclass.
