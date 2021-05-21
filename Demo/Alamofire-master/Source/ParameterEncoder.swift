@@ -1,5 +1,9 @@
 import Foundation
 
+/*
+    Swift 的标准库, 引入了 Encodable 整个概念.
+    
+ */
 /// A type that can encode any `Encodable` type into a `URLRequest`.
 public protocol ParameterEncoder {
     /// Encode the provided `Encodable` parameters into `request`.
@@ -14,14 +18,22 @@ public protocol ParameterEncoder {
     func encode<Parameters: Encodable>(_ parameters: Parameters?, into request: URLRequest) throws -> URLRequest
 }
 
+/*
+    JSON Encoder 就是, 将对象序列化成为一个 JSON 对象, 然后当做 Request 的 RequestBody .
+ */
 /// A `ParameterEncoder` that encodes types as JSON body data.
 ///
 /// If no `Content-Type` header is already set on the provided `URLRequest`s, it's set to `application/json`.
 open class JSONParameterEncoder: ParameterEncoder {
-    /// Returns an encoder with default parameters.
+    
+    /*
+        类属性, 一个计算属性. 每次都是返回一个新的 JSONParameterEncoder 对象.
+     */
     public static var `default`: JSONParameterEncoder { JSONParameterEncoder() }
     
-    /// Returns an encoder with `JSONEncoder.outputFormatting` set to `.prettyPrinted`.
+    /*
+        一个特殊的对象, 将配置的过程, 封装到内部.
+     */
     public static var prettyPrinted: JSONParameterEncoder {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
@@ -34,27 +46,31 @@ open class JSONParameterEncoder: ParameterEncoder {
     public static var sortedKeys: JSONParameterEncoder {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
-        
         return JSONParameterEncoder(encoder: encoder)
     }
     
-    /// `JSONEncoder` used to encode parameters.
+    /*
+        核心功能类对象, 编码的过程, 就是使用该工具类对象.
+     */
     public let encoder: JSONEncoder
     
-    /// Creates an instance with the provided `JSONEncoder`.
-    ///
-    /// - Parameter encoder: The `JSONEncoder`. `JSONEncoder()` by default.
     public init(encoder: JSONEncoder = JSONEncoder()) {
         self.encoder = encoder
     }
     
     open func encode<Parameters: Encodable>(_ parameters: Parameters?,
                                             into request: URLRequest) throws -> URLRequest {
+        // 如果没有要编码的值, 直接返回原始 request
         guard let parameters = parameters else { return request }
         
         var request = request
         
+        /*
+            要记住, docatch 在 Swift 里面, 仅仅是一个 Enum 判断而已.
+         */
+        
         do {
+            // 使用 encoder 编码, 然后把编码后的值, 当做 bodydata.
             let data = try encoder.encode(parameters)
             request.httpBody = data
             if request.headers["Content-Type"] == nil {

@@ -55,11 +55,10 @@ extension NotificationCenter {
     }
 }
 
-/*
- 什么时候, 是 string 的 extension, 什么时候, 是 Notification 的 extension, 有点不太明白.
- */
+// 专门用一个特殊的 key, 作为 Notification 里面 userinfo 的取值 key 值.
+// 这个值只会在这个文件里面用到, 外界使用的, 是这个值服务的外部接口.
+// Extension 一个原始类型, 然后 private, 或者 fileprivate 是一个非常常用的做法.
 extension String {
-    /// User info dictionary key representing the `Request` associated with the notification.
     fileprivate static let requestKey = "org.alamofire.notification.key.request"
 }
 
@@ -68,6 +67,13 @@ extension String {
     AlamofireNotifications: EventMonitor
     这个类就是在相应的各个方法被调用的时候, 发送相应的通知.
     各个通知的发送, 就是在特定的时间点, 发送信号到外界而已. 这个含义, 正符合 EventMonitor 这个接口的含义.
+ */
+
+/*
+    通知, 就是在特定的事件发生之后, 广播通知所有对于该事件感兴趣的对象.
+    该对象在接收到通知之后, 触发自己的逻辑.
+    这件事在 AFN 时代, 是写到了业务代码里面, 在 ALAMOFIRE 里面, 有一个 EventMonitor 作为事件的接受者,
+    AlamofireNotifications 作为整个协议的实现者. 在各个协议方法里面, 是最真正的广播的行为.
  */
 public final class AlamofireNotifications: EventMonitor {
     public func requestDidResume(_ request: Request) {
