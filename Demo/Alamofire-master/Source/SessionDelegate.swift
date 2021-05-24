@@ -146,7 +146,7 @@ extension SessionDelegate: URLSessionTaskDelegate {
                                  didSendBodyData: bytesSent,
                                  totalBytesSent: totalBytesSent,
                                  totalBytesExpectedToSend: totalBytesExpectedToSend)
-        
+        // 在这里, 通过 provider 进行了任务的分发工作.
         stateProvider?.request(for: task)?.updateUploadProgress(totalBytesSent: totalBytesSent,
                                                                 totalBytesExpectedToSend: totalBytesExpectedToSend)
     }
