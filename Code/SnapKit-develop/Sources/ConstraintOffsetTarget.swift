@@ -47,7 +47,7 @@ extension CGFloat: ConstraintOffsetTarget {
 }
 
 extension ConstraintOffsetTarget {
-    
+    // 这里是为了处理, Swfit 的类型系统, 不能自动转化. 统一转化为 CGFloat
     internal var constraintOffsetTargetValue: CGFloat {
         let offset: CGFloat
         if let amount = self as? Float {

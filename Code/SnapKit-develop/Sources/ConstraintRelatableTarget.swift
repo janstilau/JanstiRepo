@@ -31,6 +31,8 @@
 public protocol ConstraintRelatableTarget {
 }
 
+// equalto 里面, 是依据 ConstraintRelatableTarget 进行的类型匹配. 所以, 可以在里面, 使用各种不同类型的值.
+
 extension Int: ConstraintRelatableTarget {
 }
 

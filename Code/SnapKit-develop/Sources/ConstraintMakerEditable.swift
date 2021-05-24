@@ -27,7 +27,7 @@
     import AppKit
 #endif
 
-
+// 各种, 算式操作, 仅仅是添加了一份数据进去而已.
 public class ConstraintMakerEditable: ConstraintMakerPrioritizable {
 
     @discardableResult

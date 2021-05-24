@@ -35,6 +35,7 @@ public struct ConstraintViewDSL: ConstraintAttributesDSL {
         return ConstraintMaker.prepareConstraints(item: self.view, closure: closure)
     }
     
+    // 外界定义的闭包, 仅仅是一个参数而已, 真正的设置约束的过程, 是在 ConstraintMaker.makeConstraints 的内部.
     public func makeConstraints(_ closure: (_ make: ConstraintMaker) -> Void) {
         ConstraintMaker.makeConstraints(item: self.view, closure: closure)
     }

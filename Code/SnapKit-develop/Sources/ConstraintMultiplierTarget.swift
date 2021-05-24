@@ -28,6 +28,7 @@
 #endif
 
 
+// 因为, Swfit 里面, 各种数值类型需要特地转化, 所以, 专门定义一种协议, 来避免这种转化.
 public protocol ConstraintMultiplierTarget {
     
     var constraintMultiplierTargetValue: CGFloat { get }

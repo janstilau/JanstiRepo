@@ -36,11 +36,19 @@ public class ConstraintMakerRelatable {
         self.description = description
     }
     
-    internal func relatedTo(_ other: ConstraintRelatableTarget, relation: ConstraintRelation, file: String, line: UInt) -> ConstraintMakerEditable {
+    // 最终, equalto 的终点.
+    internal func relatedTo(_ other: ConstraintRelatableTarget,
+                            relation: ConstraintRelation,
+                            file: String, line: UInt) -> ConstraintMakerEditable {
         let related: ConstraintItem
         let constant: ConstraintConstantTarget
         
+        // 之所以, equal 对面可以承担各种类型.
+        // 是因为, 这里对各种类型, 做了处理.
+        // 抽象的接口下会有复杂丑陋繁琐的分类处理, 这是避免不了的.
+        // 但是, 这层处理之后, 后续的操作, 又是在同一的行为下, 进行的设置.
         if let other = other as? ConstraintItem {
+            // 这里面, 是处理的约束 Item.
             guard other.attributes == ConstraintAttributes.none ||
                   other.attributes.layoutAttributes.count <= 1 ||
                   other.attributes.layoutAttributes == self.description.attributes.layoutAttributes ||

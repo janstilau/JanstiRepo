@@ -27,7 +27,8 @@
     import AppKit
 #endif
 
-
+// 所谓的链式编程, 只不过是各种属性, 仅仅是添加一份数据, 然后返回自身罢了
+// 而 第一个 left, 而是 maker 来创建除了一个 ConstraintMakerExtendable 对象出来.
 public class ConstraintMakerExtendable: ConstraintMakerRelatable {
     
     public var left: ConstraintMakerExtendable {

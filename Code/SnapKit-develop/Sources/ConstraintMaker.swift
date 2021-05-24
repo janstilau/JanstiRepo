@@ -177,10 +177,13 @@ public class ConstraintMaker {
         return ConstraintMakerExtendable(description)
     }
     
+    // 外界传递过来的闭包, 直到这里才真正的被调用.
+    // 这个闭包, 就是配置而已.
     internal static func prepareConstraints(item: LayoutConstraintItem, closure: (_ make: ConstraintMaker) -> Void) -> [Constraint] {
         let maker = ConstraintMaker(item: item)
         closure(maker)
         var constraints: [Constraint] = []
+        
         for description in maker.descriptions {
             guard let constraint = description.constraint else {
                 continue
@@ -190,6 +193,8 @@ public class ConstraintMaker {
         return constraints
     }
     
+    // 使用类方法, 将对象的创建工作, 封装到了各个类方法的内部.
+    // 对象, 就是完成操作的工具. 在使用完只有, 释放就可以了
     internal static func makeConstraints(item: LayoutConstraintItem, closure: (_ make: ConstraintMaker) -> Void) {
         let constraints = prepareConstraints(item: item, closure: closure)
         for constraint in constraints {
