@@ -8,6 +8,7 @@ Window {
     height: 400;
     color: "lightblue";
     id: root;
+    property var numbers: [1, 2, 3]
 
     Rectangle {
         id: target;
@@ -50,5 +51,11 @@ Window {
     ImageParticle {
         system: particleSystem;
         source: "qrc:///bubble_1.png";
+    }
+
+    Component.onCompleted:  {
+        for (let temp in numbers) {
+            console.log(temp)
+        }
     }
 }
