@@ -4,6 +4,10 @@
     import AppKit
 #endif
 
+/*
+    ConstraintDSL 被下面的三个 DSL 实现. 三个 DSL 仅仅是封装了不同的 Item.
+    View, layoutGuide, LayoutSupport
+ */
 
 public protocol ConstraintDSL {
     
@@ -15,6 +19,7 @@ public protocol ConstraintDSL {
 }
 
 // 这里, 还是用的传统的 Assoicate 进行的关联值的添加
+
 extension ConstraintDSL {
     
     public func setLabel(_ value: String?) {
@@ -33,6 +38,8 @@ public protocol ConstraintBasicAttributesDSL : ConstraintDSL {
     
 }
 
+// 这些, protocol 的定义, 主要是想要给实现类, 定义一些公用的方法.
+// 对于一个 DSL 来说, 它的公共的方法, 就是返回自己 target 的对应 attributeItem
 
 extension ConstraintBasicAttributesDSL {
     

@@ -1,35 +1,17 @@
-//
-//  SnapKit
-//
-//  Copyright (c) 2011-Present SnapKit Team - https://github.com/SnapKit
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
 
 public extension ConstraintView {
     
+    
+    /*
+        使用 snp_left 是给扩展的类, 增加了方法. 增加了一系列的方法.
+        使用 snp 是给扩展的类, 增加了一个属性, 然后在这个属性上, 返回相关内容的数据.
+     */
     @available(*, deprecated, renamed:"snp.left")
     var snp_left: ConstraintItem { return self.snp.left }
     
@@ -145,7 +127,9 @@ public extension ConstraintView {
         self.snp.removeConstraints()
     }
     
+    
     var snp: ConstraintViewDSL {
+        // 每次都返回一个新的对象. 这是没有问题的. 
         return ConstraintViewDSL(view: self)
     }
     

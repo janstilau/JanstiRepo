@@ -1,31 +1,15 @@
-//
-//  SnapKit
-//
-//  Copyright (c) 2011-Present SnapKit Team - https://github.com/SnapKit
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 #if os(iOS) || os(tvOS)
     import UIKit
 #else
     import AppKit
 #endif
+
+/*
+    各种, 和 base 相关的操作, 直接转交给了 base.
+    这是没有问题的, 因为, 就算是 base 上面的 category, 也是仅仅能够使用公开的属性方法.
+    所以, bsse 转交, 和自己调用, 在封装看来, 没有变化.
+    从 lazy 的实现, 可以看出, 这是苹果的实现 API 的思路.
+ */
 
 
 public struct ConstraintViewDSL: ConstraintAttributesDSL {
@@ -56,6 +40,7 @@ public struct ConstraintViewDSL: ConstraintAttributesDSL {
         get {
             return self.view.contentHuggingPriority(for: .horizontal).rawValue
         }
+        // nonmutating 关键字, 表示在关键字修饰的方法中, 不会修改当前结构体的属性值,
         nonmutating set {
             self.view.setContentHuggingPriority(LayoutPriority(rawValue: newValue), for: .horizontal)
         }
@@ -96,7 +81,5 @@ public struct ConstraintViewDSL: ConstraintAttributesDSL {
     
     internal init(view: ConstraintView) {
         self.view = view
-        
     }
-    
 }

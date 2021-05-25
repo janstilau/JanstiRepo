@@ -29,6 +29,10 @@
 
 public class ConstraintMaker {
     
+    
+    /*
+        Maker 的各种 left, right, 其实是传递一个新的对象出去. 在这个对象上, 进行各种配置工作.
+     */
     public var left: ConstraintMakerExtendable {
         return self.makeExtendableWithAttributes(.left)
     }
@@ -163,7 +167,8 @@ public class ConstraintMaker {
         return self.makeExtendableWithAttributes(.centerWithinMargins)
     }
     
-    private let item: LayoutConstraintItem
+    
+    private let item: LayoutConstraintItem // View, Layout, LayoutGuide
     private var descriptions = [ConstraintDescription]()
     
     internal init(item: LayoutConstraintItem) {
@@ -171,20 +176,37 @@ public class ConstraintMaker {
         self.item.prepare()
     }
     
+    // 只会创建一个 description, 然后 ConstraintMakerExtendable 会不断地给这个 description 增加 attribute
     internal func makeExtendableWithAttributes(_ attributes: ConstraintAttributes) -> ConstraintMakerExtendable {
         let description = ConstraintDescription(item: self.item, attributes: attributes)
         self.descriptions.append(description)
         return ConstraintMakerExtendable(description)
     }
     
+    
+    
+    
+    /*
+         v1.snp.makeConstraints { (make) -> Void in
+             make.top.equalTo(v2).offset(50)
+             make.left.equalTo(v2).offset(50)
+             return
+         }
+        上面, make 调用一次, 就是给自己添加一条 description 而已
+     */
+    
+    
+    
     // 外界传递过来的闭包, 直到这里才真正的被调用.
     // 这个闭包, 就是配置而已.
     internal static func prepareConstraints(item: LayoutConstraintItem, closure: (_ make: ConstraintMaker) -> Void) -> [Constraint] {
+        // 使用一个 ConstraintMaker, 来存储所有设置好的约束.
         let maker = ConstraintMaker(item: item)
         closure(maker)
         var constraints: [Constraint] = []
         
         for description in maker.descriptions {
+            // description.constraint 的调用过程, 就是不断地生成 Constraint 的过程.
             guard let constraint = description.constraint else {
                 continue
             }

@@ -1,26 +1,3 @@
-//
-//  SnapKit
-//
-//  Copyright (c) 2011-Present SnapKit Team - https://github.com/SnapKit
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 #if os(iOS) || os(tvOS)
     import UIKit
 #else
@@ -29,8 +6,11 @@
 
 // 所谓的链式编程, 只不过是各种属性, 仅仅是添加一份数据, 然后返回自身罢了
 // 而 第一个 left, 而是 maker 来创建除了一个 ConstraintMakerExtendable 对象出来.
+
 public class ConstraintMakerExtendable: ConstraintMakerRelatable {
     
+    
+    // 各种操作, 不过是向自己引用的盒子里面添加数据而已.
     public var left: ConstraintMakerExtendable {
         self.description.attributes += .left
         return self

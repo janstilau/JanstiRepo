@@ -27,6 +27,10 @@
     import AppKit
 #endif
 
+/*
+    标量值, 和类型, 都实现了 ConstraintRelatableTarget. 这样我们在使用 make 的时候, equal 里面可以填数值, 也可以填对象.
+    这在方便了调用的同时, 是让 equal 的实现变得复杂了.
+ */
 
 public protocol ConstraintRelatableTarget {
 }

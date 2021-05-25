@@ -28,6 +28,11 @@
 #endif
 
 // 各种, 算式操作, 仅仅是添加了一份数据进去而已.
+// 添加 attribute, 添加 item, 添加计算式.
+// SnapKit 将一份数据, 在各自的业务范围内, 使用了不同的容器进行包装. 让代码具有独立性.
+// 如果是自己设计, 可能一个容器类, 做了所有的事情, 或者容器内部有不同的处理者.
+// 这里, SnapKit 进行了良好的功能模块分割.
+
 public class ConstraintMakerEditable: ConstraintMakerPrioritizable {
 
     @discardableResult

@@ -28,12 +28,14 @@
 #endif
 
 
+// Description 是一个盒子, 存储了约束所需要的各种元信息.
 public class ConstraintDescription {
     
-    internal let item: LayoutConstraintItem
+    internal var sourceLocation: (String, UInt)? = nil // Debug 使用.
+    
+    internal let item: LayoutConstraintItem // View, LayoutGuide, LayoutSupport
     internal var attributes: ConstraintAttributes
     internal var relation: ConstraintRelation? = nil
-    internal var sourceLocation: (String, UInt)? = nil // Debug 使用.
     internal var label: String? = nil
     internal var related: ConstraintItem? = nil
     internal var multiplier: ConstraintMultiplierTarget = 1.0

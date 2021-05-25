@@ -96,6 +96,7 @@ internal struct ConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
     @available(iOS 8.0, *)
     internal static let centerWithinMargins: ConstraintAttributes = [.centerXWithinMargins, .centerYWithinMargins]
     
+    // 一个计算属性, 就是从 optionSet 里面, 取值的过程
     internal var layoutAttributes:[LayoutAttribute] {
         var attrs = [LayoutAttribute]()
         if (self.contains(ConstraintAttributes.left)) {

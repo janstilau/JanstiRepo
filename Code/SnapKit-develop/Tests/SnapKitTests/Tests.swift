@@ -133,7 +133,6 @@ class SnapKitTests: XCTestCase {
         v1.snp.makeConstraints { (make) -> Void in
             make.top.equalTo(50.0)
             make.left.equalTo(50.0)
-            return
         }
         
         XCTAssertEqual(self.container.snp_constraints.count, 2, "Should have 2 constraints installed")
