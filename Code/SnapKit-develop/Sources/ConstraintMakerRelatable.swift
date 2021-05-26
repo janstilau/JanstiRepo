@@ -48,7 +48,8 @@ public class ConstraintMakerRelatable {
         // 在这里, 确定了 target 的值
         if let other = other as? ConstraintItem {
             
-            // 
+            // to 是一个 item, 就是 view.left, view.top 这种.
+            // 直接使用 to 的 target, attribute.
             guard other.attributes == ConstraintAttributes.none ||
                   other.attributes.layoutAttributes.count <= 1 ||
                   other.attributes.layoutAttributes == self.description.attributes.layoutAttributes ||
@@ -62,9 +63,11 @@ public class ConstraintMakerRelatable {
             related = other
             constant = 0.0
         } else if let other = other as? ConstraintView {
+            // to 是一个 View, 那么 to 的 attribute 就是 none, 最后也就是使用 from 的 attribute
             related = ConstraintItem(target: other, attributes: ConstraintAttributes.none)
             constant = 0.0
         } else if let other = other as? ConstraintConstantTarget {
+            // to 是一个值, 没有 target, 就应该是 width, height 这种不需要 target 的
             related = ConstraintItem(target: nil, attributes: ConstraintAttributes.none)
             constant = other
         } else if #available(iOS 9.0, OSX 10.11, *), let other = other as? ConstraintLayoutGuide {

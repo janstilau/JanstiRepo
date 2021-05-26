@@ -61,15 +61,19 @@ extension CGPoint: ConstraintRelatableTarget {
 extension ConstraintInsets: ConstraintRelatableTarget {
 }
 
+// 以上表示, to 可以是一个数.
+
 #if os(iOS) || os(tvOS)
 @available(iOS 11.0, tvOS 11.0, *)
 extension ConstraintDirectionalInsets: ConstraintRelatableTarget {
 }
 #endif
 
+// to 可以是 view.left
 extension ConstraintItem: ConstraintRelatableTarget {
 }
 
+// to 可以是 一个 view
 extension ConstraintView: ConstraintRelatableTarget {
 }
 

@@ -69,6 +69,9 @@ extension ConstraintConstantTarget {
             return CGFloat(value)
         }
         
+        
+        // 当 constant 是下面的值的时候, 会根据 layoutAttribute, 取其中的值进行 constant 的确定.
+        
         if let value = self as? CGSize {
             if layoutAttribute == .width {
                 return value.width

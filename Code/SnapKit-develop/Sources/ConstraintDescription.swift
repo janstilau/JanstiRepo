@@ -33,13 +33,14 @@ public class ConstraintDescription {
     
     internal var sourceLocation: (String, UInt)? = nil // Debug 使用.
     
-    internal let item: LayoutConstraintItem // View, LayoutGuide, LayoutSupport
+    // item, attributes 合在一起, 就是 ConstraintItem
+    internal let item: LayoutConstraintItem // View, LayoutGuide, LayoutSupport,
     internal var attributes: ConstraintAttributes
     internal var relation: ConstraintRelation? = nil
     internal var label: String? = nil
-    internal var related: ConstraintItem? = nil
+    internal var related: ConstraintItem? = nil // to 的 attributes 一般就一个值, 或者没有值.
     internal var multiplier: ConstraintMultiplierTarget = 1.0
-    internal var constant: ConstraintConstantTarget = 0.0
+    internal var constant: ConstraintConstantTarget = 0.0 
     internal var priority: ConstraintPriorityTarget = 1000.0
     
     internal lazy var constraint: Constraint? = {

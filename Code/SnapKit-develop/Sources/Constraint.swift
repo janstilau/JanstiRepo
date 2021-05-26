@@ -83,6 +83,7 @@ public final class Constraint {
         for layoutFromAttribute in layoutFromAttributes {
             // get layout to attribute
             let layoutToAttribute: LayoutAttribute
+            // 这里这些逻辑, 是确定 toAttribute
             if layoutToAttributes.count > 0 {
                 if self.from.attributes == .edges && self.to.attributes == .margins {
                     switch layoutFromAttribute {
@@ -139,12 +140,14 @@ public final class Constraint {
                 } else if self.from.attributes == self.to.attributes {
                     layoutToAttribute = layoutFromAttribute
                 } else {
+                    // 如果, to 的 attrubute 太多, 就用一个.
                     layoutToAttribute = layoutToAttributes[0]
                 }
             } else {
                 if self.to.target == nil && (layoutFromAttribute == .centerX || layoutFromAttribute == .centerY) {
                     layoutToAttribute = layoutFromAttribute == .centerX ? .left : .top
                 } else {
+                    // 如果, 有 target, 但是 没有 toAttribute, 那么就是 from 是什么, to 就是什么.
                     layoutToAttribute = layoutFromAttribute
                 }
             }
