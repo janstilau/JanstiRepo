@@ -6,6 +6,7 @@ import AppKit
 
 /*
     这个类, 是和 NSLayoutConstaint 转化的桥梁.
+    它是被 ConstraintDescription 生成的.
  */
 public final class Constraint {
     
@@ -59,15 +60,15 @@ public final class Constraint {
                   multiplier: ConstraintMultiplierTarget,
                   constant: ConstraintConstantTarget,
                   priority: ConstraintPriorityTarget) {
-        self.from = from
-        self.to = to
-        self.relation = relation
+        self.from = from // 来源: 哪个 View 的什么属性
+        self.to = to // 目的: 哪个 View 的什么属性
+        self.relation = relation // 有什么关系
         self.sourceLocation = sourceLocation
         self.label = label
-        self.multiplier = multiplier
-        self.constant = constant
-        self.priority = priority
-        self.layoutConstraints = []
+        self.multiplier = multiplier // 因子多少
+        self.constant = constant // 偏移多少
+        self.priority = priority // 优先级多少
+        self.layoutConstraints = [] // 最终生成 NSLayoutConstraint 的存储位置.
         
         // get attributes
         let layoutFromAttributes = self.from.attributes.layoutAttributes
@@ -160,7 +161,7 @@ public final class Constraint {
             }
             
             // create layout constraint
-            // 创建了实际的约束.
+            // 上面, 根据 ConstraintDescription 中存储的各种信息, 转化成为了 NSLayoutConstraint.
             let layoutConstraint = LayoutConstraint(
                 item: layoutFrom,
                 attribute: layoutFromAttribute,

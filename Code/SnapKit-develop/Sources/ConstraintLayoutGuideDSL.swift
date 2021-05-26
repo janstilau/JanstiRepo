@@ -29,6 +29,8 @@ public struct ConstraintLayoutGuideDSL: ConstraintAttributesDSL {
         ConstraintMaker.removeConstraints(item: self.guide)
     }
     
+    // 内部, 还是使用自己的成员变量进行存储, 但是作为对于协议的实现, 直接返回这个成员变量.
+    // 也就是说, 实现一个协议的时候, 里面的属性, 最好使用计算属性进行实现, 而不是成员属性.
     public var target: AnyObject? {
         return self.guide
     }

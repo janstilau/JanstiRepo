@@ -4,6 +4,11 @@
     import AppKit
 #endif
 
+/*
+    ConstraintItem 表示的是, 哪个 View 的什么什么属性.
+    要和 另外的哪个 View 的哪个属性要有关系.
+ */
+
 public final class ConstraintItem {
     
     internal weak var target: AnyObject?

@@ -5,6 +5,7 @@
 #endif
 
 // OptionSet 这个值, 就当做是 Int 的位运算操作的封装就好了
+
 internal struct ConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
     
     typealias IntegerLiteralType = UInt
@@ -167,6 +168,9 @@ internal struct ConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
     }
 }
 
+
+// 几个操作符, 进行 attribute 的数值的合并操作.
+// 这个在 .left.right 这种链式调用里面使用了.
 internal func + (left: ConstraintAttributes, right: ConstraintAttributes) -> ConstraintAttributes {
     return left.union(right)
 }

@@ -9,6 +9,8 @@
     View, layoutGuide, LayoutSupport
  */
 
+// ConstraintDSL 的抽象是, 里面存储了一个 target, 作为 autolyout 的对象.
+
 public protocol ConstraintDSL {
     
     var target: AnyObject? { get }
@@ -18,7 +20,6 @@ public protocol ConstraintDSL {
     
 }
 
-// 这里, 还是用的传统的 Assoicate 进行的关联值的添加
 
 extension ConstraintDSL {
     
@@ -121,6 +122,7 @@ extension ConstraintBasicAttributesDSL {
 
 public protocol ConstraintAttributesDSL : ConstraintBasicAttributesDSL {
 }
+
 extension ConstraintAttributesDSL {
     
     // MARK: Baselines

@@ -27,6 +27,7 @@
     import AppKit
 #endif
 
+//  ConstraintDescription 编辑器的公共父类, 在不同的编辑器里面, 封装了不同的对于 description 修改的方法
 
 public class ConstraintMakerFinalizable {
     

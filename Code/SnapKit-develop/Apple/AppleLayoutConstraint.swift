@@ -1,18 +1,20 @@
 import Foundation
 
-//
-//  NSLayoutConstraint.h
-//  UIKit
-//
-//  Copyright (c) 2009-2018 Apple Inc. All rights reserved.
-//
-
+/*
+    专门的一个类型, 包装 Float 这个原始值.
+ */
 public struct UILayoutPriority : Hashable, Equatable, RawRepresentable {
 
     public init(_ rawValue: Float)
 
     public init(rawValue: Float)
 }
+
+/*
+    主要的作用, 其实是这里, 在类型里面定义一些特殊的值.
+    这些的特殊的值, 在 OC 里面是全局 Float 值定义的, 而在 Swfit 里面, 这里作为类的属性, 有了很好的包装性.
+ */
+
 extension UILayoutPriority {
 
     @available(iOS 6.0, *)
@@ -37,9 +39,14 @@ extension UILayoutPriority {
 /* !TARGET_OS_IPHONE */
 
 public var NSLAYOUTCONSTRAINT_H: Int32 { get }
+
 extension NSLayoutConstraint {
 
+    /*
+        Relation, 因为类内的类型的定义, 可以大大减少类型的前缀
+     */
     
+    // Enum 的前两行空白, case 是一行空白, 这可以当做 Swfit 的 Enum 的定义规范.
     public enum Relation : Int {
 
         
@@ -109,73 +116,10 @@ extension NSLayoutConstraint {
         case notAnAttribute = 0
     }
 
-    
-    public struct FormatOptions : OptionSet {
-
-        public init(rawValue: UInt)
-
-        
-        public static var alignAllLeft: NSLayoutConstraint.FormatOptions { get }
-
-        public static var alignAllRight: NSLayoutConstraint.FormatOptions { get }
-
-        public static var alignAllTop: NSLayoutConstraint.FormatOptions { get }
-
-        public static var alignAllBottom: NSLayoutConstraint.FormatOptions { get }
-
-        public static var alignAllLeading: NSLayoutConstraint.FormatOptions { get }
-
-        public static var alignAllTrailing: NSLayoutConstraint.FormatOptions { get }
-
-        public static var alignAllCenterX: NSLayoutConstraint.FormatOptions { get }
-
-        public static var alignAllCenterY: NSLayoutConstraint.FormatOptions { get }
-
-        public static var alignAllLastBaseline: NSLayoutConstraint.FormatOptions { get }
-
-        @available(iOS 8.0, *)
-        public static var alignAllFirstBaseline: NSLayoutConstraint.FormatOptions { get }
-
-        
-        public static var alignmentMask: NSLayoutConstraint.FormatOptions { get }
-
-        
-        /* choose only one of these three
-         */
-        public static var directionLeadingToTrailing: NSLayoutConstraint.FormatOptions { get } // default
-
-        public static var directionLeftToRight: NSLayoutConstraint.FormatOptions { get }
-
-        public static var directionRightToLeft: NSLayoutConstraint.FormatOptions { get }
-
-        
-        public static var directionMask: NSLayoutConstraint.FormatOptions { get }
-
-        
-        /* Valid only for vertical layouts. Between views with text content the value
-         will be used to determine the distance from the last baseline of the view above
-         to the first baseline of the view below. For views without text content the top
-         or bottom edge will be used in lieu of the baseline position.
-         The default spacing "]-[" will be determined from the line heights of the fonts
-         involved in views with text content, when present.
-         */
-        @available(iOS 11.0, *)
-        public static var spacingBaselineToBaseline: NSLayoutConstraint.FormatOptions { get }
-
-        
-        @available(iOS 11.0, *)
-        public static var spacingMask: NSLayoutConstraint.FormatOptions { get }
-    }
 }
 
 @available(iOS 6.0, *)
 open class NSLayoutConstraint : NSObject {
-
-    
-    /* Create an array of constraints using an ASCII-art-like visual format string.  The values of the `metrics` dictionary should be NSNumber (or some other type that responds to -doubleValue and returns a double).
-     */
-    @available(iOS 6.0, *)
-    open class func constraints(withVisualFormat format: String, options opts: NSLayoutConstraint.FormatOptions = [], metrics: [String : Any]?, views: [String : Any]) -> [NSLayoutConstraint]
 
     
     /* This macro is a helper for making view dictionaries for +constraintsWithVisualFormat:options:metrics:views:.

@@ -27,6 +27,10 @@
     import AppKit
 #endif
 
+/*
+    约束中, 优先级的改变相关操作的封装.
+ */
+
 @available(*, deprecated, message:"Use ConstraintMakerPrioritizable instead.")
 public typealias ConstraintMakerPriortizable = ConstraintMakerPrioritizable
 

@@ -1,26 +1,3 @@
-//
-//  SnapKit
-//
-//  Copyright (c) 2011-Present SnapKit Team - https://github.com/SnapKit
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 #if os(iOS) || os(tvOS)
     import UIKit
 #else
@@ -168,7 +145,14 @@ public class ConstraintMaker {
     }
     
     
+    
+    
     private let item: LayoutConstraintItem // View, Layout, LayoutGuide
+    // ConstraintDescription 是一个引用类型, 在 make.left.right 的过程中, 不断的修改里面的值.
+    // make {} 里面, make.left....; make.right....
+    // 每一次 make 语句, 都是向 descriptions 添加一个引用值, 然后在链式调用, 就是不断的修改这个引用值的内容而已.
+    // 这种写法很常见, 例如, alamofire 里面, 各种 .response, .progress 其实都是修改 data_request 里面的属性而已.
+    // 最后, 网络请求的时候, 才会去读取这些属性, 然后进行网络回调的触发.
     private var descriptions = [ConstraintDescription]()
     
     internal init(item: LayoutConstraintItem) {
@@ -176,7 +160,9 @@ public class ConstraintMaker {
         self.item.prepare()
     }
     
-    // 只会创建一个 description, 然后 ConstraintMakerExtendable 会不断地给这个 description 增加 attribute
+    // 创建一个引用对象, 自己存储一下, 然后把这个引用对象丢到调用链里面不断的进行修改.
+    // 一个盒子, 不断的在过程里面进行数据的添加修改.
+    // 最后才去拿这个盒子进行真正的业务操作.
     internal func makeExtendableWithAttributes(_ attributes: ConstraintAttributes) -> ConstraintMakerExtendable {
         let description = ConstraintDescription(item: self.item, attributes: attributes)
         self.descriptions.append(description)
@@ -196,14 +182,13 @@ public class ConstraintMaker {
      */
     
     
-    
-    // 外界传递过来的闭包, 直到这里才真正的被调用.
-    // 这个闭包, 就是配置而已.
     internal static func prepareConstraints(item: LayoutConstraintItem, closure: (_ make: ConstraintMaker) -> Void) -> [Constraint] {
-        // 使用一个 ConstraintMaker, 来存储所有设置好的约束.
+        
         let maker = ConstraintMaker(item: item)
         closure(maker)
         var constraints: [Constraint] = []
+        
+        // closure(maker) 的主要功能, 就是将各种对于约束的描述, 添加到了 maker.descriptions 里面.
         
         for description in maker.descriptions {
             // description.constraint 的调用过程, 就是不断地生成 Constraint 的过程.

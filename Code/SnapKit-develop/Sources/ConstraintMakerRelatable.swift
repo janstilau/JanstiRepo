@@ -74,6 +74,11 @@ public class ConstraintMakerRelatable {
             fatalError("Invalid constraint. (\(file), \(line))")
         }
         
+        /*
+            当 Extendable 进行了各种属性的叠加之后, 调用了 equal to 才会生成 ConstraintMakerEditable, 表示应该进行数值的操作了.
+            ConstraintMakerEditable 里面是, 乘法, offset, 以及 priority 的修改.
+         */
+        
         let editable = ConstraintMakerEditable(self.description)
         editable.description.sourceLocation = (file, line)
         editable.description.relation = relation

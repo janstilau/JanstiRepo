@@ -127,9 +127,11 @@ public extension ConstraintView {
         self.snp.removeConstraints()
     }
     
-    
+        
+    /*
+        SnapKit 的基础, 是引用类型. 所以, 才能将数据交给盒子一个个的进行传递.
+     */
     var snp: ConstraintViewDSL {
-        // 每次都返回一个新的对象. 这是没有问题的. 
         return ConstraintViewDSL(view: self)
     }
     

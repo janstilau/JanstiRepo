@@ -22,9 +22,9 @@
 //  THE SOFTWARE.
 
 #if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 #else
-    import AppKit
+import AppKit
 #endif
 
 public extension LayoutConstraint {
@@ -90,50 +90,50 @@ private func descriptionForRelation(_ relation: LayoutRelation) -> String {
 
 private func descriptionForAttribute(_ attribute: LayoutAttribute) -> String {
     #if os(iOS) || os(tvOS)
-        switch attribute {
-        case .notAnAttribute:       return "notAnAttribute"
-        case .top:                  return "top"
-        case .left:                 return "left"
-        case .bottom:               return "bottom"
-        case .right:                return "right"
-        case .leading:              return "leading"
-        case .trailing:             return "trailing"
-        case .width:                return "width"
-        case .height:               return "height"
-        case .centerX:              return "centerX"
-        case .centerY:              return "centerY"
-        case .lastBaseline:         return "lastBaseline"
-        case .firstBaseline:        return "firstBaseline"
-        case .topMargin:            return "topMargin"
-        case .leftMargin:           return "leftMargin"
-        case .bottomMargin:         return "bottomMargin"
-        case .rightMargin:          return "rightMargin"
-        case .leadingMargin:        return "leadingMargin"
-        case .trailingMargin:       return "trailingMargin"
-        case .centerXWithinMargins: return "centerXWithinMargins"
-        case .centerYWithinMargins: return "centerYWithinMargins"
-        #if swift(>=5.0)
-        @unknown default:           return "unknown"
-        #endif
+    switch attribute {
+    case .notAnAttribute:       return "notAnAttribute"
+    case .top:                  return "top"
+    case .left:                 return "left"
+    case .bottom:               return "bottom"
+    case .right:                return "right"
+    case .leading:              return "leading"
+    case .trailing:             return "trailing"
+    case .width:                return "width"
+    case .height:               return "height"
+    case .centerX:              return "centerX"
+    case .centerY:              return "centerY"
+    case .lastBaseline:         return "lastBaseline"
+    case .firstBaseline:        return "firstBaseline"
+    case .topMargin:            return "topMargin"
+    case .leftMargin:           return "leftMargin"
+    case .bottomMargin:         return "bottomMargin"
+    case .rightMargin:          return "rightMargin"
+    case .leadingMargin:        return "leadingMargin"
+    case .trailingMargin:       return "trailingMargin"
+    case .centerXWithinMargins: return "centerXWithinMargins"
+    case .centerYWithinMargins: return "centerYWithinMargins"
+    #if swift(>=5.0)
+    @unknown default:           return "unknown"
+    #endif
     }
     #else
-        switch attribute {
-        case .notAnAttribute:       return "notAnAttribute"
-        case .top:                  return "top"
-        case .left:                 return "left"
-        case .bottom:               return "bottom"
-        case .right:                return "right"
-        case .leading:              return "leading"
-        case .trailing:             return "trailing"
-        case .width:                return "width"
-        case .height:               return "height"
-        case .centerX:              return "centerX"
-        case .centerY:              return "centerY"
-        case .lastBaseline:         return "lastBaseline"
-        case .firstBaseline:        return "firstBaseline"
-        #if swift(>=5.0)
-        @unknown default:           return "unknown"
-        #endif
+    switch attribute {
+    case .notAnAttribute:       return "notAnAttribute"
+    case .top:                  return "top"
+    case .left:                 return "left"
+    case .bottom:               return "bottom"
+    case .right:                return "right"
+    case .leading:              return "leading"
+    case .trailing:             return "trailing"
+    case .width:                return "width"
+    case .height:               return "height"
+    case .centerX:              return "centerX"
+    case .centerY:              return "centerY"
+    case .lastBaseline:         return "lastBaseline"
+    case .firstBaseline:        return "firstBaseline"
+    #if swift(>=5.0)
+    @unknown default:           return "unknown"
+    #endif
     }
     #endif
 }
