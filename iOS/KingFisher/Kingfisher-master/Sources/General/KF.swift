@@ -290,6 +290,10 @@ extension KF.Builder {
 }
 #endif
 
+
+// Builder 的各种属性名作为函数的方法, 其实就是将这些设置到自己的属性里面, 然后返回 Self.
+// 这是一个非常常用的一个技巧.
+
 extension KF.Builder {
 
     #if os(iOS) || os(tvOS)
