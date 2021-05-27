@@ -1,29 +1,3 @@
-//
-//  KF.swift
-//  Kingfisher
-//
-//  Created by onevcat on 2020/09/21.
-//
-//  Copyright (c) 2020 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 #if canImport(UIKit)
 import UIKit
 #endif
@@ -40,14 +14,23 @@ import WatchKit
 import TVUIKit
 #endif
 
+/*
+    
+ */
+
 /// A helper type to create image setting tasks in a builder pattern.
 /// Use methods in this type to create a `KF.Builder` instance and configure image tasks there.
+
 public enum KF {
 
     /// Creates a builder for a given `Source`.
     /// - Parameter source: The `Source` object defines data information from network or a data provider.
     /// - Returns: A `KF.Builder` for future configuration. After configuring the builder, call `set(to:)`
     ///            to start the image loading.
+    
+    // 和 Alamofire 一样, 各种信息的配置, 都是收集而已.
+    // 只有真正的需要用到数据, 例如, alamofire 里面是添加了 completion 回调, 表示真的有地方需要使用到网络数据, 才开启任务.
+    // 这里, builder 的各种属性, 也是仅仅将数据收集到 builder 的内部而已. 而最终, 调用 set to 的时候, 才是真正的数据获取的开始.
     public static func source(_ source: Source?) -> KF.Builder {
         Builder(source: source)
     }

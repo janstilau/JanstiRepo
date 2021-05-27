@@ -1,29 +1,3 @@
-//
-//  Source.swift
-//  Kingfisher
-//
-//  Created by onevcat on 2018/11/17.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 import Foundation
 
 /// Represents an image setting source for Kingfisher methods.
@@ -39,7 +13,8 @@ public enum Source {
     /// Represents the source task identifier when setting an image to a view with extension methods.
     public enum Identifier {
 
-        /// The underlying value type of source identifier.
+        // 一个, Id 的生成器.
+        // 可以看到, 这种全局的 Id 生成器的思路, 其实是非常普遍的.
         public typealias Value = UInt
         static var current: Value = 0
         static func next() -> Value {
@@ -52,10 +27,12 @@ public enum Source {
 
     /// The target image should be got from network remotely. The associated `Resource`
     /// value defines detail information like image URL and cache key.
+    // 从网络远端获取数据.
     case network(Resource)
     
     /// The target image should be provided in a data format. Normally, it can be an image
     /// from local storage or in any other encoding format (like Base64).
+    // 从本地获取数据.
     case provider(ImageDataProvider)
 
     // MARK: Getting Properties

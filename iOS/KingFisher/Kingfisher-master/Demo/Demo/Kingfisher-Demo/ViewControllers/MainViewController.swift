@@ -29,7 +29,7 @@ import UIKit
 class MainViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Kingfisher"
+        title = "KingFisherAnalysis"
         setupOperationNavigationBar()
     }
 }

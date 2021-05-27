@@ -1,31 +1,7 @@
-//
-//  NormalLoadingViewController.swift
-//  Kingfisher-Demo
-//
-//  Created by Wei Wang on 15/4/6.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 import UIKit
 import Kingfisher
+
+// Basic 点击之后的跳转.
 
 class NormalLoadingViewController: UICollectionViewController {
     
@@ -41,6 +17,10 @@ extension NormalLoadingViewController {
         return ImageLoader.sampleImageURLs.count
     }
     
+    /*
+        新增了一个方法, 用于监听 cell 的移除事件.
+        在这里, KF 是停止了相关 ImageView 的图片的下载工作.
+     */
     override func collectionView(
         _ collectionView: UICollectionView,
         didEndDisplaying cell: UICollectionViewCell,
@@ -57,6 +37,7 @@ extension NormalLoadingViewController {
     {
         let imageView = (cell as! ImageCollectionViewCell).cellImageView!
         let url = ImageLoader.sampleImageURLs[indexPath.row]
+        
         KF.url(url)
             .fade(duration: 1)
             .loadDiskFileSynchronously()
