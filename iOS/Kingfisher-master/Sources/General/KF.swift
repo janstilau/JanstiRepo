@@ -14,8 +14,16 @@ import WatchKit
 import TVUIKit
 #endif
 
+// KF 的各种静态方法, 其实是提供了一个 Builder.
+// 而 Builder 的主要的任务, 其实是收集信息.
+// 最终, Builder 会通过 setTo 方法, 调用到 View 的.kf.set 各种方法, 并且将自己的收集的信息传递过去.
+
+// If you are not a fan of the kf extension, you can also prefer to use the KF builder and chained the method invocations. The code below is doing the same thing:
+// 上面说的很清楚了, Builder, 构造者, 这是 Java 里面非常常见的一个使用方式, 构造者各种属性传值, 仅仅是存值, 而在最后, 会在 build 的时候, 将存储的值传递到真正类的构造函数, 然后类的实例.
+
 /// A helper type to create image setting tasks in a builder pattern.
 /// Use methods in this type to create a `KF.Builder` instance and configure image tasks there.
+// KF 里面的各种静态方法, 都是提供了 Source 这个属性到 Builder. 然后就是 Builder 的各种属性赋值了.
 public enum KF {
     
     /// Creates a builder for a given `Source`.
@@ -41,6 +49,7 @@ public enum KF {
     ///               If `nil`, the `absoluteString` of `url` is used as the cache key.
     /// - Returns: A `KF.Builder` for future configuration. After configuring the builder, call `set(to:)`
     ///            to start the image loading.
+    // 这里, 之所以可以成功, 是因为 Url 本身就是 Resource 的实现类.
     public static func url(_ url: URL?, cacheKey: String? = nil) -> KF.Builder {
         source(url?.convertToSource(overrideCacheKey: cacheKey))
     }
@@ -59,6 +68,7 @@ public enum KF {
     ///   - cacheKey: The key used to store the downloaded image in cache.
     /// - Returns: A `KF.Builder` for future configuration. After configuring the builder, call `set(to:)`
     ///            to start the image loading.
+    // 正式因为了有了 Source 这层抽象, 才可以有直接使用 Data 的扩展的可能性.
     public static func data(_ data: Data?, cacheKey: String) -> KF.Builder {
         if let data = data {
             return dataProvider(RawImageDataProvider(data: data, cacheKey: cacheKey))
@@ -73,7 +83,7 @@ extension KF {
     
     /// A builder class to configure an image retrieving task and set it to a holder view or component.
     public class Builder {
-        private let source: Source?
+        private let source: Source? // 数据的来源.
         
         #if os(watchOS)
         private var placeholder: KFCrossPlatformImage?
@@ -110,10 +120,10 @@ extension KF {
 }
 
 /*
-    真正的触发了网络设置的代码.
-    和 SD 有了很大的不同.
-    SD 是从 View 上, 扩展分类, 完成设置图片的操作.
-    而 KF 里面, 是设置各种状态, 最后将这些状态, 交给 View.
+ 真正的触发了网络设置的代码.
+ 和 SD 有了很大的不同.
+ SD 是从 View 上, 扩展分类, 完成设置图片的操作.
+ 而 KF 里面, 是设置各种状态, 最后将这些状态, 交给 View.
  */
 extension KF.Builder {
     #if !os(watchOS)
@@ -300,9 +310,9 @@ extension KF.Builder {
     /// the image being retrieved from cache, also call `forceRefresh()` on the returned `KF.Builder`.
     
     /*
-        存储, 网络 download img 之后, 设置 img 到 View 的切换效果.
-        如果直接从缓存里面读取数据, 不做 transition
-        这个思路, 和 SDWeb 是一致的.
+     存储, 网络 download img 之后, 设置 img 到 View 的切换效果.
+     如果直接从缓存里面读取数据, 不做 transition
+     这个思路, 和 SDWeb 是一致的.
      */
     public func transition(_ transition: ImageTransition) -> Self {
         options.transition = transition
@@ -318,7 +328,7 @@ extension KF.Builder {
     /// image is retrieved from either memory or disk cache by default. If you need to do the transition even when
     /// the image being retrieved from cache, also call `forceRefresh()` on the returned `KF.Builder`.
     /*
-        一个简便的方法, 去设置 transition. 因为 fade 这种效果, 是非常常见的, 所以特意进行了方法的暴露
+     一个简便的方法, 去设置 transition. 因为 fade 这种效果, 是非常常见的, 所以特意进行了方法的暴露
      */
     public func fade(duration: TimeInterval) -> Self {
         options.transition = .fade(duration)
@@ -347,7 +357,7 @@ extension KF.Builder {
     /// This option will be ignored if the target image is not animated image data.
     ///
     /*
-        动图只加载第一张图. 这么看来, KF 里面一定有对于动图的解析.
+     动图只加载第一张图. 这么看来, KF 里面一定有对于动图的解析.
      */
     public func onlyLoadFirstFrame(_ enabled: Bool = true) -> Self {
         options.onlyLoadFirstFrame = enabled
@@ -364,7 +374,7 @@ extension KF.Builder {
     ///
     
     /*
-        失败图
+     失败图
      */
     public func onFailureImage(_ image: KFCrossPlatformImage?) -> Self {
         options.onFailureImage = .some(image)

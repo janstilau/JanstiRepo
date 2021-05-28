@@ -1,29 +1,3 @@
-//
-//  Source.swift
-//  Kingfisher
-//
-//  Created by onevcat on 2018/11/17.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 import Foundation
 
 /// Represents an image setting source for Kingfisher methods.
@@ -36,7 +10,7 @@ import Foundation
 ///             from local storage or in any other encoding format (like Base64).
 public enum Source {
 
-    /// Represents the source task identifier when setting an image to a view with extension methods.
+    // 实际上, 这就是一个静态的 Int 值. 但是 Swift 里面, 使用类型表示全局数据是标准.
     public enum Identifier {
 
         /// The underlying value type of source identifier.
@@ -50,6 +24,8 @@ public enum Source {
 
     // MARK: Member Cases
 
+    // 两个 Case, 都没有挂钩具体的类型, 都是挂钩到了一层抽象上.
+    
     /// The target image should be got from network remotely. The associated `Resource`
     /// value defines detail information like image URL and cache key.
     case network(Resource)

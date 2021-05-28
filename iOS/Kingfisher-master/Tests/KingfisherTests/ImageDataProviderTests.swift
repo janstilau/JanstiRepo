@@ -30,6 +30,7 @@ import Kingfisher
 class ImageDataProviderTests: XCTestCase {
     
     func testLocalFileImageDataProvider() {
+        
         let fm = FileManager.default
         let document = try! fm.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
         let fileURL = document.appendingPathComponent("test")

@@ -1,29 +1,3 @@
-//
-//  Indicator.swift
-//  Kingfisher
-//
-//  Created by João D. Moreira on 30/08/16.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 #if !os(watchOS)
 
 #if canImport(AppKit) && !targetEnvironment(macCatalyst)
@@ -33,6 +7,12 @@ public typealias IndicatorView = NSView
 import UIKit
 public typealias IndicatorView = UIView
 #endif
+
+
+// 实际上, 日常使用的其实是这个 Type 类.
+// 在 Type 的 set 方法里面, 其实是根据 case 的值, 生成了对应的 View 的类型的.
+// 具体的逻辑在 Set 方法内部.
+// 当然, 我们也可以自己定义出一个 Indicator 来, 赋值到 ImageView 上.
 
 /// Represents the activity indicator type which should be added to
 /// an image view when an image is being downloaded.
@@ -79,6 +59,7 @@ public enum IndicatorSizeStrategy {
     case size(CGSize)
 }
 
+// 提供一些默认的实现, 让 Indicator 的实现者, 更好地完成适配.
 extension Indicator {
     
     /// Default implementation of `centerOffset` of `Indicator`. The default value is `.zero`, means that there is
@@ -107,6 +88,7 @@ final class ActivityIndicator: Indicator {
         return activityIndicatorView
     }
 
+    // 这里, 进行了一个简单的 count 值记录
     func startAnimatingView() {
         if animatingCount == 0 {
             #if os(macOS)
@@ -194,6 +176,7 @@ final class ImageIndicator: Indicator {
             options.preloadAllAnimationData = true
         }
         
+        // 在这里, 还是使用了类库自己的图形数据解析器.
         guard let image = processor.process(item: .data(data), options: options) else {
             return nil
         }

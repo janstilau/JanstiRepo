@@ -1,29 +1,3 @@
-//
-//  Delegate.swift
-//  Kingfisher
-//
-//  Created by onevcat on 2018/10/10.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 import Foundation
 /// A class that keeps a weakly reference for `self` when implementing `onXXX` behaviors.
 /// Instead of remembering to keep `self` as weak in a stored closure:
@@ -70,7 +44,7 @@ import Foundation
 ///
 public class Delegate<Input, Output> {
     public init() {}
-
+    
     private var block: ((Input) -> Output?)?
     public func delegate<T: AnyObject>(on target: T, block: ((T, Input) -> Output)?) {
         self.block = { [weak target] input in
@@ -78,11 +52,11 @@ public class Delegate<Input, Output> {
             return block?(target, input)
         }
     }
-
+    
     public func call(_ input: Input) -> Output? {
         return block?(input)
     }
-
+    
     public func callAsFunction(_ input: Input) -> Output? {
         return call(input)
     }
@@ -92,7 +66,7 @@ extension Delegate where Input == Void {
     public func call() -> Output? {
         return call(())
     }
-
+    
     public func callAsFunction() -> Output? {
         return call()
     }
@@ -102,7 +76,7 @@ extension Delegate where Input == Void, Output: OptionalProtocol {
     public func call() -> Output {
         return call(())
     }
-
+    
     public func callAsFunction() -> Output {
         return call()
     }
@@ -116,7 +90,7 @@ extension Delegate where Output: OptionalProtocol {
             return Output._createNil
         }
     }
-
+    
     public func callAsFunction(_ input: Input) -> Output {
         return call(input)
     }
@@ -127,6 +101,6 @@ public protocol OptionalProtocol {
 }
 extension Optional : OptionalProtocol {
     public static var _createNil: Optional<Wrapped> {
-         return nil
+        return nil
     }
 }

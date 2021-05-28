@@ -265,6 +265,8 @@ public enum KingfisherOptionsInfoItem {
 /// The parsed options info used across Kingfisher methods. Each property in this type corresponds a case member
 /// in `KingfisherOptionsInfoItem`. When a `KingfisherOptionsInfo` sent to Kingfisher related methods, it will be
 /// parsed and converted to a `KingfisherParsedOptionsInfo` first, and pass through the internal methods.
+// 这其实就是一个配置类.
+// 就像是 Alamofire 里面的 Request 里面的 MutableState 一样. 存储了各种图片下载, 读取过程中所需要的数据.
 public struct KingfisherParsedOptionsInfo {
 
     public var targetCache: ImageCache? = nil

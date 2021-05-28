@@ -67,6 +67,8 @@ let KFRunLoopModeCommon = RunLoop.Mode.common
 ///
 /// Kingfisher supports setting GIF animated data to either `UIImageView` and `AnimatedImageView` out of box. So
 /// it would be fairly easy to switch between them.
+
+// 这应该是 SDAnimationImageView 的 Swift 版本实现.
 open class AnimatedImageView: UIImageView {
     
     /// Proxy object for preventing a reference cycle between the `CADDisplayLink` and `AnimatedImageView`.

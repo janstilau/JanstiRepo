@@ -8,11 +8,18 @@ import UIKit
 
 
 // KingfisherWrapper 上添加方法, where 进行限制.
+// 这里, 就是 ImageView 的分类所在了.
+// 也就是最最常用的图片设置的场所了.
 
 extension KingfisherWrapper where Base: KFCrossPlatformImageView {
 
     // MARK: Setting Image
 
+    
+    /*
+        由于 Swift 的 Label 的特性, 使得它在使用方法的时候, 能够进行简单的方法的设置.
+        所以, 习惯于写多个参数的方法, 然后提供默认值. 这样, 外界使用的时候, 既能够进行自定义, 也可以进行简单的调用.
+     */
     /// Sets an image to the image view with a `Source`.
     ///
     /// - Parameters:
@@ -21,6 +28,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
     ///   - options: An options set to define image setting behaviors. See `KingfisherOptionsInfo` for more.
     ///   - progressBlock: Called when the image downloading progress gets updated. If the response does not contain an
     ///                    `expectedContentLength`, this block will not be called.
+    ///            这里, completionHandler 是设置完之后执行的回调, 将 img 设置到 View 这个行为, 本身是在 KF 的代码逻辑中的.
     ///   - completionHandler: Called when the image retrieved and set finished.
     /// - Returns: A task represents the image downloading.
     ///
@@ -50,6 +58,9 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
     /// Since this method will perform UI changes, you must call it from the main thread.
     /// Both `progressBlock` and `completionHandler` will be also executed in the main thread.
     ///
+    
+    // KingfisherManager 还是会存在, 但是调用被掩藏在了, 各种 View 的方法的内部.
+    // 这是 Api 设计的一个重要的原则, 就是封装细节, 给用户最佳的使用的方式.
     @discardableResult
     public func setImage(
         with source: Source?,
@@ -59,7 +70,11 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
         completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)? = nil) -> DownloadTask?
     {
         let options = KingfisherParsedOptionsInfo(KingfisherManager.shared.defaultOptions + (options ?? .empty))
-        return setImage(with: source, placeholder: placeholder, parsedOptions: options, progressBlock: progressBlock, completionHandler: completionHandler)
+        return setImage(with: source,
+                        placeholder: placeholder,
+                        parsedOptions: options,
+                        progressBlock: progressBlock,
+                        completionHandler: completionHandler)
     }
 
     /// Sets an image to the image view with a `Source`.
@@ -251,6 +266,10 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
         )
     }
 
+    /*
+        最终, 会来到这个方法.
+        这里有点没有搞清楚, 前面的方法存在的意义在哪里. 本身都有默认参数, 为什么还要有那么多方法呢?
+     */
 
     func setImage(
         with source: Source?,
@@ -259,7 +278,11 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
         progressBlock: DownloadProgressBlock? = nil,
         completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)? = nil) -> DownloadTask?
     {
+        // self 是 warpper.
+        // 但是 self 的各种 set 方法, 都是计算属性. 实际上, 还是修改的自己存储的 base 的值.
         var mutatingSelf = self
+        
+        // 这里, 说明可以没有 Source.
         guard let source = source else {
             mutatingSelf.placeholder = placeholder
             mutatingSelf.taskIdentifier = nil
@@ -271,14 +294,14 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
 
         let isEmptyImage = base.image == nil && self.placeholder == nil
         if !options.keepCurrentImageWhileLoading || isEmptyImage {
-            // Always set placeholder while there is no image/placeholder yet.
-            // Warpper 的 setPlaceHolder 里面, 有了对于 base 的修改
             mutatingSelf.placeholder = placeholder
         }
 
+        // 如果, 设置了 indicator, 那么在设置新图的时候, 这个 indicator 会给用户提示.
         let maybeIndicator = indicator
         maybeIndicator?.startAnimatingView()
 
+        // 为 ImageView 设置一个新的任务的 ID 值.
         let issuedIdentifier = Source.Identifier.next()
         mutatingSelf.taskIdentifier = issuedIdentifier
 
@@ -286,6 +309,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
             options.preloadAllAnimationData = true
         }
 
+        // 设置过程回调的数据. 添加到 options 里面.
         if let block = progressBlock {
             options.onDataReceived = (options.onDataReceived ?? []) + [ImageLoadingProgressSideEffect(block)]
         }
@@ -300,9 +324,6 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
             $0.onShouldApply = { issuedIdentifier == self.taskIdentifier }
         }
 
-        // 前面, 都是 View 层的修改.
-        // 真正的数据层, 转移到了 retrieveImage 里面.
-        //
         let task = KingfisherManager.shared.retrieveImage(
             with: source,
             options: options,
@@ -421,6 +442,7 @@ private var imageTaskKey: Void?
 extension KingfisherWrapper where Base: KFCrossPlatformImageView {
 
     // MARK: Properties
+    // Box 这个类, 存在的意义就是, 将一个数据, 变为一个引用值, 然后存到 Associate Value 里面.
     public private(set) var taskIdentifier: Source.Identifier.Value? {
         get {
             let box: Box<Source.Identifier.Value>? = getAssociatedObject(base, &taskIdentifierKey)
@@ -434,6 +456,9 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
 
     /// Holds which indicator type is going to be used.
     /// Default is `.none`, means no indicator will be shown while downloading.
+    // 这里, 在进行 Type 的赋值的时候, 其实不同的 case 的东西是不同的.
+    // 在 image, 和 custom 里面, 其实要传递对应的 data 和 indicator view 过来的.
+    // 在 setType 的内部, 会生成对应的类型, 然后进行 indicator 的设置. 而 indicator 的设置, 会带来真正的 View 的添加删除.
     public var indicatorType: IndicatorType {
         get {
             return getAssociatedObject(base, &indicatorTypeKey) ?? .none
@@ -471,12 +496,17 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
                 // Set default indicator layout
                 let view = newIndicator.view
                 
+                // 在 Set 方法的内部, 封装了添加 View 的细节.
+                // 各种 Indicator 的协议, 都是在这里使用了.
+                // 使用 anchor 作为 autolayout 的使用方式以后, 其实 autolayout 使用苹果原生的 API ,已经是非常方便了.
                 base.addSubview(view)
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.centerXAnchor.constraint(
-                    equalTo: base.centerXAnchor, constant: newIndicator.centerOffset.x).isActive = true
+                    equalTo: base.centerXAnchor,
+                    constant: newIndicator.centerOffset.x).isActive = true
                 view.centerYAnchor.constraint(
-                    equalTo: base.centerYAnchor, constant: newIndicator.centerOffset.y).isActive = true
+                    equalTo: base.centerYAnchor,
+                    constant: newIndicator.centerOffset.y).isActive = true
 
                 switch newIndicator.sizeStrategy(in: base) {
                 case .intrinsicSize:
@@ -492,9 +522,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
                 newIndicator.view.isHidden = true
             }
 
-            // Save in associated object
-            // Wrap newValue with Box to workaround an issue that Swift does not recognize
-            // and casting protocol for associate object correctly. https://github.com/onevcat/Kingfisher/issues/872
+            // 在一个 Optinal 的值上, 使用 map 方法, 是一个常用的使用方式.
             setRetainedAssociatedObject(base, &indicatorKey, newValue.map(Box.init))
         }
     }
@@ -513,6 +541,9 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
     public private(set) var placeholder: Placeholder? {
         get { return getAssociatedObject(base, &placeholderKey) }
         set {
+            // 这里, 都是使用的抽象的接口.
+            // 从这里我们可以看出, 抽象了, 不一定就是少用 Api 了.
+            // 定义一个抽象接口, 以及 extension. 能使用的 API, 有的时候反而要比原始类型更多了.
             if let previousPlaceholder = placeholder {
                 previousPlaceholder.remove(from: base)
             }

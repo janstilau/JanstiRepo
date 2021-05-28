@@ -13,6 +13,9 @@ import UIKit
     
     PlaceHodler 从一张图, 变为了一个行为抽象.
  
+    直观上的感受, PlaceHolder 就是一张图, 所以, Image 实现了 PlaceHolder 的接口.
+    
+ 
  */
 /// Represents a placeholder type which could be set while loading as well as
 /// loading finished without getting an image.
