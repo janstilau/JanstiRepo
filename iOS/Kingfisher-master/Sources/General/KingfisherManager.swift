@@ -7,6 +7,8 @@ import Foundation
 /// If the expected length is not available, this block will not be called.
 public typealias DownloadProgressBlock = ((_ receivedSize: Int64, _ totalSize: Int64) -> Void)
 
+// 一个盒子, 在最后面向业务的接口里面, 是将这个盒子抛出去使用.
+// 相比较最后仅仅抛出一个 Image, 盒子能够提供更多的信息, 供业务接口使用. 比如, cacheType 就当做是否做动画的标志位.
 /// Represents the result of a Kingfisher retrieving image task.
 public struct RetrieveImageResult {
 
@@ -23,6 +25,8 @@ public struct RetrieveImageResult {
     /// The original `Source` from which the retrieve task begins. It can be different from the `source` property.
     /// When an alternative source loading happened, the `source` will be the replacing loading target, while the
     /// `originalSource` will be kept as the initial `source` which issued the image loading process.
+    
+    // 会有重定向的操作吗. 网络相关的 API 都会有这种操作. 或者, 这就是 Network 和 Disk 之间的差别.
     public let originalSource: Source
 }
 
