@@ -3,6 +3,9 @@
 import UIKit
 import ImageIO
 
+
+// 虽然, 定义了这样一个协议, 但是没有在库里面真实的使用过.
+
 /// Protocol of `AnimatedImageView`.
 public protocol AnimatedImageViewDelegate: AnyObject {
     
@@ -36,9 +39,10 @@ let KFRunLoopModeCommon = RunLoop.Mode.common
 /// it would be fairly easy to switch between them.
 
 // 这应该是 SDAnimationImageView 的 Swift 版本实现.
+
 open class AnimatedImageView: UIImageView {
     
-    /// Proxy object for preventing a reference cycle between the `CADDisplayLink` and `AnimatedImageView`.
+    // 这个内部类型, 就是为了进行循环引用的打破的.
     class TargetProxy {
         private weak var target: AnimatedImageView?
         
@@ -46,12 +50,15 @@ open class AnimatedImageView: UIImageView {
             self.target = target
         }
         
+        // 当屏幕刷新之后, 调用 updateFrameIfNeeded
         @objc func onScreenUpdate() {
             target?.updateFrameIfNeeded()
         }
     }
     
     /// Enumeration that specifies repeat count of GIF
+    // 相比较于 Int 的 -1, 1, 特定的 Int 值来表示以下的三个含义.
+    // 这种 enum 的字符串表示, 具有更棒的表示. 同时, 由于关联值的存在, 让 finite 提供特定数量也成为了可能.
     public enum RepeatCount: Equatable {
         case once
         case finite(count: UInt)
@@ -93,6 +100,7 @@ open class AnimatedImageView: UIImageView {
     
     /// The animation timer's run loop mode. Default is `RunLoop.Mode.common`.
     /// Set this property to `RunLoop.Mode.default` will make the animation pause during UIScrollView scrolling.
+    // RunLoopMode 的改变, 其实就是改变 DisplayLink 添加到 Runloop 的 Mode.
     public var runLoopMode = KFRunLoopModeCommon {
         willSet {
             guard runLoopMode != newValue else { return }
@@ -107,6 +115,9 @@ open class AnimatedImageView: UIImageView {
     /// Setting this value to another one will reset current animation.
     ///
     /// Default is `.infinite`, which means the animation will last forever.
+    
+    // 可以改变, Gif 动画的重复次数.
+    // 每次改变, 都会重新生成 Animator. 然后调用重绘的操作.
     public var repeatCount = RepeatCount.infinite {
         didSet {
             if oldValue != repeatCount {
@@ -130,6 +141,10 @@ open class AnimatedImageView: UIImageView {
     }()
     
     // A flag to avoid invalidating the displayLink on deinit if it was never created, because displayLink is so lazy.
+    // 为了, 使用一个 lazy 的属性, 只能通过这种方式去判断.
+    // 使用了 lazy, 就是为了避免使用 Optinal 带来的不断地判断 ? 的麻烦之处.
+    // 但是, 如果需要管理 lazy 属性的生命, 就需要额外的设置标志位了.
+    
     private var isDisplayLinkInitialized: Bool = false
     
     // A display link that keeps calling the `updateFrame` method on every screen refresh.
@@ -179,7 +194,7 @@ open class AnimatedImageView: UIImageView {
         }
     }
     
-    /// Starts the animation.
+    // 开启动画, 就是开启定时器.
     override open func startAnimating() {
         guard !isAnimating else { return }
         guard let animator = animator else { return }
@@ -188,7 +203,7 @@ open class AnimatedImageView: UIImageView {
         displayLink.isPaused = false
     }
     
-    /// Stops the animation.
+    // 关闭动画, 就是关闭定时器.
     override open func stopAnimating() {
         super.stopAnimating()
         if isDisplayLinkInitialized {
@@ -196,6 +211,9 @@ open class AnimatedImageView: UIImageView {
         }
     }
     
+    // 这里, 其实就是 Gif 图能够显示的原因了.
+    // displayLink 会跟随着屏幕, 判断是否应该生成新的图片了. 如果是, 那么就调用 needDisplay 方法, 刷新 UIImageView
+    // 在 Layer 的代理方法里面, 调用到了 func display(_ layer: CALayer) 方法, 将新的图, 设置给 Layer 的 image
     override open func display(_ layer: CALayer) {
         if let currentFrame = animator?.currentFrameImage {
             layer.contents = currentFrame.cgImage
@@ -222,6 +240,7 @@ open class AnimatedImageView: UIImageView {
     // Reset the animator.
     private func reset() {
         animator = nil
+        // 实际上, 需要的 ImageSource 这个属性, 是挂钩到了 Image 上面.
         if let image = image, let imageSource = image.kf.imageSource {
             let targetSize = bounds.scaled(UIScreen.main.scale).size
             let animator = Animator(
@@ -233,15 +252,19 @@ open class AnimatedImageView: UIImageView {
                 framePreloadCount: framePreloadCount,
                 repeatCount: repeatCount,
                 preloadQueue: preloadQueue)
+            // 经常用到这种设计. 真正执行的, 是另外一块业务类, 但是这个业务类的各种配置, 是启动类传递过去的.
+            // 启动类可能会有各种各样的属性, 这些属性, 会影响到各种功能类的细微的功能点. 但是, 作为用户使用的入口, 只能是在启动类里面, 占据一个属性.
             animator.delegate = self
             animator.needsPrescaling = needsPrescaling
             animator.backgroundDecode = backgroundDecode
-            animator.prepareFramesAsynchronously()
+            animator.prepareFramesAsynchronously() // 在 Init 的时候, 之后, 就会进行资源的预先准备.
             self.animator = animator
         }
         didMove()
     }
     
+    // 当, ImageView 的 Window 变化的时候, 或者 superView 变化的时候, 会调用到这个方法.
+    // 在这个方法里面, 统一进行动画的控制.
     private func didMove() {
         if autoPlayAnimatedImage && animator != nil {
             if let _ = superview, let _ = window {
@@ -253,6 +276,7 @@ open class AnimatedImageView: UIImageView {
     }
     
     /// Update the current frame with the displayLink duration.
+    // 定时器, 不断的刷新调用该方法, 进行 ImageView 的显示数据的刷新.
     private func updateFrameIfNeeded() {
         guard let animator = animator else {
             return
@@ -265,12 +289,9 @@ open class AnimatedImageView: UIImageView {
         }
         
         let duration: CFTimeInterval
-        
-        // CA based display link is opt-out from ProMotion by default.
-        // So the duration and its FPS might not match. 
-        // See [#718](https://github.com/onevcat/Kingfisher/issues/718)
-        // By setting CADisableMinimumFrameDuration to YES in Info.plist may
-        // cause the preferredFramesPerSecond being 0
+        // preferredFramesPerSecond 这个值, 代表着刷新的事件频率
+        // 如果, 通过修改 displayLink 的这个值, 可以改变定时器的调用间隔.
+        // 这里, 也就是说, gif 图应该将该值考虑在内, 判断是不是应该修改 image 的显示.
         let preferredFramesPerSecond = displayLink.preferredFramesPerSecond
         if preferredFramesPerSecond == 0 {
             duration = displayLink.duration
@@ -279,6 +300,9 @@ open class AnimatedImageView: UIImageView {
             duration = 1.0 / TimeInterval(preferredFramesPerSecond)
         }
         
+        // 使用 animator 来判断, 是不是应该刷新显示.
+        // 在 Animator 的内部, 会根据 gif 的状态, 来判断是否应该刷新.
+        // 例如, gif 里面每张图其实会有 duration 的概念的. 如果一张图的 duration 比较大, 那么其实它一直不刷新, 才是合理的, 是 gif 的制作者的原始意图.
         animator.shouldChangeFrame(with: duration) { [weak self] hasNewFrame in
             if hasNewFrame {
                 self?.layer.setNeedsDisplay()
@@ -323,6 +347,7 @@ extension AnimatedImageView {
         //
         // - parameter image: An optional `UIImage` instance to be assigned to the new frame.
         // - returns: An `AnimatedFrame` instance.
+        // 这类, 之所以用实例方法, 是因为想要复用 duration 的值. 不想再次计算了
         func makeAnimatedFrame(image: UIImage?) -> AnimatedFrame {
             return AnimatedFrame(image: image, duration: duration)
         }
@@ -334,6 +359,8 @@ extension AnimatedImageView {
     // MARK: - Animator
     
     /// An animator which used to drive the data behind `AnimatedImageView`.
+    // 这个类, 就是不断地抽取 Gif 里面的数据, 制作成为 Image, 供 UIImageView 使用的.
+    
     public class Animator {
         private let size: CGSize
         
@@ -347,7 +374,10 @@ extension AnimatedImageView {
         private let maxRepeatCount: RepeatCount
         
         private let maxTimeStep: TimeInterval = 1.0
-        private let animatedFrames = SafeArray<AnimatedFrame>()
+        private let animatedFrames = SafeArray<AnimatedFrame>() // 其他的数据, 都是常量值.
+        
+        // 其他的可变值, 都在代码层次上, 进行了线程修改的控制.
+        // 所以, 只有 animatedFrames 的数据修改, 有了线程的保护.
         private var frameCount = 0
         private var timeSinceLastFrameChange: TimeInterval = 0.0
         private var currentRepeatCount: UInt = 0
@@ -452,6 +482,7 @@ extension AnimatedImageView {
         /// Gets the image frame of a given index.
         /// - Parameter index: The index of desired image.
         /// - Returns: The decoded image at the frame. `nil` if the index is out of bound or the image is not yet loaded.
+        // 从, 存储的图里面, 读取应该进行显示的 Image, 然后显示出来.
         public func frame(at index: Int) -> KFCrossPlatformImage? {
             return animatedFrames[index]?.image
         }
@@ -468,6 +499,7 @@ extension AnimatedImageView {
             }
         }
         
+        // 如果, 当前的经过的时间, 超过了当前帧的时间, 那么就改变当前帧的 IDX 值, 通知外界该刷新了.
         func shouldChangeFrame(with duration: CFTimeInterval, handler: (Bool) -> Void) {
             incrementTimeSinceLastFrameChange(with: duration)
             
@@ -480,6 +512,7 @@ extension AnimatedImageView {
             }
         }
         
+        // setupAnimatedFrames 会在异步线程里面调用. GIFAnimatedImage.getFrameDuration 也会占用资源.
         private func setupAnimatedFrames() {
             resetAnimatedFrames()
             
@@ -488,9 +521,11 @@ extension AnimatedImageView {
             (0..<frameCount).forEach { index in
                 let frameDuration = GIFAnimatedImage.getFrameDuration(from: imageSource, at: index)
                 duration += min(frameDuration, maxTimeStep)
+                // 提前, 插入了一个 placeHolder 的 Image 进入. 这样, frame(at index: Int) 的实现就会变得非常的简单.
                 animatedFrames.append(AnimatedFrame(image: nil, duration: frameDuration))
                 
                 if index > maxFrameCount { return }
+                
                 animatedFrames[index] = animatedFrames[index]?.makeAnimatedFrame(image: loadFrame(at: index))
             }
             
@@ -501,6 +536,7 @@ extension AnimatedImageView {
             animatedFrames.removeAll()
         }
         
+        // 这里是实际的读取图的逻辑所在.
         private func loadFrame(at index: Int) -> UIImage? {
             let resize = needsPrescaling && size != .zero
             let options: [CFString: Any]?
@@ -521,10 +557,14 @@ extension AnimatedImageView {
             
             let image = KFCrossPlatformImage(cgImage: cgImage)
             
-            guard let context = GraphicsContext.current(size: imageSize, scale: imageScale, inverting: true, cgImage: cgImage) else {
+            guard let context = GraphicsContext.current(size: imageSize,
+                                                        scale: imageScale,
+                                                        inverting: true,
+                                                        cgImage: cgImage) else {
                 return image
             }
             
+            // 这里, 取得了 CGImage 之后, 专门的用 context 画出来的.
             return backgroundDecode ? image.kf.decoded(on: context) : image
         }
         
@@ -578,7 +618,9 @@ extension AnimatedImageView {
     }
 }
 
+
 class SafeArray<Element> {
+    
     private var array: Array<Element> = []
     private let lock = NSLock()
     
@@ -586,6 +628,7 @@ class SafeArray<Element> {
         get {
             lock.lock()
             defer { lock.unlock() }
+            // ~=
             return array.indices ~= index ? array[index] : nil
         }
         

@@ -1,31 +1,7 @@
-//
-//  ImageFormat.swift
-//  Kingfisher
-//
-//  Created by onevcat on 2018/09/28.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 import Foundation
 
+
+// 从这里可以看出, 不同格式的 Image 其实数据的头信息, 是不一样的.
 /// Represents image format.
 ///
 /// - unknown: The format cannot be recognized or not supported yet.
@@ -42,6 +18,9 @@ public enum ImageFormat {
     /// GIF image format.
     case GIF
     
+    
+    // 顶级的类型, 只包含上面四个值, 但是在 ImageFormat 下面, 定义所使用的类型的数据.
+    // 这些类型, 与其说是对象, 不如说是命名空间, 他们存在的意义, 就是一个特定的作用域, 包裹所对应的数据而已,
     struct HeaderData {
         static var PNG: [UInt8] = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]
         static var JPEG_SOI: [UInt8] = [0xFF, 0xD8]
@@ -83,8 +62,12 @@ public enum ImageFormat {
 extension Data: KingfisherCompatibleValue {}
 
 // MARK: - Misc Helpers
+// 可以这样认为, 各种之前, 需要增加 kf_作为开头的分类方法, 都可以使用这种方法, 提供一个自定义领域的扩展点来, 使用 KingfisherWrapper 的条件编译, 来实现.
+
 extension KingfisherWrapper where Base == Data {
     /// Gets the image format corresponding to the data.
+    
+    // 从这里可以看出, 判断图片的类型, 就是根据文件的头数据算出来的.
     public var imageFormat: ImageFormat {
         guard base.count > 8 else { return .unknown }
         
@@ -110,6 +93,7 @@ extension KingfisherWrapper where Base == Data {
         return .unknown
     }
     
+    // 这个方法, 不太明白作用
     public func contains(jpeg marker: ImageFormat.JPEGMarker) -> Bool {
         guard imageFormat == .JPEG else {
             return false

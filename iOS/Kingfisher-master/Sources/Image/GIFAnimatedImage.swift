@@ -1,33 +1,9 @@
-//
-//  AnimatedImage.swift
-//  Kingfisher
-//
-//  Created by onevcat on 2018/09/26.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 import Foundation
 import ImageIO
 
 /// Represents a set of image creating options used in Kingfisher.
+
+// Options 作为一个数据配置类的命名结尾, 是一个常规的操作.
 public struct ImageCreatingOptions {
 
     /// The target scale of image needs to be created.
@@ -70,11 +46,17 @@ public struct ImageCreatingOptions {
 
 // Represents the decoding for a GIF image. This class extracts frames from an `imageSource`, then
 // hold the images for later use.
+
+// 所谓的 Gif 图片, 就是一组图片, 和这组图片对应的时间.
+// 这里也可以看到, GIF 里面, 其实是存储了每张图的时长信息的, 这样, 可以大大的减少数据大小.
+
 class GIFAnimatedImage {
     let images: [KFCrossPlatformImage]
     let duration: TimeInterval
     
-    init?(from imageSource: CGImageSource, for info: [String: Any], options: ImageCreatingOptions) {
+    init?(from imageSource: CGImageSource,
+          for info: [String: Any],
+          options: ImageCreatingOptions) {
         let frameCount = CGImageSourceGetCount(imageSource)
         var images = [KFCrossPlatformImage]()
         var gifDuration = 0.0
@@ -112,6 +94,7 @@ class GIFAnimatedImage {
 
     // Calculates frame duration at a specific index for a gif from an `imageSource`.
     static func getFrameDuration(from imageSource: CGImageSource, at index: Int) -> TimeInterval {
+        
         guard let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, index, nil)
             as? [String: Any] else { return 0.0 }
 

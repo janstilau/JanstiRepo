@@ -287,25 +287,25 @@ public class KingfisherManager {
     
     
     
-    // 最终,
+    // 最终, 会来到这个方法. 进行图片数据的读取的工作.
     private func retrieveImage(
         with source: Source,
         context: RetrievingContext,
         completionHandler: ((Result<RetrieveImageResult, KingfisherError>) -> Void)?) -> DownloadTask?
     {
         let options = context.options
+        // 这里, 配置了一定要从原始位置取图, 就走 loadAndCacheImage 逻辑.
         if options.forceRefresh {
             return loadAndCacheImage(
                 source: source,
                 context: context,
                 completionHandler: completionHandler)?.value
-            
         } else {
+            // 否则, 就是缓存读取, 网络取图的逻辑.
             let loadedFromCache = retrieveImageFromCache(
                 source: source,
                 context: context,
                 completionHandler: completionHandler)
-            
             if loadedFromCache {
                 return nil
             }
@@ -485,6 +485,8 @@ public class KingfisherManager {
     ///    will try to check whether an original version of that image is existing or not. If there is already an
     ///    original, Kingfisher retrieves it from cache and processes it. Then, the processed image will be store
     ///    back to cache for later use.
+    
+    // 取缓存图的逻辑.
     func retrieveImageFromCache(
         source: Source,
         context: RetrievingContext,
