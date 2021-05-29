@@ -11,8 +11,7 @@ public typealias IndicatorView = UIView
 
 // 实际上, 日常使用的其实是这个 Type 类.
 // 在 Type 的 set 方法里面, 其实是根据 case 的值, 生成了对应的 View 的类型的.
-// 具体的逻辑在 Set 方法内部.
-// 当然, 我们也可以自己定义出一个 Indicator 来, 赋值到 ImageView 上.
+// 只能通过 enum 对于 ImageView 进行 indicator 的赋值.
 
 /// Represents the activity indicator type which should be added to
 /// an image view when an image is being downloaded.
@@ -44,7 +43,7 @@ public protocol Indicator {
     /// Center offset of the indicator. Kingfisher will use this value to determine the position of
     /// indicator in the super view.
     var centerOffset: CGPoint { get }
-    
+     
     /// The indicator view which would be added to the super view.
     var view: IndicatorView { get }
 
@@ -59,7 +58,6 @@ public enum IndicatorSizeStrategy {
     case size(CGSize)
 }
 
-// 提供一些默认的实现, 让 Indicator 的实现者, 更好地完成适配.
 extension Indicator {
     
     /// Default implementation of `centerOffset` of `Indicator`. The default value is `.zero`, means that there is
@@ -74,7 +72,8 @@ extension Indicator {
     }
 }
 
-// Displays a NSProgressIndicator / UIActivityIndicatorView
+// 对于系统的菊花的封装, 一个新的类型, 这个类型, 实现 Indicator 协议.
+// 该使用 final 的地方, 不要吝啬
 final class ActivityIndicator: Indicator {
 
     #if os(macOS)
@@ -88,7 +87,6 @@ final class ActivityIndicator: Indicator {
         return activityIndicatorView
     }
 
-    // 这里, 进行了一个简单的 count 值记录
     func startAnimatingView() {
         if animatingCount == 0 {
             #if os(macOS)

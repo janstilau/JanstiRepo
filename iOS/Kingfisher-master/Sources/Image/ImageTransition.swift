@@ -17,6 +17,10 @@ import UIKit
 /// - flipFromTop: Flip from top transition.
 /// - flipFromBottom: Flip from bottom transition.
 /// - custom: Custom transition.
+
+// 这个类, 封装了动画相关的各种信息.
+// 最终, 会在 UIView.transition 里面使用.
+// 要清晰地记得, enum 的 case, 就是 type 值. 只不过用更加清晰地方式表达了这个值而已.
 public enum ImageTransition {
     /// No animation transition.
     case none
@@ -50,6 +54,7 @@ public enum ImageTransition {
         case .flipFromTop(let duration):     return duration
         case .flipFromBottom(let duration):  return duration
             
+            // custom 就是一堆值的聚合. 取值的时候, 就是分别取出这堆值.
         case .custom(let duration, _, _, _): return duration
         }
     }
@@ -68,6 +73,7 @@ public enum ImageTransition {
         }
     }
     
+    // 将闭包, 当值用的使用技巧.
     var animations: ((UIImageView, UIImage) -> Void)? {
         switch self {
         case .custom(_, _, let animations, _): return animations
@@ -75,6 +81,7 @@ public enum ImageTransition {
         }
     }
     
+    // 将闭包, 当值用的使用技巧.
     var completion: ((Bool) -> Void)? {
         switch self {
         case .custom(_, _, _, let completion): return completion

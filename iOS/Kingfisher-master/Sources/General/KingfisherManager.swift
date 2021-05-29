@@ -1,29 +1,3 @@
-//
-//  KingfisherManager.swift
-//  Kingfisher
-//
-//  Created by Wei Wang on 15/4/6.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 
 import Foundation
 
@@ -72,6 +46,10 @@ public typealias DownloadTaskUpdatedBlock = ((_ newTask: DownloadTask?) -> Void)
 /// Main manager class of Kingfisher. It connects Kingfisher downloader and cache,
 /// to provide a set of convenience methods to use Kingfisher for tasks.
 /// You can use this class to retrieve an image via a specified URL from web or cache.
+
+// 在 KF 的简单的接口下, 下载, 缓存相关的逻辑都是需要的.
+// 这些逻辑, 有着各自单独的类进行处理, 但是直接使用这些类, 不利于提供简单的接口.
+// KingfisherManager 就是中间的协调者.
 public class KingfisherManager {
 
     /// Represents a shared manager used across Kingfisher.

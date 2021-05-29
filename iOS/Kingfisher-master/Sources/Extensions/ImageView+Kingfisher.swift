@@ -268,7 +268,8 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
 
     /*
         最终, 会来到这个方法.
-        这里有点没有搞清楚, 前面的方法存在的意义在哪里. 本身都有默认参数, 为什么还要有那么多方法呢?
+        实际上, SetImage 的逻辑和 SD 没有太大的区别.
+        ImageView 做下载前的一些准备动作, 然后提交下载任务, 同时, 设置下载任务的回调, 在回调里面, 拿到新的值进行 image 的替换动作.
      */
 
     func setImage(
@@ -329,8 +330,10 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
             options: options,
             downloadTaskUpdated: { mutatingSelf.imageTask = $0 },
             completionHandler: { result in
+                // 将所有的操作, 转移到了 main quque 里面.
                 CallbackQueue.mainCurrentOrAsync.execute {
                     maybeIndicator?.stopAnimatingView()
+                    // 如果, 当前没有任务表示, 要执行 completion 通知外界.
                     guard issuedIdentifier == self.taskIdentifier else {
                         let reason: KingfisherError.ImageSettingErrorReason
                         do {
@@ -344,23 +347,29 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
                         return
                     }
 
+                    // 完成后, 重置 task 相关的数据.
                     mutatingSelf.imageTask = nil
                     mutatingSelf.taskIdentifier = nil
 
+                    // 下面就是取图完成后, 无论失败与否的设置图片, 触发回调的部分了.
                     switch result {
                     case .success(let value):
                         guard self.needsTransition(options: options, cacheType: value.cacheType) else {
+                            // 如果, 不需要动画, 就直接设置 image.
+                            // 取图完成后, 设置 imageView 的 image, 是一个必然的时期, 和 CompletionHandler 是无关的.
                             mutatingSelf.placeholder = nil
                             self.base.image = value.image
                             completionHandler?(result)
                             return
                         }
 
-                        self.makeTransition(image: value.image, transition: options.transition) {
+                        self.makeTransition(image: value.image,
+                                            transition: options.transition) {
                             completionHandler?(result)
                         }
 
                     case .failure:
+                        // 如果, 设置了失败图, 那么这里就会设置失败图.
                         if let image = options.onFailureImage {
                             self.base.image = image
                         }
@@ -381,6 +390,8 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
         imageTask?.cancel()
     }
 
+    // 是不是需要动画, 是根据 cache 的状态, 以及 KingfisherParsedOptionsInfo 里面的数据来的.
+    // 专门一个函数, 将这块的逻辑封装一下.
     private func needsTransition(options: KingfisherParsedOptionsInfo, cacheType: CacheType) -> Bool {
         switch options.transition {
         case .none:
@@ -400,6 +411,9 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
     private func makeTransition(image: KFCrossPlatformImage, transition: ImageTransition, done: @escaping () -> Void) {
         #if !os(macOS)
         // Force hiding the indicator without transition first.
+        
+        // 如果, 需要动画, 还是使用了 UIView.transition 来做动画.
+        // 首先是 indicator 的移除动作.
         UIView.transition(
             with: self.base,
             duration: 0.0,
@@ -408,6 +422,8 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
             completion: { _ in
                 var mutatingSelf = self
                 mutatingSelf.placeholder = nil
+                // 然后是真正的动作.
+                // 可以看到, 所有动画相关的属性, 都封装到了 transition 的内部.
                 UIView.transition(
                     with: self.base,
                     duration: transition.duration,
@@ -421,12 +437,13 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
             }
         )
         #else
+        // 如果, 不能执行动画, 直接就调用 done
         done()
         #endif
     }
 }
 
-// MARK: - Associated Object
+// 所有使用到的 key, 是 private 修饰, 不让外界使用到
 private var taskIdentifierKey: Void?
 private var indicatorKey: Void?
 private var indicatorTypeKey: Void?
@@ -456,9 +473,9 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
 
     /// Holds which indicator type is going to be used.
     /// Default is `.none`, means no indicator will be shown while downloading.
-    // 这里, 在进行 Type 的赋值的时候, 其实不同的 case 的东西是不同的.
-    // 在 image, 和 custom 里面, 其实要传递对应的 data 和 indicator view 过来的.
-    // 在 setType 的内部, 会生成对应的类型, 然后进行 indicator 的设置. 而 indicator 的设置, 会带来真正的 View 的添加删除.
+    // 专门一个 Type 用作对外的接口.
+    // Indicator 外界是无法进行设置的, 只有通过 Type 来进行设置.
+    // 这样, 就保证了 type 和实际使用的 View 之间的统一
     public var indicatorType: IndicatorType {
         get {
             return getAssociatedObject(base, &indicatorTypeKey) ?? .none
@@ -467,9 +484,9 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
         set {
             switch newValue {
             case .none: indicator = nil
-            case .activity: indicator = ActivityIndicator()
-            case .image(let data): indicator = ImageIndicator(imageData: data)
-            case .custom(let anIndicator): indicator = anIndicator
+            case .activity: indicator = ActivityIndicator() // 系统的菊花
+            case .image(let data): indicator = ImageIndicator(imageData: data) // ImageView
+            case .custom(let anIndicator): indicator = anIndicator // 自定义的一个 Indicator View
             }
 
             setRetainedAssociatedObject(base, &indicatorTypeKey, newValue)
@@ -527,8 +544,6 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
         }
     }
     
-    // 对于, 这种不是 Apple 原生的类型的属性, 还是要使用关联对象这种技术来实现.
-    
     private var imageTask: DownloadTask? {
         get { return getAssociatedObject(base, &imageTaskKey) }
         set { setRetainedAssociatedObject(base, &imageTaskKey, newValue)}
@@ -537,7 +552,6 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
     /// Represents the `Placeholder` used for this image view. A `Placeholder` will be shown in the view while
     /// it is downloading an image.
     
-    // 虽然, set 是 wrapper 的属性, 但是真正起作用的, 还是操作 base 的值.
     public private(set) var placeholder: Placeholder? {
         get { return getAssociatedObject(base, &placeholderKey) }
         set {
@@ -548,6 +562,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
                 previousPlaceholder.remove(from: base)
             }
             
+            // 使用接口里面的行为使用 Placeholder
             if let newPlaceholder = newValue {
                 newPlaceholder.add(to: base)
             } else {
