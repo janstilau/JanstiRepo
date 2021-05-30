@@ -7,6 +7,7 @@ import ImageIO
 // 虽然, 定义了这样一个协议, 但是没有在库里面真实的使用过.
 
 /// Protocol of `AnimatedImageView`.
+
 public protocol AnimatedImageViewDelegate: AnyObject {
     
     /// Called after the animatedImageView has finished each animation loop.

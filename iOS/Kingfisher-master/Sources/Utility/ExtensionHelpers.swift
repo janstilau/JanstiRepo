@@ -99,6 +99,10 @@ extension RectCorner {
 }
 #endif
 
+
+/*
+    一个简单的扩展, 让时间的判断变得简单.
+ */
 extension Date {
     var isPast: Bool {
         return isPast(referenceDate: Date())

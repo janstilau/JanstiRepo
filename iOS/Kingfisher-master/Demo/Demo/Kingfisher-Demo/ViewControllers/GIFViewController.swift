@@ -36,6 +36,8 @@ class GIFViewController: UIViewController {
         super.viewDidLoad()
         let url = ImageLoader.gifImageURLs.last!
         
+        print(url)
+        
         // Should need to use different cache key to prevent data overwritten by each other.
         KF.url(url, cacheKey: "\(url)-imageview").set(to: imageView)
         

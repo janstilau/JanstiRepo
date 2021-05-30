@@ -46,6 +46,10 @@ private var animatedImageDataKey: Void?
 private var imageFrameCountKey: Void?
 
 // MARK: - Image Properties
+
+/*
+    各种, 属性的设置, 虽然 get, set 的点都是在 kf 属性上, 但是数据, 还是绑定到了 img 上.
+ */
 extension KingfisherWrapper where Base: KFCrossPlatformImage {
     private(set) var animatedImageData: Data? {
         get { return getAssociatedObject(base, &animatedImageDataKey) }
@@ -327,6 +331,8 @@ extension KingfisherWrapper where Base: KFCrossPlatformImage {
     ///   - options: Options to use when creating the image.
     /// - Returns: An `Image` object represents the image if created. If the `data` is invalid or not supported, `nil`
     ///            will be returned.
+    // 在这里, 如果 Image 的 data 是 Gif 图, 那么会生成对应的 animateImage 对象.
+    // 所以, 直接使用 UIImageView 其实也是可以展示 Gif 动画的.
     public static func image(data: Data, options: ImageCreatingOptions) -> KFCrossPlatformImage? {
         var image: KFCrossPlatformImage?
         switch data.kf.imageFormat {

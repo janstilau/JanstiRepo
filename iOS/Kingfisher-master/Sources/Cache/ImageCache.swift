@@ -121,7 +121,12 @@ open class ImageCache {
     /// for any of your customize cache.
     public static let `default` = ImageCache(name: "default")
 
-
+    /*
+        这里, 和其他的几个类库的思想是一样的.
+        一个 MemoryStorage 专门用来处理内存里面的缓存.
+        一个 DiskStorage 专门用来处理磁盘上的缓存.
+     */
+    
     // MARK: Public Properties
     /// The `MemoryStorage.Backend` object used in this cache. This storage holds loaded images in memory with a
     /// reasonable expire duration and a maximum memory usage. To modify the configuration of a storage, just set

@@ -1,32 +1,7 @@
-//
-//  Storage.swift
-//  Kingfisher
-//
-//  Created by Wei Wang on 2018/10/15.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 import Foundation
 
-/// Constants for some time intervals
+// 将常量定义到一个作用域里面.
+// 感觉, 应该使用 Enum 做这个事情, 但是在 Swift 里面, 都是在使用 Struct
 struct TimeConstants {
     static let secondsInOneMinute = 60
     static let minutesInOneHour = 60
@@ -34,12 +9,16 @@ struct TimeConstants {
     static let secondsInOneDay = 86_400
 }
 
+// 这里, 又能体现出 Enum 的好处来了.
+// 直接将相关的值, 和 Type 绑定在一起.
+
 /// Represents the expiration strategy used in storage.
 ///
 /// - never: The item never expires.
 /// - seconds: The item expires after a time duration of given seconds from now.
 /// - days: The item expires after a time duration of given days from now.
 /// - date: The item expires after a given date.
+
 public enum StorageExpiration {
     /// The item never expires.
     case never
@@ -52,6 +31,10 @@ public enum StorageExpiration {
     /// Indicates the item is already expired. Use this to skip cache.
     case expired
 
+    // 计算出, 过期的时间.
+    // 在之前, 这是放在 cache 类里面的.
+    // 在这里, 因为 Enum 也可以增加方法, 直接放到了对应的类型里面.
+    // 代码之间的功能划分更加的清晰.
     func estimatedExpirationSince(_ date: Date) -> Date {
         switch self {
         case .never: return .distantFuture
@@ -86,6 +69,9 @@ public enum StorageExpiration {
     }
 }
 
+
+// 每当, 图片被重新进行 touch 的时候, 它的过期时间应该更新.
+// 这个类型, 就是用于服务这个业务.
 /// Represents the expiration extending strategy used in storage to after access.
 ///
 /// - none: The item expires after the original time, without extending after access.
@@ -95,8 +81,10 @@ public enum ExpirationExtending {
     /// The item expires after the original time, without extending after access.
     case none
     /// The item expiration extends by the original cache time after each access.
+    // 重新刷新过期时间.
     case cacheTime
     /// The item expiration extends by the provided time after each access.
+    // 使用一个新的值, 刷新过期时间.
     case expirationTime(_ expiration: StorageExpiration)
 }
 

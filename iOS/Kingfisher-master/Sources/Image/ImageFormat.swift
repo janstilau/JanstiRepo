@@ -68,6 +68,7 @@ extension KingfisherWrapper where Base == Data {
     /// Gets the image format corresponding to the data.
     
     // 从这里可以看出, 判断图片的类型, 就是根据文件的头数据算出来的.
+    // 所以其实这是个计算属性, 每次都是拿到 Data 的前面几个部分, 跟对应的值进行比较之后返回的结果. 
     public var imageFormat: ImageFormat {
         guard base.count > 8 else { return .unknown }
         

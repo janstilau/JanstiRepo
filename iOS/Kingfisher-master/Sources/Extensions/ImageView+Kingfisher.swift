@@ -360,6 +360,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
                             // 取图完成后, 设置 imageView 的 image, 是一个必然的时期, 和 CompletionHandler 是无关的.
                             mutatingSelf.placeholder = nil
                             self.base.image = value.image
+                            // 如果, 是 Gif 图, 最终这个 image 会是 _UIAnimatedImage 
                             completionHandler?(result)
                             return
                         }
