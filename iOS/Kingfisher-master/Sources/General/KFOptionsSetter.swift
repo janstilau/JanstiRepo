@@ -341,6 +341,7 @@ extension KFOptionSetter {
 
 // MARK: - Redirect Handler
 extension KFOptionSetter {
+    
     /// The `ImageDownloadRedirectHandler` argument will be used to change the request before redirection.
     /// This is the possibility you can modify the image download request during redirect. You can modify the request for
     /// some customizing purpose, such as adding auth token to the header, do basic HTTP auth or something like url

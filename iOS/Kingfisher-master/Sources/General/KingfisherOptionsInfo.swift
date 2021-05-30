@@ -285,7 +285,7 @@ public struct KingfisherParsedOptionsInfo {
     public var callbackQueue: CallbackQueue = .mainCurrentOrAsync
     public var scaleFactor: CGFloat = 1.0
     public var requestModifier: AsyncImageDownloadRequestModifier? = nil
-    public var redirectHandler: ImageDownloadRedirectHandler? = nil
+    public var redirectHandler: ImageDownloadRedirectHandler? = nil // 默认是没有重定向的处理的.
     public var processor: ImageProcessor = DefaultImageProcessor.default
     public var imageModifier: ImageModifier? = nil
     public var cacheSerializer: CacheSerializer = DefaultCacheSerializer.default

@@ -1,29 +1,3 @@
-//
-//  SessionDelegate.swift
-//  Kingfisher
-//
-//  Created by Wei Wang on 2018/11/1.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 import Foundation
 
 // Represents the delegate object of downloader session. It also behave like a task manager for downloading.
@@ -46,6 +20,7 @@ open class SessionDelegate: NSObject {
     private var tasks: [URL: SessionDataTask] = [:]
     private let lock = NSLock()
 
+    // 各种, Delegate 对象, 其实就是一个 input -> output 的闭包的封装而已.
     let onValidStatusCode = Delegate<Int, Bool>()
     let onDownloadingFinished = Delegate<(URL, Result<URLResponse, KingfisherError>), Void>()
     let onDidDownloadData = Delegate<SessionDataTask, Data?>()
@@ -94,6 +69,7 @@ open class SessionDelegate: NSObject {
         url: URL,
         callback: SessionDataTask.TaskCallback) -> DownloadTask
     {
+        // 如果是之前已有的下载任务, 新增一个下载回调, 无非就是将任务下载之后的回调, 多存储一份, 等到下载之后, 将所有的回调都进行调用.
         let token = task.addCallback(callback)
         return DownloadTask(sessionTask: task, cancelToken: token)
     }
@@ -146,6 +122,9 @@ open class SessionDelegate: NSObject {
         task?.forceCancel()
     }
 }
+
+// 这个类, 就是 URLSessionDataDelegate 的实现类.
+// 并且, 在合适的时机, 去调用对应的 on 对象的各种方法.
 
 extension SessionDelegate: URLSessionDataDelegate {
 

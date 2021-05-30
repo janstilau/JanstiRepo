@@ -20,6 +20,7 @@ public struct ImageLoadingResult {
 }
 
 /// Represents a task of an image downloading process.
+// Struct 仅仅作为数据的盒子, 里面装的是引用值.
 public struct DownloadTask {
 
     /// The `SessionDataTask` object bounded to this download task. Multiple `DownloadTask`s could refer
@@ -72,6 +73,7 @@ extension DownloadTask {
 }
 
 /// Represents a downloading manager for requesting the image with a URL from server.
+// 这里, 才是真正触发了, 图片下载相关逻辑的所在. 
 open class ImageDownloader {
 
     // MARK: Singleton
@@ -101,6 +103,8 @@ open class ImageDownloader {
             session = URLSession(configuration: sessionConfiguration, delegate: sessionDelegate, delegateQueue: nil)
         }
     }
+    
+    // 这里, 有专门的一个对象, 出处理 URLSession 的所有代理方法, 这和之前类库的设计是一样的.
     open var sessionDelegate: SessionDelegate {
         didSet {
             session.invalidateAndCancel()
@@ -135,6 +139,8 @@ open class ImageDownloader {
 
         self.name = name
 
+        // SessionDelegate 专门去应对 session 的各种回调方法, 在 sessionDelegate 的内部, 设置了各种业务回调.
+        // 这些业务回调, 会触发 ImageDownloader 的方法.
         sessionDelegate = SessionDelegate()
         session = URLSession(
             configuration: sessionConfiguration,
@@ -147,6 +153,7 @@ open class ImageDownloader {
 
     deinit { session.invalidateAndCancel() }
 
+    // 在这里, 完成了 sessionDelegate 的回调.
     private func setupSessionHandler() {
         sessionDelegate.onReceiveSessionChallenge.delegate(on: self) { (self, invoke) in
             self.authenticationChallengeResponder?.downloader(self, didReceive: invoke.1, completionHandler: invoke.2)
@@ -195,6 +202,7 @@ open class ImageDownloader {
         )
     }
 
+    // 这里, 其实就是生成 Request 的操作.
     private func createDownloadContext(
         with url: URL,
         options: KingfisherParsedOptionsInfo,
@@ -205,7 +213,8 @@ open class ImageDownloader {
 
             // There is a possibility that request modifier changed the url to `nil` or empty.
             // In this case, throw an error.
-            guard let url = r.url, !url.absoluteString.isEmpty else {
+            guard let url = r.url,
+                  !url.absoluteString.isEmpty else {
                 done(.failure(KingfisherError.requestError(reason: .invalidURL(request: r))))
                 return
             }
@@ -214,7 +223,9 @@ open class ImageDownloader {
         }
 
         // Creates default request.
-        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: downloadTimeout)
+        var request = URLRequest(url: url,
+                                 cachePolicy: .reloadIgnoringLocalCacheData,
+                                 timeoutInterval: downloadTimeout)
         request.httpShouldUsePipelining = requestsUsePipelining
         if #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) , options.lowDataModeSource != nil {
             request.allowsConstrainedNetworkAccess = false
@@ -222,6 +233,7 @@ open class ImageDownloader {
 
         if let requestModifier = options.requestModifier {
             // Modifies request before sending.
+            // requestModifier.modified 的方法最后一个参数, 是 escaping, 也就是说在作者的眼里, 还是想要把这个方法, 当做一个异步方法来进行处理的.
             requestModifier.modified(for: request) { result in
                 guard let finalRequest = result else {
                     done(.failure(KingfisherError.requestError(reason: .emptyRequest)))
@@ -244,6 +256,7 @@ open class ImageDownloader {
         if let existingTask = sessionDelegate.task(for: context.url) {
             downloadTask = sessionDelegate.append(existingTask, url: context.url, callback: callback)
         } else {
+            // 如果, 之前没有这个下载任务, 就新建一个 dataTask, 然后将这个 dataTask 添加到 sessionDelegate 里面.
             let sessionDataTask = session.dataTask(with: context.request)
             sessionDataTask.priority = context.options.downloadPriority
             downloadTask = sessionDelegate.add(sessionDataTask, url: context.url, callback: callback)
@@ -352,6 +365,9 @@ open class ImageDownloader {
         completionHandler: ((Result<ImageLoadingResult, KingfisherError>) -> Void)? = nil) -> DownloadTask?
     {
         var downloadTask: DownloadTask?
+        // 调用一个方法, 然后在方法调用的 complete 回调里面, 进行相关数据的修改.
+        // 最后返回相关的数据.
+        // 之前自己一直很抵触这种方法, 但是现在想一下, 这种写法有着更强的灵活性.
         createDownloadContext(with: url, options: options) { result in
             switch result {
             case .success(let context):

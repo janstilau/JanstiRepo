@@ -306,6 +306,8 @@ public class KingfisherManager {
                 source: source,
                 context: context,
                 completionHandler: completionHandler)
+            // 如果, 缓存里面取到图了, 直接返回 nil, 也就是没有触发下载逻辑.
+            // 真正的取图, 以及 completion 的触发, 是在 ImageCache 里面进行的.
             if loadedFromCache {
                 return nil
             }
@@ -316,6 +318,7 @@ public class KingfisherManager {
                 return nil
             }
             
+            // 在这里, 才会真正的触发, 下载的相关逻辑.
             return loadAndCacheImage(
                 source: source,
                 context: context,
@@ -328,6 +331,7 @@ public class KingfisherManager {
         options: KingfisherParsedOptionsInfo,
         completionHandler: ((Result<ImageLoadingResult, KingfisherError>) -> Void)?)
     {
+        // 使用 ImageDataProvider 这样一套接口, 去进行 data 的获取, 然后, 将 data 变为 image, 包装成为了一个 Result, 触发回调.
         guard let  completionHandler = completionHandler else { return }
         provider.data { result in
             switch result {
@@ -360,6 +364,7 @@ public class KingfisherManager {
         }
     }
 
+    // 当, 网络层完成了相关的下载任务之后, 应该来到这里, 进行相关缓存逻辑的触发.
     private func cacheImage(
         source: Source,
         options: KingfisherParsedOptionsInfo,
@@ -442,17 +447,10 @@ public class KingfisherManager {
         case .network(let resource):
             let downloader = options.downloader ?? self.downloader
             let task = downloader.downloadImage(
-                with: resource.downloadURL, options: options, completionHandler: _cacheImage
+                with: resource.downloadURL,
+                options: options,
+                completionHandler: _cacheImage
             )
-
-
-            // The code below is neat, but it fails the Swift 5.2 compiler with a runtime crash when 
-            // `BUILD_LIBRARY_FOR_DISTRIBUTION` is turned on. I believe it is a bug in the compiler. 
-            // Let's fallback to a traditional style before it can be fixed in Swift.
-            //
-            // https://github.com/onevcat/Kingfisher/issues/1436
-            //
-            // return task.map(DownloadTask.WrappedTask.download)
 
             if let task = task {
                 return .download(task)
@@ -497,13 +495,17 @@ public class KingfisherManager {
         let targetCache = options.targetCache ?? cache
         let key = source.cacheKey
         let targetImageCached = targetCache.imageCachedType(
-            forKey: key, processorIdentifier: options.processor.identifier)
+            forKey: key,
+            processorIdentifier: options.processor.identifier)
         
+        // 如果, 可以直接使用缓存的数据, 就使用 targetCache 获取数据, 然后组织成为业务需要的 Item 传递给 callback
         let validCache = targetImageCached.cached &&
             (options.fromMemoryCacheOrRefresh == false || targetImageCached == .memory)
         if validCache {
             targetCache.retrieveImage(forKey: key, options: options) { result in
                 guard let completionHandler = completionHandler else { return }
+                // 这里提交了一个异步操作, 然后返回了一个 bool 值.
+                
                 options.callbackQueue.execute {
                     result.match(
                         onSuccess: { cacheResult in
@@ -531,6 +533,7 @@ public class KingfisherManager {
             return true
         }
 
+        // 后面的逻辑, 先不看了, 不妨碍总的流程.
         // 2. Check whether the original image exists. If so, get it, process it, save to storage and return.
         let originalCache = options.originalCache ?? targetCache
         // No need to store the same file in the same cache again.

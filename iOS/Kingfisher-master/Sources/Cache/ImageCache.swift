@@ -735,6 +735,9 @@ open class ImageCache {
     ///                 `DefaultImageProcessor.default`.
     /// - Returns: A `CacheType` instance which indicates the cache status.
     ///            `.none` means the image is not in cache or it is already expired.
+    
+    // 如果存到了内存里面, 就返回 .memory
+    // 如果存到了 disk 里面, 就返回 .disk
     open func imageCachedType(
         forKey key: String,
         processorIdentifier identifier: String = DefaultImageProcessor.default.identifier) -> CacheType
