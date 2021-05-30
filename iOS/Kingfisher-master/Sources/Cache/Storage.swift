@@ -94,6 +94,7 @@ public protocol CacheCostCalculable {
 }
 
 /// Represents types which can be converted to and from data.
+// 指定的对象, 到 Data 之间的转化. 这个主要用在了 disk 的存储上.
 public protocol DataTransformable {
     func toData() throws -> Data
     static func fromData(_ data: Data) throws -> Self

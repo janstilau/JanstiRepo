@@ -41,7 +41,10 @@ public enum CacheType {
     }
 }
 
-/// Represents the caching operation result.
+// Result 这个数据类型, 就是为了回调准备的.
+// Result 的第一个绑定值, 表示的成功的时候, Result 的数据类型.
+// Result 的第二个绑定至, 表示的失败的时候, Result 的错误类型.
+// 从这里的使用我们可以看到, 是可以进行不传递数据的. (), Never, 就代表着仅仅是类型判断, 不需要数据传递的作用.
 public struct CacheStoreResult {
     
     /// The cache result for memory cache. Caching an image to memory will never fail.
@@ -57,19 +60,22 @@ extension KFCrossPlatformImage: CacheCostCalculable {
     public var cacheCost: Int { return kf.cost }
 }
 
+// DataTransformable 这个协议, 本身就是 OBJ 到 Data 的转化.
+// 在定义抽象接口的时候, 要主动地让抽象接口原本代表的类型, 去实现这个接口.
 extension Data: DataTransformable {
     public func toData() throws -> Data {
         return self
     }
-
+    
     public static func fromData(_ data: Data) throws -> Data {
         return data
     }
-
+    
     public static let empty = Data()
 }
 
 
+// 在 SD 里面, 其实没有对 Image 到底是内存里面的, 还是 Disk 获取的, 进行专门的区分.
 /// Represents the getting image operation from the cache.
 ///
 /// - disk: The image can be retrieved from disk cache.
@@ -114,20 +120,22 @@ public enum ImageCacheResult {
 /// your own cache object and configure its storages as your need. This class also provide an interface for you to set
 /// the memory and disk storage config.
 open class ImageCache {
-
+    
     // MARK: Singleton
     /// The default `ImageCache` object. Kingfisher will use this cache for its related methods if there is no
     /// other cache specified. The `name` of this default cache is "default", and you should not use this name
     /// for any of your customize cache.
+    
+    // 一般来说, 类库的设计者, 在编写自己所需要的功能的时候, 会定义一些全局值.
+    // 这些全局值, 会方便类库的使用者. 也是类库一些简易的接口下, 复杂的逻辑划分所直接使用的对象.
     public static let `default` = ImageCache(name: "default")
-
+    
     /*
-        这里, 和其他的几个类库的思想是一样的.
-        一个 MemoryStorage 专门用来处理内存里面的缓存.
-        一个 DiskStorage 专门用来处理磁盘上的缓存.
+     这里, 和其他的几个类库的思想是一样的.
+     一个 MemoryStorage 专门用来处理内存里面的缓存.
+     一个 DiskStorage 专门用来处理磁盘上的缓存.
      */
     
-    // MARK: Public Properties
     /// The `MemoryStorage.Backend` object used in this cache. This storage holds loaded images in memory with a
     /// reasonable expire duration and a maximum memory usage. To modify the configuration of a storage, just set
     /// the storage `config` and its properties.
@@ -142,14 +150,9 @@ open class ImageCache {
     
     /// Closure that defines the disk cache path from a given path and cacheName.
     public typealias DiskCachePathClosure = (URL, String) -> URL
-
+    
     // MARK: Initializers
-
-    /// Creates an `ImageCache` from a customized `MemoryStorage` and `DiskStorage`.
-    ///
-    /// - Parameters:
-    ///   - memoryStorage: The `MemoryStorage.Backend` object to use in the image cache.
-    ///   - diskStorage: The `DiskStorage.Backend` object to use in the image cache.
+    
     public init(
         memoryStorage: MemoryStorage.Backend<KFCrossPlatformImage>,
         diskStorage: DiskStorage.Backend<Data>)
@@ -158,9 +161,11 @@ open class ImageCache {
         self.diskStorage = diskStorage
         let ioQueueName = "com.onevcat.Kingfisher.ImageCache.ioQueue.\(UUID().uuidString)"
         ioQueue = DispatchQueue(label: ioQueueName)
-
+        
         let notifications: [(Notification.Name, Selector)]
         #if !os(macOS) && !os(watchOS)
+        
+        // 相比较于, 由外界来触发缓存数据的清楚工作. 在类库的内部, 进行相应工作的自动触发, 会让类库的使用者更加的方便.
         notifications = [
             (UIApplication.didReceiveMemoryWarningNotification, #selector(clearMemoryCache)),
             (UIApplication.willTerminateNotification, #selector(cleanExpiredDiskCache)),
@@ -168,7 +173,8 @@ open class ImageCache {
         ]
         #elseif os(macOS)
         notifications = [
-            (NSApplication.willResignActiveNotification, #selector(cleanExpiredDiskCache)),
+            (NSApplication.willResignActiveNotification,
+             #selector(cleanExpiredDiskCache)),
         ]
         #else
         notifications = []
@@ -178,16 +184,10 @@ open class ImageCache {
         }
     }
     
-    /// Creates an `ImageCache` with a given `name`. Both `MemoryStorage` and `DiskStorage` will be created
-    /// with a default config based on the `name`.
-    ///
-    /// - Parameter name: The name of cache object. It is used to setup disk cache directories and IO queue.
-    ///                   You should not use the same `name` for different caches, otherwise, the disk storage would
-    ///                   be conflicting to each other. The `name` should not be an empty string.
     public convenience init(name: String) {
         self.init(noThrowName: name, cacheDirectoryURL: nil, diskCachePathClosure: nil)
     }
-
+    
     /// Creates an `ImageCache` with a given `name`, cache directory `path`
     /// and a closure to modify the cache directory.
     ///
@@ -211,16 +211,16 @@ open class ImageCache {
         if name.isEmpty {
             fatalError("[Kingfisher] You should specify a name for the cache. A cache with empty name is not permitted.")
         }
-
+        
         let memoryStorage = ImageCache.createMemoryStorage()
-
+        
         let config = ImageCache.createConfig(
             name: name, cacheDirectoryURL: cacheDirectoryURL, diskCachePathClosure: diskCachePathClosure
         )
         let diskStorage = try DiskStorage.Backend<Data>(config: config)
         self.init(memoryStorage: memoryStorage, diskStorage: diskStorage)
     }
-
+    
     convenience init(
         noThrowName name: String,
         cacheDirectoryURL: URL?,
@@ -230,24 +230,26 @@ open class ImageCache {
         if name.isEmpty {
             fatalError("[Kingfisher] You should specify a name for the cache. A cache with empty name is not permitted.")
         }
-
+        
         let memoryStorage = ImageCache.createMemoryStorage()
-
+        
         let config = ImageCache.createConfig(
-            name: name, cacheDirectoryURL: cacheDirectoryURL, diskCachePathClosure: diskCachePathClosure
+            name: name,
+            cacheDirectoryURL: cacheDirectoryURL,
+            diskCachePathClosure: diskCachePathClosure
         )
         let diskStorage = DiskStorage.Backend<Data>(noThrowConfig: config, creatingDirectory: true)
         self.init(memoryStorage: memoryStorage, diskStorage: diskStorage)
     }
-
+    
     private static func createMemoryStorage() -> MemoryStorage.Backend<KFCrossPlatformImage> {
         let totalMemory = ProcessInfo.processInfo.physicalMemory
         let costLimit = totalMemory / 4
         let memoryStorage = MemoryStorage.Backend<KFCrossPlatformImage>(config:
-            .init(totalCostLimit: (costLimit > Int.max) ? Int.max : Int(costLimit)))
+                                                                            .init(totalCostLimit: (costLimit > Int.max) ? Int.max : Int(costLimit)))
         return memoryStorage
     }
-
+    
     private static func createConfig(
         name: String,
         cacheDirectoryURL: URL?,
@@ -268,9 +270,11 @@ open class ImageCache {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-
+    
     // MARK: Storing Images
-
+    
+    
+    // 存图的逻辑.
     open func store(_ image: KFCrossPlatformImage,
                     original: Data? = nil,
                     forKey key: String,
@@ -281,19 +285,28 @@ open class ImageCache {
         let identifier = options.processor.identifier
         let callbackQueue = options.callbackQueue
         
+        // 存图的时候, 首先就是存到了内存里面.
+        // 这里没有专门的进行配置, 只有多大范围内的图片才存放起来, 而是直接对图片进行了存储.
         let computedKey = key.computedKey(with: identifier)
         // Memory storage should not throw.
         memoryStorage.storeNoThrow(value: image, forKey: computedKey, expiration: options.memoryCacheExpiration)
         
         guard toDisk else {
             if let completionHandler = completionHandler {
-                let result = CacheStoreResult(memoryCacheResult: .success(()), diskCacheResult: .success(()))
+                // Success, 不需要进行数据的传递, 所以, 就传递一个空元组出去就可以了.
+                let result = CacheStoreResult(memoryCacheResult: .success(()),
+                                              diskCacheResult: .success(()))
+                // 要明确的熟悉, API 的各种 queue 的设置的原因.
+                // Queue 就是代表着线程.
+                // 使用 KingfisherParsedOptionsInfo 来获取整个类库所使用的共享数据, 其中就包含了, 各种 UI 操作, 存储操作, 应该在哪个 Queue 上进行触发 callback.
                 callbackQueue.execute { completionHandler(result) }
             }
             return
         }
         
         ioQueue.async {
+            // 如何, 将 UIImage 变为 Data, 是专门使用一个 Serializer 进行的.
+            // 而这个对象, 是保存在了 options 里面.
             let serializer = options.cacheSerializer
             if let data = serializer.data(with: image, original: original) {
                 self.syncStoreToDisk(
@@ -315,7 +328,7 @@ open class ImageCache {
             }
         }
     }
-
+    
     /// Stores an image to the cache.
     ///
     /// - Parameters:
@@ -338,13 +351,13 @@ open class ImageCache {
     ///                    value.
     ///   - completionHandler: A closure which is invoked when the cache operation finishes.
     open func store(_ image: KFCrossPlatformImage,
-                      original: Data? = nil,
-                      forKey key: String,
-                      processorIdentifier identifier: String = "",
-                      cacheSerializer serializer: CacheSerializer = DefaultCacheSerializer.default,
-                      toDisk: Bool = true,
-                      callbackQueue: CallbackQueue = .untouch,
-                      completionHandler: ((CacheStoreResult) -> Void)? = nil)
+                    original: Data? = nil,
+                    forKey key: String,
+                    processorIdentifier identifier: String = "",
+                    cacheSerializer serializer: CacheSerializer = DefaultCacheSerializer.default,
+                    toDisk: Bool = true,
+                    callbackQueue: CallbackQueue = .untouch,
+                    completionHandler: ((CacheStoreResult) -> Void)? = nil)
     {
         struct TempProcessor: ImageProcessor {
             let identifier: String
@@ -362,6 +375,7 @@ open class ImageCache {
               toDisk: toDisk, completionHandler: completionHandler)
     }
     
+    // 这个方法, 是外面主动进行调用的.
     open func storeToDisk(
         _ data: Data,
         forKey key: String,
@@ -381,6 +395,8 @@ open class ImageCache {
         }
     }
     
+    // 将闭包, 当做数据传递, 也即将是将闭包, 在函数里面传来传去.
+    // 所以, completion 不断的进行组合传递, 在 Swift 里面, 是一个非常普遍的行为.
     private func syncStoreToDisk(
         _ data: Data,
         forKey key: String,
@@ -389,6 +405,9 @@ open class ImageCache {
         expiration: StorageExpiration? = nil,
         completionHandler: ((CacheStoreResult) -> Void)? = nil)
     {
+        
+        // 要时刻记着, 在 Swift 里面, throws 其实就是一个返回值强制带有 success, failure 标志的方法而已.
+        // 所以, 如果自己的方法里面, 能够对于 failure 方法进行处理, 那么就在这个方法里面, 进行 docatch 的处理就可以了.
         let computedKey = key.computedKey(with: identifier)
         let result: CacheStoreResult
         do {
@@ -411,9 +430,9 @@ open class ImageCache {
             callbackQueue.execute { completionHandler(result) }
         }
     }
-
+    
     // MARK: Removing Images
-
+    
     /// Removes the image for the given key from the cache.
     ///
     /// - Parameters:
@@ -426,6 +445,7 @@ open class ImageCache {
     ///               If `false`, the image won't be removed from the disk storage. Default is `true`.
     ///   - callbackQueue: The callback queue on which `completionHandler` is invoked. Default is `.untouch`.
     ///   - completionHandler: A closure which is invoked when the cache removing operation finishes.
+    // 面对了众多的 API 的设计, 应该熟悉了, 如果传递一个 CompletionHandler 的话, 那么基本上, 就是异步操作了.
     open func removeImage(forKey key: String,
                           processorIdentifier identifier: String = "",
                           fromMemory: Bool = true,
@@ -434,11 +454,14 @@ open class ImageCache {
                           completionHandler: (() -> Void)? = nil)
     {
         let computedKey = key.computedKey(with: identifier)
-
+        
         if fromMemory {
             memoryStorage.remove(forKey: computedKey)
         }
         
+        // 一般来说, 回调都是和类库的主要流程无关的. 仅仅是给了外界一个触发时机的方法, 来在类库完成了主逻辑之后, 进行相关事件的触发而已.
+        // 比如, remove 这个操作, 其实就应该是 KF 类库删除了对应的资源之后, 然后才去更新 UI, 这样能够保证数据的准确性.
+        // 所以, 在设计 API 的时候, 应该着重去思考这一点.
         if fromDisk {
             ioQueue.async{
                 try? self.diskStorage.remove(forKey: computedKey)
@@ -452,39 +475,42 @@ open class ImageCache {
             }
         }
     }
-
+    
     func retrieveImage(forKey key: String,
                        options: KingfisherParsedOptionsInfo,
                        callbackQueue: CallbackQueue = .mainCurrentOrAsync,
                        completionHandler: ((Result<ImageCacheResult, KingfisherError>) -> Void)?)
     {
-        // No completion handler. No need to start working and early return.
+        // 首先, 取图的目的是就是传递给回调. 那么如果没有设置回调, 那么取图就没有了意义.
+        // 这里, completionHandler 设置为非 Optinal 不更好吗?
         guard let completionHandler = completionHandler else { return }
-
+        
         // Try to check the image from memory cache first.
+        // 首先, 尝试内存里面取图, 如果能够取到, 那么直接就在当前方法运行的线程, 进行回调方法的调用.
         if let image = retrieveImageInMemoryCache(forKey: key, options: options) {
             callbackQueue.execute { completionHandler(.success(.memory(image))) }
         } else if options.fromMemoryCacheOrRefresh {
+            // 如果, 内存里面取值失败了, 并且设置了只从内存里面取图, 那么直接就报告失败了.
             callbackQueue.execute { completionHandler(.success(.none)) }
         } else {
-
-            // Begin to disk search.
+            // 这种, 进行方法调用之后出发回调的操作, 实在是太普遍了.
+            // 在 API 的设计的时候, 就应该考虑到这个事情.
+            // 主动的将, 回调这个事情, 放到最后的一个参数, 这样, 在调用的时候, 就能写的比较易读.
             self.retrieveImageInDiskCache(forKey: key, options: options, callbackQueue: callbackQueue) {
                 result in
                 switch result {
                 case .success(let image):
-
                     guard let image = image else {
-                        // No image found in disk storage.
                         callbackQueue.execute { completionHandler(.success(.none)) }
                         return
                     }
-
+                    
                     // Cache the disk image to memory.
                     // We are passing `false` to `toDisk`, the memory cache does not change
                     // callback queue, we can call `completionHandler` without another dispatch.
                     var cacheOptions = options
                     cacheOptions.callbackQueue = .untouch
+                    // 在获取到了图片之后, 还要进行内存图的更新操作.
                     self.store(
                         image,
                         forKey: key,
@@ -500,9 +526,9 @@ open class ImageCache {
             }
         }
     }
-
+    
     // MARK: Getting Images
-
+    
     /// Gets an image for a given key from the cache, either from memory storage or disk storage.
     ///
     /// - Parameters:
@@ -514,9 +540,9 @@ open class ImageCache {
     ///                        will be sent to this closure as result. Otherwise, a `KingfisherError` result
     ///                        with detail failing reason will be sent.
     open func retrieveImage(forKey key: String,
-                               options: KingfisherOptionsInfo? = nil,
-                        callbackQueue: CallbackQueue = .mainCurrentOrAsync,
-                     completionHandler: ((Result<ImageCacheResult, KingfisherError>) -> Void)?)
+                            options: KingfisherOptionsInfo? = nil,
+                            callbackQueue: CallbackQueue = .mainCurrentOrAsync,
+                            completionHandler: ((Result<ImageCacheResult, KingfisherError>) -> Void)?)
     {
         retrieveImage(
             forKey: key,
@@ -524,7 +550,7 @@ open class ImageCache {
             callbackQueue: callbackQueue,
             completionHandler: completionHandler)
     }
-
+    
     func retrieveImageInMemoryCache(
         forKey key: String,
         options: KingfisherParsedOptionsInfo) -> KFCrossPlatformImage?
@@ -532,7 +558,7 @@ open class ImageCache {
         let computedKey = key.computedKey(with: options.processor.identifier)
         return memoryStorage.value(forKey: computedKey, extendingExpiration: options.memoryCacheAccessExtendingExpiration)
     }
-
+    
     /// Gets an image for a given key from the memory storage.
     ///
     /// - Parameters:
@@ -546,7 +572,7 @@ open class ImageCache {
     {
         return retrieveImageInMemoryCache(forKey: key, options: KingfisherParsedOptionsInfo(options))
     }
-
+    
     func retrieveImageInDiskCache(
         forKey key: String,
         options: KingfisherParsedOptionsInfo,
@@ -558,7 +584,8 @@ open class ImageCache {
         loadingQueue.execute {
             do {
                 var image: KFCrossPlatformImage? = nil
-                if let data = try self.diskStorage.value(forKey: computedKey, extendingExpiration: options.diskCacheAccessExtendingExpiration) {
+                if let data =
+                    try self.diskStorage.value(forKey: computedKey, extendingExpiration: options.diskCacheAccessExtendingExpiration) {
                     image = options.cacheSerializer.image(with: data, options: options)
                 }
                 callbackQueue.execute { completionHandler(.success(image)) }
@@ -591,7 +618,7 @@ open class ImageCache {
             callbackQueue: callbackQueue,
             completionHandler: completionHandler)
     }
-
+    
     // MARK: Cleaning
     /// Clears the memory & disk storage of this cache. This is an async operation.
     ///
@@ -627,7 +654,7 @@ open class ImageCache {
         cleanExpiredMemoryCache()
         cleanExpiredDiskCache(completion: handler)
     }
-
+    
     /// Clears the expired images from disk storage.
     open func cleanExpiredMemoryCache() {
         memoryStorage.removeExpired()
@@ -637,21 +664,23 @@ open class ImageCache {
     @objc func cleanExpiredDiskCache() {
         cleanExpiredDiskCache(completion: nil)
     }
-
+    
     /// Clears the expired images from disk storage. This is an async operation.
     ///
     /// - Parameter handler: A closure which is invoked when the cache clearing operation finishes.
     ///                      This `handler` will be called from the main queue.
+    // 清除过期数据. 这些过期数据, 都是在 Disk 上.
+    // 之所以, 这个操作没有放到 diskStorage 里面, 是因为触发的时机问题.
     open func cleanExpiredDiskCache(completion handler: (() -> Void)? = nil) {
         ioQueue.async {
             do {
                 var removed: [URL] = []
                 let removedExpired = try self.diskStorage.removeExpiredValues()
                 removed.append(contentsOf: removedExpired)
-
+                
                 let removedSizeExceeded = try self.diskStorage.removeSizeExceededValues()
                 removed.append(contentsOf: removedSizeExceeded)
-
+                
                 if !removed.isEmpty {
                     DispatchQueue.main.async {
                         let cleanedHashes = removed.map { $0.lastPathComponent }
@@ -661,22 +690,23 @@ open class ImageCache {
                             userInfo: [KingfisherDiskCacheCleanedHashKey: cleanedHashes])
                     }
                 }
-
+                
                 if let handler = handler {
                     DispatchQueue.main.async { handler() }
                 }
             } catch {}
         }
     }
-
-#if !os(macOS) && !os(watchOS)
+    
+    #if !os(macOS) && !os(watchOS)
+    
     /// Clears the expired images from disk storage when app is in background. This is an async operation.
     /// In most cases, you should not call this method explicitly.
     /// It will be called automatically when `UIApplicationDidEnterBackgroundNotification` received.
     @objc public func backgroundCleanExpiredDiskCache() {
         // if 'sharedApplication()' is unavailable, then return
         guard let sharedApplication = KingfisherWrapper<UIApplication>.shared else { return }
-
+        
         func endBackgroundTask(_ task: inout UIBackgroundTaskIdentifier) {
             sharedApplication.endBackgroundTask(task)
             task = UIBackgroundTaskIdentifier.invalid
@@ -691,10 +721,10 @@ open class ImageCache {
             endBackgroundTask(&backgroundTask!)
         }
     }
-#endif
-
+    #endif
+    
     // MARK: Image Cache State
-
+    
     /// Returns the cache type for a given `key` and `identifier` combination.
     /// This method is used for checking whether an image is cached in current cache.
     /// It also provides information on which kind of cache can it be found in the return value.

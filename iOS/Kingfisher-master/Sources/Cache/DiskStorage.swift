@@ -4,14 +4,9 @@ import Foundation
 /// Represents a set of conception related to storage which stores a certain type of value in disk.
 /// This is a namespace for the disk storage types. A `Backend` with a certain `Config` will be used to describe the
 /// storage. See these composed types for more information.
+
 public enum DiskStorage {
     
-    /// Represents a storage back-end for the `DiskStorage`. The value is serialized to data
-    /// and stored as file in the file system under a specified location.
-    ///
-    /// You can config a `DiskStorage.Backend` in its initializer by passing a `DiskStorage.Config` value.
-    /// or modifying the `config` property after it being created. `DiskStorage` will use file's attributes to keep
-    /// track of a file for its expiration or size limitation.
     public class Backend<T: DataTransformable> {
         /// The config used for this disk storage.
         public var config: Config
@@ -28,12 +23,9 @@ public enum DiskStorage {
         // storage in the default cache.
         private var storageReady: Bool = true
         
-        /// Creates a disk storage with the given `DiskStorage.Config`.
-        ///
-        /// - Parameter config: The config used for this disk storage.
-        /// - Throws: An error if the folder for storage cannot be got or created.
         public convenience init(config: Config) throws {
-            self.init(noThrowConfig: config, creatingDirectory: false)
+            self.init(noThrowConfig: config,
+                      creatingDirectory: false)
             try prepareDirectory()
         }
         
@@ -60,6 +52,7 @@ public enum DiskStorage {
         private func setupCacheChecking() {
             maybeCachedCheckingQueue.async {
                 do {
+                    // 在启动的时候, 将缓存目录里面的所有的图片, 进行一次 load 的操作.
                     self.maybeCached = Set()
                     try self.config.fileManager.contentsOfDirectory(atPath: self.directoryURL.path).forEach { fileName in
                         self.maybeCached?.insert(fileName)
@@ -72,6 +65,7 @@ public enum DiskStorage {
             }
         }
         
+        // 强制创建对应的缓存目录.
         // Creates the storage folder.
         private func prepareDirectory() throws {
             let fileManager = config.fileManager
@@ -202,6 +196,7 @@ public enum DiskStorage {
             do {
                 let data = try Data(contentsOf: fileURL)
                 let obj = try T.fromData(data)
+                // 在每次进行数据的 touch 之后, 需要修改对应的文件的属性. 在这里, 就是修改对应的 access date
                 metaChangingQueue.async {
                     meta.extendExpiration(with: fileManager, extendingExpiration: extendingExpiration)
                 }
@@ -318,6 +313,7 @@ public enum DiskStorage {
             return urls
         }
         
+        // 相比较于, Memory 自己内部有一个定时器去做过期数据的删除, disk 把删除过期数据这件事的触发, 交给了外界.
         /// Removes all expired values from this storage.
         /// - Throws: A file manager error during removing the file.
         /// - Returns: The URLs for removed files.
@@ -325,6 +321,7 @@ public enum DiskStorage {
             return try removeExpiredValues(referenceDate: Date())
         }
         
+        // 删除的逻辑, 其实就是判断文件的最后 touch 的属性, 如果是已经过期了, 就删除对应位置的文件.
         func removeExpiredValues(referenceDate: Date) throws -> [URL] {
             let propertyKeys: [URLResourceKey] = [
                 .isDirectoryKey,
@@ -355,6 +352,7 @@ public enum DiskStorage {
         /// - Returns: The URLs for removed files.
         ///
         /// - Note: This method checks `config.sizeLimit` and remove cached files in an LRU (Least Recently Used) way.
+        // 这里的逻辑, 就是排序之后, 从最大的开始删除文件. 直到整个文件的大小, 到达了某一个限定值.
         func removeSizeExceededValues() throws -> [URL] {
             
             if config.sizeLimit == 0 { return [] } // Back compatible. 0 means no limit.

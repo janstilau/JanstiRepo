@@ -101,6 +101,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImage {
     #endif
 
     // Bitmap memory cost with bytes.
+    // 图片的 Cost, 就是通过 size 和 scale 计算出来的.
     var cost: Int {
         let pixel = Int(size.width * size.height * scale * scale)
         guard let cgImage = cgImage else {
@@ -127,6 +128,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImage {
         return KFCrossPlatformImage(cgImage: cgImage, scale: scale, orientation: refImage?.imageOrientation ?? .up)
     }
     
+    // 可以简单的理解成为, normalized 就是修正图片的方向.
     /// Returns normalized image for current `base` image.
     /// This method will try to redraw an image with orientation and scale considered.
     public var normalized: KFCrossPlatformImage {
@@ -192,7 +194,7 @@ extension KingfisherWrapper where Base: KFCrossPlatformImage {
     #endif
 }
 
-// MARK: - Image Representation
+// 直接使用了系统的方法, 获取对应的数据.
 extension KingfisherWrapper where Base: KFCrossPlatformImage {
     /// Returns PNG representation of `base` image.
     ///
@@ -228,6 +230,8 @@ extension KingfisherWrapper where Base: KFCrossPlatformImage {
     /// Returns GIF representation of `base` image.
     ///
     /// - Returns: Original GIF data of image.
+    
+    // animatedImageData 这个值, 并不是本来就有的, 而是一个关联至. 也就是说, 必须是经过了 KF 处理生成的 UIImage 才会直接获取到它所关联的 gif 值.
     public func gifRepresentation() -> Data? {
         return animatedImageData
     }

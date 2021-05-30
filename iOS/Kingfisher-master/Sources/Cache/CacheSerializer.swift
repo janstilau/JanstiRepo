@@ -1,32 +1,7 @@
-//
-//  CacheSerializer.swift
-//  Kingfisher
-//
-//  Created by Wei Wang on 2016/09/02.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 import Foundation
 import CoreGraphics
 
+// 该协议, 就是用来进行 UIImage 和 对应的 Data 转化的.
 /// An `CacheSerializer` is used to convert some data to an image object after
 /// retrieving it from disk storage, and vice versa, to convert an image to data object
 /// for storing to the disk storage.
@@ -57,6 +32,11 @@ public protocol CacheSerializer {
 /// Represents a basic and default `CacheSerializer` used in Kingfisher disk cache system.
 /// It could serialize and deserialize images in PNG, JPEG and GIF format. For
 /// image other than these formats, a normalized `pngRepresentation` will be used.
+
+// 默认的, 进行 Image 和 Data 转化的转化器.
+// 这件事, 如果自己去实现的话, 可能就直接使用 UIImage 的那几个方法, 然后在 Cache 的业务逻辑里面写了. 但是, 在 KF 中, 将这一层进行了抽象, 变为了协议.
+// 并且, 给了默认的实现.
+
 public struct DefaultCacheSerializer: CacheSerializer {
     
     /// The default general cache serializer used across Kingfisher's cache.
@@ -91,6 +71,8 @@ public struct DefaultCacheSerializer: CacheSerializer {
     /// If `original` is `nil`, the input `image` will be encoded as PNG data.
     public func data(with image: KFCrossPlatformImage, original: Data?) -> Data? {
         if preferCacheOriginalData {
+            // Original 的含义就在这里. 如果传递了原始值的话, 那么原始值就会优先进行存储.
+            // 否则就使用 image.kf.data 适应系统提供的方法, 进行 Image 到 Data 的数据转化.
             return original ??
                 image.kf.data(
                     format: original?.kf.imageFormat ?? .unknown,

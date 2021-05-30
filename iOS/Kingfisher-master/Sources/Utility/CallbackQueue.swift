@@ -28,6 +28,7 @@ public enum CallbackQueue {
         case .mainCurrentOrAsync:
             DispatchQueue.main.safeAsync { block() }
         case .untouch:
+            // 如果是 untouch, 就是直接调用 block, 不做任何的线程队列调度的事情.
             block()
         case .dispatch(let queue):
             queue.async { block() }
