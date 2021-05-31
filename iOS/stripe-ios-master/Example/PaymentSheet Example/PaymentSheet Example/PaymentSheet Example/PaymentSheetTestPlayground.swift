@@ -25,23 +25,23 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var checkoutButton: UIButton!
     // Other
     var newCustomerID: String? // Stores the new customer returned from the backend for reuse
-
+    
     enum CustomerMode {
         case guest
         case new
         case returning
     }
-
+    
     enum Currency: String, CaseIterable {
         case usd
         case eur
     }
-
+    
     enum IntentMode: String {
         case payment
         case setup
     }
-
+    
     var customerMode: CustomerMode {
         switch customerModeSelector.selectedSegmentIndex {
         case 0:
@@ -52,7 +52,7 @@ class PaymentSheetTestPlayground: UIViewController {
             return .returning
         }
     }
-
+    
     var applePayConfiguration: PaymentSheet.ApplePayConfiguration? {
         if applePaySelector.selectedSegmentIndex == 0 {
             return PaymentSheet.ApplePayConfiguration(
@@ -70,7 +70,7 @@ class PaymentSheetTestPlayground: UIViewController {
         }
         return nil
     }
-
+    
     /// Currency specified in the UI toggle
     var currency: Currency {
         let index = currencySelector.selectedSegmentIndex
@@ -79,7 +79,7 @@ class PaymentSheetTestPlayground: UIViewController {
         }
         return Currency.allCases[index]
     }
-
+    
     var intentMode: IntentMode {
         switch modeSelector.selectedSegmentIndex {
         case 1:
@@ -88,7 +88,7 @@ class PaymentSheetTestPlayground: UIViewController {
             return .payment
         }
     }
-
+    
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Example, Inc."
@@ -98,12 +98,12 @@ class PaymentSheetTestPlayground: UIViewController {
         configuration.returnURL = "payments-example://stripe-redirect"
         return configuration
     }
-
+    
     var clientSecret: String?
     var ephemeralKey: String?
     var customerID: String?
     var manualFlow: PaymentSheet.FlowController?
-
+    
     func makeAlertController() -> UIAlertController {
         let alertController = UIAlertController(
             title: "Complete", message: "Completed", preferredStyle: .alert)
@@ -113,24 +113,24 @@ class PaymentSheetTestPlayground: UIViewController {
         alertController.addAction(OKAction)
         return alertController
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
-
+        
         loadButton.addTarget(self, action: #selector(load), for: .touchUpInside)
-
+        
         selectPaymentMethodButton.isEnabled = false
         selectPaymentMethodButton.addTarget(
             self, action: #selector(didTapSelectPaymentMethodButton), for: .touchUpInside)
-
+        
         checkoutInlineButton.addTarget(
             self, action: #selector(didTapCheckoutInlineButton), for: .touchUpInside)
         checkoutInlineButton.isEnabled = false
     }
-
+    
     @objc
     func didTapCheckoutInlineButton() {
         checkoutInlineButton.isEnabled = false
@@ -150,7 +150,7 @@ class PaymentSheetTestPlayground: UIViewController {
             }
         }
     }
-
+    
     @objc
     func didTapCheckoutButton() {
         let mc: PaymentSheet
@@ -176,14 +176,14 @@ class PaymentSheetTestPlayground: UIViewController {
             }
         }
     }
-
+    
     @objc
     func didTapSelectPaymentMethodButton() {
         manualFlow?.presentPaymentOptions(from: self) {
             self.updatePaymentMethodSelection()
         }
     }
-
+    
     func updatePaymentMethodSelection() {
         // Update the payment method selection button
         if let paymentOption = manualFlow?.paymentOption {
@@ -209,7 +209,7 @@ extension PaymentSheetTestPlayground {
         checkoutInlineButton.isEnabled = false
         selectPaymentMethodButton.isEnabled = false
         manualFlow = nil
-
+        
         let session = URLSession.shared
         let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v3.glitch.me/checkout")!
         let customer: String = {
@@ -240,7 +240,7 @@ extension PaymentSheetTestPlayground {
                 print(error as Any)
                 return
             }
-
+            
             self.clientSecret = json["intentClientSecret"]
             self.ephemeralKey = json["customerEphemeralKeySecret"]
             self.customerID = json["customerId"]
@@ -255,12 +255,12 @@ extension PaymentSheetTestPlayground {
                     self.updatePaymentMethodSelection()
                 }
             }
-
+            
             DispatchQueue.main.async {
                 if self.customerMode == .new && self.newCustomerID == nil {
                     self.newCustomerID = self.customerID
                 }
-
+                
                 self.checkoutButton.isEnabled = true
                 switch self.intentMode {
                 case .payment:

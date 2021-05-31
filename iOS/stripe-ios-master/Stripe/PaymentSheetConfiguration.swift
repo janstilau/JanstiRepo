@@ -9,7 +9,12 @@
 import Foundation
 import UIKit
 
-// MARK: - Configuration
+/*
+    在之前 OC 里面, 其实很多类型, 仅仅会作用在某个父类型之下的.
+    由于 Swift 可以随时随地的进行 Extension 的定义, 就可以将这些类型, 完全的纳入到父类型所代表的作用域下了.
+    命名上, 也是父类型, 子类型这种相关的方法进行文件的命名.
+ */
+
 extension PaymentSheet {
 
     /// Billing address collection modes for PaymentSheet
@@ -22,6 +27,8 @@ extension PaymentSheet {
     }
 
     /// Style options for colors in PaymentSheet
+    // 要转变思想, 在一个 Int 上, 定义一个方法, 去改变 VC 的内容, 是一个非常常见的做法.
+    // 不要在想着, 把所有的操作, 都放到 VC 上面了.
     @available(iOS 13.0, *)
     public enum UserInterfaceStyle: Int {
 
@@ -85,11 +92,13 @@ extension PaymentSheet {
 
         /// Configuration related to the Stripe Customer
         /// If set, the customer can select a previously saved payment method within PaymentSheet
+        // 用户的信息. id 值 和 secret 值都应该是从服务器端获取.
         public var customer: CustomerConfiguration? = nil
 
         /// Your customer-facing business name.
         /// This is used to display a "Pay \(merchantDisplayName)" line item in the Apple Pay sheet
         /// The default value is the name of your app, using CFBundleDisplayName or CFBundleName
+        // 商户信息.
         public var merchantDisplayName: String = Bundle.displayName ?? ""
 
         /// A URL that redirects back to your app that PaymentSheet can use to auto-dismiss

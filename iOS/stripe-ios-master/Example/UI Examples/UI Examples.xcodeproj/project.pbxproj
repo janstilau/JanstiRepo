@@ -102,17 +102,17 @@
 		C1140CBF1F1EC0FC002084AB /* UI Examples */ = {
 			isa = PBXGroup;
 			children = (
-				365614B0263379FE007FA02B /* CardFormViewController.swift */,
-				365614B1263379FE007FA02B /* SwiftUICardFormView.swift */,
 				C1140CC01F1EC0FC002084AB /* AppDelegate.swift */,
 				C1140CC71F1EC0FC002084AB /* Assets.xcassets */,
 				364FC2D1242024CE002879EB /* AUBECSDebitFormViewController.swift */,
 				C1140CC21F1EC0FC002084AB /* BrowseViewController.swift */,
 				C13A00571F1FFEC200825683 /* CardFieldViewController.swift */,
+				365614B0263379FE007FA02B /* CardFormViewController.swift */,
 				C1140CCC1F1EC0FC002084AB /* Info.plist */,
 				C1A5E73C1F293EAF00E0C891 /* Localizable.strings */,
 				C1A658E61F1ED05500799757 /* MockAPIClient.swift */,
 				C1A658E41F1EC7F500799757 /* MockCustomerContext.swift */,
+				365614B1263379FE007FA02B /* SwiftUICardFormView.swift */,
 				C13A00551F1FFA0D00825683 /* ThemeViewController.swift */,
 			);
 			path = "UI Examples";

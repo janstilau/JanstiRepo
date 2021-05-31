@@ -76,9 +76,8 @@ public class PaymentSheet {
     @available(macCatalystApplicationExtension, unavailable)
     public func present(
         from presentingViewController: UIViewController,
-        completion: @escaping (PaymentSheetResult) -> ()
-    ) {
-        // Overwrite completion closure to retain self until called
+        completion: @escaping (PaymentSheetResult) -> ()) {
+        
         let completion: (PaymentSheetResult) -> () = { status in
             // Dismiss if necessary
             if self.bottomSheetViewController.presentingViewController != nil {

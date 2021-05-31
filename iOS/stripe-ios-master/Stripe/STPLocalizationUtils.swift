@@ -9,6 +9,7 @@
 import Foundation
 
 class STPLocalizationUtils: NSObject {
+    
     /// Acts like NSLocalizedString but tries to find the string in the Stripe
     /// bundle first if possible.
     /// If the main app has a localization that we do not support, we want to switch
@@ -25,6 +26,7 @@ class STPLocalizationUtils: NSObject {
     /// preferred language and our strings are in es.
     /// If the main bundle doesn't have the correct string, we'll always fall back to
     /// using the Stripe bundle so we don't inadvertantly show an untranslated string.
+    
 
     static let localizedStripeStringUseMainBundle: Bool = {
         if STPBundleLocator.stripeResourcesBundle.preferredLocalizations.first

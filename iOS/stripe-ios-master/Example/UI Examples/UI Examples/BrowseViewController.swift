@@ -12,62 +12,9 @@ import SwiftUI
 
 @testable import Stripe
 
-class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate,
-    STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate
+class BrowseViewController: UITableViewController
+                            
 {
-
-    enum Demo: Int {
-        static var count: Int {
-            if #available(iOS 13.0.0, *) {
-                return 9 + 1
-            } else {
-                return 9
-            }
-        }
-        
-        case STPPaymentCardTextField
-        case STPAddCardViewController
-        case STPAddCardViewControllerWithAddress
-        case STPPaymentOptionsViewController
-        case STPPaymentOptionsFPXViewController
-        case STPShippingInfoViewController
-        case STPAUBECSFormViewController
-        case STPCardFormViewController
-        case ChangeTheme
-        // SwiftUI Values
-        case SwiftUICardFormViewController
-
-        var title: String {
-            switch self {
-            case .STPPaymentCardTextField: return "Card Field"
-            case .STPAddCardViewController: return "(Basic Integration) Card Form"
-            case .STPAddCardViewControllerWithAddress: return "(Basic Integration) Card Form with Billing Address"
-            case .STPPaymentOptionsViewController: return "Payment Option Picker"
-            case .STPPaymentOptionsFPXViewController: return "Payment Option Picker (With FPX)"
-            case .STPShippingInfoViewController: return "Shipping Info Form"
-            case .STPAUBECSFormViewController: return "AU BECS Form"
-            case .STPCardFormViewController: return "Card Form"
-            case .ChangeTheme: return "Change Theme"
-            case .SwiftUICardFormViewController: return "Card Form (SwiftUI)"
-            }
-        }
-
-        var detail: String {
-            switch self {
-            case .STPPaymentCardTextField: return "STPPaymentCardTextField"
-            case .STPAddCardViewController: return "STPAddCardViewController"
-            case .STPAddCardViewControllerWithAddress: return "STPAddCardViewController"
-            case .STPPaymentOptionsViewController: return "STPPaymentOptionsViewController"
-            case .STPPaymentOptionsFPXViewController: return "STPPaymentOptionsViewController"
-            case .STPShippingInfoViewController: return "STPShippingInfoViewController"
-            case .STPAUBECSFormViewController: return "STPAUBECSFormViewController"
-            case .STPCardFormViewController: return "STPCardFormViewController"
-            case .ChangeTheme: return ""
-            case .SwiftUICardFormViewController: return "STPCardFormView.Representable"
-            }
-        }
-    }
-
     let customerContext: MockCustomerContext = {
         let keyManager = STPEphemeralKeyManager(
             keyProvider: MockKeyProvider(),
@@ -95,6 +42,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
         return Demo.count
     }
 
+    // 使用 Demo 的初始化, 进行数据的提取的方式, 在 Swift 里面很方便.
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath)
         -> UITableViewCell
     {
@@ -205,9 +153,14 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             }
         }
     }
+}
 
-    // MARK: STPAddCardViewControllerDelegate
+// Mark: STPAddCardViewControllerDelegate
 
+extension BrowseViewController: STPAddCardViewControllerDelegate,
+                                STPPaymentOptionsViewControllerDelegate,
+                                STPShippingAddressViewControllerDelegate {
+    
     func addCardViewControllerDidCancel(_ addCardViewController: STPAddCardViewController) {
         dismiss(animated: true, completion: nil)
     }
@@ -293,5 +246,68 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             }
         }
     }
+}
 
+extension BrowseViewController {
+    
+    // 对于 Swift 来说, 专门定义一个类型, 来封装数据和数据相关的操作, 是一个非常常见的事情.
+    enum Demo: Int {
+        // 将, 已经固定下来的个数, 直接定义到类型的内部.
+        // 之前, 这些信息都直接写在了业务代码里面.
+        // 之所以变为那个样子, 有一部分的原因是, OC 里面, 定义类型无法方便的将类相关的属性定义上去.
+        // Class Property 也是比较靠后才出来的一个特性. 而在 Swfit 里面, 类型的定义, 由于有 namespace 的存在, 是一个比较常见的事情.
+        // 并且, 类属性, 类方法, 也变得更加的方便.
+        // 这里, 其实使用 allcase 会更好一些.
+        static var count: Int {
+            if #available(iOS 13.0.0, *) {
+                return 9 + 1
+            } else {
+                return 9
+            }
+        }
+        
+        case STPPaymentCardTextField
+        case STPAddCardViewController
+        case STPAddCardViewControllerWithAddress
+        case STPPaymentOptionsViewController
+        case STPPaymentOptionsFPXViewController
+        case STPShippingInfoViewController
+        case STPAUBECSFormViewController
+        case STPCardFormViewController
+        case ChangeTheme
+        // SwiftUI Values
+        case SwiftUICardFormViewController
+
+        // 将, 应该显示的内容, 定义到类型的内部.
+        var title: String {
+            switch self {
+            case .STPPaymentCardTextField: return "Card Field"
+            case .STPAddCardViewController: return "(Basic Integration) Card Form"
+            case .STPAddCardViewControllerWithAddress: return "(Basic Integration) Card Form with Billing Address"
+            case .STPPaymentOptionsViewController: return "Payment Option Picker"
+            case .STPPaymentOptionsFPXViewController: return "Payment Option Picker (With FPX)"
+            case .STPShippingInfoViewController: return "Shipping Info Form"
+            case .STPAUBECSFormViewController: return "AU BECS Form"
+            case .STPCardFormViewController: return "Card Form"
+            case .ChangeTheme: return "Change Theme"
+            case .SwiftUICardFormViewController: return "Card Form (SwiftUI)"
+            }
+        }
+
+        // 将, 应该显示的内容, 定义到类型的内部.
+        var detail: String {
+            switch self {
+            case .STPPaymentCardTextField: return "STPPaymentCardTextField"
+            case .STPAddCardViewController: return "STPAddCardViewController"
+            case .STPAddCardViewControllerWithAddress: return "STPAddCardViewController"
+            case .STPPaymentOptionsViewController: return "STPPaymentOptionsViewController"
+            case .STPPaymentOptionsFPXViewController: return "STPPaymentOptionsViewController"
+            case .STPShippingInfoViewController: return "STPShippingInfoViewController"
+            case .STPAUBECSFormViewController: return "STPAUBECSFormViewController"
+            case .STPCardFormViewController: return "STPCardFormViewController"
+            case .ChangeTheme: return ""
+            case .SwiftUICardFormViewController: return "STPCardFormView.Representable"
+            }
+        }
+    }
 }

@@ -11,9 +11,10 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var window: UIWindow?
-
+    
+    // Stripe 的代码风格, 是我所喜欢的, 很工整.
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -26,5 +27,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = window
         return true
     }
-
+    
 }
