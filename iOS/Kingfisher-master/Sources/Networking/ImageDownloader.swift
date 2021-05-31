@@ -6,7 +6,7 @@ import UIKit
 
 typealias DownloadResult = Result<ImageLoadingResult, KingfisherError>
 
-/// Represents a success result of an image downloading progress.
+// ImageLoadingResult, 里面存储了 Image, Data, 以及对应的 URL.
 public struct ImageLoadingResult {
 
     /// The downloaded image.
@@ -19,8 +19,9 @@ public struct ImageLoadingResult {
     public let originalData: Data
 }
 
-/// Represents a task of an image downloading process.
-// Struct 仅仅作为数据的盒子, 里面装的是引用值.
+// DownloadTask 是一个盒子, 里面存储的是真正进行网络交互的 DataTask, 以及一个 token.
+// 这个类型出现的意义, 就是这个 Token.
+// 这里, 要思考明白, 引用值, 值, 引用语义, 值语义. 以及各个盒子的作用.
 public struct DownloadTask {
 
     /// The `SessionDataTask` object bounded to this download task. Multiple `DownloadTask`s could refer
@@ -80,8 +81,7 @@ open class ImageDownloader {
     /// The default downloader.
     public static let `default` = ImageDownloader(name: "default")
 
-    // MARK: Public Properties
-    /// The duration before the downloading is timeout. Default is 15 seconds.
+    // 这个值, 被传递到了 NSURLRequest 里面去了.
     open var downloadTimeout: TimeInterval = 15.0
     
     /// A set of trusted hosts when receiving server trust challenges. A challenge with host name contained in this
@@ -97,18 +97,24 @@ open class ImageDownloader {
     ///
     /// You could change the configuration before a downloading task starts.
     /// A configuration without persistent storage for caches is requested for downloader working correctly.
+    // 这里, configure 的唯一要求, 就是不应该缓存数据.
     open var sessionConfiguration = URLSessionConfiguration.ephemeral {
+        // 每次, 当 Session 相关的属性修改的时候, 都要重新生成一份
         didSet {
             session.invalidateAndCancel()
-            session = URLSession(configuration: sessionConfiguration, delegate: sessionDelegate, delegateQueue: nil)
+            session = URLSession(configuration: sessionConfiguration,
+                                 delegate: sessionDelegate,
+                                 delegateQueue: nil)
         }
     }
     
-    // 这里, 有专门的一个对象, 出处理 URLSession 的所有代理方法, 这和之前类库的设计是一样的.
+    // SessionDelegate, 是整个 Downloader 共同使用的, 而不是一个 DataTask 单独使用的.
     open var sessionDelegate: SessionDelegate {
         didSet {
             session.invalidateAndCancel()
-            session = URLSession(configuration: sessionConfiguration, delegate: sessionDelegate, delegateQueue: nil)
+            session = URLSession(configuration: sessionConfiguration,
+                                 delegate: sessionDelegate,
+                                 delegateQueue: nil)
             setupSessionHandler()
         }
     }
@@ -117,6 +123,7 @@ open class ImageDownloader {
     open var requestsUsePipelining = false
 
     /// Delegate of this `ImageDownloader` object. See `ImageDownloaderDelegate` protocol for more.
+    // 这个协议, 没有找到实现类.
     open weak var delegate: ImageDownloaderDelegate?
     
     /// A responder for authentication challenge. 
@@ -153,7 +160,9 @@ open class ImageDownloader {
 
     deinit { session.invalidateAndCancel() }
 
-    // 在这里, 完成了 sessionDelegate 的回调.
+    // 配置 SessionDelegate 的回调.
+    // 这里其实就是, 设置 SessionDelegate 的 delegate, 只不过是, SessionDelegate 将自己所需要的配置点, 都变为了一个 Delegate 对象.
+    // 这样做的麻烦的点就是, 每次新生成一个值, 都是要重新的设置一遍各个 OnDelegate 的回调.
     private func setupSessionHandler() {
         sessionDelegate.onReceiveSessionChallenge.delegate(on: self) { (self, invoke) in
             self.authenticationChallengeResponder?.downloader(self, didReceive: invoke.1, completionHandler: invoke.2)
@@ -209,8 +218,8 @@ open class ImageDownloader {
         done: @escaping ((Result<DownloadingContext, KingfisherError>) -> Void)
     )
     {
+        // 这里, 需要提前定义, 仅仅是因为后面有复用的需求.
         func checkRequestAndDone(r: URLRequest) {
-
             // There is a possibility that request modifier changed the url to `nil` or empty.
             // In this case, throw an error.
             guard let url = r.url,
@@ -227,13 +236,13 @@ open class ImageDownloader {
                                  cachePolicy: .reloadIgnoringLocalCacheData,
                                  timeoutInterval: downloadTimeout)
         request.httpShouldUsePipelining = requestsUsePipelining
-        if #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) , options.lowDataModeSource != nil {
-            request.allowsConstrainedNetworkAccess = false
-        }
-
+ 
+        // 如果, 在 Options 里面设置了 requestModifier, 那么就有最后一个机会, 去修改 Request 的内容.
+        // 在修改了之后, 调用传递过去的闭包, 来真正的触发图片的下载操作.
+        // 在设计 RequestModifier 这个接口的时候, API 的设计者, 就按照异步的方式设计的.
+        // 一个协议, 如果要实现的方法, 是接受一个闭包, 然后在做完协议的自己业务之后, 去调用这个闭包, 都可以认为, 这是一个异步协议.
         if let requestModifier = options.requestModifier {
-            // Modifies request before sending.
-            // requestModifier.modified 的方法最后一个参数, 是 escaping, 也就是说在作者的眼里, 还是想要把这个方法, 当做一个异步方法来进行处理的.
+            // 这里, 传递过去的闭包就是, 在 modify 一个 Request 之后, 还是继续走 check and done 的逻辑.
             requestModifier.modified(for: request) { result in
                 guard let finalRequest = result else {
                     done(.failure(KingfisherError.requestError(reason: .emptyRequest)))
@@ -256,7 +265,7 @@ open class ImageDownloader {
         if let existingTask = sessionDelegate.task(for: context.url) {
             downloadTask = sessionDelegate.append(existingTask, url: context.url, callback: callback)
         } else {
-            // 如果, 之前没有这个下载任务, 就新建一个 dataTask, 然后将这个 dataTask 添加到 sessionDelegate 里面.
+            // 这里的命名思路, 和自己在写 MCNetwork 的时候是一样的, 根据具体的业务, 给相关的对象增加前缀.
             let sessionDataTask = session.dataTask(with: context.request)
             sessionDataTask.priority = context.options.downloadPriority
             downloadTask = sessionDelegate.add(sessionDataTask, url: context.url, callback: callback)
@@ -308,6 +317,7 @@ open class ImageDownloader {
             return downloadTask
         }
 
+        // 将, DataTask 的代理回调, 设置到了 Downloader 上.
         sessionTask.onTaskDone.delegate(on: self) { (self, done) in
             // Underlying downloading finishes.
             // result: Result<(Data, URLResponse?)>, callbacks: [TaskCallback]
@@ -320,7 +330,9 @@ open class ImageDownloader {
             // Download finished. Now process the data to an image.
             case .success(let (data, response)):
                 let processor = ImageDataProcessor(
-                    data: data, callbacks: callbacks, processingQueue: context.options.processingQueue
+                    data: data,
+                    callbacks: callbacks,
+                    processingQueue: context.options.processingQueue
                 )
                 processor.onImageProcessed.delegate(on: self) { (self, done) in
                     // `onImageProcessed` will be called for `callbacks.count` times, with each

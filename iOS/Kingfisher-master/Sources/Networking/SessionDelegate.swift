@@ -1,7 +1,11 @@
 import Foundation
 
 // Represents the delegate object of downloader session. It also behave like a task manager for downloading.
+// 对于 OC 来说, 因为命名空间只有一个, 所以应该加上前缀.
 @objc(KFSessionDelegate) // Fix for ObjC header name conflicting. https://github.com/onevcat/Kingfisher/issues/1530
+
+
+
 open class SessionDelegate: NSObject {
 
     typealias SessionChallengeFunc = (
@@ -16,7 +20,9 @@ open class SessionDelegate: NSObject {
         URLAuthenticationChallenge,
         (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
     )
-
+    
+    // 这个类, 是管理着所有的图片下载任务的.
+    // 所以, 在里面会有这样的一个映射表, 存储这 URL 和对应的 DataTask 对象的.
     private var tasks: [URL: SessionDataTask] = [:]
     private let lock = NSLock()
 
@@ -28,6 +34,9 @@ open class SessionDelegate: NSObject {
     let onReceiveSessionChallenge = Delegate<SessionChallengeFunc, Void>()
     let onReceiveSessionTaskChallenge = Delegate<SessionTaskChallengeFunc, Void>()
 
+    // 这是开启一个新的下载任务的方法.
+    // 触发的时机就是, 缓存内没图, 需要进行网络的交互.
+    // 反会一个 DataTask 对象.
     func add(
         _ dataTask: URLSessionDataTask,
         url: URL,
@@ -64,12 +73,12 @@ open class SessionDelegate: NSObject {
         dataTask.cancel()
     }
 
+    // 如果, 已经有了 DataTask, 那么一个新的回调就是, 将回调存储到对应的 DataTask 上.
     func append(
         _ task: SessionDataTask,
         url: URL,
         callback: SessionDataTask.TaskCallback) -> DownloadTask
     {
-        // 如果是之前已有的下载任务, 新增一个下载回调, 无非就是将任务下载之后的回调, 多存储一份, 等到下载之后, 将所有的回调都进行调用.
         let token = task.addCallback(callback)
         return DownloadTask(sessionTask: task, cancelToken: token)
     }
@@ -231,7 +240,8 @@ extension SessionDelegate: URLSessionDataDelegate {
             completionHandler: completionHandler)
     }
 
-    private func onCompleted(task: URLSessionTask, result: Result<(Data, URLResponse?), KingfisherError>) {
+    private func onCompleted(task: URLSessionTask,
+                             result: Result<(Data, URLResponse?), KingfisherError>) {
         guard let sessionTask = self.task(for: task) else {
             return
         }

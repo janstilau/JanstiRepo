@@ -46,7 +46,14 @@ public class Delegate<Input, Output> {
     public init() {}
     
     private var block: ((Input) -> Output?)?
-    public func delegate<T: AnyObject>(on target: T, block: ((T, Input) -> Output)?) {
+    // 这里, 就是设置回调的地方. 存储了回调的 target, 以及回调的行为.
+    // 然后, 在容器类里面, 直接调用 call 方法.
+    
+    // 如果之前, 定义一个 protocol, 那么在宿主里面, 就是 self.delegate?.scrollViewDidScrolled(self)
+    // 而使用这个 Delegate 的话, 就是 delegate(theDelegateObj, Block)
+    // 也就是说, theDelegateObj 类里面, 主动配置对应的回调闭包, 省略了明显的协议定义的过程.
+    public func delegate<T: AnyObject>(on target: T,
+                                       block: ((T, Input) -> Output)?) {
         self.block = { [weak target] input in
             guard let target = target else { return nil }
             return block?(target, input)

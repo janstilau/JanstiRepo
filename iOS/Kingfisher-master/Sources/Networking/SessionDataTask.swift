@@ -1,8 +1,9 @@
 import Foundation
 
-/// Represents a session data task in `ImageDownloader`.
-/// It consists of an underlying `URLSessionDataTask` and
-/// an array of `TaskCallback`. Multiple `TaskCallback`s could be added for a single downloading data task.
+/*
+    DataTask 代表着一个 URL 对应的任务. 这个任务, 其实是承担了不断的进行 Data 的拼接的过程的.
+    同时, 这个任务也存储了, URL 下载之后的各个回调操作.
+ */
 public class SessionDataTask {
 
     /// Represents the type of token which used for cancelling a task.
@@ -29,13 +30,14 @@ public class SessionDataTask {
     var callbacks: [SessionDataTask.TaskCallback] {
         lock.lock()
         defer { lock.unlock() }
-        
         return Array(callbacksStore.values)
     }
 
     private var currentToken = 0
     private let lock = NSLock()
 
+    // 当, 任务完成之后, 会把原始的数据, 以及所有存储的回调暴露出去.
+    // 随意最后触发回调的操作, 也是在外界, 也就是 SessionDelegate 中刚完成的.
     let onTaskDone = Delegate<(Result<(Data, URLResponse?), KingfisherError>, [TaskCallback]), Void>()
     let onCallbackCancelled = Delegate<(CancelToken, TaskCallback), Void>()
 
@@ -55,9 +57,13 @@ public class SessionDataTask {
         mutableData = Data()
     }
 
+    // 增加一个回调, 并不会增加一个任务.
+    // 仅仅是将这个回调, 存储到自己的数组里面.
+    // 同时, token 的变化, 也不暴露到外界上.
     func addCallback(_ callback: TaskCallback) -> CancelToken {
         lock.lock()
         defer { lock.unlock() }
+        
         callbacksStore[currentToken] = callback
         defer { currentToken += 1 }
         return currentToken
@@ -83,6 +89,8 @@ public class SessionDataTask {
         guard let callback = removeCallback(token) else {
             return
         }
+        // 通知外界代理.
+        // Delegate 对象的用法, 就和代理模式的使用方式一模一样.
         onCallbackCancelled.call((token, callback))
     }
 
@@ -92,6 +100,7 @@ public class SessionDataTask {
         }
     }
 
+    // 真正的数据的拼接操作.
     func didReceiveData(_ data: Data) {
         mutableData.append(data)
     }

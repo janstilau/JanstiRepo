@@ -1,29 +1,3 @@
-//
-//  ImageDownloaderDelegate.swift
-//  Kingfisher
-//
-//  Created by Wei Wang on 2018/10/11.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 import Foundation
 
 /// Protocol of `ImageDownloader`. This protocol provides a set of methods which are related to image downloader
@@ -37,7 +11,9 @@ public protocol ImageDownloaderDelegate: AnyObject {
     ///   - url: URL of the starting request.
     ///   - request: The request object for the download process.
     ///
-    func imageDownloader(_ downloader: ImageDownloader, willDownloadImageForURL url: URL, with request: URLRequest?)
+    func imageDownloader(_ downloader: ImageDownloader,
+                         willDownloadImageForURL url: URL,
+                         with request: URLRequest?)
 
     /// Called when the `ImageDownloader` completes a downloading request with success or failure.
     ///
@@ -68,7 +44,9 @@ public protocol ImageDownloaderDelegate: AnyObject {
     ///   processing flow if you find the data is corrupted or malformed.
     ///
     ///  If this method is implemented, `imageDownloader(_:didDownload:for:)` will not be called anymore.
-    func imageDownloader(_ downloader: ImageDownloader, didDownload data: Data, with dataTask: SessionDataTask) -> Data?
+    func imageDownloader(_ downloader: ImageDownloader,
+                         didDownload data: Data,
+                         with dataTask: SessionDataTask) -> Data?
   
     /// Called when the `ImageDownloader` object successfully downloaded image data from specified URL. This is
     /// your last chance to verify or modify the downloaded data before Kingfisher tries to perform addition

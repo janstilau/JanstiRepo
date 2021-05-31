@@ -19,7 +19,8 @@ public protocol AsyncImageDownloadRequestModifier {
     ///              according to your resource url as a GET request.
     ///   - reportModified: The callback block you need to call after the asynchronous modifying done.
     ///
-    func modified(for request: URLRequest, reportModified: @escaping (URLRequest?) -> Void)
+    func modified(for request: URLRequest,
+                  reportModified: @escaping (URLRequest?) -> Void)
 
     /// A block will be called when the download task started.
     ///
@@ -59,6 +60,7 @@ extension ImageDownloadRequestModifier {
     public var onDownloadTaskStarted: ((DownloadTask?) -> Void)? { return nil }
 }
 
+// 这种, Any 开头的协议实现者, 都是一个套路, 就是存储一个 block. 
 /// A wrapper for creating an `ImageDownloadRequestModifier` easier.
 /// This type conforms to `ImageDownloadRequestModifier` and wraps an image modify block.
 public struct AnyModifier: ImageDownloadRequestModifier {

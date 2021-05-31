@@ -18,6 +18,7 @@ class ImageDataProcessor {
     // data, 图像的原始数据.
     // callbacks, 处理完图像数据之后的各种回调方法.
     // 初始化的时候, 仅仅是将这些数据存储起来了, process, 是将处理图像数据的方法, 添加到 queue 里面, 最终, 是调用存储在 callbacks 里面的各种方法, 去触发后续的操作.
+    
     init(data: Data, callbacks: [SessionDataTask.TaskCallback], processingQueue: CallbackQueue?) {
         self.data = data
         self.callbacks = callbacks
