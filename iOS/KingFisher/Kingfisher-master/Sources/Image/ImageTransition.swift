@@ -1,29 +1,3 @@
-//
-//  ImageTransition.swift
-//  Kingfisher
-//
-//  Created by Wei Wang on 15/9/18.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 import Foundation
 #if os(iOS) || os(tvOS)
 import UIKit
@@ -43,6 +17,7 @@ import UIKit
 /// - flipFromTop: Flip from top transition.
 /// - flipFromBottom: Flip from bottom transition.
 /// - custom: Custom transition.
+
 public enum ImageTransition {
     /// No animation transition.
     case none
@@ -56,44 +31,49 @@ public enum ImageTransition {
     case flipFromTop(TimeInterval)
     /// Flip from bottom transition.
     case flipFromBottom(TimeInterval)
+        
+    
+    // custom 里面的数据, 包含了所有的数据.
+    // 但明显的 case 之间的划分, 让各个 case 之间的数据, 保持隔离.
+    // 在 fade 的 type 下, 不会使用到 animations, completion 等各种数据.
+    // 语言带来了强制隔离, 让代码更加的清晰.
     /// Custom transition defined by a general animation block.
     ///    - duration: The time duration of this custom transition.
     ///    - options: `UIView.AnimationOptions` should be used in the transition.
     ///    - animations: The animation block will be applied when setting image.
     ///    - completion: A block called when the transition animation finishes.
     case custom(duration: TimeInterval,
-                 options: UIView.AnimationOptions,
-              animations: ((UIImageView, UIImage) -> Void)?,
-              completion: ((Bool) -> Void)?)
+                options: UIView.AnimationOptions,
+                animations: ((UIImageView, UIImage) -> Void)?,
+                completion: ((Bool) -> Void)?)
     
     var duration: TimeInterval {
         switch self {
         case .none:                          return 0
+        // 其他的几个 case, 就是从不同的 case 环境中, 获取到对应的数据.
         case .fade(let duration):            return duration
-            
         case .flipFromLeft(let duration):    return duration
         case .flipFromRight(let duration):   return duration
         case .flipFromTop(let duration):     return duration
         case .flipFromBottom(let duration):  return duration
-            
         case .custom(let duration, _, _, _): return duration
         }
     }
     
+    // ImageTransition 类本身, 应该提供到对应原生所使用的数据的切换.
     var animationOptions: UIView.AnimationOptions {
         switch self {
         case .none:                         return []
         case .fade:                         return .transitionCrossDissolve
-            
         case .flipFromLeft:                 return .transitionFlipFromLeft
         case .flipFromRight:                return .transitionFlipFromRight
         case .flipFromTop:                  return .transitionFlipFromTop
         case .flipFromBottom:               return .transitionFlipFromBottom
-            
         case .custom(_, let options, _, _): return options
         }
     }
-    
+        
+    // 除了 custom 提供了 animations 闭包, 其他的 case, 都是简单的 image 赋值动作.
     var animations: ((UIImageView, UIImage) -> Void)? {
         switch self {
         case .custom(_, _, let animations, _): return animations

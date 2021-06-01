@@ -1,29 +1,3 @@
-//
-//  Placeholder.swift
-//  Kingfisher
-//
-//  Created by Tieme van Veen on 28/08/2017.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 #if !os(watchOS)
 
 #if canImport(AppKit) && !targetEnvironment(macCatalyst)
@@ -34,6 +8,8 @@ import AppKit
 import UIKit
 #endif
 
+// 专门为占位这个概念, 提供了一层抽象.
+// 相比于仅仅用 Image 做占位图. 这层抽象的好处就是, 可以让一个 View 当做占位图了.
 /// Represents a placeholder type which could be set while loading as well as
 /// loading finished without getting an image.
 public protocol Placeholder {
@@ -48,9 +24,12 @@ public protocol Placeholder {
 /// Default implementation of an image placeholder. The image will be set or
 /// reset directly for `image` property of the image view.
 extension KFCrossPlatformImage: Placeholder {
+    
+    // 对于一个 Image 来说, 它添加删除就是使用 UIImageView 的 image 属性的设置.
+    
     /// How the placeholder should be added to a given image view.
     public func add(to imageView: KFCrossPlatformImageView) { imageView.image = self }
-
+    
     /// How the placeholder should be removed from a given image view.
     public func remove(from imageView: KFCrossPlatformImageView) { imageView.image = nil }
 }
@@ -62,17 +41,20 @@ extension KFCrossPlatformImage: Placeholder {
 /// `Placeholder` by `extension MyView: Placeholder {}`.
 extension Placeholder where Self: KFCrossPlatformView {
     
+    // 对于一个 ImageView 作为 PlaceHolder, 它的 add, remove, 就是将自己添加到对应的 ImageView 上面.
+    // 并且完全贴合.
+    
     /// How the placeholder should be added to a given image view.
     public func add(to imageView: KFCrossPlatformImageView) {
         imageView.addSubview(self)
         translatesAutoresizingMaskIntoConstraints = false
-
+        
         centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
         centerYAnchor.constraint(equalTo: imageView.centerYAnchor).isActive = true
         heightAnchor.constraint(equalTo: imageView.heightAnchor).isActive = true
         widthAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
     }
-
+    
     /// How the placeholder should be removed from a given image view.
     public func remove(from imageView: KFCrossPlatformImageView) {
         removeFromSuperview()
