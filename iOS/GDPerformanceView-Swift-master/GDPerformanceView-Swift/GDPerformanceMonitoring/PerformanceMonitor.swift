@@ -9,7 +9,12 @@ public class PerformanceMonitor {
     public enum Style {
         case dark
         case light
-        case custom(backgroundColor: UIColor, borderColor: UIColor, borderWidth: CGFloat, cornerRadius: CGFloat, textColor: UIColor, font: UIFont)
+        case custom(backgroundColor: UIColor,
+                    borderColor: UIColor,
+                    borderWidth: CGFloat,
+                    cornerRadius: CGFloat,
+                    textColor: UIColor,
+                    font: UIFont)
     }
     
     public enum UserInfo {
@@ -25,8 +30,10 @@ public class PerformanceMonitor {
     
     // MARK: Structs
     
+    // 对于, 原来的需要进行 或 操作的 Int Enum, 使用专门的 OptionSet 进行设置.
+    // 这个也就最后只能够控制了 View 的显示.
     public struct DisplayOptions: OptionSet {
-        public let rawValue: Int
+        public let rawValue: Int // OptionSet 协议的限制.
         
         /// CPU usage and FPS.
         public static let performance = DisplayOptions(rawValue: 1 << 0)
@@ -122,6 +129,7 @@ public class PerformanceMonitor {
 
 // MARK: Public Methods
 
+// PerformanceMonitor
 public extension PerformanceMonitor {
     func hide() {
         self.performanceView.hide()

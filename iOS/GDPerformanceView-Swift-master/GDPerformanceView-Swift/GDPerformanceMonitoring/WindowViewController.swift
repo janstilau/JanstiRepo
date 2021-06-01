@@ -39,11 +39,6 @@ internal class WindowViewController: UIViewController, StatusBarConfigurator {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.view.backgroundColor = .clear
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
 }

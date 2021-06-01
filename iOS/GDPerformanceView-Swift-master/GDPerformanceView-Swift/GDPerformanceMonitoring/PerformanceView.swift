@@ -3,10 +3,13 @@ import UIKit
 // MARK: Class Definition
 
 /// Performance view. Displays performance information above status bar. Appearance and output can be changed via properties.
+// 这个不是一个 View, 而是一个 UIWindow
 internal class PerformanceView: UIWindow, PerformanceViewConfigurator {
     
     // MARK: Structs
     
+    // 使用一个类型, 专门用来存储这些常用的值.
+    // 一般来说, 这个类型就用 Constants 就好了.
     private struct Constants {
         static let prefferedHeight: CGFloat = 20.0
         static let borderWidth: CGFloat = 1.0
@@ -19,7 +22,7 @@ internal class PerformanceView: UIWindow, PerformanceViewConfigurator {
     // MARK: Public Properties
     
     /// Allows to change the format of the displayed information.
-    public var options = PerformanceMonitor.DisplayOptions.default {
+    public var options = PerformanceMonitor.DisplayOptions.all {
         didSet {
             self.configureStaticInformation()
         }
@@ -62,6 +65,8 @@ internal class PerformanceView: UIWindow, PerformanceViewConfigurator {
         self.configureWindow()
         self.configureMonitoringTextLabel()
         self.subscribeToNotifications()
+        
+        self.backgroundColor = .green
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -150,9 +155,14 @@ private extension PerformanceView {
 // MARK: Configurations
 
 private extension PerformanceView {
+    
+    /*
+        UIWindow在显示的时候会根据UIWindowLevel进行排序的
+        即Level高的将排在所有Level比他低的层级的前面
+     */
     func configureWindow() {
         self.rootViewController = WindowViewController()
-        self.windowLevel = UIWindow.Level.statusBar + 1.0
+        self.windowLevel = UIWindow.Level.statusBar - 1.0
         self.backgroundColor = .clear
         self.clipsToBounds = true
         self.isHidden = true
@@ -273,9 +283,11 @@ private extension PerformanceView {
         self.isHidden = false
     }
     
+    // 就是去 MainBundle 的 Info 文件里面去读取相关的内容
     func applicationVersion() -> String {
         var applicationVersion = "<null>"
         var applicationBuildNumber = "<null>"
+        
         if let infoDictionary = Bundle.main.infoDictionary {
             if let versionNumber = infoDictionary["CFBundleShortVersionString"] as? String {
                 applicationVersion = versionNumber
