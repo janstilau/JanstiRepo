@@ -1,6 +1,6 @@
 import Dispatch
 
-/// Thenable represents an asynchronous operation that can be chained.
+// Thenable represents an asynchronous operation that can be chained.
 public protocol Thenable: AnyObject {
     /// The type of the wrapped value
     associatedtype T
@@ -13,7 +13,7 @@ public protocol Thenable: AnyObject {
 }
 
 public extension Thenable {
-    /**
+    /*
      The provided closure executes when this promise is fulfilled.
      
      This allows chaining promises. The promise returned by the provided closure is resolved before the promise returned by this closure resolves.
@@ -30,10 +30,25 @@ public extension Thenable {
                //…
            }
      */
-    func then<U: Thenable>(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ body: @escaping(T) throws -> U) -> Promise<U.T> {
+    func then<U: Thenable>(on: DispatchQueue? = conf.Q.map,
+                           flags: DispatchWorkItemFlags? = nil,
+                           _ body: @escaping(T) throws -> U) -> Promise<U.T> {
         let rp = Promise<U.T>(.pending)
+        // 当, pipe 的闭包, 添加到当前的 Result 的状态变化的回调中.
+        // 这样, 当 Fullfill 的时候, 取出回调, 才去执行这个回调.
+        
+        // A Promise 里面有 Box. 里面存储了回调.
+        // 当 Promise resolved 的时候, 执行自己存储的回调.
+        // 其中一个回调就是, 使用当前 A 的结果, 指定 Body 生成另外一个 ThenAble.
+        // 这个 ThenAble 的回调就是, 将一个提前生成的 Rp 的状态进行改变.
+        // Body 生成的 Promise 的状态, 由 Body 函数进行管理.
+        // 这个 Promise 存在的理由, 就是进行 rp 的改变.
+        // then 这个接口, 则是通过 rp 的状态改变, 触发后面的流程.
+        
         pipe {
             switch $0 {
+            // 当上一个 Promise 是 Fulfill 状态时, 取出 value 值.
+            // 然后
             case .fulfilled(let value):
                 on.async(flags: flags) {
                     do {
@@ -44,6 +59,9 @@ public extension Thenable {
                         rp.box.seal(.rejected(error))
                     }
                 }
+            // 如果 A 是失败状态, 那么 B 也会变为失败状态. 同时, error 会是 A 的失败 error.
+            // 这样, 后面的 C 也是使用 A 的失败 Error.
+            // 也就是从失败的节点开始, 失败会延续到最后.
             case .rejected(let error):
                 rp.box.seal(.rejected(error))
             }
@@ -197,7 +215,9 @@ public extension Thenable {
                print(response.data)
            }
      */
-    func done(on: DispatchQueue? = conf.Q.return, flags: DispatchWorkItemFlags? = nil, _ body: @escaping(T) throws -> Void) -> Promise<Void> {
+    func done(on: DispatchQueue? = conf.Q.return,
+              flags: DispatchWorkItemFlags? = nil,
+              _ body: @escaping(T) throws -> Void) -> Promise<Void> {
         let rp = Promise<Void>(.pending)
         pipe {
             switch $0 {

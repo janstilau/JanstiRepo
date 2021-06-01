@@ -1,7 +1,7 @@
 import class Foundation.Thread
 import Dispatch
 
-/**
+/*
  A `Promise` is a functional abstraction around a failable asynchronous operation.
  - See: `Thenable`
  */
@@ -12,7 +12,7 @@ public final class Promise<T>: Thenable, CatchMixin {
         self.box = box
     }
 
-    /**
+    /*
       Initialize a new fulfilled promise.
 
       We do not provide `init(value:)` because Swift is “greedy”
@@ -76,6 +76,7 @@ public final class Promise<T>: Thenable, CatchMixin {
             box.inspect {
                 switch $0 {
                 case .pending(let handlers):
+                    // 将, to 的闭包, 添加到了 handler 里面存储了起来.
                     handlers.append(to)
                 case .resolved(let value):
                     to(value)
