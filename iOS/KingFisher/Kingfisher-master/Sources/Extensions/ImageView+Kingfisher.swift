@@ -406,12 +406,17 @@ extension KingfisherWrapper where Base: KFCrossPlatformImageView {
             completion: { _ in
                 var mutatingSelf = self
                 mutatingSelf.placeholder = nil
+                
+                // 虽然, 还是使用的 UIView 的方法
+                // 但是各种所需要的数据, 都封装到了 ImageTransition 的内部了.
+                
                 UIView.transition(
-                    with: self.base,
-                    duration: transition.duration,
-                    options: [transition.animationOptions, .allowUserInteraction],
-                    animations: { transition.animations?(self.base, image) },
+                    with: self.base, // 所有的操作, 最终还是到 base 中.
+                    duration: transition.duration, // 从 transition 中获取 duration
+                    options: [transition.animationOptions, .allowUserInteraction], // 从 transition 中, 获取 options
+                    animations: { transition.animations?(self.base, image) }, // 从 transition 中, 获取  animations
                     completion: { finished in
+                        // 从 transition 中, 获取 completion
                         transition.completion?(finished)
                         done()
                     }

@@ -32,6 +32,7 @@ import Foundation
 
 // KF 里面的 Resource, 就是能够提供一个 URL, 能够提供一个缓存的 key.
 // 而 缓存的 key, 其实是可以通过 URL 来转化的. 所以, 其实就是提供一个 URL 而已.
+
 public protocol Resource {
     
     /// The key used in cache.

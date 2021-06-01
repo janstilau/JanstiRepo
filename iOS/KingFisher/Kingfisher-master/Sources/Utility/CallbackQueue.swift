@@ -1,29 +1,3 @@
-//
-//  CallbackQueue.swift
-//  Kingfisher
-//
-//  Created by onevcat on 2018/10/15.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 import Foundation
 
 /// Represents callback queue behaviors when an calling of closure be dispatched.
@@ -33,6 +7,23 @@ import Foundation
 ///                       `.main`. Otherwise, call the closure immediately in current main queue.
 /// - untouch: Do not change the calling queue for closure.
 /// - dispatch: Dispatches to a specified `DispatchQueue`.
+
+/*
+    将 Enum 当做 Container 使用的又一个例证.
+    只有 .Dispatch 这种情况, 是真正的需要存储数据的.
+    使用 Enum, 让代码更加的清晰.
+ 
+    各种方法, 直接定义到了 Enum 的内部.
+    也就是说, 这个类型主要的使用场景, 就是调用自己的方法, 而不是进行 Type 的区分.
+    这个类型, 基本不会进入到 Switch case 中, 而是得到了 .case 的实例之后, 直接调用 execute 方法, 传入对应的闭包.
+    在 Enum 的内部, 就是将对应的闭包, 传递到对应的 queue 的过程了.
+ */
+
+/*
+    Swfit 的抽象, 很多方法是使用参数的行为.
+    例如, PageView addTo, removeFrom, 都是使用 参数的 AddSubView, RemoveSubView 来进行相关页面的加载删除.
+ */
+
 public enum CallbackQueue {
     /// Dispatch the calling to `DispatchQueue.main` with an `async` behavior.
     case mainAsync
@@ -47,16 +38,21 @@ public enum CallbackQueue {
     public func execute(_ block: @escaping () -> Void) {
         switch self {
         case .mainAsync:
+            // 虽然, async 的参数类型也是 () -> Void
+            // 但这里, 没有直接将 block 传递到 async 里面, 而是又包装了一层.
+            // 将 block 当做数据来看. 提交给 main queue 的是一个动作, 而这个动作, 是调用传递过来的函数数据.
             DispatchQueue.main.async { block() }
         case .mainCurrentOrAsync:
             DispatchQueue.main.safeAsync { block() }
         case .untouch:
             block()
         case .dispatch(let queue):
+            // 这里, 才用到了 Enum 的存储属性, 将存储的 queue 提取出来, 将对于函数对象的调用, 放到对应的 queue 里面.
             queue.async { block() }
         }
     }
 
+    // OperationQueue.current?.underlyingQueue 这句, 明显的暗示了, OperationQueue 的底层任务分派, 是通过了 GCD Queue 完成的.
     var queue: DispatchQueue {
         switch self {
         case .mainAsync: return .main

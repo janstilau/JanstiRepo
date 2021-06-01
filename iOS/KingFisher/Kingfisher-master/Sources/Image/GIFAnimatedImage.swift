@@ -1,44 +1,19 @@
-//
-//  AnimatedImage.swift
-//  Kingfisher
-//
-//  Created by onevcat on 2018/09/26.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
 
 import Foundation
 import ImageIO
 
 /// Represents a set of image creating options used in Kingfisher.
 public struct ImageCreatingOptions {
-
+    
     /// The target scale of image needs to be created.
     public let scale: CGFloat
-
+    
     /// The expected animation duration if an animated image being created.
     public let duration: TimeInterval
-
+    
     /// For an animated image, whether or not all frames should be loaded before displaying.
     public let preloadAll: Bool
-
+    
     /// For an animated image, whether or not only the first image should be
     /// loaded as a static image. It is useful for preview purpose of an animated image.
     public let onlyFirstFrame: Bool
@@ -70,6 +45,8 @@ public struct ImageCreatingOptions {
 
 // Represents the decoding for a GIF image. This class extracts frames from an `imageSource`, then
 // hold the images for later use.
+// 这个类型, 并没有真正的在外界使用到, 它仅仅是 Gif 图数据的收集器而已.
+// 最终, 生成的 Image 是使用了 GIFAnimatedImage 里面的数据.
 class GIFAnimatedImage {
     let images: [KFCrossPlatformImage]
     let duration: TimeInterval
@@ -109,12 +86,12 @@ class GIFAnimatedImage {
         guard let frameDuration = duration else { return defaultFrameDuration }
         return frameDuration.doubleValue > 0.011 ? frameDuration.doubleValue : defaultFrameDuration
     }
-
+    
     // Calculates frame duration at a specific index for a gif from an `imageSource`.
     static func getFrameDuration(from imageSource: CGImageSource, at index: Int) -> TimeInterval {
         guard let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, index, nil)
-            as? [String: Any] else { return 0.0 }
-
+                as? [String: Any] else { return 0.0 }
+        
         let gifInfo = properties[kCGImagePropertyGIFDictionary as String] as? [String: Any]
         return getFrameDuration(from: gifInfo)
     }

@@ -1,29 +1,3 @@
-//
-//  ImageProcessor.swift
-//  Kingfisher
-//
-//  Created by Wei Wang on 2016/08/26.
-//
-//  Copyright (c) 2019 Wei Wang <onevcat@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-
 import Foundation
 import CoreGraphics
 
@@ -59,7 +33,7 @@ public protocol ImageProcessor {
     /// the `DefaultImageProcessor`. It is recommended to use a reverse domain name notation string of
     /// your own for the identifier.
     var identifier: String { get }
-
+    
     /// Processes the input `ImageProcessItem` with this processor.
     ///
     /// - Parameters:
@@ -189,20 +163,20 @@ public struct RectCorner: OptionSet {
 #if !os(macOS)
 /// Processor for adding an blend mode to images. Only CG-based images are supported.
 public struct BlendImageProcessor: ImageProcessor {
-
+    
     /// Identifier of the processor.
     /// - Note: See documentation of `ImageProcessor` protocol for more.
     public let identifier: String
-
+    
     /// Blend Mode will be used to blend the input image.
     public let blendMode: CGBlendMode
-
+    
     /// Alpha will be used when blend image.
     public let alpha: CGFloat
-
+    
     /// Background color of the output image. If `nil`, it will stay transparent.
     public let backgroundColor: KFCrossPlatformColor?
-
+    
     /// Creates a `BlendImageProcessor`.
     ///
     /// - Parameters:
@@ -220,7 +194,7 @@ public struct BlendImageProcessor: ImageProcessor {
         }
         self.identifier = identifier
     }
-
+    
     /// Processes the input `ImageProcessItem` with this processor.
     ///
     /// - Parameters:
@@ -233,7 +207,7 @@ public struct BlendImageProcessor: ImageProcessor {
         switch item {
         case .image(let image):
             return image.kf.scaled(to: options.scaleFactor)
-                        .kf.image(withBlendMode: blendMode, alpha: alpha, backgroundColor: backgroundColor)
+                .kf.image(withBlendMode: blendMode, alpha: alpha, backgroundColor: backgroundColor)
         case .data:
             return (DefaultImageProcessor.default |> self).process(item: item, options: options)
         }
@@ -244,20 +218,20 @@ public struct BlendImageProcessor: ImageProcessor {
 #if os(macOS)
 /// Processor for adding an compositing operation to images. Only CG-based images are supported in macOS.
 public struct CompositingImageProcessor: ImageProcessor {
-
+    
     /// Identifier of the processor.
     /// - Note: See documentation of `ImageProcessor` protocol for more.
     public let identifier: String
-
+    
     /// Compositing operation will be used to the input image.
     public let compositingOperation: NSCompositingOperation
-
+    
     /// Alpha will be used when compositing image.
     public let alpha: CGFloat
-
+    
     /// Background color of the output image. If `nil`, it will stay transparent.
     public let backgroundColor: KFCrossPlatformColor?
-
+    
     /// Creates a `CompositingImageProcessor`
     ///
     /// - Parameters:
@@ -279,7 +253,7 @@ public struct CompositingImageProcessor: ImageProcessor {
         }
         self.identifier = identifier
     }
-
+    
     /// Processes the input `ImageProcessItem` with this processor.
     ///
     /// - Parameters:
@@ -292,10 +266,10 @@ public struct CompositingImageProcessor: ImageProcessor {
         switch item {
         case .image(let image):
             return image.kf.scaled(to: options.scaleFactor)
-                        .kf.image(
-                            withCompositingOperation: compositingOperation,
-                            alpha: alpha,
-                            backgroundColor: backgroundColor)
+                .kf.image(
+                    withCompositingOperation: compositingOperation,
+                    alpha: alpha,
+                    backgroundColor: backgroundColor)
         case .data:
             return (DefaultImageProcessor.default |> self).process(item: item, options: options)
         }
@@ -316,7 +290,7 @@ public struct CompositingImageProcessor: ImageProcessor {
 /// case.
 ///
 public struct RoundCornerImageProcessor: ImageProcessor {
-
+    
     /// Represents a radius specified in a `RoundCornerImageProcessor`.
     public enum Radius {
         /// The radius should be calculated as a fraction of the image width. Typically the associated value should be
@@ -327,7 +301,7 @@ public struct RoundCornerImageProcessor: ImageProcessor {
         case heightFraction(CGFloat)
         /// Use a fixed point value as the round corner radius.
         case point(CGFloat)
-
+        
         var radiusIdentifier: String {
             switch self {
             case .widthFraction(let f):
@@ -339,11 +313,11 @@ public struct RoundCornerImageProcessor: ImageProcessor {
             }
         }
     }
-
+    
     /// Identifier of the processor.
     /// - Note: See documentation of `ImageProcessor` protocol for more.
     public let identifier: String
-
+    
     /// The radius will be applied in processing. Specify a certain point value with `.point`, or a fraction of the
     /// target image with `.widthFraction`. or `.heightFraction`. For example, given a square image with width and
     /// height equals,  `.widthFraction(0.5)` means use half of the length of size and makes the final image a round one.
@@ -354,10 +328,10 @@ public struct RoundCornerImageProcessor: ImageProcessor {
     
     /// Target size of output image should be. If `nil`, the image will keep its original size after processing.
     public let targetSize: CGSize?
-
+    
     /// Background color of the output image. If `nil`, it will use a transparent background.
     public let backgroundColor: KFCrossPlatformColor?
-
+    
     /// Creates a `RoundCornerImageProcessor`.
     ///
     /// - Parameters:
@@ -384,7 +358,7 @@ public struct RoundCornerImageProcessor: ImageProcessor {
         let radius = Radius.point(cornerRadius)
         self.init(radius: radius, targetSize: targetSize, roundingCorners: corners, backgroundColor: backgroundColor)
     }
-
+    
     /// Creates a `RoundCornerImageProcessor`.
     ///
     /// - Parameters:
@@ -405,21 +379,21 @@ public struct RoundCornerImageProcessor: ImageProcessor {
         self.targetSize = targetSize
         self.roundingCorners = corners
         self.backgroundColor = backgroundColor
-
+        
         self.identifier = {
             var identifier = ""
-
+            
             if let size = targetSize {
                 identifier = "com.onevcat.Kingfisher.RoundCornerImageProcessor" +
-                             "(\(radius.radiusIdentifier)_\(size)\(corners.cornerIdentifier))"
+                    "(\(radius.radiusIdentifier)_\(size)\(corners.cornerIdentifier))"
             } else {
                 identifier = "com.onevcat.Kingfisher.RoundCornerImageProcessor" +
-                             "(\(radius.radiusIdentifier)\(corners.cornerIdentifier))"
+                    "(\(radius.radiusIdentifier)\(corners.cornerIdentifier))"
             }
             if let backgroundColor = backgroundColor {
                 identifier += "_\(backgroundColor)"
             }
-
+            
             return identifier
         }()
     }
@@ -436,7 +410,7 @@ public struct RoundCornerImageProcessor: ImageProcessor {
         switch item {
         case .image(let image):
             let size = targetSize ?? image.kf.size
-
+            
             let cornerRadius: CGFloat
             switch radius {
             case .point(let point):
@@ -446,13 +420,13 @@ public struct RoundCornerImageProcessor: ImageProcessor {
             case .heightFraction(let heightFraction):
                 cornerRadius = size.height * heightFraction
             }
-
+            
             return image.kf.scaled(to: options.scaleFactor)
-                        .kf.image(
-                            withRoundRadius: cornerRadius,
-                            fit: size,
-                            roundingCorners: roundingCorners,
-                            backgroundColor: backgroundColor)
+                .kf.image(
+                    withRoundRadius: cornerRadius,
+                    fit: size,
+                    roundingCorners: roundingCorners,
+                    backgroundColor: backgroundColor)
         case .data:
             return (DefaultImageProcessor.default |> self).process(item: item, options: options)
         }
@@ -532,7 +506,7 @@ public struct ResizingImageProcessor: ImageProcessor {
         switch item {
         case .image(let image):
             return image.kf.scaled(to: options.scaleFactor)
-                        .kf.resize(to: referenceSize, for: targetContentMode)
+                .kf.resize(to: referenceSize, for: targetContentMode)
         case .data:
             return (DefaultImageProcessor.default |> self).process(item: item, options: options)
         }
@@ -549,7 +523,7 @@ public struct BlurImageProcessor: ImageProcessor {
     
     /// Blur radius for the simulated Gaussian blur.
     public let blurRadius: CGFloat
-
+    
     /// Creates a `BlurImageProcessor`
     ///
     /// - parameter blurRadius: Blur radius for the simulated Gaussian blur.
@@ -571,7 +545,7 @@ public struct BlurImageProcessor: ImageProcessor {
         case .image(let image):
             let radius = blurRadius * options.scaleFactor
             return image.kf.scaled(to: options.scaleFactor)
-                        .kf.blurred(withRadius: radius)
+                .kf.blurred(withRadius: radius)
         case .data:
             return (DefaultImageProcessor.default |> self).process(item: item, options: options)
         }
@@ -614,7 +588,7 @@ public struct OverlayImageProcessor: ImageProcessor {
         switch item {
         case .image(let image):
             return image.kf.scaled(to: options.scaleFactor)
-                        .kf.overlaying(with: overlay, fraction: fraction)
+                .kf.overlaying(with: overlay, fraction: fraction)
         case .data:
             return (DefaultImageProcessor.default |> self).process(item: item, options: options)
         }
@@ -651,7 +625,7 @@ public struct TintImageProcessor: ImageProcessor {
         switch item {
         case .image(let image):
             return image.kf.scaled(to: options.scaleFactor)
-                        .kf.tinted(with: tint)
+                .kf.tinted(with: tint)
         case .data:
             return (DefaultImageProcessor.default |> self).process(item: item, options: options)
         }
@@ -705,7 +679,7 @@ public struct ColorControlsProcessor: ImageProcessor {
         switch item {
         case .image(let image):
             return image.kf.scaled(to: options.scaleFactor)
-                        .kf.adjusted(brightness: brightness, contrast: contrast, saturation: saturation, inputEV: inputEV)
+                .kf.adjusted(brightness: brightness, contrast: contrast, saturation: saturation, inputEV: inputEV)
         case .data:
             return (DefaultImageProcessor.default |> self).process(item: item, options: options)
         }
@@ -791,7 +765,7 @@ public struct CroppingImageProcessor: ImageProcessor {
         switch item {
         case .image(let image):
             return image.kf.scaled(to: options.scaleFactor)
-                        .kf.crop(to: size, anchorOn: anchor)
+                .kf.crop(to: size, anchorOn: anchor)
         case .data: return (DefaultImageProcessor.default |> self).process(item: item, options: options)
         }
     }
@@ -854,13 +828,13 @@ extension KFCrossPlatformColor {
         var g: CGFloat = 0
         var b: CGFloat = 0
         var a: CGFloat = 0
-
+        
         #if os(macOS)
         (usingColorSpace(.sRGB) ?? self).getRed(&r, green: &g, blue: &b, alpha: &a)
         #else
         getRed(&r, green: &g, blue: &b, alpha: &a)
         #endif
-
+        
         let rInt = Int(r * 255) << 24
         let gInt = Int(g * 255) << 16
         let bInt = Int(b * 255) << 8

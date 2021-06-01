@@ -12,7 +12,6 @@ public enum Source {
 
     /// Represents the source task identifier when setting an image to a view with extension methods.
     public enum Identifier {
-
         // 一个, Id 的生成器.
         // 可以看到, 这种全局的 Id 生成器的思路, 其实是非常普遍的.
         public typealias Value = UInt
