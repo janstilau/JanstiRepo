@@ -719,6 +719,7 @@ extension STPAPIClient {
             params["client_secret"] = nil
         }
 
+        // 到这里是真正的进行网络请求的交互.
         APIRequest<STPPaymentIntent>.post(
             with: self,
             endpoint: endpoint,
@@ -996,6 +997,8 @@ extension STPAPIClient {
             "customer": customerID,
             "type": STPPaymentMethod.string(from: .card),
         ]
+        // 这里, 用户的各种信息, 是通过 APIRequest<STPPaymentMethodListDeserializer>.getWith 获取到的, 也就是, 通过网络请求获取到的.
+        // 所以, 最终还是存到了对方的数据库中.
         APIRequest<STPPaymentMethodListDeserializer>.getWith(
             self,
             endpoint: APIEndpointPaymentMethods,

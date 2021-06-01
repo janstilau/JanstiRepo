@@ -7,7 +7,7 @@ import PassKit
 /// :nodoc:
 public typealias PaymentResult = PaymentSheetResult
 
-/// The result of an attempt to confirm a PaymentIntent or SetupIntent
+// 专门定义一个 Enum 来处理当前的业务, 是非常普遍的行为.
 @frozen public enum PaymentSheetResult {
     /// The customer completed the payment or setup
     /// - Note: The payment may still be processing at this point; don't assume money has successfully moved.
@@ -25,18 +25,20 @@ public typealias PaymentResult = PaymentSheetResult
     case failed(error: Error)
 }
 
+// drop-in, 即插即用.
 /// A drop-in class that presents a sheet for a customer to complete their payment
 public class PaymentSheet {
     /// This contains all configurable properties of PaymentSheet
     public let configuration: Configuration
 
     /// The most recent error encountered by the customer, if any.
-    public private(set) var mostRecentError: Error?
+    public private(set) var mostRecentError: Error? // 最近发生的错误.
 
     /// Initializes a PaymentSheet
     /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
     /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+    // 使用秘钥, 以及 Config 来初始化这个类. 默认应该是支付意愿的 Secret.
     public convenience init(paymentIntentClientSecret: String, configuration: Configuration) {
         self.init(
             intentClientSecret: .paymentIntent(clientSecret: paymentIntentClientSecret),
@@ -61,15 +63,15 @@ public class PaymentSheet {
         STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(configuration: configuration)
     }
 
-    /// Presents a sheet for a customer to complete their payment
-    /// - Parameter presentingViewController: The view controller to present a payment sheet
-    /// - Parameter completion: Called with the result of the payment after the payment sheet is dismissed
+    // 真正的进行, 支付窗口弹出的方法.
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
     public func present(
         from presentingViewController: UIViewController,
         completion: @escaping (PaymentSheetResult) -> ()) {
         
+        // 在弹出的时候, 设置 PaymentSheet 的回调.
+        // 这个回调, 会在 PaymentSheetViewController 的代理方法里面触发.
         let completion: (PaymentSheetResult) -> () = { status in
             // Dismiss if necessary
             if self.bottomSheetViewController.presentingViewController != nil {
@@ -84,6 +86,7 @@ public class PaymentSheet {
         self.completion = completion
 
         // Guard against basic user error
+        // 如果, 当前的宿主 VC 已经 present 了一个 VC 了, 那么就弹出失败了.
         guard presentingViewController.presentedViewController == nil else {
             assertionFailure("presentingViewController is already presenting a view controller")
             let error = PaymentSheetError.unknown(
@@ -94,6 +97,7 @@ public class PaymentSheet {
         }
 
         // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
+        // PaymentSheet 回去读取一下, 自己存储的信息, 将存储的信息, 设置到 VC 上. 这里会初始化支付方式的信息.
         PaymentSheet.load(
             apiClient: configuration.apiClient,
             clientSecret: intentClientSecret,
@@ -136,6 +140,8 @@ public class PaymentSheet {
 
     let intentClientSecret: IntentClientSecret
     var completion: ((PaymentSheetResult) -> ())?
+    
+    // 懒加载的一个类, 承担了支付窗口的内容
     lazy var bottomSheetViewController: BottomSheetViewController = {
         let vc = BottomSheetViewController(
             contentViewController: LoadingViewController(delegate: self)
@@ -143,6 +149,7 @@ public class PaymentSheet {
         if #available(iOS 13.0, *) {
             configuration.style.configure(vc)
         }
+        vc.view.backgroundColor = .red
         return vc
     }()
 

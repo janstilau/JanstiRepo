@@ -38,6 +38,7 @@ enum Intent {
 }
 
 /// An internal type representing a PaymentIntent or SetupIntent client secret
+// 支付意愿和 Setup 意愿. 
 enum IntentClientSecret {
     /// The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
     case paymentIntent(clientSecret: String)
@@ -180,8 +181,12 @@ extension PaymentSheet {
         customerID: String? = nil,
         completion: @escaping ((Result<(Intent, [STPPaymentMethod]), Error>) -> Void)
     ) {
+        
         let intentPromise = Promise<Intent>()
         let paymentMethodsPromise = Promise<[STPPaymentMethod]>()
+        
+        // 显示进行 IntentPromise 值的确定.
+        // 在 IntentPromise 确定了值之后, 再去进行 PaymentMethodsPromise 值的确定.
         intentPromise.observe { result in
             switch result {
             case .success(let intent):
@@ -195,7 +200,6 @@ extension PaymentSheet {
                                 .contains($0.type)
                             return isSupportedByIntent && isSupportedByPaymentSheet
                         }
-
                         completion(.success((intent, savedPaymentMethods)))
                     case .failure(let error):
                         completion(.failure(error))
@@ -212,10 +216,7 @@ extension PaymentSheet {
             apiClient.retrievePaymentIntent(withClientSecret: clientSecret) {
                 paymentIntent, error in
                 guard let paymentIntent = paymentIntent, error == nil else {
-                    let error =
-                        error
-                        ?? PaymentSheetError.unknown(
-                            debugDescription: "Failed to retrieve PaymentIntent")
+                    let error = error ?? PaymentSheetError.unknown( debugDescription: "Failed to retrieve PaymentIntent")
                     intentPromise.reject(with: error)
                     return
                 }
@@ -258,10 +259,8 @@ extension PaymentSheet {
             apiClient.listPaymentMethods(forCustomer: customerID, using: ephemeralKey) {
                 paymentMethods, error in
                 guard let paymentMethods = paymentMethods, error == nil else {
-                    let error =
-                        error
-                        ?? PaymentSheetError.unknown(
-                            debugDescription: "Failed to retrieve PaymentMethods for the customer")
+                    let error = error ?? PaymentSheetError.unknown(debugDescription:
+                                                                    "Failed to retrieve PaymentMethods for the customer")
                     paymentMethodsPromise.reject(with: error)
                     return
                 }
