@@ -23,6 +23,10 @@ import Dispatch
 
  - Note: the block you pass executes immediately on the current thread/queue.
  */
+
+// body 的函数签名不同, 会走不同的函数.
+// 因为, throw 本质上是返回值不同, 所以, 同样的函数签名, 增加了 throw 的话, 其实是走不同的编译路线.
+
 public func firstly<U: Thenable>(execute body: () throws -> U) -> Promise<U.T> {
     do {
         let rp = Promise<U.T>(.pending)

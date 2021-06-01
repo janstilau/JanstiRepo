@@ -3,6 +3,7 @@ import Dispatch
 import XCTest
 
 class PromiseTests: XCTestCase {
+    
     func testIsPending() {
         XCTAssertTrue(Promise<Void>.pending().promise.isPending)
         XCTAssertFalse(Promise().isPending)

@@ -1,6 +1,3 @@
-![PromiseKit](../gh-pages/public/img/logo-tight.png)
-
-[![badge-pod][]][cocoapods] ![badge-languages][] ![badge-pms][] ![badge-platforms][] [![badge-travis][]][travis]
 
 ---
 

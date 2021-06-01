@@ -127,20 +127,20 @@
 		B6370758251057890094499F /* PaymentSheet Example */ = {
 			isa = PBXGroup;
 			children = (
+				B6B1CE8725771A48004FEF25 /* PaymentSheet Example.entitlements */,
+				B63707672510578D0094499F /* Info.plist */,
 				B6370759251057890094499F /* AppDelegate.swift */,
-				B63707622510578D0094499F /* Assets.xcassets */,
 				B67BC541257ABF8D00B7349B /* ExampleCheckoutViewController.swift */,
 				B68A9E31257D8E8800E904B5 /* ExampleCustomCheckoutViewController.swift */,
 				31319EE725B2328700C89E30 /* ExampleSwiftUICustomPaymentFlow.swift */,
 				31319EE325B11FA000C89E30 /* ExampleSwiftUIPaymentSheet.swift */,
 				31319EE525B21DC200C89E30 /* ExampleSwiftUIViews.swift */,
-				B63707672510578D0094499F /* Info.plist */,
-				B63707642510578D0094499F /* LaunchScreen.storyboard */,
-				B637075F251057890094499F /* Main.storyboard */,
-				B6B1CE8725771A48004FEF25 /* PaymentSheet Example.entitlements */,
 				B637075D251057890094499F /* PaymentSheetTestPlayground.swift */,
 				36002B4A25803B3100E46F8B /* SceneDelegate.swift */,
 				B67BC53C257AB9D300B7349B /* ViewController.swift */,
+				B63707622510578D0094499F /* Assets.xcassets */,
+				B63707642510578D0094499F /* LaunchScreen.storyboard */,
+				B637075F251057890094499F /* Main.storyboard */,
 			);
 			path = "PaymentSheet Example";
 			sourceTree = "<group>";

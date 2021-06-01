@@ -1,10 +1,16 @@
 import Dispatch
 
+// 表达 Promise 状态的类型.
+// R 表示 Promise 的结果.
+// 如果, 一个 Promise 还在等待结果, 那么它就是 pending. 关联值就是所有对于这个结果感兴趣的 handlers.
+// 如果, 一个 Promise 被满足了, 那么状态就变为了 resolved. 关联值, 就是这个 Promise 的期望值.
 enum Sealant<R> {
     case pending(Handlers<R>)
     case resolved(R)
 }
 
+// R 表示 Promise 的结果.
+// Handler 用于保存处理 Promise 结果的 handler.
 final class Handlers<R> {
     var bodies: [(R) -> Void] = []
     func append(_ item: @escaping(R) -> Void) { bodies.append(item) }
@@ -12,11 +18,12 @@ final class Handlers<R> {
 
 /// - Remark: not protocol ∵ http://www.russbishop.net/swift-associated-types-cont
 class Box<T> {
-    func inspect() -> Sealant<T> { fatalError() }
+    func inspect() -> Sealant<T> { fatalError() } // 用户返回当前 Box 的 Promise 状态.
     func inspect(_: (Sealant<T>) -> Void) { fatalError() }
     func seal(_: T) {}
 }
 
+// 一个已经封装好的 Box. 也就是, 它的状态已经变为了 Resolved 了, 其中, 已经包含了 Promise 的结果了. 已经无法对状态进行修改了.
 final class SealedBox<T>: Box<T> {
     let value: T
 
@@ -29,6 +36,7 @@ final class SealedBox<T>: Box<T> {
     }
 }
 
+// 空箱子, 等待往里面填充值.
 class EmptyBox<T>: Box<T> {
     private var sealant = Sealant<T>.pending(.init())
     private let barrier = DispatchQueue(label: "org.promisekit.barrier", attributes: .concurrent)
