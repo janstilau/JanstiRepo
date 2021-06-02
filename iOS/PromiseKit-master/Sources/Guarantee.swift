@@ -24,7 +24,7 @@ public final class Guarantee<T>: Thenable {
         body(box.seal)
     }
 
-    /// - See: `Thenable.pipe`
+    // 一定是 fullfilled
     public func pipe(to: @escaping(Result<T>) -> Void) {
         pipe{ to(.fulfilled($0)) }
     }
@@ -78,8 +78,12 @@ public final class Guarantee<T>: Thenable {
 
 public extension Guarantee {
     @discardableResult
-    func done(on: DispatchQueue? = conf.Q.return, flags: DispatchWorkItemFlags? = nil, _ body: @escaping(T) -> Void) -> Guarantee<Void> {
+    func done(on: DispatchQueue? = conf.Q.return,
+              flags: DispatchWorkItemFlags? = nil,
+              _ body: @escaping(T) -> Void) -> Guarantee<Void> {
         let rg = Guarantee<Void>(.pending)
+        
+        // rg.box.seal(()) 仅仅是让, rg 的状态变为 resolved. 没有传递过一个 value 过去.
         pipe { (value: T) in
             on.async(flags: flags) {
                 body(value)
@@ -118,6 +122,7 @@ public extension Guarantee {
     }
     #endif
 
+    // 因为这个方法, 明确的表明了, 返回值可以不被使用. 所以才没有的警告.
     @discardableResult
     func then<U>(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ body: @escaping(T) -> Guarantee<U>) -> Guarantee<U> {
         let rg = Guarantee<U>(.pending)

@@ -99,10 +99,6 @@ public extension Thenable {
                //…
            }
      */
-    // 相比较 Then, Map 所做的, 仅仅是对于当前 Promise 的 Result 值的转化.
-    // Map 不会生成一个新的 Promise 去触发返回值 Promise.
-    // 也就是说, 当前 Promise resolved 之后, 将结果交给 Map 进行映射, 然后就触发返回值 Promise.
-    // 结果就是映射的结果.
     func map<U>(on: DispatchQueue? = conf.Q.map,
                 flags: DispatchWorkItemFlags? = nil,
                 _ transform: @escaping(T) throws -> U) -> Promise<U> {
@@ -288,10 +284,7 @@ public extension Thenable {
            }
      */
     /*
-        这里是使用了 Map 实现 Get.
-        Map 的 transform 里面, 获得的是上一个 Promise 的 RESULT.
-        Get 的 body, 得到这个值, 做一些事情. 然后这个 Result 原封不动的返回了.
-        这里, 还是会生成一个新的 Promise, 不过没有对于整个事件链条有影响.
+        Body 是 T -> Void 的, 是因为, 实际上, Map 的 Closure 的签名是 T->T
      */
     func get(on: DispatchQueue? = conf.Q.return,
              flags: DispatchWorkItemFlags? = nil,

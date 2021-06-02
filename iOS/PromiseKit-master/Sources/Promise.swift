@@ -44,11 +44,11 @@ public final class Promise<T>: Thenable, CatchMixin {
         bridge.pipe(to: box.seal)
     }
 
-    /// Initialize a new promise that can be resolved with the provided `Resolver`.
+    // 使用这个方法, 来开启一个异步操作. 在异步操作的合适的位置, 调用 resolver 的 fullfil 或者 reject 方法.
+    // 从实现我们看出, 是将数据, 从 body 之外准备好, 然后在 body 内修改这些数据, 数据本身是 Box 相关的, 这样, box 改变状态之后, 触发自己存储的回调.
     public init(resolver body: (Resolver<T>) throws -> Void) {
         // Resolver 其实就是对于 Box 操作的封装, body 对于 Resolver 的操作, 其实就是对于 Box 的操作.
         // Box 又是 Promise 的成员变量状态值, 所以, body 里面, 能够直接影响到 Promiese.
-        // 一般来说, 这个 Body 应该是一个异步操作, 这样才能够给 Promise 时机, 进行后续 then 的添加.
         box = EmptyBox()
         let resolver = Resolver(box)
         do {
