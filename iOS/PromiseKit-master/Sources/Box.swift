@@ -17,7 +17,6 @@ final class Handlers<R> {
 
 // Promise 内, 存储的是 Box 作为数据成员.
 // inspect -> 返回当前的状态.
-// inspect(Block), 添加回调闭包.
 // seal(_ : T), 将 Box 的状态, 变为 Resolved, 并且传递最终值.
 class Box<T> {
     func inspect() -> Sealant<T> { fatalError() } // 用户返回当前 Box 的 Promise 状态.
@@ -78,7 +77,11 @@ class EmptyBox<T>: Box<T> {
         return rv
     }
 
-    // 向 Sealant 中添加回调.
+    // 这里, 类似于 with 函数.
+    // with 函数是取得自身的某个值, 然后将这个值传递到闭包里面调用.
+    // 这里, inspect 是取得自己的 sealant 的值, 然后传到 body 里面被使用.
+    // 这里, body 的调用, 是在线程安全的情况下.
+    // 所以, body 是在锁的环境下执行的.
     override func inspect(_ body: (Sealant<T>) -> Void) {
         var sealed = false
         barrier.sync(flags: .barrier) {
@@ -99,13 +102,20 @@ class EmptyBox<T>: Box<T> {
 }
 
 
+// 这里很像是 Wrapper Base 的模型.
+// Optinal 是 Wrapper, 当它的 Base 是 DispatchQueue 的时候, 才可以使用这个方法.
+// 各种操作, 都是交给关联的 Wrapped 值进行操作. Optinal 就是一个盒子而已.
+// 这么看, Swfit 特别流行的 Wrapper Base 模式, 就是 Optinal 的仿造而已.
 extension Optional where Wrapped: DispatchQueue {
     @inline(__always)
-    func async(flags: DispatchWorkItemFlags?, _ body: @escaping() -> Void) {
+    func async(flags: DispatchWorkItemFlags?,
+               _ body: @escaping() -> Void) {
         switch self {
         case .none:
+            // 如果, 没有提供 queue, 就直接在当前线程进行 body 的调用, 没有线程切换
             body()
         case .some(let q):
+            // 斗则, 就使用提供的 Queue 进行切换.
             if let flags = flags {
                 q.async(flags: flags, execute: body)
             } else {

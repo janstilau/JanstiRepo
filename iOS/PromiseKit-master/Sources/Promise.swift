@@ -55,13 +55,23 @@ public final class Promise<T>: Thenable, CatchMixin {
         return { ($0, Resolver($0.box)) }(Promise<T>(.pending))
     }
 
-    /// - See: `Thenable.pipe`
+    /*
+        Promise 对于 Pipe 的实现.
+        获取当前 sealant 的状态. 如果还是 pending, 就将回调, 添加到 handlers的 闭包数组里面.
+     */
     public func pipe(to: @escaping(Result<T>) -> Void) {
+        // 这里有一个 double check.
         switch box.inspect() {
         case .pending:
+            // inspect 函数, 本身会有线程同步的考虑.
+            // 所以这里是有一个 double check 的技术.
+            // 首先, box.inspect()  获取到一个值, 进入到了逻辑分支里.
+            // 然后 box.inspect {} 上锁, 并且在上锁后, 重新进行一次逻辑判断.
+            // 锁内的代码是单独线程执行的, 这样, 就算有两个线程同时进入了 pending 分支, 因为一先一后的顺序, 后进入的线程, 还是能够确保使用的是准确的数据.
             box.inspect {
                 switch $0 {
                 case .pending(let handlers):
+                    // 如果, 还在未 Resolved 的状态, 就把回调添加到 handlers 的数组里面.
                     handlers.append(to)
                 case .resolved(let value):
                     to(value)
@@ -76,9 +86,9 @@ public final class Promise<T>: Thenable, CatchMixin {
     public var result: Result<T>? {
         switch box.inspect() {
         case .pending:
-            return nil
+            return nil // 如果, 还是 pending 状态, 就没有结果.
         case .resolved(let result):
-            return result
+            return result // 只有, 明显的进行了 Resolved, 才能获取到对应的结果.
         }
     }
 

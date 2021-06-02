@@ -4,6 +4,7 @@ import Dispatch
 /*
  A `Guarantee` is a functional abstraction around an asynchronous operation that cannot error.
  - See: `Thenable`
+ 也就是说, 这个类型的 Box, 只会是 fullfil 的状态, 不可能是 rejected.
 */
 public final class Guarantee<T>: Thenable {
     let box: PromiseKit.Box<T>
