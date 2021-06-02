@@ -22,42 +22,18 @@ public final class Promise<T>: Thenable, CatchMixin {
         self.box = box
     }
 
-    /**
-      Initialize a new fulfilled promise.
-
-      We do not provide `init(value:)` because Swift is “greedy”
-      and would pick that initializer in cases where it should pick
-      one of the other more specific options leading to Promises with
-      `T` that is eg: `Error` or worse `(T->Void,Error->Void)` for
-      uses of our PMK < 4 pending initializer due to Swift trailing
-      closure syntax (nothing good comes without pain!).
-
-      Though often easy to detect, sometimes these issues would be
-      hidden by other type inference leading to some nasty bugs in
-      production.
-
-      In PMK5 we tried to work around this by making the pending
-      initializer take the form `Promise(.pending)` but this led to
-      bad migration errors for PMK4 users. Hence instead we quickly
-      released PMK6 and now only provide this initializer for making
-      sealed & fulfilled promises.
-
-      Usage is still (usually) good:
-
-          guard foo else {
-              return .value(bar)
-          }
-     */
+    // 使用一个值初始化 Promise, 就是 SealedBox, fullfilled 的状态.
     public static func value(_ value: T) -> Promise<T> {
         return Promise(box: SealedBox(value: .fulfilled(value)))
     }
 
-    /// Initialize a new rejected promise.
+    // 使用一个 Error 初始化 Promies, 就是 SealedBox, Rejected 的状态.
     public init(error: Error) {
         box = SealedBox(value: .rejected(error))
     }
 
     /// Initialize a new promise bound to the provided `Thenable`.
+    // Thenable 完成之后, 触发 Box. 而不是 Box 触发 Thenable.
     public init<U: Thenable>(_ bridge: U) where U.T == T {
         box = EmptyBox()
         bridge.pipe(to: box.seal)

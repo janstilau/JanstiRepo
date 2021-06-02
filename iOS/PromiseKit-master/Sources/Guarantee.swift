@@ -1,7 +1,7 @@
 import class Foundation.Thread
 import Dispatch
 
-/**
+/*
  A `Guarantee` is a functional abstraction around an asynchronous operation that cannot error.
  - See: `Thenable`
 */
