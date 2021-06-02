@@ -1,20 +1,30 @@
 import Dispatch
 
 // Thenable represents an asynchronous operation that can be chained.
+
+// Thenable 表示的结果, 为一个 Result.
 public protocol Thenable: AnyObject {
     /// The type of the wrapped value
+    // Thenable 表示的结果中, success 会产出的值的类型.
     associatedtype T
 
     /// `pipe` is immediately executed when this `Thenable` is resolved
+    
+    // 使用这个函数, 为 Thenable 增加一个回调函数.
     func pipe(to: @escaping(Result<T>) -> Void)
 
     /// The resolved result or nil if pending.
+    
+    // 当前的 Thenable 的结果.
     var result: Result<T>? { get }
 }
 
 public extension Thenable {
-    /**
+    /*
      The provided closure executes when this promise is fulfilled.
+     
+     当 Promise Resolved 之后, 并且状态为 Fullfil 之后, 就会执行通过 then 添加上去的各种回调.
+     这些回调, 接受 T 为参数.
      
      This allows chaining promises. The promise returned by the provided closure is resolved before the promise returned by this closure resolves.
      
@@ -30,7 +40,9 @@ public extension Thenable {
                //…
            }
      */
-    func then<U: Thenable>(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ body: @escaping(T) throws -> U) -> Promise<U.T> {
+    func then<U: Thenable>(on: DispatchQueue? = conf.Q.map,
+                           flags: DispatchWorkItemFlags? = nil,
+                           _ body: @escaping(T) throws -> U) -> Promise<U.T> {
       
         // Body 返回一个 Promise, 所以, 最直观的想法是, body 返回的 Promise 链接后面的 then.
         // 当, body 产生的 Promise resolved 之后, 触发 then 后的操作.
