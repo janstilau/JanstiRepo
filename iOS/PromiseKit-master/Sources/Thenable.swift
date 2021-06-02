@@ -2,6 +2,12 @@ import Dispatch
 
 // Thenable represents an asynchronous operation that can be chained.
 
+/*
+    Then 仅仅是一个协议, 通过 pipe, 和 result 的限制, 完成了大量的核心方法.
+    而 pipe 里面, 是真正的对于数据的管理.
+ */
+
+
 // Thenable 表示的结果, 为一个 Result.
 public protocol Thenable: AnyObject {
     /// The type of the wrapped value
@@ -11,11 +17,11 @@ public protocol Thenable: AnyObject {
     /// `pipe` is immediately executed when this `Thenable` is resolved
     
     // 使用这个函数, 为 Thenable 增加一个回调函数.
-    // 
+    // 如果, 已经是 resolved 的状态, 就将存储的结果, 传递进去立马调用
+    // 如果, 还是在 pending 的状态, 就存储这个回调, 在自己变为 resolved 的状态之后, 会逐个调用存储的闭包.
     func pipe(to: @escaping(Result<T>) -> Void)
 
     /// The resolved result or nil if pending.
-    
     // 当前的 Thenable 的结果.
     var result: Result<T>? { get }
 }
@@ -28,7 +34,7 @@ public extension Thenable {
      这些回调, 接受 T 为参数.
      
      This allows chaining promises. The promise returned by the provided closure is resolved before the promise returned by this closure resolves.
-     
+     body 返回的 Promise 先触发, 它用来设置 返回值的 Promise. 然后返回值的 Promise, 用来触发后续的操作.
      - Parameter on: The queue to which the provided closure dispatches.
      - Parameter body: The closure that executes when this promise is fulfilled. It must return a promise.
      - Returns: A new promise that resolves when the promise returned from the provided closure resolves. For example:
@@ -40,6 +46,15 @@ public extension Thenable {
            }.done { transformation in
                //…
            }
+     */
+    
+    /*
+        自己变为 Resolved 状态, 会触发 pipe 里面的操作.
+        触发的时候, 可能会引起 DispatchQueue 的调用.
+        这个时候, 才会触发 Body 调用, 生成一个新的 Promise.
+        这个新生成的 Promise, 可能是一个异步操作结果的封装. 所以 Body 里面, 很有可能还是一个异步操作. 这个异步操作到最后, 才会修改 Promise 的值.
+        这个 Promise 的状态改变, 才会触发返回值 Promise 的状态改变.
+        而返回值 Promise 状态改变之后, 才会触发后面的 then 添加的回调.
      */
     func then<U: Thenable>(on: DispatchQueue? = conf.Q.map,
                            flags: DispatchWorkItemFlags? = nil,
@@ -58,13 +73,16 @@ public extension Thenable {
                     }
                 }
             case .rejected(let error):
+                // 如果, 当前的失败了. 那么并不会触发 Body.
+                // 而是直接将返回值 Promise 状态修改为 resolved(rejected)
+                // 这样, 所有的这个 Promise 的 then 都会变为 rejected, 从而触发最终的 Catch.
                 rp.box.seal(.rejected(error))
             }
         }
         return rp
     }
 
-    /**
+    /*
      The provided closure is executed when this promise is fulfilled.
      
      This is like `then` but it requires the closure to return a non-promise.
@@ -81,7 +99,13 @@ public extension Thenable {
                //…
            }
      */
-    func map<U>(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ transform: @escaping(T) throws -> U) -> Promise<U> {
+    // 相比较 Then, Map 所做的, 仅仅是对于当前 Promise 的 Result 值的转化.
+    // Map 不会生成一个新的 Promise 去触发返回值 Promise.
+    // 也就是说, 当前 Promise resolved 之后, 将结果交给 Map 进行映射, 然后就触发返回值 Promise.
+    // 结果就是映射的结果.
+    func map<U>(on: DispatchQueue? = conf.Q.map,
+                flags: DispatchWorkItemFlags? = nil,
+                _ transform: @escaping(T) throws -> U) -> Promise<U> {
         let rp = Promise<U>(.pending)
         pipe {
             switch $0 {
@@ -101,14 +125,19 @@ public extension Thenable {
     }
 
     #if swift(>=4) && !swift(>=5.2)
-    /**
+    /*
      Similar to func `map<U>(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ transform: @escaping(T) throws -> U) -> Promise<U>`, but accepts a key path instead of a closure.
      
      - Parameter on: The queue to which the provided key path for value dispatches.
      - Parameter keyPath: The key path to the value that is using when this Promise is fulfilled.
      - Returns: A new promise that is fulfilled with the value for the provided key path.
      */
-    func map<U>(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ keyPath: KeyPath<T, U>) -> Promise<U> {
+    func map<U>(on: DispatchQueue? = conf.Q.map,
+                flags: DispatchWorkItemFlags? = nil,
+                _ keyPath: KeyPath<T, U>) -> Promise<U> {
+        // 就是一个特殊的 Map 的方式.
+        // 从 (U)-> T
+        // 变为了从 U 上, 使用特殊的 KeyPath 取 T .
         let rp = Promise<U>(.pending)
         pipe {
             switch $0 {
@@ -124,7 +153,7 @@ public extension Thenable {
     }
     #endif
 
-    /**
+    /*
       The provided closure is executed when this promise is fulfilled.
 
       In your closure return an `Optional`, if you return `nil` the resulting promise is rejected with `PMKError.compactMap`, otherwise the promise is fulfilled with the unwrapped value.
@@ -139,7 +168,10 @@ public extension Thenable {
                // either `PMKError.compactMap` or a `JSONError`
            }
      */
-    func compactMap<U>(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ transform: @escaping(T) throws -> U?) -> Promise<U> {
+    // 和 Map 相比, 如果 compactMap 的 tranform 返回一个 nil. 那么, 就是 reject 的效果.
+    func compactMap<U>(on: DispatchQueue? = conf.Q.map,
+                       flags: DispatchWorkItemFlags? = nil,
+                       _ transform: @escaping(T) throws -> U?) -> Promise<U> {
         let rp = Promise<U>(.pending)
         pipe {
             switch $0 {
@@ -163,14 +195,17 @@ public extension Thenable {
     }
 
     #if swift(>=4) && !swift(>=5.2)
-    /**
+    /*
     Similar to func `compactMap<U>(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ transform: @escaping(T) throws -> U?) -> Promise<U>`, but accepts a key path instead of a closure.
     
     - Parameter on: The queue to which the provided key path for value dispatches.
     - Parameter keyPath: The key path to the value that is using when this Promise is fulfilled. If the value for `keyPath` is `nil` the resulting promise is rejected with `PMKError.compactMap`.
     - Returns: A new promise that is fulfilled with the value for the provided key path.
     */
-    func compactMap<U>(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ keyPath: KeyPath<T, U?>) -> Promise<U> {
+    // 一个特殊的 CompactMap. 使用 keypath 进行取值作为 transform.
+    func compactMap<U>(on: DispatchQueue? = conf.Q.map,
+                       flags: DispatchWorkItemFlags? = nil,
+                       _ keyPath: KeyPath<T, U?>) -> Promise<U> {
         let rp = Promise<U>(.pending)
         pipe {
             switch $0 {
@@ -194,7 +229,7 @@ public extension Thenable {
     }
     #endif
 
-    /**
+    /*
      The provided closure is executed when this promise is fulfilled.
      
      Equivalent to `map { x -> Void in`, but since we force the `Void` return Swift
@@ -210,7 +245,9 @@ public extension Thenable {
                print(response.data)
            }
      */
-    func done(on: DispatchQueue? = conf.Q.return, flags: DispatchWorkItemFlags? = nil, _ body: @escaping(T) throws -> Void) -> Promise<Void> {
+    func done(on: DispatchQueue? = conf.Q.return,
+              flags: DispatchWorkItemFlags? = nil,
+              _ body: @escaping(T) throws -> Void) -> Promise<Void> {
         let rp = Promise<Void>(.pending)
         pipe {
             switch $0 {
@@ -230,7 +267,7 @@ public extension Thenable {
         return rp
     }
 
-    /**
+    /*
      The provided closure is executed when this promise is fulfilled.
      
      This is like `done` but it returns the same value that the handler is fed.
@@ -250,14 +287,23 @@ public extension Thenable {
                print(foo, " is Void")
            }
      */
-    func get(on: DispatchQueue? = conf.Q.return, flags: DispatchWorkItemFlags? = nil, _ body: @escaping (T) throws -> Void) -> Promise<T> {
-        return map(on: on, flags: flags) {
+    /*
+        这里是使用了 Map 实现 Get.
+        Map 的 transform 里面, 获得的是上一个 Promise 的 RESULT.
+        Get 的 body, 得到这个值, 做一些事情. 然后这个 Result 原封不动的返回了.
+        这里, 还是会生成一个新的 Promise, 不过没有对于整个事件链条有影响.
+     */
+    func get(on: DispatchQueue? = conf.Q.return,
+             flags: DispatchWorkItemFlags? = nil,
+             _ body: @escaping (T) throws -> Void) -> Promise<T> {
+        return map(on: on,
+                   flags: flags) {
             try body($0)
             return $0
         }
     }
 
-    /**
+    /*
      The provided closure is executed with promise result.
 
      This is like `get` but provides the Result<T> of the Promise so you can inspect the value of the chain at this point without causing any side effects.
@@ -268,8 +314,13 @@ public extension Thenable {
 
      promise.tap{ print($0) }.then{ /*…*/ }
      */
-    func tap(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ body: @escaping(Result<T>) -> Void) -> Promise<T> {
+    func tap(on: DispatchQueue? = conf.Q.map,
+             flags: DispatchWorkItemFlags? = nil,
+             _ body: @escaping(Result<T>) -> Void) -> Promise<T> {
+        // Promise 通过一个操作 Resolver 的闭包进行初始化.
         return Promise { seal in
+            // seal 目前, 操作的就是新生成的 Promise 的 Box.
+            // pipe 表明了, 只有 Self Resolved 之后, seal 才会修改当前生成的 Promise 的 Box. 才会触发后续的操作.
             pipe { result in
                 on.async(flags: flags) {
                     body(result)

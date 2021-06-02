@@ -24,7 +24,7 @@ class Box<T> {
     func seal(_: T) {}
 }
 
-// 一个已经封装好的 Box. 也就是, 它的状态已经变为了 Resolved 了, 其中, 已经包含了 Promise 的结果了. 已经无法对状态进行修改了.
+// 一个已经 Sealed 的 Box, 是无法再次修改自己的状态的.
 final class SealedBox<T>: Box<T> {
     let value: T
 
@@ -37,10 +37,9 @@ final class SealedBox<T>: Box<T> {
     }
 }
 
-// 空箱子, 等待往里面填充值.
-// 这种 Box, 才可能进行状态的改变.
 class EmptyBox<T>: Box<T> {
     
+    // EmptyBox 才可以进行数据的改变. 其实就是从 pending 到 resolved.
     private var sealant = Sealant<T>.pending(.init())
     /*
      concurrent:
@@ -63,10 +62,6 @@ class EmptyBox<T>: Box<T> {
         if let handlers = handlers {
             handlers.bodies.forEach{ $0(value) }
         }
-
-        //TODO solution is an unfortunate third state “sealed” where then's get added
-        // to a separate handler pool for that state
-        // any other solution has potential races
     }
 
     override func inspect() -> Sealant<T> {

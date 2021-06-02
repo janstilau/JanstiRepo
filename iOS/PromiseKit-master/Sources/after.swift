@@ -1,7 +1,7 @@
 import struct Foundation.TimeInterval
 import Dispatch
 
-/**
+/*
      after(seconds: 1.5).then {
          //…
      }

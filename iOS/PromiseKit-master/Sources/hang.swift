@@ -1,7 +1,7 @@
 import Foundation
 import CoreFoundation
 
-/**
+/*
  Runs the active run-loop until the provided promise resolves.
 
  This is for debug and is not a generally safe function to use in your applications. We mostly provide it for use in testing environments.
@@ -30,6 +30,7 @@ public func hang<T>(_ promise: Promise<T>) throws -> T {
     let runLoopMode: CFRunLoopMode = CFRunLoopMode.defaultMode
 #endif
 
+    // 这里的实现, 和 XCTest 的实现是一致的. 就是 promise 如果没有处于 resolved 的状态的话, 就一直处于 Runloop 的 run 中.
     if promise.isPending {
         var context = CFRunLoopSourceContext()
         let runLoop = CFRunLoopGetCurrent()

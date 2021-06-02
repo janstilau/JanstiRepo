@@ -1,5 +1,11 @@
-/// An object for resolving promises
+
+
+// Resolver 就是对于 box 操作的封装.
+
 public final class Resolver<T> {
+    // 这里, Box 里面的 T 的类型, 是 Result<T>
+    // 所以, Box 里面的 value 的类型, 不是 T, 而是 Result.
+    // 所有的 box 值的设定, 都是传递一个 Result. 
     let box: Box<Result<T>>
 
     init(_ box: Box<Result<T>>) {
@@ -14,12 +20,13 @@ public final class Resolver<T> {
 }
 
 public extension Resolver {
-    /// Fulfills the promise with the provided value
+    
+    // FullFill 就是将封装的 Box seal 到 Fullfilled 的状态.
     func fulfill(_ value: T) {
         box.seal(.fulfilled(value))
     }
 
-    /// Rejects the promise with the provided error
+    // reject 就是将封装的 Box seal 到 Rejected 的状态.
     func reject(_ error: Error) {
         box.seal(.rejected(error))
     }
@@ -29,7 +36,8 @@ public extension Resolver {
         box.seal(result)
     }
 
-    /// Resolves the promise with the provided value or error
+    // 如果有 error, 就是 reject, 如果有 obj, 就是 fullfull
+    // 否则, 就是一个默认的 error 进行 reject.
     func resolve(_ obj: T?, _ error: Error?) {
         if let error = error {
             reject(error)

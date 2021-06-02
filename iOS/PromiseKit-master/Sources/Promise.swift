@@ -9,12 +9,18 @@ import Dispatch
  Sealant 被 Box 封装了一层, Box 体现的数据概念和 Sealant 一致的.
  Promise 表示的是, 结果成功了还是失败了. 无论是成功还是失败, 都是完成的状态.
  所以, Promise 还会有没有完成的状态.
- Promise 的成员变量是 Box, 这个值, 本身带有三层含义.
- 1. 没有完成, 存储了各种回调在 pending 状态的 handlers 里面
- 2. 完成了. Resolved 的 Result 里面, 是 fullfil 的状态.
- 3. 完成了. resolved 的 Result 里面, 是 Rejected 的状态.
- 
  */
+
+/*
+ Promise，里面保存着某个未来才会结束的事件（通常是一个异步操作）的结果.
+ 并不是 Promise 里面有个异步操作, 而是异步操作的最后, 去操作 Promise 对象.
+ 比如网络请求, 在最后的 completion 里面, 调用 Promise 的 fullfil 或者 reject 方法, 来设置 Promise 的结果.
+ Promise 里面, 存储的是后续的一系列回调方法, 或者最终自己的 Result 状态.
+ 异步操作里面, 引用到 Promise, 在合理的实际, 触发 Promise 的状态改变.
+ 由 Promise 来触发后续的逻辑.
+ */
+
+
 public final class Promise<T>: Thenable, CatchMixin {
     let box: Box<Result<T>>
 
@@ -26,14 +32,13 @@ public final class Promise<T>: Thenable, CatchMixin {
     public static func value(_ value: T) -> Promise<T> {
         return Promise(box: SealedBox(value: .fulfilled(value)))
     }
-
     // 使用一个 Error 初始化 Promies, 就是 SealedBox, Rejected 的状态.
     public init(error: Error) {
         box = SealedBox(value: .rejected(error))
     }
 
-    /// Initialize a new promise bound to the provided `Thenable`.
     // Thenable 完成之后, 触发 Box. 而不是 Box 触发 Thenable.
+    // 所以, 这里的限制是, U.T == T, 也就是 Thenable 的输出, 要和自己的 Result 的类型相同.
     public init<U: Thenable>(_ bridge: U) where U.T == T {
         box = EmptyBox()
         bridge.pipe(to: box.seal)
@@ -41,6 +46,9 @@ public final class Promise<T>: Thenable, CatchMixin {
 
     /// Initialize a new promise that can be resolved with the provided `Resolver`.
     public init(resolver body: (Resolver<T>) throws -> Void) {
+        // Resolver 其实就是对于 Box 操作的封装, body 对于 Resolver 的操作, 其实就是对于 Box 的操作.
+        // Box 又是 Promise 的成员变量状态值, 所以, body 里面, 能够直接影响到 Promiese.
+        // 一般来说, 这个 Body 应该是一个异步操作, 这样才能够给 Promise 时机, 进行后续 then 的添加.
         box = EmptyBox()
         let resolver = Resolver(box)
         do {
@@ -50,14 +58,17 @@ public final class Promise<T>: Thenable, CatchMixin {
         }
     }
 
-    /// - Returns: a tuple of a new pending promise and its `Resolver`.
-    public class func pending() -> (promise: Promise<T>, resolver: Resolver<T>) {
+    // - Returns: a tuple of a new pending promise and its `Resolver`.
+    public class func pending() -> (promise: Promise<T>,
+                                    resolver: Resolver<T>) {
+        // 非常诡异的写法, 生成了一个 Promise, 然后传递到闭包里面.
+        // 闭包里面, 生成一个元组.
+        // 在外界生成, 然后产生一个 Resolver, 返回元组不同一的结果吗.
         return { ($0, Resolver($0.box)) }(Promise<T>(.pending))
     }
 
     /*
-        Promise 对于 Pipe 的实现.
-        获取当前 sealant 的状态. 如果还是 pending, 就将回调, 添加到 handlers的 闭包数组里面.
+        Pipe, 如果自己的状态改变了, 应该调用什么 Block.
      */
     public func pipe(to: @escaping(Result<T>) -> Void) {
         // 这里有一个 double check.
@@ -82,7 +93,8 @@ public final class Promise<T>: Thenable, CatchMixin {
         }
     }
 
-    /// - See: `Thenable.result`
+    // 获取当前的结果. 如果是 Pending 状态的时候, 就是 nil.
+    // 如果是 resolved 的状态, 一定有值.
     public var result: Result<T>? {
         switch box.inspect() {
         case .pending:
@@ -92,16 +104,20 @@ public final class Promise<T>: Thenable, CatchMixin {
         }
     }
 
+    // 一个非常特殊的初始化方法. (Promise<T>(.pending)) 能够编译成功的基础.
+    // 不太明白, 为什么不是 init().
     init(_: PMKUnambiguousInitializer) {
         box = EmptyBox()
     }
 }
 
 public extension Promise {
-    /**
+    /*
      Blocks this thread, so—you know—don’t call this on a serial thread that
-     any part of your chain may use. Like the main thread for example.
+     any part of your chain may use.
+     Like the main thread for example.
      */
+    
     func wait() throws -> T {
 
         if Thread.isMainThread {
@@ -113,7 +129,11 @@ public extension Promise {
         if result == nil {
             let group = DispatchGroup()
             group.enter()
-            pipe { result = $0; group.leave() }
+            // 如果, 自己的状态从 Pending 到 Resolved 之后,
+            pipe {
+                result = $0
+                group.leave()
+            }
             group.wait()
         }
 
@@ -156,7 +176,20 @@ public extension DispatchQueue {
      - Note: There is no Promise/Thenable version of this due to Swift compiler ambiguity issues.
      */
     @available(macOS 10.10, iOS 8.0, tvOS 9.0, watchOS 2.0, *)
-    final func async<T>(_: PMKNamespacer, group: DispatchGroup? = nil, qos: DispatchQoS = .default, flags: DispatchWorkItemFlags = [], execute body: @escaping () throws -> T) -> Promise<T> {
+    
+    /*
+        DispatchQueue的扩展, 通过一个特殊类型的变量, 复用了原有的 async 方法.
+        PMKNamespacer 就如同 type traits 一样, 仅仅是为了方法分发用的. 这个类型, 没有任何的意义.
+     */
+    final func async<T>(_: PMKNamespacer,
+                        group: DispatchGroup? = nil,
+                        qos: DispatchQoS = .default,
+                        flags: DispatchWorkItemFlags = [],
+                        execute body: @escaping () throws -> T) -> Promise<T> {
+
+        // 从这里, 可以看出平时自定义一个返回 Promise 是怎么实现的.
+        // 生成一个空的 Promise. 然后在异步操作中, 去修改这个 Promise 的状态.
+        // 返回这个 promise, 这样, 外界就可以使用 promise 去收集后续的回调了.
         let promise = Promise<T>(.pending)
         async(group: group, qos: qos, flags: flags) {
             do {

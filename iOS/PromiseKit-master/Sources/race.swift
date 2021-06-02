@@ -1,6 +1,7 @@
 import Dispatch
 
 @inline(__always)
+// 就是, 生成一个 Promise, 然后将所有数组里面的 Promise 的回调, 都添加为这个新生成 Promise 的 seal.
 private func _race<U: Thenable>(_ thenables: [U]) -> Promise<U.T> {
     let rp = Promise<U.T>(.pending)
     for thenable in thenables {
@@ -9,7 +10,7 @@ private func _race<U: Thenable>(_ thenables: [U]) -> Promise<U.T> {
     return rp
 }
 
-/**
+/*
  Waits for one promise to resolve
 
      race(promise1, promise2, promise3).then { winner in
