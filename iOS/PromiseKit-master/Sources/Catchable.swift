@@ -21,8 +21,15 @@ public extension CatchMixin {
      - SeeAlso: [Cancellation](https://github.com/mxcl/PromiseKit/blob/master/Documentation/CommonPatterns.md#cancellation)
      */
     @discardableResult
-    func `catch`(on: DispatchQueue? = conf.Q.return, flags: DispatchWorkItemFlags? = nil, policy: CatchPolicy = conf.catchPolicy, _ body: @escaping(Error) -> Void) -> PMKFinalizer {
+    func `catch`(on: DispatchQueue? = conf.Q.return,
+                 flags: DispatchWorkItemFlags? = nil,
+                 policy: CatchPolicy = conf.catchPolicy,
+                 _ body: @escaping(Error) -> Void) -> PMKFinalizer {
         let finalizer = PMKFinalizer()
+        // 最后一个 promise, 会接收到之前链条内的 Promise 的失败信息.
+        // 在自己的 handler 里面, 调用 pipe 添加的方法.
+        // 这里, 就是调用 body 方法.
+        // 最后一个 promise 成功, 也就调用到这里来, 执行 finalizer.pending.resolve(()) 的逻辑.
         pipe {
             switch $0 {
             case .rejected(let error):

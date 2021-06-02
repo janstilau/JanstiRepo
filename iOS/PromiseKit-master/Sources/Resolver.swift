@@ -94,6 +94,7 @@ extension Resolver {
 }
 #endif
 
+// Result 表示, Promise 想要的结果. 要么是一个 成功状态下的 T, 要么是一个失败状态下的 Error.
 public enum Result<T> {
     case fulfilled(T)
     case rejected(Error)
