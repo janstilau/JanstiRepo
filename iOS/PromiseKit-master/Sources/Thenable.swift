@@ -31,6 +31,12 @@ public extension Thenable {
            }
      */
     func then<U: Thenable>(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ body: @escaping(T) throws -> U) -> Promise<U.T> {
+      
+        // Body 返回一个 Promise, 所以, 最直观的想法是, body 返回的 Promise 链接后面的 then.
+        // 当, body 产生的 Promise resolved 之后, 触发 then 后的操作.
+        // 真正的实现是, 生成了一个中间层 Promise, body 产生的 Promise resolved 之后, 是将中间层状态进行改变, 中间层的 promise 触发后面的逻辑.
+        // 返回的也是这个中间层 Promise, 所有的后续操作, 都是挂钩在中间层上.
+      
         let rp = Promise<U.T>(.pending)
         pipe {
             switch $0 {

@@ -1,22 +1,24 @@
 import Dispatch
 
 // 表达 Promise 状态的类型.
-// R 表示 Promise 的结果.
-// 如果, 一个 Promise 还在等待结果, 那么它就是 pending. 关联值就是所有对于这个结果感兴趣的 handlers.
-// 如果, 一个 Promise 被满足了, 那么状态就变为了 resolved. 关联值, 就是这个 Promise 的期望值.
+// 如果, 一个 Promise 还在等待结果, 那么它就是 Pending. Pending 下, 存储了所有的回调信息.
+// 如果, 一个 Promise 被满足了, 那么状态就变为了 Resolved. Resolved 下, 存储了最终的结果.
 enum Sealant<R> {
     case pending(Handlers<R>)
     case resolved(R)
 }
 
-// R 表示 Promise 的结果.
-// Handler 用于保存处理 Promise 结果的 handler.
+// Handlers 用来保存, 当一个 Promise 从 Pending 状态, 改变到 Resolved 状态的时候, 应该触发的所有回调.
+// 正是因为 bodies 将所有的回调都记录了下来. 才能多次使用同一个 Promise 进行 then.
 final class Handlers<R> {
     var bodies: [(R) -> Void] = []
     func append(_ item: @escaping(R) -> Void) { bodies.append(item) }
 }
 
-/// - Remark: not protocol ∵ http://www.russbishop.net/swift-associated-types-cont
+// Promise 内, 存储的是 Box 作为数据成员.
+// inspect -> 返回当前的状态.
+// inspect(Block), 添加回调闭包.
+// seal(_ : T), 将 Box 的状态, 变为 Resolved, 并且传递最终值.
 class Box<T> {
     func inspect() -> Sealant<T> { fatalError() } // 用户返回当前 Box 的 Promise 状态.
     func inspect(_: (Sealant<T>) -> Void) { fatalError() }
@@ -37,10 +39,17 @@ final class SealedBox<T>: Box<T> {
 }
 
 // 空箱子, 等待往里面填充值.
+// 这种 Box, 才可能进行状态的改变.
 class EmptyBox<T>: Box<T> {
+    
     private var sealant = Sealant<T>.pending(.init())
+    /*
+     concurrent:
+     If this attribute is not present, the queue schedules tasks serially in first-in, first-out (FIFO) order.
+     */
     private let barrier = DispatchQueue(label: "org.promisekit.barrier", attributes: .concurrent)
 
+    // seal 函数, 将 Box 的状态从 Pending 变为 Resolved.
     override func seal(_ value: T) {
         var handlers: Handlers<T>!
         barrier.sync(flags: .barrier) {
@@ -51,10 +60,7 @@ class EmptyBox<T>: Box<T> {
             self.sealant = .resolved(value)
         }
 
-        //FIXME we are resolved so should `pipe(to:)` be called at this instant, “thens are called in order” would be invalid
-        //NOTE we don’t do this in the above `sync` because that could potentially deadlock
-        //THOUGH since `then` etc. typically invoke after a run-loop cycle, this issue is somewhat less severe
-
+        // 当有状态变化之后, 调用所有的回调.
         if let handlers = handlers {
             handlers.bodies.forEach{ $0(value) }
         }
@@ -72,6 +78,7 @@ class EmptyBox<T>: Box<T> {
         return rv
     }
 
+    // 向 Sealant 中添加回调.
     override func inspect(_ body: (Sealant<T>) -> Void) {
         var sealed = false
         barrier.sync(flags: .barrier) {

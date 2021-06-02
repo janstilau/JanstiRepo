@@ -1,9 +1,19 @@
 import class Foundation.Thread
 import Dispatch
 
-/**
+/*
  A `Promise` is a functional abstraction around a failable asynchronous operation.
  - See: `Thenable`
+ 
+ Sealant 表示的是, 还没完成和已经完成.
+ Sealant 被 Box 封装了一层, Box 体现的数据概念和 Sealant 一致的.
+ Promise 表示的是, 结果成功了还是失败了. 无论是成功还是失败, 都是完成的状态.
+ 所以, Promise 还会有没有完成的状态.
+ Promise 的成员变量是 Box, 这个值, 本身带有三层含义.
+ 1. 没有完成, 存储了各种回调在 pending 状态的 handlers 里面
+ 2. 完成了. Resolved 的 Result 里面, 是 fullfil 的状态.
+ 3. 完成了. resolved 的 Result 里面, 是 Rejected 的状态.
+ 
  */
 public final class Promise<T>: Thenable, CatchMixin {
     let box: Box<Result<T>>
