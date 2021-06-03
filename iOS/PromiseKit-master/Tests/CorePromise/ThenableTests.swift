@@ -19,6 +19,7 @@ struct Person: Equatable {
 }
 
 class ThenableTests: XCTestCase {
+    
     func testGet() {
         let ex1 = expectation(description: "")
         let ex2 = expectation(description: "")

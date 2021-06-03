@@ -1,5 +1,6 @@
 import PromiseKit
 
+// 这个方法, 就是测试的时候, 防止警告的.
 extension Promise {
     func silenceWarning() {}
 }
