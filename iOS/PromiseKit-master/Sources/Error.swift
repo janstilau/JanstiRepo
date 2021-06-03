@@ -76,6 +76,7 @@ public protocol CancellableError: Error {
 }
 
 extension Error {
+    // 这里, 通过 error 的模式匹配, 返回了一个 Bool 值.
     public var isCancelled: Bool {
         do {
             throw self

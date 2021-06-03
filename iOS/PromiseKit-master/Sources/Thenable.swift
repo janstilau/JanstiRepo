@@ -7,7 +7,7 @@ import Dispatch
     而 pipe 里面, 是真正的对于数据的管理.
  */
 
-
+// Thenable 和核心概念, 就是给自己添加一个回调函数. 也就是 pipe 函数.
 // Thenable 表示的结果, 为一个 Result.
 public protocol Thenable: AnyObject {
     /// The type of the wrapped value
@@ -59,6 +59,8 @@ public extension Thenable {
     func then<U: Thenable>(on: DispatchQueue? = conf.Q.map,
                            flags: DispatchWorkItemFlags? = nil,
                            _ body: @escaping(T) throws -> U) -> Promise<U.T> {
+        // 对于返回值 RP 来说, 他应该是 U.T 的, 这样, body 的结果, 才能直接传递到 RP 里面.
+        // rv.pipe(to: rp.box.seal) 能够执行的基础, 也是他们的类型是一致的.
         let rp = Promise<U.T>(.pending)
         pipe {
             switch $0 {
@@ -248,6 +250,9 @@ public extension Thenable {
     func done(on: DispatchQueue? = conf.Q.return,
               flags: DispatchWorkItemFlags? = nil,
               _ body: @escaping(T) throws -> Void) -> Promise<Void> {
+        // 当, Self Promise 的值改变之后, 会触发 pipe 的回调.
+        // 这个回调, 就是调用 body 函数, 调用完之后, 就改变 rp 的值, 里面封装一个 ().
+        // 这样, rp 的值改变, 就能触发后面的操作了.
         let rp = Promise<Void>(.pending)
         pipe {
             switch $0 {

@@ -2,10 +2,14 @@ import class Foundation.Thread
 import Dispatch
 
 /*
- A `Guarantee` is a functional abstraction around an asynchronous operation that cannot error.
- - See: `Thenable`
- 也就是说, 这个类型的 Box, 只会是 fullfil 的状态, 不可能是 rejected.
+    A `Guarantee` is a functional abstraction around an asynchronous operation that cannot error.
+    - See: `Thenable`
+    也就是说, 这个类型的 Box, 只会是 fullfil 的状态, 不可能是 rejected.
 */
+/*
+    Promise 里面, 装的是 Result<T>, 也就是说, 两种状态. 可能是 fullfil, 也可能是 failed.
+    Guarantee 里面, 装的是 T, 没有 failed 的这种状态了.
+ */
 public final class Guarantee<T>: Thenable {
     let box: PromiseKit.Box<T>
 
@@ -18,13 +22,16 @@ public final class Guarantee<T>: Thenable {
         return .init(box: SealedBox(value: value))
     }
 
+    // Promise 里, 这里传递过去的是一个 Resolver, 通过调用 Resolver 的方法, 改变 Promise 的状态.
+    // 而这里, 传递过去的是 box.seal. 也就是 Body 接收到参数之后, 直接调用传入一个具体的值.
+    // 而这个调用过程, 直接就让 Box 的状态变为了 seal.
     /// Returns a pending `Guarantee` that can be resolved with the provided closure’s parameter.
     public init(resolver body: (@escaping(T) -> Void) -> Void) {
         box = Box()
         body(box.seal)
     }
 
-    /// - See: `Thenable.pipe`
+    // 和 Promise 是一致的.
     public func pipe(to: @escaping(Result<T>) -> Void) {
         pipe{ to(.fulfilled($0)) }
     }
@@ -78,7 +85,9 @@ public final class Guarantee<T>: Thenable {
 
 public extension Guarantee {
     @discardableResult
-    func done(on: DispatchQueue? = conf.Q.return, flags: DispatchWorkItemFlags? = nil, _ body: @escaping(T) -> Void) -> Guarantee<Void> {
+    func done(on: DispatchQueue? = conf.Q.return,
+              flags: DispatchWorkItemFlags? = nil,
+              _ body: @escaping(T) -> Void) -> Guarantee<Void> {
         let rg = Guarantee<Void>(.pending)
         pipe { (value: T) in
             on.async(flags: flags) {
@@ -89,14 +98,18 @@ public extension Guarantee {
         return rg
     }
     
-    func get(on: DispatchQueue? = conf.Q.return, flags: DispatchWorkItemFlags? = nil, _ body: @escaping (T) -> Void) -> Guarantee<T> {
+    func get(on: DispatchQueue? = conf.Q.return,
+             flags: DispatchWorkItemFlags? = nil,
+             _ body: @escaping (T) -> Void) -> Guarantee<T> {
         return map(on: on, flags: flags) {
             body($0)
             return $0
         }
     }
 
-    func map<U>(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ body: @escaping(T) -> U) -> Guarantee<U> {
+    func map<U>(on: DispatchQueue? = conf.Q.map,
+                flags: DispatchWorkItemFlags? = nil,
+                _ body: @escaping(T) -> U) -> Guarantee<U> {
         let rg = Guarantee<U>(.pending)
         pipe { value in
             on.async(flags: flags) {

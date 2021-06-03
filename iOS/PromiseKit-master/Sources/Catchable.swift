@@ -6,7 +6,7 @@ public protocol CatchMixin: Thenable
 
 public extension CatchMixin {
     
-    /**
+    /*
      The provided closure executes when this promise rejects.
      
      Rejecting a promise cascades: rejecting all subsequent promises (unless
@@ -14,11 +14,12 @@ public extension CatchMixin {
      of a chain. Often utility promises will not have a catch, instead
      delegating the error handling to the caller.
      
-     - Parameter on: The queue to which the provided closure dispatches.
-     - Parameter policy: The default policy does not execute your handler for cancellation errors.
-     - Parameter execute: The handler to execute if this promise is rejected.
-     - Returns: A promise finalizer.
-     - SeeAlso: [Cancellation](https://github.com/mxcl/PromiseKit/blob/master/Documentation/CommonPatterns.md#cancellation)
+     */
+    // 当一个 Promise reject 之后, 它的 reject 状态会一直向后传递.
+    // 各种 Then, 是在 fullfill 的状态下, 才会触发自己添加的闭包. 在 reject 的状态下, 仅仅是将自己的状态也置为 reject, 向后传递.
+    // 知道到达了这里, catch 只会在 reject 的状态下, 才会触发自己的 body.
+    /*
+        当代用 catch 之后, 返回的就不是一个 Promise 了, 这个新返回的对象, 只能调用 finaly 函数了
      */
     @discardableResult
     func `catch`(on: DispatchQueue? = conf.Q.return,
@@ -48,11 +49,16 @@ public extension CatchMixin {
     }
 }
 
+// finally 只会在这个特殊的类型上, 才会使用.
+// 这个特殊的类型, 只会在 catch 中才会返回.
 public class PMKFinalizer {
+    
     let pending = Guarantee<Void>.pending()
 
     /// `finally` is the same as `ensure`, but it is not chainable
-    public func finally(on: DispatchQueue? = conf.Q.return, flags: DispatchWorkItemFlags? = nil, _ body: @escaping () -> Void) {
+    public func finally(on: DispatchQueue? = conf.Q.return,
+                        flags: DispatchWorkItemFlags? = nil,
+                        _ body: @escaping () -> Void) {
         pending.guarantee.done(on: on, flags: flags) {
             body()
         }
@@ -104,7 +110,7 @@ public extension CatchMixin {
         return rp
     }
 
-    /**
+    /*
      The provided closure executes when this promise rejects.
      This variant of `recover` requires the handler to return a Guarantee, thus it returns a Guarantee itself and your closure cannot `throw`.
      - Note it is logically impossible for this to take a `catchPolicy`, thus `allErrors` are handled.
@@ -113,7 +119,9 @@ public extension CatchMixin {
      - SeeAlso: [Cancellation](https://github.com/mxcl/PromiseKit/blob/master/Documentation/CommonPatterns.md#cancellation)
      */
     @discardableResult
-    func recover(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ body: @escaping(Error) -> Guarantee<T>) -> Guarantee<T> {
+    func recover(on: DispatchQueue? = conf.Q.map,
+                 flags: DispatchWorkItemFlags? = nil,
+                 _ body: @escaping(Error) -> Guarantee<T>) -> Guarantee<T> {
         let rg = Guarantee<T>(.pending)
         pipe {
             switch $0 {
@@ -128,7 +136,7 @@ public extension CatchMixin {
         return rg
     }
 
-    /**
+    /*
      The provided closure executes when this promise resolves, whether it rejects or not.
      
          firstly {
@@ -145,7 +153,11 @@ public extension CatchMixin {
      - Parameter body: The closure that executes when this promise resolves.
      - Returns: A new promise, resolved with this promise’s resolution.
      */
-    func ensure(on: DispatchQueue? = conf.Q.return, flags: DispatchWorkItemFlags? = nil, _ body: @escaping () -> Void) -> Promise<T> {
+    // Ensure, 在上一个节点状态改变之后, 执行自己的逻辑, 然后将上一个节点的状态, 继续向后传递.
+    // 这就是 Ensure 的逻辑, 中转站, 执行自己的逻辑, 不做任何的事情.
+    func ensure(on: DispatchQueue? = conf.Q.return,
+                flags: DispatchWorkItemFlags? = nil,
+                _ body: @escaping () -> Void) -> Promise<T> {
         let rp = Promise<T>(.pending)
         pipe { result in
             on.async(flags: flags) {
@@ -174,7 +186,9 @@ public extension CatchMixin {
      - Parameter body: The closure that executes when this promise resolves.
      - Returns: A new promise, resolved with this promise’s resolution.
      */
-    func ensureThen(on: DispatchQueue? = conf.Q.return, flags: DispatchWorkItemFlags? = nil, _ body: @escaping () -> Guarantee<Void>) -> Promise<T> {
+    func ensureThen(on: DispatchQueue? = conf.Q.return,
+                    flags: DispatchWorkItemFlags? = nil,
+                    _ body: @escaping () -> Guarantee<Void>) -> Promise<T> {
         let rp = Promise<T>(.pending)
         pipe { result in
             on.async(flags: flags) {

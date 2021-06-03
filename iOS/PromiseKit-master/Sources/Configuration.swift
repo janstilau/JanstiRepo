@@ -1,6 +1,6 @@
 import Dispatch
 
-/**
+/*
  PromiseKit’s configurable parameters.
 
  Do not change these after any Promise machinery executes as the configuration object is not thread-safe.
@@ -9,8 +9,7 @@ import Dispatch
 */
 public struct PMKConfiguration {
     /// The default queues that promises handlers dispatch to
-    public var Q: (map: DispatchQueue?,
-                   return: DispatchQueue?) =
+    public var Q: (map: DispatchQueue?, return: DispatchQueue?) =
         (map: DispatchQueue.main, return: DispatchQueue.main)
 
     /// The default catch-policy for all `catch` and `resolve`
