@@ -18,6 +18,8 @@ import Dispatch
  Promise 里面, 存储的是后续的一系列回调方法, 或者最终自己的 Result 状态.
  异步操作里面, 引用到 Promise, 在合理的实际, 触发 Promise 的状态改变.
  由 Promise 来触发后续的逻辑.
+ 
+ log
  */
 
 
