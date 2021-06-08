@@ -53,6 +53,9 @@ public extension CatchMixin {
 // 这个特殊的类型, 只会在 catch 中才会返回.
 public class PMKFinalizer {
     
+    // pending 里面, 有着一个 Guarantee, 和操作 Guarrentee 的 resolver
+    // 上 catch 里面, 使用 resolver, 让 gurantee 改变状态.
+    // 在这里, finally 里面, 使用 guarantee.done, 添加后续的回调方法.
     let pending = Guarantee<Void>.pending()
 
     /// `finally` is the same as `ensure`, but it is not chainable
@@ -68,7 +71,7 @@ public class PMKFinalizer {
 
 public extension CatchMixin {
     
-    /**
+    /*
      The provided closure executes when this promise rejects.
      
      Unlike `catch`, `recover` continues the chain.
@@ -85,11 +88,15 @@ public extension CatchMixin {
      - Parameter body: The handler to execute if this promise is rejected.
      - SeeAlso: [Cancellation](https://github.com/mxcl/PromiseKit/blob/master/Documentation/CommonPatterns.md#cancellation)
      */
-    func recover<U: Thenable>(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, policy: CatchPolicy = conf.catchPolicy, _ body: @escaping(Error) throws -> U) -> Promise<T> where U.T == T {
+    func recover<U: Thenable>(on: DispatchQueue? = conf.Q.map,
+                              flags: DispatchWorkItemFlags? = nil,
+                              policy: CatchPolicy = conf.catchPolicy,
+                              _ body: @escaping(Error) throws -> U) -> Promise<T> where U.T == T {
         let rp = Promise<U.T>(.pending)
         pipe {
             switch $0 {
             case .fulfilled(let value):
+                //
                 rp.box.seal(.fulfilled(value))
             case .rejected(let error):
                 if policy == .allErrors || !error.isCancelled {

@@ -26,6 +26,10 @@ public final class Guarantee<T>: Thenable {
     // 而这里, 传递过去的是 box.seal. 也就是 Body 接收到参数之后, 直接调用传入一个具体的值.
     // 而这个调用过程, 直接就让 Box 的状态变为了 seal.
     /// Returns a pending `Guarantee` that can be resolved with the provided closure’s parameter.
+    
+    // 在 Guarantee 的构造方法内, 建立了一个 Box, 然后执行回调.
+    // 将 Guarantee 的状态改变方法, 传递给 Body.
+    // Body 在合适的地方调用, 改变 Guarantee 的状态.
     public init(resolver body: (@escaping(T) -> Void) -> Void) {
         box = Box()
         body(box.seal)
@@ -131,11 +135,17 @@ public extension Guarantee {
     }
     #endif
 
+    
+    // Guarantee 的 then, 如果 body 返回一个 guarantee, 那么返回值就是一个 Guarantee
+    // 如果 body 返回一个 promise, 那么返回值也就是一个 Promise
     @discardableResult
-    func then<U>(on: DispatchQueue? = conf.Q.map, flags: DispatchWorkItemFlags? = nil, _ body: @escaping(T) -> Guarantee<U>) -> Guarantee<U> {
+    func then<U>(on: DispatchQueue? = conf.Q.map,
+                 flags: DispatchWorkItemFlags? = nil,
+                 _ body: @escaping(T) -> Guarantee<U>) -> Guarantee<U> {
         let rg = Guarantee<U>(.pending)
         pipe { value in
             on.async(flags: flags) {
+                // Body 返回的 Guarantee 如果已经是 sealed 的状态, 那么 pipe 直接会触发参数指代的回调.
                 body(value).pipe(to: rg.box.seal)
             }
         }
