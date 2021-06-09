@@ -67,6 +67,8 @@ public extension Thenable {
             case .fulfilled(let value):
                 on.async(flags: flags) {
                     do {
+                        // rv 的出现, 是因为可能 body 是一个异步操作.
+                        // Rv 代表的就是那个异步操作的结果.
                         let rv = try body(value)
                         guard rv !== rp else { throw PMKError.returnedSelf }
                         rv.pipe(to: rp.box.seal)

@@ -61,11 +61,9 @@ public final class Promise<T>: Thenable, CatchMixin {
     }
 
     // - Returns: a tuple of a new pending promise and its `Resolver`.
+    // 这个在 Catchable 那里, 有很大的作用.
     public class func pending() -> (promise: Promise<T>,
                                     resolver: Resolver<T>) {
-        // 非常诡异的写法, 生成了一个 Promise, 然后传递到闭包里面.
-        // 闭包里面, 生成一个元组.
-        // 在外界生成, 然后产生一个 Resolver, 返回元组不同一的结果吗.
         return { ($0, Resolver($0.box)) }(Promise<T>(.pending))
     }
 
@@ -76,11 +74,6 @@ public final class Promise<T>: Thenable, CatchMixin {
         // 这里有一个 double check.
         switch box.inspect() {
         case .pending:
-            // inspect 函数, 本身会有线程同步的考虑.
-            // 所以这里是有一个 double check 的技术.
-            // 首先, box.inspect()  获取到一个值, 进入到了逻辑分支里.
-            // 然后 box.inspect {} 上锁, 并且在上锁后, 重新进行一次逻辑判断.
-            // 锁内的代码是单独线程执行的, 这样, 就算有两个线程同时进入了 pending 分支, 因为一先一后的顺序, 后进入的线程, 还是能够确保使用的是准确的数据.
             box.inspect {
                 switch $0 {
                 case .pending(let handlers):
@@ -189,9 +182,6 @@ public extension DispatchQueue {
                         flags: DispatchWorkItemFlags = [],
                         execute body: @escaping () throws -> T) -> Promise<T> {
 
-        // 从这里, 可以看出平时自定义一个返回 Promise 是怎么实现的.
-        // 生成一个空的 Promise. 然后在异步操作中, 去修改这个 Promise 的状态.
-        // 返回这个 promise, 这样, 外界就可以使用 promise 去收集后续的回调了.
         let promise = Promise<T>(.pending)
         async(group: group, qos: qos, flags: flags) {
             do {

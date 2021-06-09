@@ -1,6 +1,6 @@
 import Foundation
 
-/**
+/*
  __AnyPromise is an implementation detail.
 
  Because of how ObjC/Swift compatibility work we have to compose our AnyPromise
